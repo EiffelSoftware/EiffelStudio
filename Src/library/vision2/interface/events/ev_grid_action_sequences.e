@@ -6,13 +6,28 @@ indexing
 class
 	EV_GRID_ACTION_SEQUENCES
 
+
+feature {NONE} -- Implementation
+
+	implementation: EV_GRID_ACTION_SEQUENCES_I
+
 feature -- Access
 
-	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE
-		-- Actions to be performed when an item is selected.
-	
-	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE
-		-- Actions to be performed when a row is selected.
+	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is selected.
+		do
+			Result := implementation.item_select_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when an row is deselected.
+		do
+			Result := implementation.row_select_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 end
 

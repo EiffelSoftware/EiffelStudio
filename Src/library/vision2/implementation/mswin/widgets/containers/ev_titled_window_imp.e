@@ -417,7 +417,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child := child_imp
+			{EV_CONTAINER_IMP} Precursor (child_imp)
 			if has_menu then
 				set_minimum_size (child_imp.minimum_width + 2*window_frame_width, child_imp.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
 			else
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 		-- the user to use the tab key.
 		once
 			Result := Ws_ex_controlparent + Ws_ex_left
-						+ Ws_ex_ltrreading
+					+ Ws_ex_ltrreading
 		end
 
 	background_brush: WEL_BRUSH is
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			-- Called when the window is destroy.
 			-- Set the parent sensitive if it exists.
 		do
-			if parent_imp.is_valid and then parent_imp.insensitive then
+			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
 				parent_imp.set_insensitive (False)
 			end
 		end

@@ -59,6 +59,8 @@ feature -- Special simbols -- 1
 
 	C_not_equal: STRING is "!="
 
+	C_not: STRING is "!"
+
 	Ampersand: STRING is "&"
 
 	Single_quote: STRING is "%'"

@@ -14,6 +14,7 @@
 #include "tools.h"
 #include "hashin.h"
 #include "malloc.h"
+#include "except.h"	/* for panic() */
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

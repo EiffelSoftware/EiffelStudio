@@ -17,6 +17,7 @@ inherit
 	ECOM_ROUTINES
 		undefine
 			is_equal,
+			copy,
 			out
 		end
 

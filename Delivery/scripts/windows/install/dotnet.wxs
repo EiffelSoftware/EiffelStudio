@@ -110,7 +110,6 @@
                   <File Id="typed_pointer.e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
                   <File Id="routine.e" Name="routine.e" />
                   <File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
-                  <File Id="ise_runtime.e" Name="ISE_RU~1.E" LongName="ise_runtime.e" />
                   <File Id="integer_8.e" Name="INTEGE~3.E" LongName="integer_8.e" />
                   <File Id="gc_info.e" Name="gc_info.e" />
                   <File Id="directory.e" Name="DIRECT~2.E" LongName="directory.e" />
@@ -153,7 +152,6 @@
                   <File Id="any.e" Name="any.e" />
                   <File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
                   <File Id="string.e1" Name="string.e" />
-                  <File Id="eiffel_exception.e1" Name="EIFFEL~1.E" LongName="eiffel_exception.e" />
                   <File Id="dotnet_pointer.e" Name="DO5684~1.E" LongName="dotnet_pointer.e" />
                   <File Id="dotnet_integer_16.e" Name="DOAC1F~1.E" LongName="dotnet_integer_16.e" />
                   <File Id="dotnet_character.e" Name="DOTNET~2.E" LongName="dotnet_character.e" />

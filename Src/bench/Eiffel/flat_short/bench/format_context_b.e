@@ -984,24 +984,25 @@ feature -- comments
 		local
 			item: BASIC_TEXT;
 			i, c_count: INTEGER;
+			c_area: SPECIAL [CHARACTER];
 			between_quotes: BOOLEAN;
 			s: STRING
 		do
 			from
 				!!s.make (0);
 				c_count := c.count;
-				i := 1
+				c_area := c.area
 			until
-				i > c_count
+				i >= c_count
 			loop
-				if between_quotes and c.item (i) = '%'' then
+				if between_quotes and c_area.item (i) = '%'' then
 					if not s.empty then
 						!!item.make (s);
 						put_text_item (item);
 						!!s.make (0)
 					end;
 					between_quotes := false
-				elseif not between_quotes and c.item (i) = '`' then
+				elseif not between_quotes and c_area.item (i) = '`' then
 					if not s.empty then
 						!!item.make (s);
 						item.set_is_comment;
@@ -1010,7 +1011,7 @@ feature -- comments
 					end;
 					between_quotes := true
 				else
-					s.extend (c.item (i))
+					s.extend (c_area.item (i))
 				end;
 				i := i + 1
 			end;

@@ -238,9 +238,9 @@ feature -- Generation
 				info.generate_gen_type_conversion (Current)
 				register.print_register
 				buf := buffer
-				buf.putstring (" = RTLN(")
+				buf.putstring (" = ")
 				info.generate
-				buf.putstring (");")
+				buf.putchar (';')
 				buf.new_line
 				info.generate_end (Current)
 				if

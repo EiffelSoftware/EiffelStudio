@@ -25,19 +25,17 @@ feature -- Basic Operations
 			l_targets: LIST [STRING]
 			l_target_type: TYPE
 			l_lookup_name: STRING
+			l_feature_i: FEATURE_I
 		do
 			found := False
-			found_item := Void
-			l_targets := target.split ('.')
 			qualified_call := False
+			found_item := Void
 			Inst_context.set_cluster (class_i.cluster)
+			l_targets := target.split ('.')
 			if feature_i /= void then
 				if l_targets.count = 1 then
-					feature_table.search (l_targets.first)
-					if feature_table.found then
-						found_item := overloaded_completion_feature (class_i, feature_table.found_item)
-						found := True
-					else
+					found_item := completion_feature_from_name (target)
+					if found_item = Void then
 						found_item := uncompiled_completion_feature (target)
 						found := found_item /= Void
 					end
@@ -55,17 +53,13 @@ feature -- Basic Operations
 						l_targets.remove
 						feature_table := recursive_lookup (l_target_type, l_targets, feature_table)
 						if feature_table /= void then
-							feature_table.search (l_lookup_name)
-							if feature_table.found then
-								found_item := overloaded_completion_feature (class_i, feature_table.found_item)
-								found := True
-							end
+							found_item := completion_feature_from_name (l_lookup_name)
 						end
 					end
 				end
 			else
 				if l_targets.count = 1 then
-					found_item := uncompiled_completion_feature (l_targets.first)
+					found_item := uncompiled_completion_feature (target)
 					found := found_item /= Void
 				end
 			end
@@ -73,47 +67,37 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	overloaded_completion_feature (a_class_i: CLASS_I; a_feature_i: FEATURE_I): COMPLETION_FEATURE is
-			-- Initialize a completion feature with overloads if any
+	completion_feature_from_name (a_name: STRING): COMPLETION_FEATURE is
+			-- Completion feature with name `a_name', may be overloaded.
 		require
-			non_void_class_i: a_class_i /= Void
-			non_void_feature_i: a_feature_i /= Void
+			non_void_name: a_name /= Void
+			valid_name: names_heap.has (a_name)
 		local
-			l_overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
-			l_overloaded_ids: LIST [INTEGER]
-			l_params: PARAMETER_ENUMERATOR
+			l_overloaded_features: LIST [FEATURE_I]
 			l_feature_i: FEATURE_I
-			l_id, l_resolved_id: INTEGER
 		do
-			create Result.make_with_return_type (a_feature_i.feature_name, parameter_descriptors (a_feature_i), a_feature_i.type.dump, feature_type (a_feature_i), a_class_i.file_name)
-			l_resolved_id := a_feature_i.feature_name_id
-			l_overloaded_names := feature_table.overloaded_names
-			if l_overloaded_names /= Void then
+			if feature_table.has_overloaded (a_name) then
+				l_overloaded_features := feature_table.overloaded_items (a_name)
+				l_feature_i := l_overloaded_features.first
+				create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), class_i.file_name)
 				from
-					l_overloaded_names.start
+					l_overloaded_features.start
+					l_overloaded_features.forth
 				until
-					l_overloaded_names.after
+					l_overloaded_features.after
 				loop
-					l_overloaded_ids := l_overloaded_names.item_for_iteration
-					if l_overloaded_ids.has (l_resolved_id) then
-						Result.set_name (Names_heap.item (l_overloaded_names.key_for_iteration))
-						from
-							l_overloaded_ids.start
-						until
-							l_overloaded_ids.after
-						loop
-							l_id := l_overloaded_ids.item
-							if l_id /= l_resolved_id then
-								l_feature_i := feature_table.item_id (l_id)		
-								create l_params.make (parameter_descriptors (l_feature_i))
-								Result.add_overload (l_params, l_feature_i.type.dump)
-							end
-							l_overloaded_ids.forth
-						end
-					end
-					l_overloaded_names.forth
+					l_feature_i := l_overloaded_features.item
+					Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump)
+					l_overloaded_features.forth
+				end
+			else
+				feature_table.search (a_name)
+				if feature_table.found then
+					l_feature_i := feature_table.found_item
+					create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), class_i.file_name)
 				end
 			end
+			found := Result /= Void
 		end
 
 	parameter_descriptors (a_feature_i: FEATURE_I): ARRAYED_LIST [PARAMETER_DESCRIPTOR] is

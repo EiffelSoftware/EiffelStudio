@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_STATUS_BAR_imp
+	parent_imp: EV_STATUS_BAR_IMP
 			-- Parent of the current item.
 
 feature -- Measurement
@@ -35,7 +35,7 @@ feature -- Status setting
 			valid_value: value >= 0 or value = -1
 		deferred
 		ensure
-			width_set: width = value
+			width_set: (width = value) or (value = -1)
 		end
 
 feature -- Element change

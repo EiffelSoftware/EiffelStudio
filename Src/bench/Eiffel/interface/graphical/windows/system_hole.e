@@ -48,6 +48,7 @@ feature {NONE}
 						load_default_ace;
 						system_tool.display;
 					elseif argument = warner then
+						name_chooser.set_window (project_tool.text_window);
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
 						fn := clone (name_chooser.selected_file);
@@ -62,9 +63,11 @@ feature {NONE}
 							temp.append ("File: ");
 							temp.append (fn);
 							temp.append ("%Ncannot be read. Try again?");
+							warner.set_window (project_tool.text_window);
 							warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
 						end;
 					else
+						warner.set_window (project_tool.text_window);
 						warner.custom_call (Current, l_Specify_ace,
 							" Ok ", "Template", "Cancel");
 					end;	

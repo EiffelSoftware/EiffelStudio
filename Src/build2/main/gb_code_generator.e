@@ -118,7 +118,10 @@ feature {NONE} -- Implementation
 			temp_string := project_location
 			if j >0 then
 				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
-			end	
+			end
+			
+				-- Now add the project_name
+			add_generated_string (ace_text, project_settings.project_name, project_name_tag)				
 			
 				-- Now add the application class name.
 			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)

@@ -326,8 +326,7 @@ feature {NONE} -- Implementation
 				pen := shadow_pen
 				draw_vertical_line (paint_dc, pen, split_position + 4)
 				pen.delete
-				pen := black_pen
-				draw_vertical_line (paint_dc, pen, split_position + 5)
+				draw_vertical_line (paint_dc, Black_pen, split_position + 5)
 				bk_pen.delete
 			end
 			paint_dc.release
@@ -339,6 +338,7 @@ feature {NONE} -- Implementation
 		do
 			paint_dc.select_pen (a_pen)
 			paint_dc.line (a_x, 0, a_x, wel_height)
+			paint_dc.unselect_pen			
 		end
 	
 feature {NONE} -- Implementation

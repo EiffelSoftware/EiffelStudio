@@ -413,6 +413,7 @@ feature {NONE} -- WEL Implementation
 					0, text_height // 2, 
 					0, cur_height - 1
 					)
+				paint_dc.unselect_pen
 				pen.delete
 			end
 

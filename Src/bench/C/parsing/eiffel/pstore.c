@@ -25,13 +25,19 @@ private long pst_store();	/* Recursive store */
 
 private void partial_store_write();
 
+extern void esys();			/* raise op sys error */
+extern void eio();
+extern void allocate_gen_buffer();
+extern char gc_ison();
+
 #undef DEBUG
 
 void c_sv_init(f_desc)
 EIF_INTEGER f_desc;
 {
 	/* Position file `f' at the end. */
-    lseek((int)f_desc,0,SEEK_END);
+    if (lseek((int)f_desc,0,SEEK_END) == -1)
+		esys();
 }
 
 long store_append(f_desc, o, mid, s)
@@ -58,6 +64,7 @@ char *s;
 
 	fides = (int)f_desc;				/* For use of `st_write' */
 	result = lseek (fides, 0, SEEK_CUR);
+	if (result==-1) esys();
 
 	make_index = mid;
 	server = s;
@@ -117,6 +124,8 @@ long object_count;
 	long saved_file_pos = lseek(fides, 0, SEEK_CUR)+current_position;
 
 	long saved_object_count = object_count;
+
+	if (saved_file_pos==-1) esys();
 
 	flags = zone->ov_flags;
 	is_expanded = (flags & EO_EXP) != (uint32) 0;
@@ -182,7 +191,12 @@ zone->ov_flags);
 long fpos2(file_desc)
 EIF_INTEGER file_desc;
 {
-	return (long) lseek((int)file_desc, 0, SEEK_CUR);
+	register long result = (long) lseek((int)file_desc, 0, SEEK_CUR);
+
+	if (result == -1)
+		esys();
+
+	return result;
 }
 
 private void partial_store_write()

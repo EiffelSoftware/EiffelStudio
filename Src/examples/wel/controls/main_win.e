@@ -9,8 +9,7 @@ inherit
 			on_vertical_scroll_control,
 			on_horizontal_scroll_control,
 			closeable,
-			background_brush,
-			class_icon
+			background_brush
 		end
 
 	WEL_SB_CONSTANTS
@@ -123,6 +122,8 @@ feature {NONE} -- Implementation
 				menu_mul_add_item
 			when Cmd_mul_count_item then
 				menu_mul_count_item
+			when Cmd_mul_count_selected_item then
+				menu_mul_count_selected_item
 			when Cmd_mul_current_item then
 				menu_mul_current_item
 			when Cmd_combo_box_create then
@@ -270,11 +271,6 @@ feature {NONE} -- Implementation
 			Result := scroll_bar_menu.popup_menu (0)
 		end
 
-	class_icon: WEL_ICON is
-		once
-			create Result.make_by_id (Id_ico_application)
-		end
-
 	menu_start is
 		do
 			list_box_menu.disable_item (Cmd_list_box_delete)
@@ -284,6 +280,7 @@ feature {NONE} -- Implementation
 			list_box_mul_menu.disable_item (Cmd_mul_delete)
 			list_box_mul_menu.disable_item (Cmd_mul_add_item)
 			list_box_mul_menu.disable_item (Cmd_mul_count_item)
+			list_box_mul_menu.disable_item (Cmd_mul_count_selected_item)
 			list_box_mul_menu.disable_item (Cmd_mul_current_item)
 			combo_box_menu.disable_item (Cmd_combo_box_delete)
 			combo_box_menu.disable_item (Cmd_combo_box_add_item)
@@ -384,6 +381,7 @@ feature {NONE} -- Implementation
 			list_box_mul_menu.enable_item (Cmd_mul_add_item)
 			list_box_mul_menu.enable_item (Cmd_mul_delete)
 			list_box_mul_menu.enable_item (Cmd_mul_count_item)
+			list_box_mul_menu.enable_item (Cmd_mul_count_selected_item)
 		end
 
 	menu_mul_delete is
@@ -393,6 +391,7 @@ feature {NONE} -- Implementation
 			list_box_mul_menu.disable_item (Cmd_mul_delete)
 			list_box_mul_menu.disable_item (Cmd_mul_add_item)
 			list_box_mul_menu.disable_item (Cmd_mul_count_item)
+			list_box_mul_menu.disable_item (Cmd_mul_count_selected_item)
 			list_box_mul_menu.disable_item (Cmd_mul_current_item)
 		end
 
@@ -416,6 +415,37 @@ feature {NONE} -- Implementation
 				text_info.append (" items are present.")
 			else
 				text_info.append (" item is present.")
+			end
+			create msg_box.make
+			msg_box.information_message_box (Current, text_info, "Count item")
+		end
+
+	menu_mul_count_selected_item is
+		local
+			msg_box: WEL_MSG_BOX
+			selected_items: ARRAY [INTEGER]
+			i: INTEGER
+		do
+			text_info.wipe_out
+			text_info.append_integer (list_box_mul.count_selected_items)
+			text_info.append (" items are selected.%N%N")
+			text_info.append ("Selected items: ")
+
+			selected_items := list_box_mul.selected_items
+			from
+				i := selected_items.lower
+			until	
+				i > selected_items.upper
+			loop
+				text_info.append ((selected_items @ i).out)
+				if i /= selected_items.upper then
+					text_info.append (", ")
+				end
+					-- Goto line if 
+				if (i \\ 15) = 14 then
+					text_info.append ("%N")
+				end
+				i := i + 1
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")

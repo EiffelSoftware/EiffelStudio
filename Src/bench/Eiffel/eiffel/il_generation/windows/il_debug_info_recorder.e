@@ -889,7 +889,7 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 				last_class_type_info_cleaned := l_class_type
 				debug ("debugger_il_info_trace")
 					print ("Cleaning : "+ l_class_type.associated_class.name_in_upper 
-										+ " ID=" + static_type_id.out 
+										+ " ID=" + l_class_type.static_type_id.out 
 										+ "%N")
 				end
 				

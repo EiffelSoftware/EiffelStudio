@@ -37,8 +37,10 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_text_new (NULL, NULL))
-			entry_widget := c_object
+			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
+			entry_widget := C.gtk_text_new (NULL, NULL)
+			C.gtk_widget_show (entry_widget)
+			C.gtk_container_add (c_object, entry_widget)
 			C.gtk_text_set_editable (entry_widget, True)
 		end
 
@@ -163,17 +165,6 @@ feature -- Status report
 			end
 		end
 
-	has_system_frozen_widget: BOOLEAN is
-			-- Is there any widget frozen?
-			-- If a widget is frozen any updates made to it
-			-- will not be shown until the widget is
-			-- thawn again.
-		do
-			check
-				To_be_implemented: False
-			end
-		end
-
 feature -- Status setting
 
 	set_caret_position (pos: INTEGER) is
@@ -265,8 +256,11 @@ feature -- Assertions
 
 	last_line_not_empty: BOOLEAN is
 			-- Has the line at least one character?
+		local
+			temp_text: STRING
 		do
-				Result := not ((text @ text.count) = '%N')
+			temp_text := text
+			Result := not ((temp_text @ temp_text.count) = '%N')
 		end
 		
 feature {NONE} -- Implementation

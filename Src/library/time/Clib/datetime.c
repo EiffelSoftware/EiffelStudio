@@ -29,7 +29,6 @@ struct tm *date_time;
 	
 void c_get_date_time () 
 {
-	const time_t *tmp;
 #ifdef EIF_THREADS
 	if (!mutex)
 		mutex = eif_thr_mutex_create();

@@ -19,6 +19,10 @@ deferred class
 
 inherit
 	EV_WIDGET_I
+		redefine
+			set_vertical_resize,
+			set_horizontal_resize
+		end
 
 	EV_SIZEABLE_IMP
 
@@ -91,7 +95,7 @@ feature -- Access
 		local
 			ww: WEL_FRAME_WINDOW
 		once
-			!! ww.make_top ("Default parent window")
+			!! ww.make_top ("Eiffel Vision default parent window")
 			ww.set_style (clear_flag (ww.style, Ws_visible))
 			!! Result.put (ww)
 		ensure
@@ -148,6 +152,48 @@ feature -- Status setting
 			expandable := flag	
 		end
 
+	set_horizontal_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		do
+			if flag then
+				if vertical_resizable then
+					resize_type := 3
+				else
+					resize_type := 1
+				end
+			else
+				if vertical_resizable then
+					resize_type := 2
+				else
+					resize_type := 0
+				end				
+			end
+			if parent_imp /= Void and then parent_imp.already_displayed then
+				parent_ask_resize (child_cell.width, child_cell.height)
+			end
+		end
+
+	set_vertical_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		do
+			if flag then
+				if horizontal_resizable then
+					resize_type := 3
+			else
+					resize_type := 2
+				end
+			else
+				if horizontal_resizable then
+					resize_type := 1
+				else
+					resize_type := 0
+				end				
+			end
+			if parent_imp /= Void and then parent_imp.already_displayed then
+				parent_ask_resize (child_cell.width, child_cell.height)
+			end
+		end
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
@@ -174,26 +220,7 @@ feature -- Element change
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the
 			-- default_parent.
-		local
-			par_imp: EV_CONTAINER_IMP
-			ww: WEL_WINDOW
-		do
-			if par /= Void then
-				if parent_imp /= Void then
-					parent_imp.remove_child (Current)
-				end
-				ww ?= par.implementation
-				wel_set_parent (ww)
-				par_imp ?= par.implementation
-				check
-					parent_not_void: par_imp /= Void
-				end
-				set_top_level_window_imp (par_imp.top_level_window_imp)
-				par_imp.add_child (Current)
-			elseif parent_imp /= Void then
-				parent_imp.remove_child (Current)
-				wel_set_parent (default_parent.item)
-			end
+		deferred
 		end
 
 feature -- Event - command association

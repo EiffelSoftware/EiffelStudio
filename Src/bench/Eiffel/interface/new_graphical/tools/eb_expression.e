@@ -673,22 +673,25 @@ feature {NONE} -- Implementation
 				if Application.is_dotnet then
 
 					result_object := evaluator.dotnet_evaluate_function (addr, value, realf.associated_feature_i, l_class_type, l_params)
-
-					at := f.type.actual_type
-					if at.associated_class /= Void then
-						result_static_type := at.associated_class
+					if result_object = Void then
+						error_message := "Error during evaluation"
 					else
-						result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
-					end
-					if
-						result_static_type /= Void and then
-						result_static_type.is_basic and
-						(result_object.address /= Void)
-					then
-							-- We expected a basic type, but got a reference.
-							-- This happens in "2 + 2" because we convert the first 2
-							-- to a reference and therefore get a reference.
-						result_object := result_object.to_basic
+						at := f.type.actual_type
+						if at.associated_class /= Void then
+							result_static_type := at.associated_class
+						else
+							result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
+						end
+						if
+							result_static_type /= Void and then
+							result_static_type.is_basic and
+							(result_object.address /= Void)
+						then
+								-- We expected a basic type, but got a reference.
+								-- This happens in "2 + 2" because we convert the first 2
+								-- to a reference and therefore get a reference.
+							result_object := result_object.to_basic
+						end
 					end
 				else
 						-- Send the target object.

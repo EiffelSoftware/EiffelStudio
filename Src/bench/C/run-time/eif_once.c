@@ -202,9 +202,9 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 		bzero((struct fop_list *) eif_fop_table, (OP_TABLE_SIZE+1) * sizeof (struct fop_list *));
 	}
 
-	list = eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE]; /* Binary operation so as to point on the correct place in 'eif_fop_table'  */ 
+	list = eif_fop_table [((size_t) feature_address) & OP_TABLE_SIZE]; /* Binary operation so as to point on the correct place in 'eif_fop_table'  */ 
 #ifdef DEBUG
-	printf ("DEBUG: feature address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((uint32) feature_address) & OP_TABLE_SIZE);
+	printf ("DEBUG: feature address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((size_t) feature_address) & OP_TABLE_SIZE);
 #endif
 				
 	if (list == (struct fop_list *) 0) {
@@ -215,7 +215,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 		list = (struct fop_list *) init_fop_list (feature_address);
 		list->val = (EIF_REFERENCE *) eif_once_set_addr ( (EIF_POINTER) (feature_address (eif_access (Current))));
 
-		eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
+		eif_fop_table [((size_t) feature_address) & OP_TABLE_SIZE] = list;
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex");
 		return ((EIF_REFERENCE) eif_access (list->val));	
 
@@ -304,18 +304,18 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
         }
  
 
-        list = eif_pop_table [ (uint32) feature_address & OP_TABLE_SIZE];	/* binary operation so as to 
+        list = eif_pop_table [ (size_t) feature_address & OP_TABLE_SIZE];	/* binary operation so as to 
 									 *point on the correct place in 'eif_pop_table'
 									 */
  
 #ifdef DEBUG
-	printf ("DEBUG: procedure address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((uint32) feature_address) & OP_TABLE_SIZE);
+	printf ("DEBUG: procedure address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((size_t) feature_address) & OP_TABLE_SIZE);
 #endif
         if (list == (struct pop_list *) 0) {
                 /* First call of procedure once in process */
                 list = (struct pop_list *) init_pop_list (feature_address);
 	        /* The once procedure is executed here. */
-		eif_pop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
+		eif_pop_table [((size_t) feature_address) & OP_TABLE_SIZE] = list;
         feature_address (eif_access (Current));
 
         } else {

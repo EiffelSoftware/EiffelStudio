@@ -22,7 +22,7 @@ extern "C" {
 
 extern uint32 nprime(register uint32 n);				/* Find first prime above a given number */
 extern int prime(register uint32 n);					/* Test whether a number is prime or not */
-extern long hashcode(register char *s, register long int count);				/* Computes hashcode for a string */
+extern EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count);				/* Computes hashcode for a string */
 
 #ifdef __cplusplus
 }

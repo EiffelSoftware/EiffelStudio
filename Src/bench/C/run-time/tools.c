@@ -12,25 +12,26 @@
 */
 
 #include "eif_tools.h"
+#include <stddef.h>					/* For size_t typedef. */
 
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public long hashcode(register char *s, register long int count)
+rt_public EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count)
 {
 	/* Compute the hash code associated with given string s. The magic number
 	 * below is the greatest prime lower than 2^23.
 	 */
 
-	register1 unsigned int hashval = 0;
+	register1 size_t hashval = 0;
 	register2 int magic = 8388593;
 
 	while (count--)
-		hashval = ((hashval % magic) << 8) + (unsigned int) *s++;
+		hashval = ((hashval % magic) << 8) + (size_t) *s++;
 
-	return (long) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
+	return (EIF_INTEGER) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
 }
 
 rt_public uint32 nprime(register uint32 n)

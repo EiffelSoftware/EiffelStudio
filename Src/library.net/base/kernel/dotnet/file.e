@@ -265,7 +265,15 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := internal_file.get_last_write_time.to_file_time.to_integer
+			Result := eiffel_file_date_time (internal_file.get_last_write_time)
+		end
+
+	creation_date: INTEGER is
+			-- Time stamp for when the file was created
+		require
+			file_exists: exists
+		do
+			Result := eiffel_file_date_time (internal_file.get_creation_time)
 		end
 
 	access_date: INTEGER is
@@ -273,7 +281,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := internal_file.get_last_access_time.to_file_time.to_integer
+			Result := eiffel_file_date_time (internal_file.get_last_access_time)
 		end
 
 	retrieved: ANY is
@@ -1066,12 +1074,9 @@ feature -- Element change
 			-- Stamp with `time' (for both access and modification).
 		require
 			file_exists: exists
-		local
-			t: SYSTEM_DATE_TIME
 		do
-			t := feature {SYSTEM_DATE_TIME}.from_file_time (time.to_integer_64)
-			internal_file.set_last_access_time (t)
-			internal_file.set_last_write_time (t)
+			set_access (time)
+			set_date (time)
 		ensure
 			date_updated: date = time	-- But race condition possible
 		end
@@ -1083,8 +1088,7 @@ feature -- Element change
 		local
 			t: SYSTEM_DATE_TIME
 		do
-			t := feature {SYSTEM_DATE_TIME}.from_file_time (time.to_integer_64)
-			internal_file.set_last_access_time (t)
+			internal_file.set_last_access_time (dot_net_file_date_time (time))
 		ensure
 			acess_date_updated: access_date = time	-- But race condition might occur
 			date_unchanged: date = old date	-- Modulo a race condition
@@ -1097,8 +1101,7 @@ feature -- Element change
 		local
 			t: SYSTEM_DATE_TIME
 		do
-			t := feature {SYSTEM_DATE_TIME}.from_file_time (time.to_integer_64)
-			internal_file.set_last_write_time (t)
+			internal_file.set_last_write_time (dot_net_file_date_time (time))
 		ensure
 			access_date_unchanged: access_date = old access_date	-- But race condition might occur
 			date_updated: date = time					-- Modulo a race condition
@@ -1543,6 +1546,53 @@ feature {NONE} -- Inapplicable
 		end
 
 feature {FILE} -- Implementation
+
+	dot_net_base_file_time: INTEGER_64 is
+			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1601:00:00:00:00 
+		local
+			t: SYSTEM_DATE_TIME
+		once
+			t.make_with_year_and_month_and_day (1601 ,1 ,1 ,0 ,0 ,0 ,0)
+			Result := t.get_ticks
+		end
+		
+	eiffel_base_file_time: INTEGER_64 is
+			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1970:00:00:00:00 
+		local
+			t: SYSTEM_DATE_TIME
+		once
+			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
+			Result := t.get_ticks
+		end
+		
+	dot_net_time_offset: INTEGER_64 is
+			-- the offset in nano-seconds between 01/01/1601:00:00:00:00 and 01/01/1970:00:00:00:00
+		do
+			Result := eiffel_base_file_time - dot_net_base_file_time
+		end
+		
+	dot_net_file_date_time (time:INTEGER): SYSTEM_DATE_TIME is
+			-- convert an eiffel date to a .NET file date time
+			-- 'eiffel_date' must be the seconds from 01/01/1970:00:00:00:00 (file system time)
+			-- returns nano-seconds since 01/01/1601:00:00:00:00
+		local
+			t: SYSTEM_DATE_TIME
+		do
+			t.make_from_ticks (eiffel_base_file_time + (time.to_integer_64 * 10000000))
+			Result := t
+		end
+
+	eiffel_file_date_time (dot_net_date:SYSTEM_DATE_TIME): INTEGER is
+			-- convert a .NET file date time to an eiffel date
+			-- 'dot_net_date' must be the nano-seconds from 01/01/1601:00:00:00:00 (file system time)
+			-- returns seconds since 01/01/1970:00:00:00:00
+		local
+			i64: INTEGER_64
+		do
+			i64 := ((dot_net_date.get_ticks - eiffel_base_file_time) / 10000000).floor
+			Result := i64.to_integer
+		end
+		
 
 	mode: INTEGER
 			-- Input-output mode

@@ -173,6 +173,16 @@ feature -- Warning messages
 	w_Class_not_in_universe: STRING is "Class is not in the universe";
 	w_Clear_breakpoints: STRING is "Do you wish to clear the breakpoints?";
 
+	w_Default_ace_file_not_exist (f_name: STRING): STRING is
+		require
+			f_name_not_void: f_name /= Void
+		do
+			!! Result.make (30);
+			Result.append ("Default ace file: ");
+			Result.append (f_name);
+			Result.append ("%Ndoes not exist")
+		end;
+			
 	w_Directory_not_exist (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void
@@ -233,6 +243,24 @@ feature -- Warning messages
 									%supported.%N";
 
 	w_Invalid_cluster_name: STRING is "Invalid cluster name";
+
+	w_Invalid_creation_name (a_name: STRING): STRING is 
+		do
+			Result := "Invalid creation procedure name: "
+			Result.append (a_name)
+		end;
+
+	w_Invalid_root_class_name (a_name: STRING): STRING is 
+		do
+			Result := "Invalid root class name: "
+			Result.append (a_name)
+		end;
+
+	w_Invalid_system_name (a_name: STRING): STRING is 
+		do
+			Result := "Invalid system name: "
+			Result.append (a_name)
+		end;
 
 	w_Include_parents: STRING is "Do you wish to include parents?";
 

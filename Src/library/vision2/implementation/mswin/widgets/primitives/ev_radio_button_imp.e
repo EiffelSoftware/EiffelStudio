@@ -22,6 +22,8 @@ inherit
 			interface,
 			initialize,
 			enable_select
+		select
+			wel_make
 		end
 
 	EV_RADIO_PEER_IMP
@@ -31,7 +33,7 @@ inherit
 
 	WEL_RADIO_BUTTON
 		rename
-			make as wel_make,
+			make as wel_radio_make,
 			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
@@ -45,6 +47,7 @@ inherit
 			enabled as is_sensitive,
 			move as move_to
 		undefine
+			make_by_id,
 			window_process_message,
 			remove_command,
 			set_width,
@@ -148,6 +151,10 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/04 04:19:22  pichery
+--| Modified the inheritance since WEL_BITMAP_BUTTON now redefine make
+--| and make_by_id
+--|
 --| Revision 1.23  2000/02/29 00:40:44  brendel
 --| Added redefinition of `enable_select', see comments on feature.
 --| Added redefinition of `on_bn_clicked', to call `enable_select' first.

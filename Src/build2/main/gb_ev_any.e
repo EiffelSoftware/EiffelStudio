@@ -532,7 +532,10 @@ feature {NONE} -- Implementation
 				add_element_containing_integer (element, font_weight_string, font.weight)
 				add_element_containing_integer (element, font_shape_string, font.shape)
 				add_element_containing_integer (element, font_height_points_string, font.height_in_points)
-				if not font.preferred_families.is_empty then
+				
+					--|FIXME the `is_empty' check on the following line is to fix the bug reported by Guy Fokou
+					--|KB entry 4203. Not yet sure why `preferred_families' would have an empty entry.
+				if not font.preferred_families.is_empty and not (font.preferred_families @ 1).is_empty then
 					add_element_containing_string (element, font_preferred_family_string, font.preferred_families @ 1)	
 				end
 			end

@@ -112,12 +112,6 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-			-- Default font used to draw dialogs.
-		once
-			create Result.make
-		end
-
 end -- class PRECOMP_MAIN_WINDOW
 
 --|----------------------------------------------------------------

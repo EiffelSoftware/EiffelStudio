@@ -77,12 +77,6 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_background)
 		end
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-			-- Default font used to draw dialogs.
-		once
-			create Result.make
-		end
-
 	default_style: INTEGER is
 			-- The window do not redraw the children.
 		once

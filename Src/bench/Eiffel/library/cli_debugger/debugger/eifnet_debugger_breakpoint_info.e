@@ -10,7 +10,7 @@ deferred class
 inherit
 	ICOR_EXPORTER
 
-feature -- Access
+feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
 	eifnet_breakpoint (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64): EIFNET_BREAKPOINT is
 			-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
@@ -21,7 +21,7 @@ feature -- Access
 			if breakpoints.has (l_bp) then
 				Result := breakpoints.item (l_bp)
 			end			
-		end		
+		end
 
 	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 			-- request a new breakpoint addition
@@ -324,9 +324,9 @@ feature {NONE} -- Implementation
 						l_icd_bp.activate (True) -- not useful ... by default, but .. just to be sure ;)
 						Result := True
 
-						debug ("debugger_bp_trace") io.error.put_string ("BreakPoint ADDED ! %N") end
+						debug ("debugger_trace_breakpoint") io.error.put_string ("BreakPoint ADDED ! %N") end
 					else
-						debug ("debugger_bp_trace") 
+						debug ("debugger_trace_breakpoint") 
 							io.error.put_string ("Error[" + l_icd_code.last_error_code_id 
 									+ "] in ICorDebugCode->CreateBreakpoint for (" 
 									+ a_bp.feature_token.out + ")%N") 
@@ -334,7 +334,9 @@ feature {NONE} -- Implementation
 					end		
 				end
 			else
-				debug ("debugger_bp_trace") io.error.put_string ("Error while retrieving function_by_token (" + a_bp.feature_token.out + ")%N") end
+				debug ("debugger_trace_breakpoint") 
+					io.error.put_string ("Error while retrieving function_by_token (" + a_bp.feature_token.out + ")%N") 
+				end
 			end
 		end
 

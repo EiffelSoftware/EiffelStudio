@@ -1,22 +1,24 @@
--- Retrieve the "project.eif" of the precompiled project
+indexing
+
+	description: 
+		"Retrieve the `project.eif' of the precompiled project.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class PRECOMP_R
 
 inherit
 
 	WINDOWS;
-	SHARED_WORKBENCH;
 	SHARED_ENV;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
-	PROJECT_CONTEXT
-		redefine
-			init_precompilation_directory
-		end
+	PROJECT_CONTEXT;
+	COMPILER_EXPORTER;
+	SHARED_EIFFEL_PROJECT;
+	SHARED_WORKBENCH
 
 feature
-
-	init_precompilation_directory: PROJECT_DIR;
 
 	retried: BOOLEAN;
 
@@ -25,11 +27,12 @@ feature
 			-- information contained in `project_dir'.
 		local
 			project_name: STRING;
-			project_dir: PROJECT_DIR;
-			workb: WORKBENCH_I;
-			workbench_file: RAW_FILE;
+			project_dir: REMOTE_PROJECT_DIRECTORY;
+			project: E_PROJECT;
+			project_eif: RAW_FILE;
 			freeze: BOOLEAN;
-			vd41: VD41
+			vd41: VD41;
+			sys: SYSTEM_I
 		do
 			if not retried then
 				project_name := Environ.interpret (precompiled_project_name);
@@ -39,25 +42,20 @@ feature
 				Error_handler.checksum;
 	
 				if project_dir.is_valid then
-					init_precompilation_directory := project_dir;
-					if Precompilation_directory /= Precompilation_directory then end;
-					!!workb;
-					!!workbench_file.make_open_read (Precompilation_file_name);
-					workb ?= workb.retrieved (workbench_file);
-					workbench_file.close;
-	
+					Precompilation_directory.make_from_string (project_name)
+					!! project_eif.make_open_read (Precompilation_file_name);
+					project ?= Eiffel_project.retrieved (project_eif);
+					project_eif.close;
 					-- Check that it is a precompiled cluster
 	
-					if (workb /= Void) and then workb.system.precompilation then
-						freeze := System.freeze;
-	
-						Universe.copy (workb.universe);
-						System.copy (workb.system);
-	
-						System.set_freeze (freeze);
-	
-						System.server_controler.init;
-						System.set_precompilation (False);
+					sys := project.saved_workbench.system;
+					if (project /= Void) and then sys.is_precompiled then
+						Universe.copy (project.saved_workbench.universe);
+						Workbench.set_system (sys);
+		
+						sys.server_controler.init;
+						Eiffel_project.set_system (project.system);
+						sys.set_precompilation (False);
 						Workbench.set_precompiled_directory_name (project_name);
 						Universe.update_cluster_paths
 					else
@@ -69,10 +67,10 @@ feature
 				end;
 			else
 				if 
-					workbench_file /= Void and then 
-					not workbench_file.is_closed 
+					project_eif /= Void and then 
+					not project_eif.is_closed 
 				then
-					workbench_file.close
+					project_eif.close
 				end;
 				retried := False;
 				!! vd41;	
@@ -82,19 +80,17 @@ feature
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
+print ("retrying...%N");
+				--retried := True;
+				--retry
 			end;
 		end;
 
 	set_precomp_dir is
 			-- Creates the once function `Precompilation_directory'
-		local
-			project_dir: PROJECT_DIR;
 		do
-			!!project_dir.make (workbench.precompiled_directory_name);
-			init_precompilation_directory := project_dir;
-			if Precompilation_directory /= Precompilation_directory then end;
+			Precompilation_directory.make_from_string 
+						(Workbench.precompiled_directory_name);
 		end;
 
-end
+end -- class PRECOMP_R

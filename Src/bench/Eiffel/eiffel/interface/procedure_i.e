@@ -241,4 +241,27 @@ feature
 --			end;
 --		end;
 
+feature {NONE} -- Implementation
+
+    new_api_feature: E_ROUTINE is
+            -- API feature creation
+        do
+			!E_PROCEDURE! Result.make (feature_name, feature_id);
+			update_api (Result)
+        end;
+
+	update_api (f: E_ROUTINE) is
+			-- Update the attributes of api feature `f'.
+		local
+			args: like arguments;
+		do
+			args := arguments;
+			if args /= Void then
+				f.set_arguments (args.api_args);
+			end;	
+			f.set_has_precondition (has_precondition);
+			f.set_has_postcondition (has_postcondition);
+			f.set_obsolete_message (obsolete_message);
+		end;
+
 end

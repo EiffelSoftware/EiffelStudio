@@ -3,12 +3,26 @@ class ONCE_PROC_I
 inherit
 
 	DYN_PROC_I
+		rename
+			update_api as old_update_api
 		redefine
 			is_once,
 			--redefinable,
 			replicated,
 			unselected,
 			can_be_inlined
+		end
+	
+	DYN_PROC_I
+		redefine
+			is_once,
+			--redefinable,
+			replicated,
+			unselected,
+			can_be_inlined,
+			update_api
+		select
+			update_api
 		end
 	
 feature 
@@ -44,5 +58,14 @@ feature
 feature -- Inlining
 
 	can_be_inlined: BOOLEAN is False
+
+feature {NONE} -- Implementation
+
+	update_api (f: E_ROUTINE) is
+			-- Update api feature `f' attribute features.
+		do
+			old_update_api (f);
+			f.set_once (True)
+		end;
 
 end

@@ -1,9 +1,18 @@
 deferred class EXPORT_I 
 
 inherit
-	PART_COMPARABLE
 
-	
+	PART_COMPARABLE;
+	COMPILER_EXPORTER
+
+feature -- Access
+
+	is_exported_to (c: E_CLASS): BOOLEAN is
+			-- Is current exported to `c'?
+		do
+			Result := valid_for (c.compiled_info)
+		end;
+
 feature -- Queries
 
 	valid_for (client: CLASS_C): BOOLEAN is

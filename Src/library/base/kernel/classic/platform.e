@@ -143,6 +143,40 @@ feature -- Access bits size
 			"esptr_size"
 		end
 
+feature -- Access min max values
+
+	Maximum_character_code: INTEGER is
+			-- Largest supported code for CHARACTER values
+		do
+			Result := feature {CHARACTER}.Max_value
+		ensure
+			meaningful: Result >= 127
+		end
+
+	Maximum_integer: INTEGER is 
+			-- Largest supported value of type INTEGER.
+		do
+			Result := feature {INTEGER}.Max_value
+		ensure
+			meaningful: Result >= 0
+		end
+
+	Minimum_character_code: INTEGER is
+			-- Smallest supported code for CHARACTER values
+		do
+			Result := feature {CHARACTER}.Min_value
+		ensure
+			meaningful: Result <= 0
+		end
+
+	Minimum_integer: INTEGER is
+			-- Smallest supported value of type INTEGER
+		do
+			Result := feature {INTEGER}.Min_value
+		ensure
+			meaningful: Result <= 0
+		end
+
 indexing
 
 	library: "[

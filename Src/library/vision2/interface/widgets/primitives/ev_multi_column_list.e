@@ -228,8 +228,8 @@ feature -- Element change
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	set_column_widths (widths: ARRAY [INTEGER]) is         
-			-- Assign `widths' to column widths in order.
+	set_column_widths (widths: ARRAY [INTEGER]) is 
+				-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
 			widths_count_is_column_count: widths.count = column_count
@@ -240,13 +240,10 @@ feature -- Element change
 
 	set_row_height (a_height: INTEGER) is
 			-- Set all rows to `a_height'.
-		require
-			height_valid: a_height > 0
-		do
-			implementation.set_row_height (a_height)
-		ensure
-			a_height_assigned: a_height = row_height
-		end
+		obsolete
+				"Not implemented. Please let us know why you need this feature."
+			do
+			end
 
 feature -- Event handling
 
@@ -374,6 +371,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/20 18:40:50  rogers
+--| Made set_column_widths obsolete.
+--|
 --| Revision 1.51  2000/04/05 21:16:23  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -55,9 +55,7 @@ feature {NONE} -- Implementation
 		local
 			res: ARRAYED_LIST [EV_FONT]
 			a_font: EV_FONT
-			font_imp: EV_FONT_IMP
 			all_fonts: ARRAYED_LIST [STRING]
-			wel_font: WEL_FONT
 		do
 			create res.make (20)
 			all_fonts ?= font_enumerator.font_faces

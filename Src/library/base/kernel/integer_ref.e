@@ -41,15 +41,14 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			if item > 0 then
+			if item >= 0 then
 				Result := item
 			else
-				Result := - item
-			end
-			-- The following instruction in case we hit the minumum negative number,
-			-- which could yield a negative result when negated.
-			if Result <= 0 then
-				Result := 1
+					-- The following instruction in case
+					-- we hit the minumum negative number,
+					-- which could yield a negative result
+					-- when negated.
+				Result := - (item + 1)
 			end
 		end;
 

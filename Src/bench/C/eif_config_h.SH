@@ -652,6 +652,7 @@ $inttypes_include
 
 /* INTEGER_64 constant definition: */
 #define RTI64C(x)	$eif_integer_64_constant
+#define RTU64C(x)	$eif_natural_64_constant
 
 /* Is windows platform? */
 #$eif_win32	EIF_WIN32	/* NC */

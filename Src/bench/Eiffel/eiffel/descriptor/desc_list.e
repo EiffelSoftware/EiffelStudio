@@ -42,21 +42,23 @@ feature -- Creation
 			-- individual descriptors to `s'.
 		local
 			desc: DESCRIPTOR
+			local_class_types: LINKED_LIST [CLASS_TYPE]
 		do
 			base_class := c
 			class_types := c.types
+			local_class_types := class_types
 
-			make_filled (class_types.count)
+			make_filled (local_class_types.count)
 			from
 				start
-				class_types.start
+				local_class_types.start
 			until
 				after
 			loop
-				!! desc.make (class_types.item, s)
+				!! desc.make (local_class_types.item, s)
 				replace (desc)
 				forth
-				class_types.forth
+				local_class_types.forth
 			end
 		end
 
@@ -74,18 +76,20 @@ feature -- Insertion
 	put_invariant (f: INVARIANT_FEAT_I) is
 		local
 			u: POLY_UNIT
+			local_class_types: LINKED_LIST [CLASS_TYPE]
 		do
 			if f.has_poly_unit then
 				u := f.new_poly_unit (System.routine_id_counter.invariant_rout_id)
 				if u /= Void then
 					from
-						class_types.start
+						local_class_types := class_types
+						local_class_types.start
 						start
 					until
 						after
 					loop
-						item.set_invariant_entry (u.entry (class_types.item))
-						class_types.forth
+						item.set_invariant_entry (u.entry (local_class_types.item))
+						local_class_types.forth
 						forth
 					end
 				end
@@ -108,6 +112,7 @@ feature -- Insertion
 			desc: DESCRIPTOR
 			du: DESC_UNIT
 			void_entry: ENTRY
+			local_class_types: LINKED_LIST [CLASS_TYPE]
 		do
 				-- Get the polymorphical unit corresponding to `f'
 				--|Note: see if and how `has_poly_unit' may be used.
@@ -131,7 +136,8 @@ feature -- Insertion
 						-- DESC_UNIT structure.
 
 					from
-						class_types.start
+						local_class_types := class_types
+						local_class_types.start
 						start
 					until
 						after
@@ -154,8 +160,8 @@ feature -- Insertion
 							offset >= du.lower
 							offset <= du.upper
 						end
-						du.put (u.entry (class_types.item), offset)
-						class_types.forth
+						du.put (u.entry (local_class_types.item), offset)
+						local_class_types.forth
 						forth
 					end
 				end

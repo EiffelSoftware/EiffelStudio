@@ -33,19 +33,23 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
-			-- Pixmap that has been set.
-		local
-			p: POINTER
-		do
-			p := gtk_pixmap
-			if p /= Void then
-				Result ?= eif_object_from_c (p)
-				check
-					Result_not_void: Result /= Void
-				end
-			end
-		end
+
+	pixmap: EV_PIXMAP
+
+-- FIXME
+--	pixmap: EV_PIXMAP is
+--			-- Pixmap that has been set.
+--		local
+--			p: POINTER
+--		do
+--			p := gtk_pixmap
+--			if p /= Void then
+--				Result ?= eif_object_from_c (p)
+--				check
+--					Result_not_void: Result /= Void
+--				end
+--			end
+--		end
 
 feature -- Element change
 
@@ -58,6 +62,8 @@ feature -- Element change
 			remove_pixmap
 			create new_pixmap
 			new_pixmap.copy (a_pixmap)
+				--|FIXME remove this
+				pixmap := new_pixmap
 
 			imp ?= new_pixmap.implementation
 			C.gtk_container_add (pixmap_box, imp.c_object)
@@ -124,6 +130,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/03 01:45:17  oconnor
+--| hack to compensate for broken pixmap feature
+--|
 --| Revision 1.18  2000/03/03 01:07:11  oconnor
 --| added assignment attempt and check in parent
 --|

@@ -12,23 +12,35 @@
 
 #include "config.h"
 #include "portable.h"
+
+#ifdef EIF_WIN32
+#define print_err_msg fprintf
+#else
 #include "err_msg.h"
+#endif
+
 #include <sys/types.h>
 #include <stdio.h>
 #include "proto.h"
+
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+
 #include <signal.h>
 #include "logfile.h"
 #include "stream.h"
 #include <stdlib.h>
 
-
+#ifdef EIF_WIN32
+#include <windows.h>
+#define EWB			"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
+#else
 #define EIFFEL4		"/usr/lib/Eiffel4"	/* Default installation directory */
 #define EWB			"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
+#endif
 
 /* Function declaration */
 rt_public void dexit(int code);			/* Daemon's exit */
@@ -36,8 +48,14 @@ rt_private void die(void);				/* A termination signal was trapped */
 rt_private Signal_t handler(int sig);		/* Signal handler */
 rt_private void set_signal(void);		/* Set up the signal handler */
 
-extern STREAM *spawn_child(char *cmd, pid_t *child_pid);	/* Start up child with ipc link */
+#ifdef EIF_WIN32
+extern  STREAM *spawn_child(char *cmd, HANDLE *child_pid);	/* Start up child with ipc link */
+extern char *win_eif_getenv(char *k, char *app);	/* Get environment variable value */
+#else
+extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);	/* Start up child with ipc link */
 extern char *getenv(const char *);			/* Get environment variable value */
+#endif
+
 extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 rt_public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
@@ -48,27 +66,45 @@ rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 	(STREAM *) 0,		/* d_as */
 };
 
+#ifdef EIF_WIN32
+#ifndef USE_ADD_LOG
+rt_public char progname[30];	/* Otherwise defined in logfile.c */
+#endif
+#else
 #ifndef USE_ADD_LOG
 rt_public char *progname;	/* Otherwise defined in logfile.c */
 #endif
+#endif
 
-rt_public void main(int argc, char **argv)
+#ifdef EIF_WIN32
+rt_public void init_bench(void)
+#else
+rt_public void init_bench(int argc, char **argv)
+#endif
 {
-	/* This is the main entry point for the ISE daemon */
-
 	STREAM *sp;			/* Stream used to talk to the child */
+#ifdef EIF_WIN32
+	HANDLE pid;			/* Pid of the spawned child */
+#else
 	Pid_t pid;			/* Pid of the spawned child */
+#endif
 	char *ewb_path;		/* Path leading to the ewb executable */
-	char *eiffel4;		/* Eiffel 3 installation directory */
+	char *eiffel4;		/* Eiffel 4 installation directory */
 	char *platform;
 	char *eif_timeout;	/* Timeout specified in environment variable */
 
 	/* Check if the user wants to override the default timeout value
 	 * required by the children processes to launch and initialize
-	 * themselves. This new value is specified in the EIF_TIMEOUT 
+	 * themselves. This new value is specified in the EIF_TIMEOUT
 	 * environment variable
 	 */
-	eif_timeout = getenv("EIF_TIMEOUT");
+
+#ifdef EIF_WIN32
+	eif_timeout = win_eif_getenv ("EIF_TIMEOUT", "es4");
+#else
+	eif_timeout = getenv ("EIF_TIMEOUT");
+#endif
+
 	if (eif_timeout != (char *) 0)			/* Environment variable set */
 		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
@@ -77,21 +113,40 @@ rt_public void main(int argc, char **argv)
 	/* Compute program name, removing any leading path to keep only the name
 	 * of the executable file.
 	 */
+#ifdef EIF_WIN32
+/*	progname = rindex(argv[0], '\\');	/* Only last name if '\' found */
+/*	if (progname++ == (char *) 0)		/* There were no '\' */
+/*	strcpy (progname,"ebench.exe");		/* This must be the filename then */
+#else
 	progname = rindex(argv[0], '/');	/* Only last name if '/' found */
 	if (progname++ == (char *) 0)		/* There were no '/' */
 		progname = argv[0];				/* This must be the filename then */
+#endif
 
 #ifdef USE_ADD_LOG
+
+#ifdef EIF_WIN32
+  	/* Open a logfile in /tmp */
+	(void) open_log("\\tmp\\ised.log");
+/*	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+#else
 	progpid = getpid();					/* Program's PID */
 
 	/* Open a logfile in /tmp */
 	(void) open_log("/tmp/ised.log");
 	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
 #endif
+#endif
 
 	set_signal();						/* Set up signal handler */
 	signal (SIGABRT ,exit);
+#ifdef EIF_WIN32
+#ifdef SIGQUIT
 	signal (SIGQUIT, exit);
+#endif
+#else
+	signal (SIGQUIT, exit);
+#endif
 
 #ifdef USE_ADD_LOG
 	add_log(20, "ised process started");
@@ -102,15 +157,15 @@ rt_public void main(int argc, char **argv)
 	 * ewb process is in the bin/ subdirectory. In the name of standardization,
 	 * the /usr/lib/Eiffel4 path is used when the EIFFEL4 variable is not set.
 	 */
-	
+
+#ifdef EIF_WIN32
+	eiffel4 = win_eif_getenv("EIFFEL4", "es4");		/* Installation directory */
+	if ((eiffel4 == (char *) 0) || (strlen (eiffel4) == 0)) {	/* Environment variable not set */
+#else
 	eiffel4 = getenv("EIFFEL4");		/* Installation directory */
 	if (eiffel4 == (char *) 0) {		/* Environment variable not set */
-		print_err_msg(stderr, "The environment variable EIFFEL4 is not set\n");
-		exit (1);
-	}
-	platform = getenv ("PLATFORM");
-	if (platform == (char *) 0) {		/* Environment variable not set */
-		print_err_msg(stderr, "The environment variable PLATFORM is not set\n");
+#endif
+		print_err_msg (stderr, "The environment variable EIFFEL4 is not set\n");
 		exit (1);
 	}
 
@@ -119,9 +174,25 @@ rt_public void main(int argc, char **argv)
 		print_err_msg(stderr, "%s: out of memory\n", progname);
 		exit(1);
 	}
-	
+
 	strcpy(ewb_path, eiffel4);			/* Base name */
+#ifdef EIF_WIN32
+	strcat(ewb_path, "\\bench\\spec\\");
+#else
 	strcat(ewb_path, "/bench/spec/");
+#endif
+
+#ifdef EIF_WIN32
+	platform = win_eif_getenv ("PLATFORM", "es4");
+	if ((platform == (char *) 0) || (strlen(platform) == 0)){		/* Environment variable not set */
+#else
+	platform = getenv ("PLATFORM");
+	if (platform == (char *) 0) {		/* Environment variable not set */
+#endif
+		print_err_msg(stderr, "The environment variable PLATFORM is not set\n");
+		exit (1);
+	}
+
 	strcat(ewb_path, platform);
 	strcat(ewb_path, EWB);				/* Append process name */
 
@@ -132,6 +203,7 @@ rt_public void main(int argc, char **argv)
 		FIXME
 		check that es4 exists
 	*/
+
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
@@ -139,8 +211,17 @@ rt_public void main(int argc, char **argv)
 	}
 
 	daemon_data.d_cs = sp;				/* Record workbench stream */
-	daemon_data.d_ewb = (int) pid;		/* And keep track of the child pid */
+#ifdef EIF_WIN32
+	daemon_data.d_ewb = (HANDLE) pid;		/* And keep track of the child pid */
+#else
+	daemon_data.d_ewb = (int) pid;			/* And keep track of the child pid */
+#endif
 	prt_init();						/* Initialize IDR filters */
+
+#ifdef EIF_WIN32
+	free (ewb_path);
+#endif
+
 	dwide_listen();					/* Enter server mode... */
 
 	dexit(0);		/* Workbench died, so do we */
@@ -162,9 +243,9 @@ rt_private void set_signal(void)
 #ifdef SIGTERM
 	signal(SIGTERM, handler);
 #endif
-#ifdef BSD 
+#ifdef BSD
 	signal (SIGCHLD, SIG_IGN);
-#else
+#elif defined (SIGCLD)
 	signal (SIGCLD, SIG_IGN);
 #endif
 }
@@ -196,11 +277,26 @@ rt_public void dexit(int code)
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", code);
 #endif
+#ifdef EIF_WIN32
+	if (daemon_data.d_as) {
+		close_stream (daemon_data.d_as);
+		free (daemon_data.d_as);
+	}
+
+	if (daemon_data.d_cs) {
+		close_stream (daemon_data.d_cs);
+		free (daemon_data.d_cs);
+	}
+
+	if (daemon_data.d_ewb != 0)
+		CloseHandle (daemon_data.d_ewb);
+
+	prt_destroy();
+#endif
 	exit(code);
 }
 
 #ifndef HAS_STRDUP
-
 rt_public char *strdup (char *s)
 {
 	char *new;
@@ -215,3 +311,206 @@ rt_public char *strdup (char *s)
 }
 #endif
 
+#ifdef EIF_WIN32
+	//extern char **_argv;		/* External declaration for command-line argumnents */
+
+char szAppName [] = "ebench";		/* Window class name for temporary ebench window */
+HANDLE hInst;				/* Application main instance			 */
+HWND hwnd;				/* Handle of temporary ebench window 	*/
+
+char slogan1 [] = "Inquire about our hands-on Eiffel sessions in Santa Barbara\nthe ideal way to learn from the experts.\n<info@eiffel.com>, 805-685-1006.";
+char slogan2 [] = "\"Object-Oriented Software Construction\": the long-awaited\nsecond edition of this all-time best seller will be out\nin January of 1997! Reserve your copy today.";
+char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for 1997.\nGet the new, exciting Eiffel developments as they come out.\n<info@eiffel.com>, 805-685-1006.";
+char slogan4 [] = "For the latest on ISE Eiffel, Eiffel projects, on-line\ndocumentation, new products: come back often to\nhttp://www.eiffel.com - 4-star McKinley award-winning site.";
+char slogan5 [] = "Windows Tech Journal about ISE Eiffel, December 1996:\n\"Eiffel may be the most thoroughly object-oriented\nlanguage that's commercially available\".";
+char slogan6 [] = "Object Magazine, Editor's Choice, December 96: ISE Eiffel.\n\"My favorite testing tool is the Eiffel language. Eiffel\nprevents bugs by facilitation good software engineering.\"";
+char slogan7 [] = "Windows Tech Journal on ISE Eiffel, December 96:\"Tired of\ndevelopment environments that only pretend to be O-O?\nISE Eiffel will have you marching to a different drummmer\"";
+char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE until January 31, 1997, with any purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
+char slogan9[] = "Do you know about Eiffel's approach to Simple Concurrent\nObject-Oriented Programming? See http://www.eiffel.com\nor write to <info@eiffel.com>, 805-685-1006.";
+char slogan10[] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
+char slogan11[] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, VMS, OS/2 and more.";
+
+
+/*----------------------------------------------------------------*/
+/* Display a splash window while loading ise4.exe */
+/*----------------------------------------------------------------*/
+
+HPALETTE CreateDIBPalette (LPBITMAPINFO lpbmi, LPINT lpiNumColors)
+{
+	LPBITMAPINFOHEADER	lpbi;
+	LPLOGPALETTE		lpPal;
+	HANDLE				hLogPal;
+	HPALETTE			hPal = NULL;
+	int 				i;
+
+	lpbi = (LPBITMAPINFOHEADER)lpbmi;
+	if (lpbi->biBitCount <= 8) *lpiNumColors = (1 << lpbi->biBitCount);
+	else *lpiNumColors = 0;  // No palette needed for 24 BPP DIB
+
+	if (*lpiNumColors)
+	{
+		hLogPal = GlobalAlloc (GHND, sizeof (LOGPALETTE) +
+				sizeof (PALETTEENTRY) * (*lpiNumColors));
+		lpPal = (LPLOGPALETTE) GlobalLock (hLogPal);
+		lpPal->palVersion	 = 0x300;
+		lpPal->palNumEntries = *lpiNumColors;
+
+		for (i = 0;  i < *lpiNumColors;  i++)
+		{
+			lpPal->palPalEntry[i].peRed   = lpbmi->bmiColors[i].rgbRed;
+			lpPal->palPalEntry[i].peGreen = lpbmi->bmiColors[i].rgbGreen;
+			lpPal->palPalEntry[i].peBlue  = lpbmi->bmiColors[i].rgbBlue;
+			lpPal->palPalEntry[i].peFlags = 0;
+		}
+		hPal = CreatePalette (lpPal);
+		GlobalUnlock (hLogPal);
+		GlobalFree	 (hLogPal);
+	}
+	return hPal;
+}
+
+HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR* lphPalette)
+{
+    HRSRC  hRsrc;
+	HGLOBAL hGlobal;
+    HBITMAP hBitmapFinal = NULL;
+    LPBITMAPINFOHEADER  lpbi;
+    HDC hdc;
+    int iNumColors;
+
+    if (hRsrc = FindResource(hInstance, lpString, RT_BITMAP))
+	{
+		hGlobal = LoadResource(hInstance, hRsrc);
+		lpbi = (LPBITMAPINFOHEADER)LockResource(hGlobal);
+
+		hdc = GetDC(NULL);
+		*lphPalette =  CreateDIBPalette ((LPBITMAPINFO)lpbi, &iNumColors);
+		if (*lphPalette)
+		{
+			SelectPalette(hdc,*lphPalette,FALSE);
+			RealizePalette(hdc);
+		}
+		hBitmapFinal = CreateDIBitmap(hdc,
+			(LPBITMAPINFOHEADER)lpbi,
+			(LONG)CBM_INIT,
+			(LPSTR)lpbi + lpbi->biSize + iNumColors * sizeof(RGBQUAD),
+			(LPBITMAPINFO)lpbi,
+			DIB_RGB_COLORS );
+
+		ReleaseDC(NULL,hdc);
+		UnlockResource(hGlobal);
+		FreeResource(hGlobal);
+	}
+    return (hBitmapFinal);
+}
+
+void display_splash()
+{
+    HDC dc, MemDC;
+    HBITMAP Bitmap, OldBitmap;
+    BITMAP bm;
+    RECT sr;
+    LONG Wait;
+    HPALETTE palette;
+
+	int i,j,lines,random;
+	CHAR *slogan;
+	CHAR st[100];
+	SIZE size;
+
+    dc = CreateDC ("DISPLAY", NULL, NULL, NULL);
+    Bitmap = LoadResourceBitmap (hInst, MAKEINTRESOURCE (1024),  &palette);
+
+    MemDC = CreateCompatibleDC (dc);
+    OldBitmap = SelectObject (MemDC, Bitmap);
+    GetObject (Bitmap, sizeof (BITMAP), &bm);
+    sr.left = (GetSystemMetrics (SM_CXSCREEN) - bm.bmWidth) / 2;
+    sr.top = (GetSystemMetrics (SM_CYSCREEN) - bm.bmHeight) / 2;
+    sr.right = sr.left + bm.bmWidth;
+    sr.bottom = sr.top + bm.bmHeight;
+    SelectPalette (dc, palette, 1);
+    RealizePalette (dc);
+    BitBlt (dc, sr.left, sr.top, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
+
+    SelectObject (dc, GetStockObject (SYSTEM_FIXED_FONT));
+    memset (st, 0, sizeof (st));
+    i=0;
+    j=0;
+    lines=0;
+    random = GetTickCount () % 11;
+    switch (random)
+    {
+	case 0: slogan = slogan1;
+		break;
+	case 1: slogan = slogan2;
+		break;
+	case 2: slogan = slogan3;
+		break;
+	case 3: slogan = slogan4;
+		break;
+	case 4: slogan = slogan5;
+		break;
+	case 5: slogan = slogan6;
+		break;
+	case 6: slogan = slogan7;
+		break;
+	case 7: slogan = slogan8;
+		break;
+	case 8: slogan = slogan9;
+		break;
+	case 9: slogan = slogan10;
+		break;
+	case 10: slogan = slogan11;
+		break;
+    }
+
+    while (j<strlen(slogan))
+    {
+		st [i++] = slogan[j++];
+		if (slogan[j]=='\n')
+		{
+			GetTextExtentPoint32 (dc, st, strlen (st), &size);
+			TextOut (dc, sr.left + 5 + ((600 - size.cx) / 2),
+				370 + sr.top + lines * 20, st, strlen (st));
+			memset (st, 0, sizeof (st));
+			i=0;
+			lines++;
+			j++;
+		}
+    }
+	GetTextExtentPoint32 (dc, st, strlen (st), &size);
+
+	TextOut (dc, sr.left + 5 + ((600 - size.cx) / 2), 370 + sr.top + lines * 20, st, strlen (st));
+
+    DeleteObject (SelectObject (MemDC, OldBitmap));
+    DeleteDC (MemDC);
+    DeleteDC (dc);
+
+	Wait = GetTickCount() + 2000;
+    while (GetTickCount() < Wait);
+
+	InvalidateRect (NULL, NULL, FALSE);
+}
+
+/*** Callback for the temporary ebench window ***/
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message, LONG wParam, LONG lParam)
+{
+	return DefWindowProc (hwnd, message, wParam, lParam);
+}
+
+int WINAPI WinMain (HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
+{
+/* Initialize Ebench, launch es4 and establish communications */
+
+	display_splash ();
+	init_bench ();
+	return 0L;
+}
+#else
+
+rt_public void main(int argc, char **argv)
+{
+	/* This is the main entry point for the ISE daemon */
+	init_bench (argc, argv);
+}
+#endif

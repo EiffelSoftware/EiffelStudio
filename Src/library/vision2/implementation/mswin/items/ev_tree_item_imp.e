@@ -169,19 +169,21 @@ feature -- {EV_TREE_IMP}
 			-- we need to recurse through all children of the item and send this message.
 		do
 			remove_all_direct_references
-			
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
 	
 	remove_all_direct_references is
+			-- Recurse through all children and update `top_parent_imp.current_image_list_info'
+			-- removing images from image list as required.
 		local	
 			original_index: INTEGER
-			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
 			loc_tuple: TUPLE[INTEGER, INTEGER]
+			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
 			item_value: INTEGER
 		do
+			original_index := ev_children.index
 			from
 				ev_children.start
 			until
@@ -193,25 +195,25 @@ feature -- {EV_TREE_IMP}
 			ev_children.go_i_th (original_index)
 			if pixmap /= Void then
 				-- If the item has a pixmap then 
-				current_images := top_parent_imp.current_image_list_info
-					-- Retrieve information about image list of the tree.
 				if pixmap_imp.icon.item /= Void then
 					item_value := cwel_pointer_to_integer (pixmap_imp.icon.item)
 				else
 					item_value := cwel_pointer_to_integer (pixmap_imp.bitmap.item)
 				end
+				current_images := top_parent_imp.current_image_list_info
+					-- Retrieve the information about the image list.
 				loc_tuple := current_images.item (item_value)
-				-- Retrieve the tuple of info correspoding to the pixmap of the item.
-				if loc_tuple.integer_item (2) > 1 then
+					-- Retrieve the tuple of info correspoding to the pixmap of the item.
+				if loc_tuple.integer_item (2) > 0 then
 					loc_tuple.enter (loc_tuple.integer_item (2) - 1, 2)
 						--Decrease and store the number of items referencing this image.
-					io.putstring ("Decreasing to " + loc_tuple.integer_item (2).out + "%N")
-				elseif loc_tuple.integer_item (2) = 1 then
-					top_parent_imp.image_list.remove_image (loc_tuple.integer_item (1))
-						-- Remove the icon from the image_list
-					current_images.remove (item_value)
-						-- Remove the image from our current_image_list_info
-					io.putstring ("Completely removed image from image list.%N")
+					if loc_tuple.integer_item (2) = 0 then
+						-- If there are no longer any items referencing this image.
+						top_parent_imp.image_list.remove_image (loc_tuple.integer_item (1))
+							-- Remove the icon from the image_list
+						current_images.remove (item_value)
+							-- Remove the image from our current_image_list_info
+					end
 				end
 			end
 		end
@@ -534,8 +536,8 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.44  2000/03/27 22:16:11  rogers
---| Added on_orphaned, remove_all_direct_references, set_heavy_capture and release_heavy_capture.
+--| Revision 1.45  2000/03/27 22:56:31  rogers
+--| Fixed remove_all_direct_references.
 --|
 --| Revision 1.42  2000/03/24 20:51:52  rogers
 --| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be set before parenting the items.

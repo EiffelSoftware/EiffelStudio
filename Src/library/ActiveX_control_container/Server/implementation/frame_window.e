@@ -20,7 +20,7 @@ feature {NONE}  -- Initialization
 	make is
 			-- Creation. Implement if needed.
 		do
-			
+			make_top (wel_class_name)
 		end
 
 	make_from_pointer (cpp_obj: POINTER) is

@@ -1093,13 +1093,13 @@ Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
 								{$$ = create_node3(CREATION_AS,$2,$4,$5);yacc_error_code=274;}
 	|						TE_CREATION Creation_target Creation_call
 								{$$ = create_node3(CREATION_AS,NULL,$2,$3);yacc_error_code=274;}
-	|						TE_CREATION TE_LCURLY Creation_type TE_RCURLY Creation_target Creation_call
-								{$$ = create_node3(CREATION_AS,$3,$5,$6);yacc_error_code=274;}
+	|						TE_LCURLY Creation_type TE_RCURLY TE_CREATION Creation_target Creation_call
+								{$$ = create_node3(CREATION_AS,$2,$5,$6);yacc_error_code=274;}
 	;
 
-Creation_expression:		TE_CREATION Creation_call
+Creation_expression:		TE_LCURLY Creation_type TE_RCURLY TE_CREATION Creation_call
 								{$$=NULL;}
-	|						TE_CREATION TE_LCURLY Creation_type TE_RCURLY Creation_call
+	|						TE_BANG Creation_type TE_BANG Creation_call
 								{$$=NULL;}
 	;
 

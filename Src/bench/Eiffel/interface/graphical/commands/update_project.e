@@ -238,15 +238,10 @@ feature {NONE} -- Implementation
 	perform_compilation (argument: ANY) is
 			-- The real compilation. (This is melting.)
 		do
-			if 
-				not is_quick_melt or else 
-				not System_defined or else
-				not Eiffel_ace.successful or else
-				Eiffel_ace.date_has_changed
-			then
-				Eiffel_project.melt
-			else
+			if is_quick_melt then
 				Eiffel_project.quick_melt
+			else
+				Eiffel_project.melt
 			end
 		end
 

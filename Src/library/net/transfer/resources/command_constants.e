@@ -21,6 +21,8 @@ feature {NONE} -- Constants for FTP
 
 	Ftp_port_command: STRING is "PORT"
 
+	Ftp_passive_mode_command: STRING is "PASV"
+
 	Ftp_retrieve_command: STRING is "RETR"
 
 	Ftp_store_command: STRING is "STOR"

@@ -476,16 +476,6 @@ feature {NONE} -- Implementation
 			create Result.make_by_pattern (bitmap)
 		end
 
-
-feature {NONE} -- Implementation
-
-	extend (v: like item) is
-		do
-			--| This requires no implementation as we are able to implement this
-			--| platform independently using set_first and set_second.
-			--| See put from EV_SPLIT_AREA_I
-		end
-
 feature {EV_ANY_I}
 
 	interface: EV_SPLIT_AREA

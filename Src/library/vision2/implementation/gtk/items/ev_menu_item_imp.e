@@ -66,17 +66,18 @@ feature {NONE} -- Initialization
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 
-feature -- Event : command association
+feature -- Status setting
 
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
-			-- The toggle event doesn't work on gtk, then
-			-- we add both event command.
-		do
-			add_command ("activate", command, arguments)
-		end
+	set_selected is
+   			-- Set current item as the selected one.
+			-- We use this function only when the parent
+			-- of the parent (the menu) is an option button.
+		local
+			pos: INTEGER
+   		do
+			pos := c_gtk_option_button_index_of_menu_item (parent_imp.parent_imp.widget, widget)
+			gtk_option_menu_set_history (parent_imp.parent_imp.widget, pos)
+   		end
 
 feature -- Element change
 
@@ -101,6 +102,36 @@ feature -- Element change
 				show
 				gtk_object_unref (widget)
 			end
+		end
+
+feature -- Assertion
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- Works only when the parent is an option button.
+		local
+			selected_item_p: POINTER
+		do
+			-- Pointer to the menu_item which is currently selected:
+			selected_item_p := c_gtk_option_button_selected_menu_item (parent_imp.parent_imp.widget)
+			if widget = selected_item_p then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
+feature -- Event : command association
+
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENT) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+			-- The toggle event doesn't work on gtk, then
+			-- we add both event command.
+		do
+			add_command ("activate", command, arguments)
 		end
 
 feature {NONE} -- Implementation

@@ -33,7 +33,6 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			first_object: EV_COLORIZABLE
-			label: EV_LABEL
 			bounding_frame: EV_FRAME
 			horizontal_box: EV_HORIZONTAL_BOX
 			vertical_box: EV_VERTICAL_BOX
@@ -54,6 +53,8 @@ feature -- Access
 			vertical_box.extend (horizontal_box)
 			create frame
 			create b_area
+			b_area.set_pebble_function (agent retrieve_color (b_area))
+			b_area.drop_actions.extend (agent actually_set_background_color)
 			frame.set_minimum_width (40)
 			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
 			create button.make_with_text (Select_button_text)
@@ -91,6 +92,8 @@ feature -- Access
 			vertical_box.extend (horizontal_box)
 			create frame
 			create f_area
+			f_area.set_pebble_function (agent retrieve_color (f_area))
+			f_area.drop_actions.extend (agent actually_set_foreground_color)
 			frame.set_minimum_width (40)
 			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
 			create button.make_with_text (Select_button_text)
@@ -132,6 +135,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	retrieve_color (label: EV_DRAWING_AREA): EV_COLOR is
+			-- `Result' is color for pick and drop, retrieved
+			-- from `background_color' of `label'.
+		do
+			Result := label.background_color
+		end
+		
+
 	restore_background_color is
 			-- Restore `background_color' of objects to originals.
 		local
@@ -165,19 +176,23 @@ feature {NONE} -- Implementation
 
 	update_background_color is
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.
-		local
-			new_color: EV_COLOR
 		do
 			color_dialog.set_color (background_color)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
 			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				new_color := color_dialog.color
-				for_all_objects (agent {EV_COLORIZABLE}.set_background_color (new_color))
-				background_color := new_color
-				update_editors
-				update_background_display
+				actually_set_background_color (color_dialog.color)
 			end
 		end
+		
+	actually_set_background_color (color: EV_COLOR) is
+			-- Actually update the background colors.
+		do
+			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (color))
+			background_color := color
+			update_editors
+			update_background_display
+		end
+		
 		
 	update_background_display is
 			-- Update area displaying the background color of the EV_COLORIZABLE.
@@ -195,18 +210,21 @@ feature {NONE} -- Implementation
 
 	update_foreground_color is
 			-- Update `foreground_color' of objects through an EV_COLOR_DIALOG.
-		local
-			new_color: EV_COLOR
 		do
 			color_dialog.set_color (foreground_color)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
 			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				new_color := color_dialog.color
-				for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (new_color))
-				foreground_color := new_color
-				update_editors
-				update_foreground_display	
+				actually_set_foreground_color (color_dialog.color)
 			end
+		end
+		
+	actually_set_foreground_color (color: EV_COLOR) is
+			-- Actually update the foreground colors.
+		do
+			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (color))
+			foreground_color := color
+			update_editors
+			update_foreground_display
 		end
 		
 	build_string_from_color (color: EV_COLOR): STRING is

@@ -10,18 +10,32 @@ feature -- Access
 	Id_ico_application: INTEGER is 1
 	Bmp_toolbar: INTEGER is 1
 	Id_main_menu: INTEGER is 1
-	Cmd_open: INTEGER is 1001
-	Cmd_save: INTEGER is 1002
-	Cmd_print: INTEGER is 1003
-	Cmd_exit: INTEGER is 1004
-	Cmd_bold: INTEGER is 1005
-	Cmd_italic: INTEGER is 1006
-	Cmd_underline: INTEGER is 1007
-	Cmd_font: INTEGER is 1008
-	Cmd_color: INTEGER is 1009
-	Cmd_left: INTEGER is 1010
-	Cmd_center: INTEGER is 1011
-	Cmd_right: INTEGER is 1012
-	Cmd_bullet: INTEGER is 1013
+	Cmd_new: INTEGER is 1001
+	Cmd_open: INTEGER is 1002
+	Cmd_save: INTEGER is 1003
+	Cmd_save_as: INTEGER is 1004
+	Cmd_print: INTEGER is 1005
+	Cmd_exit: INTEGER is 1006
+	Cmd_bold: INTEGER is 1007
+	Cmd_italic: INTEGER is 1008
+	Cmd_underline: INTEGER is 1009
+	Cmd_font: INTEGER is 1010
+	Cmd_color: INTEGER is 1011
+	Cmd_left: INTEGER is 1012
+	Cmd_center: INTEGER is 1013
+	Cmd_right: INTEGER is 1014
+	Cmd_bullet: INTEGER is 1015
 
 end -- class APPLICATION_IDS
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

@@ -7,7 +7,7 @@ class
 	HTML_FILTER
 	
 inherit
-	DOCUMENT_FILTER
+	FILE_FILTER
 		redefine			
 			on_start_tag,
 			on_end_tag,
@@ -15,6 +15,8 @@ inherit
 			on_content,
 			clear
 		end
+
+	HTML_FILTER_MAPPINGS
 
 create
 	make
@@ -36,16 +38,18 @@ feature -- Tag
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of tag.
-		do			 
+		do
 			can_write_content := True
-			if Complex_element_mappings.has (a_local_part) then
+			if element_element_complex_mappings.has (a_local_part) then
 				process_complex_element (a_local_part, True)
-			elseif Basic_element_mappings.has (a_local_part) then
+			elseif element_element_mappings.has (a_local_part) then
 				write_element (a_local_part, True, False)
 			elseif Element_attribute_mappings.has (a_local_part) then
 				process_attribute_element (a_local_part)
-			elseif Element_style_mappings.has (a_local_part) then
+			elseif style_elements.has (a_local_part) then
 				process_class_attribute_element (a_local_part)
+			elseif character_mappings.has (a_local_part) then
+				process_character_mapping_element (a_local_part)
 			else
 				can_write_content := Content_elements.has (a_local_part)
 			end
@@ -63,11 +67,11 @@ feature -- Tag
 				end
 				conc_content := Void
 			end
-			if Complex_element_mappings.has (a_local_part) then
+			if element_element_complex_mappings.has (a_local_part) then
 				process_complex_element (a_local_part, False)
-			elseif Basic_element_mappings.has (a_local_part) then
+			elseif element_element_mappings.has (a_local_part) then
 				write_element (a_local_part, False, False)
-			elseif Element_style_mappings.has (a_local_part) then
+			elseif style_elements.has (a_local_part) then
 				write_element ("span", False, False)
 			elseif Bufferable.has (a_local_part) then
 				if not Buffered_tags.is_empty then
@@ -94,7 +98,7 @@ feature -- Tag
 			l_content,
 			l_prev: STRING
 			write: BOOLEAN
-		do					
+		do	
 			if can_write_content then
 				write := True
 				l_prev := Previous_elements.item
@@ -247,6 +251,14 @@ feature {NONE} -- Processing
 		do						
 			write_attribute (e, True)
 		end
+		
+	process_character_mapping_element (e: STRING) is
+			-- Convert element to associated character mapping
+		require
+			e_not_void: e /= Void
+		do						
+			on_content (character_mappings.item (e))
+		end
 
 	process_attribute (a_name, a_value: STRING) is
 			-- Process attribute
@@ -258,8 +270,14 @@ feature {NONE} -- Processing
 			l_att: STRING
 		do
 			l_prev_element := Previous_elements.item
-			l_att := " " + a_name + "=%"" + a_value + "%""
-			if l_prev_element /= Void then
+			
+			if l_prev_element /= Void and attributable_elements.has (l_prev_element) then
+				if attribute_attribute_mappings.has (a_name) then
+					l_att := " " + attribute_attribute_mappings.item (a_name) + "=%"" + a_value + "%""	
+				else
+					l_att := " " + a_name + "=%"" + a_value + "%""
+				end				
+				
 						-- List
 				if l_prev_element.is_equal ("list") then
 					if a_value.is_equal ("true") then
@@ -267,7 +285,7 @@ feature {NONE} -- Processing
 					elseif a_value.is_equal ("false") then						
 						write_element ("list_unordered", True, True)
 					end
-				elseif l_prev_element.is_equal ("stylesheet") then
+				else					
 					output_string.insert_string (l_att, attribute_write_position)
 					attribute_write_position := output_string.count
 				end
@@ -311,11 +329,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Access
 
-	description: STRING is
-			-- Textual description of filter
-		do
-			Result := "Web"	
-		end		
+	file_type: STRING is "html"
 
 	attribute_write_position,
 	attribute_value_write_position: INTEGER
@@ -341,7 +355,7 @@ feature {NONE} -- Output
 		require
 			e_not_void: e /= Void
 			e_not_empty: not e.is_empty
-			e_maps: Complex_element_mappings.has (e) or Basic_element_mappings.has (e)
+			e_maps: element_element_complex_mappings.has (e) or element_element_mappings.has (e)
 			not_in_attribute: not in_attribute
 		local
 			l_start_tag,
@@ -356,9 +370,9 @@ feature {NONE} -- Output
 			
 					-- Extract mapping from appropriate list
 			if is_complex then
-				l_name := Complex_element_mappings.item (e)
+				l_name := element_element_complex_mappings.item (e)
 			else
-				l_name := Basic_element_mappings.item (e)
+				l_name := element_element_mappings.item (e)
 			end
 			
 					-- Write value to output
@@ -376,7 +390,7 @@ feature {NONE} -- Output
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
-			e_is_valid_element: Element_attribute_mappings.has (e) or Element_style_mappings.has (e)
+			e_is_valid_element: element_attribute_mappings.has (e) or style_elements.has (e)
 			processing_in_attribute: in_attribute
 		local
 			l_att: STRING
@@ -389,159 +403,6 @@ feature {NONE} -- Output
 				attribute_value_write_position := attribute_write_position + Element_attribute_mappings.item (e).count + 2
 			end
 			output_string.insert_string (l_att, attribute_write_position)
-		end
-
-feature {NONE} -- Mapping Tables
-
-	basic_element_mappings: HASH_TABLE [STRING, STRING] is
-			-- Basic element to element mapping strings
-		once
-			create Result.make (15)
-			Result.compare_objects
-			Result.extend ("html", "document")
-			Result.extend ("head", "meta_data")
-			Result.extend ("table", "table")
-			Result.extend ("tr", "row")
-			Result.extend ("td", "cell")
-			Result.extend ("li", "item")
-			Result.extend ("div", "div")
-			Result.extend ("span", "span")
-			Result.extend ("pre", "code_block")
-			Result.extend ("b", "bold")
-			Result.extend ("i", "italic")
-			Result.extend ("br", "line_break")					
-			Result.extend ("a", "link")
-			Result.extend ("img", "image")
-			Result.extend ("title", "title")
-			Result.extend ("a", "image_link")
-			Result.extend ("meta", "meta")			
-		end
-		
-	complex_element_mappings: HASH_TABLE [STRING, STRING] is
-			-- Complex element to element mapping strings
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("body", "document_paragraph")
-			Result.extend ("p", "paragraph")
-			Result.extend ("p", "paragraph_end")
-			Result.extend ("", "url")
-			Result.extend ("map", "image_map")
-			Result.extend ("area", "area")
-			Result.extend ("MSHelp:link", "help_link")
-			Result.extend ("a", "image_link")
-			Result.extend ("p class=%"warning%"", "warning")
-			Result.extend ("p class=%"tip%"", "tip")
-			Result.extend ("p class=%"seealso%"", "seealso")
-			Result.extend ("p class=%"sample%"", "sample")
-			Result.extend ("p class=%"note%"", "note")
-			Result.extend ("p class=%"info%"", "info")			
-			Result.extend ("ol", "list_ordered")
-			Result.extend ("ul", "list_unordered")
-			Result.extend ("", "list")
-			Result.extend ("link", "stylesheet")
-		end
-		
-	element_attribute_mappings: HASH_TABLE [STRING, STRING] is
-			-- Elements which should be converted to HTML attributes
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("id", "id")			
-			Result.extend ("target", "target")
-			Result.extend ("border", "border")
-			Result.extend ("width", "width")
-			Result.extend ("height", "height")
-			Result.extend ("alt_text", "alt_text")
-			Result.extend ("usemap", "usemap")
-			Result.extend ("shape", "shape")
-			Result.extend ("co-ordinates", "co-ordinates")
-			Result.extend ("href", "url")
-			Result.extend ("src", "image_url")	
-			Result.extend ("rel", "rel")
-			Result.extend ("", "stylesheet")
-			
-			Result.extend ("content", "content")
-			Result.extend ("name", "name")
-		end	
-		
-	element_style_mappings: ARRAYED_LIST [STRING] is
-			-- Elements which represent `class' styles
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("string")			
-			Result.extend ("number")
-			Result.extend ("character")
-			Result.extend ("keyword")
-			Result.extend ("reserved_word")
-			Result.extend ("comment")
-			Result.extend ("local_variable")
-			Result.extend ("symbol")			
-			Result.extend ("local_variable_quoted")
-			Result.extend ("contract_tag")
-			Result.extend ("generics")
-			Result.extend ("indexing_tag")
-			Result.extend ("keyword")
-			Result.extend ("syntax")
-			Result.extend ("class_name")
-			Result.extend ("cluster_name")
-			Result.extend ("feature_name")
-		end	
-		
-	content_elements: ARRAYED_LIST [STRING] is
-			-- Elements denoting purely content
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("label")
-			Result.extend ("size")
-			Result.extend ("content")
-			Result.extend ("code")
-			Result.extend ("character")
-		end
-
-	Conc_content_elements: ARRAYED_LIST [STRING] is
-			-- Elements where content must be concatenated
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("alt_text")
-			Result.extend ("content")
-		end
-
-	attributable_elements: ARRAYED_LIST [STRING] is
-			-- Elements which may contain attributes
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("link")
-			Result.extend ("image")
-			Result.extend ("table")
-			Result.extend ("meta")
-			Result.extend ("map")
-			Result.extend ("list")
-			Result.extend ("stylesheet")
-			Result.extend ("span")
-			Result.extend ("image_link")
-		end
-		
-	attributes: ARRAYED_LIST [STRING] is
-			-- Attributes
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("ordered")
-			Result.extend ("output")
-			Result.extend ("title")
-		end
-
-	bufferable: ARRAYED_LIST [STRING] is
-			-- Bufferable elements
-		once
-			create Result.make (5)
-			Result.compare_objects
-			Result.extend ("heading")
 		end
 
 feature {NONE} -- Implementation

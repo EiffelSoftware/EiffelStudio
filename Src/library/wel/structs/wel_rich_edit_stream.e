@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			structure_make
 			set_cookie (0)
 			set_error (0)
-			cwel_editstream_set_pfncallback (item, cwel_editstream_callback)
+			cwel_editstream_set_pfncallback (item)
 		end
 
 feature -- Access
@@ -83,6 +83,13 @@ feature -- Basic operations
 		do
 		end
 
+	release_stream is
+			-- In order to avoid a memory leak when using a WEL_RICH_EDIT_STREAM
+			-- descendant, this need to be called.
+		do
+			cwel_release_editstream_object
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -106,10 +113,7 @@ feature {NONE} -- Removal
 
 	destroy_item is
 			-- Free `item'.
-		local
-			default_object: like Current
 		do
-			cwel_set_editstream_procedure_address (default_pointer)
 			c_free (item)
 			item := default_pointer
 		end
@@ -133,7 +137,7 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_set_pfncallback (ptr: POINTER; value: POINTER) is
+	cwel_editstream_set_pfncallback (ptr: POINTER) is
 		external
 			"C [macro %"estream.h%"]"
 		end
@@ -159,11 +163,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_release_editstream_object is
-		external
-			"C [macro %"estream.h%"]"
-		end
-
-	cwel_editstream_callback: POINTER is
 		external
 			"C [macro %"estream.h%"]"
 		end

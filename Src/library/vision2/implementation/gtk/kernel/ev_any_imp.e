@@ -262,7 +262,7 @@ feature {EV_ANY_I} -- Event handling
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			an_action_sequence.not_empty_actions.extend (
-				agent default_window_imp.connect_signal_to_actions_now (
+				agent connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
 					an_action_sequence,

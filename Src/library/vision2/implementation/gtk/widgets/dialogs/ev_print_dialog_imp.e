@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
-		local
-			a_cs: C_STRING
 		do
 			base_make (an_interface)
 			set_c_object (create_gtk_dialog)

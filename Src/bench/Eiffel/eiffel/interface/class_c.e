@@ -2532,8 +2532,8 @@ feature -- Convenience features
 	visible_level: VISIBLE_I is
 			-- Visible level
 		do
-			if is_used_as_separate or else name.is_equal ("sep_obj") then
-				!VISIBLE_EXPORT_I! Result
+			if is_used_as_separate then
+				!VISIBLE_SEPARATE_I! Result
 			else
 				Result := lace_class.visible_level
 			end

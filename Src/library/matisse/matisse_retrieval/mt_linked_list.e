@@ -244,3 +244,5 @@ feature {NONE} -- Implementation
 		end
 		
 end -- class MT_LINKED_LIST
+
+

@@ -30,14 +30,6 @@ inherit
 			is_equal
 		end
 
-
-	INTERNAL
-		export 
-			{NONE} all
-		undefine 
-			is_equal
-		end
-	
 creation
 	make 
 
@@ -47,7 +39,7 @@ feature {NONE} -- Initialization
 			-- Object from Database.
 		do
 			oid := db_oid
-		end -- make
+		end
 
 
 feature -- Access
@@ -180,7 +172,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			until 
-				i= keys_count + 1
+				i = keys_count + 1
 			loop
 				oids.force (c_ith_key (i), i)
  				i := i + 1
@@ -207,3 +199,5 @@ feature {NONE} -- Byte array manipulation
 		end
 		
 end -- class MT_OBJECT
+
+

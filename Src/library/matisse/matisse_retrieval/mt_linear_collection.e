@@ -161,3 +161,5 @@ feature {NONE} -- Implementation
 		end
 
 end -- class MT_LINEAR_COLLECTION
+
+

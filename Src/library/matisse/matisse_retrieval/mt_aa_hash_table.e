@@ -63,7 +63,8 @@ feature
 			i: INTEGER
 			default_value: G
 		do
-			relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
+	--		SM, 01/25/99: do not see the use of this line and worst, it implies errors
+	--		relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
 			if not successors_loaded then
 				successors_loaded := True
 				if is_persistent then
@@ -106,7 +107,7 @@ feature
 				j := 1
 				i := keys.lower
 			until 
-				i = keys.upper  -- item at upper is used for default key
+				i = keys.upper
 			loop
 				if keys.item (i) /= default_key then
 					all_keys.put (keys.item (i), j)
@@ -156,3 +157,5 @@ feature {NONE}
 	
 	
 end -- class MT_AA_HASH_TABLE
+
+

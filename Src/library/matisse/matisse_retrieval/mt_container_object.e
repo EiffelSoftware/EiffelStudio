@@ -1,5 +1,5 @@
 indexing
-	description: "MATISSE-Eiffel Binding"
+	description: "MATISSE-Eiffel Binding: "
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,3 +24,5 @@ feature
 		end
 				
 end -- class MT_CONTAINER_OBJECT
+
+

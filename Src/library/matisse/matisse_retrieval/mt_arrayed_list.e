@@ -55,8 +55,6 @@ feature -- Element change
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
-					-- 'v' may be already added to the successors list
-					-- because of the inverse relationship effect.
 				mt_append (v)
 			end
 		end
@@ -69,8 +67,6 @@ feature -- Element change
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
-					-- 'v' may be already added to the successors list
-					-- because of the inverse relationship effect
 				mt_append (v)
 			end
 		end
@@ -149,7 +145,7 @@ feature -- Removal
 	prune_all (v: like item) is
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.)
+			-- based on `object_comparison').
 			-- Leave cursor `after'.
 		do
 			{ARRAYED_LIST} Precursor (v)
@@ -199,3 +195,5 @@ feature {NONE} -- Implementation
 		end
 	
 end -- class MT_ARRAYED_LIST
+
+

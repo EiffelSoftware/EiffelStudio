@@ -113,7 +113,8 @@ feature
 			an_array: ARRAY [G]
 			any_array: ARRAY [ANY]
 		do
-			relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
+	--		SM, 01/25/99: do not see the use of this line and worst, it implies errors
+	--		relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
 			if not successors_loaded then
 				successors_loaded := True
 				if is_persistent then
@@ -165,7 +166,7 @@ feature
 							end
 							ht_force (a_cell.item, default_key)
 						end
-					end -- if has_default_att
+					end
 				end
 			end
 		end
@@ -267,4 +268,8 @@ feature {NONE}
 			!! att.make ("HASH_TABLE__att_values")
 			Result ?= att.get_value (Current)
 		end
+
 end -- class MT_AR_HASH_TABLE
+
+
+

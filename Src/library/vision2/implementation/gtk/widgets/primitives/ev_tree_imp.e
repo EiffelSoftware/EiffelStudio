@@ -33,7 +33,8 @@ inherit
 			pre_pick_steps,
 			post_drop_steps,
 			call_pebble_function,
-			pointer_over_widget
+			pointer_over_widget,
+			visual_widget
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -47,7 +48,8 @@ inherit
 			count,
 			wipe_out,
 			append,
-			initialize
+			initialize,
+			visual_widget
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -70,6 +72,7 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_set_placement (c_object, C.gtk_corner_top_left_enum)
 
 			list_widget := C.gtk_ctree_new (1, 0)
+			
 			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
 			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
@@ -83,6 +86,12 @@ feature {NONE} -- Initialization
 		
 			create tree_node_ptr_table.make (100)
 		end
+		
+	visual_widget: POINTER is
+			-- 
+		do
+			Result := list_widget
+		end
 
 	initialize is
 			-- Connect action sequences to signals.
@@ -90,7 +99,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
-			real_signal_connect (c_object, "motion_notify_event", agent motion_handler, Default_translate)
+			real_signal_connect (list_widget, "motion_notify_event", agent motion_handler, Default_translate)
 
 			real_signal_connect (
 				list_widget,

@@ -16,11 +16,11 @@
 #include <stdio.h>
 #include <windows.h>
 #include <commdlg.h>
-#define EIF_WINDOWS							/* Used to trick err_msg.h */
+#define EIF_WIN32							/* Used to trick err_msg.h */
 #include "argcargv.h"
-#include "..\..\..\run-time\error.h"		/* Needs relative path here... */
+#include "..\run-time\error.h"		/* Needs relative path here... */
 #include "err_msg.h"
-#include "eif_cons.h"
+#include "econsole.h"
 
 #define BUFFER_SIZE 128
 #define BUFFER_LINES 4000

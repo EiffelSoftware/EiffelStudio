@@ -54,8 +54,8 @@ iff not defined NO_COMPILE then
 	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\lib
 	quick_move library\vision2\spec\bcb\lib\zlib.lib
 	quick_move library\vision2\spec\msc\lib\zlib.lib
-	quick_move library\vision2\spec\bcb\lib\pnglib.lib
-	quick_move library\vision2\spec\msc\lib\pnglib.lib
+	quick_move library\vision2\spec\bcb\lib\libpng.lib
+	quick_move library\vision2\spec\msc\lib\libpng.lib
 	iff isdir %INSTALL_DIR\library\com then
 		remtrace com
 		cd %INSTALL_DIR\library\com\Clib

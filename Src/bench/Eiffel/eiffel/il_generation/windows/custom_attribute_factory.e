@@ -250,11 +250,15 @@ feature {NONE} -- Generation
 			else
 				int ?= e
 				if int /= Void then
-					inspect int.size
-					when 8 then a_ca_blob.put_integer_8 (int.integer_8_value)
-					when 16 then a_ca_blob.put_integer_16 (int.integer_16_value)
-					when 32 then a_ca_blob.put_integer_32 (int.integer_32_value)
-					when 64 then a_ca_blob.put_integer_64 (int.integer_64_value)
+					inspect int.il_element_type
+					when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then a_ca_blob.put_integer_8 (int.integer_8_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then a_ca_blob.put_integer_16 (int.integer_16_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then a_ca_blob.put_integer_32 (int.integer_32_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then a_ca_blob.put_integer_64 (int.integer_64_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then a_ca_blob.put_natural_8 (int.natural_8_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then a_ca_blob.put_natural_16 (int.natural_16_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then a_ca_blob.put_natural_32 (int.natural_32_value)
+					when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then a_ca_blob.put_natural_64 (int.natural_64_value)
 					end
 				else
 					string ?= e

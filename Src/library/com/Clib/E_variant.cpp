@@ -513,16 +513,14 @@ void ccom_set_currency_reference (VARIANT * variant, CY *a_value)
 
 EIF_REFERENCE ccom_bstr (VARIANT * variant)
 {
-	BSTR a_bstr = SysAllocString (V_BSTR(variant));
-	return rt_ce.ccom_ce_bstr ( a_bstr);
+	return rt_ce.ccom_ce_bstr (V_BSTR(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_bstr_reference (VARIANT * variant)
 {
-	BSTR a_bstr = SysAllocString (*(OLECHAR **)(V_BSTRREF(variant)));
-	return rt_ce.ccom_ce_pointed_bstr (&a_bstr);
+	return rt_ce.ccom_ce_pointed_bstr (V_BSTRREF(variant));
 };
 //-------------------------------------------------------------------
 

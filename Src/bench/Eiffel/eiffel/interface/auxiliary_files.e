@@ -713,8 +713,6 @@ feature -- Plug and Makefile file
 		do
 			system.makefile_generator.generate
 			system.makefile_generator.clear
--- FIXME
---			makefile_generator := Void
 		end
 
 end -- class AUXILIARY_FILES

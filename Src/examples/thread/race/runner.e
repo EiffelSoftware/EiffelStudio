@@ -8,16 +8,16 @@ create
 
 feature
 
-	make (pm: PROXY [MUTEX]; i: INTEGER; n: INTEGER) is
+	make (m: MUTEX; i: INTEGER; n: INTEGER) is
 		do
-			proxy_mutex := pm
+			mutex := m
 			id := i
 			nb_loop := n
 		end
 
 feature
 
-	proxy_mutex: PROXY [MUTEX]
+	mutex: MUTEX
 	id, nb_loop: INTEGER
 
 	execute is
@@ -29,7 +29,7 @@ feature
 			until
 				cpt > nb_loop
 			loop
-				proxy_mutex.item.lock
+				mutex.lock
 				from 
 					io.putstring("|")
 					i := 0
@@ -41,7 +41,7 @@ feature
 				end
 				io.putint(id)
 				io.putstring("%N")
-				proxy_mutex.item.unlock
+				mutex.unlock
 				cpt := cpt + 1
 			end
 		end

@@ -30,14 +30,6 @@ feature	-- Access
 			-- Boolean reference for exiting.
 			-- It has not to be expanded so that we can put it into a proxy.
 
-feature	-- Shared Access
-
-	p_buffer: PROXY [BUFFER]
-			-- Shared buffer. Proxy to global buffer.
-
-	p_finished: PROXY [BOOLEAN_REF]
-			-- Shared boolean for exiting.
-	
 feature	-- Initialization
 
 	make is
@@ -76,16 +68,14 @@ feature	-- Initialization
 			io.read_integer
 			it  :=  io.last_integer
 			create finished
-			create p_finished.put (finished)
-			create buffer.make (size, it, p_finished)
-			create p_buffer.put (buffer)
+			create buffer.make (size, it, finished)
 
 			from
 				i := 1
 			until
 				i > n_p
 			loop
-				create producer.make (p_buffer, i, p_finished)
+				create producer.make (buffer, i, finished)
 				i := i + 1
 			end
 			from
@@ -93,7 +83,7 @@ feature	-- Initialization
 			until
 				i > n_c
 			loop
-				create consumer.make (p_buffer, i,  p_finished)
+				create consumer.make (buffer, i,  finished)
 				i := i + 1
 			end
 			join_all			

@@ -2,29 +2,40 @@ system
 	pc
 
 root
-
-	PC (root_cluster): "make"
+	PC: make
 
 default
-
-	assertion (all); -- On Eiffel4.2 , assertion are not MT-safe.
-	multithreaded(yes);
-	-- Uncomment the next line if you have the base-mt precompilation
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt");
+	assertion(check)
+	assertion(require)
+	assertion(ensure)
+	assertion(loop)
+	assertion(invariant)
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(no)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(yes)
 
 cluster
-	
-	root_cluster: "$ISE_EIFFEL/examples/thread/procucer_consumer";
-				-- If you intend to modify any part of the example,
-				-- copy all the files of $ISE_EIFFEL/examples/thread/procucer_consumer"
-				-- into one of your directories, and replace
-				-- $ISE_EIFFEL/examples/thread/procucer_consumer" by the name of
-				-- that directory on the above line.
+	root_cluster:		"$ISE_EIFFEL/examples/thread/producer_consumer"
 
 	all base:		"$ISE_EIFFEL/library/base"
 		exclude
-			"desc";"table_eiffel3"
+			"desc"; "table_eiffel3"; 
 		end
 
-	thread:			"$ISE_EIFFEL/library/thread";
+	thread:		"$ISE_EIFFEL/library/thread"
+
 end

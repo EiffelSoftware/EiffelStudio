@@ -15,11 +15,11 @@ inherit
 		rename
 			extendible_directory as shared_extendible_directory
 		end;
-	COMPILER_EXPORTER;
-	SHARED_BENCH_LICENSES
+	SHARED_WORKBENCH
 		redefine
 			lace, system, universe
 		end;
+	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT
 		rename
 			system_defined as eiffel_system_defined
@@ -150,8 +150,6 @@ feature -- Commands
 				else
 					Lace.recompile;
 				end;
-
-				check_precompiled_licenses;
 
 				System.recompile;
 

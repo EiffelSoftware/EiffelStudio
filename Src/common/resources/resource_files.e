@@ -63,18 +63,13 @@ feature -- File names
 
 	user_general: STRING is
 			-- General user level resource specification file
-			-- ($EIF_DEFAULTS/application_name/general or
-			-- $HOME/eifinit/application_name/general)
+			-- $HOME/eifinit/application_name/general
 		local
 			fn: FILE_NAME
 		do
-			if Eifdefaults /= Void then
-				!!fn.make_from_string (Eifdefaults);
-			elseif Home /= Void then
-				!!fn.make_from_string (Home);
+			if Home /= Void then
+				!! fn.make_from_string (Home);
 				fn.extend (Eifinit);
-			end
-			if fn /= Void then
 				fn.extend (application_name);
 				fn.set_file_name (General);
 				Result := fn
@@ -83,24 +78,48 @@ feature -- File names
 
 	user_specific: STRING is
 			-- Platform specific user level resource specification file
-			-- ($EIF_DEFAULTS/application_name/spec/$PLATFORM or
-			-- $HOME/eifinit/application_name/spec/$PLATFORM)
+			-- $HOME/eifinit/application_name/spec/$PLATFORM
 		local
 			fn: FILE_NAME
 		do
-			if Eifdefaults /= Void and Platform /= Void then
-				!!fn.make_from_string (Eifdefaults);
-			elseif Home /= Void and Platform /= Void then
+			if Home /= Void and Platform /= Void then
 				!!fn.make_from_string (Home);
 				fn.extend (Eifinit);
-			end
-			if fn /= Void then
 				fn.extend (application_name);
 				fn.extend (Spec);
 				fn.set_file_name (Platform);
 				Result := fn
 			end
 		end;
+
+	defaults_general: STRING is
+			-- General user level resource specification file
+			-- $EIF_DEFAULTS/application_name/general
+		local
+			fn: FILE_NAME
+		do
+			if Eifdefaults /= Void then
+				!! fn.make_from_string (Eifdefaults);
+				fn.extend (application_name);
+				fn.set_file_name (General);
+				Result := fn
+			end
+		end;
+
+	defaults_specific: STRING is
+			-- Platform specific user level resource specification file
+			-- $EIF_DEFAULTS/application_name/spec/$PLATFORM
+		local
+			fn: FILE_NAME
+		do
+			if Eifdefaults /= Void and Platform /= Void then
+				!! fn.make_from_string (Eifdefaults);
+				fn.extend (application_name);
+				fn.extend (Spec);
+				fn.set_file_name (Platform);
+				Result := fn
+			end
+		end
 
 feature {NONE} -- Implementation
 

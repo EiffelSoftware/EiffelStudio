@@ -1,3 +1,9 @@
+/* 
+	ISE_DESC.C - File for ISE_DESC.DLL
+
+	DESC is the - dynamic shared external call
+*/
+
 #include "ise_desc.h"
 
 /*
@@ -15,15 +21,15 @@
 	EIF_INTEGER j; \
 	for (i = ArgCount-1; i >= 0; i--) \
 			{ \
-			j = ArgValues [i];	\
-			__asm 	push j 	\
+			j = ArgValues [i];      \
+			__asm   push j  \
 			}
 
 #define POP_ALL \
 	__asm add esp, ArgCount \
 	__asm add esp, ArgCount \
 	__asm add esp, ArgCount \
-	__asm add esp, ArgCount 	
+	__asm add esp, ArgCount         
 
 __declspec(dllexport) BOOL desc_call_dll32_boolean
 (
@@ -34,8 +40,8 @@ __declspec(dllexport) BOOL desc_call_dll32_boolean
 {
 	/*
 	 * `ProcAddress' is the address of the function to call
-	 *	 (see function `desc_get_function_pointer'
-	 *	  and `desc_get_function_index_pointer' ).
+	 *       (see function `desc_get_function_pointer'
+	 *        and `desc_get_function_index_pointer' ).
 	 * `ArgCount' is the number of parameters.
 	 * `ArgTypes' contains the parameter types.
 	 * `ArgVales' contains the parameter values.

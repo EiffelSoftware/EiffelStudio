@@ -126,10 +126,10 @@ int len;		/* Length of the string */
 	return i < len ? ++i : 0;
 }
 
-public void str_replace(str, new, str_len, new_len, start, end)
+public void str_replace(str, new, string_length, new_len, start, end)
 char *str;			/* The original string */
 char *new;			/* The new string for substring replacement */
-int str_len;		/* Length of the original string */
+int string_length;	/* Length of the original string */
 int new_len;		/* Length of the replacing substring */
 int start;			/* Index within string where replacement starts */
 int end;			/* Index within string where replacement stops */
@@ -153,16 +153,16 @@ int end;			/* Index within string where replacement stops */
 	 */
 
 	if (i < new_len) {
-		f = str + (str_len - 1);	/* Address of last character in string */
-		str_len += (new_len - i);	/* String gains that many characters */
-		t = str + (str_len - 1);	/* New address of last character */
+		f = str + (string_length - 1);	/* Address of last character in string */
+		string_length += (new_len - i);	/* String gains that many characters */
+		t = str + (string_length - 1);	/* New address of last character */
 		for (i = f - (str + end - 1); i > 0; i--)
 			*t-- = *f--;
 	} else if (i > new_len) {
 		f = str + end;				/* First character after replacement spot */
 		t = str + (start - 1);		/* Address of first character replaced */
 		t += new_len;				/* Where first char after substring comes */
-		for (i = (str + str_len) - f; i > 0; i--)
+		for (i = (str + string_length) - f; i > 0; i--)
 			*t++ = *f++;
 	}
 
@@ -173,10 +173,10 @@ int end;			/* Index within string where replacement stops */
 	bcopy(new, str + (start - 1), new_len);
 }
 
-public void str_insert(str, new, str_len, new_len, idx)
+public void str_insert(str, new, string_length, new_len, idx)
 char *str;			/* The original string */
 char *new;			/* The new string to be inserted */
-int str_len;		/* Length of the original string */
+int string_length;		/* Length of the original string */
 int new_len;		/* Length of the inserted substring */
 int idx;			/* Index within string where insertion begins */
 {
@@ -192,10 +192,10 @@ int idx;			/* Index within string where insertion begins */
 	 * starting at 'idx'.
 	 */
 
-	f = str + (str_len - 1);	/* Address of last character in string */
-	str_len += new_len;			/* String gains that many characters */
-	t = str + (str_len - 1);	/* New address of last character */
-		for (i = str_len - new_len - idx + 1; i > 0; i--)
+	f = str + (string_length - 1);	/* Address of last character in string */
+	string_length += new_len;			/* String gains that many characters */
+	t = str + (string_length - 1);	/* New address of last character */
+		for (i = string_length - new_len - idx + 1; i > 0; i--)
 			*t-- = *f--;
 
 	/* Now copy the string at the beginning. No overlap is to be feared, so we
@@ -345,15 +345,15 @@ int l;			/* And Her Majesty, the Length */
     *str = c;
 }
 
-public void str_append(str, new, str_len, new_len)
+public void str_append(str, new, string_length, new_len)
 char *str;			/* The original string */
 char *new;			/* The new string to be appended */
-int str_len;		/* Length of the original string */
+int string_length;		/* Length of the original string */
 int new_len;		/* Length of the appended substring */
 {
 	/* Append 'new' at the end of 'str' */
 
-	bcopy (new, str + str_len, new_len);
+	bcopy (new, str + string_length, new_len);
 }
 
 /*

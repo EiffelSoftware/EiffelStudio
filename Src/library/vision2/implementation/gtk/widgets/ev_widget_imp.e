@@ -192,11 +192,14 @@ feature -- Access
 		local
 			wind: EV_WINDOW_IMP
 		do 
-			wind ?= Current
-			if wind /= Void then
-				Result := x_position
-			elseif parent_imp /= Void
-				then Result := x_position + parent_imp.screen_x
+			if parent_imp /= Void then
+				wind ?= parent_imp
+				if wind /= Void then
+					Result := wind.inner_screen_x
+				else
+					Result := parent_imp.screen_x
+				end
+				Result := Result + x_position
 			end
 		end
 
@@ -205,11 +208,14 @@ feature -- Access
 		local 
 			wind: EV_WINDOW_IMP 
 		do 
-			wind ?= Current
-			if wind /= Void then
-				Result := y_position
-			elseif parent_imp /= Void then
-				Result := y_position + parent_imp.screen_y
+			if parent_imp /= Void then
+				wind ?= parent_imp
+				if wind /= Void then
+					Result := wind.inner_screen_y
+				else
+					Result := parent_imp.screen_y
+				end
+				Result := Result + y_position
 			end
 		end
 	

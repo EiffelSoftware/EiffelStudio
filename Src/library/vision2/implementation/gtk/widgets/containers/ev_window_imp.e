@@ -18,10 +18,12 @@ inherit
 
 	EV_CONTAINER_IMP
 		undefine
-			x_position,
-			y_position,
 			replace
 		redefine
+			x_position,
+			y_position,
+			screen_x,
+			screen_y,
 			minimum_width,
 			minimum_height,
 			set_minimum_size,
@@ -32,7 +34,8 @@ inherit
 			on_key_event,
 			width,
 			height,
-			on_size_allocate
+			on_size_allocate,
+			hide
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -80,48 +83,16 @@ feature  -- Access
 			end
 		end
 
-	x_position: INTEGER is
+	screen_x, x_position: INTEGER is
 			-- Horizontal position relative to parent.
-		local
-		--	a_x: INTEGER
-			a_aux_info: POINTER
 		do
-		--	if is_displayed then
-		--		C.gdk_window_get_position (
-		--			C.gtk_widget_struct_window (c_object),
-		--			$a_x,
-		--			NULL
-		--		)
-		--		Result := a_x
-		--	else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
-					Result := C.gtk_widget_aux_info_struct_x (a_aux_info)
-				end
-		--	end
-			
+			Result := inner_screen_x
 		end
 
-	y_position: INTEGER is
+	screen_y, y_position: INTEGER is
 			-- Vertical position relative to parent.
-		local
-		--	a_y: INTEGER
-			a_aux_info: POINTER
 		do
-		--	if is_displayed then
-		--		C.gdk_window_get_position (
-		--			C.gtk_widget_struct_window (c_object),
-		--			NULL,
-		--			$a_y
-		--		)
-		--		Result := a_y
-		--	else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
-					Result := C.gtk_widget_aux_info_struct_y (a_aux_info)
-				end
-	--		end
-			
+			Result := inner_screen_y
 		end
 
 	width: INTEGER is
@@ -271,6 +242,13 @@ feature -- Status setting
 			Precursor
 		end
 
+	hide is
+		do
+			set_position (x_position, y_position)
+			Precursor
+		end
+		
+
 feature -- Element change
 
 	replace (v: like item) is
@@ -403,7 +381,58 @@ feature -- Element change
 			end
 			menu_bar := Void
 		end
+		
+feature {EV_WIDGET_IMP} -- Position retrieval
 
+	inner_screen_x: INTEGER is
+			-- Horizontal position of the window on screen, 
+			-- decoration are not taken into account.
+		local
+			a_x: INTEGER
+			a_aux_info: POINTER
+		do
+				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
+				--| It should be test with other window managers
+			if is_displayed then
+				C.gdk_window_get_position (
+					C.gtk_widget_struct_window (c_object),
+					$a_x,
+					NULL
+				)
+				Result := a_x
+			else	
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := C.gtk_widget_aux_info_struct_x (a_aux_info)
+				end
+			end
+		end
+		
+	inner_screen_y: INTEGER is
+			-- Vertical position of the window on screen, 
+			-- decoration are not taken into account.
+		local
+			a_y: INTEGER
+			a_aux_info: POINTER
+		do
+				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
+				--| It should be test with other window managers
+			if is_displayed then
+				
+			C.gdk_window_get_position (
+				C.gtk_widget_struct_window (c_object),
+				NULL,
+				$a_y
+			)
+			Result := a_y
+			else	
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := C.gtk_widget_aux_info_struct_y (a_aux_info)
+				end
+			end
+		end
+		
 feature {EV_DRAWING_AREA_IMP, EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 	set_focus_widget (a_focus_wid: EV_WIDGET_IMP) is

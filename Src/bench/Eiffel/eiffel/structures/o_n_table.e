@@ -39,7 +39,7 @@ end;
 					after
 				loop
 					if equal (item_for_iteration, latest_old) then
-						content.put (new_value, iteration_position);
+						content.put (new_value, pos_for_iter);
 						control := Changed_constant;
 					end;
 					forth
@@ -76,10 +76,10 @@ end;
 				if equal (item_for_iteration, latest_new) then
 debug
 	io.error.putstring ("FOUND ");
-	io.error.putint (iteration_position);
+	io.error.putint (pos_for_iter);
 	io.error.new_line;
 end;
-					content.put (old_value, iteration_position);
+					content.put (old_value, pos_for_iter);
 					control := Changed_constant;
 				end;
 				forth

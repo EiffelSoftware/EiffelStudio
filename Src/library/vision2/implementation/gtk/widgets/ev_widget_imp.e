@@ -340,6 +340,12 @@ feature -- Element change
 				C.gtk_widget_struct_window (c_object),
 				cursor_imp.c_object
 			)
+
+			if cursor_imp.code /= 0 then
+				create pointer_style.make_with_code (cursor_imp.code)
+			else
+				create pointer_style.make_with_pixmap (cursor_imp.pixmap)
+			end
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -818,6 +824,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/03/15 23:32:35  king
+--| Added code in set_pointer_style to set pointer_style attribute
+--|
 --| Revision 1.61  2000/03/15 22:46:38  king
 --| Uncommented pointer_style external call
 --|

@@ -127,9 +127,9 @@ feature {NONE} -- Behaviors
 	notify (a_control: WEL_CONTROL; notify_code: INTEGER) is
 		do
 			if notify_code = En_change then
-				if not class_name_edit.text.empty and then not
-					eiffel_file_edit.text.empty and then not
-					h_file_edit.text.empty then
+				if not class_name_edit.text.is_empty and then not
+					eiffel_file_edit.text.is_empty and then not
+					h_file_edit.text.is_empty then
 					translate_button.enable
 					file_menu.enable_item (Cmd_file_translate)
 				else

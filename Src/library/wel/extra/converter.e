@@ -10,9 +10,9 @@ feature -- Initialization
 			-- Create a class `a_class_name' in the file `output_file'.
 		require 
 			a_class_name_not_void: a_class_name /= Void
-			a_class_name_not_empty: not a_class_name.empty
+			a_class_name_not_empty: not a_class_name.is_empty
 			output_file_not_void: output_file /= Void
-			output_file_not_empty: not output_file.empty
+			output_file_not_empty: not output_file.is_empty
 		do
 			class_name := a_class_name
 			class_name.to_upper
@@ -34,7 +34,7 @@ feature -- Basic operations
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_Void: input_file /= Void
-			input_file_not_empty: not input_file.empty
+			input_file_not_empty: not input_file.is_empty
 			input_file_exists: file_exists (input_file)
 		local
 			a_file: PLAIN_TEXT_FILE
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			-- Add a `id' to the class file.
 		require
 			id_not_void: id /= Void
-			id_not_empty: not id.empty
+			id_not_empty: not id.is_empty
 			a_file_not_void: a_file /= Void
 			a_file_exists: a_file.exists
 			a_file_is_open: a_file.is_open_write

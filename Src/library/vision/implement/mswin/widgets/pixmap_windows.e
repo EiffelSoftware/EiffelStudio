@@ -10,6 +10,11 @@ class
 inherit
 	PIXMAP_I
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -115,7 +120,24 @@ feature -- Output
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
+		require else
+			a_file_name_not_void: a_file_name /= Void
+			a_file_name_not_empty: not a_file_name.empty
+			dib_not_void: dib /= Void
+			dib_exists: dib.exists
+		local
+			dc: WEL_SCREEN_DC
+			bitmap: WEL_BITMAP
+			file_name: FILE_NAME
 		do
+			!! file_name.make_from_string (a_file_name)
+			if file_name.is_valid then
+				!! dc
+				dc.get
+				!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+				dc.save (bitmap, file_name)
+				dc.release
+			end
 		end
 
 feature -- Implementation

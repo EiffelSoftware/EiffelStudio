@@ -1,29 +1,23 @@
 indexing
 
 	description:	
-		"Window with a clickable text";
+		"Window with a scrollable text";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CLICK_WINDOW 
+deferred class CLICK_WINDOW 
 
 inherit
 
-	TEXT_STRUCT
-	TEXT_FORMATTER
+	TEXT_STRUCT;
+	TEXT_AREA
 		export
-			{NONE} all;
 			{ANY} process_text
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
 			process_after_class,
-			process_feature_name_text, process_class_name_text
-		end;
-	OUTPUT_WINDOW
-		undefine
-			copy, setup, consistent, is_equal
-		redefine
+			process_feature_name_text, process_class_name_text,
 			put_address, put_feature_name, put_feature,
 			put_error, put_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax
@@ -34,10 +28,14 @@ feature -- Properties
 	focus_start, focus_end: INTEGER; 
 			-- Bounds of focus in the structured text
 
+feature -- Access
+
 	focus: STONE is
 			-- The stone where the focus currently is.
 		do
-			Result := item(position).node
+			if position > 0 and then position <= clickable_count then
+				Result := item (position).node
+			end
 		end;
 
 feature -- Settings
@@ -90,7 +88,7 @@ feature -- Input
 			image.append (stone_string);
 			length := stone_string.count;
 			!!p.make (a_stone, text_position, text_position + length);
-			put__right (p);
+			add_click_stone (p);
 			text_position := text_position + length;
 		end;
 
@@ -189,7 +187,7 @@ io.putstring ("%N");
 end;
 			if clickable_count /= 0 then
 				search_by_index (i);
-				set_bounds (item(position).start_focus, item (position).end_focus)
+				set_bounds (item (position).start_focus, item (position).end_focus)
 			end
 		end;
 
@@ -253,8 +251,8 @@ feature -- Output processing for text_struct
 			class_stone: CLASSC_STONE
 		do
 			put_string (" -- class ");
-			!! class_stone.make (t.class_c.e_class);
-			put_stone (class_stone, t.class_name);
+			!! class_stone.make (t.e_class);
+			put_stone (class_stone, t.e_class.name_in_upper);
 			new_line
 		end;
 

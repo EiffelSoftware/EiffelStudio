@@ -1,8 +1,15 @@
+indexing
+
+	description: 
+		"Stone representating a breakable point.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BREAKABLE_STONE 
 
 inherit
 
-	UNFILED_STONE
+	STONE
 		redefine
 			header
 		end;
@@ -13,7 +20,7 @@ creation
 
 	make
 	
-feature -- making
+feature {NONE} -- Initialization
 
 	make (e_feature: E_FEATURE; break_index: INTEGER) is
 		require
@@ -23,7 +30,7 @@ feature -- making
 			index := break_index
 		end; -- make
  
-feature
+feature -- Properties
 
 	routine: E_FEATURE;
 			-- Associated routine
@@ -31,7 +38,14 @@ feature
 	index: INTEGER;
 			-- Breakpoint index in `routine'
 
-feature -- dragging
+feature -- Access
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Setstop
+		end;
 
 	sign: STRING is 
 			-- Textual representation of the breakable mark.
@@ -56,9 +70,15 @@ feature -- dragging
 
 	origin_text: STRING is ":::";
 
-	stone_type: INTEGER is do Result := Breakable_type end;
+	stone_type: INTEGER is 
+		do 
+			Result := Breakable_type 
+		end;
  
-	stone_name: STRING is do Result := l_Showstops end;
+	stone_name: STRING is 
+		do 
+			Result := l_Showstops 
+		end;
 
 	signature: STRING is "";
  
@@ -76,5 +96,13 @@ feature -- dragging
 		do
 			Result := False
 		end
+
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_breakable (Current)
+		end;
 
 end -- class BREAKABLE_STONE

@@ -11,6 +11,11 @@ class
 
 inherit
 
+	APPLICATION_METHOD
+		rename
+			method_name as routine_name
+		end
+
 	SCROLLABLE_LIST_ELEMENT
 
 creation
@@ -25,6 +30,7 @@ feature -- Creation
 			valid_routine_name: rout_name /= Void and not rout_name.empty
 			valid_arguments: arg_list /= Void and not arg_list.empty
 		do
+			!! precondition_list.make
 			routine_name := rout_name
 			argument_list := arg_list
 		end
@@ -37,6 +43,7 @@ feature -- Creation
 			arg: APPLICATION_ARGUMENT
 		do
 			routine_name := a_command.command_name
+			!! precondition_list.make
 			!! argument_list.make
 			!! arg.make (a_command.argument_name, a_command.argument_type)
 			argument_list.extend (arg)
@@ -49,25 +56,24 @@ feature -- Scrollable element
 		do
 			!! Result.make (0)
 			Result.append (routine_name)
-			Result.append (" (")
-			argument_list.start
-			Result.append (argument_list.item.eiffel_text)
-			from
-				argument_list.forth
-			until
-				argument_list.after
-			loop
-				Result.append ("; ")
+			if not argument_list.empty then
+				Result.append (" (")
+				argument_list.start
 				Result.append (argument_list.item.eiffel_text)
-				argument_list.forth
+				from
+					argument_list.forth
+				until
+					argument_list.after
+				loop
+					Result.append ("; ")
+					Result.append (argument_list.item.eiffel_text)
+					argument_list.forth
+				end
+				Result.append (")")
 			end
-			Result.append (")")
 		end
 
 feature -- Attributes
-
-	routine_name: STRING
-			-- Name of the routine
 
 	argument_list: LINKED_LIST [APPLICATION_ARGUMENT]
 			-- List of arguments

@@ -3,7 +3,7 @@ class
 inherit
 	SHARED_LIBRARY_CONSTANTS
 
-creation
+create
 	make
 
 feature
@@ -21,10 +21,10 @@ feature
 			a: ARRAY [INTEGER]
 			r1, r2: REAL
 		do
-			!! dll.make ("testdesc.dll")
+			create  dll.make ("testdesc.dll")
 				-- Create a DLL_32 object
 
-			!! routine.make_by_name (dll, "Sum",
+			create  routine.make_by_name (dll, "Sum",
 				<<T_string, T_array, T_short_integer>>,
 				T_integer)
 				-- Create a DLL_32_ROUTINE object
@@ -46,18 +46,18 @@ feature
 			io.put_string (routine.string_result)
 			io.new_line
 
-			!! routine.make_by_name (dll, "double_function",
+			create  routine.make_by_name (dll, "double_function",
 				<<T_double, T_double>>, T_double)
 			routine.call (<<90.9, 2.2>>)
 			io.putdouble (routine.double_result)
 
-			!! routine.make_by_name (dll, "output",
+			create  routine.make_by_name (dll, "output",
 				<<T_integer, T_integer>>, T_integer)
 			routine.call (<<5, 6>>)
 			io.putint (routine.integer_result)
 			io.new_line
 
-			!! routine.make_by_name (dll, "float_function",
+			create  routine.make_by_name (dll, "float_function",
 				<<T_real, T_real>>, T_real)
 			r1 := 12.2
 			r2 := 6.6

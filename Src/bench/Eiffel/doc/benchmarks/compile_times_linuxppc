@@ -2,10 +2,89 @@ LinuxPPC G4 with AltiVec technology and 733MHz
 From version 5.3.0417 to 5.y (was compiled against YDL 2.3)
 From version 5.x to 5.3.0417 (was compiled with LinuxPPC 2000 Q4)
 
+5.6
+===
+
+5.6.0119 RTEA with use of once manifest string normal runtime (19556420):
+848.000u 15.810s 16:20.46 88.1% 0+0k 0+0io 3795pf+0w
+847.510u 16.450s 16:09.92 89.0% 0+0k 0+0io 3812pf+0w
+
+5.6.0119 RTEA with use of once manifest string optimized runtime II (19560436):
+842.780u 16.210s 16:19.28 87.7% 0+0k 0+0io 3823pf+0w
+843.640u 15.620s 16:06.35 88.9% 0+0k 0+0io 3794pf+0w
+
+5.6.0119 RTEA with use of once manifest string optimized runtime (19598352):
+864.390u 16.340s 16:40.17 88.0% 0+0k 0+0io 3877pf+0w
+864.500u 16.350s 16:35.19 88.5% 0+0k 0+0io 3852pf+0w
+
+5.6.0119 RTEA with no use once manifest string normal runtime (19524716):
+860.400u 15.910s 16:26.33 88.8% 0+0k 0+0io 3870pf+0w
+860.180u 16.550s 16:20.27 89.4% 0+0k 0+0io 3758pf+0w
+
+5.6.0119 RTEA with no use once manifest string optimized runtime II (19525308):
+859.500u 16.740s 16:33.33 88.2% 0+0k 0+0io 3852pf+0w
+861.590u 15.910s 16:20.76 89.4% 0+0k 0+0io 3769pf+0w
+
+5.6.0119 RTEA with no use once manifest string optimized runtime (19562704):
+867.370u 15.680s 16:40.78 88.2% 0+0k 0+0io 3735pf+0w
+866.230u 15.880s 16:24.81 89.5% 0+0k 0+0io 3802pf+0w
+
+5.6.0119 RTEA batch:
+851.950u 16.690s 16:52.43 85.7% 0+0k 0+0io 2370pf+0w
+
 5.5
 ===
 
+5.5.0812 RTEA:
+850.250u 15.920s 16:07.59 89.5% 0+0k 0+0io 3831pf+0w
+856.970u 15.750s 16:21.48 88.9% 0+0k 0+0io 3810pf+0w
+859.900u 16.490s 16:32.90 88.2% 0+0k 0+0io 3708pf+0w
+864.240u 15.590s 16:29.71 88.8% 0+0k 0+0io 3958pf+0w
+862.310u 15.630s 16:44.51 87.3% 0+0k 0+0io 3771pf+0w
+860.730u 16.260s 16:29.87 88.5% 0+0k 0+0io 3762pf+0w
+
+5.5.0715 RTEA:
+859.160u 16.580s 16:28.23 88.6% 0+0k 0+0io 3783pf+0w
+860.920u 15.950s 16:25.13 89.0% 0+0k 0+0io 3742pf+0w
+
+5.5.0708 RTEA:
+860.080u 16.060s 16:22.40 89.1% 0+0k 0+0io 3738pf+0w
+860.550u 16.190s 16:26.11 88.9% 0+0k 0+0io 3762pf+0w
+863.620u 16.320s 17:01.74 86.1% 0+0k 0+0io 3750pf+0w
+864.890u 15.730s 16:04.78 91.2% 0+0k 0+0io 3831pf+0w
+
+5.5.0708 RTEA batch:
+856.110u 15.450s 16:01.90 90.6% 0+0k 0+0io 2413pf+0w
+
+5.5.0621 non-RTEA compiling non-RTEA:
+635.900u 15.240s 12:22.90 87.6% 0+0k 0+0io 3106pf+0w
+
+5.5.0621 RTEA compiling non-RTEA:
+894.820u 15.990s 16:21.77 92.7% 0+0k 0+0io 3870pf+0w
+
+5.5.0621 RTEA (non-optimized cache with INHERIT_TABLE size of 35 instead of 100:
+854.370u 15.740s 16:20.87 88.7% 0+0k 0+0io 3890pf+0w
+855.000u 17.110s 16:15.95 89.3% 0+0k 0+0io 3781pf+0w
+860.520u 16.320s 16:24.67 89.0% 0+0k 0+0io 3841pf+0w
+
+5.5.0621 RTEA (optimized cache):
+927.450u 16.460s 17:28.19 90.0% 0+0k 0+0io 3798pf+0w
+927.600u 16.910s 17:29.71 89.9% 0+0k 0+0io 3776pf+0w
+
+5.5.0621 RTEA (non-optimized cache):
+902.480u 15.140s 17:04.85 89.5% 0+0k 0+0io 3850pf+0w
+900.230u 16.440s 17:03.86 89.5% 0+0k 0+0io 3781pf+0w
+
+5.5.0621 RTEA (new special allocation):
+909.660u 16.030s 17:49.05 86.5% 0+0k 0+0io 3783pf+0w
+909.660u 16.420s 17:46.36 86.8% 0+0k 0+0io 3802pf+0w
+911.160u 15.620s 16:51.12 91.6% 0+0k 0+0io 3901pf+0w
+896.790u 16.080s 17:05.19 89.0% 0+0k 0+0io 3792pf+0w
+903.850u 16.800s 17:03.60 89.9% 0+0k 0+0io 3863pf+0w
+
 5.5.0605 RTEA:
+905.570u 15.520s 16:33.81 92.6% 0+0k 0+0io 3783pf+0w
+905.050u 16.640s 17:39.08 87.0% 0+0k 0+0io 3770pf+0w
 907.870u 16.060s 17:15.35 89.2% 0+0k 0+0io 3898pf+0w
 908.210u 15.920s 17:18.33 89.0% 0+0k 0+0io 3794pf+0w
 

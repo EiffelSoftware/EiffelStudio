@@ -28,22 +28,33 @@ cluster
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
-	all system_:		"$ISE_EIFFEL\library.net\system"
 
-	all drawing:		"$ISE_EIFFEL\library.net\drawing"
+assembly
+	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-	all forms:		"$ISE_EIFFEL\library.net\winforms"
+	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+							"SYSTEM_DLL_"
+				end
 
-	all accessibility:		"$ISE_EIFFEL\library.net\accessibility"
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+						   "XML_"
+				end
 
-external
+	system_drawing: "System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+				prefix
+							"DRAWING_"
+				end
 
-	assembly:
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll"
+	accessibility:     "Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_runtime_serialization_formatters_soap:            "System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_windows_forms: "System.Windows.Forms", "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+							"WINFORMS_"
+				end
+
 
 end

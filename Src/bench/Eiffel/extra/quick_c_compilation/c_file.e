@@ -32,7 +32,7 @@ feature
 
 	fread (l_string: POINTER; l_size: INTEGER; l_count: INTEGER; l_file: POINTER): INTEGER is
 		external
-			"C [macro %"stdio.h%"]"
+			"C [macro %"stdio.h%"] (void *, size_t, size_t, FILE *): EIF_INTEGER"
 		end
 
 end -- class C_FILE

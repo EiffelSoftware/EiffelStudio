@@ -670,7 +670,7 @@ feature {EB_EDITOR_TOOL} -- Update
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then
-				fn := clone (file_name)
+				fn := file_name.twin
 				create backup_file.make (file_name)
 				backup_file.delete
 				fn.keep_head (fn.count - 4)

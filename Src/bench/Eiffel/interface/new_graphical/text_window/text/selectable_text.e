@@ -136,7 +136,7 @@ feature -- Selection Changes
 			text_is_not_empty: not is_empty
 			cursor_not_void: c /= Void
 		do
-			selection_cursor := clone (c)
+			selection_cursor := c.twin
 			enable_selection
 		ensure
 			selection_cursor.is_equal (c)
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 		do
 			if was_first_block then
 				create cursor.make_from_integer (1, Current)
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 			end
 			Precursor {TEXT} (was_first_block)
 		end

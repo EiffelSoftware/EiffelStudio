@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			development_window ?= explorer_bar_manager
 			development_window.remove_tool_window (a_widget)
 			 
-			clone_item_list := clone (item_list)
+			clone_item_list := item_list.twin
 			create new_order.make (item_list.count)
 			item_list.wipe_out
 			from

@@ -184,7 +184,7 @@ feature {NONE} -- Handle mouse clicks
 				if (click_count \\ 2) /= 1 then
 					if shifted_key and then (not text_displayed.has_selection) then
 							-- No selection? We have to start one.
-						text_displayed.set_selection_cursor(clone (text_displayed.cursor))
+						text_displayed.set_selection_cursor(text_displayed.cursor.twin)
 						text_displayed.enable_selection
 						old_l_number := text_displayed.cursor.y_in_lines
 					end
@@ -252,7 +252,7 @@ feature {NONE} -- Handle mouse clicks
 				if click_count /= 1 then
 					if click_count = 2 then
 						empty_word_selection := False
-						stop := clone (cursor)
+						stop := cursor.twin
 						text_displayed.set_selection_cursor (cursor)
 						text_displayed.selection_cursor.go_start_word
 						cursor.go_end_word
@@ -451,7 +451,7 @@ feature {NONE} -- Handle mouse clicks
 				-- Save cursor position.	
 			if not text_displayed.has_selection then	
 					-- There is no selection, so we start a selection.
-				text_displayed.set_selection_cursor(clone (cursor))
+				text_displayed.set_selection_cursor(cursor.twin)
 				text_displayed.enable_selection
 			end
 	

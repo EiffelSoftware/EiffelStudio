@@ -188,7 +188,7 @@ feature -- Status setting
 			syntax_error := False
 			expression := new_expr
 			
-			s := clone (expression)
+			s := expression.twin
 			remove_prefix_operators (s)
 			s.left_adjust
 			s.right_adjust
@@ -816,6 +816,8 @@ feature {NONE} -- Implementation
 
 	remove_prefix_operators (s: STRING) is
 			-- Remove prefix operators from the head of `s' and put them as function calls at the end.
+		require
+			s_not_void: s /= Void
 		local
 			op: STRING
 			i: INTEGER
@@ -1337,8 +1339,7 @@ feature {NONE} -- Implementation
 			prev_cluster: CLUSTER_I
 			dv: ABSTRACT_DEBUG_VALUE
 		do
-			lower_name := clone (n)
-			lower_name.to_lower
+			lower_name := n.as_lower
 			cse := Application.status.current_stack_element
 			if cse = Void then
 				check

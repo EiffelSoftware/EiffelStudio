@@ -62,7 +62,7 @@ feature -- Access
 			if t_blank = Void then
 				Result := ""
 			else
-				Result := clone (t_blank.image)	
+				Result := t_blank.image.twin
 				from
 					t_blank ?= t_blank.next
 				until

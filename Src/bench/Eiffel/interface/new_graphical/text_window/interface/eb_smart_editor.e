@@ -347,7 +347,7 @@ feature {NONE} -- Handle keystokes
 					look_for_keyword := True
 					if c = ' ' then
 						if latest_typed_word_is_keyword then
-							cur := clone (text_displayed.cursor)
+							cur := text_displayed.cursor.twin
 							cur.go_left_char
 							token := cur.token
 							if token /= Void then
@@ -478,7 +478,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 		do
 			auto_point := False
 			if is_feature_signature then
-				completed := clone (cmp)
+				completed := cmp.twin
 				ind := completed.last_index_of (':', completed.count)
 				lp := completed.last_index_of (')', completed.count)
 				if ind > 0 and ind > lp then
@@ -594,9 +594,8 @@ feature {NONE} -- syntax completion
 			tok: EDITOR_TOKEN
 			is_else, is_then: BOOLEAN
 		do
-			Result := clone (token.image)
-			test := clone (Result)
-			test.to_lower
+			Result :=token.image.twin
+			test := Result.as_lower
 			is_else := test.is_equal ("else")
 			is_then := test.is_equal ("then")
 			if is_else or is_then then
@@ -611,16 +610,14 @@ feature {NONE} -- syntax completion
 				kw ?= tok
 				if kw /= Void then
 					if is_else then
-						test := clone (kw.image)
-						test.to_lower
+						test :=kw.image.as_lower
 						if test.is_equal ("or") then
 							Result.prepend ("or ")
 						elseif test.is_equal ("require") then
 							Result.prepend ("require ")
 						end
 					elseif is_then then
-						test := clone (kw.image)
-						test.to_lower
+						test := kw.image.as_lower
 						if test.is_equal ("and") then
 							Result.prepend ("and ")
 						elseif test.is_equal ("ensure") then

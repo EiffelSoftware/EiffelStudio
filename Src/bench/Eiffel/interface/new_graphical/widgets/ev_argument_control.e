@@ -108,10 +108,10 @@ feature {NONE} -- Retrieval
 								then
 										-- Add argument to list.
 									create l_row
-									l_row.extend (clone (argument_value))
+									l_row.extend (argument_value.twin)
 									ace_arguments_list.extend (l_row)
 										-- Add argument to combo.
-									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (argument_value)))
+									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
 								end					
 								defaults.remove
 							when feature {FREE_OPTION_SD}.working_directory then
@@ -338,15 +338,13 @@ feature {NONE} -- Storage
 		require
 			file_exists: arguments_file.exists
 			file_not_open: arguments_file.is_closed
-		local
-			argument_text: STRING
 		do
 			from
 				arguments_file.wipe_out
 				arguments_file.open_write
 				arguments_file.start
 					-- Also save current argument here for retrieval in new execution of compiler.
-				arguments_file.putstring ("[" + clone (saved_argument) + "]")
+				arguments_file.putstring ("[" + saved_argument + "]")
 				if argument_check.is_selected then
 					arguments_file.putstring ("o")
 				end
@@ -355,8 +353,7 @@ feature {NONE} -- Storage
 			until
 				user_arguments_list.after
 			loop
-				argument_text := clone (user_arguments_list.item.i_th (1))
-				arguments_file.putstring (argument_text)
+				arguments_file.put_string (user_arguments_list.item.i_th (1))
 				arguments_file.new_line
 				user_arguments_list.forth
 			end
@@ -787,7 +784,7 @@ feature {NONE} -- Actions
 				
 					-- Disallow new line character.
 				l_caret_pos := current_argument.caret_position
-				l_text := clone (current_argument.text.substring (1, l_caret_pos - 2))
+				l_text := current_argument.text.substring (1, l_caret_pos - 2)
 				if not l_text.is_empty then
 					l_text.replace_substring_all ("%N", "")
 					l_caret_pos := l_text.count
@@ -824,7 +821,7 @@ feature {NONE} -- Actions
 			l_argument: STRING
 		do	
 			if not current_argument.text.is_empty then
-				l_argument := clone (current_argument.text)
+				l_argument := current_argument.text
 				create l_row
 				l_row.put_front (l_argument)
 				saved_argument := l_argument

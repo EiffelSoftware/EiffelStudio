@@ -715,7 +715,7 @@ feature -- Class names completion
 			end
 			if complete then
 				if not show_all then
-					cname := clone (insertion @ 2)
+					cname := insertion.item (2).twin
 					if cname /= Void then
 						cname.left_adjust
 						cname.right_adjust
@@ -736,8 +736,7 @@ feature -- Class names completion
 						until
 							classes.after
 						loop
-							create class_name.make_with_name (clone (classes.key_for_iteration))
-							class_name.to_upper
+							create class_name.make_with_name (classes.key_for_iteration.as_upper)
 						 	class_list.extend (class_name)
 							classes.forth
 						end
@@ -749,8 +748,7 @@ feature -- Class names completion
 							classes.after
 						loop
 							if matches (classes.key_for_iteration, cname) then
-								create class_name.make_with_name (clone (classes.key_for_iteration))
-								class_name.to_upper
+								create class_name.make_with_name (classes.key_for_iteration.as_upper)
 							 	class_list.extend (class_name)
 							end
 							classes.forth

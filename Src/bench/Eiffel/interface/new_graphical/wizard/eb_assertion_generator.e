@@ -57,8 +57,7 @@ feature {NONE} -- Implementation
 		local
 			l: STRING
 		do
-			l := clone (a_type)
-			l.to_lower
+			l := a_type.as_lower
 			Result := l.is_equal ("integer_16") or l.is_equal ("integer_8") or
 				l.is_equal ("integer") or l.is_equal ("integer_64")
 		end
@@ -68,8 +67,7 @@ feature {NONE} -- Implementation
 		local
 			l: STRING
 		do
-			l := clone (a_type)
-			l.to_lower
+			l := a_type.as_lower
 			Result := l.is_equal ("pointer")
 		end
 
@@ -78,8 +76,7 @@ feature {NONE} -- Implementation
 		local
 			l: STRING
 		do
-			l := clone (a_type)
-			l.to_lower
+			l := a_type.as_lower
 			Result := l.is_equal ("character") or l.is_equal ("wide_character")
 		end
 
@@ -88,8 +85,7 @@ feature {NONE} -- Implementation
 		local
 			l: STRING
 		do
-			l := clone (a_type)
-			l.to_lower
+			l := a_type.as_lower
 			Result := l.is_equal ("real") or l.is_equal ("double")
 		end
 
@@ -98,8 +94,7 @@ feature {NONE} -- Implementation
 		local
 			l: STRING
 		do
-			l := clone (a_type)
-			l.to_lower
+			l := a_type.as_lower
 			Result := l.is_equal ("string")
 		end
 

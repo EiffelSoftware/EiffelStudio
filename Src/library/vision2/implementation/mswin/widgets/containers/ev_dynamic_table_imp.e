@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			list := ev_children
 			columns_minimum.make_filled (columns)
 
-			-- A first loop for the children that take only one cell
+			-- A first loop for the children that takes only one cell
 			from
 				cur := list.cursor
 				minimums := columns_minimum

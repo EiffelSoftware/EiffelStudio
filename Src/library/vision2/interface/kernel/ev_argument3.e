@@ -9,16 +9,16 @@ class
 	EV_ARGUMENT3 [G, H, I]
 	
 inherit
-	EV_ARGUMENT2
+	EV_ARGUMENT2 [G, H]
 
 creation 
-	make
+	make_3
 	
 feature -- Initialization
 	
-	make (first_argument: G; second_argument: H; third_argument: I) is
+	make_3 (first_argument: G; second_argument: H; third_argument: I) is
 		do
-			Precursor (first_argument, second_argument)
+			make_2 (first_argument, second_argument)
 			third := third_argument
 		end
 	

@@ -144,7 +144,6 @@ rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 #endif
 
 		echsig = sig;				/* Signal's number */
-		printf ("Signal %d\n",sig);
 		xraise(EN_SIG);				/* Operating system signal */
 	}
 
@@ -248,7 +247,6 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 			esigblk--;				/* Restore signal handling */
 		} else {					/* Signal not caught -- raise exception */
 			echsig = sig;			/* Signal's number */
-			printf ("Signal %d\n",sig);
 			xraise(EN_SIG);			/* Operating system signal */
 		}
 	}

@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_bitmap (bitmap: WEL_BITMAP) is
+			-- Make a log bitmap using the information of `bitmap'.
 		require
 			bitmap_not_void: bitmap /= Void
 			bitmap_exists: bitmap.exists
@@ -127,7 +128,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-feature -- Element changes
+feature -- Element change
 
 	set_type (a_type: INTEGER) is
 			-- Set `type' with `a_type'

@@ -20,6 +20,9 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
+			-- Make a log pen using `a_style', `a_width' and
+			-- `a_color'.
+			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
@@ -36,6 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_pen (pen: WEL_PEN) is
+			-- Make a log pen using the information of `pen'.
 		require
 			pen_not_void: pen /= Void
 			pen_exists: pen.exists
@@ -75,7 +79,7 @@ feature -- Access
 			result_exists: Result.exists
 		end
 
-feature -- Element changes
+feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'

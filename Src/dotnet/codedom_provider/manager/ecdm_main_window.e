@@ -222,7 +222,7 @@ feature {NONE} -- Events
 		do
 			l_config := active_configuration
 			if l_config /= Void then
-				create l_prop_dialog.make (l_config, manager)
+				create l_prop_dialog.make (l_config, manager, l_config.is_equal (manager.Default_configuration))
 				l_prop_dialog.show_modal_to_window (Current)
 			end
 		end

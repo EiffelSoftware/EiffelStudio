@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: ECDM_CONFIGURATION; a_manager: ECDM_MANAGER) is
+	make (a_configuration: ECDM_CONFIGURATION; a_manager: ECDM_MANAGER; a_default_configuration: BOOLEAN) is
 			-- Initialize dialog with `a_configuration'.
 		require
 			non_void_configuration: a_configuration /= Void
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 		do
 			configuration := a_configuration
 			manager := a_manager
+			default_configuration := a_default_configuration
 			default_create
 		ensure
 			configuration_set: configuration = a_configuration
@@ -49,15 +50,20 @@ feature {NONE} -- Initialization
 				created_label.set_text (formatted_date_time (feature {SYSTEM_FILE}.get_creation_time (l_path)))
 				modified_label.set_text (formatted_date_time (feature {SYSTEM_FILE}.get_last_write_time (l_path)))
 			end
-			l_apps := manager.applications (configuration)
-			if l_apps /= Void then
-				from
-					l_apps.start
-				until
-					l_apps.after
-				loop
-					applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
-					l_apps.forth
+			if default_configuration then
+				applications_box.hide
+				set_minimum_height (235)
+			else
+				l_apps := manager.applications (configuration)
+				if l_apps /= Void then
+					from
+						l_apps.start
+					until
+						l_apps.after
+					loop
+						applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
+						l_apps.forth
+					end
 				end
 			end
 		end
@@ -69,6 +75,9 @@ feature -- Access
 
 	manager: ECDM_MANAGER
 			-- Associated manager
+
+	default_configuration: BOOLEAN
+			-- Are we displaying the properties of the default configuration?
 
 feature {NONE} -- Events
 

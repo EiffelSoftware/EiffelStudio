@@ -385,16 +385,15 @@ feature -- Removal
 			if not off then
 				from
 					i := index - 1;
-					l_count := count - 1
 				until
-					i >= l_count
+					i >= count - 1
 				loop
 					j := i + 1;
 					area.put (area.item (j), i);
 					i := j;
 				end;
 				put_i_th (default_value, count);
-				count := count -1;
+				count := count - 1
 			end
 		end;
 

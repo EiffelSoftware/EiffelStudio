@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
 			"stream_estore"
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
 			"stream_eestore"
 		end
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
 		external
-			"C |%"eif_store.h%""
+			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
 			"stream_sstore"
 		end
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Object structured retrieved from stream of pointer
 			-- `stream_ptr'
 		external
-			"C | %"eif_retrieve.h%""
+			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *): EIF_REFERENCE use %"eif_retrieve.h%""
 		alias
 			"stream_eretrieve"	
 		end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 
 	c_free (buf: POINTER) is
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_POINTER *) use %"eif_store.h%""
 		alias
 			"stream_free"
 		end

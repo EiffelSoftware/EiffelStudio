@@ -1063,6 +1063,16 @@ feature -- Externals
 			"C signature (GtkCellRenderer*, GtkWidget*, GdkRectangle*, gint*, gint*, gint*, gint*) use <gtk/gtk.h>"
 		end
 
+	frozen gtk_cell_renderer_get_fixed_size (a_cell_renderer, a_width, a_height: POINTER) is
+		external
+			"C signature (GtkCellRenderer*, gint*, gint*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_cell_renderer_set_fixed_size (a_cell_renderer: POINTER; a_width, a_height: INTEGER) is
+		external
+			"C signature (GtkCellRenderer*, gint, gint) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_cell_renderer_toggle_new: POINTER is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -10,8 +10,7 @@ inherit
 			init_project_directory
 		end;
 	ICONED_COMMAND;
-	SHARED_RESCUE_STATUS;
-	SHARED_LICENSE
+	SHARED_RESCUE_STATUS
 
 creation
 

@@ -22,6 +22,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_selected: BOOLEAN is
+			-- Is the item selected?
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
 		require

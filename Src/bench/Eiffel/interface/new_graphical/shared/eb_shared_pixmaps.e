@@ -49,6 +49,16 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_dialog_window")
 		end
 
+	Icon_preference_root: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_preference_root")
+		end
+
+	Icon_preference_folder: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_preference_folder")
+		end
+		
 	Icon_preference_window: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_preference_window")
@@ -1568,6 +1578,8 @@ feature {NONE} -- Implementation
 			Result.put ([12, 5], "icon_frozen_feature")
 			Result.put ([12,6], "icon_format_assigners_color")
 			Result.put ([12,7], "icon_format_creators_color")
+			Result.put ([12,8], "icon_preference_root")
+			Result.put ([12,9], "icon_preference_folder")
 			Result.compare_objects
 		end
 

@@ -460,11 +460,13 @@ feature {NONE} -- Implementation
 					must_exit := True
 				end
 			else
-				create confirmation.make_with_text (Exit_warning)
-				confirmation.show_modal_to_window (Current)
-				if confirmation.selected_button.is_equal (constants.ev_ok) then
-					must_exit := True
-				end
+				-- For now, always exit.
+				must_exit := True
+--				create confirmation.make_with_text (Exit_warning)
+--				confirmation.show_modal_to_window (Current)
+--				if confirmation.selected_button.is_equal (constants.ev_ok) then
+--					must_exit := True
+--				end
 			end
 			if must_save then
 				command_handler.save_command.execute

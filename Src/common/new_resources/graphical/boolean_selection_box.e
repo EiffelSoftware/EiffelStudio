@@ -44,6 +44,7 @@ feature -- Commit
 			resource_exists: resource /= Void
 		do
 			resource.set_actual_value(yes_b.state)
+			update_resource
 			caller.update
 		end
 

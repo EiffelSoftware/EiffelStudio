@@ -64,6 +64,7 @@ feature -- Command
 				success := TRUE
 			end
 			if success then
+				update_resource
 				caller.update
 			else
 				-- error

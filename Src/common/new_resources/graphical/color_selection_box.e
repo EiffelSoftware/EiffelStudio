@@ -59,6 +59,7 @@ feature -- Commands
 			s.append(";")
 			s.append(color.blue.out)
 			resource.set_value_with_color(s,color)
+			update_resource
 			caller.update
 		end
 

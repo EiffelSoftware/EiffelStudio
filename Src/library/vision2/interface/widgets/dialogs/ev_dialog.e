@@ -149,12 +149,12 @@ feature -- Basic operations
 			-- The action performed to process the default push and cancel
 			-- buttons. This is inserted in the `key_press_actions' and the
 			-- behviour is as follows:
-			-- If escape is pressed then
+			-- If escape is pressed at any time then
 				-- If there is a `default_cancel_button' then
 					-- If it is sensitive, call its `select_actions',
 					-- otherwise, close the dialog.
 					-- If there is no `default_cancel_button', do nothing.	
-			-- If enter is pressed then
+			-- If enter is pressed at any time then
 				-- If there is a default push button which is sensitive,
 				-- call its `select_actions'.
 					

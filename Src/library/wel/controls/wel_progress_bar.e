@@ -10,6 +10,8 @@ class
 	WEL_PROGRESS_BAR
 
 inherit
+	WEL_BAR
+
 	WEL_CONTROL
 
 	WEL_PBM_CONSTANTS
@@ -38,6 +40,29 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
+feature -- Access
+
+	position: INTEGER is
+			-- Current position
+		do
+			Result := cwin_send_message_result (item, Pbm_getpos,
+				0, 0)
+		end
+
+	minimum: INTEGER is
+			-- Minimum position
+		do
+			Result := cwin_send_message_result (item,
+				Pbm_getrange, 1, 0)
+		end
+
+	maximum: INTEGER is
+			-- Maximum position
+		do
+			Result := cwin_send_message_result (item,
+				Pbm_getrange, 0, 0)
+		end
+
 feature -- Element change
 
 	step_it is
@@ -48,24 +73,19 @@ feature -- Element change
 
 	set_position (new_position: INTEGER) is
 			-- Set the current position with `new_position'.
-		require
-			exists: exists
-			positive_position: new_position >= 0
 		do
 			cwin_send_message (item, Pbm_setpos, new_position, 0)
 		end
 
-	set_range (minimum, maximum: INTEGER) is
+	set_range (min, max: INTEGER) is
 			-- Set the range with `minimum' and `maximum'.
 		do
 			cwin_send_message (item, Pbm_setrange, 0,
-				cwin_make_long (minimum, maximum))
+				cwin_make_long (min, max))
 		end
 
 	set_step (step: INTEGER) is
 			-- Set the step increment with `step'.
-		require
-			exists: exists
 		do
 			cwin_send_message (item, Pbm_setstep, step, 0)
 		end

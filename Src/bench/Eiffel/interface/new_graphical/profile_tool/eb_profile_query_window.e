@@ -95,13 +95,15 @@ feature -- Status Setting
 				end
 			end
 
-			update_query_frame  
+			update_query_frame
 			subquery_text.set_text ("")
+			text_window.freeze
 			text_window.clear_window
-			text_window.hide
 			text_window.process_text (st)
+			text_window.set_editable (True)
 			text_window.set_position (1)
-			text_window.show
+			text_window.set_editable (False)
+			text_window.thaw
 		end
 
 feature -- Update

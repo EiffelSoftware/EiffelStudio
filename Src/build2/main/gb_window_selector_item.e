@@ -7,16 +7,21 @@ class
 	GB_WINDOW_SELECTOR_ITEM
 	
 inherit
-	EV_TREE_ITEM
+	GB_WINDOW_SELECTOR_COMMON_ITEM
 	
 	GB_SHARED_OBJECT_EDITORS
-		undefine
-			copy, default_create, is_equal
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_TOOLS
-		undefine
-			copy, default_create, is_equal
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		end
 
 create
@@ -31,24 +36,24 @@ feature {NONE} -- Initialization
 		local
 			pixmaps: GB_SHARED_PIXMAPS
 		do
-			default_create
-			if an_object.output_name.is_empty then
-				set_text (an_object.short_type)
-			else
-				set_text (an_object.output_name)
-			end
+			common_make
 			object := an_object
+
+				-- Ensure that `Current' graphically reflects `an_object'.
+			update_to_reflect_name_change
 			
 				-- Assign the appropriate pixmap.
 			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (an_object.type.as_lower))
+			tree_item.set_pixmap (pixmaps.pixmap_by_name (an_object.type.as_lower))
 			
 				-- Set a pebble for transport
-			set_pebble_function (agent retrieve_pebble)
+			tree_item.set_pebble_function (agent retrieve_pebble)
 				
 				-- Make `Current' available from `an_object'.
 			an_object.set_window_selector_item (Current)
-			select_actions.extend (agent window_selector.selected_window_changed (Current))
+			tree_item.select_actions.extend (agent window_selector.selected_window_changed (Current))
+			tree_item.drop_actions.extend (agent object.add_new_object)
+			tree_item.drop_actions.set_veto_pebble_function (agent object.can_add_child)
 		ensure
 			object_set: object = an_object
 		end
@@ -56,31 +61,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	object: GB_OBJECT
-		-- ID of object referenced by `Current'.
-		
-feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Implementation
+			-- Object referenced by `Current'
+			-- Note that it is safe to keep a reference to `object' here and not an id reference
+			-- as used elsewhere by a system, as `Current' is part of an object and therefore the
+			-- object is responsible for ensuring that the references are correct.
+			
+feature -- Status setting
 
-	unparent is
-			-- Remove `Current' from its parent.
-		local
-			parent_item: EV_TREE_NODE_LIST
-			original_index: INTEGER
+	update_to_reflect_name_change is
+			-- Update `Current' to reflect a name change of `object'.
 		do
-			parent_item ?= parent
-			if parent_item /= Void then
-				check
-					parent_item_not_void: parent_item /= Void
-					item_contained_in_parent: parent_item.has (Current)
-				end
-				original_index := parent_item.index
-				window_selector.update_for_removal (Current)
-				parent_item.prune_all (Current)
-				parent_item.go_i_th (original_index.min (parent_item.count))
-			end
-		ensure
-			parent_void: parent = Void
+			name := object.name
+			tree_item.set_text (name_and_type_from_object (object))
 		end
-		
+	
 feature --{NONE} -- Implementation
 
 	retrieve_pebble: ANY is
@@ -102,8 +96,12 @@ feature {GB_OBJECT} -- Implementation
 
 	set_object (an_object: GB_OBJECT) is
 			-- Assign `an_object' to `object'
+		require
+			an_object_not_void: an_object /= Void
 		do
 			object := an_object
+		ensure
+			object_set: object = an_object
 		end
 
 invariant

@@ -201,7 +201,7 @@ feature {NONE}
 			-- Build top bar: editing commands.
 		local
 			quit_cmd: QUIT_FILE;
-			hole_form, quit_form: FORM;
+			hole_form: FORM;
 			label: LABEL;
 		do
 			edit_bar.set_fraction_base (31);
@@ -254,7 +254,6 @@ feature {NONE}
 			edit_bar.attach_left_position (change_class_form, 20);
 			edit_bar.attach_top (change_class_form, 0);
 			edit_bar.attach_bottom (change_class_form, 0);
-			edit_bar.attach_right_position (change_class_form, 26);
 
 			!!change_class_command.make (change_class_form, text_window);
 			change_class_command.set_width (80);
@@ -263,23 +262,18 @@ feature {NONE}
 			change_class_form.attach_bottom (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
 
-			!!quit_form.make (new_name, edit_bar);
-			edit_bar.attach_left_position (quit_form, 26);
-			edit_bar.attach_top (quit_form, 0);
-			edit_bar.attach_bottom (quit_form, 0);
-			edit_bar.attach_right (quit_form, 0);
+			!!quit_cmd.make (edit_bar, text_window);
+			edit_bar.attach_top (quit_cmd, 0);
+			edit_bar.attach_right (quit_cmd, 0);
 
-			!!quit_cmd.make (quit_form, text_window);
-			quit_form.attach_top (quit_cmd, 0);
-			quit_form.attach_right (quit_cmd, 0);
+			!!change_font_command.make (edit_bar, text_window);
+			edit_bar.attach_top (change_font_command, 0);
+			edit_bar.attach_right_widget (quit_cmd, change_font_command, 10);
 
-			!!change_font_command.make (quit_form, text_window);
-			quit_form.attach_top (change_font_command, 0);
-			quit_form.attach_right_widget (quit_cmd, change_font_command, 10);
-
-			!!search_command.make (quit_form, text_window);
-			quit_form.attach_top (search_command, 0);
-			quit_form.attach_right_widget (change_font_command, search_command, 0)
+			!!search_command.make (edit_bar, text_window);
+			edit_bar.attach_top (search_command, 0);
+			edit_bar.attach_right_widget (change_font_command, search_command, 0);
+			edit_bar.attach_right_widget (search_command, change_class_form, 2)
 		end;
 
 feature -- Formats

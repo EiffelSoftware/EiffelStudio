@@ -30,13 +30,13 @@ feature -- Constants
 	to_natural_16_name_id: INTEGER is 20
 	to_natural_32_name_id: INTEGER is 21
 	to_natural_64_name_id: INTEGER is 22
-	not_used_5: INTEGER is 23
-	not_used_6: INTEGER is 24
-	not_used_7: INTEGER is 25
-	not_used_8: INTEGER is 26
-	not_used_9: INTEGER is 27
-	not_used_10: INTEGER is 28
-	not_used_11: INTEGER is 29
+	as_natural_8_name_id: INTEGER is 23
+	as_natural_16_name_id: INTEGER is 24
+	as_natural_32_name_id: INTEGER is 25
+	as_natural_64_name_id: INTEGER is 26
+	as_integer_8_name_id: INTEGER is 27
+	as_integer_16_name_id: INTEGER is 28
+	as_integer_32_name_id: INTEGER is 29
 	eif_plug_header_name_id: INTEGER is 30
 	eif_misc_header_name_id: INTEGER is 31
 	eif_out_header_name_id: INTEGER is 32
@@ -134,6 +134,7 @@ feature -- Constants
 	equals_name_id: INTEGER is 124
 	three_way_comparison_name_id: INTEGER is 125
 	ctype_header_name_id: INTEGER is 126
+	as_integer_64_name_id: INTEGER is 127
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

@@ -187,13 +187,13 @@ feature {NONE} -- Implementation: access
 			put ("to_natural_16") check found_item = to_natural_16_name_id end
 			put ("to_natural_32") check found_item = to_natural_32_name_id end
 			put ("to_natural_64") check found_item = to_natural_64_name_id end
-			put ("NOT_USED_5") check found_item = not_used_5 end
-			put ("NOT_USED_6") check found_item = not_used_6 end
-			put ("NOT_USED_7") check found_item = not_used_7 end
-			put ("NOT_USED_8") check found_item = not_used_8 end
-			put ("NOT_USED_9") check found_item = not_used_9 end
-			put ("NOT_USED_10") check found_item = not_used_10 end
-			put ("NOT_USED_11") check found_item = not_used_11 end
+			put ("as_natural_8") check found_item = as_natural_8_name_id end
+			put ("as_natural_16") check found_item = as_natural_16_name_id end
+			put ("as_natural_32") check found_item = as_natural_32_name_id end
+			put ("as_natural_64") check found_item = as_natural_64_name_id end
+			put ("as_integer_8") check found_item = as_integer_8_name_id end
+			put ("as_integer_16") check found_item = as_integer_16_name_id end
+			put ("as_integer_32") check found_item = as_integer_32_name_id end
 			put ("%"eif_plug.h%"") check found_item = eif_plug_header_name_id end
 			put ("%"eif_misc.h%"") check found_item = eif_misc_header_name_id end
 			put ("%"eif_out.h%"") check found_item = eif_out_header_name_id end
@@ -291,6 +291,7 @@ feature {NONE} -- Implementation: access
 			put ("equals") check found_item = equals_name_id end
 			put ("three_way_comparison") check found_item = three_way_comparison_name_id end
 			put ("<ctype.h>") check found_item = ctype_header_name_id end
+			put ("as_integer_64") check found_item = as_integer_64_name_id end
 		end
 		
 invariant

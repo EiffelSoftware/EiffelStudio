@@ -178,28 +178,28 @@ feature -- IL code generation
 					il_generator.convert_to_real
 				end
 
-			when to_natural_8_type then
+			when as_natural_8_type, to_natural_8_type then
 				il_generator.convert_to_natural_8
 
-			when to_natural_16_type then
+			when as_natural_16_type, to_natural_16_type then
 				il_generator.convert_to_natural_16
 
-			when to_natural_32_type then
+			when as_natural_32_type, to_natural_32_type then
 				il_generator.convert_to_natural_32
 
-			when to_natural_64_type then
+			when as_natural_64_type, to_natural_64_type then
 				il_generator.convert_to_natural_64
 
-			when to_integer_8_type then
+			when as_integer_8_type, to_integer_8_type then
 				il_generator.convert_to_integer_8
 
-			when to_integer_16_type then
+			when as_integer_16_type, to_integer_16_type then
 				il_generator.convert_to_integer_16
 
-			when to_integer_32_type then
+			when as_integer_32_type, to_integer_32_type then
 				il_generator.convert_to_integer_32
 
-			when to_integer_64_type then
+			when as_integer_64_type, to_integer_64_type then
 				il_generator.convert_to_integer_64
 
 			when min_type then
@@ -286,12 +286,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_equal_type, standard_is_equal_name_id)
 			Result.put (zero_type, zero_name_id)
 			Result.put (one_type, one_name_id)
-			Result.put (to_integer_32_type, truncated_to_integer_name_id)
+			Result.put (as_integer_8_type, as_integer_8_name_id)
+			Result.put (as_integer_16_type, as_integer_16_name_id)
+			Result.put (as_integer_32_type, as_integer_32_name_id)
+			Result.put (as_integer_64_type, as_integer_64_name_id)
 			Result.put (to_integer_8_type, to_integer_8_name_id)
 			Result.put (to_integer_16_type, to_integer_16_name_id)
 			Result.put (to_integer_32_type, to_integer_32_name_id)
+			Result.put (to_integer_32_type, truncated_to_integer_name_id)
 			Result.put (to_integer_32_type, to_integer_name_id)
 			Result.put (to_integer_64_type, to_integer_64_name_id)
+			Result.put (as_natural_8_type, as_natural_8_name_id)
+			Result.put (as_natural_16_type, as_natural_16_name_id)
+			Result.put (as_natural_32_type, as_natural_32_name_id)
+			Result.put (as_natural_64_type, as_natural_64_name_id)
 			Result.put (to_natural_8_type, to_natural_8_name_id)
 			Result.put (to_natural_16_type, to_natural_16_name_id)
 			Result.put (to_natural_32_type, to_natural_32_name_id)
@@ -378,7 +386,15 @@ feature -- Fast access to feature name
 	to_natural_32_type: INTEGER is 37
 	to_natural_64_type: INTEGER is 38
 	twin_type: INTEGER is 39
-	max_type_id: INTEGER is 39
+	as_integer_8_type: INTEGER is 40
+	as_integer_16_type: INTEGER is 41
+	as_integer_32_type: INTEGER is 42
+	as_integer_64_type: INTEGER is 43
+	as_natural_8_type: INTEGER is 44
+	as_natural_16_type: INTEGER is 45
+	as_natural_32_type: INTEGER is 46
+	as_natural_64_type: INTEGER is 47
+	max_type_id: INTEGER is 47
 
 feature {NONE} -- IL code generation
 

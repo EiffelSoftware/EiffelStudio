@@ -227,6 +227,10 @@ feature {NONE} -- Implementation
 					-- Create storage for all parent child name pairs.
 				create parent_child.make (0)
 				
+					-- Create storage for all generated feature names.
+				create all_generated_events.make (0)
+				all_generated_events.compare_objects
+				
 				set_progress (0.8)
 				
 					-- Generate the widget building code.
@@ -615,42 +619,47 @@ feature {NONE} -- Implementation
 									else
 										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
 									end
-									
-										-- Use `Current' in comment if the event is connected to the window.
-									if stored_current_type.is_equal (Ev_titled_window_string) then
-										comment_object_name := "Current"
-									else
-										comment_object_name := last_name
-									end
-									
-										-- No parameters if zero arguments.
-									if action_sequence.count = 0 then
-										parameters := " is"
-									else
-										parameters := " (" +action_sequence.parameter_list + ") is"
-									end	
-									
-										-- If the user has selected that they wish to generate debugging output, 
-										-- then we build a representation in `feature_implementation' otherwise,
-										-- the feature implementation will be empty.
-									if project_settings.debugging_output then
-										if action_sequence.count = 0 then
-											feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+										
+										-- We must not generate the feature names again, if we have multiple events connected
+										-- to a single action sequence and we have already generated the feature.
+									if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
+										all_generated_events.extend (action_sequence_info.feature_name.as_lower)
+											-- Use `Current' in comment if the event is connected to the window.
+										if stored_current_type.is_equal (Ev_titled_window_string) then
+											comment_object_name := "Current"
 										else
-											feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+											comment_object_name := last_name
 										end
-									else
-										feature_implementation := ""
+										
+											-- No parameters if zero arguments.
+										if action_sequence.count = 0 then
+											parameters := " is"
+										else
+											parameters := " (" +action_sequence.parameter_list + ") is"
+										end	
+										
+											-- If the user has selected that they wish to generate debugging output, 
+											-- then we build a representation in `feature_implementation' otherwise,
+											-- the feature implementation will be empty.
+										if project_settings.debugging_output then
+											if action_sequence.count = 0 then
+												feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+											else
+												feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+											end
+										else
+											feature_implementation := ""
+										end
+										
+											-- Now we must generate the event declarations.
+										add_event_declaration (action_sequence_info.feature_name + parameters +
+										indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+										indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
+										
+										add_event_implementation (action_sequence_info.feature_name + parameters +
+										indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+										indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
 									end
-									
-										-- Now we must generate the event declarations.
-									add_event_declaration (action_sequence_info.feature_name + parameters +
-									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-									indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
-									
-									add_event_implementation (action_sequence_info.feature_name + parameters +
-									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-									indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
 								end
 								another_element.forth
 							end
@@ -916,6 +925,11 @@ feature {NONE} -- Implementation
 		-- parent, child, parent, child, parent, child.
 		-- This is not the most efficient format, but can be changed as necessary.
 
+	all_generated_events: ARRAYED_LIST [STRING]
+		-- A list of all event feature names that have been generated. This is necessary, so
+		-- that when there are multiple events connected to one feature, then we do not
+		-- repeatedly generate the feature, just the connection of the feature to
+		-- the action sequence.
 
 	current_document: XML_DOCUMENT
 		-- An XML document representing the current layout built

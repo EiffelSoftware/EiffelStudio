@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_GENERAL_FUNCTION_NAMES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Shared_file_name_factory: WIZARD_FILE_NAME_FACTORY is
@@ -265,20 +270,43 @@ feature -- Access
 			tmp_string.to_lower
 			Result.force (tmp_string)
 
-			Result.force (Make_word)
-			Result.force (Make_from_other)
-			Result.force (Make_from_pointer)
-			Result.force (Item_clause)
-			Result.force (Ccom_item_function_name)
-			Result.force (Last_error_code)
-			Result.force (Last_error_description)
-			Result.force (Last_error_help_file)
-			Result.force (Last_source_of_exception)
-			Result.force (Ccom_last_error_code)
-			Result.force (Ccom_last_error_description)
-			Result.force (Ccom_last_error_help_file)
-			Result.force (Ccom_last_source_of_exception)
+			Result.force (clone (Make_word))
+			Result.force (clone (Make_from_other))
+			Result.force (clone (Make_from_pointer))
+			Result.force (clone (Item_clause))
+			Result.force (clone (Ccom_item_function_name))
+			Result.force (clone (Last_error_code))
+			Result.force (clone (Last_error_description))
+			Result.force (clone (Last_error_help_file))
+			Result.force (clone (Last_source_of_exception))
+			Result.force (clone (Ccom_last_error_code))
+			Result.force (clone (Ccom_last_error_description))
+			Result.force (clone (Ccom_last_error_help_file))
+			Result.force (clone (Ccom_last_source_of_exception))
 
+			Result.force (clone (generated_type_routine))
+			Result.force (clone (generator_routine))
+			Result.force (clone (deep_equal_routine))
+			Result.force (clone (equal_routine))
+			Result.force (clone (is_equal_routine))
+			Result.force (clone (standard_equal_routine))
+			Result.force (clone (standard_is_equal_routine))
+			Result.force (clone (conforms_to_routine))
+			Result.force (clone (same_type_routine))
+			Result.force (clone (clone_routine))
+			Result.force (clone (copy_routine))
+			Result.force (clone (deep_clone_routine))
+			Result.force (clone (deep_copy_routine))
+			Result.force (clone (standard_clone_routine))
+			Result.force (clone (default_routine))
+			Result.force (clone (default_create_routine))
+			Result.force (clone (default_pointer_routine))
+			Result.force (clone (default_rescue_routine))
+			Result.force (clone (do_nothing_routine))
+			Result.force (clone (io_routine))
+			Result.force (clone (out_routine))
+			Result.force (clone (print_routine))
+			Result.force (clone (tagged_out_routine))
 		end
 
 feature {WIZARD_MANAGER} -- Element Change

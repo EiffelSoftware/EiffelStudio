@@ -26,8 +26,28 @@ feature {NONE} -- Implementation
 			feature_body: STRING
 		do
 			create Result.make
-			Result.set_name ("make")
-			Result.set_comment ("Creation")
+			Result.set_name (Make_word)
+			Result.set_comment ("Creation. Implement if needed.")
+
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+
+			Result.set_effective
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
+		end
+
+	make_from_pointer_feature:  WIZARD_WRITER_FEATURE is
+			-- `make_from_pointer' feature.
+		local
+			feature_body: STRING
+		do
+			create Result.make
+			Result.set_name ("make_from_pointer")
+			Result.set_comment ("Creation.")
 
 			Result.add_argument ("cpp_obj: POINTER")
 
@@ -43,7 +63,6 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-
 	create_item_feature: WIZARD_WRITER_FEATURE is
 			-- `create_item' feature.
 		local
@@ -53,10 +72,9 @@ feature {NONE} -- Implementation
 			Result.set_name ("create_item")
 			Result.set_comment ("Initialize %Qitem%'")
 
-			Result.add_local_variable ("a_ptr: POINTER")
 			create feature_body.make (100)
 			feature_body.append (Tab_tab_tab)
-			feature_body.append ("a_ptr := ccom_create_item (Current)")
+			feature_body.append ("item := ccom_create_item (Current)")
 
 			Result.set_effective
 			Result.set_body (feature_body)

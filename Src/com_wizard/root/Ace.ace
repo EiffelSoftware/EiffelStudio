@@ -80,6 +80,9 @@ external
 				"$LIBRARY\com\runtime\include";
 
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$DEVSTUDIO\vc\lib\shell32.lib",
-					"$DEVSTUDIO\vc\lib\comctl32.lib";
+					"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib",
+					"$(LIBRARY)\com\Library\lib\com.lib",
+					"$(LIBRARY)\com\Runtime\lib\com_runtime.lib",
+					"$(DEVSTUDIO)\vc\lib\shell32.lib",
+					"$(DEVSTUDIO)\vc\lib\comctl32.lib";
 end

@@ -32,11 +32,11 @@ feature {NONE} -- Initialization
 			create start_actions
 			create end_actions
 			create move_actions
-			pointer_button_press_actions.extend (~on_start_resizing)
-			pointer_motion_actions.extend (~on_resizing)
-			pointer_button_release_actions.extend (~on_stop_resizing)
-			show_agent := ~on_enter
-			hide_agent := ~on_leave
+			pointer_button_press_actions.extend (agent on_start_resizing)
+			pointer_motion_actions.extend (agent on_resizing)
+			pointer_button_release_actions.extend (agent on_stop_resizing)
+			show_agent := agent on_enter
+			hide_agent := agent on_leave
 			is_always_shown := True
 			minimum_x := Min_integer
 			minimum_y := Min_integer

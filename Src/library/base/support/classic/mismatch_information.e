@@ -105,7 +105,7 @@ feature {NONE} -- Externals
 
 	set_mismatch_information_access (obj: ANY; init, add: POINTER) is
 		external
-			"C"
+			"C signature (EIF_OBJECT, EIF_POINTER, EIF_POINTER) use <eif_retrieve.h>"
 		end
 
 invariant

@@ -23,7 +23,8 @@ inherit
 			parent_imp as widget_parent_imp,
 			parent_set as widget_parent_set
 		undefine
-			has_parent
+			has_parent,
+			set_foreground_color
 		end
 
 creation

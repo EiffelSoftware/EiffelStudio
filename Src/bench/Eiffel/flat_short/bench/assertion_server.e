@@ -119,15 +119,15 @@ feature -- Initialization
 						else
 							body_id := System.body_index_table.item 
 								(inh_f.body_index);
-							if Tmp_body_server.has (body_id.id) then
-								other_feat_as := Tmp_body_server.item (body_id.id)
-							elseif Body_server.has (body_id.id) then
-								other_feat_as := Body_server.item (body_id.id)
-							elseif Rep_feat_server.has (body_id.id) then
-								other_feat_as := Rep_feat_server.item (body_id.id)
+							if Tmp_body_server.has (body_id) then
+								other_feat_as := Tmp_body_server.item (body_id)
+							elseif Body_server.has (body_id) then
+								other_feat_as := Body_server.item (body_id)
+							elseif Rep_feat_server.has (body_id) then
+								other_feat_as := Rep_feat_server.item (body_id)
 							end;
 							if other_feat_as /= Void then
-								f_table := Feat_tbl_server.item (inh_f.written_in.id);
+								f_table := Feat_tbl_server.item (inh_f.written_in);
 								if f_table /= Void then
 									feat := f_table.feature_of_body_id (body_id);
 									if feat /= Void then
@@ -231,7 +231,7 @@ feature -- Debug
 				precursors.after
 			loop
 				io.error.putstring ("body index: ");
-				io.error.putint (precursors.key_for_iteration.id);
+				precursors.key_for_iteration.trace;
 				io.error.new_line;
 				from
 					precursors.item_for_iteration.start

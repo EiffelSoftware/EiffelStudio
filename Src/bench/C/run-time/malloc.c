@@ -454,6 +454,38 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
 }
 
+rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper)
+	/* Initialize special object of expanded `obj' from `lower' position to
+	 * `upper' position. I.e. creating new instances of expanded objects and
+	 * assigning them from `obj [lower]' to `obj [upper]'.
+	 */
+{
+	EIF_GET_CONTEXT
+
+	EIF_INTEGER elem_size, i;
+	EIF_REFERENCE exp;
+	union overhead *zone;
+
+	REQUIRE ("obj not null", obj != (EIF_REFERENCE) 0);
+	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
+	REQUIRE ("Special object", HEADER (obj)->ov_flags & EO_SPEC);
+	REQUIRE ("Special object of expanded", HEADER (obj)->ov_flags & EO_COMP);
+	REQUIRE ("Valid lower", ((lower >= 0) && (lower < RT_SPECIAL_COUNT(obj))));
+	REQUIRE ("Valid upper", ((upper >= 0) && (upper >= lower) && (upper <= RT_SPECIAL_COUNT(obj))));
+
+	RT_GC_PROTECT(obj);
+	elem_size = RT_SPECIAL_ELEM_SIZE(obj);
+	for (i = lower; i <= upper; i++) {
+		EIF_INTEGER offset = elem_size * i;
+		zone = (union overhead *) (obj + offset);
+		zone->ov_size = OVERHEAD + offset;	/* For GC */
+		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+		exp = RTLX(dftype);					/* Create new expanded */
+		ecopy(exp, obj + OVERHEAD + offset);
+	}
+	RT_GC_WEAN(obj);
+}
+
 rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 {
 	/* Memory allocation for an Eiffel special object. It either succeeds or
@@ -510,10 +542,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 		/* Reallocation of a string object `ptr' for new count `nbitems' */
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
-	void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* Initialization routine to be called */
 	EIF_REFERENCE ref, object;
 	EIF_INTEGER count, elem_size;
-	int dtype, dftype;
 	int old_size, new_size;					/* New and old size of special object. */
 	int old_real_size, new_real_size;		/* Size occupied by items of special */
 	EIF_BOOLEAN need_update = EIF_FALSE;	/* Do we need to remember content of special? */
@@ -685,27 +715,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = elem_size; 	/* New item size */
 
 	if (need_expanded_initialization) {
-	   		/* case of a special object of expanded structures */
-		EIF_REFERENCE addr = object + OVERHEAD;		/* Needed for that stupid gcc */
-		dftype = HEADER(addr)->ov_flags & EO_TYPE;
-		dtype = Deif_bid(dftype);
-		init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
-
-		for (
-			ref = object + old_real_size + OVERHEAD;
-			count < nbitems;
-			count++, ref += elem_size
-		) {
-			zone = HEADER(ref);
-			zone->ov_size = ref - object;		/* For GC */
-			zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
-			if (init) {
-				RT_GC_PROTECT(ref);
-				(init)(ref, ref);			/* Call initialization routine if any */
-				RT_GC_WEAN(ref);
-			}
-		}
-		zone = HEADER(object);				/* Restore malloc info zone */
+	   		/* Case of a special object of expanded structures. */
+			/* Initialize remaining items. */
+		sp_init(object, HEADER(object + OVERHEAD)->ov_flags & EO_TYPE, count, nbitems - 1);
 	}
 
 	if (need_update) {
@@ -2093,7 +2105,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
 	register3 union overhead *zone;		/* The to-be-reallocated zone */
-	EIF_REFERENCE safeptr;				/* GC-safe pointer */
+	EIF_REFERENCE safeptr = NULL;		/* GC-safe pointer */
 	int size, size_gain;				/* Gain in size brought by coalesc */
 	
 #ifdef LMALLOC_CHECK

@@ -394,7 +394,27 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	RT_GC_WEAN(obj);
 }
 
-#ifdef WORKBENCH
+#ifndef WORKBENCH
+
+EIF_REFERENCE cr_exp(uint32 type)
+	/* Create an instance of expanded object of dynamic type id `type'. */
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE result;
+	void *(*creation_procedure)(EIF_REFERENCE);	/* Initialization routine to be called */
+
+	result = RTLN(type);
+
+	creation_procedure = (void *(*) (EIF_REFERENCE)) egc_exp_create[Deif_bid(type)];
+	if (creation_procedure) {
+		RT_GC_PROTECT(result);	/* Protect address in case it moves */
+		creation_procedure (result);
+		RT_GC_WEAN(result);            /* Remove protection */
+	}
+	return result;
+}
+
+#else
 
 EIF_REFERENCE cr_exp(uint32 type)
 										/* Dynamic type */

@@ -697,8 +697,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			count++, ref += elem_size
 		) {
 			zone = HEADER(ref);
-			zone->ov_size = ref - object;	/* For GC */
-			zone->ov_flags = dftype;			/* Expanded type */
+			zone->ov_size = ref - object;		/* For GC */
+			zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 			if (init) {
 				RT_GC_PROTECT(ref);
 				(init)(ref, ref);			/* Call initialization routine if any */

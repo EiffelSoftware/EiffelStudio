@@ -150,6 +150,22 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Pointer_bytes)
 		end
 
+	read_boolean (pos: INTEGER): BOOLEAN is
+			-- Read BOOLEAN at position `pos'.
+		require
+			valid_position: (pos + Boolean_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Boolean_bytes)
+		end
+
+	read_character (pos: INTEGER): CHARACTER is
+			-- Read CHARACTER at position `pos'.
+		require
+			valid_position: (pos + Character_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Character_bytes)
+		end		
+
 	read_real (pos: INTEGER): REAL is
 			-- Read REAL at position `pos'.
 		require
@@ -238,6 +254,26 @@ feature -- Element change: Platform specific
 		ensure
 			inserted: p = read_pointer (pos)
 		end
+
+	put_boolean (b: BOOLEAN; pos: INTEGER) is
+			-- Insert `b' at position `pos'.
+		require
+			valid_position: (pos + Boolean_bytes) <= count
+		do
+			(item + pos).memory_copy ($b, Boolean_bytes)
+		ensure
+			inserted: b = read_boolean (pos)
+		end	
+
+	put_character (c: CHARACTER; pos: INTEGER) is
+			-- Insert `' at position `pos'.
+		require
+			valid_position: (pos + Character_bytes) <= count
+		do
+			(item + pos).memory_copy ($c, Character_bytes)
+		ensure
+			inserted: c = read_character (pos)
+		end			
 
 	put_real (r: REAL; pos: INTEGER) is
 			-- Insert `r' at position `pos'.

@@ -40,7 +40,7 @@ feature {NONE}
 			iw: IMPORT_WINDOW
 		do
 			if main_panel.project_initialized then
-				!!iw.make ("Import project", main_panel.base)
+				!!iw.make (main_panel.base)
 				iw.popup
 			end
 		end

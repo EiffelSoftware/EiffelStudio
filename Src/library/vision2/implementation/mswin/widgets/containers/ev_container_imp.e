@@ -83,18 +83,11 @@ feature -- Element change
 			ww: WEL_WINDOW
 		do
 			if par /= Void then
-				--if parent_imp /= Void then
-				--	parent_imp.remove_child (Current)
-				--end
 				par_imp ?= par.implementation
 				check
 					valid_cast: par_imp /= Void
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
-
-				--| FIXME , The child should have already been added.
-				--| par_imp.interface.extend (Current.interface)
-				par_imp.add_child (Current)
 				ww ?= par.implementation
 				wel_set_parent (ww)
 			elseif parent_imp /= Void then
@@ -450,6 +443,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/26 22:18:10  rogers
+--| Set parent no longer calls par_imp.add_child as the child is already added.
+--|
 --| Revision 1.50  2000/04/26 18:35:55  brendel
 --| Indexing clause.
 --|

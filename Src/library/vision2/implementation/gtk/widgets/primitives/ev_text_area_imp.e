@@ -14,7 +14,10 @@ inherit
 	EV_TEXT_AREA_I
 
 	EV_TEXT_COMPONENT_IMP
-	
+		undefine
+			build
+		end
+
 creation
 
 	make

@@ -10,6 +10,10 @@
 	Debugging control.
 */
 
+/*
+doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines used for debugging.">
+*/
+
 #include "eif_portable.h"
 #include "eif_confmagic.h"	
 #include "eif_macros.h"
@@ -17,7 +21,7 @@
 #include "eif_hashin.h"
 #include "eif_malloc.h"
 #include "eif_sig.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_local.h"			/* For epop() */
 #include "eif_out.h"			/* For build_out() */
 #include "eif_hector.h"
@@ -88,71 +92,15 @@
  */
 #define dlevel	0		/* FIXME */
 
-/*
-doc:<file name="debug.c" header="eif_debug.h">
-doc:	<attribute name="db_stack" return_type="struct dbstack">
-doc:		<summary>Debugging stack. This stack records all the calls made to any melted feature (i.e. it records also standard melted feature calls). In case an exception occurs or a breakpoint is reached, this stack will be used to print arguments values. It can also be used to inspect local variables in any of the recorded routines, by simply shifting the context and resynchronizing the interpreter registers.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="once_list" return_type="struct id_list">
-doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="d_data" return_type="struct dbinfo">
-doc:		<summary>For faster reference, the current control table is memorized in a global debugger status structure, along with the execution status and break point hash table.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="d_cxt" return_type="struct pgcontext">
-doc:		<summary>The debugger, when in interactive mode, maintains the notion of run-time context. That is to say the main stacks are saved and their content will be restored undisturbed before resuming execution.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="cop_stack" return_type="struct opstack">
-doc:		<summary>Store local/argument values in debugger.</summary>
-doc:		<thread_safety>Per thread data.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="d_globaldata" return_type="struct dbglobalinfo">
-doc:		<summary>Is debugging disabled for a while? Is current code location a breakpoint which is set?</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<fixme>No synchronization is done on accessing fileds of this structure.</fixme>
-doc:	</attribute>
-doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *">
-doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
-doc:		<thread_safety>Safe as initialized in `dbreak_create_table'.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="breakpoint_count" return_type="int">
-doc:		<summary>Interval of time we use to check if we should stop in debugger.</summary>
-doc:		<thread_safety>Safe as it is only modified by `set_breakpoint_count' called from `ipc/app/app_proto.c' while the application is stopped during debugging. So there will be no concurrent access to this variable.</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="recorded_breakpoint_count" return_type="int">
-doc:		<summary>Count how many times we have been called, use in conjonction with `breakpoint_count'.</summary>
-doc:		<thread_safety>Safe as it is only modified and accessed by `should_be_interrupted' which is only called through synchronization of `db_mutex'.</thread_safety>
-doc:		<synchronization>db_mutex</synchronization>
-doc:	</attribute>
-doc:	<attribute name="previous_bodyid" return_type="int">
-doc:		<summary>Record last body_id where debugger stopped last time.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>db_mutex</synchronization>
-doc:	</attribute>
-doc:	<attribute name="previous_break_index" return_type="uint32">
-doc:		<summary>Record last position where debugger stopped last time.</summary>
-doc:		<thread_safety>Safe.</thread_safety>
-doc:		<synchronization>db_mutex</synchronization>
-doc:	</attribute>
-doc:	<attribute name="critical_stack_depth" return_type="uint32">
-doc:		<summary>Limit to which we warn EiffelStudio user there might be a stack overflow.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>db_mutex</synchronization>
-doc:	</attribute>
-doc:	<attribute name="alread_warned" return_type="int">
-doc:		<summary>Did we warn user of a potential stack overflow?</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>db_mutex</synchronization>
-doc:	</attribute>
-doc:</file>
-*/
 
 #ifndef EIF_THREADS
-
+/*
+doc:	<attribute name="db_stack" return_type="struct dbstack" export="shared">
+doc:		<summary>Debugging stack. This stack records all the calls made to any melted feature (i.e. it records also standard melted feature calls). In case an exception occurs or a breakpoint is reached, this stack will be used to print arguments values. It can also be used to inspect local variables in any of the recorded routines, by simply shifting the context and resynchronizing the interpreter registers.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct dbstack db_stack = {
 	(struct stdchunk *) 0,		/* st_hd */
 	(struct stdchunk *) 0,		/* st_tl */
@@ -161,6 +109,13 @@ rt_shared struct dbstack db_stack = {
 	(struct dcall *) 0,			/* st_end */
 };
 
+/*
+doc:	<attribute name="once_list" return_type="struct id_list" export="shared">
+doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct id_list once_list = {
 	(struct idlchunk *) 0,		/* idl_hd */
 	(struct idlchunk *) 0,		/* idl_tl */
@@ -168,6 +123,13 @@ rt_shared struct id_list once_list = {
 	(uint32 *) 0,				/* idl_end */
 };
 
+/*
+doc:	<attribute name="d_data" return_type="struct dbinfo" export="shared">
+doc:		<summary>For faster reference, the current control table is memorized in a global debugger status structure, along with the execution status and break point hash table.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct dbinfo d_data = {
 	NULL,			/* db_start */
 	0, 				/* db_status */
@@ -176,8 +138,22 @@ rt_shared struct dbinfo d_data = {
 	0				/* db_stepinto_mode */
 };	/* Global debugger information */
 
+/*
+doc:	<attribute name="d_cxt" return_type="struct pgcontext" export="shared">
+doc:		<summary>The debugger, when in interactive mode, maintains the notion of run-time context. That is to say the main stacks are saved and their content will be restored undisturbed before resuming execution.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct pgcontext d_cxt;	/* Main program context */
 
+/*
+doc:	<attribute name="cop_stack" return_type="struct opstack" export="shared">
+doc:		<summary>Store local/argument values in debugger.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct opstack cop_stack = {
 	(struct stochunk *) 0,	/* st_hd */
 	(struct stochunk *) 0,	/* st_tl */
@@ -186,13 +162,25 @@ rt_shared struct opstack cop_stack = {
 	(struct item *) 0,	/* st_end */
 };
 #endif /* !EIF_THREADS */
-
+/*
+doc:	<attribute name="d_globaldata" return_type="struct dbglobalinfo" export="shared">
+doc:		<summary>Is debugging disabled for a while? Is current code location a breakpoint which is set?</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<fixme>No synchronization is done on accessing fileds of this structure.</fixme>
+doc:	</attribute>
+*/
 rt_shared struct dbglobalinfo d_globaldata = {
 	0,				/* db_discard_breakpoints */
 	NULL			/* db_bpinfo */
 };
 
 #ifdef EIF_THREADS
+/*
+doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
+doc:		<thread_safety>Safe as initialized in `dbreak_create_table'.</thread_safety>
+doc:	</attribute>
+*/
 rt_shared EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
 #endif /* EIF_THREADS */
 
@@ -257,18 +245,60 @@ rt_private void call_up(int level);					/* Move cursor upwards */
 /* Updating once supermelted routines */
 rt_private void write_long(char *where, long int value);
 
-/* Values used for application interrupt */
+
+/*
+doc:	<attribute name="breakpoint_count" return_type="int" export="private">
+doc:		<summary>Interval of time we use to check if we should stop in debugger.</summary>
+doc:		<thread_safety>Safe as it is only modified by `set_breakpoint_count' called from `ipc/app/app_proto.c' while the application is stopped during debugging. So there will be no concurrent access to this variable.</thread_safety>
+doc:	</attribute>
+*/
 rt_private int breakpoint_count = 10; /* default parameter */
+
+/*
+doc:	<attribute name="recorded_breakpoint_count" return_type="int" export="private">
+doc:		<summary>Count how many times we have been called, use in conjonction with `breakpoint_count'.</summary>
+doc:		<thread_safety>Safe as it is only modified and accessed by `should_be_interrupted' which is only called through synchronization of `db_mutex'.</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private int recorded_breakpoint_count = 1;
 
 /* Value used to known where we stopped for the last time - used for nested call only */
+/*
+doc:	<attribute name="previous_bodyid" return_type="int" export="private">
+doc:		<summary>Record last body_id where debugger stopped last time. Used for nested call only.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private int previous_bodyid = -1;
+
+/*
+doc:	<attribute name="previous_break_index" return_type="uint32" export="private">
+doc:		<summary>Record last position where debugger stopped last time. Used for nested call only.</summary>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private uint32 previous_break_index = (uint32) -1;
 
-/* Call stack depth at which we warn the user against a possible stack overflow. */
+/*
+doc:	<attribute name="critical_stack_depth" return_type="uint32" export="public">
+doc:		<summary>Limit to which we warn EiffelStudio user there might be a stack overflow.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public uint32 critical_stack_depth = (uint32) -1;
-rt_public int already_warned; 	 /* Have we already warned the user? We won't warn him again before the call
-								  * stack depth goes under the critical_stack_depth limit. */
+
+/*
+doc:	<attribute name="alread_warned" return_type="int" export="public">
+doc:		<summary>Did we warn user of a potential stack overflow? We won't warn him again before the call stack depth goes under `critical_stack_depth' limit.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public int already_warned;
 
 #ifndef lint
 rt_private char *rcsid =
@@ -2035,3 +2065,7 @@ rt_public void c_wipe_out(register struct stochunk *chunk)
 	)
 		xfree((char *) chunk);
 }
+
+/*
+doc:</file>
+*/

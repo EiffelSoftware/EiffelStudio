@@ -55,6 +55,10 @@ feature --Initialization
  			list.add_selection_command (Current, Void)
 		end
 
+feature -- Access
+
+	empty_tool_name: STRING is "Selector"
+
 feature -- Redefine
 
 	stone_type:INTEGER is  
@@ -145,9 +149,9 @@ feature -- User interface
 	change_tool_entry (tool: EB_TOOL) is
 		local
 			tmp: EB_SELECTOR_ITEM
-			t_name:STRING
+--			t_name:STRING
 		do
-			t_name := clone (tool.icon_name)
+--			t_name := clone (tool.icon_name)
 			tmp ?= list.find_item_by_data (tool)
 
 -- FIXME JOC: still need to decide what to do.

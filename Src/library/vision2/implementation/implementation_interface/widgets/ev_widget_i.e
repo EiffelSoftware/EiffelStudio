@@ -115,6 +115,24 @@ feature -- Measurement
 		ensure
 			Positive_height: Result >= 0
 		end
+	
+	minimum_width: INTEGER is
+			-- Minimum width of widget
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Positive_width: Result >= 0
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum height of widget
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Positive_height: Result >= 0
+		end
 
 feature -- Resizing
 
@@ -127,8 +145,7 @@ feature -- Resizing
 			Positive_height_: new_height >= 0
 		deferred
 		ensure
-			width_set: width = new_width
-			height_set: height = new_height		
+			dimensions_set: dimensions_set (new_width, new_height)		
 		end
 
 	set_width (new_width :INTEGER) is
@@ -138,7 +155,7 @@ feature -- Resizing
 			Positive_width: new_width >= 0
 		deferred
 		ensure
-			width_set: width = new_width
+			dimensions_set: dimensions_set (new_width, height)
 		end
 	
 	set_height (new_height: INTEGER) is
@@ -148,7 +165,7 @@ feature -- Resizing
 			Positive_height: new_height >= 0
 		deferred
 		ensure					
-			height_set: height = new_height
+			dimensions_set: dimensions_set (width, new_height)
 		end
 
 	set_x (new_x: INTEGER) is
@@ -181,7 +198,14 @@ feature -- Resizing
 		ensure
 			y_set: y = new_y		
 		end
-
+	
+	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget
+		deferred
+		end
+			
 feature -- Event - command association
 
 	add_command (event: EV_EVENT; command: EV_COMMAND; 
@@ -194,7 +218,7 @@ feature -- Event - command association
 			-- means that no arguments are passed to the
 			-- command.
 		require
-			exists: not destroyde
+			exists: not destroyed
 			Valid_event: event /= Void
 			Valid_command: command /= Void
 		deferred
@@ -218,6 +242,7 @@ feature -- Event - command association
 			exists: not destroyed
 		deferred
 		end
+	
 	
 end -- class EV_WIDGET_I
 

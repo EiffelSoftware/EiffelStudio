@@ -16,7 +16,12 @@ inherit
 		redefine
 			implementation
 		end
-
+	
+	EV_FONTABLE
+		rename
+			implementation as fontable_implementation
+		end
+	
 
 feature -- Access
 
@@ -27,6 +32,7 @@ feature -- Access
                 do
                         Result:= implementation.text
                 end 
+	
 
 feature -- Status setting
 

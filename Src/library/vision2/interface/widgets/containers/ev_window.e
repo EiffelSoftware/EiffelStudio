@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
         delete_command: EV_COMMAND
 
-feature {NONE} -- Implementation
+feature {EV_APPLICATION} -- Implementation
 
         implementation: EV_WINDOW_I
                         -- Implementation of window

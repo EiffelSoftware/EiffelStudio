@@ -14,11 +14,15 @@ inherit
         EV_BUTTON_I
         
 	EV_BAR_ITEM_IMP
+		redefine
+			wel_window
+		end
         
 	EV_TEXT_CONTAINER_IMP
+		redefine
+			wel_window
+		end
 	
-	WEL_PUSH_BUTTON
-        
 creation
 
         make
@@ -27,22 +31,19 @@ feature {NONE} -- Initialization
 
         make (parent: EV_CONTAINER) is
                         -- Create a wel push button.
-                local
-                        a: ANY
-			s: STRING
-			parent_imp: WEL_WINDOW
+		local
+			cont_imp: EV_CONTAINER_IMP
 		do
-			!!s.make (0)
-			s := ""
-			a ?= s.to_c
-			parent_imp ?= parent
+			cont_imp ?= parent.implementation
 			check
-				valid_parent: parent_imp /= Void
+				valid_container: cont_imp /= Void
 			end
-			wel_make (parent_imp, x, y, width, height, 0)
+			-- Create a button with 0 size
+			!!wel_window.make (cont_imp.wel_window, "", 0, 0, 0, 0, 0)
+			set_font (font)
 			set_default_size
-                end
-	
+		end
+
 feature {NONE} -- Implementation
        	
 	set_default_size is
@@ -55,9 +56,15 @@ feature {NONE} -- Implementation
 				font_not_void: fw /= Void
 			end
 			set_size (fw.string_width (Current, text) +
-				  extra_width,
+				  Extra_width,
 				  (7 * fw.string_height (Current, text)) // 4 - 2)
 		end
+	
+	Extra_width: INTEGER is 10
+
+feature {NONE} -- Implementation	
+	
+	wel_window: WEL_PUSH_BUTTON
 end
 
 

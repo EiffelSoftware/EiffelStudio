@@ -15,21 +15,11 @@ inherit
 	EV_WINDOW_I	
 	
 	EV_CONTAINER_IMP
-		undefine
-			on_wm_destroy,
-			minimal_width,
-			minimal_height,
-			move_and_resize,
-			process_message,
-			destroy,
-			remove_command			
-		select -- selecting renamed WEL features
-			set_size,
-			wel_command,
-			set_x_y
+		redefine	
+			wel_window,
+			minimum_width,
+			minimum_height
 		end
-	
-	WEL_FRAME_WINDOW
 	
 creation
 	
@@ -41,9 +31,10 @@ feature {NONE} -- Initialization
                         -- Create a window. Window does not have any
                         -- parents
 		do
-			set_x_y (default_x, default_y)
-			set_size (minimal_width, minimal_height)
-			make_top ("EV_WINDOW")
+			!!wel_window.make_top ("EV_WINDOW")
+		--	set_x_y (wel_window.default_x, wel_window.default_y)
+		--	set_size (wel_window.minimal_width, wel_window.minimal_height)
+
 		end
 	
 		
@@ -97,8 +88,25 @@ feature -- Element change
                                 not_yet_implemented: False
                         end
                 end
+	
+feature -- Measurement
+	
+	minimum_width: INTEGER is
+			-- Minimum width of window
+		once
+			Result := system_metrics.window_minimum_width
+		end
 
-
+	minimum_height: INTEGER is
+			-- Minimum height of window
+		once
+			Result := system_metrics.window_minimum_height
+		end
+	
+	
+feature {EV_APPLICATION} -- Implementation
+	
+	wel_window: WEL_FRAME_WINDOW
 
 
 end

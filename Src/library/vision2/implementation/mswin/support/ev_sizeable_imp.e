@@ -18,7 +18,7 @@ feature -- Status report
 		do
 			Result := fixed_size_flag 
 			if not Result then
-				pw ?= parent 
+				pw ?= parent_imp 
 				Result := pw /= Void and then pw.fixed_size
 			end
 		end
@@ -38,12 +38,13 @@ feature -- Status setting
 		end
 
 	resize_for_shell is
-			-- Resize current widget if the parent is a shell.			
+			-- Resize current widget if the parent is a
+			-- shell.
 		local
 			tw: EV_CONTAINER_IMP
 		do
-			tw ?= parent
-			if tw /= Void and then tw.exists and then not fixed_size_flag then
+			tw ?= parent_imp
+			if tw /= Void and then not tw.destroyed and then not fixed_size_flag then
 				set_x_y (0, 0)
 				set_size (tw.client_width, tw.client_height)
 			end
@@ -53,12 +54,13 @@ feature -- Status setting
 feature {EV_SIZEABLE_IMP} -- Implementation
 
 	fixed_size_flag: BOOLEAN
-			-- Flag to indicate if this widget can have its size changed
+			-- Flag to indicate if this widget can have
+			-- its size changed
 
---XX	parent: EV_CONTAINER_IMP is
+	parent_imp: EV_CONTAINER_IMP is
 			-- Parent of this sizeable widget
-	--XX	deferred
-	--	end
+		deferred
+		end
 
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Positioning of this sizeable widget

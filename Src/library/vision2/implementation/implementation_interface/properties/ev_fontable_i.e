@@ -1,21 +1,33 @@
 indexing
 
-	description: 
-		"EiffelVision bar item, gtk implementation."
-	status: "See notice at end of class"
-	id: "$Id$"
-	date: "$Date$"
+	description: "Widgets which define a font";
+	status: "See notice at end of class";
+	date: "$Date$";
 	revision: "$Revision$"
-	
+
 deferred class
-	EV_BAR_ITEM_IMP
-	
-inherit
-	
-	EV_PRIMITIVE_IMP
 
+	EV_FONTABLE_I 
 
-end
+feature -- Access
+
+	font: EV_FONT is
+			-- Font name of label
+		deferred
+		end
+
+feature -- Element change
+
+	set_font (a_font: EV_FONT) is
+			-- Set font label to `font_name'.
+		require
+			a_font_exists: a_font /= Void
+			a_font_specified: a_font.is_specified
+		deferred
+		end
+
+end -- class EV_FONTABLE_I
+
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -32,3 +44,4 @@ end
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

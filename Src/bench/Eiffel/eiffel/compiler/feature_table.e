@@ -125,7 +125,7 @@ end;
 					if f1.written_in.is_equal (feat_tbl_id) and then f1.is_external then
 						ext_i ?= f1;
 						if ext_i.encapsulated then
-							System.set_freeze (True)
+							System.set_freeze
 						end
 					end;
 					Result := False;
@@ -148,7 +148,7 @@ end;
 								not ext_i.freezing_equiv (f2)
 							then
 									-- The external definition has changed
-								System.set_freeze (True)
+								System.set_freeze
 							end
 						end
 						Result := False;
@@ -424,7 +424,6 @@ end;
 			non_deferred, deferred_found: BOOLEAN;
 			feature_i: FEATURE_I;
 			vcch1: VCCH1;
-			vcch2: VCCH2;
 			pos: INTEGER;
 		do
 			from
@@ -447,11 +446,6 @@ end;
 				check_feature (feature_i);
 				go (pos);
 				forth;
-			end;
-			if not (non_deferred or else deferred_found) then
-				!!vcch2;
-				vcch2.set_class (associated_class);
-				Error_handler.insert_error (vcch2);
 			end;
 		end;
 

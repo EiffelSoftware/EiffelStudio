@@ -72,10 +72,10 @@ feature -- Properties
 		do
 		end;
 
-    stone_type: INTEGER is
-        do
-            Result := System_type
-        end;
+	stone_type: INTEGER is
+		do
+			Result := System_type
+		end;
 
 feature {NONE} -- Execution
 
@@ -135,12 +135,11 @@ feature {NONE} -- Implementation
 
 	load_default_ace is
 		local
-			create_ace: CREATE_ACE;
+			ace_b: ACE_BUILDER;
 			wizard: WIZARD
 		do
-			!! wiz_dlg.make ("Builder", Project_tool);
-			!! create_ace.make (Current);
-			!! wizard.make (Project_tool, wiz_dlg, create_ace);
+			!! ace_b.make (Current);
+			!! wizard.make (Project_tool, wiz_dlg, ace_b);
 			wizard.execute_action;
 		end;
 
@@ -151,14 +150,16 @@ feature {NONE} -- Implementation
 			!! file_name.make (0);
 			file_name.append ("Ace.ace");
 			Eiffel_ace.set_file_name (file_name);
-			wiz_dlg.popdown;
 			system_tool.display;
 			system_tool.show_file_content (file_name);
 		end;
 
 feature {NONE} -- Properties
 
-	wiz_dlg: WIZARD_DIALOG;
+	wiz_dlg: WIZARD_DIALOG is
 			-- Dialog for the wizard.
+		once
+			!! Result.make (Interface_names.t_Ace_builder, Project_tool);
+		end
 
 end -- class SYSTEM_HOLE

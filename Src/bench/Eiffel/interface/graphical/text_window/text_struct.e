@@ -7,7 +7,9 @@ inherit
 			make as array_create
 		export
 			{NONE} all;
-			{ANY} empty
+			{ANY} empty, area
+		redefine
+			is_equal
 		end
 
 feature 
@@ -76,6 +78,14 @@ feature
 			lower := 0;
 			area := Void;
 			clickable_count := 0
+		end;
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is array made of the same items as `other'?
+		do
+			Result := equal (area, other.area)
 		end;
 
 feature {NONE}

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 				lose_cmd: MEL_COMMAND; lose_arg: ANY;
 				done_cmd: MEL_COMMAND; done_arg: ANY) is
 			-- Initialize Current to initiate the sending of data 
-			-- though the selection mechanism.
+			-- through the selection mechanism.
 			-- `time' specifies the the selection should commence (should
 			-- be taken the MEL_EVENT class).
 			-- `target_atom' indicates the data representation (usually
@@ -62,10 +62,12 @@ feature {NONE} -- Initialization
 			Mel_dispatcher.make_own_selection (a_widget,
 				target_atom, time, a_string, lose_cmd_exec, done_cmd_exec)
 		ensure
-			commands_set: lose_command.command = lose_cmd and then
-					lose_command.argument = lose_arg and then
-					done_command.command = done_cmd and then
-					done_command.argument = done_arg 
+			commands_set: lose_cmd /= Void implies 
+						(lose_command.command = lose_cmd and then
+						lose_command.argument = lose_arg) and then
+					done_cmd /= Void implies 
+						(done_command.command = done_cmd and then
+						done_command.argument = done_arg)
 		end;
 
 	make_get_selection_value (a_widget: MEL_WIDGET;

@@ -478,17 +478,25 @@ feature -- Output
 			-- Append the signature of current feature in `st'
 		require
 			non_void_st: st /= Void
+		do
+			if is_normal then
+				append_name (st)
+			else
+				append_special_name (st)
+			end
+			append_just_signature (st)
+		end
+		
+	append_just_signature (st: STRUCTURED_TEXT) is
+			-- Append just signature of feature in `st'.
+		require
+			st_not_void: st /= Void
 		local
 			args: like arguments
 			orig_type, cur_type: TYPE_A
 			same: BOOLEAN
 		do
 			args := arguments
-			if is_normal then
-				append_name (st)
-			else
-				append_special_name (st)
-			end
 			if args /= Void then
 				st.add_space
 				st.add (Ti_l_parenthesis)
@@ -525,8 +533,9 @@ feature -- Output
 				st.add (Ti_colon)
 				st.add_space
 				type.ext_append_to (st, Current)
-			end
+			end			
 		end
+		
 
 	append_name (st: STRUCTURED_TEXT) is
 			-- Append the name of the feature in `st'

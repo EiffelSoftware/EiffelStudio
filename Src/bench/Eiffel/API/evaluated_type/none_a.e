@@ -9,7 +9,7 @@ class
 inherit
 	TYPE_A
 		redefine
-			is_none, dump, type_i, same_as
+			is_none, dump, type_i, same_as, is_full_named_type
 		end
 
 feature -- Comparison
@@ -24,6 +24,9 @@ feature -- Properties
 
 	is_none: BOOLEAN is True
 			-- Is the current type a none type ?
+
+	is_full_named_type: BOOLEAN is True
+			-- Current is a full named type.
 
 feature -- Access
 

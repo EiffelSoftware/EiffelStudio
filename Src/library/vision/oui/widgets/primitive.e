@@ -25,9 +25,9 @@ feature -- Widget hierarchy
 
 	parent: COMPOSITE is
 			-- Parent of Current widget
-        do
-            Result ?= widget_manager.parent (Current)
-        end; -- parent
+		do
+			Result ?= widget_manager.parent (Current)
+		end; -- parent
 
 feature -- Color
 

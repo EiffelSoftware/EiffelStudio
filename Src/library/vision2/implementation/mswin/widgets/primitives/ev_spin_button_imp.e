@@ -122,8 +122,8 @@ inherit
 			on_erase_background,
 			text_length,
 			set_focus,
-			default_style
-			
+			default_style,
+			on_notify
 		end
 
 	WEL_UDS_CONSTANTS
@@ -132,6 +132,11 @@ inherit
 		end
 
 	WEL_SB_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	WEL_UDN_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -629,10 +634,8 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 			-- A key has been pressed.
 			-- If `virtual_key' is Return then we update `Current' accordingly.
 		do
-			manually_updating := True
 			Precursor {EV_GAUGE_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return then
-				manually_updating := False
 				internal_text_field.set_caret_position (1)
 				translate_text
 				interface.return_actions.call ([])
@@ -670,43 +673,37 @@ feature {NONE} -- Implementation
 				set_text (internal_arrows_control.minimum.out)
 			end
 		end
-
-	on_en_change is	
-			-- Contents of `Current' changed.
-			--| This is redefined as the step used by windows is always one.
-			--| Using `manually_updating', we monitor whether the value
-			--| Changed due to cklicking `internal_arrows_control'. If step
-			--| is greater than One and not manually updating then adjust
-			--| `value' by remaining step.
+		
+	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+			-- A `wm_notify' message has been received by `Current'
+		local
+			up_down: WEL_NM_UP_DOWN_CONTROL
 		do
-		if not manually_updating then
-			manually_updating := True
-			if step > 1 then
-			if last_value < value then
-				if value + step - 1 <= maximum then
-					set_value (value + step - 1)
+				-- If `Udn_deltapos', we must assign the stepping distance
+				-- ourselves.
+			if info.code = Udn_deltapos then
+				create up_down.make_by_pointer (info.item)
+				if up_down.delta < 0 then
+						-- Adjust value of `Current' by `step'.
+					up_down.set_delta (-step)
+						-- We must ensure `last_value' never becomes less
+						-- than minimum.
+					last_value := (value - step).max (minimum)
 				else
-					set_value (maximum)
-				end
-			elseif last_value > value then
-				if value - step + 1 >= minimum then
-					set_value (value - step + 1)
-				else
-					set_value (minimum)
+						-- Adjust value of `Current' by `step'.
+					up_down.set_delta (step)
+						-- We must make ensure `last_value' never becomes
+						-- greater than `maximum'.
+					last_value := (value + step).min (maximum)
 				end
 			end
-			last_value := value
-			end
-		else
-			manually_updating := False
-		end
 		end
 
 	last_value: INTEGER
-		-- Holds the last `value'.
-
-	manually_updating: BOOLEAN
-		-- Are we updating the control to move the rest of the step?
+		-- Holds the last `value' of `Current' as seen from the interface.
+		-- We need this as windows sends `on_wm_vscroll' even if the value is
+		-- not changing, ie reached its maximum. We only want to call the
+		-- change actions when the value really does change.
 
 	on_char (character_code, key_data: INTEGER) is
 			-- Wm_char message
@@ -736,8 +733,10 @@ feature {NONE} -- Implementation
 					check
 						up_down_has_buddy: up_down.buddy_window /= Void
 					end
-					if change_actions_internal /= Void then
-						change_actions_internal.call ([value])
+					if last_value /= value then
+						if change_actions_internal /= Void then
+							change_actions_internal.call ([value])
+						end
 					end
 				end
 			end

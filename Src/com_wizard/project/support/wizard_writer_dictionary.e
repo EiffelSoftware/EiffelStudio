@@ -74,6 +74,10 @@ feature -- Paths -- 11
 
 	Structures: STRING is "Structures"
 
+	Interface_proxy: STRING is "Interface_proxy"
+
+	Interface_stub: STRING is "Interface_stub"
+
 	Eiffel_file_extension: STRING is ".e"
 
 	Header_file_extension: STRING is ".h"

@@ -294,8 +294,6 @@ feature {NONE} -- Event handling
 		do
 			ost ?= s
 			if ost /= Void then
-				keep_object_from_dropped_stone (ost)
-				
 				create dlg.make_with_object (ost.object_address)
 				dlg.set_callback (agent add_expression (dlg))
 				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
@@ -308,24 +306,6 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
-	keep_object_from_dropped_stone (ost: OBJECT_STONE) is
-			-- 
-		local
-			l_tree_item: EV_TREE_ITEM
-			l_dv: ABSTRACT_DEBUG_VALUE			
-		do
---			l_tree_item := ost.tree_item
---			if l_tree_item /= Void then
---				l_dv ?= l_tree_item.data
---				if l_dv /= Void then
---					if Application.is_dotnet then
---							--| FIXME: JFIAT : find a nicer way to manage kept objects						
---						Application.imp_dotnet.keep_object (l_dv)
---					end
---				end
---			end
-		end		
 
 	on_item_selected (unused: EV_MULTI_COLUMN_LIST_ROW) is
 			-- An item in the list of expression was selected.

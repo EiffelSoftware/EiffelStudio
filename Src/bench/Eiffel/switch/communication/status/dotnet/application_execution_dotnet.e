@@ -69,6 +69,9 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		do
+			debug ("debugger_trace_callback")
+				print ("Notify callback: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
+			end
 			callback_notification_processed := False		
 			if eifnet_debugger /= Void then
 				if eifnet_debugger.data_changed then
@@ -97,7 +100,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			end
 		end
 
-feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR}  -- Trigger eStudio status
+feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL}  -- Trigger eStudio status
 
 	callback_notification_processed: BOOLEAN
 			-- Is callback notification processed and done ?
@@ -255,8 +258,6 @@ feature -- Execution
 			app: STRING
 			l_status: APPLICATION_STATUS_DOTNET
 		do
-
-
 			create eifnet_debugger.make
 			eifnet_debugger.initialize_debugger_session
 			if eifnet_debugger.is_debugging then
@@ -287,7 +288,8 @@ feature -- Execution
 			-- referenced the next time we stop the application.
 		do
 --| This is not require for dotnet system, but we may adapt it for others uses
---			keep_objects (kept_objects)		
+--			keep_objects (kept_objects)
+			keep_only_objects (kept_objects)
 --			cont_request.send_breakpoints
 			inspect application.execution_mode
 			when feature {EXEC_MODES}.step_into then 
@@ -863,12 +865,12 @@ feature {NONE} -- Events on notification
 				--| on top of the stack = current stack/feature
 			application.set_current_execution_stack_number (1)			
 
-			--| We need to stop
-			--| Already "stopped" but let's be sure ..
+				--| We need to stop
+				--| Already "stopped" but let's be sure ..
 			status.set_is_stopped (True)
 			status.set_top_level
 
-			--| CallStack
+				--| CallStack
 			status.reload_call_stack --| since we stop, let's reload the whole callstack
 			
 			debug ("debugger_trace_callstack")
@@ -910,6 +912,7 @@ feature {NONE} -- Events on notification
 		local
 			l_bp: BREAKPOINT
 			expr: EB_EXPRESSION
+			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if eifnet_debugger_info.last_control_mode_is_stepping then
 				debug ("debugger_trace")
@@ -923,18 +926,12 @@ feature {NONE} -- Events on notification
 						print ("CONDITIONAL BP %N")
 					end
 					expr := l_bp.condition
-					if expr /= Void then		
+					if expr /= Void then
 						expr.evaluate
-						if expr.error_message = Void then
-							Result := (expr.final_result_type.is_basic) and then
-									(expr.final_result_value.output_value.is_equal ("True"))
-							debug ("debugger_trace")
-								print ("Evaluation result = " + Result.out + "%N")
-							end
+						evaluator := expr.expression_evaluator
+						if evaluator.error_message = Void then
+							Result := evaluator.final_result_is_true_boolean_value
 						else		
-							debug ("debugger_trace")
-								print ("Evaluation error = " + expr.error_message + "%N")
-							end
 							Result := False
 						end
 					else
@@ -1114,18 +1111,6 @@ feature -- Call stack related
 
 feature -- Object Keeper
 
-	keep_object (adv: ABSTRACT_DEBUG_VALUE) is
-			-- Keep a reference to this data `adv' because we may need it later
-			-- for object browsing and expression evaluation
-		do
-			Debug_value_keeper.keep (adv)
-		end
-
-	remove_kept_object_by_address (add: STRING) is
-			-- we don't need to keep a reference on this object addressed by `add'
-		do
-			Debug_value_keeper.remove_by_address (add)
-		end
 
 	recycle_kept_object is
 			-- recycle the "keeper" container
@@ -1142,7 +1127,7 @@ feature -- Object Keeper
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
 			-- Keep this object addressed by `a_address'
 		do
-			Result := Debug_value_keeper.debug_value_kept.item (a_address)
+			Result := Debug_value_keeper.item (a_address)
 		end
 
 	know_about_kept_object (a_address: STRING): BOOLEAN is

@@ -21,8 +21,6 @@ feature -- Access
 
 	Case_6: STRING is "Class STRING must have only one creation procedure having an integer argument";
 
-	Case_17: STRING is "Class STRING must have a procedure with an integer argument named `set_count'";
-
 	Case_7: STRING is "Class ARRAY must have exactly one formal generic parameter";
 
 	Case_8: STRING is "Class ARRAY must inherit from TO_SPECIAL [Generic #1]";
@@ -42,5 +40,7 @@ feature -- Access
 	Case_15: STRING is "Non-expanded classes for basic types must have only one attribute with a good associated type";
 
 	Case_16: STRING is "Non-expanded classes for basic types may not have creation procedure";
+	
+	Case_17: STRING is "Class STRING must have a procedure with an integer argument named `set_count'";
 
 end -- class SPECIAL_CONST

@@ -495,7 +495,6 @@ feature -- Implementation
 		local
 			gdkwin: POINTER
 			x, y: INTEGER
-			pnd_wid: EV_PICK_AND_DROPABLE
 			a_wid_imp: EV_WIDGET_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 			a_row_imp: EV_PND_DEFERRED_ITEM

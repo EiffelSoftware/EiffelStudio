@@ -281,44 +281,44 @@ feature -- Status Setting
 			infix_set: is_infix = a_value
 		end
 
-	set_new_slot is
+	set_new_slot (a_value: like new_slot) is
 		indexing
-			description: "Set `new_slot' with `True'."
+			description: "Set `new_slot' with `a_value'."
 			external_name: "SetNewSlot"
 		do
-			new_slot := True
+			new_slot := a_value
 		ensure
-			new_slot: new_slot
+			new_slot_set: new_slot = a_value
 		end
 		
-	set_modified is
+	set_modified (a_value: like modified) is
 		indexing
-			description: "Set `modified' with `True'."
+			description: "Set `modified' with `a_value'."
 			external_name: "SetModified"
 		do
-			modified := True
+			modified := a_value
 		ensure
-			modified: modified
+			modified_set: modified = a_value
 		end
 
-	set_enum_literal is
+	set_enum_literal (a_value: like is_enum_literal) is
 		indexing
-			description: "Set `is_enum_literal' with `True'."
+			description: "Set `is_enum_literal' with `a_value'."
 			external_name: "SetEnumLiteral"
 		do
-			is_enum_literal := True
+			is_enum_literal := a_value
 		ensure
-			is_enum_literal: is_enum_literal
+			is_enum_literal_set: is_enum_literal = a_value
 		end
 
-	set_literal is
+	set_literal (a_value: like is_literal) is
 		indexing
-			description: "Set `is_literal' with `True'."
+			description: "Set `is_literal' with `a_value'."
 			external_name: "SetLiteral"
 		do
-			is_literal := True
+			is_literal := a_value
 		ensure
-			is_literal: is_literal
+			is_literal_set: is_literal = a_value
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is

@@ -204,13 +204,6 @@ feature -- Element change
 			gray_pixmap := Void
 		end
 
-feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
-
-	on_activate is
-			-- Is called by the menu when the item is activated.
-		do
-		end
-
 feature {NONE} -- Implementation, pick and drop
 
 	widget_source: EV_WIDGET_IMP is
@@ -270,6 +263,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/07 00:03:20  rogers
+--| Removed on_activate as it does nothing.
+--|
 --| Revision 1.19  2000/04/06 18:47:47  rogers
 --| Removed old command association.
 --|

@@ -105,13 +105,13 @@ feature -- Basic operations
 			a_string.append (Tab)
 			a_string.append (a_date_time.out)
 			a_string.append (Tab)
-			a_string.append (clone (a_origin.generator))
+			a_string.append (a_origin.generator)
 			a_string.append (New_line_tab)
 			a_string.append (a_log_text)
 			a_string.append (New_line)
 			a_string.append (New_line)
 			if log_file /= Void then
-				log_file.put_string (clone (a_string))
+				log_file.put_string (a_string)
 			end
 		end
 

@@ -393,9 +393,6 @@ feature {NONE} -- Implementation
 		do
 			Result := clone (a_filename)
 			Result.head (Result.count - 2)
-			if is_client then
-				Result.append ("_proxy")
-			end
 			if is_cpp then
 				Result.append (Cpp_file_extension)
 			else

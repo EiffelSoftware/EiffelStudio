@@ -72,16 +72,20 @@ external
 
 	include_path:
 		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
-		"\$(EIFFEL_SRC)/library/vision2/spec/include",
 		"\$(EIFFEL_SRC)/build2/modified_libraries/gobo_16/library/kernel/include",
 		"\$(EIFFEL_SRC)/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib",
-		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(EIFFEL_SRC)/C_library/libpng",
+		"\$(EIFFEL_SRC)/C_library/zlib",
+		"\$(EIFFEL_SRC)/library/vision2/spec/include"
 
 	object:
 		"$(EIFFEL_SRC)/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o",
 		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-		"-lpng -lz -lXtst"
+		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
+		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
+		"-L/usr/X11R6/lib -lXtst"
 
 end

@@ -930,7 +930,9 @@ feature {NONE} -- Completion implementation
 							end
 						end
 					else
-						feat := current_class_c.feature_with_name (name)
+						if current_class_c.has_feature_table then
+							feat := current_class_c.feature_with_name (name)
+						end
 						is_create := create_before_position (current_line, current_token)
 					end
 					if feat = Void then		

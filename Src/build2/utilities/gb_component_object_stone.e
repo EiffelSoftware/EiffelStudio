@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 			a_component_not_void: a_component /= Void
 		do
 			component ?= a_component
+				-- As this represents a component, there are no nested dependencies.
+			create all_contained_instances.make (10)
 		ensure
 			component_set: component = a_component
 		end

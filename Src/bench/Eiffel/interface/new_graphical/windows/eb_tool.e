@@ -60,7 +60,7 @@ feature -- Tool Properties
 
 	empty_tool_name: STRING is 
 			-- Name given to the tool when it is empty
-		do
+		deferred
 		end
 
 --	save_cmd_holder: TWO_STATE_CMD_HOLDER is
@@ -112,13 +112,13 @@ feature -- Status report
 	title: STRING is
 			-- The title of the tool.
 		do
-			Result := manager.tool_title
+			Result := manager.tool_title (Current)
 		end
 
 	icon_name: STRING is
 			-- The title of the tool.
 		do
-			Result := manager.tool_icon_name
+			Result := manager.tool_icon_name (Current)
 		end
 
 	destroyed: BOOLEAN is
@@ -169,6 +169,8 @@ feature -- Status setting
 
 	set_title (s: STRING) is
 			-- Set parent title to `s'.
+		require
+			s_non_void: s /= void
 		do
 			manager.set_tool_title (Current, s)
 		ensure
@@ -178,6 +180,8 @@ feature -- Status setting
 	set_icon_name (s: STRING) is
 			-- Set icon name to `s'.
 			-- icon name is shown just below the icon.
+		require
+			s_non_void: s /= void
 		do
 			manager.set_tool_icon_name (Current, s)
 		ensure

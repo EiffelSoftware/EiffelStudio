@@ -17,7 +17,7 @@ class LEX_ARRAY [T] inherit
 			{TEXT_FILLER} area, to_c
 		end
 
-creation
+create
 
 	make
 
@@ -29,7 +29,6 @@ feature -- Initialization
 		end;
 
 end -- class LEX_ARRAY [T]
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

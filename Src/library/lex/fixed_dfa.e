@@ -14,7 +14,7 @@ class FIXED_DFA inherit
 			copy, consistent, is_equal, setup
 		end;
 
-	FIX_AUTOMAT [STATE_OF_DFA]
+	FIXED_AUTOMATON [STATE_OF_DFA]
 		rename
 			make as fixed_make,
 			set_final as f_set_final
@@ -22,7 +22,7 @@ class FIXED_DFA inherit
 			{ANY} add_right, item, put, upper, last_position
 		end
 
-creation
+create
 
 	make
 
@@ -56,7 +56,7 @@ feature -- Status setting
 		local
 			current_state: STATE_OF_DFA
 		do
-			!! current_state.make (greatest_input);
+			create current_state.make (greatest_input);
 			add_right (current_state)
 		end; 
 
@@ -152,7 +152,6 @@ feature {NONE} -- Implementation
 		end; 
 
 end -- class FIXED_DFA
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

@@ -16,7 +16,7 @@ class METALEX inherit
 			raise_error
 		end
 
-creation
+create
 
 	make, make_extended
 
@@ -29,7 +29,7 @@ feature -- Initialization
 		do
 			freeze_lexical;
 			if analyzer = Void then
-				!! analyzer.make
+				create analyzer.make
 			end;
 			analyzer.initialize_attributes (dfa, categories_table,
 				keyword_h_table, keywords_case_sensitive);
@@ -74,7 +74,7 @@ feature -- Input
 			-- then a line beginning with two dashes --
 			-- then zero or more lines containing one keyword each.
 		do
-			!! token_file.make_open_read (token_file_name);
+			create token_file.make_open_read (token_file_name);
 			record_atomics;
 			record_keywords;
 			make_analyzer
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			error_position: INTEGER;
 			message: STRING
 		do
-			!! message.make (0);
+			create message.make (0);
 			if description_length = 1 or pos < 1 then
 				error_position := 1
 			elseif pos < description_length then
@@ -182,9 +182,8 @@ feature {NONE} -- Implementation
 			parsing_stopped := True
 		end 
 
-end -- METALEX
+end -- class METALEX
  
-
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

@@ -105,7 +105,7 @@ feature -- Transformation
 				!! dstates.make (greatest_input);
 				dstates.set_state
 			until
-				dstates.after or dstates.empty
+				dstates.after or dstates.is_empty
 			loop
 				state := dstates.item;
 				old_index := dstates.index;
@@ -218,8 +218,8 @@ feature {NONE} -- Implementation
 			-- Change the value of "set_position" and set it
 			-- to the position of set in sets_list.
 		require
-			set_no_Void: set /= Void;
-			set_no_empty: not set.empty
+			set_no_void: set /= Void;
+			set_no_empty: not set.is_empty
 		local
 			index, last_index: INTEGER;
 			current_tree, new_tree: FIXED_TREE [INTEGER]
@@ -255,9 +255,9 @@ feature {NONE} -- Implementation
 				new_number := new_number + 1;
 				current_tree.put (new_number);
 				set_position := new_number;
-				new_set := true
+				new_set := True
 			else
-				new_set := false
+				new_set := False
 			end
 		end; 
 

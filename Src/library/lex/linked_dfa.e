@@ -16,12 +16,12 @@ class LINKED_DFA inherit
 			set_final as l_set_final,
 			make as link_make
 		export
-			{ANY} start, after, empty, item, first,
+			{ANY} start, after, is_empty, item, first,
 					last, forth, back, index,
 					islast, go_i_th, finish
 		end
 
-creation
+create
 
 	make
 
@@ -63,7 +63,7 @@ feature -- Status setting
 			current_state: STATE_OF_DFA
 		do
 			nb_states := nb_states + 1;
-			!!current_state.make (greatest_input);
+			create current_state.make (greatest_input);
 			finish;
 			put_right (current_state);
 			finish
@@ -103,11 +103,11 @@ feature -- Duplication
 	lcopy: FIXED_DFA is
 			-- Copy of Current in a fixed_dfa
 		do
-			!!Result.make (greatest_input, nb_states);
+			create Result.make (greatest_input, nb_states);
 			from
 				start
 			until
-				after or empty
+				after or is_empty
 			loop
 				Result.add_right (item);
 				forth
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			Result := item;
 			go_i_th (memory)
 		ensure then
-			old index = index
+			index_unchanged: index = old index
 		end 
 
 invariant
@@ -136,7 +136,6 @@ invariant
 	nb_states_right: nb_states = count
 
 end -- class LINKED_DFA
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

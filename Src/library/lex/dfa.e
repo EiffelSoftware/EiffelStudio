@@ -19,19 +19,18 @@ feature -- Access
 			-- inputs listed in `l'; 0 if not recognized.
 		local
 			state: STATE_OF_DFA;
-			index: INTEGER
 		do
 			from
 				state := start_state;
 				l.start
 			until
-				(l.after or l.empty) or else
+				(l.after or l.is_empty) or else
 					state.successor (l.item) = Void
 			loop
 				state := state.successor (l.item);
 				l.forth
 			end;
-			if (l.after or l.empty) then
+			if (l.after or l.is_empty) then
 				Result := state.final
 			end
 		end; 
@@ -42,18 +41,17 @@ feature -- Access
 			-- inputs listed in `l'; empty if not recognized
 		local
 			state: STATE_OF_DFA;
-			index: INTEGER
 		do
 			from
 	   			state := start_state;
    				l.start
 			until
-   				(l.after or l.empty) or else state.successor(l.item) = Void
+   				(l.after or l.is_empty) or else state.successor(l.item) = Void
 			loop
    				state := state.successor (l.item);
    				l.forth
 			end;
-			if l.after or l.empty then
+			if l.after or l.is_empty then
    				Result := state.final_array
 			else
    				!!Result.make (0, -1)

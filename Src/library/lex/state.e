@@ -49,7 +49,6 @@ invariant
 
 end -- class STATE
  
-
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

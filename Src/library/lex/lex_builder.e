@@ -20,7 +20,7 @@ class LEX_BUILDER inherit
 			dfa_set_final
 		end
 
-creation
+create
 
 	make, make_extended
 
@@ -30,8 +30,8 @@ feature  -- Initialization
 			-- Set up the analyzer.
 		do
 			last_character_code := Last_ascii;
-			!! tool_list.make;
-			!! tool_names.make
+			create tool_list.make;
+			create tool_names.make
 		ensure
 			last_character_set: last_character_code = Last_ascii
 		end;
@@ -42,8 +42,8 @@ feature  -- Initialization
 			valid_char_code: char_code > 0
 		do
 			last_character_code := char_code
-			!! tool_list.make;
-			!! tool_names.make
+			create tool_list.make;
+			create tool_names.make
 		ensure
 			last_character_set: last_character_code = char_code
 		end;
@@ -51,9 +51,9 @@ feature  -- Initialization
 	initialize is
 			-- Set up attributes of `analyzer'.
 		do
-			initialized := true;
+			initialized := True;
 			if analyzer = Void then
-				!! analyzer.make
+				create analyzer.make
 			end;
 			analyzer.initialize_attributes (dfa, categories_table,
 					keyword_h_table, keywords_case_sensitive)
@@ -87,7 +87,7 @@ feature -- Access
 	error_list: ERROR_LIST is
 			-- List of error messages
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 	analyzer: LEXICAL;
@@ -114,7 +114,7 @@ feature -- Status setting
 			-- Make letter case not significant in future tools.
 			-- This is the default.
 		do
-			case_sensitive := false
+			case_sensitive := False
 		ensure
 			not case_sensitive
 		end;
@@ -123,7 +123,7 @@ feature -- Status setting
 			-- Make letter case significant in future tools.
 			-- Default is ignore case.
 		do
-			case_sensitive := true
+			case_sensitive := True
 		ensure
 			case_sensitive
 		end;
@@ -133,9 +133,9 @@ feature -- Status setting
 			-- in future tools.
 			-- This is the default.
 		require
-			no_tools_built: tool_list = Void or else tool_list.empty
+			no_tools_built: tool_list = Void or else tool_list.is_empty
 		do
-			keywords_case_sensitive := false
+			keywords_case_sensitive := False
 		ensure
 			not keywords_case_sensitive
 		end;
@@ -145,9 +145,9 @@ feature -- Status setting
 			-- in future tools.
 			-- Default is ignore case.
 		require
-			no_tool_built: tool_list.empty
+			no_tool_built: tool_list.is_empty
 		do
-			keywords_case_sensitive := true
+			keywords_case_sensitive := True
 		ensure
 			keywords_case_sensitive
 		end;
@@ -165,9 +165,8 @@ feature -- Element change
 			i, ee, bb: INTEGER;
 			fa: PDFA;
 			c_name: STRING;
-			list: LINKED_LIST [INTEGER]
 		do
-			!! fa.make (2, last_character_code);
+			create fa.make (2, last_character_code);
 			bb := b.code;
 			ee := e.code;
 			from
@@ -189,7 +188,7 @@ feature -- Element change
 			tool_list.finish;
 			tool_list.put_right (fa);
 			if bb /= ee then
-				!! c_name.make (8);
+				create c_name.make (8);
 				c_name.extend ('%'');
 				c_name.append (readable_form (b));
 				c_name.extend ('%'');
@@ -198,7 +197,7 @@ feature -- Element change
 				c_name.append (readable_form (e));
 				c_name.extend ('%'')
 			else
-				!! c_name.make (3);
+				create c_name.make (3);
 				c_name.extend ('%'');
 				c_name.append (readable_form (b));
 				c_name.extend ('%'')
@@ -215,7 +214,7 @@ feature -- Element change
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!! new_tool.make (2, last_character_code);
+			create new_tool.make (2, last_character_code);
 			from
 				i := -1
 			until
@@ -244,7 +243,7 @@ feature -- Element change
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!! new_tool.make (2, last_character_code);
+			create new_tool.make (2, last_character_code);
 			from
 				i := First_printable - 1
 			until
@@ -280,7 +279,7 @@ feature -- Element change
 			c_name: STRING
 		do
 			tool_list.go_i_th (r);
-			!! new.make (tool_list.item.nb_states, last_character_code);
+			create new.make (tool_list.item.nb_states, last_character_code);
 			new.include (tool_list.item, 0);
 			cc := c.code;
 			new.delete_transition (1, cc, 2);
@@ -290,7 +289,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			tool_names.go_i_th (r);
 			c_name.append (tool_names.item);
 			c_name.extend ('-');
@@ -318,7 +317,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -329,7 +328,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
 			c_name.extend (' ');
@@ -356,7 +355,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -368,7 +367,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
 			c_name.extend (' ');
@@ -397,7 +396,7 @@ feature -- Element change
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -409,7 +408,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.extend ('[');
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
@@ -431,17 +430,16 @@ feature -- Element change
 		local
 			new: PDFA;
 			c_name: STRING;
-			in_put: INTEGER
 		do
 			tool_list.go_i_th (c);
-			!! new.make (tool_list.item.nb_states, last_character_code);
+			create new.make (tool_list.item.nb_states, last_character_code);
 			new.include (tool_list.item, 0);
 			new.remove_case_sensitiveness;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.extend ('~');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
@@ -463,7 +461,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (1, length);
 			if not case_sensitive then
@@ -473,7 +471,7 @@ feature -- Element change
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.extend ('[');
 			c_name.append (tool_names.item);
 			c_name.extend (']');
@@ -494,7 +492,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			if not case_sensitive then
@@ -504,7 +502,7 @@ feature -- Element change
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.precede ('+');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
@@ -526,7 +524,7 @@ feature -- Element change
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!! new.make (length, last_character_code);
+			create new.make (length, last_character_code);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			new.set_e_transition (1, length);
@@ -537,7 +535,7 @@ feature -- Element change
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.precede ('*');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
@@ -561,7 +559,7 @@ feature -- Element change
 			tool_list.go_i_th (c);
 			new := tool_list.item;
 			o_length := new.nb_states;
-			!! a_prefix.make (o_length * n, last_character_code);
+			create a_prefix.make (o_length * n, last_character_code);
 			a_prefix.include (new, 0);
 			from
 				index := 1
@@ -580,7 +578,7 @@ feature -- Element change
 			tool_list.finish;
 			tool_list.put_right (a_prefix);
 			tool_names.go_i_th (c);
-			!! c_name.make (0);
+			create c_name.make (0);
 			c_name.append_integer (n);
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
@@ -618,7 +616,7 @@ feature -- Element change
 					io.put_string ("Union2, length = 6");
 					io.new_line;
 				end;
-				!! new.make (2, last_character_code);
+				create new.make (2, last_character_code);
 				new.include (tool_list.item, 0);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 0)
@@ -627,7 +625,7 @@ feature -- Element change
 					io.put_string ("Union2, length /= 6");
 					io.new_line;
 				end;
-				!! new.make (length, last_character_code);
+				create new.make (length, last_character_code);
 				new.include (tool_list.item, a_length + 1);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 1);
@@ -642,7 +640,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			tool_names.go_i_th (a);
 			c_name.append (tool_names.item);
 			c_name.extend ('|');
@@ -667,8 +665,8 @@ feature -- Element change
 			c_name: STRING;
 			cat_set, non_cat_set: FIXED_INTEGER_SET
 		do
-			!! cat_set.make (b);
-			!! non_cat_set.make (b);
+			create cat_set.make (b);
+			create non_cat_set.make (b);
 			length := 2;
 			from
 				tool_list.go_i_th (a)
@@ -683,8 +681,8 @@ feature -- Element change
 				end;
 				tool_list.forth
 			end;
-			if not cat_set.empty then
-				!! cat.make (2, last_character_code);
+			if not cat_set.is_empty then
+				create cat.make (2, last_character_code);
 				from
 					tool_p := cat_set.smallest
 				until
@@ -698,12 +696,12 @@ feature -- Element change
 			if length = 2 then
 				new := cat
 			else
-				if cat_set.empty then
-					!! new.make (length, last_character_code);
+				if cat_set.is_empty then
+					create new.make (length, last_character_code);
 					index := 2
 				else
 					length := length + 2;
-					!! new.make (length, last_character_code);
+					create new.make (length, last_character_code);
 					new.include (cat, 1);
 					new.set_e_transition (1, 2);
 					new.set_e_transition (3, length);
@@ -728,7 +726,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!! c_name.make (0);
+			create c_name.make (0);
 			from
 				tool_names.go_i_th (a);
 			until
@@ -754,7 +752,7 @@ feature -- Element change
 			tool_name: STRING
 		do
 			length := word.count;
-			!! new_tool.make (length + 1, last_character_code);
+			create new_tool.make (length + 1, last_character_code);
 			from
 			until
 				i = length
@@ -800,7 +798,7 @@ feature -- Element change
 			r_name: STRING
 		do
 			length := word.count;
-			!! new_tool.make ((6 * length) + 1, last_character_code);
+			create new_tool.make ((6 * length) + 1, last_character_code);
 			from
 			until
 				i = length
@@ -835,7 +833,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new_tool);
-			!! r_name.make (4);
+			create r_name.make (4);
 			r_name.extend ('-');
 			r_name.extend ('>');
 			r_name.extend ('"');
@@ -880,8 +878,8 @@ feature -- Element change
 			i_exist: i > 0 and i <= last_created_tool
 		do
 			if selected_tools = Void then
-				!! selected_tools.make;
-				!! token_type_list.make
+				create selected_tools.make;
+				create token_type_list.make
 			end;
 			selected_tools.finish;
 			selected_tools.put_right (i);
@@ -929,7 +927,7 @@ feature -- Element change
 			i: INTEGER;
 			l: LINKED_LIST [INTEGER];
 		do
-			!! l.make;
+			create l.make;
 			from
 				i := 1
 			until
@@ -965,7 +963,7 @@ feature -- Input
 		local
 			retrieved_file: RAW_FILE
 		do
-			!! retrieved_file.make_open_read (file_name);
+			create retrieved_file.make_open_read (file_name);
 			analyzer ?= retrieved_file.retrieved;
 			retrieved_file.close
 		end;
@@ -980,9 +978,9 @@ feature -- Output
 			store_file: RAW_FILE
 		do
 			if analyzer = Void then
-				!! analyzer.make
+				create analyzer.make
 			end;
-			!! store_file.make_open_write (file_name);
+			create store_file.make_open_write (file_name);
 			store_file.basic_store (analyzer);
 			store_file.close
 		end;
@@ -1009,7 +1007,7 @@ feature {NONE} -- Implementation
 			elseif c = '%R' then
 				Result := "%%R"
 			else
-				!! Result.make (1);
+				create Result.make (1);
 				Result.extend (c)
 			end
 		end;
@@ -1027,7 +1025,7 @@ feature {NONE} -- Implementation
 			set_start (1);
 			construct_dfa;
 			copy_keywords;
-			lexical_frozen := true
+			lexical_frozen := True
 		ensure
 			not_frozen: dfa /= Void;
 			not_frozen: lexical_frozen
@@ -1051,7 +1049,7 @@ feature {NONE} -- Implementation
 				token_type_list.start;
 				shift := 1
 			until
-				selected_tools.after or selected_tools.empty
+				selected_tools.after or selected_tools.is_empty
 			loop
 				set_e_transition (1, shift + 1);
 				tool_list.go_i_th (selected_tools.item);
@@ -1090,9 +1088,9 @@ feature {NONE} -- Implementation
 			in_put: INTEGER;
 			set, old_set: FIXED_INTEGER_SET
 		do
-			!! set_tree.make (nb_states, 0);
-			!! categories_table.make (-1, last_character_code);
-			!! old_set.make (nb_states);
+			create set_tree.make (nb_states, 0);
+			create categories_table.make (-1, last_character_code);
+			create old_set.make (nb_states);
 			from
 				in_put := - 1
 			until
@@ -1126,7 +1124,7 @@ feature {NONE} -- Implementation
 			new_input_array: ARRAY [FIXED_INTEGER_SET];
 			category, in_put: INTEGER
 		do
-			!! new_input_array.make (0, greatest_input);
+			create new_input_array.make (0, greatest_input);
 			from
 				in_put := -1
 			until
@@ -1149,13 +1147,13 @@ feature {NONE} -- Implementation
 			tool_number, token_type: INTEGER
 		do
 			if last_declared_keyword > 0 then
-				!! keyword_h_table.make (last_declared_keyword)
+				create keyword_h_table.make (last_declared_keyword)
 			end;
 			from
 				selected_tools.start;
 				token_type_list.start
 			until
-				selected_tools.after or selected_tools.empty
+				selected_tools.after or selected_tools.is_empty
 			loop
 				tool_number := selected_tools.item;
 				token_type := token_type_list.item;
@@ -1164,7 +1162,7 @@ feature {NONE} -- Implementation
 				from
 					k_list.start
 				until
-					k_list.after or k_list.empty
+					k_list.after or k_list.is_empty
 				loop
 					k := k_list.item;
 					keyword_h_table.put (token_type, k);
@@ -1188,7 +1186,7 @@ feature {NONE} -- Implementation
 			l: LINKED_LIST [INTEGER];
 			possible_tokens: ARRAY [INTEGER]
 		do
-			!! l.make;
+			create l.make;
 			from
 				i := 1
 			until
@@ -1234,7 +1232,7 @@ feature {NONE} -- Implementation
 		local
 			message: STRING
 		do
-			!! message.make (0);
+			create message.make (0);
 			message.append ("Warning: some tokens can be recognized by ");
 			token_type_list.start;
 			token_type_list.search (first);
@@ -1257,7 +1255,7 @@ feature {NONE} -- Implementation
 		local
 			message: STRING
 		do
-			!! message.make (0);
+			create message.make (0);
 			message.append ("Warning: ");
 			message.append (k);
 			message.append (" is not recognized by ");

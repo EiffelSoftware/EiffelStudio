@@ -14,18 +14,19 @@ class ERROR_LIST inherit
 			make as linked_list_make
 		end
 
-creation
+create
 
 	make
 
 feature -- Initialization
 
 	make is
+			-- Create list.
 		do
 			linked_list_make;
-			display := true
+			display := True
 		ensure
-			display = true
+			display_enabled: display
 		end; 
 
 feature -- Status setting
@@ -33,17 +34,17 @@ feature -- Status setting
 	display_message is
 			-- From now, display new messages on standard output.
 		do
-			display := true
+			display := True
 		ensure
-			display
+			display_enabled: display
 		end; 
 
 	do_not_display_message is
 			-- From now, do not display new messages on standard output.
 		do
-			display := false
+			display := False
 		ensure
-			not display
+			display_disabled: not display
 		end; 
 
 feature -- Element change
@@ -52,7 +53,7 @@ feature -- Element change
 			-- Add message in list and display it or not.
 		do
 			finish;
-			if (before or empty) or else not message.is_equal (item) then
+			if (before or is_empty) or else not message.is_equal (item) then
 				put_right (message);
 				if display then
 					output.put_string (message);
@@ -70,13 +71,12 @@ feature {NONE} -- Implementation
 	output: STD_FILES is
 			-- Standard error output if the messages are to be displayed.
 		once
-			!!Result;
+			 create Result;
 			Result.set_error_default
 		end;
 
-end -- ERROR_LIST
+end -- class ERROR_LIST
  
-
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

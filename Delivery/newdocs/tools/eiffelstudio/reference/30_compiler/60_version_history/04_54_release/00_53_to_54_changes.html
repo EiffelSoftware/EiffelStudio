@@ -74,6 +74,15 @@
           <span class="ekeyword">end</span></pre>Not doing it could generate dead-lock during the execution of a multithreaded system.</li>
           <li>Static access on externals is now only authorized when external is 
           a frozen external without assertions.</li>
+          <li>Compiler will now report a warning for assignments like those:<br>
+          <pre>td: <span class="eclass">TUPLE</span> [<span class="eclass">DOUBLE</span>]
+ti: <span class="eclass">TUPLE</span> [<span class="eclass">INTEGER</span>]
+
+td := ti</pre>
+          The warning will help you correct code using this pattern, because in 
+          the next release this will be rejected in order to conform to the 
+          Eiffel language specification.
+          </li>
 </ul>
         
         

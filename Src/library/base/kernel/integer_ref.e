@@ -14,10 +14,8 @@ class INTEGER_REF inherit
 			infix "/" as infix "//",
 			one as one_ref,
 			zero as zero_ref
-		undefine
-			is_equal
 		redefine
-			out
+			out, is_equal
 		end;
 
 	COMPARABLE
@@ -27,14 +25,12 @@ class INTEGER_REF inherit
 		export
 			{NONE} max_ref, min_ref
 		redefine
-			out, three_way_comparison
+			out, three_way_comparison, is_equal
 		end;
 
 	HASHABLE
-		undefine
-			is_equal
 		redefine
-			is_hashable, out
+			is_hashable, out, is_equal
 		end
 
 feature -- Access
@@ -86,6 +82,13 @@ feature -- Comparison
 			-- Is current integer less than `other'?
 		do
 			Result := item < other.item
+		end;
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object of the same type
+			-- as current object and identical to it?
+		do
+			Result := other.item = item
 		end;
 
 	three_way_comparison (other: INTEGER_REF): INTEGER is

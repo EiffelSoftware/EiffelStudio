@@ -41,10 +41,12 @@ feature -- Access
 		require
 			non_void_type: a_type /= Void
 		do
-			check_eac_for_type (a_type)
-			if a_type.equals_type (feature {TYPE}.get_type ("System.Void")) then
+			if Name_formatter.has_special_type_name (a_type.full_name) then
+				Result := Name_formatter.special_type_name.twin
+			elseif a_type.full_name.equals (("System.Void").to_cil) then
 				Result := "NONE"
 			else
+				check_eac_for_type (a_type)
 				Result := cache_reflection.type_name (a_type)
 			end
 			if Result /= Void then

@@ -33,7 +33,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (f: like feature_names; b: like body; i: like indexes; s, e: INTEGER) is
+	initialize (f: like feature_names; b: like body; i: like indexes; l, s, e: INTEGER) is
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
@@ -49,6 +49,7 @@ feature {AST_FACTORY} -- Initialization
 				System.current_class.set_has_unique
 			end
 			create location.reset
+			location.set_line_number (l)
 			location.set_start_position (s)
 			location.set_end_position (e)
 			set_start_position

@@ -32,13 +32,6 @@ inherit
 			default_create, copy
 		end
 
-	EB_GRAPHICAL_DATA
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
@@ -420,5 +413,10 @@ feature {NONE} -- Implementation
 		
 	cancel_compilation_requested: BOOLEAN
 			-- Has the user requested to cancel the compilation?
+
+	progress_bar_color: EV_COLOR is
+		do
+			Result := (create {SHARED_RESOURCES}).color_resource_value ("progress_bar_color", 0, 0, 128)
+		end
 
 end -- class EB_PROGRESS_DIALOG

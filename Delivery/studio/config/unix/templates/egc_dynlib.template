@@ -25,7 +25,7 @@ void init_rt (void)
 			initsig(); 
 			initstk(); 
 			exvect = exset((char *) 0, 0, (char *) 0); 
-			exvect->ex_jbuf = (char *) exenv; 
+			exvect->ex_jbuf = &exenv; 
 			if (setjmp(exenv)) 
 				failure(); 
 

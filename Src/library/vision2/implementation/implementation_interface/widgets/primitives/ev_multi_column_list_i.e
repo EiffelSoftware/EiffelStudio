@@ -23,6 +23,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+				-- Set default width & height for the pixmaps
+			pixmaps_width := 16
+			pixmaps_height := 16
+
 			update_children_agent := ~update_children
 			create column_titles.make
 			create column_widths.make
@@ -111,6 +115,12 @@ feature -- Status report
 			end
 		end
 
+	pixmaps_width: INTEGER
+			-- Width of displayed pixmaps in the Multicolumn list.
+
+	pixmaps_height: INTEGER
+			-- Height of displayed pixmaps in the Multicolumn list.
+
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
@@ -119,7 +129,8 @@ feature -- Status setting
 			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			item_deselected: not selected_items.has (interface.i_th (an_index))
+			item_deselected: 
+				not selected_items.has (interface.i_th (an_index))
 		end
 
 	deselect_item (an_index: INTEGER) is
@@ -128,7 +139,8 @@ feature -- Status setting
 			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			item_deselected: not selected_items.has (interface.i_th (an_index))
+			item_deselected: 
+				not selected_items.has (interface.i_th (an_index))
 		end
 
 	clear_selection is
@@ -199,6 +211,16 @@ feature -- Status setting
 		do
 			create an_alignment.make_with_right_alignment
 			set_column_alignment (an_alignment, a_column)
+		end
+
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in the Multicolumn list.
+		do
+			if pixmaps_width /= a_width or pixmaps_height /= a_height then
+				pixmaps_width := a_width
+				pixmaps_height := a_height
+				pixmaps_size_changed
+			end
 		end
 
 feature -- Element change
@@ -359,7 +381,8 @@ feature -- Element change
 		end
 
 	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
-			-- Assign text alignment to `an_alignment' for column `a_column'.
+			-- Assign text alignment to `an_alignment' for 
+			-- column `a_column'.
 		require
 			an_alignment_not_void: an_alignment /= Void
 			a_column_within_range: a_column > 1 and a_column <= column_count
@@ -435,23 +458,43 @@ feature {EV_ANY_I} -- Implementation
 			cur: CURSOR
 			txt: STRING
 			list: EV_MULTI_COLUMN_LIST_ROW
+			column_counter: INTEGER
+			list_pixmap: EV_PIXMAP
 		do
 			list := child.interface
 			cur := list.cursor
 			from
+				column_counter := 1
 				list.start
 			until
-				list.after
+				column_counter > column_count
 			loop
-				if list.isfirst and then list.pixmap /= Void then
-					set_row_pixmap (a_row, list.pixmap)
+				if column_counter = 1 then
+					-- Handle the pixmap
+					list_pixmap := list.pixmap
+					if list_pixmap /= Void then
+						set_row_pixmap (a_row, list_pixmap)
+					else
+						remove_row_pixmap (a_row)
+					end
 				end
-				txt := list.item
-				if txt = Void then
+
+					-- Set the text in the cell
+				if list.after then
 					txt := ""
+				else
+					txt := list.item
+					if txt = Void then
+						txt := ""
+					end
 				end
-				set_text_on_position (list.index, a_row, txt)
-				list.forth
+				set_text_on_position (column_counter, a_row, txt)
+
+					-- Prepare next iteration
+				if not list.after then
+					list.forth
+				end
+				column_counter := column_counter + 1
 			end
 			list.go_to (cur)
 			child.update_performed
@@ -480,6 +523,22 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+	remove_row_pixmap (a_row: INTEGER) is
+			-- Remove any pixmap associated with row `a_row'.
+		require
+			a_row_positive: a_row > 0
+			a_row_not_greater_than_count: a_row <= count
+		do
+			-- Do nothing by default
+		end
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			-- Do nothing by default
+		end
+
 	column_title_changed (a_title: STRING; a_column: INTEGER) is
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
@@ -496,8 +555,10 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
-			-- Set alignment of `a_column' to corresponding `alignment_code'.
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; 
+	a_column: INTEGER) is
+			-- Set alignment of `a_column' to
+			-- corresponding `alignment_code'.
 		require
 			a_column_positive: a_column > 0
 			an_alignment_not_void: an_alignment /= Void
@@ -521,14 +582,16 @@ feature {EV_ANY_I} -- Implementation
 	column_titles: LINKED_LIST [STRING]
 			-- All column titles set using `set_column_titles' and
 			-- `set_column_title'. We store it to give the user the
-			-- option to specify more titles than the current number of colums.
+			-- option to specify more titles than the current
+			-- number of colums.
 
 	column_widths: LINKED_LIST [INTEGER]
 			-- All column widths set using `set_column_widths' and
 			-- `set_column_width'.
 
 	column_alignments: LINKED_LIST [INTEGER]
-			--  All column alignment codes set using `set_column_alignments'
+			--  All column alignment codes set using
+			-- `set_column_alignments'
 			--  and `set_column_alignment'.
 
 	Default_column_width: INTEGER is 80
@@ -538,7 +601,7 @@ invariant
 
 end -- class EV_MULTI_COLUMN_LIST_I
 
---!-----------------------------------------------------------------------------
+--!---------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -559,8 +622,19 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/26 00:02:44  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.51  2000/04/21 18:54:52  king
---| Made column_width and column_alignment return default results for non set values
+--| Made column_width and column_alignment return default results for non 
+--| set values
 --|
 --| Revision 1.50  2000/04/21 16:32:56  rogers
 --| Removed set_row_height.
@@ -591,7 +665,8 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --| count from the recently wiped out list instead of the parameter.
 --|
 --| Revision 1.41  2000/03/28 00:34:37  king
---| Optimized update_children to only expand list once on iteratation of children
+--| Optimized update_children to only expand list once on iteratation of 
+--| children
 --|
 --| Revision 1.40  2000/03/27 19:32:01  brendel
 --| Removed obsolete preconditions.

@@ -12,7 +12,9 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
 			interface,
-			initialize
+			initialize,
+			remove_row_pixmap,
+			pixmaps_size_changed
 		end
 
 	EV_PRIMITIVE_IMP
@@ -275,51 +277,6 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	setup_image_list(a_width, a_height: INTEGER) is
-			-- Create the image list and associate it
-			-- to the control if it's not already done.
-		do
-				-- Create image list with all images 16 by 16 pixels
-			create image_list.make_with_size (a_width, a_height)
-
-				-- Associate the image list with the multicolumn list.
-			set_image_list(image_list)
-			set_small_image_list(image_list)
-		ensure
-			image_list_not_void: image_list /= Void
-		end
-
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
-			-- Set row `a_row' pixmap to `a_pixmap'.
-		local
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
-			image_index		: INTEGER
-			wel_row			: WEL_LIST_VIEW_ITEM
-		do
-			pixmap_imp ?= a_pixmap.implementation
-
-				-- Create the imagelist and associate it
-				-- to the control if it's not already done.
-			if image_list = Void then
-				setup_image_list (pixmap_imp.width, pixmap_imp.height)
-			end
-
-			image_list.add_pixmap (pixmap_imp)
-			image_index := image_list.last_position
-
-				-- Retrieve the first item of the row
-			wel_row := wel_get_item (a_row - 1, 0)
-
-				-- Add image to the item
-			wel_row.set_image (image_index)
-
-				-- Reflect the change in Windows.
-			replace_item (wel_row)
-
-				-- Update the display
-			invalidate
-		end
-
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Set the label of the cell with coordinates `a_x', `a_y'
 			-- with `txt'.
@@ -457,7 +414,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			list := item_imp.interface
 
 				-- Add the new columns if some are needed
-			expand_column_count_to (list.count)
+			if list.count > column_count then
+				expand_column_count_to (list.count)	
+			end
 
 				-- Put the items in the listview.
 			from
@@ -556,13 +515,136 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			internal_set_minimum_size (32, 32)
 		end
 
+feature {NONE} -- Implementation, Pixmap handling
+
+	setup_image_list is
+			-- Create the image list and associate it
+			-- to the control if it's not already done.
+		do
+				-- Create image list with all images 16 by 16 pixels
+			create image_list.make_with_size (pixmaps_width, pixmaps_height)
+
+				-- Associate the image list with the multicolumn list.
+			set_small_image_list(image_list)
+		ensure
+			image_list_not_void: image_list /= Void
+		end
+
+	remove_image_list is
+			-- Destroy the image list and remove it
+			-- from the control if it's not already done.
+		require
+			image_list_not_void: image_list /= Void
+		do
+				-- Destroy the image list.
+			image_list.destroy
+			image_list := Void
+
+				-- Remove the image list from the multicolumn list.
+			set_small_image_list(Void)
+		ensure
+			image_list_is_void: image_list = Void
+		end
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		local
+			pixmap: EV_PIXMAP
+			cur: CURSOR
+		do
+				-- We only do the job if there are some images.
+			if image_list /= Void then
+
+					-- Rebuild the image list.
+				remove_image_list
+				setup_image_list
+
+					-- Save cursor position
+				cur := ev_children.cursor
+
+					-- ReInsert the image of each
+					-- row in the image list.
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					pixmap := ev_children.item.pixmap
+					if pixmap /= Void then
+						set_row_pixmap (
+							ev_children.index,
+							pixmap
+							)
+					end		
+					ev_children.forth
+				end
+					-- Restore saved position
+				ev_children.go_to (cur)
+			end
+		end
+
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Set row `a_row' pixmap to `a_pixmap'.
+		local
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			image_index		: INTEGER
+			wel_row			: WEL_LIST_VIEW_ITEM
+		do
+			pixmap_imp ?= a_pixmap.implementation
+
+				-- Create the imagelist and associate it
+				-- to the control if it's not already done.
+			if image_list = Void then
+				setup_image_list
+			end
+
+			image_list.add_pixmap (pixmap_imp)
+			image_index := image_list.last_position
+
+				-- Retrieve the first item of the row
+			wel_row := wel_get_item (a_row - 1, 0)
+
+				-- Add image to the item
+			wel_row.set_image (image_index)
+
+				-- Reflect the change in Windows.
+			replace_item (wel_row)
+
+				-- Update the display
+			invalidate
+		end
+
+	remove_row_pixmap (a_row: INTEGER) is
+			-- Remove any associated pixmap with row `a_row'.
+		local
+			image_index		: INTEGER
+			wel_row			: WEL_LIST_VIEW_ITEM
+		do
+				-- Create the imagelist and associate it
+				-- to the control if it's not already done.
+			if image_list /= Void then
+					-- Retrieve the first item of the row
+				wel_row := wel_get_item (a_row - 1, 0)
+	
+					-- Remove image from the cell
+				wel_row.set_image (0)
+
+					-- Reflect the change in Windows.
+				replace_item (wel_row)
+
+					-- Update the display
+				invalidate
+			end
+		end
+
 feature {NONE} -- WEL Implementation
 
-	computing_column_width: BOOLEAN
-			-- Are we in the function `compute_column_width'?
+	updating_column_width: BOOLEAN
+			-- Are we in the function `update_column_width'?
 			--
 			-- This flag is used to avoid reentrance in the function 
-			-- `compute_column_width'. 
+			-- `update_column_width'. 
 
 	internal_propagate_pointer_press
 		(event_id, x_pos, y_pos, button: INTEGER) is
@@ -627,11 +709,11 @@ feature {NONE} -- WEL Implementation
 
 	update_last_column_width is
 		do
-			computing_column_width := True -- Set reentrance flag.
+			updating_column_width := True -- Set reentrance flag.
 
 			wel_set_column_width (Lvscw_autosize_useheader, wel_column_count - 1)
 
-			computing_column_width := False -- remove reentrance flag.
+			updating_column_width := False -- remove reentrance flag.
 		end
 
 	on_wm_windowposchanging (window_pos: WEL_WINDOW_POS) is
@@ -651,12 +733,11 @@ feature {NONE} -- WEL Implementation
 			-- Increasing size width is handled in 
 			-- `on_wm_windowposchanged'.
 		do
-			if (not computing_column_width) and is_displayed then
+			if (not updating_column_width) and is_displayed then
 					-- window_pos.width holds the future
 					-- width of the window.
 				if window_pos.width - width < 0 then
 					update_last_column_width
---					compute_column_widths (window_pos.width)
 				end
 			end
 		end
@@ -672,10 +753,9 @@ feature {NONE} -- WEL Implementation
 			-- scrollbar. See `on_wm_windowposchanging' for more
 			-- details.
 		do
-			if (not computing_column_width) and is_displayed then
+			if (not updating_column_width) and is_displayed then
 					-- window_pos.width holds the future
 					-- width of the window.
---				compute_column_widths (window_pos.width)
 				update_last_column_width
 			end
 		end
@@ -689,12 +769,11 @@ feature {NONE} -- WEL Implementation
 		do
 			code := info.code
 			if (code = Hdn_itemchangeda) or (code = Hdn_itemchangedw)
-			   and (not computing_column_width)
+			   and (not updating_column_width)
 			then
 					-- A column header has changed. Its size may 
 					-- being changed. So we recompute the width 
 					-- of the last column.
---				compute_column_widths (width)
 				update_last_column_width
 			end
 		end
@@ -846,6 +925,16 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.92  2000/04/26 00:03:12  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.91  2000/04/25 01:22:46  pichery
 --| Entire refactoring - Improvement.
 --|

@@ -1,14 +1,14 @@
 -- Classes modified since last compilation.
 
-class EWB_MODIFS
+class EWB_MODIFIED
 
 inherit
 
 	EWB_CMD
 		rename
-			name as modifs_cmd_name, 
-			help_message as modifs_help, 
-			abbreviation as modifs_abb
+			name as modified_cmd_name, 
+			help_message as modified_help, 
+			abbreviation as modified_abb
 		end
 
 feature
@@ -106,4 +106,4 @@ feature
 			end
 		end;
 
-end -- class EWB_MODIFS
+end -- class EWB_MODIFIED

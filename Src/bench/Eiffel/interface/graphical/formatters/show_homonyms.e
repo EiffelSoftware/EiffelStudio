@@ -1,6 +1,6 @@
--- Command to display the synonyms of the routine.
+-- Command to display the homonyms of the routine.
 
-class SHOW_SYNONYMS
+class SHOW_HOMONYMS
 
 inherit
 
@@ -23,28 +23,28 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showsynonyms 
+			Result := bm_Showhomonyms 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showsynonyms 
+			Result := bm_Dark_showhomonyms 
 		end;
  
 feature {NONE}
 
-	command_name: STRING is do Result := l_Showsynonyms end;
+	command_name: STRING is do Result := l_Showhomonyms end;
 
-	title_part: STRING is do Result := l_Synonyms_of end;
+	title_part: STRING is do Result := l_Homonyms_of end;
 
 	display_info (i: INTEGER; f: FEATURE_STONE)  is
-			-- Display Senders of `c'.
+			-- Display homonyms of the routine.
 		local
-			cmd: EWB_SYNONYMS;
+			cmd: EWB_HOMONYMS;
 		do
 			!!cmd.null;
 			cmd.set_output_window (text_window);
 			cmd.display (f.feature_i, f.class_c);
 		end;
 
-end -- class SHOW_SYNONYMS
+end -- class SHOW_HOMONYMS

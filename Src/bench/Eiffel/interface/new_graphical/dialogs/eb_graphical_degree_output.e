@@ -42,6 +42,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (par: EV_WINDOW) is
+			-- Initialize current.
 		do
 			parent := par
 			create event_queue.make

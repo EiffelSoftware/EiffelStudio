@@ -1,5 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description:
+		"About Dialog, displaying general information %
+		%about EiffelBench"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,8 +19,6 @@ inherit
 	SYSTEM_CONSTANTS
 
 	EB_SHARED_PIXMAPS
-
---	WINDOW_ATTRIBUTES
 
 creation
 	make

@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Command to open a file, and display warnings in case of errors"
 	date: "$Date$"
 	revision: "$Revision$"
 

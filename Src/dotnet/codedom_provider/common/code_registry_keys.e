@@ -25,6 +25,12 @@ feature -- Access
 			Result.keep_head (Result.count - 4)
 		end
 
+	Precompile_ace_files_key: STRING is "Software\ISE\Eiffel Codedom Provider\Precompile\Ace Files"
+			-- Key holding precompiled libraries ace file names
+
+	Precompile_folders_key: STRING is "Software\ISE\Eiffel Codedom Provider\Precompile\Folders"
+			-- Key holding precompiled libraries paths
+
 	Installation_dir_value: STRING is "InstallDir"
 			-- Name of string value that holds installation path
 			-- This value is found under the setup key

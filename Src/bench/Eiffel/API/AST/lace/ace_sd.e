@@ -18,10 +18,8 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 create
+	default_create,
 	initialize
-
-create {LACE_I}
-	default_create
 
 feature {NONE} -- Initialization
 

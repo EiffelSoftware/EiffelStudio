@@ -28,19 +28,19 @@ feature
 	align_text_center is
 			-- Display `text' centered.
 		do
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_right
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 		end
         
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 
 end -- class EV_TEXT_ALIGNABLE_IMP

@@ -234,11 +234,11 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					-- Set the flag for the forthcoming call to
 					-- `draw_text'.
 				inspect text_alignment
-				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center then
+				when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 					draw_flags := Dt_center
-				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left then
+				when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
 					draw_flags := Dt_left
-				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_right then
+				when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
 					draw_flags := Dt_right
 				else
 					check

@@ -304,11 +304,11 @@ feature {NONE} -- WEL Implementation
 
 				-- Fill empty space
 			if not text.is_empty then
-				if alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left then
+				if alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
 					text_pos := Text_padding
-				elseif alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center then
+				elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 					text_pos := (cur_width - text_width) // 2
-				elseif alignment = feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_right then
+				elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
 					text_pos := cur_width - text_width - Text_padding
 				end
 

@@ -196,7 +196,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_left)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_Text_alignment_left
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_left
 			invalidate
 		end
 
@@ -210,7 +210,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_right)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_Text_alignment_right
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_right
 			invalidate
 		end
 
@@ -224,7 +224,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_center)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_Text_alignment_center
+			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_center
 			invalidate
 		end
 

@@ -59,25 +59,25 @@ feature -- Execution
 				if not text_window.changed then
 					execute_licenced (formatted);
 				else
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				end
 			elseif argument = control_click then
 					-- No confirmation required.
-				formatted ?= text_window.root_stone;
+				formatted ?= tool.stone;
 				if not text_window.changed then
 					!! mp.set_watch_cursor;
 					execute_licenced (formatted);
 					mp.restore
 				else
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				end
 			else
-				if argument = text_window then
-					formatted ?= text_window.root_stone
+				if argument = tool then
+					formatted ?= tool.stone
 				else
 					formatted ?= argument
 				end;
-				confirmer (text_window).call (Current, 
+				confirmer (popup_parent).call (Current, 
 						"This format requires exploring the entire%N%
 						%system and may take a long time...", "Continue")
 			end

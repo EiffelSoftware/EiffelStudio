@@ -504,13 +504,13 @@ feature {NONE} -- Implementation
 			--| `default_width' and `default_height' are not useful anymore
 			default_width := -1
 			default_height := -1
+			positioned_by_user := False
 			Precursor (a_x, a_y, a_width, a_height)
 			if x_position /= previous_x or y_position /= previous_y then
 				previous_x := x_position
 				previous_y := y_position
 				user_x_position := inner_screen_x
-				user_y_position := inner_screen_y
-				positioned_by_user := False
+				user_y_position := inner_screen_y			
 				if move_actions_internal /= Void then
 					move_actions_internal.call ([previous_x, previous_y, width, height])
 				end	

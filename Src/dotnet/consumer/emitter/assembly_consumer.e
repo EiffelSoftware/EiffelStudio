@@ -287,8 +287,13 @@ feature {NONE} -- Implementation
 			l_string_tuple: like string_tuple
 			l_empty_tuple: like empty_tuple
 			l_is_delegate, l_is_value_type: BOOLEAN
+			l_dir: DIRECTORY
 		do
-			(create {DIRECTORY}.make (destination_path + Classes_path)).create_dir
+			create l_dir.make (destination_path)
+			l_dir.create_dir
+			create l_dir.make (destination_path + Classes_path)
+			l_dir.create_dir
+
 			create serializer
 			create types.make (type_consumers.count)			
 			l_string_tuple := string_tuple

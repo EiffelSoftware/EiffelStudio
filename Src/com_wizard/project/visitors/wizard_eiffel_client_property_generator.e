@@ -360,7 +360,13 @@ feature {NONE} -- Implementation
 			Result.append (Open_parenthesis)
 			if visitor.is_array_basic_type or visitor.is_interface 
 						or visitor.is_structure or visitor.is_structure_pointer then
-				Result.append (Eif_pointer)
+				Result.append (visitor.c_type)
+				Result.append (Space)
+				Result.append (Asterisk)
+
+			elseif visitor.is_structure_pointer or visitor.is_interface_pointer then
+				Result.append (visitor.c_type)
+
 			elseif visitor.is_basic_type then
 				Result.append (visitor.cecil_type)
 			else

@@ -32,5 +32,6 @@ clean:
 	$(RM) cecil.rc
 	$(RM) cecil.melted
 	$(RM) cecil.exe
+	$(RM) exception_trace.log
 	$(DELDIR) EIFGEN
 	

@@ -56,7 +56,7 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an intruction call
 		do
-			context.generate_melted_debugger_hook (ba);
+			generate_melted_debugger_hook (ba);
 			call.make_byte_code (ba);
 		end;
 

@@ -169,7 +169,7 @@ feature -- Byte code generation
 			i: INTEGER
 			case: CASE_B
 		do
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 
 				-- Generate switch expression byte code
 			switch.make_byte_code (ba)

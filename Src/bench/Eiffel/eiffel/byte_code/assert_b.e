@@ -207,22 +207,22 @@ feature -- Byte Code generation
 				make_precondition_byte_code (ba)
 			when In_postcondition then
 					-- generate a debugger hook
-				context.generate_melted_debugger_hook (ba)
+				generate_melted_debugger_hook (ba)
 				ba.append (Bc_assert)
 				ba.append (Bc_pst)
 			when In_check then
 					-- generate a debugger hook
-				context.generate_melted_debugger_hook (ba)
+				generate_melted_debugger_hook (ba)
 				ba.append (Bc_assert)
 				ba.append (Bc_chk)
 			when In_loop_invariant then
 					-- generate a debugger hook
-				context.generate_melted_debugger_hook (ba)
+				generate_melted_debugger_hook (ba)
 				ba.append (Bc_assert)
 				ba.append (Bc_linv)
 			when In_loop_variant then
 					-- generate a debugger hook
-				context.generate_melted_debugger_hook (ba)
+				generate_melted_debugger_hook (ba)
 				ba.append (Bc_assert)
 				ba.append (Bc_lvar)
 			when In_invariant then
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- generate a debugger hook
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 
 			ba.append (Bc_assert)
 			ba.append (Bc_pre)

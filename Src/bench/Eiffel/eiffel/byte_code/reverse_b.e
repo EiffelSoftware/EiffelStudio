@@ -89,7 +89,7 @@ feature -- Byte code generation
 		local
 			source_type: TYPE_I
 		do
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 
 				-- Generate expression byte code
 			source.make_byte_code (ba)

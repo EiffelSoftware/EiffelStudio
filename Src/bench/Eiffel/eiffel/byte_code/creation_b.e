@@ -147,7 +147,7 @@ feature -- Byte code generation
 			end
 
 			target_type := Context.real_type (target.type)
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 			if target_type.is_separate then
 				ba.append (Bc_sep_create)
 				cl_type ?= target_type -- can't be fail

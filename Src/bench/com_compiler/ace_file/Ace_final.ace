@@ -1,5 +1,5 @@
 system
-	"eif_compiler"
+	"ISE.Compiler.exe"
 
 root
 	ECOM_EIF_COMPILER_REGISTRATION: make
@@ -328,7 +328,6 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-
 external
 
 	include_path:
@@ -359,4 +358,5 @@ external
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"corguids.lib"
+
 end

@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_FRAME_I
+		rename
+			style as frame_style,
+			set_style as set_frame_style
 		undefine
 			propagate_foreground_color,
 			propagate_background_color
@@ -27,29 +30,27 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			interface,
-			initialize
+			interface
 		end
 
 	EV_TEXTABLE_IMP
 		undefine
 			set_default_minimum_size
 		redefine
-			interface
+			interface,
+			set_text,
+			remove_text
 		end
 
 	EV_SYSTEM_PEN_IMP
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make,
-			style as window_style,
-			set_style as set_window_style
+			make as ev_wel_control_container_make
 		redefine
 			on_paint,
 			top_level_window_imp,
-			wel_move_and_resize,
-			wel_set_text
+			wel_move_and_resize
 		end
 
 	WEL_DRAWING_ROUTINES
@@ -64,54 +65,72 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
-			style := Ev_frame_etched_in
-		end
-
-	initialize is
-			-- Set default font.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
-			wel_set_font (create {WEL_ANSI_VARIABLE_FONT}.make)
+			frame_style := Ev_frame_etched_in
+			create alignment
+			create font
 		end
 
 feature -- Access
 
-	style: INTEGER
+	frame_style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
-
-feature -- Access
 
 	client_x: INTEGER is
 			-- Left of the client area.
 		do
-			Result := box_width
+			Result := Border_width
 		end
 
 	client_y: INTEGER is
 			-- Top of the client area.
 		do
-			Result := box_text_height + box_width
+			Result := text_height.max (Border_width)
 		end
 
 	client_width: INTEGER is
-			-- Width of the client area of container
+			-- Width of the client area.
 		do
-			Result := (client_rect.width - 2 * box_width).max (0)
+			Result := (width - client_x - Border_width).max (0)
 		end
 	
 	client_height: INTEGER is
-			-- Height of the client area of container
+			-- Height of the client area.
 		do
-			Result := (client_rect.height - box_text_height -
-				2 * box_width).max (0)
+			Result := (height - client_y - Border_width).max (0)
 		end
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
-			-- Assign `a_style' to `style'.
+	set_frame_style (a_style: INTEGER) is
+			-- Assign `a_style' to `frame_style'.
 		do
-			style := a_style
+			frame_style := a_style
+			invalidate
+		end
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		local
+			font_imp: EV_FONT_IMP
+			t: TUPLE [INTEGER, INTEGER]
+		do
+			font_imp ?= font.implementation
+			check
+				font_imp_not_void: font_imp /= Void
+			end
+			t := font_imp.string_width_and_height (a_text)
+			text_width := t.integer_item (1)
+			text_height := t.integer_item (2)
+			Precursor (a_text)
+			invalidate
+		end
+
+	remove_text is
+			-- Make `text' `Void'.
+		do
+			text_width := 0
+			text_height := 0
+			Precursor
 			invalidate
 		end
 
@@ -119,48 +138,32 @@ feature -- Status setting
 
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
-		local
-			dc: WEL_CLIENT_DC
 		do
-			!! dc.make (Current)
-			dc.get
-			internal_set_minimum_size (dc.string_width (wel_text) +
-				2 * box_width + 10, box_text_height + 2 * box_width)
-			dc.release
+			internal_set_minimum_size (2 * Text_padding, 2 * Border_width)
 		end
 
 	align_text_center is
 			-- Display `text' centered.
 		do
-			check
-				to_be_implemented: False
-			end
+			alignment.set_center_alignment
+			invalidate
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			check
-				to_be_implemented: False
-			end
+			alignment.set_left_alignment
+			invalidate
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			check
-				to_be_implemented: False
-			end
+			alignment.set_right_alignment
+			invalidate
 		end
 
 feature -- Element change
-
-	wel_set_text (txt: STRING) is
-			-- Set the window text
-		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (txt)
-			invalidate
-		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
@@ -176,30 +179,43 @@ feature {NONE} -- Implementation for automatic size compute.
 
 	compute_minimum_width is
 			-- Recompute the minimum_width of the object.
+		local
+			minwidth: INTEGER
 		do
-			if item_imp /= Void then
-				internal_set_minimum_width (item_imp.minimum_width +
-					2 * box_width)
+			if item /= Void then
+				minwidth := item_imp.minimum_width
 			end
+			minwidth := minwidth + client_x + Border_width
+			internal_set_minimum_width (minwidth)
 		end
 
 	compute_minimum_height is
 			-- Recompute the minimum_width of the object.
+		local
+			minheight: INTEGER
 		do
-			if item_imp /= Void then
-				internal_set_minimum_height (item_imp.minimum_height +
-					box_text_height + 2 * box_width)
+			if item /= Void then
+				minheight := item_imp.minimum_height
 			end
+			minheight := minheight + client_y + Border_width
+			minheight := minheight.max (text_width + 2 * Text_padding)
+			internal_set_minimum_height (minheight)
 		end
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width and then
 			-- minimum_height of the object.
+		local
+			minheight, minwidth: INTEGER
 		do
-			if item_imp /= Void then
-				internal_set_minimum_size (item_imp.minimum_width + 2 * box_width,
-					item_imp.minimum_height + box_text_height + 2 * box_width)
+			if item /= Void then
+				minwidth := item_imp.minimum_width
+				minheight := item_imp.minimum_height
 			end
+			minwidth := minwidth + client_x + Border_width
+			minheight := minheight + client_y + Border_width
+			minheight := minheight.max (text_width + 2 * Text_padding)
+			internal_set_minimum_size (minwidth, minheight)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -209,25 +225,44 @@ feature {NONE} -- WEL Implementation
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 		repaint: BOOLEAN) is
-			-- Make `x' and `y' the new position of the current object and
-			-- `w' and `h' the new width and height of it.
-			-- If there is any child, it also adapt them to fit to the given
-			-- value.
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width,
 				a_height, repaint)
 			if item_imp /= Void then
-				item_imp.set_move_and_size (box_width, box_text_height +
-					box_width, client_width, client_height)
+				item_imp.set_move_and_size (client_x, client_y,
+					client_width, client_height)
 			end
 		end
 
+	Border_width: INTEGER is 4
+			-- Number of pixels taken up by border.
+
+	Text_padding: INTEGER is 4
+			-- Number of pixels left and right to `text'.
+
+	text_height: INTEGER
+			-- Height of `text' displayed at top.
+
+	text_width: INTEGER
+			-- Height of `text' displayed at top.
+
+	alignment: EV_TEXT_ALIGNMENT
+			-- Placement of `text'.
+
+	font: EV_FONT
+			-- Appearance of `text'.
+
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Redraw frame with `style'.
+			-- Redraw frame with `frame_style'.
 		local
 			wel_style: INTEGER
+			frame_rect: WEL_RECT
+			text_pos: INTEGER
+			font_imp: EV_FONT_IMP
 		do
-			inspect style
+			inspect frame_style
 				when Ev_frame_lowered then wel_style := Edge_sunken
 				when Ev_frame_raised then wel_style := Edge_raised
 				when Ev_frame_etched_in then wel_style := Edge_etched
@@ -237,93 +272,34 @@ feature {NONE} -- WEL Implementation
 					valid_value: False
 				end
 			end
-			paint_dc.select_font (wel_font)
+
+			create frame_rect.make (
+				invalid_rect.left + 1,
+				invalid_rect.top + 1 + text_height // 2,
+				invalid_rect.right - 1,
+				invalid_rect.bottom - 1
+			)
+
+			if alignment.is_left_aligned then
+				text_pos := Text_padding
+			elseif alignment.is_center_aligned then
+				text_pos := (width - text_width) // 2
+			elseif alignment.is_right_aligned then
+				text_pos := width - text_width - Text_padding
+			end
+
+			font_imp ?= font.implementation
+			check
+				font_imp_not_void: font_imp /= Void
+			end
+			paint_dc.select_font (font_imp.wel_font)
 			paint_dc.set_text_color (foreground_color_imp)
 			paint_dc.set_background_color (background_color_imp)
-			draw_edge (paint_dc, invalid_rect, wel_style, Bf_rect)
+			draw_edge (paint_dc, frame_rect, wel_style, Bf_rect)
 			if is_sensitive then
-				paint_dc.text_out (10, 0, wel_text)
+				paint_dc.text_out (text_pos, 0, wel_text)
 			else
-				draw_insensitive_text (paint_dc, wel_text, 10, 0)
-			end
-		end
-
-	paint_etched_in_frame (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Paint frame that looks like a groove.
-		local
-			top: INTEGER
-		do
-			paint_dc.select_font (wel_font)
-			paint_dc.set_text_color (foreground_color_imp)
-			paint_dc.set_background_color (background_color_imp)
-			paint_dc.text_out (10, 0, wel_text)
-			if wel_text.empty then
-				top := 0
-			else
-				top := wel_font.log_font.height // 2
-			end
-			paint_dc.select_pen (shadow_pen)
-			paint_dc.line (0, top, 0, height - 1)
-			paint_dc.line (0, height - 2, width - 2, height - 2)
-			paint_dc.line (width - 2, height - 2, width - 2, top)
-			if wel_text.empty then
-				paint_dc.line (0, top, width - 2, top)
-			else
-				paint_dc.line (0, top, 7, top)
-				paint_dc.line (width - 2, top,
-					paint_dc.string_size (wel_text).width + 13 , top)
-			end
-
-			paint_dc.select_pen (highlight_pen)
-			paint_dc.line (1, top + 1, 1, height - 2)
-			paint_dc.line (0,  height - 1, width - 1, height - 1)
-			paint_dc.line (width - 1, height - 1, width - 1, top)
-			if wel_text.empty then
-				paint_dc.line (1, 1, width - 3, 1)
-			else
-				paint_dc.line (1, top + 1, 7, top +1)
-				paint_dc.line (width - 3, top + 1,
-					paint_dc.string_size (wel_text).width + 13, top + 1)
-			end
-		end
-
-	wel_font: WEL_FONT
-			-- Font used for the label of the frame
-
-	wel_set_font (a_font: WEL_FONT) is
-			-- Make `a_font' the new font of the widget.
-		local
-			dc: WEL_CLIENT_DC
-		do
-			wel_font := a_font
-			!! dc.make (Current)
-			dc.get
-			dc.select_font (a_font)
-			if item_imp /= Void then
-				internal_set_minimum_size (dc.string_width (wel_text) +
-					2 * box_width + 10 + item_imp.minimum_width,
-					box_text_height + 2 * box_width + item_imp.minimum_height)
-			else
-				internal_set_minimum_size (dc.string_width (wel_text) +
-					2 * box_width + 10,
-					box_text_height + 2 * box_width)
-			end
-			dc.release
-		end
-
-	box_width: INTEGER is 4
-			-- Width of the border
-
-	box_text_height: INTEGER is
-			-- Height of the label of the frame
-		do
-			if wel_text.empty then
-				Result := 0
-			else
-						--|FIXME Fonts are currently changing.
-						--|Needs to be changed to the new implementation
-						--|Of the old code listed below
-				Result := 10 --|wel_font.log_font.height
+				draw_insensitive_text (paint_dc, wel_text, text_pos, 0)
 			end
 		end
 
@@ -354,6 +330,10 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/27 23:52:34  brendel
+--| First complete implementation.
+--| Cleanup.
+--|
 --| Revision 1.30  2000/04/27 18:30:22  brendel
 --| Corrected order of arguments.
 --|

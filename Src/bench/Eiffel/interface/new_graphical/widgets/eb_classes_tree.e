@@ -84,10 +84,12 @@ feature {NONE} -- Initialization
 		local
 			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
 			an_item: EB_CLASSES_TREE_FOLDER_ITEM
+			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
 		do
 			wipe_out
 			if Eiffel_project.initialized then
 				clusters := manager.clusters
+				create tmp_list.make (clusters.count)
 					-- Build the tree.
 				from
 					clusters.start
@@ -95,7 +97,7 @@ feature {NONE} -- Initialization
 					clusters.after
 				loop
 					create an_item.make (clusters.item)
-					extend (an_item)
+					tmp_list.extend (an_item)
 					if window /= Void then
 						an_item.associate_with_window (window)
 					end
@@ -112,6 +114,7 @@ feature {NONE} -- Initialization
 					end
 					clusters.forth
 				end
+				append (tmp_list)
 			end
 		end
 

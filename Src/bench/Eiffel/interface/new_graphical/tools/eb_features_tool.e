@@ -37,11 +37,10 @@ feature {NONE} -- Initialization
 
 	build_interface is
 			-- Build all the tool's widgets.
-		local
-			f_tree: EB_FEATURES_TREE
 		do
-			create f_tree.make (Current, true)
-			widget := f_tree
+			create tree.make (Current, true)
+			create widget
+			widget.extend (tree)
 		end
 
 	build_explorer_bar is
@@ -67,7 +66,10 @@ feature -- Access
 	mini_toolbar: EV_TOOL_BAR
 			-- Bar containing a button for a new feature.
 
-	widget: EB_FEATURES_TREE
+	widget: EV_CELL
+			-- Container.
+
+	tree: EB_FEATURES_TREE
 			-- Widget corresponding to the tree of features.
 
 	window: EB_DEVELOPMENT_WINDOW
@@ -99,6 +101,7 @@ feature -- Memory management
 		do
 			explorer_bar_item.recycle
 			widget := Void
+			tree := Void
 			manager := Void
 		end
 
@@ -130,6 +133,8 @@ feature -- Element change
 				current_stone := conv_cst
 			end
 			classc_stone ?= c
+				-- We put the tree off-screen to optimize performance.
+			widget.wipe_out
 			if classc_stone /= Void then
 				if classc_stone.e_class.has_ast then
 					if classc_stone.e_class /= current_compiled_class then
@@ -138,28 +143,29 @@ feature -- Element change
 						feature_clauses := new_class.features
 								-- Build the tree
 						--| FIXME
-						if widget.selected_item /= Void then
-							widget.selected_item.disable_select
+						if tree.selected_item /= Void then
+							tree.selected_item.disable_select
 						end
-						widget.wipe_out
+						tree.wipe_out
 						current_class := new_class
 						current_compiled_class := classc_stone.e_class
 						if feature_clauses /= Void then
-							widget.build_tree (feature_clauses)
+							tree.build_tree (feature_clauses)
 						else
-							widget.extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.W_no_feature_to_display))
+							tree.extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.W_no_feature_to_display))
 						end
 						Eiffel_system.System.set_current_class (Void)
 					end
 				else
 					current_compiled_class := Void
-					widget.wipe_out
+					tree.wipe_out
 				end
 			else
 					-- Invalid stone, wipe out window content.
-				widget.wipe_out
+				tree.wipe_out
 				current_compiled_class := Void
 			end
+			widget.extend (tree)
 		end
 
 feature {EB_FEATURES_TREE} -- Status setting

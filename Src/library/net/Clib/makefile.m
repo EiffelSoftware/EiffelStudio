@@ -1,6 +1,7 @@
 AR = lib 
 CC = cl
 CFLAGS = -Ox -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+NET_LIBRARY = net.lib
 LN = copy
 MAKE = make
 RANLIB = echo
@@ -9,7 +10,7 @@ RM = del
 SOURCES =  $(LSRCS)
 OBJECTS =  $(OBJS) $(WOBJS)
 
-all:: net.lib
+all:: $(NET_LIBRARY)
 
 .c.obj:
 	$(CC) -o $@ -c $(CFLAGS) $<
@@ -23,16 +24,16 @@ OBJS = \
 
 local_clean:: remove
 
-all:: net.lib
+all:: $(NET_LIBRARY)
 
 local_realclean::
-	$(RM) net.lib
+	$(RM) $(NET_LIBRARY)
 
-net.lib: $(OBJS)
+$(NET_LIBRARY): $(OBJS)
 	$(RM) $@
 	$(AR) -OUT:$@ $(OBJS) wsock32.lib
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
-	copy wnet.lib ..\spec\msc\lib\wnet.lib
+	copy $(NET_LIBRARY) ..\spec\msc\lib\$(NET_LIBRARY)

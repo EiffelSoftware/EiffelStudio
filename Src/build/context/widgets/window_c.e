@@ -40,7 +40,8 @@ inherit
 			show, hide, realize
 		select
 			reset_modified_flags, undo_cut, title_label, hide, show
-		end
+		end;
+	G_ANY
 	
 feature -- Specification
 
@@ -59,12 +60,23 @@ feature -- Specification
 	start_hidden_modified: BOOLEAN
 
 	is_really_shown: BOOLEAN;
-		-- Setting show/hide does not set `shown' instantly (always
-		-- false if calling show/hide until the next event loop).
-		-- I needed this info immediately after a hide/show hence
-		-- the need for this boolean. This boolean is used
-		-- for the hide/show facility on the Context Tree
+			-- Setting show/hide does not set `shown' instantly (always
+			-- false if calling show/hide until the next event loop).
+			-- I needed this info immediately after a hide/show hence
+			-- the need for this boolean. This boolean is used
+			-- for the hide/show facility on the Context Tree
 
+	configure_count: INTEGER
+			-- Number of configure counts for set_x_y while
+			-- window is realized. 
+			--| This is for motif only. Setting x&y while
+			--| the window is realized causes configure event
+			--| and this becomes a problem when there is
+			--| a sequence of geometry requests (eg undoing/redoing window 
+			--| geometry in the history list in succession) will cause
+			--| configure events to be queued at the end of the sequence
+			--| recording geometry commands out of sequence.
+		
 feature -- Setting values
 
 	set_default_position (b: BOOLEAN) is
@@ -78,7 +90,10 @@ feature -- Setting values
 			title_modified := True
 			widget_set_title (new_title)
 			visual_name := clone (new_title);
-			update_tree_element
+			update_tree_element;
+			if namer_window.namable = Current then
+				namer_window.update_name
+			end;
 		end;
 
 	disable_resize_policy (flag: BOOLEAN) is
@@ -212,7 +227,12 @@ feature
 			old_x := new_x;
 			old_y := new_y;
 			x := old_x;
-			y := old_y
+			y := old_y;
+			if ("MOTIF").is_equal (toolkit.name) and then
+				widget.realized 
+			then	
+				configure_count := configure_count + 1
+			end
 		end
 
 	set_size (new_w, new_h: INTEGER) is
@@ -226,7 +246,6 @@ feature
 			old_height := new_h;
 		end
 
-	
 feature {CONTEXT}
 
 	full_name: STRING is
@@ -358,9 +377,14 @@ feature
 			win_cmd: WIN_CONFIG_CMD
 			top: PERM_WIND_C
 		do
-			if not widget.destroyed and then not deleted then
+			if configure_count = 0 and then 
 					-- This is just in case that the event
 					-- is still called just after a destruction
+				not widget.destroyed and then 
+				not deleted and then
+					-- Only concerned if the window is shown
+				shown
+			then
 				x := widget.x - x_offset;
 				y := widget.y - y_offset;
 					-- Configure event
@@ -374,6 +398,9 @@ feature
 					old_height := height;
 					win_cmd.execute (argument)
 				end
+			end;
+			if configure_count > 0 then
+				configure_count := configure_count - 1
 			end;
 		end
 

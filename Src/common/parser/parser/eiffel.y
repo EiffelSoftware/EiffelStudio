@@ -1581,7 +1581,14 @@ Delayed_actual: TE_QUESTION
 	;
 
 Creation: Position TE_BANG Creation_type TE_BANG Creation_target Creation_call
-			{ $$ := new_creation_as ($3, $5, $6, $1) }
+			{
+				$$ := new_creation_as ($3, $5, $6, $1)
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Use keyword `create' instead."))
+				end
+			}
 	|	Position TE_CREATE Creation_target Creation_call
 			{ $$ := new_creation_as (Void, $3, $4, $1) }
 	|	Position TE_CREATE TE_LCURLY Type TE_RCURLY Creation_target Creation_call
@@ -1591,7 +1598,14 @@ Creation: Position TE_BANG Creation_type TE_BANG Creation_target Creation_call
 Creation_expression: TE_CREATE TE_LCURLY Type TE_RCURLY Position Creation_call
 			{ $$ := new_creation_expr_as ($3, $6, $5) }
 	|	TE_BANG Type TE_BANG Position Creation_call
-			{ $$ := new_creation_expr_as ($2, $5, $4) }
+			{
+				$$ := new_creation_expr_as ($2, $5, $4)
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($4.start_position,
+						$4.end_position, filename, 0, "Use keyword `create' instead."))
+				end
+			}
 	;
 
 Creation_type: -- Empty

@@ -169,10 +169,15 @@ feature -- Basic operation
 			initialize_split_areas
 
 				-- Now restore from preferences
-			set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
+			if horizontal_split_area.full then
+				set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
+			end
 			initialize_tool_positions (preferences.array_resource_value (preferences.tool_order, create {ARRAY [STRING]}.make (1, 1)))
 			initialize_external_tool_positions (preferences.array_resource_value (preferences.external_tool_order, create {ARRAY [STRING]}.make (1, 1)))
 			
+				-- This will update the tool interface if `multiple_split_area' has no items contained,
+				-- effectively hiding `multiple_split_area'.
+			widget_removed_from_multiple_split_area
 	
 			unlock_update
 			
@@ -229,7 +234,9 @@ feature {NONE} -- Implementation
 			-- Set splitters to default positions.
 		do
 			--| FIXME when the vertical control is completed, add an appropriate setting.
-			horizontal_split_area.set_split_position (Default_width_of_type_selector)
+			if horizontal_split_area.full then
+				horizontal_split_area.set_split_position (Default_width_of_type_selector)
+			end
 		--	vertical_split_area.set_split_position (Default_height_of_type_selector)
 		end
 
@@ -376,6 +383,8 @@ feature {NONE} -- Implementation
 			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
 			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
 			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
+			multiple_split_area.docked_out_actions.extend (agent widget_removed_from_multiple_split_area)
+			multiple_split_area.docked_in_actions.extend (agent widget_inserted_into_multiple_split_area)
 
 			create constructor_box
 			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
@@ -396,6 +405,41 @@ feature {NONE} -- Implementation
 				vertical_box.disable_item_expand (status_bar)
 			end
 		end
+		
+	widget_removed_from_multiple_split_area is
+			-- Respond to a widget being removed from `multiple_split_area'
+		local
+			split_area_parent: EV_HORIZONTAL_BOX
+		do
+			if multiple_split_area.count = 0 then
+				split_area_parent ?= horizontal_split_area.parent
+				if split_area_parent /= Void then
+						-- The non Void check is a hack to get around a bug in
+						-- `docked_out_actions' which is fired when you drag a
+						-- dockable item that is already external.
+					split_area_parent.prune_all (horizontal_split_area)
+					Layout_constructor.parent.prune_all (Layout_constructor)
+					split_area_parent.go_i_th (1)
+					split_area_parent.put_left (layout_constructor)
+					multiple_split_area.parent.prune_all (multiple_split_area)
+				end
+			end
+		end
+	
+	widget_inserted_into_multiple_split_area is
+			-- Respond to a widget being inserted into `multiple_split_area'.
+		local
+			layout_constructor_parent: EV_HORIZONTAL_BOX
+		do
+			if multiple_split_area.count = 1 then
+				layout_constructor_parent ?= layout_constructor.parent
+				layout_constructor_parent.prune_all (layout_constructor)
+				create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
+				layout_constructor_parent.go_i_th (1)
+				layout_constructor_parent.put_left (horizontal_split_area)
+			end
+		end
+		
 		
 	status_bar: EV_VERTICAL_BOX is
 			-- `Result' is status bar displayed in `Current'.
@@ -599,7 +643,7 @@ feature {NONE} -- Implementation
 				end
 					-- Add `tool' as an enternal tool, that is one that apepars if it has been docked out of
 					-- `multiple_split_area'.
-				multiple_split_area.add_external (tool, name_by_tool (tool_by_name (tool_name)), 10, an_x, a_y, a_width, a_height)
+				multiple_split_area.add_external (tool, Current, name_by_tool (tool_by_name (tool_name)), 1, an_x, a_y, a_width, a_height)
 				counter := counter + 1
 			end
 		end	

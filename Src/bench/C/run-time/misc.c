@@ -20,6 +20,8 @@
 #include "macros.h"
 #include "cecil.h"
 
+#include <ctype.h>			/* For toupper(), is_alpha(), ... */
+
 #ifdef __WATCOMC__
 #include <windows.h>
 #endif

@@ -20,6 +20,12 @@
 #include "hector.h"
 #include "traverse.h"
 
+#ifdef I_STRING
+#include <string.h>				/* For bzero() */
+#else
+#include <strings.h>
+#endif
+
 /*
  * Declarations
  */

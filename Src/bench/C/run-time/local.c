@@ -26,6 +26,12 @@
 #include "debug.h"
 #endif
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 #ifdef I_STDARG
 #include <stdarg.h>
 #else

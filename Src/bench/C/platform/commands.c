@@ -8,8 +8,9 @@
 #include "portable.h"
 
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "dir.h"
 #include "file.h"	/* for PATH_MAX */

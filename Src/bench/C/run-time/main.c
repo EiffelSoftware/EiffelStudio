@@ -22,6 +22,7 @@
 #include "update.h"
 #endif
 #include <stdio.h>
+#include <stdlib.h>
 #include "err_msg.h"
 #ifdef __WATCOMC__
 #include <stdlib.h>

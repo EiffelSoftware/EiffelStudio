@@ -15,6 +15,12 @@
 #include "search.h"
 #include "tools.h"
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 public struct s_table *s_create(size)
 uint32 size;
 {

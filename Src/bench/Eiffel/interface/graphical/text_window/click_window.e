@@ -169,12 +169,12 @@ feature -- Input
 			put_stone (stone, f_name)
 		end;
 
-	put_address (address: STRING; e_class: E_CLASS) is
-			-- Put `address' for `e_class'.
+	put_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+			-- Put `address' with `a_name' for `e_class'.
 		local
 			stone: OBJECT_STONE	
 		do
-			!! stone.make (address, e_class);
+			!! stone.make (address, a_name, e_class);
 			put_stone (stone, address)
 		end;
 

@@ -67,7 +67,7 @@ feature -- Basic Operation
 				-- `update_object_editors_for_delete'.
 			previous_parent_object := child_object.parent_object
 
-			child_object.unparent
+			previous_parent_object.remove_child (child_object)
 			object_handler.update_object_editors_for_delete (child_object, previous_parent_object)
 				-- We now need to mark the deleted object and all children as
 				-- deleted.

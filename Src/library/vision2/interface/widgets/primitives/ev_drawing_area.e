@@ -35,7 +35,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_pixmap
 
 feature {NONE} -- Initialization
 
@@ -44,6 +45,15 @@ feature {NONE} -- Initialization
 		do
 			!EV_DRAWING_AREA_IMP! implementation.make
 			widget_make (par)
+		end
+
+	make_with_pixmap (par: EV_CONTAINER; pix: EV_PIXMAP) is
+			-- Create a drawing area with a pixmap attached to
+			-- it.
+		do
+			!EV_DRAWING_AREA_IMP! implementation.make
+			widget_make (par)
+			set_pixmap (pix)
 		end
 
 feature -- Event - command association

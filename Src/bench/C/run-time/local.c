@@ -340,6 +340,7 @@ rt_shared void initstk(void)
 	tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	tmpDbgFlag |= _CRTDBG_DELAY_FREE_MEM_DF;
 	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+	tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF;
 	_CrtSetDbgFlag(tmpDbgFlag);
 #endif
 #endif

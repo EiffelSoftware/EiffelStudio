@@ -37,15 +37,21 @@ feature
 feature {NONE}
 
 	reset_debugger is
+		local
+			execution_table: EXECUTION_TABLE
 		do
-			debug_info.wipe_out;
-			quit_cmd.exit_now;
 			if Run_info.is_running then
+				quit_cmd.exit_now;
 				debug_window.clear_window;
 				debug_window.put_string ("System terminated%N");
 				debug_window.display;
 				run_info.set_is_running (false);
 				quit_cmd.recv_dead
+			end;
+			debug_info.wipe_out;
+			execution_table := System.execution_table;
+			if execution_table /= Void then
+				execution_table.reset_debug_counter
 			end;
 				-- Get rid of adopted objects.
 			addr_table.clear_all;

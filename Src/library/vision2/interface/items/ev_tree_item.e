@@ -36,7 +36,9 @@ inherit
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_index,
+	make_with_all
 
 feature {NONE} -- Initialization
 
@@ -58,12 +60,45 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
+	make_with_index (par: EV_TREE_ITEM_HOLDER; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
+		require
+			valid_parent: par /= Void
+			valid_index: (value > 0) and (value <= par.count + 1)
+		do
+			!EV_TREE_ITEM_IMP!implementation.make_with_index (par, value)
+			implementation.set_interface (Current)
+--			set_parent (par)
+		end
+
+	make_with_all (par: EV_TREE_ITEM_HOLDER; txt: STRING; value: INTEGER) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `value' as index.
+		require
+			valid_parent: par /= Void
+			valid_index: (value > 0) and (value <= par.count + 1)
+		do
+			!EV_TREE_ITEM_IMP!implementation.make_with_all (par, txt, value)
+			implementation.set_interface (Current)
+--			set_parent (par)
+		end
+
 feature -- Access
 
 	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
 		do
 			Result ?= {EV_SIMPLE_ITEM} Precursor
+		end
+
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			Result := implementation.index
 		end
 
 feature -- Status setting
@@ -125,6 +160,19 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.is_parent
+		end
+
+feature -- Element change
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+--			valid_index: (value > 0) and (value <= par.count + 1)
+		do
+			implementation.set_index (value)
 		end
 
 feature -- Event : command association
@@ -236,7 +284,8 @@ feature -- Event -- removing command association
 			implementation.remove_button_release_commands (mouse_button)
 		end
 
-feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation
+-- feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation
+feature -- Implementation
 
 	implementation: EV_TREE_ITEM_I
 

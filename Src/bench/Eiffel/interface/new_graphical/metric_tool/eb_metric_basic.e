@@ -30,11 +30,6 @@ feature -- Initialization
 			correct_unit: a_unit /= Void and then not a_unit.is_empty
 			correct_scope: minimal >= Feature_scope and minimal <= Archive_scope
 			tool_not_void: tl /= Void
-		local
-			i: INTEGER
-			scope_action: TUPLE [INTEGER, FUNCTION [ANY, TUPLE [ANY], DOUBLE]]
-			action: FUNCTION [ANY, TUPLE [ANY], DOUBLE]
-			index: INTEGER_REF
 		do
 			name := a_name
 			unit := a_unit
@@ -46,6 +41,23 @@ feature -- Initialization
 			processors.put (agent default_cluster_value, Cluster_scope)
 			processors.put (agent default_system_value, System_scope)
 
+			if agent_array /= Void then
+				override_processors_with (agent_array)
+			end
+		end
+
+feature -- Settings
+
+	override_processors_with (agent_array: ARRAY [TUPLE [INTEGER, FUNCTION [ANY, TUPLE [ANY], DOUBLE]]]) is
+			-- Override `processors' with data from `agent_array'.
+		require
+			agent_array_not_void: agent_array /= Void
+		local
+			i: INTEGER
+			action: FUNCTION [ANY, TUPLE [ANY], DOUBLE]
+			scope_action: TUPLE [INTEGER, FUNCTION [ANY, TUPLE [ANY], DOUBLE]]
+			index: INTEGER_REF
+		do
 			from
 				i := agent_array.lower
 			until
@@ -59,7 +71,7 @@ feature -- Initialization
 			end
 		end
 
-feature -- Access
+feature {NONE} -- Implementation: Access
 
 	processors: ARRAY [FUNCTION [ANY, TUPLE [ANY], DOUBLE]]
 		-- Array of agents to evaluate metrics over scopes. Each line of array

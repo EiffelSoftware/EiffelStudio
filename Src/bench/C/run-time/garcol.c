@@ -124,8 +124,9 @@ rt_public int gc_running = 0;			/* Is the GC running */
 rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */
 rt_public int gc_ran = 0;				/* Has the GC been running */
 
-#if defined __VMS || defined EIF_OS2
+#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
 rt_public int r_fides;	/* moved here from retrieve.c */
+rt_public char r_fstoretype;	/* moved here from retrieve.c */
 	/* Was getting a link warning that it couldn't find this symbol.
 	 * Under vms the linker won't include the symbol if at least one
 	 * routine from the module isn't used.

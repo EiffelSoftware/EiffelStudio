@@ -15,10 +15,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-	SHARED_IL_CODE_GENERATOR
-
-	IL_CONST
-
 feature -- Access
 
 	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
@@ -129,6 +125,8 @@ feature -- C special code generation
 			inspect function_type
 			when lower_type, upper_type then
 				generate_lower_upper (buffer, basic_type, function_type, target)
+			when is_digit_type then
+				generate_is_digit (buffer, basic_type, target)
 			when equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_type then
@@ -231,6 +229,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 			Result.put (lower_type, feature {PREDEFINED_NAMES}.lower_name_id)
 			Result.put (upper_type, feature {PREDEFINED_NAMES}.upper_name_id)
+			Result.put (is_digit_type, feature {PREDEFINED_NAMES}.is_digit_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -309,7 +308,8 @@ feature {NONE} -- Fast access to feature name
 	to_character_type: INTEGER is 30
 	upper_type: INTEGER is 31
 	lower_type: INTEGER is 32
-	max_type_id: INTEGER is 32
+	is_digit_type: INTEGER is 33
+	max_type_id: INTEGER is 33
 
 feature {NONE} -- Byte code generation
 
@@ -397,6 +397,23 @@ feature {NONE} -- C code generation
 			else
 				buffer.putstring ("chupper(")
 			end
+			target.print_register
+			buffer.putchar (')')
+
+				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+		end
+
+	generate_is_digit (buffer: GENERATION_BUFFER;
+			basic_type: BASIC_I; target: REGISTRABLE)
+		is
+			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			character_type: type_of (basic_type) = character_type
+		do
+			buffer.putstring ("chis_digit(")
 			target.print_register
 			buffer.putchar (')')
 

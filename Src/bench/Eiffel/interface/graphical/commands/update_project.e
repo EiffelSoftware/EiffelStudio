@@ -315,7 +315,7 @@ feature {NONE} -- Attributes
 
 	wiz_dlg: WIZARD_DIALOG is
 			-- Dialog used to display the wizard.
-		once
+		do
 			!! Result.make (Interface_names.t_Ace_builder, Project_tool)
 		end
 
@@ -395,7 +395,7 @@ feature {NONE} -- Attributes
 	ace_b: ACE_BUILDER is
 			-- Wizard action to generate ace file (the only one)
 			-- At the moment there is only one step
-		once
+		do
 			!! Result.make (Current)
 		end
 

@@ -109,7 +109,7 @@ feature -- Graphical User Interface
 			!! debug_toggle.make ("debug", default_option_box)
 			!! line_generation_toggle.make ("line generation", default_option_box)
 			!! inlining_toggle.make ("inlining", default_option_box)
-			!! inlining_size_edit.make ("inlining_size_edit", default_option_box)
+			!! inlining_size_edit.make ("inlining_size_edit", check_form)
 
 			inlining_toggle.set_toggle_off
 			inlining_size_edit.set_text ("4")
@@ -239,6 +239,10 @@ feature -- Graphical User Interface
 
 			check_form.attach_left (default_option_box, 10)
 			check_form.attach_top_widget (default_option_label, default_option_box, 10)
+
+			check_form.attach_left (inlining_size_edit, 10)
+			check_form.attach_bottom (inlining_size_edit, 10)
+			check_form.attach_top_widget (default_option_box, inlining_size_edit, 10)
 
 			radio_form.attach_top (assertion_label, 5)
 			radio_form.attach_left (assertion_label, 10)

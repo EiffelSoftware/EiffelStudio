@@ -166,7 +166,7 @@ feature {NONE} -- Properties
 
 	wiz_dlg: WIZARD_DIALOG is
 			-- Dialog for the wizard.
-		once
+		do
 			!! Result.make (Interface_names.t_Ace_builder, Project_tool);
 		end
 

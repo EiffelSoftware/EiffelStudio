@@ -22,7 +22,8 @@ inherit
 			can_run,
 			set_display_warnings,
 			set_discard_assertions,
-			was_compilation_successful
+			was_compilation_successful,
+			set_quick_finalization
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -221,6 +222,12 @@ feature -- Basic Operations
 			end
 		end
 
+	set_quick_finalization is
+			-- Skip generation of single class modules
+		do
+			Eiffel_project.comp_system.set_il_quick_finalization
+		end
+		
 feature -- Element Change
 
 	set_output_pipe_name (a_name: STRING) is

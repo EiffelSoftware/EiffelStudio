@@ -87,13 +87,7 @@ feature -- Access
 			primitive: GB_PRIMITIVE_OBJECT
 			menu_bar: GB_MENU_BAR_OBJECT
 			can_drop: BOOLEAN
-			constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			constructor_item ?= object.layout_item
-			check
-				constructor_item_not_void: constructor_item /= Void
-			end
-			
 			--| Note that the checks in this feature check for the state that we do not want
 			--| and then if this is not the case, perform an action. It is simpler to do it this
 			--| way, as there are so many other cases that we would allow.
@@ -115,7 +109,7 @@ feature -- Access
 					-- We cannot directly query the count of a primitive
 					-- as only some primitives support items. Checking the count
 					-- of the layout item achieves this in a general way.
-				if primitive.layout_item.count > 0 then
+				if primitive.children.count > 0 then
 					can_drop := False
 				end
 			end
@@ -161,7 +155,7 @@ feature -- Access
 				-- Menu bars are not widgets, or items, and can only
 				-- be replaced by other menu bars.
 			if type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
-				menu_bar ?= constructor_item.object
+				menu_bar ?= object
 				if menu_bar = Void then
 					can_drop := False
 				end

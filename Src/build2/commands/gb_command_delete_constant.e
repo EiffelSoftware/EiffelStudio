@@ -72,7 +72,6 @@ feature -- Basic Operation
 		local
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
-			Constants.remove_constant (internal_constant)
 --			if not history.command_list.has (Current) then
 --				history.add_command (Current)
 --			end
@@ -85,6 +84,7 @@ feature -- Basic Operation
 				editors.i_th (editors.index).constant_removed (internal_constant)
 				editors.forth
 			end
+			Constants.remove_constant (internal_constant)			
 			command_handler.update
 		end
 

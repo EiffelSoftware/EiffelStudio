@@ -39,7 +39,10 @@ feature -- basic Operations
 				%To continue, click Next.")
 		end
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-			-- Icon for the Eiffel Vision2 Wizard
-	
+	pixmap_icon_location: STRING is
+			-- Icon for the Eiffel Wel Wizard
+		once
+			Result := "eiffel_wizard_icon" + pixmap_extension
+		end
+
 end -- class WIZARD_INITIAL_STATE

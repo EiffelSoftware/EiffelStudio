@@ -349,11 +349,6 @@ feature -- Status setting
 
 	deselect_item (an_item: WEL_TREE_VIEW_ITEM) is
 			-- Deselect the given item.
-		obsolete "This feature is not actually obsolete. However, the %
-			%behaviour has changed so that the item is really deselected. %
-			%The previous implementation would only change the appearence of the %
-			%item, and can be reproduced by setting the mask of the item to %
-			%reflect an unselected state."
 		require
 			exists: exists
 			valid_item: has_item (an_item)

@@ -121,7 +121,7 @@ covers both redefinition and effecting. </P>
 
 <P>Deferred classes describe a group of implementations of an abstract
 data type rather than just a single implementation. A deferred class may
-not be instantiated: !! <I>v</I> is invalid if <I>v</I> is an entity declared
+not be instantiated: <B><FONT COLOR="#0000FF">create</FONT></B> <I>v</I> is invalid if <I>v</I> is an entity declared
 of type <I>VEHICLE</I>. But such an entity may be assigned a reference
 to an instance of a non-deferred descendant of <I>VEHICLE</I>. For example,
 assuming <I>CAR</I> and <I>TRUCK</I> provide effective definitions for
@@ -133,7 +133,7 @@ all deferred routines of <I>VEHICLE</I>, the following will be valid: </P>
 
 <DT><I>... </I></DT>
 
-<DT>!!<I> c ...; </I>!! <I>t ...;... </I><BR>
+<DT><B><FONT COLOR="#0000FF">create</FONT></B><I> c ...; </I><B><FONT COLOR="#0000FF">create</FONT></B> <I>t ...;... </I><BR>
 <BR>
 </DT>
 

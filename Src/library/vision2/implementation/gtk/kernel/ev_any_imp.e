@@ -53,7 +53,9 @@ feature {EV_ANY_I} -- Access
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+			 {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+		ensure
+			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
 
 	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
@@ -97,14 +99,16 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
-			a_connection_id: INTEGER
 			a_cs: EV_GTK_C_STRING
+			l_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+			a_connection_id: INTEGER
 		do
 			a_cs := a_signal_name
+			l_translate := app_implementation.default_translate
 			a_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
 				a_cs.item,
-				an_agent
+				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate, ?, ?)
 			)
 		end
 
@@ -148,23 +152,20 @@ feature {EV_ANY_I} -- Event handling
 			an_agent_not_void: an_agent /= Void
 		local
 			a_cs: EV_GTK_C_STRING
+			l_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		do
 			a_cs := a_signal_name
-			if translate /= Void then
-				last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
-					a_c_object,
-					a_cs.item,
-					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?),
-					invoke_after_handler
-				)
+			if translate = Void then
+				l_translate := app_implementation.default_translate
 			else
-				last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
-					a_c_object,
-					a_cs.item,
-					an_agent,
-					invoke_after_handler
-				)
+				l_translate := translate
 			end
+			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+				a_c_object,
+				a_cs.item,
+				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate, ?, ?),
+				invoke_after_handler
+			)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
 		end
@@ -175,7 +176,7 @@ feature {EV_ANY_I} -- Event handling
 feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN is
-			-- 
+			-- Does `event_widget' need an event box to receive events?
 		do
 			Result := False
 		end
@@ -186,7 +187,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_in_final_collect then
 				if c_object /= NULL then
-					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+					 {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
 					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
@@ -242,10 +243,6 @@ feature -- Measurement
 		alias
 			"NULL"
 		end
-
-invariant
-	c_object_coupled: c_object /= NULL implies
-		eif_object_from_c (c_object) = Current
 
 end -- class EV_ANY_IMP
 

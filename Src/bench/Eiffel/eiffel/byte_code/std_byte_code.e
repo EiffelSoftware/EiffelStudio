@@ -1085,6 +1085,10 @@ feature -- Byte code generation
 			have_assert, has_old: BOOLEAN;
 			inh_assert: INHERITED_ASSERTION;
 		do
+			if system.has_separate and then arguments /= Void then
+					-- Reserve separeate parameters
+				process_sep_paras_in_byte_code (ba, True);
+			end;
 			inh_assert := Context.inherited_assertion;
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else 
@@ -1094,10 +1098,18 @@ feature -- Byte code generation
 				context.set_assertion_type (In_precondition);
 				ba.append (Bc_precond);
 				ba.mark_forward;
+				ba.sep_mark_backward;
+				ba.append (Bc_sep_unset);
 			end;
 			if Context.origin_has_precondition and then (precondition /= Void) then
 				context.set_is_prec_first_block (True);
 				precondition.make_byte_code (ba);
+				from
+				until
+					ba.forward_marks4.count = 0
+				loop
+					ba.write_forward4
+				end;
 				ba.append (Bc_goto_body);
 				ba.mark_forward;
 			end;
@@ -1105,7 +1117,17 @@ feature -- Byte code generation
 				inh_assert.make_precondition_byte_code (ba);
 			end;
 			if have_assert then
-				ba.append (Bc_raise_prec);
+				if system.has_separate then
+					search_for_separate_call_in_precondition;
+				end;
+				if has_separate_call_in_precondition then
+					ba.append (Bc_sep_raise_prec);
+						-- Reserve separeate parameters
+					process_sep_paras_in_byte_code (ba, True);
+					ba.sep_write_backward;
+				else
+					ba.append (Bc_raise_prec);
+				end;
 				if precondition /= Void then
 					ba.write_forward;
 				end;
@@ -1168,6 +1190,10 @@ feature -- Byte code generation
 			end;
 			if have_assert then
 				ba.write_forward;
+			end;
+			if system.has_separate and then arguments /= Void then
+					-- Reserve separeate parameters
+				process_sep_paras_in_byte_code (ba, False);
 			end;
 		end;
 
@@ -1522,6 +1548,47 @@ feature -- Concurrent Eiffel
 			loop
 				Result := s @ i
 				i := i + 1
+			end
+		end
+
+			-- generate byte codes for reserving/freeing separate parameters 
+			-- of a feature 
+	process_sep_paras_in_byte_code (ba: BYTE_ARRAY; reserve: BOOLEAN) is
+			-- generate codes for reserving/freeing separate parameters of a feature
+		local
+			i, count: INTEGER;
+			s: like separate_calls
+		do
+			s := separate_calls
+			if s /= Void then
+				i := s.lower
+			end;
+			from 
+			until
+				s = Void or else i > s.upper
+			loop
+				if s @ i then
+					count := count + 1;
+				end;
+				i := i + 1;
+			end;
+			if count > 0 then
+				if reserve then
+					ba.append (Bc_sep_reserve);
+				else
+					ba.append (Bc_sep_free);
+				end;
+				ba.append_short_integer (count);
+				from
+					i := s.lower
+				until
+					i > s.upper
+				loop
+					if s @ i then
+						ba.append_short_integer (i - 1);
+					end;
+					i := i + 1;
+				end
 			end
 		end
 

@@ -7,9 +7,8 @@
 		<heading>
 			<size>2</size>
 			<content>Publication history</content>
-		</heading>First published 1987.  Some revisions (in particular Web versions) have used the title " 
-		<span>Eiffel in a Nutshell</span> "
-		<line_break/>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.  0 of the ISE Eiffel environment.  
+		</heading>First published 1987.  Some revisions (in particular Web versions) have used the title "Eiffel in a Nutshell"
+		<line_break/>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.0 of the ISE Eiffel environment.  
 		<heading>
 			<size>2</size>
 			<content>Author</content>
@@ -18,12 +17,10 @@
 			<size>2</size>
 			<content>Software Credits</content>
 		</heading>See acknowledgments in book 
-		<span>
 			<link>
 				<url>http://www.eiffel.com/doc/page.xml#etl</url>
 				<label>Eiffel: The Language</label>
-			</link>
-		</span> .  
+			</link>.
 		<heading>
 			<size>2</size>
 			<content>Cover Design</content>
@@ -36,12 +33,11 @@
 			<size>2</size>
 			<content>Special duplication permission for educational institutions</content>
 		</heading>Degree-granting educational institutions using ISE Eiffel for teaching purposes as part of the 
-		<span>
 			<link>
 				<url> http://www.eiffel.com/educators/resources.xml</url>
 				<label>Eiffel University Partnership Program</label>
-			</link>
-		</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
+			</link> 
+		may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
 		<info>About ISE ISE (Interactive Software Engineering) helps you produce software better, faster and cheaper.  ISE provides a wide range of products and services based on object technology, including ISE Eiffel, a complete development environment for the full system lifecycle.  ISE's training courses, available worldwide, cover key management and technical topics.  ISE's consultants are available to address your project needs at all levels.  ISE's TOOLS (Technology of Object-Oriented Languages and Systems) conferences, 
 			<link>
 				<url>http://www.tools-conferences.com</url>
@@ -54,7 +50,17 @@
 			<heading>
 				<size>2</size>
 				<content>For more information</content>
-			</heading>    Interactive Software Engineering Inc.      ISE Building, 360 Storke Road    Goleta, CA 93117 USA    Telephone 805-685-1006, Fax 805-685-6869 
+			</heading>
+			Interactive Software Engineering Inc.
+			<line_break/>
+			ISE Building,
+			<line_break/>356 Storke Road,
+			<line_break/>Goleta,
+			<line_break/>CA, 93117
+			<line_break/>USA.
+			<line_break/>
+			<line_break/>Telephone 805-685-1006,
+			<line_break/>Fax 805-685-6869 
 			<heading>
 				<size>2</size>
 				<content>Internet and email</content>

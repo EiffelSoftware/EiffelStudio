@@ -12,7 +12,8 @@
 		<paragraph>We have now studied the constituents of Eiffel software.  It remains to see how you can combine these elements into executable 
 			<bold>systems</bold> -- the Eiffel concept closest to the traditional notion of program -- and libraries.
 		</paragraph>
-		<paragraph>How do you get an executable system? All you need is to</paragraph>
+		<paragraph>How do you get an executable system? All you need is to
+		<line_break/>
 		<list ordered="false">
 			<item>Provide a set of classes, called a 
 				<bold>universe</bold>.
@@ -23,9 +24,9 @@
 			<item>Designate one of its creation procedures as the 
 				<bold>root procedure</bold>.
 			</item>
-		</list>
+		</list></paragraph>
 		<paragraph>This defines what it means to execute the system: create one direct instance of the root class (the execution's 
-			<bold>root object</bold> ); and call the root procedure on it.  That's all.
+			<bold>root object</bold>); and call the root procedure on it.  That's all.
 		</paragraph>
 		<paragraph>In any practical case, the root procedure will create other objects, call other routines on them, leading to further creations and calls.  </paragraph>
 		<paragraph>For the system to be valid, it must include all the classes which the  root 
@@ -33,17 +34,17 @@
 		</paragraph>
 		<paragraph>We can generalize these notions to encompass a library rather than an executable system, by accepting 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> as root class.  Since 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> inherits from all other classes, it needs all the classes in the universe; compiling with 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> as root will compile all classes.  In this case you don't specify a root procedure, and the result is not executable.
 		</paragraph>
 		<paragraph>The Eiffel method suggests grouping related classes -- typically 5 to 40 classes -- into collections called 
-			<bold>clusters</bold> .  A universe is then a set of clusters.  For example the EiffelBase library is divided into clusters corresponding each to a major category of data structure: 
+			<bold>clusters</bold>.  A universe is then a set of clusters.  For example the EiffelBase library is divided into clusters corresponding each to a major category of data structure: 
 			<code>
 				<string>lists</string>
 			</code>, 
@@ -132,17 +133,17 @@
 		<info>The path names in this example use the Windows path separator, a backward slash 
 			<code>
 				<keyword>\</keyword>
-			</code> .  Unix uses a forward slash 
+			</code>.  Unix uses a forward slash 
 			<code>
 				<keyword>/</keyword>
 			</code> (also acceptable on Windows) for the same purpose.
 		</info>
 		<paragraph>This Ace is from an example in the delivery.  If you compile and execute it, it will create an instance of class 
 			<code>
-				<string>CALCULATOR</string>
+				<class_name>CALCULATOR</class_name>
 			</code> and call its 
 			<code>
-				<string>make</string>
+				<feature_name>make</feature_name>
 			</code> procedure.  This starts a small interactive calculator, illustrating some of the simple mechanisms of EiffelBase.
 		</paragraph>
 	</paragraph></document>

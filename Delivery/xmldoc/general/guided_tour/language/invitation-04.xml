@@ -12,7 +12,7 @@
 		<paragraph>To achieve reusability, extendibility and reliability, the principles of object-oriented design provide the best known technical answer.  </paragraph>
 		<paragraph>An in-depth discussion of these principles fall beyond the scope of this introduction but here is a short definition:</paragraph>
 		<info>Object-oriented design is the construction of software systems as structured collections of abstract data type implementations, or "classes".  </info>
-		<paragraph>The following points are worth noting in this definition:</paragraph>
+		<paragraph>The following points are worth noting in this definition:<line_break/>
 		<list ordered="false">
 			<item>The emphasis is on structuring a system around the types of objects it manipulates (not the functions it performs on them) and on reusing whole data structures together with the associated operations (not isolated routines).  </item>
 			<item>Objects are described as instances of abstract data types -- that is to say, data structures known from an official interface rather than through their representation.  </item>
@@ -23,7 +23,7 @@
 			<item>Finally, the word 
 				<italic>structured</italic> reflects the existence of two important relations between classes: the client and inheritance relations.  
 			</item>
-		</list>
+		</list></paragraph>
 		<paragraph>Eiffel makes these techniques available to developers in a simple and practical way.</paragraph>
 		<paragraph>As a language, Eiffel includes more than presented in this introduction, but not 
 			<span>much</span> more; it is a small language, not much bigger (by such a measure as the number of keywords) than Pascal.  It was meant to be a member of the class of languages which programmers can master entirely -- as opposed to languages of which most programmers know only a subset.  Yet it is appropriate for the development of industrial software systems, as has by now been shown by many full-scale projects, some in the thousands of classes and hundreds of thousands of lines, in companies around the world.  

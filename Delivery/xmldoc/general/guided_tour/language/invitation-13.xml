@@ -11,178 +11,169 @@
 	<paragraph>
 		<paragraph>Genericity and inheritance, the two fundamental mechanisms for generalizing classes, may be combined in two fruitful ways.  </paragraph>
 		<paragraph>The first technique yields 
-			<bold>polymorphic data structures</bold> .  Assume that in the generic class 
+			<bold>polymorphic data structures</bold>.  Assume that in the generic class 
 			<code>
-				<string>LIST</string>
-			</code> [ 
+				<class_name>LIST</class_name> 
+				<symbol>[</symbol>
+				<generic>G</generic>
+				<symbol>]</symbol>
+			</code> the insertion procedure 
 			<code>
-				<string>G</string>
-			</code>] the insertion procedure 
-			<code>
-				<string>put</string>
+				<feature_name>put</feature_name>
 			</code> has a formal argument of type 
 			<code>
-				<string>G</string>
+				<generic>G</generic>
 			</code>, representing the element to be inserted.  Then with a declaration such as
 		</paragraph>
-		<code_block>	pl<symbol>:</symbol><class_name>LIST</class_name> <symbol>[</symbol><class_name>POLYGON</class_name><symbol>]</symbol>
-		</code_block>
+		<code_block><local_variable>pl</local_variable><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>POLYGON</class_name><symbol>]</symbol></code_block>
 		<paragraph>the type rules imply that in a call 
 			<code>
-				<string>pl</string>
-			</code>. 
+				<local_variable>pl</local_variable>
+			</code>.
 			<code>
-				<string>put</string>
-			</code>
+				<feature_name>put</feature_name>
+			</code> 
 			<code>
-				<comment> ("</comment>
-			</code>
+				<symbol>(</symbol>
+				<string>"p"</string>
+				<symbol>)</symbol>
+			</code> the permitted types for the argument 
 			<code>
-				<string>p</string>
-			</code>
-			<code>
-				<comment>")</comment>
-			</code>the permitted types for the argument 
-			<code>
-				<string>p</string>
+				<local_variable>p</local_variable>
 			</code> include not just 
 			<code>
-				<string>POLYGON</string>
+				<class_name>POLYGON</class_name>
 			</code>, but also 
 			<code>
-				<string>RECTANGLE</string>
+				<class_name>RECTANGLE</class_name>
 			</code> (an heir of 
 			<code>
-				<string>POLYGON</string>
-			</code> ) or any other type conforming to 
+				<class_name>POLYGON</class_name>
+			</code>) or any other type conforming to 
 			<code>
-				<string>POLYGON</string>
+				<class_name>POLYGON</class_name>
 			</code> through inheritance.
 		</paragraph>
 		<paragraph>The basic conformance requirement used here is the inheritance-based type compatibility rule: 
 			<code>
-				<string>V</string>
+				<class_name>V</class_name>
 			</code> conforms to 
 			<code>
-				<string>T </string>
-			</code>if 
+				<class_name>T</class_name>
+			</code> if 
 			<code>
-				<string> V</string>
+				<class_name>V</class_name>
 			</code> is a descendant of 
 			<code>
-				<string>T</string>
+				<class_name>T</class_name>
 			</code>.
 		</paragraph>
 		<paragraph>Structures such as 
 			<code>
-				<string>pl</string>
-			</code> may contain objects of different types, hence the name "polymorphic data structure".  Such polymorphism is, again, made safe by the type rules: by choosing an actual generic parameter ( 
+				<local_variable>pl</local_variable>
+			</code> may contain objects of different types, hence the name "polymorphic data structure".  Such polymorphism is, again, made safe by the type rules: by choosing an actual generic parameter (
 			<code>
-				<string>POLYGON</string>
+				<class_name>POLYGON</class_name>
 			</code> in the example) based higher or lower in the inheritance graph, you extend or restrict the permissible types of objects in 
 			<code>
-				<string>pl</string>
-			</code> .  A fully general list would be declared as
+				<local_variable>pl</local_variable>
+			</code>.  A fully general list would be declared as
 		</paragraph>
-		<code_block>	<class_name>LIST</class_name> <symbol>[</symbol><class_name>ANY</class_name><symbol>]</symbol>
-		</code_block>
+		<code_block><class_name>LIST</class_name> <symbol>[</symbol><class_name>ANY</class_name><symbol>]</symbol></code_block>
 		<paragraph>where 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code>, a Kernel Library class, is automatically an ancestor of any class that you may write.
 		</paragraph>
 		<paragraph>The other mechanism for combining genericity and inheritance is 
 			<bold>constrained genericity</bold>.  By indicating a class name after a formal generic parameter, as in
 		</paragraph>
-		<code_block>	<class_name>VECTOR</class_name> <symbol>[</symbol><generics>T</generics> <symbol>-</symbol>&gt;<class_name> NUMERIC</class_name><symbol>]</symbol>
-		</code_block>
+		<code_block><class_name>VECTOR</class_name> <symbol>[</symbol><generics>T</generics> <symbol>-&gt;</symbol> <class_name>NUMERIC</class_name><symbol>]</symbol></code_block>
 		<paragraph>you express that only descendants of that class (here 
 			<code>
-				<string>NUMERIC</string>
-			</code> ) may be used as the corresponding actual generic parameters.  This makes it possible to use the corresponding operations.  Here, for example, class 
+				<class_name>NUMERIC</class_name>
+			</code>) may be used as the corresponding actual generic parameters.  This makes it possible to use the corresponding operations.  Here, for example, class 
 			<code>
-				<string>VECTOR</string>
+				<class_name>VECTOR</class_name>
 			</code> may define a routine 
 			<code>
 				<keyword>infix</keyword>
 			</code>  "+" for adding vectors, based on the corresponding routine from 
 			<code>
-				<string>NUMERIC</string>
+				<class_name>NUMERIC</class_name>
 			</code> for adding vector elements.  Then by making 
 			<code>
-				<string>VECTOR</string>
+				<class_name>VECTOR</class_name>
 			</code> itself inherit from 
 			<code>
-				<string>NUMERIC</string>
+				<class_name>NUMERIC</class_name>
 			</code>, you ensure that it satisfies itsown generic constraint and enable the definition of types such as 
 			<code>
-				<string>VECTOR</string>
+				<class_name>VECTOR</class_name>
+			</code> 
+			<code>
+				<symbol>[</symbol>
 			</code>
 			<code>
-				<comment> [</comment>
+				<class_name>VECTOR</class_name>
+			</code> 
+			<code>
+				<symbol>[</symbol>
 			</code>
 			<code>
-				<string> VECTOR </string>
+				<generic>T</generic>
 			</code>
 			<code>
-				<comment>[</comment>
-			</code>
-			<code>
-				<string> T </string>
-			</code>
-			<code>
-				<comment>]]</comment>
+				<symbol>]]</symbol>
 			</code>.
 		</paragraph>
 		<paragraph>As you have perhaps guessed, unconstrained genericity, as in 
 			<code>
-				<string>LIST </string>
-			</code>
+				<string>LIST</string>
+			</code> 
 			<code>
-				<comment>[</comment>
-			</code>
+				<symbol>[</symbol>
+				<generic>G</generic>
+				<symbol>]</symbol>
+			</code>, may be viewed as an abbreviation for genericity constrained by 
 			<code>
-				<string>G</string>
-			</code>], may be viewed as an abbreviation for genericity constrained by 
-			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code>, as in
 		</paragraph>
-		<code_block>	<class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics> <symbol>-</symbol>&gt;<class_name>ANY</class_name><symbol>]</symbol>
-		</code_block>
+		<code_block><class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics> <symbol>-&gt;</symbol> <class_name>ANY</class_name><symbol>]</symbol></code_block>
 		<paragraph>Something else you may have guessed: if 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code>, introduced in this session, is the top of the inheritance structure -- providing all classes with universal features such as 
 			<code>
-				<string>equal</string>
+				<feature_name>equal</feature_name>
 			</code> to compare arbitrary objects and 
 			<code>
-				<string>clone</string>
+				<feature_name>clone</feature_name>
 			</code> to duplicate objects -- then 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code>, seen earlier in the notation 
 			<code>
 				<keyword>feature</keyword>
+			</code> 
+			<code>
+				<symbol>{</symbol>
 			</code>
 			<code>
-				<comment> {</comment>
+				<class_name>NONE</class_name>
 			</code>
 			<code>
-				<string>NONE</string>
-			</code>
-			<code>
-				<comment>}</comment>
+				<symbol>}</symbol>
 			</code>, is its bottom. 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> indeed conceptually inherits from all other classes. 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> is, among other things, the type of 
 			<code>
-				<string>Void</string>
+				<keyword>ensure</keyword>
 			</code>, the void reference.
 		</paragraph>
 	</paragraph></document>

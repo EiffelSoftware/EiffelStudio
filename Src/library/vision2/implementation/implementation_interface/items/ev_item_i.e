@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_ITEM_HOLDER [EV_ITEM] is
+	parent: EV_ITEM_HOLDER is
 			-- The parent of the Current widget
 			-- Can be void.
 		do

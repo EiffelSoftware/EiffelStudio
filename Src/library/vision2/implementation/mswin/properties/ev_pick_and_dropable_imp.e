@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Implementation of a pick and drop source."
@@ -301,6 +300,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/19 07:07:54  oconnor
+--| released
+--|
 --| Revision 1.12  2000/02/17 00:23:24  brendel
 --| Commented out line that assumes that EV_MULTI_COLUMN_LIST_ROW is pick
 --| and dropable, but that is not yet implemented.

@@ -55,6 +55,12 @@ inherit
 			{ANY} valid_polygon_fill_mode_constant
 		end
 
+	WEL_ROP2_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_rop2_constant
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -160,6 +166,8 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_get_rop2 (item)
+		ensure
+			valid_result: valid_rop2_constant (Result)
 		end
 
 	text_alignment: INTEGER is
@@ -285,7 +293,7 @@ feature -- Status report
 			size: INTEGER
 		do
 			a := text.to_c
-			size := cwin_get_tabbed_text_extend (item, $a,
+			size := cwin_get_tabbed_text_extent (item, $a,
 				text.count, 0, default_pointer)
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
@@ -330,7 +338,7 @@ feature -- Status report
 		do
 			a1 := text.to_c
 			a2 := tabulations.to_c
-			size := cwin_get_tabbed_text_extend (item, $a1,
+			size := cwin_get_tabbed_text_extent (item, $a1,
 				text.count, tabulations.count, $a2)
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
@@ -548,15 +556,21 @@ feature -- Status setting
 			is_transparent: is_transparent
 		end
 
-	set_rop2 (mode: INTEGER) is
-			-- Set the current drawing mode with `mode'
-			-- For `mode' values, see class WEL_ROP2_CONSTANTS
+	set_rop2 (a_rop2: INTEGER) is
+			-- Set the current foreground mix mode. GDI uses the
+			-- foreground mix mode to combine pens and interiors of
+			-- filled objects with the colors already on the screen.
+			-- The foreground mix mode defines how colors from the
+			-- brush or pen and the colors in the existing image
+			-- are to be combined.
+			-- For `a_rop2' values, see class WEL_ROP2_CONSTANTS.
 		require
 			exists: exists
+			valid_rop2_constant: valid_rop2_constant (a_rop2)
 		do
-			cwin_set_rop2 (item, mode)
+			cwin_set_rop2 (item, a_rop2)
 		ensure
-			mode_set: mode = rop2
+			rop2_set: rop2 = a_rop2
 		end
 
 	select_palette (a_palette: WEL_PALETTE) is
@@ -1011,6 +1025,26 @@ feature -- Basic operations
 			cwin_fill_rect (item, a_rect.item, a_brush.item)
 		end
 
+	invert_rect (a_rect: WEL_RECT) is
+			-- Invert `a_rect' in a window by performing a logical
+			-- NOT operation on the color values for each pixel.
+		require
+			exists: exists
+			a_rect_not_void: a_rect /= Void
+		do
+			cwin_invert_rect (item, a_rect.item)
+		end
+
+	invert_region (a_region: WEL_REGION) is
+			-- Invert the colors in `a_region'.
+		require
+			exists: exists
+			a_region_not_void: a_region /= Void
+			a_region_exists: a_region.exists
+		do
+			cwin_invert_rgn (item, a_region.item)
+		end
+
 	flood_fill_border (x, y: INTEGER; color: WEL_COLOR_REF) is
 			-- Fill an area which is bounded by `color' starting
 			-- at `x', `y'.
@@ -1133,7 +1167,7 @@ feature -- Basic operations
 			-- `y_source' to `x_destination', `y_destination',
 			-- using `width' and `height' with `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
-			-- `raster_operations' values
+			-- `raster_operation' values.
 		require
 			exists: exists
 			positive_width: width >= 0
@@ -1155,7 +1189,7 @@ feature -- Basic operations
 			-- `y_source' to `x_destination', `y_destination',
 			-- using `width' and `height' with `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
-			-- `raster_operations' values.
+			-- `raster_operation' values.
 		require
 			exists: exists
 			positive_width_destination: width_destination >= 0
@@ -1180,7 +1214,7 @@ feature -- Basic operations
 			-- `y_destination', using `width' and `height'
 			-- with `raster_operation' and `rgb_mode'
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
-			-- `raster_operations' values
+			-- `raster_operation' values
 			-- See class WEL_DIB_COLORS_CONSTANTS for
 			-- `rgb_mode' values
 		require
@@ -1217,7 +1251,7 @@ feature -- Basic operations
 			-- `y_source' to `x_destination', `y_destination',
 			-- using with `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
-			-- `raster_operations' values
+			-- `raster_operation' values.
 		require
 			exists: exists
 			positive_width: width >= 0
@@ -1227,7 +1261,7 @@ feature -- Basic operations
 				width, height, raster_operation)
 		end
 
-	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
+	save_bitmap (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
 			-- Save `a_bitmap' in `file'.
 		require
 			exists: exists
@@ -1363,6 +1397,11 @@ feature -- Obsolete
 			polyline (points)
 		end
 
+	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is obsolete "Use ``save_bitmap''"
+		do
+			save_bitmap (a_bitmap, file)
+		end
+
 feature {NONE} -- Externals
 
 	cwin_text_out (hdc: POINTER; x, y: INTEGER; string: POINTER;
@@ -1446,6 +1485,22 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC, int, int, int, int)"
 		alias
 			"Rectangle"
+		end
+
+	cwin_invert_rect (hdc: POINTER; rect: POINTER) is
+			-- SDK InvertRect
+		external
+			"C [macro <wel.h>] (HDC, RECT *)"
+		alias
+			"InvertRect"
+		end
+
+	cwin_invert_rgn (hdc: POINTER; rgn: POINTER) is
+			-- SDK InvertRgn
+		external
+			"C [macro <wel.h>] (HDC, HRGN)"
+		alias
+			"InvertRgn"
 		end
 
 	cwin_fill_rect (hdc, rect, hbrush: POINTER) is
@@ -1799,7 +1854,7 @@ feature {NONE} -- Externals
 			"GetTextExtentPoint"
 		end
 
-	cwin_get_tabbed_text_extend (hdc: POINTER; s: POINTER;
+	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
 		external

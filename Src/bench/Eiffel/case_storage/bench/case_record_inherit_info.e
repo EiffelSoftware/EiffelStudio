@@ -95,7 +95,7 @@ end
 			temp: STRING
 		do
 			features := s_class_data.features;
-				-- Note: There are a test made to see if compiler information
+				-- Note: There is a test made to see if then compiler information
 				-- if valid (i.e whether a feature exists and so on) and
 				-- if everything was based solely on the compiler information
 				-- then these test are not necessary.
@@ -163,11 +163,13 @@ end;
 							feature_i := classc.feature_table.item 
 														(renaming.key_for_iteration);
 							if feature_i /= Void then
+								-- This is for BON. The renamed feature is
+								-- displayed in the specification page.
 								feature_ast := Body_server.item (feature_i.body_id);
 								feature_ast.store_information (feature_data);
 								feature_i.store_case_information (feature_data);
-								--s_class_data.add_feature (feature_data, 
-									--parent_c.new_export_for (temp))
+								s_class_data.add_feature (feature_data, 
+									parent_c.new_export_for (temp))
 							end
 						end;
 						feature_data.set_rename_clause (rename_data);

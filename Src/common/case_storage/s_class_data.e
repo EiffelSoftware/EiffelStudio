@@ -413,4 +413,45 @@ feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO} -- Implementation
 			disk_content := cont
 		end;
 
+feature {CASE_RECORD_INHERIT_INFO}
+
+	add_feature (s_feature_data: S_FEATURE_DATA; exp: EXPORT_I) is
+			-- Add feature `s_feature_data' to a feature clause with
+			-- export `exp'.
+			--| This is for renamed features. In BON, the renamed
+			--| feature is displayed in the Specification text.
+		require
+			is_valid: is_valid;
+			valid_data: s_feature_data /= void;
+		local
+			export_i: S_EXPORT_I;
+			f_clause: S_FEATURE_CLAUSE;
+			feats: ARRAYED_LIST [S_FEATURE_DATA];
+			comment: S_FREE_TEXT_DATA
+		do
+			if exp = Void then
+				! S_EXPORT_ALL_I ! export_i
+			else
+				export_i := exp.storage_info
+			end;
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after or else
+				feature_clause_list.item.same_export (export_i)
+			loop
+				feature_clause_list.forth
+			end;
+			if feature_clause_list.after then
+					-- Not found then create clause
+				!! feats.make (1);
+				feats.extend (s_feature_data);
+				!! comment.make (0);
+				!! f_clause.make (feats, export_i, comment); 
+				feature_clause_list.extend (f_clause)
+			else
+				feature_clause_list.item.features.extend (s_feature_data)
+			end
+		end;
+
 end -- class S_CLASS_DATA

@@ -31,13 +31,22 @@ feature -- Access
 		do
 			Result:= implementation.text
 		end 
-	
+
 feature -- Status setting
 	
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		require
+			exists: not destroyed
+		do
+			implementation.set_editable (flag)
+		end
+
 	set_text (txt: STRING) is
 			-- Make `txt' the new `text'.
 		require
-			exist: not destroyed			
+			exists: not destroyed			
 			not_void: txt /= Void
 		do
 			implementation.set_text (txt)

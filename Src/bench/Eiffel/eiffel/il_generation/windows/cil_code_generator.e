@@ -77,6 +77,11 @@ inherit
 			{NONE} all
 		end
 	
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -386,6 +391,23 @@ feature -- Settings
 			global_once_generation := v
 		ensure
 			global_once_generation_set: global_once_generation = v
+		end
+
+	set_current_module_for_class (class_c: CLASS_C) is
+			-- Update `current_module' so that it refers to module in which
+			-- data class for `class_c' is generated.
+		require
+			class_c_not_void: class_c /= Void
+		do
+			current_module := il_module_for_class (class_c)
+				-- Refine so that only classes being generated in current compilation
+				-- unit needs the module to be generated as well.
+			if not current_module.is_generated then
+				current_module.prepare (md_dispenser, type_count)
+			end
+		ensure
+			current_module_set: current_module /= Void
+			associated_current_module: current_module = il_module_for_class (class_c)
 		end
 
 	set_current_module_with (a_class_type: CLASS_TYPE) is
@@ -1023,27 +1045,16 @@ feature -- Class info
 			internal_class_types := Void
 		end
 
-	generate_type_class_mappings is
-			-- Create correspondance between `runtime_type_id' and ISE.Runtime.TYPE.
-		do
-		end
-
 	generate_class_mappings (class_type: CLASS_TYPE; for_interface: BOOLEAN) is
 			-- Define all types, both external and eiffel one.
 		require
 			class_type_not_void: class_type /= Void
 			class_type_generated: class_type.is_generated
 		do
-			if class_type.is_generated_as_single_type then
-				if for_interface then
-					current_module.generate_interface_class_mapping (class_type)
-				end
-			else
-				if for_interface then
-					current_module.generate_interface_class_mapping (class_type)
-				else
-					current_module.generate_implementation_class_mapping (class_type)
-				end
+			if for_interface then
+				current_module.generate_interface_class_mapping (class_type)
+			elseif not class_type.is_generated_as_single_type then
+				current_module.generate_implementation_class_mapping (class_type)
 			end
 		end
 
@@ -1595,6 +1606,21 @@ feature {NONE} -- SYSTEM_OBJECT features
 
 feature {NONE} -- Class info
 
+	generate_class_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate IL code for class invariant of `class_c' and other internal
+			-- features required by run-time, CIL, etc.
+		require
+			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
+		do
+				-- Define all features used by ISE runtime
+			define_runtime_features (class_type)
+				-- Define definition of SYSTEM_OBJECT features for .NET types
+			define_system_object_features (class_type)
+				-- Generate invariant routine
+			generate_invariant_feature (class_c.invariant_feature)
+		end
+
 	clean_implementation_class_data is
 			-- Clean current class implementation data.
 		require
@@ -1718,14 +1744,10 @@ feature -- Features info
 				i := i + 1				
 			end
 
-				-- Define all features used by ISE runtime
-			define_runtime_features (class_type)
-				-- Define definition of SYSTEM_OBJECT features for .NET types
-			define_system_object_features (class_type)
+				-- Generate class invariant and internal run-time features
+			generate_class_features (class_c, class_type)
 				-- Generate default constructor
 			current_module.define_default_constructor (class_type, False)
-				-- Generate invariant routine
-			generate_invariant_feature (class_c.invariant_feature)
 
 				-- Generate type features for formal generic parameters.
 			if class_c.generic_features /= Void then
@@ -4005,33 +4027,99 @@ feature -- Return statements
 
 feature -- Once management
 
+	generate_once_data (class_c: CLASS_C) is
+			-- Generate IL class that is used to store results of once routines declared in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+		local
+			feature_table: FEATURE_TABLE
+			feature_i: FEATURE_I
+		do
+				-- Set current module and class
+			set_current_module_for_class (class_c)
+			current_class := class_c
+			current_class_token := current_module.class_data_token (class_c)
+				-- Generate data for once features in class `class_c'
+				-- (they are either immediate or replicated in it)
+			from
+				feature_table := class_c.feature_table
+				feature_table.start
+			until
+				feature_table.after
+			loop
+				feature_i := feature_table.item_for_iteration
+				if feature_i.is_once and then feature_i.access_in = class_c.class_id then
+					generate_once_data_info (feature_i)
+				end
+				feature_table.forth
+			end
+		end
+
 	done_token, result_token: INTEGER
 			-- Token for static fields holding value if once has been computed,
 			-- and its value if computed.
 			-- Ok to use token in a non-module specific code here, because they
 			-- are only local to current feature generation.
 
+	generate_once_data_info (feat: FEATURE_I) is
+			-- Generate declaration of variables required to store data of once feature `feat'.
+		require
+			feat_not_void: feat /= Void
+			feat_is_once: feat.is_once
+		local
+			name: STRING
+			result_sig: like field_sig
+		do
+			name := feat.feature_name
+
+				-- Generate field that indicates whether result is calculated or not
+			uni_string.set_string (name + "_done")
+			done_token := md_emit.define_field (uni_string,
+				current_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+				done_sig)
+			if not feat.is_process_relative then
+				current_module.define_thread_static_attribute (done_token)
+			end
+
+			fixme ("Generate debug info for readiness flag of once routine as required")
+			-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
+
+			if not feat.type.is_void then
+					-- Generate field for result
+				result_sig := field_sig
+				result_sig.reset
+				set_signature_type (result_sig, feat.type.actual_type.type_i)
+
+				uni_string.set_string (name + "_result")
+				result_token := md_emit.define_field (uni_string,
+					current_class_token,
+					feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, result_sig)
+				if not feat.is_process_relative then
+					current_module.define_thread_static_attribute (result_token)
+				end
+
+				fixme ("Generate debug info for result of once function as required")
+				-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
+			end
+		end
+
 	generate_once_done_info (name: STRING) is
-			-- Generate declaration of static `done' variable corresponding
+			-- Initialize a token of static `done' variable corresponding
 			-- to once feature `name'.
 		require
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
 		do
 			uni_string.set_string (name + "_done")
-			done_token := md_emit.define_field (uni_string,
-				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+			done_token := md_emit.define_member_ref (
+				uni_string,
+				current_module.class_data_token (current_class),
 				done_sig)
-			if not global_once_generation then
-				current_module.define_thread_static_attribute (done_token)
-			end
-
-			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 		end
 
 	generate_once_result_info (name: STRING; type_i: TYPE_I) is
-			-- Generate declaration of static `result' variable corresponding
+			-- Initialize a token of static `result' variable corresponding
 			-- to once function `name' that has a return type `type_i'.
 		require
 			name_not_void: name /= Void
@@ -4045,14 +4133,10 @@ feature -- Once management
 			set_signature_type (l_sig, type_i)
 
 			uni_string.set_string (name + "_result")
-			result_token := md_emit.define_field (uni_string,
-				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
-			if not global_once_generation then
-				current_module.define_thread_static_attribute (result_token)
-			end
-				
-			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
+			result_token := md_emit.define_member_ref (
+				uni_string,
+				current_module.class_data_token (current_class),
+				l_sig)
 		end
 
 	generate_once_computed is
@@ -5633,11 +5717,11 @@ feature -- Once per feature definition
 
 feature -- Mapping between Eiffel compiler and generated tokens
 
-	il_module (a_class_type: CLASS_TYPE): IL_MODULE is
-			-- Perform lookup for module associated with `a_class_type'. If not
+	il_module_for_class (a_class: CLASS_C): IL_MODULE is
+			-- Perform lookup for module associated with `a_class'. If not
 			-- found then create a module used for reference only.
 		require
-			a_class_type_not_void: a_class_type /= Void
+			a_class_not_void: a_class /= Void
 		local
 			l_type_id: INTEGER
 			l_output: FILE_NAME
@@ -5646,8 +5730,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			if is_single_module then
 				l_type_id := 1
 			else
-				l_type_id :=
-					a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
+				l_type_id := a_class.class_id // System.msil_classes_per_module + 1
 			end
 			Result := internal_il_modules.item (l_type_id)
 			if Result = Void then
@@ -5666,6 +5749,19 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					False)
 				internal_il_modules.put (Result, l_type_id)
 			end
+		ensure
+			module_not_void: Result /= Void
+		end
+
+	il_module (a_class_type: CLASS_TYPE): IL_MODULE is
+			-- Perform lookup for module associated with `a_class_type'. If not
+			-- found then create a module used for reference only.
+		require
+			a_class_type_not_void: a_class_type /= Void
+		do
+			Result := il_module_for_class (a_class_type.associated_class)
+		ensure
+			module_not_void: Result /= Void
 		end
 
 	internal_il_modules: ARRAY [IL_MODULE]

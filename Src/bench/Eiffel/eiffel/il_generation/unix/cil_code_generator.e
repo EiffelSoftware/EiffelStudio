@@ -489,6 +489,17 @@ feature -- Class info
 		do
 		end
 
+feature {NONE} -- Class info
+
+	generate_class_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate IL code for class invariant of `class_c' and other internal
+			-- features required by run-time, CIL, etc.
+		require
+			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
+		do
+		end
+
 feature -- Features info
 
 	generate_creation_procedures (class_c: CLASS_C; class_type: CLASS_TYPE) is
@@ -1105,6 +1116,13 @@ feature -- Return statements
 		end
 
 feature -- Once management
+
+	generate_once_data (class_c: CLASS_C) is
+			-- Generate IL class that is used to store results of once routines declared in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+		do
+		end
 
 	done_token, result_token: INTEGER
 			-- Token for static fields holding value if once has been computed,

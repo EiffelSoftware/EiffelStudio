@@ -31,18 +31,19 @@ feature -- Basic operation
 	compress_all_id is
 			-- Compress all ids used in system, so they
 			-- are contiguous.
-		require
-			no_deleted_items: object_handler.deleted_objects.is_empty
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
 			counter: INTEGER
 			objects_without_ids: BOOLEAN
 			current_object: GB_OBJECT
+			original_id: INTEGER
 		do
 			system_status.set_object_structure_changing
 				-- First, intialization.
 			create existing_ids.make (50)
+			create deleted_ids.make (50)
 			objects := object_handler.objects.linear_representation
+			objects.merge_right (object_handler.deleted_objects.linear_representation)
 				-- Firstly, store all ids into an array
 			objects.do_all (agent record_id)
 				-- Now create lookup table.
@@ -64,8 +65,19 @@ feature -- Basic operation
 				counter := counter + 1
 			end
 			
-				-- Clear all existing objects.			
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				if object_handler.deleted_objects.has (objects.item.id) then
+					deleted_ids.extend (objects.item.id, objects.item.id)
+				end
+				objects.forth
+			end
+			
 			object_handler.objects.clear_all
+			object_handler.deleted_objects.clear_all
 			
 				-- Now update all ids stored in objects.
 			from
@@ -74,10 +86,14 @@ feature -- Basic operation
 				objects.off
 			loop
 				current_object := objects.item
+				original_id := current_object.id
 				current_object.update_internal_id_references (lookup)
 			
-					-- Now place object back in `objects' as it's id has changed.
-				object_handler.objects.extend (current_object, current_object.id)
+				if deleted_ids.has (original_id) then
+					object_handler.deleted_objects.extend (current_object, current_object.id)
+				else
+					object_handler.objects.extend (current_object, current_object.id)
+				end
 					
 				objects.forth
 			end
@@ -88,7 +104,7 @@ feature -- Basic operation
 				-- that some of the objects referenced in the save file
 				-- do not have ids (an old save file). So we must now add ids
 				-- to all of these objects.
-				--| FIXME
+				--| FIXME should probably happen before the replacing of objects.
 			from
 				objects.start
 			until
@@ -100,6 +116,9 @@ feature -- Basic operation
 				objects.forth
 			end
 			system_status.set_object_structure_changed
+		ensure
+			lists_not_changed: old object_handler.objects.count = object_handler.objects.count and
+				old object_handler.deleted_objects.count = object_handler.deleted_objects.count
 		end
 		
 	shift_all_ids_upwards is
@@ -248,6 +267,9 @@ feature {GB_COMPONENT} -- implementation
 			
 	existing_ids: ARRAYED_LIST [INTEGER]
 			-- All ids before compression
+			
+	deleted_ids: HASH_TABLE [INTEGER, INTEGER]
+		-- All ids that are contained within `deleted_objects' at start.
 
 feature {NONE} -- Implementation
 		

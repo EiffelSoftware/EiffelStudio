@@ -388,7 +388,7 @@ feature -- Access
 			else
 					-- In this case we must certainly be handling a dotnet feature and we need
 					-- to create an empty AST otherwise we cannot pick and drop it.
-				create Result
+				create Result.initialize (Void, Void, Void)
 			end			
 		end;
 

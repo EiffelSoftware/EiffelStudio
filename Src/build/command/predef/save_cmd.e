@@ -36,6 +36,8 @@ feature
 			lab: CMD_LABEL
 		once
 			!! Result.make;
+			!!lab.make ("save");
+			labels.extend (lab);
 			!!lab.make ("cancel");
 			labels.extend (lab);
 		end;

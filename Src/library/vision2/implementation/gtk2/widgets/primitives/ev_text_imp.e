@@ -25,7 +25,6 @@ inherit
 			create_change_actions,
 			dispose,
 			text_length,
-			remove_selection_on_lose_focus,
 			default_key_processing_blocked,
 			visual_widget
 		end
@@ -51,6 +50,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (scrolled_window)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, scrolled_window)
 			text_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new
+			text_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
@@ -228,12 +228,14 @@ feature -- Basic operation
 		local
 			clip_imp: EV_CLIPBOARD_IMP
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text: EV_GTK_C_STRING
 		do
 			clip_imp ?= App_implementation.clipboard.implementation
 			create a_iter.make
+			a_text := clip_imp.text
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_paste_clipboard (text_buffer, clip_imp.clipboard, a_iter.item, True)
-		end		
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_text.item, -1)
+		end
 
 feature -- Access
 
@@ -490,12 +492,6 @@ feature {NONE} -- Implementation
 			Result := text_view
 		end
 
-	remove_selection_on_lose_focus: BOOLEAN is
-			-- Should `Current' lose selection when focus is lost?
-		do
-			Result := False
-		end
-
 	selection_start_internal: INTEGER is
 			-- Index of the first character selected.
 		local
@@ -563,11 +559,8 @@ feature {NONE} -- Implementation
 	scrolled_window: POINTER
 		-- Pointer to the GtkScrolledWindow
 
-	text_buffer: POINTER is
+	text_buffer: POINTER
 			-- Pointer to the GtkTextBuffer.
-		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
-		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -49,9 +49,11 @@ feature {NONE} -- Initialization
 			!! background_color.make (associated_category.background_color);
 			if not Platform_constants.is_windows then
 				!! focus_label_color.make (associated_category.focus_label_color)
+				!! progress_bar_color.make (associated_category.progress_bar_color);
+				!! highlight_line_background_color.make (associated_category.highlight_line_background_color);
+				!! highlight_line_foreground_color.make (associated_category.highlight_line_foreground_color);
 			end;
 			!! foreground_color.make (associated_category.foreground_color);
-			!! progress_bar_color.make (associated_category.progress_bar_color);
 			!! string_text_color.make (associated_category.string_text_color);
 			!! default_text_color.make (associated_category.default_text_color);
 			!! stop_color.make (associated_category.stop_color);
@@ -63,10 +65,6 @@ feature {NONE} -- Initialization
 			!! object_color.make (associated_category.object_color);
 			!! comment_color.make (associated_category.comment_color);
 			!! keyword_color.make (associated_category.keyword_color);
-			!! highlight_line_background_color.make (associated_category.highlight_line_background_color);
-			!! highlight_line_foreground_color.make (associated_category.highlight_line_foreground_color);
-			!! selected_clickable_background_color.make (associated_category.selected_clickable_background_color);
-			!! selected_clickable_foreground_color.make (associated_category.selected_clickable_foreground_color);
 
 			resources.extend (font);
 			resources.extend (text_font);
@@ -92,19 +90,17 @@ feature {NONE} -- Initialization
 			resources.extend (default_text_color);
 			resources.extend (error_color);
 			resources.extend (feature_color);
-			if not Platform_constants.is_windows then
-				resources.extend (focus_label_color);
-			end;
-			resources.extend (highlight_line_background_color);
-			resources.extend (highlight_line_foreground_color);
 			resources.extend (keyword_color);
 			resources.extend (object_color);
-			resources.extend (progress_bar_color);
-			resources.extend (selected_clickable_background_color);
-			resources.extend (selected_clickable_foreground_color);
 			resources.extend (stop_color);
 			resources.extend (string_text_color);
 			resources.extend (symbol_color);
+			if not Platform_constants.is_windows then
+				resources.extend (focus_label_color);
+				resources.extend (highlight_line_background_color);
+				resources.extend (highlight_line_foreground_color);
+				resources.extend (progress_bar_color);
+			end;
 		end
 
 feature {PREFERENCE_TOOL} -- Initialization
@@ -175,8 +171,6 @@ feature {NONE} -- Resources
     comment_color,
     keyword_color,
     highlight_line_background_color,
-    highlight_line_foreground_color,
-    selected_clickable_background_color,
-    selected_clickable_foreground_color: COLOR_PREF_RES
+    highlight_line_foreground_color: COLOR_PREF_RES
 
 end -- class GRAPHICAL_PREF_CAT

@@ -621,6 +621,43 @@ feature {NONE} -- GTK C functions for file selection
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_file_selection_get_dir_name (dialog: POINTER): POINTER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- GTK C functions for file selection
+
+	c_gtk_color_selection_dialog_new (name: POINTER): POINTER is
+		external
+			"C (char*): EIF_POINTER | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_color_selection_get_ok_button (dialog: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkColorSelectionDialog *): EIF_POINTER"
+		end
+
+	c_gtk_color_selection_get_cancel_button (dialog: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkColorSelectionDialog *): EIF_POINTER"
+		end
+
+	c_gtk_color_selection_get_help_button (dialog: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkColorSelectionDialog *): EIF_POINTER"
+		end
+
+	c_gtk_color_selection_get_color (file_dialog: POINTER; r, g, b: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_color_selection_set_color (file_dialog: POINTER; r, g, b: INTEGER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,

@@ -174,41 +174,4 @@ feature -- Inlining
 			expression := expression.inlined_byte_code
 		end
 
-feature -- Concurrent Eiffel
-
-	current_has_been_changed: BOOLEAN;
-		-- Has the Register for "Current" been changed during the parameter attachments?
-
-	set_current_has_been_changed (c: BOOLEAN) is
-		do
-			current_has_been_changed := c;
-		end
-
-	changed_list: LINKED_LIST[INTEGER];
-		-- the list of index of REGISTER which stores a parameter of a 
-		-- feature call and the attachment for the parameter is from
-		-- "non-separate" object to "separate".
-
-	set_changed_list(l: LINKED_LIST[INTEGER]) is
-		do
-			changed_list := l;
-		end
-
-	has_been_separated(i: INTEGER): BOOLEAN is
-		-- has the object in REGISTER with index "i" been changed into separate object?
-		do
-			if changed_list /= Void then
-			from 
-				changed_list.start;
-			until
-				Result or changed_list.after
-			loop
-				Result := changed_list.item = i;
-				changed_list.forth;
-			end;
-			else
-				Result := False;
-			end;
-		end
-
 end

@@ -816,11 +816,13 @@ feature -- Basic operation
 		local
 			t: TUPLE [GB_OBJECT]
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			cursor: CURSOR
 		do
 			create t
 			t.put (an_object, 1)
 			action.call (t)
 			layout_item := an_object.layout_item
+			cursor := layout_item.cursor
 			from
 				layout_item.start
 			until
@@ -832,6 +834,11 @@ feature -- Basic operation
 				end
 				recursive_do_all (current_layout_item.object, action)
 				layout_item.forth
+			end
+			if layout_item.valid_cursor (cursor) then
+					-- We only restore the cursor position if it is valid, 
+					-- as `action' may have modified the structure.
+				layout_item.go_to (cursor)	
 			end
 		end
 		

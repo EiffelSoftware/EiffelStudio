@@ -11,11 +11,14 @@ class
 inherit 
 	COMPOSITE_WINDOWS
 		redefine
+			on_size,
 			height, 
 			set_height,
 			set_size,
 			set_width,
-			width
+			width,
+			real_x,
+			real_y
 		end
 
 	SHELL_I
@@ -55,6 +58,7 @@ inherit
 			set_menu as wel_set_menu,
 			menu as wel_menu
 		undefine
+			on_move,
 			on_destroy,
 			on_right_button_up,
 			on_left_button_down,
@@ -106,6 +110,19 @@ feature -- Initialization
 		end
 
 feature -- Access
+
+	real_x: INTEGER is
+			-- Relative x-position of the client-area to the screen.
+		do
+			Result := absolute_x + window_frame_width
+		end
+
+	real_y: INTEGER is
+			-- Relative y-position of the client-area to the screen.
+		do
+			Result := absolute_y + title_bar_height + window_border_height +
+				window_frame_height
+		end
 
 	height: INTEGER is
 			-- Height of widget
@@ -203,6 +220,7 @@ feature {NONE} -- Implementation
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
 			resize_shell_children (a_width, a_height)
+			resize_actions.execute (Current, Void)
 		end
 
 	resize_shell_children (a_width, a_height: INTEGER) is

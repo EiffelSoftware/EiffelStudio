@@ -341,7 +341,7 @@ feature -- Execution
 				eifnet_debugger.set_debug_param_executable (app)
 				eifnet_debugger.set_debug_param_arguments (args)
 
-				eifnet_debugger_info.set_jit_debugging_mode (optimized_jit_debugging_enabled)
+				eifnet_debugger_info.set_jit_debugging_mode (Application.optimized_jit_debugging_enabled)
 				
 				process_before_running
 				create l_status.make

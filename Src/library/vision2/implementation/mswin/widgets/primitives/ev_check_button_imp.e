@@ -49,6 +49,7 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
+			on_set_cursor,
 			on_bn_clicked
 		redefine
 			default_style

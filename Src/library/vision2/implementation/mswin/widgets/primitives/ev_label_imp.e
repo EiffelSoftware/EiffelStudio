@@ -53,7 +53,8 @@ inherit
 			on_mouse_move,
 			on_set_focus,
 			on_kill_focus,
-			on_key_up
+			on_key_up,
+			on_set_cursor
 		redefine
 			on_key_down,
 			default_style,

@@ -364,11 +364,11 @@ feature -- Status setting
 			x_coord, y_coord: INTEGER
 		do
 			create popup_window
-			x_coord := screen_x + viewable_x_offset - viewport_x_offset +a_item.virtual_x_position
+			x_coord := screen_x + viewable_x_offset - viewport_x_offset + a_item.virtual_x_position
 			y_coord := screen_y + viewable_y_offset - viewport_y_offset + a_item.virtual_y_position
 			popup_window.set_position (x_coord, y_coord)
 			popup_window.set_size (a_item.column.width, a_item.row.height)
-			popup_window.show
+			popup_window.focus_out_actions.extend (agent popup_window.destroy)
 			a_item.active_action (popup_window)
 		end
 

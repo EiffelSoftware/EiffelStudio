@@ -102,8 +102,6 @@ feature {GB_XML_STORE, GB_XML_LOAD}
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of sepecific attributes of `Current'
 			-- in `element'. For now, only a name needs to be stored.
-		local
-			new_type_element: XML_ELEMENT
 		do
 			add_element_containing_string (element, name_string, name)
 		end
@@ -203,7 +201,6 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 		local
 			container: EV_CONTAINER
 			widget: EV_WIDGET
-			parent_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			widget ?= object
 			container ?= widget.parent
@@ -385,7 +382,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- actions for GB_TYPE_SELECTOR_ITEM.
 		local
 			environment: EV_ENVIRONMENT
-			object_editor: GB_OBJECT_EDITOR
 		do
 			io.putstring ("Calling retrieve pebble%N")
 			create environment
@@ -404,7 +400,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- to accept `pebble' ready for the transport.
 		local
 			environment: EV_ENVIRONMENT
-			constructor: GB_LAYOUT_CONSTRUCTOR	
 		do
 			create environment
 			if environment.application.shift_pressed then
@@ -461,9 +456,17 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 		
-feature {NONE} -- Implementation
+feature {GB_CODE_GENERATOR} -- Implementation
+
+	extend_xml_representation (child_name: STRING): STRING is
+			-- `Result' is XML representation of code required to extend
+			-- the current_object_type.
+		do
+			Result := "extend (" + child_name + ")"
+		end
 		
 
-	Name_string: STRING is "name"
+feature {NONE} -- Implementation
+
 
 end -- class GB_OBJECT

@@ -32,10 +32,9 @@ feature -- Initialization
 	initialize is
 			-- Initialize	
 		do
-			if help_directory.exists then
-				help_directory.recursive_delete
+			if not help_directory.exists then				
+				help_directory.create_dir	
 			end
-			help_directory.create_dir
 			build_table_of_contents
 			create settings.make (Current)	
 		end
@@ -89,7 +88,7 @@ feature {HELP_GENERATOR} -- File
 	help_directory: DIRECTORY is
 			-- Help directory
 		once
-			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)
+			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)			
 		end
 		
 	full_toc_text: STRING is

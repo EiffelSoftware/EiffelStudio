@@ -24,7 +24,7 @@ feature
 			Result := Execution_environment.get ("EIF_FILTER_NAME");
 			if Result = Void or else Result.empty then
 					-- EIF_FILTER_NAME was not set.
-				Result := resources.get_string (r_Filter_name, "troff")
+				Result := resources.get_string (r_Filter_name, "PostScript")
 			end
 		end;
 

@@ -101,13 +101,13 @@ feature -- Access
 		
 feature {GB_XML_STORE} -- Output
 
-	
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
-			temp_x_position_string, temp_y_position_string,
-			temp_width_string, temp_height_string: STRING
+			temp_column_positions_string, temp_row_positions_string,
+			temp_widths_string, temp_heights_string: STRING
 			temp: STRING
+			item_list: ARRAYED_LIST [EV_WIDGET]
 		do
 			
 			if first.columns /= 1 then
@@ -128,52 +128,53 @@ feature {GB_XML_STORE} -- Output
 			end
 			
 			
---			temp_x_position_string := ""
---			temp_y_position_string := ""
---			temp_width_string := ""
---			temp_height_string := ""
---			from
---				first.start
---			until
---				first.off
---			loop
---				temp_x_position_string := temp_x_position_string + add_leading_zeros (first.item.x_position.out)
---				temp_y_position_string := temp_y_position_string + add_leading_zeros (first.item.y_position.out)
---				temp_width_string := temp_width_string + add_leading_zeros (first.item.width.out)
---				temp_height_string := temp_height_string + add_leading_zeros (first.item.height.out)
---				first.forth
---			end
---			if not temp_x_position_string.is_empty then
---				add_element_containing_string (element, x_position_string, temp_x_position_string)
---			end
---			if not temp_y_position_string.is_empty then
---				add_element_containing_string (element, y_position_string, temp_y_position_string)
---			end
---			if not temp_width_string.is_empty then
---				add_element_containing_string (element, width_string, temp_width_string)
---			end
---			if not temp_height_string.is_empty then
---				add_element_containing_string (element, height_string, temp_height_string)
---			end
+			temp_column_positions_string := ""
+			temp_row_positions_string := ""
+			temp_widths_string := ""
+			temp_heights_string := ""
+			item_list := first.item_list
+			from
+				item_list.start
+			until
+				item_list.off
+			loop
+				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (item_list.item).out)
+				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (item_list.item).out)
+				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (item_list.item).out)
+				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (item_list.item).out)
+				item_list.forth
+			end
+			if not temp_column_positions_string.is_empty then
+				add_element_containing_string (element, column_positions_string, temp_column_positions_string)
+			end
+			if not temp_row_positions_string.is_empty then
+				add_element_containing_string (element, row_positions_string, temp_row_positions_string)
+			end
+			if not temp_widths_string.is_empty then
+				add_element_containing_string (element, column_spans_string, temp_widths_string)
+			end
+			if not temp_heights_string.is_empty then
+				add_element_containing_string (element, row_spans_string, temp_heights_string)
+			end
 		end
-		
---	add_leading_zeros (original_string: STRING): STRING is
---			-- Add leading zeros to `original_string',
---			-- so it is a valid 4 character, Integer representation.
---		require
---			original_string_length_ok: original_string.count >= 1 and original_string.count < 5
---		do
---			if original_string.count = 1 then
---				Result := "000" + original_string
---			elseif original_string.count = 2 then
---				Result := "00" + original_string
---			elseif original_string.count = 3 then
---				Result := "0" + original_string
---			end
---		ensure
---			Result_correct_length: Result.count = 4
---			Result_is_integer: Result.is_integer
---		end
+	
+	add_leading_zeros (original_string: STRING): STRING is
+			-- Add leading zeros to `original_string',
+			-- so it is a valid 4 character, Integer representation.
+		require
+			original_string_length_ok: original_string.count >= 1 and original_string.count < 5
+		do
+			if original_string.count = 1 then
+				Result := "000" + original_string
+			elseif original_string.count = 2 then
+				Result := "00" + original_string
+			elseif original_string.count = 3 then
+				Result := "0" + original_string
+			end
+		ensure
+			Result_correct_length: Result.count = 4
+			Result_is_integer: Result.is_integer
+		end
 		
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -281,75 +282,74 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			temp_x_position_string, temp_y_position_string,
-			temp_width_string, temp_height_string: STRING
+			temp_column_positions_string, temp_row_positions_string,
+			temp_column_spans_string, temp_row_spans_string: STRING
+			extracted_column, extracted_row, extracted_column_span, extracted_row_span: STRING
 			extracted_string: STRING
+			item_list: ARRAYED_LIST [EV_WIDGET]
+			lower, upper: INTEGER
 		do
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (x_position_string)
---			if element_info /= Void then
---				temp_x_position_string := element_info.data				
---			end
---			
---			element_info := full_information @ (y_position_string)
---			if element_info /= Void then
---				temp_y_position_string := element_info.data				
---			end
---			
---			element_info := full_information @ (width_string)
---			if element_info /= Void then
---				temp_width_string := element_info.data				
---			end
---			
---			element_info := full_information @ (height_string)
---			if element_info /= Void then
---				temp_height_string := element_info.data			
---			end
---			
---			check
---				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
---					temp_x_position_string.count = temp_width_string.count and
---					temp_x_position_string.count = temp_height_string.count
---				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
---				strings_correct_length: temp_x_position_string.count // 4 = first.count
---			end
---			
---			from
---				first.start
---			until
---				first.off
---			loop
---					-- Read current x position data from `temp_x_position_string'.
---				extracted_string := temp_x_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
---				check
---					value_is_integer: extracted_string.is_integer
---				end
---				set_x_position (first.item, extracted_string.to_integer)
---					
---					-- Read current y position data from `temp_y_position_string'.
---				extracted_string := temp_y_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
---				check
---					value_is_integer: extracted_string.is_integer
---				end
---				set_y_position (first.item, extracted_string.to_integer)
---				
---					-- Read current width data from `temp_width_string'.
---				extracted_string := temp_width_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
---				check
---					value_is_integer: extracted_string.is_integer
---				end
---				set_item_width (first.item, extracted_string.to_integer)
---				
---					-- Read current height data from `temp_height_string'.
---				extracted_string := temp_height_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
---				check
---					value_is_integer: extracted_string.is_integer
---				end
---				set_item_height (first.item, extracted_string.to_integer)
---				
---				first.forth
---			end	
+			full_information := get_unique_full_info (element)
+			item_list ?= first.item_list
+			element_info := full_information @ (column_positions_string)
+			if element_info /= Void then
+				temp_column_positions_string := element_info.data				
+			end
+			
+			element_info := full_information @ (row_positions_string)
+			if element_info /= Void then
+				temp_row_positions_string := element_info.data				
+			end
+			
+			element_info := full_information @ (column_spans_string)
+			if element_info /= Void then
+				temp_column_spans_string := element_info.data				
+			end
+			
+			element_info := full_information @ (row_spans_string)
+			if element_info /= Void then
+				temp_row_spans_string := element_info.data			
+			end
+			
+			check
+				strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
+					temp_column_positions_string.count = temp_row_spans_string.count and
+					temp_column_positions_string.count = temp_column_spans_string.count
+				strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
+				strings_correct_length: temp_column_positions_string.count // 4 = first.widget_count
+			end
+			
+			from
+				item_list.start
+			until
+				item_list.off
+			loop
+					-- We now read all information from the strings retrieved form the XML.
+				lower := (item_list.index - 1) * 4 + 1
+				upper := (item_list.index - 1) * 4 + 4
+				extracted_column := temp_column_positions_string.substring (lower, upper)
+				check
+					value_is_integer: extracted_column.is_integer
+				end
+				extracted_row := temp_row_positions_string.substring (lower, upper)
+				check
+					value_is_integer: extracted_row.is_integer
+				end
+				extracted_column_span := temp_column_spans_string.substring (lower, upper)
+				check
+					value_is_integer: extracted_column_span.is_integer
+				end
+				extracted_row_span := temp_row_spans_string.substring (lower, upper)
+				check
+					value_is_integer: extracted_row_span.is_integer
+				end
+					-- Modify the current items position and size.
+				set_item_position_and_span (item_list.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+				
+				item_list.forth
+			end	
 		end
+
 
 feature {NONE} -- Implementation
 
@@ -972,5 +972,13 @@ feature {NONE} -- Attributes
 	
 	diagram_border: INTEGER is 25
 		-- Size of border around table representation in diagram.
+		
+	Column_positions_string: STRING is "Column_positions"
+	
+	Row_positions_string: STRING is "Row_positions"
+	
+	Column_spans_string: STRING is "Column_spans"
+	
+	Row_spans_string: STRING is "Row_spans"
 
 end -- class GB_EV_TABLE

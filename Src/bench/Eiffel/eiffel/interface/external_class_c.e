@@ -175,6 +175,53 @@ feature -- Status report
 			-- Is class an instance of EXTERNAL_CLASS_C?
 			-- If yes, we do not generate it.
 
+feature -- Query
+
+	has_associated_property_setter (a_feat: FEATURE_I): BOOLEAN is
+			-- Associated property setter of `a_feat' if any.
+		require
+			a_feat_not_void: a_feat /= Void
+			a_feat_is_function: a_feat.is_function
+			a_feat_is_external: a_feat.is_external
+		local
+			l_reader: EIFFEL_XML_DESERIALIZER
+			l_ext: IL_EXTENSION_I
+			l_consumed_type: CONSUMED_TYPE
+			l_properties: ARRAY [CONSUMED_PROPERTY]
+			l_setter: CONSUMED_PROCEDURE
+			l_prop: CONSUMED_PROPERTY
+			i, nb: INTEGER
+			done: BOOLEAN
+		do
+				-- Initialize `external_class' which will be used later by
+				-- `initialize_from_xml_data', then it is discarded to save
+				-- some memory as we do not use it anymore.
+			create l_reader
+			l_consumed_type ?= l_reader.new_object_from_file (lace_class.file_name)
+			
+				-- It should not be Void, since we were able to parse it before, but it
+				-- is possible that someone might remove the file or other external
+				-- events, so we protect our call.
+			if l_consumed_type /= Void then
+				l_properties := l_consumed_type.properties
+				from
+					i := l_properties.lower
+					nb := l_properties.upper
+				until
+					i > nb or done
+				loop
+					l_prop := l_properties.item (i)
+					if l_prop /= Void then
+						if l_prop.getter.eiffel_name.is_equal (a_feat.feature_name) then
+							done := True
+							Result := l_prop.setter /= Void
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+		
 feature {NONE} -- Initialization
 
 	process_parents is

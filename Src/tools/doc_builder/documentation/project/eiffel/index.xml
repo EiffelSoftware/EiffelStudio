@@ -1,7 +1,9 @@
 <document title="Writing Eiffel Documentation">
 	<meta_data/>
 	<paragraph>
-		<heading><size>2</size>Writing Eiffel Documentation</heading>
+		<heading>
+			<size>2</size>Writing Eiffel Documentation
+		</heading>
 		<paragraph>This document contains information specific to writing Eiffel documentation.  For details of how to use the document tool please refer to the other documents in this help.</paragraph>
 		<heading>
 			<size>3</size>Overview
@@ -62,6 +64,11 @@
 			<size>3</size>Output filters
 		</heading>
 		<paragraph>Output filters are defined for ENViSiON, EiffelStudio, and then for EiffelStudio for Mac, Windows and Linux respectively.  If you wish to add your own please ask before doing so.</paragraph>
+		
+		<heading>
+			<size>3</size>Tag filters
+		</heading>
+		<paragraph>Tag filters are similar to output filters.  To define a tag filter use the  <bold>'&lt;start type="filter name">'</bold> tag.  For filter name you may use 'free' or 'enterprise' to denote differences between the free and enterprise editions of Eiffel products.  The difference between a tag filter and an output filter is that tag filters are always visible in the document but are just tagged at the beginning and end to denote that the text is applicable on to a certain product type.</paragraph>
 		<heading>
 			<size>3</size>Table of Contents
 		</heading>
@@ -76,9 +83,20 @@
 			<bold>much</bold> faster to sort the tocs using a finalized non .NET system.
 		</note>
 		<heading>
-			<size>3</size>Conventions
+			<size>3</size>Conventions and Standards
 		</heading>
-		<paragraph>For hyperlink urls use relative links.  For image hyperlinks you can use relative from the document, or you can use relative from the root (e.g '/images/my_image.png')</paragraph><heading>
+		<paragraph>For hyperlink urls use relative links.  For image hyperlinks you can use relative from the document, or you can use relative from the root (e.g '/images/my_image.png')</paragraph>
+		<paragraph>For code blocks make sure all code is tabbed in by a single tab for Eiffel code, and no tabs for C code.  Treat the code block area as a blank piece of paper and tab according the styling conventions of the language you are sampling.</paragraph>
+		<paragraph>Images may be aligned to left of the document to the center, whichever is appropriate.</paragraph>
+		<heading>
 			<size>3</size>Shortcuts
 		</heading>
-		<paragraph>The <link><url>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/documentation.dpr</url><label>default project file</label></link> for the Eiffel documentation project contains a number of eiffel specific shortcuts for inserting eiffel code text, lists, tables and so on more easily.  To see the available shortcuts go to <bold>Tools</bold> -> <bold>Shortcuts..</bold> and you will see what is defined.  Feel free to edit or add you own shortcuts for tagging and inserting text that you use more frequently, but please do not commit the project file back to CVS since your shortcuts will then override the default ones.</paragraph>	</paragraph></document>
+		<paragraph>The 
+			<link>
+				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/documentation.dpr</url>
+				<label>default project file</label>
+			</link> for the Eiffel documentation project contains a number of eiffel specific shortcuts for inserting eiffel code text, lists, tables and so on more easily.  To see the available shortcuts go to 
+			<bold>Tools</bold> -&gt; 
+			<bold>Shortcuts..</bold> and you will see what is defined.  Feel free to edit or add you own shortcuts for tagging and inserting text that you use more frequently, but please do not commit the project file back to CVS since your shortcuts will then override the default ones.
+		</paragraph>
+	</paragraph></document>

@@ -30,14 +30,6 @@ table.header
 	margin: 0px 0px 0px 0px;
 }
 
-table.content
-{
-	width: 90%;	
-	border: 0;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-
 table.navigation 
 {
 	border-bottom-style: solid;
@@ -55,11 +47,27 @@ table.header_filler
 	margin: 0px 0px 0px 0px;
 }
 
-td.header_filler
+table.product_type
+{
+	width: 100%;
+}
+
+td 
+{
+	padding-bottom:0.4mm; 
+	background:#eeedde;	
+}
+
+td.header_filler, td.bordered_cell
 {	
 	text-align: right;
 	background-color: #6699cc;
 	color: white:	
+}
+
+td.footer, td.content_style
+{	
+	background:white;
 }
 
 td.navigation 
@@ -69,38 +77,28 @@ td.navigation
 	margin: 0px 0px 0px 0px;
 }
 
-table.product_type
-{
-	width: 100%;	
-}
-
 td.product_type
 {
 	text-align: right;
-	font: italic;	
+	font: italic;
+	background:white;
 }
 
-table.page_title
+td.title_style
 {
-	width: 100%;	
-	margin: 3px 5px 5px 14px;
-}
-
-td.page_title
-{	
-	font: 160%;
-	font-weight: bold;
-	margin: 3px 5px 3px 14px;
+	padding-left: 20px;	
+	background: white;
 }
 
 a 
 {
 	color: #3333cc;
-	text-decoration: underline;
+	text-decoration: none;
 }
-a:hover {
+
+a:hover 
+{
 	color: red;
-	text-decoration: underline;
 }
 
 h1, h2, h3, h4, h5, h6 
@@ -114,27 +112,19 @@ h1
 
 h2 
 {	
-	font-size: 140%;
+	font-size: 120%;
 }
 
 h3 
 {
-	font-size: 120%;
+	font-size: 110%;
+	font-style: italic;
 }
 
 h4, h5, h6 
 {
 	font-size: 100%;
-}
-
-ol, ul 
-{
-	margin: 5px 5px 15px 40px;
-}
-
-li 
-{
-	margin: 5px 5px 5px 5px;
+	font-style: italic;
 }
 
 pre, code, .code 
@@ -157,14 +147,14 @@ span, div
 img 
 {
 	border: none; 
-	margin: 3px 5px 3px 20px;
+	margin: 2px 2px 2px 2px;
 }
 
 <!-- custom styles -->
 
 .content_style
 {
-	margin: 5px 20px 5px 20px;
+	margin: 15px 20px 15px 20px;
 	width: 100%;	
 }
 
@@ -403,15 +393,36 @@ a.block_feature:hover
 	text-decoration: none;
 }
 
-.warning, .seealso, .note, .tip, .sample, .figuretitle 
+
+.warning, .note, .info, .seealso, .tip, .sample
 {
 	margin-top: 1em;
 	margin-left: 1em;
 	margin-right: 1em;
-	background-color: white;
+	background-color: #ffecef;
 	border-width: 1px;
 	border-style: solid;
 	border-color: black;
+	padding: 4px 8px;
+}
+
+.tagged_text_top
+{
+	background-color: white;
+	border-top: solid black 2px;
+	border-left: solid black 2px;
+	border-bottom: none;
+	border-right: none;
+	padding: 4px 8px;
+}
+
+.tagged_text_bottom
+{
+	background-color: white;
+	border-top: none;
+	border-left: non;
+	border-bottom: solid black 2px;
+	border-right: solid black 2px;
 	padding: 4px 8px;
 }
 

@@ -39,7 +39,7 @@
 		</heading>
 		<paragraph>To quickly input tags that are known to the editor through the loaded just right-click in the text and the editor will display a drop down list of available tags based upon the cursor position.</paragraph>
 		<image>
-			<url>taglist.png</url>
+			<url>/images/taglist.png</url>
 		</image>
 		<paragraph>If you right click over highlighted text and select a tag it will enclose the highlighted text in that tag</paragraph>
 		<heading>
@@ -58,11 +58,11 @@
 				<url>docprops.png</url>
 			</image> toolbar button to view document specific properties.  The dialog allows you to specify meta-information about the document regarding the 
 			<link>
-				<url>..\..\filters\index.xml</url>
+				<url>../filters/index.xml</url>
 				<label>output filter</label>
 			</link> to which the document relates, plus information for producing 
 			<link>
-				<url>../../help_projects/index.xml</url>
+				<url>../help_projects/index.xml</url>
 				<label>help projects</label>
 			</link> and 
 			<link>

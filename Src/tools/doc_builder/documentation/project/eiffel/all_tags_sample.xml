@@ -1,7 +1,25 @@
 <document title="Sample document containing every schema tag available">
 	<meta_data/>
 	<paragraph>
-		<heading><size>2</size>Sample document containing every schema tag available</heading>
+		<paragraph><link><url>index.xml</url><label>relative link to document</label></link></paragraph>
+		<paragraph><link><url>../index.xml</url><label>relative link to parent document</label></link></paragraph>
+		<paragraph><link><url>sub_dir/index.xml</url><label>relative link to sub directory document</label></link></paragraph>
+		<paragraph><link><url>index2.xml</url><label>invalid relative link to document</label></link></paragraph>
+		<paragraph><link><url>../index2.xml</url><label>invalid relative link to document</label></link></paragraph>
+		<paragraph><link><url>a_sub_dir/index2.xml</url><label>invalid relative link to document</label></link></paragraph>
+		<heading>
+			<size>2</size>Sample document containing every schema tag available
+		</heading>
+		<paragraph>
+			<start type="free">
+				<content>This text applies to the free edition</content>
+			</start>
+		</paragraph>
+		<paragraph>
+			<start type="enterprise">
+				<content>This text applies to the enterprise edition</content>
+			</start>
+		</paragraph>
 		<heading>
 			<size>3</size>Textual tags
 		</heading>
@@ -17,6 +35,15 @@
 		</paragraph>
 		<paragraph>A paragraph with 
 			<bold>Bold Text </bold>
+		</paragraph>
+		<paragraph>A paragraph with 
+			<underline>Underlined Text </underline>
+		</paragraph>
+		<paragraph>A paragraph with text 
+			<line_break/>separated 
+			<line_break/>by 
+			<line_break/>line 
+			<line_break/>breaks
 		</paragraph>
 		<heading>
 			<size>3</size>Headings
@@ -174,6 +201,40 @@
 				<row>
 					<cell>2,1</cell>
 					<cell>2,2</cell>
+				</row>
+			</table>
+		</paragraph>
+		<paragraph>Formatted table
+			<table>
+				<border>1</border>
+				<row>
+					<cell>
+						<height>50</height>
+						<vertical_alignment>top</vertical_alignment>top aligned
+					</cell>
+					<cell>
+						<vertical_alignment>middle</vertical_alignment>middle aligned
+					</cell>
+					<cell>
+						<vertical_alignment>bottom</vertical_alignment>bottom aligned
+					</cell>
+				</row>
+				<row>
+					<cell columnspan="3">Column span of 3</cell>
+				</row>
+				<row>
+					<cell rowspan="3">Row span of 3</cell>
+				</row>
+				<row>
+					<cell columnspan="2">Column span of 2</cell>
+				</row>
+				<row>
+					<cell>hello</cell>
+					<cell>hello</cell>
+				</row>
+				<row>
+					<cell>hello</cell>
+					<cell>hello</cell>
 				</row>
 			</table>
 		</paragraph>

@@ -146,23 +146,12 @@ feature -- Status report
 
 	name: STRING is
 			-- String form of font details
-		local
-			size_in_point: INTEGER
-			screen_dc: WEL_SCREEN_DC
 		do
 			!! Result.make (60)
 				-- face name
 			Result.append (wel_log_font.face_name)
 			Result.extend (',')
-				-- point size
-			size_in_point := -wel_log_font.height
-			create screen_dc
-			screen_dc.get
-			size_in_point := mul_div (size_in_point, 72,
-								get_device_caps (screen_dc.item, logical_pixels_y))
-			screen_dc.release
-
-			Result.append_integer (size_in_point)
+			Result.append_integer (point // 10)
 			Result.extend (',')
 				-- weight
 			Result.append_integer (wel_log_font.weight)
@@ -255,8 +244,19 @@ feature -- Status report
 	pixel_size: INTEGER
 			-- Size of font in pixels
 
-	point: INTEGER
+	point: INTEGER is
 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
+		local
+			screen_dc: WEL_SCREEN_DC
+		do
+			Result := -wel_log_font.height
+			create screen_dc
+			screen_dc.get
+			Result := mul_div (Result, 72,
+								get_device_caps (screen_dc.item, logical_pixels_y))
+			screen_dc.release
+			Result := Result * 10
+		end
 
 	slant: CHARACTER is
 			-- Slant of font (o, r, i...)

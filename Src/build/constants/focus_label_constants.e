@@ -30,6 +30,7 @@ feature
 	create_instance_label: STRING is "Create instance"
 	create_edit_label: STRING is "Create/Edit"
 	create_project_label: STRING is "Create project"
+	current_state_label: STRING is "Current State"
 	drawing_label: STRING is "Drawing commands"
 	fg_color_att_label: STRING is "Foreground color attribute"
 	load_project_label: STRING is "Retrieve project"

@@ -22,7 +22,7 @@ inherit
 			close, set_default_size,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title, resources
+			set_title, resources, history_window_title
 		end;
 	BAR_AND_TEXT
 		rename
@@ -34,7 +34,7 @@ inherit
 			build_basic_bar, close, make_shell, reset,
 			update_boolean_resource, set_default_size,
 			update_integer_resource,
-			set_title, resources
+			set_title, resources, history_window_title
 		select
 			close_windows, make_shell, reset
 		end;
@@ -139,7 +139,13 @@ feature -- Window Properties
 			-- Accept any type stone
 		do
 			Result := Object_type
-		end
+		end;
+
+	history_window_title: STRING is
+			-- Title of the history window
+		do
+			Result := Interface_names.t_Select_object
+		end;
  
 feature -- Access
  
@@ -268,7 +274,7 @@ feature -- Update
 			old_close_windows;
 			sc ?= slice_cmd_holder.associated_command;
 			sw ?= sc.slice_window
-			if sw.is_popped_up then
+			if sw /= Void and then sw.is_popped_up then
 				sw.popdown
 			end
 		end;

@@ -140,7 +140,7 @@ feature {NONE}
 		local
 			ts: EB_TOP_SHELL
 		once
-			ts.make ("", project_tool.screen);
+			ts.make (project_tool.screen);
 			!! Result.make_shell (ts);
 			ts.set_title (Result.tool_name);
 			ts.raise

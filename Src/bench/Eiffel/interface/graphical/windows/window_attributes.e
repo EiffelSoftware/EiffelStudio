@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"Class to set window attributes.";
+	description: "Class to set window attributes.";
 	date: 	"$Date$";
 	revision: 	"$Revision$"
 

@@ -8,18 +8,22 @@ indexing
 class SYSTEM_HOLE
 
 inherit
-	SHARED_EIFFEL_PROJECT;
-	PROJECT_CONTEXT;
+	SHARED_EIFFEL_PROJECT
+
+	PROJECT_CONTEXT
+
 	DEFAULT_HOLE_COMMAND
 		redefine
 			work, symbol, full_symbol, name, stone_type,
 			menu_name, accelerator
 		end
+
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as load_default,
 			execute_warner_ok as load_chosen
-		end;
+		end
+
 	CREATE_ACE_CALLER
 
 creation
@@ -89,7 +93,7 @@ feature {NONE} -- Execution
 			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
-			if tool = System_tool then
+			if is_system_tool_created and then tool = System_tool then
 				tool.synchronize
 			elseif Project_tool.initialized then
 				if Eiffel_ace.file_name = void then

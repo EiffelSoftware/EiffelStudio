@@ -108,7 +108,7 @@ feature {NONE} -- Execution
 				else
 					class_list := Void
 				end;
-			elseif project_initialized then
+			elseif Eiffel_project.initialized then
 				class_i ?= arg;
 				if class_i = Void then
 					cname := clone (text);

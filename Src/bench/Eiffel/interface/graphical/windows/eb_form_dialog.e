@@ -1,27 +1,24 @@
 indexing
-
-	description:
-		"Notion of a form dialog used for creation of a %
-		%tool as a form.";
-	date: "$Date$";
+	description: "Notion of a form dialog used for creation of a tool as a form."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class EB_FORM_DIALOG
 
 inherit
-	TOOLTIP_INITIALIZER;
+	TOOLTIP_INITIALIZER
 	EB_SHELL
 		undefine
 			raise, lower, parent
 		redefine
 			implementation, hide, show
-		end;
+		end
 	FORM_D
 		rename
 			make as old_make
 		redefine
 			implementation, hide, show
-		end;
+		end
 	WINDOWS
 
 creation
@@ -29,19 +26,19 @@ creation
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING a_parent: COMPOSITE) is
 			-- Initialize Current.
 		require
 			valid_name: a_name /= Void
 			valid_parent: a_parent /= Void
 		do
-			old_make (a_name, a_parent);
+			old_make (a_name, a_parent)
 			tooltip_initialize (Current)
 			set_default_position (False)
 		ensure
-			parent_set: parent = a_parent;
+			parent_set: parent = a_parent
 			identifier_set: identifier.is_equal (a_name)
-		end;
+		end
 
 feature -- Properties
 
@@ -49,57 +46,57 @@ feature -- Properties
 			-- Associated form
 		do
 			Result := Current
-		end;
+		end
 
 	icon_name: STRING is
 			-- Icon name of Current
 		do
 			Result := ""
-		end;
+		end
 
 feature -- Setting
 
 	set_icon_name (a_string: STRING) is
 		do
-		end;
+		end
 
 	set_delete_command (c: COMMAND) is
 		do
-		end;
+		end
 
 	display is
 			-- Show Current on the screen.
 		local
-			new_x, new_y: INTEGER;
+			new_x, new_y: INTEGER
 			p: like parent
 		do
 			if is_popped_up then
 				raise
 			else
-				p := parent;
-				new_x := p.real_x + (p.width - width) // 2;
+				p := parent
+				new_x := p.real_x + (p.width - width) // 2
 				new_y := p.real_y - (height // 2)
 				if new_x + width > screen.width then
 					new_x := screen.width - width
 				elseif new_x < 0 then
 					new_x := 0
-				end;
+				end
 				if new_y + height > screen.height then
 					new_y := screen.height - height
 				elseif new_y < 0 then
 					new_y := 0
-				end;
-				set_x_y (new_x, new_y);
-				popup;
+				end
+				set_x_y (new_x, new_y)
+				popup
 				focus_label.initialize_focusables (Current)
 			end
-		end;
+		end
 
 	hide is
 			-- Hide Current.
 		do
 			popdown
-		end;
+		end
 
 	show is
 			-- Show Current.
@@ -109,11 +106,11 @@ feature -- Setting
 
 feature -- Inapplicable
 
-	is_iconic_state: BOOLEAN is False;
+	is_iconic_state: BOOLEAN is False
 
 	set_iconic_state is
 		do
-		end;
+		end
 
 	set_normal_state is
 		do
@@ -121,7 +118,6 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	--implementation: FORM_D_IMP
-	implementation: FORM_D_I --VISIONLITE
+	implementation: FORM_D_I
 
 end -- class EB_FORM_DIALOG

@@ -1,15 +1,15 @@
 indexing
-
-	description:
-		"Notion of a toolbar that can be added to and %
-		%removed from the user interface.";
+	description: "Notion of a toolbar that can be added to and %
+			%removed from the user interface.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOOLBAR
+class
+	TOOLBAR
 
 inherit
-	FORM;
+	FORM
+
 	COMMAND_W
 
 creation

@@ -1,31 +1,20 @@
 indexing
-
-	description:	
-		"Window manager for class tools.";
-	date: "$Date$";
+	description: "Window manager for class tools."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_WIN_MGR 
+class
+	CLASS_WIN_MGR 
 
 inherit
-
-	EDITOR_MGR
-		rename
-			make as mgr_make
-		redefine
-			editor_type, update_array_resource
-		end;
 	EDITOR_MGR
 		redefine
 			editor_type, make, update_array_resource
-		select
-			make
-		end;
-	EB_CONSTANTS;
+		end
+
 	SHARED_FORMAT_TABLES
 
 creation
-
 	make
 
 feature -- Initialization
@@ -33,7 +22,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			mgr_make (a_screen);
+			{EDITOR_MGR} precursor (a_screen)
 			Class_resources.add_user (Current)
 		end
 
@@ -50,11 +39,11 @@ feature -- Access
 			until
 				active_editors.after
 			loop
-				active_editors.item.raise_shell_popup;
+				active_editors.item.raise_shell_popup
 				active_editors.forth
 			end
 			active_editors.go_to (c)
-		end;
+		end
 
 feature -- Update
 
@@ -65,14 +54,21 @@ feature -- Update
 		local
 			cr: like Class_resources
 		do
-			cr := Class_resources;
+			cr := Class_resources
 			if old_res = cr.feature_clause_order then
 				clear_class_tables
 			end
+			{EDITOR_MGR} precursor (old_res, new_res)
 		end
 
 feature {NONE} -- Properties
 
-	editor_type: CLASS_W;
+	editor_type: CLASS_W
+
+	create_editor: CLASS_W is
+			-- Create a new class tool.
+		do
+			!! Result.make (screen)
+		end
 
 end -- class CLASS_WIN_MGR

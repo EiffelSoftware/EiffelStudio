@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"To name automatically each new widget.";
+	description: "To name automatically each new widget.";
 	date: "$Date$";
 	revision: "$Revision: "
 
@@ -12,14 +10,14 @@ feature {NONE} -- Properties
 	new_name: STRING is
 			-- Original name for tool identification
 		do
-			counter.put (counter.item + 1);
+			counter.set_item (counter.item + 1);
 			Result := counter.item.out
 		end;
 
-	counter: CELL [INTEGER] is
+	counter: INTEGER_REF is
 			-- Shared container of tool identification numbers
 		once
-			!!Result.put (0)
+			!! Result
 		end
 
 end -- class NAMER

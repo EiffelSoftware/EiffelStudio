@@ -84,6 +84,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 #ifdef __WINDOWS_386__
 	extern char *appl_ini_file ();
 	char eif_timeout[10];
+	int l;
 #else
 	char *eif_timeout;
 #endif
@@ -100,9 +101,10 @@ public EIF_REFERENCE eif_timeout_msg ()
 #endif
 	strcat(s, "EIF_TIMEOUT to a value larger than\n");
 #ifdef __WINDOWS_386__
-	GetPrivateProfileString ("Communications", "EIF_TIMEOUT", "15000", eif_timeout, 10 ,appl_ini_file());
+	l = GetPrivateProfileInt ("Environment", "EIF_TIMEOUT", 15, appl_ini_file()) * 1000;
+	sprintf (eif_timeout, "%d", l);
 	strcat(s, eif_timeout);
-	strcat(s, " in the [Communications] section\nof the file ");
+	strcat(s, " in the [Environment] section\nof the file ");
 	strcat(s, appl_ini_file());
 	strcat(s, "\n");
 #else

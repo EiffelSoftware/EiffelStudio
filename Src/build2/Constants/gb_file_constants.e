@@ -33,6 +33,14 @@ feature -- Generation constants
 			Result.extend ("build_class_template_imp.e")
 		end
 		
+	constants_template_imp_file_name: FILE_NAME is
+			-- `Result' is location of build constants implementation template file,
+			-- including name.
+		do
+			Result := template_file_location
+			Result.extend ("constants_imp.e")
+		end
+		
 	constants_template_file_name: FILE_NAME is
 			-- `Result' is location of build constants template file,
 			-- including name.

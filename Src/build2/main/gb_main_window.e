@@ -293,11 +293,9 @@ feature {NONE} -- Implementation
 	initialize_split_areas is
 			-- Set splitters to default positions.
 		do
-			--| FIXME when the vertical control is completed, add an appropriate setting.
 			if horizontal_split_area.full then
 				horizontal_split_area.set_split_position (Default_width_of_type_selector)
 			end
-		--	vertical_split_area.set_split_position (Default_height_of_type_selector)
 		end
 
 	initialize_menu is

@@ -568,6 +568,8 @@ register2 struct dcall *val;
 	db_stack.st_top = top + 1;			/* Points to next free location */
 	if (val != (struct dcall *) 0)		/* If value was provided */
 		bcopy(val, top, CALL_SZ);		/* Push it on the stack */
+	else
+		bzero(top, CALL_SZ);
 
 	return top;				/* Address of allocated item */
 }

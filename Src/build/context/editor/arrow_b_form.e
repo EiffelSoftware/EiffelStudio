@@ -29,6 +29,7 @@ feature -- Interface
 					radio_b, Arrow_b_cmd, editor);
 			!!arrow_right.make (Widget_names.right_arrow_name, 
 					radio_b, Arrow_b_cmd, editor);
+			radio_b.set_always_one (True);	
 
 			attach_left (radio_b, 10);
 			attach_top (radio_b, 10);
@@ -49,14 +50,18 @@ feature {NONE}
 			dir:INTEGER
 		do
 			dir := context.direction;
+			arrow_up.set_toggle_off;
+			arrow_down.set_toggle_off;
+			arrow_left.set_toggle_off;
+			arrow_right.set_toggle_off;
 			if dir = Context_const.up_arrow_direction then
-				arrow_up.arm
+				arrow_up.set_toggle_on
 			elseif dir = Context_const.down_arrow_direction then
-				arrow_down.arm
+				arrow_down.set_toggle_on
 			elseif dir = Context_const.left_arrow_direction then
-				arrow_left.arm
+				arrow_left.set_toggle_on
 			else
-				arrow_right.arm
+				arrow_right.set_toggle_on
 			end;
 		end;
 

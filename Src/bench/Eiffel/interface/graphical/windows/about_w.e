@@ -131,7 +131,7 @@ feature -- Attachements
 		do
 			logo_width  := bm_ISE_power.width
 			logo_height  := bm_ISE_power.height
-			total_width := 3* logo_width
+			total_width := 3 * logo_width
 
 			text_intro.set_size (total_width, logo_height // 5 )
 			label.set_size (total_width, logo_height // 5 * 3)
@@ -139,7 +139,7 @@ feature -- Attachements
 			button.set_x ((total_width - 75) //2)
 			button.forbid_recompute_size
 
-			set_size (logo_width + total_width, logo_height)
+			set_size (logo_width + total_width + 50, logo_height)
 			forbid_resize
 		end
 

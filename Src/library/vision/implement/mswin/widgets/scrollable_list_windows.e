@@ -398,7 +398,8 @@ feature -- Status setting
 				a_visible_count := new_height // item_height
 				private_attributes.set_height (a_visible_count * item_height +
 					2 * Border_height)
-				set_visible_item_count (a_visible_count)
+				wel_set_height (a_visible_count * item_height +
+					2 * Border_height)
 			end
 			if parent /= Void then
 				parent.child_has_resized

@@ -127,17 +127,17 @@ feature {NONE}
 				end;
 			end;
 			if not found then
-				io.putstring ("Problem in group retrieve set attrib%N%N");
+				io.error.putstring ("Error in retrieving group (setting attributes)%N");
 			else
-			s_context.set_context_attributes (a_context);
-			from
-				a_context.child_start
-			until
-				a_context.child_offright
-			loop
-				retrieve_attributes (a_context.child);
-				a_context.child_forth;
-			end;
+				s_context.set_context_attributes (a_context);
+				from
+					a_context.child_start
+				until
+					a_context.child_offright
+				loop
+					retrieve_attributes (a_context.child);
+					a_context.child_forth;
+				end;
 			end;
 		end;
 

@@ -6,11 +6,11 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_PARSER
-		undefine
-			equals, get_hash_code, to_string
-		end
 	
-	ANY
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
 
 create
 	default_create
@@ -30,7 +30,7 @@ feature -- Interface
 			l_retried: BOOLEAN
 			l_code_stream: SYSTEM_STRING
 		do
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
 			if not l_retried then
 				initialize_referenced_assemblies
 				create l_eiffel_parser.make
@@ -48,9 +48,9 @@ feature -- Interface
 				Result ?= l_support.last_element_created;
 				last_compile_unit_generated := Result
 			end
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True
 			Result := last_compile_unit_generated
 			retry

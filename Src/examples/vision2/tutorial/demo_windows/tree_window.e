@@ -25,26 +25,30 @@ feature {NONE} -- Initialization
 			cmd: EV_ROUTINE_COMMAND
 		do
 			{EV_TREE} Precursor (par)
-			tree_item1 := create_item (Current, "Item")
-			tree_item2 := create_item (tree_item1, "Item 2")
-			tree_item1 := create_item (Current, "Item 3")
-			tree_item1 := create_item (Current, "Item 4")
-			tree_item3 := create_item (tree_item1, "Item 5")
-			tree_item2 := create_item (tree_item1, "Item 6")
-			create action_item.make_with_text (tree_item2, "Click Me !")
+			--tree_item1 := create_item (Current, "Item")
+			--tree_item2 := create_item (tree_item1, "Item 2")
+			--tree_item1 := create_item (Current, "Item 3")
+			--tree_item1 := create_item (Current, "Item 4")
+			--tree_item3 := create_item (tree_item1, "Item 5")
+			--tree_item2 := create_item (tree_item1, "Item 6")
+			--create action_item.make_with_text (tree_item2, "Click Me !")
 
 			-- Once everything done, we expand the sub-tree we want
-			tree_item1.set_expand (True)
-			tree_item2.set_expand (True)
+			--tree_item1.set_expand (True)
+			--tree_item2.set_expand (True)
 
 			-- We add a command on an item.
-			create cmd.make (~execute1)
-			action_item.add_select_command (cmd, Void)
+			--create cmd.make (~execute1)
+			--action_item.add_select_command (cmd, Void)
 		end
 
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_primitive_tabs
+			tab_list.extend (tree_tab)
+			create action_window.make (Current, tab_list)
+			tree_tab.set_tree
 		end
 
 feature -- Access

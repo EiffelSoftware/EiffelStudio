@@ -10,7 +10,7 @@ class
 inherit
 	ECOM_QUERIABLE
 
-creation
+create
 	make_from_other,
 	make_from_pointer
 

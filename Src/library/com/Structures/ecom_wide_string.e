@@ -13,7 +13,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make_from_string,
 	make_from_pointer
 
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (string)
+			create wel_string.make (string)
 			item := ccom_create_from_string (wel_string.item)	
 			shared := False
 		ensure

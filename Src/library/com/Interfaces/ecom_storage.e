@@ -20,7 +20,7 @@ inherit
 	
 	ECOM_STAT_FLAGS
 
-creation
+create
 	make_new_doc_file,
 	make_temporary_doc_file,
 	make_open_file,

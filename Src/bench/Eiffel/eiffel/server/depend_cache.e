@@ -4,7 +4,7 @@ class DEPEND_CACHE
 
 inherit
 
-	CACHE [CLASS_DEPENDANCE]
+	CACHE [CLASS_DEPENDANCE, CLASS_ID]
 
 creation
 

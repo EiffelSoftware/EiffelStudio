@@ -4,7 +4,7 @@ class BYTE_CACHE
 
 inherit
 
-	CACHE [BYTE_CODE]
+	CACHE [BYTE_CODE, BODY_ID]
 
 creation
 

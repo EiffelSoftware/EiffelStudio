@@ -1,3 +1,5 @@
+#ifndef _CONCURRENT_EXTERN_
+#define _CONCURRENT_EXTERN_
 
 /*****************************************************************
     In the C-programs, we use EIF_OBJ and char * to indicate
@@ -59,12 +61,23 @@ extern REQUEST *_concur_end_of_req_list;
 extern EIF_INTEGER _concur_req_list_count;
 */
 
+/* for POLLING mechanism */
+extern EIF_INTEGER process_exception();
+extern EIF_INTEGER has_msg_from_pc();
+extern void process_connection();
+/* For blocked client list */
+extern void add_to_blocked_client_queue();
+extern CLIENT *take_head_from_blocked_client_list();
+                                           
 /* from REF_TABLE  */
 extern REF_TABLE_NODE *_concur_ref_table; /* each item in the list is a
 processor which has imported objects from the current processor. */
 extern int _concur_ref_table_size;
 extern EXPORTED_OBJ_LIST_NODE *_concur_exported_obj_list;
 extern IMPORTED_OBJ_TABLE_NODE *_concur_imported_obj_tab;
+
+/* for SEP_OBJ */
+extern void c_send_unregister_request();
 
 /* Not used now  */
 extern EIF_INTEGER _concur_obj_type;
@@ -131,7 +144,11 @@ extern char *_concur_buffer;
 extern int  _concur_buffer_len;
 
 extern char  _concur_crash_info[constant_crash_info_len];
-extern double _concur_begin_tms, _concur_end_tms;
+#ifdef GC_ON_CPU_TIME
+extern double _concur_begin_tms;
+#else
+extern Timeval _concur_begin_tms;
+#endif
 
 extern char _concur_error_msg[100];
 
@@ -143,19 +160,28 @@ extern char **_concur_ptr_to_root_obj;
 extern char _concur_root_of_the_application;
 
 extern char _concur_is_creating_sep_child;
-#ifdef WORK_BENCH
+#ifdef WORKBENCH
 extern char _concur_invariant_checked;
 #endif
 
-#ifdef SIGNAL
 extern jmp_buf _concur_exenv1;
 extern jmp_buf _concur_exenv2;
 extern jmp_buf _concur_exenv3;
 extern jmp_buf _concur_exenv4;
 extern int _concur_sys_mask;
-#endif
 
 extern MY_STRING _concur_call_stack;
+
+/*---------------------------------------------------------*/
+/* The following are variables used in POLLing mechanism   */
+/*---------------------------------------------------------*/
+
+extern fd_set _concur_mask;
+extern MASK_LIMIT _concur_mask_limit;
+
+extern CLIENT *_concur_blk_cli_list;
+extern CLIENT *_concur_end_of_blk_cli_list;
+extern EIF_INTEGER _concur_blk_cli_list_count;
 
 /*---------------------------------------------------------*/
 /* The following are external variables                    */
@@ -237,14 +263,14 @@ extern void process_request_from_parent();
 extern void process_request_from_child();
 extern void release_child_list();
 extern void release_system_lists_in_rescue();
-#ifdef SIGNAL
 extern void sig_def_resc();
 extern void sig_proc_child();
 extern void sig_sys_list();
 extern void sig_rels_child();
 extern void def_res();
 extern void c_my_concur_put_int();
-#endif
+extern void c_my_concur_put_stream();
+extern void release_exported_objects();
 
 /* From ref_table.c */
 extern EIF_INTEGER c_get_oid_from_addr();
@@ -309,6 +335,7 @@ extern EIF_DOUBLE c_wait_time();
 extern EIF_BOOLEAN c_wait_long_enough();
 extern void c_process_ser_list_from_sep_obj();
 extern void c_raise_concur_exception();
+extern void cur_usleep();
 
 
 
@@ -319,3 +346,4 @@ extern void print_ref_table_and_exported_object();
 extern void get_call_stack();
 
 
+#endif

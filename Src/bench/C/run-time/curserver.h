@@ -1,3 +1,5 @@
+#ifndef _CONCURRENT_SERVER_
+#define _CONCURRENT_SERVER_
 
 /*****************************************************************
     In the C-programs, we use EIF_OBJ and char * to indicate
@@ -11,6 +13,7 @@ to indicate indirect(also called Eiffel or protected) address.
  * generated for an application).
 */
 
+#include "net.h"
 #include "constant.h"
 
 /*----------------------------------------------------*/
@@ -69,6 +72,9 @@ REF_TABLE_NODE *_concur_ref_table=NULL;
 int _concur_ref_table_size=0;
 EXPORTED_OBJ_LIST_NODE *_concur_exported_obj_list=NULL;
 IMPORTED_OBJ_TABLE_NODE *_concur_imported_obj_tab=NULL;
+
+/* for SEP_OBJ */
+extern void c_send_unregister_request();
 
 /* Not used now  */
 EIF_INTEGER _concur_obj_type;
@@ -131,11 +137,15 @@ EIF_BOOLEAN _concur_server_list_released;
 EIF_BOOLEAN _concur_current_client_reserved;
 
 struct sockaddr_in _concur_caddr, _concur_saddr;
-char *_concur_buffer;
-int  _concur_buffer_len;
+char *_concur_buffer = NULL;
+int  _concur_buffer_len = 0;
 
 char  _concur_crash_info[constant_crash_info_len];
-double  _concur_begin_tms, _concur_end_tms;
+#ifdef GC_ON_CPU_TIME
+double  _concur_begin_tms;
+#else
+Timeval  _concur_begin_tms;
+#endif
 
 char _concur_error_msg[constant_errno_text_len+1];
 
@@ -143,16 +153,25 @@ char **_concur_ptr_to_root_obj=NULL;
 char _concur_root_of_the_application=1;
 
 char _concur_is_creating_sep_child = 0;
-#ifdef WORK_BENCH
+#ifdef WORKBENCH
 char _concur_invariant_checked = 1;
 #endif
 
-#ifdef SIGNAL
 CONCUR_RESC_DECLARE;
 int _concur_sys_mask = constant_invalid_signal_mask;
-#endif
 
 MY_STRING _concur_call_stack;
+
+/*---------------------------------------------------------*/
+/* The following are variables used for POLLing mechanism  */
+/*---------------------------------------------------------*/
+
+fd_set _concur_mask;
+MASK_LIMIT _concur_mask_limit;
+
+CLIENT *_concur_blk_cli_list = NULL;
+CLIENT *_concur_end_of_blk_cli_list = NULL;
+EIF_INTEGER _concur_blk_cli_list_count = 0;
 
 /*---------------------------------------------------------*/
 /* The following are external variables                    */
@@ -234,14 +253,22 @@ extern void process_request_from_parent();
 extern void process_request_from_child();
 extern void release_child_list();
 extern void release_system_lists_in_rescue();
-#ifdef SIGNAL
 extern void sig_def_resc();
 extern void sig_proc_child();
 extern void sig_sys_list();
 extern void sig_rels_child();
 extern void def_res();
 extern void c_my_concur_put_int();
-#endif
+extern void c_my_concur_put_stream();
+extern void release_exported_objects();
+
+/* for POLLING mechanism */
+extern EIF_INTEGER process_exception();
+extern EIF_INTEGER has_msg_from_pc();
+extern void process_connection();
+/* For blocked client list */
+extern void add_to_blocked_client_queue();
+extern CLIENT *take_head_from_blocked_client_list();
 
 /* From ref_table.c */
 extern EIF_INTEGER c_get_oid_from_addr();
@@ -306,6 +333,7 @@ extern EIF_DOUBLE c_wait_time();
 extern EIF_BOOLEAN c_wait_long_enough();
 extern void c_raise_concur_exception();
 extern void c_process_ser_list_from_sep_obj();
+extern void cur_usleep();
 
 
 
@@ -314,3 +342,5 @@ extern void print_server_list() ;
 extern void print_ref_table_and_exported_object();
 
 extern void get_call_stack();
+
+#endif

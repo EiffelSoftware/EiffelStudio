@@ -15,27 +15,49 @@ feature {NONE} -- Initialization
 		do
 			create item.make (Default_size)
 			create a.make (0, Default_size)
+			internal_signature := a.area
 			current_position := 0
+			is_written := False
 		ensure
 			current_position_set: current_position = 0
+			not_is_written: not is_written
 		end
 			
 feature -- Access
 
-	size: INTEGER
+	size: INTEGER is
 			-- Size of structure once emitted.
+		do
+			Result := current_position
+		end
 
 	item: MANAGED_POINTER
 			-- C structures that holds signature.
 
-feature -- Utilities
+feature -- Status report
 
-	insert_compressed_item (i: INTEGER) is
-			-- 
+	is_written: BOOLEAN
+			-- Is current signature written in `item'?
+		
+feature -- Saving
+
+	update_item is
+			-- Write to `item'.
+		require
+			not_is_written: not is_written
+		local
+			l_spe: like internal_signature
 		do
-			
+			l_spe := internal_signature
+			if item.size < current_position then
+				item.resize (current_position.max (item.size + Default_size))
+			end
+			item.item.memory_copy ($l_spe, current_position)
+			is_written := True
+		ensure
+			is_written: is_written
 		end
-
+		
 feature {NONE} -- Implementation
 
 	compress_data (i: INTEGER) is

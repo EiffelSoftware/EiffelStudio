@@ -18,6 +18,7 @@ inherit
 		undefine
 			set_default_colors
 		redefine
+			pebble_over_widget,
 			initialize,
 			interface,
 			make
@@ -178,6 +179,13 @@ feature -- Status setting
 			)
 		end
 
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+		do
+			Result := a_gdkwin = C.gtk_widget_struct_window (list_widget)
+		end
+
 feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	previous_selected_item: EV_LIST_ITEM
@@ -234,6 +242,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/22 22:02:09  king
+--| Redefined pebble_over_widget to return correct gdkwindow
+--|
 --| Revision 1.33  2000/03/21 21:32:45  king
 --| Made c_object an event box
 --|

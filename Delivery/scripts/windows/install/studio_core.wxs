@@ -1,0 +1,1746 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="studio_core" Guid="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Language="0" Version="5.5">
+    <Package Id="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Keywords="MergeModule, MSI, Database" Description="EiffelCompilerFiles" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
+	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="Registry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF">
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel55\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry36" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel55\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\wizard" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\ec" Name="ISE_EIFFEL" Value="[Application]" Id="registry46" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\finish_freezing" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry42" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\wizard" Name="ISE_PLATFORM" Value="windows" Id="registry38" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\finish_freezing" Name="ISE_PLATFORM" Value="windows" Id="registry43" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\ec" Name="ISE_PLATFORM" Value="windows" Id="registry47" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\finish_freezing" Name="ISE_CFLAGS" Id="registry41" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel55\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry40" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" />
+      </Component>
+	  <!--      <Component Id="registry" Guid="F746C614-200F-47DF-AA21-E42FBD216D54">
+        <Registry Root="HKCR" Key="estudio.project\shell\open\command" Value="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot; &quot;%1&quot;" Id="registry53" />
+        <Registry Root="HKCR" Key="estudio.project\shell\open" Value="open" Id="registry51" />
+        <Registry Root="HKCR" Key="estudio.project\shell" Value="open" Id="registry54" />
+        <Registry Root="HKCR" Key="estudio.project" Value="EiffelStudio Project" Id="registry52" />
+        <Registry Root="HKCR" Key=".epr" Value="estudio.project" KeyPath="yes" Id="registry" />
+	</Component>
+	-->
+	  <Directory Id="DesktopFolder" Name="." />
+      <Directory Id="ProgramMenuFolder" Name=".">
+        <Directory Id="EiffelStudio_55" Name="EIFFEL~5" LongName="EiffelStudio 5.5">
+          <Component Id="EiffelStudio_55" Guid="96C73318-4E9A-414E-A2DE-222E40C1D981">
+            <CreateFolder />
+          </Component>
+          <Directory Id="Tools9" Name="Tools">
+            <Component Id="Tools9" Guid="AD69E09D-AC14-4696-99D3-777BBAFCE1D4">
+              <CreateFolder />
+            </Component>
+          </Directory>
+          <Directory Id="Documentation8" Name="DOCUME~6" LongName="Documentation">
+            <Component Id="Documentation8" Guid="641DA88D-F5A4-4C61-A3C1-A68000526175">
+              <CreateFolder />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="Application" Name=".">
+        <Directory Id="eifinit" Name="eifinit">
+          <Directory Id="studio" Name="studio">
+            <Directory Id="spec" Name="spec">
+              <Directory Id="windows" Name="windows">
+                <Component Id="windows" Guid="2FEFF63A-7841-4A85-AABF-5A093566E8C4">
+                  <File Id="culture" Name="culture" KeyPath="yes" />
+                  <File Id="default.xml" Name="default.xml" />
+                  <File Id="default_recent_projects.xml" Name="DEFAUL~1.XML" LongName="default_recent_projects.xml" />
+                  <File Id="general" Name="general" />
+                  <File Id="general.cfg" Name="general.cfg" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="studio1" Name="studio">
+          <Directory Id="appdefaults" Name="APP-DE~1" LongName="app-defaults">
+            <Component Id="appdefaults" Guid="6DC22BFE-D98C-46C3-AD1D-84ED85C5F224">
+              <File Id="XKeysymDB" Name="XKEYSY~1" LongName="XKeysymDB" KeyPath="yes" />
+            </Component>
+          </Directory>
+          <Directory Id="profiler" Name="profiler">
+            <Component Id="profiler" Guid="C96FB383-E44A-45E8-A224-C260837E978D">
+              <File Id="profiler.info" Name="PROFIL~1.INF" LongName="profiler.info" KeyPath="yes" />
+              <File Id="win32_ms" Name="win32_ms" />
+              <File Id="gprof" Name="gprof" />
+              <File Id="eiffel" Name="eiffel" />
+            </Component>
+          </Directory>
+          <Directory Id="filters" Name="filters">
+            <Component Id="filters" Guid="C1671DF3-6001-4D7A-8F9E-9F266E23DCC6">
+              <File Id="PostScript.fil" Name="POSTSC~1.FIL" LongName="PostScript.fil" KeyPath="yes" />
+              <File Id="index.fil" Name="index.fil" />
+              <File Id="ASCII.fil" Name="ASCII.fil" />
+              <File Id="htmlclassic.fil" Name="HTML-C~1.FIL" LongName="html-classic.fil" />
+              <File Id="com.fil" Name="com.fil" />
+              <File Id="TeX1.fil" Name="TeX1.fil" />
+              <File Id="MML.fil" Name="MML.fil" />
+              <File Id="html.fil" Name="html.fil" />
+              <File Id="TeX2.fil" Name="TeX2.fil" />
+              <File Id="troff.fil" Name="troff.fil" />
+              <File Id="htmlstylesheet.fil" Name="HTML-S~1.FIL" LongName="html-stylesheet.fil" />
+              <File Id="cayenne.fil" Name="cayenne.fil" />
+              <File Id="documentation.fil" Name="DOCUME~1.FIL" LongName="documentation.fil" />
+              <File Id="cool_jex.fil" Name="cool_jex.fil" />
+              <File Id="build.fil" Name="build.fil" />
+              <File Id="default.css" Name="default.css" />
+              <File Id="eiffel.fil" Name="eiffel.fil" />
+              <File Id="RTF.fil" Name="RTF.fil" />
+              <File Id="format.filtemplate" Name="FORMAT~1.FIL" LongName="format.fil-template" />
+              <File Id="xml.fil" Name="xml.fil" />
+            </Component>
+          </Directory>
+          <Directory Id="wizards" Name="wizards">
+            <Directory Id="new_projects" Name="NEW_PR~1" LongName="new_projects" src="$(env.INSTALL_DIR)\start_wizards\">
+              <Component Id="new_projects" Guid="D79A794C-E4B6-4EBE-9D76-1D2CD366234C">
+                <File Id="dotnet.dsc" Name="dotnet.dsc" KeyPath="yes" />
+                <File Id="vision2.dsc" Name="vision2.dsc" />
+                <File Id="wel.dsc" Name="wel.dsc" />
+              </Component>
+              <Directory Id="dotnet" Name="dotnet">
+                <Component Id="dotnet" Guid="CAFD9E4C-C65B-4351-A7C2-75191DB047A4">
+                  <File Id="install.bat" Name="install.bat" KeyPath="yes" />
+                </Component>
+                <Directory Id="pixmaps12" Name="pixmaps">
+                  <Component Id="pixmaps12" Guid="D9B73A03-5048-4DC4-A046-C7FCE1B2D770">
+                    <File Id="icon_to_eiffel_color.ico" Name="ICON_T~4.ICO" LongName="icon_to_eiffel_color.ico" KeyPath="yes" />
+                    <File Id="icon_import_assembly_tool_color.ico" Name="ICON_I~3.ICO" LongName="icon_import_assembly_tool_color.ico" />
+                    <File Id="icon_edit_assembly_color.ico" Name="ICON_E~5.ICO" LongName="icon_edit_assembly_color.ico" />
+                    <File Id="icon_dotnet_wizard_color.ico" Name="ICON_D~5.ICO" LongName="icon_dotnet_wizard_color.ico" />
+                    <File Id="icon_assembly_paths_color.ico" Name="IC09F5~1.ICO" LongName="icon_assembly_paths_color.ico" />
+                    <File Id="icon_assembly_help_color.ico" Name="ICON_A~4.ICO" LongName="icon_assembly_help_color.ico" />
+                    <File Id="icon_import_assembly_color.ico" Name="ICON_I~4.ICO" LongName="icon_import_assembly_color.ico" />
+                    <File Id="icon_export_to_eiffel_color.ico" Name="ICON_E~6.ICO" LongName="icon_export_to_eiffel_color.ico" />
+                    <File Id="V103" Name="ICON_I~5.ICO" LongName="icon_import_assembly_title_color.ico" />
+                    <File Id="icon_delete_color.ico104" Name="ICON_D~6.ICO" LongName="icon_delete_color.ico" />
+                    <File Id="icon_import_tool_title_color.ico" Name="ICON_I~6.ICO" LongName="icon_import_tool_title_color.ico" />
+                    <File Id="wizard.png105" Name="wizard.png" />
+                    <File Id="icon_edit_title_color.ico" Name="ICON_E~7.ICO" LongName="icon_edit_title_color.ico" />
+                    <File Id="Eiffel_tower.png" Name="EIFFEL~3.PNG" LongName="Eiffel_tower.png" />
+                    <File Id="icon_assembly_key_color.ico" Name="ICDFB9~1.ICO" LongName="icon_assembly_key_color.ico" />
+                    <File Id="V106" Name="ICON_A~3.ICO" LongName="icon_assembly_dependencies_dialog_color.ico" />
+                    <File Id="V107" Name="ICON_A~5.ICO" LongName="icon_assembly_dependencies_color.ico" />
+                    <File Id="eiffel_wizard_icon.png108" Name="EIFFEL~4.PNG" LongName="eiffel_wizard_icon.png" />
+                    <File Id="icon_assembly_culture_color.ico" Name="ICON_A~6.ICO" LongName="icon_assembly_culture_color.ico" />
+                    <File Id="eiffel_wizard.png110" Name="EIFFEL~5.PNG" LongName="eiffel_wizard.png" />
+                    <File Id="icon_assembly_version_color.ico" Name="IC6135~1.ICO" LongName="icon_assembly_version_color.ico" />
+                    <File Id="icon_watch_color.ico" Name="ICON_W~5.ICO" LongName="icon_watch_color.ico" />
+                    <File Id="icon_open_file_color.ico111" Name="ICON_O~5.ICO" LongName="icon_open_file_color.ico" />
+                    <File Id="icon_dotnet_import_color.ico112" Name="ICON_D~7.ICO" LongName="icon_dotnet_import_color.ico" />
+                    <File Id="icon_title_dependencies_color.ico" Name="ICON_T~5.ICO" LongName="icon_title_dependencies_color.ico" />
+                    <File Id="icon_assembly_name_color.ico" Name="ICB027~1.ICO" LongName="icon_assembly_name_color.ico" />
+                  </Component>
+                </Directory>
+                <Directory Id="resources" Name="RESOUR~1" LongName="resources">
+                  <Component Id="resources" Guid="B94CC7FC-908D-4EEF-8F46-98C803789C73">
+                    <File Id="V102" Name="TEMPLA~2.ACE" LongName="template_ace_with_root_class_none.ace" KeyPath="yes" />
+                    <File Id="template_application.e" Name="TEMPLA~1.E" LongName="template_application.e" />
+                    <File Id="template_ace.ace" Name="TEMPLA~1.ACE" LongName="template_ace.ace" />
+                    <File Id="template_callback_filename" Name="TEMPLA~1" LongName="template_callback_filename" />
+                  </Component>
+                </Directory>
+                <Directory Id="spec11" Name="spec">
+                  <Directory Id="windows13" Name="windows">
+                    <Component Id="wizard.exe" Guid="D662316B-7D98-4CB3-9E32-26C4F5D31270">
+                      <File Id="wizard.exe" Name="wizard.exe" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+              </Directory>
+              <Directory Id="vision2" Name="vision2">
+                <Directory Id="unix_resources" Name="UNIX_R~1" LongName="unix_resources">
+                  <Component Id="unix_resources" Guid="F1FE4124-3142-4018-B8E5-83AE2B49CB67">
+                    <File Id="interface_names.e" Name="INTERF~1.E" LongName="interface_names.e" KeyPath="yes" />
+                    <File Id="about_dialog.e" Name="ABOUT_~1.E" LongName="about_dialog.e" />
+                    <File Id="template_toolbar_init.e" Name="TE9412~1.E" LongName="template_toolbar_init.e" />
+                    <File Id="template_statusbar_init.e" Name="TE4CBF~1.E" LongName="template_statusbar_init.e" />
+                    <File Id="template_aboutdialog_init.e" Name="TEMPLA~2.E" LongName="template_aboutdialog_init.e" />
+                    <File Id="template_menubar_init.e" Name="TEMPLA~4.E" LongName="template_menubar_init.e" />
+                    <File Id="template_ace.ace115" Name="TEMPLA~3.ACE" LongName="template_ace.ace" />
+                    <File Id="template_menubar_add.e118" Name="TEMPLA~6.E" LongName="template_menubar_add.e" />
+                    <File Id="open.png119" Name="open.png" />
+                    <File Id="template_menu_help_about_add.e" Name="TE890D~1.E" LongName="template_menu_help_about_add.e" />
+                    <File Id="template_toolbar_add.e122" Name="TE5CD2~2.E" LongName="template_toolbar_add.e" />
+                    <File Id="template_main_window.e126" Name="TEMPLA~8.E" LongName="template_main_window.e" />
+                    <File Id="save.png127" Name="save.png" />
+                    <File Id="template_statusbar_add.e129" Name="TECB26~2.E" LongName="template_statusbar_add.e" />
+                    <File Id="new.png131" Name="new.png" />
+                    <File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
+                  </Component>
+                </Directory>
+                <Directory Id="pixmaps16" Name="pixmaps">
+                  <Component Id="pixmaps16" Guid="7642B8EE-9D3E-4524-B3DD-1ABBE8AF35DE">
+                    <File Id="Image0010.png" Name="IMAGE0~3.PNG" LongName="Image0010.png" KeyPath="yes" />
+                    <File Id="wizard.png114" Name="wizard.png" />
+                    <File Id="Image0110.png" Name="IMCEF3~1.PNG" LongName="Image0110.png" />
+                    <File Id="Image0011.png" Name="IMAGE0~4.PNG" LongName="Image0011.png" />
+                    <File Id="Image0000.png" Name="IMAGE0~1.PNG" LongName="Image0000.png" />
+                    <File Id="Image0111.png" Name="IMC204~1.PNG" LongName="Image0111.png" />
+                    <File Id="Image0100.png" Name="IMCEFD~1.PNG" LongName="Image0100.png" />
+                    <File Id="Image0001.png" Name="IMAGE0~2.PNG" LongName="Image0001.png" />
+                    <File Id="Image0101.png" Name="IMC20E~1.PNG" LongName="Image0101.png" />
+                    <File Id="Image1010.png" Name="IMAGE1~3.PNG" LongName="Image1010.png" />
+                    <File Id="Image1110.png" Name="IMCEF2~1.PNG" LongName="Image1110.png" />
+                    <File Id="Image1011.png" Name="IMAGE1~4.PNG" LongName="Image1011.png" />
+                    <File Id="Image1000.png" Name="IMAGE1~1.PNG" LongName="Image1000.png" />
+                    <File Id="Image1111.png" Name="IMC203~1.PNG" LongName="Image1111.png" />
+                    <File Id="Image1100.png" Name="IMCEF8~1.PNG" LongName="Image1100.png" />
+                    <File Id="Image1001.png" Name="IMAGE1~2.PNG" LongName="Image1001.png" />
+                    <File Id="Image1101.png" Name="IMC209~1.PNG" LongName="Image1101.png" />
+                    <File Id="eiffel_wizard.png128" Name="EIFFEL~6.PNG" LongName="eiffel_wizard.png" />
+                    <File Id="eiffel_wizard_icon.png134" Name="EIFFEL~7.PNG" LongName="eiffel_wizard_icon.png" />
+                  </Component>
+                </Directory>
+                <Directory Id="resources17" Name="RESOUR~2" LongName="resources">
+                  <Component Id="resources17" Guid="25DA9617-AECE-4702-934A-813CDFA755BF">
+                    <File Id="new.png" Name="new.png" KeyPath="yes" />
+                    <File Id="template_menubar_add.e" Name="TEMPLA~3.E" LongName="template_menubar_add.e" />
+                    <File Id="template_aboutdialog_init.e116" Name="TEMPLA~5.E" LongName="template_aboutdialog_init.e" />
+                    <File Id="open.png117" Name="open.png" />
+                    <File Id="template_ace.ace120" Name="TEMPLA~4.ACE" LongName="template_ace.ace" />
+                    <File Id="template_toolbar_add.e" Name="TE5CD2~1.E" LongName="template_toolbar_add.e" />
+                    <File Id="template_statusbar_add.e" Name="TECB26~1.E" LongName="template_statusbar_add.e" />
+                    <File Id="interface_names.e121" Name="INTERF~2.E" LongName="interface_names.e" />
+                    <File Id="about_dialog.e123" Name="ABOUT_~2.E" LongName="about_dialog.e" />
+                    <File Id="template_main_window.e" Name="TEMPLA~7.E" LongName="template_main_window.e" />
+                    <File Id="save.png124" Name="save.png" />
+                    <File Id="application.e125" Name="APPLIC~2.E" LongName="application.e" />
+                    <File Id="template_statusbar_init.e130" Name="TE4CBF~2.E" LongName="template_statusbar_init.e" />
+                    <File Id="template_toolbar_init.e132" Name="TE9412~2.E" LongName="template_toolbar_init.e" />
+                    <File Id="template_menu_help_about_add.e133" Name="TE890D~2.E" LongName="template_menu_help_about_add.e" />
+                    <File Id="template_menubar_init.e135" Name="TEMPLA~9.E" LongName="template_menubar_init.e" />
+                  </Component>
+                </Directory>
+                <Directory Id="spec14" Name="spec">
+                  <Directory Id="windows15" Name="windows">
+                    <Component Id="wizard.exe2" Guid="4AE01885-ABAA-4554-87CE-DC52661C62D6">
+                      <File Id="wizard.exe2" Name="wizard.exe" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+              </Directory>
+              <Directory Id="wel" Name="wel">
+                <Directory Id="resources19" Name="RESOUR~3" LongName="resources">
+                  <Component Id="resources19" Guid="D0D33C7B-AFA8-47CE-BFFA-9AA87EC62E96">
+                    <File Id="ace.ace" Name="ace.ace" KeyPath="yes" />
+                    <File Id="dialog_resource.h" Name="DIALOG~1.H" LongName="dialog_resource.h" />
+                    <File Id="frame_template.rc" Name="FRAME_~1.RC" LongName="frame_template.rc" />
+                    <File Id="frame_main_window.e" Name="FRAME_~2.E" LongName="frame_main_window.e" />
+                    <File Id="eiffel.ico" Name="eiffel.ico" />
+                    <File Id="frame_resource.h" Name="FRAME_~1.H" LongName="frame_resource.h" />
+                    <File Id="dialog_main_window.e" Name="DIALOG~2.E" LongName="dialog_main_window.e" />
+                    <File Id="dialog_template.rc" Name="DIALOG~1.RC" LongName="dialog_template.rc" />
+                    <File Id="dialog_application_ids.e" Name="DIALOG~1.E" LongName="dialog_application_ids.e" />
+                    <File Id="root_template.e" Name="ROOT_T~1.E" LongName="root_template.e" />
+                    <File Id="frame_application_ids.e" Name="FRAME_~1.E" LongName="frame_application_ids.e" />
+                  </Component>
+                </Directory>
+                <Directory Id="pixmaps20" Name="pixmaps">
+                  <Component Id="pixmaps20" Guid="7AD5ABE0-AA4D-4935-9FE8-A5E40340B80F">
+                    <File Id="wizard.png136" Name="wizard.png" KeyPath="yes" />
+                    <File Id="frame_application.png" Name="FRAME_~1.PNG" LongName="frame_application.png" />
+                    <File Id="eiffel_wizard.png138" Name="EIFFEL~8.PNG" LongName="eiffel_wizard.png" />
+                    <File Id="dialog_application.png" Name="DIALOG~1.PNG" LongName="dialog_application.png" />
+                    <File Id="eiffel_wizard_icon.png139" Name="EIFFEL~9.PNG" LongName="eiffel_wizard_icon.png" />
+                  </Component>
+                </Directory>
+                <Directory Id="spec18" Name="spec">
+                  <Directory Id="windows21" Name="windows">
+                    <Component Id="wizard.exe3" Guid="E3AFB42F-69F8-4F7A-9D2B-EA778A8B6958">
+                      <File Id="wizard.exe3" Name="wizard.exe" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="precompile" Name="PRECOM~1" LongName="precompile">
+              <Directory Id="pixmaps" Name="pixmaps">
+                <Component Id="pixmaps" Guid="FC3DE46B-A3B3-42E9-A32A-D1F5AD13119E">
+                  <File Id="eiffel_wizard.png" Name="EIFFEL~1.PNG" LongName="eiffel_wizard.png" KeyPath="yes" />
+                  <File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" />
+                  <File Id="wizard.png" Name="wizard.png" />
+                </Component>
+              </Directory>
+              <Directory Id="spec2" Name="spec">
+                <Directory Id="windows3" Name="windows">
+                  <Component Id="wizard.exe1" Guid="A31D074A-9275-43ED-863B-93447FE5886A">
+                    <File Id="wizard.exe1" Name="wizard.exe" KeyPath="yes" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="config" Name="config">
+            <Directory Id="unix" Name="unix">
+              <Directory Id="templates" Name="TEMPLA~1" LongName="templates">
+                <Component Id="templates" Guid="A7DBA1DA-93D8-4181-91FB-EDAB5F97F379">
+                  <File Id="emain.template" Name="EMAIN~1.TEM" LongName="emain.template" KeyPath="yes" />
+                  <File Id="egc_dynlib.template" Name="EGC_DY~1.TEM" LongName="egc_dynlib.template" />
+                  <File Id="emain.separate_template5" Name="EMAIN~2.SEP" LongName="emain.separate_template" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="windows4" Name="windows">
+              <Directory Id="bcb" Name="bcb">
+                <Component Id="bcb" Guid="DBA2CF11-BC3A-45B2-AD9D-FBBDECE62BF3">
+                  <File Id="version.eif" Name="version.eif" KeyPath="yes" />
+                  <File Id="config.eif" Name="config.eif" />
+                  <File Id="appl.ico" Name="appl.ico" />
+                  <File Id="eiffel.rc10" Name="eiffel.rc" />
+                </Component>
+              </Directory>
+              <Directory Id="templates5" Name="TEMPLA~2" LongName="templates">
+                <Component Id="templates5" Guid="EBCBE53C-C436-4ECF-9A55-008FDC911716">
+                  <File Id="emain.template1" Name="EMAIN~2.TEM" LongName="emain.template" KeyPath="yes" />
+                  <File Id="cecil.def" Name="cecil.def" />
+                  <File Id="emain.templategnu" Name="EMAIN~3.TEM" LongName="emain.template-gnu" />
+                  <File Id="emain.separate_template" Name="EMAIN~1.SEP" LongName="emain.separate_template" />
+                  <File Id="egc_dynlib.template8" Name="EGC_DY~2.TEM" LongName="egc_dynlib.template" />
+                  <File Id="assembly_config.xml" Name="ASSEMB~1.XML" LongName="assembly_config.xml" />
+                </Component>
+              </Directory>
+              <Directory Id="msc" Name="msc">
+                <Component Id="msc" Guid="98D070ED-51E0-439B-854A-8C56FE79E506">
+                  <File Id="config.eif2" Name="config.eif" KeyPath="yes" />
+                  <File Id="version.eif6" Name="version.eif" />
+                  <File Id="eiffel.rc7" Name="eiffel.rc" />
+                  <File Id="appl.ico9" Name="appl.ico" />
+                </Component>
+              </Directory>
+              <Directory Id="gnu" Name="gnu">
+                <Component Id="gnu" Guid="3C075247-1010-48E5-9F85-8500F97077D7">
+                  <File Id="gnu.ico" Name="gnu.ico" KeyPath="yes" />
+                  <File Id="config.eif3" Name="config.eif" />
+                  <File Id="version.eif4" Name="version.eif" />
+                  <File Id="eiffel.rc" Name="eiffel.rc" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="bitmaps" Name="bitmaps">
+            <Directory Id="xpm" Name="xpm">
+              <Component Id="xpm" Guid="FB2059F1-0520-42DC-B718-C80995300600">
+                <File Id="sclients.xpm" Name="sclients.xpm" KeyPath="yes" />
+                <File Id="routdot.xpm" Name="routdot.xpm" />
+                <File Id="clr_bp.xpm" Name="clr_bp.xpm" />
+                <File Id="case_change_name.xpm" Name="CASE_C~2.XPM" LongName="case_change_name.xpm" />
+                <File Id="systdot.xpm" Name="systdot.xpm" />
+                <File Id="sstatist.xpm" Name="sstatist.xpm" />
+                <File Id="sexterna.xpm" Name="sexterna.xpm" />
+                <File Id="setstop.xpm" Name="setstop.xpm" />
+                <File Id="magnifyslice.xpm" Name="MAGNIF~1.XPM" LongName="magnify-slice.xpm" />
+                <File Id="expldot.xpm" Name="expldot.xpm" />
+                <File Id="shell.xpm" Name="shell.xpm" />
+                <File Id="qupdate.xpm" Name="qupdate.xpm" />
+                <File Id="objicon.xpm" Name="objicon.xpm" />
+                <File Id="object.xpm" Name="object.xpm" />
+                <File Id="header_close_highlight.xpm" Name="HEADER~2.XPM" LongName="header_close_highlight.xpm" />
+                <File Id="editobj.xpm" Name="editobj.xpm" />
+                <File Id="delete.xpm" Name="delete.xpm" />
+                <File Id="stext.xpm" Name="stext.xpm" />
+                <File Id="routicon.xpm" Name="routicon.xpm" />
+                <File Id="quit.xpm" Name="quit.xpm" />
+                <File Id="open.xpm" Name="open.xpm" />
+                <File Id="modified.xpm" Name="modified.xpm" />
+                <File Id="icon_zoom_out_gray.xpm" Name="ICON_Z~1.XPM" LongName="icon_zoom_out_gray.xpm" />
+                <File Id="favorites_folder.xpm" Name="FAVORI~1.XPM" LongName="favorites_folder.xpm" />
+                <File Id="case_new_inherit.xpm" Name="CASE_N~3.XPM" LongName="case_new_inherit.xpm" />
+                <File Id="sroutine.xpm" Name="sroutine.xpm" />
+                <File Id="scluhier.xpm" Name="scluhier.xpm" />
+                <File Id="rout_up.xpm" Name="rout_up.xpm" />
+                <File Id="isepower.xpm" Name="isepower.xpm" />
+                <File Id="Icon_toolbar_separator.xpm" Name="ICON_T~1.XPM" LongName="Icon_toolbar_separator.xpm" />
+                <File Id="gbreakpt.xpm" Name="gbreakpt.xpm" />
+                <File Id="dynlibico.xpm" Name="DYNLIB~2.XPM" LongName="dynlibico.xpm" />
+                <File Id="clckable.xpm" Name="clckable.xpm" />
+                <File Id="classdot.xpm" Name="classdot.xpm" />
+                <File Id="case_new_agg_client.xpm" Name="CASE_N~1.XPM" LongName="case_new_agg_client.xpm" />
+                <File Id="bm_About.xpm" Name="bm_About.xpm" />
+                <File Id="sexport1.xpm" Name="sexport1.xpm" />
+                <File Id="search.xpm" Name="search.xpm" />
+                <File Id="histfort.xpm" Name="histfort.xpm" />
+                <File Id="dis_bp.xpm" Name="dis_bp.xpm" />
+                <File Id="shomonym.xpm" Name="shomonym.xpm" />
+                <File Id="shistory.xpm" Name="shistory.xpm" />
+                <File Id="sexporte.xpm" Name="sexporte.xpm" />
+                <File Id="sattribu.xpm" Name="sattribu.xpm" />
+                <File Id="execstep.xpm" Name="execstep.xpm" />
+                <File Id="sindexin.xpm" Name="sindexin.xpm" />
+                <File Id="scallers.xpm" Name="scallers.xpm" />
+                <File Id="save.xpm" Name="save.xpm" />
+                <File Id="sancesto.xpm" Name="sancesto.xpm" />
+                <File Id="routine.xpm" Name="routine.xpm" />
+                <File Id="routdown.xpm" Name="routdown.xpm" />
+                <File Id="objdot.xpm" Name="objdot.xpm" />
+                <File Id="header_close.xpm" Name="HEADER~1.XPM" LongName="header_close.xpm" />
+                <File Id="sfshort.xpm" Name="sfshort.xpm" />
+                <File Id="execlast.xpm" Name="execlast.xpm" />
+                <File Id="casestor.xpm" Name="casestor.xpm" />
+                <File Id="bon_deferred.xpm" Name="BON_DE~1.XPM" LongName="bon_deferred.xpm" />
+                <File Id="graph.xpm" Name="graph.xpm" />
+                <File Id="dynlib.xpm" Name="dynlib.xpm" />
+                <File Id="dis_histfort.xpm" Name="DIS_HI~2.XPM" LongName="dis_histfort.xpm" />
+                <File Id="dbgstatu.xpm" Name="dbgstatu.xpm" />
+                <File Id="case_reset_diagram.xpm" Name="CASE_R~1.XPM" LongName="case_reset_diagram.xpm" />
+                <File Id="smodifie.xpm" Name="smodifie.xpm" />
+                <File Id="save_as.xpm" Name="save_as.xpm" />
+                <File Id="obj_up.xpm" Name="obj_up.xpm" />
+                <File Id="gstoppt.xpm" Name="gstoppt.xpm" />
+                <File Id="execinto.xpm" Name="execinto.xpm" />
+                <File Id="dbg_dyneval.xpm" Name="DBG_DY~1.XPM" LongName="dbg_dyneval.xpm" />
+                <File Id="dbgquit.xpm" Name="dbgquit.xpm" />
+                <File Id="case_change_color.xpm" Name="CASE_C~1.XPM" LongName="case_change_color.xpm" />
+                <File Id="bon_interfaced.xpm" Name="BON_IN~1.XPM" LongName="bon_interfaced.xpm" />
+                <File Id="sshort.xpm" Name="sshort.xpm" />
+                <File Id="sdversio.xpm" Name="sdversio.xpm" />
+                <File Id="scluster.xpm" Name="scluster.xpm" />
+                <File Id="saversio.xpm" Name="saversio.xpm" />
+                <File Id="histback.xpm" Name="histback.xpm" />
+                <File Id="general.xpm" Name="general.xpm" />
+                <File Id="dynlibdot.xpm" Name="DYNLIB~1.XPM" LongName="dynlibdot.xpm" />
+                <File Id="dbgstop.xpm" Name="dbgstop.xpm" />
+                <File Id="current.xpm" Name="current.xpm" />
+                <File Id="class.xpm29" Name="class.xpm" />
+                <File Id="Xclass.xpm" Name="Xclass.xpm" />
+                <File Id="ssupplie.xpm" Name="ssupplie.xpm" />
+                <File Id="sdeferre.xpm" Name="sdeferre.xpm" />
+                <File Id="sclasses.xpm" Name="sclasses.xpm" />
+                <File Id="dn_stack.xpm" Name="dn_stack.xpm" />
+                <File Id="recycle.xpm" Name="recycle.xpm" />
+                <File Id="explicon.xpm" Name="explicon.xpm" />
+                <File Id="execstop.xpm" Name="execstop.xpm" />
+                <File Id="execnost.xpm" Name="execnost.xpm" />
+                <File Id="breakpt.xpm" Name="breakpt.xpm" />
+                <File Id="bon_persistent.xpm" Name="BON_PE~1.XPM" LongName="bon_persistent.xpm" />
+                <File Id="up_stack.xpm" Name="up_stack.xpm" />
+                <File Id="update.xpm" Name="update.xpm" />
+                <File Id="sonces.xpm" Name="sonces.xpm" />
+                <File Id="sflat.xpm" Name="sflat.xpm" />
+                <File Id="obj_down.xpm" Name="obj_down.xpm" />
+                <File Id="classico.xpm" Name="classico.xpm" />
+                <File Id="case_new_client.xpm" Name="CASE_N~2.XPM" LongName="case_new_client.xpm" />
+                <File Id="slice.xpm" Name="slice.xpm" />
+                <File Id="sexporte3.xpm" Name="SEXPOR~1.XPM" LongName="sexporte3.xpm" />
+                <File Id="dis_histback.xpm" Name="DIS_HI~1.XPM" LongName="dis_histback.xpm" />
+                <File Id="system.xpm" Name="system.xpm" />
+                <File Id="sdescend.xpm" Name="sdescend.xpm" />
+                <File Id="projicon.xpm" Name="projicon.xpm" />
+                <File Id="project.xpm" Name="project.xpm" />
+                <File Id="profiler.xpm" Name="profiler.xpm" />
+                <File Id="header_open_highlight.xpm" Name="HEADER~4.XPM" LongName="header_open_highlight.xpm" />
+                <File Id="header_open.xpm" Name="HEADER~3.XPM" LongName="header_open.xpm" />
+                <File Id="explain.xpm" Name="explain.xpm" />
+                <File Id="dbgrun.xpm" Name="dbgrun.xpm" />
+                <File Id="bon_effective.xpm" Name="BON_EF~1.XPM" LongName="bon_effective.xpm" />
+              </Component>
+            </Directory>
+            <Directory Id="png" Name="png">
+              <Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
+                <File Id="Xinterro.png" Name="Xinterro.png" />
+                <File Id="obj_down.png" Name="obj_down.png" />
+                <File Id="icon_step_into_color.png" Name="IC6787~1.PNG" LongName="icon_step_into_color.png" />
+                <File Id="icon_running_3.png" Name="IC0951~1.PNG" LongName="icon_running_3.png" />
+                <File Id="icon_preference_window.png" Name="ICON_P~2.PNG" LongName="icon_preference_window.png" />
+                <File Id="icon_new_small_color.png" Name="IC5909~1.PNG" LongName="icon_new_small_color.png" />
+                <File Id="icon_inherit_color.png" Name="ICON_I~2.PNG" LongName="icon_inherit_color.png" />
+                <File Id="icon_green_arrow.png" Name="ICON_G~2.PNG" LongName="icon_green_arrow.png" />
+                <File Id="V" Name="ICDBE9~1.PNG" LongName="icon_format_feature_ancestors_color.png" />
+                <File Id="icon_finalize_color.png" Name="ICD75A~1.PNG" LongName="icon_finalize_color.png" />
+                <File Id="icon_exec_stop_color.png" Name="IC06F6~1.PNG" LongName="icon_exec_stop_color.png" />
+                <File Id="icon_display_labels_color.png" Name="IC3319~1.PNG" LongName="icon_display_labels_color.png" />
+                <File Id="icon_dialog_window.png" Name="IC0744~1.PNG" LongName="icon_dialog_window.png" />
+                <File Id="icon_del_bkpt_color.png" Name="IC4F46~1.PNG" LongName="icon_del_bkpt_color.png" />
+                <File Id="icon_degree2.png" Name="ICA139~1.PNG" LongName="icon_degree2.png" />
+                <File Id="icon_crop_color.png" Name="IC6BEE~1.PNG" LongName="icon_crop_color.png" />
+                <File Id="icon_close_color.png" Name="ICE840~1.PNG" LongName="icon_close_color.png" />
+                <File Id="icon_class_header_color.png" Name="IC940D~1.PNG" LongName="icon_class_header_color.png" />
+                <File Id="icon_bpenabled_stopped.png" Name="IC5CC6~1.PNG" LongName="icon_bpenabled_stopped.png" />
+                <File Id="clientlnk.png" Name="CLIENT~1.PNG" LongName="clientlnk.png" />
+                <File Id="case_change_name.png" Name="CASE_C~2.PNG" LongName="case_change_name.png" />
+                <File Id="bm_wizard_blue.png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_blue.png" />
+                <File Id="Xfeature.png" Name="Xfeature.png" />
+                <File Id="up_stack.png" Name="up_stack.png" />
+                <File Id="recycle.png" Name="recycle.png" />
+                <File Id="open.png" Name="open.png" />
+                <File Id="inheritlnk.png" Name="INHERI~1.PNG" LongName="inheritlnk.png" />
+                <File Id="icon_zoom_in_color.png" Name="ICON_Z~2.PNG" LongName="icon_zoom_in_color.png" />
+                <File Id="icon_tool_color.png" Name="ICON_T~2.PNG" LongName="icon_tool_color.png" />
+                <File Id="icon_supplier_color.png" Name="ICE81F~1.PNG" LongName="icon_supplier_color.png" />
+                <File Id="icon_shell_color.png" Name="IC7449~1.PNG" LongName="icon_shell_color.png" />
+                <File Id="icon_set_stack_depth_color.png" Name="IC8468~1.PNG" LongName="icon_set_stack_depth_color.png" />
+                <File Id="icon_select_metrics_color.png" Name="ICDAC6~1.PNG" LongName="icon_select_metrics_color.png" />
+                <File Id="icon_preferences_folder.png" Name="ICON_P~3.PNG" LongName="icon_preferences_folder.png" />
+                <File Id="icon_object_symbol.png" Name="ICON_O~1.PNG" LongName="icon_object_symbol.png" />
+                <File Id="V12" Name="IC8B3D~1.PNG" LongName="icon_format_feature_implementers_color.png" />
+                <File Id="icon_degree3.png" Name="ICA13D~1.PNG" LongName="icon_degree3.png" />
+                <File Id="icon_class_symbol_color.png" Name="IC9358~1.PNG" LongName="icon_class_symbol_color.png" />
+                <File Id="icon_center_diagram_color.png" Name="ICON_C~1.PNG" LongName="icon_center_diagram_color.png" />
+                <File Id="cluster.png" Name="cluster.png" />
+                <File Id="classico.png" Name="classico.png" />
+                <File Id="breakpt.png" Name="breakpt.png" />
+                <File Id="shell.png" Name="shell.png" />
+                <File Id="sdescend.png" Name="sdescend.png" />
+                <File Id="quit.png" Name="quit.png" />
+                <File Id="projicon.png" Name="projicon.png" />
+                <File Id="profiler.png" Name="profiler.png" />
+                <File Id="icon_wizard_project.png" Name="ICF992~1.PNG" LongName="icon_wizard_project.png" />
+                <File Id="icon_step_out_color.png" Name="IC6B6D~1.PNG" LongName="icon_step_out_color.png" />
+                <File Id="icon_run_color.png" Name="IC0D81~1.PNG" LongName="icon_run_color.png" />
+                <File Id="icon_open_file_color.png" Name="ICON_O~3.PNG" LongName="icon_open_file_color.png" />
+                <File Id="icon_green_tick.png" Name="ICON_G~3.PNG" LongName="icon_green_tick.png" />
+                <File Id="icon_favorites_color.png" Name="ICON_F~1.PNG" LongName="icon_favorites_color.png" />
+                <File Id="icon_exe_up_to_date.png" Name="ICCB4B~1.PNG" LongName="icon_exe_up_to_date.png" />
+                <File Id="icon_delete_measure_color.png" Name="IC0F9A~1.PNG" LongName="icon_delete_measure_color.png" />
+                <File Id="icon_delete_color.png" Name="IC4037~1.PNG" LongName="icon_delete_color.png" />
+                <File Id="icon_degree4.png" Name="ICA131~1.PNG" LongName="icon_degree4.png" />
+                <File Id="icon_cluster_tool_text_color.png" Name="IC2C4D~1.PNG" LongName="icon_cluster_tool_text_color.png" />
+                <File Id="icon_cluster_tool_color.png" Name="ICFB67~1.PNG" LongName="icon_cluster_tool_color.png" />
+                <File Id="icon_bpenabled_condition.png" Name="IC50E6~1.PNG" LongName="icon_bpenabled_condition.png" />
+                <File Id="icon_bparrow.png" Name="ICC562~1.PNG" LongName="icon_bparrow.png" />
+                <File Id="dynlibdot.png" Name="DYNLIB~1.PNG" LongName="dynlibdot.png" />
+                <File Id="dynlib.png" Name="dynlib.png" />
+                <File Id="case_new_inherit.png" Name="CASE_N~3.PNG" LongName="case_new_inherit.png" />
+                <File Id="borland_logo.png" Name="BORLAN~1.PNG" LongName="borland_logo.png" />
+                <File Id="Xcluster.png" Name="Xcluster.png" />
+                <File Id="stext.png" Name="stext.png" />
+                <File Id="sclients.png" Name="sclients.png" />
+                <File Id="obj_up.png" Name="obj_up.png" />
+                <File Id="icon_wizard_blank_project.png" Name="ICON_W~4.PNG" LongName="icon_wizard_blank_project.png" />
+                <File Id="icon_straight_arrows_color.png" Name="IC5E48~1.PNG" LongName="icon_straight_arrows_color.png" />
+                <File Id="icon_quick_compile_color.png" Name="ICON_Q~1.PNG" LongName="icon_quick_compile_color.png" />
+                <File Id="icon_open_project.png" Name="ICON_O~4.PNG" LongName="icon_open_project.png" />
+                <File Id="icon_new_supplier_color.png" Name="ICD9C6~1.PNG" LongName="icon_new_supplier_color.png" />
+                <File Id="icon_maximize_color.png" Name="ICON_M~1.PNG" LongName="icon_maximize_color.png" />
+                <File Id="icon_history_color.png" Name="ICON_H~2.PNG" LongName="icon_history_color.png" />
+                <File Id="icon_format_text_color.png" Name="ICE732~1.PNG" LongName="icon_format_text_color.png" />
+                <File Id="icon_format_onces_color.png" Name="IC3D30~1.PNG" LongName="icon_format_onces_color.png" />
+                <File Id="icon_exec_step_color.png" Name="IC01F6~1.PNG" LongName="icon_exec_step_color.png" />
+                <File Id="icon_dummy.png" Name="IC2CEA~1.PNG" LongName="icon_dummy.png" />
+                <File Id="icon_degree5.png" Name="ICA135~1.PNG" LongName="icon_degree5.png" />
+                <File Id="icon_cut_color.png" Name="IC0D42~1.PNG" LongName="icon_cut_color.png" />
+                <File Id="icon_bpslot_stopped.png" Name="IC5FE8~1.PNG" LongName="icon_bpslot_stopped.png" />
+                <File Id="icon_bpdisabled_top.png" Name="ICB34D~1.PNG" LongName="icon_bpdisabled_top.png" />
+                <File Id="header_open.png" Name="HEADER~3.PNG" LongName="header_open.png" />
+                <File Id="favorites_folder.png" Name="FAVORI~1.PNG" LongName="favorites_folder.png" />
+                <File Id="explain.png" Name="explain.png" />
+                <File Id="bon_effective.png" Name="BON_EF~1.PNG" LongName="bon_effective.png" />
+                <File Id="Xfavorites_folder.png" Name="XFAVOR~1.PNG" LongName="Xfavorites_folder.png" />
+                <File Id="sstatist.png" Name="sstatist.png" />
+                <File Id="sshort.png" Name="sshort.png" />
+                <File Id="sexterna.png" Name="sexterna.png" />
+                <File Id="project.png" Name="project.png" />
+                <File Id="icon_super_cluster_color.png" Name="ICFB99~1.PNG" LongName="icon_super_cluster_color.png" />
+                <File Id="icon_profiler_window.png" Name="ICC318~1.PNG" LongName="icon_profiler_window.png" />
+                <File Id="icon_preferences_root.png" Name="ICON_P~4.PNG" LongName="icon_preferences_root.png" />
+                <File Id="icon_nothing.png" Name="IC9C4B~1.PNG" LongName="icon_nothing.png" />
+                <File Id="icon_new_feature_color.png" Name="ICD9DD~1.PNG" LongName="icon_new_feature_color.png" />
+                <File Id="icon_minimize_color.png" Name="ICD00A~1.PNG" LongName="icon_minimize_color.png" />
+                <File Id="icon_light_class_gray.png" Name="ICON_L~2.PNG" LongName="icon_light_class_gray.png" />
+                <File Id="icon_format_descendants_color.png" Name="IC5602~1.PNG" LongName="icon_format_descendants_color.png" />
+                <File Id="icon_format_contract_color.png" Name="IC7A3C~1.PNG" LongName="icon_format_contract_color.png" />
+                <File Id="icon_fill_cluster_color.png" Name="IC88FE~1.PNG" LongName="icon_fill_cluster_color.png" />
+                <File Id="icon_exec_quit_color.png" Name="IC82B3~1.PNG" LongName="icon_exec_quit_color.png" />
+                <File Id="icon_down_triangle.png" Name="IC84F3~1.PNG" LongName="icon_down_triangle.png" />
+                <File Id="icon_delete_view_color.png" Name="IC34B6~1.PNG" LongName="icon_delete_view_color.png" />
+                <File Id="icon_degree6.png" Name="ICB139~1.PNG" LongName="icon_degree6.png" />
+                <File Id="icon_context_tool_color.png" Name="IC31A5~1.PNG" LongName="icon_context_tool_color.png" />
+                <File Id="icon_bpenabled.png" Name="IC47DD~1.PNG" LongName="icon_bpenabled.png" />
+                <File Id="icon_attribute_symbol.png" Name="ICON_A~2.PNG" LongName="icon_attribute_symbol.png" />
+                <File Id="case_new_agg_client.png" Name="CASE_N~1.PNG" LongName="case_new_agg_client.png" />
+                <File Id="Xclass.png" Name="Xclass.png" />
+                <File Id="systdot.png" Name="systdot.png" />
+                <File Id="setstop.png" Name="setstop.png" />
+                <File Id="routdot.png" Name="routdot.png" />
+                <File Id="icon_windows_text_color.png" Name="ICON_W~2.PNG" LongName="icon_windows_text_color.png" />
+                <File Id="icon_void_pointer.png" Name="ICBCC8~1.PNG" LongName="icon_void_pointer.png" />
+                <File Id="icon_unify_stone_color.png" Name="ICON_U~2.PNG" LongName="icon_unify_stone_color.png" />
+                <File Id="icon_light_class_color.png" Name="ICON_L~1.PNG" LongName="icon_light_class_color.png" />
+                <File Id="icon_immediate_value.png" Name="ICON_I~1.PNG" LongName="icon_immediate_value.png" />
+                <File Id="V14" Name="ICE419~1.PNG" LongName="icon_format_feature_descendants_color.png" />
+                <File Id="V15" Name="IC9B3C~1.PNG" LongName="icon_format_feature_callers_color.png" />
+                <File Id="icon_format_deferreds_color.png" Name="IC64C3~1.PNG" LongName="icon_format_deferreds_color.png" />
+                <File Id="icon_format_clients_color.png" Name="IC43B1~1.PNG" LongName="icon_format_clients_color.png" />
+                <File Id="icon_enable_bkpt_color.png" Name="ICON_E~4.PNG" LongName="icon_enable_bkpt_color.png" />
+                <File Id="icon_degree1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
+                <File Id="expldot.png" Name="expldot.png" />
+                <File Id="sexporte3.png" Name="SEXPOR~1.PNG" LongName="sexporte3.png" />
+                <File Id="save.png" Name="save.png" />
+                <File Id="routicon.png" Name="routicon.png" />
+                <File Id="qupdate.png" Name="qupdate.png" />
+                <File Id="objicon.png" Name="objicon.png" />
+                <File Id="magnifyslice.png" Name="MAGNIF~1.PNG" LongName="magnify-slice.png" />
+                <File Id="icon_view_small_color.png" Name="ICON_V~4.PNG" LongName="icon_view_small_color.png" />
+                <File Id="icon_sorter_color.png" Name="ICCB49~1.PNG" LongName="icon_sorter_color.png" />
+                <File Id="icon_slice_limits_vsmall_color.png" Name="IC0E02~1.PNG" LongName="icon_slice_limits_vsmall_color.png" />
+                <File Id="icon_save_call_stack_color.png" Name="ICON_S~1.PNG" LongName="icon_save_call_stack_color.png" />
+                <File Id="icon_restore_view_color.png" Name="ICA256~1.PNG" LongName="icon_restore_view_color.png" />
+                <File Id="icon_print_color.png" Name="ICF7AC~1.PNG" LongName="icon_print_color.png" />
+                <File Id="icon_new_feature_small_color.png" Name="ICE3CF~1.PNG" LongName="icon_new_feature_small_color.png" />
+                <File Id="icon_document_color.png" Name="IC2106~1.PNG" LongName="icon_document_color.png" />
+                <File Id="icon_descendants_color.png" Name="IC7FCF~1.PNG" LongName="icon_descendants_color.png" />
+                <File Id="icon_degree2.png20" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
+                <File Id="icon_copy_color.png" Name="IC2FAE~1.PNG" LongName="icon_copy_color.png" />
+                <File Id="icon_compiled.png" Name="IC614F~1.PNG" LongName="icon_compiled.png" />
+                <File Id="icon_class_symbol_gray.png" Name="ICF463~1.PNG" LongName="icon_class_symbol_gray.png" />
+                <File Id="icon_bpdisabled_stopped.png" Name="ICC7B6~1.PNG" LongName="icon_bpdisabled_stopped.png" />
+                <File Id="icon_bpdisabled_condition.png" Name="IC5D40~1.PNG" LongName="icon_bpdisabled_condition.png" />
+                <File Id="header_close_highlight.png" Name="HEADER~2.PNG" LongName="header_close_highlight.png" />
+                <File Id="editobj.png" Name="editobj.png" />
+                <File Id="Xstopexec.png" Name="XSTOPE~1.PNG" LongName="Xstopexec.png" />
+                <File Id="update.png" Name="update.png" />
+                <File Id="sroutine.png" Name="sroutine.png" />
+                <File Id="sonces.png" Name="sonces.png" />
+                <File Id="modified.png" Name="modified.png" />
+                <File Id="isepower.png" Name="isepower.png" />
+                <File Id="icon_zoom_in.png" Name="ICON_Z~1.PNG" LongName="icon_zoom_in.png" />
+                <File Id="icon_windows_color.png" Name="ICON_W~1.PNG" LongName="icon_windows_color.png" />
+                <File Id="icon_search_text_color.png" Name="IC6A62~1.PNG" LongName="icon_search_text_color.png" />
+                <File Id="icon_reset_diagram_color.png" Name="IC4CFE~1.PNG" LongName="icon_reset_diagram_color.png" />
+                <File Id="icon_new_development_tool_color.png" Name="ICBE67~1.PNG" LongName="icon_new_development_tool_color.png" />
+                <File Id="icon_new_context_window_color.png" Name="ICEB86~1.PNG" LongName="icon_new_context_window_color.png" />
+                <File Id="icon_new_cluster_color.png" Name="ICF364~1.PNG" LongName="icon_new_cluster_color.png" />
+                <File Id="icon_new_agg_supplier_color.png" Name="ICON_N~1.PNG" LongName="icon_new_agg_supplier_color.png" />
+                <File Id="icon_global_search_color.png" Name="ICON_G~1.PNG" LongName="icon_global_search_color.png" />
+                <File Id="icon_freeze_color.png" Name="ICE1F6~1.PNG" LongName="icon_freeze_color.png" />
+                <File Id="icon_format_routines_color.png" Name="IC0B7D~1.PNG" LongName="icon_format_routines_color.png" />
+                <File Id="icon_format_flat_color.png" Name="ICE860~1.PNG" LongName="icon_format_flat_color.png" />
+                <File Id="icon_dotnet_import_color.png" Name="ICD89B~1.PNG" LongName="icon_dotnet_import_color.png" />
+                <File Id="icon_degree3.png23" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />
+                <File Id="icon_bkpt_info_color.png" Name="ICON_B~2.PNG" LongName="icon_bkpt_info_color.png" />
+                <File Id="header_close.png" Name="HEADER~1.PNG" LongName="header_close.png" />
+                <File Id="gbreakpt.png" Name="gbreakpt.png" />
+                <File Id="clckable.png" Name="clckable.png" />
+                <File Id="classdot.png" Name="classdot.png" />
+                <File Id="bm_About.png" Name="bm_About.png" />
+                <File Id="stopexec.png24" Name="stopexec.png" />
+                <File Id="sexport1.png" Name="sexport1.png" />
+                <File Id="rout_up.png" Name="rout_up.png" />
+                <File Id="icon_restore_color.png" Name="IC0818~1.PNG" LongName="icon_restore_color.png" />
+                <File Id="icon_pretty_print_8.png" Name="IC2217~1.PNG" LongName="icon_pretty_print_8.png" />
+                <File Id="icon_no_stop_color.png" Name="IC8712~1.PNG" LongName="icon_no_stop_color.png" />
+                <File Id="icon_new_editor_color.png" Name="IC3C28~1.PNG" LongName="icon_new_editor_color.png" />
+                <File Id="icon_mini_back_color.png" Name="ICON_M~2.PNG" LongName="icon_mini_back_color.png" />
+                <File Id="icon_format_suppliers_color.png" Name="ICC438~1.PNG" LongName="icon_format_suppliers_color.png" />
+                <File Id="icon_feature_clause_some.png" Name="ICC54A~1.PNG" LongName="icon_feature_clause_some.png" />
+                <File Id="icon_favorites_text_color.png" Name="ICON_F~3.PNG" LongName="icon_favorites_text_color.png" />
+                <File Id="V25" Name="ICON_E~1.PNG" LongName="icon_edit_exported_feature_color.png" />
+                <File Id="icon_editing.png" Name="ICON_E~3.PNG" LongName="icon_editing.png" />
+                <File Id="icon_development_window.png" Name="IC1B39~1.PNG" LongName="icon_development_window.png" />
+                <File Id="icon_debug_run_color.png" Name="ICON_D~1.PNG" LongName="icon_debug_run_color.png" />
+                <File Id="icon_compiling_1.png" Name="IC2292~1.PNG" LongName="icon_compiling_1.png" />
+                <File Id="icon_compile_text_color.png" Name="ICD532~1.PNG" LongName="icon_compile_text_color.png" />
+                <File Id="icon_bpslot_top.png" Name="ICE12E~1.PNG" LongName="icon_bpslot_top.png" />
+                <File Id="histfort.png" Name="histfort.png" />
+                <File Id="case_reset_diagram.png" Name="CASE_R~1.PNG" LongName="case_reset_diagram.png" />
+                <File Id="bon_interfaced.png" Name="BON_IN~1.PNG" LongName="bon_interfaced.png" />
+                <File Id="bon_deferred.png" Name="BON_DE~1.PNG" LongName="bon_deferred.png" />
+                <File Id="system.png" Name="system.png" />
+                <File Id="shomonym.png" Name="shomonym.png" />
+                <File Id="shistory.png" Name="shistory.png" />
+                <File Id="sexporte.png" Name="sexporte.png" />
+                <File Id="sattribu.png" Name="sattribu.png" />
+                <File Id="icon_send_stone_down_color.png" Name="IC5B0C~1.PNG" LongName="icon_send_stone_down_color.png" />
+                <File Id="icon_redo_color.png" Name="ICON_R~3.PNG" LongName="icon_redo_color.png" />
+                <File Id="icon_recycle_bin_color.png" Name="ICON_R~1.PNG" LongName="icon_recycle_bin_color.png" />
+                <File Id="icon_format_interface_color.png" Name="IC753D~1.PNG" LongName="icon_format_interface_color.png" />
+                <File Id="icon_feature_color.png" Name="IC089D~1.PNG" LongName="icon_feature_color.png" />
+                <File Id="icon_feature_clause_any.png" Name="ICON_F~4.PNG" LongName="icon_feature_clause_any.png" />
+                <File Id="icon_features_color.png" Name="IC235F~1.PNG" LongName="icon_features_color.png" />
+                <File Id="icon_compiling_2.png" Name="IC2296~1.PNG" LongName="icon_compiling_2.png" />
+                <File Id="icon_bon_interfaced.png" Name="IC1294~1.PNG" LongName="icon_bon_interfaced.png" />
+                <File Id="icon_back_color.png" Name="ICON_B~1.PNG" LongName="icon_back_color.png" />
+                <File Id="icon_add_exported_feature_color.png" Name="ICON_A~1.PNG" LongName="icon_add_exported_feature_color.png" />
+                <File Id="graph.png" Name="graph.png" />
+                <File Id="execstep.png" Name="execstep.png" />
+                <File Id="dbgrun.png" Name="dbgrun.png" />
+                <File Id="case_new_client.png" Name="CASE_N~2.PNG" LongName="case_new_client.png" />
+                <File Id="sindexin.png" Name="sindexin.png" />
+                <File Id="scallers.png" Name="scallers.png" />
+                <File Id="sancesto.png" Name="sancesto.png" />
+                <File Id="routdown.png" Name="routdown.png" />
+                <File Id="icon_zoom_out.png" Name="ICON_Z~3.PNG" LongName="icon_zoom_out.png" />
+                <File Id="icon_view_measure_color.png" Name="ICON_V~1.PNG" LongName="icon_view_measure_color.png" />
+                <File Id="icon_stopped.png" Name="IC9DBB~1.PNG" LongName="icon_stopped.png" />
+                <File Id="icon_set_arguments_color.png" Name="ICC9D4~1.PNG" LongName="icon_set_arguments_color.png" />
+                <File Id="icon_save_color.png" Name="ICON_S~2.PNG" LongName="icon_save_color.png" />
+                <File Id="icon_restore_all_color.png" Name="IC84DD~1.PNG" LongName="icon_restore_all_color.png" />
+                <File Id="icon_new_class_small_color.png" Name="ICON_N~4.PNG" LongName="icon_new_class_small_color.png" />
+                <File Id="icon_mini_forth_color.png" Name="ICON_M~3.PNG" LongName="icon_mini_forth_color.png" />
+                <File Id="icon_light_deferred_class_color.png" Name="ICON_L~4.PNG" LongName="icon_light_deferred_class_color.png" />
+                <File Id="icon_light_cluster_color.png" Name="ICON_L~3.PNG" LongName="icon_light_cluster_color.png" />
+                <File Id="icon_expand_string_color.png" Name="IC4D7E~1.PNG" LongName="icon_expand_string_color.png" />
+                <File Id="icon_compiling_3.png" Name="IC329A~1.PNG" LongName="icon_compiling_3.png" />
+                <File Id="header_open_highlight.png" Name="HEADER~4.PNG" LongName="header_open_highlight.png" />
+                <File Id="dis_histfort.png" Name="DIS_HI~2.PNG" LongName="dis_histfort.png" />
+                <File Id="clr_bp.png" Name="clr_bp.png" />
+                <File Id="bm_wizard_profiler_icon.png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_profiler_icon.png" />
+                <File Id="Xclientlnk.png" Name="XCLIEN~1.PNG" LongName="Xclientlnk.png" />
+                <File Id="routine.png" Name="routine.png" />
+                <File Id="icon_view_measure_plus_color.png" Name="ICON_V~3.PNG" LongName="icon_view_measure_plus_color.png" />
+                <File Id="icon_new_inherit_color.png" Name="ICB225~1.PNG" LongName="icon_new_inherit_color.png" />
+                <File Id="icon_minimize_all_color.png" Name="ICON_M~4.PNG" LongName="icon_minimize_all_color.png" />
+                <File Id="icon_folders_color.png" Name="IC4531~1.PNG" LongName="icon_folders_color.png" />
+                <File Id="icon_feature_clause_none.png" Name="ICCF3A~1.PNG" LongName="icon_feature_clause_none.png" />
+                <File Id="icon_expanded_object.png" Name="IC727E~1.PNG" LongName="icon_expanded_object.png" />
+                <File Id="icon_compiling_4.png" Name="IC329E~1.PNG" LongName="icon_compiling_4.png" />
+                <File Id="icon_cmd_history_color.png" Name="ICAEBA~1.PNG" LongName="icon_cmd_history_color.png" />
+                <File Id="icon_bpenabled_top.png" Name="ICE536~1.PNG" LongName="icon_bpenabled_top.png" />
+                <File Id="icon_bparrow_color.png" Name="IC6795~1.PNG" LongName="icon_bparrow_color.png" />
+                <File Id="execlast.png" Name="execlast.png" />
+                <File Id="class.png30" Name="class.png" />
+                <File Id="case_change_color.png" Name="CASE_C~1.PNG" LongName="case_change_color.png" />
+                <File Id="casestor.png" Name="casestor.png" />
+                <File Id="bon_persistent.png" Name="BON_PE~1.PNG" LongName="bon_persistent.png" />
+                <File Id="sfshort.png" Name="sfshort.png" />
+                <File Id="object.png" Name="object.png" />
+                <File Id="icon_undo_color.png" Name="ICON_U~1.PNG" LongName="icon_undo_color.png" />
+                <File Id="icon_toolbar_separator.png" Name="ICON_T~3.PNG" LongName="icon_toolbar_separator.png" />
+                <File Id="icon_toggle_clusters_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_clusters_color.png" />
+                <File Id="icon_search_color.png" Name="ICON_S~4.PNG" LongName="icon_search_color.png" />
+                <File Id="icon_save_measure_color.png" Name="ICON_S~3.PNG" LongName="icon_save_measure_color.png" />
+                <File Id="icon_progress_dialog.png" Name="IC7541~1.PNG" LongName="icon_progress_dialog.png" />
+                <File Id="icon_pretty_print_16.png" Name="ICCC5D~1.PNG" LongName="icon_pretty_print_16.png" />
+                <File Id="icon_history_text_color.png" Name="ICON_H~3.PNG" LongName="icon_history_text_color.png" />
+                <File Id="icon_delete_small_color.png" Name="IC6C1E~1.PNG" LongName="icon_delete_small_color.png" />
+                <File Id="icon_bon_persistent.png" Name="ICF704~1.PNG" LongName="icon_bon_persistent.png" />
+                <File Id="hourglass.png33" Name="HOURGL~2.PNG" LongName="hourglass.png" />
+                <File Id="delete.png" Name="delete.png" />
+                <File Id="dbgstatu.png" Name="dbgstatu.png" />
+                <File Id="Xobject.png35" Name="Xobject.png" />
+                <File Id="smodifie.png" Name="smodifie.png" />
+                <File Id="icon_wizard_ace_project.png" Name="ICON_W~3.PNG" LongName="icon_wizard_ace_project.png" />
+                <File Id="icon_void_pointer_old.png" Name="IC891B~1.PNG" LongName="icon_void_pointer_old.png" />
+                <File Id="V36" Name="ICON_R~4.PNG" LongName="icon_remove_exported_feature_color.png" />
+                <File Id="icon_past_color.png" Name="ICON_P~1.PNG" LongName="icon_past_color.png" />
+                <File Id="icon_format_clickable_color.png" Name="ICF3CB~1.PNG" LongName="icon_format_clickable_color.png" />
+                <File Id="icon_favorites_folder_color.png" Name="ICON_F~2.PNG" LongName="icon_favorites_folder_color.png" />
+                <File Id="icon_dynamiclib_window.png" Name="IC17A0~1.PNG" LongName="icon_dynamiclib_window.png" />
+                <File Id="icon_context_tool_text_color.png" Name="IC7958~1.PNG" LongName="icon_context_tool_text_color.png" />
+                <File Id="icon_color_color.png" Name="ICB78E~1.PNG" LongName="icon_color_color.png" />
+                <File Id="icon_class_color.png" Name="ICON_C~4.PNG" LongName="icon_class_color.png" />
+                <File Id="icon_bon_effective.png" Name="ICON_B~4.PNG" LongName="icon_bon_effective.png" />
+                <File Id="execinto.png" Name="execinto.png" />
+                <File Id="dynlibico.png" Name="DYNLIB~2.PNG" LongName="dynlibico.png" />
+                <File Id="sflat.png" Name="sflat.png" />
+                <File Id="scluster.png" Name="scluster.png" />
+                <File Id="saversio.png" Name="saversio.png" />
+                <File Id="icon_system_info_color.png" Name="IC00F2~1.PNG" LongName="icon_system_info_color.png" />
+                <File Id="icon_new_metric_color.png" Name="IC54C7~1.PNG" LongName="icon_new_metric_color.png" />
+                <File Id="icon_new_expression_color.png" Name="IC9FFA~1.PNG" LongName="icon_new_expression_color.png" />
+                <File Id="icon_new_class_color.png" Name="ICON_N~3.PNG" LongName="icon_new_class_color.png" />
+                <File Id="icon_new_agg_supplier_gray.png" Name="ICON_N~2.PNG" LongName="icon_new_agg_supplier_gray.png" />
+                <File Id="icon_help_tool_color.png" Name="ICON_H~1.PNG" LongName="icon_help_tool_color.png" />
+                <File Id="V38" Name="ICC89F~1.PNG" LongName="icon_format_feature_homonyms_color.png" />
+                <File Id="icon_format_exporteds_color.png" Name="IC1D4A~1.PNG" LongName="icon_format_exporteds_color.png" />
+                <File Id="icon_export_to_png_color.png" Name="IC1A3D~1.PNG" LongName="icon_export_to_png_color.png" />
+                <File Id="icon_edit_expression_color.png" Name="ICON_E~2.PNG" LongName="icon_edit_expression_color.png" />
+                <File Id="icon_compilation_error.png" Name="ICACAD~1.PNG" LongName="icon_compilation_error.png" />
+                <File Id="icon_bpdisabled.png" Name="IC5D88~1.PNG" LongName="icon_bpdisabled.png" />
+                <File Id="histback.png" Name="histback.png" />
+                <File Id="dis_bp.png" Name="dis_bp.png" />
+                <File Id="dbg_dyneval.png" Name="DBG_DY~1.PNG" LongName="dbg_dyneval.png" />
+                <File Id="dbgquit.png" Name="dbgquit.png" />
+                <File Id="Xinheritlnk.png42" Name="XINHER~2.PNG" LongName="Xinheritlnk.png" />
+                <File Id="ssupplie.png" Name="ssupplie.png" />
+                <File Id="slice.png" Name="slice.png" />
+                <File Id="search.png" Name="search.png" />
+                <File Id="sdversio.png" Name="sdversio.png" />
+                <File Id="sdeferre.png" Name="sdeferre.png" />
+                <File Id="sclasses.png" Name="sclasses.png" />
+                <File Id="save_as.png" Name="save_as.png" />
+                <File Id="interro.png43" Name="interro.png" />
+                <File Id="icon_zoom_out_color.png" Name="ICON_Z~4.PNG" LongName="icon_zoom_out_color.png" />
+                <File Id="icon_view_measure_minus_color.png" Name="ICON_V~2.PNG" LongName="icon_view_measure_minus_color.png" />
+                <File Id="icon_select_depth_color.png" Name="IC37A7~1.PNG" LongName="icon_select_depth_color.png" />
+                <File Id="icon_running_1.png" Name="IC0959~1.PNG" LongName="icon_running_1.png" />
+                <File Id="icon_red_cross.png" Name="ICON_R~2.PNG" LongName="icon_red_cross.png" />
+                <File Id="icon_once_symbol.png" Name="ICON_O~2.PNG" LongName="icon_once_symbol.png" />
+                <File Id="icon_new_measure_color.png" Name="IC998C~1.PNG" LongName="icon_new_measure_color.png" />
+                <File Id="icon_format_externals_color.png" Name="IC5CED~1.PNG" LongName="icon_format_externals_color.png" />
+                <File Id="icon_external_feature.png" Name="IC7EC6~1.PNG" LongName="icon_external_feature.png" />
+                <File Id="icon_disable_bkpt_color.png" Name="ICC497~1.PNG" LongName="icon_disable_bkpt_color.png" />
+                <File Id="icon_degree0.png" Name="IC9131~1.PNG" LongName="icon_degree0.png" />
+                <File Id="icon_compile_color.png" Name="IC4547~1.PNG" LongName="icon_compile_color.png" />
+                <File Id="icon_cluster_symbol_color.png" Name="IC2794~1.PNG" LongName="icon_cluster_symbol_color.png" />
+                <File Id="icon_bon_deferred.png" Name="ICON_B~3.PNG" LongName="icon_bon_deferred.png" />
+                <File Id="gstoppt.png" Name="gstoppt.png" />
+                <File Id="dn_stack.png" Name="dn_stack.png" />
+                <File Id="current.png" Name="current.png" />
+                <File Id="test.png" Name="test.png" />
+                <File Id="icon_system_color.png" Name="IC8A29~1.PNG" LongName="icon_system_color.png" />
+                <File Id="icon_running_2.png" Name="IC095D~1.PNG" LongName="icon_running_2.png" />
+                <File Id="icon_new_dynamic_lib_color.png" Name="ICC148~1.PNG" LongName="icon_new_dynamic_lib_color.png" />
+                <File Id="icon_new_cluster_small_color.png" Name="IC359A~1.PNG" LongName="icon_new_cluster_small_color.png" />
+                <File Id="icon_forth_color.png" Name="IC3AA9~1.PNG" LongName="icon_forth_color.png" />
+                <File Id="icon_format_attributes_color.png" Name="IC96DF~1.PNG" LongName="icon_format_attributes_color.png" />
+                <File Id="icon_format_ancestors_color.png" Name="ICCEB7~1.PNG" LongName="icon_format_ancestors_color.png" />
+                <File Id="icon_features_text_color.png" Name="ICF547~1.PNG" LongName="icon_features_text_color.png" />
+                <File Id="icon_delete_very_small_color.png" Name="IC00E3~1.PNG" LongName="icon_delete_very_small_color.png" />
+                <File Id="icon_degree1.png46" Name="IC9135~1.PNG" LongName="icon_degree1.png" />
+                <File Id="icon_deferred_feature.png" Name="ICON_D~4.PNG" LongName="icon_deferred_feature.png" />
+                <File Id="V47" Name="ICON_D~3.PNG" LongName="icon_deferred_class_symbol_color.png" />
+                <File Id="icon_debug_run_text_color.png" Name="ICON_D~2.PNG" LongName="icon_debug_run_text_color.png" />
+                <File Id="icon_class.png" Name="ICON_C~3.PNG" LongName="icon_class.png" />
+                <File Id="icon_check_exports_color.png" Name="ICON_C~2.PNG" LongName="icon_check_exports_color.png" />
+                <File Id="icon_bpslot.png" Name="IC360C~1.PNG" LongName="icon_bpslot.png" />
+                <File Id="general.png" Name="general.png" />
+                <File Id="feature.png48" Name="feature.png" />
+                <File Id="explicon.png" Name="explicon.png" />
+                <File Id="execstop.png" Name="execstop.png" />
+                <File Id="execnost.png" Name="execnost.png" />
+                <File Id="dis_histback.png" Name="DIS_HI~1.PNG" LongName="dis_histback.png" />
+                <File Id="dbgstop.png" Name="dbgstop.png" />
+                <File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
+                <File Id="logo.png" Name="logo.png" KeyPath="yes" />
+                <File Id="icon_external_symbol.png" Name="IC63F7~1.PNG" LongName="icon_external_symbol.png" />
+                <File Id="icon_word_wrap_color.png" Name="IC9F0D~1.PNG" LongName="icon_word_wrap_color.png" />
+                <File Id="icon_auto_slice_limits_color.png" Name="ICON_A~3.PNG" LongName="icon_auto_slice_limits_color.png" />
+                <File Id="V108" Name="IC5D1C~1.PNG" LongName="icon_numeric_format_very_small_color.png" />
+                <File Id="icon_on_off_very_small_color.png" Name="ICON_O~5.PNG" LongName="icon_on_off_very_small_color.png" />
+                <File Id="V110" Name="ICON_D~5.PNG" LongName="icon_debug_run_continue_text_color.png" />
+                <File Id="icon_debug_run_continue_color.png" Name="ICON_D~6.PNG" LongName="icon_debug_run_continue_color.png" />
+                <File Id="V112" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
+              </Component>
+            </Directory>
+            <Directory Id="ico" Name="ico">
+              <Component Id="ico" Guid="42D4CBFD-383A-4744-9384-BAE102155EF5">
+                <File Id="icon_view_measure_minus_color.ico" Name="ICON_V~2.ICO" LongName="icon_view_measure_minus_color.ico" KeyPath="yes" />
+                <File Id="icon_step_out_color.ico" Name="IC03B5~1.ICO" LongName="icon_step_out_color.ico" />
+                <File Id="icon_send_stone_down_color.ico" Name="IC9B53~1.ICO" LongName="icon_send_stone_down_color.ico" />
+                <File Id="icon_redo_color.ico" Name="ICON_R~3.ICO" LongName="icon_redo_color.ico" />
+                <File Id="icon_new_feature_color.ico" Name="IC1A25~1.ICO" LongName="icon_new_feature_color.ico" />
+                <File Id="icon_maximize_color.ico" Name="ICON_M~1.ICO" LongName="icon_maximize_color.ico" />
+                <File Id="icon_inherit_color.ico" Name="ICON_I~2.ICO" LongName="icon_inherit_color.ico" />
+                <File Id="V11" Name="IC7332~1.ICO" LongName="icon_format_feature_ancestors_color.ico" />
+                <File Id="icon_format_externals_color.ico" Name="ICF336~1.ICO" LongName="icon_format_externals_color.ico" />
+                <File Id="icon_format_exporteds_color.ico" Name="ICB492~1.ICO" LongName="icon_format_exporteds_color.ico" />
+                <File Id="icon_delete_small_color.ico" Name="IC0466~1.ICO" LongName="icon_delete_small_color.ico" />
+                <File Id="icon_degree2.ico" Name="ICE180~1.ICO" LongName="icon_degree2.ico" />
+                <File Id="icon_bpslot_stopped.ico" Name="ICF631~1.ICO" LongName="icon_bpslot_stopped.ico" />
+                <File Id="icon_zoom_in_color.ico" Name="ICON_Z~2.ICO" LongName="icon_zoom_in_color.ico" />
+                <File Id="icon_wizard_ace_project.ico" Name="ICON_W~3.ICO" LongName="icon_wizard_ace_project.ico" />
+                <File Id="icon_view_measure_plus_color.ico" Name="ICON_V~3.ICO" LongName="icon_view_measure_plus_color.ico" />
+                <File Id="icon_unify_stone_color.ico" Name="ICON_U~2.ICO" LongName="icon_unify_stone_color.ico" />
+                <File Id="icon_system_color.ico" Name="IC2271~1.ICO" LongName="icon_system_color.ico" />
+                <File Id="icon_save_color.ico" Name="ICON_S~2.ICO" LongName="icon_save_color.ico" />
+                <File Id="icon_print_color.ico" Name="IC38F3~1.ICO" LongName="icon_print_color.ico" />
+                <File Id="icon_open_file_color.ico" Name="ICON_O~3.ICO" LongName="icon_open_file_color.ico" />
+                <File Id="icon_object_symbol.ico" Name="ICON_O~1.ICO" LongName="icon_object_symbol.ico" />
+                <File Id="icon_new_class_small_color.ico" Name="ICON_N~4.ICO" LongName="icon_new_class_small_color.ico" />
+                <File Id="icon_minimize_color.ico" Name="IC7842~1.ICO" LongName="icon_minimize_color.ico" />
+                <File Id="icon_format_clients_color.ico" Name="ICFAF9~1.ICO" LongName="icon_format_clients_color.ico" />
+                <File Id="icon_features_text_color.ico" Name="IC369E~1.ICO" LongName="icon_features_text_color.ico" />
+                <File Id="icon_favorites_color.ico" Name="ICON_F~1.ICO" LongName="icon_favorites_color.ico" />
+                <File Id="icon_dialog_window.ico" Name="IC579B~1.ICO" LongName="icon_dialog_window.ico" />
+                <File Id="icon_delete_view_color.ico" Name="IC840E~1.ICO" LongName="icon_delete_view_color.ico" />
+                <File Id="icon_degree3.ico" Name="ICE184~1.ICO" LongName="icon_degree3.ico" />
+                <File Id="icon_bpdisabled_top.ico" Name="IC5B85~1.ICO" LongName="icon_bpdisabled_top.ico" />
+                <File Id="icon_bparrow.ico" Name="IC16B9~1.ICO" LongName="icon_bparrow.ico" />
+                <File Id="icon_add_exported_feature_color.ico" Name="ICON_A~1.ICO" LongName="icon_add_exported_feature_color.ico" />
+                <File Id="icon_void_pointer_old.ico" Name="IC2163~1.ICO" LongName="icon_void_pointer_old.ico" />
+                <File Id="icon_select_depth_color.ico" Name="ICDEEF~1.ICO" LongName="icon_select_depth_color.ico" />
+                <File Id="icon_light_deferred_class_color.ico" Name="ICON_L~4.ICO" LongName="icon_light_deferred_class_color.ico" />
+                <File Id="icon_light_class_color.ico" Name="ICON_L~1.ICO" LongName="icon_light_class_color.ico" />
+                <File Id="icon_format_ancestors_color.ico" Name="IC6600~1.ICO" LongName="icon_format_ancestors_color.ico" />
+                <File Id="icon_exec_step_color.ico" Name="IC414E~1.ICO" LongName="icon_exec_step_color.ico" />
+                <File Id="icon_enable_bkpt_color.ico" Name="ICON_E~4.ICO" LongName="icon_enable_bkpt_color.ico" />
+                <File Id="icon_dummy.ico" Name="IC6C32~1.ICO" LongName="icon_dummy.ico" />
+                <File Id="icon_descendants_color.ico" Name="ICCF17~1.ICO" LongName="icon_descendants_color.ico" />
+                <File Id="icon_degree4.ico" Name="ICF188~1.ICO" LongName="icon_degree4.ico" />
+                <File Id="icon_class_symbol_gray.ico" Name="IC45BA~1.ICO" LongName="icon_class_symbol_gray.ico" />
+                <File Id="icon_check_exports_color.ico" Name="ICON_C~2.ICO" LongName="icon_check_exports_color.ico" />
+                <File Id="icon_bpdisabled_condition.ico" Name="IC0598~1.ICO" LongName="icon_bpdisabled_condition.ico" />
+                <File Id="icon_undo_color.ico" Name="ICON_U~1.ICO" LongName="icon_undo_color.ico" />
+                <File Id="icon_toggle_clusters_color.ico" Name="ICON_T~1.ICO" LongName="icon_toggle_clusters_color.ico" />
+                <File Id="icon_profiler_window.ico" Name="IC046F~1.ICO" LongName="icon_profiler_window.ico" />
+                <File Id="icon_past_color.ico" Name="ICON_P~1.ICO" LongName="icon_past_color.ico" />
+                <File Id="icon_nothing.ico" Name="ICDC92~1.ICO" LongName="icon_nothing.ico" />
+                <File Id="icon_new_metric_color.ico" Name="ICFB00~1.ICO" LongName="icon_new_metric_color.ico" />
+                <File Id="icon_new_cluster_color.ico" Name="IC44BB~1.ICO" LongName="icon_new_cluster_color.ico" />
+                <File Id="icon_history_color.ico" Name="ICON_H~2.ICO" LongName="icon_history_color.ico" />
+                <File Id="icon_format_flat_color.ico" Name="IC39B7~1.ICO" LongName="icon_format_flat_color.ico" />
+                <File Id="icon_exec_quit_color.ico" Name="ICD20B~1.ICO" LongName="icon_exec_quit_color.ico" />
+                <File Id="icon_degree5.ico" Name="ICF18C~1.ICO" LongName="icon_degree5.ico" />
+                <File Id="icon_context_tool_text_color.ico" Name="ICB9AF~1.ICO" LongName="icon_context_tool_text_color.ico" />
+                <File Id="icon_compiling_1.ico" Name="IC72E9~1.ICO" LongName="icon_compiling_1.ico" />
+                <File Id="icon_compiling.ico" Name="IC2129~1.ICO" LongName="icon_compiling.ico" />
+                <File Id="icon_search_text_color.ico" Name="ICBAB9~1.ICO" LongName="icon_search_text_color.ico" />
+                <File Id="icon_open_project.ico" Name="ICON_O~4.ICO" LongName="icon_open_project.ico" />
+                <File Id="icon_immediate_value.ico" Name="ICON_I~1.ICO" LongName="icon_immediate_value.ico" />
+                <File Id="icon_favorites_text_color.ico" Name="ICON_F~3.ICO" LongName="icon_favorites_text_color.ico" />
+                <File Id="icon_external_feature.ico" Name="IC161F~1.ICO" LongName="icon_external_feature.ico" />
+                <File Id="icon_down_triangle.ico" Name="ICD44B~1.ICO" LongName="icon_down_triangle.ico" />
+                <File Id="icon_document_color.ico" Name="ICD84E~1.ICO" LongName="icon_document_color.ico" />
+                <File Id="icon_delete_color.ico" Name="ICE77F~1.ICO" LongName="icon_delete_color.ico" />
+                <File Id="icon_degree6.ico" Name="ICF180~1.ICO" LongName="icon_degree6.ico" />
+                <File Id="icon_degree1.ico" Name="IC9B61~1.ICO" LongName="icon_degree-1.ico" />
+                <File Id="icon_compiling_2.ico" Name="IC72ED~1.ICO" LongName="icon_compiling_2.ico" />
+                <File Id="icon_compiled.ico" Name="IC1987~1.ICO" LongName="icon_compiled.ico" />
+                <File Id="icon_running_1.ico" Name="IC49A0~1.ICO" LongName="icon_running_1.ico" />
+                <File Id="icon_red_cross.ico" Name="ICON_R~2.ICO" LongName="icon_red_cross.ico" />
+                <File Id="icon_recycle_bin_color.ico" Name="ICON_R~1.ICO" LongName="icon_recycle_bin_color.ico" />
+                <File Id="icon_quick_compile_color.ico" Name="ICON_Q~1.ICO" LongName="icon_quick_compile_color.ico" />
+                <File Id="icon_pretty_print_8.ico" Name="ICC95F~1.ICO" LongName="icon_pretty_print_8.ico" />
+                <File Id="icon_new_agg_supplier_gray.ico" Name="ICON_N~2.ICO" LongName="icon_new_agg_supplier_gray.ico" />
+                <File Id="icon_edit_expression_color.ico" Name="ICON_E~2.ICO" LongName="icon_edit_expression_color.ico" />
+                <File Id="icon_degree2.ico16" Name="IC9F61~1.ICO" LongName="icon_degree-2.ico" />
+                <File Id="icon_deferred_feature.ico" Name="ICON_D~4.ICO" LongName="icon_deferred_feature.ico" />
+                <File Id="icon_compiling_3.ico" Name="IC72E1~1.ICO" LongName="icon_compiling_3.ico" />
+                <File Id="icon_class_header_color.ico" Name="IC3C45~1.ICO" LongName="icon_class_header_color.ico" />
+                <File Id="icon_bpslot.ico" Name="ICDD44~1.ICO" LongName="icon_bpslot.ico" />
+                <File Id="icon_bpenabled_condition.ico" Name="ICA03E~1.ICO" LongName="icon_bpenabled_condition.ico" />
+                <File Id="icon_bpdisabled.ico" Name="ICF4D0~1.ICO" LongName="icon_bpdisabled.ico" />
+                <File Id="icon_void_pointer.ico" Name="IC5411~1.ICO" LongName="icon_void_pointer.ico" />
+                <File Id="icon_running_2.ico" Name="IC49A4~1.ICO" LongName="icon_running_2.ico" />
+                <File Id="icon_restore_all_color.ico" Name="ICC425~1.ICO" LongName="icon_restore_all_color.ico" />
+                <File Id="icon_preferences_folder.ico" Name="ICON_P~3.ICO" LongName="icon_preferences_folder.ico" />
+                <File Id="icon_new_cluster_small_color.ico" Name="IC75E1~1.ICO" LongName="icon_new_cluster_small_color.ico" />
+                <File Id="icon_format_descendants_color.ico" Name="IC0E4A~1.ICO" LongName="icon_format_descendants_color.ico" />
+                <File Id="icon_format_attributes_color.ico" Name="ICE627~1.ICO" LongName="icon_format_attributes_color.ico" />
+                <File Id="icon_features_color.ico" Name="ICDA97~1.ICO" LongName="icon_features_color.ico" />
+                <File Id="icon_delete_very_small_color.ico" Name="IC503B~1.ICO" LongName="icon_delete_very_small_color.ico" />
+                <File Id="icon_degree3.ico21" Name="IC9371~1.ICO" LongName="icon_degree-3.ico" />
+                <File Id="V22" Name="ICON_D~3.ICO" LongName="icon_deferred_class_symbol_color.ico" />
+                <File Id="icon_compiling_4.ico" Name="IC72E5~1.ICO" LongName="icon_compiling_4.ico" />
+                <File Id="icon_cluster_tool_color.ico" Name="IC93BF~1.ICO" LongName="icon_cluster_tool_color.ico" />
+                <File Id="icon_class_symbol_color.ico" Name="IC3B90~1.ICO" LongName="icon_class_symbol_color.ico" />
+                <File Id="icon_bon_interfaced.ico" Name="ICC9DC~1.ICO" LongName="icon_bon_interfaced.ico" />
+                <File Id="icon_bkpt_info_color.ico" Name="ICON_B~2.ICO" LongName="icon_bkpt_info_color.ico" />
+                <File Id="icon_zoom_in.ico" Name="ICON_Z~1.ICO" LongName="icon_zoom_in.ico" />
+                <File Id="icon_running_3.ico" Name="IC59A8~1.ICO" LongName="icon_running_3.ico" />
+                <File Id="icon_new_supplier_color.ico" Name="IC711F~1.ICO" LongName="icon_new_supplier_color.ico" />
+                <File Id="icon_mini_back_color.ico" Name="ICON_M~2.ICO" LongName="icon_mini_back_color.ico" />
+                <File Id="icon_editing.ico" Name="ICON_E~3.ICO" LongName="icon_editing.ico" />
+                <File Id="icon_debug_run_color.ico" Name="ICON_D~1.ICO" LongName="icon_debug_run_color.ico" />
+                <File Id="icon_zoom_out.ico" Name="ICON_Z~3.ICO" LongName="icon_zoom_out.ico" />
+                <File Id="icon_windows_color.ico" Name="ICON_W~1.ICO" LongName="icon_windows_color.ico" />
+                <File Id="icon_toolbar_separator.ico" Name="ICON_T~3.ICO" LongName="icon_toolbar_separator.ico" />
+                <File Id="icon_sorter_color.ico" Name="IC6391~1.ICO" LongName="icon_sorter_color.ico" />
+                <File Id="icon_restore_color.ico" Name="IC486F~1.ICO" LongName="icon_restore_color.ico" />
+                <File Id="V26" Name="ICON_R~4.ICO" LongName="icon_remove_exported_feature_color.ico" />
+                <File Id="icon_no_stop_color.ico" Name="ICD769~1.ICO" LongName="icon_no_stop_color.ico" />
+                <File Id="icon_new_inherit_color.ico" Name="IC037C~1.ICO" LongName="icon_new_inherit_color.ico" />
+                <File Id="icon_new_dynamic_lib_color.ico" Name="IC029F~1.ICO" LongName="icon_new_dynamic_lib_color.ico" />
+                <File Id="icon_freeze_color.ico" Name="IC893F~1.ICO" LongName="icon_freeze_color.ico" />
+                <File Id="icon_format_onces_color.ico" Name="ICE488~1.ICO" LongName="icon_format_onces_color.ico" />
+                <File Id="icon_format_deferreds_color.ico" Name="IC1C0C~1.ICO" LongName="icon_format_deferreds_color.ico" />
+                <File Id="icon_fill_cluster_color.ico" Name="IC3047~1.ICO" LongName="icon_fill_cluster_color.ico" />
+                <File Id="icon_crop_color.ico" Name="IC1337~1.ICO" LongName="icon_crop_color.ico" />
+                <File Id="icon_context_tool_color.ico" Name="ICE8ED~1.ICO" LongName="icon_context_tool_color.ico" />
+                <File Id="icon_color_color.ico" Name="ICF7D5~1.ICO" LongName="icon_color_color.ico" />
+                <File Id="icon_cmd_history_color.ico" Name="ICEE02~1.ICO" LongName="icon_cmd_history_color.ico" />
+                <File Id="icon_class_color.ico" Name="ICON_C~4.ICO" LongName="icon_class_color.ico" />
+                <File Id="icon_tool_color.ico" Name="ICON_T~2.ICO" LongName="icon_tool_color.ico" />
+                <File Id="icon_set_stack_depth_color.ico" Name="ICC4BF~1.ICO" LongName="icon_set_stack_depth_color.ico" />
+                <File Id="icon_reset_diagram_color.ico" Name="IC9C46~1.ICO" LongName="icon_reset_diagram_color.ico" />
+                <File Id="icon_new_context_window_color.ico" Name="IC83D6~1.ICO" LongName="icon_new_context_window_color.ico" />
+                <File Id="V27" Name="IC19E6~1.ICO" LongName="icon_format_feature_homonyms_color.ico" />
+                <File Id="icon_feature_color.ico" Name="IC48E4~1.ICO" LongName="icon_feature_color.ico" />
+                <File Id="icon_dynamiclib_window.ico" Name="IC67F7~1.ICO" LongName="icon_dynamiclib_window.ico" />
+                <File Id="icon_dotnet_import_color.ico" Name="IC19E2~1.ICO" LongName="icon_dotnet_import_color.ico" />
+                <File Id="icon_cluster_tool_text_color.ico" Name="IC6C94~1.ICO" LongName="icon_cluster_tool_text_color.ico" />
+                <File Id="icon_bon_persistent.ico" Name="ICAF4C~1.ICO" LongName="icon_bon_persistent.ico" />
+                <File Id="icon_windows_text_color.ico" Name="ICON_W~2.ICO" LongName="icon_windows_text_color.ico" />
+                <File Id="icon_system_info_color.ico" Name="IC504A~1.ICO" LongName="icon_system_info_color.ico" />
+                <File Id="icon_stopped.ico" Name="ICDD03~1.ICO" LongName="icon_stopped.ico" />
+                <File Id="icon_run_color.ico" Name="IC5DD8~1.ICO" LongName="icon_run_color.ico" />
+                <File Id="icon_restore_view_color.ico" Name="IC5A9E~1.ICO" LongName="icon_restore_view_color.ico" />
+                <File Id="icon_preferences_root.ico" Name="ICON_P~4.ICO" LongName="icon_preferences_root.ico" />
+                <File Id="icon_once_symbol.ico" Name="ICON_O~2.ICO" LongName="icon_once_symbol.ico" />
+                <File Id="icon_new_expression_color.ico" Name="IC3743~1.ICO" LongName="icon_new_expression_color.ico" />
+                <File Id="icon_new_agg_supplier_color.ico" Name="ICON_N~1.ICO" LongName="icon_new_agg_supplier_color.ico" />
+                <File Id="icon_light_class_gray.ico" Name="ICON_L~2.ICO" LongName="icon_light_class_gray.ico" />
+                <File Id="icon_green_tick.ico" Name="ICON_G~3.ICO" LongName="icon_green_tick.ico" />
+                <File Id="icon_global_search_color.ico" Name="ICON_G~1.ICO" LongName="icon_global_search_color.ico" />
+                <File Id="icon_forth_color.ico" Name="IC7AF0~1.ICO" LongName="icon_forth_color.ico" />
+                <File Id="icon_expanded_object.ico" Name="ICB2C5~1.ICO" LongName="icon_expanded_object.ico" />
+                <File Id="icon_cut_color.ico" Name="IC5D99~1.ICO" LongName="icon_cut_color.ico" />
+                <File Id="icon_bpdisabled_stopped.ico" Name="IC6FFE~1.ICO" LongName="icon_bpdisabled_stopped.ico" />
+                <File Id="icon_attribute_symbol.ico" Name="ICON_A~2.ICO" LongName="icon_attribute_symbol.ico" />
+                <File Id="icon_straight_arrows_color.ico" Name="IC9E9F~1.ICO" LongName="icon_straight_arrows_color.ico" />
+                <File Id="icon_progress_dialog.ico" Name="ICC598~1.ICO" LongName="icon_progress_dialog.ico" />
+                <File Id="icon_pretty_print_16.ico" Name="IC0DA4~1.ICO" LongName="icon_pretty_print_16.ico" />
+                <File Id="icon_new_measure_color.ico" Name="ICD9D3~1.ICO" LongName="icon_new_measure_color.ico" />
+                <File Id="icon_format_suppliers_color.ico" Name="IC6C70~1.ICO" LongName="icon_format_suppliers_color.ico" />
+                <File Id="V31" Name="IC8C51~1.ICO" LongName="icon_format_feature_descendants_color.ico" />
+                <File Id="icon_folders_color.ico" Name="IC9588~1.ICO" LongName="icon_folders_color.ico" />
+                <File Id="icon_feature_clause_some.ico" Name="IC0691~1.ICO" LongName="icon_feature_clause_some.ico" />
+                <File Id="icon_compilation_error.ico" Name="ICECF4~1.ICO" LongName="icon_compilation_error.ico" />
+                <File Id="icon_cluster_symbol_color.ico" Name="ICDEDC~1.ICO" LongName="icon_cluster_symbol_color.ico" />
+                <File Id="icon_bpenabled_top.ico" Name="IC368D~1.ICO" LongName="icon_bpenabled_top.ico" />
+                <File Id="icon_bpenabled.ico" Name="IC8725~1.ICO" LongName="icon_bpenabled.ico" />
+                <File Id="icon_zoom_out_color.ico" Name="ICON_Z~4.ICO" LongName="icon_zoom_out_color.ico" />
+                <File Id="icon_view_small_color.ico" Name="ICON_V~4.ICO" LongName="icon_view_small_color.ico" />
+                <File Id="icon_green_arrow.ico" Name="ICON_G~2.ICO" LongName="icon_green_arrow.ico" />
+                <File Id="icon_format_interface_color.ico" Name="IC1D75~1.ICO" LongName="icon_format_interface_color.ico" />
+                <File Id="icon_format_contract_color.ico" Name="ICBA83~1.ICO" LongName="icon_format_contract_color.ico" />
+                <File Id="icon_debug_run_text_color.ico" Name="ICON_D~2.ICO" LongName="icon_debug_run_text_color.ico" />
+                <File Id="icon_close_color.ico" Name="IC3997~1.ICO" LongName="icon_close_color.ico" />
+                <File Id="icon_shell_color.ico" Name="ICB490~1.ICO" LongName="icon_shell_color.ico" />
+                <File Id="icon_preference_window.ico" Name="ICON_P~2.ICO" LongName="icon_preference_window.ico" />
+                <File Id="icon_new_feature_small_color.ico" Name="IC3417~1.ICO" LongName="icon_new_feature_small_color.ico" />
+                <File Id="icon_new_class_color.ico" Name="ICON_N~3.ICO" LongName="icon_new_class_color.ico" />
+                <File Id="icon_light_cluster_color.ico" Name="ICON_L~3.ICO" LongName="icon_light_cluster_color.ico" />
+                <File Id="icon_help_tool_color.ico" Name="ICON_H~1.ICO" LongName="icon_help_tool_color.ico" />
+                <File Id="icon_feature_clause_any.ico" Name="ICON_F~4.ICO" LongName="icon_feature_clause_any.ico" />
+                <File Id="icon_expand_string_color.ico" Name="IC8DC5~1.ICO" LongName="icon_expand_string_color.ico" />
+                <File Id="icon_development_window.ico" Name="ICB281~1.ICO" LongName="icon_development_window.ico" />
+                <File Id="icon_compile_text_color.ico" Name="IC8D7A~1.ICO" LongName="icon_compile_text_color.ico" />
+                <File Id="icon_slice_limits_vsmall_color.ico" Name="IC5E59~1.ICO" LongName="icon_slice_limits_vsmall_color.ico" />
+                <File Id="icon_select_metrics_color.ico" Name="IC721F~1.ICO" LongName="icon_select_metrics_color.ico" />
+                <File Id="icon_save_call_stack_color.ico" Name="ICON_S~1.ICO" LongName="icon_save_call_stack_color.ico" />
+                <File Id="icon_new_editor_color.ico" Name="ICD370~1.ICO" LongName="icon_new_editor_color.ico" />
+                <File Id="icon_finalize_color.ico" Name="IC7F92~1.ICO" LongName="icon_finalize_color.ico" />
+                <File Id="icon_feature_clause_none.ico" Name="IC0091~1.ICO" LongName="icon_feature_clause_none.ico" />
+                <File Id="V39" Name="ICON_E~1.ICO" LongName="icon_edit_exported_feature_color.ico" />
+                <File Id="icon_display_labels_color.ico" Name="ICDA51~1.ICO" LongName="icon_display_labels_color.ico" />
+                <File Id="icon_del_bkpt_color.ico" Name="ICF69E~1.ICO" LongName="icon_del_bkpt_color.ico" />
+                <File Id="icon_copy_color.ico" Name="ICD6F6~1.ICO" LongName="icon_copy_color.ico" />
+                <File Id="icon_bpenabled_stopped.ico" Name="ICAC1E~1.ICO" LongName="icon_bpenabled_stopped.ico" />
+                <File Id="icon_bon_effective.ico" Name="ICON_B~4.ICO" LongName="icon_bon_effective.ico" />
+                <File Id="icon_view_measure_color.ico" Name="ICON_V~1.ICO" LongName="icon_view_measure_color.ico" />
+                <File Id="icon_supplier_color.ico" Name="IC9067~1.ICO" LongName="icon_supplier_color.ico" />
+                <File Id="icon_minimize_all_color.ico" Name="ICON_M~4.ICO" LongName="icon_minimize_all_color.ico" />
+                <File Id="icon_format_routines_color.ico" Name="IC4BC4~1.ICO" LongName="icon_format_routines_color.ico" />
+                <File Id="icon_delete_measure_color.ico" Name="ICA6E2~1.ICO" LongName="icon_delete_measure_color.ico" />
+                <File Id="icon_degree0.ico" Name="ICE188~1.ICO" LongName="icon_degree0.ico" />
+                <File Id="icon_compile_color.ico" Name="IC859E~1.ICO" LongName="icon_compile_color.ico" />
+                <File Id="icon_class.ico" Name="ICON_C~3.ICO" LongName="icon_class.ico" />
+                <File Id="icon_center_diagram_color.ico" Name="ICON_C~1.ICO" LongName="icon_center_diagram_color.ico" />
+                <File Id="icon_wizard_project.ico" Name="ICA1EA~1.ICO" LongName="icon_wizard_project.ico" />
+                <File Id="icon_wizard_blank_project.ico" Name="ICON_W~4.ICO" LongName="icon_wizard_blank_project.ico" />
+                <File Id="icon_step_into_color.ico" Name="ICA7DE~1.ICO" LongName="icon_step_into_color.ico" />
+                <File Id="icon_save_measure_color.ico" Name="ICON_S~3.ICO" LongName="icon_save_measure_color.ico" />
+                <File Id="icon_new_small_color.ico" Name="IC9950~1.ICO" LongName="icon_new_small_color.ico" />
+                <File Id="icon_new_development_tool_color.ico" Name="IC56BF~1.ICO" LongName="icon_new_development_tool_color.ico" />
+                <File Id="icon_mini_forth_color.ico" Name="ICON_M~3.ICO" LongName="icon_mini_forth_color.ico" />
+                <File Id="icon_history_text_color.ico" Name="ICON_H~3.ICO" LongName="icon_history_text_color.ico" />
+                <File Id="icon_format_text_color.ico" Name="IC3889~1.ICO" LongName="icon_format_text_color.ico" />
+                <File Id="V49" Name="ICCB84~1.ICO" LongName="icon_format_feature_implementers_color.ico" />
+                <File Id="V50" Name="IC3384~1.ICO" LongName="icon_format_feature_callers_color.ico" />
+                <File Id="icon_format_clickable_color.ico" Name="IC9B04~1.ICO" LongName="icon_format_clickable_color.ico" />
+                <File Id="icon_favorites_folder_color.ico" Name="ICON_F~2.ICO" LongName="icon_favorites_folder_color.ico" />
+                <File Id="icon_export_to_png_color.ico" Name="IC5A84~1.ICO" LongName="icon_export_to_png_color.ico" />
+                <File Id="icon_exe_up_to_date.ico" Name="IC6393~1.ICO" LongName="icon_exe_up_to_date.ico" />
+                <File Id="icon_exec_stop_color.ico" Name="IC464E~1.ICO" LongName="icon_exec_stop_color.ico" />
+                <File Id="icon_degree1.ico51" Name="ICE18C~1.ICO" LongName="icon_degree1.ico" />
+                <File Id="icon_bpslot_top.ico" Name="IC8966~1.ICO" LongName="icon_bpslot_top.ico" />
+                <File Id="icon_bon_deferred.ico" Name="ICON_B~3.ICO" LongName="icon_bon_deferred.ico" />
+                <File Id="icon_back_color.ico" Name="ICON_B~1.ICO" LongName="icon_back_color.ico" />
+                <File Id="icon_external_symbol.ico" Name="ICA34F~1.ICO" LongName="icon_external_symbol.ico" />
+                <File Id="icon_disable_bkpt_color.ico" Name="IC6CDF~2.ICO" LongName="icon_disable_bkpt_color.ico" />
+                <File Id="icon_word_wrap_color.ico" Name="ICDF54~1.ICO" LongName="icon_word_wrap_color.ico" />
+                <File Id="icon_auto_slice_limits_color.ico" Name="ICON_A~7.ICO" LongName="icon_auto_slice_limits_color.ico" />
+                <File Id="icon_search_color.ico" Name="ICON_S~5.ICO" LongName="icon_search_color.ico" />
+                <File Id="icon_set_arguments_color.ico" Name="IC1A2C~2.ICO" LongName="icon_set_arguments_color.ico" />
+                <File Id="V109" Name="IC9D63~1.ICO" LongName="icon_numeric_format_very_small_color.ico" />
+                <File Id="icon_on_off_very_small_color.ico" Name="ICON_O~6.ICO" LongName="icon_on_off_very_small_color.ico" />
+                <File Id="icon_debug_run_continue_color.ico" Name="ICON_D~8.ICO" LongName="icon_debug_run_continue_color.ico" />
+                <File Id="V111" Name="ICON_D~9.ICO" LongName="icon_debug_run_continue_text_color.ico" />
+                <File Id="V113" Name="ICON_T~6.ICO" LongName="icon_toggle_signature_vsmall_color.ico" />
+                <File Id="icon_super_cluster_color.ico" Name="IC3CE0~2.ICO" LongName="icon_super_cluster_color.ico" />
+                <File Id="icon_bparrow_color.ico1" Name="ICB7EC~2.ICO" LongName="icon_bparrow_color.ico" />
+              </Component>
+            </Directory>
+            <Directory Id="cursor" Name="cursor">
+              <Component Id="cursor" Guid="92FC9A43-713E-4C3F-B345-6DA66513A309">
+                <File Id="Xfavorites_folder.ico" Name="XFAVOR~1.ICO" LongName="Xfavorites_folder.ico" KeyPath="yes" />
+                <File Id="inheritlnk.ico" Name="INHERI~1.ICO" LongName="inheritlnk.ico" />
+                <File Id="hourglass.png" Name="HOURGL~1.PNG" LongName="hourglass.png" />
+                <File Id="clientlnk.ico" Name="CLIENT~1.ICO" LongName="clientlnk.ico" />
+                <File Id="class.xpm" Name="class.xpm" />
+                <File Id="class.ico" Name="class.ico" />
+                <File Id="xstopexec.xpm" Name="XSTOPE~1.XPM" LongName="xstopexec.xpm" />
+                <File Id="copy_selection.png" Name="COPY_S~1.PNG" LongName="copy_selection.png" />
+                <File Id="xstopcur.bm" Name="xstopcur.bm" />
+                <File Id="favorites_folder.png13" Name="FAVORI~2.PNG" LongName="favorites_folder.png" />
+                <File Id="explcur.bm" Name="explcur.bm" />
+                <File Id="Xclass.ico" Name="Xclass.ico" />
+                <File Id="stopexec.png" Name="stopexec.png" />
+                <File Id="Xobject.ico" Name="Xobject.ico" />
+                <File Id="Xfavorites_folder.png17" Name="XFAVOR~2.PNG" LongName="Xfavorites_folder.png" />
+                <File Id="inheritlnk.png18" Name="INHERI~2.PNG" LongName="inheritlnk.png" />
+                <File Id="clientlnk.png19" Name="CLIENT~2.PNG" LongName="clientlnk.png" />
+                <File Id="featcur.bm" Name="featcur.bm" />
+                <File Id="class.png" Name="class.png" />
+                <File Id="Xstopexec.ico" Name="XSTOPE~1.ICO" LongName="Xstopexec.ico" />
+                <File Id="Xinheritlnk.ico" Name="XINHER~1.ICO" LongName="Xinheritlnk.ico" />
+                <File Id="interro.ico" Name="interro.ico" />
+                <File Id="cut_selection.ico" Name="CUT_SE~1.ICO" LongName="cut_selection.ico" />
+                <File Id="clsscur.bm" Name="clsscur.bm" />
+                <File Id="Xinterro.ico" Name="Xinterro.ico" />
+                <File Id="xexplcur.bm" Name="xexplcur.bm" />
+                <File Id="feature.xpm" Name="feature.xpm" />
+                <File Id="feature.ico" Name="feature.ico" />
+                <File Id="xobjcur.bm" Name="xobjcur.bm" />
+                <File Id="Xfeature.ico" Name="Xfeature.ico" />
+                <File Id="Xclientlnk.ico" Name="XCLIEN~1.ICO" LongName="Xclientlnk.ico" />
+                <File Id="Xclass.png28" Name="Xclass.png" />
+                <File Id="systcur.bm" Name="systcur.bm" />
+                <File Id="Xobject.png" Name="Xobject.png" />
+                <File Id="xfeature.xpm" Name="xfeature.xpm" />
+                <File Id="xfeatcur.bm" Name="xfeatcur.bm" />
+                <File Id="cluster.xpm" Name="cluster.xpm" />
+                <File Id="cluster.ico" Name="cluster.ico" />
+                <File Id="Xcluster.ico" Name="Xcluster.ico" />
+                <File Id="xclass.xpm" Name="xclass.xpm" />
+                <File Id="object.xpm32" Name="object.xpm" />
+                <File Id="object.ico" Name="object.ico" />
+                <File Id="Xstopexec.png34" Name="XSTOPE~2.PNG" LongName="Xstopexec.png" />
+                <File Id="Xinheritlnk.png" Name="XINHER~1.PNG" LongName="Xinheritlnk.png" />
+                <File Id="xclsscur.bm" Name="xclsscur.bm" />
+                <File Id="interro.png" Name="interro.png" />
+                <File Id="hourglass.ico" Name="HOURGL~1.ICO" LongName="hourglass.ico" />
+                <File Id="cut_selection.png" Name="CUT_SE~1.PNG" LongName="cut_selection.png" />
+                <File Id="xsystcur.bm" Name="xsystcur.bm" />
+                <File Id="Xinterro.png37" Name="Xinterro.png" />
+                <File Id="feature.png" Name="feature.png" />
+                <File Id="Xfeature.png40" Name="Xfeature.png" />
+                <File Id="Xclientlnk.png41" Name="XCLIEN~2.PNG" LongName="Xclientlnk.png" />
+                <File Id="copy_selection.ico" Name="COPY_S~1.ICO" LongName="copy_selection.ico" />
+                <File Id="favorites_folder.xpm44" Name="FAVORI~2.XPM" LongName="favorites_folder.xpm" />
+                <File Id="favorites_folder.ico" Name="FAVORI~1.ICO" LongName="favorites_folder.ico" />
+                <File Id="cluster.png45" Name="cluster.png" />
+                <File Id="xobject.xpm" Name="xobject.xpm" />
+                <File Id="Xcluster.png52" Name="Xcluster.png" />
+                <File Id="stopexec.xpm" Name="stopexec.xpm" />
+                <File Id="stopexec.ico" Name="stopexec.ico" />
+                <File Id="stopcur.bm" Name="stopcur.bm" />
+                <File Id="object.png53" Name="object.png" />
+                <File Id="objcur.bm" Name="objcur.bm" />
+              </Component>
+            </Directory>
+            <Directory Id="bmp" Name="bmp">
+              <Component Id="bmp" Guid="B790F65E-D3FC-45A0-A32E-107664B37C90">
+                <File Id="sindexin.bmp" Name="sindexin.bmp" KeyPath="yes" />
+                <File Id="shell.bmp" Name="shell.bmp" />
+                <File Id="sattribu.bmp" Name="sattribu.bmp" />
+                <File Id="sancesto.bmp" Name="sancesto.bmp" />
+                <File Id="routdown.bmp" Name="routdown.bmp" />
+                <File Id="explain.bmp" Name="explain.bmp" />
+                <File Id="dbg_dyneval.bmp" Name="DBG_DY~1.BMP" LongName="dbg_dyneval.bmp" />
+                <File Id="stext.bmp" Name="stext.bmp" />
+                <File Id="project.bmp" Name="project.bmp" />
+                <File Id="execlast.bmp" Name="execlast.bmp" />
+                <File Id="setstop.bmp" Name="setstop.bmp" />
+                <File Id="save.bmp" Name="save.bmp" />
+                <File Id="smodifie.bmp" Name="smodifie.bmp" />
+                <File Id="qupdate.bmp" Name="qupdate.bmp" />
+                <File Id="objicon.bmp" Name="objicon.bmp" />
+                <File Id="object.BMP" Name="object.BMP" />
+                <File Id="execinto.bmp" Name="execinto.bmp" />
+                <File Id="editobj.bmp" Name="editobj.bmp" />
+                <File Id="dis_bp.bmp" Name="dis_bp.bmp" />
+                <File Id="systdot.BMP" Name="systdot.BMP" />
+                <File Id="search.bmp" Name="search.bmp" />
+                <File Id="scluster.bmp" Name="scluster.bmp" />
+                <File Id="saversio.bmp" Name="saversio.bmp" />
+                <File Id="routdot.BMP" Name="routdot.BMP" />
+                <File Id="dbgstatu.BMP" Name="dbgstatu.BMP" />
+                <File Id="ssupplie.bmp" Name="ssupplie.bmp" />
+                <File Id="sdversio.bmp" Name="sdversio.bmp" />
+                <File Id="sdeferre.bmp" Name="sdeferre.bmp" />
+                <File Id="sclasses.bmp" Name="sclasses.bmp" />
+                <File Id="histback.bmp" Name="histback.bmp" />
+                <File Id="dynlibico.bmp" Name="DYNLIB~2.BMP" LongName="dynlibico.bmp" />
+                <File Id="dn_stack.bmp" Name="dn_stack.bmp" />
+                <File Id="rout_up.bmp" Name="rout_up.bmp" />
+                <File Id="explicon.bmp" Name="explicon.bmp" />
+                <File Id="execstop.bmp" Name="execstop.bmp" />
+                <File Id="execnost.bmp" Name="execnost.bmp" />
+                <File Id="obj_down.bmp" Name="obj_down.bmp" />
+                <File Id="objdot.BMP" Name="objdot.BMP" />
+                <File Id="graph.bmp" Name="graph.bmp" />
+                <File Id="up_stack.bmp" Name="up_stack.bmp" />
+                <File Id="obj_up.bmp" Name="obj_up.bmp" />
+                <File Id="dynlib.bmp" Name="dynlib.bmp" />
+                <File Id="classico.bmp" Name="classico.bmp" />
+                <File Id="sfshort.bmp" Name="sfshort.bmp" />
+                <File Id="routine.bmp" Name="routine.bmp" />
+                <File Id="profiler.bmp" Name="profiler.bmp" />
+                <File Id="class.bmp" Name="class.bmp" />
+                <File Id="sshort.bmp" Name="sshort.bmp" />
+                <File Id="sdescend.bmp" Name="sdescend.bmp" />
+                <File Id="sclients.bmp" Name="sclients.bmp" />
+                <File Id="sstatist.bmp" Name="sstatist.bmp" />
+                <File Id="sflat.bmp" Name="sflat.bmp" />
+                <File Id="sexterna.bmp" Name="sexterna.bmp" />
+                <File Id="dynlibdot.bmp" Name="DYNLIB~1.BMP" LongName="dynlibdot.bmp" />
+                <File Id="dbgquit.bmp" Name="dbgquit.bmp" />
+                <File Id="update.bmp" Name="update.bmp" />
+                <File Id="sonces.bmp" Name="sonces.bmp" />
+                <File Id="slice.bmp" Name="slice.bmp" />
+                <File Id="routicon.bmp" Name="routicon.bmp" />
+                <File Id="general.bmp" Name="general.bmp" />
+                <File Id="dbgstop.bmp" Name="dbgstop.bmp" />
+                <File Id="system.bmp" Name="system.bmp" />
+                <File Id="sroutine.bmp" Name="sroutine.bmp" />
+                <File Id="open.bmp" Name="open.bmp" />
+                <File Id="modified.bmp" Name="modified.bmp" />
+                <File Id="clckable.bmp" Name="clckable.bmp" />
+                <File Id="classdot.bmp" Name="classdot.bmp" />
+                <File Id="quit.bmp" Name="quit.bmp" />
+                <File Id="isepower.bmp" Name="isepower.bmp" />
+                <File Id="dbgrun.bmp" Name="dbgrun.bmp" />
+                <File Id="breakpt.bmp" Name="breakpt.bmp" />
+                <File Id="shomonym.bmp" Name="shomonym.bmp" />
+                <File Id="shistory.bmp" Name="shistory.bmp" />
+                <File Id="sexporte.bmp" Name="sexporte.bmp" />
+                <File Id="scluhier.BMP" Name="scluhier.BMP" />
+                <File Id="histfort.bmp" Name="histfort.bmp" />
+                <File Id="execstep.bmp" Name="execstep.bmp" />
+                <File Id="clr_bp.bmp" Name="clr_bp.bmp" />
+                <File Id="scallers.bmp1" Name="scallers.bmp" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="help" Name="help">
+            <Directory Id="errors" Name="errors">
+              <Component Id="errors" Guid="50FB8C41-7003-411B-8E28-947E877DA5B6">
+                <File Id="Vtat" Name="Vtat" KeyPath="yes" />
+                <File Id="Vqui" Name="Vqui" />
+                <File Id="Vkcn" Name="Vkcn" />
+                <File Id="Vdrs" Name="Vdrs" />
+                <File Id="Vupr" Name="Vupr" />
+                <File Id="Vuex" Name="Vuex" />
+                <File Id="Vtug" Name="Vtug" />
+                <File Id="Vgcs" Name="Vgcs" />
+                <File Id="Vwst" Name="Vwst" />
+                <File Id="Vtcg" Name="Vtcg" />
+                <File Id="Vqmc" Name="Vqmc" />
+                <File Id="Vmcn" Name="Vmcn" />
+                <File Id="Vgcc" Name="Vgcc" />
+                <File Id="Vdrd" Name="Vdrd" />
+                <File Id="Vape" Name="Vape" />
+                <File Id="Vncn" Name="Vncn" />
+                <File Id="Vlcp" Name="Vlcp" />
+                <File Id="Vcch" Name="Vcch" />
+                <File Id="Vzaa" Name="Vzaa" />
+                <File Id="Vxrt" Name="Vxrt" />
+                <File Id="Vxrc" Name="Vxrc" />
+                <File Id="Vwbe" Name="Vwbe" />
+                <File Id="Vdoc" Name="Vdoc" />
+                <File Id="Vlec" Name="Vlec" />
+                <File Id="Vjar" Name="Vjar" />
+                <File Id="Vhrc" Name="Vhrc" />
+                <File Id="Vhpr" Name="Vhpr" />
+                <File Id="Vwma" Name="Vwma" />
+                <File Id="Vrle" Name="Vrle" />
+                <File Id="Vwms" Name="Vwms" />
+                <File Id="Vdjr" Name="Vdjr" />
+                <File Id="Vwoe" Name="Vwoe" />
+                <File Id="Vscn" Name="Vscn" />
+                <File Id="Vrfa" Name="Vrfa" />
+                <File Id="Vncs" Name="Vncs" />
+                <File Id="Vncb" Name="Vncb" />
+                <File Id="Vmss" Name="Vmss" />
+                <File Id="Vgci" Name="Vgci" />
+                <File Id="Vncc" Name="Vncc" />
+                <File Id="Vjrv" Name="Vjrv" />
+                <File Id="Virw" Name="Virw" />
+                <File Id="Veen" Name="Veen" />
+                <File Id="Vmrc" Name="Vmrc" />
+                <File Id="Vjaw" Name="Vjaw" />
+                <File Id="Vhay" Name="Vhay" />
+                <File Id="Vdcn" Name="Vdcn" />
+                <File Id="Vaol" Name="Vaol" />
+                <File Id="Vnce" Name="Vnce" />
+                <File Id="Vcrn" Name="Vcrn" />
+                <File Id="Vsta" Name="Vsta" />
+                <File Id="Vncf69" Name="Vncf" />
+                <File Id="Vbgv70" Name="Vbgv" />
+                <File Id="Vwid72" Name="Vwid" />
+                <File Id="Vweq73" Name="Vweq" />
+                <File Id="Vtec" Name="Vtec" />
+                <File Id="Vrrr" Name="Vrrr" />
+                <File Id="Vncg74" Name="Vncg" />
+                <File Id="Vave75" Name="Vave" />
+                <File Id="Comp_int" Name="Comp_int" />
+                <File Id="Vugv81" Name="Vugv" />
+                <File Id="Vnch82" Name="Vnch" />
+                <File Id="Vlel" Name="Vlel" />
+                <File Id="Vdus" Name="Vdus" />
+                <File Id="Vbar83" Name="Vbar" />
+                <File Id="Re_int" Name="Re_int" />
+                <File Id="Vucs88" Name="Vucs" />
+                <File Id="Vtct89" Name="Vtct" />
+                <File Id="Vreg90" Name="Vreg" />
+                <File Id="Vgcp" Name="Vgcp" />
+                <File Id="Vduc91" Name="Vduc" />
+                <File Id="Vwca95" Name="Vwca" />
+                <File Id="Vuar" Name="Vuar" />
+                <File Id="Vtbt96" Name="Vtbt" />
+                <File Id="Vsrc" Name="Vsrc" />
+                <File Id="Vomb" Name="Vomb" />
+                <File Id="Vmfn97" Name="Vmfn" />
+                <File Id="Vffd" Name="Vffd" />
+                <File Id="No_license101" Name="NO_LIC~2" LongName="No_license" />
+                <File Id="Vncp" Name="Vncp" />
+                <File Id="Vcfg4" Name="Vcfg" />
+              </Component>
+              <Directory Id="short" Name="short">
+                <Component Id="short" Guid="F22C41E6-52CB-40F8-A6A5-FE7DCD426D3B">
+                  <File Id="Vtec2" Name="Vtec2" KeyPath="yes" />
+                  <File Id="Vsta1" Name="Vsta1" />
+                  <File Id="Vrrr2" Name="Vrrr2" />
+                  <File Id="Vomb5" Name="Vomb5" />
+                  <File Id="Vncf" Name="Vncf" />
+                  <File Id="Vlel3" Name="Vlel3" />
+                  <File Id="Vgcp4" Name="Vgcp4" />
+                  <File Id="Vgcc8" Name="Vgcc8" />
+                  <File Id="Vffd5" Name="Vffd5" />
+                  <File Id="Vdus3" Name="Vdus3" />
+                  <File Id="Vdrd8" Name="Vdrd8" />
+                  <File Id="Vd62" Name="Vd62" />
+                  <File Id="Vd51" Name="Vd51" />
+                  <File Id="Vd40" Name="Vd40" />
+                  <File Id="Vbgv" Name="Vbgv" />
+                  <File Id="Vwid" Name="Vwid" />
+                  <File Id="Vweq" Name="Vweq" />
+                  <File Id="Vsta2" Name="Vsta2" />
+                  <File Id="Vomb6" Name="Vomb6" />
+                  <File Id="Vncg" Name="Vncg" />
+                  <File Id="Vffd6" Name="Vffd6" />
+                  <File Id="Vdus4" Name="Vdus4" />
+                  <File Id="Vd63" Name="Vd63" />
+                  <File Id="Vd52" Name="Vd52" />
+                  <File Id="Vd41" Name="Vd41" />
+                  <File Id="Vd30" Name="Vd30" />
+                  <File Id="Vave" Name="Vave" />
+                  <File Id="Vugv" Name="Vugv" />
+                  <File Id="Vnch" Name="Vnch" />
+                  <File Id="Vmrc1" Name="Vmrc1" />
+                  <File Id="Vffd7" Name="Vffd7" />
+                  <File Id="Vd64" Name="Vd64" />
+                  <File Id="Vd53" Name="Vd53" />
+                  <File Id="Vd42" Name="Vd42" />
+                  <File Id="Vd31" Name="Vd31" />
+                  <File Id="Vd20" Name="Vd20" />
+                  <File Id="Vbar" Name="Vbar" />
+                  <File Id="Vaol1" Name="Vaol1" />
+                  <File Id="V9fm" Name="V9fm" />
+                  <File Id="Ext_same_sign" Name="EXT_SA~1" LongName="Ext_same_sign" />
+                  <File Id="Vucs" Name="Vucs" />
+                  <File Id="Vtct" Name="Vtct" />
+                  <File Id="Vreg" Name="Vreg" />
+                  <File Id="Vmrc2" Name="Vmrc2" />
+                  <File Id="Vjrv1" Name="Vjrv1" />
+                  <File Id="Vism" Name="Vism" />
+                  <File Id="Vduc" Name="Vduc" />
+                  <File Id="Vd65" Name="Vd65" />
+                  <File Id="Vd54" Name="Vd54" />
+                  <File Id="Vd43" Name="Vd43" />
+                  <File Id="Vd32" Name="Vd32" />
+                  <File Id="Vd21" Name="Vd21" />
+                  <File Id="Vd10" Name="Vd10" />
+                  <File Id="Vaol2" Name="Vaol2" />
+                  <File Id="Unused_local_warning" Name="UNUSED~1" LongName="Unused_local_warning" />
+                  <File Id="Obs_call" Name="Obs_call" />
+                  <File Id="Vwca" Name="Vwca" />
+                  <File Id="Vtbt" Name="Vtbt" />
+                  <File Id="Vncs1" Name="Vncs1" />
+                  <File Id="Vmss1" Name="Vmss1" />
+                  <File Id="Vmfn" Name="Vmfn" />
+                  <File Id="Vjrv2" Name="Vjrv2" />
+                  <File Id="Veen21" Name="Veen21" />
+                  <File Id="Veen2" Name="Veen2" />
+                  <File Id="Vd44" Name="Vd44" />
+                  <File Id="Vd33" Name="Vd33" />
+                  <File Id="V9xp" Name="V9xp" />
+                  <File Id="No_license" Name="NO_LIC~1" LongName="No_license" />
+                  <File Id="Melt_exp" Name="Melt_exp" />
+                  <File Id="Vwms1" Name="Vwms1" />
+                  <File Id="Vqui54" Name="Vqui" />
+                  <File Id="Vncs2" Name="Vncs2" />
+                  <File Id="Vmss2" Name="Vmss2" />
+                  <File Id="Veen22" Name="Veen22" />
+                  <File Id="Vd34" Name="Vd34" />
+                  <File Id="Vd23" Name="Vd23" />
+                  <File Id="Vd12" Name="Vd12" />
+                  <File Id="Vd01" Name="Vd01" />
+                  <File Id="V9xq" Name="V9xq" />
+                  <File Id="Ext_cpp" Name="Ext_cpp" />
+                  <File Id="Vwms2" Name="Vwms2" />
+                  <File Id="Vrle1" Name="Vrle1" />
+                  <File Id="Vmss3" Name="Vmss3" />
+                  <File Id="Vifc" Name="Vifc" />
+                  <File Id="Vgcs55" Name="Vgcs" />
+                  <File Id="Vd46" Name="Vd46" />
+                  <File Id="Vd35" Name="Vd35" />
+                  <File Id="Vd24" Name="Vd24" />
+                  <File Id="Vd13" Name="Vd13" />
+                  <File Id="Vd02" Name="Vd02" />
+                  <File Id="Vtcg56" Name="Vtcg" />
+                  <File Id="Vrle2" Name="Vrle2" />
+                  <File Id="Vqmc57" Name="Vqmc" />
+                  <File Id="Vhrc1" Name="Vhrc1" />
+                  <File Id="Vhpr1" Name="Vhpr1" />
+                  <File Id="Vd47" Name="Vd47" />
+                  <File Id="Vd36" Name="Vd36" />
+                  <File Id="Vd25" Name="Vd25" />
+                  <File Id="Vd14" Name="Vd14" />
+                  <File Id="Vd03" Name="Vd03" />
+                  <File Id="Vape58" Name="Vape" />
+                  <File Id="V9dp" Name="V9dp" />
+                  <File Id="Not_supported" Name="NOT_SU~1" LongName="Not_supported" />
+                  <File Id="Vncn59" Name="Vncn" />
+                  <File Id="Vlcp60" Name="Vlcp" />
+                  <File Id="Vhrc2" Name="Vhrc2" />
+                  <File Id="Vhpr2" Name="Vhpr2" />
+                  <File Id="Vd26" Name="Vd26" />
+                  <File Id="Vd15" Name="Vd15" />
+                  <File Id="Vd04" Name="Vd04" />
+                  <File Id="V9xc" Name="V9xc" />
+                  <File Id="V9gc" Name="V9gc" />
+                  <File Id="V9cp" Name="V9cp" />
+                  <File Id="Obsolete_call" Name="OBSOLE~1" LongName="Obsolete_call" />
+                  <File Id="Vzaa61" Name="Vzaa" />
+                  <File Id="Vxrt62" Name="Vxrt" />
+                  <File Id="Vxrc63" Name="Vxrc" />
+                  <File Id="Vwbe64" Name="Vwbe" />
+                  <File Id="Vhrc3" Name="Vhrc3" />
+                  <File Id="Vhpr3" Name="Vhpr3" />
+                  <File Id="Vdoc65" Name="Vdoc" />
+                  <File Id="Vd38" Name="Vd38" />
+                  <File Id="Vd27" Name="Vd27" />
+                  <File Id="Vd16" Name="Vd16" />
+                  <File Id="Vd05" Name="Vd05" />
+                  <File Id="Vcch1" Name="Vcch1" />
+                  <File Id="V9xd" Name="V9xd" />
+                  <File Id="Vwst1" Name="Vwst1" />
+                  <File Id="Vmcn1" Name="Vmcn1" />
+                  <File Id="Vlec66" Name="Vlec" />
+                  <File Id="Vjar67" Name="Vjar" />
+                  <File Id="Vhrc4" Name="Vhrc4" />
+                  <File Id="Vgcc1" Name="Vgcc1" />
+                  <File Id="Vdrd1" Name="Vdrd1" />
+                  <File Id="Vd39" Name="Vd39" />
+                  <File Id="Vd28" Name="Vd28" />
+                  <File Id="Vd17" Name="Vd17" />
+                  <File Id="Vcch2" Name="Vcch2" />
+                  <File Id="V9ds" Name="V9ds" />
+                  <File Id="Ext_dll_alias" Name="EXT_DL~1" LongName="Ext_dll_alias" />
+                  <File Id="Vwst2" Name="Vwst2" />
+                  <File Id="Vwma68" Name="Vwma" />
+                  <File Id="Vupr1" Name="Vupr1" />
+                  <File Id="Vuex1" Name="Vuex1" />
+                  <File Id="Vtug1" Name="Vtug1" />
+                  <File Id="Vmcn2" Name="Vmcn2" />
+                  <File Id="Vhrc5" Name="Vhrc5" />
+                  <File Id="Vgcc2" Name="Vgcc2" />
+                  <File Id="Vdrd2" Name="Vdrd2" />
+                  <File Id="Vd29" Name="Vd29" />
+                  <File Id="Vd18" Name="Vd18" />
+                  <File Id="Vd07" Name="Vd07" />
+                  <File Id="Obs_class" Name="OBS_CL~1" LongName="Obs_class" />
+                  <File Id="Ext_struct" Name="EXT_ST~1" LongName="Ext_struct" />
+                  <File Id="Vupr2" Name="Vupr2" />
+                  <File Id="Vuex2" Name="Vuex2" />
+                  <File Id="Vtug2" Name="Vtug2" />
+                  <File Id="Vtat1" Name="Vtat1" />
+                  <File Id="Vmcn3" Name="Vmcn3" />
+                  <File Id="Vkcn1" Name="Vkcn1" />
+                  <File Id="Vgcc3" Name="Vgcc3" />
+                  <File Id="Vdrs1" Name="Vdrs1" />
+                  <File Id="Vdrd3" Name="Vdrd3" />
+                  <File Id="Vdjr71" Name="Vdjr" />
+                  <File Id="Vd19" Name="Vd19" />
+                  <File Id="Vd08" Name="Vd08" />
+                  <File Id="Melt_only" Name="MELT_O~1" LongName="Melt_only" />
+                  <File Id="Vwoe76" Name="Vwoe" />
+                  <File Id="Vupr3" Name="Vupr3" />
+                  <File Id="Vuar1" Name="Vuar1" />
+                  <File Id="Vtat2" Name="Vtat2" />
+                  <File Id="Vsrc1" Name="Vsrc1" />
+                  <File Id="Vscn77" Name="Vscn" />
+                  <File Id="Vrfa78" Name="Vrfa" />
+                  <File Id="Vomb1" Name="Vomb1" />
+                  <File Id="Vncb79" Name="Vncb" />
+                  <File Id="Vkcn2" Name="Vkcn2" />
+                  <File Id="Vgci80" Name="Vgci" />
+                  <File Id="Vgcc4" Name="Vgcc4" />
+                  <File Id="Vffd1" Name="Vffd1" />
+                  <File Id="Vdrs2" Name="Vdrs2" />
+                  <File Id="Vdrd4" Name="Vdrd4" />
+                  <File Id="Vd09" Name="Vd09" />
+                  <File Id="Vcfg1" Name="Vcfg1" />
+                  <File Id="V9sc" Name="V9sc" />
+                  <File Id="V9cd" Name="V9cd" />
+                  <File Id="Vupr4" Name="Vupr4" />
+                  <File Id="Vuar2" Name="Vuar2" />
+                  <File Id="Vsrc2" Name="Vsrc2" />
+                  <File Id="Vomb2" Name="Vomb2" />
+                  <File Id="Vncc84" Name="Vncc" />
+                  <File Id="Vkcn3" Name="Vkcn3" />
+                  <File Id="Virw85" Name="Virw" />
+                  <File Id="Vgcp1" Name="Vgcp1" />
+                  <File Id="Vgcc5" Name="Vgcc5" />
+                  <File Id="Vffd2" Name="Vffd2" />
+                  <File Id="Veen86" Name="Veen" />
+                  <File Id="Vdrs3" Name="Vdrs3" />
+                  <File Id="Vdrd5" Name="Vdrd5" />
+                  <File Id="Vcfg2" Name="Vcfg2" />
+                  <File Id="Ext_dll_sign" Name="EXT_DL~2" LongName="Ext_dll_sign" />
+                  <File Id="Comp_int87" Name="Comp_int" />
+                  <File Id="Vupr5" Name="Vupr5" />
+                  <File Id="Vuar3" Name="Vuar3" />
+                  <File Id="Vsrc3" Name="Vsrc3" />
+                  <File Id="Vomb3" Name="Vomb3" />
+                  <File Id="Vlel1" Name="Vlel1" />
+                  <File Id="Vjaw92" Name="Vjaw" />
+                  <File Id="Vhay93" Name="Vhay" />
+                  <File Id="Vgcp2" Name="Vgcp2" />
+                  <File Id="Vgcc6" Name="Vgcc6" />
+                  <File Id="Vffd3" Name="Vffd3" />
+                  <File Id="Vdus1" Name="Vdus1" />
+                  <File Id="Vdrs4" Name="Vdrs4" />
+                  <File Id="Vdrd6" Name="Vdrd6" />
+                  <File Id="Vdcn94" Name="Vdcn" />
+                  <File Id="Vd60" Name="Vd60" />
+                  <File Id="Vcfg3" Name="Vcfg3" />
+                  <File Id="V9rd" Name="V9rd" />
+                  <File Id="Vuar4" Name="Vuar4" />
+                  <File Id="Vtec1" Name="Vtec1" />
+                  <File Id="Vrrr1" Name="Vrrr1" />
+                  <File Id="Vomb4" Name="Vomb4" />
+                  <File Id="Vnce98" Name="Vnce" />
+                  <File Id="Vlel2" Name="Vlel2" />
+                  <File Id="Vgcp3" Name="Vgcp3" />
+                  <File Id="Vgcc7" Name="Vgcc7" />
+                  <File Id="Vffd4" Name="Vffd4" />
+                  <File Id="Vdus2" Name="Vdus2" />
+                  <File Id="Vd61" Name="Vd61" />
+                  <File Id="Vcrn99" Name="Vcrn" />
+                  <File Id="V9cx" Name="V9cx" />
+                  <File Id="Re_int100" Name="Re_int" />
+                  <File Id="Obsolete" Name="Obsolete" />
+                  <File Id="Vifi1" Name="Vifi1" />
+                  <File Id="Vifi2" Name="Vifi2" />
+                  <File Id="Viic" Name="Viic" />
+                  <File Id="Vica" Name="Vica" />
+                  <File Id="Library_error" Name="LIBRAR~1" LongName="Library_error" />
+                  <File Id="Vd66" Name="Vd66" />
+                  <File Id="Viik" Name="Viik" />
+                  <File Id="Viac" Name="Viac" />
+                  <File Id="Viof" Name="Viof" />
+                  <File Id="Virc" Name="Virc" />
+                  <File Id="Vncp1" Name="Vncp" />
+                  <File Id="Tuple_warning" Name="TUPLE_~1" LongName="Tuple_warning" />
+                  <File Id="Viop" Name="Viop" />
+                  <File Id="Vicf" Name="Vicf" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="defaults" Name="defaults">
+              <Directory Id="windows9" Name="windows">
+                <Component Id="windows9" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
+                  <File Id="full.cls" Name="full.cls" KeyPath="yes" />
+                  <File Id="default.cls" Name="default.cls" />
+                  <File Id="default.ace" Name="default.ace" />
+                  <File Id="empty.cls" Name="empty.cls" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="spec6" Name="spec">
+            <Directory Id="windows7" Name="windows">
+              <Directory Id="bin8" Name="bin">
+                <Component Id="estudio.exe" Guid="80B6C77B-41F5-4346-B02F-E00153176E46">
+					<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes" />
+					<ProgId Id="estudio.project" Description="EiffelStudio project">
+						<Extension Id="epr">
+							<Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot;" />
+						</Extension>
+					</ProgId>
+                  <Shortcut Id="estudio.exe" Directory="EiffelStudio_55" Name="EIFFEL~1.2" LongName="EiffelStudio 5.5" Target="[#estudio.exe]" Description="EiffelStudio development environment" Hotkey="0"  Show="normal" />
+				  <Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.5" Target="[#estudio.exe]" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
+                </Component>
+                <Component Id="FINISH1.EXE" Guid="371AC489-A5B5-4CD9-AC82-59F6C2EB2EEC">
+                  <File Id="finish_freezing.exe" Name="FINISH~1.EXE" LongName="finish_freezing.exe" KeyPath="yes" />
+                </Component>
+                <Component Id="h2e.exe" Guid="70827559-3A13-4F64-9E8E-6A9462E31FDC">
+                  <File Id="h2e.exe" Name="h2e.exe" KeyPath="yes" />
+                  <Shortcut Id="h2e.exe" Directory="Tools9" Name="h2e.exe" Target="[#h2e.exe]" Description="A tool to extract constant definitions into Eiffel classes" Hotkey="0" Show="normal" />
+                </Component>
+                <Component Id="legacy.exe" Guid="B3A1D6E5-0085-42BB-817F-BF1B315BE839">
+                  <File Id="legacy.exe" Name="legacy.exe" KeyPath="yes" />
+                </Component>
+                <Component Id="QUICK_1.EXE" Guid="E690988F-69A1-4862-9191-7C8785AC0487">
+                  <File Id="quick_finalize.exe" Name="QUICK_~1.EXE" LongName="quick_finalize.exe" KeyPath="yes" />
+                </Component>
+                <Component Id="x2c.exe" Guid="2788DC58-2331-4ADA-8650-494E49D4B01B">
+                  <File Id="x2c.exe" Name="x2c.exe" KeyPath="yes" />
+                </Component>
+                <Component Id="xmlparse.dll" Guid="2FD27F9C-F88E-4DED-ADAB-B4467657BFAA">
+                  <File Id="xmlparse.dll" Name="xmlparse.dll" KeyPath="yes" />
+                </Component>
+                <Component Id="xmltok.dll" Guid="AECCFCBF-4C80-4854-963B-4DBB7DD65BBE">
+                  <File Id="xmltok.dll" Name="xmltok.dll" KeyPath="yes" />
+                </Component>
+                <Component Id="wel_hook.dll" Guid="44C8CF4C-2C14-4B0E-9586-EDBC54065160">
+                  <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="include" Name="include">
+                <Component Id="include" Guid="6FA0BB8D-652F-4347-8790-A90EBC18FA34">
+                  <File Id="eif_wbench.h" Name="EIF_WB~1.H" LongName="eif_wbench.h" KeyPath="yes" />
+                  <File Id="egc_dynlib.h" Name="EGC_DY~1.H" LongName="egc_dynlib.h" />
+                  <File Id="egc_include.h" Name="EGC_IN~1.H" LongName="egc_include.h" />
+                  <File Id="eif_argv.h" Name="eif_argv.h" />
+                  <File Id="eif_bits.h" Name="eif_bits.h" />
+                  <File Id="eif_boolstr.h" Name="EIF_BO~1.H" LongName="eif_boolstr.h" />
+                  <File Id="eif_cecil.h" Name="EIF_CE~1.H" LongName="eif_cecil.h" />
+                  <File Id="eif_cond_var.h" Name="EIF_CO~2.H" LongName="eif_cond_var.h" />
+                  <File Id="eif_config.h" Name="EIF_CO~3.H" LongName="eif_config.h" />
+                  <File Id="eif_confmagic.h" Name="EI38F4~1.H" LongName="eif_confmagic.h" />
+                  <File Id="eif_console.h" Name="EIF_CO~4.H" LongName="eif_console.h" />
+                  <File Id="eif_constants.h" Name="EI72AC~1.H" LongName="eif_constants.h" />
+                  <File Id="eif_copy.h" Name="eif_copy.h" />
+                  <File Id="eif_debug.h" Name="EIF_DE~1.H" LongName="eif_debug.h" />
+                  <File Id="eif_dir.h" Name="eif_dir.h" />
+                  <File Id="eif_eiffel.h" Name="EIF_EI~1.H" LongName="eif_eiffel.h" />
+                  <File Id="eif_equal.h" Name="EIF_EQ~1.H" LongName="eif_equal.h" />
+                  <File Id="eif_err_msg.h" Name="EIF_ER~2.H" LongName="eif_err_msg.h" />
+                  <File Id="eif_error.h" Name="EIF_ER~1.H" LongName="eif_error.h" />
+                  <File Id="eif_except.h" Name="EIF_EX~1.H" LongName="eif_except.h" />
+                  <File Id="eif_file.h" Name="eif_file.h" />
+                  <File Id="eif_garcol.h" Name="EIF_GA~1.H" LongName="eif_garcol.h" />
+                  <File Id="eif_gen_conf.h" Name="EIF_GE~1.H" LongName="eif_gen_conf.h" />
+                  <File Id="eif_globals.h" Name="EIF_GL~1.H" LongName="eif_globals.h" />
+                  <File Id="eif_hector.h" Name="EIF_HE~1.H" LongName="eif_hector.h" />
+                  <File Id="eif_helpers.h" Name="EIF_HE~2.H" LongName="eif_helpers.h" />
+                  <File Id="eif_internal.h" Name="EIF_IN~1.H" LongName="eif_internal.h" />
+                  <File Id="eif_interp.h" Name="EIF_IN~2.H" LongName="eif_interp.h" />
+                  <File Id="eif_lmalloc.h" Name="EIF_LM~1.H" LongName="eif_lmalloc.h" />
+                  <File Id="eif_local.h" Name="EIF_LO~1.H" LongName="eif_local.h" />
+                  <File Id="eif_macros.h" Name="EIF_MA~1.H" LongName="eif_macros.h" />
+                  <File Id="eif_main.h" Name="eif_main.h" />
+                  <File Id="eif_malloc.h" Name="EIF_MA~2.H" LongName="eif_malloc.h" />
+                  <File Id="eif_memory.h" Name="EIF_ME~1.H" LongName="eif_memory.h" />
+                  <File Id="eif_misc.h" Name="eif_misc.h" />
+                  <File Id="eif_object_id.h" Name="EIF_OB~1.H" LongName="eif_object_id.h" />
+                  <File Id="eif_option.h" Name="EIF_OP~1.H" LongName="eif_option.h" />
+                  <File Id="eif_out.h" Name="eif_out.h" />
+                  <File Id="eif_path_name.h" Name="EIF_PA~1.H" LongName="eif_path_name.h" />
+                  <File Id="eif_plug.h" Name="eif_plug.h" />
+                  <File Id="eif_portable.h" Name="EIF_PO~1.H" LongName="eif_portable.h" />
+                  <File Id="eif_project.h" Name="EIF_PR~1.H" LongName="eif_project.h" />
+                  <File Id="eif_retrieve.h" Name="EIF_RE~1.H" LongName="eif_retrieve.h" />
+                  <File Id="eif_rout_obj.h" Name="EIF_RO~1.H" LongName="eif_rout_obj.h" />
+                  <File Id="eif_setup.h" Name="EIF_SE~2.H" LongName="eif_setup.h" />
+                  <File Id="eif_sig.h" Name="eif_sig.h" />
+                  <File Id="eif_size.h" Name="eif_size.h" />
+                  <File Id="eif_store.h" Name="EIF_ST~1.H" LongName="eif_store.h" />
+                  <File Id="eif_str.h" Name="eif_str.h" />
+                  <File Id="eif_struct.h" Name="EIF_ST~2.H" LongName="eif_struct.h" />
+                  <File Id="eif_threads.h" Name="EIF_TH~1.H" LongName="eif_threads.h" />
+                  <File Id="eif_tools.h" Name="EIF_TO~1.H" LongName="eif_tools.h" />
+                  <File Id="eif_traverse.h" Name="EIF_TR~1.H" LongName="eif_traverse.h" />
+                  <File Id="eif_types.h" Name="EIF_TY~1.H" LongName="eif_types.h" />
+                  <File Id="eif_umain.h" Name="EIF_UM~1.H" LongName="eif_umain.h" />
+                  <File Id="eif_vmsdirent.h" Name="EIF_VM~1.H" LongName="eif_vmsdirent.h" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="rb" Name="rb">
+          <Directory Id="example" Name="example">
+            <Component Id="example" Guid="50D1E756-F18C-4692-B9A2-283E5A01090B">
+              <File Id="icon_2.ico" Name="icon_2.ico" KeyPath="yes" />
+              <File Id="cursor_1.cur" Name="cursor_1.cur" />
+              <File Id="cursor_2.cur" Name="cursor_2.cur" />
+              <File Id="Example.h" Name="Example.h" />
+              <File Id="toolbar.bmp" Name="toolbar.bmp" />
+              <File Id="example.rc" Name="example.rc" />
+              <File Id="bitmap_1.bmp" Name="bitmap_1.bmp" />
+              <File Id="icon_1.ico" Name="icon_1.ico" />
+              <File Id="bitmap_2.bmp" Name="bitmap_2.bmp" />
+            </Component>
+          </Directory>
+          <Directory Id="bin10" Name="bin">
+            <Component Id="rb.exe" Guid="1CC472C3-5426-40D4-A917-3E86C494B904">
+              <File Id="rb.exe" Name="rb.exe" KeyPath="yes" />
+              <Shortcut Id="rb.exe" Directory="Tools9" Name="RESOUR~1" LongName="ResourceBench" Target="[#rb.exe]" Description="A tool to convert .rc files into WEL classes" Hotkey="0" Show="normal" />
+              <Shortcut Id="ResourceBench_Documentation" Directory="Documentation8" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="precomp" Name="precomp">
+          <Directory Id="spec22" Name="spec">
+            <Directory Id="windows23" Name="windows">
+              <Directory Id="vision224" Name="vision2">
+                <Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
+                  <File Id="ace.ace140" Name="ace.ace" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="basemt" Name="base-mt">
+                <Component Id="basemt" Guid="DD937DAD-9136-4553-8E64-CCDFE8519EE0">
+                  <File Id="Ace.ace" Name="Ace.ace" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="welmt" Name="wel-mt">
+                <Component Id="welmt" Guid="6DF2EC23-1E26-465B-8397-DE4A1FD118FB">
+                  <File Id="ace.ace141" Name="ace.ace" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="wel25" Name="wel">
+                <Component Id="wel25" Guid="B1F73FE5-ED9C-4B4A-A121-5B9E6A683841">
+                  <File Id="ace.ace142" Name="ace.ace" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="base" Name="base">
+                <Component Id="base" Guid="3E24F992-00C3-4EAD-A6D9-7290FE36B408">
+                  <File Id="Ace.ace143" Name="Ace.ace" KeyPath="yes" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="dotnet1" Name="dotnet">
+              <Directory Id="vision23" Name="vision2">
+                <Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
+                  <File Id="ace_v1.0.ace" Name="ACE_V1~1.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
+                  <File Id="ace_v1.1.ace" Name="ACE_V1~2.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="wel2" Name="wel">
+                <Component Id="wel2" Guid="7B4957D5-F93E-4CB4-BF19-8F185BB0FF5E">
+                  <File Id="ace_v1.0.ace1" Name="ACE_V1~3.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
+                  <File Id="ace_v1.1.ace3" Name="ACE_V1~5.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="base4" Name="base">
+                <Component Id="base4" Guid="23CFD01E-AE9F-40DE-96E5-2005039047B6">
+                  <File Id="ace_v1.0.ace2" Name="ACE_V1~4.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
+                  <File Id="ace_v1.1.ace4" Name="ACE_V1~6.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="docs" Name="docs">
+          <Component Id="eiffel.chm" Guid="157B7187-2D9F-4A55-B421-7C28926B657B">
+            <File Id="eiffel.chm" Name="eiffel.chm" KeyPath="yes" />
+            <Shortcut Id="eiffel.chm1" Directory="Documentation8" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Target="[#eiffel.chm]" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
+          </Component>
+          <Directory Id="Pdf" Name="Pdf" />
+        </Directory>
+      </Directory>
+    </Directory>
+    <UI />
+    <Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
+  </Module>
+</Wix>

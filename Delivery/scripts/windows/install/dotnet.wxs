@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="dotnet" Guid="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Language="0" Version="5.5">
+    <Package Id="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Keywords="MergeModule, MSI, Database" Description="Eiffel for .NET Support" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="registry" Guid="1E275E79-401F-4B47-A0DE-E1B839C1D8F0">
+        <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel55\emitter" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+        <Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll2]" Id="registry2" />
+        <Registry Root="HKCR" Key="CLSID\{E1FFE16A-FB59-4F0C-9D85-ADDD9366E359}\InprocServer32" Name="CodeBase" Value="[#emitter.exe]" Id="registry11.26D33D6D_3A8D_4EEE_A3CD_664C59885A41" />
+        <Registry Root="HKCR" Key="CLSID\{E1FFE16A-FB59-4F0C-9D85-ADDD9366E359}\InprocServer32\5.5.316.0" Name="CodeBase" Value="[#emitter.exe]" Id="registry15.26D33D6D_3A8D_4EEE_A3CD_664C59885A41" />
+      </Component>
+	  <Directory Id="Application" Name=".">
+        <Directory Id="dotnet" Name="dotnet">
+          <Component Id="CreateFolder" Guid="0EC46414-25FA-4814-A018-00F63912F9B9" KeyPath="yes">
+            <CreateFolder />
+            <CreateFolder Directory="assemblies" />
+            <CreateFolder Directory="v1.0.3705" />
+            <CreateFolder Directory="v1.1.4322" />
+          </Component>
+          <Directory Id="assemblies" Name="ASSEMB~1" LongName="assemblies">
+            <Directory Id="v1.0.3705" Name="v103705" LongName="v1.0.3705" />
+            <Directory Id="v1.1.4322" Name="v114322" LongName="v1.1.4322" />
+          </Directory>
+        </Directory>
+        <Directory Id="studio" Name="studio">
+          <Directory Id="spec" Name="spec">
+            <Directory Id="windows" Name="windows">
+              <Directory Id="bin" Name="bin">
+                <Component Id="EiffelSoftware.Runtime.dll" Guid="747074F4-6EFD-48E9-88AC-E0AC1264C461">
+					<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" Assembly=".net" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll">
+					</File>
+				</Component>
+				<Component Id="EiffelSoftware.Runtime.dll2" Guid="12B3E0B2-0646-4dd5-9DC5-D7EAE23A4A7E">
+					<File Id="EiffelSoftware.Runtime.dll2" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll"/>
+				</Component>
+				<Component Id="emitter.exe" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
+					<File Id="emitter.exe" Name="emitter.exe" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="emitter.exe" src="$(env.INSTALL_DIR)\dotnet_binaries\emitter.exe">
+					</File>
+				</Component>
+				<Component Id="ISE.VS.FusionSupport.dll" Guid="74612B43-50C6-4769-828C-AC55E479CB92">
+					<File Id="ISE.VS.FusionSupport.dll" Name="ISEVSF~1.DLL" LongName="ISE.VS.FusionSupport.dll" Checksum="yes" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes"  AssemblyApplication="ISE.VS.FusionSupport.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\ISE.VS.FusionSupport.dll"/>
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="library.net" Name="LIBRAR~1" LongName="library.net">
+          <Directory Id="wel" Name="wel">
+            <Component Id="wel_enum_window_delegate.e" Guid="A931A94F-9B5D-4353-9414-7E80ADD49233">
+              <File Id="wel_enum_window_delegate.e" Name="WEL_EN~2.E" LongName="wel_enum_window_delegate.e" KeyPath="yes" />
+              <File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
+              <File Id="wel_font_family_enumerator.e" Name="WEL_FO~1.E" LongName="wel_font_family_enumerator.e" />
+              <File Id="wel_identified.e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
+              <File Id="wel_dispatcher_delegate.e" Name="WEL_DI~2.E" LongName="wel_dispatcher_delegate.e" />
+              <File Id="wel_window_enumerator.e" Name="WEL_WI~1.E" LongName="wel_window_enumerator.e" />
+              <File Id="wel_enum_font_delegate.e" Name="WEL_EN~1.E" LongName="wel_enum_font_delegate.e" />
+              <File Id="wel_dispatcher.e" Name="WEL_DI~1.E" LongName="wel_dispatcher.e" />
+              <File Id="wel_winform_container.e" Name="WEL_WI~2.E" LongName="wel_winform_container.e" />
+              <File Id="wel_main_arguments.e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" />
+            </Component>
+          </Directory>
+          <Directory Id="vision25" Name="vision2">
+            <Component Id="ev_pixmap_imp.e" Guid="37E31268-8F1C-4CBC-9A8B-6B3615D6F099">
+              <File Id="ev_pixmap_imp_delegate.e" Name="EV_PIX~2.E" LongName="ev_pixmap_imp_delegate.e" KeyPath="yes" />
+              <File Id="ev_pixmap_imp_loader.e" Name="EV_PIX~3.E" LongName="ev_pixmap_imp_loader.e" />
+            </Component>
+          </Directory>
+          <Directory Id="thread" Name="thread">
+            <Directory Id="dotnet2" Name="dotnet">
+              <Component Id="read_write_lock.e" Guid="B7B3C805-366D-41B6-8F8D-C31F502E094A">
+                <File Id="read_write_lock.e" Name="READ_W~1.E" LongName="read_write_lock.e" KeyPath="yes" />
+                <File Id="thread_control.e" Name="THREAD~2.E" LongName="thread_control.e" />
+                <File Id="thread_attributes.e" Name="THREAD~1.E" LongName="thread_attributes.e" />
+                <File Id="condition_variable.e" Name="CONDIT~1.E" LongName="condition_variable.e" />
+                <File Id="mutex.e" Name="mutex.e" />
+                <File Id="thread.e" Name="thread.e" />
+                <File Id="semaphore.e" Name="SEMAPH~1.E" LongName="semaphore.e" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="base" Name="base">
+            <Directory Id="support" Name="support">
+              <Directory Id="dotnet3" Name="dotnet">
+                <Component Id="operating_environment.e" Guid="1DFDDD79-210D-4DFB-9837-3328F1C2279E">
+                  <File Id="operating_environment.e" Name="OPERAT~1.E" LongName="operating_environment.e" KeyPath="yes" />
+                  <File Id="execution_environment.e" Name="EXECUT~1.E" LongName="execution_environment.e" />
+                  <File Id="class_name_translations.e" Name="CLASS_~1.E" LongName="class_name_translations.e" />
+                  <File Id="mismatch_information.e" Name="MISMAT~1.E" LongName="mismatch_information.e" />
+                  <File Id="managed_pointer.e" Name="MANAGE~1.E" LongName="managed_pointer.e" />
+                  <File Id="double_math.e" Name="DOUBLE~1.E" LongName="double_math.e" />
+                  <File Id="single_math.e" Name="SINGLE~1.E" LongName="single_math.e" />
+                  <File Id="profiling_setting.e" Name="PROFIL~1.E" LongName="profiling_setting.e" />
+                  <File Id="bool_string.e" Name="BOOL_S~1.E" LongName="bool_string.e" />
+                  <File Id="identified_controller.e" Name="IDENTI~2.E" LongName="identified_controller.e" />
+                  <File Id="internal.e" Name="internal.e" />
+                  <File Id="identified.e" Name="IDENTI~1.E" LongName="identified.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="kernel" Name="kernel">
+              <Directory Id="dotnet4" Name="dotnet">
+                <Component Id="raw_file.e" Guid="23DA1C36-A57B-4A5D-9B1A-CA6B2D4AF39A">
+                  <File Id="raw_file.e" Name="raw_file.e" KeyPath="yes" />
+                  <File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />
+                  <File Id="typed_pointer.e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
+                  <File Id="routine.e" Name="routine.e" />
+                  <File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
+                  <File Id="ise_runtime.e" Name="ISE_RU~1.E" LongName="ise_runtime.e" />
+                  <File Id="integer_8.e" Name="INTEGE~3.E" LongName="integer_8.e" />
+                  <File Id="gc_info.e" Name="gc_info.e" />
+                  <File Id="directory.e" Name="DIRECT~2.E" LongName="directory.e" />
+                  <File Id="mem_info.e" Name="mem_info.e" />
+                  <File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
+                  <File Id="storable.e" Name="storable.e" />
+                  <File Id="native_array.e" Name="NATIVE~1.E" LongName="native_array.e" />
+                  <File Id="integer_64.e" Name="INTEGE~2.E" LongName="integer_64.e" />
+                  <File Id="array.e" Name="array.e" />
+                  <File Id="real_ref.e" Name="real_ref.e" />
+                  <File Id="pointer.e" Name="pointer.e" />
+                  <File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
+                  <File Id="console.e" Name="console.e" />
+                  <File Id="unix_signals.e" Name="UNIX_S~1.E" LongName="unix_signals.e" />
+                  <File Id="plain_text_file.e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
+                  <File Id="arguments.e" Name="ARGUME~1.E" LongName="arguments.e" />
+                  <File Id="file.e" Name="file.e" />
+                  <File Id="bit_ref.e" Name="bit_ref.e" />
+                  <File Id="integer.e" Name="integer.e" />
+                  <File Id="exceptions.e" Name="EXCEPT~2.E" LongName="exceptions.e" />
+                  <File Id="boolean.e" Name="boolean.e" />
+                  <File Id="real.e" Name="real.e" />
+                  <File Id="platform.e" Name="platform.e" />
+                  <File Id="memory.e" Name="memory.e" />
+                  <File Id="integer_16.e" Name="INTEGE~1.E" LongName="integer_16.e" />
+                  <File Id="double_ref.e" Name="DOUBLE~2.E" LongName="double_ref.e" />
+                  <File Id="directory_name.e" Name="DIRECT~3.E" LongName="directory_name.e" />
+                  <File Id="pointer_ref.e" Name="POINTE~1.E" LongName="pointer_ref.e" />
+                  <File Id="cli_cell.e" Name="cli_cell.e" />
+                  <File Id="special.e" Name="special.e" />
+                  <File Id="character_ref.e" Name="CHARAC~2.E" LongName="character_ref.e" />
+                  <File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
+                  <File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
+                  <File Id="stream.e" Name="stream.e" />
+                  <File Id="double.e" Name="double.e" />
+                  <File Id="function.e" Name="function.e" />
+                  <File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
+                  <File Id="tuple.e" Name="tuple.e" />
+                  <File Id="boolean_ref.e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
+                  <File Id="any.e" Name="any.e" />
+                  <File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
+                  <File Id="string.e1" Name="string.e" />
+                  <File Id="eiffel_exception.e1" Name="EIFFEL~1.E" LongName="eiffel_exception.e" />
+                  <File Id="dotnet_pointer.e" Name="DO5684~1.E" LongName="dotnet_pointer.e" />
+                  <File Id="dotnet_integer_16.e" Name="DOAC1F~1.E" LongName="dotnet_integer_16.e" />
+                  <File Id="dotnet_character.e" Name="DOTNET~2.E" LongName="dotnet_character.e" />
+                  <File Id="dotnet_integer.e" Name="DOTNET~4.E" LongName="dotnet_integer.e" />
+                  <File Id="dotnet_double.e" Name="DOTNET~3.E" LongName="dotnet_double.e" />
+                  <File Id="dotnet_integer_8.e" Name="DO0D19~1.E" LongName="dotnet_integer_8.e" />
+                  <File Id="dotnet_boolean.e" Name="DOTNET~1.E" LongName="dotnet_boolean.e" />
+                  <File Id="dotnet_real.e" Name="DO9EFE~1.E" LongName="dotnet_real.e" />
+                  <File Id="dotnet_integer_64.e" Name="DOCC0B~1.E" LongName="dotnet_integer_64.e" />
+                </Component>
+              </Directory>
+              <Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions" />
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="examples" Name="examples">
+          <Directory Id="dotnet1" Name="dotnet">
+            <Directory Id="vision2" Name="vision2">
+              <Directory Id="data_grid" Name="DATA_G~1" LongName="data_grid">
+                <Component Id="about_dialog.e" Guid="40508895-D62B-4B52-9D50-20C7A8DFF84C">
+                  <File Id="about_dialog.e" Name="ABOUT_~1.E" LongName="about_dialog.e" KeyPath="yes" />
+                  <File Id="interface_names.e" Name="INTERF~1.E" LongName="interface_names.e" />
+                  <File Id="main_window.e" Name="MAIN_W~1.E" LongName="main_window.e" />
+                  <File Id="application.e18" Name="APPLIC~2.E" LongName="application.e" />
+                  <File Id="ace_v1.0.ace2" Name="ACE_V1~4.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace5" Name="ACE_V1~7.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="calculator" Name="CALCUL~1" LongName="calculator">
+              <Component Id="ace.ace16" Guid="E78A7B5C-EF9F-4F02-8A3F-2B0A151D96D0">
+                <File Id="ace_v1.0.ace17" Name="ACE_V1~J.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
+                <File Id="ace_v1.1.ace21" Name="ACE_V1~N.ACE" LongName="ace_v1.1.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="winforms" Name="winforms">
+              <Directory Id="hello_world_dlg" Name="HELLO_~1" LongName="hello_world_dlg">
+                <Component Id="hello_world.e" Guid="DF2C1E70-8FA1-44BC-8E74-97D9F3D4D8C3">
+                  <File Id="hello_world.e" Name="HELLO_~1.E" LongName="hello_world.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace14" Name="ACE_V1~G.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace18" Name="ACE_V1~K.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="mdi" Name="mdi">
+                <Component Id="ace.ace4" Guid="9FEB1761-5E10-4D92-A3FA-8EF545F3A959">
+                  <File Id="document.e" Name="document.e" KeyPath="yes" />
+                  <File Id="main_form.e" Name="MAIN_F~1.E" LongName="main_form.e" />
+                  <File Id="ace_v1.0.ace1" Name="ACE_V1~3.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace3" Name="ACE_V1~5.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="basic" Name="basic">
+                <Component Id="application.e" Guid="D8555F0F-06C0-41D3-8057-E18E0919DCB6">
+                  <File Id="application.e" Name="APPLIC~1.E" LongName="application.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace4" Name="ACE_V1~6.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace7" Name="ACE_V1~9.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="hello_world" Name="HELLO_~2" LongName="hello_world">
+                <Component Id="ace.ace11" Guid="C895AD1E-F365-4F28-85D6-9A9EA6042F8D">
+                  <File Id="hello_world.e19" Name="HELLO_~2.E" LongName="hello_world.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace10" Name="ACE_V1~C.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace12" Name="ACE_V1~E.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="applications" Name="APPLIC~2" LongName="applications">
+                <Directory Id="world_calc" Name="WORLD_~1" LongName="world_calc">
+                  <Component Id="ace.ace3" Guid="B801D30C-CB34-4B46-8976-3D2E2FCAD8C1">
+                    <File Id="world_calc.e" Name="WORLD_~1.E" LongName="world_calc.e" KeyPath="yes" />
+                    <File Id="ace_v1.0.ace19" Name="ACE_V1~L.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace24" Name="ACE_V1~Q.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                  <Component Id="parserutils.dll" Guid="0ACB9FAA-182D-4400-AB9B-1E1B986373CA">
+                    <File Id="parserutils.dll" Name="PARSER~1.DLL" LongName="parserutils.dll" KeyPath="yes" />
+                  </Component>
+                  <Component Id="math.dll" Guid="D63A4FCA-BE02-4674-8243-BA4B0F6B45A6">
+                    <File Id="math.dll" Name="math.dll" KeyPath="yes" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="gdi_plus" Name="gdi_plus">
+                <Directory Id="text" Name="text">
+                  <Component Id="gdip_text.e" Guid="1266A3C2-BED1-493B-9DA4-FEE0CE143CD0">
+                    <File Id="gdip_text.e" Name="GDIP_T~1.E" LongName="gdip_text.e" KeyPath="yes" />
+                    <File Id="marble.jpg" Name="marble.jpg" />
+                    <File Id="colorbars.jpg" Name="COLORB~1.JPG" LongName="colorbars.jpg" />
+                    <File Id="ace_v1.0.ace22" Name="ACE_V1~O.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace25" Name="ACE_V1~R.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="data" Name="data">
+                <Directory Id="grid" Name="grid">
+                  <Component Id="data_grid.e9" Guid="53291981-AD7E-48ED-A419-2C294E1C2045">
+                    <File Id="data_grid.e9" Name="DATA_G~2.E" LongName="data_grid.e" KeyPath="yes" />
+                    <File Id="ace_v1.0.ace31" Name="ACE_V1~X.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace33" Name="ACE_V1~Z.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                </Directory>
+                <Directory Id="simple_binding" Name="SIMPLE~1" LongName="simple_binding" />
+              </Directory>
+              <Directory Id="control_reference" Name="CONTRO~1" LongName="control_reference">
+                <Directory Id="tree_view_ctl" Name="TREE_V~1" LongName="tree_view_ctl">
+                  <Component Id="openfold.bmp" Guid="20D0B826-7ECD-4E00-B29A-F8066913FC4C">
+                    <File Id="openfold.bmp" Name="openfold.bmp" KeyPath="yes" />
+                    <File Id="directory_node.e" Name="DIRECT~1.E" LongName="directory_node.e" />
+                    <File Id="clsdfold.bmp" Name="clsdfold.bmp" />
+                    <File Id="diamond.bmp" Name="diamond.bmp" />
+                    <File Id="tree_view_ctl.e" Name="TREE_V~1.E" LongName="tree_view_ctl.e" />
+                    <File Id="externals.e" Name="EXTERN~1.E" LongName="externals.e" />
+                    <File Id="club.bmp" Name="club.bmp" />
+                    <File Id="ace_v1.0.ace9" Name="ACE_V1~B.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace11" Name="ACE_V1~D.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                </Directory>
+                <Directory Id="progress_bar_ctl" Name="PROGRE~1" LongName="progress_bar_ctl">
+                  <Component Id="progress_bar_ctl.e" Guid="7349841A-A1F9-4B57-86AE-9494DDB0D5BE">
+                    <File Id="progress_bar_ctl.e" Name="PROGRE~1.E" LongName="progress_bar_ctl.e" KeyPath="yes" />
+                    <File Id="ace_v1.0.ace23" Name="ACE_V1~P.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace26" Name="ACE_V1~S.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                </Directory>
+                <Directory Id="date_time_picker_ctl" Name="DATE_T~1" LongName="date_time_picker_ctl">
+                  <Component Id="ace.ace2" Guid="DC9FB891-BCFE-4FE0-A61E-C492AA53B8BA">
+                    <File Id="change_color_dlg.e" Name="CHANGE~1.E" LongName="change_color_dlg.e" KeyPath="yes" />
+                    <File Id="date_time_picker_ctl.e" Name="DATE_T~1.E" LongName="date_time_picker_ctl.e" />
+                    <File Id="ace_v1.0.ace28" Name="ACE_V1~U.ACE" LongName="ace_v1.0.ace" />
+                    <File Id="ace_v1.1.ace30" Name="ACE_V1~W.ACE" LongName="ace_v1.1.ace" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="menu" Name="menu">
+                <Component Id="ace.ace" Guid="78EC0B07-57AC-4BE1-8CF0-314C9D5034BC">
+                  <File Id="menus.e" Name="menus.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace" Name="ACE_V1~2.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace" Name="ACE_V1~1.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="ado" Name="ado">
+              <Directory Id="ado3" Name="ado3">
+                <Component Id="ado.e" Guid="E24AD907-EEA1-4FAC-A04F-152668DD6AEF">
+                  <File Id="ado.e" Name="ado.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace6" Name="ACE_V1~8.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace8" Name="ACE_V1~A.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="threading" Name="THREAD~1" LongName="threading">
+              <Directory Id="timers" Name="timers">
+                <Component Id="ace.ace1" Guid="7CCE6532-1C6E-4165-B52E-2783A9D014E0">
+                  <File Id="timers.e" Name="timers.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace32" Name="ACE_V1~Y.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace34" Name="ACE_V1~Z.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="monitor" Name="monitor">
+                <Component Id="resource.e" Guid="00F08824-B699-47B4-AFE7-B6A3E6880C6D">
+                  <File Id="resource.e" Name="resource.e" KeyPath="yes" />
+                  <File Id="monitor.e" Name="monitor.e" />
+                  <File Id="ace_v1.0.ace16" Name="ACE_V1~I.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace20" Name="ACE_V1~M.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="pools" Name="pools">
+                <Component Id="pools.e" Guid="462FAFF1-C46D-4F72-8037-3802F82A1FE6">
+                  <File Id="pools.e" Name="pools.e" KeyPath="yes" />
+                  <File Id="ace_v1.0.ace13" Name="ACE_V1~F.ACE" LongName="ace_v1.0.ace" />
+                  <File Id="ace_v1.1.ace15" Name="ACE_V1~H.ACE" LongName="ace_v1.1.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Module>
+</Wix>

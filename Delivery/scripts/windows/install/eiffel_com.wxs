@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="eiffel_com" Guid="FF5EF6B2-8164-41E6-8817-C9137C10AFFA" Language="0" Version="5.5">
+    <Package Id="FF5EF6B2-8164-41E6-8817-C9137C10AFFA" Keywords="MergeModule, MSI, Database" Description="EiffelCOM" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="Registry" Guid="18B68737-CE2F-4F57-B358-1DAE29826C27">
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\com_wizard" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+      </Component>
+      <Directory Id="Application" Name=".">
+        <Directory Id="library" Name="library">
+          <Directory Id="com" Name="com">
+            <Directory Id="Support" Name="Support">
+              <Component Id="Support" Guid="30F7852F-D092-43F3-8643-DFFF0AE3BCE6">
+                <File Id="ecom_routines.e" Name="ECOM_R~1.E" LongName="ecom_routines.e" />
+                <File Id="ecom_wrapper.e" Name="ECOM_W~1.E" LongName="ecom_wrapper.e" KeyPath="yes" />
+                <File Id="ecom_cookie_generator.e" Name="ECOM_C~2.E" LongName="ecom_cookie_generator.e" />
+                <File Id="ecom_guid_routines.e" Name="ECOM_G~2.E" LongName="ecom_guid_routines.e" />
+              </Component>
+            </Directory>
+            <Directory Id="Interfaces" Name="INTERF~1" LongName="Interfaces">
+              <Component Id="Interfaces" Guid="861AB901-46B5-49A0-BD11-B6028E35CCF8">
+                <File Id="font_interface.e" Name="FONT_I~2.E" LongName="font_interface.e" KeyPath="yes" />
+                <File Id="ecom_storage_routines.e" Name="ECOM_S~2.E" LongName="ecom_storage_routines.e" />
+                <File Id="ienum_impl.e" Name="IENUM_~1.E" LongName="ienum_impl.e" />
+                <File Id="ecom_queriable.e" Name="ECOM_Q~1.E" LongName="ecom_queriable.e" />
+                <File Id="ecom_automation_interface.e" Name="ECOM_A~1.E" LongName="ecom_automation_interface.e" />
+                <File Id="picture_interface.e" Name="PICTUR~2.E" LongName="picture_interface.e" />
+                <File Id="ecom_stub.e" Name="ECOM_S~4.E" LongName="ecom_stub.e" />
+                <File Id="picture_impl_proxy.e" Name="PICTUR~1.E" LongName="picture_impl_proxy.e" />
+                <File Id="ifont_interface.e" Name="IFONT_~2.E" LongName="ifont_interface.e" />
+                <File Id="ipicture_interface.e" Name="IPICTU~1.E" LongName="ipicture_interface.e" />
+                <File Id="ecom_stream.e" Name="ECOM_S~5.E" LongName="ecom_stream.e" />
+                <File Id="ecom_enum_statstg.e" Name="ECOM_E~2.E" LongName="ecom_enum_statstg.e" />
+                <File Id="ienum_variant_interface.e" Name="IENUM_~3.E" LongName="ienum_variant_interface.e" />
+                <File Id="ienum_variant_impl_proxy.e" Name="IENUM_~2.E" LongName="ienum_variant_impl_proxy.e" />
+                <File Id="ecom_interface.e" Name="ECOM_I~1.E" LongName="ecom_interface.e" />
+                <File Id="ifont_impl_proxy.e" Name="IFONT_~1.E" LongName="ifont_impl_proxy.e" />
+                <File Id="ecom_storage.e" Name="ECOM_S~7.E" LongName="ecom_storage.e" />
+                <File Id="ecom_root_storage.e" Name="ECOM_R~2.E" LongName="ecom_root_storage.e" />
+                <File Id="font_impl_proxy.e" Name="FONT_I~1.E" LongName="font_impl_proxy.e" />
+                <File Id="font_events_interface.e" Name="FONT_E~1.E" LongName="font_events_interface.e" />
+                <File Id="ecom_unknown_interface.e" Name="ECOM_U~2.E" LongName="ecom_unknown_interface.e" />
+              </Component>
+            </Directory>
+            <Directory Id="Structures" Name="STRUCT~1" LongName="Structures">
+              <Component Id="Structures" Guid="71FB486A-9641-4A7C-98F9-369A92D21D14">
+                <File Id="ecom_structure.e" Name="ECOM_S~3.E" LongName="ecom_structure.e" KeyPath="yes" />
+                <File Id="ecom_excep_info.e" Name="ECOM_E~1.E" LongName="ecom_excep_info.e" />
+                <File Id="ecom_currency.e" Name="ECOM_C~1.E" LongName="ecom_currency.e" />
+                <File Id="ecom_ularge_integer.e" Name="ECOM_U~1.E" LongName="ecom_ularge_integer.e" />
+                <File Id="ecom_statstg.e" Name="ECOM_S~1.E" LongName="ecom_statstg.e" />
+                <File Id="ecom_variant.e" Name="ECOM_V~1.E" LongName="ecom_variant.e" />
+                <File Id="ecom_hresult.e" Name="ECOM_H~1.E" LongName="ecom_hresult.e" />
+                <File Id="ecom_guid.e" Name="ECOM_G~1.E" LongName="ecom_guid.e" />
+                <File Id="ecom_disp_params.e" Name="ECOM_D~2.E" LongName="ecom_disp_params.e" />
+                <File Id="fontsize_alias.e" Name="FONTSI~1.E" LongName="fontsize_alias.e" />
+                <File Id="hresult_formatter.e" Name="HRESUL~1.E" LongName="hresult_formatter.e" />
+                <File Id="ecom_exception.e" Name="ECOM_E~4.E" LongName="ecom_exception.e" />
+                <File Id="ecom_decimal.e" Name="ECOM_D~1.E" LongName="ecom_decimal.e" />
+                <File Id="ecom_array.e" Name="ECOM_A~2.E" LongName="ecom_array.e" />
+                <File Id="fontname_alias.e" Name="FONTNA~1.E" LongName="fontname_alias.e" />
+                <File Id="ecom_large_integer.e" Name="ECOM_L~3.E" LongName="ecom_large_integer.e" />
+                <File Id="ecom_wide_string.e" Name="ECOM_W~2.E" LongName="ecom_wide_string.e" />
+              </Component>
+            </Directory>
+            <Directory Id="Constants" Name="CONSTA~1" LongName="Constants">
+              <Component Id="Constants" Guid="B1CF330C-2DE8-4299-9A38-3D4DCD48A329">
+                <File Id="ecom_load_picture_constants_enum.e" Name="ECOM_L~1.E" LongName="ecom_load_picture_constants_enum.e" KeyPath="yes" />
+                <File Id="ecom_stgm.e" Name="ECOM_S~6.E" LongName="ecom_stgm.e" />
+                <File Id="ecom_lock_types.e" Name="ECOM_L~2.E" LongName="ecom_lock_types.e" />
+                <File Id="ecom_exception_codes.e" Name="ECOM_E~3.E" LongName="ecom_exception_codes.e" />
+                <File Id="ecom_stgty.e" Name="ECBC31~1.E" LongName="ecom_stgty.e" />
+                <File Id="ecom_ole_tristate_enum.e" Name="ECOM_O~1.E" LongName="ecom_ole_tristate_enum.e" />
+                <File Id="ecom_flags.e" Name="ECOM_F~1.E" LongName="ecom_flags.e" />
+                <File Id="ecom_var_type.e" Name="ECOM_V~2.E" LongName="ecom_var_type.e" />
+                <File Id="ecom_stat_flags.e" Name="ECOM_S~8.E" LongName="ecom_stat_flags.e" />
+                <File Id="ecom_stgmove.e" Name="ECOM_S~9.E" LongName="ecom_stgmove.e" />
+                <File Id="ecom_stgc.e" Name="ECOM_S~A.E" LongName="ecom_stgc.e" />
+                <File Id="ecom_stream_seek.e" Name="ECB5F4~1.E" LongName="ecom_stream_seek.e" />
+              </Component>
+            </Directory>
+            <Directory Id="spec" Name="spec">
+              <Directory Id="Windows" Name="Windows">
+                <Directory Id="Profiles" Name="Profiles">
+                  <Directory Id="Start_Menu" Name="STARTM~1" LongName="Start Menu">
+                    <Directory Id="Programs" Name="Programs" />
+                  </Directory>
+                </Directory>
+              </Directory>
+              <Directory Id="bcb" Name="bcb">
+                <Directory Id="lib1" Name="lib">
+                  <Component Id="lib1" Guid="7E9EAEAA-4DDB-41B8-8FB8-A0EDB00F8FBD">
+                    <File Id="com_runtime.lib1" Name="COM_RU~2.LIB" LongName="com_runtime.lib" KeyPath="yes" />
+                    <File Id="com.lib2" Name="com.lib" />
+                    <File Id="mtcom_runtime.lib" Name="MTCOM_~1.LIB" LongName="mtcom_runtime.lib" />
+                    <File Id="mtcom.lib2" Name="mtcom.lib" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="msc" Name="msc">
+                <Directory Id="lib" Name="lib">
+                  <Component Id="lib" Guid="A32F2CE4-CFBE-4794-9972-00285C58CCEF">
+                    <File Id="com.lib" Name="com.lib" KeyPath="yes" />
+                    <File Id="com_runtime.lib" Name="COM_RU~1.LIB" LongName="com_runtime.lib" />
+                    <File Id="mtcom.lib" Name="mtcom.lib" />
+                    <File Id="mtcom_runtime.lib1" Name="MTCOM_~2.LIB" LongName="mtcom_runtime.lib" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="windows" Name="windows">
+                <Directory Id="include" Name="include">
+                  <Component Id="include" Guid="36656FAB-DBB0-4CE0-BF27-2FA6FB2A02E0">
+                    <File Id="E_wide_string.h" Name="E_WIDE~1.H" LongName="E_wide_string.h" KeyPath="yes" />
+                    <File Id="E_safearraybound.h" Name="E_SAFE~1.H" LongName="E_safearraybound.h" />
+                    <File Id="E_paramdescex.h" Name="E_PARA~2.H" LongName="E_paramdescex.h" />
+                    <File Id="E_generic_interface.h" Name="E_GENE~1.H" LongName="E_generic_interface.h" />
+                    <File Id="ecom_excepinfo.h" Name="ECOM_E~1.H" LongName="ecom_excepinfo.h" />
+                    <File Id="E_idldesc.h" Name="E_IDLD~1.H" LongName="E_idldesc.h" />
+                    <File Id="E_automation_interface.h" Name="E_AUTO~1.H" LongName="E_automation_interface.h" />
+                    <File Id="ecom_runtime_e_c.h" Name="ECOM_R~3.H" LongName="ecom_runtime_e_c.h" />
+                    <File Id="ecom_runtime_c_e.h" Name="ECOM_R~2.H" LongName="ecom_runtime_c_e.h" />
+                    <File Id="ecom_picture23.h" Name="ECOM_P~1.H" LongName="ecom_picture23.h" />
+                    <File Id="ecom_font.h" Name="ECOM_F~2.H" LongName="ecom_font.h" />
+                    <File Id="E_custdataitem.h" Name="E_CUST~2.H" LongName="E_custdataitem.h" />
+                    <File Id="ecom_rt_globals.h" Name="ECOM_R~1.H" LongName="ecom_rt_globals.h" />
+                    <File Id="E_Currency.h" Name="E_CURR~1.H" LongName="E_Currency.h" />
+                    <File Id="E_Routines.h" Name="E_ROUT~1.H" LongName="E_Routines.h" />
+                    <File Id="ecom_ienumvariant1_impl_proxy.h" Name="ECOM_I~1.H" LongName="ecom_ienumvariant1_impl_proxy.h" />
+                    <File Id="E_bstr.h" Name="E_bstr.h" />
+                    <File Id="ecom__large_integer_impl.h" Name="ECOM__~1.H" LongName="ecom__large_integer_impl.h" />
+                    <File Id="E_variant.h" Name="E_VARI~1.H" LongName="E_variant.h" />
+                    <File Id="E_statstg.h" Name="E_STAT~1.H" LongName="E_statstg.h" />
+                    <File Id="E_ITypeLib.h" Name="E_ITYP~3.H" LongName="E_ITypeLib.h" />
+                    <File Id="E_Decimal.h" Name="E_DECI~1.H" LongName="E_Decimal.h" />
+                    <File Id="ecom_flags.h" Name="ECOM_F~1.H" LongName="ecom_flags.h" />
+                    <File Id="E_type_attr.h" Name="E_TYPE~1.H" LongName="E_type_attr.h" />
+                    <File Id="E_elemdesc.h" Name="E_ELEM~1.H" LongName="E_elemdesc.h" />
+                    <File Id="ecom__ularge_integer_impl.h" Name="ECOM__~2.H" LongName="ecom__ularge_integer_impl.h" />
+                    <File Id="E_IStorage.h" Name="E_ISTO~1.H" LongName="E_IStorage.h" />
+                    <File Id="ecom_font21_impl_proxy.h" Name="ECOM_F~3.H" LongName="ecom_font21_impl_proxy.h" />
+                    <File Id="ecom_exception.h" Name="ECOM_E~2.H" LongName="ecom_exception.h" />
+                    <File Id="E_paramdesc.h" Name="E_PARA~1.H" LongName="E_paramdesc.h" />
+                    <File Id="ecom_ifont20_impl_proxy.h" Name="ECOM_I~2.H" LongName="ecom_ifont20_impl_proxy.h" />
+                    <File Id="E_vardesc.h" Name="E_VARD~1.H" LongName="E_vardesc.h" />
+                    <File Id="E_ITypeInfo.h" Name="E_ITYP~2.H" LongName="E_ITypeInfo.h" />
+                    <File Id="E_IRootStorage.h" Name="E_IROO~1.H" LongName="E_IRootStorage.h" />
+                    <File Id="e_arraydesc.h" Name="E_ARRA~1.H" LongName="e_arraydesc.h" />
+                    <File Id="ecom_dispparams.h" Name="ECOM_D~1.H" LongName="ecom_dispparams.h" />
+                    <File Id="E_ITypeComp.h" Name="E_ITYP~1.H" LongName="E_ITypeComp.h" />
+                    <File Id="E_IStream.h" Name="E_ISTR~1.H" LongName="E_IStream.h" />
+                    <File Id="E_funcdesc.h" Name="E_FUNC~1.H" LongName="E_funcdesc.h" />
+                    <File Id="ecom_server_rt_globals.h" Name="ECOM_S~1.H" LongName="ecom_server_rt_globals.h" />
+                    <File Id="ecom_guid.h" Name="ECOM_G~1.H" LongName="ecom_guid.h" />
+                    <File Id="E_typedesc.h" Name="E_TYPE~2.H" LongName="E_typedesc.h" />
+                    <File Id="E_bindptr.h" Name="E_BIND~1.H" LongName="E_bindptr.h" />
+                    <File Id="E_custdata.h" Name="E_CUST~1.H" LongName="E_custdata.h" />
+                    <File Id="eif_com.h" Name="eif_com.h" />
+                    <File Id="E_tlib_attr.h" Name="E_TLIB~1.H" LongName="E_tlib_attr.h" />
+                    <File Id="E_IEnumSTATSTG.h" Name="E_IENU~1.H" LongName="E_IEnumSTATSTG.h" />
+                    <File Id="E_Hresult.h" Name="E_HRES~1.H" LongName="E_Hresult.h" />
+                    <File Id="ecom_picture23_impl_proxy.h" Name="ECOM_P~2.H" LongName="ecom_picture23_impl_proxy.h" />
+                    <File Id="ecom_ifont_x20.h" Name="ECOM_I~3.H" LongName="ecom_ifont_x20.h" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="wizards" Name="wizards">
+          <Directory Id="com3" Name="com">
+            <Component Id="COM_WI2.EXE" Guid="1F39F603-A697-424F-B59F-FF50E4FDD1E0">
+              <File Id="com_wizard_cmd.exe" Name="COM_WI~2.EXE" LongName="com_wizard_cmd.exe" KeyPath="yes" />
+            </Component>
+            <Component Id="com3" Guid="44AAE90D-433C-4148-838D-9D6B7AA44651">
+              <File Id="eiffelcom.cnt" Name="EIFFEL~1.CNT" LongName="eiffelcom.cnt" KeyPath="yes" />
+            </Component>
+            <Component Id="EIFFEL1.HLP" Guid="D83CA897-8B78-40C3-9192-571F9AC8D1CB">
+              <File Id="Eiffelcom.hlp" Name="EIFFEL~1.HLP" LongName="Eiffelcom.hlp" KeyPath="yes" />
+            </Component>
+            <Component Id="conspawn.exe" Guid="0D818C6C-17DA-4BD0-8B7F-1CBC723F95E7">
+              <File Id="conspawn.exe" Name="conspawn.exe" KeyPath="yes" />
+            </Component>
+            <Component Id="COM_WI1.EXE" Guid="E6E56A8A-095A-488C-B9A8-3A109422839F">
+              <File Id="com_wizard.exe" Name="COM_WI~1.EXE" LongName="com_wizard.exe" KeyPath="yes" />
+            </Component>
+            <Directory Id="config" Name="config">
+              <Component Id="config" Guid="78E866BF-4C04-4509-8F1C-864C54055C76">
+                <File Id="melted_path.reg" Name="MELTED~1.REG" LongName="melted_path.reg" KeyPath="yes" />
+                <File Id="wizard_winapi_names.cfg" Name="WIZARD~1.CFG" LongName="wizard_winapi_names.cfg" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="examples" Name="examples">
+          <Directory Id="com2" Name="com">
+            <Directory Id="compound" Name="compound">
+              <Component Id="compound" Guid="F1BD2FDC-FE95-42C1-AE81-0F9BA3EFB548">
+                <File Id="compound_ids.e" Name="COMPOU~1.E" LongName="compound_ids.e" KeyPath="yes" />
+                <File Id="compound.e" Name="compound.e" />
+                <File Id="stream_display_window.e" Name="STREAM~1.E" LongName="stream_display_window.e" />
+                <File Id="main_win.e" Name="main_win.e" />
+                <File Id="Ace.ace" Name="Ace.ace" />
+                <File Id="compound.rc" Name="compound.rc" />
+                <File Id="compound.ico" Name="compound.ico" />
+                <File Id="child.ico" Name="child.ico" />
+                <File Id="child_window.e" Name="CHILD_~1.E" LongName="child_window.e" />
+              </Component>
+            </Directory>
+            <Directory Id="wizard" Name="wizard">
+              <Directory Id="string_manipulator" Name="STRING~1" LongName="string_manipulator">
+                <Component Id="string_manipulator" Guid="97E0A243-1A10-4B90-AFE6-EE731AEB519A">
+                  <File Id="string_manipulator.idl" Name="STRING~1.IDL" LongName="string_manipulator.idl" KeyPath="yes" />
+                </Component>
+                <Directory Id="client" Name="client">
+                  <Component Id="client" Guid="FE871F33-017C-47C8-8F83-D00B8A9EDC0C">
+                    <File Id="V" Name="STRING~1.E" LongName="string_manipulator_client_main_dialog.e" KeyPath="yes" />
+                    <File Id="resource.h" Name="resource.h" />
+                    <File Id="String_manipulator_client.rc" Name="STRING~1.RC" LongName="String_manipulator_client.rc" />
+                    <File Id="application_ids.e" Name="APPLIC~2.E" LongName="application_ids.e" />
+                    <File Id="ace.ace4" Name="ace.ace" />
+                    <File Id="my_string_manipulator.e" Name="MY_STR~1.E" LongName="my_string_manipulator.e" />
+                    <File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
+                  </Component>
+                </Directory>
+                <Directory Id="server" Name="server">
+                  <Component Id="server" Guid="144CE452-9FB0-4F6D-AC1C-C15976E957FB">
+                    <File Id="string_manipulator_coclass_imp.e" Name="STRING~2.E" LongName="string_manipulator_coclass_imp.e" KeyPath="yes" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="task_scheduler" Name="TASK_S~1" LongName="task_scheduler">
+                <Component Id="task_scheduler" Guid="DC9DF21A-C650-4A95-A1DE-01E2184595C7">
+                  <File Id="mstask.idl" Name="mstask.idl" KeyPath="yes" />
+                  <File Id="mstask_modified.idl" Name="MSTASK~1.IDL" LongName="mstask_modified.idl" />
+                </Component>
+                <Directory Id="task_scheduler_client" Name="TASK_S~2" LongName="task_scheduler_client">
+                  <Component Id="task_scheduler_client" Guid="B334E8EC-58CE-4952-AAA9-67260DA9CF34">
+                    <File Id="task_scheduler.e" Name="TASK_S~1.E" LongName="task_scheduler.e" KeyPath="yes" />
+                    <File Id="ace.ace3" Name="ace.ace" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="e2idl" Name="e2idl">
+                <Directory Id="eproject" Name="eproject">
+                  <Component Id="eproject" Guid="CEF30173-9725-4929-9020-559798BDE873">
+                    <File Id="ace.ace" Name="ace.ace" KeyPath="yes" />
+                    <File Id="root_class.e" Name="ROOT_C~1.E" LongName="root_class.e" />
+                    <File Id="string_manipulator.e" Name="STRING~3.E" LongName="string_manipulator.e" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" Name="Redist">
+        <Directory Id="EiffelStudio_5.5" Name="EIFFEL~5" LongName="EiffelStudio 5.5">
+          <Directory Id="Documentation7" Name="DOCUME~5" LongName="Documentation">
+            <Component Id="Documentation7" Guid="34749585-99BD-4328-9C8D-21310D66A542" KeyPath="yes">
+              <Shortcut Id="EIFFEL1.HLPEiffelcom.hlp" Directory="Documentation7" Name="COMWIZ~1" LongName="COM Wizard Documentation" Target="[#Eiffelcom.hlp]" Description="Documentation concerning the COM wizard" Hotkey="0" Show="normal" />
+            </Component>
+          </Directory>
+          <Directory Id="Tools6" Name="Tools">
+            <Component Id="Tools6" Guid="2077AB8F-11BE-4527-9EE7-4AF6AA764FF1" KeyPath="yes">
+              <Shortcut Id="COM_WI1.EXEcom_wizard.exe" Directory="Tools6" Name="COMWIZ~1" LongName="COM Wizard" Target="[#com_wizard.exe]" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <UI />
+  </Module>
+</Wix>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Module Id="$(var.ISE_MODULE_NAME)" Guid="E23C87E4-4376-4D45-85C1-B2234AB7AF68" Language="0" Version="5.5">
+		<Package Id="E23C87E4-4376-4D45-85C1-B2234AB7AF68" Keywords="MergeModule, MSI, Database" Description="$(var.ISE_PRODUCT_NAME)" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="Application" Name="." >
+				<Directory Id="studio" Name="studio">
+					<Directory Id="spec" Name="spec">
+						<Directory Id="windows" Name="windows">
+							<Directory Id="bin" Name="bin">
+								<Component Id="ec.exe" Guid="D1A60484-59B5-4A63-A296-3542CC6D4493">
+									<File Id="ec.exe" Name="ec.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\ec.exe" />
+								</Component>
+							</Directory>
+							<?if $(var.ISE_RELEASE)="university_version" ?>
+								<?define destination="enterprise" ?>
+							<?else ?>
+								<?define destination=$(var.ISE_RELEASE) ?>
+							<?endif?>
+							<Directory Id="lib" Name="lib" src="$(env.INSTALL_DIR)\releases\$(var.destination)\lib\" >
+								<Directory Id="bcb" Name="bcb">
+									<Component Id="bcb" Guid="8B26D3AB-1D7C-4B7B-8726-382D0E0576BD">
+										<File Id="mtwkbench.lib" Name="MTWKBE~1.LIB" LongName="mtwkbench.lib" KeyPath="yes" />
+										<File Id="mtfinalized.lib" Name="MTFINA~1.LIB" LongName="mtfinalized.lib" />
+										<File Id="finalized.lib" Name="FINALI~1.LIB" LongName="finalized.lib" />
+										<File Id="wkbench.lib" Name="wkbench.lib" />
+									</Component>
+								</Directory>
+								<Directory Id="msc" Name="msc">
+									<Component Id="msc" Guid="72B28830-55E6-4608-AD1E-3499CA977B61">
+										<File Id="wkbench.lib1" Name="wkbench.lib" KeyPath="yes" />
+										<File Id="dll_wkbench.lib" Name="DLL_WK~1.LIB" LongName="dll_wkbench.lib" />
+										<File Id="mtfinalized.lib2" Name="MTFINA~2.LIB" LongName="mtfinalized.lib" />
+										<File Id="mtwkbench.lib3" Name="MTWKBE~2.LIB" LongName="mtwkbench.lib" />
+										<File Id="dll_finalized.lib" Name="DLL_FI~1.LIB" LongName="dll_finalized.lib" />
+										<File Id="finalized.lib4" Name="FINALI~2.LIB" LongName="finalized.lib" />
+										<File Id="ise_desc.lib" Name="ise_desc.lib" />
+										<File Id="dll_mtfinalized.lib" Name="DLL_MT~1.LIB" LongName="dll_mtfinalized.lib" />
+										<File Id="dll_mtwkbench.lib" Name="DLL_MT~2.LIB" LongName="dll_mtwkbench.lib" />
+									</Component>
+									<Component Id="FINALI1.DLL" Guid="D6592FF5-7F10-418D-9E53-264554AF7F45">
+										<File Id="finalized.dll" Name="FINALI~1.DLL" LongName="finalized.dll" KeyPath="yes" />
+									</Component>
+									<Component Id="ise_desc.dll" Guid="9BB55A24-D3C6-4A10-A3D4-398C01CE1257">
+										<File Id="ise_desc.dll" Name="ise_desc.dll" KeyPath="yes" />
+									</Component>
+									<Component Id="wkbench.dll" Guid="0938406C-9302-4DBD-AD3F-D1B441EB4FFF">
+										<File Id="wkbench.dll" Name="wkbench.dll" KeyPath="yes" />
+									</Component>
+									<Component Id="MTWKBE1.DLL" Guid="128A1631-37F8-46AA-8E2A-C6EA5D4D475F">
+										<File Id="mtwkbench.dll" Name="MTWKBE~1.DLL" LongName="mtwkbench.dll" KeyPath="yes" />
+									</Component>
+									<Component Id="MTFINA1.DLL" Guid="C78A9D64-1435-44D1-BBE6-9A159662DD43">
+										<File Id="mtfinalized.dll" Name="MTFINA~1.DLL" LongName="mtfinalized.dll" KeyPath="yes" />
+									</Component>
+								</Directory>
+							</Directory>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>

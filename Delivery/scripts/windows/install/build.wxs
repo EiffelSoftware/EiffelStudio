@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="$(var.ISE_MODULE_NAME)" Guid="925B6F83-D534-4335-A8D1-D030B4DA753E" Language="0" Version="5.5">
+    <Package Id="925B6F83-D534-4335-A8D1-D030B4DA753E" Keywords="MergeModule, MSI, Database" Description="$(var.ISE_PRODUCT_NAME)" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
+	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="Registry" Guid="AE44C028-98E2-41B0-A2B5-5B359D6C13A0">
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\build" Name="ISE_PLATFORM" Value="windows" Id="registry6" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\build" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry7" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\build" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+      </Component>
+      <Directory Id="Application" Name=".">
+        <Directory Id="build" Name="build">
+          <Directory Id="pixmaps" Name="pixmaps">
+            <Component Id="pixmaps" Guid="5BC02BCD-CDF4-40A3-990B-83FF41BB4B55">
+              <File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" KeyPath="yes" />
+              <File Id="eiffel_wizard.png" Name="EIFFEL~1.PNG" LongName="eiffel_wizard.png" />
+              <File Id="wizard.png" Name="wizard.png" />
+            </Component>
+          </Directory>
+          <Directory Id="templates" Name="TEMPLA~1" LongName="templates">
+            <Component Id="templates" Guid="8715B65F-B659-4814-8235-98285EA329FA">
+              <File Id="build_class_template_imp.e" Name="BUILD_~3.E" LongName="build_class_template_imp.e" KeyPath="yes" />
+              <File Id="build_class_template.e" Name="BUILD_~2.E" LongName="build_class_template.e" />
+              <File Id="build_application_template.e" Name="BUILD_~1.E" LongName="build_application_template.e" />
+              <File Id="constants.e" Name="CONSTA~1.E" LongName="constants.e" />
+              <File Id="constants_imp.e" Name="CONSTA~2.E" LongName="constants_imp.e" />
+            </Component>
+            <Directory Id="Unix" Name="Unix">
+              <Component Id="Unix" Guid="20B7F500-8C6D-47F8-ACF1-E908D23EC0DE">
+                <File Id="ace_template.ace" Name="ACE_TE~1.ACE" LongName="ace_template.ace" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="Windows" Name="Windows">
+              <Component Id="Windows" Guid="96A1A5A8-E024-471C-A413-402C61C19090">
+                <File Id="ace_template.ace2" Name="ACE_TE~2.ACE" LongName="ace_template.ace" KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="components" Name="COMPON~1" LongName="components">
+            <Component Id="components" Guid="E2909719-7483-4DCF-8BF7-DB6E76904624">
+              <File Id="components.xml" Name="COMPON~1.XML" LongName="components.xml" KeyPath="yes" />
+            </Component>
+          </Directory>
+          <Directory Id="bitmaps" Name="bitmaps">
+            <Directory Id="png" Name="png">
+              <Component Id="png" Guid="F22C8D4F-8BD8-4A68-8A4E-AC91108993E3">
+                <File Id="icon_redo_color.png" Name="ICON_R~1.PNG" LongName="icon_redo_color.png" KeyPath="yes" />
+                <File Id="icon_object_symbol.png" Name="ICON_O~2.PNG" LongName="icon_object_symbol.png" />
+                <File Id="ev_vertical_box.png" Name="EV_VER~1.PNG" LongName="ev_vertical_box.png" />
+                <File Id="ev_frame.png" Name="ev_frame.png" />
+                <File Id="ev_check_menu_item.png" Name="EV_CHE~2.PNG" LongName="ev_check_menu_item.png" />
+                <File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
+                <File Id="ev_vertical_range.png" Name="EV_VER~3.PNG" LongName="ev_vertical_range.png" />
+                <File Id="V" Name="ICON_D~3.PNG" LongName="icon_display_window_window_color.png" />
+                <File Id="icon_display_window_color.png" Name="ICON_D~2.PNG" LongName="icon_display_window_color.png" />
+                <File Id="icon_build_window_color.png" Name="ICON_B~1.PNG" LongName="icon_build_window_color.png" />
+                <File Id="icon_builder_window_color.png" Name="ICON_B~2.PNG" LongName="icon_builder_window_color.png" />
+                <File Id="icon_undo_color.png" Name="ICON_U~1.PNG" LongName="icon_undo_color.png" />
+                <File Id="icon_new_editor_color.png" Name="ICON_N~2.PNG" LongName="icon_new_editor_color.png" />
+                <File Id="ev_table.png" Name="ev_table.png" />
+                <File Id="ev_horizontal_split_area.png" Name="EV2EC1~1.PNG" LongName="ev_horizontal_split_area.png" />
+                <File Id="ev_horizontal_progress_bar.png" Name="EV_HOR~2.PNG" LongName="ev_horizontal_progress_bar.png" />
+                <File Id="ev_fixed.png" Name="ev_fixed.png" />
+                <File Id="ev_combo_box.png" Name="EV_COM~1.PNG" LongName="ev_combo_box.png" />
+                <File Id="icon_cmd_history_title_color.png" Name="ICON_C~3.PNG" LongName="icon_cmd_history_title_color.png" />
+                <File Id="icon_close_color.png" Name="ICON_C~1.PNG" LongName="icon_close_color.png" />
+                <File Id="ev_vertical_progress_bar.png" Name="EV_VER~2.PNG" LongName="ev_vertical_progress_bar.png" />
+                <File Id="ev_tool_bar_toggle_button.png" Name="EVAF99~1.PNG" LongName="ev_tool_bar_toggle_button.png" />
+                <File Id="icon_system_color.png" Name="ICON_S~2.PNG" LongName="icon_system_color.png" />
+                <File Id="ev_list.png" Name="ev_list.png" />
+                <File Id="ev_container.png" Name="EV_CON~1.PNG" LongName="ev_container.png" />
+                <File Id="icon_restore_color.png" Name="ICON_R~2.PNG" LongName="icon_restore_color.png" />
+                <File Id="ev_vertical_separator.png" Name="EV946D~1.PNG" LongName="ev_vertical_separator.png" />
+                <File Id="ev_tool_bar_separator.png" Name="EV_TOO~4.PNG" LongName="ev_tool_bar_separator.png" />
+                <File Id="ev_notebook.png" Name="EV_NOT~1.PNG" LongName="ev_notebook.png" />
+                <File Id="ev_list_item.png" Name="EV_LIS~1.PNG" LongName="ev_list_item.png" />
+                <File Id="icon_component_viewer_color.png" Name="IC91B7~1.PNG" LongName="icon_component_viewer_color.png" />
+                <File Id="ev_tree.png" Name="ev_tree.png" />
+                <File Id="ev_titled_window.png" Name="EV_TIT~1.PNG" LongName="ev_titled_window.png" />
+                <File Id="ev_scrollable_area.png" Name="EV_SCR~1.PNG" LongName="ev_scrollable_area.png" />
+                <File Id="ev_pixmap.png" Name="EV_PIX~1.PNG" LongName="ev_pixmap.png" />
+                <File Id="ev_menu_item.png" Name="EV_MEN~2.PNG" LongName="ev_menu_item.png" />
+                <File Id="ev_horizontal_scroll_bar.png" Name="EV_HOR~4.PNG" LongName="ev_horizontal_scroll_bar.png" />
+                <File Id="ev_tool_bar_button.png" Name="EV_TOO~2.PNG" LongName="ev_tool_bar_button.png" />
+                <File Id="ev_toggle_button.png" Name="EV_TOG~1.PNG" LongName="ev_toggle_button.png" />
+                <File Id="V4" Name="IC4C92~1.PNG" LongName="icon_component_display_view_color.png" />
+                <File Id="icon_component_build_view_color.png" Name="IC1A54~1.PNG" LongName="icon_component_build_view_color.png" />
+                <File Id="containers.png" Name="CONTAI~1.PNG" LongName="containers.png" />
+                <File Id="icon_object_window_color.png" Name="ICON_O~3.PNG" LongName="icon_object_window_color.png" />
+                <File Id="icon_delete_small_color.png" Name="ICON_D~1.PNG" LongName="icon_delete_small_color.png" />
+                <File Id="ev_vertical_split_area.png" Name="EVE1BD~1.PNG" LongName="ev_vertical_split_area.png" />
+                <File Id="ev_tool_bar_radio_button.png" Name="EV_TOO~3.PNG" LongName="ev_tool_bar_radio_button.png" />
+                <File Id="ev_spin_button.png" Name="EV_SPI~1.PNG" LongName="ev_spin_button.png" />
+                <File Id="ev_password_field.png" Name="EV_PAS~1.PNG" LongName="ev_password_field.png" />
+                <File Id="ev_multi_column_list.png" Name="EV_MUL~1.PNG" LongName="ev_multi_column_list.png" />
+                <File Id="ev_label.png" Name="ev_label.png" />
+                <File Id="icon_maximize_color.png" Name="ICON_M~1.PNG" LongName="icon_maximize_color.png" />
+                <File Id="ev_tree_item.png" Name="EV_TRE~1.PNG" LongName="ev_tree_item.png" />
+                <File Id="ev_text.png" Name="ev_text.png" />
+                <File Id="icon_object_editor_color.png" Name="ICON_O~1.PNG" LongName="icon_object_editor_color.png" />
+                <File Id="icon_minimize_color.png" Name="ICON_M~2.PNG" LongName="icon_minimize_color.png" />
+                <File Id="icon_code_generation_color.png" Name="ICON_C~4.PNG" LongName="icon_code_generation_color.png" />
+                <File Id="ev_check_button.png" Name="EV_CHE~1.PNG" LongName="ev_check_button.png" />
+                <File Id="icon_new_class_color.png" Name="ICON_N~1.PNG" LongName="icon_new_class_color.png" />
+                <File Id="ev_tool_bar.png" Name="EV_TOO~1.PNG" LongName="ev_tool_bar.png" />
+                <File Id="ev_radio_menu_item.png" Name="EV_RAD~2.PNG" LongName="ev_radio_menu_item.png" />
+                <File Id="ev_menu.png" Name="ev_menu.png" />
+                <File Id="ev_button.png" Name="EV_BUT~1.PNG" LongName="ev_button.png" />
+                <File Id="icon_component_window_color.png" Name="IC5FB5~1.PNG" LongName="icon_component_window_color.png" />
+                <File Id="ev_viewport.png" Name="EV_VIE~1.PNG" LongName="ev_viewport.png" />
+                <File Id="ev_vertical_scroll_bar.png" Name="EV_VER~4.PNG" LongName="ev_vertical_scroll_bar.png" />
+                <File Id="ev_text_field.png" Name="EV_TEX~1.PNG" LongName="ev_text_field.png" />
+                <File Id="ev_radio_button.png" Name="EV_RAD~1.PNG" LongName="ev_radio_button.png" />
+                <File Id="ev_menu_separator.png" Name="EV_MEN~3.PNG" LongName="ev_menu_separator.png" />
+                <File Id="ev_horizontal_separator.png" Name="EVD088~1.PNG" LongName="ev_horizontal_separator.png" />
+                <File Id="ev_horizontal_range.png" Name="EV_HOR~3.PNG" LongName="ev_horizontal_range.png" />
+                <File Id="ev_drawing_area.png" Name="EV_DRA~1.PNG" LongName="ev_drawing_area.png" />
+                <File Id="ev_cell.png" Name="ev_cell.png" />
+                <File Id="icon_cmd_history_color.png" Name="ICON_C~2.PNG" LongName="icon_cmd_history_color.png" />
+                <File Id="ev_menu_bar.png" Name="EV_MEN~1.PNG" LongName="ev_menu_bar.png" />
+                <File Id="ev_horizontal_box.png" Name="EV_HOR~1.PNG" LongName="ev_horizontal_box.png" />
+                <File Id="bm_about.png" Name="bm_about.png" />
+                <File Id="primitives.png" Name="PRIMIT~1.PNG" LongName="primitives.png" />
+                <File Id="items.png" Name="items.png" />
+                <File Id="widgets.png" Name="widgets.png" />
+                <File Id="ev_checkable_list.png" Name="EV_CHE~3.PNG" LongName="ev_checkable_list.png" />
+                <File Id="icon_new_cluster_small_color.png" Name="ICON_N~3.PNG" LongName="icon_new_cluster_small_color.png" />
+                <File Id="ev_dialog.png" Name="EV_DIA~1.PNG" LongName="ev_dialog.png" />
+                <File Id="icon_titled_window_main_color.png" Name="ICON_T~1.PNG" LongName="icon_titled_window_main_color.png" />
+                <File Id="icon_cluster_symbol_color.png" Name="ICON_C~5.PNG" LongName="icon_cluster_symbol_color.png" />
+                <File Id="V5" Name="ICON_T~2.PNG" LongName="icon_titled_window_main_small_color.png" />
+                <File Id="icon_expand_all_small_color.png" Name="ICON_E~1.PNG" LongName="icon_expand_all_small_color.png" />
+                <File Id="icon_view_small_color.png" Name="ICON_V~1.PNG" LongName="icon_view_small_color.png" />
+                <File Id="icon_preference_window.png" Name="ICON_P~1.PNG" LongName="icon_preference_window.png" />
+                <File Id="icon_preferences_root.png" Name="ICON_P~3.PNG" LongName="icon_preferences_root.png" />
+                <File Id="icon_preferences_folder.png" Name="ICON_P~2.PNG" LongName="icon_preferences_folder.png" />
+                <File Id="icon_format_onces_color.png" Name="ICON_F~1.PNG" LongName="icon_format_onces_color.png" />
+                <File Id="icon_string_small_color.png" Name="ICON_S~3.PNG" LongName="icon_string_small_color.png" />
+                <File Id="icon_missing_pixmap_small_color.png" Name="ICON_M~3.PNG" LongName="icon_missing_pixmap_small_color.png" />
+                <File Id="icon_integer_small_color.png" Name="ICON_I~1.PNG" LongName="icon_integer_small_color.png" />
+                <File Id="lightbulb.png" Name="LIGHTB~1.PNG" LongName="lightbulb.png" />
+                <File Id="ev_rich_text.png" Name="EV_RIC~1.PNG" LongName="ev_rich_text.png" />
+              </Component>
+            </Directory>
+            <Directory Id="ico" Name="ico" />
+          </Directory>
+          <Directory Id="spec" Name="spec">
+            <Directory Id="windows" Name="windows">
+              <Directory Id="bin" Name="bin">
+				  <Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
+					<File Id="build.exe" Name="build.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\build.exe" />
+                </Component>
+                <Component Id="wel_hook.dll" Guid="6E65E2A3-1D01-451D-B106-2DABD40F4286">
+                  <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
+                </Component>
+                <Component Id="xmlparse.dll" Guid="2E4839F1-D07D-4CCA-8B80-C317093C6759">
+                  <File Id="xmlparse.dll" Name="xmlparse.dll" KeyPath="yes" />
+                </Component>
+                <Component Id="xmltok.dll" Guid="DC24E72C-5016-43C3-9296-C892CD34D34A">
+                  <File Id="xmltok.dll" Name="xmltok.dll" KeyPath="yes" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="config" Name="config">
+            <Component Id="config" Guid="7D14B6ED-77CD-40C2-AE82-76C0C5DCEF5C">
+              <File Id="default.xml" Name="default.xml" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" Name="Redist">
+        <Directory Id="EiffelStudio_5.5" Name="EIFFEL~4" LongName="EiffelStudio 5.5">
+          <Component Id="EiffelStudio_5.5" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" KeyPath="yes">
+            <Shortcut Id="build.exe" Directory="EiffelStudio_5.5" Name="ISEEIF~1" LongName="ISE EiffelBuild" Target="[#build.exe]" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+    <UI />
+  </Module>
+</Wix>

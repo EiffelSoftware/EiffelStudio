@@ -674,9 +674,9 @@ feature -- Plug and Makefile file
 
 			buffer.putstring ("%N%Tegc_system_name = %"")
 			buffer.putstring (System.system_name)
-			buffer.putstring ("%";%N%Tegc_compiler_tag = '")
+			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putstring (System.version_tag);
-			buffer.putstring ("';%N}%N")
+			buffer.putstring (";%N}%N")
 			buffer.close_c
 
 			!! plug_file.make_open_write (gen_file_name (final_mode, Eplug));

@@ -82,12 +82,6 @@ feature {COLOR_X}
 		end;
 
 
-	window: POINTER is
-				-- the window pointer of the widget
-		do
-			Result := Xt_window (screen_object);
-		end;
-
 end 
 
 

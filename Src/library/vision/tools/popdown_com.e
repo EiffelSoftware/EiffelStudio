@@ -19,10 +19,8 @@ feature
 			if (shell = Void) then
 				dialog ?= argument;
 				dialog.popdown;
-				io.putstring("------> dialog popdown%N");
 			else
 				shell.popdown;
-				io.putstring("------> shell popdown%N");
 			end
 		end
 

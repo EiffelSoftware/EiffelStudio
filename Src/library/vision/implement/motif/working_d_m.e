@@ -20,7 +20,7 @@ inherit
 		undefine
 			make
 		redefine
-            define_cursor_if_shell, undefine_cursor_if_shell
+			define_cursor_if_shell, undefine_cursor_if_shell
 		select
 			cc_set_pixmap
 		end;

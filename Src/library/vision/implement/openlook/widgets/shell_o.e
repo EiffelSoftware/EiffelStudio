@@ -118,16 +118,6 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	x_lower_window (disp, wind: POINTER) is
-		external
-			"C"
-		end; 
-
-	x_raise_window (disp, wind: POINTER) is
-		external
-			"C"
-		end; 
-
 end
 
 

@@ -154,7 +154,8 @@ feature
 
 		local
 			pixmap_implementation: PIXMAP_X;
-			ext_name: ANY
+			ext_name: ANY;
+			c_bitmap: POINTER;
 		do
 			if not (icon_pixmap = Void) then
 				pixmap_implementation ?= icon_pixmap.implementation;
@@ -162,9 +163,10 @@ feature
 			end;
 			icon_pixmap := a_pixmap;
 			pixmap_implementation ?= icon_pixmap.implementation;
+			c_bitmap := pixmap_implementation.resource_pixmap (screen);
 			pixmap_implementation.put_object (Current);
 			ext_name := MiconPixmap.to_c;
-			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+			c_set_pixmap (screen_object, c_bitmap, $ext_name)
 		ensure then
 			icon_pixmap = a_pixmap
 

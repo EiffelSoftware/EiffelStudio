@@ -75,6 +75,14 @@ feature {COLOR_X}
 						$forg_name)
 		end;
 
+feature
+
+    is_stackable: BOOLEAN is
+        do
+            Result := True;
+        end;
+
+
 end 
 
 

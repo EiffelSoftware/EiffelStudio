@@ -95,9 +95,9 @@ feature {NONE}
 	dispose is
 			-- Called when the pixmap is garbaged
 		do
-			--if objects /= Void and then  not objects.empty then
-			--	free_resources
-			--end;
+			if objects /= Void and then  not objects.empty then
+				free_resources
+			end;
 		end; 
 
 	free_resources is
@@ -110,7 +110,10 @@ feature {NONE}
 			until
 				off
 			loop
-				c_free_xpixmap (item.identifier);
+				if item.is_allocated then
+					c_free_xpixmap (item.identifier);
+					item.set_allocated (False);
+				end;
 				forth
 			end;
 			wipe_out;
@@ -119,12 +122,16 @@ feature {NONE}
 			until
 				bitmaps.off
 			loop
-				x_free_pixmap (bitmaps.item.screen.screen_object, bitmaps.item.identifier);
+				if bitmaps.item.is_allocated then
+					x_free_pixmap (bitmaps.item.screen.screen_object, bitmaps.item.identifier);
+					bitmaps.item.set_allocated (False);
+				end;
 				bitmaps.forth
 			end;
 			bitmaps.wipe_out;
 			if arx_pixmap /= void_pointer then
 				c_free_pixmap (arx_pixmap)
+				arx_pixmap := void_pointer;
 			end
 		end;
 	

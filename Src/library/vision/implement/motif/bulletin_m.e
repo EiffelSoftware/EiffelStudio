@@ -73,7 +73,7 @@ feature
 			from ind := s_child_list.lower
 			until ind > s_child_list.upper
 			loop
-				warray.put(s_child_list.item(ind).window, ind);
+				warray.put(Xt_window (s_child_list.item(ind).screen_object), ind);
 				ind := ind + 1;
 			end;
 			arg1 := warray.to_c;

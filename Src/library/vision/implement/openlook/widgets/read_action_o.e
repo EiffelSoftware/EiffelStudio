@@ -14,12 +14,13 @@ feature {NONE}
         	local
             		clip: CLIP;
             		coord: COORD_XY
+					count: INTEGER;
         	do
             		!!coord;
             		coord.set (c_clip_action_x, c_clip_action_y);
             		!!clip;
             		clip.set (coord, c_clip_action_width, c_clip_action_height);
-            		!!Result.make (widget_oui, clip)
+            		!!Result.make (widget_oui, clip, count)
         	end; 
 
 	browse_data (widget_oui: WIDGET): SINGLE_DATA is

@@ -8,7 +8,7 @@ inherit
 
 	MESSAGE_O
 		undefine
-			make, set_managed, real_x, real_y,
+			make, set_managed, real_x, real_y, action_target,
 			undefine_cursor_if_shell, define_cursor_if_shell
 		redefine
 			set_x, set_y, set_x_y,
@@ -41,6 +41,7 @@ feature -- Creation
 				create_message_box (a_message.identifier, a_message.parent);
 			a_message.set_dialog_imp (Current);
 			initialize (a_message)
+			action_target := screen_object;
 		end;
 
 feature 

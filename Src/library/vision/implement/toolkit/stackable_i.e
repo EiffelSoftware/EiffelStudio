@@ -10,9 +10,9 @@ feature
 
 	is_stackable: BOOLEAN is
 		deferred
-		end
+		end;
 
-	window: POINTER is
+	screen_object: POINTER is
 		deferred
 		end;
 

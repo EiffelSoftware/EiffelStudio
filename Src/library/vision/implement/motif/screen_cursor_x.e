@@ -78,20 +78,30 @@ feature {NONE}
 
 	free_resources is
 			-- Free all cursor resources.
-		
+		local
+			null_pointer: POINTER;
 		do
 			from
 				start
 			until
 				off
 			loop
-				x_free_cursor (item.screen.screen_object, item.identifier);
+				if item.is_allocated then
+					x_free_cursor (item.screen.screen_object, item.identifier);
+					item.set_allocated (False);
+				end;
 				forth
 			end;
 			wipe_out;
 			if type = User_defined_pixmap then
-				c_free_pixmap (arx_pixmap);
-				c_free_pixmap (arx_mask)
+				if arx_pixmap /= null_pointer then
+					c_free_pixmap (arx_pixmap);
+					arx_pixmap := null_pointer;
+				end;
+				if arx_mask /= null_pointer then
+					c_free_pixmap (arx_mask);
+					arx_mask := null_pointer;
+				end;
 			end
 		end; 
 

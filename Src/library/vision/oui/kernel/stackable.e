@@ -12,9 +12,10 @@ feature
 			Result := implementation.is_stackable;
 		end
 
-	window: POINTER is
+	screen_object: POINTER is
+			-- implementation of current widget
 		do
-			Result := implementation.window;
+			Result := implementation.screen_object;
 		end;
 
 	parent: COMPOSITE is

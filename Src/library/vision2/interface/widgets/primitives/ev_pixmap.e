@@ -1,7 +1,7 @@
 class EV_PIXMAP
 
-inherit
+--inherit
 
-	DRAWABLE
+	--EV_DRAWABLE
 
 end -- class EV_PIXMAP

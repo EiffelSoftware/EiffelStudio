@@ -186,7 +186,7 @@ rt_public char *dir_search(EIF_POINTER d, char *name)
 #endif
 }
 
-rt_public char *dir_next(EIF_POINTER d)
+rt_public EIF_REFERENCE dir_next(EIF_POINTER d)
 	/* Return the Eiffel string corresponding to the next entry name, or a
 	 * null pointer if we reached the end of the directory.
 	 */

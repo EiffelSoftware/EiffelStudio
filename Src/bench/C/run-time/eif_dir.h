@@ -69,7 +69,7 @@ RT_LNK EIF_BOOLEAN eif_dir_is_deletable (char *name);
 RT_LNK void eif_dir_delete (char *name);
 RT_LNK void dir_rewind(EIF_POINTER dirp);
 RT_LNK char *dir_search(EIF_POINTER dirp, char *name);
-RT_LNK char *dir_next(EIF_POINTER dirp);
+RT_LNK EIF_REFERENCE dir_next(EIF_POINTER dirp);
 RT_LNK void dir_close(EIF_POINTER dirp);
 
 #ifdef __cplusplus

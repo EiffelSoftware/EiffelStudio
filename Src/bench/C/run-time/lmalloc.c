@@ -20,6 +20,12 @@
 #include "malloc.h"
 #include "garcol.h"
 
+#ifdef I_STRING
+#include <string.h>		/* For memset(), bzero() */
+#else
+#include <strings.h>
+#endif
+
 #ifndef lint
 private char *rcsid =
 	"$Id$";
@@ -75,13 +81,13 @@ register2 unsigned int nbytes;
 }
 
 void free(ptr)
-register1 char *ptr;
+register1 Malloc_t ptr;
 {
 	/* Free is guaranteed to work enven with a null pointer, while xfree will
 	 * most probably dump a core...
 	 */
 
-	if (ptr == (char *) 0)
+	if (ptr == (Malloc_t) 0)
 		return;
 
 	xfree(ptr);

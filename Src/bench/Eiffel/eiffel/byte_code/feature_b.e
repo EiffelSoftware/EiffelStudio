@@ -266,7 +266,7 @@ feature -- IL code generation
 
 			parameters.generate_il
 			class_type ?= cl_type.associated_class_type
-			class_type.generate_il (feature_name)
+			class_type.generate_il (feature_name_id)
 		end
 
 feature -- Byte code generation

@@ -15,7 +15,7 @@ inherit
 			adapt, adapt_defaults
 		end
 
-	CONSTRUCT_LIST [T]
+	ARRAYED_LIST [T]
 		rename
 			duplicate as construct_list_duplicate
 		end

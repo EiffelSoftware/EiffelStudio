@@ -14,6 +14,8 @@ inherit
 	SCROLL_L_I;
 
 	PRIMITIVE_COMPOSITE_M
+		undefine
+			set_no_event_propagation
 		redefine
 			set_size, set_height, set_width
 		end;
@@ -26,7 +28,7 @@ inherit
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
 			make_from_existing, create_callback_struct,
-			clean_up
+			clean_up, set_no_event_propagation
 		redefine
 			set_size, set_height, set_width,
 			update_background_color, update_foreground_color,

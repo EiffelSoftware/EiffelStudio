@@ -13,6 +13,8 @@ inherit
 	SCROLLED_T_I;
 
 	PRIMITIVE_COMPOSITE_M
+		undefine
+			set_no_event_propagation
 		redefine
 			set_size, set_height, set_width
 		end;
@@ -22,7 +24,8 @@ inherit
 			mel_text_make, clean_up,
 			height, real_x, real_y, realized, shown, width,
 			x, y, hide, lower, propagate_event, raise,
-			realize, set_x, set_x_y, set_y, show, unrealize
+			realize, set_x, set_x_y, set_y, show, unrealize,
+			set_no_event_propagation
 		redefine
 			make, make_word_wrapped,
 			set_background_color,

@@ -53,12 +53,26 @@ feature -- Access
 			wel_font: WEL_FONT
 			ev_font: EV_FONT
 			font_imp: EV_FONT_IMP
+			dc: WEL_MEMORY_DC
+			text_metric: WEL_TEXT_METRIC
 		do
 				--| FIXME we return a default EV_FONT if the
 				--| user cancells the dialog, but we should make this,
 				--| and other standard dialogs all return the previously
 				--| set value. Julian 10/23/02.
 			if selected then
+				create wel_font.make_indirect (log_font)
+					-- As `Current' is created with the flag Cf_noscriptsel, the log font returned
+					-- does not have the char set attribute filled correctly. To determine the
+					-- actual char set from the face name, we must select the font into a DC,
+					-- and query the DC directly. The new font we create now has the correct char set.
+				create dc.make
+				dc.select_font (wel_font)
+				create text_metric.make (dc)
+				log_font.set_char_set (text_metric.character_set)--dc.text_character_set)
+				dc.unselect_all
+				dc.release		
+				
 				create wel_font.make_indirect (log_font)
 				create ev_font
 				font_imp ?= ev_font.implementation

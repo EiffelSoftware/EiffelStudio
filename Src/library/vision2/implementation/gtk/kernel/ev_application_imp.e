@@ -86,22 +86,22 @@ feature {NONE} -- Initialization
 		do
 			gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
 				0,
-				(interface.post_launch_actions)~call ([])
+				agent (interface.post_launch_actions).call ([])
 			)
 			internal_idle_actions.not_empty_actions.extend (
-				~connect_internal_idle_actions
+				agent connect_internal_idle_actions
 			)
 			internal_idle_actions.empty_actions.extend (
-				~disconnect_internal_idle_actions
+				agent disconnect_internal_idle_actions
 			)
 			if not internal_idle_actions.is_empty then
 				connect_internal_idle_actions
 			end
 			interface.idle_actions.not_empty_actions.extend (
-				internal_idle_actions~extend (idle_actions_agent)
+				agent internal_idle_actions.extend (idle_actions_agent)
 			)
 			interface.idle_actions.empty_actions.extend (
-				internal_idle_actions~prune_all (idle_actions_agent)
+				agent internal_idle_actions.prune_all (idle_actions_agent)
 			)
 			if not interface.idle_actions.is_empty then
 				internal_idle_actions.extend (idle_actions_agent)
@@ -354,7 +354,7 @@ feature -- Implementation
 		do
 			if idle_actions_agent_internal = Void then
 				idle_actions_agent_internal :=
-					(interface.idle_actions)~call ([])
+					agent (interface.idle_actions).call ([])
 			end
 			Result := idle_actions_agent_internal
 		end
@@ -366,7 +366,7 @@ feature -- Implementation
 			if internal_idle_actions_connection_id = 0 then
 				internal_idle_actions_connection_id :=
 					gtk_marshal.c_ev_gtk_callback_marshal_idle_connect (
-						internal_idle_actions~call ([]) 
+						agent internal_idle_actions.call ([]) 
 					)
 			end
 		ensure

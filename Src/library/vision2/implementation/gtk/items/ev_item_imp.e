@@ -118,13 +118,13 @@ feature {EV_ANY_I} -- Implementation
 	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 		do
 			create Result
-			Result.not_empty_actions.extend (~connect_button_press_switch)
+			Result.not_empty_actions.extend (agent connect_button_press_switch)
 		end
 
 	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 		do
 			create Result
-			Result.not_empty_actions.extend (~connect_button_press_switch)
+			Result.not_empty_actions.extend (agent connect_button_press_switch)
 		end
 
 feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation

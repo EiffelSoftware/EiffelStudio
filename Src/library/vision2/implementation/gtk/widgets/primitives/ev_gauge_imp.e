@@ -43,11 +43,11 @@ feature {NONE} -- Initialization
 			--| so initialize does not have to be called again.
 		do
 			create value_range.make (0, 100)
-			value_range.change_actions.extend (~set_range)
+			value_range.change_actions.extend (agent set_range)
 			real_signal_connect (
 				adjustment,
 				"value-changed",
-				~value_changed_handler,
+				agent value_changed_handler,
 				Void
 			)
 		end

@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			create tree_node_ptr_table.make (100)
 			C.gtk_clist_set_row_height (list_widget, row_height)
 			create timer.make_with_interval (0)
-			timer.actions.extend (~on_time_out)
+			timer.actions.extend (agent on_time_out)
 		end
 
 	initialize is
@@ -90,27 +90,27 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
-			real_signal_connect (visual_widget, "motion_notify_event", ~motion_handler, Default_translate)
+			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
 
 			real_signal_connect (
 				list_widget,
 				"tree-select-row",
-				~select_callback,
-				~gtk_value_pointer_to_tuple
+				agent select_callback,
+				agent gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-expand",
-				~expand_callback,
-				~gtk_value_pointer_to_tuple
+				agent expand_callback,
+				agent gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-collapse",
-				~collapse_callback,
-				~gtk_value_pointer_to_tuple
+				agent collapse_callback,
+				agent gtk_value_pointer_to_tuple
 			)
 			connect_button_press_switch
 				-- Needed so items are always hooked up, even though widget may not need to be.
@@ -360,7 +360,7 @@ feature -- Implementation
 			if button_press_connection_id > 0 then
 				signal_disconnect (button_press_connection_id)
 			end
-			signal_connect ("button-press-event", ~start_transport_filter, default_translate)
+			signal_connect ("button-press-event", agent start_transport_filter, default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		end

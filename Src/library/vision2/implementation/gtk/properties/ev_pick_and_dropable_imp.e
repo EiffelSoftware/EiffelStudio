@@ -40,7 +40,7 @@ feature -- Implementation
 			end
 			signal_connect (
 				"button-press-event",
-				~start_transport_filter,
+				agent start_transport_filter,
 				default_translate
 			)
 			button_press_connection_id := last_signal_connection_id
@@ -179,7 +179,7 @@ feature -- Implementation
 					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
 					signal_connect (
 						"motion-notify-event",
-						~add_grab_cb,
+						agent add_grab_cb,
 						default_translate
 					)
 					grab_callback_connection_id := last_signal_connection_id
@@ -190,7 +190,7 @@ feature -- Implementation
 					signal_disconnect (button_press_connection_id)
 					signal_connect (
 						"button-press-event",
-						~end_transport_filter,
+						agent end_transport_filter,
 						default_translate
 					)
 					button_press_connection_id := last_signal_connection_id
@@ -200,7 +200,7 @@ feature -- Implementation
 						end
 						signal_connect (
 							"button-release-event",
-							~end_transport,
+							agent end_transport,
 							default_translate
 						)
 						button_release_connection_id := last_signal_connection_id
@@ -208,19 +208,19 @@ feature -- Implementation
 
 					signal_connect (
 						"motion-notify-event",
-						~execute,
+						agent execute,
 						default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id
 					signal_connect (
 						"enter_notify_event",
-						~signal_emit_stop (visual_widget, "enter_notify_event"),
+						agent signal_emit_stop (visual_widget, "enter_notify_event"),
 						default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
 					signal_connect (
 						"leave_notify_event",
-						~signal_emit_stop (visual_widget, "leave_notify_event"),
+						agent signal_emit_stop (visual_widget, "leave_notify_event"),
 						default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id

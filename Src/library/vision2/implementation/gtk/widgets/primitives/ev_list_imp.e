@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,
 				eiffel_to_c ("focus-out-event"),
-				~lose_focus
+				agent lose_focus
 				)
 		end
 		

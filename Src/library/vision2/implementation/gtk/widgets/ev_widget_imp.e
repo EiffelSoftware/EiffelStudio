@@ -438,7 +438,7 @@ feature -- Element change
 			end
 		--	popup_menu := a_menu
 		--	C.gtk_signal_connect_object (
-		--		c_object, ~show_popup_menu, popup_menu)
+		--		c_object, agent show_popup_menu, popup_menu)
 		end
 
 	remove_popup_menu is

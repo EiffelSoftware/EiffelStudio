@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.
 		do
-			signal_connect ("activate", ~on_activate, Void)
+			signal_connect ("activate", agent on_activate, Void)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box

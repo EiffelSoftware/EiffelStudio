@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	connect_signals is
 			-- Connect on_activate to toggled signal.
 		do
-			signal_connect ("toggled", ~on_activate, Void)
+			signal_connect ("toggled", agent on_activate, Void)
 		end
 		
 	on_activate is

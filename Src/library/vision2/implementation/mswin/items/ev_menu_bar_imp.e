@@ -31,6 +31,10 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is         
 			-- Create a menu widget with `par' as parent.
 			-- We increase the counter to have ids bigger than 1.
+			-- Here, we create the local wel_window, for the moment
+			-- it is just to avoid that the features of ev_primitive
+			-- crash, but it has no need, because when you use them,
+			-- it has no effect.
 		local
 			par_imp: EV_CONTAINER_IMP
 		do
@@ -40,7 +44,7 @@ feature {NONE} -- Initialization
 				valid_container: par_imp /= Void
 			end
 			initialize
-			!! wel_window.make (par_imp.wel_window," ")
+			!! wel_window.make (par_imp.wel_window)
 			par_imp.wel_window.set_menu (Current)
 		end	
 
@@ -48,7 +52,7 @@ feature -- Implementation
 
 	wel_window: EV_WEL_CONTROL_WINDOW
 	
-end -- class EV_MENU BAR_IMP
+end -- class EV_MENU_BAR_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

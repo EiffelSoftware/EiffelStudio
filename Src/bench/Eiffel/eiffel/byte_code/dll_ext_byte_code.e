@@ -87,7 +87,7 @@ feature -- Code generation
             generated_file.new_line;
             generated_file.putstring ("if (handle == NULL) eraise(%"Can not allocate function handle%",EN_PROG);");
             generated_file.new_line;
- 
+
             if not result_type.is_void then
                 generated_file.putstring ("Result = ");
             end;
@@ -178,15 +178,15 @@ feature -- Code generation
                 -- FIXME: remove extern declaration
             generated_file.putstring ("extern HANDLE eif_load_dll(char*);");
             generated_file.new_line;
- 
+
                 -- Declare local variables required by the call
             generated_file.putstring ("HANDLE a_result;");
             generated_file.new_line;
- 
+
             result_type.c_type.generate (generated_file);
             generated_file.putstring ("(*fp)();");
             generated_file.new_line;
- 
+
             if not result_type.is_void then
                 result_type.c_type.generate (generated_file);
                 generated_file.putstring (" Result;");
@@ -213,7 +213,7 @@ feature -- Code generation
                 generated_file.putchar ('"');
             end
             generated_file.putstring (");");
- 
+
             generated_file.new_line;
             generated_file.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);");
             generated_file.new_line;

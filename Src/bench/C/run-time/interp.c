@@ -409,9 +409,14 @@ int where;			/* Are we checking invariant before or after compound? */
 			 * not be suitably aligned. Therefore, we get an EIF_OBJ pointer
 			 * and write it in place--RAM.
 			 */
-			if  ((rtype & SK_HEAD) == SK_REF) {
-				EIF_OBJ ptr = henter((char *) 0);	/* Now always alive */
-				write_address(rvar, (char *) ptr);	/* Write hector address */
+			switch (rtype & SK_HEAD) {
+				case SK_BIT:
+				case SK_EXP:
+				case SK_REF:
+				{
+					EIF_OBJ ptr = henter((char *) 0);	/* Now always alive */
+					write_address(rvar, (char *) ptr);	/* Write hector address */
+				}
 			}
 
 			*once_done = '\01';	/* Mark the once done */
@@ -561,11 +566,29 @@ int where;			/* Are we checking invariant before or after compound? */
 				last->type = SK_EXP;
 				if (tagval != stagval)
 					sync_registers(scur, stop);
+				if (once_done != (char *) 0) {
+					/* If the Result is an expanded, then we have an hector pointer
+					 * in place of the result.
+					 */
+				string = IC;	/* Save IC value */
+				IC = rvar;		/* Where hector pointer is recorded */
+				eif_access(get_address()) = last->it_ref;
+				IC = string;	/* Restore IC value */
+				}
 				break;
 			case SK_BIT:
 				last->type = SK_POINTER;    /* GC: wait for malloc */
 				last->it_bit = RTLB(type & SK_BMASK);
 				last->type = type;
+				if (once_done != (char *) 0) {
+					/* If the Result is a bit, then we have an hector pointer
+					* in place of the result.
+					*/
+					string = IC;	/* Save IC value */
+					IC = rvar;		/* Where hector pointer is recorded */
+					eif_access(get_address()) = last->it_bit;
+					IC = string;	/* Restore IC value */
+				}
 				break;
 			default:
 				break;

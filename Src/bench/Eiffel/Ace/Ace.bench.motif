@@ -2,7 +2,7 @@ system es3
 
 root
 
-	ewb (root_cluster): "make"
+	ewb_motif (root_cluster): "make"
 
 default
 
@@ -104,6 +104,9 @@ cluster
 		 archi_text:			"$BENCH/Eiffel/interface/archi_text";
 
 		 ipc:				"$BENCH/Eiffel/ipc";
+
+		case_common:		"$BENCH/Eiffel/case_storage/common";
+		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
 		 graph_resources:	"$BENCH/Eiffel/library/vision/implement/motif/Resources";
 		 graph_widgets:		"$BENCH/Eiffel/library/vision/implement/motif/widgets";

@@ -522,6 +522,8 @@ feature {NONE} -- Stepping
 			l_call_stack_element: CALL_STACK_ELEMENT_DOTNET
 			do_not_use_range: BOOLEAN
 			l_ranges:  ARRAY [TUPLE [INTEGER,INTEGER]]
+			l_origin_cc: CLASS_C
+			l_impl_ct: CLASS_TYPE
 		do		
 			do_not_use_range := False
 			if do_not_use_range then
@@ -539,8 +541,14 @@ feature {NONE} -- Stepping
 						debug ("debugger_trace_stepping")
 							print (" ### Current IL OffSet = 0x"+l_current_il_offset.to_hex_string+" ~ "+l_current_il_offset.out+" %N")
 						end
+						l_impl_ct := l_call_stack_element.dynamic_type
+						l_origin_cc := l_call_stack_element.origin_class
+						if l_origin_cc /= l_call_stack_element.dynamic_class then
+							l_impl_ct := il_debug_info_recorder.implemented_type (l_origin_cc, l_impl_ct)
+						end
+						
 						l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
-										l_call_stack_element.dynamic_type,
+										l_impl_ct,
 										l_call_stack_element.routine.associated_feature_i,
 										l_current_il_offset
 										)

@@ -857,6 +857,7 @@ work: libwkbench.a
 network.o: ../ipc/app/network.o
 
 network.o:
+	$(RM) network.o
 	$(LN) $(NETWORK_OBJ) $@
 
 bmain.c: main.c

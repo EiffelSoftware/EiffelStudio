@@ -21,7 +21,9 @@ inherit
 			assembly_culture,
 			assembly_cluster_name,
 			assembly_public_key_token,
-			set_assembly_prefix
+			set_assembly_prefix,
+			is_prefix_read_only,
+			set_assembly_prefix_user_precondition
 		end
 			
 	
@@ -62,7 +64,12 @@ feature {NONE} -- initalization
 			create assembly_sd.initialize (l_cluster_name_sd, l_name_sd, Void, l_version_sd, l_culture_sd, l_public_key_token_sd)
 			is_local := False
 			
-			set_assembly_prefix(a_prefix)
+			if not is_prefix_read_only then
+				set_assembly_prefix (a_prefix)
+			else
+				-- force setting of known prefix
+				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
+			end
 		end
 		
 	make_local (a_cluster_name, a_assembly_path, a_prefix: STRING) is
@@ -81,7 +88,12 @@ feature {NONE} -- initalization
 			
 			is_local := True
 			create assembly_sd.initialize (l_cluster_name_sd, l_path_sd, Void, Void, Void, Void)
-			set_assembly_prefix(a_prefix)
+			if not is_prefix_read_only then
+				set_assembly_prefix (a_prefix)
+			else
+				-- force setting of known prefix
+				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
+			end
 		end
 		
 	make_with_assembly_sd (a_assembly: ASSEMBLY_SD) is
@@ -95,12 +107,18 @@ feature {NONE} -- initalization
 			else
 				is_local := True
 			end
+			if is_prefix_read_only then
+				-- force setting of known prefix
+				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
+			end
 		end
 
 feature -- Status setting
 
 	set_assembly_prefix (a_prefix: STRING) is
 			-- set 'assembly_prefix' with 'a_prefix'
+		require else
+			editable_prefix: not is_prefix_read_only
 		local
 			asm_prefix: ID_SD
 		do
@@ -112,20 +130,36 @@ feature -- Status setting
 				assembly_sd.set_prefix_name (Void)
 			end
 		end
+		
+	set_assembly_prefix_user_precondition (a_prefix: STRING): BOOLEAN is
+			-- `set_assembly_prefix' precondition
+		do
+			Result := False
+		end
 
 feature -- Access
+
+	is_prefix_read_only: BOOLEAN is
+			-- can assembly's prefix be changed?
+		do
+			Result := known_prefixes.has (format_hash_assembly_name (assembly_name, assembly_public_key_token))
+		end
 
 	assembly_prefix: STRING is
 			-- the prefix assigned to all classes in the system
 		local
 			a_prefix: ID_SD
 		do
-			a_prefix := assembly_sd.prefix_name
-			if a_prefix = Void then
-				Result := ""
+			if not is_prefix_read_only then
+				a_prefix := assembly_sd.prefix_name
+				if a_prefix = Void then
+					Result := ""
+				else
+					Result := a_prefix
+					Result.to_upper
+				end
 			else
-				Result := a_prefix
-				Result.to_upper
+				Result := known_prefixes.item (format_hash_assembly_name (assembly_name, assembly_public_key_token))
 			end
 		ensure
 			non_void_Result: Result /= Void
@@ -185,6 +219,37 @@ feature -- Access
 			
 	assembly_sd: ASSEMBLY_SD
 			-- lace assembly object
+			
+feature {NONE} -- Implementation
+
+
+	format_hash_assembly_name (a_name, a_public_key: STRING): STRING is
+			-- format an assembly name and public key toekn into a hashable representation
+			-- to match with `known_prefixes'
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			non_void_public_key: a_public_key /= Void
+		local
+			l_key: STRING
+		do
+			Result := clone (a_name)
+			l_key := clone (a_public_key)
+			l_key.to_lower
+			Result.append (l_key)
+		end
+		
+	known_prefixes: HASH_TABLE [STRING, STRING] is
+			-- known assembly prefixes
+			-- key: name + public key token
+			-- value: prefix
+		do
+			create Result.make (13)
+			Result.put ("SYSTEM_DLL_", format_hash_assembly_name ("System", "b77a5c561934e089"))
+			Result.put ("XML_", format_hash_assembly_name ("System.Xml", "b77a5c561934e089"))
+			Result.put ("WINFORMS_", format_hash_assembly_name ("System.Windows.Forms", "b77a5c561934e089"))
+		end
+		
 			
 invariant
 	non_void_cluster_name: assembly_cluster_name /= Void

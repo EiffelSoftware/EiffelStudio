@@ -11,7 +11,10 @@ inherit
 			adapt
 		end
 
-feature {CLUST_ADAPT_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (cn: like cluster_name) is
 			-- Create a new CLUST_IGN AST node.
@@ -29,8 +32,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (cluster_name.duplicate)
+			create Result.initialize (cluster_name.duplicate)
 		end
 
 feature -- Comparison

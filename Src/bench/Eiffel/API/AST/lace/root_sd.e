@@ -19,7 +19,10 @@ inherit
 			valid_reference_class, is_class
 		end
 
-feature {ROOT_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (rn: like root_name; cm: like cluster_mark;
 		cp: like creation_procedure_name) is
@@ -101,8 +104,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (root_name.duplicate, duplicate_ast (cluster_mark),
+			create Result.initialize (root_name.duplicate, duplicate_ast (cluster_mark),
 				duplicate_ast (creation_procedure_name))
 		end
 

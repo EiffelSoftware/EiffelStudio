@@ -16,7 +16,11 @@ inherit
 	SHARED_ENV;
 	SYSTEM_CONSTANTS
 
-feature {CLUST_PROP_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize,
+	default_create
+
+feature {NONE} -- Initialization
 
 	initialize (dep: like dependencies; us: like use_name; iop: like include_option;
 		eo: like exclude_option; ao: like adapt_option;
@@ -51,10 +55,10 @@ feature -- Properties
 	use_name: ID_SD;
 			-- Use file
 
-	include_option: LACE_LIST [INCLUDE_SD];
+	include_option: LACE_LIST [FILE_NAME_SD];
 			-- File name to include
 
-	exclude_option: LACE_LIST [EXCLUDE_SD];
+	exclude_option: LACE_LIST [FILE_NAME_SD];
 			-- File names to exclude from current cluster
 
 	adapt_option: LACE_LIST [CLUST_ADAPT_SD];
@@ -116,8 +120,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (
+			create Result.initialize (
 				duplicate_ast (dependencies),
 				duplicate_ast (use_name), duplicate_ast (include_option),
 				duplicate_ast (exclude_option), duplicate_ast (adapt_option),

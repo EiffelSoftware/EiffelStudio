@@ -7,8 +7,6 @@ class FREE_OPTION_SD
 
 inherit
 	OPTION_SD
-		rename
-			initialize as initialize_option
 		redefine
 			process_system_level_options, is_system_level,
 			is_system_level_only, is_free_option, duplicate,
@@ -23,7 +21,22 @@ inherit
 
 	SHARED_EIFFEL_PARSER
 
-feature {OPTION_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize,
+	make
+
+feature {NONE} -- Initialization
+
+	make (type_id: INTEGER) is
+			-- Create a new FREE_OPTION AST node with code `type_id'.
+		require
+			type_id_positive: type_id > 0
+			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
+		do
+			code := type_id
+		ensure
+			code_set: code = type_id
+		end
 
 	initialize (on: like option_name) is
 			-- Create a new FREE_OPTION AST node.
@@ -123,8 +136,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (option_name.duplicate)
+			create Result.initialize (option_name.duplicate)
 		end
 
 feature {COMPILER_EXPORTER}

@@ -13,12 +13,15 @@ inherit
 		rename
 			initialize as d_initialize
 		redefine
-			duplicate, save, same_as
+			duplicate, save, same_as, is_precompiled
 		end;
 
 	EIFFEL_ENV
 
-feature {D_PRECOMPILED_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like option; v: like value; r: like renamings) is
 			-- Create a new D_PRECOMPILED AST node.
@@ -40,13 +43,17 @@ feature -- Access
 			-- Cluster renaming list
 			-- Can be Void.
 
+feature -- Status report
+
+	is_precompiled: BOOLEAN is True
+			-- Current is an instance of `D_PRECOMPILED_SD'.
+
 feature -- Duplication
 
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (option.duplicate, duplicate_ast (value), duplicate_ast (renamings))
+			create Result.initialize (option.duplicate, duplicate_ast (value), duplicate_ast (renamings))
 		end
 
 feature -- Comparison
@@ -58,7 +65,6 @@ feature -- Comparison
 			 		and then same_ast (value, other.value)
 					and then same_ast (renamings, other.renamings)
 		end
-
 
 feature -- Saving
 

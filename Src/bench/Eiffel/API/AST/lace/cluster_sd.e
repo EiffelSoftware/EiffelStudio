@@ -17,7 +17,10 @@ inherit
 
 	SHARED_RESCUE_STATUS
 
-feature {CLUSTER_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (cn: like cluster_name; pn: like parent_name;
 		dn: like directory_name; cp: like cluster_properties;
@@ -99,8 +102,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (cluster_name.duplicate, duplicate_ast (parent_name),
+			create Result.initialize (cluster_name.duplicate, duplicate_ast (parent_name),
 				directory_name.duplicate, duplicate_ast (cluster_properties),
 				is_recursive, is_library)
 		end

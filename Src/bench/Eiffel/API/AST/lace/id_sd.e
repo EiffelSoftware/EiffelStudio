@@ -20,7 +20,7 @@ inherit
 create
 	make, initialize
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (s: STRING) is
 			-- Create a new ID AST node made up

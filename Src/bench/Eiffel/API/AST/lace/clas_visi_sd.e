@@ -12,7 +12,10 @@ inherit
 			adapt
 		end
 
-feature {CLAS_VISI_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (cn: like class_name; vn: like visible_name;
 		cr: like creation_restriction; er: like export_restriction;
@@ -58,8 +61,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (class_name.duplicate, duplicate_ast (visible_name),
+			create Result.initialize (class_name.duplicate, duplicate_ast (visible_name),
 				duplicate_ast (creation_restriction), duplicate_ast (export_restriction),
 				duplicate_ast (renamings))
 		end

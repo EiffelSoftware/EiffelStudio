@@ -11,10 +11,13 @@ inherit
 		rename
 			initialize as d_initialize
 		redefine
-			adapt, duplicate, save, same_as
+			adapt, duplicate, save, same_as, is_optional
 		end;
 
-feature {O_OPTION_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like option; v: like value; t: like target_list) is
 			-- Create a new O_OPTION AST node.
@@ -35,13 +38,17 @@ feature -- Properties
 	target_list: LACE_LIST [ID_SD];
 			-- List of class targets
 
+feature -- Status report
+
+	is_optional: BOOLEAN is True
+			-- Current is an instance of `O_OPTION_SD'.
+
 feature -- Duplication
 
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (option.duplicate,
+			create Result.initialize (option.duplicate,
 				duplicate_ast (value), duplicate_ast (target_list))
 		end
 

@@ -11,7 +11,10 @@ inherit
 			adapt
 		end
 
-feature {CLUST_REN_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (cn: like cluster_name; r: like renamings) is
 			-- Create a new CLUST_REN AST node.
@@ -37,8 +40,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (cluster_name.duplicate, renamings.duplicate)
+			create Result.initialize (cluster_name.duplicate, renamings.duplicate)
 		end
 
 feature -- Comparison

@@ -12,7 +12,10 @@ inherit
 			adapt, adapt_defaults
 		end;
 
-feature {D_OPTION_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+	
+feature {NONE} -- Initialization
 
 	initialize (o: like option; v: like value) is
 			-- Create a new D_OPTION AST node.
@@ -34,13 +37,24 @@ feature -- Properties
 	value: OPT_VAL_SD
 			-- option value
 
+feature -- Status report
+
+	is_optional: BOOLEAN is
+			-- Is Current an instance of `O_OPTION_SD'.
+		do
+		end
+		
+	is_precompiled: BOOLEAN is
+			-- Is Current an instance of `D_PRECOMPILED_SD'.
+		do
+		end
+		
 feature -- Duplication
 
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (option.duplicate, duplicate_ast (value))
+			create Result.initialize (option.duplicate, duplicate_ast (value))
 		end
 
 feature -- Comparison

@@ -6,13 +6,15 @@ indexing
 class LANG_TRIB_SD
 
 inherit
-
 	AST_LACE
 		redefine
 			adapt
 		end
 
-feature {LANG_TRIB_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (ln: like language_name; fn: like file_names) is
 			-- Create a new LANG_TRIB AST node.
@@ -40,8 +42,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (language_name.duplicate, file_names.duplicate)
+			create Result.initialize (language_name.duplicate, file_names.duplicate)
 		end
 
 feature -- Comparison

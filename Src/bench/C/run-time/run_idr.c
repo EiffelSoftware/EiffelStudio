@@ -26,8 +26,12 @@
 #endif
 #include "eiffel.h"
 #include "bits.h"
+#if !CUSTOM || NEED_RETRIEVE_H
 #include "retrieve.h"
+#endif
+#if !CUSTOM || NEED_STORE_H
 #include "store.h"
+#endif
 #include "error.h"
 #include "run_idr.h"
 #include "../idrs/idrf.h"

@@ -18,6 +18,12 @@ extern "C" {
 #endif
 
 #include "config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 #include "eif_globals.h"
 
 /* The following includes are needed only because Eiffel has no way to direct
@@ -30,12 +36,6 @@ extern "C" {
 #include <sys/types.h>			/* Needed for directory entries */
 #include "dir.h"				/* Directory routines */
 #include "file.h"				/* %%ss moved from 3 lines above */
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #include "macros.h"
 

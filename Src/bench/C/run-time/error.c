@@ -11,15 +11,17 @@
 */
 
 #include "config.h"
-#include "portable.h"
-#include "except.h"
-#include "error.h"
 
 #ifdef I_STRING
 #include <string.h>			/* Try to find strerror() there */
 #else
 #include <strings.h>
 #endif
+
+#include "portable.h"
+#include "except.h"
+#include "error.h"
+
 
 rt_public char *error_tag(int code)
 {

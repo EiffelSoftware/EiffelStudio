@@ -11,18 +11,17 @@
 
 */
 
-#include "eif_str.h"
-#include "eif_globals.h"
 #include "config.h"
-#include <ctype.h>
-
-#include <stdio.h>					/* For sscanf() */
-
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+#include "eif_str.h"
+#include "eif_globals.h"
+#include <ctype.h>
+
+#include <stdio.h>					/* For sscanf() */
 
 #define MAX_NUM_LEN		256			/* Maximum length for an ASCII number */
 

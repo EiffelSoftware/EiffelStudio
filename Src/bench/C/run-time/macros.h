@@ -13,8 +13,8 @@
 #ifndef _macros_h_
 #define _macros_h_
 
-#include "eif_globals.h"
 #include "config.h"
+#include "eif_globals.h"
 #include "malloc.h"
 #include "garcol.h"
 #include "except.h"
@@ -23,7 +23,9 @@
 #include "plug.h"				/* For struct bit declaration */
 #include "hector.h"
 #include "size.h"
+#if !defined CUSTOM || defined NEED_OPTION_H
 #include "option.h"
+#endif
 #include "bits.h"
 
 #ifdef __cplusplus

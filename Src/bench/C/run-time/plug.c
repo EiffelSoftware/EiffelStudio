@@ -11,15 +11,19 @@
 */
 
 #include "config.h"
+#include "eiffel.h"
 #include "plug.h"
 #include "malloc.h"
-#include "eiffel.h"
+#if !defined CUSTOM || defined NEED_OPTION_H
 #include "option.h"
+#endif
 #include "macros.h"
 #include "except.h"
 #include "local.h"
 #include "interp.h"
+#if !defined CUSTOM || defined NEED_HASHIN_H
 #include "hashin.h"
+#endif
 #include "bits.h"
 #include "project.h"		/* for bit_dtype */
 

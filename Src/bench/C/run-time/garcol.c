@@ -17,22 +17,31 @@
 extern "C" {
 #endif
 
+#include "config.h"
+#include "eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
 #include "misc.h"	/* %%ss added for eif_free_dlls */
-#include "config.h"
 #include "size.h"
 #include "malloc.h"
 #include "garcol.h"
+#if ! defined CUSTOM || defined NEED_TIMER_H
 #include "timer.h"
+#endif
 #include "macros.h"
 #include "sig.h"
 #include "urgent.h"
 #include "search.h"
-#include "eiffel.h"		/* For bcopy/memcpy */
 #include <stdio.h>		/* For stream flushing */
+
+#if ! defined CUSTOM || defined NEED_DLE_H
 #include "dle.h"		/* For dle_reclaim */
+#endif
+#if ! defined CUSTOM || defined NEED_OPTION_H
 #include "option.h"		/* For exitprf */
+#endif
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "object_id.h"	/* For the object id and separate stacks */
+#endif
 #include "hector.h"
 #ifndef TEST
 #include "main.h"
@@ -239,8 +248,9 @@ rt_private void clean_up(void);			/* After collection, time to clean up */
 /* Stack markers */
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);	/* Marks a collector's stack */
 rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);			/* Marks a collector's stack */
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void); /* Update the object id stack */
-
+#endif
 /* Storage compation reclaimer */
 rt_public void plsc(void);					/* Storage compaction reclaimer entry */
 rt_private int partial_scavenging(void);	/* The partial scavenging algorithm */
@@ -396,6 +406,7 @@ rt_public int acollect(void)
 	int allocated;					/* Memory used since last full collect */
 	int started_here = 0;			/* Was this the original entry point? */
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -406,6 +417,7 @@ rt_public int acollect(void)
 			started_here = 1;
 			gc_ran = 1;
 		}
+#endif
 
 	if (g_data.status & GC_STOP)
 		return -1;					/* Garbage collection stopped */
@@ -453,6 +465,7 @@ rt_public int acollect(void)
 
 	nb_calls++;			/* Records the call */
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -461,7 +474,7 @@ rt_public int acollect(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
-
+#endif
 	return status;		/* Collection done, forward status */
 
 	EIF_END_GET_CONTEXT
@@ -491,6 +504,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	int nbstat;							/* Current number of statistics */
 	int started_here = 0;
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -501,7 +515,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 			started_here = 1;
 			gc_ran = 1;
 		}
-
+#endif
 	if (g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
 
@@ -640,6 +654,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
 #endif
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime; 
@@ -648,7 +663,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
-
+#endif
 	return status;		/* Forward status report */
 
 	EIF_END_GET_CONTEXT
@@ -703,6 +718,7 @@ rt_public void mksp(void)
 	EIF_GET_CONTEXT
 	int started_here = 0;
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -713,12 +729,13 @@ rt_public void mksp(void)
 			started_here = 1;
 			gc_ran = 1;
 		}
-
+#endif
 	if (g_data.status & GC_STOP)
 		return;						/* Garbage collection stopped */
 
 	(void) scollect(mark_and_sweep, GST_PART);
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -727,6 +744,7 @@ rt_public void mksp(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -781,9 +799,8 @@ rt_public void reclaim(void)
 	 */
 
 	EIF_GET_CONTEXT
-#ifdef EIF_WINDOWS
+
 	 struct chunk *c, *cn; /* %%ss removed since lines below are commented */
-#endif
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: collecting all objects...\n");
@@ -796,28 +813,38 @@ rt_public void reclaim(void)
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
-#ifdef EIF_WINDOWS
-#ifndef EIF_WIN_31
 #ifdef EIF_WIN32
 	eif_cleanup();
 #endif
+
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
 		{
 		cn = c->ck_next;
 		free (c);
 		}
-#endif
+	cklst.ck_head = (struct chunk *) 0;
+
+#ifdef EIF_WINDOWS 
 	eif_free_dlls();
 #endif
 
+#ifdef DLE
 	dle_reclaim();			/* Reclaim resources introduced by DLE */
+#endif
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_enabled)
 		exitprf();			/* Store profile information */
+#endif
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");
 #endif
+
+#ifdef EIF_THREADS
+	free (eif_globals);
+#endif
+
 	EIF_END_GET_CONTEXT
 }
 
@@ -910,6 +937,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	mark_simple_stack(&hec_stack, MARK_SWITCH, moving);
 	mark_simple_stack(&hec_saved, MARK_SWITCH, moving);
 
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #ifdef CONCURRENT_EIFFEL
 	/* The separate_object_id_set records object referenced by other processors */
 	mark_simple_stack(&separate_object_id_set, MARK_SWITCH, moving);
@@ -919,6 +947,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * are not necessarily alive. Thus only an update after a move is needed.
 	 */
 	if (moving) update_object_id_stack();
+#endif
 
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
@@ -955,6 +984,9 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 	 * objects are expected to more or not (to avoid useless writing
 	 * indirections). Stack holds direct references to objects.
 	 */
+#ifdef DEBUG
+	EIF_GET_CONTEXT
+#endif
 
 	register1 char **object;		/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
@@ -1005,7 +1037,6 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 			for (; roots > 0; roots--, object++)
 				(void) mark_expanded(*object, marker);
 		}
-
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
 		dprintf(2)("mark_simple_stack: after GC: %d objects in %s chunk\n",
@@ -1018,8 +1049,12 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 		flush;
 #endif
 	}
+#ifdef DEBUG
+	EIF_END_GET_CONTEXT
+#endif
 }
 
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void)
 {
 	/* Loop over the specified stack to update the objects after a move.
@@ -1092,6 +1127,7 @@ rt_private void update_object_id_stack(void)
 #endif
 	}
 }
+#endif /* !CUSTOM || NEED_OBJECT_ID_H */
 
 rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
                             		/* The stack which is to be marked */
@@ -1103,7 +1139,9 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 	 * objects are expected to move or not (to avoid useless writing
 	 * indirections). Stack holds indirect references to objects.
 	 */
-
+#ifdef DEBUG
+	EIF_GET_CONTEXT
+#endif
 	register1 char **object;		/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stchunk *s;	/* To walk through each stack's chunk */
@@ -1161,6 +1199,9 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 		flush;
 #endif
 	}
+#ifdef DEBUG
+	EIF_END_GET_CONTEXT
+#endif
 }
 
 rt_private char *mark_expanded(char *root, char *(*marker) (char *))
@@ -1368,6 +1409,10 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 	 * when objects are moved around.
 	 */
 
+#ifdef DEBUG
+	EIF_GET_CONTEXT
+#endif
+
 	register1 struct ex_vect *last;	/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stxchunk *s;	/* To walk through each stack's chunk */
@@ -1442,6 +1487,9 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 				}
 			
 	}
+#ifdef DEBUG
+	EIF_END_GET_CONTEXT
+#endif
 }
 
 #ifdef RECURSIVE_MARKING
@@ -2445,6 +2493,7 @@ rt_public void plsc(void)
 	EIF_GET_CONTEXT
 	int started_here = 0;
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -2455,12 +2504,13 @@ rt_public void plsc(void)
 			started_here = 1;
 			gc_ran = 1;
 		}
-
+#endif
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -2469,6 +2519,7 @@ rt_public void plsc(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -2514,6 +2565,7 @@ rt_shared void urgent_plsc(char **object)
 	EIF_GET_CONTEXT
 	int started_here = 0;
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -2524,7 +2576,7 @@ rt_shared void urgent_plsc(char **object)
 			started_here = 1;
 			gc_ran = 1;
 		}
-	
+#endif	
 	if (g_data.status & GC_STOP)
 		return;							/* Garbage collection stopped */
 
@@ -2539,6 +2591,7 @@ rt_shared void urgent_plsc(char **object)
 
 	run_plsc();				/* Normal sequence */
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -2547,6 +2600,7 @@ rt_shared void urgent_plsc(char **object)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -2561,6 +2615,12 @@ rt_private void clean_zones(void)
 	 */
 
 	EIF_GET_CONTEXT
+
+#ifdef DEBUG
+	dprintf(1)("clean_zones: entering function..\n");
+#endif
+
+
 	if (!(g_data.status & GC_PART))
 		return;				/* A simple mark and sweep was done */
 
@@ -3400,6 +3460,7 @@ rt_public int collect(void)
 	int result;
 	int started_here = 0;
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -3410,9 +3471,10 @@ rt_public int collect(void)
 			started_here = 1;
 			gc_ran = 1;
 		}
-
+#endif
 	result = scollect(generational_collect, GST_GEN);
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -3421,7 +3483,7 @@ rt_public int collect(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
-
+#endif
 	return result;
 	EIF_END_GET_CONTEXT
 }
@@ -3591,6 +3653,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	mark_simple_stack(&hec_stack, GEN_SWITCH, moving);
 	mark_simple_stack(&hec_saved, GEN_SWITCH, moving);
 
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #ifdef CONCURRENT_EIFFEL
 	/* The separate_object_id_set records object referenced by other processors */
 	mark_simple_stack(&separate_object_id_set, GEN_SWITCH, moving);
@@ -3600,7 +3663,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * are not necessarily alive. Thus only an update after a move is needed.
 	 */
 	if (moving) update_object_id_stack();
-
+#endif
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.

@@ -15,17 +15,16 @@
 
 #include <signal.h>
 #include "config.h"
-#include "portable.h"
-#include "except.h"
-#include "sig.h"
-#include <errno.h>
-#include <stdio.h>				/* For sprintf() */
-
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+#include "portable.h"
+#include "except.h"
+#include "sig.h"
+#include <errno.h>
+#include <stdio.h>				/* For sprintf() */
 
 #ifdef __VMS
 #define sigmask(m)	(1<<((m)-1))
@@ -329,6 +328,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 	 * reception will no longer be well-defined.
 	 */
 
+	EIF_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
@@ -371,6 +371,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 		ovec->sv_handler = oldfunc;
 
 	return 0;		/* Call succeeded */
+	EIF_END_GET_CONTEXT
 }
 #endif
 

@@ -281,6 +281,74 @@ feature -- Access
 		ensure
 			Count_identical: Result.count = ucstring.count
 		end
+		
+	process_xml_string (xml_string: STRING) is
+			-- Format `xml_string' so that it includes indents and new lines, so that it
+			-- will appear nicely in editors that do not automatically format XML.
+			-- Note that this algorithm is far from perfect, but is good enough for the
+			-- moment. There is definitely the possibility for improvement. Julian 02/03/03
+		local
+			current_position: INTEGER
+			no_more_tags: BOOLEAN
+			depth: INTEGER
+			counter: INTEGER
+			next_pos: INTEGER
+			closing_index: INTEGER
+			tag_contents: STRING
+		do
+			from
+				counter := 1
+			until
+				counter > xml_string.count
+			loop
+				if xml_string @ counter = ('<')  then
+					closing_index := xml_string.index_of ('>', counter  + 1)
+					if closing_index - counter > 1 then
+						tag_contents := xml_string.substring (counter + 1, closing_index - 1)
+						if tag_contents.has ('/') then
+							if not ((tag_contents @ tag_contents.count) = '/') then
+								if depth > 0 then
+									depth := depth - 1
+								end
+								xml_string.insert_character ('%N', closing_index + 1)
+								add_tabs (xml_string, closing_index + 2, depth)
+							else
+								xml_string.insert_character ('%N', closing_index + 1)
+								add_tabs (xml_string, closing_index + 2, depth)
+							end
+						else
+							if (not tag_contents.is_equal (Internal_properties_string)) then
+								depth := depth + 1
+							else
+								xml_string.insert_character ('%N', closing_index + 1)
+								add_tabs (xml_string, closing_index + 2, depth)
+							end
+						end
+					end
+				end
+				counter := counter + 1
+			end
+		end
+		
+	add_tabs (a_string: STRING; index, count: INTEGER) is
+			-- Add `count' tab characters to `a_string' at index `index'.
+		local
+			counter: INTEGER
+			temp_string: STRING
+		do
+			create temp_string.make (0)
+			from
+				counter := 1
+			until
+				counter > count
+			loop
+				temp_string.append ("%T")
+				counter := counter + 1
+			end
+			a_string.insert_string (temp_string, index)
+		ensure
+			new_count_correct: a_string.count = old a_string.count + count
+		end
 
 feature {NONE} -- Implementation
 

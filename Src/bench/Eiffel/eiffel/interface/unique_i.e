@@ -17,16 +17,19 @@ feature
 			-- [Note that this value is processed during second pass by
 			-- feature `feature_unit' of class INHERIT_TABLE.]
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN is True
 			-- Is the current feature a unique one ?
-		do
-			Result := True
-		end
 
 	equiv (other: FEATURE_I): BOOLEAN is
 			-- Is `other' equivalent to Current ?
+		local
+			other_unique: UNIQUE_I
 		do
-			Result := {CONSTANT_I} Precursor (other)
+			other_unique ?= other;
+			if other_unique /= Void then
+				Result := basic_equiv (other_unique)
+					and then value.int_val = other_unique.value.int_val
+			end;
 			if Not Result then
 				System.current_class.insert_changed_feature (feature_name)
 			end
@@ -49,7 +52,7 @@ feature
 			actual_type: TYPE_A
 			vqui: VQUI
 		do
-			{CONSTANT_I} Precursor (feat_tbl)
+			old_check_types (feat_tbl)
 
 			actual_type := type.actual_type
 			if
@@ -62,8 +65,6 @@ feature
 				vqui.set_feature_name (feature_name)
 				vqui.set_type (actual_type)
 				Error_handler.insert_error (vqui)
-			else
-				{CONSTANT_I} precursor (feat_tbl)
 			end
 		end
 

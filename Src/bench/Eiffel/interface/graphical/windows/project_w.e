@@ -69,7 +69,7 @@ feature
 			base_make (tool_name, a_screen);
 			forbid_resize;
 			build_widgets;
-			set_title (l_New_project);
+			set_title (l_project);
 			set_icon_name (tool_name);
 			set_default_position;
 			realize;
@@ -284,7 +284,11 @@ feature -- rest
 	build_text is
 			-- Build console text window.
 		do
-			!!text_window.make (new_name, form_manager, Current);
+			if tabs_disabled then
+				!!text_window.make (new_name, form_manager, Current);
+			else
+				!PROJECT_TAB_TEXT! text_window.make (new_name, form_manager, Current)
+			end;
 			text_window.set_size (200, 100);
 		end;
 

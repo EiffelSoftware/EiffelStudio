@@ -80,4 +80,10 @@ feature -- Access
 			create Result
 		end	
 			
+	toc_merge_dialog: TOC_MERGE_DIALOG is
+			-- Dialog for toc merging
+		once
+			create Result
+		end			
+			
 end -- class SHARED_DIALOGS

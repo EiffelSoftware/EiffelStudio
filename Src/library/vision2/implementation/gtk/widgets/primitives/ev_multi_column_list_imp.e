@@ -32,6 +32,7 @@ inherit
 			item,
 			count,
 			remove_item_from_position,
+			reorder_child,
 			add_to_container,
 			destroy,
 			interface
@@ -46,12 +47,8 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
-		local
-			i: INTEGER
-			col_nb: INTEGER
 		do
 			base_make (an_interface)
-			--| FIXME IEK Columns need to be set on interface creation
 
 			-- Creating the gtk scrolled window
 
@@ -59,12 +56,20 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_set_policy (
 				c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM
 			)
+			create ev_children.make (0)
+		end
 
+	create_list (a_columns: INTEGER) is
+			-- Create the clist with `a_columns' columns.
+		local
+			i: INTEGER
+		do
+			list_widget := C.gtk_clist_new (a_columns)
 
-			col_nb := 10
-			list_widget := C.gtk_clist_new (col_nb)
+			if rows_height > 0 then
+				C.gtk_clist_set_row_height (list_widget, rows_height)
+			end
 			C.gtk_widget_show (list_widget)
-			
 			C.gtk_container_add (c_object, list_widget)
 
 			-- We need to specify a width for the columns
@@ -72,28 +77,30 @@ feature {NONE} -- Initialization
 			from
 				i := 0
 			until
-				i = col_nb
+				i = a_columns
 			loop
 				C.gtk_clist_set_column_width (list_widget, i, 80)
 				i := i + 1
 			end
-
 			show_title_row
-			create ev_children.make (0)
-		end
+		end	
 
 feature -- Access
 
 	columns: INTEGER is
 			-- Number of columns in the list.
 		do
-			Result := C.c_gtk_clist_columns (list_widget)
+			if list_widget /= Default_pointer then
+				Result := C.c_gtk_clist_columns (list_widget)
+			end
 		end
 
 	rows, count: INTEGER is
 			-- Number of rows in the list.
 		do
-			Result := C.c_gtk_clist_rows (list_widget)
+			if list_widget /= Default_pointer then
+				Result := C.c_gtk_clist_rows (list_widget)
+			end
 		end
 
 	item: EV_MULTI_COLUMN_LIST_ROW is
@@ -107,11 +114,12 @@ feature -- Access
 		local
 			an_index: INTEGER
 		do
-			if (C.c_gtk_clist_selection_length (list_widget) = 0 ) then
-				-- there is no selected item
+			if (list_widget /= Default_pointer and
+				C.c_gtk_clist_selection_length (list_widget) = 0 ) then
+					-- there is no selected item
 				Result := Void
-			else
-				-- there is one selected item
+			elseif list_widget /= Default_pointer then
+					-- there is one selected item
 				an_index := C.c_gtk_clist_ith_selected_item (list_widget, 0)
 				Result ?= (ev_children @ (an_index + 1)).interface
 			end
@@ -129,7 +137,9 @@ feature -- Access
 			upper: INTEGER
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
-			upper := C.c_gtk_clist_selection_length (list_widget)
+			if list_widget /= Default_pointer then
+				upper := C.c_gtk_clist_selection_length (list_widget)
+			end
 			create Result.make
 			from
 				i := 0
@@ -179,21 +189,27 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			Result := C.c_gtk_clist_selected (list_widget).to_boolean
+			if list_widget /= Default_pointer then
+				Result := C.c_gtk_clist_selected (list_widget).to_boolean
+			end
 		end
 
 	is_multiple_selection: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		do
-			Result := (C.c_gtk_clist_selection_mode (list_widget) = C.GTK_SELECTION_MULTIPLE_ENUM)
+			if list_widget /= Default_pointer then
+				Result := (C.c_gtk_clist_selection_mode (list_widget) = C.GTK_SELECTION_MULTIPLE_ENUM)
+			end
 		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
-			Result := C.c_gtk_clist_title_shown (list_widget).to_boolean
+			if list_widget /= Default_pointer then
+				Result := C.c_gtk_clist_title_shown (list_widget).to_boolean
+			end
 		end
 
 	get_column_width (a_column: INTEGER): INTEGER is
@@ -286,7 +302,11 @@ feature -- Element change
 	set_rows_height (value: INTEGER) is
 			-- Make`value' the new height of all the rows.
 		do
-			C.gtk_clist_set_row_height (list_widget, value)
+			if list_widget /= Default_pointer then
+				C.gtk_clist_set_row_height (list_widget, value)
+			else
+				rows_height := value
+			end
 		end
 
 	clear_items is
@@ -298,8 +318,10 @@ feature -- Element change
 				-- increases speed if there are many elements
 				-- in `ev_children'
 		do
-			ev_children.wipe_out	
-			C.gtk_clist_clear (list_widget)
+			if rows > 0 then
+				ev_children.wipe_out	
+				C.gtk_clist_clear (list_widget)
+			end
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -426,7 +448,7 @@ feature -- Event -- removing command association
 			--remove_commands (list_widget, click_column_id)
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `v' to the list.
@@ -435,8 +457,14 @@ feature {NONE}
 			column_i: INTEGER
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			if list_widget = Default_pointer then
+				create_list (v.columns)
+			end
+
 			item_imp ?= v.implementation
+			item_imp.set_columns (columns)
 			item_imp.set_parent_imp (Current)
+
 			-- update the list of rows of the column list:
 			ev_children.force (item_imp)
 
@@ -448,8 +476,7 @@ feature {NONE}
 				item_imp.internal_text.start
 				column_i := 1
 			until
-				--column_i > columns
-				column_i > item_imp.internal_text.count
+				column_i > columns
 			loop
 				item_imp.set_cell_text ( column_i, item_imp.internal_text.item)
 				item_imp.internal_text.forth
@@ -457,35 +484,45 @@ feature {NONE}
 			end
 		end
 
-	remove_from_container (v: EV_MULTI_COLUMN_LIST_ROW) is
-			-- Remove `v' from the list.
+	remove_item_from_position (a_position: INTEGER) is
+			-- Remove item from list at `a_position'.
+			-- Set the items parent to void.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			item_imp ?= v.implementation
-			remove_item_from_position (item_imp.index)
-		end
-
-	remove_item_from_position (a_position: INTEGER) is
-			-- Remove item from list at `a_position'.
-		do
+			item_imp ?= interface.i_th (a_position).implementation
+			item_imp.set_parent_imp (Void)
 			C.gtk_clist_remove (list_widget, a_position - 1)
 			-- remove the row from the `ev_children'
 			ev_children.move (a_position)
 			ev_children.remove
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_MULTI_COLUMN_LIST
+	reorder_child (v: like item; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		local
+			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			item_imp ?= v.implementation
+			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
+		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
 			check
-				not_implemented: False
+				do_not_call: False
 			end
 		end
+
+	rows_height: INTEGER
+		-- Value used to store row height if list isn't yet created.
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MULTI_COLUMN_LIST
+
+
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
@@ -514,6 +551,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/17 21:52:21  king
+--| Implemented to use no column setting on creation
+--|
 --| Revision 1.23  2000/02/16 20:25:58  king
 --| Implemented to fit in with new structure
 --|

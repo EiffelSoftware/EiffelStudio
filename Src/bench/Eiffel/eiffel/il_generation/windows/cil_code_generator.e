@@ -439,7 +439,13 @@ feature -- Generation Structure
 			if a_key_pair_file_name /= Void then
 				if (create {MD_STRONG_NAME}).present then
 					create public_key.make_from_file (a_key_pair_file_name)
-					l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+					if public_key.is_valid then
+						l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+					else
+						public_key := Void
+							-- Introduce error saying that public key cannot be read.
+						Error_handler.insert_warning (create {VIIK})
+					end
 				else
 					public_key := Void
 					Error_handler.insert_warning (create {VISM})

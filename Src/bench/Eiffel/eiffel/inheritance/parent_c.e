@@ -174,7 +174,7 @@ feature
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 					
-					if not parent_table.has (real_name) then
+					if real_name = Void or else not parent_table.has (real_name) then
 						!!vdrs1;
 						vdrs1.set_class_id (System.current_class.id);
 						vdrs1.set_parent_id (parent_id);
@@ -195,7 +195,7 @@ feature
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 
-					if not parent_table.has (real_name) then
+					if real_name = Void or else not parent_table.has (real_name) then
 						!!vmss1;
 						vmss1.set_class_id (System.current_class.id);
 						vmss1.set_parent_id (parent_id);
@@ -216,7 +216,7 @@ feature
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 
-					if not parent_table.has (real_name) then
+					if real_name = Void or else not parent_table.has (real_name) then
 						!!vdus1;
 						vdus1.set_class_id (System.current_class.id);
 						vdus1.set_parent_id (parent_id);
@@ -237,7 +237,7 @@ feature
 						-- Take care of renamings
 					real_name := renaming_of (feature_name);
 	
-					if not parent_table.has (real_name) then
+					if real_name = Void or else not parent_table.has (real_name) then
 						!!vlel2;
 						vlel2.set_class_id (System.current_class.id);
                     	vlel2.set_parent_id (parent_id);
@@ -293,12 +293,14 @@ feature
 					end;
 					renaming.forth;
 				end;
-			end;
-			if Result = Void then
+				if Result = Void then
+					if not renaming.has (feature_name) then
+						Result := feature_name;
+					end;
+				end;
+			else
 				Result := feature_name;
 			end;
-		ensure
-			not_void: Result /= Void;
 		end;
 
 end

@@ -42,8 +42,8 @@ io.error.putstring ("Inserting error object:%N");
 e.trace;
 end;
 			new_error := True;
-			error_list.start;	
-			error_list.put_right (e);
+			error_list.finish;	
+			error_list.add_right (e);
 		end;
 
 	insert_warning (w: WARNING) is
@@ -55,8 +55,8 @@ debug
 io.error.putstring ("Inserting warning object:%N");
 w.trace;
 end;
-			warning_list.start;	
-			warning_list.put_right (w);
+			warning_list.finish;	
+			warning_list.add_right (w);
 		end;
 
 	mark is

@@ -787,7 +787,7 @@ end;
 				supplier := local_cursor.item.supplier;
 				supplier_clients := supplier.clients;
 				supplier_clients.start;
-				supplier_clients.search_same (Current);
+				supplier_clients.search (Current);
 				supplier_clients.remove;
 				local_cursor := local_cursor.right
 			end;
@@ -798,8 +798,7 @@ end;
 			loop
 				supplier := local_cursor.item.supplier;
 				supplier_clients := supplier.clients;
-				supplier_clients.start;
-				supplier_clients.add_left (Current);
+				supplier_clients.add_front (Current);
 				local_cursor := local_cursor.right
 			end;
 			suppliers := new_suppliers;
@@ -1313,7 +1312,7 @@ feature -- Class initialization
 				end;
 				parents.forth;
 			end;
-			parents.go (pos);
+			parents.go_i_th (pos);
 		end;
 
 	Any_type: CL_TYPE_A is
@@ -1351,7 +1350,7 @@ feature
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients;
 					supplier_clients.start;
-					supplier_clients.search_same (Current);
+					supplier_clients.search (Current);
 					if not supplier_clients.after then
 						supplier_clients.remove;	
 					end;
@@ -1367,8 +1366,7 @@ feature
 				a_class := local_cursor.item.supplier;
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients;
-					supplier_clients.start;
-					supplier_clients.add_left (Current);
+					supplier_clients.add_front (Current);
 				end;
 				local_cursor := local_cursor.right
 			end;
@@ -1493,7 +1491,7 @@ feature
 					end;
 					generics.forth;
 				end;
-				generics.go (pos);
+				generics.go_i_th (pos);
 
 				generics.forth;
 			end;
@@ -1671,8 +1669,7 @@ feature -- Supplier checking
 					syntactical_suppliers.start;
 					syntactical_suppliers.search_equal (supplier);
 					if syntactical_suppliers.offright then
-						syntactical_suppliers.start;
-						syntactical_suppliers.add_left (supplier);
+						syntactical_suppliers.add_front (supplier);
 					end;
 				end;
 			else
@@ -1892,8 +1889,7 @@ feature -- Convenience features
 			good_argument: c /= Void;
 		do
 			if not descendants.has (c) then
-				descendants.start;
-				descendants.add_left (c);	
+				descendants.add_front (c);	
 			end;
 		end;
 
@@ -2049,8 +2045,7 @@ feature -- Actual class type
 			!!type_i;
 			type_i.set_base_id (id);
 			class_type := new_type (type_i);
-			types.start;
-			types.add_left (class_type);
+			types.add_front (class_type);
 			System.insert_class_type (class_type);
 		end;
 
@@ -2092,8 +2087,7 @@ end;
 				changed4 := True;
 				pass4_controler.insert_new_class (Current);
 					-- Insertion of the new class type
-				types.start;	
-				types.add_left (new_class_type);
+				types.add_front (new_class_type);
 				System.insert_class_type (new_class_type);
 				if already_compiled then
 						-- Melt all the code written in the associated class of
@@ -2180,7 +2174,7 @@ feature -- Validity class
 
 feature -- Dead code removal
 		
-	remove_visible (remover: REMOVER) is
+	mark_visible (remover: REMOVER) is
 			-- Dead code removal from the visible features
 		require
 			visible_level.has_visible;
@@ -2194,6 +2188,7 @@ feature -- Dead code removal
 		local
 			tbl: FEATURE_TABLE;
 			a_feature: FEATURE_I;
+			pos: INTEGER;
 		do
 			from
 				tbl := feature_table;
@@ -2202,9 +2197,11 @@ feature -- Dead code removal
 				tbl.offright
 			loop
 				a_feature := tbl.item_for_iteration;
+				pos := tbl.position_for_iteration;
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end;
+				tbl.go (pos);
 				tbl.forth;
 			end;
 		end;
@@ -2293,13 +2290,10 @@ feature -- Conformance table generation
 		local
 			ftab: FEATURE_TABLE;
 			stab: SELECT_TABLE;
-			ftabid: INTEGER
 		do
 			ftab := feature_table;
-			ftabid := ftab.feat_tbl_id;
 			stab := ftab.origin_table;
-			ftab := Void;
-			stab.add_units (ftabid)
+			stab.add_units (id);
 		end; 
 
 	make_conformance_table (t: CONFORM_TABLE) is

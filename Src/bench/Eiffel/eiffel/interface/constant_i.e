@@ -103,7 +103,14 @@ feature -- C code generation
 		do
 			if 	class_type.associated_class = written_class
 				and then
-				used
+				(	byte_context.workbench_mode
+					or else
+						-- Polymorphic function redefined as a constant
+						-- or a constant string implies the generation
+						-- of a C function.
+					(	(is_once or else not is_origin)
+						and then
+						System.is_used (Current)))
 			then
 				type_i := type.actual_type.type_i;
 				internal_name := Encoder.feature_name (class_type.id, body_id); 

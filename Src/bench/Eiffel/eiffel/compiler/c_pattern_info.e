@@ -53,6 +53,15 @@ feature
 			pattern.generate_pattern (c_pattern_id, Pattern_file);
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putint (c_pattern_id);
+			io.error.new_line;
+			pattern.trace;
+		end;
+
 invariant
 
 	pattern_exists: pattern /= Void

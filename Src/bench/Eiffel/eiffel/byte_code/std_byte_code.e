@@ -614,11 +614,9 @@ feature
 					generated_file.putstring ("RTJB;");
 					generated_file.new_line;
 					generated_file.exdent;
-					generated_file.exdent;
 					context.print_current_label;
 					generated_file.putchar (':');
 					generated_file.new_line;
-					generated_file.indent;
 					generated_file.indent;
 				end;
 				

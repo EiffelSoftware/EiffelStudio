@@ -17,15 +17,6 @@ creation
 	
 feature 
 
-	unit_of_body_index (body_index: INTEGER; type_id: INTEGER): DISPATCH_UNIT is
-			-- Unit associated to an instance of FEATURE_I of
-			-- body index `body_index' in a class type of type id `type_id'.
-		do
-			Marker.set_body_index (body_index);
-			Marker.set_class_type (System.class_type_of_id (type_id));
-			Result := item (Marker);
-		end;
-
 	real_body_index (body_index: INTEGER; type_id: INTEGER): INTEGER is
 			-- Body id associated to an instance of FEATURE_I of
 			-- body index `body_index' in a class type of type id `type_id'.
@@ -38,6 +29,17 @@ feature
 			end;
 		end;
 
+feature {NONE} -- Search
+
+	unit_of_body_index (body_index: INTEGER; type_id: INTEGER): DISPATCH_UNIT is
+			-- Unit associated to an instance of FEATURE_I of
+			-- body index `body_index' in a class type of type id `type_id'.
+		do
+			Marker.set_body_index (body_index);
+			Marker.set_class_type (System.class_type_of_id (type_id));
+			Result := item (Marker);
+		end;
+
 	Marker: DISPATCH_UNIT is
 			-- Marker for search
 		local
@@ -47,6 +49,8 @@ feature
 			f.set_body_index (1);
 			!!Result.make (System.class_type_of_id (1), f);
 		end;
+
+feature	-- Melting and C Generation
 
 	make_update (file: UNIX_FILE) is
 			-- Generate byte code for updating the dispatch table

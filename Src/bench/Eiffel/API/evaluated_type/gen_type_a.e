@@ -368,8 +368,7 @@ feature -- Primitives
 					constraint_info.set_type1 (to_check);
 					constraint_info.set_formal_number (i);
 					constraint_info.set_type2 (constraint_type);
-					Constraint_error_list.start;
-					Constraint_error_list.put_right (constraint_info);
+					Constraint_error_list.add_front (constraint_info);
 				end;
 
 					-- Recursion

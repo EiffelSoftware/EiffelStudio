@@ -36,6 +36,11 @@ feature
 			Result := True;
 		end;
 
+	byte_code_cast: CHARACTER is
+			-- Code for the interpreter cast
+		do	
+		end;
+
 	associated_reference: CLASS_TYPE is
 			-- Reference class associated with simple type
 		deferred

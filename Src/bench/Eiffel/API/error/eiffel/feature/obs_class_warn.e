@@ -23,12 +23,12 @@ feature
 	code: STRING is
 			-- Error code
 		do
-			Result := "Warning";
+			Result := "Obsolete";
 		end;
 
 	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			a_clickable.put_string ("%TWarning: ");
+			a_clickable.put_string ("%T%T");
 			a_clickable.put_string (associated_class.class_name);
 			a_clickable.put_string (" is obsolete: ");
 			a_clickable.put_string (associated_class.obsolete_message);

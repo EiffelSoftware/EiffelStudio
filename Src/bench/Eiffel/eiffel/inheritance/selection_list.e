@@ -42,16 +42,15 @@ feature
 
 				if Result /= Void then
 						-- Keep track of the selection
-					Selected.start;
-					Selected.put_right (Result.feature_name);
+					Selected.add_front (Result.feature_name);
 					from
-                        start;
-                        feat_table := Origin_table.computed;
-                    until
-                        empty
-                    loop
-                        unselect (new_t, old_t, feat_table);
-                    end;
+						start;
+						feat_table := Origin_table.computed;
+					until
+						empty
+					loop
+						unselect (new_t, old_t, feat_table);
+					end;
 					Result.set_is_selected (True);
 				end;
 			end;
@@ -79,13 +78,13 @@ feature
 				feature_i := item.a_feature;
 				if parents.is_selecting (feature_i.feature_name) then
 					Result := feature_i;
+				else
+					forth;
 				end;
-				forth;
 			end;
 			if Result /= Void then
 					-- Check if there is no second selection
 				from
-					back;
 						-- Remove result information
 					remove;
 				until
@@ -150,10 +149,10 @@ feature
 				info := item;
 				if info.parent = Void then
 						-- Redeclaration
-                    instantiator := written_actual_type;
-                else
-                    instantiator := info.parent.parent_type;
-                end;
+					instantiator := written_actual_type;
+				else
+					instantiator := info.parent.parent_type;
+				end;
 				written_type := written_type.instantiation_in
 													(instantiator, written_id);
 				Result := deep_equal (to_compair, written_type);
@@ -248,10 +247,10 @@ feature
 						-- instantiated written actual type.
 					info_parent := info.parent;
 					if info_parent = Void then
-                        instantiator := written_actual_type;
-                    else
-                        instantiator := info_parent.parent_type;
-                    end;
+						instantiator := written_actual_type;
+					else
+						instantiator := info_parent.parent_type;
+					end;
 					written_type := written_actual_type.duplicate;
 					written_type := written_type.instantiation_in
 													(instantiator, written_id);

@@ -141,16 +141,13 @@ feature
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: EXTEND_TABLE [EXPORT_I, STRING];
 			creation_name: STRING;
+			equiv_tables: BOOLEAN;
 		do
 			a_class := pass_c.associated_class;
 			supplier_status_modified := is_supplier_status_modified;
 
 				-- Verbose
 			a_cluster := a_class.cluster;
-			io.error.putstring ("Pass 2 on class ");
-			io.error.putstring (a_class.class_name);
-			io.error.new_line;
-
 				-- Initialization of the context for evaluation of actual
 				-- types
 			Inst_context.set_cluster (a_cluster);
@@ -308,8 +305,13 @@ feature
 				-- Update the assert_id_set of redefined features.
 			update_inherited_assertions;
 
+			equiv_tables := resulting_table.equiv (feature_table);
+			if equiv_tables and then previous_feature_table /= Void then
+				equiv_tables := resulting_table.equiv (previous_feature_table)
+			end;
+			
 				-- Propagation
-			pass_c.propagate (feature_table, resulting_table,
+			pass_c.propagate (resulting_table, equiv_tables,
 								pass2_control, assert_prop_list);
 			assert_prop_list := Void;
 
@@ -403,7 +405,6 @@ feature
 				-- Information on one inherited feature
 			feature_i: FEATURE_I;
 				-- Inherited feature
-			parent_actual_type: TYPE_A;
 		do
 				-- Check generic parents of the class
 			a_class.check_parents;
@@ -521,8 +522,7 @@ feature
 							-- features by an inherited non-deferred feature
 						!!def.make (inherit_feat, feature_i);
 							-- Reset assertions of `feature_i'
-						adaptations.start;
-						adaptations.put_left (def);
+						adaptations.add_front (def);
 					else
 						 Origin_table.insert (inherited_info);
 					end;
@@ -637,6 +637,7 @@ feature
 			rout_id_set, new_rout_id_set: ROUT_ID_SET;
 			redef: REDEFINITION;
 			info, inherited_info: INHERIT_INFO;
+			vmfn: VMFN;
 			vmfn1: VMFN1;
 			compute_new_rout_id: BOOLEAN;
 		do
@@ -694,8 +695,14 @@ feature
 					inherit_feat.set_inherited_info (info);
 						-- Store the redefintion for later
 					!!redef.make (inherit_feat, feature_i);
-					adaptations.start;
-					adaptations.put_left (redef);
+					adaptations.add_front (redef);
+				elseif inherited_info.parent = Void then
+						-- The feature has two implementations in the class
+					!!vmfn;
+					vmfn.set_class_id (a_class.id);
+					vmfn.set_a_feature (feature_i);
+					vmfn.set_other_feature (inherited_features.item (feature_name));
+					Error_handler.insert_error (vmfn);
 				else
 						-- Name clash: a non-deferred feature is inherited
 					!!vmfn1;
@@ -742,8 +749,7 @@ feature
 			end;
 				-- Keep track of the origin features for pattern
 				-- processing
-			origins.start;
-			origins.put_right (feature_i.feature_name);
+			origins.add_front (feature_i.feature_name);
 		end;
 
 	feature_unit (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I is
@@ -795,8 +801,7 @@ end;
 			elseif Result.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= Result;
-				new_externals.start;
-				new_externals.put_right (external_i.external_name);
+				new_externals.add_front (external_i.external_name);
 			end;
 
 			read_info := class_info.index.item (yacc_feature.id);
@@ -866,8 +871,7 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");
 end;
-					changed_features.start;
-					changed_features.put_right (feature_name);
+					changed_features.add_front (feature_name);
 				else
 						-- Keep the type
 					Result.set_type (feature_i.type);
@@ -893,8 +897,7 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");
 end;
-				changed_features.start;
-				changed_features.put_right (feature_name);
+				changed_features.add_front (feature_name);
 			end;
 				-- Check incompatibily between `frozen' and `deferred'
 			if Result.is_frozen and then Result.is_deferred then
@@ -1060,8 +1063,7 @@ end;
 								-- The deferred features must have the same
 								-- signature
 							!!join.make (inherit_feat, inherited_feature);
-							adaptations.start;
-							adaptations.put_left (join);
+							adaptations.add_front (join);
 debug ("ACTIVITY")
 	io.putstring ("joining feature: ");
 	io.putstring (inherited_feature.feature_name);

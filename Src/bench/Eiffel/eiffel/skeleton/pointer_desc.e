@@ -33,6 +33,7 @@ feature
 
 	trace is
 		do
+			io.error.putstring (attribute_name);
 			io.error.putstring ("[POINTER]");
 		end;
 

@@ -108,8 +108,7 @@ feature -- Creation feature
 			if rename_clause = Void then
 				!!rename_clause.make;
 				rename_clause.set_cluster (cl);
-				renamings.start;
-				renamings.put_right (rename_clause);
+				renamings.add_front (rename_clause);
 			end;
 			rename_clause.renamings.put (new_name, old_name);
 		end;
@@ -462,8 +461,7 @@ feature -- Creation feature
 		require
 			good_argument: c /= Void;
 		do
-			ignore.start;
-			ignore.put_right (c);
+			ignore.add_front (c);
 		end;
 
 	compute_last_class (class_name: STRING) is
@@ -545,7 +543,7 @@ feature -- Creation feature
 				end;
 				renamings.forth;
 			end;
-			renamings.go (pos);
+			renamings.go_i_th (pos);
 		end;
 
 	new_date: INTEGER is

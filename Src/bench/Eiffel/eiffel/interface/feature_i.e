@@ -813,6 +813,19 @@ feature -- Signature checking
 					-- exection is triggered by the type evaluator.
 				solved_type /= Void;
 			end;
+debug ("ACTIVITY")
+	io.error.putstring ("Check types of ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+	if solved_type = Void then
+		io.error.putstring ("VOID solved type!!%N");
+	else
+		io.error.putstring ("Solved type: ");
+		io.error.putstring (solved_type.dump);
+		io.error.new_line;
+	end;
+end;
+
 			if feat_table.associated_class = written_class then
 					-- Check validity of an expanded result type
 				if	solved_type.has_expanded then
@@ -863,9 +876,10 @@ feature -- Signature checking
 				vffd7.set_body_id (body_id);
 				Error_handler.insert_error (vffd7);
 			end;
-			if solved_type /= Void then
-				solved_type.check_for_obsolete_class
-			end;
+--				Check above ensure that solved_type is not Void
+--			if solved_type /= Void then
+				solved_type.check_for_obsolete_class;
+--			end;
 			if arguments /= Void then
 				if is_infix and then argument_count /= 1 then
 						-- Infixed features should have only one argument
@@ -907,6 +921,11 @@ feature -- Signature checking
 			ve02: VE02;
 			ve02a: VE02A;
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("Check signature of ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
 			current_class := System.current_class;
 
 				-- Check if an attribute is redefined in an attribute
@@ -950,6 +969,26 @@ feature -- Signature checking
 				-- `new_type' is the actual type of the redefinition already
 				-- instantiated
 			new_type := type.actual_type;
+debug ("ACTIVITY")
+	io.error.putstring ("Types:%N");
+	if old_type /= Void then
+		io.error.putstring ("old type:%N");
+		io.error.putstring (old_type.dump);
+		io.error.new_line;
+	end;
+	if new_type /= Void then
+		io.error.putstring ("new type:%N");
+		io.error.putstring (new_type.dump);
+		io.error.new_line;
+	else
+		io.error.putstring ("New type: VOID%Ntype:");
+		io.error.putstring (type.dump);
+		io.error.new_line;
+		io.error.putstring (type.out);
+		io.error.new_line;
+	end;
+	io.error.new_line;
+end;
 			if not current_class.valid_redeclaration (old_type, new_type) then
 				!!vdrd51;
 				vdrd51.init (old_feature, Current);
@@ -983,6 +1022,20 @@ feature -- Signature checking
 					old_type ?= old_arguments.i_th (i);
 					old_type := old_type.conformance_type.actual_type;
 					new_type := arguments.i_th (i).actual_type;
+debug ("ACTIVITY")
+	io.error.putstring ("Types:%N");
+	if old_type /= Void then
+		io.error.putstring ("old type:%N");
+		io.error.putstring (old_type.dump);
+		io.error.new_line;
+	end;
+	if new_type /= Void then
+		io.error.putstring ("new type:%N");
+		io.error.putstring (new_type.dump);
+		io.error.new_line;
+	end;
+	io.error.new_line;
+end;
 					if not
 						current_class.valid_redeclaration (old_type, new_type)
 					then
@@ -1294,10 +1347,9 @@ feature -- Dead code removal
 					-- In final mode dead code removal process is on.
 					-- In workbench mode all the features are considered
 					-- used.
---			Result := 	byte_context.workbench_mode 
---						or else
---						System.is_used (Current)
-			Result := True
+			Result := 	byte_context.workbench_mode 
+						or else
+						System.is_used (Current)
 		end;
 
 feature -- Byte code access
@@ -1326,30 +1378,9 @@ feature -- C code generation
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
-			result_type: TYPE_I;
-			gen_type: GEN_TYPE_I;
 		do
 			if used then
 				byte_code := Byte_server.disk_item (body_id);
-
-				if byte_context.final_mode then
-					if in_pass3 then
-							-- Not a constant
-						result_type := byte_code.result_type;
-					else
-							-- Constant: result type cannot be generic
-						result_type := type.actual_type.type_i;
-					end;
-	
-					if 	(result_type /= Void)
-						and then
-						result_type.has_formal
-					then
-						gen_type ?= class_type.type;
-						result_type := result_type.instantiation_in (gen_type);
-					end;
-	
-				end;
 
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.

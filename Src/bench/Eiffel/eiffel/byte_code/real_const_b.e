@@ -22,7 +22,7 @@ feature
 	type: TYPE_I is
 			-- Float type
 		once
-			Result := Float_c_type;
+			Result := Double_c_type;
 		end;
 
 	print_register is

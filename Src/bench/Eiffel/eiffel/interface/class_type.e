@@ -3,6 +3,7 @@ class CLASS_TYPE
 inherit
 
 	SHARED_WORKBENCH;
+	SHARED_GENERATOR;
 	SHARED_CODE_FILES;
 	SHARED_SERVER;
 	SHARED_ENCODER;
@@ -167,11 +168,38 @@ feature -- Generation
 			file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
 			final_mode: BOOLEAN;
+			generate_c_code: BOOLEAN;
 		do
 			final_mode := byte_context.final_mode;
 
 			current_class := associated_class;
 			current_class_id := current_class.id;
+
+			feature_table := current_class.feature_table;
+
+			if final_mode then
+					-- Check to see if there is really something to generate
+
+				generate_c_code := has_creation_routine or else
+					(	associated_class.has_invariant and then
+						associated_class.assertion_level.check_invariant);
+				from
+					feature_table.start
+				until
+					feature_table.offright or else generate_c_code
+				loop
+					feature_i := feature_table.item_for_iteration;
+					if feature_i.to_generate_in (current_class) and then
+							feature_i.used then
+						generate_c_code := True;
+					end;
+					feature_table.forth;
+				end;
+			else
+				generate_c_code := True;
+			end;
+
+			if generate_c_code then
 
 			file := generation_file;
 			file.open_write;
@@ -203,7 +231,6 @@ feature -- Generation
 			end;
 
 			from
-				feature_table := current_class.feature_table;
 				feature_table.start;
 				byte_context.init (Current);
 				--byte_context.set_class_type (Current);
@@ -234,6 +261,11 @@ feature -- Generation
 				Extern_declarations.wipe_out;
 			end;
 			file.close;
+
+			else
+					-- The file hasn't been generated
+				Makefile_generator.record_empty_class_type (id)
+			end;
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is

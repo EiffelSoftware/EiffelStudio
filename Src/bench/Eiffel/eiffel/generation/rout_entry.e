@@ -51,9 +51,9 @@ feature
 			remover: REMOVER
 		do
 			remover := System.remover;
-			Result := 	remover = Void						-- Workbench mode
+			Result := 	remover = Void					-- Workbench mode
 						or else
-						remover.used_table.has (body_id)	-- Final mode
+						remover.is_body_alive (body_id)	-- Final mode
 		end;
 
 	routine_name: STRING is

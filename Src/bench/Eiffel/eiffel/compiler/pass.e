@@ -70,6 +70,9 @@ end;
 			end;
 			if not found then
 				Result := new_controler (a_class);
+				check
+					changed_classes.after
+				end;
 				changed_classes.add_left (Result);
 			end;
 			changed_classes.go (position);

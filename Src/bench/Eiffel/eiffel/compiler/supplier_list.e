@@ -69,8 +69,7 @@ end;
 				suppl_info := info (id);
 				if suppl_info = Void then
 					!!suppl_info.make (System.class_of_id (id));
-					start;
-					add_left (suppl_info);
+					add_front (suppl_info);
 				else
 					suppl_info.add_occurence;
 				end;
@@ -96,6 +95,7 @@ end;
 				offright
 			loop
 				Result.add_right (item.twin);
+				Result.forth;
 				forth
 			end
 		end;
@@ -134,10 +134,10 @@ feature {NONE}
 				end;
 				forth;
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 
-	is_ok (l: SORTED_TWO_WAY_LIST [DEPEND_UNIT]): BOOLEAN is
+	is_ok (l: SORTED_SET [DEPEND_UNIT]): BOOLEAN is
 			-- Is the supplier list consistant regarding to `l'.
 		require
 			good_argument: l /= Void

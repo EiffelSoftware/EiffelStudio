@@ -8,7 +8,7 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_bits, internal_conform_to, associated_class, dump,
+			is_bits, associated_class, dump,
 			heaviest, same_as
 		end;
 

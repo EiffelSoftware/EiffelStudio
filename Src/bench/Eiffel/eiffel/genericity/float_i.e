@@ -8,8 +8,10 @@ inherit
 			is_float,
 			is_numeric,
 			same_as,
-			description, sk_value, generate_cecil_value, hash_code
-		end
+			description, sk_value, generate_cecil_value, hash_code,
+			byte_code_cast
+		end;
+	BYTE_CONST
 
 feature
 
@@ -17,6 +19,12 @@ feature
 			-- Internal code for generation
 		do
 			Result := C_float;
+		end;
+
+	byte_code_cast: CHARACTER is
+			-- Code for interpreter cast
+		do
+			Result := Bc_cast_float;
 		end;
 
 	is_float: BOOLEAN is

@@ -53,8 +53,7 @@ feature
 	mark_melted (t: T) is
 			-- Insert `t' in `melted_list'.
 		do
-			melted_list.start;
-			melted_list.put_right (t);
+			melted_list.add_front (t);
 		end;
 
 	freeze is

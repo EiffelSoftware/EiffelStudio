@@ -53,8 +53,7 @@ feature
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then
-				to_remove.start;
-				to_remove.put_right (i);
+				to_remove.add_front (i);
 			end;
 		end;
 

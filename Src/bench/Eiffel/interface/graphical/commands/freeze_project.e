@@ -38,13 +38,13 @@ feature {NONE}
 					project_tool.set_changed (true);
 					Workbench.recompile;
 					if Workbench.successfull then
+						System.freeze_system;
 						project_tool.set_changed (false);
 						system.server_controler.wipe_out;
 						!!file.make (Project_file_name);
 						file.open_write;
 						workbench.basic_store (file);
 						file.close;
-						System.freeze_system;
 						finish_freezing;
 					end;
 					restore_cursors;

@@ -6,7 +6,7 @@ inherit
 
 	CLASS_C
 		redefine
-			check_validity, new_type, is_special
+			check_validity, new_type, is_special, mark_all_used
 		end;
 	SPECIAL_CONST
 
@@ -82,7 +82,7 @@ feature
 	is_special: BOOLEAN is True;
 			-- Is the class special ?
 
-	mark_area_used (remover: REMOVER) is
+	mark_all_used (remover: REMOVER) is
 			-- Mark attribute `area' used for dead code removal
 		do
 			remover.record (feature_table.item ("area"), Current)

@@ -919,7 +919,7 @@ feature
 			good_argument: t /= Void
 		do
 			local_list.finish;
-			local_list.put_right (t);
+			local_list.add_right (t);
 		end;
 
 feature -- Debugger

@@ -16,4 +16,10 @@ feature {NONE}
 			!!Result
 		end;
 
+	Makefile_generator: MAKEFILE_GENERATOR is
+			-- Makefile generator
+		once
+			!!Result
+		end;
+
 end

@@ -42,8 +42,7 @@ end;
 				!!derivations.make;
 				put (derivations, an_id);
 			end;
-			derivations.start;
-			derivations.add_left (a_type);
+			derivations.add_front (a_type);
 		end;
 
 end

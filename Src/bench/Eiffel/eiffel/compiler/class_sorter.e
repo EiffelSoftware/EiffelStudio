@@ -97,8 +97,7 @@ feature
 					if name_list = Void then
 						!!name_list.make;
 					end;
-					name_list.start;
-					name_list.add_left (a_class.id);
+					name_list.add_front (a_class.id);
 				end;
 				i := i + 1;
 			end;

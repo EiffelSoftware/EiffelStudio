@@ -115,6 +115,9 @@ feature {NONE}
 	Bc_not_rec:			CHARACTER is '%/107/';
 	Bc_end_pre:			CHARACTER is '%/108/';
 	Bc_end_first_pre:	CHARACTER is '%/109/';
+	Bc_cast_long:		CHARACTER is '%/110/';
+	Bc_cast_float:		CHARACTER is '%/111/';
+	Bc_cast_double:		CHARACTER is '%/112/';
 
 
 end

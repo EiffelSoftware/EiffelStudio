@@ -189,6 +189,9 @@ feature -- Status report
 							then
 								mismatch := True
 							end
+						else
+								-- Must be NONE open type
+							mismatch := arg /= Void
 						end
 					else
 						if arg_type_code /= open_arg_type_code then

@@ -34,8 +34,7 @@ feature {NONE} -- Initialization
 			
 			build_text_window (container)
 
---			build_menus
-			build_edit_bar
+			build_edit_bar (edit_bar)
 --			build_toolbar_menu
 		end
 
@@ -64,10 +63,10 @@ feature -- Window Properties
 			stone = Void
 		end
 
-	search_cmd_holder: COMMAND_HOLDER
+--	search_cmd_holder: COMMAND_HOLDER
 			-- Command to search for a text
 
-	print_cmd_holder: COMMAND_HOLDER
+--	print_cmd_holder: COMMAND_HOLDER
 			-- Command to print text
 
 	edit_bar: EV_HORIZONTAL_BOX
@@ -79,7 +78,7 @@ feature -- Window Properties
 --			Result := text_window.hole_target
 --		end
 
-	hole_button: EB_BUTTON_HOLE
+--	hole_button: EB_BUTTON_HOLE
 			-- Button to represent Current's default hole.
 
 	history_window_title: STRING is
@@ -381,9 +380,9 @@ feature -- Pick and Throw Implementation
 			reset_stone
 			history.wipe_out
 --			close_windows
-			if hole_button /= Void then
-				hole_button.set_empty_symbol
-			end
+--			if hole_button /= Void then
+--				hole_button.set_empty_symbol
+--			end
 		end
 
 feature -- Element change
@@ -393,22 +392,22 @@ feature -- Element change
 		require
 			valid_history: history /= Void
 		do
-			history.extend (a_stone)
+			history.add_stone (a_stone)
 		ensure
 			has_history: history.has (a_stone)
 		end
 
 feature {NONE} -- Implementation
 
-	create_toolbar (par: EV_CONTAINER) is
+	create_toolbar (par: EV_BOX) is
 			-- Create all toolbars with parent `a_parent'.
 		do
 			create edit_bar.make (par)
-			edit_bar.set_expand (False)
+			par.set_child_expandable (edit_bar, False)
 --			edit_bar.set_minimum_height (22)
 		end
 
-	build_edit_bar is
+	build_edit_bar (a_toolbar: EV_BOX) is
 		deferred
 		end
 

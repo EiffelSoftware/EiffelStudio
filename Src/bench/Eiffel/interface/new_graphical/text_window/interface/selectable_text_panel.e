@@ -242,6 +242,7 @@ feature {NONE} -- Handle mouse clicks
 			invalidate_line (cursor.y_in_lines, False)
 			if not shifted_key then
 				store_mouse_up := True
+				click_delay.set_interval (0)				 
 				click_delay.set_interval (300)
 				click_count := click_count + 1
 				mouse_up_delayed := False

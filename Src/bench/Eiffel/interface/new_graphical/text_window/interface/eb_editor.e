@@ -8,7 +8,6 @@ class
 	EB_EDITOR
 
 inherit
-
 	SELECTABLE_TEXT_PANEL
 		undefine
 			font,
@@ -750,7 +749,7 @@ feature {NONE} -- Mouse copy cut
 
 	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 		do
-			if is_editable and then position_is_in_selection (x_pos, y_pos) then
+			if is_editable and then position_is_in_selection (x_pos, y_pos) and then click_count = 0 then
 				if not editor_area.has_capture then
 					editor_area.enable_capture
 				end			

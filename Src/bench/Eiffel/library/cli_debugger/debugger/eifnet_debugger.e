@@ -9,8 +9,6 @@ class
 
 inherit
 	
-	DISPOSABLE
-	
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
@@ -219,18 +217,6 @@ feature -- Termination monitoring ...
 				timer_monitor_process_termination_on_exit := Void
 				--FIXME JFIAT:  try to reuse timer object !
 				Application.process_termination
-			end
-		end
-
-
-feature -- Disposable
-
-	dispose is
-			-- Dispose Current
-		do
-			if icor_debug /= Void then
-				terminate_debugger
-				icor_debug := Void
 			end
 		end
 

@@ -9,6 +9,9 @@ class
 
 inherit
 	ICOR_OBJECT
+		redefine
+			dispose
+		end
 
 create 
 	make_by_pointer
@@ -34,7 +37,7 @@ feature {ICOR_EXPORTER} -- Access
 				last_icd_managed_callback.terminate_callback
 				last_icd_unmanaged_callback.terminate_callback
 				last_icd_managed_callback := Void
-				last_icd_unmanaged_callback := Void				
+				last_icd_unmanaged_callback := Void
  			end
  		rescue
  			retried := True
@@ -98,6 +101,14 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		ensure
 			success: last_call_success = 0
+		end
+
+feature -- Disposable
+
+	dispose is
+		do
+			last_call_success := cpp_terminate (item)
+			Precursor
 		end
 
 feature {ICOR_EXPORTER} -- Access

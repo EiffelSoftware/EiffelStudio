@@ -7,6 +7,9 @@ class
 
 inherit
 	ICOR_OBJECT
+		redefine
+			dispose
+		end
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		undefine
@@ -39,8 +42,16 @@ feature -- Initialization
 			l_success: INTEGER
 		do
 			l_success := c_terminate_callback (item)
-		end			
+		end
 
+feature -- disposable
+
+	dispose is
+		do
+			terminate_callback
+			Precursor
+		end
+		
 feature {NONE} -- debugger behavior
 	
 	begin_of_unmanaged_callback (cb_id: INTEGER) is

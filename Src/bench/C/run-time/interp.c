@@ -443,12 +443,14 @@ rt_private void interpret(int flag, int where)
 											   level depth */
 	struct item * volatile stop;			/* To save stack context */
 	struct stochunk * volatile scur;		/* Current chunk (stack context) */
+#ifdef ISE_GC
 	char ** volatile l_top;					/* Local top */
 	struct stchunk * volatile l_cur;		/* Current local chunk */
 	char ** volatile ls_top;				/* loc_stack top */
 	struct stchunk * volatile ls_cur;		/* Current loc_stack chunk */
 	char ** volatile h_top;					/* Hector stack top */
 	struct stchunk * volatile h_cur;		/* Current hector stack chunk */
+#endif
 	int volatile assert_type;				/* Assertion type */
 	int volatile is_extern = 0;				/* External flag for feature call */
 	char volatile pre_success;				/* Flag for precondition success */ 
@@ -764,12 +766,14 @@ rt_private void interpret(int flag, int where)
 			}
 
 			if (rescue) {	/* If there is a rescue clause */
+#ifdef ISE_GC
 				l_top = loc_set.st_top;		/* Save C local stack */
 				l_cur = loc_set.st_cur;
 				ls_top = loc_stack.st_top;	/* Save loc_stack */
 				ls_cur = loc_stack.st_cur;
 				h_top = hec_stack.st_top;	/* Save hector stack */
 				h_cur = hec_stack.st_cur;
+#endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
 				exvect->ex_jbuf = &exenv;	/* Longjmp address */
@@ -808,6 +812,7 @@ rt_private void interpret(int flag, int where)
 		op_stack.st_cur = scur;					/* Restore stack context */
 		op_stack.st_top = stop;
 		if (scur) op_stack.st_end = scur->sk_end;
+#ifdef ISE_GC
 		loc_set.st_cur = l_cur;
 		if (l_cur) loc_set.st_end = l_cur->sk_end;
 		loc_set.st_top = l_top;
@@ -817,6 +822,7 @@ rt_private void interpret(int flag, int where)
 		hec_stack.st_cur = h_cur;
 		if (h_cur) hec_stack.st_end = h_cur->sk_end;
 		hec_stack.st_top = h_top;
+#endif
 		sync_registers(MTC scur, stop);
 		RTEU;
 		break;

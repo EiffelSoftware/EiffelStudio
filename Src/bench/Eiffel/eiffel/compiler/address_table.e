@@ -480,7 +480,7 @@ feature {NONE} -- Generation
 					then
 						rout_info := System.rout_info_table.item (rout_id)
 						gen_file.putstring ("RTWPF(")
-						gen_file.putstring (rout_info.origin.generated_id)
+						rout_info.origin.generated_id (gen_file)
 						gen_file.putstring (", ")
 						gen_file.putint (rout_info.offset)
 					else

@@ -22,10 +22,6 @@ c_gdk_window_deiconify (GdkWindow * window);
 gboolean
 c_gdk_window_is_iconified (GdkWindow * window);
 
-void
-c_gdk_window_get_geometry (GdkWindow * window,
-		int * x, int * y, int * width, int * height);
-
 #endif
 
 //------------------------------------------------------------------------------
@@ -49,6 +45,9 @@ c_gdk_window_get_geometry (GdkWindow * window,
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2000/03/08 16:42:06  brendel
+// Removed c_gdk_window_get_geometry.
+//
 // Revision 1.4  2000/03/08 02:06:39  brendel
 // Added function c_gdk_window_get_geometry.
 //

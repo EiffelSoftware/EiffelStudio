@@ -34,7 +34,7 @@ feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 	process is
 		do
 --			execute_licensed (s)
-			f.format (s)
+			f.format
 			set_selected (True)
 		end
 

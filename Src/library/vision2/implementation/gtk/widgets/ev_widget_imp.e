@@ -318,17 +318,23 @@ feature -- Element change
 				not_yet_implemented: False
 			end
 		end
-
+	
 	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
+			-- Make `color' the new `background_color'.
 		do
 			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+			if box_widget /= default_pointer then
+				c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+			end
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+			if box_widget /= default_pointer then
+				c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+			end
 		end
 	
 feature -- Measurement
@@ -433,10 +439,67 @@ feature -- Resizing
 
 feature -- Accelerators - command association
 
+ 	string_from_accelerator (accel: EV_ACCELERATOR): STRING is
+ 			-- Return a string which correspond to the value of the accelerator.
+ 			-- Ex: for shift: True, alt: False, control: True, code: an_integer
+ 			--		The result would be "shift_control_'an_integer'"
+ 		require
+ 			accel_exists: accel /= Void
+ 		do
+ 			Result := ""
+ 			if accel.shift_key then
+ 				Result.append ("shift_")
+ 			end
+ 			if accel.control_key then
+ 				Result.append ("alt_")
+ 			end
+ 			if accel.shift_key then
+ 				Result.append ("control_")
+ 			end
+ 			Result.append (accel.keycode.out)
+ 		ensure
+ 			correct_result: not Result.is_equal ("")
+ 		end
+
 	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when `acc' is completed by the user.
-		do
+ 		local
+ 			signal_name: STRING
+ 			a: ANY
+ 			i: INTEGER
+ 		do
+ 			-- First we create a new signal:
+ 			-- 1. the signal name depending on the accelerator values.
+ 			signal_name := string_from_accelerator (acc)
+ 			a := signal_name.to_c
+ 			-- 2. Add the signal to the widget.
+ 			-- Before adding the signal to the GtkWidget,
+ 			-- test if the accelerator already exists or not otherwise
+ 			-- there is no need to re-register it. (Done in the c funtion).
+ 			i := c_gtk_object_class_user_signal_new (widget, $a)
+ 			check
+ 				new_signal_added: i > 0
+ 			end
+ 
+ 			-- Second, We create an accelerator for the widget.
+ 			c_gtk_widget_add_accelerator (widget, $a, acc.keycode ,acc.shift_key, acc.control_key, acc.alt_key)
+ 
+ 			-- Third, we connect the command to the signal.
+ 			i := c_gtk_signal_connect (widget,
+ 					$a,
+ 					cmd.execute_address,
+ 					$cmd,
+ 					$arg,
+ 					Default_pointer,
+ 					Default_pointer,
+ 					Default_pointer,
+ 					0,
+ 					False,
+ 					Default_pointer)
+ 			check
+ 				callback_connected: i > 0
+ 			end
 		end
 
 	remove_accelerator_commands (acc: EV_ACCELERATOR) is
@@ -552,6 +615,24 @@ feature -- Event - command association
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 			add_command_with_event_data (widget, "focus_out_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
+
+--	add_display_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed
+--			-- when the widget has been displayed on the screen.
+--		local
+--			ev_data: EV_EVENT_DATA		
+--		do
+--			add_command (widget, "show", cmd, arg, default_pointer)
+--		end
+
+--	add_hide_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed
+--			-- when the widget has been hidden.
+--		local
+--			ev_data: EV_EVENT_DATA		
+--		do
+--			add_command (widget, "hide", cmd, arg, default_pointer)
+--		end
 
 feature -- Event -- removing command association
 
@@ -672,6 +753,20 @@ feature -- Event -- removing command association
 		do
 			remove_commands (widget, focus_out_event_id)
 		end
+
+--	remove_display_commands is
+--			-- Empty the list of commands to be executed when
+--			-- the widget lose the focus.
+--		do
+--			remove_commands (widget, show_id)
+--		end
+
+--	remove_hide_commands is
+--			-- Empty the list of commands to be executed when
+--			-- the widget lose the focus.
+--		do
+--			remove_commands (widget, hide_id)
+--		end
 
 feature -- Postconditions
 	

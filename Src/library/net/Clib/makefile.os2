@@ -14,34 +14,14 @@ all:: network.lib wnetwork.lib
 .c.obj:
 	$(CC) -Fo$@ -c $(CFLAGS) $<
 
-SMODE = network.c network_r.c
+SMODE = network.c network_r.c storable.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
 	network.obj \
-	network_r.obj
-
-WOBJS = \
-	wnetwork.obj \
-	wnetwork_r.obj
-
-wnetwork.c: network.c
-	if exist wnetwork.c $(RM) wnetwork.c
-	$(LN) network.c wnetwork.c
-
-
-wnetwork.obj: wnetwork.c bitmask.h
-	$(CC) -Fo$@ -c $(CFLAGS) -DWORKBENCH $*.c
-
-
-wnetwork_r.c: network_r.c
-	if exist wnetwork_r.c $(RM) wnetwork_r.c
-	$(LN) network_r.c wnetwork_r.c
-
-wnetwork_r.obj: wnetwork_r.c
-	$(CC) -Fo$@ -c $(CFLAGS) -DWORKBENCH $*.c
-
+	network_r.obj \
+	storable.obj
 
 local_clean:: remove
 
@@ -54,6 +34,7 @@ network.lib: $(OBJS)
 	if exist $@ $(RM) $@
 	$(AR) /nobackup /nologo /noignorecase $@ network_r.obj,,
 	$(AR) /nobackup /nologo /noignorecase $@ network.obj,,
+	$(AR) /nobackup /nologo /noignorecase $@ storable.obj,,
 #	 $(AR) /nobackup /nologo /noignorecase $@ c:\ibmcpp\lib\os2386.lib,,
 #	 $(AR) /nobackup /nologo /noignorecase $@ c:\mptn\lib\so32dll.lib,,
 #	 $(AR) /nobackup /nologo /noignorecase $@ c:\mptn\lib\tcp32dll.lib,,
@@ -63,20 +44,3 @@ network.lib: $(OBJS)
 	if not exist ..\spec\os2ibm\lib mkdir ..\spec\os2ibm\lib
 	copy network.lib ..\spec\os2ibm\lib\network.lib
 
-all:: wnetwork.lib
-
-local_realclean::
-	if exist wnetwork.lib $(RM) wnetwork.lib
-
-wnetwork.lib: $(WOBJS)
-	if exist $@ $(RM) $@
-	$(AR) /nobackup /nologo /noignorecase $@ wnetwork_r.obj,,
-	$(AR) /nobackup /nologo /noignorecase $@ wnetwork.obj,,
-#	 $(AR) /nobackup /nologo /noignorecase $@ c:\ibmcpp\lib\os2386.lib,,
-#	 $(AR) /nobackup /nologo /noignorecase $@ c:\mptn\lib\so32dll.lib,,
-#	 $(AR) /nobackup /nologo /noignorecase $@ c:\mptn\lib\tcp32dll.lib,,
-	$(RANLIB) $@
-	if not exist ..\spec mkdir ..\spec
-	if not exist ..\spec\os2ibm mkdir ..\spec\os2ibm
-	if not exist ..\spec\os2ibm\lib mkdir ..\spec\os2ibm\lib
-	copy wnetwork.lib ..\spec\os2ibm\lib\wnetwork.lib

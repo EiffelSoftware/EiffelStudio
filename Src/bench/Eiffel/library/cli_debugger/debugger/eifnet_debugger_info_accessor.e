@@ -59,10 +59,15 @@ feature {NONE} -- Callback actions
 		end
 
 	notify_end_of_callback (cb_id: INTEGER; is_stopped: BOOLEAN) is
+		local
+			s: APPLICATION_STATUS
 		do
 			Eifnet_debugger_info.set_data_changed (True)
 			if is_stopped then
-				Eifnet_debugger_info.application.imp_dotnet.status.set_is_stopped (is_stopped)
+				s := eifnet_debugger_info.application.status
+				s.set_is_stopped (is_stopped)
+				s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+				s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
 			end
 			
 			debug ("DEBUGGER_TRACE_CALLBACK")
@@ -113,15 +118,24 @@ feature {NONE} -- Change by pointer
 			eifnet_debugger_info.set_last_icd_process (p)
 		end
 
+	set_last_breakpoint_by_pointer (p: POINTER) is
+		do
+			eifnet_debugger_info.set_last_icd_breakpoint (p)
+		end
+		
 	set_last_thread_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_icd_thread (p)
 		end
 		
-
-	set_last_breakpoint_by_pointer (p: POINTER) is
+	add_managed_thread_by_pointer (p: POINTER) is
 		do
-			eifnet_debugger_info.set_last_icd_breakpoint (p)
+			eifnet_debugger_info.add_managed_thread_by_pointer (p)
+		end
+
+	remove_managed_thread_by_pointer (p: POINTER) is
+		do
+			eifnet_debugger_info.remove_managed_thread_by_pointer (p)			
 		end
 
 feature {NONE} -- Change by value
@@ -151,13 +165,6 @@ feature {NONE} -- reset
 				set_last_process_by_pointer (default_pointer)
 			end
 		end		
-
-	reset_last_thread_by_pointer (p: POINTER) is
-		do
-			if Eifnet_debugger_info.last_p_icd_thread.is_equal (p) then
-				set_last_thread_by_pointer (Default_pointer)
-			end
-		end
 
 feature {EIFNET_EXPORTER} -- Stepping Access
 

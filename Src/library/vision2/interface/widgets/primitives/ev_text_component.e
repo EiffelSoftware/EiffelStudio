@@ -137,6 +137,7 @@ feature -- Element change
 		require
 			text_not_void: a_text /= Void
 			is_editable: is_editable
+			no_carriage_returns: not a_text.has ('%R')
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -335,6 +336,9 @@ end -- class EV_TEXT_COMPONENT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/20 01:14:31  brendel
+--| Added precondition that text may not contain carriage returns.
+--|
 --| Revision 1.28  2000/03/27 18:43:22  oconnor
 --| added fixme
 --|

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	RESOURCE_ERROR_CONSTANTS
+	DATA_RESOURCE_ERROR_CONSTANTS
 
 feature {NONE} -- Constants
 
@@ -55,7 +55,7 @@ feature -- Status report
 			end
 		end
 
-end -- class RESOURCE_ERROR_CONSTANTS
+end -- class DATA_RESOURCE_ERROR_CONSTANTS
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

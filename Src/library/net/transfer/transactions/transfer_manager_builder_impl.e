@@ -8,7 +8,7 @@ indexing
 
 class TRANSFER_MANAGER_BUILDER_IMPL inherit
 	
-	RESOURCE_FACTORY
+		DATA_RESOURCE_FACTORY
 		export
 			{NONE} all
 		end
@@ -83,7 +83,7 @@ feature -- Status report
 			non_empty_address: addr /= Void and then not addr.is_empty
 			mode_in_range: Readable <= mode and mode <= writable
 		local
-			res: RESOURCE
+			res: DATA_RESOURCE
 			u: URL
 		do
 			resource_factory.set_address (addr)
@@ -134,8 +134,8 @@ feature -- Element change
 			source_address_correct: is_address_correct (s, Readable)
 			target_address_correct: is_address_correct (t, Writable)
 		local
-			sr: RESOURCE
-			tr: RESOURCE
+			sr: DATA_RESOURCE
+			tr: DATA_RESOURCE
 			su: URL
 			tu: URL
 			ta: SINGLE_TRANSACTION
@@ -228,22 +228,22 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	transactions: ARRAYED_LIST[TRANSACTION]
+	transactions: ARRAYED_LIST [TRANSACTION]
 			-- Registered transactions
 
-	optimized_transactions: ARRAYED_LIST[TRANSACTION]
+	optimized_transactions: ARRAYED_LIST [TRANSACTION]
 			-- Optimized transactions
 
 	transfer_manager: TRANSFER_MANAGER
 			-- The manager
 
-	readable_set: BINARY_SEARCH_TREE_SET[STRING]
+	readable_set: BINARY_SEARCH_TREE_SET [STRING]
 			-- Set storing readable adresses
 
-	writable_set: BINARY_SEARCH_TREE_SET[STRING]
+	writable_set: BINARY_SEARCH_TREE_SET [STRING]
 			-- Set storing writable adresses
 
-	resource_hash: HASH_TABLE[RESOURCE, STRING]
+	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
 			-- Hash table of created resources
 
 	optimized_count: INTEGER is
@@ -267,9 +267,9 @@ feature {NONE} -- Implementation
 		require
 			not_empty: not is_empty
 		local
-			hash: HASH_TABLE[LINKED_LIST[INTEGER], URL]
+			hash: HASH_TABLE [LINKED_LIST [INTEGER], URL]
 			addr: URL
-			lst: LINKED_LIST[INTEGER]
+			lst: LINKED_LIST [INTEGER]
 			multitrans: MULTIPLE_TRANSACTION
 		do
 			create hash.make (count)
@@ -340,8 +340,8 @@ feature {NONE} -- Implementation
 			manager_set_up: manager_built
 		end
 
-	add_reference (s: SET[STRING]; r: RESOURCE;
-				f: FUNCTION[RESOURCE, TUPLE, BOOLEAN]): BOOLEAN is
+	add_reference (s: SET [STRING]; r: DATA_RESOURCE;
+				f: FUNCTION [DATA_RESOURCE, TUPLE, BOOLEAN]): BOOLEAN is
 			-- Add `r' into `s' if `f' is true.
 		require
 			set_exists: s /= Void
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			inserted: Result implies s.has (r.location)
 		end
 
-	remove_reference (s: SET[STRING]; r: RESOURCE) is
+	remove_reference (s: SET [STRING]; r: DATA_RESOURCE) is
 			-- Remove `r' from `s'.
 		require
 			set_exists: s /= Void

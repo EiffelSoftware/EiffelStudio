@@ -8,14 +8,14 @@ indexing
 
 class TRANSFER_MANAGER inherit
 
-	TRANSACTION_CONTAINER[TRANSACTION]
+	TRANSACTION_CONTAINER [TRANSACTION]
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force
+			copy, is_equal, force, is_inserted
 		end
 
-	ARRAYED_LIST[TRANSACTION]
+	ARRAYED_LIST [TRANSACTION]
 		rename
 			make as list_make, item as transaction, 
 			go_i_th as select_transaction
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: RESOURCE is
+	source: DATA_RESOURCE is
 			-- Selected source
 		do
 			Result := transaction.source
 		end
 
-	target: RESOURCE is
+	target: DATA_RESOURCE is
 			-- Selected target
 		do
 			Result := transaction.target

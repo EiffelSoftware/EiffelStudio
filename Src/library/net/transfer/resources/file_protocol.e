@@ -8,7 +8,7 @@ indexing
 
 class FILE_PROTOCOL inherit
 
-	RESOURCE
+	DATA_RESOURCE
 		redefine
 			address
 		end
@@ -194,14 +194,14 @@ feature -- Status setting
 			mode := Write_mode_id
 		end
 		
-	reuse_connection (other: RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		do
 		end
 
 feature -- Output
 
-	put (other: RESOURCE) is
+	put (other: DATA_RESOURCE) is
 			-- Write out resource `other'.
 		do
 			from until not other.is_packet_pending loop

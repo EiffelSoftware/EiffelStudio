@@ -15,11 +15,11 @@ class MULTIPLE_TRANSACTION inherit
 			error
 		end
 
-	TRANSACTION_CONTAINER[TRANSACTION]
+	TRANSACTION_CONTAINER [TRANSACTION]
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force
+			copy, is_equal, force, is_inserted
 		end
 	
 	ARRAYED_LIST[TRANSACTION]
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: RESOURCE is
+	source: DATA_RESOURCE is
 			-- Current source
 		do
 			Result := transaction.source
 		end
 	
-	target: RESOURCE is
+	target: DATA_RESOURCE is
 			-- Current target
 		do
 			Result := transaction.target
@@ -110,7 +110,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	first_source: RESOURCE
+	first_source: DATA_RESOURCE
 			-- Handle to first source in collection
 			
 	reset_error_flags is

@@ -11,12 +11,12 @@ deferred class
 
 feature -- Access
 
-	source: RESOURCE is
+	source: DATA_RESOURCE is
 			-- Current source
 		deferred
 		end
 	
-	target: RESOURCE is
+	target: DATA_RESOURCE is
 			-- Current target
 		deferred
 		end

@@ -2,6 +2,10 @@ deferred class MAIN_PANEL_TOGGLE
 
 inherit
 
+	HOLE
+		redefine
+			process_any
+		end;
 	TOGGLE_B
 		rename
 			make as toggle_b_make,
@@ -10,12 +14,23 @@ inherit
 	LICENCE_COMMAND;
 
 feature {NONE}
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.any_type
+		end;
+
+	target: WIDGET is
+		do
+			Result := Current		
+		end;
 	
 	make (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			toggle_b_make (a_name, a_parent);
 			add_activate_action (Current, Void);
 			set_toggle_off;
+			register;
 			set_left_alignment
 		end;
 
@@ -23,6 +38,10 @@ feature {NONE}
 		do
 			if main_panel.project_initialized then
 				toggle_pressed		
+			elseif armed then
+				set_toggle_off
+			else
+				set_toggle_on
 			end
 		end;
 
@@ -31,6 +50,16 @@ feature {NONE}
 		require
 			project_initialized: main_panel.project_initialized
 		deferred
+		end;
+
+	process_any (stone: STONE) is
+		local
+			ed: EDITABLE
+		do
+			ed ?= stone.data;
+			if ed /= Void then
+				ed.create_editor
+			end
 		end;
 
 end 

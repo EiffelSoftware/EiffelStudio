@@ -45,33 +45,7 @@ feature -- Menu items
 			description: "Text of import tool menu item"
 			external_name: "ImportToolMenuItem"
 		end
-				
-feature -- Shortcuts
-
-	Ctrl_P_shortcut: INTEGER is 131152
-		indexing
-			description: "Ctrl+P shortcut, enum value: 0x 20050"
-			external_name: "CtrlPShortcut"
-		end
-		
-	Ctrl_E_shortcut: INTEGER is 131141
-		indexing
-			description: "Ctrl+E shortcut, enum value: 0x 20045"
-			external_name: "CtrlEShortcut"
-		end
-
-	Ctrl_M_shortcut: INTEGER is 131149
-		indexing
-			description: "Ctrl+M shortcut, enum value: 0x 2004D"
-			external_name: "CtrlMShortcut"
-		end
-		
-	Ctrl_G_shortcut: INTEGER is 131143
-		indexing
-			description: "Ctrl+G shortcut, enum value: 0x 20047"
-			external_name: "CtrlGShortcut"
-		end
-		
+						
 feature -- Toolbar icons filename
 
 	Path_icon_filename: STRING is
@@ -83,7 +57,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Path_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Edit_icon_filename: STRING is 
@@ -95,7 +69,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Edit_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Remove_icon_filename: STRING is 
@@ -107,7 +81,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Remove_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Eiffel_generation_icon_filename: STRING is 
@@ -119,7 +93,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Eiffel_generation_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 
 	Import_icon_filename: STRING is 
@@ -131,7 +105,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 
 feature -- Column Names
@@ -152,12 +126,6 @@ feature -- Messages
 		
 feature -- Other constants
 	
-	Cancel: INTEGER is 2
-		indexing
-			description: "Value indicating that the `Cancel' button of the message box has been clicked"
-			external_name: "Cancel"
-		end
-
 	Caption_text: STRING is "Imported Assemblies"
 		indexing
 			description: "Text that appears in the blue header of the data grid"
@@ -170,6 +138,12 @@ feature -- Other constants
 			external_name: "NonEditbleAssembly"
 		end
 
+	Mscorlib_assembly_name: STRING is "mscorlib"
+		indexing
+			description: "Name of `mscorlib.dll'"
+			external_name: "MscorlibAssemblyName"
+		end
+		
 feature {NONE} -- Implementation
 
 	Path_icon_relative_filename: STRING is "icon_assembly_paths_color.ico"

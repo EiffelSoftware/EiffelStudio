@@ -93,68 +93,6 @@ feature -- Menu items
 			description: "Text of about ISE assembly manager menu item"
 			external_name: "AboutMenuItem"
 		end
-		
-feature -- Shortcuts
-
-	Ctrl_X_shortcut: INTEGER is 131160
-		indexing
-			description: "Ctrl+X shortcut, enum value: 0x 20058"
-			external_name: "CtrlXShortcut"
-		end
-		
-	Ctrl_N_shortcut: INTEGER is 131150
-		indexing
-			description: "Ctrl+N shortcut, enum value: 0x 2004E"
-			external_name: "CtrlNShortcut"
-		end	
-
-	Ctrl_R_shortcut: INTEGER is 131154
-		indexing
-			description: "Ctrl+R shortcut, enum value: 0x 20052"
-			external_name: "CtrlRShortcut"
-		end
-	
-	Ctrl_U_shortcut: INTEGER is 131157
-		indexing
-			description: "Ctrl+U shortcut, enum value: 0x 20055"
-			external_name: "CtrlUShortcut"
-		end	
-	
-	Ctrl_K_shortcut: INTEGER is 131147
-		indexing
-			description: "Ctrl+K shortcut, enum value: 0x 2004B"
-			external_name: "CtrlKShortcut"
-		end	
-
-	Ctrl_D_shortcut: INTEGER is 131140
-		indexing
-			description: "Ctrl+D shortcut, enum value: 0x 20044"
-			external_name: "CtrlDShortcut"
-		end
-		
-	Ctrl_A_shortcut: INTEGER is 131137
-		indexing
-			description: "Ctrl+A shortcut, enum value: 0x 20041"
-			external_name: "CtrlAShortcut"
-		end	
-
-	Ctrl_W_shortcut: INTEGER is 131159
-		indexing
-			description: "Ctrl+W shortcut, enum value: 0x 20057"
-			external_name: "CtrlWShortcut"
-		end	
-		
-	Ctrl_I_shortcut: INTEGER is 131145
-		indexing
-			description: "Ctrl+I shortcut, enum value: 0x 20049"
-			external_name: "CtrlIShortcut"
-		end
-
-	Ctrl_H_shortcut: INTEGER is 131144
-		indexing
-			description: "Ctrl+H shortcut, enum value: 0x 20048"
-			external_name: "CtrlHShortcut"
-		end
 
 feature -- Error messages
 
@@ -164,32 +102,6 @@ feature -- Error messages
 			external_name: "ErrorMessage"
 		end
 		
-feature -- Toolbar constants
-
-	Flat_appearance: INTEGER is 1
-		indexing
-			description: "Flat appearance of toolbar buttons"
-			external_name: "FlatAppearance"
-		end
-	
-	Push_button: INTEGER is 1
-		indexing
-			description: "Toolbar button style: push button"
-			external_name: "PushButton"
-		end
-
-	Toggle_button: INTEGER is 2
-		indexing
-			description: "Toolbar button style: toggle button"
-			external_name: "ToggleButton"
-		end
-
-	Separator: INTEGER is 3
-		indexing
-			description: "Toolbar button style: separator"
-			external_name: "Separator"
-		end
-
 feature -- Toolbar icons filename
 	
 	Name_icon_filename: STRING is 
@@ -201,7 +113,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Name_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Version_icon_filename: STRING is 
@@ -213,7 +125,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Version_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 
 	Culture_icon_filename: STRING is 
@@ -225,7 +137,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Culture_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Public_key_icon_filename: STRING is 
@@ -237,7 +149,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Public_key_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	Dependancies_icon_filename: STRING is 
@@ -249,7 +161,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Dependancies_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 
 	Dependancy_viewer_icon_filename: STRING is 
@@ -261,7 +173,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Dependancy_viewer_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 						
 	Help_icon_filename: STRING is 
@@ -273,7 +185,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Help_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 feature -- Columns names
@@ -310,12 +222,6 @@ feature -- Columns names
 		
 feature -- Other constants
 
-	Cell: INTEGER is 4
-		indexing
-			description: "Cell info type"
-			external_name: "Cell"
-		end
-	
 	Data_table_title: STRING is "Assemblies table"
 		indexing
 			description: "Data table title"
@@ -375,7 +281,7 @@ feature -- Other constants
 			description: "White color"
 			external_name: "WhiteColor"
 		once
-			Result := Result.White
+			Result := Result.get_White
 		end
 		
 	Window_height: INTEGER is 500

@@ -10,12 +10,6 @@ inherit
 	
 feature -- Access
 
-	Bold_style: INTEGER is 1
-		indexing
-			description: "Bold style"
-			external_name: "BoldStyle"
-		end
-		
 	Comma_separator: STRING is ", "
 		indexing
 			description: "Comma separator"

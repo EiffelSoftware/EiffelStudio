@@ -37,15 +37,9 @@ feature -- Access
 			Result := Result.concat_string_string (Result, Image_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
-	
-	Middle_center_alignment: INTEGER is 32
-		indexing
-			description: "Label text middle center alignment"
-			external_name: "MiddleCenterAlignment"
-		end
-	
+		
 	Powered_by_eiffel_sharp: STRING is "Powered by Eiffel#"
 		indexing
 			description: "Powered by Eiffel#"
@@ -93,7 +87,7 @@ feature -- Access
 			description: "White color"
 			external_name: "WhiteColor"
 		once
-			Result := Result.White	
+			Result := Result.get_White	
 		end
 		
 	Window_height: INTEGER is 250

@@ -27,14 +27,6 @@ feature -- Menu items
 			description: "Text of import menu item"
 			external_name: "ImportToolMenuItem"
 		end
-
-feature -- Shortcuts
-
-	Ctrl_O_shortcut: INTEGER is 131151
-		indexing
-			description: "Ctrl+O shortcut, enum value: 0x 2004F"
-			external_name: "CtrlOShortcut"
-		end
 		
 feature -- Error messages
 
@@ -81,7 +73,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result,Open_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0			
+			not_empty_filename: Result.get_length > 0			
 		end
 		
 	Import_icon_filename: STRING is 
@@ -93,7 +85,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0			
+			not_empty_filename: Result.get_length > 0			
 		end
 
 	Import_tool_icon_filename: STRING is 
@@ -105,7 +97,7 @@ feature -- Toolbar icons filename
 			Result := Result.concat_string_string (Result, Import_tool_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 feature -- Other constants

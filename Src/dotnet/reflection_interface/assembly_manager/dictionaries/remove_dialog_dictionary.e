@@ -27,6 +27,12 @@ feature -- Access
 			description: "Check box for dependancies removal"
 			external_name: "DependanciesCheckBoxText"
 		end
+
+	Mscorlib_assembly_name: STRING is "mscorlib"
+		indexing
+			description: "Name of `mscorlib.dll'"
+			external_name: "MscorlibAssemblyName"
+		end
 		
 	No_button_label: STRING is "No"
 		indexing
@@ -71,7 +77,13 @@ feature -- Access
 			Result := Result.concat_string_string (Result, Remove_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
+		end
+
+	System_assembly_name: STRING is "system"
+		indexing
+			description: "Name of `System.dll'"
+			external_name: "SystemAssemblyName"
 		end
 		
 	Title: STRING is "Remove a .NET assembly"

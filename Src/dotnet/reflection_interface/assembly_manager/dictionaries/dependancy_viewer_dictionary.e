@@ -41,7 +41,7 @@ feature -- Access
 			Result := Result.concat_string_string (Result, Dependancies_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 		
 	No_dependancies_text: STRING is "The selected assembly has no dependancy."

@@ -16,18 +16,6 @@ feature -- Access
 			external_name: "AccessComment"
 		end
 
-	Align_left: INTEGER is 32
-		indexing
-			description: "Left alignment"
-			external_name: "AlignLeft"
-		end
-
-	Alignment: INTEGER is 1
-		indexing
-			description: "Left alignment (in list view)"
-			external_name: "Alignment"
-		end
-		
 	Argument_string: STRING is "Argument"
 		indexing
 			description: "Argument string"
@@ -69,7 +57,7 @@ feature -- Access
 			description: "Class color"
 			external_name: "ClassColor"
 		once
-			Result := Result.Blue
+			Result := Result.get_Blue
 		end
 
 	Closing_curl_bracket: STRING is "}"
@@ -95,7 +83,7 @@ feature -- Access
 			description: "Comment color"
 			external_name: "CommentColor"
 		once
-			Result := Result.DarkRed
+			Result := Result.get_Dark_Red
 		end
 
 	Editable_color: SYSTEM_DRAWING_COLOR is
@@ -103,7 +91,7 @@ feature -- Access
 			description: "Color for editable text fields"
 			external_name: "EditableColor"
 		once
-			Result := Result.Ivory
+			Result := Result.get_Ivory
 		end
 	
 	Eiffel_generation: STRING is "Updating Eiffel class..."
@@ -118,12 +106,6 @@ feature -- Access
 			external_name: "ElementChangeComment"
 		end
 	
-	Enter_key: INTEGER is 13
-		indexing
-			description: "Enter key"
-			external_name: "EnterKey"
-		end
-
 	Error: STRING is "Error"
 		indexing
 			description: "Error string"
@@ -135,7 +117,7 @@ feature -- Access
 			description: "Feature color"
 			external_name: "FeatureColor"
 		once
-			Result := Result.DarkGreen
+			Result := Result.get_Dark_Green
 		end
 
 	Feature_keyword: STRING is "feature"
@@ -162,24 +144,12 @@ feature -- Access
 			external_name: "InitializationComment"
 		end
 
-	Italic_style: INTEGER is 2
-		indexing
-			description: "Italic style"
-			external_name: "ItalicStyle"
-		end
-
 	Keyword_color: SYSTEM_DRAWING_COLOR is
 		indexing
 			description: "Keyword color"
 			external_name: "KeywordColor"
 		once
-			Result := Result.DarkBlue
-		end
-
-	List_view_border_style: INTEGER is 1
-		indexing
-			description: "List view border style"
-			external_name: "ListViewBorderStyle"
+			Result := Result.get_Dark_Blue
 		end
 		
 	None_class: STRING is "NONE"
@@ -211,7 +181,7 @@ feature -- Access
 			description: "Red color"
 			external_name: "RedColor"
 		once
-			Result := Result.Red
+			Result := Result.get_Red
 		end
 
 	Space: STRING is " "
@@ -231,7 +201,7 @@ feature -- Access
 			description: "Color for type view text"
 			external_name: "TextColor"
 		once
-			Result := Result.Black
+			Result := Result.get_Black
 		end
 		
 	Title: STRING is "Type view"
@@ -245,19 +215,13 @@ feature -- Access
 			description: "Comment for unary operators clause"
 			external_name: "UinaryOperatorsComment"
 		end
-
-	View: INTEGER is 2
-		indexing
-			description: "List view"
-			external_name: "View"
-		end
 		
 	White_color: SYSTEM_DRAWING_COLOR is
 		indexing
 			description: "White color"
 			external_name: "WhiteColor"
 		once
-			Result := Result.White
+			Result := Result.get_White
 		end
 		
 end -- class TYPE_VIEW_DICTIONARY

@@ -41,7 +41,7 @@ feature -- Access
 			Result := Result.concat_string_string (Result, Assembly_manager_icon_relative_filename)
 		ensure
 			filename_created: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 
 	Base_filename: STRING is
@@ -53,7 +53,7 @@ feature -- Access
 		once
 			create support.make_reflectionsupport
 			support.make
-			Result := support.Eiffeldeliverypath
+			Result := support.Eiffel_delivery_path
 			Result := Result.concat_string_string (Result, Base_relative_filename)
 		end
 
@@ -62,13 +62,7 @@ feature -- Access
 			description: "Path to folder where icons are stored"
 			external_name: "BaseRelativeFilename"
 		end
-		
-	Border_style: INTEGER is 3
-		indexing
-			description: "Window border style: a fixed, single line border"
-			external_name: "BorderStyle"
-		end
-				
+						
 	Button_height: INTEGER is 27
 		indexing
 			description: "Button height"
@@ -92,13 +86,7 @@ feature -- Access
 			description: "Caption for error message boxes"
 			external_name: "ErrorCaption"
 		end
-	
-	Error_icon: INTEGER is 16
-		indexing
-			description: "Icon for error message boxes"
-			external_name: "ErrorIcon"
-		end
-		
+			
 	Font_family_name: STRING is "Verdana"
 		indexing
 			description: "Name of label font family"
@@ -110,25 +98,13 @@ feature -- Access
 			description: "Font size"
 			external_name: "FontSize"
 		end
-
-	Ignore_result: INTEGER is 5
-		indexing
-			description: "Returned value in case user clicked on `Ignore'"
-			external_name: "IgnoreResult"
-		end
 		
 	Information_caption: STRING is "Information - ISE Assembly Manager"
 		indexing
 			description: "Caption for information message boxes"
 			external_name: "InformationCaption"
 		end
-		
-	Information_icon: INTEGER is 64
-		indexing
-			description: "Icon for information message boxes"
-			external_name: "InformationIcon"
-		end
-		
+				
 	Label_font_size: REAL is 10.0
 		indexing
 			description: "Label font size"
@@ -146,31 +122,7 @@ feature -- Access
 			description: "Margin"
 			external_name: "Margin"
 		end
-
-	Ok_cancel_message_box_buttons: INTEGER is 1
-		indexing
-			description: "OK and Cancel message box buttons"
-			external_name: "OkCancelMessageBoxButtons"
-		end
-		
-	Ok_message_box_button: INTEGER is 0
-		indexing
-			description: "OK message box button"
-			external_name: "OkMessageBoxButton"
-		end
-	
-	Regular_style: INTEGER is 0
-		indexing
-			description: "Regular style"
-			external_name: "RegularStyle"
-		end
-
-	Retry_result: INTEGER is 4
-		indexing
-			description: "Returned value in case user clicked on `Retry'"
-			external_name: "RetryResult"
-		end
-		
+			
 feature {NONE} -- Implementation
 
 	Assembly_manager_icon_relative_filename: STRING is "\icon_dotnet_wizard_color.ico"

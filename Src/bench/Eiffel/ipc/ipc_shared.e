@@ -80,6 +80,7 @@ feature {NONE} -- Implementation
 	Break_set: INTEGER is 0;
 		-- #define DT_SET      0
 		-- /* Activate breakpoint */
+
 	Break_remove: INTEGER is 1;
 		-- #define DT_REMOVE   1
 		-- /* Remove breakpoint */

@@ -48,6 +48,9 @@ feature -- Access
 			end
 		end
 
+	click_tool: EB_CLICK_AND_COMPLETE_TOOL
+			-- Tool that finds types and stones from text tokens.
+
 feature -- Element Change
 
 	clear_syntax_error is
@@ -141,7 +144,7 @@ feature -- Basic Operations
 				history.bind_current_item_to_next
 			end
 			if has_selection then
-				has_selection := False
+				internal_has_selection := False
 				on_selection_finished
 			end
 			cursor.go_end_line
@@ -230,7 +233,7 @@ feature -- Basic Operations
 			end
 			Result := r_ln.indentation
 		end
-						
+			
 feature -- Search
 
 	find_feature_named (a_name: STRING) is
@@ -368,8 +371,6 @@ feature -- Completion-clickable initialization / update
 			-- are available in `completion_possibilities'.
 		require
 			click_and_complete_is_active
-		local
-			i: INTEGER
 		do
 			history.record_move
 			auto_complete_possible := False
@@ -380,20 +381,7 @@ feature -- Completion-clickable initialization / update
 			end
 			click_tool.build_completion_list (cursor)
 			if click_tool.completion_possibilities /= Void then
-				if click_tool.insertion_count > 0 then
-						-- there is a word before `cursor' that can be
-						-- completed.
-						-- Let's wipe it out and display proposals
-					from
-						i := 1
-					until
-						i > click_tool.insertion_count
-					loop 
-						i := i + 1
-						back_delete_char
-					end
-					history.bind_current_item_to_next
-				end
+				
 				auto_complete_possible := True
 			elseif add_point then
 					-- We should have added a point.
@@ -408,27 +396,11 @@ feature -- Completion-clickable initialization / update
 			-- name to be completed at `cursor' position.
 			-- If it is, strings that can possibly be used for completion
 			-- are available in `class_completion_possibilities'.
-		local
-			i: INTEGER
-		do
+		do			
 			history.record_move
 			auto_complete_possible := False
 			click_tool.build_class_completion_list (cursor)
 			if click_tool.class_completion_possibilities /= Void then
-				if click_tool.insertion_count > 0 then
-						-- there is a word before `cursor' that can be
-						-- completed.
-						-- Let's wipe it out and display proposals
-					from
-						i := 1
-					until
-						i > click_tool.insertion_count
-					loop 
-						i := i + 1
-						back_delete_char
-					end
-					history.bind_current_item_to_next
-				end
 				auto_complete_possible := True
 			end
 		end
@@ -444,7 +416,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			-- Completions proposals found by `prepare_auto_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
@@ -456,39 +428,38 @@ class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			-- Word, which is the beginning of feature names, which is being completed.
 		do
 			if click_tool /= Void and then auto_complete_possible then
-				if click_tool.insertion.valid_index (2) and then not click_tool.insertion.item (2).is_empty then
-					Result := click_tool.insertion.item (2)
-				end
+				Result := click_tool.insertion.item
 			end
 		end
 
 	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
-			-- Finish completion process be inserting the completed expression.
+ 			-- Finish completion process be inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
 		local
 			x: INTEGER
 			y: INTEGER
 		do
-			if click_tool.insertion.valid_index (1) and then not click_tool.insertion.item (1).is_empty then
+			if click_tool.insertion.item /= Void and then not click_tool.insertion.item.is_empty then --  valid_index (1) and then not click_tool.insertion.item (1).is_empty then
 				if completed.item (1) = ' ' then
-				back_delete_char
-				history.bind_current_item_to_next
-				else
-					completed.remove (1)
+					back_delete_char
+					history.bind_current_item_to_next
 				end
 			end
 			x := cursor.x_in_characters
 			y := cursor.y_in_lines
 			insert_string (completed)
+
 			if appended_character /= '%U' then
 				insert_char (appended_character)
 			end
-
+ 
 			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
-				selection_cursor := cursor.twin
-				cursor.set_y_in_lines (y)
-				cursor.set_x_in_characters (x)
+
+			selection_cursor := cursor.twin
+
+			cursor.set_y_in_lines (y)
+			cursor.set_x_in_characters (x)
 			end
 		end
 
@@ -510,20 +481,20 @@ feature -- Syntax completion
 		do
 			syntax_completed := False
 			kw := keyword.as_lower
-			index := Editor_preferences.completed_keywords.index_of (kw, 1)
+			index := editor_preferences.completed_keywords.index_of (kw, 1)
 
-			if index /= 0 and then Editor_preferences.syntax_complete_enabled and then Editor_preferences.complete_keywords.item (index) then
+			if index /= 0 and then editor_preferences.syntax_complete_enabled and then editor_preferences.complete_keywords.item (index) then
 				if keyword_already_present then
 					if newline then
-						insert := Editor_preferences.insert_after_keyword.item (index).item (2)
+						insert := editor_preferences.insert_after_keyword.item (index).item (2)
 					else
-						insert := Editor_preferences.insert_after_keyword.item (index).item (1)
+						insert := editor_preferences.insert_after_keyword.item (index).item (1)
 					end
 				else
 					if newline then
-						insert := Editor_preferences.insert_after_keyword.item (index).item (4)
+						insert := editor_preferences.insert_after_keyword.item (index).item (4)
 					else
-						insert := Editor_preferences.insert_after_keyword.item (index).item (3)
+						insert := editor_preferences.insert_after_keyword.item (index).item (3)
 					end
 				end
 				syntax_completed := True
@@ -559,8 +530,7 @@ feature -- Syntax completion
 				if has_selection and then not cursor.is_equal (selection_cursor) then
 					delete_selection
 				end
-				has_selection := False 
-				if Editor_preferences.smart_identation then
+				if editor_preferences.smart_identation then
 					indent := cursor.line.indentation
 				else
 					indent := ""
@@ -744,8 +714,5 @@ feature {NONE} -- Implementation
 				click_tool.setup_line (Result)
 			end
 		end
-
-	click_tool: EB_CLICK_AND_COMPLETE_TOOL
-			-- Tool that finds types and stones from text tokens.
 
 end -- class SMART_TEXT

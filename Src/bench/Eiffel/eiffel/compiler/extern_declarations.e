@@ -134,7 +134,6 @@ feature
 				-- generate the include files required by externals
 			generate_header_files (f);
 
-			f.generate_cpp_wrapper_start;
 			from
 				routines.start
 			until
@@ -146,7 +145,6 @@ feature
 				f.putstring ("();%N");
 				routines.forth;
 			end;
-			f.generate_cpp_wrapper_end;
 
 			from
 				routine_tables.start

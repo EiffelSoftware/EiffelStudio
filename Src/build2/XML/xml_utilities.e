@@ -39,7 +39,6 @@ feature -- Access
 			a_prefix_not_void: a_prefix /= Void
 			a_value_not_void: a_value /= Void
 		local
-			internal_name, internal_prefix, internal_value: UCSTRING
 			attribute: XM_ATTRIBUTE
 		do
 			create attribute.make (a_name, create {XM_NAMESPACE}.make ("", ""), a_value, element )
@@ -111,7 +110,6 @@ feature -- Access
 			content_not_void: content /= Void
 		local	
 			new_element: XM_CHARACTER_DATA
-			string: UCSTRING
 		do
 			create new_element.make (element, content)
 			element.force_last (new_element)
@@ -160,7 +158,7 @@ feature -- Access
 						loop
 							current_data_element ?= current_element.item_for_iteration
 							if current_data_element /= Void then
-								char_data := current_data_element.content--ucstring_to_latin_1 (current_data_element.content)
+								char_data := current_data_element.content
 								char_data.replace_substring_all ("%T","")
 									-- If we are loading a multiple line text, then we must
 									-- keep appending a new line character and the new text.

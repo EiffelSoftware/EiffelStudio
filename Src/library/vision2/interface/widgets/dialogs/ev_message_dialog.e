@@ -28,7 +28,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
-			-- Create dialog with `a_text'.
+			-- Create `Current' and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -40,7 +40,8 @@ feature {NONE} -- Initialization
 		a_text: STRING;
 		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
 	) is
-			-- Create dialog with `a_text' and `actions'.
+			-- Create `Current', assign `a_text' to `text' and `actions' to `select_actions'
+			-- of `buttons'.
 			-- (`actions' are added to `buttons' in order.)
 		require
 			a_text_not_void: a_text /= Void
@@ -76,7 +77,7 @@ feature {NONE} -- Initialization
 		end
 		
 	initialize is
-			-- Initialize to default state.
+			-- Initialize `Current' to default state.
 		local
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
@@ -127,7 +128,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	pixmap: EV_PIXMAP is
-			-- Icon displayed by dialog.
+			-- Icon displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -140,7 +141,7 @@ feature -- Access
 		end
 
 	text: STRING is
-			-- Message displayed by dialog.
+			-- Message displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -148,15 +149,15 @@ feature -- Access
 		end
 
 	foreground_color: EV_COLOR
-			-- Foreground color of the dialog.
+			-- Foreground color of `Current'.
 
 	background_color: EV_COLOR
-			-- Background color of the dialog.
+			-- Background color of `Current'.
 
 feature -- Status setting
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Sets background color of the dialog.
+			-- Assign `a_color' to `background_color'.
 		local
 			dialog_box: EV_CONTAINER
 		do
@@ -169,7 +170,7 @@ feature -- Status setting
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
-			-- Sets foreground color of the dialog.
+			-- Assign `a_color' to `foreground_color'.
 		local
 			dialog_box: EV_CONTAINER
 		do
@@ -182,7 +183,7 @@ feature -- Status setting
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set icon associated with dialog.
+			-- Assign `a_pixmap' to `pixmap'.
 		require
 			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
@@ -202,7 +203,7 @@ feature -- Status setting
 		end
 
 	remove_pixmap is
-			-- Set `pixmap' `Void'.
+			-- Assign `Void' to `pixmap'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -224,7 +225,7 @@ feature -- Status setting
 		end
 
 	remove_text is
-			-- Set `text' `Void'.
+			-- Assign `Void' to `text'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -255,7 +256,7 @@ feature -- Status setting
 		button_labels: ARRAY [STRING]
 		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
 	) is
-			-- Assign new buttons with `button_labels' to `buttons'.
+			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
 		require
 			not_destroyed: not is_destroyed
 			button_labels_not_void: button_labels /= Void
@@ -282,29 +283,29 @@ feature -- Status setting
 
 feature -- Status report
 
-	has_button (a_label: STRING): BOOLEAN is
-			-- Is there a button that has `a_label'?
+	has_button (a_text: STRING): BOOLEAN is
+			-- Does `Current' contain a button with `text' `a_text'?
 		require
 			not_destroyed: not is_destroyed
-			a_label_not_void: a_label /= Void
+			a_text_not_void: a_text /= Void
 		do
-			Result := buttons.has (a_label)
+			Result := buttons.has (a_text)
 		end
 
-	button (a_label: STRING): EV_BUTTON is
-			-- Button that has `a_label'.
+	button (a_text: STRING): EV_BUTTON is
+			-- Button that has `a_text'.
 		require
 			not_destroyed: not is_destroyed
-			a_label_not_void: a_label /= Void
-			has_button_with_a_label: has_button (a_label)
+			a_text_not_void: a_text /= Void
+			has_button_with_a_text: has_button (a_text)
 		do
-			Result := buttons.item (a_label)
+			Result := buttons.item (a_text)
 		ensure
 			not_void: Result /= Void
 		end
 		
 	selected_button: STRING
-			-- Label of the last clicked button.
+			-- Label of last clicked button.
 
 feature {NONE} -- Implementation
 
@@ -318,11 +319,11 @@ feature {NONE} -- Implementation
 			-- Container to display pixmap in.
 
 	buttons: HASH_TABLE [EV_BUTTON, STRING]
-			-- Lookup-table for the buttons on the dialog based on
+			-- Lookup-table for the buttons in `Current' based on
 			-- their captions.
 
 	clean_buttons is
-			-- Remove all buttons from the dialog
+			-- Remove all buttons from `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -370,7 +371,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_button_press (a_button_text: STRING) is
-			-- A button with label `a_button_text' has been pressed.
+			-- A button with text `a_button_text' has been pressed.
 		require
 			not_destroyed: not is_destroyed
 		do

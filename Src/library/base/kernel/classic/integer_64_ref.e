@@ -265,6 +265,12 @@ feature -- Conversion
 		do
 			Result := item.to_integer
 		end
+		
+	to_integer_64: INTEGER_64 is
+			-- Return `item'.
+		do
+			Result := item
+		end
 
 feature -- Bit operations
 

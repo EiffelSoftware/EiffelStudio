@@ -6,14 +6,12 @@ exprt -r %DEFAULT_CVS_TAG -d vision2_tour Src/examples/vision2/widget_test
 REM Must now call batch files here, to generate the flatshorts and also retrieve the
 REM build files needed by the test
 
-cdd %EIFFEL_SRC/vision2_tour
+cdd %EIFFEL_SRC\vision2_tour
 
-call retrieve_build_files.bat
-call retrieve_flat_short.bat
+call retrieve_build_files.bat %DEFAULT_CVS_TAG  >>& %INSTALL_LOG
+call retrieve_flat_short.bat >>& %INSTALL_LOG
 
-
-
-cdd %EIFFEL_SRC/vision2_tour
+cdd %EIFFEL_SRC\vision2_tour
 clean_project
 finalize win32ace.ace
 fff
@@ -23,3 +21,8 @@ iff not exist vision2_tour.exe then
 	CANCEL
 endiff
 move vision2_tour.exe %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM\bin
+
+move /s %EIFFEL_SRC\vision2_tour\tests %INSTALL_DIR\vision2_tour\tests
+move /s %EIFFEL_SRC\vision2_tour\flatshort %INSTALL_DIR\vision2_tour\flatshort
+move %EIFFEL_SRC\vision2_tour\bitmaps\ico\*.ico %INSTALL_DIR\vision2_tour\bitmaps\ico
+move %EIFFEL_SRC\vision2_tour\bitmaps\png\*.png %INSTALL_DIR\vision2_tour\bitmaps\png

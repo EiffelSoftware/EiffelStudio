@@ -9,16 +9,22 @@ deferred class
 
 feature -- Basic operations
 
-	parent_window (widget: EV_WIDGET): EV_WINDOW is
-			-- `Result' is window parent of `widget'.
+	parent_window (containable: EV_CONTAINABLE): EV_WINDOW is
+			-- `Result' is window parent of `containable'.
 			-- `Void' if none.
+		require
+			containable_not_void: containable /= Void
 		local
 			window: EV_WINDOW
+			parent_containable: EV_CONTAINABLE
 		do
-			window ?= widget.parent
+			window ?= containable
 			if window = Void then
-				if widget.parent /= Void then
-					Result := parent_window (widget.parent)
+				if containable.parent /= Void then
+					parent_containable ?= containable.parent
+					if parent_containable /= Void then
+						Result := parent_window (parent_containable)
+					end
 				end	
 			else
 				Result := window
@@ -28,6 +34,8 @@ feature -- Basic operations
 	parent_dialog (widget: EV_WIDGET): EV_DIALOG is
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
+		require
+			widget_not_void: widget /= Void
 		local
 			dialog: EV_DIALOG
 		do
@@ -549,5 +557,72 @@ feature {NONE} -- Implementation
 		ensure
 			index_not_changed: old tree_node_list.index = tree_node_list.index
 		end
+		
+	insert_into_window (ev_any: EV_ANY; window: EV_TITLED_WINDOW) is
+			-- Insert `ev_any' into `window' with the minimum parenting structure
+			-- required to bridge the interface if `ev_any' is not a widget.
+		require
+			ev_any_not_void: ev_any /= Void
+			window_not_void: window /= Void
+			window_empty: window.is_empty
+			window_has_no_menu_bar: window.menu_bar = Void
+		local
+			widget: EV_WIDGET
+			an_item: EV_ITEM
+			tool_bar_item: EV_TOOL_BAR_ITEM
+			tool_bar: EV_TOOL_BAR
+			tree_item: EV_TREE_ITEM
+			tree: EV_TREE
+			list_item: EV_LIST_ITEM
+			list: EV_LIST
+			menu_item: EV_MENU_ITEM
+			a_menu_bar: EV_MENU_BAR
+			containable: EV_CONTAINABLE
+		do
+			an_item ?= ev_any
+			a_menu_bar ?= ev_any
+			
+			if an_item /= Void then
+				tool_bar_item ?= ev_any
+				if tool_bar_item /= Void then
+					create tool_bar
+					tool_bar.extend (tool_bar_item)	
+					window.extend (tool_bar)
+				end
+				tree_item ?= an_item
+				if tree_item /= Void then
+					create tree
+					tree.extend (tree_item)
+					window.extend (tree)
+				end
+				list_item ?= an_item
+				if list_item /= Void then
+					create list
+					list.extend (list_item)
+					window.extend (list)
+				end
+				menu_item ?= an_item
+				if menu_item /= Void then
+					create a_menu_bar
+					window.set_menu_bar (a_menu_bar)
+					a_menu_bar.extend (menu_item)
+				end
+				-- A menu bar is not a widget or an item, so we must handle it specially.
+			elseif a_menu_bar /= Void then
+				window.set_menu_bar (a_menu_bar)
+			else
+				widget ?= ev_any
+				check
+					was_widget: widget /= Void
+				end
+				window.extend (widget)
+			end
+			containable ?= ev_any
+			check
+				ev_any_was_containable: containable /= Void
+				parent_within_window_structure: parent_window (containable) = window
+			end
+		end
+		
 
 end -- class GB_UTILITIES

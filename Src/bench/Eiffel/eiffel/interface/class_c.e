@@ -886,7 +886,9 @@ end;
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Clean context if error
+						-- FIXME call clear1 ????
 				ast_context.clear2;
+
 					-- Undo the `change_body_id' calls
 				from
 					changed_body_ids := system.changed_body_ids;

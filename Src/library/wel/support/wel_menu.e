@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	REFACTORING_HELPER
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_by_id,

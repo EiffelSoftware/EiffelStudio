@@ -126,7 +126,7 @@ feature  -- Access
 			if p /= NULL then
 				create Result.make_from_c (p)
 			else
-				create Result.make (0)
+				Result := ""
 			end
 		end
 

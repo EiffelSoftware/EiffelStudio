@@ -48,6 +48,7 @@ cp Delivery/vision2_tour/bitmaps/png/image2.png ./bitmaps/png/
 # Copy modified vision2 interface files needed.
 cp -r ./Src/build2/modified_libraries/vision2/ev_pixmap.e ./interface/
 cp -r ./Src/build2/modified_libraries/vision2/ev_pixmapable.e ./interface/
+cp -r ./Src/build2/modified_libraries/vision2/ev_notebook.e ./interface/
 
 # Copy any required dialogs
 cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_fixed_positioner.e ./interface/

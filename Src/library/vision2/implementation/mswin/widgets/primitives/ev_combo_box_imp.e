@@ -99,7 +99,8 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			count
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,
@@ -687,6 +688,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/06 17:01:42  rogers
+--| Undefined count from WEL_COMBO_BOX_eXbutton_rectangle: WEL_RECT
+--|
 --| Revision 1.67  2000/03/30 22:40:04  rogers
 --| Fixed by re-implementing : is_item_imp_selected, select_item_imp,
 --| deselect_item_imp and set_item_imp_text.

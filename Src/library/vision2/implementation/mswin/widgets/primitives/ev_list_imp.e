@@ -543,7 +543,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 						child_imp.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call ([child_imp.interface])
+						deselect_actions_internal.call (Void)
 					end
 					internal_selected_items.prune (child_imp.interface)
 				end
@@ -645,7 +645,7 @@ feature {EV_ANY_I} -- Implementation
 							item_imp.select_actions_internal.call (Void)
 						end
 						if select_actions_internal /= Void then
-							select_actions_internal.call ([item_interface])
+							select_actions_internal.call (Void)
 						end
 	
 					elseif flag_set(info.uoldstate, Lvis_selected) and
@@ -659,7 +659,7 @@ feature {EV_ANY_I} -- Implementation
 							item_imp.deselect_actions_internal.call (Void)
 						end
 						if deselect_actions_internal /= Void then
-							deselect_actions_internal.call ([item_interface])
+							deselect_actions_internal.call (Void)
 						end
 					end
 				end

@@ -40,14 +40,7 @@ inherit
 		export
 			{NONE} all
 		end
-
-	SHARED_RESOURCES
-		rename
-			initialize as initialize_resources
-		export
-			{NONE} all
-		end
-
+		
 	SHARED_LICENSE
 		export
 			{NONE} all
@@ -64,8 +57,8 @@ feature {NONE} -- Initialization
 			compiler: ES
 			eifgen_init: INIT_SERVERS
 			new_resources: TTY_RESOURCES
-			pref_strs: RESOURCES_STRING_CONSTANTS
-			fn: FILE_NAME
+			pref_strs: PREFERENCE_CONSTANTS
+			fn: FILE_NAME					
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
 		do
@@ -84,9 +77,7 @@ feature {NONE} -- Initialization
 				--| directory
 			create eifgen_init.make
 
-				--| Initialization of global resources.
-			register_basic_graphical_types
-			initialize_resources (System_general, Eiffel_preferences)
+				--| Initialization of global resources.		
 			create pref_strs
 				-- Initialize pixmaps
 			pref_strs.Pixmaps_extension_cell.put ("png")
@@ -96,6 +87,7 @@ feature {NONE} -- Initialization
 
 
 				-- Initialization of compiler resources.
+			setup_preferences
 			create new_resources.initialize
 			if not new_resources.error_occurred then
 					-- Read the resource files
@@ -137,6 +129,16 @@ feature {NONE} -- Initialization
 			--| uncomment the following line when profiling 
 			--prof_setting.start_profiling
 		end
+
+	setup_preferences is
+			-- Setup the preferences
+		local
+			l_prefs: PREFERENCES
+			studio_prefs: EB_SHARED_PREFERENCES	
+		do
+			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)			
+			create studio_prefs.make_preferences (l_prefs)						
+		end		
 
 feature {NONE} -- Implementation
 

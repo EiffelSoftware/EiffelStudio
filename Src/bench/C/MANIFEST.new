@@ -84,7 +84,6 @@ ipc/ewb/eproto.h
 ipc/ewb/ewb.h
 ipc/ewb/init.c
 ipc/ewb/main.c
-ipc/ewb/new.c
 ipc/ewb/proto.c
 ipc/ewb/proto.h
 ipc/ewb/tmp

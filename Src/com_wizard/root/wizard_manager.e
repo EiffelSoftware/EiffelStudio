@@ -233,8 +233,10 @@ feature {NONE} -- Implementation
 				end
 				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
 				Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+				Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
 				Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+				Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			end
 		end
 		

@@ -82,11 +82,13 @@ feature -- Comparison
 		local
 			lower_current, lower_s: STRING
 		do
-			lower_current := out
-			lower_current.to_lower
-			lower_s := s.out
-			lower_s.to_lower
-			Result := lower_current.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+			if count >= s.count then
+				lower_current := out
+				lower_current.to_lower
+				lower_s := s.out
+				lower_s.to_lower
+				Result := lower_current.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+			end
 		end	
 
 end -- class EB_NAME_FOR_COMPLETION

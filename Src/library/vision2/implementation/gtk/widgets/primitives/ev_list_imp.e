@@ -44,23 +44,23 @@ feature {NONE} -- Initialization
 			gtk_scrolled_window_add_with_viewport (widget, list_widget)
 
 			-- Create the array where the items will be listed.
-			!! ev_children.make (1)
+			create ev_children.make (0)
 		end
 
 feature -- Access
 
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-			Result := ev_children.count
-		end
+--	count: INTEGER is
+--			-- Number of direct children of the holder.
+--		do
+--			Result := ev_children.count
+--		end
 
-	get_item (index: INTEGER): EV_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
+--	get_item (index: INTEGER): EV_ITEM is
+--			-- Give the item of the list at the zero-base
+--			-- `index'.
+--		do
+--			Result ?= (ev_children.i_th (index)).interface
+--		end
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
@@ -156,13 +156,15 @@ feature -- Status setting
 
 feature -- Element change
 
---	clear_items is
---			-- Clear all the items of the list.
---		do
----- XXX
---			clear_ev_children
---			gtk_list_clear_items (list_widget, 0, rows)
---		end
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			-- clear the EiffelVision objects.
+			clear_ev_children
+
+			-- clear the gtk objects.
+			gtk_list_clear_items (list_widget, 0, rows)
+		end
 
 feature -- Event : command association
 

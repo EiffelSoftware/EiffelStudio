@@ -801,18 +801,21 @@ feature -- Generation type
 			-- Current generated application is a CONSOLE application.
 		do
 			is_console_application := True
+			is_dll := False
 		end
 
 	set_window_application is
 			-- Current generated application is a WINDOW application.
 		do
 			is_console_application := False
+			is_dll := False
 		end
 
 	set_dll is
 			-- Current generated application is a DLL.
 		do
 			is_dll := True
+			is_console_application := True
 		end
 
 feature -- Generation Info

@@ -314,6 +314,7 @@ feature -- Settings: Generation type
 			-- Current module is marked as being a CONSOLE application.
 		do
 			is_console_application := True
+			is_dll := False
 		ensure
 			is_console_application_set: is_console_application
 		end
@@ -322,6 +323,7 @@ feature -- Settings: Generation type
 			-- Current module is marked as being a WINDOW application.
 		do
 			is_console_application := False
+			is_dll := False
 		ensure
 			is_console_application_set: not is_console_application
 		end
@@ -329,6 +331,7 @@ feature -- Settings: Generation type
 	set_dll is
 			-- Current module is a DLL.
 		do
+			is_console_application := True
 			is_dll := True
 		ensure
 			is_dll_set: is_dll

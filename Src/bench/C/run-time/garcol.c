@@ -290,7 +290,7 @@ rt_shared int epush(register struct stack *stk, register char *value);				/* Pus
 rt_shared char **st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
-rt_private int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
 
 #ifdef DEBUG
 rt_private int reset(register1 struct stack *);				/* Reset stack to its initial state */
@@ -5148,7 +5148,7 @@ rt_shared char **st_alloc(register struct stack *stk, register int size)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private int st_extend(register struct stack *stk, register int size)
+rt_shared int st_extend(register struct stack *stk, register int size)
                             		/* The stack */
                    					/* Size of new chunk to be added */
 {

@@ -43,10 +43,12 @@ feature {NONE} -- Initilization
 			colormap_identifier := a_colormap.identifier;
 			identifier := get_color_by_name ($temp, 
 				display_handle, colormap_identifier);
-			status := last_color_alloc_status
+			status := last_color_alloc_status;
+			shared := True
 		ensure
 			has_valid_display: has_valid_display;
-			has_valid_colormap: has_valid_colormap
+			has_valid_colormap: has_valid_colormap;
+			shared: shared
 		end;
 
 	make_by_rgb_value (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
@@ -69,9 +71,11 @@ feature {NONE} -- Initilization
 				(red_value, green_value, blue_value, 
 					display_handle, colormap_identifier);
 			status := last_color_alloc_status;
+			shared := True
 		ensure
 			has_valid_display: has_valid_display;
-			has_valid_colormap: has_valid_colormap
+			has_valid_colormap: has_valid_colormap;
+			shared: shared
 		end;
 
 	make_from_existing (a_display: MEL_DISPLAY; an_id: like identifier) is
@@ -82,8 +86,10 @@ feature {NONE} -- Initilization
 			identifier := an_id;
 			display_handle := a_display.handle;
 			status := 0;
+			shared := True
 		ensure then
-			is_valid: is_valid
+			is_valid: is_valid;
+			shared: shared
 		end;
 
 feature -- Access
@@ -186,19 +192,18 @@ feature -- Status setting
 
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free the cell from `colormap'.
-		require
-			has_valid_colormap: has_valid_colormap;
-			not_destroyed: not is_destroyed
 		do
+			check
+				has_valid_display: display_handle /= default_pointer;
+				has_valid_colormap: has_valid_colormap
+			end;
 			x_free_color (display_handle, 
 					colormap_identifier,
 					identifier);
 			identifier := default_pointer;
 			status := ALREADY_FREED
-		ensure
-			is_destroyed: is_destroyed
 		end;
 
 feature {NONE} -- Implementation

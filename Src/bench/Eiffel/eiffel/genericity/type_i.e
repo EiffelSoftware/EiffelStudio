@@ -138,6 +138,7 @@ feature
 
 	instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'
+			-- FIXME: other not used in most implementors, and causes a crash when compiling generic expandeds
 		require
 			good_argument: other /= Void;
 			other_is_data: not other.has_formal;

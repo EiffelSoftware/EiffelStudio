@@ -68,7 +68,7 @@ feature -- Creation
 			discard_licence;
 			io.error.putstring ("ISE Eiffel3: Session aborted%N");
 			io.error.putstring ("Exception tag: ");
-			temp := developer_exception_name;
+			temp := original_tag_name;
 			if temp /= Void then
 				io.error.putstring (temp);
 			end;

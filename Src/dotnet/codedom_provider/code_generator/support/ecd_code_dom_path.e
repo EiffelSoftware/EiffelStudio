@@ -54,6 +54,37 @@ feature -- Access
 			ends_with_directory_separator: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
+	Default_configs_directory: STRING is
+			-- Path to configs directory used by default if config file path is not specified in registry
+		local
+			l_install_dir: STRING
+			l_dir: DIRECTORY
+		once
+			l_install_dir := Codedom_installation_path
+			if l_install_dir /= Void then
+				create l_dir.make (l_install_dir)
+				if l_dir.exists then
+					create l_dir.make (l_install_dir + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + "Configs")
+					if not l_dir.exists then
+						l_dir.create_dir
+					end
+					Result := l_dir.name
+				end
+			else
+				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.missing_installation_directory, [])
+			end
+		end
+		
+	Default_config_file_path: STRING is
+			-- Default path to config file if not overwritten in Registry settings
+		once
+			Result := Default_configs_directory
+			if Result /= Void then
+				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+				Result.append ("_default.config")
+			end
+		end
+		
 end -- class ECD_CODE_DOM_PATH
 
 --+--------------------------------------------------------------------

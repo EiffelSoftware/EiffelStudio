@@ -149,6 +149,8 @@ feature {NONE} -- Implementation
 						File_lock)
 			Result.extend (["Missing Input", "general", "Operation {1} cannot execute because input is missing", Warning],
 						Missing_input)
+			Result.extend (["Missing .NET member", "general", "Member {1} cannot be found in type {2}.", Warning],
+						Missing_dotnet_member)
 
 			-- General Information
 			Result.extend (["Does Nothing", "general", "Construct does not require processing: {1}", Information],

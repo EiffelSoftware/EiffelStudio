@@ -58,6 +58,9 @@ feature -- General Warning
 	Missing_input: INTEGER is 1004
 			-- Input is missing
 
+	Missing_dotnet_member: INTEGER is 1005
+			-- .NET member is missing
+
 feature -- General Information
 
 	Does_nothing: INTEGER is 2001

@@ -12,7 +12,7 @@ deferred class
 	EV_INVISIBLE_CONTAINER_IMP
 	
 inherit
-	EV_INVISIBLE_CONTAINER_I
+	EV_CONTAINER_I
 		redefine
 			interface
 		end
@@ -147,6 +147,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/21 16:57:29  oconnor
+--| removed invisible container _I
+--|
 --| Revision 1.25  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

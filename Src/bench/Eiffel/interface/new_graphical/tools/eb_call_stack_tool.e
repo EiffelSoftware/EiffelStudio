@@ -275,54 +275,79 @@ feature {NONE} -- Implementation
 
 	display_stop_cause is
 			-- Fill in the `stop_cause' label with a message describing the application status.
+		local
+			m: STRING
 		do
 			if not Application.status.is_stopped then
 				stop_cause.set_text (Interface_names.l_System_running)
 				exception.remove_text
 				exception.remove_tooltip
 			else -- Application is stopped.
+				create m.make (100)
 				inspect Application.status.reason
+				when Pg_step then
+					stop_cause.set_text (Interface_names.l_Stepped)
+					m.append (Interface_names.l_Stepped)
 				when Pg_break then
 					stop_cause.set_text (Interface_names.l_Stop_point_reached)
+					m.append (Interface_names.l_Stop_point_reached)
 				when Pg_interrupt then
 					stop_cause.set_text (Interface_names.l_Execution_interrupted)
+					m.append (Interface_names.l_Execution_interrupted)
 				when Pg_raise then
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
+					m.append (Interface_names.l_Explicit_exception_pending)
+					m.append (": ")
+					m.append (exception_text)
 					display_exception
 				when Pg_viol then
 					stop_cause.set_text (Interface_names.l_Implicit_exception_pending)
+					m.append (Interface_names.l_Implicit_exception_pending)
+					m.append (": ")
+					m.append (exception_text)
 					display_exception
 				when Pg_new_breakpoint then
 					stop_cause.set_text (Interface_names.l_New_breakpoint)
-				when Pg_step then
-					stop_cause.set_text (Interface_names.l_Stepped)
+					m.append (Interface_names.l_New_breakpoint)
 				else
 					stop_cause.set_text (Interface_names.l_Unknown_status)
+					m.append (Interface_names.l_Unknown_status)
 				end
+				Debugger_manager.debugging_window.status_bar.display_message (m)
 			end
 		end
 
 	display_exception is
 			-- Fill in the `exception' label with a text describing the exception, if any.
 		local
-			e: EXCEPTIONS
-			m, s: STRING
+			m: STRING
 		do
-			create m.make (100)
-			m.append ("Code: ")
-			m.append (Application.status.exception_code.out)
-			m.append (" (")
+			m := exception_text
+			exception.set_text (m)
+			exception.set_tooltip (m)
+		end
+
+	exception_text: STRING is
+			-- Text corresponding to the current exception.
+		local
+			e: EXCEPTIONS
+			s: STRING
+		do
+			create Result.make (100)
+			Result.append ("Code: ")
+			Result.append (Application.status.exception_code.out)
+			Result.append (" (")
 			!!e
 			s := e.meaning (Application.status.exception_code)
 			if s = Void then
 				s := "Undefined"
 			end
-			m.append (s)
-			m.append (")")
-			m.append (" Tag: ")
-			m.append (Application.status.exception_tag)
-			exception.set_text (m)
-			exception.set_tooltip (m)
+			Result.append (s)
+			Result.append (")")
+			Result.append (" Tag: ")
+			Result.append (Application.status.exception_tag)
+		ensure
+			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
 
 	on_element_drop (st: CALL_STACK_STONE) is

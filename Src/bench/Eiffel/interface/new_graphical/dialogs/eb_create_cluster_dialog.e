@@ -82,6 +82,8 @@ feature {NONE} -- Initialization
 
 	make_default (a_target: EB_DEVELOPMENT_WINDOW) is
 			-- Create the dialog and link it to a given development window (for modality).
+		require
+			a_target_not_void: a_target /= Void
 		local
 			vb: EV_VERTICAL_BOX
 			buttons_box: EV_HORIZONTAL_BOX
@@ -155,8 +157,14 @@ feature {NONE} -- Initialization
 			name_frame.extend (vb)
 			
 				-- Build the list
+			create vb
+			vb.set_padding (Layout_constants.Small_border_size)
+			vb.set_border_width (Layout_constants.Small_border_size)
+			extend_no_expand (vb, top_radio)
+			extend_no_expand (vb, sub_radio)
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
-			cluster_frame.extend (cluster_list)
+			vb.extend (cluster_list)
+			cluster_frame.extend (vb)
 
 				-- Build the button box
 			create buttons_box
@@ -170,8 +178,6 @@ feature {NONE} -- Initialization
 			vb.set_padding (Layout_constants.Small_border_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
 			extend_no_expand (vb, name_frame)
-			extend_no_expand (vb, top_radio)
-			extend_no_expand (vb, sub_radio)
 			vb.extend (cluster_frame) -- Expandable item
 			extend_no_expand (vb, buttons_box)
 			sub_radio.enable_select
@@ -183,11 +189,35 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_b)
 			set_default_push_button (create_button)
 			show_actions.extend (agent on_show_actions)
+		ensure
+			target_set: target = a_target
 		end
 		
 feature -- Basic operations
 
+	call_default is
+			-- Display dialog and create a random cluster name.
+		do
+			default_cluster_name := "new_cluster_" + new_cluster_counter.item.out
+			is_default_cluster_name_set := True
+			new_cluster_counter.put (new_cluster_counter.item + 1)
+			internal_call (default_cluster_name)
+		end
+		
 	call (cluster_n: STRING) is
+			-- Display the dialog.
+			-- Give `cluster_n' as the default cluster name in it.
+		require
+			valid_args: cluster_n /= Void 
+		do
+			is_default_cluster_name_set := False
+			default_cluster_name := Void
+			call (cluster_n)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_call (cluster_n: STRING) is
 			-- Display the dialog.
 			-- Give `cluster_n' as the default cluster name in it.
 		require
@@ -245,7 +275,19 @@ feature -- Basic operations
 			show_modal_to_window (target.window)
 		end
 
-feature {NONE} -- Implementation
+	new_cluster_counter: CELL [INTEGER] is
+			-- Counter for how many clusters have been created in current session.
+		once
+			create Result.put (1)
+		ensure
+			new_cluster_counter_not_void: Result /= Void
+		end
+
+	default_cluster_name: STRING
+			-- Initial value for cluster name
+
+	is_default_cluster_name_set: BOOLEAN
+			-- Is default_cluster_name set?
 
 	cluster: CLUSTER_I
 			-- The optional parent to the cluster that is about to be created.
@@ -263,15 +305,14 @@ feature {NONE} -- Implementation
 			-- Name of the cluster entered by the user, in lower case.
 		do
 			Result := cluster_entry.text.as_lower
+		ensure
+			cluster_name_not_void: Result /= Void
 		end
 
 	file_name: FILE_NAME is
 			-- File name of the cluster chosen by the user.
-		local
-			str: STRING
 		do
-			str := folder_entry.text.twin
-			create Result.make_from_string (str)
+			create Result.make_from_string (folder_entry.text)
 		end
 
 	aok: BOOLEAN
@@ -313,7 +354,6 @@ feature {NONE} -- Implementation
 			test_file: RAW_FILE
 			base_name: STRING
 			wd: EV_WARNING_DIALOG
-			cd: EV_QUESTION_DIALOG
 			in_recursive: BOOLEAN
 		do
 			aok := True
@@ -376,9 +416,7 @@ feature {NONE} -- Implementation
 							wd.show_modal_to_window (Current)
 						end
 					else
-						create cd.make_with_text (Warning_messages.w_Directory_already_in_cluster (chosen_dir))
-						cd.button ((create {EV_DIALOG_CONSTANTS}).ev_yes).select_actions.extend (agent real_create_cluster (in_recursive, base_name, dollar_path, ace_path))
-						cd.show_modal_to_window (Current)
+						real_create_cluster (in_recursive, base_name, dollar_path, ace_path)
 					end
 				end
 			end
@@ -450,28 +488,11 @@ feature {NONE} -- Implementation
 		local
 			cn: STRING
 			wd: EV_WARNING_DIALOG
-			cchar: CHARACTER
-			i: INTEGER
 		do
 			cn := cluster_name
-			if cn = Void or else cn.is_empty then
-				aok := False
-			else
-				from
-					i := 1
-				until
-					i > cn.count or not aok
-				loop
-					cchar := (cn @ i)
-					aok := cchar.is_alpha or cchar.is_digit or cchar = '_'
-					i := i + 1
-				end
-			end
+			aok := not cn.is_empty and then (create {IDENTIFIER_CHECKER}).is_valid (cn)
 			if not aok then
-				if cn = Void then
-					cn := ""
-				end
-				create wd.make_with_text (Warning_messages.w_Invalid_cluster_name (cn))
+				create wd.make_with_text (Warning_messages.w_invalid_cluster_name (cn))
 				wd.show_modal_to_window (Current)
 			end
 		end
@@ -535,13 +556,18 @@ feature {NONE} -- Graphic interface
 		do
 			create bd
 			bd.ok_actions.extend (agent set_path (bd))
-			if not folder_entry.text.is_empty then
-				bd.set_start_directory ((create {ENV_INTERP}).interpreted_string (folder_entry.text))
-			else
-				lastdir := last_browsed_directory
-				if not lastdir.is_empty then
-					bd.set_start_directory (lastdir)
+			lastdir := folder_entry.text
+			if not lastdir.is_empty then
+				lastdir := (create {ENV_INTERP}).interpreted_string (lastdir)
+				if not (create {DIRECTORY}.make (lastdir)).exists then
+					lastdir := Void
 				end
+			end
+			if lastdir = Void or else lastdir.is_empty then
+				lastdir := last_browsed_directory
+			end
+			if not lastdir.is_empty and then (create {DIRECTORY}.make (lastdir)).exists then
+				bd.set_start_directory (lastdir)
 			end
 			bd.show_modal_to_window (target.window)
 		end
@@ -549,11 +575,24 @@ feature {NONE} -- Graphic interface
 	set_path (bd: EV_DIRECTORY_DIALOG) is
 			-- Initialize the cluster path with the directory selected in `bd'.
 		local
+			sep_index: INTEGER
 			dir: STRING
 		do
 			dir := bd.directory
 			folder_entry.set_text (dir)
 			set_string_resource ("last_browsed_cluster_directory", dir)
+			if
+				(not dir.is_empty and is_default_cluster_name_set) and then
+				(cluster_name.is_equal (default_cluster_name) or cluster_name.is_empty)
+			then
+				sep_index := dir.last_index_of (platform_constants.directory_separator,
+					dir.count)
+				dir := dir.as_lower
+				dir.remove_head (sep_index)
+				cluster_entry.change_actions.block
+				cluster_entry.set_text (dir)
+				cluster_entry.change_actions.resume
+			end
 		end
 
 	top_cluster_selected is
@@ -623,5 +662,18 @@ feature {NONE} -- Constants
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (100)
 		end
+
+invariant
+	all_box_valid: all_box /= Void and then not all_box.is_destroyed
+	browse_button_valid: browse_button /= Void and then not browse_button.is_destroyed
+	cluster_entry_valid: cluster_entry /= Void and then not cluster_entry.is_destroyed
+	cluster_list_valid: cluster_list /= Void and then not cluster_list.is_destroyed
+	create_button_valid: create_button /= Void and then not create_button.is_destroyed
+	folder_entry_valid: folder_entry /= Void and then not folder_entry.is_destroyed
+	library_box_valid: library_box /= Void and then not library_box.is_destroyed
+	sub_radio_valid: sub_radio /= Void and then not sub_radio.is_destroyed
+	top_radio_valid: top_radio /= Void and then not top_radio.is_destroyed
+	default_cluster_name_not_void: is_default_cluster_name_set implies default_cluster_name /= Void
+	target_not_void: target /= Void
 
 end -- class EB_CREATE_CLUSTER_DIALOG

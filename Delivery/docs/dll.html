@@ -35,7 +35,7 @@
   tool ?</A> 
   <LI><A 
   href="dll.html#Selecting">Selecting 
-  and creating a definition file</A> 
+  and creating a definition file - Lace option</A> 
   <LI><A 
   href="dll.html#Dynamic">Dynamic 
   Library tool bar</A> 
@@ -47,7 +47,7 @@
   the C level</A> </LI></UL>
 <H2>Overview</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>The ISE Eiffel compiler offers now the possibility to generate a <B>dynamic 
 shared library</B> of the system. </P>
 <P>Thanks to this dynamic library, the user will be able to call an Eiffel feature from a C program, by using the real name of the feature.</P>
@@ -61,7 +61,7 @@ which the user will specify the feature he wants to export.</P>
 name=def></A>
 <H2>The Definition File</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>The syntax is pretty simple when you understand what you need to export a 
 feature: you need the name of the <B>feature</B>, the name of the concerned 
 <B>class</B>, and the name of a <B>creation procedure</B>, what is optional is 
@@ -155,7 +155,7 @@ href="dll.html#Why"
 name=Why></A>
 <H2>Why this tool ?</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>This tool is a wizard to help the user to build its definition file. It will 
 use a simple drag and drop mechanism, and has the possibility to store different 
 definition files.</P>
@@ -163,34 +163,42 @@ definition files.</P>
 and basically will say when it is not possible. </P><!-- ------------------------------------------------------------ --><A 
 href="dll.html#Selecting" 
 name=Selecting></A>
-<H2>Selecting and creating a definition file </H2><A 
+<H2>Selecting and creating a definition file - Lace option </H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>When you first open your dynamic library tool, the user will have to choose 
 or create an Eiffel definition file :</P>
 <P>At this point, 2 choices: Browse to open an existing definition file, or 
 create the default file. A dialog box will appear :</P><IMG align=bottom 
-alt=IMAGE border=1 src="images/opendyn.gif"> 
+alt=IMAGE border=1 src="images/opendyn.gif" width="343" height="121"> 
 <P>If you open the default file, Ebench will create the file and open the 
 dynamic library tool.</P><IMG align=bottom alt=IMAGE border=1 
-src="images/defdyn.gif"> 
+src="images/defdyn.gif" width="450" height="203"> 
 <P>Now, the user can use this tool to build its definition file with a simple 
-drag and drop mechanism.</P><!-- ------------------------------------------------------------ --><A 
+drag and drop mechanism.</P> 
+<P>&nbsp;</P><P>Starting with ISE EiffelBench 4.5 there are two ways to select
+    an existing definition file. The first method is described above, but it has
+    the limitation that each time you recompile your project from scratch, you
+    will need to redo the previous steps. The second method is to use the new
+    lace definition (see <a href="lace.html">Lace</a>) `<b>shared_library_definition</b>'
+    in your Ace file. By specifying a definition file in your ace file, the
+    Eiffel compiler will look at it to generate the DLL.</P> 
+<P>&nbsp;</P><!-- ------------------------------------------------------------ --><A 
 href="dll.html#Dynamic" 
 name=Dynamic></A>
 <H2>Dynamic Library tool bar</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> <IMG align=bottom 
-alt=IMAGE border=1 src="images/dyntool.gif"> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> <IMG align=bottom 
+alt=IMAGE border=1 src="images/dyntool.gif" width="454" height="362"> 
 <P>The Dynamic Library toolbar is composed of <BR><BR>
 <UL>
   <UL>
-    <LI><IMG align=bottom alt=OPEN/SAVE border=1 src="images/opensave.gif"> 
+    <LI><IMG align=bottom alt=OPEN/SAVE border=1 src="images/opensave.gif" width="48" height="28"> 
     open/save part<BR>- to save or open a new eiffel definition file 
     (*.def).<BR><BR>
-    <LI><IMG align=bottom alt=FORMAT border=1 src="images/format.gif"> format 
+    <LI><IMG align=bottom alt=FORMAT border=1 src="images/format.gif" width="52" height="28"> format 
     part:<BR>- to select clickable format, or text format.<BR><BR>
-    <LI><IMG align=bottom alt=ICON border=1 src="images/dynicon.gif"> the 
+    <LI><IMG align=bottom alt=ICON border=1 src="images/dynicon.gif" width="27" height="27"> the 
     dynamic lib icon:<BR>- to reload the definition file<BR><FONT 
     color=red>ATTENTION : this will cancel your changes, and reload the 
     file</FONT><BR><BR></LI></UL></UL><!-- ------------------------------------------------------------ --><A 
@@ -198,18 +206,18 @@ href="dll.html#How"
 name=How></A>
 <H2>How to use it ?</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>The way to use the Dynamic Library Tool is simple, you first open your tool, 
 as describe before, then you just <B>drag and drop</B> the feature you want to 
 export into the Dynamic Library Tool or the corresponding button, if you do not 
 follow the constraints, a warning dialog will pop up.</P>
 <P>In case of a class with severals valid creation procedures, a dialog will pop 
 up, with a list of <B>valid creation procedure</B> (ie: no argument).</P><IMG 
-align=bottom alt=ICON border=1 src="images/creation.gif"> <!-- ------------------------------------------------------------ --><A 
+align=bottom alt=ICON border=1 src="images/creation.gif" width="158" height="127"> <!-- ------------------------------------------------------------ --><A 
 name=c_level></A>
 <H2>At the C level</H2><A 
 href="dll.html#TOP"><IMG 
-align=right alt=TOP border=1 src="images/top.gif"></A> 
+align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
     <P>Basically, once the Eiffel definition file is created, the compiler will 
 generate a set of files and will compile them to generate the Dynamic
     library into the <I>EIFGEN/W_code</I> or <I>EIFGEN/F_code</I>  directory.</P>

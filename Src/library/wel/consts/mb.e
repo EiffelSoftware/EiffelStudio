@@ -65,6 +65,20 @@ feature -- Access
 			"MB_ICONHAND"
 		end
 
+	Mb_iconerror: INTEGER is
+			external
+				"C [macro <wel.h>]"
+			alias
+				"MB_ICONERROR"
+		end
+
+	Mb_iconstop: INTEGER is
+			external
+				"C [macro <wel.h>]"
+			alias
+				"MB_ICONSTOP"
+		end
+
 	Mb_iconquestion: INTEGER is
 		external
 			"C [macro <wel.h>]"
@@ -78,6 +92,14 @@ feature -- Access
 		alias
 			"MB_ICONEXCLAMATION"
 		end
+
+	Mb_iconwarning: INTEGER is
+		external
+   			"C [macro <wel.h>]"
+   		alias
+   			"MB_ICONWARNING"
+		end
+
 
 	Mb_iconasterisk: INTEGER is
 		external
@@ -98,13 +120,6 @@ feature -- Access
 			"C [macro <wel.h>]"
 		alias
 			"MB_ICONINFORMATION"
-		end
-
-	Mb_iconstop: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"MB_ICONSTOP"
 		end
 
 	Mb_defbutton1: INTEGER is
@@ -156,11 +171,61 @@ feature -- Access
 			"MB_TASKMODAL"
 		end
 
+	Mb_default_desktop_only: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_DEFAULT_DESKTOP_ONLY"
+		end
+
+	Mb_help: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_HELP"
+		end
+
+	Mb_right: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_RIGHT"
+		end
+
+	Mb_rtlreading: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_RTLREADING"
+		end
+
+	Mb_setforeground: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_SETFOREGROUND"
+		end
+
+	Mb_topmost: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_TOPMOST"
+		end
+
+	
 	Mb_nofocus: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
 			"MB_NOFOCUS"
+		end
+
+	Mb_usericon: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"MB_USERICON"
 		end
 
 end -- class WEL_MB_CONSTANTS

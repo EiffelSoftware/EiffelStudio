@@ -8,29 +8,21 @@ inherit
 		rename
 			make as extend_table_create,
 			key_for_iteration as current_state
-		export
-			{NONE} all
 		end;
 
 	CALLBACK_GENE
-		export
-			{NONE} all
 		undefine
 			is_equal, copy
 		end;
 
 	COM_NAMER
-		export
-			{NONE} all
 		undefine
 			is_equal, copy
 		end
 
-
 creation
 
 	make
-
 	
 feature 
 
@@ -46,7 +38,7 @@ feature
 				Result.append ("%T%T%T");
 				Result.append (namer.value);
 				Result.append (": ");
-				Result.append (item (current_state).eiffel_type);
+				Result.append (item (current_state).eiffel_type_to_upper);
 				Result.append (";%N");
 				forth
 			end

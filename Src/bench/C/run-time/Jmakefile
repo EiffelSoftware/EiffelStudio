@@ -169,6 +169,7 @@ RemoteTargetDependency(network.o,../ipc/app,network.o)
 >LIBS
 
 network.o:
+	$(RM) network.o
 	$(LN) $(NETWORK_OBJ) $@
 
 /*

@@ -523,7 +523,7 @@ feature {NONE} -- Implementation - internal speedup
 			-- List of correspondance between type names and their
 			-- corresponding dynamic types.
 		once
-			create Result.make (1, 19)
+			create Result.make (types.lower, types.upper)
 		end
 
 end -- class EIFFEL_XML_DESERIALIZER

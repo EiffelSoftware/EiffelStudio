@@ -82,6 +82,52 @@ void enable_ev_gtk_log (int a_mode)
 }
 
 /* XPM */
+char *default_pixmap_data[] = {
+/* width height ncolors chars_per_pixel */
+"16 16 16 1",
+/* colors */
+"  c #B90000",
+". c #FF6B6B",
+"X c #F2F2F2",
+"o c #FFD4D4",
+"O c #960000",
+"+ c #FFAB8E",
+"@ c #C0C0C0",
+"# c #B93D00",
+"$ c #FFFBF0",
+"% c #FF4848",
+"& c #FFC7B1",
+"* c #808080",
+"= c #FFB1B1",
+"- c #FFFFFF",
+"; c #FF8E8E",
+": c None",
+/* pixels */
+"                ",
+" -------------- ",
+" -     ;#     - ",
+" -     @%     - ",
+" -     ;.     - ",
+" -     .;     - ",
+" -     ;;     - ",
+" -     *&.    - ",
+" -    #$$     - ",
+" -    =#+=    - ",
+" -    &o&;    - ",
+" -   %=O $#   - ",
+" -   ;.X@;&   - ",
+" -   -; ##&%  - ",
+" -------------- ",
+"                "
+};
+
+char **default_pixmap_xpm (void) {
+        return default_pixmap_data;
+}
+
+
+
+/* XPM */
 char * information_pixmap_data[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 4 1",
@@ -1096,6 +1142,9 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2004/02/12 22:38:47  king
+// Added default_pixmap_xpm
+//
 // Revision 1.4  2004/02/06 00:31:23  king
 // Removed externals that are now written in Eiffel using inline
 //

@@ -15,6 +15,7 @@
 void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
+char **default_pixmap_xpm (void);
 char **information_pixmap_xpm (void);
 char **error_pixmap_xpm (void);
 char **question_pixmap_xpm (void);
@@ -60,6 +61,9 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2004/02/12 22:38:57  king
+// Added default_pixmap_xpm
+//
 // Revision 1.3  2004/02/06 00:31:56  king
 // Removed externals that are now written in Eiffel using inline
 //

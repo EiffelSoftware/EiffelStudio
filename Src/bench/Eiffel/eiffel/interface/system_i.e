@@ -3220,21 +3220,12 @@ feature -- Dispose routine
 		local
 			feature_i: FEATURE_I
 		once
-			if memory_class /= Void then
-				feature_i := memory_class.feature_table.item_id (names.dispose_name_id)
+			if memory_class /= Void and memory_class.is_compiled then
+				feature_i := memory_class.compiled_class.feature_table.item_id (names.dispose_name_id)
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
 				end
 			end
-		end
-
-	memory_class: CLASS_C is
-			-- MEMORY class of system. Void if it has
-			-- not been compiled.
-		require
-			memory_class_i_not_void: memory_class_i /= Void
-		once
-			Result := memory_class_i.compiled_class
 		end
 
 	memory_descendants: SEARCH_TABLE [CLASS_C] is
@@ -3251,8 +3242,8 @@ feature -- Dispose routine
 			memory_descendants.clear_all
 
 				-- Recompute it if MEMORY is in system.
-			if memory_class_i /= Void and memory_class_i.is_compiled then
-				formulate_mem_descendants (memory_class, memory_descendants)
+			if memory_class /= Void and memory_class.is_compiled then
+				formulate_mem_descendants (memory_class.compiled_class, memory_descendants)
 			end
 		end
  
@@ -3280,7 +3271,7 @@ feature -- Dispose routine
 		local
 			entry: ROUT_TABLE
 		do
-			if memory_class_i /= Void and then memory_class_i.is_compiled then
+			if memory_class /= Void and then memory_class.is_compiled then
 					-- Get the polymorphic table corresponding to the `dispose' routine
 					-- from MEMORY.
 				entry ?= Eiffel_table.poly_table (memory_dispose_id)

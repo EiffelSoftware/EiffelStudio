@@ -536,7 +536,7 @@ feature -- Plug and Makefile file
 									%long *eif_lower_table = (long *)0;%N")
 			end
 
-			has_dispose := System.memory_class /= Void
+			has_dispose := System.memory_class /= Void and System.memory_class.is_compiled
 
 			if final_mode then
 				init_name :=

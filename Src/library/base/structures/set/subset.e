@@ -60,6 +60,9 @@ feature -- Duplication
 		require
 			non_negative: n >= 0
 		deferred
+		ensure
+			correct_count_1: n <= count implies Result.count = n
+			correct_count_2: n >= count implies Result.count = count
 		end;
 
 feature -- Basic operations

@@ -147,7 +147,7 @@ feature -- Access
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			to_implement ("EV_GRID_COLUMN_I.is_selected")
+			Result := selected_item_count = count
 		end
 
 feature -- Status report
@@ -280,8 +280,26 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		
 	enable_select is
 			-- Select the object.
+		local
+			i, a_count: INTEGER
+			a_item: EV_GRID_ITEM_I
 		do
-			to_implement ("EV_GRID_ROW_I.enable_select")
+			from
+				i := 1
+				a_count := count
+			until
+				i = a_count
+			loop
+				a_item := parent_grid_i.item_internal (index, i, False)
+					-- We query the grid without forcing a creation of items
+				if a_item /= Void then
+					a_item.enable_select
+						-- Enabling the item will enable increase the selected_item_count for `Current'
+				else
+					increase_selected_item_count
+				end
+				i := i + 1
+			end
 		end
 
 	destroy is
@@ -303,6 +321,32 @@ feature {EV_GRID_I} -- Implementation
 			parent_grid_i_unset: parent_grid_i = Void
 		end
 
+feature {EV_GRID_ITEM_I} -- Implementation
+
+	increase_selected_item_count is
+			-- Increase `selected_item_count' by 1
+		require
+			selected_item_count_less_than_count: selected_item_count < count
+		do
+			selected_item_count := selected_item_count + 1
+		ensure
+			selected_item_count_increased: selected_item_count = old selected_item_count + 1
+		end
+
+	decrease_selected_item_count is
+			-- Decrease selected_item_count by 1
+		require
+			selected_item_count_greater_than_zero: selected_item_count > 0
+		do
+			selected_item_count := selected_item_count + 1
+		ensure
+			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
+			selected_item_count_not_negative: selected_item_count >= 0
+		end
+
+	selected_item_count: INTEGER
+		-- Number of selected items in `Current'
+
 feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	parent_grid_i: EV_GRID_I
@@ -317,6 +361,7 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
 	index_same_as_parent_index: parent_grid_i /= Void implies parent_grid_i.grid_rows.index_of (Current, 1) = index
+	selected_item_count_valid: selected_item_count >= 0 and then selected_item_count <= count
 
 end
 

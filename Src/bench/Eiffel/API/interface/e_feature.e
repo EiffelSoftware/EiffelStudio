@@ -379,7 +379,8 @@ feature -- Access
 				class_ast := Tmp_ast_server.item (written_in)
 				Result := class_ast.feature_with_name (name)
 			else
-					-- In this case we must certainly be handling a dotnet feature.
+					-- In this case we must certainly be handling a dotnet feature and we need
+					-- to create an empty AST otherwise we cannot pick and drop it.
 				create Result
 			end			
 		end;

@@ -35,12 +35,12 @@ feature
 	add_specific_objects is
 			-- Add workbench mode specific files to the object list
 		do
-			add_in_system_basket (Econform)
-			add_in_system_basket (Eoption);
-			add_in_system_basket (Epattern);
-			add_in_system_basket (Efrozen);
-			add_in_system_basket (Edispatch);
-			add_in_system_basket (Ecall);
+			add_in_primary_system_basket (Econform)
+			add_in_primary_system_basket (Eoption);
+			add_in_primary_system_basket (Epattern);
+			add_in_primary_system_basket (Efrozen);
+			add_in_primary_system_basket (Edispatch);
+			add_in_primary_system_basket (Ecall);
 		end;
 
 	add_cecil_objects is
@@ -50,7 +50,6 @@ feature
 			if not System.has_multithreaded then
 				cecil_basket := cecil_rt_basket
 				cecil_basket.extend ("network.o"); cecil_basket.finish
-				cecil_basket.extend ("wmath.o"); cecil_basket.finish
 				cecil_basket.extend ("wmalloc.o"); cecil_basket.finish
 				cecil_basket.extend ("wgarcol.o"); cecil_basket.finish
 				cecil_basket.extend ("wlocal.o"); cecil_basket.finish

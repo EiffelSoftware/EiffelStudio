@@ -144,24 +144,7 @@ rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 	 * declared in associated class of `type_id'. */
 
 	int16 *typearr = System(Deif_bid(type_id)).cn_gtypes[i];
-	int16 dtype = eif_compound_id (0, (int16) type_id, typearr [1], typearr);
-
-	switch (dtype) {
-		case CHARACTER_TYPE: dtype = (int16) egc_char_dtype; break;
-		case BOOLEAN_TYPE: dtype = (int16) egc_bool_dtype; break;
-		case INTEGER_TYPE: dtype = (int16) egc_int32_dtype; break;
-		case REAL_TYPE: dtype = (int16) egc_real_dtype; break;
-		case DOUBLE_TYPE: dtype = (int16) egc_doub_dtype; break;
-		case POINTER_TYPE: dtype = (int16) egc_point_dtype; break;
-		case INTEGER_8_TYPE: dtype = (int16) egc_int8_dtype; break;
-		case INTEGER_16_TYPE: dtype = (int16) egc_int16_dtype; break;
-		case INTEGER_64_TYPE: dtype = (int16) egc_int64_dtype; break;
-		case WIDE_CHAR_TYPE: dtype = (int16) egc_wchar_dtype; break;
-		default:
-			;
-	}
-
-	return dtype;
+	return eif_compound_id (0, (int16) type_id, typearr [1], typearr);
 }
 
 rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)

@@ -83,6 +83,7 @@ inherit
 			wel_select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
+			on_size,
 			default_style,
 			default_ex_style
 		end
@@ -349,6 +350,13 @@ feature {NONE} -- Implementation : WEL features
 			process_tab_key (virtual_key)
 		end
 
+	on_size (size_type, a_height, a_width: INTEGER) is
+			-- List resized.
+		do
+			Precursor (size_type, a_height, a_width)
+			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+		end
+
 	wel_background_color: WEL_COLOR_REF is
 		do
 			Result := background_color_imp
@@ -522,6 +530,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/07 17:53:53  rogers
+--| Redefined on_size from WEL_LIST_BOX, so the resize_actions can be called.
+--|
 --| Revision 1.44  2000/03/07 00:11:56  rogers
 --| The select actions are now always called on the child first before the list
 --|

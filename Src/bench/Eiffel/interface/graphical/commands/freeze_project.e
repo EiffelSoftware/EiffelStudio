@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			error_window.put_string ("System recompiled%N");
 			if start_c_compilation then
 				error_window.put_string
-					("Launching C compilation in background...%N");
+						("Launching C compilation in background...%N");
 				Eiffel_project.call_finish_freezing (True);
 			end
 		end;

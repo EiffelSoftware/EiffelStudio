@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"pressed",
 				~on_ok,
-				default_translate
+				Void
 			)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
 				"pressed",
 				~on_cancel,
-				default_translate
+				Void
 			)
 			is_initialized := True
 		end
@@ -114,6 +114,9 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/20 18:07:39  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.8  2000/04/04 20:51:57  oconnor
 --| updated signal connection for new marshaling scheme
 --|

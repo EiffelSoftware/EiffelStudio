@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 				entry_widget,
 				"activate",
 				interface.return_actions,
-				default_translate
+				Void
 			)
 			real_connect_signal_to_actions (
 				entry_widget,
 				"changed",
 				interface.change_actions,
-				default_translate
+				Void
 			)
 		end
 
@@ -156,6 +156,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/20 18:07:41  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.17  2000/04/04 21:00:33  oconnor
 --| updated signal connection for new marshaling scheme
 --|

@@ -1445,7 +1445,7 @@ feature -- Messages
 			bk_brush := background_brush
 			if bk_brush /= Void then
 				paint_dc.fill_rect (invalid_rect, bk_brush)
-				bk_brush.delete
+				bk_brush.dispose
 					--| Disable the default windows processing and return correct
 					--| value to Windows, i.e. nonzero value.
 				disable_default_processing

@@ -63,7 +63,7 @@ feature -- Initialization
 						l_temp_file.end_of_file
 					loop
 						l_temp_file.read_line
-						l_var_string := clone (l_temp_file.laststring)
+						l_var_string := l_temp_file.last_string.twin
 						if l_var_string /= Void and not l_var_string.is_empty then
 							parse_variable_string (l_var_string)
 						end

@@ -24,6 +24,13 @@ feature -- Event handling
 		do
 			create Result
 		end
+		
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a file access action sequence.
+		do
+			create Result
+		end
+		
 
 end
 

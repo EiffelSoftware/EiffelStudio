@@ -1280,8 +1280,7 @@ feature -- Input
 			until
 				done
 			loop
-				read := read +
-					file_gs (file_pointer, $str_area, str_cap, read);
+				read := read + file_gs (file_pointer, $str_area, str_cap, read);
 				if read > str_cap then
 						-- End of line not reached yet
 						--|The string must be consistently set before

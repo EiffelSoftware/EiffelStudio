@@ -22,10 +22,4 @@ feature
 			-- Do nothing
 		end;
 
-	byte_anchor: BIN_MOD_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-end
+end -- class BIN_MOD_AS

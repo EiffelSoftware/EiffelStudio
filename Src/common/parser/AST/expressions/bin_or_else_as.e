@@ -13,10 +13,4 @@ feature
 			Result := "_infix_or_else";
 		end;
 
-	byte_anchor: B_OR_ELSE_B is
-			-- Byte code type
-		do
-			!!Result
-		end; 
-
-end
+end -- class BIN_OR_ELSE_AS

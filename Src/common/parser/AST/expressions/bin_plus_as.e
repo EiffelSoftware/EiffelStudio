@@ -13,9 +13,4 @@ feature
 			Result := "_infix_plus";
 		end;
 
-	byte_anchor: BIN_PLUS_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-end
+end -- class BIN_PLUS_AS

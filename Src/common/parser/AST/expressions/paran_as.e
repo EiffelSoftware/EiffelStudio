@@ -1,4 +1,8 @@
--- Abstract description of a parenthesized expression
+indexing
+
+	description: "Abstract description of a parenthesized expression";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PARAN_AS
 
@@ -6,9 +10,8 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -25,47 +28,16 @@ feature -- Initialization
 			expr_exists: expr /= Void;
 		end;
 
-feature -- Type check, byte code and dead code removal
+feature -- Simple formatting
 
-	type_check is
-			-- Type check an parenthesized expression
-		do
-			expr.type_check;
-		end;
-
-	byte_node: PARAN_B is
-			-- Associated byte code
-		do
-			!!Result;
-			Result.set_expr (expr.byte_node);
-		end;
-
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		do
 			ctxt.begin;
 			ctxt.put_text_item (ti_L_parenthesis);
-			expr.format (ctxt);
-			if ctxt.last_was_printed then
-				ctxt.put_text_item (ti_R_parenthesis);
-				ctxt.commit;
-			else
-				ctxt.rollback;
-			end;
-		end;
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			expr.fill_calls_list (l);
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do	
-			Result := clone (Current);
-			Result.set_expr (expr.replicate (ctxt))
+			expr.simple_format (ctxt);
+			ctxt.put_text_item (ti_R_parenthesis);
+			ctxt.commit;
 		end;
 
 feature {PARAN_AS}	-- Replication
@@ -77,5 +49,4 @@ feature {PARAN_AS}	-- Replication
 			expr := e
 		end;
 
-
-end
+end -- class PARAN_AS

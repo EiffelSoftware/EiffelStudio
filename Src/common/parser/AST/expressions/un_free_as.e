@@ -1,4 +1,8 @@
--- Free unary expression description
+indexing
+
+	description: "Free unary expression description";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class UN_FREE_AS
 
@@ -6,7 +10,7 @@ inherit
 
 	UNARY_AS
 		redefine
-			set, byte_node
+			set
 		end
 
 feature -- Attributes
@@ -39,21 +43,6 @@ feature -- Type check
 	Internal_prefix: STRING is "_prefix_";
 			-- Prefix string for internal name
 
-	byte_node: UN_FREE_B is
-			-- Associated byte code
-		local
-			access_line: ACCESS_LINE;
-			feature_b: FEATURE_B;
-		do
-			!!Result;
-			Result.set_expr (expr.byte_node);
-
-			access_line := context.access_line;
-			feature_b ?= access_line.access;
-			Result.init (feature_b);
-			access_line.forth;
-		end;
-
 	operator_name: STRING is
 		do
 			Result := op_name;
@@ -69,4 +58,4 @@ feature {UNARY_AS}	-- Replication
 				-- 8 is "_prefix_".count
 		end;
 
-end
+end -- class UN_FREE_AS

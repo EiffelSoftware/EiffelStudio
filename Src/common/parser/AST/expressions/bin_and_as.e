@@ -4,7 +4,7 @@ inherit
 
 	BINARY_AS
 		redefine
-			bit_balanced, byte_anchor
+			bit_balanced
 		end
 
 feature
@@ -23,10 +23,4 @@ feature
 			Result := True;
 		end;
 
-	byte_anchor: BIN_AND_B is
-            -- Byte code type
-        do
-            !!Result;
-        end;
-
-end
+end -- class BIN_AND_AS

@@ -1,4 +1,8 @@
--- Free binary expression description
+indexing
+
+	description: "Free binary expression description";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class BIN_FREE_AS
 
@@ -14,7 +18,7 @@ feature -- Attributes
 	op_name: ID_AS;
 			-- Free operator name
 
-feature
+feature -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -28,6 +32,8 @@ feature
 			operator_exists: op_name /= Void;
 		end;
 
+feature
+
 	infix_function_name: STRING is
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
@@ -40,21 +46,15 @@ feature
 	Internal_infix: STRING is "_infix_";
 			-- Internal prefix name for feature
 
-	byte_anchor: BIN_FREE_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-
 	operator_is_keyword: BOOLEAN is false;
 
 feature {BINARY_AS}
 
-	set_infix_function_name (name: ID_AS) is
+	set_infix_function_name (name: like op_name) is
 		do
 			op_name := clone (name)
 			op_name.tail (op_name.count - 7);
 			-- 7 = "_infix_".count
 		end;
-end
+
+end -- class BIN_FREE_AS

@@ -13,10 +13,4 @@ feature
 			Result := "_infix_star";
 		end;
 
-	byte_anchor: BIN_STAR_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-end
+end -- class BIN_STAR_AS

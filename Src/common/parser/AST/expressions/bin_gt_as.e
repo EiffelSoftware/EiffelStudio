@@ -13,10 +13,4 @@ feature
 			Result := "_infix_gt";
 		end;
 
-	byte_anchor: BIN_GT_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-end
+end -- class BIN_GT_AS

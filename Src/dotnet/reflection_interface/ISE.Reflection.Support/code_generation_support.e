@@ -190,6 +190,68 @@ feature -- Status Report
 			create_error (error_messages.Read_lock, error_messages.Read_lock_message)
 			retry
 		end
+
+	valid_path (a_path: STRING): BOOLEAN is
+			-- Is `a_path' valid?
+		indexing
+			external_name: "ValidPath"
+		require
+			non_void_path: a_path /= Void
+			not_empty_path: a_path.length > 0
+		local
+			dir: SYSTEM_IO_DIRECTORY
+		do
+			Result := dir.exists (a_path)
+		end
+
+feature -- Basic Operations
+
+	create_folder (a_path: STRING) is
+			-- Create folder with path `a_path' (recursively).
+		indexing
+			external_name: "CreateFolder"
+		require
+			non_void_path: a_path /= Void
+			not_empty_path: a_path.length > 0		
+		local
+			i: INTEGER
+			folder_names: SYSTEM_COLLECTIONS_ARRAYLIST
+			a_folder_name: STRING
+			folder_path: STRING
+			path: STRING
+			slash_index: INTEGER
+			dir: SYSTEM_IO_DIRECTORY		
+			info: SYSTEM_IO_DIRECTORYINFO
+			path_exists: BOOLEAN
+			added: INTEGER
+		do
+			create folder_names.make
+			path := a_path.copy (a_path)
+			from
+				slash_index := path.lastindexof ("\") 
+			until
+				path_exists or slash_index = -1
+			loop
+				added := folder_names.add (path.substring (slash_index + 1))
+				path_exists := dir.exists (path.substring_int32_int32 (0, slash_index))
+				path := path.substring_int32_int32 (0, slash_index)
+				slash_index := path.lastindexof ("\") 
+			end
+			from
+				i := folder_names.count - 1
+			until
+				i = - 1
+			loop
+				a_folder_name ?= folder_names.item (i)	
+				if a_folder_name /= Void then
+					folder_path := path.concat_string_string_string (path, "\", a_folder_name)
+					info := dir.createdirectory (folder_path)
+				end
+				i := i - 1
+			end
+		ensure
+			valid_path: valid_path (a_path)
+		end
 		
 feature {NONE} -- Implementation
 

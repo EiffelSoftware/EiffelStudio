@@ -68,7 +68,7 @@ Feature/Bug requests:
   set editable the cells of the list ? (jsireude@capgemini.fr, PR 2456) 
 
 Allocations:
-JR: fontable, textable, primitive, tool_bar_item, pick_and_dropable
+JR: tool_bar_item, pick_and_dropable
 AP: pixmap
 VB: dynamic_list, item, simple_item, list_item, list, menu, menu_item_list
 
@@ -91,10 +91,10 @@ X   complete but found to have bugs
     properties/ev_fontable.e                            *    o .5  o     .
     properties/ev_pick_and_dropable.e                   o    o .5  o     .
     properties/ev_pixmapable.e                          *    o .5  *     .
-    properties/ev_textable.e                            *    o .1  *     .
+    properties/ev_textable.e                            *    *     *     .
     support/ev_dynamic_list.e                           o    o 2   o     .
     widgets/ev_widget.e                                 o    o 3   o     .
-    widgets/primitives/ev_primitive.e                   *    o .1  *     .
+    widgets/primitives/ev_primitive.e                   *    *     *     .
     items/ev_item.e                                     *    o .5  *     .
     items/ev_simple_item.e                              o    o .1  *     .
     items/ev_separator_item.e                           o    *     *     .

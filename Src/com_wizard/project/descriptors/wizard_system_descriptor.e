@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_ENUM_DESCRIPTOR]} enumerators.make
 			create {LINKED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} 
 					interfaces.make
+			interfaces.compare_objects
 			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
 			create eiffel_names.make (100)
 			eiffel_names.compare_objects

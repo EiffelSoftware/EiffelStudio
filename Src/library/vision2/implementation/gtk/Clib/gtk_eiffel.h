@@ -316,6 +316,13 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 
 EIF_POINTER c_gtk_toolbar_new_horizontal (void);
 
+
+/*==============================================================================
+ cursor functions
+==============================================================================*/
+
+gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor);
+
 /*==============================================================================
  button functions
 ==============================================================================*/

@@ -85,13 +85,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cursor: EV_CURSOR is
+	cursor: EV_CURSOR --is
 			-- Cursor used currently on the widget.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+	--	do
+	--		check
+	--			not_yet_implemented: False
+	--		end
+	--	end
 
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
@@ -359,12 +359,36 @@ feature -- Element change
 		end
 
 	set_cursor (cur: EV_CURSOR) is
-			-- Make `value' the new cursor of the widget
+			-- Make `cur' the cursor of the widget.
+		local
+			cur_imp: EV_CURSOR_IMP
 		do
+			cur_imp ?= cur.implementation
 			check
-				not_yet_implemented: False
+				cursor_implementation_exists: cur_imp /= Void
 			end
+
+					-- Disconnect previous callback if any
+			if cursor_signal_tag /= 0 then
+				gtk_signal_disconnect (widget, cursor_signal_tag)
+			end 
+				-- Call C function that initialises callback
+				-- that sets the cursor on mouse entry to prevent
+				-- Gtk assertion violation when setting a widgets
+				-- cursor when its root window isn't shown
+			cursor := cur
+			cursor_signal_tag := c_gtk_widget_set_cursor (widget, cur_imp.cursor)
 		end
+
+	c_gtk_widget_set_cursor (wid: POINTER; cur: POINTER): INTEGER is
+		external
+			"C (GtkWidget *, GdkCursor *): EIF_INTEGER | %"gtk_eiffel.h%""
+		end
+
+	cursor_signal_tag: INTEGER
+		-- Tag returned from Gtk used to disconnect `enter-notify' signal
+
+	
 	
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'.

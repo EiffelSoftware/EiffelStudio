@@ -28,6 +28,7 @@ default
 	disabled_debug ("comments")
 	disabled_debug ("count")
 	disabled_debug ("dbg")
+	disabled_debug ("dbg_extra_display")
 	disabled_debug ("dbg_synchro")
 	disabled_debug ("dead_code")
 	disabled_debug ("dead_code_removal")
@@ -36,6 +37,7 @@ default
 	disabled_debug ("debugger")
 	disabled_debug ("debugger_bp_trace")
 	disabled_debug ("debugger_eifnet_data")
+	disabled_debug ("debugger_eifnet_data_extra")
 	disabled_debug ("debugger_evaluator")
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_icor_data")
@@ -46,12 +48,13 @@ default
 	disabled_debug ("debugger_trace_breakpoint")
 	disabled_debug ("debugger_trace_callback")
 	disabled_debug ("debugger_trace_callback_data")
+	disabled_debug ("debugger_trace_callback_notify")
 	disabled_debug ("debugger_trace_callstack")
+	disabled_debug ("debugger_trace_callstack_data")
 	disabled_debug ("debugger_trace_children")
 	disabled_debug ("debugger_trace_eifnet")
 	disabled_debug ("debugger_trace_eval")
 	disabled_debug ("debugger_trace_eval_data")
-	disabled_debug ("debugger_trace_message")
 	disabled_debug ("debugger_trace_operation")
 	disabled_debug ("debugger_trace_stepping")
 	disabled_debug ("debugger_trace_synchro")
@@ -64,6 +67,7 @@ default
 	disabled_debug ("dollar")
 	disabled_debug ("editor")
 	disabled_debug ("filters")
+	disabled_debug ("fixme")
 	disabled_debug ("flat_short")
 	disabled_debug ("flush_file")
 	disabled_debug ("formal_generic")
@@ -72,7 +76,6 @@ default
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
-	disabled_debug ("icordebugreferencevalue")
 	disabled_debug ("il_info_trace")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("md out-of-order")
@@ -129,15 +132,11 @@ cluster
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
-		default
-			assertion (no)
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
-		default
-			assertion (no)
 		end
 
 	all net:		"$EIFFEL_SRC\library\net"
@@ -178,8 +177,6 @@ cluster
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
-		default
-			assertion (no)
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"

@@ -39,9 +39,6 @@ feature -- Initialization
 			if C.gtk_is_widget (c_object) then
 				C.gtk_widget_show (c_object)
 			end
-			---interface.drop_actions.set_source_connection_agent (
-			--	global_pnd_targets~extend (interface)
-			--)
 
 			-- FIXME this probably should call precursor {EV_WIDGET_IMP}
 			set_default_colors
@@ -130,6 +127,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/24 02:20:29  oconnor
+--| removed c-ed out code
+--|
 --| Revision 1.23  2000/03/09 01:15:27  king
 --| Corrected comment of set_parent_imp
 --|

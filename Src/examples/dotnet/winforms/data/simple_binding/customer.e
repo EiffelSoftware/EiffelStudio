@@ -5,28 +5,14 @@ indexing
 	
 class
 	CUSTOMER
+	
+inherit
+	SYSTEM_DLL_COMPONENT
 
 create
-	make,
 	make_with_data
 
 feature {NONE} -- Initialization
-
-	make is
-		do
-			create id.make_empty
-			create title.make_empty
-			create first_name.make_empty
-			create last_name.make_empty
-			create address.make_empty
-			create date_of_birth.make_from_year_and_month_and_day (2002, 01, 01)
-		ensure
-			non_void_id: id /= Void
-			non_void_title: title /= Void
-			non_void_first_name: first_name /= Void
-			non_void_address: address /= Void
-			non_void_date_of_birth: date_of_birth /= Void
-		end
 
 	make_with_data (an_id: like id; a_title: like title; a_first_name: like first_name; a_last_name: like last_name; an_address: like address; a_date_of_birth: like date_of_birth) is
 		require
@@ -40,7 +26,6 @@ feature {NONE} -- Initialization
 			non_empty_a_last_name: not a_last_name.is_empty
 			non_void_an_address: an_address /= Void
 			non_empty_an_address: not an_address.is_empty
-			non_void_a_date_of_birth: a_date_of_birth /= Void
 		do
 			id := an_id
 			title := a_title
@@ -54,7 +39,6 @@ feature {NONE} -- Initialization
 			first_name_set: first_name = a_first_name
 			last_name_set: last_name = a_last_name
 			address_set: address = an_address
-			date_of_birth_set: date_of_birth = a_date_of_birth
 		end
 
 feature -- Access
@@ -125,13 +109,14 @@ feature -- Status Setting
 		
 	set_date_of_birth (a_date_of_birth: like date_of_birth) is
 			-- Set `date_of_birth' with `a_date_of_birth'.
-		require
-			non_void_a_date_of_birth: a_date_of_birth /= Void
 		do
 			date_of_birth := a_date_of_birth
-		ensure
-			date_of_birth_set: date_of_birth = a_date_of_birth
 		end
+
+feature {NONE} -- Implementation
+
+	Void: NONE
+		-- Void reference
 
 invariant
 	non_void_id: id /= Void

@@ -21,6 +21,7 @@ inherit
 			execute_warner_help as load_default,
 			execute_warner_ok as load_chosen
 		end;
+	CREATE_ACE_CALLER
 
 creation
 
@@ -31,7 +32,6 @@ feature -- Callbacks
 	load_default is
 			-- Load default ace file.
 		do
-			system_tool.display;
 			load_default_ace;
 		end;
 
@@ -108,8 +108,8 @@ feature {NONE} -- Execution
 						end
 					else
 						warner (project_tool.text_window).custom_call 
-							(Current, l_Specify_ace, " OK ", 
-							"Template", "Cancel");
+							(Current, l_Specify_ace, "Browse", 
+							"Build", "Cancel");
 					end;	
 				else
 					!! system_stone;
@@ -123,13 +123,25 @@ feature {NONE} -- Implementation
 
 	load_default_ace is
 		local
-			file_name: STRING;
+			wiz_dlg: WIZARD_DIALOG;
+			create_ace: CREATE_ACE;
+			wizard: WIZARD
 		do
-			!! file_name.make (50);	
-			file_name.append (Default_ace_name);
-			System_tool.text_window.show_file_content (file_name);
-			System_tool.text_window.set_changed (True)
-			tool.update_save_symbol
+			!! wiz_dlg.make ("dialog", Project_tool);
+			!! create_ace.make (Current);
+			!! wizard.make (Project_tool, wiz_dlg, create_ace);
+			wizard.execute_action;
+		end;
+
+	perform_post_creation is
+		local
+			file_name: STRING
+		do
+			!! file_name.make (0);
+			file_name.append ("Ace.ace");
+			system_tool.display;
+			system_tool.text_window.show_file_content (file_name);
+			system_tool.text_window.set_changed (True)
 		end;
 
 end -- class SYSTEM_HOLE

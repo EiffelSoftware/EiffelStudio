@@ -408,16 +408,29 @@ end
 			output_text: STRUCTURED_TEXT
 			wd: EV_WARNING_DIALOG
 			working_dir: STRING
+			l_cmd_line_arg: STRING
 		do
 			create output_text.make
 			if not Application.is_running then
 					-- First time we launch the program, we clear the output tool.
 				output_manager.clear
 			end
-			output_text.add_string ("Launching system...")
+			working_dir := application_working_directory
+			l_cmd_line_arg := current_cmd_line_argument
+			
+			output_text.add_string ("Launching system :")
+			output_text.add_new_line
+			output_text.add_comment ("  - directory = ")
+			output_text.add_quoted_text (working_dir)
+			output_text.add_new_line
+			output_text.add_comment_text ("  - arguments = ")
+			if l_cmd_line_arg.is_empty then
+				output_text.add_string ("<Empty>")
+			else
+				output_text.add_quoted_text (l_cmd_line_arg)			
+			end
 			output_text.add_new_line
 			
-			working_dir := application_working_directory
 			if not (create {DIRECTORY} .make (working_dir)).exists then
 				create wd.make_with_text (Warning_messages.w_Invalid_working_directory (working_dir))
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -425,7 +438,7 @@ end
 			else
 				debugger_manager.raise
 				Application.set_critical_stack_depth (Debugger_manager.critical_stack_depth)
-				Application.run (current_cmd_line_argument, working_dir)
+				Application.run (l_cmd_line_arg, working_dir)
 				if Application.is_running then
 					output_text.add_string ("System is running")
 					output_text.add_new_line

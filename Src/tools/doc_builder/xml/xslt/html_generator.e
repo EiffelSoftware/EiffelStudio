@@ -104,6 +104,7 @@ feature {NONE} -- Generation
 			until
 				cnt = l_cnt
 			loop
+				print ("Generating HTML for directory " + target.name)
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
 							-- Create directory/filename
@@ -157,6 +158,8 @@ feature {NONE} -- Generation
 			l_filename: FILE_NAME
 			filtered_document: FILTERED_DOCUMENT
 		do		
+			print ("%NGenerating HTML from XML file " + a_doc.name + " in " + target.name)
+		
 					-- First filter the document according to correct filter
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
 				

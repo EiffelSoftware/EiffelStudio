@@ -227,8 +227,7 @@ feature -- Basic operation
 				keep_menu_bar := True
 			else
 				display_button.enable_sensitive
-				builder_button.enable_sensitive
-				new_object := component.object	
+				builder_button.enable_sensitive	
 				object_handler.recursive_do_all (new_object, agent force_object_to_component)
 				if display_view_enabled then
 					widget ?= new_object.object	

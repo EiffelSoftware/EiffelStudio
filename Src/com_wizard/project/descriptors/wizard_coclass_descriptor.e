@@ -26,6 +26,10 @@ feature {NONE} -- Initialization
 			a_creator.initialize_descriptor (Current)
 			create feature_c_names.make
 			feature_c_names.compare_objects
+
+			create feature_eiffel_names.make
+			feature_eiffel_names.compare_objects
+
 		ensure then
 			non_void_interface_descriptors: interface_descriptors /= Void 
 			non_void_feature_c_names: feature_c_names /= Void
@@ -54,7 +58,10 @@ feature -- Access
 	
 	feature_c_names: LINKED_LIST [STRING]
 			-- List of feature C names
-		
+
+	feature_eiffel_names: LINKED_LIST [STRING]
+			-- List of feature Eiffel names.
+
 feature -- Element Change
 
 	set_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
@@ -98,8 +105,39 @@ feature -- Basic operations
 			loop
 				interface_descriptors.item.disambiguate_c_names (Current)
 				feature_c_names.append (interface_descriptors.item.feature_c_names)
+				feature_eiffel_names.append (interface_descriptors.item.feature_eiffel_names)
 				interface_descriptors.forth
 			end
+
+			from
+				interface_descriptors.start
+			until
+				interface_descriptors.after
+			loop
+				from
+					interface_descriptors.item.functions.start
+				until
+					interface_descriptors.item.functions.after
+				loop
+
+					if interface_descriptors.item.functions.item.argument_count > 0 then
+						from
+							interface_descriptors.item.functions.item.arguments.start
+						until
+							interface_descriptors.item.functions.item.arguments.after
+						loop
+							if feature_eiffel_names.has (interface_descriptors.item.functions.item.arguments.item.name) then
+								interface_descriptors.item.functions.item.arguments.item.name.prepend ("a_")
+							end
+							interface_descriptors.item.functions.item.arguments.forth
+						end
+					end
+					interface_descriptors.item.functions.forth
+				end
+
+				interface_descriptors.forth
+			end
+
 		end
 
 feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor

@@ -11,21 +11,27 @@ A:hover {
 }
 
 .eclass {
-    COLOR: magenta;
+    COLOR: blue;
     FONT-STYLE: italic;
 }
 
 .neclass {
-    COLOR: darkmagenta;
+    COLOR: black;
+    FONT-STYLE: italic;
 }
 
 .ekeyword {
-    COLOR: blue;
+    COLOR: navy;
     FONT-WEIGHT: bold;
 }
 
 .esymbol {
     COLOR: navy;
+}
+
+.eitag {
+    COLOR: sienna;
+    FONT: 91% "Courier New", serif;
 }
 
 .estring {
@@ -53,7 +59,8 @@ A:hover {
 }
 
 .nefeature {
-    COLOR: darkslategray;
+    COLOR: black;
+    FONT-STYLE: italic;
 }
 
 .ecomment {
@@ -61,30 +68,24 @@ A:hover {
     FONT: 91% "Courier New", serif;
 }
 
-.equoted {
-    COLOR: black;
+.elocal, .equoted {
+    COLOR: brown;
     FONT-STYLE: italic;
 }
 
-.elocal {
-    COLOR: brown;
-}
-
-.eitag {
-    COLOR: blue;
-}
-
 .ereserved {
-    COLOR: brown;
+    COLOR: darkgreen;
+    FONT-STYLE: italic;
     FONT-WEIGHT: bold;
 }
 
 .egeneric {
+    FONT-STYLE: italic;
 	COLOR: dodgerblue;
 }
 
 .ecluster {
-    COLOR: navy;
+    COLOR: crimson;
     FONT-VARIANT: small-caps;
     FONT-WEIGHT: bold;
 }

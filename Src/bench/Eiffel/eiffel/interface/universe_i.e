@@ -412,6 +412,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			system_exists: system /= Void
 		do
+			if system.il_generation then
+				system.set_system_object_class (unique_class ("system_object"))
+			end
 			system.set_any_class (unique_class ("any"))
 			system.set_boolean_class (unique_class ("boolean"))
 			system.set_character_class (unique_class ("character"), False)
@@ -425,26 +428,36 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_pointer_class (unique_class ("pointer"))
 			system.set_array_class (unique_class ("array"))
 			system.set_special_class (unique_class ("special"))
+			system.set_tuple_class (unique_class ("tuple"))
+			system.set_memory_class_i (unique_class ("memory"))
+			system.set_routine_class (unique_class ("routine"))
+			system.set_procedure_class (unique_class ("procedure"))
+			system.set_function_class (unique_class ("function"))
+			system.set_to_special_class (unique_class ("to_special"))
+
+				-- XX_REF classes
+			system.set_bit_class (unique_class ("bit_ref"))
+			system.set_character_ref_class (unique_class ("character_ref"), False)
+			system.set_boolean_ref_class (unique_class("boolean_ref"))
+			system.set_integer_ref_class (unique_class("integer_8_ref"), 8)
+			system.set_integer_ref_class (unique_class("integer_16_ref"), 16)
+			system.set_integer_ref_class (unique_class("integer_ref"), 32)
+			system.set_integer_ref_class (unique_class("integer_64_ref"), 64)
+			system.set_real_ref_class (unique_class("real_ref"))
+			system.set_double_ref_class (unique_class("double_ref"))
+			system.set_pointer_ref_class (unique_class("pointer_ref"))
 
 			if not system.il_generation then
-				system.set_tuple_class (unique_class ("tuple"))
-				system.set_to_special_class (unique_class ("to_special"))
-				system.set_bit_class (unique_class ("bit_ref"))
-				system.set_character_ref_class (unique_class ("character_ref"), False)
-				system.set_boolean_ref_class (unique_class("boolean_ref"))
-				system.set_integer_ref_class (unique_class("integer_8_ref"), 8)
-				system.set_integer_ref_class (unique_class("integer_16_ref"), 16)
-				system.set_integer_ref_class (unique_class("integer_ref"), 32)
-				system.set_integer_ref_class (unique_class("integer_64_ref"), 64)
-				system.set_real_ref_class (unique_class("real_ref"))
-				system.set_double_ref_class (unique_class("double_ref"))
-				system.set_pointer_ref_class (unique_class("pointer_ref"))
-				system.set_memory_class_i (unique_class ("memory"))
-				system.set_routine_class (unique_class ("routine"))
-				system.set_procedure_class (unique_class ("procedure"))
-				system.set_function_class (unique_class ("function"))
 				system.set_character_class (unique_class ("wide_character"), True)
+					-- XX_REF classes
 				system.set_character_ref_class (unique_class ("wide_character_ref"), True)
+
+			else
+				system.set_system_string_class (unique_class ("system_string"))
+				system.set_native_array_class (unique_class ("native_array"))
+
+					-- In MSIL generation, WIDE_CHARACTER does not exist since
+					-- all characters are wide.
 			end
 
 				-- Check sum error

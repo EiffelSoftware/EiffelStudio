@@ -331,6 +331,10 @@ feature -- Properties
 				-- not compiled. So we must say to the workbench to compile
 				-- classes ANY, DOUBLE... ARRAY
 				-- It is very important that these classes were protected.
+
+			if il_generation then
+				local_workbench.change_class (system_object_class)
+			end
 			local_workbench.change_class (any_class)
 			local_workbench.change_class (double_class)
 			local_workbench.change_class (real_class)
@@ -343,15 +347,18 @@ feature -- Properties
 			local_workbench.change_class (special_class)
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (array_class)
+			local_workbench.change_class (tuple_class)
+			local_workbench.change_class (to_special_class)
+			local_workbench.change_class (bit_class)
+			local_workbench.change_class (routine_class)
+			local_workbench.change_class (procedure_class)
+			local_workbench.change_class (function_class)
 
 			if not il_generation then
-				local_workbench.change_class (tuple_class)
 				local_workbench.change_class (wide_char_class)
-				local_workbench.change_class (to_special_class)
-				local_workbench.change_class (bit_class)
-				local_workbench.change_class (routine_class)
-				local_workbench.change_class (procedure_class)
-				local_workbench.change_class (function_class)
+			else
+				local_workbench.change_class (native_array_class)
+				local_workbench.change_class (system_string_class)
 			end
 
 			local_workbench.change_class (string_class)
@@ -372,6 +379,10 @@ feature -- Properties
 			not_is_precompiling: not Compilation_modes.is_precompiling
 		do
 			marked_precompiled_classes := True
+
+			if il_generation then
+				system_object_class.compiled_class.record_precompiled_class_in_system
+			end
 			any_class.compiled_class.record_precompiled_class_in_system
 			double_class.compiled_class.record_precompiled_class_in_system
 			real_class.compiled_class.record_precompiled_class_in_system
@@ -385,15 +396,18 @@ feature -- Properties
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
+			tuple_class.compiled_class.record_precompiled_class_in_system
+			to_special_class.compiled_class.record_precompiled_class_in_system
+			bit_class.compiled_class.record_precompiled_class_in_system
+			routine_class.compiled_class.record_precompiled_class_in_system
+			procedure_class.compiled_class.record_precompiled_class_in_system
+			function_class.compiled_class.record_precompiled_class_in_system
 
 			if not il_generation then
-				tuple_class.compiled_class.record_precompiled_class_in_system
 				wide_char_class.compiled_class.record_precompiled_class_in_system
-				to_special_class.compiled_class.record_precompiled_class_in_system
-				bit_class.compiled_class.record_precompiled_class_in_system
-				routine_class.compiled_class.record_precompiled_class_in_system
-				procedure_class.compiled_class.record_precompiled_class_in_system
-				function_class.compiled_class.record_precompiled_class_in_system
+			else
+				native_array_class.compiled_class.record_precompiled_class_in_system
+				system_string_class.compiled_class.record_precompiled_class_in_system
 			end
 		end
 
@@ -987,6 +1001,9 @@ end
 			root_class_c := root_class.compiled_class
 			root_class_c.mark_class (marked_classes)
 
+			if il_generation then
+				system_object_class.compiled_class.mark_class (marked_classes)
+			end
 			any_class.compiled_class.mark_class (marked_classes)
 			double_class.compiled_class.mark_class (marked_classes)
 			real_class.compiled_class.mark_class (marked_classes)
@@ -1000,15 +1017,18 @@ end
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
+			tuple_class.compiled_class.mark_class (marked_classes)
+			to_special_class.compiled_class.mark_class (marked_classes)
+			bit_class.compiled_class.mark_class (marked_classes)
+			routine_class.compiled_class.mark_class (marked_classes)
+			procedure_class.compiled_class.mark_class (marked_classes)
+			function_class.compiled_class.mark_class (marked_classes)
 
 			if not il_generation then
-				tuple_class.compiled_class.mark_class (marked_classes)
 				wide_char_class.compiled_class.mark_class (marked_classes)
-				to_special_class.compiled_class.mark_class (marked_classes)
-				bit_class.compiled_class.mark_class (marked_classes)
-				routine_class.compiled_class.mark_class (marked_classes)
-				procedure_class.compiled_class.mark_class (marked_classes)
-				function_class.compiled_class.mark_class (marked_classes)
+			else
+				native_array_class.compiled_class.mark_class (marked_classes)
+				system_string_class.compiled_class.mark_class (marked_classes)
 			end
 
 				-- Now mark all classes reachable from `unref_classes'.
@@ -3203,15 +3223,15 @@ feature -- Pattern table generation
 				if has_separate then
 					buffer.putstring ("%T%Tif (egc_rcorigin != -1)%N%
 						%%T%T%Tif (egc_rcarg)%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
+						%%T%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
+						%%T%T%T%T(FUNCTION_CAST(void, (EIf_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				else
 					buffer.putstring ("%Tif (egc_rcorigin != -1)%N%
 						%%T%Tif (egc_rcarg)%N%
-						%%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
+						%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
 						%%T%Telse%N%
-						%%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
+						%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				end
 			end
 

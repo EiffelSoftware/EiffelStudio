@@ -155,20 +155,15 @@ rt_private struct exprint eif_except;		/* Where exception has been raised */
 #define EIF_EXCEPT_UNLOCK 
 #else	/* EIF_THREADS */
 /*
-doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE" export="private">
-doc:		<summary></summary>
+doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:		<summary>Ensures that when a thread crashes, the complete stack trace is displayed in one shot, and not mixed with other thread's stack traces.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
-doc:		<fixme>Creation is not thread safe. It should be created in `eif_thread.c'</fixme>
 doc:	</attribute>
 */
-rt_private	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_EXCEPT_LOCK	\
-	if (!eif_except_lock) \
-		EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");\
-	EIF_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
+rt_shared	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
+#define EIF_EXCEPT_LOCK	EIF_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
 #define EIF_EXCEPT_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
-
 
 #endif /* EIF_THREADS */
 

@@ -75,10 +75,10 @@ feature -- Access
 			col_index: INTEGER
 		do
 			a_grid_row := row_internal (a_row)
-			grid_row :=  row_list @ (a_row - 1)
+			grid_row :=  internal_row_data @ a_row
 			if a_column > grid_row.count then
 				enlarge_row (a_row, a_column)
-				grid_row := row_list @ (a_row - 1)
+				grid_row := internal_row_data @ a_row
 			end
 			
 			a_grid_column_i := grid_columns @ a_column
@@ -148,6 +148,8 @@ feature -- Status setting
 				a_col_i.set_is_visible (True)
 				visible_column_count := visible_column_count + 1
 			end
+			
+			fixme ("Implement showing of column header%N")
 		ensure
 			column_displayed: column_displayed (a_column)
 		end
@@ -163,7 +165,9 @@ feature -- Status setting
 			if a_col_i.is_visible then
 				a_col_i.set_is_visible (False)
 				visible_column_count := visible_column_count - 1
-			end	
+			end
+			
+			fixme ("Implement hiding of column header%N")
 		ensure
 			column_not_displayed: not column_displayed (a_column)
 		end
@@ -385,22 +389,55 @@ feature -- Element change
 			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
 			j_less_than_row_count: j <= row_count
+		local
+			a_row: EV_GRID_ROW
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
+				--Retrieve row at position `i' and remove from list
+			a_row := row_internal (i)
+			grid_rows.go_i_th (i)
+			grid_rows.remove
+			
+				-- Insert retrieved row at position `j'
+			grid_rows.go_i_th (j)
+			grid_rows.put_left (a_row.implementation)
+			
+			internal_row_data.go_i_th (i)
+			a_row_data := internal_row_data.item
+			internal_row_data.remove
+			
+			internal_row_data.go_i_th (j)
+			internal_row_data.put_left (a_row_data)
+			
 
+			fixme ("EV_GRID_I: move_row redraw")
 		ensure
-			moved: row (j) = old row (i) and then row (j) /= row (i)
+			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
 		end
 
 	move_column (i, j: INTEGER) is
 			-- Move row at index `i' to index `j'
 		require
 			i_positive: i > 0
+			j_positive: j > 0
 			i_less_than_column_count: i <= column_count
 			j_less_than_column_count: j <= column_count
+		local
+			a_col: EV_GRID_COLUMN
 		do
-
+				--Retrieve column at position `i' and remove from list
+			a_col := column_internal (i)
+			grid_columns.go_i_th (i)
+			grid_columns.remove
+			
+				-- Insert retrieved column at position `j'
+			grid_columns.go_i_th (j)
+			grid_columns.put_left (a_col.implementation)
+			
+				-- Remove column from header and insert at the appropriate position
+			fixme ("EV_GRID_I:move_column  add column header removal and redraw")
 		ensure
-			moved: column (j) = old column (i) and then column (j) /= column (i)
+			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
 		end
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
@@ -420,12 +457,11 @@ feature -- Element change
 			a_grid_col_i :=  column_internal (a_column).implementation
 			a_grid_row_i := row_internal (a_row).implementation
 
-			a_row_data := row_list.item (a_row - 1)
+			a_row_data := internal_row_data @ a_row
 			if a_row_data.count < a_grid_col_i.physical_index + 1 then
 				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
 			end
-			row_list.item (a_row - 1).put (a_item.implementation, a_grid_col_i.physical_index)
-			
+			internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)	
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
 		end
@@ -477,19 +513,31 @@ feature -- Measurements
 	row_count: INTEGER is
 			-- Number of rows in Current
 		do
-			if	grid_rows /= Void then
-				Result := grid_rows.count
+			if	internal_row_data /= Void then
+				Result := internal_row_data.count
 			end
 		end
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
+feature {NONE} -- Implementation
 
-	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]]
+	internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
 		-- The row data returned from `row_list' @ i may be Void for optimization purposes
 		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
 		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
 		-- The actual ordering is queried from `visible_physical_column_indexes'
+
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
+
+	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]] is
+		-- Memory Array of individual row's data, row by row
+		-- The row data returned from `row_list' @ i may be Void for optimization purposes
+		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
+		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
+		-- The actual ordering is queried from `visible_physical_column_indexes'
+		do
+			Result := internal_row_data.area
+		end
 
 	visible_physical_column_indexes: SPECIAL [INTEGER] is
 			-- Zero-based physical data indexes of the visible columns needed for `row_data' lookup whilst rendering cells
@@ -561,9 +609,9 @@ feature {NONE} -- Drawing implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
-			create row_list.make (5)
-			create grid_columns.make (0)
-			create grid_rows.make (0)
+			create internal_row_data.make
+			create grid_columns.make
+			create grid_rows.make
 			
 			create drawer.make_with_grid (Current)
 			create drawable
@@ -865,6 +913,7 @@ feature {NONE} -- Implementation
 				if replace_existing_item then
 					grid_columns.resize (a_index)
 				else
+						-- Resize to new count minus 1 as we are inserting a new item, when item is inserted then count will be increased
 					grid_columns.resize (a_index - 1)
 				end
 			end
@@ -928,7 +977,7 @@ feature {NONE} -- Implementation
 		require
 			valid_new_count: new_count > row_list.count
 		do
-			row_list := row_list.aliased_resized_area (new_count)
+			internal_row_data.resize (new_count)
 		ensure
 			count_increased: row_list.count = new_count
 		end
@@ -947,9 +996,9 @@ feature {NONE} -- Implementation
 		local
 			a_row: SPECIAL [EV_GRID_ITEM_I]
 		do
-			a_row := row_list @ (a_index - 1)
+			a_row := internal_row_data @ a_index
 			a_row := a_row.aliased_resized_area (new_count)
-			row_list.put (a_row, (a_index - 1))
+			internal_row_data.put_i_th (a_row, a_index)
 		end
 
 	column_internal (a_column: INTEGER): EV_GRID_COLUMN is

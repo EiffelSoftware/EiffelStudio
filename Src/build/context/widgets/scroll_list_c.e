@@ -76,7 +76,7 @@ feature {NONE}
 
 feature 
 
-	eiffel_type: STRING is "SCROLLABL_LIST";
+	eiffel_type: STRING is "SCROLLABLE_LIST";
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do

@@ -49,7 +49,12 @@ inherit
 		export
 			{NONE} all
 		end
-	
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	components_loaded: BOOLEAN is
@@ -138,6 +143,7 @@ feature -- Basic operations
 			new_element := create_widget_instance (component_element, an_object.type)
 			component_element.force_last (new_element)
 			xml_store.add_new_object_to_output (an_object, new_element, create {GB_GENERATION_SETTINGS})
+			Constants.flatten_constants (component_element)
 		end
 
 	save_components is
@@ -154,7 +160,7 @@ feature -- Basic operations
 			create file.make (component_filename)
 			from
 			until
-				file.is_writable OR cancelled
+				file.is_writable or cancelled
 			loop
 				create error_dialog.make_with_text ("Unable to write to file : " + component_filename + ".%NPlease check file permissions and try again.")
 				error_dialog.show_modal_to_window (main_window)

@@ -24,7 +24,13 @@
 			<item>Compiler is now checking that you cannot redeclare a formal generic parameter into a reference type unless the formal generic parameter is being constraint to be always a reference type.</item>
 			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_name> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
 			<item>In .NET, changed the naming conventions of resources included in an assembly. The extension `.resources' is appended for resources that are originally provided as `.resx' or `.txt' files. Other files are embedded as is in the assembly and the name of the resource is the name of the file.</item>
-			<item>In .NET, now all classes inherit from <class_name>ANY</class_name>. Before all classes inherited from <class_name>SYSTEM_OBJECT</class_name>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class. However none of the features of <class_name>ANY</class_name> are directly accessible to .NET classes.</item>
+			<item>In .NET, now all classes inherit from <class_name>ANY</class_name>. Before all classes inherited from <class_name>SYSTEM_OBJECT</class_name>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class.</item>
+			<item>Now on .NET the following assignment attempt will succeed whereas it failed before because <class_name>SYSTEM_OBJECT</class_name> did not inherit from <class_name>ANY</class_name>:<code_block>a: <class_name>ANY</class_name>
+o: <class_name>SYSTEM_OBJECT</class_name>
+...
+<keyword>check</keyword> o /= Void <keyword>and</keyword> a = Void <keyword>end</keyword>
+a ?= o
+<keyword>check</keyword> o /= Void <keyword>and</keyword> a /= Void <keyword>end</keyword></code_block></item>
 			<item>New format of the independent storable files which takes into account internal changes made for a better generic conformance in classic mode.</item>
 		</list>
 		<heading>
@@ -107,10 +113,8 @@
 			<item>Fixed incorrect code generation of native arrays which would cause the code to be rejected in newer version of the .NET Framework.</item>
 			<item>Fixed incorrect computation of `max_stack' for a routine body which could make the generated code not verifiable.</item>
 		</list>
-		<heading>
-			<size>3</size>Store/Retrieve issues
-		</heading>
+		<heading>	<size>3</size>Store/Retrieve issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fix some issues related to the use of recoverable storable when manipulating generic types.</item>
 		</list>
 	</paragraph></document>

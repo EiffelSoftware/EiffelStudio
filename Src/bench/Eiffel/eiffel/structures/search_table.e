@@ -1,6 +1,10 @@
--- Hash tables to store ``hashable'' items
+indexing
+	description: "Set based on implementation of HASH_TABLE for fast lookup"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class SEARCH_TABLE [H -> HASHABLE]
+class
+	SEARCH_TABLE [H -> HASHABLE]
 
 creation
 	make
@@ -12,48 +16,54 @@ feature -- Creation
 			-- The table will be resized automatically
 			-- if more than `n' items are inserted.
 		local
-			clever: PRIMES;
+			clever: PRIMES
 			local_content: ARRAY [H]
 			local_deleted_marks: ARRAY [BOOLEAN]
 		do
-			!! clever;
-			capacity := clever.higher_prime ((3 * n) // 2);
+			create clever
+			capacity := clever.higher_prime ((3 * n) // 2)
 			if capacity < 5 then
 				capacity := 5
-			end;
-			!! local_content.make (0, capacity - 1);
-			!! local_deleted_marks.make (0, capacity - 1)
+			end
+			create local_content.make (0, capacity - 1)
+			create local_deleted_marks.make (0, capacity - 1)
 			content := local_content.area
 			deleted_marks := local_deleted_marks.area
 		ensure
-			capacity_big_enough: capacity >= n and capacity >= 5;
-		end;
+			capacity_big_enough: capacity >= n and capacity >= 5
+		end
 
 feature -- Access and queries
 
 	item (key: H): H is
-			-- Item associated with `key', if present;
+			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
+		require
+			valid_key: valid_key (key)
 		do
-			internal_search (key);
+			internal_search (key)
 			if control = Found then
 				Result := content.item (position)
 			end
-		end;
+		end
 
 	has (key: H): BOOLEAN is
 			-- Is `access_key' currently used?
 			-- (Shallow equality)
+		require
+			valid_key: valid_key (key)
 		do
-			internal_search (key);
+			internal_search (key)
 			Result := (control = Found)
-		end;
+		end
 
 	key_at (n: INTEGER): H is
 			-- Key corresponding to entry `n'
 		do
-			Result := content.item (n)
-		end;
+			if n >= 0 and n < content.count then
+				Result := content.item (n)
+			end
+		end
 
 	is_empty: BOOLEAN is
 			-- Is structure empty?
@@ -67,43 +77,45 @@ feature -- Insertion, deletion
 			-- Attempt to insert `new' with `key'.
 			-- Set `control' to `Inserted' or `Conflict'.
 			-- No insertion if conflict.
+		require
+			valid_key (key)
 		do
-			internal_search (key);
+			internal_search (key)
 			if control = Found then
 				control := Conflict
 			else
 				if soon_full then
-					add_space;
+					add_space
 					internal_search (key)
-				end;
-				content.put (key, position);
-				count := count + 1;
+				end
+				content.put (key, position)
+				count := count + 1
 				control := Inserted
 			end
 		ensure then
 			insertion_done: control = Inserted implies item (key) = key
-		end;
+		end
 
 	force (key: H) is
 			-- If `key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `key'.
 			-- Set `control' to `Inserted'.
-		require else
-			valid_key (key);
+		require
+			valid_key (key)
 		do
-			internal_search (key);
+			internal_search (key)
 			if control /= Found then
 				if soon_full then
-					add_space;
+					add_space
 					internal_search (key)
-				end;
+				end
 				count := count + 1
-			end;
-			content.put (key, position);
+			end
+			content.put (key, position)
 			control := Inserted
 		ensure then
 			insertion_done: item (key) = key
-		end;
+		end
 
 	change_key (new_key: H; old_key: H) is
 			-- If table contains an item at `old_key',
@@ -112,17 +124,17 @@ feature -- Insertion, deletion
 		require
 			valid_keys: valid_key (new_key) and valid_key (old_key)
 		do
-			internal_search (old_key);
+			internal_search (old_key)
 			if control = Found then
-				content.put (new_key, position);
+				content.put (new_key, position)
 				if control /= Conflict then
-					remove (old_key);
+					remove (old_key)
 					control := Changed
 				end
 			end
 		ensure
 			changed: control = Changed implies not has (old_key)
-		end;
+		end
 
 	remove, prune (key: H) is
 			-- Remove item associated with `key', if present.
@@ -130,17 +142,17 @@ feature -- Insertion, deletion
 		require
 			valid_key: valid_key (key)
 		local
-			dead_key: H;
+			dead_key: H
 		do
-			internal_search (key);
+			internal_search (key)
 			if control = Found then
-				content.put (dead_key, position);
-				deleted_marks.put (True, position);
-				count := count - 1;
+				content.put (dead_key, position)
+				deleted_marks.put (True, position)
+				count := count - 1
 			end
 		ensure
-			not_has: not has (key);
-		end;
+			not_has: not has (key)
+		end
 
 	wipe_out, clear_all is
 			-- Reset all items to default values.
@@ -150,10 +162,12 @@ feature -- Insertion, deletion
 			count := 0
 			control := 0
 			position := 0
-		end;
+		end
 
 	merge (other: like Current) is
 			-- Merge two search_tables
+		require
+			other_not_void: other /= Void
 		local
 			local_other, local_current, new_content: SPECIAL[H]
 			new: SEARCH_TABLE[H]
@@ -167,7 +181,7 @@ feature -- Insertion, deletion
 				my_size := local_current.count
 				if ((my_size + other_size) * Size_threshold <= 100*count) then
 					from		
-						!! new.make (3 * (capacity + other_size) // 2)
+						create new.make (3 * (capacity + other_size) // 2)
 						new_content := new.content
 					until
 						i >= my_size
@@ -198,12 +212,12 @@ feature -- Insertion, deletion
 				
 feature -- Number of elements
 
-	count: INTEGER;
+	count: INTEGER
 			-- Number of items actually inserted in `Current'
 
 feature {NONE} -- Internal features
 
-	position: INTEGER;
+	position: INTEGER
 			-- Hash table cursor
 
 	internal_search (search_key: H) is
@@ -215,9 +229,9 @@ feature {NONE} -- Internal features
 		require
 			good_key: valid_key (search_key)
 		local
-			increment, hash_code, table_size, pos: INTEGER;
-			first_deleted_position, visited_count: INTEGER;
-			old_key, default_key: H;
+			increment, hash_code, table_size, pos: INTEGER
+			first_deleted_position, visited_count: INTEGER
+			old_key, default_key: H
 			stop: BOOLEAN
 			local_content: SPECIAL [H]
 			local_deleted_marks: SPECIAL [BOOLEAN]
@@ -225,22 +239,22 @@ feature {NONE} -- Internal features
 			from
 				local_content := content
 				local_deleted_marks := deleted_marks
-				first_deleted_position := -1;
+				first_deleted_position := -1
 				table_size := capacity
-				hash_code := search_key.hash_code;
+				hash_code := search_key.hash_code
 				-- Increment computed for no cycle: `table_size' is prime
-				increment := 1 + hash_code \\ (table_size - 1);
-				pos := (hash_code \\ table_size) - increment;
+				increment := 1 + hash_code \\ (table_size - 1)
+				pos := (hash_code \\ table_size) - increment
 			until
 				stop or else visited_count >= table_size
 			loop
-				pos := (pos + increment) \\ table_size;
-				visited_count := visited_count + 1;
-				old_key := local_content.item (pos);
+				pos := (pos + increment) \\ table_size
+				visited_count := visited_count + 1
+				old_key := local_content.item (pos)
 				if old_key = default_key then
 					if not local_deleted_marks.item (pos) then
-						control := Not_found;
-						stop := True;
+						control := Not_found
+						stop := True
 						if first_deleted_position >= 0 then
 							pos := first_deleted_position
 						end
@@ -248,47 +262,47 @@ feature {NONE} -- Internal features
 						first_deleted_position := pos
 					end
 				elseif search_key.is_equal (old_key) then
-					control := Found;
+					control := Found
 					stop := True
 				end
-			end;
+			end
 			if not stop then
-				control := Not_found;
+				control := Not_found
 				if first_deleted_position >= 0 then
 					pos := first_deleted_position
-				end;
-			end;
+				end
+			end
 			position := pos
-		end;
+		end
 
 	add_space is
 			-- Double the capacity of `Current'.
 			-- Transfer everything except deleted keys.
 		local
-			i, table_size: INTEGER;
-			current_key: H;
+			i, table_size: INTEGER
+			current_key: H
 			other: SEARCH_TABLE [H]
 			local_content: SPECIAL [H]
 		do
 			from
-				!! other.make ((3 * capacity) // 2);
+				create other.make ((3 * capacity) // 2)
 				local_content := content
 				table_size := local_content.count
 			until
 				i >= table_size
 			loop
-				current_key := local_content.item (i);
+				current_key := local_content.item (i)
 				if valid_key (current_key) then
 					other.put (current_key)
-				end;
+				end
 				i := i + 1
-			end;
-			content := other.content;
-			deleted_marks := other.deleted_marks;
+			end
+			content := other.content
+			deleted_marks := other.deleted_marks
 			capacity := other.capacity
-		end;
+		end
 
-	Size_threshold: INTEGER is 80;
+	Size_threshold: INTEGER is 80
 			-- Filling percentage over which some resizing is done
 
 	soon_full: BOOLEAN is
@@ -296,7 +310,7 @@ feature {NONE} -- Internal features
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
 			Result := (content.count * Size_threshold <= 100 * count)
-		end;
+		end
 
 feature -- Assertion check
 
@@ -306,31 +320,31 @@ feature -- Assertion check
 			dead_key: H
 		do
 			Result := k /= dead_key and then k.is_hashable
-		end;
+		end
 
 feature {NONE} -- Status
 
-	control: INTEGER;
+	control: INTEGER
 			-- Control code set by operations that may return
 			-- several possible conditions.
 			-- Possible control codes are the following:
 
-	Inserted: INTEGER is unique;
+	Inserted: INTEGER is unique
 			-- Insertion successful
 
-	Found: INTEGER is unique;
+	Found: INTEGER is unique
 			-- Key found
 
-	Changed: INTEGER is unique;
+	Changed: INTEGER is unique
 			-- Change successful
 
-	Removed: INTEGER is unique;
+	Removed: INTEGER is unique
 			-- Remove successful
 
-	Conflict: INTEGER is unique;
+	Conflict: INTEGER is unique
 			-- Could not insert an already existing key
 
-	Not_found: INTEGER is unique;
+	Not_found: INTEGER is unique
 			-- Key not found
 
 feature {SEARCH_TABLE}
@@ -338,7 +352,7 @@ feature {SEARCH_TABLE}
 	capacity: INTEGER
 			-- Size of the table
 
-	deleted_marks: SPECIAL [BOOLEAN];
+	deleted_marks: SPECIAL [BOOLEAN]
 			-- Deleted marks
 
 	content: SPECIAL [H]
@@ -349,14 +363,14 @@ feature -- Iteration
 	start is
 			-- Iteration initialization
 		do
-			iteration_position := -1;
-			forth;
-		end;
+			iteration_position := -1
+			forth
+		end
 
 	forth is
 			-- Iteration
 		local
-			stop: BOOLEAN;
+			stop: BOOLEAN
 			local_content: SPECIAL [H]
 			pos_for_iter, table_size: INTEGER
 		do
@@ -367,17 +381,17 @@ feature -- Iteration
 			until
 				stop
 			loop
-				pos_for_iter := pos_for_iter + 1;
-				stop := pos_for_iter > table_size or else valid_key (local_content.item (pos_for_iter));
+				pos_for_iter := pos_for_iter + 1
+				stop := pos_for_iter > table_size or else valid_key (local_content.item (pos_for_iter))
 			end
 			iteration_position := pos_for_iter
-		end;
+		end
 
 	after: BOOLEAN is
 			-- Is the iteration cursor off ?
 		do
 			Result := iteration_position > capacity - 1
-		end;
+		end
 
 	item_for_iteration: H is
 			-- Item at cursor position
@@ -385,15 +399,14 @@ feature -- Iteration
 			not_off: not after
 		do
 			Result := content.item (iteration_position)
-		end;
+		end
 
 feature {NONE} -- Iteration cursor
 
-	iteration_position: INTEGER;
+	iteration_position: INTEGER
 			-- Iteration position value
 
 invariant
+	count_big_enough: 0 <= count
 
-	count_big_enough: 0 <= count;
-
-end
+end -- class SEARCH_TABLE

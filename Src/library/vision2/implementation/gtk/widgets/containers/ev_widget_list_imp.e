@@ -18,18 +18,8 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			initialize,
 			replace,
 			extend
-		end
-
-feature -- Initialization
-
-	initialize is
-			-- Precusor and create new_item_actions.
-		do
-			{EV_CONTAINER_IMP} Precursor
-			create new_item_actions.make ("new_item", <<"widget">>)
 		end
 
 feature -- Access
@@ -196,6 +186,7 @@ feature -- Removal
 		local
 			imp: EV_WIDGET_IMP
 		do
+			remove_item_actions.call ([v])
 			imp ?= v.implementation
 			C.gtk_container_remove (c_object, imp.c_object)
 		end
@@ -204,27 +195,27 @@ feature -- Removal
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
+		local
+			p: POINTER
+			w: EV_WIDGET
 		do
-			C.gtk_container_remove (
-				c_object, 
-				C.g_list_nth_data (
-					C.gtk_container_children (c_object),
-					index - 1
-				)
-			)
+			p := C.g_list_nth_data (C.gtk_container_children (c_object), index - 1)
+			w ?= eif_object_from_c (p).interface
+			remove_item_actions.call ([w])
+			C.gtk_container_remove (c_object, p)
 		end
 
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
+		local
+			p: POINTER
+			w: EV_WIDGET
 		do
-			C.gtk_container_remove (
-				c_object, 
-				C.g_list_nth_data (
-					C.gtk_container_children (c_object),
-					index - 2
-				)
-			)
+			p := C.g_list_nth_data (C.gtk_container_children (c_object), index - 2)
+			w ?= eif_object_from_c (p).interface
+			remove_item_actions.call ([w])
+			C.gtk_container_remove (c_object, p)
 			index := index - 1
 		end
 
@@ -232,20 +223,15 @@ feature -- Removal
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
+		local
+			p: POINTER
+			w: EV_WIDGET
 		do
-			C.gtk_container_remove (
-				c_object, 
-				C.g_list_nth_data (
-					C.gtk_container_children (c_object),
-					index
-				)
-			)
+			p := C.g_list_nth_data (C.gtk_container_children (c_object), index)
+			w ?= eif_object_from_c (p).interface
+			remove_item_actions.call ([w])
+			C.gtk_container_remove (c_object, p)
 		end
-
-feature -- Event handling
-
-	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
-			-- Actions to be performed when a new item is added.
 
 feature {EV_ANY_I} -- implementation
 
@@ -257,9 +243,6 @@ feature {EV_ANY_I} -- implementation
 	interface: EV_WIDGET_LIST
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
-invariant
-	new_item_actions_not_void: is_useable implies new_item_actions /= void
 
 end -- class EV_WIDGET_LIST_IMP
 
@@ -284,6 +267,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/26 01:29:02  brendel
+--| Added calls to action sequences when adding/removing an item.
+--|
 --| Revision 1.3  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -11,9 +11,13 @@ inherit
 	EV_HORIZONTAL_PROGRESS_BAR_I
 
 	EV_PROGRESS_BAR_IMP
+		undefine
+			set_default_options
+		end
 
 creation
-	make
+	make,
+	make_with_range
 
 feature {NONE} -- Initialization
 

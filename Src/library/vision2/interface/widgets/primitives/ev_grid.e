@@ -15,7 +15,8 @@ inherit
 			create_implementation,
 			prunable,
 			readable,
-			writable
+			writable,
+			is_in_default_state
 		end
 	
 	EV_GRID_ACTION_SEQUENCES
@@ -123,6 +124,28 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_resizing_divider_solid
+		end
+		
+	is_horizontal_scrolling_per_item: BOOLEAN is
+			-- Is horizontal scrolling performed on a per-item basis?
+			-- If `True', each change of the horizontal scroll bar increments the horizontal
+			-- offset by the current column width.
+			-- If `False', the scrolling is smooth on a per-pixel basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_horizontal_scrolling_per_item
+		end
+		
+	is_vertical_scrolling_per_item: BOOLEAN is
+			-- Is vertical scrolling performed on a per-item basis?
+			-- If `True', each change of the vertical scroll bar increments the vertical
+			-- offset by the current row height.
+			-- If `False', the scrolling is smooth on a per-pixel basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_vertical_scrolling_per_item
 		end
 
 feature -- Status setting
@@ -309,6 +332,46 @@ feature -- Status setting
 			implementation.disable_solid_resizing_divider
 		ensure
 			dashed_resizing_divider: not is_resizing_divider_solid
+		end
+		
+	enable_horizontal_scrolling_per_item is
+			-- Ensure horizontal scrolling is performed on a per-item basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_horizontal_scrolling_per_item
+		ensure
+			horizontal_scrolling_performed_per_item: is_horizontal_scrolling_per_item
+		end
+		
+	disable_horizontal_scrolling_per_item is
+			-- Ensure horizontal scrolling is performed on a per-pixel basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_horizontal_scrolling_per_item
+		ensure
+			horizontal_scrolling_performed_per_pixel: not is_horizontal_scrolling_per_item
+		end
+		
+	enable_vertical_scrolling_per_item is
+			-- Ensure vertical scrolling is performed on a per-item basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_vertical_scrolling_per_item
+		ensure
+			vertical_scrolling_performed_per_item: is_vertical_scrolling_per_item
+		end
+		
+	disable_vertical_scrolling_per_item is
+			-- Ensure vertical scrolling is performed on a per-pixel basis.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_vertical_scrolling_per_item
+		ensure
+			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
 
 feature -- Status report
@@ -524,6 +587,15 @@ feature -- Measurements
 			Result := implementation.row_count
 		ensure
 			result_positive: Result >= 1
+		end
+		
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := not is_horizontal_scrolling_per_item and
+				is_vertical_scrolling_per_item and is_header_displayed
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

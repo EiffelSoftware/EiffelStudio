@@ -8,11 +8,11 @@
 
 /*------------------------------------------------------------------*/
 /* Create a ROUTINE object of type `dftype' and put the routine     */
-/* dispatch address `rout_disp' into it. Use `tgt' as target,       *
-/* `args' as arguments and `tpos' as target position                */
+/* dispatch address `rout_disp' into it. Use `args' as arguments,   */
+/* `omap' as open map and `cmap' as closed map.                     */
 /*------------------------------------------------------------------*/
 
-rt_public char *rout_obj_create (int16 dftype, char *rout_disp, char *tgt, char *args, int16 tpos)
+rt_public char *rout_obj_create (int16 dftype, char *rout_disp, char *args, char *omap, char *cmap)
 
 {
 	EIF_GET_CONTEXT
@@ -24,7 +24,7 @@ rt_public char *rout_obj_create (int16 dftype, char *rout_disp, char *tgt, char 
 	epush(&loc_stack, (char *) &result); 
 	nstcall = 0;
 	/* Call 'set_rout_disp' from ROUTINE */
-	(egc_routdisp)(result, rout_disp, tgt, args, (int) tpos);
+	(egc_routdisp)(result, rout_disp, args, omap, cmap);
 	/* Remove protection */
 	epop(&loc_stack, 1);
 
@@ -81,7 +81,7 @@ rt_public void rout_obj_call_function (char *cur, char *res, char *rout, char *a
 	char gcode, *resp;
 
 	ap = (EIF_ARG_UNION *) args;
-	gcode = ((char(*)(char *, char *, EIF_ARG_UNION *))rout)(ap[0].rarg, ap+1, &result);
+	gcode = ((char(*)(char *, char *, EIF_ARG_UNION *))rout)(ap[0].rarg, (char *)(ap+1), &result);
 
 	resp = *(char **)res;
 

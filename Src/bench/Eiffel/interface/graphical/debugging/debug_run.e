@@ -36,7 +36,7 @@ feature -- Initialization
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			init_from_tool (a_tool);
+			init (a_tool);
 			!! run_request.make (Rqst_application);
 			!! cont_request.make (Rqst_cont)
 		end;
@@ -93,7 +93,6 @@ feature -- Execution
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
 			kept_objects: LINKED_SET [STRING];
-			debug_tool: PROJECT_W;
 			ready_to_run: BOOLEAN;
 			temp: STRING;
 			update_command: UPDATE_PROJECT;
@@ -103,7 +102,7 @@ feature -- Execution
 			if argument = melt_and_run then
 				update_command ?= tool.update_cmd_holder.associated_command;
 				update_command.set_run_after_melt (true);
-				update_command.execute (text_window);
+				update_command.execute (tool);
 				update_command.set_run_after_melt (false)
 			elseif argument = specify_args then
 				if argument_window.destroyed then
@@ -186,8 +185,7 @@ end;
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
 					kept_objects := window_manager.object_win_mgr.objects_kept;
-					debug_tool ?= Debug_window.tool;
-					kept_objects.merge (debug_tool.kept_objects);
+					kept_objects.merge (Project_tool.kept_objects);
 					Application.continue (kept_objects);
 					Window_manager.object_win_mgr.hang_on;
 					if status.e_feature /= Void then

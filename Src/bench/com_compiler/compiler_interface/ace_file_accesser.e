@@ -582,7 +582,7 @@ feature -- Element change
 				create ass
 				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
-			end
+			end		
 		end
 		
 	set_precompiled (filename: STRING) is
@@ -612,9 +612,12 @@ feature -- Element change
 				create defaults.make (10)
 				root_ast.set_defaults (defaults)
 			end
-			value := new_id_sd (filename, true)
-			create d_option.initialize (create {PRECOMPILED_SD}, create {OPT_VAL_SD}.make (value))
-			defaults.extend (d_option)
+			
+			if filename /= Void and not filename.is_empty then
+				value := new_id_sd (filename, true)
+				create d_option.initialize (create {PRECOMPILED_SD}, create {OPT_VAL_SD}.make (value))
+				defaults.extend (d_option)				
+			end
 		end
 		
 
@@ -726,13 +729,14 @@ feature -- Status report
 		local
 			tmp_ast: ACE_SD
 		do
-			Result := False
-			if ace_file_name /= Void then
-				tmp_ast := parsed_ast (ace_file_name)
-				if tmp_ast /= Void then
-					Result := True
-				end
-			end	
+			Result := True
+--			Result := False
+--			if ace_file_name /= Void then
+--				tmp_ast := parsed_ast (ace_file_name)
+--				if tmp_ast /= Void then
+--					Result := True
+--				end
+--			end	
 		end
 
 	last_error_message: STRING

@@ -9,7 +9,8 @@ class
 inherit
 	CACHE_READER
 		redefine
-			consumed_type
+			consumed_type,
+			assembly_types
 		end
 
 feature -- Redefined
@@ -34,6 +35,23 @@ feature -- Redefined
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
+		end
+
+	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
+			-- Assembly information from EAC
+		local
+			i: INTEGER
+		do
+			i := aname.full_name.get_hash_code
+			Assembly_types_cache.search (i)
+			if Assembly_types_cache.found then
+				Result := Assembly_types_cache.found_item
+			else
+				Result := Precursor {CACHE_READER} (aname)
+				if Result /= Void then
+					Assembly_types_cache.put (Result, i)
+				end
+			end
 		end
 
 feature -- Initialization
@@ -406,6 +424,12 @@ feature -- Implementation
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
+		end
+
+	Assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, INTEGER] is
+			-- Cache of assembly types
+		once
+			create Result.make (15)
 		end
 
 feature {NONE} -- Implementation

@@ -32,6 +32,7 @@ feature -- Status Report
 feature -- Status Setting
 
 	object_id: INTEGER is
+			-- Runtime Id of `Current'.
 		do
 			if internal_object_id = 0 then
 				internal_object_id := eif_object_id (Current)
@@ -44,11 +45,14 @@ feature -- Status Setting
 			-- 
 		require
 			exists: exists
-			not_shared: not shared
 			tracking_reference_disabled: not reference_tracked
 		do
 			reference_tracked := True
-			references_number := 1
+			if not shared then
+				references_number := 1
+			else
+				references_number := -1 -- Shared
+			end
 		end
 
 	decrement_reference is
@@ -58,7 +62,6 @@ feature -- Status Setting
 			-- `delete' is called if the object is not protected.
 		require
 			exists: exists
-			not_shared: not shared
 			tracking_references_started: reference_tracked
 		do
 			if references_number > 0 then
@@ -73,10 +76,11 @@ feature -- Status Setting
 			-- Increment the number of references to this object.
 		require
 			exists: exists
-			not_shared: not shared
 			tracking_references_started: reference_tracked
 		do
-			references_number := references_number + 1
+			if references_number > 0 then
+				references_number := references_number + 1
+			end
 		end
 
 feature {NONE} -- Removal
@@ -84,11 +88,19 @@ feature {NONE} -- Removal
 	dispose is
 			-- Destroy the inner structure of `Current'.
 			--
-			-- This function should be called by the GC when the
-			-- object is collected or by the user if `Current' is
-			-- no more usefull. 
+			-- This function is called by the GC when the
+			-- object is collected, the developer should
+			-- use `delete'. 
 		do
 			if exists and then not shared then
+				debug ("WEL")
+					if reference_tracked and references_number > 0 then
+						io.putstring ("Warning, reference tracking was enabled for the following object%N")
+						io.putstring ("but `reference_number' was not equal to zero at dispose time%N")
+						print (Current)
+						io.new_line
+					end
+				end
 				destroy_item
 			end
 			if internal_object_id /= 0 then
@@ -96,9 +108,31 @@ feature {NONE} -- Removal
 			end
 		end
 
+feature -- Removal
+
+	delete is
+			-- Destroy the inner structure of `Current'.
+			--
+			-- Call this function when Current is no more needed
+		require
+			reference_not_tracked: not reference_tracked
+		do
+			if exists and then (not shared) then
+				destroy_item
+			end
+		ensure
+			destroyed: not exists
+		end
+
+feature {NONE} -- Removal
+
 	destroy_item is
 			-- Ensure the current object is destroyed.
+		require
+			exists: exists
 		deferred
+		ensure
+			destroyed: not exists
 		end
 
 	internal_object_id: INTEGER

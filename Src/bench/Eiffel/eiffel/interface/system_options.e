@@ -413,7 +413,7 @@ feature -- Update
 			has_syntax_warning_set: has_syntax_warning = b
 		end
 	
-	set_old_verbatim_strings (b: BOOLEAN) is
+	set_has_old_verbatim_strings (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings' to `b'.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -425,7 +425,7 @@ feature -- Update
 				has_old_verbatim_strings = b
 		end
 	
-	set_old_verbatim_strings_warning (b: BOOLEAN) is
+	set_has_old_verbatim_strings_warning (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings_warning' to `b'.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then

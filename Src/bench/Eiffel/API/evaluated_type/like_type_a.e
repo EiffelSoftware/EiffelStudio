@@ -112,8 +112,16 @@ feature -- Primitives
 
 	type_i: TYPE_I is
 			-- Reduced type of `actual_type'
+		local
+			cl_type : CL_TYPE_I
 		do
 			Result := actual_type.type_i
+			cl_type ?= Result
+
+			if cl_type /= Void then
+				-- Remember that it's an anchored type 
+				cl_type.set_cr_info (create_info)
+			end
 		end
 
 	meta_type: TYPE_I is

@@ -9,8 +9,18 @@ class
 
 inherit
 	WIZARD_COM_PROJECT_BOX_IMP
+		redefine
+			show
+		end
 
 	WIZARD_VALIDITY_CHECKER
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
+	WIZARD_SHARED_DATA
 		undefine
 			default_create,
 			copy,
@@ -27,11 +37,58 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			initialize_checker
-			definition_file_box.setup ("Component definition file:", "definition_key", agent is_valid_file_name (?, "Invalid component definition file"), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
+			definition_file_box.setup ("Component definition file:", "definition_key", agent is_valid_definition_file (?, Invalid_component_file), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
+		end
+
+feature -- Basic Operations
+
+	update_environment is
+			-- Update `environment' according to active file name.
+		local
+			l_file_name: STRING
+		do
+			l_file_name := definition_file_box.value.as_lower
+			if is_valid_file_name (l_file_name, Invalid_component_file) then
+				if l_file_name.substring_index (".idl", l_file_name.count - 3) = l_file_name.count - 3 then
+					environment.set_idl_file_name (l_file_name)
+					marshaller_box.show
+				else
+					environment.set_type_library_file_name (l_file_name)
+					environment.set_idl (False)
+					marshaller_box.hide
+				end
+				environment.set_project_name (l_file_name.substring (l_file_name.last_index_of ('\', l_file_name.count) + 1, l_file_name.count))
+			end
+		end
+		
+	show is
+			-- Update environment and show.
+		do
+			Precursor {WIZARD_COM_PROJECT_BOX_IMP}
+			update_environment
+		end
+		
+feature {NONE} -- Events Handling
+
+	on_use_marshaller is
+			-- Called by `select_actions' of `marshaller_check_button'.
+			-- Set `environment.marshaller_generated' accordingly.
+		do
+			environment.set_marshaller_generated (marshaller_check_button.is_selected)
 		end
 
 feature {NONE} -- Implementation
 
+	is_valid_definition_file (a_file_name, a_error_message: STRING): BOOLEAN is
+			-- Is `a_file_name' a valid definition file?
+			-- Show marshaller box if `a_file_name' corresponds to an IDL file.
+		do
+			Result := is_valid_file_name (a_file_name, a_error_message)
+			if Result then
+				update_environment
+			end
+		end
+		
 	is_valid_file_name (a_file_name, a_error_message: STRING): BOOLEAN is
 			-- Is `a_file_name' a valid file name?
 		require
@@ -40,6 +97,11 @@ feature {NONE} -- Implementation
 			Result := not a_file_name.is_empty and then (create {RAW_FILE}.make (a_file_name)).exists
 			set_error (Result, a_error_message)
 		end
-		
+
+feature {NONE} -- Private Access
+
+	Invalid_component_file: STRING is "Invalid component definition file"
+			-- Invalid component file error
+
 end -- class WIZARD_COM_PROJECT_BOX
 

@@ -65,7 +65,7 @@ feature -- Access
 			-- System.Windows.Forms.ComboBox 
 
 	i_sleep_time: INTEGER
-	timed_progress: THREAD
+	timed_progress: SYSTEM_THREAD
 
 feature -- Implementation
 
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 				loop
 					dummy := invoke (l_mi)
 					sleep_time := 100
-					feature {THREAD}.sleep_integer (i_sleep_time)
+					feature {SYSTEM_THREAD}.sleep_integer (i_sleep_time)
 				end
 			end
 		rescue

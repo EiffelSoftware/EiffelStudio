@@ -13,7 +13,7 @@ default
 	trace (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
+	dotnet_naming_convention (yes)
 	use_cluster_name_as_namespace (no)
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("dll")
@@ -50,13 +50,16 @@ cluster
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; "EIFGEN"; 
+			"CVS"; "EIFGEN"; "interop"
+		end
+
+	all interop:		"$EIFFEL_SRC\dotnet\consumer\support\interop"
+		exclude
+			"CVS"; "EIFGEN"; "interop"
+		default
+			namespace ("Interop")
 		visible
 			COM_CACHE_MANAGER
-				end
-			COM_ASSEMBLY_INFORMATION
-				end
-			CACHE_REFLECTION
 				end
 		end
 

@@ -61,6 +61,24 @@ feature -- Access
 			end
 		end
 
+feature -- Removal
+
+	delete is
+			-- Delete the current gdi object
+		deferred
+		ensure
+			not_exists: not exists
+		end
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Ensure the current gdi object is deleted when
+			-- garbage collected.
+		do
+			delete
+		end
+
 feature {NONE} -- Externals
 
 	cwin_load_image (hinstance, name: POINTER; type, width, height,

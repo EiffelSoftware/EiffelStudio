@@ -86,7 +86,7 @@ feature {EV_ANY_I} -- Implementation
 			if radio_group /= Void then
 				remove_from_radio_group
 			end
-			radio_group := a_list
+			internal_set_radio_group (a_list)
 			if radio_group.is_empty then
 				enable_select
 			end
@@ -115,6 +115,14 @@ feature {EV_ANY_I} -- Implementation
 			void: radio_group = Void
 		end
 		
+feature {EV_CONTAINER_IMP} -- Implementation
+
+	internal_set_radio_group (a_list: like radio_group) is
+			-- Assign `a_list' to `radio_group'.
+		do
+			radio_group := a_list			
+		end
+	
 invariant
 	
 	peers_not_void: peers /= Void

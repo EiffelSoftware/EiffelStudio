@@ -239,7 +239,7 @@ feature -- Basic operations
 			end
 			if item_imp = selected_item_imp then
 				item_imp.deselect_actions.call (Void)
-				deselect_actions.call ([item_imp.interface])
+				deselect_actions.call (Void)
 			end
 			all_ev_children.remove (item_imp.h_item)
 			delete_item (item_imp)

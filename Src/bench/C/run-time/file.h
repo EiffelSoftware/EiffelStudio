@@ -103,37 +103,50 @@ extern "C" {
  * Functions declaration.
  */
 
+extern char *file_open_mode(int how, char mode);
 extern EIF_POINTER	file_open(char *name, int how);
-extern EIF_POINTER	file_dopen(int fd, int how);
-extern EIF_POINTER	file_reopen(char *name, int how, FILE *old);
+extern EIF_POINTER file_dopen(int fd, int how);
+extern EIF_POINTER file_reopen(char *name, int how, FILE *old);
+extern EIF_POINTER file_binary_open(char *name, int how);
+extern EIF_POINTER file_binary_dopen(int fd, int how);
+extern EIF_POINTER file_binary_reopen(char *name, int how, FILE *old);
 extern void file_close(FILE *fp);
 extern void file_flush(FILE *fp);
+extern EIF_INTEGER file_size (FILE *fp);
 extern EIF_BOOLEAN file_feof(FILE *fp);
 extern void file_pi(FILE *f, EIF_INTEGER number);
 extern void file_pr(FILE *f, EIF_REAL number);
+extern void file_pib(FILE *f, EIF_INTEGER number);
+extern void file_prb(FILE *f, EIF_REAL number);
 extern void file_ps(FILE *f, char *str, EIF_INTEGER len);
+extern void file_pt_ps(FILE *f, char *str, EIF_INTEGER len);
 extern void file_pc(FILE *f, char c);
 extern void file_pd(FILE *f, EIF_DOUBLE val);
+extern void file_pdb(FILE *f, EIF_DOUBLE val);
 extern void file_tnwl(FILE *f);
 extern void file_append(FILE *f, FILE *other, EIF_INTEGER l);
 extern void file_tnil(FILE *f);
 extern EIF_INTEGER file_gi(FILE *f);
 extern EIF_REAL file_gr(FILE *f);
 extern EIF_DOUBLE file_gd(FILE *f);
-extern EIF_CHARACTER	file_gc(FILE *f);
+extern EIF_INTEGER file_gib(FILE *f);
+extern EIF_REAL file_grb(FILE *f);
+extern EIF_DOUBLE file_gdb(FILE *f);
+extern EIF_CHARACTER file_gc(FILE *f);
 extern EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
 extern EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound);
 extern EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
 extern EIF_CHARACTER file_lh(FILE *f);
 extern void file_chown(char *name, int uid);
 extern void file_chgrp(char *name, int gid);
-extern void file_stat (char *path, struct stat *buf);
-extern EIF_INTEGER file_info (struct stat *buf, int op);
+extern void file_stat(char *path, struct stat *buf);
+extern EIF_INTEGER file_info(struct stat *buf, int op);
 extern EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
 extern EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
 extern EIF_BOOLEAN file_exists(char *name);
 extern void file_rename(char *from, char *to);
 extern void file_link(char *from, char *to);
+extern void file_mkdir(char *path);
 extern void file_unlink(char *name);
 extern void file_touch(char *name);
 extern void file_utime(char *name, time_t stamp, int how);
@@ -149,21 +162,24 @@ extern EIF_INTEGER file_fd(FILE *f);
 extern char *file_owner(int uid);
 extern char *file_group(int gid);
 
-#ifdef EIF_WIN_31
-	/* The following routines are already defined with the correct prototype */
-#else
+#ifdef HAS_GETGROUPS
+/* Does the list of groups the user belongs to include `gid'? */
+extern EIF_BOOLEAN eif_group_in_list(int gid);
+#endif
+
 	/* FIXME: include the correct header files!!! */
 
 #ifndef HAS_RENAME	/* %%zs added */
 extern int rename(const char *from, const char *to);
 #endif
 
-#ifndef HAS_RMDIR	/* %%zs added */
+#ifndef HAS_RMDIR
 extern int rmdir(const char *path);
 #endif
-#endif
 
-extern EIF_BOOLEAN eif_group_in_list(int gid);
+#ifndef HAS_MKDIR
+extern int mkdir(char *path);
+#endif
 
 #ifdef __cplusplus
 }

@@ -11,7 +11,6 @@ inherit
 
 	TOP_WINDOWS
 		redefine
-			make,
 			class_name,
 			child_has_resized
 		end
@@ -26,6 +25,14 @@ feature -- Initialization
 		do
 			!! private_attributes
 			private_title := a_top_shell.identifier
+			if private_title.is_integer then
+				!! class_icon.make_by_id (private_title.to_integer)
+				if not class_icon.exists then	
+					class_icon := null_class_icon
+				end
+			else
+				class_icon := null_class_icon
+			end
 			a_top_shell.set_wm_imp (Current)
 			set_managed (True)
 			private_attributes.set_x (default_x)

@@ -163,8 +163,8 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			-- Storage info for Current type in class `classc'
 		local
 			gens: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
-            gen_name: STRING
-        do
+			gen_name: STRING
+		do
 			gens := classc.generics;
 			if gens /= Void and then position <= gens.count then
 				!! gen_name.make (0);

@@ -292,6 +292,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			wel_font.delete
 			wel_font := Void
+			is_destroyed := True
 		end
 
 	update_preferred_faces (a_face: STRING) is

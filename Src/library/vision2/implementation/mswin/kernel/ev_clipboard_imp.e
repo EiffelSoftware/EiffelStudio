@@ -36,6 +36,7 @@ feature {NONE}-- Initialization
 	destroy is
 		do
 			--| FIXME
+			is_destroyed := True
 		end
 
 feature -- Access

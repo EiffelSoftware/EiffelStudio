@@ -105,12 +105,15 @@ feature -- Queries
 				db_selection.unset_action
 				db_selection.set_query (s)
 				db_selection.execute_query
-				db_selection.load_result
-				db_selection.terminate
 				if db_selection.is_ok then
-					create tuple.copy (db_selection.cursor)
-					Result := tuple.item (1)
-				else
+					db_selection.load_result
+					db_selection.terminate
+					if db_selection.is_ok then
+						create tuple.copy (db_selection.cursor)
+						Result := tuple.item (1)
+					end
+				end
+				if not db_selection.is_ok then
 					has_error := True
 					error_message := session_control.error_message
 				end
@@ -141,17 +144,22 @@ feature -- Queries
 				create db_actions.make (db_selection, an_obj)
 				db_selection.set_action (db_actions)
 				db_selection.execute_query
-				db_selection.load_result
-				db_selection.terminate
 				if db_selection.is_ok then
-					Result := db_actions.list
-				else
+					db_selection.load_result
+					db_selection.terminate
+					if db_selection.is_ok then
+						Result := db_actions.list
+					end
+				end
+				if not db_selection.is_ok then
 					has_error := True
 					error_message := session_control.error_message
+					create Result.make (0)
 				end
 			else
 				has_error := True
 				error_message := unexpected_error (list_select_name)
+				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void

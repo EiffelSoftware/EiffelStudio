@@ -94,7 +94,7 @@ feature -- Basic operation
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			gtk_editable_select_region (widget, 0, text_length)
+			gtk_editable_select_region (widget, 0, 0)
 		end
 
 	delete_selection is

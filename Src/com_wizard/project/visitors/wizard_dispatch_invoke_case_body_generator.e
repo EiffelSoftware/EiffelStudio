@@ -172,29 +172,9 @@ feature -- Basic operations
 			counter: INTEGER
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			body.append (Tmp_variable_name)
-			body.append (Space_equal_space)
-			body.append (Open_parenthesis)
-			body.append (Variantarg)
-			body.append (Space)
-			body.append (Asterisk)
-			body.append (Asterisk)
-			body.append (Close_parenthesis)
-			body.append (Co_task_mem_alloc)
-			body.append (Space_open_parenthesis)
+			body.append ("tmp_value = (VARIANTARG **)CoTaskMemAlloc (")
 			body.append_integer (argument_count)
-			body.append (Asterisk)
-			body.append (Sizeof)
-			body.append (Space_open_parenthesis)
-			body.append (Variantarg)
-			body.append (Asterisk)
-			body.append (Close_parenthesis)
-			body.append (Close_parenthesis)
-			body.append (Semicolon)
-			body.append (New_line)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
+			body.append (" * sizeof (VARIANTARG*));%N%N%T%T%T%T")
 			body.append ("VARTYPE vt_type [] = {")
 			from
 				func_desc.arguments.start
@@ -209,74 +189,12 @@ feature -- Basic operations
 				counter := counter + 1
 				func_desc.arguments.forth
 			end
-			body.append ("};")
-			body.append (New_line)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-			
-			body.append (If_keyword)
-			body.append (Space_open_parenthesis)
-			body.append ("cNamedArgs")
-			body.append (Space)
-			body.append (More)
-			body.append (Zero)
-			body.append (Close_parenthesis)
-
-			-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab)
-			body.append (For)
-			body.append (Space_open_parenthesis)
-			body.append ("i = 0; i < ")
-			body.append ("cNamedArgs")
-			body.append (Semicolon)
-			body.append (Space)
-			body.append ("i++")
-			body.append (Close_parenthesis)
-
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab)
-			body.append (Open_curly_brace)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab_tab)
-						
-			body.append ("tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);")
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab)
-			body.append (Close_curly_brace)
-			body.append (New_line)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
-			-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
-			body.append (For)
-			body.append (Space_open_parenthesis)
-			body.append ("i = ")
-			body.append ("cArgs")
-			body.append (Semicolon)
-			body.append (Space)
-			body.append ("i > ")
-			body.append ("cNamedArgs")
-			body.append (Semicolon)
-			body.append (Space)
-			body.append ("i--")
-			body.append (Close_parenthesis)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-			body.append (Open_curly_brace)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab)
-
-			
-			body.append ("tmp_value [cArgs - i] = &(rgvarg [i - 1]);")
-			
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-			body.append (Close_curly_brace)
-			body.append (New_line)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
+			body.append ("};%N%N%T%T%T%T")
+			body.append ("if (cNamedArgs > 0)%N%T%T%T%T%T")
+			body.append ("for (i = 0; i < cNamedArgs; i++)%N%T%T%T%T%T{%N%T%T%T%T%T%T")
+			body.append ("tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);%N%T%T%T%T%T}%N%T%T%T%T")
+			body.append ("for (i = cArgs; i > cNamedArgs; i--)%N%T%T%T%T{%N%T%T%T%T%T")
+			body.append ("tmp_value [cArgs - i] = &(rgvarg [i - 1]);%N%T%T%T%T}%N%T%T%T%T")
 			from
 				func_desc.arguments.start
 				counter := 0
@@ -284,29 +202,13 @@ feature -- Basic operations
 				counter = argument_count 
 			loop
 				visitor := func_desc.arguments.item.type.visitor
-
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
-				body.append (get_argument_from_variant 
-					(func_desc.arguments.item.type, 
-					"arg_" + counter.out, 
-					"tmp_value %(" + counter.out +"%)", 
-					counter, argument_count))
-				
-				if 
-					(visitor.is_interface_pointer or
-					visitor.is_coclass_pointer) and 
-					not is_paramflag_fout (func_desc.arguments.item.flags)
-				then
+				body.append ("%N%T%T%T%T")
+				body.append (get_argument_from_variant (func_desc.arguments.item.type, "arg_" + counter.out, "tmp_value %(" + counter.out +"%)", counter, argument_count))				
+				if (visitor.is_interface_pointer or visitor.is_coclass_pointer) and not is_paramflag_fout (func_desc.arguments.item.flags) then
 					release_interfaces.append (release_interface_pointer_code ("arg_" + counter.out))
-				elseif
-					(visitor.is_interface_pointer_pointer or
-					visitor.is_coclass_pointer_pointer) and
-					not is_paramflag_fout (func_desc.arguments.item.flags)
-				then
+				elseif (visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer) and not is_paramflag_fout (func_desc.arguments.item.flags) then
 					release_interfaces.append (release_interface_pointer_pointer_code ("arg_" + counter.out))
 				end
-
 				counter := counter + 1
 				func_desc.arguments.forth
 			end
@@ -391,43 +293,29 @@ feature -- Basic operations
 			counter: INTEGER
 		do
 			if return_hresult then
-				body.append (Hresult_variable_name)
-				body.append (Space_equal_space)
+				body.append ("hr = ")
 			end
 			body.append (func_desc.name)
-			body.append (Space_open_parenthesis)
-
-
+			body.append (" (")
 			if has_arguments then
-
 				from
 					counter := 0
 				until
 					counter = argument_count 
 				loop
-
-					body.append (Space)
-					body.append ("arg_")
+					body.append (" arg_")
 					body.append_integer (counter)
-					body.append (Comma)
-
-
+					body.append (",")
 					counter := counter + 1
 				end
 				if not has_result  then
 					body.remove (body.count)
 				end
 			end
-
 			if has_result  then
-				body.append (Ampersand)
-				body.append (C_result)
+				body.append ("&result")
 			end
-
-			body.append (Close_parenthesis)
-			body.append (Semicolon)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
+			body.append (");%N%T%T%T%T")
 		end
 		
 	function_case_body: STRING is
@@ -439,71 +327,35 @@ feature -- Basic operations
 		do
 			dispatch := func_desc.func_kind = func_dispatch
 			
-			create body.make (10000)
-			body.append (New_line_tab_tab_tab)
-			body.append (Open_curly_brace)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
-			body.append (If_keyword)
-			body.append (Space_open_parenthesis)
-			body.append (Dispparam_parameter)
-			body.append (Struct_selection_operator)
-			body.append ("cArgs")
-			body.append (Space)
-			body.append (C_not_equal)
-			body.append (Space)
+			create body.make (1000)
+			body.append ("%N%T%T%T{%N%T%T%T%T")
+			body.append ("if (pDispParams->cArgs != ")
 			body.append_integer (argument_count )
-			body.append (Close_parenthesis)
-			body.append (New_line_tab_tab_tab)
-
-			body.append (Tab_tab)
-			body.append (Return)
-			body.append (Space)
-			body.append ("DISP_E_BADPARAMCOUNT")
-			body.append (Semicolon)
-			body.append (New_line)
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
+			body.append (")%N%T%T%T%T%T")
+			body.append ("return DISP_E_BADPARAMCOUNT;%N%N%T%T%T%T")
 			if has_arguments then
 				process_arguments 
 			end
-			
 			if has_result  then
 				process_result (result_type_visitor )
 			end
-			
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-
+			body.append ("%N%T%T%T%T")
 			call_vtable_function 
-			
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab)
-			
+			body.append ("%N%T%T%T%T")
 			if return_hresult then
 				body.append (check_failer (argument_count, excepinfo_setting, "DISP_E_EXCEPTION"))
 			end
-
 			if not local_buffer.is_empty then
-				body.append (Tab)
+				body.append ("%T")
 				body.append (local_buffer)
-				body.append (New_line_tab_tab_tab)
+				body.append ("%N%T%T%T")
 			end
-
 			if has_arguments  then
-				body.append (Tab)
+				body.append ("%T")
 				body.append (release_interfaces)
-
-				body.append (Co_task_mem_free)
-				body.append (Space_open_parenthesis)
-				body.append (Tmp_variable_name)
-				body.append (Close_parenthesis)
-				body.append (Semicolon)
-				body.append (New_line_tab_tab_tab)
+				body.append ("CoTaskMemFree (tmp_value);%N%T%T%T")
 			end		
-			body.append (Close_curly_brace)
+			body.append ("}")
 			Result := body
 		ensure
 			non_void_body: Result /= Void

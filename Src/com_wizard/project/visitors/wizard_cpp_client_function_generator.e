@@ -25,7 +25,7 @@ feature -- Basic operations
 		local
 			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor, l_pointed_visitor: WIZARD_DATA_TYPE_VISITOR
 			l_header_file: STRING
 		do
 			create Result.make (1000)
@@ -40,9 +40,11 @@ feature -- Basic operations
 				if is_paramflag_fretval (l_arguments.item.flags) then
 					l_descriptor ?= l_arguments.item.type
 					if l_descriptor /= Void then
-						l_visitor := l_descriptor.pointed_data_type_descriptor.visitor
+						l_pointed_visitor := l_descriptor.pointed_data_type_descriptor.visitor
 					end
-					set_return_type (l_visitor)
+				end
+				if l_pointed_visitor /= Void and then l_pointed_visitor.vt_type /= Vt_void then
+					set_return_type (l_pointed_visitor)
 				else
 					Result.append (" /* [")
 					if is_paramflag_fout (l_arguments.item.flags) then

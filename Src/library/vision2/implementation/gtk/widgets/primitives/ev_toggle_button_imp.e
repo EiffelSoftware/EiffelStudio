@@ -46,7 +46,7 @@ feature -- Status setting
                         -- Set Current toggle on and set
                         -- pressed to True.
                 do
-			gtk_toggle_button_set_state (widget, button_pressed)
+			gtk_toggle_button_set_active (widget, button_pressed)
                 end
 
         toggle is

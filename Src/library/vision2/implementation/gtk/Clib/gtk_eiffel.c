@@ -106,6 +106,52 @@ void mclist_click_column_callback(GtkWidget *clist,
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
+void toggle_button_state_selection_callback(GtkToggleButton *togglebutton, gpointer data){
+	callback_data_t *pcbd;
+	int signal_type;
+	//Signal type is either 1, 2 or 3
+	//states :   Toggled = 1
+	//	    Selected (toggle on) = 2
+	//	    Unselected (toggle off) = 3
+	gboolean toggled;
+	pcbd = (callback_data_t *)data;
+	signal_type = (int)(pcbd->extra_data);
+	toggled = togglebutton->active;
+
+	if (signal_type == 1)
+	{
+	//Call toggled routine
+		(pcbd->rtn)(eif_access(pcbd->obj),
+		eif_access(pcbd->argument),
+	    	eif_access(pcbd->ev_data));
+
+	}
+	else if (signal_type == 2) 
+	{
+	//Call selected routine if button is selected (toggle on)
+		if (toggled == 1)
+		{
+			//If button is selected then call callback
+			(pcbd->rtn)(eif_access(pcbd->obj),
+ 			eif_access(pcbd->argument),
+    			eif_access(pcbd->ev_data));
+	
+		}
+	}
+	else if (signal_type == 3)
+	{
+	//Call unselected routine if button is unselected (toggle off)
+		if (toggled == 0)
+		{
+			//If button is unselected then call callback
+			(pcbd->rtn)(eif_access(pcbd->obj),
+			eif_access(pcbd->argument),
+			eif_access(pcbd->ev_data));
+		}
+	}
+}
+	
+		
 void mclist_row_selection_callback(GtkWidget *clist,
                                gint row,
                                gint column,
@@ -331,7 +377,7 @@ void c_gtk_signal_destroy_data (gpointer data)
 
 /*********************************
  *
- * Function `c_gtk_signal_connect'
+ * Function `c_gtk_signal_connect_general'
  *
  * Note : Connect a callback to a widget/event pair 
  *  
@@ -468,7 +514,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 			if ((strcmp(name, "tree_expand") == 0) || (strcmp(name, "tree_collapse") == 0))
 			{
 				return (gtk_signal_connect (widget, name, 
-					GTK_SIGNAL_FUNC(ctree_row_subtree_callback), 
+					GTK_SIGNAL_FUNC(ctree_row_subtree_callback),
 					(gpointer)pcbd));
 			}
 			else
@@ -491,6 +537,25 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 				return (gtk_signal_connect (widget, name, 
 					GTK_SIGNAL_FUNC(list_selection_child_callback), 
 					(gpointer)pcbd));
+			}
+			if (strcmp(name, "toggled_on_off") == 0)
+			{
+				return (gtk_signal_connect (widget, "toggled", 
+					GTK_SIGNAL_FUNC(toggle_button_state_selection_callback), 
+					(gpointer)pcbd));
+
+			}		
+			if (strcmp(name, "toggled_on") == 0)
+			{
+				return (gtk_signal_connect (widget, "toggled", 
+					GTK_SIGNAL_FUNC(toggle_button_state_selection_callback), 
+					(gpointer)pcbd));			
+			}
+			if (strcmp(name, "toggled_off") == 0)
+			{
+				return (gtk_signal_connect (widget, "toggled", 
+					GTK_SIGNAL_FUNC(toggle_button_state_selection_callback), 
+					(gpointer)pcbd));			
 			}
 			else
 			{
@@ -1432,7 +1497,6 @@ static char * xpm_data[] = {
        "                "};
 
 
-
 	/*
       "1 1 1 1",
       "       c None",
@@ -1500,17 +1564,25 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
 GtkWidget* c_gtk_pixmap_create_with_size ( GtkWidget *window_parent,
 				  gint width, gint height)
 {
-//    GdkPixmap *pixmap;
-//    GdkBitmap *mask;
-	
+	GdkPixmap *pixmap;
+        GdkBitmap *mask;
+	char* empty_bitmap_data;
+	gint array_size;
+
 	if (!GTK_WIDGET_REALIZED(window_parent)) {
 		gtk_widget_realize (window_parent);
-	}
-return ((GtkWidget *) gdk_pixmap_new (window_parent->window, width, height, -1));
-//    pixmap =  gdk_pixmap_new (window_parent, width, height, -1);
-//	return (gtk_pixmap_new (pixmap, ));
-}
-
+	}	
+	
+	array_size = ((width * height)/8)+1;
+	empty_bitmap_data = (char *)calloc(array_size,1);
+	memset (empty_bitmap_data, 255, array_size);
+	mask = (GdkBitmap *)gdk_bitmap_create_from_data (window_parent->window,
+				empty_bitmap_data, width, height);
+	pixmap = (GdkPixmap *) gdk_pixmap_new(window_parent->window, width, height, -1);
+	free (empty_bitmap_data);
+	
+	return (gtk_pixmap_new (pixmap, mask));
+    }
 /*********************************
  *
  * Function : `c_gtk_pixmap_read_from_xpm'

@@ -17,7 +17,7 @@
 */
 
 #include "config.h"
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>		/* %%ss added for chdir, getcwd */
 #include <windows.h>
@@ -42,10 +42,6 @@
 
 #ifdef DEBUG
 #include "interp.h"					/* For idump() */
-#endif
-
-#ifdef EIF_WIN32
-extern char *win_eif_getenv (char *k, char *app); /* %%ss added. In extra/win32/ipc/shared/env.c */
 #endif
 
 rt_private void cecil_updt(void);			/* Cecil update */
@@ -84,45 +80,22 @@ rt_public void update(char ignore_updt)
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
-#ifdef EIF_WINDOWS
-		chdir ("..\\..");
-#endif
 		return;
 	}
 
 /* TEMPORARY */
-#ifdef EIF_WIN_31
 #define UPDTLEN 10
-#define UPDT_NAME "\\melted.eif"
-	{
-#ifdef EIF_WINDOWS
-		char *inipath; /* %%ss moved from above*/
-		char buf[128]; /* %%ss moved from above*/
-#endif
-		inipath = eif_getenv ("ES4INI");
-		GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
-		WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
-		if (strlen(buf)) 
-			meltpath = buf;
-	}
-#elif defined EIF_WIN32
 
-#define UPDTLEN 10
-#define UPDT_NAME "\\melted.eif"
-meltpath = win_eif_getenv ("MELT_PATH", "es4");
-
+#ifdef EIF_WIN32
+#	define UPDT_NAME "\\melted.eif"
 #elif defined __VMS
-
-#define UPDTLEN 10
-#define UPDT_NAME "melted.eif"
-	meltpath = eif_getenv ("MELT_PATH");
-
+#	define UPDT_NAME "melted.eif"
 #else
-#define UPDTLEN 10
-#define UPDT_NAME "/melted.eif"
+#	define UPDT_NAME "/melted.eif"
+#endif
+
 	meltpath = eif_getenv ("MELT_PATH");
 
-#endif
 	if (meltpath) {
 		filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 	}
@@ -130,10 +103,12 @@ meltpath = win_eif_getenv ("MELT_PATH", "es4");
 		meltpath = NULL;
 		filename = (char *)cmalloc (UPDTLEN + 3);
 	}
+
 	if (filename == (char *)0){
 		enomem(MTC_NOARG);
 		exit (1);
 	}
+
 	if (meltpath)
 		strcpy (filename, meltpath);
 	else 
@@ -142,6 +117,7 @@ meltpath = win_eif_getenv ("MELT_PATH", "es4");
 #else
 		strcpy (filename, ".");
 #endif /* __VMS */
+
 	strcat(filename, UPDT_NAME);
 
 #ifdef DEBUG
@@ -149,18 +125,15 @@ meltpath = win_eif_getenv ("MELT_PATH", "es4");
 	dprintf(1)("Reading .UPDT in: %s\n", filename);
 #endif
 
-if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	print_err_msg(stderr, "Error: could not open Eiffel update file %s\n", filename);
-	print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
-	exit(1);
-}
+	if ((fil = fopen(filename, "r")) == (FILE *) 0) {
+		print_err_msg(stderr, "Error: could not open Eiffel update file %s\n", filename);
+		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
+		exit(1);
+	}
 	xfree (filename);
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();
-#ifdef EIF_WINDOWS
-		chdir ("..\\..");
-#endif
 		fclose(fil);
 		return;
 	}
@@ -175,9 +148,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	*/
 
 	if (c)
-	{
 		eraise ("Unable to interpret Java code", EN_EXT);
-	}
 
 		/* Update the root class and the creation feature ids */
 	root_class_updt ();
@@ -343,9 +314,6 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 
 /* TEMPORARY */
 fclose(fil);
-#ifdef EIF_WINDOWS
-chdir ("..\\..");
-#endif
 }
 
 /* TEMPORARY */

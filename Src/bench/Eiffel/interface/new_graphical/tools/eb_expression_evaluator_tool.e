@@ -242,8 +242,10 @@ feature {NONE} -- Event handling
 			-- Toggle state of the selected expressions from the list.
 		local
 			sel: LIST [EV_MULTI_COLUMN_LIST_ROW]
+			sel_item: EV_MULTI_COLUMN_LIST_ROW
 			cv_expr: EB_EXPRESSION
 		do
+			sel_item := ev_list.selected_item
 			sel := ev_list.selected_items
 			from
 				sel.start
@@ -259,7 +261,12 @@ feature {NONE} -- Event handling
 				refresh_expression (cv_expr)
 				sel.forth
 			end
-			on_item_deselected (Void)
+			if not sel.is_empty then
+				on_item_deselected (Void)
+			end
+			if sel_item /= Void then
+				sel_item.enable_select			
+			end
 		end
 
 	remove_selected is
@@ -267,7 +274,9 @@ feature {NONE} -- Event handling
 		local
 			sel: LIST [EV_MULTI_COLUMN_LIST_ROW]
 			cv_expr: EB_EXPRESSION
+			sel_index: INTEGER
 		do
+			sel_index := ev_list.index_of (ev_list.selected_item, 1)
 			sel := ev_list.selected_items
 			from
 				sel.start
@@ -280,7 +289,11 @@ feature {NONE} -- Event handling
 				sel.forth
 			end
 			if not sel.is_empty then
-				on_item_deselected (Void)
+				if ev_list.valid_index (sel_index) then
+					ev_list.i_th (sel_index).enable_select
+				else
+					on_item_deselected (Void)
+				end
 			end
 		end
 
@@ -358,13 +371,13 @@ feature {NONE} -- Event handling
 			l_expr := dlg.new_expression
 			expressions.extend (l_expr)
 			if l_expr.evaluation_disabled then
-				ev_list.extend (disabled_expression_to_row (l_expr))
+				ev_list.extend (disabled_expression_to_row (l_expr, Void))
 			else
 				if Application.is_running and Application.is_stopped then
 					dlg.new_expression.evaluate
-					ev_list.extend (expression_to_row (l_expr))
+					ev_list.extend (expression_to_row (l_expr, Void))
 				else
-					ev_list.extend (unevaluated_expression_to_row (l_expr))
+					ev_list.extend (unevaluated_expression_to_row (l_expr, Void))
 				end
 			end
 		end
@@ -414,13 +427,13 @@ feature {NONE} -- Implementation
 			loop
 				l_expr := expressions.item
 				if l_expr.evaluation_disabled then
-					lst.extend (disabled_expression_to_row (l_expr))
+					lst.extend (disabled_expression_to_row (l_expr, Void))
 				else					
 					if eval then
 						expressions.item.evaluate
-						lst.extend (expression_to_row (l_expr))
+						lst.extend (expression_to_row (l_expr, Void))
 					else
-						lst.extend (unevaluated_expression_to_row (l_expr))
+						lst.extend (unevaluated_expression_to_row (l_expr, Void))
 					end
 				end
 
@@ -428,8 +441,21 @@ feature {NONE} -- Implementation
 			end
 			ev_list.append (lst)
 		end
+		
+	recycle_row_item (a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
+			-- 
+		do
+			if a_item /= Void then
+				Result := a_item
+				Result.wipe_out
+				Result.remove_pebble
+				Result.pointer_double_press_actions.wipe_out
+			else
+				create Result
+			end			
+		end		
 
-	expression_to_row (expr: EB_EXPRESSION): EV_MULTI_COLUMN_LIST_ROW is
+	expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 		require
 			valid_expression: expr /= Void
@@ -438,10 +464,10 @@ feature {NONE} -- Implementation
 			ost: OBJECT_STONE
 			res: STRING
 			typ: STRING
---			en_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
-			create Result
+				-- Recycle Row ..
+			Result := recycle_row_item (a_item)
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			if expr.error_message = Void then
@@ -454,10 +480,6 @@ feature {NONE} -- Implementation
 				
 				if dmp.address /= Void then
 					create ost.make (dmp.address, " ", dmp.dynamic_class)
---					en_drv ?= dmp.eifnet_debug_value
---					if en_drv /= Void then
---						application.imp_dotnet.keep_object (en_drv)
---					end
 					Result.set_pebble (ost)
 					Result.set_accept_cursor (ost.stone_cursor)
 					Result.set_deny_cursor (ost.X_stone_cursor)
@@ -479,11 +501,12 @@ feature {NONE} -- Implementation
 			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 		end
 		
-	unevaluated_expression_to_row (expr: EB_EXPRESSION): EV_MULTI_COLUMN_LIST_ROW is
+	unevaluated_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 			-- `expr' is assumed not to have been evaluated.
 		do
-			create Result
+				-- Recycle Row ..
+			Result := recycle_row_item (a_item)
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			Result.extend (Unevaluated)
@@ -491,13 +514,14 @@ feature {NONE} -- Implementation
 			Result.set_data (expr)
 		end
 		
-	disabled_expression_to_row (expr: EB_EXPRESSION): EV_MULTI_COLUMN_LIST_ROW is
+	disabled_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 			-- `expr' is assumed to be disable for evaluation.
 		require
 			expression_evaluation_disabled: expr.evaluation_disabled
 		do
-			create Result
+				-- Recycle Row ..
+			Result := recycle_row_item (a_item)
 --			Result.extend (expr.context)
 			Result.extend ("Disabled")
 			Result.extend (expr.expression)
@@ -512,6 +536,7 @@ feature {NONE} -- Implementation
 			valid_expr: expr /= Void
 		local
 			pos: INTEGER
+			l_item: EV_MULTI_COLUMN_LIST_ROW
 		do
 			from
 				ev_list.start
@@ -524,14 +549,15 @@ feature {NONE} -- Implementation
 				ev_list.forth
 			end
 			ev_list.go_i_th (pos)
+			l_item := ev_list.item
 			if expr.evaluation_disabled then
-				ev_list.replace (disabled_expression_to_row (expr))
+				ev_list.replace (disabled_expression_to_row (expr, l_item))
 			else				
 				if Application.is_running and Application.is_stopped then
 					expr.evaluate
-					ev_list.replace (expression_to_row (expr))
+					ev_list.replace (expression_to_row (expr, l_item))
 				else
-					ev_list.replace (unevaluated_expression_to_row (expr))
+					ev_list.replace (unevaluated_expression_to_row (expr, l_item))
 				end
 			end
 		end
@@ -554,9 +580,9 @@ feature {NONE} -- Implementation
 				if expr.on_context then
 					expr.evaluate
 					if expr.evaluation_disabled then
-						ev_list.replace (disabled_expression_to_row (expr))						
+						ev_list.replace (disabled_expression_to_row (expr, row))						
 					else
-						ev_list.replace (expression_to_row (expr))
+						ev_list.replace (expression_to_row (expr, row))
 					end
 				end
 				ev_list.forth

@@ -12,7 +12,7 @@ inherit
 		undefine
 			compilation_id, is_precompiled
 		redefine
-			generated_id
+			generated_id, counter, class_array
 		end;
 
 	ENCODER
@@ -43,6 +43,20 @@ feature {COMPILER_EXPORTER} -- Access
 				!! Result.make (5);
 				Result.append_integer (id)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	counter: CLASS_SUBCOUNTER is
+			-- Counter associated with the id
+		do
+			Result := Class_counter.item (compilation_id)
+		end
+
+	class_array: ARRAY [CLASS_C] is
+			-- Classes compiled during compilation `compilation_id'
+		do
+			Result := System.classes.item (compilation_id)
 		end
 
 end -- class P_CLASS_ID

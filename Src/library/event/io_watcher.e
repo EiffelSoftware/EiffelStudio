@@ -104,22 +104,22 @@ feature {NONE} -- Implementation
 	on_event (condition: INTEGER) is
 			-- Call action sequence corresponding to `condition'.
 		do
-			if condition.bit_and (G_io_in).to_boolean then
+			if condition & G_io_in /= 0 then
 				read_actions.call ([])
 			end
-			if condition.bit_and (G_io_out).to_boolean then
+			if condition & G_io_out /= 0 then
 				--FIXME
 			end
-			if condition.bit_and (G_io_err).to_boolean then
+			if condition & G_io_err /= 0 then
 				error_actions.call ([])
 			end
-			if condition.bit_and (G_io_pri).to_boolean then
+			if condition & G_io_pri /= 0 then
 				exception_actions.call ([])
 			end
-			if condition.bit_and (G_io_hup).to_boolean then
+			if condition & G_io_hup /= 0 then
 				--FIXME
 			end
-			if condition.bit_and (G_io_nval).to_boolean then
+			if condition & G_io_nval /= 0 then
 				--FIXME
 			end
 		end
@@ -136,8 +136,7 @@ feature {NONE} -- Implementation
 
 	G_io_nval: INTEGER is 32
 
-	c_add_watch_callback (object: IO_WATCHER; handle: INTEGER)
-		: INTEGER is
+	c_add_watch_callback (object: IO_WATCHER; handle: INTEGER): INTEGER is
 			-- Set up `on_event' callback for `object' when an event occurs
 			-- on medium referenced by `handle'.
 		external
@@ -176,24 +175,6 @@ invariant
 	medium_has_callback_handle: not (medium /= Void xor callback_handle > 0)
 
 end
-
-
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license.
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
-
 
 --|----------------------------------------------------------------
 --| EiffelEvent: library of reusable components for ISE Eiffel.

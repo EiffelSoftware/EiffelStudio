@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 	current_classes: ARRAY [CLASS_C]
 			-- Classes of current compilation unit
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER is 200
 			-- Chunk size of class arrays
 
 	Initial_size: INTEGER is 5

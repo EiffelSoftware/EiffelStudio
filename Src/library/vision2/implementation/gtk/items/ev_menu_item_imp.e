@@ -144,6 +144,16 @@ feature -- Element change
 			end
 		end
 
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			-- clear the EiffelVision objects.
+			clear_ev_children
+
+			-- clear the gtk objects.
+			c_gtk_menu_remove_all_items (C_GTK_MENU_ITEM_SUBMENU (widget))
+		end
+
 feature -- Assertion
 
 	grand_parent_is_option_button: BOOLEAN is
@@ -206,12 +216,18 @@ feature {NONE} -- Implementation
 				gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenu)
 			end
 			gtk_menu_append (C_GTK_MENU_ITEM_SUBMENU(widget), item_imp.widget)
+
+			-- Update the array `ev_children'.
+			ev_children.extend (item_imp)			
 		end		
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Remove `item_imp' from the list.
 		do
 			gtk_container_remove (GTK_CONTAINER (C_GTK_MENU_ITEM_SUBMENU(widget)), item_imp.widget)
+
+			-- Update the array `ev_children'.
+			ev_children.prune_all (item_imp)
 		end
 
 end -- class EV_MENU_ITEM_IMP

@@ -9,8 +9,8 @@
 
 	<BODY>
 		<H1>Tutorial Step 6</H1>
-		<P>This sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A>, but the drawing is no
-		longer lost when Windows re-draws the client area of the <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. The output is shown below:
+		<P>This sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A> by preventing the loss of the drawing 
+		when Windows re-draws the client area of the <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. The output is shown below:
 		</P>
 		<CENTER><IMG SRC="step6.png" ALT="step6" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
@@ -26,12 +26,12 @@
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
-		<P>After launching the sample, you should see a <A CLASS="eclass" HREF="/Libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
+		<P>After launching the sample, you will see a <A CLASS="eclass" HREF="/Libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
 		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button,
 		a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> will pop up which allows you to enter the thickness of the line that is drawn. If you re-size
 		the window, then the drawing will be re-drawn.</P>
 		<H2>Under the Hood</H2>
-		<P>This sytem builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A> by redefining <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_on_paint">on_paint</A> to re-draw the
+		<P>This system uses a redefined <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_on_paint">on_paint</A> to re-draw the
 		contents of the window. A <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> of <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/lines_chart.html">LINES</A> is used to store all
 		the lines that have been drawn and during <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_on_paint">on_paint</A>, this list is traversed in order to re-draw each line.
 

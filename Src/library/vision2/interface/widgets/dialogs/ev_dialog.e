@@ -18,8 +18,7 @@ inherit
 		redefine 
 			implementation,
 			create_implementation,
-			initialize,
-			is_modal
+			initialize
 		end
 
 create
@@ -65,9 +64,19 @@ feature -- Access
 
 feature -- Access
 
-	is_modal: BOOLEAN
-			-- Must `Current' be closed before application can
-			-- receive user events again?
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
+		do
+			Result := implementation.is_modal
+		end
+		
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := implementation.is_relative
+		end
 
 feature -- Status Setting
 
@@ -139,6 +148,8 @@ feature -- Basic operations
 			a_window_not_current: a_window /= Current
 		do
 			implementation.show_relative_to_window (a_window)
+		ensure
+			is_relative_to_window: is_relative
 		end
 		
 	dialog_key_press_action (a_key: EV_KEY) is
@@ -171,6 +182,10 @@ feature {NONE} -- Implementation
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
 		end
+		
+invariant
+	
+	modal_or_relative: is_modal implies not is_relative and is_relative implies not is_modal
 
 end -- class EV_DIALOG
 

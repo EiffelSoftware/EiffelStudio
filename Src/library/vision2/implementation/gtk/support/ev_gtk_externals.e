@@ -822,7 +822,7 @@ feature -- Measurement
 			"sizeof(GtkWindow)"
 		end
 	
-feature 
+feature -- GTK Macros
 
 	c_gtk_widget_can_focus (w: POINTER): BOOLEAN is
 			-- (from EV_GTK_WIDGETS_EXTERNALS)

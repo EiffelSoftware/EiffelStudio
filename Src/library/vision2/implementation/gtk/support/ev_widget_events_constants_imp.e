@@ -78,109 +78,104 @@ feature -- Events for windows
 
 feature -- Event for buttons
 
-	clicked_id: INTEGER is 19
+	clicked_id: INTEGER is 22
 			-- The button has been clicked
 
-	toggled_id: INTEGER is 20
+	toggled_id: INTEGER is 23
 			-- The button has been clicked
 
 feature -- Event for items
 
-	select_id: INTEGER is 19
+	select_id: INTEGER is 24
 			-- The item has been selected/activated
 
-	deselect_id: INTEGER is 20
+	deselect_id: INTEGER is 25
 			-- The item has been deselected/deactivated
 
-	collapse_id: INTEGER is 21
+	collapse_id: INTEGER is 26
 			-- The user has collapsed a subtree
 
-	expand_id: INTEGER is 22
+	expand_id: INTEGER is 27
 			-- The user has expanded a subtree
 
 feature -- Event for items, text fields and combo boxes
 
-	activate_id: INTEGER is 23
+	activate_id: INTEGER is 28
 			-- the "Return" button has been pressed
 
 feature -- Event for notebooks
 
-	switch_page_id: INTEGER is 19
+	switch_page_id: INTEGER is 29
 			-- a page is switched in the notebook
  
 feature -- Event for lists and combo boxes
 
-	selection_changed_id: INTEGER is 19
+	selection_changed_id: INTEGER is 30
 			-- the selection has changed
 
-	select_child_id: INTEGER is 20
+	select_child_id: INTEGER is 31
+			-- the selection has changed
+
+	unselect_child_id: INTEGER is 32
 			-- the selection has changed
 
 feature -- Event for ctrees
 
-	tree_select_row_id: INTEGER is 19
+	tree_select_row_id: INTEGER is 33
 			-- an item has been selected
 
-	tree_unselect_row_id: INTEGER is 20
+	tree_unselect_row_id: INTEGER is 34
 			-- an item has been unselected
 
-	tree_expand_id: INTEGER is 21
+	tree_expand_id: INTEGER is 35
 			-- an item has been expanded
 
-	tree_collapse_id: INTEGER is 22
+	tree_collapse_id: INTEGER is 36
 			-- an item has been collapsed
-
-	tree_subtree_id: INTEGER is 23
-			-- an item has been expanded or collapsed.
-			-- This signal does not exist in GTK.
-			-- We need this constants for EV_TREE_ITEM_IMP. 
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 feature -- Event for multi column lists
 
-	select_row_id: INTEGER is 19
+	select_row_id: INTEGER is 37
 			-- a row of the column list has been selected
  
-	unselect_row_id: INTEGER is 20
+	unselect_row_id: INTEGER is 38
 			-- a row of the column list has been unselected
 
-	click_column_id: INTEGER is 21
+	click_column_id: INTEGER is 39
 			-- a column of the column list has been clicked
 
 feature -- Event for text components and combo boxes
-	changed_id: INTEGER is 19
+	changed_id: INTEGER is 40
 			-- the selection has changed
  
 feature -- Event for selection dialog
 
-	ok_clicked_id: INTEGER is 19
+	ok_clicked_id: INTEGER is 41
 			-- `ok' button has been clicked.
  
-	cancel_clicked_id: INTEGER is 20
+	cancel_clicked_id: INTEGER is 42
 			-- `cancel' button has been clicked.
  
-	help_clicked_id: INTEGER is 21
+	help_clicked_id: INTEGER is 43
 			-- `help' button has been clicked.
 			-- Event only for color selection dialog.
  
 feature -- Event for rich texts
 
-	insert_text_id: INTEGER is 19
+	insert_text_id: INTEGER is 44
 			-- Text has been inserted.
 
-	delete_text_id: INTEGER is 20
+	delete_text_id: INTEGER is 45
 			-- Text has been inserted.
 
 feature -- Event for scrollbars, spin buttons and range (GtkScale)
 
---	motion_id: INTEGER is 19
---			-- The scrollbar has been moved.
-
-	value_changed_id: INTEGER is 19
+	value_changed_id: INTEGER is 46
 			-- The scrollbar has been moved.
 
 feature -- Upper constants value
 
-	command_count: INTEGER is 23
+	command_count: INTEGER is 46
 			-- Number of different events
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

@@ -72,7 +72,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon displayed in title of `Current'.
 		once
-			Result := ((create {GB_SHARED_PIXMAPS}).Icon_cmd_history @ 1)
+			Result := ((create {GB_SHARED_PIXMAPS}).Icon_cmd_history_title @ 1)
 		end
 		
 feature -- Basic operation

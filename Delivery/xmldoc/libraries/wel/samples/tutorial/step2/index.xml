@@ -22,7 +22,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step1\</italic> and select <italic>tutorial_step1.eifp</italic></item>
+					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step2\</italic> and select <italic>tutorial_step2.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>
@@ -30,7 +30,7 @@
 				<list ordered="true">
 					<item>Launch EiffelStudio.</item>
 					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
-					<item>Browse to <italic>$ISE_EIFFEL\examples\wel\tutorial\step1\</italic></item>
+					<item>Browse to <italic>$ISE_EIFFEL\examples\wel\tutorial\step2\</italic></item>
 					<item>Choose the Ace file</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
 					<item>Click <bold>OK</bold>.</item>

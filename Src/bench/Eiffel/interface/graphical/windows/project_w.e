@@ -888,7 +888,9 @@ feature -- Graphical Interface
 			sep: THREE_D_SEPARATOR
 		do
 			{TOOL_W} Precursor (a_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			if Platform_constants.is_windows then
+				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			end
 		end
 
 	build_menu is

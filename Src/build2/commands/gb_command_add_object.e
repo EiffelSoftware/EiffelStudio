@@ -7,6 +7,11 @@ indexing
 class
 	GB_COMMAND_ADD_OBJECT
 	
+	--| FIXME This is messy, we should pass the layout items
+	-- directly when creating `Current'. At the moment, we have to handle
+	-- the first execution and then subsequent executions differently
+	-- which becomes messy. See in `execute' as we handle this here. Julian.
+	
 inherit
 	
 	GB_ACCESSIBLE_OBJECT_HANDLER
@@ -14,6 +19,10 @@ inherit
 	GB_COMMAND
 	
 	GB_ACCESSIBLE_HISTORY
+	
+	GB_ACCESSIBLE_OBJECT_EDITOR
+	
+	GB_WIDGET_UTILITIES
 	
 create
 	
@@ -48,15 +57,21 @@ feature -- Basic Operation
 
 	execute is
 			-- Execute `Current'.
+		local
+			a_previous_parent: GB_OBJECT
 		do
 			if not executed then
 				if previous_parent_object /= Void then
+					a_previous_parent := child_object.parent_object
 					child_object.unparent
+					update_parent_object_editors (child_object, a_previous_parent, all_editors)
 				end
 				object_handler.add_object (parent_object, child_object, insert_position)
 			else
 				if previous_parent_layout_item /= Void then
+					a_previous_parent := child_layout_item.object.parent_object
 					child_layout_item.object.unparent
+					update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
 				end
 				object_handler.add_object (parent_layout_item.object, child_layout_item.object, insert_position)
 			end
@@ -85,8 +100,18 @@ feature -- Basic Operation
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
+		local
+			a_previous_parent: GB_OBJECT
+			-- `previous_parent_layout_item' is Void when we first execute, so
+			-- we store our own local for passing to `update_object_editors_for_delete'.
+			-- We must store it, as the unparenting which must occur first if we are to see any changes
+			-- will change the parent.
 		do
+			a_previous_parent := child_layout_item.object.parent_object
 			child_layout_item.object.unparent
+			update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
+
+				-- If the object had a previous parent, we must put it back.
 			if previous_parent_layout_item /= Void then
 				object_handler.add_object (previous_parent_layout_item.object, child_layout_item.object, previous_position_in_parent)
 			end
@@ -137,5 +162,27 @@ feature {NONE} -- Implementation
 		-- every time we call execute after the first time, as they will give
 		-- us a reference to the real objects. The layout constructor items
 		-- should not be changed when a type is changed.
+		
+		
+	update_parent_object_editors (deleted_object, a_parent_object: GB_OBJECT; editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
+			-- For every item in `editors', update to reflect removal of `deleted_object'.
+		local
+			editor: GB_OBJECT_EDITOR
+			window_parent: EV_WINDOW
+		do
+			from
+				editors.start
+			until
+				editors.off
+			loop
+				editor := editors.item		
+					-- If the parent of `an_object' is in the object editor then we must
+					-- update it accordingly.
+				if a_parent_object /= Void and then a_parent_object = editor.object then
+					editor.update_current_object
+				end	
+				editors.forth
+			end
+		end
 
 end -- class GB_COMMAND_ADD_OBJECT

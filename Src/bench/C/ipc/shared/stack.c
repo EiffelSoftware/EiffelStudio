@@ -281,10 +281,13 @@ private struct dump *execution()
 	expop (&eif_stack);
 	
 	
-	if (top -> ex_type != EX_CALL 
-			|| (top -> ex_type == EX_CALL && top -> exu.exur.exur_id == 0))
-		return (struct dump *) IGNORE;
-		/* This vector should not be sent */
+	if ( !(
+			(top->ex_type == EX_CALL ||		/* A feature call (1st call) */
+			 top->ex_type == EX_RETY ||		/* A retried feature call */
+			 top->ex_type == EX_RESC) &&	/* A rescue clause */
+			 top->exu.exur.exur_id != 0)
+	)
+		return (struct dump *) IGNORE;		/* This vector should not be sent */
 		
 
 	/* Now check whether by chance the vector associated with the callling
@@ -320,7 +323,7 @@ private struct dump *execution()
 	if (dumped.dmp_vect -> ex_type){ 
 		hack = dumped.dmp_vect -> exu.exur.exur_orig;
 		hack <<= 16;
-		hack += Dtype (dumped.dmp_vect -> exu.exur.exur_id);
+		hack += Dtype(dumped.dmp_vect -> exu.exur.exur_id);
 		dumped.dmp_vect -> exu.exur.exur_orig = hack;
 	}
 

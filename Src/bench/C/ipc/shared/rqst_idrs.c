@@ -149,6 +149,8 @@ struct item *exi;
 			&& idr_char (idrs, &exv->ex_rescue)))
 			return 0;
 		switch (exv->ex_type){
+		case EX_RESC:
+		case EX_RETY:
 		case EX_CALL:
 			return idr_u_long (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_STRLEN)

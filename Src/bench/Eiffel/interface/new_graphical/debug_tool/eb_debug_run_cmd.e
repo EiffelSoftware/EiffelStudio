@@ -305,7 +305,9 @@ feature -- Execution
 					if uf.exists then
 						if is_dotnet_system then
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
-							l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
+							if dotnet_debugger /= Void then
+								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
+							end
 							if l_app_string /= Void then
 									--| This means we are using either dbgclr or cordbg
 								if Application.execution_mode = {EXEC_MODES}.User_stop_points then

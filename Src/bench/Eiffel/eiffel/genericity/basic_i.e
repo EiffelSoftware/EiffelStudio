@@ -55,12 +55,6 @@ feature -- Access
 		deferred
 		end
 
-	associated_dtype: INTEGER is
-			-- Dynamic type of associated reference class
-		do
-			Result := associated_reference.type_id - 1
-		end
-
 	base_class: CLASS_C is
 			-- Associated class
 		do

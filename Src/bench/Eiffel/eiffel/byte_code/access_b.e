@@ -57,6 +57,7 @@ feature
 	has_gcable_variable: BOOLEAN is
 			-- Is the access using a GCable variable ?
 		local
+			expr_b: EXPR_B
 			is_in_register: BOOLEAN
 			i, nb: INTEGER
 			l_parameters: BYTE_LIST [EXPR_B]
@@ -80,12 +81,12 @@ feature
 				if not is_in_register and l_parameters /= Void then
 					from
 						l_area := l_parameters.area
-						i := 0
 						nb := l_parameters.count
 					until
 						i = nb or Result
 					loop
-						Result := l_area.item (i).has_gcable_variable
+						expr_b := l_area.item (i)
+						Result := expr_b.has_gcable_variable
 						i := i + 1
 					end
 				end
@@ -95,6 +96,7 @@ feature
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in local access ?
 		local
+			expr: EXPR_B
 			i, nb: INTEGER
 			l_area: SPECIAL [EXPR_B]
 			l_parameters: BYTE_LIST [EXPR_B]
@@ -103,12 +105,12 @@ feature
 			if l_parameters /= Void then
 				from
 					l_area := l_parameters.area
-					i := 0
 					nb := l_parameters.count
 				until
 					i = nb or Result
 				loop
-					Result := l_area.item (i).used(r)
+					expr := l_area.item (i)
+					Result := expr.used(r)
 					i := i + 1
 				end
 			end
@@ -133,7 +135,6 @@ feature
 				if l_parameters /= Void then
 					from
 						l_area := l_parameters.area
-						i := 0
 						nb := l_parameters.count
 					until
 						i = nb or not Result
@@ -249,17 +250,18 @@ feature
 			l_parameters: BYTE_LIST [EXPR_B]
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
+			expr_b: EXPR_B
 		do
 			l_parameters := parameters
 			if l_parameters /= Void then
 				from
 					l_area := l_parameters.area
-					i := 0
 					nb := l_parameters.count
 				until
 					i = nb
 				loop
-					l_area.item (i).unanalyze
+					expr_b := l_area.item (i)
+					expr_b.unanalyze
 					i := i + 1
 				end
 			end
@@ -271,17 +273,18 @@ feature
 			l_parameters: BYTE_LIST [EXPR_B]
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
+			expr_b: EXPR_B
 		do
 			l_parameters := parameters
 			if l_parameters /= Void then
 				from
 					l_area := l_parameters.area
-					i := 0
 					nb := l_parameters.count
 				until
 					i = nb
 				loop
-					l_area.item (i).free_register
+					expr_b := l_area.item (i)
+					expr_b.free_register
 					i := i + 1
 				end
 			end
@@ -602,6 +605,12 @@ feature -- Byte code generation
 				if gen_type /= Void then
 					ba.append_short_integer (context.current_type.generated_id (False))
 					gen_type.make_gen_type_byte_code (ba, true)
+				else
+					if not cl_type.is_explicit then
+						-- Anchored
+						ba.append_short_integer (context.current_type.generated_id (False))
+						cl_type.cr_info.make_reverse_byte_code (ba)
+					end
 				end
 				ba.append_short_integer (-1)
 			end

@@ -47,14 +47,14 @@ feature  -- Implementation
 					code
 				when 0..47 then
 					code := code \\ 10 + 48
-					s.put (code.ascii_char, i)
+					s.put (code.to_character, i)
 				when 58..64 then
-					s.put ((code + 7).ascii_char, i)
+					s.put ((code + 7).to_character, i)
 				when 91..96 then
-					s.put ((code + 7).ascii_char, i)
+					s.put ((code + 7).to_character, i)
 				else
 					code := code \\ 26 + 64
-					s.put (code.ascii_char, i)
+					s.put (code.to_character, i)
 				end
 				i := i + 1
 			end	

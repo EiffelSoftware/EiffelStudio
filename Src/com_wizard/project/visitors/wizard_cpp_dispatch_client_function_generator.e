@@ -258,7 +258,11 @@ feature {NONE} -- Implementation
 					if is_paramflag_fout (arguments.item.flags) then
 						out_variable := True  
 						Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
-						return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))
+
+						if not visitor.is_array_basic_type and not visitor.is_structure_pointer and not
+						 		visitor.is_interface_pointer and not visitor.is_coclass_pointer then
+							return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))
+						end
 
 					else
 						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
@@ -355,7 +359,7 @@ feature {NONE} -- Implementation
 
 
 			Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
-			Result.append (Space_open_parenthesis)
+			Result.append (Comma_space)
 			Result.append (name)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
@@ -415,6 +419,10 @@ feature {NONE} -- Implementation
 					Result.append (Space_open_parenthesis)
 					Result.append (name)
 					Result.append (Close_parenthesis)
+					if visitor.writable then
+						Result.append (Comma_space)
+						Result.append (Null)
+					end
 					Result.append (Close_parenthesis)
 				end
 				Result.append (Semicolon)

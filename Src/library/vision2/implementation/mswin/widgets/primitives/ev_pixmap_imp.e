@@ -32,8 +32,6 @@ inherit
 		rename
 			raise as exception_raise,
 			class_name as exception_class_name
-		redefine
-			default_create
 		end
 
 create

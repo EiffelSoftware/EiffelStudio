@@ -38,42 +38,4 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="post_launch_actions"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator.html#f_post_launch_actions"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_destroyed"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator.html#f_is_destroyed"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="ACCELERATOR_TEST"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test_chart.html"></OBJECT>
-		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_and_launch"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_make_and_launch"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="test_accelerators"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_test_accelerators"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_default_create"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="clipboard"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_clipboard"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="contextual_help_accelerator"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_contextual_help_accelerator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="data"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_data"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="help_accelerator"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_help_accelerator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="help_engine"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_help_engine"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="locked_window"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_locked_window"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="windows"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_windows"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="alt_pressed"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_alt_pressed"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="ctrl_pressed"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_ctrl_pressed"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_tooltip_delay"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_default_tooltip_delay"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="focused_widget"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_focused_widget"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_launched"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_is_launched"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="shift_pressed"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_shift_pressed"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="tooltip_delay"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_tooltip_delay"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_tooltip_delay"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_set_tooltip_delay"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_data"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_set_data"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_copy"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="display_help_for_widget"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_display_help_for_widget"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="enable_contextual_help"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_enable_contextual_help"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="launch"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_launch"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="process_events"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_process_events"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="sleep"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_sleep"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="destroy"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_destroy"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_contextual_help_accelerator"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_set_contextual_help_accelerator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_help_accelerator"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_set_help_accelerator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_help_engine"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_set_help_engine"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_once_on_idle"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_do_once_on_idle"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="drop_actions"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_drop_actions"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="idle_actions"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_idle_actions"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="pick_actions"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_pick_actions"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="post_launch_actions"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_post_launch_actions"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_destroyed"><param name="Local" value="libraries\vision2\samples\accelerator\root_cluster\accelerator_test.html#f_is_destroyed"></OBJECT>
-		</UL>
 	</UL>

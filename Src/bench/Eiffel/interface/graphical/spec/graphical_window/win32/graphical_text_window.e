@@ -148,7 +148,7 @@ feature -- Output
 			implementation.wel_hide
 			set_changed (True);
 			st_process_text (texts);
-			set_cursor_position (0);
+	--		set_cursor_position (0);
 			set_changed (False)
 			implementation.wel_show;
 			dummy_text.hide

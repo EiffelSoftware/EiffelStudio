@@ -45,8 +45,8 @@ feature -- basic Operations
 			create add_all_b.make_with_text ("Add all ->")
 			add_all_b.select_actions.extend (~add_all_items)
 			v1.extend (add_all_b)
-			add_all_b.set_minimum_width (25)
-			add_all_b.set_minimum_height (23)
+			add_all_b.set_minimum_width (Button_width)
+			add_all_b.set_minimum_height (Button_height)
 			add_all_b.align_text_center
 			v1.disable_item_expand (add_all_b)
 			v1.extend (create {EV_CELL})
@@ -55,16 +55,16 @@ feature -- basic Operations
 			create add_b.make_with_text ("Add->")
 			add_b.select_actions.extend (~add_items)
 			v1.extend (add_b)
-			add_b.set_minimum_width (15)
-			add_b.set_minimum_height (23)
+			add_b.set_minimum_width (Button_width)
+			add_b.set_minimum_height (Button_height)
 			add_b.align_text_center
 			v1.disable_item_expand (add_b)
 
 			create remove_b.make_with_text ("<-Remove")
 			remove_b.select_actions.extend (~remove_items)
 			v1.extend (remove_b)
-			remove_b.set_minimum_width (15)
-			remove_b.set_minimum_height (23)
+			remove_b.set_minimum_width (Button_width)
+			remove_b.set_minimum_height (Button_height)
 			remove_b.align_text_center
 			v1.disable_item_expand (remove_b)
 			v1.extend (create {EV_CELL})
@@ -73,8 +73,8 @@ feature -- basic Operations
 			create remove_all_b.make_with_text ("<- Remove all")
 			remove_all_b.select_actions.extend (~remove_all_items)
 			v1.extend (remove_all_b)
-			remove_all_b.set_minimum_width (25)
-			remove_all_b.set_minimum_height (23)
+			remove_all_b.set_minimum_width (Button_width)
+			remove_all_b.set_minimum_height (Button_height)
 			remove_all_b.align_text_center
 			v1.disable_item_expand (remove_all_b)
 
@@ -270,7 +270,7 @@ feature -- basic Operations
 		do
 			title.set_text ("STEP 2 BIS: TABLE SELECTION")
 			message.set_text (" Please select which tables you wish to be%
-								% able to manipulate within your project. (At least one !!)")
+								% able to manipulate within your project.%N(At least one !!)")
 		end
 
 feature -- Implementation
@@ -278,5 +278,11 @@ feature -- Implementation
 	selected_items, unselected_items: EV_LIST
 
 	remove_b, add_b, remove_all_b, add_all_b: EV_BUTTON
+
+	Button_width: INTEGER is 25
+			-- Standard button width.
+			
+	Button_height: INTEGER is 23
+			-- Standard button height.
 
 end -- class DB_TABLE_SELECTION

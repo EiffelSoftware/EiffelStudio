@@ -4,13 +4,17 @@ indexing
 class
 	DOCUMENT
 
---inherit 
---	WINFORMS_FORM
---		redefine
---			make,
---			on_paint,
---			dispose_boolean
---		end
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			dispose_boolean
+		end
+
+	ANY
 
 create
 	make_with_name
@@ -25,8 +29,6 @@ feature {NONE} -- Initialization
 			mi_file, mi_format, miLoadDoc: WINFORMS_MENU_ITEM
 			l_array_menu_item: NATIVE_ARRAY [WINFORMS_MENU_ITEM]
 		do
-			create my_window.make
-
 			initialize_component
 
 			--  Initialize Fonts - use generic fonts to avoid problems across
@@ -36,7 +38,7 @@ feature {NONE} -- Initialization
 			create serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
-			my_window.set_text (doc_name)
+			set_text (doc_name)
 
 			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize)) --= new System.Drawing.Font(current_font_family, fontSize)
 			rich_text_box.set_text (doc_name)
@@ -46,7 +48,7 @@ feature {NONE} -- Initialization
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 			mi_file.set_merge_order (0)
 
-			miLoadDoc := main_menu.menu_items.add_string_event_handler ((("").to_cil).concat_string_string_string (("&Load Document (").to_cil, doc_name, (")").to_cil), create {EVENT_HANDLER}.make (Current, $LoadDocument_Clicked)) --= mi_file.MenuItems.Add("&Load Document (" + doc_name + ")", new EventHandler(this.LoadDocument_Clicked))
+			miLoadDoc := main_menu.menu_items.add_string_event_handler ((("").to_cil).concat_string_string_string (("&Load Document (").to_cil, doc_name, (")").to_cil), create {EVENT_HANDLER}.make (Current, $load_document_clicked)) --= mi_file.MenuItems.Add("&Load Document (" + doc_name + ")", new EventHandler(this.load_document_clicked))
 			miLoadDoc.set_merge_order (105)
 
 			-- Add Formatting Menu
@@ -55,11 +57,11 @@ feature {NONE} -- Initialization
 			mi_format.set_merge_order (5)
 
 			-- Font Face sub-menu
-			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name), create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			mmi_sans_serif.set_checked (True) 
 			mmi_sans_serif.set_default_item (True) 
-			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
-			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name), create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name), create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
@@ -69,11 +71,11 @@ feature {NONE} -- Initialization
 
 
 			-- Font Size sub-menu
-			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
-			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			mmi_medium.set_checked (True) 
 			mmi_medium.set_default_item (True) 
-			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_small)
@@ -81,15 +83,11 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (2, mmi_large)
 			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
-
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container.
@@ -131,19 +129,36 @@ feature {NONE} -- Implementation
 			rich_text_box.set_tab_index (0)
 			rich_text_box.set_dock (feature {WINFORMS_DOCK_STYLE}.fill)
 
-			my_window.set_text (("").to_cil)
+			set_text (("").to_cil)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (392, 117)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 			create main_menu.make
-			my_window.set_menu (main_menu)
+			set_menu (main_menu)
 
-			my_window.controls.add (rich_text_box)		
+			controls.add (rich_text_box)		
 		end
 
 
 feature {NONE} -- Implementation
+
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
+		local
+			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
+		do
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
+		end
 
 	font_sizes (a_size: STRING): DOUBLE is
 			--  Comment out this structure to view menus.cs in the WinForms Designer.
@@ -161,15 +176,15 @@ feature {NONE} -- Implementation
 		end
 
 
-	LoadDocument_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	load_document_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Load Document Menu item handler
 		local
 			dummy: WINFORMS_DIALOG_RESULT
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (my_window.text)
+			dummy := feature {WINFORMS_MESSAGE_BOX}.show (text)
 		end
 
-	FormatFont_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Font Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM
@@ -199,8 +214,7 @@ feature {NONE} -- Implementation
 			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
 		end
 
-
-	FormatSize_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Size Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM
@@ -232,18 +246,6 @@ feature {NONE} -- Implementation
 
 			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
 		end
-
-
---		protected override void Dispose(bool disposing)
---				-- Clean up any resources being used.
---			do
---		   if (disposing) {
---				if (components != null) {
---					components.Dispose()
---				}
---		   }
---		   base.Dispose(disposing)
---			end
 
 
 end -- Class DOCUMENT

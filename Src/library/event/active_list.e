@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			-- Initialize
 		do
 			Precursor
-			create add_actions.make ("add", <<"item">>)
-			create remove_actions.make ("remove", <<"item">>)
+			create add_actions.make
+			create remove_actions.make
 		end
 
 feature -- Access
@@ -80,6 +80,9 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.7  2000/07/24 22:42:44  oconnor
+--| updated for modified action_sequence
+--|
 --| Revision 1.6  2000/06/15 22:52:05  pichery
 --| Removed `on_item_already_xxxx',
 --| now `on_item_xxxx' is executed after the

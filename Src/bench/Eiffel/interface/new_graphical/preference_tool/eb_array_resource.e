@@ -87,16 +87,11 @@ feature -- Status report
 		end
 
 	is_default: BOOLEAN is
-		do
-			Result := has_changed
-		end
-
-	has_changed: BOOLEAN is
-			-- Has the resource changed from the default value?
+			-- Is the resource equal to its default value?
 		local
 			i: INTEGER
 		do
-			Result := True
+			Result := False
 			if actual_value /= Void and then
 				default_value /= Void 
 			then
@@ -114,7 +109,7 @@ feature -- Status report
 			elseif actual_value = Void and then
 				default_value = Void 
 			then
-				Result := False
+				Result := True
 			end
 		end
 

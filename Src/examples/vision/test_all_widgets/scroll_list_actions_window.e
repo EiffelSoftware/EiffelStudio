@@ -58,7 +58,7 @@ feature
 				widget.finish
 				widget.scroll_to_current
 			when b_forth then
-				if not widget.empty and then widget.index <= widget.count then
+				if not widget.is_empty and then widget.index <= widget.count then
 					widget.forth
 					widget.scroll_to_current
 				end

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision list-item container. %
@@ -32,14 +33,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
-			-- Insert `item_imp' at the `an_index' position.
-		do
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (item_imp)
-			graphical_insert_item (item_imp.interface, an_index - 1)
-		end
 
 	move_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
 			-- Move `item_imp' to the `an_index' position.
@@ -254,6 +247,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/29 02:21:24  brendel
+--| Unreleased.
+--|
 --| Revision 1.23  2000/03/21 01:30:32  rogers
 --| Added deferred feature, set_pointer_style.
 --|

@@ -313,8 +313,8 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			until
 				i > widths.count
 			loop
-				column_width_changed (widths @ (i + widths.lower - 1), i)
 				column_widths.extend (widths @ (i + widths.lower - 1))
+				column_width_changed (widths @ (i + widths.lower - 1), i)				
 				i := i + 1
 				old_count := old_count - 1
 			end

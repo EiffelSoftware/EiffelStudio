@@ -67,6 +67,10 @@ feature -- Access
 			label: EV_LABEL
 			editor_item: GB_OBJECT_EDITOR_ITEM
 			hbox1, hbox2: EV_HORIZONTAL_BOX
+			vbox1, vbox2: EV_VERTICAL_BOX
+			frame1, frame2: EV_FRAME
+			button1, button2: EV_BUTTON
+			new_button1, new_button2: EV_BUTTON
 		do
 			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text (gb_ev_container_radio_groups)
@@ -92,19 +96,39 @@ feature -- Access
 			check
 				colorizable_controls_not_changed: editor_item /= Void
 			end
-			hbox1 ?= editor_item @ 2
-			hbox2 ?= editor_item @ 4
+			frame1 ?= editor_item @ 1
+			frame2 ?= editor_item @ 2
 			check
-				colorizable_controls_not_changed: hbox1 /= Void and hbox2 /= Void
+				colorizable_controls_not_changed: frame1 /= Void and frame2 /= Void
 			end
-				-- Remove the cells contained in the interface,
-				-- and replace with the new buttons.
-			hbox1.prune (hbox1.i_th (hbox1.count))
+			
+			
+				-- Note that as we rebuild the colorizable control,
+				-- we must rebuild one of the buttons, as we have no
+				-- way of restoring it back to its original size.
+			
+				-- Firstly rebuild the background_color
+			vbox1 ?= frame1.item
+			hbox1 ?= vbox1.i_th (vbox1.count)
+			button1 ?= hbox1.i_th (1)
+			create new_button1
+			new_button1.set_text (button1.text)
+			new_button1.select_actions.append (button1.select_actions)
+			button1.destroy
+			hbox1.extend (new_button1)
 			hbox1.extend (propagate_background_color)
-			hbox1.disable_item_expand (propagate_background_color)
-			hbox2.prune (hbox2.i_th (hbox2.count))
+			
+			
+				-- Secondly rebuild the foreground_color
+			vbox2 ?= frame2.item
+			hbox2 ?= vbox2.i_th (vbox2.count)
+			button2 ?= hbox2.i_th (1)
+			create new_button2
+			new_button2.set_text (button2.text)
+			new_button2.select_actions.append (button2.select_actions)
+			button2.destroy
+			hbox2.extend (new_button2)
 			hbox2.extend (propagate_foreground_color)
-			hbox2.disable_item_expand (propagate_foreground_color)
 			
 			update_attribute_editor
 			disable_all_items (Result)

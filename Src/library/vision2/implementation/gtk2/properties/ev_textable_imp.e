@@ -110,7 +110,7 @@ feature {EV_ANY_IMP} -- Implementation
 	accelerators_enabled: BOOLEAN is
 			-- Does `Current' have keyboard accelerators enabled?
 		do
-			Result := True
+			Result := False
 		end
 
 	real_text: STRING

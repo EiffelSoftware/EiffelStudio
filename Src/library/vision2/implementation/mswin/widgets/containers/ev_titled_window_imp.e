@@ -17,7 +17,8 @@ inherit
 					
 	EV_CONTAINER_IMP
 		redefine
-			wel_window,
+			wel_window,	
+			on_show,
 			parent_imp,
 			set_width,
 			set_height,
@@ -236,6 +237,48 @@ feature -- Resizing
 			minimum_height := min_height --.max (system_metrics.window_minimum_height)
 		end
 
+feature {EV_WEL_FRAME_WINDOW} -- Event handling
+
+	on_show is
+			-- When the wel_window receive the on_show message.
+			-- Resize the wel_window at the minimum_size.
+		do
+			if the_child /= Void then
+				parent_ask_resize (the_child.minimum_width,
+									the_child.minimum_height)
+			end
+		end
+
+	on_size (a_width, a_height: INTEGER) is
+			-- Called when the wel_window is resized.
+			-- Resize the child if it exists.
+		do
+			if the_child /= Void then
+					the_child.parent_ask_resize (a_width, a_height)
+			end
+		end
+
+	on_destroy is
+			-- Called when the wel_window is destroy.
+			-- Set the parent sensitive if it exists.
+		do
+			if parent_imp /= Void and not parent_imp.destroyed then
+				parent_imp.set_insensitive (False)
+			end
+		end
+
+	on_menu_command (menu_id: INTEGER) is
+			-- The `menu_id' has been choosen from the menu.
+			-- If this feature is called, it means that the 
+			-- child is a menu.
+		local
+			current_menu: EV_MENU_ITEM_CONTAINER_IMP
+		do
+			current_menu ?= the_child
+			if current_menu /= Void then
+				current_menu.on_menu_command (menu_id)
+			end
+		end
 
 feature --{EV_WINDOW_IMP} -- Implementation
 	

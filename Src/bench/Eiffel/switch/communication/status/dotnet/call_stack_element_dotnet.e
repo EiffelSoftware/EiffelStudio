@@ -516,6 +516,7 @@ feature {NONE} -- Implementation
 				l_enum_args := l_il_frame.enumerate_arguments
 				if l_enum_args /= Void then
 					if l_enum_args.get_count > 0 then
+						l_enum_args.reset
 						l_array_objects := l_enum_args.next (1)
 						Result := debug_value_from_icdv (l_array_objects @ (l_array_objects.lower))
 					end

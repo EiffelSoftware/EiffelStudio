@@ -22,8 +22,11 @@ feature -- Processing
 	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
+		local
+			alias_server_generator: WIZARD_ALIAS_EIFFEL_SERVER_GENERATOR
 		do
 			Precursor (alias_descriptor)
+			create alias_server_generator
 			alias_server_generator.initialize
 			alias_server_generator.generate (alias_descriptor)
 		end
@@ -35,11 +38,16 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			coclass_server_generator: WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR
+			coclass_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
 		do
 			Precursor (coclass_descriptor)
 			if shared_wizard_environment.new_eiffel_project then
+				create coclass_impl_generator
 				coclass_impl_generator.generate (coclass_descriptor)
 			else
+				create coclass_server_generator
 				coclass_server_generator.initialize
 				coclass_server_generator.generate (coclass_descriptor)
 			end
@@ -50,8 +58,11 @@ feature -- Processing
 			-- generated class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every function of interface
+		local
+			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			Precursor (interface_descriptor)
+			create implemented_interface_generator
 			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (interface_descriptor)
 		end
@@ -61,9 +72,12 @@ feature -- Processing
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
+		local
+			interface_server_generator: WIZARD_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			if not shared_wizard_environment.new_eiffel_project then
 				Precursor (interface_descriptor)
+				create interface_server_generator
 				interface_server_generator.initialize
 				interface_server_generator.generate (interface_descriptor)
 			end
@@ -74,8 +88,11 @@ feature -- Processing
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
 				-- generate code for constant
+		local
+			enum_server_generator: WIZARD_ENUM_EIFFEL_SERVER_GENERATOR
 		do
 			Precursor (enum_descriptor)
+			create enum_server_generator
 			enum_server_generator.initialize
 			enum_server_generator.generate (enum_descriptor)
 		end
@@ -94,55 +111,16 @@ feature -- Processing
 					-- 
 				-- if field type is union then
 					--
+		local
+			record_server_generator: WIZARD_RECORD_EIFFEL_SERVER_GENERATOR
 		do
 			Precursor (record_descriptor)
+			create record_server_generator
 			record_server_generator.initialize
 			record_server_generator.generate (record_descriptor)
 		end
 
 feature {NONE}
-
-	alias_server_generator: WIZARD_ALIAS_EIFFEL_SERVER_GENERATOR is
-			-- Alias eiffel server generator
-		once
-			create Result
-		end
-
-	coclass_server_generator: WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR is
-			-- Coclass eiffel server generator
-		once
-			create Result
-		end
-
-	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR is
-			-- Implemented interface Eiffel server  generator.
-		once
-			create Result
-		end
-
-	enum_server_generator: WIZARD_ENUM_EIFFEL_SERVER_GENERATOR is
-			-- Enum eiffel server generator
-		once
-			create Result
-		end			
-
-	interface_server_generator: WIZARD_INTERFACE_EIFFEL_SERVER_GENERATOR is
-			-- Interface eiffel server generator
-		once
-			create Result
-		end
-
-	coclass_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR is
-			-- Coclass implementation generator
-		once
-			create Result
-		end
-
-	record_server_generator: WIZARD_RECORD_EIFFEL_SERVER_GENERATOR is
-			-- Record eiffel server generator
-		once
-			create Result
-		end
 
 	language: STRING is
 			-- Lanuage currently generated

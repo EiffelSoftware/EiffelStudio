@@ -30,9 +30,12 @@ feature -- Processing
 	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
+		local
+			alias_client_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR
 		do
 			if not shared_wizard_environment.server then
 				Precursor (alias_descriptor)
+				create alias_client_generator
 				alias_client_generator.initialize
 				alias_client_generator.generate (alias_descriptor)
 			end
@@ -45,8 +48,11 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			coclass_client_generator: WIZARD_COCLASS_C_CLIENT_GENERATOR
 		do
 			Precursor (coclass_descriptor)
+			create coclass_client_generator
 			coclass_client_generator.initialize
 			coclass_client_generator.generate (coclass_descriptor)
 		end
@@ -58,8 +64,11 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR
 		do
 			Precursor (implemented_interface_descriptor)
+			create implemented_interface_generator
 			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (implemented_interface_descriptor)
 		end
@@ -69,12 +78,13 @@ feature -- Processing
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
+		local
+			interface_client_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (interface_descriptor)
-				interface_client_generator.initialize
-				interface_client_generator.generate (interface_descriptor)
-			end
+			Precursor (interface_descriptor)
+			create interface_client_generator
+			interface_client_generator.initialize
+			interface_client_generator.generate (interface_descriptor)
 		end
 
 	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
@@ -102,45 +112,16 @@ feature -- Processing
 					-- 
 				-- if field type is union then
 					--
+		local
+			record_client_generator: WIZARD_RECORD_C_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (record_descriptor)
-				record_client_generator.initialize
-				record_client_generator.generate (record_descriptor)
-			end
+			Precursor (record_descriptor)
+			create record_client_generator
+			record_client_generator.initialize
+			record_client_generator.generate (record_descriptor)
 		end
 
 feature {NONE} -- Implementation
-
-	alias_client_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR is
-			-- Alias C client generator.
-		once
-			create Result
-		end
-
-	coclass_client_generator: WIZARD_COCLASS_C_CLIENT_GENERATOR is
-			-- Coclass C client generator.
-		once
-			create Result
-		end
-
-	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR is
-			-- Implemented interface C client generator.
-		once
-			create Result
-		end
-
-	interface_client_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR is
-			-- Interface C client generator.
-		once
-			create Result
-		end
-
-	record_client_generator: WIZARD_RECORD_C_CLIENT_GENERATOR is
-			-- Record C client generator.
-		once
-			create Result
-		end
 
 	language: STRING is
 			-- Lanuage currently generated.

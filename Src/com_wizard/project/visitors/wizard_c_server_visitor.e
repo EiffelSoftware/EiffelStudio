@@ -22,8 +22,11 @@ feature -- Processing
 	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
+		local
+			alias_server_generator: WIZARD_ALIAS_C_SERVER_GENERATOR
 		do
 			Precursor (alias_descriptor)
+			create alias_server_generator
 			alias_server_generator.initialize
 			alias_server_generator.generate (alias_descriptor)
 		end
@@ -35,8 +38,11 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			coclass_server_generator: WIZARD_COCLASS_C_SERVER_GENERATOR
 		do
 			Precursor (coclass_descriptor)
+			create coclass_server_generator
 			coclass_server_generator.initialize
 			coclass_server_generator.generate (coclass_descriptor)
 		end
@@ -46,8 +52,11 @@ feature -- Processing
 			-- generated class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every function of interface
+		local
+			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_SERVER_GENERATOR
 		do
 			Precursor (interface_descriptor)
+			create implemented_interface_generator
 			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (interface_descriptor)
 		end
@@ -57,8 +66,11 @@ feature -- Processing
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
+		local
+			interface_server_generator: WIZARD_INTERFACE_C_SERVER_GENERATOR
 		do
 			Precursor (interface_descriptor)
+			create interface_server_generator
 			interface_server_generator.initialize
 			interface_server_generator.generate (interface_descriptor)
 		end
@@ -86,43 +98,16 @@ feature -- Processing
 					-- 
 				-- if field type is union then
 					--
+		local
+			record_server_generator: WIZARD_RECORD_C_SERVER_GENERATOR
 		do
 			Precursor (record_descriptor)
+			create record_server_generator
 			record_server_generator.initialize
 			record_server_generator.generate (record_descriptor)
 		end
 
 feature {NONE} -- Implementation
-
-	alias_server_generator: WIZARD_ALIAS_C_SERVER_GENERATOR is
-			-- Alias C server generator
-		once
-			create Result
-		end
-
-	coclass_server_generator: WIZARD_COCLASS_C_SERVER_GENERATOR is
-			-- Coclass C server generator
-		once
-			create Result
-		end
-
-	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_SERVER_GENERATOR is
-			-- Implemented interface C server  generator.
-		once
-			create Result
-		end
-
-	interface_server_generator: WIZARD_INTERFACE_C_SERVER_GENERATOR is
-			-- Interface C server generator
-		once
-			create Result
-		end
-
-	record_server_generator: WIZARD_RECORD_C_SERVER_GENERATOR is
-			-- Record C server generator
-		once
-			create Result
-		end
 
 	language: STRING is
 			-- Lanuage currently generated

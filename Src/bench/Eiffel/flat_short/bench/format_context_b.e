@@ -167,8 +167,16 @@ feature -- Properties
 			-- Feature adaptation information for non nested features
 			-- within the enclosing features
 
+	saved_unnested_local_adapt: LOCAL_FEAT_ADAPTATION
+			-- Saved feature adaptation information for non nested features
+			-- within the enclosing features
+
 	local_adapt: LOCAL_FEAT_ADAPTATION
 			-- Current feature adaptation information for features
+			-- within the enclosing features
+
+	saved_local_adapt: LOCAL_FEAT_ADAPTATION
+			-- Saved Current feature adaptation information for features
 			-- within the enclosing features
 
 	execution_error: BOOLEAN;
@@ -285,26 +293,41 @@ feature -- Setting
 		do
 			global_adapt := clone (global_adapt);
 			global_adapt.update_new_source_in_assertion (source);
+			!! unnested_local_adapt;
+			unnested_local_adapt.update_from_global (global_adapt)
+			local_adapt := unnested_local_adapt;
 		end;
 
-	save_global_adapt is
-			-- Save global adapt.
+	save_adaptations is
+			-- Save adapt.
 		do
 			saved_global_adapt := global_adapt;
+			saved_local_adapt := local_adapt;
+			saved_unnested_local_adapt := unnested_local_adapt;
 		ensure
 			saved_global_adapt = global_adapt
 		end;
 
-	restore_global_adapt is
-			-- Restore global adapt.
+	restore_adaptations is
+			-- Restore adaptations.
 		require
 			valid_saved_global_adapt: saved_global_adapt /= Void
+			valid_saved_local_adapt: saved_local_adapt /= Void
+			valid_saved_unnested_adapt: saved_unnested_local_adapt /= Void
 		do
 			global_adapt := saved_global_adapt;
+			local_adapt := saved_local_adapt;
+			unnested_local_adapt := saved_unnested_local_adapt;
 			saved_global_adapt := Void;
+			saved_local_adapt := Void;
+			saved_unnested_local_adapt := Void;
 		ensure
 			saved_global_adapt = Void;
-			(old saved_global_adapt) = global_adapt
+			saved_local_adapt = Void;
+			saved_unnested_local_adapt = Void;
+			(old saved_global_adapt) = global_adapt;
+			(old saved_unnested_local_adapt) = unnested_local_adapt;
+			(old saved_local_adapt) = local_adapt
 		end;
 
 feature -- Setting local format details

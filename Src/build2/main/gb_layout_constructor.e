@@ -109,6 +109,20 @@ feature -- Basic operation
 			ensure_item_visible (an_object.layout_item)	
 		end
 		
+	target_associated_top_object (an_object: GB_OBJECT) is
+			-- Target associated top level object of `an_object' to `Current'.
+		require
+			an_object_not_void: an_object /= Void
+			an_object_is_instance: an_object.is_instance_of_top_level_object
+		local
+			top_object: GB_OBJECT
+		do
+			top_object := object_handler.object_from_id (an_object.associated_top_level_object)
+			top_object.window_selector_item.enable_select
+		ensure
+			root_item_set: root_item = object_handler.object_from_id (an_object.associated_top_level_object).layout_item
+		end
+		
 feature -- Access
 
 	root_item: GB_LAYOUT_CONSTRUCTOR_ITEM is

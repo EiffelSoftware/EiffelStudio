@@ -66,13 +66,13 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 
-	info: CACHE_INFO is
+	info (info_file_name: STRING): CACHE_INFO is
 			-- Assembly information from EAC
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			Result ?= des.new_object_from_file ("E:\Eiffel52\dotnet\assemblies\info.xml")
+			Result ?= des.new_object_from_file (info_file_name)
 		ensure
 			non_void_info: Result /= Void
 		end

@@ -19,7 +19,7 @@
       </TR>
 </TABLE>
 
-<table cols="1" width="800" cellpadding="0" cellspacing="0" border="0">
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <h1>ISE EiffelBench 4.5</h1>
@@ -67,10 +67,10 @@ front of the cluster name and all subdirectories will be compiled. Look at
     </ol>
   </li>
   <p>
-  <li> New way to look at STRING objects in the debugger:
+  <li> New way to look at <b> STRING</b> objects in the debugger:
     <ol>
-      <li> When the size of the STRING object is bigger than 50 characters, three dots will appear at the end.</li>
-      <li> The following Eiffel STRING object &quot;Hello,%N%THow are
+      <li> When the size of the <b> STRING</b> object is bigger than 50 characters, three dots will appear at the end.</li>
+      <li> The following Eiffel <b> STRING</b> object &quot;Hello,%N%THow are
         you?%N%TRegards,%N%TManu&quot;&nbsp;<br>
      will appear now appear like:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;Hello,<br>
@@ -107,25 +107,29 @@ front of the cluster name and all subdirectories will be compiled. Look at
   <li> Removed `dll16' as a recognized sublanguage name, user will have to switch
     to `dll32' (To know more click <a href="C_ext.html">here</a>).</li>
   <p>
-  <li> Removed `consistent' and `setup' from GENERAL in order to increase the
+  <li> Removed `consistent' and `setup' from <b> GENERAL</b> in order to increase the
   compatibility of ISE libraries with the ELKS 95 standard.</li>
   <p>
-  <li> Added a new class INTEGER_INTERVAL in EiffelBase to represent contiguous
+  <li> Added a new class <b> PROFILING_SETTING</b> in EiffelBase to help you to
+    configure the Eiffel profiler and to get the best out of it (To know more
+    click <a href="profiler.html">here</a>).</li>
+  <p>
+  <li> Added a new class <b> INTEGER_INTERVAL</b> in EiffelBase to represent contiguous
   integer intervals.</li>
   <p>
-  <li> Added in INDEXABLE a new feature `index_set: INTEGER_INTERVAL'. This can
+  <li> Added in <b> INDEXABLE</b> a new feature `index_set: <b>INTEGER_INTERVAL</b>'. This can
   produce some incompatibility with your existing code if you are using the
   name `index_set' or if you have some repeated inheritance where `index_set'
-  from INDEXABLE has been redefined in two different ways. If you have such
+  from <b> INDEXABLE</b> has been redefined in two different ways. If you have such
   problems, please use the old version of the EiffelBase library which does
   not contain this feature in `$EIFFEL4|library|compatible_base'.</li>
   <p>
   <li> Revisited STRING class:
     <ol>
-      <li> Added `infix "+"' in class STRING to concatenate two Eiffel strings.</li>
+      <li> Added `infix "+"' in class <b> STRING</b> to concatenate two Eiffel strings.</li>
       <li> Now, STRING can have more than once creation routine and we provide
      two new ones `make_from_string' and `make_from_c'.</li>
-      <li> `set_count' is now exported to the new added class STRING_HANDLER,
+      <li> `set_count' is now exported to the new added class <b>STRING_HANDLER</b>,
      so that people who needs to have access to this feature can simply
 	 inherits from it (To be used with caution).</li>
       <li> Improved performance of class STRING to reduce memory allocation
@@ -133,9 +137,9 @@ front of the cluster name and all subdirectories will be compiled. Look at
     </ol>
   </li>
   <p>
-  <li> Added in class POINTER the new following features:
+  <li> Added in class <b> POINTER</b> the new following features:
     <ol>
-      <li> `infix "+" (offset: INTEGER): POINTER' which returns the current
+      <li> `infix "+" (offset: <b>INTEGER</b>): <b>POINTER</b>' which returns the current
       pointer moved by an offset of `offset' bytes.</li>
       <li>`memory_copy' and `memory_move' which corresponds to the C ANSI
       functions `memcpy' and `memmove'.</li>

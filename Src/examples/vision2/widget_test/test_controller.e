@@ -217,12 +217,15 @@ feature {NONE} -- Implementation
 		local
 			directory: DIRECTORY
 			directory_name: DIRECTORY_NAME
+			directory_string: STRING
 			filenames: ARRAYED_LIST [STRING]
 			current_file_name:  STRING
 		do
 			create directory_name.make_from_string (".")
 			directory_name.extend ("tests")
-			directory_name.extend (a_type.substring (4, a_type.count))
+			directory_string := a_type.substring (4, a_type.count)
+			directory_string.to_lower
+			directory_name.extend (directory_string)
 			create directory.make_open_read (directory_name)
 			filenames := directory.linear_representation
 			from

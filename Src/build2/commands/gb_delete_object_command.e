@@ -88,7 +88,7 @@ feature {GB_WINDOW_SELECTOR} -- Basic operation
 			titled_window_object ?= an_object
 			if titled_window_object = Void then
 				delete_position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
-				create command_delete.make (an_object.parent_object, an_object, delete_position)
+				create command_delete.make (an_object)
 				history.cut_off_at_current_position
 				command_delete.execute
 			else
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			-- is by looking at the parent of the object. If it is Void then
 			-- we should not be deleting the object.
 		do
-			Result := an_object.layout_item /= Void--an_object.parent_object /= Void
+			Result := an_object.layout_item /= Void
 		end
 
 end -- class GB_DELETE_OBJECT

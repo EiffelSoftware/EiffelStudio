@@ -142,6 +142,14 @@ feature -- Status report
 			Result := manager_built and then manager.transactions_succeeded
 		end
 
+	last_added_source_correct: BOOLEAN
+			-- Is source address of the most recent transaction addition
+			-- correct?
+
+	last_added_target_correct: BOOLEAN
+			-- Is target address of the most recent transaction addition
+			-- correct?
+
 feature -- Status setting
 
 	set_timeout (s: INTEGER) is
@@ -163,8 +171,6 @@ feature -- Element change
 		require
 			source_exists: s /= Void
 			target_exists: t /= Void
-			source_address_correct: is_address_correct (s, Readable)
-			target_address_correct: is_address_correct (t, Writable)
 		local
 			sr: DATA_RESOURCE
 			tr: DATA_RESOURCE
@@ -172,48 +178,53 @@ feature -- Element change
 			tu: URL
 			ta: SINGLE_TRANSACTION
 		do
-			optimized_transactions := Void
-			transfer_manager := Void
+			last_added_source_correct := is_address_correct (s, Readable)
+			last_added_target_correct := is_address_correct (t, Writable)
+			if last_added_source_correct and last_added_target_correct then
+				optimized_transactions := Void
+				transfer_manager := Void
 
-			resource_factory.set_address (s)
-			su := resource_factory.url
-			resource_hash.search (su.location)
-				check
-					found: resource_hash.found
-						-- Because resource has been created during correctness
-						-- check
-				end
-			sr := deep_clone (resource_hash.found_item)
-
-				debug
-					Io.error.put_string (s)
-					Io.error.put_string (" -> ")
-					Io.error.put_string (t)
-					Io.error.put_string (" added.%N")
-				end
-			resource_factory.set_address (t)
-			tu := resource_factory.url
-			resource_hash.search (tu.location)
-				check
-					found: resource_hash.found
-						-- Because resource has been created during correctness
-						-- check
-				end
-			tr := deep_clone (resource_hash.found_item)
-			
-			if timeout /= Void then
-				sr.set_timeout (timeout.item)
-				tr.set_timeout (timeout.item)
-					debug
-						Io.error.put_string ("Timeout set to ")
-						Io.error.put_integer (timeout.item)
-						Io.error.put_string (" seconds%N")
+				resource_factory.set_address (s)
+				su := resource_factory.url
+				resource_hash.search (su.location)
+					check
+						found: resource_hash.found
+							-- Because resource has been created during 
+							-- correctness check
 					end
+				sr := deep_clone (resource_hash.found_item)
+
+				resource_factory.set_address (t)
+				tu := resource_factory.url
+				resource_hash.search (tu.location)
+					check
+						found: resource_hash.found
+							-- Because resource has been created during 
+							-- correctness check
+					end
+				tr := deep_clone (resource_hash.found_item)
+					debug
+						Io.error.put_string (s)
+						Io.error.put_string (" -> ")
+						Io.error.put_string (t)
+						Io.error.put_string (" added.%N")
+					end
+				if timeout /= Void then
+					sr.set_timeout (timeout.item)
+					tr.set_timeout (timeout.item)
+						debug
+							Io.error.put_string ("Timeout set to ")
+							Io.error.put_integer (timeout.item)
+							Io.error.put_string (" seconds%N")
+						end
+				end
+				create ta.make (sr, tr)
+				transactions.extend (ta)
 			end
-			create ta.make (sr, tr)
-			transactions.extend (ta)
 		ensure
-			one_more_transaction: count = old count + 1
+			one_more_transaction_if_correct: 
+				(last_added_source_correct and 
+				last_added_target_correct) implies count = old count + 1
 		end
 
 feature -- Removal
@@ -413,6 +424,7 @@ feature {NONE} -- Implementation
 			if not s.has (r.location) then
 				f.call ([])
 				Result := f.last_result
+				Io.put_string ("is_readable: " + Result.out + "%N")
 				if Result then s.extend (r.location) end
 			else
 				Result := True

@@ -1,4 +1,9 @@
--- Class ids.
+indexing
+ 
+	description:
+		"Class identifiers.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLASS_ID
 

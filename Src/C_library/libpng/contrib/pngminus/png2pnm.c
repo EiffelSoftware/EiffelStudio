@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
           if ((fp_al = fopen (argv[argi], "wb")) == NULL)
           {
             fprintf (stderr, "PNM2PNG\n");
-            fprintf (stderr, "Error:  can not create alpha-channel file %s\n", argv[argi]);
+            fprintf (stderr, "Error:  cannot create alpha-channel file %s\n", argv[argi]);
             exit (1);
           }
           break;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
       if ((fp_wr = fopen (argv[argi], "wb")) == NULL)
       {
         fprintf (stderr, "PNG2PNM\n");
-        fprintf (stderr, "Error:  can not create file %s\n", argv[argi]);
+        fprintf (stderr, "Error:  cannot create file %s\n", argv[argi]);
         exit (1);
       }
     }

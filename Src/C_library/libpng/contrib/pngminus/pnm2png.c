@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
       if ((fp_wr = fopen (argv[argi], "wb")) == NULL)
       {
         fprintf (stderr, "PNM2PNG\n");
-        fprintf (stderr, "Error:  can not create PNG-file %s\n", argv[argi]);
+        fprintf (stderr, "Error:  cannot create PNG-file %s\n", argv[argi]);
         exit (1);
       }
     }

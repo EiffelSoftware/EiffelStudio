@@ -79,19 +79,17 @@ feature -- Basic Operations
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 		local
 			i: INTEGER
-			an_observer: SYSTEM_DELEGATE
-			an_array: ARRAY [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
-			object_returned: ANY
+			an_observer: SYSTEM_EVENTHANDLER
+			arguments: SYSTEM_EVENTARGS
 		do	
+			create arguments.make
 			from
 			until
 				i = add_observers.Count
 			loop
 				an_observer ?= add_observers.Item (i)
 				if an_observer /= Void then
-					create an_array.make (1)
-					an_array.put (0, an_assembly_descriptor)
-					object_returned := an_observer.dynamicinvoke (an_array)
+					an_observer.invoke (an_observer, arguments)
 				end
 				i := i + 1
 			end
@@ -106,19 +104,17 @@ feature -- Basic Operations
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 		local
 			i: INTEGER
-			an_observer: SYSTEM_DELEGATE
-			an_array: ARRAY [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
-			object_returned: ANY
+			an_observer: SYSTEM_EVENTHANDLER
+			arguments: SYSTEM_EVENTARGS
 		do	
+			create arguments.make
 			from
 			until
 				i = remove_observers.Count
 			loop
 				an_observer ?= remove_observers.Item (i)
 				if an_observer /= Void then
-					create an_array.make (1)
-					an_array.put (0, an_assembly_descriptor)
-					object_returned := an_observer.dynamicinvoke (an_array)
+					an_observer.invoke (an_observer, arguments)
 				end
 				i := i + 1
 			end

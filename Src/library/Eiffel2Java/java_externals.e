@@ -44,6 +44,10 @@ feature {NONE} -- dynamic method calls
 		external "C"
 		end
 
+	c_call_long_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): INTEGER_64 is
+		external "C"
+		end
+
 	c_call_float_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): REAL is
 		external "C"
 		end
@@ -72,6 +76,14 @@ feature {NONE} -- dynamic attribute access
 		end
 
 	c_get_static_integer_field (env: POINTER; oid: POINTER; fid: POINTER): INTEGER is
+		external "C"
+		end
+
+	c_get_long_field (env: POINTER; oid: POINTER; fid: POINTER): INTEGER_64 is
+		external "C"
+		end
+
+	c_get_static_long_field (env: POINTER; oid: POINTER; fid: POINTER): INTEGER_64 is
 		external "C"
 		end
 
@@ -146,6 +158,14 @@ feature {NONE} -- dynamic attribute setting
 		end
 		
 	c_set_static_integer_field (env: POINTER; oid: POINTER; fid: POINTER; value: INTEGER) is
+		external "C"
+		end
+
+	c_set_long_field ( env: POINTER; oid: POINTER; fid: POINTER; value: INTEGER_64) is
+		external "C"
+		end
+		
+	c_set_static_long_field (env: POINTER; oid: POINTER; fid: POINTER; value: INTEGER_64) is
 		external "C"
 		end
 
@@ -243,6 +263,10 @@ feature {NONE} -- static method calls
 		external "C"
 		end
 
+	c_call_static_long_method (lenv: POINTER; cls: POINTER; mid: POINTER; argp: POINTER): INTEGER_64 is
+		external "C"
+		end
+
 	c_call_static_float_method (lenv: POINTER; cls: POINTER; mid: POINTER; argp: POINTER): REAL is
 		external "C"
 		end
@@ -300,6 +324,18 @@ feature {NONE} -- array operations
 		end
 
 	c_set_int_array_element (lenv: POINTER; ljarray: POINTER; indx: INTEGER; lvalue: INTEGER) is
+		external "C"
+		end
+
+	c_new_long_array (lenv: POINTER; lsize: INTEGER ): POINTER is
+		external "C"
+		end
+
+	c_get_long_array_element (lenv: POINTER; ljarray: POINTER; indx: INTEGER): INTEGER_64  is
+		external "C"
+		end
+
+	c_set_long_array_element (lenv: POINTER; ljarray: POINTER; indx: INTEGER; lvalue: INTEGER_64) is
 		external "C"
 		end
 

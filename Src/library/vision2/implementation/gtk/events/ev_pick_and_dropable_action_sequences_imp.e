@@ -29,8 +29,7 @@ feature -- Event handling
 
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Create a drop action sequence.
-		do
-			create Result
+		deferred
 		end
 
 end

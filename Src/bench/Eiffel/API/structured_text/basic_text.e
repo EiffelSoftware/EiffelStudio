@@ -36,9 +36,6 @@ feature -- Properties
 	is_special: BOOLEAN;
 			-- Is Current special?
 
-	is_comment: BOOLEAN;
-			-- Is Current a comment?
-
 	is_keyword: BOOLEAN;
 			-- Is Current a keyword?
 
@@ -50,14 +47,6 @@ feature -- Setting
 			is_keyword := True
 		ensure
 			is_keyword: is_keyword
-		end;
-
-	set_is_comment is
-			-- Set is_comment to True.
-		do
-			is_comment := True
-		ensure
-			is_comment: is_comment
 		end;
 
 	set_is_special is

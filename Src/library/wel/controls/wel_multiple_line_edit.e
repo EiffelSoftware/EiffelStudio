@@ -15,11 +15,6 @@ inherit
 			set_caret_position
 		end
 
-	WEL_ES_CONSTANTS
-		export
-			{NONE} all
-		end
-
 creation
 	make,
 	make_by_id

@@ -18,22 +18,12 @@ inherit
 		undefine
 			replace
 		redefine
-			interface,
-			initialize
+			interface
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
 		redefine
 			interface
-		end
-
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Set `list_widget' to `c_object'.
-		do
-			Precursor
-			list_widget := c_object
 		end
 
 feature {NONE} -- Implementation
@@ -65,6 +55,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/06 20:27:55  brendel
+--| Removed initialize.
+--|
 --| Revision 1.14  2000/04/05 21:16:09  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

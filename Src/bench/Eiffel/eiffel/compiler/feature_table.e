@@ -820,6 +820,27 @@ feature -- API
 			Result.set_keys (clone (keys));
 		end;
 
+    written_in_features: LIST [E_FEATURE] is
+            -- List of features defined in current class
+		local
+			c_id: like feat_tbl_id;
+			list: LINKED_LIST [E_FEATURE]
+        do  
+			from
+				c_id := feat_tbl_id;
+				!! list.make;
+				start
+			until
+				after
+			loop
+				if c_id.is_equal (item_for_iteration.written_in) then
+					list.put_front (item_for_iteration.api_feature (c_id))
+				end;
+				forth
+			end;
+			Result := list
+        end;
+
 feature -- Debugging
 
 	trace is

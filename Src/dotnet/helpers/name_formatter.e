@@ -61,36 +61,41 @@ feature -- Basic Operations
 			if type_mapping_table.found then
 				Result := type_mapping_table.found_item
 			else
-				create Result.make_from_string (name)
-				if Result.item (name.count) = ']' then
-					Result.keep_head (Result.count - 2)
-					Result.append (native_array_string)
-					Result.append (full_formatted_type_name (Result))
-					Result.append_character (']')
+				variable_mapping_table.search (name.as_lower)
+				if variable_mapping_table.found then
+					Result := variable_mapping_table.found_item.as_upper
 				else
-					i := name.index_of ('+', 1)
-					if i > 0 then
-						container := name.substring (1, i - 1)
-						nested := name.substring (i + 1, name.count)
-							-- Estimated allocation size.
-						create Result.make (name.count + 5)
-						Result.append (full_formatted_type_name (nested))
-						Result.append (in_string)
-						Result.append (full_formatted_type_name (container))
+					create Result.make_from_string (name)
+					if Result.item (name.count) = ']' then
+						Result.keep_head (Result.count - 2)
+						Result.append (native_array_string)
+						Result.append (full_formatted_type_name (Result))
+						Result.append_character (']')
 					else
-						if Result.item (Result.count) = '&' then
-							Result.keep_head (Result.count - 1)
+						i := name.index_of ('+', 1)
+						if i > 0 then
+							container := name.substring (1, i - 1)
+							nested := name.substring (i + 1, name.count)
+								-- Estimated allocation size.
+							create Result.make (name.count + 5)
+							Result.append (full_formatted_type_name (nested))
+							Result.append (in_string)
+							Result.append (full_formatted_type_name (container))
+						else
+							if Result.item (Result.count) = '&' then
+								Result.keep_head (Result.count - 1)
+							end
+							Result.replace_substring_all (single_dot_string, single_underscore_string)
+							Result.replace_substring_all (triple_underscore_string,
+								single_underscore_string)
+							Result.replace_substring_all (double_underscore_string,
+								single_underscore_string)
+							if Result.item (1) = '_' then
+								Result.prepend_character ('X')
+							end
+							Result := eiffel_format (Result, True)
+							Result.to_upper
 						end
-						Result.replace_substring_all (single_dot_string, single_underscore_string)
-						Result.replace_substring_all (triple_underscore_string,
-							single_underscore_string)
-						Result.replace_substring_all (double_underscore_string,
-							single_underscore_string)
-						if Result.item (1) = '_' then
-							Result.prepend_character ('X')
-						end
-						Result := eiffel_format (Result, True)
-						Result.to_upper
 					end
 				end
 			end
@@ -406,13 +411,9 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (100)
 			Result.put ("INTEGER", "Int32")
-			Result.put ("INTEGER", "UInt32")
 			Result.put ("INTEGER_64", "Int64")
-			Result.put ("INTEGER_64", "UInt64")
-			Result.put ("INTEGER_16", "Int16")
 			Result.put ("INTEGER_16", "Int16")
 			Result.put ("INTEGER_8", "Byte")
-			Result.put ("INTEGER_8", "SByte")
 			Result.put ("CHARACTER", "Char")
 			Result.put ("DOUBLE", "Double")
 			Result.put ("REAL", "Single")
@@ -458,6 +459,7 @@ feature {NONE} -- Implementation
 			Result.put ("and_", "and")
 			Result.put ("as_", "as")
 			Result.put ("assign_", "assign")
+			Result.put ("attribute_", "attribute")
 			Result.put ("bit_", "bit")
 			Result.put ("check_", "check")
 			Result.put ("class_", "class")
@@ -527,14 +529,10 @@ feature {NONE} -- Implementation
 			Result.put ("boolean", "Boolean")
 			Result.put ("character", "Char")
 			Result.put ("integer8", "Byte")
-			Result.put ("integer8", "SByte")
 			Result.put ("integer16", "Int16")
-			Result.put ("integer16", "UInt16")
 			Result.put ("integer", "Int32")
-			Result.put ("integer", "UInt32")
 			Result.put ("pointer", "IntPtr")
 			Result.put ("integer64", "Int64")
-			Result.put ("integer64", "UInt64")
 			Result.put ("double", "Double")
 			Result.put ("real", "Single")
 		end

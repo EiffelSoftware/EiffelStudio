@@ -40,7 +40,8 @@ feature
 	unset_project_initialized is 
 			-- Set project_initialized to False.
 		do 		
-			project_initialized := False 
+			project_initialized := False ;
+			set_title (Widget_names.main_panel)
 		end;
 
 	set_saved_symbol is
@@ -194,8 +195,8 @@ feature
 			!!editor_t.make (Widget_names.editors_toggle, check_box1)
 			!!cmd_cat_t.make (Widget_names.command_catalog, check_box2)
 			!!app_edit_t.make (Widget_names.application_editor, check_box2)
-			!!interface_t.make (Widget_names.interface_toggle, check_box2)
-			!!interface_only_t.make (Widget_names.interface_only_toggle, check_box2)
+			!!interface_t.make (Widget_names.interface_label, check_box2)
+			!!interface_only_t.make (Widget_names.interface_only_label, check_box2)
 
 			form3.set_fraction_base (2);
 			form3.attach_left (visibility_label, 0);

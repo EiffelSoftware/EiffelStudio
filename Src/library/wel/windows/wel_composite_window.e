@@ -997,8 +997,6 @@ feature {NONE} -- Externals
 	cwin_get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
-		alias
-			"GET_WM_VSCROLL_POS"
 		end
 
 	cwin_get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
@@ -1018,8 +1016,6 @@ feature {NONE} -- Externals
 	cwin_get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
-		alias
-			"GET_WM_HSCROLL_POS"
 		end
 
 	cwin_get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is

@@ -38,8 +38,15 @@ feature -- Access
 			end
 		end
 
+	is_valid: BOOLEAN is
+			-- Find out if some calls can be made.
+		do
+		end
+
 	assembly_name: STRING is
 			-- Name of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			check
 				False
@@ -48,6 +55,8 @@ feature -- Access
 	
 	assembly_version: STRING is
 			-- Version number of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			check
 				False
@@ -56,6 +65,8 @@ feature -- Access
 	
 	assembly_culture: STRING is
 			-- Culture/locale of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			check
 				False
@@ -64,6 +75,8 @@ feature -- Access
 	
 	assembly_public_key_token: STRING is
 			-- Public key of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			check
 				False

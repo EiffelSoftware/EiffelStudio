@@ -38,26 +38,40 @@ feature -- Access
 			Result := assembly_interface /= Void
 		end
 
+	is_valid: BOOLEAN is
+			-- Find out if some calls can be made.
+		do
+			Result := item /= Void and then item.is_successful
+		end
+		
 	assembly_name: STRING is
 			-- Name of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			Result := item.name
 		end
 	
 	assembly_version: STRING is
 			-- Version number of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			Result := item.version
 		end
 	
 	assembly_culture: STRING is
 			-- Culture/locale of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			Result := item.culture
 		end
 	
 	assembly_public_key_token: STRING is
 			-- Public key of assembly at 'item'
+		require
+			is_valid: is_valid
 		do
 			Result := item.public_key_token
 		end

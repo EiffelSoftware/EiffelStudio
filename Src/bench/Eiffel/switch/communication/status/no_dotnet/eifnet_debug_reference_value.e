@@ -10,10 +10,27 @@ class
 inherit
 	ABSTRACT_REFERENCE_VALUE
 
+
+	EIFNET_ABSTRACT_DEBUG_VALUE	
+		undefine
+			address
+		end
+
+feature -- properties
+
+	value_class_token: INTEGER
+
+--	value_module_file_name: STRING
+
 feature -- Access
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
+		do
+		end
+
+
+	dynamic_class_type: CLASS_TYPE is
 		do
 		end
 

@@ -44,6 +44,10 @@ feature {APPLICATION_EXECUTION} -- Properties
 		do
 		end
 
+feature -- Trigger eStudio done
+
+	callback_notification_processed: BOOLEAN		
+	
 feature -- Bridge to Debugger
 
 	exception_occured: BOOLEAN is
@@ -58,6 +62,10 @@ feature -- Bridge to Debugger
 		do
 		end
 
+	exception_message: STRING is
+		do
+		end
+		
 	exception_details: TUPLE [STRING, STRING] is
 			-- class details , module details
 		do

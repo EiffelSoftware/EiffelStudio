@@ -19,7 +19,7 @@ feature -- Basic operations
 			non_void_coclass: a_component /= Void
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_signature, tmp_string: STRING
+			tmp_signature, a_result_type: STRING
 		do
 			func_desc := a_descriptor
 			coclass_name := a_component.name
@@ -38,12 +38,13 @@ feature -- Basic operations
 				if is_hresult (visitor.vt_type) then
 					ccom_feature_writer.set_result_type (Std_method_imp)
 				else
-					tmp_string := clone (Std_method_imp)
-					tmp_string.append (Underscore)
-					tmp_string.append (Open_parenthesis)
-					tmp_string.append (visitor.c_type)
-					tmp_string.append (Close_parenthesis)
-					ccom_feature_writer.set_result_type (tmp_string)
+					create a_result_type.make (100)
+					a_result_type.append (Std_method_imp)
+					a_result_type.append (Underscore)
+					a_result_type.append (Open_parenthesis)
+					a_result_type.append (visitor.c_type)
+					a_result_type.append (Close_parenthesis)
+					ccom_feature_writer.set_result_type (a_result_type)
 				end
 			end
 
@@ -76,10 +77,12 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			Result := clone (Ecatch)
+			create Result.make (10000)
+			Result.append (Ecatch)
 
 			if func_desc.argument_count > 0 then
-				arguments := clone (Space_open_parenthesis)
+				create arguments.make (100)
+				arguments.append (Space_open_parenthesis)
 				arguments.append (Eif_access)
 				arguments.append (Space_open_parenthesis)
 				arguments.append (Eiffel_object)
@@ -117,7 +120,8 @@ feature {NONE} -- Implementation
 						if is_paramflag_fout (func_desc.arguments.item.flags) then
 							
 							if not visitor.is_pointed then
-								tmp_string := clone (visitor.c_type)
+								create tmp_string.make (100)
+								tmp_string.append (visitor.c_type)
 								tmp_string.append (visitor.c_post_type)
 								tmp_string.append (Struct_selection_operator)
 								tmp_string.append (message_output.Not_pointer_type)
@@ -367,7 +371,8 @@ feature {NONE} -- Implementation
 				visitor.visit (type_descriptor)
 			end
 
-			Result := clone (Asterisk)
+			create Result.make (1000)
+			Result.append (Asterisk)
 			Result.append (arg_name)
 			Result.append (Space_equal_space)
 
@@ -401,7 +406,8 @@ feature {NONE} -- Implementation
 			-- Cecil procedure call
 		do
 			-- EIF_PROCEDURE eiffel_procedure
-			Result := clone (Eif_procedure)
+			create Result.make (1000)
+			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Semicolon)
@@ -495,7 +501,8 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			-- (FUNCTION_CAST ('return_type', (EIF_REFERENCE
-			Result := ("(FUNCTION_CAST (")
+			create Result.make (1000)
+			Result.append ("(FUNCTION_CAST (")
 
 			Result.append (return_type)
 			Result.append (Comma)
@@ -534,7 +541,8 @@ feature {NONE} -- Implementation
 			non_void_name: function_name /= Void
 			not_empty: not function_type.empty and then not function_name.empty
 		do
-			Result := Clone (function_type)
+			create Result.make (1000)
+			Result.append (function_type)
 			Result.append (Space)
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Semicolon)
@@ -561,7 +569,8 @@ feature {NONE} -- Implementation
 	empty_argument_body: STRING is
 			-- Eiffel procedure call body
 		do
-			Result := clone (Eif_procedure)
+			create Result.make (1000)
+			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Semicolon)

@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			non_void_feature_writer: feature_writer /= Void
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			tmp_string: STRING
+			an_argument: STRING
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -70,11 +70,12 @@ feature {NONE} -- Implementation
 					feature_writer.set_result_type (visitor.eiffel_type)
 					
 				else
-					tmp_string := clone (arguments.item.name)
-					tmp_string.append (Colon)
-					tmp_string.append (Space)
-					tmp_string.append (visitor.eiffel_type)
-					feature_writer.add_argument (tmp_string)
+					create an_argument.make (100)
+					an_argument.append (arguments.item.name)
+					an_argument.append (Colon)
+					an_argument.append (Space)
+					an_argument.append (visitor.eiffel_type)
+					feature_writer.add_argument (an_argument)
 					add_enumeration_comments (arguments.item.name, arguments.item.type, visitor)
 				end
 				visitor := Void

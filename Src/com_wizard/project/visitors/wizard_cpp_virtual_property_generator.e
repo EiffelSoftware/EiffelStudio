@@ -17,21 +17,23 @@ feature -- Basic operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 		local
-			tmp_string: STRING
+			a_name, a_comment, a_signature: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create c_setting_feature.make
 			create c_access_feature.make
 
-			tmp_string := clone (Set_clause)
-			tmp_string.append (a_descriptor.name)
-			c_setting_feature.set_name (tmp_string)
+			create a_name.make (100)
+			a_name.append (Set_clause)
+			a_name.append (a_descriptor.name)
+			c_setting_feature.set_name (a_name)
 
 			c_setting_feature.set_result_type (Hresult)
 
-			tmp_string := "Set "
-			tmp_string.append (a_descriptor.name)
-			c_setting_feature.set_comment (tmp_string)
+			create a_comment.make (100)
+			a_comment.append ("Set ")
+			a_comment.append (a_descriptor.name)
+			c_setting_feature.set_comment (a_comment)
 
 			create visitor
 			visitor.visit (a_descriptor.data_type)
@@ -39,30 +41,32 @@ feature -- Basic operations
 				set_header_file (visitor.c_header_file)
 			end
 
-			tmp_string := clone (visitor.c_type)
-			tmp_string.append (Space)
-			tmp_string.append (Tmp_clause)
-			tmp_string.append (a_descriptor.name)
-
-			c_setting_feature.set_signature(tmp_string)
+			create a_signature.make (100)
+			a_signature.append (visitor.c_type)
+			a_signature.append (Space)
+			a_signature.append (Tmp_clause)
+			a_signature.append (a_descriptor.name)
+			c_setting_feature.set_signature(a_signature)
 			c_setting_feature.set_pure_virtual
 
-			tmp_string := clone (Get_clause)
-			tmp_string.append (a_descriptor.name)
-			c_access_feature.set_name (tmp_string)
+			create a_name.make (100)
+			a_name.append (Get_clause)
+			a_name.append (a_descriptor.name)
+			c_access_feature.set_name (a_name)
 
 			c_access_feature.set_result_type (Hresult)
 
-			tmp_string := "Get "
-			tmp_string.append (a_descriptor.name)
-			c_access_feature.set_comment (tmp_string)
+			create a_comment.make (100)
+			a_comment.append ("Get ")
+			a_comment.append (a_descriptor.name)
+			c_access_feature.set_comment (a_comment)
 
-			tmp_string := clone (visitor.c_type)
-			tmp_string.append (Space)
-			tmp_string.append (Tmp_clause)
-			tmp_string.append (a_descriptor.name)
-
-			c_access_feature.set_signature(tmp_string)
+			create a_signature.make (100)
+			a_signature.append (visitor.c_type)
+			a_signature.append (Space)
+			a_signature.append (Tmp_clause)
+			a_signature.append (a_descriptor.name)
+			c_access_feature.set_signature(a_signature)
 			c_access_feature.set_pure_virtual			
 		ensure
 			setting_feature_exists: c_setting_feature /= Void

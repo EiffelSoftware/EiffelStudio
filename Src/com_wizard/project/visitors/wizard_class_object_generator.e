@@ -21,27 +21,30 @@ feature -- Basic operations
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate class object.
 		local
-			tmp_string: STRING
+			a_name, a_header_file_name, a_header: STRING
 			member_writer: WIZARD_WRITER_C_MEMBER
 		do
 			coclass_descriptor := a_descriptor
 
 			create cpp_class_writer.make
 
-			tmp_string := clone (coclass_descriptor.c_type_name)
-			tmp_string.append (Underscore)
-			tmp_string.append (Factory)
-			cpp_class_writer.set_name (tmp_string)
+			create a_name.make (1000)
+			a_name.append (coclass_descriptor.c_type_name)
+			a_name.append (Underscore)
+			a_name.append (Factory)
+			cpp_class_writer.set_name (a_name)
 
-			tmp_string := clone (tmp_string)
-			tmp_string.append (Header_file_extension)
-			cpp_class_writer.set_header_file_name (tmp_string)
+			create a_header_file_name.make (100)
+			a_header_file_name.append (a_name)
+			a_header_file_name.append (Header_file_extension)
+			cpp_class_writer.set_header_file_name (a_header_file_name)
 
 			-- Description
-			tmp_string := clone (coclass_descriptor.c_type_name)
-			tmp_string.append (Space)
-			tmp_string.append (Factory)
-			cpp_class_writer.set_header (tmp_string)
+			create a_header.make (1000)
+			a_header.append (coclass_descriptor.c_type_name)
+			a_header.append (Space)
+			a_header.append (Factory)
+			cpp_class_writer.set_header (a_header)
 
 			-- Import/include header file
 			cpp_class_writer.add_import (coclass_descriptor.c_header_file_name)
@@ -173,19 +176,21 @@ feature {NONE} -- Implementations
 	lock_server_feature: WIZARD_WRITER_C_FUNCTION is
 			-- LoackServer feature
 		local
-			tmp_body: STRING
+			a_signature, tmp_body: STRING
 		do
 			create Result.make
 			Result.set_name ("LockServer")
 			Result.set_comment ("Lock Server")
 			Result.set_result_type (Std_method_imp)
 
-			tmp_body := clone (Bool)
-			tmp_body.append (Space)
-			tmp_body.append (Tmp_variable_name)
-			Result.set_signature (tmp_body)
+			create a_signature.make (100)
+			a_signature.append (Bool)
+			a_signature.append (Space)
+			a_signature.append (Tmp_variable_name)
+			Result.set_signature (a_signature)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab)
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Tmp_variable_name)
@@ -216,7 +221,8 @@ feature {NONE} -- Implementations
 			Result.set_result_type (Std_method_imp)
 			Result.set_signature ("IUnknown *pIunknown, REFIID riid, void **ppv")
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append ("ppv")
@@ -309,7 +315,8 @@ feature {NONE} -- Implementations
 			Result.set_result_type (Std_method_imp)
 			Result.set_signature (Query_interface_signature)
 
-			tmp_body:= clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Riid)
@@ -386,7 +393,8 @@ feature {NONE} -- Implementations
 			Result.set_comment ("Decrement reference count")
 			Result.set_result_type (Ulong_std_method_imp)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 
 			if shared_wizard_environment.in_process_server then
 				tmp_body.append ("UnlockModule ();")
@@ -411,7 +419,8 @@ feature {NONE} -- Implementations
 			Result.set_comment ("Increment reference count")
 			Result.set_result_type (Ulong_std_method_imp)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 
 			if shared_wizard_environment.in_process_server then
 				tmp_body.append ("LockModule ();")

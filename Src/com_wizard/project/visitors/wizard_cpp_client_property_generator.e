@@ -101,40 +101,44 @@ feature {NONE} -- Implementation
 			non_void_property: a_property/= Void
 			valid_interface_name: not interface_name.empty
 		local
-			tmp_string, set_feature_name: STRING
+			a_comment, a_signature, set_feature_name: STRING
 		do
 			create c_setting_feature.make
-			set_feature_name := clone (Set_clause)
+			
+			create set_feature_name.make (100)
+			set_feature_name.append (Set_clause)
 			set_feature_name.append (a_property.eiffel_name (a_component))
 			c_setting_feature.set_name (external_feature_name (set_feature_name))
 
 			-- Set comment
-			tmp_string := clone (a_property.description)
-			tmp_string.prepend ("Set ")
-			c_setting_feature.set_comment (tmp_string)
+			create a_comment.make (200)
+			a_comment.append (a_property.description)
+			a_comment.prepend ("Set ")
+			c_setting_feature.set_comment (a_comment)
 
 			-- Set signature
+			create a_signature.make (200)
 			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
-				tmp_string := clone (visitor.cecil_type)
+				a_signature.append (visitor.cecil_type)
 
 			elseif visitor.is_structure or visitor.is_array_basic_type or
 					visitor.is_interface then
-				tmp_string := clone (visitor.c_type)
-				tmp_string.append (Space)
-				tmp_string.append (Asterisk)
+				a_signature.append (visitor.c_type)
+				a_signature.append (Space)
+				a_signature.append (Asterisk)
 			elseif 
 				visitor.is_structure_pointer or 
 				visitor.is_interface_pointer or
 				visitor.is_coclass_pointer 
 			then
-				tmp_string := clone (visitor.c_type)
+				a_signature.append (visitor.c_type)
 
 			else
-				tmp_string := clone (Eif_object)
+				a_signature.append (Eif_object)
 			end
-			tmp_string.append (Space)
-			tmp_string.append (Argument_name)
-			c_setting_feature.set_signature (tmp_string)
+			a_signature.append (Space)
+			a_signature.append (Argument_name)
+			c_setting_feature.set_signature (a_signature)
 			c_setting_feature.set_result_type ("void")
 
 			-- Set setting feature body

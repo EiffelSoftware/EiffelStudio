@@ -20,7 +20,7 @@ feature -- Basic operations
 			non_void_coclass_name: a_component.name /= Void
 			non_void_property: a_property /= Void
 		local
-			tmp_string: STRING
+			a_name, a_signature, tmp_string: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create c_access_feature.make
@@ -30,55 +30,52 @@ feature -- Basic operations
 			visitor.visit (a_property.data_type)
 
 			-- Access feature
-			tmp_string := clone (Get_clause)
-			tmp_string.append (a_property.name)
-			c_access_feature.set_name (tmp_string)
+			create a_name.make (100)
+			a_name.append (Get_clause)
+			a_name.append (a_property.name)
+			c_access_feature.set_name (a_name)
 
-			-- Set c access body
 			c_access_feature.set_body (access_body (a_property.eiffel_name (a_component), visitor))
-
-			-- Set result type.
 			c_access_feature.set_result_type (Std_method_imp)
-
-			-- Set comment
 			c_access_feature.set_comment (a_property.description)
 
 			-- Set c signature
-			tmp_string := clone (Beginning_comment_paramflag)
-			tmp_string.append (Out_keyword)
-			tmp_string.append (End_comment_paramflag)
-			tmp_string.append (visitor.c_type)
-			tmp_string.append (visitor.c_post_type)
-			tmp_string.append (Asterisk)
-			tmp_string.append (Space)
-			tmp_string.append (Argument_name)
-			c_access_feature.set_signature (tmp_string)
+			create a_signature.make (100)
+			a_signature.append (Beginning_comment_paramflag)
+			a_signature.append (Out_keyword)
+			a_signature.append (End_comment_paramflag)
+			a_signature.append (visitor.c_type)
+			a_signature.append (visitor.c_post_type)
+			a_signature.append (Asterisk)
+			a_signature.append (Space)
+			a_signature.append (Argument_name)
+			c_access_feature.set_signature (a_signature)
 
 			-- Setting feature
-			tmp_string := clone (Set_clause)
-			tmp_string.append (a_property.name)
-			c_setting_feature.set_name (tmp_string)
+			create a_name.make (100)
+			a_name.append (Set_clause)
+			a_name.append (a_property.name)
+			c_setting_feature.set_name (a_name)
 
 			-- set c setting body
-			tmp_string := clone (Set_clause)
+			create tmp_string.make (100)
+			tmp_string.append (Set_clause)
 			tmp_string.append (a_property.eiffel_name (a_component))
 			c_setting_feature.set_body (setting_body (tmp_string, visitor))
 
-			--  Set result type
 			c_setting_feature.set_result_type (Std_method_imp)
-
-			-- Set comment
 			c_setting_feature.set_comment (a_property.description)
 
 			-- Set c signature
-			tmp_string := clone (Beginning_comment_paramflag)
-			tmp_string.append (In)
-			tmp_string.append (End_comment_paramflag)
-			tmp_string.append (visitor.c_type)
-			tmp_string.append (visitor.c_post_type)
-			tmp_string.append (Space)
-			tmp_string.append (Argument_name)
-			c_setting_feature.set_signature (tmp_string)
+			create a_signature.make (100)
+			a_signature.append (Beginning_comment_paramflag)
+			a_signature.append (In)
+			a_signature.append (End_comment_paramflag)
+			a_signature.append (visitor.c_type)
+			a_signature.append (visitor.c_post_type)
+			a_signature.append (Space)
+			a_signature.append (Argument_name)
+			c_setting_feature.set_signature (a_signature)
 		end
 
 feature {NONE} -- Implementation
@@ -89,7 +86,8 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			non_void_visitor: visitor /= Void
 		do
-			Result := clone (Ecatch)
+			create Result.make (10000)
+			Result.append (Ecatch)
 
 			Result.append (New_line_tab)
 			Result.append (cecil_function (a_name, visitor))
@@ -136,7 +134,8 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			non_void_visitor: visitor /= Void
 		do
-			Result := clone (Ecatch)
+			create Result.make (1000)
+			Result.append (Ecatch)
 			Result.append (set_variable (visitor))
 			Result.append (New_line_tab)
 			Result.append (cecil_procedure (a_name, visitor))
@@ -153,7 +152,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 		do
-			Result := clone (Tab)
+			create Result.make (1000)
+			Result.append (Tab)
 			if visitor.is_basic_type then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
@@ -311,7 +311,9 @@ feature {NONE} -- Implementation
 							and then not call_func_name.empty
 		do
 			-- EIF_type_FUNCTION eiffel_function
-			Result := Clone (function_type)
+			
+			create Result.make (10000)
+			Result.append (function_type)
 			Result.append (Space)
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Semicolon)
@@ -340,7 +342,8 @@ feature {NONE} -- Implementation
 			non_void_visitor: visitor /= Void
 		do
 			-- EIF_PROCEDURE eiffel_procedure
-			Result := clone (Eif_procedure)
+			create Result.make (10000)
+			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Semicolon)

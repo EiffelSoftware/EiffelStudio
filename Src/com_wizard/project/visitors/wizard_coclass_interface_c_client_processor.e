@@ -18,7 +18,7 @@ feature -- Basic operations
 	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
 		local
-			a_name, tmp_string: STRING
+			a_name, a_variable_name, a_variable_type: STRING
 			data_member: WIZARD_WRITER_C_MEMBER
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
@@ -26,20 +26,20 @@ feature -- Basic operations
 			coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 			coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
 
-			-- Add data member
 			create data_member.make
 			data_member.set_comment (Interface_pointer_comment)
 
-			-- Variable name
-			tmp_string := clone (Interface_variable_prepend)
-			tmp_string.append (an_interface.c_type_name)
-			data_member.set_name (tmp_string)
+			create a_variable_name.make (100)
+			a_variable_name.append (Interface_variable_prepend)
+			a_variable_name.append (an_interface.c_type_name)
+			data_member.set_name (a_variable_name)
 
 			-- Variable type
-			tmp_string := clone (an_interface.c_type_name)
-			tmp_string.append (Space)
-			tmp_string.append (Asterisk)
-			data_member.set_result_type (tmp_string)
+			create a_variable_type.make (100)
+			a_variable_type.append (an_interface.c_type_name)
+			a_variable_type.append (Space)
+			a_variable_type.append (Asterisk)
+			data_member.set_result_type (a_variable_type)
 
 			coclass_generator.cpp_class_writer.add_member (data_member, Private)
 

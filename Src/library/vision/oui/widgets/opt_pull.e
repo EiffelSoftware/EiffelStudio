@@ -30,9 +30,9 @@ feature -- Creation
 			not_name_void: not (a_name = Void);
 			not_parent_void: not (a_parent = Void)
 		do
-     		        depth := a_parent.depth+1;
-           		widget_manager.new (Current, a_parent);
+     		depth := a_parent.depth+1;
 			identifier:= clone (a_name);
+           	widget_manager.new (Current, a_parent);
 			implementation := toolkit.opt_pull (Current);
 			set_default
 		ensure

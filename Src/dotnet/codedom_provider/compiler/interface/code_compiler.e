@@ -15,7 +15,7 @@ inherit
 	CODE_EXECUTION_ENVIRONMENT
 	CODE_SHARED_TEMPORARY_FILES
 	CODE_SHARED_EVENT_MANAGER
-	CODE_REFERENCED_ASSEMBLIES
+	CODE_SHARED_REFERENCED_ASSEMBLIES
 	CODE_SHARED_GENERATION_HELPERS
 	CODE_SHARED_ACCESS_MUTEX
 
@@ -281,6 +281,8 @@ feature {NONE} -- Implementation
 			l_cluster: CODE_ACE_CLUSTER
 			l_precompiler: CODE_PRECOMPILER
 			l_precompile_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
+			l_references_list: CODE_REFERENCES_LIST
+			l_assembly_name: ASSEMBLY_NAME
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -391,7 +393,7 @@ feature {NONE} -- Implementation
 						i = l_count
 					loop
 						l_assembly_file_name := l_assemblies.item (i)
-						if not has_file (l_assembly_file_name) then
+						if not Referenced_assemblies.has_file (l_assembly_file_name) then
 							if feature {SYSTEM_FILE}.exists (l_assembly_file_name) then
 								l_path := l_assembly_file_name
 							else
@@ -399,7 +401,7 @@ feature {NONE} -- Implementation
 								l_path.append (l_assembly_file_name)
 							end
 							if feature {SYSTEM_FILE}.exists (l_path) then
-								add_file (l_path)
+								Referenced_assemblies.extend_file (l_path)
 							else
 								Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_assembly, [l_assembly_file_name])
 							end
@@ -411,11 +413,12 @@ feature {NONE} -- Implementation
 				end
 				
 				-- Complete list of referenced assemblies so all required assemblies are listed
-				complete
+				Referenced_assemblies.complete
 				
 					-- Remove precompile referenced assemblies
 				if l_precompiler /= Void and then l_precompiler.successful then
 						-- Only add references not already in precompile
+					create l_references_list.make (10)
 					from
 						l_precompile_assemblies := l_precompiler.precompile_assembly.get_referenced_assemblies
 						i := 0
@@ -423,10 +426,23 @@ feature {NONE} -- Implementation
 					until
 						i = l_count
 					loop
-						remove (l_precompile_assemblies.item (i))
+						l_assembly_name := l_precompile_assemblies.item (i)
+						if not l_references_list.has_name (l_assembly_name) then
+							l_references_list.extend_name (l_assembly_name)
+						end
 						i := i + 1
 					end
+					l_references_list.complete
+					from
+						l_references_list.start
+					until
+						l_references_list.after
+					loop
+						Referenced_assemblies.remove_name (l_references_list.item.assembly.get_name)
+						l_references_list.forth
+					end
 				end
+				
 
 				-- Only add base clusters if requires
 				create l_cluster.make ("base", "$ISE_EIFFEL\library\base")

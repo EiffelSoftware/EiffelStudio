@@ -67,35 +67,68 @@ feature -- Code generation
 		local
 			i, count: INTEGER;
 		do
-io.putstring ("generate_body%N")
-
-			if not result_type.is_void or has_return_type then
+				-- Check for null pointer to C++ object in workbench mode
+			if not Context.final_mode then
+				inspect
+					type
+				when standard, data_member then
+					generated_file.putstring ("if ((")
+					generated_file.putstring (class_name)
+					generated_file.putstring ("*) arg1 == NULL) RTET(%"")
+					generated_file.putstring (class_name)
+					generated_file.putstring ("::")
+					generated_file.putstring (external_name)
+					generated_file.putstring ("%", EN_VOID);")
+					generated_file.new_line
+					generated_file.new_line
+				else
+				end
+			end
+			if not result_type.is_void then
 				generated_file.putstring ("return ");
 			end;
-			if has_return_type then
-				generated_file.putchar ('(');
-				generated_file.putstring (return_type);
-				generated_file.putchar (')');
-				generated_file.putchar (' ');
-			elseif result_type /= Void then
+			--if has_return_type then
+				--generated_file.putchar ('(');
+				--generated_file.putstring (return_type);
+				--generated_file.putchar (')');
+				--generated_file.putchar (' ');
+			if result_type /= Void then
 				result_type.c_type.generate_cast (generated_file);
 			else
-					-- I'm not sure this is really needed
-				generated_file.putstring ("(void) ");
+				generated_file.putstring ("(void)");
 			end;
-				--| External procedure will be generated as:
-				--| (void) (c_proc (args));
-				--| The extra parenthesis are necessary if c_proc is
-				--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
-				--| Without the parenthesis, the cast is done only on the first
-				--| argument, not the entire expression (affectation)
-			generated_file.putchar ('(');
-			generated_file.putstring (external_name);
-			if arguments /= Void then
-				generated_file.putchar ('(');
-				generate_arguments_with_cast;
-				generated_file.putchar (')');
-			end;
+
+			generated_file.putchar ('(')
+			inspect
+				type
+			when standard, data_member then
+				generated_file.putstring ("((")
+				generated_file.putstring (class_name)
+				generated_file.putstring ("*) arg1)->")
+				generated_file.putstring (external_name);
+			when static, static_data_member then
+				generated_file.putstring (class_name)
+				generated_file.putstring ("::")
+				generated_file.putstring (external_name);
+			when new then
+				generated_file.putstring ("new ")
+				generated_file.putstring (class_name)
+			when delete then
+				generated_file.putstring ("delete ((")
+				generated_file.putstring (class_name)
+				generated_file.putstring ("*)arg1)")
+			end
+
+			inspect
+				type
+			when delete, data_member, static_data_member then
+					-- Nothing to generate
+			when standard, static, new then
+				generated_file.putchar ('(')
+				generate_arguments_with_cast
+				generated_file.putchar (')')
+			end
+
 			generated_file.putchar (')');
 			generated_file.putchar (';');
 			generated_file.new_line;
@@ -108,33 +141,30 @@ io.putstring ("generate_body%N")
 		do
 			if arguments /= Void then
 				from
-					i := arguments.lower;
-					count := arguments.count;
+					j := 1
+					count := arguments.count
+					if type = standard then
+							-- First argument is the pointer to the C++ object
+						i := 2
+					else
+							-- constructor or call to static routine
+						i := 1
+					end
 				until
 					i > count
 				loop
+					if j > 1 then
+						generated_file.putstring (gc_comma);
+					end
 					if has_arg_list then
-						inspect
-							type
-						when normal, delete, data_member then
-								-- CPP type doesn't have a cast
-							j := i - 1
-						when new, static, static_data_member then
-								-- Same number of arguments in signature
-							j := i
-						end
-						if j > 0 then
-							generated_file.putchar ('(');
-							generated_file.putstring (argument_types.item (j));
-							generated_file.putstring (") ");
-						end
+						generated_file.putchar ('(');
+						generated_file.putstring (argument_types.item (j));
+						generated_file.putstring (") ");
 					end;
 					generated_file.putstring ("arg");
 					generated_file.putint (i);
 					i := i + 1;
-					if i <= count then
-						generated_file.putstring (gc_comma);
-					end;
+					j := j + 1
 				end;
 			end;
 		end;

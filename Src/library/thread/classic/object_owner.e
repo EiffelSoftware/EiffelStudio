@@ -9,6 +9,8 @@ indexing
 class
 	OBJECT_OWNER
 
+obsolete
+	"Not needed anymore"
 
 feature {NONE}
 

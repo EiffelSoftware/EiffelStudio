@@ -1,8 +1,6 @@
 indexing
 	description: "Defines the general notions of a stream for the rich %
 		%edit control."
-	note: "Do not use more than one instance of this class at the same %
-		%time. Nested streams are not supported."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,9 +22,8 @@ feature {NONE} -- Initialization
 			-- Make the structure
 		do
 			structure_make
-			set_cookie (0)
+			set_cookie (cwel_pointer_to_integer (ceif_adopt (Current)))
 			set_error (0)
-			cwel_editstream_set_pfncallback (item)
 		end
 
 feature -- Access
@@ -34,7 +31,8 @@ feature -- Access
 	cookie: INTEGER is
 			-- Application-defined value that is passed to the
 			-- callback function.
-			--| Useless in Eiffel.
+			--| Contains Current, so the C callback function knows
+			--| which object to call.
 		do
 			Result := cwel_editstream_get_dwcookie (item)
 		end
@@ -54,7 +52,8 @@ feature -- Element change
 
 	set_cookie (a_cookie: INTEGER) is
 			-- Set `cookie' with `a_cookie'.
-			--| Useless in Eiffel.
+			--| Contains Current, so the C callback function knows
+			--| which object to call.
 		do
 			cwel_editstream_set_dwcookie (item, a_cookie)
 		ensure
@@ -75,19 +74,23 @@ feature -- Basic operations
 			-- Called before the streams.
 			-- May be redefined to make special operations.
 		do
+			print ("init_stream%N")
 		end
 
 	finish_action is
 			-- Called after the streams.
 			-- May be redefined to make special operations.
 		do
+			print ("finish_stream%N")
+
 		end
 
 	release_stream is
 			-- In order to avoid a memory leak when using a WEL_RICH_EDIT_STREAM
 			-- descendant, this need to be called.
 		do
-			cwel_release_editstream_object
+			-- cwel_release_editstream_object
+			ceif_wean (cookie)
 		end
 
 feature -- Measurement
@@ -96,17 +99,6 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_editstream
-		end
-
-feature {NONE} -- Implementation
-
-	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
-			-- The control calls this callback function repeatedly,
-			-- transferring a portion of the data with each call.
-		require
-			buffer_not_null: a_buffer /= default_pointer
-			positive_length: a_length >= 0
-		deferred
 		end
 
 feature {NONE} -- Removal
@@ -137,11 +129,6 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_set_pfncallback (ptr: POINTER) is
-		external
-			"C [macro %"estream.h%"]"
-		end
-
 	cwel_editstream_get_dwcookie (ptr: POINTER): INTEGER is
 		external
 			"C [macro %"estream.h%"]"
@@ -152,34 +139,20 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_set_editstream_procedure_address (address: POINTER) is
+	ceif_adopt (object: ANY): POINTER is
+			-- Eiffel macro to adopt an object
 		external
-			"C [macro %"estream.h%"]"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
+		alias
+			"eif_adopt"
 		end
 
-	cwel_set_editstream_object (object: like Current) is
+	ceif_wean (object: ANY) is
+			-- Eiffel macro to wean an object
 		external
-			"C [macro %"estream.h%"]"
-		end
-
-	cwel_release_editstream_object is
-		external
-			"C [macro %"estream.h%"]"
-		end
-
-	cwel_set_editstream_buffer (value: POINTER) is
-		external
-			"C [macro %"estream.h%"]"
-		end
-
-	cwel_set_editstream_buffer_size (value: INTEGER) is
-		external
-			"C [macro %"estream.h%"]"
-		end
-
-	cwel_set_editstream_in (value: BOOLEAN) is
-		external
-			"C [macro %"estream.h%"]"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
+		alias
+			"eif_wean"
 		end
 
 end -- class WEL_RICH_EDIT_STREAM

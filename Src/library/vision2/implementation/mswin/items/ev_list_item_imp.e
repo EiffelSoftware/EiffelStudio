@@ -21,7 +21,8 @@ inherit
 			parent
 		redefine
 			parent_imp,
-			interface
+			interface,
+			pnd_press
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -42,6 +43,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			press_action := ev_pnd_start_transport
 			is_initialized := True
 		end
 
@@ -69,18 +71,55 @@ feature -- Access
 
 --|FIXME implement as now pick and dropable
 
-	set_capture is
+pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		local
+			list_imp: EV_LIST_IMP
 		do
+			list_imp ?= parent_imp
 			check
-				to_be_implemented: FALSE
+				parent_not_void: list_imp /= Void
+			end
+			if press_action = Ev_pnd_start_transport then
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				list_imp.set_source_true
+				list_imp.set_child_source (Current)
+				list_imp.set_t_item_true
+			elseif press_action = Ev_pnd_end_transport then
+				end_transport (a_x, a_y, a_button)
+				list_imp.set_source_false
+				list_imp.set_child_source (Void)
+				list_imp.set_t_item_false
+			else
+				list_imp.set_source_false
+				list_imp.set_child_source (Void)
+				list_imp.set_t_item_false
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
 			end
 		end
 
-	release_capture is
+
+	set_capture is
+		local
+			list_imp: EV_LIST_IMP
 		do
+			list_imp ?= parent_imp
 			check
-				to_be_implemented: FALSE
+				parent_not_void: list_imp /= Void
 			end
+			list_imp.set_capture
+		end
+
+	release_capture is
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				parent_not_void: list_imp /= Void
+			end
+			list_imp.release_capture
 		end
 
 feature -- Status report
@@ -179,6 +218,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/17 23:29:01  rogers
+--| Implemented pnd_press, set_capture and release_capture.
+--|
 --| Revision 1.33  2000/03/15 17:17:02  rogers
 --| Improved comments and removed old command association.
 --|

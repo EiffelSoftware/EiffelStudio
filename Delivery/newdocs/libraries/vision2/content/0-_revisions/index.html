@@ -70,6 +70,7 @@
 			<LI><B>EV_TEXTABLE</B> - `align_text_left', `align_text_right' and `align_text_center' have been extracted into a new class, EV_TEXT_ALIGNABLE which inherits EV_TEXTABLE. All previous descendents of EV_TEXTABLE now inherit EV_TEXT_ALIGNABLE, except EV_TREE_NODE, EV_MENU_ITEM, EV_LIST_ITEM and EV_TOOL_BAR_BUTTON</LI>
 			<LI><B>EV_TEXT_COMPONENT</B> - Now inherits EV_TEXTABLE.</LI>
 			<LI><B>EV_TEXT_ALIGNMENT_CONSTANTS</B> - New class added to support EV_TEXT_ALIGNABLE.</LI>
+			<LI><B>EV_MENU_ITEM_LIST</B> - `parent' is now of type EV_ANY, instead of EV_MENU_ITEM_LIST as it did not hold for EV_MENU_BAR. The renaming of `parent' to `old_parent' in EV_MENU_BAR has now been removed.</LI>
 		</UL>
 		<P><B>Bug fixes</B>
 		<UL>

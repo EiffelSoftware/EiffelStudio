@@ -24,7 +24,7 @@ feature -- Access
 	Cp_symbol: INTEGER is 42
 			-- Symbol code page.
 
-	Cp_utf7: INTREGER is 65000
+	Cp_utf7: INTEGER is 65000
 			-- UTF-7 code page.
 
 	Cp_utf8: INTEGER is 65001

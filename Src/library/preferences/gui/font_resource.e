@@ -8,8 +8,10 @@ class
 
 inherit
 	STRING_RESOURCE
+		rename
+			make as string_make
 		redefine
-			make, set_value, xml_trace, registry_name
+			set_value
 		end
 
 	EV_FONT_CONSTANTS
@@ -22,9 +24,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING) is
+	make (a_name: STRING; a_value: STRING; a_type: RESOURCE_TYPE) is
 			-- Initialize Current
 		do
+			type := a_type
 			name := a_name
 			default_value := a_value
 			if a_value /= Void then
@@ -32,11 +35,12 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_with_font (a_name: STRING; a_font: EV_FONT) is
+	make_with_font (a_name: STRING; a_font: EV_FONT; a_type: RESOURCE_TYPE) is
 			-- Initialize Current
 		require
 			valid_font: a_font /= Void implies not a_font.is_destroyed
 		do
+			type := a_type
 			name := a_name
 			if a_font = Void then
 				
@@ -125,30 +129,6 @@ feature {NONE} -- Implementation
 	faces : STRING
 
 	shape, weight, height, family: INTEGER
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of current
-		local
-			xml_name, xml_value: STRING
-		do
-			xml_name := name
-			xml_value := value
-
-			create Result.make (27 + xml_name.count + xml_value.count)
-			Result.append ("<TEXT>")
-			Result.append (xml_name)
-			Result.append ("<FONT>")
-			Result.append (xml_value)
-			Result.append ("</FONT></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFFON_" + name
-		end
 
 feature {NONE} -- Implementation
 

@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelStudio resources, with access facilities"
+	description: "Access facilities to a standard resource structure."
 	author: "Pascal Freund and Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,44 +9,145 @@ class
 
 feature -- Initialization
 
+	register_basic_types is
+			-- Append basic resource types to the list of known resource types.
+		require
+			no_registered_type: registered_types.is_empty
+		do
+			resources.register_basic_types
+		ensure
+			basic_types_registered: basic_types_registered
+		end
+
+	register_basic_graphical_types is
+			-- Append the graphical version of the basic resource types to the list of known resource types.
+		require
+			no_registered_type: registered_types.is_empty
+		do
+			resources.register_type (create {BOOLEAN_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {INTEGER_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {STRING_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {ARRAY_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {COLOR_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {FONT_GRAPHICAL_RESOURCE_TYPE}.make)
+		ensure
+			basic_types_registered: basic_types_registered
+		end
+
 	initialize (default_file_name: STRING; location: STRING) is
 			-- Initialize the resources.
 			-- `default_file_name' is the path of the file that contains the default values,
 			-- `location' is the path to either:
-			--		* the registry key where preferences are stored,
+			--		* the root registry key where preferences are stored,
 			--		* or the file where preferences are stored,
 			-- depending on which implementation is chosen (registry or xml).
+		require
+			basic_types_registered: basic_types_registered
 		do
-			resources_cell.put (create {RESOURCE_STRUCTURE}.make_from_location (default_file_name, location))
+			resources.make_from_location (default_file_name, location)
 		ensure
 			initialized_if_no_error: error_message = Void implies initialized
 		end
 
-feature -- Access
+feature -- Status report
 
 	initialized: BOOLEAN is
 			-- Have the preferences been successfully initialized?
 		do
-			Result := Resources_cell.item /= Void and then Resources_cell.item.error_message = Void
+			Result := resources.initialized
+		ensure
+			need_basic_types: Result implies basic_types_registered
 		end
 
 	error_message: STRING is
 			-- Message explaining why `Current' could not be initialized.
 		do
-			if Resources_cell.item /= Void then
-				Result := Resources_cell.item.error_message
-			end
+			Result := resources.error_message
 		end
 
-	resources: RESOURCE_STRUCTURE is
-			-- Resources specified by the user
-		require
-			initialized: initialized
+	basic_types_registered: BOOLEAN is
+			-- Are the basic types of resource (integer, string, etc.) known?
 		do
-			Result := resources_cell.item
+			Result := resources.basic_types_registered
 		end
 
 feature -- Access
+
+	resources: RESOURCE_STRUCTURE is
+			-- Resources specified by the user
+		once
+			create Result
+		end
+
+	registered_types: LINEAR [RESOURCE_TYPE] is
+			-- Known resource types.
+		do
+			Result := resources.registered_types
+		end
+
+	boolean_resource_value (s: STRING; db: BOOLEAN): BOOLEAN is
+			-- Get the value of boolean resource named `s'.
+			-- Default to `db' if `s' could not be found.
+		require
+			initialized: initialized
+		local
+			r: BOOLEAN_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.actual_value
+			else
+				Result := db
+			end
+		end
+
+	integer_resource_value (s: STRING; di: INTEGER): INTEGER is
+			-- Get the value of integer resource named `s'.
+			-- Default to `di' if `s' could not be found.
+		require
+			initialized: initialized
+		local
+			r: INTEGER_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.actual_value
+			else
+				Result := di
+			end
+		end
+
+	string_resource_value (s: STRING; ds: STRING): STRING is
+			-- Get the value of string resource named `s'.
+			-- Default to `ds' if `s' could not be found.
+		require
+			initialized: initialized
+		local
+			r: STRING_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.value
+			else
+				Result := ds
+			end
+		end
+
+	array_resource_value (s: STRING; da: ARRAY [STRING]): ARRAY [STRING] is
+			-- Get the value of array resource named `s'.
+			-- Default to `da' if `s' could not be found.
+		require
+			initialized: initialized
+		local
+			r: ARRAY_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.actual_value
+			else
+				Result := da
+			end
+		end
 
 	color_resource_value (s: STRING; rd, gd, bd: INTEGER): EV_COLOR is
 			-- Color value of resource named `s', or rgb color defined by
@@ -64,7 +165,7 @@ feature -- Access
 			end
 		end
 
-	font_resource_value (s: STRING; df: STRING): EV_FONT is
+	font_resource_value (s: STRING; df: EV_FONT): EV_FONT is
 			-- Font value of resource named `s', or font defined by
 			-- `df' if resource does not exist.
 		require
@@ -76,64 +177,7 @@ feature -- Access
 			if r /= Void then
 				Result := r.actual_value
 			else
-				create r.make (s, df)
-				Result := r.actual_value
-			end
-		end
-
-	array_resource_value (s: STRING; da: ARRAY [STRING]): ARRAY [STRING] is
-		require
-			initialized: initialized
-		local
-			r: ARRAY_RESOURCE
-		do
-			r ?= resources.item (s)
-			if r /= Void then
-				Result := r.actual_value
-			else
-				Result := da
-			end
-		end
-
-	integer_resource_value (s: STRING; di: INTEGER): INTEGER is
-		require
-			initialized: initialized
-		local
-			r: INTEGER_RESOURCE
-		do
-			r ?= resources.item (s)
-			if r /= Void then
-				Result := r.actual_value
-			else
-				Result := di
-			end
-		end
-
-	boolean_resource_value (s: STRING; db: BOOLEAN): BOOLEAN is
-		require
-			initialized: initialized
-		local
-			r: BOOLEAN_RESOURCE
-		do
-			r ?= resources.item (s)
-			if r /= Void then
-				Result := r.actual_value
-			else
-				Result := db
-			end
-		end
-
-	string_resource_value (s: STRING; ds: STRING): STRING is
-		require
-			initialized: initialized
-		local
-			r: STRING_RESOURCE
-		do
-			r ?= resources.item (s)
-			if r /= Void then
-				Result := r.value
-			else
-				Result := ds
+				Result := df
 			end
 		end
 
@@ -226,7 +270,7 @@ feature -- Setting
 			if r /= Void then
 				r.set_actual_value (nb)
 			else
-				create r.make (s, nb)
+				create r.make (s, nb, Resources.registered_types @ Resources.Boolean_type_index)
 				resources.root_folder.resource_list.extend (r)
 				resources.put_resource (r)
 			end
@@ -243,7 +287,7 @@ feature -- Setting
 			if r /= Void then
 				r.set_actual_value (ni)
 			else
-				create r.make (s, ni)
+				create r.make (s, ni, Resources.registered_types @ Resources.Integer_type_index)
 				resources.root_folder.resource_list.extend (r)
 				resources.put_resource (r)
 			end
@@ -260,7 +304,7 @@ feature -- Setting
 			if r /= Void then
 				r.set_value (ns)
 			else
-				create r.make (s, ns)
+				create r.make (s, ns, Resources.registered_types @ Resources.String_type_index)
 				resources.root_folder.resource_list.extend (r)
 				resources.put_resource (r)
 			end
@@ -277,7 +321,7 @@ feature -- Setting
 			if resource_item /= Void then
 				resource_item.set_actual_value (a_value)
 			else
-				create resource_item.make (a_resource_name, a_value)
+				create resource_item.make (a_resource_name, a_value, Resources.registered_types @ Resources.Array_type_index)
 				resources.root_folder.resource_list.extend (resource_item)
 				resources.put_resource (resource_item)
 			end
@@ -295,7 +339,7 @@ feature -- Setting
 			if r /= Void then
 				r.set_value_with_color (nc.red_8_bit, nc.green_8_bit, nc.blue_8_bit)
 			else
-				create r.make_with_color (s, nc)
+				create r.make_with_color (s, nc, Resources.registered_types @ Resources.Color_type_index)
 				resources.root_folder.resource_list.extend (r)
 				resources.put_resource (r)
 			end
@@ -313,7 +357,7 @@ feature -- Setting
 			if r /= Void then
 				r.set_actual_value (nf)
 			else
-				create r.make_with_font (s, nf)
+				create r.make_with_font (s, nf, Resources.registered_types @ Resources.Font_type_index)
 				resources.root_folder.resource_list.extend (r)
 				resources.put_resource (r)
 			end

@@ -12,8 +12,7 @@ inherit
 			make as sr_make,
 			default_value as value
 		redefine
-			set_value, value, xml_trace,
-			registry_name
+			set_value, value
 		end
 
 
@@ -23,17 +22,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: ARRAY [STRING]) is
+	make (a_name: STRING; a_value: ARRAY [STRING]; a_type: RESOURCE_TYPE) is
 			-- Initialize Current
 		do
+			type := a_type
 			name := a_name
 			actual_value := a_value
 			update_value
 		end
 
-	make_from_string (a_name: STRING; a_value: STRING) is
+	make_from_string (a_name: STRING; a_value: STRING; a_type: ARRAY_RESOURCE_TYPE) is
 			-- Initialize Current
 		do
+			type := a_type
 			name := a_name
 			value := a_value
 			update_actual_value
@@ -114,30 +115,6 @@ feature {NONE} -- Implementation
 					actual_value.force (value.substring (start_pos, value.count), actual_value.count + 1)
 				end
 			end
-		end
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of current
-		local
-			xml_name, xml_value: STRING
-		do
-			xml_name := name
-			xml_value := value
-
-			create Result.make (41 + xml_name.count + xml_value.count)
-			Result.append ("<TEXT>")
-			Result.append (xml_name)
-			Result.append ("<LIST_STRING>")
-			Result.append (xml_value)
-			Result.append ("</LIST_STRING></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFARR_" + name
 		end
 
 end -- class ARRAY_RESOURCE

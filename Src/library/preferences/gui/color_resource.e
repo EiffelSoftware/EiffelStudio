@@ -8,8 +8,10 @@ class
  
 inherit
 	STRING_RESOURCE
+		rename
+			make as string_make
 		redefine
-			set_value, make, xml_trace, registry_name
+			set_value
 		end
  
 creation
@@ -17,9 +19,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING) is
+	make (a_name: STRING; a_value: STRING; a_type: RESOURCE_TYPE) is
 			-- Initialize Current with `a_name' and value `a_value'.
 		do
+			type := a_type
 			name := a_name
 			default_value := a_value
 			if a_value /= Void then
@@ -27,11 +30,12 @@ feature {NONE} -- Initialization
 			end
 		end
  
-	make_with_color (a_name: STRING; a_color: EV_COLOR) is
+	make_with_color (a_name: STRING; a_color: EV_COLOR; a_type: RESOURCE_TYPE) is
 			-- Initialize Current with `a_name' and value `a_value'.
 		require
 			valid_color: a_color = Void or else not a_color.is_destroyed
 		do
+			type := a_type
 			name := a_name
 			if a_color = Void then
 				set_void
@@ -198,24 +202,6 @@ feature {NONE} -- Implementation
 			elseif Result < 0 then
 				Result := 0
 			end
-		end
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of current
-		do
-			Result := "<TEXT>"
-			Result.append (name)
-			Result.append ("<COLOR>")
-			Result.append (value)
-			Result.append ("</COLOR></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFCOL_" + name
 		end
 
 end -- class COLOR_RESOURCE

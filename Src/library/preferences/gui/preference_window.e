@@ -29,9 +29,13 @@ create
 feature {NONE} -- Initialization
 
 	delayed_resources: ARRAYED_LIST [STRING]
+			-- Resources that will only be taken into account
+			-- after the application is restarted.
 
 	make is
 			-- Initialize
+		require
+			all_types_are_graphical: all_types_are_graphical
 		local
 			main_box: EV_VERTICAL_BOX
 			split: FLAT_HORIZONTAL_SPLIT_AREA
@@ -40,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Preference_window)
-			set_size (Layout_constants.Dialog_unit_to_pixels(640), Layout_constants.Dialog_unit_to_pixels(460))
+			set_size (Layout_constants.Dialog_unit_to_pixels (640), Layout_constants.Dialog_unit_to_pixels (460))
 			set_icon_pixmap (pixmap_file_contents (Interface_names.preference_window_icon))
 
 			create left_list
@@ -52,10 +56,10 @@ feature {NONE} -- Initialization
 			right_list.column_resize_actions.extend (agent on_right_list_column_resize)
 			right_list.resize_actions.extend (agent on_window_move_and_resize)
 
-			create boolean_selec.make (Current)
-			create text_selec.make (Current)
-			create color_selec.make (Current)
-			create font_selec.make (Current)
+--			create boolean_selec.make (Current)
+--			create text_selec.make (Current)
+--			create color_selec.make (Current)
+--			create font_selec.make (Current)
 
 				-- Split area
  			create split
@@ -129,12 +133,31 @@ feature -- Command
 			-- Destroy the window
 		do
 				-- Destroy the selection windows as well
-			boolean_selec.destroy
-			text_selec.destroy
-			color_selec.destroy
-			font_selec.destroy
+--			boolean_selec.destroy
+--			text_selec.destroy
+--			color_selec.destroy
+--			font_selec.destroy
 
 			Precursor {EV_TITLED_WINDOW}
+		end
+
+feature -- Contract support
+
+	all_types_are_graphical: BOOLEAN is
+			-- Are all registered types graphical?
+		local
+			cv_grap: GRAPHICAL_RESOURCE_TYPE
+		do
+			from
+				registered_types.start
+				Result := True
+			until
+				registered_types.after or Result = False
+			loop
+				cv_grap ?= registered_types.item
+				Result := cv_grap /= Void
+				registered_types.forth
+			end
 		end
 
 feature {SELECTION_BOX} -- Update
@@ -220,30 +243,22 @@ feature {NONE} -- Execution
 			edition_window_y: INTEGER
 			column2_width: INTEGER
 			column1_width: INTEGER
+			box: SELECTION_BOX
+			gtype: GRAPHICAL_RESOURCE_TYPE
 		do
 			clear
 			it ?= l_item
 			check
 				correct_type: it /= Void
 			end
-			col ?= it.resource
-			font ?= it.resource
-			bool ?= it.resource
-			int ?= it.resource
-			str ?= it.resource
-			if col /= Void then
-				color_selec.display (col)
-				current_edition_window := color_selec.change_dialog
-			elseif font /= Void then
-				font_selec.display (font)
-				current_edition_window := font_selec.change_dialog
-			elseif bool /= Void then
-				boolean_selec.display (bool)
-				current_edition_window := boolean_selec.change_dialog
-			elseif int /= Void or str /= Void then
-				text_selec.display (it.resource)
-				current_edition_window := text_selec.change_dialog
+			gtype ?= it.resource.type
+			check
+				gtype /= Void
+				-- Cf. precondition in `make'.
 			end
+			box := gtype.edition_box (Current)
+			box.display (it.resource)
+			current_edition_window := box.change_dialog
 			
 			column1_width := right_list.column_width (1)
 			column2_width := right_list.column_width (2)
@@ -337,7 +352,7 @@ feature {NONE} -- Implementation - Fill Lists
 			-- Fill Left tree.
 		local
  			it: EV_TREE_ITEM
-			l: LINKED_LIST [RESOURCE_FOLDER]
+			l: LIST [RESOURCE_FOLDER]
 			curr_item: RESOURCE_FOLDER
 		do
 			from
@@ -364,7 +379,7 @@ feature {NONE} -- Implementation - Fill Lists
 			folder_visible: folder.is_visible
 		local
  			it, it_child: EV_TREE_ITEM
- 			l: LINKED_LIST [RESOURCE_FOLDER]
+ 			l: LIST [RESOURCE_FOLDER]
 			curr_item: RESOURCE_FOLDER
 		do
 			create it
@@ -407,6 +422,7 @@ feature {NONE} -- Implementation - Fill Lists
 			selected_item: RESOURCE_LIST_ITEM
 			row_number: INTEGER
 			selected_row: INTEGER
+			rl: LIST [RESOURCE]
 			tmp_list: ARRAYED_LIST [RESOURCE_LIST_ITEM]
 		do
 			implementation.lock_update
@@ -417,13 +433,14 @@ feature {NONE} -- Implementation - Fill Lists
 				right_list.wipe_out
 				create tmp_list.make (r.resource_list.count)
 				from
-					r.resource_list.start
+					rl := r.resource_list
+					rl.start
 					row_number := 1
 				until
-					r.resource_list.after
+					rl.after
 				loop
-					if r.resource_list.item.description /= Void then
-						create it.make_resource (r.resource_list.item)
+					if rl.item.description /= Void then
+						create it.make_resource (rl.item)
 						it.set_row_number (row_number)
 						tmp_list.extend (it)
 						if selected_item /= Void and then selected_item.resource = it.resource then
@@ -431,7 +448,7 @@ feature {NONE} -- Implementation - Fill Lists
 						end
 						row_number := row_number + 1
 					end
-					r.resource_list.forth
+					rl.forth
 				end
 				right_list.append (tmp_list)
 				if selected_row > 0 then
@@ -527,18 +544,18 @@ feature {NONE} -- Private widgets
 	right_list: EV_MULTI_COLUMN_LIST
 			-- List of values attached to field selected in the left list 'left_list'.
 
-	boolean_selec: BOOLEAN_SELECTION_BOX
-			-- Box in which the user may choose whether the value is True or False.
-
-	text_selec: TEXT_SELECTION_BOX
-			-- Box in which the user may change the value representable with a string.
-
-	color_selec: COLOR_SELECTION_BOX
-			-- Box in which the user may change the value associated to a color.
-
-	font_selec: FONT_SELECTION_BOX
-			-- Box in which the user may change the value associated to a font.
-
+--	boolean_selec: BOOLEAN_SELECTION_BOX
+--			-- Box in which the user may choose whether the value is True or False.
+--
+--	text_selec: TEXT_SELECTION_BOX
+--			-- Box in which the user may change the value representable with a string.
+--
+--	color_selec: COLOR_SELECTION_BOX
+--			-- Box in which the user may change the value associated to a color.
+--
+--	font_selec: FONT_SELECTION_BOX
+--			-- Box in which the user may change the value associated to a font.
+--
 	current_edition_window: EV_DIALOG
 			-- Currently displayed edition window. Void if no window is
 			-- displayed.

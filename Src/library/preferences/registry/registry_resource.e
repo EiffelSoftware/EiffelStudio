@@ -55,11 +55,12 @@ feature -- Implementation
 			type: INTEGER
 			b: BOOLEAN
 			sprefix: STRING
+			r: RESOURCE
 		do
 				--| For backward compatibilities, everything is now stored through STRINGs.
 			if key_value.type = key_value.Reg_dword then
 				type := integer_type
-				create {INTEGER_RESOURCE} value.make (name, key_value.dword_value)
+				create {INTEGER_RESOURCE} value.make (name, key_value.dword_value, create {INTEGER_RESOURCE_TYPE}.make)
 			else
 				s := key_value.string_value
 				type := string_type

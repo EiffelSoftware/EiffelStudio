@@ -43,6 +43,13 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when a pebble that fits here is picked.")
 			Result.extend ("-- Actions to be performed when a pebble is dropped here.")
 		end
+		
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		do
+			--| FIXME implement
+		end
 
 end -- class GB_EV_PICK_AND_DROPABLE_ACTION_SEQUENCES
 

@@ -144,18 +144,15 @@ feature -- IL code generation
 			min_value: INTERVAL_VAL_B
 			max_value: INTERVAL_VAL_B
 			labels: ARRAY [IL_LABEL]
-			case_index: INTEGER
-			case_label: IL_LABEL
-			case_l: like case_list
-			case_b: CASE_B
-			compound: BYTE_LIST [BYTE_NODE]
 		do
 			else_label := il_label_factory.new_label
 			end_label := il_label_factory.new_label
 			generate_il_line_info (True)
 
-				-- Generate switch expression byte code
-			switch.generate_il
+			if not switch.is_fast_as_local then
+					-- Generate switch expression byte code
+				switch.generate_il
+			end
 
 			if case_list /= Void then
 					-- Sort and merge intervals
@@ -176,27 +173,10 @@ feature -- IL code generation
 						-- Group intervals
 					spans := build_spans (intervals, min_value, max_value)
 						-- Create array of labels for all cases and put `else_label' to position 0
-					create labels.make (0, case_list.count)
+					create labels.make (-1, case_list.count)
+					labels.put (end_label, -1)
 					labels.put (else_label, 0)
 					generate_spans (spans, 1, spans.count, min_value, max_value, true, true, labels)
-					from
-						case_index := labels.upper
-						case_l := case_list
-					until
-						case_index <= 0
-					loop
-						case_label := labels.item (case_index)
-						if case_label /= Void then
-							il_generator.mark_label (case_label)
-							case_b ?= case_l.i_th (case_index)
-							compound := case_b.compound
-							if compound /= Void then
-								compound.generate_il
-							end
-							il_generator.branch_to (end_label)
-						end
-						case_index := case_index - 1
-					end
 				end
 			end
 
@@ -210,11 +190,13 @@ feature -- IL code generation
 
 			il_generator.mark_label (end_label)
 
-				-- Either there was nothing in the inspect and therefore we need to
-				-- pop the value on which we were inspecting as it is not used. Or if
-				-- there was some `when' parts we need to remove the duplication made
-				-- for case comparison.
-			il_generator.pop
+			if not switch.is_fast_as_local then
+					-- Either there was nothing in the inspect and therefore we need to
+					-- pop the value on which we were inspecting as it is not used. Or if
+					-- there was some `when' parts we need to remove the duplication made
+					-- for case comparison.
+				il_generator.pop
+			end
 			
 			check
 				end_location_not_void: end_location /= Void
@@ -414,6 +396,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	minimum_group_size: INTEGER is 7
+			-- Minimum number of items in group for which switch IL instruction is generated
+			-- Switch instruction adds too much overhead when group consists of less than 7 items
+
 	build_spans (intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN] is
 			-- New sorted list of spans built from given `intervals' bounded with `min_value' and `max_value'
 		require
@@ -473,7 +459,7 @@ feature {NONE} -- Implementation
 						groups.remove
 					end
 				end
-				if group.count >= 4 then
+				if group.count >= minimum_group_size then
 						-- This is a dense group with enough elements
 					Result.extend (group)
 				else
@@ -505,17 +491,60 @@ feature {NONE} -- Implementation
 			if lower = upper then
 					-- There is only one group
 				span := spans.i_th (lower)
-				span.generate_il (min, max, is_min_included, is_max_included, labels)
+				generate_il_line_info (false)
+				span.generate_il (min, max, is_min_included, is_max_included, labels, Current)
 			else
 					-- Divide groups in two parts and recurse
 				middle := (lower + upper) // 2
 				span := spans.i_th (middle)
 				next_label := il_label_factory.new_label
-				span.upper.generate_il_branch_on_greater (span.is_upper_included, next_label)
+				generate_il_line_info (false)
+				span.upper.generate_il_branch_on_greater (span.is_upper_included, next_label, Current)
 				generate_spans (spans, lower, middle, min, span.upper, is_min_included, span.is_upper_included, labels)
 				il_generator.mark_label (next_label)
 				generate_spans (spans, middle + 1, upper, span.upper, max, not span.is_upper_included, is_max_included, labels)
 			end
+		end
+
+feature {INTERVAL_SPAN, INTERVAL_VAL_B} -- Implementation
+
+	generate_il_load_value is
+			-- Load value of expression
+		do
+			if switch.is_fast_as_local then
+				switch.generate_il
+			else
+				il_generator.duplicate_top
+			end
+		end
+
+	generate_il_when_part (case_index: INTEGER; labels: ARRAY [IL_LABEL]) is
+			-- Generate code for When_part idetified by `case_index' and
+			-- adjust `labels' if required.
+		require
+			case_list_not_void: case_list /= Void
+			valid_case_index: 1 <= case_index and case_index <= case_list.count
+			labels_not_void: labels /= Void
+			valid_labels: labels.lower = -1 and labels.upper = case_list.count
+		local
+			case_label: IL_LABEL
+			case_b: CASE_B
+			compound: BYTE_LIST [BYTE_NODE]
+		do
+			case_label := labels.item (case_index)
+			if case_label = Void then
+				case_label := il_label_factory.new_label
+				labels.put (case_label, case_index)
+			end
+			il_generator.mark_label (case_label)
+			case_b ?= case_list.i_th (case_index)
+			compound := case_b.compound
+			if compound /= Void then
+				compound.generate_il
+			end
+			il_generator.branch_to (labels.item (-1))
+		ensure
+			label_not_void: labels.item (case_index) /= Void
 		end
 
 end

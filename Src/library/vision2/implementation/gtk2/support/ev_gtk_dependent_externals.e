@@ -153,12 +153,10 @@ feature -- Externals
 		external
 			"C (GtkTextBuffer*, GtkTextIter*, GtkTextIter*, gboolean ): gchar* | <gtk/gtk.h>"
 		end
-
-	c_gtk_text_iter_struct_allocate: POINTER is
+		
+	gtk_text_iter_get_text (a_start_iter: POINTER; a_end_iter: POINTER): POINTER is
 		external
-			"C [macro <stdlib.h>]"
-		alias
-			"calloc (sizeof(GtkTextIter), 1)"
+			"C (const GtkTextIter*, const GtkTextIter*): gchar* | <gtk/gtk.h>"
 		end
 
 end

@@ -133,6 +133,9 @@ feature -- Access
 			-- Public key if used and if current is an assembly manifest.
 		--require
 		--	is_assembly_module: is_assembly_module
+		
+	resources: CLI_RESOURCES
+			-- List of resources used by this module.
 
 feature -- Status report
 
@@ -333,6 +336,18 @@ feature -- Settings: Generation type
 			is_dll_set: is_dll
 		end
 
+feature -- Settings
+
+	set_resources (r: like resources) is
+			-- Set `resources' with `r'.
+		require
+			r_not_void: r /= Void
+		do
+			resources := r
+		ensure
+			resources_set: resources = r
+		end
+		
 feature -- Settings: signature
 
 	set_method_return_type (a_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
@@ -550,6 +565,9 @@ feature -- Code generation
 			end
 			l_pe_file.set_emitter (md_emit)
 			l_pe_file.set_method_writer (method_writer)
+			if resources /= Void then
+				l_pe_file.set_resources (resources)
+			end
 			if entry_point_token /= 0 then
 				l_pe_file.set_entry_point_token (entry_point_token)
 			end

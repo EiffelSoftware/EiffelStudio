@@ -260,14 +260,14 @@ doc:	</attribute>
 rt_shared uint32 gen_scavenge = GS_OFF;
 
 /*
-doc:	<attribute name="eiffel_usage" return_type="long" export="public">
+doc:	<attribute name="eiffel_usage" return_type="long" export="shared">
 doc:		<summary>Monitor Eiffel memory usage. Each time an Eiffel object is created outside the scavenge zone (via emalloc or tenuring), we record its size in eiffel_usage variable. Then, once the amount of allocated data goes beyond th_alloc, a cycle of acollect() is run.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eiffel_usage_mutex' or GC synchronization.</synchronization>
 doc:	</attribute>
 */
-rt_public long eiffel_usage = 0;
+rt_shared long eiffel_usage = 0;
 
 /*
 doc:	<attribute name="eif_max_mem" return_type="int" export="shared">

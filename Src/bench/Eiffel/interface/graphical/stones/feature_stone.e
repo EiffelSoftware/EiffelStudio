@@ -166,24 +166,9 @@ feature -- dragging
 
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
-		local
-			class_i: CLASS_I;
-			f_table: FEATURE_TABLE
 		do
-			if fs_valid and then class_c /= Void and then feature_i /= Void then
-				class_i := Universe.class_i (class_c.class_name);
-				if 
-					class_i /= Void and then class_i.compiled 
-					and then class_i.compiled_class = class_c
-				then
-					f_table := class_c.feature_table;
-					Result := feature_i = f_table.item (feature_i.feature_name)
-				else
-					Result := False
-				end
-			else
-				Result := False
-			end
+			Result := fs_valid and then class_c /= Void 
+						and then feature_i /= Void
 		end;
 
 	set_positions (s, e: INTEGER) is
@@ -198,18 +183,14 @@ feature -- dragging
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		local
-			new_class_i: CLASS_I;
-			new_class_c: CLASS_C;
 			new_feature_i: FEATURE_I
 		do
 			if class_c /= Void and feature_i /= Void then
-				new_class_i := Universe.class_i (class_c.class_name);
-				if new_class_i /= Void and then new_class_i.compiled then
-					new_class_c := new_class_i.compiled_class;
-					new_feature_i := new_class_c.feature_table.item
+				if System.id_array.item (class_c.id) = class_c then
+					new_feature_i := class_c.feature_table.item
 													(feature_i.feature_name);
 					if new_feature_i /= Void then
-						Result := clone (new_feature_i.stone (new_class_c))
+						Result := new_feature_i.stone (class_c)
 					end
 				end
 			end

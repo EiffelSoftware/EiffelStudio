@@ -1,0 +1,198 @@
+<!-- Page Initialization -->
+<script language="JavaScript">
+
+function pageLoad()
+//Page load function
+{
+	selectFilterNode();
+	ToggleAll();
+}
+
+function selectFilterNode()
+//Select appropriate filter node in combo box
+{
+
+	//keep everything after the '?'
+	query = document.location.toString()
+	query = query.substring ((query.indexOf('?')) + 1);
+
+	if (!query.length < 1)
+	{
+		keypairs = new Object();
+		numKP = 1;
+
+		while (query.indexOf('&') > -1)
+		{
+		    keypairs[numKP] = query.substring(0,query.indexOf('&'));
+		    query = query.substring((query.indexOf('&')) + 1);
+			numKP++;
+		}
+
+		keypairs[numKP] = query;
+		// Store what's left in the query string as the final keypairs[] data.
+
+		for (i in keypairs)
+		{
+			keyName = keypairs[i].substring(0,keypairs[i].indexOf('='));
+			// Left of '=' is name.
+			keyValue = keypairs[i].substring((keypairs[i].indexOf('=')) + 1);
+			// Right of '=' is value.
+		}
+	    if (keyName == "index")
+	    {
+			keyValue = unescape(keyValue);
+			document.theForm.filterMenu.options [keyValue].selected = true;
+		}
+	}
+}
+
+</script>
+
+<!-- DOCUMENT FILTERING AND LOADING -->
+<script language="JavaScript">
+
+function documentLoaded ()
+//A new document was loaded in the content frame, so filter it based on filter.
+{
+
+	//Extract filter words from filter string
+	var filterString = document.theForm.filterMenu [document.theForm.filterMenu.selectedIndex].name;
+
+	if (!filterString.length < 1)
+	{
+		filterStrings = new Object();
+		cnt = 1;
+
+		while (filterString.indexOf(',') > -1)
+		{
+			filterStrings [cnt] = filterString.substring(0, filterString.indexOf(','));
+			filterString = filterString.substring((filterString.indexOf(',')) + 1);
+			cnt++;
+		}
+
+		filterStrings [cnt] = filterString;
+	}
+
+	//Get filter string and document span tag elements
+	var pageSpans = parent.content_frame.document.getElementsByTagName("span")
+
+	for (i = 0; i < pageSpans.length; i++)
+	{
+		spanId = pageSpans[i].getAttribute('id');
+
+		match = false;
+		//Look for match in strings against span id
+		for (j in filterStrings)
+		{
+			if (spanId == filterStrings [j])
+			{
+				match = true;
+			}
+		}
+
+		//Process match (or not)
+		if (!match)
+		{
+			pageSpans[i].style.display = 'none'
+		}
+		else
+		{
+			pageSpans[i].style.display = ''
+		}
+	}
+}
+
+</script>
+
+<!-- TOC TREE CODE -->
+<script language="JavaScript">
+
+function swapTOC(selNdx, formObj)
+{
+	tocUrl = formObj.filterMenu.options[formObj.filterMenu.selectedIndex].value + "?index=" + selNdx.toString();;
+	self.location = tocUrl;
+}
+
+function Toggle(node)
+//Toggle node
+{
+	// Unfold the branch if it isn't visible
+	var divNode = node.nextSibling.nextSibling;
+	if (divNode != null && divNode.nodeName == "DIV")
+	{
+		if (divNode.style.display == 'none')
+		{
+			// Change the image (if there is an image)
+			if (node.children.length > 0)
+			{
+				if (node.children.item(0).tagName == "IMG")
+				{
+					node.children.item(0).src = "icon_toc_folder_open.gif";
+				}
+			}
+
+			node.nextSibling.nextSibling.style.display = '';
+		}
+		// Collapse the branch if it IS visible
+		else
+		{
+			// Change the image (if there is an image)
+			if (node.children.length > 0)
+			{
+				if (node.children.item(0).tagName == "IMG")
+				{
+					node.children.item(0).src = "icon_toc_folder_closed.gif";
+				}
+			}
+			divNode.style.display = 'none';
+		}
+	}
+
+}
+
+function ToggleAll()
+//Toggle ALL nodes
+{
+	var pageImages = document.getElementsByTagName("a")
+
+	for (i = 0; i < pageImages.length; i++)
+	{
+		Toggle (pageImages[i]);
+	}
+}
+</script>
+
+<html>
+	<head>
+
+		<style>
+			A, A:hover, A:visited, A:link,
+			{
+				color:black;
+				font-size: 70%;
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				text-decoration:none;
+			}
+			A:active
+			{
+				color:red;
+				font-size: 70%;
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				text-decoration:none;
+			}
+		</style>
+
+	</head>
+	<body onload="pageLoad()">
+		<form name="theForm">
+			<table>
+				<tr>
+					<td>[!FilterHTML!]<td>
+				</tr>
+				<tr>
+					<td>[!TOCHTML!]<td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

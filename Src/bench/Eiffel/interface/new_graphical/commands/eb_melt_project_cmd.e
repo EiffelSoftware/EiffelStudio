@@ -377,12 +377,12 @@ feature {NONE} -- Attributes
 --			end
 --		end
 
-	ace_b: ACE_BUILDER is
-			-- Wizard action to generate ace file (the only one)
-			-- At the moment there is only one step
-		once
+--	ace_b: ACE_BUILDER is
+--			-- Wizard action to generate ace file (the only one)
+--			-- At the moment there is only one step
+--		once
 --			!! Result.make (Current)
-		end
+--		end
 
 feature {NONE} -- Implementation Execution
 

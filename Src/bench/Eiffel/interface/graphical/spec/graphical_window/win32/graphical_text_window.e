@@ -93,7 +93,7 @@ creation
 
 feature -- Access
 
-	implementation: TABBED_TEXT_WINDOWS
+	implementation: TABBED_TEXT_IMP
 
 	dummy_text: WEL_RICH_EDIT
 

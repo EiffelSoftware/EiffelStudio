@@ -12,7 +12,7 @@ creation
 
 feature -- Access
 
-	implementation: SEPARATOR_WINDOWS
+	implementation: SEPARATOR_IMP
 
 feature -- Update
 

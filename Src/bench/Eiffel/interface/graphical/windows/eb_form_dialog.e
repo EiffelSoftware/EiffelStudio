@@ -129,6 +129,6 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	implementation: FORM_D_I
+	implementation: FORM_D_IMP
 
 end -- class EB_FORM_DIALOG

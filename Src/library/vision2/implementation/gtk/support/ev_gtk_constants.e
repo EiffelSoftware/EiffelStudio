@@ -52,7 +52,13 @@ feature
 	GTK_TOOLBAR_ICONS: INTEGER is 0
 	GTK_TOOLBAR_TEXT: INTEGER is 1
 	GTK_TOOLBAR_BOTH: INTEGER is 2
-	
+
+	-- Constants for Justification
+	GTK_JUSTIFY_LEFT: INTEGER is 0
+	GTK_JUSTIFY_RIGHT: INTEGER is 1
+	GTK_JUSTIFY_CENTER: INTEGER is 2
+	GTK_JUSTIFY_FILL: INTEGER is 3
+
 	--------------------------------
 	-- Selection mode for a list. --
 	--

@@ -25,6 +25,50 @@ feature {NONE} -- GTK C functions for menu items
 		external "C | <gtk/gtk.h>"
 		end	
 
+	c_gtk_menu_item_submenu (menu_item: POINTER): POINTER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	gtk_check_menu_item_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_check_menu_item_new_with_label (label_text: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_check_menu_item_set_state (check_menu_item: POINTER; state: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_check_menu_item_set_show_toggle (check_menu_item: POINTER; always: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_check_menu_item_toggled (check_menu_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_check_menu_item_active (check_menu_item: POINTER): BOOLEAN is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	gtk_radio_menu_item_new (group: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_radio_menu_item_new_with_label (group: POINTER; label_text: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_radio_menu_item_group (radio_menu_item: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_radio_menu_item_set_group (radio_menu_item: POINTER; group: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for list items
 
 	gtk_list_item_new: POINTER is
@@ -41,6 +85,28 @@ feature {NONE} -- GTK C functions for list items
 
 	c_gtk_list_item_unselect (list_item: POINTER) is
 		external "C | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- GTK C functions for multi-columns rows
+
+	gtk_clist_set_text (list: POINTER; row, column: INTEGER; text: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_foreground (list: POINTER; row: INTEGER; color: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_background (list: POINTER; row: INTEGER; color: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_select_row (list: POINTER; row, column: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_unselect_row (list: POINTER; row, column: INTEGER) is
+		external "C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C function for tree items

@@ -44,6 +44,27 @@ feature -- Access
 			"BM_SETSTYLE"
 		end
 
+	Bm_click: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BM_CLICK"
+		end
+
+	Bm_getimage: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BM_GETIMAGE"
+		end
+
+	Bm_setimage: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BM_SETIMAGE"
+		end
+
 end -- class WEL_BM_CONSTANTS
 
 --|----------------------------------------------------------------

@@ -206,7 +206,7 @@ The full text of this class is: (Note that the class <I>APPLICATION_IDS</I> gene
 <I>			</I>-- Make the dialog box and create <I>edit</I>.
 		<B>do</B> 
 <I>			make_by_id </I>(<I>a_parent</I>,<I> Dlg_line_thickness</I>)
-<I>			</I>!!<I> edit<B>.</B>make_by_id </I>(<I>Current</I>,<I> idc_edit_width</I>)
+<I>			</I><b>create</b><I> edit<B>.</B>make_by_id </I>(<I>Current</I>,<I> idc_edit_width</I>)
 <I>			pen_width </I>:=<I> 1</I>
 		<B>end</B>
 <I>	</I>
@@ -225,7 +225,7 @@ The full text of this class is: (Note that the class <I>APPLICATION_IDS</I> gene
 		<B>local</B> 
 <I>			s</I>:<I> STRING</I>
 		<B>do</B> 
-<I>			</I>!!<I> s<B>.</B>make </I>(<I>0</I>)
+<I>			</I><b>create</b><I> s<B>.</B>make </I>(<I>0</I>)
 <I>			s<B>.</B>append_integer </I>(<I>pen_width</I>)
 <I>			edit<B>.</B>set_text </I>(<I>s</I>)
 		<B>end</B>
@@ -352,7 +352,7 @@ You also have to set the default pen width in the <I>make</I> routine:
 <I>			</I>-- Make the main window.
 		<B>do</B> 
 <I>			make_top </I>(&quot;<I>My application</I>&quot;)
-<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			</I><b>create</b><I> dc<B>.</B>make </I>(<I>Current</I>)
 <I>			set_pen_width </I>(<I>1</I>)
 		<B>end</B>
 </PRE>
@@ -361,7 +361,7 @@ The implementation of <I>set_pen_width</I> is defined as follows:
 <PRE><I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>) <B>is</B> 
 <I>			</I>-- Set pen width with <I>new_width</I>.
 		<B>do</B> 
-<I>			</I>!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+<I>			</I><b>create</b><I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
 		<B>end</B>
 </PRE>
 <P>
@@ -398,7 +398,7 @@ on_right_button_down</I> as follows:
 <I>			</I>-- new pen width.
 		<B>do</B> 
 			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
-<I>				</I>!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+<I>				</I><b>create</b><I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
 			<B>end</B>
 <I>			line_thickness_dialog<B>.</B>activate</I>
 			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
@@ -419,7 +419,7 @@ on_right_button_down</I> as follows:
 <I>			</I>-- new pen width.
 		<B>do</B> 
 			<B>if</B>  <I>line_thickness_window </I>=<I> void </I><B>then</B> 
-<I>				</I>!!<I> line_thickness_window<B>.</B>make </I>(<I>Current</I>)
+<I>				</I><b>create</b><I> line_thickness_window<B>.</B>make </I>(<I>Current</I>)
 			<B>end</B>
 <I>			line_thickness_window<B>.</B>activate</I>
 		<B>end</B>
@@ -455,7 +455,7 @@ This is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>			</I>-- Make the main window.
 		<B>do</B> 
 <I>			make_top </I>(&quot;<I>My application</I>&quot;)
-<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			</I><b>create</b><I> dc<B>.</B>make </I>(<I>Current</I>)
 <I>			set_pen_width </I>(<I>1</I>)
 		<B>end</B>
 <I>	</I>
@@ -479,7 +479,7 @@ This is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>) <B>is</B> 
 			-- Set pen width with <I>new_width</I>.
 		<B>do</B> 
-			!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+			<b>create</b><I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
 		<B>end
 </B>
 <B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
@@ -516,7 +516,7 @@ This is the full text of <I>MAIN_WINDOW</I> (Professional version):
 			-- Bring up <I>line_thickness_dialog</I> and set the -- new pen width.
 		<B>do</B> 
 			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
-				!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+				<b>create</b><I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
 			<B>end</B>
 <I>			line_thickness_dialog<B>.</B>activate</I>
 			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
@@ -529,7 +529,7 @@ This is the full text of <I>MAIN_WINDOW</I> (Professional version):
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-<I>			!! msgBox.make
+<I>			<b>create</b> msgBox.make
 			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
 <I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
 		<B>end
@@ -560,7 +560,7 @@ This is the full text of MAIN_WINDOW (Personal version):</pre>
 			-- Make the main window.
 		<B>do</B> 
 			make_top (&quot;My application&quot;)
-			!! dc<B>.</B>make (Current)
+			<b>create</b> dc<B>.</B>make (Current)
 			set_pen_width (1)
 		<B>end</B>
 	
@@ -584,7 +584,7 @@ This is the full text of MAIN_WINDOW (Personal version):</pre>
 	set_pen_width (new_width: INTEGER) <B>is</B> 
 			-- Set pen width with new_width.
 		<B>do</B> 
-			!! pen<B>.</B>make_solid (new_width, black)
+			<b>create</b> pen<B>.</B>make_solid (new_width, black)
 		<B>end</B>
 	
 <B>feature</B>  {NONE} -- Implementation
@@ -622,7 +622,7 @@ This is the full text of MAIN_WINDOW (Personal version):</pre>
 			-- new pen width.
 		<B>do</B> 
 			<B>if</B>  line_thickness_window = void <B>then</B> 
-				!! line_thickness_window<B>.</B>make (Current)
+				<b>create</b> line_thickness_window<B>.</B>make (Current)
 			<B>end</B>
 			line_thickness_window<B>.</B>activate
 		<B>end</B>
@@ -632,7 +632,7 @@ This is the full text of MAIN_WINDOW (Personal version):</pre>
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-			!! msgBox.make
+			<b>create</b> msgBox.make
 			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
 			Result := msgBox.message_box_result = Mb_ok
 		<B>end</B>

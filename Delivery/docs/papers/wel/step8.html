@@ -78,7 +78,7 @@ Now, you are ready to implement Open and Save options in <I>on_menu_command</I>.
 			<B>...</B>
 			<B>when</B>  <I>Cmd_open </I><B>then</B>  
 				<B>if</B>  <I>open_dialog </I>=<I> void </I><B>then</B> 
-<I>					</I>!!<I> open_dialog<B>.</B>make</I>
+<I>					</I><b>create</b><I> open_dialog<B>.</B>make</I>
 <I>					open_dialog<B>.</B>set_filter </I>(&lt;&lt;&quot;<I>Draw file</I>&quot;&gt;&gt;,<I> </I>&lt;&lt;&quot;<I>*.drw</I>&quot;&gt;&gt;)
 <I>					open_dialog<B>.</B>set_default_extension </I>(&quot;<I>drw</I>&quot;)
 				<B>end</B>
@@ -89,7 +89,7 @@ Now, you are ready to implement Open and Save options in <I>on_menu_command</I>.
 				<B>end</B> 
 			<B>when</B>  <I>Cmd_save </I><B>then</B>  
 				<B>if</B>  <I>save_dialog </I>=<I> void </I><B>then</B> 
-<I>					</I>!!<I> save_dialog<B>.</B>make</I>
+<I>					</I><b>create</b><I> save_dialog<B>.</B>make</I>
 <I>					save_dialog<B>.</B>set_filter </I>(&lt;&lt;&quot;<I>Draw file</I>&quot;&gt;&gt;,<I> </I>&lt;&lt;&quot;<I>*.drw</I>&quot;&gt;&gt;)
 <I>					save_dialog<B>.</B>set_default_extension </I>(&quot;<I>drw</I>&quot;)
 				<B>end</B>

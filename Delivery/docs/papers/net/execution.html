@@ -100,7 +100,7 @@ In EiffelNet the possible events associated with a socket will be of three kind:
 			<DT><DD><B>local</B>
 				<DT><DL><DT><DD>sen_pack: DATAGRAM_PACKET; ccode: INTEGER</DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! sen_pack.make (10);
+				<DT><DL><DT><DD><b>create</b> sen_pack.make (10);
 				<DT><DD><B>from</B> ccode := charcode ('a') <B>until</B> ccode &gt; charcode ('k') <B>loop</B>
 					<DT><DL><DT><DD>sen_pack.put_element (charconv (ccode), ccode -- charcode ('a'));
 					<DT><DD>ccode := ccode + 1</DL>
@@ -135,10 +135,10 @@ Here is the server built with this mechanism:
 				<DT><DD>readcomm: SERVER_DATAGRAM_READER;
 				<DT><DD>writecomm: SERVER_DATAGRAM_WRITER</DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc.make_server_by_port (6530);
-				<DT><DD>!! poller.make;
-				<DT><DD>!! readcomm.make (soc); poller.put_read_command (readcomm);
-				<DT><DD>!! writecomm.make (soc); poller.put_write_command (writecomm);
+				<DT><DL><DT><DD><b>create</b> soc.make_server_by_port (6530);
+				<DT><DD><b>create</b> poller.make;
+				<DT><DD><b>create</b> readcomm.make (soc); poller.put_read_command (readcomm);
+				<DT><DD><b>create</b> writecomm.make (soc); poller.put_write_command (writecomm);
 				<DT><DD>poller.make_read_only; poller.execute (15, 20000);
 				<DT><DD>poller.make_write_only; poller.execute (15, 20000);
 				<DT><DD>soc.close</DL>
@@ -149,7 +149,7 @@ Here is the server built with this mechanism:
 Procedure <I>make</I> creates three objects: a socket, which it associates with a specific port; a poller; and a read command (an instance of <I>SERVER_DATAGRAM_READER</I>), which it attaches to the socket. It then enters the read command into the poller, and does the same thing with a write command. It sets up the poller to accept read commands only and then executes the poller; this will enable the server to get the read event triggered by the client's write command (as it appears below in the text of class <I>POLLING_CLIENT</I>). Then the server reverses the poller's set-up to write-only, and calls <I>execute</I> again.
 </P>
 <P>
-The procedures <I>make_read_only</I> and <I>make_write_only</I> are creation procedures, so that it is possible in a single instruction to create a poller and set it up for read-only or write-only, as in !! <I>poller</I><I></I>l<I></I><I>make_read_only</I>. For clarity, however, the above class and the next separate calls to these procedures from the creation of the poller, which uses <I>make</I> as creation procedure.
+The procedures <I>make_read_only</I> and <I>make_write_only</I> are creation procedures, so that it is possible in a single instruction to create a poller and set it up for read-only or write-only, as in <b>create</b> <I>poller</I><I></I>l<I></I><I>make_read_only</I>. For clarity, however, the above class and the next separate calls to these procedures from the creation of the poller, which uses <I>make</I> as creation procedure.
 </P>
 <P>
 The client follows the same scheme, reversing the order of read and write operations:
@@ -167,10 +167,10 @@ The client follows the same scheme, reversing the order of read and write operat
 				<DT><DD>readcomm: DATAGRAM_READER;
 				<DT><DD>writecomm>: DATAGRAM_WRITER</DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc.make_client_by_port (6530, "serverhost");
-				<DT><DD>!! poller.make;
-				<DT><DD>!! readcomm.make (soc); poller.put_read_command (readcomm);
-				<DT><DD>!! writecomm.make (soc); poller.put_write_command (writecomm);
+				<DT><DL><DT><DD><b>create</b> soc.make_client_by_port (6530, "serverhost");
+				<DT><DD><b>create</b> poller.make;
+				<DT><DD><b>create</b> readcomm.make (soc); poller.put_read_command (readcomm);
+				<DT><DD><b>create</b> writecomm.make (soc); poller.put_write_command (writecomm);
 				<DT><DD>poller.make_write_only; poller.execute (15, 20000);
 				<DT><DD>poller.make_read_only; poller.execute (15, 20000);
 				<DT><DD>soc.close</DL>

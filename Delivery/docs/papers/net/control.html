@@ -57,8 +57,8 @@ Here we will create and manipulate sockets directly. For that reason, both class
 The two sockets must be able to refer to a common address. For a communication within a single machine, as noted, this address is a path name, again <I>/tmp/here</I> for this example. The address will be an argument of the creation procedure used to obtain a socket <I>soc1 </I>on either side:
 <ul><DL>
 <I>
-	<DT>!! soc1.make_client ("/tmp/here")
-	<DT>!! soc1.make_server ("/tmp/here")
+	<DT><b>create</b> soc1.make_client ("/tmp/here")
+	<DT><b>create</b> soc1.make_server ("/tmp/here")
 </I>
 </DL></ul>
 <P>
@@ -127,7 +127,7 @@ Here is the server class based on these principles. The actual processing has be
 			<DT><DD><B>local</B>
 				<DT><DL><DT><DD>count: INTEGER</DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc1.make_server ("/tmp/here")
+				<DT><DL><DT><DD><b>create</b> soc1.make_server ("/tmp/here")
 				<DT><DD><B>from</B>
 					<DT><DL><DT><DD>soc1listen (5); count := 0</DL>
 				<DT><DD><B>until</B>
@@ -175,7 +175,7 @@ Note that at the end the server should not only closes the original socket <I>so
 		<DT><DD>make <B>is</B>
 				<DT><DL><DT><DL><DT><DD></I>-- Establish communication with server, and exchange messages<I></DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc1.make_client ("/tmp/here");
+				<DT><DL><DT><DD><b>create</b> soc1.make_client ("/tmp/here");
 				<DT><DD>soc1.connect;
 				<DT><DD>process; </I>-- See below<I>
 				<DT><DD>soc1.cleanup</DL>
@@ -189,7 +189,7 @@ Note that at the end the server should not only closes the original socket <I>so
 			<DT><DD><B>local</B>
 				<DT><DL><DT><DD>our_list, our_new_list: OUR_MESSAGE</DL>
 				<DT><DD><B>do</B>
-					<DT><DL><DT><DD>!! our_list.make;
+					<DT><DL><DT><DD><b>create</b> our_list.make;
 					<DT><DD>our_list.extend("This"); our_list.extend (" is");
 					<DT><DD>our_list.extend (" our"); our_list.extend (" test");
 					<DT><DD>our_list.general_store (soc1);
@@ -224,7 +224,7 @@ Let us now assume that the client and the server will run on two separate machin
 The available creation procedures are slightly different. The server will be set up so as to listen to clients from any machine; it designates a <B>port</B>, identified by an integer, on which it will listen. The socket creation on the server side is then
 <ul><DL>
 <I>
-	<DT>!! soc1.make_server_port (2000)
+	<DT><b>create</b> soc1.make_server_port (2000)
 </I>
 </DL></ul>
 <P>
@@ -245,7 +245,7 @@ The rest of the classes is as before.
 		<DT><DD>make <B>is</B>
 				<DT><DL><DT><DL><DT><DD></I>-- Accept communication with client and exchange messages.<I></DL>
 			<DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc1.make_server_by_port (2000);
+				<DT><DL><DT><DD><b>create</b> soc1.make_server_by_port (2000);
 				<DT><DD></I>... The rest as before...<I></DL>
 			<DT><DD><B>end</B></DL>
 		<DT><DD>process <B>is</B> </I>... As before ...<I>
@@ -260,7 +260,7 @@ The rest of the classes is as before.
 <BR><BR>
 		<DT><DD>make <B>is</B>
 			<DT><DL><DT><DD><B>do</B>
-				<DT><DL><DT><DD>!! soc1.make_client_by_port (2000, "serverhost");
+				<DT><DL><DT><DD><b>create</b> soc1.make_client_by_port (2000, "serverhost");
 				<DT><DD></I>... The rest as before ...<I></DL>
 			<DT><DD><B>end</B></DL>
 <BR>

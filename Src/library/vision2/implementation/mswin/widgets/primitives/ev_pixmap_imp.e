@@ -57,11 +57,32 @@ feature {NONE} -- Initialization
 
 feature -- Loading/Saving
 
+	set_with_icon (a_icon: WEL_ICON) is
+			-- Initialize the pixmap with the content of `a_icon'
+			--
+			-- Exceptions "Unable to retrieve icon information"
+		require
+			valid_icon: a_icon /= Void
+		do
+			is_initialized := False -- Turn contracts off
+
+				-- Keep the WEL_ICON handle, and retrieve the
+				-- corresponding `bitmap' and `mask_bitmap'.
+			icon := a_icon
+			retrieve_icon_information
+
+				-- Update the width & height attributes
+			width := bitmap.width
+			height := bitmap.height
+
+			is_initialized := True -- Turn constract back on
+		end
+
 	set_with_default (pixmap_name: STRING) is
 			-- Initialize the pixmap with the default
 			-- image named `pixmap_name'.
 			--
-			-- Exceptions "Unable to retrieve icon information", 
+			-- Exceptions "Unable to retrieve icon information"
 		local
 			icon_id: POINTER
 		do
@@ -92,6 +113,9 @@ feature -- Loading/Saving
 					Idi_constants.Idi_question
 					)
 				retrieve_icon_information
+
+			elseif pixmap_name.is_equal ("Vision2") then
+				c_ev_load_pixmap($Current, Default_pointer, $update_fields)
 			end
 				
 				-- Update width & height attributes.
@@ -173,6 +197,8 @@ feature -- Loading/Saving
 				end
 
 				if data_type = Loadpixmap_rgb_data then
+						-- Compute the size of a row in bytes (here
+						-- we have 24 bits/color)
 					size_row := 4 * ((pixmap_width * 24 + 31) // 32)
 					create dib.make_by_content_pointer (
 						rgb_data, 
@@ -188,16 +214,21 @@ feature -- Loading/Saving
 					s_dc.release
 					palette := dib.palette
 
-					size_row := 4 * ((pixmap_width * 1 + 31) // 32)
-					create dib.make_by_content_pointer (
-						alpha_data, 
-						size_row * pixmap_height + 40 + 8
-						)
-					create memory_dc.make
-					create mask_bitmap.make_by_dib (
-						memory_dc, dib, 
-						Dib_colors_constants.Dib_rgb_colors
-						)
+						-- Let's build the mask.
+					if alpha_data /= Default_pointer then 
+							-- Compute the size of a row in bytes (here
+							-- we have 1 bit/color)
+						size_row := 4 * ((pixmap_width * 1 + 31) // 32)
+						create dib.make_by_content_pointer (
+							alpha_data, 
+							size_row * pixmap_height + 40 + 8
+							)
+						create memory_dc.make
+						create mask_bitmap.make_by_dib (
+							memory_dc, dib, 
+							Dib_colors_constants.Dib_rgb_colors
+							)
+					end
 				end
 			else
 					-- An error occurred while loading the file
@@ -219,7 +250,7 @@ feature -- Access
 			-- Void otherwise (see Invariant at the end of class).
 
 	mask_bitmap: WEL_BITMAP
-		-- Monochrome bitmap used as mask. Void if none.
+			-- Monochrome bitmap used as mask. Void if none.
 
 	has_mask: BOOLEAN is
 			-- Has the current pixmap a mask?
@@ -228,10 +259,11 @@ feature -- Access
 		end
 
 	palette: WEL_PALETTE
-		-- Current palette used. Void if none.
+			-- Current palette used. Void if none.
 
 	transparent_color: EV_COLOR
 			-- Color used as transparent (Void by default).
+			--| FIXME ARNAUD: Not yet implemented.
 
 feature -- Status setting
 
@@ -275,11 +307,7 @@ feature -- Status setting
 
 				-- Recreate the icon if there was any.
 			if icon /= Void then
-				create info_icon.make
-				info_icon.set_fIcon (True)
-				info_icon.set_color_bitmap (bitmap)
-				info_icon.set_mask_bitmap (mask_bitmap)
-				create icon.make_by_icon_info (info_icon)
+				icon := build_icon
 			end
 		end
 
@@ -1254,6 +1282,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/03 00:36:33  pichery
+--| Added feature `set_with_icon' + Refactoring.
+--|
 --| Revision 1.34  2000/04/28 21:43:01  pichery
 --| Fixed contract violation.
 --|

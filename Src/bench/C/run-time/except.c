@@ -239,7 +239,8 @@ rt_private char *ex_tag[] = {
 	"Eiffel run-time fatal error.",		/* EN_FATAL */
 	"CECIL cannot call melted code",	/* EN_DOL */
 	"Runtime I/O error.",				/* EN_ISE_IO */
-	"COM error."						/* EN_COM */
+	"COM error.",						/* EN_COM */
+	"Runtime check violated."			/* EN_RT_CHECK */
 };
 
 /* Converts a vector's type in the stack to an exception code, i.e. given a
@@ -851,6 +852,8 @@ rt_public void eraise(char *tag, long num)
 	 */
 	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
 		trace = exget(&eif_trace);
+			/* Make sure there is no garbage in `trace'. */
+		memset (trace, 0, sizeof(struct ex_vect));
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
 			echmem |= MEM_FULL;					/* Signal it */
 			if (num != EN_OMEM)					/* If not already there */
@@ -2258,7 +2261,6 @@ rt_private void print_object_location_reason_effect (
 	int l_location_count, l_reason_count, l_effect_count;
 
 	REQUIRE("tracing_feature_not_null", append_trace);
-	REQUIRE("object_addr_not_null", a_object_addr);
 	REQUIRE("location_not_null", a_location);
 	REQUIRE("reason_not_null", a_reason);
 	REQUIRE("effect_not_null", a_effect);
@@ -2287,22 +2289,22 @@ rt_private void print_object_location_reason_effect (
 	sprintf(buffer, "<%016lX>  ", (unsigned long) a_object_addr);
 	append_trace(buffer);
 
-	if (l_location_count > 19) {
+	if (l_location_count > 22) {
 		sprintf(buffer, "%*.255s\n", l_location_count, a_location);
 		append_trace(buffer);
-		if (l_reason_count > 22) {
+		if (l_reason_count > 29) {
 			sprintf(buffer, "%*.212s\n", 43 + l_reason_count, a_reason);
 			append_trace(buffer);
 			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);
 		} else {
-			sprintf(buffer, "%*.22s %*.182s", 43 + l_reason_count, a_reason,
+			sprintf(buffer, "%*.29s %*.182s", 43 + l_reason_count, a_reason,
 						73 + l_effect_count - (43 + l_reason_count + 1), a_effect);
 			append_trace(buffer);
 		}
 	} else {
-		if (l_reason_count > 22) {
-			sprintf(buffer,"%-22.22s %*.212s\n", a_location, l_reason_count, a_reason);
+		if (l_reason_count > 29) {
+			sprintf(buffer,"%-29.29s %*.212s\n", a_location, l_reason_count, a_reason);
 			append_trace(buffer);
 			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);
@@ -2465,13 +2467,12 @@ rt_private void print_top(void (*append_trace)(char *))
 		 */
 
 		top = eif_trace.st_bot;		/* Look ahead */
-		code = top->ex_type;
 
 #ifdef DEBUG
 		dump_vector("\nprint_top: followed by", top);
 #endif
 
-		if (code == EN_FAIL || code == EN_RES) {
+		if (top->ex_type == EN_FAIL || top->ex_type == EN_RES) {
 			if (eif_except.retried) {
 				sprintf(buffer, "Retry\n%s\n", retried);
 			} else {

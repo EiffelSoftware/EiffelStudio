@@ -37,9 +37,9 @@ struct bit {
  * Run time functions used by generated C code.
  */
 
-extern char *makestr();				/* Build an Eiffel string object */
-extern char *makebit();				/* Build an Eiffel bit object */
-extern char *striparr();			/* Build an Eiffel ARRAY[ANY] object for strip*/
+extern char *makestr(register char *s, register int len);				/* Build an Eiffel string object */
+extern char *makebit(char *bit, long int bit_count);				/* Build an Eiffel bit object */
+extern char *striparr(register char *curr, register int dtype, register char **items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 extern int str_dtype;				/* Dynamic type for string */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 extern int32 disp_rout_id;			/* Dispose routine id */ 
@@ -54,14 +54,14 @@ extern void (*eif_strset)();		/* STRING `set_count' feature */
 extern void (*eif_arrmake)();	/* STRING creation feature */
 #endif
 
-extern char *argarr();				/* ARRAY[STRING] creation from command line arguments */
+extern char *argarr(int argc, char **argv);				/* ARRAY[STRING] creation from command line arguments */
 
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
 
 #ifdef WORKBENCH
-extern void wstdinit();				/* Composite objects initialization */
-extern char *cr_exp();				/* Creation of expanded objects */
+extern void wstdinit(char *obj, char *parent);				/* Composite objects initialization */
+extern char *cr_exp(uint32 type);				/* Creation of expanded objects */
 #endif
 
 #ifdef __cplusplus
@@ -130,16 +130,16 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
  * Miscellaneous routines.
  */
 
-extern EIF_BOOLEAN econfg();	/* Conformance query in class GENERAL */
-extern int econfm();			/* Conformance query for assignment attempt */
-extern long sp_count();			/* Count of a special object */
-extern void chkinv();			/* Invariant control call */
+extern EIF_BOOLEAN econfg(char *obj1, char *obj2);	/* Conformance query in class GENERAL */
+extern int econfm(int ancestor, int heir);			/* Conformance query for assignment attempt */
+extern long sp_count(char *spobject);			/* Count of a special object */
+extern void chkinv(char *obj, int where);			/* Invariant control call */
 #ifdef WORKBENCH
-extern void chkcinv();			/* Creation invariant call */	
+extern void chkcinv(char *obj);			/* Creation invariant call */	
 #endif
 
 #ifndef WORKBENCH
-extern void rt_norout();		/* No function pointer */
+extern void rt_norout(void);		/* No function pointer */
 #endif
 
 #ifdef __cplusplus

@@ -69,13 +69,11 @@ rt_private char *rcsid =
 
 
 #ifdef DEBUG
-rt_shared long nomark();
-rt_private long chknomark();
+rt_shared long nomark(char *);
+rt_private long chknomark(char *, struct htable *, long);
 #endif
 
-rt_shared void traversal(object, accounting)
-char *object;
-int accounting;
+rt_shared void traversal(char *object, int accounting)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
@@ -189,7 +187,7 @@ int accounting;
  * Indirection table handling.
  */
 
-rt_shared void map_start()
+rt_shared void map_start(void)
 {
 	/* Restart the maping table at the beginning. Note that we are using the
 	 * extra st_bot field which is added after all the fields from the stack
@@ -201,7 +199,7 @@ rt_shared void map_start()
 	map_stack.st_end = map_stack.st_cur->sk_end;
 }
 
-rt_shared EIF_OBJ map_next()
+rt_shared EIF_OBJ map_next(void)
 {
 	/* Return next object in the map table, via its indirection pointer. Note
 	 * that the stack structure is physically destroyed in the process, being
@@ -242,8 +240,8 @@ rt_shared EIF_OBJ map_next()
 	return *item;
 }
 
-rt_shared void map_reset(emergency)
-int emergency;		/* Need to reset due to emergency (exception) */
+rt_shared void map_reset(int emergency)
+              		/* Need to reset due to emergency (exception) */
 {
 	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
 	 * and a consistency check is made to ensure it is really empty.
@@ -283,8 +281,7 @@ int emergency;		/* Need to reset due to emergency (exception) */
 
 #ifdef DEBUG
 
-rt_shared long nomark(obj)
-char *obj;
+rt_shared long nomark(char *obj)
 {
 	/* Check if there is no object marked EO_STORE under `obj'. */
 	struct htable *tbl;
@@ -305,10 +302,7 @@ char *obj;
 	return result;
 }
 
-rt_private long chknomark(object,tbl,object_count)
-char *object;
-struct htable *tbl;
-long object_count;
+rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 

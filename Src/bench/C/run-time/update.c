@@ -39,9 +39,9 @@
 #include "interp.h"					/* For idump() */
 #endif
 
-rt_private void cecil_updt();			/* Cecil update */
-rt_private char **names_updt();		/* String array */
-rt_private void root_class_updt();		/* Update the root class info */
+rt_private void cecil_updt(void);			/* Cecil update */
+rt_private char **names_updt(short int count);		/* String array */
+rt_private void root_class_updt(void);		/* Update the root class info */
 rt_public long melt_count;				/* Size of melting table */
 
 /* For debugging */
@@ -51,8 +51,7 @@ rt_public long melt_count;				/* Size of melting table */
 /* TEMPORARY */
 static FILE *fil;
 
-rt_public void update(ignore_updt)
-char ignore_updt;
+rt_public void update(char ignore_updt)
 {
 	/* Update internal structures before execution */
 
@@ -296,9 +295,7 @@ chdir ("..\\..");
 }
 
 /* TEMPORARY */
-void wread(buffer, nbytes)
-char *buffer;
-int nbytes;
+void wread(char *buffer, int nbytes)
 {
 #ifdef DEBUG
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
@@ -316,7 +313,7 @@ int nbytes;
 #endif
 }
 
-rt_private void root_class_updt ()
+rt_private void root_class_updt (void)
 {
 	/* Update the root class info */
 
@@ -331,7 +328,7 @@ rt_private void root_class_updt ()
 #endif
 }
 
-rt_public void cnode_updt()
+rt_public void cnode_updt(void)
 {
 	/* Update a cnode structure */
 
@@ -483,7 +480,7 @@ rt_public void cnode_updt()
 #endif
 }
 
-rt_public void routid_updt()
+rt_public void routid_updt(void)
 {
 	/* Update routine id arrays */
 
@@ -544,7 +541,7 @@ rt_public void routid_updt()
 	}
 }
 
-rt_public void conform_updt()
+rt_public void conform_updt(void)
 {
 	/* Update conformance table */
 
@@ -584,7 +581,7 @@ rt_public void conform_updt()
 	cecil_updt();
 }
 
-rt_private void cecil_updt()
+rt_private void cecil_updt(void)
 {
 	/* Update high-level cecil structure. */
 
@@ -637,8 +634,7 @@ rt_private void cecil_updt()
 	}
 }
 
-rt_private char **names_updt(count)
-short count;
+rt_private char **names_updt(short int count)
 {
 	/* Return and array of string of count `count'. */
 
@@ -665,7 +661,7 @@ short count;
 	return result;
 }
 		
-rt_public void option_updt()
+rt_public void option_updt(void)
 {
 	/* Update of the option table */
 
@@ -752,7 +748,7 @@ rt_public void option_updt()
 	}
 }
 
-rt_public void routinfo_updt()
+rt_public void routinfo_updt(void)
 {
 
 	/* Update the routine information table */
@@ -773,7 +769,7 @@ rt_public void routinfo_updt()
 	}
 }
 
-rt_public void desc_updt()
+rt_public void desc_updt(void)
 {
 	
 	long count;
@@ -814,7 +810,7 @@ rt_public void desc_updt()
 	}
 }
 
-rt_public short wshort()
+rt_public short wshort(void)
 {
 	/* Next short integer. */
 
@@ -824,7 +820,7 @@ rt_public short wshort()
 	return result;
 }
 
-rt_public long wlong()
+rt_public long wlong(void)
 {
 	/* Next long integer. */
 
@@ -834,7 +830,7 @@ rt_public long wlong()
 	return result;
 }
 
-rt_public int32 wint32()
+rt_public int32 wint32(void)
 {
 	/* Next int32. */
 
@@ -844,7 +840,7 @@ rt_public int32 wint32()
 	return result;
 }
 
-rt_public uint32 wuint32()
+rt_public uint32 wuint32(void)
 {
 	/* Next uint32. */
 

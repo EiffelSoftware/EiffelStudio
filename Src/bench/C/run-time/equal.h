@@ -31,12 +31,12 @@ extern "C" {
  * Routine declarations
  */
 
-rt_public int xequal();			/* Equality with no conformance constraint */
-rt_public int eequal();			/* Standard equality on standard objects */
-rt_public int spequal();			/* Standard equality on special objects */
-rt_public int eiso();				/* Standard isomorphism on normal objects */
-rt_public int spiso();				/* Standard isomorphism on special objects */
-rt_public int ediso();				/* Standard recursive isomorphism */
+rt_public int xequal(char *ref1, char *ref2);			/* Equality with no conformance constraint */
+rt_public int eequal(register char *target, register char *source);			/* Standard equality on standard objects */
+rt_public int spequal(register char *target, register char *source);			/* Standard equality on special objects */
+rt_public int eiso(char *target, char *source);				/* Standard isomorphism on normal objects */
+rt_public int spiso(register char *target, register char *source);				/* Standard isomorphism on special objects */
+rt_public int ediso(char *target, char *source);				/* Standard recursive isomorphism */
 
 #ifdef __cplusplus
 }

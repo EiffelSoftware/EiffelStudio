@@ -20,10 +20,7 @@
 
 #include "umain.h"
 
-void umain(argc, argv, envp)
-int argc;
-char **argv;
-char **envp;
+void umain(int argc, char **argv, char **envp)
 {
 	/* Empty by default, but may be overwritten by user */
 }

@@ -134,25 +134,25 @@ struct stchunk {
 #define GST_GEN		1				/* Index for generation collection stats */
 
 /* General-purpose exported functions */
-extern void plsc();					/* Partial scavenging */
-extern void urgent_plsc();			/* Partial scavenge with given local root */
-extern void mksp();					/* Mark and sweep algorithm */
-extern void reclaim();				/* Reclaim all the objects */
-extern int collect();				/* Generation-based collector */
-extern int epush();					/* Push an addess on a run-time stack */
-extern char **st_alloc();			/* Creates an empty stack */
-extern int acollect();				/* Automatic garbage collection */
-extern int scollect();				/* Collection with statistics */
-extern void st_truncate();			/* Truncate stack if necessary */
-extern void st_wipe_out();			/* Remove unneeded chunk from stack */
-extern void eremb();				/* Remembers old object */
-extern void erembq();				/* Quick veersion (no GC call) of eremb */
-extern void onceset();				/* Recording of once function result */
-extern int refers_new_object();		/* Does an object refers to young ones ? */
-extern void gc_stop();				/* Stop the garbage collector */
-extern void gc_run();				/* Restart the garbage collector */
-extern char *to_chunk();			/* Base address of partial 'to' chunk */
-extern void gfree();				/* Garbage collector's free routine */
+extern void plsc(void);					/* Partial scavenging */
+extern void urgent_plsc(char **object);			/* Partial scavenge with given local root */
+extern void mksp(void);					/* Mark and sweep algorithm */
+extern void reclaim(void);				/* Reclaim all the objects */
+extern int collect(void);				/* Generation-based collector */
+extern int epush(register struct stack *stk, register char *value);					/* Push an addess on a run-time stack */
+extern char **st_alloc(register struct stack *stk, register int size);			/* Creates an empty stack */
+extern int acollect(void);				/* Automatic garbage collection */
+extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
+extern void st_truncate(register struct stack *stk);			/* Truncate stack if necessary */
+extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
+extern void eremb(char *obj);				/* Remembers old object */
+extern void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
+extern void onceset(register char **ptr);				/* Recording of once function result */
+extern int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
+extern void gc_stop(void);				/* Stop the garbage collector */
+extern void gc_run(void);				/* Restart the garbage collector */
+extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
+extern void gfree(register union overhead *zone);				/* Garbage collector's free routine */
 
 /* Exported data-structure declarations */
 extern struct stack loc_set;			/* Local variable stack */

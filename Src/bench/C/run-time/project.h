@@ -17,8 +17,8 @@ extern "C" {
 #endif
 
 extern int bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
-extern void einit();			/* System-dependent initializations, E1/einit.c */
-extern void tabinit();			/* E1/einit.c */
+extern void einit(void);		/* System-dependent initializations, E1/einit.c */
+extern void tabinit(void);			/* E1/einit.c */
 extern int32 rcdt;				/* E1/einit.c */
 extern int32 rcorigin;			/* E1/einit.c */
 extern int32 rcoffset;			/* E1/einit.c */

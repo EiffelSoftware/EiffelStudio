@@ -62,9 +62,9 @@ typedef Time_t Timeval;
 #endif
 
 /* Routine declarations */
-extern void gettime();			/* Save current time (timestamp) */
-extern unsigned long elapsed();	/* Give elapsed time between two timestamps */
-extern void getcputime();		/* Get CPU usage (user time and sys time) */
+extern void gettime(struct timeval *stamp);			/* Save current time (timestamp) */
+extern unsigned long elapsed(struct timeval *first, struct timeval *second);	/* Give elapsed time between two timestamps */
+extern void getcputime(double *usertime, double *systime);		/* Get CPU usage (user time and sys time) */
 
 #ifdef __cplusplus
 }

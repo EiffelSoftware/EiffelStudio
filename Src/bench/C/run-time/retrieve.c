@@ -87,32 +87,32 @@ rt_public char r_fstoretype;	/* File storage type used for retrieve */
 /*
  * Function declations
  */
-rt_public char *irt_make();			/* Do the independant retrieve */
-rt_public char *grt_make();			/* Do the general retrieve (3.3 and later) */
-rt_public char *irt_nmake();			/* Retrieve n objects independent form*/
-rt_public char *grt_nmake();			/* Retrieve n objects general form*/
-rt_private void iread_header();		/* Read independent header */
-rt_private void rt_clean();			/* Clean data structure */
-rt_private void rt_update1();			/* Reference correspondance update */
-rt_private void rt_update2();			/* Fields updating */
-rt_public char *rt_make();				/* Do the retrieve */
-rt_public char *rt_nmake();			/* Retrieve n objects */
-rt_private void read_header();			/* Read general header */
-rt_private void object_read ();		/* read the individual attributes of the object*/
-rt_private void gen_object_read ();	/* read the individual attributes of the object*/
-rt_private long get_expanded_pos ();
+rt_public char *irt_make(void);			/* Do the independant retrieve */
+rt_public char *grt_make(void);			/* Do the general retrieve (3.3 and later) */
+rt_public char *irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
+rt_public char *grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
+rt_private void iread_header(void);		/* Read independent header */
+rt_private void rt_clean(void);			/* Clean data structure */
+rt_private void rt_update1(register char *old, register EIF_OBJ new);			/* Reference correspondance update */
+rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
+rt_public char *rt_make(void);				/* Do the retrieve */
+rt_public char *rt_nmake(long int objectCount);			/* Retrieve n objects */
+rt_private void read_header(char rt_type);			/* Read general header */
+rt_private void object_read (char *object, char *parent);		/* read the individual attributes of the object*/
+rt_private void gen_object_read (char *object, char *parent);	/* read the individual attributes of the object*/
+rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 
-rt_private int readline ();
-rt_private int buffer_read ();
+rt_private int readline (register char *ptr, register int *maxlen);
+rt_private int buffer_read (register char *object, int size);
 
 
 /* read function declarations */
-int retrieve_read ();
-int old_retrieve_read ();
-int retrieve_read_with_compression ();
-int old_retrieve_read_with_compression ();
+int retrieve_read (void);
+int old_retrieve_read (void);
+int retrieve_read_with_compression (void);
+int old_retrieve_read_with_compression (void);
 
-int (*retrieve_read_func)() = retrieve_read_with_compression;
+int (*retrieve_read_func)(void) = retrieve_read_with_compression;
 
 /*
  * Convenience functions
@@ -120,9 +120,7 @@ int (*retrieve_read_func)() = retrieve_read_with_compression;
  
 /* Initialize retrieve function pointers and globals */
  
-rt_public void rt_init_retrieve(retrieve_function, buf_size)
-int (*retrieve_function)();
-int buf_size;
+rt_public void rt_init_retrieve(int (*retrieve_function) (void), int buf_size)
 {
     retrieve_read_func = retrieve_function;
 	if (buf_size)
@@ -131,7 +129,7 @@ int buf_size;
  
 /* Reset retrieve function pointers and globals to their default values */
  
-rt_public void rt_reset_retrieve(){
+rt_public void rt_reset_retrieve(void) {
     retrieve_read_func = retrieve_read_with_compression;
 }
  
@@ -140,9 +138,7 @@ rt_public void rt_reset_retrieve(){
  * Function definitions
  */
 
-rt_public char *eretrieve(file_desc, file_storage_type)
-EIF_INTEGER file_desc;
-EIF_CHARACTER file_storage_type;
+rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type)
 {
 	/* Retrieve object store in file `filename' */
 
@@ -237,9 +233,9 @@ EIF_CHARACTER file_storage_type;
 	}
 
 	if (rt_kind)
-		xfree(dtypes);					/* Free the correspondance table */
+		xfree((char *)dtypes);					/* Free the correspondance table */
 	if (rt_kind == INDEPENDENT_STORE)
-		xfree(spec_elm_size);					/* Free the element size table */
+		xfree((char *)spec_elm_size);					/* Free the element size table */
 
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
@@ -258,9 +254,9 @@ EIF_CHARACTER file_storage_type;
 			idr_temp_buf = (char *) 0;
 			for (i = 0; i < scount; i++) {
 				if (*(dattrib + i))
-					xfree (*(dattrib +i));
+					xfree ((char *)*(dattrib +i));
 			}
-			xfree (dattrib);
+			xfree ((char *)dattrib);
 			dattrib = (int **) 0;
 			break;
 		}
@@ -271,7 +267,7 @@ EIF_CHARACTER file_storage_type;
 }
 
 
-rt_public char *rt_make()
+rt_public char *rt_make(void)
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -288,8 +284,7 @@ rt_public char *rt_make()
 }
 
 
-rt_public char *rt_nmake(objectCount)
-long objectCount;
+rt_public char *rt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -424,7 +419,7 @@ long objectCount;
 	return newadd;
 }
 
-rt_public char *grt_make()
+rt_public char *grt_make(void)
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -439,8 +434,7 @@ rt_public char *grt_make()
 	return grt_nmake(objectCount);
 }
 
-rt_public char *grt_nmake(objectCount)
-long objectCount;
+rt_public char *grt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -605,7 +599,7 @@ long objectCount;
 	return newadd;
 }
 
-rt_public char *irt_make()
+rt_public char *irt_make(void)
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -620,8 +614,7 @@ rt_public char *irt_make()
 	return irt_nmake(objectCount);
 }
 
-rt_public char *irt_nmake(objectCount)
-long objectCount;
+rt_public char *irt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -822,7 +815,7 @@ long objectCount;
 	return newadd;
 }
 
-rt_private void rt_clean()
+rt_private void rt_clean(void)
 {
 	/* Clean the data structure before raising an exception of code `code'
 	/* after having cleaned the hash table */
@@ -883,9 +876,7 @@ rt_private void rt_clean()
 	rt_reset_retrieve();
 }
 
-rt_private void rt_update1 (old, new)
-register4 char *old;
-register3 EIF_OBJ new;
+rt_private void rt_update1 (register char *old, register EIF_OBJ new)
 {
 	/* `new' is hector pointer to a retrieved object. We have to solve
 	 * possible references with it, before putting it in the hash table.
@@ -938,8 +929,7 @@ register3 EIF_OBJ new;
 	rt_info->rt_obj = new;
 }
 
-rt_private void rt_update2(old, new, parent)
-char *old, *new, *parent;
+rt_private void rt_update2(char *old, char *new, char *parent)
 {
 	/* Reference field updating: record new unsolved references.
 	 * The third argument is needed because of expanded objects:
@@ -1055,8 +1045,7 @@ update:
 }
 
 
-rt_private char *next_item (ptr)
-char * ptr;
+rt_private char *next_item (char *ptr)
 {
 	int first_char = 0;
 
@@ -1070,8 +1059,7 @@ char * ptr;
 	return (ptr);
 }
 
-rt_private void read_header(rt_type)
-char rt_type;
+rt_private void read_header(char rt_type)
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
@@ -1205,7 +1193,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 }
 
 
-rt_private void iread_header()
+rt_private void iread_header(void)
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
@@ -1407,9 +1395,7 @@ rt_private void iread_header()
 }
 
 
-rt_private int readline (ptr, maxlen)
-register char * ptr;
-register int *maxlen;
+rt_private int readline (register char *ptr, register int *maxlen)
 {
 	int num_char, read_char;
 	char c;
@@ -1438,9 +1424,7 @@ register int *maxlen;
 }
 		
 			
-rt_private int direct_read (object, size)
-register char * object;
-int size;
+rt_private int direct_read (register char *object, int size)
 {
 	int i, amount = 0;
 	char *buf = object;
@@ -1464,9 +1448,7 @@ int size;
 
 		
 			
-rt_private int buffer_read (object, size)
-register char * object;
-int size;
+rt_private int buffer_read (register char *object, int size)
 {
 	register i;
 
@@ -1492,7 +1474,7 @@ int size;
 	return (i);
 }
 
-rt_public int old_retrieve_read ()
+rt_public int old_retrieve_read (void)
 {
 	char * ptr = general_buffer;
 
@@ -1511,7 +1493,7 @@ rt_public int old_retrieve_read ()
 	return (end_of_buffer);
 }
 
-rt_public int old_retrieve_read_with_compression ()
+rt_public int old_retrieve_read_with_compression (void)
 {
 	  char* dcmps_in_ptr = (char *)0;
 	  char* dcmps_out_ptr = (char *)0;
@@ -1573,7 +1555,7 @@ rt_public int old_retrieve_read_with_compression ()
 	  return (end_of_buffer);
 }
 
-rt_public int retrieve_read ()
+rt_public int retrieve_read (void)
 {
 	char * ptr = general_buffer;
 	short read_size;
@@ -1612,7 +1594,7 @@ rt_public int retrieve_read ()
 	return (end_of_buffer);
 }
 
-rt_public int retrieve_read_with_compression ()
+rt_public int retrieve_read_with_compression (void)
 {
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
@@ -1676,8 +1658,7 @@ rt_public int retrieve_read_with_compression ()
 	return (end_of_buffer);
 }
 
-rt_private void gen_object_read (object, parent)
-char * object, * parent;
+rt_private void gen_object_read (char *object, char *parent)
 {
 	long attrib_offset;
 	int z;
@@ -1844,8 +1825,7 @@ char * object, * parent;
 }
 
 
-rt_private void object_read (object, parent)
-char * object, * parent;
+rt_private void object_read (char *object, char *parent)
 {
 	long attrib_offset;
 	int z;
@@ -2117,20 +2097,17 @@ char * object, * parent;
 	}
 }
 
-rt_private long dbl_off(v,w,x,y,z)
-long v, w, x, y, z;
+rt_private long dbl_off(long v, long w, long x, long y, long z)
 {
 	return (PTROFF(v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(v,w,x,y)+(z)*PTRSIZ,DBLSIZ));
 }
 
-rt_private long obj_size(u,v,w,x,y,z)
-long u, v, w, x, y, z;
+rt_private long obj_size(long u, long v, long w, long x, long y, long z)
 {
 	return (dbl_off(u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(dbl_off(u,v,w,x,y)+(z)*DBLSIZ));
 }
 
-rt_private long get_expanded_pos (o_type, num_attrib)
-uint32 o_type, num_attrib;
+rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 {
 	long Result;
 	int numb, counter, bit_size = 0;

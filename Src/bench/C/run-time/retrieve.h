@@ -53,27 +53,27 @@ struct rt_struct {
 /*
  * Eiffel calls
  */
-extern char *eretrieve();		/* Retrieve object store in file */
+extern char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type);		/* Retrieve object store in file */
 
 /*
  * Utilities
  */
 extern int r_fides; 	        /* File descriptor use for retrieve */
 extern char r_fstoretype;	/* File storage type use for retrieve */
-extern char *rt_make();			/* Retrieve object graph */
-extern char *rt_nmake();		/* Retrieve `n' objects */
+extern char *rt_make(void);			/* Retrieve object graph */
+extern char *rt_nmake(long int objectCount);		/* Retrieve `n' objects */
 extern struct htable *rt_table;	/* Table used for solving references */
 extern int32 nb_recorded;		/* Number of items recorded in Hector */
 extern char rt_kind;
 
-extern int old_retrieve_read();
-extern int retrieve_read();
+extern int old_retrieve_read(void);
+extern int retrieve_read(void);
 
-extern int old_retrieve_read_with_compression();
-extern int retrieve_read_with_compression();
+extern int old_retrieve_read_with_compression(void);
+extern int retrieve_read_with_compression(void);
 
-extern void rt_init_retrieve();
-extern void rt_reset_retrieve();
+extern void rt_init_retrieve(int (*retrieve_function) (void), int buf_size);
+extern void rt_reset_retrieve(void);
 
 extern int (*retrieve_read_func)();
 

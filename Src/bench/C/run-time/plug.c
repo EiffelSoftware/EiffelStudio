@@ -37,16 +37,14 @@ rt_private char *rcsid =
  */
 rt_public int nstcall = 0;					/* Is current call a nested one? */
 
-rt_private void recursive_chkinv();		/* Internal invariant control loop */
+rt_private void recursive_chkinv(int dtype, char *obj, int where);		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
  * class creation routine
  */
 
-rt_public char *argarr(argc,argv)
-int argc;
-char **argv;
+rt_public char *argarr(int argc, char **argv)
 {
 	/* Create an Eiffel ARRAY [STRING] with the values contained in
 	 * `argv'
@@ -81,11 +79,7 @@ char **argv;
  * Manifest array creation for strip
  */
 
-rt_public char *striparr(curr, dtype, items, nbr)
-register1 char *curr;
-register2 int dtype;
-register3 char **items;
-register4 long nbr;
+rt_public char *striparr(register char *curr, register int dtype, register char **items, register long int nbr)
 {
 	/* Create an Eiffel ARRAY[ANY] using current object curr. 
 	 * This routine creates the object and returns a pointer to the newly
@@ -197,9 +191,7 @@ register4 long nbr;
 	return array;
 }
 
-rt_public char *makestr(s, len)
-register1 char *s;
-register2 int len;
+rt_public char *makestr(register char *s, register int len)
 {
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
@@ -230,8 +222,7 @@ register2 int len;
  * Conformance query
  */
 
-rt_public char estypeg(obj1,obj2)
-char *obj1, *obj2;
+rt_public char estypeg(char *obj1, char *obj2)
 {
 	/* Are dynamic types of `obj1' and `obj2' identical? */
 
@@ -241,8 +232,7 @@ char *obj1, *obj2;
 	return (Dtype(obj1) == Dtype(obj2));
 }
 
-rt_public EIF_BOOLEAN econfg(obj1,obj2)
-char *obj1, *obj2;
+rt_public EIF_BOOLEAN econfg(char *obj1, char *obj2)
 {
 	/* Does dynamic type of `obj2' conform to dynamic type of `obj1' ? */
 
@@ -253,9 +243,9 @@ char *obj1, *obj2;
 
 }
 
-rt_public int econfm(ancestor, heir)
-int ancestor;	/* If conformance is true, this must be the ancestor type */
-int heir;		/* And this must be the heir then */
+rt_public int econfm(int ancestor, int heir)
+             	/* If conformance is true, this must be the ancestor type */
+         		/* And this must be the heir then */
 {
 	/* Does dynamic type `heir' conform to dynamic type `ancestor' ? */
 
@@ -283,8 +273,7 @@ int heir;		/* And this must be the heir then */
  * Special object count
  */
 
-rt_public long sp_count(spobject)
-char *spobject;
+rt_public long sp_count(char *spobject)
 {
 	/* Return the count of a special object */
 
@@ -302,9 +291,9 @@ rt_private char *inv_mark_table;		/* Marking table to avoid checking the same
 									 * invariant several times
 									 */
 
-rt_public void chkinv (obj, where)
-char *obj;
-int where;		/* Invariant is beeing checked before or after compound? */
+rt_public void chkinv (char *obj, int where)
+          
+          		/* Invariant is beeing checked before or after compound? */
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
 
@@ -322,8 +311,7 @@ int where;		/* Invariant is beeing checked before or after compound? */
 }
 
 #ifdef WORKBENCH
-rt_public void chkcinv(obj)
-char *obj;
+rt_public void chkcinv(char *obj)
 {
 	/* Check invariant of `obj' after creation. */
 
@@ -332,10 +320,10 @@ char *obj;
 }
 #endif
 
-rt_private void recursive_chkinv(dtype, obj, where)
-int dtype;
-char *obj;
-int where;		/* Invariant is being checked before or after compound? */
+rt_private void recursive_chkinv(int dtype, char *obj, int where)
+          
+          
+          		/* Invariant is being checked before or after compound? */
 {
 	/* Recursive invariant check. */
 
@@ -420,8 +408,8 @@ int where;		/* Invariant is being checked before or after compound? */
 
 #ifdef WORKBENCH
 
-char *cr_exp(type)
-uint32 type;							/* Dynamic type */
+char *cr_exp(uint32 type)
+            							/* Dynamic type */
 {
 	/* Creates expanded object of type `type'. If it has
 	 * a creation routine then call it.
@@ -459,9 +447,9 @@ uint32 type;							/* Dynamic type */
  * workbench mode
  */
 
-void wstdinit(obj, parent)
-char *obj;		/* Object we want to initialize */
-char *parent;	/* Parent (enclosing object) */
+void wstdinit(char *obj, char *parent)
+          		/* Object we want to initialize */
+             	/* Parent (enclosing object) */
 {
 	/* Initialize composite object `obj' */
 
@@ -563,7 +551,7 @@ char *parent;	/* Parent (enclosing object) */
 
 #ifndef WORKBENCH
 
-void rt_norout()
+void rt_norout(void) /* %%ss global */
 {
 	/* Function called when Eiffel is supposed to call a deferred feature
 	 * without any implementation in final mode

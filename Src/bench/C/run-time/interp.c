@@ -118,65 +118,65 @@ rt_private char *botched = "Operational stack botched";
 rt_private char *unknown_type = "unknown entity type";
 
 /* Monadic and diadic operator handling */
-rt_private void monadic_op();				/* Execute a monadic operation */
-rt_private void diadic_op();				/* Execute a diadic operation */
+rt_private void monadic_op(int code);				/* Execute a monadic operation */
+rt_private void diadic_op(int code);				/* Execute a diadic operation */
 
 /* Assertion checking */
-rt_private void icheck_inv();				/* Invariant check */
-rt_private void irecursive_chkinv();		/* Recursive invariant check */
+rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
+rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_private uint32 get_uint32();			/* Get an unsigned int32 */
-rt_private double get_double();			/* Get a double constant */
-rt_private float get_float();				/* Get a float constant */
-rt_private long get_long();				/* Get a long constant */
-rt_private short get_short();				/* Get a short constant */
-rt_private fnptr get_fnptr();				/* Get a function pointer */
-rt_private char *get_address();			/* Get an address */
+rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
+rt_private double get_double(void);			/* Get a double constant */
+rt_private float get_float(void);				/* Get a float constant */
+rt_private long get_long(void);				/* Get a long constant */
+rt_private short get_short(void);				/* Get a short constant */
+rt_private fnptr get_fnptr(void);				/* Get a function pointer */
+rt_private char *get_address(void);			/* Get an address */
 
 /* Writing constants */
-rt_private void write_long();				/* Write long constant */
-rt_private void write_float();				/* Write a float constant */
-rt_private void write_double();			/* Write a double constant */
-rt_private void write_fnptr();				/* Write a function pointer constant */
-rt_private void write_address();			/* Write an address constant */
+rt_private void write_long(char *where, long int value);				/* Write long constant */
+rt_private void write_float(char *where, float value);				/* Write a float constant */
+rt_private void write_double(char *where, double value);			/* Write a double constant */
+rt_private void write_fnptr(char *where, fnptr value);				/* Write a function pointer constant */
+rt_private void write_address(char *where, char *value);			/* Write an address constant */
 
 /* Interpreter interface */
-rt_public void exp_call();					/* Sets IC before calling interpret */
-rt_public void xinterp();					/* Sets IC before calling interpret */
-rt_public void xinitint();					/* Initialization of the interpreter */
-rt_private void interpret();				/* Run the interpreter */
+rt_public void exp_call();				/* Sets IC before calling interpret */ /* %%ss undefine */
+rt_public void xinterp(char *icval);		/* Sets IC before calling interpret */
+rt_public void xinitint(void);			/* Initialization of the interpreter */
+rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_private int icall();					/* Interpreter dispatcher (in water) */
-rt_private int ipcall();					/* Interpreter precomp dispatcher */
-rt_private void interp_access();			/* Access to an attribute */
-rt_private void interp_paccess();			/* Access to a precompiled attribute */
-rt_private void address();					/* Address of a routine */
-rt_private void assign();					/* Assignment in an attribute */
-rt_private void passign();					/* Assignment in a precomp attribute */
+rt_private int icall(int fid, int stype, int is_extern);					/* Interpreter dispatcher (in water) */
+rt_private int ipcall(int32 origin, int32 offset, int is_extern);					/* Interpreter precomp dispatcher */
+rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
+rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
+rt_private void address(int32 fid, int stype);					/* Address of a routine */
+rt_private void assign(long int fid, int stype, uint32 type);					/* Assignment in an attribute */
+rt_private void passign(int32 origin, int32 f_offset, uint32 type);					/* Assignment in a precomp attribute */
 
 /* Calling protocol */
-rt_private void init_var();				/* Initialize to 0 a variable entity */
-rt_private void init_registers();			/* Intialize registers in callee */
-rt_private void allocate_registers();		/* Allocate the register array */
-rt_shared void sync_registers();			/* Resynchronize the register array */
-rt_private void pop_registers();			/* Remove local vars and arguments */
+rt_private void init_var(struct item *ptr, long int type);				/* Initialize to 0 a variable entity */
+rt_private void init_registers(void);			/* Intialize registers in callee */
+rt_private void allocate_registers(void);		/* Allocate the register array */
+rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top);			/* Resynchronize the register array */
+rt_private void pop_registers(void);			/* Remove local vars and arguments */
 
 /* Operational stack handling routines */
-rt_public struct item *opush();			/* Push one value on op stack */
-rt_public struct item *opop();				/* Pop last item */
-rt_private struct item *stack_allocate();	/* Allocates first chunk */
-rt_private int stack_extend();				/* Extend stack's size */
-rt_private void npop();					/* Pop 'n' items */
-rt_public struct item *otop();				/* Pointer to value at the top */
-rt_private struct item *oitem();			/* Pointer to value at position `n' down the stack */
-rt_private void stack_truncate();			/* Truncate stack if necessary */
-rt_private void wipe_out();				/* Remove unneeded chunk from stack */
+rt_public struct item *opush(register struct item *val);			/* Push one value on op stack */
+rt_public struct item *opop(void);				/* Pop last item */
+rt_private struct item *stack_allocate(register int size);	/* Allocates first chunk */
+rt_private int stack_extend(register int size);				/* Extend stack's size */
+rt_private void npop(register int nb_items);					/* Pop 'n' items */
+rt_public struct item *otop(void);				/* Pointer to value at the top */
+rt_private struct item *oitem(uint32 n);			/* Pointer to value at position `n' down the stack */
+rt_private void stack_truncate(void);			/* Truncate stack if necessary */
+rt_private void wipe_out(register struct stochunk *chunk);				/* Remove unneeded chunk from stack */
 #ifdef DEBUG
-rt_private void dump_stack();				/* Dumps the operational stack */
-rt_public void idump();					/* Byte code dumping */
-rt_private void iinternal_dump();			/* Internal (compound) dumping */
+rt_private void dump_stack(void);				/* Dumps the operational stack */
+rt_public void idump(FILE *, char *);					/* Byte code dumping */
+rt_private void iinternal_dump(FILE *, char *);			/* Internal (compound) dumping */
 #endif
 
 /* Those macros are used to save and restore the ``x'' stack context to/from 
@@ -212,8 +212,7 @@ rt_private char *rcsid =
 #endif
 
 
-rt_public void xinterp(icval)
-char *icval;
+rt_public void xinterp(char *icval)
 {
 	/* Starts interpretation at IC = icval. It is the interpreter entry
 	 * point for C code. When an exception occurs in the interpreted
@@ -276,9 +275,9 @@ char *icval;
 	dpop();								/* Remove calling context */
 }
 
-rt_public void xiinv(icval, where)
-char *icval;
-int where;		/* Invariant checked after or before ? */
+rt_public void xiinv(char *icval, int where)
+            
+          		/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
 
@@ -306,7 +305,7 @@ int where;		/* Invariant checked after or before ? */
 	dpop();								/* Remove calling context */
 }
 
-rt_public void xinitint()
+rt_public void xinitint(void)
 {
 	/* Creation of the register array. */
 
@@ -316,9 +315,9 @@ rt_public void xinitint()
 		enomem();
 }
 
-rt_private void interpret(flag, where)
-int flag;			/* Flag set to INTERP_INVA or INTERP_CMPD */
-int where;			/* Are we checking invariant before or after compound? */
+rt_private void interpret(int flag, int where)
+         			/* Flag set to INTERP_INVA or INTERP_CMPD */
+          			/* Are we checking invariant before or after compound? */
 {
 	/* Interprets the byte-code starting at IC. For effeciency reasons, some
 	 * "globals" are used by the main interpreting loop, to save some precious
@@ -3272,11 +3271,11 @@ rt_private char *inv_mark_table;		/* Marking table to avoid checking the same
 									 * invariant several times
 									 */
 
-rt_private void icheck_inv(obj, scur, stop, where)
-char *obj;
-struct stochunk *scur;		/* Current chunk (stack context) */
-struct item *stop;			/* To save stack context */
-int where;					/* Invariant after or before */
+rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where)
+          
+                      		/* Current chunk (stack context) */
+                  			/* To save stack context */
+          					/* Invariant after or before */
 {
 	/* Check invariant on non-void object `obj' */
 	char *old_IC;		/* IC backup */
@@ -3298,12 +3297,12 @@ int where;					/* Invariant after or before */
 	}
 }
 
-rt_private void irecursive_chkinv(dtype, obj, scur, stop, where)
-int dtype;
-char *obj;
-struct stochunk *scur;		/* Current chunk (stack context) */
-struct item *stop;			/* To save stack context */
-int where;					/* Invariant after or before */
+rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
+          
+          
+                      		/* Current chunk (stack context) */
+                  			/* To save stack context */
+          					/* Invariant after or before */
 {
 	/* Recursive invariant check. */
 
@@ -3405,8 +3404,7 @@ int where;					/* Invariant after or before */
  * Monadic and diadic operations
  */
 
-rt_private void monadic_op(code)
-int code;
+rt_private void monadic_op(int code)
 {
 	/* Apply the operation 'code' to the value on top of the stack */
 
@@ -3462,8 +3460,7 @@ int code;
 	}
 }
 
-rt_private void diadic_op(code)
-int code;
+rt_private void diadic_op(int code)
 {
 	/* Execute the diadic operation "code" (arithmetic or boolean) and push
 	 * the result back on the stack.
@@ -3997,10 +3994,10 @@ int code;
  * Function calling routines
  */
 
-rt_private int icall(fid, stype, is_extern)
-int fid;				/* Feature ID */
-int stype;				/* Static type (entity where feature is applied) */
-int is_extern;			/* Is it an external or an Eiffel feature */
+rt_private int icall(int fid, int stype, int is_extern)
+        				/* Feature ID */
+          				/* Static type (entity where feature is applied) */
+              			/* Is it an external or an Eiffel feature */
 {
 	/* This is the interpreter dispatcher for routine calls. Depending on the
 	 * routine's temperature, the snow version (i.e. C code) is called and the
@@ -4065,10 +4062,10 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-rt_private int ipcall(origin, offset, is_extern)
-int32 origin;			/* Origin class ID of the feature.*/
-int32 offset;			/* offset of the feature in the origin class */
-int is_extern;			/* Is it an external or an Eiffel feature */
+rt_private int ipcall(int32 origin, int32 offset, int is_extern)
+             			/* Origin class ID of the feature.*/
+             			/* offset of the feature in the origin class */
+              			/* Is it an external or an Eiffel feature */
 {
 	/* This is the interpreter dispatcher for precompiled routine calls.
 	 * Depending on the routine's temperature, the snow version (i.e. C code)
@@ -4131,10 +4128,10 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-rt_private void interp_access(fid, stype, type)
-int fid;				/* Feature ID */
-int stype;				/* Static type (entity where feature is applied) */
-uint32 type;			/* Get attribute meta-type */
+rt_private void interp_access(int fid, int stype, uint32 type)
+        				/* Feature ID */
+          				/* Static type (entity where feature is applied) */
+            			/* Get attribute meta-type */
 {
 	/* Fetch the attribute value of feature identified by 'fid', in the
 	 * static type context 'stype', with Current being place on top of the
@@ -4167,10 +4164,10 @@ uint32 type;			/* Get attribute meta-type */
 	}
 }
 
-rt_private void interp_paccess(origin, f_offset, type)
-int32 origin;			/* Origin class ID of the attribute.*/
-int32 f_offset;			/* offset of the feature in the origin class */
-uint32 type;			/* Get attribute meta-type */
+rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
+             			/* Origin class ID of the attribute.*/
+               			/* offset of the feature in the origin class */
+            			/* Get attribute meta-type */
 {
 	/* Fetch the attribute value of offset 'offset' in the origin class
 	 * 'origin', with Current being place on top of the operational stack.
@@ -4203,10 +4200,10 @@ uint32 type;			/* Get attribute meta-type */
 	}
 }
 
-rt_private void assign(fid, stype, type)
-long fid;				/* Feature ID */
-int stype;				/* Static type (entity where feature is applied) */
-uint32 type;			/* Attribute meta-type */
+rt_private void assign(long int fid, int stype, uint32 type)
+         				/* Feature ID */
+          				/* Static type (entity where feature is applied) */
+            			/* Attribute meta-type */
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * name (fid) and the static type where it is declared (stype). The value
@@ -4267,10 +4264,10 @@ uint32 type;			/* Attribute meta-type */
 #undef l
 }
 
-rt_private void passign(origin, f_offset, type)
-int32 origin;			/* Origin class ID of the attribute.*/
-int32 f_offset;			/* offset of the feature in the origin class */
-uint32 type;			/* Attribute meta-type */
+rt_private void passign(int32 origin, int32 f_offset, uint32 type)
+             			/* Origin class ID of the attribute.*/
+               			/* offset of the feature in the origin class */
+            			/* Attribute meta-type */
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * origin class `origin' and with offset `offset' in that class. The value
@@ -4331,9 +4328,7 @@ uint32 type;			/* Attribute meta-type */
 #undef l
 }
 
-void call_disp(dtype,object)
-uint32 dtype;
-char *object;
+void call_disp(uint32 dtype, char *object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
@@ -4344,9 +4339,9 @@ char *object;
 	IC = OLD_IC;
 }
 
-rt_private void address(fid, stype)
-int32 fid;				/* Feature ID */
-int stype;				/* Static type (entity where feature is applied) */
+rt_private void address(int32 fid, int stype)
+          				/* Feature ID */
+          				/* Static type (entity where feature is applied) */
 {
 	/* Get the address of a routine identified by 'fid', in the static type
 	 * context 'stype', with Current being place on top of the operational
@@ -4365,7 +4360,7 @@ int stype;				/* Static type (entity where feature is applied) */
  * Get constants from byte code in an hopefully portable (slow) way--RAM.
  */
 
-rt_private double get_double()
+rt_private double get_double(void)
 {
 	/* Get double stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4385,7 +4380,7 @@ rt_private double get_double()
 	return *(double *) &xdouble;	/* Correctly aligned by union */
 }
 
-rt_private float get_float()
+rt_private float get_float(void)
 {
 	/* Get float stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4405,7 +4400,7 @@ rt_private float get_float()
 	return *(float *) &xfloat;		/* Correctly aligned by union */
 }
 
-rt_private long get_long()
+rt_private long get_long(void)
 {
 	/* Get long int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4425,7 +4420,7 @@ rt_private long get_long()
 	return *(long *) &xlong;		/* Correctly aligned by union */
 }
 
-rt_private short get_short()
+rt_private short get_short(void)
 {
 	/* Get short int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4445,7 +4440,7 @@ rt_private short get_short()
 	return *(short *) &xshort;		/* Correctly aligned by union */
 }
 
-rt_private uint32 get_uint32()
+rt_private uint32 get_uint32(void)
 {
 	/* Get uint32 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4465,7 +4460,7 @@ rt_private uint32 get_uint32()
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
 }
 
-rt_private fnptr get_fnptr()
+rt_private fnptr get_fnptr(void)
 {
 	/* Get a fnptr stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4485,7 +4480,7 @@ rt_private fnptr get_fnptr()
 	return *(fnptr *) &xfnptr;		/* Correctly aligned by union */
 }
 
-rt_private char *get_address()
+rt_private char *get_address(void)
 {
 	/* Get an address stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4509,9 +4504,7 @@ rt_private char *get_address()
  * Write constants to byte code in an hopefully portable (slow) way--RAM.
  */
 
-rt_private void write_long(where, value)
-char *where;
-long value;
+rt_private void write_long(char *where, long int value)
 {
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
@@ -4528,9 +4521,7 @@ long value;
 		*where++ = *p++;
 }
 
-rt_private void write_float(where, value)
-char *where;
-float value;
+rt_private void write_float(char *where, float value)
 {
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
@@ -4547,9 +4538,7 @@ float value;
 		*where++ = *p++;
 }
 
-rt_private void write_double(where, value)
-char *where;
-double value;
+rt_private void write_double(char *where, double value)
 {
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
@@ -4566,9 +4555,7 @@ double value;
 		*where++ = *p++;
 }
 
-rt_private void write_fnptr(where, value)
-char *where;
-fnptr value;
+rt_private void write_fnptr(char *where, fnptr value)
 {
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
@@ -4585,9 +4572,7 @@ fnptr value;
 		*where++ = *p++;
 }
 
-rt_private void write_address(where, value)
-char *where;
-char *value;
+rt_private void write_address(char *where, char *value)
 {
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
@@ -4609,9 +4594,7 @@ char *value;
  * Calling protocol
  */
 
-rt_private void init_var(ptr, type)
-struct item *ptr;
-long type;
+rt_private void init_var(struct item *ptr, long int type)
 {
 	/* Initializes variable 'ptr' to be of type 'type' */
 
@@ -4631,7 +4614,7 @@ long type;
 	}
 }
 
-rt_private void init_registers()
+rt_private void init_registers(void)
 {
 	/* Upon entry in a new feature, given that locnum and argnum are set,
 	 * initialize the register array, poping the registers from the stack,
@@ -4707,7 +4690,7 @@ rt_private void init_registers()
 	last->it_long = argnum;			/* Got this from byte code */
 }
 
-rt_private void allocate_registers()
+rt_private void allocate_registers(void)
 {
 	/* Automagically increase/decrease the size of the register array. If its
 	 * size is too small, then of course we try to extend it. However, it it's
@@ -4746,9 +4729,9 @@ rt_private void allocate_registers()
 	}
 }
 
-rt_shared void sync_registers(stack_cur, stack_top)
-struct stochunk *stack_cur;		/* Saved current chunk of op stack */
-struct item *stack_top;			/* Saved top of op stack */
+rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top)
+                           		/* Saved current chunk of op stack */
+                       			/* Saved top of op stack */
 {
 	/* Whenever an interpreted function is called, the register array is
 	 * reset to match registers for the new function. When we regain control
@@ -4806,7 +4789,7 @@ struct item *stack_top;			/* Saved top of op stack */
 	dsync();						/* Resynchronize cached status */
 }
 
-rt_private void pop_registers()
+rt_private void pop_registers(void)
 {
 	/* This is the reverse operation of init_registers(). We remove all the
 	 * registers from the stack because the Eiffel function is now returning.
@@ -4845,8 +4828,8 @@ rt_private void pop_registers()
  * Operational stack handling.
  */
 
-rt_private struct item *stack_allocate(size)
-register1 int size;					/* Initial size */
+rt_private struct item *stack_allocate(register int size)
+                   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
 	 * Return the arena value (bottom of stack).
@@ -4881,8 +4864,7 @@ register1 int size;					/* Initial size */
  * (char *) elements, we now store (struct item) ones.
  */
 
-rt_public struct item *opush(val)
-register2 struct item *val;
+rt_public struct item *opush(register struct item *val)
 {
 	/* Push value 'val' on top of the operational stack. If it fails, raise
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
@@ -4925,8 +4907,8 @@ register2 struct item *val;
 	return top;				/* Address of allocated item */
 }
 
-rt_private int stack_extend(size)
-register1 int size;					/* Size of new chunk to be added */
+rt_private int stack_extend(register int size)
+                   					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -4958,7 +4940,7 @@ register1 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-rt_public struct item *opop()
+rt_public struct item *opop(void)
 {
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
@@ -4996,8 +4978,7 @@ rt_public struct item *opop()
 	return op_stack.st_top;
 }
 
-rt_private void npop(nb_items)
-register1 int nb_items;
+rt_private void npop(register int nb_items)
 {
 	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
 	 * try to truncate the unused chunks from the tail of the stack. We do
@@ -5065,7 +5046,7 @@ register1 int nb_items;
 		stack_truncate();			/* Eventually remove unused chunks */
 }
 
-rt_public struct item *otop()
+rt_public struct item *otop(void)
 {
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -5092,8 +5073,7 @@ rt_public struct item *otop()
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
-rt_private struct item *oitem(n)
-uint32 n;
+rt_private struct item *oitem(uint32 n)
 {
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -5119,7 +5099,7 @@ uint32 n;
 	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
 }
 
-rt_private void stack_truncate()
+rt_private void stack_truncate(void)
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
 	 * MIN_FREE locations, then we may free all the chunks starting with the
@@ -5146,8 +5126,8 @@ rt_private void stack_truncate()
 	}
 }
 
-rt_private void wipe_out(chunk)
-register struct stochunk *chunk;	/* First chunk to be freed */
+rt_private void wipe_out(register struct stochunk *chunk)
+                                	/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
 
@@ -5171,9 +5151,9 @@ register struct stochunk *chunk;	/* First chunk to be freed */
  */
 
 /* VARARGS1 */
-rt_public struct item *ivalue(code, num)
-int code;		/* Request code */
-int num;		/* Additional info for local and arguments */
+rt_public struct item *ivalue(int code, int num)
+         		/* Request code */
+        		/* Additional info for local and arguments */
 {
 	/* Extract information from the interpreter's registers. For local and
 	 * arguments, a range checking is performmed and a null pointer returned
@@ -5211,7 +5191,7 @@ int num;		/* Additional info for local and arguments */
 }
 
 #ifdef DEBUG
-rt_private void dump_stack()
+rt_private void dump_stack(void)
 {
 	/* Dumps the contents of the operational stack */
 
@@ -5281,8 +5261,7 @@ rt_private void dump_stack()
 	}
 }
 
-static void xiprint(last)
-struct item *last;
+static void xiprint(struct item *last)
 {
 	/* Print a stack item */
 
@@ -5315,7 +5294,7 @@ struct item *last;
 	}
 }
 
-static void xidebug()
+static void xidebug(void)
 {
 	/* Print Current and arguments */
 
@@ -5333,8 +5312,7 @@ static void xidebug()
 	}
 }
 
-static void xistack(n)
-int n;
+static void xistack(int n)
 {
 	/* Print the `n' items on the top of the stack */
 
@@ -5370,9 +5348,7 @@ int n;
  * Byte-code dumping routines.
  */
 
-rt_public void idump(fd, start)
-FILE *fd;
-char *start;
+rt_public void idump(FILE *fd, char *start)
 {
 	/* Dumps an ASCII representation (disassembling) of byte code starting at
 	 * IC and ending at BC_NULL. The dump is made in the file fd.
@@ -5507,9 +5483,7 @@ char *start;
 	IC = old_IC;
 }
 	
-rt_private void iinternal_dump(fd, start)
-FILE *fd;
-char *start;
+rt_private void iinternal_dump(FILE *fd, char *start)
 {
 	register1 int code;				/* Current intepreted byte code */
 	register2 struct item *last;	/* Last pushed value */

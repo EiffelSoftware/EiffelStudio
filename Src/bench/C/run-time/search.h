@@ -35,10 +35,10 @@ struct s_table {
  * Search table interface.
  */
 
-extern struct s_table *s_create();	/* Creates search table */
-extern int s_put();					/* Insertion in search table */
-extern int32 s_search();			/* Search in table */
-extern void s_resize();				/* Search table resizing */
+extern struct s_table *s_create(uint32 size);	/* Creates search table */
+extern int s_put(struct s_table *tbl, char *object);					/* Insertion in search table */
+extern int32 s_search(struct s_table *tbl, char *object);			/* Search in table */
+extern void s_resize(register struct s_table *tbl);				/* Search table resizing */
 
 #ifdef __cplusplus
 }

@@ -52,7 +52,7 @@
  * reset to its default behaviour (of course, we do this only when the
  * default behaviour is not SIG_IGN).
  */
-rt_public Signal_t (*esig[NSIG])();	/* Array of signal handlers */
+rt_public Signal_t (*esig[NSIG])(int);	/* Array of signal handlers */
 
 /* Records whether a signal is ignored by default or not. Some of these
  * values where set during the initialization, others were hardwired. We also
@@ -74,14 +74,14 @@ rt_shared int esigblk = 0;				/* By default, signals are not blocked */
 rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
 
 /* Routine declarations */
-rt_public char *signame();				/* Give English description of a signal */
-rt_private Signal_t ehandlr();			/* Eiffel main signal handler */
-rt_public Signal_t exfpe();			/* Floating point exception handler */
-rt_private int dangerous();			/* Is a given signal dangerous for us? */
-rt_shared void esdpch();				/* Dispatch queued signals */
-rt_shared void initsig();				/* Run-time initialization for trapping */
-rt_private void spush();				/* Queue signal in a FIFO stack */
-rt_private int spop();					/* Extract signals from queued stack */
+rt_public char *signame(int sig);				/* Give English description of a signal */
+rt_private Signal_t ehandlr(register int sig);			/* Eiffel main signal handler */
+rt_public Signal_t exfpe(int sig);			/* Floating point exception handler */
+rt_private int dangerous(int sig);			/* Is a given signal dangerous for us? */
+rt_shared void esdpch(void);				/* Dispatch queued signals */
+rt_shared void initsig(void);				/* Run-time initialization for trapping */
+rt_private void spush(int sig);				/* Queue signal in a FIFO stack */
+rt_private int spop(void);					/* Extract signals from queued stack */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -99,15 +99,14 @@ rt_private char *rcsid =
  * Signal handler routines.
  */
 
-rt_private Signal_t ehandlr(sig)
-register1 int sig;
+rt_private Signal_t ehandlr(register int sig)
 {
 	/* Eiffel signal handler -- all the signals that can be caught let the
 	 * process jump to this routine, which is in charge of dispatching the
 	 * signal or simply ignoring it.
 	 */
 
-	Signal_t (*handler)();			/* The Eiffel signal handler routine */
+	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 	int oldmask;					/* To get old signal mask */
 
 #ifndef SIGNALS_KEPT
@@ -155,8 +154,7 @@ register1 int sig;
 	}
 }
 
-rt_public Signal_t exfpe(sig)
-int sig;
+rt_public Signal_t exfpe(int sig)
 {
 	/* Raise a floating point exception */
 
@@ -175,8 +173,8 @@ int sig;
 	xraise(EN_FLOAT);		/* Raise a floating point exception */
 }
 
-rt_shared void trapsig(handler)
-Signal_t (*handler)();		/* The signal handler provided */
+rt_shared void trapsig(void (*handler) (int))
+                      		/* The signal handler provided */
 {
 	/* This routine is usually called only by the main() when something wrong
 	 * happened. All the signals are trapped and redirected to the supplied
@@ -201,8 +199,7 @@ Signal_t (*handler)();		/* The signal handler provided */
 #endif
 }
 
-rt_private int dangerous(sig)
-int sig;
+rt_private int dangerous(int sig)
 {
 	/* Return true if the signal 'sig' is dangerous, false otherwise. A signal
 	 * is thought as being dangerous if it may be caused by a corrupted memory
@@ -231,14 +228,14 @@ int sig;
  * Dispatching queued signals.
  */
 
-rt_shared void esdpch()
+rt_shared void esdpch(void)
 {
 	/* Dispatches any pending signal in a FIFO manner as if the signal was
 	 * being received now. We knwo the signal was not meant to be ignored,
 	 * otherwise it would not have been queued.
 	 */
 
-	Signal_t (*handler)();			/* The Eiffel signal handler routine */
+	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 	int sig;						/* Signal number to be sent */
 
 	/* Note that all the signal queued here have their corresponding bit in
@@ -263,9 +260,9 @@ rt_shared void esdpch()
  * Kernel signal interface.
  */
 
-rt_public Signal_t (*esignal(sig, func))()
-int sig;				/* Signal to handle */
-Signal_t (*func)();		/* Handler to be associated with signal */
+rt_public Signal_t (*esignal(int sig, void (*func) (int)))(int)
+        				/* Signal to handle */
+                   		/* Handler to be associated with signal */
 {
 	/* Set-up a signal handler for a specific signal and return the previous
 	 * handler. This routine behaves exactly as its kernel counterpart, except
@@ -275,7 +272,7 @@ Signal_t (*func)();		/* Handler to be associated with signal */
 	 * may occur if this is not done by the kernel).
 	 */
 
-	Signal_t (*oldfunc)();		/* Previous signal handler set */
+	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
 	if (sig >= NSIG)
@@ -309,7 +306,7 @@ Signal_t (*func)();		/* Handler to be associated with signal */
 
 #ifndef HAS_SIGVEC
 #ifndef HAS_SIGVECTOR
-rt_public int esigvec()
+rt_public int esigvec(void)
 {
 	/* The sigvec() kernel interface (named sigvector() on HP-UX, thanks HP)
 	 * is missing. This raises an external event exception.
@@ -323,9 +320,7 @@ rt_public int esigvec()
 #endif
 
 #ifdef HAS_SIGVEC
-rt_public int esigvec(sig, vec, ovec)
-int sig;
-struct sigvec *vec, *ovec;
+rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 {
 	/* This routine is a wrapper to the kernel sigvec() routine. This is needed
 	 * since all the signals are nornally trapped by the run-time first, and
@@ -333,7 +328,7 @@ struct sigvec *vec, *ovec;
 	 * reception will no longer be well-defined.
 	 */
 
-	Signal_t (*oldfunc)();		/* Previous signal handler set */
+	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
 	if (sig >= NSIG) {		/* Bad signal, don't bother issuing system call */
@@ -382,7 +377,7 @@ struct sigvec *vec, *ovec;
  * Initialization section.
  */
 
-rt_shared void initsig()
+rt_shared void initsig(void)
 {
 	/* This routine should be called by the main() of the Eiffel program to
 	 * properly initialize signals. This code is thus executed only once
@@ -495,8 +490,7 @@ rt_shared void initsig()
  * Eiffel signal's FIFO stack.
  */
 
-rt_private void spush(sig)
-int sig;
+rt_private void spush(int sig)
 {
 	/* Record a signal in the FIFO stack for deferred handling. If the buffer
 	 * is full, we panic immediately (I chose to hardwire size, alas--RAM).
@@ -548,7 +542,7 @@ int sig;
 #endif
 }
 
-rt_private int spop()
+rt_private int spop(void)
 {
 	/* Pops off a signal from the FIFO stack and returns its value. If the
 	 * stack is empty, return 0.
@@ -734,8 +728,7 @@ rt_private struct sig_desc sig_name[] = {
 	{ 39, 0, "Unknown signal" }
 };
 
-rt_public char *signame(sig)
-int sig;
+rt_public char *signame(int sig)
 {
 	/* Returns a description of a signal given its number. If sys_siglist[]
 	 * is available and gives a non-null description, then use it. Otherwise
@@ -758,8 +751,7 @@ int sig;
  * Eiffel interface
  */
 
-rt_public long esigmap(idx)
-long idx;
+rt_public long esigmap(long int idx)
 {
 	/* C signal code for signal of index `idx' */
 
@@ -770,8 +762,7 @@ long idx;
 			return (long) (sig_name[i].s_num);
 }
 
-rt_public char *esigname(sig)
-long sig;
+rt_public char *esigname(long int sig)
 {
 	/* Returns a description of a signal given its number. If sys_siglist[]
 	 * is available and gives a non-null description, then use it. Otherwise
@@ -782,15 +773,14 @@ long sig;
 	return (signame((int) sig));
 } 
 
-rt_public long esignum()
+rt_public long esignum(void)
 {
 	/* Number of last signal */
 
 	return (long) echsig;
 }
 
-rt_public void esigcatch(sig)
-long sig;
+rt_public void esigcatch(long int sig)
 {
 	/* Catch signal `sig'.
 	 * Check that the signal is defined
@@ -848,8 +838,7 @@ long sig;
 #endif
 }
 
-rt_public void esigignore(sig)
-long sig;
+rt_public void esigignore(long int sig)
 {
 	/* Ignore signal `sig'.
 	 * Check that the signal is defined
@@ -907,8 +896,7 @@ long sig;
 #endif
 }
 
-rt_public char esigiscaught(sig)
-long sig;
+rt_public char esigiscaught(long int sig)
 {
 	/* Is signal of number `sig' caught?
 	 * Check that the signal is defined
@@ -920,8 +908,7 @@ long sig;
 		return (char) 0;
 }
 
-rt_public char esigdefined (sig)
-long sig;
+rt_public char esigdefined (long int sig)
 {
 	/* Id signal of number `sig' defined? */
 
@@ -938,7 +925,7 @@ long sig;
 	}
 }
 
-void esigresall() 
+void esigresall(void)
 {
 	/* Reset all the signals to their default handling */
 
@@ -972,8 +959,7 @@ void esigresall()
 
 }
 
-void esigresdef(sig)
-long sig;
+void esigresdef(long int sig)
 {
 	/* Reset signal `sig' to its default handling */
 	if (!(esigdefined(sig) == (char) 1))
@@ -1036,10 +1022,9 @@ long sig;
  */
 
 struct eif_except exdata;	/* Exception handling global flags */
-rt_private int bufstate();	/* Print circular buffer state */
+rt_private int bufstate(void);	/* Print circular buffer state */
 
-Signal_t test_handler(sig)
-int sig;
+Signal_t test_handler(int sig)
 {
 	printf("test_handler: caught signal #%d\n", sig);
 }
@@ -1093,7 +1078,7 @@ main()
 	printf("> End of tests.\n");
 }
 
-rt_private int bufstate()
+rt_private int bufstate(void)
 {
 	/* Give circular buffer state */
 
@@ -1102,22 +1087,18 @@ rt_private int bufstate()
 }
 
 /* Functions not provided here */
-rt_public void panic(s)
-char *s;
+rt_public void panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);
 }
 
-rt_public void xraise(val)
-int val;
+rt_public void xraise(int val)
 {
 	printf("xraise: exception code %d\n", val);
 }
 
-rt_public void exhdlr(handler, sig)
-Signal_t (*handler)();
-int sig;
+rt_public void exhdlr(Signal_t (*handler)(int), int sig)
 {
 	(handler)(sig);		/* Call handler */
 }

@@ -65,21 +65,21 @@ rt_private char *s_buffer = (char *) 0;
 /*
  * Function declarations
  */
-rt_private void internal_store();
-rt_private void st_store();				/* Second pass of the store */
-rt_private void ist_write();
-rt_private void gst_write();
-rt_private void make_header();				/* Make header */
-rt_private void imake_header();				/* Make header */
-rt_private int store_buffer ();
-rt_private void object_write ();
-rt_private void gen_object_write ();
-rt_public long get_offset ();
-rt_public long get_alpha_offset ();
-rt_public void allocate_gen_buffer();
-void store_write();
-rt_private void st_clean();
-rt_public void free_sorted_attributes();
+rt_private void internal_store(char *object);
+rt_private void st_store(char *object);				/* Second pass of the store */
+rt_private void ist_write(char *object);
+rt_private void gst_write(char *object);
+rt_private void make_header(void);				/* Make header */
+rt_private void imake_header(void);				/* Make header */
+rt_private int store_buffer();		/* %%ss undefined */
+rt_private void object_write (char *object);
+rt_private void gen_object_write (char *object);
+rt_public long get_offset (uint32 o_type, uint32 attrib_num);
+rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
+rt_public void allocate_gen_buffer(void);
+void store_write(void);
+rt_private void st_clean(void);
+rt_public void free_sorted_attributes(void);
 
 /*
  * Shared data declarations
@@ -96,10 +96,10 @@ rt_private char *rcsid =
 
 /*function pointers to save on if statements*/
 
-void (*make_header_func)() = make_header;
-void (*st_write_func)() = st_write;
-void (*flush_buffer_func)() = flush_st_buffer;
-void (*store_write_func)() = store_write;
+void (*make_header_func)(void) = make_header;
+void (*st_write_func)(char *) = st_write;
+void (*flush_buffer_func)(void) = flush_st_buffer;
+void (*store_write_func)(void) = store_write;
 
 /*
  * Convenience functions
@@ -107,9 +107,7 @@ void (*store_write_func)() = store_write;
 
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
-rt_public void rt_init_store(store_function, buf_size)
-void (*store_function)();
-int buf_size;
+rt_public void rt_init_store(void (*store_function) (void), int buf_size)
 {
 	store_write_func = store_function;
 	if (buf_size)
@@ -118,7 +116,7 @@ int buf_size;
 
 /* Reset store function pointers and globals to their default values */
 
-rt_public void rt_reset_store(){
+rt_public void rt_reset_store(void) {
 	store_write_func = store_write;
 	buffer_size = EIF_BUFFER_SIZE;
 }
@@ -128,10 +126,7 @@ rt_public void rt_reset_store(){
  * Functions definitions
  */
 
-rt_public void eestore(file_desc, object, file_storage_type)
-EIF_INTEGER file_desc;
-char *object;
-EIF_CHARACTER file_storage_type;
+rt_public void eestore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type)
 {
 	/* Store object hierarchy of root `object' and produce a header
 	 * so it can be retrieved by other systems.
@@ -148,10 +143,7 @@ EIF_CHARACTER file_storage_type;
 	st_write_func = st_write;
 }
 
-rt_public void estore(file_desc, object, file_storage_type)
-EIF_INTEGER file_desc;
-char *object;
-EIF_CHARACTER file_storage_type;
+rt_public void estore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type)
 {
 	/* Store object hierarchy of root `object' without header. */
 	fides = (int) file_desc;
@@ -161,10 +153,7 @@ EIF_CHARACTER file_storage_type;
 	internal_store(object);
 }
 
-rt_public void sstore (fd, object, file_storage_type)
-EIF_INTEGER fd;
-char * object;
-EIF_CHARACTER file_storage_type;
+rt_public void sstore (EIF_INTEGER fd, char *object, EIF_CHARACTER file_storage_type)
 {
 	/* Use file decscriptor so sockets and files can be used for storage
 	 * Store object hierarchy of root `object' and produce a header
@@ -189,7 +178,7 @@ EIF_CHARACTER file_storage_type;
 	idr_temp_buf = (char *)0;
 }
 
-rt_public void allocate_gen_buffer ()
+rt_public void allocate_gen_buffer (void)
 {
 	if (general_buffer == (char *) 0) {
 		char g_status = g_data.status;
@@ -213,8 +202,7 @@ if no compression, use buffer_size -> 1k instead of 32k + padding
 	end_of_buffer = 0;
 }
 
-rt_private void internal_store(object)
-char *object;
+rt_private void internal_store(char *object)
 {
 	/* Store object hierarchy of root `object' in file `file_ptr' and
 	 * produce header if `accounting'.
@@ -297,8 +285,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #endif
 }
 
-rt_private void st_store(object)
-char *object;
+rt_private void st_store(char *object)
 {
 	/* Second pass of the store mecahnism: writing on the disk. */
 
@@ -360,8 +347,7 @@ char *object;
 
 }
 
-rt_public void st_write(object)
-char *object;
+rt_public void st_write(char *object)
 {
 	/* Write an object in file `fides'.
 	 * Use for basic and general (before 3.3) store
@@ -411,8 +397,7 @@ char *object;
 
 }
 
-rt_private void gst_write(object)
-char *object;
+rt_private void gst_write(char *object)
 {
 	/* Write an object in file `fides'.
 	 * used for general store
@@ -457,8 +442,7 @@ char *object;
 
 }
 
-rt_private void ist_write(object)
-char *object;
+rt_private void ist_write(char *object)
 {
 	/* Write an object in file `fides'.
 	 * used for independent store
@@ -503,8 +487,7 @@ char *object;
 
 }
 
-rt_public long get_offset(o_type, attrib_num)
-uint32 o_type, attrib_num;
+rt_public long get_offset(uint32 o_type, uint32 attrib_num)
 {
 #ifndef WORKBENCH
 	return ((System(o_type).cn_offsets[attrib_num])[o_type]);
@@ -518,8 +501,7 @@ uint32 o_type, attrib_num;
 #endif
 }
 
-rt_public long get_alpha_offset(o_type, attrib_num)
-uint32 o_type, attrib_num;
+rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 {
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
 
@@ -546,8 +528,7 @@ uint32 o_type, attrib_num;
 }
 
 
-rt_private void gen_object_write(object)
-char * object;
+rt_private void gen_object_write(char *object)
 {
 		/* Writes an object to disk (used by the new (3.3) general store)
 		 * It uses the same algorithm as `object_write' and should be updated
@@ -685,8 +666,7 @@ char * object;
 }
 
 
-rt_private void object_write(object)
-char * object;
+rt_private void object_write(char *object)
 {
 	long attrib_offset;
 	int z;
@@ -743,7 +723,7 @@ char * object;
 								printf ("\n");
 						}
 #endif
-						widr_norm_int (&(HEADER(bptr)->ov_flags), 1);
+						widr_norm_int (&(HEADER(bptr)->ov_flags));	/* %%zs misuse, removed ",1" */
 						widr_multi_bit (bptr, 1, bptr->b_length, NULL);
 					}
 
@@ -862,7 +842,7 @@ char * object;
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						widr_norm_int (&(HEADER (object + OVERHEAD)->ov_flags), 1);
+						widr_norm_int (&(HEADER (object + OVERHEAD)->ov_flags));		/* %%zs misuse, removed ",1" */
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 							object_write(ref);
@@ -896,7 +876,7 @@ char * object;
 #endif
 				} else {			/* Special of composites */
 					elem_size = *(long *) (o_ptr + sizeof(long));
-					widr_norm_int (&(HEADER (object)->ov_flags), 1);
+					widr_norm_int (&(HEADER (object)->ov_flags));	/* %%zs misuse, removed ",1" */
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						object_write(ref);
@@ -909,7 +889,7 @@ char * object;
 
 
 
-rt_private void make_header()
+rt_private void make_header(void)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -1013,8 +993,7 @@ rt_private void make_header()
 	expop(&eif_stack);
 }
 
-rt_public void sort_attributes(dtype)
-int dtype;
+rt_public void sort_attributes(int dtype)
 {
 	/* Sort the attributes alphabeticaly by type */
 
@@ -1079,7 +1058,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
-rt_private void imake_header()
+rt_private void imake_header(void)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -1203,7 +1182,7 @@ rt_private void imake_header()
 }
 
 
-rt_private void st_clean()
+rt_private void st_clean(void)
 {
 	/* clean up memory allocation and reset function pointers */
 
@@ -1225,7 +1204,7 @@ rt_private void st_clean()
 	}
 }
 
-rt_public void free_sorted_attributes()
+rt_public void free_sorted_attributes(void)
 {
 	unsigned int i;
 	unsigned int *s_attr;
@@ -1245,9 +1224,7 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 	}
 }
 
-rt_public void buffer_write(data, size)
-register char * data;
-int size;
+rt_public void buffer_write(register char *data, int size)
 {
 	register int i;
 
@@ -1264,14 +1241,14 @@ int size;
 	}
 }
 
-rt_public void flush_st_buffer ()
+rt_public void flush_st_buffer (void)
 {
 	if (current_position != 0)
 		store_write_func ();
 }
 
 
-void store_write()
+void store_write(void)
 {
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;

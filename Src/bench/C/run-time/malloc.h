@@ -149,17 +149,17 @@ union overhead {
 /*
  * Functions return type.
  */
-extern char *emalloc();				/* Allocate an Eiffel object */
-extern char *spmalloc();			/* Allocate an Eiffel special object */
-extern char *cmalloc();				/* Allocate a C object */
-extern char *gmalloc();				/* Garbage collector's allocation */
-extern char *xmalloc();				/* Low level allocation routine */
-extern char *xcalloc();				/* Calloc */
-extern void xfree();				/* Free */
-extern char *crealloc();			/* Reallocate a C object */
-extern char *xrealloc();			/* Reallocate with GC turned on/off */
-extern char *sprealloc();			/* Reallocate an Eiffel special object */
-extern struct emallinfo *meminfo();	/* Memory statistics */
+extern char *emalloc(uint32 type);				/* Allocate an Eiffel object */
+extern char *spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
+extern char *cmalloc(unsigned int nbytes);				/* Allocate a C object */
+extern char *gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
+extern char *xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
+extern char *xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
+extern void xfree(register char *ptr);				/* Free */
+extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
+extern char *xrealloc(register char *ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
+extern char *sprealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 
 /*
  * Shared variables
@@ -177,16 +177,16 @@ extern long eiffel_usage;			/* For memory statistics */
 /*
  * Shared routines
  */
-extern int split_block();			/* Block spliting */
-extern void lxtract();				/* Extraction from free list */
-extern void rel_core();				/* Give memory back to kernel */
-extern int chunk_coalesc();			/* Coalescing to reduce fragmentation */
-extern char *get_to_from_core();	/* Get to_space from core for partial scavenging */
-extern void memck();
-extern void mem_diagnose();			/* Memory usage dump */
-extern int full_coalesc();			/* Perform free blocks coalescing */
-extern void sc_stop();
-rt_shared char *eif_set();				/* Set Eiffel object prior use */
+extern int split_block(register union overhead *selected, register uint32 nbytes);			/* Block spliting */
+extern void lxtract(union overhead *next);				/* Extraction from free list */
+extern void rel_core(void);				/* Give memory back to kernel */
+extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
+extern char *get_to_from_core(unsigned int nbytes);	/* Get to_space from core for partial scavenging */
+extern void memck(unsigned int max_dt);
+extern void mem_diagnose(int sig);			/* Memory usage dump */
+extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
+extern void sc_stop(void);
+rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type);				/* Set Eiffel object prior use */
 
 #ifndef TEST
 extern int cc_for_speed;			/* Priority to speed or memory? */

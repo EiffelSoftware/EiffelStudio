@@ -31,16 +31,16 @@ struct htable {
 };
 
 /* Function declaration */
-extern int ht_create();				/* Create H table */
-extern char *ht_value();			/* Get value given some key */
-extern char *ht_first();			/* Get item address */
-extern char *ht_put();				/* Insert value in H table */
-extern void ht_force();				/* Insert value in H table (extending
+extern int ht_create(struct htable *ht, int32 n, int sval);				/* Create H table */
+extern char *ht_value(struct htable *ht, register long unsigned int key);			/* Get value given some key */
+extern char *ht_first(struct htable *ht, register long unsigned int key);			/* Get item address */
+extern char *ht_put(struct htable *ht, register long unsigned int key, char *val);				/* Insert value in H table */
+extern void ht_force(struct htable *ht, register long unsigned int key, char *val);				/* Insert value in H table (extending
 									 * hash table if needed) */
-extern void ht_remove();			/* Remove value in H table */
-extern int ht_xtend();				/* Extend size of full H table */
-extern void ht_zero();				/* Initialize H table to zero */
-extern void ht_free();				/* Free hash table */
+extern void ht_remove(struct htable *ht, register long unsigned int key);			/* Remove value in H table */
+extern int ht_xtend(struct htable *ht);				/* Extend size of full H table */
+extern void ht_zero(struct htable *ht);				/* Initialize H table to zero */
+extern void ht_free(struct htable *ht);				/* Free hash table */
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,7 @@
 
 #include "config.h"
 
-#include <stdio.h>
+/* #include <stdio.h>	*/	/* %%zs here, moved <stdio.h> into file.h */
 #include <errno.h>
 #include <ctype.h>
 
@@ -95,22 +95,27 @@
 #define NAME_MAX	10			/* Maximum length for user/group name */
 #endif
 
-rt_public char *file_open_mode();		/* Open file */
-rt_private char *file_fopen();		/* Open file */
-rt_private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
-rt_private char *file_freopen();	/* Reopen file */
-rt_private char *file_binary_fopen();		/* Open file */
-rt_private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */
-rt_private char *file_binary_freopen();	/* Reopen file */
-rt_private void swallow_nl();		/* Swallow next character if new line */
+rt_public char *file_open_mode(int how, char mode);		/* Open file */
+rt_private char *file_fopen(char *name, char *type);		/* Open file */
+rt_private char *file_fdopen(int fd, char *type);	/* Open file descriptor (UNIX specific) */
+rt_private char *file_freopen(char *name, char *type, FILE *stream);	/* Reopen file */
+rt_private char *file_binary_fopen();		/* Open file */ /* %%zs undefined */
+rt_private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */ /* %%zs undefined */
+rt_private char *file_binary_freopen();	/* Reopen file */ /* %%zs undefined */
+rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
-rt_private int utime();
+/* rt_private int utime(); */ /* %%ss removed and replaced by below */
+#ifdef __VMS
+rt_private int utime(char *path, char *times);		/* %%ss */
+#else
+rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
+#endif
 #endif
 
 #ifndef HAS_UNLINK
 #ifndef unlink
-rt_private int unlink();
+rt_private int unlink(char *path);
 #endif
 #endif
 
@@ -119,9 +124,7 @@ rt_private int unlink();
  * Opening a file.
  */
 
-rt_public char *file_open_mode (how, mode)
-int how;
-char mode;
+rt_public char *file_open_mode (int how, char mode)
 {
 	static char type [4];
 
@@ -147,9 +150,7 @@ char mode;
 	return type;
 }
 
-rt_public EIF_POINTER file_open(name, how)
-char *name;
-int how;
+rt_public EIF_POINTER file_open(char *name, int how)
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
@@ -163,9 +164,7 @@ int how;
 #endif
 }
 
-rt_public EIF_POINTER file_dopen(fd, how)
-int fd;
-int how;
+rt_public EIF_POINTER file_dopen(int fd, int how)
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
@@ -179,10 +178,7 @@ int how;
 #endif
 }
 
-rt_public EIF_POINTER file_reopen(name, how, old)
-char *name;
-int how;
-FILE *old;
+rt_public EIF_POINTER file_reopen(char *name, int how, FILE *old)
 {
 	/* Reopen file `name' with the corresponding type 'how' and substitute that
 	 * to the old stream described by `old'. This is useful to redirect 'stdout'
@@ -199,9 +195,7 @@ FILE *old;
 #endif
 }
 
-rt_public EIF_POINTER file_binary_open(name, how)
-char *name;
-int how;
+rt_public EIF_POINTER file_binary_open(char *name, int how)
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
@@ -212,9 +206,7 @@ int how;
 #endif
 }
 
-rt_public EIF_POINTER file_binary_dopen(fd, how)
-int fd;
-int how;
+rt_public EIF_POINTER file_binary_dopen(int fd, int how)
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
@@ -225,10 +217,7 @@ int how;
 #endif
 }
 
-rt_public EIF_POINTER file_binary_reopen(name, how, old)
-char *name;
-int how;
-FILE *old;
+rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 {
 	/* Reopen file `name' with the corresponding type 'how' and substitute that
 	 * to the old stream described by `old'. This is useful to redirect 'stdout'
@@ -246,9 +235,7 @@ FILE *old;
 #include "windows.h"
 #endif
 
-rt_private char *file_fopen(name, type)
-char *name;
-char *type;
+rt_private char *file_fopen(char *name, char *type)
 {
 	/* Issue the fopen() call and raise exception if it fails, or return the
 	 * file pointer when sucessful.
@@ -264,9 +251,7 @@ char *type;
 	return (char *) fp;
 }
 
-rt_private char *file_fdopen(fd, type)
-int fd;
-char *type;
+rt_private char *file_fdopen(int fd, char *type)
 {
 	/* Issue the fdopen() call and raise exception if it fails, or return the
 	 * file pointer when sucessful.
@@ -282,10 +267,7 @@ char *type;
 	return (char *) fp;
 }
 
-rt_private char *file_freopen(name, type, stream)
-char *name;
-char *type;
-FILE *stream;
+rt_private char *file_freopen(char *name, char *type, FILE *stream)
 {
 	/* Issue the freopen() call and raise exception if it fails, or return the
 	 * file pointer when sucessful.
@@ -305,8 +287,7 @@ FILE *stream;
  * Dealing with a file.
  */
 
-rt_public void file_close(fp)
-FILE *fp;
+rt_public void file_close(FILE *fp)
 {
 	/* Close the file */
 
@@ -315,8 +296,7 @@ FILE *fp;
 		esys();				/* Close failed, raise exception */
 }
 
-rt_public void file_flush(fp)
-FILE *fp;
+rt_public void file_flush(FILE *fp)
 {
 	/* Flush data held in stdio buffer */
 
@@ -329,8 +309,7 @@ FILE *fp;
 		esys();				/* Flush failed, raise exception */
 }
 
-rt_public  EIF_INTEGER file_size (fp)
-FILE *fp;
+rt_public  EIF_INTEGER file_size (FILE *fp)
 {
 	struct stat buf;
 #ifdef __VMS
@@ -366,8 +345,7 @@ FILE *fp;
 	return (EIF_INTEGER) buf.st_size;
 }
 
-rt_public EIF_BOOLEAN file_feof(fp)
-FILE *fp;      
+rt_public EIF_BOOLEAN file_feof(FILE *fp)
 {
 	return (EIF_BOOLEAN) (feof(fp) != 0);	/* End of file? */
 }
@@ -376,9 +354,7 @@ FILE *fp;
  * I/O routines (output).
  */
 
-rt_public void file_pi(f, number)
-FILE *f;
-EIF_INTEGER	number;
+rt_public void file_pi(FILE *f, EIF_INTEGER number)
 {
 	/* Write `number' on `f' */
 
@@ -387,9 +363,7 @@ EIF_INTEGER	number;
 		eio();
 }
 
-rt_public void file_pr(f, number)
-FILE *f;
-EIF_REAL number;
+rt_public void file_pr(FILE *f, EIF_REAL number)
 {
 	/* Write `number' on `f' */
 
@@ -398,9 +372,7 @@ EIF_REAL number;
 		eio();
 }
 
-rt_public void file_pib(f, number)
-FILE *f;
-EIF_INTEGER	number;
+rt_public void file_pib(FILE *f, EIF_INTEGER number)
 {
 	/* Write `number' on `f' */
 
@@ -409,9 +381,7 @@ EIF_INTEGER	number;
 		eio();
 }
 
-rt_public void file_prb(f, number)
-FILE *f;
-EIF_REAL number;
+rt_public void file_prb(FILE *f, EIF_REAL number)
 {
 	/* Write `number' on `f' */
 
@@ -420,10 +390,7 @@ EIF_REAL number;
 		eio();
 }
 
-rt_public void file_ps(f, str, len)
-FILE *f;
-char *str;
-EIF_INTEGER len;
+rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 {
 	/* Write string `str' on `f' */
 
@@ -435,10 +402,7 @@ EIF_INTEGER len;
 		eio();
 }
 
-rt_public void file_pt_ps(f, str, len)
-FILE *f;
-char *str;
-EIF_INTEGER len;
+rt_public void file_pt_ps(FILE *f, char *str, EIF_INTEGER len)
 {
 #ifdef __WINDOWS_386__
 	/* Write string `str' on `f' */
@@ -469,9 +433,7 @@ EIF_INTEGER len;
 #endif	
 }
 
-rt_public void file_pc(f, c)
-FILE *f;
-char c;
+rt_public void file_pc(FILE *f, char c)
 {
 	/* Write character `c' on `f' */
 
@@ -480,9 +442,7 @@ char c;
 		eio();
 }
 
-rt_public void file_pd(f, val)
-FILE *f;
-EIF_DOUBLE val;
+rt_public void file_pd(FILE *f, EIF_DOUBLE val)
 {
 	/* Write double `val' onto `f' */
 
@@ -491,9 +451,7 @@ EIF_DOUBLE val;
 		eio();
 }
 
-rt_public void file_pdb(f, val)
-FILE *f;
-EIF_DOUBLE val;
+rt_public void file_pdb(FILE *f, EIF_DOUBLE val)
 {
 	/* Write double `val' onto `f' */
 
@@ -502,8 +460,7 @@ EIF_DOUBLE val;
 		eio();
 }
 
-rt_public void file_tnwl(f)
-FILE *f;
+rt_public void file_tnwl(FILE *f)
 {
 	/* Put new_line onto `f' */
 
@@ -512,10 +469,10 @@ FILE *f;
 		eio();
 }
 
-rt_public void file_append(f, other, l)
-FILE *f;			/* Target file */
-FILE *other;		/* Source file */
-EIF_INTEGER l;		/* Amount of bytes from `other' to be appended */
+rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
+        			/* Target file */
+            		/* Source file */
+              		/* Amount of bytes from `other' to be appended */
 {
 	/*	Append a copy of `otherile' to `f' */
 
@@ -546,8 +503,7 @@ EIF_INTEGER l;		/* Amount of bytes from `other' to be appended */
  * I/O routines (input).
  */
 
-rt_private void swallow_nl(f)
-FILE *f;
+rt_private void swallow_nl(FILE *f)
 {
 	/* Swallow next character if it is a new line */
 
@@ -568,8 +524,7 @@ FILE *f;
 	}
 }
 			
-rt_public void file_tnil(f)
-FILE *f;
+rt_public void file_tnil(FILE *f)
 {
 	/* Read upto next input line */
 
@@ -582,8 +537,7 @@ FILE *f;
 		eio();
 }
 
-rt_public EIF_INTEGER file_gi(f) 
-FILE *f;     
+rt_public EIF_INTEGER file_gi(FILE *f)
 {             
 	/* Get an integer from `f' */
 
@@ -597,8 +551,7 @@ FILE *f;
 	return i;
 }
 
-rt_public EIF_REAL file_gr(f) 
-FILE *f;     
+rt_public EIF_REAL file_gr(FILE *f)
 {             
 	/* Get a real from `f' */
 
@@ -612,8 +565,7 @@ FILE *f;
 	return r;
 }
 
-rt_public EIF_DOUBLE file_gd(f) 
-FILE *f;     
+rt_public EIF_DOUBLE file_gd(FILE *f)
 {             
 	/* Get a double from `f' */
 
@@ -626,8 +578,7 @@ FILE *f;
 
 	return d;
 }
-rt_public EIF_INTEGER file_gib(f) 
-FILE *f;     
+rt_public EIF_INTEGER file_gib(FILE *f)
 {             
 	/* Get an integer from `f' */
 
@@ -640,8 +591,7 @@ FILE *f;
 	return i;
 }
 
-rt_public EIF_REAL file_grb(f) 
-FILE *f;     
+rt_public EIF_REAL file_grb(FILE *f)
 {             
 	/* Get a real from `f' */
 
@@ -654,8 +604,7 @@ FILE *f;
 	return r;
 }
 
-rt_public EIF_DOUBLE file_gdb(f) 
-FILE *f;     
+rt_public EIF_DOUBLE file_gdb(FILE *f)
 {             
 	/* Get a double from `f' */
 
@@ -668,8 +617,7 @@ FILE *f;
 	return d;
 }
 
-rt_public EIF_CHARACTER file_gc(f)
-FILE *f;
+rt_public EIF_CHARACTER file_gc(FILE *f)
 {
 	/* Get a character from `f' */
 
@@ -683,11 +631,11 @@ FILE *f;
 	return (EIF_CHARACTER) c;
 }
 
-rt_public EIF_INTEGER file_gs(f, s, bound, start)
-FILE *f;		/* File stream descriptor */
-char *s;		/* Target buffer where read characters are written */
-EIF_INTEGER bound;		/* Size of the target buffer */
-EIF_INTEGER start;		/* Amount of characters already held in buffer */
+rt_public EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)
+        		/* File stream descriptor */
+        		/* Target buffer where read characters are written */
+                  		/* Size of the target buffer */
+                  		/* Amount of characters already held in buffer */
 {
 	/* Get a string from `f' and fill it into `s' (at most `bound' characters),
 	 * with `start' being the amount of bytes already stored within s. This
@@ -733,10 +681,10 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-rt_public EIF_INTEGER file_gss(f, s, bound)
-FILE *f;		/* File stream descriptor */
-char *s;		/* Target buffer where read characters are written */
-EIF_INTEGER bound;		/* Size of the target buffer */
+rt_public EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound)
+        		/* File stream descriptor */
+        		/* Target buffer where read characters are written */
+                  		/* Size of the target buffer */
 {
 	/* Read min (bound, remaining bytes in file) characters into `s' and
 	 * return the number of characters read.
@@ -758,11 +706,11 @@ EIF_INTEGER bound;		/* Size of the target buffer */
 	return bound - amount - 1;	/* Number of characters read */
 }
 
-rt_public EIF_INTEGER file_gw(f, s, bound, start)
-FILE *f;		/* File stream descriptor */
-char *s;		/* Target buffer where read characters are written */
-EIF_INTEGER bound;		/* Size of the target buffer */
-EIF_INTEGER start;		/* Amount of characters already held in buffer */
+rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)
+        		/* File stream descriptor */
+        		/* Target buffer where read characters are written */
+                  		/* Size of the target buffer */
+                  		/* Amount of characters already held in buffer */
 {
 	/* Get a word from `f' and fill it into `s' (at most `bound' characters),
 	 * with `start' being the amount of bytes already stored within s. This
@@ -815,8 +763,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-rt_public EIF_CHARACTER file_lh(f)
-FILE *f;
+rt_public EIF_CHARACTER file_lh(FILE *f)
 {
 	/* Look ahead one character. If EOF, return 0 */
 
@@ -837,9 +784,7 @@ FILE *f;
  * Accessing/changing inode.
  */
 
-rt_public void file_chown(name, uid)
-char *name;
-int uid;
+rt_public void file_chown(char *name, int uid)
 {
 #ifdef HAS_CHOWN
 	/* Change the owner of the file to `uid' */
@@ -865,9 +810,7 @@ int uid;
 #endif
 }
 
-rt_public void file_chgrp(name, gid)
-char *name;
-int gid;
+rt_public void file_chgrp(char *name, int gid)
 {
 #ifdef HAS_CHOWN
 	/* Change the group of the file to `gid' */
@@ -893,9 +836,9 @@ int gid;
 #endif
 }
 
-rt_public void file_stat (path, buf)
-char *path;				/* Path name */
-struct stat *buf;		/* Structure to fill in */
+rt_public void file_stat (char *path, struct stat *buf)
+           				/* Path name */
+                 		/* Structure to fill in */
 {
 	/* This is an encapsulation of the stat() system call. The routine either
 	 * succeeds and returns or fails and raises the appropriate exception.
@@ -927,9 +870,7 @@ struct stat *buf;		/* Structure to fill in */
 	}
 }
 
-rt_public EIF_INTEGER file_info (buf, op)
-struct stat *buf;
-int op;
+rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 {
 	/* Perform the field dereferencing from the appropriate stat structure,
 	 * which Eiffel cannot do directly.
@@ -987,9 +928,7 @@ int op;
     }
 }
 
-rt_public EIF_BOOLEAN file_eaccess(buf, op)
-struct stat *buf;
-int op;
+rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 {
 	/* Check file permissions using effective UID and effective GID. The
 	 * current permission mode is held in the st_mode field of the stat()
@@ -1100,9 +1039,7 @@ int op;
 	}
 }
 
-rt_public EIF_BOOLEAN file_access(name, op)
-char *name;
-EIF_INTEGER op;
+rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 {
 	/* Check whether access permission 'op' are possible on file 'name' using
 	 * real UID and real GID. This is probably only useful to setuid or setgid
@@ -1123,8 +1060,7 @@ EIF_INTEGER op;
 	}
 }
 
-rt_public EIF_BOOLEAN file_exists(name)
-char *name;
+rt_public EIF_BOOLEAN file_exists(char *name)
 {
 	/* Test whether file exists or not by checking the return from the stat()
 	 * system call, hence letting the kernel run all the tests. Return true
@@ -1145,9 +1081,7 @@ char *name;
  * Interfacing with file system.
  */
 
-rt_public void file_rename(from, to)
-char *from;
-char *to;
+rt_public void file_rename(char *from, char *to)
 {
 	/* Rename file `from' into `to' */
 
@@ -1170,9 +1104,7 @@ char *to;
 	}
 }
 
-rt_public void file_link(from, to)
-char *from;
-char *to;
+rt_public void file_link(char *from, char *to)
 {
 #ifdef HAS_LINK
 	/* Link file `from' into `to' */
@@ -1193,8 +1125,7 @@ char *to;
 #endif
 }
 
-rt_public void file_mkdir(path)
-char *path;
+rt_public void file_mkdir(char *path)
 {
 	/* Create directory `path' */
 
@@ -1232,8 +1163,7 @@ char *path;
 	}
 }
 
-rt_public void file_unlink(name)
-char *name;
+rt_public void file_unlink(char *name)
 {
 	/* Delete file or directory `name' */
 
@@ -1258,8 +1188,7 @@ char *name;
 	}
 }
 
-rt_public void file_touch(name)
-char *name;
+rt_public void file_touch(char *name)
 {
 	/* Touch file `name' by setting both access and modification time to the
 	 * current time stamp. This external function exists only because there
@@ -1274,10 +1203,10 @@ char *name;
  * Inode manipulations.
  */
 
-rt_public void file_utime(name, stamp, how)
-char *name;		/* File name */
-Time_t stamp;	/* Time stamp */
-int how;		/* How should the time stamp be applied */
+rt_public void file_utime(char *name, time_t stamp, int how)
+           		/* File name */
+             	/* Time stamp */
+        		/* How should the time stamp be applied */
 {
 	/* Modify the modification and/or the access time stored in the file's
 	 * inode. The 'how' parameter tells which attributes should be set.
@@ -1315,11 +1244,11 @@ int how;		/* How should the time stamp be applied */
 	}
 }
 
-rt_public void file_perm(name, who, what, flag)
-char *name;		/* The file name */
-char *who;		/* User (u), group (g) or other (o) */
-char *what;		/* Which permission to change: rwx, s (for ug) or t (for o) */
-int flag;		/* Add (1) or remove (0) permissions */
+rt_public void file_perm(char *name, char *who, char *what, int flag)
+           		/* The file name */
+          		/* User (u), group (g) or other (o) */
+           		/* Which permission to change: rwx, s (for ug) or t (for o) */
+         		/* Add (1) or remove (0) permissions */
 {
 
 /* FIXME: allow several combinations in `who' */
@@ -1418,9 +1347,7 @@ int flag;		/* Add (1) or remove (0) permissions */
     file_chmod(name, fmode);
 }
 
-rt_public void file_chmod(path, mode)
-char *path;
-int mode;
+rt_public void file_chmod(char *path, int mode)
 {
 	/* Change permission mode on file `path' */
 
@@ -1443,8 +1370,7 @@ int mode;
  * File cursor management.
  */
 
-rt_public EIF_INTEGER file_tell(f)
-FILE *f;
+rt_public EIF_INTEGER file_tell(FILE *f)
 {
 	/* Current position within file */
 
@@ -1454,9 +1380,7 @@ FILE *f;
 	return (EIF_INTEGER) ftell(f);
 }
 
-rt_public void file_go(f, pos)
-FILE *f;
-EIF_INTEGER pos;
+rt_public void file_go(FILE *f, EIF_INTEGER pos)
 {
 	/* Go to absolute position 'pos' counted from start */
 
@@ -1466,9 +1390,7 @@ EIF_INTEGER pos;
 	clearerr(f);						/* Clear error status and EOF */
 }
 
-rt_public void file_recede(f, pos)
-FILE *f;
-EIF_INTEGER pos;
+rt_public void file_recede(FILE *f, EIF_INTEGER pos)
 {
 	/* Go to absolute position 'pos' counted from end */
 
@@ -1478,9 +1400,7 @@ EIF_INTEGER pos;
 	clearerr(f);						/* Clear error status and EOF */
 }
 
-rt_public void file_move(f, pos)
-FILE *f;
-EIF_INTEGER pos;
+rt_public void file_move(FILE *f, EIF_INTEGER pos)
 {
 	/* Go to absolute position 'pos' counted from current position */
 
@@ -1494,7 +1414,7 @@ EIF_INTEGER pos;
  * Miscellaneous routines.
  */
 
-rt_public EIF_INTEGER stat_size()
+rt_public EIF_INTEGER stat_size(void)
 {
 	/* Size of the stat structure. This is used by the Eiffel side to create
 	 * the area (special object) which will play the role of a stat buffer
@@ -1504,8 +1424,7 @@ rt_public EIF_INTEGER stat_size()
 	return (EIF_INTEGER) sizeof(struct stat);
 }
 
-rt_public EIF_BOOLEAN file_creatable(path)
-char *path;
+rt_public EIF_BOOLEAN file_creatable(char *path)
 {
 	/* Check whether the file `path' may be created: we need write permissions
 	 * in the parent directory and there must not be any file bearing that name
@@ -1577,8 +1496,7 @@ char *path;
 #endif	/* vms */
 }
 
-rt_public EIF_INTEGER file_fd(f)
-FILE *f;
+rt_public EIF_INTEGER file_fd(FILE *f)
 {
 	/* Return the associated file descriptor */
 
@@ -1588,8 +1506,7 @@ FILE *f;
 	return (EIF_INTEGER) fileno(f);	/* Might be an int */
 }
 
-rt_public char *file_owner(uid)
-int uid;
+rt_public char *file_owner(int uid)
 {
 	/* Return the Eiffel string filled in with the name associated with 'uid'
 	 * if found in /etc/passwd. Otherwise, return fill it in with the numeric
@@ -1612,8 +1529,7 @@ int uid;
 	return makestr(str, strlen(str));
 }
 
-rt_public char *file_group(gid)
-int gid;
+rt_public char *file_group(int gid)
 {
 	/* Return the Eiffel string filled in with the name associated with 'gid'
 	 * if found in /etc/group. Otherwise, return fill it in with the numeric
@@ -1640,8 +1556,7 @@ int gid;
 
 /* Does the list of groups the user belongs to include `gid'? */
 
-EIF_BOOLEAN eif_group_in_list(gid)
-int gid;
+EIF_BOOLEAN eif_group_in_list(int gid)
 {
 	Groups_t group_list[NGROUPS_MAX];
 	int i, nb_groups;
@@ -1663,9 +1578,9 @@ int gid;
  */
 
 #ifndef HAS_RENAME
-rt_public int rename(from, to)
-char *from;		/* Orginal name */
-char *to;		/* Target name */
+rt_public int rename(char *from, char *to)
+		/* Orginal name */
+		/* Target name */
 {
 
 	/* Emulates the system call rename() */
@@ -1679,8 +1594,7 @@ char *to;		/* Target name */
 #endif
 
 #ifndef HAS_RMDIR
-rt_public int rmdir(path)
-char *path;
+rt_public int rmdir(char *path)
 {
 #ifdef __VMS
 	printf("rmdir() not implemented under VMS yet.\n");
@@ -1703,8 +1617,7 @@ char *path;
 #endif
 
 #ifndef HAS_MKDIR
-rt_public int mkdir(path)
-char *path;
+rt_public int mkdir(char *path)
 {
 	/* Emulates the mkdir() system call */
 
@@ -1722,12 +1635,10 @@ char *path;
 #endif
 
 #ifndef HAS_UTIME
-int utime(path, times)		/* note, had to remove ; from this line */
-char *path;
 #ifdef __VMS
-char *times;
+rt_private int utime(char *path, char *times)		/* %%ss changed form */
 #else
-struct utimbuf *times;
+rt_private int utime(char *path, struct utimbuf *times)	/* %%ss changed form */
 #endif
 {
 	/* Emulation of utime */
@@ -1746,8 +1657,7 @@ struct utimbuf *times;
 #ifndef HAS_UNLINK
 #ifndef unlink
 
-int unlink(path)
-char *path;
+int unlink(char *path)
 {
 #ifdef __VMS
 	int		status;

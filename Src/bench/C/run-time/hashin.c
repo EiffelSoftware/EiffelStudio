@@ -37,10 +37,7 @@ rt_private char *rcsid =
  * Xavier
  */
 
-rt_public int ht_create(ht, n, sval)
-struct htable *ht;
-int32 n;
-int sval;
+rt_public int ht_create(struct htable *ht, int32 n, int sval)
 {
 	/* Creates an H table to hold 'n' items with descriptor held in 'ht'. The
 	 * size of the table is optimized to avoid conflicts and is of course a
@@ -72,8 +69,7 @@ int sval;
 	return 0;			/* Creation was ok */
 }
 
-rt_public void ht_zero(ht)
-struct htable *ht;
+rt_public void ht_zero(struct htable *ht)
 {
 	/* Initialize the hash table with zeros */
 
@@ -83,9 +79,7 @@ struct htable *ht;
 	bzero(ht->h_values, hsize * ht->h_sval);
 }
  
-rt_public char *ht_value(ht, key)
-struct htable *ht;
-register1 unsigned long key;
+rt_public char *ht_value(struct htable *ht, register long unsigned int key)
 {
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.
@@ -115,9 +109,7 @@ register1 unsigned long key;
 	return (char *) 0;			/* Item was not found */
 }
 
-rt_public char *ht_first(ht, key)
-struct htable *ht;
-register1 unsigned long key;
+rt_public char *ht_first(struct htable *ht, register long unsigned int key)
 {
 	/* Retrun first available item address where key is present or should
 	 * be. In case there is no more room, return a null pointer.
@@ -153,10 +145,7 @@ register1 unsigned long key;
 	return (char *) 0;		  /* Item was not found */
 }
 
-void ht_force(ht, key, val)
-struct htable *ht;
-register1 unsigned long key;
-char *val;
+void ht_force(struct htable *ht, register long unsigned int key, char *val)
 {
 	/* Tries to put value held at 'val' tagged with key 'key' in H table
 	 * 'ht'. If the first put fails, the H table 'ht' is extended and
@@ -173,10 +162,7 @@ char *val;
 	}
 }
 
-rt_public char *ht_put(ht, key, val)
-struct htable *ht;
-register1 unsigned long key;
-char *val;
+rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *val)
 {
 	/* Puts value held at 'val' tagged with key 'key' in H table 'ht'. If
 	 * insertion was successful, the address of the value is returned and the
@@ -214,9 +200,7 @@ char *val;
 	return (char *) 0;		/* We were unable to insert item */
 }
 
-rt_public void ht_remove(ht, key)
-struct htable *ht;
-register1 unsigned long key;
+rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 {
 	/* Remove item and key 'key' from H table 'ht'.
 	 * If 'key' does not exist, nothing will be done.
@@ -252,8 +236,7 @@ register1 unsigned long key;
 	}
 }
 
-rt_public int ht_xtend(ht)
-struct htable *ht;
+rt_public int ht_xtend(struct htable *ht)
 {
 	/* The H table 'ht' is full and needs resizing. We add 50% of old size and
 	 * copy the old table in the new one, before freeing the old one. Note that
@@ -298,8 +281,7 @@ struct htable *ht;
 	return 0;		/* Extension was ok */
 }
 
-rt_public void ht_free(ht)
-struct htable *ht;
+rt_public void ht_free(struct htable *ht)
 {
 	/* Free hash table arrays and descriptor */
 

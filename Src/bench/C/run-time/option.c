@@ -187,13 +187,13 @@ struct htable *class_table;		/* The H table that contains all info */
 
 /* INTERNAL PROFILE FUNCTIONS */
 
-void update_class_table();				/* Update H table */
-void prof_stack_push();					/* Push item on staack */
-void prof_stack_free();					/* Free profile stack memory */
-void prof_stack_init();					/* Initialize stack */
-void prof_time();						/* Get time */
-struct prof_info* prof_stack_top();		/* Top the stack */
-struct prof_info* prof_stack_pop();		/* Pop top off stack */
+void update_class_table(struct prof_info *item);				/* Update H table */
+void prof_stack_push(struct prof_info *new_item);					/* Push item on staack */
+void prof_stack_free(void);					/* Free profile stack memory */
+void prof_stack_init(void);					/* Initialize stack */
+void prof_time(struct prof_rusage *a_time);						/* Get time */
+struct prof_info* prof_stack_top(void);		/* Top the stack */
+struct prof_info* prof_stack_pop(void);		/* Pop top off stack */
 
 /* We do debug only in WORKBENCH mode
  * We also need check_options and check_options_stop in WORKBENCH mode
@@ -201,9 +201,7 @@ struct prof_info* prof_stack_pop();		/* Pop top off stack */
 
 #ifdef WORKBENCH
 
-rt_public int is_debug(st_type, key)
-int st_type;
-char *key;
+rt_public int is_debug(int st_type, char *key)
 {
 	/* Is the debug option of the class of type `st_type' consistent
 	 * with `key'.
@@ -232,9 +230,9 @@ char *key;
 	}
 }
 
-void check_options(opt, dtype)
-struct eif_opt *opt;	/* Options for the Eiffel feature*/
-int dtype;				/* Dtype of the Eiffel class */
+void check_options(struct eif_opt *opt, int dtype)
+                    	/* Options for the Eiffel feature*/
+          				/* Dtype of the Eiffel class */
 {
 	/* Check whether the class `dty[e' has E-TRACE or E-PROFILE
 	 * options in `opt' and dispatch to the finctions `start_trace()'
@@ -274,7 +272,7 @@ int dtype;				/* Dtype of the Eiffel class */
 	}
 }
 
-void check_options_stop()
+void check_options_stop(void)
 {
 	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd
 	 * and E-PROFILEd and dispatches to the functions `stop_trace()' and
@@ -305,7 +303,7 @@ void check_options_stop()
 
 #endif /* WORKBENCH */
 
-void initprf()
+void initprf(void)
 {
 	/* Creates the table needed for E-PROFILE. This function only
 	 * allocates that table if `prof_enabled'.
@@ -327,7 +325,7 @@ void initprf()
 	}
 }
 
-void exitprf()
+void exitprf(void)
 {
 	/* Exit profiling. Call this function only at exit of Eiffel system.
 	 * Store information to disk and deallocate structures.
@@ -388,10 +386,10 @@ void exitprf()
 	}
 }
 
-void start_profile(name, origin, dtype)
-char *name; /* Feature name */
-int origin; /* Origin of `name' */
-int dtype;  /* Dynamic type of `name'*/
+void start_profile(char *name, int origin, int dtype)
+            /* Feature name */
+            /* Origin of `name' */
+            /* Dynamic type of `name'*/
 {
 	/* Initialize timer and push `name' on `prof_stack'. */
 
@@ -420,7 +418,7 @@ int dtype;  /* Dynamic type of `name'*/
 	}
 }
 
-void stop_profile()
+void stop_profile(void)
 {
 	/* Stop timer for feature on top of 'prof_stack' and store
 	 * information in `class_table'.
@@ -464,10 +462,10 @@ void stop_profile()
 
 #define Classname(x)	System(x).cn_generator
 
-void start_trace(name, origin, dtype)
-char *name;				/* The routine name */
-int origin;				/* The origin of the routine */
-int dtype;				/* The class in which the routine is defined */
+void start_trace(char *name, int origin, int dtype)
+           				/* The routine name */
+           				/* The origin of the routine */
+          				/* The class in which the routine is defined */
 {
 	/* Prints, on stdout, the message that feature 'name' in class 'dtype' inherited from 'origin' is just entered.
 	 * The user can redirect the output to a file, when he/she wants that.
@@ -493,10 +491,10 @@ int dtype;				/* The class in which the routine is defined */
 	last_name = name;
 }
 
-void stop_trace(name, origin, dtype)
-char *name;				/* The routine name */
-int origin;				/* The origin of the routine */
-int dtype;				/* The class in which the routine is defined */
+void stop_trace(char *name, int origin, int dtype)
+           				/* The routine name */
+           				/* The origin of the routine */
+          				/* The class in which the routine is defined */
 {
 	/* Prints that feature 'name' in class 'dtype' inherited from 'origin' is about to leave. */
 
@@ -522,7 +520,7 @@ int dtype;				/* The class in which the routine is defined */
 		fprintf(stderr, " (%s)", Classname(origin));
 }
 
-struct prof_info* prof_stack_pop()
+struct prof_info* prof_stack_pop(void)
 {
 	/* Pop the top off `prof_stack'.
 	 * Return NULL if there is no top item to pop.
@@ -550,7 +548,7 @@ struct prof_info* prof_stack_pop()
 	}
 }
 
-struct prof_info* prof_stack_top()
+struct prof_info* prof_stack_top(void)
 {
 	/* Return top of `prof_stack'.
 	 * NULL if no item is available on `prof_stack'
@@ -583,7 +581,7 @@ struct prof_info* prof_stack_top()
 		return 0;
 }
 
-void prof_stack_init()
+void prof_stack_init(void)
 {
 	/* Initialize `prof_stack' by allocating memory for the
 	 * stack-structure and then calling st_alloc() in `garcol.c'.
@@ -608,7 +606,7 @@ void prof_stack_init()
 	}
 }
 
-void prof_stack_free()
+void prof_stack_free(void)
 {
 	/* Free the memory allocated for `prof_stack'. */
 
@@ -618,8 +616,7 @@ void prof_stack_free()
 	}
 }
 
-void prof_stack_push(new_item)
-struct prof_info *new_item;
+void prof_stack_push(struct prof_info *new_item)
 {
 	/* Push `new_item' on `prof_stack'.
 	 * Painc if not possible.
@@ -633,8 +630,7 @@ struct prof_info *new_item;
 	}
 }
 
-void update_class_table(item)
-struct prof_info *item;
+void update_class_table(struct prof_info *item)
 {
 	/* The `class_table' is a H table containing H tables. This is
  	* because of the fact that the only precise identification of
@@ -742,8 +738,8 @@ item->descendent_time);
 	}
 }
 
-void prof_stack_rewind(old_top)
-char **old_top;		/* Old top. Just to know where to stop rewinding. */
+void prof_stack_rewind(char **old_top)
+               		/* Old top. Just to know where to stop rewinding. */
 {
 	/* Rewinds part of 'prof_stack' and thus updates all features in
  	* that part and puts data in the profile table. This function
@@ -798,8 +794,8 @@ char **old_top;		/* Old top. Just to know where to stop rewinding. */
 
 #ifdef HAS_GETRUSAGE
 
-void prof_time(a_time)
-struct prof_rusage *a_time;	/* Time structure */
+void prof_time(struct prof_rusage *a_time)
+                           	/* Time structure */
 {
 	struct rusage usage;
 
@@ -813,9 +809,9 @@ struct prof_rusage *a_time;	/* Time structure */
 
 #else
 
-void prof_time(usertime, systime)
-double *usertime;		/* Time in user mode */
-double *systime;		/* Time in kernel mode */
+void prof_time(double *usertime, double *systime)
+		/* Time in user mode */
+		/* Time in kernel mode */
 
 #ifdef HAS_TIMES
 

@@ -32,18 +32,16 @@ rt_private struct s_table *table;		/* Search table for deep equal */
  * Routines declarations
  */
 
-rt_private int e_field_equal();		/* Field-by-field equality */
-rt_private int e_field_iso();			/* Field-by-field isomorhphism */
-rt_private int rdeepiso();				/* Recursive isomorphism */
-rt_private int rdeepiter();			/* Iteration on normal objects */
+rt_private int e_field_equal(register char *target, register char *source, uint32 t_flags, uint32 s_flags);		/* Field-by-field equality */
+rt_private int e_field_iso(register char *target, register char *source, uint32 t_flags, uint32 s_flags);			/* Field-by-field isomorhphism */
+rt_private int rdeepiso(char *target, char *source);				/* Recursive isomorphism */
+rt_private int rdeepiter(register char *target, register char *source);			/* Iteration on normal objects */
 
 /*
  * Routine definitions
  */
 
-rt_public int xequal(ref1, ref2)
-char *ref1;
-char *ref2;
+rt_public int xequal(char *ref1, char *ref2)
 {
 	/* Expanded equality. */
 	char *tmp;
@@ -64,9 +62,7 @@ char *ref2;
 	return 0;
 }
 
-rt_public int eequal(target, source)
-register1 char *source;
-register2 char *target;
+rt_public int eequal(register char *target, register char *source)
 {
 	/* Eiffel standard equality: it assumes that dynamic type of Eiffel
 	 * object refered by `source' conforms to dynamic type of Eiffel
@@ -107,9 +103,7 @@ register2 char *target;
 	return FALSE;
 }
 
-rt_public int spequal(target, source)
-register1 char *source;
-register2 char *target;
+rt_public int spequal(register char *target, register char *source)
 {
 	/* Eiffel standard equality on special objects: type check assumes
 	 * the comparison is on areas of the same type (containing the same
@@ -139,9 +133,7 @@ register2 char *target;
 	return (char) (!bcmp(source, target, s_size * sizeof(char)));
 }
 	
-rt_public int eiso(target, source)
-char *source;
-char *target;
+rt_public int eiso(char *target, char *source)
 {
 	/* Compare `source ' and `target' in term of their structure:
 	 * 1/ direct instances should be equal.
@@ -180,9 +172,7 @@ char *target;
 	return e_field_iso(target, source, t_flags, s_flags);
 }
 
-rt_public int spiso(target, source)
-register1 char *target;
-register2 char *source;
+rt_public int spiso(register char *target, register char *source)
 {
 	/* Compare two special objects in term of their structures. `source'
 	 * and `target' are refering two special objects. There is three cases:
@@ -283,9 +273,7 @@ register2 char *source;
 	return TRUE;
 }
 
-rt_public int ediso(target, source)
-char *source;
-char *target;
+rt_public int ediso(char *target, char *source)
 {
 	/* Compare recursively the structure attached to `target' to the
 	 * one attached to `source'. This is the standard Eiffel feature
@@ -305,9 +293,7 @@ char *target;
 	return result;
 }
 
-rt_private int rdeepiso(target, source)
-char *source;
-char *target;
+rt_private int rdeepiso(char *target, char *source)
 {
 	/* Recursive isomorphism test.
 	 * Return a boolean.
@@ -396,9 +382,7 @@ char *target;
 	/* NOTREACHED */
 }
 
-rt_private int rdeepiter(target, source)
-register1 char *target;
-register2 char *source;
+rt_private int rdeepiter(register char *target, register char *source)
 {
 	/* Iterate deep isomorphism on normal objects `target' and `source'.
 	 * It assumes that `source' and `target' are not NULL and isomorphic.
@@ -435,11 +419,7 @@ register2 char *source;
 	return TRUE;
 }
 
-rt_private int e_field_equal(target, source, t_flags, s_flags)
-register2 char *source;
-register1 char *target;
-uint32 t_flags;
-uint32 s_flags;
+rt_private int e_field_equal(register char *target, register char *source, uint32 t_flags, uint32 s_flags)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -562,11 +542,7 @@ uint32 s_flags;
 	return TRUE;
 }
 
-rt_private int e_field_iso(target, source, t_flags, s_flags)
-register2 char *source;
-register1 char *target;
-uint32 t_flags;
-uint32 s_flags;
+rt_private int e_field_iso(register char *target, register char *source, uint32 t_flags, uint32 s_flags)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are

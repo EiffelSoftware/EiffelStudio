@@ -29,15 +29,14 @@
 #include "eiffel.h"			/* For Windows and OS2 */
 
 #if defined EIF_WINDOWS || defined EIF_OS2
-EIF_BOOLEAN c_is_file_valid (EIF_POINTER);
-EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER);
-EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER);
+EIF_BOOLEAN c_is_file_valid (EIF_POINTER p);
+EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER p);
+EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER p);
 #endif
 
 /* Validity */
 
-EIF_BOOLEAN c_is_directory_valid(p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_directory_valid(EIF_POINTER p)
 {
 		/* Test to see if `p' is a well constructed directory path */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -103,8 +102,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_is_volume_name_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER p)
 {
 #ifdef __WINDOWS_386__
 	int drive;
@@ -136,8 +134,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_is_file_name_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_file_name_valid (EIF_POINTER p)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 #ifdef EIF_WIN_31
@@ -190,8 +187,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_is_extension_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_extension_valid (EIF_POINTER p)
 {
 		/* Test to see if `p' is a valid extension */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -209,8 +205,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_is_file_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_file_valid (EIF_POINTER p)
 {
 		/* Test to see if `p' is a well constructed file name (with directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -236,8 +231,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_is_directory_name_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER p)
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -255,9 +249,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN c_path_name_compare(s, t, length)
-EIF_POINTER s, t;
-EIF_INTEGER length;
+EIF_BOOLEAN c_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_INTEGER length)
 {
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -272,10 +264,7 @@ EIF_INTEGER length;
 
 /* Concatenation */
 
-void c_append_directory(string, p, v)
-EIF_REFERENCE string;
-EIF_POINTER p;
-EIF_POINTER v;
+void c_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
@@ -314,10 +303,7 @@ EIF_POINTER v;
 #endif
 }
 
-void  c_set_directory(string, p, v)
-EIF_REFERENCE string;
-EIF_POINTER p;
-EIF_POINTER v;
+void  c_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* Set the absolute part of the path name */
 #ifdef __VMS
@@ -336,10 +322,7 @@ EIF_POINTER v;
 #endif
 }
 
-void  c_append_file_name(string, p, v)
-EIF_REFERENCE string;
-EIF_POINTER p;
-EIF_POINTER v;
+void  c_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* Append the file name part in the path name */
 	if (*((char *)p) == '\0'){
@@ -356,7 +339,7 @@ EIF_POINTER v;
 	(eif_strset)(string, strlen ((char *)p));
 }
 
-EIF_BOOLEAN eif_case_sensitive_path_names()
+EIF_BOOLEAN eif_case_sensitive_path_names(void)
 {
 		/* Are path names case sensitive? */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -368,7 +351,7 @@ EIF_BOOLEAN eif_case_sensitive_path_names()
 #endif
 }
 
-EIF_REFERENCE eif_current_dir_representation()
+EIF_REFERENCE eif_current_dir_representation(void)
 {
 		/* String representation of Current directory */
 #ifdef __VMS
@@ -378,7 +361,7 @@ EIF_REFERENCE eif_current_dir_representation()
 #endif
 }
 
-EIF_BOOLEAN eif_home_dir_supported()
+EIF_BOOLEAN eif_home_dir_supported(void)
 {
 		/* Is the notion of $HOME supported */
 #ifdef EIF_WIN_31
@@ -388,13 +371,13 @@ EIF_BOOLEAN eif_home_dir_supported()
 #endif
 }
 
-EIF_BOOLEAN eif_root_dir_supported()
+EIF_BOOLEAN eif_root_dir_supported(void)
 {
 		/* Is the notion of root directory supported */
 	return EIF_TRUE;
 }
 
-EIF_REFERENCE eif_home_directory_name()
+EIF_REFERENCE eif_home_directory_name(void)
 {
 		/* String representation of $HOME */
 #ifdef EIF_WIN_31
@@ -406,7 +389,7 @@ EIF_REFERENCE eif_home_directory_name()
 #endif
 }
 
-EIF_REFERENCE eif_root_directory_name()
+EIF_REFERENCE eif_root_directory_name(void)
 {
 		/* String representation of the root directory */
 #if defined EIF_WINDOWS || defined EIF_OS2

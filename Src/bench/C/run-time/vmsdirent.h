@@ -30,9 +30,9 @@ typedef struct _dirdesc {
 #define rewinddir(dirp)		seekdir((dirp), 0L)
 
 
-extern DIR		*opendir();
-extern struct dirent	*readdir();
-extern long		telldir();
-extern void		seekdir();
-extern void		closedir();
-extern void		vmsreaddirversions();
+extern DIR		*opendir(char *name);
+extern struct dirent	*readdir(DIR *dd);
+extern long		telldir(DIR *dd);
+extern void		seekdir(DIR *dd, long pos);
+extern void		closedir(DIR *dd);
+extern void		vmsreaddirversions(DIR *dd, int flag);

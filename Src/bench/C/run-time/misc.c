@@ -34,63 +34,54 @@
 #endif
 
 #ifdef __VMS
-rt_public int	putenv ();
+rt_public int	putenv (char *);
 #endif
 
 /*
  * Various casts.
  */
 
-rt_public EIF_CHARACTER chconv(i)
-EIF_INTEGER i;
+rt_public EIF_CHARACTER chconv(EIF_INTEGER i)
 {
 	return (EIF_CHARACTER) i;	/* (EIF_INTEGER) -> (EIF_CHARACTER) */
 }
 
-rt_public EIF_INTEGER chcode(c)
-EIF_CHARACTER c;
+rt_public EIF_INTEGER chcode(EIF_CHARACTER c)
 {
 	return (EIF_INTEGER) c;	/* (EIF_CHARACTER) -> (EIF_INTEGER) */
 }
 
-rt_public EIF_POINTER conv_pp(p)
-EIF_POINTER p;
+rt_public EIF_POINTER conv_pp(EIF_POINTER p)
 {
 	return p;	/* (EIF_POINTER) -> (EIF_POINTER) */
 }
 
-rt_public EIF_INTEGER conv_pi(p)
-EIF_POINTER p;
+rt_public EIF_INTEGER conv_pi(EIF_POINTER p)
 {
 	return (EIF_INTEGER) p;	/* (EIF_POINTER) -> (EIF_INTEGER) */
 }
 
-rt_public EIF_REAL conv_ir(v)
-EIF_INTEGER v;
+rt_public EIF_REAL conv_ir(EIF_INTEGER v)
 {
 	return (EIF_REAL) v;	/* (EIF_INTEGER) -> (EIF_REAL) */
 }
 
-rt_public EIF_INTEGER conv_ri(v)
-EIF_REAL v;
+rt_public EIF_INTEGER conv_ri(EIF_REAL v)
 {
 	return (EIF_INTEGER) v;	/* (EIF_REAL) -> (EIF_INTEGER) */
 }
 
-rt_public EIF_REAL conv_dr (d)
-EIF_DOUBLE d;
+rt_public EIF_REAL conv_dr (EIF_DOUBLE d)
 {
 	return (EIF_REAL) d;	/* (EIF_DOUBLE) -> (EIF_REAL) */
 }
 
-rt_public EIF_INTEGER conv_di(d)
-EIF_DOUBLE d;
+rt_public EIF_INTEGER conv_di(EIF_DOUBLE d)
 {
 	return (EIF_INTEGER) d;		/* (EIF_DOUBLE) -> (EIF_INTEGER) */
 }
 
-rt_public EIF_INTEGER bointdiv(n1, n2)
-EIF_INTEGER n1, n2;
+rt_public EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 {
 	/* Return the greatest integer less or equal to the
 	 * integer division of `n1' by `n2'
@@ -99,8 +90,7 @@ EIF_INTEGER n1, n2;
 	return ((n1 >= 0) ^ (n2 > 0))  ? (n1 % n2 ? n1 / n2 - 1: n1 / n2) : n1 / n2;
 }
 
-rt_public EIF_INTEGER upintdiv(n1,n2)
-EIF_INTEGER n1, n2;
+rt_public EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 {
 	/* Return the smallest integer greater or equal to the
 	 * integer division of `n1' by `n2'
@@ -114,58 +104,52 @@ EIF_INTEGER n1, n2;
  */
 
 
-rt_public EIF_CHARACTER chupper(c)
-EIF_CHARACTER c;
+rt_public EIF_CHARACTER chupper(EIF_CHARACTER c)
 {
 	return (EIF_CHARACTER)toupper(c);
 }
 
-rt_public EIF_CHARACTER chlower(c)
-EIF_CHARACTER c;
+rt_public EIF_CHARACTER chlower(EIF_CHARACTER c)
 {
 	return (EIF_CHARACTER)tolower(c);
 }
 
-rt_public EIF_BOOLEAN chis_upper(c)
-EIF_CHARACTER c;
+rt_public EIF_BOOLEAN chis_upper(EIF_CHARACTER c)
 {
 	return EIF_TEST(isupper(c));
 }
 
-rt_public EIF_BOOLEAN chis_lower(c)
-EIF_CHARACTER c;
+rt_public EIF_BOOLEAN chis_lower(EIF_CHARACTER c)
 {
 	return EIF_TEST(islower(c));
 }
 
-rt_public EIF_BOOLEAN chis_digit(c)
-EIF_CHARACTER c;
+rt_public EIF_BOOLEAN chis_digit(EIF_CHARACTER c)
 {
 	return EIF_TEST(isdigit(c));
 }
 
-rt_public EIF_BOOLEAN chis_alpha(c)
-EIF_CHARACTER c;
+rt_public EIF_BOOLEAN chis_alpha(EIF_CHARACTER c)
 {
 	return EIF_TEST(isalpha(c));
 }
 
-rt_public EIF_INTEGER eschar_size()
+rt_public EIF_INTEGER eschar_size(void)
 {
 	return BYTSIZ*CHRSIZ;
 }
 
-rt_public EIF_INTEGER esreal_size()
+rt_public EIF_INTEGER esreal_size(void)
 {
 	return BYTSIZ*FLTSIZ;
 }
 
-rt_public EIF_INTEGER esint_size()
+rt_public EIF_INTEGER esint_size(void)
 {
 	return BYTSIZ*LNGSIZ;
 }
 
-rt_public EIF_INTEGER esdouble_size()
+rt_public EIF_INTEGER esdouble_size(void)
 {
 	return BYTSIZ*DBLSIZ;
 }
@@ -174,8 +158,7 @@ rt_public EIF_INTEGER esdouble_size()
  * Protected call to system
  */
 
-rt_public EIF_INTEGER eif_system (s)
-char *s;
+rt_public EIF_INTEGER eif_system (char *s)
 {
 	EIF_INTEGER result;
 
@@ -215,8 +198,7 @@ char *s;
 	return result;
 }
 
-rt_public EIF_INTEGER eif_putenv (v,k)
-EIF_OBJ v,k;
+rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 {
 		/* We need a copy of the string because the string will be
 			referenced in the environment and the eiffel string can
@@ -300,8 +282,7 @@ EIF_OBJ v,k;
 #endif
 }
 
-rt_public EIF_OBJ eif_getenv (k)
-EIF_OBJ k;
+rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 {
 #ifdef EIF_WIN32
 	char *key, *lower_k, *value;
@@ -370,9 +351,7 @@ EIF_OBJ k;
 
 /***************************************/
 
-rt_public char *arycpy(area, i, j, k)
-char *area;
-EIF_INTEGER i, j, k;
+rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 {
 	/* Reallocation of memory for an array's `area' for new count `i', keeping
 	 * the old content.(starts at `j' and is `k' long).
@@ -482,8 +461,7 @@ EIF_INTEGER i, j, k;
 #include <descrip.h>
 
 
-int	putenv (string)
-char	*string;
+int	putenv (char *string)
 	/* string should point to a character string of the form name=value
 	** Then the string is parsed into its separate components.
 	** lib$set_logical returns an unsigned int.
@@ -555,8 +533,7 @@ struct eif_dll_info *eif_dll_table = (struct eif_dll_info *) 0;
 int eif_dll_capacity = EIF_DLL_CHUNK;
 int eif_dll_count = 0;
 
-HANDLE eif_load_dll(module_name)
-char *module_name;
+HANDLE eif_load_dll(char *module_name)
 {
 	HANDLE a_result;
 	char *m_name;
@@ -596,7 +573,7 @@ char *module_name;
 	return a_result;
 }
 
-void eif_free_dlls()
+void eif_free_dlls(void)
 {
 	int i;
 	HINSTANCE module_ptr;

@@ -49,9 +49,7 @@ rt_shared char *idr_temp_buf;	/* This is shared so it can be freed
 rt_private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
 
 
-rt_public bool_t run_idr_setpos(idrs, pos)
-IDR *idrs;
-int pos;
+rt_public bool_t run_idr_setpos(IDR *idrs, int pos)
 {
 	/* Set the position of the stream to pos and return true if it is possible,
 	 * false otherwise.
@@ -65,8 +63,7 @@ int pos;
 }
 
 
-rt_public void run_mem_destroy(idrs)
-IDR *idrs;
+rt_public void run_mem_destroy(IDR *idrs)
 {
 	/* Release the memory used by the IDR stream */
 
@@ -77,11 +74,11 @@ IDR *idrs;
 	}
 }
 
-rt_public void run_idrmem_create(idrs, addr, len, i_op)
-IDR *idrs;			/* The IDR structure managing the stream */
-char *addr;			/* Address of the serializing buffer */
-int len;			/* Length of the serializing buffer */
-int i_op;			/* Operation wanted */
+rt_public void run_idrmem_create(IDR *idrs, char *addr, int len, int i_op)
+          			/* The IDR structure managing the stream */
+           			/* Address of the serializing buffer */
+        			/* Length of the serializing buffer */
+         			/* Operation wanted */
 {
 	/* Initialize a memory stream, where the (de)serialization is done in the
 	 * provided buffer pointed to by addr.
@@ -94,8 +91,8 @@ int i_op;			/* Operation wanted */
 }
 
 
-rt_public int run_idrf_create(size)
-int size;		/* Size of IDR buffers */
+rt_public int run_idrf_create(int size)
+         		/* Size of IDR buffers */
 {
 	/* Initializes memory for IDR operations. We create memory streams for
 	 * input and output. Thus, all the input requests will have the same length,
@@ -122,7 +119,7 @@ int size;		/* Size of IDR buffers */
 }
 
 
-rt_public void run_idr_init ()
+rt_public void run_idr_init (void)
 {
 	if (-1 == run_idrf_create (IDRF_SIZE))
 		eraise ("cannot allocate idrf", EN_MEM);
@@ -131,15 +128,14 @@ rt_public void run_idr_init ()
 	amount_read = 0;
 }
 
-rt_public void run_idr_destroy ()
+rt_public void run_idr_destroy (void)
 {
 	run_mem_destroy(&idrf.i_encode);
 	run_mem_destroy(&idrf.i_decode);
 }
 
 
-rt_private int run_idr_read (bu)
-IDR *bu;
+rt_private int run_idr_read (IDR *bu)
 {
         register char * ptr = bu->i_buf;
         short read_size, amount_left;
@@ -187,8 +183,7 @@ IDR *bu;
 	return total_read;
 }
 
-rt_private void run_idr_write (bu)
-IDR *bu;
+rt_private void run_idr_write (IDR *bu)
 {
         register char * ptr = idrs_buf (bu);
         short host_send, send_size = (short) (bu->i_ptr - idrs_buf (bu));
@@ -234,9 +229,7 @@ IDR *bu;
 		}
 }
 
-rt_public void check_capacity (bu, size)
-IDR *bu;
-int size;
+rt_public void check_capacity (IDR *bu, int size)
 {
 
 	if (idrs_op (bu)) {
@@ -252,16 +245,12 @@ int size;
 	}
 }
 
-rt_public void idr_flush ()
+rt_public void idr_flush (void)
 {
 	check_capacity (&idrf.i_encode, IDRF_SIZE);
 }
 
-rt_public bool_t run_long(idrs, lp, len, size)
-IDR *idrs;
-long *lp;
-int len;
-int size;
+rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 {
 	/* Serialize a long byte */
 
@@ -352,11 +341,7 @@ int size;
 	return TRUE;
 }
 
-rt_public bool_t run_ulong(idrs, lp, len, size)
-IDR *idrs;
-unsigned long *lp;
-int len;
-int size;
+rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 {
 	/* Serialize a long byte */
 
@@ -425,10 +410,7 @@ int size;
 	return TRUE;
 }
 
-rt_public bool_t run_int(idrs, ip, len)
-IDR *idrs;
-uint32 *ip;
-int len;
+rt_public bool_t run_int(IDR *idrs, uint32 *ip, int len)
 {
 	/* Serialize a int byte */
 
@@ -454,9 +436,7 @@ int len;
 }
 
 
-rt_public void ridr_multi_char (obj, num)
-char *obj;
-int num;
+rt_public void ridr_multi_char (char *obj, int num)
 {
 	int cap = IDRF_SIZE / sizeof (char);
 
@@ -482,9 +462,7 @@ int num;
 	}
 }
 
-rt_public void widr_multi_char (obj, num)
-char *obj;
-int num;
+rt_public void widr_multi_char (char *obj, int num)
 {
 	int cap = IDRF_SIZE / sizeof (char);
 
@@ -511,9 +489,7 @@ int num;
 }
 
 
-rt_public void ridr_multi_any (obj, num)
-char *obj;
-int num;
+rt_public void ridr_multi_any (char *obj, int num)
 {
 	int cap;
 	char s;
@@ -539,9 +515,7 @@ int num;
 	}
 }
 
-rt_public void widr_multi_any (obj, num)
-char *obj;
-int num;
+rt_public void widr_multi_any (char *obj, int num)
 {
 	int cap = IDRF_SIZE / sizeof (char *);
 	char s = (char) sizeof (char *);
@@ -567,9 +541,7 @@ int num;
 }
 
 
-rt_public void ridr_multi_int (obj, num)
-long *obj;
-int num;
+rt_public void ridr_multi_int (long int *obj, int num)
 {
 	int cap;
 	char s;
@@ -594,9 +566,7 @@ int num;
 	}
 }
 
-rt_public void widr_multi_int (obj, num)
-long *obj;
-int num;
+rt_public void widr_multi_int (long int *obj, int num)
 {
 	int cap = IDRF_SIZE / sizeof (long);
 	char s = (char) sizeof (long);
@@ -621,9 +591,7 @@ int num;
 }
 
 
-rt_public void ridr_multi_float (obj, num)
-float *obj;
-int num;
+rt_public void ridr_multi_float (float *obj, int num)
 {
 	register int i = 0;
 	char temp_len;
@@ -641,9 +609,7 @@ int num;
 	}
 }
 
-rt_public void widr_multi_float (obj, num)
-float *obj;
-int num;
+rt_public void widr_multi_float (float *obj, int num)
 {
 	register int i = 0;
 	char temp_len;
@@ -662,9 +628,7 @@ int num;
 }
 
 
-rt_public void ridr_multi_double (obj, num)
-double *obj;
-int num;
+rt_public void ridr_multi_double (double *obj, int num)
 {
 	register int i = 0;
 	char temp_len;
@@ -682,9 +646,7 @@ int num;
 	}
 }
 
-rt_public void widr_multi_double (obj, num)
-double *obj;
-int num;
+rt_public void widr_multi_double (double *obj, int num)
 {
 	register int i = 0;
 	char temp_len;
@@ -703,10 +665,7 @@ int num;
 }
 
 
-rt_public void ridr_multi_bit (obj, num, elm_siz)
-struct bit *obj;
-int num;
-long elm_siz;
+rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 {
 	int i = 0;
 	int siz, number_of_bits;
@@ -744,10 +703,7 @@ long elm_siz;
 	}
 }
 
-rt_public void widr_multi_bit (obj, num, len, elm_siz)
-struct bit *obj;
-int num;
-uint32 len;
+rt_public void widr_multi_bit (struct bit *obj, int num, uint32 len, int elm_siz)
 {
 	int i = 0;
 	int siz = BIT_NBPACK (len);
@@ -781,21 +737,17 @@ uint32 len;
 	}
 }
 
-rt_public void ridr_norm_int (obj)
-uint32 *obj;
+rt_public void ridr_norm_int (uint32 *obj)
 {
 	run_int (&idrf.i_decode, obj, 1);
 }
 
-rt_public void widr_norm_int (obj)
-uint32 *obj;
+rt_public void widr_norm_int (uint32 *obj)
 {
 	run_int (&idrf.i_encode, obj, 1);
 }
 
-rt_public int idr_read_line (bu, max_size)
-char * bu;
-int max_size;
+rt_public int idr_read_line (char *bu, int max_size)
 {
 	char *ptr = bu;
 	register int i;

@@ -38,8 +38,7 @@ rt_private char *rcsid =
  * wanted, but that makes a difference only when we are short in memory--RAM.
  */
 
-rt_public Malloc_t malloc(nbytes)
-register1 unsigned int nbytes;
+rt_public Malloc_t malloc(register unsigned int nbytes)
 {
 	char *arena;
 
@@ -55,9 +54,7 @@ register1 unsigned int nbytes;
 	return (Malloc_t) arena;
 }
 
-rt_public Malloc_t calloc(nelem, elsize)
-unsigned int nelem;
-unsigned int elsize;
+rt_public Malloc_t calloc(unsigned int nelem, unsigned int elsize)
 {
 	register1 unsigned int nbytes = nelem * elsize;
 	register2 Malloc_t allocated;
@@ -69,9 +66,7 @@ unsigned int elsize;
 	return allocated;
 }
 
-rt_public Malloc_t realloc(ptr, nbytes)
-register1 Malloc_t ptr;
-register2 unsigned int nbytes;
+rt_public Malloc_t realloc(register void *ptr, register unsigned int nbytes)
 {
 	/* A realloc with a null pointer has to be equivalent to a single malloc */
 
@@ -81,8 +76,7 @@ register2 unsigned int nbytes;
 	return (Malloc_t) xrealloc(ptr, nbytes, GC_OFF);
 }
 
-void free(ptr)
-register1 Malloc_t ptr;
+void free(register void *ptr)
 {
 	/* Free is guaranteed to work enven with a null pointer, while xfree will
 	 * most probably dump a core...

@@ -42,12 +42,12 @@ extern char *(**dle_make)();	/* Make routines of DYNAMIC descendants */
 #endif
 
 extern int dynamic_dtype;		/* Dynamic type of DYNAMIC */
-extern void dle_reclaim();		/* Free resources introduced by the DC-set */
+extern void dle_reclaim(void);		/* Free resources introduced by the DC-set */
 
 /* Function called from the Eiffel side (in class DYNAMIC_CLASS) */
-extern EIF_INTEGER dle_retrieve();	/* Load the Dynamic Class Set */
-extern EIF_INTEGER dle_search();	/* Search for a class in the DC-Set */
-extern void c_pass_dle_routines();	/* Pass eiffel routine addr to C */
+extern EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path);	/* Load the Dynamic Class Set */
+extern EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name);	/* Search for a class in the DC-Set */
+extern void c_pass_dle_routines(EIF_PROC set_dtype_addr);	/* Pass eiffel routine addr to C */
 
 #ifdef __cplusplus
 }

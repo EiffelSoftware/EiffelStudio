@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-extern char gc_ison();
+extern char gc_ison(void);
 
 #ifdef __cplusplus
 }

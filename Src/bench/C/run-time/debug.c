@@ -84,37 +84,37 @@ rt_shared struct dbinfo d_data;	/* Global debugger information */
 rt_shared struct pgcontext d_cxt;	/* Main program context */
 
 /* Context set up */
-rt_public void dstart();			/* Beginning of melted feature execution */
-rt_public void drun();				/* Starting execution of debugged feature */
+rt_public void dstart(void);			/* Beginning of melted feature execution */
+rt_public void drun(int body_id);				/* Starting execution of debugged feature */
 
 /* Step by step execution control */
-rt_public void dnext();			/* Breakable point reached */
-rt_public void set_breakpoint_number();	/* Sets the n breakpoint to stop at*/
+rt_public void dnext(void);			/* Breakable point reached */
+rt_public void set_breakpoint_number(int num);	/* Sets the n breakpoint to stop at*/
 
 /* Debugging stack handling routines */
-rt_public struct dcall *dpush();			/* Push value on stack */
-rt_public struct dcall *dpop();			/* Pop value off stack */
-rt_public struct dcall *dtop();			/* Current top value */
-rt_private struct dcall *stack_allocate();	/* Allocate first chunk */
-rt_private int stack_extend();				/* Extend stack size */
-rt_private void npop();					/* Pop 'n' items */
-rt_private int nb_calls();					/* Number of calls registered */
+rt_public struct dcall *dpush(register struct dcall *val);			/* Push value on stack */
+rt_public struct dcall *dpop(void);			/* Pop value off stack */
+rt_public struct dcall *dtop(void);			/* Current top value */
+rt_private struct dcall *stack_allocate(register int size);	/* Allocate first chunk */
+rt_private int stack_extend(register int size);				/* Extend stack size */
+rt_private void npop(register int nb_items);					/* Pop 'n' items */
+rt_private int nb_calls(void);					/* Number of calls registered */
 
 /* Once list handling routines */
-rt_public uint32 *onceadd();				/* Add once body_id to list */
-rt_public uint32 *onceitem();				/* Item with body_id in list */
-rt_private uint32 *list_allocate();		/* Allocate first chunk */
-rt_private int list_extend();				/* Extend list size */
+rt_public uint32 *onceadd(uint32 id);				/* Add once body_id to list */
+rt_public uint32 *onceitem(register uint32 id);				/* Item with body_id in list */
+rt_private uint32 *list_allocate(register int size);		/* Allocate first chunk */
+rt_private int list_extend(register int size);				/* Extend list size */
 
 /* Program context */
-rt_shared void escontext();				/* Save program context */
-rt_shared void esresume();					/* Restore saved program context */
-rt_private struct ex_vect *last_call();	/* Last call recorded on Eiffel stack */
+rt_shared void escontext(int why);				/* Save program context */
+rt_shared void esresume(void);					/* Restore saved program context */
+rt_private struct ex_vect *last_call(void);	/* Last call recorded on Eiffel stack */
 
 /* Changing active routine */
-rt_public void dmove();					/* Move inside calling context stack */
-rt_private void call_down();				/* Move cursor downwards */
-rt_private void call_up();					/* Move cursor upwards */
+rt_public void dmove(int offset);					/* Move inside calling context stack */
+rt_private void call_down(int level);				/* Move cursor downwards */
+rt_private void call_up(int level);					/* Move cursor upwards */
 
 /* Values used for application interrupt */
 int breakpoint_number = 0;
@@ -130,7 +130,7 @@ rt_private char *rcsid =
  * Context set up and handling.
  */
 
-rt_public void dstart()
+rt_public void dstart(void)
 {
 	/* This routine is called at the beginning of every melted feature. It
 	 * builds up a calling context on the debugging stack and initializes it.
@@ -173,8 +173,8 @@ rt_public void dstart()
 	context->dc_exec = (struct ex_vect *) 0;
 }
 
-rt_public void dexset(exvect)
-struct ex_vect *exvect;		/* Execution vector */
+rt_public void dexset(struct ex_vect *exvect)
+                       		/* Execution vector */
 {
 	/* As soon as the associated execution vector is known (this is computed
 	 * within the byte code itself), set it in the calling context. In the
@@ -186,8 +186,8 @@ struct ex_vect *exvect;		/* Execution vector */
 	dtop()->dc_exec = exvect;		/* Associate context with Eiffel stack */
 }
 
-rt_public void drun(body_id)
-int body_id;		/* Body ID of the current melted feature */
+rt_public void drun(int body_id)
+            		/* Body ID of the current melted feature */
 {
 	/* The current feature is to be run under debugger control. Set-up the
 	 * control table context and update the execution status. This marks the
@@ -202,7 +202,7 @@ int body_id;		/* Body ID of the current melted feature */
 	dsync();						/* Initialize cached data */
 }
 
-rt_public void dostk()
+rt_public void dostk(void)
 {
 	/* Save the current operational stack context (the one after interpreter
 	 * registers have been initialized) so that we can resynchronize the
@@ -216,7 +216,7 @@ rt_public void dostk()
 	context->dc_top = op_stack.st_top;
 }
 
-rt_public void dsync()
+rt_public void dsync(void)
 {
 	/* Resynchronizes the debugger information structure when we return from a
 	 * feature call. This is also called at the entrance of a feature call to
@@ -236,8 +236,7 @@ rt_public void dsync()
 	d_data.db_start = context->dc_start;	/* Used to compute offsets in BC */
 }
 
-rt_public void dstatus(dx)
-int dx;
+rt_public void dstatus(int dx)
 {
 	/* Set a new debugging status for the debugging of the last routine. This is
 	 * a request from ewb, and we need to get the context of this last routine
@@ -252,8 +251,7 @@ int dx;
  * Debugging hooks.
  */
 
-rt_public void set_breakpoint_number (num)
-int num;
+rt_public void set_breakpoint_number (int num)
 {
 		/*
 		 * Sets `n' breakpoint in which the application
@@ -262,7 +260,7 @@ int num;
 	breakpoint_number = num;
 }
 
-rt_public void dnext()
+rt_public void dnext(void)
 {
 	if (breakpoint_number >= recorded_breakpoint_number) {
 		recorded_breakpoint_number = 1;
@@ -276,8 +274,7 @@ rt_public void dnext()
  * Breakpoints handling.
  */
 
-rt_shared void dbreak(why)
-int why;
+rt_shared void dbreak(int why)
 {
 	/* Program execution stopped. The run-time context is saved and the
 	 * application is put in a server mode, where it listens for workbench
@@ -297,10 +294,10 @@ int why;
 	/* Returning from this routine will resume execution where it stopped */
 }
 
-rt_public void dsetbreak(body_id, offset, what)
-int body_id;		/* Debuggable feature whose info needed to be changed */
-uint32 offset;		/* Offset within byte code */
-int what;			/* Command (DT_SET, DT_REMOVE, ...) */
+rt_public void dsetbreak(int body_id, uint32 offset, int what)
+            		/* Debuggable feature whose info needed to be changed */
+              		/* Offset within byte code */
+         			/* Command (DT_SET, DT_REMOVE, ...) */
 {
 	/* Change the breakpoint information for debuggable feature whose body ID
 	 * is 'body_id'. At the specified offset, we add/remove a breakpoint as
@@ -336,8 +333,8 @@ int what;			/* Command (DT_SET, DT_REMOVE, ...) */
  * Computing position within program.
  */
 
-rt_shared void ewhere(where)
-struct where *where;		/* Structure filled in with current position */
+rt_shared void ewhere(struct where *where)
+                    		/* Structure filled in with current position */
 {
 	/* Compute position within the program, using the Eiffel execution stack to
 	 * determine the lattest call. If the program was in a melted feature,
@@ -379,7 +376,7 @@ struct where *where;		/* Structure filled in with current position */
 		where->wh_offset = IC - dc->dc_start;
 }
 
-rt_private struct ex_vect *last_call()
+rt_private struct ex_vect *last_call(void)
 {
 	/* Get the first execution call from the top of the Eiffel execution trace.
 	 * This is used by the debugging routines to find information on a feature.
@@ -420,8 +417,8 @@ rt_private struct ex_vect *last_call()
  * Saving and restoring program context.
  */
 
-rt_shared void escontext(why)
-int why;			/* Reason why program stopped */
+rt_shared void escontext(int why)
+        			/* Reason why program stopped */
 {
 	/* Whenever the program stops, the main run-time stacks are preserved.
 	 * Under work bench control, the user may modify those stack, for instance
@@ -457,7 +454,7 @@ int why;			/* Reason why program stopped */
 	}
 }
 
-rt_shared void esresume()
+rt_shared void esresume(void)
 {
 	/* Resume execution context by restoring all the run-time stacks in the
 	 * status they had when the program stopped. We also update the run-time
@@ -510,8 +507,8 @@ rt_shared void esresume()
  * Context stack handling.
  */
 
-rt_private struct dcall *stack_allocate(size)
-register1 int size;					/* Initial size */
+rt_private struct dcall *stack_allocate(register int size)
+                   					/* Initial size */
 {
 	/* The debugging stack is created, with size 'size'.
 	 * Return the arena value (bottom of stack).
@@ -548,8 +545,7 @@ register1 int size;					/* Initial size */
  * (char *) elements, we now store (struct dcall) ones.
  */
 
-rt_public struct dcall *dpush(val)
-register2 struct dcall *val;
+rt_public struct dcall *dpush(register struct dcall *val)
 {
 	/* Push value 'val' on top of the debugging stack. If it fails, raise
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
@@ -590,8 +586,8 @@ register2 struct dcall *val;
 	return top;				/* Address of allocated item */
 }
 
-rt_private int stack_extend(size)
-register1 int size;					/* Size of new chunk to be added */
+rt_private int stack_extend(register int size)
+                   					/* Size of new chunk to be added */
 {
 	/* The debugging stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -623,7 +619,7 @@ register1 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-rt_public struct dcall *dpop()
+rt_public struct dcall *dpop(void)
 {
 	/* Removes one item from the debugging stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
@@ -661,8 +657,7 @@ rt_public struct dcall *dpop()
 	return db_stack.st_top;
 }
 
-rt_private void npop(nb_items)
-register1 int nb_items;
+rt_private void npop(register int nb_items)
 {
 	/* Removes 'nb_items' from the debugging stack */
 
@@ -718,7 +713,7 @@ register1 int nb_items;
 	SIGRESUME;				/* End of critical section */
 }
 
-rt_public struct dcall *dtop()
+rt_public struct dcall *dtop(void)
 {
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -748,7 +743,7 @@ rt_public struct dcall *dtop()
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
-rt_public void initdb()
+rt_public void initdb(void)
 {
 	/* Initialize debugger stack and once list */
 
@@ -764,7 +759,7 @@ rt_public void initdb()
 		fatal_error("can't create once list");
 }
 
-rt_private int nb_calls()
+rt_private int nb_calls(void)
 {
 	/* Gives the number of calling records on the stack */
 
@@ -788,8 +783,8 @@ rt_private int nb_calls()
  * Changing the currenly active routine.
  */
 
-rt_public void dmove(offset)
-int offset;		/* Offset by which cursor should move within context stack */
+rt_public void dmove(int offset)
+           		/* Offset by which cursor should move within context stack */
 {
 	/* Calling this routine will change the active routine by moving the
 	 * current calling context pointer by 'offset', positive will move towards
@@ -809,8 +804,8 @@ int offset;		/* Offset by which cursor should move within context stack */
 	sync_registers(active->dc_cur, active->dc_top);
 }
 
-rt_private void call_down(level)
-int level;		/* Delta by which we should move active cursor */
+rt_private void call_down(int level)
+          		/* Delta by which we should move active cursor */
 {
 	/* Artificially decrease the top of the calling stack context to move the
 	 * active routine "cursor" downwards. Primitive range checking is done,
@@ -825,8 +820,8 @@ int level;		/* Delta by which we should move active cursor */
 	npop(level);				/* It will do the work for us */
 }
 
-rt_private void call_up(level)
-int level;		/* Delta by which we should move active cursor */
+rt_private void call_up(int level)
+          		/* Delta by which we should move active cursor */
 {
 	/* Artificially increase the top of the calling stack context to move the
 	 * active routine "cursor" upwards. Primitive range checking is done,
@@ -889,8 +884,7 @@ int level;		/* Delta by which we should move active cursor */
  * Viewing objects.
  */
 
-rt_shared char *dview(root)
-EIF_OBJ root;
+rt_shared char *dview(EIF_OBJ root)
 {
 	/* Compute the tagged out form for object 'root' and return a pointer to
 	 * the location of the C buffer holding the string. Note that the
@@ -907,8 +901,8 @@ EIF_OBJ root;
  * Debuggable byte-code loading.
  */
 
-rt_public int dmake_room(new)
-int new;		/* Amount of new entries in melting table */
+rt_public int dmake_room(int new)
+        		/* Amount of new entries in melting table */
 {
 	/* Pre-extend the melting table, making room for the new byte codes entries.
 	 * This avoids successive realloc() which could cause fragmentation within
@@ -955,10 +949,10 @@ int new;		/* Amount of new entries in melting table */
 	return 0;					/* Reallocation ok */
 }
 
-rt_public void drecord_bc(body_idx, body_id, addr)
-int body_idx;		/* Body index for byte code (index in dispatch table) */
-int body_id;		/* ID of byte code (index in melt table) */
-char *addr;			/* Address where byte code is stored */
+rt_public void drecord_bc(int body_idx, int body_id, char *addr)
+             		/* Body index for byte code (index in dispatch table) */
+            		/* ID of byte code (index in melt table) */
+           			/* Address where byte code is stored */
 {
 	/* Update the dispatch table and the melting table by introducing the
 	 * new debuggable byte code into the system. We know the byte code has
@@ -1050,8 +1044,8 @@ char *addr;			/* Address where byte code is stored */
  * Once list handling.
  */
 
-rt_private uint32 *list_allocate(size)
-register1 int size;					/* Initial size */
+rt_private uint32 *list_allocate(register int size)
+                   					/* Initial size */
 {
 	/* The once list is created, with size 'size'.
 	 * Return the arena value.
@@ -1081,8 +1075,7 @@ register1 int size;					/* Initial size */
 	return arena;			/* List allocated */
 }
 
-rt_public uint32 *onceadd(id)
-uint32 id;
+rt_public uint32 *onceadd(uint32 id)
 {
 	/* Add body_id 'id' to end of the once list. If it fails, raise
 	 * an "Out of memory" exception.
@@ -1109,8 +1102,8 @@ uint32 id;
 	return last;						/* Address of allocated item */
 }
 
-rt_private int list_extend(size)
-register1 int size;					/* Size of new chunk to be added */
+rt_private int list_extend(register int size)
+                   					/* Size of new chunk to be added */
 {
 	/* The once list is extended and the list structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -1141,8 +1134,7 @@ register1 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-rt_public uint32 *onceitem(id)
-register1 uint32 id;
+rt_public uint32 *onceitem(register uint32 id)
 {
 	/* Returns a pointer to the element of the list with body_id `id'
 	 * or a NULL pointer if that value is not found. I assume that the
@@ -1171,9 +1163,9 @@ register1 uint32 id;
 	return (uint32 *)0;		/* val not found */
 }
 
-rt_public struct item *docall(body_id, arg_num)
-register1 uint32 body_id;		/* body id of the once function */
-register2 int arg_num;			/* Number of arguments */
+rt_public struct item *docall(register uint32 body_id, register int arg_num)
+                         		/* body id of the once function */
+                      			/* Number of arguments */
 {
 	/* Call the routine identified by `body_id'. This routine is supposed to
 	 * be an already called once function with `arg_num' arguments. `arg_num'+1

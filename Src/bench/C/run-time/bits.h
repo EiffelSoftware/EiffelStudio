@@ -33,22 +33,22 @@ extern "C" {
 /* 
  * Functions declarations
  */
-rt_public EIF_BOOLEAN b_equal();	/* needed in interp.c */
+rt_public EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
 
-extern char *b_clone();			/* Clones bit */
-extern void b_copy();			/* Copies bit */
-extern char *bmalloc();			/* Bit object creation */
-extern void b_put();
-extern EIF_BOOLEAN b_item();
-extern char *b_shift();
-extern char *b_rotate();
-extern char *b_and();
-extern char *b_implies();
-extern char *b_or();
-extern char *b_xor();
-extern char *b_not();
-extern char *b_out();
-extern char *b_mirror();
+extern char *b_clone(char *bit);			/* Clones bit */
+extern void b_copy(char *a, char *b);			/* Copies bit */
+extern char *bmalloc(long int size);			/* Bit object creation */
+extern void b_put(char *bit, char value, int at);
+extern EIF_BOOLEAN b_item(char *bit, long int at);
+extern char *b_shift(char *bit, long int s);
+extern char *b_rotate(char *bit, long int s);
+extern char *b_and(char *a, char *b);
+extern char *b_implies(char *a, char *b);
+extern char *b_or(char *a, char *b);
+extern char *b_xor(char *a, char *b);
+extern char *b_not(char *a);
+extern char *b_out(char *bit);
+extern char *b_mirror(char *a);
 extern int bit_dtype;
 
 #ifdef __cplusplus

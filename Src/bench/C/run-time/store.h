@@ -42,25 +42,25 @@ extern "C" {
 /*
  * Eiffel calls
  */
-extern void estore();			/* Store by file name */
+extern void estore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type);			/* Store by file name */
 
 /*
  * Utilities
  */
 extern int fides;			/* File descriptor used by `store_write' */
 extern char fstoretype;		/* File storage type used by `store_write' */
-extern void st_write();			/* Write an object in file */
+extern void st_write(char *object);			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
-extern void allocate_gen_buffer();
-extern long get_alpha_offset();
+extern void allocate_gen_buffer(void);
+extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
 extern int fides;			/* File descriptor used by `store_write' */
 
 #ifdef EIF_WINDOWS
 rt_public void buffer_write(char *data, int size);
 #else
-extern void buffer_write();
+extern void buffer_write(register char *data, int size);
 #endif
-extern void flush_st_buffer();
+extern void flush_st_buffer(void);
 
 extern int current_position;
 extern char * general_buffer;
@@ -70,18 +70,18 @@ extern int end_of_buffer;
 /* compression */
 extern char * cmps_general_buffer;
 
-extern void (*store_write_func)();
-extern void store_write();
+extern void (*store_write_func)(void);
+extern void store_write(void);
 
-extern void rt_init_store();
-extern void rt_reset_store();
+extern void rt_init_store(void (*store_function) (void), int buf_size);
+extern void rt_reset_store(void);
 
-extern long get_offset();          /* get offset of attrib in object*/
+extern long get_offset(uint32 o_type, uint32 attrib_num);          /* get offset of attrib in object*/
 
 	/* General store utilities (3.3 and later) */
 extern unsigned int **sorted_attributes;
-extern void sort_attributes();
-extern void free_sorted_attributes();
+extern void sort_attributes(int dtype);
+extern void free_sorted_attributes(void);
 
 #ifdef __cplusplus
 }

@@ -26,19 +26,19 @@
 rt_private uint32 delta[ASIZE];	/* Records shifting deltas */
 rt_private uint32 **darray;		/* Pointer to array recording shifting tables */
 
-rt_private void compile();			/* Regular pattern compilation */
-rt_private void fuz_compile();		/* Fuzzy pattern compilation */
-rt_private void free_structures();	/* Free fuzzy shifting tables */
-rt_private char *qsearch();		/* Sunday's Quick Search algorithm */
-rt_private char *fuz_qsearch();	/* Fuzzy version of Quick Search */
+rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
+rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
+rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
+rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
+rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
-rt_public int str_str(text, pattern, tlen, plen, start, fuzzy)
-EIF_OBJ text;		/* The text string */
-EIF_OBJ pattern;	/* The pattern we are looking for */
-int tlen;			/* Length of the text */
-int plen;			/* Length of the pattern */
-int start;			/* Index within text where search starts */
-int fuzzy;			/* Fuzzy matching quantifier (0 = perfect matching) */
+rt_public int str_str(EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy)
+             		/* The text string */
+                	/* The pattern we are looking for */
+         			/* Length of the text */
+         			/* Length of the pattern */
+          			/* Index within text where search starts */
+          			/* Fuzzy matching quantifier (0 = perfect matching) */
 {
 	/* Forward search of 'pattern' within 'text' starting at 'start'. Return
 	 * the index within 'text' where the pattern was located, 0 if not found
@@ -88,10 +88,10 @@ int fuzzy;			/* Fuzzy matching quantifier (0 = perfect matching) */
 		return 1 + (p - eif_access(text));		/* Index within string */
 }
 
-rt_private void compile(pattern, plen, dtable)
-char *pattern;		/* The pattern we want to look at */
-register4 int plen;	/* The length of the pattern */
-uint32 *dtable;		/* Base address of delta array */
+rt_private void compile(char *pattern, register int plen, uint32 *dtable)
+              		/* The pattern we want to look at */
+                   	/* The length of the pattern */
+               		/* Base address of delta array */
 {
 	/* Compile the pattern by computing the delta shift table from a pattern
 	 * string. This has to be done before searching occurs.
@@ -120,10 +120,10 @@ uint32 *dtable;		/* Base address of delta array */
 		dtable[*p] = plen - i;
 }
 
-rt_private void fuz_compile(pattern, plen, fuzzy)
-EIF_OBJ pattern;	/* The pattern we want to look at */
-register4 int plen;	/* The length of the pattern */
-int fuzzy;			/* Fuzzy control */
+rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy)
+                	/* The pattern we want to look at */
+                   	/* The length of the pattern */
+          			/* Fuzzy control */
 {
 	/* Compile the pattern by computing the delta shift tables from a pattern
 	 * string. This has to be done before searching occurs. The first delta
@@ -159,8 +159,7 @@ int fuzzy;			/* Fuzzy control */
 		compile(eif_access(pattern), plen - i, darray[i]);
 }
 
-rt_private void free_structures(n)
-int n;
+rt_private void free_structures(int n)
 {
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 
@@ -169,11 +168,11 @@ int n;
 	xfree(darray);					/* Free main table */
 }
 
-rt_private char *qsearch(text, tlen, pattern, plen)
-char *text;		/* The text we are searching through */
-int tlen;		/* Length of the text */
-char *pattern;	/* The pattern string */
-int plen;		/* The length of the pattern */
+rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
+           		/* The text we are searching through */
+         		/* Length of the text */
+              	/* The pattern string */
+         		/* The length of the pattern */
 {
 	/* The quick substring search algorithm. It returns the address of the start
 	 * of the matching substring or a null pointer if not found.
@@ -208,12 +207,12 @@ int plen;		/* The length of the pattern */
 	return (char *) 0;		/* No substring found */
 }
 
-rt_private char *fuz_qsearch(text, tlen, pattern, plen, fuzzy)
-char *text;		/* The text we are searching through */
-int tlen;		/* Length of the text */
-char *pattern;	/* The pattern string */
-int plen;		/* The length of the pattern */
-int fuzzy;		/* Allowed number of mismatches */
+rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy)
+           		/* The text we are searching through */
+         		/* Length of the text */
+              	/* The pattern string */
+         		/* The length of the pattern */
+          		/* Allowed number of mismatches */
 {
 	/* The quick substring search algorithm. It returns the address of the start
 	 * of the matching substring or a null pointer if not found. At most 'fuzzy'

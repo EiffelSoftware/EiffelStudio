@@ -2148,12 +2148,13 @@ int chunk_type;
 	 * If ALL_T is used, then the whole memory is scanned and coalesced.
 	 */
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -2195,12 +2196,12 @@ int chunk_type;
 	flush;
 #endif
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 

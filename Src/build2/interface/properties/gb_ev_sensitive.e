@@ -62,7 +62,9 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			add_element_containing_boolean (element, is_sensitive_string, objects.first.is_sensitive)
+			if not first.is_sensitive then
+				add_element_containing_boolean (element, is_sensitive_string, objects.first.is_sensitive)
+			end
 		end
 
 	modify_from_xml (element: XML_ELEMENT) is
@@ -73,10 +75,12 @@ feature {GB_XML_STORE} -- Output
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_sensitive_string)
-			if element_info.data.is_equal (True_string) then
-				for_first_object (agent {EV_SENSITIVE}.enable_sensitive)
-			else
-				for_first_object (agent {EV_SENSITIVE}.disable_sensitive)
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					for_first_object (agent {EV_SENSITIVE}.enable_sensitive)
+				else
+					for_first_object (agent {EV_SENSITIVE}.disable_sensitive)
+				end
 			end
 		end
 		
@@ -91,10 +95,12 @@ feature {GB_XML_STORE} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_sensitive_string)
-			if element_info.data.is_equal (True_string) then
-				Result := a_name + ".enable_sensitive"
-			else
-				Result := a_name + ".disable_sensitive"
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					Result := a_name + ".enable_sensitive"
+				else
+					Result := a_name + ".disable_sensitive"
+				end
 			end
 		end
 

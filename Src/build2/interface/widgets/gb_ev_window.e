@@ -94,11 +94,23 @@ feature {GB_XML_STORE} -- Output
 	
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
+		local
+			window: EV_WINDOW
 		do
-			add_element_containing_boolean (element, User_can_resize_string, objects.first.user_can_resize)
-			add_element_containing_integer (element, Maximum_width_string, objects.first.maximum_width)
-			add_element_containing_integer (element, Maximum_height_string, objects.first.maximum_height)
-			add_element_containing_string (element, Title_string, objects.first.title)
+			window ?= new_instance_of (dynamic_type_from_string (class_name (first)))
+			window.default_create
+			if window.user_can_resize /= first.user_can_resize then
+				add_element_containing_boolean (element, User_can_resize_string, first.user_can_resize)
+			end
+			if window.maximum_width /= first.maximum_width then
+				add_element_containing_integer (element, Maximum_width_string, first.maximum_width)
+			end
+			if window.maximum_height /= first.maximum_height then
+				add_element_containing_integer (element, Maximum_height_string, first.maximum_height)
+			end
+			if window.title /= first.title then
+				add_element_containing_string (element, Title_string, first.title)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -110,20 +122,28 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			
 			element_info := full_information @ (User_can_resize_string)
-			if element_info.data.is_equal (True_string) then
-				for_first_object (agent {EV_WINDOW}.enable_user_resize)
-			else
-				for_first_object (agent {EV_WINDOW}.disable_user_resize)
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					for_first_object (agent {EV_WINDOW}.enable_user_resize)
+				else
+					for_first_object (agent {EV_WINDOW}.disable_user_resize)
+				end
 			end
 			
 			element_info := full_information @ (Maximum_width_string)
-			for_first_object (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
+			if element_info /= Void then
+				for_first_object (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
+			end
 			
 			element_info := full_information @ (Maximum_height_string)
-			for_first_object (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
+			if element_info /= Void then
+				for_first_object (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
+			end
 			
 			element_info := full_information @ (title_string)
-			for_first_object (agent {EV_WINDOW}.set_title (element_info.data))
+			if element_info /= Void then
+				for_first_object (agent {EV_WINDOW}.set_title (element_info.data))
+			end
 		end
 		
 	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
@@ -137,22 +157,29 @@ feature {GB_XML_STORE} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (User_can_resize_string)
-			if element_info.data.is_equal (True_string) then
-				Result := a_name + ".enable_user_resize"
-			else
-				Result := a_name + ".disable_user_resize"
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					Result := a_name + ".enable_user_resize"
+				else
+					Result := a_name + ".disable_user_resize"
+				end
 			end
 		
 			element_info := full_information @ (Maximum_width_string)
-			Result := Result + indent + a_name + ".set_maximum_width (" + element_info.data + ")"
-			
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_maximum_width (" + element_info.data + ")"
+			end
+				
 			element_info := full_information @ (Maximum_height_string)
-			Result := Result + indent + a_name + ".set_maximum_height (" + element_info.data + ")"
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_maximum_height (" + element_info.data + ")"
+			end
 			
 			element_info := full_information @ (Title_string)
-			Result := Result + indent + a_name + ".set_title (%"" + element_info.data + "%")"
-		
-		
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_title (%"" + element_info.data + "%")"
+			end
+
 			Result := strip_leading_indent (Result)
 		end
 

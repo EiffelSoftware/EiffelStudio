@@ -1068,6 +1068,22 @@ feature {NONE} -- Messages
 		do
 		end
 
+	on_show is
+			-- Wm_showwindow message.
+			-- The window is being shown.
+		require
+			exists: exists
+		do
+		end
+
+	on_hide is
+			-- Wm_showwindow message.
+			-- The window is being hidden.
+		require
+			exists: exists
+		do
+		end
+
 	on_destroy is
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
@@ -1168,6 +1184,17 @@ feature {NONE} -- Implementation
 			Result.set_item (True)
 		end
 
+	on_wm_show_window (wparam, lparam: INTEGER) is
+		require
+			exists: exists
+		do
+			if wparam = 0 then
+				on_hide
+			else
+				on_show
+			end
+		end
+
 	on_wm_destroy is
 			-- Wm_destroy message.
 			-- The window must be unregistered
@@ -1250,6 +1277,8 @@ feature {WEL_DISPATCHER}
 				on_sys_key_down (wparam, lparam)
 			elseif msg = Wm_syskeyup then
 				on_sys_key_up (wparam, lparam)
+			elseif msg = Wm_showwindow then
+				on_wm_show_window (wparam, lparam)
 			elseif msg = Wm_destroy then
 				on_wm_destroy
 			end

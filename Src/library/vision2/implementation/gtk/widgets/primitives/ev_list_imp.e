@@ -60,26 +60,6 @@ feature {NONE} -- Initialization
 			create ev_children.make (0)
 		end
 
-feature -- Access
-
-	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
-			-- XX Currently just give head of the gtk selection list
-		local
-			p: POINTER
-			o: EV_ANY_IMP
-		do
-			p := C.gtk_list_struct_selection (list_widget)
-			if p/= Default_pointer then
-				p := C.g_list_nth_data (p, 0)
-				if p /= Default_pointer then
-					o := eif_object_from_c (p)
-					Result ?= o.interface
-				end
-			end
-		end
-
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -207,6 +187,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/01 00:58:16  king
+--| Removed selected_item
+--|
 --| Revision 1.26  2000/02/29 19:07:50  king
 --| Removed now platform independent selected_items
 --|

@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER is
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
-			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (LPWSTR):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"ise_cache_manager.h%""
 		alias
 			"initialize_with_path"
 		end

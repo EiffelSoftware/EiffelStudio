@@ -136,13 +136,13 @@ feature {NONE} -- Externals
 	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
 								timeout_secs: INTEGER): INTEGER is
 		external
-			"C"
+			"C blocking"
 		end
 		
 	c_check_exception_with_timeout (fd: INTEGER;
 								timeout_secs: INTEGER): INTEGER is
 		external
-			"C"
+			"C blocking"
 		end
 		
 invariant

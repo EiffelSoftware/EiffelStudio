@@ -821,14 +821,14 @@ feature {NONE} -- Externals
 			-- External c routine that connect the socket
 			-- to the peer address
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_shutdown (s: INTEGER; how: INTEGER) is
 			-- Shut down socket `s' with `how' modality
 			-- (0 no more receive, 1 no more send, 2 no more both)
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_close_socket (s: INTEGER) is
@@ -853,70 +853,70 @@ feature {NONE} -- Externals
 	c_put_char (fd: INTEGER; c: CHARACTER) is
 			-- External routine to write character `c' to socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_put_int (fd: INTEGER; i: INTEGER) is
 			-- External routine to write integer `i' to socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_put_float (fd: INTEGER; r: REAL) is
 			-- External routine to write real `r' to socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_put_double (fd: INTEGER; d: DOUBLE) is
 			-- External routine to write double `d' to socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_put_stream (fd: INTEGER; s: POINTER; length: INTEGER) is
 			-- External routine to write stream pointed by `s' of
 			-- length `length' to socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_read_char (fd: INTEGER): CHARACTER is
 			-- External routine to read a character from socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_read_int (fd: INTEGER): INTEGER is
 			-- External routine to read an integer from socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_read_float (fd: INTEGER): REAL is
 			-- external routine to read a real from socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_read_double (fd: INTEGER): DOUBLE is
 			-- External routine to read a double from socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_read_stream (fd: INTEGER; l: INTEGER; buf: POINTER): INTEGER is
 			-- External routine to read a `l' number of characters
 			-- into buffer `buf' from socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_write (fd: INTEGER; buf: POINTER; l: INTEGER): INTEGER is
 			-- External routine to write `l' length of data
 			-- on socket `fd'.
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_receive (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER is
@@ -924,7 +924,7 @@ feature {NONE} -- Externals
 			-- bytes into buffer `buf' from socket `fd' with `flags'
 			-- options
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER is
@@ -932,7 +932,7 @@ feature {NONE} -- Externals
 			-- bytes from buffer `buf' on socket `fd' with `flags'
 			-- options
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_set_sock_opt_int (fd, level, opt, val: INTEGER) is
@@ -969,42 +969,42 @@ feature {NONE} -- Externals
 			-- C routine to synchonously poll socket
 			-- (using `msg_peek' flag)
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_select_poll (fd: INTEGER): INTEGER is
 			-- C routine to synchronously poll socket
 			-- (using `select')
 		external
-			"C"
+			"C blocking"
 		end
 
 	eif_net_retrieved (file_handle: INTEGER): ANY is
 			-- Object structured retrieved from file of pointer
 			-- `file_handle'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	eif_net_basic_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C"
+			"C blocking"
 		end;
  
 	eif_net_general_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C"
+			"C blocking"
 		end;
  
 	eif_net_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C"
+			"C blocking"
 		end;
  
 end -- Class SOCKET

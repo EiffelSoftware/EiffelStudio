@@ -55,7 +55,7 @@ feature -- Access
 
 	drawing_mode: INTEGER is
 			-- Logical operation on pixels when drawing.
-			-- Default: Ev_drawing_mode_copy.
+			-- Default: drawing_mode_copy.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -416,9 +416,9 @@ feature -- Drawing mode setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.set_drawing_mode (Ev_drawing_mode_copy)
+			implementation.set_drawing_mode (drawing_mode_copy)
 		ensure
-			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_copy
+			drawing_mode_assigned: drawing_mode = drawing_mode_copy
 		end
 
 	set_xor_mode is
@@ -426,9 +426,9 @@ feature -- Drawing mode setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.set_drawing_mode (Ev_drawing_mode_xor)
+			implementation.set_drawing_mode (drawing_mode_xor)
 		ensure
-			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_xor
+			drawing_mode_assigned: drawing_mode = drawing_mode_xor
 		end
 
 	set_invert_mode is
@@ -436,9 +436,9 @@ feature -- Drawing mode setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.set_drawing_mode (Ev_drawing_mode_invert)
+			implementation.set_drawing_mode (drawing_mode_invert)
 		ensure
-			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_invert
+			drawing_mode_assigned: drawing_mode = drawing_mode_invert
 		end
 
 	set_and_mode is
@@ -446,9 +446,9 @@ feature -- Drawing mode setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.set_drawing_mode (Ev_drawing_mode_and)
+			implementation.set_drawing_mode (drawing_mode_and)
 		ensure
-			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_and
+			drawing_mode_assigned: drawing_mode = drawing_mode_and
 		end
 
 	set_or_mode is
@@ -456,9 +456,9 @@ feature -- Drawing mode setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.set_drawing_mode (Ev_drawing_mode_or)
+			implementation.set_drawing_mode (drawing_mode_or)
 		ensure
-			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_or
+			drawing_mode_assigned: drawing_mode = drawing_mode_or
 		end
 
 feature {NONE} -- Contract support
@@ -468,7 +468,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_ANY} and then
 				line_width = 1 and then
-				drawing_mode = Ev_drawing_mode_copy and then
+				drawing_mode = drawing_mode_copy and then
 				clip_area = Void and then
 				tile = Void and then
 				dashed_line_style = False

@@ -783,7 +783,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_has_value: BOOLEAN
 			l_installed_runtimes: LINEAR [STRING]
 		do
-			Universe.set_override_cluster_name (Void)
 			if defaults /= Void then
 				from
 					l_installed_runtimes := (create {IL_ENVIRONMENT}).installed_runtimes

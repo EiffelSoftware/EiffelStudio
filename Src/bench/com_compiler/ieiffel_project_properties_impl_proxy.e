@@ -86,26 +86,14 @@ feature -- Access
 			Result := ccom_evaluate_invariant (initializer)
 		end
 
-	working_directory: STRING is
-			-- Working directory.
-		do
-			Result := ccom_working_directory (initializer)
-		end
-
-	arguments: STRING is
-			-- Program arguments.
-		do
-			Result := ccom_arguments (initializer)
-		end
-
 	debug_info: BOOLEAN is
 			-- Generate debug info?
 		do
 			Result := ccom_debug_info (initializer)
 		end
 
-	clusters: ECOM_VARIANT is
-			-- List of clusters in current project (list of IEiffelClusterProperties*).
+	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
 		do
 			Result := ccom_clusters (initializer)
 		end
@@ -214,48 +202,11 @@ feature -- Basic Operations
 			ccom_set_evaluate_invariant (initializer, return_value)
 		end
 
-	set_working_directory (return_value: STRING) is
-			-- Working directory.
-			-- `return_value' [in].  
-		do
-			ccom_set_working_directory (initializer, return_value)
-		end
-
-	set_arguments (return_value: STRING) is
-			-- Program arguments.
-			-- `return_value' [in].  
-		do
-			ccom_set_arguments (initializer, return_value)
-		end
-
 	set_debug_info (return_value: BOOLEAN) is
 			-- Generate debug info?
 			-- `return_value' [in].  
 		do
 			ccom_set_debug_info (initializer, return_value)
-		end
-
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-			-- `cluster_name' [in].  
-			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
-		do
-			ccom_add_cluster (initializer, cluster_name, parent_name, cluster_path)
-		end
-
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-			-- `cluster_name' [in].  
-		do
-			ccom_remove_cluster (initializer, cluster_name)
-		end
-
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_name' [in].  
-		do
-			Result := ccom_cluster_properties (initializer, cluster_name)
 		end
 
 	add_assembly (assembly_path: STRING) is
@@ -422,30 +373,6 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_working_directory (cpp_obj: POINTER): STRING is
-			-- Working directory.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_set_working_directory (cpp_obj: POINTER; return_value: STRING) is
-			-- Working directory.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
-	ccom_arguments (cpp_obj: POINTER): STRING is
-			-- Program arguments.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_set_arguments (cpp_obj: POINTER; return_value: STRING) is
-			-- Program arguments.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
 	ccom_debug_info (cpp_obj: POINTER): BOOLEAN is
 			-- Generate debug info?
 		external
@@ -458,28 +385,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_clusters (cpp_obj: POINTER): ECOM_VARIANT is
-			-- List of clusters in current project (list of IEiffelClusterProperties*).
+	ccom_clusters (cpp_obj: POINTER): IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_add_cluster (cpp_obj: POINTER; cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
-		end
-
-	ccom_remove_cluster (cpp_obj: POINTER; cluster_name: STRING) is
-			-- Remove a cluster from the project.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
-	ccom_cluster_properties (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_assemblies (cpp_obj: POINTER): ECOM_ARRAY [STRING] is

@@ -72,26 +72,14 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	working_directory: STRING is
-			-- Working directory.
-		do
-			-- Put Implementation here.
-		end
-
-	arguments: STRING is
-			-- Program arguments.
-		do
-			-- Put Implementation here.
-		end
-
 	debug_info: BOOLEAN is
 			-- Generate debug info?
 		do
 			-- Put Implementation here.
 		end
 
-	clusters: ECOM_VARIANT is
-			-- List of clusters in current project (list of IEiffelClusterProperties*).
+	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
 		do
 			-- Put Implementation here.
 		end
@@ -174,46 +162,9 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_working_directory (return_value: STRING) is
-			-- Working directory.
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_arguments (return_value: STRING) is
-			-- Program arguments.
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
 	set_debug_info (return_value: BOOLEAN) is
 			-- Generate debug info?
 			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-			-- `cluster_name' [in].  
-			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_name' [in].  
 		do
 			-- Put Implementation here.
 		end

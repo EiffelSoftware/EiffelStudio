@@ -84,6 +84,36 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	parent_name: STRING is
+			-- Name of the parent cluster.
+		do
+			-- Put Implementation here.
+		end
+
+	has_parent: BOOLEAN is
+			-- Does the current cluster have a parent cluster?
+		do
+			-- Put Implementation here.
+		end
+
+	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- List of subclusters (list of IEiffelClusterProperties*).
+		do
+			-- Put Implementation here.
+		end
+
+	has_children: BOOLEAN is
+			-- Does the current cluster have children?
+		do
+			-- Put Implementation here.
+		end
+
+	cluster_id: INTEGER is
+			-- Cluster identifier.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	set_name (return_value: STRING) is
@@ -128,37 +158,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_evaluate_require_by_default (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_ensure_by_default (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_check_by_default (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_loop_by_default (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_invariant_by_default (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated by default?
-			-- `return_value' [in].  
+	set_assertions (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+			-- Set assertions for cluster.
+			-- `evaluate_check' [in].  
+			-- `evaluate_require' [in].  
+			-- `evaluate_ensure' [in].  
+			-- `evaluate_loop' [in].  
+			-- `evaluate_invariant' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -173,6 +179,13 @@ feature -- Basic Operations
 	remove_exclude (dir_name: STRING) is
 			-- Remove a directory to exclude.
 			-- `dir_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_parent_name (return_value: STRING) is
+			-- Name of the parent cluster.
+			-- `return_value' [in].  
 		do
 			-- Put Implementation here.
 		end

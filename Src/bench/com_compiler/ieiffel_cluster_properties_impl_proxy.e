@@ -97,6 +97,36 @@ feature -- Access
 			Result := ccom_excluded (initializer)
 		end
 
+	parent_name: STRING is
+			-- Name of the parent cluster.
+		do
+			Result := ccom_parent_name (initializer)
+		end
+
+	has_parent: BOOLEAN is
+			-- Does the current cluster have a parent cluster?
+		do
+			Result := ccom_has_parent (initializer)
+		end
+
+	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- List of subclusters (list of IEiffelClusterProperties*).
+		do
+			Result := ccom_subclusters (initializer)
+		end
+
+	has_children: BOOLEAN is
+			-- Does the current cluster have children?
+		do
+			Result := ccom_has_children (initializer)
+		end
+
+	cluster_id: INTEGER is
+			-- Cluster identifier.
+		do
+			Result := ccom_cluster_id (initializer)
+		end
+
 feature -- Status Report
 
 	last_error_code: INTEGER is
@@ -167,39 +197,15 @@ feature -- Basic Operations
 			ccom_set_use_system_default (initializer, return_value)
 		end
 
-	set_evaluate_require_by_default (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated by default?
-			-- `return_value' [in].  
+	set_assertions (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+			-- Set assertions for cluster.
+			-- `evaluate_check' [in].  
+			-- `evaluate_require' [in].  
+			-- `evaluate_ensure' [in].  
+			-- `evaluate_loop' [in].  
+			-- `evaluate_invariant' [in].  
 		do
-			ccom_set_evaluate_require_by_default (initializer, return_value)
-		end
-
-	set_evaluate_ensure_by_default (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_ensure_by_default (initializer, return_value)
-		end
-
-	set_evaluate_check_by_default (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_check_by_default (initializer, return_value)
-		end
-
-	set_evaluate_loop_by_default (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated by default?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_loop_by_default (initializer, return_value)
-		end
-
-	set_evaluate_invariant_by_default (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated by default?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_invariant_by_default (initializer, return_value)
+			ccom_set_assertions (initializer, evaluate_check, evaluate_require, evaluate_ensure, evaluate_loop, evaluate_invariant)
 		end
 
 	add_exclude (dir_name: STRING) is
@@ -214,6 +220,13 @@ feature -- Basic Operations
 			-- `dir_name' [in].  
 		do
 			ccom_remove_exclude (initializer, dir_name)
+		end
+
+	set_parent_name (return_value: STRING) is
+			-- Name of the parent cluster.
+			-- `return_value' [in].  
+		do
+			ccom_set_parent_name (initializer, return_value)
 		end
 
 feature {NONE}  -- Implementation
@@ -304,22 +317,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
-	ccom_set_evaluate_require_by_default (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should preconditions be evaluated by default?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
 	ccom_evaluate_ensure_by_default (cpp_obj: POINTER): BOOLEAN is
 			-- Should postconditions be evaluated by default?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_ensure_by_default (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should postconditions be evaluated by default?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_evaluate_check_by_default (cpp_obj: POINTER): BOOLEAN is
@@ -328,22 +329,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
-	ccom_set_evaluate_check_by_default (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should check assertions be evaluated by default?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
 	ccom_evaluate_loop_by_default (cpp_obj: POINTER): BOOLEAN is
 			-- Should loop assertions be evaluated by default?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_loop_by_default (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated by default?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_evaluate_invariant_by_default (cpp_obj: POINTER): BOOLEAN is
@@ -352,10 +341,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
-	ccom_set_evaluate_invariant_by_default (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should class invariants be evaluated by default?
+	ccom_set_assertions (cpp_obj: POINTER; evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+			-- Set assertions for cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN)"
 		end
 
 	ccom_excluded (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
@@ -374,6 +363,42 @@ feature {NONE}  -- Externals
 			-- Remove a directory to exclude.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_parent_name (cpp_obj: POINTER): STRING is
+			-- Name of the parent cluster.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_parent_name (cpp_obj: POINTER; return_value: STRING) is
+			-- Name of the parent cluster.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_has_parent (cpp_obj: POINTER): BOOLEAN is
+			-- Does the current cluster have a parent cluster?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_subclusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
+			-- List of subclusters (list of IEiffelClusterProperties*).
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_has_children (cpp_obj: POINTER): BOOLEAN is
+			-- Does the current cluster have children?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_cluster_id (cpp_obj: POINTER): INTEGER is
+			-- Cluster identifier.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_delete_ieiffel_cluster_properties_impl_proxy (a_pointer: POINTER) is

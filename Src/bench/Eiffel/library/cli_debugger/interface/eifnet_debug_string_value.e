@@ -125,8 +125,14 @@ feature -- Output
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
-			Result := children_from_external_type
+			Result := attributes
+			if Result = Void then
+				Result := children_from_external_type
+				attributes := Result			
+			end
 		end
+		
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.

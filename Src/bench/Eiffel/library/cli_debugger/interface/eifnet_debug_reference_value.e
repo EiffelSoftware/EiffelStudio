@@ -169,13 +169,18 @@ feature -- Output
 			-- Generated on demand.
 			-- (sorted by name)
 		do
-			if is_external_type then
-				Result := children_from_external_type
-			else
-				Result := children_from_eiffel_type
+			Result := attributes
+			if Result = Void then
+				if is_external_type then
+					Result := children_from_external_type
+				else
+					Result := children_from_eiffel_type
+				end
+				attributes := Result				
 			end
-			-- SORT IT : FIXME JFIAT
 		end
+		
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		
 feature {NONE} -- Children implementation
 

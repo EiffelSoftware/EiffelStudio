@@ -11,7 +11,7 @@ ES4 = $(EIFFEL4)/bench/spec/$(PLATFORM)/bin/es4
 EIFLIB = EIFGEN/W_code/libtst.a 
 LIBS = -lm
 OBJECT = main.o
-VERSION_NUMBER=42
+VERSION_NUMBER=45
 
 all: compile_eiffel compile_c mklink tst 
 

@@ -12,7 +12,7 @@ EIFLIB = EIFGEN/W_code/libtst.a
 LIBS = -lm
 OBJECT = main.o
 CFLAGS = -O
-VERSION_NUMBER=43
+VERSION_NUMBER=45
 
 all: compile_eiffel compile_c mklink tst 
 

@@ -11,7 +11,7 @@ EIFLIB = EIFGEN\W_code\libtst.lib
 CFLAGS = -DEIF_WIN32
 LIBS = 
 OBJECT = main.obj
-VERSION_NUMBER=43
+VERSION_NUMBER=45
 
 all: main.obj compile_eiffel compile_c   
 

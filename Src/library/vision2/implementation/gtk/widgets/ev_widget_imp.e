@@ -272,36 +272,70 @@ feature -- Access
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		local
-			useless_y: INTEGER 
-			success: BOOLEAN
-			gdk_window: POINTER
-		do			
-			gdk_window := C.gtk_widget_struct_window (c_object)
-			if gdk_window /= NULL then
-				success := C.gdk_window_get_deskrelative_origin (
-					gdk_window,
-					$Result,
-					$useless_y
-					)
+			wind: EV_WINDOW_IMP
+		do 
+			if parent_imp /= Void then
+				wind ?= parent_imp
+				if wind /= Void then
+					Result := wind.inner_screen_x
+				else
+					Result := parent_imp.screen_x
+				end
+				Result := Result + x_position
 			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen. 
-		local
-			useless_x: INTEGER
-			success: BOOLEAN
-			gdk_window: POINTER
-		do			
-			gdk_window := C.gtk_widget_struct_window (c_object)
-			if gdk_window /= NULL then
-				success := C.gdk_window_get_deskrelative_origin (
-					gdk_window,
-					$useless_x,
-					$Result
-					)				
+		local 
+			wind: EV_WINDOW_IMP 
+		do 
+			if parent_imp /= Void then
+				wind ?= parent_imp
+				if wind /= Void then
+					Result := wind.inner_screen_y
+				else
+					Result := parent_imp.screen_y
+				end
+				Result := Result + y_position
 			end
 		end
+	
+--
+--	screen_x: INTEGER is
+--			-- Horizontal offset relative to screen.
+--		local
+--			useless_y: INTEGER 
+--			success: BOOLEAN
+--			gdk_window: POINTER
+--			i: INTEGER
+--		do			
+--			gdk_window := C.gtk_widget_struct_window (c_object)
+--			if gdk_window /= NULL then
+--				success := C.gdk_window_get_deskrelative_origin (
+--					gdk_window,
+--					$Result,
+--					$useless_y
+--					)
+--			end
+--		end
+--
+--	screen_y: INTEGER is
+--			-- Vertical offset relative to screen. 
+--		local
+--			useless_x: INTEGER
+--			success: BOOLEAN
+--			gdk_window: POINTER
+--		do			
+--			gdk_window := C.gtk_widget_struct_window (c_object)
+--			if gdk_window /= NULL then
+--				success := C.gdk_window_get_deskrelative_origin (
+--					gdk_window,
+--					$useless_x,
+--					$Result
+--					)				
+--			end
+--		end
 	
 feature -- Status report
 
@@ -504,6 +538,7 @@ feature -- Measurement
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
+			update_request_size
 			Result := C.gtk_allocation_struct_width (
 				C.gtk_widget_struct_allocation (c_object)
 			).max (minimum_width)
@@ -512,6 +547,7 @@ feature -- Measurement
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
+			update_request_size
 			Result := C.gtk_allocation_struct_height (
 				C.gtk_widget_struct_allocation (c_object)
 			).max (minimum_height)
@@ -522,6 +558,7 @@ feature -- Measurement
 		local
 			gr: POINTER
 		do
+			update_request_size
 			if internal_minimum_width /= -1 then
 				Result := internal_minimum_width
 			else
@@ -539,6 +576,7 @@ feature -- Measurement
 		local
 			gr: POINTER
 		do
+			update_request_size
 			if internal_minimum_height /= -1 then
 				Result := internal_minimum_height
 			else
@@ -671,7 +709,9 @@ feature {NONE} -- Implementation
 	update_request_size is
 			-- Force the requisition struct to be updated.
 		do
-			C.gtk_widget_size_request (c_object, C.gtk_widget_struct_requisition (c_object))
+			if not is_displayed then
+				C.gtk_widget_size_request (c_object, C.gtk_widget_struct_requisition (c_object))
+			end
 		end
 
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is

@@ -121,15 +121,22 @@ feature {NONE} -- Implementation
 	Text_font_value: INTEGER is 2;
 	Button_font_value: INTEGER is 3;
 
+	children_list: LIST [POINTER] is
+			-- List of children C widget points to be used
+			-- for resouce settting
+		do
+			Result := children
+		end;
+
 	set_background_color_from_imp (color_imp: COLOR_X) is
 			-- Set the background color from implementation `color_imp'.
 		local
-			list: like children;
+			list: like children_list;
 			color_id: POINTER
 		do
 			mel_set_background_color (color_imp);
 			color_id := color_imp.identifier;
-			list := children;
+			list := children_list;
 			from
 				list.start
 			until
@@ -189,10 +196,10 @@ feature {NONE} -- Implementation
 			-- List of C button widget
 		local
 			w: POINTER;
-			list: like children
+			list: like children_list
 		do
 			!! Result.make;
-			list := children;
+			list := children_list;
 			from
 				list.start
 			until
@@ -215,10 +222,10 @@ feature {NONE} -- Implementation
 			-- List of C text widget
 		local
 			w: POINTER;
-			list: like children
+			list: like children_list
 		do
 			!! Result.make;
-			list := children;
+			list := children_list;
 			from
 				list.start
 			until
@@ -240,10 +247,10 @@ feature {NONE} -- Implementation
 			-- List of C label widget
 		local
 			w: POINTER;
-			list: like children
+			list: like children_list
 		do
 			!! Result.make;
-			list := children;
+			list := children_list;
 			from
 				list.start
 			until

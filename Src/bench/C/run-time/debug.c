@@ -382,7 +382,8 @@ private struct ex_vect *last_call()
 	while (item = extop(&eif_stack)) {		/* While not found */
 		if (
 			item->ex_type == EX_CALL ||		/* A feature call (1st call) */
-			item->ex_type == EX_RETY 		/* A retried feature call */
+			item->ex_type == EX_RETY ||		/* A retried feature call */
+			item->ex_type == EX_RESC 		/* A rescue clause */
 		)
 			break;			/* Exit loop when found */
 		expop(&eif_stack);	/* Will panic if we underflow, because we can't */

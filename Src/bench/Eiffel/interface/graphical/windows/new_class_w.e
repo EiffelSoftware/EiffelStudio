@@ -19,7 +19,8 @@ inherit
 			execute_warner_help as choose_different_name,
 			execute_warner_ok as keep_name
 		end;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	EIFFEL_ENV
 
 creation
 
@@ -32,20 +33,21 @@ feature -- Initialization
 			class_text := text;
 			form_d_make ("New Class", composite);
 			set_title ("New Class");
-			!!class_l.make ("", Current);
-			!!message.make ("", Current);
-			!!cluster_form.make ("", Current);
-			!!cluster_name.make ("", cluster_form);
-			!!cluster_entry.make ("", cluster_form);
-			!!file_form.make ("", Current);
-			!!file_label.make ("", file_form);
-			!!file_entry.make ("", file_form);
-			!!form.make ("", Current);
-			!!create_b.make ("Create", form);
-			!!cancel_b.make ("Cancel", form);
+			!! class_l.make ("", Current);
+			!! message.make ("", Current);
+			!! cluster_form.make ("", Current);
+			!! cluster_name.make ("", cluster_form);
+			!! cluster_list.make ("", cluster_form);
+			cluster_list.set_visible_item_count (10);
+			!! file_form.make ("", Current);
+			!! file_label.make ("", file_form);
+			!! file_entry.make ("", file_form);
+			!! form.make ("", Current);
+			!! create_b.make ("Create", form);
+			!! cancel_b.make ("Cancel", form);
 			cluster_form.attach_left (cluster_name, 0);
-			cluster_form.attach_right (cluster_entry, 0);
-			cluster_form.attach_left_widget (cluster_name, cluster_entry, 5);
+			cluster_form.attach_right (cluster_list, 0);
+			cluster_form.attach_left_widget (cluster_name, cluster_list, 5);
 			file_form.attach_left (file_label, 0);
 			file_form.attach_right (file_entry, 0);
 			file_form.attach_left_widget (file_label, file_entry, 5);
@@ -72,7 +74,7 @@ feature -- Initialization
 			cluster_name.set_text ("Cluster: ");
 			file_label.set_text ("File name: ");
 			message.set_text ("No such class in system");
-			cluster_entry.add_activate_action (Current, create);
+			--cluster_list.add_selection_action (Current, create);
 			file_entry.add_activate_action (Current, create);
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
@@ -98,7 +100,9 @@ feature -- Callbacks
 
 feature -- Properties
 
-	cluster_entry, file_entry: TEXT_FIELD;
+	cluster_list: SCROLL_LIST;
+
+	file_entry: TEXT_FIELD;
 
 	cluster_form, file_form: FORM;
 
@@ -140,14 +144,15 @@ feature -- Access
 		require
 			valid_args: class_n /= Void 
 		local
-			str, str2: STRING
+			str, str2: STRING;
+			clus: LINKED_LIST [CLUSTER_I]
 		do
 			cluster := cl;
 			class_name := clone (class_n);
 			str2 :=  clone (class_n);
 			str2.to_upper;
 			class_name.to_lower;
-			!!str.make (0);
+			!! str.make (0);
 			str.append ("Class name: ");
 			str.append (str2);
 			class_l.set_text (str);	
@@ -155,11 +160,23 @@ feature -- Access
 			file_name.append (".e");
 			file_entry.set_text (file_name);
 			if cluster = Void then
-				cluster_entry.set_text ("<cluster name>");
+				from
+					clus := Eiffel_universe.clusters;
+					clus.start
+				until
+					clus.after
+				loop
+					cluster_list.put_left (clus.item.cluster_name);
+					clus.forth
+				end;
+				cluster_list.select_i_th (1);
+				if cluster_list.empty then
+					create_b.set_insensitive
+				end
 			else
-				cluster_entry.set_text (cluster.cluster_name);
-			end
-			popup;
+				cluster_list.put_left(cluster.cluster_name)
+			end;
+			popup
 		end;
 
 	change_cluster is
@@ -168,7 +185,7 @@ feature -- Access
 			clun: STRING;
 			clu: CLUSTER_I; 
 		do
-			clun := cluster_entry.text; 
+			clun := cluster_list.selected_item; 
 			clun.to_lower;
 			clu := Eiffel_universe.cluster_of_name (clun);
 			if clu = Void then
@@ -209,16 +226,7 @@ feature -- Execution
 					else 
 						!! stone.make (class_i);
 						if not file.exists then
-							file.open_write;
-							file.putstring ("class ");
-							file.putstring (stone.signature);
-							file.putstring (" feature%N%Nend -- class ");
-							file.putstring (stone.signature);
-							file.new_line;
-							file.close;
-							cluster.add_new_classs (class_i);
-							!! stone.make (class_i);
-							class_text.tool.process_classi (stone);
+							load_default_class_text (file);
 							popdown;
 						elseif
 							not (file.is_readable and then file.is_plain)
@@ -241,6 +249,27 @@ feature -- Execution
 					last_warner.popdown
 				end
 			end;
+		end;
+
+	load_default_class_text (output: PLAIN_TEXT_FILE) is
+			-- Loads the default class text.
+		local
+			input: PLAIN_TEXT_FILE;
+			in_buf: STRING
+		do
+			!! input.make (Default_class_file);
+			if input.exists and then input.is_readable then
+				input.open_read;
+				input.read_stream (input.count)
+				in_buf := input.last_string
+				in_buf.replace_substring_all ("$classname", stone.signature);
+				output.open_write;
+				output.putstring (in_buf);
+				output.close
+			end;
+			cluster.add_new_classs (class_i);
+			!! stone.make (class_i);
+			class_text.tool.process_classi (stone)
 		end;
 
 end -- class NEW_CLASS_W

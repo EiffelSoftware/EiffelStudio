@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			Application.set_termination_command (cmd)
 
 			create debug_run_cmd.make
+			can_debug := True
 			init_commands
 			object_split_position := 200
 		end
@@ -184,7 +185,22 @@ feature -- Status report
 	raised: BOOLEAN
 			-- Are the debugging tools currently raised?
 
+	can_debug: BOOLEAN
+			-- Is graphical debugging allowed?
+
 feature -- Status setting
+
+	enable_debug is
+			-- Allow graphic debugging.
+		do
+			can_debug := True
+		end
+
+	disable_debug is
+			-- Disallow graphic debugging.
+		do
+			can_debug := False
+		end
 
 	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Associate `Current' with `a_window'.
@@ -215,6 +231,7 @@ feature -- Status setting
 			step_cmd.enable_sensitive
 			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
+			enable_debug
 		end
 
 	raise is
@@ -481,7 +498,9 @@ feature -- Debugging events
 			Application.set_current_execution_stack (1)
 			create st.make (1)
 			object_tool.disable_refresh
-			launch_stone (st)
+			if st.is_valid then
+				launch_stone (st)
+			end
 			object_tool.enable_refresh
 			debug ("debugger_interface")
 				io.putstring ("refreshing display (dixit EB_DEBUGGER_MANAGER)%N")

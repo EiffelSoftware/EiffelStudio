@@ -208,7 +208,23 @@ feature -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			explorer_bar_item.recycle
+			recycle_expressions
 		end
+		
+	recycle_expressions is
+			-- Recycle
+		do
+			if expressions /= Void then
+				from 
+					expressions.start
+				until
+					expressions.after
+				loop
+					expressions.item.recycle
+					expressions.forth
+				end				
+			end	
+		end			
 
 feature {NONE} -- Event handling
 
@@ -445,7 +461,7 @@ feature {NONE} -- Implementation
 				l_expr := expressions.item
 				if l_expr.evaluation_disabled then
 					l_row := disabled_expression_to_row (l_expr, Void)
-				else					
+				else
 					if eval then
 						expressions.item.evaluate
 						l_row:= expression_to_row (l_expr, Void)

@@ -162,6 +162,43 @@ feature -- PND
 			end
 		end
 
+feature -- Element Change
+
+	set_pixmap (a_pix: EV_PIXMAP) is
+			-- Set the rows `pixmap' to `a_pix'.
+		do
+			internal_pixmap := clone (a_pix)
+			update
+		end
+
+	remove_pixmap is
+			-- Remove the rows pixmap.
+		do
+			internal_pixmap := Void
+			update
+		end
+
+feature -- Basic operations
+
+	update is
+			-- Layout of row has been changed.
+		local
+			app: EV_APPLICATION_I
+		do
+			if parent_imp /= Void then
+				update_needed := True
+				app := (create {EV_ENVIRONMENT}).application.implementation
+				if interface.count > parent_imp.count then
+					parent_imp.update_children_agent.call (Void)
+					app.once_idle_actions.prune (parent_imp.update_children_agent)
+				elseif not app.once_idle_actions.has (
+						parent_imp.update_children_agent) then
+					app.do_once_on_idle (
+						parent_imp.update_children_agent)
+				end
+			end
+		end
+
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
@@ -180,6 +217,37 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					end	
 				end
 			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	dirty_child is
+			-- Mark `Current' as dirty.
+		do
+			update_needed := True
+		end
+
+	update_needed: BOOLEAN
+			-- Is the child dirty.
+
+	update_performed is
+			-- Mark `Current' as up to date.
+		do
+			update_needed := False
+		end
+		
+feature {NONE} -- Implementation
+		
+	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been added to index `item_index'.
+		do
+			update
+		end
+
+	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been removed from index `item_index'.
+		do
+			update
 		end
 
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation

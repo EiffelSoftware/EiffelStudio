@@ -247,45 +247,24 @@ feature
 			end
 		end;
 
-feature -- prototype code generation
+feature {INDENT_FILE} -- prototype code generation
 
-	generate_cpp_wrapper_start is
-			-- Generate the C++ wrapper start for C functions
-		do
-			putstring ("CPP_WRAPPER_START%N")
-		end
-
-	generate_cpp_wrapper_end is
-			-- Generate the C++ wrapper end for C functions
-		do
-			putstring ("CPP_WRAPPER_END%N")
-		end
-
-	generate_extern_declaration (type: STRING; f_name, args: STRING) is
-			-- Generate the external declaration for a C function
-		do
-			putstring ("EXTERN_DECL(")
-			putstring (type)
-			putstring (", ")
-			putstring (f_name)
-			putstring (", (")
-			putstring (args)
-			putstring ("));%N")
-		end
-
-	generate_protected_extern_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING]) is
-			-- Generate the external declaration for a C function
-			-- with the C++ wrapper
-		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_types /= Void
-			valid_lower:arg_types.lower = 1
+	generate_function_declaration (type: STRING; f_name: STRING;
+			protected, extern: BOOLEAN; arg_types: ARRAY [STRING]) is
+				-- Generate funtion declaration using macros
 		local
 			i, nb: INTEGER
 		do
-			putstring ("CPP_WRAPPER_START%N%
-				%EXTERN_DECL(")
+			if protected then
+				putstring ("CPP_WRAPPER_START%N")
+			end
+
+			if extern then
+				putstring ("EXTERN_DECL(")
+			else
+				putstring ("STATIC_DECL(")
+			end
+
 			putstring (type)
 			putstring (", ")
 			putstring (f_name)
@@ -302,26 +281,88 @@ feature -- prototype code generation
 				putstring (arg_types @ i)
 				i := i + 1
 			end
-			putstring ("));%N%
-				%CPP_WRAPPER_END%N%N")
+			putstring ("));%N")
+
+			if protected then
+				putstring ("CPP_WRAPPER_END%N")
+			end
+		end
+
+feature -- prototype code generation
+
+	generate_cpp_wrapper_start is
+			-- Generate the C++ wrapper start for C functions
+		do
+			putstring ("CPP_WRAPPER_START%N")
+		end
+
+	generate_cpp_wrapper_end is
+			-- Generate the C++ wrapper end for C functions
+		do
+			putstring ("CPP_WRAPPER_END%N")
+		end
+
+	generate_extern_declaration (type: STRING; f_name: STRING;
+					arg_types: ARRAY [STRING]) is
+			-- Generate the external declaration for a C function
+		require
+			non_void_args: type /= Void and f_name /= Void and
+				arg_types /= Void
+			valid_lower:arg_types.lower = 1
+		do
+			generate_function_declaration (type, f_name, False, True, arg_types)
+		end
+
+	generate_static_declaration (type: STRING; f_name: STRING;
+					arg_types: ARRAY [STRING]) is
+			-- Generate the external declaration for a C function
+		require
+			non_void_args: type /= Void and f_name /= Void and
+				arg_types /= Void
+			valid_lower:arg_types.lower = 1
+		do
+			generate_function_declaration (type, f_name, False, False, arg_types)
+		end
+
+	generate_protected_extern_declaration (type: STRING; f_name: STRING;
+					arg_types: ARRAY [STRING]) is
+			-- Generate the external declaration for a C function
+			-- with the C++ wrapper
+		require
+			non_void_args: type /= Void and f_name /= Void and
+				arg_types /= Void
+			valid_lower:arg_types.lower = 1
+		do
+			generate_function_declaration (type, f_name, True, True, arg_types)
+		end
+
+	generate_protected_static_declaration (type: STRING; f_name: STRING;
+					arg_types: ARRAY [STRING]) is
+			-- Generate the static declaration for a C function
+			-- with the C++ wrapper
+		require
+			non_void_args: type /= Void and f_name /= Void and
+				arg_types /= Void
+			valid_lower:arg_types.lower = 1
+		do
+			generate_function_declaration (type, f_name, True, False, arg_types)
 		end
 
 	generate_function_signature (type: STRING; f_name: STRING;
-					scope: STRING; extern_dec_file: like Current;
+					extern: BOOLEAN; extern_dec_file: like Current;
 					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
 			--- Generate the function signature for both ANSI and K&R
 		require
 			non_void_args: type /= Void and f_name /= Void and
-				scope /= Void and arg_names /= Void and arg_types /= Void
+				arg_names /= Void and arg_types /= Void
 			same_count: arg_names.count = arg_types.count
 			valid_lower: arg_names.lower = 1 and arg_types.lower = 1
 		local
 			i, nb: INTEGER
 		do
-			extern_dec_file.generate_protected_extern_declaration
-				(type, f_name, arg_types)
-			putstring (scope)
-			putstring ("%N#ifdef __STDC__%N")
+			extern_dec_file.generate_function_declaration
+				(type, f_name, True, extern, arg_types)
+			putstring ("#ifdef __STDC__%N")
 			putstring (type)
 			putchar (' ')
 			putstring (f_name)

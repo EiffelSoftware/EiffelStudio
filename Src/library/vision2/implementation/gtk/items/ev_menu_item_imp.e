@@ -14,21 +14,21 @@ inherit
 	EV_MENU_ITEM_I
 
 	EV_ITEM_IMP
-		rename
-			set_parent as widget_set_parent
 		undefine
 			pixmap_size_ok
 		redefine
 			make,
 			make_with_text,
 			add_activate_command,
-			add_pixmap,
-			parent_imp
+			set_pixmap
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
-		redefine
-			parent_imp
+		rename
+			parent_imp as widget_parent_imp,
+			parent_set as widget_parent_set
+		undefine
+			has_parent
 		end
 
 creation
@@ -84,21 +84,6 @@ feature {NONE} -- Initialization
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 
-feature -- Access
-
-	parent: EV_MENU_ITEM_HOLDER is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
-
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-			-- Parent implementation
-
 feature -- Event : command association
 
 	add_activate_command ( command: EV_COMMAND; 
@@ -125,13 +110,13 @@ feature -- Element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				show
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp ?= par_imp
 				par_imp.add_item (Current)
+				show
 				gtk_object_unref (widget)
 			end
 		end
@@ -157,12 +142,12 @@ feature {NONE} -- Implementation
 			gtk_container_remove (GTK_CONTAINER (C_GTK_MENU_ITEM_SUBMENU(widget)), item_imp.widget)
 		end
 
-	add_pixmap (pixmap: EV_PIXMAP) is
+	set_pixmap (pix: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			pixmap_imp ?= pixmap.implementation
+			pixmap_imp ?= pix.implementation
 			check
 				imp_not_void: pixmap_imp /= Void
 			end

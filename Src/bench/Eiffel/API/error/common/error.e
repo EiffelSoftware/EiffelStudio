@@ -66,7 +66,6 @@ feature -- Debug pupose
 			file: PLAIN_TEXT_FILE;
 		do
 			file_name := clone (help_path)
-			file_name.extend (Directory_separator);
 			file_name.append ("short");
 			file_name.extend (Directory_separator);
 			file_name.append (help_file_name);

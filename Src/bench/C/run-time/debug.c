@@ -44,6 +44,8 @@
  */
 #define dlevel	0		/* FIXME */
 
+#ifndef EIF_THREADS
+
 /* Debugging stack. This stack records all the calls made to any melted feature
  * (i.e. it records also standard melted feature calls). In case an exception
  * occurs or a breakpoint is reached, this stack will be used to print arguments
@@ -59,6 +61,8 @@ rt_shared struct dbstack db_stack = {
 	(struct dcall *) 0,			/* st_end */
 };
 
+#endif /* !EIF_THREADS */
+
 /* Once list. This list records the body_id of once routines that have already
  * been called. This is usefull to prevent those routines to be supermelted
  * losing in that case their memory (whether they have already been called
@@ -72,6 +76,8 @@ rt_shared struct id_list once_list = {
 	(uint32 *) 0,				/* idl_end */
 };
 
+#ifndef EIF_THREADS
+
 /* For faster reference, the current control table is memorized in a global
  * debugger status structure, along with the execution status and break point
  * hash table.
@@ -83,6 +89,7 @@ rt_shared struct dbinfo d_data;	/* Global debugger information */
  * restored undisturbed before resuming execution.
  */
 rt_shared struct pgcontext d_cxt;	/* Main program context */
+#endif /* !EIF_THREADS */
 
 /* Context set up */
 rt_public void dstart(void);			/* Beginning of melted feature execution */
@@ -230,6 +237,7 @@ rt_public void dsync(void)
 
 	struct dcall *context;		/* Current calling context */
 
+	EIF_GET_CONTEXT
 	/* Reset execution status. It is important to restore that information, even
 	 * if we are in a non-debuggable feature because the DX_STEP status must be
 	 * propagated and the first time we will enter a debuggable feature, we'll
@@ -239,6 +247,7 @@ rt_public void dsync(void)
 	context = dtop();
 	d_data.db_status = context->dc_status;	/* Execution status */
 	d_data.db_start = context->dc_start;	/* Used to compute offsets in BC */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void dstatus(int dx)
@@ -249,7 +258,9 @@ rt_public void dstatus(int dx)
 	 * We simply update the current cached information held in d_data.
 	 */
 
+	EIF_GET_CONTEXT
 	d_data.db_status = dx;		/* Update execution status (RESUME request) */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -746,6 +757,7 @@ rt_public struct dcall *dtop(void)
 	register1 struct dcall *last_item;		/* Address of last item stored */
 	register2 struct stdchunk *prev;		/* Previous chunk in stack */
 
+	EIF_GET_CONTEXT
 	last_item = db_stack.st_top - 1;
 	if (last_item >= db_stack.st_cur->sk_arena)
 		return last_item;
@@ -764,6 +776,7 @@ rt_public struct dcall *dtop(void)
 #endif
 	
 	return prev->sk_end - 1;			/* Last item of previous chunk */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void initdb(void)
@@ -790,6 +803,7 @@ rt_private int nb_calls(void)
 	register3 int n = 0;			/* Number of items */
 	register4 int done = 0;			/* Top of stack not reached yet */
 
+	EIF_GET_CONTEXT
 	for (s = db_stack.st_hd; s && !done; s = s->sk_next) {
 		if (s != db_stack.st_cur)
 			n += s->sk_end - s->sk_arena;			/* The whole chunk */
@@ -800,6 +814,7 @@ rt_private int nb_calls(void)
 	}
 
 	return n;		/* Number of objects held in stack */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -835,12 +850,14 @@ rt_private void call_down(int level)
 	 * because npop() will panic if we give it too much to pop.
 	 */
 
+	EIF_GET_CONTEXT
 	if (d_cxt.pg_index - level < 1)
 		level = d_cxt.pg_index - 1;
 
 	d_cxt.pg_index -= level;
 
 	npop(level);				/* It will do the work for us */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void call_up(int level)
@@ -855,6 +872,7 @@ rt_private void call_up(int level)
 	struct stdchunk *s;			/* To walk trhough stack chunks */
 	struct dcall *end;			/* Once cell above end of current chunk */
 
+	EIF_GET_CONTEXT
 	if (level + d_cxt.pg_index > d_cxt.pg_calls)
 		level = d_cxt.pg_calls - d_cxt.pg_index;
 
@@ -901,6 +919,7 @@ rt_private void call_up(int level)
 	db_stack.st_cur = s;
 	db_stack.st_top = top;
 	db_stack.st_end = s->sk_end;
+	EIF_END_GET_CONTEXT
 }
 
 /*

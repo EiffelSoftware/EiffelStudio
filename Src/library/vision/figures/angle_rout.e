@@ -1,8 +1,9 @@
-
--- Set of trigonometric routines.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Set of trigonometric routines";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ANGLE_ROUT 
 

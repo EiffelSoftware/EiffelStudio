@@ -39,8 +39,9 @@ feature -- Access
 		do
 			Result:= implementation.text
 		ensure
-			bridge_ok: (Result = Void and implementation.text = Void) or else
-				Result.is_equal (implementation.text)
+			bridge_ok: equal (Result, implementation.text)
+			not_void_implies_cloned: Result /= Void implies
+				Result /= implementation.text
 		end 
 
 feature -- Status setting
@@ -73,7 +74,7 @@ feature -- Element change
 		do
 			implementation.set_text (a_text)
 		ensure
-			text_assigned: text.is_equal (a_text) and text /= a_text
+			text_cloned: text.is_equal (a_text) and then text /= a_text
 		end
 
 	remove_text is
@@ -142,6 +143,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/29 20:24:16  brendel
+--| Improved postconditions.
+--|
 --| Revision 1.19  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

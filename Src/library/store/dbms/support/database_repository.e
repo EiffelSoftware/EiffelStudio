@@ -106,7 +106,7 @@ feature -- Basic operations
 				el_type := el.eiffel_type
 				if el_type = Integer_type_database then
 					s2 := "INTEGER"
-					s3.append("%T%T%T"+col_name+" := 0")
+					s3.append("%T%T%T"+col_name+" := 0%N")
 				elseif el_type = Boolean_type_database then
 					s3.append("%T%T%T"+col_name+" := FALSE%N")
 					s2 := "BOOLEAN"
@@ -131,7 +131,7 @@ feature -- Basic operations
 					s2 :=  "ANY"
 				end
 
-				s4.append("%T%T%TResult.append(%""+col_name+".out%%N%")%N")
+				s4.append("%T%T%TResult.append(" + col_name + ".out + %"%%N%")%N")
 
 				s1.append(s2+") is%N%T%T%T--Set the value of "+col_name)
 				s1.append("%N%T%Trequire")

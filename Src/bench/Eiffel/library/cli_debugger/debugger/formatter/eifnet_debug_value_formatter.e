@@ -23,6 +23,11 @@ feature -- Access
 		do
 			Result := icd
 			Result := strip_references (Result)
+-- FIXME JFIAT 2004-07-06 : We should handle the case where last_strip_references_call_success reports
+-- an error. And Return Void
+-- for now, this is too many changes, and too big change
+-- but we should check this
+-- especially on whidbey
 			Result := unbox_debug_value (Result)
 		ensure
 			Result_not_void: Result /= Void
@@ -422,6 +427,13 @@ feature {NONE} -- preparing
 							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x" 
 													+ l_real_value_mp.out +"%N")
 						end
+						
+							-- FIXME JFIAT 2004-07-06: we set this as Void for now
+							-- maybe one day we should handle this a better way
+							-- this case occurs mainly when we have unused local variables
+							-- In future we should return Void Result
+							-- and handle this with error message.
+						l_is_null := True
 						do_break := True
 					else
 						--| got a new real value, let's check if no dereferencing is needed anymore
@@ -431,6 +443,8 @@ feature {NONE} -- preparing
 						end
 					end
 				end
+					-- We keep trace of the is_null information
+				Result.set_is_null_reference (l_is_null)
 				if l_icor_ref /= Void then
 					l_icor_ref.clean_on_dispose
 				end

@@ -20,6 +20,6 @@ cluster
 
 external
 	object:
-		"\$(EIFFEL4)/library/time/Clib/libdatetime.a"
+		"\$(EIFFEL4)/library/time/Clib/spec/\$(PLATFORM)/lib/libdatetime.a"
 
 end

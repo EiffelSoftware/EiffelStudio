@@ -434,7 +434,7 @@ feature -- Detection of safe/unsafe features
 			good_class: a_class /= Void
 		do
 			if not (a_feature.is_attribute or else is_treated (a_feature.body_index, a_feature.rout_id_set.first)) then
-				mark (a_feature.feature_id, a_feature.body_index, a_class.class_id, a_feature.written_in, a_feature.rout_id_set.first)
+				mark (a_feature.body_index, a_class.class_id, a_feature.written_in, a_feature.rout_id_set.first)
 			end
 		end
 
@@ -499,7 +499,7 @@ feature {NONE} -- Detection of safe/unsafe features
 						is_treated (body_index, depend_unit.rout_id))
 					then
 						mark_treated (body_index, depend_unit.rout_id)
-						mark (depend_unit.feature_id, body_index, depend_unit.class_id, depend_unit.written_in, depend_unit.rout_id)
+						mark (body_index, depend_unit.class_id, depend_unit.written_in, depend_unit.rout_id)
 					end
 						-- get the status ...
 					if not is_safe (depend_unit) then

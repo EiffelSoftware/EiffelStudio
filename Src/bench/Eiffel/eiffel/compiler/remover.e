@@ -46,7 +46,7 @@ feature
 					not is_treated (dep.body_index, dep.rout_id)
 				then
 					mark_treated (dep.body_index, dep.rout_id)
-					mark (dep.feature_id, dep.body_index, dep.class_id, dep.written_in, dep.rout_id)
+					mark (dep.body_index, dep.class_id, dep.written_in, dep.rout_id)
 				end
 				control.remove
 			end
@@ -144,8 +144,6 @@ feature -- for debug purpose
 			io.putstring (a_class.feature_table.feature_of_body_index (dep.body_index).feature_name)
 			io.putstring (" (bid: ")
 			io.putint (dep.body_index)
-			io.putstring ("; fid: ")
-			io.putint (dep.feature_id)
 			io.putstring ("; rid: ")
 			io.putint (dep.rout_id)
 			io.putstring (") of ")

@@ -479,9 +479,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							-- Add it to top cluster list of system and to universe.
 						if l_compiled_assembly.is_local then
 							l_local_assemblies.extend (l_compiled_assembly)
-						else
-							l_new_assemblies.extend (l_compiled_assembly)
 						end
+						l_new_assemblies.extend (l_compiled_assembly)
 						Eiffel_system.add_sub_cluster (l_compiled_assembly)
 						Universe.insert_cluster (l_compiled_assembly)
 					else
@@ -496,20 +495,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					assemblies.forth
 				end
 				
-				if not l_new_assemblies.is_empty or not l_local_assemblies.is_empty then
-					degree_output.put_string ("Importing .NET metadata...")
-				end
-
 					-- Import data for newly introduced assemblies.
 					-- FIXME: Manu 05/03/2002: we should do something here so that
 					-- we take care of possible incremental changes in XML files.
-				from
-					l_new_assemblies.start
-				until
-					l_new_assemblies.after
-				loop
-					l_new_assemblies.item.import_data
-					l_new_assemblies.forth
+
+				if not l_new_assemblies.is_empty or not l_local_assemblies.is_empty then
+					degree_output.put_string ("Importing .NET metadata...")
 				end
 
 					-- Now consumes local assemblies.
@@ -519,6 +510,17 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					l_local_assemblies.remove
 					l_compiled_assembly.consume_assemblies (l_local_assemblies)
 				end
+
+					-- Import .NET classes in assembly clusters.
+				from
+					l_new_assemblies.start
+				until
+					l_new_assemblies.after
+				loop
+					l_new_assemblies.item.import_data
+					l_new_assemblies.forth
+				end
+
 			end
 		end
 

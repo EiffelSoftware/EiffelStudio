@@ -30,6 +30,10 @@ feature -- Basic operations
 		
 	move_file_between_directories (original, new: DIRECTORY; file_name: STRING) is
 			-- Move file named `file_name' from `original' directory to `new_directory'.
+		require
+			original_directory_exists: original.exists
+			new_directory_exists: new.exists
+			file_name_not_void: file_name /= Void
 		local
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
@@ -42,6 +46,15 @@ feature -- Basic operations
 			if file.exists then
 				file.change_name (new_file_name.string)
 			end
+		end
+		
+	directory_exists (name: STRING): BOOLEAN is
+			-- Does a directory named `name' exist?
+		local
+			directory: DIRECTORY
+		do
+			create directory.make (name)
+			Result := directory.exists
 		end
 		
 	delete_file (directory: DIRECTORY; a_file_name: STRING) is

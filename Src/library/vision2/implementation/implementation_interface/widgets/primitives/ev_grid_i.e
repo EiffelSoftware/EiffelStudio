@@ -230,7 +230,7 @@ feature -- Status setting
 			-- Ensure header displayed.
 		do
 			is_header_displayed := True
-			header.show
+			header_viewport.show
 		ensure
 			header_displayed: is_header_displayed
 		end
@@ -239,7 +239,7 @@ feature -- Status setting
 			-- Ensure header is hidden.
 		do
 			is_header_displayed := False
-			header.hide
+			header_viewport.hide
 		ensure
 			header_not_displayed: not is_header_displayed
 		end
@@ -662,7 +662,7 @@ feature {NONE} -- Drawing implementation
 			
 			header_viewport.extend (header)
 			header_viewport.set_minimum_height (default_header_height)
-			header_viewport.set_item_size (10000, default_header_height)
+			header_viewport.set_item_size (maximum_header_width, default_header_height)
 			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
@@ -840,16 +840,7 @@ feature {NONE} -- Drawing implementation
 		do
 				-- If the width of the item contained in `viewport' is smaller than the width of the viewport,
 				-- enlarge it to the viewport's width.
-			if viewport.item.width < viewport.width then
-				new_width := viewport.width
-			else
-				new_width := viewport.item.width
-			end
-				-- Ensure that the height of the viewport's item always matches that of the viewport.
-			new_height := viewport.height
-
-				-- Now actually perform size setting.
-			viewport.set_item_size (new_width, new_height)
+			viewport.set_item_size (viewport.width.max (viewport.item.width), viewport.height)
 
 			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
@@ -904,6 +895,12 @@ feature {NONE} -- Drawing implementation
 		
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
+		
+	maximum_header_width: INTEGER is 10000
+		-- Maximium width of `header'.
+		
+	buffered_drawable_size: INTEGER is 2000
+		-- Default size of `drawable' used for scrolling purposes.
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 

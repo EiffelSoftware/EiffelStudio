@@ -65,7 +65,7 @@ feature -- IL code generation
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to Result.
 		do
-			if is_target_of_call and then real_type (type).is_expanded then
+			if need_address (is_target_of_call) then
 				il_generator.generate_result_address
 			else
 				il_generator.generate_result

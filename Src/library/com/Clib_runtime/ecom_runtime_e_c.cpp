@@ -15,7 +15,7 @@ ecom_runtime_ec rt_ec;
 
 static EIF_TYPE_ID int_array_tid = -1;
 
-IUnknown * * ecom_runtime_ec::ccom_ec_pointed_pointed_unknown( EIF_REFERENCE eif_ref, IUnknown * * old )
+IUnknown * * ecom_runtime_ec::ccom_ec_pointed_pointed_unknown ( EIF_REFERENCE eif_ref, IUnknown * * old )
 
 /*-----------------------------------------------------------
   Convert CELL [ECOM_INTERFACE] to IUnknown * *.
@@ -64,7 +64,7 @@ IDispatch * * ecom_runtime_ec::ccom_ec_pointed_pointed_dispatch ( EIF_REFERENCE 
   return result;
 };
 //-------------------------------------------------------------------------
-IFont * ecom_runtime_ec::ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref )
+IFont * ecom_runtime_ec::ccom_ec_pointed_ifont ( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
   Convert IFONT_INTERFACE to IFont *.
@@ -92,7 +92,7 @@ IFont * ecom_runtime_ec::ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref )
 };
 //-------------------------------------------------------------------------
 
-IFont * * ecom_runtime_ec::ccom_ec_pointed_pointed_ifont( EIF_REFERENCE eif_ref, IFont * * old )
+IFont * * ecom_runtime_ec::ccom_ec_pointed_pointed_ifont ( EIF_REFERENCE eif_ref, IFont * * old )
 
 /*-----------------------------------------------------------
   Convert CELL [IFONT_INTERFACE] to IFont * *.
@@ -117,7 +117,7 @@ IFont * * ecom_runtime_ec::ccom_ec_pointed_pointed_ifont( EIF_REFERENCE eif_ref,
 };
 //-------------------------------------------------------------------------
 
-IEnumVARIANT * ecom_runtime_ec::ccom_ec_pointed_enum_variant( EIF_REFERENCE eif_ref )
+IEnumVARIANT * ecom_runtime_ec::ccom_ec_pointed_enum_variant ( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
   Convert IENUM_VARIANT_INTERFACE to IEnumVARIANT *.
@@ -145,7 +145,7 @@ IEnumVARIANT * ecom_runtime_ec::ccom_ec_pointed_enum_variant( EIF_REFERENCE eif_
 };
 //-------------------------------------------------------------------------
 
-IEnumVARIANT * * ecom_runtime_ec::ccom_ec_pointed_pointed_enum_variant( EIF_REFERENCE eif_ref, IEnumVARIANT * * old )
+IEnumVARIANT * * ecom_runtime_ec::ccom_ec_pointed_pointed_enum_variant ( EIF_REFERENCE eif_ref, IEnumVARIANT * * old )
 
 /*-----------------------------------------------------------
   Convert CELL [IENUM_VARIANT_INTERFACE] to IEnumVARIANT * *.
@@ -179,7 +179,7 @@ HRESULT * ecom_runtime_ec::ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT
   HRESULT * hresult =0;
   HRESULT tmp_hresult = 0;
 
-  tmp_hresult = (HRESULT) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
+  tmp_hresult = (HRESULT) eif_field (eif_access (eif_object), "item", EIF_INTEGER);
 
   if ( old == NULL)
   {
@@ -279,12 +279,12 @@ DATE ecom_runtime_ec::ccom_ec_date (EIF_REFERENCE a_ref)
 
   systime = (SYSTEMTIME *)malloc (sizeof (SYSTEMTIME));
 
-  systime->wYear = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_year)(eif_access(date_time));
-  systime->wMonth = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_month)(eif_access(date_time));
-  systime->wDay = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_day)(eif_access(date_time));
-  systime->wHour = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_hour)(eif_access(date_time));
-  systime->wMinute = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_minute)(eif_access(date_time));
-  systime->wSecond = (WORD)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_second)(eif_access(date_time));
+  systime->wYear = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_year) (eif_access (date_time));
+  systime->wMonth = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_month) (eif_access (date_time));
+  systime->wDay = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_day) (eif_access (date_time));
+  systime->wHour = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_hour) (eif_access (date_time));
+  systime->wMinute = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_minute) (eif_access (date_time));
+  systime->wSecond = (WORD) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_second) (eif_access (date_time));
 
   SystemTimeToVariantTime (systime, &variant_time);
 
@@ -304,7 +304,7 @@ HRESULT ecom_runtime_ec::ccom_ec_hresult (EIF_REFERENCE a_ref)
   hr = eif_protect (a_ref);
 
   HRESULT result = 0;
-  result = (HRESULT) eif_field (eif_access(hr), "item", EIF_INTEGER);
+  result = (HRESULT) eif_field (eif_access (hr), "item", EIF_INTEGER);
 
   eif_wean (hr);
 
@@ -322,7 +322,7 @@ LARGE_INTEGER ecom_runtime_ec::ccom_ec_long_long (EIF_REFERENCE a_ref)
 
   an_int = eif_protect (a_ref);
 
-  c_large_integer = (LARGE_INTEGER *)eif_field (eif_access(an_int), "item", EIF_POINTER);
+  c_large_integer = (LARGE_INTEGER *)eif_field (eif_access (an_int), "item", EIF_POINTER);
   eif_wean (an_int);
 
   return (*c_large_integer);
@@ -339,7 +339,7 @@ LONGLONG * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LONG
   eif_object = eif_protect (a_ref);
 
   result = (LONGLONG *) CoTaskMemAlloc (sizeof (LONGLONG));
-  * result = (LONGLONG) eif_field (eif_access(eif_object), "item", EIF_INTEGER_64);
+  * result = (LONGLONG) eif_field (eif_access (eif_object), "item", EIF_INTEGER_64);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -362,7 +362,7 @@ ULARGE_INTEGER ecom_runtime_ec::ccom_ec_ulong_long (EIF_REFERENCE a_ref)
 
   an_int = eif_protect (a_ref);
 
-  c_ularge_integer = (ULARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
+  c_ularge_integer = (ULARGE_INTEGER *)eif_field (eif_access (an_int), "item", EIF_POINTER);
   eif_wean (an_int);
 
   return (*c_ularge_integer);
@@ -381,7 +381,7 @@ ULONGLONG * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, UL
   eif_object = eif_protect (a_ref);
 
   result = (ULONGLONG *) CoTaskMemAlloc (sizeof (ULONGLONG));
-  * result = (ULONGLONG) eif_field (eif_access(eif_object), "item", EIF_INTEGER_64);
+  * result = (ULONGLONG) eif_field (eif_access (eif_object), "item", EIF_INTEGER_64);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -458,7 +458,7 @@ DECIMAL ecom_runtime_ec::ccom_ec_decimal (EIF_REFERENCE a_ref)
 
   a_decimal = eif_protect (a_ref);
 
-  c_decimal = (DECIMAL *)eif_field(eif_access(a_decimal), "item", EIF_POINTER);
+  c_decimal = (DECIMAL *)eif_field (eif_access (a_decimal), "item", EIF_POINTER);
   eif_wean (a_decimal);
 
   return (*c_decimal);
@@ -475,7 +475,7 @@ DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL
 
   a_decimal = eif_protect (a_ref);
 
-  c_decimal = (DECIMAL *)eif_field(eif_access(a_decimal), "item", EIF_POINTER);
+  c_decimal = (DECIMAL *)eif_field (eif_access (a_decimal), "item", EIF_POINTER);
 
 
   if (old != NULL)
@@ -509,7 +509,7 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 
   a_currency = eif_protect (a_ref);
 
-  c_currency = (CURRENCY *)eif_field(eif_access(a_currency), "item", EIF_POINTER);
+  c_currency = (CURRENCY *)eif_field (eif_access (a_currency), "item", EIF_POINTER);
   eif_wean (a_currency);
 
   return (*c_currency);
@@ -534,7 +534,7 @@ char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * o
   eif_object = eif_protect (a_ref);
 
   result = (char *) CoTaskMemAlloc (sizeof (char));
-  * result = (char) eif_field(eif_access(eif_object), "item", EIF_CHARACTER);
+  * result = (char) eif_field (eif_access (eif_object), "item", EIF_CHARACTER);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -617,7 +617,7 @@ int * ecom_runtime_ec::ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old)
   eif_object = eif_protect (a_ref);
 
   result = (int *) CoTaskMemAlloc (sizeof (int));
-  * result = (int) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
+  * result = (int) eif_field (eif_access (eif_object), "item", EIF_INTEGER);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -648,7 +648,7 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
   eif_object = eif_protect (a_ref);
 
   result = (long *) CoTaskMemAlloc (sizeof (long));
-  * result = (long) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
+  * result = (long) eif_field (eif_access (eif_object), "item", EIF_INTEGER);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -671,7 +671,7 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
   eif_object = eif_protect (a_ref);
 
   result = (float *) CoTaskMemAlloc (sizeof (float));
-  * result = (float) eif_field (eif_access(eif_object), "item", EIF_REAL);
+  * result = (float) eif_field (eif_access (eif_object), "item", EIF_REAL);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -694,7 +694,7 @@ double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * 
   eif_object = eif_protect (a_ref);
 
   result = (double *) CoTaskMemAlloc (sizeof (double));
-  * result = (double) eif_field(eif_access(eif_object), "item", EIF_DOUBLE);
+  * result = (double) eif_field (eif_access (eif_object), "item", EIF_DOUBLE);
 
   eif_wean (eif_object);
   if (old != NULL)
@@ -718,7 +718,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRE
 
   a_currency = eif_protect (a_ref);
 
-  c_currency = (CURRENCY *)eif_field(eif_access(a_currency), "item", EIF_POINTER);
+  c_currency = (CURRENCY *)eif_field (eif_access (a_currency), "item", EIF_POINTER);
 
   if (old != NULL)
   {
@@ -763,7 +763,7 @@ BSTR ecom_runtime_ec::ccom_ec_bstr (EIF_REFERENCE a_ref)
     if (0 == f_to_c)
       f_to_c = eif_reference_function ("to_c", tid);
 
-    c_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))f_to_c)(eif_access (eif_object));
+    c_string = (char *) (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))f_to_c) (eif_access (eif_object));
     wide_string = ccom_create_from_string (c_string);
 
     b_string = SysAllocString (wide_string);
@@ -796,7 +796,7 @@ LPSTR ecom_runtime_ec::ccom_ec_lpstr (EIF_REFERENCE a_ref, char * old)
     if (0 == to_c)
       to_c = eif_reference_function ("to_c", type_id);
 
-    area_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c)(eif_access (eif_object));
+    area_string = (char *) (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
     if (old != NULL)
     {
       result = old;
@@ -834,7 +834,7 @@ LPWSTR ecom_runtime_ec::ccom_ec_lpwstr (EIF_REFERENCE a_ref, LPWSTR old)
     if (0 == to_c)
       to_c = eif_reference_function ("to_c", type_id);
 
-    area_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
+    area_string = (char *) (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
     str_size = strlen (area_string) + 1;
     size = mbstowcs (NULL, area_string, str_size);
 
@@ -864,7 +864,7 @@ VARIANT ecom_runtime_ec::ccom_ec_variant (EIF_REFERENCE a_ref)
 
   a_variant = eif_protect (a_ref);
 
-  c_variant = (VARIANT *)eif_field(eif_access(a_variant), "item", EIF_POINTER);
+  c_variant = (VARIANT *)eif_field (eif_access (a_variant), "item", EIF_POINTER);
   eif_wean (a_variant);
 
   return (*c_variant);
@@ -881,7 +881,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT
 
   a_variant = eif_protect (a_ref);
 
-  c_variant = (VARIANT *)eif_field(eif_access(a_variant), "item", EIF_POINTER);
+  c_variant = (VARIANT *)eif_field (eif_access (a_variant), "item", EIF_POINTER);
 
   if (old != NULL)
   {
@@ -941,7 +941,7 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, 
   }
   // Allocate memory
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))count)(eif_access(eif_date_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))count) (eif_access (eif_date_array));
 
   if (old != NULL)
   {
@@ -954,8 +954,8 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, 
 
   for (int i=0; i < capacity; i++)
   {
-    a_date = ccom_ec_date( (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-          (eif_access(eif_date_array), ((EIF_INTEGER)(i+1))));
+    a_date = ccom_ec_date ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
+          (eif_access (eif_date_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (date_array, i, DATE) = a_date;
   }
 
@@ -1002,14 +1002,14 @@ char * ecom_runtime_ec::ccom_ec_array_character (EIF_REFERENCE a_ref, int dimens
 
 
   // Allocate memory
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (char *)CoTaskMemAlloc (capacity*(sizeof(char)));
+    result = (char *)CoTaskMemAlloc (capacity* (sizeof (char)));
   else
     result = old;
 
 
-  memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)(eif_access(e_array)), capacity*(sizeof(char)));
+  memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c) (eif_access (e_array)), capacity* (sizeof (char)));
 
   eif_wean (e_array);
   return result;
@@ -1051,14 +1051,14 @@ unsigned char * ecom_runtime_ec::ccom_ec_array_unsigned_character (EIF_REFERENCE
 
 
   // Allocate memory
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (unsigned char *)CoTaskMemAlloc (capacity*(sizeof(unsigned char)));
+    result = (unsigned char *)CoTaskMemAlloc (capacity* (sizeof (unsigned char)));
   else
     result = old;
 
 
-  memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)(eif_access(e_array)), capacity*(sizeof(unsigned char)));
+  memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c) (eif_access (e_array)), capacity* (sizeof (unsigned char)));
 
   eif_wean (e_array);
   return result;
@@ -1101,15 +1101,15 @@ long * ecom_runtime_ec::ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, 
 
 
   // Allocate memory
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (long *)CoTaskMemAlloc (capacity*(sizeof(long)));
+    result = (long *)CoTaskMemAlloc (capacity* (sizeof (long)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(long)) );
+      (eif_access (e_array)), capacity* (sizeof (long)) );
 
   eif_wean (e_array);
   return result;
@@ -1152,15 +1152,15 @@ unsigned long * ecom_runtime_ec::ccom_ec_array_unsigned_long (EIF_REFERENCE a_re
 
 
   // Allocate memory
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (unsigned long *)CoTaskMemAlloc (capacity*(sizeof(unsigned long)));
+    result = (unsigned long *)CoTaskMemAlloc (capacity* (sizeof (unsigned long)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(unsigned long)) );
+      (eif_access (e_array)), capacity* (sizeof (unsigned long)) );
 
   eif_wean (e_array);
   return result;
@@ -1205,15 +1205,15 @@ int * ecom_runtime_ec::ccom_ec_array_integer (EIF_REFERENCE a_ref, int dimension
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (int *)CoTaskMemAlloc (capacity*(sizeof(int)));
+    result = (int *)CoTaskMemAlloc (capacity* (sizeof (int)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(int)) );
+      (eif_access (e_array)), capacity* (sizeof (int)) );
 
   eif_wean (e_array);
   return result;
@@ -1258,15 +1258,15 @@ unsigned int * ecom_runtime_ec::ccom_ec_array_unsigned_integer (EIF_REFERENCE a_
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (unsigned int *)CoTaskMemAlloc (capacity*(sizeof(unsigned int)));
+    result = (unsigned int *)CoTaskMemAlloc (capacity* (sizeof (unsigned int)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(unsigned int)) );
+      (eif_access (e_array)), capacity* (sizeof (unsigned int)) );
 
   eif_wean (e_array);
   return result;
@@ -1311,15 +1311,15 @@ float * ecom_runtime_ec::ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (float *)CoTaskMemAlloc (capacity*(sizeof(float)));
+    result = (float *)CoTaskMemAlloc (capacity* (sizeof (float)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(float)));
+      (eif_access (e_array)), capacity* (sizeof (float)));
 
   eif_wean (e_array);
   return result;
@@ -1364,15 +1364,15 @@ double * ecom_runtime_ec::ccom_ec_array_double (EIF_REFERENCE a_ref, int dimensi
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (double *)CoTaskMemAlloc (capacity*(sizeof(double)));
+    result = (double *)CoTaskMemAlloc (capacity* (sizeof (double)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(double)));
+      (eif_access (e_array)), capacity* (sizeof (double)));
 
   eif_wean (e_array);
   return result;
@@ -1415,7 +1415,7 @@ short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_short_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_short_array));
 
   if (old != NULL)
   {
@@ -1423,13 +1423,13 @@ short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension
   }
   else
   {
-    short_array = (short *)CoTaskMemAlloc (capacity*(sizeof(short)));
+    short_array = (short *)CoTaskMemAlloc (capacity* (sizeof (short)));
   }
 
   for (int i=0; i < capacity; i++)
   {
-    a_short = (short)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_short_array), ((EIF_INTEGER)(i+1)));
+    a_short = (short) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_INTEGER))f_item)
+        (eif_access (e_short_array), ((EIF_INTEGER) (i+1)));
     ccom_c_array_element (short_array, i, short) = a_short;
   }
 
@@ -1478,7 +1478,7 @@ unsigned short * ecom_runtime_ec::ccom_ec_array_unsigned_short (EIF_REFERENCE a_
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_short_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_short_array));
 
   if (old != NULL)
   {
@@ -1486,13 +1486,13 @@ unsigned short * ecom_runtime_ec::ccom_ec_array_unsigned_short (EIF_REFERENCE a_
   }
   else
   {
-    short_array = (unsigned short *)CoTaskMemAlloc (capacity*(sizeof(unsigned short)));
+    short_array = (unsigned short *)CoTaskMemAlloc (capacity* (sizeof (unsigned short)));
   }
 
   for (int i=0; i < capacity; i++)
   {
-    a_short = (unsigned short)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_short_array), ((EIF_INTEGER)(i+1)));
+    a_short = (unsigned short) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_INTEGER))f_item)
+        (eif_access (e_short_array), ((EIF_INTEGER) (i+1)));
     ccom_c_array_element (short_array, i, short) = a_short;
   }
 
@@ -1541,7 +1541,7 @@ HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimen
     f_capacity = eif_integer_function ("count", tid);
   }
   // Allocate memory
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_hresult_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_hresult_array));
 
   if (old != NULL)
   {
@@ -1549,13 +1549,13 @@ HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimen
   }
   else
   {
-    hresult_array = (HRESULT *)CoTaskMemAlloc (capacity*(sizeof(HRESULT)));
+    hresult_array = (HRESULT *)CoTaskMemAlloc (capacity* (sizeof (HRESULT)));
   }
 
   for (int i=0; i < capacity; i++)
   {
     hr = ccom_ec_hresult ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_hresult_array), ((EIF_INTEGER)(i+1))));
+        (eif_access (e_hresult_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (hresult_array, i, HRESULT) = hr;
   }
 
@@ -1606,7 +1606,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_currency_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_currency_array));
 
   if (old != NULL)
   {
@@ -1614,14 +1614,14 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
   }
   else
   {
-    currency_array = (CURRENCY *)CoTaskMemAlloc (capacity*(sizeof(CURRENCY)));
+    currency_array = (CURRENCY *)CoTaskMemAlloc (capacity* (sizeof (CURRENCY)));
   }
 
   for (int i=0; i < capacity; i++)
   {
     p_currency = ccom_ec_pointed_currency ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_currency_array), ((EIF_INTEGER)(i+1))), NULL);
-    memcpy (((CURRENCY *)currency_array + i), p_currency, sizeof (CURRENCY));
+        (eif_access (e_currency_array), ((EIF_INTEGER) (i+1))), NULL);
+    memcpy (( (CURRENCY *)currency_array + i), p_currency, sizeof (CURRENCY));
   }
 
   eif_wean (e_currency_array);
@@ -1672,7 +1672,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_variant_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_variant_array));
 
   if (old != NULL)
   {
@@ -1686,8 +1686,8 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
   for (i = 0; i < capacity; i++)
   {
     p_var = ccom_ec_pointed_variant ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_variant_array), ((EIF_INTEGER)(i+1))), NULL);
-    memcpy (((VARIANT *) variant_array + i), p_var, sizeof (VARIANT));
+        (eif_access (e_variant_array), ((EIF_INTEGER) (i+1))), NULL);
+    memcpy (( (VARIANT *) variant_array + i), p_var, sizeof (VARIANT));
   }
 
   eif_wean (e_variant_array);
@@ -1738,7 +1738,7 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_decimal_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_decimal_array));
 
   if (old != NULL)
   {
@@ -1752,8 +1752,8 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
   for (i = 0; i < capacity; i++)
   {
     p_decimal = ccom_ec_pointed_decimal ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_decimal_array), ((EIF_INTEGER)(i+1))), NULL);
-    memcpy (((DECIMAL *) decimal_array + i),p_decimal, sizeof (DECIMAL));
+        (eif_access (e_decimal_array), ((EIF_INTEGER) (i+1))), NULL);
+    memcpy (( (DECIMAL *) decimal_array + i),p_decimal, sizeof (DECIMAL));
   }
 
   eif_wean (e_decimal_array);
@@ -1804,7 +1804,7 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_boolean_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_boolean_array));
 
   if (old != NULL)
   {
@@ -1818,7 +1818,7 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
   for (i = 0; i < capacity; i++)
   {
     a_bool = ccom_ec_boolean ((FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_boolean_array), ((EIF_INTEGER)(i+1))));
+        (eif_access (e_boolean_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (boolean_array, i, VARIANT_BOOL) = a_bool;
   }
 
@@ -1872,15 +1872,15 @@ LONGLONG * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, int di
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (LONGLONG *)CoTaskMemAlloc (capacity*(sizeof(LONGLONG)));
+    result = (LONGLONG *)CoTaskMemAlloc (capacity* (sizeof (LONGLONG)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(LONGLONG)) );
+      (eif_access (e_array)), capacity* (sizeof (LONGLONG)) );
 
   eif_wean (e_array);
   return result;
@@ -1927,15 +1927,15 @@ ULONGLONG * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int 
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_array));
   if (old == NULL)
-    result = (ULONGLONG *)CoTaskMemAlloc (capacity*(sizeof(ULONGLONG)));
+    result = (ULONGLONG *)CoTaskMemAlloc (capacity* (sizeof (ULONGLONG)));
   else
     result = old;
 
 
   memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
-      (eif_access(e_array)), capacity*(sizeof(ULONGLONG)) );
+      (eif_access (e_array)), capacity* (sizeof (ULONGLONG)) );
 
   eif_wean (e_array);
   return result;
@@ -1979,7 +1979,7 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_dispatch_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_dispatch_array));
 
   if (old != NULL)
   {
@@ -1993,7 +1993,7 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
   for (i = 0; i < capacity; i++)
   {
     an_interface = ccom_ec_dispatch ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_dispatch_array), ((EIF_INTEGER)(i+1))));
+        (eif_access (e_dispatch_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (dispatch_array, i, IDispatch *) = an_interface;
   }
 
@@ -2045,7 +2045,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_unknown_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_unknown_array));
 
   if (old == NULL)
   {
@@ -2059,7 +2059,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
   for (i = 0; i < capacity; i++)
   {
     an_interface = ccom_ec_unknown ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_unknown_array), ((EIF_INTEGER)(i+1))));
+        (eif_access (e_unknown_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (unknown_array, i, IUnknown *) = an_interface;
   }
 
@@ -2111,7 +2111,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_lpwstr_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_lpwstr_array));
 
   if (old != NULL)
   {
@@ -2125,7 +2125,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
   for (i = 0; i < capacity; i++)
   {
     a_string = ccom_ec_lpwstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_lpwstr_array), ((EIF_INTEGER)(i+1))), NULL);
+        (eif_access (e_lpwstr_array), ((EIF_INTEGER) (i+1))), NULL);
     ccom_c_array_element (lpwstr_array, i, LPWSTR) = a_string;
   }
 
@@ -2177,7 +2177,7 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_lpstr_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_lpstr_array));
 
   if (old != NULL)
   {
@@ -2191,7 +2191,7 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
   for (i = 0; i < capacity; i++)
   {
     a_string = ccom_ec_lpstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_lpstr_array), ((EIF_INTEGER)(i+1))), NULL);
+        (eif_access (e_lpstr_array), ((EIF_INTEGER) (i+1))), NULL);
     ccom_c_array_element (lpstr_array, i, LPSTR) = a_string;
   }
 
@@ -2203,6 +2203,69 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
   }
   else
     return lpstr_array;
+};
+//----------------------------------------------------------------------------------------
+
+void* ecom_runtime_ec::ccom_ec_array_record (EIF_REFERENCE a_ref, int dimension, void* old)
+
+// Create C array of structs from Eiffel array.
+{
+  EIF_OBJECT e_struct_array = 0;
+
+  static EIF_TYPE_ID tid = -1;
+  static EIF_TYPE_ID elem_tid = -1;
+
+  EIF_REFERENCE_FUNCTION f_item = 0;
+  EIF_INTEGER_FUNCTION f_capacity = 0;
+  EIF_INTEGER_FUNCTION f_sizeof = 0;
+  EIF_INTEGER_FUNCTION f_s = 0;
+
+  void* c_array = 0;
+  void* elem = 0;
+  int capacity = 0, i = 0;
+  int elem_size = 0;
+
+  e_struct_array = eif_protect (a_ref);
+  tid = eif_type_by_reference (a_ref);
+  if (dimension > 1)
+  {
+    f_item = eif_reference_function ("array_item", tid);
+  }
+  else
+  {
+    f_item = eif_reference_function ("item", tid);
+  }
+  f_capacity = eif_integer_function ("count", tid);
+  elem_tid = eif_gen_param_id (-1, tid, 1);
+  f_sizeof = eif_integer_function ("structure_size", tid);
+  // Allocate memory
+
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_struct_array));
+  elem_size = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_sizeof) (eif_access (e_struct_array));
+  if (old != NULL)
+  {
+    c_array = old;
+  }
+  else
+  {
+    c_array = (void *) CoTaskMemAlloc (capacity * elem_size);
+  }
+
+  for (i = 0; i < capacity; i++)
+  {
+    elem = (void*) ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
+      (eif_access (e_struct_array), ((EIF_INTEGER) (i+1))), NULL);
+    ccom_c_array_element (c_array, i, void*) = elem;
+  }
+
+  eif_wean (e_struct_array);
+
+  if (old != NULL)
+  {
+    return NULL;
+  }
+  else
+    return c_array;
 };
 //---------------------------------------------------------------------------------------------
 
@@ -2243,7 +2306,7 @@ BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, 
   // Allocate memory
 
 
-  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_bstr_array));
+  capacity = (int) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity) (eif_access (e_bstr_array));
 
   if (old != NULL)
   {
@@ -2257,7 +2320,7 @@ BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, 
   for (i = 0; i < capacity; i++)
   {
     a_string = ccom_ec_bstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-        (eif_access(e_bstr_array), ((EIF_INTEGER)(i+1))));
+        (eif_access (e_bstr_array), ((EIF_INTEGER) (i+1))));
     ccom_c_array_element (bstr_array, i, BSTR) = a_string;
   }
 
@@ -2315,13 +2378,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
-  tmp_object3 = eif_protect (eif_field(eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2371,10 +2434,10 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (char)(FUNCTION_CAST (EIF_CHARACTER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (char) (FUNCTION_CAST (EIF_CHARACTER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
 
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -2439,13 +2502,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2494,9 +2557,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      a_float = (float)(FUNCTION_CAST (EIF_REAL, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      a_float = (float) (FUNCTION_CAST (EIF_REAL, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &a_float);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &a_float);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -2562,13 +2625,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2618,9 +2681,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (long)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (long) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -2686,13 +2749,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_int64 (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2742,9 +2805,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_int64 (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (LONGLONG)(FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (LONGLONG) (FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -2810,13 +2873,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_uint64 (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2866,9 +2929,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_uint64 (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (ULONGLONG)(FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (ULONGLONG) (FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -2934,13 +2997,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -2991,9 +3054,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (short)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (short) (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3058,14 +3121,14 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
   if (0 == f_to_c)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
-  tmp_object1 = eif_protect ( eif_field(eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
-  tmp_object3 = eif_protect (eif_field(eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3114,10 +3177,10 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
       {
         c_index[i] = (long) tmp_index [dimensions - i - 1];
       }
-      an_element = (double)(FUNCTION_CAST (EIF_DOUBLE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+      an_element = (double) (FUNCTION_CAST (EIF_DOUBLE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index));
 
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3183,13 +3246,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *)(FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3241,7 +3304,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_boolean ((FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3307,13 +3370,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
   tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3365,7 +3428,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_date ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3431,13 +3494,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3489,7 +3552,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_hresult ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)));
-      hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3555,13 +3618,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3613,7 +3676,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_pointed_variant ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3679,13 +3742,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3737,7 +3800,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_pointed_currency ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3803,13 +3866,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3861,7 +3924,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
       }
       an_element = ccom_ec_pointed_decimal ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
             (eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -3927,13 +3990,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -3986,7 +4049,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
       an_element = ccom_ec_bstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)));
 
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -4052,13 +4115,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *)(FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *)(FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *)(FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -4111,7 +4174,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
       an_element = ccom_ec_dispatch ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
           (eif_access (eif_safe_array), eif_access (eif_index)));
 
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -4177,13 +4240,13 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
     f_to_c = eif_pointer_function ("to_c", int_array_tid);
 
   tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
-  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+  lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object1));
 
-  tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
-  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+  tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+  element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object2));
 
   tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
-  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+  upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c) (eif_access (tmp_object3));
 
   // create SAFEARRAYBOUND
   array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
@@ -4237,9 +4300,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
           (eif_access (eif_safe_array), eif_access (eif_index)));
 
 
-      hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+      hr = SafeArrayPutElement (c_safe_array, c_index, an_element);
       if (an_element)
-      	an_element->Release();
+      	an_element->Release ();
       if (FAILED (hr))
       {
         com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
@@ -4295,7 +4358,7 @@ SCODE * ecom_runtime_ec::ccom_ec_pointed_hresult (SCODE a_hresult)
 // create pointed SCODE from SCODE
 
 {
-  SCODE * result = (SCODE *)CoTaskMemAlloc(sizeof(SCODE));
+  SCODE * result = (SCODE *)CoTaskMemAlloc (sizeof (SCODE));
   *result = a_hresult;
   return result;
 }

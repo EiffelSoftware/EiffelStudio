@@ -70,7 +70,7 @@ feature -- Status setting
 				if a_type = C.Gdk_button_press_enum then
 					if a_button = 1 then
 						print ("Viable for dragging%N")
-						if not is_dragging then
+						if not is_dock_executing then
 							start_dragable (
 								a_x,
 								a_y,
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			env: EV_ENVIRONMENT
 		do
 			io.putstring ("real_start_draggging%N")
-			if not is_dragging then
+			if not is_dock_executing then
 ----				create top_screen.make_top ("Internal window%N")
 ----			--	top_screen.maximize
 ----				top_screen.set_x (-800)
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			if drag_motion_notify_connection_id > 0 then
 				signal_disconnect (drag_motion_notify_connection_id)
 			end		
-			complete_drag
+			complete_dock
 --			
 		ensure then
 		--	original_window_void: original_top_level_window_imp = Void

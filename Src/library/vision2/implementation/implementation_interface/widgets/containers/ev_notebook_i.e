@@ -41,6 +41,14 @@ feature -- Status setting
 						or pos = Pos_bottom or pos = Pos_top
 		deferred
 		end
+
+	set_current_page (index: INTEGER) is
+			-- Make the `index'-th page the currently opened page.
+		require
+			exists: not destroyed
+			valid_index: index >= 1 and index <= count
+		deferred
+		end
 	
 feature -- Element change
 

@@ -117,6 +117,12 @@ feature -- Status setting
 			set_font (font)
 		end
 
+	set_current_page (index: INTEGER) is
+			-- Make the `index'-th page the currently opened page.
+		do
+			set_current_selection (index - 1)
+		end
+
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
    			-- `flag'.

@@ -79,7 +79,16 @@ feature -- Status setting
 		do
 			implementation.set_tab_position (implementation.Pos_right)
 		end
-	
+
+	set_current_page (index: INTEGER) is
+			-- Make the `index'-th page the currently opened page.
+		require
+			exists: not destroyed
+			valid_index: index >= 1 and index <= count
+		do
+			implementation.set_current_page (index)
+		end
+
 feature -- Element change
 
 	set_page_title (index: INTEGER; str: STRING) is

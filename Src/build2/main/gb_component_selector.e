@@ -107,7 +107,7 @@ feature -- Basic operation
 			component_item: GB_COMPONENT_SELECTOR_ITEM
 			dialog: GB_NAMING_DIALOG
 		do
-			create dialog.make_with_values (unique_name (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
+			create dialog.make_with_values (unique_name_from_array (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
 			dialog.show_modal_to_window (parent_window (Current))
 			if not dialog.cancelled then
 				create component_item.make_from_object (an_object, dialog.name)	

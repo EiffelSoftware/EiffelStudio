@@ -808,7 +808,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: GB_NAMING_DIALOG
 		do
-			create dialog.make_with_values (unique_name (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name. Please ensure that it is valid and is not already in use.", agent valid_directory_name)
+			create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name. Please ensure that it is valid and is not already in use.", agent valid_directory_name)
 			dialog.show_modal_to_window (parent_window (current))
 			if not dialog.cancelled then
 				add_named_directory (dialog.name)

@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include "eif_globals.h"
 #include "portable.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -27,32 +28,6 @@ extern "C" {
 	/* need to redefine this before including errno.h */
 #endif
 #include <errno.h>    /* needed in error.c, except.c, retrieve.c */
-
-/* Structure used as the execution vector. This is for both the execution
- * stack (eif_stack) and the exception trace stack (eif_trace).
- */
-struct ex_vect {
-	unsigned char ex_type;		/* Function call, pre-condition, etc... */
-	unsigned char ex_retry;		/* True if function has been retried */
-	unsigned char ex_rescue;	/* True if function entered its rescue clause */
-	union {
-		unsigned int exu_lvl;	/* Level for multi-branch backtracking */
-		int exu_sig;			/* Signal number */
-		int exu_errno;			/* Error number reported by kernel */
-		struct {
-			char *exua_name;	/* The assertion tag */
-			char *exua_where;	/* The routine name where assertion was found */
-			int exua_from;		/* And its origin (where it was written) */
-			char *exua_oid;		/* Object ID (value of Current) */
-		} exua;					/* Used by assertions */
-		struct {
-			char *exur_jbuf;	/* Execution buffer address, null if none */
-			char *exur_id;		/* Object ID (value of Current) */
-			char *exur_rout;	/* The routine name */
-			int exur_orig;		/* Origin of the routine */
-		} exur;					/* Used by routines */
-	} exu;
-};
 
 /* Macros for easy access */
 #define ex_jbuf		exu.exur.exur_jbuf
@@ -66,27 +41,6 @@ struct ex_vect {
 #define ex_where	exu.exua.exua_where
 #define ex_from		exu.exua.exua_from
 #define ex_oid		exu.exua.exua_oid
-
-/*
- * Stack used by the exception vector of each routine. It is implemented
- * with small chunks linked together. These structure look like the one used
- * by the garbage collector, only the type of the items stored changes...
- */
-struct xstack {
-	struct stxchunk *st_hd;		/* Head of chunk list */
-	struct stxchunk *st_tl;		/* Tail of chunk list */
-	struct stxchunk *st_cur;	/* Current chunk in use (where top is) */
-	struct ex_vect *st_top;		/* Top in chunk (pointer to next free item) */
-	struct ex_vect *st_end;		/* Pointer to first element beyond chunk */
-	struct ex_vect *st_bot;		/* Bottom of stack (for eif_trace only) */
-};
-
-struct stxchunk {
-	struct stxchunk *sk_next;	/* Next chunk in stack */
-	struct stxchunk *sk_prev;	/* Previous chunk in stack */
-	struct ex_vect *sk_arena;	/* Arena where objects are stored */
-	struct ex_vect *sk_end;		/* Pointer to first element beyond the chunk */
-};
 
 /* Structure used to record general flags. These are the value to take into
  * account for the last exception that occurred, which might not be in the
@@ -118,30 +72,6 @@ struct eif_except {
 #define echort		exdata.ex_ort
 #define echclass	exdata.ex_class
 #define echoclass	exdata.ex_oclass
-
-/* Structure used while printing the exception trace stack. It is built using
- * some look-ahead inside the stack.
- */
-struct exprint {
-	unsigned char retried;	/* Routine has been retried */
-	unsigned char rescued;	/* Routine entered in a rescue clause */
-	unsigned char code;		/* Exception code */
-	unsigned char last;		/* The very last exception record */
-	unsigned char previous;	/* Previous exception code printed */
-	char *rname;			/* Routine name of enclosing call */
-	char *tag;				/* Exception tag of current exception */
-	char *obj_id;			/* Object's ID */
-	int from;				/* Where the routine comes from */
-};
-
-/* Improved string structure (with number of bytes used and length)
- * for the exception trace string 
- */
-typedef struct _smart_string {
-	char *area;		/* Pointer to zone where data is stored */
-	long used;		/* Number of bytes actually used */
-	long size;		/* Length of the area */
-} SMART_STRING;
 
 /* Flags for ex_nomem */
 #define MEM_FULL	0x01	/* A simple "Out of memory" condition */
@@ -203,58 +133,52 @@ typedef struct _smart_string {
 #define EN_NEX		25			/* Number of internal exceptions */
 #else
 #define EN_DOL		26			/* $ applied to melted feature */
-#define EN_NEX		26			/* Number of internal exceptions */
 #endif
-
-/* Exported data structures (used by the generated C code) */
-extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
-extern struct xstack eif_trace;	/* Unsolved exception trace */
-extern struct eif_except exdata;	/* Exception handling global flags */
 
 /* Exported routines (used by the generated C code or run-time) */
 extern void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
-extern void eraise(char *tag, long num);			/* Raise an Eiffel exception */
-extern void xraise(int code);			/* Raise an exception with no tag */
-extern void eviol(void);			/* Eiffel violation of last assertion */
-extern void enomem(void);			/* Raises an "Out of memory" exception */
-extern struct ex_vect *exret(register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
-extern void exhdlr(Signal_t (*handler)(int), int sig);			/* Call signal handler */
-extern void exinv(register2 char *tag, register3 char *object);			/* Invariant record */
-extern void exasrt(char *tag, int type);			/* Assertion record */
-extern void exfail(void);			/* Signals: reached end of a rescue clause */
-extern void panic(char *msg);			/* Run-time raised panic */
-extern void fatal_error(char *msg);			/* Run-time raised fatal errors */
-extern void exok(void);				/* Resumption has been successful */
-extern void esfail(void);			/* Eiffel system failure */
-extern void ereturn(void);			/* Return to lastly recorded rescue entry */
+extern void eraise(EIF_CONTEXT char *tag, long num);			/* Raise an Eiffel exception */
+extern void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
+extern void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
+extern void enomem(EIF_CONTEXT_NOARG);			/* Raises an "Out of memory" exception */
+extern struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
+extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
+extern void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
+extern void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
+extern void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
+extern void panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
+extern void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
+extern void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
+extern void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
+extern void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
 extern struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */
-extern void excatch(char *jmp);			/* Set exception catcher from C to interpret */
-extern void exresc(register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
+extern void excatch(EIF_CONTEXT char *jmp);			/* Set exception catcher from C to interpret */
+extern void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
 #ifndef WORKBENCH
 extern struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
-extern struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
-extern struct ex_vect *exnext(void);	/* Read next eif_trace item from bottom */
+extern struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
+extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */
 extern struct ex_vect *extop(register1 struct xstack *stk);	/* Top of Eiffel stack */
 extern void esdie(int code);
 
 /* Eiffel interface with class EXCEPTIONS */
-extern long eeocode(void);			/* Original exception code */
-extern char *eeotag(void);			/* Original exception tag */
-extern char *eeoclass(void);		/* Original class where exception occurred */
-extern char *eeorout(void);			/* Original routine where exception occurred */
-extern long eelcode(void);			/* Last exception code */
-extern char *eeltag(void);			/* Last exception tag */
-extern char *eelclass(void);		/* Last class where exception occurred */
-extern char *eelrout(void);			/* Last routine where exception occurred */
-extern void eetrace(char b);			/* Print/No Print of exception history table */
-extern void eecatch(long ex);			/* Catch exception */
-extern void eeignore(long ex);			/* Ignore exception */
+extern long eeocode(EIF_CONTEXT_NOARG);			/* Original exception code */
+extern char *eeotag(EIF_CONTEXT_NOARG);			/* Original exception tag */
+extern char *eeoclass(EIF_CONTEXT_NOARG);		/* Original class where exception occurred */
+extern char *eeorout(EIF_CONTEXT_NOARG);			/* Original routine where exception occurred */
+extern long eelcode(EIF_CONTEXT_NOARG);			/* Last exception code */
+extern char *eeltag(EIF_CONTEXT_NOARG);			/* Last exception tag */
+extern char *eelclass(EIF_CONTEXT_NOARG);		/* Last class where exception occurred */
+extern char *eelrout(EIF_CONTEXT_NOARG);			/* Last routine where exception occurred */
+extern void eetrace(EIF_CONTEXT char b);			/* Print/No Print of exception history table */
+extern void eecatch(EIF_CONTEXT long ex);			/* Catch exception */
+extern void eeignore(EIF_CONTEXT long ex);			/* Ignore exception */
 extern char *eename(long ex);			/* Exception description */
 
-extern EIF_REFERENCE stack_trace_string(void);		/* Exception stack as an Eiffel string */
+extern EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);		/* Exception stack as an Eiffel string */
 
 #ifdef __cplusplus
 }

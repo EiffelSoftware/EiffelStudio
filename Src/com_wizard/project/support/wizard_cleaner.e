@@ -25,10 +25,7 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
+	WIZARD_EXECUTION_ENVIRONMENT
 
 feature -- Basic Operations
 
@@ -81,8 +78,8 @@ feature -- Basic Operations
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
-				a_working_directory := current_working_directory
-				change_working_directory (a_directory_name)
+				a_working_directory := execution_environment.current_working_directory
+				execution_environment.change_working_directory (a_directory_name)
 				a_file_list := a_directory.linear_representation
 				from
 					a_file_list.start
@@ -97,7 +94,7 @@ feature -- Basic Operations
 					end
 					a_file_list.forth
 				end
-				change_working_directory (a_working_directory)
+				execution_environment.change_working_directory (a_working_directory)
 			end
 		end
 
@@ -121,3 +118,19 @@ feature -- Basic Operations
 		end
 
 end -- class WIZARD_CLEANER
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-2000 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -101,7 +101,7 @@ feature -- Basic Operations
 			a_string.append (clone (shared_wizard_environment.project_name))
 			a_string.append (".tlb")
 			shared_wizard_environment.set_type_library_file_name (a_string)
-			change_working_directory (Shared_wizard_environment.destination_folder)
+			execution_environment.change_working_directory (Shared_wizard_environment.destination_folder)
 			generate_make_file (Idl_compiler_command_line, Temporary_input_file_name)
 			a_string := clone (Idl_compiler)
 			a_string.append (clone (Space))
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 		local
 			a_file: RAW_FILE
 		do
-			change_working_directory (shared_wizard_environment.destination_folder)
+			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
 			create a_file.make (Def_file_name)
 			if not a_file.exists then
 				a_file.make_create_read_write (Def_file_name)

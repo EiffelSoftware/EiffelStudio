@@ -36,11 +36,6 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -63,12 +58,12 @@ feature -- Basic Operations
 			a_file: RAW_FILE
 			a_working_directory, a_string: STRING
 		do
-			a_working_directory := clone (current_working_directory)
+			a_working_directory := clone (execution_environment.current_working_directory)
 			create a_directory.make_open_read (a_folder_name)
 			a_file_list := a_directory.linear_representation
 			progress_report.start
 			progress_report.set_range (a_file_list.count)
-			change_working_directory (a_folder_name)
+			execution_environment.change_working_directory (a_folder_name)
 			from
 				a_file_list.start
 			until
@@ -87,13 +82,13 @@ feature -- Basic Operations
 					a_string := clone (C_compiler)
 					a_string.append (Space)
 					a_string.append (last_make_command)
-					launch (a_string, current_working_directory)
+					launch (a_string, execution_environment.current_working_directory)
 					check_return_code
 				end
 				progress_report.step
 				a_file_list.forth
 			end
-			change_working_directory (a_working_directory)
+			execution_environment.change_working_directory (a_working_directory)
 		end
 	
 	compile_file (a_file_name: STRING) is
@@ -108,7 +103,7 @@ feature -- Basic Operations
 			a_string := clone (C_compiler)
 			a_string.append (Space)
 			a_string.append (last_make_command)
-			launch (a_string, current_working_directory)
+			launch (a_string, execution_environment.current_working_directory)
 			check_return_code
 		end
 	
@@ -181,7 +176,7 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			if not retried then
-				a_string := clone (current_working_directory)
+				a_string := clone (execution_environment.current_working_directory)
 				a_string.append_character (Directory_separator)
 				a_string.append (title)
 				create a_file.make_open_write (a_string)
@@ -206,7 +201,7 @@ feature {NONE} -- Implementation
 			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
-			Result.append (clone (current_working_directory))
+			Result.append (clone (execution_environment.current_working_directory))
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end
@@ -215,7 +210,7 @@ feature {NONE} -- Implementation
 			-- Standard Cl commmand line used to compile generated code (Server and Client folders)
 		do
 			Result := clone (Common_standard_c_compiler_options)
-			Result.append (clone (current_working_directory))
+			Result.append (clone (execution_environment.current_working_directory))
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end
@@ -224,7 +219,7 @@ feature {NONE} -- Implementation
 			-- Standard Cl commmand line used to compile generated code (Commont folder for client)
 		do
 			Result := clone (Client_standard_c_compiler_options)
-			Result.append (clone (current_working_directory))
+			Result.append (clone (execution_environment.current_working_directory))
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end
@@ -233,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Standard Cl commmand line used to compile generated code (Common folder for server)
 		do
 			Result := clone (Server_standard_c_compiler_options)
-			Result.append (clone (current_working_directory))
+			Result.append (clone (execution_environment.current_working_directory))
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end

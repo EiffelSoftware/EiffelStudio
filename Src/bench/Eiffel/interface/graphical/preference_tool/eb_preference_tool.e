@@ -9,18 +9,18 @@ class EB_PREFERENCE_TOOL
 
 inherit
 	PREFERENCE_TOOL
-		rename
-			display as p_display
-		end;
-	PREFERENCE_TOOL
 		redefine
 			display 
-		select
-			display
-		end;
-	EB_CONSTANTS;
-	WINDOWS;
+		end
+
+	EB_CONSTANTS
+
+	WINDOWS
+
 	WINDOW_ATTRIBUTES
+
+	SYSTEM_CONSTANTS
+
 
 creation
 	make
@@ -52,7 +52,7 @@ feature -- Output
 				end;
 			   	set_x_y (new_x, new_y)
 			end;
-			p_display;
+			{PREFERENCE_TOOL} precursor
 			if not already_realized then
 				set_title (Interface_names.t_Preference_tool);
 				set_icon_name (Interface_names.t_Preference_tool);
@@ -74,7 +74,13 @@ feature {NONE} -- Constants
 
 	t_Tool_name: STRING is
 		once
-			Result := Interface_names.n_X_resource_name
+			if Platform_constants.is_windows then
+					-- For windows we need the id for the Icon
+				Result := Interface_names.i_Class_id.out
+			else
+					-- For unix we need this for the X resource file
+				Result := Interface_names.n_X_resource_name
+			end;
 		end;
 
 	m_File: STRING is

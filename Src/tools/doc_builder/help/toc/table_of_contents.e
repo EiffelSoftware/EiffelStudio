@@ -71,7 +71,7 @@ feature -- Initialization
 
 feature -- Access
 	
-	root: TABLE_OF_CONTENTS_NODE
+--	root: TABLE_OF_CONTENTS_NODE
 			-- Root node			
 	
 	name: STRING
@@ -140,7 +140,7 @@ feature -- Query
 feature -- Commands	
 
 	sort is
-			-- Sort.  Sort according to the follwing sequence and rules:
+			-- Sort.  Sort according to the following sequence and rules:
 			--	1) Filters out nodes not applicable to output type.  If a node needs to be moved
 			--     it is filtered here and added back later in the correct location
 			--  2) Sorts nodes which passed filter process in 1) according to sorting options specified

@@ -192,11 +192,14 @@ feature -- Processing
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- process interface
+		local
+			impl_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 		do
+			create impl_interface.make_from_interface (interface_descriptor)
 			c_type := clone (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
 			c_header_file := clone (interface_descriptor.c_header_file_name)
-			eiffel_type := clone (interface_descriptor.eiffel_class_name)
+			eiffel_type := clone (impl_interface.eiffel_class_name)
 
 			is_interface := True
 

@@ -58,28 +58,29 @@ feature -- Access
 					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_char then
 					create {CHARACTER_VALUE} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_character (l_icd_prepared))
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
---					do_nothing
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+				when 
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_i1,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 
+				then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
+				when 
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_i2,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 
+				then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
---					do_nothing
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i4,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_i,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u4,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u 					
 				then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer (l_icd_prepared))
 				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u4,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u 
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_i8,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u8
 				then
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_64 (l_icd_prepared))
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
---					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_real (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r8 then

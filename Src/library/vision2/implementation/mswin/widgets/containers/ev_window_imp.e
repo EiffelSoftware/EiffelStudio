@@ -281,8 +281,6 @@ feature -- Status setting
 
 feature -- Element change
 
-	--|FIXME This should no longer be required.
-	--|Julian Rogers  12021999
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
@@ -882,6 +880,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/22 20:15:15  rogers
+--| Removed FIXME on set_parent as this has always worked correctly, and the FIXME was added mistakenly.
+--|
 --| Revision 1.22  2000/02/22 18:21:01  pichery
 --| added 4 times the same small hack with `wel_parent' in order to
 --| avoid a Segmentation Violation with EiffelBench 4.6.008

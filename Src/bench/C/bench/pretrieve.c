@@ -17,6 +17,9 @@
 #include "retrieve.h"
 #include "store.h"
 
+extern void esys();
+extern void allocate_gen_buffer();
+
 char *partial_retrieve(f_desc, position, nb_obj)
 EIF_INTEGER f_desc;
 long position, nb_obj;
@@ -28,7 +31,7 @@ long position, nb_obj;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
-	lseek(r_fides, position, SEEK_SET);
+	if (lseek(r_fides, position, SEEK_SET) == -1) esys();	/* bail out */
 	allocate_gen_buffer();
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
@@ -51,7 +54,7 @@ long position;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
-	lseek(r_fides, position, SEEK_SET);
+	if (lseek(r_fides, position, SEEK_SET) == -1) esys();	/* bail out */
 	allocate_gen_buffer();
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */

@@ -236,6 +236,22 @@ feature -- Window sizes
 	tree_x: INTEGER;
 	tree_y: INTEGER;
 
+		-- Object tool generator
+	object_tool_generator_width: INTEGER
+	object_tool_generator_height: INTEGER
+	object_tool_generator_x: INTEGER
+	object_tool_generator_y: INTEGER
+
+		-- Object command generator
+	object_command_generator_width: INTEGER
+	object_command_generator_height: INTEGER
+
+		-- Class selector
+	class_selector_width: INTEGER
+	class_selector_height: INTEGER
+	class_selector_x: INTEGER
+	class_selector_y: INTEGER
+
 feature {NONE} -- Integer Values initialization
 
 	initialize_window_size_values (resource: RESOURCE_TABLE) is
@@ -252,7 +268,7 @@ feature {NONE} -- Integer Values initialization
 			cmd_cat_x := resource.get_integer ("cmd_cat_x", 0);
 			cmd_cat_y := resource.get_integer ("cmd_cat_y", 315);
 
-			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 300);
+			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 365);
 			cmd_inst_ed_height := resource.get_pos_integer ("cmd_inst_ed_height", 167);
 
 			-- cmd_type_ed_width := resource.get_pos_integer ("cmd_type_ed_width", 500);
@@ -264,8 +280,8 @@ feature {NONE} -- Integer Values initialization
 			cont_cat_x := resource.get_integer ("cont_cat_x", 0);
 			cont_cat_y := resource.get_integer ("cont_cat_y", 0);
 
-			cont_ed_width := resource.get_pos_integer ("cont_ed_width", 400);
-			cont_ed_height := resource.get_pos_integer ("cont_ed_height", 575);
+			cont_ed_width := resource.get_pos_integer ("cont_ed_width", 310);
+			cont_ed_height := resource.get_pos_integer ("cont_ed_height", 410);
 
 			help_wnd_width := resource.get_pos_integer ("help_wnd_width", 450);
 			help_wnd_height := resource.get_pos_integer ("help_wnd_height", 500);
@@ -291,6 +307,19 @@ feature {NONE} -- Integer Values initialization
 			tree_height := resource.get_pos_integer ("tree_height", 270);
 			tree_x := resource.get_integer ("tree_x", 345);
 			tree_y := resource.get_integer ("tree_y", 0);
+
+			object_tool_generator_width := resource.get_pos_integer ("object_tool_generator_width", 505)
+			object_tool_generator_height := resource.get_pos_integer ("object_tool_generator_height", 580)
+			object_tool_generator_x := resource.get_pos_integer ("object_tool_generator_x", 0)
+			object_tool_generator_y := resource.get_pos_integer ("object_tool_generator_y", 0)
+
+			object_command_generator_width := resource.get_pos_integer ("object_command_generator_width", 410)
+			object_command_generator_height := resource.get_pos_integer ("object_command_generator_height", 135)
+
+			class_selector_width := resource.get_pos_integer ("class_selector_width", 300)
+			class_selector_height := resource.get_pos_integer ("class_selector_height", 300)
+			class_selector_x := resource.get_pos_integer ("class_selector_x", 0)
+			class_selector_y := resource.get_pos_integer ("class_selector_y", 0)
 
 		end;
 

@@ -134,6 +134,15 @@ struct exprint {
 	int from;				/* Where the routine comes from */
 };
 
+/* Improved string structure (with number of bytes used and length)
+ * for the exception trace string 
+ */
+typedef struct _smart_string {
+	char *area;		/* Pointer to zone where data is stored */
+	long used;		/* Number of bytes actually used */
+	long size;		/* Length of the area */
+} SMART_STRING;
+
 /* Flags for ex_nomem */
 #define MEM_FULL	0x01	/* A simple "Out of memory" condition */
 #define MEM_FSTK	0x02	/* The exception trace stack is full */

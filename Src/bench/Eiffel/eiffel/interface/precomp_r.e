@@ -44,6 +44,7 @@ feature
 					!!workb;
 					!!workbench_file.make_open_read (Precompilation_file_name);
 					workb ?= workb.retrieved (workbench_file);
+					workbench_file.close;
 	
 					-- Check that it is a precompiled cluster
 	
@@ -67,6 +68,12 @@ feature
 					end;
 				end;
 			else
+				if 
+					workbench_file /= Void and then 
+					not workbench_file.is_closed 
+				then
+					workbench_file.close
+				end;
 				retried := False;
 				!! vd41;	
 				vd41.set_path (project_name);

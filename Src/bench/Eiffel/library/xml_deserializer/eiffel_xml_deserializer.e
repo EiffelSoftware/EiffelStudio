@@ -501,7 +501,7 @@ feature {NONE} -- Array manipulations
 			l_element_type_id: INTEGER
 			l_array_type: STRING
 		do
-			if not a_array_element_type.is_equal (none_node) then
+			if lower <= upper then
 				l_element_type_id := dynamic_type_from_id (a_array_element_type.to_integer)
 					-- Create ARRAY
 				l_array_type := "ARRAY ["

@@ -205,7 +205,7 @@ feature {NONE} -- WEL Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		local
-			clip: EV_RECTANGLE
+			clip: EV_CLIP
 			pt: EV_COORDINATES
 			expose_event_data: EV_EXPOSE_EVENT_DATA
 		do

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	clip_region: EV_RECTANGLE is
+	clip_region: EV_CLIP is
 			-- Exposed region
 		do
 			Result := implementation.clip_region

@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	ECOM_VAR_TYPE
+		export 
+			{NONE} all
+		end
+
 	ECOM_PARAM_FLAGS
 		export
 			{NONE} all
@@ -604,11 +609,11 @@ feature -- Basic Operations
 				interface_desc.functions.after
 			loop
 				if is_propertyget (interface_desc.functions.item.invoke_kind) then
-					prop_get_functions.extend (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					prop_get_functions.force (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 				elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
-					prop_put_functions.extend (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 				elseif is_propertyputref (interface_desc.functions.item.invoke_kind) then
-					prop_put_functions.extend (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 				else
 					Result.append (function_case (interface_desc.functions.item))
 				end
@@ -718,8 +723,7 @@ feature -- Basic Operations
 				Result.append (Open_curly_brace)
 				Result.append (New_line_tab_tab_tab)
 
-				create visitor
-				visitor.visit (prop_desc.data_type)
+				visitor := prop_desc.data_type.visitor
 
 				Result.append ("pVarResult")
 				Result.append (Struct_selection_operator)
@@ -758,8 +762,7 @@ feature -- Basic Operations
 					Result.append (Open_curly_brace)
 					Result.append (New_line_tab_tab_tab)
 
-					create visitor
-					visitor.visit (prop_desc.data_type)
+					visitor := prop_desc.data_type.visitor
 	
 					Result.append (New_line_tab_tab)
 
@@ -1045,8 +1048,7 @@ feature -- Basic Operations
 				until
 					func_desc.arguments.after
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor
 
 					Result.append (If_keyword)
 					Result.append (Space_open_parenthesis)
@@ -1233,6 +1235,45 @@ feature -- Basic Operations
 						Result.append (New_line_tab_tab_tab)
 						Result.append (Tab)
 
+					elseif visitor.is_structure then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (Memcpy)
+						Result.append (Space_open_parenthesis)
+						Result.append (Ampersand)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Comma_space)
+						if not (visitor.vt_type = Vt_variant) then
+							Result.append (Ampersand)
+							Result.append (Open_parenthesis)
+						end
+						Result.append (Tmp_variable_name)
+						Result.append (Space)
+						Result.append (Open_bracket)
+						Result.append_integer (counter)
+						Result.append (Close_bracket)
+						Result.append (Dot)
+						Result.append (vartype_namer.variant_field_name (visitor))
+						if not (visitor.vt_type = Vt_variant) then
+							Result.append (Close_parenthesis)
+						end
+						Result.append (Comma_space)
+						Result.append (sizeof)
+						Result.append (Space_open_parenthesis)
+						Result.append (visitor.c_type)
+						Result.append (Close_parenthesis)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
 					else
 						Result.append (visitor.c_type)
 						Result.append (Space)
@@ -1309,14 +1350,15 @@ feature -- Basic Operations
 				end
 			end
 			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 
 				Result.append (visitor.c_type)
 				Result.append (Space)
 				Result.append (C_result)
-				Result.append (Space_equal_space)
-				Result.append (Zero)
+				if not visitor.is_structure then
+					Result.append (Space_equal_space)
+					Result.append (Zero)
+				end
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
@@ -1330,12 +1372,31 @@ feature -- Basic Operations
 				local_buffer.append (New_line_tab_tab_tab)
 				local_buffer.append (Tab)
 
-
-				local_buffer.append ("pVarResult")
-				local_buffer.append (Struct_selection_operator)
-				local_buffer.append (vartype_namer.variant_field_name (visitor))
-				local_buffer.append (Space_equal_space)
-				local_buffer.append (C_result)
+				if visitor.is_structure then
+					local_buffer.append (memcpy)
+					local_buffer.append (Space_open_parenthesis)
+					local_buffer.append (Ampersand)
+					local_buffer.append (Open_parenthesis)
+					local_buffer.append ("pVarResult")
+					local_buffer.append (Struct_selection_operator)
+					local_buffer.append (vartype_namer.variant_field_name (visitor))
+					local_buffer.append (Close_parenthesis)
+					local_buffer.append (Comma_space)
+					local_buffer.append (Ampersand)
+					local_buffer.append (C_result)
+					local_buffer.append (Comma_space)
+					local_buffer.append (Sizeof)
+					local_buffer.append (Space_open_parenthesis)
+					local_buffer.append (visitor.c_type)
+					local_buffer.append (Close_parenthesis)
+					local_buffer.append (Close_parenthesis)
+				else
+					local_buffer.append ("pVarResult")
+					local_buffer.append (Struct_selection_operator)
+					local_buffer.append (vartype_namer.variant_field_name (visitor))
+					local_buffer.append (Space_equal_space)
+					local_buffer.append (C_result)
+				end
 				local_buffer.append (Semicolon)
 				local_buffer.append (New_line_tab_tab_tab)
 				local_buffer.append (Tab)
@@ -1369,8 +1430,7 @@ feature -- Basic Operations
 			end
 
 			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 
 				Result.append (Ampersand)
 				Result.append (C_result)
@@ -1818,6 +1878,7 @@ feature -- Basic Operations
 		local
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			alias_descriptor: WIZARD_ALIAS_DESCRIPTOR
 			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
@@ -1835,6 +1896,20 @@ feature -- Basic Operations
 				if (user_defined /= Void) then
 					an_index := user_defined.type_descriptor_index
 					a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
+					from
+						alias_descriptor ?= a_type_descriptor
+					until
+						alias_descriptor = Void
+					loop
+						user_defined ?= alias_descriptor.type_descriptor
+						if (user_defined /= Void) then
+							an_index := user_defined.type_descriptor_index
+							a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
+							alias_descriptor ?= a_type_descriptor
+						else
+							alias_descriptor := Void
+						end
+					end
 					if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer then
 						tmp_interface_descriptor ?= a_type_descriptor
 					else

@@ -151,7 +151,7 @@ feature -- Node
 		
 feature -- Commands		
 		
-	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN; a_desc: STRING) is
+	sort_toc (a_filter: DOCUMENT_FILTER; index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN; a_desc: STRING) is
 			-- Sort `loaded toc'.  (A new sorted is created from the current toc)
 		do	
 			create loaded_toc.make_from_toc (loaded_toc)
@@ -163,6 +163,7 @@ feature -- Commands
 				loaded_toc.set_name (a_desc)
 			end			
 			
+			loaded_toc.set_filter (a_filter)
 			loaded_toc.set_make_index_root (index_root)
 			loaded_toc.set_filter_empty_nodes (not empty_elements)
 			loaded_toc.set_filter_nodes_no_index (not no_index)

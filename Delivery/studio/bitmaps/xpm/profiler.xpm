@@ -1,25 +1,28 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 2 1",
+static char *profiler[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        4            1",
 /* colors */
-"` c #000000",
-"a c #C0C0C0",
+". c #000000",
+"# c #c0c0c0",
+"a c #0000ff",
+"b c #ff00ff",
 /* pixels */
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaa``````aaaaa",
-"aaaa`aa`aaa`aaaa",
-"aaaa`aa`aaa`aaaa",
-"aaaa`a``aa`aaaaa",
-"aaaa`a````aaaaaa",
-"aaaaaa`aaaaaaaaa",
-"aaaaaa`aaaaaaaaa",
-"aaa``````aaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa",
-"aaaaaaaaaaaaaaaa"
+"################",
+"#.##############",
+"#.##############",
+"#.##############",
+"#.b####a######b#",
+"#.#b##a#a####b##",
+"#.##ba###aa#b###",
+"#.##ab#####b####",
+"#.#a#b#####ba###",
+"#.a###b###b##a##",
+"#.#####b#b####a#",
+"#.######b#######",
+"#.##############",
+"#.##############",
+"#..............#",
+"################"
 };
+SIMPLE  =                    T                                                  BITPIX  =                    8                                                  NAXIS   =                    2                                                  NAXIS1  =                   16                                                  NAXIS2  =                   16                                                  HISTORY Written by XV 3.10a                                                     END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             응응응응응응응응�

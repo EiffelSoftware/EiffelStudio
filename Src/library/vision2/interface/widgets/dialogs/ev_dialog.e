@@ -15,7 +15,7 @@ class
 inherit
 
 	EV_WINDOW
-		redefine
+		redefine 
 			make,
 			implementation
 		end
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is
 			-- Create the dialog box.
 		do
-			!EV_DIALOG_IMP!implementation.make (par)
+			!!implementation.make (par)
 			implementation.set_interface (Current)
 			implementation.build
 			implementation.plateform_build (par.implementation)

@@ -82,10 +82,61 @@ feature -- Access
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
+		local
+			i: INTEGER
+			sel_rows: like selected_rows
 		do
 			to_implement ("EV_GRID_I.selected_items")
+			if single_row_selection_enabled or multiple_row_selection_enabled then
+				create Result.make (0)
+				from
+					sel_rows := selected_rows
+					i := 1
+				until
+					i > sel_rows.count
+				loop
+					Result.append (sel_rows.i_th (i).selected_items)
+					i := i + 1
+				end
+			else
+				Result := internal_selected_items
+			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	clear_selection is
+			-- Clear the selected rows or items if any
+		local
+			sel_rows: like selected_rows
+			sel_items: like selected_items
+		do
+			fixme ("Implement EV_GRID_I.clear_selection")
+			if single_row_selection_enabled or multiple_row_selection_enabled then
+				sel_rows := selected_rows
+				from
+					sel_rows.start
+				until
+					sel_rows.after
+				loop
+					sel_rows.item.implementation.disable_select_internal
+					sel_rows.remove
+				end
+			else
+				sel_items := selected_items
+				from
+					sel_items.start
+				until
+					sel_items.after
+				loop
+					sel_items.item.implementation.disable_select_internal
+					sel_items.remove
+				end
+			end
+			redraw_client_area
+		ensure
+			selected_items_empty: selected_items.is_empty
+			selected_rows_empty: selected_rows.is_empty
 		end
 		
 	is_header_displayed: BOOLEAN
@@ -214,6 +265,7 @@ feature -- Status setting
 			-- unselecting any previous rows.
 		do
 			to_implement ("EV_GRID_I.enable_single_row_selection")
+			clear_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
@@ -227,6 +279,7 @@ feature -- Status setting
 			-- Multiple rows may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_row_selection")
+			clear_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := True
@@ -240,6 +293,7 @@ feature -- Status setting
 			-- unselecting any previous items.
 		do
 			to_implement ("EV_GRID_I.enable_single_item_selection")
+			clear_selection
 			single_item_selection_enabled := True
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
@@ -253,6 +307,7 @@ feature -- Status setting
 			-- Multiple items may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_item_selection")
+			clear_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := True
 			multiple_row_selection_enabled := False
@@ -948,6 +1003,7 @@ feature {NONE} -- Drawing implementation
 			create grid_rows.make
 			
 			create internal_selected_rows.make (0)
+			create internal_selected_items.make (0)
 			
 			create drawer.make_with_grid (Current)
 			create drawable
@@ -986,16 +1042,19 @@ feature {NONE} -- Drawing implementation
 				-- Current in response to their re-sizing.
 			header.item_resize_actions.extend (agent header_item_resizing)
 			header.item_resize_end_actions.extend (agent header_item_resize_ended)
-			
+
 			header_viewport.extend (header)
-			header_viewport.set_minimum_height (default_header_height)
-			header_viewport.set_item_size (maximum_header_width, default_header_height)
+			header_viewport.set_minimum_height (default_header_height.max (header.minimum_height))
+			header.set_minimum_width (maximum_header_width)
+			header_viewport.set_item_size (maximum_header_width, default_header_height.max (header.minimum_height))
 			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
 			drawable.pointer_button_press_actions.extend (agent grid_pressed)
 			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
 			update_scroll_bar_spacer
+			
+			enable_single_item_selection
 		end
 		
 	recompute_column_offsets is
@@ -1603,21 +1662,17 @@ feature {EV_GRID_ROW_I} -- Implementation
 	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		-- List of selected rows
 
+	internal_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
+		-- List of selected items, only used when in item selection modes
+
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'
 		do
-			if single_row_selection_enabled then
+			if single_row_selection_enabled or multiple_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
-				from
-					internal_selected_rows.start
-				until
-					internal_selected_rows.after
-				loop
-					internal_selected_rows.item.implementation.disable_select_internal
-					internal_selected_rows.remove
-				end				
+				clear_selection			
 			end
 			if a_row_i.is_selected then
 					-- Add to grid's selected rows
@@ -1626,6 +1681,23 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					end
 			else
 				internal_selected_rows.prune_all (a_row_i.interface)
+			end
+		end
+
+	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
+			-- Update the selection status for `a_item_i' in `Current'
+		do
+			if single_item_selection_enabled or multiple_item_selection_enabled then
+					-- Deselect existing items and then remove from list
+				clear_selection			
+			end
+			if a_item_i.is_selected then
+					-- Add to grid's selected rows
+					if not internal_selected_items.has (a_item_i.interface) then
+						internal_selected_items.extend (a_item_i.interface)
+					end
+			else
+				internal_selected_items.prune_all (a_item_i.interface)
 			end
 		end
 

@@ -19,6 +19,19 @@ inherit
 			implementation
 		end
 
+feature -- Status setting
+
+	set_position (value: INTEGER) is
+			-- Make `value' the new position of the splitter.
+			-- `value' is given in pixel.
+			-- Has an effect only if the split area has
+			-- already a child.
+		require
+			exists: not destroyed
+		do
+			implementation.set_position (value)
+		end
+
 feature {EV_MENU_ITEM} -- Implementation
 	
 	implementation: EV_SPLIT_AREA_I	

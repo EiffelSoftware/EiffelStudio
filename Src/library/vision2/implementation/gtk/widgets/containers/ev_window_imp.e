@@ -220,6 +220,7 @@ feature -- Status setting
 			update_request_size
 			default_width := a_width
 			default_height := a_height
+			feature {EV_GTK_EXTERNALS}.gdk_window_resize (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 

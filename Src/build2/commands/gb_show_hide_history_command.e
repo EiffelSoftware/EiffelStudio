@@ -24,7 +24,7 @@ inherit
 		end
 
 create
-	default_create
+	make
 	
 feature {GB_COMMAND_HANDLER} -- Initialization
 

@@ -120,7 +120,7 @@ feature -- Basic operations
 			end
 			
 		perform_close is
-				-- Actually perfrom the closing of the project.
+				-- Actually perform the closing of the project.
 			do
 				object_handler.clear_all_objects
 					-- This must be called before we hide the tools, 
@@ -147,6 +147,10 @@ feature -- Basic operations
 					-- last project are lost.
 				builder_window.restore_to_default
 				display_window.restore_to_default
+				
+					-- Clear the component viewer
+					
+				component_viewer.clear
 				
 					-- Hide the history window.
 				if history.history_dialog.is_show_requested then

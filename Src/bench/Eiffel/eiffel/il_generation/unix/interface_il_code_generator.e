@@ -208,8 +208,7 @@ feature -- IL Generation
 							generate_local_feature (feat, Void, class_type, True)
 							mark_as_treated (feat)
 						else
-								-- Case of local renaming or implicit
-								-- covariant redefinition.
+								-- Case of local renaming or implicit covariant redefinition.
 							generate_inherited_feature (feat, Void, class_type)
 							mark_as_treated (feat)
 						end
@@ -269,10 +268,19 @@ feature -- IL Generation
 							generate_local_feature (feat, inh_feat, class_type, False)
 							mark_as_treated (feat)
 						else
-								-- Case of local renaming or implicit
-								-- covariant redefinition.
-							generate_inherited_feature (feat, inh_feat, class_type)
-							mark_as_treated (feat)
+								-- Case of local renaming or implicit covariant redefinition.
+								-- Except that we do not generate redefinition of `finalize'
+								-- from SYSTEM_OBJECT in ANY if `current_class' does not
+								-- conform to DISPOSABLE. This enables a speed up by about
+								-- 30/40% at execution time because .NET GC really slows down
+								-- when you define `Finalize' in a descendant of SYSTEM_OBJECT.
+							if
+								not feat.rout_id_set.has (System.object_finalize_id) 
+								or else System.disposable_descendants.has (current_class)
+							then
+								generate_inherited_feature (feat, inh_feat, class_type)
+								mark_as_treated (feat)
+							end
 						end
 					else
 							-- Nothing to be done here. Parent was deferred and we

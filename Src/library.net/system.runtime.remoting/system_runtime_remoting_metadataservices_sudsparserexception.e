@@ -1,0 +1,14 @@
+indexing
+	Generator: "Eiffel Emitter 2.7b2"
+	external_name: "System.Runtime.Remoting.MetadataServices.SUDSParserException"
+
+external class
+	SYSTEM_RUNTIME_REMOTING_METADATASERVICES_SUDSPARSEREXCEPTION
+
+inherit
+	SYSTEM_EXCEPTION
+	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
+
+create {NONE}
+
+end -- class SYSTEM_RUNTIME_REMOTING_METADATASERVICES_SUDSPARSEREXCEPTION

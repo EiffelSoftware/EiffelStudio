@@ -345,3 +345,78 @@ EIF_INTEGER i, j, k;
 	return new_area;
 }
 
+
+#ifdef __WINDOWS_386__
+
+/* DLL Stuff */
+
+#define EIF_DLL_CHUNK 20
+
+struct eif_dll_info {
+	char *dll_name;
+	HANDLE dll_module_ptr;
+};
+
+struct eif_dll_info *eif_dll_table = (struct eif_dll_info *) 0;
+
+int eif_dll_capacity = EIF_DLL_CHUNK;
+int eif_dll_count = 0;
+
+HANDLE eif_load_dll(module_name)
+char *module_name;
+{
+	HANDLE a_result;
+	char *m_name;
+	int i;
+
+	if (eif_dll_table == (struct eif_dll_info *) 0) {
+		eif_dll_table = malloc(sizeof(struct eif_dll_info) * eif_dll_capacity);
+		if (eif_dll_table == (struct eif_dll_info *) 0)
+			enomem();
+	}
+
+	for (i=0; i < eif_dll_count; i++) {
+		if (strcasecmp(eif_dll_table[i].dll_name, module_name) == 0)
+			return eif_dll_table[i].dll_module_ptr;
+	}
+
+	if (eif_dll_count == eif_dll_capacity) {
+		eif_dll_capacity += EIF_DLL_CHUNK;
+		eif_dll_table = realloc(eif_dll_table, sizeof(struct eif_dll_info) * eif_dll_capacity);
+
+		if (eif_dll_table == (struct eif_dll_info *) 0)
+			enomem();
+	}
+
+	if ((m_name = (char *) malloc(strlen(module_name)+1)) == (char *) 0)
+		enomem();
+	strcpy (m_name, module_name);
+
+	a_result = LoadLibrary(module_name);
+
+	eif_dll_table[eif_dll_count].dll_name = m_name;
+	eif_dll_table[eif_dll_count].dll_module_ptr = a_result;
+
+	eif_dll_count++;
+
+	return a_result;
+}
+
+void eif_free_dlls()
+{
+	int i;
+	HANDLE module_ptr;
+
+	if (eif_dll_table) {
+		for (i=0; i< eif_dll_count; i++) {
+			free(eif_dll_table[i].dll_name);
+
+			module_ptr = eif_dll_table[i].dll_module_ptr;
+			if (module_ptr > 32)
+				FreeLibrary(module_ptr);
+		}
+		free(eif_dll_table);
+	}
+}
+
+#endif

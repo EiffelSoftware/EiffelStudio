@@ -14,6 +14,8 @@ inherit
 
 	SHARED_GENERATION
 
+	SHARED_COMPILATION_MODES
+
 creation
 	make
 
@@ -460,6 +462,14 @@ feature -- Plug and Makefile file
 			final_mode: BOOLEAN
 			plug_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
+
+			has_argument: BOOLEAN
+			root_cl: CLASS_C
+			dtype: INTEGER
+			rout_info: ROUT_INFO
+			root_feat: FEATURE_I
+			rcorigin: INTEGER
+			rcoffset: INTEGER
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -688,7 +698,36 @@ feature -- Plug and Makefile file
 			buffer.putstring (System.system_name)
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putstring (System.version_tag)
-			buffer.putstring (";%N")
+			buffer.putstring (";%N%N")
+
+			if not final_mode then
+				root_cl := System.root_class.compiled_class
+				dtype := root_cl.types.first.type_id - 1
+				if not Compilation_modes.is_precompiling and then System.creation_name /= Void then
+					root_feat := root_cl.feature_table.item (System.creation_name)
+					has_argument := root_feat.has_arguments
+					rout_info := System.rout_info_table.item (root_feat.rout_id_set.first)
+					rcorigin := rout_info.origin.id
+					rcoffset := rout_info.offset
+				else
+					rcorigin := -1
+				end
+
+				buffer.putstring ("%Tegc_rcorigin = ")
+				buffer.putint (rcorigin)
+				buffer.putstring (";%N%Tegc_rcdt = ")
+				buffer.putint (dtype)
+				buffer.putstring (";%N%Tegc_rcoffset = ")
+				buffer.putint (rcoffset)
+				buffer.putstring (";%N%Tegc_rcarg = ")
+				if has_argument then
+					buffer.putstring ("1")
+				else
+					buffer.putstring ("0")
+				end
+				buffer.putstring (";%N%N")
+			end
+
 			buffer.putstring ("%Tegc_platform_level = 0x00000D00;%N}%N")
 			buffer.close_c
 

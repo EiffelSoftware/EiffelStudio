@@ -137,7 +137,7 @@ rt_public void dir_rewind(EIF_POINTER d)
  * Looking for a specific entry.
  */
 
-rt_public char *dir_search(EIF_POINTER d, char *name)
+rt_public EIF_POINTER dir_search(EIF_POINTER d, char *name)
           		/* Directory where search is made */
            		/* Entry we are looking for */
 {
@@ -159,10 +159,10 @@ rt_public char *dir_search(EIF_POINTER d, char *name)
 	eif_free (filename);
 	if (h != INVALID_HANDLE_VALUE) {
 		FindClose (h);
-		return (char *) 1;
+		return (EIF_POINTER) 1;
 	}
 
-	return (char *) 0;		/* Not found */
+	return NULL;		/* Not found */
 
 #else /* UNIX, VMS */
 	/* Look for a given entry throughout the directory and return a pointer
@@ -184,13 +184,13 @@ rt_public char *dir_search(EIF_POINTER d, char *name)
 	for (dp = readdir(dirp); dp != (DIRENTRY *) 0; dp = readdir(dirp))
 #ifdef DIRNAMLEN
 		if (dp->d_namlen == len && 0 == strcmp(dp->d_name, name))
-			return (char *) dp;
+			return (EIF_POINTER) dp;
 #else
 		if (0 == strcmp(dp->d_name, name))
-			return (char *) dp;
+			return (EIF_POINTER) dp;
 #endif
 
-	return (char *) 0;		/* Not found */
+	return NULL;		/* Not found */
 #endif
 }
 

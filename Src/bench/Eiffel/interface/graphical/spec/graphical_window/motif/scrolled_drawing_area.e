@@ -1,7 +1,8 @@
 indexing
 
 	description: 
-		"Scrolled window with a drawing area.";
+		"Scrolled window with a drawing area. It is responsible %
+		% for managing the drawing area.";
 	date: "$Date$";
 	revision: "$Revision $"
 

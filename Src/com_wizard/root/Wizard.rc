@@ -42,7 +42,7 @@ BEGIN
     LTEXT           "Destination Folder",Generate_Static,110,126,100,10
     PUSHBUTTON      "Browse",Browse2_Button,290,135,50,14
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    PUSHBUTTON      "< &Back",IDOK2,130,160,50,14
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
     LTEXT           "Paths",Introduction_Static,110,5,230,10
     LTEXT           "A Definition Files is either an Interface Definition Language (IDL) file or a Type Library (.tlb) file. A type library can be linked to an executable or dll as a resource. Enter the component definition file.",
                     Paths_Static,110,30,230,25

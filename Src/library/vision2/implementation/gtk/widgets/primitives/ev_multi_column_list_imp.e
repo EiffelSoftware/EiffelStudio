@@ -524,16 +524,27 @@ feature -- Status setting
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS.
+		local
+			sel_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			sel_item: EV_MULTI_COLUMN_LIST_ROW
 		do
 			multiple_selection_enabled := False
 			ignore_select_callback := True
 			selection_mode_is_single := True
-			C.gtk_clist_unselect_all (list_widget)
+			sel_items := selected_items
+			if not sel_items.is_empty then
+				sel_item := sel_items.first
+			end	
 			C.gtk_clist_set_selection_mode (
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
+			if sel_item /= Void then
+				sel_item.enable_select
+				sel_item.select_actions.call ([])
+			end	
 			ignore_select_callback := False
+		
 		end
 
 	select_item (an_index: INTEGER) is

@@ -1312,7 +1312,6 @@ feature {NONE} -- open new class
 						had_selection := False
 					end
 				end
-				is_typing := True
 			end
 		end
 
@@ -1334,11 +1333,6 @@ feature {NONE} -- open new class
 					else
 						cluster_had_selection := False
 					end
-				end
-				if k.code /= Key_csts.Key_enter then
-					is_typing := True
-				else
-					is_typing := False
 				end
 			end
 		end
@@ -1362,7 +1356,6 @@ feature {NONE} -- open new class
 						feature_had_selection := False
 					end
 				end
-				is_typing := True
 			end
 		end
 
@@ -1375,9 +1368,6 @@ feature {NONE} -- open new class
 	cluster_had_selection: BOOLEAN
 			-- Did the cluster address had a selection when the user hit the key?
 			-- Only meaningful if `last_key_was_backspace'.
-
-	is_typing: BOOLEAN
-			-- Is the user typing in an address combo box (we don't complete otherwise).
 
 	had_selection: BOOLEAN
 			-- Did the class address had a selection when the user hit the key?
@@ -1449,7 +1439,6 @@ feature {NONE} -- open new class
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or
-									not is_typing or
 									last_caret_position /= nb + 1 or
 									not Workbench.system_defined
 				if nb > 0 and not do_not_complete and last_key_was_backspace and had_selection then
@@ -1457,7 +1446,6 @@ feature {NONE} -- open new class
 					nb := nb - 1
 					truncated := True
 				end
-				is_typing := False
 				
 				if not do_not_complete and nb > 1 then
 					list := System.classes
@@ -1540,7 +1528,6 @@ feature {NONE} -- open new class
 				end
 			end
 			class_address.change_actions.resume
-			is_typing := False
 		end
 
 	type_cluster is
@@ -1568,14 +1555,12 @@ feature {NONE} -- open new class
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or
-									not is_typing or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and cluster_had_selection then
 					str.keep_head (nb - 1)
 					nb := nb - 1
 					truncated := True
 				end
-				is_typing := False
 				
 				if not do_not_complete and nb > 0 then
 					list := Universe.clusters
@@ -1650,7 +1635,6 @@ feature {NONE} -- open new class
 				end
 			end
 			cluster_address.change_actions.resume
-			is_typing := False
 		end
 
 	type_feature is
@@ -1679,14 +1663,12 @@ feature {NONE} -- open new class
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or
-									not is_typing or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and feature_had_selection then
 					str.keep_head (nb - 1)
 					nb := nb - 1
 					truncated := True
 				end
-				is_typing := False
 	
 				if
 					current_typed_class /= Void and then
@@ -1766,7 +1748,6 @@ feature {NONE} -- open new class
 				end
 			end
 			feature_address.change_actions.resume
-			is_typing := False
 		end
 
 	current_class: CLASS_C is

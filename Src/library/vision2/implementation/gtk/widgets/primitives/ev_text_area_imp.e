@@ -13,7 +13,7 @@ class
 inherit
 	EV_TEXT_AREA_I
 
-	EV_TEXT_COMPONENT_IMP	
+	EV_TEXT_COMPONENT_IMP
 	
 creation
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-        text: STRING is
+	text: STRING is
 		local
 			p: POINTER
 		do
@@ -40,13 +40,20 @@ feature -- Access
 			Result.from_c (p)
 		end
 
-	text_length: INTEGER is
-		do
-			Result := gtk_text_get_length (widget)
-		end
+--	text_length: INTEGER is
+--		do
+--			Result := gtk_text_get_length (widget)
+--		end
 
 feature -- Status setting
 	
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		do
+			gtk_text_set_editable (widget, flag)
+		end
+
 	insert_text (txt: STRING) is
 		local
 			a: ANY
@@ -66,7 +73,7 @@ feature -- Status setting
 	
 	append_text (txt: STRING) is
 		do
-			set_position (0)
+			set_position (text_length)
 			insert_text (txt)
 		end
 	

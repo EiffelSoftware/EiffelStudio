@@ -17,6 +17,8 @@ inherit
 			{EV_MULTI_COLUMN_LIST_ROW_IMP} widget
 		undefine
 			build
+		redefine
+			destroy
 		end
 
 creation
@@ -48,12 +50,12 @@ feature -- Access
 			Result := c_gtk_clist_rows (widget)
 		end
 
-	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-			Result := ev_children @ index
-		end
+--	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+--			-- Give the item of the list at the zero-base
+--			-- `index'.
+--		do
+--			Result := ev_children @ index
+--		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected, for a multiple
@@ -105,6 +107,13 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	destroy is
+		-- Destroy screen widget implementation and EV_LIST_ITEM objects
+	do
+		clear_items
+		{EV_PRIMITIVE_IMP} Precursor 
+	end
 
 	show_title_row is
 			-- Show the row of the titles.
@@ -166,6 +175,22 @@ feature -- Element change
 			gtk_clist_set_row_height (widget, value)
 		end
 
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.remove_implementation
+				ev_children.forth
+			end
+			ev_children.wipe_out
+			
+			gtk_clist_clear (widget)
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
@@ -176,20 +201,16 @@ feature -- Event : command association
 			add_command ("unselect_row", a_command, arguments)
 		end
 
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when an item is
-			-- selected.
+	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when a column is clicked.
 		do
-			check
-				not_yet_implemented: False
-			end
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
-	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			-- We have to store the children of the
-			-- list because gtk doesn't.
+--	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+--			-- We have to store the children of the
+--			-- list because gtk doesn't.
 
 	add_item (item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `item' to the list

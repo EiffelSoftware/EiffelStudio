@@ -146,7 +146,7 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER} -- Status setting
 			layout_item_object_set: layout_item.object = Current
 		end
 
-feature {GB_OBJECT_HANDLER, GB_DELETE_TOOL_BAR_BUTTON, GB_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
+feature {GB_OBJECT_HANDLER, GB_DELETE_OBJECT_COMMAND, GB_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
 
 	unparent is
 			-- Removed `Current' from its parents. All representations

@@ -50,7 +50,6 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			tf_text: STRING
 			temp_text: ANY
 		do
 			temp_text := a_text.to_c

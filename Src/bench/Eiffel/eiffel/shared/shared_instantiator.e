@@ -9,7 +9,7 @@ feature {NONE}
 	Instantiator: INSTANTIATOR is
 			-- Generic tool
 		once
-			!!Result.make;
+			Result := System.instantiator;
 		end;
 
 end

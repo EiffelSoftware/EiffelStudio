@@ -285,6 +285,7 @@ feature -- Creation feature
 			-- Remove a class_c that is not present is the system any more
 		local
 			class_c: CLASS_C;
+			class_i: CLASS_I;
 			clients: LINKED_LIST [CLASS_C];
 		do
 			class_c := a_class.compiled_class;
@@ -296,7 +297,9 @@ feature -- Creation feature
 					clients.after
 				loop
 						-- recompile the client
-					Workbench.add_class_to_recompile (clients.item.lace_class);
+					class_i := clients.item.lace_class;
+					Workbench.add_class_to_recompile (class_i);
+					class_i.set_changed (True);
 					clients.forth;
 				end;
 

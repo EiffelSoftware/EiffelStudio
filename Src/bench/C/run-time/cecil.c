@@ -279,7 +279,7 @@ EIF_TYPE_ID cid;
 	int dtype = cid_to_dtype(cid);		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
 #ifdef WORKBENCH
-	int32 feature_id;
+	int32 *feature_ptr;
 	int32 rout_id;
 	uint32 body_id;
 	int16 body_index;
@@ -293,8 +293,10 @@ EIF_TYPE_ID cid;
 #ifndef WORKBENCH
 	return *(EIF_FN_REF *) ct_value(ptr_table, routine);	/* Code location */
 #else
-	feature_id = *(int32 *) ct_value(ptr_table, routine);
-	rout_id = (System(dtype).cn_routids)[feature_id];
+	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0)
+		return (EIF_FN_REF) 0;
+
+	rout_id = (System(dtype).cn_routids)[*feature_ptr];
 	CBodyIdx(body_index,rout_id,dtype);
 	body_id = dispatch[body_index];
 
@@ -601,6 +603,9 @@ register1 char *key;
 	/* Initializations */
 	hsize = ct->h_size;
 	hkeys = ct->h_keys;
+
+	if (hsize == 0)
+		return (char *) 0;			/* Item was not found */
 
 	/* Jump from one hashed position to another until we find the value or
 	 * go to an empty entry or reached the end of the table.

@@ -36,6 +36,11 @@ feature
 		deferred
 		end;
 
+	append_clikcable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string (dump)
+		end;
+
 	is_solved: BOOLEAN is
 			-- Is the type solved ? (i.e: is the type a result to a call
 			-- to feature `solved_type' ?)

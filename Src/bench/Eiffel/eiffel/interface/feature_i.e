@@ -1402,6 +1402,9 @@ feature -- Debug purpose
 			end;
 			io.error.putstring ("]: ");
 			type.trace;
+			io.error.new_line;
+			io.error.putstring (type.out);
+			io.error.new_line;
 		end; -- trace_signature
 
 feature -- PS

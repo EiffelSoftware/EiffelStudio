@@ -19,7 +19,7 @@ creation
 
 	make
 	
-feature 
+feature -- Attributes
 
 	dispatch (generic_type: GEN_TYPE_A; a_class: CLASS_C) is
 			-- Treat generic type `generic_type': it is either a new
@@ -28,22 +28,15 @@ feature
 			-- to the class `a_class'.
 		require
 			good_type: generic_type /= Void;
-			good_class: a_class /= Void and then a_class.changed;
+			good_class: a_class /= Void
+--							 and then a_class.changed;
 		local
 			type_i: GEN_TYPE_I;
 			i, nb: INTEGER;
 			another_generic: GEN_TYPE_A;
 			generics: ARRAY [TYPE_A];
-			insertion_list: LINKED_LIST [GEN_TYPE_I];
+			insertion_list: FILTER_LIST;
 		do
-debug
-	io.error.putstring ("Dispatch: ");
-	io.error.putstring (a_class.clasS_name);
-	io.error.putint (a_class.id);
-	io.error.new_line;
-	io.error.putstring (generic_type.dump);
-	io.error.new_line;
-end;
 				-- Evaluation of a type class
 			type_i := generic_type.type_i;
 				-- In case of expanded
@@ -60,6 +53,14 @@ end;
 					-- it is a data: the insertion list is the Current one
 				insertion_list := Current;
 			end;
+debug
+	io.error.putstring ("Dispatch : ");
+	io.error.putstring (a_class.class_name);
+	io.error.putint (a_class.id);
+	io.error.new_line;
+	io.error.putstring (generic_type.dump);
+	io.error.new_line;
+end;
 
 				-- Look for the item in the insertion list
 			insertion_list.start;
@@ -91,30 +92,13 @@ end;
 		local
 			data: GEN_TYPE_I;
 			local_cursor: LINKABLE [GEN_TYPE_I];
-			i, nb: INTEGER
 		do
 				-- Check array class
 			check_array_class;
-debug
-	io.error.putstring ("Instantiator: Process%N");
-end;
-				-- First clean the list, i.e. remove the elements associated
-				-- with a removed class
-			from
-				start
-			until
-				after
-			loop
-				if item.base_class = Void then
-debug
-	io.error.putstring ("Removing data (class id: ");
-	io.error.putint (item.base_id);
-	io.error.putstring (")%N");
-end;
-					remove
-				end;
-				forth
-			end;
+
+				-- Remove the obsolete types
+			clean;
+
 			from
 				local_cursor := first_element
 			until
@@ -129,6 +113,14 @@ end;
 				data.base_class.update_types (data);
 				local_cursor := local_cursor.right;
 			end;
+			derivations.clear_all;
+		end;
+
+	derivations: DERIVATIONS is
+			-- Set of all the processed derivations
+			-- Avoid recursive loop in process
+		once
+			!!Result.make (40);
 		end;
 
 feature {NONE}
@@ -137,28 +129,70 @@ feature {NONE}
 			-- Force an array type in the system
 		local
 			array_cl: CLASS_C;
+			array_t: GEN_TYPE_I;
 		do
 			array_cl := System.array_class.compiled_class;
-			if array_cl.types.empty then
-					-- Insert a default array class type
-				array_cl.update_types (Array_type);
-			end
+			dispatch (Array_type_a, array_cl);
+			array_t := Array_type;
+			--array_cl.update_types (Array_type);
 		end;
 
 feature {STRIP_B, SYSTEM_I}
+
+	Array_type_a: GEN_TYPE_A is
+			-- Default array type
+		require
+			any_compiled: System.any_class.compiled;
+			array_compiled: System.array_class.compiled;
+		local
+			any_type: CL_TYPE_A;
+			generics: ARRAY [TYPE_A];
+		do
+				-- Not once because array_id and any_id can change
+			!!Result;
+			Result.set_base_type (System.array_id);
+			!!generics.make (1, 1);
+			!!any_type;
+			any_type.set_base_type (System.any_id);
+			generics.put (any_type, 1);
+			Result.set_generics (generics);
+			Result.set_is_expanded (False);
+		end;
 
 	Array_type: GEN_TYPE_I is
 			-- Default array type
 		local
 			ref: REFERENCE_I;
 			meta_gen: META_GENERIC;
-		once
+		do
+				--- Not once because array_id can change
 			!!ref;
 			!!meta_gen.make (1);
 			meta_gen.put (ref, 1);
 			!!Result;
 			Result.set_meta_generic (meta_gen);
 			Result.set_base_id (System.array_id);
+		end;
+
+feature -- Debug
+
+	trace is
+		local
+			data: GEN_TYPE_I;
+			local_cursor: LINKABLE [GEN_TYPE_I];
+			i, nb: INTEGER
+		do
+			io.error.putstring ("Instantiator.trace%N");
+			from
+				local_cursor := first_element
+			until
+				local_cursor = Void
+			loop
+				data := local_cursor.item;
+				data.dump (io.error);
+				io.error.new_line;
+				local_cursor := local_cursor.right;
+			end;
 		end;
 
 end

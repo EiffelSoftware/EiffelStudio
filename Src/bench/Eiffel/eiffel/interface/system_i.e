@@ -9,7 +9,6 @@ inherit
 	BASIC_SYSTEM_I;
 	SHARED_WORKBENCH;
 	SHARED_TMP_SERVER;
-	SHARED_INSTANTIATOR;
 	SHARED_EXPANDED_CHECKER;
 	SHARED_TYPEID_TABLE;
 	SHARED_TABLE;
@@ -127,6 +126,9 @@ feature
 	history_control: HISTORY_CONTROL;
 			-- Routine table controler
 			-- Only used for final mode code generation.
+
+	instantiator: INSTANTIATOR;
+			-- Tool to process the generic derivations
 
 	externals: EXTERNALS;
 			-- Table of external names currently used by the system
@@ -281,6 +283,7 @@ feature
 			!!feature_counter;
 				-- Routine table controler creation
 			!!history_control.make;
+			!!instantiator.make;
 				-- Type set creation
 			!!type_set.make (100);
 				-- External table creation
@@ -877,7 +880,6 @@ end;
 				a_class := local_cursor.item.associated_class;
 debug ("ACTIVITY")
 io.error.putstring ("%T");
-io.error.putint (a_class.id);
 io.error.putstring (a_class.class_name);
 io.error.putstring ("%N");
 end;
@@ -1313,9 +1315,6 @@ end;
 			Depend_server.take_control (Tmp_depend_server);
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
 			M_desc_server.take_control (Tmp_m_desc_server);
-
-				-- Clear the instantiator
-			Instantiator.wipe_out;
 		end;
 
 feature  -- Freeezing

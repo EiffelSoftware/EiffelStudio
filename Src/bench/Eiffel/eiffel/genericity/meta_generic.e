@@ -39,6 +39,23 @@ feature
 			end;
 		end;
 
+	is_valid: BOOLEAN is
+			-- Are all the types valid ?
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := count;
+				i := 1;
+				Result := True
+			until
+				i > nb or else not Result
+			loop
+				Result := item (i).is_valid;
+				i := i + 1;
+			end;
+		end;
+
 	generate_cecil_values (f: UNIX_FILE) is
 			-- Generate Cecil meta-types
 		local

@@ -303,6 +303,11 @@ end;
 							-- and the class associated with the result does not
 							-- exist in the system any more
 						type_a.associated_class = Void then
+debug
+	io.error.putstring ("Update table: ");
+	io.error.putstring (key_for_iteration);
+	io.error.putstring (" removed%N");
+end;
 						remove (key_for_iteration)
 					end;
 				end;

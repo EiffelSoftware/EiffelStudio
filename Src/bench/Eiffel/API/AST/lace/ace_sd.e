@@ -98,6 +98,9 @@ feature -- Lace compilation
 			build_clusters;
 				-- Second adaptation of Use files
 			adapt_use;
+				-- Reset the options of the CLASS_I
+			reset_options;
+
 				-- Thid general adaptation
 			adapt;
 
@@ -163,6 +166,22 @@ feature -- Lace compilation
 			end;
 		end;
 
+	reset_options is
+			-- Reset the options of the CLASS_I in the system
+		local
+			cluster_list: LINKED_LIST [CLUSTER_I];
+		do
+			from
+				cluster_list := Universe.clusters;
+				cluster_list.start;
+			until
+				cluster_list.offright
+			loop
+				cluster_list.item.reset_options;
+				cluster_list.forth;
+			end;
+		end;
+
 	process_options is
 			-- Process options for the universe
 		local
@@ -175,8 +194,6 @@ feature -- Lace compilation
 			until
 				cluster_list.offright
 			loop
-				cluster_list.item.reset_options;
-
 				if defaults /= Void then
 						-- Update current cluster visible by class D_OPTION_SD
 					context.set_current_cluster (cluster_list.item);

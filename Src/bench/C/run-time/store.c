@@ -32,7 +32,7 @@ public char * general_buffer = (char *) 0;
 public int current_position = 0;
 public int buffer_size = 1024;
 public int end_of_buffer = 0;
-private char *bufer = (char *) 0;
+private char *s_buffer = (char *) 0;
 extern char *idr_temp_buf; 			/*temporary buffer for idr floats and doubles*/
 
 
@@ -627,22 +627,22 @@ private void make_header()
                 ereturn();                              /* Propagate exception */
         }
 
-	bufer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
-	if (0 > sprintf(bufer,"%d\n", scount)) {
+	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eio();
 	}
-	buffer_write(bufer, (strlen (bufer)));
+	buffer_write(s_buffer, (strlen (s_buffer)));
 	
 
 	for (i=0; i<scount; i++)
 		if (account[i])
 			nb_line++;
 	/* Write number of header lines */
-	if (0 > sprintf(bufer,"%d\n", nb_line)) {
+	if (0 > sprintf(s_buffer,"%d\n", nb_line)) {
 		eio();
 	}
-	buffer_write(bufer, (strlen (bufer)));
+	buffer_write(s_buffer, (strlen (s_buffer)));
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
@@ -653,7 +653,7 @@ private void make_header()
 		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6))
 			{
 				bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
-				bufer = (char *) xrealloc (bufer, bsize, GC_OFF);
+				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
 		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
@@ -666,11 +666,11 @@ private void make_header()
 			int nb_gen = info->gt_param;
 			int j;
 
-			if (0 > sprintf(bufer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)) {
+			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)) {
 				eio();
 			}
 
-			buffer_write(bufer, (strlen (bufer)));
+			buffer_write(s_buffer, (strlen (s_buffer)));
 
 			for (;;) {
 #if DEBUG &1
@@ -686,27 +686,27 @@ private void make_header()
 				long dgen;
 
 				dgen = (long) *(gt_gen++);
-				if (0 > sprintf(bufer, " %lu", dgen)) {
+				if (0 > sprintf(s_buffer, " %lu", dgen)) {
 					eio();
 				}
-				buffer_write(bufer, (strlen (bufer)));
+				buffer_write(s_buffer, (strlen (s_buffer)));
 			}
 		} else {
 			/* Non-generic type, write in file:
 			 *    "dtype visible_name size 0"
 			 */
-			if (0 > sprintf(bufer, "%d %s %ld 0", i, vis_name, Size(i))) {
+			if (0 > sprintf(s_buffer, "%d %s %ld 0", i, vis_name, Size(i))) {
 				eio();
 			}
-			buffer_write(bufer, (strlen (bufer)));
+			buffer_write(s_buffer, (strlen (s_buffer)));
 		}
-		if (0 > sprintf(bufer,"\n")) {
+		if (0 > sprintf(s_buffer,"\n")) {
 			eio();
 		}
-		buffer_write(bufer, (strlen (bufer)));
+		buffer_write(s_buffer, (strlen (s_buffer)));
 	}
-	xfree (bufer);
-	bufer = (char *) 0;
+	xfree (s_buffer);
+	s_buffer = (char *) 0;
 	expop(&eif_stack);
 }
 
@@ -728,26 +728,26 @@ private void imake_header()
                 ereturn();                              /* Propagate exception */
         }
 
-	bufer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
-	if (0 > sprintf(bufer,"%d\n", scount)) {
+	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eio();
 	}
-	widr_multi_char (bufer, (strlen (bufer)));
+	widr_multi_char (s_buffer, (strlen (s_buffer)));
 	
-	if (0 > sprintf(bufer,"%d\n", OVERHEAD)) {
+	if (0 > sprintf(s_buffer,"%d\n", OVERHEAD)) {
 		eio();
 	}
-	widr_multi_char (bufer, (strlen (bufer)));
+	widr_multi_char (s_buffer, (strlen (s_buffer)));
 
 	for (i=0; i<scount; i++)
 		if (account[i])
 			nb_line++;
 	/* Write number of header lines */
-	if (0 > sprintf(bufer,"%d\n", nb_line)) {
+	if (0 > sprintf(s_buffer,"%d\n", nb_line)) {
 		eio();
 	}
-	widr_multi_char (bufer, (strlen (bufer)));
+	widr_multi_char (s_buffer, (strlen (s_buffer)));
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
@@ -758,7 +758,7 @@ private void imake_header()
 		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6))
 			{
 				bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
-				bufer = (char *) xrealloc (bufer, bsize, GC_OFF);
+				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
 		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
@@ -771,11 +771,11 @@ private void imake_header()
 			int nb_gen = info->gt_param;
 			int j;
 
-			if (0 > sprintf(bufer, "%d %s %d", i, vis_name, nb_gen)) {
+			if (0 > sprintf(s_buffer, "%d %s %d", i, vis_name, nb_gen)) {
 				eio();
 			}
 
-			widr_multi_char (bufer, (strlen (bufer)));
+			widr_multi_char (s_buffer, (strlen (s_buffer)));
 
 			for (;;) {
 #if DEBUG &1
@@ -791,19 +791,19 @@ private void imake_header()
 				long dgen;
 
 				dgen = (long) *(gt_gen++);
-				if (0 > sprintf(bufer, " %lu", dgen)) {
+				if (0 > sprintf(s_buffer, " %lu", dgen)) {
 					eio();
 				}
-				widr_multi_char (bufer, (strlen (bufer)));
+				widr_multi_char (s_buffer, (strlen (s_buffer)));
 			}
 		} else {
 			/* Non-generic type, write in file:
 			 *    "dtype visible_name size 0"
 			 */
-			if (0 > sprintf(bufer, "%d %s 0", i, vis_name)) {
+			if (0 > sprintf(s_buffer, "%d %s 0", i, vis_name)) {
 				eio();
 			}
-			widr_multi_char (bufer, (strlen (bufer)));
+			widr_multi_char (s_buffer, (strlen (s_buffer)));
 		}
 		
 				/* also add 
@@ -811,24 +811,24 @@ private void imake_header()
 				 */
 
 		num_attrib = System(i).cn_nbattr;
-		if (0 > sprintf(bufer, " %d", num_attrib)) {
+		if (0 > sprintf(s_buffer, " %d", num_attrib)) {
 			eio();
 		}
-		widr_multi_char (bufer, (strlen (bufer)));
+		widr_multi_char (s_buffer, (strlen (s_buffer)));
 		for (; num_attrib-- > 0;) {
-			if (0 > sprintf(bufer, "\n%lu %s", (*(System(i).cn_types + num_attrib) & SK_HEAD), 
+			if (0 > sprintf(s_buffer, "\n%lu %s", (*(System(i).cn_types + num_attrib) & SK_HEAD), 
 					*(System(i).cn_names + num_attrib))) {
 				eio();
 			}
-			widr_multi_char (bufer, (strlen (bufer)));
+			widr_multi_char (s_buffer, (strlen (s_buffer)));
 		}	
-		if (0 > sprintf(bufer,"\n")) {
+		if (0 > sprintf(s_buffer,"\n")) {
 			eio();
 		}
-		widr_multi_char (bufer, (strlen (bufer)));
+		widr_multi_char (s_buffer, (strlen (s_buffer)));
 	}
-	xfree (bufer);
-	bufer = (char *) 0;
+	xfree (s_buffer);
+	s_buffer = (char *) 0;
 	expop(&eif_stack);
 }
 
@@ -840,9 +840,9 @@ private void st_clean ()
 	make_header_func = make_header;
 	flush_buffer_func = flush_st_buffer;
 	st_write_func = st_write;
-	if (bufer != (char *) 0) {
-		xfree (bufer);
-		bufer = (char *) 0;
+	if (s_buffer != (char *) 0) {
+		xfree (s_buffer);
+		s_buffer = (char *) 0;
 	}
 	if (account != (char *)0) {
 		xfree (account);

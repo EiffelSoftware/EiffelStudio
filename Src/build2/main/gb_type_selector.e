@@ -32,7 +32,7 @@ feature -- Initialization
 			-- Initialize `Current'.
 			-- Fill with supported Widgets.
 		local
-			tree_item1, tree_item2: EV_TREE_ITEM
+			tree_item1, tree_item2, tree_item3: EV_TREE_ITEM
 		do
 			Precursor {EV_TREE}
 			create tree_item1.make_with_text ("Widgets")
@@ -40,9 +40,13 @@ feature -- Initialization
 			create tree_item2.make_with_text ("Primitives")
 			tree_item1.extend (tree_item2)
 			add_tree_items (primitives, tree_item2)
-			create tree_item2.make_with_text ("Containers")
-			tree_item1.extend (tree_item2)
-			add_tree_items (containers, tree_item2)
+			create tree_item3.make_with_text ("Containers")
+			tree_item1.extend (tree_item3)
+			add_tree_items (containers, tree_item3)
+				-- Expand the types when the project is started.
+			tree_item2.expand
+			tree_item3.expand
+			tree_item1.expand
 			recursive_do_all (agent strip_leading_ev (?))
 		end
 

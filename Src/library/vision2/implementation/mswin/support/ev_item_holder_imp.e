@@ -15,7 +15,19 @@ deferred class
 inherit
 	EV_ITEM_LIST_I [G]
 		redefine
+			initialize,
 			item
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+		do
+			create new_item_actions.make ("new item", <<"item">>)
+			new_item_actions.extend (~item_parented)
+			create remove_item_actions.make ("remove item", <<"item">>)
+			remove_item_actions.extend (~item_orphaned)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -43,6 +55,30 @@ feature -- Access
 	index: INTEGER is
 		do
 			Result := ev_children.index
+		end
+
+feature {EV_ANY_I} -- implementation
+
+	item_parented (i: EV_ITEM) is
+			-- Called every time an item is added to the container.
+		require
+			i_not_void: i /= Void
+		local
+			i_imp: EV_ITEM_IMP
+		do
+			i_imp ?= i.implementation
+			i_imp.on_parented
+		end
+
+	item_orphaned (i: EV_ITEM) is
+			-- Called every time an item is removed from the container.
+		require
+			i_not_void: i /= Void
+		local
+			i_imp: EV_ITEM_IMP
+		do
+			i_imp ?= i.implementation
+			i_imp.on_orphaned
 		end
 
 	insert_item (item_imp: ev_item_imp; pos: INTEGER) is
@@ -75,6 +111,7 @@ feature -- Access
 			item_to_imp (v).set_parent (interface)
 			insert_item (item_to_imp (v), count + 1)
 			ev_children.go_i_th (old_index)
+			new_item_actions.call ([v])
 		end
 
 	remove_left is
@@ -97,10 +134,10 @@ feature -- Access
 			old_index: INTEGER
 				-- `Index' value at entry.
 		do
-				old_index := index
-				forth
-				remove
-				ev_children.go_i_th (old_index)
+			old_index := index
+			forth
+			remove
+			ev_children.go_i_th (old_index)
 		end
 
 	remove is
@@ -110,6 +147,7 @@ feature -- Access
 		local
 			item_imp: EV_ITEM_IMP
 		do
+			remove_item_actions.call ([item])
 			item_imp := item_to_imp (item)
 			check
 				item_implementation_not_void: item_imp /= Void
@@ -137,6 +175,7 @@ feature -- Access
 				ev_children.forth
 			end
 			if not ev_children.after then
+				remove_item_actions.call ([v])
 				remove
 			end		
 			ev_children.go_i_th (original_index)
@@ -149,6 +188,7 @@ feature -- Access
 		do
 			item_to_imp (v).set_parent (interface)
 			insert_item (item_to_imp (v), index + 1)
+			new_item_actions.call ([v])
 		end
 		
 	put_front (v: like item) is
@@ -165,6 +205,7 @@ feature -- Access
 			else
 				ev_children.go_i_th (0)
 			end
+			new_item_actions.call ([v])
 		end
 
 	replace (v: like item) is
@@ -180,6 +221,7 @@ feature -- Access
 				put_front (v)
 				move (-1)
 			end
+			new_item_actions.call ([v])
 		end
 
 	move (i: INTEGER) is
@@ -219,6 +261,18 @@ feature -- Implementation
 			not_void: Result /= Void
 		end
 
+feature -- Event handling
+
+	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_ITEM]]
+			-- Actions to be performed after an item is added.
+
+	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_ITEM]]
+			-- Actions to be performed before an item is removed.
+
+invariant
+	new_item_actions_not_void: is_useable implies new_item_actions /= Void
+	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
+
 end -- class EV_ITEM_LIST_IMP
 
 --|----------------------------------------------------------------
@@ -243,6 +297,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/24 19:20:25  rogers
+--| Added initialize, item_parented item_orphaned, new_item_actions and remove_item_actions.Set up addition and removal so new_item_actions or remove_item_actions are called appropriately.
+--|
 --| Revision 1.22  2000/03/24 17:31:38  brendel
 --| Improved comment. Removed unused local variables.
 --|

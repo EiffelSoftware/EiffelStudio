@@ -40,7 +40,6 @@ feature -- Basic operations
 			valid_file: input_file.is_closed or input_file.is_open_read
 		local
 			raw_data: LINKED_LIST[STRING]
-			str_buffer: STRING
 		do
 			create raw_data.make
 			if input_file.is_closed then

@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			valid_feature: parsed_feature /= Void
 			valid_input: input /= Void and then not input.empty
 		local
-			l_type, l_name: STRING
+			l_type: STRING
 			para: EI_PARAMETER
 			colon_index, comma_index: INTEGER
 		do

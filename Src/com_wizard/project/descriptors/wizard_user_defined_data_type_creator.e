@@ -22,12 +22,10 @@ feature -- Basic operations
 			valid_system_descriptor: a_system_descriptor /= Void
 			valid_type_desc_type: a_type_desc.var_type = Vt_userdefined
 		local
-			handle, i, an_index: INTEGER
+			handle, an_index: INTEGER
 			tmp_type_info: ECOM_TYPE_INFO
 			tmp_guid: ECOM_GUID
-			tmp_type_descriptor: WIZARD_TYPE_DESCRIPTOR
 			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_documentation: ECOM_DOCUMENTATION
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
 			type := a_type_desc.var_type

@@ -54,13 +54,7 @@ feature
 
 	put (t: REP_FEATURES) is
 			-- Append object `t' in file ".TMP_AST".
-		local
-			server_file: SERVER_FILE;
 		do
-			server_file := Server_controler.file_of_id (current_id);
-			if not server_file.is_open then
-				Server_controler.open_file (server_file);
-			end;
 			index.clear_all;
 			last_id := t.class_id;
 				-- Write data structure in file `file'
@@ -102,7 +96,7 @@ feature
 			index.clear_all
 		end;
 
-	Size_limit: INTEGER is 1000000;
+	Size_limit: INTEGER is 20;
 
 feature {NONE} -- External features
 

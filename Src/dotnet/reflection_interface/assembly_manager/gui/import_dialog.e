@@ -274,7 +274,6 @@ feature {NONE} -- Implementation
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
 						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
-						--emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
 						message_box.close
@@ -332,7 +331,6 @@ feature {NONE} -- Implementation
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
 						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
-						--emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
 						message_box.close

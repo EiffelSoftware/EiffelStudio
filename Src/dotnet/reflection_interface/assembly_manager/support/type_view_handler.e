@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			type_view := a_type_view
 			is_valid := True
 			children := type_view.children
-			create new_inheritance_clauses.make
+			new_inheritance_clauses ?= eiffel_class.parents.clone
 			create errors_in_features.make
 			create errors_in_arguments.make
 		ensure
@@ -128,14 +128,14 @@ feature -- Basic Operations
 			added: INTEGER
 		do
 				-- Update class name (in current class and descendants)
-			if type_modifications.new_name /= Void then
-				if type_modifications.new_name.length > 0 then
-					update_class
-				else
-					is_valid := False
-					class_error_message := Empty_class_name
-				end
-			end			
+		--	if type_modifications.new_name /= Void then
+		--		if type_modifications.new_name.length > 0 then
+		--			update_class
+		--		else
+		--			is_valid := False
+		--			class_error_message := Empty_class_name
+		--		end
+		--	end			
 				-- Update class features 
 			features_changes := type_modifications.features_modifications
 			if features_changes /= Void and then features_changes.count > 0 then
@@ -236,10 +236,11 @@ feature {NONE} -- Implementation
 					else
 						is_valid := is_valid and True
 						old_name := a_feature_modifications.old_feature_name					
-						recursive_update_inheritance_clauses (old_name, new_name)
-						update_children_inheritance_clauses (old_name, new_name)
+						--recursive_update_inheritance_clauses (old_name, new_name)
+						--update_children_inheritance_clauses (old_name, new_name)
 						rename_feature_in_children (old_name, new_name)
 						a_feature.seteiffelname (new_name)
+						a_feature.setmodified
 					end
 				else
 					is_valid := False
@@ -330,6 +331,7 @@ feature {NONE} -- Implementation
 				else
 					is_valid := is_valid and True
 					an_argument.seteiffelname (new_name)
+					a_feature.setmodified
 				end
 			else
 				is_valid := False
@@ -438,15 +440,12 @@ feature {NONE} -- Implementation
 		require
 			non_void_class: a_class /= Void
 			non_void_feature_name: a_feature_name /= Void
+		local
+			support: SUPPORT
 		do
-			Result := has_feature (a_class.initializationfeatures, a_feature_name)
-					or has_feature (a_class.accessfeatures, a_feature_name)
-					or has_feature (a_class.elementchangefeatures, a_feature_name)
-					or has_feature (a_class.basicoperations, a_feature_name)
-					or has_feature (a_class.unaryoperatorsfeatures, a_feature_name)
-					or has_feature (a_class.binaryoperatorsfeatures, a_feature_name)
-					or has_feature (a_class.specialfeatures, a_feature_name)
-					or has_feature (a_class.implementationfeatures, a_feature_name)
+			create support
+			Result := support.exists (a_class, a_feature_name)
+			eiffel_feature := support.eiffel_feature
 		end
 	
 	recursive_exists (a_feature_name: STRING): BOOLEAN is
@@ -476,30 +475,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	has_feature (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
-		indexing
-			description: "Does `a_list' contain feature with name `a_feature_name'?"
-			external_name: "HasFeature"
-		require
-			non_void_list: a_list /= Void
-			non_void_feature_name: a_feature_name /= Void
-		local
-			i: INTEGER
-			a_feature: ISE_REFLECTION_EIFFELFEATURE
-		do
-			from
-			until
-				i = a_list.count or Result
-			loop
-				a_feature ?= a_list.item (i)
-				if a_feature /= Void and then a_feature.eiffelname.tolower.equals_string (a_feature_name.tolower) then
-					eiffel_feature := a_feature
-					Result := True
-				end
-				i := i + 1
-			end
-		end
-
 	eiffel_feature: ISE_REFLECTION_EIFFELFEATURE
 		indexing
 			description: "Eiffel feature (Result of `has_feature')"
@@ -538,6 +513,7 @@ feature {NONE} -- Implementation
 				a_feature ?= enumerator.current_
 				if a_feature /= Void then
 					a_feature.seteiffelname (new_name)
+					a_feature.setmodified
 				end
 			end
 		end
@@ -602,7 +578,7 @@ feature {NONE} -- Implementation
 				added := rename_clauses.add (a_rename_clause)
 			end
 			intern_update_inheritance_clauses (old_name, new_name)
-			commit_parent_changes (parent_name)
+			commit_parent_changes (parent_name, eiffel_class)
 		ensure
 			not_in_undefine_clauses: not is_in_list (undefine_clauses, old_name)
 			not_in_redefine_clauses: not is_in_list (redefine_clauses, old_name)
@@ -623,12 +599,12 @@ feature {NONE} -- Implementation
 			a_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE
 			a_select_clause: ISE_REFLECTION_SELECTCLAUSE
 		do
-			if has_rename_clause (old_name) then
-				rename_clauses.removeat (index_in_list)
-				create a_rename_clause.make_renameclause
-				a_rename_clause.makefrominfo (rename_source, new_name)
-				added := rename_clauses.add (a_rename_clause)
-			end
+		--	if has_rename_clause (old_name) then
+		--		rename_clauses.removeat (index_in_list)
+		--		create a_rename_clause.make_renameclause
+		--		a_rename_clause.makefrominfo (rename_source, new_name)
+		--		added := rename_clauses.add (a_rename_clause)
+		--	end
 			if is_in_list (undefine_clauses, old_name) then
 				undefine_clauses.removeat (index_in_list)
 				create an_undefine_clause.make_undefineclause
@@ -653,18 +629,21 @@ feature {NONE} -- Implementation
 			not_in_select_clauses: not is_in_list (select_clauses, old_name)
 		end
 
-	commit_parent_changes (parent_name: STRING) is
+	commit_parent_changes (parent_name: STRING; a_class: ISE_REFLECTION_EIFFELCLASS) is
 		indexing
 			description: "Set new inheritance clauses to parent of `eiffel_class' with name `parent_name'."
 			external_name: "CommitParentChanges"
 		require
 			non_void_parent_name: parent_name /= Void
 			non_void_inheritance_clauses: new_inheritance_clauses /= Void
+			non_void_class: a_class /= Void
 		do
 			if new_inheritance_clauses.contains (parent_name) then
 				new_inheritance_clauses.remove (parent_name)
+				if a_class.parents.contains (parent_name) and not a_class.eiffelname.equals_string (parent_name) then
+					new_inheritance_clauses.add (parent_name, inheritance_clauses)
+				end
 			end
-			new_inheritance_clauses.add (parent_name, inheritance_clauses)
 		end
 	 
 	commit (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
@@ -722,6 +701,7 @@ feature {NONE} -- Implementation
 				if a_child /= Void then
 					parents := a_child.parents
 					if parents.contains (eiffel_class.eiffelname) then
+						new_inheritance_clauses ?= parents.clone
 						clauses ?= parents.item (eiffel_class.eiffelname) 
 						if clauses /= Void and then clauses.count = 5 then
 							rename_clauses := clauses.item (0)
@@ -729,7 +709,7 @@ feature {NONE} -- Implementation
 							redefine_clauses := clauses.item (2)	
 							select_clauses := clauses.item (3)	
 							intern_update_inheritance_clauses (old_name, new_name)
-							commit_parent_changes (eiffel_class.eiffelname)
+							commit_parent_changes (eiffel_class.eiffelname, a_child)
 						end
 					end
 				end

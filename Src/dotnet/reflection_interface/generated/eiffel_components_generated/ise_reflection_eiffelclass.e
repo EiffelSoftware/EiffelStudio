@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "ISE.Reflection.EiffelClass"
 
 external class
@@ -38,13 +38,6 @@ feature -- Access
 			"EiffelName"
 		end
 
-	frozen Parents: SYSTEM_COLLECTIONS_HASHTABLE is
-		external
-			"IL field signature :System.Collections.Hashtable use ISE.Reflection.EiffelClass"
-		alias
-			"Parents"
-		end
-
 	frozen IsExpanded: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
@@ -73,11 +66,11 @@ feature -- Access
 			"FullExternalName"
 		end
 
-	frozen Invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen Modified: BOOLEAN is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
 		alias
-			"Invariants"
+			"Modified"
 		end
 
 	frozen Attribute: ISE_REFLECTION_EIFFELFEATURE is
@@ -92,6 +85,13 @@ feature -- Access
 			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelClass"
 		alias
 			"AssemblyDescriptor"
+		end
+
+	frozen Routine: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"Routine"
 		end
 
 	frozen IsDeferred: BOOLEAN is
@@ -143,11 +143,11 @@ feature -- Access
 			"Namespace"
 		end
 
-	frozen Routine: ISE_REFLECTION_EIFFELFEATURE is
+	frozen Parents: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
-			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+			"IL field signature :System.Collections.Hashtable use ISE.Reflection.EiffelClass"
 		alias
-			"Routine"
+			"Parents"
 		end
 
 	frozen AccessFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -171,6 +171,13 @@ feature -- Access
 			"BasicOperations"
 		end
 
+	frozen Invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"Invariants"
+		end
+
 feature -- Basic Operations
 
 	SetFrozen (a_value: BOOLEAN) is
@@ -187,6 +194,13 @@ feature -- Basic Operations
 			"SetDeferred"
 		end
 
+	AddInvariant (a_tag: STRING; a_text: STRING) is
+		external
+			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddInvariant"
+		end
+
 	AddBinaryOperator (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
@@ -194,11 +208,11 @@ feature -- Basic Operations
 			"AddBinaryOperator"
 		end
 
-	AddInvariant (a_tag: STRING; a_text: STRING) is
+	SetModified is
 		external
-			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"AddInvariant"
+			"SetModified"
 		end
 
 	AddBasicOperation (a_feature: ISE_REFLECTION_EIFFELFEATURE) is

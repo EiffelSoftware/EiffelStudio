@@ -61,6 +61,7 @@ feature -- Access
 			create Result.make
 			create reflection_interface.make_reflectioninterface
 			reflection_interface.makereflectioninterface
+			reflection_interface.cleanassemblies
 			imported_assemblies := reflection_interface.assemblies
 			from
 			until

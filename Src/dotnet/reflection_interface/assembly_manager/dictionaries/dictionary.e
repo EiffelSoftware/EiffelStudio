@@ -7,6 +7,12 @@ class
 
 feature -- Access
 
+	Abort_retry_ignore_message_box_buttons: INTEGER is 2
+		indexing
+			description: "Abort/Retry/Ignore message box buttons"
+			external_name: "AbortRetryIgnoreMessageBoxButtons"
+		end
+
 	Assembly_manager_icon: SYSTEM_DRAWING_ICON is
 		indexing
 			description: "Icon appearing in dialogs header"
@@ -96,6 +102,12 @@ feature -- Access
 			external_name: "FontSize"
 		end
 
+	Ignore_result: INTEGER is 5
+		indexing
+			description: "Returned value in case user clicked on `Ignore'"
+			external_name: "IgnoreResult"
+		end
+		
 	Information_caption: STRING is "Information - ISE Assembly Manager"
 		indexing
 			description: "Caption for information message boxes"
@@ -144,6 +156,12 @@ feature -- Access
 			external_name: "RegularStyle"
 		end
 
+	Retry_result: INTEGER is 4
+		indexing
+			description: "Returned value in case user clicked on `Retry'"
+			external_name: "RetryResult"
+		end
+		
 feature {NONE} -- Implementation
 
 	Assembly_manager_icon_relative_filename: STRING is "\icon_dotnet_wizard_color.ico"

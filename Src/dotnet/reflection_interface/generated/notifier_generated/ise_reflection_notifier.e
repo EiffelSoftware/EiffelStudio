@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "ISE.Reflection.Notifier"
 
 external class
@@ -31,14 +31,14 @@ feature -- Access
 			"AddObservers"
 		end
 
-feature -- Basic Operations
-
-	AddAdditionObserver (an_observer: SYSTEM_DELEGATE) is
+	frozen ReplaceObservers: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
 		alias
-			"AddAdditionObserver"
+			"ReplaceObservers"
 		end
+
+feature -- Basic Operations
 
 	Make is
 		external
@@ -47,18 +47,11 @@ feature -- Basic Operations
 			"Make"
 		end
 
-	a_invariant is
+	AddReplaceObserver (an_observer: SYSTEM_DELEGATE) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.Notifier"
+			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
 		alias
-			"_invariant"
-		end
-
-	NotifyRemove (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.Notifier"
-		alias
-			"NotifyRemove"
+			"AddReplaceObserver"
 		end
 
 	NotifyAdd (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -73,6 +66,34 @@ feature -- Basic Operations
 			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
 		alias
 			"AddRemoveObserver"
+		end
+
+	a_invariant is
+		external
+			"IL signature (): System.Void use ISE.Reflection.Notifier"
+		alias
+			"_invariant"
+		end
+
+	NotifyReplace is
+		external
+			"IL signature (): System.Void use ISE.Reflection.Notifier"
+		alias
+			"NotifyReplace"
+		end
+
+	NotifyRemove (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.Notifier"
+		alias
+			"NotifyRemove"
+		end
+
+	AddAdditionObserver (an_observer: SYSTEM_DELEGATE) is
+		external
+			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
+		alias
+			"AddAdditionObserver"
 		end
 
 end -- class ISE_REFLECTION_NOTIFIER

@@ -150,6 +150,15 @@ feature -- Messages
 			external_name: "EditAssemblyMessage"
 		end
 
+	Access_violation_error: STRING is "[The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
+						%- Abort: To close this dialog without doing anything.%N%
+						%- Retry: To retry in case the other process has exited.%N%
+						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache.]"
+		indexing
+			description: "Message to the user in case there is a write or read lock in the currently accessed assembly folder"
+			external_name: "AccessViolationError"
+		end
+		
 feature -- Other constants
 	
 	Cancel: INTEGER is 2

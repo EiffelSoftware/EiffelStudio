@@ -75,6 +75,9 @@ feature -- Access
 				end
 				i := i + 1
 			end
+			if Result.contains (a_class) then
+				Result.remove (a_class)
+			end
 		ensure
 			children_created: Result /= Void
 		end

@@ -15,24 +15,6 @@ feature {NONE} -- Initialization
 			"IL creator use Formatter"
 		end
 
-feature -- Access
-
-	frozen EiffelFormatting: BOOLEAN is
-		external
-			"IL signature (): System.Boolean use Formatter"
-		alias
-			"get_EiffelFormatting"
-		end
-
-feature -- Element Change
-
-	frozen set_EiffelFormatting (value: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use Formatter"
-		alias
-			"set_EiffelFormatting"
-		end
-
 feature -- Basic Operations
 
 	frozen FormatArgumentTypeName (ArgumentType: SYSTEM_TYPE): STRING is
@@ -75,6 +57,22 @@ feature -- Basic Operations
 			"IL signature (System.String): System.String use Formatter"
 		alias
 			"FormatVariableName"
+		end
+
+feature -- Specials
+
+	frozen set_EiffelFormatting (value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use Formatter"
+		alias
+			"set_EiffelFormatting"
+		end
+
+	frozen get_EiffelFormatting: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use Formatter"
+		alias
+			"get_EiffelFormatting"
 		end
 
 feature {NONE} -- Implementation

@@ -167,6 +167,16 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_attribute_symbol")
 		end
 
+	Icon_deferred_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_deferred_feature")
+		end
+
+	Icon_external_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_external_feature")
+		end
+
 	Icon_void_object: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_void_pointer")
@@ -728,6 +738,13 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_class_symbol_color")
 		end
 
+	Icon_deferred_class_symbol_color: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := pixmap_file_content ("icon_deferred_class_symbol_color")
+		end
+
 	Icon_class_symbol_gray: EV_PIXMAP is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -740,6 +757,13 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 		once
 			Result := pixmap_file_content ("icon_light_class_color")
+		end
+
+	Icon_deferred_read_only_class_color: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := pixmap_file_content ("icon_light_deferred_class_color")
 		end
 
 	Icon_read_only_class_gray: EV_PIXMAP is

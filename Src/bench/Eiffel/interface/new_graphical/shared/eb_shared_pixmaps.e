@@ -1002,9 +1002,7 @@ feature -- Icons
 	Icon_pretty_print_vsmall: ARRAY [EV_PIXMAP] is
 			-- Icon for the dialog that display expanded value of objects.
 		once
-			create Result.make (1, 2)
-			Result.put (pixmap_file_content ("icon_pretty_print_8"), 1)
-			Result.put (pixmap_file_content ("icon_pretty_print_8"), 2)
+			Result := build_classic_pixmap ("expand_string")
 		end
 
 	Icon_crop: ARRAY [EV_PIXMAP] is

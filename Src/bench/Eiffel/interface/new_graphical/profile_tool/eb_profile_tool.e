@@ -13,19 +13,12 @@ inherit
 		redefine
 			make,
 			show, hide, destroy,
-			init_commands, tool_name
+			init_commands, default_name
 		end
-
---	EB_PROFILE_TOOL_DATA
---		rename
---			Profile_resources as resources
---		end
 
 	EB_PROFILE_TOOL_DATA
 
 	EV_COMMAND
-
---	WINDOWS
 
 	SYSTEM_CONSTANTS
 
@@ -35,33 +28,27 @@ creation
 feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
+			-- Create a new tool with `man' as manager.
 		do
---			resources.add_user (Current)
 			create open_tools.make 
 
-			precursor {EB_TOOL} (man)			
+			precursor {EB_TOOL} (man)
+		ensure then
+			open_tools_exists: open_tools /= Void			
 		end
 
 feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
+			-- Build all the tool's widgets.
 		local
 			h_box: EV_HORIZONTAL_BOX
 			switch_form, language_form, compile_form: EV_FRAME
 			input_frame, query_frame: EV_FRAME
 		do
 
---			if Platform_constants.is_windows then
---					-- For windows we need the id for the Icon
---				top_shell_make (Interface_names.i_Class_id.out, Project_tool.screen)
---			else
---					-- For unix we need this for the X resource file
---			 	top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen)
---			end
-			
-			set_title (tool_name)
---			set_icon_name (tool_name)
-
+			set_title (default_name)
+--			set_icon_name (default_name)
 
 				-- User Interface Components
 			create container.make (parent)
@@ -101,10 +88,9 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				-- Input File Frame
 			create input_frame.make_with_text (container, Interface_names.l_Input_file)
 			create h_box.make (input_frame)
-			create input_text.make_with_text (h_box, Interface_names.t_Empty)
+			create input_text.make (h_box)
 			input_text.set_text ("profinfo.pfi")
 			create browse_button.make_with_text (h_box, Interface_names.b_Browse)
---			browse_button.set_minimum_width (100)
 			browse_button.set_horizontal_resize (False)
 			browse_button.set_vertical_resize (False)
 			h_box.set_child_expandable (browse_button, False)
@@ -134,8 +120,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 				-- Sizing policy
 			update
---			set_size (resources.tool_width.actual_value,
---				resources.tool_height.actual_value)
 		end
 
 	init_commands is
@@ -148,7 +132,8 @@ feature {EB_TOOL_MANAGER} -- Initialization
 	
 feature -- Access
 
-	tool_name: STRING is
+	default_name: STRING is
+			-- Default name given to Current.
 		do
 			Result := Interface_names.t_Profile_tool
 		end
@@ -156,53 +141,28 @@ feature -- Access
 feature -- Updating
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("profile_tool_width")
 			register_to ("profile_tool_height")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			set_size (profile_tool_width, profile_tool_height)
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("profile_tool_width")
 			unregister_to ("profile_tool_height")
 		end
-
---	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
---		local
---			pr: like resources
---		do
---			pr := resources
---			if new_res.actual_value >= 0 then
---				if old_res = pr.tool_width then
---					set_width (new_res.actual_value)
---				elseif old_res = pr.tool_height then
---					set_height (new_res.actual_value)
---				elseif old_res = pr.query_tool_width then
---					from
---						open_tools.start
---					until
---						open_tools.after
---					loop
---						open_tools.item.set_width (new_res.actual_value)
---						open_tools.forth
---					end
---				elseif old_res = pr.query_tool_height then
---					from
---						open_tools.start
---					until
---						open_tools.after
---					loop
---						open_tools.item.set_height (new_res.actual_value)
---						open_tools.forth
---					end
---				end
---			end
---		end
 
 feature -- Graphical User Interface
 
@@ -212,7 +172,7 @@ feature -- Graphical User Interface
 		local
 			new_window: EB_PROFILE_QUERY_WINDOW
 		do
-			create new_window.make (Current)
+			create new_window.make_default (Current)
 			new_window.show
 			new_window.update_window (st, pq, po, profinfo)
 			open_tools.extend (new_window)
@@ -359,7 +319,6 @@ feature  -- status Setting
 				a_wnd.destroy
 				open_tools.remove
 			end
---			resources.remove_user (Current)
 			precursor
 		end
 
@@ -495,15 +454,6 @@ feature {NONE} -- Implementation
 
 	input_text: EV_TEXT_FIELD
 			-- Text field for file name of input file
-
-	query_label,
-			-- Label for `query_text'
-
-	input_label,
-			-- Label for `input_text'
-
-	compilation_label: EV_LABEL
-			--Label for 'compilation mode buttons' 
 
 	open_tools: LINKED_LIST [EB_PROFILE_QUERY_WINDOW]
 			-- List of all open query windows

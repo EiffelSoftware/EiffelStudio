@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		local
                         a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			
 			set_label_widget (gtk_label_new ($a))
 			gtk_widget_show (label_widget)
@@ -95,7 +95,7 @@ feature -- Element change
 			if label_widget = Default_pointer then
 				create_text_label (txt)	
 			else
-				a ?= txt.to_c
+				a := txt.to_c
 				gtk_label_set_text (label_widget, $a)
 			end
 		end

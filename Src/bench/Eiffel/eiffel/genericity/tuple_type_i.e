@@ -110,24 +110,25 @@ feature -- Generic conformance
 			if use_info and then (cr_info /= Void) then
 				-- It's an ancored type 
 				cr_info.generate_cid (buffer, final_mode)
-			end
-			buffer.putint (Tuple_type)
-			buffer.putstring (", ")
-			buffer.putint (0)
-			buffer.putstring (", ")
-			buffer.putint (true_generics.count)
-			buffer.putstring (", ")
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
-
-			from
-				i  := true_generics.lower
-				up := true_generics.upper
-			until
-				i > up
-			loop
-				true_generics.item (i).generate_cid (buffer, final_mode, use_info)
-				i := i + 1
+			else
+				buffer.putint (Tuple_type)
+				buffer.putstring (", ")
+				buffer.putint (0)
+				buffer.putstring (", ")
+				buffer.putint (true_generics.count)
+				buffer.putstring (", ")
+				buffer.putint (generated_id (final_mode))
+				buffer.putstring (", ")
+	
+				from
+					i  := true_generics.lower
+					up := true_generics.upper
+				until
+					i > up
+				loop
+					true_generics.item (i).generate_cid (buffer, final_mode, use_info)
+					i := i + 1
+				end
 			end
 		end
 
@@ -139,21 +140,21 @@ feature -- Generic conformance
 			if use_info and then (cr_info /= Void) then
 				-- It's an ancored type 
 				cr_info.make_gen_type_byte_code (ba)
-			end
-
-			ba.append_short_integer (Tuple_type)
-			ba.append_short_integer (0)
-			ba.append_short_integer (true_generics.count)
-			ba.append_short_integer (generated_id (False))
-
-			from
-				i  := true_generics.lower
-				up := true_generics.upper
-			until
-				i > up
-			loop
-				true_generics.item (i).make_gen_type_byte_code (ba, use_info)
-				i := i + 1
+			else
+				ba.append_short_integer (Tuple_type)
+				ba.append_short_integer (0)
+				ba.append_short_integer (true_generics.count)
+				ba.append_short_integer (generated_id (False))
+	
+				from
+					i  := true_generics.lower
+					up := true_generics.upper
+				until
+					i > up
+				loop
+					true_generics.item (i).make_gen_type_byte_code (ba, use_info)
+					i := i + 1
+				end
 			end
 		end
 
@@ -163,33 +164,34 @@ feature -- Generic conformance
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an anchored type 
+					-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
-			end
-			buffer.putint (Tuple_type)
-			buffer.putstring (", ")
-			buffer.putint (0)
-			buffer.putstring (", ")
-			buffer.putint (true_generics.count)
-			buffer.putstring (", ")
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
-
-			-- Increment counter by 4
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-
-			from
-				i  := true_generics.lower
-				up := true_generics.upper
-			until
-				i > up
-			loop
-				true_generics.item (i).generate_cid_array (buffer, 
-												final_mode, use_info, idx_cnt)
-				i := i + 1
+			else
+				buffer.putint (Tuple_type)
+				buffer.putstring (", ")
+				buffer.putint (0)
+				buffer.putstring (", ")
+				buffer.putint (true_generics.count)
+				buffer.putstring (", ")
+				buffer.putint (generated_id (final_mode))
+				buffer.putstring (", ")
+	
+					-- Increment counter by 4
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+	
+				from
+					i  := true_generics.lower
+					up := true_generics.upper
+				until
+					i > up
+				loop
+					true_generics.item (i).generate_cid_array (buffer, 
+													final_mode, use_info, idx_cnt)
+					i := i + 1
+				end
 			end
 		end
 
@@ -199,25 +201,25 @@ feature -- Generic conformance
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an anchored type 
+					-- It's an anchored type 
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
-			end
-
-			-- Increment counter by 4
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-
-			from
-				i  := true_generics.lower
-				up := true_generics.upper
-			until
-				i > up
-			loop
-				true_generics.item (i).generate_cid_init (buffer, 
-												final_mode, use_info, idx_cnt)
-				i := i + 1
+			else
+					-- Increment counter by 4
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+	
+				from
+					i  := true_generics.lower
+					up := true_generics.upper
+				until
+					i > up
+				loop
+					true_generics.item (i).generate_cid_init (buffer, 
+													final_mode, use_info, idx_cnt)
+					i := i + 1
+				end
 			end
 		end
 

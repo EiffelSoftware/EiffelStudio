@@ -17,18 +17,18 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 
 <SPAN CLASS="ekeyword">create</SPAN> 
 
-	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_make">make</A>
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_make">make</A>
 </A>
-	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make from pointer.</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_structure.html">ECOM_STRUCTURE</A>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_structure.html">ECOM_STRUCTURE</A>
 			<SPAN CLASS="etag">valid_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 </A>
-	<A NAME="f_make_from_double"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_make_from_double">make_from_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dbl_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_double"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_make_from_double">make_from_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dbl_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with value 'dbl_value'</SPAN>
 </A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
@@ -38,25 +38,25 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_one"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_one">one</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_one"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_one">one</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Neutral element for </SPAN><SPAN CLASS="equoted">*</SPAN><SPAN CLASS="ecomment"> operation</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f_scale"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_scale">scale</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_scale"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_scale">scale</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Scale of value. &nbsp;e.g. 123.45 has a scale of 2</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">non_void_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 </A>
-	<A NAME="f_zero"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_zero">zero</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_zero"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_zero">zero</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Neutral element for </SPAN><SPAN CLASS="equoted">+</SPAN><SPAN CLASS="ecomment"> operation</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
-	<A NAME="f_structure_size"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_structure_size"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of DECIMAL (DECIMAL) structure</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
 			<SPAN CLASS="etag">positive_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
@@ -72,7 +72,7 @@
 	<A NAME="f_shared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
 	
@@ -102,7 +102,7 @@
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
 
-	<A NAME="f_absolute"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_absolute">absolute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_absolute"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_absolute">absolute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Absolute value of decimal</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">non_void_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
@@ -110,7 +110,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">non_void_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f_ceiled_integer_portion"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_ceiled_integer_portion">ceiled_integer_portion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_ceiled_integer_portion"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_ceiled_integer_portion">ceiled_integer_portion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Integer portion of decimal value.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The first negative integer &gt;= to the value is returned if the value is negative.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
@@ -119,7 +119,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">non_void_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f_rounded"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_rounded">rounded</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_rounded"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_rounded">rounded</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Round value with </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment"> decimal places</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
@@ -134,10 +134,10 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
 			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f_truncated_to_double"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_truncated_to_double">truncated_to_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A>
+	<A NAME="f_truncated_to_double"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_truncated_to_double">truncated_to_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double value</SPAN>
 </A>
-	<A NAME="f_truncated_to_integer_portion"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_truncated_to_integer_portion">truncated_to_integer_portion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f_truncated_to_integer_portion"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_truncated_to_integer_portion">truncated_to_integer_portion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Integer portion of a decimal value. The first negative integer</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &lt;= to the value is returned if the value is negative.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
@@ -164,11 +164,11 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes from </SPAN><SPAN CLASS="equoted">source_pointer</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
-			<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_structure_size">structure_size</A>
+			<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_structure_size">structure_size</A>
 			<SPAN CLASS="etag">length_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
 			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
 </A>
-	<A NAME="f__infix_star"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_star">*</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__infix_star"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_star">*</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Multiply by </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
@@ -178,7 +178,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f__prefix_plus"><SPAN CLASS="ekeyword">prefix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__prefix_plus">+</A><SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__prefix_plus"><SPAN CLASS="ekeyword">prefix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__prefix_plus">+</A><SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unary plus</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="ekeyword">True</SPAN>
@@ -188,7 +188,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f__infix_plus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_plus">+</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__infix_plus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_plus">+</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add with </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
@@ -197,9 +197,9 @@
 			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-			<SPAN CLASS="etag">commutative</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_plus">+</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">commutative</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../../com/reference/structures/ecom_decimal.html#f__infix_plus">+</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f__infix_minus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_minus">-</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__infix_minus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_minus">-</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Subtract with </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
@@ -209,7 +209,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f__prefix_minus"><SPAN CLASS="ekeyword">prefix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__prefix_minus">-</A><SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__prefix_minus"><SPAN CLASS="ekeyword">prefix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__prefix_minus">-</A><SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Negative value of decimal</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="ekeyword">True</SPAN>
@@ -219,11 +219,11 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f__infix_slash"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_slash">/</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A>
+	<A NAME="f__infix_slash"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../com/reference/Structures/ecom_decimal.html#f__infix_slash">/</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Multiply by </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-			<SPAN CLASS="etag">good_divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_divisible">divisible</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">good_divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_divisible">divisible</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN>
 			<SPAN CLASS="etag">non_void_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
@@ -238,39 +238,39 @@
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
 
-	<A NAME="f_set_value"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_structure.html#f_set_value">set_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_set_value"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_structure.html#f_set_value">set_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set Current to 'source'.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_structure.html">ECOM_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_structure.html">ECOM_STRUCTURE</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_structure.html">ECOM_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_structure.html">ECOM_STRUCTURE</A>
 			<SPAN CLASS="etag">non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">valid_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialiazation</SPAN>
 
-	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_make">make</A>
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_make">make</A>
 </A>
-	<A NAME="f_make_from_double"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_make_from_double">make_from_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dbl_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_double"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_make_from_double">make_from_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dbl_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with value 'dbl_value'</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> status report</SPAN>
 
-	<A NAME="f_divisible"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_divisible">divisible</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_divisible"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_divisible">divisible</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is divisible by </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f_exponentiable"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_exponentiable">exponentiable</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_exponentiable"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_exponentiable">exponentiable</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_decimal.html">ECOM_DECIMAL</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is exponentiable by </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/numeric.html">NUMERIC</A>
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
-	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is 'other' equal to Current object?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Not implemented yet.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
 			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
-			<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_decimal.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_decimal.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>

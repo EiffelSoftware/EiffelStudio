@@ -111,12 +111,12 @@
 				above).
 				<LI><B>H2</B>. Frequently, the objects will be composite, that is to say, instances of a developer-defined
 				class, and one of the attributes of that class, of type
-				<A HREF="/libraries/base/reference/structures/kernel/string_chart.html">STRING</A>, can serve as
+				<A HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A>, can serve as
 				the key. For example if you were writing an Eiffel compiler you would probably
 				need to keep a data structure that includes information about classes of the
 				system. Each class is represented by an object with several fields describing the
 				properties of the class; one of these fields, the class name, corresponding to an
-				attribute of type <A HREF="/libraries/base/reference/structures/kernel/string_chart.html">STRING</A>, will serve as key.
+				attribute of type <A HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A>, will serve as key.
 				<LI><B>H3</B>. Instead of being the full object (as in case <B>H1</B>) or one of the object’s fields (as in
 				case <B>H2</B>), the key may have to be computed through a function of the generating
 				class, which will take into account several attributes of the class (that is to say,
@@ -128,8 +128,8 @@
 				the key is highly variable but must in all cases be a descendant of
 				<A HREF="/libraries/base/reference/kernel/hashable_chart.html">HASHABLE</A>. This is
 				true of both
-				<A HREF="../../../../../libraries/base/reference/structures/kernel/integer_chart.html">INTEGER</A> (case <B>H1</B>)
-				and <A HREF="../../../../../libraries/base/reference/structures/kernel/string_chart.html">STRING</A> (case <B>H2</B>).
+				<A HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A> (case <B>H1</B>)
+				and <A HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A> (case <B>H2</B>).
 				The requirements for being a
 				<A HREF="/libraries/base/reference/kernel/hashable_chart.html">HASHABLE</A> are not harsh:
 				all you need is a function hash_code that returns a non-negative integer.

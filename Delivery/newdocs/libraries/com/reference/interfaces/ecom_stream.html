@@ -17,58 +17,58 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_stream.html">ECOM_STREAM</A>
+	<A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_stream.html">ECOM_STREAM</A>
 
 <SPAN CLASS="ekeyword">create</SPAN> 
 
-	<A NAME="f_make_from_other"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_make_from_other">make_from_other</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_interface.html">ECOM_INTERFACE</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_other"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_make_from_other">make_from_other</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_interface.html">ECOM_INTERFACE</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make from other Queriable.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
 			<SPAN CLASS="etag">non_void_other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
-			<SPAN CLASS="etag">valid_initializer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
-			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
+			<SPAN CLASS="etag">valid_initializer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A>
 </A>
-	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cpp_obj</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cpp_obj</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make from pointer</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
 			<SPAN CLASS="etag">non_default_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
-		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
-			<SPAN CLASS="etag">valid_initializer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
-			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
+			<SPAN CLASS="etag">valid_initializer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A>
 </A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;Access</SPAN>
 
-	<A NAME="f_hresult"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult">hresult</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult">hresult</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Original HRESULT.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_code"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_code">hresult_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult_code"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_code">hresult_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status code.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_facility"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_facility">hresult_facility</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult_facility"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_facility">hresult_facility</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Facility code.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_message"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_message">hresult_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+	<A NAME="f_hresult_message"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_message">hresult_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Error message.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
-		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
-		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 			<SPAN CLASS="etag">non_void_message</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
-	<A NAME="f_access_time"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_access_time">access_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
+	<A NAME="f_access_time"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_access_time">access_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access time</SPAN>
 </A>
 	<A NAME="f_check_instruction"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_check_instruction">Check_instruction</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
@@ -83,14 +83,14 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for a COM error.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_creation_time"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_creation_time">creation_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
+	<A NAME="f_creation_time"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_creation_time">creation_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Creation time</SPAN>
 </A>
-	<A NAME="f_description"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_description">description</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stat_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_statstg.html">ECOM_STATSTG</A>
+	<A NAME="f_description"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_description">description</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stat_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_statstg.html">ECOM_STATSTG</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> STATSTG structure</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">stat_flag</SPAN><SPAN CLASS="ecomment"> values.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">stat_flag</SPAN><SPAN CLASS="ecomment"> values.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
-			<SPAN CLASS="etag">valid_stat_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stat_flags.html#f_is_valid_stat_flag">is_valid_stat_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stat_flag</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">valid_stat_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stat_flags.html#f_is_valid_stat_flag">is_valid_stat_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stat_flag</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
@@ -98,13 +98,13 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for developer exception</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_end_of_stream"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+	<A NAME="f_end_of_stream"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current seek pointer at end of stream?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Valid only after </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read">read</A><SPAN CLASS="ecomment"> ,</SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_update_end_of_stream">update_end_of_stream</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_start">start</A><SPAN CLASS="ecomment">, or </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_finish">finish</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Valid only after </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read">read</A><SPAN CLASS="ecomment"> ,</SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_update_end_of_stream">update_end_of_stream</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_start">start</A><SPAN CLASS="ecomment">, or </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_finish">finish</A><SPAN CLASS="ecomment">.</SPAN>
 
-	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is wrapped structure initialized?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_external_exception"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_external_exception">External_exception</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for operating system error</SPAN>
@@ -125,58 +125,58 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for I/O error</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_is_valid_lock"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_valid_lock"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">lock</SPAN><SPAN CLASS="ecomment"> a valid locktype?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_is_valid_seek"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stream_seek.html#f_is_valid_seek">is_valid_seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">seek</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_seek">seek</A><SPAN CLASS="ecomment"> a valid IStorage and IStream seek flag?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
+	<A NAME="f_is_valid_seek"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stream_seek.html#f_is_valid_seek">is_valid_seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">seek</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_seek">seek</A><SPAN CLASS="ecomment"> a valid IStorage and IStream seek flag?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_is_valid_stat_flag"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stat_flags.html#f_is_valid_stat_flag">is_valid_stat_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_valid_stat_flag"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stat_flags.html#f_is_valid_stat_flag">is_valid_stat_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">flag</SPAN><SPAN CLASS="ecomment"> a valid stat flag?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer to COM object wrapper.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_last_boolean"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_last_boolean">last_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+	<A NAME="f_last_boolean"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_last_boolean">last_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last read </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="ecomment"></SPAN>
 
-	<A NAME="f_last_character"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A></A>
+	<A NAME="f_last_character"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last read </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="ecomment"></SPAN>
 
-	<A NAME="f_last_integer"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
+	<A NAME="f_last_integer"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last read </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="ecomment"></SPAN>
 
-	<A NAME="f_last_real"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real.html">REAL</A></A>
+	<A NAME="f_last_real"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real.html">REAL</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last read </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/real.html">REAL</A><SPAN CLASS="ecomment"></SPAN>
 
-	<A NAME="f_last_string"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A></A>
+	<A NAME="f_last_string"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last read </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="ecomment"></SPAN>
 
-	<A NAME="f_lock_exclusive"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_exclusive">lock_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_exclusive"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_exclusive">lock_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Attempts to read or write this stream by other stream openings</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> return error EOLE_STG_E_ACCESSDENIED.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_lock_onlyonce"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_onlyonce">lock_onlyonce</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_onlyonce"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_onlyonce">lock_onlyonce</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If lock is granted, no other EOLE_LOCK_ONLYONCE lock can be</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> obtained on bytes in given region. Usually this lock type</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is an alias for some other lock type and other semantics might occur</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as a side effect.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_lock_write"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_write">lock_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_write"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_write">lock_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If lock is granted, specified region of stream</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> can be read by calling IStream.Read from any opening of</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> this stream. Attempts to write to this region from any opening</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of this stream other than the one to which lock was granted</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> returns error EOLE_STG_E_ACCESSDENIED.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_locks_supported"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_locks_supported">locks_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_locks_supported"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_locks_supported">locks_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Types of region locking supported by stream</SPAN>
 </A>
 	<A NAME="f_loop_invariant"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_loop_invariant">Loop_invariant</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
@@ -187,10 +187,10 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for non-decreased loop variant</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_modification_time"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_modification_time">modification_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
+	<A NAME="f_modification_time"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_modification_time">modification_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_file_time.html">WEL_FILE_TIME</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Modification time</SPAN>
 </A>
-	<A NAME="f_name"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+	<A NAME="f_name"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name</SPAN>
 </A>
 	<A NAME="f_no_more_memory"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_no_more_memory">No_more_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
@@ -233,31 +233,31 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for operating system signal</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
 
-	<A NAME="f_size"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_size">size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A>
+	<A NAME="f_size"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_size">size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size in bytes</SPAN>
 </A>
-	<A NAME="f_statflag_default"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stat_flags.html#f_statflag_default">statflag_default</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_statflag_default"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stat_flags.html#f_statflag_default">statflag_default</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Indicate that this is not used for property</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_statflag_noname"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stat_flags.html#f_statflag_noname">statflag_noname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_statflag_noname"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stat_flags.html#f_statflag_noname">statflag_noname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Indicate that this is not used for property</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stat_flags.html">ECOM_STAT_FLAGS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_stream_seek_cur"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stream_seek.html#f_stream_seek_cur">stream_seek_cur</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stream_seek_cur"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stream_seek.html#f_stream_seek_cur">stream_seek_cur</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets seek position relative to</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> current position of stream</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_stream_seek_end"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stream_seek.html#f_stream_seek_end">stream_seek_end</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stream_seek_end"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stream_seek.html#f_stream_seek_end">stream_seek_end</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets seek position relative to</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> current end of stream</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
-	<A NAME="f_stream_seek_set"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stream_seek.html#f_stream_seek_set">stream_seek_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stream_seek_set"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stream_seek.html#f_stream_seek_set">stream_seek_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets seek position relative to</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> beginning of stream</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_void_assigned_to_expanded"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_void_assigned_to_expanded">Void_assigned_to_expanded</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for assignment of void value</SPAN>
@@ -301,7 +301,7 @@
 </A>
 	<A NAME="f_is_developer_exception_of_name"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception_of_name">is_developer_exception_of_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the last exception originally due to a developer</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> exception of name </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> exception of name </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="ecomment">?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/exceptions.html">EXCEPTIONS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_is_signal"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_signal">is_signal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -376,130 +376,130 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/exceptions.html">EXCEPTIONS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_raise"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_raise">raise</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raise a developer exception of name </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raise a developer exception of name </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_name">name</A><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/exceptions.html">EXCEPTIONS</A><SPAN CLASS="ecomment">)</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
 
-	<A NAME="f_clone_stream"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_clone_stream">clone_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_stream.html">ECOM_STREAM</A>
+	<A NAME="f_clone_stream"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_clone_stream">clone_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_stream.html">ECOM_STREAM</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> New stream referencing</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the same bytes as Current</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Seek pointer is also cloned</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">clone_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A>
+			<SPAN CLASS="etag">clone_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A>
 </A>
-	<A NAME="f_copy_to"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_copy_to">copy_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_stream.html">ECOM_STREAM</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_copy_to"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_copy_to">copy_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_stream.html">ECOM_STREAM</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">bytes</SPAN><SPAN CLASS="ecomment"> number of bytes from current seek pointer</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in stream to current seek pointer in</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">destination</SPAN><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
-			<SPAN CLASS="etag">valid_destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">destination</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A>
+			<SPAN CLASS="etag">valid_destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">destination</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A>
 			<SPAN CLASS="etag">valid_bytes_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">bytes</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
 </A>
-	<A NAME="f_finish"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_finish">finish</A>
+	<A NAME="f_finish"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_finish">finish</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set seek pointer to end of stream.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">at_end</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A>
+			<SPAN CLASS="etag">at_end</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A>
 </A>
-	<A NAME="f_lock_region"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_lock_region">lock_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_lock_region"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_lock_region">lock_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Restricts access to range of bytes defined by</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">offset</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">count</SPAN><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_offset</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">offset</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
 			<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">count</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
-			<SPAN CLASS="etag">valid_lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">valid_lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f_read"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read">read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_read"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read">read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reads </SPAN><SPAN CLASS="equoted">bytes</SPAN><SPAN CLASS="ecomment"> number of bytes from stream</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> into </SPAN><SPAN CLASS="equoted">buffer</SPAN><SPAN CLASS="ecomment"> starting at current seek pointer.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">buffer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 			<SPAN CLASS="etag">valid_bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">bytes</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
 </A>
-	<A NAME="f_read_boolean"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read_boolean">read_boolean</A>
+	<A NAME="f_read_boolean"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read_boolean">read_boolean</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read boolean from stream.</SPAN>
 </A>
-	<A NAME="f_read_character"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read_character">read_character</A>
+	<A NAME="f_read_character"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read_character">read_character</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read character from stream.</SPAN>
 </A>
-	<A NAME="f_read_integer"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read_integer">read_integer</A>
+	<A NAME="f_read_integer"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read_integer">read_integer</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read integer from stream.</SPAN>
 </A>
-	<A NAME="f_read_real"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read_real">read_real</A>
+	<A NAME="f_read_real"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read_real">read_real</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read real from stream.</SPAN>
 </A>
-	<A NAME="f_read_string"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_read_string">read_string</A>
+	<A NAME="f_read_string"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_read_string">read_string</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read string from stream.</SPAN>
 </A>
-	<A NAME="f_seek"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_seek">seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">displacement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_large_integer.html">ECOM_LARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_seek"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_seek">seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">displacement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_large_integer.html">ECOM_LARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move seek pointer by </SPAN><SPAN CLASS="equoted">displacement</SPAN><SPAN CLASS="ecomment"></SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> relative to </SPAN><SPAN CLASS="equoted">origin</SPAN><SPAN CLASS="ecomment">.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">origin</SPAN><SPAN CLASS="ecomment"> values.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stream_seek.html">ECOM_STREAM_SEEK</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">origin</SPAN><SPAN CLASS="ecomment"> values.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">non_void_displacement</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">displacement</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">valid_displacement</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">displacement</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
-			<SPAN CLASS="etag">valid_seek_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stream_seek.html#f_is_valid_seek">is_valid_seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">origin</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">valid_seek_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stream_seek.html#f_is_valid_seek">is_valid_seek</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">origin</SPAN><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f_set_size"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_set_size">set_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_set_size"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_set_size">set_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change size of stream to </SPAN><SPAN CLASS="equoted">new_size</SPAN><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_size">size</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_size</SPAN>
+			<A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_size">size</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_size</SPAN>
 </A>
-	<A NAME="f_start"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_start">start</A>
+	<A NAME="f_start"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_start">start</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set seek pointer to beginning of stream.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">not_end</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A>
+			<SPAN CLASS="etag">not_end</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A>
 </A>
-	<A NAME="f_unlock_region"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_unlock_region">unlock_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_unlock_region"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_unlock_region">unlock_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../com/reference/structures/ecom_ularge_integer.html">ECOM_ULARGE_INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removes access restriction to range of bytes defined by</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">offset</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">count</SPAN><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_offset</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">offset</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
 			<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">count</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">count</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
-			<SPAN CLASS="etag">valid_lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">valid_lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f_update_end_of_stream"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_update_end_of_stream">update_end_of_stream</A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update value of </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A><SPAN CLASS="ecomment">.</SPAN>
+	<A NAME="f_update_end_of_stream"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_update_end_of_stream">update_end_of_stream</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update value of </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_end_of_stream">end_of_stream</A><SPAN CLASS="ecomment">.</SPAN>
 </A>
-	<A NAME="f_write"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write">write</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write">write</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bytes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Writes </SPAN><SPAN CLASS="equoted">bytes</SPAN><SPAN CLASS="ecomment"> number of bytes into stream</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> starting at current seek pointer.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">buffer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 </A>
-	<A NAME="f_write_boolean"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write_boolean">write_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">boolean</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write_boolean"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write_boolean">write_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">boolean</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">boolean</SPAN><SPAN CLASS="ecomment"> into stream.</SPAN>
 </A>
-	<A NAME="f_write_character"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write_character">write_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write_character"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write_character">write_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">character</SPAN><SPAN CLASS="ecomment"> into stream.</SPAN>
 </A>
-	<A NAME="f_write_integer"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write_integer">write_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">integer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write_integer"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write_integer">write_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">integer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">integer</SPAN><SPAN CLASS="ecomment"> into stream.</SPAN>
 </A>
-	<A NAME="f_write_real"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write_real">write_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real.html">REAL</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write_real"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write_real">write_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real.html">REAL</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">real</SPAN><SPAN CLASS="ecomment"> into stream.</SPAN>
 </A>
-	<A NAME="f_write_string"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stream.html#f_write_string">write_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_write_string"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stream.html#f_write_string">write_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">string</SPAN><SPAN CLASS="ecomment"> into stream.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="elocal">string</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
 
-	<A NAME="f_trigger"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_trigger">trigger</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_trigger"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_trigger">trigger</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raise exception with code </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_exception_codes.html">ECOM_EXCEPTION_CODES</A><SPAN CLASS="ecomment"> for possible values.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_exception_codes.html">ECOM_EXCEPTION_CODES</A><SPAN CLASS="ecomment"> for possible values.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A><SPAN CLASS="ecomment">)</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
 	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
-		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
-	<SPAN CLASS="etag">queriable_invariant</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_queriable.html#f_exists">exists</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_queriable.html">ECOM_QUERIABLE</A>
+	<SPAN CLASS="etag">queriable_invariant</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_initializer">initializer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_queriable.html#f_exists">exists</A>
 
 <SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ECOM_STREAM</PRE>
 

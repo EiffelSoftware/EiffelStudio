@@ -18,14 +18,14 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stgm.html">ECOM_STGM</A>
+	<A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stgm.html">ECOM_STGM</A>
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
-	<A NAME="f_is_valid_stgm"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_is_valid_stgm">is_valid_stgm</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stgm</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_valid_stgm"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_is_valid_stgm">is_valid_stgm</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stgm</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">stgm</SPAN><SPAN CLASS="ecomment"> a valid storage mode flag?</SPAN>
 </A>
-	<A NAME="f_stgm_convert"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_convert">stgm_convert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_convert"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_convert">stgm_convert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This flag is applicable only to the creation of IStorage objects.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_convert allows the creation to proceed while preserving</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> existing data. The old data is saved to a stream named CONTENTS</SPAN>
@@ -34,31 +34,31 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> stream regardless of whether the existing file currently contains</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a layered storage object.</SPAN>
 </A>
-	<A NAME="f_stgm_create"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_create">stgm_create</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_create"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_create">stgm_create</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_create indicates an existing IStorage or IStream object</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> should be removed before the new one replaces it. A new object</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is created when this flag is specified only if the existing</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> IStorage or IStream has been successfully removed.</SPAN>
 </A>
-	<A NAME="f_stgm_deleteonrelease"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_deleteonrelease">stgm_deleteonrelease</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_deleteonrelease"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_deleteonrelease">stgm_deleteonrelease</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The Stgm_deleteonrelease flag indicates that the underlying</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> file is to be automatically destroyed when the root IStorage</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object is released. This capability is most useful for</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> creating temporary files.</SPAN>
 </A>
-	<A NAME="f_stgm_direct"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_direct">stgm_direct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_direct"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_direct">stgm_direct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_DIrect is always specified for IStream objects.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_transacted is not supported in the compound file</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> implementation of IStream. Other implementations can choose</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to support it.</SPAN>
 </A>
-	<A NAME="f_stgm_failifthere"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_failifthere">stgm_failifthere</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_failifthere"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_failifthere">stgm_failifthere</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_failifthere causes the create operation to fail if an</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> existing object with the specified name exists. In this case,</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stg_e_filealreadyexists is returned. Stgm_failifthere</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> applies to both IStorage and IStream objects.</SPAN>
 </A>
-	<A NAME="f_stgm_priority"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_priority">stgm_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_priority"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_priority">stgm_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The Stgm_priority flag allows an IStorage object to be opened</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> so that a subsequent copy operation can be done at reduced cost.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_priority allows an application to read certain streams</SPAN>
@@ -71,7 +71,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> keep IStorage objects open in priority mode for as short a time</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as possible.</SPAN>
 </A>
-	<A NAME="f_stgm_read"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_read">stgm_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_read"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_read">stgm_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When applied to an IStream object, Stgm_READ enables</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> applications to successfully call IStream.Read. If Stgm_read</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is omitted, IStream.Read will return an error. When applied to an</SPAN>
@@ -81,20 +81,20 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> must also have been opened in read mode otherwise, an error is</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> returned.</SPAN>
 </A>
-	<A NAME="f_stgm_readwrite"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_readwrite">stgm_readwrite</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_readwrite"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_readwrite">stgm_readwrite</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_readwrite is the logical combination of the</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_read and Stgm_write. However, the defined value</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of Stgm_readwrite is not equal to</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Stgm_read or Stgm_write).</SPAN>
 </A>
-	<A NAME="f_stgm_share_deny_none"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_share_deny_none">stgm_share_deny_none</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_share_deny_none"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_share_deny_none">stgm_share_deny_none</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 0x00000040L</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_SHARE_DENY_NONE indicates that neither read access nor</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> write access should be denied to subsequent openings. This is the</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> default sharing mode and if no Stgm_SHARE_* flag is explicitly</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> given, Stgm_SHARE_DENY_NONE is implied.</SPAN>
 </A>
-	<A NAME="f_stgm_share_deny_read"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_share_deny_read">stgm_share_deny_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_share_deny_read"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_share_deny_read">stgm_share_deny_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 0x00000030L</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When successfully applied to a root IStorage, the</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_SHARE_DENY_READ flag prevents others from opening the</SPAN>
@@ -108,7 +108,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object with Stgm_SHARE_DENY_READ applies only to that opening,</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> not the network-wide set of openings of the parent.</SPAN>
 </A>
-	<A NAME="f_stgm_share_deny_write"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_share_deny_write">stgm_share_deny_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_share_deny_write"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_share_deny_write">stgm_share_deny_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When successfully applied the Stgm_share_deny_write flag</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> prevents subsequent openings of either a storage or a stream from</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> specifying write mode. The open call fails and returns an error</SPAN>
@@ -116,14 +116,14 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For information about the interaction of this flag with nested</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> openings, see the earlier discussion about Stgm_share_deny_read.</SPAN>
 </A>
-	<A NAME="f_stgm_share_exclusive"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_share_exclusive">stgm_share_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_share_exclusive"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_share_exclusive">stgm_share_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The compound files implementation requires that all inner elements</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be opened Stgm_share_exclusive. It is the logical combination</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of the Stgm_share_deny_read and Stgm_share_deny_write.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> All root storage objects, as well as child storage and stream</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> objects must be opened with Stgm_share_exclusive.</SPAN>
 </A>
-	<A NAME="f_stgm_transacted"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_transacted">stgm_transacted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_transacted"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_transacted">stgm_transacted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The transaction for each open object is nested in the transaction</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for its parent storage object. Therefore, committing changes at the</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> child level is dependent on committing changes in the parent and</SPAN>
@@ -140,7 +140,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> first opened. The creation and destruction of elements within a</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> storage object are scoped by its transaction.</SPAN>
 </A>
-	<A NAME="f_stgm_write"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgm.html#f_stgm_write">stgm_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgm_write"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgm.html#f_stgm_write">stgm_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stgm_write lets an object commit changes to the storage.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifically, unless this flag has been given, IStorage.Commit</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> and IStream.Commit will fail. An open object whose changes cannot</SPAN>

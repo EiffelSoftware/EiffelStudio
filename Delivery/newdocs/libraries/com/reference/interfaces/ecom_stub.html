@@ -17,29 +17,29 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Interfaces/ecom_stub.html">ECOM_STUB</A>
+	<A CLASS="eclass" HREF="../../../com/reference/interfaces/ecom_stub.html">ECOM_STUB</A>
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
-	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is stub initialized?</SPAN>
 </A>
-	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer to COM object stub.</SPAN>
 	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
 
-	<A NAME="f_create_item"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_create_item">create_item</A>
+	<A NAME="f_create_item"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_create_item">create_item</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create COM stub.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
-			<SPAN CLASS="etag">not_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_exists">exists</A>
+			<SPAN CLASS="etag">not_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_exists">exists</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_exists">exists</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_exists">exists</A>
 </A>
-	<A NAME="f_set_item"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN>
+	<A NAME="f_set_item"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ecom_stub.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN>
+			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ecom_stub.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>
 

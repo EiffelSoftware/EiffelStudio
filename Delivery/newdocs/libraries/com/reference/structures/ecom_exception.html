@@ -17,26 +17,26 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_exception.html">ECOM_EXCEPTION</A>
+	<A CLASS="eclass" HREF="../../../com/reference/structures/ecom_exception.html">ECOM_EXCEPTION</A>
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;Access</SPAN>
 
-	<A NAME="f_hresult"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult">hresult</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult">hresult</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Original HRESULT.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_code"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_code">hresult_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult_code"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_code">hresult_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status code.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_facility"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_facility">hresult_facility</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_hresult_facility"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_facility">hresult_facility</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Facility code.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
 </A>
-	<A NAME="f_hresult_message"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_hresult_message">hresult_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+	<A NAME="f_hresult_message"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_hresult_message">hresult_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Error message.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">applicable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
@@ -250,9 +250,9 @@
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
 
-	<A NAME="f_trigger"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_exception.html#f_trigger">trigger</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_trigger"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_exception.html#f_trigger">trigger</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raise exception with code </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_exception_codes.html">ECOM_EXCEPTION_CODES</A><SPAN CLASS="ecomment"> for possible values.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../com/reference/constants/ecom_exception_codes.html">ECOM_EXCEPTION_CODES</A><SPAN CLASS="ecomment"> for possible values.</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>
 

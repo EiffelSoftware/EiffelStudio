@@ -14,7 +14,6 @@ inherit
 			execute
 		end;
 	NAMER;
-	SHARED_PIXMAPS;
 	LICENCED_COMMAND
 		rename
 			parent_window as Project_tool

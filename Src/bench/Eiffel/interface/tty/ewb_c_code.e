@@ -20,36 +20,20 @@ feature
 		end;
 
 	loop_execute is
-		local
-			d: DIRECTORY;
-			cp_cmd, current_dir: STRING;
 		do
 			if Project_read_only.item then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
-					-- Change dir to the c_code_directory
-				current_dir := Execution_environment.current_working_directory
-				Execution_environment.change_working_directory (c_code_directory);
-
-					-- Check to see if Finish_freezing_script is there
-					-- copy if not
-				!!d.make (".");
-				if not d.has_entry (Finish_freezing_script) then
-					!!cp_cmd.make (50);
-					cp_cmd.append (Copy_cmd);
-					cp_cmd.extend (' ');
-					cp_cmd.append (freeze_command_name);
-					cp_cmd.append (" .");
-					Execution_environment.system (cp_cmd);
-				end;
-
-					-- Call Finish_freezing_script
-				Execution_environment.system (Finish_freezing_script);
-
-					-- Change dir back to original
-				Execution_environment.change_working_directory (current_dir);
+				eif_call_finish_freezing (c_code_directory.to_c, freeze_command_name.to_c)
 			end
 		end;
+
+feature {NONE} -- Externals
+
+	eif_call_finish_freezing (c_code_dir, freeze_cmd: ANY) is
+		external
+			"C"
+		end
 
 end
 

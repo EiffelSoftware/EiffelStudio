@@ -12,7 +12,7 @@
 
 	More testing needs to be done for a console application being passed large strings.
 */
-
+ 
 #include <stdio.h>
 #include <windows.h>
 #include <commdlg.h>
@@ -24,167 +24,114 @@
 
 #define BUFFER_SIZE 255
 
-static HANDLE eif_coninfile, eif_conoutfile;	/* Handles for the non windowed console 	*/
-static char eif_console_buffer [BUFFER_SIZE];	/* buffer for reads from windowed console	*/
-static char transfer_buffer [30];		/* buffer to output of numbers as strings	*/
-static DWORD buffer_length = 0;			/* Length of data in buffer			*/
-static unsigned int buffer_place = 0;			/* Position in buffer we are currently at 	*/
+#define BUFFER(x,y) *(pBuffer + y * cxBuffer + x)
+static char *pBuffer = NULL ;
+static int line_max ;
+static int cxBuffer;
 
-int dummy_length;				/* Length holder for some calls			*/
+static HANDLE eif_coninfile, eif_conoutfile;
+static char eif_console_buffer [BUFFER_SIZE];
 
-static int eif_console_eof_value = 0;		/* eof of the console?				*/
-static BOOL eif_console_allocated = FALSE;	/* Has the console been allocated yet
-							(an expensive operation			*/
+static int xCaret, yCaret;
+static int cxChar, cyChar, cxClient, cyClient, cyBuffer;
+static int iVscrollPos, iVscrollMax, iVscrollInc;
+static int line_height;
+static HDC hdc;
 
-static int console_in_x = 10, console_in_y = 30;	/* Initial position of the console	*/
+int dummy_length;
 
-BOOL windowed_application = TRUE;		/* Is this a windowed application?		*/
-						/* This will most likely crash the system if it 
-							has its value changed after the console
-							is created
-						*/
+static int eif_console_eof_value = 0;
+static BOOL eif_console_allocated = FALSE;
 
-extern HINSTANCE eif_hInstance;			/* Instance available for windowed applications */
+BOOL windowed_application = TRUE;
+BOOL Reading = FALSE;
 
-/* Prototypes */
+extern HANDLE eif_coninfile, eif_conoutfile;
+extern HINSTANCE eif_hInstance;
+
+void eif_console_putint (long l);
+void eif_console_putchar (EIF_CHARACTER c);
+void eif_console_putstring (BYTE *s, long length);
 void eif_make_console();
 void eif_GetWindowedInput();
+
 HWND eif_conout_window;
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam);
 void eif_PutWindowedOutput(char *s, int l);
-
-static HWND hEdit;				/* Edit window handle				*/
+static HWND hEdit;
 
 EIF_INTEGER eif_console_readint()
-/*
-	read an integer from the console
-*/
 {
 	long lastint;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if (buffer_place >= buffer_length)
-		{
-		if (windowed_application)
-			eif_GetWindowedInput();
-		else    
-			if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio();
-		buffer_place = 0;
-		}
+	if (windowed_application)
+		eif_GetWindowedInput();
+	else {}
+		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+		//	eio();
 
-	if (0 >= sscanf (eif_console_buffer + buffer_place, "%i", &lastint))
+	if (0 >= sscanf (eif_console_buffer, "%i", &lastint))
 		eio();
 
-	while ((buffer_place < buffer_length) && (!isspace(eif_console_buffer[buffer_place])))
-		buffer_place++;
-
-	if ((buffer_place < buffer_length) && 
-		((eif_console_buffer [buffer_place] == '\r') || (eif_console_buffer [buffer_place] == '\n')) )
-		buffer_place = buffer_length;
 	return lastint;
 }
 
 EIF_REAL eif_console_readreal()
-/*
-	read a real from the console
-*/
 {
 	float lastreal;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if (buffer_place >= buffer_length)
-		{
-		if (windowed_application)
-			eif_GetWindowedInput();
-		else
-			if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio();
-		buffer_place = 0;
-		}
+	if (windowed_application)
+		eif_GetWindowedInput();
+	else {}
+		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+		//	eio();
 
-	if (0 > sscanf (eif_console_buffer+buffer_place, "%f", &lastreal))
+	if (0 > sscanf (eif_console_buffer, "%f", &lastreal))
 		eio();
-
-	while ((buffer_place < buffer_length) && (!isspace(eif_console_buffer[buffer_place])))
-		buffer_place++;
-	if ((buffer_place < buffer_length) && 
-		((eif_console_buffer [buffer_place] == '\r') || (eif_console_buffer [buffer_place] == '\n')) )
-		buffer_place = buffer_length;
 
 	return lastreal;
 }
 
 EIF_CHARACTER eif_console_readchar()
-/*
-	read a character from the console
-*/
 {
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if ((buffer_place >= buffer_length) ||
-	    (eif_console_buffer [buffer_place] == '\r') ||
-	    (eif_console_buffer [buffer_place] == '\n'))
-		{
-		if (windowed_application)
-			eif_GetWindowedInput();
-		else
-			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio();
-		buffer_place = 0;
-		}
-	if ((buffer_length == 0) || 
-	    (eif_console_buffer [buffer_place] == '\r') ||
-	    (eif_console_buffer [buffer_place] == '\n'))
-		return EOF;
-	else
-		return eif_console_buffer [buffer_place++];
+	if (windowed_application)
+		eif_GetWindowedInput();
+	else {}
+		//if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+		//	eio();
+
+	return eif_console_buffer [0];
 }
 
 double eif_console_readdouble()
-/*
-	read a double from the console
-*/
 {
 	double lastdouble;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if (buffer_place >= buffer_length)
-		{
-		if (windowed_application)
-			eif_GetWindowedInput();
-		else
-			if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio();
-		buffer_place = 0;
-		}
+	if (windowed_application)
+		eif_GetWindowedInput();
+	else {}
+		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+		//		eio();
 
-	if (0 > sscanf (eif_console_buffer+buffer_place, "%lf", &lastdouble))
+	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
 		eio();
-
-	while ((buffer_place < buffer_length) && (!isspace(eif_console_buffer[buffer_place])))
-		buffer_place++;
-	if ((buffer_place < buffer_length) && 
-		((eif_console_buffer [buffer_place] == '\r') || (eif_console_buffer [buffer_place] == '\n')) )
-		buffer_place = buffer_length;
 
 	return lastdouble;
 }
 
-EIF_INTEGER eif_console_readline(char *s, long bound, long start)
-/*
-	read a line of input from the console
-	into the buffer s, s has start characters in it and a total 
-	size of bound
-*/
-
+long eif_console_readline(char *s,long bound,long start)
 {
 	long amount, read;
 	static char *c = NULL;
@@ -204,20 +151,13 @@ EIF_INTEGER eif_console_readline(char *s, long bound, long start)
 	if (c == NULL)  
 		{
 		if (windowed_application)
-			{
+		{
 			eif_GetWindowedInput();
 			strcat (eif_console_buffer, "\r\n");
-			buffer_length += 2;
-			}
-		else    
-			result = ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
-		c = eif_console_buffer;
 		}
-
-	if (buffer_length == 0)
-		{
-		eif_console_eof_value = 1;
-		return 0;
+		else {}   
+			//result = ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
+		c = eif_console_buffer;
 		}
 
 	amount = bound - start;
@@ -236,7 +176,6 @@ EIF_INTEGER eif_console_readline(char *s, long bound, long start)
 			c++;
 		}
 
-	buffer_place = buffer_length;
 	if (*c == '\n')
 		{
 		c = NULL;
@@ -247,40 +186,21 @@ EIF_INTEGER eif_console_readline(char *s, long bound, long start)
 		return (read + 1);
 
 	return bound - start + 1;
-	}
+
+}
 
 long eif_console_readstream(char *s, long bound)
-/*
-	read a stream of input from the console
-	at most bound characters
-*/
 {
-	long amount = bound;
-
-	if (!eif_console_allocated)
-		eif_make_console();
-
-	if (windowed_application) {
-		eif_GetWindowedInput();
-		strcat (eif_console_buffer, "\r\n");
-		buffer_length += 2;
-	} else    
-		if (!ReadConsole(eif_coninfile, s, bound, &amount, NULL)) {
-			 eif_console_eof_value = 1;
-			 return bound - amount - 1;
-		 }
-
-	return bound - amount - 1;
 }
 
 
 long eif_console_readword(char *s, long bound, long start)
 /*
-s       target buffer
-bound   target buffer size
-start   number of characters already in target buffer
+	s       target buffer
+	bound   target buffer size
+	start   number of characters already in target buffer
 */
-	{
+{
 	/* Get a word and fill it into `s' (at most `bound' characters),
 	 * with `start' being the amount of bytes already stored within s. This
 	 * means we really have to read (bound - start) characters. Any leading
@@ -294,45 +214,17 @@ start   number of characters already in target buffer
 		eif_make_console();
 
 	amount = bound - start;         /* Characters to be read */
-	s += start;                                     /* Where read characters are written */
+	s += start;                     /* Where read characters are written */
 
-	if (start == 0) {                       /* First call */
-		while (c = eif_console_readchar())
-			if (!isspace(c))
-				break;
-		if (c == EOF)
-			{
-			eif_console_eof_value = 1;
-			return 0;                               /* Reached EOF before word */
-			}
-	}
-
-	while (amount-- > 0) {
-		*s++ = c;
-		if (buffer_place >= buffer_length)
-			break;
-		c = eif_console_readchar();
-		if (isspace(c))
-			break;
-	}
-	
-	/* If we managed to get the whole string, return the number of characters
-	 * read. Otherwise, return (bound - start + 1) to indicate an error
-	 * condition.
-	 */
-
-	if ((buffer_place >= buffer_length) || isspace(c))
-		return bound - start - amount;  /* Number of characters read */
-
-	return bound - start + 1;                       /* Error condition */
-	}
+	c = eif_console_readchar ();
+	*s = c;
+	return 1;
+}
 
 void eif_console_putint (long l)
-/*
-	put the ascii representation of l on the console
-*/
 {
 	int t = 0;
+	char transfer_buffer [BUFFER_SIZE];
 
 	if (!eif_console_allocated)
 		eif_make_console();
@@ -342,13 +234,12 @@ void eif_console_putint (long l)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	}
+}
 
 void eif_console_putchar (EIF_CHARACTER c)
-/*
-	put the character c on the console
-*/
 {
+	char transfer_buffer [BUFFER_SIZE];
+
 	if (!eif_console_allocated)
 		eif_make_console();
 
@@ -357,12 +248,9 @@ void eif_console_putchar (EIF_CHARACTER c)
 		eif_PutWindowedOutput (transfer_buffer, 1);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer,1, &dummy_length, NULL);
-	}
+}
 
 void eif_console_putstring (BYTE *s, long length)
-/*
-	put the string s length l on the console
-*/
 {
 	if (!eif_console_allocated)
 		eif_make_console();
@@ -370,13 +258,11 @@ void eif_console_putstring (BYTE *s, long length)
 		eif_PutWindowedOutput (s, length);
 	else
 		WriteConsole(eif_conoutfile,s, length, &dummy_length, NULL);
-	}
+}
 
-void eif_console_putreal (EIF_DOUBLE r)
-/*
-	put the ascii representation of r on the console
-*/
+void eif_console_putreal (double r)
 {
+	char transfer_buffer [BUFFER_SIZE];
 	int t = 0;
 
 	if (!eif_console_allocated)
@@ -390,10 +276,8 @@ void eif_console_putreal (EIF_DOUBLE r)
 }
 
 void eif_console_putdouble (double d)
-/*
-	put the ascii representation of d on the console
-*/
 {
+	char transfer_buffer [BUFFER_SIZE];
 	int t = 0;
 
 	if (!eif_console_allocated)
@@ -406,27 +290,17 @@ void eif_console_putdouble (double d)
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
 }
 
-
 EIF_BOOLEAN eif_console_eof ()
-/*
-	Has the equivalent of eof been reached for the console?
-*/
 {
 	return (eif_console_eof_value == 1 ? '\01' : '\00');
 }
 
 void eif_console_next_line()
-/*
-	Force us to read a new line for the next input
-*/
 {
-	buffer_place = buffer_length;
+	eif_PutWindowedOutput ("\n", 1);
 }
 
 int print_err_msg (FILE *err, char *StrFmt, ...)
-/*
-	Print an error message, modified for special exception processing
-*/
 {
 	va_list ap;
 	int r;
@@ -452,6 +326,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 
 	return r;
 }
+
 BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 /*
 	Display a dialog when an exception trace occurs.
@@ -511,17 +386,14 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 }
 
 void eif_console_cleanup ()
-/*
-	Cleanup the console
-*/
 {
 	if (windowed_application)
 		DestroyWindow (eif_conout_window);
 	else
-		{
+	{
 		CloseHandle (eif_coninfile);
 		CloseHandle (eif_conoutfile);
-		}
+	}
 }
 
 void show_trace()
@@ -542,16 +414,12 @@ void show_trace()
 }
 
 void eif_make_console()
-/*
-	Create a console based on windowed_application
-	register cleanup function.
-*/
 {
 	BOOL b;
 	SECURITY_ATTRIBUTES sa;
 
 	if (windowed_application)
-		{
+	{
 		WNDCLASS wc;
 			
 		wc.style         = CS_VREDRAW | CS_HREDRAW;
@@ -562,21 +430,21 @@ void eif_make_console()
 		
 		wc.hIcon         = NULL;
 		wc.hCursor       = NULL;
-		wc.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+		wc.hbrBackground = (HBRUSH) GetStockObject (BLACK_BRUSH);
 		wc.lpszMenuName  = NULL;
 		wc.lpszClassName = "EiffelConsole";
 			
 		if (!RegisterClass (&wc))
 			return;
 
-		eif_conout_window = CreateWindow ("EiffelConsole", "Log", 
-			WS_VISIBLE | WS_THICKFRAME | WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 400, 200, 
-			NULL,0, eif_hInstance, NULL);
+		eif_conout_window = CreateWindow ("EiffelConsole", "Eiffel Console",
+			WS_SYSMENU | WS_VISIBLE | WS_VSCROLL |  WS_THICKFRAME |WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, eif_hInstance, NULL) ;
+
 		ShowWindow (eif_conout_window, SW_SHOW);
-		SetWindowPos (eif_conout_window, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-		}
+	}
 	else
-		{
+	{
 		b = AllocConsole();
 	
 		sa.nLength = sizeof (sa);
@@ -594,163 +462,364 @@ void eif_make_console()
 
 		if (eif_coninfile == INVALID_HANDLE_VALUE)
 			eio();
-		}
-
+	}
 	eif_register_cleanup (eif_console_cleanup);
 	eif_console_allocated = TRUE;
-		
 }
-
-BOOL CALLBACK get_input_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-/*
-	Ask for input dialog - this dialog remembers its position
-*/
-{
-	DWORD size;
-
-	switch (umsg)
-		{
-		case WM_INITDIALOG:
-			SetFocus (GetDlgItem(hwnd, 1001));
-			SetWindowPos (hwnd, HWND_TOPMOST, console_in_x-5, console_in_y-24, 0, 0, SWP_NOSIZE);
-			size = SendMessage (hEdit, WM_GETTEXTLENGTH, 0, 0);
-			SendMessage (hEdit, EM_SETSEL, size, size);
-			SendMessage (hEdit, EM_SCROLLCARET, 0, 0);
-			return 0;
-		case WM_MOVE:
-			console_in_x = LOWORD(lparam);
-			console_in_y = HIWORD(lparam);
-			return 0;
-		case WM_COMMAND:
-			switch LOWORD (wparam)
-				{
-				case IDOK:
-				case IDCANCEL:
-					buffer_length = GetDlgItemText (hwnd, 1001, eif_console_buffer, BUFFER_SIZE);
-					EndDialog (hwnd, LOWORD(wparam));
-					return 1;
-				}
-			return 1;
-		default:
-			return 0;       
-		}
-}
-
 
 void eif_GetWindowedInput()
-/*
-	Ask for input dialog or use console
-*/
 {
-	if (DialogBox (eif_hInstance, "EIF_GET_INPUT", NULL, get_input_dialog) == IDCANCEL)
-		eio();
-	else
+	MSG msg;
+
+	yCaret = line_max - iVscrollMax;
+    SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;				
+	ShowCaret (eif_conout_window) ;
+	Reading = TRUE;
+	while (Reading == TRUE)
+	{
+		if (PeekMessage (&msg, (HWND) eif_conout_window, 0L, 0L, PM_REMOVE))
 		{
-		eif_console_putstring (eif_console_buffer, strlen(eif_console_buffer));
-		eif_console_putchar ('\n');
+			TranslateMessage (&msg);
+			DispatchMessage (&msg);
 		}
+	}
 }
 
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam)
-/*
-	Console window proc
-*/
 {
 	LPCREATESTRUCT lpcs;
-	
+	static int first_line, iMaxWidth;
+	static int buffer_start_pos, buffer_length, buffer_on;
+
+	int  x, y, i ;
+	PAINTSTRUCT ps ;
+	TEXTMETRIC  tm ;
+
 	switch (wMsg)
 		{
-		case WM_CREATE:
-			lpcs = (LPCREATESTRUCT) lParam;
-			hEdit = CreateWindow ("edit", NULL,  WS_CHILD | ES_MULTILINE | ES_READONLY | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
-				0,0, lpcs->cx, lpcs->cy, hwnd, NULL, eif_hInstance, NULL);
-			SendMessage (hEdit, WM_SETTEXT, 0, (LPARAM) "");
-			SendMessage (hEdit, WM_SETFONT, (WPARAM) GetStockObject (ANSI_FIXED_FONT), MAKELPARAM (0,0));
-			return 0;
+		case WM_CREATE :
+			hdc = GetDC (hwnd) ;
+			SelectObject (hdc, GetStockObject (SYSTEM_FIXED_FONT)) ;
+			GetTextMetrics (hdc, &tm) ;
+			cxChar = tm.tmAveCharWidth ;
+			cyChar = tm.tmHeight ;
+
+			iMaxWidth = 255;
+            			cxBuffer = 255;
+			cyBuffer = 1000;
+			line_max = 0;
+			iVscrollPos = 0;
+			buffer_on = FALSE;
+
+				// allocate memory for buffer and clear it
+
+			if (pBuffer != NULL) free (pBuffer) ;
+			if ((pBuffer = (char *) malloc (cxBuffer * cyBuffer)) == NULL)
+			{
+				MessageBox (hwnd, "Window too large.  Cannot "
+					"allocate enough memory.", "Eiffel Console",
+					MB_ICONEXCLAMATION | MB_OK);
+			}
+			else
+			{
+				for (y = 0 ; y < cyBuffer ; y++)
+					for (x = 0 ; x < cxBuffer ; x++)
+						BUFFER(x,y) = ' ';
+			}
+
+				// set caret to upper left corner
+			xCaret = 0;
+			yCaret = 0;
+
+			return 0 ;
+
 		case WM_SIZE:
-			SetWindowPos (hEdit, HWND_TOP, 0, 0, LOWORD(lParam), HIWORD(lParam), SWP_NOMOVE | SWP_NOZORDER);
+				// obtain window size in pixels
+			cxClient = LOWORD (lParam);
+			cyClient = HIWORD (lParam);
+			line_height = cyClient / cyChar;
+
+			iVscrollMax = max (0, line_max + 2 - cyClient / cyChar);
+			iVscrollPos = min (iVscrollPos, iVscrollMax);
+			if (iVscrollMax > 0)
+			{
+				SetScrollRange (hwnd, SB_VERT, 0, iVscrollMax, FALSE);
+				SetScrollPos   (hwnd, SB_VERT, iVscrollPos, TRUE);
+			}
+
+			return 0 ;
+
+		case WM_VSCROLL :
+
+			switch (LOWORD (wParam))
+				{
+				case SB_TOP :
+					iVscrollInc = -iVscrollPos ;
+					break ;
+
+				case SB_BOTTOM :
+    				iVscrollInc = iVscrollMax - iVscrollPos ;
+    				break ;
+
+				case SB_LINEUP :
+					iVscrollInc = -1 ;
+					break ;
+
+				case SB_LINEDOWN :
+					iVscrollInc = 1 ;
+					break ;
+
+				case SB_PAGEUP : 
+					iVscrollInc = min (-1, -cyClient / cyChar) ;
+					break ;
+
+				case SB_PAGEDOWN :
+					iVscrollInc = max (1, cyClient / cyChar) ;
+					break ;
+
+				case SB_THUMBTRACK :
+					iVscrollInc = HIWORD (wParam) - iVscrollPos ;
+					break ;
+
+				default :
+					iVscrollInc = 0 ;
+				}
+			iVscrollInc = max (-iVscrollPos, min (iVscrollInc, iVscrollMax - iVscrollPos));
+
+			if (iVscrollInc != 0)
+			{
+				iVscrollPos += iVscrollInc ;
+				SetScrollPos (hwnd, SB_VERT, iVscrollPos, TRUE) ;
+				InvalidateRect (hwnd, NULL, 1);
+			}
+
+			if (Reading)
+			{
+				yCaret = line_max;
+                SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
+			}
+
+			return 0 ;
+
+		case WM_SETFOCUS :
+			// create and show the caret
+
+			CreateCaret (hwnd, NULL, cxChar, cyChar);
+			yCaret = line_max - iVscrollMax;
+			SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
+			return 0 ;
+
+		case WM_KILLFOCUS :
+			// hide and destroy the caret
+
+			HideCaret (hwnd) ;
+			DestroyCaret () ;
+			return 0 ;
+
+		case WM_KEYDOWN :
+			switch (wParam)
+			{
+
+				case VK_DELETE :
+					for (x = xCaret ; x < cxBuffer - 1 ; x++)
+						BUFFER (x, yCaret) = BUFFER (x + 1, yCaret) ;
+				
+					BUFFER (cxBuffer - 1, yCaret) = ' ' ;
+				
+					HideCaret (hwnd) ;
+					hdc = GetDC (hwnd) ;
+				
+					SelectObject (hdc,GetStockObject (SYSTEM_FIXED_FONT)) ;
+					SetTextColor (hdc, RGB (175, 175, 175));
+					SetBkColor (hdc, RGB (0, 0, 0));
+					SetBkMode (hdc, OPAQUE);				
+
+					TextOut (hdc, xCaret * cxChar, yCaret * cyChar,
+							& BUFFER (xCaret, yCaret),
+							cxBuffer - xCaret) ;
+				
+					ShowCaret (hwnd) ;
+					ReleaseDC (hwnd, hdc) ;
+					break ;
+			}
+			if (Reading)
+			{
+				yCaret = line_max - iVscrollMax;
+				SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
+			}
+			return 0 ;
+      
+		case WM_CHAR :
+			if (Reading)
+			{
+				if (!buffer_on)
+				{
+					buffer_on = TRUE;
+					buffer_start_pos = xCaret;
+				}
+				yCaret = line_max - iVscrollMax;
+                SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;				
+				ShowCaret (hwnd) ;
+				for (i = 0 ; i < (int) LOWORD (lParam) ; i++)
+                	{
+                    	switch (wParam)
+						{
+						case '\b' :                    // backspace
+							if ((xCaret > 0) && (xCaret > buffer_start_pos))
+								{
+								xCaret-- ;
+								SendMessage (hwnd, WM_KEYDOWN,VK_DELETE, 1L) ;
+								}
+							break ;
+
+						case '\t' :                    // tab
+							do
+								{
+								SendMessage (hwnd, WM_CHAR, ' ', 1L) ;
+								}
+							while (xCaret % 8 != 0) ;
+							break ;
+
+						case '\n' :                    // line feed
+							if (++yCaret == cyBuffer)
+							{
+								yCaret = 0 ;
+							}
+							break ;
+
+						case '\r' :                    // carriage return
+
+							Reading = FALSE;
+							buffer_on = FALSE;
+							memset (eif_console_buffer, 0, BUFFER_SIZE);
+							for (i=0; i< (xCaret - buffer_start_pos); i++)
+							{
+								eif_console_buffer [i] = BUFFER (buffer_start_pos + i, line_max);
+                            }
+							line_max++;
+
+							iVscrollMax = max (0, line_max + 2 - cyClient / cyChar);
+							iVscrollPos = iVscrollMax;
+
+							if (iVscrollMax > 0)
+							{
+								SetScrollRange (hwnd, SB_VERT, 0, iVscrollMax, FALSE);
+								SetScrollPos   (hwnd, SB_VERT, iVscrollMax, TRUE);
+							}
+
+							xCaret = 0 ;
+							HideCaret (hwnd) ;
+							InvalidateRect (eif_conout_window, NULL, 1);
+
+							break ;
+
+						default :						// character codes
+							BUFFER (xCaret, line_max) = (char) wParam ;
+                            
+							HideCaret (hwnd) ;
+							hdc = GetDC (hwnd) ;
+
+							SelectObject (hdc,GetStockObject (SYSTEM_FIXED_FONT)) ;
+							SetTextColor (hdc, RGB (175, 175, 175));
+							SetBkMode (hdc, TRANSPARENT);
+
+							TextOut (hdc, xCaret * cxChar, yCaret * cyChar,
+								& BUFFER (xCaret, line_max), 1) ;
+
+							ShowCaret (hwnd) ;
+							ReleaseDC (hwnd, hdc) ;
+
+							if (++xCaret == cxBuffer)
+							{
+								xCaret = 0 ;
+                            	if (++yCaret == cyBuffer) yCaret = 0 ;
+							}
+							break ;
+						}
+					yCaret = line_max - iVscrollMax;
+                 	SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
+					}
+			}
+			return 0 ;
+
+		case WM_PAINT:
+
+			hdc = BeginPaint (hwnd, &ps);
+			SetTextColor (hdc, RGB (175, 175, 175));
+			SetBkMode (hdc, TRANSPARENT);
+
+			SelectObject (hdc, GetStockObject (SYSTEM_FIXED_FONT));
+			for (y = 0 ; y < (line_max - iVscrollPos + 1); y++)
+				TextOut (hdc, 0, y * cyChar, & BUFFER(0,(y + iVscrollPos)), cxBuffer);
+			EndPaint (hwnd, &ps);
 			return 0;
 		}
+
 	return DefWindowProc (hwnd, wMsg, wParam, lParam);
 }
 
-void eif_PutWindowedOutput(char *s, int l)
-/*
-	Put the string on the console
-*/
+void output_all ()
 {
-#define BUFSIZE 16000
-	char *buffer, *sp, *bp, *ss = s;
-	MSG msg;
-	int size, lv = l, newlines = 0;
-	BOOL update = FALSE;
-
-	/*
-		FIXME: this should be allocated statically
-	*/
-	if ((buffer = calloc (BUFSIZE+1,1)) == NULL) return;
-
-	while (PeekMessage (&msg, (HWND) eif_conout_window, 0L, 0L, PM_REMOVE))
-		{
-		TranslateMessage (&msg);
-		DispatchMessage (&msg);
-		}
-
-	size = SendMessage (hEdit, WM_GETTEXT, BUFSIZE, (LPARAM) buffer);
-
-	// Count the number of newlines
-
-	for (sp = ss, lv = l; lv; lv --, sp++)
-		if (*sp == '\n')
-			newlines ++;
-	update = newlines > 0;
-
-	// Can we fit the current string?
-
-	if (BUFSIZE - size > l + newlines)
-		{
-		// Yes it fits just append it
-		for (sp = ss, bp = buffer + size; l; l--, sp++, bp++)
-			{
-			if (*sp == '\n')
-				{
-				*bp = '\r';
-				bp++;
-				}
-			*bp = *sp;
-			}
-		}
-	else // No it doesn't fit
-		// Will the string fit in the buffer?
-		{
-		if (l + newlines < BUFSIZE)
-			{
-			// Yes
-			}
-		else	// String won't fit in buffer at all
-			{
-			ss = ss + l + newlines - BUFSIZE + 1;
-			}
-		memset (buffer, 0, BUFSIZE);
-		for (sp = ss, bp = buffer; *sp; sp++, bp++)
-			{
-			if (*sp == '\n')
-				{
-				*bp = '\r';
-				bp++;
-				}
-			*bp = *sp;
-			}
-		}
-	SendMessage (hEdit, WM_SETTEXT, 0, (LPARAM) buffer);
-	/*
-		Only update the text when necessary
-	*/
-	if (update)
-		{
-		SetWindowPos (eif_conout_window, HWND_TOP, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-		SendMessage (hEdit, EM_SETSEL, size, size);
-		SendMessage (hEdit, EM_SCROLLCARET, 0, 0);
-		}
-	free (buffer);
+	int y;
+	SetTextColor (hdc, RGB (175, 175, 175));
+	SelectObject (hdc, GetStockObject (BLACK_BRUSH));
+	SetBkMode (hdc, TRANSPARENT);
+	Rectangle (hdc, 0, 0, 1200, 1000);
+	for (y = 0 ; y < (line_max - iVscrollPos + 1); y++)
+		TextOut (hdc, 0, y * cyChar, & BUFFER(0,(y + iVscrollPos)), cxBuffer);
 }
+
+void eif_PutWindowedOutput(char *s, int l)
+{
+	int i, ix;
+	static int next_print=25;
+	int next_line = FALSE;
+	int start = xCaret;
+	int stop = l + start;
+
+	ix = start;
+	for (i=start; i < stop; i++)
+	{
+
+		switch (s[i - start])
+			{
+				case 13:
+					break;
+
+				case 10:
+					next_line = TRUE;
+					xCaret = 0;
+					ix = 0;
+					line_max ++;
+					break;
+
+				case '\t':
+					xCaret = xCaret + 8;
+					break;
+
+				default:
+					BUFFER (ix, line_max) = s[i - start];
+					xCaret ++;
+					ix ++;
+					break;
+			}
+	}
+	if (next_line)
+	{
+		iVscrollMax = max (0, line_max + 2 - line_height);
+		iVscrollPos = iVscrollMax;
+		if (iVscrollMax > 0)  
+		{
+			SetScrollRange (eif_conout_window, SB_VERT, 0, iVscrollMax,TRUE) ;
+			SetScrollPos   (eif_conout_window, SB_VERT, iVscrollMax, TRUE);
+		}
+	}
+	InvalidateRect (eif_conout_window, NULL, 1);
+	next_print--;
+	if (next_print == 0)
+	{
+		next_print = 25;
+		output_all ();
+	}
+}
+

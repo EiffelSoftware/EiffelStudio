@@ -33,21 +33,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_bar_new)
-			initialize_menu_bar_style  (c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-		end
-
-	initialize_menu_bar_style (a_menu_bar: POINTER) is
-			-- Remove the default shadow from the menubar
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-				{
-					gtk_widget_set_name ((GtkWidget*) $a_menu_bar, "v2menubar");
-					gtk_rc_parse_string ("style \"v2-menubar-style\" {\n GtkMenuBar::shadow-type = none\n }\n  widget \"*.v2menubar\" style : highest  \"v2-menubar-style\" " );
-				}
-			]"
 		end
 		
 feature {EV_WINDOW_IMP} -- Implementation

@@ -27,6 +27,11 @@ inherit
 			{NONE} all
 		end
 
+	ECOM_VAR_TYPE
+		export
+			{NONE} all
+		end
+	
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -34,7 +39,6 @@ feature -- Basic operations
 		local
 			member_writer: WIZARD_WRITER_C_MEMBER
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
-			a_registration_code_gen: WIZARD_REGISTRATION_CODE_GENERATOR
 			tmp_string: STRING
 		do
 			create cpp_class_writer.make
@@ -452,8 +456,9 @@ feature {NONE} -- Implementation
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr")
 
-			body_code := check_type_info (cocls_descriptor)
+			create body_code.make (0)
 
+			body_code.append (Tab)
 			body_code.append (Hresult)
 			body_code.append (Space)
 			body_code.append (Hresult_variable_name)
@@ -471,12 +476,35 @@ feature {NONE} -- Implementation
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
 
-
-			body_code.append ("VARIANTARG * lcl_rgvarg")
+			body_code.append ("VARIANTARG * rgvarg")
 			body_code.append (Space_equal_space)
 			body_code.append (Dispparam_parameter)
 			body_code.append (Struct_selection_operator)
 			body_code.append ("rgvarg")
+			body_code.append (Semicolon)
+			body_code.append (New_line_tab)
+
+			body_code.append ("DISPID * rgdispidNamedArgs")
+			body_code.append (Space_equal_space)
+			body_code.append (Dispparam_parameter)
+			body_code.append (Struct_selection_operator)
+			body_code.append ("rgdispidNamedArgs")
+			body_code.append (Semicolon)
+			body_code.append (New_line_tab)
+
+			body_code.append ("unsigned int cArgs")
+			body_code.append (Space_equal_space)
+			body_code.append (Dispparam_parameter)
+			body_code.append (Struct_selection_operator)
+			body_code.append ("cArgs")
+			body_code.append (Semicolon)
+			body_code.append (New_line_tab)
+
+			body_code.append ("unsigned int cNamedArgs")
+			body_code.append (Space_equal_space)
+			body_code.append (Dispparam_parameter)
+			body_code.append (Struct_selection_operator)
+			body_code.append ("cNamedArgs")
 			body_code.append (Semicolon)
 			body_code.append (New_line_tab)
 
@@ -487,6 +515,16 @@ feature {NONE} -- Implementation
 			body_code.append (Semicolon)
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
+
+			body_code.append ("pExcepInfo->wCode = 0;%N%T")
+			body_code.append ("pExcepInfo->wReserved = 0;%N%T")
+			body_code.append ("pExcepInfo->bstrSource = NULL;%N%T")
+			body_code.append ("pExcepInfo->bstrDescription = NULL;%N%T")
+			body_code.append ("pExcepInfo->bstrHelpFile = NULL;%N%T")
+			body_code.append ("pExcepInfo->dwHelpContext = 0;%N%T")
+			body_code.append ("pExcepInfo->pvReserved = NULL;%N%T")
+			body_code.append ("pExcepInfo->pfnDeferredFillIn = NULL;%N%T")
+			body_code.append ("pExcepInfo->scode = 0;%N%T")
 
 			body_code.append (Switch)
 			body_code.append (Space_open_parenthesis)
@@ -520,26 +558,6 @@ feature {NONE} -- Implementation
 			body_code.append (New_line_tab)
 			body_code.append (Close_curly_brace)
 
-			body_code.append (New_line)
-			body_code.append (New_line_tab)
-			body_code.append (If_keyword)
-			body_code.append (Space_open_parenthesis)
-			body_code.append (Dispparam_parameter)
-			body_code.append (Struct_selection_operator)
-			body_code.append ("cArgs")
-			body_code.append (Space)
-			body_code.append (C_not_equal)
-			body_code.append (Space)
-			body_code.append (Zero)
-			body_code.append (Close_parenthesis)
-			body_code.append (New_line_tab_tab)			
-
-			body_code.append (Co_task_mem_free)
-			body_code.append (Space_open_parenthesis)
-			body_code.append (Tmp_variable_name)
-			body_code.append (Close_parenthesis)
-			body_code.append (Semicolon)
-			body_code.append (New_line)
 			body_code.append (New_line_tab)
 			body_code.append (Return_s_ok)
 
@@ -578,6 +596,7 @@ feature {NONE} -- Implementation
 				elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
 					prop_put_functions.extend (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 				elseif is_propertyputref (interface_desc.functions.item.invoke_kind) then
+					prop_put_functions.extend (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 				else
 					Result.append (function_case (interface_desc.functions.item))
 				end
@@ -675,12 +694,12 @@ feature {NONE} -- Implementation
 				Result.append (prop_get_func.item (prop_desc.member_id))
 				prop_get_func.remove (prop_desc.member_id)
 			else
-				Result := clone (Tab_tab)
+				create Result.make (0)
 				Result.append (If_keyword)
 				Result.append (Space_open_parenthesis)
 				Result.append ("wFlags")
-				Result.append (C_equal)
-				Result.append ("INVOKE_PROPERTYGET")
+				Result.append (Ampersand)
+				Result.append (" (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF)")
 				Result.append (Close_parenthesis)
 				Result.append (New_line_tab_tab)
 				Result.append (Open_curly_brace)
@@ -716,12 +735,11 @@ feature {NONE} -- Implementation
 					Result.append (prop_put_func.item (prop_desc.member_id))
 					prop_put_func.remove (prop_desc.member_id)
 				else
-					Result := clone (Tab_tab)
 					Result.append (If_keyword)
 					Result.append (Space_open_parenthesis)
 					Result.append ("wFlags")
-					Result.append (C_equal)
-					Result.append ("INVOKE_PROPERTYPUT")
+					Result.append (Ampersand)
+					Result.append (" (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF)")
 					Result.append (Close_parenthesis)
 					Result.append (New_line_tab_tab)
 					Result.append (Open_curly_brace)
@@ -751,78 +769,138 @@ feature {NONE} -- Implementation
 			-- Function code for propertyput
 		require
 			non_void_descriptor: func_desc /= Void
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			Result := clone (Tab_tab)
+			create Result.make (0)
+			Result.append (New_line_tab_tab_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
-			Result.append ("wFlags")
-			Result.append (C_equal)
-			Result.append ("INVOKE_PROPERTYPUT")
+			Result.append ("wFlags ")
+			Result.append (Ampersand)
+			Result.append (" (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF)")
 			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab_tab)
-
-			create visitor
-			visitor.visit (func_desc.arguments.first.type)
-
-			Result.append (New_line_tab_tab)
-			Result.append (func_desc.name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Variant_parameter)
-			Result.append (Struct_selection_operator)
-			Result.append (vartype_namer.variant_field_name (visitor))
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-			Result.append (Close_curly_brace)
+			Result.append (function_case_body (func_desc))
 		end
 
 	propertyget_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			Result := clone (Tab_tab)
+			create Result.make (0)
+			Result.append (New_line_tab_tab_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
-			Result.append ("wFlags")
-			Result.append (C_equal)
-			Result.append ("INVOKE_PROPERTYGET")
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab_tab)
-
-			create visitor
-			visitor.visit (func_desc.return_type)
-
-			Result.append ("pVarResult")
-			Result.append (Struct_selection_operator)
-			Result.append ("vt")
-			Result.append (Space_equal_space)
-			Result.append_integer (visitor.vt_type)
-			Result.append (Semicolon)
-
-			Result.append (New_line_tab_tab)
-			Result.append (func_desc.name)
-			Result.append (Space_open_parenthesis)
+			Result.append ("wFlags ")
 			Result.append (Ampersand)
-			Result.append ("pVarResult")
-			Result.append (Struct_selection_operator)
-			Result.append (vartype_namer.variant_field_name (visitor))
+			Result.append (" (DISPATCH_PROPERTYGET | DISPATCH_METHOD)")
 			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-			Result.append (Close_curly_brace)
-			
+			Result.append (function_case_body (func_desc))
 		end
 
-	function_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	check_failer  (func_desc: WIZARD_FUNCTION_DESCRIPTOR; an_additional_string, a_return_code: STRING): STRING is
+			-- Case statement for function descriptor
+		require
+			non_void_descriptor: func_desc /= Void
+			non_void_additional_string: an_additional_string /= Void
+			non_void_return_code: a_return_code /= Void
+			valid_return_code: not a_return_code.empty
+		do
+			create Result.make (0)
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (Failed)
+			Result.append (Space_open_parenthesis)
+			Result.append (Hresult_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+			
+			Result.append (Open_curly_brace)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab_tab)
+			if not func_desc.arguments.empty then
+				Result.append (Co_task_mem_free)
+				Result.append (Space_open_parenthesis)
+				Result.append (Tmp_variable_name)
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+			end
+			Result.append (an_additional_string)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab_tab)
+			Result.append (Return)
+			Result.append (Space)
+			Result.append (a_return_code)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+			
+			Result.append (Close_curly_brace)
+			Result.append (New_line_tab_tab_tab)
+		end
+
+	excepinfo_setting (an_application_name: STRING): STRING is
+			-- Fills EXCEPINFO `bstrDescription' and `bstrSource'
+		require
+			non_void_application_name: an_application_name /= Void
+			valid_application_name: not an_application_name.empty
+		do
+			Result := "WCHAR * wide_string = 0;%N%
+	%					wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));%N%
+	%					BSTR b_string = SysAllocString (wide_string);%N%
+	%					free (wide_string);%N%
+	%					pExcepInfo->bstrDescription = b_string;%N%
+	%					wide_string = ccom_create_from_string (%"" + an_application_name + "%");%N%
+	%					b_string = SysAllocString (wide_string);%N%
+	%					free (wide_string);%N%
+	%					pExcepInfo->bstrSource = b_string;%N%
+	%					pExcepInfo->wCode = HRESULT_CODE (hr);"
+		end
+
+	interface_descriptor (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
+					a_visitor: WIZARD_DATA_TYPE_VISITOR): WIZARD_INTERFACE_DESCRIPTOR is
+		require
+			interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
+		local
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
+			an_index: INTEGER
+		do
+			pointed_descriptor ?= a_data_type_descriptor
+			if (pointed_descriptor /= Void) then
+				if a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
+					pointed_descriptor ?= pointed_descriptor.pointed_data_type_descriptor
+					check
+						non_void_pointed_descriptor: pointed_descriptor /= Void
+					end
+				end
+				user_defined ?= pointed_descriptor.pointed_data_type_descriptor
+				if (user_defined /= Void) then
+					an_index := user_defined.type_descriptor_index
+					a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
+					if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer then
+						tmp_interface_descriptor ?= a_type_descriptor
+					else
+						tmp_coclass_descriptor ?= a_type_descriptor
+						if tmp_coclass_descriptor /= Void then
+							tmp_interface_descriptor := tmp_coclass_descriptor.default_interface_descriptor
+						end
+					end
+				end
+			end
+			Result := tmp_interface_descriptor
+		ensure
+			non_void_interface_descriptor: Result /= Void
+		end
+	
+	function_case_body (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -832,13 +910,12 @@ feature {NONE} -- Implementation
 			local_buffer: STRING
 		do
 			create local_buffer.make (0)
-
-			Result := clone (New_line_tab_tab)
-			Result.append (Case)
-			Result.append (Space)
-			Result.append_integer (func_desc.member_id)
-			Result.append (Colon)
+			create Result.make (0)
 			Result.append (New_line_tab_tab_tab)
+			Result.append (Open_curly_brace)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
 			Result.append (Dispparam_parameter)
@@ -850,13 +927,15 @@ feature {NONE} -- Implementation
 			Result.append_integer (func_desc.argument_count)
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab_tab_tab)
-			Result.append (Tab)
+
+			Result.append (Tab_tab)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append ("DISP_E_BADPARAMCOUNT")
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
 
 			if func_desc.argument_count > 0 then
 				Result.append (Tmp_variable_name)
@@ -878,11 +957,10 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 				Result.append (New_line)
 				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
 
 				Result.append (If_keyword)
 				Result.append (Space_open_parenthesis)
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
 				Result.append ("cNamedArgs")
 				Result.append (Space)
 				Result.append (More)
@@ -891,125 +969,424 @@ feature {NONE} -- Implementation
 
 				-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
+				Result.append (Tab_tab)
 				Result.append (For)
 				Result.append (Space_open_parenthesis)
-				Result.append ("i=0; i < ")
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
+				Result.append ("i = 0; i < ")
 				Result.append ("cNamedArgs")
 				Result.append (Semicolon)
+				Result.append (Space)
 				Result.append ("i++")
 				Result.append (Close_parenthesis)
 
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab_tab)
-				Result.append (Asterisk)
+				Result.append (Tab_tab_tab)
+				Result.append (Memcpy)
+				Result.append (Space)
+				Result.append (Open_parenthesis)
+				Result.append (Ampersand)
 				Result.append (Open_parenthesis)
 				Result.append (Tmp_variable_name)
-				Result.append (Plus)
-				Result.append (Asterisk)
-				Result.append (Open_parenthesis)
-				Result.append (Open_parenthesis)
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
+				Result.append (Space)
+				Result.append (Open_bracket)
 				Result.append ("rgdispidNamedArgs")
-				Result.append (Close_parenthesis)
-				Result.append (Plus)
+				Result.append (Space)
+				Result.append (Open_bracket)
 				Result.append ("i")
+				Result.append (Close_bracket)
+				Result.append (Close_bracket)
 				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Space_equal_space)
-				Result.append (Asterisk)
+				Result.append (Comma_space)
+				Result.append (Ampersand)
 				Result.append (Open_parenthesis)
-				Result.append (Variant_parameter)
-				Result.append (Plus)
+				Result.append ("rgvarg")
+				Result.append (Open_bracket)
 				Result.append ("i")
+				Result.append (Close_bracket)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append ("VARIANTARG")
+				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line)
 				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
 
 				-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
 				Result.append (For)
 				Result.append (Space_open_parenthesis)
-				Result.append ("i=")
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
+				Result.append ("i = ")
 				Result.append ("cArgs")
 				Result.append (Semicolon)
-				Result.append ("i>")
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
+				Result.append (Space)
+				Result.append ("i > ")
 				Result.append ("cNamedArgs")
 				Result.append (Semicolon)
+				Result.append (Space)
 				Result.append ("i--")
 				Result.append (Close_parenthesis)
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
-				Result.append (Asterisk)
+				Result.append (Tab_tab)
+
+				Result.append (Memcpy)
+				Result.append (Space)
+				Result.append (Open_parenthesis)
+				Result.append (Ampersand)
 				Result.append (Open_parenthesis)
 				Result.append (Tmp_variable_name)
-				Result.append (Plus)
-				Result.append (Open_parenthesis)
-				Result.append (Dispparam_parameter)
-				Result.append (Struct_selection_operator)
+				Result.append (Space)
+				Result.append (Open_bracket)
+				Result.append ("rgdispidNamedArgs")
+				Result.append (Space)
+				Result.append (Open_bracket)
 				Result.append ("cArgs")
-				Result.append ("-i")
+				Result.append (Close_bracket)
+				Result.append (" - i")
+				Result.append (Close_bracket)
 				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append ("rgvarg")
+				Result.append (Open_bracket)
+				Result.append ("i - 1")
+				Result.append (Close_bracket)
 				Result.append (Close_parenthesis)
-				Result.append (Space_equal_space)
-				Result.append (Asterisk)
-				Result.append (Open_parenthesis)
-				Result.append (Variant_parameter)
-				Result.append (Plus)
-				Result.append (Open_parenthesis)
-				Result.append ("i-1")
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append ("VARIANTARG")
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
-			end
-			Result.append (New_line)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (func_desc.name)
-			Result.append (Space_open_parenthesis)
-
-			if not func_desc.arguments.empty then
+				Result.append (New_line)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
 
 				from
 					func_desc.arguments.start
 					counter := 0
 				until
-					func_desc.arguments.off
+					func_desc.arguments.after
 				loop
 					create visitor
 					visitor.visit (func_desc.arguments.item.type)
 
-					Result.append (Space)
-					Result.append (Open_parenthesis)
+					Result.append (If_keyword)
+					Result.append (Space_open_parenthesis)
 					Result.append (Tmp_variable_name)
-					Result.append (Plus)
+					Result.append (Space)
+					Result.append (Open_bracket)
 					Result.append_integer (counter)
+					Result.append (Close_bracket)
+					Result.append (Dot)
+					Result.append ("vt")
+					Result.append (Space)
+					Result.append (C_not_equal)
+					Result.append_integer (visitor.vt_type)
 					Result.append (Close_parenthesis)
-					Result.append (Struct_selection_operator)
-					Result.append (vartype_namer.variant_field_name (visitor))
-					Result.append (Comma)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Tab)
+					Result.append (Open_curly_brace)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Tab)
+					Result.append (Tab)
+					Result.append (Co_task_mem_free)
+					Result.append (Space_open_parenthesis)
+					Result.append (Tmp_variable_name)
+					Result.append (Close_parenthesis)
+					Result.append (Semicolon)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Tab_tab)
+					
+					Result.append (Return)
+					Result.append (Space)
+					Result.append ("DISP_E_BADVARTYPE")
+					Result.append (Semicolon)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Tab)
+					Result.append (Close_curly_brace)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Tab)
+
+					if visitor.is_interface_pointer or visitor.is_coclass_pointer then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Zero)						
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (Iunknown)
+						Result.append (Space)
+						Result.append ("tmp_")
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Tmp_variable_name)
+						Result.append (Space)
+						Result.append (Open_bracket)
+						Result.append_integer (counter)
+						Result.append (Close_bracket)
+						Result.append (Dot)
+						Result.append (vartype_namer.variant_field_name (visitor))
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append ("IID tmp_iid_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).guid.to_definition_string)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (Hresult_variable_name)
+						Result.append (Space_equal_space)
+						Result.append ("tmp_")
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Struct_selection_operator)
+						Result.append (Query_interface)
+						Result.append (Space_open_parenthesis)
+						Result.append ("tmp_iid_")
+						Result.append_integer (counter)
+						Result.append (Comma_space)
+						Result.append ("(void**)")
+						Result.append (Open_parenthesis)
+						Result.append (Ampersand)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Close_parenthesis)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (check_failer (func_desc, "", "DISP_E_BADVARTYPE"))
+
+
+					elseif visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Zero)						
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append ("IID tmp_iid_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).guid.to_definition_string)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).c_type_name)
+						Result.append (Space)
+						Result.append (Asterisk)
+						Result.append (Space)
+						Result.append ("tmp_tmp_arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Zero)						
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (Iunknown)
+						Result.append (Asterisk)
+						Result.append (Space)
+						Result.append ("tmp_")
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Tmp_variable_name)
+						Result.append (Space)
+						Result.append (Open_bracket)
+						Result.append_integer (counter)
+						Result.append (Close_bracket)
+						Result.append (Dot)
+						Result.append (vartype_namer.variant_field_name (visitor))
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (Hresult_variable_name)
+						Result.append (Space_equal_space)
+						Result.append (Open_parenthesis)
+						Result.append (Asterisk)
+						Result.append ("tmp_")
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Close_parenthesis)
+						Result.append (Struct_selection_operator)
+						Result.append (Query_interface)
+						Result.append (Space_open_parenthesis)
+						Result.append ("tmp_iid_")
+						Result.append_integer (counter)
+						Result.append (Comma_space)
+						Result.append ("(void**)")
+						Result.append (Open_parenthesis)
+						Result.append (Ampersand)
+						Result.append ("tmp_tmp_arg_")
+						Result.append_integer (counter)
+						Result.append (Close_parenthesis)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+						Result.append (check_failer (func_desc, "", "DISP_E_BADVARTYPE"))
+
+						Result.append (Tab)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Ampersand)
+						Result.append ("tmp_tmp_arg_")
+						Result.append_integer (counter)						
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+
+					else
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append ("arg_")
+						Result.append_integer (counter)
+						Result.append (Space_equal_space)
+						Result.append (Tmp_variable_name)
+						Result.append (Space)
+						Result.append (Open_bracket)
+						Result.append_integer (counter)
+						Result.append (Close_bracket)
+						Result.append (Dot)
+						Result.append (vartype_namer.variant_field_name (visitor))
+						Result.append (Semicolon)
+						Result.append (New_line_tab_tab_tab)
+						Result.append (Tab)
+					end
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
-						local_buffer.append (Open_parenthesis)
 						local_buffer.append (Tmp_variable_name)
-						local_buffer.append (Plus)
+						local_buffer.append (Space)
+						local_buffer.append (Open_bracket)
 						local_buffer.append_integer (counter)
-						local_buffer.append (Close_parenthesis)
-						local_buffer.append (Struct_selection_operator)
+						local_buffer.append (Close_bracket)
+						local_buffer.append (Dot)
 						local_buffer.append ("vt")
 						local_buffer.append (Space_equal_space)
 						local_buffer.append_integer (visitor.vt_type)
 						local_buffer.append (Semicolon)
-						local_buffer.append (New_line_tab_tab_tab)				
+						local_buffer.append (New_line_tab_tab_tab)	
+						local_buffer.append (Tab)
+
+						if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+							local_buffer.append (Asterisk)
+							local_buffer.append (Open_parenthesis)
+						end
+						local_buffer.append (Tmp_variable_name)
+						local_buffer.append (Space)
+						local_buffer.append (Open_bracket)
+						local_buffer.append_integer (counter)
+						local_buffer.append (Close_bracket)
+						local_buffer.append (Dot)
+						local_buffer.append (vartype_namer.variant_field_name (visitor))
+						if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+							local_buffer.append (Close_parenthesis)
+						end
+						local_buffer.append (Space_equal_space)
+						if 
+							visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
+							visitor.is_interface_pointer or visitor.is_coclass_pointer
+						then
+							local_buffer.append ("static_cast<IUnknown *>(")
+						end
+						if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+							local_buffer.append (Asterisk)
+						end
+						local_buffer.append ("arg_")
+						local_buffer.append_integer (counter)
+						if 
+							visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
+							visitor.is_interface_pointer or visitor.is_coclass_pointer
+						then
+							local_buffer.append (Close_parenthesis)
+						end
+						local_buffer.append (Semicolon)
+						local_buffer.append (New_line_tab_tab_tab)	
+						local_buffer.append (Tab)
 					end
+					if func_desc.argument_count > 0 then
+					end
+
+					counter := counter + 1
+					func_desc.arguments.forth
+				end
+			end
+			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
+				create visitor
+				visitor.visit (func_desc.return_type)
+
+				Result.append (visitor.c_type)
+				Result.append (Space)
+				Result.append (C_result)
+				Result.append (Space_equal_space)
+				Result.append (Zero)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+
+				local_buffer.append ("pVarResult")
+				local_buffer.append (Struct_selection_operator)
+				local_buffer.append ("vt")
+				local_buffer.append (Space_equal_space)
+				local_buffer.append_integer (visitor.vt_type)
+				local_buffer.append (Semicolon)
+				local_buffer.append (New_line_tab_tab_tab)
+				local_buffer.append (Tab)
+
+
+				local_buffer.append ("pVarResult")
+				local_buffer.append (Struct_selection_operator)
+				local_buffer.append (vartype_namer.variant_field_name (visitor))
+				local_buffer.append (Space_equal_space)
+				local_buffer.append (C_result)
+				local_buffer.append (Semicolon)
+				local_buffer.append (New_line_tab_tab_tab)
+				local_buffer.append (Tab)
+			end
+
+			Result.append (Hresult_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (func_desc.name)
+			Result.append (Space_open_parenthesis)
+
+
+			if not func_desc.arguments.empty then
+
+				from
+					counter := 0
+				until
+					counter = func_desc.argument_count
+				loop
+
+					Result.append (Space)
+					Result.append ("arg_")
+					Result.append_integer (counter)
+					Result.append (Comma)
+
 
 					counter := counter + 1
 					func_desc.arguments.forth
@@ -1024,58 +1401,158 @@ feature {NONE} -- Implementation
 				visitor.visit (func_desc.return_type)
 
 				Result.append (Ampersand)
-				Result.append ("pVarResult")
-				Result.append (Struct_selection_operator)
-				Result.append (vartype_namer.variant_field_name (visitor))
-
-				local_buffer.append ("pVarResult")
-				local_buffer.append (Struct_selection_operator)
-				local_buffer.append ("vt")
-				local_buffer.append (Space_equal_space)
-				local_buffer.append_integer (visitor.vt_type)
-				local_buffer.append (Semicolon)
-				local_buffer.append (New_line_tab_tab_tab)
+				Result.append (C_result)
 			end
 
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
 
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Failed)
-			Result.append (Space_open_parenthesis)
-			Result.append (Hresult_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-			Result.append (Tab_tab)
+			Result.append (check_failer (func_desc, excepinfo_setting (Shared_wizard_environment.project_name), "DISP_E_EXCEPTION"))
+
+			if not local_buffer.empty then
+				Result.append (Tab)
+				Result.append (local_buffer)
+				Result.append (New_line_tab_tab_tab)
+			end
+
 			if not func_desc.arguments.empty then
+				Result.append (Tab)
+				Result.append (If_keyword)
+				Result.append (Space_open_parenthesis)
+				Result.append ("cNamedArgs")
+				Result.append (Space)
+				Result.append (More)
+				Result.append (Zero)
+				Result.append (Close_parenthesis)
+
+				-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+				
+				Result.append (For)
+				Result.append (Space_open_parenthesis)
+				Result.append ("i = 0; i < ")
+				Result.append ("cNamedArgs")
+				Result.append (Semicolon)
+				Result.append (Space)
+				Result.append ("i++")
+				Result.append (Close_parenthesis)
+
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab_tab)
+				Result.append (Memcpy)
+				Result.append (Space)
+				Result.append (Open_parenthesis)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append ("rgvarg")
+				Result.append (Open_bracket)
+				Result.append ("i")
+				Result.append (Close_bracket)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append (Tmp_variable_name)
+				Result.append (Space)
+				Result.append (Open_bracket)
+				Result.append ("rgdispidNamedArgs")
+				Result.append (Space)
+				Result.append (Open_bracket)
+				Result.append ("i")
+				Result.append (Close_bracket)
+				Result.append (Close_bracket)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append ("VARIANTARG")
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
+				Result.append (New_line)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+
+				-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
+				Result.append (For)
+				Result.append (Space_open_parenthesis)
+				Result.append ("i = ")
+				Result.append ("cArgs")
+				Result.append (Semicolon)
+				Result.append (Space)
+				Result.append ("i > ")
+				Result.append ("cNamedArgs")
+				Result.append (Semicolon)
+				Result.append (Space)
+				Result.append ("i--")
+				Result.append (Close_parenthesis)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab_tab)
+
+				Result.append (Memcpy)
+				Result.append (Space)
+				Result.append (Open_parenthesis)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append ("rgvarg")
+				Result.append (Open_bracket)
+				Result.append ("i - 1")
+				Result.append (Close_bracket)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append (Tmp_variable_name)
+				Result.append (Space)
+				Result.append (Open_bracket)
+				Result.append ("rgdispidNamedArgs")
+				Result.append (Space)
+				Result.append (Open_bracket)
+				Result.append ("cArgs")
+				Result.append (Close_bracket)
+				Result.append (" - i")
+				Result.append (Close_bracket)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append ("VARIANTARG")
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
+				Result.append (New_line)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
+
 				Result.append (Co_task_mem_free)
 				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_variable_name)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-				Result.append (Tab_tab)
-			end
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Hresult_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab_tab)
+				Result.append (New_line_tab_tab_tab)
+			end		
 			Result.append (Close_curly_brace)
 			Result.append (New_line_tab_tab_tab)
+		end
 
-			if not local_buffer.empty then
-				Result.append (local_buffer)
-				Result.append (New_line_tab_tab_tab)
-			end
+	function_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+			-- Case statement for function descriptor
+		require
+			non_void_descriptor: func_desc /= Void
+		do
+			Result := clone (New_line_tab_tab)
+			Result.append (Case)
+			Result.append (Space)
+			Result.append_integer (func_desc.member_id)
+			Result.append (Colon)
+			Result.append (function_case_body (func_desc))
+
 			Result.append (Break)
 			Result.append (Semicolon)
-			Result.append (New_line_tab_tab_tab)
+			Result.append (New_line)
 		end
 
 	add_query_interface (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is

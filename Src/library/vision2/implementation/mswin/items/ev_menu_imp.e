@@ -106,8 +106,6 @@ feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
 
 	clear_ev_children is
 			-- Clear all the items of the list.
-		require
-			exists: not destroyed
 		local
 			list: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 		do

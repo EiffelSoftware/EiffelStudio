@@ -26,12 +26,14 @@ feature {NONE} -- Initialization
 			internal_body := a.area
 			current_position := 0
 			method_token := token
+			local_token := 0
 			is_written := False
 		ensure
 			current_position_set: current_position = 0
 			max_stack_set: max_stack = 0
 			current_stack_depth_set: current_stack_depth = 0
 			method_token_set: method_token = token
+			local_token_set: local_token = 0
 			not_is_written: not is_written
 		end
 

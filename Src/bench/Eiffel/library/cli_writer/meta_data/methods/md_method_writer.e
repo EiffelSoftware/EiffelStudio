@@ -136,11 +136,7 @@ feature -- Settings
 			l_meth_size := l_meth.count
 			method_locations.put (l_pos, l_meth.method_token)
 
-			if (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count) > capacity then
-					-- Resize `internal_item'.
-				internal_item.resize ((l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count)
-					.max (capacity + Chunk_size))
-			end
+			update_size (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count)
 			
 			if
 				not l_meth.has_locals and then not l_meth.has_exceptions_handling
@@ -175,6 +171,7 @@ feature -- Settings
 					l_ex.catch_position,
 					l_ex.end_position - l_ex.catch_position,
 					l_ex.type_token)
+				update_size (l_pos + Exception_header.count)
 				Exception_header.write_to_stream (internal_item, l_pos)
 				l_pos := l_pos + Exception_header.count
 			end
@@ -204,6 +201,20 @@ feature {NONE} -- Implementation
 
 	internal_item: MANAGED_POINTER
 			-- Memory where IL data instruction stream is stored.
+
+	update_size (a_new_offset: INTEGER) is
+			-- Resized `internal_item' if it cannot hold up to `a_new_offset' new items.
+		require
+			a_new_offset_non_negative: a_new_offset >= 0
+		do
+			if a_new_offset > capacity then
+					-- Resize `internal_item'.
+				capacity := a_new_offset.max (capacity + Chunk_size)
+				internal_item.resize (capacity)
+			end
+		ensure
+			resized_if_necessary: a_new_offset <= capacity
+		end
 
 feature {NONE} -- constants
 

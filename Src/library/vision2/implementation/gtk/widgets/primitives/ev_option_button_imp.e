@@ -15,6 +15,9 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST_IMP
+		redefine
+			interface
+		end
 
 	EV_BUTTON_IMP
 		rename
@@ -267,6 +270,8 @@ feature -- Event - command association
 
 feature -- Implementation
 
+	list_widget: POINTER
+
 	menu_title_widget: POINTER
 			-- A gtk_menu_item:
 			-- When the menu has a title (`text' not null)
@@ -304,6 +309,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/19 01:58:35  oconnor
+--| redefine interface from EV_MENU_ITEM_LIST_IMP
+--|
 --| Revision 1.16  2000/02/19 01:08:26  oconnor
 --| removed refs to old EV_MENU_HOLDER class
 --|

@@ -1,4 +1,4 @@
-<document output="studio" title="Major changes between  Eiffel Software  Eiffel 5.0 and  Eiffel Software  Eiffel 5.1">
+<document output="studio" title="Major changes between ISE Eiffel 5.0 and ISE Eiffel 5.1">
 	<meta_data/>
 	<paragraph>
 		<heading>
@@ -10,7 +10,7 @@
 				<list ordered="false">
 					<item>Support for multiple inheritance.</item>
 					<item>Support for generics.</item>
-					<item>Partial implementation of generic conformance (same as what was supported up to and including  Eiffel Software  Eiffel 4.2).</item>
+					<item>Partial implementation of generic conformance (same as what was supported up to and including ISE Eiffel 4.2).</item>
 					<item>Support for tuples and agents.</item>
 					<item>Support for any existing Eiffel code that does not use C externals.</item>
 					<item>Partial support for compiling Eiffel libraries using C externals (e.g. WEL)</item>

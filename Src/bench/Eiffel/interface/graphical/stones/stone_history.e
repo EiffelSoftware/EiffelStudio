@@ -1,5 +1,10 @@
--- Lists of a given number of stones. stones are added to the end 
--- and older stones are thrown away.
+indexing
+
+	description: 
+		"Lists of a given number of stones. Stones are added %
+		%to the end and older stones are thrown away.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class
 

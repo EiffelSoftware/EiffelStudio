@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 		require
 			a_handle_not_null: a_handle /= default_pointer
 		do
-			handle := a_handle;
+			handle := a_handle
+			set_shared
 		ensure
 			set: handle = a_handle;
 		end;

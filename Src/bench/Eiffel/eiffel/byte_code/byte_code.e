@@ -960,7 +960,7 @@ feature -- Byte code generation
 					-- Generate full type info.
 					expanded_type ?= formal_type
 
-					Temp_byte_code_array.append_short_integer (expanded_type.expanded_type_id - 1)
+					Temp_byte_code_array.append_short_integer (expanded_type.type_id - 1)
 					gen_type ?= expanded_type
 
 					if gen_type /= Void then
@@ -996,7 +996,7 @@ feature -- Byte code generation
 						else
 							expanded_type ?= formal_type
 							Temp_byte_code_array.append_short_integer
-										(expanded_type.expanded_type_id - 1)
+										(expanded_type.type_id - 1)
 							gen_type ?= expanded_type
 
 							if gen_type /= Void then
@@ -1016,7 +1016,7 @@ feature -- Byte code generation
 				-- Generate full type info.
 				expanded_type ?= r_type
 
-				Temp_byte_code_array.append_short_integer (expanded_type.expanded_type_id - 1)
+				Temp_byte_code_array.append_short_integer (expanded_type.type_id - 1)
 				gen_type ?= expanded_type
 
 				if gen_type /= Void then

@@ -292,10 +292,12 @@ feature {NONE} -- Implementation
 			s, fn: STRING
 			done: BOOLEAN
 			type: CONSUMED_TYPE
+			parent: CONSUMED_REFERENCED_TYPE
 			types: CONSUMED_ASSEMBLY_TYPES
 			mapping: CONSUMED_ASSEMBLY_MAPPING
 			l_string_tuple: like string_tuple
 			l_empty_tuple: like empty_tuple
+			l_is_delegate, l_is_value_type: BOOLEAN
 		do
 			(create {DIRECTORY}.make (destination_path + Classes_path)).create_dir
 			create serializer
@@ -311,7 +313,12 @@ feature {NONE} -- Implementation
 				type_consumers.remove (type_consumers.key_for_iteration)
 				type_consumer.initialize
 				type := type_consumer.consumed_type
-				types.put (type.dotnet_name, type.eiffel_name)
+				parent := type.parent
+				if parent /= Void then
+					l_is_value_type := parent.name.is_equal ("System.ValueType")
+					l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")					
+				end
+				types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
 				fn := file_name (type)
 				create s.make (fn.count + destination_path.count + Classes_path.count)
 				s.append (destination_path)

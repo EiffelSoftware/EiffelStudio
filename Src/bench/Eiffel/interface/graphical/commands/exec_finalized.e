@@ -7,7 +7,7 @@ indexing
 class EXEC_FINALIZED
 
 inherit
-	ICONED_COMMAND;
+	PIXMAP_COMMAND;
 	PROJECT_CONTEXT
 		export
 			{NONE} all

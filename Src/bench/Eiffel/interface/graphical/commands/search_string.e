@@ -9,7 +9,7 @@ class SEARCH_STRING
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			init_from_tool as make
 		end

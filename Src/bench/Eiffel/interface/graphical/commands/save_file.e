@@ -9,9 +9,9 @@ class SAVE_FILE
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
-			dark_symbol, licence_checked
+			licence_checked
 		end
 
 creation

@@ -9,7 +9,7 @@ class ICE
 
 inherit
  
-	ICONED_COMMAND
+	PIXMAP_COMMAND
  
 creation
 

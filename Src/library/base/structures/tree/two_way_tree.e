@@ -18,7 +18,7 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off
 		redefine
-			parent, copy
+			parent
 		select
 			has
 		end
@@ -36,9 +36,7 @@ class TWO_WAY_TREE [G] inherit
 				bl_put_left, bl_put_right,
 				forget_left, forget_right
 		undefine
-			is_equal
-		redefine
-			copy
+			copy, is_equal
 		end
 
 	TWO_WAY_LIST [G]
@@ -90,13 +88,13 @@ class TWO_WAY_TREE [G] inherit
 				twl_fill, twl_duplicate,
 				twl_full
 		undefine
-			child_readable, is_leaf,
+			copy, child_readable, is_leaf,
 			child_writable,
 			linear_representation,
 			child_isfirst, child_islast, valid_cursor_index,
 			is_equal
 		redefine
-			first_child, last_child, new_cell, copy
+			first_child, last_child, new_cell
 		select
 			is_leaf
 		end
@@ -162,8 +160,8 @@ feature -- Element change
 	replace_child (n: like parent) is
 			-- Replace current child by `n'.
 		do
-			put_child_right (n)
 			remove_child
+			put_child_right (n)
 		end
 
 	put_child_left (n: like parent) is
@@ -267,18 +265,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Duplication
-
-	copy (other: like Current) is
-			-- Copy contents from `other'.
-		local
-			tmp_tree: like Current
-		do
-			create tmp_tree.make (other.item)
-			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			standard_copy (tmp_tree)
-		end
-
 feature {LINKED_TREE} -- Implementation
 
 	new_cell (v: like item): like first_child is
@@ -295,6 +281,16 @@ feature {LINKED_TREE} -- Implementation
 			-- produce an adequately allocated and initialized object.
 		do
 			create Result.make (item)
+		end
+
+	cut_off_node is
+			-- Cut off all links from current node.
+		do
+			make (item)
+			wipe_out
+			simple_forget_left
+			simple_forget_right
+			parent := Void
 		end
 
 feature {NONE} -- Implementation

@@ -15,10 +15,41 @@ inherit
 
 feature -- Access
 
+	client_width: INTEGER is
+			-- Width of the client area of container
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			positive_result: Result >= 0
+		end
+	
+	client_height: INTEGER is
+			-- Height of the client area of container
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			positive_result: Result >= 0
+		end
+
 	child: EV_WIDGET_IMP
 			-- The child of the current container
-	
-feature {EV_WIDGET_I} -- Status report
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite
+		require
+			exists: not destroyed
+			valid_child: child_imp /= Void
+			add_child_ok: add_child_ok
+		deferred
+		ensure
+			child_add_successful: child_add_successful (child_imp)
+		end
+
+feature -- Assertion test
 
 	add_child_ok: BOOLEAN is
 			-- Used in the precondition of
@@ -39,31 +70,6 @@ feature {EV_WIDGET_I} -- Status report
 			Result := child = child_imp
 		end
 	
-feature {EV_WIDGET_I} -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		require
-			exists: not destroyed
-			valid_child: child_imp /= Void
-			add_child_ok: add_child_ok
-		deferred
-		ensure
-			child_add_successful: child_add_successful (child_imp)
-		end
-
-feature -- Access
-	
-	client_width: INTEGER is
-			-- Width of the client area of container
-		deferred			
-		end
-	
-	client_height: INTEGER is
-			-- Height of the client area of container
-		deferred
-		end
-
 end -- class EV_CONTAINER_I
 
 --|----------------------------------------------------------------

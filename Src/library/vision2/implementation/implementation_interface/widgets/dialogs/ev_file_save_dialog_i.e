@@ -9,6 +9,19 @@ deferred class
 
 inherit
 	EV_FILE_DIALOG_I
+		redefine
+			internal_accept
+		end
+	
+feature {NONE} -- Implementation
+
+	internal_accept: STRING is
+			-- The text of the "ok" type button of `Current'.
+			-- e.g. not the cancel button.
+			-- See comment in EV_STANDARD_DIALOG_I.
+		do
+			Result := ev_save
+		end
 
 end -- class EV_FILE_SAVE_DIALOG_I
 

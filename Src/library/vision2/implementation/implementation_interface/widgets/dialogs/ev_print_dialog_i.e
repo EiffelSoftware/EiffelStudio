@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EV_STANDARD_DIALOG_I
+		redefine
+			internal_accept
+		end
 
 feature -- Access
 
@@ -304,6 +307,16 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_from_page_set: minimum_from_page = value
+		end
+
+feature {NONE} -- Implementation
+
+	internal_accept: STRING is
+			-- The text of the "ok" type button of `Current'.
+			-- e.g. not the cancel button.
+			-- See comment in EV_STANDARD_DIALOG_I.
+		do
+			Result := ev_print
 		end
 
 end -- class EV_PRINT_DIALOG_I

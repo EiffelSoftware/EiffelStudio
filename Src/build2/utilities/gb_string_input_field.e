@@ -103,6 +103,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.enable_select
 				constants_button.select_actions.resume
+				list_item := constants_combo_box.selected_item
 				if list_item /= Void then
 					list_item.deselect_actions.block
 				end
@@ -238,7 +239,6 @@ feature {NONE} -- Implementation
 				constants_combo_box.hide
 				entry_widget.show
 				constants_combo_box.remove_selection
-				--remove_selected_constant
 			end
 		end
 		

@@ -6,7 +6,8 @@ inherit
 
 	INSTR_B
 		redefine
-			analyze, generate, enlarge_tree, make_byte_code
+			analyze, generate, enlarge_tree, make_byte_code,
+			has_loop, assigns_to
 		end;
 	VOID_REGISTER
 		export
@@ -145,5 +146,20 @@ feature -- Byte code generation
 			end;
 			ba.append (Bc_inspect);
 		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+			Result := (case_list /= Void and then case_list.has_loop) or else
+				(else_part /= Void and then else_part.has_loop)
+		end
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := (case_list /= Void and then case_list.assigns_to (i)) or else
+				(else_part /= Void and then else_part.assigns_to (i))
+		end
+
 
 end

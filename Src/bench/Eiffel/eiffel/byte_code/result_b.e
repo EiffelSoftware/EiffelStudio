@@ -9,7 +9,8 @@ inherit
 			enlarged, read_only, is_result, is_creatable,
 			register_name,
 			make_byte_code, creation_access,
-			assign_code, expanded_assign_code, reverse_code
+			assign_code, expanded_assign_code, reverse_code,
+			assigns_to
 		end
 
 feature 
@@ -83,5 +84,12 @@ feature -- Byte code generation
 		once
 			Result := Bc_rreverse;
 		end; -- reverse_code
+
+feature -- Array optimization
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := i = 0
+		end;
 
 end

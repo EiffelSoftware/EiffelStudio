@@ -11,7 +11,7 @@ inherit
 			creation_access,
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
-			bit_assign_code
+			bit_assign_code, assigns_to
 		end
 	
 feature 
@@ -119,6 +119,13 @@ feature -- Byte code generation
 			-- Reverse assignment code
 		do
 			Result := Bc_lreverse;
+		end;
+
+feature -- Array optimization
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := position = - i
 		end;
 
 end

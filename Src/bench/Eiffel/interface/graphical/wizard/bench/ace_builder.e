@@ -391,11 +391,16 @@ feature -- Subdirs from a directory name
 				first_sep := d.index_of (Operating_environment.Directory_separator, 1);
 				second_sep := d.index_of (Operating_environment.Directory_separator, first_sep + 1);
 			until
-				second_sep = 0
+				second_sep = 0 
 			loop
-				Result.force (d.substring (first_sep + 1, second_sep - 1), Result.count + 1);
-				first_sep := second_sep;
-				second_sep := d.index_of (Operating_environment.Directory_separator, first_sep + 1);
+				if first_sep /= second_sep - 1 then
+					Result.force (d.substring (first_sep + 1, second_sep - 1), Result.count + 1);
+					first_sep := second_sep;
+					second_sep := d.index_of (Operating_environment.Directory_separator, first_sep + 1);
+				else
+					first_sep := second_sep;
+					second_sep := d.index_of (Operating_environment.Directory_separator, second_sep + 1);
+				end
 			end;
 			Result.force (d.substring (first_sep + 1, d.count), Result.count + 1)
 		end;
@@ -406,7 +411,7 @@ feature -- Subdirs from a directory name
 			s_d_r: ARRAY [STRING]
 		do
 			s_d_r := sub_dir_representation (dir);
-			Result := s_d_r.item (s_d_r.count);
+			Result := s_d_r.item (s_d_r.count - 2);
 		end;
 
 feature {NONE} -- Implementation
@@ -449,13 +454,13 @@ feature {NONE} -- Implementation
 						else
 							precomp_lines.extend ('%T')
 						end;
-						precomp_lines.append ("precompiled (");
+						precomp_lines.append ("precompiled (%"");
 						!! d_name.make;
 						d_name.extend_from_array (
 							<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
 						d_name.set_directory (standard_precompiles_reverse.item (toggle.text));
 						precomp_lines.append (d_name);
-						precomp_lines.append (");%N")
+						precomp_lines.append ("%");%N")
 					end;
 					child.forth;
 				end;
@@ -494,8 +499,8 @@ feature {NONE} -- Implementation
 			t: STRING
 		do
 			rc := clone (root_class_edit.text);
-			rc.to_lower;
 			rc.append (Dot_e);
+			rc.to_lower;
 			!! new_class.make (rc);
 			if not new_class.exists then
 				new_class.open_write;
@@ -534,25 +539,27 @@ feature {NONE} -- Implementation
 			valid_contents: contents /= Void
 		local
 			new_file: RAW_FILE;
+			fname: FILE_NAME;
 			char: CHARACTER
 		do
-			!! new_file.make ("Ace.ace");
-			if new_file.is_writable then
-				new_file.open_write;
-				if not contents.empty then
-					new_file.putstring (contents);
-					char := contents.item (contents.count);
-					if Platform_constants.is_unix and 
-						then char /= '%N' and
-						then char /= '%R'
-							-- Add a carriage return like vi if there's none at
-							-- the end
-					then
-						new_file.new_line
-					end
-				end;
-				new_file.close;
+			!! fname.make_from_string (Project_directory);
+			fname.set_file_name ("Ace.ace");
+
+			!! new_file.make (fname);
+			new_file.open_write;
+			if not contents.empty then
+				new_file.putstring (contents);
+				char := contents.item (contents.count);
+				if Platform_constants.is_unix and 
+					then char /= '%N' and
+					then char /= '%R'
+						-- Add a carriage return like vi if there's none at
+						-- the end
+				then
+					new_file.new_line
+				end
 			end;
+			new_file.close;
 		end;
 
 	default_ace_file_contents: STRING is

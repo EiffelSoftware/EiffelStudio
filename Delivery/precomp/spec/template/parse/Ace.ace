@@ -7,12 +7,12 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/lex")
+	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/lex")
 
 cluster
 
 -- EiffelParse
 
-		parse:				"$EIFFEL4/library/parse";
+		parse:				"$EIFFEL5/library/parse";
 
 end

@@ -8,12 +8,12 @@ default
 
         assertion (require);
 	multithreaded (yes);
-        precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt")
+        precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base-mt")
 
 cluster
 
 	-- EiffelNet
-	net:				"$EIFFEL4/library/net";
+	net:				"$EIFFEL5/library/net";
 	abstract_socket (net):		"$/abstract/socket";
 	net_socket (net):		"$/network/socket";
 	local_socket (net):		"$/local/socket";
@@ -28,6 +28,6 @@ cluster
 external
 	-- External EiffelNet library 
         object:
-                "$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libmtnet.a"
--- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/mtnet.lib"
+                "$(EIFFEL5)/library/net/spec/$(PLATFORM)/lib/libmtnet.a"
+-- win		"$(EIFFEL5)/library/net/spec/$(COMPILER)/lib/mtnet.lib"
 end

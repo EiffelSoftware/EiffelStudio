@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 	add_new_component (an_object: GB_OBJECT) is
 			-- Add a new component representing `an_object'.
 		local
-			component: GB_COMPONENT
+			component_item: GB_COMPONENT_SELECTOR_ITEM
 		do
-			create component.make_from_object (an_object, "Component_" + (count + 1).out)
-			extend (component.list_item)
+			create component_item.make_from_object (an_object, "Component_" + (count + 1).out)
+			extend (component_item)
 		end
 		
 	is_valid_object (an_object: GB_OBJECT): BOOLEAN is
@@ -69,15 +69,15 @@ feature {GB_XML_HANDLER} -- Basic operation
 		require
 			list_not_void: list /= Void
 		local
-			component: GB_COMPONENT
+			component_item: GB_COMPONENT_SELECTOR_ITEM
 		do
 			from
 				list.start
 			until
 				list.off
 			loop
-				create component.make_with_name (list.item)
-				extend (component.list_item)
+				create component_item.make_with_name (list.item)
+				extend (component_item)
 				list.forth
 			end
 		ensure

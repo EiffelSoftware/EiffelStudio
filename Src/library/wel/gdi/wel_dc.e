@@ -511,7 +511,7 @@ feature -- Status report
 			if not mask_blt_funcaddr_retrieved then
 				retrieve_mask_blt_funcaddr
 			end
-			Result := (internal_mask_blt_funcaddr /= Void)
+			Result := (internal_mask_blt_funcaddr /= default_pointer)
 		end
 
 feature -- Status setting

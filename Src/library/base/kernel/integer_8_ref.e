@@ -431,8 +431,6 @@ feature -- Bit operations
 			else
 				Result := bit_shift_left (- n)
 			end	
-		ensure
-			bit_shift_not_void: Result /= Void
 		end
 
 	frozen infix "|<<", frozen bit_shift_left (n: INTEGER): like Current is

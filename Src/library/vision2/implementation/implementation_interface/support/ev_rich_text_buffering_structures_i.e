@@ -516,8 +516,6 @@ feature {NONE} -- Implementation
 					current_depth := current_depth - 1
 				end
 			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 		
 	highest_read_char: INTEGER

@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			item := cwin_create_icon_indirect (icon_info.item)
 			gdi_make
 		ensure
-			item_not_void: item /= Void
+			item_not_void: item /= default_pointer
 		end
 
 	make_by_id (id: INTEGER) is

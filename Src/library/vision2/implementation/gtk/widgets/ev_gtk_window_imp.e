@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_ANY_IMP is
+	parent_imp: EV_CONTAINER_IMP is
 			-- Parent of `Current', always Void as windows cannot be parented
 		do
 			-- Return Void
@@ -132,7 +132,6 @@ feature {NONE} -- Implementation
 			user_x_position := a_x
 			user_y_position := a_y
 			{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
-			{EV_GTK_EXTERNALS}.gdk_window_move ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_x, a_y)
 			positioned_by_user := True
 		end
 

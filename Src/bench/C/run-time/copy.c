@@ -180,6 +180,8 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	}
 
 	return anchor.boot;			/* The cloned object tree */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *rtclone(char *source)

@@ -142,6 +142,7 @@ rt_private void stk_start(EIF_CONTEXT int what)
 	default:
 		panic("illegal dump request");
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void stk_end(EIF_CONTEXT int what)
@@ -167,6 +168,7 @@ rt_private void stk_end(EIF_CONTEXT int what)
 		bcopy(&ostk_context, &once_set, sizeof(struct stack));
 		break;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -209,6 +211,8 @@ rt_private struct dump *pending(void)
 	dumped.dmp_vect = top;
 
 	return &dumped;			/* Pointer to static data */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -328,6 +332,8 @@ rt_private struct dump *execution(void)
 	}
 
 	return &dumped;			/* Pointer to static data */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private struct dcall *safe_dtop(void)

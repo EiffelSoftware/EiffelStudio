@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			warning_dialog: EV_WARNING_DIALOG
 			application_name_lower, class_name_lower, project_name_lower,
 			invalid_text, warning_message, constant_name_lower: STRING
-			windows: ARRAYED_LIST [GB_TITLED_WINDOW_OBJECT]
+			windows: ARRAYED_LIST [GB_OBJECT]
 			l_boolean: BOOLEAN
 		do
 			create hashed_names.make (4)
@@ -257,6 +257,7 @@ feature {NONE} -- Implementation
 			else
 				invalid_text := "'" + invalid_text
 			end
+			
 			windows := window_selector.objects
 			from
 				windows.start

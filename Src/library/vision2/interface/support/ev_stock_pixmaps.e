@@ -1,9 +1,8 @@
 indexing
-	description:
-		"Facilities for accessing default pixmaps."
-	keywords: "pixmap, default"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Facilities for accessing default pixmaps."
+	keywords	: "pixmap, default"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EV_DEFAULT_PIXMAPS
@@ -13,31 +12,39 @@ feature -- Access
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
 		do
-			create Result.make_with_default ("Information")
+			Result := default_pixmaps_imp.Information_pixmap
 		end
 
 	Error_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing an error.
 		do
-			create Result.make_with_default ("Error")
+			Result := default_pixmaps_imp.Error_pixmap
 		end
 
 	Warning_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a warning.
 		do
-			create Result.make_with_default ("Warning")
+			Result := default_pixmaps_imp.Warning_pixmap
 		end
 
 	Question_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a question.
 		do
-			create Result.make_with_default ("Question")
+			Result := default_pixmaps_imp.Question_pixmap
 		end
 
 	Default_window_icon: EV_PIXMAP is
 			-- Pixmap used as default icon for new windows.
 		do
-			create Result.make_with_default ("Vision2")
+			Result := default_pixmaps_imp.Default_window_icon
+		end
+
+feature {NONE} -- Implementation
+
+	default_pixmaps_imp: EV_DEFAULT_PIXMAPS_IMP is
+			-- Responsible for interaction with the native graphics toolkit.
+		once
+			create Result
 		end
 
 end -- class EV_DEFAULT_PIXMAPS
@@ -63,6 +70,9 @@ end -- class EV_DEFAULT_PIXMAPS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/05/03 16:31:21  pichery
+--| Platform independant default pixmaps
+--|
 --| Revision 1.2  2000/05/03 00:23:57  pichery
 --| Added default window pixmap.
 --|

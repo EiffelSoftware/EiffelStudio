@@ -24,7 +24,8 @@ inherit
 
 	EV_TEXTABLE
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	EV_PIXMAPABLE
@@ -87,6 +88,7 @@ feature {NONE} -- Contract support
 			-- Create with action for testing purposes.
 		do
 			{EV_PRIMITIVE} Precursor
+			{EV_TEXTABLE} Precursor
 			select_actions.extend (~print (text + " button pressed.%N"))
 		end
 
@@ -125,6 +127,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/28 00:42:45  brendel
+--| Incorpoated {EV_TEXTABLE}.make_for_test.
+--|
 --| Revision 1.30  2000/04/19 00:46:40  brendel
 --| Cosmetics.
 --|

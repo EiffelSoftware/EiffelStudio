@@ -14,18 +14,29 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	EV_TEXTABLE
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 		
 create
 	default_create,
 	make_with_text,
 	make_for_test
+
+feature {NONE} -- Initialization
+
+	make_for_test is
+			-- Create interesting.
+		do
+			{EV_PRIMITIVE} Precursor
+			{EV_TEXTABLE} Precursor
+		end
 
 feature {NONE} -- Implementation
 
@@ -61,6 +72,9 @@ end -- class EV_LABEL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/28 00:42:45  brendel
+--| Incorpoated {EV_TEXTABLE}.make_for_test.
+--|
 --| Revision 1.20  2000/03/21 02:11:27  oconnor
 --| comments and formatting
 --|

@@ -563,11 +563,13 @@ feature {NONE} -- Implementation
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
 
-	hbox: POINTER
-			-- Horizontal box for the child.
-
 	accel_group: POINTER
 			-- Pointer to GtkAccelGroup struct.
+			
+feature {EV_CLIPBOARD_IMP} -- Implementation
+
+	hbox: POINTER
+			-- Horizontal box for the child.
 
 feature {EV_ANY_I} -- Implementation
 

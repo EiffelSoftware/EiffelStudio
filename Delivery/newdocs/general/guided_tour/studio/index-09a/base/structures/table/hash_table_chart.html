@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.34">
 <META NAME="revision" CONTENT="$Revision$">
 <META NAME="instructions" CONTENT="TTSeveral procedures are provided for inserting an itemR TTwith a given key.R TTR TTHere is how to choose between them:R TTR TTT- Use `put' if you want to do an insertion only ifR TTT  there was no item with the given key, doing nothingR TTT  otherwise. (You can find out on return if there was one,R TTT  and what it was.)R TTR TTT- Use `force' if you always want to insert the item;R TTT  if there was one for the given key it will be removed,R TTT  (and you can find out on return what it was).R TTR TTT- Use `extend' if you are sure there is no item withR TTT  the given key, enabling faster insertion (butR TTT  unpredictable behavior if this assumption is not true).R TTR TTT- Use `replace' if you want to replace an already presentR TTT  item with the given key, and do nothing if there is none.R TTR TTIn addition you can use `replace_key' to change the key of anR TTalready present item, identified by its previous key, orR TTdo nothing if there is nothing for that previous key.R TTYou can find out on return.">
 <META NAME="date" CONTENT="$Date$">

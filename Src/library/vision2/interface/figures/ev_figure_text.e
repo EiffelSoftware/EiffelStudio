@@ -118,6 +118,13 @@ feature {NONE} -- Implementation
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do
 			t := font.string_size (text)
+			update_dimensions_with_text_size (t)
+		end
+
+	update_dimensions_with_text_size (t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]) is
+		require
+			t_not_void: t /= Void
+		do
 			width := t.integer_item (1)
 			width := width - t.integer_item (3)
 			width := width + t.integer_item (4)
@@ -129,9 +136,9 @@ feature {NONE} -- Implementation
 		local
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			x_pos: INTEGER
-		do
-			update_dimensions
+		do 
 			t := font.string_size (text)
+			update_dimensions_with_text_size (t)
 			x_pos := point.x_abs
 			x_pos := x_pos + t.integer_item (3)
 			create Result.make (x_pos, point.y_abs, width, height)

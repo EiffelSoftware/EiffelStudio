@@ -248,6 +248,7 @@ feature {NONE} -- Implementation
 						or Shared_wizard_environment.abort
 					loop
 						if shared_wizard_environment.client then
+							c_client_visitor.visit (system_descriptor.interfaces.item)
 							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
 						end
 						system_descriptor.interfaces.forth

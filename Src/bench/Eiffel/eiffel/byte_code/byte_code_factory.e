@@ -93,6 +93,7 @@ feature {NONE} -- Implementation: Byte node
 			l_hector_b: HECTOR_B
 			l_feat: FEATURE_I
 			l_basic_i: BASIC_I
+			l_ref: CL_TYPE_I
 		do
 			if
 				System.il_generation and
@@ -130,14 +131,15 @@ feature {NONE} -- Implementation: Byte node
 						-- and then assign new value. We use a hack here to call `set_item' as
 						-- creation procedure to avoid having to generate two calls: one
 						-- for creating the object, the other to assign it.
-					l_feat := a_source_type.associated_class.
-						feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
 					l_basic_i ?= a_source_type.type_i
+					l_ref := l_basic_i.reference_type
+					l_feat := l_ref.base_class.
+						feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void
 						l_basic_i_not_void: l_basic_i /= Void
 					end
-					Result := creation_byte_code (l_feat, l_basic_i, l_basic_i.reference_type, a_expr)
+					Result := creation_byte_code (l_feat, l_basic_i, l_ref, a_expr)
 				end
 			end			
 		end

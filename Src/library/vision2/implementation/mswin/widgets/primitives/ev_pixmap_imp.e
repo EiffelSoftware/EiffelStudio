@@ -323,7 +323,6 @@ feature {EV_ANY_I} -- Delegated features
 				must_be_widget_to_get_called: False
 			end
 		end
-		
 
 	set_pebble (a_pebble: like pebble) is
 			-- Assign `a_pebble' to `pebble'.
@@ -735,11 +734,17 @@ feature {EV_ANY_I} -- Delegated features
 		do
 		end
 		
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		do
+		end
+		
 	internal_disable_dockable is
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
-		do
-			
+		do	
 		end
 
 	disable_capture is

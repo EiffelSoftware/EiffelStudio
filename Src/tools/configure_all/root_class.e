@@ -148,7 +148,7 @@ feature -- Actions
 				
 			create key.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, new_key_val)
 			create reg
-			p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\ec",
+			p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel53\ec",
 				feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 			reg.set_key_value (p, "ISE_EIFFEL", key)
 			reg.close_key (p)
@@ -156,22 +156,22 @@ feature -- Actions
 --			if changed or not new_key_val.is_equal (install_dir) then
 
 				p := reg.open_key_with_access (
-					"hkey_local_machine\Software\ISE\Eiffel52\finish_freezing",
+					"hkey_local_machine\Software\ISE\Eiffel53\finish_freezing",
 					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\wizard",
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel53\wizard",
 					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\build",
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel53\build",
 					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\emitter",
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel53\emitter",
 					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)

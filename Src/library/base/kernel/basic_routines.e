@@ -21,10 +21,9 @@ feature -- Conversion
 
 	charcode (c: CHARACTER): INTEGER is
 			-- Integer ascii code corresponding to `c'
-		external
-			"C"
-		alias
-			"chcode"
+		obsolete "Instead of charcode (c) use c.code"
+		do
+			Result := c.code
 		end;
 
 	integer_to_real (n: INTEGER): REAL is
@@ -37,18 +36,17 @@ feature -- Conversion
 
 	real_to_integer (r: REAL): INTEGER is
 			-- Integer conversion (truncation) of `r'
-		external
-			"C"
-		alias
-			"conv_ri"
+
+		obsolete "Instead of real_to_integer (r) use r.truncated_to_integer"
+		do
+			Result := r.truncated_to_integer
 		end;
 
 	double_to_real (d: DOUBLE): REAL is
 			-- Real conversion (truncation) of `d'
-		external
-			"C"
-	   	alias
- 			"conv_dr"
+		obsolete "Instead of double_to_real (d) use d.truncated_to_real"
+		do
+			Result := d.truncated_to_real
 		end;
 
 	real_to_double (r: REAL): DOUBLE is
@@ -61,10 +59,9 @@ feature -- Conversion
 
 	double_to_integer (d: DOUBLE): INTEGER is
 			-- Integer conversion (truncation) of `d'
-		external
-			"C"
-		alias
-			"conv_di"
+		obsolete "Instead of double_to_integer (d) use d.truncated_to_integer"
+		do
+			Result := d.truncated_to_integer
 		end
 
 feature -- Basic operations
@@ -100,18 +97,16 @@ feature -- Basic operations
 		
 	max (n1, n2: INTEGER): INTEGER is
 			-- Maximum of `n1' and `n2'
+		obsolete "Replace max (a, b) with a.max (b)"
 		do
-			if n1 > n2 then
-				Result := n1
-			else
-				Result := n2
-			end;
+			Result := n1.max (n2)
 		ensure
 			is_maximum: (n2 >= n1) = (Result = n2) or else (n1 > n2) = (Result = n1)
 		end;
 
 	min (n1, n2: INTEGER): INTEGER is
 			-- Minimum of `n1' and `n2'
+		obsolete "Replace min (a, b) with a.min (b)"
 		do
 			if n1 < n2 then
 				Result := n1
@@ -141,24 +136,18 @@ feature -- Basic operations
 		
 	rmax (r1, r2: REAL): REAL is
 			-- Maximum of `r1' and `r2'
+		obsolete "Replace rmax (a, b) with a.max (b)"
 		do
-			if r1 > r2 then
-				Result := r1
-			else
-				Result := r2
-			end
+			Result := r1.max (r2)
 		ensure
 			is_maximum: (r2 >= r1) = (Result = r2) or else (r1 > r2) = (Result = r1)
 		end;
 
 	rmin (r1, r2: REAL): REAL is
 			-- Minimum of `r1' and `r2'
+		obsolete "Replace rmin (a, b) with a.min (b)"
 		do
-			if r1 < r2 then
-				Result := r1
-			else
-				Result := r2
-			end
+			Result := r1.min (r2)
 		ensure
 			is_minimum: (r2 <= r1) = (Result = r2) or else (r1 < r2) = (Result = r1)
 		end;

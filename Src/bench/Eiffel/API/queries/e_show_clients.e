@@ -20,8 +20,8 @@ feature -- Execution
 	execute is
 			-- Execute Current command.
 		local
-			clients: LINKED_LIST [CLASS_C];
-			a_client: CLASS_C
+			clients: LINKED_LIST [E_CLASS];
+			a_client: E_CLASS
 		do
 			output_window.put_string ("Clients of class ");
 			current_class.append_clickable_signature (output_window);

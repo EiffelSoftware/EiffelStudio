@@ -1,7 +1,5 @@
 <document title="New feature command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>New feature command
@@ -9,7 +7,7 @@
 		<paragraph>The new feature command 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_new_feature_small_color.gif</url>
-			</image>&gt;located in the 
+			</image>located in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>feature tool</label>

@@ -1,7 +1,5 @@
 <document title="Locate command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Locate command
@@ -9,7 +7,7 @@
 		<paragraph>The locate command ( 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_view_small_color.gif</url>
-			</image> ),located in the 
+			</image> ), located in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>cluster tool</label>

@@ -1,7 +1,5 @@
 <document title="New favorite class command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>New favorite class command
@@ -27,7 +25,7 @@
 				<label>move</label>
 			</link> it to a different favorite folder.
 		</paragraph>
-		<paragraph>
+		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
@@ -40,6 +38,6 @@
 				<label>Favorite menu</label>
 			</link>
 			<line_break></line_break>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

@@ -1,7 +1,5 @@
 <document title="Introduction" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Introduction
@@ -26,7 +24,7 @@
 			<link>
 				<url>50_windows_tool/00_introduction.xml</url>
 				<label>windows tool</label>
-			</link> and the
+			</link> and the 
 			<link>
 				<url>60_search_tool.xml</url>
 				<label>search tool</label>

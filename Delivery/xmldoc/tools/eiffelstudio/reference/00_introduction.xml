@@ -27,6 +27,6 @@
 				<label>What's new section</label>
 			</link>.
 		</paragraph>
-		<paragraph>An quick overview of the new graphical interface is available here.</paragraph>
+		<paragraph>An quick overview of the new graphical interface is available <link><url>05_general_interface_description/20_eiffelstudio_window_overview.xml</url><label>here</label></link>.</paragraph>
 	</paragraph>
 </document>

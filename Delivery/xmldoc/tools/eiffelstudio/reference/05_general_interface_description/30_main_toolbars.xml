@@ -24,7 +24,7 @@
 			<bold>Toolbars</bold> sub-menu of the 
 			<bold>View</bold> menu or in the context menu that you can get by right-clicking in the empty space on the right of the bars. If you want them to be displayed again, just select them in the 
 			<bold>Toolbars</bold> sub-menu of the 
-			<bold>View</bold>menu.
+			<bold>View</bold> menu.
 		</paragraph>
 		<paragraph>In the standard toolbar, you will find buttons to manage 
 			<link>
@@ -40,7 +40,7 @@
 		<div>
 			<paragraph>Standard toolbar icons.</paragraph>
 		</div>
-		<paragraph>The project toolbars gathers the buttons for commands related to
+		<paragraph>The project toolbars gathers the buttons for commands related to 
 			<link>
 				<url>../30_compiler/index.xml</url>
 				<label>compilation</label>
@@ -57,15 +57,12 @@
 		<paragraph>
 			<line_break></line_break>
 		</paragraph>
-		<div>
-			<bold>Note</bold>: For both toolbars, it is possible to choose which buttons are displayed and which ones are not. See the
+		<note>
+			<bold>Note</bold>: For both toolbars, it is possible to choose which buttons are displayed and which ones are not. See the 
 			<link>
 				<url>10_general_interface_mechanisms/30_toolbars_customization.xml</url>
 				<label>Toolbars customization page</label>
 			</link> for more information.
-		</div>
-		<line_break></line_break>  
-		<line_break></line_break>  
-		<line_break></line_break> 
+		</note>
 	</paragraph>
 </document>

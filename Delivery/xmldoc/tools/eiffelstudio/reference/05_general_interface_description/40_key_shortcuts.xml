@@ -16,17 +16,21 @@
 		<heading>
 			<size>2</size>Editor shortcuts
 		</heading>
-		<paragraph>
+		Missing table
+		<note>
 			<bold>Note</bold>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are available both in the editor and in the class and feature tabs of the context tool. Other operations are available only in theeditor.
-		</paragraph>
+		</note>
 		<heading>
 			<size>2</size>Compiler
 		</heading>
+		Missing table
 		<heading>
 			<size>2</size>Debugger
 		</heading>
+		Missing table
 		<heading>
 			<size>2</size>Miscellaneous
 		</heading>
+		Missing table
 	</paragraph>
 </document>

@@ -139,6 +139,9 @@ feature {NONE} -- Implementation
 			constructor_body.append (Semicolon)
 			constructor_body.append (New_line)
 
+			constructor_body.append (co_initialize_ex_function)
+			constructor_body.append (examine_hresult (Hresult_variable_name))
+
 			constructor_body.append (New_line_tab)
 			constructor_body.append (Hresult_variable_name)
 			constructor_body.append (Space_equal_space)
@@ -232,6 +235,8 @@ feature {NONE} -- Implementation
 			end
 
 			Result.append (release_interface (a_descriptor.interface_descriptor.name))
+
+			Result.append (Co_uninitialize_function)
 		ensure
 			non_void_destructor: Result /= void
 			valid_descructor: not Result.empty

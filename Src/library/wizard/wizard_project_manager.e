@@ -15,10 +15,10 @@ inherit
 			default_create
 		end
 
-Creation
+creation
 	make_and_launch 
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_and_launch is
 			-- Initialize and launch application
@@ -39,7 +39,7 @@ feature -- Initialization
 			-- avoid to violate the invariant of class EV_APPLICATION.
 		do
 			first_window.set_title (Wizard_title)
-			first_window.close_actions.extend (~end_application)
+			first_window.close_request_actions.extend (agent end_application)
 			first_window.show
 		end
 

@@ -877,7 +877,7 @@ end;
 				-- compiled one ?
 			read_info: READ_INFO;
 			feature_name_id: INTEGER;
-			integer_value: INT_VALUE_I;
+			integer_value: INTEGER_CONSTANT;
 				-- Internal name of the feature
 			vffd4: VFFD4;
 			external_i: EXTERNAL_I;
@@ -900,12 +900,12 @@ end;
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
-				!!integer_value;
-				integer_value.set_int_val (class_info.unique_values.item (Result.feature_name));
+				create integer_value.make_default
+				integer_value.set_lower (class_info.unique_values.item (Result.feature_name));
 				unique_feature.set_value (integer_value);
 debug ("ACTIVITY")
 	io.error.putstring ("Value: ");
-	io.error.putint (integer_value.int_val);
+	io.error.putint (integer_value.value);
 	io.error.new_line;
 end;
 			elseif Result.is_external then

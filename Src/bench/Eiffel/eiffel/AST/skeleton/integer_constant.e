@@ -417,7 +417,7 @@ feature {NONE} -- Translation
 					if not is_32bits and then s.is_equal (largest_integer_32) then
 						done := True
 						size := 32
-						lower := 0x7fffffff
+						lower := 0x80000000
 					end
 				else
 					is_32bits := s < largest_integer_32

@@ -22,8 +22,6 @@ inherit
 
 	NEW_EB_CONSTANTS
 
---	WINDOW_ATTRIBUTES
-
 creation
 
 	make_default

@@ -11,7 +11,6 @@ inherit
 	EV_DIALOG
 	EB_GENERAL_DATA
 	NEW_EB_CONSTANTS
---	WINDOW_ATTRIBUTES
 	EIFFEL_ENV	
 
 creation
@@ -183,7 +182,7 @@ feature {NONE} -- Implementation
 			filter_names: SORTED_TWO_WAY_LIST [STRING]
 			str_element: EV_LIST_ITEM
 		do
-			!!filter_dir.make (filter_path)
+			create filter_dir.make (filter_path)
 			if not filter_dir.exists then
 				warning_message := Warning_messages.w_Directory_not_exist (filter_path)
 				list.clear_items
@@ -193,7 +192,7 @@ feature {NONE} -- Implementation
 				list.clear_items
 				create str_element.make (list)
 			else
-				!! filter_names.make
+				create filter_names.make
 				filter_dir.open_read
 				from
 					filter_dir.start

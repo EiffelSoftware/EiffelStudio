@@ -16,7 +16,7 @@ create
 feature -- Initialization
 
 	make_default is
-			-- Initialize with "DEFAULT" as selected view.
+			-- Initialize with "100%" as zoom level.
 		do
 			make_with_strings (Initial_strings)
 			remove_selection

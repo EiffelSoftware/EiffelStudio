@@ -28,7 +28,8 @@ inherit
 			process_message,
 			set_x_position,
 			set_y_position,
-			set_position
+			set_position,
+			on_key_down
 		end
 
 create
@@ -187,6 +188,56 @@ feature -- Basic operations
 			end
 		end
 
+feature {EV_DIALOG_I} -- Implementation
+
+	apply_center_dialog: BOOLEAN
+			-- Should `center_dialog' be called?
+
+	parent_window: EV_WINDOW
+			-- Parent window if any, Void otherwise
+
+	interface: EV_DIALOG
+			-- Interface for `Current'
+
+	destroy_implementation is
+			-- Destroy `Current' but does not wipe out the children.
+		local
+			app_imp: EV_APPLICATION_IMP
+		do
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			check
+				implementation_not_void: app_imp /= void
+			end
+			app_imp.remove_root_window (Current)
+
+			wel_destroy_window
+			is_destroyed := True
+		end
+
+feature {EV_BUTTON_IMP} -- Implementation
+
+	on_dialog_key_down (virtual_key: INTEGER) is
+			-- Executed when the Enter or Escape key is pressed.
+		local
+			button_actions: EV_NOTIFY_ACTION_SEQUENCE
+			button: EV_BUTTON
+		do
+			if not interface.is_destroyed then
+				if virtual_key = Vk_escape then
+					button := interface.default_cancel_button
+				elseif virtual_key = Vk_return then
+					button := interface.default_push_button
+				end
+				
+				if button /= Void then
+					button_actions := button.select_actions
+					if button_actions /= Void then
+						button_actions.call ([])
+					end
+				end
+			end
+		end
+	
 feature {NONE} -- Implementation
 
 	move_children (other_imp: EV_DIALOG_IMP_COMMON)is
@@ -215,16 +266,17 @@ feature {NONE} -- Implementation
 			new_style := style
 			if user_can_resize then
 				new_style := bit_op.set_flag (new_style, Ws_thickframe)
+				new_style := bit_op.set_flag (new_style, Ws_maximizebox)
 			else
 				new_style := bit_op.clear_flag (new_style, Ws_thickframe)
+				new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
 			end
 			if is_closeable then
 				new_style := bit_op.set_flag (new_style, Ws_sysmenu)
 			else
 				new_style := bit_op.clear_flag (new_style, Ws_sysmenu)
 			end
-			new_style := bit_op.clear_flag (new_style, Ws_minimizebox)
-			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
+			new_style := bit_op.set_flag (new_style, Ws_minimizebox)
 			set_style (new_style)
 		end
 
@@ -254,35 +306,12 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-feature {EV_DIALOG_I} -- Implementation
-
-	apply_center_dialog: BOOLEAN
-			-- Should `center_dialog' be called?
-
-	parent_window: EV_WINDOW
-			-- Parent window if any, Void otherwise
-
-	interface: EV_DIALOG
-			-- Interface for `Current'
-
-	destroy_implementation is
-			-- Destroy `Current' but does not wipe out the children.
-		local
-			app_i: EV_APPLICATION_I
-			app_imp: EV_APPLICATION_IMP
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
 		do
-			app_i := (create {EV_ENVIRONMENT}).application.implementation
-			app_imp ?= app_i
-			check
-				implementation_not_void: app_imp /= void
-			end
-			app_imp.remove_root_window (Current)
-
-			wel_destroy_window
-			is_destroyed := True
+			on_dialog_key_down (virtual_key)
+			Precursor (virtual_key, key_data)
 		end
-
-feature {NONE} -- Implementation
 
 	promote_to_modal_dialog is
 			-- Promote the current implementation to

@@ -45,6 +45,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_LVSIL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_LVCF_CONSTANTS
 
 creation
@@ -309,6 +314,33 @@ feature -- Status setting
 			!! a_column.make_with_attributes (Lvcf_fmt, index, fmt, "")
 			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
 		end
+
+	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+			-- Set the current "large" image list to `an_imagelist'.
+			-- If `an_imagelist' is set to Void, it removes
+			-- the current associated image list (if any).
+		do
+				-- Then, associate the image list to the tree view.
+			if an_imagelist /= Void then
+				cwin_send_message (item, Lvm_setimagelist, Lvsil_normal, cwel_pointer_to_integer (an_imagelist.item))
+			else
+				cwin_send_message (item, Lvm_setimagelist, Lvsil_normal, 0) -- 0 correspond to NULL.
+			end
+		end
+
+	set_small_image_list(an_imagelist: WEL_IMAGE_LIST) is
+			-- Set the current "small" image list to `an_imagelist'.
+			-- If `an_imagelist' is set to Void, it removes
+			-- the current associated image list (if any).
+		do
+				-- Then, associate the image list to the tree view.
+			if an_imagelist /= Void then
+				cwin_send_message (item, Lvm_setimagelist, Lvsil_small, cwel_pointer_to_integer (an_imagelist.item))
+			else
+				cwin_send_message (item, Lvm_setimagelist, Lvsil_small, 0) -- 0 correspond to NULL.
+			end
+		end
+
 
 feature -- Element change
 

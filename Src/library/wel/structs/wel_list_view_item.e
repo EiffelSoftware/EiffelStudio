@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_iitem (a_iitem)
 			set_isubitem (a_isubitem)
 			set_text (a_text)
-			set_iimage (an_iimage)
+			set_image (an_iimage)
 		end
 
 feature -- Access
@@ -110,6 +110,12 @@ feature -- Element change
 			mask_set: mask = value
 		end
 
+	add_mask (a_mask_value: INTEGER) is
+			-- add `a_mask_value' to the current mask.
+		do
+			cwel_lv_item_add_mask (item, mask, a_mask_value)
+		end
+
 	set_iitem (value: INTEGER) is
 			-- Set `iitem' with `value'.
 		do
@@ -146,13 +152,16 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_iimage (value: INTEGER) is
-			-- Set `iimage' with `value'.
+	set_image (image_normal: INTEGER) is
+			-- Set the image for the list item to `image_normal'.
+			-- `image_normal' is the index of an image in the
+			-- image list associated with the listview.
 		do
-			cwel_lv_item_set_iimage (item, value)
-		ensure
-			iimage_set: iimage = value
+			cwel_lv_item_set_iimage (item, image_normal)
+			add_mask(Lvif_image)
 		end
+
+
 
 feature -- Measurement
 
@@ -191,6 +200,11 @@ feature {NONE} -- externals
 		end
 
 	cwel_lv_item_set_mask (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <lvitem.h>]"
+		end
+
+	cwel_lv_item_add_mask (ptr: POINTER; mask_to_modify: INTEGER; value_to_add: INTEGER) is
 		external
 			"C [macro <lvitem.h>]"
 		end

@@ -13,6 +13,8 @@ inherit
 
 	EV_GTK_EXTERNALS
 
+	EV_GTK_WIDGETS_EXTERNALS
+
 	EV_ANY_I
 
 Creation
@@ -60,6 +62,7 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?
 		do
+			Result := widget = default_pointer
 		end
 
 feature -- Status setting
@@ -67,6 +70,10 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
+			if not destroyed then
+				gtk_widget_destroy (widget)
+			end
+			widget := default_pointer
 		end
 
 	activate is

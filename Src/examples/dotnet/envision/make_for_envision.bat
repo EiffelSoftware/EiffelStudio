@@ -5,7 +5,7 @@ cd samples
 copy ..\eiffel_stud_to_envision.exe
 copy ..\eiffel_project.eifp
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\calculator\ace.ace" "$ISE_EIFFEL\..\samples\ado.net"
+call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\calculator\ace.ace" "$ISE_EIFFEL\..\samples\ado"
 mkdir ado
 cd ado
 copy %ISE_EIFFEL%\examples\dotnet\ado\ado3\*.e 

@@ -22,6 +22,12 @@ feature
 --create 
 --	make_by_pointer
 --	
+feature -- Cleaning and dipose
+
+	clean_on_dispose is
+		do
+		end
+
 --feature {NONE} -- Initialization
 --
 --	init_icor is

@@ -16,6 +16,17 @@ inherit
 			address
 		end
 
+feature -- get
+
+	get_object_value is
+			-- Get `object_value' value
+		do
+		end
+		
+	release_object_value is
+		do
+		end
+	
 feature -- properties
 
 	value_class_token: INTEGER

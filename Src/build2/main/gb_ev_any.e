@@ -97,7 +97,7 @@ feature -- Access
 feature -- Status setting
 
 	add_object (an_object: like ev_type) is
-			--
+			-- Add `an_object' to `objects'.
 		require
 			an_object_not_void: an_object /= Void
 		do

@@ -143,8 +143,8 @@ feature -- Element change
 			cwel_hd_item_set_psz_text (item, str_text.item)
 			cwel_hd_item_set_cch_text_max (item, str_text.length)
 			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_text))
+			internal_add_format (hdf_string)
 			set_format (clear_flag (format, hdf_bitmap))
-			set_format (set_flag (format, hdf_string))
 		ensure
 			text_set: text.is_equal (a_text)
 			text_count_set: a_text.count = text_count
@@ -227,7 +227,7 @@ feature -- Element change
 		do
 			cwel_hditem_set_iimage (item, an_index)
 			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.hdi_image))
-			set_format (set_flag (format, feature {WEL_HDF_CONSTANTS}.hdf_image))
+			internal_add_format (feature {WEL_HDF_CONSTANTS}.hdf_image)
 		end
 		
 feature -- Measurement
@@ -236,6 +236,18 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_hd_item
+		end
+		
+feature {NONE} -- Implementation
+
+	internal_add_format (a_format: INTEGER) is
+			-- Add `a_format' to `format' and set `Hdi_format' into `mask'
+			-- if not set.
+		do
+			if not flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_format) then
+				set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_format))
+			end
+			set_format (set_flag (format, a_format))
 		end
 
 feature {NONE} -- Externals

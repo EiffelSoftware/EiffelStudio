@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	MS_WINDOWS
+	TOOLKIT_IMP
 
 inherit
 	TOOLKIT
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class MS_WINDOWS
+end -- class TOOLKIT_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -98,6 +98,12 @@ feature {NONE} -- Initialization
 				agent select_callback,
 				agent gtk_value_pointer_to_tuple
 			)
+			real_signal_connect (
+				list_widget,
+				"tree-unselect-row",
+				agent deselect_callback,
+				agent gtk_value_pointer_to_tuple
+			)
 
 			real_signal_connect (
 				list_widget,
@@ -236,6 +242,8 @@ feature {NONE} -- Implementation
 			C.gtk_clist_thaw (list_widget)
 			timer.set_interval (1)
 		end
+		
+	selected_node: EV_TREE_NODE_IMP
 
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
@@ -244,7 +252,7 @@ feature {NONE} -- Implementation
 
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void then
+			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
 					select_actions_internal.call ([])
 				end
@@ -252,31 +260,25 @@ feature {NONE} -- Implementation
 					a_tree_node_imp.select_actions_internal.call ([])
 				end
 			end
-
-			--if previous_selected_item /= Void and then
-			--previous_selected_item.parent_tree = interface and then
-			--previous_selected_item /= t_item.interface then
-			--	p_item ?= previous_selected_item.implementation
-			--	if p_item.deselect_actions_internal /= Void then
-			--		p_item.deselect_actions_internal.call ([])
-			--	end
-			--end
-			
-			--if t_item.is_selected then
-			--	if t_item.select_actions_internal /= Void then
-			--		t_item.select_actions_internal.call ([])
-			--	end
-			--	if select_actions_internal /= Void then
-			--		select_actions_internal.call ([t_item.interface])
-			--	end
-			--	previous_selected_item := t_item.interface
-			--else
-			--	if deselect_actions_internal /= Void then
-			--		deselect_actions_internal.call ([t_item.interface])
-			--	end
-			--	previous_selected_item := Void
-			--end		
+			selected_node := a_tree_node_imp
 		end
+		
+	deselect_callback (a_tree_item: POINTER) is
+			-- Called when a tree item is deselected.
+		local
+			a_tree_node_imp: EV_TREE_NODE_IMP
+		do
+			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			if a_tree_node_imp /= Void then
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([])
+				end
+				if a_tree_node_imp.deselect_actions_internal /= Void then
+					a_tree_node_imp.deselect_actions_internal.call ([])
+				end
+			end
+		end
+		
 
 	timer: EV_TIMEOUT
 	

@@ -113,7 +113,7 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-	pnd_target_from_gdk_window (a_gdk_window: POINTER): EV_PICK_AND_DROPABLE is
+	pnd_target_from_gdk_window (a_gdk_window: POINTER; a_x, a_y: INTEGER): EV_PICK_AND_DROPABLE is
 		require
 			a_gdk_window_not_void: a_gdk_window /= Default_pointer
 		local
@@ -138,7 +138,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					check
 						imp_not_void: imp /= Void
 					end
-					if imp.pebble_over_widget (a_gdk_window) then
+					if imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
 						Result := trg
 					end				
 				end
@@ -324,6 +324,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/23 19:18:17  king
+--| Updated for signature change of pebble_over_widget
+--|
 --| Revision 1.18  2000/03/22 21:59:27  king
 --| Added pebble_over_widget functionality
 --|

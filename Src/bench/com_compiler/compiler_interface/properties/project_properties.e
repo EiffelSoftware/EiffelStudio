@@ -74,7 +74,8 @@ inherit
     		
     
 create
-    make
+    make,
+    make_in_memory
     
 feature {NONE} -- Initialization
 
@@ -86,6 +87,14 @@ feature {NONE} -- Initialization
             create ace.make (Eiffel_ace.file_name)
         end
     
+    make_in_memory is
+    		-- Initialize properties from in memory ace AST
+       require
+            initialized: Eiffel_project.initialized
+        do
+            create ace.make_in_memory
+        end   	
+    	
 feature -- Access
     
     system_name: STRING is
@@ -136,7 +145,7 @@ feature -- Access
             l_root_class_name: STRING
         do
             l_console := ace.is_console_application
-            l_root_class_name := clone (ace.root_class_name)
+            l_root_class_name := ace.root_class_name.twin
             l_root_class_name.to_upper
             l_dll := ace.il_generation_type = ace.Il_generation_dll
             

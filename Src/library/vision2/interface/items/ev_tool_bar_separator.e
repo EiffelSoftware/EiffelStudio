@@ -12,7 +12,8 @@ inherit
 	EV_SEPARATOR_ITEM
 		redefine
 			make_with_index,
-			implementation
+			implementation,
+			parent
 		end
 
 create
@@ -34,6 +35,15 @@ feature {NONE} -- Initialization
 		do
 			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make
 			{EV_SEPARATOR_ITEM} Precursor (par, pos)
+		end
+
+feature -- Access
+
+	parent: EV_TOOL_BAR is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_SEPARATOR_ITEM} Precursor
 		end
 
 feature -- Implementation

@@ -5,13 +5,13 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Thu Jun 27 19:59:10 2002
+/* at Tue Jul 16 15:15:24 2002
  */
 /* Compiler settings for emitter.idl:
     Os, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext
-    error checks: allocation ref bounds_check enum stub_data
-    VC __declspec() decoration level:
+    error checks: allocation ref bounds_check enum stub_data 
+    VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -33,24 +33,18 @@
 #pragma once
 #endif
 
-/* Forward Declarations */
+/* Forward Declarations */ 
 
 #ifndef __ISE_Cache_COM_ISE_CACHE_MANAGER_FWD_DEFINED__
 #define __ISE_Cache_COM_ISE_CACHE_MANAGER_FWD_DEFINED__
 typedef interface ISE_Cache_COM_ISE_CACHE_MANAGER ISE_Cache_COM_ISE_CACHE_MANAGER;
-#endif  /* __ISE_Cache_COM_ISE_CACHE_MANAGER_FWD_DEFINED__ */
+#endif 	/* __ISE_Cache_COM_ISE_CACHE_MANAGER_FWD_DEFINED__ */
 
 
 #ifndef __ISE_Cache_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__
 #define __ISE_Cache_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__
 typedef interface ISE_Cache_COM_ASSEMBLY_INFORMATION ISE_Cache_COM_ASSEMBLY_INFORMATION;
-#endif  /* __ISE_Cache_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__ */
-
-
-#ifndef __EIFFEL_TYPE_INFO_FWD_DEFINED__
-#define __EIFFEL_TYPE_INFO_FWD_DEFINED__
-typedef interface EIFFEL_TYPE_INFO EIFFEL_TYPE_INFO;
-#endif  /* __EIFFEL_TYPE_INFO_FWD_DEFINED__ */
+#endif 	/* __ISE_Cache_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__ */
 
 
 #ifndef __ISE_Cache_Impl_COM_ISE_CACHE_MANAGER_FWD_DEFINED__
@@ -62,7 +56,7 @@ typedef class ISE_Cache_Impl_COM_ISE_CACHE_MANAGER ISE_Cache_Impl_COM_ISE_CACHE_
 typedef struct ISE_Cache_Impl_COM_ISE_CACHE_MANAGER ISE_Cache_Impl_COM_ISE_CACHE_MANAGER;
 #endif /* __cplusplus */
 
-#endif  /* __ISE_Cache_Impl_COM_ISE_CACHE_MANAGER_FWD_DEFINED__ */
+#endif 	/* __ISE_Cache_Impl_COM_ISE_CACHE_MANAGER_FWD_DEFINED__ */
 
 
 #ifndef __ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__
@@ -74,23 +68,22 @@ typedef class ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION ISE_Cache_Impl_COM_ASSEMBL
 typedef struct ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION;
 #endif /* __cplusplus */
 
-#endif  /* __ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__ */
+#endif 	/* __ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION_FWD_DEFINED__ */
 
 
 #ifdef __cplusplus
 extern "C"{
-#endif
+#endif 
 
 void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * );
+void __RPC_USER MIDL_user_free( void * ); 
 
 
 #ifndef __emitter_LIBRARY_DEFINED__
 #define __emitter_LIBRARY_DEFINED__
 
 /* library emitter */
-/* [version][uuid] */
-
+/* [version][uuid] */ 
 
 
 
@@ -101,95 +94,95 @@ EXTERN_C const IID LIBID_emitter;
 #define __ISE_Cache_COM_ISE_CACHE_MANAGER_INTERFACE_DEFINED__
 
 /* interface ISE_Cache_COM_ISE_CACHE_MANAGER */
-/* [object][custom][oleautomation][dual][version][uuid] */
+/* [object][custom][oleautomation][dual][version][uuid] */ 
 
 
 EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-
+    
     MIDL_INTERFACE("E3526F85-A118-3FBC-B445-417452D1AAA5")
     ISE_Cache_COM_ISE_CACHE_MANAGER : public IDispatch
     {
     public:
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE make( void) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_successful(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_successful( 
             /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
-
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_gac_assembly(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_gac_assembly( 
             /* [in] */ BSTR aname,
             /* [in] */ BSTR aversion,
             /* [in] */ BSTR aculture,
             /* [in] */ BSTR akey) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_local_assembly(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_local_assembly( 
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE relative_folder_name(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE relative_folder_name( 
             /* [in] */ BSTR aname,
             /* [in] */ BSTR aversion,
             /* [in] */ BSTR aculture,
             /* [in] */ BSTR akey,
             /* [retval][out] */ BSTR *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE assembly_info_from_assembly(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE assembly_info_from_assembly( 
             /* [in] */ BSTR apath,
             /* [retval][out] */ ISE_Cache_COM_ASSEMBLY_INFORMATION **pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl( 
             /* [retval][out] */ IUnknown **pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl( 
             /* [in] */ IUnknown *p1) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_7342(
-            /* [retval][out] */ void **pRetVal) = 0;
-
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_2752( 
+            /* [retval][out] */ /* external definition not present */ _Type **pRetVal) = 0;
+        
     };
-
-#else   /* C style interface */
+    
+#else 	/* C style interface */
 
     typedef struct ISE_Cache_COM_ISE_CACHE_MANAGERVtbl
     {
         BEGIN_INTERFACE
-
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-
-        ULONG ( STDMETHODCALLTYPE *AddRef )(
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-
-        ULONG ( STDMETHODCALLTYPE *Release )(
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [out] */ UINT *pctinfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [in] */ UINT cNames,
             /* [in] */ LCID lcid,
             /* [size_is][out] */ DISPID *rgDispId);
-
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
@@ -199,58 +192,58 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [out] */ VARIANT *pVarResult,
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *is_successful )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *is_successful )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ VARIANT_BOOL *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_gac_assembly )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_gac_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ BSTR aname,
             /* [in] */ BSTR aversion,
             /* [in] */ BSTR aculture,
             /* [in] */ BSTR akey);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_local_assembly )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_local_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *relative_folder_name )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *relative_folder_name )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ BSTR aname,
             /* [in] */ BSTR aversion,
             /* [in] */ BSTR aculture,
             /* [in] */ BSTR akey,
             /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *assembly_info_from_assembly )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *assembly_info_from_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ BSTR apath,
             /* [retval][out] */ ISE_Cache_COM_ASSEMBLY_INFORMATION **pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ IUnknown **pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ IUnknown *p1);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_emitter_type_7342 )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_emitter_type_2752 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [retval][out] */ void **pRetVal);
-
+            /* [retval][out] */ /* external definition not present */ _Type **pRetVal);
+        
         END_INTERFACE
     } ISE_Cache_COM_ISE_CACHE_MANAGERVtbl;
 
@@ -259,75 +252,75 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         CONST_VTBL struct ISE_Cache_COM_ISE_CACHE_MANAGERVtbl *lpVtbl;
     };
 
-
+    
 
 #ifdef COBJMACROS
 
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_QueryInterface(This,riid,ppvObject) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_AddRef(This)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_AddRef(This)	\
     (This)->lpVtbl -> AddRef(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_Release(This) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Release(This)	\
     (This)->lpVtbl -> Release(This)
 
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetTypeInfoCount(This,pctinfo)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetTypeInfo(This,iTInfo,lcid,ppTInfo) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_make(This)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_make(This)	\
     (This)->lpVtbl -> make(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful(This,pRetVal) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful(This,pRetVal)	\
     (This)->lpVtbl -> is_successful(This,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)	\
     (This)->lpVtbl -> last_error_message(This,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
     (This)->lpVtbl -> initialize(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly(This,aname,aversion,aculture,akey) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly(This,aname,aversion,aculture,akey)	\
     (This)->lpVtbl -> consume_gac_assembly(This,aname,aversion,aculture,akey)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly(This,apath,adest)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly(This,apath,adest)	\
     (This)->lpVtbl -> consume_local_assembly(This,apath,adest)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name(This,aname,aversion,aculture,akey,pRetVal) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name(This,aname,aversion,aculture,akey,pRetVal)	\
     (This)->lpVtbl -> relative_folder_name(This,aname,aversion,aculture,akey,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly(This,apath,pRetVal) \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly(This,apath,pRetVal)	\
     (This)->lpVtbl -> assembly_info_from_assembly(This,apath,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_impl(This,pRetVal)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_impl(This,pRetVal)	\
     (This)->lpVtbl -> impl(This,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl(This,p1)  \
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl(This,p1)	\
     (This)->lpVtbl -> _set_impl(This,p1)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_7342(This,pRetVal)  \
-    (This)->lpVtbl -> _emitter_type_7342(This,pRetVal)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_2752(This,pRetVal)	\
+    (This)->lpVtbl -> _emitter_type_2752(This,pRetVal)
 
 #endif /* COBJMACROS */
 
 
-#endif  /* C style interface */
+#endif 	/* C style interface */
 
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_make_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_make_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
@@ -338,7 +331,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_make_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ VARIANT_BOOL *pRetVal);
 
@@ -350,7 +343,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ BSTR *pRetVal);
 
@@ -362,7 +355,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
@@ -373,7 +366,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [in] */ BSTR aname,
     /* [in] */ BSTR aversion,
@@ -388,7 +381,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [in] */ BSTR apath,
     /* [in] */ BSTR adest);
@@ -401,7 +394,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [in] */ BSTR aname,
     /* [in] */ BSTR aversion,
@@ -417,7 +410,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [in] */ BSTR apath,
     /* [retval][out] */ ISE_Cache_COM_ASSEMBLY_INFORMATION **pRetVal);
@@ -430,7 +423,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly_Stub
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_impl_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_impl_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ IUnknown **pRetVal);
 
@@ -442,7 +435,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_impl_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [in] */ IUnknown *p1);
 
@@ -454,12 +447,12 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_7342_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_2752_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [retval][out] */ void **pRetVal);
+    /* [retval][out] */ /* external definition not present */ _Type **pRetVal);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_7342_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_2752_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -467,83 +460,83 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_7342_Stub(
 
 
 
-#endif  /* __ISE_Cache_COM_ISE_CACHE_MANAGER_INTERFACE_DEFINED__ */
+#endif 	/* __ISE_Cache_COM_ISE_CACHE_MANAGER_INTERFACE_DEFINED__ */
 
 
 #ifndef __ISE_Cache_COM_ASSEMBLY_INFORMATION_INTERFACE_DEFINED__
 #define __ISE_Cache_COM_ASSEMBLY_INFORMATION_INTERFACE_DEFINED__
 
 /* interface ISE_Cache_COM_ASSEMBLY_INFORMATION */
-/* [object][custom][oleautomation][dual][version][uuid] */
+/* [object][custom][oleautomation][dual][version][uuid] */ 
 
 
 EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-
-    MIDL_INTERFACE("F48FE226-D835-346E-97D2-2AED5595CB9F")
+    
+    MIDL_INTERFACE("FD2F67FF-FF44-3B67-A55D-8EE3086D3970")
     ISE_Cache_COM_ASSEMBLY_INFORMATION : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE public_key_token(
-            /* [retval][out] */ BSTR *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl(
-            /* [retval][out] */ IUnknown **pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl(
-            /* [in] */ IUnknown *p1) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE make(
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE make( 
             /* [in] */ IUnknown *ass) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE name(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE name( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE version(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE version( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE culture(
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE culture( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
-
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE public_key_token( 
+            /* [retval][out] */ BSTR *pRetVal) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl( 
+            /* [retval][out] */ IUnknown **pRetVal) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl( 
+            /* [in] */ IUnknown *p1) = 0;
+        
     };
-
-#else   /* C style interface */
+    
+#else 	/* C style interface */
 
     typedef struct ISE_Cache_COM_ASSEMBLY_INFORMATIONVtbl
     {
         BEGIN_INTERFACE
-
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-
-        ULONG ( STDMETHODCALLTYPE *AddRef )(
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
-
-        ULONG ( STDMETHODCALLTYPE *Release )(
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [out] */ UINT *pctinfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [in] */ UINT cNames,
             /* [in] */ LCID lcid,
             /* [size_is][out] */ DISPID *rgDispId);
-
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
@@ -553,35 +546,35 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
             /* [out] */ VARIANT *pVarResult,
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *public_key_token )(
-            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-            /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )(
-            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-            /* [retval][out] */ IUnknown **pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )(
-            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-            /* [in] */ IUnknown *p1);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [in] */ IUnknown *ass);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *name )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *name )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *version )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *version )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *culture )(
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *culture )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [retval][out] */ BSTR *pRetVal);
-
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *public_key_token )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
+            /* [retval][out] */ BSTR *pRetVal);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
+            /* [retval][out] */ IUnknown **pRetVal);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
+            /* [in] */ IUnknown *p1);
+        
         END_INTERFACE
     } ISE_Cache_COM_ASSEMBLY_INFORMATIONVtbl;
 
@@ -590,99 +583,63 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
         CONST_VTBL struct ISE_Cache_COM_ASSEMBLY_INFORMATIONVtbl *lpVtbl;
     };
 
-
+    
 
 #ifdef COBJMACROS
 
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_QueryInterface(This,riid,ppvObject)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_AddRef(This) \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_AddRef(This)	\
     (This)->lpVtbl -> AddRef(This)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Release(This)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Release(This)	\
     (This)->lpVtbl -> Release(This)
 
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetTypeInfoCount(This,pctinfo) \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetTypeInfo(This,iTInfo,lcid,ppTInfo)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token(This,pRetVal) \
-    (This)->lpVtbl -> public_key_token(This,pRetVal)
-
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_impl(This,pRetVal) \
-    (This)->lpVtbl -> impl(This,pRetVal)
-
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl(This,p1) \
-    (This)->lpVtbl -> _set_impl(This,p1)
-
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_make(This,ass) \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_make(This,ass)	\
     (This)->lpVtbl -> make(This,ass)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_name(This,pRetVal) \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_name(This,pRetVal)	\
     (This)->lpVtbl -> name(This,pRetVal)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_version(This,pRetVal)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_version(This,pRetVal)	\
     (This)->lpVtbl -> version(This,pRetVal)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_culture(This,pRetVal)  \
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_culture(This,pRetVal)	\
     (This)->lpVtbl -> culture(This,pRetVal)
+
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token(This,pRetVal)	\
+    (This)->lpVtbl -> public_key_token(This,pRetVal)
+
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_impl(This,pRetVal)	\
+    (This)->lpVtbl -> impl(This,pRetVal)
+
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl(This,p1)	\
+    (This)->lpVtbl -> _set_impl(This,p1)
 
 #endif /* COBJMACROS */
 
 
-#endif  /* C style interface */
+#endif 	/* C style interface */
 
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token_Proxy(
-    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-    /* [retval][out] */ BSTR *pRetVal);
-
-
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Proxy(
-    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-    /* [retval][out] */ IUnknown **pRetVal);
-
-
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Proxy(
-    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-    /* [in] */ IUnknown *p1);
-
-
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_make_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_make_Proxy( 
     ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
     /* [in] */ IUnknown *ass);
 
@@ -694,7 +651,7 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_make_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_name_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_name_Proxy( 
     ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
     /* [retval][out] */ BSTR *pRetVal);
 
@@ -706,7 +663,7 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_name_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_version_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_version_Proxy( 
     ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
     /* [retval][out] */ BSTR *pRetVal);
 
@@ -718,7 +675,7 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_version_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Proxy(
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Proxy( 
     ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
     /* [retval][out] */ BSTR *pRetVal);
 
@@ -730,195 +687,36 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Stub(
     DWORD *_pdwStubPhase);
 
 
-
-#endif  /* __ISE_Cache_COM_ASSEMBLY_INFORMATION_INTERFACE_DEFINED__ */
-
-
-#ifndef __EIFFEL_TYPE_INFO_INTERFACE_DEFINED__
-#define __EIFFEL_TYPE_INFO_INTERFACE_DEFINED__
-
-/* interface EIFFEL_TYPE_INFO */
-/* [object][custom][oleautomation][dual][version][uuid] */
-
-
-EXTERN_C const IID IID_EIFFEL_TYPE_INFO;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-
-    MIDL_INTERFACE("DCF16324-925C-366D-B887-7ED347C7A613")
-    EIFFEL_TYPE_INFO : public IDispatch
-    {
-    public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _invariant( void) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ____type(
-            /* [retval][out] */ void **pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ____class_name(
-            /* [retval][out] */ BSTR *pRetVal) = 0;
-
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ____set_type(
-            /* [in] */ void *type) = 0;
-
-    };
-
-#else   /* C style interface */
-
-    typedef struct EIFFEL_TYPE_INFOVtbl
-    {
-        BEGIN_INTERFACE
-
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
-            EIFFEL_TYPE_INFO * This,
-            /* [in] */ REFIID riid,
-            /* [iid_is][out] */ void **ppvObject);
-
-        ULONG ( STDMETHODCALLTYPE *AddRef )(
-            EIFFEL_TYPE_INFO * This);
-
-        ULONG ( STDMETHODCALLTYPE *Release )(
-            EIFFEL_TYPE_INFO * This);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
-            EIFFEL_TYPE_INFO * This,
-            /* [out] */ UINT *pctinfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
-            EIFFEL_TYPE_INFO * This,
-            /* [in] */ UINT iTInfo,
-            /* [in] */ LCID lcid,
-            /* [out] */ ITypeInfo **ppTInfo);
-
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
-            EIFFEL_TYPE_INFO * This,
-            /* [in] */ REFIID riid,
-            /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [in] */ UINT cNames,
-            /* [in] */ LCID lcid,
-            /* [size_is][out] */ DISPID *rgDispId);
-
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
-            EIFFEL_TYPE_INFO * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_invariant )(
-            EIFFEL_TYPE_INFO * This);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *____type )(
-            EIFFEL_TYPE_INFO * This,
-            /* [retval][out] */ void **pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *____class_name )(
-            EIFFEL_TYPE_INFO * This,
-            /* [retval][out] */ BSTR *pRetVal);
-
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *____set_type )(
-            EIFFEL_TYPE_INFO * This,
-            /* [in] */ void *type);
-
-        END_INTERFACE
-    } EIFFEL_TYPE_INFOVtbl;
-
-    interface EIFFEL_TYPE_INFO
-    {
-        CONST_VTBL struct EIFFEL_TYPE_INFOVtbl *lpVtbl;
-    };
-
-
-
-#ifdef COBJMACROS
-
-
-#define EIFFEL_TYPE_INFO_QueryInterface(This,riid,ppvObject)  \
-    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
-
-#define EIFFEL_TYPE_INFO_AddRef(This) \
-    (This)->lpVtbl -> AddRef(This)
-
-#define EIFFEL_TYPE_INFO_Release(This)  \
-    (This)->lpVtbl -> Release(This)
-
-
-#define EIFFEL_TYPE_INFO_GetTypeInfoCount(This,pctinfo) \
-    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
-
-#define EIFFEL_TYPE_INFO_GetTypeInfo(This,iTInfo,lcid,ppTInfo)  \
-    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
-
-#define EIFFEL_TYPE_INFO_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)  \
-    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
-
-#define EIFFEL_TYPE_INFO_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)  \
-    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
-
-
-#define EIFFEL_TYPE_INFO__invariant(This) \
-    (This)->lpVtbl -> _invariant(This)
-
-#define EIFFEL_TYPE_INFO_____type(This,pRetVal) \
-    (This)->lpVtbl -> ____type(This,pRetVal)
-
-#define EIFFEL_TYPE_INFO_____class_name(This,pRetVal) \
-    (This)->lpVtbl -> ____class_name(This,pRetVal)
-
-#define EIFFEL_TYPE_INFO_____set_type(This,type)  \
-    (This)->lpVtbl -> ____set_type(This,type)
-
-#endif /* COBJMACROS */
-
-
-#endif  /* C style interface */
-
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EIFFEL_TYPE_INFO__invariant_Proxy(
-    EIFFEL_TYPE_INFO * This);
-
-
-void __RPC_STUB EIFFEL_TYPE_INFO__invariant_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EIFFEL_TYPE_INFO_____type_Proxy(
-    EIFFEL_TYPE_INFO * This,
-    /* [retval][out] */ void **pRetVal);
-
-
-void __RPC_STUB EIFFEL_TYPE_INFO_____type_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EIFFEL_TYPE_INFO_____class_name_Proxy(
-    EIFFEL_TYPE_INFO * This,
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
     /* [retval][out] */ BSTR *pRetVal);
 
 
-void __RPC_STUB EIFFEL_TYPE_INFO_____class_name_Stub(
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE EIFFEL_TYPE_INFO_____set_type_Proxy(
-    EIFFEL_TYPE_INFO * This,
-    /* [in] */ void *type);
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
+    /* [retval][out] */ IUnknown **pRetVal);
 
 
-void __RPC_STUB EIFFEL_TYPE_INFO_____set_type_Stub(
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
+    /* [in] */ IUnknown *p1);
+
+
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -926,14 +724,14 @@ void __RPC_STUB EIFFEL_TYPE_INFO_____set_type_Stub(
 
 
 
-#endif  /* __EIFFEL_TYPE_INFO_INTERFACE_DEFINED__ */
+#endif 	/* __ISE_Cache_COM_ASSEMBLY_INFORMATION_INTERFACE_DEFINED__ */
 
 
 EXTERN_C const CLSID CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER;
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("436996E6-9986-3E67-A16D-8EBE28A7EEFC")
+class DECLSPEC_UUID("01BDF738-3044-3ED6-BA7B-34632D67E145")
 ISE_Cache_Impl_COM_ISE_CACHE_MANAGER;
 #endif
 
@@ -941,7 +739,7 @@ EXTERN_C const CLSID CLSID_ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION;
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("7EFA46A3-45F3-3BA4-8F4E-6CBB5CBF73D7")
+class DECLSPEC_UUID("7F6F58E1-29FD-3FB3-B612-72205FE907E3")
 ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION;
 #endif
 #endif /* __emitter_LIBRARY_DEFINED__ */

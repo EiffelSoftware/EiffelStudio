@@ -348,10 +348,10 @@ feature {NONE} -- Implementation
 			-- Window for laying out children of fixed.
 		local
 			horizontal_box, hb: EV_HORIZONTAL_BOX
-			vertical_box, vb: EV_VERTICAL_BOX
+			vertical_box, vb, vb1: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM
-			frame: EV_FRAME
+			grid_control_holder: EV_FRAME
 		do
 			create Result
 			create vertical_box
@@ -369,7 +369,6 @@ feature {NONE} -- Implementation
 			create pixmap
 			drawing_area.resize_actions.force_extend (agent update_pixmap_size)
 			drawing_area.resize_actions.force_extend (agent draw_widgets)
-			pixmap.set_size (250, 250)
 			create projector.make_with_buffer (world, pixmap, drawing_area)
 			
 			create scrollable_area
@@ -388,17 +387,16 @@ feature {NONE} -- Implementation
 				-- We do not build a new control if it already exists.
 			if snap_button = Void then
 				create snap_button.make_with_text ("Snap to grid")
-				snap_button.select_actions.extend (agent snap_button_selected)
 			else
 				snap_button.parent.prune_all (snap_button)
 			end
-			create grid_control_holder
-			grid_control_holder.disable_sensitive
+			create grid_control_holder.make_with_text ("Grid properties")
+			create vb1
+			grid_control_holder.extend (vb1)
 			vertical_box.extend (list)
-			vertical_box.extend (snap_button)
 			vertical_box.extend (grid_control_holder)
+			vb1.extend (snap_button)
 			vertical_box.disable_item_expand (grid_control_holder)
-			vertical_box.disable_item_expand (snap_button)
 			if grid_visible_control = Void then
 				create grid_visible_control.make_with_text ("Visible")
 				grid_visible_control.enable_select
@@ -406,17 +404,17 @@ feature {NONE} -- Implementation
 			else
 				grid_visible_control.parent.prune_all (grid_visible_control)
 			end
-			grid_control_holder.extend (grid_visible_control)
+			vb1.extend (grid_visible_control)
 				-- We do not build a new control if it already exists.
 				-- This allows us to keep the previous value.
 			if (grid_size_control = Void) then
 				create grid_size_control.make_with_value_range (create {INTEGER_INTERVAL}.make (5, 500))
 				grid_size_control.change_actions.force_extend (agent draw_widgets)
-				grid_size_control.set_value (25)
+				grid_size_control.set_value (20)
 			else
 				grid_size_control.parent.prune_all (grid_size_control)
 			end
-			grid_control_holder.extend (grid_size_control)
+			vb1.extend (grid_size_control)
 			from
 				first.start
 			until
@@ -429,7 +427,6 @@ feature {NONE} -- Implementation
 				first.forth
 			end
 			set_initial_area_size
-			snap_button_selected
 		end
 		
 	set_initial_area_size is
@@ -486,7 +483,7 @@ feature {NONE} -- Implementation
 				-- Remove all previous figures from `world'.
 			world.wipe_out
 				-- We must  draw the grid if necessary.
-			if snap_button.is_selected and grid_visible_control.is_selected then
+			if grid_visible_control.is_selected then
 				draw_grid	
 			end	
 			from
@@ -830,24 +827,8 @@ feature {NONE} -- Implementation
 			end
 			drawing_area.set_pointer_style (cursor)
 		end
-		
-	snap_button_selected is
-			-- Enable/disable the grid option dependent on
-			-- state of `snap_button'.
-		do
-			if snap_button.is_selected then
-				grid_control_holder.enable_sensitive
-			else
-				grid_control_holder.disable_sensitive
-			end
-				-- Update the display.
-			draw_widgets
-		end
 
 feature {NONE} -- Attributes.
-
-	grid_control_holder: EV_HORIZONTAL_BOX
-		-- Holds `snap_button' and `grid_size_control'.
 
 	snap_button: EV_CHECK_BUTTON
 		-- Snap to grid enabled?

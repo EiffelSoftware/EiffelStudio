@@ -92,7 +92,6 @@ feature -- Basic Operation
 			string_constant: GB_STRING_CONSTANT
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
-			filename_constant: GB_FILENAME_CONSTANT
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			if internal_constant.type.is_equal (Integer_constant_type) then
@@ -107,9 +106,6 @@ feature -- Basic Operation
 			elseif internal_constant.type.is_equal (Directory_constant_type) then
 				directory_constant ?= internal_constant
 				Constants.add_directory (directory_constant)
-			elseif internal_constant.type.is_equal (Filename_constant_type) then
-				filename_constant ?= internal_constant
-				Constants.add_filename (filename_constant)
 			end
 			editors := all_editors
 			from

@@ -103,7 +103,8 @@ feature {NONE} -- Execution
 			if (choice /= Void) and then (arg = choice) then
 				if choice.position /= 0 then
 					if text_window.changed then
-						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+						warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+								Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 					else
 						read_in_file (Void)
 					end

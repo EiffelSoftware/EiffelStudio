@@ -31,6 +31,7 @@
 %token LAC_END;
 %token LAC_ENSURE;
 %token LAC_EXCLUDE;
+%token LAC_EXECUTABLE;
 %token LAC_EXPORT;
 %token LAC_EXTERNAL;
 %token LAC_GENERATE;
@@ -351,6 +352,9 @@ Language_name           : LAC_C
 						| LAC_OBJECT
 							{$$ =
 		create_node1(OBJECT_NAME_SD,lace_id("object",start_position,end_position));}
+						| LAC_EXECUTABLE
+							{$$ =
+		create_node1(EXECUTABLE_NAME_SD,lace_id("executable",start_position,end_position));}
                         | Name
 							{$$ = create_node1(LANGUAGE_NAME_SD,$1);}
                         ;

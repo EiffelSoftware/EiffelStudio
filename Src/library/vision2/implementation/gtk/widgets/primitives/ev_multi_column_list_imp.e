@@ -1177,6 +1177,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Externals
+
+	calloc (nmemb, size: INTEGER): POINTER is
+			-- void *calloc(size_t nmemb, size_t size);
+		external
+			"C (size_t, size_t): void* | <stdlib.h>"
+		end
 		
 	sizeof_pointer: INTEGER is
 		external

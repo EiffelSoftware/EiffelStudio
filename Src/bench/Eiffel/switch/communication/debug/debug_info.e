@@ -6,7 +6,7 @@ inherit
 			{NONE} all
 		end
 
-creation {APPLICATION_EXECUTION}
+create {APPLICATION_EXECUTION}
 	make
 
 feature {NONE} -- Initialization

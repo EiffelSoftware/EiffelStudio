@@ -16,7 +16,7 @@ inherit
 			init_uncompiled_feature_context
 		end
 
-creation
+create
 	make, make_for_case
 
 feature
@@ -79,7 +79,7 @@ feature {NONE}
 			else
 				text.add (ti_padded_debug_mark)
 			end
-			{FORMAT_CONTEXT} Precursor
+			Precursor {FORMAT_CONTEXT}
 		end
 
 end -- class CLASS_DEBUG_CONTEXT

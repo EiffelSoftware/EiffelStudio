@@ -17,7 +17,7 @@ inherit
 			make as ht_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -4,7 +4,7 @@ class
 inherit
 	EDIT_ITEM
 
-creation
+create
 	default_create
 
 feature {NONE} -- Implementation of deferred features

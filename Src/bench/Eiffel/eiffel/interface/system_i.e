@@ -40,7 +40,8 @@ inherit
 			freeze_system as c_comp_actions_freeze_system
 		end;
 	SHARED_DLE;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_ID
 
 feature -- Counters
 
@@ -59,9 +60,9 @@ feature -- Counters
 			if Compilation_modes.is_precompiling then
 				Result := 1
 			elseif Compilation_modes.is_extending then
-				Result := 3
+				Result := Dle_compilation
 			else
-				Result := -1
+				Result := Normal_compilation
 			end
 		end;
 

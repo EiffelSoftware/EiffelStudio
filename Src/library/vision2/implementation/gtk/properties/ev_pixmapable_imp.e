@@ -16,9 +16,6 @@ inherit
 	EV_PIXMAPABLE_I
 
 	EV_CONTAINER_IMP
-		redefine
-			add_child
-		end
 	
 feature -- Access
 
@@ -39,16 +36,8 @@ feature {EV_CONTAINER} -- Element change
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
 			add_child (pixmap_imp)
-			--gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, True, False, 0)
 		 	gtk_widget_show (pixmap_imp.widget)
 			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 2)
-		end
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite.
-			-- We just set the child for the postconditions.
-		do
-			child := child_imp
 		end
 
 feature {NONE} -- Implementation

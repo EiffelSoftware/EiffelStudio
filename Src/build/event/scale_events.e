@@ -41,10 +41,10 @@ feature {NONE}
 			Result := Pixmaps.selected_scale_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.scale_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.scale_label)
+		end;
 	
 feature {CATALOG}
     

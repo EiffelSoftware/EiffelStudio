@@ -56,10 +56,10 @@ feature {NONE}
 			Result := Pixmaps.selected_button_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.button_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.button_label)
+		end;
 
 feature {CATALOG}
     

@@ -10,10 +10,10 @@ creation
 
 feature {NONE} -- focus label
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.accept_change_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.accept_change_label)
+		end;
 
 -- samik	focus_label: FOCUS_LABEL is
 -- samik		do
@@ -29,7 +29,6 @@ feature {NONE} -- focus label
 		do
 			namer_window := namer;	
 			make_visible (a_parent);
-			set_focus_string (Focus_labels.accept_change_label)
 		end;
 
 

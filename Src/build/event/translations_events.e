@@ -109,10 +109,10 @@ feature {NONE}
 			Result := Pixmaps.selected_translation_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.translation_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.translation_label)
+		end;
 
 	translation_editor: TRANSL_EDITOR is
 		once

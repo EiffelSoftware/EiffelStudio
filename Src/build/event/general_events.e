@@ -34,10 +34,10 @@ feature {NONE}
 			Result := Pixmaps.selected_general_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.general_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.general_label)
+		end;
 
 	append_general_events is
 		do

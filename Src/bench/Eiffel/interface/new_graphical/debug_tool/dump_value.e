@@ -214,7 +214,7 @@ feature -- Status report
 					obj.attributes.forth
 				end
 			else
-				f := debuggable_class.feature_with_name ("debug_output").ancestor_version (dynamic_type)
+				f := debug_output_feature.ancestor_version (dynamic_type)
 				create expr.make_with_object (create {DEBUGGED_OBJECT}.make (value_object, 0, 1), f.name)
 				expr.evaluate
 				if expr.error_message = Void then
@@ -418,23 +418,50 @@ feature {NONE} -- Implementation
 	debuggable_class: CLASS_C is
 			-- Class that provides the `debug_output' interface, if any.
 		local
-			cis: LINKED_LIST [CLASS_I]
+			cis: LIST [CLASS_I]
 			lc: CLASS_C
 		do
 			lc := internal_debuggable_class.item
-			if lc = Void or else not lc.is_valid then
+			if lc = Void then
 				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
 				if not cis.is_empty then
 					Result := cis.first.compiled_class
 				end
 				internal_debuggable_class.put (Result)
+			elseif not lc.is_valid then
+				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
+				if not cis.is_empty then
+					Result := cis.first.compiled_class
+				end
+				internal_debuggable_class.put (Result)
+					-- The DEBUG_OUTPUT class has changed. Reset the debug feature.
+				Internal_debug_output_feature.put (Void)
 			else
 				Result := lc
 			end
 		end
 
+	debug_output_feature: E_FEATURE is
+			-- E_feature that corresponds to DEBUG_OUTPUT::debug_output.
+		require
+			has_formatted_output: has_formatted_output
+		do
+			if
+				internal_debug_output_feature.item = Void
+			then
+				internal_debug_output_feature.put (debuggable_class.feature_with_name ("debug_output"))
+			end
+			Result := internal_debug_output_feature.item
+		end
+
 	internal_debuggable_class: CELL [CLASS_C] is
 			-- Last computed `debuggable_class'.
+		once
+			create Result.put (Void)
+		end
+
+	internal_debug_output_feature: CELL [E_FEATURE] is
+			-- Last computed `debug_output_feature'.
 		once
 			create Result.put (Void)
 		end

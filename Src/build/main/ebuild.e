@@ -25,7 +25,7 @@ feature
 		local
 			init: INIT_CHECK;
 			mp: MOUSE_PTR;
-			tg: STRING
+			tg: STRING;
 		do
 			no_message_on_failure;
 			if not retried then

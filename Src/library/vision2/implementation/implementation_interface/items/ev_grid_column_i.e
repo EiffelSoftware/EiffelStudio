@@ -58,6 +58,12 @@ feature {EV_GRID_I} -- Initialization
 
 feature -- Access
 
+	is_displayed: BOOLEAN is
+		-- Is `Current' displayable in `parent'
+	do
+		Result := is_visible
+	end
+
 	title: STRING is
 			-- Title of Current column. Empty if none.
 		require
@@ -122,6 +128,28 @@ feature -- Access
 			Result := header_item.width
 		ensure
 			Result_non_negative: Result >= 0
+		end
+
+feature -- Status setting
+
+	hide is
+			-- Prevent column from being displayed in `parent'
+		require
+			is_parented: parent /= Void
+		do
+			parent.hide_column (index)
+		ensure
+			not_is_displayed: not is_displayed
+		end
+
+	show is
+			-- Allow column to be displayable within `parent'
+		require
+			is_parented: parent /= Void
+		do
+			parent.show_column (index)
+		ensure
+			is_displayed: is_displayed
 		end
 
 feature -- Status report

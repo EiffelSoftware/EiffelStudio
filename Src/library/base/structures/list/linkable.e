@@ -14,7 +14,7 @@ class LINKABLE [G] inherit
 
 	CELL [G]
 		export
-			{CELL, CHAIN} 
+			{CELL, CHAIN}
 				put;
 			{ANY}
 				item

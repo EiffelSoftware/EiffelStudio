@@ -4,7 +4,7 @@ indexing
 		"Objects that are able to iterate over linear structures";
 
 	status: "See notice at end of class";
-	names: iterators, iteration, linear_iterators, 
+	names: iterators, iteration, linear_iterators,
 			linear_iteration;
 	date: "$Date$";
 	revision: "$Revision$"
@@ -26,28 +26,28 @@ feature -- Cursor movement
 			-- (from the `start' of `target')
 		do
 			from
-				start 
+				start
 			invariant
-				invariant_value 
-			until 
+				invariant_value
+			until
 				exhausted
 			loop
 				action ;
-				forth 
+				forth
 			end
 		ensure then
 			exhausted
 		end;
 
 	do_while is
-			-- Apply `action' to every item of `target' up to 
+			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'.
 			-- (from the `start' of `target')
 		do
 			start;
-			continue_while 
+			continue_while
 		ensure then
-			finished: not exhausted implies not test 
+			finished: not exhausted implies not test
 		end;
 
 	continue_while is
@@ -61,15 +61,15 @@ feature -- Cursor movement
 			from
 				if not exhausted then action end
 			invariant
-				invariant_value 
+				invariant_value
 			until
-				exhausted or else not test 
+				exhausted or else not test
 			loop
 				forth
 				if not exhausted then action end
 			end
 		ensure then
-			finished: not exhausted implies not test 
+			finished: not exhausted implies not test
 		end;
 
 	while_do is
@@ -99,7 +99,7 @@ feature -- Cursor movement
 		ensure
 			finished: not exhausted implies not test
 		end
-	
+
 	until_do is
 		-- Apply `action' to every item of `target' up to
 		-- but excluding first one satisfying `test'.
@@ -117,7 +117,7 @@ feature -- Cursor movement
 		require
 			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
-		do  
+		do
 			from
 			invariant
 				invariant_value
@@ -126,20 +126,20 @@ feature -- Cursor movement
 			loop
 				action;
 				forth
-			end 
+			end
 		ensure
 			achieved: exhausted or else test;
 			invariant_satisfied: invariant_value
 		end;
 
 	do_until is
-			-- Apply `action' to every item of `target' up to 
+			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 		do
 			start ;
 			continue_until;
 		ensure then
-			achieved: not exhausted implies test 
+			achieved: not exhausted implies test
 		end;
 
 	continue_until is
@@ -148,26 +148,26 @@ feature -- Cursor movement
 			-- (from the current position of `target').
 		require
 			traversable_exists: target /= Void;
-			invariant_satisfied: invariant_value 
+			invariant_satisfied: invariant_value
 		local
 			finished: BOOLEAN
 		do
 			from
 				if not exhausted then action end
 			invariant
-				invariant_value 
+				invariant_value
 			until
-				exhausted or else test 
+				exhausted or else test
 			loop
 				forth ;
 				if not exhausted then action end
 			end
 		ensure then
-			achieved: not exhausted implies test 
+			achieved: not exhausted implies test
 		end;
 
 	search (b: BOOLEAN) is
-			-- Search the first item of `target' for which `test' 
+			-- Search the first item of `target' for which `test'
 			-- has the same value as `b' (both true or both false).
 		require
 			traversable_exists: target /= Void
@@ -185,29 +185,29 @@ feature -- Cursor movement
 		do
 			from
 			invariant
-				invariant_value 
-			until 
+				invariant_value
+			until
 				exhausted or else (b = test )
 			loop
-				forth 
+				forth
 			end
 		ensure then
 			found: not exhausted = (b = test )
 		end;
 
 	do_if is
-			-- Apply `action' to every item of `target' 
+			-- Apply `action' to every item of `target'
 			-- satisfying `test'.
 		do
 			from
-				start 
+				start
 			invariant
-				invariant_value 
+				invariant_value
 			until
 				exhausted
 			loop
 				if test then action end;
-				forth 
+				forth
 			end
 		end;
 
@@ -230,7 +230,7 @@ feature -- Cursor movement
 			variant
 				i - j
 			until
-				exhausted or else j = i 
+				exhausted or else j = i
 			loop
 				forth ;
 				j := j + 1
@@ -264,8 +264,8 @@ feature -- Cursor movement
 					j >= 0 and j <= k
 				variant
 					k - j
-				until 
-					exhausted  or else j = k 
+				until
+					exhausted  or else j = k
 				loop
 					forth ;
 					j := j + 1
@@ -278,7 +278,7 @@ feature -- Cursor movement
 			-- all items of `target'?
 		do
 			search (False);
-			Result := exhausted 
+			Result := exhausted
 		end;
 
 	exists: BOOLEAN is

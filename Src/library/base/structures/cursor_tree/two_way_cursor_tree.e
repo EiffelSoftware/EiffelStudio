@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 
 	cursor_anchor: TWO_WAY_TREE_CURSOR [G];
 			-- Anchor for definitions concerning cursors
- 
+
 	active: TWO_WAY_TREE [G];
 			-- Current node
 

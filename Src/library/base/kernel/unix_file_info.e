@@ -52,7 +52,7 @@ feature -- Access
 		do
 			Result := file_info ($buffered_file_info, 6);
 		end;
-	
+
 	user_id: INTEGER is
 			-- UID of the file owner
 		do
@@ -76,7 +76,7 @@ feature -- Access
 		do
 			Result := file_info ($buffered_file_info, 8);
 		end;
-	
+
 	change_date: INTEGER is
 			-- Date of last status change
 		do
@@ -88,7 +88,7 @@ feature -- Access
 		do
 			Result := file_info ($buffered_file_info, 2);
 		end;
-	
+
 	device_type: INTEGER is
 			-- Device type on which inode resides
 		do
@@ -101,7 +101,7 @@ feature -- Access
 			Result := file_info ($buffered_file_info, 10);
 		end;
 
-	
+
 	owner_name: STRING is
 			-- Name of the file owner, if available from /etc/passwd.
 			-- Otherwise, the UID
@@ -132,7 +132,7 @@ feature -- Status report
 		do
 			Result := file_info ($buffered_file_info, 14) /= 0;
 		end;
-		
+
 	is_directory: BOOLEAN is
 			-- Is file a directory?
 		do
@@ -150,19 +150,19 @@ feature -- Status report
 		do
 			Result := file_info ($buffered_file_info, 17) /= 0;
 		end;
-		
+
 	is_socket: BOOLEAN is
 			-- Is file a named socket?
 		do
 			Result := file_info ($buffered_file_info, 19) /= 0;
 		end;
-		
+
 	is_block: BOOLEAN is
 			-- Is file a device block special file?
 		do
 			Result := file_info ($buffered_file_info, 16) /= 0;
 		end;
-	
+
 	is_character: BOOLEAN is
 			-- Is file a character block special file?
 		do
@@ -174,7 +174,7 @@ feature -- Status report
 		do
 			Result := file_eaccess ($buffered_file_info, 0);
 		end;
-		
+
 	is_writable: BOOLEAN is
 			-- Is file writable by effective UID?
 		do
@@ -186,13 +186,13 @@ feature -- Status report
 		do
 			Result := file_eaccess ($buffered_file_info, 2);
 		end;
-		
+
 	is_setuid: BOOLEAN is
 			-- Is file setuid?
 		do
 			Result := file_eaccess ($buffered_file_info, 3);
 		end;
-		
+
 	is_setgid: BOOLEAN is
 			-- Is file setgid?
 		do
@@ -222,7 +222,7 @@ feature -- Status report
 		do
 			Result := file_access (file_name, 3);
 		end;
-		
+
 	is_access_writable: BOOLEAN is
 			-- Is file writable by real UID?
 		do
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-	
+
 	file_group (gid: INTEGER): STRING is
 			-- Convert GID to group name if possible
 		external

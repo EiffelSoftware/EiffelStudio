@@ -30,7 +30,7 @@ feature -- Status report
 			-- Is there a current item that may be modified?
 		do
 			Result := not empty
-		end;	
+		end;
 
 feature -- Element change
 

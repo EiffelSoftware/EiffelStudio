@@ -32,7 +32,7 @@ feature -- Access
 	code: INTEGER is
 			-- Associated integer value
 		do
-			Result := chcode (item);		
+			Result := chcode (item);
 		end;
 
 	hash_code: INTEGER is

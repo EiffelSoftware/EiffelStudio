@@ -28,7 +28,7 @@ class SEQ_STRING inherit
 			put as sequence_put,
 			remove as remove_current_item
 		export
-			{NONE} 
+			{NONE}
 				sequence_put, seq_append
 		undefine
 			occurrences, out, copy, is_equal, prune_all,
@@ -79,7 +79,7 @@ feature -- Access
 			-- Move cursor to first position
 			-- (at or after cursor position) where `substring
 			-- (index, index + s.count)' and `s' are identical.
-			-- Go after if unsuccessful. 
+			-- Go after if unsuccessful.
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
@@ -121,7 +121,7 @@ feature -- Access
 				end
 			end
 		end;
- 
+
 	current_item: CHARACTER is
 			-- Current item
 		do
@@ -131,7 +131,7 @@ feature -- Access
 	index: INTEGER;
 			-- Index of `current_item', if valid
 			-- Valid values are between 1 and `count' (if `count' > 0).
-	
+
 	index_of_occurrence (c: CHARACTER; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of `c'.
 			-- 0 if none.
@@ -217,7 +217,7 @@ feature -- Element change
 
 	replace (c: CHARACTER) is
 			-- Replace current item by `c'.
-		do 
+		do
 			put (c, index)
 		end;
 

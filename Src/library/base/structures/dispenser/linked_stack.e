@@ -126,7 +126,7 @@ feature -- Duplication
 				end;
 				start;
 				back
-			end	
+			end
 		end;
 
 invariant

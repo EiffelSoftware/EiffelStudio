@@ -19,7 +19,7 @@ feature -- Measurement
 		require
 			type_ok:
 				memory_type = Total_memory or
-				memory_type = Eiffel_memory or 
+				memory_type = Eiffel_memory or
 				memory_type = C_memory
 		do
 			!! Result.make (memory_type);
@@ -52,7 +52,7 @@ feature -- Status report
 			"C"
 		alias
 			"mem_pget"
-		end;	
+		end;
 
 	collecting: BOOLEAN is
 			-- Is garbage collection enabled?
@@ -80,7 +80,7 @@ feature -- Status setting
 		alias
 			"gc_stop"
 		end;
-	
+
 	collection_on is
 			-- Enable garbage collection.
 		external
@@ -97,7 +97,7 @@ feature -- Status setting
 		alias
 			"mem_speed"
 		end;
-	
+
 	allocate_compact is
 			-- Enter ``memory'' mode: will try to compact memory
 			-- before requesting more from the operating system.
@@ -106,7 +106,7 @@ feature -- Status setting
 		alias
 			"mem_slow"
 		end;
-	
+
 	allocate_tiny is
 			-- Enter ``tiny'' mode: will enter ``memory'' mode
 			-- after having freed as much memory as possible.
@@ -137,7 +137,7 @@ feature -- Status setting
 		alias
 			"mem_tset"
 		end;
-	
+
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'.
 		require
@@ -191,9 +191,9 @@ feature -- Removal
 		external
 			"C"
 		end;
-	
+
 	full_collect is
-			-- Force a full collection cycle if garbage 
+			-- Force a full collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
 			"C"

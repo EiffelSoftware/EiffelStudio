@@ -49,22 +49,22 @@ feature -- Access
 			-- for `type' before last call to `update'
 
 	cycle_count: INTEGER;
-			-- Number of collection cycles for `type' 
+			-- Number of collection cycles for `type'
 			-- before last call to `update'
-	
+
 	memory_used: INTEGER;
-			-- Total number of bytes used (counting overhead) 
-			-- after last cycle for `type' before last 
+			-- Total number of bytes used (counting overhead)
+			-- after last cycle for `type' before last
 			-- call to `update'
 
 	collected: INTEGER;
 			-- Number of bytes collected by the last cycle,
 			-- for `type' before last call to `update'
-	
+
 	collected_average: INTEGER;
 			-- Average number of bytes collected by a cycle,
 			-- for `type' before last call to `update'
-	
+
 	real_time: INTEGER;
 			-- Real time in centi-seconds used by last cycle
 			-- for `type', before last call to `update';
@@ -76,44 +76,44 @@ feature -- Access
 			-- Average amount of real time, in centi-seconds,
 			-- spent in collection cycle,
 			-- for `type' before last call to `update'
-	
+
 	real_interval_time: INTEGER;
 			-- Real interval time (as opposed to CPU time) between
 			-- two automatically raised cycles, in centi-seconds,
 			-- for `type' before last call to `update'
-	
+
 	real_interval_time_average: INTEGER;
 			-- Average real interval time between two automatic
 			-- cycles, in centi-seconds,
 			-- for `type' before last call to `update'
-	
+
 	cpu_time: DOUBLE;
 			-- Amount of CPU time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
-	
+
 	cpu_time_average: DOUBLE;
-			-- Average amount of CPU time spent in cycle, 
+			-- Average amount of CPU time spent in cycle,
 			-- in seconds, for `type' before last call to `update'
 
 	cpu_interval_time: DOUBLE;
-			-- Amount of CPU time elapsed since between last 
+			-- Amount of CPU time elapsed since between last
 			-- and penultimate cycles for `type' before
 			-- last call to `update'
 
 	cpu_interval_time_average: DOUBLE;
 			-- Average amount of CPU time between two cycles,
 			-- for `type' before last call to `update'
-	
+
 	sys_time: DOUBLE;
 			-- Amount of kernel time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
-	
+
 	sys_time_average: DOUBLE;
 			-- Average amount of kernel time spent in cycle,
 			-- for `type' before last call to `update'
-	
+
 	sys_interval_time: DOUBLE;
-			-- Amount of kernel time elapsed since between 
+			-- Amount of kernel time elapsed since between
 			-- the last and the penultimate cycle,
 			-- for `type' before last call to `update'
 

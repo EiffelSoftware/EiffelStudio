@@ -154,10 +154,10 @@ feature -- Status report
 				Result := double_value.item >= 0.0 or item /= 0
 			end
 		ensure then
-			safe_values: ((other.conforms_to (0) and item /= 0) or 
+			safe_values: ((other.conforms_to (0) and item /= 0) or
 				(other.conforms_to (0.0) and item > 0)) implies Result
 		end;
-			
+
 	is_hashable: BOOLEAN is
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)

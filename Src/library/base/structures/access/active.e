@@ -35,7 +35,7 @@ feature -- Status report
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
 		deferred
-		end;	
+		end;
 
 feature -- Element change
 

@@ -9,7 +9,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] 
+class LINKED_PRIORITY_QUEUE [G -> COMPARABLE]
 
 inherit
 	PRIORITY_QUEUE [G]
@@ -30,7 +30,7 @@ inherit
 			{NONE}
 				all
 		end
-		
+
 creation
 	make
 
@@ -40,7 +40,7 @@ feature -- Initialization
 			-- Allocate heap space.
 		do
 			sl_make ;
-		end;	
+		end;
 
 feature -- Access
 
@@ -53,7 +53,7 @@ feature -- Access
 feature -- Removal
 
 	remove is
-			-- Remove item of highest value. 
+			-- Remove item of highest value.
 		do
 			go_i_th (count)
 			sl_remove

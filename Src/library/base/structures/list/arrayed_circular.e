@@ -29,7 +29,7 @@ class ARRAYED_CIRCULAR [G] inherit
 			before as l_before,
 			remove as l_remove,
 			first as l_first,
-			off as l_off, 
+			off as l_off,
 			prune as l_prune,
 			prune_all as l_prune_all,
 			go_i_th as l_go_i_th,
@@ -56,7 +56,7 @@ feature -- Initialization
 			!!list.make (n)
 		end
 
-feature --  Access 
+feature --  Access
 
 	item : G is
 			-- Current item
@@ -81,7 +81,7 @@ feature -- Measurement
 feature -- Status report
 
 	full : BOOLEAN is
-			-- Is structure filled to capacity? 
+			-- Is structure filled to capacity?
 		do
 			Result := list.full
 		end
@@ -182,7 +182,7 @@ feature -- Element change
 		do
 			list.merge_right (other.list)
 		end
-	
+
 	put_right (v : like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
@@ -218,7 +218,7 @@ feature -- Element change
 		do
 			list.put_left (v)
 		end
-	
+
 feature -- Removal
 
 	remove_left is
@@ -242,7 +242,7 @@ feature -- Removal
 			count > 1
 		do
 			if standard_islast then
-				standard_start; 
+				standard_start;
 				remove;
 				finish
 			else
@@ -273,7 +273,7 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 				end
 			end
 		end;
-		
+
 	starter: INTEGER
 			-- The position currently selected as first
 
@@ -284,9 +284,9 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 		do
 			!! Result.make (count)
 		end;
-	
+
 	list : ARRAYED_LIST[G]
- 
+
 	standard_after : BOOLEAN is
 			do
 				Result := list.after

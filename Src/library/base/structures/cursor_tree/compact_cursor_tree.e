@@ -116,7 +116,7 @@ feature -- Status report
 
 	above: BOOLEAN;
 			-- Is there no valid cursor position above the cursor?
-	
+
 	isfirst: BOOLEAN is
 			-- Is cursor on first sibling?
 		local
@@ -365,13 +365,13 @@ feature -- Element change
 				item_table.put (v, active);
 				next_sibling_table.put (new, active);
 				first_child_table.put (0, active);
-				active := new			
+				active := new
 			else
 				next_sibling_table.put (next_sibling_table.item (active), new);
 				next_sibling_table.put (new, active);
 			end;
 		end;
-		
+
 	put_left (v: G) is
 			-- Add `v' to the left of current position.
 		require else
@@ -394,7 +394,7 @@ feature -- Element change
 			end;
 			active := new
 		end;
-		
+
 	put_front (v: G) is
 			-- Add a leaf `v' as first child.
 			-- If `above' and `empty', make `v' the root value
@@ -428,9 +428,9 @@ feature -- Element change
 
 	put_parent (v: G) is
 			-- insert a new node, with value v, as parent of
-			-- current node and 
+			-- current node and
 			-- with the same position
-			--if above or on root, add a new root 
+			--if above or on root, add a new root
 		require
 			not after;
 			not before
@@ -483,7 +483,7 @@ feature -- Element change
 				next_sibling_table.put (new, index);
 			end;
 		end;
-				
+
 feature -- Removal
 
 	remove is
@@ -632,10 +632,10 @@ feature {NONE} -- Implementation
 
 	free_list_index: INTEGER;
 			-- Index to first empty space in `item_table'
-			
+
 	free_list_count: INTEGER;
 			-- Number of empty spaces in `item_table'
-			
+
 	remove_subtree (i: INTEGER) is
 		local
 			index, next: INTEGER;
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 
 	new_cell_index: INTEGER is
 		local
-			default_value: like item	
+			default_value: like item
 		do
 			if free_list_index > 0 then
 				Result := free_list_index;

@@ -13,7 +13,7 @@ class ARRAYED_LIST_CURSOR inherit
 	CURSOR
 
 creation
-	
+
 	make
 
 feature {ARRAYED_LIST, FIXED_LIST} -- Initialization

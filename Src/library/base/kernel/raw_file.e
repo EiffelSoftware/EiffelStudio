@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RAW_FILE 
+class RAW_FILE
 
 inherit
 	FILE
@@ -37,7 +37,7 @@ feature -- Output
 			ext_bool_str: ANY
 		do
 			if b then
-				put_character ('%/001/')	
+				put_character ('%/001/')
 			else
 				put_character ('%U')
 			end;

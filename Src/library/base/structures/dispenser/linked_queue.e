@@ -30,7 +30,7 @@ class LINKED_QUEUE [G] inherit
 			remove_left as remove,
 			put as ll_put
 		export
-			{NONE} 
+			{NONE}
 				all;
 			{ANY}
 				writable, extendible, wipe_out,
@@ -55,18 +55,18 @@ feature -- Initialization
 		do
 			after := true
 		end;
-			
+
 feature -- Access
 
 	item: G is
-			-- Oldest item	
+			-- Oldest item
 		require else
 			not empty
 		do
 				check
 					after and not empty implies (active = last_element)
 				end;
-			Result := active.item	
+			Result := active.item
 		end;
 
 feature -- Element change
@@ -124,14 +124,14 @@ feature -- Duplication
 		end;
 
 feature {NONE} -- Not applicable
-	
+
 	prune (v: like item) is
 			-- Remove one occurrence of `v'.
 			-- Not available.
 		do
 			-- Do nothing
 		end;
-	
+
 	prune_all (v: like item) is
 			-- Remove all occurrences of `v'.
 			-- Not available

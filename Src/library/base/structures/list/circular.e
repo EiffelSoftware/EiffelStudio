@@ -52,7 +52,7 @@ feature -- Access
 			move (Result-1)
 			go_to (p)
 		end
-		
+
 	last: like first is
 			-- Item at position currently defined as last
 		local
@@ -61,7 +61,7 @@ feature -- Access
 			pos := standard_index;
 			finish;
 			Result := item;
-			start; 
+			start;
 			move (pos-1)
 		end;
 
@@ -82,7 +82,7 @@ feature -- Status report
 		ensure then
 			empty_and_std_after: Result = (empty and standard_after)
 		end;
-	
+
 	before: BOOLEAN is
 			-- Is there no valid cursor position to the right of cursor?
 		do
@@ -109,7 +109,7 @@ feature -- Cursor movement
 
 	forth is
 			-- Move cursor to next item, cyclically.
-		do		
+		do
 			if islast then
 				internal_exhausted := true
 			end
@@ -164,7 +164,7 @@ feature -- Cursor movement
 			index_big_enough: i>=1;
 			not_empty: not empty
 		do
-			start; 
+			start;
 			move (i - 1)
 		end;
 
@@ -267,7 +267,7 @@ feature {CIRCULAR} -- Implementation
 	standard_start is
 			-- Move cursor to first element.
 		deferred
-		end;	
+		end;
 
 invariant
 

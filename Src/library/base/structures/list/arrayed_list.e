@@ -25,7 +25,7 @@ class ARRAYED_LIST [G] inherit
 			count as array_count,
 			bag_put as put
 		export
-			{NONE} 
+			{NONE}
 				all;
 			{ARRAYED_LIST}
 				array_make;
@@ -33,7 +33,7 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put,
-			prune, consistent, is_equal, occurrences, 
+			prune, consistent, is_equal, occurrences,
 			extendible, has
 		redefine
 			extend, setup, copy, prune_all, full, valid_index
@@ -59,7 +59,7 @@ class ARRAYED_LIST [G] inherit
 			linear_representation, prunable, full, put,
 			prune, consistent, is_equal, occurrences,
 			extendible, has
-		redefine 
+		redefine
 			wipe_out, extend,
 			setup, copy, prune_all, valid_index
 		select
@@ -73,7 +73,7 @@ class ARRAYED_LIST [G] inherit
 		redefine
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
-			count, prune, remove, 
+			count, prune, remove,
 			setup, copy, put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
@@ -194,7 +194,7 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position if any.
 		do
-			index := 1		
+			index := 1
 		ensure then
 			after_when_empty: empty implies after
 		end;
@@ -335,7 +335,7 @@ feature -- Element change
 				other.wipe_out
 			end
 		end;
-				
+
 	merge_right (other: ARRAYED_LIST [G]) is
 		local
 			old_index: INTEGER;
@@ -460,7 +460,7 @@ feature -- Removal
 			end;
 			if i > 0 then
 				index := i
-				from 
+				from
 				until
 					i >= count
 				loop
@@ -471,8 +471,8 @@ feature -- Removal
 			end
 		ensure then
 			is_after: after;
-		end;	
-					
+		end;
+
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
@@ -488,7 +488,7 @@ feature -- Removal
 			index := index + 1;
 			remove;
 			index := index - 1;
-		end;			
+		end;
 
 	wipe_out is
 			-- Remove all items.
@@ -565,8 +565,8 @@ feature {NONE} --Internal
 			last_value: like item;
 			last_item: like item;
 		do
-			if index >= pos then 
-				index := index + 1 
+			if index >= pos then
+				index := index + 1
 			end;
 			last_item := last;
 			count := count + 1;
@@ -594,7 +594,7 @@ feature {NONE} --Internal
 invariant
 
 	prunable: prunable;
-		
+
 end -- class ARRAYED_LIST
 
 

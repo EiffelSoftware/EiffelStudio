@@ -86,7 +86,7 @@ feature -- Element change
 	set_output_default is
 			-- Use standard output as default output.
 		do
-			default_output := output; 
+			default_output := output;
 		end;
 
 	set_error_default is
@@ -137,8 +137,8 @@ feature -- Element change
 				put_string ("true")
 			else
 				put_string ("false")
-			end 
-		end; 
+			end
+		end;
 
 	new_line is
 			-- Write line feed at end of default output.
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-	
+
 end -- class STD_FILES
 
 

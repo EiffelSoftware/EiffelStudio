@@ -14,8 +14,8 @@ class CIRCULAR_CURSOR
  inherit
 	CURSOR
 
-creation 
-	
+creation
+
 	make
 
 feature {LINKED_LIST} -- Initialization

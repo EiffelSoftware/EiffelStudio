@@ -201,8 +201,8 @@ feature -- Conversion
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end;
-	
-feature -- Basic operations 
+
+feature -- Basic operations
 
 	abs: DOUBLE is
 			-- Absolute value
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void;
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
 		end;
-			
+
 	c_outd (d: DOUBLE): STRING is
 			-- Printable representation of double value
 		external
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 		alias
 			"floor"
 		end;
-			
+
 invariant
 
 	sign_times_abs: sign * abs = item

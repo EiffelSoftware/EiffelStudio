@@ -24,7 +24,7 @@ creation
 feature -- Initialization
 
 	make (dn: STRING) is
-			-- Create directory object for the directory 
+			-- Create directory object for the directory
 			-- of name `dn'.
 		require
 			string_exists: dn /= Void
@@ -113,7 +113,7 @@ feature -- Access
 		do
 			dir_rewind (directory_pointer);
 		end;
-	
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -159,7 +159,7 @@ feature -- Conversion
 			dir_temp.close
 		end;
 
-feature -- Status report	
+feature -- Status report
 
 	lastentry: STRING;
 			-- Last entry read by `readentry'

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PLAIN_TEXT_FILE 
+class PLAIN_TEXT_FILE
 
 inherit
 	FILE
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			"file_pt_ps"
 		end;
 
-invariant 
+invariant
 
 	plain_text: is_plain_text
 

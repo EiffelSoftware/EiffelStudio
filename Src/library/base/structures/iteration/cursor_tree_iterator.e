@@ -7,7 +7,7 @@ indexing
 		%``until'' and others.";
 
 	status: "See notice at end of class";
-	names: iterators, iteration, cursor_tree_iterators, 
+	names: iterators, iteration, cursor_tree_iterators,
 		cursor_tree_iteration, tree_iterators, tree_iteration;
 	exploration: depth_first, breadth_first;
 	traversal: preorder, postorder, inorder;

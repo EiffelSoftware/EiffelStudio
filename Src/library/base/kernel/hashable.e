@@ -4,7 +4,7 @@ indexing
 		"Values that may be hashed into an integer index, %
 		%for use as keys in hash tables";
 
-	note: 
+	note:
 		"In general, the default value of a type (e.g. 0 for integers, %
 		%void for references) may not be hashed."
 

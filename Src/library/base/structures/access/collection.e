@@ -83,7 +83,7 @@ feature -- Removal
 				prune (v)
 			end
 		ensure
-			no_more_occurrences: not has (v)	
+			no_more_occurrences: not has (v)
 		end;
 
 	wipe_out is

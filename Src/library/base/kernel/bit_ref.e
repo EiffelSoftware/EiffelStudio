@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Bit sequences of length `count', with binary operations"; 
+		"Bit sequences of length `count', with binary operations";
 
 	status: "See notice at end of class";
 	date: "$Date$";

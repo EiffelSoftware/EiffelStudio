@@ -28,7 +28,7 @@ feature -- Status report
 			-- Is last exception originally due to a violated
 			-- assertion or non-decreasing variant?
 		do
-			Result := 
+			Result :=
 				(original_exception = Check_instruction) or else
 				(original_exception = Class_invariant) or else
 				(original_exception = Loop_invariant) or else
@@ -71,7 +71,7 @@ feature -- Status report
 			-- Is last exception originally due to an
 			-- external event (operating system error)?
 		do
-			Result := 
+			Result :=
 				(original_exception = External_exception) or else
 				(original_exception = Operating_system_exception)
 		end;
@@ -146,7 +146,7 @@ feature -- Status report
 			"eeoclass"
 		end;
 
-feature -- Status setting 
+feature -- Status setting
 
 	catch (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be

@@ -37,7 +37,7 @@ feature -- Cursor movement
 			cursor_position_valid: valid_cursor (p)
 		deferred
 		end;
-		
+
 end -- class CURSOR_STRUCTURE
 
 

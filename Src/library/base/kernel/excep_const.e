@@ -18,33 +18,33 @@ feature -- Access
 
 	Class_invariant: INTEGER is 6;
 			-- Exception code for violated class invariant
-   
+
 	Incorrect_inspect_value: INTEGER is	9;
 			-- Exception code for inspect value which is not one
 			-- of the inspect constants, if there is no Else_part
-   
+
 	Loop_invariant: INTEGER is 11;
 			-- Exception code for violated loop invariant
-   
+
 	Loop_variant: INTEGER is 10;
 			-- Exception code for non-decreased loop variant
-   
+
 	No_more_memory: INTEGER is 2;
 			-- Exception code for failed memory allocation
-   
+
 	Postcondition: INTEGER is 4;
 			-- Exception code for violated postcondition
-   
+
 	Precondition: INTEGER is 3;
 			-- Exception code for violated precondition
-   
+
 	Routine_failure: INTEGER is 8;
 			-- Exception code for failed routine
-   
+
 	Void_assigned_to_expanded: INTEGER is 19;
 			-- Exception code for assignment of void value
 			-- to expanded entity
-   
+
 	Void_call_target: INTEGER is 1;
 			-- Exception code for feature applied to void reference
 
@@ -66,7 +66,7 @@ feature -- Access
 
 	Developer_exception: INTEGER is 24;
 			-- Exception code for developer exception
-			
+
 	Operating_system_exception: INTEGER is 22;
 			-- Exception code for operating system error
 			-- which sets the `errno' variable

@@ -14,7 +14,7 @@ deferred class FILE inherit
 	SEQUENCE [CHARACTER]
 		undefine
 			prune
-		redefine 
+		redefine
 			off, append
 		end;
 
@@ -265,7 +265,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	after: BOOLEAN is 
+	after: BOOLEAN is
 			-- Is there no valid cursor position to the right of cursor position?
 		do
 			Result := not is_closed and then (end_of_file or count = 0)
@@ -276,7 +276,7 @@ feature -- Status report
 		do
 			Result := is_closed
 		end;
-	
+
 	off: BOOLEAN is
 			-- Is there no item?
 		do
@@ -508,7 +508,7 @@ feature -- Status report
 	is_open_read: BOOLEAN is
 			-- Is file open for reading?
 		do
-			Result := mode = Read_file or else 
+			Result := mode = Read_file or else
 				mode = Read_write_file or else
 				mode = Append_read_file
 		end;
@@ -516,7 +516,7 @@ feature -- Status report
 	is_open_write: BOOLEAN is
 			-- Is file open for writing?
 		do
-			Result := mode = Write_file or else 
+			Result := mode = Write_file or else
 				mode = Read_write_file or else
 				mode = Append_read_file or else
 				mode = Append_file
@@ -629,7 +629,7 @@ feature -- Status setting
 			open_read: is_open_read
 			open_write: is_open_write
 		end;
-		
+
 	open_read_append is
 			-- Open file in read and write-at-end mode;
 			-- create it if it does not exist.
@@ -689,7 +689,7 @@ feature -- Status setting
 		end;
 
 	fd_open_read_append (fd: INTEGER) is
-			-- Open file of descriptor `fd' 
+			-- Open file of descriptor `fd'
 			-- in read and write-at-end mode.
 		local
 			external_name: ANY
@@ -793,7 +793,7 @@ feature -- Status setting
 			open_read: is_open_read
 			open_write: is_open_write
 		end;
-		
+
 	reopen_read_append (fname: STRING) is
 			-- Reopen in read and write-at-end mode with file
 			-- of name `fname'; create file if it does not exist.
@@ -840,7 +840,7 @@ feature -- Cursor movement
 		do
 			file_recede (file_pointer, 0);
 		end;
-	
+
 	forth is
 			-- Go to next position.
 		require else
@@ -848,13 +848,13 @@ feature -- Cursor movement
 		do
 			file_move (file_pointer, 1);
 		end;
-		
+
 	back is
 			-- Go back one position.
 		do
 			file_move (file_pointer, -1);
 		end;
-		
+
 	move (offset: INTEGER) is
 			-- Advance by `offset' from current location.
 		require
@@ -862,7 +862,7 @@ feature -- Cursor movement
 		do
 			file_move (file_pointer, offset);
 		end;
-	
+
 	go (abs_position: INTEGER) is
 			-- Go to the absolute `position'.
 			-- (New position may be beyond physical length.)
@@ -872,9 +872,9 @@ feature -- Cursor movement
 		do
 			file_go (file_pointer, abs_position);
 		end;
-	
+
 	recede (abs_position: INTEGER) is
-			-- Go to the absolute `position' backwards, 
+			-- Go to the absolute `position' backwards,
 			-- starting from end of file.
 		require
 			file_opened: not is_closed;
@@ -1236,7 +1236,7 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
-				str_area := last_string.area; 
+				str_area := last_string.area;
 				str_cap := last_string.capacity;
 			until
 				done
@@ -1281,7 +1281,7 @@ feature -- Input
 
 	read_word, readword is
 			-- Read a string, excluding white space and stripping
-			-- leading white space. 
+			-- leading white space.
 			-- Make result available in `last_string'.
 			-- White space characters are: blank, new_line, tab,
 			-- vertical tab, formfeed, end of file.
@@ -1293,7 +1293,7 @@ feature -- Input
 			read: INTEGER;	-- Amount of bytes already read
 		do
 			from
-				str_area := last_string.area; 
+				str_area := last_string.area;
 				str_cap := last_string.capacity;
 			until
 				read > str_cap
@@ -1331,7 +1331,7 @@ feature {NONE} -- Implementation
 		once
 			Result := "false"
 		end;
-	
+
 	buffered_file_info: UNIX_FILE_INFO is
 			-- Information about the file.
 		once
@@ -1529,13 +1529,13 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-	
+
 	file_recede (file: POINTER; abs_position: INTEGER) is
 			-- Go to absolute `position', originated from end.
 		external
 			"C"
 		end;
-	
+
 	file_move (file: POINTER; offset: INTEGER) is
 			-- Move file pointer by `offset'.
 		external

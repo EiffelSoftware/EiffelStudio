@@ -619,6 +619,8 @@ feature -- Object editor properties
 	gb_ev_colorizable_background_color: STRING is "Background color"
 	gb_ev_colorizable_background_color_tooltip: STRING is "feature `background_color' from GB_EV_COLORIZABLE"
 	gb_ev_colorizable_restore_color: STRING is "Restore"
+	background_color_restore: STRING is " Restore background color to default."
+	foreground_color_restore: STRING is " Restore foreground color to default."
 	
 	gb_ev_deselectable_is_selected: STRING is "Is Selected?"
 	gb_ev_deselectable_is_selected_tooltip: STRING is "feature `is_selected' from EV_SELECTABLE"

@@ -239,7 +239,7 @@ feature -- Status setting
 					cwel_pointer_to_integer (wel_item))
 					interface.select_actions.call ([an_index, (ev_children @ an_index).interface])
 						-- Must now manually inform the combo box that a selection is taking place.
-					(ev_children @ an_index).interface.interface.select_actions.call ([])
+					(ev_children @ an_index).interface.select_actions.call ([])
 						-- Call select events on child.
 			end
 		end
@@ -479,7 +479,7 @@ feature {NONE} -- WEL Implementation
 				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					if old_selected_item /= Void then
 						interface.deselect_actions.call ([old_selected_item.index, (ev_children @ old_selected_item.index).interface])
-						(old_selected_item.index).interface.deselect_actions.call ([])
+						old_selected_item.interface.deselect_actions.call ([])
 								-- Call deselect events on child.
 					end
 	
@@ -626,6 +626,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/03/02 18:10:33  rogers
+--| Corrected two non working calls to a child's selection events.
+--|
 --| Revision 1.57  2000/03/02 17:29:27  rogers
 --| Added calls to the children's select and deselect events.
 --|

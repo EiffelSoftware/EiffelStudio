@@ -25,8 +25,6 @@ inherit
 	EV_SYSTEM_PEN_IMP
 
 	EV_WEL_CONTROL_CONTAINER_IMP
-		undefine
-			on_set_cursor
 		redefine
 			make,
 			on_paint,
@@ -91,7 +89,7 @@ feature -- Access
 	dc: WEL_CLIENT_DC
 			-- Client dc linked to the split window
 
-	cursor: WEL_CURSOR
+	internal_cursor: WEL_CURSOR
 			-- Current cursor
 
 	is_splitting: BOOLEAN

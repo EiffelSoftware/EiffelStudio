@@ -50,6 +50,7 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
+			on_set_cursor,
 			on_draw_item,
 			on_menu_command,
 			on_accelerator_command

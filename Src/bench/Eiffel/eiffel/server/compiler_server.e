@@ -434,6 +434,7 @@ debug ("SERVER")
 	io.error.new_line
 end
 					live_ids.extend (an_id)
+					live_ids.forth
 					dead_files.extend (old_server_file)
 				end
 				forth

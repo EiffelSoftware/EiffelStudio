@@ -67,7 +67,7 @@ rescue,			TE_RESCUE
 result,			TE_RESULT
 retry,			TE_RETRY
 select,			TE_SELECT
-#separate,		0
+separate,		TE_SEPARATE
 #string,			0
 strip,			TE_STRIP
 then,			TE_THEN

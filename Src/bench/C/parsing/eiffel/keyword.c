@@ -18,7 +18,7 @@ struct token {
 #define MIN_HASH_VALUE 2
 #define MAX_HASH_VALUE 144
 /*
-   56 keywords
+   57 keywords
   143 is the maximum key range
 */
 
@@ -68,7 +68,7 @@ in_word_set (str, len)
     {
       0,  0,  2,  0,  4,  0,  5,  0,  0,  0,  0,  0,  5,  8,
       4,  5,  0,  0,  0,  0,  0,  6,  0,  8,  0,  0,  6,  2,
-      8,  0,  0,  0,  2,  0,  0,  5,  6,  0,  3,  0,  0,  0,
+      8,  0,  0,  0,  2,  8,  0,  5,  6,  0,  3,  0,  0,  0,
       0,  0,  4,  5,  0,  2,  3,  4,  0,  0,  7,  8,  0,  5,
       0,  6,  8,  0,  5,  0,  2,  3,  4,  5,  6,  7,  8,  4,
       0,  0,  7,  3,  8,  0,  6,  7,  8,  0,  0,  6,  7,  3,
@@ -103,7 +103,8 @@ in_word_set (str, len)
       {"obsolete", 		TE_OBSOLETE},
       {"",}, {"",}, {"",}, 
       {"if", 				TE_IF},
-      {"",}, {"",}, 
+      {"separate", 		TE_SEPARATE},
+      {"",}, 
       {"false", 			TE_FALSE},
       {"elseif", 			TE_ELSEIF},
       {"",}, 

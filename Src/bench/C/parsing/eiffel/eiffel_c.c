@@ -229,10 +229,10 @@ char *constrained;
  * Creating Eiffel objects
  */
 
-char *create_class(cl_name, deferred, expanded, indexes, generics, obsolete,
+char *create_class(cl_name, deferred, expanded, separate, indexes, generics, obsolete,
 parents, creators, features, invariant, cl_list, end_pos)
 char *cl_name, *obsolete, *indexes, *generics, *parents, *creators, *features, *invariant, *cl_list;
-char deferred, expanded;
+char deferred, expanded, separate;
 int end_pos;
 {
 	/* Create an instance of CLASS_AS */
@@ -254,6 +254,7 @@ int end_pos;
 	object_arg[9] = obsolete;
 	bool_arg[0] = deferred;
 	bool_arg[1] = expanded;
+	bool_arg[2] = separate;
 	int_arg[0] = end_pos;
 
 	(*init_array[CLASS_AS])(result);
@@ -396,6 +397,17 @@ char *id, *generics;
 	(*c_set_put)(suppliers,id);
 
 	return create_node2(EXP_TYPE_AS,id,generics);
+}
+
+char *create_separate_class_type(id, generics)
+char *id, *generics;
+{
+	/* Create a separate class type. Update supplier list `suppliers'. */
+
+	/* Update `suppliers' */
+	(*c_set_put)(suppliers,id);
+
+	return create_node2(SEPARATE_TYPE_AS,id,generics);
 }
 
 char *create_int(an_int, sign)

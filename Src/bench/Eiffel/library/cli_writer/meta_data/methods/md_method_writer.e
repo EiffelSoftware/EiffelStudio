@@ -143,10 +143,10 @@ feature -- Settings
 			
 			if
 				not l_meth.has_locals and then not l_meth.has_exceptions_handling
-				and then l_meth.max_stack <= 8
+				and then l_meth.max_stack <= 8 and then l_meth_size < 64
 			then
 					-- Valid candidate for tiny header.
-				Tiny_method_header.set_code_size (l_meth_size.to_integer_8)
+				Tiny_method_header.set_code_size (l_meth_size)
 				Tiny_method_header.write_to_stream (internal_item, l_pos)
 				l_pos := l_pos + Tiny_method_header.size
 			else

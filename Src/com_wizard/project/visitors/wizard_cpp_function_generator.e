@@ -153,10 +153,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_func_desc: func_desc /= Void
 			non_void_ccom_feature_writer: ccom_feature_writer /= Void
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			if func_desc.arguments /= Void and not func_desc.arguments.empty then
 				ccom_feature_writer.set_signature (set_result_type_and_signature)
 			end
+
+			if not (func_desc.return_type.type = Vt_hresult) then
+				create visitor
+				visitor.visit (func_desc.return_type)
+
+				if visitor.is_basic_type or visitor.is_enumeration then
+					ccom_feature_writer.set_result_type (visitor.cecil_type)
+				elseif (visitor.vt_type = Vt_bool) then
+					ccom_feature_writer.set_result_type (Eif_boolean)
+				else
+					ccom_feature_writer.set_result_type (Eif_reference)
+				end
+			end
+
 		end
 
 	cecil_feature_set_up (arg_name, cecil_feature_type, feature_name, object_type: STRING): STRING is

@@ -31,6 +31,7 @@ feature -- Access
 			ed: EDITABLE
 		do
 			!! string_list.make
+			string_list.extend ("New command")
 			data_list := l
 			from
 				l.start
@@ -47,12 +48,26 @@ feature -- Access
 
 	continue_after_popdown is
 		local
+			cmd: USER_CMD
 			command: CMD
 			command_instance: CMD_INSTANCE
 			command_instance_stone: COM_INST_IS
 		do
 			if position /= 1 then
-				command ?= data_list.i_th (position - 1)
+				if position > 2 then
+					command ?= data_list.i_th (position - 1)
+				else
+						--| create a new command
+					!! cmd.make
+					cmd.set_internal_name ("")
+					cmd.set_eiffel_text (cmd.template)
+					cmd.overwrite_text
+					command_catalog.add (cmd)
+					command := cmd
+-- 					if parent_command_editor /= Void then
+-- 						parent_command_editor.set_command_tool_command (cmd)
+-- 					end
+				end	
 				command.create_editor
 				!! command_instance_stone
 				command_instance_stone.set_data (command.instances.last)

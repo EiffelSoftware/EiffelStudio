@@ -94,24 +94,20 @@ feature -- Comparison
 		require
 			good_argument: other /= Void
 		local
-			ct, o_ct: TYPE_A
+			ct, o_ct: like constraint
 		do
 			Result := position = other.position and then
 				is_reference = other.is_reference and then
 				is_expanded = other.is_expanded
 			if Result then
-					-- Test on void is done only to
-					-- protect incorrect generic constraints
-				ct := constraint_type
-				o_ct := other.constraint_type
-				if ct /= Void then
-					if o_ct /= Void then
-						Result := ct.same_as (o_ct)
-					end
+				ct := constraint
+				o_ct := other.constraint
+				if ct = Void then
+					Result := o_ct = Void
+				else
+					Result := o_ct /= Void and then ct.same_as (o_ct)
 					Result := Result and then
 						equivalent (creation_feature_list, other.creation_feature_list)
-				else
-					Result := o_ct = Void
 				end
 			end
 		end

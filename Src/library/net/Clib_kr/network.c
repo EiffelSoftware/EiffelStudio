@@ -1,4 +1,5 @@
 #include "config.h"
+#include "size.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>

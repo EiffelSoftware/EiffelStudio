@@ -377,6 +377,8 @@ feature -- Settings
 			else
 				!! Result.make (1, 0)
 			end
+		ensure
+			argument_types_not_void: Result /= Void
 		end
 
 	generate_arg_declarations is

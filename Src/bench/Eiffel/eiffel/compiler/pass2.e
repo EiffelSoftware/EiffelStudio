@@ -119,10 +119,10 @@ end;
 					current_class := extra_check_list.first;
 					System.set_current_class (current_class);
 					id := current_class.id;
-					if Tmp_rep_info_server.has (id.id) then
+					if Tmp_rep_info_server.has (id) then
 						current_class.process_replicated_features;
-					elseif Tmp_rep_server.has (id.id) then
-						Tmp_rep_server.remove (id.id)
+					elseif Tmp_rep_server.has (id) then
+						Tmp_rep_server.remove (id)
 					end;
 					extra_check_list.remove;
 				end;

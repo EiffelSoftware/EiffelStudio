@@ -41,10 +41,10 @@ feature
 					!! comment_reg.make (ast, associated_class);
 					comment_reg.register
 				end
-			elseif Tmp_ast_server.has (class_id.id) then
-				ast := Tmp_ast_server.item (class_id.id)
+			elseif Tmp_ast_server.has (class_id) then
+				ast := Tmp_ast_server.item (class_id)
 			else
-				ast := Ast_server.item (class_id.id)
+				ast := Ast_server.item (class_id)
 			end;
 			check
 					-- The ast is either recomputed or retrieved from

@@ -118,7 +118,7 @@ feature {NONE} -- Array optimization
 				a_class := array_descendants.item;
 				ftable := a_class.feature_table;
 				select_table := ftable.origin_table;
-				class_depend := Depend_server.item (a_class.id.id);
+				class_depend := Depend_server.item (a_class.id);
 
 				from
 					ftable.start
@@ -138,7 +138,7 @@ feature {NONE} -- Array optimization
 								-- Calls to `lower' or `area'
 								-- See if assignment
 							b_id := a_feature.body_id;
-							byte_code := Byte_server.item (b_id.id);
+							byte_code := Byte_server.item (b_id);
 							if lower = Void then
 									-- Optimization: get the FEATURE_Is only
 									-- if the sets are not disjoint
@@ -274,7 +274,7 @@ feature
 						-- then if the routine has a descendant of ARRAY
 						-- as a local variable, an argument or Result and then
 						-- calls put or item on this local/argument/Result
-					byte_code := Byte_server.disk_item (a_feature.body_id.id);
+					byte_code := Byte_server.disk_item (a_feature.body_id);
 						-- `disk_item' is used because the byte code will be modified and
 						-- we don't want the modified byte code to remain in the cache
 					if
@@ -458,10 +458,10 @@ feature -- Detection of safe/unsafe features
 
 				if
 					not rout_id_val.is_attribute and then
-					Tmp_poly_server.has (rout_id_val.id)
+					Tmp_poly_server.has (rout_id_val)
 				then	
 					written_class := f.written_class;
-					table ?= Tmp_poly_server.item (rout_id_val.id);
+					table ?= Tmp_poly_server.item (rout_id_val);
 					from
 						Result := True;
 						body_table := System.body_index_table;

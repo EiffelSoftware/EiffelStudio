@@ -80,7 +80,7 @@ feature
 				if not processed_features.item (body_id.id) then
 					processed_features.put (True, body_id.id)
 					if f.can_be_inlined then
-						byte_code := Byte_server.item (body_id.id)
+						byte_code := Byte_server.item (body_id)
 						size := byte_code.size
 						if size < min_inlining_threshold then
 							to_be_inlined.put (True, body_id.id);

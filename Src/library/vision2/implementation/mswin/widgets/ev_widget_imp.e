@@ -386,15 +386,19 @@ feature -- Status setting
 			-- Enable capture.
 			--| Accessible through the interface of widget.
 		do
-			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			application_imp.set_captured_widget (interface)
+			if not has_capture then
+				Precursor {EV_PICK_AND_DROPABLE_IMP}
+				application_imp.set_captured_widget (interface)
+			end
 		end
 
 	disable_capture is
 			-- Release all user events.
 		do
-			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			application_imp.set_captured_widget (Void)
+			if has_capture then
+				Precursor {EV_PICK_AND_DROPABLE_IMP}
+				application_imp.set_captured_widget (Void)
+			end
 		end
 
 feature -- Element change

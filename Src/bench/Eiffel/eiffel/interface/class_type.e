@@ -313,7 +313,9 @@ feature -- Generation
 				found or i > nbr
 			loop
 				class_c := id_array.item (i);
-				if class_c.class_name.is_equal ("memory") then
+				if	class_c /= Void and then
+					class_c.class_name.is_equal ("memory") 
+				then
 					found := true
 				else
 					i := i + 1;

@@ -68,6 +68,7 @@ feature -- Behavior
 					virtual_table_universal_radio.set_checked
 				else
 					virtual_table_standard_radio.set_checked
+					proxy_stub_input_edit.enable
 				end
 			end
 			if shared_wizard_environment.proxy_stub_file_name /= Void then

@@ -65,7 +65,6 @@ feature -- Initialization
 		local
 			cf: CLASS_FIGURE
 			cd: CONTEXT_DIAGRAM
-			stone_midpoints, saved_midpoints: LINKED_LIST [LINK_MIDPOINT]
 		do
 			cd ?= tool.class_view
 			if cd = Void then
@@ -78,20 +77,11 @@ feature -- Initialization
 					cf.code_generator.reset_date
 					cf.code_generator.set_diagram (cf.world)
 				end
-				stone_midpoints := a_stone.source.midpoints
-				create saved_midpoints.make
-				from
-					stone_midpoints.start
-				until
-					stone_midpoints.after
-				loop
-					saved_midpoints.put_front (stone_midpoints.item)
-					stone_midpoints.forth
-				end
 				history.do_named_undoable (
 					Interface_names.t_Diagram_delete_inheritance_link_cmd,
 					agent remove_inheritance_figure (a_stone.source),
-					agent restore_inheritance_figure (a_stone.source, saved_midpoints))
+					agent restore_inheritance_figure (a_stone.source,
+						clone (a_stone.source.midpoints)))
 				if not a_stone.source.last_generation_successful then
 					history.remove_last
 					a_stone.source.update
@@ -108,7 +98,6 @@ feature -- Initialization
 			cf: CLASS_FIGURE
 			dial: EB_DELETE_CLIENT_LINK_DIALOG
 			cd: CONTEXT_DIAGRAM
-			stone_midpoints, saved_midpoints: LINKED_LIST [LINK_MIDPOINT]
 		do
 			cd ?= tool.class_view
 			if cd = Void then
@@ -144,23 +133,13 @@ feature -- Initialization
 				else
 					csfs_to_remove.extend (a_stone.source)
 				end
-				stone_midpoints := a_stone.source.midpoints
-				create saved_midpoints.make
-				from
-					stone_midpoints.start
-				until
-					stone_midpoints.after
-				loop
-					saved_midpoints.put_front (stone_midpoints.item)
-					stone_midpoints.forth
-				end
-	
 				if not cancelled then
 					history.do_named_undoable (
 						Interface_names.t_Diagram_delete_client_link_cmd,
 						[<<agent remove_client_supplier_figures (csfs_to_remove, a_stone.source),
 							agent update_label (a_stone.source)>>],
-						[<<agent restore_client_supplier_figures (csfs_to_remove, saved_midpoints, a_stone.source),
+						[<<agent restore_client_supplier_figures (csfs_to_remove,
+							clone (a_stone.source.midpoints), a_stone.source),
 							agent update_label (a_stone.source)>>])
 				end
 			end
@@ -199,7 +178,7 @@ feature -- Initialization
 		
 	restore_inheritance_figure (
 		a_inheritance_figure: INHERITANCE_FIGURE;
-		saved_midpoints: LINKED_LIST [LINK_MIDPOINT]) is
+		saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT]) is
 			-- Put `a_inheritance_figure' back on diagram and code.
 		local
 			d: CONTEXT_DIAGRAM
@@ -254,7 +233,7 @@ feature -- Initialization
 		
 	restore_client_supplier_figures (
 		client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
-		saved_midpoints: LINKED_LIST [LINK_MIDPOINT];
+		saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT];
 		client_stone: CLIENT_SUPPLIER_FIGURE) is
 			-- Put `client_supplier_figures' items back on  diagram.
 		local

@@ -43,14 +43,12 @@ feature -- Basic operations
 	execute_with_link_stone (a_stone: LINK_STONE) is
 			-- Change `a_stone' layout as the user wants.
 		local
-			stone_midpoints: LINKED_LIST [LINK_MIDPOINT]
 			lf: LINK_FIGURE
 			x_pos, y_pos: INTEGER
 			d: CONTEXT_DIAGRAM
 			client_stone: CLIENT_STONE
 			screen: EV_SCREEN
 		do
-			create saved_midpoints.make
 			current_stone := a_stone
 			d ?= tool.class_view
 			if d = Void then
@@ -65,15 +63,7 @@ feature -- Basic operations
 					-- Save current link midpoints.
 				lf := a_stone.source
 				link_tool_dialog.set_link_figure (lf)
-				stone_midpoints := lf.midpoints
-				from
-					stone_midpoints.start
-				until
-					stone_midpoints.after
-				loop
-					saved_midpoints.put_front (stone_midpoints.item)
-					stone_midpoints.forth
-				end
+				saved_midpoints := clone (lf.midpoints)
 	
 				create screen
 				x_pos := screen.pointer_position.x - link_tool_dialog.width // 2
@@ -111,15 +101,17 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 			-- The user made his mind.
 		local
 			lf: LINK_FIGURE
-			new_midpoints, stone_midpoints: LINKED_LIST [LINK_MIDPOINT]
+			new_midpoints: ARRAYED_LIST [LINK_MIDPOINT]
 		do
+			check
+				saved_midpoints_not_void: saved_midpoints /= Void
+			end
 			lf := link_tool_dialog.link_figure
 			
 				-- We need to check that `lf' is still on the diagram.
 			if lf.world /= Void then
 				if not link_tool_dialog.cancelled then
 					if not lf.is_reflexive then
-						create new_midpoints.make
 						if not link_tool_dialog.reset_selected then
 							lf.hide
 							project
@@ -137,16 +129,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 						end
 						
 							-- Save current link midpoints.
-						stone_midpoints := lf.midpoints
-						from
-							stone_midpoints.start
-						until
-							stone_midpoints.after
-						loop
-							new_midpoints.put_front (stone_midpoints.item)
-							stone_midpoints.forth
-						end
-													
+						new_midpoints := clone (lf.midpoints)
 						if link_tool_dialog.handle_left_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_left_cmd,
@@ -230,7 +213,7 @@ feature {NONE} -- Implementation
 	link_tool_dialog: EB_LINK_TOOL_DIALOG
 			-- Associated widget.
 			
-	saved_midpoints: LINKED_LIST [LINK_MIDPOINT]
+	saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT]
 			-- Backup of previous link midpoints.
 	
 end -- class EB_LINK_TOOL_COMMAND

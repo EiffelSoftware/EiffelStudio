@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that"
+	description: "Formatter that displays the text of a feature in flat form."
 	author: "Xavier Rousselot"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,8 @@ inherit
 	SHARED_FORMAT_INFO
 
 	SHARED_APPLICATION_EXECUTION
+	
+	EB_SHARED_INTERFACE_TOOLS
 
 create
 	make
@@ -63,6 +65,11 @@ feature -- Formatting
 						app_stopped := stel.routine.body_index = associated_feature.body_index
 					end
 					if editor.current_text /= formatted_text then
+						if not Eiffel_system.System.il_generation then
+							editor.show_breakpoints
+						else
+							editor.hide_breakpoints
+						end
 						editor.process_text (formatted_text)
 						if app_stopped then
 							selected_line := stel.break_index

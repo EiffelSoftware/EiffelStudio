@@ -377,10 +377,6 @@ rt_private EIF_REFERENCE ntop(register1 struct stack *stk);	/* Returns the top e
 rt_private EIF_REFERENCE nget(register1 struct stack *stk);	/* Pops the top element of a stack */
 #endif
 
-#ifdef TEST
-rt_private int cc_for_speed = 1;			/* Priority to speed or memory? */
-#endif
-
 rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
@@ -3508,6 +3504,9 @@ rt_private int find_scavenge_spaces(void)
 	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
+#ifdef EIF_NO_SCAVENGING
+	return -1;
+#else	/* EIF_NO_SCAVENGING */
 	EIF_GET_CONTEXT
 	int from_size;					/* Size of selected 'from' space */
 	EIF_REFERENCE to_space;					/* Location of the 'to' space */
@@ -3621,6 +3620,7 @@ rt_private int find_scavenge_spaces(void)
 	return 0;		/* Ok, we got a 'to' space */
 
 	EIF_END_GET_CONTEXT
+#endif	/* EIF_NO_SCAVENGING */
 }
 
 rt_private struct chunk *find_std_chunk(register struct chunk *start)
@@ -3801,6 +3801,9 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	to->sc_top += length;					/* Update free-location pointer */
 	bcopy((EIF_REFERENCE) zone, root, length);		/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
+#ifdef EIF_NO_SCAVENGE
+	eif_panic ("Scavenging is not disabled");
+#endif	/* EIF_NO_SCAVENGING */
 	zone->ov_size |= B_FWD;					/* Mark object as forwarded */
 
 	/* If we reached the end of the scavenge space, then the B_LAST flag
@@ -4937,6 +4940,9 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 */
 
 			bcopy(root, new, size);		/* Copy data part */
+#ifdef EIF_NO_SCAVENGING
+			eif_panic ("Generation Scavenging is not disabled");
+#endif	/* EIF_NO_SCAVENGING */
 			zone->ov_size |= B_FWD;		/* Mark object as forwarded */
 			zone->ov_fwd = new;			/* Leave forwarding pointer */
 			zone = HEADER(new);			/* New info zone */

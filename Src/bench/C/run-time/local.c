@@ -472,7 +472,6 @@ rt_shared void initstk(void)
 #include "timer.c"
 #include "urgent.c"
 
-rt_private int cc_for_speed = 1;	/* Optimized for speed */
 rt_private void collect_stats(void);	/* Gives statistics on collector's stack */
 rt_private void stack_stats(void);		/* Gives statistics on local stack */
 

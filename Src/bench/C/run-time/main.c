@@ -62,10 +62,14 @@
 #if defined VXWORKS
 	/* when eif_malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
-rt_public int cc_for_speed = 0;			/* Save memory */
-#else
+rt_public int cc_for_speed = 0;			/* Save memory. */
+#else	/* VXWORKS */
+#ifdef EIF_NO_SCAVENGING
+rt_public int cc_for_speed = 0;			/* No scavenging. */
+#else	/* EIF_NO_SCAVENGING */
 rt_public int cc_for_speed = 1;			/* Fast memory allocation */
-#endif
+#endif	/* EIF_NO_SCAVENGING */
+#endif	/* VXWORKS */
 
 rt_public char *ename;						/* Eiffel program's name */
 

@@ -130,10 +130,6 @@ feature -- Generation
 					-- Sign assembly only if we are allowed to.
 				if feature {EIFFEL_ENV}.has_signable_generation then
 					l_key_file_name := System.msil_key_file_name
-					if l_key_file_name /= Void then
-						l_key_file_name := (create {ENV_INTERP}).interpreted_string (
-							l_key_file_name)
-					end
 				end
 
 				if l_key_file_name /= Void then

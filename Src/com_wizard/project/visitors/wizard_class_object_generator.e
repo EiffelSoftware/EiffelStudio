@@ -92,14 +92,6 @@ feature -- Basic operations
 			member_writer.set_comment ("Component class id")
 			cpp_class_writer.add_member (member_writer, Private)
 
-			-- Change header file name to generate file
-
-			tmp_string := clone (a_descriptor.c_type_name)
-			tmp_string.append (Factory)
-			tmp_string.append (Header_file_extension)
-			tmp_string.to_lower
-			a_descriptor.set_c_header_file_name (tmp_string)
-
 			-- Generate code and save name.
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)

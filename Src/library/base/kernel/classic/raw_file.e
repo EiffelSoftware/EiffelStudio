@@ -61,6 +61,8 @@ feature -- Output
 	put_data (p: POINTER; size: INTEGER) is
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
+		require
+			p_not_null: p /= default_pointer
 		do
 			file_ps (file_pointer, p, size)
 		end

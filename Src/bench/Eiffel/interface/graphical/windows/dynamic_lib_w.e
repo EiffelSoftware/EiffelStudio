@@ -242,14 +242,21 @@ feature -- Stone process
 			a_file: PLAIN_TEXT_FILE
 			content:STRING
 		do
-			create a_file.make_open_read (a_file_name)
-			if a_file.count > 0 then
-				a_file.readstream (a_file.count)
-				if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
-					warner (eb_shell).gotcha_call ("Error in the eiffel def file%N")
+			create a_file.make (a_file_name)
+			if a_file.exists and then a_file.is_readable and then a_file.is_plain then
+				a_file.open_read
+				if a_file.count > 0 then
+					a_file.readstream (a_file.count)
+					if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
+						warner (eb_shell).gotcha_call ("Error in the Eiffel def file `" +
+													a_file_name + "'%N")
+					end
 				end
+				a_file.close
+			else
+				warner (eb_shell).gotcha_call ("Error in the Eiffel def file `" +
+												a_file_name + "'%N")
 			end
-			a_file.close
 
 			display_clickable_dynamic_lib_exports (False)
 			set_file_name (a_file_name)

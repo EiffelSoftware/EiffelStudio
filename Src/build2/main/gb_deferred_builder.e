@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			all_element_not_void: all_element /= Void
 		end
 		
-feature {GB_XML_LOAD} -- Basic operation
+feature {GB_XML_LOAD, GB_COMPONENT} -- Basic operation
 
 	build is
 			-- For every item in `all_gb_ev', execute the deferred
@@ -66,22 +66,8 @@ feature {GB_EV_ANY} -- Basic operation
 			all_gb_ev_extended: all_gb_ev.has (gb_ev) and (all_gb_ev.count = old all_gb_ev.count + 1)
 			all_element_extended: all_element.has (element) and (all_element.count = old all_element.count + 1)
 		end
-		
-feature {GB_XML_OBJECT_BUILDER} -- Basic operation
-
-	--| FIXME this should be removed after the first release. This is required
-	--| as when picking a component, we simply build the object from XML, as if we were
-	--| loading it from a file. This sets defered building on it which should not be
-	--| the case. This feature is only here as a temporary fix. Julian 11/13/2001.
-
-	clear_deferred is
-			-- Remove all deferred building currently stored.
-		do
-			all_gb_ev.wipe_out
-			all_element.wipe_out
-		end
 	
-feature {NONE} -- Implementation
+feature {GB_COMPONENT} -- Implementation
 
 	all_gb_ev: ARRAYED_LIST [GB_EV_ANY]
 		-- All instances of `gb_ev_any' which have been set as

@@ -194,6 +194,10 @@ feature -- Generation
 					-- Generate entry point if necessary
 				generate_entry_point
 
+					-- Generate resources if any
+				if System.dotnet_resources_names /= Void then
+					il_generator.generate_resources (System.dotnet_resources_names)				
+				end
 					-- Finish code generation.
 				il_generator.end_assembly_generation
 			else

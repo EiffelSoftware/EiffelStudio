@@ -40,6 +40,9 @@ feature -- Access
 	assembly_names: LIST [STRING]
 			-- Assembly names needed by IL generation to find types
 
+	dotnet_resources_names: LIST [STRING]
+			-- Resources names needed by IL generation.
+
 	has_cpp_externals: BOOLEAN
 			-- Did system included a C++ external at some point.
 
@@ -133,6 +136,14 @@ feature -- Update
 			assembly_names := l
 		ensure
 			assembly_names_set: assembly_names = l
+		end
+
+	set_dotnet_resources_names (l: like dotnet_resources_names) is
+			-- Assign `l' to `dotnet_resources_names'.
+		do
+			dotnet_resources_names := l
+		ensure
+			dotnet_resources_names_set: dotnet_resources_names = l
 		end
 
 	set_has_cpp_externals (v: BOOLEAN) is

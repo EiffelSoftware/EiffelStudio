@@ -343,6 +343,13 @@ feature -- Generation Structure
 		do
 		end
 
+	generate_resources (a_resources: LIST [STRING]) is
+			-- Generate all resources in assembly.
+		require
+			a_resources_not_void: a_resources /= Void
+		do
+		end
+
 	end_assembly_generation is
 			-- Finish creation of current assembly.
 		do

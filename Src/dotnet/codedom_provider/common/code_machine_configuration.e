@@ -60,6 +60,28 @@ feature -- Access
 				Result := l_node.attributes.item (1).value
 			end
 		end
+	
+	languages: LIST [STRING] is
+			-- List of languages in configuration file
+		local
+			l_compilers: XML_XML_NODE_LIST
+			i, l_count: INTEGER
+		do
+			l_compilers := compilers_node.child_nodes
+			from
+				l_count := l_compilers.count
+				create {ARRAYED_LIST [STRING]} Result.make (l_count)
+			until
+				i = l_count
+			loop
+				Result.extend (l_compilers.item (i).attributes.item (0).value.split (<<';'>>).item (0))
+				i := i + 1
+			end
+			Result.compare_objects
+		ensure
+			non_void_languages: Result /= Void
+			compare_objects: Result.object_comparison
+		end
 		
 feature -- Basic Operations
 
@@ -121,6 +143,7 @@ feature {NONE} -- Implementation
 			l_compilers: XML_XML_NODE_LIST
 			i, l_count: INTEGER
 			l_found: BOOLEAN
+			l_synonyms: SYSTEM_ARRAY
 		do
 			if compilers_node /= Void then
 				l_compilers := compilers_node.child_nodes
@@ -130,8 +153,10 @@ feature {NONE} -- Implementation
 				until
 					i >= l_count or l_found
 				loop
- 					l_found := l_compilers.item (i).attributes.item (0).value.equals (a_language.to_cil)
-					i := i + 1
+					l_synonyms := l_compilers.item (i).attributes.item (0).value.split (<<';'>>)
+					feature {SYSTEM_ARRAY}.sort (l_synonyms)
+ 					l_found := feature {SYSTEM_ARRAY}.binary_search (l_synonyms, a_language.to_cil) >= 0
+ 					i := i + 1
 				end
 				if l_found then
 					Result := l_compilers.item (i - 1)

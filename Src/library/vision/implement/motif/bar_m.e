@@ -6,17 +6,20 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BAR_M 
+class 
+	BAR_M 
 
 inherit
 
 	BAR_I;
 
-	MANAGER_M
+	MENU_M
 		rename
 			is_shown as shown
 		undefine
 			create_callback_struct
+		redefine
+			set_title, remove_title, title
 		end;
 
 	MEL_MENU_BAR
@@ -41,11 +44,12 @@ feature {NONE} -- Initialization
 
 	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif bar menu.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			bar_make (a_bar.identifier,
-					mel_parent (a_bar, widget_index),
-					man);
+			bar_make (a_bar.identifier, mc, man)
 		end;
 
 feature -- Status report

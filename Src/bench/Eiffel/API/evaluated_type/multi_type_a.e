@@ -135,7 +135,6 @@ feature {COMPILER_EXPORTER}
 			gen_type, array_type: GEN_TYPE_A
 			l_generics: ARRAY [TYPE_A]
 			i, nb: INTEGER
-			generic_param, type_a: TYPE_A
 		do
 			nb := count
 			gen_type ?= other

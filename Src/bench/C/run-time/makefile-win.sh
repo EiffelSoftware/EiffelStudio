@@ -318,29 +318,29 @@ $(OUTDIR)\mtwkbench.$lib: $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.$lib
 	$link_mtwline
 
-dll:: mtwkbench.dll mtfinalized.dll
-dll:: wkbench.dll finalized.dll
+dll:: $(OUTDIR)\mtwkbench.dll $(OUTDIR)\mtfinalized.dll
+dll:: $(OUTDIR)\wkbench.dll $(OUTDIR)\finalized.dll
 
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS)
 
-mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
+$(OUTDIR)\mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\mtwkbench.dll \
 		-IMPLIB:$(OUTDIR)\dll_mtwkbench.lib $(MT_WOBJECTS)
 
-mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
+$(OUTDIR)\mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
 	$(RM) $(OUTDIR)\mtfinalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\mtfinalized.dll \
 		-IMPLIB:$(OUTDIR)\dll_mtfinalized.lib $(MT_OBJECTS)
 
-wkbench.dll : $(OUTDIR) $(WOBJECTS)
+$(OUTDIR)\wkbench.dll : $(OUTDIR) $(WOBJECTS)
 	$(RM) $(OUTDIR)\wkbench.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\wkbench.dll \
 		-IMPLIB:$(OUTDIR)\dll_wkbench.lib $(WOBJECTS) 
 
-finalized.dll : $(OUTDIR) $(OBJECTS)
+$(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\finalized.dll \
 		-IMPLIB:$(OUTDIR)\dll_finalized.lib $(OBJECTS)

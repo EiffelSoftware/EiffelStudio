@@ -24,6 +24,9 @@ inherit
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
+		redefine
+			add_item
+		end
 
 	WEL_TREE_VIEW
 		rename
@@ -34,7 +37,9 @@ inherit
 			destroy as wel_destroy,
 			font as wel_font,
 			set_font as wel_set_font,
-			selected_item as wel_selected_item
+			selected_item as wel_selected_item,
+			insert_item as wel_insert_item,
+			count as total_count
 		undefine
 			window_process_message,
 			remove_command,
@@ -66,6 +71,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVI_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -80,8 +90,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+			Result := get_children_count (Void)
+		end
+
 	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
+
+	children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+			-- List of the direct children of the tree.
+		do
+			Result := get_children (Void)
+		end
 
 	selected_item: EV_TREE_ITEM is
 			-- Item which is currently selected.
@@ -113,6 +135,25 @@ feature -- Access
 			end
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+		local
+			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+		do
+			c := children
+			from
+				c.start
+			until
+				c.after
+			loop
+				delete_item (c.item)
+				c.forth
+			end
+			ev_children.clear_all
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -131,25 +172,160 @@ feature -- Event -- removing command association
 			remove_command (Cmd_selection)
 		end
 
+feature -- Basic operations
+
+	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER) is
+			-- Add `item_imp' to the tree with `par' as parent.
+			-- if `par' is the default_pointer, the parent is the tree.
+		local
+			struct: WEL_TREE_VIEW_INSERT_STRUCT
+			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			ci: EV_TREE_ITEM_IMP
+			bool: BOOLEAN
+		do
+			-- First, we add the item
+			create struct.make
+			if par = default_pointer then
+				struct.set_root
+			else
+				struct.set_parent (par)
+			end
+			struct.set_insert_after (after)
+			struct.set_tree_view_item (item_imp)
+			wel_insert_item (struct)
+			ev_children.force (item_imp, last_item)
+
+			-- Then, we add the subitems if there are some.
+			if item_imp.internal_children /= Void then
+				c := item_imp.internal_children
+				from
+					c.start
+				until
+					c.after
+				loop
+					general_insert_item (c.item, item_imp.h_item, Tvi_last)
+					c.forth
+				end
+				item_imp.set_internal_children (Void)
+			end
+		end
+
+	general_remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove the given ite, if it has any children, it store them in
+			-- the item.
+		local
+			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			ci: EV_TREE_ITEM_IMP
+		do
+			if item_imp.is_parent then
+				from
+					c := get_children (item_imp)
+					c.start
+				until
+					c.after
+				loop
+					general_remove_item (c.item)
+					c.forth
+				end
+				item_imp.set_internal_children (c)
+			end
+			ev_children.remove (item_imp.h_item)
+			delete_item (item_imp)
+		end
+
+	get_children (item_imp: EV_TREE_ITEM_IMP): ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+			-- List of the direct children of the tree-item.
+			-- If the item is Void, it returns the children of the tree.
+		local
+			handle: INTEGER
+			hwnd: POINTER
+		do
+			create Result.make (1)
+			from
+				if item_imp = Void then
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_root, 0)
+					hwnd := cwel_integer_to_pointer (handle)
+				else
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
+					hwnd := cwel_integer_to_pointer (handle)
+				end
+			until
+				hwnd = default_pointer
+			loop
+				Result.extend (ev_children @ hwnd)
+				handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_next, handle)
+				hwnd := cwel_integer_to_pointer (handle)
+			end
+		end
+
+	get_children_count (item_imp: EV_TREE_ITEM_IMP): INTEGER is
+			-- Number of children of the given item.
+			-- If the item is Void, it return the children of the tree.
+		local
+			handle: INTEGER
+		do
+			from
+				if item_imp = Void then
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_root, 0)
+				else
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
+				end
+			until
+				handle = 0
+			loop
+				Result := Result + 1
+				handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_next, handle)
+			end
+		end
+
+	internal_get_index (item_imp: EV_TREE_ITEM_IMP): INTEGER is
+			-- Find the index fo `item_imp' in his parent.
+		local
+			handle: INTEGER
+			found: BOOLEAN
+		do
+			from
+				if item_imp.parent_imp = Current then
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_root, 0)
+				else
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
+				end
+				Result := -1
+			until
+				handle = 0 or found
+			loop
+				Result := Result + 1
+				if handle = cwel_pointer_to_integer (item_imp.h_item) then
+					found := True
+				else
+					handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_next, handle)
+				end
+			end
+		end
+
 feature {EV_TREE_ITEM_I} -- Implementation
 
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item_imp' to the list
-		local
-			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
 		do
-			!! insert_struct.make
-			insert_struct.set_root
-			insert_struct.set_tree_view_item (item_imp)
-			insert_item (insert_struct)
-			ev_children.force (item_imp, last_item)
+			general_insert_item (item_imp, default_pointer, Tvi_last)
+		end
+
+	insert_item (item_imp: like item_type; index: INTEGER) is
+			-- Insert `item_imp' at the `index' position.
+		do
+			if index = 1 then
+				general_insert_item (item_imp, default_pointer, Tvi_first)
+			else
+				general_insert_item (item_imp, default_pointer, (children @ (index - 1)).h_item)
+			end
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Remove `item_imp' from the children.
 		do
-			ev_children.remove (item_imp.h_item)
-			delete_item (item_imp)
+			general_remove_item (item_imp)
+			invalidate
 		end
 
 	notify_item_info (item_imp: EV_TREE_ITEM_IMP) is

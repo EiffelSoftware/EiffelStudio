@@ -15,8 +15,6 @@ inherit
 	WIDGET_M
 		rename
 			is_shown as shown
-		undefine
-			clean_up_callbacks
 		redefine
 			set_action, remove_action,
 			set_background_color, set_background_pixmap

@@ -131,4 +131,12 @@ feature -- Basic operation
 			end	
 		end
 		
+feature {NONE} -- Implementation
+
+	Default_project_name: STRING is
+			-- Default project name
+		do
+			Result := "my_dotnet_application"
+		end
+		
 end -- class WIZARD_INFORMATION

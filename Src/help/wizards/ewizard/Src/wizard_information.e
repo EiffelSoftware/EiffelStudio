@@ -38,4 +38,12 @@ feature -- Element change
 			number_state := a_number_state
 		end
 
+feature {NONE} -- Implementation
+
+	Default_project_name: STRING is
+			-- Default project name
+		do
+			Result := "my_wizard_application"
+		end
+		
 end -- class WIZARD_INFORMATION

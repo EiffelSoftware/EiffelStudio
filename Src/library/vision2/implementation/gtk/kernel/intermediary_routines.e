@@ -364,16 +364,16 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 			a_window_imp.call_close_request_actions
 		end
 		
-	on_window_show (a_c_object: POINTER) is
-			-- Window has been shown
+	on_widget_show (a_c_object: POINTER) is
+			-- Widget has been shown
 		local
-			a_window_imp: EV_WINDOW_IMP
+			a_widget_imp: EV_WIDGET_IMP
 		do
-			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			check
-				a_window_imp_not_void: a_window_imp /= Void
+				a_widget_imp_not_void: a_widget_imp /= Void
 			end
-			a_window_imp.show_actions_internal.call (Empty_tuple)
+			a_widget_imp.on_widget_mapped
 		end
 	
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	

@@ -380,6 +380,7 @@ feature -- Label texts
 	l_Context: STRING is				"Context"
 	l_Creation: STRING is				"Creation procedure:"
 	l_Current_context: STRING is		"Current feature"
+	l_Current_object: STRING is			"Current object"
 	l_Deferred: STRING is				"deferred"
 	l_Deferreds: STRING is				"deferred features"
 	l_Deleting_dialog_default: STRING is "Creating new project, please wait..."

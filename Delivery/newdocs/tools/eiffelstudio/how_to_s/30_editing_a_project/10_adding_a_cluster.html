@@ -10,8 +10,10 @@
 
 <h1>Adding a cluster</h1>
 It is possible to create new clusters from EiffelStudio. A dialog window
-has been designed to help you doing so. There are three ways to make this
-window appear. You can:
+has been designed to help you do so.
+<p align="center"><img src="/images/eiffelstudio/dialogs_and_wizards/new_cluster_dialog.png"></img></p>
+<p>There are three ways to make this
+window appear. You can:</p>
 <ul>
 <li>
 Click <img SRC="/images/eiffelstudio/icons/icon_new_cluster_color.gif" >
@@ -25,14 +27,22 @@ in the <A HREF="/tools/eiffelstudio/reference/10_browsing_tools/20_cluster_tool/
 <li>
 Select <b>New cluster</b> in the <b>Tools</b> menu.</li>
 </ul>
-This window displays a list of all the clusters in the system. Select an
-item in this list to set the parent of the new cluster and type its name
-in the text field above. Then, click then on the <b>Create</b> button to
-complete the process.
-<p>To import an existing cluster, in the <A HREF="/tools/eiffelstudio/reference/25_project_settings/30_clusters.html">
-Project Settings dialog</a>, go to the <b>Clusters</b> tab and click <b>Add</b>.
-Give the newly added cluster the name you want and give it the path of the
-existing cluster.</p>
+Using this dialog, you can either create a subcluster of an existing cluster or a top-level cluster.
+<p>If you decide to create a top-level cluster, you should give it a name and a
+path (if the selected path does not exist, it will be created). You can also
+choose its basic properties, such as whether it should be a library cluster
+and/or a recursive one (being a library cluster implies being recursive).</p>
+<p>If you want to create a subcluster, give it a name and select its parent in
+the list of available clusters (read-only clusters are not displayed). Giving it
+a path is not required. If you do not set a path for a new subcluster, it will be
+located by default in a subdirectory of its parent cluster, named after the
+subcluster name. This is the recommended way of creating a subcluster (since its
+path in the Ace file will be automatically relative to the parent), but it is
+not compulsory.</p>
+<p>To import an existing cluster, you can also go to the <b>Clusters</b> tab
+in the <A HREF="/tools/eiffelstudio/reference/25_project_settings/30_clusters.html">
+Project Settings dialog</a> and click <b>Add</b>.
+Although this solution may be slightly more tedious, it gives access to more options.</p>
 
 <p CLASS="seealso"><b>See Also</b>
 <br><a href="40_removing_a_cluster.html">Removing a cluster</a>

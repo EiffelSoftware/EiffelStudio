@@ -3,15 +3,21 @@
 class HISTORY_CONTROL
 
 inherit
+	PROJECT_CONTEXT
 
-	SHARED_SERVER;
-	SHARED_FILES;
-	SHARED_WORKBENCH;
 	COMPILER_EXPORTER
 
-creation
+	SHARED_SERVER
 
+creation
 	make
+
+feature -- Initialization
+
+	make is
+		do
+			!!new_units.make (500)
+		end
 
 feature
 
@@ -20,11 +26,6 @@ feature
 
 	count: INTEGER;
 			-- Count of new and obsolete units already recorded
-
-	make is
-		do
-			!!new_units.make (500);
-		end;
 
 	add_new (u: POLY_UNIT; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
 			-- Add a new unit for routine id `rout_id' to the controler
@@ -86,12 +87,5 @@ feature
 		end;
 
 	Overload: INTEGER is 10000;
-
-feature {NONE} -- External
-
-	write_int (f: POINTER; v: INTEGER) is
-		external
-			"C"
-		end;
 
 end

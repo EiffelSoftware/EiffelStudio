@@ -17,7 +17,7 @@ default
 	inlining(no)
 	multithreaded(no)
 	check_vape(yes)
-	arguments("F:\Eiffel50\bench\wizards\new_projects\dotnet")
+	arguments("F:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
 	disabled_debug(yes)
 	disabled_debug("win_dispatcher")
 	disabled_debug("wel")
@@ -114,7 +114,8 @@ external
 		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Include",
 		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Common\Include",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
-		"$(EIFFEL_SRC)\library\time\Clib"
+		"$(EIFFEL_SRC)\library\time\Clib",
+		"$(EIFFEL_SRC)\library\wizard\help\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -124,6 +125,7 @@ external
 		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib"
+		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib",
+		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib"
 
 end

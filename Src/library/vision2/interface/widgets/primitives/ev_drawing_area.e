@@ -64,6 +64,12 @@ feature -- Basic operations
 			implementation.redraw_rectangle (x1, y1, x2, y2)
 		end
 
+	flush is
+			-- Update immediately the screen if needed
+		do
+			implementation.flush
+		end
+
 feature -- Events
 
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
@@ -125,6 +131,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/03 03:59:03  pichery
+--| added feature `flush'
+--|
 --| Revision 1.15  2000/03/01 20:28:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -40,6 +40,11 @@ feature -- Drawing operations
 		deferred
 		end
 
+	flush is
+			-- Update immediately the screen if needed
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_DRAWING_AREA
@@ -69,11 +74,15 @@ end -- class EV_DRAWING_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/03 03:58:34  pichery
+--| added feature `flush'
+--|
 --| Revision 1.14  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|
 --| Revision 1.13  2000/02/16 18:08:52  pichery
---| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
+--| implemented the newly added features: redraw_rectangle, clear_and_redraw,
+--| clear_and_redraw_rectangle
 --|
 --| Revision 1.11.6.10  2000/02/04 04:10:28  oconnor
 --| released

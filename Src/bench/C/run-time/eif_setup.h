@@ -70,6 +70,12 @@ extern "C" {
 
 
 /* -------------------------------
+ * --    Extern declarations    --
+ * ------------------------------- */
+
+extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
+									 * called in the CECIL macros. */
+/* -------------------------------
  * --    Primary definitions    --
  * ------------------------------- */
 

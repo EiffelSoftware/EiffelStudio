@@ -54,7 +54,7 @@ feature {ICOR_EXPORTER} -- Access
 			
 			last_call_success := cpp_get_string (item, a_len, $p_nbfetched, mp_name.item)
 			if mp_name.item /= default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				Result := (create {UNI_STRING}.make_by_pointer_and_count (mp_name.item, a_len)).string_with_count (a_len)
 			end
 		ensure
 --			success: last_call_success = 0

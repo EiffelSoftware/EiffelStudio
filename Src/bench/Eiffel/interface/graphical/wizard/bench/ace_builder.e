@@ -111,7 +111,7 @@ feature -- Graphical User Interface
 			!! all_ass.make ("all_ass", assertion_radio);
 
 			project_name := "Project_directory:   "
-			project_name.append (Project_directory)
+			project_name.append (Project_directory_name)
 			dir_label.set_text (project_name);
 			system_label.set_text ("System name:");
 			root_class_label.set_text ("Root class name:");
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			!! root_cluster_line.make (0);
 			if not creation_procedure_edit.text.empty then
 				root_cluster_line.append ("%N%Troot_cluster: %"");
-				root_cluster_line.append (Project_directory);
+				root_cluster_line.append (Project_directory_name);
 				root_cluster_line.append ("%";");
 			end;
 			contents.replace_substring_all ("$root_cluster_line", root_cluster_line);	
@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 			fname: FILE_NAME;
 			char: CHARACTER
 		do
-			!! fname.make_from_string (Project_directory);
+			!! fname.make_from_string (Project_directory_name);
 			fname.set_file_name ("Ace.ace");
 
 			!! new_file.make (fname);

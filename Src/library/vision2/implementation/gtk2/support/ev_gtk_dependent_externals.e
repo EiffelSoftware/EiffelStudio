@@ -8,6 +8,56 @@ class
 
 feature -- Externals
 
+	frozen gtk_accel_groups_activate (a_object: POINTER; a_key, a_modifier_type: INTEGER): BOOLEAN is
+		external
+			"C signature (GObject*, guint, GdkModifierType): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_present (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_iconify (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_deiconify (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_stick (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_unstick (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_maximize (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_unmaximize (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_fullscreen (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_unfullscreen (a_window: POINTER) is
+		external
+			"C signature (GtkWindow*) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_pixbuf_get_formats: POINTER is
 		external
 			"C signature (): GSList* use <gtk/gtk.h>"

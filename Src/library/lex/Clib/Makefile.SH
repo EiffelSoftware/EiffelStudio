@@ -36,6 +36,9 @@ lex.a: $(OBJECTS)
 
 clean:
 	$(RM) lex.a $(OBJECTS)
+
+clobber:
+	$(RM) Makefile config.sh
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile

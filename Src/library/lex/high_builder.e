@@ -113,13 +113,15 @@ feature -- Element change
 			dollar_r := last_created_tool
 		end 
 
+feature -- Implementation
+
+	description: STRING;
+			-- Description of the regular expression
+
 feature {NONE} -- Implementation
 
 	cursor: INTEGER;
 			-- Position in description.
-
-	description: STRING;
-			-- Description of the regular expression
 
 	description_length: INTEGER;
 			-- Length of description.

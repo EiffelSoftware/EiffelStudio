@@ -476,6 +476,11 @@ feature {LEXICAL, LEX_BUILDER} -- Implementation
 			keywords_case_sensitive := b
 		end;
 
+feature -- Implementation
+
+	dfa: FIXED_DFA;
+			-- Automaton used for the parsing
+
 feature {NONE} -- Implementation
 
 	Standard_buffer_size: INTEGER is 10240;
@@ -497,9 +502,6 @@ feature {NONE} -- Implementation
 
 	Close_of_file: INTEGER is 255;
 			-- End-of-file indicator on some platforms
-
-	dfa: FIXED_DFA;
-			-- Automaton used for the parsing
 
 	categories_table: ARRAY [INTEGER];
 			-- For each input, category number

@@ -23,7 +23,7 @@ inherit
 			wipe_out as list_wipe_out
 		export
 			{NONE} all;
-			{ANY} before, isfirst, islast, count, index, first, last, i_th
+			{ANY} before, isfirst, islast, count, index, first, last, i_th, empty
 		end
 
 creation

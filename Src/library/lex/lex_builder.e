@@ -16,6 +16,8 @@ class LEX_BUILDER inherit
 			put as pdfa_put,
 			wipe_out as pdfa_wipe_out,
 			move as pdfa_move
+		export
+			{ANY} charcode
 		redefine
 			dfa_set_final
 		end
@@ -972,13 +974,15 @@ feature -- Output
 			store_file.close
 		end;
 
+feature -- Implementation
+
+	initialized: BOOLEAN;
+			-- Is analyzer initialized?
+
 feature {NONE} -- Implementation
 
 	last_declared_keyword: INTEGER;
 			-- Identification number of the last keyword declared
-
-	initialized : BOOLEAN;
-			-- Is analyzer initialized?
 
 	readable_form (c: CHARACTER): STRING is
 			-- "\n" if c = '\n' ...

@@ -1,6 +1,32 @@
+indexing
+
+	description: 
+		"File server to store temporarily class and%
+		%system data. All files are saved with a%
+		%temporary file extension when information is%
+		%cached and is not saved. When the information%
+		%is saved all files are changed from .TMP to%
+		%their respective file names.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CASE_FILE_SERVER
 
-feature 
+feature -- Initialization
+
+	init (p: like path) is
+			-- Initialize Current
+		require
+			valid_path: p /= Void
+		do
+			path := clone (p);
+			!! saved_classes.make (2)
+		ensure
+			path_set: path.is_equal (p);
+			valid_saved_classes: saved_classes /= Void
+		end;
+
+feature -- Properties
 
 	saved_system: S_SYSTEM_DATA;
 			-- System saved to disk
@@ -9,12 +35,30 @@ feature
 			-- Table of class content saved to disk hashed
 			-- on view_id
 
-feature 
-
     path: STRING;
             -- Path to store case format
  
-	is_saving, had_io_problems: BOOLEAN;
+	is_saving: BOOLEAN;
+			-- Is the saved_classes being saved to disk?
+	
+	had_io_problems: BOOLEAN;
+			-- Did we have IO exception when trying to save?
+
+feature -- Access
+
+	s_class_data_with (view_id: INTEGER): S_CLASS_DATA is
+			-- S_CLASS_DATA with view_id `view_id'.
+			-- (Void if not found).
+		do
+			Result := saved_classes.item (view_id);
+			if Result /= Void then
+				Result.retrieve_from_disk (path, True);
+			end;
+		ensure
+			valid_result: Result /= Void implies Result.is_valid
+		end
+
+feature -- Output
 
 	tmp_save_class (s_class_data: S_CLASS_DATA) is
 			-- Temporarily save stored class data format
@@ -46,6 +90,8 @@ feature
 			had_io_problems := True;
 		end;
 
+feature -- Saving information to disk
+
 	save_eiffelcase_format is
 			-- Save the eiffelcase format to disk.
 		require
@@ -70,6 +116,8 @@ end
 			saved_system := Void;
 		end;
 
+feature -- Removal
+
 	clear is
 			-- Clear Current.
 		do
@@ -78,15 +126,12 @@ end
 			saved_classes := Void;
 			is_saving := False;
 			had_io_problems := False;
-		end;
-
-	init (p: like path) is
-			-- Initialize Current
-		require
-			valid_path: p /= Void
-		do
-			path := clone (p);
-			!! saved_classes.make (2)
+		ensure
+			cleared: path = Void and then
+					saved_system = Void and then
+					saved_classes = Void and then
+					not is_saving and then
+					not had_io_problems
 		end;
 
 	remove_tmp_files is
@@ -109,18 +154,4 @@ end
 			end;
 		end;
 
-feature -- Class information
-
-	s_class_data_with (view_id: INTEGER): S_CLASS_DATA is
-			-- S_CLASS_DATA with view_id `view_id'.
-			-- (Void if not found).
-		do
-			Result := saved_classes.item (view_id);
-			if Result /= Void then
-				Result.retrieve_from_disk (path, True);
-			end;
-		ensure
-			valid_result: Result /= Void implies Result.is_valid
-		end
-
-end
+end -- class S_CASE_FILE_SERVER

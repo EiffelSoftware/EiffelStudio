@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"Class chart information based on the BON method.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CLASS_CHART
 
 inherit
 
 	S_CHART
 
-feature
+feature -- Properties
 
 	queries: ARRAYED_LIST [S_TEXT_DATA];
 			-- Comments of current class functions,
@@ -18,7 +25,7 @@ feature
 			-- Assertions and invariants of the current class,
 			-- as inputed in the chart view.
 
-feature
+feature -- Setting
 
 	set_queries (l: like queries) is
 			-- Set queries to `l'.
@@ -53,6 +60,4 @@ feature
 			constraints_set: constraints = l
 		end;
 
-
-
-end
+end -- class S_CLASS_CHART

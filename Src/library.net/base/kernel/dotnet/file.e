@@ -1041,12 +1041,9 @@ feature -- Element change
 
 	put_string, putstring (s: STRING) is
 			-- Write `s' at current position.
-		local
-			ext_s: SYSTEM_STRING
 		do
 			if s.count /= 0 then
-				ext_s := s.to_cil
-				writer.write_string (ext_s)
+				writer.write_string (s.to_cil)
 			end
 		end
 

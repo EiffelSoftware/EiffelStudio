@@ -104,9 +104,8 @@ feature {NONE} -- Execution
 					set_text (cname);
 					execute (class_i)
 				else
-					close_choice_window;
 					class_list := Void
-				end
+				end;
 			elseif project_initialized then
 				class_i ?= arg;
 				if class_i = Void then
@@ -205,7 +204,6 @@ feature {NONE} -- Execution
 						!! classi_stone.make (class_i)
 						tool.process_classi (classi_stone);
 					end
-					--close_choice_window;
 				end
 			end
 		end;
@@ -248,7 +246,7 @@ feature {NONE} -- Execution
 			if choice = Void then
 				!! choice.make_with_widget (parent, Current)
 			end;
-			choice.popup (Current, class_names)
+			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end
 
 end -- class CLASS_TEXT_FIELD

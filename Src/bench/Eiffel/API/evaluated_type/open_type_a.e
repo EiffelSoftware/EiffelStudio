@@ -7,7 +7,7 @@ class
 	OPEN_TYPE_A
 
 inherit
-	CL_TYPE_A
+	TYPE_A
 		redefine
 			is_valid,
 			is_equivalent,
@@ -18,9 +18,7 @@ inherit
 			type_i,
 			good_generics,
 			conform_to,
-			generic_conform_to,
 			instantiation_in,
-			instantiation_of,
 			format
 		end
 
@@ -99,13 +97,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 			Result := True
 		end
 
-	generic_conform_to (gen_type: GEN_TYPE_A): BOOLEAN is
-			-- Does Current conform to `gen_type' ?
-		do
-			-- An open type can be replaced by anything
-			Result := True
-		end
-
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
@@ -114,20 +105,19 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 		do
 			Result := Current
 		end
+		
+	create_info: CREATE_INFO is
+			-- Byte code information for entity type creation
+		do
+			-- Not creatable
+		end
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
-
-	instantiation_of (type: TYPE_AS; a_class_id: INTEGER): TYPE_A is
-			-- Instantiation of type `type' written in class of id `class_id'
-			-- in the context of Current
-		do
-			Result := Current
-		end
 
 	format (ctxt: FORMAT_CONTEXT) is
 
 		do
-			ctxt.put_string (".")
+			ctxt.put_string ("?")
 		end
 
 end -- class OPEN_TYPE_A

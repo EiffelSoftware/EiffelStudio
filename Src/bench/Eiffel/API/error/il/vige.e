@@ -1,5 +1,5 @@
 indexing
-	description	: "IL Generation error, occurs at degree 1 or 2 during IL generation."
+	description	: "IL Generation error, occurs during IL code generation."
 	date: "$Date$";
 	revision: "$Revision$"
 

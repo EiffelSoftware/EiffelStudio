@@ -13,10 +13,60 @@ feature -- Externals
 --			"C signature (): GtkWidget* use <gtk/gtk.h>"
 --		end
 
+	frozen gtk_entry_set_max_length (a_entry: POINTER; a_max: INTEGER) is
+		external
+			"C (GtkEntry*, gint) | <gtk/gtk.h>"
+		end
+
+	frozen gtk_fixed_get_type: INTEGER is
+		external
+			"C (): GtkType | <gtk/gtk.h>"
+		end
+
+	frozen gtk_fixed_move (a_fixed: POINTER; a_widget: POINTER; a_x: INTEGER; a_y: INTEGER) is
+		external
+			"C (GtkFixed*, GtkWidget*, gint, gint) | <gtk/gtk.h>"
+		end
+
+	frozen gtk_fixed_new: POINTER is
+		external
+			"C (): GtkWidget* | <gtk/gtk.h>"
+		end
+
+	frozen gtk_fixed_put (a_fixed: POINTER; a_widget: POINTER; a_x: INTEGER; a_y: INTEGER) is
+		external
+			"C (GtkFixed*, GtkWidget*, gint, gint) | <gtk/gtk.h>"
+		end
+
+	frozen set_gdk_rectangle_struct_height (a_c_struct: POINTER; a_height: INTEGER) is
+		external
+			"C [struct <gtk/gtk.h>] (GdkRectangle, gint)"
+		alias
+			"height"
+		end
+
+	frozen set_gdk_rectangle_struct_width (a_c_struct: POINTER; a_width: INTEGER) is
+		external
+			"C [struct <gtk/gtk.h>] (GdkRectangle, gint)"
+		alias
+			"width"
+		end
+
+	frozen set_gdk_rectangle_struct_x (a_c_struct: POINTER; a_x: INTEGER) is
+		external
+			"C [struct <gtk/gtk.h>] (GdkRectangle, gint)"
+		alias
+			"x"
+		end
+
+	frozen set_gdk_rectangle_struct_y (a_c_struct: POINTER; a_y: INTEGER) is
+		external
+			"C [struct <gtk/gtk.h>] (GdkRectangle, gint)"
+		alias
+			"y"
+		end
+
 	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
-			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
-			--	return (GtkArg*)(args_array + index);
-			-- }
 		external
 			"C inline use <gtk/gtk.h>"
 		alias

@@ -96,32 +96,28 @@ feature -- Access
 	page: INTEGER is
 			-- Number of scroll units per page
 		do
-			scroll_info_struct.set_mask (Sif_page)
-			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			retrieve_scroll_info (sif_page)
 			Result := scroll_info_struct.page
 		end
 
 	position: INTEGER is
 			-- Current position of the scroll box
 		do
-			scroll_info_struct.set_mask (Sif_pos)
-			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			retrieve_scroll_info (sif_pos)
 			Result := scroll_info_struct.position
 		end
 
 	minimum: INTEGER is
 			-- Minimum position
 		do
-			scroll_info_struct.set_mask (Sif_range)
-			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			retrieve_scroll_info (Sif_range)
 			Result := scroll_info_struct.minimum
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
 		do
-			scroll_info_struct.set_mask (Sif_range)
-			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			retrieve_scroll_info (Sif_range)
 			Result := scroll_info_struct.maximum
 		end
 
@@ -208,7 +204,7 @@ feature -- Basic operations
 				elseif scroll_code = Sb_thumbtrack then
 					scroll_info_struct.set_mask (sif_trackpos)
 					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
-					new_pos := scroll_info_struct.track_position
+					new_pos := scroll_info_struct.track_position				
 				elseif scroll_code = Sb_top then
 					new_pos := min
 				elseif scroll_code = Sb_bottom then
@@ -257,6 +253,19 @@ feature {NONE} -- Implementation
 
 	scroll_info_struct: WEL_SCROLL_BAR_INFO
 		-- Associated SCROLLINFO struct to current toolbar.
+		
+	retrieve_scroll_info (mask: INTEGER) is
+			-- Retrieve `mask' into `scroll_info_struct' and then restore original mask.
+		local
+			original_mask: INTEGER
+		do
+			original_mask := scroll_info_struct.mask
+			scroll_info_struct.set_mask (mask)
+			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			scroll_info_struct.set_mask (original_mask)
+		ensure
+			msk_not_changed: old scroll_info_struct.mask = scroll_info_struct.mask
+		end
 
 feature {NONE} -- Externals
 

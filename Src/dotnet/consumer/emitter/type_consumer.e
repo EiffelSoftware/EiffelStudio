@@ -131,8 +131,8 @@ feature -- Basic Operation
 			rescued: BOOLEAN
 			i, nb, arg_count, index: INTEGER
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
-			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
-			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+			l_functions, l_other_functions: ARRAY [CONSUMED_FUNCTION]
+			overload_solver: OVERLOAD_SOLVER
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			field: FIELD_INFO
@@ -152,8 +152,6 @@ feature -- Basic Operation
 				end
 				create tc.make
 				create l_fields.make (0)
-				create l_functions.make (0)
-				create l_procedures.make (0)
 				create l_properties.make (0)
 				create l_events.make (0)
 				create reserved_names.make (100)
@@ -176,6 +174,7 @@ feature -- Basic Operation
 				from
 					i := 0
 					nb := internal_members.count
+					create overload_solver.make
 				until
 					i = nb
 				loop
@@ -187,12 +186,7 @@ feature -- Basic Operation
 						end
 						if is_consumed_method (meth) then
 							if not is_property_or_event (meth) then
-								l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (meth.get_name))
-								if is_function (meth) then
-									l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
-								else
-									l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
-								end
+								overload_solver.add_method (meth)
 							else
 								-- The method will be added at the same time than the property or the event.
 							end
@@ -239,21 +233,25 @@ feature -- Basic Operation
 				consumed_type.set_events (l_events)
 				consumed_type.set_constructors (solved_constructors (tc))
 				consumed_type.set_fields (l_fields)
-				consumed_type.set_procedures (l_procedures)
+				overload_solver.set_reserved_names (reserved_names)
+				overload_solver.solve
+				consumed_type.set_procedures (overload_solver.procedures)
+				l_functions := overload_solver.functions
 				if consumed_type.is_enum then
 					from
+						i := 1
 						l_other_functions := l_functions
-						l_other_functions.start
-						create l_functions.make (nb + Additional_enum_features)
+						nb := l_other_functions.count
+						create l_functions.make (1, nb + Additional_enum_features)
 					until
-						l_other_functions.after
+						i > nb
 					loop
-						l_functions.extend (l_other_functions.item)
-						l_other_functions.forth
+						l_functions.put (l_other_functions.item (i), i)
+						i := i + 1
 					end
-					l_functions.extend (infix_or_feature (internal_referenced_type))
-					l_functions.extend (from_integer_feature (internal_referenced_type))
-					l_functions.extend (to_integer_feature (internal_referenced_type))
+					l_functions.put (infix_or_feature (internal_referenced_type), i)
+					l_functions.put (from_integer_feature (internal_referenced_type), i + 1)
+					l_functions.put (to_integer_feature (internal_referenced_type), i + 2)
 				end
 				consumed_type.set_functions (l_functions)			
 				initialized := True
@@ -261,7 +259,6 @@ feature -- Basic Operation
 				initialized := False
 			end
 		ensure
---			initialized: initialized
 			non_void_constructors: consumed_type.constructors /= Void
 			non_void_fields: consumed_type.fields /= Void
 			non_void_procedures: consumed_type.procedures /= Void

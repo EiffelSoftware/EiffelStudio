@@ -55,10 +55,16 @@ inherit
 			default_ex_style,
 			default_style,
 			adjust_items,
-			on_tcn_selchange
+			on_tcn_selchange,
+			on_key_down
 		end
 
 	WEL_TCIF_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_VK_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -69,10 +75,7 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a fixed widget with, `par' as
-			-- parent.
-			-- We cannot use make if we want to have access
-			-- to the creation data.
+			-- Create an empty notebook.
 		do
 			wel_make (default_parent.item, 0, 0, 0, 0, 0)
 			tab_pos := Pos_top
@@ -435,9 +438,11 @@ feature {NONE} -- WEL Implementation
 			index: INTEGER
 			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
+			rect: WEL_RECT
 		do
 			from
 				index := 0
+				rect := sheet_rect
 			until
 				index = count
 			loop
@@ -446,7 +451,7 @@ feature {NONE} -- WEL Implementation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				child_imp.set_move_and_size (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height)
+				child_imp.set_move_and_size (rect.left, rect.top, rect.width, rect.height)
 				index := index + 1
 			end
 		end
@@ -506,6 +511,44 @@ feature {NONE} -- WEL Implementation
 		do
 			show_current_selection
 			execute_command (Cmd_switch, Void)			
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Use the tab key to jump from one control
+			-- to another. Use also the arrows.
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			if virtual_key = Vk_tab then
+				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
+				window := windows.item (hwnd)
+				window.set_focus
+			elseif virtual_key = Vk_down then
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
+				window := windows.item (hwnd)
+				window.set_focus
+			elseif virtual_key = Vk_up then
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
+				window := windows.item (hwnd)
+				window.set_focus
+			end
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
 end -- EV_NOTEBOOK_IMP

@@ -672,11 +672,13 @@ feature {NONE} -- Implementation
 			l: POINTER
 			child: POINTER
 			fg: EV_COLOR
+			a_child_list: POINTER
 		do
 			if C.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
-					l := C.gtk_container_children (a_c_object)
+					a_child_list := C.gtk_container_children (a_c_object) 
+					l := a_child_list
 				until
 					l = NULL
 				loop
@@ -687,6 +689,7 @@ feature {NONE} -- Implementation
 					end
 					l := C.glist_struct_next (l) 
 				end
+				C.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
@@ -698,13 +701,15 @@ feature {NONE} -- Implementation
 			l: POINTER
 			child: POINTER
 			bg: EV_COLOR
+			a_child_list: POINTER
 		do
 			if
 				C.gtk_is_container (a_c_object)
 			then
 				from
 					bg := a_color
-					l := C.gtk_container_children (a_c_object)
+					a_child_list := C.gtk_container_children (a_c_object)
+					l := a_child_list
 				until
 					l = NULL
 				loop
@@ -717,6 +722,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				real_set_background_color (a_c_object, bg)
+				C.g_list_free (a_child_list)
 			end
 		end
 		

@@ -48,8 +48,8 @@
 
 #ifdef EIF_VMS
 #include <assert.h>
-static int err;  		/* for debugging - save errno value */
-static char filnam[FILENAME_MAX +1];
+rt_private int err;  		/* for debugging - save errno value */
+rt_private char filnam[FILENAME_MAX +1];
 struct utimbuf {
     time_t actime;      /* access time */
     time_t modtime;     /* modification time */

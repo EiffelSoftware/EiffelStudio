@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
                         -- Create radio button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_radio_button_new (Default_pointer))
+			set_c_object (C.gtk_radio_button_new (NULL))
                 end
 
 feature {EV_ANY_I} -- Implementation
@@ -70,6 +70,10 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.19  2000/04/25 18:51:35  king
 --| gslist->radio_group
 --|

@@ -152,10 +152,10 @@ feature -- Access
 			from
 				c_parent := c_object
 			until
-				Result /= Void or c_parent = Default_pointer
+				Result /= Void or c_parent = NULL
 			loop
 				c_parent := C.gtk_widget_struct_parent (c_parent)
-				if c_parent /= Default_pointer then
+				if c_parent /= NULL then
 					Result_imp ?= eif_object_from_c (c_parent)
 					if Result_imp /= Void then
 						Result := Result_imp.interface
@@ -352,8 +352,8 @@ feature -- Status setting
 				C.Gdk_button_motion_mask_enum +
 				C.Gdk_pointer_motion_hint_mask_enum +
 				C.Gdk_pointer_motion_mask_enum,
-				Default_pointer,                      -- GdkWindow* confine_to 
-				Default_pointer,                      -- GdkCursor *cursor
+				NULL,                      -- GdkWindow* confine_to 
+				NULL,                      -- GdkCursor *cursor
 				0)                                    -- guint32 time
 			end
 
@@ -562,7 +562,7 @@ feature -- Element change
 			tooltip := clone (a_text)
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				eiffel_to_c (a_text), Default_pointer)
+				eiffel_to_c (a_text), NULL)
 		end
 
 	remove_tooltip is
@@ -573,7 +573,7 @@ feature -- Element change
 			tooltip := Void
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				Default_pointer, Default_pointer)
+				NULL, NULL)
 		end
 
 	set_popup_menu (a_menu: EV_MENU) is
@@ -874,6 +874,10 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/05/02 18:55:26  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.66  2000/04/04 21:00:34  oconnor
 --| updated signal connection for new marshaling scheme
 --|

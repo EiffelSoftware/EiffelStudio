@@ -34,6 +34,13 @@ feature -- Measurement
 			"sizeof (void*)"
 		end
 
+		NULL: POINTER is
+			external
+				"C [macro <stdio.h>]"
+			alias
+				"NULL"
+			end
+
 feature -- Conversion
 
 	pointer_array_i_th (pointer_array: POINTER; index: INTEGER): POINTER is
@@ -115,7 +122,7 @@ feature -- Conversion
 			from
 				cur := gslist
 			until
-				cur = Default_pointer
+				cur = NULL
 			loop
 				Result.extend (gslist_struct_data (cur))
 				cur := gslist_struct_next (cur)
@@ -140,13 +147,6 @@ feature {NONE} -- Nasty hack
                 do
                         Result := p
                 end
-
-		NULL: POINTER is
-			external
-				"C [macro <stdio.h>]"
-			alias
-				"NULL"
-			end
 
 		sizeof_pointer: INTEGER is
 			external

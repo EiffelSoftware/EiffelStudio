@@ -64,7 +64,7 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?
 		do
-			Result := widget = default_pointer
+			Result := widget = NULL
 		end
 
 feature -- Status setting
@@ -75,7 +75,7 @@ feature -- Status setting
 			if not destroyed then
 				gtk_widget_destroy (widget)
 			end
-			widget := default_pointer
+			widget := NULL
 		end
 
 	activate is
@@ -114,16 +114,19 @@ feature -- Element change
 			-- Make `txt' the tip that is displayed when the
 			-- user stays on `wid'.
 		local
-			a: ANY
 			wid_imp: EV_WIDGET_IMP
 		do
-			a := txt.to_c
 			wid_imp ?= wid.implementation
 
 			-- The last parameter is a text that may be helpful if
 			-- the user gets stop. For now, as Windows does not
 			-- have this options, we set it to `NULL'.
-			gtk_tooltips_set_tip (widget, wid_imp.widget, $a, default_pointer)
+			gtk_tooltips_set_tip (
+				widget,
+				wid_imp.widget,
+				eiffel_to_c (txt),
+				NULL
+			)
 		end
 
 feature -- Implementation
@@ -154,6 +157,10 @@ end -- class EV_TOOLTIP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.5  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_event_box_new)
 
 			scroll_window := 
-				C.gtk_scrolled_window_new (Default_pointer, Default_pointer)
+				C.gtk_scrolled_window_new (NULL, NULL)
 			
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
@@ -116,9 +116,9 @@ feature -- Status report
 			o: EV_ANY_IMP
 		do
 			p := GTK_TREE_SELECTION (list_widget)
-			if p /= Default_pointer then
+			if p /= NULL then
 				p := C.g_list_nth_data (p, 0)
-				if p /= Default_pointer then
+				if p /= NULL then
 					o := eif_object_from_c (p)
 					Result ?= o.interface
 				end
@@ -131,7 +131,7 @@ feature -- Status report
 			list_pointer: POINTER
 		do
 			list_pointer := C.gtk_tree_struct_selection (list_widget)
-			if list_pointer /= Default_pointer then
+			if list_pointer /= NULL then
 				Result := C.g_list_length (list_pointer) > 0
 			end
 		end
@@ -164,12 +164,12 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			C.gtk_widget_show (item_imp.c_object)
 			C.gtk_tree_append (list_widget, item_imp.c_object)
-			if item_imp.dummy_list_widget /= Default_pointer then
+			if item_imp.dummy_list_widget /= NULL then
 				C.gtk_tree_item_set_subtree (
 					item_imp.c_object,
 					item_imp.dummy_list_widget
 				)
-				item_imp.set_dummy_list_widget (Default_pointer)
+				item_imp.set_dummy_list_widget (NULL)
 			end
 		end
 
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_dummy_list_widget (item_imp.list_widget)
 
-			if item_imp.list_widget /= Default_pointer then
+			if item_imp.list_widget /= NULL then
 				C.gtk_widget_ref (item_imp.list_widget)
 			end
 			Precursor (a_position)
@@ -231,6 +231,10 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.41  2000/04/26 00:13:42  king
 --| Made compilable with initialize in _I
 --|

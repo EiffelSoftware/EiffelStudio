@@ -38,7 +38,7 @@ feature -- Access
 		do
 			p := text_label
 			C.gtk_label_get (text_label, $p)
-			if p /= Default_pointer then
+			if p /= NULL then
 				create Result.make_from_c (p)
 				if Result.empty then
 					Result := Void
@@ -81,7 +81,7 @@ feature -- Element change
 	remove_text is
 			-- Assign `Void' to `text'.
 		do
-			C.gtk_label_set_text (text_label, Default_pointer)
+			C.gtk_label_set_text (text_label, NULL)
 			C.gtk_widget_hide (text_label)
 		end
 	
@@ -120,6 +120,10 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/05/02 18:55:23  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.25  2000/03/27 18:03:28  brendel
 --| Removed unused local variable.
 --|

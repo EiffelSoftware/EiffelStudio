@@ -59,7 +59,7 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			acc_imp.set_accel_group (Default_pointer)
+			acc_imp.set_accel_group (NULL)
 		end
 
 feature -- Access
@@ -212,7 +212,7 @@ feature -- Element change
 				--C.gdk_window_set_icon (
 				--	C.gtk_widget_struct_window (pixmap_imp.c_object),
 				--	C.gtk_widget_struct_window (icon_window_imp.c_object),
-				--	default_pointer, default_pointer)
+				--	NULL, NULL)
 
 			end
 		end
@@ -226,7 +226,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			C.gdk_window_get_geometry (
 				C.gtk_widget_struct_window (c_object),
-				$x, $y, $w, $h, Default_pointer)
+				$x, $y, $w, $h, NULL)
 				--| `x' and `y' are not working, so:
 			C.gdk_window_get_root_origin (
 				C.gtk_widget_struct_window (c_object),
@@ -274,6 +274,10 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.44  2000/04/04 20:52:30  oconnor
 --| formatting
 --|

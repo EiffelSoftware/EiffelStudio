@@ -31,7 +31,7 @@ feature -- Access
 				C.gtk_container_children (list_widget),
 				i - 1)
 			check
-				child_not_void: child /= Default_pointer
+				child_not_void: child /= NULL
 			end
 			imp := eif_object_from_c (child)
 			check
@@ -48,7 +48,7 @@ feature -- Measurement
 	count: INTEGER is
 			-- Number of items.
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				Result := C.g_list_length (C.gtk_container_children (list_widget))
 			end
 		end
@@ -104,7 +104,7 @@ invariant
 --| FIXME EV_TREE_ITEM_IMP has no list_widget when it has no
 --| children. Remove invariant from here?
 --	list_widget_not_void:
---		is_useable implies list_widget /= Default_pointer
+--		is_useable implies list_widget /= NULL
 
 end -- class EV_DYNAMIC_LIST_IMP
 
@@ -129,6 +129,10 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.7  2000/05/02 17:30:52  king
 --| Made *_i_th deferred, added deferred *_item_actions
 --|

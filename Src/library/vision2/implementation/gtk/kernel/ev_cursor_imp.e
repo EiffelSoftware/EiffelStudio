@@ -13,6 +13,8 @@ inherit
 			interface
 		end
 
+	EV_C_UTIL
+
 create
 	make
 
@@ -51,7 +53,7 @@ feature -- Element change
 			pixmap.copy (a_pixmap)
 			code := 0
 
-			if c_object /= Default_pointer then
+			if c_object /= NULL then
 				C.gdk_cursor_destroy (c_object)
 			end
 
@@ -77,7 +79,7 @@ feature -- Element change
 		--| FIXME need precondition
 		do
 			code := a_code
-			if c_object /= Default_pointer then
+			if c_object /= NULL then
 				C.gdk_cursor_destroy (c_object)
 			end
 			c_object := C.gdk_cursor_new (a_code)
@@ -86,7 +88,7 @@ feature -- Element change
 
 	destroy is
 		do
-			if c_object /= Default_pointer then
+			if c_object /= NULL then
 				C.gdk_cursor_destroy (c_object)
 			end
 			is_destroyed := True
@@ -131,6 +133,10 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.9  2000/04/26 17:04:48  oconnor
 --| put GtkPixmap in an event box
 --|

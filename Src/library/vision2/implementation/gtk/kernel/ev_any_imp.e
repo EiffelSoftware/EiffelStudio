@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Access
 			-- Set up Eiffel GC / GTK cooperation.
 			--| (See note at end of class)
 		require
-			a_c_object_not_null: a_c_object /= Default_pointer
+			a_c_object_not_null: a_c_object /= NULL
 		do
 			c_object := a_c_object
 			debug ("EV_GTK_DEBUG")
@@ -59,7 +59,7 @@ feature {EV_ANY_I} -- Access
 	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		require
-			a_c_object_not_null: a_c_object /= Default_pointer
+			a_c_object_not_null: a_c_object /= NULL
 		do
 			Result := c_get_eif_reference_from_object_id (a_c_object)
 		end
@@ -74,11 +74,11 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				safe_print (generator + ".destroy")
 			end
 			C.gtk_object_destroy (c_object)
-			c_object := Default_pointer
+			c_object := NULL
 			is_destroyed := True
 			destroy_just_called := True
 		ensure then
-			c_object_detached: c_object = Default_pointer
+			c_object_detached: c_object = NULL
 		end
 
 feature {EV_ANY_I} -- Event handling
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			--debug ("EV_GTK_DEBUG")
 			--	safe_print (generator + ".dispose")
 			--end
-			if c_object /= Default_pointer then
+			if c_object /= NULL then
 				gtk_signal_disconnect_by_data (c_object, object_id)
 				gtk_object_unref (c_object)
 			end
@@ -511,13 +511,13 @@ feature {NONE} -- Implementation
 			debug ("EV_GTK_DEBUG")
 				safe_print (generator + ".c_object_dispose")
 			end
-			c_object := Default_pointer
+			c_object := NULL
 			is_destroyed := True
 			destroy_just_called := True
 		ensure
 			is_destroyed_set: is_destroyed
 			destroy_just_called_set: destroy_just_called
-			c_object_detached: c_object = Default_pointer
+			c_object_detached: c_object = NULL
 		end
 
 feature {NONE} -- External implementation
@@ -579,9 +579,9 @@ feature {NONE} -- External implementation
 
 invariant
 	c_object_only_null_when_destroyed:
-		is_destroyed = (c_object = Default_pointer)
-	c_invariant: c_object /= Default_pointer implies c_invariant (c_object)
-	c_object_coupled: c_object /= Default_pointer implies
+		is_destroyed = (c_object = NULL)
+	c_invariant: c_object /= NULL implies c_invariant (c_object)
+	c_object_coupled: c_object /= NULL implies
 		eif_object_from_c (c_object) = Current
 	c_externals_object_not_void: C /= Void
 
@@ -689,6 +689,10 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.10  2000/04/11 16:26:08  oconnor
 --| formatting
 --|

@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	adjustment_not_void: adjustment /= Default_pointer
+	adjustment_not_void: adjustment /= NULL
 
 end -- class EV_GAUGE_I
 
@@ -281,6 +281,10 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.13  2000/04/13 18:46:51  brendel
 --| Changed default value.
 --|

@@ -150,7 +150,7 @@ feature -- Status report
 	is_drawable: BOOLEAN is
 			-- Is the device drawable?
 		do
-			Result := drawable /= Default_pointer
+			Result := drawable /= NULL
 		end
 
 feature -- Element change
@@ -236,7 +236,7 @@ feature -- Element change
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
-			C.gdk_gc_set_clip_rectangle (gc, Default_pointer)
+			C.gdk_gc_set_clip_rectangle (gc, NULL)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -302,7 +302,7 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 	 			C.gdk_draw_point (drawable, gc, x, y)
 			end
 		end
@@ -312,7 +312,7 @@ feature -- Drawing operations
 		local
 			font_imp: EV_FONT_IMP
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				font_imp ?= font.implementation
 				C.gdk_draw_string (drawable, font_imp.c_object, gc, x, y, eiffel_to_c (a_text))
 			end
@@ -321,7 +321,7 @@ feature -- Drawing operations
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				C.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
 			end
 		end
@@ -356,7 +356,7 @@ feature -- Drawing operations
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
 					y - a_vertical_radius, a_horizontal_radius * 2,
 					a_vertical_radius * 2, radians_to_gdk (a_start_angle),
@@ -369,7 +369,7 @@ feature -- Drawing operations
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				pixmap_imp ?= a_pixmap.implementation
 				if pixmap_imp.mask /= NULL then
 					C.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
@@ -389,7 +389,7 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width, a_height)
 			end
 		end
@@ -398,7 +398,7 @@ feature -- Drawing operations
 			-- Draw an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
 					y - a_vertical_radius, a_horizontal_radius * 2,
 					a_vertical_radius * 2, 0, 360 * 64)
@@ -412,7 +412,7 @@ feature -- Drawing operations
 		local
 			tmp: SPECIAL [INTEGER]
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					C.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
@@ -446,7 +446,7 @@ feature -- filling operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
@@ -460,7 +460,7 @@ feature -- filling operations
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Fill with `background_color'.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
@@ -477,7 +477,7 @@ feature -- filling operations
 		local
 			tmp: SPECIAL [INTEGER]
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
@@ -494,7 +494,7 @@ feature -- filling operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		do
-			if drawable /= Default_pointer then
+			if drawable /= NULL then
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
@@ -554,8 +554,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	gc_not_void: gc /= Default_pointer
-	gcvalues_not_void: gcvalues /= Default_pointer
+	gc_not_void: gc /= NULL
+	gcvalues_not_void: gcvalues /= NULL
 
 end -- class EV_DRAWABLE_IMP
 
@@ -580,6 +580,10 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/02 18:55:23  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.13  2000/04/14 16:36:50  oconnor
 --| added clip mask to draw_pixmap
 --|

@@ -27,13 +27,13 @@ feature -- Status report
 			peer_imp: like Current
 		do
 			create Result.make
-			if radio_group = Default_pointer then
+			if radio_group = NULL then
 				Result.extend (interface)
 			else
 				from
 					cur := radio_group
 				until
-					cur = Default_pointer
+					cur = NULL
 				loop
 					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
 					Result.extend (peer_imp.interface)
@@ -48,13 +48,13 @@ feature -- Status report
 			cur: POINTER
 			peer_imp: like Current
 		do
-			if radio_group = Default_pointer then
+			if radio_group = NULL then
 				Result := interface
 			else
 				from
 					cur := radio_group
 				until
-					cur = Default_pointer or else Result /= void
+					cur = NULL or else Result /= void
 				loop
 					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
 					if peer_imp.is_selected then
@@ -97,11 +97,15 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/02 18:55:25  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.6  2000/04/25 18:46:40  king
 --| Accounted for gslist name change
 --|
 --| Revision 1.5  2000/04/13 22:05:54  king
---| Corrected gslist equality statements from Void to Default_pointer
+--| Corrected gslist equality statements from Void to NULL
 --|
 --| Revision 1.4  2000/02/26 01:26:02  brendel
 --| Removed annoying put_string.

@@ -142,7 +142,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		a_x, a_y: INTEGER
 		): EV_PICK_AND_DROPABLE is
 		require
-			a_gdk_window_not_void: a_gdk_window /= Default_pointer
+			a_gdk_window_not_void: a_gdk_window /= NULL
 		local
 			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
@@ -245,7 +245,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						if imp /= Void then
 							C.gtk_widget_set_state
 								(imp.c_object, C.Gtk_state_prelight_enum)
-							C.gtk_widget_draw (imp.c_object, Default_pointer)
+							C.gtk_widget_draw (imp.c_object, NULL)
 						end
 					end
 					pnd_targets.forth
@@ -279,7 +279,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						if imp /= Void then
 							C.gtk_widget_set_state
 								(imp.c_object, C.Gtk_state_normal_enum)
-							C.gtk_widget_draw (imp.c_object, Default_pointer)
+							C.gtk_widget_draw (imp.c_object, NULL)
 						end
 					end
 					pnd_targets.forth
@@ -331,7 +331,7 @@ feature -- Implementation
 		require
 			agent_not_void: agent /= Void
 			n_args_not_negative: n_args >= 0
-			args_not_null: n_args > 0 implies args /= Default_pointer
+			args_not_null: n_args > 0 implies args /= NULL
 			--FIXME make this an attribut or somthign to make it faster
 		local
 			f_of_tuple_type_id: INTEGER
@@ -418,7 +418,7 @@ feature -- External implementation
 
 invariant
 	c_externals_object_not_void: C /= Void
-	tooltips_not_void: tooltips /= Default_pointer
+	tooltips_not_void: tooltips /= NULL
 	idle_actions_agent_not_void: idle_actions_agent /= void
 
 end -- class EV_APPLICATION_IMP
@@ -444,6 +444,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.29  2000/04/25 00:58:35  oconnor
 --| added support of right click PND menus
 --|

@@ -80,7 +80,7 @@ feature -- Status report
 				C.gtk_notebook_get_current_page (c_object)
 			)
 			check
-				p_not_void: p /= default_pointer
+				p_not_void: p /= NULL
 			end
 			imp ?= eif_object_from_c (p)
 			check
@@ -248,6 +248,10 @@ end -- class EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.21  2000/04/20 18:07:40  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

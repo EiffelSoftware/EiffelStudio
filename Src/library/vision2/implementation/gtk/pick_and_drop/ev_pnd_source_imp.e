@@ -436,7 +436,7 @@ feature -- Implementation
 			check
 				app_imp_not_void: app_imp /= Void
 			end
-			if gdkwin /= Default_pointer then
+			if gdkwin /= NULL then
 				Result := app_imp.pnd_target_from_gdk_window (gdkwin, x, y)
 			end
 		end
@@ -517,6 +517,10 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/05/02 18:55:22  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.24  2000/04/25 00:58:36  oconnor
 --| added support of right click PND menus
 --|

@@ -64,7 +64,7 @@ feature -- Status report
 			a_x, a_y: INTEGER
 			temp_pointer: POINTER
 		do
-			temp_pointer := C.gdk_window_get_pointer (Default_pointer, $a_x, $a_y, Default_pointer)
+			temp_pointer := C.gdk_window_get_pointer (NULL, $a_x, $a_y, NULL)
 			create Result.set (a_x, a_y)
 		end
 
@@ -219,6 +219,10 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/02 18:55:32  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.15  2000/04/25 18:39:22  king
 --| Implemented pointer_position
 --|

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a menu item.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_radio_menu_item_new (Default_pointer))
+			set_c_object (C.gtk_radio_menu_item_new (NULL))
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
 			C.gtk_check_menu_item_set_active (c_object, True)
 		end
@@ -76,6 +76,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.18  2000/04/25 18:44:07  king
 --| Added set_radio_group, gslist->radio-group
 --|

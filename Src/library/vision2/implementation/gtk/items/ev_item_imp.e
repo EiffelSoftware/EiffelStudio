@@ -89,10 +89,10 @@ feature -- Access
 				from
 					c_parent := c_object
 				until
-					Result /= Void or c_parent = Default_pointer
+					Result /= Void or c_parent = NULL
 				loop
 					c_parent := C.gtk_widget_struct_parent (c_parent)
-					if c_parent /= Default_pointer then
+					if c_parent /= NULL then
 						Result_imp ?= eif_object_from_c (c_parent)
 						if Result_imp /= Void then
 							Result := Result_imp
@@ -147,6 +147,10 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.28  2000/05/01 21:32:20  king
 --| Exporting redundant features to none
 --|

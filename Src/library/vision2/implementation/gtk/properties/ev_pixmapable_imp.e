@@ -41,7 +41,7 @@ feature -- Access
 			imp: EV_PIXMAP_IMP
 		do
 			p := gtk_pixmap
-			if p /= Default_pointer then
+			if p /= NULL then
 				imp ?= eif_object_from_c (p)
 				check
 					imp_not_void: imp /= Void
@@ -74,7 +74,7 @@ feature -- Element change
 		do
 			p:= gtk_pixmap
 
-			if p /= Default_pointer then
+			if p /= NULL then
 				C.gtk_container_remove (pixmap_box, p)
 			end
 
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			-- Pointer to the GtkPixmap widget.
 		do
 			Result := C.gtk_container_children (pixmap_box)
-			if Result /= Default_pointer then
+			if Result /= NULL then
 				Result := C.g_list_nth_data (Result, 0)
 			end
 		end
@@ -100,9 +100,9 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_PIXMAPABLE
 
 invariant
-	pixmap_box_not_null: is_useable implies pixmap_box /= Default_pointer
+	pixmap_box_not_null: is_useable implies pixmap_box /= NULL
 	pixmap_box_has_parent: is_useable implies
-		C.gtk_widget_struct_parent (pixmap_box) /= Default_pointer
+		C.gtk_widget_struct_parent (pixmap_box) /= NULL
 
 end -- EV_PIXMAPABLE_IMP
 
@@ -127,6 +127,10 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/05/02 18:55:23  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.23  2000/04/27 18:20:59  king
 --| Corrected pixmapable to add c_object instead of gtkpixmap
 --|

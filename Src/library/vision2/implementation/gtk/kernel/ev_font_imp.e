@@ -262,12 +262,12 @@ feature {NONE} -- Implementation
 		require
 			pattern_not_void: pattern /= Void
 		local
-			c_name: ANY
 			c_expanded_name_pointer: POINTER
 		do
-			c_name := pattern.to_c
-			c_expanded_name_pointer := C.c_match_font_name ($c_name)
-			if c_expanded_name_pointer /= Default_pointer then
+			
+			c_expanded_name_pointer :=
+				C.c_match_font_name (eiffel_to_c (pattern))
+			if c_expanded_name_pointer /= NULL then
 				create Result.make (0)
 				Result.from_c (c_expanded_name_pointer)
 			end
@@ -515,7 +515,7 @@ feature -- Obsolete
 		end
 
 invariant
-	c_object_not_null: c_object /= Default_pointer
+	c_object_not_null: c_object /= NULL
 	full_name_not_void: full_name /= Void
 	
 end -- class EV_FONT_IMP
@@ -542,6 +542,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.15  2000/04/18 19:36:03  oconnor
 --| renamed get_pointer_from_array_by_index->pointer_array_i_th
 --|

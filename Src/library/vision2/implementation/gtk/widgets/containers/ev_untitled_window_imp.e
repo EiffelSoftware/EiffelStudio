@@ -60,9 +60,9 @@ feature  -- Access
 			o: EV_ANY_IMP
 		do
 			p := C.gtk_container_children (hbox)
-			if p/= Default_pointer then
+			if p/= NULL then
 				p := C.g_list_nth_data (p, 0)
-				if p /= Default_pointer then
+				if p /= NULL then
 					o := eif_object_from_c (p)
 					Result ?= o.interface
 				end
@@ -112,7 +112,7 @@ feature  -- Access
 			p : POINTER
 		do
 			p := C.c_gtk_window_title (c_object)
-			if p /= Default_pointer then
+			if p /= NULL then
 				create Result.make_from_c (p)
 			else
 				create Result.make (0)
@@ -244,7 +244,7 @@ feature -- Status setting
 	--			a := s.to_c
 	--			gtk_signal_emit_stop_by_name (c_object, $a)
 	--		else
-	--			widget := default_pointer
+	--			widget := NULL
 	--		end
 		end
 
@@ -459,6 +459,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.20  2000/04/28 22:02:37  brendel
 --| A status bar can now be any widget.
 --|

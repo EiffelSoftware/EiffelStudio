@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			C.gtk_box_pack_start (box, text_label, True, True, 2)
 			C.gtk_widget_hide (text_label)
 		ensure
-			item_box /= default_pointer
+			item_box /= NULL
 		end
 
 feature -- Status report
@@ -164,11 +164,11 @@ feature {NONE} -- Implementation
 			C.gtk_widget_show (item_imp.c_object)
 			item_subtree := C.gtk_tree_item_struct_subtree (c_object)
 
-			if list_widget = Default_pointer then
+			if list_widget = NULL then
 				set_dummy_list_widget (sub_tree)
 			end
 
-			if item_subtree /= Default_pointer then
+			if item_subtree /= NULL then
 				C.gtk_tree_append (
 					item_subtree,
 					item_imp.c_object
@@ -183,16 +183,16 @@ feature {NONE} -- Implementation
 						c_object,
 						dummy_list_widget
 					)
-					set_dummy_list_widget (Default_pointer)
+					set_dummy_list_widget (NULL)
 				end
 			end
 
-			if item_imp.dummy_list_widget /= Default_pointer then
+			if item_imp.dummy_list_widget /= NULL then
 				C.gtk_tree_item_set_subtree (
 					item_imp.c_object,
 					item_imp.dummy_list_widget
 				)
-				item_imp.set_dummy_list_widget (Default_pointer)
+				item_imp.set_dummy_list_widget (NULL)
 			end
 		end
 
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_parent_imp (Void)
 			item_imp.set_dummy_list_widget (item_imp.list_widget)
-			if item_imp.list_widget /= Default_pointer then
+			if item_imp.list_widget /= NULL then
 				C.gtk_widget_ref (item_imp.list_widget)
 			end	
 			Precursor (a_position)
@@ -260,7 +260,7 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 			-- Pointer to the items own gtktree.
 		do
 			Result := C.gtk_tree_item_struct_subtree (c_object)
-			if Result = Default_pointer then
+			if Result = NULL then
 				Result := dummy_list_widget
 			end
 		end
@@ -310,6 +310,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.54  2000/04/20 18:07:37  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

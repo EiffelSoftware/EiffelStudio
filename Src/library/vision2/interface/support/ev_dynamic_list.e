@@ -32,6 +32,7 @@ inherit
 		export
 			{NONE} duplicate, new_chain, dl_prune
 			{EV_DYNAMIC_LIST_I} sequential_index_of
+			{EV_ANY_HANDLER} default_create
 		undefine
 			changeable_comparison_criterion,
 			default_create,
@@ -54,6 +55,8 @@ inherit
 	SET [G]
 		rename
 			extend as set_extend
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			prune_all,
 			changeable_comparison_criterion,

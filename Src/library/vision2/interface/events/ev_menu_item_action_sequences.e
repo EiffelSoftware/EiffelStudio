@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	ANY
+		export
+			{NONE} default_create
 		undefine
 			default_create, copy
 		end

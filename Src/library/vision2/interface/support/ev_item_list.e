@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	EV_ANY
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			is_equal
 		redefine

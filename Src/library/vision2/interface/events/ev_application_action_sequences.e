@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	ANY
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			default_create,
 			copy
@@ -56,6 +58,9 @@ feature -- Event handling
 		
 	cancel_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to be performed when a PND is cancelled.
+			-- A cancel may be initiated in a number of ways depending on the transport
+			-- type, including attempting to drop on a target that does not accept
+			-- transported pebble.
 		do
 			Result := implementation.cancel_actions
 		ensure

@@ -109,10 +109,10 @@ feature {NONE} -- Initialization
 			loop
 				create tree_item2.make_with_text (containers @ counter)
 				tree_item1.extend (tree_item2)
-				passed := c_check_assert (False)
+				passed := feature {ISE_RUNTIME}.check_assert (False)
 				widget ?= new_instance_of (dynamic_type_from_string (tree_item2.text))
 				widget.default_create
-				passed := c_check_assert (True)
+				passed := feature {ISE_RUNTIME}.check_assert (True)
 				tree_item2.select_actions.extend (agent test_widget (widget))
 				counter := counter + 1
 			end
@@ -134,10 +134,10 @@ feature {NONE} -- Initialization
 			loop
 				create tree_item.make_with_text (primitives @ counter)
 				tree_item1.extend (tree_item)
-				passed := c_check_assert (False)
+				passed := feature {ISE_RUNTIME}.check_assert (False)
 				widget ?= new_instance_of (dynamic_type_from_string (tree_item.text))
 				widget.default_create
-				passed := c_check_assert (True)
+				passed := feature {ISE_RUNTIME}.check_assert (False)
 					-- If we are a pixmap, then we must load and assign
 					-- an image.
 				pixmap ?= widget
@@ -188,6 +188,12 @@ feature {NONE} -- Initialization
 			if textable /= Void then
 				create textable_control.make (test_holder, textable, output)
 			end
+			
+			text_alignable ?= widget
+			if text_alignable /= Void then
+				create text_alignable_control.make (test_holder, text_alignable, output)
+			end
+			
 			text_component ?= widget
 			if text_component /= Void then
 				create text_component_control.make (test_holder, text_component, output)
@@ -329,6 +335,8 @@ feature {NONE} -- Implementation
 	
 	textable_text_field: EV_TEXT_FIELD
 	
+	text_alignable: EV_TEXT_ALIGNABLE
+	
 	item_list: EV_ITEM_LIST [EV_ITEM]
 	
 	bspinr, bsping, bspinb, fspinr, fsping, fspinb: EV_SPIN_BUTTON
@@ -347,6 +355,7 @@ feature {NONE} -- Implementation
 	gauge_control: GAUGE_CONTROL
 	container_control: CONTAINER_CONTROL
 	item_list_control: ITEM_LIST_CONTROL
+	text_alignable_control: TEXT_ALIGNABLE_CONTROL
 
 		-- Default width of the scrollable area.
 	Scrollable_area_width: INTEGER is 220

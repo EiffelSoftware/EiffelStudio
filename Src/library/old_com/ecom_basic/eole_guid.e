@@ -35,8 +35,8 @@ feature -- Element change
 			-- Create a Globally Unique IDentifier with
 			-- format "{12345678-1234-1234-1234-123456789ABC}".
 		do
-			!! Result.make (0)
-			Result.from_c (ole2_co_create_guid)
+			!!Result.make(0)
+			Result.from_c(ole2_co_create_guid)
 		ensure
 			valid_guid: is_valid_guid (Result)
 		end

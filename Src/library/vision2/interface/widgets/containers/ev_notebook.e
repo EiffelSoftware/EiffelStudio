@@ -48,6 +48,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result.is_equal (implementation.item_text (an_item))
 			not_void: Result /= Void
+			cloned: Result /= implementation.item_text (an_item)
 		end
 
 feature -- Status report
@@ -177,6 +178,7 @@ feature -- Element change
 			implementation.set_item_text (an_item, a_text)
 		ensure
 			item_text_assigned: item_text (an_item).is_equal (a_text)
+			cloned: item_text (an_item) /= a_text
 		end
 		
 feature {NONE} -- Contract support

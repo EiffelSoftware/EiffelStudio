@@ -1,4 +1,4 @@
-class EXAMPLE creation
+class EXAMPLE create
 
 	make
 
@@ -8,7 +8,7 @@ feature
 
 	make is
 		do
-			!! base_object; 
+			create base_object; 
 			base_object.operate
 		end;
 

@@ -5,7 +5,7 @@ class OBJECT feature
 	operate is
 			-- Do some operations.
 		do
-			!! other;
+			create other;
 			good_routine (333);
 			bad_routine;
 		end;

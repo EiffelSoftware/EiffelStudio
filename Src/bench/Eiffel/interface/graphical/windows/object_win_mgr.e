@@ -11,7 +11,7 @@ inherit
 
 	EDITOR_MGR
 		redefine
-			editor_type, synchronize, editor
+			editor_type, synchronize, shell_editor
 		end
 
 creation
@@ -77,7 +77,7 @@ feature -- Synchronization
 
 feature {WINDOW_MGR} -- Properties
 
-	editor: like editor_type is
+	shell_editor (a_parent: EB_SHELL): like editor_type is
 			-- Creates new editor. (Either creates one or
 			-- retrieves one from the free_list).
 		local
@@ -93,7 +93,7 @@ feature {WINDOW_MGR} -- Properties
 				free_list.remove
 			else
 				!! mp.set_watch_cursor;
-				!! Result.make (screen);
+				!! Result.make (a_parent);
 				mp.restore
 			end;
 			active_editors.extend (Result)

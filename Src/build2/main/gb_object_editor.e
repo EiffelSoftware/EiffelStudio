@@ -290,6 +290,27 @@ feature -- Status setting
 				item_parent.forth
 			end
 		end
+		
+feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT} -- Implementation
+		
+	constant_added (a_constant: GB_CONSTANT) is
+			-- Update `Current' to reflect adition of constant `a_constant'.
+		require
+			constant_not_void: a_constant /= Void
+		local
+			object_editor_item: GB_OBJECT_EDITOR_ITEM
+		do
+			object_editor_item := editor_item_by_type ("EV_PIXMAPABLE")
+			--| FIXME implement
+		end
+
+	constant_removed (a_constant: GB_CONSTANT) is
+			-- Update `Current' to reflect removal of constant `a_constant'.
+		require
+			constant_not_void: a_constant /= Void
+		do
+			--| FIXME implement
+		end
 
 feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 		
@@ -661,14 +682,12 @@ feature {NONE} -- Implementation
 			a_timeout.destroy			
 		end
 		
-		
 	scroll_bar_changed (value: INTEGER) is
 			-- Set the offset of the controls to `Value'
 			-- within the viewport.
 		do
 			viewport.set_y_offset (value)
 		end
-		
 
 	item_parent: EV_VERTICAL_BOX
 		-- An EV_VERTICAL_BOX to hold all GB_OBJECT_EDITOR_ITEM.

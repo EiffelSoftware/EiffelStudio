@@ -843,6 +843,20 @@ char *yytext_ptr;
  ######     #    #       #       ######  ######   ###    ######
 
 			Eiffel Lex analyzer description
+
+Copyright (C) 1992, 1993, 1994, 1995, Interactive Software Engineering Inc.
+All rights reserved. Duplication and distribution prohibited without
+prior agreement with Interactive Software Engineering.
+
+270 Storke Road, Suite 7, Goleta, CA 93117 USA
+Telephone 805-685-1006
+Fax 805-685-6869
+Electronic mail <info@eiffel.com>
+Customer support e-mail <support@eiffel.com>
+
+Web server: http://www.eiffel.com
+Ftp server: ftp.eiffel.com
+
 */
 
 #include <ctype.h>
@@ -989,7 +1003,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-# line 76 "lexic.l"
+# line 90 "lexic.l"
 
 
 	if ( yy_init )
@@ -1112,213 +1126,213 @@ do_action:	/* This label is used only to access EOF actions. */
 	{ /* beginning of action switch */
 case 1:
 YY_USER_ACTION
-# line 77 "lexic.l"
+# line 91 "lexic.l"
 {	start_position = end_position;
 								end_position += yyleng;}
 	YY_BREAK
 case 2:
 YY_USER_ACTION
-# line 79 "lexic.l"
+# line 93 "lexic.l"
 {	start_position = end_position;
 								end_position += yyleng;}
 	YY_BREAK
 case 3:
 YY_USER_ACTION
-# line 81 "lexic.l"
+# line 95 "lexic.l"
 {return process_name(TE_INTEGER);}
 	YY_BREAK
 case 4:
 YY_USER_ACTION
-# line 82 "lexic.l"
+# line 96 "lexic.l"
 {return process(TE_SEMICOLON);}
 	YY_BREAK
 case 5:
 YY_USER_ACTION
-# line 83 "lexic.l"
+# line 97 "lexic.l"
 {return process(TE_COLON);}
 	YY_BREAK
 case 6:
 YY_USER_ACTION
-# line 84 "lexic.l"
+# line 98 "lexic.l"
 {return process(TE_COMMA);}
 	YY_BREAK
 case 7:
 YY_USER_ACTION
-# line 85 "lexic.l"
+# line 99 "lexic.l"
 {return process(TE_DOTDOT);}
 	YY_BREAK
 case 8:
 YY_USER_ACTION
-# line 86 "lexic.l"
+# line 100 "lexic.l"
 {return process(TE_DOT);}
 	YY_BREAK
 case 9:
 YY_USER_ACTION
-# line 87 "lexic.l"
+# line 101 "lexic.l"
 {return process(TE_ADDRESS);}
 	YY_BREAK
 case 10:
 YY_USER_ACTION
-# line 88 "lexic.l"
+# line 102 "lexic.l"
 {return process(TE_ASSIGN);}
 	YY_BREAK
 case 11:
 YY_USER_ACTION
-# line 89 "lexic.l"
+# line 103 "lexic.l"
 {return process(TE_ACCEPT);}
 	YY_BREAK
 case 12:
 YY_USER_ACTION
-# line 90 "lexic.l"
+# line 104 "lexic.l"
 {return process(TE_EQ);}
 	YY_BREAK
 case 13:
 YY_USER_ACTION
-# line 91 "lexic.l"
+# line 105 "lexic.l"
 {return process(TE_LT);}
 	YY_BREAK
 case 14:
 YY_USER_ACTION
-# line 92 "lexic.l"
+# line 106 "lexic.l"
 {return process(TE_GT);}
 	YY_BREAK
 case 15:
 YY_USER_ACTION
-# line 93 "lexic.l"
+# line 107 "lexic.l"
 {return process(TE_LE);}
 	YY_BREAK
 case 16:
 YY_USER_ACTION
-# line 94 "lexic.l"
+# line 108 "lexic.l"
 {return process(TE_GE);}
 	YY_BREAK
 case 17:
 YY_USER_ACTION
-# line 95 "lexic.l"
+# line 109 "lexic.l"
 {return process(TE_NE);}
 	YY_BREAK
 case 18:
 YY_USER_ACTION
-# line 96 "lexic.l"
+# line 110 "lexic.l"
 {return process(TE_LPARAN);}
 	YY_BREAK
 case 19:
 YY_USER_ACTION
-# line 97 "lexic.l"
+# line 111 "lexic.l"
 {return process(TE_RPARAN);}
 	YY_BREAK
 case 20:
 YY_USER_ACTION
-# line 98 "lexic.l"
+# line 112 "lexic.l"
 {return process(TE_LCURLY);}
 	YY_BREAK
 case 21:
 YY_USER_ACTION
-# line 99 "lexic.l"
+# line 113 "lexic.l"
 {return process(TE_RCURLY);}
 	YY_BREAK
 case 22:
 YY_USER_ACTION
-# line 100 "lexic.l"
+# line 114 "lexic.l"
 {return process(TE_LSQURE);}
 	YY_BREAK
 case 23:
 YY_USER_ACTION
-# line 101 "lexic.l"
+# line 115 "lexic.l"
 {return process(TE_RSQURE);}
 	YY_BREAK
 case 24:
 YY_USER_ACTION
-# line 102 "lexic.l"
+# line 116 "lexic.l"
 {return process(TE_PLUS);}
 	YY_BREAK
 case 25:
 YY_USER_ACTION
-# line 103 "lexic.l"
+# line 117 "lexic.l"
 {return process(TE_MINUS);}
 	YY_BREAK
 case 26:
 YY_USER_ACTION
-# line 104 "lexic.l"
+# line 118 "lexic.l"
 {return process(TE_STAR);}
 	YY_BREAK
 case 27:
 YY_USER_ACTION
-# line 105 "lexic.l"
+# line 119 "lexic.l"
 {return process(TE_SLASH);}
 	YY_BREAK
 case 28:
 YY_USER_ACTION
-# line 106 "lexic.l"
+# line 120 "lexic.l"
 {return process(TE_POWER);}
 	YY_BREAK
 case 29:
 YY_USER_ACTION
-# line 107 "lexic.l"
+# line 121 "lexic.l"
 {return process(TE_CONSTRAIN);}
 	YY_BREAK
 case 30:
 YY_USER_ACTION
-# line 108 "lexic.l"
+# line 122 "lexic.l"
 {return process(TE_BANG);}
 	YY_BREAK
 case 31:
 YY_USER_ACTION
-# line 109 "lexic.l"
+# line 123 "lexic.l"
 {return process(TE_LARRAY);}
 	YY_BREAK
 case 32:
 YY_USER_ACTION
-# line 110 "lexic.l"
+# line 124 "lexic.l"
 {return process(TE_RARRAY);}
 	YY_BREAK
 case 33:
 YY_USER_ACTION
-# line 111 "lexic.l"
+# line 125 "lexic.l"
 {return process_name(TE_FREE);}
 	YY_BREAK
 case 34:
 YY_USER_ACTION
-# line 112 "lexic.l"
+# line 126 "lexic.l"
 {return process(TE_DIV);}
 	YY_BREAK
 case 35:
 YY_USER_ACTION
-# line 113 "lexic.l"
+# line 127 "lexic.l"
 {return process(TE_MOD);}
 	YY_BREAK
 case 36:
 YY_USER_ACTION
-# line 114 "lexic.l"
+# line 128 "lexic.l"
 {return process_name(TE_ID);}
 	YY_BREAK
 case 37:
 YY_USER_ACTION
-# line 115 "lexic.l"
+# line 129 "lexic.l"
 {return process_bit();}
 	YY_BREAK
 case 38:
 YY_USER_ACTION
-# line 116 "lexic.l"
+# line 130 "lexic.l"
 {return process_int();}
 	YY_BREAK
 case 39:
 YY_USER_ACTION
-# line 117 "lexic.l"
+# line 131 "lexic.l"
 {return process_name(TE_REAL); }
 	YY_BREAK
 case 40:
 YY_USER_ACTION
-# line 118 "lexic.l"
+# line 132 "lexic.l"
 {return get_string();}
 	YY_BREAK
 case 41:
 YY_USER_ACTION
-# line 119 "lexic.l"
+# line 133 "lexic.l"
 {return get_char();}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-# line 120 "lexic.l"
+# line 134 "lexic.l"
 {
 								/* This rule has to be removed when compiling with `lex'.
 								 * and the extra rule: \1	{return process(TE_END);} has to be added
@@ -1333,14 +1347,14 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 42:
 YY_USER_ACTION
-# line 131 "lexic.l"
+# line 145 "lexic.l"
 {	start_position = end_position;
 								end_position += yyleng;
 								yyerror ((char *) 0);}
 	YY_BREAK
 case 43:
 YY_USER_ACTION
-# line 134 "lexic.l"
+# line 148 "lexic.l"
 ECHO;
 	YY_BREAK
 
@@ -2033,7 +2047,7 @@ void *ptr;
 	{
 	free( ptr );
 	}
-# line 134 "lexic.l"
+# line 148 "lexic.l"
 
 
 /*

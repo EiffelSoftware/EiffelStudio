@@ -35,6 +35,16 @@ feature -- Access
 			end
 		end
 
+feature -- Element Change
+
+	set_parent_with_index (par: like parent; pos: INTEGER) is
+			-- Make `par' the new parent of the widget and set
+			-- the current button at `pos'.
+		do
+			set_parent (par)
+			set_index (pos)
+		end
+
 feature -- Assertion features
 
 	has_parent: BOOLEAN is

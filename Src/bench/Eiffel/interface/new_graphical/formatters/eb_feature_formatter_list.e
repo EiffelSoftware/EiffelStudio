@@ -12,7 +12,7 @@ inherit
 			make, tool
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

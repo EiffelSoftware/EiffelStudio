@@ -14,7 +14,7 @@ inherit
 
 	SHARED_SERVER
 
-creation
+create
 
 	make
 	

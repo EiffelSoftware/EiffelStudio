@@ -14,7 +14,7 @@ inherit
 	EB_FEATURE_TOOL_DATA
 	NEW_EB_CONSTANTS
 
-creation
+create
 
 	make
 	

@@ -21,7 +21,7 @@ feature -- Access
 			-- Create a new toolbar button and associate it with `Current'.
 		do
 			Result := Precursor {EB_FEATURE_INFO_FORMATTER}
-			Result.drop_actions.extend (~on_feature_drop)
+			Result.drop_actions.extend (agent on_feature_drop)
 		end
 
 	widget: EV_WIDGET is
@@ -155,9 +155,9 @@ feature {NONE} -- Implementation
 			internal_empty_widget.set_background_color (def.White)
 			manag ?= widget_owner
 			if manag = Void then
-				internal_empty_widget.drop_actions.extend (~on_feature_drop) 
+				internal_empty_widget.drop_actions.extend (agent on_feature_drop) 
 			else
-				internal_empty_widget.drop_actions.extend (manag~drop_stone)
+				internal_empty_widget.drop_actions.extend (agent manag.drop_stone)
 			end
 		end
 

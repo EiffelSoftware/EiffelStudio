@@ -36,7 +36,7 @@ feature -- Status setting
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
 			an_editor.show_breakpoints
-			editor.drop_actions.extend (~on_breakable_drop)
+			editor.drop_actions.extend (agent on_breakable_drop)
 		end
 
 	set_stone (new_stone: FEATURE_STONE) is

@@ -23,7 +23,7 @@ inherit
 
 	EB_SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 

@@ -15,7 +15,7 @@ inherit
 			is_dotnet_formatter
 		end
 
-creation
+create
 	make
 	
 feature -- Properties
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 		do
 			confirmed := False
 			create cf.make_initialized (2, "generate_homonyms", Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
-			cf.set_ok_action (~confirm_generate)
+			cf.set_ok_action (agent confirm_generate)
 			cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			if confirmed then
 				last_was_error := False

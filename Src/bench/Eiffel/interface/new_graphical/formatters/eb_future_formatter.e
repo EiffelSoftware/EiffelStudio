@@ -13,7 +13,7 @@ inherit
 		end
 	SHARED_SERVER
 
-creation
+create
 	make
 
 feature -- Properties

@@ -556,7 +556,7 @@ feature {NONE} -- Generation
 						buffer.putint (feature_id)
 					end
 					buffer.putstring (", %"")
-					buffer.putstring (a_feature.feature_name)
+					buffer.putstring (a_feature.escaped_feature_name)
 					buffer.putstring ("%", ")
 					buffer.putstring (l_current_name)
 					buffer.putstring ("))(")

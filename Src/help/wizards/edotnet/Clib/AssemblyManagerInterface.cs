@@ -21,35 +21,36 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 	public String [] ImportedAssemblies()
 	{
 		ArrayList ImportedAssemblies;
-		int i, j;
-		String [] Assemblies;
-		EiffelAssembly AnAssembly;
 
 		ImportedAssemblies = RInterface.Assemblies();
 		if( ImportedAssemblies != null )
-		{			
-			Assemblies = new String [ImportedAssemblies.Count * 5];			
-			j = 0;
-			for( i = 0; i < ImportedAssemblies.Count; i++ )
+		{	
+			if( RInterface.LastError != null )
 			{
-				AnAssembly = ( EiffelAssembly )ImportedAssemblies [i];
-				if( AnAssembly != null )
+				if( ( RInterface.LastError.Code == RInterface.HasReadLockCode() )|| ( RInterface.LastError.Code == RInterface.HasWriteLockCode() ) )
 				{
-					Assemblies [j] = AnAssembly.AssemblyDescriptor.Name;
-					Assemblies [j + 1] = AnAssembly.AssemblyDescriptor.Version;
-					Assemblies [j + 2] = AnAssembly.AssemblyDescriptor.Culture;
-					Assemblies [j + 3] = AnAssembly.AssemblyDescriptor.PublicKey;
-					Assemblies [j + 4] = AnAssembly.EiffelClusterPath;
-					j = j + 5;
+					PrivateLastImportationSuccessful = false;
+					return( new String [0] );
 				}
+				else
+					return PrivateImportedAssemblies( ImportedAssemblies );				
 			}
+			else
+				return PrivateImportedAssemblies( ImportedAssemblies );
 		}			
 		else
-			Assemblies = new String [0];	
-
-		return Assemblies;
+		{
+			PrivateLastImportationSuccessful = false;
+			return( new String [0] );
+		}
 	}
-	
+
+	// Was last importation successful?
+	public bool LastImportationSuccessful()
+	{
+		return PrivateLastImportationSuccessful;
+	}	
+		
 	// Location of the assembly with `Name', `Version', `Culture' and `PublicKey'
 	public String AssemblyLocation( String Name, String Version, String Culture, String PublicKey )
 	{
@@ -121,6 +122,44 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		}
 		return assemblyDependencies;
 	}
+
+	// Remove locks from the Eiffel Assembly Cache.
+	public void CleanAssemblies()
+	{
+		ReflectionSupport support;
+		
+		support = new ReflectionSupport();
+		support.Make();
+		support.CleanAssemblies();
+	}
+	
+	protected String [] PrivateImportedAssemblies( ArrayList ImportedAssemblies )
+	{
+		int i, j;
+		String [] Assemblies;
+		EiffelAssembly AnAssembly;
+		
+		Assemblies = new String [ImportedAssemblies.Count * 5];			
+		j = 0;
+		for( i = 0; i < ImportedAssemblies.Count; i++ )
+		{
+			AnAssembly = ( EiffelAssembly )ImportedAssemblies [i];
+			if( AnAssembly != null )
+			{
+				Assemblies [j] = AnAssembly.AssemblyDescriptor.Name;
+				Assemblies [j + 1] = AnAssembly.AssemblyDescriptor.Version;
+				Assemblies [j + 2] = AnAssembly.AssemblyDescriptor.Culture;
+				Assemblies [j + 3] = AnAssembly.AssemblyDescriptor.PublicKey;
+				Assemblies [j + 4] = AnAssembly.EiffelClusterPath;
+				j = j + 5;
+			}
+		}
+		PrivateLastImportationSuccessful = true;
+		return Assemblies;
+	}
+
+	// Was last importation successful?
+	private bool PrivateLastImportationSuccessful;
 	
 	// Reflection interface	
 	protected ReflectionInterface RInterface;

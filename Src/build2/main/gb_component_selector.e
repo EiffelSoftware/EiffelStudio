@@ -50,6 +50,13 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -80,21 +87,34 @@ feature -- Basic operation
 		
 	add_new_component (an_object: GB_OBJECT) is
 			-- Add a new component representing `an_object'.
+		require
+			an_object_not_void: an_object /= Void
 		local
 			component_item: GB_COMPONENT_SELECTOR_ITEM
-			dialog: GB_COMPONENT_NAMER_DIALOG
-			new_component_name: STRING
+			dialog: GB_NAMING_DIALOG
 		do
-			create dialog.make_with_names_and_prompts (all_component_names, "component", "New component namer", Component_invalid_name_warning)
+			create dialog.make_with_values (unique_name (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
 			dialog.show_modal_to_window (parent_window (Current))
-			new_component_name := dialog.name
-			
-			if not new_component_name.is_empty then
-				create component_item.make_from_object (an_object, new_component_name)	
+			if not dialog.cancelled then
+				create component_item.make_from_object (an_object, dialog.name)	
 				extend (component_item)
 			end
 		end
 		
+	valid_component_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid component name?
+		local
+			temp_string: STRING
+		do
+			if valid_class_name (a_name) then
+				temp_string := a_name
+				temp_string.to_lower
+				if not all_component_names.has (temp_string) then
+					Result := True
+				end
+			end
+		end
+
 	delete_component (component_name: STRING) is
 			-- Remove component with name `component_name'.
 		require
@@ -190,9 +210,10 @@ feature {NONE} -- Implementation
 				Result.extend (temp_string)
 				forth
 			end
+			Result.compare_objects
 		ensure
 			result_not_void: Result /= Void
-		end
-		
+			comparing_objects: Result.object_comparison
+		end		
 		
 end -- class GB_COMPONENT_SELECTOR

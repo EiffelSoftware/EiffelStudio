@@ -13,11 +13,11 @@ class CATEGORY
 
 inherit
 	
-	COMPARABLE
+	PART_COMPARABLE;
+	SHARED_FORMAT_INFO
 		undefine
 			is_equal
-		end;
-	SHARED_FORMAT_INFO
+		end
 
 creation
 
@@ -26,17 +26,17 @@ creation
 feature -- Initialization
 
 	make is
-			-- Initialize Current.
+			-- Initialize Current and set comments to `c'.
 		do
-			!! clauses.make
+			!! clauses.make;
 		end;
 
 feature -- Properties
 
-	comment: EIFFEL_COMMENTS;
+	comments: EIFFEL_COMMENTS;
 			-- Comments for Current category
 
-	clauses: SORTED_TWO_WAY_LIST [FEATURE_CLAUSE_EXPORT];
+	clauses: PART_SORTED_TWO_WAY_LIST [FEATURE_CLAUSE_EXPORT];
 			-- Sorted list of features based on export clauses
 			-- with same comments
 
@@ -56,11 +56,27 @@ feature -- Access
 			end;
 		end;
 
-	same_comment (c: like comment): BOOLEAN is
+	same_comment (c: like comments): BOOLEAN is
 			-- Is the comment same as `c'?
 		do
-			Result := comment = void and c = void
-				or else comment /= void and comment.is_equal (c);
+			Result := comments = void and c = void
+				or else comments /= void and comments.is_equal (c);
+		end;
+
+feature -- Setting
+
+	set_comments (c: like comments) is
+			-- Set comment to all clauses to `c'.
+		do
+			comments := c;
+			from
+				clauses.start
+			until
+				clauses.after
+			loop
+				clauses.item.set_comments (c);
+				clauses.forth
+			end;
 		end;
 
 feature -- Comparison
@@ -69,25 +85,10 @@ feature -- Comparison
 			-- Is Current less than `other' comment?
 			--| to be fixed-> order should be configurable
 		do
-			Result := comment = void
-			or else (other.comment /= void
-				and then comment < other.comment)
-		end;
-
-feature -- Setting
-
-	set_comment (c: like comment) is
-			-- Set comment to all clauses to `c'.
-		do
-			comment := c;
-			from
-				clauses.start
-			until
-				clauses.after
-			loop
-				clauses.item.set_comment (comment);
-				clauses.forth
-			end;
+			Result := 
+				(comments = Void and then other.comments /= Void)
+				or else (other.comments /= void
+					and then comments < other.comments)
 		end;
 
 feature -- Element change
@@ -134,19 +135,21 @@ feature -- Element change
 	add (feat_adapter: FEATURE_ADAPTER) is
 			-- Add `feat_adapter' to a feature_clause.
 		require
-			good_argument:  feat_adapter /= void;
-			good_adapter: feat_adapter.target_feature /= Void and then
-							feat_adapter.source_feature /= Void
+			good_argument:  feat_adapter /= Void
 		local
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do
-			from
-				clauses.start
-			until
-				clauses.after
-				or else clauses.item.can_include (feat_adapter.target_feature)
-			loop
-				clauses.forth;
+			if feat_adapter.target_feature = Void then
+				clauses.finish
+			else
+				from
+					clauses.start
+				until
+					clauses.after
+					or else clauses.item.can_include (feat_adapter.target_feature)
+				loop
+					clauses.forth
+				end
 			end;
 			if not clauses.off then
 				clauses.item.add (feat_adapter);
@@ -199,7 +202,7 @@ feature -- Removal
 			-- Wipe out Current structures.
 		do
 			clauses.wipe_out;	
-			comment := Void
+			comments := Void
 		end;	
 
 feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
@@ -243,5 +246,9 @@ feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
 				clauses.forth
 			end;
 		end;	
+
+invariant
+
+	non_void_clauses: clauses /= Void
 
 end -- class CATEGORY

@@ -551,6 +551,9 @@ end;
 					a_class.set_cluster (Current);
 					a_class.set_date;
 				end;
+				if Workbench.automatic_backup then
+					record_class (class_name)
+				end
 				classes.put (a_class, class_name);
 			end;
 		end;
@@ -683,6 +686,9 @@ end;
 				if not classes.has (old_class.class_name) then
 					-- the class has been removed
 					old_cluster.remove_class (old_class);
+					if Workbench.automatic_backup then
+						record_removed_class (old_class.class_name)
+					end
 				end;
 				old_classes.forth;
 			end;
@@ -989,10 +995,48 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 		end
 
 	backup_subdirectory: STRING is
-			-- Translation of the `clusteR_name' in something machine independent
+			-- Translation of the `cluster_name' in something machine independent
 		do
-			Result := cluster_name.substring (1, (5).min (cluster_name.count))
-			Result.append_integer (id)
+			if False then
+				Result := cluster_name.substring (1, (5).min (cluster_name.count))
+				Result.append_integer (id)
+			else
+				Result := cluster_name
+			end
+		end
+
+	backup_log_file: PLAIN_TEXT_FILE is
+			-- Log file for cluster in current compilation
+		local
+			file_name: FILE_NAME
+		do
+			!! file_name.make_from_string (backup_directory)
+			file_name.set_file_name (Backup_info)
+			!! Result.make_open_append (file_name)
+		end
+
+	record_removed_class (class_name: STRING) is
+			-- Record the classes removed since last compilation
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			file := backup_log_file
+			file.put_string ("Removed: ")
+			file.put_string (class_name)
+			file.new_line
+			file.close
+		end
+
+	record_class (class_name: STRING) is
+			-- Record the classes in the directory
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			file := backup_log_file
+			file.put_string ("Inserted: ")
+			file.put_string (class_name)
+			file.new_line
+			file.close
 		end
 
 feature {COMPILER_EXPORTER} -- DLE

@@ -181,6 +181,8 @@ feature {NONE} -- Implementation
 			Result.set_flags (Startf_use_std_handles)
 			if hidden then
 				Result.set_show_command (Sw_hide)
+			else
+				Result.set_show_command (Sw_show)
 			end
 			Result.add_flag (Startf_use_show_window)
 			Result.set_std_input (input_pipe.input_handle)

@@ -109,10 +109,8 @@ feature -- Access
 			fns: FEATURE_STONE
 		do
 			fns ?= other;
-			Result := fns /= Void and then
-						e_feature /= Void and then
-						feature_name.is_equal (fns.feature_name) and then
-						e_class = fns.e_class
+			Result := fns /= Void and then e_feature /= Void and then
+					feature_name.is_equal (fns.feature_name) and then e_class = fns.e_class
 		end
 
 feature -- dragging

@@ -273,6 +273,11 @@ feature {NONE} -- Access: metadata generation
 	last_parents: ARRAY [INTEGER]
 			-- List of parents tokens last described after call to `update_parents'.
 
+	last_parents_index: INTEGER
+			-- Index in `last_parents' to mark last parents added. Needed to add
+			-- `ise_eiffel_type_info_type_token' in `last_parents' when no inheritance
+			-- includes id (eg you inherit from a .NET interface).
+
 	single_inheritance_parent_id: INTEGER
 			-- Implementation ID of parent when no interface is being generated:
 			-- either if `is_single_inheritance_implementation' or if class `is_single'.
@@ -646,6 +651,14 @@ feature -- Metadata description
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
 				update_parents (class_type, class_c)
+				if last_parents = Void then
+					last_parents := << ise_eiffel_type_info_type_token >>
+				elseif not class_c.simple_conform_to (System.any_class.compiled_class) then
+						-- We need to add `ise_eiffel_type_info_type_token' to last_parents.
+					last_parents.force (ise_eiffel_type_info_type_token, last_parents_index)
+					last_parents.force (0, last_parents_index + 1)
+				end
+
 				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
 					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					feature {MD_TYPE_ATTRIBUTES}.Ansi_class
@@ -653,25 +666,13 @@ feature -- Metadata description
 				if not (class_c.is_frozen or class_c.is_single) then
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
 						feature {MD_TYPE_ATTRIBUTES}.Abstract
-
-					if class_type.static_type_id = any_type_id then
-							-- By default interface of ANY does not implement any other
-							-- interfaces than EIFFEL_TYPE_INFO.
-						l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
-							<< ise_eiffel_type_info_type_token >>)
-					else
-						l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
-							last_parents)
-					end
+					l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
+						last_parents)
 				else
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_class |
 						feature {MD_TYPE_ATTRIBUTES}.Serializable
 					if class_c.is_frozen then
 						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
-					end
-
-					if last_parents = Void then
-						last_parents := << ise_eiffel_type_info_type_token >>
 					end
 
 					single_parent_mapping.put (single_inheritance_parent_id,
@@ -734,10 +735,14 @@ feature -- Metadata description
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 			
-				if class_c.simple_conform_to (System.any_class.compiled_class) then
+				if not class_c.is_single then
 					last_parents := << class_type_token (class_type.static_type_id) >>
-				else
+				elseif last_parents = Void then
 					last_parents := << ise_eiffel_type_info_type_token >>
+				elseif not class_c.simple_conform_to (System.any_class.compiled_class) then
+						-- We need to add `ise_eiffel_type_info_type_token' to last_parents.
+					last_parents.force (ise_eiffel_type_info_type_token, last_parents_index)
+					last_parents.force (0, last_parents_index + 1)
 				end
 				
 				single_parent_mapping.put (single_inheritance_parent_id,
@@ -849,6 +854,8 @@ feature -- Metadata description
 				l_parents.put (0, i)
 				last_parents := l_parents
 			end
+
+			last_parents_index := i
 
 				-- Restore byte context if any.
 			if l_class_type /= Void then

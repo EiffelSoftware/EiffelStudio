@@ -12,7 +12,7 @@ inherit
 			release_hector_protection, basic_register, has_hector_variables,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end
+			analyze_on, analyze, generate_end, allocates_memory
 		end;
 	EXTERNAL_B
 		redefine
@@ -21,7 +21,7 @@ inherit
 			release_hector_protection, basic_register, has_hector_variables,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end
+			analyze_on, analyze, generate_end, allocates_memory
 		select
 			free_register
 		end;
@@ -286,9 +286,6 @@ feature
 		local
 			expr: EXPR_B;
 			i: INTEGER;
-			param_is_hector: BOOLEAN;
-			hector_b: HECTOR_B;
-			param_bl: PARAMETER_BL
 		do
 			if parameters /= Void then
 				from
@@ -301,18 +298,6 @@ feature
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 						-- add cast before parameter
-					if expr.is_hector then
-						param_bl ?= expr;
-						hector_b ?= param_bl.expression;
-						if hector_b.expr.type.is_basic then
-							param_is_hector := True;
-							generated_file.putstring ("&(");
-						else
-							param_is_hector := False
-						end
-					else
-						param_is_hector := False
-					end;
 					if context.final_mode
 						and then has_arg_list
 						and then (special_id /= dll16_id) and (special_id /= dll32_id) then
@@ -320,16 +305,7 @@ feature
 						generated_file.putstring (arg_list.item (i));
 						generated_file.putstring (") ");
 					end;
-					if param_is_hector then
-						if hector_b.expr.is_attribute then
-							hector_b.expr.generate_access
-						else
-							expr.print_register;
-						end
-						generated_file.putchar (')');
-					else
-						expr.print_register;
-					end;
+					expr.print_register;
 					if not parameters.islast then
 						generated_file.putstring (gc_comma);
 					end;
@@ -414,8 +390,10 @@ feature
 			end;
 		end;
 
-	has_call: BOOLEAN is true;
-			-- The expression as at least one call
+	has_call: BOOLEAN is True;
+			-- The expression has at least one call
+
+	allocates_memory: BOOLEAN is True;
 
 	has_hector_variables: BOOLEAN is
 			-- Does the current external call make use of Hector ?

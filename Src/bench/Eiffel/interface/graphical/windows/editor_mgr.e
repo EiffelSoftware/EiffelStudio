@@ -91,6 +91,7 @@ feature {WINDOW_MGR}
 				active_editors.after
 			loop
 				active_editors.item.hide;
+				active_editors.item.close_windows;
 				active_editors.forth
 			end;
 		end;

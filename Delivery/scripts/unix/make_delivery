@@ -67,13 +67,15 @@ md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Delivery/studio
+mv studio/config/unix studio/config/$ISE_PLATFORM
+rm -rf studio/config/windows
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt -r $DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
+exprt -r $DEFAULT_CVS_TAG -d $ISE_PLATFORM Delivery/precomp/spec/unix
 cd $INSTALL_DIR
 remtrace wizards
 exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards

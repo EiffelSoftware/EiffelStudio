@@ -493,8 +493,6 @@ feature {NONE} -- Implementation
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
-		local
-			close_agent: PROCEDURE [ANY, TUPLE]
 		do
 			Precursor
 			is_initialized := False
@@ -505,7 +503,6 @@ feature {NONE} -- Implementation
 			create upper_bar
 			create lower_bar
 			set_maximum_size (32000, 32000)
-			close_agent := agent call_close_request_actions
 			signal_connect_true ("delete_event", agent gtk_marshal.on_window_close_request (c_object))
 			initialize_client_area
 			enable_user_resize

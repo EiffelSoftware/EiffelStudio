@@ -138,7 +138,7 @@ feature -- Output
 				!! dc
 				dc.get
 				!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
-				dc.save (bitmap, file_name)
+				dc.save_bitmap (bitmap, file_name)
 				dc.release
 			end
 		end

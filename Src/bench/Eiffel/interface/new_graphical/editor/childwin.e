@@ -55,8 +55,8 @@ feature -- Initialization
 
 					-- Compute Font related constants
 				create dc.make
-				dc.select_font(font)
-				space_size := dc.string_size(" ")
+				dc.select_font (font)
+				space_size := dc.string_size (" ")
 				line_height := space_size.height
 --				line_increment := line_height + 1
 				line_increment := line_height
@@ -72,20 +72,20 @@ feature -- Initialization
 			mdi_child_window_make (a_parent, a_name)
 
 				-- Retrieve user preferences (syntax highligting, tabulation width, ...).
-			editor_preferences.set_tabulation_spaces(4)
+			editor_preferences.set_tabulation_spaces (4)
 
 				-- Read and parse the file.
-			read_and_analyse_file(a_name)
+			read_and_analyse_file (a_name)
 
 				-- Load the font & Compute Font related constants.
 			Initialize
 			number_of_lines_displayed := height // line_increment
 
 				-- Setup the scroll bars.
-			set_vertical_range (1,vertical_range_max)
+			set_vertical_range (1, vertical_range_max)
 
 				-- Initialize the cursor
-			create cursor.make_from_absolute_pos (0,1,Current)
+			create cursor.make_from_absolute_pos (0, 1, Current)
 
 				-- Get the focus
 			set_focus
@@ -109,10 +109,10 @@ feature -- Initialization
 				file.after
 			loop
 				file.read_line
-				curr_string := clone(file.last_string)
-				text_displayed.lexer.execute(curr_string)
-				create line_item.make_from_lexer(text_displayed.lexer)
-				text_displayed.extend(line_item)
+				curr_string := clone (file.last_string)
+				text_displayed.lexer.execute (curr_string)
+				create line_item.make_from_lexer (text_displayed.lexer)
+				text_displayed.extend (line_item)
 			end
 		end
 
@@ -134,7 +134,7 @@ feature -- Basic operations
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Paint the bitmap
 		do
-			update_buffered_screen(paint_dc, invalid_rect.top, invalid_rect.bottom)
+			update_buffered_screen (paint_dc, invalid_rect.top, invalid_rect.bottom)
 		end
 
 	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
@@ -147,11 +147,11 @@ feature -- Basic operations
 			number_of_lines_displayed := height // line_increment
 
 				-- Setup the scroll bars.
-			set_vertical_range(1,vertical_range_max)
+			set_vertical_range (1, vertical_range_max)
 
-				-- Compute the first line to be displayed [ = max (0,min(vpos,vmax)) ]
-			first_line_displayed := (first_line_displayed.min(vertical_range_max)).max(1)
-			set_vertical_position(first_line_displayed)
+				-- Compute the first line to be displayed [ = max (0, min (vpos, vmax)) ]
+			first_line_displayed := (first_line_displayed.min (vertical_range_max)).max (1)
+			set_vertical_position (first_line_displayed)
 		end
 
 	on_vertical_scroll (scroll_code, position: INTEGER) is
@@ -183,8 +183,8 @@ feature -- Basic operations
 				-- Do nothing.
 			end
 
-				-- Compute the first line to be displayed [ = max (0,min(vpos,vmax)) ]
-			vscroll_inc := (vscroll_pos.min(vertical_range_max)).max(1) - first_line_displayed
+				-- Compute the first line to be displayed [ = max (0, min (vpos, vmax)) ]
+			vscroll_inc := (vscroll_pos.min (vertical_range_max)).max (1) - first_line_displayed
 			first_line_displayed := first_line_displayed + vscroll_inc
 
 				-- Update the screen (if needed).
@@ -192,14 +192,14 @@ feature -- Basic operations
 
 					-- Setup the new vertical position.
 				scroll (0, -line_increment * vscroll_inc)
-				set_vertical_position(first_line_displayed)
+				set_vertical_position (first_line_displayed)
 
 					-- Ask window to repaint our window.
 				update
 			end
 		end
 
-	invalidate_cursor_rect(redraw: BOOLEAN) is
+	invalidate_cursor_rect (redraw: BOOLEAN) is
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `redraw' is set.
 		local
@@ -208,8 +208,8 @@ feature -- Basic operations
 		do
    				-- Invalidate old cursor location.
    			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
-   			create wel_rect.make(0, cursor_up, width, cursor_up + line_increment)
-			invalidate_rect(wel_rect,true)
+   			create wel_rect.make (0, cursor_up, width, cursor_up + line_increment)
+			invalidate_rect (wel_rect,true)
 			if redraw then
 				update
 			end
@@ -403,7 +403,7 @@ feature -- Basic operations
 					invalidate
 					update
 				else
-					invalidate_cursor_rect(False)
+					invalidate_cursor_rect (False)
 
 					if insert_mode then
 						cursor.replace_char (c)
@@ -411,7 +411,7 @@ feature -- Basic operations
 						cursor.insert_char (c)
 					end
 
-					invalidate_cursor_rect(True)
+					invalidate_cursor_rect (True)
 				end
 			end
  		end
@@ -427,7 +427,7 @@ feature -- Basic operations
 			l_number := (y_pos // line_increment) + first_line_displayed
 			if l_number > number_of_lines then
 				xline := text_displayed.last_line
-				create new_cursor.make_from_relative_pos (xline, xline.end_token, 1, Current)
+				create new_cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
 			else
 				create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
 			end
@@ -491,11 +491,11 @@ feature {NONE} -- Display functions
 			last_line_to_draw: INTEGER
 		do
 				-- Draw all lines
-			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max(1)
-			last_line_to_draw := (first_line_displayed + bottom // line_increment).min(number_of_lines)
+			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max (1)
+			last_line_to_draw := (first_line_displayed + bottom // line_increment).min (number_of_lines)
 
 			if first_line_to_draw <= last_line_to_draw then
-				text_displayed.go_i_th(first_line_to_draw)
+				text_displayed.go_i_th (first_line_to_draw)
 				from
 					curr_line := first_line_to_draw
 				until
@@ -510,7 +510,7 @@ feature {NONE} -- Display functions
 		end
 
 	display_line (a_line: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
-			-- Display `line' at the coordinates (`d_x',`d_y') on the
+			-- Display `line' at the coordinates (`d_x', `d_y') on the
 			-- device context `dc'.
 		local
 			curr_y				: INTEGER
@@ -526,7 +526,7 @@ feature {NONE} -- Display functions
 			begin_selection		: TEXT_CURSOR -- Cursor that represents the begin of the selection
 			end_selection		: TEXT_CURSOR
 		do
-			curr_y := (a_line - first_line_displayed)*line_increment
+			curr_y := (a_line - first_line_displayed) * line_increment
 			cursor_line := (a_line = cursor.y_in_lines)
 
 			if has_selection then
@@ -612,11 +612,11 @@ feature {NONE} -- Display functions
 				inspect token_selection
 				when Token_not_selected then
 						-- Normally Display the token.
-					curr_token.display(curr_y, dc)
+					curr_token.display (curr_y, dc)
 				when Token_selected then
-					curr_token.display_selected(curr_y, dc)
+					curr_token.display_selected (curr_y, dc)
 				when Token_half_selected then
-					curr_token.display_half_selected(curr_y, token_begin_selection, token_end_selection, dc)
+					curr_token.display_half_selected (curr_y, token_begin_selection, token_end_selection, dc)
 				else
 					-- Unexpected value, do nothing
 				end
@@ -628,14 +628,14 @@ feature {NONE} -- Display functions
 						-- Compute the width of the pixel depending whether we are
 						-- in Insertion mode or not (small or plain cursor)
 					if insert_mode then
-						width_cursor := curr_token.get_substring_width(cursor.pos_in_token) - curr_token.get_substring_width(cursor.pos_in_token - 1)
-						width_cursor := width_cursor.max(2)
+						width_cursor := curr_token.get_substring_width (cursor.pos_in_token) - curr_token.get_substring_width (cursor.pos_in_token - 1)
+						width_cursor := width_cursor.max (2)
 					else
 						width_cursor := 2
 					end
 						-- Draw the cursor
-					dc.select_brush(black_brush)
-					dc.pat_blt(start_cursor, curr_y, width_cursor, line_height, Blackness)
+					dc.select_brush (black_brush)
+					dc.pat_blt (start_cursor, curr_y, width_cursor, line_height, Blackness)
 					dc.unselect_brush
 				end
 
@@ -656,7 +656,7 @@ feature {NONE} -- Status Report
 	vertical_range_max: INTEGER is
 		do
 			Result := number_of_lines - number_of_lines_displayed + 2
-			Result := Result.max(1)
+			Result := Result.max (1)
 		end
 
 feature {NONE} -- Constants & Text Attributes
@@ -684,8 +684,8 @@ feature {NONE} -- Implementation
 		local
 			black_color: WEL_COLOR_REF
 		once
-			create black_color.make_rgb(0,0,0)
-			create Result.make_solid(black_color)
+			create black_color.make_rgb (0, 0, 0)
+			create Result.make_solid (black_color)
 		end
 
 	initialized: BOOLEAN
@@ -709,8 +709,8 @@ feature {NONE} -- Implementation
 			log_font: WEL_LOG_FONT
 		once
 				-- create the font
-			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
-			create Result.make_indirect(log_font)
+			create log_font.make (editor_preferences.font_size, editor_preferences.font_name)
+			create Result.make_indirect (log_font)
 		end
 
 	cursor: TEXT_CURSOR

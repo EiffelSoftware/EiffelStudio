@@ -78,12 +78,12 @@
 							<bold>See also</bold>
 							<line_break/>
 							<link>
-								<url>project_configuration.htm</url>
+								<url>index.xml</url>
 								<label>Property Page Overview</label>
 							</link>
 							<line_break/>
 							<link>
-								<url>assembly_info.htm</url>
+								<url>assembly_info.xml</url>
 								<label>AssemblyInfo Property Page</label>
 							</link>
 						</seealso>

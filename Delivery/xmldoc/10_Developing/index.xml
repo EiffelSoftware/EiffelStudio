@@ -15,19 +15,19 @@
 					<list ordered="false">
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 								<label>Using  ENViSioN! within Visual Studio.Net</label>
 							</link>
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/20_Managing_Projects/index.htm</url>
+								<url>/10_Developing/20_Managing_Projects/index.xml</url>
 								<label>Managing Projects</label>
 							</link>
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/30_Deploying_Projects/deploying_projects.htm</url>
+								<url>/10_Developing/30_Deploying_Projects/index.xml</url>
 								<label>Deploying  Projects</label>
 							</link>
 						</item>
@@ -56,7 +56,7 @@
 								<label>  Eiffel, The Language</label>
 							</link> which contains information regarding the Eiffel  language, including a section of pages devoted to the 
 							<link>
-								<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
+								<url>/20_Language/10_Eiffel_NET/index.xml</url>
 								<label>  Eiffel for .Net Language</label>
 							</link>.
 						</paragraph>
@@ -69,7 +69,7 @@
 							</link>
 							<line_break/>
 							<link>
-								<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
+								<url>/20_Language/10_Eiffel_NET/index.xml</url>
 								<label>Eiffel for .Net Language</label>
 							</link>
 							<line_break/>

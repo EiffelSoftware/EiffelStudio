@@ -47,12 +47,12 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.xml</url>
 				<label>  Object Browser  </label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 				<label>  Using ENViSioN! Within Visual Studio.NET  </label>
 			</link>
 		</seealso>

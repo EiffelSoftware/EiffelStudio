@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>  The editor allows you to view and edit the Eiffel 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>classes</label>
 			</link>  that are included in your solution.
 		</paragraph>
@@ -15,15 +15,15 @@
 		</paragraph>
 		<paragraph>  The screenshot shows the editor with one 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>class</label>
 			</link>  open for editing, ROOT_CLASS. You can open as many 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>class</label>
 			</link>  source texts as you desire and choose between them by clicking the tab  corresponding to the 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>class</label>
 			</link>  you wish to edit/view.
 		</paragraph>
@@ -32,17 +32,17 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>./EditorFeatures.htm</url>
+				<url>./EditorFeatures.xml</url>
 				<label>Editor Features</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./EditorQuickInfo.htm</url>
+				<url>./EditorQuickInfo.xml</url>
 				<label>Editor Quick Info</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./EditorAdvancedSettings.htm</url>
+				<url>./EditorAdvancedSettings.xml</url>
 				<label>Editor Advanced Settings</label>
 			</link>
 			<line_break/>

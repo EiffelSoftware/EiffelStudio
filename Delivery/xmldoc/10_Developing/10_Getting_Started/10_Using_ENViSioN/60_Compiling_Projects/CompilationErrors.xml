@@ -22,7 +22,7 @@
 		<paragraph>  The current compilation error is listed in the Task List, and if you move the  mouse over the error, additional information will appear in the form of a tooltip as in the  screenshot above. This tooltip contains detailed information about the error,  which simplifies the process of finding and fixing the problem. </paragraph>
 		<paragraph>  If you double click on a compilation error in the Task List, the corresponding  source code that caused the compilation to fail, will be opened in an 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.xml</url>
 				<label>Editor</label>
 			</link>.  You can then easily fix the offending code, and recompile the project.
 		</paragraph>

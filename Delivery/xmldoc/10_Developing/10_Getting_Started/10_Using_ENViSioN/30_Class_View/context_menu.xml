@@ -29,14 +29,14 @@
 			<item> 
 				<bold> Go to Definition</bold>: Opens the Eiffel class containing the definition in the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.xml</url>
 					<label>Editor</label>
 				</link>.
 			</item>
 			<item>  
 				<bold>Browse Definition</bold>: Sends the current target of the menu, to the current 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.xml</url>
 					<label>Object Browser</label>
 				</link>.
 			</item>
@@ -49,28 +49,28 @@
 			<item>  
 				<bold>Sort Alphabetically</bold>: Sorts all items in the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.xml</url>
 					<label>Object Browser</label>
 				</link> alphabetically.
 			</item>
 			<item>  
 				<bold>Sort By Type</bold>: Sorts all items in the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.xml</url>
 					<label>Object Browser</label>
 				</link> by type.
 			</item>
 			<item>  
 				<bold>Sort By Access</bold>: Sorts all items in the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.xml</url>
 					<label>Object Browser</label>
 				</link> by access type.
 			</item>
 			<item>  
 				<bold>Group By Type</bold>: Sorts all items in the 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.xml</url>
 					<label>Object Browser</label>
 				</link> by type.
 			</item>
@@ -85,7 +85,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../index.htm</url>
+				<url>../index.xml</url>
 				<label>Using ENViSioN! Within Visual Studio.NET</label>
 			</link>
 			<line_break/>

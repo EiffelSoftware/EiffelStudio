@@ -9,11 +9,11 @@
 	<paragraph>
 		<paragraph>The Externals property page is used to add any project 
 			<link>
-				<url>#include_paths</url>
+				<anchor_name>include_paths</anchor_name>
 				<label>include  paths</label>
 			</link> and any external 
 			<link>
-				<url>#object_files</url>
+				<anchor_name>object_files</anchor_name>
 				<label>object files</label>
 			</link> (*.obj  or *.lib) required when compiling the unmanaged C/C++ code in your project.
 			<line_break/>
@@ -50,7 +50,7 @@
 		</heading>
 		<paragraph>Adding an object file works in the same way in adding an 
 			<link>
-				<url>#include_paths</url>
+				<anchor_name>include_paths</anchor_name>
 				<label>  Include Path</label>
 			</link>. There are two available ways to add an object file.  Through physically entering the object file path into the edit box located  underneath the list of object files, or by clicking the ellipse (...) button  next to it. Clicking the ellipse will open a file browse dialog where an object  file can be chosen. Once an object file has been entered or located through the  browse dialog, click the corresponding 'Add' button and the object file will be  append to the bottom of the object files list.
 		</paragraph>
@@ -66,17 +66,17 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>clusters_ppg.htm</url>
+				<url>clusters_ppg.xml</url>
 				<label>Clusters Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>advanced_ppg.htm</url>
+				<url>advanced_ppg.xml</url>
 				<label>AdvancedProperty Page</label>
 			</link>
 		</seealso>

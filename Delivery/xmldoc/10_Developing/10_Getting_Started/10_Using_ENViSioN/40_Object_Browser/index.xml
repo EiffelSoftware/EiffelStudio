@@ -3,11 +3,11 @@
 	<paragraph>
 		<paragraph>  The Object Browser allows you to browse the objects available for use in your  system. You may only browse the objects of a compiled system that is currently  open in Visual Studio. As well as being able to view available objects, the  object browser allows you to see the 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>features</label>
 			</link>  of each object and the relationships between objects, for example,  
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#ancestors</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>ancestors</anchor_name>
 				<label>ancestors</label>
 			</link>.
 		</paragraph>
@@ -22,11 +22,11 @@
 		<list ordered="false">
 			<item>  Objects - Situated at the top left hand side of the object browser, this pane  allows you to browse the objects in the system, their 
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 					<label>features</label>
 				</link>  and any 
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#ancestors</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>ancestors</anchor_name>
 					<label>ancestors</label>
 				</link>.  Selecting an object in this pane will display the features defined in this  object only in the Members pane, and to see all the features available for the  object, select the all features node.
 			</item>
@@ -36,7 +36,7 @@
 		<paragraph>  The toolbar at the very top of the object browser allows you to modify the  information displayed. </paragraph>
 		<paragraph>  Double clicking an Eiffel class or a feature in the object browser will  automatically open up its definition in the 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.xml</url>
 				<label>Editor</label>
 			</link>.
 		</paragraph>
@@ -57,7 +57,7 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>../20_Solution_Explorer/index.htm</url>
+				<url>../20_Solution_Explorer/index.xml</url>
 				<label>Solution Explorer</label>
 			</link>
 			<line_break/>
@@ -67,7 +67,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../index.htm</url>
+				<url>../index.xml</url>
 				<label>Using ENViSioN! Within Visual Studio.NET</label>
 			</link>
 			<line_break/>

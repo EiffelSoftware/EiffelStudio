@@ -161,7 +161,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>./BreakPointWindow.xml</url>
+				<url>../BreakPointWindow.xml</url>
 				<label>Break Point Window</label>
 			</link>
 		</seealso>

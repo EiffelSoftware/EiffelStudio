@@ -9,15 +9,15 @@
 	<paragraph>
 		<paragraph>  While 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Debugging</label>
 			</link>  a system, it is possible to view the values of all locals of the current 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link>, and attributes of the current 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>object</anchor_name>
 				<label>Object</label>
 			</link>  in which the execution has stopped.
 		</paragraph>
@@ -39,7 +39,7 @@
 		</paragraph>
 		<paragraph>  In the screenshot above, the execution of the system has stopped in a 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link>  with three locals :- 
 			<bold>a</bold>, 
@@ -49,7 +49,7 @@
 				<keyword>Current</keyword>
 			</code> is also available and corresponds to the current 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>object</anchor_name>
 				<label>Object</label>
 			</link> in which execution has stopped.
 			<list ordered="false">
@@ -80,7 +80,7 @@
 				<keyword>Once</keyword>
 			</code> 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>features</label>
 			</link>  , 
 			<code>
@@ -99,7 +99,7 @@
 				<keyword>Once</keyword>
 			</code> has been executed.  The name of this 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link>  corresponds to the name of the 
 			<code>
@@ -118,14 +118,14 @@
 				<keyword>Once</keyword>
 			</code> 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link> has not been executed as  they evaluate to False. For every 
 			<code>
 				<keyword>Once</keyword>
 			</code> 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link>  which has a return type, an attribute is generated, the value of which is the Result from the 
 			<code>
@@ -140,11 +140,11 @@
 		</paragraph>
 		<paragraph>  This ability to see the current state of an 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>object</anchor_name>
 				<label>Object</label>
 			</link>  can prove to be a critical component in successful 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Debugging</label>
 			</link>.
 		</paragraph>
@@ -153,22 +153,22 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>./index.htm</url>
+				<url>./index.xml</url>
 				<label>Debugging</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./CallStackWindow.htm</url>
+				<url>./CallStackWindow.xml</url>
 				<label>Call Stack Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./BreakPointWindow.htm</url>
+				<url>./BreakPointWindow.xml</url>
 				<label>Break Point Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./WatchWindow.htm</url>
+				<url>./WatchWindow.xml</url>
 				<label>Watch Window</label>
 			</link>
 			<line_break/>

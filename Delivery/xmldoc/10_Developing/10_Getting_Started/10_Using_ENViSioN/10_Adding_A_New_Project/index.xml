@@ -8,7 +8,7 @@
 			<bold>Project</bold> from the 
 			<bold>File</bold> menu,  or right click on a solution in the
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>  Solution Explorer</label>
 			</link>, and select 
 			<bold>Add</bold>, 
@@ -70,7 +70,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/precompile_wizard.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/precompile_wizard.xml</url>
 					<label>
 						<bold>Eiffel Class Library</bold>
 					</label>
@@ -78,7 +78,7 @@
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/import_eiffelstudio_project.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced/import_eiffelstudio_project.xml</url>
 					<label>
 						<bold>Import from EiffelStudio</bold>
 					</label>
@@ -86,7 +86,7 @@
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project.xml_report_wizard.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/html_report_wizard.xml</url>
 					<label>
 						<bold>HTML Report</bold>
 					</label>
@@ -98,12 +98,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/10_Developing/20_Managing_Projects/index.htm</url>
+				<url>/10_Developing/20_Managing_Projects/index.xml</url>
 				<label>Managing Projects</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 				<label>Using  Eiffel ENViSioN!</label>
 			</link>
 		</seealso>

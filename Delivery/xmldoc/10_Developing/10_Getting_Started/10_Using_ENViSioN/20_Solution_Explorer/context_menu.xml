@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph> Right clicking on a node in the 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Solution Explorer</label>
 			</link>  will bring up a context menu that allows you to perform certain actions  relative to that node. For an Eiffel Project there two main types of  context menus, one for the Eiffel project itself, and one for the files  contained within your project directory, be it either an Eiffel Class or a  miscellaneous file.
 		</paragraph>
@@ -21,21 +21,21 @@
 			<item>  
 				<bold>Build</bold>: Builds the Eiffel project (
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.xml</url>
 					<label>Compiling</label>
 				</link>).
 			</item>
 			<item>  
 				<bold>Rebuild</bold>: Rebuilds the Eiffel project (
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.xml</url>
 					<label>Compiles</label>
 				</link> completely from scratch).
 			</item>
 			<item>  
 				<bold>Add</bold>: This allows you to
 				<link>
-					<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
+					<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
 					<label> Add a New or Existing Item</label>
 				</link> to the Eiffel project.
 			</item>
@@ -117,12 +117,12 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Solution Explorer</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 				<label>Using ENViSioN! Within Visual Studio.NET</label>
 			</link>
 			<line_break/>

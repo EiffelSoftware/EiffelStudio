@@ -9,21 +9,21 @@
 	<paragraph>
 		<paragraph>  While 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Debugging</label>
 			</link>  a system, it is possible to watch any of the locals of the current 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link>,  and attributes of the current 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>object</anchor_name>
 				<label>Object</label>
 			</link>  in which the execution has stopped.
 		</paragraph>
 		<paragraph>  To set a watch, you may drag a representation from the 
 			<link>
-				<url>./LocalsWindow.htm</url>
+				<url>./LocalsWindow.xml</url>
 				<label>Locals Window</label>
 			</link>, into a watch window, or simply type the name of the attribute  into an entry in the name column of the Watch Window. If you attempt to enter a  name that cannot be evaluated, or does not make sense in the current context,  then an error message will be displayed.
 		</paragraph>
@@ -143,22 +143,22 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>./index.htm</url>
+				<url>./index.xml</url>
 				<label>Debugging</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./CallStackWindow.htm</url>
+				<url>./CallStackWindow.xml</url>
 				<label>Call Stack Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./BreakPointWindow.htm</url>
+				<url>./BreakPointWindow.xml</url>
 				<label>Break Point Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./LocalsWindow.htm</url>
+				<url>./LocalsWindow.xml</url>
 				<label>Locals Window</label>
 			</link>
 			<line_break/>

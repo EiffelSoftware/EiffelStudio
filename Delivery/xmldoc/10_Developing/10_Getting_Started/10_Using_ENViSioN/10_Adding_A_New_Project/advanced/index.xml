@@ -12,7 +12,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/import_eiffelstudio_project.xml</url>
+					<url>import_eiffelstudio_project.xml</url>
 					<label>  Import Eiffel Studio Project</label>
 				</link> - Allows you to create a project from an   existing EiffelStudio Project.
 			</item>

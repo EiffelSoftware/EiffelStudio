@@ -89,7 +89,7 @@
 		</heading>
 		<paragraph>The override option can only be applied to one cluster in each configuration.  This property is to resolve any class name clashes between the selected cluster  and anycluster in the configuration without the need to 
 			<link>
-				<url>#cluster_excludes</url>
+				<anchor_name>cluster_excludes</anchor_name>
 				<label>exclude</label>
 			</link> individual files. The cluster that has the Override property  checked will be cluster who's classes are used over any of the other clusters  in the universe.
 		</paragraph>
@@ -102,17 +102,17 @@
 		</heading>
 		<paragraph>If either the 
 			<link>
-				<url>#include_subdirectories</url>
+				<anchor_name>include_subdirectories</anchor_name>
 				<label>Include Subcdirectories</label>
 			</link>  or 
 			<link> 
-				<url>#LibraryAndAll</url>
+				<anchor_name>LibraryAndAll</anchor_name>
 				<label>Library</label>
 			</link> property for the selected cluster have  been checked then the compile will recursively look in all of the  clusterssub-directories for classes. This maylead to class name  conficts as different libraries may use the same name for classes.In this  situationyou can choose to exclude any subdirectoryfrom being  searched or any file being include by the compiler at compile time.
 		</paragraph>
 		<paragraph>The current cluster excluded items list is located underneath the  
 			<link>
-				<url>#namespace</url>
+				<anchor_name>namespace</anchor_name>
 				<label>Namespace</label>
 			</link> property, accompanied by an 
 			<bold>Add</bold> and a 
@@ -173,17 +173,17 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>assertions_ppg.htm</url>
+				<url>assertions_ppg.xml</url>
 				<label>Assertions Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>externals_ppg.htm</url>
+				<url>externals_ppg.xml</url>
 				<label>External sProperty Page</label>
 			</link>
 		</seealso>

@@ -6,7 +6,7 @@
 		<paragraph>
 			<line_break/> Documenting an ENViSioN! project is made easy through using the 
 			<link>
-				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\xml_report_wizard.xml</url>
+				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
 				<label>  HTML Report Project Wizard</label>
 			</link> in the Add New Project dialog.
 		</paragraph>
@@ -27,7 +27,7 @@
 			<bold>See Also:</bold>
 			<line_break/>
 			<link>
-				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\xml_report_wizard.xml</url>
+				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
 				<label>  HTML Report Project Wizard</label>
 			</link>
 		</seealso>

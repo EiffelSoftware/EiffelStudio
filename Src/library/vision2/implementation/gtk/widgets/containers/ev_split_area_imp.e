@@ -153,7 +153,7 @@ feature
 				end
 				update_splitter
 			end
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	enable_item_expand (an_item: like item) is

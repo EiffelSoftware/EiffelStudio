@@ -72,6 +72,8 @@ feature -- Access
 	
 	show_deleting_final_directory_warning: STRING is "show_deleting_final_directory_warning"
 	
+	generate_empty_directories: STRING is "generate_empty_directories"
+	
 	tools_on_top:STRING is "tools_on_top"
 			
 feature -- Basic operations

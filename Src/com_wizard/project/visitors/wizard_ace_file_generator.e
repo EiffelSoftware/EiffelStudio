@@ -275,19 +275,10 @@ feature -- Basic operations
 		do
 			create Result.make (100)
 			if not is_empty_clib_folder (a_folder) then
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Double_quote)
+				Result.append ("%N%T%T%T%"%%%"")
 				Result.append (environment.destination_folder)
 				Result.append (a_folder)
-				Result.append_character (Directory_separator)
-				Result.append (Clib)
-				Result.append_character (Directory_separator)
-				Result.append ("$(ISE_C_COMPILER)")
-				Result.append_character (Directory_separator)
-				Result.append (Clib_name)
-				Result.append (Lib_file_extension)
-				Result.append (Double_quote)
-				Result.append (Comma)
+				Result.append ("\Clib\$(ISE_C_COMPILER)\ecom.lib%%%"%",")
 			end			
 		ensure
 			non_void_result: Result /= Void
@@ -418,19 +409,19 @@ feature -- Basic operations
 				end
 			end
 
-			Result.append ("%"")
+			Result.append ("%"%%%"")
 			Result.append (environment.destination_folder)
 			Result.append ("Client")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%",%N%T%T%T%"")
+			Result.append ("Include%%%"%",%N%T%T%T%"%%%"")
 			Result.append (environment.destination_folder)
 			Result.append ("Server")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%",%N%T%T%T%"")
+			Result.append ("Include%%%"%",%N%T%T%T%"%%%"")
 			Result.append (environment.destination_folder)
 			Result.append ("Common")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%";%N%N")
+			Result.append ("Include%%%"%";%N%N")
 			Result.append (End_ace_file)
 
 			if original_cluster_info /= Void then

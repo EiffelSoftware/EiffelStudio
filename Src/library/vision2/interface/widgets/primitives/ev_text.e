@@ -24,7 +24,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 create
 	default_create,
 	make_with_text
@@ -35,8 +35,7 @@ feature -- Access
 			-- `Result' is content of `i'th line.
 		require
 			not_destroyed: not is_destroyed
-			valid_line_index: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line_index: valid_line_index (i)
 		do
 			Result := implementation.line (i)
 		ensure
@@ -83,8 +82,7 @@ feature -- Status report
 			-- Position of first character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
-			valid_line: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line: valid_line_index (i)
 		do
 			Result := implementation.first_position_from_line_number (i)
 		ensure
@@ -95,8 +93,7 @@ feature -- Status report
 			-- Position of last character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
-			valid_line: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line: valid_line_index (i)
 		do
 			Result := implementation.last_position_from_line_number (i)
 		ensure
@@ -129,22 +126,9 @@ feature -- Basic operation
 			-- Ensure that line `i' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
-			valid_line_index: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line_index: valid_line_index (i)
 		do
 			implementation.scroll_to_line (i)
-		end
-
-	put_new_line is
-			-- Insert return character at `caret_position'.
-		obsolete
-			"[
-				Use insert_text ("%N") instead
-			]"
-		require
-			not_destroyed: not is_destroyed
-		do
-			implementation.put_new_line
 		end
 
 	search (str: STRING; start: INTEGER): INTEGER is
@@ -179,8 +163,9 @@ feature -- Contract support
 
 	last_line_not_empty: BOOLEAN is
 			-- Has last line at least one character?
+		obsolete "Use `not line (line_count).is_empty'"
 		do
-			Result := implementation.last_line_not_empty
+			Result := not line (line_count).is_empty
 		end
 		
 feature {NONE} -- Contract support

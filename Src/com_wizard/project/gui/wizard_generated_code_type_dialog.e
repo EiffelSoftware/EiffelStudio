@@ -50,28 +50,28 @@ feature -- Behavior
 			Precursor {WIZARD_DIALOG}
 			uncheck_all
 
-			if shared_wizard_environment.new_eiffel_project then
+			if environment.new_eiffel_project then
 				client_radio.disable
 				server_radio.set_checked
 			else
-				if shared_wizard_environment.client then
+				if environment.client then
 					client_radio.set_checked
 				end
 			end
 
-			if shared_wizard_environment.server or shared_wizard_environment.new_eiffel_project then
+			if environment.server or environment.new_eiffel_project then
 				server_radio.set_checked
 			end
-			if shared_wizard_environment.in_process_server then
+			if environment.in_process_server then
 				in_process_check.set_checked
 			end
-			if shared_wizard_environment.out_of_process_server then
+			if environment.out_of_process_server then
 				out_of_process_check.set_checked
 			end
-			if not shared_wizard_environment.compile_eiffel then
+			if not environment.compile_eiffel then
 				eiffel_code_compilation_check.set_checked
 			end
-			if not shared_wizard_environment.compile_c then
+			if not environment.compile_c then
 				c_code_compilation_check.set_checked
 			end
 		end
@@ -79,11 +79,11 @@ feature -- Behavior
 	on_ok is
 			-- Process Next button activation.
 		do
-			shared_wizard_environment.set_client_server (client_radio.checked, server_radio.checked)
-			shared_wizard_environment.set_in_process_server (in_process_check.checked)
-			shared_wizard_environment.set_out_of_process_server (out_of_process_check.checked)
-			Shared_wizard_environment.set_compile_eiffel (not eiffel_code_compilation_check.checked)			
-			Shared_wizard_environment.set_compile_c (not c_code_compilation_check.checked)
+			environment.set_client_server (client_radio.checked, server_radio.checked)
+			environment.set_in_process_server (in_process_check.checked)
+			environment.set_out_of_process_server (out_of_process_check.checked)
+			environment.set_compile_eiffel (not eiffel_code_compilation_check.checked)			
+			environment.set_compile_c (not c_code_compilation_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 
@@ -95,7 +95,7 @@ feature -- Behavior
 					eiffel_code_compilation_check.set_checked
 					eiffel_code_compilation_check.disable
 				else
-					if not Shared_wizard_environment.compile_eiffel then
+					if not environment.compile_eiffel then
 						eiffel_code_compilation_check.set_checked
 					else
 						eiffel_code_compilation_check.set_unchecked

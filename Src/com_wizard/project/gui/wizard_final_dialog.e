@@ -47,13 +47,13 @@ feature -- Behavior
 			Precursor {WIZARD_DIALOG}
 			information_check.set_unchecked
 			warnings_check.set_unchecked
-			if Shared_wizard_environment.output_level = Shared_wizard_environment.Output_all then
+			if environment.output_level = environment.Output_all then
 				information_check.set_checked
 				warnings_check.set_checked
-			elseif Shared_wizard_environment.output_level = Shared_wizard_environment.Output_warnings then
+			elseif environment.output_level = environment.Output_warnings then
 				warnings_check.set_checked
 			end
-			if not Shared_wizard_environment.stop_on_error then
+			if not environment.stop_on_error then
 				stop_check.set_checked
 			end
 		end
@@ -62,13 +62,13 @@ feature -- Behavior
 			-- Finish button was clicked.
 		do
 			if information_check.checked then
-				Shared_wizard_environment.set_all_output
+				environment.set_all_output
 			elseif warnings_check.checked then
-				Shared_wizard_environment.set_warning_output
+				environment.set_warning_output
 			else
-				Shared_wizard_environment.set_no_output
+				environment.set_no_output
 			end
-			Shared_wizard_environment.set_stop_on_error (not stop_check.checked)
+			environment.set_stop_on_error (not stop_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 

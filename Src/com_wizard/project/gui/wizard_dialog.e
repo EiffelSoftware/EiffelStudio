@@ -51,7 +51,7 @@ feature -- Behavior
 	on_cancel is
 			-- Cancel button was pushed
 		do
-			Shared_wizard_environment.set_abort (0)
+			environment.set_abort (0)
 			Precursor {WEL_MODAL_DIALOG}
 		end
 

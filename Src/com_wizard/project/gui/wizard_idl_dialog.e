@@ -45,10 +45,10 @@ feature -- Behavior
 		do
 			Precursor {WIZARD_DIALOG}
 			uncheck_all
-			if Shared_wizard_environment.automation then
+			if environment.automation then
 				automation_radio.set_checked
 			else
-				if Shared_wizard_environment.use_universal_marshaller then
+				if environment.use_universal_marshaller then
 					virtual_table_universal_radio.set_checked
 				else
 					virtual_table_standard_radio.set_checked
@@ -59,8 +59,8 @@ feature -- Behavior
 	on_ok is
 			-- Process next button activation
 		do
-			Shared_wizard_environment.set_automation (automation_radio.checked)
-			shared_wizard_environment.set_use_universal_marshaller (virtual_table_universal_radio.checked or automation_radio.checked)
+			environment.set_automation (automation_radio.checked)
+			environment.set_use_universal_marshaller (virtual_table_universal_radio.checked or automation_radio.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 

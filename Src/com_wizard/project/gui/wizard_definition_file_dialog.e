@@ -64,13 +64,13 @@ feature -- Behavior
 			-- Initialize dialog's controls.
 		do
 			Precursor {WIZARD_DIALOG}
-			if shared_wizard_environment.idl and shared_wizard_environment.idl_file_name /= Void then
-				definition_file_edit.set_text (shared_wizard_environment.idl_file_name)
-			elseif not shared_wizard_environment.idl and shared_wizard_environment.type_library_file_name /= Void then
-				definition_file_edit.set_text (shared_wizard_environment.type_library_file_name)
+			if environment.idl and environment.idl_file_name /= Void then
+				definition_file_edit.set_text (environment.idl_file_name)
+			elseif not environment.idl and environment.type_library_file_name /= Void then
+				definition_file_edit.set_text (environment.type_library_file_name)
 			end
-			if shared_wizard_environment.destination_folder /= Void then
-				destination_folder_edit.set_text (shared_wizard_environment.destination_folder)
+			if environment.destination_folder /= Void then
+				destination_folder_edit.set_text (environment.destination_folder)
 			end
 		end
 
@@ -98,7 +98,7 @@ feature -- Behavior
 			elseif file_name = Void or file_name.is_empty then
 				msg_box.error_message_box (Current, Empty_definition_file, Initialization_error)
 			else
-				shared_wizard_environment.set_project_name (project_name)
+				environment.set_project_name (project_name)
 
 				if folder_name.item (folder_name.count) = Directory_separator then
 					folder_name.keep_head (folder_name.count -1)
@@ -111,14 +111,14 @@ feature -- Behavior
 					if not a_file.exists then
 						msg_box.warning_message_box (Current, Invalid_definition_file, Wizard_error)
 					else
-						shared_wizard_environment.set_destination_folder (folder_name)
+						environment.set_destination_folder (folder_name)
 						if file_name.substring_index (idl_file_extension, 1) =
 								(file_name.count - idl_file_extension.count + 1) then
-							shared_wizard_environment.set_idl (True)
-							shared_wizard_environment.set_idl_file_name (file_name)
+							environment.set_idl (True)
+							environment.set_idl_file_name (file_name)
 						else
-							shared_wizard_environment.set_idl (False)
-							shared_wizard_environment.set_type_library_file_name (file_name)
+							environment.set_idl (False)
+							environment.set_type_library_file_name (file_name)
 						end
 						Precursor {WIZARD_DIALOG}
 					end
@@ -218,15 +218,15 @@ feature {NONE} -- Implementation
 			-- IDL file extension
 
 	setup_text_fields is
-			-- Initialize edits according to `shared_wizard_environment'.
+			-- Initialize edits according to `environment'.
 		do
-			if shared_wizard_environment.idl and shared_wizard_environment.idl_file_name /= Void then
-				definition_file_edit.set_text (shared_wizard_environment.idl_file_name)
-			elseif not shared_wizard_environment.idl and shared_wizard_environment.type_library_file_name /= Void then
-				definition_file_edit.set_text (shared_wizard_environment.type_library_file_name)
+			if environment.idl and environment.idl_file_name /= Void then
+				definition_file_edit.set_text (environment.idl_file_name)
+			elseif not environment.idl and environment.type_library_file_name /= Void then
+				definition_file_edit.set_text (environment.type_library_file_name)
 			end
-			if shared_wizard_environment.destination_folder /= Void then
-				destination_folder_edit.set_text (shared_wizard_environment.destination_folder)
+			if environment.destination_folder /= Void then
+				destination_folder_edit.set_text (environment.destination_folder)
 			end
 		end
 

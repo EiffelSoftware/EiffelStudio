@@ -81,15 +81,15 @@ feature -- Behavior
 				if not a_file.exists then
 					msg_box.warning_message_box (Current, Invalid_destination_folder, Wizard_error)
 				else
-					shared_wizard_environment.set_destination_folder (folder_name)
-					shared_wizard_environment.set_idl (True)
+					environment.set_destination_folder (folder_name)
+					environment.set_idl (True)
 
 					idl_file_name := folder_name.twin
 					idl_file_name.append ("\idl\")
-					idl_file_name.append (shared_wizard_environment.eiffel_class_name)
+					idl_file_name.append (environment.eiffel_class_name)
 					idl_file_name.append (idl_file_extension)
 
-					shared_wizard_environment.set_idl_file_name (idl_file_name)
+					environment.set_idl_file_name (idl_file_name)
 					Precursor {WIZARD_DIALOG}
 				end
 			end
@@ -145,10 +145,10 @@ feature {NONE} -- Implementation
 			-- IDL file extension
 
 	setup_text_fields is
-			-- Initialize edits according to `shared_wizard_environment'.
+			-- Initialize edits according to `environment'.
 		do
-			if shared_wizard_environment.destination_folder /= Void then
-				destination_folder_edit.set_text (shared_wizard_environment.destination_folder.twin)
+			if environment.destination_folder /= Void then
+				destination_folder_edit.set_text (environment.destination_folder.twin)
 			end
 		end
 

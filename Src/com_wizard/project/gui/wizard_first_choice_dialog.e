@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			create welcome_static.make_by_id (Current, Title_static_constant)
 			help_topic_id := 731
 
-			shared_wizard_environment.set_new_project (False)
+			environment.set_new_project (False)
 		end
 
 feature -- Behavior
@@ -61,7 +61,7 @@ feature -- Behavior
 			-- Disable back button and setup buttons.
 		do
 			id_back.disable
-			if shared_wizard_environment.new_project then
+			if environment.new_project then
 				open_project_radio.disable
 				create_project_from_com_radio.set_checked
 			else
@@ -75,14 +75,14 @@ feature -- Behavior
 			-- Record values of buttons.
 		do
 			if create_project_from_com_radio.checked then
-				shared_wizard_environment.set_new_eiffel_project (False)
-				shared_wizard_environment.set_new_project (True)
+				environment.set_new_eiffel_project (False)
+				environment.set_new_project (True)
 			elseif create_project_from_eiffel_class_radio.checked then
-				shared_wizard_environment.set_new_eiffel_project (True)
-				shared_wizard_environment.set_new_project (True)
+				environment.set_new_eiffel_project (True)
+				environment.set_new_project (True)
 			else
-				shared_wizard_environment.set_new_eiffel_project (False)
-				shared_wizard_environment.set_new_project (False)
+				environment.set_new_eiffel_project (False)
+				environment.set_new_project (False)
 			end
 			Precursor {WEL_MODAL_DIALOG}
 		end

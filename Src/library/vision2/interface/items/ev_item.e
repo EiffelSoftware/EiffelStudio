@@ -69,7 +69,8 @@ feature -- Access
 			-- May be redefine
 
 	index: INTEGER is
-			-- Index of the current item in its parent.
+			-- One based index of the current item
+			-- in its parent.
 		require
 			exists: not destroyed
 			has_parent: parent /= Void

@@ -166,8 +166,9 @@ feature {NONE} -- Implementation
 			Precursor {EV_TITLED_WINDOW_IMP}
 			if is_dialog_closeable then 
 				if internal_default_cancel_button /= Void and then
-					internal_default_cancel_button.is_sensitive and then
-					internal_default_cancel_button.is_displayed then
+					internal_default_cancel_button.is_sensitive-- and then
+					--internal_default_cancel_button.is_displayed 
+					then
 						if internal_default_cancel_button.select_actions /= Void then
 							internal_default_cancel_button.select_actions.call ([])
 						end

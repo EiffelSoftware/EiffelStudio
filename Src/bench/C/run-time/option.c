@@ -589,17 +589,17 @@ void exitprf(void)
 					}
 				}
 				ht_free(f_values[i].htab);
+			}
+		}
 #ifdef HAS_GETRUSAGE
-				eif_free (init_date);
-				eif_free (execution_time);
+		eif_free (init_date);
+		eif_free (execution_time);
 #elif defined(HAS_TIMES)
 
 #elif defined(EIF_WIN32)
-				eif_free (init_date);
-				eif_free (execution_time);
+		eif_free (init_date);
+		eif_free (execution_time);
 #endif
-			}
-		}
 
 		fclose(prof_output);		/* Close the file */
 			/* No need to `xfree' the struct: is done by `ht_free()' */

@@ -85,7 +85,7 @@ feature -- Status report
 			-- if it is indeed a dialog, the result will always
 			-- be non zero, otherwise it is zero.
 		do
-			Result := cwin_get_window_long (hwnd, Dwl_dlgproc) /= 0
+			Result := c_get_window_long (hwnd, Dwl_dlgproc) /= 0
 		end
 
 feature -- Status setting
@@ -258,11 +258,8 @@ feature {NONE} -- Externals
 			"GetLastActivePopup"
 		end
 
-	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
+	c_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
 			-- SDK GetWindowLong
-			-- We give a BOOLEAN type to the result because we
-			-- are not interested in the given value, but only
-			-- if it is NULL to know if it is a dialog or not.
 		external
 			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
 		alias

@@ -46,31 +46,5 @@ feature {GB_TYPE_SELECTOR_ITEM} -- Implementation
 				Result := True
 			end
 		end
-		
-feature {GB_OBJECT_HANDLER} -- Implementation
-		
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
-			--
-		local
-			tool_bar_item: EV_TOOL_BAR_ITEM
-		do
-			tool_bar_item ?= an_object.object
-			check
-				object_is_a_tool_bar_item: tool_bar_item /= Void
-			end
-			object.go_i_th (position)
-			object.put_left (tool_bar_item)
-				-- Check we need to handle if display_object is a container.
-			tool_bar_item ?= an_object.display_object
-			check
-				display_object_is_a_tool_bar_item: tool_bar_item /= Void
-			end
-			display_object.go_i_th (position)
-			display_object.put_left (tool_bar_item)
-			if not layout_item.has (an_object.layout_item) then
-				layout_item.go_i_th (position)
-				layout_item.put_left (an_object.layout_item)			
-			end
-		end
 
 end -- class GB_TOOL_BAR_OBJECT

@@ -10,6 +10,9 @@ feature {NONE} -- Formats
 	format_table: HASH_TABLE [CELL2 [STRING, STRING], STRING];
 			-- User-specified formats
 
+	escape_characters: LINKED_LIST [CELL2 [CHARACTER, STRING]];
+			-- User-specified escape characters
+
 	read_formats (filename: STRING) is
 			-- Parse `filename' and fill `format_table' with
 			-- the user-specified format.
@@ -19,7 +22,10 @@ feature {NONE} -- Formats
 		local
 			construct, before, after: STRING;
 			in_construct, in_before: BOOLEAN;
-			new_format: CELL2 [STRING, STRING]
+			new_format: CELL2 [STRING, STRING];
+			normal_format: BOOLEAN;
+			escape: STRING;
+			new_escape: CELL2 [CHARACTER, STRING]
 		do
 			!!filter_file.make (filename);
 			if filter_file.exists and then filter_file.is_readable then
@@ -45,9 +51,6 @@ feature {NONE} -- Formats
 								if not is_last_meta then
 									construct.extend (last_char_read)
  								elseif last_char_read = '|' then
-									construct.left_adjust;
-									construct.right_adjust;
-									construct.to_lower;
 									in_construct := false;
 									in_before := true;
 									!!before.make (5)
@@ -78,9 +81,31 @@ feature {NONE} -- Formats
 							end
 						end;
 						if not read_error then
-							if not construct.empty and then before /= Void then
-								!!new_format.make (before, after);
-								format_table.force (new_format, construct)
+							normal_format := true;
+							construct.left_adjust;
+							if construct.count >= 7 then
+								escape := construct.substring (1, 6);
+								escape.to_lower;
+								if escape.is_equal ("escape") then
+									normal_format := false;
+									if before /= Void and after = Void then
+										!!new_escape.make (construct.item (7),
+															before);
+										escape_characters.extend (new_escape)
+									else
+										syntax_error ("Escape character expected")
+									end
+								end
+							end;
+							if normal_format then
+								construct.right_adjust;
+								construct.to_lower;
+								if 
+									not construct.empty and then 
+									before /= Void 
+								then
+									!!new_format.make (before, after);
+									format_table.force (new_format, construct)
 debug ("FILTERS")
 	io.error.putstring (construct);
 	io.error.putstring (" -> ");
@@ -91,10 +116,13 @@ debug ("FILTERS")
 	end;
 	io.error.new_line
 end
-							elseif construct.empty and before /= Void then
-								syntax_error ("Construct expected")
-							elseif not construct.empty and before = Void then
-								syntax_error ("Appearance expected")
+								elseif construct.empty and before /= Void then
+									syntax_error ("Construct expected")
+								elseif 
+									not construct.empty and before = Void 
+								then
+									syntax_error ("Appearance expected")
+								end
 							end
 						else
 								-- Go to the beginning of the next line
@@ -104,8 +132,8 @@ end
 							line_nb := line_nb + 1
 						end
 					end;
-					filter_file.close
-				end
+				end;
+				filter_file.close
 			else
 				io.error.putstring ("Warning: Cannot read filter ");
 				io.error.putstring (filename);
@@ -243,6 +271,7 @@ end
 
 invariant
 
-	format_table_not_void: format_table /= Void
+	format_table_not_void: format_table /= Void;
+	escape_characters_not_void:  escape_characters /= Void
 
 end -- class FILTER_PARSER

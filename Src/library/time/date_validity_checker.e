@@ -79,14 +79,18 @@ feature -- Preconditions
 	compact_date_valid (c_d: INTEGER): BOOLEAN is
 			-- Is compact date `c_d' valid?
 		local
+			l_cd: INTEGER
 			y, m, d: INTEGER
 		do
-			y := c_year (c_d)
-			m := c_month (c_d)
-			d := c_day (c_d)
+			l_cd := compact_date
+			compact_date := c_d
+			d := day
+			m := month
+			y := year
+			compact_date := l_cd
 			Result := (m >= 1 and m <= Months_in_year and
-			d >= 1 and d <= days_in_i_th_month (m, y) and
-			y <= 65535)
+				d >= 1 and d <= days_in_i_th_month (m, y) and
+				y <= 65535)
 		end
 
 	is_correct_date (y, m, d: INTEGER): BOOLEAN is

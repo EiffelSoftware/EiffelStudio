@@ -46,7 +46,9 @@ feature -- Initialization
 		require
 			correct_date: is_correct_date (y, m, d)
 		do
-			compact_date := c_make_date (d, m, y)
+			set_year (y)
+			set_month (m)
+			set_day (d)
 		ensure
 			year_set: year = y
 			month_set: month = m
@@ -80,13 +82,10 @@ feature -- Initialization
 	make_now is
 			-- Set the current object to today's date.
 		local
-			y, m, d: INTEGER
+			l_date: C_DATE
 		do
-			c_get_date_time
-			y := c_year_now
-			m := c_month_now
-			d := c_day_now
-			make (y, m, d)
+			create l_date
+			make (l_date.year_now, l_date.month_now, l_date.day_now)
 		end
 
 	make_by_days (n: INTEGER) is
@@ -527,38 +526,6 @@ feature {NONE} -- Implementation
 		ensure
 			result_exists: Result /= Void
 			count_is_months_in_year: Result.count = Months_in_year
-		end
-
-	c_get_date_time is
-			-- get the date from the intern clock
-			-- and save it in a local variable.
-		external
-			"C"
-		end
-	
-	c_year_now: INTEGER is
-			-- Current year recorded by c_get_date_time.
-			-- Has to be checked after 2000.
-		external 
-			"C"
-		end
-
-	c_month_now: INTEGER is
-			-- Current month recorded by c_get_date_time.
-		external
-			"C"
-		end
-
-	c_day_now: INTEGER is
-			-- Current day recorded by c_get_date_time.
-		external
-			"C"
-		end
-
-	c_make_date (d, m, y: INTEGER): INTEGER is
-			-- Initialize the integer `compact_date'.
-		external
-			"C"
 		end
 
 invariant

@@ -53,7 +53,7 @@ feature -- Creation
 					i := i + 1
 				end
 			end
-			base_century := c_year_now // 100 * -100
+			base_century := (create {C_DATE}).year_now // 100 * -100
 				-- A negative value of `base_century' indicates that it has
 				-- been calculated automatically, therefore '* -100'.
 		ensure
@@ -331,7 +331,7 @@ feature -- Interface
 			i := i + 1
 			end
 			if am_pm_index /= 0 then
-				Result.insert (am_pm, am_pm_index - 1)
+				Result.insert_string (am_pm, am_pm_index - 1)
 			else
 				Result.append (am_pm)
 			end
@@ -432,7 +432,7 @@ feature -- Interface
 				value.put (tmp_code, i + 2)
 				s.append ("000000")
 				Result := create_date_time (s).date
-				s.head (s.count - 6)
+				s.remove_tail (6)
 			end
 				value := tmp_ht
 		ensure
@@ -478,7 +478,7 @@ feature -- Interface
 				value.put (tmp_code, i + 2)
 				s.append ("010101")
 				Result := create_date_time (s).time
-				s.head (s.count - 6)
+				s.remove_tail (6)
 			end
 			value := tmp_ht
 		ensure
@@ -588,14 +588,6 @@ feature -- Interface
 				i := i + 1
 			end
 			Result := has_hour and has_minute and has_second
-		end
-	
-feature {NONE} -- Externals
-
-	c_year_now: INTEGER is
-			-- Today's year
-		external
-			"C"
 		end
 
 feature {NONE} -- Implementation

@@ -23,7 +23,34 @@ inherit
 		end
 
 create
-	make
+	make_empty_line,
+	make_from_lexer
+
+feature ---
+
+	make_empty_line is
+			-- Create an empty line.
+		local
+			t_eol: EDITOR_TOKEN_EOL
+		do
+			create t_eol.make
+			first_token := t_eol
+			end_token := t_eol
+		end
+
+	make_from_lexer (lexer: EIFFEL_SCANNER) is
+			-- Create a line using token from `lexer'
+		local
+			t_eol: EDITOR_TOKEN_EOL
+			t: EDITOR_TOKEN
+		do
+			create t_eol.make
+			t := lexer.last_token
+			t.set_next_token (t_eol)
+			t_eol.set_previous_token (t)
+			first_token := lexer.first_token
+			end_token := t_eol
+		end
 
 feature -- Access
 

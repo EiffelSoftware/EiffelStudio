@@ -596,6 +596,7 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 			original_path, new_path: ARRAYED_LIST [STRING]
 		do
 			create original.make_from_string (generated_path.string)
+			original_directory := create {DIRECTORY}.make (original)
 			if an_original_directory /= Void then
 				original_path := an_original_directory.path
 				from
@@ -613,6 +614,7 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 				end
 			end
 			create new.make_from_string (generated_path.string)
+			new_directory := create {DIRECTORY}.make (new)
 			if a_new_directory /= Void then
 				new_path := a_new_directory.path
 				from

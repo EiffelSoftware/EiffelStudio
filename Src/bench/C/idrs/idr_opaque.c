@@ -34,9 +34,9 @@ rt_public bool_t idr_opaque(IDR *idrs, char *p, int len)
 	CHK_SIZE(idrs, len);
 
 	if (idrs->i_op == IDR_ENCODE)
-		bcopy(p, idrs->i_ptr, len);
+		memcpy (idrs->i_ptr, p, len);
 	else
-		bcopy(idrs->i_ptr, p, len);
+		memcpy (p, idrs->i_ptr, len);
 	
 	idrs->i_ptr += len;
 

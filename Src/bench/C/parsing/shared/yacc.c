@@ -199,8 +199,9 @@ char *list_new(int list_type)
 #endif
 
 	/* Copy in the `area' of the fixed list */
-	bcopy(	object_stack + object_top,			/* Source: stack */
-			area, 								/* Target: area */
+			
+	memcpy (	area,/* Target: area */
+				object_stack + object_top,			/* Source: stack */
 			list_count * sizeof(char *));		/* Byte number */
 	return result;
 }

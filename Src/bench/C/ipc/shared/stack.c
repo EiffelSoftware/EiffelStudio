@@ -113,7 +113,7 @@ rt_private void send_dump(int s, struct dump *dp)
 
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
-	bcopy(dp, &rqst.rq_dump, sizeof(struct dump));
+	memcpy (&rqst.rq_dump, dp, sizeof(struct dump));
 	send_packet(s, &rqst);			/* Send to network */
 }
 
@@ -138,26 +138,26 @@ rt_private void stk_start(EIF_CONTEXT int what)
 
 	switch (what) {
 	case ST_PENDING:
-		bcopy(&eif_trace, &xstk_context, sizeof(struct xstack));
+		memcpy (&xstk_context, &eif_trace, sizeof(struct xstack));
 		is_first = 1;
 		stk_next = pending;
 		break;
 	case ST_CALL:
 	case ST_FULL:
-		bcopy(&eif_stack, &xstk_context, sizeof(struct xstack));
-		bcopy(&db_stack, &dstk_context, sizeof(struct dbstack));
-		bcopy(&op_stack, &istk_context, sizeof(struct opstack));
+		memcpy (&xstk_context, &eif_stack, sizeof(struct xstack));
+		memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
+		memcpy (&istk_context, &op_stack, sizeof(struct opstack));
 		stk_next = execution;
 		break;
 	case ST_LOCAL:
 	case ST_ARG:
 	case ST_VAR:
-		bcopy(&op_stack, &istk_context, sizeof(struct opstack));
+		memcpy (&istk_context, &op_stack, sizeof(struct opstack));
 		init_var_dump(d_cxt.pg_active);
 		stk_next = variable;
 		break;
 	case ST_ONCE:
-		bcopy(&once_set, &ostk_context, sizeof(struct stack));
+		memcpy (&ostk_context, &once_set, sizeof(struct stack));
 		stk_next = once;
 		break;
 	default:
@@ -173,20 +173,20 @@ rt_private void stk_end(EIF_CONTEXT int what)
 
 	switch (what) {
 	case ST_PENDING:
-		bcopy(&xstk_context, &eif_trace, sizeof(struct xstack));
+		memcpy (&eif_trace, &xstk_context, sizeof(struct xstack));
 		break;
 	case ST_CALL:
 	case ST_FULL:
-		bcopy(&xstk_context, &eif_stack, sizeof(struct xstack));
-		bcopy(&dstk_context, &db_stack, sizeof(struct dbstack));
+		memcpy (&eif_stack, &xstk_context, sizeof(struct xstack));
+		memcpy (&db_stack, &dstk_context, sizeof(struct dbstack));
 		/* Fall through */
 	case ST_LOCAL:
 	case ST_ARG:
 	case ST_VAR:
-		bcopy(&istk_context, &op_stack, sizeof(struct opstack));
+		memcpy (&op_stack, &istk_context, sizeof(struct opstack));
 		break;
 	case ST_ONCE:
-		bcopy(&ostk_context, &once_set, sizeof(struct stack));
+		memcpy (&once_set, &ostk_context, sizeof(struct stack));
 		break;
 	}
 	EIF_END_GET_CONTEXT

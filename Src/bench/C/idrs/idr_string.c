@@ -56,7 +56,7 @@ rt_public bool_t idr_string(IDR *idrs, char **sp, int maxlen)
 			return FALSE;
 
 		CHK_SIZE(idrs, len);			/* Make sure there is enough room */
-		bcopy(string, idrs->i_ptr, len + 1);
+		memcpy (idrs->i_ptr, string, len + 1);
 	} else {
 		if (!idr_u_int(idrs, &len))		/* Get string length */
 			return FALSE;
@@ -75,7 +75,7 @@ rt_public bool_t idr_string(IDR *idrs, char **sp, int maxlen)
 			}
 			*sp = string;				/* Set up string pointer dynamically */
 		}
-		bcopy(idrs->i_ptr, string, len + 1);
+		memcpy (string, idrs->i_ptr, len + 1);
 	}
 
 	

@@ -23,7 +23,7 @@ void ca_copy(char *from, char *to, long int nbitems, long int at)
 {
 	/* Copy `nbitems' character from `from' into `to'. */
 
-	bcopy(from, to + at, nbitems * sizeof(char));
+	memcpy (to + at, from, nbitems * sizeof(char));
 }
 
 void ca_zero(char *area, long int size)

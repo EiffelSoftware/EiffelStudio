@@ -34,10 +34,10 @@ rt_public bool_t idr_short(IDR *idrs, short int *sp)
 
 	if (idrs->i_op == IDR_ENCODE) {
 		value = htons(*(unsigned short *) sp);
-		bcopy(&value, idrs->i_ptr, 2);
+		memcpy (idrs->i_ptr, &value, 2);
 		idrs->i_ptr += 2;
 	} else {
-		bcopy(idrs->i_ptr, &value, 2);
+		memcpy (&value, idrs->i_ptr, 2);
 		*sp = (short) ntohs(value);
 		idrs->i_ptr += 2;
 	}

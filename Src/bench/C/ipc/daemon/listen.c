@@ -109,9 +109,9 @@ rt_public void dwide_listen(void)
 	for (;0 <= (nfd = do_select(ACTIVE_TM));)
 #else
 	for (
-		bcopy(&tm, &tmu, sizeof(struct timeval));
+		memcpy (&tmu, &tm, sizeof(struct timeval));
 		0 <= (nfd = do_select(&tmu));
-		bcopy(&tm, &tmu, sizeof(struct timeval))
+		memcpy (&tmu, &tm, sizeof(struct timeval))
 	)
 #endif
 #endif

@@ -39,7 +39,7 @@ char *click_list_new(void)
 	result = create_node(CLICK_LIST_SD);
 	(*init_array[CLICK_LIST_SD])(result,(long) click_top);
 	area = ((char *(*)()) c_list_area)(result);
-	bcopy(click_stack, area, click_top * sizeof(char *)); 
+	memcpy (area, click_stack, click_top * sizeof(char *)); 
 
 	return result;
 }

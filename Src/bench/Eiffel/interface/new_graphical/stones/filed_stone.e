@@ -20,10 +20,10 @@ feature -- Access
 			-- Name of the file which parsing led 
 			-- to the creation of current AST node
 		deferred
-		end;
+		end
 
 	origin_text: STRING is
-			-- Content of the file named `file_name';
+			-- Content of the file named `file_name'
 			-- Void if unreadable file
 		require else
 			true
@@ -31,11 +31,11 @@ feature -- Access
 			a_file: RAW_FILE
 		do
 			if is_valid then
-				!!a_file.make (file_name);
+				create a_file.make (file_name)
 				if a_file.exists and then a_file.is_readable then
-					a_file.open_read;
-					a_file.readstream (a_file.count);
-					a_file.close;
+					a_file.open_read
+					a_file.readstream (a_file.count)
+					a_file.close
 					Result := a_file.laststring
 				end
 			end
@@ -46,6 +46,8 @@ feature -- Setting
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		deferred
+		ensure
+			name_set: file_name.is_equal (s)
 		end
 
 feature -- Status report

@@ -3,9 +3,9 @@ echo -----------------------------------------------------------------
 echo ----------------- Preparing Temporary directory -----------------
 echo -----------------------------------------------------------------
 pushd
-mkdir %DELIVERY%\bench\wizards\precompile\spec
-mkdir %DELIVERY%\bench\wizards\precompile\spec\windows
-mkdir %DELIVERY%\bench\wizards\precompile\spec\windows\bin
+mkdir %DELIVERY%\studio\wizards\precompile\spec
+mkdir %DELIVERY%\studio\wizards\precompile\spec\windows
+mkdir %DELIVERY%\studio\wizards\precompile\spec\windows\bin
 echo Y > y.txt
 rd /S %TEMP%\precomp_wizard < y.txt
 del y.txt
@@ -18,12 +18,12 @@ call cvs up -Pd
 echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
-%ISE_EIFFEL%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\precompile_wizard.ace -project_path %TEMP%\precomp_wizard
+%ISE_EIFFEL%\studio\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\precompile_wizard.ace -project_path %TEMP%\precomp_wizard
 cdd %TEMP%\precomp_wizard
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .
 cdd %TEMP%\precomp_wizard\EIFGEN\F_Code
-%ISE_EIFFEL%\bench\spec\windows\bin\finish_freezing -silent
+%ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing -silent
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
@@ -31,7 +31,7 @@ upx wizard.exe
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\bench\wizards\precompile\spec\windows\bin
+copy wizard.exe %DELIVERY%\studio\wizards\precompile\spec\windows\bin
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------

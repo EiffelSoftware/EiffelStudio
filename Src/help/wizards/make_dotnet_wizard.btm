@@ -3,9 +3,9 @@ echo -----------------------------------------------------------------
 echo ----------------- Preparing Temporary directory -----------------
 echo -----------------------------------------------------------------
 pushd
-mkdir %DELIVERY%\bench\wizards\new_projects\dotnet\spec
-mkdir %DELIVERY%\bench\wizards\new_projects\dotnet\spec\windows
-mkdir %DELIVERY%\bench\wizards\new_projects\dotnet\spec\windows\bin
+mkdir %DELIVERY%\studio\wizards\new_projects\dotnet\spec
+mkdir %DELIVERY%\studio\wizards\new_projects\dotnet\spec\windows
+mkdir %DELIVERY%\studio\wizards\new_projects\dotnet\spec\windows\bin
 echo Y > y.txt
 rd /S %TEMP%\dotnet_wizard < y.txt
 del y.txt
@@ -24,12 +24,12 @@ cdd %EIFFEL_SRC%\help\wizards
 echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
-%ISE_EIFFEL%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\dotnet_wizard.ace -project_path %TEMP%\dotnet_wizard
+%ISE_EIFFEL%\studio\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\dotnet_wizard.ace -project_path %TEMP%\dotnet_wizard
 cdd %TEMP%\dotnet_wizard
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .
 cdd %TEMP%\dotnet_wizard\EIFGEN\F_Code
-%ISE_EIFFEL%\bench\spec\windows\bin\finish_freezing -silent
+%ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing -silent
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
@@ -37,7 +37,7 @@ upx wizard.exe
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\bench\wizards\new_projects\dotnet\spec\windows
+copy wizard.exe %DELIVERY%\studio\wizards\new_projects\dotnet\spec\windows
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------

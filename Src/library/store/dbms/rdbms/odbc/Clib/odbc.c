@@ -245,7 +245,7 @@ int odbc_max_descriptor ()
 /* stored procedure.                                             */
 /*                                                               */
 /*****************************************************************/
-int odbc_pre_immediate(int no_desc, int argNum) {
+void odbc_pre_immediate(int no_desc, int argNum) {
 
 
 	odbc_clear_error();
@@ -253,13 +253,11 @@ int odbc_pre_immediate(int no_desc, int argNum) {
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(NULL, 202);
 		strcat(error_message, "\nInvalid Descriptor Number!");
-		return error_number;
 	}
 	if (argNum > 0) {
 		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SDWORD *) malloc(sizeof(SDWORD)*argNum));
 	} else
-		pcbValue[no_desc] = NULL;
-	return error_number;
+	pcbValue[no_desc] = NULL;
 }
 
 /*****************************************************************/
@@ -923,7 +921,7 @@ int odbc_insensitive_mixed() {
 /* The following function has not been used by EiffelStore on ODBC now and has not been */
 /* writen well.										*/
 
-int odbc_set_parameter(int no_desc, int seri, int dir, int eifType, char *value) {
+void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, char *value) {
 
 	UWORD seriNumber = seri;
 	SWORD direction = dir;
@@ -964,11 +962,9 @@ TIMESTAMP_STRUCT *dp;
 			odbc_error_handler(NULL, 204);
 			strcat(error_message, "\nInvalid Data Type in odbc_set_parameter");
 			odbc_error_handler(NULL, 110);
-			return error_number;
 	}
 	if (rc)
 		odbc_error_handler(hstmt[no_desc], rc);
-	return error_number;
 }
 
 

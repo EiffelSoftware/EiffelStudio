@@ -17,7 +17,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		rename
-			make as widget_make
+			make as old_make
 		end
 	
 creation
@@ -64,6 +64,15 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	parent_widget: POINTER
+
+feature {NONE} -- Inapplicable
+
+	old_make is
+		do
+			check
+				Inapplicable: False
+			end
+		end
 
 end -- EV_PIXMAP_IMP
 

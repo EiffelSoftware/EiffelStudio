@@ -36,8 +36,8 @@ DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG 
 		DWORD result;
 
 		/* Call the Eiffel routine `internal_callback'. */
-		result = (DWORD) ((wel_editstream_in_procedure) (
-			(EIF_REFERENCE) eif_access ((EIF_EDITSTREAM_IN_PROCEDURE)dwCookie),
+		result = (DWORD) (((EIF_EDITSTREAM_IN_PROCEDURE)wel_editstream_in_procedure) (
+			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
 			(EIF_POINTER) pbBuff,
 			(EIF_INTEGER) cb, 
 			(EIF_POINTER)pcb));
@@ -75,8 +75,8 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 		* pcb = cb;
 
 		/* Call the Eiffel routine `internal_callback'. */
-		result = (DWORD) ((wel_editstream_out_procedure) (
-			(EIF_REFERENCE) eif_access ((EIF_EDITSTREAM_OUT_PROCEDURE) dwCookie),
+		result = (DWORD) (((EIF_EDITSTREAM_OUT_PROCEDURE) wel_editstream_out_procedure) (
+			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
 			(EIF_REFERENCE) eif_str_buffer));
 
 		return result;

@@ -72,6 +72,10 @@ feature -- Access
 				lastentry := Void
 			else
 				create lastentry.make_from_cil (ent.item (search_index))
+					-- Because .NET will return something like `Current_dir\found_entry'
+					-- we need to get rid of `Current_dir\' to be consistent with
+					-- classic EiffelBase.
+				lastentry.remove_head (name.count + 1)
 				search_index := search_index + 1
 			end
 		end
@@ -197,9 +201,9 @@ feature -- Status report
 		require
 			directory_exists: exists
 		do
-				-- count = 2, since there are "." and ".." which
+				-- count = 0, since .NET does not return "." and ".." which
 				-- are symbolic representations but not effective directories.
-			Result := (count = 2)
+			Result := (count = 0)
 		end
 	
 	empty: BOOLEAN is

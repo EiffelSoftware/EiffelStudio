@@ -727,7 +727,11 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		local
 			root_class_c: CLASS_C
+			d1, d2: DATE_TIME
 		do
+			debug ("timing")
+				create d1.make_now
+			end
 				-- Recompilation initialization
 			if Compilation_modes.is_precompiling then
 				init_precompilation
@@ -775,6 +779,14 @@ feature -- Recompilation
 
 					-- Perform parsing of Eiffel code
 				process_degree_5
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 5 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					create d1.make_now
+				end
+
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tnew_class = ")
@@ -836,6 +848,14 @@ end
 					-- Inheritance analysis: `Degree_4' is sorted by class 
 					-- topological ids so the parent come first the heirs after.
 				process_degree_4
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 4 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					create d1.make_now
+				end
+
 
 				if
 					not Compilation_modes.is_precompiling and
@@ -846,6 +866,13 @@ end
 
 					-- Byte code production and type checking
 				process_degree_3
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 3 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					create d1.make_now
+				end
 
 				Error_handler.set_error_position (0)
 
@@ -883,6 +910,13 @@ debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N")
 end
 				end
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 2/1 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					create d1.make_now
+				end
 			end
 
 			if System.il_generation then
@@ -894,9 +928,21 @@ end
 				Degree_output.put_freezing_message
 				freeze_system
 				private_freeze := False
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree -1 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+				end
 			end
 			if il_generation and then (private_melt or else not degree_minus_1.is_empty) then
 				generate_il
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 1 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+				end
 				Degree_minus_1.wipe_out
 			end
 			private_melt := False
@@ -1851,14 +1897,26 @@ feature -- Final mode generation
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 			deg_output: DEGREE_OUTPUT
 			retried: BOOLEAN
+			d1, d2: DATE_TIME
 		do
 			if not retried and is_finalization_needed then
+				debug ("Timing")
+					create d1.make_now
+				end
+
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
 				keep_assertions := keep_assert and then lace.has_assertions
 		
 				if il_generation then
 					generate_il
+					debug ("Timing")
+						create d2.make_now
+						print ("Degree -2/-3 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						create d1.make_now
+					end
 				else
 						-- Set `Server_control' to remove right away extra unused
 						-- files (especially done for the TMP_POLY_SERVER).
@@ -1888,12 +1946,26 @@ feature -- Final mode generation
 					array_optimization_on := array_optimization_on and not remover_off
 		
 					process_degree_minus_2
+					debug ("Timing")
+						create d2.make_now
+						print ("Degree -2 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						create d1.make_now
+					end
 					
 						-- Dead code removal
 					if not remover_off then
 						deg_output := Degree_output
 						deg_output.put_start_dead_code_removal_message
 						remove_dead_code
+						debug ("Timing")
+							create d2.make_now
+							print ("Dead code removal duration: ")
+							print (d2.relative_duration (d1).fine_seconds_count)
+							print ("%N")
+							create d1.make_now
+						end
 						deg_output.put_end_dead_code_removal_message
 					end
 					tmp_opt_byte_server.flush
@@ -1912,6 +1984,13 @@ feature -- Final mode generation
 					process_degree_minus_3
 					Eiffel_table.finish_degree_minus_3
 		
+					debug ("Timing")
+						create d2.make_now
+						print ("Degree -3 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+					end
+
 					generate_main_finalized_eiffel_files
 		
 						-- Clean Eiffel table

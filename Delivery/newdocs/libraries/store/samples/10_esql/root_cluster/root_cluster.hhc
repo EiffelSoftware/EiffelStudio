@@ -16,7 +16,6 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="start"><param name="Local" value=".\root_cluster\esql.html#f_start"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value=".\root_cluster\esql.html#f_make"></OBJECT>
 		</UL>
-	</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ESQL_ODBC"><param name="Local" value=".\root_cluster\esql_odbc_chart.html"></OBJECT>
 		<UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="login"><param name="Local" value=".\root_cluster\esql_odbc.html#f_login"></OBJECT>

@@ -68,6 +68,69 @@ feature -- Access
 		deferred
 		end
 
+feature -- Saving
+
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+			-- Save `Current' to `a_filename' in `a_format' format.
+		require
+			a_format_not_void: a_format /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_valid: a_filename.is_valid
+		local
+			bmp_format: EV_BMP_FORMAT
+			png_format: EV_PNG_FORMAT
+			mem_dc: WEL_MEMORY_DC
+			a_wel_bitmap: WEL_BITMAP
+			a_fn: WEL_STRING
+			char_array: WEL_CHARACTER_ARRAY
+			a_width, a_height: INTEGER
+			l_raw_image_data: like raw_image_data
+		do
+			bmp_format ?= a_format
+			png_format ?= a_format
+			l_raw_image_data := raw_image_data
+			if bmp_format /= Void then
+				create mem_dc.make
+					--| FIXME. Add code for dealing with cursors & icons.
+				a_wel_bitmap := get_bitmap
+				mem_dc.select_bitmap (a_wel_bitmap)
+				mem_dc.save_bitmap (a_wel_bitmap, a_filename)
+				mem_dc.unselect_bitmap
+				mem_dc.delete
+				a_wel_bitmap.decrement_reference
+			elseif png_format /= Void then
+				create a_fn.make (a_filename)
+				create char_array.make (l_raw_image_data)
+				if png_format.scale_height /= 0 then
+					a_height := png_format.scale_height
+				else
+					a_height := l_raw_image_data.height
+				end
+	
+				if png_format.scale_width /= 0 then
+					a_width := png_format.scale_width
+				else
+					a_width := l_raw_image_data.width
+				end
+				c_ev_save_png (char_array.item, a_fn.item, l_raw_image_data.width,
+					l_raw_image_data.height, a_width, a_height, png_format.color_mode)
+			end
+			save_with_format (a_format, a_filename, l_raw_image_data)
+		end
+
+feature {NONE} -- Savings
+
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
+			-- Call `save' on `a_format'. Implemented in descendant since `save' from
+			-- EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
+		require
+			a_format_not_void: a_format /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_valid: a_filename.is_valid
+			a_raw_image_data_not_void: a_raw_image_data /= Void
+		deferred
+		end
+
 feature -- Misc.
 
 	raw_image_data: EV_RAW_IMAGE_DATA is
@@ -226,6 +289,16 @@ feature {NONE} -- External
 			"C [macro <windows.h>] (HDC, int, int): COLORREF"
 		alias
 			"GetPixel"
+		end
+
+	c_ev_save_png (char_array, path: POINTER;
+			array_width,
+			array_height,
+			a_scale_width,
+			a_scale_height,
+			a_colormode: INTEGER) is
+		external
+			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
 
 feature {

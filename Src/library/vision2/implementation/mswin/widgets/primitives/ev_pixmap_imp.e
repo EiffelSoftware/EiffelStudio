@@ -11,13 +11,14 @@ class
 
 inherit
 	EV_PIXMAP_I
+		undefine
+			save_to_named_file
 		redefine
 			interface,
 			on_parented,
 			set_with_default,
 			set_pebble,
 			set_actual_drop_target_agent,
-			save_to_named_file,
 			set_pebble_function,
 			draw_straight_line,
 			disable_initialized
@@ -120,45 +121,13 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			update_needed := True
 		end
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
-			-- Save `Current' to `a_filename' in `a_format' format.
-		local
-			png_format: EV_PNG_FORMAT
-			bmp_format: EV_BMP_FORMAT
-			mem_dc: WEL_MEMORY_DC
-			a_wel_bitmap: WEL_BITMAP
-			a_fn: WEL_STRING
-			char_array: WEL_CHARACTER_ARRAY
-			a_width, a_height: INTEGER
+feature {NONE} -- Saving
+
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
+			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
+			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do
-			bmp_format ?= a_format
-			png_format ?= a_format
-			if bmp_format /= Void then
-				create mem_dc.make
-					--| FIXME. Add code for dealing with cursors & icons.
-				a_wel_bitmap := get_bitmap
-				mem_dc.select_bitmap (a_wel_bitmap)
-				mem_dc.save_bitmap (a_wel_bitmap, a_filename)
-				mem_dc.delete
-				a_wel_bitmap.decrement_reference
-			elseif png_format /= Void then
-				create a_fn.make (a_filename)
-				create char_array.make (raw_image_data)
-				if png_format.scale_height /= 0 then
-					a_height := png_format.scale_height
-				else
-					a_height := raw_image_data.height
-				end
-	
-				if png_format.scale_width /= 0 then
-					a_width := png_format.scale_width
-				else
-					a_width := raw_image_data.width
-				end
-				c_ev_save_png (char_array.item, a_fn.item, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
-			end
-							
-			a_format.save (raw_image_data, a_filename)
+			a_format.save (a_raw_image_data, a_filename)
 		end
 
 feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Misc.
@@ -1656,18 +1625,6 @@ feature {
 		} -- Implementation
 
 	interface: EV_PIXMAP
-
-feature {NONE} -- Externals
-
-	c_ev_save_png (char_array, path: POINTER;
-			array_width,
-			array_height,
-			a_scale_width,
-			a_scale_height,
-			a_colormode: INTEGER) is
-		external
-			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
-		end
 
 invariant
 	not_both_icon_and_cursor:

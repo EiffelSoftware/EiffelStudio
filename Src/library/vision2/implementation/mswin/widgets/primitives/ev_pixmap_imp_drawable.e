@@ -10,13 +10,14 @@ class
 
 inherit
 	EV_PIXMAP_I
+		undefine
+			save_to_named_file
 		redefine
 			interface,
 			on_parented,
 			set_with_default,
 			set_pebble,
-			set_actual_drop_target_agent,
-			save_to_named_file
+			set_actual_drop_target_agent
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -211,25 +212,13 @@ feature {NONE} -- Initialization
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end	
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
-			-- Save `Current' to `a_filename' in `a_format' format.
-		local
-			bmp_format: EV_BMP_FORMAT
-			mem_dc: WEL_MEMORY_DC
-			a_wel_bitmap: WEL_BITMAP
+feature {NONE} -- Saving
+
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
+			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
+			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do
-			bmp_format ?= a_format
-			if bmp_format /= Void then
-				create mem_dc.make
-				--| FIXME. Add code for dealing with cursors & icons.
-				a_wel_bitmap := get_bitmap
-				mem_dc.select_bitmap (a_wel_bitmap)
-				mem_dc.save_bitmap (a_wel_bitmap, a_filename)
-				mem_dc.unselect_bitmap
-				a_wel_bitmap.decrement_reference
-				mem_dc.delete
-			end				
-			a_format.save (raw_image_data, a_filename)
+			a_format.save (a_raw_image_data, a_filename)
 		end
 
 feature -- Access
@@ -924,7 +913,7 @@ feature -- Delegated features
 			promote_to_widget
 			Result := interface.implementation.y_position
 		end
-	
+
 invariant
 	bitmap_not_void: 
 		is_initialized implies internal_bitmap /= Void

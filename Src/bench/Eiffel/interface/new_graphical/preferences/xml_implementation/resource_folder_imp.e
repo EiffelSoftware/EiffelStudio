@@ -40,7 +40,6 @@ feature -- Update
 			file: RAW_FILE
 			s: STRING
 			parser: XML_TREE_PARSER
-			error_message: STRING
 		do
 			name := "root"
 			description := "root folder"
@@ -70,10 +69,8 @@ feature -- Update
 			resource: RESOURCE
 			child: like Current
 			cursor, des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node, category_node: XML_ELEMENT
-			s: STRING
+			node: XML_ELEMENT
 			txt: XML_TEXT
-			att: XML_ATTRIBUTE
 		do
 			cursor := doc.new_cursor
 			from

@@ -101,7 +101,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
+			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
 		end
 
 	all net:		"$EIFFEL_SRC\library\net"

@@ -29,7 +29,8 @@ feature {NONE} -- Initialization
 			valid_version: not v.is_empty
 			non_void_culture: c /= Void
 			valid_culture: not c.is_empty
-			valid_key: k /= Void implies not k.is_empty
+			valid_key: k /= Void
+			valid_key: not k.is_empty
 		do
 			name := n
 			version := v
@@ -59,26 +60,16 @@ feature -- Access
 	out: STRING is
 			-- New string containing terse printable representation
 			-- of current object
-			-- Eg: "System.Management, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-		local
-			count: INTEGER
+			-- Eg: "A, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 		do
-			count := name.count
-			count := count + version.count + 2
-			count := count + culture.count + 2
-			if key /= Void then
-				count := count + key.count + 2
-			end
-			create Result.make (count)
+			create Result.make (name.count)
 			Result.append (name)
 			Result.append (", Version=")
 			Result.append (version)
 			Result.append (", Culture=")
 			Result.append (culture)
-			if key /= Void then
-				Result.append (", PublicKeyToken=")
-				Result.append (key)
-			end			
+			Result.append (", PublicKeyToken=")
+			Result.append (key)
 		end
 
 feature -- Comparison
@@ -88,17 +79,15 @@ feature -- Comparison
 			-- equal to current object?
 		do
 			Result := other.name.is_equal (name) and
-						(version = Void implies other.version = Void) and
-						(version /= Void implies (other.version /= Void and then other.version.is_equal (version))) and
-						(culture = Void implies other.culture = Void) and
-						(culture /= Void implies (other.culture /= Void and then other.culture.is_equal (culture))) and
-						(key = Void implies other.key = Void) and
-						(key /= Void implies (other.key /= Void and then other.key.is_equal (key)))
+				other.version.is_equal (version) and
+				other.culture.is_equal (culture) and
+				other.key.is_equal (key)
 		end
 		
 invariant
 	non_void_assembly_name: name /= Void
 	non_void_assembly_version: version /= Void
-	non_void_assembly_culture: culture /= Void
+	non_void_culture: culture /= Void
+	non_void_key: key /= Void
 
 end -- class CONSUMED_ASSEMBLY

@@ -15,6 +15,25 @@ inherit
 
 	EV_PND_EVENTS_CONSTANTS_IMP
 
+feature -- Access
+
+	capture_enabled: BOOLEAN is
+			-- Is the mouse currently captured?
+			-- See constants Capture_xxxx at the end of the class
+		do
+			Result := internal_capture_status.item
+		end
+
+	capture_type: INTEGER is
+			-- Type of capture to use when capturing the mouse
+			-- See constants Capture_xxxx at the end of the class
+		do
+			Result := internal_capture_type.item
+		ensure
+			valid_result: Result = Capture_normal or
+						  Result = Capture_heavy
+		end
+
 feature -- Status setting
 
 	enable_transport is
@@ -34,6 +53,21 @@ feature -- Status setting
 			press_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled -- FIXME needed??
 			is_transport_enabled := False
+		end
+
+	set_capture_type (a_capture_type: INTEGER) is
+			-- Set the type of capture to use when capturing the 
+			-- mouse to `a_capture_type'.
+			-- See constants Capture_xxxx at the end of the class
+		require
+			valid_capture_type: a_capture_type = Capture_normal or
+								a_capture_type = Capture_heavy
+			no_current_capture: not capture_enabled
+		do
+			internal_capture_type.set_item(a_capture_type)
+		ensure
+			valid_capture: capture_type = Capture_normal or
+						   capture_type = Capture_heavy
 		end
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
@@ -111,7 +145,7 @@ feature -- Implementation
 					pick_y := a_screen_y
 				end
 
-				set_capture
+				enable_capture
 	
 				press_action := Ev_pnd_end_transport
 				motion_action := Ev_pnd_execute
@@ -134,7 +168,9 @@ feature -- Implementation
 			release_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
 			erase_rubber_band
-			release_capture
+
+			disable_capture
+
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -367,26 +403,70 @@ feature {EV_ANY_I} -- Implementation
 			create Result
 		end
 
-
 	enable_capture is
 			-- Grab all user events.
 		do
-			set_capture
+			inspect capture_type
+			when Capture_heavy then
+				set_heavy_capture
+			when Capture_normal then
+				set_capture
+			end
 		end
 
 	disable_capture is
 			-- Release all user events.
 		do
-			release_capture
+			inspect capture_type
+			when Capture_heavy then
+				release_heavy_capture
+			when Capture_normal then
+				release_capture
+			end
+		end
+
+	set_heavy_capture is
+		deferred
+		end
+
+	release_heavy_capture is
+		deferred
 		end
 
 	set_capture is
 		deferred
-	end
+		end
 
 	release_capture is
 		deferred
-	end
+		end
+
+	internal_capture_status: BOOLEAN_REF is
+			-- System wide once, in order to always get the
+			-- same value.
+			-- True if there is the mouse is currently captured.
+		once
+			Create Result
+		end
+
+	internal_capture_type: INTEGER_REF is
+			-- System wide once, in order to always get the
+			-- same value.
+		once
+			Create Result
+		end
+
+feature -- Public constants
+
+	Capture_heavy: INTEGER is 0
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_heavy_capture'
+			--
+			-- Default value.
+
+	Capture_normal: INTEGER is 1
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_capture'
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 
@@ -411,6 +491,13 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/27 20:59:15  pichery
+--| Added "heavy" mouse capture notion in pick&drop mechanism.
+--| This is NOW the default mouse capture method. The old method
+--| (which does not work with Trees and MulticolumnsList) is still
+--| available. It is possible to switch from one method to the another
+--| using `set_capture_type'.
+--|
 --| Revision 1.20  2000/03/27 19:42:56  oconnor
 --| added support for pebble_funtion
 --|

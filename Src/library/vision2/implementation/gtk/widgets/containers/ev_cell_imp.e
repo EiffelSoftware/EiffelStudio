@@ -66,7 +66,6 @@ feature -- Element change
 			if v /= Void then
 				imp ?= v.implementation
 				feature {EV_GTK_EXTERNALS}.gtk_container_add (container_widget, imp.c_object)
-				imp.update_request_size
 				on_new_item (imp)
 			end
 			item := v

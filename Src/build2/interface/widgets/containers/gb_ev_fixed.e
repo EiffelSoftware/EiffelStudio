@@ -69,7 +69,7 @@ feature -- Access
 			check_button: EV_CHECK_BUTTON
 			button: EV_BUTTON
 		do
-			create button.make_with_text ("Position items")
+			create button.make_with_text ("Position children")
 			Result := Precursor {GB_EV_ANY}
 			Result.extend (button)
 			button.select_actions.extend (agent show_layout_window)

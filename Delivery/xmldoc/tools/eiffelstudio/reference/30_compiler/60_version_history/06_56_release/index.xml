@@ -22,6 +22,7 @@
 		<list ordered="false">
 			<item>Changed behavior of once routines in .NET  mode from once-per-process to once-per-thread to match behavior in classic mode.</item>
 			<item>Provided project options (<code>old_verbatim_strings</code> and <code>old_verbatim_strings_warning</code>) to support semantics of verbatim strings as in previous versions when they were not left-aligned.</item>
+			<item>Changed processing of hexadecimal integer literals to be consistent for different integer types.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -30,7 +31,10 @@
 			<size>3</size>Language issues
 		</heading>
 		<list ordered="false">
-			<item>Used <code><character>'%N'</character></code> as an end of line in verbatim strings regardless of the end of line sequence in source code.</item><item>Fixed incorrect handling of negative hexadecimal integer literals.</item>
+			<item>Used <code><character>'%N'</character></code> as an end of line in verbatim strings regardless of the end of line sequence in source code.</item>
+			<item>Fixed incorrect handling of negative hexadecimal integer literals.</item>
+			<item>Implemented checks for input ranges of integer constants.</item>
+			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues
@@ -42,7 +46,7 @@
 			<size>3</size>Runtime/code generation issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Corrected C code on Windows for constants of type <code><class_name>INTEGER_64</class_name></code>.</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues

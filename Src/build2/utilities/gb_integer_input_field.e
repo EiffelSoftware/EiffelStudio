@@ -40,6 +40,13 @@ inherit
 		undefine
 			is_equal, copy, default_create
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, default_create
+		end
 	
 create
 	make,
@@ -68,6 +75,7 @@ feature {NONE} -- Initialization
 				internal_gb_ev_any /= Void
 			end
 			object ?= internal_gb_ev_any.object
+			internal_gb_ev_any.parent_editor.add_integer_input_field (Current)
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -95,6 +103,7 @@ feature {NONE} -- Initialization
 				internal_gb_ev_any /= Void
 			end
 			object ?= internal_gb_ev_any.object
+			internal_gb_ev_any.parent_editor.add_integer_input_field (Current)
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -117,6 +126,45 @@ feature -- Access
 		do
 			Result := text_field.text
 		end
+		
+feature {GB_OBJECT_EDITOR} -- Implementation
+
+	constant_removed (constant: GB_INTEGER_CONSTANT) is
+			-- Update `Current' to reflect removal of `constant' from system.
+		require
+			constant_not_void: constant /= Void
+		local
+			list_item: EV_LIST_ITEM
+		do
+			if constants_button.is_selected then
+				if constants_combo_box.selected_item /= Void and then
+					constants_combo_box.selected_item.text.is_equal (constant.name) then
+					constants_button.disable_select
+				end
+				list_item := list_item_with_matching_text (constants_combo_box, constant.name)
+				check
+					list_item_not_void: list_item /= Void
+				end
+				constants_combo_box.prune_all (list_item)
+			end
+		ensure
+			list_count_increased: constants_combo_box.count = old constants_combo_box.count - 1
+		end
+
+	constant_added (constant: GB_INTEGER_CONSTANT) is
+			-- Update `Current' to reflect addition of `constant' to system.
+		require
+			constant_not_void: constant /= Void
+		local
+			list_item: EV_LIST_ITEM
+		do
+			create list_item.make_with_text (constant.name)
+			list_item.set_data (constant)
+			list_item.select_actions.extend (agent list_item_selected (list_item))
+			constants_combo_box.extend (list_item)
+		ensure
+			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
+		end
 
 feature {NONE} -- Implementation
 
@@ -134,7 +182,6 @@ feature {NONE} -- Implementation
 		
 	internal_type: STRING
 		--| FIXME &**^*678LK6;78LK6;78K
-		
 
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
@@ -288,7 +335,7 @@ feature {NONE} -- Implementation
 				do_nothing
 			end
 			constants_combo_box.wipe_out
-			create list_item.make_with_text ("Select constant")
+			create list_item.make_with_text (select_constant_string)
 			constants_combo_box.extend (list_item)
 			integer_constants := Constants.integer_constants
 			from

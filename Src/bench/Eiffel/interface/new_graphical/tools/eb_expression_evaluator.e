@@ -424,7 +424,6 @@ feature {NONE} -- Implementation
 			valid_expr: expr /= Void
 		local
 			pos: INTEGER
-			row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			from
 				ev_list.start

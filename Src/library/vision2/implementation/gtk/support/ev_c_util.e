@@ -15,7 +15,7 @@ feature -- Output
 
 	puts (s: POINTER) is
 		external
-			"C | <stdio.h>"
+			"C signature (char *) use <stdio.h>"
 		end
 
 feature -- Measurement

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Data representation of inheritance relationships.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_INHERIT_DATA
 
 inherit
@@ -6,4 +13,4 @@ inherit
 
 feature
 
-end
+end -- class S_INHERIT_DATA

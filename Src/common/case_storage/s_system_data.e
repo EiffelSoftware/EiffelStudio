@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Data describing the whole system for a given project.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_SYSTEM_DATA
 
 inherit
@@ -5,11 +12,11 @@ inherit
 	STORABLE;
 	S_CASE_INFO
 
-feature
+feature -- Properties
 
 	root_cluster: S_CLUSTER_DATA;
-		-- Cluster root containing all system
-		-- entities (classes and clusters).
+			-- Cluster root containing all system
+			-- entities (classes and clusters).
 
 	class_id_number: INTEGER;
 			-- Last number use for default class name
@@ -20,7 +27,7 @@ feature
 	cluster_view_number: INTEGER;
 			-- Last number use for default cluster name
 
-feature -- Setting values
+feature -- Setting 
 
 	set_class_id_number (value: like class_id_number) is
 			-- Set class_id_number to `value'.
@@ -106,5 +113,4 @@ feature -- Storing
 			system_file.close;
 		end;
 
-
-end
+end -- class S_SYSTEM_DATA

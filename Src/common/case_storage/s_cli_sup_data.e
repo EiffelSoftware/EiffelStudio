@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Data describing client-supplier relationships."
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CLI_SUP_DATA
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			f_rom as client, t_o as supplier
 		end	
 
-feature
+feature -- Properties
 
     label: STRING;
             -- Label of relation
@@ -22,7 +29,7 @@ feature
 	is_reflexive: BOOLEAN;
 			-- Is this link an reflexive link ?
 
-feature -- Setting values
+feature -- Setting 
 
 	set_implementation (b: BOOLEAN) is
 			-- Set is_implementation to `b'.
@@ -50,4 +57,4 @@ feature -- Setting values
             label_set: label = l
         end;
 
-end
+end -- class S_CLI_SUP_DATA

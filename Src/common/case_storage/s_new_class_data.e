@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Class data for new classes created under eiffelcase.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_NEW_CLASS_DATA
 
 inherit
@@ -11,10 +18,10 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	is_new_since_last_re: BOOLEAN is True;
 			-- Is current class new since
 			-- last reverse engineering ?
 
-end
+end -- class S_NEW_CLASS_DATA

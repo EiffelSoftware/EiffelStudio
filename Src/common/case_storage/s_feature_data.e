@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"Data representation of feature information.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_FEATURE_DATA
 
 creation
 
 	make
 
-feature
+feature -- Properties
 
 	name: STRING;
 			-- Feature's name
@@ -39,7 +46,7 @@ feature
 	rename_clause: S_RENAME_DATA;
 			-- String representing where feature comes from
 
-feature -- Modification details
+feature -- Modification Properties
 
 	is_new_since_last_re: BOOLEAN is
 			-- Is current feature new since last reverse engineering ?
@@ -51,7 +58,12 @@ feature -- Modification details
 		do
 		end;
 
-feature -- Setting values
+	is_reversed_engineered: BOOLEAN is
+			-- Is Current class reversed engineered?
+		do
+		end;
+
+feature -- Setting 
 
 	make (s: STRING) is
 			-- Set id to `s' 
@@ -184,13 +196,6 @@ feature -- Setting values
 			result_type_set: result_type = type
 		end;
 
-feature -- Reverse engineering details
-
-	is_reversed_engineered: BOOLEAN is
-			-- Is Current class reversed engineered?
-		do
-		end;
-
 	set_reversed_engineered is
 			-- Set `is_reversed_engineered' to True.
 		do
@@ -198,4 +203,4 @@ feature -- Reverse engineering details
 			is_reversed_engineered: is_reversed_engineered
 		end
 
-end
+end -- class S_FEATURE_DATA

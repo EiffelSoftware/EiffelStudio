@@ -1,3 +1,11 @@
+indexing
+
+	description: 
+		"Free form text notion where no checks are made for%
+		%its content";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_FREE_TEXT_DATA
 
 inherit
@@ -13,4 +21,4 @@ creation
 
 	make
 
-end
+end -- class S_FREE_TEXT_DATA

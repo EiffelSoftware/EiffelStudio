@@ -1,3 +1,11 @@
+indexing
+
+	description: 
+		"Data representing tagged information%
+		%that has a tag and associated text.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_TAG_DATA
 
 inherit
@@ -8,15 +16,7 @@ creation
 
 	make
 
-feature
-
-	tag: STRING;
-			-- Tag of Current 
-
-    text: STRING
-            -- Expression
-
-feature {NONE}
+feature {NONE} -- Initialization
 
     make (tg, txt: STRING) is
             -- Make invariant with tag `tg' with expression `exp'.
@@ -30,4 +30,12 @@ feature {NONE}
             text_set: text = txt
         end;
 
-end
+feature -- Properties
+
+	tag: STRING;
+			-- Tag of Current 
+
+    text: STRING
+            -- Expression
+
+end -- class S_TAG_DATA

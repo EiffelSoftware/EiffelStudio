@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Feature data denoting that it has been removed.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_DELETED_FEATURE_DATA
 
 inherit
@@ -11,9 +18,9 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	is_deleted_since_last_re: BOOLEAN is True;
 			-- Current feature is deleted since last re
 
-end
+end -- class S_DELETED_FEATURE_DATA

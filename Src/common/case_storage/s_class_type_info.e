@@ -1,3 +1,9 @@
+indexing
+
+	description: "Explicit class type information.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CLASS_TYPE_INFO
 
 inherit
@@ -11,7 +17,7 @@ creation
 	
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (s: STRING; id: like class_id) is
 			-- Set id to `s' and set
@@ -29,13 +35,22 @@ feature {NONE}
 			class_id_set: class_id = id;
 		end;
 
-feature
+feature -- Properties
 
 	class_id: INTEGER;
+			-- Class id for Current class type
 
-	string_value: STRING is
+	real_class_ids: LINKED_LIST [INTEGER] is
+			-- List container Current class_id if positive
 		do
-			Result := clone (free_text_name)
+			!! Result.make;
+			if class_id /= 0 then
+				Result.put_front (class_id)
+			end;
+		ensure then
+			has_current: class_id /= 0 implies 
+							(Result.has (class_id) and then
+							Result.count = 1);
 		end;
 
     is_valid: BOOLEAN is
@@ -46,18 +61,22 @@ feature
 			else
 				Result := True
             end
+		ensure then
+			ok: Result implies (free_text_name /= Void or else
+						(class_id > 0))
         end;
 
-	real_class_ids: LINKED_LIST [INTEGER] is
+feature -- Output
+
+	string_value: STRING is
 		do
-			!! Result.make;
-			if class_id /= 0 then
-				Result.put_front (class_id)
-			end;
+			Result := clone (free_text_name)
+		ensure then
+			output: equal (Result, free_text_name)
 		end;
 
 invariant
 
 	is_valid: is_valid
 
-end
+end -- class S_CLASS_TYPE_INFO

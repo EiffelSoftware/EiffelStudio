@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Formal generics data within a class definition.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_GENERIC_DATA
 
 inherit
@@ -8,7 +15,7 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
     make (s: STRING; t: like constraint_type) is
             -- Set name to `s' and set
@@ -24,12 +31,12 @@ feature {NONE}
             type_is_set: t = constraint_type
         end;
 
-feature
+feature -- Properties
 
 	constraint_type: S_TYPE_INFO
+			-- Generic constraint type 
 
 	name: STRING
+			-- Name of generic parameter
 
-end
-
-
+end -- class S_GENERIC_DATA

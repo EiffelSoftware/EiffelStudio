@@ -131,17 +131,16 @@ feature -- Event : command association
 			-- selected.
 		do
 			add_command ("selection_changed", cmd, arg)
-			--add_command ("select_child", a_command, arguments)
+			-- add_command ("select_child", a_command, arguments)
 		end
 
-	add_double_click_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `command' executed when an item is
-			-- selected.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+-- useless
+--	add_double_click_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Make `command' executed when an item is
+--			-- selected.
+--		do
+--			check False end
+--		end
 
 feature -- Event -- removing command association
 
@@ -149,15 +148,16 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			check False end
+			remove_commands (selection_changed_id)
 		end
 
-	remove_double_click_selection_commands is	
-			-- Empty the list of commands to be executed
-			-- when the selection has changed.
-		do
-			check False end
-		end
+-- useless
+--	remove_double_click_selection_commands is	
+--			-- Empty the list of commands to be executed
+--			-- when the selection has changed.
+--		do
+--			check False end
+--		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 

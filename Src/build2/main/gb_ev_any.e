@@ -479,6 +479,33 @@ feature {NONE} -- Implementation
 			end				
 		end
 		
+	retrieve_and_set_color_value (a_type_name: STRING): EV_COLOR is
+			-- Result is string data associated with `a_type_name'.
+			-- If the data of `a_type_name' is a constant, then create a new constant_context
+			-- within the system, and return the integer data of the constant.
+			-- Should only be user while loading a project from XML, and after a call to 
+			-- `get_unique_full_info'.
+		require
+			a_type_name_not_void: a_type_name /= Void
+		local
+			color_constant: GB_COLOR_CONSTANT
+			element_info: ELEMENT_INFORMATION
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					color_constant ?= Constants.all_constants.item (element_info.data)
+					create constant_context.make_with_context (color_constant, object, type, a_type_name)
+					color_constant.add_referer (constant_context)
+					object.add_constant_context (constant_context)
+					Result := color_constant.value
+				else
+					Result := build_color_from_string (element_info.data)
+				end
+			end				
+		end
+		
 	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER) is
 			-- Add an element containing an INTEGER to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
@@ -495,7 +522,7 @@ feature {NONE} -- Implementation
 		end
 		
 	add_font_element (element: XM_ELEMENT; name: STRING; font: EV_FONT) is
-			-- Add an element containing an EV_FONT to `element' with value `current_value'.
+			-- Add an element containing an EV_FONT to `element' with value `font'.
 			-- if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
 		require
@@ -513,6 +540,22 @@ feature {NONE} -- Implementation
 				if not font.preferred_families.is_empty then
 					add_element_containing_string (element, font_preferred_family_string, font.preferred_families @ 1)	
 				end
+			end
+		end
+		
+	add_color_element (element: XM_ELEMENT; name: STRING; color: EV_COLOR) is
+			-- Add an element containing an EV_COLOR to `element' with value `color'.
+			-- if no constant is specified, of the value of the constant
+			-- in another constant element, if the current setting is represented by a constant.
+		require
+			element_not_void: element /= Void
+			name_not_void: name /= Void
+			current_value_not_void: color /= Void
+		do
+			if uses_constant (name) then
+				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
+			else
+				add_element_containing_string (element, name, build_string_from_color (color))
 			end
 		end
 		

@@ -67,4 +67,28 @@
 				</image> An object that is expanded
 			</item>
 		</list>
+		<paragraph>For .NET system, special symbols are used to describe :</paragraph>
+		<list ordered="false">			
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_external_symbol.png</url>
+				</image> An object that is external (i.e not known as an Eiffel type)
+			</item>			
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_static_external_symbol.png</url>
+				</image> A static value object that is external (i.e not known as an Eiffel type)
+			</item>			
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_static_object_symbol.png</url>
+				</image> A static value object that is known as an Eiffel type
+			</item>			
+		</list>
 	</paragraph></document>

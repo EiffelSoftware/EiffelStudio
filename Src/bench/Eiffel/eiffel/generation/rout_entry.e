@@ -87,8 +87,6 @@ feature -- previously in ROUT_UNIT
 
 	entry (class_type: CLASS_TYPE): ROUT_ENTRY is
 			-- Entry for a routine
-		local
-			written_type: CL_TYPE_I
 		do
 			create Result
 			Result.set_type_id (class_type.type_id)
@@ -102,11 +100,7 @@ io.error.put_string ("cur = ")
 io.error.put_string (written_class.name)
 io.error.put_new_line
 end
-			written_type := written_class.meta_type (class_type.type)
-			Result.set_written_type_id (written_type.type_id)
-			-- Not necessary anymore
-			--Result.set_pattern_id
-			--	(Pattern_table.c_pattern_id (pattern_id, written_type) - 1)
+			Result.set_written_type_id (written_class.meta_type (class_type).type_id)
 		end
 
 feature -- update
@@ -114,7 +108,7 @@ feature -- update
 	update (class_type: CLASS_TYPE) is
 		do
 			Precursor {ENTRY} (class_type)
-			set_written_type_id (written_class.meta_type (class_type.type).type_id)
+			set_written_type_id (written_class.meta_type (class_type).type_id)
 		end
 
 feature -- from ROUT_ENTRY

@@ -291,7 +291,10 @@ feature -- Access
 					Result ?= abstract_types.get_item (l_type)
 				else
 						-- FIXME: BIT not supported
-					if l_type.is_subclass_of (feature {TYPE}.get_type_string (("System.Enum").to_cil)) then
+					if
+						l_type.is_subclass_of (
+						feature {TYPE}.get_type_string (("System.Enum").to_cil))
+					then
 						Result := Expanded_type
 					else
 						Result := Reference_type
@@ -344,6 +347,28 @@ feature -- Access
 			Result := bref.item
 		end
 
+	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_8_field: field_type (i, object) = Integer_8_type
+		do
+			Result ?= field (i, object)
+		end
+
+	integer_16_field (i: INTEGER; object: ANY): INTEGER_16 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_16_field: field_type (i, object) = Integer_16_type
+		do
+			Result ?= field (i, object)
+		end
+
 	integer_field (i: INTEGER; object: ANY): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		require
@@ -351,6 +376,17 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			integer_field: field_type (i, object) = Integer_type
+		do
+			Result ?= field (i, object)
+		end
+
+	integer_64_field (i: INTEGER; object: ANY): INTEGER_64 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_64_field: field_type (i, object) = Integer_64_type
 		do
 			Result ?= field (i, object)
 		end
@@ -453,12 +489,42 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
+	set_integer_8_field (i: INTEGER; object: ANY; value: INTEGER_8) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_8_field: field_type (i, object) = Integer_8_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_integer_16_field (i: INTEGER; object: ANY; value: INTEGER_16) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_16_field: field_type (i, object) = Integer_16_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
 	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			integer_field: field_type (i, object) = Integer_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_integer_64_field (i: INTEGER; object: ANY; value: INTEGER_64) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_64_field: field_type (i, object) = Integer_64_type
 		do
 			internal_set_reference_field (i, object, value)
 		end

@@ -9,6 +9,8 @@ indexing
 class EB_FORM_DIALOG
 
 inherit
+
+	TOOLTIP_INITIALIZER;
 	EB_SHELL
 		undefine
 			raise, lower, parent
@@ -30,15 +32,24 @@ feature -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Initialize Current.
-        require
-            valid_name: a_name /= Void
-            valid_parent: a_parent /= Void
-        do
-            old_make (a_name, a_parent);
-        ensure
-            parent_set: parent = a_parent;
-            identifier_set: identifier.is_equal (a_name)
-        end;
+		require
+			valid_name: a_name /= Void
+			valid_parent: a_parent /= Void
+		do
+			old_make (a_name, a_parent);
+			set_default_position (False)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name)
+		end;
+
+feature -- Access
+
+	tooltip_parent: COMPOSITE is
+			-- Tooltip parent
+		do
+			Result := Current
+		end;
 
 feature -- Properties
 
@@ -66,10 +77,27 @@ feature -- Setting
 
 	display is
 			-- Show Current on the screen.
+		local
+			new_x, new_y: INTEGER;
+			p: like parent
 		do
 			if is_popped_up then
 				raise
 			else
+				p := parent;
+				new_x := p.real_x + (p.width - width) // 2;
+				new_y := p.real_y - (height // 2)
+				if new_x + width > screen.width then
+					new_x := screen.width - width
+				elseif new_x < 0 then
+					new_x := 0
+				end;
+				if new_y + height > screen.height then
+					new_y := screen.height - height
+				elseif new_y < 0 then
+					new_y := 0
+				end;
+				set_x_y (new_x, new_y);
 				popup;
 				focus_label.initialize_focusables (Current)
 			end

@@ -1,8 +1,8 @@
 indexing
 	description: "EiffelVision list. Mswindows implementation."
-	note: "In the wel_list, the index starts with the element %
-		% number zero although in the linked_list, it starts  %
-		% with number one. That is the reason for the graps in %
+	note: "In the wel_list, the index starts with the element%
+		% number zero although in the linked_list, it starts%
+		% with number one. That is the reason for the graps in%
 		% the list calls."
 	status: "See notice at end of class"
 	id: "$$"
@@ -14,16 +14,11 @@ class
 
 inherit
 	EV_LIST_I
-		redefine
-			ev_children
+		rename
+			rows as count
 		end
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-
-	EV_ITEM_CONTAINER_IMP
-		redefine
-			ev_children
-		end
+	EV_LIST_ITEM_CONTAINER_IMP
 
 	EV_PRIMITIVE_IMP
 		undefine
@@ -58,12 +53,14 @@ inherit
 			on_char,
 			on_key_up,
 			background_color,
-			foreground_color
+			foreground_color,
+			default_process_message
 		redefine
 			selected,
 			on_lbn_dblclk,
 			on_lbn_selchange,
-			default_style
+			default_style,
+			default_process_message
 		select
 			single_select_item
 		end
@@ -94,12 +91,14 @@ inherit
 			on_char,
 			on_key_up,
 			background_color,
-			foreground_color
+			foreground_color,
+			default_process_message
 		redefine
 			selected,
 			on_lbn_dblclk,
 			on_lbn_selchange,
-			default_style
+			default_style,
+			default_process_message
 		select
 			wel_destroy
 		end
@@ -122,7 +121,7 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			wel_make (par_imp, 0, 0, 0, 0, 0)
-			initialize
+			!! ev_children.make
 			is_multiple_selection := False
 		end	
 
@@ -140,32 +139,6 @@ feature -- Access
 				end
 			else
 				Result ?= (ev_children.i_th (single_selected_item + 1)).interface
-			end
-		end
-
-	selected_items: LINKED_LIST [EV_LIST_ITEM] is
-			-- List of all the selected items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
-		local
-			index: INTEGER
-			an_item: EV_LIST_ITEM
-		do
-			!! Result.make
-			if is_multiple_selection then
-				from
-					index := multiple_selected_items.lower
-				until
-					index > multiple_selected_items.upper
-				loop
-					an_item ?= (ev_children.i_th(multiple_selected_items.item (index) + 1)).interface
-					Result.extend (an_item)
-					index := index + 1
-				end
-			else
-				Result.extend (selected_item)
 			end
 		end
 
@@ -207,7 +180,6 @@ feature -- Status setting
 		do
 			if not is_multiple_selection then
 				is_multiple_selection := True
---				set_style (default_style)
 				wel_imp ?= parent_imp
 				wel_destroy
 				wel_make (wel_imp, 0, 0, 0, 0, 0)
@@ -223,7 +195,6 @@ feature -- Status setting
 		do
 			if is_multiple_selection then
 				is_multiple_selection := False
---				set_style (default_style)
 				wel_imp ?= parent_imp
 				wel_destroy
 				wel_make (wel_imp, 0, 0, 0, 0, 0)
@@ -235,32 +206,24 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
-			-- XX Need to be reimplemented with the set_parent
-			-- XX feature.
-
 		do
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				ev_children.item.interface.remove_implementation
-				ev_children.forth
-			end
+			clear_ev_children
 			reset_content
-			ev_children.wipe_out
 		end
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when the selection has
-			-- changed.
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when the selection has changed.
 		do
-			add_command (Cmd_selection, a_command, arguments)
+			add_command (Cmd_selection, cmd, arg)
 		end
 
 feature {NONE} -- Implementation
+
+	last_selected_item: EV_LIST_ITEM_IMP
+			-- Last selected item
 
 	copy_list is
 			-- Take an empty list and initialize all the children with
@@ -277,41 +240,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	add_item (an_item: EV_LIST_ITEM) is
-			-- Add an item to the list
-		local
-			item_imp: EV_LIST_ITEM_IMP
-		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			ev_children.extend (item_imp)
-			add_string (name_item)
-			item_imp.set_id (ev_children.count - 1)
-		end
-
-feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	remove_item (an_id: INTEGER) is
-			-- Remove the child whose id is `id'.
-		do
-			delete_string (an_id)
-			ev_children.go_i_th (an_id + 1)
-			ev_children.remove
-			from
-			until
-				ev_children.after
-			loop
-				ev_children.item.set_id (ev_children.index - 1)
-				ev_children.forth
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	last_selected_item: EV_LIST_ITEM_IMP
 
 	on_lbn_selchange is
 			-- The selection has changed.
@@ -360,25 +288,42 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
-
 feature {NONE} -- Implementation : WEL features
 
 	default_style : INTEGER is
 		do
+			Result := Lbs_ownerdrawfixed + Lbs_hasstrings
 			if is_multiple_selection then
-				Result := {WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor
+				Result := Result + {WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor
 			else
-				Result := {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
+				Result := Result + {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
 			end
 		end
-	
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+		   -- Process `msg' which has not been processed by
+		   -- `process_message'.
+		local
+			top: INTEGER
+			paint_dc: WEL_PAINT_DC
+			rect: WEL_RECT
+		do
+			if msg = Wm_erasebkgnd then
+				!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+				!! rect.make_client (Current)
+				top := item_height * (count - top_index)
+				if top < rect.bottom then
+					rect.set_top (top)
+					paint_dc.fill_rect (rect, background_brush)
+				end
+				disable_default_processing
+			end
+ 		end
+
 end -- class EV_LIST_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -1,6 +1,6 @@
 indexing	
 	description:
-		"Eiffel Vision check menu item."
+		"Menu item with a check box."
 	status: "See notice at end of class"
 	keywords: "menu, item, check, select, deselect, uncheck"
 	date: "$Date$"
@@ -23,7 +23,7 @@ create
 feature -- Status setting
 
 	disable_select is
-			-- Deselect this menu item.
+			-- Set `is_selected' `False'.
 		do
 			implementation.disable_select
 		ensure
@@ -31,22 +31,24 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Invert the value of `is_selected'.
+			-- Change `is_selected'.
 		do
 			implementation.toggle
 		ensure
-			inverted: is_selected = not old is_selected
+			changed: is_selected = not old is_selected
 		end
 
 feature {NONE} -- Implementation
 
+	implementation: EV_CHECK_MENU_ITEM_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CHECK_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-	implementation: EV_CHECK_MENU_ITEM_I
-			-- Platform dependent access.
 
 end -- class EV_CHECK_MENU_ITEM
 
@@ -71,6 +73,9 @@ end -- class EV_CHECK_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/22 23:49:53  oconnor
+--| comments
+--|
 --| Revision 1.16  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|
@@ -112,7 +117,6 @@ end -- class EV_CHECK_MENU_ITEM
 --|
 --| Revision 1.11.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

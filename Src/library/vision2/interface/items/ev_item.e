@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision item. Base class for all other items."
+		"Base class for all items that may be held in EV_ITEM_LISTs."
 	status: "See notice at end of class."
 	keywords: "item"
 	date: "$Date$"
@@ -47,20 +47,19 @@ feature -- Event handling
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 
+feature {EV_ANY_I, EV_RADIO} -- Implementation
+
+	implementation: EV_ITEM_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {EV_ITEM, EV_ANY_I, EV_RADIO} -- Implementation
 
 	create_action_sequences is
-			-- Create empty action sequences, not yet connected to events.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			create pointer_button_press_actions
 			create pointer_motion_actions
 		end
-
-feature {EV_ANY_I, EV_RADIO} -- Implementation
-
-	implementation: EV_ITEM_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 end -- class EV_ITEM
 
@@ -85,6 +84,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/22 23:49:37  oconnor
+--| comments
+--|
 --| Revision 1.12  2000/03/13 19:11:46  king
 --| Added feature tag
 --|

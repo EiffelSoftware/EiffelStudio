@@ -531,11 +531,24 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			c_imp ?= other.implementation
 			Result := c_imp.radio_group = radio_group
 		end
+		
+	reset_radio_group is
+			-- Reset radio group to be an empty
+			-- list.
+		do
+			create radio_group.make
+		ensure
+			radio_group_exists: radio_group /= Void
+			radio_group_empty: radio_group.is_empty
+		end
+		
 
 	set_radio_group (rg: like radio_group) is
 			-- Set `radio_group' by reference. (Merge)
 		do
 			radio_group := rg
+		ensure
+			radio_group_set: radio_group = rg
 		end
 
 	add_radio_button (w: EV_WIDGET) is
@@ -638,6 +651,67 @@ feature -- Status setting
 				end
 			end
 		end
+		
+	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+			-- Removed radio grouping of `a_container' from `Current'.
+		local
+			l: like radio_group
+			peer: EV_CONTAINER_IMP
+			r: EV_RADIO_BUTTON_IMP
+			original_selected_button: EV_RADIO_BUTTON_IMP
+		do
+			peer ?= a_container.implementation
+			if peer = Void then
+				-- It's a widget that inherits from EV_CONTAINER,
+				-- but has implementation renamed.
+				-- If this is the case, on `a_container' this feature
+				-- had to be redefined.
+				a_container.unmerge_radio_button_groups (interface)
+			else
+				l := radio_group
+				from
+					l.start
+				until
+					l.off
+				loop
+					r ?= l.item
+					if r.is_selected then
+							-- Store originally selected button,
+							-- for selection of necessary button at
+							-- end of unmerge, as a button has to
+							-- be selected in all groups.
+						original_selected_button := r
+					end
+					if r.parent = a_container then
+						if peer.radio_group = radio_group then
+								-- Reset radio group, back to
+								-- empty.
+							peer.reset_radio_group	
+						end
+							-- Remove radio button from radio group
+							-- of `Current'.
+						l.remove
+							-- Link radio group of `r' to match that of `a_container'.
+						r.internal_set_radio_group (peer.radio_group)
+							-- Add `r' to radio group of `container'.
+						peer.radio_group.extend (r)
+					else
+						l.forth
+					end
+				end
+			end
+			check
+				orignal_selection_found: original_selected_button /= Void
+			end
+				-- We now select a radio button in the new group,
+				-- that does not already have one selected.
+			if original_selected_button.parent_imp = peer then
+				select_first_radio_button
+			else
+				peer.select_first_radio_button
+			end
+		end
+		
 
 feature -- Event handling
 

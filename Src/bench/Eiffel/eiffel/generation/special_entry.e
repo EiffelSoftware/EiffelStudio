@@ -52,7 +52,7 @@ feature -- DLE
 		local
 			remover: REMOVER
 		do
-			if type_id <= System.dle_max_dr_type_id then
+			if type_id < System.min_type_id then
 				remover := System.dle_remover;
 				Result :=	remover = Void or else
 							equal (body_id, Initialization_body_id) or else

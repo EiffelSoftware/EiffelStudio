@@ -54,6 +54,9 @@ feature -- Initialization
 			workb.make;
 			Workbench.init;
 			set_is_initialized;
+			if Platform_constants.is_windows then
+				Execution_environment.change_working_directory (project_dir.name)
+			end;
 		ensure
 			initialized: initialized
 		end;
@@ -131,6 +134,9 @@ feature -- Initialization
 				check_permissions (project_dir)
 				if not error_occurred then
 					set_is_initialized;
+					if Platform_constants.is_windows then
+						Execution_environment.change_working_directory (project_dir.name)
+					end;
 				end
 			else
 				set_error_status (Retrieve_error_status);
@@ -795,10 +801,13 @@ feature {NONE} -- Implementation
 
 				!!uf.make (file_name);
 				if not uf.exists then
-					link_eiffel_driver (Workbench_generation_path,
-						system.name,
-						Prelink_command_name,
-						Precompilation_driver);
+					!! uf.make (Precompilation_driver);
+					if uf.exists and then uf.is_readable then
+						link_eiffel_driver (Workbench_generation_path,
+							system.name,
+							Prelink_command_name,
+							Precompilation_driver);
+					end
 				end;
 			end;
 		end;

@@ -90,6 +90,14 @@ feature -- Externals
 			"generic_parameter_count"
 		end
 
+	frozen type_of_generic_parameter (o: SYSTEM_OBJECT; pos: INTEGER): TYPE is
+			-- Type of generic parameter at position `pos' in type associated to `o'.
+		external
+			"IL static signature (System.Object, System.Int32): System.Type use ISE.Runtime.RUN_TIME"
+		alias
+			"type_of_generic_parameter"
+		end
+
 	frozen generator (o: SYSTEM_OBJECT): SYSTEM_STRING is
 			-- Generating class name of object `o'.
 			-- (base class of the type of which it is a direct instance)

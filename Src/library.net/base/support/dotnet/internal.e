@@ -233,10 +233,11 @@ feature -- Access
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `object' at
 			-- position `i'.
+		local
+			generic_type: TYPE
 		do
-			check
-				False
-			end
+			generic_type := feature {ISE_RUNTIME}.type_of_generic_parameter (object, i)
+			Result := get_type_index (generic_type)
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end

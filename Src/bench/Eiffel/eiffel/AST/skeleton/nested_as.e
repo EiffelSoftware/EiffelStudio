@@ -52,17 +52,12 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check the call
 		local
-			vape_check: BOOLEAN
 			t: TYPE_A
 			not_supported: NOT_SUPPORTED
 			arg_name: ID_AS
 		do
-			vape_check := context.check_for_vape
 				-- Type check the target
 			target.type_check
-			if context.level4 then
-				context.set_check_for_vape (False);	
-			end
 
 			t := context.item
 			if t.is_separate then
@@ -83,9 +78,6 @@ feature -- Type check, byte code and dead code removal
 
 				-- Type check the message
 			message.type_check
-			if vape_check then
-				context.set_check_for_vape (true)
-			end
 		end
 
 	byte_node: NESTED_B is

@@ -123,7 +123,7 @@ feature -- Type check, byte code and dead code removal
 			obs_warn: OBS_FEAT_WARN
 			context_export: EXPORT_I
 			feature_export: EXPORT_I
-			like_argument_detected, vape_check: BOOLEAN
+			like_argument_detected: BOOLEAN
 			vape: VAPE
 			formal_type: FORMAL_A
 			operand: OPERAND_AS
@@ -205,16 +205,8 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.raise_error
 				elseif parameters /= Void then
 						-- Type check on parameters
-					if context.level4 then
-						vape_check := context.check_for_vape
-							-- Do not want check for vape
-							-- for parameters
-						context.set_check_for_vape (False)
-						parameters.type_check
-						context.set_check_for_vape (vape_check)
-					else
-						parameters.type_check
-					end
+					parameters.type_check
+
 						-- Conformance initialization
 					Argument_types.init2 (a_feature)
 					from

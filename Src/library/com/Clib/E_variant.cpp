@@ -50,7 +50,7 @@ EIF_CHARACTER ecom_variant::ccom_character ()
 
 EIF_REFERENCE ecom_variant::ccom_character_reference ()
 {
-	return rt_ce.ccom_ce_pointed_character((unsigned char *)V_I1REF(variant), NULL);
+	return rt_ce.ccom_ce_pointed_character((char *)V_I1REF(variant), NULL);
 }
 
 EIF_CHARACTER ecom_variant::ccom_unsigned_character ()
@@ -60,7 +60,7 @@ EIF_CHARACTER ecom_variant::ccom_unsigned_character ()
 
 EIF_REFERENCE ecom_variant::ccom_unsigned_character_reference()
 {
-	return rt_ce.ccom_ce_pointed_character (V_UI1REF(variant), NULL);
+	return rt_ce.ccom_ce_pointed_character ((char *)V_UI1REF(variant), NULL);
 }
 
 void ecom_variant::ccom_set_character (EIF_CHARACTER char_value)

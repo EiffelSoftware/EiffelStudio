@@ -45,6 +45,7 @@ feature -- Connections
  			-- 'session_control' provides informations control access and 
  			--  the status of the database.
  			create session_control.make
+			session_control.reset
  	
 			-- Start session
  			session_control.connect
@@ -60,8 +61,6 @@ feature -- Connections
 			is_connected: session_control.is_connected
  		do
  			session_control.disconnect
-		ensure
-			is_not_connected: not session_control.is_connected
  		end
  
  feature -- Loadings

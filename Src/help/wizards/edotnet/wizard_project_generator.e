@@ -19,15 +19,19 @@ feature -- Basic Operations
 			tuple: TUPLE [STRING, STRING]
 			project_name_lowercase: STRING
 			project_location: STRING
+			ace_location: STRING
 			root_class_name_lowercase: STRING
-		do	
+		do
 				-- cached variables
 			project_name_lowercase := clone (wizard_information.project_name)
 			project_name_lowercase.to_lower
 			project_location := wizard_information.project_location
 
 				-- Update the ace file location.
-			wizard_information.set_ace_location (project_location + "\" + project_name_lowercase + Ace_extension)
+			create ace_location.make_from_string (project_location)
+			ace_location.append_character ((create {OPERATING_ENVIRONMENT}.default_create).Directory_separator)
+			ace_location.append (project_name_lowercase + Ace_extension)
+			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
 			add_common_parameters (map_list)
@@ -35,7 +39,7 @@ feature -- Basic Operations
 			create tuple.make
 			tuple.put (Application_type_template, 1)
 			tuple.put (wizard_information.application_type, 2)
-			map_list.extend (tuple)		
+			map_list.extend (tuple)
 
 				-- Add the root class name
 			root_class_name_lowercase := clone (wizard_information.root_class_name)
@@ -53,12 +57,22 @@ feature -- Basic Operations
 				map_list.extend (tuple)
 			end
 
+				-- Add console application (yes\no)
+			create tuple.make
+			tuple.put (Console_application, 1)
+			if wizard_information.console_application then
+				tuple.put ("yes", 2)
+			else
+				tuple.put ("no", 2)
+			end
+			map_list.extend (tuple)
+
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
 				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			else
-				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)			
+				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 			end
 		end
 
@@ -101,6 +115,9 @@ feature {NONE} -- Constants
 
 	Creation_routine_name_template: STRING is "<FL_CREATION_ROUTINE_NAME>"
 			-- String to be replaced by the chosen creation routine name
+
+	Console_application: STRING is "<FL_CONSOLE_APPLICATION>"
+			-- String to be replaced by yes or no.
 
 	Ace_extension: STRING is ".ace"
 			-- Ace files extension

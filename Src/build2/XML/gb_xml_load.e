@@ -93,11 +93,6 @@ feature -- Basic operation
 			
 			initialize_load_output
 
-			--|FIXME this is a test to see whether either of these windows
-			--| is shown while executing this code. I think that this is now impossible
-			--| due to other changes, so have just removed the code that stored
-			--| the state, and replaced it with these four lines. When sure that
-			--| this check never fails, we can remove it.
 		check
 			display_window_hidden: not display_window.is_show_requested
 			builder_window_hidden: not builder_window.is_show_requested
@@ -171,7 +166,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					-- and hence we must create it accordingly.
 				window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
 				if not directory_name.is_empty then
-						--| FIXME should probably add a procedure in the directory item to handle this.
 					directory_item := Window_selector.directory_object_from_name (directory_name)
 					unparent_tree_node (window_object.window_selector_item)
 					directory_item.extend (window_object.window_selector_item)
@@ -180,9 +174,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			else
 				window_object := titled_window_object
 			end
-				--| FIXME we must now look at the current type of `window'
-				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
-				--| are specific to EV_TITLED_WINDOW
 			from
 				window.start
 			until

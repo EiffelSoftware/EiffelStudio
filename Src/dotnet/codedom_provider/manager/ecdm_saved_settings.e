@@ -165,8 +165,8 @@ feature {NONE} -- Implementation
 			Result.put (500, width_key_name)
 			Result.put (100, x_pos_key_name)
 			Result.put (50, y_pos_key_name)
-			Result.put (1, show_text_name)
-			Result.put (1, show_tooltip_name)
+			Result.put (2, show_text_name)
+			Result.put (2, show_tooltip_name)
 		end
 
 	height_key_name: STRING is "height"

@@ -72,8 +72,6 @@ end;
 			-- Remove file from Current
 		require
 			good_argument: f /= Void
-		local
-			void_file: SERVER_FILE;
 		do
 			if f.is_open then
 					-- If the file is open then it is in the cache
@@ -81,7 +79,7 @@ end;
 				remove_id (f.id);
 			end;
 				-- Remove `f' from the controler
-			files.put (void_file, f.id);
+			files.put (Void, f.id);
 				-- Remove file from the disk
 			f.delete;
 debug ("SERVER")
@@ -273,5 +271,14 @@ feature -- Precompilation
 				i := i + 1
 			end;
 		end;
+
+feature -- SERVER_FILE sizes
+
+	chunk_size: INTEGER;
+
+	set_chunk_size (s: INTEGER) is
+		do
+			chunk_size := s
+		end
 
 end

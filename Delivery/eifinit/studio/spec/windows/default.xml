@@ -96,6 +96,13 @@
 					<TEXT DESCRIPTION="+ Alt">show_search_panel_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
 					<TEXT DESCRIPTION="+ Shift">show_search_panel_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
 				</TOPIC>
+				<TOPIC TOPIC_ID="Show search and replace panel" ICON="icon_preferences_folder">
+					<HEAD>Show search and replace panel</HEAD>
+					<TEXT DESCRIPTION="Key">show_search_and_replace_panel_shortcut_key<STRING>H</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">show_search_and_replace_panel_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">show_search_and_replace_panel_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">show_search_and_replace_panel_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
 			</TOPIC>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
 				<HEAD>Autocomplete</HEAD>

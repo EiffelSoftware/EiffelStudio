@@ -107,9 +107,8 @@ feature -- Status setting
 
 feature -- Event handling
 
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when pressed.
-			--| FIXME change to select_actions
 
 feature {EV_ANY_I} -- Implementation
 
@@ -129,11 +128,20 @@ feature {NONE} -- Implementation
 		do
 			{EV_ITEM} Precursor
 			{EV_PICK_AND_DROPABLE} Precursor
-			create press_actions
+			create select_actions
+		end
+
+feature -- Obsolete
+
+	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		obsolete
+			"use select_actions"
+		do
+			Result := select_actions
 		end
 
 invariant
-	press_actions_not_void: press_actions /= Void
+	select_actions_not_void: select_actions /= Void
 
 end -- class EV_TOOL_BAR_BUTTON
 
@@ -158,6 +166,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/17 16:06:10  brendel
+--| Replaced press_actions with select_actions.
+--|
 --| Revision 1.14  2000/04/07 22:28:19  brendel
 --| EV_SIMPLE_ITEM -> EV_ITEM.
 --|

@@ -34,7 +34,7 @@ feature -- Access
 			check_button: EV_CHECK_BUTTON
 			counter: INTEGER
 			first_item, second_item: EV_WIDGET
-			frame: EV_FRAME
+			label: EV_LABEL
 			vertical_box: EV_VERTICAL_BOX
 		do
 			create check_buttons.make (0)
@@ -56,11 +56,9 @@ feature -- Access
 
 				-- We only add the is_expandable label if there are children
 			if not first.is_empty then
-				create frame.make_with_text ("Is_item_expanded?")
-				Result.extend (frame)
-				create vertical_box
-				vertical_box.set_border_width (Object_editor_padding_width)
-				frame.extend (vertical_box)
+				create label.make_with_text ("Is_item_expanded?")
+				Result.extend (label)
+				Result.disable_item_expand (label)
 				from
 					counter := 1
 				until
@@ -75,7 +73,8 @@ feature -- Access
 					check_buttons.force (check_button)
 					check_button.select_actions.extend (agent update_widget_expanded (check_button, counter))
 					check_button.select_actions.extend (agent update_editors)
-					vertical_box.extend (check_button)
+					Result.extend (check_button)
+					Result.disable_item_expand (check_button)
 					counter := counter + 1
 				end
 			end

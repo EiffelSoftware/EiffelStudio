@@ -440,7 +440,7 @@ EIF_INTEGER a_delay;
 {
 	event_callback = (EVENT_CALLBACK) a;
 	event_object = eif_adopt (o);
-	delay = 10; 
+	delay = a_delay; 
 }
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)

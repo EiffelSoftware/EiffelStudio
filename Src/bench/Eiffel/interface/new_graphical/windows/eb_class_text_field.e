@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Properties
 
---	new_class_win: EB_NEW_CLASS_TOOL
+	new_class_win: EB_NEW_CLASS_TOOL_DIALOG
 			-- New window for a class tool.
 
 	tool: EB_CLASS_TOOL
@@ -111,10 +111,8 @@ feature {EB_CHOICE_WINDOW} -- Execution
 --								mp.restore
 								if class_list.empty then
 									class_list := Void
---									if new_class_win = Void then
---										create new_class_win.make (tool)
---									end
---									new_class_win.call (cname, tool.cluster)
+									create new_class_win.make_default (tool)
+									new_class_win.call (cname)
 								elseif class_list.count = 1 then
 									cname.to_upper
 									set_text (cname)
@@ -140,13 +138,11 @@ feature {EB_CHOICE_WINDOW} -- Execution
 									create wd.make_default (tool.parent, Interface_names.t_Warning,
 										Warning_messages.w_Cannot_find_cluster (cluster_name))
 								else
---									class_i := cluster.classes.item (cname)
---									if class_i = Void then
---										if new_class_win = Void then
---											create new_class_win.make (tool)
---										end
---										new_class_win.call (cname, cluster)
---									end
+									class_i := cluster.classes.item (cname)
+									if class_i = Void then
+										create new_class_win.make_default (tool)
+										new_class_win.call (cname)
+									end
 								end	
 							end
 						else

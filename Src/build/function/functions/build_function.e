@@ -49,9 +49,12 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			drop_command: FUNC_DROP
 		do
 			if pair_is_valid then
-				accept_pair;
+				add (input_data, output_data)
 				!!drop_command;
 				drop_command.execute (Current);
+--				accept_pair;
+				reset_input_data
+				reset_output_data
 				func_editor.reset_stones
 			end
 		end;
@@ -241,12 +244,16 @@ feature -- Input and Output datas
 			-- Set `input_data' to `s'.
 		do
 			input_data := s;
+		ensure
+			input_data_set: input_data = s
 		end;
 
 	set_output_data (s: like output_data) is
 			-- Set `input_data' to `s'.
 		do
 			output_data := s;
+		ensure
+			output_data_set: output_data = s
 		end;
 
 feature {NONE}

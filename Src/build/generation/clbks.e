@@ -56,7 +56,7 @@ feature
 				end;
 				Result.append (c.eiffel_callback_calls)
 			end;
-			Result.append ("%T%Tend;%N");
+			Result.append ("%T%Tend%N");
 		end;
 
 	make is

@@ -15,7 +15,8 @@ inherit
 	EV_BOX_IMP
 		redefine
 			move_and_resize,
-			internal_resize
+			internal_resize,
+			set_child_expandable
 		end
 
 creation
@@ -50,6 +51,14 @@ feature -- Status setting
 			notify_change (1 + 2)
 		end
 
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+			-- Make the child corresponding to `index' expandable if `flag',
+			-- not expandable otherwise.
+		do
+			{EV_BOX_IMP} Precursor (child, flag)
+			notify_change (2)
+		end
+
 feature {NONE} -- Basic operation 
 
 	set_local_width (new_width: INTEGER) is
@@ -76,26 +85,30 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	set_local_height (temp_height: INTEGER) is
+	set_local_height (value: INTEGER) is
 			-- Make 'new_height' the `height' of the box and adapt 
 			-- the children height.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
+			expandable: ARRAYED_LIST [INTEGER]
 			litem: EV_WIDGET_IMP
 			rate, total_rest, mark: INTEGER
 			children_size, localint: INTEGER
 			cwidth, bwidth, space: INTEGER
 			cur: CURSOR
+			int1, int2: INTEGER
+			next_non_expandable: INTEGER
 		do
 			if childvisible_nb = 0 then
-				mark := temp_height
+				mark := value
 			else
 				lchild := ev_children
+				expandable := children_expandable 
 				cur := lchild.cursor
 				cwidth := client_width
 				bwidth := border_width
 				space := spacing
-				children_size := temp_height - 2 * bwidth - total_spacing
+				children_size := value - 2 * bwidth - total_spacing
 
 				-- Homogeneous state : only the visible children are
 				-- importante.
@@ -122,20 +135,28 @@ feature {NONE} -- Basic operation
 				-- Non homogeneous state : we have to be carefull to the non
 				-- expanded children too.
 				else
-					rate := (children_size - children_height) // (childexpand_nb.max (1))
-					total_rest := (children_size - children_height) \\ (childexpand_nb.max (1))
+					int1 := children_size - children_height
+					int2 := childexpand_nb.max (1)
+					rate := int1 // int2
+					total_rest := int1 \\ int2
 
 					-- Then, we ask the children to move and resize.
 					-- Be carefull to the expanded child.
 					from
 						mark := bwidth
 						lchild.start
+						if expandable = Void then
+							next_non_expandable := -1
+						else
+							expandable.start
+							next_non_expandable := expandable.item
+						end
 					until
 						lchild.after
 					loop
 						litem := lchild.item
 						if litem.shown then
-							if litem.expandable then
+							if lchild.index /= next_non_expandable then
 								localint := litem.minimum_height + rate + rest (total_rest)
 								if total_rest > 0 then
 									total_rest := total_rest - 1
@@ -144,6 +165,12 @@ feature {NONE} -- Basic operation
 								end
 							else
 								localint := litem.minimum_height
+								if expandable.islast then
+									next_non_expandable := - 1
+								else
+									expandable.forth
+									next_non_expandable := expandable.item
+								end
 							end
 							litem.set_move_and_size (bwidth, mark, cwidth, localint)
 							mark := mark + space + localint
@@ -193,7 +220,7 @@ feature {NONE} -- Implementation for automatic size compute
 				lchild := ev_children
 				from
 					cur := lchild.cursor
-					childvisible_nb := 0; childexpand_nb := 0; value := 0;
+					childvisible_nb := 0; value := 0; --childexpand_nb := 0; 
 					lchild.start
 				until
 					lchild.after
@@ -203,9 +230,6 @@ feature {NONE} -- Implementation for automatic size compute
 						childvisible_nb := childvisible_nb + 1
 						if litem.minimum_width > value then
 							value := litem.minimum_width
-						end
-						if litem.expandable then
-							childexpand_nb := childexpand_nb + 1
 						end
 					end
 					lchild.forth
@@ -226,7 +250,7 @@ feature {NONE} -- Implementation for automatic size compute
 			if not ev_children.empty then
 				lchild := ev_children
 				cur := lchild.cursor
-				childvisible_nb := 0; childexpand_nb := 0; value := 0
+				childvisible_nb := 0;  value := 0; --childexpand_nb := 0;
 				if is_homogeneous then
 					from
 						lchild.start
@@ -238,9 +262,6 @@ feature {NONE} -- Implementation for automatic size compute
 							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_height > value then
 								value := litem.minimum_height
-							end
-							if litem.expandable then
-								childexpand_nb := childexpand_nb + 1
 							end
 						end
 						lchild.forth
@@ -256,9 +277,6 @@ feature {NONE} -- Implementation for automatic size compute
 						if litem.shown then
 							value := value + litem.minimum_height
 							childvisible_nb := childvisible_nb + 1
-							if litem.expandable then
-								childexpand_nb := childexpand_nb + 1
-							end
 						end
 						lchild.forth
 					end
@@ -280,7 +298,7 @@ feature {NONE} -- Implementation for automatic size compute
 			if not ev_children.empty then
 				lchild := ev_children
 				cur := lchild.cursor
-				childvisible_nb := 0; childexpand_nb := 0; hvalue := 0; wvalue := 0
+				childvisible_nb := 0; hvalue := 0; wvalue := 0 -- childexpand_nb := 0; 
 				if is_homogeneous then
 					from
 						lchild.start
@@ -295,9 +313,6 @@ feature {NONE} -- Implementation for automatic size compute
 							end
 							if litem.minimum_height > hvalue then
 								hvalue := litem.minimum_height
-							end
-							if litem.expandable then
-								childexpand_nb := childexpand_nb + 1
 							end
 						end
 						lchild.forth
@@ -316,9 +331,6 @@ feature {NONE} -- Implementation for automatic size compute
 								wvalue := litem.minimum_width
 							end
 							hvalue := hvalue + litem.minimum_height
-							if litem.expandable then
-								childexpand_nb := childexpand_nb + 1
-							end
 						end
 						lchild.forth
 					end

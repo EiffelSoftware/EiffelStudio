@@ -73,7 +73,6 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-			object.layout_item.set_text (name_and_type_from_object (object))
 			titled_window_object ?= object
 			if titled_window_object /= Void then
 				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
@@ -98,7 +97,6 @@ feature -- Basic Operation
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			object.set_name (old_name)
-			object.layout_item.set_text (name_and_type_from_object (object))
 			titled_window_object ?= object
 			if titled_window_object /= Void then
 				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
@@ -119,7 +117,7 @@ feature -- Basic Operation
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			if old_name.is_empty then
-				Result := "Unnamed " + object.layout_item.object.short_type + " named as '" + new_name + "'"
+				Result := "Unnamed " + object.short_type + " named as '" + new_name + "'"
 			else
 				if new_name.is_empty then
 					Result := "'" + old_name + "' name removed."	

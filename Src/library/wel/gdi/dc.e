@@ -61,6 +61,11 @@ inherit
 			{ANY} valid_rop2_constant
 		end
 
+	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -417,6 +422,22 @@ feature -- Status report
 				Max_text_face, $a))
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	width: INTEGER is
+			-- Width of the screen (in pixels)
+		require
+			exists: exists
+		do
+			Result := device_caps (Horizontal_resolution)
+		end
+
+	height: INTEGER is
+			-- Height of screen (in raster lines)
+		require
+			exists: exists
+		do
+			Result := device_caps (Vertical_resolution)
 		end
 
 feature -- Status setting
@@ -921,9 +942,9 @@ feature -- Basic operations
 				Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
-	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, width, height: INTEGER) is
+	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, a_width, a_height: INTEGER) is
 			-- Draw `bitmap' at the `x', `y' position
-			-- using `width' and `height'.
+			-- using `a_width' and `a_height'.
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void
@@ -937,7 +958,7 @@ feature -- Basic operations
 				bitmap_dc.realize_palette
 			end
 			bitmap_dc.select_bitmap (a_bitmap)
-			bit_blt (x, y, width, height, bitmap_dc, 0, 0, Srccopy)
+			bit_blt (x, y, a_width, a_height, bitmap_dc, 0, 0, Srccopy)
 			bitmap_dc.unselect_bitmap
 			if bitmap_dc.palette_selected then
 				bitmap_dc.unselect_palette
@@ -1159,24 +1180,24 @@ feature -- Basic operations
 				rect.top, Srccopy)
 		end
 
-	bit_blt (x_destination, y_destination, width, height: INTEGER;
+	bit_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			dc_source: WEL_DC; x_source, y_source,
 			raster_operation: INTEGER) is
 			-- Copy a bitmap from the `dc_source' to
 			-- the current device context, from `x_source',
 			-- `y_source' to `x_destination', `y_destination',
-			-- using `width' and `height' with `raster_operation'.
+			-- using `a_width' and `a_height' with `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
 		require
 			exists: exists
-			positive_width: width >= 0
-			positive_height: height >= 0
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
 			dc_source_not_void: dc_source /= Void
 			dc_source_exists: dc_source.exists
 		do
 			cwin_bit_blt (item, x_destination, y_destination,
-				width, height, dc_source.item, x_source,
+				a_width, a_height, dc_source.item, x_source,
 				y_source, raster_operation)
 		end
 
@@ -1205,13 +1226,14 @@ feature -- Basic operations
 				width_source, height_source, raster_operation)
 		end
 
-	stretch_di_bits (x_destination, y_destination, width, height, x_source,
-				y_source, dib_width, dib_height: INTEGER;
+	stretch_di_bits (x_destination, y_destination, a_width, a_height,
+				x_source, y_source, dib_width,
+				dib_height: INTEGER;
 				dib: WEL_DIB; bitmap_info: WEL_BITMAP_INFO;
 				rgb_mode, raster_operation: INTEGER) is
 			-- Copy a dib to the current device context, from
 			-- `x_source', `y_source' to `x_destination',
-			-- `y_destination', using `width' and `height'
+			-- `y_destination', using `a_width' and `a_height'
 			-- with `raster_operation' and `rgb_mode'
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values
@@ -1219,14 +1241,14 @@ feature -- Basic operations
 			-- `rgb_mode' values
 		require
 			exists: exists
-			positive_width: width >= 0
-			positive_height: height >= 0
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
 			dib_not_void: dib /= Void
 			bitmap_not_void: bitmap_info /= Void
 			valid_rgb_mode: valid_dib_colors_constant (rgb_mode)
 		do
 			cwin_stretch_di_bits (item, x_destination,
-				y_destination, width, height, x_source,
+				y_destination, a_width, a_height, x_source,
 				y_source, dib_width, dib_height,
 				dib.item_bits, bitmap_info.item, rgb_mode,
 				raster_operation)
@@ -1245,7 +1267,7 @@ feature -- Basic operations
 			stretch_blt_mode_set: stretch_blt_mode = a_mode
 		end
 
-	pat_blt (x_destination, y_destination, width, height: INTEGER;
+	pat_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			raster_operation: INTEGER) is
 			-- Copy a bitmap from the `dc_source' to
 			-- `y_source' to `x_destination', `y_destination',
@@ -1254,11 +1276,11 @@ feature -- Basic operations
 			-- `raster_operation' values.
 		require
 			exists: exists
-			positive_width: width >= 0
-			positive_height: height >= 0
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
 		do
 			cwin_pat_blt (item, x_destination, y_destination,
-				width, height, raster_operation)
+				a_width, a_height, raster_operation)
 		end
 
 	save_bitmap (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
@@ -1564,8 +1586,8 @@ feature {NONE} -- Externals
 			"Pie"
 		end
 
-	cwin_round_rect (hdc: POINTER; x1, y1, x2, y2, width,
-			height: INTEGER) is
+	cwin_round_rect (hdc: POINTER; x1, y1, x2, y2, a_width,
+			a_height: INTEGER) is
 			-- SDK RoundRect
 		external
 			"C [macro <wel.h>] (HDC, int, int, int, int, int, int)"
@@ -1573,7 +1595,7 @@ feature {NONE} -- Externals
 			"RoundRect"
 		end
 
-	cwin_bit_blt (hdc_dest: POINTER; x_dest, y_dest, width, height: INTEGER;
+	cwin_bit_blt (hdc_dest: POINTER; x_dest, y_dest, a_width, a_height: INTEGER;
 			hdc_src: POINTER; x_src, y_src, rop: INTEGER) is
 			-- SDK BitBlt
 		external
@@ -1613,7 +1635,7 @@ feature {NONE} -- Externals
 			"SetStretchBltMode"
 		end
 
-	cwin_pat_blt (hdc_dest: POINTER; x_dest, y_dest, width, height: INTEGER;
+	cwin_pat_blt (hdc_dest: POINTER; x_dest, y_dest, a_width, a_height: INTEGER;
 			rop: INTEGER) is
 			-- SDK PatBlt
 		external

@@ -107,20 +107,21 @@ mkdir setups\Enterprise\setup
 mkdir setups\Free
 
 remtrace Preparing Free edition
-WfWI "D:\Installations\Eiffel55\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
+WfWI "D:\Installations\Eiffel55\Eiffel55.wsi" /c /p FREEVERSION="TRUE" /p EDITIONNAME="Free Edition"
 copy D:\Installations\Eiffel55\Eiffel55_single.exe setups\Free\
 copy D:\Installations\Eiffel55\Eiffel55.exe setups\Free\
 copy D:\Installations\Eiffel55\Eiffel55.ini setups\Free\
 copy D:\Installations\Eiffel55\Eiffel55.msi setups\Free\
 
 remtrace Preparing University edition
+WfWI "D:\Installations\Eiffel55\Eiffel55.wsi" /c /p FREEVERSION="TRUE" /p EDITIONNAME="University Edition"
 copy D:\Installations\Eiffel55\Eiffel55_university.exe setups\University\install.exe
 copy D:\Installations\Eiffel55\Eiffel55_university.ini setups\University\install.ini
 copy D:\Installations\Eiffel55\Eiffel55_university.msi setups\University\
 
 
 remtrace Preparing Enterprise edition
-WfWI "D:\Installations\Eiffel55\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
+WfWI "D:\Installations\Eiffel55\Eiffel55.wsi" /c /p FREEVERSION="FALSE" /p EDITIONNAME="Enterprise Edition"
 move setup.exe setups\Enterprise
 copy D:\Installations\Eiffel55\Eiffel55_enterprise.exe setups\Enterprise\setup\install.exe
 copy D:\Installations\Eiffel55\Eiffel55_enterprise.ini setups\Enterprise\setup\install.ini

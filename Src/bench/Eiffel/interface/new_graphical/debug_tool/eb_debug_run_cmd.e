@@ -294,12 +294,12 @@ feature -- Execution
 											-- Launch cordbg.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string, 
-												eiffel_system.application_name (True).out + " " + current_cmd_line_argument)
+												"%"" + eiffel_system.application_name (True).out + "%" " + current_cmd_line_argument)
 									elseif l_il_env.use_dbgclr (dotnet_debugger) then
 											-- Launch DbgCLR.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args 
 											(l_app_string,
-												eiffel_system.application_name (True).out)
+												"%"" + eiffel_system.application_name (True).out + "%"")
 									else
 										(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
 											current_cmd_line_argument)

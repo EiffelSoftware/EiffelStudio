@@ -651,6 +651,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			index_of_tool: INTEGER
 			vertical_box: EV_VERTICAL_BOX
 			cell: EV_CELL
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			index_of_tool := all_holders.index_of (a_holder, 1)
 			from
@@ -658,16 +659,33 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.off
 			loop
-				if all_holders.index < index_of_tool - 1 or
+				holder := all_holders.item
+				if all_holders.index < index_of_tool or
 					all_holders.index > index_of_tool + 1 then
-					vertical_box := all_holders.item.upper_box
-	
+					vertical_box := holder.upper_box
 					create cell
 					cell.set_data (all_holders.index)
 					vertical_box.extend (cell)
 					vertical_box.disable_item_expand (cell)
 					cell.enable_docking
-					all_holders.item.set_real_target (cell)
+					holder.set_real_target (cell)
+				end
+				if all_holders.index = all_holders.count and index_of_tool /= all_holders.count then
+						-- As `holder' is the last holder, we must perform special processing, so
+						-- that the final position may be docked to.
+					if index_of_tool + 1 /= all_holders.index then
+							-- If `a_holder' is immediately above `holder', then
+							-- do not allow docking to the top, as it is already
+							-- positioned there.
+						holder.label_box.set_real_target (cell)
+					end
+					create cell
+					cell.set_data (all_holders.index + 1)
+					vertical_box := holder.lower_box
+					vertical_box.extend (cell)
+					vertical_box.disable_item_expand (cell)
+					cell.enable_docking
+					holder.tool.set_real_target (cell)
 				end
 				all_holders.forth
 			end
@@ -678,21 +696,36 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- `initialize_docking_areas'.
 		local
 			cell: EV_CELL
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			from
 				all_holders.start
 			until
 				all_holders.off
 			loop
-				if not all_holders.item.upper_box.is_empty then
+				holder := all_holders.item
+				holder.remove_real_target
+				holder.tool.remove_real_target
+				holder.label_box.remove_real_target
+				if not holder.upper_box.is_empty then
 					
 					-- We do not wish to remove any minimized items contained in `upper_box',
 					-- only the cells added during call to `initialize_docking_areas'.
 					-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= all_holders.item.upper_box.first
+					cell ?= holder.upper_box.first
 					if cell /= Void and then cell.data /= Void then
-						all_holders.item.upper_box.start
-						all_holders.item.upper_box.remove
+						holder.upper_box.start
+						holder.upper_box.remove
+					end
+				end
+				if not holder.lower_box.is_empty then
+					-- We do not wish to remove any minimized items contained in `lower_box',
+					-- only the cells added during call to `initialize_docking_areas'.
+					-- Therefore, we check that they are cells with data to qualify this.
+					cell ?= holder.lower_box.first
+					if cell /= Void and then cell.data /= Void then
+						holder.lower_box.start
+						holder.lower_box.remove
 					end
 				end
 				all_holders.forth

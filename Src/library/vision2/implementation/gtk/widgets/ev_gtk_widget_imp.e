@@ -98,10 +98,10 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	parent_imp: EV_ANY_IMP is
-			-- Parent of `Current'
-		deferred
-		end
+--	parent_imp: EV_ANY_IMP is
+--			-- Parent of `Current'
+--		deferred
+--		end
 
 	event_widget: POINTER is
 			-- Pointer to the widget handling the widget events
@@ -207,8 +207,8 @@ feature {EV_ANY_I} -- Implementation
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
-			if parent_imp /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
+			if feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			else
 				update_request_size
 			end
@@ -218,8 +218,8 @@ feature {EV_ANY_I} -- Implementation
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
-			if parent_imp /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
+			if feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			else
 				update_request_size
 			end

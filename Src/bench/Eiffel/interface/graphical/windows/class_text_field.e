@@ -92,7 +92,8 @@ feature {NONE} -- Execution
 			choice_position: INTEGER;
 			at_pos: INTEGER;
 			cluster: CLUSTER_I;
-			cluster_name: STRING
+			cluster_name: STRING;
+			pattern: STRING_PATTERN
 		do
 			if (choice /= Void) and then (arg = choice) then
 				check
@@ -106,6 +107,8 @@ feature {NONE} -- Execution
 					cname.to_upper;
 					set_text (cname);
 					execute (class_i)
+				else
+					close_choice_window
 				end
 				class_list := Void
 			elseif project_initialized then
@@ -118,7 +121,9 @@ feature {NONE} -- Execution
 						warner (popup_parent).gotcha_call (w_Specify_a_class)
 					else
 						cname.to_lower;
-						if cname.item (cname.count) /= '*' then
+						!! pattern.make (0);
+						pattern.append (cname);
+						if not pattern.has_wild_cards then
 							!! mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
@@ -165,17 +170,21 @@ feature {NONE} -- Execution
 						else
 							!! mp.set_watch_cursor;
 							!! sorted_classes.make;
-							cname.head (cname.count - 1);
 							clusters := Eiffel_universe.clusters;
-							from clusters.start until clusters.after loop
+							from
+								clusters.start
+							until
+								clusters.after
+							loop
 								classes := clusters.item.classes;
-								from classes.start until classes.after loop
+								from
+									classes.start
+								until
+									classes.after
+								loop
 									class_name := classes.key_for_iteration;
-									if 
-										cname.empty or else
-										(class_name.count >= cname.count
-										and then class_name.substring 
-											(1, cname.count).is_equal (cname))
+									if
+										pattern.matches (class_name)
 									then
 										sorted_classes.put_front
 											(classes.item_for_iteration)
@@ -199,6 +208,7 @@ feature {NONE} -- Execution
 						!! classi_stone.make (class_i)
 						tool.process_classi (classi_stone);
 					end
+					close_choice_window;
 				end
 			end
 		end;

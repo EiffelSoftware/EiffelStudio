@@ -86,7 +86,8 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 			stone: CLASSC_STONE;
 			feature_stone: FEATURE_STONE;
 			feat_names: SORTED_TWO_WAY_LIST [STRING];
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			pattern: STRING_PATTERN
 		do
 			if (choice /= Void) and then arg = choice then
 				if choice.position /= 1 then
@@ -94,6 +95,8 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 					stone := classc_stone;
 					classc_stone := Void;
 					execute (stone)
+				else
+					close_choice_window
 				end
 			else
 				stone ?= arg;
@@ -110,16 +113,18 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 						e_class := stone.e_class;	
 						if e_class /= Void then
 							f_table := e_class.feature_table;
-							if rname.item (rname.count) = '*' then
-								rname.head (rname.count - 1);
+							!! pattern.make (0);
+							pattern.append (rname);
+							if pattern.has_wild_cards then
 								!! feat_names.make;
-								from f_table.start until f_table.after loop
+								from
+									f_table.start
+								until
+									f_table.after
+								loop
 									feat_name := f_table.key_for_iteration;
 									if
-										rname.empty or else
-										(feat_name.count >= rname.count and then
-										feat_name.substring 
-											(1, rname.count).is_equal (rname))
+										pattern.matches (feat_name)
 									then
 										feat_names.extend (feat_name)
 									end;
@@ -140,6 +145,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 									!! feature_stone.make (e_feature);
 									tool.process_feature (feature_stone);
 									mp.restore;
+									close_choice_window
 								end
 							end
 						else

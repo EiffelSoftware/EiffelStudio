@@ -84,24 +84,10 @@ feature {NONE} -- Initialization
 			shell_width := 2 * window_frame_width
 		end
 
-	dialog_realize is
-			-- Realize the current widget
-		local
-			h,w: INTEGER
-		do
-			if not exists then
-				realize_current
-				realize_children
-				if not fixed_size then
-					set_enclosing_size
-				end
-			end
-			realized := true
-			if grab_style = modal then
-				set_windows_insensitive
-			end
-			show
-		end
+feature -- Access
+
+	default_position: BOOLEAN
+			-- Use default position?
 
 feature -- Status setting
 

@@ -1,5 +1,5 @@
 system
-	"VISION2_WIDGET_TEST"
+	"vision2_widget_test"
 
 root
 	vision2_application: make_and_launch

@@ -44,7 +44,9 @@ feature -- Access
 			ct: CONSUMED_TYPE
 		do
 			ct := consumed_type (t)
-			Result := clone (ct.eiffel_name)
+			if ct /= Void then
+				Result := clone (ct.eiffel_name)
+			end
 		end	
 
 	feature_name (t: TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [TYPE]): STRING is

@@ -1,24 +1,37 @@
+indexing
+
+	description: 
+		"Pre and Post condition defined in origin feature.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ROUTINE_ASSERTIONS
 
 creation
+
 	make, make_for_feature
 	
-feature
+feature -- Initialization
 
-	precondition: REQUIRE_AS_B;
-
-	postcondition: ENSURE_AS_B;
-		
-	origin: FEATURE_I;
-
-	make (ast: FEATURE_FSAS) is
+	make (feat_adapter: FEATURE_ADAPTER) is
+			-- Initialize Current assertion
+			-- with assertions from `ast'.
+		require
+			valid_feat_adapter: feat_adapter /= Void
+		local
+			routine_as: ROUTINE_AS_B	
 		do
-			precondition := ast.precondition;
-			postcondition := ast.postcondition;
-			origin := ast.adapter.old_feature;
+			routine_as ?= feat_adapter.ast.body.content;
+			if routine_as /= Void then
+				precondition := routine_as.precondition;
+				postcondition := routine_as.postcondition;
+			end;
+			origin := feat_adapter.source_feature;
 		end;
 
 	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS_B) is
+			-- Initialize Current with feature `feat'
+			-- and ast structure `ast'.
 		local
 			rout_as: ROUTINE_AS_B
 		do
@@ -30,30 +43,40 @@ feature
 			origin := feat;
 		end;
 
-	format_precondition (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.begin;
-			ctxt.set_source_context (origin);
-			ctxt.set_source_class (origin.written_class);
-			precondition.format (ctxt);
-			ctxt.commit
-		end;
+feature -- Properties
 
-	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.begin;
-			ctxt.set_source_context (origin);
-			ctxt.set_source_class (origin.written_class);
-			postcondition.format (ctxt);
-			ctxt.commit;
-		end;
+	precondition: REQUIRE_AS_B;
+			-- Precondition ast for origin
+
+	postcondition: ENSURE_AS_B;
+			-- Postcondition ast for origin
+		
+	origin: FEATURE_I;
+			-- Feature where assertions are defined
 
 	written_in: INTEGER is
+			-- Written in id of origin feature
 		require
 			origin_set: origin /= Void
 		do
 			Result := origin.written_in
 		end;
+
+feature -- Output
+
+	format_precondition (ctxt: FORMAT_CONTEXT_B) is
+		do
+			ctxt.set_source_feature_for_assertion (origin);
+			precondition.format (ctxt);
+		end;
+
+	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
+		do
+			ctxt.set_source_feature_for_assertion (origin);
+			postcondition.format (ctxt);
+		end;
+
+feature -- Debug
 
 	trace is
 		do
@@ -62,9 +85,4 @@ feature
 			io.error.new_line;
 		end;
 
-
 end
-		
-
-
-	

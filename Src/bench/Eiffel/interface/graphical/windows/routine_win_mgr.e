@@ -18,7 +18,22 @@ creation
 
 	make
 
-feature -- Debugging (stop points)
+feature -- Update
+
+	resynchronize_debugger (feat: E_FEATURE) is
+			-- Resynchronize debugged routine window with feature `feat'.
+		require
+			feat_non_void: feat /= Void
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.resynchronize_debugger (feat);
+				active_editors.forth
+			end
+		end;
 
 	show_stoppoint (routine: E_FEATURE; index: INTEGER) is
 			-- Show the `index'-th breakable point of `routine' in
@@ -27,33 +42,17 @@ feature -- Debugging (stop points)
 		require
 			routine_exists: routine /= Void
 		local
-			rout_text: ROUTINE_TEXT;
 			rout_window: ROUTINE_W
 		do
-			from
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				rout_window := active_editors.item;
-				rout_text := rout_window.text_window;
-				if 
-					rout_text.root_stone /= Void and then
-					rout_text.root_stone.e_feature /= Void and then
-					equal (rout_text.root_stone.e_feature.body_id, routine.body_id)
-				then
-					if rout_text.in_debug_format then
-						rout_text.redisplay_breakable_mark (index)
-					elseif 
-						rout_text.last_format = rout_window.showtext_frmt_holder 
-					then
-							-- Update the title bar of the feature tool.
-							-- "(stop)" if the routine has a stop point set.
-						rout_window.showtext_frmt_holder.associated_command.display_header 
-													(rout_text.root_stone)
-					end
-				end;
-				active_editors.forth
+			if index > 0 then
+				from
+					active_editors.start
+				until
+					active_editors.after
+				loop
+					active_editors.item.show_stoppoint (routine, index);
+					active_editors.forth
+				end
 			end
 		end;
 

@@ -1,23 +1,31 @@
 #!/usr/bin/perl -w
 #===============================================================================
 # gen_action_sequences
+#-------------------------------------------------------------------------------
 # This program translates an action sequence definition file into a collection
 # of eiffel classes. 
+# The deffinition file has one like per difinition like this:
+# name: description; arg_name: ARG_TYPE; arg_name: ARG_TYPE etc
+#-------------------------------------------------------------------------------
 # Date: $Date$
 # Revision: $Revision$
 #===============================================================================
 
 while (<>) {
+	# Initiailize some arrays.
 	@args = ();
 	@arg_names = ();
 	@arg_types = ();
+	# Ignore empty lines, those starting with whitespace and comments.
 	if (!/^[\n 	#].*/) {
 		chomp;
 		@fields = split (/;[ 	]*/,$_);
+		# Grab the name and the description.
 		$name = shift (@fields);
 		@parts = split (/:[ 	]*/,$name);
 		$name = $parts[0];
 		$desc = $parts[1];
+		# Grab the arguments.
 		foreach $field (@fields) {
 			push (@args, $field);
 			@parts = split (/:[	 ]*/,$field);
@@ -25,21 +33,24 @@ while (<>) {
 			push (@arg_types, $parts[1]);
 		}
 
+		# Prepare the parent class name.
 		$parent = "ACTION_SEQUENCE";
 		$_ = $parent;
 		tr/[A-Z]/[a-z]/;
 		$parent_lower = $_;
 
+		# Prepare the class name.
 		$_ = $name;
 		tr/[a-z]/[A-Z]/;
 		$classname = "$_\_$parent";
-
-		print "$classname\n";
-
 		$_ = $classname;
 		tr/[A-Z]/[a-z]/;
 		$lower_classname = $_;
 
+		# Status message.
+		print "$classname\n";
+
+		# Prepare the event data type, and some handy argument list strings.
 		$data_type = "TUPLE [";
 		$wrapper_args = "";
 		$arg_name_array = "";
@@ -68,8 +79,10 @@ while (<>) {
 		}
 		$data_type = "$data_type]";
 
+		# Open our output file.
 		open (OH, ">" . "$lower_classname.e");
 
+		# Dump the classtext.
 		print OH <<EOT;
 indexing
 	description: "Action sequence $desc."
@@ -116,6 +129,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.6  1999/10/27 20:48:43  oconnor
+# added some more comments
+#
 # Revision 1.5  1999/10/27 20:43:30  oconnor
 # added cvs date revision keywords
 #

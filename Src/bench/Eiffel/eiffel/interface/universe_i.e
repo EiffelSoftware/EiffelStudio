@@ -89,7 +89,6 @@ feature -- Access
 			cur: CURSOR;
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
-			!! Result.make;
 			cur := clusters.cursor;
 			from 
 				clusters.start 

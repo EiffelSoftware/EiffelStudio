@@ -6664,6 +6664,7 @@ libs='$libs'
 ln='$ln'
 make='$make'
 mkdep='$mkdep'
+mkdir='$mkdir'
 mtldflags="\$ldflags"
 mtldsharedflags="\$ldsharedflags"
 mtlibs="\$libs"

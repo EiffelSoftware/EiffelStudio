@@ -15,10 +15,17 @@ feature -- Access
 
 	names: HASH_TABLE [RGB_TRIPLE, STRING] is
 			-- Fill the hash-table when called
+		once
+			!! Result.make (800)
+			add_names
+		end
+
+feature {NONE} -- Implementation
+
+	add_names is 
 		local
 			color: WEL_COLOR_REF
-		once
-			!! Result.make (1000)
+		do
 			add_name (255, 250, 250, "snow")
 			add_name (248, 248, 255, "ghost white")
 			add_name (248, 248, 255, "GhostWhite")
@@ -772,24 +779,19 @@ feature -- Access
 			add_name (color.red, color.green, color.blue, "Color_windowtext")
 		end
 
-feature {NONE} -- Implementation
-
 	add_name (r, g, b: INTEGER; color_name: STRING) is
 			-- Add a item in the hash-table, with the key color_name
 		require
 			color_name_not_void: color_name /= Void
 		local
 			rgb_tripple: RGB_TRIPLE
-			temp_string: STRING
 		do
 			!! rgb_tripple.make (r, g, b)
-			temp_string := clone (color_name)
-			names.put (rgb_tripple, temp_string)
+			names.put (rgb_tripple, clone (color_name))
 		end
 
 end -- class COLOR_NAMES_WINDOWS
  
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1997 Interactive Software Engineering Inc.

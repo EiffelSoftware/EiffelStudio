@@ -30,7 +30,7 @@ feature -- access
 		do
 			Result := cwel_nmtvinfotip_get_psztext (item)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_default: Result /= default_pointer
 		end
 
 	cchtextmax: INTEGER is
@@ -38,7 +38,7 @@ feature -- access
 		do
 			Result := cwel_nmtvinfotip_get_cchtextmax (item)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_void: Result >= 0
 		end
 
 	hitem: POINTER is
@@ -46,7 +46,7 @@ feature -- access
 		do
 			Result := cwel_nmtvinfotip_get_hitem (item)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_default: Result /= default_pointer
 		end
 
 	lparam: INTEGER is
@@ -54,7 +54,7 @@ feature -- access
 		do
 			Result := cwel_nmtvinfotip_get_lparam (item)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_void: Result /= 0
 		end
 
 	structure_size: INTEGER is
@@ -67,34 +67,45 @@ feature {NONE} -- Externals
 
 	c_size_of_nm_tvgetinfotip: INTEGER is
 		external
-			"C [macro <nmtvgetinfotip.h>]"
+			"C [macro <windows.h>]"
 		alias
-			"sizeof (TVN_GETINFOTIP)"
+			"sizeof (NMTVGETINFOTIP)"
 		end
 
 	cwel_nmtvinfotip_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtvgetinfotip.h>] (NMTVGETINFOTIP *): EIF_POINTER"
+			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_POINTER"
+		alias
+			"&hdr"
 		end
 
 	cwel_nmtvinfotip_get_psztext (ptr: POINTER): POINTER is
+			-- (export status {NONE})
 		external
-			"C [macro <nmtvgetinfotip.h>] (NMTVGETINFOTIP *): EIF_POINTER"
+			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_POINTER"
+		alias
+			"pszText"
 		end
-
+		
 	cwel_nmtvinfotip_get_cchtextmax (ptr: POINTER): INTEGER is
 		external
-			"C [macro <nmtvgetinfotip.h>]"
+			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+		alias
+			"cchTextMax"
 		end
 
 	cwel_nmtvinfotip_get_hitem (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtvgetinfotip.h>] (NMTVGETINFOTIP *): EIF_POINTER"
+			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+		alias
+			"hItem"
 		end
 
 	cwel_nmtvinfotip_get_lparam (ptr: POINTER): INTEGER is
 		external
-			"C [macro <nmtvgetinfotip.h>]"
+			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+		alias
+			"lParam"
 		end
 
 

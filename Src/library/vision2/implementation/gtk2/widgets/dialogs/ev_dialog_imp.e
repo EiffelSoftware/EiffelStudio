@@ -21,7 +21,8 @@ inherit
 		redefine
 			make,
 			interface,
-			call_close_request_actions
+			call_close_request_actions,
+			client_area
 		end
 		
 create
@@ -33,12 +34,19 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			--set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_dialog_enum))
 			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_new)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (c_object))
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
 			enable_closeable
 		end
+		
+	client_area: POINTER is
+			-- Pointer to the client area where the widgets are contained within the dialog.
+		do
+			Result := feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (c_object)
+		end		
 		
 feature -- Status Report
 

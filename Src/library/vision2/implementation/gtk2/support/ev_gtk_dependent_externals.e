@@ -329,7 +329,10 @@ feature -- Externals
 			"C signature (): GtkWidget* use <gtk/gtk.h>"
 		end
 		
-
+	gtk_dialog_set_has_separator (a_dialog: POINTER; a_setting: BOOLEAN) is
+		external
+			"C signature (GtkDialog*, gboolean) use <gtk/gtk.h>"
+		end
 end
 
 --|----------------------------------------------------------------

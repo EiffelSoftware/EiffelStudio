@@ -8,7 +8,7 @@ default
 	assertion (all)
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\splitarea"
+	root_cluster:	"."
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"

@@ -2,13 +2,27 @@ system
 	magnify_demo
 
 root 
-	PRECOMP_MAGNIFY_DEMO (root_cluster): "make"
+	MAGNIFY_DEMO (root_cluster): "make"
 
 default
 	assertion (all)
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\magnify"
+	root_cluster:	"."
+
+		-- WEL
+	all wel: 		"$ISE_EIFFEL\library\wel"
+
+		-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"
+			"desc"
+		end
+
+external
+	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include"
+	object: 		"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib"
 
 end -- magnify_demo

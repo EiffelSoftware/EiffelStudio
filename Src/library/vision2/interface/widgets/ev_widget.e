@@ -48,14 +48,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_WIDGET is
+	parent: EV_CONTAINER is
 			-- The parent of the Current widget
 			-- Can be void.
 		require
 			exists: not destroyed
 		do
 			if implementation.parent_imp /= Void then
-				Result := implementation.parent_imp.interface
+				Result ?= implementation.parent_imp.interface
 			else
 				Result := Void
 			end

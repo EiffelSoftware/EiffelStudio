@@ -56,7 +56,7 @@ feature -- Status setting
 			when Clock, Watch then
 				make_by_predefined_id (idc_wait)
 			when Crosshair,Fleur then
-				make_by_predefined_id (idc_size)
+				make_by_predefined_id (idc_sizeall)
 			when Sb_h_double_arrow then
 				make_by_predefined_id (idc_sizewe)
 			when Sb_v_double_arrow then

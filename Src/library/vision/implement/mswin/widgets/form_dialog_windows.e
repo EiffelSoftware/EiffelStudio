@@ -41,6 +41,7 @@ inherit
 			unrealize as form_unrealize
 		undefine
 			default_style,
+			destroy,
 			class_background,
 			height,
 			minimal_height,
@@ -50,9 +51,10 @@ inherit
 			on_paint,
 			realize_current,
 			realized,
+			resize_for_shell,
 			width,
 			wel_move
-		redefine
+	redefine
 			class_name,
 			realize,
 			on_size,
@@ -107,6 +109,7 @@ feature -- Status setting
 		do
 			if not exists then
 				realize_current
+				shown := true
 				updating := true
 				realize_children
 				if not fixed_size_flag then
@@ -134,7 +137,7 @@ feature -- Status setting
 				ypos := ypos.max (0)
 				set_x_y (xpos, ypos)
 			end
-			show
+			wel_show
 		end
 
 	realize is

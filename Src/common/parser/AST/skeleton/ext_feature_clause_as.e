@@ -1,11 +1,10 @@
 indexing
-
 	description: 
 		"Extended AST representation of a feature clause structure. %
 		%Keeps the comments as an attribute, instead of %
-		%retrieving them each time. Also keeps position information.";
-	date: "$Date$";
-	revision: "$Revision $"
+		%retrieving them each time. Also keeps position information."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXT_FEATURE_CLAUSE_AS
 
@@ -41,7 +40,7 @@ feature -- Properties
 			-- Comments associated to Current feature clause
 			--| Kept in an attribute, unlike in FEATURE_CLAUSE_AS
 
-	features: EIFFEL_LIST [EXT_FEATURE_AS];
+	features: EIFFEL_LIST [EXT_FEATURE_AS]
 			-- Features
 
 	start_position, end_position: INTEGER
@@ -69,7 +68,7 @@ feature -- Access
 					Result := equal (comments, other.comments)
 				end
 			end
-		end;
+		end
 
 feature {AST_EIFFEL} -- Output
 
@@ -85,7 +84,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.set_separator (ti_Comma)
 				ctxt.set_space_between_tokens
 				clients.simple_format (ctxt)
-			end;
+			end
 			c := comments
 			if c = Void then
 				ctxt.new_line
@@ -117,63 +116,63 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Extract the comments for Current feature clause and
 			-- its features.
 		local
-			i, l_count: INTEGER;
-			f: like features;
-			next_feat, feat: EXT_FEATURE_AS;
+			i, l_count: INTEGER
+			f: like features
+			next_feat, feat: EXT_FEATURE_AS
 		do
-			comments := e_file.current_feature_clause_comments;
-			f := features;
+			comments := e_file.current_feature_clause_comments
+			f := features
 			from
-				i := 1;
-				l_count := f.count;
+				i := 1
+				l_count := f.count
 				if l_count > 0 then		
 					feat := f.i_th (1)
 				end
 			until
 				i > l_count
 			loop
-				i := i + 1;
+				i := i + 1
 				if i > l_count then
-					e_file.set_next_feature (Void);
+					e_file.set_next_feature (Void)
 				else
-					next_feat := f.i_th (i);
-					e_file.set_next_feature (next_feat);
-				end;
-				e_file.set_current_feature (feat);
-				feat.extract_comments (e_file);
-				feat := next_feat;
-			end;
-		end;
+					next_feat := f.i_th (i)
+					e_file.set_next_feature (next_feat)
+				end
+				e_file.set_current_feature (feat)
+				feat.extract_comments (e_file)
+				feat := next_feat
+			end
+		end
 
 feature {NONE} -- Implementation
 
 	features_simple_format (ctxt :FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			i, l_count: INTEGER;
-			f: like features;
-			feat: EXT_FEATURE_AS;
+			i, l_count: INTEGER
+			f: like features
+			feat: EXT_FEATURE_AS
 		do
-			f := features;
-			ctxt.begin;
+			f := features
+			ctxt.begin
 			from
-				i := 1;
-				l_count := f.count;
+				i := 1
+				l_count := f.count
 			until
 				i > l_count
 			loop
-				ctxt.new_expression;
+				ctxt.new_expression
 				if i > 1 then
-					ctxt.put_separator;
-				end;
-				ctxt.new_expression;
-				ctxt.begin;
+					ctxt.put_separator
+				end
+				ctxt.new_expression
+				ctxt.begin
 				feat := f.i_th (i)
-				feat.simple_format (ctxt);
-				i := i + 1;
-				ctxt.commit;
-			end;
-			ctxt.commit;
-		end;
+				feat.simple_format (ctxt)
+				i := i + 1
+				ctxt.commit
+			end
+			ctxt.commit
+		end
 
 end -- class EXT_FEATURE_CLAUSE_AS

@@ -922,13 +922,24 @@ feature -- Font
 		local
 			fontable: FONTABLE;
 			old_w, old_h: INTEGER;
+			was_managed: BOOLEAN
 		do
 			font_name_modified := False;
 			if is_fontable then
 				fontable ?= widget;
 				if s = Void or else s.empty then
 					if default_font /= Void then
+						was_managed := widget.managed;
+						if was_managed then
+							old_w := width;
+							old_h := height;
+							widget.unmanage;
+						end;
 						fontable.set_font (default_font);		
+						if was_managed then
+							widget.set_size (old_w, old_h)
+							widget.manage
+						end;
 					end
 					font_name_modified := False;
 					font_name := s
@@ -938,7 +949,17 @@ feature -- Font
 					end;
 					font_name := s;
 					font_name_modified := True;
+					was_managed := widget.managed;
+					if was_managed then
+						old_w := width;
+						old_h := height;
+						widget.unmanage;
+					end;
 					fontable.set_font_name (s);
+					if was_managed then
+						widget.set_size (old_w, old_h)
+						widget.manage
+					end
 				end
 			end;			
 		end;

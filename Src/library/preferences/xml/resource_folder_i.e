@@ -19,29 +19,18 @@ feature -- Initialization
 		local
 			s: STRING
 			att: XM_ATTRIBUTE
-			att_table: DS_LIST [XM_ATTRIBUTE]
 		do
-			att_table := doc.attributes
 			is_visible := True
-			from
-				att_table.start
-			until
-				att_table.after
-			loop
-				att := att_table.item_for_iteration
-				check
-					non_void_attribute: att /= Void
+			if doc.has_attribute_by_name ("TOPIC_ID") then
+				name := doc.attribute_by_name ("TOPIC_ID").value
+			end
+			if doc.has_attribute_by_name ("ICON") then
+				icon := doc.attribute_by_name ("ICON").value
+			end
+			if doc.has_attribute_by_name ("VISIBILITY") then
+				if doc.attribute_by_name ("VISIBILITY").value.is_equal ("hidden") then
+					is_visible := False
 				end
-				if att.name.is_equal ("TOPIC_ID") then
-					name := att.value
-				elseif att.name.is_equal ("ICON") then
-					icon := att.value
-				elseif att.name.is_equal ("VISIBILITY") then
-					if att.value.is_equal ("hidden") then
-						is_visible := False
-					end
-				end
-				att_table.forth
 			end
 			structure := struct
 			load_default_attributes (doc)
@@ -266,29 +255,17 @@ feature {NONE} -- Implementation
 			node: XM_ELEMENT
 			txt: XM_CHARACTER_DATA
 			att: XM_ATTRIBUTE
-			att_table: DS_LIST [XM_ATTRIBUTE]
 			val: STRING
 		do
 			create resource_name.make (20)
-			att_table := el.attributes
 			resource_description := Void
-			from
-				att_table.start
-			until
-				att_table.after
-			loop
-				att := att_table.item_for_iteration
-				check
-					non_void_attribute: att /= Void
-				end
-				if att.name.is_equal ("DESCRIPTION") then
-					resource_description := att.value
-				elseif att.name.is_equal ("IMMEDIATE_EFFECT") then
-					val := clone (att.value)
-					val.to_lower
-					effect_is_delayed := val.is_equal ("no")
-				end
-				att_table.forth
+			if el.has_attribute_by_name ("DESCRIPTION") then
+				resource_description := el.attribute_by_name ("DESCRIPTION").value
+			end
+			if el.has_attribute_by_name ("IMMEDIATE_EFFECT") then
+				val := clone (el.attribute_by_name ("IMMEDIATE_EFFECT").value)
+				val.to_lower
+				effect_is_delayed := val.is_equal ("no")
 			end
 			cursor := el.new_cursor
 			from

@@ -10,17 +10,18 @@ call gacutil -silent -nologo -u ise_runtime
 call gacutil -silent -nologo -i ise_runtime.dll
 
 rem Registering ISE generator for .NET
-call gacutil -silent -nologo -u core
-call gacutil -silent -nologo -i core.dll
-call regasm -silent -nologo core.dll
+call gacutil -silent -nologo -u EiffelCompiler
+call gacutil -silent -nologo -i EiffelCompiler.dll
+call regasm -silent -nologo EiffelCompiler.dll
 
-call dotnet_install_ami.bat
+rem Assembly Manager install
+rem call dotnet_install_ami.bat
 
 rem Registering Eiffel Assembly Cache
-cd dotnet\assembly_manager
-call regasm -silent -nologo ISE.Reflection.EiffelComponents.dll
-call regasm -silent -nologo ISE.Reflection.CodeGenerator.dll
-cd ..\..
+rem cd dotnet\assembly_manager
+rem call regasm -silent -nologo ISE.Reflection.EiffelComponents.dll
+rem call regasm -silent -nologo ISE.Reflection.CodeGenerator.dll
+rem cd ..\..
 
 @echo on
 rem Installation of .NET components terminated.

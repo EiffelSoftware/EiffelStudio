@@ -13,47 +13,23 @@ class
 inherit
 
 	EV_CONTAINER
-		rename
-			item as container_item,
-			put as container_put
-		export
-			{NONE}
-				container_item, container_put,
-				extend, replace
+		undefine
+			prune_all
 		redefine
 			implementation,
 			create_implementation,
-			items_unique,
-			parent_of_items_is_current,
 			is_in_default_state
-		end
-
-	ARRAY [EV_WIDGET]
-		rename
-			make as array_make,
-			item as array_item,
-			put as array_put,
-			force as array_force,
-			resize as array_resize
-		export
-			{NONE}
-				array_make, array_item, array_force,
-				array_resize, wipe_out, bag_put, extend,
-				changeable_comparison_criterion,
-				compare_references,
-				compare_objects,
-				object_comparison
-			{EV_TABLE}
-				array_put;
-			{ANY}
-				copy, is_equal, area, to_c
-		undefine
-			copy, is_equal, default_create,
-			changeable_comparison_criterion, extend
-		redefine
-			linear_representation, prune, prunable
 		select
-			bag_put, extend
+			put, extend
+		end
+		
+	CHAIN [EV_WIDGET]
+		undefine
+			default_create, copy, is_equal, put,
+			changeable_comparison_criterion, remove, prune,
+			linear_representation, has
+		redefine
+			duplicate
 		end
 
 create
@@ -61,23 +37,32 @@ create
 
 feature -- Access
 
-	rows: INTEGER
+	rows: INTEGER is
 			-- Number of rows in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.rows
+		end
 
-	columns: INTEGER
+	columns: INTEGER is
 			-- Number of columns in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.columns
+		end
 
-	item (a_column, a_row: INTEGER): EV_WIDGET is
-			-- Widget at coordinates (`row', `column')
+	item_at_position (a_column, a_row: INTEGER): EV_WIDGET is
+			-- Widget at coordinates (`row', `column').
 		require
 			not_destroyed: not is_destroyed
 			valid_row: (1 <= a_row) and (a_row <= rows);
 			valid_column: (1 <= a_column) and (a_column <= columns)
 		do
-			Result := array_item ((a_row - 1) * columns + a_column)
+			Result := implementation.item_at_position (a_column, a_row)
 		end
-		
-		
+
 	item_column_position (widget: EV_WIDGET): INTEGER is
 			-- `Result' is column coordinate of `widget'.
 		require
@@ -126,24 +111,8 @@ feature -- Access
 			-- List of items in `Current'.
 		require
 			not_destroyed: not is_destroyed
-		local
-			i, j: INTEGER
 		do
-			create Result.make (count)
-			if count > 0 then
-				from
-					i := lower
-					j := upper
-				until
-					i > j
-				loop
-					if array_item (i) /= Void and not Result.has
-						(array_item (i)) then
-						Result.extend (array_item (i))
-					end
-					i := i + 1
-				end
-			end
+			Result := implementation.item_list
 		ensure
 			Result_not_void: Result /= Void
 			count_matches_widget_count: Result.count = widget_count
@@ -159,18 +128,7 @@ feature -- Status report
 		local
 			a_column_index: INTEGER
 		do
-			Result := True
-			if a_column < columns then
-				from
-					a_column_index := a_column + 1
-					-- Column `a_column' can hold widgets.
-				until
-					not Result or else a_column_index > columns
-				loop
-					Result := column_clear (a_column_index)
-					a_column_index := a_column_index + 1
-				end
-			end
+			Result := implementation.columns_resizable_to (a_column)
 		end
 
 	rows_resizable_to (a_row: INTEGER): BOOLEAN is
@@ -181,18 +139,7 @@ feature -- Status report
 		local
 			a_row_index: INTEGER
 		do
-			Result := True
-			if a_row < rows then
-				from
-					a_row_index := a_row + 1
-					-- Row `a_row' can hold widgets.
-				until
-					not Result or else a_row_index > rows
-				loop
-					Result := row_clear (a_row_index)
-					a_row_index := a_row_index + 1
-				end
-			end
+			Result := implementation.rows_resizable_to (a_row)
 		end
 
 	column_clear (a_column: INTEGER): BOOLEAN is
@@ -204,15 +151,7 @@ feature -- Status report
 		local
 			a_row_index: INTEGER
 		do
-			Result := True
-			from
-				a_row_index := 1
-			until
-				not Result or else a_row_index > rows
-			loop
-				Result := item (a_column, a_row_index) = Void
-				a_row_index := a_row_index + 1
-			end
+			Result := implementation.column_clear (a_column)
 		end
 
 	row_clear (a_row: INTEGER): BOOLEAN is
@@ -224,23 +163,22 @@ feature -- Status report
 		local
 			a_column_index: INTEGER
 		do
-			Result := True
-			from
-				a_column_index := 1
-			until
-				not Result or else a_column_index > columns
-			loop
-				Result := item (a_column_index, a_row) = Void
-				a_column_index := a_column_index + 1
-			end
+			Result := implementation.row_clear (a_row)
 		end
 
 	widget_count: INTEGER is
 			-- Number of widgets in `Current'.
+			-- Now that `Current' inherits CHAIN instead
+			-- of ARRAY, `count' correctly returns the number
+			-- of items in `Current', instead of the number of
+			-- available cells in `Current', thereby making `widget_count'
+			-- obsolete. To find the number of cells in `Current', do
+			-- not use `count' anymore, but use rows * columns.
+		obsolete "Use `count' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.widget_count
+			Result := count
 		ensure
 			Result_non_negative: Result >= 0
 		end
@@ -306,7 +244,7 @@ feature -- Status report
 				until
 					not Result or else (a_col_ctr = a_column + column_span)
 				loop
-					Result := item (a_col_ctr, a_row_ctr) = Void
+					Result := item_at_position (a_col_ctr, a_row_ctr) = Void
 					a_col_ctr := a_col_ctr + 1
 				end
 				a_row_ctr := a_row_ctr + 1
@@ -323,37 +261,29 @@ feature -- Status report
 		local
 			a_col_ctr, a_row_ctr: INTEGER
 		do
-			if a_column = 2 and a_row = 2 and column_span =3 and row_span = 2 then
-				do_nothing
-			end
-			Result := True
-			from
-				a_row_ctr := a_row
-			until
-				not Result or else (a_row_ctr = a_row + row_span)
-			loop
-				from
-					a_col_ctr := a_column
-				until
-					not Result or else (a_col_ctr = a_column + column_span)
-				loop
-					if item (a_col_ctr, a_row_ctr) /= v then
-						Result := item (a_col_ctr, a_row_ctr) = Void	
-					end
-					a_col_ctr := a_col_ctr + 1
-				end
-				a_row_ctr := a_row_ctr + 1
-			end
-		end	
-
-	Readable: BOOLEAN is True
-		-- `Current' is always readable.
-
-	Writable: BOOLEAN is True
-		-- `Current' is always writeable.
+			Result := implementation.area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
+		end
 		
 	Prunable: BOOLEAN is True
 		-- `Current' is always prunable.
+		
+	extendible: BOOLEAN is
+			-- May new items be added?
+		do
+			Result := not full
+		end
+		
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-chain beginning at current position
+			-- and having min (`n', `from_here') items,
+			-- where `from_here' is the number of items
+			-- at or to the right of current position.
+			
+			-- This is not implementable in Vision2 as a widget may
+			-- only be parented in one container at once. Hence, the
+			-- `Void' `Result'.
+		do
+		end
 
 feature -- Status settings
 
@@ -423,37 +353,11 @@ feature -- Status settings
 			new: ARRAY [EV_WIDGET]
 			col_index, row_index, column_max, row_max: INTEGER
 		do
-			create new.make (1, a_column * a_row)
-			column_max := columns.min (a_column)
-			row_max := rows.min (a_row)
-			
-			from
-				row_index := 1
-			until
-				row_index > row_max
-			loop
-				from
-					col_index := 1
-				until
-					col_index > column_max
-				loop
-					new.put (item (col_index, row_index),
-						((row_index - 1) * a_column) + col_index)
-					col_index := col_index + 1
-				end
-				row_index := row_index + 1
-			end
-
-			area := new.area
-			
-			columns := a_column
-			rows := a_row
-			upper := columns * rows
 			implementation.resize (a_column, a_row)
 		ensure
 			columns_set: columns = a_column
 			rows_set: rows = a_row
-			upper_updated: upper = rows * columns
+			--upper_updated: internal_array.upper = rows * columns
 			items_untouched: item_list.is_equal (old item_list)
 		end
 		
@@ -468,38 +372,7 @@ feature -- Status settings
 			table_tall_enough: a_row + (item_row_span (v) - 1) <= rows
 			table_area_clear:
 				area_clear_excluding_widget (v, a_column, a_row, item_column_span (v), item_row_span (v))
-		local
-			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
-			original_item_row_span, original_item_column_span: INTEGER
 		do
-			original_item_row_span := item_row_span (v)
-			original_item_column_span := item_column_span (v)
-			from
-				a_cell_index := 1
-			until
-				a_cell_index > count
-			loop
-				if array_item (a_cell_index) = v then
-					array_put (Void, a_cell_index)
-				end
-				a_cell_index := a_cell_index + 1						
-			end
-			from
-				a_row_ctr := a_row
-			until
-				a_row_ctr = a_row + original_item_row_span
-			loop
-				from
-					a_col_ctr := a_column
-				until
-					a_col_ctr = a_column + original_item_column_span
-				loop
-					a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-					array_put (v, a_cell_index)
-					a_col_ctr := a_col_ctr + 1
-				end
-				a_row_ctr := a_row_ctr + 1
-			end
 			implementation.set_item_position (v, a_column, a_row)
 		end
 		
@@ -514,38 +387,7 @@ feature -- Status settings
 			table_tall_enough: item_row_position (v) + row_span - 1 <= rows
 			table_area_clear:
 				area_clear_excluding_widget (v, item_column_position (v), item_row_position (v), column_span, row_span)
-			local
-				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
-				original_item_row_position, original_item_column_position: INTEGER
 			do
-				original_item_row_position := item_row_position (v)
-				original_item_column_position := item_column_position (v)
-				from
-					a_cell_index := 1
-				until
-					a_cell_index > count
-				loop
-					if array_item (a_cell_index) = v then
-						array_put (Void, a_cell_index)
-					end
-					a_cell_index := a_cell_index + 1						
-				end
-				from
-					a_row_ctr := original_item_row_position
-				until
-					a_row_ctr = original_item_row_position + row_span
-				loop
-					from
-						a_col_ctr := original_item_column_position
-					until
-						a_col_ctr = original_item_column_position + column_span
-					loop
-						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-						array_put (v, a_cell_index)
-						a_col_ctr := a_col_ctr + 1
-					end
-					a_row_ctr := a_row_ctr + 1
-				end
 				implementation.set_item_span (v, column_span, row_span)
 			end
 		
@@ -564,42 +406,13 @@ feature -- Status settings
 			table_tall_enough: a_row + (row_span - 1) <= rows
 			table_area_clear:
 				area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
-			local
-				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
 			do
-				from
-					a_cell_index := 1
-				until
-					a_cell_index > count
-				loop
-					if array_item (a_cell_index) = v then
-						array_put (Void, a_cell_index)
-					end
-					a_cell_index := a_cell_index + 1						
-				end
-				from
-					a_row_ctr := a_row
-				until
-					a_row_ctr = a_row + row_span
-				loop
-					from
-						a_col_ctr := a_column
-					until
-						a_col_ctr = a_column + column_span
-					loop
-						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-						array_put (v, a_cell_index)
-						a_col_ctr := a_col_ctr + 1
-					end
-					a_row_ctr := a_row_ctr + 1
-				end
-				implementation.set_item_position (v, a_column, a_row)
-				implementation.set_item_span (v, column_span, row_span)
+				implementation.set_item_position_and_span (v, a_column, a_row, column_span, row_span)
 			end
 
 feature -- Element change
 
-	put, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	put_at_position, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
 			-- Set the position of the widgets in one-based coordinates. 
 			--
 			--           1         2
@@ -626,66 +439,114 @@ feature -- Element change
 			table_tall_enough: a_row + (row_span - 1) <= rows
 			table_area_clear:
 				area_clear (a_column, a_row, column_span, row_span)
-		local
-			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
 		do
-			from
-				a_row_ctr := a_row
-			until
-				a_row_ctr = a_row + row_span
-			loop
-				from
-					a_col_ctr := a_column
-				until
-					a_col_ctr = a_column + column_span
-				loop
-					a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-					array_put (v, a_cell_index)
-					a_col_ctr := a_col_ctr + 1
-				end
-				a_row_ctr := a_row_ctr + 1
-			end
 			implementation.put (v, a_column, a_row, column_span, row_span)
 		ensure
 			item_inserted: has (v)
+			count_increased : count = old count + 1
+			position_assigned: item_at_position (a_column, a_row) = v
+			span_assigned: item_column_span (v) = column_span and item_row_span (v) = row_span
 		end
-
-	remove (v: EV_WIDGET) is
-			-- Remove `v' from `Current' if present.
-		require
-			not_destroyed: not is_destroyed
-			item_not_void: v /= Void
-			item_in_table: has (v)
-		local
-			a_cell_index: INTEGER
+		
+	remove is
+			-- Remove current item.
 		do
-			if v /= Void and then has (v) then
-				from
-					a_cell_index := 1
-				until
-					a_cell_index > count
-				loop
-					if array_item (a_cell_index) = v then
-						array_put (Void, a_cell_index)
-					end
-					a_cell_index := a_cell_index + 1						
-				end
-				implementation.remove (v)
-			end
-		ensure
-			item_removed: not has (v)
+			prune (item)
 		end
 		
 	prune (v: EV_WIDGET) is
-			-- Remove first occurrence of `v' if any.
+			-- Remove `v' if present. Do not move cursor, except if
+			-- cursor was on `v', move to right neighbor.
+		local
+			item_index: INTEGER
 		do
-			remove (v)
+			implementation.remove (v)
 		ensure
 			not_has_v: not has (v)
 			had_item_implies_parent_void:
 				old has (v) implies v.parent = Void
 			had_item_implies_count_decreased:
 				old has (v) implies widget_count = old widget_count - 1
+		end
+		
+feature -- Iteration.
+
+	has (v: EV_WIDGET): BOOLEAN is
+			-- Does `Current' contain `v'?
+		do
+			Result := implementation.has (v)
+		end
+		
+	count: INTEGER is
+			-- Number of widgets contained in `Current'.
+		do
+			Result := implementation.count
+		end
+		
+		
+	full: BOOLEAN is
+			-- Is structure filled to capacity?
+		do
+			Result := implementation.full
+		end
+
+	wipe_out is
+			-- Remove all items.
+		do
+			implementation.wipe_out
+		end
+		
+	before: BOOLEAN is
+			-- Is there no valid position to the left of current one?
+		do
+			Result := implementation.before
+		end
+		
+	index: INTEGER is
+			-- Current position.
+		do
+			Result := implementation.index
+		end
+	
+	after: BOOLEAN is
+			-- Is there no valid position to the right of current one?
+		do
+			Result := implementation.after
+		end
+	
+	forth is
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		do
+			implementation.forth
+		end
+		
+	back is
+			-- Move to previous position.
+		do
+			implementation.back
+		end
+		
+	cursor: CURSOR is
+			-- Current cursor position.
+		do
+			Result := implementation.cursor
+		ensure then
+			bridge_ok: Result.is_equal (implementation.cursor)
+		end
+		
+	valid_cursor (p: CURSOR): BOOLEAN is
+			-- Can the cursor be moved to position `p'?
+			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
+			-- if it points to an item, `Current' must have it.
+		do
+			Result := implementation.valid_cursor (p)
+		end
+		
+	go_to (p: CURSOR) is
+			-- Move cursor to position `p'.
+		do
+			implementation.go_to (p)
 		end
 
 feature -- Conversion
@@ -697,49 +558,6 @@ feature -- Conversion
 				not_destroyed: not is_destroyed
 			end
 			Result := item_list
-		end
-
-feature {NONE} -- Contract support
-
-	parent_of_items_is_current: BOOLEAN is
-			-- Do all items in `Current' have `Current' as parent?
-		local
-			temp_list: ARRAYED_LIST [EV_WIDGET]
-		do
-			Result := True
-			temp_list := item_list
-			from
-				temp_list.start
-			until
-				not Result or else temp_list.after
-			loop
-				Result := temp_list.item.parent = Current
-				temp_list.forth
-			end
-		end
-
-	items_unique: BOOLEAN is
-			-- Are all items unique?
-			-- (ie Are there no duplicates?)
-		local
-			l: LINEAR [EV_WIDGET]
-			ll: LINKED_LIST [EV_WIDGET]
-
-		do
-			create ll.make
-			Result := True
-			l := item_list
-			from
-				l.start
-			until
-				l.after or Result = False
-			loop
-				if ll.has (l.item) then
-					Result := False
-				end
-				ll.extend (l.item)
-				l.forth
-			end
 		end
 		
 	is_in_default_state: BOOLEAN is
@@ -753,7 +571,6 @@ feature {NONE} -- Contract support
 				rows = 1 and
 				columns = 1)
 		end
-
 		
 feature {EV_ANY_I} -- Implementation
 	
@@ -766,11 +583,12 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TABLE_IMP} implementation.make (Current)
-			columns := 1
-			rows := 1
-			array_make (1, 1)
 		end
-
+		
+invariant
+	columns_positive: columns >= 1
+	rows_positive: rows >= 1
+	
 end -- class EV_TABLE
 
 --|----------------------------------------------------------------

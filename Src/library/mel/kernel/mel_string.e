@@ -30,16 +30,17 @@ inherit
 creation
 	make,
 	make_localized,
+	make_default_l_to_r,
 	make_l_to_r,
 	make_from_existing
 
 feature {NONE} -- Initialization
 
 	make (a_string, a_tag: STRING) is
-			-- Create the compound string.
+			-- Create the compound string `a_string' with `a_tag'.
 		require
-			a_string_not_void: a_string /= Void
-			a_tag_not_void: a_tag /= Void
+			string_not_void: a_string /= Void
+			tag_not_void: a_tag /= Void
 		local
 			temp_str, temp_tag: ANY
 		do
@@ -52,24 +53,26 @@ feature {NONE} -- Initialization
 		end;
 
 	make_localized (a_string: STRING) is
-			-- Create the compound string in the current locale.
+			-- Create the compound string `a_string' with `a_tag'
+			-- in current locale (default font list tag is 
+			-- XmFONTLIST_DEFAULT_TAG).
 		require
-			a_string_not_void: a_string /= Void
+			string_not_void: a_string /= Void
 		local
 			temp: ANY
 		do
 			temp := a_string.to_c;
 			handle := xm_string_create_localized ($temp)
 		ensure
-			exists: not is_destroyed;
-			text_set: 
+			exists: not is_destroyed
 		end;
 
 	make_l_to_r (a_string, a_tag: STRING) is
-			-- Create the compound string from left to right direction.
+			-- Create the compound string with `a_tag' from left to 
+			-- right direction interpreting `%N'.
 		require
-			a_string_not_void: a_string /= Void
-			a_tag_not_void: a_tag /= Void
+			string_not_void: a_string /= Void
+			tag_not_void: a_tag /= Void
 		local
 			temp_str, temp_tag: ANY
 		do
@@ -77,19 +80,32 @@ feature {NONE} -- Initialization
 			temp_tag := a_tag.to_c;
 			handle := xm_string_create_l_to_r ($temp_str, $temp_tag)
 		ensure
-			exists: not is_destroyed;
-			text_set: 
+			exists: not is_destroyed
+		end;
+
+	make_default_l_to_r (a_string: STRING) is
+			-- Create compound string with tag `XmFONTLIST_DEFAULT_TAG' 
+			-- from left to right direction interpreting `%N'.
+		require
+			string_not_void: a_string /= Void
+		local
+			temp_str: ANY
+		do
+			temp_str := a_string.to_c;
+			handle := xm_string_create_l_to_r ($temp_str, 
+					XmFONTLIST_DEFAULT_TAG)
+		ensure
+			exists: not is_destroyed
 		end;
 
 	make_from_existing (a_xm_string: POINTER) is
 			-- Create the MEL_STRING object from an existing compound string.
 		require	
-			a_xm_string_not_null: a_xm_string /= default_pointer
+			xm_string_not_null: a_xm_string /= default_pointer
 		do
 			handle := a_xm_string;
 		ensure
 			exists: not is_destroyed
-			text_set:
 		end;
 
 feature -- Access
@@ -101,7 +117,7 @@ feature -- Access
 			-- Does compound_string have sub-string `a_compound_string'?
 		require
 			exists: not is_destroyed;
-			a_compound_string_exists: a_compound_string /= Void and then
+			compound_string_exists: a_compound_string /= Void and then
 									  not a_compound_string.is_destroyed
 		do
 			Result := xm_string_has_substring (handle, a_compound_string.handle)
@@ -113,7 +129,7 @@ feature -- Measurement
 			-- Baseline spacing for a compound string
 		require
 			exists: not is_destroyed;
-			a_font_list_exists:
+			font_list_exists: a_font_list /= Void and then a_font_list.is_valid
 		do
 			-- Result := xm_string_baseline (, handle)
 		ensure
@@ -126,7 +142,7 @@ feature -- Measurement
 			exists: not is_destroyed;
 			a_font_list_exists:
 		do
-			-- Result := xm_string_height (, handle)
+			Result := xm_string_height (a_font_list.handle, handle)
 		ensure
 			height_large_enough: Result >= 0
 		end;
@@ -137,7 +153,7 @@ feature -- Measurement
 			exists: not is_destroyed;
 			a_font_list_exists:
 		do
-			-- Result := xm_string_width (, handle)
+			Result := xm_string_width (a_font_list.handle, handle)
 		ensure
 			width_large_enough: Result >= 0
 		end;
@@ -186,10 +202,20 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_valid: BOOLEAN is
+			-- Is compound string valid?
+		do
+			Result := handle /= default_pointer
+		ensure
+			valid_result: Result implies handle /= default_pointer
+		end;
+
 	is_destroyed: BOOLEAN is
 			-- Is compound string destroyed?
 		do
-			Result := handle = default_pointer
+			Result := not is_valid
+		ensure
+			valid_result: Result = not is_valid
 		end;
 
 	empty: BOOLEAN is
@@ -389,6 +415,13 @@ feature {NONE} -- Implementation
 	xm_string_to_eiffel (a_compound_string: POINTER): STRING is
 		external
 			"C"
+		end;
+
+	XmFONTLIST_DEFAULT_TAG: POINTER is
+		external
+			"C [macro <Xm/Xm.h>]: EIF_POINTER"
+		alias
+			"XmFONTLIST_DEFAULT_TAG"
 		end;
 
 end -- class MEL_STRING

@@ -76,7 +76,7 @@ dpflags: ""
 continuation: "\"
 
 appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS) $(EXTERNALS)%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%T$(RM) $@%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(LDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
@@ -85,7 +85,7 @@ appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS
 %,,$appl.res%N|%
 %%N%N%
 %..\..\$appl.rc:%N%
-%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
+%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
 %%N%
 %%N%
 %$appl.res: ..\..\$appl.rc Makefile%N%
@@ -99,15 +99,15 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%T$(LDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
 %,,driver.res%N|%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe .\$(ISE_C_COMPILER)\driver.exe%N%
 %%T$(MV) precomp.lib .\$(ISE_C_COMPILER)\precomp.lib%N%
 %%T$(RM) driver.exe%N%
 %%T$(RM) precomp.lib%N%
 %%N%
-%driver.rc: $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%driver.rc: $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
 %%N%
 %driver.res: driver.rc%N%
 %%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r driver.rc%N%

@@ -669,6 +669,12 @@ feature -- Plug and Makefile file
 
 			buffer.putstring ("%N%Tegc_system_name = %"")
 			buffer.putstring (System.system_name)
+			buffer.putstring ("%";%N%Tegc_system_location = %"")
+			if context.final_mode then
+				buffer.putstring ((create {STRING_CONVERTER}).escaped_string (Final_generation_path))
+			else
+				buffer.putstring ((create {STRING_CONVERTER}).escaped_string (Workbench_generation_path))
+			end
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putint (System.version_tag)
 			buffer.putstring (";%N%Tegc_project_version = ")

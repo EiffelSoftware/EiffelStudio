@@ -60,7 +60,7 @@ void async_shell_pass_address(fnptr send_address, fnptr set_address)
 	send_proc = send_address;
 }
 
-void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
+void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT prelink_command_name, EIF_OBJECT driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
 	char *source_exe, *target_exe;
@@ -134,7 +134,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 #endif
 }
 
-void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
+void eif_gr_link_driver (EIF_OBJECT request, EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT prelink_command_name, EIF_OBJECT driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
@@ -171,15 +171,15 @@ EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 
 extern STREAM *sp;
 
-typedef void (* EVENT_CALLBACK)(EIF_OBJ);
+typedef void (* EVENT_CALLBACK)(EIF_REFERENCE);
 EVENT_CALLBACK event_callback;
-EIF_OBJ event_object;
+EIF_OBJECT event_object;
 EIF_INTEGER delay;
 UINT event_id;
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
-void win_ioh_make_client(EIF_POINTER a, EIF_OBJ o, EIF_INTEGER a_delay)
+void win_ioh_make_client(EIF_POINTER a, EIF_OBJECT o, EIF_INTEGER a_delay)
 {
 	event_callback = (EVENT_CALLBACK) a;
 	event_object = eif_adopt (o);

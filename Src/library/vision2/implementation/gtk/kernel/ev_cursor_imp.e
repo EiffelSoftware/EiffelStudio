@@ -23,55 +23,69 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a cursor with the default appearance.
 		do
-			check
-				not_yet_implemented: False
-			end
+			-- Set the cursor to the default pointer
+			cursor := default_pointer
+			destroyed := False
 		end
 
 	make_by_code (code: INTEGER) is
 			-- Create a cursor with the appearance corresponding
 			-- to `value'. See class EV_CURSOR_CODE fo the code.
 		do
-			check
-				not_yet_implemented: False
-			end
+			cursor := gdk_cursor_new (code)
+			destroyed := False
 		end
 
 	make_by_pixmap (pix: EV_PIXMAP) is
 			-- Create a cursor with `pix' as appearance
 		do
 			check
-				not_yet_implemented: False
+				to_be_implemented: False
 			end
+			destroyed := False
 		end
 
 	make_by_filename (filename: STRING) is
 			-- Create a cursor from the given file path
 		do
 			check
-				not_yet_implemented: False
+				to_be_implemented: False
 			end
+			destroyed := False
 		end
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is Current object destroyed?
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 feature -- Status setting
 
 	destroy is
 			-- Destroy actual object.
 		do
-			check
-				not_yet_implemented: False
+			destroyed := True
+			if cursor /= default_pointer then
+				gdk_cursor_destroy (cursor)
 			end
 		end
+
+feature -- Implementation
+
+	cursor: POINTER
+		-- Pointer to the initialised GdkCursor.
+
+feature -- External
+
+	gdk_cursor_new (code: INTEGER): POINTER is
+		external
+			"C (GdkCursorType): EIF_POINTER | <gdk/gdk.h>"
+		end
+
+	gdk_cursor_destroy (cursor_pointer: POINTER) is
+		external
+			"C (GdkCursor *) | <gdk/gdk.h>"
+		end
+
 
 end -- class EV_CURSOR_IMP
 

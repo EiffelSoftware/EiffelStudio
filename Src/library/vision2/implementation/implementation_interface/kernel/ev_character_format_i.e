@@ -14,7 +14,8 @@ deferred class
 inherit
 	EV_ANY_I
 		redefine
-			interface
+			interface,
+			out
 		end
 
 feature -- Access
@@ -45,6 +46,36 @@ feature -- Access
 		deferred
 		ensure
 			Result_not_void: Result /= Void
+		end
+		
+	out: STRING is
+			-- Terse printable representation of `Current'.
+		local
+			value: INTEGER
+			l_color: INTEGER
+		do
+			Result := family.out
+			Result.append (name)
+			Result.append (height.out)
+			Result.append (weight.out)
+			Result.append (shape.out)
+			
+			l_color := fcolor
+			value := l_color |>> 16
+			Result.append (value.to_integer_8.out)
+			value := l_color |>> 8
+			Result.append (value.to_integer_8.out)
+			Result.append (l_color.to_integer_8.out)
+			l_color := bcolor
+			value := l_color |>> 16
+			Result.append (value.to_integer_8.out)
+			value := l_color |>> 8
+			Result.append (value.to_integer_8.out)
+			Result.append (l_color.to_integer_8.out)
+			
+			Result.append (is_underlined.out)
+			Result.append (is_striked_out.out)
+			Result.append (vertical_offset.out)
 		end
 
 feature -- Status setting
@@ -84,8 +115,70 @@ feature -- Status setting
 		ensure
 			effects_set: effects.is_equal (an_effect)
 		end
+		
+feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-feature {NONE} -- Implementation
+	name: STRING is
+			-- Face name used by `Current'.
+		deferred
+		end
+		
+	family: INTEGER is
+			-- Family used by `Current'.
+		deferred
+		end
+		
+	height: INTEGER is
+			--  Height of `Current'.
+		deferred
+		end
+		
+	weight: INTEGER is
+			-- Weight of `Current'.
+		deferred
+		end
+		
+	is_bold: BOOLEAN is
+			-- Is `Current' bold?
+		deferred
+		end
+		
+	shape: INTEGER is
+			-- Shape of `Current'.
+		deferred
+		end
+
+	char_set: INTEGER is
+			-- Char set used by `Current'.
+		deferred
+		end
+		
+	is_underlined: BOOLEAN is
+			-- Is `Current' underlined?
+		deferred
+		end
+		
+	is_striked_out: BOOLEAN is
+			-- Is `Current' striken out?
+		deferred
+		end
+		
+	vertical_offset: INTEGER is
+			-- Vertical offset of `Current'.
+		deferred
+		end
+
+	fcolor: INTEGER is
+			-- foreground color RGB packed into 24 bit.
+		deferred
+		end
+		
+	bcolor: INTEGER is
+			-- background color RGB packed into 24 bit.
+		deferred
+		end
+
+feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	interface: EV_CHARACTER_FORMAT
 

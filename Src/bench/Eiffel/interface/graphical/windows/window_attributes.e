@@ -28,11 +28,7 @@ feature -- Setting
 			bg_color := Graphical_resources.background_color.actual_value;
 			fg_color := Graphical_resources.foreground_color.actual_value;
 			font := Graphical_resources.font.actual_value;
-			if 
-				bg_color /= Void or else 
-				fg_color /= Void or else
-				font /= Void
-			then
+			if bg_color /= Void or else fg_color /= Void or else font /= Void then
 				children := composite.descendants;
 				children.extend (composite);
 				from

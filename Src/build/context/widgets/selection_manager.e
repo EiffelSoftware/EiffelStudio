@@ -119,7 +119,7 @@ feature {NONE}
 				display_selected_rectangles;
 			end;
 			parent := context.parent;
-			if not (parent = Void) then
+			if parent /= Void then
 					-- cursor does not change in the form
 				parent.widget.set_cursor (cursor_shape)
 			end;
@@ -512,7 +512,7 @@ feature {NONE}
 
 	cursor_shape: SCREEN_CURSOR;
 
-	corner_side: INTEGER is 12;
+	corner_side: INTEGER is 10;
 			-- Lenght of the sensitive squares
 			-- If the cursor is on the squares, the mode
 			-- is resize, otherwise it is move

@@ -9,21 +9,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: TYPE) is
-			-- Initialize from `t'.
+	make (n: STRING; id: INTEGER) is
+			-- set `name' with `n'.
+			-- Set `assembly_id' with `id'.
 		require
-			non_void_type: t /= Void
+			non_void_name: n /= Void
+			valid_name: not n.is_empty
+			valid_id: id > 0
 		do
-			create name.make_from_cil (t.get_full_name)
-			create assembly.make (t.get_assembly)
+			name := n
+			assembly_id := id
+		ensure
+			name_set: name = n
+			id_set: assembly_id = id
 		end
 
 feature -- Access
 
 	name: STRING
-			-- Type name
+			-- .NET type name
 	
-	assembly: CONSUMED_ASSEMBLY
+	assembly_id: INTEGER
 			-- Assembly containing type
-
+		
 end -- class CONSUMED_REFERENCE_TYPE

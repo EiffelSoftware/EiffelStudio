@@ -7,6 +7,8 @@ class
 inherit
 	NAME_FORMATTER
 
+	SHARED_ASSEMBLY_MAPPING
+
 create
 	make
 
@@ -132,7 +134,7 @@ feature {NONE} -- Implementation
 								format_feature_name (dotnet_name),
 								dotnet_name,
 								arguments (info),
-								create {CONSUMED_REFERENCED_TYPE}.make (info.get_return_type),
+								referenced_type_from_type (info.get_return_type),
 								info.get_is_final,
 								info.get_is_static,
 								info.get_is_abstract,
@@ -176,15 +178,25 @@ feature {NONE} -- Implementation
 		require
 			non_void_method: info /= Void
 		local
-			i: INTEGER
+			i, count: INTEGER
+			p: PARAMETER_INFO
+			name: STRING
 		do
 			from
-				create Result.make (1, info.get_parameters.get_length)
+				count := info.get_parameters.get_length
+				create Result.make (1, count)
 				i := 0
 			until
-				i >= info.get_parameters.get_length
+				i >= count
 			loop
-				Result.put (create {CONSUMED_ARGUMENT}.make (info.get_parameters.item (i)), i + 1)
+				p := info.get_parameters.item (i)
+				create name.make_from_cil (p.get_name)
+				Result.put (create {CONSUMED_ARGUMENT}.make (
+									name,
+									format_variable_name (name),
+									referenced_type_from_type (p.get_parameter_type),
+									p.get_is_out),
+							i + 1)
 				i := i + 1
 			end
 		end

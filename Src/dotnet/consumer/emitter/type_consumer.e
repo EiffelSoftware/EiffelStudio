@@ -9,6 +9,8 @@ inherit
 
 	NAME_FORMATTER
 
+	SHARED_ASSEMBLY_MAPPING
+
 create
 	make
 
@@ -24,10 +26,11 @@ feature {NONE} -- Initialization
 			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
 			i: INTEGER
+			interface_type: TYPE
 		do
 			create dotnet_name.make_from_cil (t.get_full_name)
 			if t.get_base_type /= Void then
-				create parent.make (t.get_base_type)				
+				parent := referenced_type_from_type (t.get_base_type)
 			end 
 			inter := t.get_interfaces
 			create interfaces.make (1, inter.get_length)
@@ -36,7 +39,7 @@ feature {NONE} -- Initialization
 		 	until
 				i > inter.get_length
 			loop
-				interfaces.put (create {CONSUMED_REFERENCED_TYPE}.make (inter.item (i - 1)), i)
+				interfaces.put (referenced_type_from_type (inter.item (i - 1)), i)
 				i := i + 1
 			end
 			create consumed_type.make (
@@ -173,12 +176,16 @@ feature {NONE} -- Implementation
 			non_void_field_info: info /= Void
 		local
 			dotnet_name: STRING
+			field_type: TYPE
 		do
 			create dotnet_name.make_from_cil (info.get_name)
+			field_type := info.get_field_type
 			create Result.make (
 								format_feature_name (dotnet_name),
 								dotnet_name,
-								create {CONSUMED_REFERENCED_TYPE}.make (info.get_field_type),
+								create {CONSUMED_REFERENCED_TYPE}.make (
+										create {STRING}.make_from_cil (field_type.get_full_name),
+										assembly_mapping.item (create {STRING}.make_from_cil (field_type.get_assembly.to_string))),
 								info.get_is_static)
 		end
 
@@ -234,15 +241,23 @@ feature {NONE} -- Implementation
 		require
 			non_void_method: info /= Void
 		local
-			i: INTEGER
+			i, count: INTEGER
+			en, dn: STRING
+			params: NATIVE_ARRAY [PARAMETER_INFO]
+			p: PARAMETER_INFO
 		do
+			create Result.make (1, info.get_parameters.get_length)
+			params := info.get_parameters
 			from
-				create Result.make (1, info.get_parameters.get_length)
 				i := 0
+				count := params.get_length
 			until
-				i >= info.get_parameters.get_length
+				i >= count
 			loop
-				Result.put (create {CONSUMED_ARGUMENT}.make (info.get_parameters.item (i)), i + 1)
+				p := params.item (i)
+				create dn.make_from_cil (p.get_name)
+				en := format_variable_name (dn)
+				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en, referenced_type_from_type (p.get_parameter_type), p.get_is_out), i + 1)
 				i := i + 1
 			end
 		end

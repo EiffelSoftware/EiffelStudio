@@ -133,6 +133,7 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
+			--| FIXME IEK Does not function correctly.
 			if (flag) then
 				C.gtk_tree_item_select (c_object)
 			else
@@ -285,6 +286,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/02/29 00:57:41  king
+--| Added fixme to set_selected
+--|
 --| Revision 1.39  2000/02/28 23:59:31  king
 --| Added root_tree macro
 --|

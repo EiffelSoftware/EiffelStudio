@@ -18,7 +18,7 @@ cvs -z3 up -Pd
 echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
-%EIFFEL5%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\dotnet_wizard.ace -project_path %TEMP%\dotnet_wizard
+%ISE_EIFFEL%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\dotnet_wizard.ace -project_path %TEMP%\dotnet_wizard
 cdd %TEMP%\dotnet_wizard
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .

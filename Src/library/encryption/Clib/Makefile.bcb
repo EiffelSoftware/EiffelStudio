@@ -2,8 +2,8 @@
 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib
-CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I. -I$(ISE_EIFFEL)\BCC55\include -I$(ISE_EIFFEL)\bench\spec\windows\include
-MTCFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I. -I$(ISE_EIFFEL)\BCC55\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I. -I$(ISE_EIFFEL)\BCC55\include -I$(ISE_EIFFEL)\studio\spec\windows\include
+MTCFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I. -I$(ISE_EIFFEL)\BCC55\include -I$(ISE_EIFFEL)\studio\spec\windows\include
 
 .c.obj:
 	$(CC) @&&|

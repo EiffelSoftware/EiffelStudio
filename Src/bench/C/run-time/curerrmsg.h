@@ -48,8 +48,8 @@
 
 
 /* The following are error messages whose causes are not clear  */
-#define CURERR1		"    More space(%d bytes) is necessary for class name;\n    or one of the current processor's server is dead(which causes an incorrect class name length)."
-#define CURERR2		"    More space(%d bytes) is necessary for feature name;\n    or one of the current processor's server is dead(which causes an incorrect class name length)."
+#define CURERR1		"    More space(%d bytes) is necessary for class name;\nor one of the current processor's server is dead(which causes an incorrect class name length)."
+#define CURERR2		"    More space(%d bytes) is necessary for feature name;\nor one of the current processor's server is dead(which causes an incorrect class name length)."
 #define CURERR3		"    Receive Unknown Parameter Data Type: %d."
 #define CURERR4		"    Try to Send Unknown Parameter Data Type: %d."
 #define CURERR5		"    A UNREGISTER make a reserved client destroyed \n-- maybe caused by the crash of other separate object(s)!"
@@ -114,13 +114,18 @@
 /*--------------------------------------------------------*/
 
 /* The following are implementation error messages */
-#define CURIMPERR9	"    Error happened when get host name."
+#define CURIMPERR9	"    Error happened when get host name(%s)."
 #define CURIMPERR18	"    Error happened when get host name--name is long than buffer."
-#define CURIMPERR10	"    Error happened when get current directory."
-#define CURIMPERR11	"    Error happened when get user name."
-#define CURIMPERR12	"    Error happened when send signal to parent process\n-- parent process crashed or the parameters were not correct."
+#define CURIMPERR10	"    Error happened when get current directory(%s)."
+#define CURIMPERR11	"    Error happened when get user name(%s)."
+#define CURIMPERR12	"    Error happened when send signal to parent process\n-- parent process crashed or the parameters were not correct(%s)."
 #define CURIMPERR13	"    Error happened when connect to a network server<%s, %d>(%s)."
-#define CURIMPERR14	"    Error happened when Set Up Client with <%s, %d>(increase the try times(default:%d))."
+#define CURIMPERR14	"    Error happened when Set Up Client with <%s, %d>\n-- increase the try times(default:%d)(%s)."
+#define CURIMPERR19	"    Can't find an entry for host with address `%ld' in host table(%s)."
+#define CURIMPERR20	"    Can't find an entry for host with name `%s' in host table(%s)."
+#define CURIMPERR21	"    Can't find an entry for local host `%s' in host table(s)."
+#define CURIMPERR22	"    Can't allocate socket!\n-- Maybe system resources are exhausted(%s)!"
+#define CURIMPERR23	"    Can't create server for a separate object!\n-- Maybe system resources(socket) are exhausted(%s)!"
 
 /* The following are application error messages */
 
@@ -135,7 +140,7 @@
 /*--------------------------------------------------------*/
 
 /* The following are implementation error messages */
-#define CURIMPERR15	"    Fail in malloc memory!"
+#define CURIMPERR15	"    Fail in malloc memory(%s)!"
 #define CURIMPERR16	"    Expect ACK_FOR_PROCEDURE/QUERY_RESULT but got %s!"
 
 /* The following are application error messages */
@@ -143,9 +148,9 @@
 /* The following are error messages whose causes are not clear  */
 #define CURERR7 	"    Invalid number of parameters to the creation feature\n-- correct format is: your_executable init parameters_if_any."
 #define CURERR8 	"    The first parameter of service file must be `init' or `creation'."
-#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up.\n"	
-#define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number.\n"	
-#define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number.\n"	
+#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up."	
+#define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	
+#define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	
 	
 
 
@@ -175,7 +180,7 @@
 
 /* The following are implementation error messages */
 /*
-#define CURIMPERR19	
+#define CURIMPERR24	
 */
 
 /* The following are application error messages */

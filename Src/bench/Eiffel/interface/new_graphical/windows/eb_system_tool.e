@@ -68,6 +68,17 @@ feature -- Initialization
 			create filter_cmd.make (Current)
 		end
 
+feature {EB_TOOL_MANAGER} -- Initialize
+
+	build_interface is
+		do
+			precursor
+
+			if resources.command_bar.actual_value = False then
+				system_toolbar.hide
+			end
+		end
+
 feature -- Access
 
 	stone: SYSTEM_STONE
@@ -240,15 +251,6 @@ feature -- Update
 		end
 
 feature {NONE} -- Implementation Graphical Interface
-
-	build_interface is
-		do
-			precursor
-
-			if resources.command_bar.actual_value = False then
-				system_toolbar.hide
-			end
-		end
 
 --	build_save_as_menu_entry is
 --			-- Create a save_as command to be inserted into file menu.

@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_MENU_SEPARATOR_I
+		undefine
+			parent
 		redefine
 			interface
 		end
@@ -29,16 +31,40 @@ feature {NONE} -- Initialization
 			-- Create the widget with `an_interface'.
 		do
 			base_make (an_interface)
+			make_id
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Access
 
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+			-- Radio items following this separator.
 
 	create_radio_group is
 			-- Create `radio_group'.
+		require
+			radio_group_void: radio_group = Void
 		do
 			create radio_group.make
+		ensure
+			radio_group_not_void: radio_group /= Void
+		end
+
+	set_radio_group (a_list: like radio_group) is
+			-- Assign `a_list' to `radio_group'.
+		require
+			a_list_not_void: a_list /= Void
+		do
+			radio_group := a_list
+		ensure
+			assigned: radio_group = a_list
+		end
+
+	remove_radio_group is
+			-- Set `radio_group' to `Void'.
+		do
+			radio_group := Void
+		ensure
+			void: radio_group = Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -68,6 +94,9 @@ end -- class EV_MENU_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/24 01:45:17  brendel
+--| Added functions to modify radio_group.
+--|
 --| Revision 1.4  2000/02/23 02:15:49  brendel
 --| Revised. Added feature `radio_group' and `create_radio_group', to save
 --| the need for a list of radiogroups.

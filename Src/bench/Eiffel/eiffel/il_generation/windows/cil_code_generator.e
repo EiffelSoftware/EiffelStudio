@@ -3930,6 +3930,7 @@ feature -- Assertions
 		local
 			l_invariant_token: INTEGER
 			l_dotnet_invariant_token: INTEGER
+			l_end_of_invariant: IL_LABEL
 			l_sig: like method_sig
 		do
 				-- First we generate the `$$_invariant' feature which only contains invariant for
@@ -3957,6 +3958,10 @@ feature -- Assertions
 					feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 				start_new_body (l_invariant_token)
+				l_end_of_invariant := create_label
+				generate_invariant_checked_for (l_end_of_invariant)
+				generate_inherited_invariants
+				mark_label (l_end_of_invariant)
 				generate_return (False)
 				method_writer.write_current_body
 			end

@@ -14,6 +14,8 @@ inherit
 		redefine
 			create_ev_widget,
 			set_size,
+			set_width,
+			set_height,
 			implementation
 		end
 
@@ -36,6 +38,18 @@ feature
 			-- and `new_height'.
 		do
 			implementation.implementation_set_size (new_width, new_height)
+		end
+
+	set_width (new_width:INTEGER) is
+			-- Set width to `new_width'.
+		do
+			implementation.implementation_set_width (new_width)
+		end
+
+	set_height (new_height: INTEGER) is
+			-- Set height to `new__height'.
+		do
+			implementation.implementation_set_height (new_height)
 		end
 
 	implementation: CENTERED_BULLETIN_I

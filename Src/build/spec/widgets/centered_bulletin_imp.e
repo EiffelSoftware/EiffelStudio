@@ -14,12 +14,16 @@ inherit
 
 	CENTERED_BULLETIN_I
 		select
-			set_size
+			set_size,
+			set_width,
+			set_height
 		end
 
 	BULLETIN_IMP
 		rename
-			set_size as implementation_set_size
+			set_size as implementation_set_size,
+			set_width as implementation_set_width,
+			set_height as implementation_set_height
 		redefine
 			make
 		end
@@ -42,6 +46,20 @@ feature -- Initialization
 			-- position is computed.
 		do
 			parent_bulletin.set_size (new_width, new_height)
+		end
+
+	set_width (new_width: INTEGER) is
+			-- Call `parent_bulletin' `set_width', where the center
+			-- position is computed.
+		do
+			parent_bulletin.set_width (new_width)
+		end
+
+	set_height (new_height: INTEGER) is
+			-- Call `parent_bulletin' `set_height', where the center
+			-- position is computed.
+		do
+			parent_bulletin.set_height (new_height)
 		end
 
 	parent_bulletin: CENTERED_BULLETIN

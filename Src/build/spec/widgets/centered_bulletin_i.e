@@ -19,4 +19,14 @@ feature
 		deferred
 		end
 
+	implementation_set_width (new_width: INTEGER) is
+			-- Effective set width.
+		deferred
+		end
+
+	implementation_set_height (new_height: INTEGER) is
+			-- Effective set height.
+		deferred
+		end
+
 end -- class CENTERED_BULLETIN_I

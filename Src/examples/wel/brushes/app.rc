@@ -1,0 +1,5 @@
+#include "app_ids.h"
+
+ID_ICO_APPLICATION ICON "app.ico"
+
+ID_BMP_ISE_LOGO BITMAP "eiffel.bmp"

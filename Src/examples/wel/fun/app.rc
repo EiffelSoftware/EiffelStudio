@@ -1,0 +1,18 @@
+#include <windows.h>
+#include "app_ids.h"
+
+ID_ICO_APPLICATION ICON "app.ico"
+ID_ICO_ARTIST ICON "artist.ico"
+
+ID_BMP_ISE_LOGO BITMAP "iselogo.bmp"
+
+ID_CUR_INVISIBLE CURSOR "invisibl.cur"
+
+ID_DIALOG DIALOG 28, 23, 246, 139
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+{
+	CTEXT "Application Error", -1, 95, 9, 56, 9
+	PUSHBUTTON "Close", IDOK, 98, 103, 50, 19
+	CTEXT "KERNEL.EXE caused a Page Fault in", -1, 39, 27, 167, 8
+	CTEXT "module <unknown> V|CI33DF:8059EBA will close", -1, 40, 53, 165, 14
+}

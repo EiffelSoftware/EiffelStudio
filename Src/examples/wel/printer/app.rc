@@ -1,0 +1,13 @@
+#include "app_ids.h"
+
+ID_ICO_APPLICATION ICON "app.ico"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&Print", CMD_PRINT
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}

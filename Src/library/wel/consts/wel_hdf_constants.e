@@ -65,6 +65,14 @@ feature -- Access
 		alias
 			"HDF_STRING"
 		end
+		
+	frozen Hdf_image: INTEGER is
+			-- The item displays an image from an image list. 
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"HDF_IMAGE"
+		end
 
 	Hdf_rtl_reading: INTEGER is
 			-- In addition, on Hebrew or Arabic systems you can specify this flag 

@@ -62,6 +62,13 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 	
 create
 	default_create
@@ -71,44 +78,24 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Fill with supported Widgets.
-		local
-			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
-			shared_pixmaps: GB_SHARED_PIXMAPS
 		do
-			create tree
 			Precursor {EV_CELL}
-			extend (tree)
-			tree.set_minimum_height (tool_minimum_height)
-			create shared_pixmaps
-			create tree_item1.make_with_text ("Widgets")
-			tree_item1.set_pixmap (shared_pixmaps.pixmap_by_name ("widgets"))
-			tree.extend (tree_item1)
-			create tree_item3.make_with_text ("Containers")
-			tree_item3.set_pixmap (shared_pixmaps.pixmap_by_name ("containers"))
-			tree_item1.extend (tree_item3)
-			add_tree_items (containers, tree_item3)
-			create tree_item2.make_with_text ("Primitives")
-			tree_item2.set_pixmap (shared_pixmaps.pixmap_by_name ("primitives"))
-			tree_item1.extend (tree_item2)
-			add_tree_items (primitives, tree_item2)
-			create tree_item4.make_with_text ("Items")
-			tree_item4.set_pixmap (shared_pixmaps.pixmap_by_name ("items"))
-			tree.extend (tree_item4)
-			add_tree_items (items, tree_item4)
-				-- Expand the types when the project is started.
-			tree_item2.expand
-			tree_item3.expand
-			tree_item1.expand
-			tree_item4.expand
+			if preferences.boolean_resource_value (preferences.type_selector_classic_mode, True) then
+				build_classic_view
+				extend (tree)
+			else
+				build_icon_view
+				view_mode_button.enable_select
+				extend (drawing_area)
+			end
 		end
 		
 feature -- Access
 		
 	tool_bar: EV_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
-		do
+		once
 			create Result
-			create view_mode_button
 			view_mode_button.set_pixmap (pixmap_by_name ("icon_icon_view_color"))
 			view_mode_button.set_tooltip ("Icon View Mode")
 			view_mode_button.select_actions.extend (agent switch_view_mode)
@@ -121,7 +108,8 @@ feature -- Access
 	is_in_classic_view_mode: BOOLEAN is
 			-- Is `Current' in the classic view mode?
 		do
-			Result := tree.parent /= Void
+			Result := (tree /= Void and then tree.parent /= Void) or
+				(drawing_area /= Void and then drawing_area.parent = Void)
 		end
 
 feature -- Basic operation
@@ -182,7 +170,6 @@ feature {NONE} -- Implementation
 		require
 			list_not_void: list /= Void
 			tree_item_not_void: tree_item /= Void
-			is_in_classic_view_mode: is_in_classic_view_mode
 		local
 			counter: INTEGER
 			new_item: GB_TREE_TYPE_SELECTOR_ITEM
@@ -197,8 +184,38 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
+		
+	build_classic_view is
+			--
+		local
+			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
+		do
+			create tree			
+			tree.set_minimum_height (tool_minimum_height)
+			create tree_item1.make_with_text ("Widgets")
+			tree_item1.set_pixmap (pixmap_by_name ("widgets"))
+			tree.extend (tree_item1)
+			create tree_item3.make_with_text ("Containers")
+			tree_item3.set_pixmap (pixmap_by_name ("containers"))
+			tree_item1.extend (tree_item3)
+			add_tree_items (containers, tree_item3)
+			create tree_item2.make_with_text ("Primitives")
+			tree_item2.set_pixmap (pixmap_by_name ("primitives"))
+			tree_item1.extend (tree_item2)
+			add_tree_items (primitives, tree_item2)
+			create tree_item4.make_with_text ("Items")
+			tree_item4.set_pixmap (pixmap_by_name ("items"))
+			tree.extend (tree_item4)
+			add_tree_items (items, tree_item4)
+				-- Expand the types when the project is started.
+			tree_item2.expand
+			tree_item3.expand
+			tree_item1.expand
+			tree_item4.expand
+		end
+		
 
-	build_small_view is
+	build_icon_view is
 			--
 		local
 			figure_line: EV_FIGURE_LINE
@@ -318,21 +335,29 @@ feature {NONE} -- Implementation
 		do
 			if view_mode_button.is_selected then
 				if drawing_area = Void then
-					build_small_view
+					build_icon_view
 				end
 				wipe_out
 				extend (drawing_area)
 			else
+				if tree = Void then
+					build_classic_view
+				end
 				wipe_out
 				extend (tree)
 			end
+			preferences.set_boolean_resource (preferences.type_selector_classic_mode, not view_mode_button.is_selected)
+			preferences.save_resources
 		ensure
 			mode_toggled: is_in_classic_view_mode = not old is_in_classic_view_mode
 		end
 		
-	view_mode_button: EV_TOOL_BAR_TOGGLE_BUTTON
-		-- A button to switch between view modes,
-		-- either the standard view, or the compressed view.
+	view_mode_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- A button to switch between view modes,
+			-- either the standard view, or the compressed view.
+		once
+			create Result
+		end
 		
 	figure_world: EV_FIGURE_WORLD
 		-- Figure world in which all items are contained when using figures.

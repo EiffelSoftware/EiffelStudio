@@ -27,7 +27,12 @@ feature -- Basic operation
 			-- Generate eiffel class for coclass.
 		local
 			local_string: STRING
+			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
+			create a_visible.make
+			a_visible.set_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
+			system_descriptor.add_visible_class (a_visible)
+
 			create eiffel_writer.make
 			coclass_descriptor := a_descriptor
 

@@ -31,7 +31,14 @@ feature -- Basic operations
 		local
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
+			create a_visible.make
+			a_visible.set_name (a_descriptor.eiffel_class_name)
+			a_visible.add_feature (Make_from_other)
+			a_visible.add_feature (Make_from_pointer)
+			system_descriptor.add_visible_class (a_visible)
+
 			create eiffel_writer.make
 
 			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, True)

@@ -44,6 +44,7 @@ feature -- Access
 			new_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			local_string: STRING
 		do
+
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_descriptor)
 			coclass_descriptor := a_descriptor
 

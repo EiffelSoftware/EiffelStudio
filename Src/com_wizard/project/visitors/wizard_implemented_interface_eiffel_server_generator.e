@@ -24,29 +24,6 @@ feature -- Initialization
 			void_writer: eiffel_writer = Void
 		end
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 
@@ -55,7 +32,12 @@ feature -- Basic operations
 		local
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
+			create a_visible.make
+			a_visible.set_name (a_descriptor.eiffel_class_name)
+			system_descriptor.add_visible_class (a_visible)
+
 			create eiffel_writer.make
 
 			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, False)

@@ -10,7 +10,12 @@ class
 inherit
 	CONSUMED_PROCEDURE
 		export
-			{COMPARABLE_CONSUMED_PROCEDURE}internal_flags;
+			{COMPARABLE_CONSUMED_PROCEDURE}a;
+		redefine
+			eiffel_name,
+			dotnet_name,
+			arguments,
+			declared_type
 		end
 
 	COMPARABLE
@@ -20,7 +25,14 @@ inherit
 
 create
 	make_with_consumed_procedure
-	
+
+feature -- Access
+
+	eiffel_name: STRING
+	dotnet_name: STRING
+	arguments: ARRAY [CONSUMED_ARGUMENT]
+	declared_type: CONSUMED_REFERENCED_TYPE
+
 feature -- Initialization
 	
 	make_with_consumed_procedure (a_consumed_procedure: CONSUMED_PROCEDURE) is
@@ -31,14 +43,12 @@ feature -- Initialization
 			dotnet_name := a_consumed_procedure.dotnet_name
 			arguments := a_consumed_procedure.arguments
 			declared_type := a_consumed_procedure.declared_type
-			return_type := a_consumed_procedure.return_type
-			internal_flags := a_consumed_procedure.internal_flags
+			a := a_consumed_procedure.a
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_procedure.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_procedure.dotnet_name
 			arguments_set: arguments = a_consumed_procedure.arguments
 			declared_type_set: declared_type = a_consumed_procedure.declared_type
-			return_type_set: return_type = a_consumed_procedure.return_type
 		end
 
 feature -- Implementation

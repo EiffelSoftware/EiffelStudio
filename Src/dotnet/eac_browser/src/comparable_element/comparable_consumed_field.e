@@ -8,8 +8,17 @@ class
 	COMPARABLE_CONSUMED_FIELD
 
 inherit
-	CONSUMED_FUNCTION
-	
+	CONSUMED_FIELD
+		export
+			{COMPARABLE_CONSUMED_FIELD}r;
+		redefine
+			eiffel_name,
+			dotnet_name,
+			arguments,
+			declared_type,
+			return_type
+		end
+
 	COMPARABLE
 		undefine
 			default_create, is_equal, copy
@@ -17,6 +26,14 @@ inherit
 
 create
 	make_with_consumed_field
+
+feature -- Access
+
+	eiffel_name: STRING
+	dotnet_name: STRING
+	return_type: CONSUMED_REFERENCED_TYPE
+	arguments: ARRAY [CONSUMED_ARGUMENT]
+	declared_type: CONSUMED_REFERENCED_TYPE
 	
 feature -- Initialization
 	
@@ -29,14 +46,14 @@ feature -- Initialization
 			arguments := a_consumed_field.arguments
 			declared_type := a_consumed_field.declared_type
 			return_type := a_consumed_field.return_type
-			internal_flags := a_consumed_field.internal_flags
+			r := a_consumed_field.r
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_field.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_field.dotnet_name
 			arguments_set: arguments = a_consumed_field.arguments
 			declared_type_set: declared_type = a_consumed_field.declared_type
 			return_type_set: return_type = a_consumed_field.return_type
-			internal_flags_set: internal_flags = a_consumed_field.internal_flags
+			a_set: r = a_consumed_field.r
 		end
 
 feature -- Implementation

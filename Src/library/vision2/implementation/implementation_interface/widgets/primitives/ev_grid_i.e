@@ -2161,6 +2161,7 @@ feature {NONE} -- Event handling
 			current_subrow_indent: INTEGER
 			node_x_position_click_edge: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
+			pointed_item_interface: EV_GRID_ITEM
 		do
 			drawable.set_focus
 			pointed_item := drawer.item_at_position (a_x, a_y)
@@ -2183,6 +2184,12 @@ feature {NONE} -- Event handling
 						handle_newly_selected_item (pointed_item.interface)
 					end
 				end
+			end
+			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
+				if pointed_item /= Void then
+					pointed_item_interface := pointed_item.interface
+				end
+				pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 		end
 		
@@ -2216,14 +2223,14 @@ feature {NONE} -- Event handling
 			-- Called by `pointer_motion_actions' of `drawable'.
 		local
 			pointed_item: EV_GRID_ITEM_I
+			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointed_item := drawer.item_at_position (a_x, a_y)
 				if pointed_item /= Void then
-					pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item.interface])
-				else
-					pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), Void])
+					pointed_item_interface := pointed_item.interface
 				end
+				pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
 			end
 		end
 
@@ -2231,20 +2238,30 @@ feature {NONE} -- Event handling
 			-- Called by `pointer_double_press_actions' of `drawable'.
 		local
 			pointed_item: EV_GRID_ITEM_I
+			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
 				pointed_item := drawer.item_at_position (a_x, a_y)
 				if pointed_item /= Void then
-					pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item.interface])
-				else
-					pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, Void])
+					pointed_item_interface := pointed_item.interface
 				end
+				pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 		end
 
 	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_button_release_actions' of `drawable'.
+		local
+			pointed_item: EV_GRID_ITEM_I
+			pointed_item_interface: EV_GRID_ITEM
 		do
+			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
+				pointed_item := drawer.item_at_position (a_x, a_y)
+				if pointed_item /= Void then
+					pointed_item_interface := pointed_item.interface
+				end
+				pointer_button_release_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+			end
 		end
 
 	pointer_enter_received is

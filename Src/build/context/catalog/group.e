@@ -16,8 +16,6 @@ inherit
 			is_equal, copy, consistent, setup
 		end;
 	SHARED_STORAGE_INFO
-		rename
-			clear_all as storage_clear_all
 		undefine
 			is_equal, copy, consistent, setup
 		end;
@@ -65,6 +63,7 @@ feature
 				until
 					a_context.child_offright
 				loop
+					context_list.finish;
 					context_list.put_right (a_context.child);
 					context_list.forth;
 					a_context.child_forth;
@@ -102,7 +101,7 @@ feature
 			loop
 				s_context := save_context (context_list.item);
 				s_context.reset_position (x, y);
-				remove_context_from_table (context_list.item);
+				--remove_context_from_table (context_list.item);
 				context_list.forth
 			end;
 			trim;
@@ -130,7 +129,12 @@ feature
 				gb_cmd.execute (group_c);
 			else
 				group_c.oui_create (parent_context.widget);
+					-- To give new identifier
+				for_import.set_item (True);
 				create_oui_group (group_c);
+				for_import.set_item (False);
+					-- Clear the context table.
+				context_table.clear_all;
 				!!create_command;
 				create_command.group_create (group_c, context_list);
 				create_command.execute (group_c);
@@ -361,58 +365,57 @@ feature {NONE}
 	
 feature 
 	
-    create_oui_group (group_c: GROUP_C) is
-        local
-            saved_identifier: INTEGER;
-            a_context: CONTEXT;
-        do
-                -- Identifier is used as a global variable
-                -- for the recursive function create_context_tree
-            saved_identifier := identifier;
-                -- Reset the values of `group_c'
-            container.set_context_attributes (group_c);
-            group_c.set_position (group_c.parent.real_x, group_c.parent.real_y);
-            identifier := 1;
-            from
-            until
-                identifier > count
-            loop
-                a_context := create_context_tree (group_c);
-                a_context.retrieve_oui_widget;
+	create_oui_group (group_c: GROUP_C) is
+		local
+			saved_identifier: INTEGER;
+			a_context: CONTEXT;
+		do
+				-- Identifier is used as a global variable
+				-- for the recursive function create_context_tree
+			saved_identifier := identifier;
+				-- Reset the values of `group_c'
+			container.set_context_attributes (group_c);
+			group_c.set_position (group_c.parent.real_x, group_c.parent.real_y);
+			identifier := 1;
+			from
+			until
+				identifier > count
+			loop
+				a_context := create_context_tree (group_c);
+				a_context.retrieve_oui_group_child_widget;
 				a_context.widget.manage;
-                identifier := identifier + 1;
-                group_c.add_group_child (a_context);
-            end;
-            identifier := saved_identifier;
-            if (eiffel_text = Void) then
-                eiffel_text := group_c.group_text
-            end;
-        end;
+				identifier := identifier + 1;
+				group_c.add_group_child (a_context);
+			end;
+			identifier := saved_identifier;
+			if (eiffel_text = Void) then
+				eiffel_text := group_c.group_text
+			end;
+		end	;
 	
 feature {NONE}
 
-    create_context_tree (a_parent: COMPOSITE_C): CONTEXT is
-        local
-            i: INTEGER;
-            s_context: S_CONTEXT;
-            temp: COMPOSITE_C;
-        do
-            s_context :=  item (identifier);
-            Result := s_context.context (a_parent);
-            temp ?= Result;
-            from
-                i := s_context.arity
-            until
-                i <= 0
-            loop
-                identifier := identifier + 1;
-                Result.put_child_right (create_context_tree (temp));
-                Result.child_forth;
-                i := i - 1;
---              s_context.post_process;
-            end;
-        end;
-
+	create_context_tree (a_parent: COMPOSITE_C): CONTEXT is
+		local
+			i: INTEGER;
+			s_context: S_CONTEXT;
+			temp: COMPOSITE_C;
+		do
+			s_context :=  item (identifier);
+			Result := s_context.context (a_parent);
+			temp ?= Result;
+			from
+				i := s_context.arity
+			until
+				i <= 0
+			loop
+				identifier := identifier + 1;
+				Result.put_child_right (create_context_tree (temp));
+				Result.child_forth;
+				i := i - 1;
+--			  s_context.post_process;
+			end;
+		end;
 
 feature 
 

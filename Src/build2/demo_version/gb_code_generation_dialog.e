@@ -45,7 +45,7 @@ inherit
 		end
 
 create
-	make_default
+	make_default, make_for_single_generation
 
 feature {NONE} -- Initialization
 
@@ -131,6 +131,11 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
+	make_for_single_generation (window_name: STRING) is
+			--
+		do
+			make_default
+		end
 
 	start_generation is
 			-- Begin generation and set generation

@@ -227,7 +227,7 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := internal_full_il_name_with (Void)
+			Result := type.il_type_name (Void)
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -239,7 +239,7 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := internal_full_il_name_with ("Impl")
+			Result := type.il_type_name ("Impl")
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -251,7 +251,7 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := internal_full_il_name_with ("Create")
+			Result := type.il_type_name ("Create")
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -1496,40 +1496,6 @@ feature -- Debug
 			type.trace
 		end
 
-feature {NONE} -- IL naming
-
-	internal_full_il_name_with (prefix_str: STRING): STRING is
-			-- Full type name of Current using `prefix_str' in IL code generation
-			-- with namespace specification.
-		require
-			il_generation: System.il_generation
-			prefix_valid: prefix_str /= Void implies not prefix_str.is_empty
-		local
-			l_class: like associated_class
-			l_name: STRING
-		do
-			Result := type.il_type_name
-			l_class := associated_class
-			if not l_class.is_external then
-				l_name := l_class.lace_class.actual_namespace
-				if prefix_str /= Void then
-					if l_name.is_empty then
-						l_name := prefix_str + "."
-					else
-						l_name := il_casing.namespace_casing (l_name) + "." + prefix_str + "."		
-					end
-				else
-					if not l_name.is_empty then					
-						l_name := il_casing.namespace_casing (l_name) + "."
-					end
-				end
-				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
-			end
-		ensure
-			internal_full_il_name_with_not_void: Result /= Void
-			internal_full_il_name_with_not_empty: not Result.is_empty
-		end
-		
 invariant
 	type_not_void: type /= Void
 	valid_type_id: type_id > 0

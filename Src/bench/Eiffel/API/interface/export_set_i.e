@@ -213,7 +213,7 @@ feature
 			loop
 				ctxt.put_text_item (ti_L_curly);
 				item.format (ctxt);
-				ctxt.put_text_item (ti_R_curly);
+				ctxt.put_text_item_without_tabs (ti_R_curly);
 				forth;
 			end;
 		end;

@@ -348,6 +348,23 @@ feature {NONE} -- Implementation
 				if extension /= Void then
 					extension.parse
 				end
+
+					-- For old external we generate a syntax warning if option is turned on.
+				raise_external_warning
+			end
+		end
+
+	raise_external_warning is
+			-- Raises warning when parsing an old external syntax.
+		local
+			l_warning: SYNTAX_WARNING
+		do
+			if System.has_syntax_warning then
+				create l_warning.make (
+					eiffel_parser.current_position.start_position,
+					eiffel_parser.current_position.end_position,
+					eiffel_parser.filename, 0, "Use new external syntax instead.")
+				Error_handler.insert_warning (l_warning)
 			end
 		end
 

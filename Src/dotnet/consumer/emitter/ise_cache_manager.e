@@ -46,13 +46,11 @@ feature {NONE}-- Initialization
 			is_successful := True
 			last_error_message := ""	
 			no_output := True
-			create consumed_assemblies.make
-			consumed_assemblies.compare_objects
-			
+
 			assembly_consumer.set_status_printer (agent display_status)
 			assembly_consumer.set_error_printer (agent process_error)
 		end
-		
+
 	make_with_path (a_path: STRING) is
 			-- create instance of ISE_CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
 		require
@@ -63,14 +61,14 @@ feature {NONE}-- Initialization
 			set_internal_eiffel_path (a_path)
 			make
 		end
-		
+
 feature -- Access
 
 	is_successful: BOOLEAN
-	
+
 	last_error_message: STRING
 		-- last error message
-		
+
 feature -- Basic Oprtations
 
 	consume_gac_assembly (aname, aversion, aculture, akey: STRING) is
@@ -91,7 +89,6 @@ feature -- Basic Oprtations
 			is_successful := True
 			last_error_message := ""
 			
-			put_in_eac := True
 			assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (aname, aversion, aculture, akey).to_cil)
 			if assembly /= Void then
 				consume_in_eac (assembly)
@@ -102,33 +99,7 @@ feature -- Basic Oprtations
 		ensure
 			successful: is_successful
 		end
-		
-	consume_local_assembly (apath, adest: STRING) is
-			-- consume a local assembly from 'apath' into 'adest'
-		require
-			non_void_path: apath /= Void
-			non_void_dest: adest /= Void
-			path_exists: (create {RAW_FILE}.make (apath)).exists
-			dest_exists: (create {DIRECTORY}.make (adest)).exists
-		local
-			assembly: ASSEMBLY
-		do	
-			is_successful := True
-			last_error_message := ""
-			
-			destination_path := adest.clone (adest)
-			assembly_consumer.set_destination_path (adest)
-			assembly := feature {ASSEMBLY}.load_from (apath.to_cil)
-			if assembly /= Void then
-				consume_into_path (assembly)
-			else
-				set_error (Cannot_load_local_assembly, Void)
-				process_error (error_message)
-			end
-		ensure
-			successful: is_successful
-		end
-		
+
 	relative_folder_name (aname, aversion, aculture, akey: STRING): STRING is
 			-- retruns the relative path to an assembly
 		require
@@ -153,7 +124,7 @@ feature -- Basic Oprtations
 			non_void_result: Result /= Void
 			non_empty_result: Result.count > 0
 		end
-		
+
 	assembly_info_from_assembly (apath: STRING): CONSUMED_ASSEMBLY is
 			-- retrieve a local assembly's information
 		require
@@ -202,7 +173,6 @@ feature {NONE} -- Basic Operations
 			non_void_result: Result /= Void
 			non_empty_result: Result.count > 0
 		end
-		
 
 feature {NONE} -- Internal Agents
 
@@ -218,13 +188,12 @@ feature {NONE} -- Internal Agents
 			is_successful := False
 			last_error_message := s.clone (s)
 		end
-		
+
 	display_status (s: STRING) is
 			-- Display progress status.
 		do
 			--| Do nothing
 		end
-		
 
 invariant
 	invariant_clause: True -- Your invariant here

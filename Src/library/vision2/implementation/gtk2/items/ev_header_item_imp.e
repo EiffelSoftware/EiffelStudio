@@ -46,24 +46,46 @@ feature -- Initialization
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
+			
+				-- Allow the column to be shrank to nothing
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, 80)
+
+				-- Set the default width to 80 pixels wide
+			set_width (80)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_box
-			
-			real_signal_connect (c_object, "notify::fixed_width", agent handle_resize, Void)
-			real_signal_connect (c_object, "clicked", agent print ("Column clicked%N"), Void)
 
-
+			real_signal_connect ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_widget (c_object),  "realize", agent setup_events, Void)
 			is_initialized := True
 		end
 
-	handle_resize is
-			-- 
+	setup_events is
+			--
+		local
+			item_box: POINTER
+			box_parent: POINTER
 		do
-			if parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void and then width /= old_width then
+			if not events_set then
+					-- Go up through widget ancestry to find the GtkButton that represents the column
+				item_box := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_widget (c_object)
+				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (item_box)
+				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box_parent)
+				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box_parent)
+				real_signal_connect (box_parent, "size-allocate", agent handle_resize, Void)
+			end
+			events_set := True
+		end
+		
+	events_set: BOOLEAN
+
+	handle_resize is
+			-- Call the appropriate actions for the header item resize
+		do
+			if width /= old_width and then parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void then
+				print ("column resize%N")
 				parent_imp.item_resize_actions_internal.call ([interface])
 				parent_imp.item_resize_end_actions_internal.call ([interface])
 			end
@@ -71,7 +93,7 @@ feature -- Initialization
 		end
 
 	old_width: INTEGER
-		
+		-- Previous width of `Current', used to prevent multiple calls to resize actions when the item hasn't actually resized
 
 	initialize_box is
 			-- Create and initialize box.
@@ -91,7 +113,11 @@ feature -- Access
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+			if parent_imp /= Void and then parent_imp.is_displayed then
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+			else
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_fixed_width (c_object)
+			end
 		end
 
 feature -- Status setting

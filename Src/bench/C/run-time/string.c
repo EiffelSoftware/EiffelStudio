@@ -412,8 +412,10 @@ rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
                     state = 2;
                     ret = EIF_TRUE;
                 }
-                else
+                else {
+					state = 4;
                     ret = EIF_FALSE;
+				}
                 break;
 
             case 2:

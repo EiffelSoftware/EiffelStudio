@@ -23,6 +23,11 @@ inherit
 
 	WARNER_CALLBACKS
 
+	BENCH_COMMAND_EXECUTOR
+		rename
+			execute as launch_ebench
+		end
+
 creation
 	make
 

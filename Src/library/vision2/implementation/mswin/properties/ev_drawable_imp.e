@@ -446,14 +446,16 @@ feature -- Drawing operations
 			source_y			: INTEGER
 			source_width		: INTEGER
 			source_height		: INTEGER
-			display_mask_bitmap	: WEL_BITMAP
-			display_bitmap		: WEL_BITMAP
+			source_mask_bitmap	: WEL_BITMAP
+			source_bitmap		: WEL_BITMAP
 			s_dc				: WEL_SCREEN_DC
-			display_mask_dc		: WEL_MEMORY_DC
-			display_bitmap_dc	: WEL_MEMORY_DC
+			source_mask_dc		: WEL_MEMORY_DC
+			source_bitmap_dc	: WEL_MEMORY_DC
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
-			pixmap_imp_drawable	: EV_PIXMAP_IMP_DRAWABLE
-			tmp_bitmap			: WEL_BITMAP
+			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
+			dest_dc				: WEL_DC
+			temp_foreground_color	: WEL_COLOR_REF
+			temp_background_color	: WEL_COLOR_REF
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -484,81 +486,90 @@ feature -- Drawing operations
 					-- Allocate GDI objects
 				create s_dc
 				s_dc.get
+				
+				dest_dc := dc
 
 				if pixmap_imp.has_mask then -- Display a masked pixmap
-	
-						-- Create the mask and image used for display. 
-						-- They are different than the real image because 
-						-- we need to apply logical operation in order 
-						-- to display the masked bitmap.
-					tmp_bitmap := pixmap_imp.get_mask_bitmap
-					create display_mask_bitmap.make_by_bitmap (tmp_bitmap)
-					tmp_bitmap.decrement_reference
-					tmp_bitmap := Void
+				
+					source_drawable ?= pixmap_imp
 					
-					create display_mask_dc.make
-					display_mask_dc.select_bitmap(display_mask_bitmap)
-						-- Display_mask_dc = NOT MASK
-					display_mask_dc.pat_blt
-						(source_x, source_y, source_width, source_height, Dstinvert)
-
-					tmp_bitmap := pixmap_imp.get_bitmap
-					create display_bitmap.make_by_bitmap(tmp_bitmap)
-					tmp_bitmap.decrement_reference
-					tmp_bitmap := Void
-					
-					create display_bitmap_dc.make_by_dc(s_dc)
-					display_bitmap_dc.select_bitmap(display_bitmap)
-
-						-- display_bitmap_dc = IMAGE AND (NOT MASK)
-					display_bitmap_dc.bit_blt (
-						source_x, source_y, 
-						source_width, source_height, 
-						display_mask_dc, 0, 0, Srcand
-					)
-
-						-- Apply NOT MASK
-					dc.bit_blt (
-						x, y, 
-						source_width, source_height, 
-						display_mask_dc, source_x, source_y, Maskpaint
-					)
-
-						-- Apply IMAGE AND (NOT MASK)
-					dc.bit_blt (
-						x, y,
-						source_width, source_height, 
-						display_bitmap_dc, source_x, source_y, Srcpaint
-					)
-
-						-- Free GDI Objects
-					display_bitmap_dc.unselect_bitmap
-					display_bitmap_dc.delete
-					display_mask_dc.unselect_bitmap
-					display_mask_dc.delete
-					display_bitmap.delete
-					display_mask_bitmap.delete
-	
-				else -- Display a not masked pixmap.
-
-					pixmap_imp_drawable ?= pixmap_imp
-					if pixmap_imp_drawable = Void then
-						tmp_bitmap := pixmap_imp.get_bitmap
-						create display_bitmap.make_by_bitmap(tmp_bitmap)
-						tmp_bitmap.decrement_reference
-						tmp_bitmap := Void
-						
-						create display_bitmap_dc.make_by_dc(s_dc)
-						display_bitmap_dc.select_bitmap(display_bitmap)
+					if source_drawable /= Void then
+							-- If the dc's are already available then we use them without reffing
+						source_bitmap_dc := source_drawable.dc
+						source_mask_dc := source_drawable.mask_dc
 					else
-						display_bitmap_dc := pixmap_imp_drawable.dc
+							-- Retrieve Source bitmap
+						source_bitmap := pixmap_imp.get_bitmap
+						
+							-- Create dc for Source bitmap
+						create source_bitmap_dc.make_by_dc (s_dc)
+						source_bitmap_dc.select_bitmap (source_bitmap)
+						
+							-- Retrieve Mask bitmap
+						source_mask_bitmap := pixmap_imp.get_mask_bitmap
+						
+							-- Create dc for Mask bitmap
+						create source_mask_dc.make_by_dc (s_dc)
+						source_mask_dc.select_bitmap (source_mask_bitmap)
 					end
 
-					dc.bit_blt (
-						x, y, 
-						source_width, source_height, 
-						display_bitmap_dc, source_x, source_y, src_drawing_mode
-					)
+						-- Store original colors as they need to be unset for masking
+					temp_background_color := dest_dc.background_color
+					temp_foreground_color := dest_dc.text_color
+
+					dest_dc.set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
+					dest_dc.set_background_color (create {WEL_COLOR_REF}.make_rgb (255, 255, 255))
+
+						-- Xor source to destination
+					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
+					
+						-- Set opaque pixels to black on destination
+					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, Srcand)
+					
+						-- Re Xor source to destination to restore original pixels
+					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
+					
+						-- Reset colors
+					dest_dc.set_text_color (temp_foreground_color)
+					dest_dc.set_background_color (temp_background_color)
+
+						-- Free newly created GDI Objects if source isn't a pixmap drawable
+					if source_drawable = Void then
+						source_bitmap_dc.unselect_bitmap
+						source_bitmap_dc.delete
+						source_mask_dc.unselect_bitmap
+						source_mask_dc.delete
+						source_bitmap.decrement_reference
+						source_mask_bitmap.decrement_reference						
+					end
+
+				else -- Display a not masked pixmap.
+
+					source_drawable ?= pixmap_imp
+					if source_drawable = Void then
+							-- Source bitmap dc
+						source_bitmap := pixmap_imp.get_bitmap
+						create source_bitmap_dc.make_by_dc (s_dc)
+						source_bitmap_dc.select_bitmap (source_bitmap)
+						
+						dest_dc.bit_blt (
+							x, y, 
+							source_width, source_height, 
+							source_bitmap_dc, source_x, source_y, src_drawing_mode
+						)
+							-- Free GDI Objects
+						source_bitmap_dc.unselect_bitmap
+						source_bitmap_dc.delete
+						source_bitmap.decrement_reference
+					else
+						source_bitmap_dc := source_drawable.dc
+						dest_dc.bit_blt (
+							x, y, 
+							source_width, source_height, 
+							source_bitmap_dc, source_x, source_y, src_drawing_mode
+						)
+					end
+
 				end
 
 					-- Free GDI objects

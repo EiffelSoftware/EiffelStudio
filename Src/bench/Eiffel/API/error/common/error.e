@@ -4,16 +4,14 @@ deferred class ERROR
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	EIFFEL_ENV;
 	COMPARABLE
 		undefine
 			is_equal
 		end;
-	WINDOWS;
-	STONABLE
 
-feature -- Error code 
+feature -- Access 
 
 	code: STRING is
 			-- Code error
@@ -24,7 +22,17 @@ feature -- Error code
 		do
 		end;
 
-feature
+	help_file_name: STRING is
+		do
+			Result := code
+		end;
+
+	Error_string: STRING is
+		do
+			Result := "Error";
+		end;
+
+feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 		do
@@ -33,35 +41,36 @@ feature
 							subcode < other.subcode)
 		end;
 
-feature -- Debug pupose
+feature -- Output
 
-	print_error_message is
+	trace (ow: OUTPUT_WINDOW) is
+		require
+			valid_ow: ow /= Void
 		do
-			put_string (Error_string);
-			put_string (" code: ");
-			put_clickable_string (stone (Void), code);
+			print_error_message (ow);
+			build_explain (ow);
+		end;
+
+	print_error_message (ow: OUTPUT_WINDOW) is
+		require
+			valid_ow: ow /= Void
+		do
+			ow.put_string (Error_string);
+			ow.put_string (" code: ");
+			ow.put_error (Current, code);
 			if subcode /= 0 then
-				put_char ('(');
-				put_int (subcode);
-				put_string (")%N");
+				ow.put_char ('(');
+				ow.put_int (subcode);
+				ow.put_string (")%N");
 			else
-				new_line;
+				ow.new_line;
 			end;
-			print_short_help;
+			print_short_help (ow);
 		end;
 
-	trace is
-		do
-			print_error_message;
-			build_explain;
-		end;
-
-	help_file_name: STRING is
-		do
-			Result := code
-		end;
-
-	print_short_help is
+	print_short_help (ow: OUTPUT_WINDOW) is
+		require
+			valid_ow: ow /= Void
 		local
 			file_name: STRING;
 			f_name: FILE_NAME;
@@ -82,69 +91,26 @@ feature -- Debug pupose
 					file.end_of_file
 				loop
 					file.readline;
-					put_string (file.laststring);
-					new_line;
+					ow.put_string (file.laststring);
+					ow.new_line;
 				end;
 				file.close;
 			else
-				put_string ("%NNo help available for this error%N%
+				ow.put_string ("%NNo help available for this error%N%
 							%(cannot read file: ");
-				put_string (file_name);
-				put_string (")%N%
+				ow.put_string (file_name);
+				ow.put_string (")%N%
 							%%NAn error message should always be available.%N%
 							%Please contact ISE.%N%N");
 			end;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
+		require
+			valid_ow: ow /= Void
 		deferred
 		end;
 
-	Error_string: STRING is
-		do
-			Result := "Error";
-		end;
-
-feature -- Clicking
-
-	put_string (s: STRING) is
-		do
-			error_window.put_string (s)
-		end;
-
-	put_clickable_string (a: STONE; s: STRING) is
-		do
-			error_window.put_clickable_string (a, s)
-		end;
-
-	new_line is
-		do
-			error_window.new_line
-		end;
-
-	put_char (c: CHARACTER) is
-		do
-			error_window.put_char (c)
-		end;
-
-	put_int (i: INTEGER) is
-		do
-			error_window.put_int (i);
-		end;
-
-	putstring (s: STRING) is obsolete "Use put_string"
-		do
-			put_string (s)
-		end;
-
-feature -- stoning
-
-	stone (reference_class: E_CLASS): ERROR_STONE is
-			-- Reference class is useless here
-		do
-			!! Result.make (Current)
-		end
-
-end
+end -- class ERROR

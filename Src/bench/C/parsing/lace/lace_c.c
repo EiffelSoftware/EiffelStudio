@@ -33,9 +33,6 @@ void lp_init()
 	 * after calling feature `init' on instance of YACC_INIT.
 	 */
 
-	int i;
-	EIF_OBJ addr;
-
 	/* Allocation of an Eiffel ID */
 	id_string = create_node(ID_SD);
 	id_string = eif_freeze((EIF_OBJ) (&id_string));	/* Object shouldn't move */
@@ -86,7 +83,6 @@ char *lp_file(FILE *file_pointer, char *filename)
 	extern int xxdebug;
 #endif
 
-	char buf[100];			/* Error message */
 	int cancel;				/* Parsing cancelity */
 
 	/* Initialization */

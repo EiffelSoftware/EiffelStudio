@@ -18,6 +18,10 @@
 #include <ctype.h>
 #include "yacc.h"
 
+#ifdef EIF_WIN32
+#include <io.h>
+#endif
+
 /* private functions for lex */
 static int process();
 static int process_name();

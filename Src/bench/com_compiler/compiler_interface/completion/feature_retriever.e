@@ -28,7 +28,7 @@ feature -- Basic Operations
 			-- Find `target' in current context
 		local
 			l_targets: LIST [STRING]
-			l_target_type: TYPE
+			l_target_type: TYPE_AS
 			l_lookup_name: STRING
 			l_new_target: like target
 		do

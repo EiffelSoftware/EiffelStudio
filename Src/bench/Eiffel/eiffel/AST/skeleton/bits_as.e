@@ -64,7 +64,10 @@ feature -- Type evaluation
 		local
 			vtbt: VTBT
 		do
-			if (bits_value.integer_32_value <= 0) then
+			if 
+				bits_value.integer_32_value <= 0 or else
+				bits_value.integer_32_value > feature {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant 
+			then
 				create vtbt
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)

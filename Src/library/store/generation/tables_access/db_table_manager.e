@@ -148,7 +148,7 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 		do
-			select_columns := "*"
+			select_columns := All_columns
 		end
 
 	set_columns (cols: ARRAYED_LIST [INTEGER]) is
@@ -164,7 +164,7 @@ feature -- Basic operations
 			until
 				cols.after
 			loop
-				select_columns.append (", " + select_table_descr.description_list.i_th (cols.item))
+				select_columns.append (Values_separator + select_table_descr.description_list.i_th (cols.item))
 				cols.forth
 			end
 		end
@@ -173,13 +173,19 @@ feature -- Basic operations
 			-- Add qualifier `column' = `value' to prepared select query.
 		local
 			q: STRING
+			sql_value: STRING
 		do
-			q := select_table_descr.description_list.i_th (column) + " = '" + value + "'"
+			sql_value := string_format (value)
+			q := select_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
 			add_qualifier (q)
 		end
 
 	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN) is
 			-- Add qualifier `column' related to `value' with `type' and `case'.
+			-- 'LIKE' predicates are implemented by both Oracle and ODBC with '%' and '_' wild
+			-- card characters.
+			-- Case sensitiveness can only be specified for Oracle. ODBC set case sensitiveness
+			-- directly on database columns. 
 		local
 			q: STRING
 			attr, val: STRING
@@ -187,13 +193,13 @@ feature -- Basic operations
 		do
 			attr := select_table_descr.description_list.i_th (column)
 			val := clone (value)
-			if case_sens then
+			if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
 				q := clone (attr)
 			else
 				coltype := select_table_descr.type_list.i_th (column)
 				if coltype = select_table_descr.string_type or else
 						coltype = select_table_descr.character_type then
-					q := "lower (" + attr + ")"
+					q := to_lower (attr)
 					val.to_lower
 				else
 					q := clone (attr)
@@ -203,17 +209,18 @@ feature -- Basic operations
 					-- '%' and '_' have a special meaning in SQL (wild cards: '%' -> '*',
 					-- '_' -> '?'): a solution is to replace
 					-- these characters by any character, i.e. '_'.
-				val.replace_substring_all ("%%", "_")
-				q.append (" like '")
+				val.replace_substring_all (any_wildcard, only_one_wildcard)
+				q.append (Space)
+				q.append (Like_predicate)
+				q.append (Space)
 				if type = Contains_type or else type = Suffix_type then
-					q.append ("%%")
+					val.prepend (any_wildcard)
 				end
-				q.append (val)
 				if type = Contains_type or else type = Prefix_type then
-					q.append ("%%")
+					val.append (any_wildcard)
 				end
 			else
-				q.append (" ")
+				q.append (Space)
 				if type = Equals_type then
 					q.append ("=")
 				elseif type = Greater_type then
@@ -221,24 +228,11 @@ feature -- Basic operations
 				elseif type = Lower_type then
 					q.append ("<")
 				end
-				q.append (" '")
-				q.append (val)
+				q.append (Space)
 			end
-			q.append ("'")
-			add_qualifier (q)
-		end
-
-	add_special_value_qualifier (column: INTEGER; value: STRING) is
-			-- Add qualifier prefix(`column') = `value' to prepared select query.
-			-- Qualifier is case insensitive.
-		require
-			select_query_prepared: select_query_prepared
-			valid_value: not value.has ('_') and then not value.has ('%%')
-		local
-			q: STRING
-		do
-			value.to_lower
-			q := "lower (" + select_table_descr.description_list.i_th (column) + ") like '" + value + "%%'"
+					-- Gives a valid SQL string representation to `val'.
+			val := string_format (val)
+			q.append (val)
 			add_qualifier (q)
 		end
 
@@ -260,7 +254,7 @@ feature -- Basic operations
 			if select_qualifiers = Void then
 				select_qualifiers := value
 			else
-				select_qualifiers.append (" and " + value)
+				select_qualifiers.append (Space + And_operator + Space + value)
 			end
 		end
 
@@ -280,7 +274,7 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 		do
-			order_by := " order by " + select_table_descr.description_list.i_th (column)
+			order_by := Space + Order_by_clause + Space + select_table_descr.description_list.i_th (column)
 		end
 
 	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER]) is
@@ -293,14 +287,14 @@ feature -- Basic operations
 		do
 			descr_list := select_table_descr.description_list
 			if not column_list.is_empty then
-				order_by := " order by " + descr_list.i_th (column_list.first)
+				order_by := Space + Order_by_clause + Space + descr_list.i_th (column_list.first)
 				from
 					column_list.start
 					column_list.forth
 				until
 					column_list.after
 				loop
-					order_by.append (", " + descr_list.i_th (column_list.item))
+					order_by.append (Values_separator + descr_list.i_th (column_list.item))
 					column_list.forth
 				end
 			else
@@ -616,6 +610,30 @@ feature {NONE} -- Implementation
 			Result := database_manager.session_control
 		end
 
+	database_handle_name: STRING is
+			-- Database handle name.
+		do
+			if db_handle_name = Void then
+				db_handle_name := database_manager.database_handle_name
+			end
+			Result := db_handle_name
+		end
+
+	db_handle_name: STRING
+			-- Database handle name.
+
+	Oracle_handle_name: STRING is "ORACLE"
+			-- Oracle handle name.
+
+	Odbc_handle_name: STRING is "ODBC"
+			-- ODBC handle name.
+
+	string_format (s: STRING): STRING is
+			-- String representation in SQL of `s'.
+		do
+			Result := database_manager.string_format (s)
+		end
+
 	database_manager: DATABASE_MANAGER [DATABASE]
 			-- Database manager: manage every interaction
 			-- with database.
@@ -664,6 +682,39 @@ feature {NONE} -- Implementation
 				name_list.forth
 			end
 		end
+
+feature {NONE} -- SQL query construction
+
+	Only_one_wildcard: STRING is "_"
+			-- SQL representation of a wild card matching any character.
+
+	Any_wildcard: STRING is "%%"
+			-- SQL representation of a wild card matching any number of characters,
+			-- including none.
+
+	Space: STRING is " "
+			-- Space separator in SQL queries.
+
+	to_lower (attribute: STRING): STRING is
+			-- Oracle SQL representation of the value in lower case for `attribute'.
+		do
+			Result := "lower (" + attribute + ")"
+		end
+
+	Like_predicate: STRING is "like"
+			-- SQL 'like' predicate (used to match expressions using wildcards).
+
+	Order_by_clause: STRING is "order by"
+			-- SQL 'order by' clause.
+
+	Values_separator: STRING is ", "
+			-- SQL value separator: for 'order by' clauses and columns to select.
+
+	All_columns: STRING is "*"
+			-- SQL all columns sign.
+
+	And_operator: STRING is "and"
+			-- SQL 'and' operator.
 
 feature {NONE} -- Error messages
 

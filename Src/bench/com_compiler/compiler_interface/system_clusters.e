@@ -42,7 +42,9 @@ feature -- Initialization
 			cl_name: ID_SD
 		do
 			create clusters_impl.make (10)
-					
+			create cluster_table_by_id.make (10)		
+			create clusters_table.make (10)
+			create renamed_clusters_table.make (10)
 			ace_accesser := an_ace_accesser
 			cl := ace_accesser.root_ast.clusters
 			if cl /= Void then
@@ -51,9 +53,6 @@ feature -- Initialization
 					-- parent cluster if any. 
 					
 					-- Initialize all cluster structures
-					create clusters_table.make (cl.count)
-					create cluster_table_by_id.make (cl.count)
-					create renamed_clusters_table.make (10)
 				from
 						-- Detached store information from original.
 					cl := cl.duplicate
@@ -84,6 +83,8 @@ feature -- Initialization
 					next_id := next_id + 1
 					cl.forth
 				end
+			else
+				next_id := 1
 			end
 		end
 

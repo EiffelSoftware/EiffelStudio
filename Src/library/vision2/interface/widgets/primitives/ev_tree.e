@@ -72,6 +72,8 @@ feature -- Status report
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
 			item_contained: has_recursively	(an_item)
 		do
 			implementation.ensure_item_visible (an_item)

@@ -134,9 +134,9 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.case_prepare_for_feature (feature_name.internal_name, Void)
+			ctxt.prepare_for_feature (feature_name.internal_name, Void)
 			ctxt.put_text_item_without_tabs (ti_Dollar)
-			ctxt.case_put_current_feature
+			ctxt.put_current_feature
 		end
 
 end -- class ADDRESS_AS

@@ -28,6 +28,31 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			physical_index := -1
+			is_initialized := True
+		end
+
+feature {EV_GRID_I} -- Initialization
+
+	set_grid_i (a_grid_i: EV_GRID_I) is
+			-- Make `Current' associated with `a_grid_i'
+		require
+			a_grid_i_not_void: a_grid_i /= Void
+		do
+			parent_grid_i := a_grid_i
+		ensure
+			parent_grid_i = a_grid_i
+		end
+
+	set_physical_index (a_index: INTEGER) is
+			-- Set the physical index of the column
+		require
+			valid_index: a_index >= 0
+			physical_index_not_set: physical_index = -1
+		do
+			physical_index := a_index
+		ensure
+			physical_index_set: physical_index = a_index
 		end
 
 feature -- Access
@@ -106,7 +131,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.count")
+			Result := parent_grid_i.row_count
 		ensure
 			count_positive: Result > 0
 		end
@@ -196,6 +221,9 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
+
+	physical_index: INTEGER
+		-- Physical index of column row data stored in `parent_grid_i'
 
 	internal_index: INTEGER
 		-- Index of `Current' in `parent_grid_i'

@@ -103,6 +103,7 @@ feature -- Constants
 	memory_free_name_id: INTEGER is 93
 	from_integer_name_id: INTEGER is 94
 	finalize_name_id: INTEGER is 95
+	eif_helpers_header_name_id: INTEGER is 96
 	
 			-- Predefined name IDs constants
 

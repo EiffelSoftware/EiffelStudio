@@ -91,7 +91,7 @@ feature -- Element change
 			a_cs: C_STRING
 		do
 			a_text.replace_substring_all ("%T", " ")
-				-- Replace tab characters with 4 spaces.
+				-- Replace tab characters with spaces.
 			real_text := clone (a_text)	
 			if a_text.has ('&') then
 				temp_string := clone (a_text)

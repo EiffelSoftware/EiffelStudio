@@ -1,0 +1,4 @@
+Error: Custom attribute creation is incorrect.
+What to do: Make sure that it is created using proper creation procedure
+    and if named argument initialization is provided that they are indeed
+    attributes or properties of custom attribute class.

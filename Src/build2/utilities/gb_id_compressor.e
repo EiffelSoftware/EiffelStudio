@@ -79,6 +79,25 @@ feature -- Basic operation
 			end
 		end
 		
+	shift_all_ids_upwards is
+			-- For every id in system, shift higher.
+			-- Used when importing pjects, so we do not get
+			-- a clash between the current and new ids.
+		local
+			objects: ARRAYED_LIST [GB_OBJECT]
+		do
+			objects := object_handler.objects
+			objects.do_all (agent shift_id)
+		end
+		
+	shift_id (an_object: GB_OBJECT) is
+				-- Adjust id of `an_object' upwards by 32000.
+			require
+				an_object_not_void: an_object /= Void
+			do
+				an_object.set_id (an_object.id + 32000)
+			end
+
 	compress_object_id (an_object: GB_OBJECT; start_value: INTEGER) is
 			-- Compress all ids of `an_object' and all children, so
 			-- they are contiguous, starting at `start_value'.

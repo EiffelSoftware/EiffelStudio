@@ -19,6 +19,8 @@
 #include <OLECTL.H>
 #include <OBJBASE.H>
 #include <OCIDL.H>
+#include <mshtmhst.h>
+#include <objidl.h>
 
 #include "ecom_font.h"
 #include "ecom_picture23.h"

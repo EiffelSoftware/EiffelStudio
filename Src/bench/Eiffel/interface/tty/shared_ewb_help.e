@@ -67,7 +67,7 @@ feature {NONE}
 
 	feature_help: STRING is "feature formats and information"
 
-	Featurename_help: STRING is " output of featurenames"
+	Featurename_help: STRING is " output of feature names"
 
 	file_help: STRING is "save the output to a file"
 

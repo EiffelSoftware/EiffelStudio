@@ -149,7 +149,9 @@ feature -- Basic operations
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
 			
-			current_row: SPECIAL [EV_GRID_ITEM_I]
+			current_row_list: SPECIAL [EV_GRID_ITEM_I]
+			current_row: EV_GRID_ROW_I
+			
 			visible_physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index, first_row_index: INTEGER
 			last_column_index, last_row_index: INTEGER
@@ -169,6 +171,7 @@ feature -- Basic operations
 			current_item_y_position, current_item_x_position: INTEGER
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
+			current_tree_indent: INTEGER
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			printing_values := False
@@ -288,7 +291,10 @@ feature -- Basic operations
 					if not bool and printing_values then
 						print ("%N%NStarting to draw row%N")
 					end
-					current_row := grid.row_list @ (row_counter - 1)
+						-- Retrieve information regarding the rows that we must draw.
+					current_row_list := grid.row_list @ (row_counter - 1)
+					current_row := grid.grid_rows @ row_counter
+					
 					current_index_in_row := first_column_index
 					if grid.is_row_height_fixed then
 						current_item_y_position := (grid.row_height * (current_index_in_column - 1)) - (internal_client_y - vertical_buffer_offset)
@@ -316,12 +322,12 @@ feature -- Basic operations
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						if not grid.is_content_completely_dynamic and current_row /= Void and then current_row.count > (current_index_in_row - 1) then
+						if not grid.is_content_completely_dynamic and current_row_list /= Void and then current_row_list.count > (current_index_in_row - 1) then
 								-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
 								-- as the current contents of the grid are never used. We also check that the current row and
 								-- current row position are valid.
 								
-							grid_item := current_row @ (current_index_in_row - 1)
+							grid_item := current_row_list @ (current_index_in_row - 1)
 								-- In this case, we have found the grid item so we flag this fact
 								-- so that the calculations for the partial dynamic content know that
 								-- a new item must not be retrieved.
@@ -349,7 +355,17 @@ feature -- Basic operations
 						
 						if grid_item_exists then
 								-- An item has been retrieved for the current drawing position so draw it.
-							grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
+							if column_counter = 1 and grid.is_tree_enabled then
+									-- Now draw tree node for root tree items if any.
+								current_tree_indent := tree_indent * current_row.depth_in_tree
+								
+								grid.drawable.set_foreground_color (grid.background_color)
+								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_tree_indent, current_row_height)
+								grid_item.redraw (current_item_x_position + current_tree_indent, current_item_y_position, current_column_width - current_tree_indent, current_row_height, grid.drawable)
+								fixme ("Must handle tree nodes that are not only in the first column")
+							else
+								grid_item.redraw (current_item_x_position, current_item_y_position, current_column_width, current_row_height, grid.drawable)
+							end
 						else
 								-- As there is no current item, we must now fill the background with the
 								-- parent background color.
@@ -417,6 +433,10 @@ feature -- Basic operations
 		
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.
+		
+	tree_indent: INTEGER is 16
+	
+	tree_square: INTEGER is 6
 
 feature {NONE} -- Implementation
 

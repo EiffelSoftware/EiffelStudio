@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>There are three kind of tools directly available in a default development tool : 
+	<paragraph>
+	There are three kind of tools directly available in a default development tool : 
 		<link>
 			<url>../../../reference/10_browsing_tools/00_introduction.xml</url>
 			<label>browsing tools</label>
@@ -15,7 +16,7 @@
 		<link>
 			<url>../../../reference/20_editor/00_introduction.xml</url>
 			<label>editor</label>
-		</link> on the upper right and context tools on the lower right. No browsing tool, except the feature tool, displays information about a particular component. On the contrary, the editor and context tools display information about a given cluster, class or feature :they are centered on this component. There are several ways to center the editor on an element:
+		</link> on the upper right and context tools on the lower right. No browsing tool, except the feature tool, displays information about a particular component. On the contrary, the editor and context tools display information about a given cluster, class or feature : they are centered on this component. There are several ways to center the editor on an element:
 		<list ordered="false">
 			<item>use the 
 				<link>

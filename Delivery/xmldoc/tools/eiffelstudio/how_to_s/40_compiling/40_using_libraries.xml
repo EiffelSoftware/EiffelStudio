@@ -16,9 +16,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Using libraries
-		</heading>
 		<paragraph>There are two kinds of libraries in Eiffel: precompiled Eiffel libraries and C libraries.</paragraph>
 		<paragraph>To use an Eiffel precompiled library:</paragraph>
 		<list ordered="false">

@@ -16,9 +16,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Enabling the profiler
-		</heading>
 		<paragraph>To profile an executable, the profiler must first be enabled. To enable the profiler:</paragraph>
 		<list ordered="false">
 			<item>Open the 

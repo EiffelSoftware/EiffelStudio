@@ -32,9 +32,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size> Setting the assertion level 
-		</heading>
 		<paragraph>To modify the assertion level in a generated binary (executable or library),</paragraph>
 		<list ordered="false">
 			<item>Open the 

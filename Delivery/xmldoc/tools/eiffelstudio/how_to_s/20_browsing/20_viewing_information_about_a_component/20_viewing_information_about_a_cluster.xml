@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>To view information about a cluster, you have to center the context tool on this component. Then the 
+	<paragraph>
+	To view information about a cluster, you have to center the context tool on this component. Then the 
 		<link>
 			<url>../../../reference/60_metric_tool/00_introduction.xml</url>
 			<label>metric tool</label>

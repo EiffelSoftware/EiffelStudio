@@ -84,9 +84,9 @@ feature
 				changed_classes.empty
 			loop
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (changed_classes.count);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 end;
 				pass_c := changed_classes.first;
 				current_class := pass_c.associated_class;

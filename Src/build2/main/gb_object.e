@@ -672,9 +672,9 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 			end
 			element_info := full_information @ reference_id_string
 			if element_info /= Void then
-				temp_top_level_id := element_info.data.to_integer
+				associated_top_level_object := element_info.data.to_integer
 			else
-				temp_top_level_id := -1
+				associated_top_level_object := 0
 			end
 		end
 
@@ -1536,16 +1536,14 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		
 	update_object_as_instance_representation is
 			-- Update `Current' to reflect the fact that it is a representation
-			-- of another top level object, only if `temp_top_level_id' >=0.
+			-- of another top level object, only if `associated_top_level_object' > 0.
 		local
 			l_object: GB_OBJECT
-			l_id: INTEGER
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
-			if temp_top_level_id >= 0 then
-				l_id := temp_top_level_id
+			if associated_top_level_object > 0 then
 					-- Retrieve the object which `Current' represents.
-				l_object := object_handler.object_from_id (temp_top_level_id)
+				l_object := object_handler.object_from_id (associated_top_level_object)
 				check
 					object_not_void: object /= Void
 				end
@@ -1556,9 +1554,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				represent_as_locked_instance
 				update_representations_for_name_or_type_change
 				connect_instance_referers (l_object, Current)
-					-- Reset `temp_top_level_id' so that it is no longer used in
-					-- subsequent updates, for example while importing a system.
-				temp_top_level_id := -1
 				
 					-- Now update the builder window representations of all children recursively so that
 					-- a user may not build directly within them as they should be locked.
@@ -1575,13 +1570,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					all_children.forth
 				end
 			end
-		ensure
-			temp_id_reset: temp_top_level_id = -1
 		end
-		
-	temp_top_level_id: INTEGER
-		-- A temporary id used to reference the top level object which `Current' represents.
-		--| FIXME, why can we not use associated_top_level_object?
 		
 feature {NONE} -- Contract support
 

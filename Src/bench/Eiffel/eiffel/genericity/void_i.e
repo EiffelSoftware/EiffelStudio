@@ -10,7 +10,9 @@ inherit
 		export
 			{NONE} generate_access_cast
 		undefine
-			is_void, is_bit
+			is_bit
+		redefine
+			is_void
 		end
 
 	SHARED_C_LEVEL

@@ -1,9 +1,12 @@
+indexing
+	description: "Ancestor for basic types."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 deferred class BASIC_I
 
 inherit
 	CL_TYPE_I
-		rename
-			is_void as cl_type_is_void
 		undefine
 			type_a
 		redefine
@@ -13,7 +16,7 @@ inherit
 
 	TYPE_C
 		undefine
-			is_bit
+			is_bit, is_void
 		end
 
 	SHARED_C_LEVEL
@@ -32,7 +35,7 @@ feature {CLASS_B} -- Settings
 			class_id_set: class_id = an_id
 		end
 
-feature
+feature -- Access
 
 	c_type: TYPE_C is
 			-- C type
@@ -40,18 +43,11 @@ feature
 			Result := Current
 		end
 
-	is_reference: BOOLEAN is False
-			-- Type is not a reference.
-
-	is_basic: BOOLEAN is True
-			-- Type is a basic type.
-
-	is_valid: BOOLEAN is True
-			-- A Basic type is always in the system
-
-	generate_byte_code_cast (ba: BYTE_ARRAY) is
-			-- Code for the interpreter cast
+	metamorphose_type: BASIC_I is
+			-- Type used for metamorphose. Needed for TYPED_POINTER_I
+			-- since transformed into a POINTER_I for metamorphose.
 		do
+			Result := Current
 		end
 
 	associated_reference: CLASS_TYPE is
@@ -75,8 +71,26 @@ feature
 			end
 		end
 
+feature -- Status report
+
+	is_reference: BOOLEAN is False
+			-- Type is not a reference.
+
+	is_basic: BOOLEAN is True
+			-- Type is a basic type.
+
+	is_valid: BOOLEAN is True
+			-- A Basic type is always in the system
+
+feature -- Byte code generation
+
+	generate_byte_code_cast (ba: BYTE_ARRAY) is
+			-- Code for the interpreter cast
+		do
+		end
+
 	metamorphose
-	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
+		(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
@@ -87,14 +101,14 @@ feature
 		do
 			reg.print_register
 			buffer.putstring (" = ")
-				-- Even though we pass Current (which does not correspond
+				-- Even though we pass a basic type (which does not correspond
 				-- to the associated reference class) to CREATE_TYPE, it works
 				-- because `base_class' is redefined so that it always return
 				-- the associated reference class and `base_class' is called
 				-- by `associated_class_type' which is called by CREATE_TYPE.
-			(create {CREATE_TYPE}.make (Current)).generate
+			(create {CREATE_TYPE}.make (metamorphose_type)).generate
 			buffer.putstring (", *")
-			generate_access_cast (buffer)
+			metamorphose_type.generate_access_cast (buffer)
 			reg.print_register
 			buffer.putstring (" = ")
 			value.print_register

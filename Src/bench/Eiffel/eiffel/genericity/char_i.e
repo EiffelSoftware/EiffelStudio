@@ -9,7 +9,7 @@ inherit
 			is_char,
 			same_as, element_type,
 			description, sk_value, generate_cecil_value, hash_code,
-			generated_id, typecode
+			generated_id
 		end
 
 create
@@ -50,12 +50,6 @@ feature -- Access
 			else
 				Result := C_char
 			end
-		end
-
-	typecode: INTEGER is
-			-- Typecode for TUPLE element.
-		do
-			Result := feature {SHARED_TYPECODE}.character_code
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

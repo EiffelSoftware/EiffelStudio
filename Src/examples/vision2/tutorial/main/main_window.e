@@ -2,6 +2,7 @@ indexing
 	description: 
 	"MAIN_WINDOW, main window for the application. Belongs to EiffelVision example 'hello world'."
 	status: "See notice at end of class"
+
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,8 +35,6 @@ feature --Access
 	case_class: CASE_CLASS
 			-- A class to include all the classes in the system.
 
-	test_wind : TEST_WINDOW
-
 feature -- Initialization
 
 	make_top_level is
@@ -50,7 +49,10 @@ feature -- Initialization
 			color: EV_COLOR
 			bc: EV_BASIC_COLORS
 			sitem: EV_STATUS_BAR_ITEM
+			action_button: EV_BUTTON
+			cmd: EV_ROUTINE_COMMAND
 		do
+
 			{EV_WINDOW} Precursor
 			set_minimum_size (720, 420)
 			set_title ("Tutorial of EiffelVision")
@@ -76,6 +78,7 @@ feature -- Initialization
 			!! tree.make (vbox)
 			tree.set_minimum_size (200, 250)
 			fill_tree
+			create action_button.make_with_text(vbox,"Actions")
 
 			-- We set the notebook
 			!! item.make (Void)
@@ -90,10 +93,29 @@ feature -- Initialization
 			notebook.append_page (item.example_page, "Example text")
 			item.destroy
 			notebook.set_minimum_size (250, 250)
+
+
+
+			--create cmd.make(~execute1)
+			--action_button.add_click_command (cmd, Void)
 		end
 
 feature -- Features needed for the status bar of the window.
 
+
+feature -- Execute commands
+
+
+	--execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	--		--When the action button is pressed then
+--			--display the window
+--		local
+--	do	
+--		if act_window=Void then
+--			create act_window.make(Current)
+--		end
+--		act_window.show
+--	end
 	
 feature -- Menu Features
 
@@ -126,8 +148,7 @@ feature -- Tree features
 
 			-- Sub items for widgets node
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-
-			demo,gauges: EV_TREE_ITEM
+			demo,gauges,table: EV_TREE_ITEM
 
 			-- Sub items for items node
 			-- simple, composed, separator: EV_TREE_ITEM
@@ -206,8 +227,8 @@ feature -- Tree features
 			!SPLIT_AREA_ITEM! demo.make (container)
 			!SCROLLABLE_ITEM! demo.make (container)
 			!FRAME_ITEM! demo.make (container)
-			!TABLE_ITEM! demo.make (container)
-			!DYNTABLE_ITEM! demo.make (container)
+			!TABLE_ITEM! table.make (container)
+			!DYNTABLE_ITEM! demo.make (table)
 
 --	This example does not work on gtk yet
 			!POPUP_ITEM! demo.make (uncommon)

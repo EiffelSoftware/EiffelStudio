@@ -185,9 +185,8 @@ feature -- Project Initialization
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir_name)
 
-			Eiffel_project.make (project_dir)
 			retrieve_project
-	
+
 			-- We print text in the project_tool text concerning the system.
 			debug_tool.display_system_info
 		end
@@ -215,7 +214,7 @@ feature -- Project Initialization
 --			mp.set_watch_cursor
 
 				-- Retrieve the project
-			Eiffel_project.retrieve
+			Eiffel_project.make (project_dir)
 
 			if Eiffel_project.retrieval_error then
 				Project_tool.set_title (old_title)

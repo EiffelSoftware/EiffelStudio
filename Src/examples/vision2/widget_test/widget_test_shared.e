@@ -9,6 +9,8 @@ class
 	
 inherit
 	INTERNAL
+	
+	INSTALLATION_LOCATOR
 
 feature -- Access
 		
@@ -53,6 +55,32 @@ feature -- Basic operation
 			widget_type_changed_agents.extend (an_agent)
 		ensure
 			agent_added: widget_type_changed_agents.count = old widget_type_changed_agents.count + 1
+		end
+		
+	pixmap_by_name (a_name: STRING): EV_PIXMAP is
+			-- `Result' is a pixmap corresponding to `a_name'.
+		require
+			name_not_void: a_name /= Void
+		local
+			file_name: FILE_NAME
+			file_location: STRING
+			file: RAW_FILE
+		do
+			create Result
+			if installation_location /= Void then
+				create file_name.make_from_string (installation_location)
+				file_name.extend ("bitmaps")
+				file_name.extend (image_extension)
+				file_name.extend (a_name + "." + image_extension)
+				create file.make (file_name.out)
+				if file.exists then
+					Result.set_with_named_file (file_name.out)
+				else
+					Missing_files.extend (a_name + "." + image_extension)
+				end
+			else
+				missing_files.extend (a_name + "." + image_extension)
+			end
 		end
 
 feature {NONE} -- Implementation

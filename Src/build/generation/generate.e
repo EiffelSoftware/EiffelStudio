@@ -33,6 +33,8 @@ inherit
 
 	COMMAND_ARGS
 
+	SHARED_INSTANTIATOR
+
 feature 
 
 	rescued: BOOLEAN
@@ -59,6 +61,7 @@ feature
 				!!mp
 				mp.set_watch_shape
 				save_edited_commands
+				command_instantiator_generator.update_command
 				generate_files	
 				mp.restore
 			else

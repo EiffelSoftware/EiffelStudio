@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-void cwel_msgboxparams_set (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD);
+extern void cwel_msgboxparams_set (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD);
 
 #ifdef __cplusplus
 }

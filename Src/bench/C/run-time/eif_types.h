@@ -21,6 +21,14 @@ extern "C" {
 #include "portable.h"
 #include "eif_constants.h"
 
+
+	/*-----------*/
+	/*  debug.h  */
+	/*-----------*/
+
+/* Moved at end, because relies on many structures below */
+
+
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
@@ -189,14 +197,6 @@ struct item {
 };
 
 	/* Stack used by the interpreter (operational stack) */
-struct opstack {
-	struct stochunk *st_hd;		/* Head of chunk list */
-	struct stochunk *st_tl;		/* Tail of chunk list */
-	struct stochunk *st_cur;	/* Current chunk in use (where top is) */
-	struct item *st_top;		/* Top (pointer to next free location) */
-	struct item *st_end;		/* First element beyond current chunk */
-};
-
 struct stochunk {
 	struct stochunk *sk_next;	/* Next chunk in stack */
 	struct stochunk *sk_prev;	/* Previous chunk in stack */
@@ -204,6 +204,13 @@ struct stochunk {
 	struct item *sk_end;		/* Pointer to first element beyond the chunk */
 };
 
+struct opstack {
+	struct stochunk *st_hd;		/* Head of chunk list */
+	struct stochunk *st_tl;		/* Tail of chunk list */
+	struct stochunk *st_cur;	/* Current chunk in use (where top is) */
+	struct item *st_top;		/* Top (pointer to next free location) */
+	struct item *st_end;		/* First element beyond current chunk */
+};
 
 
 	/*------------*/
@@ -315,6 +322,69 @@ struct s_stack {
     int s_max;              /* Maximum value of circular buffer */
     char s_pending;         /* Are any signals pending? */
     char s_buf[SIGSTACK];   /* The circular buffer used as a FIFO stack */
+};
+
+
+	/*-----------*/
+	/*  debug.h  */
+	/*-----------*/
+
+	/* Call context. Each call to a debuggable byte code is recorded into a calling
+ * context, which enable the user to move upwards and downwards and thus fetch
+ * the corresponding local variables and parameters. We also record the position
+ * of the associated execution vector within the Eiffel stack, which enables
+ * easy stack dumps.
+ */
+struct dcall {					/* Debug context call */
+	char *dc_start;				/* Start of current byte code */
+	struct stochunk *dc_cur;	/* Current operational stack chunk */
+	struct item *dc_top;		/* Current operational stack top */
+	struct ex_vect *dc_exec;	/* Execution vector on Eiffel stack */
+	int dc_status;				/* Execution status for this routine */
+	int dc_body_id;				/* Body ID of current feature */
+};
+
+/*
+ * Stack used by the debugger (context stack)
+ */
+
+struct stdchunk {
+	struct stdchunk *sk_next;	/* Next chunk in stack */
+	struct stdchunk *sk_prev;	/* Previous chunk in stack */
+	struct dcall *sk_arena;		/* Arena where objects are stored */
+	struct dcall *sk_end;		/* Pointer to first element beyond the chunk */
+};
+
+struct dbstack {
+	struct stdchunk *st_hd;		/* Head of chunk list */
+	struct stdchunk *st_tl;		/* Tail of chunk list */
+	struct stdchunk *st_cur;	/* Current chunk in use (where top is) */
+	struct dcall *st_top;		/* Top (pointer to next free location) */
+	struct dcall *st_end;		/* First element beyond current chunk */
+};
+
+/* For fastest reference, the debugging informations for the current routine
+ * are held in the debugger status structure.
+ */
+struct dbinfo {
+	char *db_start;				/* Start of current byte code (dcall) */
+	int db_status;				/* Execution status (dcall) */
+};
+
+/*
+ * Program status (saved when breakpoint reached, restored upon continuation).
+ */
+
+struct pgcontext {				/* Program context */
+	struct dbstack pg_debugger;	/* Debugger's context stack */
+	struct opstack pg_interp;	/* Interpreter's operational stack */
+	struct xstack pg_stack;		/* Calling stack */
+	struct xstack pg_trace;		/* Pending exceptions */
+	struct dcall *pg_active;	/* Active routine */
+	char *pg_IC;				/* Current IC value */
+	int pg_status;				/* Cause of suspension */
+	int pg_calls;				/* Amount of calling contexts in stack */
+	int pg_index;				/* Index of active routine within stack */
 };
 
 #ifdef __cplusplus

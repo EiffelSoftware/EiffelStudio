@@ -3,24 +3,16 @@ class FEATURE_DEPENDANCE
 inherit
 
 	TWO_WAY_SORTED_SET [DEPEND_UNIT]
-		rename
-			make as sorted_set_make,
-			wipe_out as sorted_set_wipe_out,
-			copy as basic_copy
-		end
-	TWO_WAY_SORTED_SET [DEPEND_UNIT]
 		redefine
-			make, wipe_out, copy
-		select
-			make, wipe_out, copy
+			make, wipe_out, copy, is_equal
 		end
 	SHARED_WORKBENCH
 		undefine
-			copy
+			copy, is_equal
 		end
 	COMPILER_EXPORTER
 		redefine
-			copy
+			copy, is_equal
 		end
 
 creation
@@ -42,7 +34,7 @@ feature
 
 	make is 
 		do
-			sorted_set_make
+			Precursor {TWO_WAY_SORTED_SET}
 			compare_objects
 			!!suppliers.make
 			suppliers.compare_objects
@@ -50,13 +42,13 @@ feature
 
 	wipe_out is 
 		do
-			sorted_set_wipe_out
+			Precursor {TWO_WAY_SORTED_SET}
 			suppliers.wipe_out
 		end;
 
 	copy (other: like Current) is
 		do
-			basic_copy (other)
+			Precursor {TWO_WAY_SORTED_SET} (other)
 			set_suppliers (clone (suppliers))
 		end
 
@@ -71,6 +63,22 @@ feature
 	set_feature_name (name: STRING) is
 		do
 			feature_name := name
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := active = other.active and then after = other.after and then
+						before = other.before and then count = other.count and then
+						feature_name = other.feature_name and then
+						first_element = other.first_element and then
+						last_element = other.last_element and then
+						object_comparison = other.object_comparison and then
+						sublist = other.sublist
+			Result := Result and then equal (suppliers, other.suppliers)
 		end
 
 feature -- Incrementality

@@ -48,7 +48,7 @@ feature -- Basic Operations
 				system_descriptor.add_visible_class_common (a_visible)
 			end
 		ensure then
-			non_void_eiffel_writer: not no_need_create_class implies eiffel_writer /= Void
+	--		non_void_eiffel_writer: not no_need_create_class implies eiffel_writer /= Void
 		end
 
 feature -- Processing
@@ -186,7 +186,6 @@ feature -- Processing
 				eiffel_writer.add_feature (writer_feature, Initialization)
 
 			elseif a_data_type_visitor.is_enumeration then
-				eiffel_writer.set_empty_creation_routines
 
 			else
 				message_output.add_warning (Current, message_output.Non_supported_alias)

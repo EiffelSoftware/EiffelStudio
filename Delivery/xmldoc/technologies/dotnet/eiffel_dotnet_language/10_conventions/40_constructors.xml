@@ -70,8 +70,8 @@
 			</code> assembly metadata, these two constructor versions look like this:
 		</paragraph>
 		<code_block>
-void .ctor(int32 width, int32 height)
-void .ctor(System.Drawing.Point pt)
+<keyword>void</keyword> <feature_name>.ctor</feature_name>(<class_name>int32</class_name> width, <class_name>int32</class_name> height)
+<keyword>void</keyword> <feature_name>.ctor</feature_name>(<class_name>System.Drawing.Point</class_name> pt)
 </code_block>
 		<paragraph>So the argument names for the first version are 
 			<code>
@@ -85,8 +85,8 @@ void .ctor(System.Drawing.Point pt)
 			</code>. The constructor versions as presented to Eiffel programmers as creation procedures look like this:
 		</paragraph>
 		<code_block>
-make_from_width_and_height (width: INTEGER; height: INTEGER)
-make_from_pt (pt: DRAWING_POINT)
+<feature_name>make_from_width_and_height</feature_name> (width: <class_name>INTEGER</class_name>; height: <class_name>INTEGER</class_name>)
+<feature_name>make_from_pt</feature_name> (pt: <class_name>DRAWING_POINT</class_name>)
 </code_block>
 		<paragraph>Presenting the names in this format handles the conflicts of overloading and provides reasonably intuitive names that comply with Eiffel naming conventions. </paragraph>
 		<heading>

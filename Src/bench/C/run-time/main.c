@@ -22,13 +22,7 @@
 #include "wbench.h"		/* %%ss added for create_desc */
 #include "interp.h"
 #include "update.h"
-#ifdef EIF_WIN_31						/* for winit() */
-#include "network.h"					/* extra/mswin/ipc */
-#elif defined EIF_WIN32
-#include "server.h"						/* extra/win32/ipc/app */
-#else									/* Unix */
 #include "server.h"						/* ../ipc/app */
-#endif /* EIF_WIN_31 */
 #endif /* WORKBENCH */
 
 #include <stdio.h>
@@ -47,16 +41,13 @@
 #endif
 #include "umain.h"
 #include "argv.h"
-#include "oncekeys.h"
-#ifdef DEBUG
-#include "malloc.h"						/* for mem_diagnose */
-#endif
+#include "malloc.h"
 #include "main.h"
 #include "project.h"					/* for einit() */
 
 #define null (char *) 0					/* Null pointer */
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
 rt_public int cc_for_speed = 0;			/* Fast memory allocation */
@@ -96,34 +87,58 @@ rt_public long *nbref;						/* Gives # of references (updated by DLE) */
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
-
-#ifndef EIF_WIN_31
 rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
+
+long EIF_once_count;	/* Total nr. of once routines */
+long EIF_bonce_count;	/* Nr. of once routines in bytecode */
+
+#ifndef EIF_THREADS
+char **EIF_once_values;
 #endif
+
+rt_public void once_init (void)
+{
+	EIF_GET_CONTEXT
+	register long i;
+
+	/* At this point 'EIF_bonce_count' has already been
+	   computed (by update) */
+
+	/* Run through all modules and count once routines
+	   This also assigns an offset to each module. The
+	   sum of the module offset and a once routines own
+	   key index gives the index in 'once_keys' */
+
+	EIF_once_count = EIF_bonce_count;
+
+	system_mod_init ();
+
+	/* Allocate room for once values */
+
+	EIF_once_values = (char **) cmalloc ( EIF_once_count * sizeof (char *) );
+
+	if (EIF_once_values == (char **) 0)
+		/* Out of memory */
+		enomem();
+
+	bzero((char *)EIF_once_values, EIF_once_count * sizeof (char *));
+	
+	EIF_END_GET_CONTEXT
+}
+
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
 	/* struct ex_vect *exvect;*/ /* Execution vector for main */ /* %%ss removed */
 	/* jmp_buf exenv;*/	/* Jump buffer for rescue */ /* %%ss removed */
-#ifndef EIF_WIN_31
 	char *eif_timeout;
-#endif
-
 
 	/* Compute the program name, so that all the error messages can be tagged
 	 * with that name (with the notable exception of the stack trace, for
 	 * formatting purpose).
 	 */
 
-#ifdef EIF_WIN_31
-
-	_fmode = O_BINARY;
-	_grow_handles (40);
-	ename = rindex(_argv[0], '\\');		/* Only last name if '\' found */
-
-	if (ename++ == (char *) 0)			/* There was no '\' in the name */
-		ename = _argv[0];				/* Program name is the filename */
-#elif defined EIF_WINDOWS
+#ifdef EIF_WIN32
 	static char module_name [255] = {0};
 
 	_fmode = O_BINARY;
@@ -155,8 +170,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	esignal(SIGUSR2, mem_diagnose);
 #endif
 
-
-#ifndef EIF_WIN_31
 	/* Check if the user wants to override the default timeout value
 	 * for interprocess communications. This new value is specified in
 	 * the EIF_TIMEOUT environment variable
@@ -166,8 +179,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
 		TIMEOUT = 120;
-#endif
-
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */
@@ -193,13 +204,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		char temp = 0;
 		int i;
 
-#ifdef EIF_WIN_31
-		for (i=1;i<_argc;i++) {
-			if (0 == strcmp (_argv[i], "-ignore_updt")) {
-#else
 		for (i=1;i<argc;i++) {
 			if (0 == strcmp (argv[i], "-ignore_updt")) {
-#endif
 				temp = (char) 1;	
 				break;
 			}
@@ -236,14 +242,9 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #endif
 
-#ifdef EIF_WIN_31
-	umain(_argc, _argv, envp);			/* User's initializations */
-	arg_init(_argc, _argv);				/* Save copy for class ARGUMENTS */
-#else
 	umain(argc, argv, envp);			/* User's initializations */
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
-#endif
-	/* Create and initialize once keys */
+
 	once_init();
 }
 

@@ -100,6 +100,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
+			align_text_center
 		end
 
 feature -- Status setting
@@ -248,6 +249,10 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/03 20:08:20  brendel
+--| Default: align_text_center.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.33  2000/03/03 01:40:35  brendel
 --| Fixed bug in minimum size calculation.
 --|
@@ -270,13 +275,16 @@ end -- class EV_LABEL_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.28.6.4  2000/01/19 23:55:54  rogers
---| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface, and selected interface from EV_LABEL_I.
+--| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface,
+--| and selected interface from EV_LABEL_I.
 --|
 --| Revision 1.28.6.3  2000/01/11 23:33:48  rogers
---| Modified to comply with the major Vision2 changes. See diff for re-definitions. renamed set_******_alignment to align_text_******.
+--| Modified to comply with the major Vision2 changes. See diff for
+--| re-definitions. renamed set_******_alignment to align_text_******.
 --|
 --| Revision 1.28.6.2  1999/12/17 00:39:19  rogers
---| Altered to fit in with the review branch. Basic alterations, make now takes an interface.
+--| Altered to fit in with the review branch. Basic alterations, make now
+--| takes an interface.
 --|
 --| Revision 1.28.6.1  1999/11/24 17:30:32  oconnor
 --| merged with DEVEL branch

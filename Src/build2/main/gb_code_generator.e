@@ -519,67 +519,42 @@ feature {NONE} -- Implementation
 			new_object : GB_OBJECT
 			found_name: STRING
 			menu_bar_object: GB_MENU_BAR_OBJECT
+			generated_info: GB_GENERATED_INFO
 		do
-				-- Retrieve the current type represented by `element'.
-			if element.has_attribute_by_name (type_string) then
-				current_type := element.attribute_by_name (type_string).value.to_utf8
-			end
 			from
-				element.start
+				all_ids.start
 			until
-				element.off
+				all_ids.off
 			loop
-				current_element ?= element.item_for_iteration
-				if current_element /= Void then
-					current_name := current_element.name.to_utf8
-					if current_name.is_equal (Item_string) then
-						if found_name = Void then
-							found_name := ""
-						end
-						generate_structure (current_element, depth + 1, found_name, current_type)
-					else
-						if current_name.is_equal (Internal_properties_string) and depth > 2 then
-								full_information := get_unique_full_info (current_element)
-								element_info := full_information @ (name_string)
-								new_object := object_handler.build_object_from_string_and_assign_id (current_type)
-									--| FIXME we must use the extend from the parent type.
-									
-									-- Because at the top level we are a window, we do not need to include the
-									-- windows name in the code generated. Checking the current depth tells us whether
-									-- we are generating code for a window or not. i.e for the window code
-									-- generated should be "extend (widget)" instead of "something.extend (widget)".
-								if depth = 3 then
-										--| FIXME this should be implemented in a less specific way,
-										--| not in this class.
-									menu_bar_object ?= new_object
-									if menu_bar_object /= Void then
-										if project_settings.client_of_window then
-											add_build ("window.set_menu_bar (" + element_info.data + ")")
-										else
-											add_build ("set_menu_bar (" + element_info.data + ")")
-										end
-									else
-										if not parent_type.is_equal (Ev_table_string) then
-											if project_settings.client_of_window then
-												add_build ("window." + new_object.extend_xml_representation (element_info.data))
-											else
-												add_build (new_object.extend_xml_representation (element_info.data))
-											end
-										end
-									end
-								else
-										-- Tables need to use put, but this is done in conjunction with the placement.
-										-- So here, we do not add the children of the table, as it will be done later.
-									if not parent_type.is_equal (Ev_table_string) then
-										add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
-									end
-								end
-								found_name := element_info.data
+				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+					-- Fixme, why assign id here? Try generating, and then see new ids after...
+				new_object := object_handler.build_object_from_string_and_assign_id (generated_info.type)
+				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.type.is_equal (Ev_titled_window_string) then
+					do_nothing
+					menu_bar_object ?= new_object
+					if menu_bar_object /= Void then
+						if project_settings.client_of_window then
+							add_build ("window.set_menu_bar (" + generated_info.name + ")")
 						else
+							add_build ("set_menu_bar (" + generated_info.name + ")")
 						end
+					else
+							if project_settings.client_of_window then
+								add_build ("window." + new_object.extend_xml_representation (generated_info.name))
+							else
+								add_build (new_object.extend_xml_representation (generated_info.name))
+							end
+					end
+						-- If name is Void, the we are at the root element of the info.
+						-- This does not represent a widget at all, so do nothing
+				elseif generated_info.name /= Void then
+					-- Tables need to use put, but this is done in conjunction with the placement.
+					-- So here, we do not add the children of the table, as it will be done later.
+					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.is_equal (Ev_table_string) then
+						add_build (generated_info.parent.name + "." + new_object.extend_xml_representation (generated_info.name))
 					end
 				end
-				element.forth
+				all_ids.forth
 			end
 		end
 		

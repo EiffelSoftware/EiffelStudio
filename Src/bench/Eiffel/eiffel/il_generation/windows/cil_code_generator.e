@@ -2971,16 +2971,6 @@ feature -- Variables access
 			end
 		end
 
-	generate_attribute_access (type_i: TYPE_I; a_feature_id: INTEGER) is
-			-- Generate direct access to attribute of `a_feature_id' in implementation `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
-		do
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
-				attribute_token (type_i.implementation_id, a_feature_id))
-		end
-
 	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
@@ -2994,7 +2984,8 @@ feature -- Variables access
 				cl_type /= Void and then
 				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
 			then
-				generate_attribute_access (cl_type, a_feature_id)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
+					attribute_token (cl_type.implementation_id, a_feature_id))
 			else
 					-- Attribute are accessed through their feature encapsulation.
 				internal_generate_feature_access (type_i.static_type_id, a_feature_id,
@@ -3187,6 +3178,37 @@ feature -- Addresses
 			end
 		end
 
+	generate_attribute_address (type_i: TYPE_I; attr_type: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate address to attribute of `a_feature_id' in `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			attr_type_not_void: attr_type /= Void
+			positive_feature_id: a_feature_id > 0
+		local
+			cl_type: CL_TYPE_I
+			local_number: INTEGER
+		do
+			cl_type ?= type_i
+			if
+				cl_type /= Void and then
+				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+			then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldflda,
+					attribute_token (cl_type.implementation_id, a_feature_id))
+			else
+					-- Attribute are accessed through their feature encapsulation.
+				duplicate_top
+				internal_generate_feature_access (type_i.static_type_id, a_feature_id,
+					0, True, True)
+				duplicate_top
+				Byte_context.add_local (attr_type)
+				local_number := Byte_context.local_list.count
+				put_dummy_local_info (attr_type, local_number)
+				generate_local_assignment (local_number)
+				generate_local_address (local_number)
+			end
+		end
+
 	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'.
 		require
@@ -3284,6 +3306,25 @@ feature -- Assignments
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
 					attribute_token (type_i.static_type_id, a_feature_id))
 			else
+				method_body.put_call (feature {MD_OPCODES}.Callvirt,
+					setter_token (type_i.static_type_id, a_feature_id), 1, False)
+			end
+		end
+
+	generate_expanded_attribute_assignment (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate assignment to attribute of `a_feature_id' in current class
+			-- when direct access to attribute is not possible.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		local
+			cl_type: CL_TYPE_I
+		do
+			cl_type ?= type_i
+			if
+				cl_type = Void or else
+				not (cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+			then
 				method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					setter_token (type_i.static_type_id, a_feature_id), 1, False)
 			end

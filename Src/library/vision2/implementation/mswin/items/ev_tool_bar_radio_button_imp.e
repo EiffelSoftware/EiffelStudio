@@ -13,13 +13,11 @@ class
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
 		select
-			parent_imp,
 			interface
 		end
 
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		rename
-			parent_imp as old_toggle_button_parent_imp,
 			interface as ev_tool_bar_toggle_button_imp_interface
 		redefine
 			type,
@@ -54,8 +52,6 @@ feature -- Status report
 				group.set_selection_at_no_event (Current)
 			end
 		end
-
-	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 
 feature {NONE} -- Implementation
 
@@ -98,6 +94,10 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/03 18:48:18  rogers
+--| Removed parent_imp as it can be inherited directly from
+--| EV_TOGGLE_BUTTON_IMP.
+--|
 --| Revision 1.5  2000/02/19 05:44:59  oconnor
 --| released
 --|

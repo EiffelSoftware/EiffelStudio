@@ -86,12 +86,17 @@ feature -- For DATABASE_FORMAT
 		end
 	
 	string_format (object: STRING): STRING is
-			-- String representation in SQL of `object'
+			-- String representation in SQL of `object'.
 		do
-			Result := object
+			Result := clone (object)
 			if not is_binary (object) then
-				Result.precede ('%'')
-				Result.extend ('%'')
+				if Result.empty then
+					Result := "NULL"
+				else
+					Result.replace_substring_all ("'", "''")
+					Result.precede ('%'')
+					Result.extend ('%'')
+				end
 			end
 		end
 

@@ -40,7 +40,7 @@ feature {FILTER_MANAGER} -- Creation
 					filter_document
 				end
 			else
-				print ("%NUnable to filter " + a_doc.name)	
+				print ("%NUnable to filter " + a_doc.name)
 			end			
 		ensure
 			has_filter: filter /= Void

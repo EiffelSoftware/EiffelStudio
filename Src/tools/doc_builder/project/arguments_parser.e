@@ -286,12 +286,13 @@ feature -- Commands
 					l_help_project := create {MSHELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
 					report ("success%N")
 				elseif help_generation_type.is_equal ("web_tree") then					
-					l_help_project := create {WEB_HELP_PROJECT_TREE}.make (l_html_directory, l_project.name, l_toc)
+					l_help_project := create {WEB_HELP_PROJECT_TREE}.make (l_html_directory, l_project.name, l_toc)					
 					report ("success%N")
 				elseif help_generation_type.is_equal ("web_simple") then					
 					l_help_project := create {WEB_HELP_PROJECT_SIMPLE}.make (l_html_directory, l_project.name, l_toc)
 					report ("success%N")
 				end
+				shared_constants.help_constants.set_help_project_name (l_project.name)
 				report ("Generating help from help project information...")
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate

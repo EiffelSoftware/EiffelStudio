@@ -16,10 +16,10 @@ interface,,,,,,,
 ,3,Optimize useless computations for tools that are not displayed,Xavier,INT0012,,,
 ,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1,Done
 ,4,Add a status bar,Xavier,INT0014,Xavier,3,Done
-,2,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3,
-,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5,
+,2,Improve the default handling of tool sizes,Xavier,INT0015,,,
+,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,,,
 ,3,Unify the event handling in trees (feature/cluster/favorites),Xavier,INT0017,,,
-,3,Support CVS from within EiffelStudio,Xavier,INT0018,,,
+,3,Support CVS from within EiffelStudio,Xavier,INT0018,Xavier,2,Done(external commands)
 ,2,Make it possible to drop onto the context tool labels,Julian,INT0019,,,
 ,4,"Improve new class command (deferred, parents,…)",Xavier,INT0020,Xavier,2,Done
 ,3,"Improve new cluster command (import existing cluster, create top-level cluster)",Xavier,INT0021,Xavier,2,Done
@@ -31,8 +31,8 @@ interface,,,,,,,
 ,3,Make it easier to precompile several libraries,Arnaud,INT0027,,,
 ,3,Light development window = old class tool,Arnaud,INT0028,,,
 ,3,Save preferences for several types of development windows,Arnaud,INT0029,,,
-,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,,
-,3,Add a cell separator in toolbars,R. Osmond,INT0033,Xavier,1,
+,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,Xavier,2,Done
+,3,Add a cell separator in toolbars,R. Osmond,INT0033,,,
 ,2,Clean up the history of the history managers now and then,Xavier,INT0034,,,
 ,2,"Add a close menu in the file menu, to close the current file",Julian,INT0034,,,
 ,3,Add a central dictionary of ordered classes somewhere to optimize some things,Xavier,INT0035,,,
@@ -70,7 +70,7 @@ Project settings,,,,,,,
 
 
 Formats,,,,,,,
-,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2,
+,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2,Done(we now mention obsolete features)
 ,2,Let the user customize the formats,Xavier,FMT0002,,,
 ,2,Add a formatter that yields the path/cluster/indexing clause of a class,Xavier,FMT0003,,,
 ,3,Give features without a named feature clause,Xavier,FMT0004,,,
@@ -78,11 +78,11 @@ Formats,,,,,,,
 ,2,Add a formatter for the invariant,Arnaud,FMT0006,,,
 ,3,List of class names and class paths in the system,Arnaud,FMT0007,,,
 ,3,Let the user print the format,Raphael,FMT0008,,,
-,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
-,3,Being able to query location of creation of class instance,Manus,FMT0010,,
-,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
-,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,
-,3,Have a command line option for ec that does the same as flat-short/short but just the clickable format,Glenn Maughan,FMT0013,,
+,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10,
+,3,Being able to query location of creation of class instance,Manus,FMT0010,,,
+,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,,
+,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,Xavier,1,Done(in the exported features)
+,3,Have a command line option for ec that does the same as flat-short/short but just the clickable format,Glenn Maughan,FMT0013,,,
 
 
 
@@ -136,7 +136,7 @@ editor,,,,,,,
 ,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004,,,
 ,3,"Add ""Add setter feature""",Arnaud,EDT0005,,,
 ,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006,,,
-,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006,,,
+,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006,Xavier,1,"Done(it is not red, but remains black)"
 ,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008,Xavier,1,Done
 ,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009,,,
 ,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010,,,
@@ -158,7 +158,7 @@ compiler,,,,,,,
 ,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003,,,
 ,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004,,,
 ,3,Ability to create .rc files (Windows),Xavier,CMP0005,,,
-,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006,,,
+,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006
 ,3,"Add compilation, crash, execution time information",Xavier,CMP0007
 ,4,Make freeze/finalize melt .NET projects,Xavier,CMP0008
 ,4,Fix inlining (run-time panics) and improve it,Xavier,CMP0009
@@ -174,7 +174,7 @@ compiler,,,,,,,
 ,3,Report an error when an invalid .def file is specified in `shared_library_definition'.,Manus,CMP0019
 ,4,Report several errors at the same time,Emmanuel,CMP0020
 ,2,Creation calls should never be polymorphic (and should be candidate to inlining),Xavier,CMP0021
-,2,Deferred features that have only one implementer should not be called polymorphicly either,Xavier,CMP0022
+,2,Deferred features that have only one implementer should not be called polymorphicly either,Xavier,CMP0022,,,
 ,3,Optimize the size of polymorphic tables by ordering classes better,Xavier,CMP0023,,,
 ,4,Melt agents,Xavier,CMP0024,,,
 ,2,Detect and optimize static calls by not passing the object parameter and not even computing it whenever possible,Xavier,CMP0025,,,
@@ -190,7 +190,7 @@ compiler,,,,,,,
 ,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033,,,
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034,Xavier,1,Done
 ,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035,,,
-,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036,,,
+,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036
 ,3,Warn the user when an attribute or local is initialized but never used,Xavier,CMP0037
 ,3,"When an attribute is never queried (recursive check in callers), discard it and its initializations altogether",Xavier,CMP0037
 ,2,"When an attribute is always accessed polymorphically in its class, make sure it is put in a local variable in the case there is no function call that could modify its value and that we are not in multithreaded mode",Manus,CMP0038
@@ -208,32 +208,32 @@ Metrics,,,,
 
 
 
-Diagram,,,,,,,
-,3,Support UML,Xavier,DGM0001,,,
-,3,Merge the command history with the one of the editor,Xavier,DGM0002,,,
-,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003,,,
-,2,Give a list of all removed classes to be able to show them again,Xavier,DGM0004,,,
+Diagram,,,,
+,3,Support UML,Xavier,DGM0001
+,3,Merge the command history with the one of the editor,Xavier,DGM0002
+,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003
+,2,Give a list of all removed classes to be able to show them again,Xavier,DGM0004
 
 
 
 
 
-Wizards,,,,,,,
-,3,Refactoring tool,Arnaud,WIZ0001,,,
-,3,Add a test wizard,Xavier,WIZ0002,,,
-,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003,,,
+Wizards,,,,
+,3,Refactoring tool,Arnaud,WIZ0001
+,3,Add a test wizard,Xavier,WIZ0002
+,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,WIZ0004,Xavier,1,Done
-,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005
+,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005,,,
 
 
 
 
-libraries,,,,
-,3,Design a unmutable STRING class (and a builder for such strings),Arnaud,LIB0001
-,4,Design new libraries,Xavier,LIB0002
-,4,Really test libraries,Xavier,LIB0003
-,4,Keep the documentation up-to-date,Xavier,LIB0004
-,4,Use consistent naming (isfirst/islast),Ian,LIB0005
-,3,Add a calendar control in Vision2,Arnaud,LIB0006
-,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007
-,2,Introduce agents in EiffelBase,Arnaud,LIB0008
+libraries,,,,,,,
+,3,Design a unmutable STRING class (and a builder for such strings),Arnaud,LIB0001,,,
+,4,Design new libraries,Xavier,LIB0002,,,
+,4,Really test libraries,Xavier,LIB0003,,,
+,4,Keep the documentation up-to-date,Xavier,LIB0004,,,
+,4,Use consistent naming (isfirst/islast),Ian,LIB0005,,,
+,3,Add a calendar control in Vision2,Arnaud,LIB0006,,,
+,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007,,,
+,2,Introduce agents in EiffelBase,Arnaud,LIB0008,,,

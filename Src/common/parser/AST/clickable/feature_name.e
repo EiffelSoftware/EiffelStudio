@@ -48,11 +48,8 @@ feature -- Properties
 			Result := True;
 		end;
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN is True
 			-- Does the Current AST represent a feature?
-		do
-			Result := True
-		end;
 
 	internal_name: ID_AS is
 			-- Internal name used by the compiler

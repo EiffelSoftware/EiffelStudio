@@ -60,11 +60,8 @@ feature -- Access
 	start_position, end_position: INTEGER
 			-- Start and end of the text of the feature in origin file
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN is True
 			-- Does the Current AST represent a feature?
-		do
-			Result := True
-		end;
 
 feature -- Comparison
 

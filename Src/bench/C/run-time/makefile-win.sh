@@ -4,7 +4,9 @@ INDIR = .\OBJDIR
 RTSRC = .
 CC = $cc
 CTAGS = ctags
-JCFLAGS = $(CFLAGS)  $ccflags $optimize /Fo"$(INDIR)\\" /Fd"$(INDIR)\\" -c 
+OUTPUT_CMD = $output_cmd
+INPUT_CMD = $input_cmd
+JCFLAGS = $(CFLAGS)  $ccflags $optimize $(INPUT_CMD)"$(INDIR)\\" $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
 LN = copy
 MAKE = $make
@@ -92,10 +94,10 @@ WOBJECTS = \
 	"$(INDIR)\wstore.obj" \
 	"$(INDIR)\wretrieve.obj" \
 	"$(INDIR)\whash.obj" \
-	"$(INDIR)\wtravers.obj" \
+	"$(INDIR)\wtraverse.obj" \
 	"$(INDIR)\whashin.obj" \
 	"$(INDIR)\wtools.obj" \
-	"$(INDIR)\winterna.obj" \
+	"$(INDIR)\winternal.obj" \
 	"$(INDIR)\wplug.obj" \
 	"$(INDIR)\wcopy.obj" \
 	"$(INDIR)\wequal.obj" \
@@ -149,10 +151,10 @@ EOBJECTS = \
 	"$(INDIR)\wstore.obj" \
 	"$(INDIR)\wretrieve.obj" \
 	"$(INDIR)\whash.obj" \
-	"$(INDIR)\wtravers.obj" \
+	"$(INDIR)\wtraverse.obj" \
 	"$(INDIR)\whashin.obj" \
 	"$(INDIR)\wtools.obj" \
-	"$(INDIR)\winterna.obj" \
+	"$(INDIR)\winternal.obj" \
 	"$(INDIR)\wplug.obj" \
 	"$(INDIR)\wcopy.obj" \
 	"$(INDIR)\wequal.obj" \
@@ -280,148 +282,6 @@ eif_portable.h : $(TOP)\eif_portable.h
 	$(LN) $(TOP)\eif_portable.h .
 
 *.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h
-
-###################
-# W__FILES
-###################
-
-"$(RTSRC)\wmath.c" : math.c
-	$(LN) math.c wmath.c
-
-"$(RTSRC)\wmalloc.c" : malloc.c
-	$(LN) malloc.c wmalloc.c
-
-"$(RTSRC)\wgarcol.c" : garcol.c
-	$(LN) garcol.c wgarcol.c
-
-"$(RTSRC)\wgen_conf.c" : gen_conf.c
-	$(LN) gen_conf.c wgen_conf.c
-
-"$(RTSRC)\wrout_obj.c" : rout_obj.c
-	$(LN) rout_obj.c wrout_obj.c
-
-"$(RTSRC)\weif_threads.c" : eif_threads.c
-	$(LN) eif_threads.c weif_threads.c
-
-"$(RTSRC)\weif_cond_var.c" : eif_cond_var.c
-	$(LN) eif_cond_var.c weif_cond_var.c
-
-"$(RTSRC)\weif_once.c" : eif_once.c
-	$(LN) eif_once.c weif_once.c
-
-"$(RTSRC)\wlocal.c" : local.c
-	$(LN) local.c wlocal.c
-
-"$(RTSRC)\wexcept.c" : except.c
-	$(LN) except.c wexcept.c
-
-"$(RTSRC)\wstore.c" : store.c
-	$(LN) store.c wstore.c
-
-"$(RTSRC)\wrun_idr.c" : run_idr.c
-	$(LN) run_idr.c wrun_idr.c
-
-"$(RTSRC)\wretrieve.c" : retrieve.c
-	$(LN) retrieve.c wretrieve.c
-
-"$(RTSRC)\whash.c" : hash.c
-	$(LN) hash.c whash.c
-
-"$(RTSRC)\wtravers.c" : traverse.c
-	$(LN) traverse.c wtravers.c
-
-"$(RTSRC)\whashin.c" : hashin.c
-	$(LN) hashin.c whashin.c
-
-"$(RTSRC)\wtools.c" : tools.c
-	$(LN) tools.c wtools.c
-
-"$(RTSRC)\winterna.c" : internal.c
-	$(LN) internal.c winterna.c
-
-"$(RTSRC)\wpath_name.c" : path_name.c
-	$(LN) path_name.c wpath_name.c
-
-"$(RTSRC)\wplug.c" : plug.c
-	$(LN) plug.c wplug.c
-
-"$(RTSRC)\wcopy.c" : copy.c
-	$(LN) copy.c wcopy.c
-
-"$(RTSRC)\wequal.c" : equal.c
-	$(LN) equal.c wequal.c
-
-"$(RTSRC)\wlmalloc.c" : lmalloc.c
-	$(LN) lmalloc.c wlmalloc.c
-
-"$(RTSRC)\wout.c" : out.c
-	$(LN) out.c wout.c
-
-"$(RTSRC)\wtimer.c" : timer.c
-	$(LN) timer.c wtimer.c
-
-"$(RTSRC)\wurgent.c" : urgent.c
-	$(LN) urgent.c wurgent.c
-
-"$(RTSRC)\wsig.c" : sig.c
-	$(LN) sig.c wsig.c
-
-"$(RTSRC)\whector.c" : hector.c
-	$(LN) hector.c whector.c
-
-"$(RTSRC)\wcecil.c" : cecil.c
-	$(LN) cecil.c wcecil.c
-
-"$(RTSRC)\wbits.c" : bits.c
-	$(LN) bits.c wbits.c
-
-"$(RTSRC)\wconsole.c" : console.c
-	$(LN) console.c wconsole.c
-
-"$(RTSRC)\wfile.c" : file.c
-	$(LN) file.c wfile.c
-
-"$(RTSRC)\wdir.c" : dir.c
-	$(LN) dir.c wdir.c
-
-"$(RTSRC)\wstring.c" : string.c
-	$(LN) string.c wstring.c
-
-"$(RTSRC)\wmisc.c" : misc.c
-	$(LN) misc.c wmisc.c
-
-"$(RTSRC)\wpattern.c" : pattern.c
-	$(LN) pattern.c wpattern.c
-
-"$(RTSRC)\werror.c" : error.c
-	$(LN) error.c werror.c
-
-"$(RTSRC)\wumain.c" : umain.c
-	$(LN) umain.c wumain.c
-
-"$(RTSRC)\wmemory.c" : memory.c
-	$(LN) memory.c wmemory.c
-
-"$(RTSRC)\woption.c" : option.c
-	$(LN) option.c woption.c
-
-"$(RTSRC)\wargv.c" : argv.c
-	$(LN) argv.c wargv.c
-
-"$(RTSRC)\wboolstr.c" : boolstr.c
-	$(LN) boolstr.c wboolstr.c
-
-"$(RTSRC)\wsearch.c" : search.c
-	$(LN) search.c wsearch.c
-
-"$(RTSRC)\wmain.c" : main.c
-	$(LN) main.c wmain.c
-
-"$(RTSRC)\wobject_id.c" : object_id.c
-	$(LN) object_id.c wobject_id.c
-
-"$(RTSRC)\weif_project.c" : eif_project.c
-	$(LN) eif_project.c weif_project.c
 
 ###################
 # OBJECTS
@@ -577,149 +437,149 @@ eif_portable.h : $(TOP)\eif_portable.h
 "$(INDIR)\interp.obj" :	"$(RTSRC)\interp.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\interp.c"
 
-"$(INDIR)\wargv.obj" :	"$(RTSRC)\wargv.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wargv.c"
+"$(INDIR)\eif_rw_lock.obj" : "$(RTSRC)\eif_rw_lock.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_rw_lock.c"
+
+"$(INDIR)\wargv.obj" :	"$(RTSRC)\argv.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\argv.c"
 
 "$(INDIR)\wbench.obj" :	"$(RTSRC)\wbench.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wbench.c"
 
-"$(INDIR)\wbits.obj" :	"$(RTSRC)\wbits.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wbits.c"
+"$(INDIR)\wbits.obj" :	"$(RTSRC)\bits.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\bits.c" 
 
-"$(INDIR)\wboolstr.obj" :	"$(RTSRC)\wboolstr.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wboolstr.c"
+"$(INDIR)\wboolstr.obj" :	"$(RTSRC)\boolstr.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\boolstr.c"
 
-"$(INDIR)\wcecil.obj" :	"$(RTSRC)\wcecil.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wcecil.c"
+"$(INDIR)\wcecil.obj" :	"$(RTSRC)\cecil.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\cecil.c"
 
-"$(INDIR)\wconsole.obj" :	"$(RTSRC)\wconsole.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wconsole.c"
+"$(INDIR)\wconsole.obj" :	"$(RTSRC)\console.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\console.c"
 
-"$(INDIR)\wcopy.obj" :	"$(RTSRC)\wcopy.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wcopy.c"
+"$(INDIR)\wcopy.obj" :	"$(RTSRC)\copy.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\copy.c"
 
-"$(INDIR)\wdir.obj" :	"$(RTSRC)\wdir.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wdir.c"
+"$(INDIR)\wdir.obj" :	"$(RTSRC)\dir.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\dir.c"
 
-"$(INDIR)\weif_cond_var.obj" :	"$(RTSRC)\weif_cond_var.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_cond_var.c"
+"$(INDIR)\weif_cond_var.obj" :	"$(RTSRC)\eif_cond_var.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_cond_var.c"
 
-"$(INDIR)\weif_once.obj" :	"$(RTSRC)\weif_once.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_once.c"
+"$(INDIR)\weif_once.obj" :	"$(RTSRC)\eif_once.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_once.c"
 
-"$(INDIR)\eif_rw_lock.obj" : "$(RTSRC)\eif_rw_lock.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_rw_lock.c"
+"$(INDIR)\weif_project.obj" :	"$(RTSRC)\eif_project.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_project.c"
 
-"$(INDIR)\weif_project.obj" :	"$(RTSRC)\weif_project.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_project.c"
+"$(INDIR)\weif_threads.obj" :	"$(RTSRC)\eif_threads.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_threads.c"
 
-"$(INDIR)\weif_threads.obj" :	"$(RTSRC)\weif_threads.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_threads.c"
+"$(INDIR)\wequal.obj" :	"$(RTSRC)\equal.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\equal.c"
 
-"$(INDIR)\wequal.obj" :	"$(RTSRC)\wequal.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wequal.c"
+"$(INDIR)\werror.obj" :	"$(RTSRC)\error.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\error.c"
 
-"$(INDIR)\werror.obj" :	"$(RTSRC)\werror.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\werror.c"
+"$(INDIR)\wexcept.obj" :	"$(RTSRC)\except.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\except.c"
 
-"$(INDIR)\wexcept.obj" :	"$(RTSRC)\wexcept.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wexcept.c"
+"$(INDIR)\wfile.obj" :	"$(RTSRC)\file.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\file.c"
 
-"$(INDIR)\wfile.obj" :	"$(RTSRC)\wfile.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wfile.c"
+"$(INDIR)\wgarcol.obj" :	"$(RTSRC)\garcol.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\garcol.c"
 
-"$(INDIR)\wgarcol.obj" :	"$(RTSRC)\wgarcol.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wgarcol.c"
+"$(INDIR)\wgen_conf.obj" :	"$(RTSRC)\gen_conf.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\gen_conf.c"
 
-"$(INDIR)\wgen_conf.obj" :	"$(RTSRC)\wgen_conf.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wgen_conf.c"
+"$(INDIR)\wrout_obj.obj" :	"$(RTSRC)\rout_obj.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\rout_obj.c"
 
-"$(INDIR)\wrout_obj.obj" :	"$(RTSRC)\wrout_obj.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wrout_obj.c"
+"$(INDIR)\whash.obj" :	"$(RTSRC)\hash.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\hash.c"
 
-"$(INDIR)\whash.obj" :	"$(RTSRC)\whash.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\whash.c"
+"$(INDIR)\whashin.obj" :	"$(RTSRC)\hashin.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\hashin.c"
 
-"$(INDIR)\whashin.obj" :	"$(RTSRC)\whashin.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\whashin.c"
+"$(INDIR)\whector.obj" :	"$(RTSRC)\hector.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\hector.c"
 
-"$(INDIR)\whector.obj" :	"$(RTSRC)\whector.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\whector.c"
+"$(INDIR)\winternal.obj" :	"$(RTSRC)\internal.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\internal.c"
 
-"$(INDIR)\winterna.obj" :	"$(RTSRC)\winterna.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\winterna.c"
+"$(INDIR)\wlmalloc.obj" :	"$(RTSRC)\lmalloc.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\lmalloc.c"
 
-"$(INDIR)\wlmalloc.obj" :	"$(RTSRC)\wlmalloc.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wlmalloc.c"
+"$(INDIR)\wlocal.obj" :	"$(RTSRC)\local.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\local.c"
 
-"$(INDIR)\wlocal.obj" :	"$(RTSRC)\wlocal.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wlocal.c"
+"$(INDIR)\wmain.obj" :	"$(RTSRC)\main.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\main.c"
 
-"$(INDIR)\wmain.obj" :	"$(RTSRC)\wmain.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wmain.c"
+"$(INDIR)\wmalloc.obj" :	"$(RTSRC)\malloc.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\malloc.c"
 
-"$(INDIR)\wmalloc.obj" :	"$(RTSRC)\wmalloc.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wmalloc.c"
+"$(INDIR)\wmath.obj" :	"$(RTSRC)\math.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\math.c"
 
-"$(INDIR)\wmath.obj" :	"$(RTSRC)\wmath.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wmath.c"
+"$(INDIR)\wmemory.obj" :	"$(RTSRC)\memory.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\memory.c"
 
-"$(INDIR)\wmemory.obj" :	"$(RTSRC)\wmemory.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wmemory.c"
+"$(INDIR)\wmisc.obj" :	"$(RTSRC)\misc.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\misc.c"
 
-"$(INDIR)\wmisc.obj" :	"$(RTSRC)\wmisc.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wmisc.c"
+"$(INDIR)\wobject_id.obj" :	"$(RTSRC)\object_id.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\object_id.c"
 
-"$(INDIR)\wobject_id.obj" :	"$(RTSRC)\wobject_id.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wobject_id.c"
+"$(INDIR)\woption.obj" :	"$(RTSRC)\option.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\option.c"
 
-"$(INDIR)\woption.obj" :	"$(RTSRC)\woption.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\woption.c"
+"$(INDIR)\wout.obj" :	"$(RTSRC)\out.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\out.c"
 
-"$(INDIR)\wout.obj" :	"$(RTSRC)\wout.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wout.c"
+"$(INDIR)\wpath_name.obj" :	"$(RTSRC)\path_name.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\path_name.c"
 
-"$(INDIR)\wpath_name.obj" :	"$(RTSRC)\wpath_name.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wpath_name.c"
+"$(INDIR)\wpattern.obj" :	"$(RTSRC)\pattern.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\pattern.c"
 
-"$(INDIR)\wpattern.obj" :	"$(RTSRC)\wpattern.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wpattern.c"
+"$(INDIR)\wplug.obj" :	"$(RTSRC)\plug.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\plug.c"
 
-"$(INDIR)\wplug.obj" :	"$(RTSRC)\wplug.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wplug.c"
+"$(INDIR)\wretrieve.obj" :	"$(RTSRC)\retrieve.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\retrieve.c"
 
-"$(INDIR)\wretrieve.obj" :	"$(RTSRC)\wretrieve.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wretrieve.c"
+"$(INDIR)\wrun_idr.obj" :	"$(RTSRC)\run_idr.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\run_idr.c"
 
-"$(INDIR)\wrun_idr.obj" :	"$(RTSRC)\wrun_idr.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wrun_idr.c"
+"$(INDIR)\wsearch.obj" :	"$(RTSRC)\search.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\search.c"
 
-"$(INDIR)\wsearch.obj" :	"$(RTSRC)\wsearch.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wsearch.c"
+"$(INDIR)\wsig.obj" :	"$(RTSRC)\sig.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\sig.c"
 
-"$(INDIR)\wsig.obj" :	"$(RTSRC)\wsig.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wsig.c"
+"$(INDIR)\wstore.obj" :	"$(RTSRC)\store.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\store.c"
 
-"$(INDIR)\wstore.obj" :	"$(RTSRC)\wstore.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wstore.c"
+"$(INDIR)\wstring.obj" :	"$(RTSRC)\string.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\string.c"
 
-"$(INDIR)\wstring.obj" :	"$(RTSRC)\wstring.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wstring.c"
+"$(INDIR)\wtimer.obj" :	"$(RTSRC)\timer.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\timer.c"
 
-"$(INDIR)\wtimer.obj" :	"$(RTSRC)\wtimer.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wtimer.c"
+"$(INDIR)\wtools.obj" :	"$(RTSRC)\tools.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\tools.c"
 
-"$(INDIR)\wtools.obj" :	"$(RTSRC)\wtools.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wtools.c"
+"$(INDIR)\wtraverse.obj" :	"$(RTSRC)\traverse.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\traverse.c"
 
-"$(INDIR)\wtravers.obj" :	"$(RTSRC)\wtravers.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wtravers.c"
+"$(INDIR)\wumain.obj" :	"$(RTSRC)\umain.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\umain.c"
 
-"$(INDIR)\wumain.obj" :	"$(RTSRC)\wumain.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wumain.c"
-
-"$(INDIR)\wurgent.obj" :	"$(RTSRC)\wurgent.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wurgent.c"
+"$(INDIR)\wurgent.obj" :	"$(RTSRC)\urgent.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\urgent.c"
 
 "$(INDIR)\x2c.obj" :	"$(RTSRC)\x2c.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\x2c.c"
@@ -728,18 +588,11 @@ eif_portable.h : $(TOP)\eif_portable.h
 final: finalized.lib
 work: wkbench.lib
 
-"$(RTSRC)\bmain.c" : main.c
-	$(LN) main.c bmain.c
+"$(INDIR)\bmain.obj" :	"$(RTSRC)\main.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK "$(RTSRC)\main.c"
 
-"$(INDIR)\bmain.obj" :	"$(RTSRC)\bmain.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK "$(RTSRC)\bmain.c"
-
-"$(RTSRC)\bexcept.c" : except.c
-	$(LN) except.c bexcept.c
-
-"$(INDIR)\bexcept.obj" :	"$(RTSRC)\bexcept.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK "$(RTSRC)\bexcept.c"
-
+"$(INDIR)\bexcept.obj" :	"$(RTSRC)\except.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK "$(RTSRC)\except.c"
 
 TESTS = mram gram lram eram sram
 

@@ -159,6 +159,10 @@ feature -- Access
 		
 	row_height: INTEGER
 			-- Height of all rows within `Current'.
+			
+	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			-- Function which computes the item that resides in a particular position of the
+			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
 
 feature -- Status setting
 
@@ -472,6 +476,17 @@ feature -- Status setting
 			redraw_client_area
 		ensure
 			row_count_set: row_count = a_row_count
+		end
+		
+	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]) is
+			-- Function which computes the item that resides in a particular position of the
+			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+		require
+			a_function_not_void: a_function /= Void
+		do
+			dynamic_content_function := a_function
+		ensure
+			dynamic_content_function_set: dynamic_content_function = a_function
 		end
 
 feature -- Status report

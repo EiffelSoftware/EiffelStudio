@@ -28,7 +28,7 @@ feature {EV_DIALOG} -- Initialization
 		do
 			container_interface ?= interface
 			check
-				container_not_void: container_interface /= Void
+				valid_cast: container_interface /= Void
 			end
 			{EV_WINDOW_I} Precursor
 

@@ -11,17 +11,13 @@ class
 inherit
 	WEL_STRUCTURE
 
-	WEL_WINDOW_MANAGER
-		export
-			{NONE} all
-		end
-
 creation
 	make,
 	make_from_nmhdr,
 	make_by_pointer
 
 feature -- Initialisation
+
 	make_from_nmhdr (nmhdr: WEL_NMHDR) is
 		require
 			nmhdr_exists: nmhdr /= Void and then nmhdr.exists

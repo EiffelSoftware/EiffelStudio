@@ -631,28 +631,22 @@ public class EiffelClassGenerator: Globals
 	virtual protected EiffelFeature GeneratedFeature( EiffelClassFactory ClassFactory, String FeatureName, System.Collections.Hashtable FeatureTable )
 	{
 		EiffelFeature GeneratedEiffelFeature;
-		String Preconditions = "";
-		String Postconditions = "";
 		EiffelMethodFactory MethodFactory;
 		EiffelCreationRoutine CreationRoutine;
-		int DashesIndex;
-		String Dashes, Comment, TempPrecondition;
 		String ArgumentType, ArgumentTypeFullName;
 		String returnName;
 		SignatureType ReturnType;
 		String ArgumentName, ArgumentExternalName;
 		NamedSignatureType Argument;
-		bool Found;
 		Type returnType;
 		ConstructorInfo ConstructorDescriptor = null;
 		MethodInfo MethodDescriptor = null;
 		FieldInfo FieldDescriptor  = null;
 		ParameterInfo[] Arguments = new ParameterInfo[] {};
-		Type[] Parameters;
 		Boolean IsField, IsUnaryOperator, IsBinaryOperator, IsMethod, IsCreationRoutine;
 		String PrefixName, Prefix, InfixName, Infix;
 		int PrefixIndex, InfixIndex;
-		int i,j;
+		int i;
 
 		GeneratedEiffelFeature = new EiffelFeature();
 		GeneratedEiffelFeature.Make();
@@ -741,7 +735,7 @@ public class EiffelClassGenerator: Globals
 			{
 				if( IsBinaryOperator )
 					i = 1;
-				Found = false;
+				
 				ArgumentType = NameFormatter.FormatArgumentTypeName( Arguments[i].ParameterType );
 				ArgumentTypeFullName = NameFormatter.FormatStrongName( Arguments [i].ParameterType.FullName );
 				if( IsMethod )
@@ -773,24 +767,6 @@ public class EiffelClassGenerator: Globals
 				
 				}
 					
-				if( NameFormatter.IsEnum( Arguments[i].ParameterType ))
-				{
-					if( IsMethod )
-					{
-						Parameters = new Type[ Arguments.Length ];
-						for( j = 0; j < Arguments.Length; j++ )
-							Parameters [j] = Arguments [j].ParameterType;
-						for( j = 0; j < ClassFactory.Parents.Count && !Found; j++ )
-							foreach( EiffelMethodFactory CurrentMethod in (( EiffelClassFactory )ClassTable[( int )ClassFactory.Parents [j]]).Routines )
-							{
-								Found = CurrentMethod.HasPolymorphID(( EiffelMethodFactory )FeatureTable [FeatureName]);
-								if( Found )
-									break;
-							}
-					}
-					if( !Found )
-						Preconditions = ClassFactory.GeneratedPreconditionsFromEnum( Arguments[i].ParameterType, ArgumentName );
-				}
 				Argument = new NamedSignatureType();
 				Argument.SetEiffelName( ArgumentName );
 				Argument.SetExternalName( ArgumentExternalName );
@@ -807,25 +783,6 @@ public class EiffelClassGenerator: Globals
 			if( !returnType.Name.ToLower().Equals( "void" ))
 			{
 				returnName = NameFormatter.FormatArgumentTypeName( returnType );
-				if( returnType.IsEnum )
-				{
-					Found = false;
-					if( IsMethod )
-					{
-						Parameters = new Type[ Arguments.Length ];
-						for( j = 0; j < Arguments.Length; j++ )
-							Parameters [j] = Arguments [j].ParameterType;
-						for( j = 0; j < ClassFactory.Parents.Count && !Found; j++ )
-							foreach( EiffelMethodFactory CurrentMethod in (( EiffelClassFactory )ClassTable[( int )ClassFactory.Parents [j]]).Routines )
-							{
-								Found = CurrentMethod.HasPolymorphID(( EiffelMethodFactory )FeatureTable [FeatureName]);
-								if( Found )
-									break;
-							}
-					}
-					if( !Found )
-						Postconditions = ClassFactory.GeneratedPostconditionsFromEnum( returnType );
-				}
 				ReturnType = new SignatureType();
 				ReturnType.SetTypeEiffelName( returnName );
 				ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( returnType.FullName ) ); 
@@ -849,43 +806,6 @@ public class EiffelClassGenerator: Globals
 			ReturnType.SetEnum( FieldDescriptor.FieldType.IsEnum );
 			GeneratedEiffelFeature.SetReturnType( ReturnType ); 
 		}
-		
-		if( Preconditions.Length > 0 )
-		{
-			Comment = Preconditions.Trim();
-			Dashes = "--";
-			DashesIndex = -1;
-			if( Comment.Length > 0 )
-			{
-				DashesIndex = Comment.IndexOf( Dashes );
-				if( DashesIndex > -1 )
-				{
-					TempPrecondition = Comment.Substring( DashesIndex + Dashes.Length ).Trim();
-					if( TempPrecondition.IndexOf( Dashes ) > -1 )
-					{
-						Comment = Comment.Substring( DashesIndex + Dashes.Length ).Trim();	
-						while( Comment.IndexOf( Dashes ) > -1 )
-						{
-							DashesIndex = Comment.IndexOf( Dashes );
-							if( DashesIndex > -1 )
-							{
-								if( Comment.Substring( 0, DashesIndex ).Trim().Length > 0 )
-									GeneratedEiffelFeature.AddComment( Comment.Substring( 0, DashesIndex ).Trim() );
-								
-								Comment = Comment.Substring( DashesIndex + Dashes.Length ).Trim();
-							}
-							else
-								GeneratedEiffelFeature.AddComment( Comment );
-						}
-					}
-					else
-						GeneratedEiffelFeature.AddComment( Comment );
-				}
-				else
-					GeneratedEiffelFeature.AddComment( Comment );
-
-			}
-		}
 
 		if( IsMethod || IsField )
 		{
@@ -894,9 +814,6 @@ public class EiffelClassGenerator: Globals
 			else
 				GeneratedEiffelFeature.SetExternalName( FieldDescriptor.Name );
 		}
-		
-		if( Postconditions.Length > 0 )
-			GeneratedEiffelFeature.SetPostcondition( true );
 			
 		return GeneratedEiffelFeature;	
 	}

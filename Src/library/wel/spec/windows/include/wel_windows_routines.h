@@ -9,8 +9,11 @@
 #	include <wel.h>
 #endif
 
-#define cwel_key_down(key) (EIF_BOOLEAN) (GetKeyState (key) & 1)	
-#define cwel_key_locked(key) (EIF_BOOLEAN) (GetKeyState (key) & 0x1000)	
+/* if key is down high order bit is set */
+#define cwel_key_down(key) (EIF_BOOLEAN) (GetKeyState (key) & 128)
+
+/* if key is locked low order bit is set */
+#define cwel_key_locked(key) (EIF_BOOLEAN) (GetKeyState (key) & 1)	
 
 #endif  /* __WEL_WINDOWS_ROUTINES__ */
 

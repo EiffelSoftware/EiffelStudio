@@ -56,6 +56,8 @@ inherit
 			on_menu_command,
 			on_accelerator_command,
 			on_paint,
+			on_get_min_max_info,
+			on_set_cursor,
 			real_x,
 			real_y,
 			realize,

@@ -15,6 +15,7 @@ inherit
 	COMPOSITE_IMP
 		redefine
 			on_size,
+			on_set_cursor,
 			height, 
 			set_height,
 			set_size,
@@ -82,7 +83,8 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name
+			class_name,
+			on_get_min_max_info
 		end
 
 feature -- Initialization
@@ -311,6 +313,7 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 			wa: WIDGET_ACTIONS
+			unresizable: BOOLEAN
 		do
 			if size_type = Size_minimized then
 				wa := unmap_actions.widget_actions (Current)
@@ -318,17 +321,19 @@ feature {NONE} -- Implementation
 					shown := False
 					wa.execute (Void)
 				end
-			elseif size_type = Size_maximized or size_type = Size_restored then
-				wa := map_actions.widget_actions (Current)
-				if wa /= Void then
-					shown := True
-					wa.execute (Void)
-				end
 			else
-				!! resize_data.make (owner, a_width, a_height, size_type)
-				resize_actions.execute (Current, resize_data)
+				if size_type = Size_maximized or size_type = Size_restored then
+					wa := map_actions.widget_actions (Current)
+					if wa /= Void then
+						shown := True
+						wa.execute (Void)
+					end
+				else
+					!! resize_data.make (owner, a_width, a_height, size_type)
+					resize_actions.execute (Current, resize_data)
+				end
+				resize_shell_children (a_width, a_height)
 			end
-			resize_shell_children (a_width, a_height)
 		end
 
 	resize_shell_children (a_width, a_height: INTEGER) is
@@ -391,6 +396,24 @@ feature {NONE} -- Implementation
 			-- Windows 3D look
 		once
 			Result := 0
+		end
+
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+		 	track: WEL_POINT
+		do
+			if fixed_size_flag then
+				!! track.make (private_attributes.width + shell_width, private_attributes.height + shell_height)
+				min_max_info.set_min_track_size (track)
+				min_max_info.set_max_track_size (track)
+			end
+		end
+
+	on_set_cursor (hit_code: INTEGER) is
+		do
+			if fixed_size_flag then
+				disable_default_processing
+			end
 		end
 
 end -- SHELL_IMP

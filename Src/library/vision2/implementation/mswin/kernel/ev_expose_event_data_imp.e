@@ -10,7 +10,7 @@ class
 
 inherit
 	EV_EXPOSE_EVENT_DATA_I
-	
+
 end -- class EV_EXPOSE_EVENT_DATA_IMP
 
 --|----------------------------------------------------------------

@@ -9,35 +9,11 @@ class
 
 inherit
 	EV_MOTION_EVENT_DATA_I
-		select
-			interface
-		end
 
 	EV_EVENT_DATA_IMP
-		rename
-			interface as parent_interface
-		redefine
-			fill
-		end		
-
-creation
-	make
-
-feature {NONE} -- Implementation
-
-	fill (mi: WEL_MESSAGE_INFORMATION) is
-			-- Set the attributes of this data depending of `mi'.
-		local
-			mouse_msg: WEL_MOUSE_MESSAGE
-		do
-			mouse_msg ?= mi
-			check
-				valid_msg: mouse_msg /= Void
-			end
-			interface.set_x (mouse_msg.x)
-			interface.set_y (mouse_msg.y)
-		end
-
+		undefine
+			print_contents
+		end	
 
 end -- class EV_MOTION_EVENT_DATA_IMP
 

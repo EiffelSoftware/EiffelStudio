@@ -5,43 +5,17 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_BUTTON_EVENT_DATA_IMP
+	EV_PND_EVENT_DATA_IMP
 
 inherit
-	EV_BUTTON_EVENT_DATA_I
+	EV_PND_EVENT_DATA_I
 
-	EV_EVENT_DATA_IMP
+	EV_BUTTON_EVENT_DATA_IMP
 		undefine
 			print_contents
 		end	
 
-feature -- Access	
-
-	absolute_x: INTEGER is
-			-- absolute x of the mouse pointer
-		local
-			ww: WEL_WINDOW
-			pt: WEL_POINT
-		do
-			ww ?= widget.implementation
-			!! pt.make (x, y)
-			pt.client_to_screen (ww)
-			Result := pt.x
-		end
-
-	absolute_y: INTEGER is
-			-- absolute y of the mouse pointer
-		local
-			ww: WEL_WINDOW
-			pt: WEL_POINT
-		do
-			ww ?= widget.implementation
-			!! pt.make (x, y)
-			pt.client_to_screen (ww)
-			Result := pt.y
-		end
-
-end -- class EV_BUTTON_EVENT_DATA_IMP
+end -- class EV_PND_EVENT_DATA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

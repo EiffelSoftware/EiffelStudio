@@ -9,37 +9,11 @@ class
 
 inherit
 	EV_KEY_EVENT_DATA_I
-		select
-			interface
-		end
 
 	EV_EVENT_DATA_IMP
-		rename
-			interface as parent_interface
-		redefine
-			fill
-		end
-
-creation
-	make
-
-
-feature {NONE} -- Implementation
-
-	fill (mi: WEL_MESSAGE_INFORMATION) is
-			-- Set the attributes of this data.
-		local
-			key_msg: WEL_KEY_MESSAGE
-		do
-			key_msg ?= mi
-			check
-				valid_msg: key_msg /= Void
-			end
-			interface.set_keyval (key_msg.code)
-			interface.set_state (key_msg.data)
-			interface.set_string (key_msg.code.ascii_char.out)
-		end
-
+		undefine
+			print_contents
+		end	
 
 end -- class EV_KEY_EVENT_DATA_IMP
 
@@ -58,4 +32,3 @@ end -- class EV_KEY_EVENT_DATA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

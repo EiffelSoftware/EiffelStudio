@@ -24,7 +24,24 @@
 #include "run_idr.h"
 #include "../parsing/shared/limits.h"
 
+#include <ctype.h>					/* For isspace() */
+
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
+/*#define DEBUG_GENERAL_STORE	/**/
+
 /*#define DEBUG 1 /**/
+
+
+/* Internal representation of the different kinds of storage */
+
+#define BASIC_STORE '\0'
+#define GENERAL_STORE '\01'
+#define INDEPENDENT_STORE '\02'
 
 /*
  * Public data declarations 
@@ -52,7 +69,9 @@ public int r_fides;			/* File descriptor use for retrieve */
  * Function declations
  */
 public char *irt_make();			/* Do the independant retrieve */
+public char *grt_make();			/* Do the general retrieve (3.3 and later) */
 public char *irt_nmake();			/* Retrieve n objects  independent form*/
+public char *grt_nmake();			/* Retrieve n objects  general form*/
 private void iread_header();		/* Read independent header */
 private void rt_clean();			/* Clean data structure */
 private void rt_update1();			/* Reference correspondance update */
@@ -60,8 +79,8 @@ private void rt_update2();			/* Fields updating */
 public char *rt_make();				/* Do the retrieve */
 public char *rt_nmake();			/* Retrieve n objects */
 private void read_header();			/* Read  general header */
-extern long get_offset ();			/* get offset of attrib in object*/
 private void object_read ();		/* read the individual attributes of the object*/
+private void gen_object_read ();	/* read the individual attributes of the object*/
 private long get_expanded_pos ();
 
 private int readline ();
@@ -104,21 +123,25 @@ EIF_INTEGER file_desc;
 	/* set rt_kind depending on the type to be retrieved */
 
 	switch (rt_type) {
-		case '\0':			/*old basic store */
+		case BASIC_STORE_3_1:			/*old basic store */
 			retrieve_read_func = old_retrieve_read;
-		case '\02':			/* New basic store */
+		case BASIC_STORE_3_2:			/* New basic store */
 			allocate_gen_buffer ();
-			rt_kind = '\0';
+			rt_kind = BASIC_STORE;
 			break;
-		case '\01': 			/* Old general store */
+		case GENERAL_STORE_3_1:			/* Old general store */
 			retrieve_read_func = old_retrieve_read;
-		case '\03':			/* New General store */
+		case GENERAL_STORE_3_2:			/* New General store */
 			allocate_gen_buffer ();
-			rt_kind = '\01';
+			rt_kind = GENERAL_STORE;
 			break;
-		case '\04':			/* New Independent store */
+		case GENERAL_STORE_3_3:			/* New General store 3.3 */
+			allocate_gen_buffer ();
+			rt_kind = GENERAL_STORE;
+			break;
+		case INDEPENDENT_STORE_3_2:		/* New Independent store */
 			run_idr_init ();
-			rt_kind = '\02';
+			rt_kind = INDEPENDENT_STORE;
 			idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 			if (idr_temp_buf == (char *)0)
 				xraise (EN_MEM);
@@ -139,12 +162,15 @@ EIF_INTEGER file_desc;
 #endif
 
 
-	if (rt_kind == '\02') {
+	if (rt_kind == INDEPENDENT_STORE) {
 		iread_header();					/* Make correspondance table */
 		retrieved = irt_make();
+	} else if (rt_type == GENERAL_STORE_3_3) {
+		read_header(rt_type);					/* Make correspondance table */
+		retrieved = grt_make();
 	} else {
 		if (rt_kind)
-			read_header();			/* Make correspondance table */
+			read_header(rt_type);			/* Make correspondance table */
 
 		/* Retrieve */
 		retrieved = rt_make();
@@ -152,19 +178,22 @@ EIF_INTEGER file_desc;
 
 	if (rt_kind)
 		xfree(dtypes);					/* Free the correspondance table */
-	if (rt_kind == '\02')
+	if (rt_kind == INDEPENDENT_STORE)
 		xfree(spec_elm_size);					/* Free the element size table */
 
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 	switch (rt_type) {
-		case '\0':
+		case BASIC_STORE_3_1:
 			retrieve_read_func = retrieve_read;
 			break;
-		case '\01': 
+		case GENERAL_STORE_3_1: 
 			retrieve_read_func = retrieve_read;
 			break;
-		case '\04': {
+		case GENERAL_STORE_3_3: 
+			free_sorted_attributes();
+			break;
+		case INDEPENDENT_STORE_3_2: {
 			int i;
 
 			run_idr_destroy ();
@@ -336,6 +365,185 @@ long objectCount;
 	return newadd;
 }
 
+public char *grt_make()
+{
+	/* Make the retrieve of all objects in file */
+	long objectCount;
+
+	/* Read the object count in the file header */
+	buffer_read(&objectCount, sizeof(long));
+
+#if DEBUG & 1
+		printf ("\n %ld", objectCount);
+#endif
+
+	return grt_nmake(objectCount);
+}
+
+public char *grt_nmake(objectCount)
+long objectCount;
+{
+	/* Make the retrieve of `objectCount' objects.
+	 * Return pointer on retrived object.
+	 */
+
+	long nb_char;
+	char *oldadd;
+	char *newadd = (char *) 0;
+	EIF_OBJ new_hector;
+	uint32 flags;
+	uint32 spec_size = 0;
+	char g_status = g_data.status;
+	jmp_buf exenv;
+
+	excatch((char *) exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		rt_clean();				/* Clean data structure */
+		ereturn();				/* Propagate exception */
+	}
+
+	/* Initialization of the hash table */
+	nb_recorded = 0;
+	rt_table = (struct htable *) xmalloc(sizeof(struct htable), C_T, GC_OFF);
+	if (rt_table == (struct htable *) 0)
+		xraise(EN_MEM);
+	if (-1 == ht_create(rt_table, objectCount, sizeof(struct rt_struct)))
+		xraise(EN_MEM);
+	ht_zero(rt_table);
+
+	for (;objectCount > 0; objectCount--) {
+		/* Read object address */
+		buffer_read(&oldadd, sizeof(EIF_REFERENCE));
+
+#if DEBUG & 1
+		printf ("\n  %lx", oldadd);
+#endif
+
+		/* Read object flags (dynamic type) */
+		buffer_read(&flags, sizeof(uint32));
+
+#if DEBUG & 1
+		printf (" %x", flags);
+#endif
+
+		/* Read a possible size */
+		if (flags & EO_SPEC) {
+			uint32 count, elm_size;
+			uint32 dgen, spec_type;
+			struct gt_info *info;
+			char *vis_name;
+
+			spec_type = dtypes[flags & EO_TYPE];
+			vis_name = System(spec_type).cn_generator;
+
+			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			/* Generic type, :
+			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 */
+				int16 *gt_type = info->gt_type;
+				int32 *gt_gen;
+				int nb_gen = info->gt_param;
+	
+				for (;;) {
+					if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
+						break;
+				}
+				gt_type--;
+				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+				dgen = *gt_gen;
+			}
+
+			if (!((dgen & SK_HEAD) == SK_EXP)) {
+				switch (dgen) {
+					case SK_INT:
+						spec_size = sizeof (EIF_INTEGER);
+						break;
+					case SK_CHAR:
+						spec_size = sizeof (EIF_CHARACTER);
+						break;
+					case SK_BOOL:
+						spec_size = sizeof (EIF_BOOLEAN);
+						break;
+					case SK_FLOAT:
+						spec_size = sizeof (EIF_REAL);
+						break;
+					case SK_DOUBLE:
+						spec_size = sizeof (EIF_DOUBLE);
+						break;
+					case SK_POINTER:
+						spec_size = sizeof (EIF_POINTER);
+						break;
+					case SK_DTYPE:
+					case SK_REF:
+						spec_size = sizeof (EIF_OBJ);
+						break;
+					default:
+						if (dgen & SK_BIT) 
+							spec_size = BITOFF(dgen & SK_DTYPE);
+						else
+							eio();
+				}
+			} else {
+				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+			}
+			buffer_read(&count, sizeof(uint32));
+			nb_char = CHRPAD(count * spec_size ) + LNGPAD(2);
+			buffer_read(&elm_size, sizeof(uint32));
+
+#if DEBUG & 1
+		printf (" %x", count);
+		printf (" %x", elm_size);
+#endif
+			newadd = spmalloc(nb_char);
+			{
+				long * o_ref;
+
+				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD(2));
+				*o_ref++ = count; 		
+				*o_ref = spec_size;
+				/* FIXME spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;*/
+			} 
+			HEADER(newadd)->ov_flags |= dtypes[flags & EO_TYPE] |
+							(flags & (EO_REF|EO_COMP));
+		} else {
+			/* Normal object */
+			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
+			newadd = emalloc(dtypes[flags & EO_TYPE]); 
+		}
+		
+		/* Creation of the Eiffel object */	
+		if (newadd == (char *) 0)
+			xraise(EN_MEM);
+
+		/* Stop in the garbage collector because we have know an unstable
+		 * object. */
+		g_data.status |= GC_STOP;
+
+		/* Record the new object in hector table */
+		new_hector = hrecord(newadd);
+		nb_recorded++;
+
+		/* Update unsolved references on `newadd' */
+		rt_update1 (oldadd, new_hector);
+
+		/* Read the object's body */
+		gen_object_read (newadd, newadd);
+
+		/* Update fileds: the garbage collector should not be called
+		 * during `rt_update2' because the object is in a very unstable
+		 * state.
+		 */
+		rt_update2(oldadd, newadd, newadd);
+
+		/* Restore garbage collector status */
+		g_data.status = g_status;
+	}
+	expop(&eif_stack);
+
+	return newadd;
+}
+
 public char *irt_make()
 {
 	/* Make the retrieve of all objects in file */
@@ -347,7 +555,6 @@ public char *irt_make()
 #if DEBUG & 1
 		printf ("\n %ld", objectCount);
 #endif
-
 
 	return irt_nmake(objectCount);
 }
@@ -593,7 +800,7 @@ private void rt_clean()
 		r_buffer = (char *) 0;
 	}
 	epop(&hec_stack, nb_recorded);				/* Pop hector records */
-	if (rt_kind == '\02') {
+	if (rt_kind == INDEPENDENT_STORE) {
 		run_idr_destroy ();
 		if (!(idr_temp_buf == (char *)0)) {
 			xfree (idr_temp_buf);
@@ -610,6 +817,7 @@ private void rt_clean()
 			dattrib = (int **) 0;
 		}
 	}
+	free_sorted_attributes();
 	retrieve_read_func = retrieve_read;
 }
 
@@ -701,7 +909,7 @@ char *old, *new, *parent;
 			char *old_addr;
 
 			elem_size = *(long *) (o_ref + sizeof(long));
-			if (rt_kind != '\02') {
+			if (rt_kind != INDEPENDENT_STORE) {
 				old_overhead = OVERHEAD;
 				old_elem_size = elem_size;
 			} else
@@ -736,7 +944,7 @@ update:
 				long new_offset;
 				long offset = reference - old;
 	
-				if (rt_kind == '\02') {
+				if (rt_kind == INDEPENDENT_STORE) {
 					new_offset = get_expanded_pos (flags & EO_TYPE, (uint32)(total_ref - nb_references));
 				} else
 					new_offset = offset;
@@ -800,11 +1008,11 @@ char * ptr;
 	return (ptr);
 }
 
-private void read_header()
+private void read_header(rt_type)
+char rt_type;
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
-	extern int errno;
 	int dtype, new_dtype;
 	long size;
 	int nb_gen, bsize = 1024;
@@ -832,6 +1040,18 @@ private void read_header()
 	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
+
+	if (rt_type == GENERAL_STORE_3_3) {
+		sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
+#ifdef DEBUG_GENERAL_STORE
+printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
+#endif
+		if (sorted_attributes == (unsigned int **)0) {
+			xfree (dtypes);
+			xraise(EN_MEM);
+			}
+		}
+		bzero(sorted_attributes, scount * sizeof(unsigned int *));
 
 	/* Read the number of lines */
 	if (readline(r_buffer, &bsize) <= 0)
@@ -911,6 +1131,9 @@ private void read_header()
 			eraise(vis_name, EN_RETR);		/* No good size */
 		}
 		dtypes[dtype] = new_dtype;
+
+		if (rt_type == GENERAL_STORE_3_3)
+			sort_attributes(new_dtype);
 	}
 	xfree (r_buffer);
 	r_buffer = (char *) 0;
@@ -922,7 +1145,6 @@ private void iread_header()
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
-	extern int errno;
 	int dtype, new_dtype;
 	int nb_gen, bsize = 1024;
 	char vis_name[512], end;
@@ -1231,7 +1453,172 @@ public int retrieve_read ()
 	return (end_of_buffer);
 }
 
+private void gen_object_read (object, parent)
+char * object, * parent;
+{
+	long attrib_offset;
+	int z;
+	uint32 o_type;
+	uint32 num_attrib;
+	uint32 flags = HEADER(object)->ov_flags;
+	int *attrib_order;
 
+	o_type = flags & EO_TYPE;
+	num_attrib = System(o_type).cn_nbattr;
+
+	if (num_attrib > 0) {
+		for (; num_attrib > 0;) {
+			uint32 types_cn;
+
+			attrib_offset = get_alpha_offset(o_type, --num_attrib);
+			types_cn = *(System(o_type).cn_types + num_attrib);
+
+			switch (types_cn & SK_HEAD) {
+				case SK_INT:
+					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER));
+					break;
+				case SK_BOOL:
+				case SK_CHAR:
+					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER));
+					break;
+				case SK_FLOAT:
+					buffer_read(object + attrib_offset, sizeof(EIF_REAL));
+					break;
+				case SK_DOUBLE:
+					buffer_read(object + attrib_offset, sizeof(EIF_DOUBLE));
+					break;
+				case SK_BIT:
+						{
+							int q;
+							uint32 old_flags;
+							struct bit *bptr = (struct bit *)(object + attrib_offset);
+
+							HEADER(bptr)->ov_flags = bit_dtype;
+							buffer_read(&old_flags, sizeof(uint32));
+							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
+
+							buffer_read(bptr, bptr->b_length);
+							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
+								eio();
+						}
+
+					break;
+				case SK_EXP: {
+					uint32  old_flags;
+					long size_count;
+
+					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+					buffer_read(&old_flags, sizeof(uint32));
+					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
+					size_count = get_expanded_pos (o_type, --num_attrib);
+
+					HEADER(object + size_count)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
+					gen_object_read (object + size_count, parent);						
+
+					}
+					break;
+				case SK_REF:
+				case SK_POINTER:
+					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+					break;
+				default:
+					eio();
+			}
+		} 
+	} else {
+		if (flags & EO_SPEC) {		/* Special object */
+			long count, elem_size;
+			char *ref, *o_ptr;
+			char *vis_name;
+			uint32 dgen;
+			struct gt_info *info;
+
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			count = *(long *) o_ptr;
+			vis_name = System(o_type).cn_generator;
+
+
+			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			/* Generic type, :
+			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 */
+				int16 *gt_type = info->gt_type;
+				int32 *gt_gen;
+				int nb_gen = info->gt_param;
+	
+				for (;;) {
+					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+						break;
+				}
+				gt_type--;
+				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+				dgen = *gt_gen;
+			}
+	
+			if (!(flags & EO_REF)) {			/* Special of simple types */
+				switch (dgen & SK_HEAD) {
+					case SK_INT:
+						buffer_read((long *)object, count*sizeof(EIF_INTEGER));
+						break;
+					case SK_BOOL:
+					case SK_CHAR:
+						buffer_read(object, count*sizeof(EIF_CHARACTER));
+						break;
+					case SK_FLOAT:
+						buffer_read((float *)object, count*sizeof(EIF_REAL));
+						break;
+					case SK_DOUBLE:
+						buffer_read((double *)object, count*sizeof(EIF_DOUBLE));
+						break;
+					case SK_EXP: {
+						uint32 old_flags;
+
+						elem_size = *(long *) (o_ptr + sizeof(long));
+						buffer_read(&old_flags, sizeof(uint32));
+						for (ref = object + OVERHEAD; count > 0;
+							count --, ref += elem_size) {
+	
+							HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+							HEADER(ref)->ov_size = (uint32)(ref - parent);
+							gen_object_read (ref, parent);						
+							}
+						}
+						break;
+					case SK_BIT: {
+						uint32 l;
+
+						elem_size = *(long *) (o_ptr + sizeof(long));
+						buffer_read((struct bit *)object, count*elem_size);
+						}
+						break;
+					case SK_POINTER:
+						buffer_read(object, count*sizeof(EIF_POINTER));
+						break;
+					default:
+   	   	          		eio();
+						break;
+				}
+			} else {
+				if (!(flags & EO_COMP)) {		/* Special of references */
+					buffer_read(object, count*sizeof(EIF_REFERENCE));
+				} else {						/* Special of composites */
+					uint32  old_flags;
+
+					buffer_read(&old_flags, sizeof(uint32));
+					elem_size = *(long *) (o_ptr + sizeof(long));
+					for (ref = object + OVERHEAD; count > 0;
+							count --, ref += elem_size) {
+						HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+						HEADER(ref)->ov_size = (uint32)(ref - parent);
+						gen_object_read (ref, parent);						
+					}
+				}
+			}
+		} 
+	}
+}
 
 
 private void object_read (object, parent)

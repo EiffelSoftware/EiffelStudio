@@ -626,6 +626,10 @@ feature -- Object editor properties
 	gb_ev_sensitive_is_sensitive: STRING is "Is Sensitive?"
 	gb_ev_sensitive_is_sensitive_tooltip: STRING is "feature `is_sensitive' from EV_SENSITIVE"
 	
+	gb_ev_tool_bar_has_vertical_button_style: STRING is "Vertical button style?"
+	gb_ev_tool_bar_has_vertical_button_style_tooltip: STRING is "feature `has_vertical_button_style' from EV_TOOL_BAR"
+	
+	
 	gb_ev_textable_text: STRING is "Text"
 	gb_ev_textable_text_tooltip: STRING is "feature `text' from EV_TEXTABLE"
 	

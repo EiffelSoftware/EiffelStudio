@@ -246,7 +246,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
   HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
-
+  
+  [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
+  HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
 };
 //---------------------------------------------------------------------
 

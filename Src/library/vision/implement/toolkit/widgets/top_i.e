@@ -28,6 +28,11 @@ feature -- Status report
 		deferred
 		end
 
+	is_maximized_state: BOOLEAN is
+			-- Does application start in maximized state?
+		deferred
+		end
+
 feature -- Status setting
 
 	set_iconic_state is
@@ -37,6 +42,11 @@ feature -- Status setting
 
 	set_normal_state is
 			-- Set start state of the application to be normal.
+		deferred
+		end;
+
+	set_maximized_state is
+			-- Set start state of the application to be maximized.
 		deferred
 		end;
 

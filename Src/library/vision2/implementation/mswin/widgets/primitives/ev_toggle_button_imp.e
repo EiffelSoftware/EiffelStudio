@@ -16,8 +16,8 @@ inherit
 	EV_SELECT_BUTTON_IMP
 		undefine
 			default_style,
-			wel_make,
-			make_by_id
+			wel_make,	--| FIXME Get back to this.
+			make_by_id	--| FIXME Get back to this.
 		redefine
 			interface
 		end
@@ -109,6 +109,10 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/09 16:25:18  brendel
+--| Added 2 FIXME's at undefine clause about newly added creation procedures
+--| to WEL, but it is unclear what exactly has to be done.
+--|
 --| Revision 1.22  2000/03/07 17:39:03  rogers
 --| Undefined on_size from WEL_SELECTABLE_BUTTON as this is now inherited from EV_BUTTON_IMP.
 --|

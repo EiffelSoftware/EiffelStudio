@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 		do
 			username := ""
 			password := ""
-			handle := ""
+			data_source := ""
 			location := ""
 			project_location := ""
 			Create table_list.make
@@ -32,7 +32,7 @@ feature {STATE_WINDOW} -- Settings
 		do
 			username := s1
 			password := s2
-			handle := s3
+			data_source := s3
 			is_oracle := oracle_selected
 		end
 
@@ -78,8 +78,8 @@ feature -- Access
 	password: STRING
 		-- User Password.
 
-	handle: STRING
-		-- Database Name.
+	data_source: STRING
+		-- User datasource. (Useful with ODBC)
 
 	generate_facade: BOOLEAN
 		-- Does the user want to generate a facade ?
@@ -98,7 +98,7 @@ feature -- Access
 invariant
 	default_exist :username /= Void
 				  and password /= Void 
-				  and handle /= Void
+				  and data_source /= Void
 			      and location /= Void 
 				  and project_location /= Void
 				  and table_list /= Void

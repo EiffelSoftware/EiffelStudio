@@ -40,7 +40,7 @@ feature -- basic Operations
 				oracle_b.enable_select
 			end
 			oracle_b.press_actions.extend(~set_handle_insensitive(TRUE))
-			Create db_name.make("Data Source Name",state_information.handle,10,20,Current)
+			Create db_name.make("Data Source Name",state_information.data_source,10,20,Current)
 			Create username.make("username",state_information.username,10,20,Current)
 			Create password.make("Password",state_information.password,10,20,Current)
 			

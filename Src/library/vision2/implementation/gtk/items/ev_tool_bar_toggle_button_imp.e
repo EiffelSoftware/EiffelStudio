@@ -31,9 +31,11 @@ feature -- Initialization
 		-- Create the tool-bar toggle button
 		do
 			widget := gtk_toggle_button_new
+			gtk_button_set_relief (widget, GTK_RELIEF_NONE)
 			gtk_object_ref (widget)
 			-- Create the box (for caption and pixmap)
 			initialize
+			initialize_object_handling
 		end
 
 feature -- Status report

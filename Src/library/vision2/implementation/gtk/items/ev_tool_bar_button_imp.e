@@ -53,16 +53,14 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- create the tool bar buton.
+			-- create the tool bar button.
 			-- Redefined because the interface does not
 			-- call `widget_make' where we connect `destroy_signal_callback'
 			-- to `destroy' event.
 		do
 			{EV_BUTTON_IMP} Precursor
-			set_minimum_height(20)
-			set_minimum_width(20)
-
 			initialize_object_handling
+			gtk_button_set_relief (widget, GTK_RELIEF_NONE)
 		end
 
 	initialize is
@@ -140,6 +138,16 @@ feature -- Event -- removing command association
 		do
 			remove_commands (widget, clicked_id)
 		end
+
+feature -- External
+
+	gtk_button_set_relief (but: POINTER; style: INTEGER) is
+		external
+			"C (GtkButton *, gint) | <gtk/gtk.h>"
+		end
+
+	GTK_RELIEF_NONE: INTEGER is 2
+		-- Style used for no edges around buttons.
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 

@@ -132,7 +132,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			temp_column_positions_string, temp_row_positions_string,
 			temp_widths_string, temp_heights_string: STRING
-			item_list: ARRAYED_LIST [EV_WIDGET]
 			an_object: GB_OBJECT
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			current_table_widget: EV_WIDGET
@@ -462,13 +461,11 @@ feature {NONE} -- Implementation
 			horizontal_box, h1: EV_HORIZONTAL_BOX
 			vertical_box: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
-			cell: EV_CELL
 			status_bar: EV_FRAME
 			split_area: EV_HORIZONTAL_SPLIT_AREA
 			table_content: ARRAYED_LIST [EV_WIDGET]
 			list_item: EV_LIST_ITEM
 			layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
-			label: EV_LABEL
 		do
 				-- Reset the selected item.
 			selected_item := Void

@@ -67,11 +67,9 @@ feature -- Basic operations
 				project_settings: GB_PROJECT_SETTINGS
 				opened: BOOLEAN
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
-				invalid_system_interface_file: BOOLEAN
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
-				a_file_name: FILE_NAME
 			do
 				create dialog
 				dialog.set_filter (project_file_filter)

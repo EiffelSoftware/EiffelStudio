@@ -68,13 +68,13 @@ feature -- Event handling
 			create Result
 		end
 
-	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_in action sequence.
 		do
 			create Result
 		end
 
-	create_focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_out action sequence.
 		do
 			create Result

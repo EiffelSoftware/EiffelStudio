@@ -237,7 +237,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.
 		do
 			if focus_in_actions_internal = Void then
@@ -251,18 +251,18 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_in action sequence.
 		deferred
 		end
 
-	focus_in_actions_internal: EV_FOCUS_ACTION_SEQUENCE
+	focus_in_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `focus_in_actions'.
 
 
 feature -- Event handling
 
-	focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			if focus_out_actions_internal = Void then
@@ -276,12 +276,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_out action sequence.
 		deferred
 		end
 
-	focus_out_actions_internal: EV_FOCUS_ACTION_SEQUENCE
+	focus_out_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `focus_out_actions'.
 
 

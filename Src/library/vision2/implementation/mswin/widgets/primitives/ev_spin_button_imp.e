@@ -353,24 +353,24 @@ feature -- action sequences
 			Result := internal_text_field.create_return_actions
 		end
 
-	focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.
 		do
 			Result := internal_text_field.focus_in_actions
 		end
 
-	create_focus_in_actions:  EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			Result := internal_text_field.create_focus_in_actions
 		end
 
-	focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			Result := internal_text_field.focus_out_actions
 		end
 
-	create_focus_out_actions:  EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			Result := internal_text_field.create_focus_out_actions
 		end

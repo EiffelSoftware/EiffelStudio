@@ -884,7 +884,7 @@ feature -- Basic operations
 		end
 
 	safearray_safearray_ce_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
-			-- Body of EC conversion function for SAFEARRAY of records.
+			-- Body of EC conversion function for SAFEARRAY of safearrays..
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
 		local
@@ -893,7 +893,7 @@ feature -- Basic operations
 		do
 			a_visitor := a_safearray_descriptor.visitor
 			check
-				a_visitor.is_structure_pointer
+				is_safearray: is_array (a_visitor.vt_type)
 			end
 			tmp_element_c_type := a_visitor.c_type
 			tmp_element_eiffel_type := a_visitor.eiffel_type

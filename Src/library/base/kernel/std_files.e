@@ -14,28 +14,28 @@ class
 
 feature -- Access
 
-	input: UNIX_FILE is
+	input: PLAIN_TEXT_FILE is
 			-- Standard input file
 		once
-			!UNIX_STD! Result.make_open_stdin ("stdin");
+			!CONSOLE! Result.make_open_stdin ("stdin");
 		end;
 
-	output: UNIX_FILE is
+	output: PLAIN_TEXT_FILE is
 			-- Standard output file
 		once
-			!UNIX_STD! Result.make_open_stdout ("stdout");
+			!CONSOLE! Result.make_open_stdout ("stdout");
 		end;
 
-	error: UNIX_FILE is
+	error: PLAIN_TEXT_FILE is
 			-- Standard error file
 		once
-			!UNIX_STD! Result.make_open_stderr ("stderr");
+			!CONSOLE! Result.make_open_stderr ("stderr");
 		end;
 
-	default_output: UNIX_FILE;
+	default_output: PLAIN_TEXT_FILE;
 			-- Default output.
 
-	standard_default: UNIX_FILE is
+	standard_default: PLAIN_TEXT_FILE is
 			-- Return the `default_output' or `output'
 			-- if `default_output' is Void.
 			--| Useful if a class inherits from STD_FILES and
@@ -97,7 +97,7 @@ feature -- Element change
 	putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
 		do
-			file_pc (standard_default.file_pointer, $c)
+			console_pc (standard_default.file_pointer, $c)
 		end;
 
 	putstring (s: STRING) is
@@ -108,25 +108,25 @@ feature -- Element change
 			external_s: ANY;
 		do
 			external_s := s.to_c;
-			file_ps (standard_default.file_pointer, $external_s, s.count)
+			console_ps (standard_default.file_pointer, $external_s, s.count)
 		end;
 
 	putreal (r: REAL) is
 			-- Write `r' at end of default output.
 		do
-			file_pr (standard_default.file_pointer, r)
+			console_pr (standard_default.file_pointer, r)
 		end;
 
 	putdouble (d: DOUBLE) is
 			-- Write `d' at end of default output.
 		do
-			file_pd (standard_default.file_pointer, d)
+			console_pd (standard_default.file_pointer, d)
 		end;
 
 	putint (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
-			file_pi (standard_default.file_pointer, i)
+			console_pi (standard_default.file_pointer, i)
 		end;
 
 	putbool (b: BOOLEAN) is
@@ -136,13 +136,13 @@ feature -- Element change
 				putstring ("true")
 			else
 				putstring ("false")
-			end -- if
+			end 
 		end; 
 
 	new_line is
 			-- Write line feed at end of default output.
 		do
-			file_tnwl (standard_default.file_pointer)
+			console_tnwl (standard_default.file_pointer)
 		end;
 
 feature -- Input
@@ -206,37 +206,37 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	file_pc (file: POINTER; c: CHARACTER) is
+	console_pc (file: POINTER; c: CHARACTER) is
 		-- Write character `c' at end of `file'
 		external
 			"C"
 		end;
 
-	file_ps (file: POINTER; s_name: ANY; lenght: INTEGER) is
+	console_ps (file: POINTER; s_name: ANY; lenght: INTEGER) is
 			-- Write string `s' at end of `file'
 		external
 			"C"
 		end;
 
-	file_pr (file: POINTER; r: REAL) is
+	console_pr (file: POINTER; r: REAL) is
 			-- Write real `r' at end of `file'
 		external
 			"C"
 		end;
 
-	file_pd (file: POINTER; d: DOUBLE) is
+	console_pd (file: POINTER; d: DOUBLE) is
 			-- Write double `d' at end of `file'
 		external
 			"C"
 		end;
 
-	file_pi (file: POINTER; i: INTEGER) is
+	console_pi (file: POINTER; i: INTEGER) is
 			-- Write integer `i' at end of `file'
 		external
 			"C"
 		end;
 
-	file_tnwl (file: POINTER) is
+	console_tnwl (file: POINTER) is
 			-- Write a new_line to `file'
 		external
 			"C"

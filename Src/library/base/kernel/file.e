@@ -921,7 +921,7 @@ feature -- Element change
 			file_link ($external_name, $fn_name)
 		end;
 
-	append (f: FILE) is
+	append (f: like Current) is
 			-- Append a copy of the contents of `f'.
 		require else
 			target_is_closed: is_closed;

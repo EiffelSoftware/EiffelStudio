@@ -50,7 +50,7 @@ feature -- Store/Retrieve
 			al: LACE_LIST [ASSEMBLY_SD]
 			l_assembly_sd: ASSEMBLY_SD
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			pref_string, pk_string: ID_SD
+			pref_string: ID_SD
 		do
 			if msil_widgets_enabled then
 				al := root_ast.assemblies
@@ -71,18 +71,13 @@ feature -- Store/Retrieve
 						pref_string := new_id_sd (l_row @ 2, True)
 					else
 						pref_string := Void
-					end
-					if not (l_row @ 6).is_empty then
-						pk_string := new_id_sd (l_row @ 6, True)
-					else
-						pk_string := Void
-					end
+					end		
 					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
 						new_id_sd (l_row @ 3, True),
 						pref_string,
-						new_id_sd (l_row @ 4, True),
-						new_id_sd (l_row @ 5, True),
-						pk_string)
+						Void,
+						Void,
+						Void)
 					al.extend (l_assembly_sd)
 					local_assembly_list.forth
 				end
@@ -110,7 +105,6 @@ feature -- Store/Retrieve
 				root_ast.set_assemblies (al)
 			end
 		end
-		
 
 	retrieve (root_ast: ACE_SD) is
 			-- Retrieve content of `root_ast' and update content of widget.
@@ -142,7 +136,11 @@ feature {NONE} -- Filling
 					if assembly_type (assembly).is_equal ("local") then
 							-- Add local reference row
 						create list_row
-						list_row.extend (assembly.cluster_name)
+						if not valid_cluster_name (assembly.cluster_name) then
+							list_row.extend ("%"" + assembly.cluster_name + "%"")
+						else
+							list_row.extend (assembly.cluster_name)
+						end
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
 							list_row.extend (assembly.prefix_name)
 						else
@@ -159,7 +157,11 @@ feature {NONE} -- Filling
 					else
 							-- Add GAC reference row
 						create list_row
-						list_row.extend (assembly.cluster_name)
+						if not valid_cluster_name (assembly.cluster_name) then
+							list_row.extend ("%"" + assembly.cluster_name + "%"")
+						else
+							list_row.extend (assembly.cluster_name)
+						end
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
 							list_row.extend (assembly.prefix_name)
 						else
@@ -601,27 +603,29 @@ feature -- Implementation
 		end
 		
 	valid_cluster_name (a_name: STRING): BOOLEAN is
-			-- Is 'a_name' valid?
+			-- Is 'a_name' valid? A name enclosed by quotes will always be valid.	
 		local
 			valid: BOOLEAN
 			i: INTEGER
 		do
-			from
-				i := 1
-				valid := True
-				if (not a_name.item (i).is_alpha) or reserved_words.has (a_name) then
-					valid := False
+			valid := True
+			if not (a_name.item (1) = '"' and a_name.item (a_name.count) = '"') then
+				from
+					i := 1
+					if (not a_name.item (i).is_alpha) or reserved_words.has (a_name) then
+						valid := False
+					end
+				until
+					i = a_name.count + 1 or not valid
+				loop
+					if not (a_name.item (i).is_alpha or 
+							a_name.item (i).is_digit or
+							a_name.item (i) = '_' or						
+							a_name.is_empty) then
+						valid := False
+					end
+					i := i + 1
 				end
-			until
-				i = a_name.count + 1 or not valid
-			loop
-				if not (a_name.item (i).is_alpha or 
-						a_name.item (i).is_digit or
-						a_name.item (i).is_equal ('_') or
-						a_name.is_empty) then
-					valid := False
-				end
-				i := i + 1
 			end
 			Result := valid
 		end	

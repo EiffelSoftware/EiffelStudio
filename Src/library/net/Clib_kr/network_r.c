@@ -1,5 +1,12 @@
 #include "config.h"
 
+#ifdef EIF_OS2
+#include <stdlib.h>
+#include <types.h>
+#include <sys/socket.h>
+#include <nerrno.h>
+#endif
+
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
@@ -59,7 +66,8 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#ifndef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
+#else
 #include <sys/un.h>
 #include <netinet/tcp.h>
 #endif
@@ -102,7 +110,11 @@ EIF_INTEGER no_buffs ()
 
 EIF_INTEGER c_permission ()
 {
+#ifdef EIF_OS2
+	return (EIF_INTEGER) SOCEPERM;
+#else
 	return (EIF_INTEGER) EPERM;
+#endif
 }
 
 EIF_INTEGER bad_socket()
@@ -137,7 +149,11 @@ EIF_INTEGER no_access ()
 
 EIF_INTEGER unreadable ()
 {
+#ifdef EIF_OS2
+	return (EIF_INTEGER) SOCEFAULT;
+#else
 	return (EIF_INTEGER) EFAULT;
+#endif
 }
 
 EIF_INTEGER no_connect ()
@@ -362,16 +378,20 @@ EIF_INTEGER ipoptions ()
 
 EIF_INTEGER tcpmax_seg ()
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) TCP_MAXSEG;
-#else
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_INTEGER) 0;
+#else
+	return (EIF_INTEGER) TCP_MAXSEG;
 #endif
 }
 
 EIF_INTEGER tcpno_delay ()
 {
+#ifdef  TCP_NODELAY
 	return (EIF_INTEGER) TCP_NODELAY;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER sobroadcast ()
@@ -494,37 +514,37 @@ EIF_INTEGER c_fsetown ()
 
 EIF_INTEGER c_fgetfl ()
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) F_GETFL;
-#else
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_INTEGER) 0;
+#else
+	return (EIF_INTEGER) F_GETFL;
 #endif
 }
 
 EIF_INTEGER c_fsetfl ()
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) F_SETFL;
-#else
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_INTEGER) 0;
+#else
+	return (EIF_INTEGER) F_SETFL;
 #endif
 }
 
 EIF_INTEGER c_fndelay ()
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) FNDELAY;
-#else
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_INTEGER) 0;
+#else
+	return (EIF_INTEGER) FNDELAY;
 #endif
 }
 
 EIF_INTEGER c_fasync ()
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) FASYNC;
-#else
+#if defined  EIF_WIN32 || defined EIF_OS2
 	return (EIF_INTEGER) 0;
+#else
+	return (EIF_INTEGER) FASYNC;
 #endif
 }
 

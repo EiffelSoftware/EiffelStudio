@@ -648,7 +648,8 @@ feature {NONE} -- Implementation / Commands
 			if general_customizable_toolbar.changed then
 				set_array_resource ("development_window__general_toolbar_layout", save_toolbar (general_customizable_toolbar))
 				set_boolean_resource ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
-				set_boolean_resource ("development_window__show_text_in_general_toolbar", general_customizable_toolbar.is_text_displayed)
+				set_boolean_resource ("development_window__show_text_in_general_toolbar", general_customizable_toolbar.is_text_important)
+				set_boolean_resource ("development_window__show_all_text_in_general_toolbar", general_customizable_toolbar.is_text_displayed)
 			end
 		end
 

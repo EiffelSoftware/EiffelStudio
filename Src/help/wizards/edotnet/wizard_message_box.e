@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			message_dialog.set_default_push_button (close_button)
 			message_dialog.set_default_cancel_button (close_button)
 			
-			message_dialog.close_request_actions.extend (~on_close)
+		--	message_dialog.close_request_actions.extend (~on_close)
 	--		message_dialog.show_modal_to_window (parent_window)			
 			message_dialog.show
 			create cursor_pixmap

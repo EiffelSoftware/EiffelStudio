@@ -45,8 +45,6 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toolbar_new)
-			--set_c_object (feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 2))
-			--feature {EV_GTK_EXTERNALS}.gtk_event_box_set_above_child (c_object, True)
 		end
 		
 	initialize is
@@ -55,7 +53,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
-		--	feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_tooltips (list_widget, False)
+			has_vertical_button_style := True
 		end
 		
 	list_widget: POINTER is
@@ -66,26 +64,25 @@ feature {NONE} -- Implementation
 		
 feature -- Status report
 
-	has_vertical_button_style: BOOLEAN is
+	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
-		do
-		--	Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (list_widget) /= feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum
-		end
 		
 feature -- Status setting
 
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
-		--	feature {EV_GTK_EXTERNALS}.gtk_toolbar_unset_style (visual_widget)
+			has_vertical_button_style := True
+			update_toolbar_style
 		end
 		
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
-		--	feature {EV_GTK_EXTERNALS}.gtk_toolbar_set_style (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum)
+			has_vertical_button_style := False
+			update_toolbar_style
 		end
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
@@ -97,6 +94,42 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		end
 
 feature -- Implementation
+
+	update_toolbar_style is
+			-- Set the style of `Current' relative to items
+		local
+			tbb_imp: EV_TOOL_BAR_BUTTON_IMP
+			has_text, has_pixmap: BOOLEAN
+			i, a_style: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > interface.count
+			loop
+				tbb_imp ?= interface.i_th (i).implementation
+				if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
+					has_text := True
+				end
+				if tbb_imp /= Void and then tbb_imp.pixmap /= Void then
+					has_pixmap := True
+				end
+				i := i + 1
+			end
+			
+			if has_text and has_pixmap then
+				if has_vertical_button_style then
+					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+				else
+					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+				end
+			elseif has_text then
+				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
+			else
+				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+			end
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
+		end	
 
 	insertion_position: INTEGER is
 			-- `Result' is index - 1 of item beneath the
@@ -120,34 +153,11 @@ feature -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
-			a_pixmapable: EV_PIXMAPABLE_IMP
-			a_textable: EV_TEXTABLE_IMP
-			a_style: INTEGER
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
-			--feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
-			if count = 0 then
-				a_pixmapable ?= v_imp
-				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (visual_widget)
-				if a_pixmapable /= Void and then a_pixmapable.pixmap /= Void then
-					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
-				end
-				a_textable ?= v_imp
-				if a_textable /= Void and then not a_textable.text.is_equal ("") then
-					if a_style = feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum  then
-						if has_vertical_button_style then
-							a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
-						else
-							a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
-						end
-					else
-						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
-					end
-				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
-			end	
+			update_toolbar_style
 			add_radio_button (v)
 			child_array.go_i_th (i)
 			child_array.put_left (v)

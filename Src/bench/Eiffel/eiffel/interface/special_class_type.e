@@ -337,13 +337,14 @@ feature -- IL code generation
 			l_native_array: ATTRIBUTE_I
 		do
 				-- Get `native_array' field info.
-			l_native_array ?= associated_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Native_array_name_id)
+			l_native_array ?= associated_class.feature_table.item_id (
+				feature {PREDEFINED_NAMES}.Native_array_name_id)
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end
 			
 				-- Load `native_array' on stack.
-			Il_generator.generate_attribute (associated_class.is_single, special_type, l_native_array.feature_id)
+			Il_generator.generate_attribute (True, special_type, l_native_array.feature_id)
 		end
 
 	generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is

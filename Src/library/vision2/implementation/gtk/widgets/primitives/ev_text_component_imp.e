@@ -37,31 +37,31 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable
 		do
-			Result := C.c_gtk_editable_editable (c_object) /= 0
+			Result := C.c_gtk_editable_editable (entry_widget) /= 0
 		end
 
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_text_get_point (c_object) + 1
+			Result := C.gtk_text_get_point (entry_widget) + 1
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := C.c_gtk_editable_has_selection (c_object) /= 0
+			Result := C.c_gtk_editable_has_selection (entry_widget) /= 0
 		end
 
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := C.c_gtk_editable_selection_start (c_object) + 1
+			Result := C.c_gtk_editable_selection_start (entry_widget) + 1
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := C.c_gtk_editable_selection_end (c_object)
+			Result := C.c_gtk_editable_selection_end (entry_widget)
 		end
 
 feature -- status settings
@@ -70,13 +70,13 @@ feature -- status settings
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
-			C.gtk_editable_set_editable (c_object, flag)
+			C.gtk_editable_set_editable (entry_widget, flag)
 		end
 
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			C.gtk_text_set_point (c_object, pos - 1)
+			C.gtk_text_set_point (entry_widget, pos - 1)
 		end
 
 feature -- Resizing
@@ -93,25 +93,25 @@ feature -- Basic operation
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
 		do
-			C.gtk_editable_select_region (c_object, start_pos - 1, end_pos)
+			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
 		end	
 
 	select_all is
 			-- Select all the text.
 		do
-			C.gtk_editable_select_region (c_object, 0, text_length)
+			C.gtk_editable_select_region (entry_widget, 0, text_length)
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			C.gtk_editable_select_region (c_object, 0, 0)
+			C.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			C.gtk_editable_delete_selection (c_object)
+			C.gtk_editable_delete_selection (entry_widget)
 		end
 
 	cut_selection is
@@ -121,7 +121,7 @@ feature -- Basic operation
 			-- If the `selectd_region' is empty, it does
 			-- nothing.
 		do
-			C.gtk_editable_cut_clipboard (c_object)
+			C.gtk_editable_cut_clipboard (entry_widget)
 		end
 
 	copy_selection is
@@ -130,7 +130,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			C.gtk_editable_copy_clipboard (c_object)
+			C.gtk_editable_copy_clipboard (entry_widget)
 		end
 
 	paste (index: INTEGER) is
@@ -143,29 +143,16 @@ feature -- Basic operation
 		do
 			pos := position
 			set_position (index)
-			C.gtk_editable_paste_clipboard (c_object)
+			C.gtk_editable_paste_clipboard (entry_widget)
 			set_position (pos)
 		end
 
-feature -- Event - command association
-
---	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---			-- Add 'cmd' to the list of commands to be executed 
---			-- when the text of the widget have changed.
---		do
---		--	add_command (c_object, "changed", cmd, arg, default_pointer)
---		end
-
-feature -- Event -- removing command association
-
---	remove_change_commands is
---			-- Empty the list of commands to be executed
---			-- when the text of the widget have changed.
---		do
---		--	remove_commands (c_object, changed_id)
---		end
-
 feature {EV_ANY_I} -- Implementation
+
+	entry_widget: POINTER is
+			-- Pointer to the gtkeditable widget.
+		deferred
+	end
 
 	interface: EV_TEXT_COMPONENT
 
@@ -192,6 +179,9 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/08 21:40:42  king
+--| Made implementation refer to entry_widget insetad of c_object
+--|
 --| Revision 1.18  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

@@ -69,7 +69,7 @@ rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 	array = emalloc((uint32)typres);		/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
-	(egc_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
+	(egc_arrmake)(array, (EIF_INTEGER) 0, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(char **) array;			/* Get the area of the ARRAY */
 	epush (&loc_stack, (char *) &sp);		/* Protect the area */
 
@@ -136,7 +136,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	array = emalloc((uint32)typres);	/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
-	(egc_arrmake)(array, 1L, stripped_nbr);	
+	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 
 	sp = *(char **) array;		/* Get the area of the ARRAY */
@@ -221,9 +221,9 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 	string = emalloc(egc_str_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &string); /* Protect address in case it moves */
 	nstcall = 0;
-	(egc_strmake)(string, len);		/* Call feature `make' in class STRING */
+	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
-	(egc_strset)(string, len);		/* Call feature `set_count' in STRING */
+	(egc_strset)(string, (EIF_INTEGER) len);		/* Call feature `set_count' in STRING */
 
 	/* Copy C string `s' in special object `area' of the new string
 	 * descriptor `string'. We know the `area' is the very first reference

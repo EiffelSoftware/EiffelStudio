@@ -37,7 +37,7 @@ typedef struct {			/* Acknowledgment */
 
 typedef struct {			/* Position in program execution flow */
 	char *wh_name;			/* Feature name */
-	rt_int_ptr wh_obj;		/* Object address (can't use (char *) with XDR) */
+	rt_uint_ptr wh_obj;		/* Object address (can't use (char *) with XDR) */
 	int wh_origin;			/* Where feature comes from */
 	int wh_type;			/* Dynamic type of Current */
 	int wh_offset;			/* Offset within byte code (-1 if none) */

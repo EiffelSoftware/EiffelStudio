@@ -415,11 +415,13 @@ feature -- Plug and Makefile file
 			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
-			to_c_feat, set_count_feat, set_make_feat: FEATURE_I
+			to_c_feat, str_make_feat, set_count_feat: FEATURE_I
+			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			dispose_name, str_make_name, init_name, exp_init_name, set_count_name, to_c_name: STRING
+			dispose_name, str_make_name, init_name, exp_init_name, count_name,
+			set_count_name, to_c_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			correct_mismatch_name: STRING
 			special_cl: SPECIAL_B
@@ -471,15 +473,22 @@ feature -- Plug and Makefile file
 			buffer.putstring ("();%N")
 
 				-- Make string declaration
-			set_count_feat := string_cl.feature_table.item_id (Names_heap.set_count_name_id)
-			set_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
-			str_make_name := clone (Encoder.feature_name (id, set_make_feat.body_index))
-			set_count_name := clone (Encoder.feature_name (id, set_count_feat.body_index))
+			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
+			str_make_name := clone (Encoder.feature_name (id, str_make_feat.body_index))
 			buffer.putstring ("extern void ")
 			buffer.putstring (str_make_name)
-			buffer.putstring ("();%Nextern void ")
-			buffer.putstring (set_count_name)
 			buffer.putstring ("();%N")
+			if final_mode then
+				count_feat ?= string_cl.feature_table.item_id (Names_heap.count_name_id)
+				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
+			else
+				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
+				set_count_name := clone (Encoder.feature_name (id, set_count_feat.body_index))
+				buffer.putstring ("extern void ")
+				buffer.putstring (set_count_name)
+				buffer.putstring ("();%N")
+			end
+
 			if system.has_separate then
 				to_c_feat := string_cl.feature_table.item_id (Names_heap.to_c_name_id)
 				to_c_name := clone (Encoder.feature_name (id, to_c_feat.body_index))
@@ -593,10 +602,21 @@ feature -- Plug and Makefile file
 			buffer.putstring (arr_make_name)
 			buffer.putstring (";%N")
 
-				--Pointer on `set_count' of class STRING
-			buffer.putstring ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
-			buffer.putstring (set_count_name)
-			buffer.putstring (";%N")
+			if final_mode then
+					-- Offset from top of STRING object to access `count' attribute of class STRING
+				buffer.putstring ("%Tegc_str_count_offset = ")
+				string_cl.types.first.skeleton.generate_offset (buffer, count_feat.feature_id, False)
+				buffer.putstring (";%N")
+
+					-- Offset from top of STRING object to access `internal_hash_code' attribute of class STRING
+				buffer.putstring ("%Tegc_str_hash_offset = ")
+				string_cl.types.first.skeleton.generate_offset (buffer, internal_hash_code_feat.feature_id, False)
+				buffer.putstring (";%N")
+			else
+				buffer.putstring ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
+				buffer.putstring (set_count_name)
+				buffer.putstring (";%N")
+			end
 
 				--Pointer on `set_rout_disp' of class ROUTINE
 			if set_rout_disp_name /= Void then
@@ -744,7 +764,7 @@ feature -- Plug and Makefile file
 			buffer.putstring ("%Tegc_platform_level = 0x00000D00;%N}%N")
 			buffer.end_c_specific_code
 
-			create plug_file.make_c_code_file (gen_file_name (final_mode, Eplug));
+			create plug_file.make_c_code_file (x_gen_file_name (final_mode, Eplug));
 			plug_file.put_string (buffer)
 			plug_file.close
 		end

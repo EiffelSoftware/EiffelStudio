@@ -294,6 +294,9 @@ feature
 			generate_rescue;
 				-- End of C function
 			generated_file.putstring ("EDCX%N");
+			if is_once and then context.result_used then
+				generated_file.putstring ("#undef Result%N");
+			end
 			generated_file.exdent;
 			generated_file.putchar ('}');
 			generated_file.new_line;
@@ -349,12 +352,9 @@ feature
 				-- if they have already been generated. For instance, when
 				-- generating return for a once function, hooks have not
 				-- been generated.
+			type_i := real_type (result_type);
 			finish_compound;
 			if not result_type.is_void then
-				if is_once and then context.result_used then
-						generated_file.putstring ("*PResult = Result;");
-						generated_file.new_line;
-				end;
 				generated_file.putstring ("return ");
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
@@ -366,7 +366,6 @@ feature
 					end;
 					generated_file.putchar (';');
 				else
-					type_i := real_type (result_type);
 					type_i.c_type.generate_cast (generated_file);
 					generated_file.putstring ("0;");
 				end;
@@ -661,6 +660,7 @@ feature
 					generated_file.new_line;
 				end;
 			end;
+
 				-- Onces are processed via keys. We store a pointer to
 				-- Result (or something !=0 if void) to indicate whether
 				-- the once was processed or not. If processed, we'll get
@@ -672,12 +672,7 @@ feature
 				real_type (result_type).c_type.generate (generated_file);
 				generated_file.putstring ("*PResult = (");
 				real_type (result_type).c_type.generate (generated_file);
-				generated_file.putstring ("*) 0;");
-				generated_file.new_line;
-				generated_file.putstring ("EIF_ONCE_TYPE *key = EIF_once_keys + EIF_oidx_off + ");
-				generated_file.putint (context.once_index);
-				generated_file.putchar (';');
-				generated_file.new_line;
+				generated_file.putstring ("*) 0;%N");
 			end;
 
 				-- Generate temporary non-reference locals declarations

@@ -61,7 +61,7 @@ feature
 			-- never true
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.put_string ("NONE");

@@ -87,7 +87,7 @@ feature
 			Result := clone (Current);
 		end;
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			bits_s: BITS_SYMBOL_A
 		do

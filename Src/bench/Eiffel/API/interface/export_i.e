@@ -75,7 +75,7 @@ feature -- Debug purpose
 
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		deferred
 		end;
 

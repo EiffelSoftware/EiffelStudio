@@ -12,12 +12,12 @@ creation
 feature
 
 
-	compute_new_name (f_name: STRING): FEATURE_NAME is
+	compute_new_name (f_name: STRING): FEATURE_NAME_B is
 			-- Compute new feature name
 		local
-			infix_as: INFIX_AS;
-			prefix_as: PREFIX_AS;
-			feature_name_id_as: FEAT_NAME_ID_AS
+			infix_as: INFIX_AS_B;
+			prefix_as: PREFIX_AS_B;
+			feature_name_id_as: FEAT_NAME_ID_AS_B
 		do
 			if (f_name.item (1) = '_') then
 				if (f_name.item (2) = 'i') then 
@@ -48,8 +48,8 @@ feature
 			found: BOOLEAN;
 			body_id: INTEGER;
 			feature_i: FEATURE_I;
-			feature_as: FEATURE_AS;
-			new_name: FEATURE_NAME
+			feature_as: FEATURE_AS_B;
+			new_name: FEATURE_NAME_B
 		do
 			!!adapter.make (a,d);
 			adapter.set_context_features (old_feat, new_feat);
@@ -88,6 +88,6 @@ feature
 		end;		
 			
 					
-	ast: FEATURE_AS;
+	ast: FEATURE_AS_B;
 
 end

@@ -16,13 +16,13 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	EIFFEL_LIST [TYPE]
+	EIFFEL_LIST_B [TYPE_B]
 		rename
 			make as basic_make,
 			copy as basic_copy
 		end
 
-	EIFFEL_LIST [TYPE]
+	EIFFEL_LIST_B [TYPE_B]
 		rename
 			make as basic_make
 		redefine
@@ -39,7 +39,7 @@ creation
 	
 feature 
 
-	argument_names: EIFFEL_LIST [ID_AS];
+	argument_names: EIFFEL_LIST_B [ID_AS_B];
 			-- Argument names
 
 	make (n: INTEGER) is
@@ -62,7 +62,7 @@ feature
 			argument_names := n;
 		end;
 
-	put_name (s: ID_AS; i: INTEGER) is
+	put_name (s: ID_AS_B; i: INTEGER) is
 			-- Record argument name `s'.
 		require
 			index_small_enough: i <= count;
@@ -77,7 +77,7 @@ feature
 		local
 			solved_type: TYPE_A;
 			associated_class: CLASS_C;
-			argument_name: ID_AS;
+			argument_name: ID_AS_B;
 			vtug: VTUG;
 			vtgg2: VTGG2;
 		do
@@ -141,7 +141,7 @@ feature
 			good_argument: not (associated_class = Void or f = Void);
 		local
 			solved_type: TYPE_A;
-			argument_name: ID_AS;
+			argument_name: ID_AS_B;
 			vtec1: VTEC1;
 			vtec2: VTEC2;
 		do

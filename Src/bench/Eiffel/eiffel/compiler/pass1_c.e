@@ -20,7 +20,7 @@ feature
 	execute is
 			-- Syntax analysis on `associated_class'
 		local
-			ast: CLASS_AS;
+			ast: CLASS_AS_B;
 			class_id: INTEGER;
 			temp: STRING
 		do

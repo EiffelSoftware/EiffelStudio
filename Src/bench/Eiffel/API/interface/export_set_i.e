@@ -204,7 +204,7 @@ feature
 			end;
 		end;
 	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			from
 				start;

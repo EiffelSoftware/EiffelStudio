@@ -4,7 +4,7 @@ class AST_SERVER
 
 inherit
 
-	SERVER [CLASS_AS]
+	SERVER [CLASS_AS_B]
 
 creation
 

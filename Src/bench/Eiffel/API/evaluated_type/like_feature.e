@@ -74,7 +74,7 @@ feature -- Primitives
 		local
 			origin_table: HASH_TABLE [FEATURE_I, INTEGER];
 			anchor_feature, orig_feat: FEATURE_I;
-			anchor_type: TYPE;
+			anchor_type: TYPE_B;
 		do
 			origin_table := feat_table.origin_table;
 			if System.current_class.id /= class_id then
@@ -218,7 +218,7 @@ end;
 						other_like_feat.feature_id = feature_id
 		end;
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			like_feat: LIKE_FEATURE
 		do

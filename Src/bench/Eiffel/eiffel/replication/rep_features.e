@@ -2,7 +2,7 @@ class REP_FEATURES
 
 inherit
 
-	EXTEND_TABLE [FEATURE_AS, INTEGER]
+	EXTEND_TABLE [FEATURE_AS_B, INTEGER]
 		rename
 			make as et_make
 		end;

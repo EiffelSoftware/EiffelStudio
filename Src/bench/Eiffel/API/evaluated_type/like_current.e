@@ -122,7 +122,7 @@ feature -- Primitives
 			Result := other.is_like_current
 		end;
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			like_c: LIKE_CURRENT
 		do

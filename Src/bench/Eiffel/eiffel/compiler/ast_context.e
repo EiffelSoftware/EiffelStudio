@@ -8,7 +8,7 @@ inherit
 		rename
 			make as extend_stack_make
 		export
-			{ACCESS_FEAT_AS} i_th
+			{ACCESS_FEAT_AS_B} i_th
 		end
 	SHARED_SERVER
 		undefine
@@ -403,7 +403,7 @@ feature
 
 feature -- Debugger
 
-	instruction_line: LINE [AST_EIFFEL];
+	instruction_line: LINE [AST_EIFFEL_B];
 			 -- List of instructions encountered sequentially in the compound.
 
 end

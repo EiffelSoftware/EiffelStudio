@@ -78,7 +78,7 @@ feature
 		local
 			read_info: READ_INFO;
 			is_feature, is_invariant: BOOLEAN;
-			feat: FEATURE_AS;
+			feat: FEATURE_AS_B;
 		do
 				-- Put `obj' in the index.
 			!!read_info;

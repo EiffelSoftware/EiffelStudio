@@ -32,7 +32,7 @@ feature {CASE_CLUSTER_INFO}
 		require
 			valid_classc: classc /= Void;
 		local
-			class_ast: CLASS_AS;
+			class_ast: CLASS_AS_B;
 			record_relation_com: CASE_RECORD_SUPPLIERS;
 			record_inherit_info_com: CASE_RECORD_INHERIT_INFO;
 			record_chart_info_com: CASE_RECORD_CHART_INFO

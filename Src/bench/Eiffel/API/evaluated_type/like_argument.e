@@ -51,7 +51,7 @@ feature -- Primitives
 			-- Check if the anchor type is still a non like type and
 			-- update `actual_type'.
 		local
-			argument_type: TYPE;
+			argument_type: TYPE_B;
 		do
 			if Like_control.is_on then
 				Like_control.raise_error
@@ -157,7 +157,7 @@ feature -- Primitives
 						other_like_arg.position = position
 		end;
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			other_like_arg: LIKE_ARGUMENT;
 		do

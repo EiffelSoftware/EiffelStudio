@@ -595,13 +595,13 @@ feature -- Conveniences
 			-- Do nothing
 		end;
 
-	type: TYPE is
+	type: TYPE_B is
 			-- Type of the feature
 		do
 			Result := Void_type
 		end;
 
-	set_type (t: TYPE) is
+	set_type (t: TYPE_B) is
 			-- Assign `t' to `type'.
 		do
 			-- Do nothing
@@ -613,7 +613,7 @@ feature -- Conveniences
 			-- No arguments
 		end;
 
-	argument_names: EIFFEL_LIST [ID_AS] is
+	argument_names: EIFFEL_LIST_B [ID_AS_B] is
 			-- Argument names
 		do
 			-- No argument names
@@ -725,7 +725,7 @@ feature -- Check
 --		do
 --		end;
 
-	body: FEATURE_AS is
+	body: FEATURE_AS_B is
 			-- Body of the feature
 		do
 			if is_code_replicated then
@@ -977,7 +977,7 @@ feature -- Signature checking
 				-- of `feat_table'.
 		local
 			arg_names: like argument_names;
-			arg_id: ID_AS;
+			arg_id: ID_AS_B;
 			vreg: VREG;
 			vrfa: VRFA;
 		do
@@ -1422,7 +1422,7 @@ end;
 			end;
 		end;
 
-	argument_position (arg_id: ID_AS): INTEGER is
+	argument_position (arg_id: ID_AS_B): INTEGER is
 			-- Position of argument `arg_id' in the list of arguments
 			-- of the current feature. 0 if none or not found.
 		require
@@ -1433,7 +1433,7 @@ end;
 			end;
 		end;
 
-	has_argument_name (arg_id: ID_AS): BOOLEAN is
+	has_argument_name (arg_id: ID_AS_B): BOOLEAN is
 			-- Has the current feature an argument named `arg_id" ?
 		do
 			if arguments /= Void then
@@ -1761,7 +1761,7 @@ feature -- Debug purpose
 
 feature -- PS
 
-	flat_names (target: CLASS_C; desc: FEATURE_AS): LINKED_LIST [STRING] is
+	flat_names (target: CLASS_C; desc: FEATURE_AS_B): LINKED_LIST [STRING] is
 			-- Flat name list of access id's found in
 			-- abstract syntax description `desc' in the context of
 			-- the target class `target'.
@@ -1861,7 +1861,7 @@ feature -- PS
 	stone (c: CLASS_C): FEATURE_STONE is
 		local
 			bd: INTEGER;
-			body_as: FEATURE_AS
+			body_as: FEATURE_AS_B
 		do
 			if body_index /= 0 then
 				body_as := body;
@@ -1931,7 +1931,7 @@ feature -- Debugging
 			eu: EXECUTION_UNIT;
 			new_body_id: INTEGER;
 			bc: BYTE_CODE;
-			fa: FEATURE_AS
+			fa: FEATURE_AS_B
 		do
 			!!Result;
 

@@ -6,7 +6,7 @@ class TMP_AST_SERVER
 
 inherit
 
-	SERVER [CLASS_AS]
+	SERVER [CLASS_AS_B]
 		rename
 			make as basic_make,
 			put as old_put
@@ -14,7 +14,7 @@ inherit
 			make_index, init_file
 		end;
 
-	SERVER [CLASS_AS]
+	SERVER [CLASS_AS_B]
 		redefine
 			put, make_index, make, init_file
 		select
@@ -55,7 +55,7 @@ feature
 			!!Result.make;
 		end;
 
-	put (t: CLASS_AS) is
+	put (t: CLASS_AS_B) is
 			-- Append object `t' in file ".TMP_AST".
 		do
 			index.clear_all;
@@ -81,7 +81,7 @@ feature
 		local
 			read_info: READ_INFO;
 			is_feature, is_invariant: BOOLEAN;
-			feat: FEATURE_AS;
+			feat: FEATURE_AS_B;
 		do
 			is_feature := is_feature_as ($obj);
 			is_invariant := is_invariant_as ($obj);

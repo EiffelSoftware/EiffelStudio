@@ -4,7 +4,7 @@ class AST_CACHE
 
 inherit
 
-	CACHE [CLASS_AS]
+	CACHE [CLASS_AS_B]
 
 creation
 

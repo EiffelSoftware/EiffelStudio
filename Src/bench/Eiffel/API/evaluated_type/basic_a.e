@@ -45,7 +45,7 @@ feature
 			Result := Current;
 		end;
 
-	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_B; class_id: INTEGER): TYPE_A is
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type;

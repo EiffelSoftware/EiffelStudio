@@ -12,10 +12,10 @@ inherit
 	
 feature
 
-	target: ACCESS_AS;
+	target: ACCESS_AS_B;
 			-- Target of attachment involved in the error
 
-	set_target (t: ACCESS_AS) is
+	set_target (t: ACCESS_AS_B) is
 			-- Assign `t' to `target'.
 		do
 			target := t;

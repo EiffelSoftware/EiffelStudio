@@ -17,7 +17,7 @@ feature
 	op_name: STRING;
 			-- Internal name of the infix/prefix feature
 
-	node: EXPR_AS;
+	node: EXPR_AS_B;
 			-- Binary or unary node
 
 	set_other_class (o: CLASS_C) is
@@ -32,7 +32,7 @@ feature
 			op_name := s;
 		end;
 
-	set_node (e: EXPR_AS) is
+	set_node (e: EXPR_AS_B) is
 			-- Assign `e' to `node'.
 		do
 			node := e;

@@ -25,17 +25,6 @@
 #include "networku.h"
 #endif
 
-/*
-
-rt_public bool_t idr_u_long(idrs, lp)
-IDR *idrs;
-unsigned long *lp;
-{
-	return idr_long(idrs, (long *) lp);
-}
-
-*/
-
 rt_public bool_t idr_u_long(IDR *idrs, long unsigned int *lp)
 {
 	/* Serialize a long byte */
@@ -89,7 +78,6 @@ rt_public bool_t idr_u_long(IDR *idrs, long unsigned int *lp)
 			lower = (unsigned long) ntohl(value);
 			idrs->i_ptr += 4;
 			bcopy(idrs->i_ptr, &value, 4);
-			upper = (unsigned long) ntohl(value);
 			idrs->i_ptr += 4;
 #if LNGSIZ == 4
 						/*if the data has come from a 8 byte */
@@ -99,6 +87,7 @@ rt_public bool_t idr_u_long(IDR *idrs, long unsigned int *lp)
 						/* assuming we do not send any longs between*/
 						/* 64 bit to 32 bit that are larger than 2^32 */
 #else
+			upper = (unsigned long) ntohl(value);
 						/* rejoin the upper and lower parts */ 
 
 			*lp = (lower & 0x00000000ffffffff) | (upper << 32);

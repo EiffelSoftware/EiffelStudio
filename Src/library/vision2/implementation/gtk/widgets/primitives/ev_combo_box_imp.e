@@ -31,7 +31,8 @@ inherit
 			set_text,
 			set_focus,
 			has_focus,
-			destroy
+			destroy,
+			on_key_event
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -44,7 +45,6 @@ inherit
 			gtk_reorder_child,
 			initialize,
 			make,
-			select_item,
 			selected,
 			add_to_container,
 			interface,
@@ -53,7 +53,9 @@ inherit
 			visual_widget,
 			set_focus,
 			has_focus,
-			destroy
+			destroy,
+			on_item_clicked,
+			on_key_event
 		end
 
 create
@@ -66,7 +68,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-
 			-- create of the gtk object.
 			set_c_object (C.gtk_event_box_new)
 			container_widget := C.gtk_combo_new
@@ -78,8 +79,8 @@ feature {NONE} -- Initialization
 
 			-- Pointer to the list of items.
 			list_widget := C.gtk_combo_struct_list (container_widget)
-			C.gtk_combo_disable_activate (container_widget)
-			C.gtk_combo_set_use_arrows_always (container_widget, 1)
+		--	C.gtk_combo_disable_activate (container_widget)
+			C.gtk_combo_set_use_arrows (container_widget, 0)
 		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
 			real_signal_connect (
 					entry_widget,
@@ -95,9 +96,9 @@ feature {NONE} -- Initialization
 			
 			create timer.make_with_interval (0)
 			timer.actions.extend (~launch_select_actions)
+			activate_id := C.gtk_combo_struct_activate_id (container_widget)
+			C.gtk_signal_handler_block (entry_widget, activate_id)
 		end
-
-	container_widget: POINTER
 
 	initialize is
 			-- Connect action sequences to signals.
@@ -114,51 +115,15 @@ feature {NONE} -- Initialization
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
-			selection_mode_is_single := True
 			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-in-event"), agent attain_focus)
 			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-out-event"), agent lose_focus)
-		end
-
-	avoid_callback: BOOLEAN
-		-- Flag used to avoid repeated emission of select signal from combo box.
-
-	select_callback (n: INTEGER; an_item: POINTER) is
-			-- Redefined to counter repeated select signal of combo box. 
-		do
-			if not avoid_callback then
-			--	Precursor (n, an_item)
-			 	if select_actions_internal /= Void and then select_actions_internal.count > 0 then
-				 	triggering_item ?= eif_object_from_c (
-						gtk_value_pointer (an_item)
-					)
-					timer.set_interval (1)
-			 	end
-				avoid_callback := True
-			else
-				avoid_callback := False
-			end
-		end
-
-	visual_widget: POINTER is
-		do
-			Result := c_object
-		end
-
-feature -- Access
-
-	select_item (an_index: INTEGER) is
-			-- Give the item of the list at the one-base index.
-		do
-			if selection_mode_is_single then
-				C.gtk_list_set_selection_mode (
+			temp_sig_id := c_signal_connect (
 					list_widget,
-					C.GTK_SELECTION_BROWSE_ENUM
-				)
-				selection_mode_is_single := False
-			end
-			C.gtk_list_select_item (list_widget, an_index - 1)
+					eiffel_to_c ("button-release-event"),
+					~on_button_released
+			)
 		end
-
+		
 feature -- Status report
 
 	has_focus: BOOLEAN is
@@ -268,13 +233,6 @@ feature {NONE} -- Implementation
 		local
 			imp: EV_LIST_ITEM_IMP
 		do
-			if not selection_mode_is_single then
-				C.gtk_list_set_selection_mode (
-					list_widget,
-					C.GTK_SELECTION_SINGLE_ENUM
-				)
-				selection_mode_is_single := True
-			end
 			imp ?= i_th (a_position).implementation
 			Precursor (a_position)
 			imp.set_parent_imp (Void)
@@ -304,6 +262,79 @@ feature {NONE} -- Implementation
 	
 	triggering_item: EV_LIST_ITEM_IMP
 	
+	container_widget: POINTER
+		-- Gtk combo struct
+	
+	activate_id: INTEGER
+		-- Activate event handler id
+
+	avoid_callback: BOOLEAN
+		-- Flag used to avoid repeated emission of select signal from combo box.
+
+	select_callback (n: INTEGER; an_item: POINTER) is
+			-- Redefined to counter repeated select signal of combo box. 
+		local
+			popwin: POINTER
+		do
+			if not avoid_callback then
+			--	Precursor (n, an_item)
+				if select_actions_internal /= Void and then select_actions_internal.count > 0 then
+				 	triggering_item ?= eif_object_from_c (
+						gtk_value_pointer (an_item)
+					)
+					timer.set_interval (1)
+				 	if not button_pressed then
+						popwin := C.gtk_combo_struct_popwin (container_widget)
+						C.gtk_widget_hide (popwin)
+						if ((
+							(C.gtk_object_struct_flags (visual_widget)
+							// C.GTK_HAS_GRAB_ENUM) \\ 2)
+							) = 1
+						then
+							C.gtk_grab_remove (popwin)
+							C.gdk_pointer_ungrab (0)
+						end
+					end
+			 	end
+				avoid_callback := True
+			else
+				avoid_callback := False
+			end
+		end
+
+	visual_widget: POINTER is
+		do
+			Result := c_object
+		end
+
+	on_button_released is
+		do
+			button_pressed := False
+		end
+		
+	button_pressed: BOOLEAN
+	
+
+	on_item_clicked is
+		do
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+			button_pressed := True
+		end
+		
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+		local
+			success: BOOLEAN
+		do
+			if 
+				a_key /= Void and then a_key.Key_down = a_key.code
+			then
+					C.gtk_signal_handler_unblock (entry_widget, activate_id)
+					success := C.gtk_widget_activate (entry_widget)
+					C.gtk_signal_handler_block (entry_widget, activate_id)
+			end
+			Precursor (a_key, a_key_string, a_key_press)
+		end
+	
 	launch_select_actions is
 			-- 
 		do
@@ -323,24 +354,6 @@ feature {NONE} -- Implementation
 			Precursor
 		end
 		
-	switch_to_single_mode_if_necessary is
-			-- Change selection mode if the last selected item is deselected.
-		do
-			if not selection_mode_is_single then
-				C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
-				selection_mode_is_single := True
-			end
-		end
-		
-	switch_to_browse_mode_if_necessary is
-			-- Change selection mode to browse mode if necessary.
-		do
-			if selection_mode_is_single then
-				C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_browse_enum)
-				selection_mode_is_single := False
-			end
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX
@@ -368,6 +381,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2001/07/05 21:26:11  etienne
+--| Fixed problem in combo boxes `select_actions' and made combo boxes expandable by using the keyboard.
+--|
 --| Revision 1.41  2001/06/19 22:40:12  etienne
 --| Added test to check if select_actions are void before the 1 ms timer is triggered in `select_callback'.
 --| This was needed to solve a problem in EiffelStudio: an item was added to a combo box and then an action to its `select_actions'. This triggered the action because it was in the action sequence when the 1 ms delay was out.

@@ -20,10 +20,12 @@ inherit
 			interface,
 			visual_widget,
 			initialize,
-			switch_to_single_mode_if_necessary,
-			switch_to_browse_mode_if_necessary,
 			has_focus,
-			add_to_container
+			add_to_container,
+			select_item,
+			deselect_item,
+			clear_selection,
+			on_item_clicked
 		end	
 create
 	make
@@ -111,6 +113,29 @@ feature -- Status setting
 			)
 		end
 		
+	select_item (an_index: INTEGER) is
+			-- Select the item of the list at the one-based
+			-- `index'.
+		do
+			switch_to_browse_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+		end
+		
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			switch_to_single_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+		end
+		
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			switch_to_single_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+		end
+
+		
 feature {EV_ANY_I} -- Implementation
 
 	visual_widget: POINTER is
@@ -121,6 +146,18 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_LIST
 	
 feature {NONE} -- Implementation
+
+	select_callback (n_args: INTEGER; args: POINTER) is
+			-- Called when a list item is selected.
+		local
+			l_item: EV_LIST_ITEM_IMP
+		do
+			switch_to_browse_mode_if_necessary		
+		 	l_item ?= eif_object_from_c (
+				gtk_value_pointer (args)
+			)
+			call_select_actions (l_item)
+		end
 
 	switch_to_single_mode_if_necessary is
 			-- Change selection mode if the last selected
@@ -251,6 +288,16 @@ feature {NONE} -- Implementation
 						+ C.gdk_button3_mask_enum
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
 		end	
+
+	on_item_clicked is
+			-- One of the item has been clicked.
+		do
+			Precursor
+			switch_to_browse_mode_if_necessary
+		end
+
+	selection_mode_is_single:BOOLEAN
+
 		
 end -- class EV_LIST_IMP
 
@@ -275,6 +322,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2001/07/05 21:26:11  etienne
+--| Fixed problem in combo boxes `select_actions' and made combo boxes expandable by using the keyboard.
+--|
 --| Revision 1.49  2001/06/29 22:28:07  king
 --| Added ensure_i_th_visible
 --|

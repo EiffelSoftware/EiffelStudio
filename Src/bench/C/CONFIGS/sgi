@@ -1,14 +1,6 @@
 #!/bin/sh
 #
-# This file was produced by running the Configure script. It holds all the
-# definitions figured out by Configure. Should you modify one of these values,
-# do not forget to propagate your changes by running "Configure -der". You may
-# instead choose to run each of the .SH files by yourself, or "Configure -S".
-#
-
-# Configuration time: Wed Dec 10 19:31:36 PST 1997
 # Configured by: manuelt
-# Target system: irix seattle 6.3 12161207 ip32 
 
 d_bsd='undef'
 d_eunice='undef'

@@ -16,6 +16,8 @@ inherit
 
 	FILE_PATHS
 
+	EV_COMMAND
+
 creation
 	make_with_title
 
@@ -24,12 +26,9 @@ feature {NONE} -- Initialization
 	make_with_title (par:EV_TREE_ITEM_HOLDER; classs, example: STRING) is
 			-- Create the item and the demo that
 			-- goes with it.
-		local
-			cmd: EV_ROUTINE_COMMAND
 		do
 			make_with_text (par, classs)
-			!! cmd.make (~activate)
-			add_select_command (cmd, Void)
+			add_select_command (Current, Void)
 			class_name := classs
 			example_name := example
 		end
@@ -96,12 +95,6 @@ feature -- Access
 			Result.set_background_color (color.white)
 		end
 
---	event_box: EV_LIST is
---			-- A list to display the events that occurs
---		once
---			!! Result.make (Void)
---		end
-
 	current_demo: CELL [DEMO_WINDOW] is
 			-- Demo currently in action
 		once
@@ -155,7 +148,7 @@ feature -- Basic operation
 
 feature {DEMO_ITEM} -- Execution commands
 
-	activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent

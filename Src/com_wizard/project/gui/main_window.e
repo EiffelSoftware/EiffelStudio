@@ -379,7 +379,7 @@ feature {NONE} -- State management
 					else
 						state := Ps_state
 					end
-				When Initial_eiffel_state then
+				when Initial_eiffel_state then
 					state := Idl_state
 				when Idl_state, Ps_state then
 					state := Final_state
@@ -484,17 +484,21 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			when Exit_string_constant then
 				destroy			
 			when Open_string_constant then
+				open_file_dialog.set_initial_directory (browse_directory)
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					open_project (open_file_dialog.file_name)
 				end
+				safe_browse_directory_from_dialog (open_file_dialog)
 				tool_bar.enable_button (Save_string_constant)
 				tool_bar.enable_button (Generate_string_constant)
 			when Save_string_constant then
+				save_file_dialog.set_initial_directory (browse_directory)
 				save_file_dialog.activate (Current)
 				if save_file_dialog.selected then
 					save_project (save_file_dialog.file_name)
 				end
+				safe_browse_directory_from_dialog (save_file_dialog)
 			When New_string_constant then
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
 				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
@@ -510,9 +514,13 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 		end
 
 	launch_help is
-			-- Launch Help			
+			-- Launch Help
+		local
+			tmp_help_path: STRING			
 		do
-			win_help ("eiffelcom.hlp", Help_finder, 0)
+			tmp_help_path := clone (get ("EIFFEL4"))
+			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
+			win_help (tmp_help_path, Help_finder, 0)
 		end
 
 	on_control_id_command (control_id: INTEGER) is
@@ -558,6 +566,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			rebar.reposition
 		end
 
+
 feature {NONE} -- Externals
 
 	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
@@ -573,7 +582,8 @@ feature {NONE} -- Externals
 invariant
 	
 	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
-				state = Final_state or state = Finished_state or state = Abort_state or state = First_state
+				state = Final_state or state = Finished_state or state = Abort_state or state = First_state or
+				state = Initial_eiffel_state
 
 end -- class MAIN_WINDOW
 

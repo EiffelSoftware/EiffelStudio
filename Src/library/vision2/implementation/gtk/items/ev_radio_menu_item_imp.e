@@ -32,8 +32,10 @@ feature {NONE} -- Initialization
 		do
 			dummy_item := gtk_radio_menu_item_new (Default_pointer)
 			widget := gtk_radio_menu_item_new (Default_pointer)
+			gtk_object_ref (widget)
+
 			gtk_radio_menu_item_set_group (widget,
-				gtk_radio_menu_item_group (dummy_item));
+			gtk_radio_menu_item_group (dummy_item));
 			set_state (False)
 			gtk_check_menu_item_set_show_toggle (widget, True)
 			initialize

@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			-- Create menu item
 		do
 			widget := gtk_check_menu_item_new
+			gtk_object_ref (widget)
+
 			gtk_check_menu_item_set_show_toggle (widget, True)
 			initialize
 			create_text_label (txt)

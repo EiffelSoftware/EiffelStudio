@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters, info.get_return_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters, info.get_return_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end

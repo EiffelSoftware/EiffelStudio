@@ -271,7 +271,7 @@ feature -- Obsolete
 		end
 
  	is_standard: BOOLEAN is True
- 			-- Is the font standard and information available (except for name) ?
+ 			-- Is the font standard and information available (except for name)?
 
 feature {EV_ANY_I} -- Access
 
@@ -289,7 +289,8 @@ feature {EV_FONTABLE_IMP} -- Access
 			wel_log_font.update_by_font (wel_font)
 			shape := convert_font_shape(wel_log_font.italic)
 			weight := convert_font_weight(wel_log_font.weight)
-			family := convert_font_family(wel_log_font.family, wel_log_font.pitch)
+			family := convert_font_family(wel_log_font.family,
+				wel_log_font.pitch)
 			preferred_face := clone(wel_log_font.face_name)
 		end
 
@@ -318,7 +319,7 @@ feature {NONE} -- Implementation
 		end
 
 	destroy is
-			-- Destroy WEL font.
+			-- Destroy `Current'.
 		do
 			wel_font.delete
 		end
@@ -400,10 +401,10 @@ feature {NONE} -- Implementation
 		end
 
 	internal_face_name: STRING
-		-- Font face name
+		-- Font face name.
 
 	internal_is_proportional: BOOLEAN
-		-- Is the font proportional? (or fixed)
+		-- Is the font proportional? (or fixed).
 
 	update_internal_is_proportional(logfont: WEL_LOG_FONT) is
 		do	
@@ -418,7 +419,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER): INTEGER is
+	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER):
+		INTEGER is
 			-- Calculate the width of the longest %N delimited string in
 			-- `str' on `dc' given there are `number_of_lines' lines
 		require
@@ -450,7 +452,8 @@ feature {NONE} -- Implementation
 
 	text_metrics: WEL_TEXT_METRIC is
 			-- Text metric object for current WEL font.
-			--| Used to get `ascent' and `descent'.
+			--| Used to get `ascent' and `descent', horizontal_resolution
+			--| and vertical_resolution.
 		local
 			sdc: WEL_SCREEN_DC
 		do
@@ -546,10 +549,12 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			loop
 				index := a_string.index_of ('%N', n)
 				if index > 0 then
-					extent := screen_dc.string_size (a_string.substring (n, index - 1))
+					extent := screen_dc.string_size (a_string.substring
+						(n,index - 1))
 					n := index + 1
 				else
-					extent := screen_dc.string_size (a_string.substring (n, a_string.count))
+					extent := screen_dc.string_size (a_string.substring
+						(n,a_string.count))
 					n := a_string.count + 1
 				end
 				cur_width := cur_width.max (extent.width)
@@ -560,7 +565,8 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			Result := [cur_width, cur_height]
 		end
 
-	string_width_and_height_ignore_new_line (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+	string_width_and_height_ignore_new_line (a_string: STRING):
+		TUPLE [INTEGER, INTEGER] is
 			-- [width, height] of `a_string'.
 			-- Treat `%N' as a character.
 		require
@@ -731,6 +737,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/05/01 23:37:11  rogers
+--| Column formatting.
+--|
 --| Revision 1.33  2000/05/01 23:30:01  rogers
 --| Implemented horizontal_resolution and vertical_resolution.
 --| Comments and formatting.
@@ -775,7 +784,9 @@ end -- class EV_FONT_IMP
 --| the retrieved font.
 --|
 --| Revision 1.21  2000/02/22 19:51:50  rogers
---| set_height in make now takes 15 as the argument for the font height as height is now measured in pixels rather than the previous implementation, using points.
+--| set_height in make now takes 15 as the argument for the font height as
+--| height is now measured in pixels rather than the previous implementation,
+--| using points.
 --|
 --| Revision 1.20  2000/02/21 20:02:39  pichery
 --| Changed implementation of EV_FONT under Windows. Now we only keep one
@@ -832,7 +843,8 @@ end -- class EV_FONT_IMP
 --| strngthened pre-condition on string width.
 --|
 --| Revision 1.16.6.2  1999/12/17 17:24:32  rogers
---| Altered to fit in with the review branch.Make procedures have been changed temporarily, not final.
+--| Altered to fit in with the review branch. Make procedures have been
+--| changed temporarily, not final.
 --|
 --| Revision 1.16.6.1  1999/11/24 17:30:18  oconnor
 --| merged with DEVEL branch

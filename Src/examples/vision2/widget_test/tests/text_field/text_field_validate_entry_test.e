@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that test EV_PASSWORD_FIELD."
+	description: "Objects that test EV_TEXT_FIELD."
 	date: "$Date$"
 	revision: "$Revision$"
 

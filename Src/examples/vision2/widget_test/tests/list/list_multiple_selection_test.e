@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that test EV_MULTI_COLUMN_LIST."
+	description: "Objects that test EV_LIST."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that test EV_FIXED."
+	description: "Objects that demonstrate z order in EV_FIXED."
 	date: "$Date$"
 	revision: "$Revision$"
 

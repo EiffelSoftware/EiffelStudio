@@ -63,10 +63,8 @@ feature
 			error := (creators = Void) or else creators.count /= 1;
 			if not error then
 				creators.start;
-				creat_feat := feature_table.item
-												(creators.key_for_iteration);
-				error := not creat_feat.same_signature
-												(Make_signature); 
+				creat_feat := feature_table.item (creators.key_for_iteration);
+				error := not creat_feat.same_signature (Make_signature); 
 			end;
 			if error then
 				!!special_error.make (Case_10, Current);

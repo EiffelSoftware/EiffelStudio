@@ -42,7 +42,7 @@ feature -- Adding a panel
 			-- Add `a_panel' to the list of all panels.
 		require
 			a_panel_not_void: a_panel /= Void
-			not_created: a_panel.destroyed
+			not_created: not a_panel.destroyed
 		do
 			extend (a_panel)
 		ensure

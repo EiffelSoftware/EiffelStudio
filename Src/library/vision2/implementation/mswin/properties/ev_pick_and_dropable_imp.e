@@ -382,12 +382,16 @@ feature {EV_ANY_I} -- Implementation
 				target := pointed_target
 					-- Retrieve `target'.
 				if target /= Void then
-					target.drop_actions.call ([pebble])
-						-- If there is a target then execute the drop
-						-- actions for `target'.
+					if target.drop_actions.accepts_pebble (pebble) then
+						target.drop_actions.call ([pebble])
+							-- If there is a target then execute the drop
+							-- actions for `target'.
 							
-					env.application.drop_actions.call ([pebble])
-						-- Execute drop_actions for the application.
+						env.application.drop_actions.call ([pebble])
+							-- Execute drop_actions for the application.
+					else
+						env.application.cancel_actions.call ([pebble])
+					end
 				end
 			else
 				env.application.cancel_actions.call ([pebble])

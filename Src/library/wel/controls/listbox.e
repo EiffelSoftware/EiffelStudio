@@ -394,6 +394,8 @@ feature {NONE} -- Implementation
 				on_lbn_selchange
 			elseif notification_code = Lbn_setfocus then
 				on_lbn_setfocus
+			else
+				default_process_notification (notification_code)
 			end
 		end
 

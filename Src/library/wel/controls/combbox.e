@@ -394,6 +394,8 @@ feature {NONE} -- Implementation
 				on_cbn_selendok
 			elseif notification_code = Cbn_setfocus then
 				on_cbn_setfocus
+			else
+				default_process_notification (notification_code)
 			end
 		end
 

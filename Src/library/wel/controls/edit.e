@@ -364,6 +364,8 @@ feature {NONE} -- Implementation
 				on_en_update
 			elseif notification_code = En_maxtext then
 				on_en_maxtext
+			else
+				default_process_notification (notification_code)
 			end
 		end
 

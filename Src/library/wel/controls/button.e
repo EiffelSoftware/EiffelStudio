@@ -63,6 +63,8 @@ feature {NONE} -- Implementation
 		do
 			if notification_code = Bn_clicked then
 				on_bn_clicked
+			else
+				default_process_notification (notification_code)
 			end
 		end
 

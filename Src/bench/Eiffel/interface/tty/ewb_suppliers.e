@@ -1,9 +1,15 @@
+indexing
+
+	description: 
+		"Displays suppliers of a class in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_SUPPLIERS
 
 inherit
 
-	EWB_CLASS
+	EWB_COMPILED_CLASS
 		rename
 			name as suppliers_cmd_name,
 			help_message as suppliers_help,
@@ -12,32 +18,16 @@ inherit
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature {NONE} -- Properties
 
-	display (c: CLASS_C) is
-		local
-			suppliers: SUPPLIER_LIST;
-			a_supplier: CLASS_C
-		do
-			output_window.put_string ("Suppliers of class ");
-			c.append_clickable_signature (output_window);
-			output_window.put_string (":%N%N");
-			from	
-				suppliers := c.suppliers;
-				suppliers.start;
-			until
-				suppliers.after
-			loop
-				a_supplier := suppliers.item.supplier;
-				if (c /= a_supplier) then
-					output_window.put_char ('%T');
-					a_supplier.append_clickable_signature (output_window);
-					output_window.new_line;
-				end;
-				suppliers.forth
-			end
+	associated_cmd: E_SHOW_SUPPLIERS is
+			-- Associated class command to be executed
+			-- after successfully retrieving the compiled
+			-- class
+		once
+			!! Result.do_nothing
 		end;
 
-end
+end -- class EWB_SUPPLIERS

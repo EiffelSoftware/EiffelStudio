@@ -1,66 +1,53 @@
+indexing
+
+	description: 
+		"Displays class text in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_TEXT 
 
 inherit
 
-	EWB_CMD
+	EWB_CLASS
 		rename
 			name as text_cmd_name,
 			help_message as text_help,
 			abbreviation as text_abb
 		redefine
-			loop_execute
+			process_uncompiled_class
 		end
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature -- Creation
+feature {NONE} -- Implementation
 
-	make (cn: STRING) is
+	associated_cmd: E_CLASS_CMD is
+			-- Associated class command to be executed
+			-- after successfully retrieving the compiled
+			-- class
 		do
-			class_name := cn;
-			class_name.to_lower;
+			check
+				not_be_called: false
+			end
 		end;
 
-	class_name: STRING;
-
-feature
-
-	loop_execute is
-		do
-			get_class_name;
-			class_name := last_input;
-			check_arguments_and_execute;
-		end;
-
-	execute is
+	process_uncompiled_class (class_i: CLASS_I) is
+			-- Display the class text.
 		local
-			class_i: CLASS_I
 			text: STRING;
 		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					class_i := Universe.unique_class (class_name);
-					if class_i /= Void then
-						text := class_i.stone.origin_text
-						if text /= Void then
-							output_window.put_string (text);
-							output_window.new_line;
-						else
-							output_window.put_string ("Cannot open ");
-							output_window.put_string (class_i.file_name);
-							output_window.new_line;
-						end;
-					else
-						output_window.put_string (class_name);
-						output_window.put_string (" is not in the universe%N");
-					end;
-				end;
+			text := class_i.stone.origin_text
+			if text /= Void then
+				output_window.put_string (text);
+				output_window.new_line;
+			else
+				output_window.put_string ("Cannot open ");
+				output_window.put_string (class_i.file_name);
+				output_window.new_line;
 			end;
 		end;
 
-end
+end -- class EWB_TEXT

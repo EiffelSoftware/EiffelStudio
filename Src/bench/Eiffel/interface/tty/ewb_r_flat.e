@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Displays routine flat in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_R_FLAT 
 
@@ -12,18 +18,15 @@ inherit
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature {NONE} -- Implementation
 
-	display (feature_i: FEATURE_I; class_c: CLASS_C) is
-		local
-			ctxt: FORMAT_FEAT_CONTEXT
-		do
-			!!ctxt.make (class_c);
-			ctxt.execute (feature_i);
-			output_window.put_string (ctxt.text.image);
-			output_window.new_line;
+	associated_cmd: E_SHOW_ROUTINE_FLAT is
+			-- Associated feature command to be executed
+			-- after successfully retrieving the feature_i
+		once
+			!! Result.do_nothing
 		end;
 
-end
+end -- class EWB_R_FLAT

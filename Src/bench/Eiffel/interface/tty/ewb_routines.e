@@ -1,9 +1,15 @@
+indexing
+
+	description: 
+		"Displays class's routines in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_ROUTINES 
 
 inherit
 
-	EWB_FORMAT
+	EWB_COMPILED_CLASS
 		rename
 			name as routines_cmd_name,
 			help_message as routines_help,
@@ -12,15 +18,16 @@ inherit
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature {NONE} -- Properties
 
-	criterium (f: FEATURE_I): BOOLEAN is
-		do
-			Result := any_criterium (f);
-			Result := Result and (not f.is_attribute);
-			Result := Result and (not f.is_constant)
-		end
+    associated_cmd: E_SHOW_ROUTINES is
+            -- Associated class command to be executed
+            -- after successfully retrieving the compiled
+            -- class
+        once
+			!! Result.do_nothing
+        end;
 
-end
+end -- class EWB_ROUTINES

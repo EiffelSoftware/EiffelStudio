@@ -9,16 +9,8 @@ class FONT_PREF_RES
 
 inherit
 	PREFERENCE_RESOURCE
-		rename
-			execute as pref_execute
-		redefine
-			associated_resource, validate
-		end;
-	PREFERENCE_RESOURCE
 		redefine
 			associated_resource, validate, execute
-		select
-			execute
 		end
 
 creation
@@ -160,7 +152,7 @@ feature -- Execution
 				font_box.popdown;
 				font_box.remove_ok_action (Current, fb_ok_action)
 			else
-				pref_execute (arg)
+				{PREFERENCE_RESOURCE} Precursor (arg)
 			end
 		end;
 

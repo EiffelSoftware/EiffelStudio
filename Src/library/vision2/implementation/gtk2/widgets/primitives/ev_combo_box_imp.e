@@ -89,20 +89,20 @@ feature {NONE} -- Initialization
 				set_text (a_selected_item.text)
 				a_selected_item_imp ?= a_selected_item.implementation
 				if a_selected_item_imp.select_actions_internal /= Void then
-					a_selected_item_imp.select_actions_internal.call (app_implementation.empty_tuple)
+					a_selected_item_imp.select_actions_internal.call (Void)
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call (app_implementation.empty_tuple)
+					select_actions_internal.call (Void)
 				end
 			else
 				set_text ("")
 			end
 			if previous_selected_item_imp /= Void then
 					if previous_selected_item_imp.deselect_actions_internal /= Void then
-						previous_selected_item_imp.deselect_actions_internal.call (app_implementation.empty_tuple)
+						previous_selected_item_imp.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call (app_implementation.empty_tuple)
+						deselect_actions_internal.call (Void)
 					end
 			end
 			previous_selected_item_imp := a_selected_item_imp

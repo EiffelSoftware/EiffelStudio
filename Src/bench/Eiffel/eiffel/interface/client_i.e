@@ -186,7 +186,6 @@ feature -- formatter
 		local
 			temp: STRING;
 			cluster: CLUSTER_I;
-			client_classc: CLASS_C;
 			client_classi: CLASS_I;
 		do
 			cluster := System.class_of_id (written_in).cluster;
@@ -198,12 +197,7 @@ feature -- formatter
 				temp := clone (clients.item)
 				client_classi := Universe.class_named (temp, cluster);
 				if client_classi /= Void then
-					client_classc := client_classi.compiled_class;
-					if client_classc /= Void then
-						ctxt.put_class_name (client_classc)
-					else
-						ctxt.put_classi_name (client_classi)
-					end
+					ctxt.put_classi (client_classi)
 				else
 					temp.to_upper;
 					ctxt.put_string (temp);

@@ -62,7 +62,7 @@ feature -- Format
 					ctxt.put_text_item (ti_Dashdash);
 					ctxt.put_space;
 					ctxt.put_comment_text ("from ");
-					ctxt.put_class_name (source_cl);
+					ctxt.put_classi (source_cl.lace_class);
 				end;
 				ctxt.indent; 
 				ctxt.new_line;

@@ -683,7 +683,7 @@ feature  -- Generation
 			end
 
 				--| End of the class	
-			Result.append ("%N%Nend")
+			Result.append ("%N%Nend -- class eiffel_type_to_upper%N")
 		end
 
 feature -- Arguments 

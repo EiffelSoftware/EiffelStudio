@@ -18,7 +18,7 @@ feature -- Labels names
 	l_Root_class_external_name: STRING is 	"Root class .NET name"
 	l_Selected_assemblies_name: STRING is	"Selected assemblies Name"
 	l_Version: STRING is 				"Version"
-	l_clr_version: STRING is			"Targeted CLR Version:"
+	l_clr_version: STRING is			"Targetted CLR Version:"
 
 feature -- Buttons names
 

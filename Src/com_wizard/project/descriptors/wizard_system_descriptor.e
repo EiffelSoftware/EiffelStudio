@@ -215,6 +215,7 @@ feature -- Basic operations
 				forth
 			end
 			progress_report.step
+			l_type_lib.release
 		end
 
 	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

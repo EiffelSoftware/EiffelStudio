@@ -38,7 +38,6 @@
 
 #ifdef EIF_WIN32
 #include <windows.h>
-#include "shword.h"
 #define EWB		"\\bin\\ec.exe -bench"	/* Ewb process within Eiffel dir */
 #elif defined EIF_VMS
 #include "ipcvms.h"	/* for ipcvms_get_progname() */
@@ -99,7 +98,7 @@ rt_public void init_bench(int argc, char **argv)
 	 * themselves. This new value is specified in the ISE_TIMEOUT
 	 * environment variable
 	 */
-
+	
 #ifdef EIF_WIN32
 	eif_timeout = win_eif_getenv ("ISE_TIMEOUT", "ec");
 #else
@@ -214,16 +213,18 @@ rt_public void init_bench(int argc, char **argv)
 	if (argc == 2) {
 			/* It means that we give as an extra parameter the project file to open
 			 * with EiffelBench */
-		strcat (ewb_path, " -project ");
+		strcat (ewb_path, " -project \"");
 		strcat (ewb_path, argv [1]);
+		strcat (ewb_path, "\"");
 	}
 	if ((argc >= 5) && (strcmp (argv[1], "-create")==0) && (strcmp (argv[3], "-ace")==0)) {
 			/* It means that we try to create a project from the command line or from
 			 * estudio or with EiffelBench */
-		strcat (ewb_path, " -create ");
+		strcat (ewb_path, " -create \"");
 		strcat (ewb_path, argv [2]);
-		strcat (ewb_path, " -ace ");
+		strcat (ewb_path, "\" -ace \"");
 		strcat (ewb_path, argv [4]);
+		strcat (ewb_path, "\"");
 	}
 	if ((argc >= 6) && strcmp (argv[5], "-compile") == 0) {
 			/* It means that we try to compile a project from the command line or from
@@ -486,19 +487,107 @@ void display_splash(void)
 	DeleteDC (dc);
 }
 
+rt_private void shword(char *cmd, int *argc, char ***argvp)
+{
+	/* Break the shell command held in 'cmd', putting each shell word
+	 * in a separate array entry, hence building an argument
+	 * suitable for the execvp() system call.
+	 */
+
+	int quoted = 0;	/* parsing inside a quoted string? */
+	int nbs;		/* number of backspaces */
+	int i;
+	char *p = NULL, *pe = NULL;	/* pointers in `cmd' */
+	char *qb = NULL, *q = NULL;	/* pointers in arguments */
+
+	/* Remove leading and trailing white spaces */
+	for (p = cmd; *p == ' ' || *p == '\t'; p++)
+		; /* empty */
+	for (pe = p + strlen(p) - 1; pe >= p && (*pe == ' ' || *pe == '\t'); pe--)
+		; /* empty */
+
+	if (p <= pe) {
+
+		*argc = *argc + 1;	/* at least one argument */
+
+		qb = q = malloc(pe - p + 2);
+		if (!qb)
+			return;
+
+		do {
+			switch(*p) {
+				case ' ':
+				case '\t':
+					if (quoted)
+						do {
+							*q++ = *p++; 
+						} while(*p == ' ' || *p == '\t');
+					else {
+						do {
+							p++;
+						} while(*p == ' ' || *p == '\t');
+						*q++ = '\0';
+						*argc = *argc + 1;
+					}
+					break;
+				case '\"':
+					quoted = ! quoted;
+					p++;
+					break;
+				case '\\':
+					for (nbs = 0; *p == '\\'; nbs++)
+						*q++ = *p++;
+					if (*p == '\"') {
+						if (nbs % 2) {	/* odd number of backslashes */
+							q -= (nbs + 1) / 2;
+							*q++ = *p++;
+						}
+						else {			/* even number of backslashes */
+							quoted = ! quoted;
+							q -= nbs / 2;
+							p++;
+						}
+					}
+					break;
+				default:
+					*q++ = *p++;
+			}
+		} while (p <= pe);
+		*q++ = '\0';
+	}
+
+	if (!argvp) {
+		free(qb);
+		return;
+	}
+
+	*argvp = (char **) malloc ((*argc + 1) * sizeof(char *));
+	if (!(*argvp)) {
+		free(qb);
+		return;
+	}
+
+	for (i = 0; i < *argc; i++) {
+		(*argvp)[i] = qb;
+		qb += strlen(qb) + 1;
+	}
+	(*argvp)[i] = (char *)0;
+
+}
+
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
 /* Initialize Estudio, launch ec and establish communications */
 
-	int argc;
-	char **argv;
+	int argc = 0;
+	char **argv = NULL;
 	char *tmp = strdup (GetCommandLine());	/* Cannot use lpszCmdLine since we need the
 												application name */
 
 	hInst = hInstance;
 	display_splash ();
 
-	argv = shword (tmp);	/* Create from the string returned by GetCommandLine,
+	shword (tmp, &argc, &argv);	/* Create from the string returned by GetCommandLine,
 								an array of string */
 
 		/* Count the number of elements in argv */
@@ -506,6 +595,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 		;
 
 	init_bench (argc, argv);
+
+	free (argv);
 	return 0L;
 }
 

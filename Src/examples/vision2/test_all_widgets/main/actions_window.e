@@ -29,9 +29,9 @@ feature -- Access
 
 feature -- Initialization
 	
-	make_with_main_widget (main_widget: EV_WIDGET) is
+	make_with_main_widget (par: EV_WINDOW; main_widget: EV_WIDGET) is
 		do
-			make
+			make (par)
 			active_widget := main_widget
 			set_widgets
 			set_values

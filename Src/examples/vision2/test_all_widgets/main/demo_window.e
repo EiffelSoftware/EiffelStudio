@@ -36,8 +36,9 @@ feature --Access
 	
 feature -- Initialization
 	
-	make is
+	make (par: EV_WINDOW) is
 		do
+			parent := par
 		end
 	
 feature -- Status setting
@@ -58,11 +59,11 @@ feature -- Command executing
 	
 	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]) is
 		do
-			parent_make
+			parent_make (parent) 
 			set_widgets
 			set_values
 			show
-			!!actions_window.make_with_main_widget (main_widget)
+			!!actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
 			argument.first.set_insensitive (True)
 			set_delete_command (argument.first)

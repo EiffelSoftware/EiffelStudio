@@ -14,7 +14,7 @@ inherit
 
 	EV_WINDOW
 		redefine	
-			make
+			make_top_level
 		end
 	
 	EV_COMMAND
@@ -22,7 +22,7 @@ inherit
 
 creation
 
-	make
+	make_top_level
 
 feature --Access
 	
@@ -33,31 +33,30 @@ feature --Access
 	
 feature -- Initialization
 	
-	make is
+	make_top_level is
 		local
 			b: MAIN_WINDOW_BUTTON
 			c1: LABEL_DEMO_WINDOW
 			c2: FIXED_DEMO_WINDOW
 			c3: BOX_DEMO_WINDOW
-			c4: NOTEBOOK_DEMO_WINDOW
+--			c4: NOTEBOOK_DEMO_WINDOW
 			c5: TEXT_FIELD_DEMO_WINDOW
 			c6: TEXT_AREA_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
 			
-			
-			!!c1.make
-			!!c2.make
-			!!c3.make
-			!!c4.make
-			!!c5.make
-			!!c6.make
+			!!c1.make (Current)
+			!!c2.make (Current)
+			!!c3.make (Current)
+--			!!c4.make (Current)
+			!!c5.make (Current)
+			!!c6.make (Current)
 			
 			!!b.make_button (Current, "Label", c1)
 			!!b.make_button (Current, "Fixed", c2)
 			!!b.make_button (Current, "Box", c3)
-			!!b.make_button (Current, "Notebook", c4)
+--			!!b.make_button (Current, "Notebook", c4)
 			!!b.make_button (Current, "Text field", c5)
 			!!b.make_button (Current, "Text area", c6)
 			

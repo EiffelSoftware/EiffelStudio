@@ -90,7 +90,7 @@ feature
 			file_name_exists: file_name /= Void;
 		local
 			f: INDENT_FILE;
-		do	
+		do
 			!!f.make (file_name);
 			f.open_write;
 

@@ -17,12 +17,10 @@ inherit
 			is_equal
 		end
 
-
 creation
 
 	make
 
-	
 feature 
 
 	pattern_id: PATTERN_ID;

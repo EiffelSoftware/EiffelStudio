@@ -10,6 +10,9 @@ deferred class
 inherit
 	
 	GB_CONSTANTS
+		export {NONE}
+			all
+		end
 
 feature {NONE} -- Implementation
 

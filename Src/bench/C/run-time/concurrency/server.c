@@ -159,7 +159,7 @@ EIF_OBJ s1;
 	 */
 	if (Dtype(s1) != _concur_sep_obj_dtype) {
 		add_nl;
-		sprintf(crash_info, "    The object(whose Dtype is %d) is not a separate object(whose Dtype is: %d).", Dtype(s1), _concur_sep_obj_dtype);
+		sprintf(crash_info, CURIMPERR26, Dtype(s1), _concur_sep_obj_dtype);
 		c_raise_concur_exception(exception_invalid_separate_object);
 	}
 	return hostaddr_of_sep_obj(s1) == _concur_hostaddr && pid_of_sep_obj(s1) == _concur_pid;
@@ -437,85 +437,85 @@ EIF_INTEGER cmd;
 /* given a request's code, return the name of the request in text. */
 	switch (cmd) {
 	case constant_reserve:
-		strcpy(_concur_command_text, " RESERVE_SEP_OBJ ");
+		strcpy(_concur_command_text, CURPROMPT9);
 		return _concur_command_text;
 	case constant_reserve_ack:
-		strcpy(_concur_command_text, " ACKNOWLEDGE_TO_RESERVE_SEP_OBJ ");
+		strcpy(_concur_command_text, CURPROMPT10);
 		return _concur_command_text;
 	case constant_reserve_fail:
-		strcpy(_concur_command_text, " REJECT_TO_RESERVE_SEP_OBJ ");
+		strcpy(_concur_command_text, CURPROMPT11);
 		return _concur_command_text;
 	case constant_register_first_from_parent:
-		strcpy(_concur_command_text, " REGISTER_FIRST_FROM_PARENT "); 
+		strcpy(_concur_command_text, CURPROMPT12); 
 		return _concur_command_text;
 	case constant_register:
-		strcpy(_concur_command_text, " REGISTER "); 
+		strcpy(_concur_command_text, CURPROMPT13); 
 		return _concur_command_text;
 	case constant_register_ack:
-		strcpy(_concur_command_text, " REGISTER_ACK "); 
+		strcpy(_concur_command_text, CURPROMPT14); 
 		return _concur_command_text;
 	case constant_register_ack_with_root_oid:
-		strcpy(_concur_command_text, " REGISTER_ACK_WITH_ROOT_OID "); 
+		strcpy(_concur_command_text, CURPROMPT15); 
 		return _concur_command_text;
 	case constant_unregister:
-		strcpy(_concur_command_text, " UNREGISTER "); 
+		strcpy(_concur_command_text, CURPROMPT16); 
 		return _concur_command_text;
 	case constant_release:
-		strcpy(_concur_command_text, " RELEASE "); 
+		strcpy(_concur_command_text, CURPROMPT17); 
 		return _concur_command_text;
 	case constant_query_result:
-		strcpy(_concur_command_text, " QUERY_RESULT "); 
+		strcpy(_concur_command_text, CURPROMPT18); 
 		return _concur_command_text;
 	case constant_ack_for_procedure:
-		strcpy(_concur_command_text, " ACKNOWLEDGE_FOR_PROCEDURE "); 
+		strcpy(_concur_command_text, CURPROMPT19); 
 		return _concur_command_text;
 	case constant_middle_result_of_importation:
-		strcpy(_concur_command_text, " MIDDLE_RESULT_OF_IMPORTATION "); 
+		strcpy(_concur_command_text, CURPROMPT20); 
 		return _concur_command_text;
 	case constant_create_sep_obj:
-		strcpy(_concur_command_text, " CREATE_SEP_OBJ "); 
+		strcpy(_concur_command_text, CURPROMPT21); 
 		return _concur_command_text;
 	case constant_creation_feature_parameter:
-		strcpy(_concur_command_text, " CREATION_FEATURE_PARAMETER "); 
+		strcpy(_concur_command_text, CURPROMPT22); 
 		return _concur_command_text;
 	case constant_end_of_request:
-		strcpy(_concur_command_text, " END_OF_REQUEST "); 
+		strcpy(_concur_command_text, CURPROMPT23); 
 		return _concur_command_text;
 	case constant_sep_child:
-		strcpy(_concur_command_text, " CONNECTION_FROM_SEP_CHILD "); 
+		strcpy(_concur_command_text, CURPROMPT24); 
 		return _concur_command_text;
 	case constant_sep_child_info:
-		strcpy(_concur_command_text, " INFORMATION_FROM_SEP_CHILD "); 
+		strcpy(_concur_command_text, CURPROMPT25); 
 		return _concur_command_text;
 	case constant_message_ack:
-		strcpy(_concur_command_text, " MESSAGE_ACK "); 
+		strcpy(_concur_command_text, CURPROMPT26); 
 		return _concur_command_text;
 	case constant_execute_procedure:
-		strcpy(_concur_command_text, " EXECUTE_PROCEDURE "); 
+		strcpy(_concur_command_text, CURPROMPT27); 
 		return _concur_command_text;
 	case constant_execute_query:
-		strcpy(_concur_command_text, " EXECUTE_QUERY "); 
+		strcpy(_concur_command_text, CURPROMPT28); 
 		return _concur_command_text;
 	case constant_query_result_ack:
-		strcpy(_concur_command_text, " QUERY_RESULT_ACK "); 
+		strcpy(_concur_command_text, CURPROMPT29); 
 		return _concur_command_text;
 	case constant_report_error:
-		strcpy(_concur_command_text, " REPORT_ERROR "); 
+		strcpy(_concur_command_text, CURPROMPT30); 
 		return _concur_command_text;
 	case constant_stop_execution:
-		strcpy(_concur_command_text, " STOP_EXECUTION "); 
+		strcpy(_concur_command_text, CURPROMPT31); 
 		return _concur_command_text;
 	case constant_start_sep_obj_ok:
-		strcpy(_concur_command_text, " START_SEP_OBJ_OK "); 
+		strcpy(_concur_command_text, CURPROMPT32); 
 		return _concur_command_text;
 	case constant_exit_ok:
-		strcpy(_concur_command_text, " EXIT_OK "); 
+		strcpy(_concur_command_text, CURPROMPT33); 
 		return _concur_command_text;
 	case constant_not_defined:
-		strcpy(_concur_command_text, " NOT_DEFINED "); 
+		strcpy(_concur_command_text, CURPROMPT34); 
 		return _concur_command_text;
 	default :
-		sprintf(_concur_command_text, " UNKNOWN COMMAND CODE(%d) ", cmd); 
+		sprintf(_concur_command_text, CURPROMPT35, cmd); 
 		return _concur_command_text;
 	}
 }
@@ -946,6 +946,9 @@ EIF_INTEGER s;
 	char send_buf[constant_command_buffer_len];
 	EIF_INTEGER send_data_len=0;
 	EIF_INTEGER tmp_len;
+	
+	float tmp_float;
+	double tmp_double;
 
 	c_concur_set_blocking(s);
 	gc_stop();
@@ -1014,7 +1017,8 @@ EIF_INTEGER s;
 				/* to send the EIF_REAL parameter's data length */
 				fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofreal);
 				/* to send the EIF_REAL parameter's value */
-				fill_buf(s, send_buf, send_data_len, &(_concur_paras[tmp].uval.real_val), constant_sizeofreal);
+				tmp_float = ise_htonf(_concur_paras[tmp].uval.real_val);
+				fill_buf(s, send_buf, send_data_len, &tmp_float, constant_sizeofreal);
 #ifdef DISP_MSG
 		printf(" len: %d, VAL: %f\n", constant_sizeofreal, _concur_paras[tmp].uval.real_val);
 #endif
@@ -1023,7 +1027,8 @@ EIF_INTEGER s;
 				/* to send the EIF_DOUBLE parameter's data length */
 				fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofdouble);
 				/* to send the EIF_DOUBLE parameter's value */
-				fill_buf(s, send_buf, send_data_len, &(_concur_paras[tmp].uval.double_val), constant_sizeofdouble);
+				tmp_double = ise_htond(_concur_paras[tmp].uval.double_val);
+				fill_buf(s, send_buf, send_data_len, &tmp_double, constant_sizeofdouble);
 #ifdef DISP_MSG
 		printf(" len: %d, VAL: %f\n", constant_sizeofdouble, _concur_paras[tmp].uval.double_val);
 #endif
@@ -2230,7 +2235,6 @@ void default_rescue() {
     RTSN;
 #ifdef WORKBENCH
     RTDA;
-    RTDT;
 #endif
     RTXD;
 	RTXI(0);
@@ -2390,10 +2394,10 @@ rescue:
 void print_run_time_error_message() {
 	EIF_INTEGER tmp;
 
-	printf("\n*************** Error Message of Running Concurrent Application ***************\n");
+	printf(CURPROMPT36);
 	for(tmp=0; tmp<_concur_para_num; tmp++) {
 		printf("%s", _concur_paras[tmp].str_val);
-	    printf("\n*******************************************************************************\n");
+			printf(CURPROMPT37);
 	}
 	
 	return;

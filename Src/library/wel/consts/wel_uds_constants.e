@@ -48,8 +48,8 @@ feature -- Access
 			-- Causes the control to exhibit "hot tracking" behavior. That 
 			-- is, it highlights the UP ARROW and DOWN ARROW on the control 
 			-- as the pointer passes over them. This style requires 
-			-- Microsoft® Windows® 98 or Windows® 2000. If the system is 
-			-- running Windows® 95 or Windows NT® 4.0, the flag is ignored. 
+			-- Microsoft Windows 98 or Windows 2000. If the system is 
+			-- running Windows 95 or Windows NT 4.0, the flag is ignored. 
 			-- To check whether hot tracking is enabled, call 
 			-- SystemParametersInfo. 
 			--

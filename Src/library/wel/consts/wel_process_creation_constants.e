@@ -24,7 +24,7 @@ feature -- Access
 		end
 
 	create_new_console: INTEGER is
-			-- New process has a new console, instead of inheriting parent’s console.
+			-- New process has a new console, instead of inheriting parent's console.
 		external
 			"C [macro <winbase.h>]"
 		alias

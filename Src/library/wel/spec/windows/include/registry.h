@@ -22,8 +22,8 @@ extern "C" {
 //
 
 typedef struct {
-		EIF_POINTER name;
-		EIF_POINTER KeyClass;
+		TCHAR *name;
+		TCHAR *KeyClass;
 		PFILETIME LastWriteTime;
 		} REG_KEY;
 

@@ -250,6 +250,82 @@ typedef ODBCSQLDA_TYPE(sqda_, ODBCSQLDA, IISQ_MAX_COLS);
 # define        IISQDA_HEAD_SIZE        16
 # define        IISQDA_VAR_SIZE         sizeof(IISQLVAR)
 
+
+extern void c_odbc_make (int m_size);
+extern int odbc_new_descriptor ();
+extern int odbc_first_descriptor_available (void);
+extern int odbc_available_descriptor ();
+extern int odbc_max_descriptor ();
+extern void odbc_pre_immediate(int no_desc, int argNum);
+extern void odbc_exec_immediate (int no_desc, char *order);
+extern void odbc_init_order (int no_desc, char *order, int argNum);
+extern void odbc_start_order (int no_desc);
+extern void odbc_terminate_order (int no_des);
+extern void odbc_close_cursor (int no_des);
+extern int odbc_next_row (int no_des);
+extern int odbc_support_proc();
+extern int odbc_support_create_proc();
+extern char * odbc_driver_name();
+extern int odbc_insensitive_upper();
+extern int odbc_insensitive_lower();
+extern int odbc_sensitive_mixed();
+extern int odbc_insensitive_mixed();
+extern void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, char *value);
+extern void odbc_set_col_flag(int no_desc);
+extern void odbc_set_tab_flag(int no_desc);
+extern void odbc_set_proc_flag(int no_desc);
+extern char *odbc_hide_qualifier(char *buf);
+extern void odbc_unhide_qualifier(char *buf);
+extern char *odbc_identifier_quoter();
+extern char *odbc_qualifier_seperator();
+extern void odbc_set_qualifier(char *qfy);
+extern void odbc_set_owner(char *owner);
+extern void odbc_unset_catalog_flag(int no_desc);
+extern char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int sec, int type);
+extern char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int sec, int type);
+extern char *odbc_str_from_str(char *ptr);
+extern void odbc_connect (char *name, char *passwd, char *dsn);
+extern void odbc_disconnect ();
+extern void odbc_rollback ();
+extern void odbc_commit ();
+extern void odbc_begin ();
+extern int odbc_trancount ();
+extern void cut_tail_blank(char *buf);
+extern int odbc_get_count (int no_des);
+extern int odbc_get_user  (char *result);
+extern int odbc_put_col_name (int no_des, int index, char *result);
+extern int odbc_get_col_len (int no_des, int index);
+extern int odbc_get_data_len (int no_des, int index);
+extern int odbc_conv_type (int typeCode);
+extern int odbc_get_col_type (int no_des, int index);
+extern int odbc_put_data (int no_des, int index, char *result);
+extern int odbc_get_integer_data (int no_des, int index);
+extern int odbc_get_boolean_data (int no_des, int index);
+extern double odbc_get_float_data (int no_des, int index);
+extern float odbc_get_real_data (int no_des, int index);
+extern int odbc_is_null_data(int no_des, int index);
+extern int odbc_get_date_data (int no_des, int index);
+extern int odbc_get_year();
+extern int odbc_get_month();
+extern int odbc_get_day();
+extern int odbc_get_hour();
+extern int odbc_get_min();
+extern int odbc_get_sec();
+extern int odbc_str_len(char *val);
+extern char *odbc_str_value(char *val);
+extern int odbc_get_error_code ();
+extern char * odbc_get_error_message ();
+extern char * odbc_get_warn_message ();
+extern void odbc_clear_error ();
+extern int odbc_c_type(int odbc_type);
+extern void odbc_disp_c_type();
+extern void odbc_disp_rec(int no_des);
+
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+
+
 #ifdef __cplusplus
 }
 #endif

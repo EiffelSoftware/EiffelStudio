@@ -1499,7 +1499,7 @@ int odbc_get_col_len (int no_des, int index)
 	return length;
 }
 
-UDWORD odbc_get_data_len (int no_des, int index)
+int odbc_get_data_len (int no_des, int index)
 {
   int i = index - 1;
   int type = abs(GetDbCType(odbc_descriptor[no_des], i));

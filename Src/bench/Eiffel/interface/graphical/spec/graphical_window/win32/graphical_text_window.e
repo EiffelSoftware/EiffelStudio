@@ -121,8 +121,10 @@ feature -- Output
 	init_resource_values is
 			-- Initialize the resource values.
 		do
+			set_changed (True);
 			st_init_resource_values;
-			init_graphical_values
+			init_graphical_values;
+			set_changed (False);
 		end;
 
 	process_text (texts: STRUCTURED_TEXT) is

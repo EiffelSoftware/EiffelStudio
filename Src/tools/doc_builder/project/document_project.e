@@ -21,15 +21,19 @@ feature -- Initialize
 			has_preferences: preferences /= Void
 		local
 			l_constants: APPLICATION_CONSTANTS
-			l_documents: like documents
 		do
-			if preferences.is_valid then		
+			if preferences.is_valid then	
 				is_valid := True			
 				create filter_manager.make
 				create invalid_files.make (5)
 				invalid_files.compare_objects
 				l_constants := Shared_constants.Application_constants
 				has_been_validated := False				
+				
+						-- Copy stylesheet file
+				if Shared_document_manager.has_stylesheet then
+					copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
+				end
 				
 						-- Initialize tree widget if in gui mode
 				if l_constants.is_gui_mode then
@@ -38,7 +42,6 @@ feature -- Initialize
 						-- Retrieve documents
 				all_documents_read := False
 				files_changed := False
-				l_documents := documents
 			end
 			update
 		end		
@@ -144,14 +147,17 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 	validate_files is
 			-- Validate files in Current to loaded schema.  Put invalid files
 			-- in `invalid_files' list.
+		local
+			l_doc_count: INTEGER
 		do			
+			l_doc_count := documents.count
 			if not has_been_validated then
 				has_been_validated := True
 				invalid_files.wipe_out
 				progress_generator.set_title ("File Validation")
 				progress_generator.set_procedure (agent validate_against_schema)
 				progress_generator.set_heading_text ("Validating project files...")
-				progress_generator.set_upper_range (documents.count)
+				progress_generator.set_upper_range (l_doc_count)
 				progress_generator.generate	
 			end
 			build_error_report

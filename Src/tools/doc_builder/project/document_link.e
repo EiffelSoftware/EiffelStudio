@@ -281,6 +281,17 @@ feature -- Query
 			end
 		end		
 
+	external_link: BOOLEAN is
+			-- Is `url' a link to an external resource?
+		do
+			Result := 
+				url.has_substring ("www.") or 
+				url.has_substring ("http:") or
+				url.has_substring ("https:") or
+				url.has_substring ("ftp:") or
+				url.has_substring ("mailto:")
+		end
+
 feature {DOCUMENT_LINK} -- Query
 
 	relative_from_document: BOOLEAN is
@@ -327,17 +338,6 @@ feature {DOCUMENT_LINK} -- Query
 			l_first_char := url.item (1)
 			Result := l_first_char = '\' or l_first_char = '/'
 		end		
-
-	external_link: BOOLEAN is
-			-- Is `url' a link to an external resource?
-		do
-			Result := 
-				url.has_substring ("www.") or 
-				url.has_substring ("http:") or
-				url.has_substring ("https:") or
-				url.has_substring ("ftp:") or
-				url.has_substring ("mailto:")
-		end
 
 	in_document (a_document: DOCUMENT): BOOLEAN is
 			-- Is there a link to `url' in `a_document'?

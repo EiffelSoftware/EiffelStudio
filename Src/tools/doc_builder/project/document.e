@@ -43,6 +43,7 @@ feature -- Creation
 			initialize
 			name := a_name
 			create text.make_empty
+			create saved_text.make_empty
 		end
 		
 	make_from_file (a_file: PLAIN_TEXT_FILE) is
@@ -65,6 +66,7 @@ feature -- Creation
 			create observers.make (2)
 			create schema_validator
 			create links.make (3)
+			create images.make (3)
 			create invalid_links.make_empty ("Invalid links")		
 			attach (Application_window)
 		end
@@ -113,7 +115,11 @@ feature -- XML
 			Result := internal_xml
 			if Result = Void or is_modified then				
 				create Result.make_from_document (Current)
-				internal_xml := Result
+				if Result.valid then
+					internal_xml := Result
+				else
+					Result := Void
+				end				
 			end
 		end
 			
@@ -140,7 +146,7 @@ feature -- XML
 		end
 		
 	output_filter_text: STRING is
-			-- Document level output filter text (default: "all")
+			-- Document level output filter text (default: "unfiltered")
 		local
 			l_element: XM_ELEMENT
 			l_att: XM_ATTRIBUTE
@@ -155,12 +161,12 @@ feature -- XML
 					end					
 				end
 			end
-			if l_value = Void or l_value.is_equal ("all") then
-				Result := "Unfiltered"
-			elseif l_value.is_equal ("envision") then
-				Result := "ENViSioN!"
-			elseif l_value.is_equal ("studio") then
-				Result := "EiffelStudio"
+			if l_value = Void or l_value.is_equal (shared_constants.output_constants.unfiltered_flag) then
+				Result := shared_constants.output_constants.unfiltered
+			elseif l_value.is_equal (shared_constants.output_constants.envision_flag) then
+				Result := shared_constants.output_constants.envision_desc
+			elseif l_value.is_equal (shared_constants.output_constants.studio_flag) then
+				Result := shared_constants.output_constants.studio_desc
 			end
 		ensure
 			has_result: Result /= Void
@@ -187,8 +193,11 @@ feature -- GUI
 
 feature -- Query
 
-	is_modified: BOOLEAN
-			-- Has current been modified since it was opened for editing?	
+	is_modified: BOOLEAN is
+			-- Has current been modified since last save?	
+		do
+			Result := not saved_text.is_equal (text)
+		end
 		
 	do_update_link: BOOLEAN
 			-- Can links in Current be updated?
@@ -203,9 +212,9 @@ feature -- Query
 			
 			Result := 
 						-- Application defines no filtering
-				l_curr_filter.is_equal ("Unfiltered") or
+				l_curr_filter.is_equal (shared_constants.output_constants.unfiltered) or
 						-- Document defines no filtering
-				l_doc_filter.is_equal ("Unfiltered") or			
+				l_doc_filter.is_equal (shared_constants.output_constants.unfiltered) or			
 						-- Application level filterinf matches document level filter type
 				l_curr_filter.is_equal (l_doc_filter)				
 		end	
@@ -226,6 +235,14 @@ feature -- Status Setting
 			links.extend (a_url)
 		end		
 	
+	add_image (a_url: DOCUMENT_LINK) is
+			-- Add `a_url' to list of image urls
+		require
+			url_not_void: a_url /= Void
+		do
+			images.extend (a_url)
+		end	
+	
 	change_name (a_new_name: STRING) is
 			-- Change name of current on disk to `a_new_name'
 		local
@@ -240,23 +257,13 @@ feature -- Status Setting
 			else
 				name := a_new_name
 			end
-			set_modified (True)
 		end	
-		
-	set_modified (flag: BOOLEAN) is
-			-- Set current to indicate it has been modified by user and
-			-- notify observers of change
-		do
-			is_modified := flag
-			Shared_document_manager.add_modified_document (Current)
-			notify_observers
-		end
 
 	set_text (a_text: STRING) is
 			-- Set `text'
-		do
+		do			
 			text := a_text
-			set_modified (True)
+			notify_observers
 		end
 
 	save is
@@ -273,13 +280,16 @@ feature -- Status Setting
 			else
 				internal_save (name)
 			end
-			Application_window.update_toolbar
+			Application_window.update
 		end	
 
-feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
+feature {DOCUMENT_LINK, LINK_MANAGER, HTML_GENERATOR} -- Links
 	
 	links: ARRAYED_LIST [DOCUMENT_LINK]
 			-- Links in Current	
+
+	images: ARRAYED_LIST [DOCUMENT_LINK]
+			-- Images in Current
 
 	invalid_links: ERROR_REPORT
 			-- Invalid link errors	
@@ -324,7 +334,7 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 			create l_formatter.make_with_document (Current)
 			l_formatter.set_links (a_old, a_new)
 			l_formatter.process_document (xml)
-			save_xml_document (xml, create {FILE_NAME}.make_from_string (name))
+			save_xml_document (xml, name)
 			do_update_link := False
 		end			
 
@@ -347,7 +357,8 @@ feature {NONE} -- Implementation
 		do			
 			file.open_read
 			file.read_stream (file.count)
-			text := file.last_string
+			saved_text := file.last_string
+			set_text (file.last_string)
 			file.close			
 		end
 
@@ -356,6 +367,9 @@ feature {NONE} -- Implementation
 			
 	internal_widget: like widget
 			-- Widget
+			
+	saved_text: STRING
+			-- Last saved text value
 			
 	schema_validator: SCHEMA_VALIDATOR
 			-- Schema Validator
@@ -380,7 +394,7 @@ feature {NONE} -- Implementation
 				file.putstring (text)
 				file.flush
 				file.close
-				set_modified (False)
+				saved_text := text
 			end
 		end
 

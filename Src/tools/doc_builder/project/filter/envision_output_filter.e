@@ -20,7 +20,7 @@ feature -- Access
 	description: STRING is
 			-- Textual description of filter
 		do
-			Result := "ENViSioN!"
+			Result := envision_desc
 		end	
 
 end -- class ENVISION_OUTPUT_FILTER

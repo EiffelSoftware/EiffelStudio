@@ -65,9 +65,11 @@ feature -- Generation
 			document_not_void: a_doc /= Void
 			target_not_void: target /= Void
 		local
+			l_name, l_html: STRING
 			l_filename: FILE_NAME
 			filtered_document: FILTERED_DOCUMENT
-			l_html: STRING
+			l_target_dir: DIRECTORY
+			l_link: DOCUMENT_LINK
 		do				
 					-- First filter the document according to correct filter
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
@@ -81,12 +83,25 @@ feature -- Generation
 				l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
 			end					
 
-			create l_filename.make_from_string (target.name)
+					-- Copy generated HTML to a file in ``target'
+			l_name := target.name
+			create l_filename.make_from_string (l_name)
 			l_filename.extend (file_no_extension (short_name (a_doc.name)))
 			l_filename.add_extension ("html")
-			create last_generated_file.make_create_read_write (l_filename)
+			create last_generated_file.make_create_read_write (l_filename.string)
 			last_generated_file.put_string (l_html)
 			last_generated_file.close
+			
+					-- Finally copy the images referenced in `a_doc' so they are still visible from new file. FIXME: Do copy actual images.
+			from
+				a_doc.images.start
+			until
+				a_doc.images.after
+			loop
+				l_link := a_doc.images.item
+				create l_target_dir.make (temporary_html_location (l_link.url, False))
+				a_doc.images.forth
+			end
 		ensure
 			has_last_generated_file: last_generated_file /= Void
 		end
@@ -119,14 +134,14 @@ feature {NONE} -- Implementation
 							-- Create directory/filename
 					create l_filename.make_from_string (path)
 					l_filename.extend (a_dir.lastentry)
-					create src_sub_dir.make (l_filename)
-					progress_generator.set_status_text (l_filename)
+					create src_sub_dir.make (l_filename.string)
+					progress_generator.set_status_text (l_filename.string)
 					if not src_sub_dir.exists then
 						if files.has (l_filename.string) then
 									-- This is a file in `files' so convert it to HTML
 							l_doc := Shared_document_manager.document_by_name (l_filename.string)
 							if l_doc = Void then
-								create doc_file.make (l_filename)
+								create doc_file.make (l_filename.string)
 								create l_doc.make_from_file (doc_file)								
 							end
 							if not is_code_document (l_doc) and l_doc.can_transform then 
@@ -134,17 +149,17 @@ feature {NONE} -- Implementation
 							end
 						elseif file_types.has (file_type (l_filename.string)) then
 									-- Not XML but does need copying
-							create bin_file.make (l_filename)
+							create bin_file.make (l_filename.string)
 							create l_filename.make_from_string (target.name)
 							l_filename.extend (a_dir.lastentry)
-							create target_bin_file.make (l_filename)
+							create target_bin_file.make (l_filename.string)
 							copy_file (bin_file, target_bin_file)
 						end		
 					else
 						create l_filename.make_from_string (target.name)
 						l_filename.extend (a_dir.lastentry)						
 						if not excluded_directories.has (l_filename.string)  then
-							create sub_dir.make (l_filename)
+							create sub_dir.make (l_filename.string)
 							sub_dir.create_dir
 							generate_directory (src_sub_dir, sub_dir)
 						end						

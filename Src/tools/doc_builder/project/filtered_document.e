@@ -9,8 +9,9 @@ class
 inherit
 	DOCUMENT
 		rename
-			text as file_text,
 			title as default_title
+		redefine
+			set_text
 		end
 
 create
@@ -26,38 +27,30 @@ feature {FILTER_MANAGER} -- Creation
 		local
 			retried: BOOLEAN
 		do
+			set_text ("")
 			if not retried then
 				if a_doc.is_persisted then
 					make_from_file (a_doc.file)
 				else
 					make_new (a_doc.name)
 				end			
-				filter := a_filter
+				filter := a_filter				
+				set_text (filter_text)
 				
-				if True then
-						-- TODO: put options here for custom xml formatting
-					xml.add_custom_elements
-					text := xml.text
-					xml.remove_custom_elements
-				else
-					text := xml.text
-				end
-				
-				if not filter.description.is_equal ("Unfiltered") then
+				if not filter.description.is_equal (shared_constants.output_constants.unfiltered) then
 					filter_document
 				end
+			else
+				print ("%NUnable to filter " + a_doc.name)	
 			end			
 		ensure
 			has_filter: filter /= Void
-		rescue
+		rescue			
 			retried := True
-			retry
+			retry			
 		end
 
 feature -- Access
-
-	text: STRING
-			-- Filtered text
 
 	title: STRING is
 			-- Title	
@@ -94,24 +87,30 @@ feature -- Access
 			end
 		end		
 
+feature -- Status Setting
+
+	set_text (a_text: STRING) is
+			-- Set `text'
+		do
+			text := a_text		
+		end
+
 feature {NONE} -- Commands
 
 	filter_document is
 			-- Filter Current and put filtered text into `text'
 		local
 			retried: BOOLEAN
-			l_string: STRING
 			l_parser: XM_EIFFEL_PARSER
 		do
 			if not retried then
-				l_string := xml.text
-				if l_string.is_empty then
+				if text.is_empty then
 					-- error
 				else
 					filter.clear
 					create l_parser.make					
 					l_parser.set_callbacks (standard_callbacks_pipe (<<filter>>))
-					l_parser.parse_from_string (l_string)
+					l_parser.parse_from_string (text)
 					check
 						ok_parsing: l_parser.is_correct
 					end
@@ -127,6 +126,19 @@ feature {NONE} -- Implementation
 
 	filter: DOCUMENT_FILTER
 			-- Filter
+	
+	filter_text: STRING is
+			-- Filter text
+		do
+			if True then
+					-- TODO: put options here for custom xml formatting
+				xml.add_custom_elements
+				Result := xml.text.twin
+				--xml.remove_custom_elements														
+			else
+				Result := xml.text
+			end
+		end
 			
 	filter_tag_value (tag_name: STRING): STRING is
 			-- For filter `tag_name' retrieve tag content

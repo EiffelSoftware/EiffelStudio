@@ -114,7 +114,7 @@ feature -- Display Constants
 	no_error_color: EV_COLOR is
 			-- Color for non-error messages
 		once
-			create Result.make_with_rgb (1.0, 1.0, 1.0)
+			create Result.make_with_rgb (0.0, 0.0, 0.0)
 		end
 
 feature -- Schema preferences			
@@ -136,14 +136,12 @@ feature -- Table of Contents Preferences
 		local
 			l_project_root,
 			l_code_dir: FILE_NAME
-			l_filter: DOCUMENT_FILTER
 			l_proj: DOCUMENT_PROJECT
-		do
+		once
 			create Result.make (10)
 			Result.compare_objects
 			l_proj := (create {SHARED_OBJECTS}).shared_project
 			create l_project_root.make_from_string (l_proj.root_directory)
-			l_filter := l_proj.filter_manager.filter
 			
 			l_project_root.extend ("libraries")
 				-- Base
@@ -163,51 +161,48 @@ feature -- Table of Contents Preferences
 			l_code_dir.extend ("vision2")
 			l_code_dir.extend ("reference")
 			Result.extend (l_code_dir.string)
+
+				-- Lex
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("lex")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
 			
+				-- COM
+			create l_code_dir.make_from_string (l_project_root.string)			
+			l_code_dir.extend ("com")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
 			
-			if not l_filter.description.is_equal ((create {SHARED_OBJECTS}).Shared_constants.Output_constants.Envision_desc) then
-						-- Lex
-				create l_code_dir.make_from_string (l_project_root.string)
-				l_code_dir.extend ("lex")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- COM
-				create l_code_dir.make_from_string (l_project_root.string)			
-				l_code_dir.extend ("com")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- Java
-				create l_code_dir.make_from_string (l_project_root.string)
-				l_code_dir.extend ("eiffel2java")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- Parse
-				create l_code_dir.make_from_string (l_project_root.string)
-				l_code_dir.extend ("parse")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- Net	
-				create l_code_dir.make_from_string (l_project_root.string)
-				l_code_dir.extend ("net")			
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- Time
-				create l_code_dir.make_from_string (l_project_root.string)			
-				l_code_dir.extend ("time")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)
-				
-					-- Web
-				create l_code_dir.make_from_string (l_project_root.string)
-				l_code_dir.extend ("web")
-				l_code_dir.extend ("reference")
-				Result.extend (l_code_dir.string)			
-			end			
+				-- Java
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("eiffel2java")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Parse
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("parse")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Net	
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("net")			
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Time
+			create l_code_dir.make_from_string (l_project_root.string)			
+			l_code_dir.extend ("time")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Web
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("web")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
 		end		
 			
 feature -- Status Setting

@@ -55,6 +55,14 @@ feature -- Tag
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End of tag.
 		do
+			if conc_content /= Void then
+				if in_attribute then
+					output_string.insert_string ("%"" + conc_content + "%"", content_write_position)
+				else
+					output_string.insert_string (conc_content, content_write_position)
+				end
+				conc_content := Void
+			end
 			if Complex_element_mappings.has (a_local_part) then
 				process_complex_element (a_local_part, False)
 			elseif Basic_element_mappings.has (a_local_part) then
@@ -62,8 +70,10 @@ feature -- Tag
 			elseif Element_style_mappings.has (a_local_part) then
 				write_element ("span", False, False)
 			elseif Bufferable.has (a_local_part) then
-				output_string.append (Buffered_tags.item)
-				Buffered_tags.remove
+				if not Buffered_tags.is_empty then
+					output_string.append (Buffered_tags.item)
+					Buffered_tags.remove
+				end				
 			end
 			if Element_attribute_mappings.has (a_local_part) then
 				Attribute_stack.remove
@@ -81,38 +91,62 @@ feature -- Tag
 			-- Forward content.
 		local
 			l_tag,
-			l_content: STRING
-		do			
+			l_content,
+			l_prev: STRING
+			write: BOOLEAN
+		do					
 			if can_write_content then
-				if Previous_elements.item.is_equal ("size") then
-					if a_content.is_equal ("1") then
-						l_tag := "h1"
-					elseif a_content.is_equal ("2") then
-						l_tag := "h2"
-					elseif a_content.is_equal ("3") then
-						l_tag := "h3"
-					elseif a_content.is_equal ("4") then
-						l_tag := "h4"
-					elseif a_content.is_equal ("5") then
-						l_tag := "h5"
-					elseif a_content.is_equal ("6") then
-						l_tag := "h6"
-					end
-					if l_tag = Void then
-						l_tag := ""
-					end
+				write := True
+				l_prev := Previous_elements.item
+				l_content := cleaned_content (a_content)
+					-- Headings
+				if l_prev.is_equal ("size") then
+					l_tag := ""
+					if 
+						a_content.is_equal ("1") or
+						a_content.is_equal ("2") or
+						a_content.is_equal ("3") or
+						a_content.is_equal ("4") or
+						a_content.is_equal ("5") or
+						a_content.is_equal ("6")
+					then
+						l_tag := "h" + a_content					
+					end					
 					l_content := "<" + l_tag + ">"
-					Buffered_tags.extend ("</" + l_tag + ">")
-				else
-					l_content := a_content
+					if not l_tag.is_empty then
+						Buffered_tags.extend ("</" + l_tag + ">")
+					end					
+				elseif 
+					l_prev.is_equal ("url") and then 
+					not Previous_elements.linear_representation.i_th (2).has_substring ("image")
+				then
+					l_content := link_convert (a_content)
+				elseif Conc_content_elements.has (l_prev) then
+					if conc_content = Void then
+						conc_content := ""
+					end
+					conc_content.append (a_content)
+					write := False
 				end
-				if in_attribute then
-					output_string.insert_string ("%"" + l_content + "%"", content_write_position)
-				else
-					output_string.insert_string (l_content, content_write_position)
+				if not l_content.is_equal (Empty_tag) and not l_content.is_empty and write then
+					if in_attribute then
+						output_string.insert_string ("%"" + l_content + "%"", content_write_position)
+					else
+						output_string.insert_string (l_content, content_write_position)
+					end
 				end
 			end			
 		end
+
+feature -- Status Setting
+
+	set_filename (a_file: STRING) is
+			-- Set filename indicating file being filtered
+		require
+			file_not_void: a_file /= Void
+		do
+			filename := a_file	
+		end		
 
 feature {NONE} -- Processing
 
@@ -145,6 +179,11 @@ feature {NONE} -- Processing
 					else
 						write_attribute (e, False)
 					end
+				elseif e.is_equal ("stylesheet") then
+					write_element (e, True, True)
+					write_attribute ("rel", False)
+					output_string.insert_string ("%"stylesheet%"", attribute_value_write_position)
+					process_attribute_element ("url")
 				else
 					write_element (e, is_start, True)
 				end					
@@ -247,6 +286,29 @@ feature {NONE} -- Query
 	can_write_content: BOOLEAN
 			-- Can content be output based Current element?
 
+	link_convert (a_url: STRING): STRING is
+			-- Converts `a_url' file link to html file link
+		require
+			url_not_void: a_url /= Void
+			url_not_empty: not a_url.is_empty
+		local
+			l_util: UTILITY_FUNCTIONS
+			l_filename: FILE_NAME
+			l_link: DOCUMENT_LINK
+		do
+			create l_util
+			create l_link.make (filename, a_url)
+			if not l_link.external_link then
+				create l_filename.make_from_string (l_util.file_no_extension (a_url))
+				if not l_filename.is_empty then
+					l_filename.add_extension ("html")
+				end				
+				Result := l_filename.string
+			else
+				Result := a_url
+			end			
+		end		
+
 feature {NONE} -- Access
 
 	description: STRING is
@@ -314,7 +376,7 @@ feature {NONE} -- Output
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
-			e_is_vald_element: Element_attribute_mappings.has (e) or Element_style_mappings.has (e)
+			e_is_valid_element: Element_attribute_mappings.has (e) or Element_style_mappings.has (e)
 			processing_in_attribute: in_attribute
 		local
 			l_att: STRING
@@ -350,8 +412,9 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("br", "line_break")					
 			Result.extend ("a", "link")
 			Result.extend ("img", "image")
-			Result.extend ("link", "stylesheet")
-			Result.extend ("title", "title")	
+			Result.extend ("title", "title")
+			Result.extend ("a", "image_link")
+			Result.extend ("meta", "meta")			
 		end
 		
 	complex_element_mappings: HASH_TABLE [STRING, STRING] is
@@ -376,6 +439,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("ol", "list_ordered")
 			Result.extend ("ul", "list_unordered")
 			Result.extend ("", "list")
+			Result.extend ("link", "stylesheet")
 		end
 		
 	element_attribute_mappings: HASH_TABLE [STRING, STRING] is
@@ -391,21 +455,14 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("alt_text", "alt_text")
 			Result.extend ("usemap", "usemap")
 			Result.extend ("shape", "shape")
-			Result.extend ("co-ordinates", "co-ordinates")		
---			Result.extend ("class_name", "class_name")
---			Result.extend ("string", "string")
---			Result.extend ("keywords", "keywords")
---			Result.extend ("tab_index", "tab_index")
---			Result.extend ("hover_color", "hover_color")
---			Result.extend ("disambiguator", "disambiguator")
---			Result.extend ("error_url", "error_url")
---			Result.extend ("filter_name", "filter_name")
---			Result.extend ("filter_string", "filter_string")
---			Result.extend ("index_moniker", "index_moniker")
---			Result.extend ("namespace", "namespace")
---			Result.extend ("options", "options")
+			Result.extend ("co-ordinates", "co-ordinates")
 			Result.extend ("href", "url")
-			Result.extend ("src", "image_url")			
+			Result.extend ("src", "image_url")	
+			Result.extend ("rel", "rel")
+			Result.extend ("", "stylesheet")
+			
+			Result.extend ("content", "content")
+			Result.extend ("name", "name")
 		end	
 		
 	element_style_mappings: ARRAYED_LIST [STRING] is
@@ -444,6 +501,15 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("character")
 		end
 
+	Conc_content_elements: ARRAYED_LIST [STRING] is
+			-- Elements where content must be concatenated
+		once
+			create Result.make (5)
+			Result.compare_objects
+			Result.extend ("alt_text")
+			Result.extend ("content")
+		end
+
 	attributable_elements: ARRAYED_LIST [STRING] is
 			-- Elements which may contain attributes
 		once
@@ -457,6 +523,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("list")
 			Result.extend ("stylesheet")
 			Result.extend ("span")
+			Result.extend ("image_link")
 		end
 		
 	attributes: ARRAYED_LIST [STRING] is
@@ -489,6 +556,7 @@ feature {NONE} -- Implementation
 			-- Previously processed element name
 		once
 			create Result.make (1)
+			Result.compare_objects
 		end
 
 	complex_stack: ARRAYED_STACK [STRING] is
@@ -528,6 +596,35 @@ feature {NONE} -- Implementation
 			if previous_attribute /= Void then
 				Result ?= previous_attribute.item (2)
 			end			
+		end
+
+	filename: STRING
+			-- File name
+
+	empty_tag: STRING is
+			-- Empty tag
+		once
+			Result := "<>"
+		end		
+		
+	conc_content: STRING
+			-- Current concatenated content string	
+
+	cleaned_content (a_content: STRING): STRING is
+			-- Content cleaned
+		do
+			Result := a_content.twin
+			if not in_pre_tag then
+				Result.prune_all_leading ('%N')
+				Result.prune_all_leading ('%T')
+				Result.prune_all_trailing ('%T')
+			end
+		end
+
+	in_pre_tag: BOOLEAN is
+			-- Are we inside a tag which should be treated as a pre tag?
+		do
+			Result := Previous_elements.has ("code_block")
 		end
 
 end -- class HTML_FILTER

@@ -45,7 +45,7 @@ feature {DOCUMENT} -- Creation
 			make
 			internal_document := a_document
 			l_xml := deserialize_text (internal_document.text)
-			if l_xml /= Void then
+			if l_xml /= Void and then not l_xml.is_empty then
 				set_root_element (l_xml.root_element)
 				valid := True
 			end				
@@ -76,11 +76,10 @@ feature {DOCUMENT} -- Status Setting
 			if l_parent /= Void then
 				l_parent := l_parent.element_by_name ("meta_data")
 				if l_parent /= Void then
-					l_path := stylesheet_path
+					l_path := stylesheet_path (internal_document.name, True)
 					if l_path /= Void then
 						create stylesheet_tag.make_child (l_parent, "stylesheet", Void)
-						stylesheet_tag.put_last (create {XM_ATTRIBUTE}.make ("rel", Void, "stylesheet", stylesheet_tag))
-						stylesheet_tag.put_last (create {XM_ATTRIBUTE}.make ("href", Void, stylesheet_path, stylesheet_tag))
+						stylesheet_tag.put_last (create {XM_CHARACTER_DATA}.make (stylesheet_tag, l_path))
 						l_parent.put_last (stylesheet_tag)
 					end
 				end
@@ -107,29 +106,7 @@ feature {DOCUMENT} -- Status Setting
 feature -- Custom Tags
 
 	stylesheet_tag: XM_ELEMENT
-			-- Tag representing stylesheet, if any
-		
-feature {NONE} -- Implementation
-
-	stylesheet_path: STRING is
-			-- Path to stylesheet
-		local
-			l_name,
-			l_path: STRING
-			l_file_path: FILE_NAME
-			l_link: DOCUMENT_LINK
-		do
-			if Shared_project.preferences.has_stylesheet_file then
-				l_name := Shared_project.preferences.stylesheet_file
-						-- Create a project relative link to the stylesheet file
-				create l_link.make (internal_document.name, l_name)
-				l_path := l_link.relative_url
-				if l_path /= Void then
-					create l_file_path.make_from_string (l_path)	
-					Result := l_file_path.string
-				end
-			end				
-		end		
+			-- Tag representing stylesheet, if any	
 
 	internal_document: DOCUMENT
 			-- Actual document

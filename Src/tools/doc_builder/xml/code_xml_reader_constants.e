@@ -36,6 +36,7 @@ feature {CODE_XML_READER} -- Tag Constants
 			Result.extend ("itag")
 			Result.extend ("generic")
 			Result.extend ("dot")
+			Result.extend ("comment")
 		end
 		
 	location_tag: STRING is "location"

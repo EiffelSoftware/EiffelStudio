@@ -13,9 +13,9 @@ feature -- Access
 		once
 			create Result.make (3)
 			Result.compare_objects
-			Result.extend (Studio_flag, Studio_desc)
-			Result.extend (Envision_flag, Envision_desc)
-			Result.extend (Web_flag, Web_desc)
+			Result.extend (studio_flag, studio_desc)
+			Result.extend (envision_flag, envision_desc)
+			Result.extend (unfiltered_flag, unfiltered)
 		end
 		
 	file_generation_types: ARRAYED_LIST [STRING] is
@@ -39,18 +39,18 @@ feature -- Access
 		end	
 		
 feature -- Flags		
+
+	unfiltered: STRING is "Unfiltered"
 		
 	studio_flag: STRING is "studio"
 	
 	envision_flag: STRING is "envision"
 	
-	web_flag: STRING is "all"
+	unfiltered_flag: STRING is "all"
 
 	studio_desc: STRING is "EiffelStudio"
 	
 	envision_desc: STRING is "ENViSioN!"
-	
-	web_desc: STRING is "Web"
 
 	studio_help_flag: STRING is "mshtml"
 

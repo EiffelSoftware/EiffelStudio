@@ -50,23 +50,11 @@ feature -- TOC Management
 	
 	save_toc is
 			-- Save loaded toc
-		local
-			l_name: STRING
-			l_persisted: BOOLEAN
-		do
-			report_status ("Saving", "Saving Table of Contents")			
-			l_persisted := loaded_toc.is_persisted
-			if displayed_toc.modified then
-				l_name := loaded_toc.name
-				create loaded_toc.make_from_tree (displayed_toc)
-				loaded_toc.set_name (l_name)				
-				displayed_toc.set_modified (False)
-			end
-			loaded_toc.set_persisted (l_persisted)
+		do	
+			synchronize			
 			loaded_toc.save			
 			loaded_tocs.replace_key (loaded_toc.name, loaded_toc.old_name)
 			loaded_widgets.replace_key (loaded_toc.name, loaded_toc.old_name)
-			Progress_generator.close
 		end		
 	
 	build_toc (a_dir: DIRECTORY) is
@@ -74,11 +62,9 @@ feature -- TOC Management
 		local
 			l_loaded_toc: TABLE_OF_CONTENTS
 		do
-			report_status ("Building Table of Contents", "Building table of contents from directory")
 			create l_loaded_toc.make_from_directory (a_dir)
 			loaded_tocs.extend (l_loaded_toc, l_loaded_toc.name)
-			load_toc (l_loaded_toc.name)			
-			Progress_generator.close
+			load_toc (l_loaded_toc.name)
 		end	
 		
 	load_toc (a_name: STRING) is
@@ -88,12 +74,11 @@ feature -- TOC Management
 		local
 			xml: XM_DOCUMENT
 			xml_toc_converter: XML_TABLE_OF_CONTENTS_CONVERTER
-		do					
+		do				
 			if loaded_tocs.has (a_name) then
 				loaded_toc := loaded_tocs.item (a_name)
 			else
 						-- Create XML document from `a_filename'
-				report_status ("Loading TOC", "Processing file " + a_name)
 				xml ?= deserialize_document (create {FILE_NAME}.make_from_string (a_name))
 				if xml /= Void then
 					create xml_toc_converter.make
@@ -101,10 +86,10 @@ feature -- TOC Management
 					loaded_toc := xml_toc_converter.toc
 					loaded_toc.set_name (a_name)
 					loaded_tocs.extend (loaded_toc, a_name)
+					xml_toc_converter := Void					
 				end
 			end
 			display_toc
---			Progress_generator.close
 		end		
 		
 	new_node (is_heading: BOOLEAN) is
@@ -117,10 +102,24 @@ feature -- TOC Management
 		end		
 		
 	remove_node is
-			-- Remov selected node in displayed toc
+			-- Remove selected node in displayed toc
 		do
 			if displayed_toc.selected_item /= Void then
-				displayed_toc.prune (displayed_toc.selected_item)
+				displayed_toc.remove_node
+			end	
+		end		
+		
+	toggle_include_node is
+			-- Toggle `included' property of selected node in displayed toc for sorting and generation
+		local
+			l_node: TABLE_OF_CONTENTS_WIDGET_NODE
+		do
+			if displayed_toc.selected_item /= Void then
+				l_node ?= displayed_toc.selected_item
+				if l_node /= Void then
+					l_node.set_included (not l_node.include)
+					displayed_toc.set_modified (True)
+				end
 			end	
 		end		
 		
@@ -128,9 +127,9 @@ feature -- Commands
 		
 	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN) is
 			-- Sort `loaded toc'
-		do				
-			report_status ("Sorting", "Sorting Table of Contents, please wait..")
-			loaded_toc := clone (loaded_toc)
+		do	
+			--loaded_toc := clone (loaded_toc)
+			synchronize
 			loaded_toc.set_name (next_toc_name)
 			loaded_toc.set_make_index_root (index_root)
 			loaded_toc.set_filter_empty_nodes (not empty_elements)
@@ -140,7 +139,22 @@ feature -- Commands
 			loaded_toc.sort	
 			loaded_tocs.extend (loaded_toc, loaded_toc.name)
 			load_toc (loaded_toc.name)
-			Progress_generator.close
+		end		
+
+	synchronize is
+			-- Synchronize loaded toc with widget
+		local
+			l_name: STRING
+			l_persisted: BOOLEAN
+		do
+			l_persisted := loaded_toc.is_persisted			
+			if displayed_toc.modified then				
+				l_name := loaded_toc.name
+				create loaded_toc.make_from_tree (displayed_toc)
+				loaded_toc.set_name (l_name)				
+				displayed_toc.set_modified (False)
+				loaded_toc.set_persisted (l_persisted)
+			end	
 		end		
 
 feature -- Access
@@ -202,33 +216,17 @@ feature {NONE} -- Implementation
 	display_toc is
 			-- Display `loaded_toc' as widget
 		local
-			toc_widget_converter: TABLE_OF_CONTENTS_WIDGET_FORMATTER
 			l_name: STRING
 		do
 			l_name := loaded_toc.name
 			if loaded_widgets.has (l_name) then
 				displayed_toc := loaded_widgets.item (l_name)
 			else
-				Progress_generator.set_heading_text ("Building Table of Contents")
-				Progress_generator.set_update_timer (500)
-				create toc_widget_converter.make
-				toc_widget_converter.process_toc (loaded_toc)
-				displayed_toc := toc_widget_converter.toc_widget
-				loaded_widgets.extend (displayed_toc, l_name)				
+				create displayed_toc.make (loaded_toc)
+				loaded_widgets.extend (displayed_toc, loaded_toc.name)
 			end
 			Parent_window.set_toc_widget (displayed_toc)
 			Parent_window.update
-			Progress_generator.reset_timer
-		end	
-
-	report_status (a_title, a_heading: STRING) is
-			-- Report status
-		do
-			Progress_generator.set_title (a_title)
-			Progress_generator.set_heading_text (a_heading)
-			Progress_generator.set_update_timer (500)
-			Progress_generator.suppress_progress_bar (True)
-			Progress_generator.display
-		end
+		end		
 		
 end -- class TABLE_OF_CONTENTS_MANAGER

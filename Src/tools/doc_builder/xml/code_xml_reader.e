@@ -1,7 +1,5 @@
 indexing
-	description: "Reader of Eiffel XML code file.  Works by creating code object structures%
-		%from xml tags and maintaining state by using stacks to determine the current code%
-		%context."
+	description: "Reader of Eiffel XML code file."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,10 +17,10 @@ inherit
 		end
 
 	CODE_XML_READER_CONSTANTS
-	
-	SHARED_CONSTANTS
 
 	UTILITY_FUNCTIONS
+	
+	XML_ROUTINES
 
 create
 	make
@@ -44,6 +42,9 @@ feature -- Tag
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- Start tag
 		do
+			if conc_content /= Void then
+				write_content (False)
+			end
 			element_stack.extend (a_local_part)
 			if not root_done then
 					-- Determine type of code we are reading
@@ -56,9 +57,13 @@ feature -- Tag
 		
 	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- End tag
-		do				
+		do	
+			if conc_content /= Void then
+				write_content (True)				
+			end			
 			process_tag (a_local_part, False)
-			Element_stack.remove
+			Element_stack.remove			
+			location_replaced := False
 		end	
 		
 	on_content (a_content: STRING) is
@@ -66,17 +71,19 @@ feature -- Tag
 		local
 			l_start_pos,
 			l_end_pos: INTEGER
-			l_tag_string: STRING
 			l_content,
-			l_url: STRING
-		do
-			if current_tag.is_equal ("string") then
-				l_content := ""
+			l_tag_string: STRING
+		do		
+			l_content := output_escaped (a_content)
+			if conc_content = Void then
+				create conc_content.make_from_string (l_content)
+				Content_stack.extend (conc_content)
+			else
+				conc_content.append (l_content)
 			end
-			l_content := a_content			
-			if current_tag.is_equal (Location_tag) then
-				l_url := parsed_url (a_content)
-				output_string.insert_string (" href=%"" + l_url + "%"", attribute_write_position)
+			
+					-- In case this is a location tag replace html tag with 'a' tag.
+			if current_tag.is_equal (Location_tag) and then not location_replaced then
 				l_start_pos := output_string.last_index_of ('<', output_string.count)
 				if l_start_pos > 0 then
 					l_tag_string := output_string.substring (l_start_pos, output_string.count)					
@@ -84,15 +91,13 @@ feature -- Tag
 						l_end_pos := l_tag_string.index_of (' ', 1)
 						if l_end_pos > 0 then
 							l_end_pos := l_end_pos + l_start_pos
+							attribute_write_position := attribute_write_position - (l_end_pos - l_start_pos) + 3
 							output_string.remove_substring (l_start_pos + 1, l_end_pos - 1)
 							output_string.insert_string (Html_anchor_tag + " ", l_start_pos + 1)
 						end
 					end					
 				end
-			elseif current_tag.is_equal (Anchor_tag) then
-				output_string.insert_string (" name=%"" + l_content + "%"", attribute_write_position)
-			elseif not current_tag.is_equal (include_tag) then				
-				output_string.append (l_content)
+				location_replaced := True
 			end
 		end
 
@@ -150,9 +155,21 @@ feature {NONE} -- Implementation
 			create Result.make (2)
 			Result.compare_objects
 		end
+		
+	content_stack: ARRAYED_STACK [STRING] is
+			-- Stack of element names
+		once
+			create Result.make (2)
+			Result.compare_objects
+		end
 
 	root_done: BOOLEAN
 			-- Has root node been read yet?
+
+	conc_content: STRING
+			-- Current concatenated content string		
+	
+	location_replaced: BOOLEAN
 	
 	write_style_tag (a_tag_name: STRING; is_start: BOOLEAN) is
 			-- Write HTML style tag of `a_tag_name'
@@ -181,6 +198,7 @@ feature {NONE} -- Implementation
 		do
 			l_name := file_no_extension (a_url)
 			l_name.replace_substring_all ("../", "")
+			l_name.replace_substring_all (" ", "")
 			l_ref_pos := a_url.last_index_of ('#', a_url.count)
 			if l_ref_pos > 0 then
 				l_anchor := a_url.substring (l_ref_pos, a_url.count)
@@ -191,11 +209,42 @@ feature {NONE} -- Implementation
 			if l_ref_pos > 0 then
 				l_name.insert_string ("/reference", l_ref_pos)				
 			end
-			create l_filename.make_from_string (Application_constants.html_location)
-			l_filename.extend ("libraries")
+			create l_filename.make_from_string ("libraries")
 			l_filename.extend (l_name)
 			l_filename.add_extension ("html")
-			Result := l_filename.string + l_anchor
+			Result := "\" + l_filename.string + l_anchor
 		end		
+		
+	write_content (remove: BOOLEAN) is
+			-- Write built content string,  Remove from stack after if `remove', otherwise 
+			-- clear for next batch of content.
+		local			
+			l_url: STRING
+		do
+			if current_tag.is_equal (Location_tag) then		
+				conc_content.replace_substring_all ("%"", "&quot;")
+				l_url := parsed_url (conc_content)
+				output_string.insert_string (" href=%"" + l_url + "%"", attribute_write_position)				
+			elseif current_tag.is_equal (Anchor_tag) then
+				conc_content.replace_substring_all ("%"", "&quot;")
+				output_string.insert_string (" name=%"" + conc_content + "%"", attribute_write_position)
+			elseif not current_tag.is_equal (include_tag) then				
+				output_string.append (conc_content)
+			end
+			
+			if remove then
+				Content_stack.remove
+			else
+				Content_stack.item.wipe_out
+			end
+			
+			if Content_stack.is_empty then
+				conc_content := Void
+			else
+				create conc_content.make_empty
+				Content_stack.extend (conc_content)
+			end
+		end
+		
 			
 end -- class CODE_XML_READER

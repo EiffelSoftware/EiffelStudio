@@ -83,24 +83,12 @@ feature {NONE} -- Commands
 						end
 					else
 						document.add_link (l_link)
+						if e.name.is_equal ("image") then
+							document.add_image (l_link)
+						end
 					end					
 				end
 			end
---			if l_element /= Void then
---				l_url := l_element.text
---				if l_url /= Void and then not l_url.is_empty then
---					if 
---						file_type (l_url).is_equal ("htm") or
---						file_type (l_url).is_equal ("html")
---					then
---						l_element.wipe_out
---						l_new_link := file_no_extension (l_url) + ".xml"
---						if l_new_link /= Void then
---							l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, l_new_link))	
---						end
---					end
---				end
---			end
 		end
 
 feature {NONE} -- Implementation

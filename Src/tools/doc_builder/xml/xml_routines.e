@@ -11,6 +11,9 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	XM_MARKUP_CONSTANTS
+		export {NONE} all end
 
 feature -- Access
 
@@ -130,6 +133,38 @@ feature -- Status Setting
 				end
 			end
 		end
+		
+	clear_element (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]) is
+			-- Remove all elements in the element found at the end of the array path.
+		require
+			a_doc_not_void: a_doc /= Void
+			non_void_path: a_array_path /= Void
+			first_element_root: a_doc.root_element.name.is_equal (a_array_path.item (1))
+		local
+			cnt: INTEGER
+			is_void_element: BOOLEAN
+			l_element, l_child_element: XM_ELEMENT
+		do
+			a_array_path.compare_references
+			if not a_array_path.has (Void) then
+				l_element := a_doc.root_element
+				from
+					cnt := 1
+				until
+					cnt = a_array_path.count or is_void_element
+				loop
+					l_child_element := l_element.element_by_name (a_array_path.item (cnt + 1))
+					l_element := l_child_element
+					if l_child_element = Void then
+						is_void_element := True
+					end
+					cnt := cnt + 1
+				end
+				if not is_void_element then
+					l_child_element.wipe_out
+				end
+			end
+		end
 
 feature -- Commands
 
@@ -141,7 +176,7 @@ feature -- Commands
 		local
 			l_parser: XM_EIFFEL_PARSER
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_xm_concatenator: DOCUMENT_XML_READER
 		do
 			create l_parser.make
 			create l_tree_pipe.make
@@ -167,35 +202,14 @@ feature -- Commands
 		require
 			doc_name_not_void: a_doc_name /= Void
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file.make (a_doc_name)
 			if l_file.exists then
 				l_file.open_read
-				if l_file.is_open_read then
-					create l_parser.make
-					create l_tree_pipe.make
-					create l_xm_concatenator.make_null
-					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-					l_parser.parse_from_stream (l_file)
-					if l_parser.is_correct then 
-						if not l_tree_pipe.error.has_error then
-							Result := l_tree_pipe.document
-						else
-							error_description := l_tree_pipe.error.last_error
-						end
-					else
-						error_description := l_parser.last_error_extended_description
-						Result := Void
-					end
-				else
-					error_description :=  "File " + a_doc_name + " cannot not be open"
-				end
-			else
-				error_description := "Try to deserialize unexisting file :%N" + a_doc_name
+				l_file.read_stream (l_file.count)
+				Result := deserialize_text (l_file.last_string)
+				l_file.close
 			end
 		end
 
@@ -245,7 +259,7 @@ feature -- Access
 
 feature -- Storage
 
-	save_xml_document (a_doc: XM_DOCUMENT; a_doc_name: FILE_NAME) is
+	save_xml_document (a_doc: XM_DOCUMENT; a_doc_name: STRING) is
 			-- Save `a_doc' in `ptf'
 		require
 			doc_not_void: a_doc /= Void
@@ -273,6 +287,73 @@ feature -- Storage
 			retried := True
 			io.putstring ("Unable to write file: " + a_doc_name)
 			retry
+		end
+
+feature -- Escaping
+
+	is_escaped (a_char: INTEGER): BOOLEAN is
+			-- Is this an escapable character? (<, >, &)
+		do
+			Result := a_char = Lt_char.code
+				or a_char = Gt_char.code
+				or a_char = Amp_char.code
+		end
+
+	output_escaped (a_string: STRING): STRING is
+			-- Escape and output content string.  The string "<>&" will become
+			-- "&gt;&lt;&amp;"
+		require
+			a_string_not_void: a_string /= Void
+		local
+			last_escaped: INTEGER
+			i: INTEGER
+			cnt: INTEGER
+			a_char: INTEGER
+		do
+			create Result.make_empty
+			from
+				last_escaped := 0
+				i := 1
+				cnt := a_string.count
+			invariant
+				last_escaped <= i
+			until
+				i > cnt
+			loop
+				a_char := a_string.item_code (i)
+				if is_escaped (a_char) then
+					if last_escaped < i - 1 then
+						Result := Result + (a_string.substring (last_escaped + 1, i - 1))
+					end
+					Result := Result + (escaped_char (a_char))
+					last_escaped := i
+				end
+				i := i + 1
+			end
+				-- At exit.
+			if last_escaped = 0 then
+				Result := Result + (a_string)
+			elseif last_escaped < i - 1 then
+				Result := Result + (a_string.substring (last_escaped + 1, i - 1))
+			end
+		end
+
+	escaped_char (a_char: INTEGER): STRING is
+			-- Escape char.
+		require
+			is_escaped: is_escaped (a_char)
+		do
+			if a_char = lt_char.code then
+				Result := lt_entity
+			elseif a_char = gt_char.code then
+				Result := gt_entity
+			elseif a_char = amp_char.code then
+				Result := amp_entity
+			elseif a_char = quot_char.code then
+				Result := quot_entity
+			else
+				Result := "&#" + a_char.out + ";"
+			end
 		end
 
 end -- class XML_ROUTINES

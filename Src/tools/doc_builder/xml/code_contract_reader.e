@@ -27,7 +27,9 @@ feature -- Creation
 			-- Create
 		do
 			make_with_id (1)
-			Element_stack.wipe_out
+			create element_stack.make (2)
+			element_stack.compare_objects
+			create anchors.make (1)
 		end
 
 feature -- Tag
@@ -49,17 +51,18 @@ feature -- Tag
 		local
 			l_content,
 			l_title,
-			l_href: STRING
+			l_href,
+			l_anchor: STRING
 		do
 			l_content := a_content	
+			l_anchor := l_content.substring (l_content.index_of ('#', 1), l_content.count)
 			if current_tag.is_equal (Location_tag) then
 				if l_content.occurrences ('#') > 0 then
-					anchor.put (l_content, 2)
+					anchor.put (l_anchor, 2)
 					in_anchor := True
 				end
 			elseif in_anchor and then current_tag.is_equal (Feature_tag) then
-				anchor.put (l_content, 1)
-				l_title ?= Anchor.item (1)
+				l_title ?= l_content
 				l_href ?= Anchor.item (2)
 				if l_title /= Void and then l_href /= Void then
 					anchors.extend (l_title, l_href)	
@@ -70,11 +73,8 @@ feature -- Tag
 
 feature -- Access
 	
-	anchors: HASH_TABLE [STRING, STRING] is
+	anchors: HASH_TABLE [STRING, STRING]
 			-- List of anchors
-		once
-			create Result.make (1)		
-		end
 
 feature {NONE} -- Tag
 		
@@ -95,12 +95,8 @@ feature {NONE} -- Implementation
 			Result := "Eiffel XML contract code file reader"
 		end
 
-	element_stack: ARRAYED_STACK [STRING] is
+	element_stack: ARRAYED_STACK [STRING]
 			-- Stack of element names
-		once
-			create Result.make (2)
-			Result.compare_objects
-		end
 			
 	anchor: TUPLE [STRING, STRING] is
 			-- Anchor [feature name/title, location/href]

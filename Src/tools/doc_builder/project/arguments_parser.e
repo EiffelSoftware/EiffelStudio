@@ -49,17 +49,17 @@ feature -- Access
 			if is_gui then
 				args_ok := True
 			elseif l_has_project then
-				if file_generation and then Output_constants.file_generation_types.has (file_generation_type) then
+				if file_generation and then shared_constants.output_constants.file_generation_types.has (file_generation_type) then
 					args_ok := True
 				else
 					argument_error := Message_constants.no_generation_type
 				end
 				
-				if help_generation and then not Output_constants.Help_generation_types.has (help_generation_type) then
+				if help_generation and then not shared_constants.output_constants.Help_generation_types.has (help_generation_type) then
 					args_ok := False					
 				end
 				
-				if output_filtered and then not Output_constants.Output_list.has (output_filter_type) then
+				if output_filtered and then not shared_constants.output_constants.Output_list.has (output_filter_type) then
 					args_ok := False
 				end
 			end
@@ -126,7 +126,7 @@ feature -- Commands
 					elseif equal (flag, "envision") then
 						output_filter_type := op.Envision_flag
 					elseif equal (flag, "all") then
-						output_filter_type := op.Web_flag
+						output_filter_type := op.unfiltered_flag
 					end
 				elseif count = Argument_count then
 						-- Last argument
@@ -180,7 +180,6 @@ feature -- Commands
 			
 			l_toc_file: PLAIN_TEXT_FILE
 			
---			l_toc2: TABLE_OF_CONTENTS
 		do
 			l_constants := Shared_constants.Application_constants					
 			
@@ -190,8 +189,8 @@ feature -- Commands
 			
 				-- Load project
 			l_project := Shared_project
-			print ("Loading project...")
-			l_output_file.putstring ("Loading project...")
+			print ("Loading project " + project_file + "...")
+			l_output_file.putstring ("Loading project " + project_file + "...")
 			l_project.load (project_file)
 			print ("success%N")
 			l_output_file.putstring ("success%N")			
@@ -203,9 +202,9 @@ feature -- Commands
 			
 				-- Set content output filter
 			if output_filtered then
-				if output_filter_type.is_equal ("studio") then
+				if output_filter_type.is_equal (shared_constants.output_constants.studio_flag) then
 					l_project.filter_manager.set_studio_filtered	
-				elseif output_filter_type.is_equal ("envision") then
+				elseif output_filter_type.is_equal (shared_constants.output_constants.envision_flag) then
 					l_project.filter_manager.set_envision_filtered
 				end
 			end
@@ -225,91 +224,70 @@ feature -- Commands
 				l_output_file.putstring ("%NConverting XML to HTML in " + l_constants.temporary_html_directory + ":-%N")				
 				print ("%NConverting XML to HTML in " + l_constants.temporary_html_directory + ":-%N")
 				
+						-- Create TOC
 				print ("Creating TOC...")
 				l_output_file.putstring ("Creating TOC...")
-				create l_toc.make_from_directory (l_root_dir)
-				
-				print ("success%NSaving toc to file...")
---				l_output_file.putstring ("success%NSaving toc to file store...")			
---				l_toc.store_by_name ("C:\studio_saved_toc_independent_store.xml")
-				
-				l_output_file.putstring ("success%NSaving toc to file...")			
-				create l_toc_file.make_create_read_write ("C:\studio_saved_toc.xml")
---				save_xml_document (l_toc, create {FILE_NAME}.make_from_string (l_toc_file.name))
-				print ("success")
+				create l_toc.make_from_directory (l_root_dir)								
 				l_output_file.putstring ("success")
 
---				l_toc.set_filter_alphabetically (True)
---				l_toc.set_filter_elements_no_index (True)
---				l_toc.set_filter_empty_elements (True)
---				l_toc.set_filter_skipped_sub_elements (False)
---				l_toc.set_make_index_root (True)
---				l_output_file.putstring ("Sorting Table of Contents...")
---				print ("Sorting Table of Contents...")
---				l_toc.sort
---				l_output_file.putstring ("success%NSaving sorted toc to file...")
---				print ("success%NSaving sorted toc to file...")				
---				save_xml_document (l_toc, create {FILE_NAME}.make_from_string ("C:\studio_saved_toc_filtered.xml"))	
---				print ("success")
---				l_output_file.putstring ("success")
---				
-----				l_toc := load_toc ("C:\studio_saved_toc.xml")
---				
---					-- Generate HTML from written documentation files
---				l_output_file.putstring ("Generating HTML written documentation...")
---				print ("Generating HTML written documentation...")
---				create l_html_generator.make (l_toc.files, create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
---				l_html_generator.generate
---				l_output_file.putstring ("success")
---				print ("success")
---				
---					-- Generate HTML for libraries
---				l_output_file.putstring ("Generating HTML libraries documentation...")
---				generate_code_html
---				l_output_file.putstring ("success")
---			end
---			
---					-- Help generation
---			if help_generation then
---				create l_help_directory.make (l_constants.Temporary_help_directory)
---				l_output_file.open_append
---				l_output_file.putstring ("%N%NCreating help project in " + l_constants.Temporary_help_directory + ":-%N")
---				l_output_file.close
---				if l_help_directory.exists then
---					l_help_directory.recursive_delete
---				end
---				l_help_directory.create_dir
---				
---						-- Generate Help project from TOC
---				if help_generation_type.is_equal ("mshtml") then
---					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
---				elseif help_generation_type.is_equal ("vsip") then
---					l_help_project := create {MSHELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
---				else
---					-- TO DO: Web Help
---				end
---				create l_help_generator.make (l_help_project)
---				l_help_generator.generate
+						-- Filter TOC
+				if output_filter_type.is_equal (shared_constants.output_constants.studio_flag) then
+					l_toc.set_filter_alphabetically (False)
+					l_toc.set_filter_nodes_no_index (True)
+					l_toc.set_filter_empty_nodes (True)
+					l_toc.set_filter_skipped_sub_nodes (False)
+					l_toc.set_make_index_root (True)
+				elseif output_filter_type.is_equal (shared_constants.output_constants.envision_flag) then
+					l_toc.set_filter_alphabetically (True)
+					l_toc.set_filter_nodes_no_index (True)
+					l_toc.set_filter_empty_nodes (True)
+					l_toc.set_filter_skipped_sub_nodes (False)
+					l_toc.set_make_index_root (True)
+				end
+				print ("Sorting Table of Contents...")
+				l_toc.sort
+				l_output_file.putstring ("success%N")
+		
+					-- Generate HTML from written documentation files
+				l_output_file.putstring ("Generating HTML written documentation...")
+				create l_html_generator.make (l_toc.files (True), create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
+				l_html_generator.generate
+				l_output_file.putstring ("success%N")
+
+				
+					-- Generate HTML for libraries
+				l_output_file.putstring ("Generating HTML libraries documentation...")
+				generate_code_html
+				l_output_file.putstring ("success%N")
 			end
---			
---			l_output_file.open_append
---			l_output_file.putstring ("%N%NGeneration completed.  Review information above in case of errors.")
---			l_output_file.close
+			
+					-- Help generation
+			if help_generation then
+				create l_help_directory.make (l_constants.Temporary_help_directory)
+				l_output_file.open_append
+				l_output_file.putstring ("%N%NCreating help project in " + l_constants.Temporary_help_directory + ":-%N")
+				l_output_file.close
+				if l_help_directory.exists then
+					l_help_directory.recursive_delete
+				end
+				l_help_directory.create_dir
+				
+						-- Generate Help project from TOC
+				if help_generation_type.is_equal ("mshtml") then
+					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
+				elseif help_generation_type.is_equal ("vsip") then
+					l_help_project := create {MSHELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
+				else
+					-- TO DO: Web Help
+				end
+				create l_help_generator.make (l_help_project)
+				l_help_generator.generate
+			end
+			
+			l_output_file.open_append
+			l_output_file.putstring ("%N%NGeneration completed.  Review information above in case of errors.")
+			l_output_file.close
 		end
-
-feature {NONE} -- Commands
-
-	terminate_with_error (a_error: STRING) is
-			-- Terminate execution with `a_error' message 
-		do
-			io.putstring (a_error)
-			io.put_new_line
-			io.put_string (Message_constants.command_read_line)
-			io.read_character
-			if io.last_character /= Void then
---				feature {ENVIRONMENT}.exit (0)	
-			end
-		end		
 
 feature {NONE} -- Implementation
 			
@@ -411,12 +389,6 @@ feature {NONE} -- Implementation
 				Result := xml_toc_converter.toc
 				Result.set_name (a_name)
 			end
-		end
-		
-	output_constants: OUTPUT_CONSTANTS is
-			-- Output constants
-		once
-			Result := Shared_constants.Output_constants
 		end
 	
 	message_constants: MESSAGE_CONSTANTS is

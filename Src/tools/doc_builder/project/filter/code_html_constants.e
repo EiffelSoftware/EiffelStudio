@@ -40,18 +40,21 @@ feature -- Access
 	html_content_token: STRING is "[!Content!]"
 			-- Content token
 	
-feature -- Query
-
-	is_contract: BOOLEAN is False
-			-- Short format?
+	html_stylesheet_token: STRING is "[!Stylesheet!]"
+			-- Stylesheet token
 	
-	is_interface: BOOLEAN is True
-			-- Flat format
+feature -- Query
 
 	replace_token (text, a_token, new_text: STRING) is
 			-- Replace `a_token' in `text' with `new_text'
 		do
 			text.replace_substring_all (a_token, new_text)	
-		end		
+		end	
+		
+	chart_suffix: STRING is "_chart"
+			-- Suffix for code chart view files
+		
+	contract_suffix: STRING is "_flatshort"
+			-- Suffix for code contract view
 
 end -- class CODE_HTML_CONSTANTS

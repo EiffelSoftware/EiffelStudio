@@ -38,4 +38,10 @@ feature -- Access
 			create Result			
 		end
 
+	Transformation_constants: XSL_TRANSFORM_CONSTANTS is
+			-- Transform constants
+		once
+			create Result	
+		end		
+
 end -- class SHARED_CONSTANTS

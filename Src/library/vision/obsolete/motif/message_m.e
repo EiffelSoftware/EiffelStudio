@@ -200,8 +200,8 @@ feature
 			set_unsigned_char (screen_object, MALIGNMENT_CENTER, $ext_name)
 		end;
 
-	set_end_alignment is
-			-- Set message alignment to end.
+	set_right_alignment is
+			-- Set message alignment to right.
 		local
 			ext_name: ANY
 		do
@@ -247,7 +247,7 @@ feature
 			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
-	set_start_alignment is
+	set_left_alignment is
 			-- Set message alignment to beginning.
 		local
 			ext_name: ANY

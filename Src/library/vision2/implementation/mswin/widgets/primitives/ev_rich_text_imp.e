@@ -838,6 +838,7 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
 			end
+			enable_all_notifications
 			
 				-- Restore contents of `Current' from stored RTF.
 			create stream_in.make (old_text_as_rtf)

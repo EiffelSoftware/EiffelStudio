@@ -19,13 +19,6 @@
 
 #define MAX_CHAR	256			/* Ascii limit */
 
-/* 
- * Public declarations
- */
-
-int line_pos = 1;				/* Position in current line */
-int last_saved=0;				/* Position reached in previous line */
-
 /*
  * Static declarations
  */
@@ -66,8 +59,19 @@ extern struct token *in_word_set();		/* Pointer to static data */
 #define YY_INPUT(buf,result,max_size) \
 	{ \
 	int c = getc( yyin ); \
-	result = c == EOF ? (inherit_context ? '\001': 0) : 1; \
-	buf[0] = (char) c; \
+	/*result = c == EOF ? (inherit_context ? (buf[0]='\001', 1):(buf[0]=EOF, 0)): (buf[0]=c, 1); */ \
+	if (c == EOF) \
+		if (inherit_context) { \
+			buf[0]='\001'; \
+			result = 1; \
+		} else { \
+			buf[0]=EOF; \
+			result = 0; \
+		} \
+	else { \
+		buf[0]=c; \
+		result = 1; \
+		} \
 	}
 
 #else

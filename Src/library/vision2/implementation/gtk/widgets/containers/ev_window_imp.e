@@ -478,8 +478,16 @@ feature {NONE} -- Implementation
 				application_created: app_imp /= Void
 			end
 			app_imp.window_oids.extend (object_id)
-			signal_connect_true ("delete_event", agent close_request_actions.call ([]))
+			signal_connect_true ("delete_event", agent call_close_request_actions)
 			enable_user_resize
+		end
+		
+	call_close_request_actions is
+			-- Call the close request actions.
+		do
+			if close_request_actions_internal /= Void then
+				close_request_actions_internal.call ([])
+			end
 		end
 
 	vbox: POINTER
@@ -519,6 +527,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2001/06/15 19:30:27  king
+--| Refactored a call_close_request_actions callback routine
+--|
 --| Revision 1.48  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

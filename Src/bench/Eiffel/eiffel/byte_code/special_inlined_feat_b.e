@@ -13,11 +13,6 @@ inherit
 			generate_parameters
 		end
 
-	SHARED_NAMES_HEAP
-		export
-			{NONE} all
-		end
-
 feature -- Generation
 
 	generate_parameters (gen_reg: REGISTRABLE) is
@@ -25,7 +20,7 @@ feature -- Generation
 			buf: GENERATION_BUFFER
 			type_c: TYPE_C
 		do
-			if feature_name_id = put_name_id then
+			if feature_name_id = Names_heap.put_name_id then
 				parameters.generate
 				buf := buffer
 				buf.putchar ('{')
@@ -83,7 +78,7 @@ feature -- Generation
 	
 				buf.putchar ('}')
 				buf.new_line
-			elseif feature_name_id = item_name_id then
+			elseif feature_name_id = Names_heap.item_name_id then
 				parameters.generate
 				buf := buffer
 				buf.putchar ('{')
@@ -135,20 +130,6 @@ feature -- Generation
 			else
 				{INLINED_FEAT_B} Precursor (gen_reg)
 			end
-		end
-
-feature {NONE} -- Constant
-
-	put_name_id: INTEGER is
-			-- Id of "put" in NAMES_HEAP.
-		once
-			Result := Names_heap.id_of ("put")
-		end
-
-	item_name_id: INTEGER is
-			-- Id of "item" in NAMES_HEAP.
-		once
-			Result := Names_heap.id_of ("item")
 		end
 
 end -- class SPECIAL_INLINED_FEAT_B

@@ -11,14 +11,15 @@ inherit
 	WINDOWS
 	ISE_COMMAND
 
-	INTERFACE_NAMES
+	NEW_EB_CONSTANTS
 
 creation
 	make
 
 feature {NONE} -- Initalization
 
-	make (a_window: like about_window) is
+--	make (a_window: like about_window) is
+	make is
 			-- Initialize command with `a_category'.
 		do
 		end
@@ -42,16 +43,16 @@ feature -- Properties
 			-- Name of the command.
 		do
 			Result := clone(Interface_names.f_About)
-			Result.append(" ")
-			Result.append(version_number)
+--			Result.append(" ")
+--			Result.append(version_number)
 		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
 			Result := clone(Interface_names.m_About)
-			Result.append(" ")
-			Result.append(version_number)
+--			Result.append(" ")
+--			Result.append(version_number)
 		end
 
 	accelerator: STRING is
@@ -61,6 +62,6 @@ feature -- Properties
 
 invariant
 
-	valid_category: category /= Void
+--	valid_category: category /= Void
 
 end -- class EB_LAUNCHER3

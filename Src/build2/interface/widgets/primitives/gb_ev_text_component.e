@@ -94,7 +94,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -107,9 +107,9 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := a_name + ".enable_edit"
+					Result := info.name + ".enable_edit"
 				else
-					Result := a_name + ".disable_edit"
+					Result := info.name + ".disable_edit"
 				end
 			end
 			Result := strip_leading_indent (Result)

@@ -1071,20 +1071,20 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 -------------------------------------------------
--- Search the beginning of the SYSTEM_IN_DLL part
+-- Search the beginning of the SYSTEM_IN_DYNAMIC_LIB part
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			from
 			until
-				lastline.count>14 and then lastline.substring (1,14).is_equal ("SYSTEM_IN_DLL=")
+				lastline.count>22 and then lastline.substring (1,22).is_equal ("SYSTEM_IN_DYNAMIC_LIB=")
 			loop
 				read_next
 				lastline := clone (makefile_sh.laststring)
 			end
 
-			makefile.putstring ("%N#SYSTEM_IN_DLL PART%N%N")
+			makefile.putstring ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
 
--- SYSTEM_IN_DLL= appl.dll
+-- SYSTEM_IN_DYNAMIC_LIB= appl.dll
 			lastline.replace_substring_all (".so", ".dll")
 			makefile.putstring (lastline)
 			makefile.new_line
@@ -1095,12 +1095,12 @@ feature {NONE} -- Translation
 			makefile.putstring (".def")
 			makefile.new_line
 
--- dll: $(SYSTEM_IN_DLL)
+-- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- egc_dll.obj
+-- egc_dynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1134,7 +1134,7 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- edll.obj
+-- edynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1156,7 +1156,7 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- SYSTEM_IN_DLL_OBJ
+-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1166,14 +1166,14 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
--- DLLSHAREDFLAGS
+-- DYNLIBSHAREDFLAGS
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			makefile.putstring (lastline)
-			if options.has ("system_dll") 
+			if options.has ("system_dynlib") 
 			then 
 				makefile.putstring (" \%N")
-				lastline := clone (options.get_string ("system_dll", Void))
+				lastline := clone (options.get_string ("system_dynlib", Void))
 				lastline.replace_substring_all ("$appl", appl)
 				makefile.putstring (lastline)
 				makefile.new_line
@@ -1181,18 +1181,18 @@ feature {NONE} -- Translation
 				makefile.new_line
 			end
 
--- SYSTEM_IN_DLL
+-- SYSTEM_IN_DYNAMIC_LIB
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.putstring (" $(DEF_FILE)")
 			makefile.new_line 
 
--- $(RM) "$(SYSTEM_IN_DLL)"
+-- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- $(SHAREDLINK) $(DLLSHAREDFLAGS) $(SYSTEM_IN_DLL_OBJ) $(SHAREDLIBS)
+-- $(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS)
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line

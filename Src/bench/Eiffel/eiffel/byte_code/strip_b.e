@@ -6,8 +6,9 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, analyze, generate, print_register
+			make_byte_code, enlarged
 		end;
+	SHARED_INSTANTIATOR
 
 creation
 
@@ -29,40 +30,63 @@ feature
 		local
 			meta_generic: META_GENERIC;
 		once
-			!!Result;
-			Result.set_base_id (System.array_id);
-			!!meta_generic.make (1);
-			meta_generic.put (Reference_c_type, 1);
-			Result.set_meta_generic (meta_generic);
+			Result := Instantiator.Array_type
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is
-			--## FIXME
 		do
 		end;
 
-	analyze is
-			-- Analyze expression
+	enlarged: STRIP_BL is
+			-- Enlarge node
 		do
-			--## FIXME
-		end;
-	
-	generate is
-			-- Generate expression
-		do
-			--## FIXME
+			!!Result;
+			Result.set_feature_ids (feature_ids)
 		end;
 
-	print_register is
-			-- Print current register (the one holding the strip array).
+	attribute_names: LINKED_LIST [STRING] is
+			-- Get routine ids.
+		local
+			skeleton: SKELETON;
+			attr: ATTR_DESC;
 		do
-			--## FIXME
+			skeleton := Context.class_type.skeleton;
+           	from
+				!!Result.make;
+            	feature_ids.start
+            until
+            	feature_ids.after
+            loop
+              	skeleton.search_feature_id (feature_ids.item);
+               	attr := skeleton.item;
+               	--! Should always be found
+				Result.add_right (attr.attribute_name);
+				Result.forth;
+               	feature_ids.forth;
+            end;
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a strip expression
+		local
+			cl_type: CLASS_TYPE;
+			attr_names: LINKED_LIST [STRING];
 		do
-			-- FIXME
+			cl_type := Context.class_type;
+			attr_names := attribute_names;
+			ba.append (Bc_current);
+			from
+				attr_names.start
+			until
+				attr_names.after
+			loop
+				ba.append (Bc_add_strip);
+				ba.append_raw_string (attr_names.item);
+				attr_names.forth
+			end;
+			ba.append (Bc_end_strip);
+			ba.append_short_integer (cl_type.type_id - 1);
+			ba.append_integer (attr_names.count);
 		end;
 
 invariant

@@ -1071,7 +1071,6 @@ feature -- Removal
 			create internal_string_builder.make_1 (0)
 		ensure then
 			is_empty: count = 0
-			empty_capacity: capacity = 0
 		end
 
 	clear_all is

@@ -67,7 +67,7 @@ feature -- Access
 				l.after or Result
 			loop
 				ct ?= l.item
-				if l.item /= Void then
+				if ct /= Void then
 					Result := ct.has_recursive (an_item)
 				end
 				l.forth
@@ -86,7 +86,7 @@ feature -- Status setting
 		do
 			implementation.connect_radio_grouping (other)
 		end
-
+	
 feature -- Status report
 
 	writable: BOOLEAN is
@@ -365,6 +365,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/29 03:38:15  pichery
+--| Fixed bug in `recursive_has'
+--|
 --| Revision 1.31  2000/04/21 18:14:47  brendel
 --| Improved contracts for client_width/height.
 --|

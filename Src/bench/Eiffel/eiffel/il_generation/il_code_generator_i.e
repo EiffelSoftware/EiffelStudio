@@ -155,6 +155,13 @@ feature -- Class info
 		deferred
 		end
 
+	add_eiffel_interface (type_id: INTEGER) is
+			-- Add interface of `type_id' into list of parents of current type.
+		require
+			positive_type_id: type_id >= 0
+		deferred
+		end
+
 	end_parents_list is
 			-- Finishing inheritance part description
 			-- `start_parents_list' should have been called before.
@@ -378,6 +385,13 @@ feature -- Object creation
 		deferred
 		end
 
+	set_eiffel_type (type_id: INTEGER) is
+			-- Set `Type_id' to newly created Eiffel object.
+		require
+			positive_type_id: type_id > 0
+		deferred
+		end
+
 	mark_creation_routines (feature_ids: ARRAY [INTEGER]) is
 			-- Mark routines of `feature_ids' in Current class as creation
 			-- routine of Current class.
@@ -428,6 +442,14 @@ feature -- Variables access
 
 	generate_precursor_feature_access (type_id, feature_id: INTEGER) is
 			-- Generate access to feature of `feature_id' in `type_id'.
+		require
+			positive_type_id: type_id > 0
+			positive_feature_id: feature_id > 0
+		deferred
+		end
+
+	put_method_token (type_id, feature_id: INTEGER) is
+			-- Put associated metadata token to feature of `feature_id' in `type_id'.
 		require
 			positive_type_id: type_id > 0
 			positive_feature_id: feature_id > 0

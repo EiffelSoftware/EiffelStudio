@@ -359,6 +359,14 @@ feature -- Class info
 			implementation.add_interface (type_id)
 		end
 
+	add_eiffel_interface (type_id: INTEGER) is
+			-- Add interface of `type_id' into list of parents of current type.
+		require
+			positive_type_id: type_id >= 0
+		do
+			implementation.add_eiffel_interface (type_id)
+		end
+
 	end_parents_list is
 			-- Finishing inheritance part description
 			-- `start_parents_list' should have been called before.
@@ -1017,8 +1025,14 @@ feature -- Object creation
 			-- Create object of same type as current object.
 		require
 			il_generation_started: il_generation_started
+		local
+			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_like_current_object
+			gen_type_i ?= current_class_type.type
+			if gen_type_i /= Void then
+				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
+			end
 		end
 
 	create_object (type_i: TYPE_I) is
@@ -1026,8 +1040,14 @@ feature -- Object creation
 		require
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
+		local
+			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_object (static_id_of (type_i))
+			gen_type_i ?= type_i
+			if gen_type_i /= Void then
+				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
+			end
 		end
 
 	create_attribute_object (type_i: TYPE_I; feature_id: INTEGER) is
@@ -1036,8 +1056,14 @@ feature -- Object creation
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
 			positive_feature_id: feature_id > 0
+		local
+			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_attribute_object (static_id_of (type_i), feature_id)
+			gen_type_i ?= type_i
+			if gen_type_i /= Void then
+				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
+			end
 		end
 
 	mark_creation_routines (feature_ids: ARRAY [INTEGER]) is
@@ -1114,6 +1140,15 @@ feature -- Variables access
 			positive_feature_id: feature_id > 0
 		do
 			implementation.generate_precursor_feature_access (implementation_id_of (type_i), feature_id)
+		end
+
+	put_method_token (type_i: TYPE_I; feature_id: INTEGER) is
+		require
+			il_generation_started: il_generation_started
+			type_i_not_void: type_i /= Void
+			positive_feature_id: feature_id > 0
+		do
+			implementation.put_method_token (static_id_of (type_i), feature_id)
 		end
 
 	generate_argument (n: INTEGER) is
@@ -1623,6 +1658,12 @@ feature -- Constants generation
 			end
 		end
 
+	put_void is
+			-- Add a Void element on stack.
+		do
+			implementation.put_void
+		end
+		
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
 		require

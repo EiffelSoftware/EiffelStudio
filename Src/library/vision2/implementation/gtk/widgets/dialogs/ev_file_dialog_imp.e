@@ -122,7 +122,6 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			filter := clone (a_filter)
-			filter.append ("/")
 			create a_gs.make (filter)
 			C.gtk_file_selection_complete (c_object, a_gs.item)
 		end

@@ -12,8 +12,10 @@ add_unselect_command
 remove_select_commands
 remove_unselect_commands
 ==========================================================================
-CLASS:	ev_composite_command
+CLASS:	ev_tree_imp
 DATE:	19990827
 WHO:	king
-history
-failed
+add_select_command
+add_unselect_command
+remove_select_commands
+remove_unselect_commands

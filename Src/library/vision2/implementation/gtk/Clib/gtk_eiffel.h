@@ -509,6 +509,12 @@ EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap);
 void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
 
 /*==============================================================================
+ gtk_progressbar functions
+==============================================================================*/
+
+EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
+
+/*==============================================================================
  gtk_style functions
 ==============================================================================*/
 

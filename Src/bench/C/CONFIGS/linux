@@ -11,7 +11,7 @@ eiflib='finalized'
 ld='ld'
 mt_prefix='mt'
 
-mtccflags='-DEIF_THREADS -DEIF_LINUXTHREADS'
+mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-L/usr/X11R6/lib -lXext -lSM -lICE -lbsd -lm -lpthread'
 
 # flags libs and mtlibs for graphical application (needs motif)

@@ -2345,12 +2345,12 @@ debug ("GEYACC")
 end
 
 			yyval := yyval_default;
-				if il_parser then
-					is_frozen_class := True
-				else
-						-- Trigger a syntax error.
-					raise_error
-				end
+					-- I'm adding a few comments line
+					-- here because otherwise the generated
+					-- parser is very different from the
+					-- previous one, since line numbers are
+					-- emitted.
+				is_frozen_class := True
 			
 
 if yy_parsing_status = yyContinue then

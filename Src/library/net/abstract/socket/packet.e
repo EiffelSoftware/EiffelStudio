@@ -1,4 +1,4 @@
-indexing
+isciindexing
 	description: "A data packet for sending and receiving on a socket.";
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -52,7 +52,7 @@ feature -- Access
 		require
 			valid_position: valid_position (i)			
 		do
-			Result := data.item (i).ascii_char
+			Result := data.item (i).to_character
 		end
 		
 feature -- Status report

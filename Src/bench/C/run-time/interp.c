@@ -216,6 +216,7 @@ char *icval;
 	 */
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
+	RTXD;					/* Store stack contexts */
 
 	IC = icval;				/* Where interpretation starts */
 	tagval++;				/* One more call to interpreter */
@@ -244,6 +245,7 @@ char *icval;
 	 */
 
 	if (setjmp(exenv)) {
+		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
 		dpop();							/* Pop off our own record */
@@ -272,6 +274,7 @@ int where;		/* Invariant checked after or before ? */
 	/* Starts interpretation of invariant at IC = icval. */
 
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
+	RTXD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
 
 	IC = icval;					/* Where interpretation starts */
@@ -282,6 +285,7 @@ int where;		/* Invariant checked after or before ? */
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 
 	if (setjmp(exenv)) {
+		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
 		dpop();							/* Remove calling context */
@@ -325,6 +329,8 @@ int where;			/* Are we checking invariant before or after compound? */
 	struct stochunk *scur;			/* Current chunk (stack context) */
 	char **l_top;					/* Local top */
 	struct stchunk *l_cur;			/* Current local chunk */
+	char **ls_top;					/* loc_stack top */
+	struct stchunk *ls_cur;			/* Current loc_stack chunk */
 	char **h_top;					/* Hector stack top */
 	struct stchunk *h_cur;			/* Current hector stack chunk */
 	int assert_type;				/* Assertion type */
@@ -488,7 +494,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			 * stack).
 			 */
 			RTEA(string, code, icurrent->it_ref);
-			check_options(eoption[icur_dtype], icur_dtype);
+			check_options(eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */
 			stop = op_stack.st_top;		/* needed for setjmp() and calls */
@@ -599,6 +605,8 @@ int where;			/* Are we checking invariant before or after compound? */
 			if (rescue != (char *) 0) {	/* If there is a rescue clause */
 				l_top = loc_set.st_top;		/* Save C local stack */
 				l_cur = loc_set.st_cur;
+				ls_top = loc_stack.st_top;	/* Save loc_stack */
+				ls_cur = loc_stack.st_cur;
 				h_top = hec_stack.st_top;	/* Save hector stack */
 				h_cur = hec_stack.st_cur;
 				current_trace_level = trace_call_level;	/* Save trace call level */
@@ -640,6 +648,9 @@ end:
 		loc_set.st_cur = l_cur;
 		loc_set.st_end = l_cur->sk_end;
 		loc_set.st_top = l_top;
+		loc_stack.st_cur = ls_cur;
+		loc_stack.st_end = ls_cur->sk_end;
+		loc_stack.st_top = ls_top;
 		hec_stack.st_cur = h_cur;
 		hec_stack.st_end = h_cur->sk_end;
 		hec_stack.st_top = h_top;
@@ -2535,20 +2546,17 @@ int where;					/* Invariant after or before */
 	int dtype = Dtype(obj);
 	int i;
 
-	inv_mark_table = (char *) cmalloc (scount * sizeof(char));
-	for (i=0; i<scount; i++) inv_mark_table[i]=(char) 0;
+	if (inv_mark_table == (char *) 0)
+		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
+			enomem();
 
-	if ((~in_assertion & WASC(dtype) & CK_INVARIANT) && !(zone->ov_flags & EO_INV)) {
+	bzero (inv_mark_table, scount);
+
+	if (~in_assertion & WASC(dtype) & CK_INVARIANT) {
 		old_IC = IC;				/* Save IC */
-		epush(&loc_stack, &obj);	/* Automatic updating of the `obj' ref. */
-		zone->ov_flags |= EO_INV;	/* Mark it in assertion evaluation */
 		irecursive_chkinv(dtype, obj, scur, stop, where);
-		HEADER(obj)->ov_flags &= ~EO_INV;	/* Unmark the object */
-		epop(&loc_stack, 1);		/* Release protection of `obj' */
 		IC = old_IC;				/* Restore IC */
 	}
-
-	xfree(inv_mark_table);
 }
 
 private void irecursive_chkinv(dtype, obj, scur, stop, where)

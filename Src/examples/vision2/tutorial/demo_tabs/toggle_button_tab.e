@@ -33,20 +33,16 @@ feature -- Initialization
 			create cmd2.make (~get_state_val)
 
 			create f1.make (Current, 0, 0, "Toggle On", cmd1, cmd2)
-
 			create iTrue.make_with_text (f1.combo, "True")
 			create iFalse.make_with_text (f1.combo, "False")
 			create h1.make (Current)
-			set_child_position (h1, 0, 0, 1, 3)
-
-
-			create cmd1.make (~toggle_button)
-			create b1.make_with_text(Current,"Toggle")
+			set_child_position (h1, 1, 0, 2, 3)
+			create cmd1.make (~toggle_button)			create b1.make_with_text(Current,"Toggle")
 			b1.add_click_command(cmd1, Void)
-			set_child_position (b1, 2, 1, 3, 2)
 			b1.set_vertical_resize(False)
+			set_child_position (b1, 2, 1, 3, 2)
 	
-			-- Creates the objects and their commands
+				-- Creates the objects and their commands
 			set_parent(par)
 		end
 

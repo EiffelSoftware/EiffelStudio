@@ -26,6 +26,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		once
 			{ANY_TAB} Precursor (Void)
 		
@@ -34,10 +35,13 @@ feature -- Initialization
 				create f1.make (Current, 0, 0, "Set Pixmap", cmd2, cmd2)		
 				f1.combo.set_editable (True)
 				f1.button.set_text ("Set Pixmap")
+				create h1.make (Current)
+				set_child_position (h1, 1, 0, 2, 3)
 				create cmd1.make (~unset_pixmap)
 				create b1.make_with_text (Current, "Unset Pixmap")
 				b1.set_vertical_resize (False)
 				b1.add_click_command (cmd1, Void)
+				set_child_position (b1, 2, 1, 3, 2)
 			
 				create p1.make_from_file (pixmap_path ("current"))
 				create e1.make_with_text (f1.combo, "current")

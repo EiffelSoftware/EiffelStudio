@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		do
 			{ANY_TAB} Precursor (Void)
 		
@@ -33,15 +34,19 @@ feature -- Initialization
 			create cmd1.make (~set_finite_dimens)
 			create cmd2.make (~get_finite_dimens)
 			create f2.make (Current, 1, 0, "Finite Dimension", cmd1, cmd2)
+			create h1.make (Current)
+			set_child_position (h1, 2, 0, 3, 3)
 
 			create cmd1.make(~set_row_layout)
 			create b1.make_with_text (Current, "Row Layout")
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
+			set_child_position (b1, 3, 0, 4, 1)
 			create cmd1.make (~set_column_layout)
 			create b2.make_with_text (Current, "Column layout")
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)
+			set_child_position (b2, 3, 1, 4, 2)
 
 			set_parent(par)
 		end

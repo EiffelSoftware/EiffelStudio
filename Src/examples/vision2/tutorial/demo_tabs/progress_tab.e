@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		once
 			{ANY_TAB} Precursor (Void)
 				
@@ -34,6 +35,8 @@ feature -- Initialization
 
 			create cmd2.make (~get_mode)
 			create f2.make (Current, 1, 0, "Mode", Void, cmd2)
+			create h1.make (Current)
+			set_child_position (h1, 2, 0, 3, 3)
 
 			create cmd1.make (~set_continuous)
 			--create b1.make_with_text(Current, "Continuous Mode")
@@ -41,12 +44,14 @@ feature -- Initialization
 			b1.set_text("Set to Continuous Mode")
 			b1.set_vertical_resize(False)
 			b1.add_click_command (cmd1, Void)
+			set_child_position (b1, 3, 0, 4, 1)
 			create cmd1.make (~set_segmented)
 			--b2.make_with_text (Current, "Segmented Mode")
 			create b2.make (Current)
 			b2.set_text("Set to Segmented Mode")
 			b2.set_vertical_resize (False)
 			b2.add_click_command (cmd1, Void)
+			set_child_position (b2, 3, 1, 4, 2)
 	
 
 

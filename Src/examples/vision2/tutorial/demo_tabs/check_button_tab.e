@@ -28,6 +28,7 @@ feature -- Initialization
 			
 				-- Creates the objects and their commands
 			create label.make_with_text(Current, "All features are inherited from EV_TOGGLE_BUTTON,%Ntherefore there are no features unique to EV_CHECK_BUTTON to modify")
+			set_child_position (label, 0, 0, 1, 1) 
 			set_parent(par)
 		end
 

@@ -92,7 +92,7 @@ feature -- Element change
 				a_pal_entry.flags)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

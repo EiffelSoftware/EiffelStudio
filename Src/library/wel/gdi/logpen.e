@@ -102,7 +102,7 @@ feature -- Element change
 			set_color: color.item = a_color.item
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

@@ -103,7 +103,7 @@ feature -- Element change
 			hatch_set: hatch = a_hatch
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

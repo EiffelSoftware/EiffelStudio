@@ -47,7 +47,7 @@ feature -- Element change
 			color_set: i_th_color (i).is_equal (a_color)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

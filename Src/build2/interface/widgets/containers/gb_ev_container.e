@@ -84,7 +84,7 @@ feature -- Access
 				-- GB_EV_COLORIZABLE. It is much nicer, if the
 				-- propagate buttons are placed here, along with the color
 				-- selection.
-			editor_item := parent_editor.editor_item_by_type ("GB_EV_COLORIZABLE")
+			editor_item := parent_editor.editor_item_by_type ("EV_COLORIZABLE")
 			check
 				colorizable_controls_not_changed: editor_item /= Void
 			end

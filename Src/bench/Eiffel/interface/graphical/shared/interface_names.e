@@ -21,38 +21,40 @@ class INTERFACE_NAMES
 	
 feature -- Button texts
 
-	b_Apply: STRING is					" Apply ";
+	b_And: STRING is					"And"
+	b_Apply: STRING is				" Apply ";
 	b_All: STRING is					" All ";
-	b_Browse: STRING is					"Browse...";
-	b_Build: STRING is					"Build";
-	b_Cancel: STRING is					" Cancel ";
+	b_Browse: STRING is				"Browse...";
+	b_Build: STRING is				"Build";
+	b_Cancel: STRING is				" Cancel ";
 	b_C_functions: STRING is			"C functions";
-	b_Close: STRING is					"Close";
+	b_Close: STRING is				"Close";
 	b_Compile: STRING is				"Compile";
-	b_Create: STRING is					"Create";
-	b_Descendant_time: STRING is		"Descendant time";
+	b_Create: STRING is				"Create";
+	b_Descendant_time: STRING is			"Descendant time";
 	b_Discard_assertions: STRING is		"Discard assertions";
 	b_Display: STRING is				" Display ";
-	b_Eiffel_features: STRING is		"Eiffel features";
+	b_Eiffel_features: STRING is			"Eiffel features";
 	b_Execute: STRING is				" Execute ";
 	b_Exit: STRING is					"Exit";
 	b_Exit_now: STRING is				"Exit now";
 	b_Feature_name: STRING is			"Feature name";
-	b_Final: STRING is					"Final mode";
+	b_Final: STRING is				"Final mode";
 	b_Finalize_now: STRING is			"Finalize now";
-	b_Finalize_now_but_no_c: STRING is	"Finalize (no C comp)";
+	b_Finalize_now_but_no_c: STRING is		"Finalize (no C comp)";
 	b_Freeze_now: STRING is				"Freeze now";
-	b_Freeze_now_but_no_c: STRING is	"Freeze (no C comp)";
+	b_Freeze_now_but_no_c: STRING is		"Freeze (no C comp)";
 	b_Function_time: STRING is			"Function time";
-	b_Keep_assertions: STRING is		"Keep assertions";
-	b_No: STRING is						" No ";
+	b_Keep_assertions: STRING is			"Keep assertions";
+	b_No: STRING is					" No ";
 	b_Non_clickable_Stoppoints_of: STRING is "Non clickable stop points of ";
-	b_Number_of_calls: STRING is		"Number of calls";
-	b_Ok: STRING is						" OK ";
+	b_Number_of_calls: STRING is			"Number of calls";
+	b_Ok: STRING is					" OK ";
+	b_Or: STRING is					"Or";
 	b_Overwrite: STRING is				"Overwrite";
 	b_Percentage: STRING is				"Percentage";
 	b_Precompile_now: STRING is			"Precompile now";
-	b_Recursive_functions: STRING is	"Recursive functions";
+	b_Recursive_functions: STRING is		"Recursive functions";
 	b_Run: STRING is					"Run";
 	b_Run_query: STRING is				"Run query";
 	b_Run_subquery: STRING is			"Run subquery";
@@ -313,21 +315,27 @@ feature -- Menu mnenomics
 
 feature -- Label texts
 
+	l_Active_query: STRING is			"Active query";
+	l_Add: STRING is					"Add:";
+	l_Change_operator: STRING is			"Change operator";
 	l_Cluster: STRING is				"Cluster:";
 	l_Compile_type: STRING is			"Compile type";
 	l_File_name: STRING is				"File name: ";
+	l_Inactivate: STRING is				"Inactivate";
+	l_Inactive_subqueries: STRING is		"Inactive subqueries";
 	l_Input_file: STRING is				"Input file";
 	l_Language_type: STRING is			"Language type";
-	l_Non_clickable_showstops: STRING is "Non clickable stop points";
-	l_Output_switches: STRING is		"Output switches";
-	l_Query: STRING is					"Query";
+	l_Non_clickable_showstops: STRING is 	"Non clickable stop points";
+	l_Output_switches: STRING is			"Output switches";
+	l_Query: STRING is				"Query";
+	l_Reactivate: STRING is				"Reactivate";
 	l_Results: STRING is				"Results";
-	l_Select_profiler: STRING is		"Select used profiler";
+	l_Select_profiler: STRING is			"Select used profiler";
 	l_Showallcallers: STRING is			"Show all callers";
 	l_Showcallers: STRING is			"Show static callers";
 	l_Showstops: STRING is				"Show stoppoints";
 	l_Specify_arguments: STRING is		"Specify arguments";
-	l_Subquery: STRING is				"Subquery";
+	l_Subquery: STRING is				"Define new subquery";
 
 feature -- Widget names
 
@@ -419,3 +427,5 @@ feature -- Title part
 	m_Workbench_mode: STRING is			"&Workbench mode";
 
 end -- class INTERFACE_NAMES
+	
+

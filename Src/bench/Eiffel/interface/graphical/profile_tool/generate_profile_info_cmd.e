@@ -21,8 +21,8 @@ feature -- Command execution
 			prof_converter: CONVERTER_CALLER
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
-			information_dlg: WARNER_W
-				--| Guillaume: Pb, utilise WEL...
+			error_dlg: WARNER_W
+			ok_dlg: MESSAGE_WINDOW
 		do
 			if arg = Void and then dlg = Void then
 					--| Create the dialog
@@ -50,13 +50,17 @@ feature -- Command execution
 						prof_invoker.invoke_profiler;
 					end;
 					!! prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config);
-					!! information_dlg.make(Profile_tool)
 					if prof_converter.conf_load_error then
-						profinfo.append (": File does not exist!")
-						information_dlg.gotcha_call(profinfo)
+						profinfo.append (": file does not exist")
+						!! error_dlg.make (profile_tool)
+						error_dlg.gotcha_call (profinfo)
 					elseif prof_converter.is_last_conversion_ok then
-						information_dlg.gotcha_call("Ready for queries...")
-				 	end; --| Guillaume - 09/26/97
+						!! ok_dlg.make ("Ready for queries", profile_tool)
+						ok_dlg.hide_cancel_button
+						ok_dlg.hide_help_button
+						ok_dlg.set_message ("Ready for queries") 
+						ok_dlg.popup
+				 	end; 
 				end;
 
 					--| Get rid of the object...
@@ -95,10 +99,12 @@ feature {NONE} -- Implementation
 			-- Explains that an error occured while loading the
 			-- profiler specific configuration file.
 		local
-			l_warner: WARNER_W
+			l_warner: ERROR_D
 		do
-			!! l_warner.make(profile_tool)
-			l_warner.gotcha_call (Warning_messages.w_Load_configuration);
+			-- !! l_warner.make(profile_tool) --|if l_warner: WARNER_W
+			-- l_warner.gotcha_call (Warning_messages.w_Load_configuration);
+			!! l_warner.make (Warning_messages.w_Load_configuration, profile_tool)
+			l_warner.popup
 		end
 
 end -- class GENERATE_PROFILE_INFO_CMD

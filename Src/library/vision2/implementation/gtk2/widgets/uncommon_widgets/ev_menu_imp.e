@@ -10,24 +10,16 @@ class
 inherit
 	EV_MENU_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		undefine
-			parent,
-			show
+			parent
 		redefine
 			interface,
 			initialize,
 			on_activate,
-			dispose,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
 			destroy
 		end
 
@@ -36,7 +28,6 @@ inherit
 			interface,
 			initialize,
 			list_widget,
-			dispose,
 			destroy
 		end
 
@@ -119,14 +110,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU
 
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
 feature {NONE} -- Implementation
 	
 	destroy is
@@ -134,13 +117,6 @@ feature {NONE} -- Implementation
 		do
 			interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
-		end
-		
-	dispose is
-			-- Disposal routine
-		do
-			Precursor {EV_MENU_ITEM_IMP}
-			list_widget := NULL
 		end
 
 end -- class EV_MENU_IMP

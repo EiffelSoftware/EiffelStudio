@@ -15,7 +15,7 @@ default
 	assertion (all)
 
 cluster
-	root_cluster:	"."
+	root_cluster:	"$ISE_EIFFEL/examples/vision2/widgets"
 
 
 	all base:	"$ISE_EIFFEL/library/base"

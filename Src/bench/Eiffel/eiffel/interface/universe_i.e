@@ -800,15 +800,17 @@ feature {COMPILER_EXPORTER} -- Implementation
 					-- Remove classes which are overridden
 				ovc := override_cluster
 
-				from
-					clusters.start
-				until
-					clusters.after
-				loop
-					if clusters.item /= ovc then
-						clusters.item.process_overrides (ovc)
+				if ovc /= Void then
+					from
+						clusters.start
+					until
+						clusters.after
+					loop
+						if clusters.item /= ovc then
+							clusters.item.process_overrides (ovc)
+						end
+						clusters.forth
 					end
-					clusters.forth
 				end
 			end
 

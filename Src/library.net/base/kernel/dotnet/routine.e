@@ -29,6 +29,7 @@ feature -- Initialization
 			target_object := other.target_object
 			open_map := other.open_map
 			rout_disp := other.rout_disp
+			is_cleanup_needed := other.is_cleanup_needed
 		ensure
 			same_call_status: other.callable implies callable
 		end
@@ -69,9 +70,8 @@ feature -- Access
 	target: ANY is
 			-- Target of call.
 		do
-			Result ?= internal_operands.item (0)
+			Result ?= target_object
 		end
-
 
 	hash_code: INTEGER is
 			-- Hash code value.
@@ -108,10 +108,11 @@ feature -- Status report
 			-- associated with `other'.
 		do
 				--| Do not compare implementation data
-			Result := internal_operands.equals (other.internal_operands)
+			Result := feature {SYSTEM_OBJECT}.equals (internal_operands, other.internal_operands)
 				and then open_map.equals (other.open_map)
 				and then (rout_disp = other.rout_disp)
 				and then (target_object = other.target_object)
+				and then (is_cleanup_needed = other.is_cleanup_needed)
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
@@ -176,6 +177,7 @@ feature -- Duplication
 			target_object := other.target_object
 			open_map := other.open_map
 			rout_disp := other.rout_disp
+			is_cleanup_needed := other.is_cleanup_needed
 		ensure then
 			same_call_status: other.callable implies callable
 		end
@@ -250,15 +252,17 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 			rout_disp := feature {METHOD_BASE}.get_method_from_handle (handle)
 
 			target_object := args.fast_item (0)
-			from
-				i := 1
-				nb := args.count - 1
-				create l_internal.make (nb)
-			until
-				i > nb
-			loop
-				l_internal.put (i - 1, args.fast_item (i))
-				i := i + 1
+			nb := args.count - 1
+			if nb > 0 then
+				from
+					i := 1
+					create l_internal.make (nb)
+				until
+					i > nb
+				loop
+					l_internal.put (i - 1, args.fast_item (i))
+					i := i + 1
+				end
 			end
 			internal_operands := l_internal
 
@@ -267,6 +271,8 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 			else
 				open_map := Void
 			end
+			
+			compute_is_cleanup_needed (args)
 		end
 
 feature {NONE} -- Implementation
@@ -300,6 +306,32 @@ feature {NONE} -- Implementation
 					l_internal.put (l_pos - 1, Void)
 				end
 				i := i + 1
+			end
+		end
+
+	frozen compute_is_cleanup_needed (args: TUPLE) is
+			-- Set `is_cleanup_needed' to True if some open arguments are references.
+		local
+			l_open_map: like open_map
+			i, nb, l_pos: INTEGER
+		do
+			is_cleanup_needed := False
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+				until
+					i > nb or is_cleanup_needed
+				loop
+					l_pos := l_open_map.item (i)
+						-- We only need to clean up references so that GC
+						-- can collect them if necessary.
+					if args.is_reference_item (l_pos) then
+						is_cleanup_needed := False
+					end
+					i := i + 1
+				end
 			end
 		end
 		

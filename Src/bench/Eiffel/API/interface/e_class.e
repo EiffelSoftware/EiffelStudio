@@ -115,6 +115,13 @@ feature -- Properties
 
 feature -- Access
 
+	name_in_upper: STRING is
+			-- Class name in upper case
+		do
+			Result := clone (name);
+			Result.to_upper
+		end;
+
 	ast: CLASS_AS is
 			-- Associated AST structure
 		do

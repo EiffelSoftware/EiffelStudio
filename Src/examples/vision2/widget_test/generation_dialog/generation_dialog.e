@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			set_default_cancel_button (cancel_button)
 			cancel_button.select_actions.extend (agent hide)
+			directory_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 		end
 		
 feature -- Basic operation

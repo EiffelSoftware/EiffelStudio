@@ -22,7 +22,9 @@ inherit
 			item as wel_item,
 			enabled as is_sensitive,
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position
 		undefine
 			window_process_message,
 			set_width,
@@ -189,6 +191,12 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/14 03:02:54  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.16.2.1  2000/03/09 21:58:05  brendel
+--| Renamed x to x_position, y to y_position.
+--|
 --| Revision 1.16  2000/02/23 02:21:29  brendel
 --| Removed `on_menu_command' from inh. clause.
 --|

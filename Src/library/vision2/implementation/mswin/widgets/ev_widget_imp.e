@@ -26,6 +26,7 @@ inherit
 
 	EV_SIZEABLE_IMP
 		redefine
+			initialize,
 			interface
 		end
 
@@ -85,13 +86,10 @@ feature {NONE} -- Initialization
 	initialize  is
 			-- Creation of the widget.
 		do
-			create child_cell
-			set_vertical_resize (True)
-			set_horizontal_resize (True)
+			Precursor
 			set_default_colors
 			set_default_minimum_size
 			show
-			is_initialized := True
 		end
 
 feature -- Access
@@ -185,18 +183,6 @@ feature -- Access
 			if parent_imp /=Void then
 				Result := parent_imp.notebook_parent
 			end
-		end
-
-	x_position: INTEGER is
-			-- Widget x position.
-		do
-			Result := x
-		end
-
-	y_position: INTEGER is
-			-- Widget y position.
-		do
-			Result := y
 		end
 
 	parent: EV_CONTAINER is
@@ -946,8 +932,18 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/14 03:02:54  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
 --| Revision 1.53  2000/03/09 21:10:05  rogers
 --| All calls to interface.pointer.button_***_actions are passes 0.0 instead of 0.
+--|
+--| Revision 1.52.2.2  2000/03/09 21:39:47  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
+--| Revision 1.52.2.1  2000/03/09 17:53:04  brendel
+--| Removed inheritance of EV_SIZEABLE_IMP.
 --|
 --| Revision 1.52  2000/02/19 06:34:13  oconnor
 --| removed old command stuff

@@ -28,10 +28,12 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make,
-			move as move_to
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		redefine
 			top_level_window_imp,
-			move_and_resize
+			wel_move_and_resize
 		end
 
 create
@@ -63,7 +65,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Make `x' and `y' the new position of the current object and
 			-- `w' and `h' the new width and height of it.
 			-- If there is any child, it also adapt them to fit to the given
@@ -71,8 +73,9 @@ feature {EV_ANY_I} -- Implementation
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
-				child.set_move_and_size (0, 0, 
-					client_width, client_height)
+				--| FIXME necessary???
+				--child.set_move_and_size (0, 0, 
+				--	client_width, client_height)
 			end
 		end
 
@@ -129,6 +132,14 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.5.2.1  2000/03/11 00:19:15  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.5  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

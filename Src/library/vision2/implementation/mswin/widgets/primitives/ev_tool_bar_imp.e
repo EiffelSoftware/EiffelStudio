@@ -21,7 +21,7 @@ inherit
 			integrate_changes
 		redefine
 			parent_imp,
-			move_and_resize,
+			wel_move_and_resize,
 			on_left_button_up,
 			on_left_button_down,
 			on_right_button_down,
@@ -44,7 +44,8 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			interface
+			interface,
+			initialize
 		end
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP [EV_TOOL_BAR_ITEM]
@@ -63,12 +64,16 @@ inherit
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive, 
 			width as wel_width,
 			height as wel_height,
 			tooltip as wel_tooltip,
-			set_tooltip as wel_set_tooltip
+			set_tooltip as wel_set_tooltip,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			set_width,
 			set_height,
@@ -90,9 +95,9 @@ inherit
 			hide
 		redefine
 			wel_set_parent,
-			resize,
-			move_to,
-			move_and_resize,
+			wel_resize,
+			wel_move,
+			wel_move_and_resize,
 			default_style,
 			default_process_message
 		end
@@ -119,6 +124,7 @@ feature {NONE} -- Initialization
 		do
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)			
+			{EV_SIZEABLE_CONTAINER_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			create ev_children.make (2)
 			--create children.make (1)
@@ -389,21 +395,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- We must not resize the height of the tool-bar.
 		do
 			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
 			reposition
 		end
 
-	resize (a_width, a_height: INTEGER) is
+	wel_resize (a_width, a_height: INTEGER) is
 			-- We must not resize the height of the tool-bar.
 		do
 			bar.resize (a_width, height)
 			reposition
 		end
 
-	move_to (a_x, a_y: INTEGER) is
+	wel_move (a_x, a_y: INTEGER) is
 			-- We need to move the bar only.
 		do
 			bar.move (a_x, a_y)
@@ -662,6 +668,21 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.27.2.3  2000/03/14 00:05:52  brendel
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.27.2.2  2000/03/11 00:19:21  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.27.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.27  2000/02/19 05:45:01  oconnor
 --| released
 --|

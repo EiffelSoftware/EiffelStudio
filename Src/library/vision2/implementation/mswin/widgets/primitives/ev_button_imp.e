@@ -74,11 +74,15 @@ inherit
 			set_font as wel_set_font,
 			destroy as wel_destroy,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive,
 			width as wel_width,
 			height as wel_height,
-			text as wel_text
+			text as wel_text,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -320,6 +324,18 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.41.2.2  2000/03/11 00:19:19  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.41.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.41  2000/03/07 17:41:21  rogers
 --| Redefined on_size from WEL_BITMAP_BUTTON so the re-size actions can be called.
 --|

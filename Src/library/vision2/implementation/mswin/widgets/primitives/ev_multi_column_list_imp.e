@@ -57,10 +57,14 @@ inherit
 			set_column_width as wel_set_column_width,
 			get_column_width as wel_get_column_width,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive, 
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			remove_command,
 			set_width,
@@ -293,6 +297,8 @@ feature -- Status setting
 			end
 			a_x := x
 			a_y := y
+			a_x := x_position
+			a_y := y_position
 			a_width := width
 			a_height := height
 				-- Store parent, x, y, width, height
@@ -620,16 +626,16 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
-		-- Propagate `event_id' to the good item. 
-		local 
-			it: EV_MULTI_COLUMN_LIST_ROW_IMP 
-	do
-		it := find_item_at_position (x_pos, y_pos) 
-		if it /= Void then 
-		--it.execute_command (event_id, ev_data) 
-		end 
-	end 
+--	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
+--		-- Propagate `event_id' to the good item. 
+--		local 
+--			it: EV_MULTI_COLUMN_LIST_ROW_IMP 
+--	do
+--		it := find_item_at_position (x_pos, y_pos) 
+--		if it /= Void then 
+--		--it.execute_command (event_id, ev_data) 
+--		end 
+--	end 
 
 
 	process_message (hwnd: POINTER; msg,
@@ -886,11 +892,23 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
 --| Revision 1.49  2000/03/13 23:15:21  rogers
 --| Added internal_propagate_event, not yet implemented. Redfined on_mouse_move from ev_primitive and call the pointer_motion_actions on an item if required. Changed the export status of implementation feature to {EV_MULTI_COLUMN_LIST_ROW_IMP}.
 --|
 --| Revision 1.48  2000/03/13 22:22:13  rogers
 --| Fixed set_columns so if the list does not have a parent and items are added, the default_parent will be used.
+--|
+--| Revision 1.47.2.2  2000/03/11 00:19:21  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.47.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
 --|
 --| Revision 1.47  2000/03/07 18:31:37  rogers
 --| Redefined on_size from WEL_LIST_VIEW, so the resize_actions can be called.

@@ -49,7 +49,8 @@ inherit
 			internal_set_minimum_size,
 			on_destroy,
 			notebook_parent,
-			interface
+			interface,
+			notify_change
 		end
 
 	WEL_FRAME_WINDOW
@@ -61,12 +62,16 @@ inherit
 			set_width as wel_set_width,
 			set_height as wel_set_height,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive,
 			set_x as set_x_position,
 			set_y as set_y_position,
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			remove_command,
 			on_left_button_down,
@@ -98,7 +103,7 @@ inherit
 			on_show,
 			on_move,
 			default_process_message,
-			move_and_resize,
+			wel_move_and_resize,
 			on_menu_command,
 			on_wm_close
 		end
@@ -283,7 +288,7 @@ feature -- Element change
 		do
 			maximum_width := value
 			if value < width then
-				resize (value, height)
+		--		request_resize (value, height)
 			end
 		end
 
@@ -294,7 +299,7 @@ feature -- Element change
 		do
 			maximum_height := value
 			if value < height then
-				resize (width, value)
+		--		request_resize (width, value)
 			end
 		end
 
@@ -372,11 +377,11 @@ feature -- Resizing
 			-- We don't redefine it because of the post-conditions.
 		do
 			if is_show_requested then
-				resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+				wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 			else
 				internal_changes := set_bit (internal_changes, 64, True)
 				internal_changes := set_bit (internal_changes, 128, True)
-				resize (w, h)
+				wel_resize (w, h)
 			end
 		end
 
@@ -486,7 +491,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
 			if value > width then
-				resize (value, height)
+		--		request_resize (value, height)
 			end
 		end
 
@@ -497,7 +502,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
 			if value > height then
-				resize (width, value)
+		--		request_resize (width, value)
 			end
 		end
 
@@ -507,14 +512,8 @@ feature {NONE} -- Implementation
 			-- the size change.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (mw, mh)
-			if mw > width then
-				if mh > height then
-					resize (mw, mh)
-				else
-					resize (mw, height)
-				end
-			elseif mh > height then
-				resize (width, mh)
+			if mw > width or else mh > height then
+				wel_resize (mw.max (width), mh.max (height))
 			end
 		end
 
@@ -580,6 +579,19 @@ feature {NONE} -- Implementation
 			internal_set_minimum_size (mw, mh)
 		end
 
+	notify_change (type: INTEGER) is
+		local
+			app_imp: EV_APPLICATION_IMP
+		do
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			if resize_on_idle_agent = Void then
+				resize_on_idle_agent := ~compute_minimum_size
+			end
+			app_imp.do_once_on_idle (resize_on_idle_agent)
+		end
+
+	resize_on_idle_agent: PROCEDURE [ANY, TUPLE []]
+
 feature {NONE} -- Inapplicable
 
 	parent_ask_resize (a_width, a_height: INTEGER) is
@@ -615,8 +627,8 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_controlparent
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x_position', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
 			{WEL_FRAME_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
@@ -664,7 +676,7 @@ feature {NONE} -- Implementation
 			end
 
 			-- We resize everything and draw the menu.
-			resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+			wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
@@ -683,14 +695,14 @@ feature {NONE} -- Implementation
 						sb_imp.reposition
 					end
 				end
-				interface.resize_actions.call ([x, y, a_width, a_height])
+				interface.resize_actions.call ([x_position, y_position, a_width, a_height])
 			end
 		end
 
    	on_move (x_pos, y_pos: INTEGER) is
    			-- Wm_move message.
    			-- This message is sent after a window has been moved.
-   			-- `x_pos' specifies the x-coordinate of the upper-left
+   			-- `x_position_pos' specifies the x_position-coordinate of the upper-left
    			-- corner of the client area of the window.
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
@@ -699,20 +711,27 @@ feature {NONE} -- Implementation
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+			-- Called by WEL to request min/max size of window.
+			-- Is called just before move and/or resize.
 		local
 			min_track, max_track: WEL_POINT
 			w, h: BOOLEAN
 		do
+		--	io.put_string ("recomputing sizes%N")
+		--	compute_minimum_size
 			w := horizontal_resizable
 			h := vertical_resizable
 			if w and h then
 				!! min_track.make (internal_minimum_width, internal_minimum_height)
+		--		!! min_track.make (minimum_width, minimum_height)
 				!! max_track.make (maximum_width, maximum_height)
 			elseif w then
 				!! min_track.make (internal_minimum_width, height)
+		--		!! min_track.make (minimum_width, height)
 				!! max_track.make (maximum_width, height)
 			elseif h then
 				!! min_track.make (width, internal_minimum_height)
+		--		!! min_track.make (width, minimum_height)
 				!! max_track.make (width, maximum_height)
 			else
 				!! min_track.make (width, height)
@@ -885,6 +904,23 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.27.2.3  2000/03/14 00:08:59  brendel
+--| Reworked idle handler. Now uses {EV_APPLICATION_IMP}.do_once_on_idle.
+--|
+--| Revision 1.27.2.2  2000/03/11 00:18:05  brendel
+--| Added redefinition of notify_change, that recomputes the minimum sizes.
+--| Renamed move_and_resize, move, resize to wel_*.
+--| Added function request_resize that puts a function into
+--| {EV_APPLICATION}.internal_idle_actions. The handler `resize_on_idle' is
+--| not yet finished.
+--|
+--| Revision 1.27.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.27  2000/02/29 22:15:54  rogers
 --| In on_wm_close, after calling the events, now set_default_processing (False)  to stop windows automatically closing the window, or exiting the application.
 --|

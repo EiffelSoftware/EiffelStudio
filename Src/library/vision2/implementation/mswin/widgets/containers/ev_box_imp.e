@@ -35,7 +35,6 @@ inherit
 	
 	EV_INVISIBLE_CONTAINER_IMP
 		rename
-			move as move_to,
 			interface as ev_invisible_container_imp_interface
 		undefine
 			compute_minimum_width,
@@ -310,6 +309,14 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.29.2.1  2000/03/11 00:19:15  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.29  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -21,6 +21,8 @@ inherit
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
+		undefine
+			initialize
 		redefine
 			interface
 		end
@@ -28,15 +30,7 @@ inherit
 	EV_MENU_ITEM_HANDLER_IMP
 
 	EV_WIDGET_IMP
-		undefine
-			internal_set_minimum_width,
-			internal_set_minimum_height,
-			internal_set_minimum_size,
-			integrate_changes,
-			minimum_width,
-			minimum_height
 		redefine
-			move_and_resize,
 			interface,
 			initialize
 		end
@@ -51,12 +45,12 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Precusor and create new_item_actions.
 		do
-			Precursor
 			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
 			create remove_item_actions.make ("remove_item", <<"widget">>)
 			remove_item_actions.extend (~remove_radio_button)
+			{EV_WIDGET_IMP} Precursor
 		end
 
 feature -- Access
@@ -467,6 +461,13 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.41.2.1  2000/03/09 21:39:47  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.41  2000/03/06 21:21:53  brendel
 --| Added functionality to connect_radio_grouping that reverses the target
 --| and argument of the call when implementation of argument is Void.

@@ -332,7 +332,7 @@ feature {NONE} -- WEL Implementation
 					h := 0
 				end
 	
-				resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+				wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 			end
 		end
 
@@ -377,6 +377,14 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.55.2.1  2000/03/11 00:19:16  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.55  2000/02/29 22:18:27  rogers
 --| Redefined initialize, to add the window to the root windows list and to also extend the close_actions with destroy.
 --|

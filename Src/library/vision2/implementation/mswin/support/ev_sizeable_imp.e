@@ -1,10 +1,12 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "A class for MS-Windows to simulate resizing by children";
-	status: "See notice at end of class"; 
-	date: "$Date$"; 
+	description:
+		"Eiffel Vision sizeable. Mswindows implementation of ancestor%N%
+		%for EV_SIZEABLE_PRIMITIVE_IMP and EV_SIZEABLE_CONTAINER_IMP."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$" 
- 
+
 deferred class
 	EV_SIZEABLE_IMP
 
@@ -13,36 +15,27 @@ inherit
 
 	EV_BIT_OPERATIONS_I
 
+feature {NONE} -- Initialization
+
+	initialize is
+		do
+			is_initialized := True
+			create child_cell
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
+		end
+
 feature -- Access
 
 	minimum_width: INTEGER is
-			-- Minimum width of the window.
-			-- We recompute it if necessary.
-		do
-			Result := internal_minimum_width
+			-- Lower bound on `width' in pixels.
+		deferred
 		end
 
 	minimum_height: INTEGER is
-			-- Minimum height of the window.
-			-- We recompute it if necessary.
-		do
-			Result := internal_minimum_height
+			-- Lower bound on `height' in pixels.
+		deferred
 		end
-
-	Nc_minwidth: INTEGER is 1
-			-- Used only in the `notify_change' feature to
-			-- notify the parent that the minimum width of 
-			-- the current widget has changed.
-
-	Nc_minheight: INTEGER is 2
-			-- Used only in the `notify_change' feature to
-			-- notify the parent that the minimum height of 
-			-- the current widget has changed.
-
-	Nc_minsize: INTEGER is 3
-			-- Used only in the `notify_change' feature to
-			-- notify the parent that both the minimum width
-			-- and height of the current widget have changed.
 
 feature -- Status report
 
@@ -94,7 +87,7 @@ feature -- Status setting
 			-- Make `flag' the new horizontal_resizable status.
 		do
 			internal_changes := set_bit (internal_changes, 16, flag)
-			if is_displayed then
+			if is_show_requested then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -103,7 +96,7 @@ feature -- Status setting
 			-- Make `flag' the new vertical_resizable status.
 		do
 			internal_changes := set_bit (internal_changes, 32, flag)
-			if is_displayed then
+			if is_show_requested then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -137,21 +130,21 @@ feature -- Resizing
 	set_size (w, h: INTEGER) is
 			-- Resize the widget when it is not managed.
 		do
-			move_and_resize (x, y, w.max (minimum_width), h.max (minimum_height), True)
+			wel_resize (w.max (minimum_width), h.max (minimum_height))
 		end
 
 	set_width (value:INTEGER) is
 			-- Make `value' the new width of the widget when
 			-- it is not managed.
 		do
-			move_and_resize (x, y, value.max (minimum_width), height, True)
+			wel_resize (value.max (minimum_width), height)
 		end
 
 	set_height (value: INTEGER) is
 			-- Make `value' the new height of the widget when
 			-- it is not managed.
 		do
-			move_and_resize (x, y, width, value.max (minimum_height), True)
+			wel_resize (width, value.max (minimum_height))
 		end
 
 	set_minimum_width (value: INTEGER) is
@@ -187,19 +180,21 @@ feature -- Resizing
 
 feature -- Position
 
-	set_x_y, set_position (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y' relative to parent.
+	set_position (new_x_position: INTEGER; new_y_position: INTEGER) is
+			-- Put at horizontal position `new_x_position' and at
+			-- vertical position `new_y_position' relative to parent.
 		do
-			move_to (new_x, new_y)
+			wel_move (new_x_position, new_y_position)
 		end
 
-feature -- Assertion features
+feature -- Contract support
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+		obsolete
+			"Do not use it."
 		local
 			temp: INTEGER
 		do
@@ -211,6 +206,8 @@ feature -- Assertion features
 			-- Check if the dimensions of the widget are set to 
 			-- the values given or the minimum values possible 
 			-- for that widget.
+		obsolete
+			"Do not use it."
 		do
 			if new_width = -1 then
 				Result := new_height = internal_minimum_height
@@ -222,98 +219,75 @@ feature -- Assertion features
 			end
 		end		
 
-	position_set (new_x, new_y: INTEGER): BOOLEAN is
+	position_set (new_x_position, new_y_position: INTEGER): BOOLEAN is
 			-- Check if the dimensions of the widget are set to 
 			-- the values given or the minimum values possible 
 			-- for that widget.
+		obsolete
+			"Do not use it."
 		do
-			if new_x = -1 then
-				Result := new_y = y
-			elseif new_y = -1 then
-				Result := new_x = x
+			if new_x_position = -1 then
+				Result := new_y_position = y_position
+			elseif new_y_position = -1 then
+				Result := new_x_position = x_position
 			else
-				Result := new_x = x and new_y = y
+				Result := new_x_position = x_position and new_y_position = y_position
 			end
 		end
 
 feature -- Basic operation
 
-	set_move_and_size (a_x, a_y, a_width, a_height: INTEGER) is
+	set_move_and_size (a_x_position, a_y_position, a_width, a_height: INTEGER) is
 			-- Move and resize the widget. Only the parent can call this feature
 			-- because it doesn't notify the parent of the change.
 			-- Equivalent of `parent_ask_resize' with move.
 		do
-			child_cell.move (a_x, a_y)
+			child_cell.move (a_x_position, a_y_position)
 			parent_ask_resize (a_width, a_height)
 		end
 
 	parent_ask_resize (a_width, a_height: INTEGER) is
-			-- When the parent is a splitter, the children is
-			-- always resized.
+			-- Called by the parent when the size of `Current' has to be
+			-- changed to `a_width', `a_height'.
+			-- Too slow?
 		local
-			cc: EV_CHILD_CELL_IMP
-			w, h: INTEGER
-			wc, hc: BOOLEAN
+			new_width, new_height: INTEGER
+			new_x, new_y: INTEGER
 		do
-			cc := child_cell
-			cc.resize (a_width, a_height)
-			wc := horizontal_resizable
-			hc := vertical_resizable
-			if wc and hc then
-				move_and_resize (cc.x, cc.y, a_width, a_height, True)
-			elseif hc then
-				w := minimum_width.min (a_width)
-				move_and_resize ((a_width - w) // 2 + cc.x, cc.y, w, a_height, True)
-			elseif wc then
-				h := minimum_height.min (a_height)
-				move_and_resize (cc.x, (a_height - h) // 2 + cc.y, a_width, h, True)
+			-- We have to use minimum_size here to show the widgets.
+			child_cell.resize (minimum_width.max (a_width), minimum_height.max (a_height))
+
+			if vertical_resizable then
+				new_height := child_cell.height
+				new_y := child_cell.y
 			else
-				w := minimum_width.min (a_width)
-				h := minimum_height.min (a_height)
-				move_and_resize ((a_width - w) // 2 + cc.x, (a_height - h) // 2 + cc.y, w, h, True)
+				new_height := minimum_height.min (child_cell.height)
+				new_y := child_cell.y + (child_cell.height - new_height) // 2
 			end
+
+			if horizontal_resizable then
+				new_width := child_cell.width
+				new_x := child_cell.x
+			else
+				new_width := minimum_width.min (child_cell.width)
+				new_x := child_cell.x + (child_cell.width - new_width) // 2
+			end
+
+			wel_move_and_resize (new_x, new_y, new_width, new_height, True)
 		end
 
 	internal_set_minimum_width (value: INTEGER) is
 			-- Make `value' the new `minimum_width'.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
-		local
-			changed: BOOLEAN
-		do
-			if not is_minwidth_locked then
-				if internal_minimum_width /= value then
-					internal_minimum_width := value
-					if managed then 
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth)
-						end
-					else
-						move_and_resize (x, y, width.max (value), height, True)
-					end
-				end
-			end
+		deferred
 		end
 
 	internal_set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum_height'.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
-		local
-			changed: BOOLEAN
-		do
-			if not is_minheight_locked then
-				if internal_minimum_height /= value then
-					internal_minimum_height := value
-					if managed then 
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight)
-						end
-					else
-						move_and_resize (x, y, width, height.max (value), True)
-					end
-				end
-			end
+		deferred
 		end
 
 	internal_set_minimum_size (mw, mh: INTEGER) is
@@ -321,70 +295,19 @@ feature -- Basic operation
 			-- minimum_height.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
-		local
-			w_cd, h_cd: BOOLEAN
-			w_ok, h_ok: BOOLEAN
-			w_ns, h_ns: BOOLEAN
-		do
- 			w_ok := not is_minwidth_locked
-			h_ok := not is_minheight_locked
- 
-			if w_ok and h_ok then
-				w_cd := internal_minimum_width /= mw
-				h_cd := internal_minimum_height /= mh
-				internal_minimum_width := mw
-				internal_minimum_height := mh
-				if managed then
-					if parent_imp /= Void then
-						if w_cd and h_cd then
-							parent_imp.notify_change (Nc_minsize)
-						elseif w_cd then
-							parent_imp.notify_change (Nc_minwidth)
-						elseif h_cd then
-							parent_imp.notify_change (Nc_minheight)
-						end
-					end
-				else
-					move_and_resize (x, y, width.max (mw), height.max (mh), True)
-				end
-
-			elseif w_ok then
-				if internal_minimum_width /= mw then
-					internal_minimum_width := mw
-					if managed then
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth)
-						end
-					else
-						move_and_resize (x, y, width.max (mw), height, True)
-					end
-				end
-
-	 		elseif h_ok then
-				if internal_minimum_height /= mh then
-					internal_minimum_height := mh
-					if managed then
-						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight)
-						end
-					else
-						move_and_resize (x, y, width, height.max (mh), True)
-					end
-				end
-			end
+		deferred
 		end
 
-		integrate_changes is
+	integrate_changes is
 			-- A fonction that simply recompute the minimum size if
 			-- necessary. It do not resize the widget, only integrate
 			-- the changes.
-		do
-			-- Do nothing here.
+		deferred
 		end
 
 feature {EV_SIZEABLE_IMP} -- Implementation
 
-	child_cell: EV_CHILD_CELL_IMP
+	child_cell: EV_RECTANGLE
 			-- The space that the parent allow to the current
 			-- child.
 
@@ -406,7 +329,7 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 
 feature {EV_ANY_I} -- deferred feature
 
-	parent_imp: EV_CONTAINER_IMP is
+	parent_imp: EV_SIZEABLE_CONTAINER_IMP is
 			-- Parent of this sizeable widget
 		deferred
 		end
@@ -423,35 +346,35 @@ feature {EV_ANY_I} -- deferred feature
 		deferred
 		end
 
-	x: INTEGER is
+	x_position: INTEGER is
 			-- Horizontal position relative to parent
 			-- Implemented by wel.
 		deferred
 		end
 
-	y: INTEGER is
+	y_position: INTEGER is
 			-- Vertical position relative to parent
 			-- Implemented by wel.
 		deferred
 		end
 
-	move_to (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y'.
+	wel_move (a_x_position, a_y_position: INTEGER) is
+			-- Move the window to `a_x_position', `a_y_position'.
 			-- Use move for a basic wel moving.
 			-- Implemented by wel.
 		deferred
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+	wel_move_and_resize (a_x_position, a_y_position, a_width, a_height: INTEGER;
 			repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
+			-- Move the window to `a_x_position', `a_y_position' position and
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		deferred
 		end
 
-	resize (a_width, a_height: INTEGER) is
+	wel_resize (a_width, a_height: INTEGER) is
 			-- Resize the window with `a_width', `a_height'.
 			-- Use resize for a basic wel resizing.
 			-- Implemented by wel.
@@ -471,13 +394,22 @@ feature {EV_ANY_I} -- deferred feature
 		deferred
 		end
 
-	is_displayed: BOOLEAN is
-			-- Is the window displayed on the screen?
-			-- ie : both the parent and the widget are shown.
-		deferred
-		end
+feature -- Obsolete
 
-	displayed: BOOLEAN is obsolete "is_displayed" do Result := is_displayed end
+	Nc_minwidth: INTEGER is 1
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that the minimum width of 
+			-- the current widget has changed.
+
+	Nc_minheight: INTEGER is 2
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that the minimum height of 
+			-- the current widget has changed.
+
+	Nc_minsize: INTEGER is 3
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that both the minimum width
+			-- and height of the current widget have changed.
 
 end -- EV_SIZEABLE_IMP
  
@@ -503,6 +435,32 @@ end -- EV_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/14 03:02:54  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.19.2.4  2000/03/14 00:14:31  brendel
+--| Removed request_paint and move_and_resize.
+--| Changed all calls to wel_move_and_resize back to have repaint `True' at
+--| every call. It seems to be inevitable to have every change redrawn.
+--| This is what causes the flickering, though, so a workaround has to be
+--| found or the entire design has to be redone.
+--|
+--| Revision 1.19.2.3  2000/03/11 00:11:12  brendel
+--| Changed initialization sequence.
+--| Replaced is_displayed consistently with is_show_requested. Whether that is
+--| really necessary is unclear.
+--| Redefined move_and_resize. Adds no functionality yet, but could be
+--| optimized if only position or size is changed for example.
+--| Added feature `request_paint' that repaints the widget. Maybe `invalidate'
+--| can be used instead.
+--| Changed type of parent_imp to EV_SIZEABLE_CONTAINER_IMP.
+--| Renamed move_and_resize and resize and move to wel_*, to make more clear
+--| which calls are direct toolkit calls.
+--|
+--| Revision 1.19.2.1  2000/03/09 21:54:20  brendel
+--| Moved features that were before redefined by EV_SIZEABLE_CONTAINER_IMP
+--| to EV_SIZEABLE_PRIMITIVE_IMP.
+--|
 --| Revision 1.19  2000/03/06 21:19:48  brendel
 --| Fixed bug in internal_set_minimum_width.
 --|
@@ -513,7 +471,7 @@ end -- EV_SIZEABLE_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.16.10.4  2000/02/07 18:26:40  rogers
---| Replaced all calls to displayed by is_displayed.
+--| Replaced all calls to displayed by is_show_requested.
 --|
 --| Revision 1.16.10.3  2000/01/27 19:30:16  oconnor
 --| added --| FIXME Not for release

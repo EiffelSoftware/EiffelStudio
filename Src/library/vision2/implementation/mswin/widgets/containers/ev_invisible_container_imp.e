@@ -29,7 +29,10 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make
+			make as ev_wel_control_container_make,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		redefine
 			top_level_window_imp
 		end
@@ -144,6 +147,14 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.24.2.1  2000/03/11 00:19:16  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.24  2000/02/28 17:32:55  rogers
 --| Fixed set_insensitve, which was always diasbling the children, even if `flag' was False.
 --|

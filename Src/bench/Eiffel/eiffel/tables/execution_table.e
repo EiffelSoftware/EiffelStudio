@@ -5,7 +5,8 @@ class EXECUTION_TABLE
 inherit
 	SEARCH_TABLE [EXECUTION_UNIT]
 		rename
-			make as search_table_make
+			make as search_table_make,
+			search as table_search
 		end
 
 	SHARED_WORKBENCH

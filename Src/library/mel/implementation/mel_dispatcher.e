@@ -157,8 +157,6 @@ feature {MEL_OBJECT} -- Implementation
 			if xm_callbacks.need_to_call_c then
 				c_remove_callback (a_screen_object, a_resource)
 			end
-		ensure
-			removed: not xm_callbacks.has_callback (a_screen_object, a_resource)
 		end;
 
 	remove_wm_protocol (a_screen_object: POINTER;
@@ -174,8 +172,6 @@ feature {MEL_OBJECT} -- Implementation
 			if wm_protocol_callbacks.need_to_call_c then
 				c_remove_wm_protocol (a_screen_object, atom.identifier)
 			end
-		ensure
-			removed: not wm_protocol_callbacks.has_callback (a_screen_object, atom.identifier)
 		end;
 
 	remove_event_handler (a_screen_object,
@@ -192,8 +188,6 @@ feature {MEL_OBJECT} -- Implementation
 			if xt_event_callbacks.need_to_call_c then
 				c_remove_event_handler (a_screen_object, a_resource)
 			end
-		ensure
-			removed: not xt_event_callbacks.has_callback (a_screen_object, a_resource)
 		end;
 
 	remove_translation (a_screen_object: POINTER;

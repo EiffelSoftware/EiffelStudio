@@ -53,7 +53,7 @@ feature -- Initialization
 				end
 			else
 				error_msg.append ("Could not launch finish_freezing. Make%N")
-				error_msg.append ("sure that the ISE EiffelBench environment%N")
+				error_msg.append ("sure that the ISE EiffelStudio environment%N")
 				error_msg.append ("has been correctly installed.%N%N")
 				create status_box.make (error_msg, True, False, True, mapped_path)
 				(create {EXCEPTIONS}).die (-1)

@@ -16,7 +16,7 @@
 #include "eif_rtlimits.h"
 
 /*
- * Eiffel object (Abstract Systac Nodes0 creation
+ * Eiffel object (Abstract Systac Nodes) creation
  */
 
 extern char	*create_node(int dyn_type);
@@ -45,6 +45,7 @@ extern fnptr c_id_area;					/* Access to area of STRING */
 extern fnptr c_id_create;				/* STRING allocation */
 extern char token_str[];				/* Buffer for strings */
 extern int yacc_position;				/* Position recorded in AST */
+extern int yacc_line_number;			/* Line number recorded in AST */
 extern fnptr c_list_area;				/* Access to an area */
 
 /*
@@ -74,6 +75,7 @@ extern int click_list_push(void);
 extern char *click_list_new(void);
 extern void click_list_init(void);
 extern int start_position, end_position;
+extern int line_number;
 extern void click_list_set(char *an_ast, int index);	/* click_set routine for CLICK_INDIR */
 extern int click_list_start(int remembered_index);		/* start_position function of CLICK_INDIR */
 extern char *click_list_elem(int remembered_index);     /* node_function routine for CLICK_INDIR */

@@ -33,5 +33,5 @@ external
 	-- External EiffelNet library 
 	object:
 --unix		"$(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a"
-		"$(ISE_EIFFEL)/library/net/spec/$(ISE_COMPILER)/lib/net.lib"
+		"$(ISE_EIFFEL)/library/net/spec/$(ISE_C_COMPILER)/lib/net.lib"
 end

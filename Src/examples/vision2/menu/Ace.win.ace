@@ -36,7 +36,7 @@ external
         include_path:
 			"c:\work\wel\spec\windows\include"
         object:
-			"c:\work\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+			"c:\work\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end
 

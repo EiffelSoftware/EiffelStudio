@@ -71,11 +71,11 @@ cluster
 external
 
 	object:		
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/support.lib",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/matisse_store.lib",
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/matisse.lib",	
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/special.lib",	
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/matisse_store.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/matisse.lib",	
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/special.lib",	
 		"matisse.lib"
 
 end

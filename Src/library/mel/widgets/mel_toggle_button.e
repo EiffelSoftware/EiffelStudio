@@ -300,7 +300,7 @@ feature -- Status setting
 		require
 			exists: not is_destroyed;
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
-			is_pixmap: a_pixmap.is_pixmap;
+			same_depth: depth = a_pixmap.depth;
 			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNselectInsensitivePixmap, a_pixmap)
@@ -313,7 +313,7 @@ feature -- Status setting
 		require
 			exists: not is_destroyed;
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
-			is_pixmap: a_pixmap.is_pixmap;
+			same_depth: depth = a_pixmap.depth;
 			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNselectPixmap, a_pixmap)

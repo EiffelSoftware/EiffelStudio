@@ -11,27 +11,29 @@ class
 	EB_CLICKABLE_EDITOR
 
 inherit
-
-	EB_EDITOR
+	EB_EDITOR		
 		rename
 			make as make_editor
+		export			
+			{EB_COMPLETION_CHOICE_WINDOW} unwanted_characters
+			{EB_ROUTINE_FLAT_FORMATTER} invalidate_line
 		redefine
 			reset, on_text_loaded,
-			build_editor_area, gain_focus,
-			on_mouse_button_down, on_click_in_margin,
+			gain_focus,
+			on_mouse_button_down,
 			on_click_in_text, handle_extended_key,
-			handle_extended_ctrled_key, left_margin_width,
-			text_displayed, display_margin,
-			copy_selection,
-			reference_window,
-			recycle
+			handle_extended_ctrled_key,
+			text_displayed,
+			copy_selection,			
+			recycle,
+			margin
 		end
 
 	EB_FORMATTED_TEXT
 		export
 			{NONE} All
-		undefine
-			clear_window, reset
+		undefine 
+			clear_window, reset, default_create
 		redefine
 			process_text
 		end
@@ -39,6 +41,8 @@ inherit
 	EB_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 create
@@ -57,7 +61,11 @@ feature {NONE}-- Initialization
 				text_displayed.add_selection_observer (dev_window)
 			end
 			create after_reading_text_actions.make
-			initialize_customizable_commands
+			initialize_customizable_commands	
+			
+			make_editor
+			editor_area.set_pebble_function (agent pebble_from_x_y)
+			editor_area.enable_pebble_positioning			
 		end
 
 	initialize_customizable_commands is
@@ -69,14 +77,6 @@ feature {NONE}-- Initialization
 			customizable_commands.put (agent find_selection, 5)
 			customizable_commands.put (agent find_next, 6)
 			customizable_commands.put (agent find_previous, 7)
-		end
-
-	build_editor_area is
-			-- Initialize variables and objects related to display.
-		do
-			Precursor {EB_EDITOR}
-			editor_area.set_pebble_function (agent pebble_from_x_y)
-			editor_area.enable_pebble_positioning
 		end
 
 feature -- Access
@@ -120,20 +120,10 @@ feature -- Access
 				Result := text_displayed.structured_text
 			end
 		end
-
-	reference_window: EV_WINDOW is
-			-- Window which error dialogs will be shown relative to.
-		do
-			if internal_reference_window = Void then
-				if dev_window /= Void and then dev_window.window /= Void then
-					Result := dev_window.window
-				else
-					Result := Window_manager.last_focused_window.window
-				end
-			else
-				Result := internal_reference_window
-			end
-		end
+			
+	margin: EB_CLICKABLE_MARGIN
+			-- Margin widget for breakpoints, line numbers, etc.  This is different to the left margin
+			-- used in the editor for spacing purposes.		
 			
 feature -- Content Change
 
@@ -158,56 +148,42 @@ feature -- Content Change
 			text_displayed.load_structured_text (local_str_text)
 
 				-- Setup the editor (scrollbar, ...)
-			setup_editor
+			setup_editor (1)
 
 			editor_area.enable_sensitive
 
-		end
-
-feature -- Status Report
-
-	has_breakable_slots: BOOLEAN is
-		do
-			Result := text_displayed.has_breakable_slots
 		end
 
 feature -- Status setting
 
 	enable_has_breakable_slots is
 			-- Set `has_breakable_slots' to `True' and update display.
-		do
-			if not hidden_breakpoints then
-				text_displayed.enable_has_breakable_slots
-
-					-- Update display
-				left_margin_buffered_screen.set_size (left_margin_width, editor_area.height)
-				update_buffered_screen (0, editor_area.height)
-				update_display
+		do			
+			margin.show_breakpoints
+			if margin_cell.is_empty then
+				margin_cell.put (margin.widget)
 			end
+
+				-- Update display
+			left_margin_buffered_screen.set_size (left_margin_width, editor_area.height)
+			update_buffered_screen (0, editor_area.height)
+			update_display		
+			margin.refresh_now
 		end	
 
 	disable_has_breakable_slots is
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
-			text_displayed.disable_has_breakable_slots
+			margin.hide_breakpoints
+			if not line_numbers_visible and then not margin_cell.is_empty then
+				margin_cell.prune (margin.widget)
+			end
 
 				-- Update display
 			left_margin_buffered_screen.set_size (left_margin_width, editor_area.height)
 			update_buffered_screen (0, editor_area.height)
-		end
-
-feature -- Basic Operations
-
-	hide_breakpoints is
-			-- Do not show breakpoints even if there are some.
-		do
-			hidden_breakpoints := True
-		end
-
-	show_breakpoints is
-			-- Show breakpoints if there are some.
-		do
-			hidden_breakpoints := False
+			update_display
+			margin.refresh_now
 		end
 
 feature -- Possibly delayed operations
@@ -241,7 +217,7 @@ feature -- Possibly delayed operations
 					refresh_now
 				else
 					after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
-				end
+				end		
 		end
 
 	highlight_when_ready (a, b: INTEGER) is
@@ -384,6 +360,17 @@ feature -- Search commands
 			end
 		end
 
+--	goto is
+--			-- Display goto dialog.
+--		do
+--			if search_tool /= Void then
+--				if not search_tool.mode_is_search then
+--					search_tool.set_mode_is_search (True)
+--				end
+--				prepare_search_tool
+--			end
+--		end
+
 	replace is
 			-- Display search tool (with Replace field) if necessary.
 		do
@@ -430,7 +417,7 @@ feature {EB_FEATURE_INFO_FORMATTER} -- Feature click tool
 			Result := text_displayed.feature_click_enabled
 		end
 
-feature {NONE}-- Process Vision2 Events
+feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 
 	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Process single click on mouse buttons.
@@ -439,31 +426,6 @@ feature {NONE}-- Process Vision2 Events
 				refresh_now
 			end
 			Precursor {EB_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
-		end
-
-	on_click_in_margin (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
-			-- Process click in the margin. `x_pos' and `y_pos' are coordinates relative to the upper left
-			-- left corner of the margin, i.e. offset has already been added/substracted to them.
-			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
-		local
-			ln: EDITOR_LINE
-			l_number: INTEGER
-			bkstn: BREAKABLE_STONE
-		do
-			if button = 1 and then pick_n_drop_status /= pnd_drop then
-				mouse_right_button_down := False
-				l_number := (y_pos // line_height) + first_line_displayed
-				if l_number <= number_of_lines then
-					ln := text_displayed.line (l_number)
-					bkstn ?= ln.real_first_token.pebble
-					if bkstn /= Void then
-						bkstn.toggle_bkpt
-					end
-					Precursor {EB_EDITOR} (x_pos, y_pos, 1, a_screen_x, a_screen_y)
-				end
-			elseif button = 3 then
-				on_click_in_text (x_pos - left_margin_width, y_pos, 3, a_screen_x, a_screen_y)
-			end
 		end
 
 	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
@@ -561,7 +523,7 @@ feature {NONE}-- Process Vision2 Events
 			end
 		end
 
-feature {NONE} -- Pick and drop
+feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 	pebble_from_x_y (x_pos_with_margin, y_pos: INTEGER): STONE is
 			-- Stone on (`x_pos', `y_pos').
@@ -592,7 +554,6 @@ feature {NONE} -- Pick and drop
 							bkst ?= Result
 							if bkst = Void then
 								l_number := cur.y_in_lines
-								--old_l_number := text_displayed.cursor.y_in_lines
 								token_pos := cur.token.position
 								if text_displayed.has_selection then
 									text_displayed.disable_selection
@@ -685,7 +646,7 @@ feature {EB_EDITOR_TOOL} -- Update
 			end
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER} -- Access
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER, EB_CLICKABLE_MARGIN} -- Access
 
 	text_displayed: CLICKABLE_TEXT
 			-- Text displayed in the editor.
@@ -694,9 +655,6 @@ feature {NONE} -- Implementation
 
 	customizable_commands: ARRAY [PROCEDURE [like Current, TUPLE]]
 			-- Array of customizable commands
-
-	dev_window: EB_DEVELOPMENT_WINDOW
-			-- Associated development window
 
 	after_reading_text_actions: LINKED_LIST [PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]]
 			-- Procedures to be applied when the text is completely loaded.
@@ -714,7 +672,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			from
 				i := 1
-				index := Editor_preferences.key_codes_for_actions.index_of (key_code, 1)
+				index := preferences.editor_data.key_codes_for_actions.index_of (key_code, 1)
 			until
 				index = 0
 			loop
@@ -722,11 +680,11 @@ feature {NONE} -- Implementation
 				meta.put (ctrl, 1)
 				meta.put (alt, 2)
 				meta.put (shift, 3)
-				if meta.is_equal (Editor_preferences.ctrl_alt_shift_for_actions.item (index)) then
+				if meta.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions.item (index)) then
 					Result.extend (index)
 				end
 				i := i + 1
-				index := Editor_preferences.key_codes_for_actions.index_of (key_code, i)
+				index := preferences.editor_data.key_codes_for_actions.index_of (key_code, i)
 			end
 		end
 
@@ -785,26 +743,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Constants & Text Attributes
-
-	Left_margin_width: INTEGER is
-			-- Width in pixel of the margin on the left
-			-- of the screen.
-			--
-			-- Breakpoint slot are placed in this margin.
-		do
-			if Display_margin then 
-				Result := 16
-			else
-				Result := 6
-			end
-		end
-
-	Display_margin: BOOLEAN is
-			-- Should the margin be displayed or not?
-		do
-			Result := (not hidden_breakpoints) and then has_breakable_slots
-		end
+	in_feature_click: BOOLEAN
 
 feature -- Memory management
 

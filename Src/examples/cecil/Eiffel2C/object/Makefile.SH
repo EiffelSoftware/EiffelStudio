@@ -61,6 +61,7 @@ clean:
 	$(RM) cecil.epr
 	$(RM) Makefile
 	$(DELDIR) EIFGEN
-	
-
+	sed -e s/"fext.o"/"fext.obj"/ Ace.ace > tmp
+	$(RM) Ace.ace
+	$(MV) tmp Ace.ace
 

@@ -176,15 +176,8 @@ feature -- Element change
 			-- Places the window above all non-topmost windows.
 			-- The window maintains its topmost position even when
 			-- it is deactivated.
-		local
-			p: POINTER
 		do
-			p := cwel_windowpos_get_hwndinsertafter (item)
-			print (p)
-			cwel_windowpos_set_hwndinsertafter (item, p)
-	-- Hwnd_topmost)
-			p := cwel_windowpos_get_hwndinsertafter (item)
-			print (p)
+			cwel_windowpos_set_hwndinsertafter (item, Hwnd_topmost)
 		end
 
 	set_no_topmost is

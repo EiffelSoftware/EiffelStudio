@@ -34,16 +34,16 @@ feature -- Access
 			users.extend (a_user)
 		end;
 
-	modified_resources: LINKED_LIST [MODIFIED_RESOURCE];
+	modified_resources: LINKED_LIST [CELL2 [RESOURCE, RESOURCE]];
 			-- Modified resources for Current
 
-	add_modified_resource (a_modified_resource: MODIFIED_RESOURCE) is
+	add_modified_resource (a_modified_resource: CELL2 [RESOURCE, RESOURCE]) is
 			-- Add `a_modified_resource' to `a_modified_resources'.
 		require
 			a_modified_resource_not_void: a_modified_resource /= Void
 			a_modified_resource_is_valid:
-				a_modified_resource.old_resource /= Void and
-				a_modified_resource.new_resource /= Void
+				a_modified_resource.item1 /= Void and
+				a_modified_resource.item2 /= Void
 		do
 			modified_resources.extend (a_modified_resource)
 		end;
@@ -68,34 +68,10 @@ feature -- Update
 				until
 					users.after
 				loop
-					dispatch_modified_resource (modified_resources.item);
+					users.item.dispatch_modified_resource (modified_resources.item.item1, modified_resources.item.item2);
 					users.forth
 				end;
 				modified_resources.forth
-			end
-		end
-
-	dispatch_modified_resource (a_modified_resource: MODIFIED_RESOURCE) is
-			-- Dispatch `a_modified_resource' to `users.item' based on
-			-- on the actual type of `a_modified_resource.old_resource'.
-		local
-			boolean: BOOLEAN_RESOURCE
-			integer: INTEGER_RESOURCE
-			string: STRING_RESOURCE
-		do
-			boolean ?= a_modified_resource.old_resource;
-			if boolean /= Void then
-				users.item.update_boolean_resource (a_modified_resource)
-			else
-				integer ?= a_modified_resource.old_resource;
-				if integer /= Void then
-					users.item.update_integer_resource (a_modified_resource)
-				else
-					string ?= a_modified_resource.old_resource;
-					if string /= Void then
-						users.item.update_string_resource (a_modified_resource)
-					end
-				end
 			end
 		end
 

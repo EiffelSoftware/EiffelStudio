@@ -212,7 +212,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Called when the page is switched.
 		local
 			temp_int_ref: INTEGER_REF
-			temp_int: INTEGER
 		do
 			if not is_destroyed then
 				temp_int_ref ?= a_page.item (1)

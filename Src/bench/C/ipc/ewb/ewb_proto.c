@@ -15,7 +15,6 @@
 #include <stdio.h>		/* For error reports -- FIXME */
 #include <sys/types.h>
 #include "request.h"
-#include "idrf.h"
 #include "rqst_idrs.h"
 #include "proto.h"
 #include "eif_network.h"
@@ -65,7 +64,7 @@ rt_public void send_packet(int s, Request *rqst)
 	/* Sends an answer to the client */
 
 	rqstcnt++;			/* One more request sent to daemon */
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
 	if (!idr_Request(&idrf.i_encode, rqst)) {
@@ -101,7 +100,7 @@ rt_public int recv_packet(int s, Request *dans)
 	 */
 
 	rqstcnt++;			/* One more request received */
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
 
 	/* Wait for request */
 #ifdef EIF_WIN32

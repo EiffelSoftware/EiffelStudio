@@ -22,7 +22,7 @@
 #include "transfer.h"
 #include "ewbio.h"
 #include "stack.h"
-#include "idrf.h"
+#include "idrs.h"
 #include "rt_debug.h"
 #include "eif_except.h"
 #include "server.h"
@@ -326,7 +326,7 @@ rt_public void send_packet(int s, Request *rqst)
 	/* Sends an answer to the client */
 
 	rqstcnt++;			/* One more request sent to daemon */
-	idrf_pos(&app_idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
 	if (!idr_Request(&app_idrf.i_encode, rqst)) {
@@ -378,7 +378,7 @@ rt_public int recv_packet(int s, Request *dans)
 #endif
 		esdie(1);		/* Connection lost, probably */
 
-	idrf_pos(&app_idrf);	/* Reposition IDR streams */
+	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Deserialize request */
 	if (!idr_Request(&app_idrf.i_decode, dans))

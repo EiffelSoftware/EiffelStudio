@@ -30,22 +30,6 @@ feature
 	used: BOOLEAN is True;
 			-- Is an attribute entry used ?
 
-	generate_workbench_info (file: INDENT_FILE) is
-			-- Generate access info.
-		local
-			skel: SKELETON;
-		do
-			file.putstring ("(long) ");
-			skel := System.class_type_of_id (type_id).skeleton;
-			skel.generate_workbench_offset (file, feature_id);
-		end;
-
-	generate_empty_info (file: INDENT_FILE) is
-			-- Generate empty access-info
-		do
-			file.putstring ("(long) 0");
-		end;
-
 	workbench_offset: INTEGER is
 			-- Offset of attribute in object structure
 		local

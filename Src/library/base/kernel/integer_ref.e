@@ -150,14 +150,6 @@ feature -- Status report
 			Result := item /= 0
 		end
 
-feature -- Conversion
-
-	to_boolean: BOOLEAN is
-			-- True if not `zero'.
-		do
-			Result := item /= 0
-		end
-
 feature -- Basic operations
 
 	abs: INTEGER is
@@ -261,6 +253,12 @@ feature -- Basic operations
 
 feature -- Conversion
 
+	to_boolean: BOOLEAN is
+			-- True if not `zero'.
+		do
+			Result := item /= 0
+		end
+
 	to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
@@ -283,6 +281,53 @@ feature -- Conversion
 			-- Convert `item' into an INTEGER_64 value.
 		do
 			Result := item.to_integer_64
+		end
+
+	to_hexa_string: STRING is
+			-- Convert `item' into an hexadecimal string.
+		local
+			i, val: INTEGER
+			a_digit: INTEGER
+		do
+			from
+				i := (create {PLATFORM}).Integer_bits // 4
+				create Result.make (i)
+				Result.fill_blank
+				val := item
+			until
+				i = 0
+			loop
+				a_digit := (val & 0xF)
+				Result.put (a_digit.to_hexa_character, i)
+				val := val |>> 4 
+				i := i - 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_valid_count: Result.count = (create {PLATFORM}).Integer_bits // 4
+		end
+
+	to_hexa_character: CHARACTER is
+			-- Convert `item' into an hexadecimal character.
+		require
+			in_bounds: 0 <= item and item <= 15
+		local
+			tmp: INTEGER
+		do
+			tmp := item
+			if tmp <= 9 then
+				Result := c_ascii_char(tmp + ('0').code)
+			else
+				Result := c_ascii_char(('A').code + (tmp - 10))
+			end
+		ensure
+			valid_character: ("0123456789ABCDEF").has (Result)
+		end
+
+	to_character: CHARACTER is
+			-- Returns corresponding ASCII character to `item' value.
+		do
+			Result := c_ascii_char (item) 
 		end
 
 feature -- Bit operations

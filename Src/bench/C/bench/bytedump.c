@@ -249,9 +249,9 @@ static  long            body_size;
 static  long            bcount;
 static  char            *ip;
 static  unsigned char   code;
-static  char            **dtype_names;
+static  EIF_CHARACTER   **dtype_names;
 static  int             dtype_max;
-static  char            **ctype_names;
+static  EIF_CHARACTER   **ctype_names;
 static  int             ctype_max;
 
 /*------------------------------------------------------------------*/
@@ -267,25 +267,20 @@ static  void    panic (void);
 
 /*------------------------------------------------------------------*/
 
-static  char    rchar (void);
-static  long    rlong (void);
-static  int     rint (void);
-static  short   rshort (void);
-static  uint32  ruint32 (void);
-static  void    rseq (int);
+static  EIF_INTEGER rlong (void);
 static  char    *rbuf (int);
-static  char    *rstr (void);
+static  EIF_CHARACTER * rstr (void);
 
 /*------------------------------------------------------------------*/
 
-static  char    bbool (void);
-static  unsigned char    bchar (void); /* !!! */
+static  EIF_BOOLEAN bbool (void);
+static  EIF_CHARACTER bchar (void);
 static  EIF_WIDE_CHAR bwchar (void);
-static  long    blong (void);
-static  short   bshort (void);
+static  EIF_INTEGER blong (void);
+static  EIF_INTEGER_16 bshort (void);
 static  uint32  buint32 (void);
-static  double  bdouble (void);
-static  char    *bstr (int length);
+static  EIF_DOUBLE  bdouble (void);
+static  EIF_CHARACTER * bstr (int length);
 
 /*------------------------------------------------------------------*/
 
@@ -319,11 +314,11 @@ int main (int argc, char **argv)
 
 	fpos = 0;
 
-	dtype_max = rint ();
+	dtype_max = rlong ();
 
-	dtype_names = (char **) malloc ((dtype_max + 1) * sizeof (char *));
+	dtype_names = (EIF_CHARACTER **) malloc ((dtype_max + 1) * sizeof (char *));
 
-	if (dtype_names == (char **) 0)
+	if (dtype_names == NULL)
 	{
 		fprintf (stderr, "Out of memory\n");
 		panic ();
@@ -334,11 +329,11 @@ int main (int argc, char **argv)
 		dtype_names [i] = rstr ();
 	}
 
-	ctype_max = rint ();
+	ctype_max = rlong ();
 
-	ctype_names = (char **) malloc ((ctype_max + 1) * sizeof (char *));
+	ctype_names = (EIF_CHARACTER **) malloc ((ctype_max + 1) * sizeof (char *));
 
-	if (ctype_names == (char **) 0)
+	if (ctype_names == NULL)
 	{
 		fprintf (stderr, "Out of memory\n");
 		panic ();
@@ -1285,24 +1280,24 @@ static  void    print_cid ()
 }
 /*------------------------------------------------------------------*/
 
-static  char    bbool ()
+static  EIF_BOOLEAN    bbool ()
 
 {
 	char    result;
 
 	result  = *ip;
-	ip    += sizeof (char);
+	ip    += sizeof (EIF_BOOLEAN);
 
 	return result;
 }
 /*------------------------------------------------------------------*/
-static  unsigned char bchar (void)
+static  EIF_CHARACTER bchar (void)
 
 {
-	unsigned char    result; /* !!! */
+	EIF_CHARACTER    result;
 
 	result = *ip;
-	ip    += sizeof (char);
+	ip    += sizeof (EIF_CHARACTER);
 
 	return result;
 }
@@ -1310,7 +1305,7 @@ static  unsigned char bchar (void)
 static  EIF_WIDE_CHAR bwchar (void)
 
 {
-	EIF_WIDE_CHAR    result; /* !!! */
+	EIF_WIDE_CHAR    result;
 
 	result = *ip;
 	ip    += sizeof (EIF_WIDE_CHAR);
@@ -1319,81 +1314,46 @@ static  EIF_WIDE_CHAR bwchar (void)
 }
 /*------------------------------------------------------------------*/
 
-static  long    blong (void)
-
+static  EIF_INTEGER blong (void)
 {
-	union {
-		char xtract[sizeof(long)];
-		long value;
-	} xlong;
-	register char *p = (char *) &xlong;
-	register int i;
-
-	for (i = 0; i < sizeof(long); i++)
-		*p++ = *ip++;
+	EIF_INTEGER result;
+	memcpy (&result, ip, sizeof(EIF_INTEGER));
 	
-	return *(long *) &xlong;
+	return result;
 }
 /*------------------------------------------------------------------*/
 
-static  double    bdouble (void)
-
+static EIF_DOUBLE bdouble (void)
 {
-	union {
-		char xtract[sizeof(double)];
-		double value;
-	} xdouble;
-	register char *p = (char *) &xdouble;
-	register int i;
-
-	for (i = 0; i < sizeof(double); i++)
-		*p++ = *ip++;
+	EIF_DOUBLE result;
+	memcpy (&result, ip, sizeof(EIF_DOUBLE));
 	
-	return *(double *) &xdouble;
+	return result;
 }
 /*------------------------------------------------------------------*/
 
-static  short    bshort (void)
-
+static EIF_INTEGER_16 bshort (void)
 {
-	union {
-		char xtract[sizeof(short)];
-		short value;
-	} xshort;
-	register char *p = (char *) &xshort;
-	register int i;
-
-	for (i = 0; i < sizeof(short); i++)
-		*p++ = *ip++;
+	EIF_INTEGER_16 result;
+	memcpy (&result, ip, sizeof(EIF_INTEGER_16));
 	
-	return *(short *) &xshort;
+	return result;
 }
 /*------------------------------------------------------------------*/
 
-static  uint32    buint32 (void)
-
+static uint32 buint32 (void)
 {
-	union {
-		char xtract[sizeof(uint32)];
-		uint32 value;
-	} xuint32;
-	register char *p = (char *) &xuint32;
-	register int i;
-
-	for (i = 0; i < sizeof(uint32); i++)
-		*p++ = *ip++;
-	
-	return *(uint32 *) &xuint32;
+	return (uint32) blong();
 }
 /*------------------------------------------------------------------*/
 
-static char *bstr (int length)
+static EIF_CHARACTER *bstr (int length)
 {
-	char    *result;
+	EIF_CHARACTER *result;
 
-	result  = ip;
+	result  = (EIF_CHARACTER *) ip;
 	if (length == -1)
-		ip += strlen (result) + 1;
+		ip += strlen ((char *)result) + 1;
 	else
 		ip += length + 1;
 
@@ -1401,109 +1361,19 @@ static char *bstr (int length)
 }
 /*------------------------------------------------------------------*/
 
-static  char    rchar ()
-
+static EIF_INTEGER rlong ()
 {
-	char    result;
+	EIF_INTEGER result;
 
-	fpos += sizeof (char);
+	fpos += sizeof (EIF_INTEGER);
 
-	if (fread (&result, sizeof (char), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_INTEGER), 1, ifp) != 1)
 	{
-		printf ("Read error (char)\n");
+		printf ("Read error (EIF_INTEGER)\n");
 		panic ();
 	}
 
 	return result;
-}
-/*------------------------------------------------------------------*/
-
-static  int    rint ()
-
-{
-	int    result;
-
-	fpos += sizeof (int);
-
-	if (fread (&result, sizeof (int), 1, ifp) != 1)
-	{
-		printf ("Read error (int)\n");
-		panic ();
-	}
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-static  long    rlong ()
-
-{
-	long    result;
-
-	fpos += sizeof (long);
-
-	if (fread (&result, sizeof (long), 1, ifp) != 1)
-	{
-		printf ("Read error (long)\n");
-		panic ();
-	}
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-static  short   rshort ()
-
-{
-	short    result;
-
-	fpos += sizeof (short);
-
-	if (fread (&result, sizeof (short), 1, ifp) != 1)
-	{
-		printf ("Read error (short)\n");
-		panic ();
-	}
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-static  uint32  ruint32 ()
-
-{
-	uint32    result;
-
-	fpos += sizeof (uint32);
-
-	if (fread (&result, sizeof (uint32), 1, ifp) != 1)
-	{
-		printf ("Read error (uint32)\n");
-		panic ();
-	}
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-static  void    rseq (int scount)
-
-{
-	int     i;
-	char    c;
-
-	fpos += scount;
-
-	i = scount;
-
-	while (i--)
-	{
-		if (fread (&c, sizeof (char), 1, ifp) != 1)
-		{
-			printf ("Read error (seq)\n");
-			panic ();
-		}
-	}
 }
 /*------------------------------------------------------------------*/
 
@@ -1533,13 +1403,12 @@ static  char    *rbuf (int size)
 }
 /*------------------------------------------------------------------*/
 
-static  char    *rstr ()
-
+static  EIF_CHARACTER * rstr ()
 {
 	static char buf [1024];
-	char        *result;
-	int         i;
-	char        c;
+	EIF_CHARACTER * result;
+	int i;
+	EIF_CHARACTER c;
 
 	c = '?';
 	i = 0;
@@ -1559,7 +1428,7 @@ static  char    *rstr ()
 
 	result = malloc (strlen (buf) + 1);
 
-	if (result == (char *) 0)
+	if (result == NULL)
 	{
 		printf ("Out of memory (rbuf)\n");
 		panic ();

@@ -9,18 +9,14 @@ class
 	EV_STATUS_BAR
 
 inherit
-	EV_PRIMITIVE
+	EV_HORIZONTAL_BOX
 		redefine
-			implementation,
-			create_implementation,
-			create_action_sequences,
 			make_for_test
 		end
 
-	EV_ITEM_LIST [EV_STATUS_BAR_ITEM]
-		redefine
-			implementation,
-			create_action_sequences
+	EV_FRAME_CONSTANTS
+		undefine
+			default_create
 		end
 
 create
@@ -29,37 +25,21 @@ create
 
 feature {NONE} -- Initialization
 
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_STATUS_BAR_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_PRIMITIVE} Precursor
-			{EV_ITEM_LIST} Precursor
-		end
-
 	make_for_test is
 			-- Create and test.
 		local
-			sbi: EV_STATUS_BAR_ITEM
+			f: EV_FRAME
 		do
 			default_create
-			from until count = 5 loop
-				create sbi
-				sbi.set_text ("Item " + (count + 1).out)
-				sbi.set_width (50 + count * 10)
-				extend (sbi)
-			end
+			create f
+			f.set_style (Ev_frame_lowered)
+			f.extend (create {EV_LABEL}.make_with_text (
+				"This looks just like a normal statusbar item..."))
+			extend (f)
+			extend (create {EV_BUTTON}.make_with_text ("Button"))
+			extend (create {EV_TEXT_FIELD}.make_with_text ("Text field"))
+			extend (create {EV_CHECK_BUTTON}.make_with_text ("Check button"))
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_STATUS_BAR_I
-			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_STATUS_BAR
 
@@ -84,6 +64,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/28 21:47:05  brendel
+--| Made platform independent.
+--|
 --| Revision 1.17  2000/04/26 23:10:42  brendel
 --| Improved make_for_test.
 --|

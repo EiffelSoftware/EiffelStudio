@@ -1788,12 +1788,16 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 	internal_data: INTEGER is
 			-- Data set to widget at creation.
 			-- Used for having weak references
+		require
+			exists: exists
 		do
 			Result := cwin_get_window_long (item, Gwl_userdata)
 		end
 
 	set_internal_data (v: INTEGER) is
 			-- Set data of window.
+		require
+			exists: exists
 		do
 			cwin_set_window_long (item, Gwl_userdata, v)
 		end

@@ -109,7 +109,7 @@ feature {AST_EIFFEL, FEATURE_I} -- Output
 			ctxt.format_ast (language_name.language_name)
 			ctxt.exdent
 			ctxt.new_line
-			if alias_name_id > 0 /= Void then
+			if alias_name_id > 0 then
 				ctxt.put_text_item (ti_Alias_keyword)
 				ctxt.indent
 				ctxt.new_line

@@ -6,7 +6,7 @@ inherit
 		rename
 			Width as Table_Width
 		undefine
-			is_equal, copy, consistent, setup, out
+			is_equal, copy, out
 		end;
 	ARRAY2[STRING]
 		rename

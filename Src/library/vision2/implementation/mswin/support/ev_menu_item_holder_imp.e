@@ -33,25 +33,11 @@ feature -- Element change
 			position := pos
 		end
 
-feature -- Event association
-
-	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
-			-- `sitem' has been selected'
-		deferred
-		end
-
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
-
-	add_item (an_item: EV_MENU_ITEM) is
-			-- Add `an_item' into container.
+	add_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
 		local
-			item_imp: EV_MENU_ITEM_IMP
 			iid: INTEGER
 		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
 			if not ev_children.empty then
 				iid := ev_children.current_keys @ ev_children.count + 1
 			else
@@ -75,6 +61,13 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 		do
 			submenu.delete_item (an_id)
 			ev_children.remove (an_id)
+		end
+
+feature -- Event association
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+		deferred
 		end
 
 end -- class EV_MENU_ITEM_CONTAINER_IMP

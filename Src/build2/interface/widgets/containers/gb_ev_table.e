@@ -36,6 +36,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 

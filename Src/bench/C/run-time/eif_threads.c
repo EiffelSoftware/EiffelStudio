@@ -511,6 +511,7 @@ rt_public void eif_thr_register(void)
 	  /*
 	   * Allocate room for once values for all threads but the initial 
 	   * because we do not have the number of onces yet
+	   * Also set value root thread id.
 	   */
 
 		EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
@@ -519,7 +520,10 @@ rt_public void eif_thr_register(void)
 			enomem();
 		bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));
 	} else 
+	{
 		once = 1;
+		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
+	}
 }
 
 rt_public EIF_BOOLEAN eif_thr_is_root()
@@ -684,6 +688,8 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 	 * This function is a wrapper to the Eiffel routine that will be
 	 * executed by the new thread. It is directly called upon creation
 	 * of the thread, and initializes the Eiffel run-time.
+	 * Also, it initializes the eif_thr_id, for the overhead of
+	 * the Eiffel objects allocated in this thread.
 	 */
 
 	start_routine_ctxt_t *routine_ctxt = (start_routine_ctxt_t *)arg;
@@ -695,6 +701,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		jmp_buf exenv;
 
 		eif_thr_context = routine_ctxt;
+		eif_thr_id = routine_ctxt->tid;	/* Initialize here the thread_id */
 /* 		EIF_MUTEX_LOCK(eif_rmark_mutex, "Couldn't lock GC mutex"); */
 		EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Locking GC mutex");
 		initsig();

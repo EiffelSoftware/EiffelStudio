@@ -161,10 +161,6 @@ feature -- Access
 
 	line (i: INTEGER): STRING is
 			-- `Result' is content of the `i'th line.
-		local
-			line_offset, length, chars_to_retrieve: INTEGER
-			handle, ptr: POINTER
-			c_string: C_STRING	
 		do
 			Result := wel_line (i - 1)
 				-- `wel_line' does not include the new line characters, so must add a

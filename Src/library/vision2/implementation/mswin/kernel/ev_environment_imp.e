@@ -54,7 +54,6 @@ feature {NONE} -- Implementation
 			-- All font families available on current platform.
 		local
 			res: ARRAYED_LIST [STRING]
-			a_font: EV_FONT
 			all_fonts: ARRAYED_LIST [STRING]
 		do
 			create res.make (20)

@@ -115,9 +115,9 @@ feature {NONE} -- Constants
 		do
 			create Result.make (3000)
 			Result.append ("You have specified the following settings:" + New_line + New_line +
-					"Project name: " + Tab + wizard_information.project_name + New_line +
-					"Location: " + Tab + wizard_information.project_location + New_line +
-					"Application type: " + Tab)
+					"Project name: " + Tab + Tab + wizard_information.project_name + New_line +
+					"Location: " + Tab + Tab + Tab + wizard_information.project_location + New_line +
+					"Application type: " + Tab + Tab)
 			if wizard_information.generate_dll then
 				Result.append ("Library (.dll)")
 			else
@@ -132,13 +132,13 @@ feature {NONE} -- Constants
 			end
 
 			Result.append (New_line + New_line)
-			Result.append ("Root class name: " + Tab + wizard_information.root_class_name + New_line)
+			Result.append ("Root class name: " + Tab + Tab + wizard_information.root_class_name + New_line)
 			creation_routine_name := wizard_information.creation_routine_name
 			if creation_routine_name /= Void and then not creation_routine_name.is_empty and then not creation_routine_name.is_equal (Unrelevant_data) then
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
 			Result.append (New_line)
-			Result.append ("Target CLR version: " + Tab + wizard_information.clr_version + New_line)
+			Result.append ("Targetted CLR version: " + Tab + wizard_information.clr_version + New_line)
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty

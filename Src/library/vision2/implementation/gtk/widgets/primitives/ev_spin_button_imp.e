@@ -14,6 +14,8 @@ inherit
 		end
 
 	EV_GAUGE_IMP
+		undefine
+			visual_widget
 		redefine
 			interface,
 			initialize,
@@ -40,10 +42,10 @@ feature {NONE} -- Implementation
 			-- Create the spin button.
 		do
 			{EV_GAUGE_IMP} Precursor (an_interface)
-			set_c_object (C.gtk_spin_button_new (adjustment, 0, 0))
-
-			-- Set the entry widget from EV_TEXT_FIELD
-			entry_widget := c_object	
+			set_c_object (C.gtk_event_box_new)
+			entry_widget := C.gtk_spin_button_new (adjustment, 0, 0)
+			C.gtk_widget_show (entry_widget)
+			C.gtk_container_add (c_object, entry_widget)
 		end
 
 	initialize is

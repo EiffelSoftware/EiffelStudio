@@ -14,12 +14,17 @@ inherit
 			default_style,
 			default_ex_style,
 			popup,
-			popdown,
 			on_kill_focus,
 			on_paint,
 			on_set_focus,
 			on_size,
-			realize_current
+			realize_current,
+			realize,	
+			set_x_y,
+			set_x,
+			set_y,
+			x,
+			y
 		end
 
 	BASIC_ROUTINES
@@ -53,26 +58,35 @@ feature -- Initialization
 			not_exists: not exists
 		local
 			wc: WEL_COMPOSITE_WINDOW
-			a_dc: WEL_CLIENT_DC
-			window_color: WEL_COLOR_REF
 		do
-			if parent = Void then
-				make_top_with_coordinates (title, x, y, width, height)
-			else
-				wc ?= parent
-				make_with_coordinates (wc, title, x, y, width, height)
-			end
-			!! a_dc.make (Current)
-			!! window_color.make_system (Color_window)
-			a_dc.get
-			a_dc.set_background_color (window_color)
-			a_dc.release
+			wc ?= parent
+			make_with_coordinates (wc, title, x, y, width, height)
 			create_buttons
 			create_controls
 			set_fonts
-			adjust_dialog
 			set_default_button
-			shown := True
+		end
+
+	realize is
+			-- Realize the dialog and its children
+		do
+			if not realized then
+				realize_current
+			end
+		end
+
+feature -- Access
+
+	x: INTEGER is
+			-- X position of dialog
+		do
+			Result := private_attributes.x
+		end
+
+	y: INTEGER is
+			-- Y position of dialog
+		do
+			Result := private_attributes.y
 		end
 
 feature -- Basic operations
@@ -80,33 +94,46 @@ feature -- Basic operations
 	popup is
 			-- Popup the dialog.
 		do
-			if exists then
+			if not is_popped_up then
+				realize
 				adjust_dialog
-				set_modality
-				wel_show
-			else
-				dialog_realize
+				determine_focus
 				set_modality
 				set_position
-				determine_focus
 				wel_show
-			end
-			shown := True
-		end
-
-	popdown is
-			-- Popdown the dialog.
-		do
-			if exists then
-				if insensitive_list /= Void then
-					set_windows_sensitive
-				end
-				wel_hide
-				shown := False
+				shown := True
 			end
 		end
 
 feature -- Status setting
+
+	set_x (new_x: INTEGER) is
+			-- Set `x' to `new_x'.
+		do
+			private_attributes.set_x (new_x)
+			if exists then
+				wel_set_x (new_x - parent.absolute_x)
+			end
+		end
+
+	set_x_y (new_x, new_y: INTEGER) is
+			-- Set `x' to `new_x', `y' to `new_y'.
+		do
+			private_attributes.set_y (new_y)
+			private_attributes.set_x (new_x)
+			if exists then
+				wel_move (new_x - parent.absolute_x, new_y - parent.absolute_y)
+			end
+		end
+
+	set_y (new_y: INTEGER) is
+			-- Set `y' to `new_y'.
+		do
+			private_attributes.set_y (new_y)
+			if exists then
+				wel_set_y (new_y - parent.absolute_y)
+			end
+		end
 
 	set_left_alignment is
 			-- Align message to the left side of the dialog.
@@ -376,9 +403,6 @@ feature {NONE} -- Implementation
 	help_label: STRING
 			-- Label for the `help_button'
 
-	default_position: BOOLEAN
-			-- Will the dialog popup at the default position?
-
 	ok_button: WEL_PUSH_BUTTON
 			-- The ok button
 
@@ -559,16 +583,34 @@ feature {NONE} -- Implementation
 			-- Create the buttons and hide them if necessary.
 		do
 			!! ok_button.make (Current, ok_label, 0, 0, 0, 0, ok_id)
+			!! cancel_button.make (Current, cancel_label, 0, 0, 0, 0, cancel_id)
+			!! help_button.make (Current, help_label, 0, 0, 0, 0, help_id)
+			update_visibility
+		end
+
+	update_visibility is
+			-- Show or hide buttons on state of dialog.
+		do
 			if ok_button_hidden then
 				ok_button.hide
+			else
+				if not flag_set (ok_button.style, Ws_visible) then
+					ok_button.set_style (set_flag (ok_button.style, Ws_visible))
+				end
 			end
-			!! cancel_button.make (Current, cancel_label, 0, 0, 0, 0, cancel_id)
 			if cancel_button_hidden then
 				cancel_button.hide
+			else
+				if not flag_set (cancel_button.style, Ws_visible) then
+					cancel_button.set_style (set_flag (cancel_button.style, Ws_visible))
+				end
 			end
-			!! help_button.make (Current, help_label, 0, 0, 0, 0, help_id)
 			if help_button_hidden then
 				help_button.hide
+			else
+				if not flag_set (help_button.style, Ws_visible) then
+					help_button.set_style (set_flag (help_button.style, Ws_visible))
+				end
 			end
 		end
 
@@ -646,6 +688,7 @@ feature {NONE} -- Implementation
 				(Maximum_window_height)).max (Minimum_window_height)
 			resize (valid_width ,valid_height)
 			reposition_children
+			update_visibility
 		end
 
 	set_position is
@@ -655,8 +698,8 @@ feature {NONE} -- Implementation
 			exists: exists
 		do
 			if default_position then
-				set_x ((parent.wel_width // 2) - (wel_width // 2))
-				set_y ((parent.wel_height // 2) - (wel_height // 2))
+				wel_move (((parent.wel_width - wel_width) // 2),
+					(parent.wel_height - wel_height) // 2)
 			end
 		end
 

@@ -1,22 +1,23 @@
 indexing
-
-	description:
-		"AST structure in Lace file for setting system level options.";
+	description: "AST structure in Lace file for setting system level options.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class FREE_OPTION_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			set, process_system_level_options, is_system_level,
 			is_valid, is_free_option, is_extending, is_extendible
 		end;
+
 	SHARED_RESCUE_STATUS;
+
 	SHARED_DYNAMIC_CALLS;
+
 	EIFFEL_ENV;
+
 	SHARED_BENCH_LICENSES
 
 feature {NONE} -- Initialization
@@ -84,12 +85,13 @@ feature {NONE}
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, override_cluster, address_expression, profile,
-	document, hide_implementation, java_generation, line_generation: INTEGER is UNIQUE;
+	document, hide_implementation, java_generation, line_generation,
+	multithreaded: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (14);
+			!!Result.make (15);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -110,6 +112,7 @@ feature {NONE}
 			Result.force (hide_implementation, "hide_implementation");
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
+			Result.force (multithreaded, "multithreaded")
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -159,6 +162,7 @@ feature {COMPILER_EXPORTER}
 		do
 			inspect
 				valid_options.item (option_name)
+
 			when dead_code then
 				if value = Void then
 					error_found := True
@@ -191,6 +195,19 @@ feature {COMPILER_EXPORTER}
 				else
 					error_found := True;
 				end;
+
+			when multithreaded then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_freeze (System.has_multithreaded)
+					System.set_has_multithreaded (False)
+				elseif value.is_yes or else value.is_all then
+					System.set_freeze (not System.has_multithreaded)
+					System.set_has_multithreaded (True)
+				else
+					error_found := True
+				end
 
 			when inlining_size then
 				if value = Void then

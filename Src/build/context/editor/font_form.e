@@ -33,6 +33,8 @@ feature -- Interface
 	make_visible (a_parent: COMPOSITE) is
 		local
 			font_stone: FONT_STONE;
+			reset_button: PUSH_B;
+			reset_font_cmd: RESET_FONT_CMD
 		do
 			initialize (Widget_names.font_form_name, a_parent);
 			create_ok_button;
@@ -41,19 +43,26 @@ feature -- Interface
 			font_b.hide_cancel_button;
 			font_b.hide_apply_button;
 
-			!!font_stone;
-			font_stone.make (Current, editor);
+			!!font_stone.make (Current, editor);
+			!!reset_button.make (Widget_names.reset_font_name, Current);
 			attach_left (font_b, 1);
 			attach_right (font_b, 1);
 			attach_top (font_b, 1);
 			attach_bottom_widget (separator, font_b, 1);
 
 			attach_right (font_stone, 20);
+			attach_right_widget (font_stone, reset_button, 0);
 			attach_bottom (font_stone, 10);
+			attach_bottom (reset_button, 10);
 			attach_bottom_widget (font_stone, separator, 5);
+			attach_bottom_widget (reset_button, separator, 5);
+			attach_left_position (reset_button, 7);
+			detach_top (reset_button);
 			detach_top (font_stone);
 			detach_top (separator);
 			detach_left (font_stone);
+			!! reset_font_cmd;
+			reset_button.add_activate_action (reset_font_cmd, editor);
 			show_current;
 				-- Shake font box so it will
 				-- resize correctly.

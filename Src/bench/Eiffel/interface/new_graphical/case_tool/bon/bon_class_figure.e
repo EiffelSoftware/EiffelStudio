@@ -1,5 +1,6 @@
 indexing
-	description: "Graphical representations of classes in BON notation."
+	description: "Objects that represent a BON view for an EIFFEL_CLASS"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,735 +8,855 @@ class
 	BON_CLASS_FIGURE
 
 inherit
-	CLASS_FIGURE
-		undefine
-			snap_to_grid,
-			out
+	EIFFEL_CLASS_FIGURE
 		redefine
-			wipe_out,
-			position_on_figure,
-			real_pebble,
-			bounding_box
-		end
-
-	EV_MOVE_HANDLE
-		rename
-			initialize as initialize_mover
-		undefine
 			default_create,
+			update,
+			set_name_label_text,
+			set_is_selected,
+			recursive_transform,
 			world,
-			wipe_out,
-			set_origin,
-			bounding_box,
-			is_equal
-		redefine
-			position_on_figure,
-			real_pebble
-		end
-
-create
-	make_with_class
-
-create {BON_CLASS_FIGURE}
-	make_filled
-
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize figures.
-		do
-			initialize_mover
-			create broken_name.make (10)
-
-			create ellipse
-			ellipse.point_a.set_origin (point)
-			ellipse.point_b.set_origin (ellipse.point_a)
-			ellipse.set_line_width (bon_class_line_width)
-			ellipse.set_foreground_color (bon_class_line_color)
-			ellipse.set_background_color (bon_class_fill_color)
-
-			create name_figures.make
-			create icon_figures.make
-
-			create generics_figure
-			generics_figure.set_font (bon_generics_font)
-			generics_figure.point.set_origin (point)
-
-			pointer_button_press_actions.extend (agent button_press)
-			move_actions.force_extend (agent update)
-			move_actions.force_extend (agent update_scrollable_area_size)
-			start_actions.extend (agent move_to_front)
-			start_actions.extend (agent save_position)
-			start_actions.extend (agent start_capture)
-			end_actions.extend (agent stop_capture)
-			start_actions.extend (agent set_pointer_style (Default_pixmaps.Sizeall_cursor))
-			end_actions.extend (agent set_pointer_style (Default_pixmaps.Standard_cursor))
-			end_actions.extend (agent update_cluster_size)
-			end_actions.extend (agent extend_history)
-		end
-
-feature -- Memory management
-
-	recycle is
-			-- Frees `Current's memory, and leave `Current' in an unstable state
-			-- so that we know whether we're still referenced or not.
-		do
-			ancestor_figures.wipe_out
-			descendant_figures.wipe_out
-			client_figures.wipe_out
-			supplier_figures.wipe_out
-		end
-
-feature -- Access
-
-	left: INTEGER is
-			-- Absolute left position.
-		do
-			Result := ellipse.point_a.x_abs
-		end
-
-	top: INTEGER is
-			-- Absolute top position.
-		do
-			Result := ellipse.point_a.y_abs
+			xml_node_name,
+			xml_element,
+			set_with_xml_element,
+			set_is_fixed,
+			recycle
 		end
 		
-	right: INTEGER is
-			-- Absolute right position.
-		do
-			Result := ellipse.point_b.x_abs
+	BON_FIGURE
+		undefine
+			default_create
 		end
-
-	bottom: INTEGER is
-			-- Absolute bottom position.
-		do
-			Result := ellipse.point_b.y_abs
+		
+	DEBUG_OUTPUT
+		undefine
+			default_create
 		end
+	
+create
+	default_create,
+	make_with_model
+	
+feature {NONE} -- Initialization
 
-	x_position: INTEGER is
-			-- Absolute center x coordinate.
+	default_create is
+			-- Create a BON_CLASS_FIGURE
+		local
+			anchor_pix: EV_MODEL_PICTURE
+			circl: EV_MODEL_ELLIPSE
 		do
-			Result := point.x_abs
+			Precursor {EIFFEL_CLASS_FIGURE}
+			prune_all (name_label)
+			
+			background_color := bon_class_fill_color
+			foreground_color := bon_class_line_color
+			line_width := bon_class_line_width
+			
+			id_generics_font := bon_generics_font
+			generics_color := bon_generics_color
+			
+			id_class_name_font := bon_class_name_font
+			class_name_color := bon_class_name_color
+			
+			real_ellipse_border_horizontal := 10
+			real_ellipse_border_vertical := 10
+			
+			create ellipse
+			extend (ellipse)
+			
+			create anchor
+			create circl.make_with_positions (-2, -2, 18, 18)
+			circl.set_foreground_color (default_colors.black)
+			circl.set_background_color (default_colors.white)
+			anchor.extend (circl)
+			create anchor_pix.make_with_identified_pixmap (bon_anchor)
+			anchor.extend (anchor_pix)
+			anchor.hide
+			anchor.disable_sensitive
+			is_anchor_shown := False
+			extend (anchor)
+				
+			create name_labels
+			extend (name_labels)
+			
+			create icon_figures
+			extend (icon_figures)
+			
+			create generics_label
+			extend (generics_label)
+
+			set_ellipse_properties
+			
+			is_high_quality := True
+			disable_rotating
+			disable_scaling
+			
+			is_default_background_color_used := True
 		end
-
-	y_position: INTEGER is
-			-- Absolute center y coordinate.
+		
+	make_with_model (a_model: ES_CLASS) is
+			-- Create a BON_CLASS_FIGURE using the `model' `a_model'.
+		require
+			a_model_not_void: a_model /= Void
 		do
-			Result := point.y_abs
-		end
+			default_create
+			model := a_model
+			initialize
 
-	width: INTEGER is
-			-- Horizontal size.
-		do
-			Result := ellipse.point_b.x
-		end
-
-	height: INTEGER is
-			-- Vertical size.
-		do
-			Result := ellipse.point_b.y
-		end
-
-	real_pebble: ANY is
-			-- Calculated `pebble'.
-			-- Void if key ctrl pressed.
-		do
-			if not ctrl_pressed then
-				Result := Precursor {CLASS_FIGURE}
-			end
-		end
-
-feature -- Figures
-
-	ellipse: EV_FIGURE_ELLIPSE
-			-- BON symbol for a class.
-
-	name_figures: LINKED_LIST [EV_FIGURE_TEXT]
-			-- Figure for every broken part of the name.
-
-	generics_figure: EV_FIGURE_TEXT
-			-- Class generics, between brackets.
-
-	icon_figures: LINKED_LIST [EV_FIGURE_PICTURE]
-			-- Optional icon for class types deferred, effective, persistent, interfaced.
-
-	color: EV_COLOR is
-			-- User selected color.
-		do
-			Result := ellipse.background_color
+			set_bon_icons			
+			model.properties_changed_actions.extend (agent set_bon_icons)
+			
+			set_generics
+			model.generics_changed_actions.extend (agent set_generics)
+			
+			request_update
 		end
 
 feature -- Status report
 
-	bounding_box: EV_RECTANGLE is
-			-- Smallest orthogonal rectangular area `Current' fits in.
+	is_anchor_shown: BOOLEAN
+			-- Is anchor indicating `is_fixed' shown?
+		
+feature -- Access
+
+	world: EIFFEL_WORLD is
+			-- World `Current' is part of.
+		do
+			Result ?= Precursor {EIFFEL_CLASS_FIGURE}
+		end
+
+	port_x: INTEGER is
+			-- x position where links are starting.
+		do
+			Result := ellipse.x
+		end
+		
+	port_y: INTEGER is
+			-- y position where links are starting.
+		do
+			Result := ellipse.y
+		end
+		
+	size: EV_RECTANGLE is
+			-- Size of `Current'.
 		do
 			Result := ellipse.bounding_box
 		end
-
-feature -- Status setting
-
-	set_size (a_width, a_height: INTEGER) is
-			-- Resize `Current' to `a_width', `a_height'.
-		require
-			a_width_positive: a_width > 0
-			a_height_positive: a_height > 0
+		
+	height: INTEGER is
+			-- Height in pixels.
 		do
-			ellipse.point_a.set_position (-a_width // 2, -a_height // 2)
-			ellipse.point_b.set_position (a_width, a_height)
+			Result := ellipse.radius2 * 2
 		end
-
-	name_width: INTEGER is
-			-- Width of the `name' figures.
+		
+	width: INTEGER is
+			-- Width in pixels.
 		do
-			Result := bon_class_name_font.string_size (broken_name).integer_item (1)
+			Result := ellipse.radius1 * 2
 		end
-
-	icon_width: INTEGER is
-			-- Width of all icons.
+			
+	background_color: EV_COLOR
+			-- Background color for the ellipse.
+			
+	foreground_color: EV_COLOR
+			-- Foreground color for the ellipse.
+			
+	line_width: INTEGER
+			-- Line width of the ellipse.
+			
+	generics_font: EV_FONT is
+			-- Font for generics parameter.
 		do
-			from
-				icon_figures.start
-			until
-				icon_figures.after
-			loop
-				Result := Result + icon_figures.item.width
-				icon_figures.forth
+			Result := id_generics_font.font
+		end
+			
+	generics_color: EV_COLOR
+			-- Color for generics parameter.
+			
+	class_name_font: EV_FONT is
+			-- Font for the class name.
+		do
+			Result := id_class_name_font.font
+		end
+			
+	class_name_color: EV_COLOR
+			-- Color for the class name.
+			
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := model.name
+		end
+		
+	xml_node_name: STRING is
+			-- Name of the xml node returned by `xml_element'.
+		do
+			Result := "BON_CLASS_FIGURE"
+		end
+		
+	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+			-- Xml element representing `Current's state.
+		do
+			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
+			Result.add_attribute ("CLUSTER_NAME", xml_namespace, model.class_i.cluster.cluster_name)
+			Result.put_last (Xml_routines.xml_node (Result, "IS_DEFAULT_BG_COLOR_USED", is_default_background_color_used.out))
+			if not is_default_background_color_used then
+				Result.put_last (Xml_routines.xml_node (Result, "BACKGROUND_COLOR", 
+					background_color.red_8_bit.out + ";" +
+					background_color.green_8_bit.out + ";" +
+					background_color.blue_8_bit.out))
+				Result.put_last (Xml_routines.xml_node (Result, "GENERICS_COLOR", 
+					generics_color.red_8_bit.out + ";" +
+					generics_color.green_8_bit.out + ";" +
+					generics_color.blue_8_bit.out))
+				Result.put_last (Xml_routines.xml_node (Result, "CLASS_NAME_COLOR", 
+					class_name_color.red_8_bit.out + ";" +
+					class_name_color.green_8_bit.out + ";" +
+					class_name_color.blue_8_bit.out))
 			end
-			Result := Result + (icon_figures.count - 1) * Icon_spacing
+			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 		end
-
-	set_active (b: BOOLEAN) is
-			-- Highlight `Current' if `b' `True'.
+		
+	set_with_xml_element (node: XM_ELEMENT) is
+			-- Retrive state from `node'.
 		do
-			if b then
-				ellipse.set_line_width (3)
+			node.forth
+			Precursor {EIFFEL_CLASS_FIGURE} (node)
+			if not xml_routines.xml_boolean (node, "IS_DEFAULT_BG_COLOR_USED") then
+				set_background_color (xml_routines.xml_color (node, "BACKGROUND_COLOR"))
+				set_generics_color (xml_routines.xml_color (node, "GENERICS_COLOR"))
+				set_class_name_color (xml_routines.xml_color (node, "CLASS_NAME_COLOR"))
 			else
-				ellipse.set_line_width (1)
+				if is_high_quality then
+					ellipse.set_background_color (bon_class_fill_color)
+				else
+					ellipse.set_background_color (low_quality_fill_color)
+				end
+				set_generics_color (bon_generics_color)
+				set_class_name_color (bon_class_name_color)
+				is_default_background_color_used := True
+			end
+			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+				model.enable_needed_on_diagram
+			else
+				model.disable_needed_on_diagram
+			end
+		end
+		
+feature -- Status settings
+
+	show_anchor is
+			-- Show anchor, if `is_fixed'.
+		do
+			if is_fixed then
+				anchor.show
+				is_anchor_shown := True
+				request_update
+			end
+		ensure
+			fixed_implies_show: is_fixed implies is_anchor_shown
+		end
+		
+	hide_anchor is
+			-- Hide anchor.
+		do
+			if anchor.is_show_requested then
+				anchor.hide
+				is_anchor_shown := False
+				request_update
+			end
+		ensure
+			anchor_hidden: not is_anchor_shown
+		end
+		
+	set_is_fixed (b: BOOLEAN) is
+			-- Set `is_fixed' to `b'.
+		do
+			Precursor {EIFFEL_CLASS_FIGURE} (b)
+			if not is_fixed then
+				hide_anchor
+			elseif world.context_editor.is_force_directed_used then
+				show_anchor
 			end
 		end
 
-	update_edge_point (p: EV_RELATIVE_POINT; angle: REAL) is
+feature -- Element change
+
+	recycle is
+			-- Free `Current's resources.
+		do
+			Precursor {EIFFEL_CLASS_FIGURE}			
+			model.properties_changed_actions.prune_all (agent set_bon_icons)
+			model.generics_changed_actions.prune_all (agent set_generics)
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Set `background_color' to `a_color'.
+		do
+			is_default_background_color_used := False
+			background_color := a_color
+			set_ellipse_properties
+		ensure
+			set: background_color = a_color
+		end
+
+-- if you uncomment this, store the colors in xml.
+--
+--	set_foreground_color (a_color: EV_COLOR) is
+--			-- Set `foreground_color' to `a_color'.
+--		require
+--			a_color_not_void: a_color /= Void
+--		do
+--			foreground_color := a_color
+--			set_ellipse_properties
+--		ensure
+--			set: foreground_color = a_color
+--		end
+		
+--	set_line_width (a_width: INTEGER) is
+--			-- Set `line_width' to `a_width'.
+--		require
+--			a_width_greater_equal_zero: a_width >= 0
+--		do
+--			line_width := a_width
+--			set_ellipse_properties
+--		ensure
+--			set: line_width = a_width
+--		end
+--
+--	set_generics_font (a_font: EV_FONT) is
+--			-- Set `generics_font' to `a_font'.
+--		require
+--			a_font_not_void: a_font /= Void
+--		local
+--			txt: EV_MODEL_TEXT
+--		do
+--			generics_font := a_font
+--			from
+--				generics_label.start
+--			until
+--				generics_label.after
+--			loop
+--				txt ?= generics_label.item
+--				set_generics_properties (txt)
+--				generics_label.forth
+--			end
+--		ensure
+--			set: generics_font = a_font
+--		end
+--
+--	set_class_name_font (a_font: EV_FONT) is
+--			-- Set `class_name_font' to `a_font'.
+--		require
+--			a_font_not_void: a_font /= Void
+--		do
+--			class_name_font := a_font
+--			set_class_name_properties
+--		ensure
+--			set: class_name_font = a_font
+--		end
+		
+	set_generics_color (a_color: EV_COLOR) is
+			-- Set `generics_color' to `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+		local
+			txt: EV_MODEL_TEXT
+		do
+			generics_color := a_color
+			from
+				generics_label.start
+			until
+				generics_label.after
+			loop
+				txt ?= generics_label.item
+				txt.set_foreground_color (generics_color)
+				generics_label.forth
+			end
+		ensure
+			set: generics_color = a_color
+		end
+
+	set_class_name_color (a_color: EV_COLOR) is
+			-- Set `class_name_color' to `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+		local
+			txt: EV_MODEL_TEXT
+		do
+			class_name_color := a_color
+			from
+				name_labels.start
+			until
+				name_labels.after
+			loop
+				txt ?= name_labels.item
+				txt.set_foreground_color (a_color)
+				name_labels.forth
+			end
+		ensure
+			set: class_name_color = a_color
+		end
+
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
 			-- Move `p', which is relative to `Current', to a point on the
 			-- edge where the outline intersects a line from the center point
-			-- in direction `angle'.
+			-- in direction `an_angle'.
 		local
-			x, y, l, a, b: REAL
+			ax, ay, l: DOUBLE
+			a, b: DOUBLE
+			l_point_array: SPECIAL [EV_COORDINATE]
+			p0, p1: EV_COORDINATE
+			cx, cy, val1, val2: DOUBLE
 		do
 				-- Some explanation for those you have forgotten about their math classes.
 				-- We have two equations:
 				-- 1 - the ellipse: x^2/a^2 + y^2/b^2 = 1
-				-- 2 - the line which has an angle `angle': y = tan(angle) * x
+				-- 2 - the line which has an angle `an_angle': y = tan(an_angle) * x
 				--
 				-- The solution of the problem is to find the point (x, y) which is
 				-- common to both equations (1) and (2). Because `tangent' only applies for
 				-- angle values between ]-pi / 2, pi / 2 [, we have to get the result
 				-- for the other quadrant of the ellipse by mirroring the value of x
 				-- and of y.
-				-- With `l = tan(angle)', we can write the following equivalences:
+				-- With `l = tan(an_angle)', we can write the following equivalences:
 				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2/a^2 + (l^2*x^2)/b^2 = 1
 				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2*b^2 + l^2*x^2*a^2 = a^2*b^2
 				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2*(b^2 + l^2*a^2) = a^2*b^2
 				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2 = a^2*b^2 / (b^2 + l^2*a^2)
 				-- x^2/a^2 + y^2/b^2 = 1 <=> x = a*b / sqrt(b^2 + l^2*a^2)
-			l := tangent (angle)
-			a := ellipse.point_b.x / 2
-			b := ellipse.point_b.y / 2
-			x := (a * b) / sqrt (b^2 + l^2 * a^2)
-			y := l * x
+			l := tangent (an_angle)
+			l_point_array := ellipse.point_array
+			p0 := l_point_array.item (0)
+			p1 := l_point_array.item (1)
+			val1 := p0.x_precise
+			val2 := p1.x_precise
+			a := (val1 - val2) / 2
+			cx := (val1 + val2) / 2
 			
-			if cosine (angle) < 0 then
-					-- When we are in ]pi/2, 3*pi/2[, then we need to reverse
-					-- the coordinates. It looks strange like that, but don't forget
-					-- that although `x' is always positive, `y' might be negative depending
-					-- on the sign of `l'. This is why we need to reverse both coordinates, 
-					-- but because we also need to reverse the `y' value because in a figure world
-					-- the `y' coordinates go down and not up, the effect is null, thus no operation
-					-- on `y'.
-				x := -x
+			val1 := p0.y_precise
+			val2 := p1.y_precise
+			b := (val1 - val2) / 2
+			cy := (val1 + val2) / 2
+			if a = 0 and b = 0 then
+				ax := 0
+				ay := 0
 			else
-					-- We need to reverse the y value, because in a figure world, the y coordinates
-					-- go down and not up.
-				y := -y
+				ax := (a * b) / sqrt (b^2 + l^2 * a^2)
+				ay := l * ax
+				
+				if cosine (an_angle) < 0 then
+						-- When we are in ]pi/2, 3*pi/2[, then we need to reverse
+						-- the coordinates. It looks strange like that, but don't forget
+						-- that although `ax' is always positive, `ay' might be negative depending
+						-- on the sign of `l'. This is why we need to reverse both coordinates, 
+						-- but because we also need to reverse the `ay' value because in a figure world
+						-- the `ay' coordinates go down and not up, the effect is null, thus no operation
+						-- on `ay'.
+					ax := -ax
+				else
+						-- We need to reverse the y value, because in a figure world, the y coordinates
+						-- go down and not up.
+					ay := -ay
+				end
 			end
-			p.set_position (x.truncated_to_integer, -y.truncated_to_integer)
+			p.set_precise (cx + ax, cy - ay)
 		end
-
-	set_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `color'.
-		do
-			ellipse.set_background_color (a_color)
-		end
-
-	set_name_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `name_figures' items.
-		do
-			from
-				name_figures.start
-			until
-				name_figures.after
-			loop
-				name_figures.item.set_foreground_color (a_color)
-				name_figures.forth
-			end
-		end
-
-	set_generics_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `generics_figure'.
-		do
-			generics_figure.set_foreground_color (a_color)
-		end
-
-	set_bounds (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Assign bounds.
-		do
-			point.set_x (a_x - point.origin.x_abs)
-			point.set_y (a_y - point.origin.y_abs)
-			set_size (a_width, a_height)
-			update
-		end
-
-	set_relative_position_and_size (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Assign bounds.
-		do
-			point.set_x (a_x)
-			point.set_y (a_y)
-			set_size (a_width, a_height)
-			update
-		end
-
-	mask is 
-			-- `Current' no longer needs to be displayed.
-		do
-			hide
-			disable_sensitive
-			from ancestor_figures.start until ancestor_figures.after loop
-				ancestor_figures.item.mask
-				ancestor_figures.forth
-			end
-			from descendant_figures.start until descendant_figures.after loop
-				descendant_figures.item.mask
-				descendant_figures.forth
-			end
-			from client_figures.start until client_figures.after loop
-				client_figures.item.mask
-				client_figures.forth
-			end
-			from supplier_figures.start until supplier_figures.after loop
-				supplier_figures.item.mask
-				supplier_figures.forth
-			end
-		end
-
-	unmask is
-			-- `Current' needs to be displayed again.
-		do
-			show
-			enable_sensitive
-			from ancestor_figures.start until ancestor_figures.after loop
-				ancestor_figures.item.unmask
-				ancestor_figures.forth
-			end
-			from descendant_figures.start until descendant_figures.after loop
-				descendant_figures.item.unmask
-				descendant_figures.forth
-			end
-			from client_figures.start until client_figures.after loop
-				client_figures.item.unmask
-				client_figures.forth
-			end
-			from supplier_figures.start until supplier_figures.after loop
-				supplier_figures.item.unmask
-				supplier_figures.forth
-			end
-		end
-
-feature {BON_DIAGRAM_FACTORY} -- Drawing
-
-	draw is
-			-- Do a quick draw on `drawable'.
+		
+feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
+		
+	update is
+			-- Some properties of `Current' may have changed.
 		local
-			cx, cy, r1, r2: INTEGER
-			fig_txt: EV_FIGURE_TEXT
-			fig_pic: EV_FIGURE_PICTURE
-			re: EV_FIGURE_ELLIPSE
-			name_font, generics_font: EV_FONT
-			d: like drawable
+			l_min_size: like minimum_size
 		do
-			d := drawable
-			cx := ellipse.center_x - drawable_position.x
-			cy := ellipse.center_y - drawable_position.y
-			r1 := ellipse.radius1
-			r2 := ellipse.radius2
-			d.set_line_width (bon_class_line_width)
-			d.set_foreground_color (ellipse.background_color)
-			d.fill_ellipse (cx - r1, cy - r2, 2 * r1, 2 * r2)
-			d.set_foreground_color (bon_class_line_color)
-			d.draw_ellipse (cx - r1, cy - r2, 2 * r1, 2 * r2)
-			if is_root_class then
-			    re := root_ellipse
-			    cx := re.center_x - drawable_position.x
-			    cy := re.center_y - drawable_position.y
-			    r1 := re.radius1
-			    r2 := re.radius2
-			    d.draw_ellipse (cx - r1, cy - r2, 2 * r1, 2 * r2)
+			l_min_size := minimum_size			
+			ellipse.set_point_a_position (l_min_size.left - ellipse_border_horizontal, l_min_size.top - ellipse_border_vertical)
+			ellipse.set_point_b_position (l_min_size.right + ellipse_border_horizontal, l_min_size.bottom + ellipse_border_vertical)
+			if anchor.is_show_requested then
+				anchor.set_x_y (ellipse.point_a_x + 3, ellipse.point_a_y + 3)
 			end
-
-			create name_font.make_with_values (
-				bon_class_name_font.family,
-				bon_class_name_font.weight,
-				bon_class_name_font.shape,
-				bon_class_name_font.height)
-			name_font.set_height ((name_font.height * world.point.scale_y).rounded)
-			d.set_font (name_font)
-			d.set_foreground_color (bon_class_name_color)
-			from
-				name_figures.start
-			until
-				name_figures.after
-			loop
-				fig_txt := name_figures.item
-				d.set_foreground_color (fig_txt.foreground_color)
-				d.draw_text_top_left (fig_txt.point.x_abs - drawable_position.x, fig_txt.point.y_abs - drawable_position.y, fig_txt.text)
-				name_figures.forth
-			end
-
-			if generics /= Void then
-				fig_txt := generics_figure
-				create generics_font.make_with_values (
-					bon_generics_font.family,
-					bon_generics_font.weight,
-					bon_generics_font.shape,
-					bon_generics_font.height)
-				generics_font.set_height ((generics_font.height * world.point.scale_y).rounded)
-				d.set_font (generics_font)
-				d.set_foreground_color (generics_figure.foreground_color)
-				d.draw_text_top_left (fig_txt.point.x_abs - drawable_position.x, fig_txt.point.y_abs - drawable_position.y, fig_txt.text)
-			end
-
-			from
-				icon_figures.start
-			until
-				icon_figures.after
-			loop
-				fig_pic := icon_figures.item
-				d.draw_pixmap (fig_pic.point.x_abs - drawable_position.x, fig_pic.point.y_abs - drawable_position.y, fig_pic.pixmap)
-				icon_figures.forth
-			end
+			is_update_required := False
 		end
+		
+feature {EV_MODEL_GROUP} -- Figure group
+
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+			-- Same as transform but without precondition
+			-- is_transformable and without invalidating
+			-- groups center
+		do
+			Precursor {EIFFEL_CLASS_FIGURE} (a_transformation)
+			real_ellipse_border_horizontal := real_ellipse_border_horizontal * a_transformation.item (1, 1)
+			real_ellipse_border_vertical := real_ellipse_border_vertical * a_transformation.item (2, 2)
+		end
+		
+feature {EIFFEL_PROJECTOR} -- Ellipse
+		
+	ellipse: EV_MODEL_ELLIPSE
+			-- The BON ellipse.
 
 feature {NONE} -- Implementation
 
-	wipe_out is
+	id_class_name_font: EV_IDENTIFIED_FONT
+	
+	id_generics_font: EV_IDENTIFIED_FONT
+
+	set_is_selected (an_is_selected: like is_selected) is
+			-- Set `is_selected' to `an_is_selected'.
 		do
-			Precursor {CLASS_FIGURE}
-			name_figures.wipe_out
+			if is_selected /= an_is_selected then
+				is_selected := an_is_selected
+				if is_selected then
+					ellipse.set_line_width (line_width * 2)
+				else
+					ellipse.set_line_width (line_width)
+				end
+			end
+		end
+
+	is_default_background_color_used: BOOLEAN
+			-- Was background color not changed by client?
+
+	ellipse_border_horizontal: INTEGER is
+			-- Horizontal border for the ellipse.
+		do
+			Result := real_ellipse_border_horizontal.truncated_to_integer
+		end
+		
+	real_ellipse_border_horizontal: REAL
+			-- Real value of `ellipse_border_horizontal'.
+			-- Needed to prevent rounding errors on scale.
+	
+	ellipse_border_vertical: INTEGER is
+			-- Vertical border for the ellipse.
+		do
+			Result := real_ellipse_border_vertical.truncated_to_integer
+		end
+		
+	real_ellipse_border_vertical: REAL
+			-- Real value of `ellipse_border_vertical'.
+
+	number_of_figures: INTEGER is 2
+			-- Number of figures used to visualize `Current'.
+			-- (`ellipse', `anchor')
+	
+	icon_figures: EV_MODEL_GROUP
+			-- Optional icon for class types deferred, effective, persistent, interfaced.
+			
+	icon_spacing: INTEGER is 2
+			-- Space in pixel between icons in `icon_figures'.
+	
+	name_labels: EV_MODEL_GROUP
+			-- All the part of the name of the class.
+			
+	generics_label: EV_MODEL_GROUP
+			-- All parts of `model'.`generics' name.
+
+	anchor: EV_MODEL_GROUP
+			-- Anchor indicating that `Current' `is_fixed'.
+			
+	set_bon_icons is
+			-- Examine the properties of the class and add `icon_figures'.
+		require
+			model_not_void: model /= Void
+		local
+			icon: EV_MODEL_PICTURE
+			hw: INTEGER
+		do
 			icon_figures.wipe_out
-		end
-
-	Extra_width: INTEGER is 30
-
-	Extra_height: INTEGER is 20
-
-	build_figure is
-			-- Build graphical representation from recently updated structure.
-		local
-			t: EB_DIMENSIONS
-		do
-			extend (ellipse)
-
-			broken_name.wipe_out
-			add_name_figure (name)
-
-			if generics /= Void then
-				generics_figure.set_text (generics)
-				generics_figure.set_font (bon_generics_font)
-				generics_figure.set_foreground_color (bon_generics_color)
-				extend (generics_figure)
+			icon_figures.set_point_position (0, 0)
+			if model.is_deferred then
+				create icon.make_with_identified_pixmap (bon_deferred_icon)
+				icon.set_point_position (0, 0)
+				icon_figures.extend (icon)
 			end
-
-			set_bon_icons
-
-			layout_figures
-
-			t := minimum_dimension
-			set_size (t.width + Extra_width, t.height + Extra_height)
-		end
-
-	layout_figures is
-			-- Set all figures to a nice position relative to `point'.
-		local
-			name_y, icon_x: INTEGER
-			nf: EV_FIGURE_TEXT
-			ifig: EV_FIGURE_PICTURE
-		do
-			name_y := name_figures.count * (bon_class_name_font.height + Text_spacing)
-			if generics /= Void then
-				name_y := name_y + bon_generics_font.height + 2
+			if model.is_effective then
+				create icon.make_with_identified_pixmap (bon_effective_icon)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon_figures.extend (icon)
 			end
-			name_y := - name_y // 2
-
-			icon_x := - icon_width // 2
+			if model.is_persistent then
+				create icon.make_with_identified_pixmap (bon_persistent_icon)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon_figures.extend (icon)
+			end
+			if model.is_interfaced then
+				create icon.make_with_identified_pixmap (bon_interfaced_icon)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon_figures.extend (icon)
+			end
 			from
+				hw := icon_figures.bounding_box.width // 2
 				icon_figures.start
 			until
 				icon_figures.after
 			loop
-				ifig := icon_figures.item
-				ifig.point.set_position (icon_x, name_y - ifig.height)
-				icon_x := icon_x + ifig.width + Icon_spacing
+				icon_figures.item.set_x (icon_figures.item.x - hw)
 				icon_figures.forth
 			end
-
-			from
-				name_figures.start
-			until
-				name_figures.after
-			loop
-				nf := name_figures.item
-				nf.point.set_position (- nf.width // 2, name_y)
-				name_y := name_y + bon_class_name_font.height + Text_spacing
-				name_figures.forth
+			if world /= Void then
+				icon_figures.scale (world.scale_factor)
 			end
-			
-			if generics /= Void then
-				generics_figure.point.set_position (- generics_figure.width // 2, name_y)
-			end
+			update_information_positions
+			request_update
 		end
 
-	Max_backup: INTEGER is 7
-			-- Break at underscores, but do not search further than this index.
-
-	Icon_spacing: INTEGER is 2
-			-- Pixels between icons.
-
-	Text_spacing: INTEGER is 0
-			-- Pixels between texts.
-
-	root_ellipse: EV_FIGURE_ELLIPSE is
-			-- BON specifies that a root class should have a double ellipse.
-		require
-			is_root_class
+	set_name_label_text (a_text: STRING) is
+			-- Set texts in `name_labels'.
+			-- | With line wrap at `max_class_name_length'.
 		local
-			lw: INTEGER
-		do
-			lw := bon_class_line_width
-			create Result
-			Result.set_line_width (lw)
-			Result.set_foreground_color (bon_class_line_color)
-			Result.remove_background_color
-			Result.point_a.set_origin (ellipse.point_a)
-			Result.point_a.set_position (lw * 2 + 1, lw * 2 + 1)
-			Result.point_b.set_origin (ellipse.point_b)
-			Result.point_b.set_position (-lw * 2 - 1, -lw * 2 - 1)
-		end
-	
-	set_bon_icons is
-			-- Examine the properties of the class and add BON pixmaps.
-		do
-			if is_deferred then
-				add_icon (Pixmaps.Icon_bon_deferred)
-			end
-			if is_effective then
-				add_icon (Pixmaps.Icon_bon_effective)
-			end
-			if is_persistent then
-				add_icon (Pixmaps.Icon_bon_persistent)
-			end
-			if is_interfaced then
-				add_icon (Pixmaps.Icon_bon_interfaced)
-			end
-		end
-
-	add_icon (p: EV_PIXMAP) is
-			-- Add picture figure for `p' to `icon_figures'.
-		local
-			icon: EV_FIGURE_PICTURE
-		do
-			create icon
-			icon.set_pixmap (p)
-			icon_figures.extend (icon)
-			icon.point.set_origin (point)
-			extend (icon)
-		end
-
-	add_name_figure (n: STRING) is
-			-- Add first characters as name figure, then call recursively.
-		local
-			name_figure: EV_FIGURE_TEXT
-			reused_figure: EV_FIGURE_LINE
 			s, rest: STRING
 			i: INTEGER
+			part_text: EV_MODEL_TEXT
 		do
-			if n.count > max_class_name_length then
-				i := n.last_index_of ('_', max_class_name_length)
-				if i < Max_backup then
-					i := max_class_name_length
+			name_labels.wipe_out
+			name_labels.set_point_position (0, 0)
+			if a_text.count > max_class_name_length then
+				from
+					s := ""
+					rest := a_text
+					i := a_text.last_index_of ('_', max_class_name_length)
+					if i = 0 then
+						i := max_class_name_length
+					end
+				until
+					i = 0 or else rest.count <= max_class_name_length
+				loop
+					s := rest.substring (1, i)
+					rest := rest.substring (i + 1, rest.count)
+					if rest.count > max_class_name_length then
+						i := rest.last_index_of ('_', max_class_name_length)
+						if i = 0 then
+							i := max_class_name_length
+						end
+					end
+					create part_text.make_with_text (s)
+					assign_class_name_properties_to_text (part_text)
+					part_text.set_point_position (0, name_labels.bounding_box.height)
+					part_text.set_x (0)
+					name_labels.extend (part_text)
 				end
-				s := n.substring (1, i)
-				rest := n.substring (i + 1, n.count)
+				s := rest			
+				create part_text.make_with_text (s)
+				assign_class_name_properties_to_text (part_text)
+				part_text.set_point_position (0, name_labels.bounding_box.height)
+				part_text.set_x (0)
+				name_labels.extend (part_text)
 			else
-				s := n.twin
+				create part_text.make_with_text (a_text)
+				assign_class_name_properties_to_text (part_text)
+				part_text.set_x (0)
+				name_labels.extend (part_text)
 			end
-
-			create name_figure
-			name_figure.set_font (bon_class_name_font)
-			name_figure.set_foreground_color (bon_class_name_color)
-			name_figure.set_text (s)
-			name_figure.point.set_origin (point)
-			name_figure.drop_actions.extend (agent on_class_drop)
-			name_figures.extend (name_figure)
-			extend (name_figure)
-
-			if is_reused then
-				create reused_figure
-				reused_figure.point_a.set_origin (name_figure.point)
-				reused_figure.point_a.set_position (0, name_figure.height + 1)
-				reused_figure.point_b.set_origin (reused_figure.point_a)
-				reused_figure.point_b.set_position (name_figure.width, 0)
-				extend (reused_figure)
-			end
-
-			broken_name.append (s)
-			if rest /= Void then
-				broken_name.extend ('%N')
-				add_name_figure (rest)
-			end
+			update_information_positions
 		end
-
-	minimum_dimension: EB_DIMENSIONS is
-			-- Best values for `width' and `height'.
+			
+	set_generics is
+			-- Set text in `generics_label'.
+			-- | With line wrap at `max_generics_name_length'.
 		local
-			height_ratio, width_ratio: DOUBLE
+			s, rest: STRING
+			a_text: STRING
+			i, j: INTEGER
+			part_text: EV_MODEL_TEXT
 		do
-			create Result.set (
-				name_width,
-				name_figures.count * (bon_class_name_font.height + Text_spacing))
-			if generics /= Void then
-				height_ratio := 0.55
-				width_ratio := 0.25
-				Result.set (
-					Result.width.max (generics_figure.width + (width_ratio * generics_figure.text.count).rounded),
-					Result.height + bon_generics_font.height + (height_ratio * generics_figure.text.count).rounded + Text_spacing)
-			end
-		end
-
-	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
-			--| Used to generate events.
-		do
-			Result := ellipse.position_on_figure (x, y)
-		end
-
-	saved_x: INTEGER
-			-- Backup of `Current' X-coordinate.
-
-	saved_y: INTEGER
-			-- Backup of `Current' Y-coordinate.
-
-feature {NONE} -- Events
-
-	button_press (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
-			-- User pressed pointer button on `Current'.
-		local
-			pebble_as_stone: STONE
-		do
-			if b = 3 and then ctrl_pressed then
-				pebble_as_stone ?= pebble
-				if pebble_as_stone /= Void and then pebble_as_stone.is_valid then
-					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (pebble_as_stone)
-				end
-			end
-		end
-
-	move_to_front is
-			-- Make `Current' appear in front of its peers.
-		local
-			w: CONTEXT_DIAGRAM
-			g: EV_FIGURE_GROUP
-		do
-			w := world
-			if w /= Void then
-				g := w.class_layer
-				g.prune_all (Current)
-				g.extend (Current)
-				w.full_redraw_performed
-			end
-		end
-
-	save_position is
-			-- Make a backup of current coordinates.
-		do
-			saved_x := point.x
-			saved_y := point.y
-		end 
-
-	extend_history is
-			-- Register move in the history.
-		local
-			cd: CLUSTER_DIAGRAM
-			new_cluster_figure: CLUSTER_FIGURE
-			saved_x_abs, saved_y_abs: INTEGER
-		do
-			cd ?= world
-			if cd /= Void then
-				new_cluster_figure := cd.smallest_cluster_containing_point (x_position, y_position)
-				if new_cluster_figure = Void then
-					point.set_position (saved_x, saved_y)
-					update_and_project
-				elseif new_cluster_figure /= cluster_figure then
-					saved_x_abs := (saved_x * cluster_figure.point.scale_x_abs).rounded + cluster_figure.point.x_abs
-					saved_y_abs := (saved_y * cluster_figure.point.scale_y_abs).rounded + cluster_figure.point.y_abs
-					world.context_editor.history.do_named_undoable (
-						Interface_names.t_Diagram_move_class_cmd,
-						[<<agent cd.on_move_class_end (Current, new_cluster_figure),
-							agent point.set_position (
-								((point.x_abs - new_cluster_figure.point.x_abs) /
-									new_cluster_figure.point.scale_x_abs).rounded,
-								((point.y_abs - new_cluster_figure.point.y_abs) /
-									new_cluster_figure.point.scale_y_abs).rounded),
-							agent update_and_project>>],
-						[<<agent cd.on_move_class_end (Current, cluster_figure),
-							agent point.set_position (saved_x, saved_y),
-							agent update_and_project>>])	
+			a_text := model.generics
+			
+			if a_text /= Void then
+				generics_label.show
+				generics_label.wipe_out
+				generics_label.set_point_position (0, 0)
+				if a_text.count > max_generics_name_length then
+					from
+						s := ""
+						rest := a_text
+						i := rest.last_index_of (' ', max_generics_name_length)
+						j := rest.last_index_of ('_', max_generics_name_length)
+						if j > i then
+							i := j
+						end
+						if i = 0 then
+							i := max_generics_name_length
+						end
+					until
+						i = 0 or else rest.count <= max_generics_name_length
+					loop
+						s := rest.substring (1, i)
+						rest := rest.substring (i + 1, rest.count)
+						if rest.count > max_generics_name_length then
+							i := rest.last_index_of (' ', max_generics_name_length)
+							j := rest.last_index_of ('_', max_generics_name_length)
+							if j > i then
+								i := j
+							end
+							if i = 0 then
+								i := max_generics_name_length
+							end
+						end
+						create part_text.make_with_text (s)
+						set_generics_properties (part_text)
+						part_text.set_point_position (0, generics_label.bounding_box.height)
+						part_text.set_x (0)
+						generics_label.extend (part_text)
+					end
+					s := rest			
+					create part_text.make_with_text (s)
+					set_generics_properties (part_text)
+					part_text.set_point_position (0, generics_label.bounding_box.height)
+					part_text.set_x (0)
+					generics_label.extend (part_text)
 				else
-					world.context_editor.history.do_named_undoable (
-						Interface_names.t_Diagram_move_class_cmd,
-						[<<agent point.set_position (point.x, point.y),
-							agent update_and_project>>],
-						[<<agent point.set_position (saved_x, saved_y),
-							agent update_and_project>>])	
+					create part_text.make_with_text (a_text)
+					set_generics_properties (part_text)
+					part_text.set_x (0)
+					generics_label.extend (part_text)
 				end
+				update_information_positions
 			else
-				world.context_editor.history.do_named_undoable (
-					Interface_names.t_Diagram_move_class_cmd,
-					[<<agent point.set_position (point.x, point.y),
-						agent update_and_project>>],
-					[<<agent point.set_position (saved_x, saved_y),
-						agent update_and_project>>])
+				update_information_positions
+			end
+			request_update
+		end
+		
+	information_border: INTEGER is 0
+		
+	update_information_positions is
+			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
+		local
+			ibbox, nbbox, gbbox: EV_RECTANGLE
+			h, w, cur_pos, cur_y_pos: INTEGER
+		do
+			ibbox := icon_figures.bounding_box
+			nbbox := name_labels.bounding_box
+			gbbox := generics_label.bounding_box
+			
+			if model.generics /= Void and then model.generics.count + model.name.count < 10  then
+				-- on one line
+				h := ibbox.height + nbbox.height
+				
+				cur_pos := port_y - h // 2
+				
+				icon_figures.set_point_position (port_x, cur_pos)
+				cur_pos := cur_pos + ibbox.height
+				
+				w := gbbox.width // 2
+				
+				cur_y_pos := port_x - w
+				
+				name_labels.set_point_position (cur_y_pos, cur_pos)
+				cur_y_pos := cur_y_pos + nbbox.width // 2 + w
+				generics_label.set_point_position (cur_y_pos, cur_pos)	
+			else
+				h := ibbox.height + nbbox.height + gbbox.height
+				
+				cur_pos := port_y - h // 2
+				
+				icon_figures.set_point_position (port_x, cur_pos)
+				cur_pos := cur_pos + ibbox.height
+				
+				name_labels.set_point_position (port_x, cur_pos)
+				cur_pos := cur_pos + nbbox.height
+				
+				generics_label.set_point_position (port_x, cur_pos)	
 			end
 		end
 
-	update_cluster_size is
-			-- Minimum size of `cluster_figure' needs to be updated
-			-- according to `Current' last move.
+	set_ellipse_properties is
+			-- Set properties of ellipse.
+		require
+			ellipse_not_void: ellipse /= Void
 		do
-			if cluster_figure /= Void then
-				if cluster_figure.position_on_figure (left, top) or else
-					cluster_figure.position_on_figure (right, bottom) or else
-					cluster_figure.position_on_figure (right, top) or else
-					cluster_figure.position_on_figure (left, bottom) then
-						cluster_figure.update_minimum_size
+			if background_color = Void then
+				ellipse.remove_background_color
+			else
+				ellipse.set_background_color (background_color)
+			end
+			ellipse.set_foreground_color (foreground_color)
+			if is_selected = True then
+				ellipse.set_line_width (line_width * 2)
+			else
+				ellipse.set_line_width (line_width)
+			end
+		end
+		
+	set_generics_properties (a_text: EV_MODEL_TEXT) is
+			-- Set propertis of `a_text' according to generics properties.
+		require
+			a_text /= Void
+		do
+			a_text.set_identified_font (id_generics_font)
+			a_text.set_foreground_color (generics_color)
+			if world /= Void then
+				a_text.scale (world.scale_factor)
+			end
+		end
+		
+	set_class_name_properties is
+			-- Set the properties of `name_labels' accoring to name properties.
+		local
+			txt: EV_MODEL_TEXT
+		do
+			from
+				name_labels.start
+			until
+				name_labels.after
+			loop
+				txt ?= name_labels.item
+				assign_class_name_properties_to_text (txt)
+				name_labels.forth
+			end
+		end
+
+	assign_class_name_properties_to_text (a_text: EV_MODEL_TEXT) is
+			-- Set properties of `a_text' according to name properties.
+		require
+			a_text /= Void
+		do
+			a_text.set_identified_font (id_class_name_font)
+			a_text.set_foreground_color (class_name_color)
+			if world /= Void then
+				a_text.scale (world.scale_factor)
+			end
+		end
+		
+	low_quality_fill_color: EV_COLOR is
+			-- Fill color for low quality ellipse.
+		once
+			create Result.make_with_rgb (1, 1, 1)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	set_is_high_quality (a_high_quality: like is_high_quality) is
+			-- Set `is_high_quality' to `a_high_quality'.
+		do
+			if is_high_quality /= a_high_quality then
+				is_high_quality := a_high_quality
+				if is_high_quality then
+					set_ellipse_properties
+					icon_figures.show
+					generics_label.show
+				else
+					if is_default_background_color_used then
+						ellipse.set_background_color (low_quality_fill_color)
+					end
+					icon_figures.hide
+					generics_label.hide
 				end
+				request_update
 			end
-			world.context_editor.update_bounds (world)
 		end
+		
+invariant
+	foreground_color_not_void: foreground_color /= Void
+	generics_font_not_void: generics_font /= Void
+	generics_color_not_void: generics_color /= Void
+	class_name_font_not_void: class_name_font /= Void
+	class_name_color_not_void: class_name_color /= Void
+	ellipse_not_void: ellipse /= Void
+	icon_figures_not_void: icon_figures /= Void
+	name_labels_not_void: name_labels /= Void
+	generics_label_not_void: generics_label /= Void
 
-	update_scrollable_area_size is
-			-- Minimum size of the scrollable area needs to be updated
-			-- according to `Current' last move.
-		do
-			world.context_editor.on_figure_moved
-		end
-	
 end -- class BON_CLASS_FIGURE

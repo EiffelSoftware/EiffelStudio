@@ -1,12 +1,13 @@
 indexing
-	description: "Objects that is a BON view for an EIFFEL_CLUSTER."
+	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	BON_CLUSTER_FIGURE
-
+	UML_CLUSTER_FIGURE
+	
+	
 inherit
 	EIFFEL_CLUSTER_FIGURE
 		redefine
@@ -20,24 +21,9 @@ inherit
 			xml_element,
 			set_with_xml_element,
 			recycle
-		select
-			default_create,
-			set_with_xml_element,
-			xml_element
 		end
 		
-	EG_POLYLINE_LABEL
-		rename
-			default_create as default_create_label,
-			update as update_label,
-			xml_element as polyline_label_xml_element,
-			set_with_xml_element as polyline_label_set_with_xml_element,
-			recycle as polyline_label_recycle
-		redefine
-			on_label_move
-		end
-		
-	BON_FIGURE
+	UML_CONSTANTS
 		undefine
 			default_create
 		end
@@ -48,21 +34,21 @@ create
 feature {NONE} -- Initialization
 
 	default_create is
-			-- Create a BON_CLUSTER_FIGURE.
+			-- Create a UML_CLUSTER_FIGURE.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
 			
 			-- Set properties to default values
-			foreground_color := bon_cluster_line_color
-			background_color := bon_cluster_fill_color
-			line_width := bon_cluster_line_width
-			cluster_name_background_color := bon_cluster_name_area_color
-			id_cluster_name_font := bon_cluster_name_font
-			cluster_name_color := bon_cluster_name_color
-			iconified_background_color := bon_cluster_iconified_fill_color
+			foreground_color := uml_cluster_line_color
+			background_color := uml_cluster_fill_color
+			line_width := uml_cluster_line_width
+			cluster_name_background_color := uml_cluster_name_area_color
+			cluster_name_font := uml_cluster_name_font
+			cluster_name_color := uml_cluster_name_color
+			iconified_background_color := uml_cluster_iconified_fill_color
 		
 			-- set name_label properties
-			name_label.set_identified_font (id_cluster_name_font)
+			name_label.set_font (cluster_name_font)
 			name_label.set_foreground_color (cluster_name_color)
 			
 			-- create the cluster rectangle
@@ -72,9 +58,6 @@ feature {NONE} -- Initialization
 				rectangle.set_background_color (background_color)
 			end
 			rectangle.set_line_width (line_width)
-			real_rectangle_radius := 20.0
-			rectangle.set_radius (rectangle_radius)
-			rectangle.enable_dashed_line_style
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 			extend (rectangle)
 			send_to_back (rectangle)
@@ -86,32 +69,18 @@ feature {NONE} -- Initialization
 				label_rectangle.set_background_color (cluster_name_background_color)
 			end
 			label_rectangle.set_line_width (line_width)
-			label_rectangle.enable_dashed_line_style
-			label_rectangle.set_radius (3)
-			
-			-- create the label 
-			default_create_label
-			label_line_start_point := polyline_points.item (2)
-			label_line_end_point := polyline_points.item (3)
-			position_on_line := 0.5
-			label_group.extend (label_rectangle)
-			label_group.extend (name_label)
-			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
-			label_move_handle.pointer_double_press_actions.extend (agent on_label_double_press)
-			extend (label_move_handle)
-			label_move_handle.disable_scaling
-			label_move_handle.disable_rotating
-			set_left (True)
-			
-			number_of_figures := 6
-			is_high_quality := True
+			label_rectangle.pointer_double_press_actions.extend (agent on_label_double_press)
+			extend (label_rectangle)
+			bring_to_front (name_label)
+			name_label.pointer_double_press_actions.extend (agent on_label_double_press)
+
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
 			is_shown := True
 		end
 		
 	make_with_model (a_model: like model) is
-			-- Create a BON_CLUSTER_FIGURE with `a_model'.
+			-- Create a UML_CLUSTER_FIGURE with `a_model'.
 		require
 			a_model_not_void: a_model /= Void
 		do
@@ -124,7 +93,7 @@ feature {NONE} -- Initialization
 			
 			request_update
 		end
-
+		
 feature -- Access
 
 	left: INTEGER is
@@ -188,54 +157,51 @@ feature -- Access
 			l_area: like area
 			i, nb: INTEGER
 			l_bbox: like bounding_box
-			e_item: ES_ITEM
+--			e_item: ES_ITEM
 			l_item: EG_FIGURE
 			l_border: INTEGER
 		do
-			if is_iconified then
-				l_border := (real_rectangle_border * 2).truncated_to_integer
+			if count <= number_of_figures then
+				l_border := (real_rectangle_border * 5).truncated_to_integer
 				create Result.make (port_x - 2 * l_border, port_y - l_border, 4 * l_border, 2 * l_border)
 			else
-				if count <= number_of_figures then
+				from
+					l_area := area
+					i := number_of_figures
+					nb := count - 1
+					l_item ?= l_area.item (i)
+--					e_item ?= l_item.model
+				until
+--					i > nb or else (e_item = Void or else e_item.is_needed_on_diagram)--
+					i > nb or else l_area.item (i).is_show_requested
+				loop
+					i := i + 1
+					if i <= nb then
+						l_item ?= l_area.item (i)
+--						e_item ?= l_item.model
+					end
+				end
+				if i <= nb then
+					Result := l_area.item (i).bounding_box
+					from
+						i := i + 1
+					until
+						i > nb
+					loop
+						l_item ?= l_area.item (i)
+--						e_item ?= l_item.model
+--						if e_item = Void or else e_item.is_needed_on_diagram then --
+						if l_area.item (i).is_show_requested then
+							l_bbox := l_area.item (i).bounding_box
+							if l_bbox.height > 0 or else l_bbox.width > 0 then
+								Result.merge (l_bbox)
+							end
+						end
+						i := i + 1
+					end
+				else
 					l_border := (real_rectangle_border * 5).truncated_to_integer
 					create Result.make (port_x - 2 * l_border, port_y - l_border, 4 * l_border, 2 * l_border)
-				else
-					from
-						l_area := area
-						i := number_of_figures
-						nb := count - 1
-						l_item ?= l_area.item (i)
-						e_item ?= l_item.model
-					until
-						i > nb or else (e_item = Void or else e_item.is_needed_on_diagram)--l_area.item (i).is_show_requested
-					loop
-						i := i + 1
-						if i <= nb then
-							l_item ?= l_area.item (i)
-							e_item ?= l_item.model
-						end
-					end
-					if i <= nb then
-						Result := l_area.item (i).bounding_box
-						from
-							i := i + 1
-						until
-							i > nb
-						loop
-							l_item ?= l_area.item (i)
-							e_item ?= l_item.model
-							if e_item = Void or else e_item.is_needed_on_diagram then --l_area.item (i).is_show_requested then
-								l_bbox := l_area.item (i).bounding_box
-								if l_bbox.height > 0 or else l_bbox.width > 0 then
-									Result.merge (l_bbox)
-								end
-							end
-							i := i + 1
-						end
-					else
-						l_border := (real_rectangle_border * 5).truncated_to_integer
-						create Result.make (port_x - 2 * l_border, port_y - l_border, 4 * l_border, 2 * l_border)
-					end
 				end
 			end
 		end
@@ -249,11 +215,8 @@ feature -- Access
 	line_width: INTEGER
 			-- Cluster border line width.
 			
-	cluster_name_font: EV_FONT is
+	cluster_name_font: EV_FONT
 			-- Font for the cluster name.
-		do
-			Result := id_cluster_name_font.font
-		end
 			
 	cluster_name_color: EV_COLOR
 			-- Color for the cluster name.
@@ -267,7 +230,7 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := "BON_CLUSTER_FIGURE"
+			Result := "UML_CLUSTER_FIGURE"
 		end
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
@@ -276,8 +239,6 @@ feature -- Access
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
 			Result.put_last (Xml_routines.xml_node (Result, "IS_ICONIFIED", is_iconified.out))
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
-			
-			Result := polyline_label_xml_element (node)
 		end
 	
 	set_with_xml_element (node: XM_ELEMENT) is
@@ -300,8 +261,6 @@ feature -- Access
 			else
 				model.disable_needed_on_diagram
 			end
-			
-			polyline_label_set_with_xml_element (node)
 		end
 
 feature -- Element change
@@ -310,102 +269,9 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
-			label_move_handle.pointer_double_press_actions.prune_all (agent on_label_double_press)
-			polyline_label_recycle
+			label_rectangle.pointer_double_press_actions.prune_all (agent on_label_double_press)
+			name_label.pointer_double_press_actions.prune_all (agent on_label_double_press)
 		end
-		
-
--- If you uncomment it you have to save the colors to xml.
---
---
---	set_iconified_background_color (an_iconified_background_color: like iconified_background_color) is
---			-- Set `iconified_background_color' to `an_iconified_background_color'.
---		do
---			iconified_background_color := an_iconified_background_color
---			if is_iconified then
---				if an_iconified_background_color /= Void then
---					rectangle.set_background_color (an_iconified_background_color)
---				else
---					rectangle.remove_background_color
---				end
---			end
---		ensure
---			iconified_background_color_assigned: iconified_background_color = an_iconified_background_color
---		end
---
---	set_cluster_name_background_color (a_cluster_name_background_color: like cluster_name_background_color) is
---			-- Set `cluster_name_background_color' to `a_cluster_name_background_color'.
---		do
---			cluster_name_background_color := a_cluster_name_background_color
---			if cluster_name_background_color /= Void then
---				label_rectangle.set_background_color (cluster_name_background_color)
---			else
---				label_rectangle.remove_background_color
---			end
---		ensure
---			cluster_name_background_color_assigned: cluster_name_background_color = a_cluster_name_background_color
---		end
---
---	set_cluster_name_color (a_cluster_name_color: like cluster_name_color) is
---			-- Set `cluster_name_color' to `a_cluster_name_color'.
---		require
---			a_cluster_name_color_not_void: a_cluster_name_color /= Void
---		do
---			cluster_name_color := a_cluster_name_color
---			name_label.set_foreground_color (cluster_name_color)
---		ensure
---			cluster_name_color_assigned: cluster_name_color = a_cluster_name_color
---		end
---
---	set_cluster_name_font (a_cluster_name_font: like cluster_name_font) is
---			-- Set `cluster_name_font' to `a_cluster_name_font'.
---		require
---			a_cluster_name_font_not_void: a_cluster_name_font /= Void
---		do
---			cluster_name_font := a_cluster_name_font
---			name_label.set_font (a_cluster_name_font)
---			request_update
---		ensure
---			cluster_name_font_assigned: cluster_name_font = a_cluster_name_font
---		end
---
---	set_line_width (a_line_width: like line_width) is
---			-- Set `line_width' to `a_line_width'.
---		require
---			a_line_width_non_negative: a_line_width >= 0
---		do
---			line_width := a_line_width
---			rectangle.set_line_width (line_width)
---			label_rectangle.set_line_width (line_width)
---		ensure
---			line_width_assigned: line_width = a_line_width
---		end
---
---	set_background_color (a_background_color: like background_color) is
---			-- Set `background_color' to `a_background_color'.
---		do
---			background_color := a_background_color
---			if not is_iconified then
---				if background_color /= Void then
---					rectangle.set_background_color (background_color)
---				else
---					rectangle.remove_background_color
---				end
---			end
---		ensure
---			background_color_assigned: background_color = a_background_color
---		end
---
---	set_foreground_color (a_foreground_color: like foreground_color) is
---			-- Set `foreground_color' to `a_foreground_color'.
---		require
---			a_foreground_color_not_void: a_foreground_color /= Void
---		do
---			foreground_color := a_foreground_color
---			rectangle.set_foreground_color (foreground_color)
---		ensure
---			foreground_color_assigned: foreground_color = a_foreground_color
---		end
 
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
 			-- Set `p' position such that it is on a point on the edge of `Current'.
@@ -468,28 +334,54 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			-- Some properties of current may have changed.
 		local
 			l_min_size: like minimum_size
+			w, h, rb, lrb, l_left, l_top, l_right, l_bottom: INTEGER
+			px, py, pax, pay: INTEGER
 		do
 			
 			if is_shown then
-				l_min_size := minimum_size
-				if user_size /= Void and then not is_iconified then
-					rectangle.set_point_a_position ((l_min_size.left - rectangle_border).min (user_size.left), (l_min_size.top - rectangle_border).min (user_size.top))
-					rectangle.set_point_b_position ((l_min_size.right + rectangle_border).max (user_size.right), (l_min_size.bottom + rectangle_border).max (user_size.bottom))		
+				if is_iconified then
+					rb := rectangle_border
+					w := name_label.width
+					h := name_label.height
+					px := port_x
+					py := port_y
+					l_left := px - w // 2
+					l_top := py - h // 2
+					
+					pax := l_left - rb
+					pay := l_top - rb
+					
+					rectangle.set_point_a_position (pax, pay)
+					rectangle.set_point_b_position (l_left + w + rb, l_top + h + rb)
+					
+					name_label.set_x_y (px, py)
+					
+					lrb := label_rectangle_border * 2
+					label_rectangle.set_point_a_position (pax, pay - lrb)
+					label_rectangle.set_point_b_position (pax + 2 * lrb, pay)
+					
 				else
-					rectangle.set_point_a_position ((l_min_size.left - rectangle_border), (l_min_size.top - rectangle_border))
-					rectangle.set_point_b_position ((l_min_size.right + rectangle_border), (l_min_size.bottom + rectangle_border))		
-				end
-				
-				if is_label_shown then
-					label_rectangle.set_point_a_position (name_label.point_x - label_rectangle_border, name_label.point_y - label_rectangle_border)
-					label_rectangle.set_point_b_position (name_label.point_x + name_label.width + label_rectangle_border,
-														  name_label.point_y + name_label.height + label_rectangle_border)
-														  
-					if is_high_quality then
-						update_label
+					l_min_size := minimum_size
+					rb := rectangle_border
+					if user_size /= Void then
+						l_left := (l_min_size.left - rb).min (user_size.left)
+						l_top := (l_min_size.top - rb).min (user_size.top)
+						l_right := (l_min_size.right + rb).max (user_size.right)
+						l_bottom := (l_min_size.bottom + rb).max (user_size.bottom)	
 					else
-						name_label.set_point_position (rectangle.point_a_x, rectangle.point_a_y - name_label.height)
+						l_left := l_min_size.left - rb
+						l_top := l_min_size.top - rb
+						l_right := l_min_size.right + rb
+						l_bottom := l_min_size.bottom + rb
 					end
+					rectangle.set_point_a_position (l_left, l_top)
+					rectangle.set_point_b_position (l_right, l_bottom)	
+					
+					lrb := label_rectangle_border
+					label_rectangle.set_point_a_position (l_left, l_top - 2 * lrb - name_label.height)
+					label_rectangle.set_point_b_position (l_left + name_label.width + 2 * lrb, l_top)
+													
+					name_label.set_point_position (l_left + lrb, label_rectangle.point_a_y + lrb)
 				end
 				Precursor {EIFFEL_CLUSTER_FIGURE}
 			end
@@ -506,10 +398,6 @@ feature {EV_MODEL_GROUP} -- Transformation
 			p0, p1: EV_COORDINATE
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE} (a_transformation)
-			real_rectangle_radius := real_rectangle_radius * a_transformation.item (1, 1)
-			if rectangle_radius.max (1) /= rectangle.radius then
-				rectangle.set_radius (rectangle_radius)	
-			end
 			real_rectangle_border := real_rectangle_border * a_transformation.item (1, 1)
 			real_label_rectangle_border := real_label_rectangle_border * a_transformation.item (1, 1)
 			if user_size /= Void then
@@ -572,8 +460,6 @@ feature {EIFFEL_WORLD} -- Show/Hide
 	
 feature {NONE} -- Implementation
 
-	id_cluster_name_font: EV_IDENTIFIED_FONT
-
 	set_is_selected (an_is_selected: like is_selected) is
 			-- Set `is_selected' to `an_is_selected'.
 		do
@@ -606,20 +492,10 @@ feature {NONE} -- Implementation
 			
 	real_rectangle_border: REAL
 			-- Real value for `rectangle_border'.
-			
-	rectangle_radius: INTEGER is
-			-- Radius for `rectangle'
-		do
-			Result := real_rectangle_radius.truncated_to_integer
-		end
-		
-	real_rectangle_radius: REAL
-			-- Real value for `rectangle_radius'.
 
-	number_of_figures: INTEGER
+	number_of_figures: INTEGER is 7
 			-- Number of figures to visualize `Current'.
-			-- high_quality: (`rectangle', `label_move_handle', `resizer_top_left', `resizer_top_right', `resizer_bottom_right', `resizer_bottom_left').
-			-- low_quality: (`rectangle', `name_label')
+			-- high_quality: (`rectangle', `label_rectangle', `name_label', `resizer_top_left', `resizer_top_right', `resizer_bottom_right', `resizer_bottom_left').
 
 	set_top_left_position (ax, ay: INTEGER) is
 			-- Set position of top left corner to (`ax', `ay').
@@ -633,26 +509,11 @@ feature {NONE} -- Implementation
 			rectangle.set_point_b_position (ax, ay)
 		end
 
-	rectangle: BON_CLUSTER_RECTANGLE
+	rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle.
 			
-	label_rectangle: EV_MODEL_ROUNDED_RECTANGLE
+	label_rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle for the label.
-
-	polyline_points: SPECIAL [EV_COORDINATE] is
-			-- Points needed for EG_POLYLINE_LABEL.
-		do
-			Result := rectangle.polyline_points
-		end
-		
-	on_label_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- `label_move_handler' was moved for `ax' `ay'.
-			-- | Redefined because `is_left' must stay True.
-		do
-			set_label_line_start_and_end
-			set_label_position_on_line (label_line_start_point, label_line_end_point)
-			request_update
-		end
 		
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
@@ -732,65 +593,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-	set_is_high_quality (an_is_high_quality: like is_high_quality) is
-			-- Set `is_high_quality' to `an_is_high_quality'.
-		do
-			if an_is_high_quality /= is_high_quality then
-				is_high_quality := an_is_high_quality
-				if is_high_quality then
-					prune_all (name_label)
-					name_label.set_point_position (label_group.point_x, label_group.point_y)
-					name_label.pointer_double_press_actions.prune_all (agent on_label_double_press)
-					label_group.extend (name_label)
-					put_front (label_move_handle)
-					label_move_handle.enable_sensitive
-					put_front (resizer_bottom_left)
-					resizer_top_left.enable_sensitive
-					put_front (resizer_bottom_right)
-					resizer_bottom_right.enable_sensitive
-					put_front (resizer_top_right)
-					resizer_top_right.enable_sensitive
-					put_front (resizer_top_left)
-					resizer_top_left.enable_sensitive
-					send_to_back (rectangle)
-					rectangle.enable_dashed_line_style
-					if not is_iconified then
-						if background_color /= Void then
-							rectangle.set_background_color (background_color)
-						else
-							rectangle.remove_background_color
-						end
-					else
-						if iconified_background_color /= Void then
-							rectangle.set_background_color (iconified_background_color)
-						else
-							rectangle.remove_background_color
-						end
-					end
-					
-					number_of_figures := 6
-				else
-					prune_all (resizer_top_left)
-					resizer_top_left.disable_sensitive
-					prune_all (resizer_top_right)
-					resizer_top_right.disable_sensitive
-					prune_all (resizer_bottom_right)
-					resizer_bottom_right.disable_sensitive
-					prune_all (resizer_bottom_left)
-					resizer_top_left.disable_sensitive
-					prune_all (label_move_handle)
-					label_move_handle.disable_sensitive
-					put_front (name_label)
-					name_label.pointer_double_press_actions.extend (agent on_label_double_press)
-					send_to_back (rectangle)
-					rectangle.disable_dashed_line_style
-					rectangle.remove_background_color
-					number_of_figures := 2
-				end
-				request_update
-			end
-		end
+
 
 invariant
 	foreground_color_not_void: foreground_color /= Void
@@ -798,4 +601,5 @@ invariant
 	cluster_name_font_not_void: cluster_name_font /= Void
 	cluster_name_color_not_void: cluster_name_color /= Void
 
-end -- class BON_CLUSTER_FIGURE
+
+end -- class UML_CLUSTER_FIGURE

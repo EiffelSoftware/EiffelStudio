@@ -1,5 +1,6 @@
 indexing
-	description: "Graphical representations of inheritance links in BON notation."
+	description: "Objects that is a view for an EIFFEL_INHERITANCE_LINK"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,253 +8,192 @@ class
 	BON_INHERITANCE_FIGURE
 
 inherit
-	INHERITANCE_FIGURE
+	EIFFEL_INHERITANCE_FIGURE
 		redefine
-			remove_from_diagram,
-			create_line
+			update,
+			recursive_transform,
+			set_line_width,
+			xml_element,
+			xml_node_name,
+			set_with_xml_element
+		end
+		
+	BON_FIGURE
+		undefine
+			default_create
 		end
 
 create
-	make_with_classes
+	make_with_model,
+	default_create
+	
+feature {NONE} -- Initialization
 
-create {BON_INHERITANCE_FIGURE}
-	make_filled
-
+	make_with_model (a_model: ES_INHERITANCE_LINK) is
+			-- Create a BON_INHERITANCE_FIGURE showing `a_model'.
+		do
+			default_create
+			model := a_model
+			is_high_quality := True
+			initialize
+			set_line_width (bon_inheritance_line_width)
+			set_foreground_color (bon_inheritance_color)
+			real_arrow_head_size := 10
+			request_update
+		end
+	
 feature -- Access
 
-	start_point: EV_RELATIVE_POINT is
-			-- Origin of `descendant'.
+	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+			-- Xml node representing `Current's state.
 		do
-			Result := descendant.point
+			Result := Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
+			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.descendant.class_i.cluster.cluster_name)
+			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.ancestor.class_i.cluster.cluster_name)
+			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
-
-	end_point: EV_RELATIVE_POINT is
-			-- Origin of `ancestor'.
+		
+	set_with_xml_element (node: XM_ELEMENT) is
+			-- Retrive state from `node'.
 		do
-			Result := ancestor.point
+			node.forth
+			node.forth
+			Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
+			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+				model.enable_needed_on_diagram
+			else
+				model.disable_needed_on_diagram
+			end
+			real_line_width := xml_routines.xml_integer (node, "REAL_LINE_WIDTH") / 100
+			if real_line_width.rounded.max (1) /= line_width then
+				line.set_line_width (real_line_width.rounded.max (1))
+			end
 		end
-
-feature -- Status setting
-
-	set_active (b: BOOLEAN) is
-			-- Highlight `Current' if `b' `True'.
+		
+	xml_node_name: STRING is
+			-- Name of the node returned by `xml_element'.
 		do
+			Result := "BON_INHERITANCE_FIGURE"
 		end
+		
+feature -- Element change
 
+	set_line_width (a_line_width: like line_width) is
+			-- Set `line_width' to `a_line_widht'.
+		do
+			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
+			real_line_width := a_line_width
+		end
+		
+feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
+		
 	update is
-			-- `descendant' or `ancestor' has been moved/resized. Need to update.
+			-- Some properties of `Current' may have changed.
 		local
-			p1, p2: EV_RELATIVE_POINT
-			angle: REAL
+			an_angle: DOUBLE
+			l_point_array: SPECIAL [EV_COORDINATE]
+			p0, p1: EV_COORDINATE
 		do
-			p1 := vertices.i_th (2)
-			p2 := descendant.point
-			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			descendant.update_edge_point (lines.first.point_a, angle)
-
-			if vertices.count = 2 then
-					-- There is a simple relation between the two angles, let's take
-					-- it to save some CPU time.
-				angle := pi + angle
+			if is_high_quality then
+				Precursor {EIFFEL_INHERITANCE_FIGURE}
 			else
-				p1 := vertices.i_th (vertices.count - 1)
-				p2 := ancestor.point
-				angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			end
-			ancestor.update_edge_point (lines.last.point_b, angle)
-		end
-
-feature {CONTEXT_DIAGRAM} -- XML
-
-	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
-			-- XML representation.
-		local		
-			vertice_xml_element: XM_ELEMENT
-			l_namespace: XM_NAMESPACE
-		do
-			if vertices.count > 2 then
-				create l_namespace.make_default
-				create Result.make (a_parent, "INHERITANCE_FIGURE", l_namespace)
-				Xml_routines.add_attribute ("SRC", l_namespace, descendant.name, Result)
-				Xml_routines.add_attribute ("TRG", l_namespace, ancestor.name, Result)
-				from
-					vertices.go_i_th (2)
-				until	
-					vertices.islast
-				loop
-					create vertice_xml_element.make (Result, "MIDPOINT", l_namespace)
-					vertice_xml_element.put_last (
-						Xml_routines.xml_node (
-							vertice_xml_element,
-							"X_POS",
-							 ((vertices.item.x_abs - ancestor.world.point.x_abs) / ancestor.world.scale_x).rounded.out))
-					vertice_xml_element.put_last (
-						Xml_routines.xml_node (
-							vertice_xml_element,
-							"Y_POS",
-							 ((vertices.item.y_abs - ancestor.world.point.y_abs) / ancestor.world.scale_y).rounded.out))
-					Result.put_last (vertice_xml_element)
-					vertices.forth
+				l_point_array := low_quality_line.point_array
+				p0 := l_point_array.item (0)
+				p1 := l_point_array.item (1)
+				
+				if descendant /= Void then
+					p0.set_position (descendant.port_x, descendant.port_y)
 				end
+				if ancestor /= Void then
+					p1.set_position (ancestor.port_x, ancestor.port_y)
+				end
+				an_angle := line_angle (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise)
+				if descendant /= Void then
+					descendant.update_edge_point (p0, an_angle)
+				end
+				if ancestor /= Void then
+					ancestor.update_edge_point (p1, an_angle + pi)
+				end
+				low_quality_line.invalidate
+				low_quality_line.center_invalidate
 			end
+			is_update_required := False
 		end
+		
+feature {EV_MODEL_GROUP} -- Transformation
 
-	set_with_xml_element (an_element: XM_ELEMENT) is
-			-- Set attributes from XML element.
-		require else
-			an_element_is_inheritance_figure: an_element.name.is_equal ("INHERITANCE_FIGURE")
-		local
-			x_pos, y_pos: INTEGER
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			node: XM_ELEMENT
-			att_node: XM_ATTRIBUTE
-			new_midpoint: EV_RELATIVE_POINT
-			retrieved_midpoints: LINKED_LIST [EV_RELATIVE_POINT]
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+			-- Same as transform but without precondition
+			-- is_transformable and without invalidating
+			-- groups center
 		do
-			reset
-			create retrieved_midpoints.make
-			a_cursor := an_element.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				node ?= a_cursor.item
-				if node /= Void then
-					if node.name.is_equal ("MIDPOINT") then
-						x_pos := Xml_routines.xml_integer (node, "X_POS")
-						y_pos := Xml_routines.xml_integer (node, "Y_POS")
-						create new_midpoint.make_with_position (x_pos, y_pos)
-						retrieved_midpoints.put_front (new_midpoint)
-					else
-						Xml_routines.display_warning_message ("tag: " + node.name + " not known")
-					end
+			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_transformation)
+			real_line_width := real_line_width * a_transformation.item (1, 1)
+			if real_line_width.rounded.max (1) /= line_width then
+				line.set_line_width (real_line_width.rounded.max (1))
+				request_update
+			end
+			real_arrow_head_size := real_arrow_head_size * a_transformation.item (1, 1)
+			if real_arrow_head_size.rounded.max (1) /= line.arrow_size then
+				if is_high_quality then
+					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
 				else
-					debug
-						att_node ?= a_cursor.item
-						if att_node = Void then
-							Xml_routines.display_warning_message ("XML element missing")
-						end
-					end
+					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
 				end
-				a_cursor.forth
-			end
-			retrieve_lines (retrieved_midpoints)
-			update
-			update_origin
-		end
-
-feature {BON_DIAGRAM_FACTORY} -- Drawing
-
-	draw is
-			-- Do a quick draw on `drawable'.
-		do
-			from
-				lines.start
-			until	
-				lines.after
-			loop
-				draw_figure_line (lines.item)
-				lines.forth
+				request_update
 			end
 		end
-
-	draw_figure_line (line: EV_FIGURE_LINE) is
-			-- Draw standard representation of `line' to canvas.
-		local
-			s, t: EV_RELATIVE_POINT
-			p: EV_FIGURE_POLYGON
-			d: like drawable
-		do
-			d := drawable
-			d.set_foreground_color (line.foreground_color)
-			if line.is_start_arrow or else line.is_end_arrow then
-				d.set_line_width (0)
-				if line.is_start_arrow then
-					p := line.start_arrow
-					p.i_th_point (2).set_angle (line.start_angle)
-					d.fill_polygon (offset_coordinates (p.point_array))
-					s := line.point_a
-				else
-					s := line.point_a
-				end
-				if line.is_end_arrow then
-					p := line.end_arrow
-					p.i_th_point (2).set_angle (line.end_angle)
-					d.fill_polygon (offset_coordinates (p.point_array))
-					t := line.point_b
-				else
-					t := line.point_b
-				end
-			else
-				s := line.point_a
-				t := line.point_b
-			end
-			if line.dashed_line_style then
-				d.enable_dashed_line_style
-			end
-			d.set_line_width (line.line_width)
-			d.draw_segment (
-				s.x_abs - drawable_position.x,
-				s.y_abs - drawable_position.y,
-				t.x_abs - drawable_position.x,
-				t.y_abs - drawable_position.y)
-			if line.dashed_line_style then
-				d.disable_dashed_line_style
-			end
-		end
-
-feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
-
-	draw_ps (ps_proj: EV_POSTSCRIPT_PROJECTOR) is
-			-- Postscript drawing routine for `Current' used by `ps_proj'.
-		do
-			from
-				lines.start
-			until	
-				lines.after
-			loop
-				ps_proj.draw_figure_line (lines.item)
-				lines.forth
-			end
-		end
-
-feature {CONTEXT_DIAGRAM} -- Removal
-
-	remove_from_diagram (d: CONTEXT_DIAGRAM) is
-			-- Remove `Current' graphically.
-		do
-			remove_midpoints
-			Precursor (d)
-		end
-
+	
 feature {NONE} -- Implementation
 
-	build_figure is
-			-- Build graphical representation from recently updated structure.
+	real_line_width: REAL
+			-- Real line width.
+			
+	real_arrow_head_size: REAL
+			-- Real size of arrow head.
+
+	low_quality_line: EV_MODEL_LINE
+			-- line used if `is_low_quality' is True.
+			
+	set_is_high_quality (a_high_quality: like is_high_quality) is
+			-- Set `is_high_quality' to `a_high_quality'.
 		do
-			from lines.start until lines.after loop
-				extend (lines.item)
-				lines.forth
+			if is_high_quality /= a_high_quality then
+				is_high_quality := a_high_quality
+				if is_high_quality then
+					prune_all (low_quality_line)
+					extend (line)
+					line.enable_sensitive
+					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+					from
+						edge_move_handlers.start
+					until
+						edge_move_handlers.after
+					loop
+						extend (edge_move_handlers.item)
+						edge_move_handlers.item.enable_sensitive
+						edge_move_handlers.forth
+					end
+				else
+					create low_quality_line
+					prune_all (line)
+					line.disable_sensitive
+					from
+						edge_move_handlers.start
+					until
+						edge_move_handlers.after
+					loop
+						prune_all (edge_move_handlers.item)
+						edge_move_handlers.item.disable_sensitive
+						edge_move_handlers.forth
+					end
+					extend (low_quality_line)
+					low_quality_line.set_foreground_color (foreground_color)
+					low_quality_line.enable_end_arrow
+					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+				end
 			end
-		end
-
-	create_line: BON_LINE is
-			-- Create new line segment with default values.
-		do
-			Result := Precursor
-			Result.set_pointer_style (Cursors.cur_Inherit_link)
-			Result.set_foreground_color (Default_colors.Red)
-			Result.set_line_width (2)
-		end
-
-feature {NONE} -- Implementation
-
-	new_filled_list (n: INTEGER): like Current is
-			-- New list with `n' elements.
-		do
-			create Result.make_filled (n)
 		end
 
 end -- class BON_INHERITANCE_FIGURE
-

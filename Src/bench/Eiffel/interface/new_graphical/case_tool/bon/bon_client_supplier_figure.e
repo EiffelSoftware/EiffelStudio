@@ -1,749 +1,774 @@
 indexing
-	description: "Graphical representations of client/supplier links in BON notation."
+	description: "Objects that is a BON view for an EIFFEL_CLIENT_SUPPLIER_LINK"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	BON_CLIENT_SUPPLIER_FIGURE
-
+	
 inherit
-	CLIENT_SUPPLIER_FIGURE
+	EIFFEL_CLIENT_SUPPLIER_FIGURE
 		redefine
-			create_line,
-			name_figure
+			update,
+			remove_i_th_point,
+			add_point_between,
+			default_create,
+			set_foreground_color,
+			recursive_transform,
+			set_line_width,
+			retrieve_edges,
+			show_label,
+			hide_label,
+			set_name_label_text,
+			is_label_shown,
+			xml_element,
+			xml_node_name,
+			set_with_xml_element,
+			reset,
+			recycle
+		select
+			default_create,
+			set_with_xml_element,
+			xml_element
+		end
+	
+	EG_POLYLINE_LABEL
+		rename
+			update as update_label_position,
+			default_create as default_create_label,
+			xml_element as polyline_label_xml_element,
+			set_with_xml_element as polyline_label_set_with_xml_element,
+			recycle as polyline_lable_recycle
+		redefine
+			set_label_position_on_line
+		end
+		
+	BON_FIGURE
+		undefine
+			default_create
+		end
+		
+create
+	make_with_model,
+	default_create
+	
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create a BON_CLIENT_SUPPLIER_FIGURE.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
+			default_create_label
+			is_high_quality := True
+
+			id_label_font := bon_client_label_font
+			label_color := bon_client_label_color
+			
+			create aggregate_figure
+			
+			name_label.set_identified_font (id_label_font)
+			name_label.set_foreground_color (label_color)
+
+			set_foreground_color (bon_client_color)
+			set_line_width (bon_client_line_width)
+			
+			label_group.extend (name_label)
+			extend (label_move_handle)
+	
+			extend (aggregate_figure)
+			aggregate_figure.set_line_width (2)
+			aggregate_figure.set_foreground_color (foreground_color)
+			
+			real_arrow_head_size := 10.0
+			real_reflexive_radius := reflexive_radius
+			
+			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
+			
+			is_label_shown := True
 		end
 
-create
-	make_with_classes
+	make_with_model (a_model: ES_CLIENT_SUPPLIER_LINK) is
+			-- Create an BON_CLIENT_SUPPLIER_FIGURE with `a_model'.
+		do
+			default_create
+			model := a_model
+			initialize
+			
+			name_label.set_accept_cursor (cursors.cur_feature)
+			name_label.set_deny_cursor (cursors.cur_x_feature)
+			label_group.pointer_double_press_actions.extend (agent on_label_group_double_clicked)
+			
+			if not model.is_aggregated then
+				aggregate_figure.hide
+			end
+			model.is_aggregated_changed.extend (agent on_is_aggregated_change)
+			
+			position_on_line := 0.5
+			request_update
+		end
+		
+feature -- Status report
 
-create {BON_CLIENT_SUPPLIER_FIGURE}
-	make_filled
+	is_label_shown: BOOLEAN
+			-- Is label shown?
+			
+	is_label_expanded: BOOLEAN
+			-- Is name label expanded?
 
 feature -- Access
 
-	start_point: EV_RELATIVE_POINT is
-			-- Origin of `client'.
-		do
-			Result := client.point
-		end
+	label_color: EV_COLOR
+			-- Feature name color.
 
-	end_point: EV_RELATIVE_POINT is
-			-- Origin of `supplier'.
+	label_font: EV_FONT is
+			-- Font used for the feature name.
 		do
-			Result := supplier.point
+			Result := id_label_font.font
 		end
-
-feature -- Memory management
+			
+	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+			-- Xml node representing `Current's state.
+		local
+			was_low: BOOLEAN
+		do
+			if not is_high_quality then
+				enable_high_quality
+				was_low := True
+			end
+			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
+			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.client.class_i.cluster.cluster_name)
+			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.supplier.class_i.cluster.cluster_name)
+			Result.remove_attribute_by_name ("NAME")
+			Result.put_last (Xml_routines.xml_node (Result, "IS_LABEL_EXPANDED", is_label_expanded.out))
+			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			
+			Result := polyline_label_xml_element (Result)
+			if was_low then
+				disable_high_quality
+			end
+		end
+		
+	set_with_xml_element (node: XM_ELEMENT) is
+			-- Retrive state from `node'.
+		local
+			was_low: BOOLEAN
+		do
+			if not is_high_quality then
+				enable_high_quality
+				was_low := True
+			end
+			node.forth
+			node.forth
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
+			if xml_routines.xml_boolean (node, "IS_LABEL_EXPANDED") then
+				is_label_expanded := True
+				on_name_change
+			else
+				is_label_expanded := False
+				on_name_change
+			end
+			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+				model.enable_needed_on_diagram
+			else
+				model.disable_needed_on_diagram
+			end
+			real_line_width := xml_routines.xml_integer (node, "REAL_LINE_WIDTH") / 100
+			if real_line_width.rounded.max (1) /= line_width then
+				line.set_line_width (real_line_width.rounded.max (1))
+			end
+			
+			polyline_label_set_with_xml_element (node)
+			if was_low then
+				disable_high_quality
+			end
+		end
+		
+	xml_node_name: STRING is
+			-- Name of the node returned by `xml_element'.
+		do
+			Result := "BON_CLIENT_SUPPLIER_FIGURE"
+		end
+			
+feature -- Element change
 
 	recycle is
-			-- Frees `Current's memory, and leave `Current' in an unstable state
-			-- so that we know whether we're still referenced or not.
+			-- Free `Current's resources.
 		do
-			enclosing_figure := Void
-			name_figure_mover := Void
-		end
-
-feature -- Figures
-
-	name_figure: BON_LABEL
-			-- Graphical representation of `label'.
-			
-	name_figure_moving_area: EV_FIGURE_RECTANGLE
-			-- Invisible rectangle where mouse cursor changes.
-	
-feature -- Status setting
-
-	set_active (b: BOOLEAN) is
-			-- Highlight `Current' if `b' `True'.
-		do
-		end
-
-	update is
-			-- `client' or `supplier' has been moved/resized. Need to update.
-		local
-			p1, p2: EV_RELATIVE_POINT
-			x1, y1, x2, y2, o_x, o_y, x_label, y_label, dif_y, dif_x: INTEGER
-			s_x, s_y: DOUBLE
-			angle: REAL
-			se_nw_label, strong_slope: BOOLEAN
-			final_line_segment: BON_LINE
-		do
-			p1 := vertices.i_th (2)
-			p2 := start_point
-			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			client.update_edge_point (lines.first.point_a, angle)
-
-			if vertices.count = 2 then
-					-- There is a simple relation between the two angles, let's take
-					-- it to save some CPU time.
-				angle := pi + angle
-			else
-					-- We need to recompute the angle
-				p1 := vertices.i_th (vertices.count - 1)
-				p2 := end_point
-				angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			end
-			supplier.update_edge_point (lines.last.point_b, angle)
-
-			if not is_reflexive then
-				if lines.count < line_labelled then
-						-- Labelled line has been removed, reset name placement.
-					line_labelled := 1
-					label_position := 0.5
-				end
-				p1 := vertices.i_th (line_labelled)
-				p2 := vertices.i_th (line_labelled + 1)
-				o_x := enclosing_figure.point.x_abs
-				o_y := enclosing_figure.point.y_abs
-				s_x := client.world.scale_x
-				s_y := client.world.scale_y
-				x1 := ((p1.x_abs - o_x) / s_x).rounded
-				y1 := ((p1.y_abs - o_y) / s_y).rounded
-				x2 := ((p2.x_abs - o_x) / s_x).rounded
-				y2 := ((p2.y_abs - o_y) / s_y).rounded
-				x_label := x1 + (label_position * (x2 - x1)).rounded
-				y_label := y1 + (label_position * (y2 - y1)).rounded
-				dif_y := (y2 - y1).abs
-				dif_x := (x2 - x1).abs
-				if dif_x = 0 then
-					strong_slope := True
-				elseif dif_y = 0 then
-					strong_slope := False
-				elseif dif_x / dif_y <= 1 then
-					strong_slope := True
-				else
-					strong_slope := False
-				end
-				if (x2 > x1 and y2 > y1) or (x2 < x1 and y2 < y1) then
-					se_nw_label := True
-				else
-					se_nw_label := False
-				end
-				if name_shifted then
-					if strong_slope then
-						name_figure.point.set_position (x_label - name_figure.width, y_label)
-						name_figure_mover.point.set_position (x_label - name_figure.width, y_label)
-					else
-						if dif_y = 0 then
-							name_figure.point.set_position (x_label, y_label - name_figure.height)
-							name_figure_mover.point.set_position (x_label, y_label - name_figure.height)
-						elseif se_nw_label then
-							name_figure.point.set_position (x_label, y_label + name_figure.height)
-							name_figure_mover.point.set_position (x_label, y_label + name_figure.height)
-						else
-							name_figure.point.set_position (x_label, y_label - 2 * name_figure.height)
-							name_figure_mover.point.set_position (x_label, y_label - 2 * name_figure.height)
-						end
-					end
-				else
-					if strong_slope then
-						name_figure.point.set_position (x_label, y_label)
-						name_figure_mover.point.set_position (x_label, y_label)
-					elseif se_nw_label then
-						name_figure.point.set_position (x_label, y_label - name_figure.height)
-						name_figure_mover.point.set_position (x_label, y_label - name_figure.height)
-					else
-						name_figure.point.set_position (x_label, y_label)
-						name_figure_mover.point.set_position (x_label, y_label)
-					end
-				end
-
-				final_line_segment := lines.i_th (lines.count)
-					-- Retrieve the final line of `Current'.
-					
-				if final_line_segment.is_cut_figure then
-						-- Position cut of `final_line_segment' if `is_cut_figure'.
-						
-					p1 := vertices.i_th (vertices.count - 1)
-					p2 := vertices.i_th (vertices.count)
-					o_x := enclosing_figure.point.x_abs
-					o_y := enclosing_figure.point.y_abs
-					s_x := client.world.scale_x
-					s_y := client.world.scale_y
-					x1 := ((p1.x_abs - o_x) / s_x).rounded
-					y1 := ((p1.y_abs - o_y) / s_y).rounded
-					x2 := ((p2.x_abs - o_x) / s_x).rounded
-					y2 := ((p2.y_abs - o_y) / s_y).rounded
-						-- Calculate start and end coordinates of line
-						-- into `x1', `y1', `x2' and `y2' based on
-						-- current vertices.
-					
-						-- The current value of `x2' and `y2' are equal to the
-						-- centre of the class bubble, and hence must be translated
-						-- to match the intersection of the line with the bubble.
-						-- This improves the behaviour, as the cut is no longer moved
-						-- within the class bubble when the link is very short.
-					x2 := x2 + lines.i_th (lines.count).point_b.x
-					y2 := y2 + lines.i_th (lines.count).point_b.y
-					
-						-- The current value of `x1' and `y2' either correspond to
-						-- the centre of the class bubble, or the centre of a link point.
-						-- If they are not pointing to a link point (only one line comprises `Current'),
-						-- they must be adjusted to match the edge of the bubble, which
-						-- improves the calculations in the same fashion as performed above.
-					if lines.count = 1 then
-						x1 := x1 + lines.i_th (1).point_a.x
-						y1 := y1 + lines.i_th (1).point_a.y
-					end
-			
-					final_line_segment.set_cut_position (- final_line_segment.Minimum_cut_position -
-						(distance (x1, y1, x2, y2) - final_line_segment.Minimum_cut_position) // 5)
-						-- Set cut position on `final_line_segment' based on calculated positions.
-				end
-			else
-				name_figure.point.set_origin (client.point)
-				name_figure.point.set_position (- client.width // 2, client.height // 2)
-			end
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
+			label_group.pointer_double_press_actions.prune_all (agent on_label_group_double_clicked)
+			model.is_aggregated_changed.prune_all (agent on_is_aggregated_change)
+			polyline_lable_recycle
 		end
 
 	hide_label is
-			-- Hide `name_figure'.
+			-- Hide label.
 		do
-			name_figure.hide
+			if is_high_quality then
+				label_group.hide
+				label_group.disable_sensitive
+			else
+				name_label.hide
+			end
+			is_label_shown := False
+			request_update
 		end
-
+		
 	show_label is
-			-- Show `name_figure'.
+			-- Show label.
 		do
-			name_figure.show
-		end
-
-feature {CONTEXT_DIAGRAM} -- XML
-
-	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
-			-- XML representation.
-		local		
-			vertice_xml_element, label_xml_element: XM_ELEMENT
-			l_namespace: XM_NAMESPACE
-		do
-			create l_namespace.make_default
-			create Result.make (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
-			Xml_routines.add_attribute ("SRC", l_namespace, client.name, Result)
-			Xml_routines.add_attribute ("TRG", l_namespace, supplier.name, Result)
-			create label_xml_element.make (Result, "LABEL", l_namespace)
-			label_xml_element.put_last (
-				Xml_routines.xml_node (
-					label_xml_element,
-					"POSITION",
-					 (label_position.out)))
-			label_xml_element.put_last (
-				Xml_routines.xml_node (
-					label_xml_element,
-					"LINE",
-					 (line_labelled.out)))
-			label_xml_element.put_last (
-				Xml_routines.xml_node (
-					label_xml_element,
-					"SHIFTED",
-					 (name_shifted.out)))
-			Result.put_last (label_xml_element)
-			if vertices.count > 2 and not is_reflexive then
-				from
-					vertices.go_i_th (2)
-				until	
-					vertices.islast
-				loop
-					create vertice_xml_element.make (Result, "MIDPOINT", l_namespace)
-					vertice_xml_element.put_last (
-						Xml_routines.xml_node (
-							vertice_xml_element,
-							"X_POS",
-							 ((vertices.item.x_abs - client.world.point.x_abs) / client.world.scale_x).rounded.out))
-					vertice_xml_element.put_last (
-						Xml_routines.xml_node (
-							vertice_xml_element,
-							"Y_POS",
-							 ((vertices.item.y_abs - client.world.point.y_abs) / client.world.scale_y).rounded.out))
-					Result.put_last (vertice_xml_element)
-					vertices.forth
+			if is_high_quality then
+				label_group.show
+				label_group.enable_sensitive
+				if not is_label_expanded then
+					name_label.show
+				else
+					name_label.hide
 				end
+			else
+				name_label.show
 			end
+			is_label_shown := True
+			request_update
 		end
 
-	set_with_xml_element (an_element: XM_ELEMENT) is
-			-- Set attributes from XML element.
-		require else
-			an_element_is_client_supplier_figure: an_element.name.is_equal ("CLIENT_SUPPLIER_FIGURE")
+	set_line_width (a_line_width: like line_width) is
+			-- Set `line_width' to `a_line_width'.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_line_width)
+			real_line_width := a_line_width
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Set `foreground_color' to `a_color'.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
+			aggregate_figure.set_foreground_color (a_color)
+		end
+--
+--	set_label_color (a_label_color: like label_color) is
+--			-- Set `label_color' to `a_label_color'.
+--		require
+--			a_label_color_not_void: a_label_color /= Void
+--		do
+--			label_color := a_label_color
+--			name_label.set_foreground_color (label_color)
+--		ensure
+--			label_color_assigned: label_color = a_label_color
+--		end
+--
+--	set_label_font (a_label_font: like label_font) is
+--			-- Set `label_font' to `a_label_font'.
+--		require
+--			a_label_font_not_void: a_label_font /= Void
+--		do
+--			label_font := a_label_font
+--			name_label.set_font (label_font)
+--			request_update
+--		ensure
+--			label_font_assigned: label_font = a_label_font
+--		end
+		
+	add_point_between (i, j: INTEGER) is
+			-- Add a point between `i'-th and `j'-th point.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (i, j)
+			set_label_line_start_and_end
+		end
+		
+	remove_i_th_point (i: INTEGER) is
+			-- Remove `i'-th point.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (i)
+			set_label_line_start_and_end
+			request_update
+		end
+		
+	retrieve_edges (retrieved_edges: LIST [EG_EDGE]) is
+			-- Add lines corresponding to the points in `retrieved_edges'.
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (retrieved_edges)
+			set_label_line_start_and_end
+			request_update
+		end
+		
+	reset is
+			-- 
+		do
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
+			set_label_line_start_and_end
+		end
+		
+		
+feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
+		
+	update is
+			-- Some properties of `Current' may have changed.
 		local
-			x_pos, y_pos: INTEGER
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			node: XM_ELEMENT
-			att_node: XM_ATTRIBUTE
-			new_midpoint: EV_RELATIVE_POINT
-			retrieved_midpoints: LINKED_LIST [EV_RELATIVE_POINT]
+			an_angle: DOUBLE
+			l_point_array: SPECIAL [EV_COORDINATE]
+			p0, p1: EV_COORDINATE
 		do
-			reset
-			create retrieved_midpoints.make
-			a_cursor := an_element.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				node ?= a_cursor.item
-				if node /= Void then
-					if node.name.is_equal ("MIDPOINT") then
-						x_pos := Xml_routines.xml_integer (node, "X_POS")
-						y_pos := Xml_routines.xml_integer (node, "Y_POS")
-						create new_midpoint.make_with_position (x_pos, y_pos)
-						retrieved_midpoints.put_front (new_midpoint)
-					elseif node.name.is_equal ("LABEL") then
-						label_position := Xml_routines.xml_double (node, "POSITION")
-						line_labelled := Xml_routines.xml_integer (node, "LINE")
-						name_shifted := Xml_routines.xml_boolean (node, "SHIFTED")
-					else
-						Xml_routines.display_warning_message ("Tag: " + node.name + " not known")
-					end
-				else
-					debug
-						att_node ?= a_cursor.item
-						if att_node = Void then
-							Xml_routines.display_warning_message ("XML element missing")
-						end
-					end
+			if is_high_quality then
+				Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
+				if label_group.is_show_requested then
+					update_label_position
 				end
-				a_cursor.forth
-			end
-			retrieve_lines (retrieved_midpoints)
-			update
-			update_origin
-		end
-
-feature {NONE} -- Implementation
-
-	label_position: DOUBLE
-			-- Parameter defining position of `name_figure' on `line_labelled'-th line of `Current'.
-
-	line_labelled: INTEGER
-			-- Index of line where `name_figure' is.
-
-	name_shifted: BOOLEAN
-			-- Does `name_figure' need to be shifted to the left of `Current'?
-
-	build_figure is
-			-- Build graphical representation from recently updated structure.
-		do
-			if parent_link = Void then
-				if not is_reflexive then
-					from lines.start until lines.after loop
-						extend (lines.item)
-						lines.forth
-					end
-				end
-				create name_figure_mover
-				create name_figure
-				name_figure.set_text (label)
-				name_figure.set_font (bon_client_label_font)
+				set_aggregate_figure_position (aggregate_figure_distance)
+			else
 				if is_reflexive then
-					name_figure.point.set_origin (client.point)
+					low_quality_circle.set_x_y (source.port_x + source.width // 2 + reflexive_radius // 2, source.port_y)
+					name_label.set_point_position (source.port_x + source.width // 2, low_quality_circle.y - name_label.height // 2)
 				else
-					name_figure.point.set_origin (enclosing_figure.point)
+					l_point_array := low_quality_line.point_array
+					p0 := l_point_array.item (0)
+					p1 := l_point_array.item (1)
+					
+					if source /= Void then
+						p0.set_position (source.port_x, source.port_y)
+					end
+					if target /= Void then
+						p1.set_position (target.port_x, target.port_y)
+					end
+					an_angle := line_angle (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise)
+					if source /= Void then
+						source.update_edge_point (p0, an_angle)
+					end
+					if target /= Void then
+						target.update_edge_point (p1, an_angle + pi)
+					end
+					low_quality_line.invalidate
+					low_quality_line.center_invalidate
+					name_label.set_x_y (low_quality_line.x, low_quality_line.y)
 				end
-				name_figure.disable_sensitive
-				label_position := 0.5
-				line_labelled := 1
-				create name_figure_moving_area
-				name_figure_moving_area.point_a.set_origin (name_figure.point)
-				name_figure_moving_area.point_b.set_origin (name_figure_moving_area.point_a)
-				name_figure_moving_area.point_b.set_position (name_figure.width, name_figure.height)
-				name_figure_mover.hide
-				name_figure_mover.disable_snapping
-				name_figure_mover.point.set_origin (enclosing_figure.point)
-				name_figure_mover.extend (name_figure_moving_area)
-				name_figure_mover.start_actions.extend (
-					agent name_figure_moving_area.set_pointer_style (Default_pixmaps.Sizeall_cursor))
-				name_figure_mover.end_actions.extend (
-					agent name_figure_moving_area.set_pointer_style (Default_pixmaps.Standard_cursor))
-				name_figure_mover.end_actions.extend (agent update_scrollable_area_size)
-				name_figure_mover.end_actions.extend (agent update)
-				name_figure_mover.set_real_position_agent (agent adjust_mover_coordinates)
-				name_figure_mover.start_actions.extend (agent start_capture)
-				name_figure_mover.end_actions.extend (agent stop_capture)
-				extend (name_figure)
 			end
+			is_update_required := False
 		end
+		
+feature {EV_MODEL_GROUP} -- Transformation
 
-	create_line: BON_LINE is
-			-- Create new line segment with default values.
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+			-- Same as transform but without precondition
+			-- is_transformable and without invalidating
+			-- groups center
 		do
-			Result := Precursor
-			Result.set_pointer_style (Cursors.cur_Client_link)
-			Result.set_foreground_color (Default_colors.Blue)
-			Result.set_line_width (4)
-		end
-
-	update_name_figure is
-			-- `label' has changed, `name_figure' should follow.
-		do
-			name_figure.set_text (label)
-			name_figure_moving_area.point_b.set_position (name_figure.width, name_figure.height)
-		end
-
-	adjust_mover_coordinates (x, y: INTEGER): TUPLE [INTEGER,INTEGER] is
-			-- Restore the right coordinates of `name_figure'.
-		local
-			p1, p2: EV_RELATIVE_POINT
-			x1, y1, x2, y2, xp, yp, xproj, yproj: INTEGER
-			x1_ok, y1_ok, x2_ok, y2_ok, min_dist: INTEGER
-			dif_x, dif_y, o_x, o_y: INTEGER
-			t, alpha, s_x, s_y: DOUBLE
-			strong_slope, se_nw_label: BOOLEAN
-		do
-			min_dist := 10000
-			from
-				lines.start
-			until
-				lines.after
-			loop
-				p1 := vertices.i_th (lines.index)
-				p2 := vertices.i_th (lines.index + 1)
-				if is_reflexive then
-					x1 := p1.x
-					y1 := p1.y
-					x2 := p2.x
-					y2 := p2.y
-				else
-					o_x := enclosing_figure.point.x_abs
-					o_y := enclosing_figure.point.y_abs
-					s_x := client.world.scale_x
-					s_y := client.world.scale_y
-					x1 := ((p1.x_abs - o_x) / s_x).rounded
-					y1 := ((p1.y_abs - o_y) / s_y).rounded
-					x2 := ((p2.x_abs - o_x) / s_x).rounded
-					y2 := ((p2.y_abs - o_y) / s_y).rounded
-				end
-				if has_projection (x, y, x1 ,y1, x2, y2) then
-					dif_x := x2 - x1
-					dif_y := y2 - y1
-					if dif_x.abs /= dif_y.abs then
-						t := 
-							(dif_x * (x - x1) - dif_y * (y - y1)) /
-								(dif_x ^ 2 - dif_y ^ 2)
-						xproj := (x1 + t * dif_x).rounded
-						yproj := (y1 + t * dif_y).rounded
-					else
-						if x2 >= x1 and y2 >= y1 and x /= x1 then
-							alpha := arc_tangent ((y - y1) / (x - x1))
-							xproj := (x1 + (cosine (Pi / 4 - alpha) * distance (x1, y1, x, y)) / sqrt (2)).rounded
-							yproj := -x1 + y1 + xproj
-						elseif x2 >= x1 and y2 <= y1 then
-							alpha := arc_tangent ((y - y1) / (x - x1))
-							xproj := (x1 + (cosine (7 * Pi / 4 - alpha) * distance (x1, y1, x, y)) / sqrt (2)).rounded
-							yproj := -xproj + x1 + y1
-						elseif x2 <= x1 and y2 >= y1 then
-							alpha := arc_tangent ((y - y1) / (x - x1))
-							xproj := (x1 + (cosine (3 * Pi / 4 - alpha) * distance (x1, y1, x, y)) / sqrt (2)).rounded
-							yproj := -xproj + x1 + y1
-						elseif x2 <= x1 and y2 <= y1 then
-							alpha := arc_tangent ((y - y1) / (x - x1))
-							xproj := (x1 + (cosine (5 * Pi / 4 - alpha) * distance (x1, y1, x, y)) / sqrt (2)).rounded
-							yproj := -x1 + y1 + xproj
-						end
-						if x2 /= x1 then
-							t := (xproj - x1) / dif_x
-						end
-					end
-					if distance (x, y, xproj, yproj) < min_dist then
-						label_position := t
-						line_labelled := lines.index
-						x1_ok := x1
-						y1_ok := y1
-						x2_ok := x2
-						y2_ok := y2
-						xp := xproj
-						yp := yproj
-						min_dist := distance (x, y, xproj, yproj)
-					end
-				else
-					if distance (x, y, x1, y1) < min_dist then
-						xp := x1
-						yp := y1
-						min_dist := distance (x, y, x1, y1)
-						label_position := 0
-						line_labelled := lines.index
-					elseif distance (x, y, x2, y2) < min_dist then
-						xp := x2
-						yp := y2
-						min_dist := distance (x, y, x2, y2)
-						label_position := 1
-						line_labelled := lines.index
-					end
-				end
-				lines.forth
+			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_transformation)
+			real_line_width := real_line_width * a_transformation.item (1, 1)
+			if real_line_width.rounded.max (1) /= line_width then
+				line.set_line_width (real_line_width.rounded.max (1))
+				request_update
 			end
-
-			dif_x := (x2_ok - x1_ok).abs
-			dif_y := (y2_ok - y1_ok).abs
-			if dif_x = 0 then
-				strong_slope := True
-			elseif dif_y = 0 then
-				strong_slope := False
-			elseif dif_x / dif_y <= 1 then
-				strong_slope := True
-			else
-				strong_slope := False
-			end
-			if (x2_ok > x1_ok and y2_ok > y1_ok) or (x2_ok < x1_ok and y2_ok < y1_ok) then
-				se_nw_label := True
-			else
-				se_nw_label := False
-			end
-
-			name_shifted := name_shift_needed (x, y, x1_ok, y1_ok, x2_ok, y2_ok)
-
-			if name_shifted then
-				if strong_slope then
-					name_figure.point.set_position (xp - name_figure.width, yp)
-				else
-					if dif_y = 0 then
-						name_figure.point.set_position (xp, yp - name_figure.height)
-					elseif se_nw_label then
-						name_figure.point.set_position (xp, yp + name_figure.height)
-					else
-						name_figure.point.set_position (xp, yp - 2 * name_figure.height)
-					end
+			real_arrow_head_size := real_arrow_head_size * a_transformation.item (1, 1)
+			if real_arrow_head_size.rounded.max (1) /= line.arrow_size then
+				if is_high_quality then
+					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+				elseif not is_reflexive then
+					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
 				end
-			else
-				if strong_slope then
-					name_figure.point.set_position (xp, yp)
-				elseif se_nw_label then
-					name_figure.point.set_position (xp, yp - name_figure.height)
-				else
-					name_figure.point.set_position (xp, yp)
-				end
+				request_update
 			end
-			Result := [xp, yp]
+			real_reflexive_radius := real_reflexive_radius * a_transformation.item (1, 1)
+			if real_reflexive_radius.truncated_to_integer /= reflexive_radius then
+				reflexive_radius := real_reflexive_radius.truncated_to_integer
+				request_update
+			end
 		end
 	
-	has_projection (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
-			-- Does (`x', `y') have a projection on segment [(`x1', `y1'),(`x2', `y2')]?
-		local
-			r, dif_x, dif_y:  INTEGER
-		do
-			dif_x := x2 - x1
-			dif_y := y2 - y1
-			if dif_x.abs /= dif_y.abs then
-				r := (dif_x ^ 2 - dif_y ^ 2).sign
-				Result := 
-					((x - x1) * dif_x - (y - y1) * dif_y).sign = r and
-					((x - x2) * dif_x - (y - y2) * dif_y).sign = -r
-			else
-				if x2 >= x1 and y2 >= y1 then
-					r := (x2 + y2 - x1 - y1).sign
-					Result :=
-						(x + y - x1 - y1).sign = r and
-						(x + y - x2 - y2).sign = -r
-				elseif x2 >= x1 and y2 <= y1 then
-					r := (x2 - y2 - x1 + y1).sign
-					Result :=
-						(x - y - x1 + y1).sign = r and
-						(x - y - x2 + y2).sign = -r
-				elseif x2 <= x1 and y2 >= y1 then
-					r := (x2 - y2 - x1 + y1).sign
-					Result :=
-						(x - y - x1 + y1).sign = r and
-						(x - y - x2 + y2).sign = -r
-				elseif x2 <= x1 and y2 <= y1 then
-					r := (x2 + y2 - x1 - y1).sign
-					Result :=
-						(x + y - x1 - y1).sign = r and
-						(x + y - x2 - y2).sign = -r
-				end
-			end
-		end
-
-	name_shift_needed (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
-			-- Is (`x', `y') on the left side of segment [(`x1', `y1'), (`x2', `y2')]?
-		local
-			eq: DOUBLE
-		do
-			if x2 /= x1 and y2 /= y1 then
-				eq := y1 + (x - x1) * (y2 - y1) / (x2 - x1)
-				if x1 < x2 and y1 > y2 then
-					Result := y <= eq
-				elseif x1 < x2 and y1 < y2 then
-					Result := y >= eq
-				elseif x1 > x2 and y1 < y2 then
-					Result := y <= eq
-				else
-					Result := y >= eq
-				end
-			elseif x1 = x2 then
-				Result := x <= x1
-			else
-				Result := y <= y1
-			end
-		end
-
-feature {BON_DIAGRAM_FACTORY} -- Drawing
-
-	draw is
-			-- Do a quick draw on `drawable'.
-		local
-			pa, t1, t2, t3: ARRAY [EV_COORDINATE]
-			p: EV_RELATIVE_POINT
-			l: BON_LINE
-			label_font: EV_FONT
-			d: like drawable
-		do
-			d := drawable
-			create pa.make (1, vertices.count)
-			from
-				vertices.start
-			until
-				vertices.after
-			loop
-				pa.put (vertices.item.absolute_coordinates, vertices.index)
-				vertices.forth
-			end
-
-			l := lines.last
-			if l.is_end_arrow then
-				l.end_arrow.i_th_point (2).set_angle (l.end_angle)
-				t1 := l.end_arrow.point_array
-				p := l.point_b
-			else
-				p := l.point_b
-			end
-			pa.put (create {EV_COORDINATE}.set (p.x_abs, p.y_abs), pa.upper)
-			if l.is_cut_figure then
-				l.cut_figure_point.set_angle (l.end_angle)
-				t3 := l.cut_figure.point_array
-				p := l.point_b
-			else
-				p := l.point_b
-			end
-			l := lines.first
-			if l.is_start_arrow then
-				l.start_arrow.i_th_point (2).set_angle (l.start_angle)
-				t2 := l.start_arrow.point_array
-				p := l.point_a
-			else
-				p := l.point_a
-			end
-			pa.put (create {EV_COORDINATE}.set (p.x_abs, p.y_abs), pa.lower)
-
-			d.set_foreground_color (Default_colors.Blue)
-			d.set_line_width (4)
-			d.draw_polyline (offset_coordinates (pa), False)
-			d.set_foreground_color (Default_colors.White)
-			d.set_line_width (2)
-			d.draw_polyline (offset_coordinates (pa), False)
-			d.set_foreground_color (Default_colors.Blue)
-			d.set_line_width (0)
-			if t1 /= Void then
-				d.fill_polygon (offset_coordinates (t1))
-			end
-			if t2 /= Void then
-				d.fill_polygon (offset_coordinates (t2))
-			end
-			d.set_line_width (2)
-			if t3 /= Void then
-				d.draw_polyline (offset_coordinates (t3), False)
-			end
-			d.set_foreground_color (name_figure.foreground_color)
-			create label_font.make_with_values (
-				bon_client_label_font.family,
-				bon_client_label_font.weight,
-				bon_client_label_font.shape,
-				bon_client_label_font.height)
-			label_font.set_height ((label_font.height * client.world.point.scale_y).rounded)	
-			d.set_font (label_font)
-			name_figure.set_font (label_font)
-			if name_figure.is_show_requested then
-				d.draw_text_top_left (
-					name_figure.point.x_abs - drawable_position.x,
-					name_figure.point.y_abs - drawable_position.y,
-					name_figure.text
-				)
-			end
-		end
-
-feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
-
-	draw_ps (ps_proj: EV_POSTSCRIPT_PROJECTOR) is
-			-- Postscript drawing routine for `Current' used by `ps_proj'.
-		local
-			pa, t1, t2, t3: ARRAY [EV_COORDINATE]
-			p: EV_RELATIVE_POINT
-			pl: EV_FIGURE_POLYLINE
-			pol: EV_FIGURE_POLYGON
-			l: BON_LINE
-		do
-			create pa.make (1, vertices.count)
-			from
-				vertices.start
-			until
-				vertices.after
-			loop
-				pa.put (vertices.item.absolute_coordinates, vertices.index)
-				vertices.forth
-			end
-
-			l := lines.last
-			if l.is_end_arrow then
-				l.end_arrow.i_th_point (2).set_angle (l.end_angle)
-				t1 := l.end_arrow.point_array
-				p := l.point_b
-			else
-				p := l.point_b
-			end
-			pa.put (create {EV_COORDINATE}.set (p.x_abs, p.y_abs), pa.upper)
-			if l.is_cut_figure then
-				l.cut_figure_point.set_angle (l.end_angle)
-				t3 := l.cut_figure.point_array
-				p := l.point_b
-			else
-				p := l.point_b
-			end
-			l := lines.first
-			if l.is_start_arrow then
-				l.start_arrow.i_th_point (2).set_angle (l.start_angle)
-				t2 := l.start_arrow.point_array
-				p := l.point_a
-			else
-				p := l.point_a
-			end
-			pa.put (create {EV_COORDINATE}.set (p.x_abs, p.y_abs), pa.lower)
-
-			create pl.make_with_coordinates (pa)
-			pl.set_foreground_color (Default_colors.Blue)
-			pl.set_line_width (4)
-			ps_proj.draw_figure_polyline (pl)
-			pl.set_foreground_color (Default_colors.White)
-			pl.set_line_width (2)
-			ps_proj.draw_figure_polyline (pl)
-			if t1 /= Void then
-				create pol.make_with_coordinates (t1)
-				pol.set_foreground_color (Default_colors.Blue)
-				pol.set_background_color (Default_colors.Blue)
-				pol.set_line_width (2)
-				ps_proj.draw_figure_polygon (pol)
-			end
-			if t2 /= Void then
-				create pol.make_with_coordinates (t2)
-				pol.set_foreground_color (Default_colors.Blue)
-				pol.set_background_color (Default_colors.White)
-				pol.set_line_width (2)
-				ps_proj.draw_figure_polygon (pol)
-			end
-			if t3 /= Void then
-				create pl.make_with_coordinates (t3)
-				pl.set_foreground_color (Default_colors.Blue)
-				pl.set_line_width (2)
-				ps_proj.draw_figure_polyline (pl)
-			end
-			if name_figure.is_show_requested then				
-				ps_proj.draw_figure_text (name_figure)
-			end
-		end
-
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
-			-- New list with `n' elements.
+	id_label_font: EV_IDENTIFIED_FONT
+
+	real_reflexive_radius: REAL
+			-- Real distance of the line from the linkable border if `is_reflexive'.
+
+	real_line_width: REAL
+			-- Real line width.
+			
+	real_arrow_head_size: REAL
+			-- Real size of arrow head.
+		
+	polyline_points: SPECIAL [EV_COORDINATE] is
+			-- Points defining the line.
+			-- | For EG_POLYLINE_LABEL.
 		do
-			create Result.make_filled (n)
+			Result := line.point_array
 		end
+
+	low_quality_line: EV_MODEL_LINE
+			-- line used to visualize `Current' if `is_high_quality' is False.
+			
+	low_quality_circle: EV_MODEL_ELLIPSE
+			-- Circle used to visualize `Current' if not `is_high_quality' and `is_reflexive'.
+	
+	aggregate_figure: EV_MODEL_LINE
+			-- Figure indicating that `Current' `is_aggregated'.
+			
+	aggregate_figure_distance: INTEGER is
+			-- Distance in pixel `aggregate_figure' has from `end_point'
+		do
+			Result := (real_arrow_head_size * 3).truncated_to_integer
+		ensure
+			Result_positive: Result >= 0
+		end
+			
+	aggregate_figure_length: INTEGER is
+			-- Length of aggregate figure.
+		do
+			Result := real_arrow_head_size.truncated_to_integer
+		ensure
+			Result_positive: Result >= 0
+		end
+			
+	set_aggregate_figure_position (a_distance: INTEGER) is
+			-- Set `aggregate_figure' `a_distance' away from `end_point'.
+		local
+			an_angle: DOUBLE
+			s: INTEGER
+			cos, sin, dcos, dsin, hssin, hscos: DOUBLE
+			a_point, b_point: EV_COORDINATE
+			px, py: INTEGER
+		do
+			a_point := line.point_array.item (line.point_count - 1)
+			b_point := line.point_array.item (line.point_count - 2)
+			an_angle := line_angle (a_point.x_precise, a_point.y_precise, b_point.x_precise, b_point.y_precise)
+			
+			s := aggregate_figure_length + line_width
+			
+			cos := cosine (an_angle)
+			sin := sine (an_angle)
+			dcos := a_distance * cos
+			dsin := a_distance * sin
+			hssin := -s / 2 * sin
+			hscos := -s / 2 * cos
+			
+			px := a_point.x
+			py := a_point.y
+			
+			aggregate_figure.set_point_a_position (px + (dcos - hssin).truncated_to_integer, py + (dsin + hscos).truncated_to_integer)
+			aggregate_figure.set_point_b_position (px + (dcos + hssin).truncated_to_integer, py + (dsin - hscos).truncated_to_integer)	
+		end
+		
+	on_is_aggregated_change is
+			-- `model'.`is_aggregated' was changed.
+		do
+			if model.is_aggregated then
+				aggregate_figure.show
+			else
+				aggregate_figure.hide
+			end
+		end
+		
+	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE) is
+			-- Set the `label_move_handle' position such that its point is
+			-- on the segment from `nearest_start' to `nearest_end'.
+		local
+			l_point_array: like point_array
+			other_bbox, label_bbox: EV_RECTANGLE
+		do
+			Precursor {EG_POLYLINE_LABEL} (nearest_start, nearest_end)
+			
+			if source /= Void and then target /= Void then
+				-- do not intersect with start or target figure
+				l_point_array := point_array
+				other_bbox := source.bounding_box
+				label_bbox := label_group.bounding_box
+				if other_bbox.intersects (label_bbox) then
+					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_start, nearest_end)
+				end
+				other_bbox := target.bounding_box
+				label_bbox := label_group.bounding_box
+				if other_bbox.intersects (label_bbox) then
+					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_end, nearest_start)
+				end
+			end
+		end
+		
+	set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE) is
+			-- Set position of `label_move_handle' such that `label_bbox' does not intersect with `other_bbox'
+			-- and `point' position of `label_move_handle' is on the line from `p' to `q'.
+		require
+			label_bbox_not_void: label_bbox /= Void
+			other_bbox_not_void: other_bbox /= Void
+			intersects: other_bbox.intersects (label_bbox)
+			p_not_void: p /= Void
+			q_not_void: q /= Void
+		local
+			d_x, d_y: DOUBLE
+			m: DOUBLE
+			nx, ny: DOUBLE
+			lx, ly: DOUBLE
+			eq: DOUBLE
+			intersect_bottom, intersect_top, intersect_left, intersect_right: BOOLEAN
+			through_x, through_y: DOUBLE
+		do
+			d_x := q.x_precise - p.x_precise
+			d_y := q.y_precise - p.y_precise
+			lx := label_move_handle.point_x
+			ly := label_move_handle.point_y
+			if d_x = 0 then
+				if d_y < 0 then
+					nx := p.x_precise
+					ny := ly - (label_bbox.bottom - other_bbox.top) - 1
+				else
+					nx := p.x_precise
+					ny := ly + (other_bbox.bottom - label_bbox.top) + 1
+				end
+			elseif d_y = 0 then
+				if d_x < 0 then
+					nx := lx - (label_bbox.right - other_bbox.left) - 1
+					ny := p.y_precise
+				else
+					nx := lx + (other_bbox.right - label_bbox.left) + 1
+					ny := p.y_precise
+				end
+			else
+				m := d_y / d_x
+				check
+					m /= 0
+				end
+				if d_y > 0 then
+					through_y := label_bbox.top
+				else		
+					through_y := label_bbox.bottom
+				end
+				if d_x > 0 then
+					through_x := label_bbox.left
+				else
+					through_x := label_bbox.right
+				end
+				eq := (other_bbox.bottom + m * through_x - through_y) / m
+				if d_y > 0 and then d_x > 0 then
+					if eq < other_bbox.right then
+						intersect_bottom := True
+					else
+						intersect_right := True
+					end
+				elseif d_y > 0 and then d_x < 0 then
+					if eq > other_bbox.left then
+						intersect_bottom := True
+					else
+						intersect_left := True
+					end
+				else
+					eq := (other_bbox.top + m * through_x - through_y) / m
+					if d_x > 0 then
+						if eq < other_bbox.right then
+							intersect_top := True
+						else
+							intersect_right := True
+						end
+					else
+						if eq > other_bbox.left then
+							intersect_top := True
+						else
+							intersect_left := True
+						end
+					end
+				end
+				check
+					one_intersection: intersect_bottom xor intersect_top xor intersect_right xor intersect_left
+				end
+				if intersect_bottom then
+					ny := ly + (other_bbox.bottom - label_bbox.top) + 2
+					nx := (ny + m*lx - ly) / m
+				elseif intersect_top then
+					ny := ly - (label_bbox.bottom - other_bbox.top) - 2
+					nx := (ny + m*lx - ly) / m
+				elseif intersect_right then
+					nx := lx + (other_bbox.right - label_bbox.left) + 2
+					ny := m * (nx - lx) + ly
+				elseif intersect_left then
+					nx := lx - (label_bbox.right - other_bbox.left) - 2
+					ny := m * (nx - lx) + ly
+				end
+			end
+			label_move_handle.set_point_position (nx.truncated_to_integer, ny.truncated_to_integer)
+		end
+		
+	on_label_group_double_clicked (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- User doubleclicked on `label_group'.
+		do
+			is_label_expanded := not is_label_expanded
+			on_name_change
+		end
+		
+	set_name_label_text (a_text: STRING) is
+			-- Set `name_label'.`text' to `a_text'.
+		local
+			txt: EV_MODEL_TEXT
+			l_features: LIST [E_FEATURE]
+			l_item: E_FEATURE
+			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
+			str: STRING
+			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
+		do
+			if not is_label_expanded then
+				label_group.wipe_out
+				name_label.set_text (a_text)
+				name_label.show
+				name_label.enable_sensitive
+				name_label.set_point_position (label_group.point_x, label_group.point_y)
+				label_group.extend (name_label)
+				
+				l_features := model.e_features
+				if l_features.is_empty then
+					name_label.remove_pebble
+				else
+					l_item := l_features.first
+					
+					if l_item.name.is_equal (model.features.first.feature_name) then
+						name_label.set_pebble (create {FEATURE_STONE}.make (l_item))
+					else
+						name_label.remove_pebble
+					end
+				end
+			else
+				label_group.wipe_out
+				label_group.extend (name_label)
+				name_label.hide
+				name_label.disable_sensitive
+				name_label.set_text (a_text)
+				create sorted_names.make
+				l_features := model.e_features
+				from
+					l_features.start
+				until
+					l_features.after
+				loop
+					l_feature_names := l_features.item.ast.feature_names
+					if l_feature_names.count > 1 then
+						--skip synonyms
+						from
+							l_feature_names.start
+							l_feature_names.forth
+						until
+							l_feature_names.after
+						loop
+							l_feature_names.forth
+							l_features.forth
+						end
+					end
+					str := model.full_name (l_features.item.ast)
+					str.replace_substring_all (model.supplier.name, "...")
+					if str.substring (str.count - 4, str.count).is_equal (": ...") then
+						str.replace_substring_all (": ...", "")
+					end
+					create txt.make_with_text (str)
+					txt.set_identified_font (id_label_font)
+					txt.set_foreground_color (label_color)
+					if world /= Void then
+						txt.scale (world.scale_factor)
+					end
+					txt.set_pebble (create {FEATURE_STONE}.make (l_features.item))
+					txt.set_accept_cursor (cursors.cur_feature)
+					txt.set_deny_cursor (cursors.cur_x_feature)
+					sorted_names.extend (txt)
+					l_features.forth
+				end
+				check
+					is_sorted: sorted_names.sorted
+				end
+				from
+					sorted_names.start
+				until
+					sorted_names.after
+				loop
+					txt := sorted_names.item
+					txt.set_point_position (label_group.point_x, label_group.bounding_box.bottom)
+					label_group.extend (txt)
+					sorted_names.forth
+				end
+			end
+		end
+		
+	set_is_high_quality (an_is_high_quality: like is_high_quality) is
+			-- Set `is_high_quality' to `an_is_high_quality'.
+		local
+			l_mh: EV_MODEL_MOVE_HANDLE
+		do
+			if an_is_high_quality /= is_high_quality then
+				is_high_quality := an_is_high_quality
+				if is_high_quality then
+					if is_reflexive then
+						prune_all (low_quality_circle)
+					else
+						prune_all (low_quality_line)
+					end
+					prune_all (name_label)
+					extend (line)
+					line.enable_sensitive
+					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+					extend (aggregate_figure)
+					name_label.set_point_position (label_group.point_x, label_group.point_y)
+					label_group.extend (name_label)
+					extend (label_move_handle)
+					label_move_handle.enable_sensitive
+					from
+						edge_move_handlers.start
+					until
+						edge_move_handlers.after
+					loop
+						l_mh := edge_move_handlers.item
+						extend (l_mh)
+						l_mh.enable_sensitive
+						edge_move_handlers.forth
+					end
+					if not is_label_shown then
+						label_group.hide
+						label_group.disable_sensitive
+					else
+						label_group.show
+						if not is_label_expanded then
+							name_label.show
+						else
+							name_label.hide
+						end
+						label_group.enable_sensitive
+					end
+				else
+					prune_all (label_move_handle)
+					label_move_handle.disable_sensitive
+					prune_all (line)
+					line.disable_sensitive
+					prune_all (aggregate_figure)
+					from
+						edge_move_handlers.start
+					until
+						edge_move_handlers.after
+					loop
+						l_mh := edge_move_handlers.item
+						prune_all (l_mh)
+						l_mh.disable_sensitive
+						edge_move_handlers.forth
+					end
+					
+					if is_reflexive then
+						create low_quality_circle.make_with_positions (0, 0, reflexive_radius, reflexive_radius)
+						low_quality_circle.set_foreground_color (foreground_color)
+						extend (low_quality_circle)
+					else
+						create low_quality_line
+						low_quality_line.enable_end_arrow
+						low_quality_line.set_foreground_color (foreground_color)
+						low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+						extend (low_quality_line)
+					end
+					extend (name_label)
+					if not is_label_shown then
+						name_label.hide
+					else
+						name_label.show
+					end
+				end
+				request_update
+			end
+		end
+
+invariant
+	label_font_not_void: label_font /= Void
+	label_color_not_void: label_color /= Void
+	foreground_color_not_void: foreground_color /= Void
+	aggregate_figure_not_void: aggregate_figure /= Void
 
 end -- class BON_CLIENT_SUPPLIER_FIGURE

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class 
 	EB_CONTEXT_EDITOR
 
 inherit
@@ -33,7 +33,17 @@ inherit
 		export {EB_CONTEXT_DIAGRAM_COMMAND}
 			Project_directory_name
 		end
-
+		
+	EB_CONSTANTS
+		undefine
+			pixmaps
+		end
+		
+	SHARED_WORKBENCH
+		undefine
+			default_create
+		end
+		
 create
 	make_with_tool
 
@@ -42,9 +52,9 @@ feature {NONE} -- Initialization
 	make_with_tool (a_tool: like tool) is
 			-- Set default values.
 		local
-			empty_world: EV_FIGURE_WORLD
+			empty_world: BON_CLASS_DIAGRAM
 			border_frame: EV_FRAME
-			vertical_box: EV_VERTICAL_BOX
+			a_class_graph: ES_CLASS_GRAPH
 		do
 			tool := a_tool
 			create widget
@@ -59,43 +69,32 @@ feature {NONE} -- Initialization
 			Eiffel_project.manager.close_agents.extend (project_close_agent)
 			development_window.window_manager.add_observer (Current)
 
-			development_window.editor_tool.text_area.add_edition_observer (Current)
-
+			create a_class_graph.make (Current)
+			create empty_world.make (a_class_graph, Current)
+			create world_cell.make_with_world_and_tool (empty_world, Current)
+			world_cell.horizontal_scrollbar.change_actions.extend (agent on_scroll)
+			world_cell.vertical_scrollbar.change_actions.extend (agent on_scroll)
+			create border_frame
+			border_frame.extend (world_cell)
+			
+			graph := a_class_graph
+			create {EIFFEL_INHERITANCE_LAYOUT} layout.make_with_world (empty_world)
+			is_rebuild_world_needed := False
+			update_excluded_class_figures
+			empty_world.drop_actions.extend (agent on_cluster_drop)
+			empty_world.drop_actions.extend (agent on_class_drop)
+			create force_directed_layout.make_with_world (empty_world)
+			force_directed_layout.stop
+			force_directed_layout.stop_actions.extend (agent on_force_stop)
+			
 			init_commands
 			build_tool_bar
-
-			create area
-			area.set_minimum_size (1, 1)
-			area.clear
-			area.flush
-			create area_buffer
-			create horizontal_box
-			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
-			vertical_scrollbar.set_step (15)
-			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
-			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
-			horizontal_scrollbar.set_step (15)
-			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
-			horizontal_box.extend (area)
-			horizontal_box.extend (vertical_scrollbar)
-			horizontal_box.disable_item_expand (vertical_scrollbar)
-			area.resize_actions.extend (agent on_resizing)
-			create empty_world
-			empty_world.drop_actions.extend (agent default_drop_class_stone)
-			empty_world.drop_actions.extend (agent default_drop_cluster_stone)
-			create projector.make_with_buffer (empty_world, area)
-			update_size (Void)
-			create border_frame
-			create vertical_box
-			vertical_box.extend (horizontal_box)
-			vertical_box.extend (horizontal_scrollbar)
-			vertical_box.disable_item_expand (horizontal_scrollbar)
-			border_frame.extend (vertical_box)
+			disable_toolbar
 			widget.extend (border_frame)
-			create autoscroll
-			autoscroll.actions.extend (agent on_time_out)
+
+			development_window.editor_tool.text_area.add_edition_observer (Current)
 		end
-		
+
 	init_commands is
 			-- Create command classes.
 		do
@@ -107,10 +106,8 @@ feature {NONE} -- Initialization
 			create_class_cmd.enable_displayed
 			create delete_cmd.make (Current, development_window)
 			delete_cmd.enable_displayed
-
 			create create_new_links_cmd.make (Current)
 			create_new_links_cmd.enable_displayed
-
 			create change_color_cmd.make (Current)
 			change_color_cmd.enable_displayed
 			create trash_cmd.make (Current)
@@ -123,6 +120,8 @@ feature {NONE} -- Initialization
 			toggle_supplier_cmd.enable_displayed
 			create toggle_labels_cmd.make (Current)
 			toggle_labels_cmd.enable_displayed
+			create toggle_quality_cmd.make (Current)
+			toggle_quality_cmd.enable_displayed
 			create link_tool_cmd.make (Current)
 			link_tool_cmd.enable_displayed
 			create fill_cluster_cmd.make (Current)
@@ -131,13 +130,10 @@ feature {NONE} -- Initialization
 			select_depth_cmd.enable_displayed
 			create history_cmd.make (Current)
 			history_cmd.enable_displayed
-
 			create undo_cmd.make (Current)
 			undo_cmd.enable_displayed
-			
 			create redo_cmd.make (Current)
 			redo_cmd.enable_displayed
-
 			create zoom_in_cmd.make (Current)
 			zoom_in_cmd.enable_displayed
 			create zoom_out_cmd.make (Current)
@@ -146,9 +142,20 @@ feature {NONE} -- Initialization
 			delete_view_cmd.enable_displayed
 			create diagram_to_ps_cmd.make (Current)
 			diagram_to_ps_cmd.enable_displayed
-			
 			create crop_cmd.make (Current)
 			crop_cmd.enable_displayed
+			create toggle_force_cmd.make (Current)
+			toggle_force_cmd.enable_displayed
+			create toggle_cluster_cmd.make (Current)
+			toggle_cluster_cmd.enable_displayed
+			create remove_anchor_cmd.make (Current)
+			remove_anchor_cmd.enable_displayed
+			create toggle_cluster_legend_cmd.make (Current)
+			toggle_cluster_legend_cmd.enable_displayed
+			create toggle_uml_cmd.make (Current)
+			toggle_uml_cmd.enable_sensitive
+			create fit_to_screen_cmd.make (Current)
+			fit_to_screen_cmd.enable_sensitive
 		end
 
 	build_tool_bar is
@@ -159,6 +166,9 @@ feature {NONE} -- Initialization
 			view_menu_toolbar: EV_TOOL_BAR
 			customize_area: EV_CELL
 			tb_commands: LINKED_LIST [EB_TOOLBARABLE_COMMAND]
+			zoom_cell: EV_CELL
+			h_box: EV_HORIZONTAL_BOX
+			label: EV_LABEL
 		do
 			create bar_bar
 
@@ -181,14 +191,40 @@ feature {NONE} -- Initialization
 			tb_commands.extend (toggle_supplier_cmd)
 			tb_commands.extend (toggle_inherit_cmd)
 			tb_commands.extend (toggle_labels_cmd)
+			tb_commands.extend (toggle_quality_cmd)
 			tb_commands.extend (delete_view_cmd)
 			tb_commands.extend (diagram_to_ps_cmd)
 			tb_commands.extend (crop_cmd)
+			tb_commands.extend (toggle_force_cmd)
+			tb_commands.extend (toggle_cluster_cmd)
+			tb_commands.extend (remove_anchor_cmd)
+			tb_commands.extend (toggle_cluster_legend_cmd)
+			tb_commands.extend (toggle_uml_cmd)
+			tb_commands.extend (fit_to_screen_cmd)
 			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
 
 			custom_toolbar.update_toolbar
 			bar_bar.extend (custom_toolbar.widget)
 			bar_bar.disable_item_expand (custom_toolbar.widget)
+			
+			create zoom_cell
+			
+				create h_box
+				
+				create label.make_with_text ("zoom: ")
+				h_box.extend (label)
+				h_box.disable_item_expand (label)
+			
+					create zoom_selector.make_default
+					zoom_selector.select_actions.extend (agent on_zoom_level_select)
+					
+				h_box.extend (zoom_selector)
+				h_box.disable_item_expand (zoom_selector)
+				
+			zoom_cell.extend (h_box)
+			bar_bar.extend (zoom_cell)
+			bar_bar.disable_item_expand (zoom_cell)
+			
 
 			widget.extend (bar_bar)
 			widget.disable_item_expand (bar_bar)
@@ -212,6 +248,7 @@ feature {NONE} -- Initialization
 			customize_area.pointer_button_release_actions.extend (agent on_customize)
 		end
 		
+
 	show_view_menu is
 			-- Display "View" menu.
 		local
@@ -220,7 +257,6 @@ feature {NONE} -- Initialization
 			create view_menu
 			view_menu.extend (select_depth_cmd.new_menu_item)
 			view_menu.extend (create {EV_MENU_SEPARATOR})
-			view_menu.extend (link_tool_cmd.new_menu_item)
 			view_menu.extend (crop_cmd.new_menu_item)
 			view_menu.extend (create {EV_MENU_SEPARATOR})
 			view_menu.extend (delete_view_cmd.new_menu_item)			
@@ -228,52 +264,90 @@ feature {NONE} -- Initialization
 			view_menu.show
 		end
 
+feature -- Status report
+
+	is_resize_enabled: BOOLEAN is
+			-- 
+		do
+			Result := world_cell.is_resize_enabled
+		end
+
+	is_rebuild_world_needed: BOOLEAN
+			-- Is a rebuild of the world needed when a stone is dropped?
+			
+	is_excluded_in_preferences (name: STRING): BOOLEAN is
+			-- Is class figure named `name' excluded in preferences?
+		do
+			Result := excluded_class_figures.has (name)
+		end
+		
+	ignore_excluded_figures: BOOLEAN
+			-- Will `excluded_class_figures' be taken into account?
+			
+	is_force_directed_used: BOOLEAN
+			-- Is force directed physics used to arrange classes?
+		
 feature -- Access
 
+	default_pixmaps: EV_STOCK_PIXMAPS is
+		do
+			create Result
+		end
+
+	progress_dialog: EB_PROGRESS_DIALOG is
+		once
+			create Result
+		end
+			
 	development_window: EB_DEVELOPMENT_WINDOW is
 			-- Application main window.
 		do
 			Result ?= tool.manager
 		end
+	
+	graph: ES_GRAPH
+			-- Current graph.
+	
+	class_graph: ES_CLASS_GRAPH is
+			-- Current class graph if not Void.
+		do
+			Result ?= graph
+		end
+		
+	cluster_graph: ES_CLUSTER_GRAPH is
+			-- Current cluster graph if not Void.
+		do
+			Result ?= graph
+		end
+
+	world: EIFFEL_WORLD is
+			-- Current world.
+		do
+			Result ?= world_cell.world
+		ensure
+			Result_not_void: Result /= Void
+		end
+	
+	projector: EIFFEL_PROJECTOR is
+			-- Current projector
+		do
+			Result := world_cell.projector
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	layout: EIFFEL_INHERITANCE_LAYOUT
+			-- Current layout.
 
 	widget: EV_VERTICAL_BOX
-			-- Graphical object of `Current'.
-
-	horizontal_box: EV_HORIZONTAL_BOX
-			-- Container for `area' and `vertical_scrollbar'.
-
-	horizontal_scrollbar: EV_HORIZONTAL_SCROLL_BAR
-			-- horizontal scroll bar for the diagram
-
-	vertical_scrollbar: EV_VERTICAL_SCROLL_BAR
-			-- vertical scroll bar for the diagram
+			-- Graphical object of `Current' containing `world_cell'.
 
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
 
-	custom_toolbar: EB_TOOLBAR
-			-- Part of toolbar that can be customized.
-
-	view_selector: EB_VIEW_SELECTOR
-			-- Combo box that lets the user change views.
-
-	area: EV_DRAWING_AREA
-			-- Graphical surface displaying diagram.
-
-	area_buffer: EV_PIXMAP
-			-- Copy of `area' from which drawing routines get called.
-
-	area_as_widget: EV_WIDGET is
-			-- `area' cast to EV_WIDGET.
-		do
-			Result ?= area
-		end
 
 	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `area'.
-		require
-			area_is_widget: area_as_widget /= Void
-			projector_exists: projector /= Void
 		do
 			create Result.set (
 				area_as_widget.pointer_position.x + projector.area_x,
@@ -282,396 +356,68 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
-	projector: ES_PROJECTOR
-			-- Responsible for drawing views.
-
-	class_view: BON_CLASS_DIAGRAM
+	class_view: EIFFEL_CLASS_DIAGRAM is
 			-- Class view currently displayed.
+		do
+			Result ?= world
+		end
 
-	cluster_view: BON_CLUSTER_DIAGRAM
+	cluster_view: EIFFEL_CLUSTER_DIAGRAM is
 			-- Cluster view currently displayed.
-
-	diagram_file_name (cd: CONTEXT_DIAGRAM): FILE_NAME is
-			-- Location of XML file.
-		require
-			diagram_exists: cd /= Void
-		local
-			cld: CLUSTER_DIAGRAM
 		do
-			cld ?= cd
-			if cld = Void then
-				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				Result.extend (cd.center_class.class_i.name)
+			Result ?= world
+		end
+
+feature -- Status settings.
+
+	update_excluded_class_figures is
+			-- Preferences may have changed.
+			-- Refresh `excluded_class_figures' and `ignore_excluded_figures'.
+		local
+			l_array: ARRAY [STRING]
+			i: INTEGER
+		do
+			ignore_excluded_figures := boolean_resource_value ("ignore_excluded_class_figures", False)
+			if not ignore_excluded_figures then
+				l_array := array_resource_value ("excluded_class_figures", Default_excluded_class_figures)
+				create excluded_class_figures.make (l_array.count)
+				from
+					i := l_array.lower
+				until
+					i > l_array.upper
+				loop
+					excluded_class_figures.put (l_array.item (i), l_array.item (i))
+					i := i + 1
+				end
 			else
-				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				Result.extend (cld.center_cluster.cluster_i.cluster_name)
-			end
-			Result.add_extension ("ead")
-		end
-
-	toolbar_menu: EV_MENU
-			-- Popped up when user clicks left to the right of the toolbar.
-
-	class_stone: CLASSI_STONE
-			-- Stone representing center class.
-
-	cluster_stone: CLUSTER_STONE
-			-- Stone representing center cluster.			
-
-feature -- Status setting
-
-	set_stone (a_stone: STONE) is
-			-- Assign `a_stone' as new stone.
-		local
-			fs: FEATURE_STONE
-		do
-			fs ?= a_stone
-			if 
-				fs = Void 
-					or else
-				(
-					class_stone = Void
-						or else
-					class_stone.class_i /= fs.class_i
-				)
-			then
-				if is_building then
-					last_build_cancelled := True
-					Progress_dialog.hide
-					if class_view /= Void then
-						class_view.cancel
-					end
-					if cluster_view /= Void then
-						cluster_view.cancel
-					end
-				end
-					-- Save current diagram.
-				if not last_build_cancelled then
-					store
-				end
-
-				horizontal_box.wipe_out
-				if projector /= Void then
-					projector.widget.pointer_motion_actions.wipe_out
-					projector.widget.pointer_button_press_actions.wipe_out
-					projector.widget.pointer_double_press_actions.wipe_out
-					projector.widget.pointer_button_release_actions.wipe_out
-					projector.widget.pointer_leave_actions.wipe_out
-				end
-				projector := Void
-
-				if area /= Void then
-					area.destroy
-				end
-				area := Void
-				if class_view /= Void then
-					class_view.recycle
-				end
-				class_view := Void
-				if cluster_view /= Void then
-					cluster_view.recycle
-				end
-				cluster_view := Void
-	
-				class_stone ?= a_stone
-				cluster_stone ?= a_stone			
-				if tool.is_diagram_selected then
-					on_select
-				end
+				create excluded_class_figures.make (0)
 			end
 		end
 
-	on_select is
-			-- Current became selected in notebook.
+	disable_resize is
+			-- Disable resizing world cell.
 		do
-			if 
-				area = Void 
-			then
-				horizontal_box.wipe_out
-				update_excluded_class_figures
-				development_window.window.set_pointer_style (Default_pixmaps.Wait_cursor)
-				if class_stone /= Void then
-					create_class_view (class_stone.class_i)
-				elseif cluster_stone /= Void then
-					create_cluster_view (cluster_stone.cluster_i)
-				else
-					disable_toolbar
-				end
-				development_window.window.set_pointer_style (Default_pixmaps.Standard_cursor)
-			elseif class_view /= Void and then class_view.cancelled then
-				set_stone (class_stone)
-			elseif cluster_view /= Void and then cluster_view.cancelled then
-				set_stone (cluster_stone)
-			end
+			world_cell.disable_resize
 		end
-
-	create_class_view (a_class: CLASS_I) is
-			-- Initialize diagram centered on `a_class'.
-		require
-			a_class_exists: a_class /= Void
-		local
-			f: RAW_FILE
-			cancelled: BOOLEAN
-			l_class_view: BON_CLASS_DIAGRAM
+		
+	enable_resize is
+			-- Enable resizing worl cell.
 		do
-			is_building := True
-			history.wipe_out
-			disable_toolbar
-
-			if not cancelled then
-				progress_dialog.set_title ("Building progress")
-				progress_dialog.set_message ("Diagram for " + a_class.name_in_upper)
-				progress_dialog.enable_cancel
-				progress_dialog.start (6)
-				progress_dialog.set_value (0)
-				progress_dialog.show
-
-				class_view := Void
-
-				create l_class_view.make (Current)
-				cluster_view := Void
-	
-				create area
-				area.disable_sensitive
-				area.resize_actions.extend (agent on_resizing)
-				horizontal_box.extend (area)
-				horizontal_box.extend (vertical_scrollbar)
-				horizontal_box.disable_item_expand (vertical_scrollbar)
-				create {ES_PROJECTOR} projector.make_with_buffer (l_class_view,area)-- area_buffer, area)
-				l_class_view.set_drawable_cell_and_position (projector.drawable_cell, projector.drawable_position)
-				l_class_view.set_projector (projector)
+			world_cell.enable_resize
+		end
 			
-				progress_dialog.set_value (1)
-				class_view := l_class_view
-				l_class_view.set_class (a_class)
-	
-				create f.make (diagram_file_name (l_class_view))
-				if not l_class_view.cancelled then
-					l_class_view.load_from_file (f)
-				else
-					l_class_view := Void
-				end
-				if l_class_view /= Void then
-					class_view := l_class_view
-				end
-				reset_scrollbars
-				last_build_cancelled := False
-			else
-				clear_area
-			end
-			is_building := False
-			area.enable_sensitive
-
-			rescue
-				class_view := Void
-				cluster_view := Void
-				cancelled := True
-				Error_handler.error_list.wipe_out
-				progress_dialog.hide
-				retry
-			end
-	
-	create_cluster_view (a_cluster: CLUSTER_I) is
-			-- Initialize diagram centered on `a_cluster'.
-		require
-			a_cluster_exists: a_cluster /= Void
-		local
-			f: RAW_FILE
-			cancelled: BOOLEAN
-			l_cluster_view: BON_CLUSTER_DIAGRAM
+	set_is_rebuild_world_needed (b: BOOLEAN) is
+			-- Set `is_rebuild_world_needed' to `b'.
 		do
-			is_building := True
-			disable_toolbar
-			history.wipe_out
-			if not cancelled then
-				progress_dialog.set_title ("Building progress")
-				progress_dialog.set_message ("Diagram for " + a_cluster.cluster_name)
-				progress_dialog.enable_cancel
-				progress_dialog.start (5)
-				progress_dialog.set_value (0)
-				progress_dialog.show
-
-				cluster_view := Void
-				create l_cluster_view.make (Current)
-				class_view := Void
-	
-				create area
-				area.disable_sensitive
-				area.resize_actions.extend (agent on_resizing)
-				horizontal_box.extend (area)
-				horizontal_box.extend (vertical_scrollbar)
-				horizontal_box.disable_item_expand (vertical_scrollbar)
-				create projector.make_with_buffer (l_cluster_view, area)
-				l_cluster_view.set_drawable_cell_and_position (projector.drawable_cell, projector.drawable_position)
-				l_cluster_view.set_projector (projector)
-					
-				progress_dialog.set_value (1)
-				cluster_view := l_cluster_view
-				l_cluster_view.set_cluster (a_cluster)
-	
-				create f.make (diagram_file_name (l_cluster_view))
-				if not l_cluster_view.cancelled then
-					l_cluster_view.load_from_file (f)
-				else
-					l_cluster_view := Void
-				end
-				if l_cluster_view /= Void then
-					cluster_view := l_cluster_view
-				end
-				reset_scrollbars
-				last_build_cancelled := False
-			else
-				clear_area
-			end
-			is_building := False
-			area.enable_sensitive
-
-		rescue
-			class_view := Void
-			cluster_view := Void
-			cancelled := True
-			Error_handler.error_list.wipe_out
-			progress_dialog.hide
-			retry
+			is_rebuild_world_needed := b
+		ensure
+			set: is_rebuild_world_needed = b
 		end
-
-	synchronize is
-			-- Contexts need to be updated because of recompilation
-			-- or similar action that needs resynchonization.
-		do
-			reset_history
-			if class_view /= Void then
-				class_view.synchronize (True, Void)
-			elseif cluster_view /= Void then
-				cluster_view.synchronize (True, Void)
-			end
-		end
-
-	set_focus is
-			-- Give the focus to the drawing_area.
-		require
-			focusable: widget.is_displayed and widget.is_sensitive
-		do
-			if area /= Void then
-				area.set_focus
-			else
-				widget.set_focus
-			end
-		end
-
-feature -- Memory management
-
-	recycle is
-			-- Frees `Current's memory, and leave `Current' in an unstable state
-			-- so that we know whether we're still referenced or not.
-		do
-			Eiffel_project.manager.close_agents.start
-			Eiffel_project.manager.close_agents.prune_all (project_close_agent)
-			development_window.window_manager.remove_observer (Current)
-			
-				--| 'if' necessary because the editor may be recycled before the diagram.
-			if development_window.editor_tool.text_area /= Void then
-				development_window.editor_tool.text_area.remove_observer (Current)
-			end
-			if cluster_view /= Void then
-				cluster_view.manager.remove_observer (cluster_view)
-			end
-			cluster_view := Void
-			class_view := Void
-			projector := Void
-			area := Void
-			widget := Void
-		end
-
-feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Toolbar actions
-
-	on_new_client_click is
-			-- The user wants a new client-supplier link.
-		require
-			a_view_exists: class_view /= Void or else cluster_view /= Void
-		do
-			if class_view /= Void then
-				class_view.set_link_client
-			elseif cluster_view /= Void then
-				cluster_view.set_link_client
-			end
-		end
-
-	on_new_agg_client_click is
-			-- The user wants a new client-supplier link.
-		require
-			a_view_exists: class_view /= Void or else cluster_view /= Void
-		do
-			if class_view /= Void then
-				class_view.set_link_aggregate_client
-			elseif cluster_view /= Void then
-				cluster_view.set_link_aggregate_client
-			end	
-		end
-
-	on_new_inherit_click is
-			-- The user wants a new inheritance link.
-		require
-			a_view_exists: class_view /= Void or else cluster_view /= Void
-		do
-			if class_view /= Void then
-				class_view.set_link_inheritance
-			elseif cluster_view /= Void then
-				cluster_view.set_link_inheritance
-			end
-		end
-
-	reset (cd: CONTEXT_DIAGRAM) is
-			-- It was not possible to retrieve current view.
-			-- Set it in a default way.
-		require
-			diagram_exists: cd /= Void
-		do
-			cd.reset
-			cd.reset_views
-			view_selector.select_actions.block
-			view_selector.set_strings (cd.available_views)
-			view_selector.select_actions.resume
-			view_selector.set_text ("DEFAULT")
-			update_size (cd)
-		end
-
-	reset_tool_bar_for_class_view is
-			-- Set toolbar for class_view.
-		do
-			create_class_cmd.enable_sensitive
-			delete_cmd.enable_sensitive
-			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
-			create_new_links_cmd.enable_sensitive
-			change_color_cmd.enable_sensitive
-			trash_cmd.enable_sensitive
-			change_header_cmd.enable_sensitive
-			link_tool_cmd.enable_sensitive
-			toggle_inherit_cmd.enable_sensitive
-			toggle_supplier_cmd.enable_sensitive
-			toggle_labels_cmd.enable_sensitive
-			select_depth_cmd.enable_sensitive
-			fill_cluster_cmd.disable_sensitive
-			undo_cmd.disable_sensitive
-			history_cmd.enable_sensitive
-			redo_cmd.disable_sensitive
-			zoom_in_cmd.enable_sensitive
-			zoom_out_cmd.enable_sensitive
-			delete_view_cmd.enable_sensitive
-			diagram_to_ps_cmd.enable_sensitive
-			crop_cmd.enable_sensitive
-		end
-
-	reset_tool_bar_for_cluster_view is
-			-- Set toolbar for cluster_view.
-		do
-			reset_tool_bar_for_class_view
-			fill_cluster_cmd.enable_sensitive
-		end
-
+		
 	disable_toolbar is
-			-- There is no need for any button to be sensitive.
+			-- Disable sensitive for all buttons except center diagram.
 		do
+			zoom_selector.disable_sensitive
 			create_class_cmd.disable_sensitive
 			delete_cmd.disable_sensitive
 			create_new_links_cmd.disable_sensitive
@@ -692,29 +438,130 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 			delete_view_cmd.disable_sensitive
 			diagram_to_ps_cmd.disable_sensitive
 			crop_cmd.disable_sensitive
+			toggle_force_cmd.disable_sensitive
+			toggle_cluster_cmd.disable_sensitive
+			remove_anchor_cmd.disable_sensitive
+			toggle_cluster_legend_cmd.disable_sensitive
+			toggle_uml_cmd.disable_sensitive
+			fit_to_screen_cmd.disable_sensitive
 		end
-
-	crop_diagram is
-			-- Crop diagram.
+		
+	enable_toolbar is
+			-- Enable toolbar.
 		do
-			if class_view /= Void then
-				class_view.crop
-			elseif cluster_view /= Void then
-				cluster_view.crop
+			if class_graph /= Void then
+				if world.is_uml then
+					reset_tool_bar_for_uml_class_view
+				else
+					reset_tool_bar_for_class_view
+				end
+			else
+				if world.is_uml then
+					reset_tool_bar_for_uml_cluster_view
+				else
+					reset_tool_bar_for_cluster_view
+				end
 			end
-			projector.full_project
-			projector.update
 		end
-	
-feature {DIAGRAM_COMPONENT} -- Control right-click
-
-	create_development_window (a_stone: STONE) is
-			-- Create a new_development_window with `a_stone'.
-		require
-			a_stone_exists: a_stone /= Void
+		
+	enable_force_directed is
+			-- Enable use of force directed physics.
+		local
+			wbbox, min_box: EV_RECTANGLE
+			w, h: INTEGER
+			fig: EG_LINKABLE_FIGURE
 		do
-			window_manager.create_window
-			window_manager.last_created_window.set_stone (a_stone)
+			if timer = Void then
+				create timer.make_with_interval (50)
+			else
+				timer.actions.wipe_out
+			end
+			timer.actions.extend (agent on_time_out)
+			wbbox := world.bounding_box
+			w := wbbox.width.max (area.width)
+			h := wbbox.height.max (area.height)
+			wbbox.grow_left (w * 5)
+			wbbox.grow_right (w * 5)
+			wbbox.grow_top (h * 5)
+			wbbox.grow_bottom (h * 5)
+			force_directed_layout.set_fence (wbbox)
+			is_force_directed_used := True
+			if class_graph = Void then
+				fig ?= world.figure_from_model (cluster_graph.center_cluster)
+				min_box := fig.minimum_size
+				force_directed_layout.set_center (min_box.left + min_box.width // 2, min_box.top + min_box.height // 2)
+			else
+				fig ?= world.figure_from_model (class_graph.center_class)
+				force_directed_layout.set_center (fig.port_x, fig.port_y)
+				fig.set_is_fixed (True)
+			end
+			if world.is_right_angles then
+				world.remove_right_angles
+			end
+			world.show_anchors
+			force_directed_layout.reset
+		ensure
+			is_force_directed_used: is_force_directed_used
+		end
+		
+	disable_force_directed is
+			-- Disable use of force directed physics.
+		do
+			is_force_directed_used := False
+			world.hide_anchors
+			force_directed_layout.stop
+			
+			if 
+				toggle_force_cmd.current_button /= Void and then
+				toggle_force_cmd.current_button.is_selected
+			then
+				toggle_force_cmd.current_button.select_actions.block
+				toggle_force_cmd.current_button.toggle
+				toggle_force_cmd.current_button.set_tooltip (toggle_force_cmd.tooltip)
+				toggle_force_cmd.current_button.select_actions.resume	
+			end
+		ensure
+			not_is_force_directed_used: not is_force_directed_used
+		end
+		
+	restart_force_directed is
+			-- Restart using force directed physics after stop.
+		do
+			if is_force_directed_used then
+				force_directed_layout.reset
+				if timer = Void then
+					create timer.make_with_interval (50)
+				end
+				if timer.actions.is_empty then
+					timer.actions.extend (agent on_time_out)
+				end
+				timer.set_interval (50)
+				if world.is_right_angles then
+					world.remove_right_angles
+				end
+			end
+		ensure
+			not_stopped: is_force_directed_used implies not force_directed_layout.is_stopped
+		end
+
+feature -- Element change
+
+	clear_area is
+			-- Make `area' empty because a diagram has been cancelled.
+		local
+			a_class_graph: ES_CLASS_GRAPH
+			a_class_view: BON_CLASS_DIAGRAM
+		do
+			world.drop_actions.wipe_out
+			create a_class_graph.make (Current)
+			create a_class_view.make (a_class_graph, Current)
+			world_cell.set_world (a_class_view)
+			layout.set_world (a_class_view)
+			graph := a_class_graph
+			world.drop_actions.extend (agent on_class_drop)
+			world.drop_actions.extend (agent on_cluster_drop)
+			projector.full_project
+			crop_diagram
 		end
 
 	create_link_tool (a_stone: LINK_STONE) is
@@ -724,214 +571,551 @@ feature {DIAGRAM_COMPONENT} -- Control right-click
 		do
 			link_tool_cmd.execute_with_link_stone (a_stone)
 		end
-
-feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Status setting
-
-	update_bounds (cd: CONTEXT_DIAGRAM) is
-			-- Drawable area needs to be resized because of figure moves or new figures.
-		require
-			diagram_exists: cd /= Void
-		local
-			r: EV_RECTANGLE
-			new_x, new_y: INTEGER
-		do
-			r := cd.bounds
-			new_x := - r.x
-			new_y := - r.y
-			if new_x > 0 or new_y > 0 then
-				cd.point.set_position (
-					new_x.max (0) + cd.point.x,
-					new_y.max (0) + cd.point.y)
-			end
-			if 
-				r.width + r.x > visible_width
-					or
-				r.height + r.y > visible_height
-			then
-				update_size (cd)
-			end
-		end		
-
-	update_size (cd: CONTEXT_DIAGRAM) is
-			-- Scrollable area and drawable area need to be resized because of diagram resizing.
-		local
-			t: EB_DIMENSIONS
-			leap_x, leap_y, old_value: INTEGER
-		do
-			if cd /= Void then
-				t := cd.minimum_size
-			else
-				create t.set (1, 1)
-			end
-			visible_width := t.width.max (area.width)
-			visible_height := t.height.max (area.height)
-			leap_x := area.width
-			leap_y := area.height
-
-			old_value := horizontal_scrollbar.value
-			horizontal_scrollbar.value_range.resize_exactly (
-				0,		
-				(visible_width - 1 - leap_x).max (1)
-			)
-			horizontal_scrollbar.set_leap (leap_x)
-			if horizontal_scrollbar.value_range.has (old_value) then
-				horizontal_scrollbar.set_value (old_value)
-			else
-				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
-			end
-
-			old_value := vertical_scrollbar.value
-			vertical_scrollbar.value_range.resize_exactly (
-				0,
-				(visible_height	- 1 - leap_y).max (1)
-			)
-			vertical_scrollbar.set_leap (leap_y)
-			if vertical_scrollbar.value_range.has (old_value) then
-				vertical_scrollbar.set_value (old_value)
-			else
-				vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
-			end
-		end
-
-	update_toggles (cd: CONTEXT_DIAGRAM)  is	
-			-- Diagram was retrieved from a file with non-default
-			-- settings. Update toolbar.
-		require
-			diagram_exists: cd /= Void
-		local
-			cld: CLUSTER_DIAGRAM
-		do
-			cld ?= cd
-			toggle_inherit_cmd.current_button.select_actions.wipe_out
-			toggle_supplier_cmd.current_button.select_actions.wipe_out
-			toggle_labels_cmd.current_button.select_actions.wipe_out
-			if cld = Void then
-				if cd.inheritance_links_displayed then
-					cd.inheritance_layer.show
-					cd.inheritance_layer.enable_sensitive
-					if not toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				else
-					cd.inheritance_layer.hide
-					cd.inheritance_layer.disable_sensitive
-					if toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				end
-				if cd.client_links_displayed then
-					cd.client_supplier_layer.show
-					cd.client_supplier_layer.enable_sensitive
-					if not toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				else
-					cd.client_supplier_layer.hide
-					cd.client_supplier_layer.disable_sensitive
-					if toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				end
-				if cd.labels_shown then
-					cd.show_labels
-					if not toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				else
-					cd.hide_labels
-					if toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				end
-			else
-				if cld.inheritance_links_displayed then
-					cld.inheritance_layer.show
-					cld.inheritance_layer.enable_sensitive
-					if not toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				else
-					cld.inheritance_layer.hide
-					cld.inheritance_layer.disable_sensitive
-					if toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				end
-				if cld.client_links_displayed then
-					cld.client_supplier_layer.show
-					cld.client_supplier_layer.enable_sensitive
-					if not toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				else
-					cld.client_supplier_layer.hide
-					cld.client_supplier_layer.disable_sensitive
-					if toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				end
-				if cld.labels_shown then
-					cld.show_labels
-					if not toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				else
-					cld.hide_labels
-					if toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				end
-			end
-			toggle_inherit_cmd.current_button.select_actions.extend (agent toggle_inherit_cmd.execute)
-			toggle_supplier_cmd.current_button.select_actions.extend (agent toggle_supplier_cmd.execute)
-			toggle_labels_cmd.current_button.select_actions.extend (agent toggle_labels_cmd.execute)
-		end
-
-	reset_toggles (cd: CONTEXT_DIAGRAM) is	
-			-- Put toggles to default settings.
-		do
-			if cd /= Void then
-				if not toggle_inherit_cmd.current_button.is_selected then
-					toggle_inherit_cmd.current_button.toggle
-				end
-				if toggle_supplier_cmd.current_button.is_selected then
-					toggle_supplier_cmd.current_button.toggle
-				end
-				cd.client_supplier_layer.hide
-				cd.client_supplier_layer.disable_sensitive
-			end
-		end
-
-	put_progress_string (info: STRING; new_value: INTEGER) is
-			-- Fill `progress_dialog' with `info' and `new_value' while building a diagram.
-		require
-			info_not_void: info /= Void
-		do
-			progress_dialog.set_message (info)
-			progress_dialog.set_value (new_value)
-		end
-
-	refresh_progress is
-			-- Process events while exploring classes.
-		do
-			progress_dialog.graphical_update
-		end
-
-	reset_scrollbars is
-			-- Scroll both scrollbars to their mimimum value.
-		do
-			horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
-			vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
-		end
-
-feature {CLASS_TEXT_MODIFIER, INHERITANCE_FIGURE, CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND} -- Status setting
-
+		
 	reset_history is
 			-- Forget about previous undoable commands.
 		do
 			history.wipe_out
 			undo_cmd.disable_sensitive
 			redo_cmd.disable_sensitive
+		end
+
+	create_class_view (a_class: CLASS_I; load_when_possible: BOOLEAN) is
+			-- Initialize diagram centered on `a_class', load from file if possible when `load_when_possible'.
+		require
+			a_class_exists: a_class /= Void
+		local
+			f: RAW_FILE
+			cancelled: BOOLEAN
+			a_class_graph: ES_CLASS_GRAPH
+			a_class_view: EIFFEL_CLASS_DIAGRAM
+			cf: EIFFEL_CLASS_FIGURE
+			es_class: ES_CLASS
+			was_legend_shown: BOOLEAN
+		do
+			history.wipe_out
+			disable_toolbar
+
+			if not cancelled then
+				graph.wipe_out
+				
+				world.drop_actions.wipe_out
+				create a_class_graph.make (Current)
+				if class_graph /= Void then
+					a_class_graph.set_ancestor_depth (class_graph.ancestor_depth)
+					a_class_graph.set_descendant_depth (class_graph.descendant_depth)
+					a_class_graph.set_client_depth (class_graph.client_depth)
+					a_class_graph.set_supplier_depth (class_graph.supplier_depth)
+					a_class_graph.set_include_all_classes_of_cluster (class_graph.include_all_classes_of_cluster)
+					a_class_graph.set_include_only_classes_of_cluster (class_graph.include_only_classes_of_cluster)
+				end
+				if world.is_uml then
+					create {UML_CLASS_DIAGRAM} a_class_view.make (a_class_graph, Current)
+					layout.set_spacing (150, 150)
+				else
+					create {BON_CLASS_DIAGRAM} a_class_view.make (a_class_graph, Current)
+					layout.set_spacing (40, 40)
+				end
+				a_class_view.scale (world.scale_factor)
+				if not world.is_high_quality then
+					a_class_view.disable_high_quality
+				end
+				if not world.is_labels_shown then
+					a_class_view.hide_labels
+				end
+				if not world.is_client_supplier_links_shown then
+					a_class_view.hide_client_supplier_links
+				end
+				if not world.is_inheritance_links_shown then
+					a_class_view.hide_inheritance_links
+				end
+				if not world.is_cluster_shown then
+					a_class_view.hide_clusters
+				end
+				if world.is_right_angles then
+					a_class_view.enable_right_angles
+				end
+				if world.is_legend_shown then
+					was_legend_shown := True
+				end
+				
+				world.recycle
+				world_cell.set_world (a_class_view)
+				layout.set_world (a_class_view)
+				force_directed_layout.set_world (a_class_view)
+				graph := a_class_graph
+				
+				if is_force_directed_used then
+					disable_force_directed
+				end
+				
+				progress_dialog.set_title ("Building progress")
+				progress_dialog.set_message ("Diagram for " + a_class.name_in_upper)
+				progress_dialog.enable_cancel
+				progress_dialog.show
+				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
+				
+				update_excluded_class_figures
+				world_cell.disable_resize
+				projector.disable_painting
+				create es_class.make (a_class)
+				
+				class_graph.set_center_class (es_class)
+
+				create f.make (diagram_file_name (class_graph))
+				
+				if load_when_possible and then is_valide_diagram_file (f) then
+					a_class_view.retrieve (f)
+					if class_graph.is_empty then
+						class_graph.explore_center_class
+						layout.layout
+					end
+				else
+					class_graph.explore_center_class
+					if is_valide_diagram_file (f) then
+						world.load_available_views (f)
+					end
+					layout.layout
+				end
+				cf ?= world.figure_from_model (class_graph.center_class)
+				cf.set_is_fixed (True)
+				
+				projector.enable_painting
+				world_cell.enable_resize
+				projector.full_project
+				progress_dialog.hide
+				crop_diagram
+				if world.is_uml then
+					reset_tool_bar_for_uml_class_view
+				else
+					reset_tool_bar_for_class_view
+				end
+				reset_view_selector
+				reset_tool_bar_toggles
+				world.figure_change_end_actions.extend (agent on_figure_change_end)
+				world.figure_change_start_actions.extend (agent on_figure_change_start)
+				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				
+				if world.is_right_angles then
+					world.apply_right_angles
+				end
+				if was_legend_shown then
+					world.show_legend
+				end
+			end
+		rescue
+			cancelled := True
+			error_handler.error_list.wipe_out
+			progress_dialog.hide
+			projector.enable_painting
+			world_cell.enable_resize
+			clear_area
+			is_rebuild_world_needed := True
+			if is_force_directed_used then
+				toggle_force_cmd.current_button.disable_select
+			end
+			retry
+		end
+	
+	create_cluster_view (a_cluster: CLUSTER_I; load_when_possible: BOOLEAN) is
+			-- Initialize diagram centered on `a_cluster', load from file if possible when `load_when_possible'.
+		require
+			a_cluster_exists: a_cluster /= Void
+		local
+			cancelled: BOOLEAN
+			l_cluster_view: EIFFEL_CLUSTER_DIAGRAM
+			l_cluster_graph: ES_CLUSTER_GRAPH
+			new_cluster: ES_CLUSTER
+			f: RAW_FILE
+			was_legend_shown: BOOLEAN
+		do
+			history.wipe_out
+			disable_toolbar
+
+			if not cancelled then
+				graph.wipe_out
+				
+				world.drop_actions.wipe_out
+				create l_cluster_graph.make (Current)
+				if cluster_graph /= Void then
+					l_cluster_graph.set_subcluster_depth (cluster_graph.subcluster_depth)
+					l_cluster_graph.set_supercluster_depth (cluster_graph.supercluster_depth)
+				end
+				if world.is_uml then
+					create {UML_CLUSTER_DIAGRAM} l_cluster_view.make (l_cluster_graph, Current)
+					layout.set_spacing (150, 150)
+				else
+					create {BON_CLUSTER_DIAGRAM} l_cluster_view.make (l_cluster_graph, Current)
+					layout.set_spacing (40, 40)
+				end
+				l_cluster_view.scale (world.scale_factor)
+				
+				if not world.is_high_quality then
+					l_cluster_view.disable_high_quality
+				end
+				if not world.is_labels_shown then
+					l_cluster_view.hide_labels
+				end
+				if not world.is_client_supplier_links_shown then
+					l_cluster_view.hide_client_supplier_links
+				end
+				if not world.is_inheritance_links_shown then
+					l_cluster_view.hide_inheritance_links
+				end
+				if not world.is_cluster_shown then
+					l_cluster_view.hide_clusters
+				end
+				if world.is_right_angles then
+					l_cluster_view.enable_right_angles
+				end
+				if world.is_legend_shown then
+					was_legend_shown := True
+				end
+				
+				world.recycle
+				world_cell.set_world (l_cluster_view)
+				layout.set_world (l_cluster_view)
+				force_directed_layout.set_world (l_cluster_view)
+				graph := l_cluster_graph
+
+				
+				if is_force_directed_used then
+					disable_force_directed
+				end
+				
+				progress_dialog.set_title ("Building progress")
+				progress_dialog.set_message ("Diagram for " + a_cluster.name_in_upper)
+				progress_dialog.enable_cancel
+				progress_dialog.show
+				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
+				
+				update_excluded_class_figures
+				world_cell.disable_resize
+				world.hide
+				create new_cluster.make (a_cluster)
+				cluster_graph.set_center_cluster (new_cluster)
+
+				create f.make (diagram_file_name (cluster_graph))
+				
+				if load_when_possible and then is_valide_diagram_file (f) then
+					l_cluster_view.retrieve (f)
+					if cluster_graph.is_empty then
+						cluster_graph.explore_center_cluster
+						layout.layout
+					end
+				else
+					cluster_graph.explore_center_cluster
+					if is_valide_diagram_file (f) then
+						world.load_available_views (f)
+					end
+					layout.layout
+				end
+				
+				world.show
+				world_cell.enable_resize
+
+				progress_dialog.hide
+				projector.full_project
+				crop_diagram
+				if world.is_uml then
+					reset_tool_bar_for_uml_cluster_view
+				else
+					reset_tool_bar_for_cluster_view
+				end
+				reset_view_selector
+				reset_tool_bar_toggles
+				world.figure_change_end_actions.extend (agent on_figure_change_end)
+				world.figure_change_start_actions.extend (agent on_figure_change_start)
+				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				
+				if world.is_right_angles then
+					world.apply_right_angles
+				end
+				if was_legend_shown then
+					world.show_legend
+				end
+			end
+		rescue
+			cancelled := True
+			error_handler.error_list.wipe_out
+			progress_dialog.hide
+			world.show
+			world_cell.enable_resize
+			clear_area
+			is_rebuild_world_needed := True
+			if is_force_directed_used then
+				toggle_force_cmd.current_button.disable_select
+			end
+			retry
+		end
+
+	synchronize is
+			-- Contexts need to be updated because of recompilation
+			-- or similar action that needs resynchonization.
+		do
+			graph.synchronize
+			reset_history
+			projector.full_project
+		end
+		
+	crop_diagram is
+			-- Crop diagram.
+		do
+			world_cell.crop
+		end
+		
+feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
+		
+	toggle_uml is
+			-- Toggle between UML/BON mode
+		local
+			uml_class: UML_CLASS_DIAGRAM
+			uml_cluster: UML_CLUSTER_DIAGRAM
+			bon_class: BON_CLASS_DIAGRAM
+			bon_cluster: BON_CLUSTER_DIAGRAM
+			f: RAW_FILE
+		do
+			create f.make (diagram_file_name (graph))
+			if f.exists then
+				f.open_read
+			else
+				f.open_write
+			end
+			world.store (f)
+			
+			if is_force_directed_used then
+				disable_force_directed
+			end
+			if world.is_uml then
+				if world.available_views.has ("DEFAULT") then
+					-- "Load" default
+					from
+						view_selector.start
+					until
+						view_selector.item.text.is_equal ("DEFAULT")
+					loop
+						view_selector.forth
+					end
+					view_selector.select_actions.block
+					view_selector.item.enable_select
+					view_selector.select_actions.resume
+					on_view_changed
+				else
+					world.recycle
+					if class_graph /= Void then
+						create bon_class.make (class_graph, Current)
+						if world.scale_factor /= 1.0 then
+							bon_class.scale (world.scale_factor)	
+						end
+						world_cell.set_world (bon_class)
+						reset_tool_bar_for_class_view
+					else
+						create bon_cluster.make (cluster_graph, Current)
+						if world.scale_factor /= 1.0 then
+							bon_cluster.scale (world.scale_factor)	
+						end
+						world_cell.set_world (bon_cluster)
+						reset_tool_bar_for_cluster_view
+					end
+					layout.set_spacing (40, 40)
+					layout.set_world (world)
+					force_directed_layout.set_world (world)
+					layout.layout
+					world.load_available_views (f)
+					reset_tool_bar_toggles
+					reset_view_selector
+					crop_diagram
+					world.figure_change_end_actions.extend (agent on_figure_change_end)
+					world.figure_change_start_actions.extend (agent on_figure_change_start)
+					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				end
+			else
+				if world.available_views.has ("DEFAULT:UML") then
+					-- "Load" default
+					from
+						view_selector.start
+					until
+						view_selector.item.text.is_equal ("DEFAULT:UML")
+					loop
+						view_selector.forth
+					end
+					view_selector.select_actions.block
+					view_selector.item.enable_select
+					view_selector.select_actions.resume
+					on_view_changed
+				else
+					world.recycle
+					if class_graph /= Void then
+						create uml_class.make (class_graph, Current)
+						if world.scale_factor /= 1.0 then
+							uml_class.scale (world.scale_factor)	
+						end
+						world_cell.set_world (uml_class)
+						reset_tool_bar_for_uml_class_view
+					else
+						create uml_cluster.make (cluster_graph, Current)
+						if world.scale_factor /= 1.0 then
+							uml_cluster.scale (world.scale_factor)	
+						end
+						world_cell.set_world (uml_cluster)
+						reset_tool_bar_for_uml_cluster_view
+					end
+					layout.set_spacing (150, 150)
+					layout.set_world (world)
+					force_directed_layout.set_world (world)
+					layout.layout
+					world.load_available_views (f)
+					reset_tool_bar_toggles
+					reset_view_selector
+					crop_diagram
+					world.figure_change_end_actions.extend (agent on_figure_change_end)
+					world.figure_change_start_actions.extend (agent on_figure_change_start)
+					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				end
+			end
+		end
+		
+	is_uml: BOOLEAN is
+			-- Is diagram shown in UML.
+		do
+			Result := world.is_uml
+		end
+
+feature -- Memory management
+
+	recycle is
+			-- Frees `Current's memory, and leave `Current' in an unstable state
+			-- so that we know whether we're still referenced or not.
+		do
+			Eiffel_project.manager.close_agents.start
+			Eiffel_project.manager.close_agents.prune_all (project_close_agent)
+			development_window.window_manager.remove_observer (Current)
+			
+				--| 'if' necessary because the editor may be recycled before the diagram.
+			if development_window.editor_tool.text_area /= Void then
+				development_window.editor_tool.text_area.remove_observer (Current)
+			end
+			if cluster_graph /= Void then
+				cluster_graph.manager.remove_observer (cluster_graph)
+			end
+			world.recycle
+			world_cell := Void
+		end
+
+feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions
+
+	is_link_client, is_link_inheritance, is_link_aggregate: BOOLEAN
+
+	on_new_client_click is
+			-- The user wants a new client-supplier link.
+		do
+			is_link_client := True
+			is_link_inheritance := False
+			is_link_aggregate := False
+		end
+
+	on_new_agg_client_click is
+			-- The user wants a new client-supplier link.
+		do
+			is_link_client := False
+			is_link_inheritance := False
+			is_link_aggregate := True
+		end
+
+	on_new_inherit_click is
+			-- The user wants a new inheritance link.
+		do
+			is_link_client := False
+			is_link_inheritance := True
+			is_link_aggregate := False
+		end
+		
+feature {EB_CONTEXT_TOOL} -- Context tool
+
+	on_select is
+			-- Current became selected in notebook.
+		do
+			if class_stone /= Void then
+				set_stone (class_stone)
+			elseif cluster_stone /= Void then
+				set_stone (cluster_stone)
+			end
+		end
+
+
+	set_focus is
+			-- Give the focus to the drawing_area.
+		require
+			focusable: widget.is_displayed and widget.is_sensitive
+		do
+			if area /= Void then
+				area.set_focus
+			else
+				widget.set_focus
+			end
+		end
+			
+	set_stone (a_stone: STONE) is
+			-- Assign `a_stone' as new stone.
+		do
+			if a_stone /= Void then
+				class_stone ?= a_stone
+				cluster_stone ?= a_stone
+				if tool.is_diagram_selected then
+					if class_stone /= Void then
+						-- create a new class view
+						if 
+							is_rebuild_world_needed or else 
+							class_graph = Void or else 
+							class_graph.center_class = Void or else 
+							class_graph.center_class.class_i /= class_stone.class_i 
+						then
+							is_rebuild_world_needed := False
+							store
+							create_class_view (class_stone.class_i, True)
+						end
+					else
+						if cluster_stone /= Void then
+							-- create a cluster view
+							if 
+								is_rebuild_world_needed or else
+								cluster_graph = Void or else
+								cluster_graph.center_cluster = Void or else
+								not cluster_graph.center_cluster.cluster_i.cluster_name.is_equal (cluster_stone.cluster_i.cluster_name)
+							then
+								is_rebuild_world_needed := False
+								store
+								create_cluster_view (cluster_stone.cluster_i, True)
+							end
+						end
+					end
+				end
+			end
+		end
+		
+feature {EB_CENTER_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Center diagram command
+
+	class_stone: CLASSI_STONE
+			-- Stone representing center class.
+
+	cluster_stone: CLUSTER_STONE
+			-- Stone representing center cluster.
+
+	tool: EB_CONTEXT_TOOL
+			-- Container of `Current'.
+		
+feature {EB_CLASS_HEADER_COMMAND} -- Class head command
+		
+	area_as_widget: EV_WIDGET is
+			-- `area' cast to EV_WIDGET.
+		do
+			Result ?= area
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Commands with global accelerators
@@ -941,11 +1125,42 @@ feature {EB_DEVELOPMENT_WINDOW} -- Commands with global accelerators
 			
 	redo_cmd: EB_REDO_DIAGRAM_COMMAND
 			-- Command to redo last undone action
+			
+feature {EB_ZOOM_OUT_COMMAND, EB_ZOOM_IN_COMMAND, EIFFEL_FIGURE_WORLD_CELL, EB_FIT_TO_SCREEN_COMMAND} -- Zoom command.
 
-feature {NONE} -- Implementation
+	zoom_selector: EB_ZOOM_SELECTOR
+			-- Combo box that lets the user select a zoom level
+			
+feature {NONE} -- Views
 
-	project_close_agent: PROCEDURE [ANY, TUPLE]
-			-- The agent that is called when the project is closed.
+	reset_view_selector is
+			-- Set entries in `view_selector' to `available_views' in `world'.
+		local
+			l_item: EV_LIST_ITEM
+		do
+			view_selector.select_actions.block
+			view_selector.set_strings (world.available_views)
+			from
+				view_selector.start
+			until
+				view_selector.after
+			loop
+				l_item := view_selector.item
+				if l_item.text.is_equal (world.current_view) then
+					l_item.enable_select
+				end
+				view_selector.forth
+			end
+			view_selector.select_actions.resume
+		end
+
+feature {NONE} -- Commands
+
+	view_selector: EB_VIEW_SELECTOR
+			-- Combo box that lets the user change views.
+
+	history_cmd: EB_DIAGRAM_HISTORY_COMMAND
+			-- History command.
 
 	create_class_cmd: EB_CREATE_CLASS_DIAGRAM_COMMAND
 			-- Command to create new classes.
@@ -977,120 +1192,112 @@ feature {NONE} -- Implementation
 	toggle_labels_cmd: EB_TOGGLE_LABELS_COMMAND
 			-- Command to show/hide labels.
 			
+	toggle_cluster_cmd: EB_TOGGLE_CLUSTER_COMMAND
+			-- Command to show/hide clusters.
+			
 	select_depth_cmd: EB_SELECT_DEPTH_COMMAND
 			-- Command to select the depth of the diagram.
 
 	link_tool_cmd: EB_LINK_TOOL_COMMAND
+			-- Command to create new links.
 
 	fill_cluster_cmd: EB_FILL_CLUSTER_COMMAND
-
-	history_cmd: EB_DIAGRAM_HISTORY_COMMAND
+			-- Command to fill cluster with all classes.
 	
 	crop_cmd: EB_CROP_DIAGRAM_COMMAND
+			-- Crop command.
 
 	zoom_in_cmd: EB_ZOOM_IN_COMMAND
+			-- Zoom in command.
 
 	zoom_out_cmd: EB_ZOOM_OUT_COMMAND
-
-	delete_view_cmd: EB_DELETE_VIEW_COMMAND
-
-	diagram_to_ps_cmd: EB_DIAGRAM_TO_PS_COMMAND
+			-- Zoom out command.
 	
-	Pixmaps: EB_SHARED_PIXMAPS is
-		once
-			create Result
-		end
+	toggle_quality_cmd: EB_TOGGLE_QUALITY_COMMAND
+			-- Toggle quality command.
+			
+	diagram_to_ps_cmd: EB_DIAGRAM_TO_PS_COMMAND
+			-- Save diagram as ps or png.
+			
+	toggle_force_cmd: EB_TOGGLE_FORCE_COMMAND
+			-- Toggle force directed layout.
+			
+	remove_anchor_cmd: EB_REMOVE_ANCHOR_COMMAND
+			-- Remove anchor from a fixed class.
+			
+	toggle_cluster_legend_cmd: EB_SHOW_LEGEND_COMMAND
+			-- Colorize clusters.
+			
+	delete_view_cmd: EB_DELETE_VIEW_COMMAND
+			-- Delete current view.
+			
+	toggle_uml_cmd: EB_TOGGLE_UML_COMMAND
+			-- Toggle between UML/BON.
+			
+	fit_to_screen_cmd: EB_FIT_TO_SCREEN_COMMAND
+			-- Resize diagram such that it fits to screen.
 
-	last_build_cancelled: BOOLEAN
-			-- Was last diagram creation cancelled?
+feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 
-	is_building: BOOLEAN
-			-- Is a diagram currently being built?
-
-	excluded_class_figures: ARRAY [STRING]
-			-- Classes never present on the diagram (unless `ignore_excluded_figures' is False).
-
-	ignore_excluded_figures: BOOLEAN
-			-- Will `excluded_class_figures' be taken into account?
-
-	Default_excluded_class_figures: ARRAY [STRING] is
-			-- Default settings for `excluded_class_figures'.
-		once
-			Result := <<
-				"INTEGER", "BOOLEAN", "STRING",
-				"CHARACTER", "REAL", "DOUBLE"
-				>>
-		end
-
-	update_excluded_class_figures is
-			-- Preferences may have changed.
-			-- Refresh `excluded_class_figures' and `ignore_excluded_figures'.
-		do
-			ignore_excluded_figures := boolean_resource_value ("ignore_excluded_class_figures", False)
-			if not ignore_excluded_figures then
-				excluded_class_figures := array_resource_value ("excluded_class_figures", Default_excluded_class_figures)
-			else
-				create excluded_class_figures.make (1,0)
-			end
-			excluded_class_figures.compare_objects
-		end			
-
-feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
-
-	is_excluded_in_preferences (name: STRING): BOOLEAN is
-			-- Is class figure named `name' excluded in preferences?
-		do
-			Result := excluded_class_figures.has (name)
-		end
-
-	clear_area is
-			-- Make `area' empty because a diagram has been cancelled.
+	on_time_out is
+			-- `timer' has a timeout.
 		local
-			empty_world: EV_FIGURE_WORLD
+			l_cpu: INTEGER
 		do
-			last_build_cancelled := True
-			create area_buffer
-			create area
-			horizontal_box.wipe_out
-			horizontal_box.extend (area)
-			horizontal_box.extend (vertical_scrollbar)
-			horizontal_box.disable_item_expand (vertical_scrollbar)
-			create empty_world
-			empty_world.drop_actions.extend (agent default_drop_class_stone)
-			empty_world.drop_actions.extend (agent default_drop_cluster_stone)
-			create {ES_PROJECTOR} projector.make_with_buffer (empty_world, area)
-			update_size (Void)
-			projector.full_project
+			if world.is_statistics then
+				l_cpu := cpu_ticks
+				projector.full_project
+				world.set_last_physics_time (cpu_ticks - l_cpu)
+				l_cpu := cpu_ticks
+				force_directed_layout.layout
+				world.set_last_draw_time (cpu_ticks - l_cpu)				
+			else
+				projector.full_project
+				force_directed_layout.layout
+			end
 		end
-
-	progress_dialog: EB_PROGRESS_DIALOG is
-		once
-			create Result
-		end
-
-	Default_pixmaps: EV_STOCK_PIXMAPS is
-		do
-			create Result
-		end
-
-	tool: EB_CONTEXT_TOOL
-			-- Container of `Current'.
+		
+	force_directed_layout: EIFFEL_FORCE_LAYOUT
+			-- Layout used to force direct the graph.
 
 feature {NONE} -- Events
 
-	on_vertical_scroll (new_value: INTEGER) is
-			-- `vertical_scrollbar' has been moved by the user.
+	cpu_ticks: INTEGER is
+			-- 
 		do
-			if projector /= Void and then new_value /= projector.area_y then
-				projector.change_area_position (projector.area_x, new_value)
-			end
+			c_cpu_ticks ($Result)
 		end
-
-	on_horizontal_scroll (new_value: INTEGER) is
-			-- `horizontal_scrollbar' has been moved by the user.
+		
+	c_cpu_ticks (i: TYPED_POINTER [INTEGER]) is
+			-- CPU ticks since app started
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				{
+				 	_int64 ticks,*ticks_ptr;
+ 					FILETIME creation,exit,kernel,user;
+  					BOOL status;
+  					status = GetProcessTimes(GetCurrentProcess(),&creation,&exit,&kernel,&user);
+  					ticks = *(_int64 *)&user+*(_int64 *)&kernel;
+  					ticks = ticks / (10000000/CLOCKS_PER_SEC);
+					*$i = ticks;
+				}
+			]"
+		end
+			
+	timer: EV_TIMEOUT
+			-- Timer used to force direct the graph.
+			
+	on_force_stop is
+			-- `force_directed_layout' has stopped.
 		do
-			if projector /= Void and then new_value /= projector.area_x then
-				projector.change_area_position (new_value, projector.area_y)
+			if timer /= Void then
+				timer.actions.wipe_out
+				timer := Void
+				if world.is_right_angles and not is_right_angles_blocked then
+					world.apply_right_angles
+				end
 			end
 		end
 
@@ -1115,44 +1322,7 @@ feature {NONE} -- Events
 				toolbar_menu.show
 			end
 		end
-	
-	customize_toolbar is
-			-- Customize diagram toolbar.
-		do
-			custom_toolbar.customize
-			save_diagram_toolbar (custom_toolbar)
-		end
 		
-	on_resizing (a_x, a_y, a_width, a_height: INTEGER) is
-			-- `area' has been resized.
-			-- Update scrollbars.
-		local
-			max, old_value: INTEGER
-		do
-			if area /= Void then
-				visible_width := visible_width.max (area.width) 
-				visible_height := visible_height.max (area.height)
-				old_value := horizontal_scrollbar.value
-				max := (visible_width - 1 - area.width.max (1)).max (1)
-				horizontal_scrollbar.value_range.resize_exactly (0, max)
-				horizontal_scrollbar.set_leap (area.width.max (1))
-				old_value := old_value.min (max).max (0)
-				horizontal_scrollbar.set_value (old_value)
-				on_horizontal_scroll (old_value)
-				
-				old_value := vertical_scrollbar.value
-				max := (visible_height - 1 - area.height.max (1)).max (1)
-				vertical_scrollbar.value_range.resize_exactly (0, max)
-				vertical_scrollbar.set_leap (area.height.max (1))
-				old_value := old_value.min (max).max (0)
-				vertical_scrollbar.set_value (old_value)
-				on_vertical_scroll (old_value)
---				if projector /= Void then
---					projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
---				end
-			end
-		end
-
 	on_history_do_command is
 			-- An undoable command has been done.
 			-- Enable `undo_cmd'.
@@ -1188,18 +1358,102 @@ feature {NONE} -- Events
 		ensure
 			redo_cmd_not_sensitive: not redo_cmd.is_sensitive
 		end
+		
+	on_zoom_level_select is
+			-- User selected a new zoom level.
+		local
+			level_text: STRING
+			level, scale_factor: DOUBLE
+			old_scale: INTEGER
+			new_scale: INTEGER
+		do
+			level_text := zoom_selector.selected_item.text.twin
+			level_text.keep_head (level_text.count - 1)
+			check
+				level_text_is_integer: level_text.is_integer
+			end
+			level := level_text.to_integer / 100
+			scale_factor := level / world.scale_factor
+			old_scale := (world.scale_factor * 100).rounded
+			world.scale (scale_factor)
+			crop_diagram
+			new_scale := (world.scale_factor * 100).rounded
+			restart_force_directed
+			history.register_named_undoable (
+				interface_names.t_diagram_zoom_cmd + " " + level_text.out + "%%",
+				[<<agent world.scale (scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (new_scale), agent restart_force_directed>>],
+				[<<agent world.scale (1/scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (old_scale), agent restart_force_directed>>])
+		end
 
 	on_view_changed is
 			-- The user wants to switch to another view.
+		local
+			cancelled: BOOLEAN
 		do
-			reset_history
-			if class_view /= Void then
-				class_view.set_current_view (view_selector.selected_item.text)
+			if not cancelled and not view_selector.is_empty then
+				reset_history		
+
+				progress_dialog.set_title ("Loading view")
+				progress_dialog.set_message ("Diagram for " + view_selector.selected_item.text)
+				progress_dialog.set_degree ("Calculating size:")
+				progress_dialog.enable_cancel
+				progress_dialog.show
+				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
+				
+				progress_dialog.start (0)
+				
+				if is_force_directed_used then
+					disable_force_directed
+				end
+				
+				update_excluded_class_figures
+				world_cell.disable_resize
+				projector.disable_painting
+			
+				world.set_current_view (view_selector.selected_item.text)
+
+				projector.enable_painting
+				world_cell.enable_resize
 				projector.full_project
-			elseif cluster_view /= Void then
-				cluster_view.set_current_view (view_selector.selected_item.text)
-				projector.full_project
+				progress_dialog.hide
+				crop_diagram
+				
+				if world.is_uml then
+					if class_graph /= Void then
+						reset_tool_bar_for_uml_class_view
+					else
+						reset_tool_bar_for_uml_cluster_view
+					end
+				else
+					if class_graph /= Void then
+						reset_tool_bar_for_class_view
+					else
+						reset_tool_bar_for_cluster_view
+					end
+				end
+				reset_view_selector
+				reset_tool_bar_toggles
+				world.figure_change_end_actions.extend (agent on_figure_change_end)
+				world.figure_change_start_actions.extend (agent on_figure_change_start)
+				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+
+				if world.is_right_angles then
+					world.apply_right_angles
+				end
 			end
+		rescue
+			cancelled := True
+			error_handler.error_list.wipe_out
+			progress_dialog.hide
+			projector.enable_painting
+			world_cell.enable_resize
+			clear_area
+			is_rebuild_world_needed := True
+			if is_force_directed_used then
+				toggle_force_cmd.current_button.disable_select
+			end
+			retry
 		end
 
 	on_text_edited (directly_edited: BOOLEAN) is 
@@ -1207,7 +1461,12 @@ feature {NONE} -- Events
 			-- If `directly_edited' is true, the user did.
 		do
 			if directly_edited then
-				reset_history
+				if has_diagram_edited_class then
+					reset_history
+					has_diagram_edited_class := False
+				end
+			else
+				has_diagram_edited_class := True
 			end
 		end
 
@@ -1219,174 +1478,266 @@ feature {NONE} -- Events
 				store
 			end
 		end
+		
+feature {EB_DELETE_VIEW_COMMAND} -- View selector
 
-	default_drop_class_stone (cst: CLASSI_STONE) is
-			-- Send `cst' to `tool'.
-		do
-			tool.launch_stone (cst)
-		end
-
-	default_drop_cluster_stone (cst: CLUSTER_STONE) is
-			-- Send `cst' to `tool'.
-		do
-			tool.launch_stone (cst)
-		end
-
-feature {DIAGRAM_COMPONENT} -- Events
-
-	autoscroll: EV_TIMEOUT
-			-- Timer limiting scrolling speed.
-
-	on_time_out is
-			-- Enable scroll.
-		do
-			autoscroll.set_interval (0)
-			if scroll then
-				scroll_if_necessary
-				autoscroll.set_interval (300)
-			end
-			scroll := False
-		end
-	
-	scroll: BOOLEAN
-			-- Is scrolling enabled?
-	
-	on_figure_moved is
-			-- Disable scrolling till end of timer.
-		do
-			scroll := True
-			if autoscroll.interval = 0 then
-				autoscroll.set_interval (300)
-			end
-		end
-
-	scroll_if_necessary is
-			-- A figure has moved.
-			-- `scrollable_area' should move as well, and may have to be resized.
-			-- Do nothing if `only_if_cursor_outside' and if the mouse pointer is over
-			-- the diagram.
+	remove_view (a_name: STRING) is
+			-- Delete view of `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			not_default: not a_name.is_equal ("DEFAULT")
 		local
- 			cursor_x, cursor_y, offset, old_value: INTEGER
+			cancelled: BOOLEAN
 		do
-			cursor_x := (pointer_position.x).max (0)
-			cursor_y := (pointer_position.y)
-			if cursor_x <= horizontal_scrollbar.value + 40 then
-				if cursor_x >= 40 then
-					horizontal_scrollbar.set_value (
-						(cursor_x - 40).max (0).min (horizontal_scrollbar.value_range.upper))
-				else
-					offset := (40 - cursor_x).max (40)
-					visible_width := visible_width - cursor_x + offset
-					horizontal_scrollbar.value_range.resize_exactly (
-						0,
-						(visible_width - 1 - area.width.max (1)).max (1)
-					)
-					if class_view /= Void then
-						class_view.point.set_x (class_view.x_to_grid (class_view.point.x + offset))
-					elseif cluster_view /= Void then
-						offset := cluster_view.x_to_grid (cluster_view.point.x + offset)
-						cluster_view.point.set_x (offset)
-						cluster_view.notify_clusters_of_origin_moved (offset - cluster_view.point.x, 0)
-					end
+			if not cancelled then
+				
+				progress_dialog.set_title ("Loading view")
+				progress_dialog.set_message ("Diagram for " + view_selector.selected_item.text)
+				progress_dialog.enable_cancel
+				progress_dialog.show
+				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
+				
+				if is_force_directed_used then
+					disable_force_directed
 				end
-			end
-			if cursor_y <= vertical_scrollbar.value + 40 then
-				if cursor_y >= 40 then
-					vertical_scrollbar.set_value (
-						(cursor_y - 40).max (0).min (vertical_scrollbar.value_range.upper))
-				else
-					offset := (40 - cursor_y).max (40)
-					visible_height := visible_height + offset
-					vertical_scrollbar.value_range.resize_exactly (
-						0,
-						(visible_height - 1 - area.height.max (1)).max (1)
-					)
-					if class_view /= Void then
-						class_view.point.set_y (class_view.y_to_grid (class_view.point.y + offset)) 
-					elseif cluster_view /= Void then
-						old_value := cluster_view.point.y
-						offset := cluster_view.y_to_grid (old_value + offset)
-						cluster_view.point.set_y (offset) 
-						cluster_view.notify_clusters_of_origin_moved (0, offset - old_value)
-					end
+				
+				update_excluded_class_figures
+				world_cell.disable_resize
+				projector.disable_painting
+				
+				world.remove_view (world.current_view)
+				
+				reset_tool_bar_toggles
+				
+				projector.enable_painting
+				world_cell.enable_resize
+				projector.full_project
+				progress_dialog.hide
+				crop_diagram
+
+				if world.is_right_angles then
+					world.apply_right_angles
 				end
+				
+				view_selector.select_actions.block
+				view_selector.set_strings (world.available_views)
+				view_selector.set_text ("DEFAULT")
+				view_selector.select_actions.resume
 			end
-			if cursor_x >= horizontal_scrollbar.value + area.width - 40 then
-				if cursor_x + 40 <= visible_width
-				then
-					horizontal_scrollbar.set_value (
-						(horizontal_scrollbar.value + 40).max (0).min (horizontal_scrollbar.value_range.upper))
-				else
-					offset := (40 + cursor_x - visible_width).max (40)
-					visible_width := visible_width + offset
-					horizontal_scrollbar.value_range.resize_exactly (
-						0,
-						(visible_width - 1 - area.width.max (1)).max (1)
-					)
-				end
+		rescue
+			cancelled := True
+			error_handler.error_list.wipe_out
+			progress_dialog.hide
+			projector.enable_painting
+			world_cell.enable_resize
+			clear_area
+			is_rebuild_world_needed := True
+			if is_force_directed_used then
+				toggle_force_cmd.current_button.disable_select
 			end
-			if cursor_y >= vertical_scrollbar.value + area.height - 40 then
-				if cursor_y + 40 <= visible_height
-				then
-					vertical_scrollbar.set_value (
-						(vertical_scrollbar.value + 40).max (0).min (vertical_scrollbar.value_range.upper))
-				else
-					offset := (40 + cursor_y -	visible_height).max (40)
-					visible_height := visible_height + offset
-					vertical_scrollbar.value_range.resize_exactly (
-							0,
-							(visible_height - 1 - area.height.max (1)).max (1)
-					)
-				end
-			end
-			projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
+			retry
 		end
 		
-feature {INHERITANCE_FIGURE} -- Events
+feature {EB_FIT_TO_SCREEN_COMMAND} -- Implementation
 
-	on_inheritance_link_created is
-			-- An inheritance link has been created.
-			-- Display inheritance links if necessary.
+	world_cell: EIFFEL_FIGURE_WORLD_CELL
+			-- Cell showing the graph.
+		
+feature {NONE} -- Implementation.
+
+	is_right_angles_blocked: BOOLEAN
+			-- Is not right angles applayed at force stop?
+
+	on_figure_change_start is
+			-- User started to change position/shape of a figure.
 		do
-			toggle_inherit_cmd.current_button.select_actions.wipe_out
-			if class_view /= Void then
-				if not class_view.inheritance_layer.is_show_requested then
-					toggle_inherit_cmd.current_button.toggle
-					toggle_inherit_cmd.execute
-				end
-			end
-			if cluster_view /= Void then
-				if not cluster_view.inheritance_layer.is_show_requested then
-					toggle_inherit_cmd.current_button.toggle
-					toggle_inherit_cmd.execute
-				end
-			end
-			toggle_inherit_cmd.current_button.select_actions.extend (agent toggle_inherit_cmd.execute)
+			is_right_angles_blocked := True
 		end
 
-feature {CLASS_TEXT_MODIFIER} -- Events
-
-	on_client_link_created is
-			-- A client link has been created.
-			-- Display client links if necessary.
+	on_figure_change_end is
+			-- User finished to change position/shape of a figure.
 		do
-			toggle_supplier_cmd.current_button.select_actions.wipe_out
-			if class_view /= Void then
-				if not class_view.client_supplier_layer.is_show_requested then
-					toggle_supplier_cmd.current_button.toggle
-					toggle_supplier_cmd.execute
-				end
+			is_right_angles_blocked := False
+			if world.is_right_angles then
+				world.apply_right_angles
 			end
-			if cluster_view /= Void then
-				if not cluster_view.client_supplier_layer.is_show_requested then
-					toggle_supplier_cmd.current_button.toggle
-					toggle_supplier_cmd.execute
-				end
+		end
+		
+	on_scroll (value: INTEGER) is
+			-- User scrolled scrollbars.
+		local
+			l_legend: EIFFEL_CLUSTER_LEGEND
+		do
+			if world.is_legend_shown and then world.cluster_legend.is_pined then
+				l_legend := world.cluster_legend
+				l_legend.set_point_position (projector.area_x + cluster_legend_x, projector.area_y + cluster_legend_y)
 			end
-			toggle_supplier_cmd.current_button.select_actions.extend (agent toggle_supplier_cmd.execute)
 		end
 
-feature {EB_CONTEXT_TOOL} -- XML Output
+	cluster_legend_x: INTEGER
+	cluster_legend_y: INTEGER
+			-- Position of pined cluster legend.
+		
+	on_cluster_legend_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- User moved `world'.`cluster_legend'.
+		do
+			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
+			cluster_legend_y := world.cluster_legend.point_y - projector.area_y
+		end
+		
+	on_cluster_legend_pin is
+			-- User pined `world'.`cluster_legend'.
+		do
+			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
+			cluster_legend_y := world.cluster_legend.point_y - projector.area_y
+		end
+		
+
+	has_diagram_edited_class: BOOLEAN
+			-- Was a class edited through the Diagram.
+			-- (Add remove feature, add remove inheritance link)
+
+	customize_toolbar is
+			-- Customize diagram toolbar.
+		do
+			custom_toolbar.customize
+			save_diagram_toolbar (custom_toolbar)
+			reset_tool_bar_toggles
+		end
+			
+	custom_toolbar: EB_TOOLBAR
+			-- Part of toolbar that can be customized.
+			
+	area: EV_DRAWING_AREA is
+			-- Graphical surface displaying diagram.
+		do
+			Result := world_cell.drawing_area
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	toolbar_menu: EV_MENU
+			-- Popped up when user clicks left to the right of the toolbar.
+			
+	on_class_drop (stone: CLASSI_STONE) is
+			-- `stone' was dropped on an empty world.
+		do
+			is_rebuild_world_needed := True
+			tool.launch_stone (stone)
+		end
+		
+	on_cluster_drop (stone: CLUSTER_STONE) is
+			-- `stone' was dropped on an empty world
+		do
+			is_rebuild_world_needed := True
+			tool.launch_stone (stone)
+		end	
+		
+	reset_tool_bar_for_uml_class_view is
+			-- Set toolbar for uml class view
+		do
+			zoom_selector.enable_sensitive
+			create_class_cmd.enable_sensitive
+			delete_cmd.enable_sensitive
+			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
+			create_new_links_cmd.enable_sensitive
+			trash_cmd.enable_sensitive
+			change_header_cmd.enable_sensitive
+			link_tool_cmd.enable_sensitive
+			toggle_inherit_cmd.enable_sensitive
+			toggle_supplier_cmd.enable_sensitive
+			toggle_labels_cmd.enable_sensitive
+			select_depth_cmd.enable_sensitive
+			undo_cmd.disable_sensitive
+			history_cmd.enable_sensitive
+			redo_cmd.disable_sensitive
+			zoom_in_cmd.enable_sensitive
+			zoom_out_cmd.enable_sensitive
+			delete_view_cmd.enable_sensitive
+			diagram_to_ps_cmd.enable_sensitive
+			crop_cmd.enable_sensitive
+			toggle_uml_cmd.enable_sensitive
+			
+			change_color_cmd.disable_sensitive
+			fill_cluster_cmd.disable_sensitive
+			toggle_quality_cmd.disable_sensitive
+			toggle_force_cmd.disable_sensitive
+			remove_anchor_cmd.disable_sensitive
+			toggle_cluster_legend_cmd.disable_sensitive
+			toggle_cluster_cmd.disable_sensitive
+			fit_to_screen_cmd.enable_sensitive
+		end
+		
+	reset_tool_bar_for_uml_cluster_view is
+			-- Set toolbar for uml cluster view.
+		do
+			reset_tool_bar_for_uml_class_view
+			fill_cluster_cmd.enable_sensitive
+			toggle_cluster_cmd.enable_sensitive
+		end
+		
+	reset_tool_bar_for_class_view is
+			-- Set toolbar for class_view.
+		do
+			zoom_selector.enable_sensitive
+			create_class_cmd.enable_sensitive
+			delete_cmd.enable_sensitive
+			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
+			create_new_links_cmd.enable_sensitive
+			change_color_cmd.enable_sensitive
+			trash_cmd.enable_sensitive
+			change_header_cmd.enable_sensitive
+			link_tool_cmd.enable_sensitive
+			toggle_inherit_cmd.enable_sensitive
+			toggle_supplier_cmd.enable_sensitive
+			toggle_labels_cmd.enable_sensitive
+			select_depth_cmd.enable_sensitive
+			fill_cluster_cmd.disable_sensitive
+			undo_cmd.disable_sensitive
+			history_cmd.enable_sensitive
+			redo_cmd.disable_sensitive
+			zoom_in_cmd.enable_sensitive
+			zoom_out_cmd.enable_sensitive
+			delete_view_cmd.enable_sensitive
+			diagram_to_ps_cmd.enable_sensitive
+			crop_cmd.enable_sensitive
+			toggle_quality_cmd.enable_sensitive
+			toggle_force_cmd.enable_sensitive
+			remove_anchor_cmd.enable_sensitive
+			toggle_cluster_legend_cmd.enable_sensitive
+			toggle_uml_cmd.enable_sensitive
+			fit_to_screen_cmd.enable_sensitive
+		end
+
+	reset_tool_bar_for_cluster_view is
+			-- Set toolbar for cluster_view.
+		do
+			reset_tool_bar_for_class_view
+			fill_cluster_cmd.enable_sensitive
+			toggle_cluster_cmd.enable_sensitive
+		end
+		
+	project_close_agent: PROCEDURE [ANY, TUPLE]
+			-- The agent that is called when the project is closed.
+
+	pixmaps: EB_SHARED_PIXMAPS is
+		once
+			create Result
+		end
+
+	excluded_class_figures: HASH_TABLE [STRING, STRING]
+			-- Classes never present on the diagram (unless `ignore_excluded_figures' is False).
+
+	default_excluded_class_figures: ARRAY [STRING] is
+			-- Default settings for `excluded_class_figures'.
+		once
+			Result := <<
+				"INTEGER", "BOOLEAN", "STRING",
+				"CHARACTER", "REAL", "DOUBLE"
+				>>
+		end
+
+feature {EB_CONTEXT_TOOL, EIFFEL_WORLD} -- XML Output
 
 	store is
 			-- Freeze state of `Current'.
@@ -1394,25 +1745,19 @@ feature {EB_CONTEXT_TOOL} -- XML Output
 			ptf: RAW_FILE
 			retried: BOOLEAN
 		do
-			if not last_build_cancelled then
-				if not retried then
-					if class_view /= Void then
-						create ptf.make (diagram_file_name (class_view))
+			if eiffel_project.initialized then
+				if 
+					(class_graph /= Void and then class_graph.center_class /= Void) or else
+					(cluster_graph /= Void and then cluster_graph.center_cluster /= Void)
+				then
+					if not retried then
+						create ptf.make (diagram_file_name (graph))
 						if ptf.exists then
 							ptf.open_read
 						else
 							ptf.open_write
 						end
-						class_view.store (ptf)
-						ptf.close
-					elseif cluster_view /= Void then
-						create ptf.make (diagram_file_name (cluster_view))
-						if ptf.exists then
-							ptf.open_read
-						else
-							ptf.open_write
-						end
-						cluster_view.store (ptf)
+						world.store (ptf)
 						ptf.close
 					end
 				end
@@ -1421,12 +1766,184 @@ feature {EB_CONTEXT_TOOL} -- XML Output
 			retried := True
 			retry
 		end
+
+	diagram_file_name (esg: ES_GRAPH): FILE_NAME is
+			-- Location of XML file.
+		require
+			diagram_exists: esg /= Void
+		local
+			clg: ES_CLUSTER_GRAPH
+			cg: ES_CLASS_GRAPH
+		do
+			clg ?= esg
+			if clg = Void then
+				cg ?= esg
+				check
+					is_class_graph: cg /= Void
+				end
+				create Result.make_from_string (Eiffel_system.context_diagram_path)
+				Result.extend (cg.center_class.class_i.name)
+			else
+				create Result.make_from_string (Eiffel_system.context_diagram_path)
+				Result.extend (clg.center_cluster.cluster_i.cluster_name)
+			end
+			Result.add_extension ("xml")
+		end
 		
-	visible_width: INTEGER
-			-- width of the part of the diagram that is visible
+	is_valide_diagram_file (f: RAW_FILE): BOOLEAN is
+			-- Is `f' referencing a valid diagram file?
+		require
+			f_not_void: f /= Void
+		local
+			is_retried: BOOLEAN
+		do
+			if not is_retried then
+				if f.exists then
+					f.open_read
+					if f.readable then
+						Result := True
+					end
+				end
+			else
+				Result := False
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+		
+	reset_tool_bar_toggles is
+			-- Set toolbar toggle buttons states according to worlds settings.
+		do
+			if toggle_supplier_cmd.current_button /= Void then
+				toggle_supplier_cmd.current_button.select_actions.block
+				if world.is_client_supplier_links_shown then
+					if not toggle_supplier_cmd.current_button.is_selected then
+						toggle_supplier_cmd.current_button.toggle
+					end
+				else
+					if toggle_supplier_cmd.current_button.is_selected then
+						toggle_supplier_cmd.current_button.toggle
+					end
+				end
+				toggle_supplier_cmd.current_button.set_tooltip (toggle_supplier_cmd.tooltip)
+				toggle_supplier_cmd.current_button.select_actions.resume
+			end
+
+			if toggle_inherit_cmd.current_button /= Void then
+				toggle_inherit_cmd.current_button.select_actions.block
+				if world.is_inheritance_links_shown then
+					if not toggle_inherit_cmd.current_button.is_selected then
+						toggle_inherit_cmd.current_button.toggle
+					end
+				else
+					if toggle_inherit_cmd.current_button.is_selected then
+						toggle_inherit_cmd.current_button.toggle
+					end
+				end
+				toggle_inherit_cmd.current_button.set_tooltip (toggle_inherit_cmd.tooltip)
+				toggle_inherit_cmd.current_button.select_actions.resume
+			end
+			
+			if toggle_cluster_cmd.current_button /= Void then
+				toggle_cluster_cmd.current_button.select_actions.block
+				if world.is_cluster_shown then
+					if not toggle_cluster_cmd.current_button.is_selected then
+						toggle_cluster_cmd.current_button.toggle
+					end
+				else
+					if toggle_cluster_cmd.current_button.is_selected then
+						toggle_cluster_cmd.current_button.toggle
+					end
+				end
+				toggle_cluster_cmd.current_button.set_tooltip (toggle_cluster_cmd.tooltip)
+				toggle_cluster_cmd.current_button.select_actions.resume
+			end
+			
+			if toggle_labels_cmd.current_button /= Void then
+				toggle_labels_cmd.current_button.select_actions.block
+				if world.is_labels_shown then
+					if not toggle_labels_cmd.current_button.is_selected then
+						toggle_labels_cmd.current_button.toggle
+					end
+				else
+					if toggle_labels_cmd.current_button.is_selected then
+						toggle_labels_cmd.current_button.toggle
+					end
+				end
+				toggle_labels_cmd.current_button.set_tooltip (toggle_labels_cmd.tooltip)
+				toggle_labels_cmd.current_button.select_actions.resume
+			end
+			
+			if toggle_quality_cmd.current_button /= Void then
+				toggle_quality_cmd.current_button.select_actions.block
+				if world.is_high_quality then
+					if not toggle_quality_cmd.current_button.is_selected then
+						toggle_quality_cmd.current_button.toggle
+					end
+				else
+					if toggle_quality_cmd.current_button.is_selected then
+						toggle_quality_cmd.current_button.toggle
+					end
+				end
+				toggle_quality_cmd.current_button.set_tooltip (toggle_quality_cmd.tooltip)
+				toggle_quality_cmd.current_button.select_actions.resume
+			end
+			
+			if toggle_cluster_legend_cmd.current_button /= Void then
+				toggle_cluster_legend_cmd.current_button.select_actions.block
+				if world.is_legend_shown then
+					if not toggle_cluster_legend_cmd.current_button.is_selected then
+						toggle_cluster_legend_cmd.current_button.toggle
+					end
+				else
+					if toggle_cluster_legend_cmd.current_button.is_selected then
+						toggle_cluster_legend_cmd.current_button.toggle
+					end
+				end
+				toggle_cluster_legend_cmd.current_button.set_tooltip (toggle_cluster_legend_cmd.tooltip)
+				toggle_cluster_legend_cmd.current_button.select_actions.resume
+			end
+			
+			if link_tool_cmd.current_button /= Void then
+				link_tool_cmd.current_button.select_actions.block			
+				if world.is_right_angles then
+					if not link_tool_cmd.current_button.is_selected then
+						link_tool_cmd.current_button.toggle
+					end
+				else
+					if link_tool_cmd.current_button.is_selected then
+						link_tool_cmd.current_button.toggle
+					end
+				end
+				link_tool_cmd.current_button.set_tooltip (link_tool_cmd.tooltip)
+				link_tool_cmd.current_button.select_actions.resume
+			end
+			
+			if toggle_uml_cmd.current_button /= Void then
+				toggle_uml_cmd.current_button.select_actions.block
+				if world.is_uml then
+					if not toggle_uml_cmd.current_button.is_selected then
+						toggle_uml_cmd.current_button.toggle
+					end
+				else
+					if toggle_uml_cmd.current_button.is_selected then
+						toggle_uml_cmd.current_button.toggle
+					end
+				end
+				toggle_uml_cmd.current_button.set_tooltip (toggle_uml_cmd.tooltip)
+				toggle_uml_cmd.current_button.select_actions.resume
+			end
+			
+			zoom_selector.show_as_text ((world.scale_factor * 100).rounded)
+		end
+
+invariant
+	world_cell_not_void: world_cell /= Void
+	area_not_void: area /= Void
+	area_as_widget_not_void: area_as_widget /= Void
+	projector_not_void: projector /= Void
 	
-	visible_height: INTEGER
-			-- height of the part of the diagram that is visible
-		
+	
 end -- class EB_CONTEXT_EDITOR
 

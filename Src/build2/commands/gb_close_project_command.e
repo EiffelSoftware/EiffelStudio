@@ -38,11 +38,6 @@ inherit
 			{NONE} all
 		end
 	
-	GB_SHARED_COMPONENT_VIEWER
-		export
-			{NONE} all
-		end
-	
 	GB_SHARED_HISTORY
 		export
 			{NONE} all

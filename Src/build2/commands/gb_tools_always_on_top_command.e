@@ -27,8 +27,6 @@ inherit
 		end
 		
 	GB_SHARED_HISTORY
-	
-	GB_SHARED_COMPONENT_VIEWER
 
 create
 	make

@@ -22,10 +22,9 @@ class E_IRootStorage
 {
 public:
 	// Commands
-	E_IRootStorage(){};
+	E_IRootStorage(EIF_POINTER pstgName);
 	~E_IRootStorage();
 	void ccom_switch_to_file (EIF_POINTER filename);
-	void ccom_initialize_root_storage (EIF_POINTER pstgName);
 	
 	// Queries	
 	EIF_POINTER ccom_iroot_storage();

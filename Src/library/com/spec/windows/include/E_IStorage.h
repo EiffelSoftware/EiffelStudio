@@ -22,6 +22,7 @@ class E_IStorage
 public:
 	// Commands
 	E_IStorage(){};
+	E_IStorage(IStorage * p_i);
 	~E_IStorage();
 	void ccom_create_doc_file (WCHAR * pwcsName, DWORD grfMode);
 	void ccom_initialize_storage (IStorage * pstgName);

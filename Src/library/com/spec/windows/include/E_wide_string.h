@@ -24,10 +24,10 @@ class E_wide_string
 public:
 	// Commands
 	E_wide_string(){};
+	E_wide_string (EIF_POINTER other_wide_string);
 	~E_wide_string();
-	void ccom_create_from_string (char * string);
-	void ccom_initialize_wide_string (EIF_POINTER other_wide_string);
-	EIF_OBJ ccom_wide_str_to_string ();
+	void ccom_create_from_string (char * string);	
+	EIF_REFERENCE ccom_wide_str_to_string ();
 	
 	
 	// Queries

@@ -31,18 +31,18 @@ feature {NONE} -- Initialization
 		do
 			initialize_components
 			
-			--fill_directory_tree
-			--image_list_combo_box.set_selected_index (1)
-			--indent_up_down.set_value (l_dec.op_implicit_integer (directory_tree.indent)) --(create {DECIMAL}).op_implicit_integer (directory_tree.indent))
+			fill_directory_tree
+			image_list_combo_box.set_selected_index (1)
+--			indent_up_down.set_value ((create {DECIMAL}).op_implicit_integer (directory_tree.indent))
 			
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
 
-	components: SYSTEM_DLL_SYSTEM_CONTAINER	
-			-- System.ComponentModel.Container
-	
+	components: SYSTEM_DLL_SYSTEM_CONTAINER
+			-- System.ComponentModel.Container	
+			
 	directory_tree: WINFORMS_TREE_VIEW
 			-- System.Windows.Forms.TreeView directory_tree
 	
@@ -77,6 +77,7 @@ feature {NONE} -- Implementation
 			l_size: DRAWING_SIZE
 			l_point: DRAWING_POINT
 			l_decimal: DECIMAL
+			l_image: DRAWING_BITMAP
 		do
 			create resources.make_from_resource_source (Current.get_type)
 
@@ -159,9 +160,10 @@ feature {NONE} -- Implementation
 			tool_tip.set_tool_tip (indent_up_down, ("The indentation width of a child node in pixels.").to_cil)
 			indent_up_down.add_value_changed (create {EVENT_HANDLER}.make (Current, $indent_up_down_value_changed))
 
---			image_list_2.set_image_stream ((System.Windows.Forms.ImageListStreamer)resources.GetObject(").to_cil)image_list_2.ImageStream").to_cil))
 			image_list_2.set_transparent_color (feature {DRAWING_COLOR}.transparent)
-
+			image_list_2.images.add (create {DRAWING_BITMAP}.make_from_filename (("diamond.bmp").to_cil))
+			image_list_2.images.add (create {DRAWING_BITMAP}.make_from_filename (("club.bmp").to_cil))
+			
 			l_size.make_from_width_and_height (5, 13)
 			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (502, 293)
@@ -202,8 +204,9 @@ feature {NONE} -- Implementation
 			tool_tip.set_tool_tip (check_box_3, ("Indicates whether lines are displayed between sibling nodes and between parent and children nodes.").to_cil)
 			check_box_3.add_click (create {EVENT_HANDLER}.make (Current, $check_box_3_click))
 
---			image_list_1.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject(").to_cil)image_list_1.ImageStream").to_cil))
 			image_list_1.set_transparent_color (feature {DRAWING_COLOR}.transparent)
+			image_list_1.images.add (create {DRAWING_BITMAP}.make_from_filename (("clsdfold.bmp").to_cil))
+			image_list_1.images.add (create {DRAWING_BITMAP}.make_from_filename (("openfold.bmp").to_cil))
 
 			image_list_combo_box.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			l_point.make_from_x_and_y (88, 192)
@@ -213,7 +216,11 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (120, 21)
 			image_list_combo_box.set_size (l_size)
 			image_list_combo_box.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $image_list_combo_box_selected_index_changed))
---			image_list_combo_box.Items.AddRange((object[])new object[] {").to_cil)(none)").to_cil), ").to_cil)system images").to_cil), ").to_cil)bitmaps").to_cil)end)
+			create l_array.make (3)
+			l_array.put (0, ("(none)").to_cil)
+			l_array.put (1, ("system images").to_cil)
+			l_array.put (2, ("bitmaps").to_cil)
+			image_list_combo_box.items.add_range (l_array)
 
 			check_box_4.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make_from_x_and_y (16, 88)
@@ -309,10 +316,7 @@ feature {NONE} -- Implementation
 					i = sub_directories.count
 				loop
 					directory_name := sub_directories.item (i).name
---					if  not directory_name.compare_to_string ((".").to_cil) and 
---						not directory_name.compare_to_string (("..").to_cil) then
-							dummy := node.nodes.add_tree_node (create {DIRECTORY_NODE}.make_from_text (directory_name))
---					end
+					dummy := node.nodes.add_tree_node (create {DIRECTORY_NODE}.make_from_text (directory_name))
 					i := i + 1
 				end
 			end
@@ -364,18 +368,25 @@ feature {NONE} -- Implementation
 			drives: NATIVE_ARRAY [SYSTEM_STRING]
 			root: DIRECTORY_NODE
 			dummy: INTEGER
+			l_drive: ANY
+			l_drive_string: STRING
+			l_ext: EXTERNALS
+			l_ptr: POINTER
 		do
 			drives := feature {ENVIRONMENT}.get_logical_drives
+			create l_ext
 			from
---				i := 0
 			until
 				i > drives.count
 			loop
---				if PlatformInvokeKernel32.GetDriveType (drives.item (i)) = PlatformInvokeKernel32.DRIVE_FIXED then
+				create l_drive_string.make_from_cil (drives.item (i))
+				l_ptr := feature {MARSHAL}.string_to_hglobal_ansi (l_drive_string.to_cil)
+				if l_ext.get_drive_type (l_ptr) = Drive_fixed then
 					create root.make_from_text (drives.item (i))
 					dummy := directory_tree.nodes.add_tree_node (root)
 					add_directories (root)
---				end
+				end
+				feature {MARSHAL}.free_hglobal (l_ptr)
 				i := i + 1
 			end
 		rescue
@@ -385,8 +396,6 @@ feature {NONE} -- Implementation
 
 	path_from_node (node: WINFORMS_TREE_NODE): SYSTEM_STRING is
 			-- Returns the directory path of the node.
-		--local
-		--	parent_path: SYSTEM_STRING	
 		do
 			if node.parent = Void then
 				Result := node.text
@@ -519,20 +528,20 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
---			index := image_list_combo_box.selected_index
---			if index = 0 then
---				directory_tree.set_image_list (Void)
---			elseif index = 1 then
---				directory_tree.set_image_list (image_list_1)
---			else
---				directory_tree.set_image_list (image_list_2)
---			end
+			index := image_list_combo_box.selected_index
+			if index = 0 then
+				directory_tree.set_image_list (Void)
+			elseif index = 1 then
+				directory_tree.set_image_list (image_list_1)
+			else
+				directory_tree.set_image_list (image_list_2)
+			end
 		end
 
 	indent_up_down_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			--
 		do
-			directory_tree.set_indent ((create {DECIMAL}).to_int_32 (indent_up_down.value))
+			--directory_tree.set_indent (indent_up_down.value.to_int_32 (indent_up_down.value))
 		end
 
 	check_box_2_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
@@ -571,5 +580,7 @@ feature {NONE} -- Implementation
 			directory_tree.set_hide_selection (check_box_7.checked)
 		end
 
+	Drive_fixed: INTEGER is 3
+			-- Value of a fixed, non removable disk drive.
 		
 end -- class DATE_TIME_PICKER_CTL

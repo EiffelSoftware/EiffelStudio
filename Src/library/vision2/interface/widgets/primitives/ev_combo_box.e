@@ -28,7 +28,8 @@ inherit
 
 	EV_LIST	
 		export
-			{NONE} set_multiple_selection 
+			{NONE} set_multiple_selection, is_multiple_selection
+			{NONE} selected_items
 		redefine
 			implementation,
 			make
@@ -56,16 +57,6 @@ feature -- Measurement
 		do
 			Result := implementation.extended_height
 		end
-
---feature {NONE}-- Implementation
-
---	count: INTEGER is
---			-- number of items in the list of the combo-box
---		require
---			exists: not destroyed
---		do
---			Result := implementation.count
---		end
 
 feature -- Implementation
 

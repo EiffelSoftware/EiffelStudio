@@ -51,7 +51,7 @@ feature -- Properties
 			Result := status_handler.is_reversed_engineered (status)
 		end
 
-	body: S_FREE_TEXT_DATA
+	body: S_FEATURE_BODY 
 			-- Body (with locals and recue) if routine or constant
 
 

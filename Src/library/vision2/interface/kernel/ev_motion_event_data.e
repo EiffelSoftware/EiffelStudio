@@ -38,23 +38,23 @@ feature -- Access
 	state: INTEGER
 	
 
-feature {EV_MOTION_EVENT_DATA_I} -- Element change
-	
+feature {EV_WIDGET_IMP, EV_MOTION_EVENT_DATA_I} -- Element change
+
 	set_x (new_x: DOUBLE) is
 		do
 			x := new_x
 		end
-	
+
 	set_y (new_y: DOUBLE) is
 		do
 			y := new_y
 		end
-	
+
 	set_state (new_state: INTEGER) is
 		do
 			state := new_state
 		end
-	
+
 feature -- Debug
 	
 	print_contents is

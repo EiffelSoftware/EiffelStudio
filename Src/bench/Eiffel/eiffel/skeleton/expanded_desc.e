@@ -31,12 +31,12 @@ feature
 	is_expanded: BOOLEAN is True;
 			-- Is the attribute an expanded one ?
 
-	generate_code (file: INDENT_FILE) is
+	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
-			-- file `file'.
+			-- `buffer'.
 		do
-			file.putstring ("SK_EXP + ");
-			file.putint (type_id - 1);
+			buffer.putstring ("SK_EXP + ");
+			buffer.putint (type_id - 1);
 		end;
 
 	level: INTEGER is

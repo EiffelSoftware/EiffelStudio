@@ -37,12 +37,12 @@ feature
 			Result := Bits_level;
 		end;
 
-	generate_code (file: INDENT_FILE) is
+	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
-			-- file `file'.
+			-- `buffer'.
 		do
-			file.putstring ("SK_BIT + ");
-			file.putint (value);
+			buffer.putstring ("SK_BIT + ");
+			buffer.putint (value);
 		end;
 
 	same_as (other: ATTR_DESC): BOOLEAN is

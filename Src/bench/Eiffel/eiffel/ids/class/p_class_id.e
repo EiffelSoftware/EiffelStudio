@@ -32,12 +32,17 @@ feature {COMPILER_EXPORTER} -- Access
 		local
 			buff: STRING
 		do
-			buff := Offset_buffer;
-			eif011 ($buff, compilation_id);
-			!! Result.make (15);
-			Result.append (buff);
-			Result.extend ('+')
-			Result.append_integer (internal_id)
+			if Compilation_modes.is_precompiling then
+				buff := Offset_buffer;
+				eif011 ($buff, compilation_id);
+				!! Result.make (15);
+				Result.append (buff);
+				Result.extend ('+');
+				Result.append_integer (internal_id)
+			else
+				!! Result.make (5);
+				Result.append_integer (id)
+			end
 		end
 
 end -- class P_CLASS_ID

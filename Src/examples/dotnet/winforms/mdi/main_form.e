@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	MDI_child_activated (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- One of the MDI Child windows has been activated
 		do
-			if active_mdi_child.equals (Void) then
+			if active_mdi_child = Void then
 				status_bar_1.set_text (("").to_cil)
 			else
 				status_bar_1.set_text (active_mdi_child.text)

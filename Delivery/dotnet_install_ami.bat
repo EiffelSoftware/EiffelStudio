@@ -11,5 +11,5 @@ cd ..\..
 
 cd bench\wizards\new_projects\dotnet
 call install.bat
-cd ..\..\..\..\..\..
+cd ..\..\..\..
 

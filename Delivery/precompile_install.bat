@@ -1,4 +1,4 @@
-echo off
+@echo off
 rem Installation of the precompiled libraries for Windows
 rem It will precompile
 rem - EiffelBase

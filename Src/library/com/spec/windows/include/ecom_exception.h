@@ -24,8 +24,10 @@ class Formatter
 public:
 	Formatter();
 	virtual ~Formatter();
-	EIF_OBJ ccom_format_message( EIF_INTEGER Code );
+	EIF_REFERENCE ccom_format_message( EIF_INTEGER Code );
 	char* c_format_message( long Code );
+	EIF_INTEGER ccom_hresult (char * exception_code_name); 
+
 };
 
 #ifdef __cplusplus

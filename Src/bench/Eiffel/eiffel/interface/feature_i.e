@@ -770,7 +770,7 @@ feature -- Signature checking
 						-- table.
 					!!vrfa;
 					vrfa.set_class_id (written_in);
-					vrfa.set_body_id (body_id);
+					vrfa.set_feature_i (Current);
 					vrfa.set_argument_name (arg_id);
 					Error_handler.insert_error (vrfa);
 				end;
@@ -876,10 +876,9 @@ end;
 				vffd7.set_body_id (body_id);
 				Error_handler.insert_error (vffd7);
 			end;
---				Check above ensure that solved_type is not Void
---			if solved_type /= Void then
+			if not feat_table.associated_class.is_obsolete then
 				solved_type.check_for_obsolete_class;
---			end;
+			end;
 			if arguments /= Void then
 				if is_infix and then argument_count /= 1 then
 						-- Infixed features should have only one argument
@@ -1513,7 +1512,6 @@ feature -- PS
 				loop
 					a_clickable.put_string (arguments.argument_names.i_th (arguments.position));
 					a_clickable.put_string (": ");
-io.error.putstring ("Clickable signature dump type%N");
 					a_clickable.put_string (arguments.item.actual_type.dump);
 					arguments.forth;
 					if not arguments.offright then
@@ -1532,7 +1530,6 @@ io.error.putstring ("Clickable signature dump type%N");
 			-- Append the name of the feature in `a_clickable'
 		do
 			a_clickable.put_clickable_string (stone (0, 0), feature_name);
-io.error.putstring ("Clickable feature_i with position 0/0%N");
 		end;
 
 	stone (start_pos, end_pos: INTEGER): FEATURE_STONE is

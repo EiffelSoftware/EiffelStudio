@@ -472,5 +472,36 @@ feature
 				deferred_features.forth;	
 			end;
 		end;
-								
+
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("INHERIT_FEAT%N");
+			io.error.putstring ("%TDeferred%N");
+			from
+				deferred_features.start
+			until
+				deferred_features.after
+			loop
+				deferred_features.item.trace;
+				deferred_features.forth;
+			end;
+			io.error.putstring ("%TEffective%N");
+			from
+				features.start
+			until
+				features.after
+			loop
+				features.item.trace;
+				features.forth;
+			end;
+			if inherited_info /= Void then
+				io.error.putstring ("Inherited info:%N");
+				inherited_info.trace
+			else
+				io.error.putstring ("Void inherited info%N");
+			end;
+		end;
+
 end

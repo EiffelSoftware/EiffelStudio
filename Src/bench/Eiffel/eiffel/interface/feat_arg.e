@@ -145,8 +145,11 @@ feature
 					-- Don't forget that the arguments are written where
 					-- the feature is written.
 				put (solved_type);
-		
-				solved_type.check_for_obsolete_class;
+
+				if not associated_class.is_obsolete then
+					solved_type.check_for_obsolete_class;
+				end;
+
 				forth;
 			end;
 		end;

@@ -8,24 +8,18 @@ class
 	UNDO_DELETE_COMMAND
 
 inherit
-	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
+	UNDO_COMMAND
 
 create
 	make_from_string
 
 feature -- Initialization
 
-	make_from_string (c: CURSOR, s: STRING; w: CHILD_WINDOW) is
+	make_from_string (c: TEXT_CURSOR; s: STRING; w: CHILD_WINDOW) is
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
-			mesage := s
+			message := s
 			chwin := w
 		end
 
@@ -67,12 +61,16 @@ feature -- Miscellaneous
 feature -- Basic operations
 
 	undo	is
+		local
+			cur: TEXT_CURSOR
 		do
 			create cur.make_from_character_pos (x_start, y_start, chwin)
-			cur.insert (message)
+			cur.insert_string (message)
 		end
 
 	redo is
+		local
+			cur: TEXT_CURSOR
 		do
 			create cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (message.count)

@@ -57,6 +57,15 @@ feature -- Access
 			create Result
 		end
 
+	Wel_ownerdraw_constants: WEL_ODS_CONSTANTS is
+			-- Owner Drawing Constants
+			-- Include constants:
+			--   ODS_xxxx
+			--   ...
+		once
+			create Result
+		end
+
 	Wel_ht_constants: WEL_HT_CONSTANTS is
 			-- Access to Ht_xxxconstnats
 		once

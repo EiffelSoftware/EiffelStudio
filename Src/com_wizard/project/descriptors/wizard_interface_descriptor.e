@@ -69,6 +69,9 @@ feature -- Access
 	flags: INTEGER
 			-- See ECOM_TYPE_FLAGS for values
 
+	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			-- Type library descriptor
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
@@ -139,6 +142,85 @@ feature -- Access
 	feature_c_names: LINKED_LIST [STRING]
 			-- List of feature C names.
 	
+feature -- Element Change
+
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+			-- Set `type_library_descriptor' with `a_descriptor'.
+		require
+			non_void_descriptor: a_descriptor /= Void
+		do
+			type_library_descriptor := a_descriptor
+		ensure
+			valid_type_library: type_library_descriptor = a_descriptor
+		end
+
+	set_functions (some_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
+			-- Set `functions' with `some_functions'
+		require
+			valid_functions: some_functions /= Void
+		do
+			functions := some_functions
+		ensure
+			valid_functions: functions /= Void and functions = some_functions
+		end
+
+	set_properties (some_properties: LINKED_LIST[WIZARD_PROPERTY_DESCRIPTOR]) is
+			-- Set `properties' with `some_properties'
+		require
+			valid_properties: some_properties /= Void
+		do
+			properties := some_properties
+		ensure
+			valid_properties: properties /= Void and properties = some_properties
+		end
+
+	set_inherited_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Set `inherited_interfaces' with `some_interfaces'
+		do
+			inherited_interface := a_interface
+		ensure
+			interface_set: inherited_interface = a_interface
+		end
+
+	update_dual (a_dual_value: BOOLEAN) is
+			-- Set `dual' with `a_dual_value'
+		do
+			dual := a_dual_value
+		ensure
+			valid_dual: dual = a_dual_value
+		end
+
+	update_dispinterface (a_dispinterface_value: BOOLEAN) is
+			-- Set `dispinterface' with `a_dispinterface_value'
+		do
+			dispinterface := a_dispinterface_value
+		ensure
+			valid_dispinterface: dispinterface = a_dispinterface_value
+		end
+
+	set_lcid (a_lcid: INTEGER) is
+			-- Set `lcid' with `a_lcid'
+		do
+			lcid := a_lcid
+		ensure
+			valid_lcid: lcid = a_lcid
+		end
+
+	set_vtbl_size (a_size: INTEGER) is
+			-- Set `vtbl_size' with `a_size'
+		do
+			vtbl_size := a_size
+		ensure
+			valid_size: vtbl_size = a_size
+		end
+
+	set_flags (some_flags: INTEGER) is
+			-- Set `flags' with `some_flags'
+		do
+			flags := some_flags
+		ensure
+			valid_flags: flags = some_flags
+		end
 
 feature -- Status Report
 
@@ -277,74 +359,6 @@ feature -- Basic operations
 		ensure
 			not_empty_feature_names: not functions.empty and not properties.empty implies 
 									not feature_c_names.empty
-		end
-
-	set_functions (some_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
-			-- Set `functions' with `some_functions'
-		require
-			valid_functions: some_functions /= Void
-		do
-			functions := some_functions
-		ensure
-			valid_functions: functions /= Void and functions = some_functions
-		end
-
-	set_properties (some_properties: LINKED_LIST[WIZARD_PROPERTY_DESCRIPTOR]) is
-			-- Set `properties' with `some_properties'
-		require
-			valid_properties: some_properties /= Void
-		do
-			properties := some_properties
-		ensure
-			valid_properties: properties /= Void and properties = some_properties
-		end
-
-	set_inherited_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
-			-- Set `inherited_interfaces' with `some_interfaces'
-		do
-			inherited_interface := a_interface
-		ensure
-			interface_set: inherited_interface = a_interface
-		end
-
-	update_dual (a_dual_value: BOOLEAN) is
-			-- Set `dual' with `a_dual_value'
-		do
-			dual := a_dual_value
-		ensure
-			valid_dual: dual = a_dual_value
-		end
-
-	update_dispinterface (a_dispinterface_value: BOOLEAN) is
-			-- Set `dispinterface' with `a_dispinterface_value'
-		do
-			dispinterface := a_dispinterface_value
-		ensure
-			valid_dispinterface: dispinterface = a_dispinterface_value
-		end
-
-	set_lcid (a_lcid: INTEGER) is
-			-- Set `lcid' with `a_lcid'
-		do
-			lcid := a_lcid
-		ensure
-			valid_lcid: lcid = a_lcid
-		end
-
-	set_vtbl_size (a_size: INTEGER) is
-			-- Set `vtbl_size' with `a_size'
-		do
-			vtbl_size := a_size
-		ensure
-			valid_size: vtbl_size = a_size
-		end
-
-	set_flags (some_flags: INTEGER) is
-			-- Set `flags' with `some_flags'
-		do
-			flags := some_flags
-		ensure
-			valid_flags: flags = some_flags
 		end
 
 

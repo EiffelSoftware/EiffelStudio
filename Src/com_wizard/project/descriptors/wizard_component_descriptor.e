@@ -10,6 +10,22 @@ deferred class
 inherit
 	WIZARD_TYPE_DESCRIPTOR
 
+feature -- Access
+
+	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			-- Type library descriptor
+
+feature -- Element Change
+
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+			-- Set `type_library_descriptor' with `a_descriptor'.
+		require
+			non_void_descriptor: a_descriptor /= Void
+		do
+			type_library_descriptor := a_descriptor
+		ensure
+			valid_type_library: type_library_descriptor = a_descriptor
+		end
 
 end -- class WIZARD_COMPONENT_DESCRIPTOR
 

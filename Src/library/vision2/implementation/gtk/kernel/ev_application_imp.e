@@ -63,7 +63,6 @@ feature {NONE} -- Initialization
 			-- and start the event loop.
 		do
 			gtk_dependent_launch_initialize
-
 			main_loop			
 				-- Unhook marshal object.
 			gtk_marshal.destroy
@@ -75,13 +74,15 @@ feature {NONE} -- Initialization
 			main_running: BOOLEAN
 			gdk_event: POINTER
 			post_launch_actions_called: BOOLEAN
+			events_pending: INTEGER
 		do
 			from
 			until 
 				is_destroyed
 			loop
+				events_pending := feature {EV_GTK_EXTERNALS}.gtk_events_pending
 				gdk_event := feature {EV_GTK_EXTERNALS}.gdk_event_get
-				if gdk_event /= default_pointer or else feature {EV_GTK_EXTERNALS}.gtk_events_pending > 0 then
+				if gdk_event /= default_pointer or else events_pending > 0 then
 					if gdk_event /= default_pointer then
 						--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
 						feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
@@ -92,12 +93,12 @@ feature {NONE} -- Initialization
 				else
 						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
 						-- All pending resizing has been performed at this point.
-					if not post_launch_actions_called and then feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+					if not post_launch_actions_called and then events_pending = 0 then
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
 					end
-					if not internal_idle_actions.is_empty or else
-						(idle_actions_internal /= Void and then not idle_actions_internal.is_empty) then
+					if internal_idle_actions.count > 0 or else
+						(idle_actions_internal /= Void and idle_actions_internal.count > 0) then
 							call_idle_actions
 					else
 								-- Block loop by running a gmain loop iteration with blocking enabled.
@@ -118,9 +119,9 @@ feature {EV_ANY_IMP} -- Access
 	call_idle_actions is
 			-- Execute idle actions
 		do
-			if not internal_idle_actions.is_empty then
-				internal_idle_actions.call (Void)
-			elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
+				-- Call the opo idle actions first, when the list is empty we call the normal idle actions
+			internal_idle_actions.call (Void)
+			if idle_actions_internal /= Void then
 				idle_actions_internal.call (Void)
 			end
 		end
@@ -295,12 +296,6 @@ feature {EV_ANY_IMP} -- Implementation
 
 	tooltips: POINTER
 			-- Reference to GtkTooltips object.
-			
-	empty_tuple: TUPLE is
-			-- Tuple optimization to prevent object recreation
-		once
-			Result := []
-		end
 
 feature -- Implementation
 

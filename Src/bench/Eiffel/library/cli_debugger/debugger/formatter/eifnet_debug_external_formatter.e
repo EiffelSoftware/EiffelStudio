@@ -23,6 +23,19 @@ inherit
 			{NONE} all
 		end		
 
+feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Provide info from debugger
+
+	set_debugger_info (di: like debugger_info) is
+			-- set `debugger_info' with `di'
+		do
+			debugger_info := di
+		end
+
+feature {NONE} -- Debugger information
+
+	debugger_info: EIFNET_DEBUGGER_INFO
+			-- Info from debugger and JIT data
+
 feature -- Conversion String
 
 	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING is
@@ -120,111 +133,97 @@ feature {NONE} -- get member data
 		end
 		
 feature {EIFNET_DEBUGGER} -- Restricted access
+
+	member_token (a_type_name: STRING; a_member_name: STRING): INTEGER is
+		local
+			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_mscorlib_meta_data: MD_IMPORT
+			l_type_token: INTEGER
+		do
+			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_mscorlib_icd_module /= Void then
+				l_mscorlib_meta_data := l_mscorlib_icd_module.interface_md_import
+				l_type_token := l_mscorlib_meta_data.find_type_def_by_name (a_type_name, 0)
+				Result := l_mscorlib_meta_data.find_member (l_type_token, a_member_name)
+			end
+		end
+		
+	get_member_tokens is
+			-- Get all tokens we need in this context
+		do
+			private_token_StringBuilder_m_StringValue := member_token ("System.Text.StringBuilder", "m_StringValue")
+			
+			private_token_Exception__message := member_token ("System.Exception", "_message")
+			private_token_Exception__className := member_token ("System.Exception", "_className")
+			private_token_Exception_ToString := member_token ("System.Exception", "ToString")
+			private_token_Exception_get_Message := member_token ("System.Exception", "get_Message")			
+		end		
 		
 	token_StringBuilder_m_StringValue: INTEGER is
 			-- Attribute token of System.StringBuilder::m_StringValue	
-		once
-			if il_environment.version.is_equal (Il_environment.v2_0) then		
-				Result := token_StringBuilder_m_StringValue_v2_0		
-			else
-				Result := token_StringBuilder_m_StringValue_v1_1		
+		do
+			Result := private_token_StringBuilder_m_StringValue
+			if Result = 0 then
+				get_member_tokens
+				Result := private_token_StringBuilder_m_StringValue
 			end
 		end
 		
 	token_Exception__message: INTEGER is
-			-- Attribute token of System.Exception::ToString
-		once
-			if il_environment.version.is_equal (Il_environment.v2_0) then		
-				Result := token_Exception__message_v2_0		
-			else
-				Result := token_Exception__message_v1_1	
-			end			
+			-- Attribute token of System.Exception::_message
+		do
+			Result := private_token_Exception__message
+			if Result = 0 then
+				get_member_tokens
+				Result := private_token_Exception__message
+			end
 		end	
 
 	token_Exception__className: INTEGER is
 			-- Attribute token of System.Exception::_className
-		once
-			if il_environment.version.is_equal (Il_environment.v2_0) then		
-				Result := token_Exception__className_v2_0		
-			else
-				Result := token_Exception__className_v1_1	
-			end			
+		do
+			Result := private_token_Exception__className
+			if Result = 0 then
+				get_member_tokens
+				Result := private_token_Exception__className
+			end
 		end	
 
 	token_Exception_ToString: INTEGER is
 			-- Attribute token of System.Exception::ToString
-		once
-			if il_environment.version.is_equal (Il_environment.v2_0) then		
-				Result := token_Exception_ToString_v2_0
-			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
-				Result := token_Exception_ToString_v1_1
-			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
-				Result := token_Exception_ToString_v1_0
+		do
+			Result := private_token_Exception_ToString
+			if Result = 0 then
+				get_member_tokens
+				Result := private_token_Exception_ToString
 			end
 		end	
 
 	token_Exception_get_Message: INTEGER is
 			-- Attribute token of System.Exception::get_Message
-		once
-			if il_environment.version.is_equal (Il_environment.v2_0) then		
-				Result := token_exception_get_Message_v2_0
-			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
-				Result := token_exception_get_Message_v1_1
-			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
-				Result := token_exception_get_Message_v1_0
+		do
+			Result := private_token_Exception_get_Message
+			if Result = 0 then
+				get_member_tokens
+				Result := private_token_Exception_get_Message
 			end
 		end	
+
+feature {NONE} -- Once per instance implementation
+
+	private_token_StringBuilder_m_StringValue: INTEGER
+			-- Attribute token of System.StringBuilder::m_StringValue	
 		
-feature {NONE} -- Implementation
+	private_token_Exception__message: INTEGER
+			-- Attribute token of System.Exception::ToString
+
+	private_token_Exception__className: INTEGER
+			-- Attribute token of System.Exception::_className
+
+	private_token_Exception_ToString: INTEGER
+			-- Attribute token of System.Exception::ToString
+
+	private_token_Exception_get_Message: INTEGER
+			-- Attribute token of System.Exception::get_Message
 		
-	Il_environment: IL_ENVIRONMENT is
-		once
-			create Result.make (Eiffel_system.System.clr_runtime_version)
-		end
-
-feature {NONE} -- Constants: v1.0
-
-	token_Exception_ToString_v1_0: INTEGER is 0x06000182
-			--| v1.0 => System.Exception::ToString: string :: 0x06000182 |--	
-
-	token_Exception_get_Message_v1_0: INTEGER is 0x06000176		
-			--| v1.0 => System.Exception::get_Message(): string :: 0x06000176 |--
-			
-feature {NONE} -- Constants: v1.1
-			
-	token_StringBuilder_m_StringValue_v1_1: INTEGER is 0x0400001B
-			--| v1.0/1.1 => System.StringBuilder::m_StringValue: string :: 0x0400001B |--	
-			
-	token_Exception__message_v1_1: INTEGER is 0x04000020
-			--| v1.0/1.1 => System.Exception::_message: string :: 0x04000020 |--	
-			
-	token_Exception_ToString_v1_1: INTEGER is 0x06000192			
-			--| v1.1 => System.Exception::ToString: string :: 0x06000192 |--	
-
-	token_Exception_get_Message_v1_1: INTEGER is 0x06000185			
-			--| v1.1 => System.Exception::get_Message(): string :: 0x06000185 |--	
-
-	token_Exception_GetClassName_v1_1: INTEGER is 0x06000186			
-			--| v1.1 => System.Exception::GetClassName: string :: 0x06000186 |--
-			
-	token_Exception__className_v1_1: INTEGER is 0x0400001D
-			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
-
-feature {NONE} -- Constants: v2.0
-
-	token_StringBuilder_m_StringValue_v2_0: INTEGER is 0x04000073
-			--| v2.0     => System.StringBuilder::m_StringValue: string :: 0x04000073 |--	
-
-	token_Exception__message_v2_0: INTEGER is 0x04000078
-			--| v2.0     => System.Exception::_message: string :: 0x04000078 |--	
-
-	token_Exception_ToString_v2_0: INTEGER is 0x06000297			
-			--| v2.0 => System.Exception::ToString: string :: 0x06000297 |--	
-
-	token_Exception_get_Message_v2_0: INTEGER is 0x06000288
-			--| v2.0 => System.Exception::get_Message(): string :: 0x06000288 |--
-			
-	token_Exception__className_v2_0: INTEGER is 0x04000075
-			--| v2.0 => System.Exception::_className: string :: 0x04000075 |--	
-			
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

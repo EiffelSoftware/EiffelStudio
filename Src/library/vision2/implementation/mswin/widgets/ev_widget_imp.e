@@ -26,35 +26,31 @@ inherit
 
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
 	WEL_WM_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_WS_CONSTANTS
 		export
 			{NONE} all
 		end
 
 feature {NONE} -- Initialization
 
-	widget_make (par: EV_CONTAINER) is
-			-- This is a general initialization for 
-			-- widgets and has to be called by all the 
-			-- widgets with parents.
-		local
-			par_imp: EV_CONTAINER_IMP
+	widget_make (an_interface: EV_WIDGET) is
+			-- Creation of the widget.
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
 			!! child_cell
-			set_top_level_window_imp (par_imp.top_level_window_imp)
-			par_imp.add_child (Current)
-			plateform_build (par_imp)
-			build
-			par_imp.update_display
-		end
-
-	plateform_build (par: EV_CONTAINER_I) is
-			-- Plateform dependant initializations.
-		do
+			interface := an_interface
+			set_default_options
+			set_default_colors
+			set_default_minimum_size
 		end
 
 feature -- Access
@@ -88,6 +84,20 @@ feature -- Access
 			Result ?= ev_imp.interface
 		end
 
+	default_parent: CELL [WEL_FRAME_WINDOW] is
+			-- A default parent for creation of the widgets.
+			-- It is the main window because it exists as long
+			-- as the application exists.
+		local
+			ww: WEL_FRAME_WINDOW
+		once
+			!! ww.make_top ("Default parent window")
+			ww.set_style (clear_flag (ww.style, Ws_visible))
+			!! Result.put (ww)
+		ensure
+			valid_parent: Result.item /= Void
+		end
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -104,14 +114,16 @@ feature -- Status report
 
 feature -- Status setting
 
---	set_parent (par: EV_CONTAINER) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		do
---			parent_imp.remove_child (Current)
---			set_parent (par)
---			interface.widget_make (par)
---		end
+	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+--				parent_imp.set_insensitive (False)
+				parent_imp.remove_child (Current)
+			end
+			wel_destroy
+		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -146,6 +158,42 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
+		end
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+			-- Redefine by some widgets.
+		do
+			set_minimum_width (0)
+			set_minimum_height (0)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the
+			-- default_parent.
+		local
+			par_imp: EV_CONTAINER_IMP
+			ww: WEL_WINDOW
+		do
+			if par /= Void then
+				if parent_imp /= Void then
+					parent_imp.remove_child (Current)
+				end
+				ww ?= par.implementation
+				wel_set_parent (ww)
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				set_top_level_window_imp (par_imp.top_level_window_imp)
+				par_imp.add_child (Current)
+			elseif parent_imp /= Void then
+				parent_imp.remove_child (Current)
+				wel_set_parent (default_parent.item)
+			end
 		end
 
 feature -- Event - command association
@@ -398,8 +446,12 @@ feature -- Implementation
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
-		do 
-			Result ?= parent
+		do
+			if parent = default_parent.item then
+				Result := Void
+			else
+				Result ?= parent
+			end
 		end
 
 	on_first_display is
@@ -571,7 +623,7 @@ feature {NONE} -- Implementation, focus event
 			execute_command (Cmd_loose_focus, Void)
 		end
 
-feature {EV_WIDGET_IMP} -- WEL Implementation
+feature -- Deferred features
 
 	top_level_window_imp: WEL_WINDOW is
 			-- Top level window that contains the current widget.
@@ -583,8 +635,6 @@ feature {EV_WIDGET_IMP} -- WEL Implementation
 			-- of the widget.
 		deferred
 		end
-
-feature -- Deferred features
 
 	exists: BOOLEAN is
 			-- Does the window exist?
@@ -600,13 +650,28 @@ feature -- Deferred features
 			-- Disable mouse and keyboard input
 		deferred
 		end
-
 	enable is
 			-- Enable mouse and keyboard input.
 		deferred
 		end
 
 	parent: WEL_WINDOW is
+		deferred
+		end
+
+	wel_set_parent (a_parent: WEL_WINDOW) is
+		deferred
+		end
+
+	default_style: INTEGER is
+		deferred
+		end
+
+	style: INTEGER is
+		deferred
+		end
+
+	set_style (a_style: INTEGER) is
 		deferred
 		end
 
@@ -619,6 +684,10 @@ feature -- Deferred features
 			-- Used by EV_SPLIT_AREA_IMP
 		deferred
 		end
+
+	wel_destroy is
+		deferred
+		end	
 
 end -- class EV_WIDGET_IMP
 

@@ -3,12 +3,6 @@ class PERM_WIND_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Top_shell_pixmap as symbol
-		export
-			{NONE} all
-		end;
 	WINDOW_C
 		rename
 			remove_yourself as wind_remove_yourself,
@@ -34,6 +28,11 @@ inherit
 feature -- Widget type
 
 	widget: PERM_WIND;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.top_shell_pixmap
+		end;
 
 feature
 

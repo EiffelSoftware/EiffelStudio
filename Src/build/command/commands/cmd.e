@@ -30,11 +30,11 @@ feature -- Instance
 			b: BEHAVIOR
 		do
 			from
-				graph.start
+				Shared_app_graph.start
 			until
-				graph.off or Result
+				Shared_app_graph.off or Result
 			loop
-				s ?= graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration;
 				if not (s = Void) then
 					from
 						s.start
@@ -54,7 +54,7 @@ feature -- Instance
 						s.forth
 					end;
 				end;
-				graph.forth
+				Shared_app_graph.forth
 			end
 		end;
 

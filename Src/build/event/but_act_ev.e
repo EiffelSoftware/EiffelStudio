@@ -3,44 +3,26 @@ class BUT_ACT_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
-		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
 		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - but_act_ev_id
+			Result := - Event_const.but_act_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Button_activate_pixmap);
-			set_label (Button_activate_label);
+			set_symbol (Pixmaps.button_activate_pixmap);
+			set_label (Event_const.button_activate_label);
 			event_table.put (Current, - identifier);
 		end;
 

@@ -2,10 +2,6 @@ class GROUP_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Group_pixmap as symbol
-		end;
 	SHARED_CONTEXT;
 	COMPOSITE_C
 		rename
@@ -40,6 +36,11 @@ inherit
 		end
 	
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.group_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

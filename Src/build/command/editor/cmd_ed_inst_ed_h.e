@@ -7,26 +7,14 @@ inherit
 		rename
 			make_visible as make_button_visible
 		end;
-
 	ICON_HOLE
 		redefine
 			make_visible
 		select
 			make_visible
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	COMMAND
-		export
-			{NONE} all
-		end
- 
 
 creation
 
@@ -41,12 +29,10 @@ feature
 		end;
  
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_button_visible (a_parent);
-			set_symbol (Create_command_instance_b_pixmap);
-			add_activate_action (Current, Nothing)
+			set_symbol (Pixmaps.create_command_instance_b_pixmap);
+			add_activate_action (Current, Void)
 		end;
 
 	

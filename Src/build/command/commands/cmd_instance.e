@@ -4,10 +4,6 @@ class CMD_INSTANCE
 inherit
 
 	CMD_INST_STONE;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	EDITABLE;
 	WINDOWS
 
@@ -129,7 +125,7 @@ feature -- Stone
  
 	symbol: PIXMAP is
 		do
-			Result := Command_i_icon_pixmap 
+			Result := Pixmaps.command_i_icon_pixmap 
 		end;
 
 	source: WIDGET is do end;

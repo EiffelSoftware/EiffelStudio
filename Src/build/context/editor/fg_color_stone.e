@@ -12,10 +12,10 @@ feature {NONE}
 			!!Result
 		end;
 
-    pixmap: PIXMAP is
-        do
-            Result := Fg_color_stone_pixmap
-        end;
+	pixmap: PIXMAP is
+		do
+			Result := Pixmaps.fg_color_stone_pixmap
+		end;
 	
 feature 
 

@@ -6,8 +6,6 @@ inherit
 	WINDOWS;
 	COMMAND;
 	EDITOR_FORM
-		undefine
-			init_toolkit
 		redefine
 			context
 		end
@@ -22,9 +20,9 @@ feature -- Interface
 		local
 			add_submenu: PUSH_BG;
 		do
-			initialize (Context_const.bar_form_name, a_parent);
+			initialize (Widget_names.bar_form_name, a_parent);
 
-			!!add_submenu.make (Context_const.add_submenu_name, Current);
+			!!add_submenu.make (Widget_names.add_submenu_name, Current);
 			add_submenu.add_activate_action (Current, add_submenu);
 
 			attach_left (add_submenu, 10);

@@ -51,16 +51,16 @@ feature -- Interface
 			label: LABEL_G;
 			radio_box: RADIO_BOX
 		do
-			initialize (Context_const.label_text_form_name, a_parent);
-			!!label.make (Context_const.text_label_name, Current);
+			initialize (Widget_names.label_text_form_name, a_parent);
+			!!label.make (Widget_names.text_label_name, Current);
 			!!text.make (Widget_names.textfield, Current, Label_text_cmd, 
 						editor);
-			!!forbid_recomp.make (Context_const.forbid_recomp_size_name, 
+			!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
 						Current, Label_resize_cmd, editor);
 			!!radio_box.make (Widget_names.radio_box, Current);
-			!!left_alignment.make (Context_const.left_alignment_name, 
+			!!left_alignment.make (Widget_names.left_alignment_name, 
 						radio_box, Label_alignment_cmd, editor);
-			!!center_alignment.make (Context_const.center_alignment_name, 
+			!!center_alignment.make (Widget_names.center_alignment_name, 
 						radio_box, Label_alignment_cmd, editor);
 			left_alignment.arm;
 			radio_box.set_always_one (True);

@@ -1,9 +1,8 @@
-
-
 class CURSORS
 
 inherit
 
+	CURSOR_TYPE;
 	CONSTANTS
 
 feature 
@@ -58,7 +57,67 @@ feature
 			Result := cursor_file_content ("type.curs")
 		end;
 
-feature {NONE} -- Read from file
+feature -- Context Cursors
+
+	move_cursor: SCREEN_CURSOR is
+			-- Cross cursor shape (move mode)
+		once
+			Result := create_cursor (Fleur)
+		end;
+
+	top_left_corner_cursor: SCREEN_CURSOR is
+			-- Top left corner cursor (resize mode)
+		once
+			Result := create_cursor (Top_left_corner)
+		end;
+
+	top_right_corner_cursor: SCREEN_CURSOR is
+			-- Top right corner cursor (resize mode)
+		once
+			Result := create_cursor (Top_right_corner)
+		end;
+
+	bottom_left_corner_cursor: SCREEN_CURSOR is
+			-- Bottom left corner cursor (resize mode)
+		once
+			Result := create_cursor (Bottom_left_corner)
+		end;
+
+	bottom_right_corner_cursor: SCREEN_CURSOR is
+			-- Bottom right corner cursor (resize mode)
+		once
+			Result := create_cursor (Bottom_right_corner)
+		end;
+
+	question_arrow_cursor: SCREEN_CURSOR is
+			-- Question arrow cursor
+		once
+			Result := create_cursor (Question_arrow)
+		end;
+
+	cross_cursor: SCREEN_CURSOR is
+			-- Cross cursor
+		once
+			Result := create_cursor (Tcross)
+		end;
+
+
+feature -- Watch Cursor
+
+	Watch_cursor: SCREEN_CURSOR is
+			-- Watch cursor
+		once
+			Result := create_cursor (Watch)
+		end;
+
+feature {NONE} 
+
+	create_cursor (cursor_type: INTEGER): SCREEN_CURSOR is
+			-- Create a cursor with `cursor_type' shape
+		do
+			!! Result.make;
+			Result.set_type (cursor_type);
+		end;
 
 	cursor_file_content (fn: STRING): SCREEN_CURSOR is
 		local

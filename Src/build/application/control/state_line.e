@@ -21,14 +21,9 @@ inherit
 			attach_drawing, attach_drawing_imp, contains, make, draw
 		end;
 	BASIC_ROUTINES;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	TRANS_STONE
-		rename source as w_source
-		export
-			{NONE} all
+		rename 
+			source as w_source
 		end;
 			
 
@@ -83,7 +78,7 @@ feature
 	deselect is
 			-- Set the width of the line to its default value.
 		do
-			set_line_width (standard_thickness);
+			set_line_width (App_const.standard_thickness);
 		end; -- deselect
 
 	calculate is
@@ -134,7 +129,6 @@ feature
 			d_not_void: not (d = Void);
 			s_has_center: not (s.center = Void);
 			d_has_center: not (s.center = Void);
-			
 		do
 			source := s;
 			destination := d;
@@ -148,7 +142,7 @@ feature
 
 	set_from_points (point1, point2: COORD_XY_FIG) is
 		do
-			set_arrow (point1, point2, arrow_head_w, arrow_head_h);
+			set_arrow (point1, point2, App_const.arrow_head_w, App_const.arrow_head_h);
 			set_origin_to_middle;
 			selection_square.set_center (origin);
 		end;	
@@ -192,8 +186,8 @@ feature {NONE}
 			-- Initialize the line.
 		do
 			arrow_create;
-			set_foreground_color (black);
-			set_line_width (standard_thickness);
+			set_foreground_color (App_const.black);
+			set_line_width (App_const.standard_thickness);
 		end; 
 
 	init_selection_square is
@@ -203,21 +197,21 @@ feature {NONE}
 			int: INTERIOR
 		do
 			!!path.make;
-			path.set_foreground_color (black);
-			path.set_line_width (selection_square_thickness_sl);
+			path.set_foreground_color (App_const.black);
+			path.set_line_width (App_const.selection_square_thickness_sl);
 			!!int.make;
-			int.set_foreground_color (white);
+			int.set_foreground_color (App_const.white);
 			!!selection_square.make;	
 			selection_square.set_path (path);
 			selection_square.set_interior (int);
-			selection_square.set_size_of_side (selection_square_side_length);
+			selection_square.set_size_of_side (App_const.selection_square_side_length);
 		end;
 
 	select_figure is
 			-- Increase the width of line by 1 to indicate Current
 			-- has been selected. 
 		do
-			set_line_width (standard_thickness + 1);
+			set_line_width (App_const.standard_thickness + 1);
 		end;
 
 feature -- Stone

@@ -3,16 +3,10 @@ deferred class CAT_COMMAND
 
 inherit
 
-	UNDOABLE
+	EB_UNDOABLE
 		redefine
 			is_template, execute
 		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end
-		
 	
 feature {NONE}
 
@@ -32,7 +26,7 @@ feature
 			catalog_work	
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 		do
 			!!Result.make (0);
 			Result.append (c_name);
@@ -58,10 +52,5 @@ feature {NONE}
 feature 
 
 	is_template: BOOLEAN is True;
-
-	history: HISTORY_WND is
-        once
-            Result := history_window;
-        end;
 
 end

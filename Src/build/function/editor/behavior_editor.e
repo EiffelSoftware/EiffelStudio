@@ -4,8 +4,6 @@ class BEHAVIOR_EDITOR
 inherit
 
 	FUNC_EDITOR
-		export
-			{ANY} all
 		redefine
 			input_list, output_list,
 			input_hole, output_hole,
@@ -25,16 +23,13 @@ feature {NONE}
 			output_stone.reset
 		end;
 
--- ***************
--- Anchor features 
--- ***************
+feature -- Anchor features
 
 	input_hole: EVENT_HOLE;
 	input_stone: FUNC_EV_STONE;
 
 	output_hole: COMMAND_HOLE;
 	output_stone: FUNC_COM_STONE;
-
 	
 feature 
 
@@ -48,13 +43,9 @@ feature {NONE}
 	menu_bar: BEHAVIOR_BAR;
 
 	
-feature 
+feature -- Editing features
 
 	edited_function: BEHAVIOR;
-
--- ****************
--- Editing features
--- ****************
 
 	current_state: STATE;
 
@@ -79,9 +70,7 @@ feature
 			edited_context := c
 		end;
 
--- ********************
--- EiffelVision Section
--- ********************
+feature -- Interface
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 		do
@@ -93,7 +82,6 @@ feature
 			button_form.attach_right_position (page_label, 1);
 			button_form.attach_left_position (row_label, 1);
 			button_form.detach_right (row_label);
-			--button_form.attach_left_widget (page_label, row_label, 1);
 		end;
 
 	

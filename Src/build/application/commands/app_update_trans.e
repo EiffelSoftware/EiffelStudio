@@ -13,14 +13,13 @@ inherit
 		select
 			redo
 		end;
-	APP_CMD_NAMES
-		rename
-			App_update_transitions_cmd_name as c_name
-		export
-			{NONE} all
-		end 
 
 feature 
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_update_transitions_cmd_name
+		end;
 
 	redo is
 		do

@@ -4,18 +4,8 @@ class CMD_LABEL
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	EB_HASHABLE
-		export
-			{NONE} all
-		end;
-
 	LABEL_STONE;
-
 
 creation
 
@@ -56,7 +46,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := Label_pixmap
+			Result := Pixmaps.label_pixmap
 		end;
 
 	label: STRING;

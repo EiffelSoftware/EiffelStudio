@@ -7,14 +7,7 @@ inherit
 		redefine
 			stone, compatible
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	LABELS
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -25,7 +18,7 @@ feature
 	make (editor: APP_EDITOR) is
 			-- Create a return hole.
 		do
-			set_symbol (Return_pixmap);
+			set_symbol (Pixmaps.return_pixmap);
 			set_label (Return_label);
 		end;
 	

@@ -8,13 +8,6 @@ inherit
 			stone, compatible
 		end;
 	LABELS
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -26,7 +19,7 @@ feature -- Creation
 			-- Create a self_hole.
 		do
 			set_label (Self_label);
-			set_symbol (Self_label_pixmap);
+			set_symbol (Pixmaps.self_label_pixmap);
 		end; 
 
 feature {NONE}

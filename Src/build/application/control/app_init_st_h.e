@@ -8,13 +8,6 @@ inherit
 			stone, compatible
 		end;
 	LABELS
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -25,7 +18,7 @@ feature -- Creation
 	make (editor: APP_EDITOR) is
 			-- Create a init_state_h.
 		do
-			set_symbol (Initial_state_pixmap);
+			set_symbol (Pixmaps.initial_state_pixmap);
 			set_label (Initial_state_label);
 		end; -- Create
 	

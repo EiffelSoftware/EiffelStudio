@@ -6,19 +6,13 @@ inherit
 	ICON
 		rename
 			make_visible as org_make_visible
-		undefine
-			init_toolkit
 		end;
-
 	ICON
-		undefine
-			init_toolkit
 		redefine
 			make_visible
 		select
 			make_visible
 		end;
-
 	HOLE
 	
 feature 

@@ -6,10 +6,8 @@ inherit
 	DRAWING_AREA
 		rename
 			make as make_drawing_area
-		undefine
-			init_toolkit
 		end;
-	HOLE;
+	HOLE
 
 creation
 

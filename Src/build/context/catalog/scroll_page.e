@@ -94,7 +94,7 @@ feature {NONE}
 			!!text_c;
 			!!text.make (text_c.eiffel_type, Current);
 			text.set_size (100, 60);
-			!!text_type.make (Context_const.text_name, text_c);
+			!!text_type.make (Widget_names.text_name, text_c);
 			text_type.initialize_callbacks (text);
 
 			!!scroll_list_c;
@@ -106,13 +106,13 @@ feature {NONE}
 				i > 5
 			loop
 				!!text_item.make (0);
-				text_item.append (Context_const.item_name);
+				text_item.append (Widget_names.item_name);
 				text_item.append (to_string (i));
 				scroll_list.put_right (text_item);
 				scroll_list.forth;
 				i := i + 1
 			end;
-			!!scroll_list_type.make (Context_const.scroll_list_name, scroll_list_c);
+			!!scroll_list_type.make (Widget_names.scroll_list_name, scroll_list_c);
 			scroll_list_type.initialize_callbacks (scroll_list);
 
 			!!drawing_area_c;
@@ -121,7 +121,7 @@ feature {NONE}
 			drawing_area.set_drawing_area_size (80, 80);
 			drawing_area.set_size (80, 80);
 			create_figures;
-			!!drawing_area_type.make (Context_const.drawing_area_name, 
+			!!drawing_area_type.make (Widget_names.drawing_area_name, 
 					drawing_area_c);
 			drawing_area_type.initialize_callbacks (drawing_area);
 

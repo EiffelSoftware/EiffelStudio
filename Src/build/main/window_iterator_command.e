@@ -21,7 +21,6 @@ feature
 	execute (arg: ANY) is
 		do
 			perm_window.hide;
-			iterate;
 		end
 
 end -- class WINDOW_ITERATOR_COMMAND

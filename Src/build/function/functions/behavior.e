@@ -3,23 +3,12 @@ class BEHAVIOR
 
 inherit
 
-	BEHAVIOR_STONE
-		
-		export
-			{NONE} all
-		end;
-
+	BEHAVIOR_STONE;
 	FUNCTION
 		redefine
 			func_editor, 
 			input_stone, output_stone
 		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -76,7 +65,7 @@ feature
 
 	make is
 		do
-			set_symbol (Behavior_pixmap_small);
+			set_symbol (Pixmaps.behavior_pixmap_small);
 			!!input_list.make;
 			!!output_list.make;
 			int_generator.next;

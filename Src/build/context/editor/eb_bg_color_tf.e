@@ -6,8 +6,6 @@ inherit
 	EB_TEXT_FIELD
 		rename
 			make as old_create
-		undefine
-			init_toolkit
 		end;
 	HOLE
 		redefine

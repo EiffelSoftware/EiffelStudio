@@ -1,17 +1,18 @@
 class S_PERM_WIND_R1
 
-	inherit
-		S_PERM_WIND
-			rename
-				set_context_attributes as old_set_attributes,
-				make as old_make
-			end;
-		S_PERM_WIND
-			redefine
-				set_context_attributes, make
-			select
-				set_context_attributes, make
-			end;
+inherit
+
+	S_PERM_WIND
+		rename
+			set_context_attributes as old_set_attributes,
+			make as old_make
+		end;
+	S_PERM_WIND
+		redefine
+			set_context_attributes, make
+		select
+			set_context_attributes, make
+		end;
 
 creation
 

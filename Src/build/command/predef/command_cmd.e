@@ -4,28 +4,14 @@ class COMMAND_CMD
 
 inherit
 
-	PREDEF_CMD_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
+	PREDEF_CMD_IDENTIFIERS;
 	PREDEF_CMD
 		redefine
 			eiffel_inherit_text,
 			eiffel_body_text,
 			eiffel_creation_text
 		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	WINDOWS
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -43,7 +29,7 @@ feature
 
 	make is
 		do
-			set_symbol (Command_o_pixmap);
+			set_symbol (Pixmaps.command_o_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)
 		end;

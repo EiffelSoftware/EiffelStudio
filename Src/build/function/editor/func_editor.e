@@ -3,18 +3,9 @@ deferred class FUNC_EDITOR
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
+	COMMAND;
+	COMMAND_ARGS;
+	CONSTANTS
 
 feature {NONE} -- Anchors
 
@@ -121,13 +112,11 @@ feature -- Display the page number details
 		do
 			!!temp.make (0);
 			nbr_of_rows := input_list.number_of_rows_in_page;
-			if nbr_of_rows = 1 then
-				temp.append ("(row: ")
-			else
-				temp.append ("(rows: ")
-			end;
-			temp.append (to_string (nbr_of_rows));
-			temp.append (")");
+			temp.extend ('(')
+			temp.append (Widget_names.rows_label);
+			temp.extend (' ');
+			temp.append_integer (nbr_of_rows);
+			temp.extend (')');
 			row_label.set_text (temp);
 			if
 				page_number /= input_list.page_number
@@ -145,10 +134,11 @@ feature -- Display the page number details
 				changed
 			then
 				!!temp.make (0);
-				temp.append ("Page ");
-				temp.append (to_string (page_number));
-				temp.append (" of ");
-				temp.append (to_string (number_of_pages));
+				temp.append (Widget_names.page_label);
+				temp.extend (' ');
+				temp.append_integer (page_number);
+				temp.extend ('/');
+				temp.append_integer (number_of_pages);
 				page_label.set_text (temp)
 			end
 		end;
@@ -186,9 +176,12 @@ feature {NONE}
 			output_stone.set_original_stone (st);
 		end;
 
-feature {NONE}
+feature
 
 	form, input_form, output_form, button_form: FORM;
+
+feature {NONE}
+
 	input_frame, output_frame: FRAME;
 	menu_bar: FUNCTION_BAR;
 	arrow_b, arrow_b1: ARROW_B;
@@ -206,29 +199,38 @@ feature {NONE}
 		end;
 
 	initialize (a_name: STRING; a_parent: COMPOSITE) is
+		local
+			tmp: STRING
 		do
 				-- ***************
 				-- Widget Creation
 				-- ***************
 
 			!!form.make (a_name, a_parent);
-			!!menu_bar.make (B_ar, form, Current);
-			!!input_form.make (F_orm1, form);
-			!!output_form.make (F_orm2, form);
-			!!button_form.make (F_orm3, form);
-			!!arrow_b.make (B_utton, button_form);
-			!!arrow_b1.make (B_utton1, button_form);
-			!!page_label.make (L_abel, button_form);
-			!!row_label.make (L_abel1, button_form);
+			!!menu_bar.make (Widget_names.bar, form, Current);
+			!!input_form.make (Widget_names.form1, form);
+			!!output_form.make (Widget_names.form2, form);
+			!!button_form.make (Widget_names.form3, form);
+			!!arrow_b.make (Widget_names.button, button_form);
+			!!arrow_b1.make (Widget_names.button1, button_form);
+			!!page_label.make (Widget_names.label, button_form);
+			!!row_label.make (Widget_names.label1, button_form);
 			create_input_stone (input_form);
 			create_output_stone (output_form);
 			!!input_hole.make (input_form, Current);
 			!!output_hole.make (output_form, Current);
-			!!input_frame.make (F_rame, input_form);
-			!!output_frame.make (F_rame1, output_form);
-			!!input_list.make (R_ow_column, input_frame, Current);
-			!!output_list.make (R_ow_column1, output_frame, Current);
-			row_label.set_text ("(rows: 0)  ");
+			!!input_frame.make (Widget_names.frame, input_form);
+			!!output_frame.make (Widget_names.frame1, output_form);
+			!!input_list.make (Widget_names.row_column, input_frame, Current);
+			!!output_list.make (Widget_names.row_column1, output_frame, Current);
+			!! tmp.make (0);
+			tmp.extend ('(');
+			tmp.append (Widget_names.rows_label);
+			tmp.append (")  ");
+			row_label.set_text (tmp);
+			!! tmp.make (0);
+			tmp.append (Widget_names.page_label);
+			tmp.append (" 1 of 1");
 			page_label.set_text ("Page 1 of 1");
 
 				-- ******
@@ -319,11 +321,5 @@ feature {NONE}
 				end
 			end
 		end;
-
-	to_string (i: INTEGER): STRING is
-		do
-			!!Result.make (0);
-			Result.append_integer (i)
-		end
 
 end

@@ -60,17 +60,17 @@ feature
 			title_label: LABEL_G;
 			icon_label: LABEL_G;
 		do	
-			initialize (Context_const.temp_wind_form_name, a_parent);
+			initialize (Widget_names.temp_wind_form_name, a_parent);
 
-			!!title_label.make (Context_const.title_name, Current);
+			!!title_label.make (Widget_names.title_name, Current);
 			!!title.make (Widget_names.textfield, Current, 
 					Temp_title_cmd, editor);
 			!!set_default_position_t.make 
-					(Context_const.set_default_position_name, Current, 
+					(Widget_names.set_default_position_name, Current, 
 					Win_set_default_position_cmd, editor);
-			!!forbid_recomp.make (Context_const.forbid_recomp_size_name, 
+			!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
 					Current, Temp_resize_cmd, editor);
-			!!start_hidden.make (Context_const.set_shown_name, Current, 
+			!!start_hidden.make (Widget_names.set_shown_name, Current, 
 					Temp_hidden_cmd, editor);
 
 			attach_left (title_label, 10);

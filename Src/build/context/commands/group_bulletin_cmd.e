@@ -19,7 +19,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.group_cmd_name
+			Result := Command_names.cont_group_cmd_name
 		end;
 
 	context: BULLETIN_C;

@@ -3,18 +3,8 @@ class SHOW
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	PAINTER
-		export
-			{NONE} all
-		undefine
-			init_toolkit
-		end;
-
+	WINDOWS;
+	PAINTER;
 	COMMAND;
 
 creation

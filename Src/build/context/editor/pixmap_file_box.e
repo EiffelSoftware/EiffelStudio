@@ -5,18 +5,10 @@ inherit
 
 	FILE_SEL_D
 		rename
-			init_toolkit as unused,
 			make as file_sel_d_create
 		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	COMMAND_ARGS
-		export
-			{NONE} all
-		end
-
 
 creation
 

@@ -5,8 +5,7 @@ inherit
 
 	SHARED_STORAGE_INFO;
 	SHARED_CONTEXT;
-	WINDOWS;
-	UNDOABLE;
+	EB_UNDOABLE;
 	ERROR_POPUPER;
 	CONSTANTS
 
@@ -26,7 +25,10 @@ feature {NONE}
 
 feature 
 
-	n_ame: STRING is "Import";
+	name: STRING is 
+		do
+			Result := Command_names.import_cmd_name
+		end;
 
 	undo is
 		do
@@ -40,15 +42,6 @@ feature
 feature {NONE}
 
 	failed: BOOLEAN is do end;
-
-	
-feature 
-
-	history: HISTORY_WND is
-		once
-			Result := history_window;
-		end;
-
 	
 feature {NONE}
 
@@ -57,7 +50,6 @@ feature {NONE}
 	import_application (import_window: IMPORT_WINDOW) is
 		local
 			import_directory: STRING;
-			msg: STRING;
 			import_path_name: FILE_NAME;
 			mp: MOUSE_PTR;
 		do
@@ -70,25 +62,19 @@ feature {NONE}
 					if import_path_name.exists then
 						import_from_file (import_window)
 					else
-						!!msg.make (0);
-						msg.append ("Directory ");
-						msg.append (import_directory);
-						msg.append ("does not exist");
-						error_box.popup (Current, msg)
+						error_box.popup (Current, 	
+							Messages.dir_not_exist_er, 
+							import_directory)
 					end;
 				else
-					!!msg.make (0);
-					msg.append ("No Directory chosen!!");
-					error_box.popup (Current, msg)
+					error_box.popup (Current, Messages.dir_not_chosen_er, Void)
 				end;
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Cannot retrieve from directory ");
-				msg.append (import_directory);
 				!!mp;
 				mp.restore;
-				error_box.popup (Current, msg);
+				error_box.popup (Current, Messages.cannot_ret_dir_er,
+							import_directory);
 			end
 		rescue
 			mp.restore;

@@ -7,7 +7,6 @@ inherit
 		rename 
 			make as extend_table_create
 		end;
-
 	SHARED_APPLICATION
 		undefine
 			is_equal, copy
@@ -123,7 +122,7 @@ feature
 					Result.append (", ");
 					if (dest_element = Void) then
 						Result.append ("Return_to_previous");
-					elseif (dest_element = Exit_element) then
+					elseif (dest_element = Shared_app_exit_element) then
 						Result.append ("Exit_from_application");
 					else
 						Result.append (dest_element.label);

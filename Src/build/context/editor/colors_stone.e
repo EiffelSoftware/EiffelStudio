@@ -14,7 +14,7 @@ feature {NONE}
 
 	pixmap: PIXMAP is
 		do
-			Result := Color_stone_pixmap
+			Result := Pixmaps.color_stone_pixmap
 		end;
 	
 feature 

@@ -1,51 +1,25 @@
 class SAVE_AS_BUTTON 
 inherit
 
-	FOCUSABLE
---	PUSH_B
---		rename 
---			make as push_b_make
---		undefine
---			init_toolkit
---		end	
-	 
 	EB_PICT_B
-        export
-            {NONE} all
-        undefine
-            init_toolkit
-        end
-	WINDOWS
-	PIXMAPS
+		rename
+			make_visible as make
+		end;
+	WINDOWS;
 	LICENCE_COMMAND
 
 creation
 
 	make
 
-feature -- Creation
-
-	make (a_name: STRING a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
-		do
-			make_visible (a_parent)
-			set_symbol (Save_as_pixmap)
-	--		push_b_make (a_name, a_parent)
-	--		set_text ("Save As")
-	--		set_size (125, 30)
-			add_activate_action (Current, Nothing)
-			initialize_focus
-		end
-
 feature {NONE} -- Focusable
 
-	focus_source: WIDGET is
-		do
-			Result := Current
-		end
-
 	focus_string: STRING is "Save project as..."
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.save_as_pixmap
+		end;
 
 	focus_label: LABEL is
 		do

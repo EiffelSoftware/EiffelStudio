@@ -6,26 +6,17 @@ inherit
 	TOP_SHELL
 		rename
 			make as top_shell_create
-		undefine
-			init_toolkit
 		redefine
 			delete_window_action
 		end;
 	TOP_SHELL
-		undefine
-			init_toolkit
 		redefine
 			make, delete_window_action
 		select
 			make
 		end;
-
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-
-	WINDOWS	
+	WINDOWS;
+	CONSTANTS;
 	COMMAND
 
 creation
@@ -59,7 +50,6 @@ feature
 	delete_window_action is
 		do
 			close;
-			iterate;
 		end;
 	
 feature {NONE}
@@ -129,16 +119,15 @@ feature
 				-- Create Widgets
 				-- **************
 			top_shell_create (a_name, a_screen);
-			!!form.make (F_orm, Current);
+			!!form.make (Widget_names.form, Current);
 			!!instance_hole.make (Current);
 			instance_hole.make_visible (form);
 			!!command_hole.make (Current);
 			command_hole.make_visible (form);	
 			!!close_b.make (Current);
-			close_b.make_visible (form);
-			!!argument_sw.make (S_croll2, form);
-			!!arguments.make (I_con_box1, argument_sw);
-			!!separator.make (S_eparator, form);
+			!!argument_sw.make (Widget_names.scroll2, form);
+			!!arguments.make (Widget_names.icon_box1, argument_sw);
+			!!separator.make (Widget_names.separator, form);
 				-- *******************
 				-- Perform attachments 
 				-- *******************

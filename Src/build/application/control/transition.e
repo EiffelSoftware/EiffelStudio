@@ -13,14 +13,14 @@ feature
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 		do
 			!!temp_trans.make (5);
-			graph.put (temp_trans, element)
+			Shared_app_graph.put (temp_trans, element)
 		end; -- init_element
 
 	all_transitions (source: STATE): TRAN_NAME_LIST is
 			-- All labels name and their destination 
 			-- graph element names from `source'	
 		require
-			--source_exists: graph.has (source)
+			source_exists: Shared_app_graph.has (source)
 		local
 			element: GRAPH_ELEMENT;
 			text: TRAN_NAME;
@@ -32,7 +32,7 @@ feature
 		do
 			!!transition_name_list.make;
 			!!updated_trans.make (10);
-			temp_trans := graph.item (source);
+			temp_trans := Shared_app_graph.item (source);
 			labels := source.labels;
 			from
 				labels.start	
@@ -68,7 +68,7 @@ feature
 				labels.forth;
 			end;
 			Result := transition_name_list;
-			graph.force (updated_trans, source);
+			Shared_app_graph.force (updated_trans, source);
 		end; -- labels
 
 	destination_element (source: GRAPH_ELEMENT; label: STRING): GRAPH_ELEMENT is
@@ -76,10 +76,8 @@ feature
 		local
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING]
 		do
-			if
-				graph.has (source)
-			then
-				temp_trans := graph.item (source);
+			if Shared_app_graph.has (source) then
+				temp_trans := Shared_app_graph.item (source);
 				Result := temp_trans.item (label);
 			end;
 		end; -- destination_element
@@ -90,15 +88,15 @@ feature
 			source: GRAPH_ELEMENT;
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 		do
-			graph.remove (element);
+			Shared_app_graph.remove (element);
 			from
-				graph.start
+				Shared_app_graph.start
 			until
-				graph.off
+				Shared_app_graph.off
 			loop
-				source := graph.key_for_iteration;
+				source := Shared_app_graph.key_for_iteration;
 				remove_transition (source, element);
-				graph.forth
+				Shared_app_graph.forth
 			end;
 		end; -- remove_element
 
@@ -108,7 +106,7 @@ feature
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 			element: GRAPH_ELEMENT
 		do
-			temp_trans := graph.item (source);
+			temp_trans := Shared_app_graph.item (source);
 			if temp_trans = Void then
 				from
 					temp_trans.start
@@ -160,19 +158,15 @@ feature
 		local
 			temp_tran: HASH_TABLE [GRAPH_ELEMENT, STRING]
 		do
-			if
-				graph.has (source)
-			then
-				temp_tran := graph.item (source);
+			if Shared_app_graph.has (source) then
+				temp_tran := Shared_app_graph.item (source);
 				from
 					temp_tran.start;
 					!!Result.make (5);
 				until
 					temp_tran.off
 				loop
-					if
-						dest= temp_tran.item_for_iteration
-					then
+					if dest= temp_tran.item_for_iteration then
 						Result.put (dest, temp_tran.key_for_iteration)
 					end;
 					temp_tran.forth
@@ -188,11 +182,11 @@ feature
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 		do
 			from
-				graph.start
+				Shared_app_graph.start
 			until
-				graph.off
+				Shared_app_graph.off
 			loop
-				temp_trans := graph.item_for_iteration;
+				temp_trans := Shared_app_graph.item_for_iteration;
 				from
 					temp_trans.start
 				until
@@ -206,9 +200,9 @@ feature
 					end;
 					temp_trans.forth
 				end;
-				graph.forth
+				Shared_app_graph.forth
 			end;
-			graph.remove (old_element); -- remove all transitions
+			Shared_app_graph.remove (old_element); -- remove all transitions
 			init_element (new_element);
 		end; -- selected_tran_labels
 
@@ -217,11 +211,11 @@ feature
 			-- dest element. If a transition between elements do not
 			-- exist then add.
 		require
-			--element_has_transitions: graph.has (source)
+			element_has_transitions: Shared_app_graph.has (source)
 		local
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING]
 		do
-			temp_trans := graph.item (source);
+			temp_trans := Shared_app_graph.item (source);
 			if
 				source = dest
 			then
@@ -234,13 +228,10 @@ feature
 	update (new_trans: HASH_TABLE [GRAPH_ELEMENT, STRING]; element: GRAPH_ELEMENT) is
 			-- Update the transitions of `element' with `new_transitions'.  
 		require
-			--not_void_new_transitions: not (new_trans = Void);
-			--graph_has_element: graph.has (element)
+			not_void_new_transitions: new_trans /= Void;
+			graph_has_element: Shared_app_graph.has (element)
 		do
-			graph.replace (new_trans, element);
+			Shared_app_graph.replace (new_trans, element);
 		end; -- update
-
-	invariant
-		not_void_graph: (graph /= Void)
 
 end

@@ -3,12 +3,6 @@ class CMD_CUT_ARGUMENT
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_cut_argument_cmd_name as c_name
-		export
-			{NONE} all
-		end;
 	CMD_CUT
 		redefine
 			element
@@ -17,6 +11,11 @@ inherit
 feature {NONE}
 
 	element: ARG;
+
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_cut_argument_cmd_name
+		end;
 
 	list: EB_LINKED_LIST [ARG] is
 		do

@@ -11,18 +11,10 @@ deferred class EVENT_STONE
 
 inherit
 
-	CURSORS
-		rename
-			Event_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
 		end;
-
 	HELPABLE
 	
 feature {NONE}
@@ -31,6 +23,11 @@ feature {NONE}
 		do
 			Result := label
 		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.event_cursor
+		end
 	
 feature 
 

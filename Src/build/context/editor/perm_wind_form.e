@@ -82,32 +82,31 @@ feature
 	make_visible (a_parent: COMPOSITE) is
 		local
 			pixmap_open_b: PUSH_BG;
-			Nothing: ANY
 			title_label: LABEL_G;
 			icon_label: LABEL_G;
 			icon_pixmap_label: LABEL_G;
 		do	
-			initialize (Context_const.perm_wind_form_name, a_parent);
+			initialize (Widget_names.perm_wind_form_name, a_parent);
 
-			!!title_label.make (Context_const.title_name, Current);
+			!!title_label.make (Widget_names.title_name, Current);
 			!!title.make (Widget_names.textfield, Current, Perm_title_cmd, editor);
-			--!!forbid_recomp.make (Context_const.forbid_recomp_size_name, 
+			--!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
 					--Current, Perm_resize_cmd, editor);
 			!!set_default_position_t.make 
-					(Context_const.set_default_position_name, 	
+					(Widget_names.set_default_position_name, 	
 					Current, Win_set_default_position_cmd, editor);
-			!!set_hidden.make (Context_const.set_shown_name, 
+			!!set_hidden.make (Widget_names.set_shown_name, 
 					Current, Perm_hidden_cmd, editor);
-			!!icon_label.make (Context_const.label_name, Current);
+			!!icon_label.make (Widget_names.label_name, Current);
 			!!icon_name.make (Widget_names.textfield, Current, 
 					Perm_icon_name_cmd, editor);
-			!!iconic_state.make (Context_const.iconic_state_name, 
+			!!iconic_state.make (Widget_names.iconic_state_name, 
 					Current, Perm_iconic_cmd, editor);
 
-			!!icon_pixmap_label.make (Context_const.icon_pix_name, Current);
+			!!icon_pixmap_label.make (Widget_names.icon_pix_name, Current);
 			!!pixmap_name.make (Widget_names.textfield, Current, 
 					Perm_icon_cmd, editor);
-			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
+			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
 			attach_left (title_label, 10);
 			attach_left (title, 100);
 			attach_right (title, 10);
@@ -134,7 +133,7 @@ feature
 			attach_top_widget (set_default_position_t, iconic_state, 10);
 			attach_top_widget (iconic_state, set_hidden, 10);
 			detach_bottom (iconic_state);
-			pixmap_open_b.add_activate_action (Current, Nothing);
+			pixmap_open_b.add_activate_action (Current, Void);
 			show_current
 		end;
 

@@ -17,7 +17,7 @@ feature {NONE}
 	
 	c_name: STRING is
 		do
-			Result := Context_const.geometry_cmd_name
+			Result := Command_names.cont_geometry_cmd_name
 		end;
 
 feature 

@@ -37,9 +37,9 @@ feature
 		local
 			visible_label: LABEL_G;
 		do
-			initialize (Context_const.scroll_list_form_name, a_parent);
+			initialize (Widget_names.scroll_list_form_name, a_parent);
 
-			!!visible_label.make (Context_const.visible_items_name, Current);
+			!!visible_label.make (Widget_names.visible_items_name, Current);
 			!!visible_item_count.make (Widget_names.textfield, 
 					Current, List_count_cmd, editor);
 			visible_item_count.set_width (50);

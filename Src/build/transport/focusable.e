@@ -25,18 +25,21 @@ feature {NONE}
 
 	initialize_focus is
 			-- Add the focusable behavior to Current.
-		local
-			Nothing: FOCUSABLE
 		do
 			focus_source.add_enter_action (focus_command, Current);
-			focus_source.add_leave_action (focus_command, Nothing);
+			focus_source.add_leave_action (focus_command, Void);
 		end;
 
 	focus_command: FOCUS_COMMAND is
 			-- Actual EiffelVision command.
 		once
-			!!Result
+			!! Result
 		end;
+
+	Focus_labels: FOCUS_LABEL_CONSTANTS is
+		once
+			!! Result
+		end;	
 	
 feature
 
@@ -58,4 +61,5 @@ feature
 		do
 			focus_label.set_text ("");
 		end;
+
 end

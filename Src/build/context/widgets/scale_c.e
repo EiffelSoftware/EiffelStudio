@@ -4,13 +4,6 @@ class SCALE_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Scale_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	PRIMITIVE_C
 		rename
 			copy_attributes as old_copy_attributes,
@@ -28,6 +21,11 @@ inherit
 		end
 
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.scale_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

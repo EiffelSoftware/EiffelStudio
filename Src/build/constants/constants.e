@@ -2,18 +2,28 @@ class CONSTANTS
 
 feature
 
+	App_const: APPLICATION_CONSTANTS is
+		once
+			!! Result
+		end;
+
 	Context_const: CONTEXT_CONSTANTS is
 		once
 			!! Result
 		end;
 
-	Widget_names: WIDGET_NAMES_N is
+	Cursors: CURSORS is
 		once
 			!! Result
 		end;
 
-	Cursors: CURSORS is
-		once	
+	Environment: EB_ENVIRONMENT is
+		once
+			!! Result
+		end;
+
+	Icon_labels: ICON_LABEL_CONSTANTS is
+		once
 			!! Result
 		end;
 
@@ -22,12 +32,7 @@ feature
 			!! Result
 		end;
 
-	Focus_labels: FOCUS_LABEL_CONSTANTS is
-		once
-			!! Result
-		end;
-
-	Environment: EB_ENVIRONMENT is
+	Widget_names: WIDGET_NAMES is
 		once
 			!! Result
 		end;

@@ -31,7 +31,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.colors_cmd_name
+			Result := Command_names.cont_colors_cmd_name
 		end;
 
 	associated_form: INTEGER is

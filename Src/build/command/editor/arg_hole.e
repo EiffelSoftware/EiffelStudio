@@ -9,17 +9,7 @@ inherit
 		redefine
 			stone, compatible
 		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	LABELS
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -39,7 +29,7 @@ feature
 	make (ed: CMD_EDITOR) is
 		do
 			command_editor := ed;
-			set_symbol (Type_pixmap);
+			set_symbol (Pixmaps.type_pixmap);
 			set_label ("Arguments");
 		end;
 

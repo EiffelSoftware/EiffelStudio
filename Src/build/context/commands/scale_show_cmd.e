@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.scale_show_cmd_name
+			Result := Command_names.cont_scale_show_cmd_name
 		end;
 
 	context: SCALE_C;

@@ -4,13 +4,6 @@ class DR_AREA_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Drawing_area_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	CONTEXT
 		rename
 			copy_attributes as old_copy_attributes,
@@ -32,6 +25,11 @@ inherit
 		end
 
 feature 
+
+    symbol: PIXMAP is
+        do
+            Result := Pixmaps.drawing_area_pixmap
+        end;
 
 	context_type: CONTEXT_TYPE is
 		do
@@ -63,7 +61,7 @@ feature {NONE}
 		do
 			old_remove_widget_callbacks;
 			widget.scrolled_window.remove_button_press_action (2, show_command, Current);
-			widget.scrolled_window.remove_button_release_action (2, show_command, Nothing);
+			widget.scrolled_window.remove_button_release_action (2, show_command, Void);
 			widget.scrolled_window.remove_button_press_action (3, transport_command, Current);
 		end;
 
@@ -71,7 +69,7 @@ feature {NONE}
 		do
 			old_initialize_transport;
 			widget.scrolled_window.add_button_press_action (2, show_command, Current);
-			widget.scrolled_window.add_button_release_action (2, show_command, Nothing);
+			widget.scrolled_window.add_button_release_action (2, show_command, Void);
 			widget.scrolled_window.add_button_press_action (3, transport_command, Current);
 		end;
 

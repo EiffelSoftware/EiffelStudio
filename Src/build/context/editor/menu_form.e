@@ -7,8 +7,6 @@ inherit
 	COMMAND;
 	COMMAND_ARGS;
 	EDITOR_FORM
-		undefine
-			init_toolkit
 		redefine
 			context
 		end
@@ -48,8 +46,8 @@ feature {NONE}
 			attach_left (title, 100);
 			attach_right (title, 10);
 
-			!!add_button.make (Context_const.add_button_name, Current);
-			!!add_submenu.make (Context_const.add_submenu_name, Current);
+			!!add_button.make (Widget_names.add_button_name, Current);
+			!!add_submenu.make (Widget_names.add_submenu_name, Current);
 
 			add_button.add_activate_action (Current, First);
 			add_submenu.add_activate_action (Current, Third);
@@ -64,8 +62,8 @@ feature
 		local
 			label: LABEL_G;
 		do
-			initialize (Context_const.menu_form_name, a_parent);
-			!!label.make (Context_const.title_name, Current);
+			initialize (Widget_names.menu_form_name, a_parent);
+			!!label.make (Widget_names.title_name, Current);
 
 			create_buttons;
 

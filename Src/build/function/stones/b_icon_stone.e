@@ -13,7 +13,6 @@ inherit
 		redefine
 			original_stone
 		end;
-
 	ICON_STONE
 		rename
 			identifier as oui_identifier
@@ -24,11 +23,7 @@ inherit
 		select
 			make_visible
 		end;
-
 	BEHAVIOR_STONE
-		export
-			{NONE} all
-		end;
 	
 feature 
 

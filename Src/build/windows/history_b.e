@@ -1,14 +1,8 @@
 class HISTORY_B 
 inherit
 
-	FOCUSABLE
-	PUSH_B_TOGGLE
-		rename
-			make as push_b_toggle_make
-		undefine
-			init_toolkit
-		end	
-	WINDOWS
+	MAIN_PANEL_TOGGLE;
+	WINDOWS;
 	LICENCE_COMMAND
 
 creation
@@ -16,45 +10,16 @@ creation
 	
 feature {NONE}
 
-	focus_source: WIDGET is
+	toggle_pressed is
 		do
-			Result := Current
-		end
-
-	focus_string: STRING is "Show/hide history"
-
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end
-
-feature 
-
-	make (a_name: STRING a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
-		do
-			push_b_toggle_make (a_name, a_parent)
-			set_text ("History")
-			set_size (132, 36)
-			initialize_focus
-			add_activate_action (Current, Void)
-		end
-	
-feature {NONE}
-
-	work (argument: ANY) is
-		do
-			if main_panel.project_initialized then
-                if armed then
-					if not main_panel.history_window.is_popped_up then
-						main_panel.history_window.popup
-					end
-                else
-					if main_panel.history_window.is_popped_up then
-						main_panel.history_window.popdown
-					end
-                end
+			if armed then
+				if not History_window.is_popped_up then
+					History_window.popup
+				end
+			else
+				if History_window.is_popped_up then
+					History_window.popdown
+				end
 			end
 		end
 

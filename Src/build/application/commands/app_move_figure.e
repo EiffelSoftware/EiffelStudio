@@ -8,10 +8,6 @@ inherit
 		redefine
 			redo	
 		end;
-	APP_CMD_NAMES
-		rename
-			App_move_figure_cmd_name as c_name
-		end
 	
 feature 
 
@@ -41,6 +37,11 @@ feature {NONE}
 	old_x, old_y: INTEGER;
 
 	figure: STATE_CIRCLE;
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_move_figure_cmd_name
+		end;
 
 	work (a_figure: STATE_CIRCLE) is
 			-- Record the movement of a figure. 

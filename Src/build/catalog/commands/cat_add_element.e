@@ -3,21 +3,18 @@ deferred class CAT_ADD_ELEMENT
 
 inherit
 
-	CAT_CMD_NAMES
-		rename
-			Cat_new_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	CAT_COMMAND
-
 	
 feature {NONE}
 
 	catalog: CATALOG [STONE] is 
 		deferred
 		end;
+
+	c_name: STRING is
+		do
+			Result := Command_names.cat_new_cmd_name
+		end
 	
 feature 
 

@@ -14,18 +14,16 @@ feature {NONE}
 
 	pixmap: PIXMAP is
 		do
-			Result := Color_stone_pixmap
+			Result := Pixmaps.color_stone_pixmap
 		end;
 
 feature 
-
 
 	eiffel_type: STRING is
 		do
 			!!Result.make (0);
 			Result.append ("pixmap");
 		end;
-
 
 	copy_attribute (new_context: CONTEXT) is
 		local
@@ -39,7 +37,6 @@ feature
 				modify_contexts (new_context);
 			end;
 		end;
-
 	
 feature {NONE}
 

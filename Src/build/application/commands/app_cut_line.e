@@ -13,12 +13,6 @@ inherit
 		select
 			redo
 		end;
-	APP_CMD_NAMES
-		rename
-			App_cut_line_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
 feature {NONE}
 
@@ -28,6 +22,11 @@ feature {NONE}
 
 	labels_cut: LINKED_LIST [APP_CUT_LABEL];
 	
+	c_name: STRING is
+		do
+			Result := Command_names.app_cut_line_cmd_name
+		end;
+
 feature 
 
 	redo is
@@ -63,7 +62,6 @@ feature
 			perform_update_display
 		end; -- undo
 		
-	
 feature {NONE}
 
 	work (a_line: STATE_LINE) is
@@ -80,7 +78,7 @@ feature {NONE}
 			!!labels_cut.make;
 			transitions := application_editor.transitions;
 			temp_tran := transitions.transition (source_element,
-							     dest_element);
+								 dest_element);
 			from
 				temp_tran.start
 			until

@@ -19,7 +19,6 @@ feature
 	execute (argument: ANY) is
 			-- Generate command
 		local
-			msg: STRING;
 			mp: MOUSE_PTR
 		do
 			if not rescued then
@@ -29,10 +28,8 @@ feature
 				mp.restore
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Cannot generate files to directory%N");
-				msg.append (Environment.generated_directory);
-				error_box.popup (Current, msg)
+				error_box.popup (Current, 
+					Messages.generate_er, Environment.generated_directory)
 			end
 		rescue
 			mp.restore;
@@ -158,7 +155,7 @@ feature
 			!!doc;
 			doc.set_directory_name (Environment.application_directory);
 			doc.set_document_name (Environment.application_file_name);
-			temp := graph.eiffel_text;
+			temp := Shared_app_graph.eiffel_text;
 			if temp.item (temp.count) /= '%N' then
 				temp.append ("%N");
 			end;
@@ -190,7 +187,7 @@ feature {NONE}
 			Result.append ("%N%TExit_from_application: INTEGER is -2;%N");
 			Result.append ("%N%TReturn_to_previous: INTEGER is -1;%N");
 			from
-				state_list := graph.states;
+				state_list := Shared_app_graph.states;
 				state_list.start;
 				counter := 1;
 			until
@@ -252,7 +249,6 @@ feature {NONE}
 			end;
 			Shared_window_list.go_to (old_cursor);
 			Result.append ("%T%T%Titerate%N%T%Tend;%N%N");
-			Result.append ("%TNothing: ANY is do end;%N%N");
 			from
 				old_cursor := Shared_window_list.cursor;
 				Shared_window_list.start;
@@ -288,7 +284,7 @@ feature {NONE}
 			!!Result.make (0);
 			Result.append ("class SHARED_CONTROL%N%Nfeature%N%N");
 			Result.append ("%Tcontrol: CONTROL is%N%T%Tonce%N%T%T%T!!Result.make (");
-			Result.append_integer (graph.count);
+			Result.append_integer (Shared_app_graph.count);
 			Result.append (")%N%T%Tend%N%Nend%N");
 		end;
 

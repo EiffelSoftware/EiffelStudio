@@ -3,40 +3,29 @@ class CMD_I_ED_HOLE
 inherit
 
 	EDIT_BUTTON
-		redefine
-			process_stone
-		end;
 
 creation
+
 	make
-
-feature
-
-	make (a_name: STRING; a_parent: COMPOSITE) is
-		do
-			make_visible (a_parent);
-			set_symbol (Command_instance_pixmap);
-			initialize_focus;
-		end;
-
-	process_stone is
-		local
-			inst: CMD_INSTANCE;
-		do
-			inst ?= stone.original_stone;
-			if inst /= Void then
-				inst.create_editor;
-			end;
-		end;
 
 feature {NONE}
 
-	focus_label: LABEL is
+	symbol: PIXMAP is
 		do
-			Result := main_panel.focus_label;
+			Result := Pixmaps.command_instance_pixmap
 		end;
 
-	focus_string: STRING is "Command instance hole";
-	
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.command_instance_label
+		end;
 
+	create_empty_editor is
+		local
+			editor: CMD_INST_EDITOR
+		do
+			editor := window_mgr.cmd_inst_editor;
+			window_mgr.display (editor)
+		end
+	
 end

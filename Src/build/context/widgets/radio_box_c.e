@@ -3,13 +3,6 @@ class RADIO_BOX_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Radio_box_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	GROUP_COMPOSITE_C
 		redefine
 			widget, stored_node
@@ -30,6 +23,10 @@ feature
 
 	widget: RADIO_BOX;
 
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.radio_box_pixmap
+		end;
 	
 feature {NONE}
 

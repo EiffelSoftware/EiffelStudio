@@ -8,10 +8,10 @@ inherit
 		rename
 			make as cat_create
 		export
-			{ CAT_COM_IS,CATALOG, CMD_CAT_BUTTON} hide, make_visible, show, shown,
-			manage, unmanage, managed, associated_catalog
-		end;
-	WIDGET_NAMES
+			{CAT_COM_IS,CATALOG, CMD_CAT_BUTTON} hide, make_visible, 
+			show, shown, manage, unmanage, 
+			managed, associated_catalog
+		end
 
 creation
 
@@ -42,8 +42,8 @@ feature
 			-- Create a catalog_page with `page_n' as page_name
 			-- and a_symbol as `symbol'.
 		require
-			not_Void_page_n: not (page_n = Void);
-			not_Void_symbol: not (a_symbol = Void)
+			not_Void_page_n: page_n /= Void;
+			not_Void_symbol: a_symbol /= Void
 		do
 			cat_create (cat);
 			page_name := page_n;
@@ -63,8 +63,8 @@ feature {CATALOG}
 			-- of button and `button_form' as the parent. Also set the
 			-- pixmap of button with symbol.
 		require
-			not_void_page_name: not (page_name = Void);
-			not_void_form: not (button_form = Void);
+			not_void_page_name: page_name /= Void;
+			not_void_form: button_form /= Void;
 			not_void_symbol: valid_symbol;
 		do	
 			create_button;	
@@ -86,7 +86,7 @@ feature {CATALOG, CMD_CAT_BUTTON}
 			-- Add an activate_action callback to the button to 
 			-- associated_catalog passing Current as the argument.
 		require
-			not_void_catalog: not (associated_catalog = Void)
+			not_void_catalog: associated_catalog /= Void
 		do
 			button.add_activate_action (associated_catalog, Current)
 		end; -- add_button_callback

@@ -21,7 +21,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.win_position_cmd_name
+			Result := Command_names.cont_win_position_cmd_name
 		end;
 
 	context: WINDOW_C;

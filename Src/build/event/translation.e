@@ -7,7 +7,6 @@ inherit
 		redefine
 			label, original_stone
 		end;
-	EV_PIXMAPS;
 	EVENT_LABELS;
 	REMOVABLE;
 	WINDOWS
@@ -86,7 +85,7 @@ feature
 
 	make is
 		do
-			set_symbol (Translation_pixmap);
+			set_symbol (Pixmaps.translation_pixmap);
 			identifier := integer_generator.value;
 			integer_generator.next;
 			text := "<Key>";

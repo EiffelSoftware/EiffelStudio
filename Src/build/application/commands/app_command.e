@@ -3,14 +3,10 @@ deferred class APP_COMMAND
 
 inherit
 
-	UNDOABLE
+	EB_UNDOABLE
 		redefine
 			is_template, update_history, execute
 		end;
-	WINDOWS
-		export
-			{NONE} all
-		end
 	
 feature 
 
@@ -21,24 +17,17 @@ feature
 			work (argument)
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 		do
 			!!Result.make (0);
 			Result.append (c_name);
-			if
-				not (worked_on = Void)
-			then
+			if worked_on /= Void then
 				Result.append (" (");
 				Result.append (worked_on);
 				Result.append (")");
 			end;
 		end;
 
-	history: HISTORY_WND is
-		once
-			Result := history_window
-		end; -- history
-	
 	redo is
 			-- Redo a command
 		do
@@ -81,9 +70,7 @@ feature {NONE}
 			-- Update the display if the command is not
 			-- a macro
 		do
-			if
-				not for_macro
-			then
+			if not for_macro then
 				update_display
 			end
 		end;
@@ -95,9 +82,7 @@ feature {NONE}
 
 	update_history is
 		do
-			if
-				not for_macro
-			then
+			if not for_macro then
 				history.record (Current)
 			end
 		end;

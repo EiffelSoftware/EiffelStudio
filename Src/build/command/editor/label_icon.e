@@ -22,10 +22,7 @@ inherit
 		select
 			make_visible
 		end;
-	LABEL_STONE
-		export
-			{NONE} all
-		end;
+	LABEL_STONE;
 	REMOVABLE
 
 creation

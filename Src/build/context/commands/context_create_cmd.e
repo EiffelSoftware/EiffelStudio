@@ -19,7 +19,7 @@ feature {NONE}
 	
 	c_name: STRING is
 		do
-			Result := Context_const.create_cmd_name
+			Result := Command_names.cont_create_cmd_name
 		end;
 
 feature 

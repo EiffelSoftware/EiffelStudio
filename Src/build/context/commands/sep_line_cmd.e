@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.sep_line_cmd_name
+			Result := Command_names.cont_sep_line_cmd_name
 		end;
 
 	context: SEPARATOR_C;

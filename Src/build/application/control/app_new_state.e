@@ -3,20 +3,10 @@ class APP_NEW_STATE
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	HOLE
 		rename
 			target as source
-		
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
@@ -25,18 +15,11 @@ inherit
 			button as source,
 			make_visible as make_icon_visible,
 			identifier as oui_identifier
-		
-		export
-			{NONE} all
-		undefine
-			init_toolkit
 		end;
 	ICON
 		rename
 			button as source,
 			identifier as oui_identifier
-		undefine
-			init_toolkit
 		redefine
 			make_visible
 		select
@@ -52,7 +35,7 @@ feature -- Creation
 
 	make is
 		do
-			set_symbol (State_pixmap);
+			set_symbol (Pixmaps.state_pixmap);
 			set_label ("Create/edit");
 		end; 
 
@@ -61,12 +44,10 @@ feature
 	original_stone: STATE;
 
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_icon_visible (a_parent);
 			register;
-			add_activate_action (Current, Nothing);
+			add_activate_action (Current, Void);
 			initialize_transport
 		end;
 

@@ -12,7 +12,6 @@ inherit
 		redefine
 			process_stone
 		end;
-
 	CMD_CAT_BUTTON
 		rename
 			button as source,
@@ -27,12 +26,7 @@ inherit
 		redefine
 			original_stone
 		end;	
-	CURSORS
-		rename
-			Command_cursor as stone_cursor
-		end;
 	COMMAND;
-	PIXMAPS
 
 creation
 
@@ -41,6 +35,11 @@ creation
 feature {NONE}
 
 	original_stone: like Current;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.command_cursor
+		end;
 	
 	process_stone is
 		require else
@@ -67,13 +66,11 @@ feature
 		end;
 
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_button_visible (a_parent);
-			set_symbol (Command_pixmap);
+			set_symbol (Pixmaps.command_pixmap);
 			initialize_transport;
-			add_activate_action (Current, Nothing)
+			add_activate_action (Current, Void)
 		end;
 
 	

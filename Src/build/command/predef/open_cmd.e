@@ -4,23 +4,9 @@ class OPEN_CMD
 
 inherit
 
-	PREDEF_CMD_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
+	PREDEF_CMD_IDENTIFIERS;
 	PREDEF_CMD;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	WINDOWS
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -49,7 +35,7 @@ feature
 			labels.extend (lab);
 			!!arg.session_init (context_catalog.text_type);
 			arguments.extend (arg);
-			set_symbol (File_pixmap);
+			set_symbol (Pixmaps.file_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)
 		end;

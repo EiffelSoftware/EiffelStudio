@@ -3,11 +3,8 @@ class APP_CUT_LABEL
 
 inherit 
 
+	SHARED_APPLICATION;
 	APP_COMMAND;
-	APP_CMD_NAMES
-		rename
-			App_cut_label_cmd_name as c_name
-		end
 
 feature 
 
@@ -33,11 +30,15 @@ feature {NONE}
 
 	cmd_label: STRING;
 
+	c_name: STRING is
+		do
+			Result := Command_names.app_cut_label_cmd_name
+		end;
+
 	work (l: STRING) is
 			-- Set cmd_label to `l'. Set source_element to the selected_figure original
 			-- stone. Peform the specific work.
 		local
-			graph: APP_GRAPH;
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 		do 
 			cmd_label := l;
@@ -46,8 +47,7 @@ feature {NONE}
 			then
 				source_element := application_editor.selected_figure.original_stone;
 			end;
-			graph := application_editor.transitions.graph;
-			temp_trans := graph.item (source_element);
+			temp_trans := Shared_app_graph.item (source_element);
 			if
 				temp_trans.has (cmd_label)
 			then
@@ -61,10 +61,8 @@ feature {NONE}
 			-- Remove cmd_label from selected_figure transitions.
 		local
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
-			graph:APP_GRAPH
 		do
-			graph := application_editor.transitions.graph;
-			temp_trans := graph.item (source_element);
+			temp_trans := Shared_app_graph.item (source_element);
 			temp_trans.remove (cmd_label);
 			perform_update_display;
 		end; -- do_specific_work 

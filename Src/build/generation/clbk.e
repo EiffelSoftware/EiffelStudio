@@ -73,7 +73,7 @@ feature {NONE}
 				Result.append ("%T%T%T");
 				Result.append (pre_fix);
 				Result.append (current_event.eiffel_text);
-				Result.append ("meta_command, Nothing);%N");
+				Result.append ("meta_command, Void);%N");
 				forth
 			end
 		end;

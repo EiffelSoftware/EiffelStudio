@@ -4,13 +4,6 @@ class MENU_ENTRY_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Menu_entry_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	BUTTON_C
 		rename
 			create_context as button_create_context
@@ -36,7 +29,11 @@ feature
 			Result := context_catalog.menu_entry_type
 		end;
 
-	
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.menu_entry_pixmap
+		end;
+
 feature {NONE}
 
 	add_widget_callbacks is
@@ -48,13 +45,13 @@ feature {NONE}
 	initialize_transport is
 		do
 			widget.add_button_press_action (2, show_command, Current);
-			widget.add_button_release_action (2, show_command, Nothing);
+			widget.add_button_release_action (2, show_command, Void);
 		end;
 
 	remove_widget_callbacks is
 		do
 			widget.remove_button_press_action (2, show_command, Current);
-			widget.remove_button_release_action (2, show_command, Nothing);
+			widget.remove_button_release_action (2, show_command, Void);
 		end;
 
 	

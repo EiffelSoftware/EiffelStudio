@@ -3,12 +3,12 @@ deferred class APP_FIGURE
 
 inherit
 
-	SHARED_APPLICATION;
-	PIXMAPS;
+	CONSTANTS;
 	FIGURE
 		redefine
 			attach_drawing, attach_drawing_imp, 
-			deselect, select_figure, contains
+			deselect, select_figure, contains,
+			is_superimposable
 		end
 	
 feature 
@@ -65,7 +65,7 @@ feature
 			temp_int: INTERIOR
 		do
 			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (white);
+			temp_int.set_foreground_color (App_const.white);
 			draw;
 		end; -- deselect
 
@@ -100,6 +100,19 @@ feature
 			Result := outer_figure.path
 		end;
 
+	select_figure is
+			-- Set the foreground color of the interior
+			-- and text_image to black and then draw itself.
+		require else
+			valid_inner;
+		local
+			temp_int: INTERIOR
+		do
+			temp_int := inner_figure.interior;
+			temp_int.set_foreground_color (App_const.black);
+			draw
+		end;
+
 	set_center (p: COORD_XY_FIG) is
 			-- Set the center of the figure
 		deferred
@@ -109,6 +122,11 @@ feature
 			-- Set the radius of the figure
 		deferred
 		end;
+
+	set_text (s: STRING) is
+		do
+			text_image.set_text (s)
+		end; -- set_text
 
 	set_copy_mode is
 			-- Set copy mode to figure.
@@ -171,7 +189,7 @@ feature
 
 feature {NONE}
 
-	is_surimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN is
 		do
 			Result := false
 		end;
@@ -197,12 +215,12 @@ feature {NONE}
 			int: INTERIOR
 		do
 			!!int.make;
-			int.set_stipple (app_interior_stipple);
+			int.set_stipple (Pixmaps.app_interior_stipple);
 			int.set_stippled_fill;
-			int.set_foreground_color (white);
+			int.set_foreground_color (App_const.white);
 			!!a_path.make;
-			a_path.set_foreground_color (black);
-			a_path.set_line_width (standard_thickness);
+			a_path.set_foreground_color (App_const.black);
+			a_path.set_line_width (App_const.standard_thickness);
 			inner_figure.set_interior (int);
 			inner_figure.set_path (a_path);
 		end; 
@@ -214,41 +232,23 @@ feature {NONE}
 			interior: INTERIOR
 		do	
 			!!a_path.make;
-			a_path.set_line_width (standard_thickness);
-			a_path.set_foreground_color (black);
+			a_path.set_line_width (App_const.standard_thickness);
+			a_path.set_foreground_color (App_const.black);
 			!!interior.make;
-			interior.set_foreground_color (white);
+			interior.set_foreground_color (App_const.white);
 			outer_figure.set_interior (interior);
 			outer_figure.set_path (a_path);
-		end;
-
-	select_figure is
-			-- Set the foreground color of the interior
-			-- and text_image to black and then draw itself.
-		require else
-			valid_inner;
-		local
-			temp_int: INTERIOR
-		do
-			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (black);
-			draw
 		end;
 
 	init_radius: INTEGER is
 		deferred
 		end;
 
-	set_text (s: STRING) is
-		do
-			text_image.set_text (s)
-		end; -- set_text
-
 	text_image_init is
 			-- Initialize the text (Secret)
 		do
-			text_image.set_background_color (white);
-			text_image.set_foreground_color (black);
+			text_image.set_background_color (App_const.white);
+			text_image.set_foreground_color (App_const.black);
 		end; -- text_image_init
 	
 	xyrotate (f: REAL; px, py: INTEGER) is

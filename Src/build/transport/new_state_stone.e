@@ -12,13 +12,6 @@ deferred class NEW_STATE_STONE
 
 inherit
 
-	CURSORS
-		rename
-			State_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
@@ -28,5 +21,11 @@ feature
 
 	original_stone: STATE is
 		deferred
+		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.state_cursor
 		end
+
 end

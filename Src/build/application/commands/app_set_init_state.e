@@ -5,10 +5,6 @@ inherit
 
 	APP_COMMAND; 
 	SHARED_APPLICATION;
-	APP_CMD_NAMES
-		rename
-			App_set_initial_state_cmd_name as c_name
-		end
 
 feature 
 
@@ -23,6 +19,11 @@ feature {NONE}
 	old_init_state: STATE;
 
 	init_state: STATE;
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_set_initial_state_cmd_name
+		end;
 
 	work (a_state: STATE) is
 		do

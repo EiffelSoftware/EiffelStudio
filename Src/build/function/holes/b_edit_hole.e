@@ -13,7 +13,6 @@ inherit
 			process_stone, function_editor, stone,
 			compatible
 		end;
-
 	FUNC_EDIT_HOLE
 		rename
 			make as func_edit_make,
@@ -25,7 +24,6 @@ inherit
 		select
 			make_visible
 		end;
-
 	BEHAVIOR_STONE
 		export
 			{NONE} all
@@ -33,16 +31,9 @@ inherit
 			transportable
 		end;
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
-
 creation
 
 	make
-
 	
 feature {NONE}
 
@@ -67,7 +58,7 @@ feature
 	make_visible (a_parent: COMPOSITE) is
 		do
 			make_icon_visible (a_parent);
-			set_symbol (Behavior_pixmap);
+			set_symbol (Pixmaps.behavior_pixmap);
 			initialize_transport
 		end; -- make_visible
 

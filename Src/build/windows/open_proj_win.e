@@ -4,10 +4,7 @@ class OPEN_PROJ_WIN
 
 inherit
 
-	PROJECT_WINDOW
-		undefine
-			init_toolkit
-		end;
+	PROJECT_WINDOW;
 	WINDOWS
 
 creation

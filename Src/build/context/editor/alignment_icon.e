@@ -4,25 +4,16 @@ class ALIGNMENT_ICON
 inherit
 
 	CON_ICON_STONE
-		undefine
-			init_toolkit
 		redefine
 			make
 		end;
-
 	HOLE
 		rename
 			target as source
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
-
 	REMOVABLE
-		export
-			{NONE} all
-		end
 
 creation
 

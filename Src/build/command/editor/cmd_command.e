@@ -3,27 +3,15 @@ deferred class CMD_COMMAND
 
 inherit
 
-	UNDOABLE
-		rename
-			history as history_window
+	EB_UNDOABLE
 		redefine
 			is_template, execute
 		end;
-	WINDOWS
-		export
-			{NONE} all
-		end
-		
 
-feature {NONE}
-
-	work (argument: ANY) is
-		do
-		end;
-
-	
 feature 
 
+	is_template: BOOLEAN is True;
+	
 	redo is
 		do
 			command_work
@@ -32,31 +20,22 @@ feature
 	execute (argument: ANY) is
 		do
 			edited_command ?= argument;
-			if
-				edited_command /= Void
-			then
+			if edited_command /= Void then
 				command_work;
 				update_history
 			end
 		end;
 
-	
-feature {NONE}
-
-	command_work is
-		deferred
-		end;
-	
 feature 
-
-	n_ame: STRING is
+	
+	name: STRING is
 		do
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" (");
 			Result.append (edited_command.label);
 			if
-				not (worked_on = Void)
+				worked_on /= Void
 			then
 				Result.append ("-");
 				Result.append (worked_on);
@@ -66,6 +45,16 @@ feature
 	
 feature {NONE}
 
+	edited_command: USER_CMD;
+
+	work (argument: ANY) is
+		do
+		end;
+
+	command_work is
+		deferred
+		end;
+	
 	worked_on: STRING is
 			-- What the command changed
 		deferred
@@ -78,12 +67,4 @@ feature {NONE}
 
 	failed: BOOLEAN;
 	
-feature 
-
-	is_template: BOOLEAN is True;
-	
-feature {NONE}
-
-	edited_command: USER_CMD;
-
 end

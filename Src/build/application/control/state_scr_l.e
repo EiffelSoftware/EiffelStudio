@@ -3,27 +3,18 @@ class STATE_SCR_L
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	COMMAND_ARGS
-		rename First as First_arg
-		export
-			{NONE} all
+		rename 
+			First as First_arg
 		end;
 	HOLE
 		rename
 			target as source
-		
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
 	STATE_STONE
-		export
-			{NONE} all
 		redefine
 			transportable
 		end;
@@ -31,13 +22,8 @@ inherit
 		rename 
 			make as list_create,
 			identifier as oui_identifier
-		undefine
-			init_toolkit
 		end;
 	REMOVABLE
-		export
-			{NONE} all
-		end;
 
 creation
 
@@ -51,7 +37,7 @@ feature -- Creation
 			list_create (a_name, a_parent);
 			application_editor := editor;
 			register;
-			add_button_press_action (3, Current, Nothing);
+			add_button_press_action (3, Current, Void);
 			initialize_transport;
 		end; -- Create
 	

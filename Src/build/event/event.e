@@ -20,6 +20,10 @@ feature {NONE}
 			Result := label.hash_code
 		end;
 
+	Event_const: EVENT_CONSTANTS is
+		once
+			!! Result
+		end;
 	
 feature 
 
@@ -37,7 +41,7 @@ feature
 			Result := internal_name
 		end;
 
-        internal_name: STRING;
+	internal_name: STRING;
 	
 feature {NONE}
 

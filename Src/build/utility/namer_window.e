@@ -45,17 +45,17 @@ feature {RENAME_COMMAND}
 			set_x_y (a_scr.x - real_x, a_scr.y - real_y)
 
             -- a cancel (pict_color_b)
-            !! cancel_p.make ("cancel", Current)
+           -- !! cancel_p.make ("cancel", Current)
             attach_top (cancel_p, 3)
             attach_right (cancel_p, 3)
 
 			-- an ok button (pict_color_b)
-			!! ok_p.make ("ok", Current)
+			--!! ok_p.make ("ok", Current)
 			attach_top (ok_p, 3)
 			attach_right_widget (cancel_p, ok_p, 2)
 
 			-- micro help
-			!!focus_label.make ("focus", Current)
+			!!focus_label.make (Current)
 			focus_label.set_text ("")
 			attach_top (focus_label, 3)
 			attach_left (focus_label, 3)
@@ -85,7 +85,7 @@ feature {RENAME_COMMAND}
 
 feature
 
-	focus_label: LABEL
+	focus_label: FOCUS_LABEL
 
 	cancel is
 		-- discard the changes in the text field

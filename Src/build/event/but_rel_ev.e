@@ -3,44 +3,26 @@ class BUT_REL_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
-		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
 		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - but_rel_ev_id
+			Result := - Event_const.but_rel_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Button_release_pixmap);
-			set_label (Button_release_label);
+			set_symbol (Pixmaps.button_release_pixmap);
+			set_label (Event_const.button_release_label);
 			event_table.put (Current, - identifier);
 		end;
 

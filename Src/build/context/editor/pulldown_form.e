@@ -56,13 +56,13 @@ feature
 			label_text: LABEL_G;
 			label: LABEL_G;
 		do
-			initialize (Context_const.pulldown_form_name, a_parent);
+			initialize (Widget_names.pulldown_form_name, a_parent);
 
-			!!label_text.make (Context_const.button_text_name, Current);
-			!!label.make (Context_const.title_name, Current);
+			!!label_text.make (Widget_names.button_text_name, Current);
+			!!label.make (Widget_names.title_name, Current);
 			!!text.make (Widget_names.textfield, Current, 
 					Pulldown_cmd, editor);
-			!!forbid_recomp.make (Context_const.forbid_auto_recomp_size_name, 
+			!!forbid_recomp.make (Widget_names.forbid_auto_recomp_size_name, 
 					Current, Pulldown_resize_cmd, editor);
 			create_buttons;
 

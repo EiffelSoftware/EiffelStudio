@@ -3,21 +3,14 @@ class NAMER_CMD
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	UNDOABLE;
+	EB_UNDOABLE;
 
 feature {NONE}
 
-	history: HISTORY_WND is
-		once
-			Result := history_window;
-		end;
-
-	n_ame: STRING is "Set visual name";
+	name: STRING is 
+		do
+			Result := Command_names.set_visual_name_cmd_name
+		end; 
 
 	failed: BOOLEAN;
 
@@ -28,9 +21,7 @@ feature {NONE}
 	work (argument: NAMABLE) is
 		do
 			namable := argument;
-			if 
-				namable.visual_name /= Void 
-			then	
+			if namable.visual_name /= Void then	
 				old_visual_name := clone (namable.visual_name);
 			end;
 		end;
@@ -44,7 +35,6 @@ feature
 			new_name := namable.visual_name;
 			namable.set_visual_name (old_visual_name);
 			old_visual_name := new_name;
-			--main_panel.namer_hole.reset (namable)
 		end;
 
 	redo is

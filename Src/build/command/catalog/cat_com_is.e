@@ -4,8 +4,6 @@ class CAT_COM_IS
 inherit
 
 	COM_ICON_STONE
-		undefine
-			init_toolkit
 		redefine
 			make
 		end;

@@ -6,10 +6,7 @@ inherit
 	B_ICON_STONE
 		rename
 			make as b_icon_stone_make	
-		undefine
-			init_toolkit
 		end;
-
 	FUNCTION_ELEMENT
 		rename
 			target as source 

@@ -13,12 +13,6 @@ inherit
 		select
 			redo
 		end; 
-	APP_CMD_NAMES
-		rename
-			App_add_line_cmd_name as c_name
-		export
-			{NONE} all
-		end	
 
 feature 
 
@@ -29,6 +23,11 @@ feature
 		do
 			source_circle := circle
 		end; -- set_source_circle
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_add_line_cmd_name
+		end;
 
 	redo is
 		do

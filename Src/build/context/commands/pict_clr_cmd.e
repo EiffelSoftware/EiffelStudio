@@ -16,7 +16,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.pict_clr_cmd_name
+			Result := Command_names.cont_pict_clr_cmd_name
 		end;
 
 	context: PICT_COLOR_C;

@@ -4,8 +4,7 @@ deferred class CONTEXT_CMD
 inherit
 
 	CONSTANTS;
-	WINDOWS;
-	UNDOABLE
+	EB_UNDOABLE
 		redefine
 			is_template
 		end
@@ -29,7 +28,7 @@ feature
 		deferred
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 			
 		do
 			!!Result.make (0);
@@ -63,14 +62,8 @@ feature {NONE}
 	context_undo is
 		deferred
 		end;
-
 	
 feature 
-
-	history: HISTORY_WND is
-		once
-			Result := history_window;
-		end;
 
 	failed: BOOLEAN;
 

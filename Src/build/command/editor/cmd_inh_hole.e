@@ -12,7 +12,6 @@ inherit
 		redefine
 			stone, compatible
 		end;
-
 	ICON_HOLE
 		rename
 			button as source,
@@ -22,19 +21,13 @@ inherit
 		select
 			make_visible
 		end;
-
-	PIXMAPS;
 	WINDOWS;
-
 	CMD_STONE
 		redefine
 			transportable
 		end;
-
 	REMOVABLE
-		export
-			{NONE} all
-		end;
+
 creation
 
 	make
@@ -52,7 +45,7 @@ feature
 	make (ed: CMD_EDITOR) is
 		do
 			command_editor := ed;
-			set_symbol (Command_pixmap);
+			set_symbol (Pixmaps.command_pixmap);
 			set_label ("Parent");
 		end;
 
@@ -67,7 +60,7 @@ feature
 	reset is
 		do
 			if original_stone /= Void then
-				set_symbol (Command_pixmap);
+				set_symbol (Pixmaps.command_pixmap);
 				set_label ("Parent");
 				original_stone := Void;
 			end;

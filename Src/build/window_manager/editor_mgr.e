@@ -94,9 +94,7 @@ feature
 		do
 			active_editors.start;
 			active_editors.search (ed);
-			if
-				not active_editors.after
-			then
+			if not active_editors.after then
 				ed.hide;
 				active_editors.remove;
 				if free_list.count >= free_list_max then

@@ -29,7 +29,7 @@ feature {NONE}
 		local
 			eb_color: EB_COLOR;
 			position: INTEGER;
-			color_name_file: UNIX_FILE;
+			color_name_file: PLAIN_TEXT_FILE;
 			file_name: FILE_NAME;
 			temp: STRING;
 			top_widget, left_widget: EB_COLOR;

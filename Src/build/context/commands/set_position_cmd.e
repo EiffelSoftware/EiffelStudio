@@ -14,7 +14,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.set_position_cmd_name
+			Result := Command_names.cont_set_position_cmd_name
 		end;
 
 	old_x: INTEGER;

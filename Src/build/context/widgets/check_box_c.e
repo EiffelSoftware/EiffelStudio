@@ -3,13 +3,6 @@ class CHECK_BOX_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Check_box_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	GROUP_COMPOSITE_C
 		redefine
 			widget, stored_node
@@ -17,6 +10,11 @@ inherit
 		end
 	
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.check_box_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

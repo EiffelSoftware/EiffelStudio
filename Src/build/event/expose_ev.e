@@ -3,44 +3,26 @@ class EXPOSE_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
 		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
-		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - expose_ev_id
+			Result := - Event_const.expose_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Expose_pixmap);
-			set_label (Expose_label);
+			set_symbol (Pixmaps.expose_pixmap);
+			set_label (Event_const.expose_label);
 			event_table.put (Current, - identifier);
 		end;
 

@@ -281,7 +281,7 @@ feature {NONE} -- Execute
 				if
 					found	
 				then
-					application_editor.set_cursor (normal_cursor)
+					application_editor.ungrab
 				end;
 			elseif
 				argument = set_stone
@@ -313,7 +313,7 @@ feature {NONE} -- Execute
 					found
 				then
 					movable_figure := figure;
-					application_editor.set_cursor (move_cursor);
+					application_editor.set_cursor (Cursors.move_cursor);
 				end;
 			end;
 		end; 

@@ -3,12 +3,6 @@ class CMD_ADD_ARGUMENT
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_add_argument_cmd_name as c_name
-		export
-			{NONE} all
-		end;
 	CMD_ADD
 		rename
 			command_work as old_command_work
@@ -25,6 +19,11 @@ inherit
 feature {NONE}
 
 	element: ARG;
+
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_add_argument_cmd_name
+		end;
 
 	list: EB_LINKED_LIST [ARG] is
 		do

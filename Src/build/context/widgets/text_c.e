@@ -1,15 +1,6 @@
-
-
 class TEXT_C 
 
 inherit
-
-	PIXMAPS
-		rename
-			Scrolled_t_pixmap as symbol
-		export
-			{NONE} all
-		end;
 
 	PRIMITIVE_C
 		rename
@@ -32,6 +23,11 @@ inherit
 feature 
 
 	widget: SCROLLED_T;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.scrolled_t_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

@@ -18,7 +18,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.fg_color_cmd_name
+			Result := Command_names.cont_fg_color_cmd_name
 		end;
 
 	old_fg_color: STRING;

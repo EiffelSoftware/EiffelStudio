@@ -3,16 +3,12 @@ class HELP_WINDOW
 
 inherit
 
+	CONSTANTS;
 	TOP_SHELL
 		rename
 			make as top_shell_create
 		end;
-
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end
-
+	CLOSEABLE
 
 creation
 
@@ -23,23 +19,28 @@ feature {NONE}
 
 	form, form1: FORM;
 	hole: HELP_HOLE;
-	close_b: CLOSE_BUTTON;
+	close_b: CLOSE_WINDOW_BUTTON;
 	
 feature 
 
 	text: SCROLLED_T;
 
-	make (a_name: STRING; a_screen: SCREEN) is
-		local
-			contin_command: ITER_COMMAND;
+	close is 
 		do
-			top_shell_create (a_name, a_screen);
-			!!form.make (F_orm, Current);
-			!!form1.make (F_orm1, form);
-			!!text.make (T_ext, form);
+			destroy
+		end;
+
+	make (a_screen: SCREEN) is
+		local
+			delete_com: DELETE_WINDOW;
+		do
+			top_shell_create (Widget_names.help_window, a_screen);
+			!!form.make (Widget_names.form, Current);
+			!!form1.make (Widget_names.form1, form);
+			!!text.make_word_wrapped (Widget_names.text, form);
 			!!hole.make (Current, form1);
-			!!close_b.make (Current);
-			close_b.make_visible (form1);
+			io.error.putstring ("help_window: FIXME%N");
+			!!close_b.make (Current, form1, Void);
 			
 			form.attach_top (form1, 2);
 			form.attach_left (form1, 2);
@@ -54,9 +55,8 @@ feature
 			form1.attach_top (close_b, 2);
 			form1.attach_right (close_b, 2);
 			form1.attach_bottom (close_b, 2);
-			text.enable_word_wrap;
-			!!contin_command;
-			set_delete_command (contin_command);
+			!!delete_com.make (Current);
+			set_delete_command (delete_com);
 		end;
 
 end

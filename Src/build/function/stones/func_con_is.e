@@ -6,10 +6,7 @@ inherit
 	CON_ICON_STONE
 		rename
 			make as con_icon_stone_make
-		undefine
-			init_toolkit
 		end;
-
 	FUNCTION_ELEMENT
 		rename
 			target as source
@@ -18,12 +15,7 @@ inherit
 		redefine
 			associated_editor
 		end;
-
 	REMOVABLE
-		export
-			{NONE} all
-		end
-
 
 creation
 

@@ -4,13 +4,6 @@ class PICT_COLOR_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Pict_color_b_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	BUTTON_C
 		rename
 			copy_attributes as button_copy_attributes,
@@ -32,6 +25,11 @@ inherit
 		end
 	
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.pict_color_b_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

@@ -19,8 +19,6 @@ feature
 	caller: B_STATE_H;
 
 	make (a_parent: COMPOSITE; c: B_STATE_H) is
-		local
-			Nothing: ANY
 		do
 			caller := c;
 			choice_make (a_parent);

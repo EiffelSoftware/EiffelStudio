@@ -19,11 +19,9 @@ inherit
 feature {NONE}
 
 	initialize_transport is
-		local
-			nothing: ANY
 		do
 			source.add_button_press_action (2, show_command, Current);
-			source.add_button_release_action (2, show_command, Nothing);
+			source.add_button_release_action (2, show_command, Void);
 			source.set_action ("!<Btn3Down>", transport_command, Current);			
 			source.set_action ("!Shift<Btn3Down>", name_command, Current);
 		end;
@@ -36,7 +34,7 @@ feature
 
 	stone_cursor: SCREEN_CURSOR is
 		do
-			Result := Context_cursor
+			Result := Cursors.context_cursor
 		end;
 
 	entity_name: STRING is

@@ -3,13 +3,6 @@ class LABEL_C
 
 inherit
 	
-	PIXMAPS
-        rename
-            Ev_label_pixmap as symbol
-        export
-            {NONE} all
-        end;
-
 	LABEL_TEXT_C
 		redefine
 			widget, stored_node
@@ -31,37 +24,42 @@ feature
 	eiffel_type: STRING is "LABEL";
 
 	context_type: CONTEXT_TYPE is
-        do
-            Result := context_catalog.label_type
-        end;
+		do
+			Result := context_catalog.label_type
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.ev_label_pixmap
+		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
-        do
-            !!widget.make_unmanaged (entity_name, a_parent);
+		do
+			!!widget.make_unmanaged (entity_name, a_parent);
 			widget.forbid_recompute_size;
-        end;
+		end;
 
-    text: STRING is
-        do
-            Result := widget.text
-        end;
+	text: STRING is
+		do
+			Result := widget.text
+		end;
  
 feature {NONE}
 
 	forbid_recompute_size is
-        do
-            widget.forbid_recompute_size
-        end;
+		do
+			widget.forbid_recompute_size
+		end;
  
-    allow_recompute_size is
-        do
-            widget.allow_recompute_size
-        end;
+	allow_recompute_size is
+		do
+			widget.allow_recompute_size
+		end;
  
-    widget_set_text (s: STRING) is
-        do
+	widget_set_text (s: STRING) is
+		do
 			widget.set_text (s);
-        end;
+		end;
 
 	widget_set_center_alignment is
 		do

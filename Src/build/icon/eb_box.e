@@ -12,7 +12,6 @@ inherit
 		export
 			{NONE} all
 		end;
-
 	ROW_COLUMN
 		rename 
 			make as make_row_col,
@@ -22,7 +21,6 @@ inherit
 		select
 			show, hide
 		end;
-
 	EB_LINKED_LIST [T]
 		rename
 			extend as list_extend,

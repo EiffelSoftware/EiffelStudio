@@ -4,15 +4,7 @@ class CUT_HOLE
 inherit
 
 	ICON_HOLE;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	FOCUSABLE
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -39,7 +31,7 @@ feature
 	make (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
-			set_symbol (Wastebasket_pixmap);
+			set_symbol (Pixmaps.wastebasket_pixmap);
 			initialize_focus
 		end;
 	

@@ -3,47 +3,44 @@ class TRANSL_EDITOR
 
 inherit
 
-	COMMAND
-		redefine
-			context_data_useful
-		end;
-	PIXMAPS;
+	CONSTANTS;
+	COMMAND;
 	WINDOWS;
 	FORM_D
 		rename
 			make as form_d_create,
 			popup as form_popup
-		undefine
-			init_toolkit
 		end;
 	FORM_D
 		rename
 			make as form_d_create
-		undefine
-			init_toolkit
 		redefine
 			popup
 		select
 			popup
 		end;
-	WIDGET_NAMES
+	CLOSEABLE
 
 creation
 
 	make
 	
-feature {NONE}
+feature {NONE, EAR_BUTTON}
 
 	transl_hole: TRANSL_HOLE;
 	--transl_stone: TRANSL_EDIT_STONE;
-	quit_button: EB_PICT_B;
-	ear_icon: EB_PICT_B;
+	quit_button: CLOSE_WINDOW_BUTTON;
+	ear_icon: EAR_BUTTON;
 	negate_t: TOGGLE_B;
 	sep1, sep2: SEPARATOR;
 	trans_text: TEXT_FIELD;
 	save_b: PUSH_B;
 
-	context_data_useful: BOOLEAN is True;
+	close is
+		do
+			reset;
+			popdown
+		end;
 
 feature 
 
@@ -55,19 +52,19 @@ feature
 			end
 		end;
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE) is
 		do
-			form_d_create (a_name, a_parent);
+			form_d_create (Widget_names.translation_editor, a_parent);
 			!!transl_hole.make (Current);
 			--!!transl_stone.make;
 			--transl_stone.make_visible (Current);
-			!!quit_button.make_visible (Current);
-			!!ear_icon.make_visible (Current);
-			!!negate_t.make (T_oggle, Current);
-			!!sep1.make (S_eparator, Current);
-			!!sep2.make (S_eparator1, Current);
-			!!trans_text.make (T_extField, Current);
-			!!save_b.make (P_Cbutton, Current);
+			--!! quit_button.make_visible (Current, Current, );
+			!!ear_icon.make (Current, Current);
+			!!negate_t.make (Widget_names.negate_name, Current);
+			!!sep1.make (Widget_names.separator, Current);
+			!!sep2.make (Widget_names.separator1, Current);
+			!!trans_text.make (Widget_names.textField, Current);
+			!!save_b.make (Widget_names.save_name, Current);
 
 			attach_top (transl_hole, 5);
 			--attach_top (transl_stone, 5);
@@ -93,20 +90,11 @@ feature
 			attach_right (trans_text, 5);
 			attach_bottom (trans_text, 5);
 
-			quit_button.set_symbol (Quit_pixmap);
-			quit_button.add_activate_action (Current, quit_button);
 			trans_text.add_activate_action (Current, trans_text);
 			transl_hole.add_activate_action (Current, transl_hole);
 			negate_t.add_activate_action (Current, negate_t);
-			ear_icon.add_key_press_action (Current, ear_icon);
-			ear_icon.add_button_press_action (1, Current, ear_icon);
-			ear_icon.add_button_press_action (2, Current, ear_icon);
-			ear_icon.add_button_press_action (3, Current, ear_icon);
 			save_b.add_activate_action (Current, save_b);
 			trans_text.set_text ("");
-			save_b.set_text ("Save");
-			ear_icon.set_symbol (Ear_pixmap);
-			negate_t.set_text ("negate");
 		end;
 
 feature 
@@ -147,10 +135,7 @@ feature {NONE}
 			transl_add: TRANSL_ADD;
 			transl_set_text: TRANSL_SET_TEXT;
 		do
-			if (argument = quit_button) then
-				reset;
-				popdown
-			elseif (argument = transl_hole) then
+			if (argument = transl_hole) then
 				!!transl_add;
 				!!edited_translation.make;
 				edited_translation.generate_internal_name;
@@ -164,8 +149,6 @@ feature {NONE}
 					!!transl_set_text;
 					transl_set_text.set_text (trans_text.text);
 					transl_set_text.execute (edited_translation);
-				elseif (argument = ear_icon) then
-					listen
 				elseif (argument = negate_t) then
 					if negate_t.state then
 						if trans_text.text.empty then
@@ -181,96 +164,6 @@ feature {NONE}
 						end
 					end
 				end;
-			end;
-		end;
-
-	listen is
-			-- Determine the translation defined by the user
-			-- by "listening" to the keypress.
-		local
-			cd: KYPRESS_DATA;
-			bd: BTPRESS_DATA;
-			temp: STRING;
-			kb: KEYBOARD;
-			bb: BUTTONS;
-			ctrl_str: CONTROL_STR;
-		do
-			cd ?= context_data;
-			bd ?= context_data;
-			!!temp.make (0);
-			if cd /= Void then
-				kb := cd.keyboard;
-				if kb.control_pressed then
-					if cd.string /= Void then
-						!!ctrl_str.make (cd.string.item_code (1));
-						if (kb.lock_pressed and
-						  not kb.shift_pressed) or 
-						  (kb.shift_pressed and
-						  not kb.lock_pressed) then
-							ctrl_str.set_lock (True);
-						end;
-						temp.append (ctrl_str.cntrl_str);
-					end;
-				elseif kb.modifiers.item (1) then
-					if cd.string /= Void then
-						temp.append ("<Alt>");
-						temp.append ("<Key>");
-						temp.append (cd.string);
-					end;
-				elseif kb.shift_pressed then
-					if cd.string /= Void then
-						temp.append ("<Key>");
-						temp.append (cd.string);
-					else
-						temp.append ("<Shift>");
-					end;
-				elseif kb.lock_pressed then
-					if cd.string /= Void and cd.string.item_code (1) <= 31 then
-						!!ctrl_str.make (cd.string.item_code (1));
-						ctrl_str.set_lock (True);
-						temp.append (ctrl_str.cntrl_str);
-					elseif cd.string /= Void then
-						temp.append ("<Key>");
-						temp.append (cd.string);
-					end;
-				elseif cd.string /= Void then
-					temp.append ("<Key>");
-					temp.append (cd.string);
-				end;
-			elseif bd /= Void then
-				kb := bd.keyboard;
-				temp.append (process_modifier (kb));
-				if bd.button = 1 then
-					temp.append ("<Btn1Down>");
-				elseif bd.button = 2 then
-					temp.append ("<Btn2Down>");
-				elseif bd.button = 3 then
-					temp.append ("<Btn3Down>");
-				elseif bd.button = 4 then
-					temp.append ("<Btn4Down>");
-				elseif bd.button = 5 then
-					temp.append ("<Btn5Down>");
-				end;
-				
-			end;
-			if not temp.empty then
-				trans_text.clear; 
-				trans_text.set_text (temp);
-			end;
-		end;
-
-	process_modifier (kb: KEYBOARD): STRING is
-		do
-			if kb.control_pressed then
-				if kb.shift_pressed then
-					Result := "<Ctrl><Shift>";
-				else
-					Result := "<Ctrl>";
-				end;
-			elseif kb.shift_pressed then
-				Result := "<Shift>";
-			else
-				Result := "";
 			end;
 		end;
 

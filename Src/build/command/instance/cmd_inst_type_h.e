@@ -3,29 +3,17 @@ class CMD_INST_TYPE_H
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-
+	COMMAND;
 	ICON_HOLE
 		rename
 			make_visible as make_icon_visible
-		
 		end;
-
 	ICON_HOLE
 		redefine
 			make_visible
 		select
 			make_visible
 		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 
 creation
 
@@ -47,15 +35,13 @@ feature
 			not_void_ed: not (ed = Void)
 		do
 			instance_editor := ed;
-			set_symbol (Create_command_instance_pixmap);
+			set_symbol (Pixmaps.create_command_instance_pixmap);
 		end; -- Create
 
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_icon_visible (a_parent);
-			add_activate_action (Current, Nothing)
+			add_activate_action (Current, Void)
 		end;
 
 	

@@ -3,13 +3,6 @@ class TEMP_WIND_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Dialog_shell_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	WINDOW_C
 		rename
 			copy_attributes as old_copy_attributes
@@ -19,7 +12,6 @@ inherit
 			position_initialization, shown,
 			hide, show, create_context
 		end;
-
 	WINDOW_C
 		redefine
 			stored_node, widget, 
@@ -31,6 +23,11 @@ inherit
 		end
 
 feature 
+
+    symbol: PIXMAP is
+	   do
+		  Result := Pixmaps.dialog_shell_pixmap
+	   end;
 
 	context_type: CONTEXT_TYPE is
 		do

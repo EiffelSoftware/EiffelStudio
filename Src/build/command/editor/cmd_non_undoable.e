@@ -3,17 +3,14 @@ class CMD_NON_UNDOABLE
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_non_undoable_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	CMD_SET_CMD_TYPE
-		
 	
 feature {NONE}
+
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_non_undoable_cmd_name
+		end;
 
 	undo is
 		do

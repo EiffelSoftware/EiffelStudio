@@ -18,16 +18,16 @@ feature -- Interface
 		local
 			radio_b: RADIO_BOX
 		do
-			initialize (Context_const.arrow_b_form_name, a_parent);
+			initialize (Widget_names.arrow_b_form_name, a_parent);
 
 			!!radio_b.make (Widget_names.row_column, Current);
-			!!arrow_up.make (Context_const.up_arrow_name, 
+			!!arrow_up.make (Widget_names.up_arrow_name, 
 					radio_b, Arrow_b_cmd, editor);
-			!!arrow_down.make (Context_const.down_arrow_name, 
+			!!arrow_down.make (Widget_names.down_arrow_name, 
 					radio_b, Arrow_b_cmd, editor);
-			!!arrow_left.make (Context_const.left_arrow_name, 
+			!!arrow_left.make (Widget_names.left_arrow_name, 
 					radio_b, Arrow_b_cmd, editor);
-			!!arrow_right.make (Context_const.right_arrow_name, 
+			!!arrow_right.make (Widget_names.right_arrow_name, 
 					radio_b, Arrow_b_cmd, editor);
 
 			attach_left (radio_b, 10);

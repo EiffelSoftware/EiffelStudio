@@ -12,7 +12,6 @@ inherit
 			element,
 			page
 		end;
-
 	CAT_CUT_ELEMENT
 		redefine
 			undo, redo, catalog_work,
@@ -21,11 +20,7 @@ inherit
 		select
 			undo, redo, catalog_work
 		end;
-
 	WINDOWS
-		export
-			{NONE} all
-		end
 
 feature {NONE}
 

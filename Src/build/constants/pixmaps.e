@@ -7,9 +7,19 @@ inherit
 	
 feature -- General Pixmaps
 
+	Alignment_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("align.symb")
+		end;
+
 	App_interior_stipple: PIXMAP is
 		once
 			Result := symbol_file_content ("circle.stip")
+		end;
+
+	Attribute_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("attrib.symb")
 		end;
 
 	Behavior_pixmap_small: PIXMAP is
@@ -80,6 +90,11 @@ feature -- General Pixmaps
 	Client_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("client.symb")
+		end;
+
+ 	Color_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("color.symb")
 		end;
 
  	Color_stone_pixmap: PIXMAP is
@@ -192,9 +207,19 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("generate.symb")
 		end;
 
+	Geometry_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("geometry.symb")
+		end;
+
 	Graph_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("graph.symb")
+		end;
+
+ 	Grid_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("grid.symb")
 		end;
 
  	Grid5_pixmap: PIXMAP is
@@ -280,6 +305,11 @@ feature -- General Pixmaps
 	Quit_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("quit.symb")
+		end;
+
+	Retrieve_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("retrieve.symb")
 		end;
 
 	Save_pixmap: PIXMAP is
@@ -639,6 +669,11 @@ feature -- Event pixmaps
 	Selection_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("single.symb");
+		end;
+
+	Submenu_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("submenu.symb");
 		end;
 
 	Translation_pixmap: PIXMAP is

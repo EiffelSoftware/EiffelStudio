@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.list_count_cmd_name
+			Result := Command_names.cont_list_count_cmd_name
 		end;
 
 	context: SCROLL_LIST_C;

@@ -12,11 +12,6 @@ class ELMT_HOLE
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	ICON_HOLE
 
 creation

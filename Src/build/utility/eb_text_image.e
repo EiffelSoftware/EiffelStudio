@@ -6,7 +6,8 @@ inherit
 		export
 			{ANY} all
 		redefine
-			attach_drawing, select_figure, deselect
+			attach_drawing, select_figure, deselect,
+			is_superimposable
 		end;
 
 	CHILD_CLIP
@@ -22,7 +23,7 @@ creation
 feature
 
 	origin: COORD_XY_FIG;
-	is_surimposable (other: like Current): BOOLEAN is do end;
+	is_superimposable (other: like Current): BOOLEAN is do end;
 	xyrotate (a: REAL; px, py: INTEGER) is do end;
 	xyscale (f: REAL; px,py: INTEGER) is do end;
 ----------

@@ -23,11 +23,9 @@ inherit
 			make as top_create
 		export
 			{NONE} all;
-			{ANY} realize, realized, set_cursor, cursor, hide, show, shown
-		undefine
-			init_toolkit
+			{ANY} realize, realized, set_cursor, 
+			cursor, hide, show, shown, ungrab
 		end;
-	WIDGET_NAMES;
 	WINDOWS;
 	CONSTANTS
 
@@ -57,7 +55,7 @@ feature -- Drawing area
 			--initial_state_circle.original_stone.reset_namer;
 			figures.wipe_out;
 			lines.wipe_out;
-			graph.clear_all;
+			Shared_app_graph.clear_all;
 			drawing_area.clear
 			--create_initial_state;
 		end;
@@ -122,19 +120,15 @@ feature -- Drawing area
 			-- to selected_figure. Also update the selected_figure
 			-- in figures and state_list.
 		do
-			if
-				not (a_circle = selected_figure)
-			then
-				if
-					not (selected_figure = Void)
-				then
+			if a_circle /= selected_figure then
+				if selected_figure /= Void then
 					selected_figure.deselect
 				end;
 				state_list.set_selected (a_circle);
 				figures.set_selected (a_circle);
 				selected_figure := a_circle;
 				if
-					not (selected_figure = Void)
+					selected_figure /= Void
 				then
 					selected_figure.select_figure
 				end;
@@ -157,8 +151,6 @@ feature -- Drawing area
 			-- initial_state of the transition graph.
 		require
 			valid_state: s /= Void
-		local
-			transition_graph: APP_GRAPH;
 		do
 			if (initial_state_circle.original_stone /= s) then
 				find_figure (s);
@@ -173,16 +165,13 @@ feature -- Drawing area
 			-- initial_state of the transition graph.
 		require
 			valid_arg: a_circle /= Void
-		local
-			transition_graph: APP_GRAPH;
 		do
 			if initial_state_circle /= Void then
 				initial_state_circle.set_standard_thickness;
 			end;
 			initial_state_circle := a_circle;
 			initial_state_circle.set_double_thickness;
-			transition_graph := transitions.graph;
-			transition_graph.set_initial_state (initial_state_circle.original_stone)
+			Shared_app_graph.set_initial_state (initial_state_circle.original_stone)
 		end; 
 	
 	update_circle_text (s: STATE) is
@@ -309,8 +298,9 @@ feature {NONE} -- State and transition list
 		do
 			source ?= l.source.original_stone;
 			dest ?= l.destination.original_stone;
-			if
-				not (source = Void) and (not (dest = Void)) and not labels_wnd.is_poped_up
+			if source /= Void and then 
+				dest /= Void and then
+				not labels_wnd.is_popped_up
 			then
 				labels_wnd.popup (transitions.selected_labels (source, dest));
 			end
@@ -397,16 +387,16 @@ feature
 				-- **************
 				-- Create widgets
 				-- **************
-			top_create ("Application Editor", a_screen);
-			!!form.make (F_orm, Current);
-			!!form1.make (F_orm1, form);
-			!!drawing_sw.make (S_croll, form);
-			!!drawing_area.make (D_rawingarea, drawing_sw, Current);
-			!!menu_bar.make (B_ar, form, Current);
-			!!state_label.make (L_abel, form1);
-			!!transition_label.make (L_abel2, form1);
-			!!state_list.make (L_ist1, form1, Current);
-			!!transition_list.make (L_ist2, form1);
+			top_create (Widget_names.application_editor, a_screen);
+			!!form.make (Widget_names.form, Current);
+			!!form1.make (Widget_names.form1, form);
+			!!drawing_sw.make (Widget_names.scroll, form);
+			!!drawing_area.make (Widget_names.drawingarea, drawing_sw, Current);
+			!!menu_bar.make (Widget_names.bar, form, Current);
+			!!state_label.make (Widget_names.state_name, form1);
+			!!transition_label.make (Widget_names.transition_name, form1);
+			!!state_list.make (Widget_names.list1, form1, Current);
+			!!transition_list.make (Widget_names.list2, form1);
 				-- *******************
 				-- Perform attachments
 				-- *******************
@@ -449,8 +439,6 @@ feature
 			!!lines.make (drawing_area);
 			!!figures.make (drawing_area, Current);
 			figures.set_showable_area (drawing_sw);
-			state_label.set_text ("State");
-			transition_label.set_text ("Transition");
 			drawing_sw.set_working_area (drawing_area);
 			--add_sub_application_command.Create (Current);
 			!!labels_wnd.make (form);
@@ -461,7 +449,7 @@ feature
 				-- made after the 'figures' callbacks are
 				-- executed.
 			drawing_area.add_expose_action (Current, expose_action);
-			drawing_area.add_button_press_action (2, Current, popup_labels_action);
+			drawing_area.add_button_press_action (3, Current, popup_labels_action);
 			drawing_area.set_action ("Ctrl<Btn1Down>", Current, ctrl_select_action);
 			state_list.add_selection_action (Current, set_state_action);
 			transition_list.add_selection_action (Current, set_label_action);
@@ -482,17 +470,13 @@ feature
 			circle: STATE_CIRCLE;
 			expose_data: EXPOSE_DATA;
 		do
-			if
-				argument = expose_action
-			then
+			if argument = expose_action then
 				expose_data ?= context_data;
 				if expose_data.exposes_to_come = 0 then
 					lines.draw;
 					figures.draw	
 				end;
-			elseif
-				argument = ctrl_select_action
-			then
+			elseif argument = ctrl_select_action then
 				figures.find;
 				if not figures.after then	
 					set_selected (figures.figure);
@@ -500,12 +484,8 @@ feature
 					draw_figures;
 					display_transitions;
 				end;
-			elseif
-				argument = set_state_action
-			then
-				if
-					(state_list.selected_item = Void)	
-				then
+			elseif argument = set_state_action then
+				if (state_list.selected_item = Void) then
 					state_list.start;
 					state_list.search_equal (selected_figure.text);
 					state_list.select_item;
@@ -513,25 +493,17 @@ feature
 				else
 					select_state (state_list.selected_item)
 				end;
-			elseif
-				argument = set_label_action
-			then
-				if
-					(transition_list.selected_item = Void)	
-				then
+			elseif argument = set_label_action then
+				if (transition_list.selected_item = Void) then
 					transition_list.start;
 					transition_list.search_equal (current_label);
 					transition_list.select_item;
 				else
 					current_label := transition_list.selected_item;
 				end;
-			elseif
-				argument = popup_labels_action
-			then
+			elseif argument = popup_labels_action then
 				lines.find;
-				if
-					lines.found
-				then	
+				if lines.found then	
 					popup_labels_window (lines.line)
 				end
 			end;

@@ -86,7 +86,7 @@ feature
 		local
 			text_l, granularity_l, min_l, max_l: LABEL_G;
 		do
-			initialize (Context_const.scale_form_name, a_parent);
+			initialize (Widget_names.scale_form_name, a_parent);
 
 			!!text.make (Widget_names.textfield, Current, 
 					Scale_text_cmd, editor);
@@ -96,24 +96,24 @@ feature
 					Scale_max_cmd, editor);
 			!!minimum.make (Widget_names.textfield, Current, 
 					Scale_min_cmd, editor);
-			!!is_value_shown.make (Context_const.show_value_name, 
+			!!is_value_shown.make (Widget_names.show_value_name, 
 					Current, Scale_show_cmd, editor);
-			!!is_output_only.make (Context_const.output_only_name, Current, 
+			!!is_output_only.make (Widget_names.output_only_name, Current, 
 					Scale_output_cmd, editor);
 			!!is_maximum_right_bottom.make 
-					(Context_const.maximum_right_bottom_name, 
+					(Widget_names.maximum_right_bottom_name, 
 					Current, Scale_max_right_cmd, editor);
-			!!is_vertical.make (Context_const.vertical_name, Current, 
+			!!is_vertical.make (Widget_names.vertical_name, Current, 
 					Scale_dir_cmd, editor);
 
 			granularity.set_width (50);
 			maximum.set_width (50);
 			minimum.set_width (50);
 
-			!!text_l.make (Context_const.text_label_name, Current);
-			!!granularity_l.make (Context_const.granularity_name, Current);
-			!!min_l.make (Context_const.minimum_name, Current);
-			!!max_l.make (Context_const.maximum_name, Current);
+			!!text_l.make (Widget_names.text_label_name, Current);
+			!!granularity_l.make (Widget_names.granularity_name, Current);
+			!!min_l.make (Widget_names.minimum_name, Current);
+			!!max_l.make (Widget_names.maximum_name, Current);
 
 			attach_left (is_vertical, 10);
 			attach_left (text_l, 10);

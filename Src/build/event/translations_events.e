@@ -13,12 +13,8 @@ inherit
 	EVENT_PAGE 
 		rename
 			add_button_callback as page_add_button_callback
-		undefine
-			init_toolkit		
 		end;
 	EVENT_PAGE
-		undefine
-			init_toolkit
 		redefine
 			add_button_callback
 		select
@@ -87,7 +83,7 @@ feature {CATALOG}
 	add_button_callback is
 		do
 			page_add_button_callback;
-			button.add_button_press_action (2, Current, Third);
+			button.add_button_press_action (3, Current, Third);
 			button.add_activate_action (Current, Second);
 			if translation_editor = Void then end;
 		end;
@@ -97,7 +93,7 @@ feature {NONE}
 
 	translation_editor: TRANSL_EDITOR is
 		once
-			!!Result.make ("Translation Editor", main_panel.base);
+			!!Result.make (main_panel.base);
 		end;
 
 	execute (argument: ANY) is

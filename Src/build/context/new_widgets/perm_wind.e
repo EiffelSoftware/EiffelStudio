@@ -18,12 +18,10 @@ inherit
 			raise, lower
 		end
 
-
 creation
 
 	make
 
-	
 feature 
 
 	make (a_name: STRING; a_screen: SCREEN) is

@@ -16,7 +16,7 @@ feature
 	eiffel_text: STRING is
 		local
 			fn, full_path: STRING;	
-			f: UNIX_FILE
+			f: PLAIN_TEXT_FILE
 		do
 			full_path := clone (Environment.Commands_directory);
 			full_path.extend (Environment.directory_separator);

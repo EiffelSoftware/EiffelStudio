@@ -8,8 +8,6 @@ inherit
 		export
 			{NONE} all;
 			{ANY} popup
-		undefine
-			init_toolkit
 		end;
 	ERROR_POPUPER
 		undefine
@@ -34,41 +32,37 @@ feature
 		local
 			cmd: SAVE_PROJECT_AS;
 			mp: MOUSE_PTR;
-			msg: STRING;	
-			Noth: ANY;
 			file: FILE_NAME
 		do
 			if not rescued then
 				!!file.make (0);
---				old_project_name := clone (Project_directory);
+				old_project_name := clone (Environment.project_directory);
 				main_panel.set_title (clone (selected_file));
---				Project_directory.wipe_out;
---				Project_directory.append (clone (selected_file));
---				file.from_string (Project_directory);
+				Environment.project_directory.wipe_out;
+				Environment.project_directory.append (clone (selected_file));
+				file.from_string (Environment.project_directory);
 				if file.exists then
-					!!msg.make (0);
 					if file.is_directory then
-						msg.append ("Directory ");
+						error_box.popup (Current, 
+							Messages.cannot_save_dir_er, 
+							Environment.project_directory)
 					else
-						msg.append ("File ");
+						error_box.popup (Current, 
+							Messages.cannot_save_file_er, 
+							Environment.project_directory)
 					end;
---					msg.append (Project_directory);
-					msg.append ("%Nalready exists. Cannot save.");
-					error_box.popup (Current, msg)
 				else
 					!!mp;
 					mp.set_watch_shape;	
 					Environment.setup_project_directory;
 					!!cmd.make (Current);
 					mp.restore;
-					cmd.execute (Noth);
+					cmd.execute (Void);
 				end
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Could not save project as%N");
-				msg.append (Environment.project_directory);
-				error_box.popup (Current, msg)
+				error_box.popup (Current, 
+					Messages.cannot_save_er, Environment.project_directory)
 			end
 		rescue
 			rescued := True;

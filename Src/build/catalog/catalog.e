@@ -9,7 +9,6 @@ inherit
 			make as form_create
 		end;
 	COMMAND;
-	WIDGET_NAMES
 
 feature 
 
@@ -21,7 +20,7 @@ feature
 
 feature {COMMAND_PAGE}
 
-	button_form, page_form: FORM;
+	button_form: FORM;
 
 feature {NONE}
 
@@ -31,8 +30,7 @@ feature {NONE}
 	
 feature 
 
-	focus_label: LABEL;
-	
+	focus_label: FOCUS_LABEL;
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen' 
@@ -131,7 +129,7 @@ feature
 				end;
 				opt_pages.forth
 			end;
-			current_page.make_visible (I_con_box1, page_form);
+			current_page.make_visible (Widget_names.icon_box1, page_sw);
 			page_sw.set_working_area (current_page);
 		end; -- update_interface 
 
@@ -173,11 +171,9 @@ feature {NONE}
 			if
 				not (page = Void)
 			then
-				if
-					not (current_page = page)
-				then
+				if current_page /= page then
 					if not page.is_visible then
-						page.make_visible (I_con_box1, page_form);
+						page.make_visible (Widget_names.icon_box1, page_sw);
 						if not page.empty then
 							page.go_i_th (1);
 							page.update_display
@@ -188,9 +184,7 @@ feature {NONE}
 					current_page.hide;
 					current_page := page;
 					update_type_label;
-					page_sw.unmanage;
 					page_sw.set_working_area (current_page);
-					page_sw.manage;	
 				end
 			end
 		end; -- execute

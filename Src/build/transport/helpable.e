@@ -10,7 +10,7 @@ feature
 	help_text: STRING is
 		local
 			full_path: FILE_NAME;
-			help_file: UNIX_FILE;
+			help_file: PLAIN_TEXT_FILE;
 			temp: STRING;
         do
             !! full_path.make (0);

@@ -11,10 +11,6 @@ inherit
 			set_editor, original_stone,
 			set_eiffel_text
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	NAMABLE;
 	ERROR_POPUPER;
 
@@ -28,7 +24,7 @@ feature -- Creation
 			-- Initialize current user
 			-- command.
 		do
-			set_symbol (Command_o_pixmap);
+			set_symbol (Pixmaps.command_o_pixmap);
 			int_generator.next;
 			identifier := int_generator.value;
 			!!arguments.make;
@@ -118,11 +114,11 @@ feature -- Namable
 			b: BEHAVIOR
 		do
 			from
-				graph.start
+				Shared_app_graph.start
 			until
-				graph.off
+				Shared_app_graph.off
 			loop
-				s ?= graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration;
 				if not (s = Void) then
 					from
 						s.start
@@ -145,7 +141,7 @@ feature -- Namable
 						s.forth
 					end;
 				end;
-				graph.forth
+				Shared_app_graph.forth
 			end
 		end;
 
@@ -175,7 +171,7 @@ feature -- Inheritance
 			-- Does current command inherit
 			-- from another command?
 		do
-			Result := not (parent_type = Void)
+			Result := parent_type /= Void
 		end;
 
 	set_parent (cmd: CMD) is 
@@ -667,7 +663,6 @@ feature -- Text generation
 			merger: MERGER;
 			temp: STRING;
 			mp: MOUSE_PTR;
-			msg: STRING
 		do
 			if not rescued then
 				!!mp;
@@ -680,12 +675,7 @@ feature -- Text generation
 				!!merger;
 				temp := merger.integrate (temp, old_template, template);
 				if temp = Void then
-					!!msg.make (0);
-					msg.append ("System call failed%N");
-					msg.append ("%NCould not update ");
-					msg.append (label);
-					msg.append (" text");
-					error_box.popup (Current, msg)
+					error_box.popup (Current, Messages.update_text_er, label)
 				else
 					if edited then
 						command_editor.text_editor.set_text ("");
@@ -709,13 +699,7 @@ feature -- Text generation
 				mp.restore;
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Cannot write to directory%N");
-				msg.append (Environment.templates_directory);
-				msg.append ("%NCould not update ");
-				msg.append (label);
-				msg.append (" text");
-				error_box.popup (Current, msg)
+				error_box.popup (Current, Messages.update_text_er, label)
 			end
 		rescue
 			mp.restore;
@@ -732,7 +716,7 @@ feature -- Text generation
 
 	remove_class is	
 		local
-			class_file: UNIX_FILE;
+			class_file: PLAIN_TEXT_FILE;
 			file_name, temp: STRING;
 		do
 			!!file_name.make(50);
@@ -750,7 +734,7 @@ feature -- Text generation
 
 	recreate_class is		
 		local
-			class_file: UNIX_FILE;
+			class_file: PLAIN_TEXT_FILE;
 			file_name, temp: STRING;
 		do
 			!!file_name.make(50);
@@ -762,7 +746,7 @@ feature -- Text generation
 			file_name.append (".e");
 			!!class_file.make (file_name);
 			if not class_file.exists then
-				class_file.open_binary_write;
+				class_file.open_write;
 				class_file.putstring (eiffel_text);
 				class_file.close;
 			end;

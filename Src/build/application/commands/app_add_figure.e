@@ -5,9 +5,6 @@ inherit
 
 	APP_COMMAND
 	
- 	
-
-	
 feature {NONE}
 
 	x, y: INTEGER;

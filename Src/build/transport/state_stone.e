@@ -12,13 +12,6 @@ deferred class STATE_STONE
 
 inherit
 
-	CURSORS
-		rename
-			State_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
@@ -37,5 +30,10 @@ feature
 	labels: LINKED_LIST [CMD_LABEL] is
 		deferred
 		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.state_cursor
+		end
 
 end

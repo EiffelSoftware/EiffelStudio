@@ -8,23 +8,17 @@ deferred class CMD_STONE
 
 inherit
 
-	CURSORS
-		rename
-			Command_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
-		
 		end
 
-
-
-	
 feature 
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.command_cursor
+		end;
 
 	identifier: INTEGER is
 			-- Unique identifier

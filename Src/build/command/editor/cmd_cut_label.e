@@ -3,13 +3,6 @@ class CMD_CUT_LABEL
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_cut_label_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	CMD_CUT
 		redefine
 			element, undo
@@ -19,11 +12,15 @@ feature {NONE}
 
 	element: CMD_LABEL;
 
+    c_name: STRING is
+        do
+            Result := Command_names.cmd_cut_label_cmd_name
+        end;
+
 	list: EB_LINKED_LIST [CMD_LABEL] is
 		do
 			Result := edited_command.labels
 		end;
-
 
 	undo is
 		do

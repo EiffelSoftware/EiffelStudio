@@ -3,11 +3,9 @@ class EVENT_CATALOG
 
 inherit
 	
-	EV_PIXMAPS;
 	EVENT_LABELS;
 	COMMAND_ARGS;
 	CATALOG [EVENT];
-	WIDGET_NAMES
 
 creation
 
@@ -40,20 +38,28 @@ feature
 	create_interface is 
 			-- Create interface of an event_catalog 
 		do
-			!!general_events.make (General_label, General_pixmap, Current);
-			!!mouse_events.make (Mouse_label, Mouse_pixmap, Current);
-			!!translations_events.make (Translation_label, Translation_pixmap, Current);
-			!!button_events.make (Button_label, Button_pixmap, Current);
-			!!text_events.make (Text_label, Text_pixmap, Current);
-			!!text_f_events.make (Text_f_label, Text_f_pixmap, Current);
-			!!drawing_events.make (Drawing_label, Drawing_pixmap, Current);
-			!!list_events.make (List_label, List_pixmap, Current);
-			!!scale_events.make (Scale_label, Scale_pixmap, Current);
-			!!button_form.make (F_orm1, Current);
-			!!page_sw.make (S_croll, Current);
-			!!page_form.make (F_orm2, page_sw);
-			!!focus_label.make (L_abel, button_form);
-			!!type_label.make (L_abel1, button_form);
+			!!general_events.make (General_label, 
+					Pixmaps.general_pixmap, Current);
+			!!mouse_events.make (Mouse_label, 
+					Pixmaps.mouse_pixmap, Current);
+			!!translations_events.make (Translation_label, 
+					Pixmaps.translation_pixmap, Current);
+			!!button_events.make (Button_label, 
+					Pixmaps.button_pixmap, Current);
+			!!text_events.make (Text_label, 
+					Pixmaps.text_pixmap, Current);
+			!!text_f_events.make (Text_f_label, 
+					Pixmaps.text_field_pixmap, Current);
+			!!drawing_events.make (Drawing_label, 
+					Pixmaps.drawing_area_pixmap, Current);
+			!!list_events.make (List_label, 
+					Pixmaps.list_pixmap, Current);
+			!!scale_events.make (Scale_label, 
+					Pixmaps.scale_pixmap, Current);
+			!!button_form.make (Widget_names.form1, Current);
+			!!page_sw.make (Widget_names.scroll, Current);
+			!!focus_label.make (button_form);
+			!!type_label.make (Widget_names.label1, button_form);
 
 			!!pages.make;
 

@@ -24,7 +24,6 @@ feature
 		local
 			dir: FILE_NAME;
 			bpdir: FILE_NAME;
-			msg: STRING;
 			restore_interface_name: FILE_NAME;
 			storage_interface_name: FILE_NAME;
 			char: CHARACTER;	
@@ -57,19 +56,13 @@ feature
 						restore_interface_name.exists and then
 						restore_interface_name.date >= storage_interface_name.date 
 					then
-						!!msg.make (0);
-						msg.append ("Project saved from system crash. %N");
-						msg.append ("Do you wish to retrieve backup files?");
-						question_box.popup (Current, msg);
+						question_box.popup (Current, 
+							Messages.retrieve_crash_qu, Void);
 					else
 						retrieve_project (Environment.storage_directory);
 					end;
 				else
-					!!msg.make (0);
-					msg.append ("Project directory :%N' ");
-					msg.append (bpdir.path_name);
-					msg.append (" '%N is not an Eiffel build project. %N");
-					handle_error (msg);
+					handle_error (Messages.not_eb_project_er, bpdir.path_name);
 				end;
 			else
 				create_initial_directories
@@ -94,15 +87,13 @@ feature {NONE}
 		local
 			mp: MOUSE_PTR;
 			storer: STORER;
-			msg: STRING;
 			init_storage: BOOLEAN
 		do
 			if not rescued then
 				!!mp;
-				main_panel.set_title ("Creating new project...");
+				main_panel.set_title (Widget_names.create_project_label);
 				mp.set_watch_shape;
 				Environment.setup_project_directory;
-				init_session;
 				app_editor.create_initial_state;
 				!!storer.make;
 				init_storage := True;
@@ -113,15 +104,14 @@ feature {NONE}
 				init_main_panel;
 			else
 				rescued := False;
-				main_panel.set_title ("EiffelBuild");
-				!!msg.make (0);
-				msg.append ("Cannot write to directory%N");
+				main_panel.set_title (Widget_names.main_panel);
 				if init_storage then
-					msg.append (Environment.storage_directory)
+					handle_error (Messages.write_dir_er,
+						Environment.storage_directory)
 				else
-					msg.append (Environment.project_directory);	
+					handle_error (Messages.write_dir_er,
+						Environment.project_directory)
 				end;
-				handle_error (msg)
 			end
 		rescue
 			mp.restore;
@@ -132,7 +122,6 @@ feature {NONE}
 	retrieve_project (dir: STRING) is
 		local
 			file_name: FILE_NAME;
-			msg: STRING;
 			storer: STORER;
 			mp: MOUSE_PTR
 		do
@@ -154,21 +143,18 @@ feature {NONE}
 				mp.restore;
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Cannot retrieve application from directory %N");
-				msg.append (dir);	
-				handle_error (msg)
+				handle_error (Messages.retrieve_er, dir)
 			end;
 		rescue
-			main_panel.set_title ("EiffelBuild");
+			main_panel.set_title (Widget_names.main_panel)
 			mp.restore;
 			rescued := True;
 			retry
 		end;
 
-	handle_error (arg: STRING) is
+	handle_error (arg: STRING; extra_message: STRING) is
 		do
-			error_box.popup (Current, arg);
+			error_box.popup (Current, arg, extra_message);
 		end;
 
 	init_main_panel is

@@ -5,8 +5,6 @@ inherit
 	FORM_D
 		rename
 			make as form_d_create
-		undefine
-			init_toolkit
 		end;
 	SHARED_STORAGE_INFO;
 	COMMAND;

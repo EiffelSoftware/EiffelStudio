@@ -8,36 +8,10 @@ inherit
 		end;
 	SHARED_TEXT_ITEMS
 	
-feature 
-
-	valid_for (client: CLASS_C): BOOLEAN is
-			-- Is the export valid for class `client' ?
-		do
-			-- Do nothing
-		end;
-
-	is_subset (other: EXPORT_I): BOOLEAN is
-			-- Is Current clients a subset or equal with
-			-- `other' clients?
-		do
-			Result := True;
-		end;
+feature -- Properties
 
 	is_none: BOOLEAN is
 			-- Is the current object an instance of EXPORT_NONE_I ?
-		do
-			Result := True;
-		end;
-
-	concatenation (other: EXPORT_I): EXPORT_I is
-			-- Concatenation of Current and `other'
-		do
-			Result := other;
-		end;
-
-	equiv (other: EXPORT_I): BOOLEAN is
-			-- Is `other' equivalent to Current ?
-			-- [Semantic: old_status.equiv (new_status)]
 		do
 			Result := True;
 		end;
@@ -48,6 +22,41 @@ feature
 			Result := other.is_none
 		end;
 
+feature -- Comparison
+
+	infix "<" (other: EXPORT_I): BOOLEAN is
+			-- is Current less restrictive than other
+		do
+			-- never true
+		end;
+
+feature {COMPILER_EXPORTER}
+
+	is_subset (other: EXPORT_I): BOOLEAN is
+			-- Is Current clients a subset or equal with
+			-- `other' clients?
+		do
+			Result := True;
+		end;
+
+	equiv (other: EXPORT_I): BOOLEAN is
+			-- Is `other' equivalent to Current ?
+			-- [Semantic: old_status.equiv (new_status)]
+		do
+			Result := True;
+		end;
+
+	valid_for (client: CLASS_C): BOOLEAN is
+			-- Is the export valid for class `client' ?
+		do
+			-- Do nothing
+		end;
+
+	concatenation (other: EXPORT_I): EXPORT_I is
+			-- Concatenation of Current and `other'
+		do
+			Result := other;
+		end;
 
 	trace is
 			-- Debug purpose
@@ -55,11 +64,7 @@ feature
 			io.error.putstring ("NONE");
 		end;
 
-	infix "<" (other: EXPORT_I): BOOLEAN is
-			-- is Current less restrictive than other
-		do
-			-- never true
-		end;
+feature {COMPILER_EXPORTER}
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 		do
@@ -68,7 +73,7 @@ feature
 			ctxt.put_text_item_without_tabs (ti_R_curly);
 		end;
 
-feature -- Case storage
+feature {COMPILER_EXPORTER} -- Case storage
 
 	storage_info: S_EXPORT_NONE_I is
 		do

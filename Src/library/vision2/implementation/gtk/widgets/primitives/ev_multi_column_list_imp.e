@@ -51,17 +51,21 @@ feature {NONE} -- Initialization
 
 			-- Creating the gtk scrolled window
 
-			set_c_object (
+			set_c_object (C.gtk_event_box_new)
+
+			scroll_window := (
 				C.gtk_scrolled_window_new (
 					Default_pointer, 
 					Default_pointer
 				)
 			)
 			C.gtk_scrolled_window_set_policy (
-				c_object,
+				scroll_window,
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
+			C.gtk_widget_show (scroll_window)
+			C.gtk_container_add (c_object, scroll_window)
 			create ev_children.make (0)
 		end
 
@@ -84,7 +88,7 @@ feature {NONE} -- Initialization
 					col_widths.extend (column_width (i))
 					i := i + 1
 				end
-				C.gtk_container_remove (c_object, list_widget)
+				C.gtk_container_remove (scroll_window, list_widget)
 			end
 
 			list_widget := C.gtk_clist_new (a_columns)
@@ -99,7 +103,7 @@ feature {NONE} -- Initialization
 
 			C.gtk_widget_show (list_widget)
 
-			C.gtk_container_add (c_object, list_widget)
+			C.gtk_container_add (scroll_window, list_widget)
 
 			-- We need to specify a width for the columns
 			-- otherwise the value given by gtk would be wrong.
@@ -475,6 +479,9 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	scroll_window: POINTER
+		-- Pointer to the scrollable window tree is in.
+
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `v' to the list.
 		local
@@ -607,6 +614,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/21 22:40:16  king
+--| Made c_object an event box
+--|
 --| Revision 1.42  2000/03/15 00:56:39  king
 --| Converted back to using arrayed_list
 --|

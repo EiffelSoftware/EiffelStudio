@@ -183,8 +183,8 @@ img
 
 .content_style
 {
-	margin: 15px 20px 15px 20px;
-	width: 100%;	
+	margin: 0px 0px 0px 20px;
+	width: 90%;	
 }
 
 .heading_text
@@ -298,7 +298,7 @@ a.feature:hover
 .cluster, .cluster_name 
 {
     	color: maroon;
-    	font-variant: small-caps;
+    	font-family: verdana;
 }
 
 .compiler_error

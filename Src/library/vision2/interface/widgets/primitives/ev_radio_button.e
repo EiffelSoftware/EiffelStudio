@@ -14,14 +14,23 @@ class
 inherit
 	EV_CHECK_BUTTON
 		redefine
+			make,
 			make_with_text,
 			implementation
 		end
 
 creation
+	make,
 	make_with_text
 
 feature -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- radio button with `par' as parent.
+		do
+			!EV_RADIO_BUTTON_IMP!implementation.make
+			widget_make (par)
+		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- radio button with `par' as parent and `txt' as

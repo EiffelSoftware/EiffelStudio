@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
-			"C | %"eif_plug.h%""
+			"C [macro %"eif_plug.h%"]"
 		alias
 			"econfg"
 		end;
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
-			"C | %"eif_plug.h%""
+			"C [macro %"eif_plug.h%"]"
 		alias
 			"estypeg"
 		end;

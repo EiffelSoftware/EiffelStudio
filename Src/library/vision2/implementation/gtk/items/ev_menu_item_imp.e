@@ -35,26 +35,35 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an item with an empty name.
 		do
+			-- Create the gtk object.
 			widget := gtk_menu_item_new
 			gtk_object_ref (widget)
+
+			-- Create the `box'.
 			initialize
+
+			-- Create a label with a null text.
 			create_text_label ("")
+
+			-- left-align and middle-vertical align
 			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
 		end
 
 feature -- Status setting
 
-	set_selected is
+	set_selected (flag: BOOLEAN) is
    			-- Set current item as the selected one.
 			-- We use this function only when the parent
 			-- of the parent (the menu) is an option button.
 		local
 			pos: INTEGER
    		do
-			pos := c_gtk_option_button_index_of_menu_item (parent_imp.parent_imp.widget, widget)
-			gtk_option_menu_set_history (parent_imp.parent_imp.widget, pos)
-   		end
+			if (flag) then
+				pos := c_gtk_option_button_index_of_menu_item (parent_imp.parent_imp.widget, widget)
+				gtk_option_menu_set_history (parent_imp.parent_imp.widget, pos)
+			end  
+ 		end
 
 feature -- Element change
 
@@ -111,7 +120,8 @@ feature -- Assertion
 
 feature -- Event : command association
 
-	add_activate_command ( command: EV_COMMAND; 
+--	add_activate_command ( command: EV_COMMAND; 
+	add_select_command ( command: EV_COMMAND; 
 			       arguments: EV_ARGUMENT) is
 			-- Add 'command' to the list of commands to be
 			-- executed when the menu item is activated
@@ -123,11 +133,12 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+--	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is activated.
 		do
-			remove_commands (widget, select_id)
+			remove_commands (widget, activate_id)
 		end	
 
 feature {NONE} -- Implementation

@@ -59,7 +59,7 @@ feature {NONE} -- Basic operation
 			rate: INTEGER
 			mark: INTEGER
 		do
-			if shown then
+			if already_displayed then
 				temp_width := minimum_width.max (new_width)
 				if not ev_children.empty then
 	
@@ -115,7 +115,7 @@ feature {NONE} -- Basic operation
 							until
 								ev_children.after
 							loop
-								if ev_children.item.shown then
+								if ev_children.item.shown or else not shown then
 									ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
 									mark := mark + spacing + ev_children.item.child_cell.width
 								end
@@ -177,7 +177,7 @@ feature {NONE} -- Basic operation
 						until
 							ev_children.after
 						loop
-							if ev_children.item.shown then
+							if ev_children.item.shown or else not shown then
 								if ev_children.item.expandable then
 									ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
 								else
@@ -288,7 +288,7 @@ feature {NONE} -- Basic operation
 			-- Resize and replace all its children according 
 			-- to the resize of one of them.
 		do
-			if shown then
+			if already_displayed then
 				if value > minimum_height then
 					set_height (value)
 				else
@@ -301,7 +301,7 @@ feature {NONE} -- Basic operation
 			-- Resize and replace all its children according
 			-- to the resize of one of them.
 		do
-			if shown then
+			if already_displayed then
 				if value > child.minimum_width then
 					set_width (value * ev_children.count + total_spacing)
 				else
@@ -342,7 +342,7 @@ feature {NONE} -- Basic operation
 				child := child_imp
 			end
 			ev_children.extend (child_imp)
-			if shown then
+			if already_displayed then
 				initialize_length_at_minimum
 				child_cell.set_width (minimum_width)
 			end

@@ -43,6 +43,7 @@ inherit
 			on_key_up
 		redefine
 			default_style,
+			default_ex_style,
 			background_brush
 		end
 
@@ -59,13 +60,7 @@ feature {NONE} -- Access
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the box
 
-feature -- Implementation
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-		do
-			child := child_imp
-			ev_children.extend (child_imp)
-		end
+feature -- Status setting
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -82,6 +77,14 @@ feature -- Implementation
 				end
 			end
 			{EV_CONTAINER_IMP} Precursor (flag)
+		end
+
+feature -- Implementation
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+		do
+			child := child_imp
+			ev_children.extend (child_imp)
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
@@ -109,8 +112,13 @@ feature {NONE} -- Implementation : WEL features
 
 	default_style: INTEGER is
 		once
-			Result := Ws_child + Ws_visible 
-				+ Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_child + Ws_visible + Ws_clipchildren
+					+ Ws_clipsiblings
+		end
+
+	default_ex_style: INTEGER is
+		once
+			Result := Ws_ex_controlparent
 		end
 
 	background_brush: WEL_BRUSH is
@@ -120,7 +128,7 @@ feature {NONE} -- Implementation : WEL features
 		do
 			if background_color /= Void then
 				!! Result.make_solid (background_color)
-				disable_default_processing
+--				disable_default_processing
 			end
 		end
 

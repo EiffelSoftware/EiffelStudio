@@ -233,7 +233,7 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 		end
 		
 	enable_minimized is
-			-- Assign `True' to `m-nimized'.
+			-- Assign `True' to `minimized'.
 		do
 			is_minimized := True
 		ensure

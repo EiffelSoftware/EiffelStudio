@@ -11,7 +11,8 @@ inherit
 	PROMPT_D
 		rename
 			make as prompt_dialog_create
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -34,19 +35,20 @@ feature
 	make (a_composite: COMPOSITE; cmd: COMMAND_W) is
 			-- Create a file selection dialog
 		do
-			prompt_dialog_create (l_Shell_w, a_composite);
-			set_title (l_Shell_w);
+			prompt_dialog_create (l_Argument_w, a_composite);
+			set_title (l_Argument_w);
 			set_selection_label ("Specify arguments");
 			hide_help_button;
 			show_apply_button;
 			!!apply_it;
 			!!cancel_it;
-			set_ok_label ("run");
-			set_apply_label ("ok");
+			set_ok_label ("Run");
+			set_apply_label ("OK");
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);
 			run := cmd;
+			set_composite_attributes (Current)
 		end;
 	
 feature {NONE}

@@ -815,6 +815,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	generate_once_computed_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_once_computed'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	generate_once_test_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `generate_once_test'.
 			-- Redefine in descendants if needed.
@@ -2226,6 +2233,14 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		require
 			generate_once_result_info_user_precondition: generate_once_result_info_user_precondition (name, type_id)
+		deferred
+
+		end
+
+	generate_once_computed is
+			-- No description available.
+		require
+			generate_once_computed_user_precondition: generate_once_computed_user_precondition
 		deferred
 
 		end

@@ -873,6 +873,12 @@ feature -- Basic Operations
 			ccom_generate_once_result_info (initializer, name, type_id)
 		end
 
+	generate_once_computed is
+			-- No description available.
+		do
+			ccom_generate_once_computed (initializer)
+		end
+
 	generate_once_test is
 			-- No description available.
 		do
@@ -1876,6 +1882,12 @@ feature {NONE}  -- Externals
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT,EIF_INTEGER)"
+		end
+
+	ccom_generate_once_computed (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
 		end
 
 	ccom_generate_once_test (cpp_obj: POINTER) is

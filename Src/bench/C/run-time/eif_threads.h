@@ -379,7 +379,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
     if (pthread_mutex_destroy(m)) eraise(msg, EN_EXT)
 
 	/* tid */
-#define EIF_THR_SELF	pthread_self();	/* Return a pthread_t */
+#define EIF_THR_SELF	pthread_self()	/* Return a pthread_t */
 
 #elif defined EIF_WIN32
 
@@ -592,7 +592,7 @@ rt_public typedef struct {
     EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
 
 	/* tid */
-#define EIF_THR_SELF	thread_self();	/* Return a thread_t */
+#define EIF_THR_SELF	thread_self()	/* Return a thread_t */
 
 #elif defined VXWORKS
 

@@ -363,6 +363,7 @@
 								<File Id="icon_bpslot_stopped.png" Name="IC5FE8~1.PNG" LongName="icon_bpslot_stopped.png" />
 								<File Id="icon_bpslot_top.png" Name="ICE12E~1.PNG" LongName="icon_bpslot_top.png" />
 								<File Id="icon_close_color.png" Name="ICE840~1.PNG" LongName="icon_close_color.png" />
+								<File Id="icon_dbg_error_png" Name="ICON_D~3.PNG" LongName="icon_dbg_error.png" />
 								<File Id="icon_degree_minus_1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
 								<File Id="icon_degree_minus_2.png" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
 								<File Id="icon_degree_minus_3.png" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />

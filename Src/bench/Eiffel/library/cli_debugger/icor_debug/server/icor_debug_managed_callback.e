@@ -140,6 +140,16 @@ feature {NONE} -- debugger behavior
 			end
 			notify_end_of_callback (cb_id, execution_stopped)
 		end
+		
+	end_of_managed_callback_without_stopping (cb_id: INTEGER) is
+			-- called at each ending of callback with no stopping state
+		local
+			process_callback: BOOLEAN
+			execution_stopped: BOOLEAN
+		do			
+			execution_stopped := continue (cb_id)
+			notify_end_of_callback (cb_id, execution_stopped)
+		end		
 
 	end_of_managed_callback_on_error (cb_id: INTEGER) is
 			-- called at each ending of callback where an error occured
@@ -570,9 +580,9 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_process)
-				set_last_controller_by_pointer (p_process)				
-				set_last_process_by_pointer (p_process)				
-				end_of_managed_callback (Cst_managed_cb_create_process)
+				set_last_controller_by_pointer (p_process)
+				set_last_process_by_pointer (p_process)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_create_process)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_create_process)
 			end
@@ -613,7 +623,7 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_create_thread)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
-				end_of_managed_callback (Cst_managed_cb_create_thread)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_create_thread)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_create_thread)
 			end
@@ -633,7 +643,7 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_exit_thread)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				reset_last_thread_by_pointer (p_thread)
-				end_of_managed_callback (Cst_managed_cb_exit_thread)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_exit_thread)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_exit_thread)
 			end
@@ -657,7 +667,7 @@ feature -- Basic Operations
 					create l_module.make_by_pointer (p_module)
 					Eifnet_debugger_info.register_new_module (l_module)
 				end
-				end_of_managed_callback (Cst_managed_cb_load_module)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_load_module)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_load_module)
 			end
@@ -681,7 +691,7 @@ feature -- Basic Operations
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_unload_module)
 			else
-				end_of_managed_callback_on_error (Cst_managed_cb_unload_module)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_unload_module)
 			end
 		rescue
 			retried := True
@@ -700,7 +710,7 @@ feature -- Basic Operations
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_load_class)
 			else
-				end_of_managed_callback_on_error (Cst_managed_cb_load_class)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_load_class)
 			end
 		rescue
 			retried := True
@@ -717,7 +727,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_unload_class)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				end_of_managed_callback (Cst_managed_cb_unload_class)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_unload_class)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_unload_class)
 			end
@@ -737,6 +747,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_debugger_error)
 				set_last_controller_by_pointer (p_process)
+				eifnet_debugger_info.notify_debugger_error (error_hr, error_code)
 				end_of_managed_callback (Cst_managed_cb_debugger_error)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_debugger_error)
@@ -809,7 +820,7 @@ feature -- Basic Operations
 				check
 					l_hr = 0
 				end
-				end_of_managed_callback (Cst_managed_cb_create_app_domain)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_create_app_domain)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_create_app_domain)
 			end
@@ -830,7 +841,7 @@ feature -- Basic Operations
 				set_last_controller_by_pointer (p_process)
 				-- NOTA jfiat [2004/06/21] : Maybe we should use controller interface
 				-- of p_app_domain, but I don't see why
-				end_of_managed_callback (Cst_managed_cb_exit_app_domain)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_exit_app_domain)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_exit_app_domain)
 			end
@@ -849,7 +860,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_assembly)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				end_of_managed_callback (Cst_managed_cb_load_assembly)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_load_assembly)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_load_assembly)
 			end
@@ -868,7 +879,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_unload_assembly)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				end_of_managed_callback (Cst_managed_cb_unload_assembly)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_unload_assembly)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_unload_assembly)
 			end
@@ -908,7 +919,7 @@ feature -- Basic Operations
 				if p_thread /= Default_pointer then
 					set_last_thread_by_pointer (p_thread)					
 				end
-				end_of_managed_callback (Cst_managed_cb_name_change)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_name_change)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_name_change)
 			end
@@ -928,7 +939,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_update_module_symbols)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				end_of_managed_callback (Cst_managed_cb_update_module_symbols)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_update_module_symbols)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_update_module_symbols)
 			end
@@ -950,7 +961,7 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
-				end_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_edit_and_continue_remap)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_edit_and_continue_remap)
 			end
@@ -976,7 +987,7 @@ feature -- Basic Operations
 					io.put_string ("  error = " + (dw_error & 0x0FFFF).to_hex_string + "%N")
 				end
 				set_last_thread_by_pointer (p_thread)
-				end_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
+				end_of_managed_callback_without_stopping (Cst_managed_cb_breakpoint_set_error)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_breakpoint_set_error)
 			end

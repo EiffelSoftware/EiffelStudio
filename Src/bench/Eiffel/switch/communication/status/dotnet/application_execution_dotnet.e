@@ -9,6 +9,8 @@ class APPLICATION_EXECUTION_DOTNET
 inherit
 	
 	SHARED_EIFNET_DEBUGGER
+
+	EB_SHARED_MANAGERS
 	
 	APPLICATION_EXECUTION_IMP
 		redefine
@@ -93,7 +95,9 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 						eifnet_debugger.reset_data_changed
 						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
 							notify_execution_on_exit_process
-						else
+						elseif Eifnet_debugger_info.debugger_error_occured then
+							notify_execution_on_debugger_error
+						else							
 							notify_execution_on_stopped
 						end
 					elseif --| Evaluation |--
@@ -894,6 +898,30 @@ feature {NONE} -- Events on notification
 			eifnet_debugger.notify_exit_process_occurred
 			eifnet_debugger.on_exit_process
 		end
+		
+	notify_execution_on_debugger_error is
+			-- Notify the system is exiting on debugger error
+		local
+			wd: EV_WARNING_DIALOG
+			st: STRUCTURED_TEXT
+			l_err_msg: STRING
+		do
+			--| We need to stop
+			--| Already "stopped" but let's be sure ..
+			l_err_msg := "The dotnet debugger has encountered a fatal error.%N"
+						+ " - error_hr   = 0x" + eifnet_debugger_info.debugger_error_hr.to_hex_string + "%N"
+						+ " - error_code = 0x" + eifnet_debugger_info.debugger_error_code.to_hex_string + "%N" 
+			
+			create st.make
+			st.add_string (l_err_msg)
+			output_manager.process_text (st)
+
+			create wd.make_with_text (l_err_msg)
+			wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+
+			status.set_is_stopped (True)
+			eifnet_debugger.terminate_debugging
+		end		
 		
 	notify_execution_on_stopped is
 		local

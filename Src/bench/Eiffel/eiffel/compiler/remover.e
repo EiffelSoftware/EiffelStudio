@@ -1,21 +1,21 @@
-
 -- Dead code removal
 
 class REMOVER
 
 inherit
-
 	FEAT_ITERATOR
 		rename
 			make as old_make,
 			mark_alive as old_mark_alive
 		end
+
 	FEAT_ITERATOR
 		redefine
 			make, mark_alive
 		select
 			make, mark_alive
-		end;
+		end
+
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -27,13 +27,10 @@ feature
 	make is
 			-- Initialization
 		do
-			old_make;
-
-			!!control.make;
-
-			!!array_optimizer.make;
-
-			!!inliner.make
+			old_make
+			!! control.make
+			!! array_optimizer.make
+			!! inliner.make
 		end;
 
 feature
@@ -43,20 +40,20 @@ feature
 			-- static type `in_class'.
 		do
 			iterate (feat, in_class)
-		end;
+		end
 
 feature -- Array optimization
 
 	record_array_descendants is
 		do
 			array_optimizer.record_array_descendants
-		end;
+		end
 
-	array_optimizer: ARRAY_OPTIMIZER;
+	array_optimizer: ARRAY_OPTIMIZER
 
 feature -- Inlining
 
-	inliner: INLINER;
+	inliner: INLINER
 
 feature {NONE}
 
@@ -116,7 +113,7 @@ debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring (static_class.name);
 	io.error.new_line;
 end;
-						!!unit_to_traverse.make (depend_feature, static_class);
+						!! unit_to_traverse.make (depend_feature, static_class);
 						control.extend (unit_to_traverse);
 					end;
 				end;

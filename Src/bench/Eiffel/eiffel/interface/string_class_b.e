@@ -3,12 +3,13 @@
 class STRING_CLASS_B 
 
 inherit
-
 	CLASS_C
 		redefine
 			check_validity, mark_all_used
-		end;
-	SPECIAL_CONST;
+		end
+
+	SPECIAL_CONST
+
 	SHARED_TYPES
 
 creation

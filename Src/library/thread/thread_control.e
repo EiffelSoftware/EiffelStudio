@@ -36,11 +36,11 @@ feature -- Basic operations
 		end
 
 
-	native_join is
+	native_join (term: POINTER) is
 			-- Same as `join' except that the low-level architecture-dependant
 			-- routine is used. The thread must not be created detached.
 		do
-			thread_join
+			thread_join (term)
 		end
 
 
@@ -61,7 +61,7 @@ feature {NONE} -- Externals
 			"eif_thr_wait"
 		end
 
-	thread_join is
+	thread_join (term: POINTER) is
 			-- The calling thread uses the low-level join routine to
 			-- join the current Eiffel thread.
 		external

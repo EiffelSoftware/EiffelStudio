@@ -11,19 +11,13 @@ feature
 		-- Cluster root containing all system
 		-- entities (classes and clusters).
 
-	is_grid_visible: BOOLEAN;
-			-- Is grid visible in a graphical representation on screen ?
-
-	is_grid_magnetic: BOOLEAN;
-			-- Do entities glu to the grid as if it was magnetic ?
-
-	grid_spacing: INTEGER;
-			-- Size of a grid square
-
-	class_number: INTEGER;
+	class_id_number: INTEGER;
 			-- Last number use for default class name
 
-	cluster_number: INTEGER;
+	class_view_number: INTEGER;
+			-- Last number use for views
+
+	cluster_view_number: INTEGER;
 			-- Last number use for default cluster name
 
 	was_generated_from_bench: BOOLEAN;
@@ -39,40 +33,34 @@ feature -- Setting values
 			was_generated_from_bench: was_generated_from_bench
 		end;
 
-	set_grid_details (is_vis, is_mag: BOOLEAN; spacing: INTEGER) is
-			-- Set is_grid_visible to `is_vis', 
-			-- set is_grid_magnetic to `is_mag' and
-			-- set grid_spacing to `spacing'.
-		require
-			valid_spacing: spacing >= 0
-		do
-			is_grid_visible := is_vis;
-			is_grid_magnetic := is_mag;
-			grid_spacing := spacing
-		ensure
-			grid_values_set: is_grid_visible = is_vis and then
-								is_grid_magnetic = is_mag and then
-								grid_spacing = spacing
-		end;
-
-	set_class_number (value: like class_number) is
-			-- Set class_number to `value'.
+	set_class_id_number (value: like class_id_number) is
+			-- Set class_id_number to `value'.
 		require
 			valid_value: value >= 0
 		do
-			class_number := value
+			class_id_number := value
 		ensure
-			value_set: class_number = value
+			value_set: class_id_number = value
 		end;
 
-	set_cluster_number (value: like cluster_number) is
-			-- Set cluster_number to `value'.
+	set_class_view_number (value: like class_view_number) is
+			-- Set class_view_number to `value'.
 		require
 			valid_value: value >= 0
 		do
-			cluster_number := value
+			class_view_number := value
 		ensure
-			value_set: cluster_number = value
+			value_set: class_view_number = value
+		end;
+
+	set_cluster_view_number (value: like cluster_view_number) is
+			-- Set cluster_view_number to `value'.
+		require
+			valid_value: value >= 0
+		do
+			cluster_view_number := value
+		ensure
+			value_set: cluster_view_number = value
 		end;
 
 	set_root_cluster (cluster: like root_cluster) is
@@ -106,13 +94,9 @@ feature -- Storing
 			file_name := clone (path);
 			file_name.append (System_name);
 			!! system_file.make (file_name);
-			system_file.open_write;
 			independent_store (system_file);
+			general_store (system_file);
 			system_file.close;
-		rescue
-			if not system_file.is_closed then
-				system_file.close;
-			end;
 		end;
 
 

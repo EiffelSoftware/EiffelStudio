@@ -206,7 +206,7 @@ feature {CASE_CLASS_INFO} -- Case storage
 			gen: FORMAL_DEC_AS;
 			gen_name: STRING;
 			gen_data: S_GENERIC_DATA;
-			key: S_CLASS_KEY;
+			class_id: INTEGER;
 			type_info: S_TYPE_INFO;
 			name: STRING
 		do
@@ -244,8 +244,8 @@ feature {CASE_CLASS_INFO} -- Case storage
 					if gen.constraint = Void then
 						!! gen_data.make (gen_name, Void)
 					else
-						key := gen.constraint_type.associated_class.case_class_key;
-						!! type_info.make (Void, key);
+						class_id := gen.constraint_type.associated_class.id;
+						!! type_info.make (Void, id);
 						!! gen_data.make (gen_name, type_info)
 					end;
 					g_l.replace (gen_data);

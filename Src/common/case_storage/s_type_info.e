@@ -6,23 +6,23 @@ creation
 
 feature {NONE}
 
-	make (s: STRING; key: like class_key) is
+	make (s: STRING; id: like class_id) is
 			-- Set id to `s' and set
-			-- class_key to `key'.
+			-- class_id to `id'.
 		require
-			both_not_void: s = Void implies key /= Void and then
-						key = Void implies s /= Void
+			both_not_void: s = Void implies id > 0 and then
+						id = 0 implies s /= Void
 		do
 			name := s;
-			class_key := key
+			class_id := id
 		ensure
 			name_set: name = s;
-			class_key_set: class_key = key;
+			class_id_set: class_id = id;
 		end;
 
 feature
 
-	class_key: S_CLASS_KEY;
+	class_id: INTEGER;
 
 	name: STRING
 

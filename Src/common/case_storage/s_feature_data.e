@@ -9,7 +9,7 @@ feature
 	name: STRING;
 			-- Feature's name
 
-	class_key: S_CLASS_KEY;
+	class_id: INTEGER;
 			-- Class that contains the feature
 
 	arguments: FIXED_LIST [S_ARGUMENT_DATA];
@@ -44,18 +44,18 @@ feature
 
 feature -- Setting values
 
-	make (s: STRING; key: like class_key) is
+	make (s: STRING; id: like class_id) is
 			-- Set id to `s' and set
-			-- class_key to `key'.
+			-- class_id to `id'.
 		require
 			valid_s: s /= Void;
-			valid_key: key /= Void
+			valid_id: id /= Void
 		do
 			name := s;
-			class_key := key
+			class_id := id
 		ensure
 			name_set: name = s;
-			class_key_set: class_key = key;
+			class_id_set: class_id = id;
 		end;
 
 	set_booleans (is_d, is_e, is_r, is_att: BOOLEAN) is
@@ -120,9 +120,9 @@ feature -- Setting values
 			l_not_empty: not l.empty;
 			not_have_void: not l.has (Void)
 		do
-			arguments := l
+			--arguments := l
 		ensure
-			arguments_set: arguments = l
+			--arguments_set: arguments = l
 		end;
 
 	set_comments (l: like comments) is

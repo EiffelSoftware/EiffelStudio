@@ -271,7 +271,7 @@ feature {FEATURE_I} -- Case storage
 			-- Storage info for Current arguments.
 		local
 			type_info: S_TYPE_INFO;
-			key: S_CLASS_KEY;
+			id: INTEGER;
 			arg_name: STRING;
 			type_a: TYPE_A;
 			classc: CLASS_C;
@@ -294,10 +294,10 @@ feature {FEATURE_I} -- Case storage
 				classc := type_a.associated_class;
 				if classc /= Void then
 					-- class type for non like features
-					key := type_a.associated_class.case_class_key;
-					!! type_info.make (Void, key);
+					id := type_a.associated_class.id;
+					!! type_info.make (Void, id);
 				else
-					!! type_info.make (arg_name, Void);
+					!! type_info.make (arg_name, 0);
 				end;
 				!! arg_data.make (arg_name, type_info);
 				Result.replace (arg_data);

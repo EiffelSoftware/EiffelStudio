@@ -2,11 +2,14 @@ class S_CLASS_DATA
 
 inherit
 
+	STORABLE;
 	S_LINKABLE_DATA
+		rename
+			make as old_make
 		redefine
-			chart
+			chart, set_chart
 		end;
-	STORABLE
+	S_CASE_INFO
 
 creation
 
@@ -14,20 +17,14 @@ creation
 
 feature
 
-	chart: S_CLASS_CHART;
-			-- Informal description of Current class
+	id: INTEGER;
+			-- Id of Current
 
 	feature_number: INTEGER;
 			-- Number of created features
 
 	generics: FIXED_LIST [S_GENERIC_DATA];
 			-- Number of generic parameters
-
-	features: LINKED_LIST [S_FEATURE_DATA];
-			-- Features of class
-
-	invariants: FIXED_LIST [S_ASSERTION_DATA];
-			-- Invariants of the current class
 
 	is_deferred: BOOLEAN;
 			-- Is the current class deferred?
@@ -69,6 +66,16 @@ feature
 								is_root = is_ro;
 		end;
 
+    set_id (i: INTEGER) is
+            -- Set id to `i'.
+        require
+            valid_i: i > 0
+        do
+            id := i
+        ensure
+            id_set: id = i
+        end;
+ 
 	set_is_effective is
 			-- Set is_effective to `true'.
 		do
@@ -89,6 +96,44 @@ feature
 			generics_set: generics = l
 		end;
 
+	set_feature_number (i: INTEGER) is
+			-- Set feature_number to `i'.
+		do
+			feature_number := i
+		end;
+
+
+feature {NONE}
+
+	disk_content: S_CLASS_CONTENT;
+			-- Information stored to disk
+
+	make (a_name: STRING) is
+		do
+			old_make (a_name);
+			!! disk_content;
+		end;
+
+feature
+
+	features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- Features of class
+		do
+			Result := disk_content.features
+		end;
+ 
+	invariants: FIXED_LIST [S_ASSERTION_DATA] is
+			-- Invariants of the current class
+		do
+			Result := disk_content.invariants
+		end;
+ 
+	chart: S_CLASS_CHART is
+			-- Informal description of Current class
+		do
+			Result := disk_content.chart
+		end;
+
 	set_features (l: like features) is
 			-- Set features to `l'.
 			--| Allow empty features to be stored
@@ -96,11 +141,11 @@ feature
 		require
 			valid_l: l /= Void;
 		do
-			features := l
+			disk_content.set_features (l)
 		ensure
 			features_set: features = l
 		end;
-
+ 
 	set_invariants (l: like invariants) is
 			-- Set invariants to `l'.
 		require
@@ -108,34 +153,85 @@ feature
 			l_not_empty: not l.empty;
 			not_have_void: not l.has (Void)
 		do
-			invariants := l
+			disk_content.set_invariants (l)
 		ensure
 			invariants_set: invariants = l
 		end;
-
-	set_feature_number (i: INTEGER) is
-			-- Set feature_number to `i'.
+ 
+	set_chart (ch: like chart) is
+			-- Set chart to `ch'.
 		do
-			feature_number := i
+			disk_content.set_chart (ch);
 		end;
 
-feature -- Storage
+feature -- Storing
 
-	store_to_disk (path: STRING) is
-			-- Store a class.
+	store_to_disk (storage_path: STRING) is
+			-- Store internal information to disk.
 		require
-			valid_path: path /= Void;
+			valid_path: storage_path /= Void;
+			valid_view_id: view_id > 0
 		local
-			class_file_name: STRING;
-			class_file: RAW_FILE
+			internal_file: RAW_FILE;
+			path: STRING;
+			dir: DIRECTORY
 		do
-			!! class_file.make_open_write (path);
-			independent_store (class_file);
-			class_file.close;
-		rescue
-			if not class_file.is_closed then
-				class_file.close;
+			path := clone (storage_path);
+			path.extend (Operating_environment.directory_separator);
+			path.append_integer (directory_number (view_id));
+			!! dir.make (path);
+			if not dir.exists then
+				dir.create
 			end;
+			path.extend (Operating_environment.directory_separator);
+			path.append_integer (view_id);
+			!! internal_file.make_open_write (path);
+			independent_store (internal_file);
+			internal_file.close;
+			disk_content := Void;
+		ensure
+			disk_content_is_void: disk_content = Void
 		end;
+
+	retrieve_from_disk (p: STRING) is
+			-- Retrieve internal information from disk.
+		require
+			valid_path: p /= Void;
+			valid_view_id: view_id > 0
+		local
+			internal_file: RAW_FILE;
+			path: STRING
+		do
+			path := clone (p);
+			path.append_integer (directory_number (view_id));
+			path.extend (Operating_environment.directory_separator);
+			path.append_integer (view_id);
+			!! internal_file.make (p);
+			if internal_file.exists and then internal_file.is_readable then
+				internal_file.open_read;
+				disk_content ?= retrieved (internal_file);
+				check
+					valid_disk_content: disk_content /= Void
+				end
+			else
+				io.error.putstring ("Error in retrieving file %N");
+				io.error.putstring (p);
+				io.error.new_line
+			end
+		end;
+
+	wipe_out_information is
+			-- Wipe out information that is not needed.
+		do
+			disk_content := Void
+		ensure
+			disk_content_is_void: disk_content = Void
+		end;
+
+	is_valid: BOOLEAN is
+			-- Is Current valid after the retrieve ?
+		do
+			Result := disk_content /= Void
+		end
 
 end

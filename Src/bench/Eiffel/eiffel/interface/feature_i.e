@@ -1939,7 +1939,7 @@ feature -- Case storage informatio
 		local
 			result_type: S_RESULT_DATA;
 			type_info: S_TYPE_INFO;	
-			key: S_CLASS_KEY;
+			id: INTEGER;
 			type_a: TYPE_A;
 			a_class: CLASS_C
 		do
@@ -1947,7 +1947,7 @@ feature -- Case storage informatio
 			if type_a /= Void then
 				a_class := type_a.associated_class;
 				if a_class /= Void then
-					!! type_info.make (Void, a_class.case_class_key); 
+					!! type_info.make (Void, a_class.id); 
 					!! result_type.make (Void, type_info);
 					f.set_result_type (result_type)
 				end;
@@ -1982,7 +1982,7 @@ feature -- Case storage informatio
 		do
 			!! temp.make (0);
 			temp.append (feature_name);
-			!! Result.make (temp, written_class.case_class_key)
+			!! Result.make (temp, written_in)
 		end;
 
 end

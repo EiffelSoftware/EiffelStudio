@@ -37,7 +37,8 @@ feature {NONE} -- Initialization
 			create format_bar.make_with_resource (Current, parameters.format_bar)
 --			create feature_window.make_with_resource (Current, parameters.feature_window)
 --			create object_window.make_with_resource (Current, parameters.object_window)
-			create selector_window.make_with_resource (Current, parameters.selector_window)
+--			create selector_window.make_with_resource (Current, parameters.selector_window)
+			create graphical_output_disabled.make_with_resource (Current, parameters.graphical_output_disabled)
 			create raise_on_error.make_with_resource (Current, parameters.raise_on_error)
 
 			resources.extend (tool_x)
@@ -48,7 +49,8 @@ feature {NONE} -- Initialization
 			resources.extend (format_bar)
 --			resources.extend (feature_window)
 --			resources.extend (object_window)
-			resources.extend (selector_window)
+--			resources.extend (selector_window)
+			resources.extend (graphical_output_disabled)
 			resources.extend (raise_on_error)
 		end
 
@@ -68,6 +70,6 @@ feature {NONE} -- Implementation
 	tool_width, tool_height: EB_INTEGER_RESOURCE_DISPLAY
 	command_bar, format_bar, selector_window,
 	feature_window, object_window,
-	raise_on_error: EB_BOOLEAN_RESOURCE_DISPLAY
+	raise_on_error, graphical_output_disabled: EB_BOOLEAN_RESOURCE_DISPLAY
 
 end -- class EB_PROJECT_ENTRY_PANEL

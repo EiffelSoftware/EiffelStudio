@@ -21,7 +21,7 @@ feature {NONE}
 
 	concurrency_license: LICENSE is
 			-- License for Concrrent Eiffel
-		do
+		once
 			!CONCURRENCY_LICENSE! Result.make
 			licenses.put (Result, Result.application_name)
 		end

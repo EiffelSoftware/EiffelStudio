@@ -28,7 +28,7 @@ feature -- Basic operations
 		end
 
 	reset_signature_status is
-			-- 
+			-- Reset status of signature command
 		do
 			target.features_tool.tree.disable_signature_status
 		end		

@@ -14,13 +14,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_x, a_y: INTEGER) is
+	make (an_x, a_y: INTEGER) is
 			-- Create a two dimensions point.
 		do
-			x := a_x;
+			x := an_x;
 			y := a_y
 		ensure
-			x_set: x = a_x;
+			x_set: x = an_x;
 			y_set: y = a_y
 		end;
 

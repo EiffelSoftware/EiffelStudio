@@ -520,18 +520,16 @@ feature {NONE} -- Implementation
 		do
 			create dotnet_name.make_from_cil (info.name)
 			if info.can_read then
-				l_info := info.get_get_method_boolean (True)
-				check
-					non_void_l_info: l_info /= Void
+				l_info := property_getter (info)
+				if l_info /= Void then
+					l_getter := consumed_function (l_info, True)
 				end
-				l_getter := consumed_function (l_info, True)
 			end
 			if info.can_write then
-				l_info := info.get_set_method_boolean (True)
-				check
-					non_void_l_info: l_info /= Void
+				l_info := property_setter (info)
+				if l_info /= Void then
+					l_setter := consumed_procedure (l_info, True)
 				end
-				l_setter := consumed_procedure (l_info, True)
 			end
 			check
 				is_property: l_info /= Void
@@ -753,15 +751,49 @@ feature {NONE} -- Status Setting.
 			-- add property.
 		require
 			non_void_info: info /= Void
+		local
+			l_info: METHOD_INFO
 		do
 			if info.can_read then
-				add_properties_or_events (info.get_get_method_boolean (True))
+				l_info := property_getter (info)
+				if l_info /= Void then
+					add_properties_or_events (l_info)
+				end
 			end
 			if info.can_write then
-				add_properties_or_events (info.get_set_method_boolean (True))
+				l_info := property_setter (info)
+				if l_info /= Void then
+					add_properties_or_events (l_info)
+				end
 			end
 		end
-	
+
+	property_getter (prop: PROPERTY_INFO): METHOD_INFO is
+			-- Get `getter' of `prop' if it exists.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := prop.get_get_method_boolean (True)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	property_setter (prop: PROPERTY_INFO): METHOD_INFO is
+			-- Get `setter' of `prop' if it exists.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := prop.get_set_method_boolean (True)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	add_event (info:EVENT_INFO) is
 			-- Add event.
 		require

@@ -50,7 +50,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
-			</link>representing an EV_BUTTON will be displayed in here using an EV_BUTTON. As this view provides direct access to the objects ( 
+			</link>representing an <code><class_name>EV_BUTTON</class_name></code> will be displayed in here using an <code><class_name>EV_BUTTON</class_name></code>. As this view provides direct access to the objects ( 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>Pick</label>
@@ -73,6 +73,8 @@
 			<label>pick and drop</label>
 		</link> transport method, seamlessly between the two views.
 		<line_break/>
+		<note><bold>Note:</bold> Holding Ctrl while right clicking on an <link><url>../02_notation.xml</url><label>object</label></link> in the Builder Window creates a new <link><url>../40_object_editor/index.xml</url><label>object editor</label></link> targeted to the <link><url>../02_notation.xml</url><label>object</label></link>. Holding Ctrl and Shift while right clicking on an <link><url>../02_notation.xml</url><label>object</label></link>, highlights it within the <link><url>../20_layout_constructor/index.xml</url><label>layout constructor</label></link>.
+</note>
 		<heading>
 			<size>2</size>Visual Differences
 		</heading>
@@ -100,7 +102,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
-			</link> representing containers in your project, an EV_VERTICAL_BOX, and an EV_HORIZONTAL_BOX (Excluding the EV_TITLED_WINDOW 
+			</link> representing containers in your project, an <code><class_name>EV_VERTICAL_BOX</class_name></code>, and an <code><class_name>EV_HORIZONTAL_BOX</class_name></code> (Excluding the <code><class_name>EV_TITLED_WINDOW</class_name></code> 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>

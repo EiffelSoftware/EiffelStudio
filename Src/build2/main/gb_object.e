@@ -343,6 +343,120 @@ feature -- Access
 --			bi_directional_reference: Result.associated_top_level_object /= Void and instance_referers.has (Result.id) and Result.associated_top_level_object = Current
 		end
 		
+	new_top_level_representation_strict: GB_OBJECT is
+			-- `Result' is a newly built version of `Current' with all ids
+			-- identical to the originals. This completely replaces `Current'
+			-- which must be destroyed. Note this is as of yet untested for
+			-- window objects, and it is unlikely that it will work.
+		local
+			xml_store: GB_XML_STORE
+			a_list: ARRAYED_LIST [GB_OBJECT]
+			old_object, old_child_object: GB_OBJECT
+			original_children: ARRAYED_LIST [GB_OBJECT]
+			a_new_object: GB_OBJECT
+			iterated_referer: INTEGER
+		do
+			create original_children.make (50)
+			all_children_recursive (original_children)
+			create xml_store
+			xml_store.store_individual_object (Current)
+			Result := new_object (xml_store.last_stored_individual_object, True)
+			
+				-- Modify id of `Result' so that it is not the same as that of `Current'.
+			create a_list.make (20)
+			Result.all_children_recursive (a_list)
+				-- Only add `Result' to objects now that we have the new id.
+			old_object := object_handler.deep_object_from_id (Result.id)
+			check
+				old_object_is_current: old_object = Current
+			end
+			object_handler.objects.remove (Result.id)
+			object_handler.deleted_objects.remove (Result.id)
+			object_handler.add_object_to_objects (Result)
+			from
+				old_object.instance_referers.start
+			until
+				old_object.instance_referers.off
+			loop
+				Result.instance_referers.extend (old_object.instance_referers.item_for_iteration, old_object.instance_referers.item_for_iteration)
+				old_object.instance_referers.forth
+			end
+			check
+				old_and_new_children_match: original_children.count = a_list.count
+			end
+			from
+				a_list.start
+				original_children.start
+			until
+				a_list.off
+			loop
+				old_child_object := original_children.item
+				a_new_object := a_list.item
+				from
+					old_child_object.instance_referers.start
+				until
+					old_child_object.instance_referers.off
+				loop
+					iterated_referer := old_child_object.instance_referers.item_for_iteration
+					a_new_object.instance_referers.extend (iterated_referer, iterated_referer)
+					old_child_object.instance_referers.forth
+				end
+				check
+					instance_referers_equal: a_new_object.instance_referers.count = old_child_object.instance_referers.count
+				end
+				a_list.forth
+				original_children.forth
+			end
+			
+				-- Ensure that the new locked object cannot have objects inserted through it's `display_object'.
+				-- Note that you can still pick the object as we do not unconnect the pick events are we do for all
+				-- children recursively.
+			Result.unconnect_display_object_drop_events
+			from
+				a_list.start
+			until
+				a_list.off
+			loop
+				object_handler.objects.remove (a_list.item.id)
+				object_handler.deleted_objects.remove (a_list.item.id)
+				object_handler.add_object_to_objects (a_list.item)
+				
+					-- Now unconnect events from the display object to prevent users
+					-- from modifying the structure of a locked representation.
+				a_list.item.unconnect_display_object_drop_events
+				a_list.item.unconnect_display_object_pick_events
+				a_list.forth
+			end
+				-- Remove the old name.
+			Result.set_name ("")
+				-- Set the text for `layout_item'.
+			Result.represent_as_locked_instance
+			
+				-- We must check that we are actually a top level object, as otherwise if
+				-- we have nested representations, it does not need to be done.
+			if is_top_level_object then
+				Result.set_associated_top_level_object (Current)
+					-- Ensure that all representations of `Result' reflect this change.
+				Result.update_representations_for_name_or_type_change
+			end
+			
+				-- Now destroy all of the original objects that used to represent `Current' as 
+				-- they are no longer required. If this is not performed, there are
+				-- GDI leaks on Windows.
+			old_object.destroy
+			from
+				original_children.start
+			until
+				original_children.off
+			loop
+				original_children.item.destroy
+				original_children.forth
+			end
+		ensure
+			object_handler_objects_not_changed: old object_handler.objects = object_handler.objects and
+				old object_handler.deleted_objects = object_handler.deleted_objects
+		end
+		
 	represent_as_locked_instance is
 			-- Ensure pixmap representation of `Current' is that of a locked type.
 		local
@@ -369,16 +483,18 @@ feature -- Access
 			until
 				children.off
 			loop
-				layout_item.extend (children.item.layout_item)
+				if children.item.layout_item.parent = Void then
+					layout_item.extend (children.item.layout_item)
+				end
 				children.forth
 			end
 		ensure
 			layout_item_children_set: layout_item.count = children.count
-			laytou_item_has_not_data: layout_item.data = Void
+			layout_item_has_not_data: layout_item.data = Void
 		end
 		
 	connect_instance_referers (original_object, instance_object:GB_OBJECT) is
-			-- Recursively add a similar referring link from evey child in `Current'
+			-- Recursively add a similar referring link from evey child in `original_object'
 			-- to every child of `instance_object' that is not part of a nested structure.
 		require
 			objects_differ: original_object /= instance_object
@@ -451,6 +567,9 @@ feature -- Access
 				instance_referers.off
 			loop
 				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				if current_object.id = 20 then
+					do_nothing
+				end
 				p.call ([current_object.object])
 				l_display ?= current_object.display_object
 				if l_display /= Void then
@@ -515,6 +634,8 @@ feature -- Access
 
 	destroy is
 			-- Destroy `Current'.
+		local
+			a_display_object: GB_DISPLAY_OBJECT
 		do
 				-- Note that both `layout_item' or `window_selector_item' may be reparented to
 				-- another object, so if this is the case, do nothing.
@@ -522,7 +643,7 @@ feature -- Access
 				layout_item.destroy
 			end
 			if window_selector_item /= Void and then window_selector_item.object = Current then
-				window_selector_item.tree_item.destroy
+				window_selector_item.destroy
 			end
 			
 			children.wipe_out
@@ -538,6 +659,15 @@ feature -- Access
 					-- no need to explicitly iterate.
 				constants.item_for_iteration.destroy
 			end
+				-- Destroy the EiffelVision2 objects representing `Current'.
+			object.destroy
+			object := Void
+			a_display_object ?= display_object
+			if a_display_object /= Void then
+				a_display_object.child.destroy
+			end
+			display_object.destroy
+			display_object := Void
 		ensure
 			children_empty: children.is_empty
 			constants_empty: constants.is_empty
@@ -755,6 +885,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			color_stone: GB_COLOR_STONE
 			colorizeable: EV_COLORIZABLE
 			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
+			actual_object: GB_OBJECT
 		do
 			color_stone ?= object_representation
 			if color_stone /= Void then
@@ -800,6 +931,21 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 					Result := not all_dependents.has (Current.id)
 					if not Result then
 						set_status_text (cyclic_inheritance_error)
+					end
+				end
+				if Result and an_object /= Void and then an_object.is_instance_of_top_level_object then
+					create all_dependents.make (4)
+					actual_object := object_handler.deep_object_from_id (an_object.associated_top_level_object)
+					all_dependents_recursive (actual_object, all_dependents)
+					all_dependents.extend (actual_object, an_object.id)
+					Result := not all_dependents.has (Current.id)
+					if not Result then
+						set_status_text (cyclic_inheritance_error)
+					else
+						Result := actual_object /= Current
+						if not Result then
+							set_status_text (cyclic_inheritance_error)
+						end
 					end
 				end
 					-- If we are at the top level and shift is pressed, there is no parent.
@@ -988,7 +1134,7 @@ feature -- Basic operations
 			end
 		ensure
 			object_contained_if_not_top_level: not an_object.is_top_level_object implies children.has (an_object)
-			children_count_increased: children.count = old children.count + 1
+			children_count_increased: old an_object.parent_object /= Current implies children.count = old children.count + 1
 			layout_item_not_void: an_object.layout_item /= Void
 		end
 		
@@ -1685,6 +1831,58 @@ feature {NONE} -- Contract support
 			end
 			Result := current_result
 		end
+
+	instance_referers_nested_strutures_match: BOOLEAN is
+			-- Does the nested structure of all instance referers of `Current' match that of `Current'?
+		local
+			cursor: CURSOR
+			current_linear_representation, new_linear_representation: ARRAYED_LIST [GB_OBJECT]
+			current_object: GB_OBJECT
+		do
+			Result := True
+			cursor := instance_referers.cursor
+			create current_linear_representation.make (20)
+			all_children_recursive (current_linear_representation)
+			from
+				instance_referers.start
+			until
+				instance_referers.off or Result = False
+			loop
+				create new_linear_representation.make (20)
+				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				if current_object.parent_object /= Void then
+
+					current_object.all_children_recursive (new_linear_representation)
+					if new_linear_representation.count /= current_linear_representation.count then
+						Result := False
+					else
+						check
+							counts_equal: new_linear_representation.count = current_linear_representation.count
+						end
+						from
+							new_linear_representation.start
+							current_linear_representation.start
+						until
+							new_linear_representation.off or Result = False
+						loop
+							if not new_linear_representation.item.type.is_equal (current_linear_representation.item.type) then
+								Result := False
+							end
+							new_linear_representation.forth
+							current_linear_representation.forth
+						end
+					end
+					
+				end
+				instance_referers.forth
+			end
+			instance_referers.go_to (cursor)
+			if not result then
+				do_nothing
+			end
+		ensure
+			index_not_changed: old instance_referers.item_for_iteration = instance_referers.item_for_iteration
+		end
 		
 feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
@@ -1705,11 +1903,11 @@ invariant
 	events_not_void: events /= Void
 	top_level_object_has_window_selector_item: is_top_level_object implies (window_selector_item /= Void)
 	instance_referers_recursively_unique: object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
+	nested_structures_equal: ((not system_status.is_object_structure_changing) and (object_handler.deleted_objects.item (id) /= Void)) implies instance_referers_nested_strutures_match	
 -- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed seperately. Check calls of `new_top_level_representation'.
 --	bi_directional_top_level_object_link: is_instance_of_top_level_object and object_handler.deep_object_from_id (associated_top_level_object) /= Void implies object_handler.deep_object_from_id (associated_top_level_object).instance_referers.has (id)
 
 -- Not True, any object within the structure may have instance referers, as properties must be updated.
 --	only_top_level_objects_have_instance_referers: not is_top_level_object implies instance_referers.is_empty
-
 
 end -- class GB_OBJECT

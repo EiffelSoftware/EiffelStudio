@@ -30,8 +30,9 @@ feature {NONE} -- Initialization
 		require
 			rn_not_void: rn /= Void
 		do
+				-- Class names are stored in upper, thus the conversion to upper cases.
 			root_name := rn
-			root_name.to_lower
+			root_name.to_upper
 			cluster_mark := cm
 			if cluster_mark /= Void then
 				cluster_mark.to_lower
@@ -41,7 +42,7 @@ feature {NONE} -- Initialization
 				creation_procedure_name.to_lower
 			end
 		ensure
-			root_name_set: root_name = rn
+			root_name_set: root_name.is_equal (rn.as_upper)
 			cluster_mark_set: cluster_mark = cm
 			creation_procedure_name_set: creation_procedure_name = cp
 		end
@@ -236,13 +237,13 @@ feature {NONE}
 	any_sd: ID_SD is
 		once
 			create Result.make (3);
-			Result.append ("any")
+			Result.append ("ANY")
 		end;
 
 	none_sd: ID_SD is
 		once
 			create Result.make (4);
-			Result.append ("none")
+			Result.append ("NONE")
 		end;
 
 end -- class ROOT_SD

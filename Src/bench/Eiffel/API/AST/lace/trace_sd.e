@@ -27,7 +27,6 @@ feature {COMPILER_EXPORTER}
 			list: LACE_LIST [ID_SD]) is
 		local
 			v: OPTION_I;
-			class_name: STRING;
 		do
 			if value /= Void then
 				if value.is_no then
@@ -57,8 +56,9 @@ feature {COMPILER_EXPORTER}
 					until
 						list.after
 					loop
-						class_name := list.item.as_lower
-						classes.item (class_name).set_trace_level (v);
+							-- Class names are stored in upper, thus the conversion to upper cases
+							-- for the lookup.
+						classes.item (list.item.as_upper).set_trace_level (v)
 						list.forth;
 					end;
 				end;

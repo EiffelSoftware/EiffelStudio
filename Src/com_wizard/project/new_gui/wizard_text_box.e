@@ -139,6 +139,12 @@ feature -- Basic Operations
 			text_combo.remove
 			text_combo.first.enable_select
 		end
+	
+	initialize_focus is
+			-- Give focus to combo.
+		do
+			text_combo.set_focus
+		end
 		
 feature -- Element Change
 
@@ -268,4 +274,15 @@ feature {NONE} -- Private Access
 			-- Cell for `save_on_return'
 		
 end -- class WIZARD_TEXT_BOX
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
 

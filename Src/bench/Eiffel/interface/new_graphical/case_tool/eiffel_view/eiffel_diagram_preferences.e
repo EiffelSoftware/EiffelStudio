@@ -1,27 +1,16 @@
 indexing
-	description: "Objects that reads preference values when changed and informs observers."
-	author: "Benno Baumgartner"
+	description: "All shared attributes specific to the context tool."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EIFFEL_DIAGRAM_PREFERENCES
-	
+
 inherit
 	DATA_OBSERVER
 		rename
-			update as update_observers
+			make as make_data_observer
 		redefine
-			default_create
-		end
-
-	RESOURCE_OBSERVATION_MANAGER
-		rename
-			add_observer as add_preferences_observer,
-			remove_observer as remove_preferences_observer
-		export
-			{NONE} all
-		undefine
 			default_create
 		end
 		
@@ -31,313 +20,562 @@ inherit
 		end
 		
 	EV_SHARED_SCALE_FACTORY
-		undefine
-			default_create
-		end
+		
+create
+	make
+		
+feature {EB_PREFERENCES} -- Initialization
 
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Create EIFFEL_DIAGRAM_PREFERENCES.
+	make (a_preferences: PREFERENCES) is
+			-- Create
+		require
+			preferences_not_void: a_preferences /= Void
 		do
-			make (Current)
-			retrive_preferences
+			make_data_observer (Current)
+			preferences := a_preferences
+			initialize_preferences
+		ensure
+			preferences_not_void: preferences /= Void
+		end	
 
-			-- BON CLASS FIGURE
-			add_preferences_observer ("bon_class_fill_color", Current)
-			add_preferences_observer ("bon_class_name_color", Current)
-			add_preferences_observer ("bon_class_name_font", Current)
-			add_preferences_observer ("bon_class_generics_color", Current)
-			add_preferences_observer ("bon_class_generics_font", Current)
-			add_preferences_observer ("bon_class_uncompiled_fill_color", Current)
-			-- BON CLIENT SUPPLIER FIGURE
-			add_preferences_observer ("bon_client_label_font", Current)
-			add_preferences_observer ("bon_client_label_color", Current)
-			add_preferences_observer ("bon_client_color", Current)
-			add_preferences_observer ("bon_client_line_width", Current)
-			-- BON CLUSTER FIGURE
-			add_preferences_observer ("bon_cluster_line_color", Current)
-			add_preferences_observer ("bon_cluster_name_area_color", Current)
-			add_preferences_observer ("bon_cluster_name_font", Current)
-			add_preferences_observer ("bon_cluster_name_color", Current)
-			add_preferences_observer ("bon_cluster_iconified_fill_color", Current)
-			-- BON INHERITANCE FIGURE
-			add_preferences_observer ("bon_inheritance_color", Current)
-			add_preferences_observer ("bon_inheritance_line_width", Current)
-			
-			-- UML CLASS FIGURE
-			add_preferences_observer ("uml_class_name_font", Current)
-			add_preferences_observer ("uml_class_deferred_font", Current)
-			add_preferences_observer ("uml_class_properties_font", Current)
-			add_preferences_observer ("uml_class_properties_color", Current)
-			add_preferences_observer ("uml_class_name_color", Current)
-			add_preferences_observer ("uml_class_fill_color", Current)
-			add_preferences_observer ("uml_generics_font", Current)
-			add_preferences_observer ("uml_generics_color", Current)
-			add_preferences_observer ("uml_class_features_font", Current)
-			add_preferences_observer ("uml_class_features_color", Current)
-			add_preferences_observer ("uml_class_feature_section_font", Current)
-			add_preferences_observer ("uml_class_feature_section_color", Current)
-			-- UML CLIENT SUPPLIER FIGURE
-			add_preferences_observer ("uml_client_line_width", Current)
-			add_preferences_observer ("uml_client_color", Current)
-			add_preferences_observer ("uml_client_label_color", Current)
-			add_preferences_observer ("uml_client_label_font", Current)
-			-- UML CLUSTER FIGURE
-			add_preferences_observer ("uml_cluster_line_color", Current)
-			add_preferences_observer ("uml_cluster_iconified_fill_color", Current)
-			add_preferences_observer ("uml_cluster_name_area_color", Current)
-			add_preferences_observer ("uml_cluster_name_color", Current)
-			add_preferences_observer ("uml_cluster_name_font", Current)
-			-- UML INHERITANCE FIGURE
-			add_preferences_observer ("uml_inheritance_color", Current)
-			add_preferences_observer ("uml_inheritance_line_width", Current)
+feature -- Value
+
+	diagram_auto_scroll_speed: INTEGER is
+			-- 
+		do
+			Result := diagram_auto_scroll_speed_preference.value
 		end
 
-feature -- Access BON Class
-
-	bon_class_name_font: EV_IDENTIFIED_FONT
-	bon_class_name_color: EV_COLOR
-	bon_class_fill_color: EV_COLOR
-	bon_class_uncompiled_fill_color: EV_COLOR
-	bon_generics_font: EV_IDENTIFIED_FONT
-	bon_generics_color: EV_COLOR
+			-- BON Class
+	bon_class_name_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := bon_class_name_font_preference.value
+		end		
+	
+	bon_class_name_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_class_name_color_preference.value
+		end
+	
+	bon_class_fill_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_class_fill_color_preference.value
+		end
+		
+	bon_class_uncompiled_fill_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_class_uncompiled_fill_color_preference.value
+		end
+		
+	bon_generics_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := bon_generics_font_preference.value
+		end
+		
+	bon_generics_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_generics_color_preference.value
+		end
+		
 			
-feature -- Access BON Client supplier link
+		-- BON Client supplier link
+	bon_client_label_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := bon_client_label_font_preference.value
+		end		 
+		
+	bon_client_label_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_client_label_color_preference.value
+		end
+		
+	bon_client_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_client_color_preference.value
+		end
+		
+	bon_client_line_width: INTEGER is
+			-- 
+		do
+			Result := bon_client_line_width_preference.value
+		end
+		
 
-	bon_client_label_font: EV_IDENTIFIED_FONT
-	bon_client_label_color: EV_COLOR
-	bon_client_color: EV_COLOR
-	bon_client_line_width: INTEGER
-
-feature -- Access BON Cluster
-
-	bon_cluster_line_color: EV_COLOR
-	bon_cluster_iconified_fill_color: EV_COLOR
-	bon_cluster_name_area_color: EV_COLOR
-	bon_cluster_name_color: EV_COLOR
-	bon_cluster_name_font: EV_IDENTIFIED_FONT
+		-- BON Cluster
+	bon_cluster_line_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_cluster_line_color_preference.value
+		end
+		
+	bon_cluster_iconified_fill_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_cluster_iconified_fill_color_preference.value
+		end
+		
+	bon_cluster_name_area_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_cluster_name_area_color_preference.value
+		end
+		
+	bon_cluster_name_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_cluster_name_color_preference.value
+		end
+		
+	bon_cluster_name_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := bon_cluster_name_font_preference.value
+		end
+		
 	
-feature -- Access BON Inheritance link
-
-	bon_inheritance_color: EV_COLOR
-	bon_inheritance_line_width: INTEGER
+		-- BON Inheritance link
+	bon_inheritance_color: EV_COLOR is
+			-- 
+		do
+			Result := bon_inheritance_color_preference.value
+		end
+		
+	bon_inheritance_line_width: INTEGER is
+			-- 
+		do
+			Result := bon_inheritance_line_width_preference.value
+		end
+		
 	
-feature -- Access UML Class
-
-	uml_class_name_font: EV_IDENTIFIED_FONT
-	uml_class_deferred_font: EV_IDENTIFIED_FONT
-	uml_class_properties_font: EV_IDENTIFIED_FONT
-	uml_class_properties_color: EV_COLOR
-	uml_class_name_color: EV_COLOR
-	uml_class_fill_color: EV_COLOR
-	uml_generics_font: EV_IDENTIFIED_FONT
-	uml_generics_color: EV_COLOR
-	uml_class_features_font: EV_IDENTIFIED_FONT
-	uml_class_features_color: EV_COLOR
-	uml_class_feature_section_font: EV_IDENTIFIED_FONT
-	uml_class_feature_section_color: EV_COLOR
+		-- UML Class
+	uml_class_name_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_class_name_font_preference.value
+		end
+		
+	uml_class_deferred_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_class_deferred_font_preference.value
+		end
+		
+	uml_class_properties_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_class_properties_font_preference.value
+		end
+		
+	uml_class_properties_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_class_properties_color_preference.value
+		end
+		
+	uml_class_name_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_class_name_color_preference.value
+		end
+		
+	uml_class_fill_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_class_fill_color_preference.value
+		end
+		
+	uml_generics_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_generics_font_preference.value
+		end
+		
+	uml_generics_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_generics_color_preference.value
+		end
+		
+	uml_class_features_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_class_features_font_preference.value
+		end
+		
+	uml_class_features_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_class_features_color_preference.value
+		end
+		
+	uml_class_feature_section_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result :=uml_class_feature_section_font_preference.value
+		end
+		
+	uml_class_feature_section_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_class_feature_section_color_preference.value
+		end
+		
 	
-feature -- Access UML Client supplier link
-
-	uml_client_line_width: INTEGER
-	uml_client_color: EV_COLOR
-	uml_client_label_color: EV_COLOR
-	uml_client_label_font: EV_IDENTIFIED_FONT
+		-- UML Client supplier link
+	uml_client_line_width: INTEGER is
+			-- 
+		do
+			Result := uml_client_line_width_preference.value
+		end
+		
+	uml_client_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_client_color_preference.value
+		end
+		
+	uml_client_label_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_client_label_color_preference.value
+		end
+		
+	uml_client_label_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_client_label_font_preference.value
+		end
+		
 	
-feature -- Access UML Cluster
-
-	uml_cluster_line_color: EV_COLOR
-	uml_cluster_iconified_fill_color: EV_COLOR
-	uml_cluster_name_area_color: EV_COLOR
-	uml_cluster_name_color: EV_COLOR
-	uml_cluster_name_font: EV_IDENTIFIED_FONT
+		-- UML Cluster
+	uml_cluster_line_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_cluster_line_color_preference.value
+		end
+		
+	uml_cluster_iconified_fill_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_cluster_iconified_fill_color_preference.value
+		end
+		
+	uml_cluster_name_area_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_cluster_name_area_color_preference.value
+		end
+		
+	uml_cluster_name_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_cluster_name_color_preference.value
+		end
+		
+	uml_cluster_name_font: EV_IDENTIFIED_FONT is
+			-- 
+		do
+			Result := uml_cluster_name_font_preference.value
+		end
+		
 	
-feature -- Access UML Inheritance link
+		-- UML Inheritance link
+	uml_inheritance_line_width: INTEGER is
+			-- 
+		do
+			Result := uml_inheritance_line_width_preference.value
+		end
+		
+	uml_inheritance_color: EV_COLOR is
+			-- 
+		do
+			Result := uml_inheritance_color_preference.value
+		end
 
-	uml_inheritance_line_width: INTEGER
-	uml_inheritance_color: EV_COLOR
+feature {NONE} -- Preference
+
+			-- BON Class
+	bon_class_name_font_preference: IDENTIFIED_FONT_PREFERENCE
+	bon_class_name_color_preference: COLOR_PREFERENCE
+	bon_class_fill_color_preference: COLOR_PREFERENCE
+	bon_class_uncompiled_fill_color_preference: COLOR_PREFERENCE
+	bon_generics_font_preference: IDENTIFIED_FONT_PREFERENCE
+	bon_generics_color_preference: COLOR_PREFERENCE
+			
+		-- BON Client supplier link
+	bon_client_label_font_preference: IDENTIFIED_FONT_PREFERENCE
+	bon_client_label_color_preference: COLOR_PREFERENCE
+	bon_client_color_preference: COLOR_PREFERENCE
+	bon_client_line_width_preference: INTEGER_PREFERENCE
+
+		-- BON Cluster
+	bon_cluster_line_color_preference: COLOR_PREFERENCE
+	bon_cluster_iconified_fill_color_preference: COLOR_PREFERENCE
+	bon_cluster_name_area_color_preference: COLOR_PREFERENCE
+	bon_cluster_name_color_preference: COLOR_PREFERENCE
+	bon_cluster_name_font_preference: IDENTIFIED_FONT_PREFERENCE
+	
+		-- BON Inheritance link
+	bon_inheritance_color_preference: COLOR_PREFERENCE
+	bon_inheritance_line_width_preference: INTEGER_PREFERENCE
+	
+		-- UML Class
+	uml_class_name_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_class_deferred_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_class_properties_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_class_properties_color_preference: COLOR_PREFERENCE
+	uml_class_name_color_preference: COLOR_PREFERENCE
+	uml_class_fill_color_preference: COLOR_PREFERENCE
+	uml_generics_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_generics_color_preference: COLOR_PREFERENCE
+	uml_class_features_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_class_features_color_preference: COLOR_PREFERENCE
+	uml_class_feature_section_font_preference: IDENTIFIED_FONT_PREFERENCE
+	uml_class_feature_section_color_preference: COLOR_PREFERENCE
+	
+		-- UML Client supplier link
+	uml_client_line_width_preference: INTEGER_PREFERENCE
+	uml_client_color_preference: COLOR_PREFERENCE
+	uml_client_label_color_preference: COLOR_PREFERENCE
+	uml_client_label_font_preference: IDENTIFIED_FONT_PREFERENCE
+	
+		-- UML Cluster
+	uml_cluster_line_color_preference: COLOR_PREFERENCE
+	uml_cluster_iconified_fill_color_preference: COLOR_PREFERENCE
+	uml_cluster_name_area_color_preference: COLOR_PREFERENCE
+	uml_cluster_name_color_preference: COLOR_PREFERENCE
+	uml_cluster_name_font_preference: IDENTIFIED_FONT_PREFERENCE
+	
+		-- UML Inheritance link
+	uml_inheritance_line_width_preference: INTEGER_PREFERENCE
+	uml_inheritance_color_preference: COLOR_PREFERENCE
+
+	diagram_auto_scroll_speed_preference: INTEGER_PREFERENCE
+
+feature {NONE} -- Preference Strings
+
+	-- BON Class
+	bon_class_name_font_string: STRING is "diagram_tool.bon_class_name_font"
+	bon_class_name_color_string: STRING is "diagram_tool.bon_class_name_color"
+	bon_class_fill_color_string: STRING is "diagram_tool.bon_class_fill_color"
+	bon_class_uncompiled_fill_color_string: STRING is "diagram_tool.bon_class_uncompiled_fill_color"
+	bon_generics_font_string: STRING is "diagram_tool.bon_class_generics_font"
+	bon_generics_color_string: STRING is "diagram_tool.bon_class_generics_color"
+			
+		-- BON Client supplier link
+	bon_client_label_font_string: STRING is "diagram_tool.bon_client_label_font"
+	bon_client_label_color_string: STRING is "diagram_tool.bon_client_label_color"
+	bon_client_color_string: STRING is "diagram_tool.bon_client_color"
+	bon_client_line_width_string: STRING is "diagram_tool.bon_client_line_width"
+
+		-- BON Cluster
+	bon_cluster_line_color_string: STRING is "diagram_tool.bon_cluster_line_color"
+	bon_cluster_iconified_fill_color_string: STRING is "diagram_tool.bon_cluster_iconified_fill_color"
+	bon_cluster_name_area_color_string: STRING is "diagram_tool.bon_cluster_name_area_color"
+	bon_cluster_name_color_string: STRING is "diagram_tool.bon_cluster_name_color"
+	bon_cluster_name_font_string: STRING is "diagram_tool.bon_cluster_name_font"
+	
+		-- BON Inheritance link
+	bon_inheritance_color_string: STRING is "diagram_tool.bon_inheritance_color"
+	bon_inheritance_line_width_string: STRING is "diagram_tool.bon_inheritance_line_width"
+	
+		-- UML Class
+	uml_class_name_font_string: STRING is "diagram_tool.uml_class_name_font"
+	uml_class_deferred_font_string: STRING is "diagram_tool.uml_class_deferred_font"
+	uml_class_properties_font_string: STRING is "diagram_tool.uml_class_properties_font"
+	uml_class_properties_color_string: STRING is "diagram_tool.uml_class_properties_color"
+	uml_class_name_color_string: STRING is "diagram_tool.uml_class_name_color"
+	uml_class_fill_color_string: STRING is "diagram_tool.uml_class_fill_color"
+	uml_generics_font_string: STRING is "diagram_tool.uml_generics_font"
+	uml_generics_color_string: STRING is "diagram_tool.uml_generics_color"
+	uml_class_features_font_string: STRING is "diagram_tool.uml_class_features_font"
+	uml_class_features_color_string: STRING is "diagram_tool.uml_class_features_color"
+	uml_class_feature_section_font_string: STRING is "diagram_tool.uml_class_feature_section_font"
+	uml_class_feature_section_color_string: STRING is "diagram_tool.uml_class_feature_section_color"
+	
+		-- UML Client supplier link
+	uml_client_line_width_string: STRING is "diagram_tool.uml_client_line_width"
+	uml_client_color_string: STRING is "diagram_tool.uml_client_color"
+	uml_client_label_color_string: STRING is "diagram_tool.uml_client_label_color"
+	uml_client_label_font_string: STRING is "diagram_tool.uml_client_label_font"
+	
+		-- UML Cluster
+	uml_cluster_line_color_string: STRING is "diagram_tool.uml_cluster_line_color"
+	uml_cluster_iconified_fill_color_string: STRING is "diagram_tool.uml_cluster_iconified_fill_color"
+	uml_cluster_name_area_color_string: STRING is "diagram_tool.uml_cluster_name_area_color"
+	uml_cluster_name_color_string: STRING is "diagram_tool.uml_cluster_name_color"
+	uml_cluster_name_font_string: STRING is "diagram_tool.uml_cluster_name_font"
+	
+		-- UML Inheritance link
+	uml_inheritance_line_width_string: STRING is "diagram_tool.uml_inheritance_line_width"
+	uml_inheritance_color_string: STRING is "diagram_tool.uml_inheritance_color"
+
+	diagram_auto_scroll_speed_preference_string: STRING is "diagram_tool.autoscroll_speed"
 
 feature {NONE} -- Implementation
 
-	update is
-			-- Preferences have changed.
-		do
-			retrive_preferences
-			update_observers
-		end
-
-	retrive_preferences is
-			-- Retrive values from preference.
+	initialize_preferences is
+			-- Initialize preference values.
 		local
-			font: EV_FONT
-			cr: COLOR_RESOURCE
-		do
-			--BON CLASS FIGURE
-			cr ?= resources.item ("bon_class_fill_color")
-			if cr /= Void then
-				cr.allow_void
-				bon_class_fill_color := color_resource_value ("bon_class_fill_color", 255, 255, 0)
-			else
-				bon_class_fill_color := Void
-			end
+			l_manager: EB_PREFERENCE_MANAGER	
+		do				
+			create l_manager.make (preferences, "diagram_tool")
+		
+					-- BON Class
+			bon_class_name_font_preference := l_manager.new_identified_font_resource_value (bon_class_name_font_string, font_factory.registered_font (create {EV_FONT}))								
+			bon_class_name_color_preference := l_manager.new_color_resource_value (l_manager, bon_class_name_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			bon_class_fill_color_preference := l_manager.new_color_resource_value (l_manager, bon_class_fill_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 0))
+			bon_class_uncompiled_fill_color_preference := l_manager.new_color_resource_value (l_manager, bon_class_uncompiled_fill_color_string, create {EV_COLOR}.make_with_8_bit_rgb (180, 180, 180))
+			bon_generics_font_preference := l_manager.new_identified_font_resource_value (bon_generics_font_string, font_factory.registered_font (create {EV_FONT}))
+			bon_generics_color_preference := l_manager.new_color_resource_value (l_manager, bon_generics_color_string, create {EV_COLOR}.make_with_8_bit_rgb ( 0, 100, 180))
+					
+				-- BON Client supplier link
+			bon_client_label_font_preference := l_manager.new_identified_font_resource_value (bon_client_label_font_string, font_factory.registered_font (create {EV_FONT}))
+			bon_client_label_color_preference := l_manager.new_color_resource_value (l_manager, bon_client_label_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			bon_client_color_preference := l_manager.new_color_resource_value (l_manager, bon_client_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 255))
+			bon_client_line_width_preference := l_manager.new_integer_resource_value (l_manager, bon_client_line_width_string, (5).max (1))
+		
+				-- BON Cluster
+			bon_cluster_line_color_preference := l_manager.new_color_resource_value (l_manager, bon_cluster_line_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 25, 0))
+			bon_cluster_iconified_fill_color_preference := l_manager.new_color_resource_value (l_manager, bon_cluster_iconified_fill_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 230, 230))
+			bon_cluster_name_area_color_preference := l_manager.new_color_resource_value (l_manager, bon_cluster_name_area_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			bon_cluster_name_color_preference := l_manager.new_color_resource_value (l_manager, bon_cluster_name_color_string, create {EV_COLOR}.make_with_8_bit_rgb (127, 0, 0))
+			bon_cluster_name_font_preference := l_manager.new_identified_font_resource_value (bon_cluster_name_font_string, font_factory.registered_font (create {EV_FONT})) 
 			
-			cr ?= resources.item ("bon_class_uncompiled_fill_color")
-			if cr /= Void then
-				cr.allow_void
-				bon_class_uncompiled_fill_color := color_resource_value ("bon_class_uncompiled_fill_color", 180, 180, 180)
-			else
-				bon_class_uncompiled_fill_color := Void
-			end
-
-			bon_class_name_color := color_resource_value ("bon_class_name_color", 0, 0, 0)
+				-- BON Inheritance link
+			bon_inheritance_color_preference := l_manager.new_color_resource_value (l_manager, bon_inheritance_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
+			bon_inheritance_line_width_preference := l_manager.new_integer_resource_value (l_manager, bon_inheritance_line_width_string, (2).max (1))
 			
-			if bon_class_name_font /= Void then
-				font_factory.unregister_font (bon_class_name_font)
-			end
-			font := font_resource_value ("bon_class_name_font", create {EV_FONT})
-			bon_class_name_font := font_factory.registered_font (font)
-			font_factory.register_font (bon_class_name_font)
+				-- UML Class
+			uml_class_name_font_preference := l_manager.new_identified_font_resource_value (uml_class_name_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_class_deferred_font_preference := l_manager.new_identified_font_resource_value (uml_class_deferred_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_class_properties_font_preference := l_manager.new_identified_font_resource_value (uml_class_properties_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_class_properties_color_preference := l_manager.new_color_resource_value (l_manager, uml_class_properties_color_string, create {EV_COLOR}.make_with_8_bit_rgb (127, 0, 0))
+			uml_class_name_color_preference := l_manager.new_color_resource_value (l_manager, uml_class_name_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 25, 127)) 
+			uml_class_fill_color_preference := l_manager.new_color_resource_value (l_manager, uml_class_fill_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			uml_generics_font_preference := l_manager.new_identified_font_resource_value (uml_generics_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_generics_color_preference := l_manager.new_color_resource_value (l_manager, uml_generics_color_string, create {EV_COLOR}.make_with_8_bit_rgb (200, 0, 0))
+			uml_class_features_font_preference := l_manager.new_identified_font_resource_value (uml_class_features_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_class_features_color_preference := l_manager.new_color_resource_value (l_manager, uml_class_features_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 127, 0))
+			uml_class_feature_section_font_preference := l_manager.new_identified_font_resource_value (uml_class_feature_section_font_string, font_factory.registered_font (create {EV_FONT}))
+			uml_class_feature_section_color_preference := l_manager.new_color_resource_value (l_manager, uml_class_feature_section_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			
-			if bon_generics_font /= Void then
-				font_factory.unregister_font (bon_generics_font)
-			end
-			font := font_resource_value ("bon_class_generics_font", create {EV_FONT})
-			bon_generics_font := font_factory.registered_font (font)
-			font_factory.register_font (bon_generics_font)
+				-- UML Client supplier link
+			uml_client_line_width_preference := l_manager.new_integer_resource_value (l_manager, uml_client_line_width_string, (1).max (1))
+			uml_client_color_preference := l_manager.new_color_resource_value (l_manager, uml_client_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			uml_client_label_color_preference := l_manager.new_color_resource_value (l_manager, uml_client_label_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			uml_client_label_font_preference := l_manager.new_identified_font_resource_value (uml_client_label_font_string, font_factory.registered_font (create {EV_FONT}))
 			
-			bon_generics_color := color_resource_value ("bon_class_generics_color", 0, 100, 180)
+				-- UML Cluster
+			uml_cluster_line_color_preference := l_manager.new_color_resource_value (l_manager, uml_cluster_line_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			uml_cluster_iconified_fill_color_preference := l_manager.new_color_resource_value (l_manager, uml_cluster_iconified_fill_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			uml_cluster_name_area_color_preference := l_manager.new_color_resource_value (l_manager, uml_cluster_name_area_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			uml_cluster_name_color_preference := l_manager.new_color_resource_value (l_manager, uml_cluster_name_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			uml_cluster_name_font_preference := l_manager.new_identified_font_resource_value (uml_cluster_name_font_string, font_factory.registered_font (create {EV_FONT}))
 			
-			-- BON CLIENT SUPPLIER FIGURE
-			if bon_client_label_font /= Void then
-				font_factory.unregister_font (bon_client_label_font)
-			end
-			font := font_resource_value ("bon_client_label_font", create {EV_FONT})
-			bon_client_label_font := font_factory.registered_font (font)
-			font_factory.register_font (bon_client_label_font)
+				-- UML Inheritance link
+			uml_inheritance_line_width_preference := l_manager.new_integer_resource_value (l_manager, uml_inheritance_line_width_string, (1).max (1))
+			uml_inheritance_color_preference := l_manager.new_color_resource_value (l_manager, uml_inheritance_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			
-			bon_client_label_color := color_resource_value ("bon_client_label_color", 0, 0, 0)
+			diagram_auto_scroll_speed_preference := l_manager.new_integer_resource_value (l_manager, diagram_auto_scroll_speed_preference_string, 50)
 			
-			bon_client_color := color_resource_value ("bon_client_color", 0, 0, 255)
-			
-			bon_client_line_width := integer_resource_value ("bon_client_line_width", 5).max(1)
-			
-			-- BON CLUSTER FIGURE
-			bon_cluster_line_color := color_resource_value ("bon_cluster_line_color", 255, 25, 0)
-			
-			cr ?= resources.item ("bon_cluster_name_area_color")
-			if cr /= Void then
-				cr.allow_void
-				bon_cluster_name_area_color := color_resource_value ("bon_cluster_name_area_color", 255, 255, 255)
-			else
-				bon_cluster_name_area_color := Void
-			end
-			
-			if bon_cluster_name_font /= Void then
-				font_factory.unregister_font (bon_cluster_name_font)
-			end
-			font := font_resource_value ("bon_cluster_name_font", create {EV_FONT})
-			bon_cluster_name_font := font_factory.registered_font (font)
-			font_factory.register_font (bon_cluster_name_font)
-			
-			bon_cluster_name_color := color_resource_value ("bon_cluster_name_color", 127, 0, 0)
-			
-			cr ?= resources.item ("bon_cluster_iconified_fill_color")
-			if cr /= Void then
-				cr.allow_void
-				bon_cluster_iconified_fill_color := color_resource_value ("bon_cluster_iconified_fill_color", 255, 230, 230)
-			else
-				bon_cluster_iconified_fill_color := Void
-			end
-			
-			-- BON INHERITANCE FIGURE
-			bon_inheritance_line_width := integer_resource_value ("bon_inheritance_line_width", 2).max (1)
-			bon_inheritance_color := color_resource_value ("bon_inheritance_color", 255, 0, 0)
-			
-			-- UML CLASS
-			if uml_class_name_font /= Void then
-				font_factory.unregister_font (uml_class_name_font)
-			end
-			font := font_resource_value ("uml_class_name_font", create {EV_FONT})
-			uml_class_name_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_class_name_font)
-			
-			if uml_class_deferred_font /= Void then
-				font_factory.unregister_font (uml_class_deferred_font)
-			end
-			font := font_resource_value ("uml_class_deferred_font", create {EV_FONT})
-			uml_class_deferred_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_class_deferred_font)
-			
-			if uml_class_properties_font /= Void then
-				font_factory.unregister_font (uml_class_properties_font)
-			end
-			font := font_resource_value ("uml_class_properties_font", create {EV_FONT})
-			uml_class_properties_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_class_properties_font)
-			uml_class_properties_color := color_resource_value ("uml_class_properties_color", 127, 0, 0)
-			uml_class_name_color := color_resource_value ("uml_class_name_color", 0, 25, 127)
-			uml_class_fill_color := color_resource_value ("uml_class_fill_color", 255, 255, 255)
-			if uml_generics_font /= Void then
-				font_factory.unregister_font (uml_generics_font)
-			end
-			font := font_resource_value ("uml_generics_font", create {EV_FONT})
-			uml_generics_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_generics_font)
-			uml_generics_color := color_resource_value ("uml_generics_color", 200, 0, 0)
-			if uml_class_features_font /= Void then
-				font_factory.unregister_font (uml_class_features_font)
-			end
-			font := font_resource_value ("uml_class_features_font", create {EV_FONT})
-			uml_class_features_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_class_features_font)
-			uml_class_features_color := color_resource_value ("uml_class_features_color", 0, 127, 0)
-			if uml_class_feature_section_font /= Void then
-				font_factory.unregister_font (uml_class_feature_section_font)
-			end
-			font := font_resource_value ("uml_class_feature_section_font", create {EV_FONT})
-			uml_class_feature_section_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_class_feature_section_font)
-			uml_class_feature_section_color := color_resource_value ("uml_class_feature_section_color", 0, 0, 0)
-			
-			-- UML CLIENT SUPPLIER FIGURE
-			uml_client_line_width := integer_resource_value ("uml_client_line_width", 1).max (1)
-			uml_client_color := color_resource_value ("uml_client_color", 0, 0, 0)
-			uml_client_label_color := color_resource_value ("uml_client_label_color", 0, 0, 0)
-			if uml_client_label_font /= Void then
-				font_factory.unregister_font (uml_client_label_font)
-			end
-			font := font_resource_value ("uml_client_label_font", create {EV_FONT})
-			uml_client_label_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_client_label_font)
-			
-			-- UML CLUSTER FIGURE
-			uml_cluster_line_color := color_resource_value ("uml_cluster_line_color", 0, 0, 0)
-			cr ?= resources.item ("uml_cluster_iconified_fill_color")
-			if cr /= Void then
-				cr.allow_void			
-				uml_cluster_iconified_fill_color := color_resource_value ("uml_cluster_iconified_fill_color", 255, 255, 255)
-			else
-				uml_cluster_iconified_fill_color := Void
-			end
-			cr ?= resources.item ("uml_cluster_name_area_color")
-			if cr /= Void then
-				cr.allow_void			
-				uml_cluster_name_area_color := color_resource_value ("uml_cluster_name_area_color", 255, 255, 255)
-			else
-				uml_cluster_name_area_color := Void
-			end
-			uml_cluster_name_color := color_resource_value ("uml_cluster_name_color", 0, 0, 0)
-			if uml_cluster_name_font /= Void then
-				font_factory.unregister_font (uml_cluster_name_font)
-			end
-			font := font_resource_value ("uml_cluster_name_font", create {EV_FONT})
-			uml_cluster_name_font := font_factory.registered_font (font)
-			font_factory.register_font (uml_cluster_name_font)
-			
-			-- UML INHERITANCE FIGURE
-			uml_inheritance_line_width := integer_resource_value ("uml_inheritance_line_width", 1).max (1)
-			uml_inheritance_color := color_resource_value ("uml_inheritance_color", 0, 0, 0)
+				-- Actions
+			bon_class_name_font_preference.change_actions.extend (agent update)
+			bon_class_name_color_preference.change_actions.extend (agent update)
+			bon_class_fill_color_preference.change_actions.extend (agent update)
+			bon_class_uncompiled_fill_color_preference.change_actions.extend (agent update)
+			bon_generics_font_preference.change_actions.extend (agent update)
+			bon_generics_color_preference.change_actions.extend (agent update)
+			bon_client_label_font_preference.change_actions.extend (agent update)
+			bon_client_label_color_preference.change_actions.extend (agent update)
+			bon_client_color_preference.change_actions.extend (agent update)
+			bon_client_line_width_preference.change_actions.extend (agent update) 
+			bon_cluster_line_color_preference.change_actions.extend (agent update)
+			bon_cluster_iconified_fill_color_preference.change_actions.extend (agent update)
+			bon_cluster_name_area_color_preference.change_actions.extend (agent update)
+			bon_cluster_name_color_preference.change_actions.extend (agent update)
+			bon_cluster_name_font_preference.change_actions.extend (agent update)
+			bon_inheritance_color_preference.change_actions.extend (agent update)
+			bon_inheritance_line_width_preference.change_actions.extend (agent update)
+			uml_class_name_font_preference.change_actions.extend (agent update)
+			uml_class_deferred_font_preference.change_actions.extend (agent update)
+			uml_class_properties_font_preference.change_actions.extend (agent update)
+			uml_class_properties_color_preference.change_actions.extend (agent update)
+			uml_class_name_color_preference.change_actions.extend (agent update)
+			uml_class_fill_color_preference.change_actions.extend (agent update)
+			uml_generics_font_preference.change_actions.extend (agent update)
+			uml_generics_color_preference.change_actions.extend (agent update)
+			uml_class_features_font_preference.change_actions.extend (agent update)
+			uml_class_features_color_preference.change_actions.extend (agent update)
+			uml_class_feature_section_font_preference.change_actions.extend (agent update)
+			uml_class_feature_section_color_preference.change_actions.extend (agent update)
+			uml_client_line_width_preference.change_actions.extend (agent update)
+			uml_client_color_preference.change_actions.extend (agent update) 
+			uml_client_label_color_preference.change_actions.extend (agent update)
+			uml_client_label_font_preference.change_actions.extend (agent update)
+			uml_cluster_line_color_preference.change_actions.extend (agent update)
+			uml_cluster_iconified_fill_color_preference.change_actions.extend (agent update)
+			uml_cluster_name_area_color_preference.change_actions.extend (agent update)
+			uml_cluster_name_color_preference.change_actions.extend (agent update)
+			uml_cluster_name_font_preference.change_actions.extend (agent update)
+			uml_inheritance_line_width_preference.change_actions.extend (agent update)
+			uml_inheritance_color_preference.change_actions.extend (agent update)
+			diagram_auto_scroll_speed_preference.change_actions.extend (agent update)
 		end
+				
+	preferences: PREFERENCES
+			-- Preferences
+
+invariant
+	preferences_not_void: preferences /= Void
+	bon_class_name_font_preference_not_void: bon_class_name_font_preference /= Void
+	bon_class_name_color_preference_not_void: bon_class_name_color_preference /= Void
+	bon_class_fill_color_preference_not_void: bon_class_fill_color_preference /= Void
+	bon_class_uncompiled_fill_color_preference_not_void: bon_class_uncompiled_fill_color_preference /= Void
+	bon_generics_font_preference_not_void: bon_generics_font_preference /= Void
+	bon_generics_color_preference_not_void: 	bon_generics_color_preference	 /= Void	
+	bon_client_label_font_preference_not_void: bon_client_label_font_preference /= Void
+	bon_client_label_color_preference_not_void: bon_client_label_color_preference /= Void
+	bon_client_color_preference_not_void: bon_client_color_preference /= Void
+	bon_client_line_width_preference_not_void: bon_client_line_width_preference /= Void
+	bon_cluster_line_color_preference_not_void: bon_cluster_line_color_preference /= Void
+	bon_cluster_iconified_fill_color_preference_not_void_not_void: bon_cluster_iconified_fill_color_preference /= Void
+	bon_cluster_name_area_color_preference_not_void: bon_cluster_name_area_color_preference /= Void
+	bon_cluster_name_color_preference_not_void: bon_cluster_name_color_preference /= Void
+	bon_cluster_name_font_preference_not_void: bon_cluster_name_font_preference /= Void
+	bon_inheritance_color_preference_not_void: bon_inheritance_color_preference /= Void
+	bon_inheritance_line_width_preference_not_void: bon_inheritance_line_width_preference /= Void
+	uml_class_name_font_preference_not_void: uml_class_name_font_preference /= Void
+	uml_class_deferred_font_preference_not_void: uml_class_deferred_font_preference /= Void
+	uml_class_properties_font_preference_not_void: uml_class_properties_font_preference /= Void
+	uml_class_properties_color_preference_not_void: uml_class_properties_color_preference /= Void
+	uml_class_name_color_preference_not_void: uml_class_name_color_preference /= Void
+	uml_class_fill_color_preference_not_void: uml_class_fill_color_preference /= Void
+	uml_generics_font_preference_not_void: uml_generics_font_preference /= Void
+	uml_generics_color_preference_not_void: uml_generics_color_preference /= Void
+	uml_class_features_font_preference_not_void: uml_class_features_font_preference /= Void
+	uml_class_features_color_preference_not_void: uml_class_features_color_preference /= Void
+	uml_class_feature_section_font_preference_not_void: uml_class_feature_section_font_preference /= Void
+	uml_class_feature_section_color_preference_not_void: uml_class_feature_section_color_preference /= Void
+	uml_client_line_width_preference_not_void: uml_client_line_width_preference /= Void
+	uml_client_color_preference_not_void: uml_client_color_preference /= Void
+	uml_client_label_color_preference_not_void: uml_client_label_color_preference /= Void
+	uml_client_label_font_preference_not_void: uml_client_label_font_preference /= Void
+	uml_cluster_line_color_preference_not_void: uml_cluster_line_color_preference /= Void
+	uml_cluster_iconified_fill_color_preference_not_void: uml_cluster_iconified_fill_color_preference /= Void
+	uml_cluster_name_area_color_preference_not_void: uml_cluster_name_area_color_preference /= Void
+	uml_cluster_name_color_preference_not_void: uml_cluster_name_color_preference /= Void
+	uml_cluster_name_font_preference_not_void: uml_cluster_name_font_preference /= Void
+	uml_inheritance_line_width_preference_not_void: uml_inheritance_line_width_preference /= Void
+	uml_inheritance_color_preference_not_void: uml_inheritance_color_preference /= Void
 
 end -- class EIFFEL_DIAGRAM_PREFERENCES

@@ -75,16 +75,15 @@ feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-
-			--| G, H, I, J... according to position
-			--| do not work with instantiation for flat
-			--| to be changed
 		local
 			s: STRING; 
+			new_type: TYPE;
 		do
-			!!s.make(1);
-			s.append_character (charconv (charcode('F') + position));
-			ctxt.put_string (s);
-			ctxt.always_succeed;
+			new_type := ctxt.format.global_types.adapted_type (Current);
+			if new_type = void then
+				ctxt.put_string (ctxt.formal_name (position));
+			else
+				new_type.format (ctxt);
+			end
 		end;
 end

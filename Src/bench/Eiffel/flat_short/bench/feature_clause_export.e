@@ -51,6 +51,9 @@ feature
 	compatible (other: like Current): BOOLEAN is
 		do
 			Result := other.reference.same_as (reference);	
+			io.putstring ("Compatible: ");
+			io.putbool (Result);
+			io.new_line;
 		end;
 
 	export_less_than (names: NAMES_LIST): BOOLEAN is
@@ -74,6 +77,7 @@ feature
 			-- Reconstitute text
 		do
 			ctxt.begin;
+			ctxt.next_line;
 			ctxt.put_keyword ("feature");
 			ctxt.put_string (" ");
 			--clients_list.format (ctxt);
@@ -81,14 +85,12 @@ feature
 			ctxt.put_comment (comment);
 			ctxt.next_line;
 			ctxt.indent_one_more;
-			ctxt.next_line;
 			from
 				features.start
 			until
 				features.offright
 			loop
 				features.item.format (ctxt);
-				ctxt.next_line;
 				features.forth;
 			end;
 			ctxt.commit;

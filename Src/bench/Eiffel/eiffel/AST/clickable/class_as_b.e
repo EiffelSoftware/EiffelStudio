@@ -139,7 +139,6 @@ feature -- formatting
 			ctxt.flat_struct.format_comments (ctxt);			
 			if indexes /= void and not indexes.empty then
 				ctxt.put_keyword ("indexing");
-				ctxt.next_line;
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.set_separator (void);
@@ -159,12 +158,16 @@ feature -- formatting
 			end;
 			ctxt.put_keyword ("class");
 			ctxt.put_string (" ");
+			if ctxt.no_internals then
+				ctxt.put_keyword ("interface");
+				ctxt.put_string (" ");
+			end;
 		--	ctxt.put_class_name (Universe.class_named (class_name,
 		--			reference_class.cluster).compiled_class);
 			s := class_name.duplicate;
 			s.to_upper;
 			ctxt.put_string (s);
-			
+
 			if generics /= void then
 				ctxt.put_string (" ");
 				ctxt.put_special ("[");
@@ -175,13 +178,16 @@ feature -- formatting
 			end;
 			ctxt.next_line;
 			ctxt.next_line;
-
---			if features /= void then
---				ctxt.set_separator (void);
---				ctxt.new_line_between_tokens;
---				features.format (ctxt);
---				ctxt.next_line;
---			end;
+			if creators /= void then
+				ctxt.continue_on_failure;
+				ctxt.new_line_between_tokens;
+				ctxt.set_separator (void);
+				creators.format (ctxt);
+				if not ctxt.last_was_printed then
+					ctxt.put_keyword ("creation");
+				end;
+				ctxt.next_line;
+			end;		
 			ctxt.begin;
 			ctxt.flat_struct.format (ctxt);	
 			ctxt.commit;	
@@ -190,8 +196,4 @@ feature -- formatting
 			ctxt.commit;
 		end;
 
-			
-			
-			
-			
 end

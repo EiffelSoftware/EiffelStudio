@@ -239,7 +239,7 @@ feature -- formatter
 			end;
 			if type /= void then
 				ctxt.put_special (": ");
-				type.format (ctxt);
+				type.format (ctxt);	
 		 	end;
 			if content /= void then
 				content.format (ctxt)

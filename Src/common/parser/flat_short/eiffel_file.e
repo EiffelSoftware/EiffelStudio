@@ -6,6 +6,11 @@ creation
 feature
 	
 	make (f: UNIX_FILE) is
+			-- analyse file f, retrieve comments
+			-- the file should not be open before the call
+		require
+			good_argument: f /= void;
+			file_not_open: f.is_closed
 		local
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
@@ -55,18 +60,24 @@ feature
 			position_in_line := 1;
 			f.close;
 			clean
+		ensure
+			file_closed: f.is_closed
 		end;
 			
 
 	lines: LINKED_LIST [EIFFEL_LINE];
+			-- the content of the file, stripped of comments
 
 	comments: LINKED_LIST [EIFFEL_COMMENTS];
+			-- extracted comments
 
 	between_lines: BOOLEAN;
+			-- is the current position between two lines
 
 
 
 	go_after (pos: INTEGER) is
+			-- make current position greater than or equal to pos
 		do
 			from
 				lines.start;
@@ -83,9 +94,13 @@ feature
 					lines.forth;
 				end;
 			end;
+		ensure
+			lines.offright or else position >= pos;
+			between_lines or position = pos	
 		end;
 
 	go_before (pos: INTEGER) is
+			-- make current position less than or equal to pos
 		do
 			from
 				lines.finish;
@@ -105,6 +120,9 @@ feature
 					end;
 				end;
 			end;
+		ensure
+			lines.offleft or else position <= pos;
+			between_lines or position = pos
 		end;
 			
 	find_first_match (pattern: STRING; stop: INTEGER; context: BOOLEAN) is
@@ -143,8 +161,8 @@ feature
 	find_last_match (pattern: STRING; stop: INTEGER; context: BOOLEAN) is
   		          -- find last occurence of pattern between current position
   		          -- and stop, checking pattern context if context is true.
- 		           -- if found, position is the last character of pattern
-		            -- else, offleft or position < stop
+ 		          -- if found, position is the last character of pattern
+		          -- else, offleft or position < stop
 		local
 			seeker: MATCH;
 			found: BOOLEAN;
@@ -192,11 +210,13 @@ feature
 	
 
 	position_in_line: INTEGER;
+		-- current position in line
 
 	comment_position: INTEGER;
 
 			
 	forth is
+			-- go to next character
 		do
 			between_lines := false;
 			if position_in_line >= line.text.count then
@@ -225,8 +245,6 @@ feature
 	trailing_comment: EIFFEL_COMMENTS is
 			-- return the trailing comment after current
 			-- position, if any (void if none)
-		local
-			old_position: INTEGER;
 		do
 			if between_lines then
 				from
@@ -276,7 +294,7 @@ feature
 feature {}
 
 	clean is
-			-- remove void lines and comments
+			-- remove void or empty lines and comments
 		do
 			from
 				lines.start

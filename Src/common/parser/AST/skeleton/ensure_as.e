@@ -21,7 +21,7 @@ feature {}
 	clause_name(ctxt: FORMAT_CONTEXT): STRING is
 			-- "ensure" or "ensure then"
 		do
-			if is_then then
+			if ctxt.first_assertion then
 				Result := "ensure"
 			else
 				Result := "ensure then"

@@ -49,26 +49,22 @@ feature -- Formatting
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			if ctxt.is_in_first_pass then
-				ctxt.register_feature_clause (Current);
-			else
-				ctxt.begin;
-				if  clients /= void then
-					ctxt.set_separator (",");
-					ctxt.no_new_line_between_tokens;
-					clients.format (ctxt);
-				end;
-				ctxt.put_trailing_comment (position);
-				if ctxt.is_reconstitution then
-					ctxt.next_line;
-					ctxt.indent_one_more;
-					ctxt.next_line;
-					ctxt.new_line_between_tokens;
-					ctxt.set_separator (void);
-					features.format (ctxt);
-				end;
-				ctxt.commit;
-			end
+			ctxt.begin;
+			if  clients /= void then
+				ctxt.set_separator (",");
+				ctxt.no_new_line_between_tokens;
+				clients.format (ctxt);
+			end;
+			ctxt.put_trailing_comment (position);
+			if ctxt.is_reconstitution then
+				ctxt.next_line;
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.new_line_between_tokens;
+				ctxt.set_separator (void);
+				features.format (ctxt);
+			end;
+			ctxt.commit;
 		end;
 
 end

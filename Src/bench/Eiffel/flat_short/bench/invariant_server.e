@@ -11,6 +11,8 @@ creation
 feature
 
 	format (ctxt: FORMAT_CONTEXT) is
+		local
+			is_not_first: BOOLEAN;
 		do
 			if not empty then
 				ctxt.begin;
@@ -21,8 +23,18 @@ feature
 				until
 					after
 				loop
+					ctxt.begin;
+					if is_not_first then
+						ctxt.put_special (";")
+					end;
 					ctxt.next_line;
 					item.format (ctxt);
+					if ctxt.last_was_printed then
+						is_not_first := true;
+						ctxt.commit
+					else
+						ctxt.rollback
+					end;
 					forth
 				end;
 			end;

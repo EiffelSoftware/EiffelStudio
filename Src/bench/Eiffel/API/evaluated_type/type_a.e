@@ -8,7 +8,7 @@ inherit
 		rename
 			position as comment_position
 		redefine
-			is_solved, same_as
+			is_solved, same_as, format
 		end;
 	SHARED_WORKBENCH;
 	SHARED_CONSTRAINT_ERROR;
@@ -329,6 +329,14 @@ feature
 				warn.set_class (ass_class);
 				Error_handler.insert_warning (warn);
 			end;
+		end;
+
+feature
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.put_string (dump);
 		end;
 
 end

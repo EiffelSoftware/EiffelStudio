@@ -91,9 +91,10 @@ feature
 				until
 					clauses.offright 
 					or else ((not other.clauses.offright)
-						and then clauses.item >= other.clauses.item )
+						and then clauses.item > other.clauses.item )
 				loop
-					new_clauses.add (clauses.item);
+					new_clauses.add_right (clauses.item);
+					new_clauses.finish;
 					clauses.forth;
 				end;
 				if not  new_clauses.off and not other.clauses.off
@@ -106,9 +107,10 @@ feature
 				until
 					other.clauses.offright
 					or else ((not clauses.offright)
-						and then not (clauses.item >= other.clauses.item))
+						and then not (other.clauses.item >= clauses.item))
 				loop
-					new_clauses.add (other.clauses.item);
+					new_clauses.add_right (other.clauses.item);
+					new_clauses.finish;
 					other.clauses.forth;
 				end;
 			end;
@@ -164,7 +166,6 @@ feature
 				clauses.offright
 			loop
 				clauses.item.format (ctxt);
-				ctxt.next_line;
 				clauses.forth
 			end;
 			ctxt.commit;

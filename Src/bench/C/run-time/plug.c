@@ -344,12 +344,14 @@ uint32 type;							/* Dynamic type */
 	int32 static_id;                	/* Creation procedure feature id */
 
 	result = emalloc(type);
+	epush(&loc_stack, &result);			/* Protect address in case it moves */
 	exp_desc = &System(type);
 	feature_id = exp_desc->cn_creation_id;
 	static_id = exp_desc->static_id;	
 	if (feature_id)
 		wexp(static_id, feature_id, type, result);
 										/* Call creation routine */
+	epop(&loc_stack, 1);            /* Remove protection */
 	return result;
 }
 
@@ -397,6 +399,7 @@ char *parent;	/* Parent (enclosing object) */
 		case SK_EXP:						/* Found an expanded attribute */
 			{
 			struct cnode *exp_desc;			/* Expanded object description */
+			char *OLD_IC;
 			long offset;					/* Attribute offset */
 			int exp_dtype;					/* Expanded dynamic type */
 			int32 feature_id;				/* Creation procedure feature id */
@@ -415,10 +418,8 @@ char *parent;	/* Parent (enclosing object) */
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
-
-			if (feature_id) {
-					wexp(static_id, feature_id, exp_dtype, l[0] + offset);
-					}
+			if (feature_id) 
+				wexp(static_id, feature_id, exp_dtype, l[0] + offset);
 										/* Call creation routine */
 
 			/* If expanded object is composite also, initialize it. */

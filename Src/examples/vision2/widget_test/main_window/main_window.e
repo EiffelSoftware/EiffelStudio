@@ -94,6 +94,17 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	display_about_dialog is
+			-- Display an instace of ABOUT_DIALOG
+			-- modally to `Current'.
+		local
+			about_dialog: ABOUT_DIALOG
+		do
+			create about_dialog.make
+			about_dialog.show_modal_to_window (Current)
+		end
+		
+
 	set_window_title (a_widget: EV_WIDGET) is
 			-- Assign a title to `Current', reflecting type
 			-- of widget that is currently being tested.

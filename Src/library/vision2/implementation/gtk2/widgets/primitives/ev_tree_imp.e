@@ -351,7 +351,7 @@ feature -- Implementation
 			real_signal_connect (
 				event_widget,
 				"button-press-event", 
-				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
+				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True

@@ -9,7 +9,7 @@ deferred class
 
 <INHERITANCE>
 
-feature {NONE} -- Initialization
+feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
@@ -24,10 +24,6 @@ feature {NONE} -- Initialization
 			<BUILD>
 			<SET>
 			<EVENT_CONNECTION>
-
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
-			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 
 				-- Call `user_initialization'.
 			user_initialization

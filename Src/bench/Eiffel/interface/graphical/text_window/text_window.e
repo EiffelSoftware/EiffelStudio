@@ -49,11 +49,6 @@ feature -- Properties
 		deferred
 		end;
 
-	update_symbol: BOOLEAN is
-			-- Update the symbol?
-		do
-		end;
-
 	cursor: CURSOR is
 			-- Current cursor position in text window
 		deferred
@@ -138,13 +133,6 @@ feature -- Status setting
 	set_changed (b: BOOLEAN) is
 			-- Set `changed' to b.
 		deferred
-		end;
-
-	reset_update_symbol is
-			-- Set `update_symbol' to False.
-		do
-		ensure
-			reset: not update_symbol
 		end;
 
 	set_text (an_image: STRING) is

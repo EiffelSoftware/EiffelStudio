@@ -232,10 +232,10 @@ feature -- Status report
 			font_imp: EV_FONT_IMP
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
-			original_caret_position: INTEGER
 		do
-			original_caret_position := caret_position
-			set_selection (caret_index, caret_index)
+			safe_store_caret
+		
+			set_selection (caret_index - 1, caret_index - 1)
 			wel_character_format := current_selection_character_format
 			effects := wel_character_format.effects
 			color_ref := wel_character_format.text_color
@@ -256,7 +256,7 @@ feature -- Status report
 				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green),
 				character_effects)
 				
-			set_caret_position (original_caret_position)
+			safe_restore_caret
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -861,12 +861,39 @@ feature -- Status setting
 		local
 			wel_character_format: WEL_CHARACTER_FORMAT
 		do	
+			safe_store_caret	
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void
 			end
 			set_character_format_selection (wel_character_format)
+			safe_restore_caret
 		end
+		
+	safe_store_caret is
+			-- Store caret position, and block caret change events from occuring.
+		do
+			internal_actions_blocked := True
+			original_caret_position := caret_position
+		end
+		
+	safe_restore_caret is
+			-- Restore caret position stored by last call to `safe_store_caret' and restore
+			-- change events.
+		do
+			set_caret_position (original_caret_position)
+			internal_actions_blocked := False
+
+		end
+		
+	internal_actions_blocked: BOOLEAN
+		-- Are caret position and selection change actions blocked internally due to an operation
+		-- occurring that may affect them. They must be displayed during the implementation of
+		-- certain features that require such modification as part of their implementation. See
+		-- `safe_store_caret', `safe_restore_caret'.
+	
+	original_caret_position: INTEGER
+		-- Original position of caret before call `to `safe_store_caret', to be restored by `safe_restore_caret'.
 		
 feature {EV_CONTAINER_IMP} -- Implementation
 
@@ -875,30 +902,32 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- `selection_type' values. `character_range' contains lower and upper selection,
 			-- equal when caret is moved with no selection.
 		do
-			if selection_type = feature {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
-				if must_fire_final_selection then
-						-- A selection has just been removed from `Current' so fire `selection_change_actions'
-						-- one final time.
-					must_fire_final_selection := False
+			if not internal_actions_blocked then
+				if selection_type = feature {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
+					if must_fire_final_selection then
+							-- A selection has just been removed from `Current' so fire `selection_change_actions'
+							-- one final time.
+						must_fire_final_selection := False
+						if selection_change_actions_internal /= Void then
+							selection_change_actions_internal.call ([Void])
+						end	
+					end
+					check
+						character_range_consistent: character_range.minimum = character_range.maximum
+					end
+					if caret_move_actions_internal /= Void then
+						caret_move_actions_internal.call ([character_range.minimum + 1])
+					end
+				else
+					must_fire_final_selection := True
+					check
+						character_range_consistent: character_range.minimum /= character_range.maximum
+					end
 					if selection_change_actions_internal /= Void then
 						selection_change_actions_internal.call ([Void])
-					end	
-				end
-				check
-					character_range_consistent: character_range.minimum = character_range.maximum
-				end
-				if caret_move_actions_internal /= Void then
-					caret_move_actions_internal.call ([character_range.minimum + 1])
-				end
-			else
-				must_fire_final_selection := True
-				check
-					character_range_consistent: character_range.minimum /= character_range.maximum
-				end
-				if selection_change_actions_internal /= Void then
-					selection_change_actions_internal.call ([Void])
-				end
-			end	
+					end
+				end	
+			end
 		end
 		
 	must_fire_final_selection: BOOLEAN

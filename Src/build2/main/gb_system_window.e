@@ -159,11 +159,11 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Default_border_size)
 
 				-- Create Ok button
-			create button.make_with_text_and_action (b_OK, ~ok_action)
+			create button.make_with_text_and_action (b_OK, agent ok_action)
 			extend_button (vbox, button)
 
 				-- Create Cancel button
-			create button.make_with_text_and_action (b_Cancel, ~cancel_action)
+			create button.make_with_text_and_action (b_Cancel, agent cancel_action)
 			extend_button (vbox, button)
 
 				-- Cosmetics
@@ -179,7 +179,7 @@ feature {NONE} -- Initialization
 			
 				-- Closing window
 			close_request_actions.wipe_out
-			close_request_actions.put_front (~cancel_action)
+			close_request_actions.put_front (agent cancel_action)
 		end
 		
 	extend_button (b: EV_BOX; but: EV_BUTTON) is

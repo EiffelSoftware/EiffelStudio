@@ -1,0 +1,28 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Changing class names and formal generics</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Class,Change name">
+		<META NAME="MS-HKWD" CONTENT="Class,Change formal generics">
+	</HEAD>
+
+	<BODY>
+		<H1>Changing class names and formal generics</H1>
+
+		<P>
+		<OL>
+			<LI>Start pick-and-drop on the class bubble of which you want to change the name or formal generics.
+			<LI>Drop it in the <B>Change class name and generics</B> hole. <IMG SRC="../../../../images/eiffelstudio/icon_class_header_color.png">
+			<LI>The <B>Class header</B> dialog appears. You can enter a new name and/or formal generics.
+			<IMG SRC="../../../../images/eiffelstudio/diagram-classheader.png">
+			<LI>If you changed the name, choose between these options:
+				<UL>
+					<LI><B>Change name locally</B>: the name will be changed in the class declaration only. Any references to this one are now invalid.
+					<LI><B>Global search/replace of name in compiled classes</B>: like the option above, but every reference to the class in compiled classes are also replaced with the new name.
+					<LI><B>Global search/replace of name in entire universe</B>: like the option above, but references are replaced even in classes that are not in the system.
+				</UL>
+			<LI>Click <B>OK</B>.
+		</OL>
+	</BODY>
+</HTML>

@@ -9,7 +9,6 @@ class PRECOMP_R
 
 inherit
 
-	WINDOWS;
 	SHARED_ENV;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
@@ -80,9 +79,8 @@ feature
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then
-print ("retrying...%N");
-				--retried := True;
-				--retry
+				retried := True;
+				retry
 			end;
 		end;
 

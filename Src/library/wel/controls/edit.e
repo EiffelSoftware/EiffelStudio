@@ -208,7 +208,10 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := selection_start /= selection_end
+			Result := cwin_lo_word (cwin_send_message_result (item,
+				Em_getsel, 0, 0)) /=
+				cwin_hi_word (cwin_send_message_result (item,
+				Em_getsel, 0, 0))
 		end
 
 	selection_start: INTEGER is

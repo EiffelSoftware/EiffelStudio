@@ -39,8 +39,7 @@ feature {NONE} -- Command Execution
 				nc.set_save_file;
 				nc.call (Current)
 			else
-				file_name := last_name_chooser.selected_file;
-				last_name_chooser.destroy;
+				file_name := clone (last_name_chooser.selected_file)
 				tool.save_in (file_name)
 			end
 		end

@@ -108,7 +108,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
 			l_item: EV_LIST_ITEM_IMP
 		do
 		 	l_item ?= eif_object_from_c (
-				(App_implementation.gtk_marshal).gtk_value_pointer (args)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 			)
 			if l_item /= Void and then not l_item.is_destroyed then
 				if l_item.deselect_actions_internal /= Void then

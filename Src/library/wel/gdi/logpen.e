@@ -13,6 +13,12 @@ inherit
 			make as structure_make
 		end
 
+	WEL_PS_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_pen_style_constant
+		end
+
 creation
 	make,
 	make_by_pen
@@ -24,6 +30,7 @@ feature {NONE} -- Initialization
 			-- `a_color'.
 			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
+			valid_pen_style_constant: valid_pen_style_constant (a_style)
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
 		do
@@ -53,6 +60,8 @@ feature -- Access
 			-- Pen style
 		do
 			Result := cwel_logpen_get_style (item)
+		ensure
+			valid_result: valid_pen_style_constant (Result)
 		end
 
 	width: INTEGER is
@@ -75,6 +84,8 @@ feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'
+		require
+			valid_pen_style_constant: valid_pen_style_constant (a_style)
 		do
 			cwel_logpen_set_style (item, a_style)
 		ensure

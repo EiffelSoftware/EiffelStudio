@@ -14,20 +14,49 @@ inherit
 		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		end
+	
+	GB_RECENT_PROJECTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -127,6 +156,7 @@ feature -- Basic operations
 						Environment.application.destroy
 					end
 				end
+				add_project_to_recent_projects
 			end
 			
 	
@@ -215,6 +245,7 @@ feature -- Basic operations
 					error_dialog.show_modal_to_window (main_window)
 					system_status.close_current_project
 				end
+				add_project_to_recent_projects
 			end
 			
 feature {NONE} -- Implementation
@@ -231,7 +262,7 @@ feature {NONE} -- Implementation
 		
 	cancel_update_location is
 			-- Assign `True' to `location_update_cancelled', so that
-			-- we know a user selected cancel, from the lcoation update
+			-- we know a user selected cancel, from the location update
 			-- dialog.
 		do
 			location_update_cancelled := True

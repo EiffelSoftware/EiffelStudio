@@ -1124,14 +1124,14 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 		{
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->low_tab = tab;
 
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->low_comp = tab;
@@ -1153,14 +1153,14 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 		{
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->high_tab = tab;
 
 			tab = (unsigned char *) cmalloc (size);
 
-			if (tab == (char *) 0)
+			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->high_comp = tab;
@@ -1276,12 +1276,12 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 	{
 		tab = (unsigned char *) cmalloc (size);
 
-		if (tab == (char *) 0)
+		if (tab == (unsigned char *) 0)
 			enomem ();
 
 		comp = (unsigned char *) cmalloc (size);
 
-		if (comp == (char *) 0)
+		if (comp == (unsigned char *) 0)
 			enomem ();
 	}
 

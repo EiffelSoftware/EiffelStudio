@@ -120,18 +120,22 @@ feature
 		local
 			eb_bulletin: SCALABLE;
 			it_count: INTEGER;
+			other_editor: CONTEXT_EDITOR
 		do
 			size_modified := True;
 			widget.unmanage;
 			widget.set_size (new_w, new_h);
-				-- Then shake it so the height will match
-				-- the visible count
-			--it_count := widget.visible_item_count;
-			--widget.set_visible_item_count (it_count + 1);
-			--widget.set_visible_item_count (it_count);
 			eb_bulletin ?= parent.widget;
 			eb_bulletin.update_ratios (widget);
 			widget.manage;
+			if retrieved_node = Void then
+					-- Not when retrieving
+				other_editor := context_catalog.editor
+					(Current, Context_const.scroll_l_att_form_nbr);
+				if other_editor /= Void then
+					other_editor.reset_current_form
+				end;
+			end
 		end;
 
 feature {NONE}

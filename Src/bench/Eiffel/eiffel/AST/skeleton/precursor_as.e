@@ -211,6 +211,7 @@ feature -- Type check, byte code and dead code removal
 			obs_warn: OBS_FEAT_WARN
 			like_argument_detected : BOOLEAN
 			formal_type: FORMAL_A
+			gen_type: GEN_TYPE_A
 		do
 				-- Replace type on top of the stack
 				-- with parent type.
@@ -307,9 +308,16 @@ feature -- Type check, byte code and dead code removal
 					-- which knows about the current generic derivation.
 				Result := Result.instantiation_in (last_type, last_id).actual_type
 			else
-					-- The result is clearly defined so we need to find its type in the 
-					-- context of the caller of `Precursor'.
-				Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
+				gen_type ?= Result.actual_type 
+				if gen_type /= Void and then gen_type.has_formal then
+						-- We need to evaluate the formal parameter in the context of
+						-- `last_type' which knows about the current generic derivation.
+					Result := Result.instantiation_in (last_type, last_id).actual_type
+				else
+						-- The result is clearly defined so we need to find its type in the 
+						-- context of the caller of `Precursor'.
+					Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
+				end
 			end
 
 			if

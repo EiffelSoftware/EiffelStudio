@@ -25,7 +25,8 @@ inherit
 			interface,
 			initialize,
 			container_widget,
-			on_widget_mapped
+			on_widget_mapped,
+			needs_event_box
 		end
 
 feature {NONE} -- Initialization
@@ -40,6 +41,13 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, 0)
 			real_signal_connect (c_object, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
 		end
+
+	needs_event_box: BOOLEAN is
+			-- 
+		do
+			Result := True
+		end
+		
 
 feature -- Access
 

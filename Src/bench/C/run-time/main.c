@@ -63,7 +63,7 @@ public uint32 zeroc;					/* Frozen level */
 public char **melt;						/* Byte code array */
 public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 public struct eif_opt *eoption;			/* Option table */
-public struct interface *pattern;		/* Pattern table */
+public struct p_interface *pattern;		/* Pattern table */
 extern void winit();					/* Workbench debugger initialization */
 extern void einit();					/* System-dependent initializations */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */

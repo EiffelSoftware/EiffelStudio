@@ -116,13 +116,14 @@ void cwin_reg_set_key_value(
     HKEY key_result;
     LONG result;
 
+
     result = RegSetValueEx(
             (HKEY)key ,
-            (LPCTSTR)keyname,
+            (char *)keyname,
             0,
             ((REG_VALUE *)keyvalue)->type,
 			((REG_VALUE *)keyvalue)->data,
-            ((REG_VALUE *)keyvalue)->length );
+            ((REG_VALUE *)keyvalue)->length );	
 }
 
 //////////////////////////////////////////////////////////////

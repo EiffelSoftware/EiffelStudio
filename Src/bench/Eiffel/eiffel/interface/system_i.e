@@ -3325,8 +3325,14 @@ feature -- Main file generation
 				%#include %"except.h%"%N%
 				%#include %"option.h%"%N%
 				%extern void emain();%N%
-				%extern void reclaim();%N%
-				%extern void failure();%N%
+				%extern void reclaim();%N");
+			if Concurrent_Eiffel then
+				Main_file.putstring ("%#include %"curserver.h%"%N")
+			else
+				Main_file.putstring ("extern void failure();%N")
+			end
+
+			Main_file.putstring ("%
 				%extern void initsig();%N%
 				%extern void initstk();%N%
 				%extern void eif_rtinit();%N%N%
@@ -3341,8 +3347,14 @@ feature -- Main file generation
 				%%Tinitstk();%N%
 				%%Texvect = exset((char *) 0, 0, (char *) 0);%N%
 				%%Texvect->ex_jbuf = (char *) exenv;%N%
-				%%Tif (echval = setjmp(exenv))%N%
-				%%T%Tfailure();%N%N%
+				%%Tif (echval = setjmp(exenv))%N");
+			if Concurrent_Eiffel then
+				Main_file.putstring ("%T%Tdefault_rescue();%N%N")
+			else
+				Main_file.putstring ("%T%Tfailure();%N%N")
+			end
+
+			Main_file.putstring ("%
 				%%Teif_rtinit(argc, argv, envp);%N%
 				%%Tif (eif_profiler_on) initprf();%N%
 				%%Temain(argc, argv);%N%
@@ -3373,6 +3385,8 @@ feature -- Main file generation
 			rout_info: ROUT_INFO;
 			rcorigin: INTEGER;
 			rcoffset: INTEGER
+
+			a_class: CLASS_C
 		do
 
 			final_mode := byte_context.final_mode;
@@ -3421,6 +3435,28 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N%N");
 			end;
 
+			if Concurrent_Eiffel then
+				Initialization_file.putstring ("#include %"curextern.h%"%N%N")
+
+				Initialization_file.putstring ("extern ");
+				Initialization_file.putstring (root_class_name);
+				Initialization_file.putstring ("case(); %N");
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					a_class := classes.item_for_iteration;
+					if a_class.actual_type.type_i.is_separate then
+						Initialization_file.putstring ("extern ");
+						Initialization_file.putstring (a_class.actual_type.associated_class.class_name);
+						Initialization_file.putstring ("case(); %N");
+					end;
+					classes.forth;
+				end;
+				Initialization_file.putstring ("%N");
+			end
+
 			Initialization_file.putstring ("%
 				%void emain(argc, argv)%N%
 				%int argc;%N%
@@ -3445,6 +3481,29 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N");
 			end;
 
+			if Concurrent_Eiffel then
+				Initialization_file.putstring ("%Tif (argc < 2) {%N%
+					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
+					%%T%Tdefault_rescue();%N%
+					%%T}%N%
+					%%Tif (strcmp(argv[1], constant_init_flag) && strcmp(argv[1], constant_creation_flag)) {%N%
+					%%T%Tsprintf(crash_info, CURERR8);%N%
+					%%T%Tdefault_rescue();%N%
+					%%T}%N%
+					%%Tif (!memcmp(argv[1], constant_init_flag, strlen(argv[1]))) {%N%
+					%%T%Tchar **root_argv;%N%
+					%%T%Tint i;%N%
+					%%T%Troot_argv = (char **)malloc(argc*sizeof(char *));%N%
+					%%T%Tvalid_memory(root_argv);%N%
+					%%T%Troot_argv[0] = argv[0];%N%
+					%%T%Tfor(i=2; i<argc; i++)%N%
+					%%T%T%Troot_argv[i-1] = argv[i];%N%
+					%%T%Troot_argv[argc-1] = NULL;%N%
+					%%T%T_concur_root_of_the_application = 1;%N%
+					%%T%T_concur_invariant_checked = 1;%N");
+					-- The last line Only for Workbench Mode
+			end
+
 			Initialization_file.putstring ("%Troot_obj = RTLN(");
 			if final_mode then
 				Initialization_file.putint (dtype);
@@ -3453,23 +3512,63 @@ feature -- Main file generation
 			end;
 			Initialization_file.putstring (");%N");
 
+			if Concurrent_Eiffel then
+				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
+			end
+
 			if final_mode then
 				if creation_name /= Void then
 					Initialization_file.putchar ('%T');
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring ("(root_obj");
 					if root_feat.has_arguments then
-						Initialization_file.putstring (", argarr(argc, argv)");
+						if Concurrent_Eiffel then
+							Initialization_file.putstring (", argarr(argc-1, root_argv)");
+						else
+							Initialization_file.putstring (", argarr(argc, argv)");
+						end
 					end;
 					Initialization_file.putstring (");%N");
 				end;
 			else
-				Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
-					%%T%Tif (rcarg)%N%
-					%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
-					%%T%Telse%N%
-					%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+				if Concurrent_Eiffel then
+					Initialization_file.putstring ("%T%Tif (rcorigin != -1)%N%
+						%%T%T%Tif (rcarg)%N%
+						%%T%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
+						%%T%T%Telse%N%
+						%%T%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+				else
+					Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
+						%%T%Tif (rcarg)%N%
+						%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
+						%%T%Telse%N%
+						%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+				end
 			end;
+
+			if Concurrent_Eiffel then
+				Initialization_file.putstring ("%T%Tserver_execute(");
+				Initialization_file.putstring (root_class_name);
+				Initialization_file.putstring (");%N");
+				Initialization_file.putstring ("%T}%N");
+
+				Initialization_file.putstring ("%Telse {%N%
+					%%T%T_concur_root_of_the_application = 0;%N%
+					%%T%Troot_obj = RTLN(eif_type_id(argv[4]));%N");
+				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
+
+					-- Only for Workbench Mode
+				Initialization_file.putstring ("%T%Tif (!strlen(argv[5])) {%N%
+					%%T%T%TRTCI(root_obj);%N%
+					%%T%T%T_concur_invariant_checked = 1;%N%
+					%%T%T}%N%
+					%%T%Telse%N%
+					%%T%T%T_concur_invariant_checked = 0;%N");
+
+				Initialization_file.putstring ("%T%Tserver_execute(argv[4]);%N");
+
+				Initialization_file.putstring ("%T}%N");
+			end
 
 			Initialization_file.putstring ("}%N");
 

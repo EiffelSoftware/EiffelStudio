@@ -35,12 +35,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-	
-	--destroyed: BOOLEAN is
-			-- Is Current object destroyed?  
-	--	do
-	--		Result := (internal_text = Void) and (internal_pixmaps = void)
-	--	end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
@@ -56,6 +50,7 @@ feature -- Status setting
 
 	update is
 		do
+			--| FIXME IEK Implement to use idle handler
 		end
 
 	destroy is
@@ -115,7 +110,7 @@ feature -- Element Change
 			-- Prepare the pixmap and the text.
 			txt := a_text.to_c
 
-			if column = 1 then
+			if column = 1 and pixmap /= Void then
 				pix_imp ?= pixmap.implementation
 			end
 
@@ -248,6 +243,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/24 01:27:47  king
+--| Removed invalid destroyed feature, checking for void pixmap
+--|
 --| Revision 1.38  2000/03/23 19:16:59  king
 --| Made compilable with new row structure
 --|

@@ -45,10 +45,14 @@ feature
 
 	create_interface is 
 			-- Create interface of an event_catalog 
+		local
+			first_separator, second_separator: THREE_D_SEPARATOR	
 		do
 			!! button_rc.make (Widget_names.row_column, Current)
 --			button_rc.set_preferred_count (1)
 			button_rc.set_column_layout
+			!! first_separator.make ("", Current)
+			!! second_separator.make ("", Current)
 			!! general_events.make (Current)
 			!! mouse_events.make (Current)
 			!! translations_events.make (Current)
@@ -61,16 +65,20 @@ feature
 			!! page_sw.make (Widget_names.scroll, Current)
 			!! pages.make
 
+			first_separator.set_horizontal (False)
+
 			attach_top (button_rc, 0)
 			attach_left (button_rc, 2)
---			attach_right (button_rc, 2)
-			attach_left (page_sw, 0)
-			attach_right (page_sw, 0)
+			attach_top (first_separator, 0)
+			attach_bottom_widget (second_separator, first_separator, 0)
 			attach_top (page_sw, 0)
-			attach_left_widget (button_rc, page_sw, 2)
---			attach_top_widget (button_rc, page_sw, 2)
-			attach_bottom (page_sw, 2)
---			attach_bottom (button_rc, 2)
+			attach_right (page_sw, 0)
+			attach_left_widget (first_separator, page_sw, 0)
+			attach_left_widget (button_rc, first_separator, 2)
+			attach_bottom_widget (second_separator, page_sw, 2)
+			attach_bottom (second_separator, 0)	
+			attach_right (second_separator, 0)
+			attach_left (second_separator, 0)
 			define_event_pages
 			update_interface
 			if not current_page.empty then

@@ -26,6 +26,12 @@ feature -- General Errors
 	Missing_installation_directory: INTEGER is 6
 			-- Installation directory in registry is missing
 
+	Missing_default_config: INTEGER is 7
+			-- No default configuration information could be found
+
+	Missing_current_process_file_name: INTEGER is 8
+			-- No default configuration information could be found
+
 feature -- General Warning
 
 	Incorrect_result: INTEGER is 1001
@@ -34,16 +40,10 @@ feature -- General Warning
 	Failed_assignment_attempt: INTEGER is 1002
 			-- An assignment attempt that should have succeeded failed.
 
-	Missing_configs: INTEGER is 1003
-			-- No configuration information could be found
-
-	Missing_default_config: INTEGER is 1004
-			-- No default configuration information could be found
-
-	File_lock: INTEGER is 1005
+	File_lock: INTEGER is 1003
 			-- Operation failed due to a file lock
 
-	Missing_input: INTEGER is 1006
+	Missing_input: INTEGER is 1004
 			-- Input is missing
 
 feature -- General Information
@@ -56,6 +56,9 @@ feature -- General Information
 
 	Missing_config: INTEGER is 2003
 			-- No specific configuration for current process found, using default configuration
+
+	Log: INTEGER is 2004
+			-- Generic log information
 
 feature -- Consumer Errors
 

@@ -64,6 +64,8 @@ feature -- Access
 			Result.append ("{")
 			Result.append (an_index.out)
 			Result.append ("}")
+		ensure
+			non_void_marker: Result /= Void
 		end
 
 	Error, Warning, Information: INTEGER is unique
@@ -125,16 +127,16 @@ feature {NONE} -- Implementation
 						Missing_setup_key)
 			Result.extend (["Missing installation directory", "general", "Installation directory missing from setup keys, installation corrupted", Error],
 						Missing_installation_directory)
+			Result.extend (["Missing Default Configuration Settings", "general", "No default configuration information could be found", Error],
+						Missing_default_config)
+			Result.extend (["Missing Current Process File Name", "general", "Could not retrieve current process filename", Error],
+						Missing_current_process_file_name)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],
 						Incorrect_result)
 			Result.extend (["Failed Assignment Attempt", "general", "An assignment attempt that should have succeeded failed: trying to assign an instance of {1} to an instance of {2} in {3}", Warning],
 						Failed_assignment_attempt)
-			Result.extend (["Missing Configuration Settings", "general", "No configuration information could be found", Warning],
-						Missing_configs)
-			Result.extend (["Missing Default Configuration Settings", "general", "No default configuration information could be found", Warning],
-						Missing_default_config)
 			Result.extend (["File Lock", "general", "Operation {2} failed because of a file lock on {1}", Warning],
 						File_lock)
 			Result.extend (["Missing Input", "general", "Operation {1} cannot execute because input is missing", Warning],
@@ -147,6 +149,8 @@ feature {NONE} -- Implementation
 						Rescued_exception)
 			Result.extend (["Missing Configuration", "general", "No specific configuration for {1} found, using default configuration", Information],
 						Missing_config)
+			Result.extend (["Log", "general", "{1}", Information],
+						Log)
 
 			-- Consumer Errors
 			Result.extend (["Missing Current Type", "consumer", "Construct is missing current type information: {1}", Error],

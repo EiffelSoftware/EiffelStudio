@@ -25,7 +25,7 @@ feature -- Basic Operations
 			if not l_events.is_event_id (an_id) then
 				raise_event (feature {ECD_EVENTS_IDS}.Invalid_event_identifier, [an_id.out])
 			elseif not l_events.is_valid_context (an_id, a_context) then
-				raise_event (feature {ECD_EVENTS_IDS}.Invalid_event_context, [l_events.event_name (an_id), l_events.event_arguments_count (an_id).out, a_context.count.out])
+				raise_event (feature {ECD_EVENTS_IDS}.Invalid_event_context, [l_events.event_name (an_id), a_context.count.out, l_events.event_arguments_count (an_id).out])
 			else
 				create l_event.make (an_id, a_context)
 				if l_event.is_error then
@@ -65,6 +65,7 @@ feature {NONE} -- Implementation
 			create l_event_log.make
 			l_event_log.set_source (log_source_name)
 			l_event_log.set_machine_name (log_server_name)
+			l_event_log.set_log (log_name)
 			if an_event.is_error then
 		        l_event_log.write_entry (an_event.message, feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error, an_event.id)
 			elseif an_event.is_warning then

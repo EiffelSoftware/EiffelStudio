@@ -91,10 +91,10 @@ feature
 			invariant_info := Void;
 		end
 
-	Size_limit: INTEGER is 100
-			-- Size of the TMP_AST_SERVER file (100 Ko)
+	Size_limit: INTEGER is 400
+			-- Size of the TMP_AST_SERVER file (400 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block
 
 feature {NONE} -- External features

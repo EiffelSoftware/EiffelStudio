@@ -287,8 +287,7 @@ end
 				an_id := other.key_for_iteration
 				old_info := tbl_item (an_id)
 				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id
-																(old_info.id)
+					old_server_file := Server_controler.file_of_id (old_info.id)
 					old_server_file.remove_occurence
 					if old_server_file.occurence = 0 then
 						file_ids.prune (old_server_file.id)
@@ -299,7 +298,11 @@ end
 			end
 			other.clear_all
 
+				-- Merge the file under the control of the Current server
+				-- Remove useless files from other so that we don't encumber
+				-- the current server.
 			other_file_ids := other.file_ids
+			other.files_purge
 			file_ids.merge (other_file_ids)
 			other_file_ids.wipe_out
 
@@ -312,6 +315,28 @@ end
 
 			--partial_purge
 		end;			
+
+	files_purge is
+			-- Purge the files, i.e. removed non used files from the disk
+		local
+			file_list: LINKED_LIST [FILE_ID]
+			server_file: SERVER_FILE
+		do
+			from
+				file_list := file_ids
+				file_list.start
+			until
+				file_list.after
+			loop
+				server_file := Server_controler.file_of_id (file_list.item)
+				if server_file.occurence = 0 then
+					Server_controler.forget_file (server_file)
+					file_list.remove
+				else
+					file_list.forth
+				end
+			end
+		end
 
 	purge is
 			-- Purge useless datas from current server
@@ -358,8 +383,7 @@ end
 					after
 				loop
 					old_info := item_for_iteration
-					old_server_file :=
-						Server_controler.file_of_id (old_info.id)
+					old_server_file := Server_controler.file_of_id (old_info.id)
 					an_id := key_for_iteration
 					if equal (old_info.id, file_id) then
 						if old_server_file.precompiled then

@@ -24,10 +24,10 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 200
-			-- Size of the AST_SERVER file (200 Ko)
+	Size_limit: INTEGER is 400
+			-- Size of the AST_SERVER file (400 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block
 
 end

@@ -22,13 +22,13 @@ feature
 	Cache: POLY_CACHE is
 			-- Cache for routine tables
 		once
-			!!Result.make;
+			!! Result.make;
 		end;
 
 	Delayed: SEARCH_TABLE [ROUTINE_ID] is
 			-- Cache for delayed items
 		once
-			!!Result.make ((3 * Cache.cache_size) // 2)
+			!! Result.make ((3 * Cache.cache_size) // 2)
 		end
 
 	clear is
@@ -47,19 +47,18 @@ feature
 				file_ids.after
 			loop
 				server_file := Server_controler.file_of_id (file_ids.item);
-				Server_controler.remove_file (server_file)
+				Server_controler.forget_file (server_file)
 				file_ids.forth
 			end;
 			clear_all;
 			file_ids.wipe_out;
 			cache.wipe_out;
-			set_current_id;
 		end;
 
 feature -- Server parameters
 
-	Size_limit: INTEGER is 300
-			-- Size of the TMP_POLY_SERVER file (300 Ko)
+	Size_limit: INTEGER is 200
+			-- Size of the TMP_POLY_SERVER file (200 Ko)
 
 	Chunk: INTEGER is 3000
 			-- Size of a HASH_TABLE block

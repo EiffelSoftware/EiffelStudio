@@ -30,8 +30,8 @@ feature
 			!!Result.make ((3 * Cache.cache_size) // 2)
 		end
 
-	Size_limit: INTEGER is 50
-			-- Size of the TMP_DEPEND_SERVER file (50 Ko)
+	Size_limit: INTEGER is 100
+			-- Size of the TMP_DEPEND_SERVER file (100 Ko)
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block

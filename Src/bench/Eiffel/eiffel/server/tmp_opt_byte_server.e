@@ -48,13 +48,11 @@ feature
 			loop
 				server_file := Server_controler.file_of_id (file_ids.item);
 				Server_controler.forget_file (server_file);
-				server_file.delete;
 				file_ids.forth
 			end;
 			clear_all;
 			file_ids.wipe_out;
 			cache.wipe_out;
-			set_current_id;
 		end;
 
 feature -- Server parameters
@@ -62,7 +60,7 @@ feature -- Server parameters
 	Size_limit: INTEGER is 100
 			-- Size of the TMP_OPT_BYTE_SERVER file (100 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 300
 			-- Size of a HASH_TABLE block
 
 end

@@ -59,10 +59,10 @@ feature
 
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 50
-			-- Size of the CLASS_INFO_SERVER file (50 Ko)
+	Size_limit: INTEGER is 200
+			-- Size of the CLASS_INFO_SERVER file (200 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block
 
 end

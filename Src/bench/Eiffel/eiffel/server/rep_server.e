@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 75
+	Size_limit: INTEGER is 100
 			-- Size of the REP_SERVER file (75 Ko)
 
 	Chunk: INTEGER is 150

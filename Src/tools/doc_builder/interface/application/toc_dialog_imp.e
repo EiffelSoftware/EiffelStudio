@@ -62,9 +62,6 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_11
 			create l_ev_label_6
 			create filter_combo
-			create combo_no_filter
-			create combo_studio_filter
-			create combo_envision_filter
 			create l_ev_horizontal_box_12
 			create l_ev_cell_1
 			create l_ev_horizontal_box_13
@@ -104,9 +101,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_11)
 			l_ev_horizontal_box_11.extend (l_ev_label_6)
 			l_ev_horizontal_box_11.extend (filter_combo)
-			filter_combo.extend (combo_no_filter)
-			filter_combo.extend (combo_studio_filter)
-			filter_combo.extend (combo_envision_filter)
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_12)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_13)
@@ -174,14 +168,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_11.set_padding_width (padding_width)
 			l_ev_horizontal_box_11.set_border_width (inner_border_width)
 			l_ev_horizontal_box_11.disable_item_expand (l_ev_label_6)
-			l_ev_label_6.set_text ("Document Filter")
+			l_ev_label_6.set_text ("Sort for ")
 			l_ev_label_6.align_text_left
-			filter_combo.set_text ("Unfiltered")
 			filter_combo.disable_edit
-			combo_no_filter.enable_select
-			combo_no_filter.set_text ("Unfiltered")
-			combo_studio_filter.set_text ("EiffelStudio")
-			combo_envision_filter.set_text ("ENViSioN!")
 			l_ev_horizontal_box_13.set_padding_width (5)
 			l_ev_horizontal_box_13.set_border_width (2)
 			l_ev_horizontal_box_13.disable_item_expand (okay_button)
@@ -213,7 +202,6 @@ feature -- Access
 	index_root_check, include_empty_dirs_check, include_no_index_check, include_skipped_sub_dirs_check, 
 	order_alphabetical_check: EV_CHECK_BUTTON
 	filter_combo: EV_COMBO_BOX
-	combo_no_filter, combo_studio_filter, combo_envision_filter: EV_LIST_ITEM
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	okay_button, cancel_button: EV_BUTTON
 

@@ -27,9 +27,32 @@ feature {NONE} -- Initialization
 		do			
 			okay_button.select_actions.extend (agent okay)
 			cancel_button.select_actions.extend (agent hide)
+			populate_filter_combo
 		end
 
 feature {NONE} -- Implementation
+
+	populate_filter_combo is
+			-- Populate filter combo
+		local
+			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
+			l_list_item: EV_LIST_ITEM
+		do			
+			if shared_project.filter_manager /= Void then
+				l_filters := shared_project.filter_manager.filters
+				filter_combo.wipe_out
+				from
+					l_filters.start
+				until
+					l_filters.after
+				loop
+					create l_list_item.make_with_text (l_filters.key_for_iteration.twin)					
+					l_list_item.set_data (l_filters.key_for_iteration.twin)
+					filter_combo.extend (l_list_item)					
+					l_filters.forth
+				end
+			end			
+		end
 
 	okay is
 			-- Okay pressed
@@ -47,6 +70,7 @@ feature {NONE} -- Implementation
 			l_filter := Shared_project.filter_manager.filter_by_description (filter_combo.selected_item.text)
 			Shared_project.filter_manager.set_filter (l_filter)
 			Shared_toc_manager.sort_toc (
+				l_filter,
 				index_root_check.is_selected,
 				include_empty_dirs_check.is_selected,
 				include_no_index_check.is_selected,

@@ -105,15 +105,19 @@ feature
 
 	set_precomp_dir is
 			-- Update precompilation related once functions.
-		require
+		require	
 			driver_not_void: Workbench.precompiled_driver /= Void
 		local
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
 			Precompilation_driver.make_from_string
-				(Workbench.precompiled_driver);
+					(Workbench.precompiled_driver)
 			precomp_dirs := Workbench.precompiled_directories;
-			from precomp_dirs.start until precomp_dirs.after loop
+			from 
+				precomp_dirs.start 
+			until 
+				precomp_dirs.after 
+			loop
 				precomp_dirs.item_for_iteration.update_path;
 				precomp_dirs.forth
 			end;

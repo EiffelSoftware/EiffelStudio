@@ -181,7 +181,10 @@ feature -- DLE
 			old_cluster := Lace.old_universe.cluster_of_path (path);
 			if cluster_of_name /= Void then
 				if cluster_of_name.is_static then
-					if cluster_of_path /= cluster_of_name then
+					if
+						cluster_of_path /= Void and then
+						cluster_of_path /= cluster_of_name
+					then
 						!!vd28;
 						vd28.set_cluster (cluster_of_name);
 						vd28.set_second_cluster_name 

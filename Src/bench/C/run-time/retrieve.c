@@ -30,7 +30,7 @@
  * Public data declarations 
  */
 public struct htable *rt_table;		/* Table used for solving references */
-public int32 nb_recorded;		/* Number of items recorded in Hector */
+public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
 public char rt_kind;			/* Kind of storable */
 extern char *idr_temp_buf;		/*temporary buffer for idr float and double */
 
@@ -42,7 +42,7 @@ private int **dattrib;				/* Pointer to attribute offsets in each object
 private int *dtypes;				/* Dynamic types */
 private uint32 *spec_elm_size;			/*array of special element sizes*/
 private uint32 old_overhead = 0;		/*overhead size from stored object*/
-private char * bufer = (char *) 0;		/*buffer for make_header*/
+private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
 /* Public data declarations */
 
@@ -87,6 +87,9 @@ EIF_INTEGER file_desc;
 
 	char *retrieved;
 	char rt_type;
+
+	/* Reset nb_recorded */
+	nb_recorded = 0;
 
 	/* Open file */
 	r_fides = file_desc;
@@ -550,7 +553,8 @@ long objectCount;
 
 private void rt_clean()
 {
-	/* Raise an exception of code `code' after having cleaned the hash table */
+	/* Clean the data structure before raising an exception of code `code'
+	/* after having cleaned the hash table */
 	/* and allocated memory and reset function pointers. */
 
 	struct rt_struct *rt_info;
@@ -582,9 +586,9 @@ private void rt_clean()
 		spec_elm_size = (uint32 *)0;
 	}
 
-	if (bufer != (char *)0) {
-		xfree (bufer);
-		bufer = (char *) 0;
+	if (r_buffer != (char *)0) {
+		xfree (r_buffer);
+		r_buffer = (char *) 0;
 	}
 	epop(&hec_stack, nb_recorded);				/* Pop hector records */
 	if (rt_kind == '\02') {
@@ -813,14 +817,14 @@ private void read_header()
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}
-	bufer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
-	if (bufer == (char *)0)
+	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
+	if (r_buffer == (char *)0)
 		xraise (EN_MEM);
 
 	/* Read the old maximum dyn type */
-	if (readline(bufer, &bsize) <= 0)
+	if (readline(r_buffer, &bsize) <= 0)
 		eio();
-	if (sscanf(bufer,"%d\n", &old_count) != 1)
+	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eio();
 	/* create a correspondance table */
 	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
@@ -828,19 +832,19 @@ private void read_header()
 		xraise(EN_MEM);
 
 	/* Read the number of lines */
-	if (readline(bufer, &bsize) <= 0)
+	if (readline(r_buffer, &bsize) <= 0)
 		eio();
-	if (sscanf(bufer,"%d\n", &nb_lines) != 1)
+	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
 		eio();
 
 	for(i=0; i<nb_lines; i++) {
-		if (readline(bufer, &bsize) <= 0)
+		if (readline(r_buffer, &bsize) <= 0)
 			eio();
 
-		temp_buf = bufer;
+		temp_buf = r_buffer;
 
 		if (
-			4 != sscanf(bufer, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen)
+			4 != sscanf(r_buffer, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen)
 		)
 			eio();
 
@@ -906,8 +910,8 @@ private void read_header()
 		}
 		dtypes[dtype] = new_dtype;
 	}
-	xfree (bufer);
-	bufer = (char *) 0;
+	xfree (r_buffer);
+	r_buffer = (char *) 0;
 	expop(&eif_stack);
 }
 
@@ -935,14 +939,14 @@ private void iread_header()
 		ereturn();				/* Propagate exception */
 	}
 
-	bufer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
-	if (bufer == (char *) 0)
+	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
+	if (r_buffer == (char *) 0)
 		xraise (EN_MEM);
 
 	/* Read the old maximum dyn type */
-	if (idr_read_line(bufer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) <= 0)
 		eio();
-	if (sscanf(bufer,"%d\n", &old_count) != 1)
+	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eio();
 	/* create a correspondance table */
 	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
@@ -951,26 +955,26 @@ private void iread_header()
 	spec_elm_size = (uint32 *) xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == (uint32 *)0)
 		xraise (EN_MEM);
-	if (idr_read_line(bufer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) <= 0)
 		eio();
-	if (sscanf(bufer,"%d\n", &old_overhead) != 1)
+	if (sscanf(r_buffer,"%d\n", &old_overhead) != 1)
 		eio();
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
 
 	/* Read the number of lines */
-	if (idr_read_line(bufer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) <= 0)
 		eio();
-	if (sscanf(bufer,"%d\n", &nb_lines) != 1)
+	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
 		eio();
 
 	for(i=0; i<nb_lines; i++) {
-		if (idr_read_line(bufer, bsize) <= 0)
+		if (idr_read_line(r_buffer, bsize) <= 0)
 			eio();
 
-		temp_buf = bufer;
+		temp_buf = r_buffer;
 
-		if (3 != sscanf(bufer, "%d %s %d",&dtype,vis_name,&nb_gen))
+		if (3 != sscanf(r_buffer, "%d %s %d",&dtype,vis_name,&nb_gen))
 			eio();
 
 		for (k = 1 ; k <= 3 ; k++)
@@ -1053,11 +1057,11 @@ private void iread_header()
 				if (attrib_order == (int *)0)
 					xraise (EN_MEM);
 				for (; num_attrib > 0;) {
-					if (idr_read_line(bufer, bsize) <= 0) {
+					if (idr_read_line(r_buffer, bsize) <= 0) {
 						xfree (attrib_order);
 						eio();
 					}
-					if (sscanf(bufer," %lu %s", &read_attrib, att_name) != 2) {
+					if (sscanf(r_buffer," %lu %s", &read_attrib, att_name) != 2) {
 						xfree (attrib_order);
 						eio();
 					}
@@ -1107,8 +1111,8 @@ private void iread_header()
 		dattrib [new_dtype] = attrib_order;		/* store position of attribute in obj*/
 		attrib_order = (int *) 0;			/* make sure its null for next loop */
 	}
-	xfree (bufer);
-	bufer = (char*) 0;
+	xfree (r_buffer);
+	r_buffer = (char*) 0;
 	expop(&eif_stack);
 }
 

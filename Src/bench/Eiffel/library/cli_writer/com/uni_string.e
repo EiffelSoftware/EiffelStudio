@@ -9,16 +9,9 @@ indexing
 class
 	UNI_STRING
 
-inherit
-	WEL_STRUCTURE
-		rename
-			make as structure_make
-		end
-
-creation
+create
 	make,
-	make_empty,
-	make_by_pointer
+	make_empty
 
 feature --{NONE} -- Initialization
 
@@ -31,11 +24,11 @@ feature --{NONE} -- Initialization
 			nb: INTEGER
 		do
 			nb := a_string.count
+			count := nb
 			make_empty (nb)
 			a := a_string.to_c
-			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0, $a, nb, item, capacity)
-		ensure
-			not_shared: not shared
+			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0,
+				$a, nb, managed_data.item, managed_data.count)
 		end
 
 	make_empty (a_length: INTEGER) is
@@ -43,149 +36,56 @@ feature --{NONE} -- Initialization
 			-- C memory area is not initialized.
 		require
 			positive_length: a_length >= 0
-		local
-			a_default_pointer: POINTER
 		do
-			capacity := 4 * (a_length + 1)
-			item := c_calloc (1, capacity)
-			if item = a_default_pointer then
-					-- Memory allocation problem
-				(create {EXCEPTIONS}).raise ("No more memory")
-			end
-			shared := False
+			create managed_data.make (4 * (a_length + 1))
+			count := 0
 		end
-
+	
 feature -- Access
 
-	string: STRING is
-			-- Eiffel string
-		local
-			l_string: UNI_STRING
-			nb: INTEGER
+	item: POINTER is
+			-- Get pointer to allocated area.
 		do
-			create l_string.make_empty (length)
-			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_utf8,
-				0, item, length, l_string.item, l_string.capacity, default_pointer, default_pointer)
-			create Result.make_from_c (l_string.item)
+			Result := managed_data.item
 		ensure
-			result_not_void: Result /= Void
+			item_not_null: Result /= default_pointer
 		end
 		
-	null_separated_strings: LINKED_LIST [STRING] is
-			-- Retrieve all string contained in `item'. Strings are
-			-- NULL separared inside `item'.
-		local
-			current_string: STRING
-			current_pos: POINTER
-		do
-			from
-				create Result.make
-				current_pos := item
-				create current_string.make_from_c (current_pos)
-			until
-				current_string.is_empty
-			loop
-				Result.extend (current_string)
-				current_pos := current_pos + current_string.count + 1
-				create current_string.make_from_c (current_pos)
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
+	count: INTEGER
+			-- Number of character in Current.
 
-	space_separated_strings: LINKED_LIST [STRING] is
-			-- Retrieve all string contained in `item'. Strings are
-			-- space-separared inside `item'.
-		local
-			curr_space: INTEGER
-			next_space: INTEGER
-			long_string: STRING
-			l_string: UNI_STRING
-		do
-			create l_string.make_by_pointer (item)
-			long_string := l_string.string			
---			create long_string.make_from_c (item)
-			create Result.make
-			
-				-- Add each "word" of the long_string to the Result-list
-			from
-				curr_space := 1
-				next_space := long_string.index_of (' ',curr_space)
-			until
-				next_space = 0
-			loop
-				Result.extend (long_string.substring (curr_space, next_space - 1))
-				curr_space := next_space + 1
-				next_space := long_string.index_of (' ',curr_space)
-			end
-				-- No space left, extract the last string: from the last space until
-				-- the end of the string.
-			Result.extend (long_string.substring (curr_space, long_string.count))
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	length, count: INTEGER is
-			-- String length
-		do
-			Result := cwel_string_length (item)
-		end
-		
-	byte_size: INTEGER is
-			-- The actual byte size of the Unicode string
-		do
-			Result := cwel_byte_size (item)
-		end
-		
 feature -- Element change
 
 	set_string (a_string: STRING) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-			valid_count: a_string.count < capacity
 		local
 			a: ANY
+			nb: INTEGER
+			new_size: INTEGER
 		do
+			nb := a_string.count
+			count := nb
+			
 			a := a_string.to_c
-			memory_copy ($a, a_string.count + 1)
-		ensure
-			string_set: a_string.is_equal (string)
+
+			new_size := 4 * (nb + 1)
+			
+			if managed_data.count < new_size  then
+				managed_data.resize (new_size)
+			end
+
+			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0,
+				$a, nb, managed_data.item, managed_data.count)
+
+			managed_data.put_integer_16 (0, nb * 2)
 		end
-
-	set_null_character (offset: INTEGER) is
-			-- Set `%U' at `offset' position of `Current'.
-			-- First position being  at `0' index.
-		require
-			valid_offset: offset >= 0 and offset < capacity
-		local
-			a: CHARACTER
-		do
-			a := '%U'
-			c_memcpy (item + offset, $a, 1)
-		end
-
-	set_size_in_string (n: INTEGER) is
-			-- Set two first bytes of string pointed by `item' to
-			-- value represented by `n' in a two bytes representation.
-		require
-			valid_size: n > 0
-		do
-			cwel_set_size_in_string (item, n)
-		end
-
-feature -- Measurement
-
-	structure_size: INTEGER is
-			-- String length
-		do
-			Result := capacity
-		end
-
-	capacity: INTEGER
-			-- Size of initial string (Needed for `set_string' precondition).
 
 feature {NONE} -- Implementation
+
+	managed_data: MANAGED_POINTER
+			-- Hold data of Current.
 
 	cwel_string_length (ptr: POINTER): INTEGER is
 		external
@@ -228,7 +128,10 @@ feature {NONE} -- Implementation
 		alias
 			"WideCharToMultiByte"
 		end
-		
+
+invariant
+	managed_data_not_void: managed_data /= Void
+
 end -- class UNI_STRING
 
 --|----------------------------------------------------------------

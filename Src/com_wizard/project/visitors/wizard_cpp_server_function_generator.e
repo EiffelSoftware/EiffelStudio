@@ -460,15 +460,6 @@ feature {NONE} -- Implementation
 					Result.append (Close_parenthesis)
 				end
 				Result.append (Semicolon)
-				if
-					visitor.is_interface_pointer_pointer or 
-					visitor.is_coclass_pointer_pointer
-				then
-					Result.append (New_line_tab)
-					Result.append ("if (*" + arg_name + " != NULL)%N%T%T(*")
-					Result.append (arg_name)
-					Result.append (")->AddRef ();")
-				end
 			end
 		end
 
@@ -546,15 +537,6 @@ feature {NONE} -- Implementation
 					end
 					Result.append (Close_parenthesis)
 					Result.append (Semicolon)
-					if
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer
-					then
-						Result.append (New_line_tab_tab)
-						Result.append ("if (*" + arg_name + " != NULL)%N%T%T%T(*")
-						Result.append (arg_name)
-						Result.append (")->AddRef ();")
-					end
 				end
 			end
 			if 

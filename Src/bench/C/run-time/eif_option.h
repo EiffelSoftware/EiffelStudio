@@ -22,9 +22,12 @@ extern "C" {
 
 #ifdef EIF_WIN32
 #include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #ifndef MAX_PATH
 #define MAX_PATH 255
-#endif
 #endif
 
 /*

@@ -155,9 +155,9 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 {
 	RT_GET_CONTEXT
 	struct stack *st = &object_id_stack;
-	register3 char **top;
-	register4 struct stchunk * current;
-	register3 char **end;
+	char **top;
+	struct stchunk * current;
+	char **end;
 
 	EIF_OBJECT_ID_LOCK;
 	if (st->st_top == (char **) 0) {

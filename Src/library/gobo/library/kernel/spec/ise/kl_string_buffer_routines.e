@@ -86,7 +86,7 @@ feature -- Access
 				nb := e - s + 1
 				!! Result.make (nb)
 				a := Result.area
-				c_bcopy (c_offset_pointer ($a_buffer, s), $a, nb)
+				c_bcopy ($a, c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($Result, nb)
 			end
 		ensure
@@ -134,7 +134,7 @@ feature -- Element change
 					a_string.resize (new_count + a_string.additional_space)
 				end
 				a := a_string.area
-				c_safe_bcopy (c_offset_pointer ($a_buffer, s), c_offset_pointer ($a, old_count), nb)
+				c_safe_bcopy (c_offset_pointer ($a, old_count), c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($a_string, new_count)
 			end
 		ensure
@@ -158,7 +158,7 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 				a := a_string.area
-				c_bcopy ($a, c_offset_pointer ($a_buffer, pos), nb)
+				c_bcopy (c_offset_pointer ($a_buffer, pos), $a, nb)
 			end
 		ensure
 			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
@@ -213,7 +213,7 @@ feature -- Element change
 			move_left: old_pos > new_pos
 		do
 			if nb > 0 then
-				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+				c_safe_bcopy (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 			end
 		end
 
@@ -230,7 +230,7 @@ feature -- Element change
 			move_right: old_pos < new_pos
 		do
 			if nb > 0 then
-				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+				c_safe_bcopy (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 			end
 		end
 
@@ -281,22 +281,22 @@ feature {NONE} -- Externals
 			"console_readstream"
 		end
 
-	c_bcopy (source, target: POINTER; size: INTEGER) is
+	c_bcopy (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' should not overlap.
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (void *, void *, size_t) | <string.h>"
 		alias
-			"bcopy"
+			"memcpy"
 		end
 
-	c_safe_bcopy (source, target: POINTER; size: INTEGER) is
+	c_safe_bcopy (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' can overlap.
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (void *, void *, size_t) | <string.h>"
 		alias
-			"safe_bcopy"
+			"memmove"
 		end
 
 	c_offset_pointer (p: POINTER; offset: INTEGER): POINTER is

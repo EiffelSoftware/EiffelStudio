@@ -65,8 +65,6 @@ feature -- Properties
 	already_evaluated_type: BOOLEAN;
 			-- Has the source and target type been evaluated
 
-	void_name: STRING is "void";
-
 	source_class: CLASS_C is
 			-- Source class for current adaptation
 		do
@@ -88,14 +86,9 @@ feature -- Access
 	is_visible (c: CLASS_C): BOOLEAN is
 			-- Is the feature visible for class_c type clients
 		do
-			if c = Void or target_feature = Void or else 
-				target_feature.feature_name.is_equal (Void_name) 
-			then
-				Result := true
-			else
-				Result := target_feature.is_exported_for (c) 
-			end;
-		end;
+			Result := c /= Void and then target_feature /= Void and then
+				target_feature.is_exported_for (c) 
+		end
 
 	compute_feature (name: STRING): FEATURE_I is
 			-- Compute feature with feature name `name' using

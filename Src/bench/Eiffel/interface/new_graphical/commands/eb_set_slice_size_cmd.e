@@ -55,6 +55,8 @@ feature -- Initialization
 		do
 			for_tool := False
 			pretty_dlg := dl
+			slice_min := 0
+			slice_max := Application.displayed_string_size
 		end
 
 feature -- Access
@@ -141,9 +143,11 @@ feature -- Execution
 			else
 				get_slice_limits (False, pretty_dlg.current_object.object_address, Void)
 				debug ("DEBUGGER_INTERFACE")
-					io.put_String ("Refreshing")
+					io.put_string ("Refreshing between " + slice_min.out + " and " + slice_max.out)
 				end
-				pretty_dlg.refresh
+				if get_effective then
+					pretty_dlg.refresh
+				end
 			end
 		end
 
@@ -277,21 +281,23 @@ feature {NONE} -- Implementation
 						io.putstring ("Capacity: " + dobj.capacity.out + "%N")
 						io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")
 					end
-					obj := tool.get_object_display_parameters (address)
-					if obj /= Void then
-							-- An object tree object was dropped.
-							-- We can try using its information, knowing that it may not be up-to-date.
-						if obj.is_special then
-							slice_min := obj.spec_lower
-							slice_max := obj.capacity - 1
+					if for_tool then
+						obj := tool.get_object_display_parameters (address)
+						if obj /= Void then
+								-- An object tree object was dropped.
+								-- We can try using its information, knowing that it may not be up-to-date.
+							if obj.is_special then
+								slice_min := obj.spec_lower
+								slice_max := obj.capacity - 1
+							else
+								slice_min := obj.spec_lower
+								slice_max := obj.spec_higher
+							end
 						else
-							slice_min := obj.spec_lower
-							slice_max := obj.spec_higher
+								-- Hmm we just have an address, we can't do much at the moment...
+							slice_min := min_slice_ref.item
+							slice_max := max_slice_ref.item
 						end
-					else
-							-- Hmm we just have an address, we can't do much at the moment...
-						slice_min := min_slice_ref.item
-						slice_max := max_slice_ref.item
 					end
 				else
 						-- A special value is available, that's an easy one!
@@ -363,7 +369,11 @@ feature {NONE} -- Implementation
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("displaying the dialog%N")
 			end
-			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+			if for_tool then
+				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+			else
+				dial.show_modal_to_window (pretty_dlg.dialog)
+			end
 		end
 
 	drop_object_stone (st: OBJECT_STONE) is
@@ -411,6 +421,11 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
+				check
+					obj /= Void
+					-- XR: This shouldn't happen (no toolbar button for
+					-- this command in the pretty print dialog!)
+				end
 				obj := tool.get_object_display_parameters (st.object_address)
 				if obj /= Void then
 					debug ("DEBUGGER_INTERFACE")

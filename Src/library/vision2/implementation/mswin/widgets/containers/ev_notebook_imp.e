@@ -19,7 +19,9 @@ inherit
 			child_added,
 			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			on_key_down,
+			notebook_parent
 		end
 
 	EV_FONTABLE_IMP
@@ -404,6 +406,43 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
+	tab_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus through to the tab key.
+			-- If `direction' it goes to the next widget otherwise, it goes to the 
+			-- previous one.
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			hwnd := next_dlgtabitem (item, default_pointer, direction)
+			window := windows.item (hwnd)
+			window.set_focus
+		end
+
+
+	process_tab_key (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next widget
+			-- Need to be called in the feature on_key_down when the control need to
+			-- process this kind of keys.
+		local
+			tab_control: WEL_TAB_CONTROL_ITEM
+			window: WEL_WINDOW
+		do
+			if virtual_key = Vk_tab and then flag_set (style, Ws_tabstop) then
+				if key_down (Vk_shift) then
+					tab_action (False)
+				else
+					tab_control := get_item (current_selection)
+					if tab_control = Void then
+						tab_action (True)
+					else
+						window ?= tab_control.window
+						window.set_focus
+					end
+				end
+			end
+		end
+
 	compute_minimum_width is
 			-- Recompute the minimum_width of the object.
 		local
@@ -512,6 +551,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
+			-- if current widget has a parent then search
+			-- recursively for the ancestors of type notebook.
+			-- If an ancestor of type notebook is found then add
+			-- it to the list.
+			
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.notebook_parent
+				if Result = Void then
+					create Result.make (1)
+				end
+				Result.extend(Current)
+			end
+		end
+
 feature {NONE} -- WEL Implementation
 
 	adjust_items is
@@ -549,7 +604,7 @@ feature {NONE} -- WEL Implementation
 
 	default_ex_style: INTEGER is
 		do
-			Result := Ws_ex_controlparent
+			Result := 0 --Ws_ex_controlparent
 		end
 
  	basic_style: INTEGER is
@@ -624,6 +679,13 @@ feature {NONE} -- WEL Implementation
 		do
 			show_current_selection
 			execute_command (Cmd_switch, Void)			
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_CONTAINER_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

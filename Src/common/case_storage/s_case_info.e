@@ -11,10 +11,10 @@ feature
 
 	System_name: STRING is "system";
 
-	System_id_name: STRING is ".idfile";
+	System_id_name: STRING is "idfile";
 
 	EiffelCase_project_type: STRING is "ISE.EiffelCase.3.3";
 
-	Tmp_file_name_ext: STRING is ".TMP";
+	Tmp_file_name_ext: STRING is "TMP";
 
 end

@@ -987,16 +987,18 @@ rt_public int16 eif_gen_param (int16 stype, EIF_REFERENCE obj, int pos, char *is
 /* TUPLE and its descendants!                                       */
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_count (EIF_REFERENCE obj)
+rt_public int eif_gen_count (EIF_REFERENCE obj) {
+	if (obj == NULL) {
+		return 0;
+	} else {
+		return eif_gen_count_with_dftype ((int16) Dftype(obj));
+	}
+}
+
+rt_shared int eif_gen_count_with_dftype (int16 dftype)
 {
-	int16       dftype;
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
-
-	if (obj == (EIF_REFERENCE )0)
-		return 0;
-
-	dftype = Dftype(obj);
 
 	/* Check for expanded */
 
@@ -1031,39 +1033,83 @@ rt_public int eif_gen_count (EIF_REFERENCE obj)
 
 	return gdp->size;
 }
+
+/*------------------------------------------------------------------*/
+/* Number of generic parameters of `obj's type. Can ONLY be used for*/
+/* TUPLE                                                            */
+/*------------------------------------------------------------------*/
+
+rt_public int eif_tuple_count (EIF_REFERENCE obj)
+{
+	return (obj ? RT_SPECIAL_COUNT(obj) - 1 : 0);
+}
+
+/*------------------------------------------------------------------*/
+/* Are all generic parameters of basic types? Can ONLY be used for  */
+/* TUPLE                                                            */
+/*------------------------------------------------------------------*/
+
+rt_public int eif_tuple_is_atomic (EIF_REFERENCE obj)
+{
+	EIF_ARG_UNION *l_item = (EIF_ARG_UNION *) obj;
+	unsigned int count;
+	
+	if (obj == NULL) {
+			/* This is atomic */
+		return 1;
+	}
+
+	CHECK("Tuple object", HEADER(obj)->ov_flags & EO_TUPLE);
+	count = RT_SPECIAL_COUNT(obj);
+
+		/* Don't forget that first element of TUPLE is just a placeholder
+		 * to avoid offset computation from Eiffel code */
+	l_item++;
+	for (; count > 0 ; count--) {
+		if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+				/* It has a reference. This is therefore not atomic */
+			return 0;
+		}
+	}
+		/* No reference found. It is atomic */
+	return 1;
+}
+
 /*------------------------------------------------------------------*/
 /* Typecode of generic type at position `pos' in `obj'. ONLY for    */
-/* TUPLE and its descendants!                                       */
+/* TUPLE                                                            */
 /*------------------------------------------------------------------*/
 
 rt_public char eif_gen_typecode (EIF_REFERENCE obj, int pos)
 {
-	int16       dftype, gtype;
+	if (obj == NULL) {
+		return (char) 0;
+	} else {
+		return eif_gen_typecode_with_dftype ((int16) Dftype(obj), pos);
+	}
+}
+
+rt_shared char eif_gen_typecode_with_dftype (int16 dftype, int pos)
+{
+	int16 gtype;
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
 	SPECIAL_CODE    *spc;
-
-	if (obj == (EIF_REFERENCE )0)
-		return 0;
-
-	dftype = Dftype(obj);
 
 		/* Check for expanded */
 	if (dftype <= EXPANDED_LEVEL)
 		dftype = EXPANDED_LEVEL-dftype;
 
 		/* Check type validity */
-	REQUIRE ("Ddftype(obj) is non-negative", dftype >= 0);
-	REQUIRE ("Dftype(obj) is less than maximum computed id", dftype < next_gen_id);
+	REQUIRE ("dftype is non-negative", dftype >= 0);
+	REQUIRE ("dftype is less than maximum computed id", dftype < next_gen_id);
 	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type >= 0);
 
 	amap = eif_anc_id_map [dftype];
 
 	if (amap == (EIF_ANC_ID_MAP *) 0)
 	{
-		CHECK("", EIF_FALSE);
-		/* EIF_ANC_ID_MAP not already computed */
-		eif_compute_anc_id_map (dftype); /* GC !!! */
+		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
 	}
 

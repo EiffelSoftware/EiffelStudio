@@ -11,7 +11,6 @@ deferred class
 inherit
 	EV_CONTAINER_I
 		export
-			{NONE} set_expand
 			{NONE} set_parent
 		redefine
 			set_default_colors

@@ -65,6 +65,13 @@ inherit
 			default_create, copy
 		end
 
+	EB_GENERAL_DATA
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make_default
 
@@ -533,7 +540,19 @@ feature {NONE} -- Implementation
 						--| In case we crash later, to know where we were.
 					writing := True
 					output.open_write
-					output.putstring (in_buf)
+					if not in_buf.is_empty then
+						in_buf.prune_all ('%R')
+						if text_mode_is_windows then
+							in_buf.replace_substring_all ("%N", "%R%N")
+							output.putstring (in_buf)
+						else
+							output.putstring (in_buf)
+							if in_buf.item (in_buf.count) /= '%N' then 
+									-- Add a carriage return like `vi' if there's none at the end 
+								output.new_line
+							end
+						end
+					end
 					output.close
 					could_not_load_file := False
 				else

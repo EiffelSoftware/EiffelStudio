@@ -199,6 +199,8 @@ feature -- Access
 								char_data.replace_substring_all ("%T","")
 									-- If we are loading a multiple line text, then we must
 									-- keep appending a new line character and the new text.
+									--| FIXME, I believe that there is no longer a need to perform this
+									--| as now we use CDATA tags which support multiple lines of text.
 								if data_valid (char_data) then
 									if info.data = Void then
 										info.set_data (char_data)
@@ -362,7 +364,7 @@ feature {NONE} -- Implementation
 	data_valid (current_data: STRING):BOOLEAN is
 			-- Is `current_data' not empty and valid?
 		do
-			if current_data.count > 0 and current_data.item (1).code /= 10 then
+			if current_data.count > 0 then
 				Result := True
 			end
 		end

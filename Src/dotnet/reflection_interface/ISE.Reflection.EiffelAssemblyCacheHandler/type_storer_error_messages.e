@@ -11,6 +11,19 @@ inherit
 	
 feature -- Access	
 
+	Assembly_description_update_failed: STRING is "Assembly description update failed"
+		indexing
+			description: "Error name: Assembly description update failed"
+			external_name: "AssemblyDescriptionUpdateFailed"
+		end
+
+	Assembly_description_update_failed_message: STRING is "The update of assembly description corresponding to this assembly has failed. The file may be corrupted or there may be a sharing violation."
+		indexing
+			description: "Error message when assembly description update has failed"
+			external_name: "AssemblyDescriptionUpdateFailedMessage"
+		end
+
+
 	File_access_failed: STRING is "File access failed"
 		indexing
 			description: "Error name: File access failed"

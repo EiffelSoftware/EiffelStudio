@@ -166,7 +166,9 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_trace_mutex, "Couldn't create tracemutex");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
+#ifdef ISE_GC
 	create_scavenge_zones();
+#endif
 #ifdef EIF_WIN32
 	{
 		HMODULE kernel_module = LoadLibrary("kernel32.dll");

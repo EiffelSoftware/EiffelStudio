@@ -2,7 +2,7 @@ class CLASS_TYPE
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_COUNTER;
 	SHARED_GENERATOR;
 	SHARED_CODE_FILES
 		select
@@ -104,7 +104,7 @@ feature
 			!!skeleton.make;
 			is_changed := True;
 			type_id := System.type_id_counter.next;
-			id := System.static_type_id_counter.next_id;
+			id := Static_type_id_counter.next_id;
 			System.reset_melted_conformance_table;
 		end;
 
@@ -232,12 +232,20 @@ feature -- Generation
 			inv_byte_code: INVARIANT_B;
 			final_mode: BOOLEAN;
 			generate_c_code: BOOLEAN;
+			type_list: TYPE_LIST
 		do
 			final_mode := byte_context.final_mode;
 
 			current_class := associated_class;
-			feature_table := current_class.feature_table;
 
+			type_list := current_class.types;
+			type_list.search (type);
+			if type_list.item = Current then
+					-- Do not generate twice the same type if it has
+					-- been derived in two different merged precompiled
+					-- libraries.
+
+			feature_table := current_class.feature_table;
 			if final_mode then
 					-- Check to see if there is really something to generate
 
@@ -282,9 +290,9 @@ feature -- Generation
 				file.putstring (".h%"%N");
 				file.new_line;
 			elseif Compilation_modes.is_precompiling then
-				System.class_counter.generate_extern_offsets (file);
-				System.static_type_id_counter.generate_extern_offsets (file);
-				System.execution_table.counter.generate_extern_offsets (file)
+				Class_counter.generate_extern_offsets (file);
+				Static_type_id_counter.generate_extern_offsets (file);
+				Real_body_id_counter.generate_extern_offsets (file)
 			end;
 			file.new_line;
 
@@ -333,6 +341,8 @@ feature -- Generation
 			end;
 				-- clean the list of shared include files
 			shared_include_set.wipe_out;
+
+			end
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is

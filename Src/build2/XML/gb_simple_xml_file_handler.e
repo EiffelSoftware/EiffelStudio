@@ -83,7 +83,7 @@ feature -- Basic operations
 			file.close
 		end
 		
-	load_file (file_name: STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
+	load_file (file_name: STRING): HASH_TABLE [STRING, STRING] is
 			-- Load file `file_name. `Result' contains the 
 			-- information contained in the file.
 			-- Do nothing if the file is a directory.
@@ -130,7 +130,7 @@ feature -- Basic operations
 		
 feature {NONE} -- Implementation
 		
-	load_and_parse_xml_file (a_filename:STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
+	load_and_parse_xml_file (a_filename:STRING): HASH_TABLE [STRING, STRING] is
 			-- Load file `a_filename' and parse.
 			-- `Result' is all information in `a_filename'.
 		require
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 					child_names.off
 				loop
 					element_info := full_information @ (child_names.item)
-					Result.extend ([element_info.name, strip_cdata (element_info.data)])
+					Result.extend (strip_cdata (element_info.data), element_info.name)
 					child_names.forth
 				end
 			end

@@ -27,7 +27,7 @@ inherit
 			interface
 		end
 
-	EV_TREE_ITEM_HOLDER_IMP
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 		--|FIXME Where has this gone?
 		--rename
 		--	item_command_count as command_count
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+	parent_imp: EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 			-- Parent implementation
 
 	text: STRING
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_item (item_imp: like item_type; pos: INTEGER) is
+	insert_item (item_imp: EV_TREE_ITEM_IMP; pos: INTEGER) is
 			-- Insert `item_imp' at the `index' position.
 		do
 			if top_parent_imp /= Void then
@@ -442,6 +442,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/07 17:43:18  rogers
+--| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. The same type change has been implemented for parent_imp, and insert item now takes EV_TREE_ITEM_IMP instead of like item_type.
+--|
 --| Revision 1.29  2000/03/06 21:10:21  rogers
 --| Is_initialized is now set to true in initialization, and internal_children is created. Re-implemented parent_imp.
 --|

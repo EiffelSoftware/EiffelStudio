@@ -4,9 +4,8 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			type_check, byte_node,
-			find_breakable, format,
-			fill_calls_list, replicate
+			has_instruction, index_of_instruction,
+			simple_format
 		end
 
 feature -- Attributes
@@ -22,75 +21,60 @@ feature -- Initialization
 			compound ?= yacc_arg (0);
 		end
 
-feature -- Type check, byte code and dead code removal
+feature -- Status report
 
-	type_check is
-			-- Type check compound
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Does the current routine body has instruction `i'?
 		do
-			if compound /= Void then
-				compound.type_check;
-			end;
+			from
+				compound.start
+			until
+				Result or else compound.off
+			loop
+				Result := compound.item.is_equiv (i)
+				compound.forth
+			end
 		end;
 
-	byte_node: STD_BYTE_CODE is
-			-- Byte code associated to `compound'
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in this feature.
 		do
-			!!Result;
-			if compound /= Void then
-				Result.set_compound (compound.byte_node);
-			end;
+			from
+				compound.start
+			until
+				compound.off or else compound.item.is_equiv (i)
+			loop
+				compound.forth
+			end
+
+			if not compound.off then
+				Result := compound.index
+			else
+				Result := 0
+			end
 		end;
 
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for breakable instructions.
-		do
-			if compound /= Void then
-				compound.find_breakable;
-			end;
-			record_break_node;
-		end;
+feature -- Simple formatting
 
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			ctxt.put_text_item (begin_keyword);
+			ctxt.indent_one_more
+
 			if compound /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.next_line
 				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
-				compound.format(ctxt);
+				compound.simple_format(ctxt);
 			end;
-			ctxt.put_breakable;
+			ctxt.indent_one_less
+
 			ctxt.commit;
 		end;
 
-feature -- Replication
-	
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current is
-		do
-			if compound /= void then
-				compound.fill_calls_list (l)
-			end
-		end;
-
-	Replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to Replication
-		do
-			Result := clone (Current);
-			if compound /= void then
-				Result.set_compound (
-					compound.replicate (ctxt.new_ctxt))
-			end
-		end;			
-
-feature {INTERNAL_AS} -- Replication
+feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
 	
 	set_compound (c: like compound) is
 		do
@@ -103,5 +87,4 @@ feature {} -- Formatter
 		deferred
 		end;
 	
- 
-end
+end -- class INTERNAL_AS

@@ -1,12 +1,17 @@
--- Abstract description of a type declaration
+indexing
+
+	description: "Abstract description of a type declaration.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class TYPE_DEC_AS
 
 inherit
 
 	AST_EIFFEL
-		redefine format, fill_calls_list, replicate
-	end
+		redefine
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -28,19 +33,6 @@ feature -- Initialization
 			type_exists: type /= Void
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
-			id_list.format (ctxt);
-			ctxt.put_text_item (ti_Colon);
-			ctxt.put_space;
-			type.format(ctxt);
-			ctxt.commit;
-		end;
-
 feature -- Incrementality
 
 	reset is
@@ -48,25 +40,43 @@ feature -- Incrementality
 			id_list.start
 		end;
 
-feature  -- Replication
+feature -- Status report
 
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
+	has_id (i: ID_AS): BOOLEAN is
+			-- Does current type declaration contain
+			-- id `i'?
+		local
+			cur: CURSOR
 		do
-			type.fill_calls_list (l);
-				--| useful for like ... only
+			cur := id_list.cursor
+			from
+				id_list.start
+			until
+				id_list.after or else Result
+			loop
+				Result := id_list.item.is_equal (i)
+				id_list.forth
+			end;
+	
+			id_list.go_to (cur)
 		end;
 
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to Replication
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		do
-			Result := clone (Current);
-			Result.set_type (clone (type));
-			Result.set_id_list (id_list.replicate (ctxt));
-				--| useful for like ... only
+			ctxt.begin;
+			ctxt.set_separator (ti_Comma);
+			ctxt.space_between_tokens;
+			id_list.simple_format (ctxt);
+			ctxt.put_text_item (ti_Colon);
+			ctxt.put_space;
+			type.simple_format(ctxt);
+			ctxt.commit;
 		end;
 
-feature {TYPE_DEC_AS} -- Replication
+feature {TYPE_DEC_AS, LOCALS_MERGER} -- Replication
 
 	set_type (t: like type) is
 		require
@@ -100,4 +110,4 @@ feature -- Debug
 			end;
 		end
 
-end
+end -- class TYPE_DEC_AS

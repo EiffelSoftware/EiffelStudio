@@ -1,4 +1,8 @@
--- Abstract description of a debug clause
+indexing
+
+	description: "Abstract description of a debug clause";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class DEBUG_AS
 
@@ -6,10 +10,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node,
-			find_breakable, format,
-			fill_calls_list, replicate
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -40,56 +42,36 @@ feature -- Initialization
 			end;
 		end;
 
-feature -- Type check, byte code and dead code removal
+feature -- Equivalence
 
-	type_check is
-			-- Type check on debug clause
-		do
-			if compound /= Void then
-				compound.type_check;
-			end;
-		end;
-
-	byte_node: DEBUG_B is
-			-- Associated byte code
+	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
+			-- Is `other' instruction equivalent to Current?
 		local
-			node_keys: ARRAYED_LIST [STRING];
+			debug_as: DEBUG_AS
 		do
-			!!Result;
-			if compound /= Void then
-				Result.set_compound (compound.byte_node);
-				if keys /= Void then
-					from
-						!!node_keys.make (0);
-						node_keys.start;
-						keys.start
-					until
-						keys.after
-					loop
-						node_keys.extend (keys.item.value);
-						keys.forth;
-					end;
-					Result.set_keys (node_keys);
-				end;
-			end;
+			debug_as ?= other
+			if debug_as /= Void then
+				-- May be equivalent
+				Result := equiv (debug_as)
+			else
+				-- NOT equivalent
+				Result := False
+			end
 		end;
 
-feature -- Debugger
-
-	find_breakable is
-			-- Record each instruction in the debug compound as being breakable,
-			-- as well as the end of the debug compound itself.
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' debug_as equivalent to Current?
 		do
- 			record_break_node;  
- 			if compound /= Void then
-				compound.find_breakable;
- 				record_break_node
-			end;
+			Result := deep_equal (keys, other.keys)
+			if Result then
+				-- May be equal
+				Result := deep_equal (compound, other.compound)
+			end
 		end;
 
-feature -- Formatter
+feature -- Simple formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+		simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -100,7 +82,7 @@ feature -- Formatter
 				ctxt.put_text_item (ti_L_parenthesis);
 				ctxt.set_separator (ti_Comma);
 				ctxt.no_new_line_between_tokens;
-				keys.format (ctxt);
+				keys.simple_format (ctxt);
 				ctxt.put_text_item (ti_R_parenthesis)
 			end;
 			if compound /= void then
@@ -108,7 +90,7 @@ feature -- Formatter
 				ctxt.next_line;
 				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
-				compound.format (ctxt);
+				compound.simple_format (ctxt);
 				ctxt.put_breakable;
 				ctxt.indent_one_less;
 			end;
@@ -117,32 +99,11 @@ feature -- Formatter
 			ctxt.commit;
 		end;
 
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current.
-		do
-			if compound /= void then
-				compound.fill_calls_list (l);
-			end
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replictation.
-		do
-			if compound /= void then
-				Result := clone (Current);
-				Result.set_compound (
-					compound.replicate (ctxt));
-			end
-		end;
-			
-feature {DEBUG_AS}	-- Replication
+feature {DEBUG_AS} -- Replication
 
 	set_compound (c: like compound) is
 		do
 			compound := c
 		end;
 
-end
+end -- class DEBUG_AS

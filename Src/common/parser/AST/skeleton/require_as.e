@@ -20,23 +20,13 @@ feature {}
 	clause_name (ctxt: FORMAT_CONTEXT): STRING is
 			-- require or require else
 		do
-			if ctxt.first_assertion then
-				Result := "require"
-			else
-				Result := "require else"
-			end
+			Result := "require"
 		end;
 			
 	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
-			-- Append keywords "require" or "require else".
+			-- Append keywords "require".
 		do
-			if ctxt.first_assertion then
-				ctxt.put_text_item (ti_Require_keyword)
-			else
-				ctxt.put_text_item (ti_Require_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Else_keyword)
-			end
+			ctxt.put_text_item (ti_Require_keyword)
 		end;
 
-end
+end -- class REQUIRE_AS

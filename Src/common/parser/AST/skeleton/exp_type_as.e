@@ -1,4 +1,8 @@
--- Abstract description of expanded class type
+indexing
+
+	description: "Abstract description of expanded class type.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class EXP_TYPE_AS
 
@@ -6,20 +10,17 @@ inherit
 
 	CLASS_TYPE_AS
 		rename
-			actual_type as basic_actual_type,
-			solved_type as basic_solved_type,
 			dump as basic_dump,
 			set as basic_set,
-			format as basic_format,
-			is_deep_equal as basic_is_deep_equal
+			is_deep_equal as basic_is_deep_equal,
+			simple_format as basic_simple_format
 		end;
+
 	CLASS_TYPE_AS
 		redefine
-			actual_type, solved_type, dump, set, format,
-			is_deep_equal
+			dump, set, is_deep_equal, simple_format
 		select
-			actual_type, solved_type, dump, set, format,
-			is_deep_equal
+			dump, set, is_deep_equal, simple_format
 		end;
 
 feature
@@ -36,28 +37,11 @@ feature
 			-- `solved_type' and `actual type' are called in pass3 for
 			-- local variables
 		do
-			System.set_has_expanded;
-			System.current_class.set_has_expanded;
-		end;
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
-		do
-			Result := basic_solved_type (feat_table, f);
-			Result.set_is_expanded (True);
-			record_exp_dependance (Result.associated_class);
-		end;
-
-	actual_type: CL_TYPE_A is
-			-- Expanded actual class type
-		do
-			Result := basic_actual_type;
-			Result.set_is_expanded (True);
-			record_exp_dependance (Result.associated_class);
 		end;
 
 	is_deep_equal (other: TYPE): BOOLEAN is
 		local
-			o: EXP_TYPE_AS
+			o: like Current
 		do
 			o ?= other;
 			Result := o /= Void and then basic_is_deep_equal (other)
@@ -71,11 +55,14 @@ feature
 			Result.append (basic_dump);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is 
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Expanded_keyword);
 			ctxt.put_space;
-			basic_format (ctxt);
+			basic_simple_format (ctxt);
 		end;
 
-end
+end -- class EXP_TYPE_AS

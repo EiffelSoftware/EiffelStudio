@@ -4,9 +4,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
+			simple_format
 		end;
-	SHARED_EXPORT_STATUS;
 
 feature -- Attributes
 
@@ -25,35 +24,20 @@ feature -- Initialization
 			features ?= yacc_arg (1);
 		end;
 
-feature -- Export status computing
+feature -- Simple formatting
 
-	update (export_adapt: EXPORT_ADAPTATION; parent: PARENT_C) is
-			-- Update `export_adapt'.
-		local
-			export_status: EXPORT_I;
-		do
-			if clients = Void then
-				export_status := Export_all;	
-			else
-				export_status := clients.export_status; 
-			end;
-			features.update (export_adapt, export_status, parent);
-		end;
-
-feature -- formatter
-
-	format (ctxt : FORMAT_CONTEXT) is
+	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			if clients /= Void then
 				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
-				clients.format (ctxt);
+				clients.simple_format (ctxt);
 				ctxt.put_space
 			end;
-			features.format (ctxt);
+			features.simple_format (ctxt);
 			ctxt.commit
 		end;
 
-end
+end -- class EXPORT_ITEM_AS

@@ -1,6 +1,10 @@
+indexing
 
--- Abstract description of a formal generic parameter.
--- Instances produced by Yacc.
+	description:
+			"Abstract description of a formal generic parameter. %
+			%Instances produced by Yacc.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FORMAL_DEC_AS
 
@@ -8,7 +12,7 @@ inherit
 
 	FORMAL_AS
 		redefine
-			set, format, is_deep_equal
+			set, is_deep_equal, simple_format
 		end
 
 feature -- Attributes
@@ -33,7 +37,7 @@ feature -- Initialization
 
 	is_deep_equal (other: TYPE): BOOLEAN is
 		local
-			o: FORMAL_DEC_AS;
+			o: like Current;
 			o_c: TYPE;
 		do
 			o ?= other;
@@ -51,46 +55,9 @@ feature -- Initialization
 			end;
 		end;
 
-	constraint_type: TYPE_A is
-			-- Actual type of the constraint.
-		do
-			if constraint = Void then
-					-- Default constraint to ANY
-				Result := Any_constraint_type;
-			else
-				Result := constraint.actual_type;
-			end;
-		end;
+feature -- Simple formatting
 
-	Any_constraint_type: CL_TYPE_A is
-			-- Default constraint actual type
-		once
-			!!Result;
-			Result.set_base_type (System.any_id);
-		end;
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to `Current'
-			-- Incrementality of the generic parameters
-		require
-			good_argument: other /= Void
-		local
-			ct, o_ct: TYPE_A;
-		do
-				-- Test on void is done only to
-				-- protect incorrect generic constraints
-			ct := constraint_type;
-			o_ct := other.constraint_type;
-			if ct /= Void then
-				if o_ct /= Void then
-					Result := ct.same_as (o_ct)
-				end;
-			else
-				Result := o_ct = Void
-			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
 			s: STRING;
@@ -102,9 +69,8 @@ feature -- Initialization
 				ctxt.put_space;
 				ctxt.put_text_item (ti_Constraint);
 				ctxt.put_space;
-				constraint.format (ctxt);
+				constraint.simple_format (ctxt);
 			end;
-			ctxt.always_succeed;
 		end;
-		
-end
+
+end -- class FORMAL_DEC_AS

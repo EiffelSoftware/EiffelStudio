@@ -1,4 +1,8 @@
--- Abstract description of retry instruction
+indexing
+
+	description: "Abstract description of retry instruction";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class RETRY_AS
 
@@ -6,9 +10,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node,
-			format
-		end
+			simple_format
+		end;
 
 feature -- Initialization
 
@@ -18,36 +21,30 @@ feature -- Initialization
 			-- Do nothing
 		end;
 
-feature -- Type check and byte code
-
-	byte_node: RETRY_B is
-			-- Associated byte code
-		do
-			!!Result
-		end;
-
-	type_check is
-			-- Type check a retry instruction
+feature -- Equivalence
+		
+	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
+			-- Is `other' instruction equivalent to Current?
 		local
-			vxrt: VXRT;
+			retry_as: RETRY_AS
 		do
-			if not context.level3 then
-					-- Retry instruction outside a recue clause
-				!!vxrt;
-				context.init_error (vxrt);
-				Error_handler.insert_error (vxrt);
-			end;
+			retry_as ?= other
+			Result := retry_as /= Void
+		end;
+	
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' retry_as equivalent to Current?
+		do
+			Result := True
 		end;
 
-feature -- Debugger
- 
+feature -- Simple formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_Retry_keyword);
-			ctxt.always_succeed;
 		end;
 
-end
+end -- class RETRY_AS

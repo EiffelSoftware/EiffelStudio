@@ -4,8 +4,8 @@ inherit
 
 	FEATURE_SET_AS
 		redefine
-			format
-		end
+			simple_format
+		end;
 
 feature -- Initialization
 
@@ -14,30 +14,12 @@ feature -- Initialization
 		do
 		end;
 
-	update
-		(   export_adapt: EXPORT_ADAPTATION;
-			export_status: EXPORT_I;
-			parent: PARENT_C)
-		is
-			-- Update `export_adapt' with `export_status'.
-		local
-			vlel1: VLEL1;
-		do
-			if export_adapt.all_export = Void then
-				export_adapt.set_all_export (export_status);
-			else
-				!!vlel1;
-				vlel1.set_class (System.current_class);
-				vlel1.set_parent (parent.parent);
-				Error_handler.insert_error (vlel1);
-			end;
-		end;
+feature -- Simple formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_All_keyword);
-			ctxt.always_succeed;
 		end;
 
-end
+end -- class ALL_AS

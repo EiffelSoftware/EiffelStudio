@@ -1,4 +1,8 @@
--- Node for "like Current" type
+indexing
+
+	description: "Node for `like Current' type.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class LIKE_CUR_AS
 
@@ -6,7 +10,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like, format
+			has_like, simple_format
 		end;
 
 feature
@@ -22,30 +26,16 @@ feature
 	has_like: BOOLEAN is True;
 			-- Does the type have anchor in its definition ?
 
-	actual_type: TYPE_A is
-			-- Useless
-		do
-			-- Do nothing
-		ensure then
-			False
-		end;
-
 	dump: STRING is "like Current";
 			-- Dump trace
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
-           -- Calcutate the effective type
-        do
-            !!Result;
-            Result.set_actual_type (feat_table.associated_class.actual_type);
-        end;
-		
-	format (ctxt: FORMAT_CONTEXT) is
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Like_keyword);
 			ctxt.put_string (" Current");
-			ctxt.always_succeed;
 		end;
 
-end
+end -- class LIKE_CUR_AS

@@ -6,7 +6,6 @@ inherit
 		redefine
 			clause_name, put_clause_keywords
 		end
-		
 
 feature
 
@@ -18,26 +17,16 @@ feature
 
 feature {}
 	
-	clause_name(ctxt: FORMAT_CONTEXT): STRING is
-			-- "ensure" or "ensure then"
+	clause_name (ctxt: FORMAT_CONTEXT): STRING is
+			-- "ensure"
 		do
-			if ctxt.first_assertion then
-				Result := "ensure"
-			else
-				Result := "ensure then"
-			end
-		end ;
+			Result := "ensure"
+		end;
 			
 	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
-			-- Append keywords "ensure" or "ensure then".
+			-- Append keyword "ensure".
 		do
-			if ctxt.first_assertion then
-				ctxt.put_text_item (ti_Ensure_keyword)
-			else
-				ctxt.put_text_item (ti_Ensure_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Then_keyword)
-			end
+			ctxt.put_text_item (ti_Ensure_keyword)
 		end;
 
-end
+end -- class ENSURE_AS

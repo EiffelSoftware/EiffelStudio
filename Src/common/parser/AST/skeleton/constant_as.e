@@ -1,4 +1,8 @@
--- Abstract description of a the content of an Eiffel constant
+indexing
+
+	description: "Abstract description of a the content of an Eiffel constant.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CONSTANT_AS
 
@@ -6,7 +10,7 @@ inherit
 
 	CONTENT_AS
 		redefine
-			is_unique, is_constant, byte_node, type_check, format
+			is_unique, is_constant, simple_format
 		end
 
 feature -- Attributes
@@ -43,30 +47,6 @@ feature -- Conveniences
 			end;
 		end;
 
-	value_i: VALUE_I is
-			-- Interface constant value
-		require
-			is_constant and then not is_unique;
-		local
-			val: VALUE_AS;
-		do
-			val ?= value;
-			Result := val.value_i;
-		end;
-
-	type_check is
-		do
-		ensure then
-			False
-		end; -- type_check
-
-	byte_node: BYTE_CODE is
-			-- Associated byte code
-		do
-		ensure then
-			False
-		end;
-
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Are the values of Current and other the
 			-- same?
@@ -74,15 +54,36 @@ feature -- Conveniences
 			Result := deep_equal (value, other.value)
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+		do
+			Result := False
+		end;
+
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in this constant.
+			-- Result is `0'.
+		do
+			Result := 0
+		end;
+
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			ctxt.put_space;
 			ctxt.put_text_item (ti_Is_keyword);
 			ctxt.put_space;
-			value.format(ctxt);
+			value.simple_format(ctxt);
 			ctxt.commit;
 		end;
 
-end
+feature -- Replication
+
+	set_value (v: like value) is
+		do
+			value := v
+		end;
+
+end -- class CONSTANT_AS

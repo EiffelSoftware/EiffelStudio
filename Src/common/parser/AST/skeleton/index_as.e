@@ -1,4 +1,8 @@
--- Abstract description of an item in the class indexing list
+indexing
+
+	description: "Abstract description of an item in the class indexing list.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class INDEX_AS
 
@@ -6,8 +10,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -16,6 +20,14 @@ feature -- Attributes
 
 	index_list: EIFFEL_LIST [ATOMIC_AS];
 			-- Indexes
+
+feature -- Equivalence
+
+	is_equiv (other: like Current): BOOLEAN is
+		do
+			Result := deep_equal (tag, other.tag) and then
+						deep_equal (index_list, other.index_list)
+		end;
 
 feature -- Initialization
 
@@ -28,57 +40,22 @@ feature -- Initialization
 			list_exists: index_list /= Void;
 		end;
 
-	
-	format (ctxt: FORMAT_CONTEXT) is
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			if tag /= Void then
-				tag.format (ctxt);
+				tag.simple_format (ctxt);
 				ctxt.put_text_item (ti_Colon);
 				ctxt.put_space
 			end;
+
 			ctxt.space_between_tokens;
 			ctxt.set_separator (ti_Comma);
-			index_list.format (ctxt);
+			index_list.simple_format (ctxt);
 			ctxt.commit;
 		end;
-
-feature -- Case storage
-
-	is_description_tag: BOOLEAN is
-		local
-			tmp: STRING
-		do
-			if tag /= Void then
-				tmp := clone (tag);
-				tmp.to_lower;
-				Result := tmp.is_equal ("description") 
-			end
-		end;
-
-	storage_info: S_TAG_DATA is
-		local
-			txt: STRING;
-			tmp: STRING;
-		do
-			!! txt.make (0);
-			from
-				index_list.start
-			until
-				index_list.after
-			loop
-				txt.append (index_list.item.string_value);
-				index_list.forth;
-				if not index_list.after then
-					txt.append (", ");
-				end;
-			end;
-			if tag = Void then
-				!! Result.make (Void, txt)
-			else
-				!! Result.make (tag.string_value, txt)
-			end
-		end;
-
-end
+	
+end -- class INDEX_AS

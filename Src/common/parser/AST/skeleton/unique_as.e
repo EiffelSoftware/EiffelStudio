@@ -1,4 +1,8 @@
--- Description of a unique value
+indexing
+
+	description: "Description of a unique value.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class UNIQUE_AS
 
@@ -6,7 +10,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_unique, type_check, format
+			is_unique, simple_format
 		end
 
 feature -- Conveniences
@@ -25,15 +29,12 @@ feature -- Initialization
 			-- Do nothing
 		end; -- set
 
-	type_check is
-			-- Type check a unique type
-		do
-			context.put (Integer_type);
-		end;
+feature -- Simple formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Unique_keyword);
 		end;
 
-end
+end -- class UNIQUE_AS

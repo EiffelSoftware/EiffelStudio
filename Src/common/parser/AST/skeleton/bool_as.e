@@ -1,4 +1,8 @@
--- Node for boolean constant
+indexing
+
+	description: "Node for boolean constant.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class BOOL_AS
 
@@ -6,8 +10,8 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, value_i, format
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -22,32 +26,10 @@ feature -- Initialization
 			value := yacc_bool_arg (0);
 		end;
 
-feature -- Type check
+feature -- Simple formatting
 
-	value_i: BOOL_VALUE_I is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 		do
-			!!Result;
-			Result.set_bool_val (value);
-		end;
-
-	type_check is
-			-- Type chek a boolean type
-		do
-			context.put (Boolean_type);
-		end;
-
-	byte_node: BOOL_CONST_B is
-			-- Associated byte code
-		do
-			!!Result;
-			Result.set_value (value);
-		end;
-
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.always_succeed;
 			if value then
 				ctxt.put_text_item (ti_True_keyword)
 			else
@@ -55,4 +37,4 @@ feature -- formatter
 			end
 		end;
 
-end
+end -- class BOOL_AS

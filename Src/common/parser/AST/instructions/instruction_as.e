@@ -1,31 +1,23 @@
--- Abstract class for instruction AS node
+indexing
+
+	description: "Abstract class for instruction AS node";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class INSTRUCTION_AS
 
 inherit
 
 	AST_EIFFEL
-		undefine
-			byte_node
-		redefine
-			find_breakable
-		end
 
 feature
 
-	byte_node: INSTR_B is
-			-- Associated byte code
+	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 		deferred
-		end
-
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for instruction (this node IS an instruction).
-			-- This will be redefined for non-atomic instructions like loop
-			-- or inspect statements to actually propagate the message.
-		do
-			record_break_node;		-- Most node are atomic instructions
 		end;
- 
-end
+
+	equiv (other: INSTRUCTION_AS): BOOLEAN is
+		deferred
+		end;
+
+end -- class INSTRUCTION_AS

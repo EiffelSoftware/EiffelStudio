@@ -4,17 +4,6 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Export status computing
+feature 
 
-	update (	export_adapt: EXPORT_ADAPTATION;
-				export_status: EXPORT_I;
-				parent: PARENT_C)
-		is
-			-- Update `export_adapt' with `export_status'.
-		require
-			good_argument1: export_adapt /= Void;
-			good_argument2: export_status /= Void;
-		deferred
-		end;
-
-end
+end -- class FEATURE_SET_AS

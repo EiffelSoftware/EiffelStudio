@@ -18,64 +18,69 @@
 #include "eif_econsole.h"
 #include "eif_error.h"
 
-#define BUFFER_SIZE 128
+#define BUFFER_SIZE 2056
+#define KEY_CR (EIF_CHARACTER) 13
+#define KEY_LF (EIF_CHARACTER) 10
 
 static HANDLE eif_coninfile, eif_conoutfile;
-static char eif_console_buffer [BUFFER_SIZE];
-
-int dummy_length;
-
-static int eif_console_eof_value = 0;
+static char *eif_console_buffer;
+static EIF_BOOLEAN eif_is_console_clean_for_input = EIF_TRUE;	/* Do we need to flush input for CR or LD */
 static BOOL eif_console_allocated = FALSE;
 
 #ifdef EIF_THREADS
 rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
 #endif
 
-void eif_console_putint (long l);
-void eif_console_putchar (EIF_CHARACTER c);
-void eif_console_putstring (EIF_POINTER s, long length);
-void eif_show_console();
+rt_private void eif_show_console();					/* Show the DOS console if needed */
+rt_private void safe_readconsole (char **buffer, int *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
 
 EIF_INTEGER eif_console_readint()
 {
-	EIF_GET_CONTEXT
 	long lastint;
 	DWORD buffer_length = (DWORD) 0;
 
 	eif_show_console();
 
-	if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		eio();
+	safe_readconsole (&eif_console_buffer, &buffer_length);
 
 	if (0 >= sscanf (eif_console_buffer, "%ld", &lastint))
 		eise_io("Not an INTEGER.");
 
 	return lastint;
-	EIF_END_GET_CONTEXT
 }
 
 EIF_REAL eif_console_readreal()
 {
-	EIF_GET_CONTEXT
-	float lastreal;
+	EIF_REAL lastreal;
 	DWORD buffer_length = (DWORD) 0;
 
 	eif_show_console();
 
-	if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		eio();
+	safe_readconsole (&eif_console_buffer, &buffer_length);
 
 	if (0 > sscanf (eif_console_buffer, "%f", &lastreal))
 		eise_io("Not a REAL.");
 
 	return lastreal;
-	EIF_END_GET_CONTEXT
+}
+
+EIF_DOUBLE eif_console_readdouble()
+{
+	EIF_DOUBLE lastdouble;
+	DWORD buffer_length = (DWORD) 0;
+
+	eif_show_console();
+
+	safe_readconsole (&eif_console_buffer, &buffer_length);
+
+	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
+		eise_io("Not a DOUBLE.");
+
+	return lastdouble;
 }
 
 EIF_CHARACTER eif_console_readchar()
 {
-	EIF_GET_CONTEXT
 	DWORD buffer_length = (DWORD) 0;
 
 	eif_show_console();
@@ -83,31 +88,12 @@ EIF_CHARACTER eif_console_readchar()
 	if (!ReadConsole(eif_coninfile, eif_console_buffer, 1, &buffer_length, NULL))
 		eio();
 
+	eif_is_console_clean_for_input = EIF_FALSE;
 	return eif_console_buffer [0];
-	EIF_END_GET_CONTEXT
-}
-
-double eif_console_readdouble()
-{
-	EIF_GET_CONTEXT
-	double lastdouble;
-	DWORD buffer_length = (DWORD) 0;
-
-	eif_show_console();
-
-	if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		eio();
-
-	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
-		eise_io("Not a DOUBLE.");
-
-	return lastdouble;
-	EIF_END_GET_CONTEXT
 }
 
 long eif_console_readline(char *s,long bound,long start)
 {
-	EIF_GET_CONTEXT
 	long amount, read;
 	static char *c = NULL;	/* declared as static: the value of `c' will be stored for the next call */
 	static BOOL done = FALSE;					    
@@ -151,7 +137,6 @@ long eif_console_readline(char *s,long bound,long start)
 
 	return bound - start + 1;
 
-	EIF_END_GET_CONTEXT
 }
 
 long eif_console_readstream(char *s, long bound)
@@ -162,7 +147,6 @@ long eif_console_readstream(char *s, long bound)
 	 * return the number of characters read.
 	 */
 
-	EIF_GET_CONTEXT
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	char c;						/* Last char read */
 	long i = 0;					/* Counter */
@@ -208,7 +192,6 @@ long eif_console_readstream(char *s, long bound)
 	}
 
 	return bound - amount - 1;	/* Number of characters read */
-	EIF_END_GET_CONTEXT
 }
 
 long eif_console_readword(char *s, long bound, long start)
@@ -224,140 +207,133 @@ long eif_console_readword(char *s, long bound, long start)
 	 * spaces are skipped.
 	 */
 
-	EIF_GET_CONTEXT
+	/* When we read the KEY_CR, we skip the sequence KEY_CR, KEY_LF and do like they
+	 * did not exist.
+	 */
+
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
-	int c;   /* Last char read */
-	long i = 0;   /* Counter */
-	static DWORD buffer_length = (DWORD) 0;
+	EIF_CHARACTER c;   /* Last char read */
+	int finished = (int) 1;
 
 	eif_show_console();
 
 	amount = bound - start;		/* Characters to be read */
 	s += start;					/* Where read characters are written */
-	i = start;
 	errno = 0;					/* No error, a priori */
 
 	if (start == 0)	{			/* First call */
-		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-			eio();
-
-		while (i < (long) buffer_length)
-			if (!isspace(c = eif_console_buffer [i++]))
-				break;
-
-		if (isspace(eif_console_buffer [i]) && (i == (long) buffer_length))
-			return (EIF_INTEGER) 0;				/* Reached EOF before word */
-		else
-			i--;
+		while (finished) {
+			c = eif_console_readchar();
+			if (c == KEY_CR) {
+				c = eif_console_readchar ();	/* We read KEY_LF */
+				c = eif_console_readchar ();	/* We read next character */
+			}
+			if (!isspace(c)) {
+				*s++ = c;
+				finished = 0;
+			}
+		}
 	}
 
 	while (amount-- > 0) {
-		c = eif_console_buffer [i++];
-		if (i == (long) buffer_length)
+		c = eif_console_readchar();
+		if (isspace(c)) {
+			if (c == KEY_CR) {
+				c = eif_console_readchar ();	/* We read KEY_LF */
+				eif_is_console_clean_for_input = EIF_TRUE;
+			}
+			else
+				eif_is_console_clean_for_input = EIF_FALSE;
 			break;
-		if (isspace(c))
-			break;
+		}
 		*s++ = c;
 	}
-		
+	
+
 		/* If we managed to get the whole string, return the number of characters
 		 * read. Otherwise, return (bound - start + 1) to indicate an error
 		 * condition.
 		 */
 		
-	if ((i == (long) buffer_length) || isspace(c))
-		return bound - start - amount - 1;	/* Number of characters read */
+	if (isspace(c))
+		return bound - start - amount;	/* Number of characters read */
 
 	return bound - start + 1;			/* Error condition */
-	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putint (long l)
 {
-	EIF_GET_CONTEXT
-	int t = 0;
-	char transfer_buffer [BUFFER_SIZE];
+	int t = 0, dummy_length;
 
 	eif_show_console();
 
-	t = sprintf (transfer_buffer, "%ld", l);
-	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	EIF_END_GET_CONTEXT
+	t = sprintf (eif_console_buffer, "%ld", l);
+	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
 void eif_console_putchar (EIF_CHARACTER c)
 {
-	EIF_GET_CONTEXT
-	char transfer_buffer [1];
+	int dummy_length;
 
 	eif_show_console();
 
-	transfer_buffer[0] = c;
-	WriteFile(eif_conoutfile,transfer_buffer,1, &dummy_length, NULL);
-	EIF_END_GET_CONTEXT
+	WriteFile(eif_conoutfile, &c,1, &dummy_length, NULL);
 }
 
 void eif_console_putstring (EIF_POINTER s, long length)
 {
-	EIF_GET_CONTEXT
+	int dummy_length;
 	eif_show_console();
 	WriteFile(eif_conoutfile,s, length, &dummy_length, NULL);
-	EIF_END_GET_CONTEXT
 }
 
-void eif_console_putreal (double r)
+void eif_console_putreal (EIF_REAL r)
 {
-	EIF_GET_CONTEXT
-	char transfer_buffer [BUFFER_SIZE];
-	int t = 0;
+	int t = 0, dummy_length;
 
 	eif_show_console();
 
-	t = sprintf (transfer_buffer, "%g", (float) r);
-	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	EIF_END_GET_CONTEXT
+	t = sprintf (eif_console_buffer, "%g", r);
+	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
-void eif_console_putdouble (double d)
+void eif_console_putdouble (EIF_DOUBLE d)
 {
-	EIF_GET_CONTEXT
-	char transfer_buffer [BUFFER_SIZE];
-	int t = 0;
+	int t = 0, dummy_length;
 
 	eif_show_console();
 
-	t = sprintf (transfer_buffer, "%.17g", d);
-	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	EIF_END_GET_CONTEXT
+	t = sprintf (eif_console_buffer, "%.17g", d);
+	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
 EIF_BOOLEAN eif_console_eof ()
+	/* There is no EOF in a Windows DOS console */
 {
-	EIF_GET_CONTEXT
-	return (eif_console_eof_value == 1 ? '\01' : '\00');
-	EIF_END_GET_CONTEXT
+	return EIF_FALSE;
 }
 
 void eif_console_next_line()
 {
-	EIF_BOOLEAN done = (EIF_BOOLEAN) 0;
+	if (!eif_is_console_clean_for_input) {
+		EIF_BOOLEAN done = (EIF_BOOLEAN) 0;
 
-		/* We read until we reach the sequence '13','10' or just '10'. */
-	while (!done) {
-		switch (eif_console_readchar()) {
-			case (EIF_CHARACTER) 13:
-				done = (EIF_BOOLEAN) (eif_console_readchar() == (EIF_CHARACTER) 10);
-				break;
-			case (EIF_CHARACTER) 10:
-				done == EIF_TRUE;
-				break;
+			/* We read until we reach the sequence KEY_CR, KEY_LF or just KEY_LF. */
+		while (!done) {
+			switch (eif_console_readchar()) {
+				case KEY_CR:
+					done = (EIF_BOOLEAN) (eif_console_readchar() == KEY_LF);
+					break;
+				case KEY_LF:
+					done == EIF_TRUE;
+					break;
+			}
 		}
 	}
 }
 
 int print_err_msg (FILE *err, char *StrFmt, ...)
 {
-	EIF_GET_CONTEXT
 	va_list ap;
 	int r;
 	char s[2038];
@@ -392,14 +368,13 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 
 	eif_console_putstring (s, strlen(s));
 	return r;
-	EIF_END_GET_CONTEXT
 }
 
 void eif_console_cleanup (void)
 {
-	EIF_GET_CONTEXT
 	BOOL b;
 	DWORD buffer_length = (DWORD) 0;
+	EIF_CHARACTER c;
 
 	if (eif_console_allocated) {
 #ifdef EIF_THREADS
@@ -407,21 +382,18 @@ void eif_console_cleanup (void)
 #endif
 		{
 			eif_console_putstring("\nPress Return to finish the execution...\0", 40);
-			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio ();
-
+			c = eif_console_readchar ();
 			CloseHandle (eif_coninfile);
 			CloseHandle (eif_conoutfile);
 			b = FreeConsole ();
 		}
+		free (eif_console_buffer);
 		eif_console_allocated = FALSE;
 	}  
-	EIF_END_GET_CONTEXT
 }
 
-void eif_show_console()
+rt_private void eif_show_console()
 {
-	EIF_GET_CONTEXT
 	if (!eif_console_allocated) {
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 	   	BOOL bLaunched;
@@ -455,6 +427,9 @@ void eif_show_console()
 				eio();
 		}
 
+			/* We are computing the cursor position to figure out, if the application
+			* has been launched from a DOS console or from the Windows Shell
+			*/
 		GetConsoleScreenBufferInfo(eif_conoutfile, &csbi);
 		bLaunched = ((csbi.dwCursorPosition.X == 0) && (csbi.dwCursorPosition.Y == 0));
 		if ((csbi.dwSize.X <= 0) || (csbi.dwSize.Y <= 0))
@@ -464,6 +439,31 @@ void eif_show_console()
 			eif_register_cleanup (eif_console_cleanup);
 
 		eif_console_allocated = TRUE;
+
+			/* Allocate the C console buffer */
+		eif_console_buffer = (char *) malloc (BUFFER_SIZE * sizeof(char));
 	}
-	EIF_END_GET_CONTEXT
+}
+
+rt_private void safe_readconsole (char **buffer, int *size)
+	/* Clean the input buffer of KEY_CR and KEY_LF */
+{
+	int done = 0;
+
+	while (!done) {
+		if (!ReadConsole(eif_coninfile, *buffer, BUFFER_SIZE, size, NULL))
+			eio();
+	
+		switch (*size) {
+			case 1:
+				done = !((**buffer == KEY_CR) || (**buffer == KEY_LF));
+				break;
+			case 2:
+				done = !((**buffer == KEY_CR) || (*(*buffer + 1) == KEY_LF));
+				break;
+			default:
+				done = (int) 1;
+				break;
+		}
+	}
 }

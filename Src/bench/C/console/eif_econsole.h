@@ -16,7 +16,7 @@ RT_LNK void get_argcargv (int *argc, char ***argv);
 void eif_console_cleanup (void);
 extern void eif_console_next_line(void);
 extern void eif_console_putint(EIF_INTEGER);
-extern void eif_console_putreal(EIF_DOUBLE);
+extern void eif_console_putreal(EIF_REAL);
 extern void eif_console_putdouble(EIF_DOUBLE);
 extern void eif_console_putchar(EIF_CHARACTER);
 extern void eif_console_putstring(EIF_POINTER, EIF_INTEGER);

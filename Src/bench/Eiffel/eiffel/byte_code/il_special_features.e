@@ -205,6 +205,10 @@ feature -- IL code generation
 			when abs_type then
 				il_generator.generate_abs (type)
 
+			when generator_type then
+				il_generator.pop
+				il_generator.put_manifest_string (type.name)
+
 			when from_integer_to_enum_type then
 					-- Argument value becomes the enum value, we discard
 					-- original value of enum.
@@ -269,10 +273,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (set_item_type, deep_copy_name_id)
 			Result.put (set_item_type, standard_copy_name_id)
 			Result.put (is_digit_type, is_digit_name_id)
+ 			Result.put (generator_type, generator_name_id)
+ 			Result.put (generator_type, generating_type_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
--- 			Result.put (generator_type, generator_name_id)
--- 			Result.put (generator_type, generating_type_name_id)
 -- 			Result.put (memory_copy, memory_copy_name_id)
 -- 			Result.put (memory_move, memory_move_name_id)
 -- 			Result.put (memory_set, memory_set_name_id)

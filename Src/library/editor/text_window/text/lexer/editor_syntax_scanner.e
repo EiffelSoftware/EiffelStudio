@@ -59,8 +59,6 @@ feature -- Actions
 	store_analyzer (file_name: STRING) is
 			-- Store `analyzer' in file named `file_name'.
 			-- This is overridden feature does NOT store to disk in `file_name', only to memory.
-		local
-			store_file: RAW_FILE
 		do
 			if analyzer = Void then
 				create analyzer.make

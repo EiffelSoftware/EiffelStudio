@@ -18,7 +18,7 @@ feature -- Attributes
 
 	supplier_name: STRING;
 			-- Supplier name 
-			--| Could be different of `supplier.class_name' because
+			--| Could be different of `supplier.name' because
 			--| of renamings of LACE
 
 	make (c: CLASS_C; s: STRING) is

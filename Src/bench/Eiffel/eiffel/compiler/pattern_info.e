@@ -106,7 +106,7 @@ feature
 		do
 			pattern.trace;
 			io.error.putstring (" --> written in ");
-			io.error.putstring (associated_class.class_name);
+			io.error.putstring (associated_class.name);
 			io.error.new_line;
 		end;
 

@@ -87,7 +87,7 @@ feature -- Type check, byte code and dead code removal
 			body_index := context.a_feature.body_index;
 debug ("OPTIMIZATION")
 	io.error.putstring ("Recording loop in class ");
-	io.error.putstring (context.a_class.class_name);
+	io.error.putstring (context.a_class.name);
 	io.error.putstring (" (");
 	context.a_class.id.trace;
 	io.error.putstring ("), feature ");

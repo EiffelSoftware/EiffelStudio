@@ -847,7 +847,7 @@ feature -- Debugging
 			-- Debug purpose
 		do
 			io.error.putstring ("Feature table for ");
-			io.error.putstring (associated_class.class_name);
+			io.error.putstring (associated_class.name);
 			io.error.new_line;
 			from
 				start;
@@ -866,7 +866,7 @@ feature -- Debugging
 			it: FEATURE_I
 		do
 			io.error.putstring ("Feature table for ");
-			io.error.putstring (associated_class.class_name);
+			io.error.putstring (associated_class.name);
 			io.error.new_line;
 			from
 				start;

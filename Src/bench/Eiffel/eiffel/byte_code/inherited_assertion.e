@@ -670,7 +670,7 @@ feature -- inherited postcondition
 					precondition_context_init;
 					c := precondition_types.item.associated_class;
 					io.putstring ("  precursor class - ");
-					io.putstring (c.class_name);
+					io.putstring (c.name);
 					io.new_line;
 					precondition_forth;
 				end;
@@ -687,7 +687,7 @@ feature -- inherited postcondition
 					postcondition_context_init;
 					c := postcondition_types.item.associated_class;
 					io.putstring ("  precursor class - ");
-					io.putstring (c.class_name);
+					io.putstring (c.name);
 					io.new_line;
 					postcondition_forth;
 				end;

@@ -661,8 +661,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
             class_name: STRING
         do
             ass_classc := associated_class;
-            !! class_name.make (ass_classc.class_name.count);
-			class_name.append (ass_classc.class_name);
+			class_name := clone (ass_classc.name);
 			!! Result.make (class_name, ass_classc.id.id);
 			count := generics.count;
 			!! gens.make (count);

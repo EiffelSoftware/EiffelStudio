@@ -86,7 +86,7 @@ feature
 							to_be_inlined.put (True, body_id.id);
 debug ("RECORD")
 	io.error.new_line;
-	io.error.putstring (f.written_class.class_name);
+	io.error.putstring (f.written_class.name);
 	io.error.putstring (" ");
 	io.error.putstring (f.feature_name);
 	io.error.putstring (" can be inlined%N");

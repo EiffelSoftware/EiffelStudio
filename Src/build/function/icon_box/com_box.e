@@ -1,4 +1,7 @@
-
+indexing
+	description: "Box used in a behavior editor containing %
+				% the command associated with a behavior. This %
+				% should be used with an EV_BOX."
 
 class COM_BOX 
 
@@ -18,7 +21,6 @@ inherit
 			make
 		end
 
-
 creation
 
 	make
@@ -30,21 +32,21 @@ feature {NONE}
 
         create_new_icon is
                 do
-                        !!new_icon.make (associated_editor);
-                end;
+                        !!new_icon.make (associated_editor)
+                end
 
 	
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: like associated_editor) is
 		do
-			page_size := 3;
-			function_make (a_name, a_parent, ed);
+			page_size := 3
+			function_make (a_name, a_parent, ed)
 		end;
 
 	
 feature {NONE}
 
-	new_icon: FUNC_COM_IS;
+	new_icon: FUNC_COM_IS
 
 end

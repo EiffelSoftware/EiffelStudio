@@ -378,7 +378,7 @@ end
 				end
 
 					-- Access managment
-				access_b := a_feature.access (Result.type_i)
+				access_b := new_call_access (a_feature, Result.type_i)
 				context.access_line.insert (access_b)
 			else
 					-- `a_feature' was not valid for current, report
@@ -427,6 +427,17 @@ end
 			end
 		end
 
+	new_call_access (a_feature: FEATURE_I; a_type_i: TYPE_I): ACCESS_B is
+			-- Create new node for associated AST node.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_i_not_void: a_type_i /= Void
+		do
+			Result := a_feature.access (a_type_i)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 	byte_node: ACCESS_B is
 			-- Associated byte code
 		local

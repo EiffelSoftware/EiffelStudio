@@ -8,14 +8,17 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef EIF_WINDOWS
 #include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "dir.h"
 #include "file.h"	/* for PATH_MAX */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
+#define WIN32
 #include <windows.h>
 #endif
 
@@ -42,7 +45,7 @@ fnptr send_address, set_address;
 void eif_call_finish_freezing(c_code_dir, freeze_cmd_name)
 EIF_OBJ c_code_dir, freeze_cmd_name;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	char *cmd, *current_dir, *eiffel_dir;
 
 	current_dir = getcwd(NULL, PATH_MAX);
@@ -96,7 +99,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 void eif_gr_call_finish_freezing(request, c_code_dir, freeze_cmd_name)
 EIF_OBJ request, c_code_dir, freeze_cmd_name;
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
 #else
 	DIR *dirp;
@@ -133,7 +136,43 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 void eif_link_driver (c_code_dir, system_name, prelink_command_name, driver_name)
 EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN32
+	char *src, *eiffel_dir, *eiffel_plt, *system_exe;
+	FILE *fi, *fo;
+	char buffer[4096];
+	char *start_dir, *i;
+	int amount;
+
+		// Given abc\EIFGEN\W_code
+		// The starting directory is abc or abc\EIFGEN\W_code - 14 characters
+	start_dir = cmalloc (strlen(eif_access(c_code_dir)),1);
+	strncpy (start_dir, eif_access(c_code_dir), strlen(eif_access(c_code_dir))-14);
+
+		/* Link */
+
+	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	src = cmalloc(strlen(eif_access(driver_name))+1);
+	if (src == (char *)0)
+		enomem();
+	strcpy (src, eif_access (driver_name));
+	fi = fopen (src, "rb");
+	system_exe = cmalloc (strlen (eif_access (system_name)) +
+							strlen (eif_access (c_code_dir)) + 5);
+	sprintf (system_exe, "%s\\%s.EXE", eif_access (c_code_dir), eif_access (system_name));
+	fo = fopen (system_exe, "wb");
+
+	amount = 4096;
+	while (amount == 4096)
+		{
+		amount = fread (buffer, sizeof(char), amount, fi);
+		if (amount != fwrite (buffer, sizeof(char), amount, fo))
+			eio();
+		}
+
+	fclose (fi);
+	fclose (fo);
+#else
+#ifdef EIF_WINDOWS
 	char *ini_path, *src, *eiffel_dir, *eiffel_plt, *system_exe;
 	FILE *ini_file, *fi, *fo;
 	char buffer[4096];
@@ -221,13 +260,14 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	(void) eif_system(cmd);
 	xfree(cmd);
 #endif
+#endif
 }
 
 void eif_gr_link_driver (request, c_code_dir, system_name, prelink_command_name, driver_name)
 EIF_OBJ request;
 EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;
@@ -251,7 +291,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 EIF_BOOLEAN tabs_disabled_for_the_platform()
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return TRUE;
 #else
 	return FALSE;

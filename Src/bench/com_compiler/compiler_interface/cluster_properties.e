@@ -34,15 +34,20 @@ inherit
 			subclusters,
 			has_children,
 			set_cluster_namespace,
+			set_cluster_namespace_user_precondition,
 			set_cluster_path,
+			set_cluster_path_user_precondition,
 			set_override,
 			set_is_library,
 			set_all,
 			set_use_system_default,
 			set_assertions,
 			set_parent_name,
+			set_parent_name_user_precondition,
 			add_exclude,
+			add_exclude_user_precondition,
 			remove_exclude,
+			remove_exclude_user_precondition,
 			cluster_id
 		end		
 create
@@ -87,6 +92,9 @@ feature -- Access
 			-- Cluster name.
 		do
 			Result := cluster_sd.cluster_name
+			if Result = Void then
+				Result := ""
+			end
 		end
 
 	cluster_namespace: STRING is 
@@ -126,12 +134,18 @@ feature -- Access
 			-- Full path to cluster.
 		do
 			Result := cluster_sd.directory_name
+			if Result = Void then
+				Result := ""
+			end
 		end
 
 	parent_name: STRING is
 			-- Name of parent cluster.
 		do
 			Result := cluster_sd.parent_name
+			if Result = Void then
+				Result := ""
+			end
 		end
 		
 	override: BOOLEAN is
@@ -354,9 +368,8 @@ feature -- Access
 			dollar_pos: INTEGER
 			slash_pos: INTEGER
 			parth_pos: INTEGER
-			
+			next_dollar_pos: INTEGER
 			env_var: STRING
-			
 			env: EXECUTION_ENVIRONMENT
 		do
 			create env
@@ -376,23 +389,30 @@ feature -- Access
 					-- allows for $(ENV)Ext\...
 					parth_pos := Result.index_of (')', dollar_pos + 1)
 					
-					if parth_pos > 0 then
-						-- if ) has been found
-						if slash_pos > 0 then
-							-- if the ) comes before \
-							if parth_pos < slash_pos then
-								slash_pos := parth_pos + 1
-							end
+					-- look or $ as path could be $var1$var2
+					next_dollar_pos := Result.index_of ('$', dollar_pos + 1)
+
+					if slash_pos > 0 then
+						if parth_pos > 0 then
+							slash_pos := slash_pos.min (parth_pos + 1)
+						end
+						if next_dollar_pos > 0 then
+							slash_pos := slash_pos.min (next_dollar_pos)
+						end
+					elseif parth_pos > 0 then
+						if next_dollar_pos > 0 then
+							slash_pos := slash_pos.min (next_dollar_pos)
 						else
 							slash_pos := parth_pos + 1
 						end
 					else
-						-- if there is no () then use the \
-						if slash_pos = 0 then
+						if next_dollar_pos > 0 then
+							slash_pos := next_dollar_pos
+						else
 							slash_pos := Result.count + 1
-						end						
+						end
 					end
-		
+					
 					var := Result.substring (dollar_pos, slash_pos - 1)
 					
 					-- remove the () and $
@@ -405,7 +425,11 @@ feature -- Access
 					if env_var /= Void and then env_var.count > 0 then
 						Result.replace_substring_all (var, env_var)
 					end
-					dollar_pos := Result.index_of ('$', 1)
+					if dollar_pos + 1 <= Result.count then
+						dollar_pos := Result.index_of ('$', dollar_pos + 1)
+					else
+						dollar_pos := 0
+					end
 				end
 			end
 		end
@@ -414,8 +438,8 @@ feature -- Access
 	subclusters: CLUSTER_PROP_ENUMERATOR is
 			-- List of subclusters (list of IEiffelClusterProperties*).
 		do
-			if subclusters_impl /= Void then
-				create Result.make (subclusters_impl)
+			if subclusters_impl = Void then
+				create subclusters_impl.make (0)
 			end
 			create Result.make (subclusters_impl)
 		end
@@ -494,58 +518,15 @@ feature -- Status
 			end
 		end
 	
-
 	is_id_defined: BOOLEAN
 			-- Is ID defined?
 			
---	is_root_cluster: BOOLEAN is
---			-- is the cluster the system root cluster (defined by the cluster mark in root declaration)
---		local
---			cluster_mark: ID_SD
---			cluster_mark_string: STRING
---			cluster_name: STRING
---		do
---			Result := false
---			
---			cluster_mark := ace.root_ast.root.cluster_mark
---			cluster_mark_string := cluster_mark.string.clone(cluster_mark.string)
---			cluster_name := name.clone(name)
---			
---			cluster_mark_string.to_lower
---			cluster_name.to_lower
---			
---			if cluster_name.is_equal (cluster_mark_string) then
---				Result := true	
---			end
---		end
-			
 feature -- Element change
 
-	set_name (a_name: STRING) is
-			-- Cluster name.
-		local
-			id_sd: ID_SD
-		do
-			id_sd := new_id_sd (a_name, False)
-			cluster_sd.set_cluster_name (id_sd)
-				
-			-- change all of the sub clusters parent name to the current name
-			if subclusters_impl /= Void then
-				from
-					subclusters_impl.start
-				until
-					subclusters_impl.after
-				loop
-					subclusters_impl.item.set_parent_name (a_name)
-					subclusters_impl.forth
-				end
-			end
-		end
-
-	set_cluster_namespace (namespace: STRING) is
-			-- Set the namespace for the cluster
+	set_cluster_namespace (a_namespace: STRING) is
+			-- Set 'cluster_namespace' with 'a_namespace'
 		require else
-			namespace_exists: namespace /= Void
+			non_void_namespace: a_namespace /= Void
 		local
 			cl_prop: CLUST_PROP_SD
 			defaults: LACE_LIST [D_OPTION_SD]
@@ -585,25 +566,40 @@ feature -- Element change
 				cluster_sd.cluster_properties.set_default_option (defaults)
 			end
 
-			-- only add the namespace if it not empty.
+			-- only add namespace if it not empty.
 			-- if namespace exists then it is removed
-			if not namespace.is_empty then
+			if not a_namespace.is_empty then
 				create free_opt.make (feature {FREE_OPTION_SD}.Namespace)
-				create v.make (new_id_sd (namespace, True))
+				create v.make (new_id_sd (a_namespace, True))
 				defaults.extend (create {D_OPTION_SD}.initialize (free_opt, v))
 			end
-	end
+		end
 		
 
-	set_cluster_path (path: STRING) is
-			-- Full path to cluster.
+	set_cluster_path (a_path: STRING) is
+			-- set 'cluster_path' to 'a_path'
+		require else
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
 		local
 			id_sd: ID_SD
+			l_ise_path: STRING
+			l_cluster_path: STRING
+			l_new_path: STRING
 		do
-			path.replace_substring_all ("/", "\")
-			path.replace_substring_all (ace.ise_eiffel, ace.ise_eiffel_envvar)
-			path.prune_all_trailing ('\')
-			id_sd := new_id_sd (path, True)
+			l_new_path := a_path.clone (a_path)
+			l_new_path.replace_substring_all ("/", "\")
+			l_new_path.to_lower
+			l_ise_path := ace.ise_eiffel.clone (ace.ise_eiffel)
+			l_ise_path.to_lower
+			if l_new_path.substring_index (l_ise_path, 1) = 1 then
+				l_cluster_path := a_path.substring (l_ise_path.count + 1, a_path.count)
+				l_cluster_path.prepend (ace.ise_eiffel_envvar)
+			else
+				l_cluster_path := a_path.clone (a_path)
+			end
+			l_cluster_path.prune_all_trailing ('\')
+			id_sd := new_id_sd (l_cluster_path, True)
 			cluster_sd.set_directory_name (id_sd)
 		end
 
@@ -735,25 +731,28 @@ feature -- Element change
 				create ass
 				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)
+				set_use_system_default (False)
+			else
+				set_use_system_default (True)
 			end	
 		end
 
 	set_parent_name (a_parent_name: STRING) is
-			-- set the parent name on those clusters that
-			-- have already had the parent name set
+			-- set 'parent_name' with 'a_parent_name'
 		require
-			is_child: parent_name.count > 0
-			non_void_parent: a_parent_name /= Void
-			non_empty_parent: a_parent_name.count > 0 
+			non_void_parent_name: a_parent_name /= Void
+			valid_parent_name: valid_parent_name (a_parent_name)
 		do
 			cluster_sd.set_parent_name (create {ID_SD}.initialize (a_parent_name))
 		ensure
 			parent_name_set: parent_name.is_equal (a_parent_name)
 		end
 		
-
-	add_exclude (dir_name: STRING) is
-			-- Add a directory to exclude.
+	add_exclude (a_file_name: STRING) is
+			-- Add 'a_file_name' to list of cluster excludes.
+		require else
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
 		local
 			cl_prop: CLUST_PROP_SD
 			l_ex: LACE_LIST [FILE_NAME_SD]
@@ -768,11 +767,14 @@ feature -- Element change
 				create l_ex.make (10)
 				cl_prop.set_exclude_option (l_ex)
 			end
-			l_ex.extend (create {FILE_NAME_SD}.initialize (new_id_sd (dir_name, True)))
+			l_ex.extend (create {FILE_NAME_SD}.initialize (new_id_sd (a_file_name, True)))
 		end
 
-	remove_exclude (dir_name: STRING) is
-			-- Remove a directory to exclude.
+	remove_exclude (a_file_name: STRING) is
+			-- Remove 'a_file_name' from list of cluster excludes.
+		require else
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
 		local
 			cl_prop: CLUST_PROP_SD
 			l_ex: LACE_LIST [FILE_NAME_SD]
@@ -786,7 +788,7 @@ feature -- Element change
 					until
 						l_ex.after
 					loop
-						if l_ex.item.file__name.is_equal (new_id_sd (dir_name, True)) then
+						if l_ex.item.file__name.is_equal (new_id_sd (a_file_name, True)) then
 							l_ex.remove
 						else
 							l_ex.forth
@@ -799,6 +801,102 @@ feature -- Element change
 			end
 		end
 	
+feature -- Validation
+
+	valid_parent_name (a_parent_name: STRING): BOOLEAN is
+			-- is 'a_parent_name' a valid parent name
+		local
+			l_parent_name: STRING
+			l_cluster_name: STRING
+		do
+			if a_parent_name /= Void and not a_parent_name.is_empty then
+				l_parent_name := a_parent_name.clone (a_parent_name)
+				l_parent_name.to_lower
+				l_cluster_name := name.clone (name)
+				l_cluster_name.to_lower
+				Result := not l_cluster_name.is_equal (l_parent_name)
+			end
+		end
+		
+	
+feature -- User Preconditions
+
+	set_cluster_namespace_user_precondition (a_namespace: STRING): BOOLEAN is
+			-- 'set_cluster_namespace ' precondition
+		do
+			Result := False
+		end
+		
+	set_cluster_path_user_precondition (path: STRING): BOOLEAN is
+			-- 'set_cluster_path ' precondition
+		do
+			Result := False
+		end
+		
+	set_parent_name_user_precondition (return_value: STRING): BOOLEAN is
+			-- 'set_parent_name ' precondition
+		do
+			Result := False
+		end
+		
+	add_exclude_user_precondition (dir_name: STRING): BOOLEAN is
+			-- 'add_exclude ' precondition
+		do
+			Result := False
+		end
+		
+	remove_exclude_user_precondition (dir_name: STRING): BOOLEAN is
+			-- 'remove_exclude ' precondition
+		do
+			Result := False
+		end
+
+
+feature {SYSTEM_CLUSTERS} -- Element Changes
+
+	set_id (new_id: like id) is
+			-- Set `id' with `new_id'.
+		require
+			id_not_set: not is_id_defined
+			valid_id: new_id > 0
+		do
+			id := new_id
+			is_id_defined := True
+		ensure
+			id_set: is_id_defined
+			valid_id: id = new_id
+		end
+		
+	set_name (a_name: STRING) is
+			-- Cluster name.
+		require
+			non_void_name: a_name /= Void
+			valid_empty_name: not a_name.is_empty
+		local
+			id_sd: ID_SD
+			is_override_cluster: BOOLEAN
+		do
+			is_override_cluster := override
+			id_sd := new_id_sd (a_name, False)
+			cluster_sd.set_cluster_name (id_sd)
+				
+			-- change all of the sub clusters parent name to the current name
+			if subclusters_impl /= Void then
+				from
+					subclusters_impl.start
+				until
+					subclusters_impl.after
+				loop
+					subclusters_impl.item.set_parent_name (a_name)
+					subclusters_impl.forth
+				end
+			end
+			
+			if is_override_cluster then
+				set_override (True)	
+			end
+		end
+		
 	add_child (a_child:like Current) is
 			-- Add child to `Current'.
 		require
@@ -840,21 +938,6 @@ feature -- Element change
 		ensure
 			not_has: not has_child (a_name)
 		end
-
-	set_id (new_id: like id) is
-			-- Set `id' with `new_id'.
-		require
-			id_not_set: not is_id_defined
-			valid_id: new_id > 0
-		do
-			id := new_id
-			is_id_defined := True
-		ensure
-			id_set: is_id_defined
-			valid_id: id = new_id
-		end
-		
-	
 
 feature -- Externals
 

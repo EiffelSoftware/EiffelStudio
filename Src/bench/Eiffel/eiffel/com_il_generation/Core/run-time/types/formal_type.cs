@@ -7,7 +7,8 @@ indexing
 */
 	
 using System;
-namespace ISE.Runtime {
+
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 public class FORMAL_TYPE: TYPE {
@@ -24,7 +25,7 @@ feature -- Status report
 		// Evaluate Current in context of `context_object'.
 	{
 			// Get type of formal in context of `a_current' object.
-		return context_object.____type().generics_type [position - 1];
+		return context_object.____type().generics [position - 1];
 	}
 /*
 feature -- Settings

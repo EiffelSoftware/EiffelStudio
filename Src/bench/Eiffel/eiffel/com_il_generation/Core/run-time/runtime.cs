@@ -10,10 +10,11 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Reflection;
-using ISE.Runtime.CA;
-using ISE.Runtime.Enums;
+using EiffelSoftware.Runtime.CA;
+using EiffelSoftware.Runtime.Enums;
+using EiffelSoftware.Runtime.Types;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
 public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int font_type, IntPtr lparam);
@@ -377,7 +378,7 @@ feature -- Status report
 		int Result = 0;
 		EIFFEL_TYPE_INFO l_object = o as EIFFEL_TYPE_INFO;
 		if (l_object != null) {
-			Result = l_object.____type ().nb_generics;
+			Result = l_object.____type ().count;
 		}
 		return Result;
 	}
@@ -388,7 +389,7 @@ feature -- Status report
 	{
 		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
 		INTERFACE_TYPE_ATTRIBUTE generic_type;
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		CLASS_TYPE cl_type;
 		Type Result = null;
 
@@ -396,11 +397,11 @@ feature -- Status report
 			#if ASSERTIONS
 				ASSERTIONS.REQUIRE ("Has  generic info", l_object.____type() != null);
 				ASSERTIONS.REQUIRE ("Valid position `pos'",
-					(pos > 0) && (pos <= l_object.____type().nb_generics));
+					(pos > 0) && (pos <= l_object.____type().count));
 			#endif
 
-			der = l_object.____type ();
-			cl_type = der.generics_type [pos - 1];
+			l_gen_type = l_object.____type ();
+			cl_type = (CLASS_TYPE) l_gen_type.generics [pos - 1];
 			if (!cl_type.is_basic ()) {
 				if (cl_type.type.Value != (System.IntPtr) 0) {
 					generic_type = (INTERFACE_TYPE_ATTRIBUTE)
@@ -427,13 +428,13 @@ feature -- Status report
 	public static Boolean is_eiffel_string (object o)
 		// Is `o' an instance of an Eiffel STRING.
 	{
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 
 		if (info != null) {
-			der = info.____type ();
-			if (der == null) {
+			l_gen_type = info.____type ();
+			if (l_gen_type == null) {
 					// Not a generic class, possibly a good candidate for STRING.
 				Result = info.____class_name ().Equals ("STRING");
 			}
@@ -444,13 +445,13 @@ feature -- Status report
 	public static Boolean is_eiffel_array (object o)
 		// Is `o' an instance of an Eiffel ARRAY.
 	{
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 
 		if (info != null) {
-			der = info.____type ();
-			if (der != null) {
+			l_gen_type = info.____type ();
+			if (l_gen_type != null) {
 					// A generic class, possibly a good candidate for ARRAY.
 				Result = info.____class_name ().Equals ("ARRAY");
 			}
@@ -527,9 +528,9 @@ feature -- Hash code
 feature -- Type creation
 */
 
-	public static EIFFEL_DERIVATION eiffel_type_of (string class_type_name)
+	public static GENERIC_TYPE eiffel_type_of (string class_type_name)
 		// Given `class_type_name' representing a generic class, we create its
-		// associated EIFFEL_DERIVATION instance.
+		// associated GENERIC_TYPE instance.
 	{
 		return null;
 	}

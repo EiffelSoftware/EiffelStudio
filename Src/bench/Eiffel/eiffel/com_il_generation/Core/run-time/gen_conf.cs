@@ -8,8 +8,9 @@ indexing
 	
 using System;
 using System.Reflection;
+using EiffelSoftware.Runtime.Types;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 [Serializable]
 public class GENERIC_CONFORMANCE {
@@ -20,19 +21,16 @@ public class GENERIC_CONFORMANCE {
 		EIFFEL_TYPE_INFO a_current
 	)
 		// Give an Eiffel generated object type `obj' and its associated type array
-		// information `type_array' generate if not yet done a new EIFFEL_DERIVATION
+		// information `type_array' generate if not yet done a new GENERIC_TYPE
 		// object and assign it to `obj'. We use `current' in case some research needs
 		// to be done in current context.
 	{
 		GENERIC_TYPE computed_type;
-		EIFFEL_DERIVATION derivation;
 
 		if (a_type is GENERIC_TYPE) {
 				// We are handling a generic type.
 			computed_type = (GENERIC_TYPE) a_type.evaluated_type (a_current);
-			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
-				(CLASS_TYPE []) computed_type.type_array);
-			a_target_object.____set_type (derivation);
+			a_target_object.____set_type (computed_type);
 		} else {
 				// Normal class type, nothing special needs to be done.
 		}
@@ -47,7 +45,6 @@ public class GENERIC_CONFORMANCE {
 	{
 		CLASS_TYPE type_to_create;
 		GENERIC_TYPE computed_type;
-		EIFFEL_DERIVATION derivation;
 		EIFFEL_TYPE_INFO Result;
 
 			// Evaluate type in context of Current object.
@@ -62,9 +59,7 @@ public class GENERIC_CONFORMANCE {
 			// Properly initializes `Result'.
 		computed_type = type_to_create as GENERIC_TYPE;
 		if (computed_type != null ) {
-			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
-				(CLASS_TYPE []) computed_type.type_array);
-			Result.____set_type (derivation);
+			Result.____set_type (computed_type);
 		}
 		return Result;
 	}
@@ -72,7 +67,7 @@ public class GENERIC_CONFORMANCE {
 	public static EIFFEL_TYPE_INFO create_like_object (EIFFEL_TYPE_INFO an_obj)
 		// Given an Eiffel object `an_obj' create a new one of same type.
 	{
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO Result;
 
 			// Create a new instance of the same type of `an_obj'
@@ -81,9 +76,9 @@ public class GENERIC_CONFORMANCE {
 		Result = (EIFFEL_TYPE_INFO) Activator.CreateInstance (an_obj.GetType ());
 
 			// If it is a generic type, we also need to set its type.
-		der = an_obj.____type ();
-		if (der != null) {
-			Result.____set_type (der);
+		l_gen_type = an_obj.____type ();
+		if (l_gen_type != null) {
+			Result.____set_type (l_gen_type);
 		}
 		return Result;
 	}
@@ -91,7 +86,7 @@ public class GENERIC_CONFORMANCE {
 	public static object create_like_object (object an_obj)
 		// Given an Eiffel object `an_obj' create a new one of same type.
 	{
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_type;
 		object Result;
 		EIFFEL_TYPE_INFO l_obj_info;
 
@@ -103,9 +98,9 @@ public class GENERIC_CONFORMANCE {
 		l_obj_info = an_obj as EIFFEL_TYPE_INFO;
 		if (l_obj_info != null) {
 				// If it is a generic type, we also need to set its type.
-			der = l_obj_info.____type ();
-			if (der != null) {
-				((EIFFEL_TYPE_INFO) Result).____set_type (der);
+			l_type = l_obj_info.____type ();
+			if (l_type != null) {
+				((EIFFEL_TYPE_INFO) Result).____set_type (l_type);
 			}
 		}
 		return Result;
@@ -114,20 +109,20 @@ public class GENERIC_CONFORMANCE {
 	public static TYPE load_type_of_object (EIFFEL_TYPE_INFO an_obj)
 		// Given an Eiffel object `an_obj' extract its type information.
 	{
-		EIFFEL_DERIVATION der;
+		GENERIC_TYPE l_gen_type;
 		CLASS_TYPE Result;
 
-		der = an_obj.____type ();
+		l_gen_type = an_obj.____type ();
 
-		if (der == null) {
+		if (l_gen_type == null) {
 				// It is not a generic type, so we can simply find its type through
 				// Reflection and then creates a CLASS_TYPE object.
 			Result = new CLASS_TYPE ();
 			Result.set_type (an_obj.GetType ().TypeHandle);
 		} else {
 				// It is a generic type, so we can simply find its type through
-				// its EIFFEL_DERIVATION.
-			Result = der.type;
+				// its GENERIC_TYPE.
+			Result = l_gen_type;
 		}
 		return Result;
 

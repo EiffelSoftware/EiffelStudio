@@ -7,7 +7,7 @@ indexing
 
 using System;
 
-namespace ISE.Runtime.CA
+namespace EiffelSoftware.Runtime.CA
 {
 
 [CLSCompliant(false)]

@@ -7,8 +7,9 @@ indexing
 	
 using System;
 using System.Reflection;
+using EiffelSoftware.Runtime.Types;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 [System.Runtime.InteropServices.ComVisibleAttribute (false)]
 public interface EIFFEL_TYPE_INFO {
@@ -24,8 +25,8 @@ feature -- Assertion checking
 feature -- Access
 */
 	[CLSCompliantAttribute (false)]
-	EIFFEL_DERIVATION ____type();
-		// Get generic type if any.
+	GENERIC_TYPE ____type();
+		/* Get generic type if any. */
 
 	[CLSCompliantAttribute (false)]
 	String ____class_name();
@@ -58,8 +59,8 @@ feature -- Settings
 */
 
 	[CLSCompliantAttribute (false)]
-	void ____set_type(EIFFEL_DERIVATION type);
-		// Set `____type' with `type'.
+	void ____set_type(GENERIC_TYPE type);
+		/* Set `____type' with `type'. */
 }
 
 }

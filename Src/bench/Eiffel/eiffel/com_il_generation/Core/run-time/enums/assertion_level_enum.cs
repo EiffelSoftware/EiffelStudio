@@ -8,7 +8,7 @@ indexing
 
 using System;
 
-namespace ISE.Runtime.Enums
+namespace EiffelSoftware.Runtime.Enums
 {
 
 [CLSCompliant(false)]

@@ -13,13 +13,13 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("ISE_Runtime")]
+[assembly: AssemblyTitle("EiffelSoftware.Runtime")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Interactive Software Engineering Inc.")]
-[assembly: AssemblyProduct("ISE EiffelStudio")]
-[assembly: AssemblyCopyright("ISE")]
-[assembly: AssemblyTrademark("ISE")]
+[assembly: AssemblyCompany("Eiffel Software Inc.")]
+[assembly: AssemblyProduct("EiffelStudio/ENViSioN!")]
+[assembly: AssemblyCopyright("Eiffel Software Inc. 2004")]
+[assembly: AssemblyTrademark("Eiffel Software Inc.")]
 [assembly: AssemblyCulture("")]		
 
 //
@@ -33,7 +33,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("5.5.424.0")]
+[assembly: AssemblyVersion("5.5.626.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

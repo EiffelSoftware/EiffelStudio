@@ -7,7 +7,7 @@ indexing
 	
 using System;
 
-namespace ISE.Runtime {
+namespace EiffelSoftware.Runtime {
 
 public class AGENT_PROXY {
 /*

@@ -6,7 +6,8 @@ indexing
 */
 
 using System;
-namespace ISE.Runtime {
+
+namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
 sealed public class NONE_TYPE: CLASS_TYPE {

@@ -98,10 +98,6 @@ feature -- Template name constants
 
 	Config_init_file_name: STRING is "config.init"
 
-feature -- Description file
-
-	Description_file_name: STRING is "classes_description.txt"
-
 feature -- File names for EiffelBuild
 
 	Ace_file: FILE_NAME is
@@ -392,10 +388,32 @@ feature -- Directory creation
 		local
 			proj_ace_f: RAW_FILE
 			ace_f: RAW_FILE
+--			template_file_name: FILE_NAME
+ --			doc: EB_DOCUMENT
+--			merger: MERGER
 		do
 			!! proj_ace_f.make (Project_ace_file)
 			!! ace_f.make (Ace_file)
-			if not proj_ace_f.exists then
+			if proj_ace_f.exists then
+--				!! template_file_name.make_from_string (templates_directory)
+--				template_file_name.set_file_name (Ace_name)
+--
+--				!! file.make (template_file_name)
+--				if not file.exists then
+--					file.append (ace_f)
+--				end
+--
+--				!! merger
+--				merger.merge_files (template_file_name, Project_ace_file, ace_f.name)
+
+ --				ace_f.open_read
+ --				ace_f.readstream (ace_f.count)
+ --				ace_f.close
+ --				!! doc
+ --				doc.set_directory_name (Project_directory)
+ --				doc.set_document_name ("Ace.ace")
+ --				doc.update (ace_f.last_string)
+			else
 				if ace_f.exists and then ace_f.is_readable then
 					proj_ace_f.append (ace_f)
 				else

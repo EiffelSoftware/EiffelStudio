@@ -491,6 +491,36 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end 
 	
+	-- List
+	gtk_list_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_append_items (list: POINTER; items_glist: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	-- List item
+	gtk_list_item_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_item_new_with_label (label_text: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_item_select (list_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_item_deselect (list_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- code in the glue library
 
 
@@ -617,6 +647,11 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 
+	-- list
+
+	c_gtk_add_list_item (list: POINTER; item: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
 
 feature {NONE} -- Implementation
 	

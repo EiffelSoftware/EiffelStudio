@@ -53,4 +53,19 @@ feature
 	GTK_TOOLBAR_TEXT: INTEGER is 1
 	GTK_TOOLBAR_BOTH: INTEGER is 2
 	
+	--------------------------------
+	-- Selection mode for a list. --
+	--
+	-- GTK_SELECTION_SINGLE - The selection is either NULL or contains a GList pointer for a single selected item. 
+	-- GTK_SELECTION_BROWSE - The selection is NULL if the list contains no widgets or insensitive ones only, otherwise it
+	--	contains a GList pointer for one GList structure, and therefore exactly one list item. 
+	-- GTK_SELECTION_MULTIPLE - The selection is NULL if no list items are selected or a GList pointer for the first selected item.
+	--	That in turn points to a GList structure for the second selected item and so on. 
+	-- GTK_SELECTION_EXTENDED - The selection is always NULL. 
+
+	GTK_SELECTION_SINGLE: INTEGER is 0
+	GTK_SELECTION_BROWSE: INTEGER is 1
+	GTK_SELECTION_MULTIPLE: INTEGER is 2
+	GTK_SELECTION_EXTENDED: INTEGER is 3
+
 end

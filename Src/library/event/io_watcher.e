@@ -22,9 +22,9 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create action sequences.
 		do
-			create read_actions.make
-			create error_actions.make
-			create exception_actions.make
+			create read_actions
+			create error_actions
+			create exception_actions
 		end
 
 	make_with_medium (a_medium: IO_MEDIUM) is

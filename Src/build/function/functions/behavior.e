@@ -4,6 +4,8 @@ class BEHAVIOR
 inherit
 
 	FUNCTION
+		export 
+			{CONTEXT} drop_pair
 		redefine
 			func_editor, 
 			input_data, output_data

@@ -21,6 +21,10 @@ feature -- Attributes
 	class_name: ID_AS;
 			-- Class name
 
+	obsolete_message: STRING_AS;
+			-- Obsolete message clause 
+			-- (Void if was not present)
+
 	is_deferred: BOOLEAN;
 			-- Is the class deferred ?
 
@@ -74,6 +78,7 @@ feature -- Initialization
 			end;
 			suppliers ?= yacc_arg (7);
 			click_list ?= yacc_arg (8);
+			obsolete_message ?= yacc_arg (9);	
 			click_class_name ?= click_list.first;
 			click_class_name.set_node (Current);
 		ensure then

@@ -6,7 +6,8 @@ inherit
 
 	CL_TYPE_A
 		rename
-			good_expanded1 as basic_good_expanded1,
+			expanded_deferred as basic_expanded_deferred,
+			valid_expanded_creation as basic_valid_expanded_creation,
 			dump as old_dump
 		redefine
 			generics,
@@ -39,11 +40,12 @@ inherit
 			has_formal_generic,
 			instantiated_in,
 			has_expanded,
-			good_expanded1,
+			expanded_deferred,
+			valid_expanded_creation,
 			same_as,
 			same_class_type
 		select
-			dump, good_expanded1
+			dump, expanded_deferred, valid_expanded_creation
 		end;
 
 feature -- Attributes
@@ -433,7 +435,7 @@ feature -- Primitives
 			end;
 		end;
 
-	good_expanded1: BOOLEAN is
+	expanded_deferred: BOOLEAN is
 			-- Are the expanded class types present in the current generic
 			-- type not based on deferred classes ?
 		local
@@ -441,7 +443,29 @@ feature -- Primitives
 			gen_param: TYPE_A;
 		do
 			from
-				Result := basic_good_expanded1;
+				Result := basic_expanded_deferred;
+				i := 1;
+				nb := generics.count;
+			until
+				i > nb or else Result
+			loop
+				gen_param := generics.item (i);
+				if gen_param.has_expanded then
+					Result := gen_param.expanded_deferred
+				end;
+				i := i + 1;
+			end;
+		end;
+
+	valid_expanded_creation: BOOLEAN is
+			-- Is the expanded type has an associated class with one
+			-- creation routine with no arguments only ?
+		local
+			i, nb: INTEGER;
+			gen_param: TYPE_A;
+		do
+			from
+				Result := basic_valid_expanded_creation;
 				i := 1;
 				nb := generics.count;
 			until
@@ -449,7 +473,7 @@ feature -- Primitives
 			loop
 				gen_param := generics.item (i);
 				if gen_param.has_expanded then
-					Result := gen_param.good_expanded1
+					Result := gen_param.valid_expanded_creation
 				end;
 				i := i + 1;
 			end;

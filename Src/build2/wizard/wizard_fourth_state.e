@@ -12,7 +12,8 @@ inherit
 			update_state_information,
 			proceed_with_current_info,
 			build,
-			build_frame
+			build_frame,
+			is_final_state
 		end
 
 	GB_SHARED_TOOLS
@@ -20,6 +21,10 @@ inherit
 	GB_WIDGET_UTILITIES
 	
 	GB_SHARED_COMMAND_HANDLER
+	
+	GB_SHARED_XML_HANDLER
+	
+	GB_SHARED_SYSTEM_STATUS
 	
 	GB_SHARED_XML_HANDLER
 
@@ -31,12 +36,27 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do
+				-- If we are modifying the interface, then we are
+				-- the last page of the wizard, and must display a finish
+				-- button.
+			if is_modify_wizard then
+				first_window.set_final_state ("Finish")
+			end
 				-- Set a suitably large minimum size, as this state
 				-- is the Build interface state, so needs to be larger.
 			first_window.set_minimum_size (680, 560)
 				-- We only want to generate the interface once.
 			if choice_box.is_empty then
-				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)	
+				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)
+				 -- Now we must load the project but only when launched as a modify item
+				 -- envision wizard.
+			end
+			
+				-- If we are modifying an existing Envision .bpr, then
+				-- we must load the project now.
+			if is_modify_wizard then
+				xml_handler.load
+				id_compressor.compress_all_id	
 			end
 			set_updatable_entries(<<>>)
 			first_window.enable_user_resize
@@ -45,16 +65,31 @@ feature -- Basic Operation
 
 	proceed_with_current_info is
 			-- User has clicked next, go to next step.
+		local
+				code_generator: GB_CODE_GENERATOR
+				progress: EV_HORIZONTAL_PROGRESS_BAR
 		do
-				-- Force the window back to the smallest size it can be.
-				-- As we do not know the minimum_size, just make it as small
-				-- as possible, and its size will be constrained to
-				-- the widgets inside.
-			first_window.set_minimum_size (100, 100)
-			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
-			Precursor
-			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
-			main_window.hide_all_floating_tools
+				-- If we are the modify wizard, then we must end
+				-- the wizard.
+			if is_modify_wizard then
+				create code_generator
+				code_generator.set_progress_bar (progress)
+				code_generator.generate
+				system_status.current_project_settings.save
+				xml_handler.save
+				first_window.destroy
+				entries_changed := False
+			else
+					-- Force the window back to the smallest size it can be.
+					-- As we do not know the minimum_size, just make it as small
+					-- as possible, and its size will be constrained to
+					-- the widgets inside.
+				first_window.set_minimum_size (100, 100)
+				first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
+				Precursor
+				proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
+				main_window.hide_all_floating_tools
+			end
 		end
 		
 	update_state_information is
@@ -62,14 +97,30 @@ feature -- Basic Operation
 		do
 			Precursor
 		end
+		
+	is_final_state: BOOLEAN is
+			-- Are we the final state of the wizard?
+			-- As this page may be launched as the only page of the
+			-- modification wizard, we return `True' if this is the case.
+		do
+			if is_modify_wizard then
+				Result := True
+			end
+		end
+		
 
 feature {NONE} -- Implementation
 
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Interface Construction.")
-			subtitle.set_text ("Build desired interface for generated system.")
+			if is_modify_wizard then
+				title.set_text ("Interface Modification.")
+				subtitle.set_text ("Perform desired interface modifications and click 'Finish' to exit.")
+			else
+				title.set_text ("Interface Construction.")
+				subtitle.set_text ("Build desired interface for generated system.")
+			end
 		end
 
 	build_frame is
@@ -192,6 +243,13 @@ feature {NONE} -- Implementation
 			choice_box.set_help_context (~create_help_context (tuple))
 		ensure
 			main_box_has_at_least_one_element: main_box.count > 0
+		end
+		
+	id_compressor: GB_ID_COMPRESSOR is
+			-- Once instance of GB_ID_COMPRESSOR
+			-- for compressing saved Ids.
+		once
+			create Result
 		end
 
 end -- class WIZARD_FOURTH_STATE

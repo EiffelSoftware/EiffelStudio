@@ -10,7 +10,9 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color, background_color
+			text_color,
+			background_color,
+			editor_preferences
 		end
 
 create
@@ -26,6 +28,12 @@ feature {NONE} -- Implementation
 	background_color: EV_COLOR is
 		do
 			Result := editor_preferences.object_background_color
+		end
+		
+	editor_preferences: EB_EDITOR_DATA is
+			-- 
+		once
+			Result ?= editor_preferences_cell.item
 		end
 
 end -- class EDITOR_TOKEN_OBJECT

@@ -20,3 +20,9 @@
 #ifdef HAS_MKTIME
 #endif
 
+#ifdef HAS_GETTIMEOFDAY
+#endif
+
+#ifdef HAS_FTIME
+#endif
+

@@ -237,15 +237,15 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	fSuccess = CreateProcess (cmd2,	/* Command 	*/
-		cmdline,		/* Command line */
-		NULL,			/* Process security attribute */
-		NULL,			/* Primary thread security attributes */
-		TRUE,			/* Handles are inherited */
-		0,				/* Creation flags */
-		NULL,			/* Use parent's environment */
-		startpath,		/* Use cmd's current directory */
-		&siStartInfo,	/* STARTUPINFO pointer */
-		&piProcInfo);	/* for PROCESS_INFORMATION */
+		cmdline,			/* Command line */
+		NULL,				/* Process security attribute */
+		NULL,				/* Primary thread security attributes */
+		TRUE,				/* Handles are inherited */
+		CREATE_NEW_CONSOLE,	/* Creation flags */
+		NULL,				/* Use parent's environment */
+		startpath,			/* Use cmd's current directory */
+		&siStartInfo,		/* STARTUPINFO pointer */
+		&piProcInfo);		/* for PROCESS_INFORMATION */
 
 	if (!fSuccess) {
 #ifdef USE_ADD_LOG

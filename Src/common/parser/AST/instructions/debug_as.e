@@ -36,8 +36,8 @@ feature {AST_FACTORY} -- Initialization
 			end
 
 			compound := c
-			location := clone (l)
-			end_location := clone (e)
+			location := l.twin
+			end_location := e.twin
 		ensure
 			keys_set: keys = k
 			compound_set: compound = c

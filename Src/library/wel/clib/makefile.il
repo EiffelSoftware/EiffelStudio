@@ -9,7 +9,6 @@ CFLAGS = -nologo -c -Ox -DEIF_IL_DLL -W4 -I..\spec\windows\include -I$(ISE_EIFFE
 #CFLAGS = -c -Zi -nologo -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 
 all:: ilwel.lib
-	del $@
 	del *.obj
 
 .c.obj:

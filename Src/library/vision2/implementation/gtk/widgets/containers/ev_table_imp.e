@@ -48,19 +48,19 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			gtk_table_set_homogeneous (widget, flag)
+			gtk_table_set_homogeneous (GTK_TABLE(widget), flag)
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Spacing between two rows of the table
 		do
-			gtk_table_set_row_spacings (widget, value)
+			gtk_table_set_row_spacings (GTK_TABLE(widget), value)
 		end
 
 	set_column_spacing (value: INTEGER) is
 			-- Spacing between two columns of the table
 		do
-			gtk_table_set_col_spacings (widget, value)
+			gtk_table_set_col_spacings (GTK_TABLE(widget), value)
 		end
 
 	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is

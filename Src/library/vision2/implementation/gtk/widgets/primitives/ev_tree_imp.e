@@ -47,7 +47,8 @@ inherit
 			visual_widget,
 			count,
 			wipe_out,
-			append
+			append,
+			initialize
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -90,6 +91,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Connect action sequences to signals.
 		do
+			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
 			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)

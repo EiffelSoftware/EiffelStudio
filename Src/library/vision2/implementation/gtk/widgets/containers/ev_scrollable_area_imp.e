@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.

@@ -16,7 +16,17 @@ inherit
 
 	EV_ANY_IMP
 		redefine
-			interface
+			interface,
+			initialize
+		end
+		
+feature -- Initialization
+
+	initialize is
+			-- Initialize the dynamic list.
+		do
+			create child_array.make (5)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -28,38 +38,15 @@ feature -- Access
 			imp: EV_ANY_IMP
 			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (list_widget)
-			child := C.g_list_nth_data (
-				a_child_list,
-				i - 1)
-			check
-				child_not_void: child /= NULL
-			end
-			C.g_list_free (a_child_list)
-			imp := eif_object_from_c (child)
-			check
-				imp_not_void: imp /= Void
-			end
-			Result := attempt (imp.interface)
-			check
-				Result_not_void: Result /= Void
-			end
+			Result := child_array.i_th (i)
 		end
 
 feature -- Measurement
 
 	count: INTEGER is
 			-- Number of items.
-		local
-			a_child_list: POINTER
 		do
-			if list_widget /= NULL and then not is_destroyed then
-				a_child_list := C.gtk_container_children (list_widget)
-				if a_child_list /= NULL then
-					Result := C.g_list_length (a_child_list)
-					C.g_list_free (a_child_list)
-				end
-			end
+			Result := child_array.count
 		end
 
 feature {NONE} -- Implementation
@@ -107,9 +94,13 @@ feature -- Event handling
 
 feature {NONE} -- Implementation
 
+	child_array: ARRAYED_LIST [G]
+
 	interface: EV_DYNAMIC_LIST [G]
 
 invariant
+
+	child_array_not_void: is_usable implies child_array /= Void
 --| FIXME EV_TREE_ITEM_IMP has no list_widget when it has no
 --| children. Remove invariant from here?
 --	list_widget_not_void:

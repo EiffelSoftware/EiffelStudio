@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			C.gtk_menu_item_set_submenu (
 				c_object, list_widget
 			)
+			{EV_MENU_ITEM_LIST_IMP} Precursor
 			{EV_MENU_ITEM_IMP} Precursor
 		end
 		

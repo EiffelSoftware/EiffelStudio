@@ -54,7 +54,8 @@ inherit
 			visual_widget,
 			disconnect_all_signals,
 			wipe_out,
-			append
+			append,
+			initialize
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -326,6 +327,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
 			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)

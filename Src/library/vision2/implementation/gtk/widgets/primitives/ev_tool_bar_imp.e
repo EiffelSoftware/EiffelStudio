@@ -15,7 +15,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -24,7 +25,8 @@ inherit
 		redefine
 			interface,
 			add_to_container,
-			list_widget
+			list_widget,
+			initialize
 		end
 
 create
@@ -40,6 +42,13 @@ feature {NONE} -- Implementation
 			list_widget := C.gtk_hbox_new (False, 0)
 			C.gtk_container_add (c_object, list_widget)
 			C.gtk_widget_show (list_widget)
+		end
+		
+	initialize is
+			-- 
+		do
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature -- Implementation

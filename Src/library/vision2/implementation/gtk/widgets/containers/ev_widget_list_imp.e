@@ -21,7 +21,8 @@ inherit
 		undefine
 			replace
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
@@ -29,7 +30,17 @@ inherit
 			destroy
 		redefine
 			interface,
-			list_widget
+			list_widget,
+			initialize
+		end
+		
+feature {NONE} -- Initialization
+
+	initialize is
+			-- 
+		do
+			{EV_CONTAINER_IMP} Precursor
+			{EV_DYNAMIC_LIST_IMP} Precursor
 		end
 
 feature {NONE} -- Implementation
@@ -40,7 +51,6 @@ feature {NONE} -- Implementation
 			v_imp: EV_ANY_IMP
 			a_c_object: POINTER
 		do
-			
 			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v_imp /= Void
@@ -50,6 +60,8 @@ feature {NONE} -- Implementation
 			if i < count then
 				gtk_reorder_child (list_widget, a_c_object, i - 1)
 			end
+			child_array.go_i_th (i)
+			child_array.put_left (v)
 			update_child_requisition (a_c_object)
 			on_new_item (v)
 		end
@@ -78,6 +90,9 @@ feature {NONE} -- Implementation
 			C.gtk_container_remove (list_widget, p)
 			C.set_gtk_widget_struct_parent (p, NULL)
 			C.gtk_object_unref (p)
+			
+			child_array.go_i_th (i)
+			child_array.remove
 		end
 	
 --| FIXME Direct implementation of extend.

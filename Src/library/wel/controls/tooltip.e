@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TTDT_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -45,16 +50,128 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
+feature -- Access
+
+	i_th_tool_info (index: INTEGER): WEL_TOOL_INFO is
+			-- Tool info structure at the zero-based `index'
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			!! Result.make
+			cwin_send_message (item, Ttm_enumtools, index,
+				Result.to_integer)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	count: INTEGER is
+			-- Count of tools
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Ttm_gettoolcount, 0, 0)
+		ensure
+			positive_result: Result >= 0
+		end
+
+feature -- Status setting
+
+	activate is
+			-- Activate the tooltip control.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Ttm_activate, 1, 0)
+		end
+
+	deactivate is
+			-- Deactivate the tooltip control.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Ttm_activate, 0, 0)
+		end
+
+	set_automatic_delay_time (delay: INTEGER) is
+			-- Set automatically the initial, reshow, and
+			-- autopopup durations based on the value of
+			-- `delay' (in milliseconds).
+		require
+			exists: exists
+			positive_delay: delay >= 0
+		do
+			cwin_send_message (item, Ttm_setdelaytime,
+				Ttdt_automatic, delay)
+		end
+
+	set_autopop_delay_time (delay: INTEGER) is
+			-- Set the length of time (in milliseconds) before the
+			-- tooltip window is hidden if the cursor remains
+			-- stationary in the tool's bounding rectangle after
+			-- the tooltip window has appeared.
+		require
+			exists: exists
+			positive_delay: delay >= 0
+		do
+			cwin_send_message (item, Ttm_setdelaytime,
+				Ttdt_autopop, delay)
+		end
+
+	set_initial_delay_time (delay: INTEGER) is
+			-- Set the length of time (in milliseconds) that the
+			-- cursor must remain stationary within the bounding
+			-- rectangle of a tool before the tooltip window is
+			-- displayed.
+		require
+			exists: exists
+			positive_delay: delay >= 0
+		do
+			cwin_send_message (item, Ttm_setdelaytime,
+				Ttdt_initial, delay)
+		end
+
+	set_reshow_delay_time (delay: INTEGER) is
+			-- Set the length of the delay (in milliseconds) before
+			-- subsequent tooltip windows are displayed when the
+			-- cursor is moved from one tool to another.
+		require
+			exists: exists
+			positive_delay: delay >= 0
+		do
+			cwin_send_message (item, Ttm_setdelaytime,
+				Ttdt_reshow, delay)
+		end
+
 feature -- Basic operations
 
 	add_tool (tool_info: WEL_TOOL_INFO) is
-			-- Add a new `tool_info'.
+			-- Add a new `tool_info' in the tooltip control.
 		require
 			exists: exists
 			tool_info_not_void: tool_info /= Void
 		do
 			cwin_send_message (item, Ttm_addtool, 0,
 				tool_info.to_integer)
+		ensure
+			count_increased: count = old count + 1
+		end
+
+	delete_tool (index: INTEGER) is
+			-- Delete the tool at the zero-based `index'.
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			cwin_send_message (item, Ttm_deltool, 0,
+				i_th_tool_info (index).to_integer)
+		ensure
+			count_decreased: count = old count - 1
 		end
 
 feature {NONE} -- Implementation

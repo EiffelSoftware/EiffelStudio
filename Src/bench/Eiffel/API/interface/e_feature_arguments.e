@@ -13,21 +13,10 @@ inherit
 			put_i_th as list_put_i_th
 		export
 			{NONE} list_put_i_th
-		redefine
-			make
 		end
 
 creation
-	make
-
-feature -- initialization
-
-	make (n: INTEGER) is
-			-- Replace `make' by `make_filled' from FIXED_LIST in order
-			-- to minimize the change on the compiler due to the new FIXED_LIST
-		do
-			make_filled (n)
-		end
+	make, make_filled
 
 feature -- Property
 

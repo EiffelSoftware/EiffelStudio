@@ -5,13 +5,13 @@ indexing
         revision: "$Revision$"
 
 class
-		EV_PRINT_DIALOG
+	EV_PRINT_DIALOG
 
 inherit
-		EV_STANDARD_DIALOG
-                redefine
-                        implementation
-                end
+	EV_STANDARD_DIALOG
+		redefine
+			implementation
+		end
 
 create
         default_create

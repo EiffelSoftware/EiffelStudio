@@ -303,6 +303,9 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name (Eac_browser_file)
 		end
+		
+	eiffelsoftware_runtime_path: STRING is "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/EiffelSoftware.Runtime.dll"
+			-- Path to EiffelSoftware.Runtime.dll
 
 feature -- Access: command name
 

@@ -32,7 +32,7 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		select
 			message_make, message_make_no_auto_unmanage
 		end
@@ -45,11 +45,12 @@ feature {NONE} -- Initialization
 
 	make (a_message: MESSAGE; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif message box.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			message_make (a_message.identifier,
-					mel_parent (a_message, widget_index),	
-					man);
+			message_make (a_message.identifier, mc, man)
 		end
 
 feature -- Status setting
@@ -77,7 +78,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_message);
+			!! ms.make_default_l_to_r (a_message);
 			set_message_string (ms);
 			ms.free
 		end;
@@ -88,7 +89,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
 			ms.free
 		end;
@@ -99,7 +100,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
 			ms.free
 		end;
@@ -110,7 +111,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
 			ms.free
 		end;
@@ -197,46 +198,6 @@ feature -- Removal
 			-- ok button is activated.
 		do
 			remove_ok_callback (mel_vision_callback (a_command), argument)
-		end;
-
-feature {NONE} -- Color implementation
-
-	update_other_fg_color (pixel: POINTER) is
-		do
-		end;
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-			xm_set_children_bg_color (pixel, screen_object)
-		end;
-
-feature {NONE} -- Font implementation
-
-	update_text_font (f_ptr: POINTER) is
-		do
-		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_message_box_get_child
-				--	(screen_object, MDIALOG_MESSAGE_LABEL),
-				--	f_ptr)
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_message_box_get_child
-				--	(screen_object, MDIALOG_CANCEL_BUTTON),
-				--	f_ptr)
-			--set_primitive_font (xm_message_box_get_child
-				--	(screen_object, MDIALOG_DEFAULT_BUTTON),
-				--	f_ptr)
-			--set_primitive_font (xm_message_box_get_child
-				--	(screen_object, MDIALOG_HELP_BUTTON),
-				--	f_ptr)
-			--set_primitive_font (xm_message_box_get_child
-				--	(screen_object, MDIALOG_OK_BUTTON),
-				--	f_ptr)
 		end;
 
 end -- class MESSAGE_M

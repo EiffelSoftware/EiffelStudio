@@ -46,20 +46,14 @@ feature {NONE} -- Initialization
 				0, 
 				Lr_loadfromfile
 				)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 	make_by_icon_info (icon_info: WEL_ICON_INFO) is
 			-- Create an icon from an `icon_info' structure
 		do
 			item := cwin_create_icon_indirect (icon_info.item)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		ensure
 			item_not_void: item /= Void
 		end
@@ -68,30 +62,21 @@ feature {NONE} -- Initialization
 			-- Load the resource by an `id'
 		do
 			Precursor (id)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 	make_by_name (name: STRING) is
 			-- Load the resource by a `name'
 		do
 			Precursor (name)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 	make_by_predefined_id (id: POINTER) is
 			-- Load the resource by an `id', predefined by Windows
 		do
 			Precursor (id)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		end
 
 feature -- Access

@@ -35,8 +35,11 @@ char *key;
 	if (debug_opt->debug_level == DB_NO)
 		return 0;
 
+	if (debug_opt->nb_keys == 0)
+		return 1;
+
 	if ((char *) 0 == key)
-		return debug_opt->nb_keys == 0;
+		return 0;
 	else {
 		nb_keys = debug_opt->nb_keys;
 		keys = debug_opt->keys;

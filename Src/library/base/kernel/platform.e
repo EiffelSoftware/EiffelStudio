@@ -14,13 +14,33 @@ class PLATFORM inherit
 
 feature -- Access
 
-	Character_bits: INTEGER is 8;
+	Character_bits: INTEGER is
+		external
+			"C"
+		alias
+			"eschar_size"
+		end;
 
-	Integer_bits: INTEGER is 32;
+	Integer_bits: INTEGER is
+		external
+			"C"
+		alias
+			"esint_size"
+		end;
 
-	Real_bits: INTEGER is 32;
+	Real_bits: INTEGER is
+		external
+			"C"
+		alias
+			"esreal_size"
+		end;
 
-	Double_bits: INTEGER is 64;
+	Double_bits: INTEGER is
+		external
+			"C"
+		alias
+			"esdouble_size"
+		end;
 
 end -- class PLATFORM
 

@@ -23,6 +23,8 @@ CC=$cc
 CFLAGS=$ccflags $optimize
 INCLUDE_PATH=../run-time
 
+all:: special_tables.o
+
 special_tables.o : special_tables.c
 	\$(CC) \$(CFLAGS) -I../run-time -I. -c special_tables.c
 

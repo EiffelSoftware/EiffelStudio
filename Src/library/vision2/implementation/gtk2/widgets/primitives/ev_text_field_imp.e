@@ -19,7 +19,8 @@ inherit
 			visual_widget,
 			create_change_actions,
 			needs_event_box,
-			on_key_event
+			on_key_event,
+			set_minimum_width_in_characters
 		end
 		
 	EV_FONTABLE_IMP
@@ -71,6 +72,12 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_width_chars (entry_widget, nb)
+		end
 	
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.

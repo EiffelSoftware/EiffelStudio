@@ -136,11 +136,13 @@ feature -- Element change
 			end
 			classc_stone ?= c
 			if shown then
-					-- We put the tree off-screen to optimize performance.
-				widget.wipe_out
+					-- We put the tree off-screen to optimize performance only when something
+					-- will happen to the tree (check calls to `widget.wipe_out' and
+					-- `widget.extend (tree)'.
 				if classc_stone /= Void then
 					if classc_stone.e_class.has_ast then
 						if classc_stone.e_class /= current_compiled_class then
+							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
 							new_class := classc_stone.e_class.ast				
 							feature_clauses := new_class.features
@@ -159,6 +161,7 @@ feature -- Element change
 									(Warning_messages.W_no_feature_to_display))
 							end
 							Eiffel_system.System.set_current_class (Void)
+							widget.extend (tree)
 						end
 					elseif classc_stone.class_i.is_external_class then
 							-- Special processing for a .NET type since has no 'ast' in the normal sense.
@@ -174,15 +177,14 @@ feature -- Element change
 							tree.build_tree_for_external (current_compiled_class)
 						end
 					else
-						current_compiled_class := Void
 						tree.wipe_out
+						current_compiled_class := Void
 					end
 				else
 						-- Invalid stone, wipe out window content.
 					tree.wipe_out
 					current_compiled_class := Void
 				end
-				widget.extend (tree)
 			end
 		end
 

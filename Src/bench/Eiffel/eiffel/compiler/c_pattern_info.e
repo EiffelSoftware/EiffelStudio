@@ -61,6 +61,12 @@ feature -- Concurrent Eiffel
 			pattern.generate_separate_pattern (c_pattern_id, Pattern_file);
 		end
 
+	generate_only_separate_pattern (file: INDENT_FILE) is
+			-- Generate pattern for separate calls in FINALIZED mode
+		do
+			pattern.generate_separate_pattern (c_pattern_id, file);
+		end
+
 feature -- Debug
 
 	trace is

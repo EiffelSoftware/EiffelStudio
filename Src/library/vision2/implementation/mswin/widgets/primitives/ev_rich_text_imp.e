@@ -434,6 +434,7 @@ feature -- Status report
 			mask: INTEGER
 			wel_character_format: WEL_CHARACTER_FORMAT2
 			range_already_selected: BOOLEAN
+			flags: INTEGER
 		do
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
@@ -444,9 +445,38 @@ feature -- Status report
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			mask := wel_character_format.mask
-			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic),
-				flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_backcolor), flag_set (mask, cfm_strikeout),
-				flag_set (mask, cfm_underline), flag_set (mask, cfm_offset))
+			if flag_set (mask, cfm_face) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
+			end
+			if flag_set (mask, cfm_bold) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
+			end
+			if flag_set (mask, cfm_italic) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
+			end
+			if flag_set (mask, cfm_size) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
+			end
+			if flag_set (mask, cfm_color) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.color
+			end
+			if flag_set (mask, cfm_backcolor) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
+			end
+			if flag_set (mask, cfm_strikeout) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
+			end
+			if flag_set (mask, cfm_underline) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
+			end
+			if flag_set (mask, cfm_offset) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
+			end
+			if flag_set (mask, cfm_underline) then
+				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined
+			end
+
+			create Result.make_with_flags (flags)
 			if not range_already_selected then
 				safe_restore_caret
 				enable_redraw
@@ -464,6 +494,7 @@ feature -- Status report
 			mask: INTEGER
 			already_selected: BOOLEAN
 			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
+			flags: INTEGER
 		do
 			first_position_on_start := first_position_from_line_number (start_line)
 			last_position_on_start := last_position_from_line_number (start_line)
@@ -484,12 +515,23 @@ feature -- Status report
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			
 			mask := wel_paragraph_format.mask
-			create Result.make_with_values (
-					flag_set (mask, pfm_alignment),
-					flag_set (mask, pfm_startindent),
-					flag_set (mask, pfm_rightindent),
-					flag_set (mask, pfm_spacebefore),
-					flag_set (mask, pfm_spaceafter))
+			if flag_set (mask, pfm_alignment) then
+				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment
+			end
+			if flag_set (mask, pfm_startindent) then
+				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin
+			end
+			if flag_set (mask, pfm_rightindent) then
+				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin
+			end
+			if flag_set (mask, pfm_spacebefore) then
+				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing
+			end
+			if flag_set (mask, pfm_spaceafter) then
+				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
+			end
+
+			create Result.make_with_flags (flags)
 
 			if not already_selected then
 				safe_restore_caret

@@ -10,7 +10,8 @@ class DEFAULT_ERROR_DISPLAYER
 inherit
 
 	ERROR_DISPLAYER;
-	SHARED_RESOURCES
+	SHARED_RESOURCES;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -78,8 +79,12 @@ feature -- Output
 			st: STRUCTURED_TEXT
 		do
 			if not retried then
-				error_list := handler.error_list;
 				!! st.make;
+				display_separation_line (st);	
+				st.add_string ("Compilation error during Degree ");
+				st.add_string (Degree_output.current_degree.out);
+				st.add_new_line;
+				error_list := handler.error_list;
 				from
 					error_list.start
 				until

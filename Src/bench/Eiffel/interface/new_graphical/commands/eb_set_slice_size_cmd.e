@@ -140,6 +140,9 @@ feature -- Execution
 				end
 			else
 				get_slice_limits (False, pretty_dlg.current_object.object_address, Void)
+				debug ("DEBUGGER_INTERFACE")
+					io.put_String ("Refreshing")
+				end
 				pretty_dlg.refresh
 			end
 		end
@@ -220,8 +223,8 @@ feature {NONE} -- Implementation
 		local
 			dial: EV_DIALOG
 			label: EV_LABEL
-			minf: EV_TEXT_FIELD
-			maxf: EV_TEXT_FIELD
+			minf: EV_SPIN_BUTTON
+			maxf: EV_SPIN_BUTTON
 			okb: EV_BUTTON
 			cancelb: EV_BUTTON
 			sep: EV_HORIZONTAL_SEPARATOR

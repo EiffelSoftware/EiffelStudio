@@ -26,7 +26,7 @@ feature {NONE}
 
 	generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation will happen
-			-- Default size is 100Ko, it will be resized when
+			-- Default size is 300Ko, it will be resized when
 			-- needed.
 		once
 			!! Result.make (300000)

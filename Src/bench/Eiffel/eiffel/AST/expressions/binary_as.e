@@ -125,13 +125,8 @@ feature -- Type check, byte code and dead code removal
 						l_arg_type ?= l_infix.arguments.i_th (1)
 						l_arg_type := l_arg_type.conformance_type
 							-- Instantiation
-						if a_left_type.is_formal then
-							l_arg_type := l_arg_type.instantiation_in (l_left_constrained,
-								l_class.class_id).actual_type
-						else
-							l_arg_type := l_arg_type.instantiation_in (a_left_type,
-								l_class.class_id).actual_type
-						end
+						l_arg_type := l_arg_type.instantiation_in (a_left_type,
+							l_class.class_id).actual_type
 
 						if not a_right_type.conform_to (l_arg_type) then
 							if
@@ -238,7 +233,9 @@ feature -- Type check, byte code and dead code removal
 						create parameters_convert_info.make (0, 1)
 					end
 					parameters_convert_info.put (last_target_conversion_info, 0)
-					context.supplier_ids.extend (last_target_conversion_info.depend_unit)
+					if last_target_conversion_info.has_depend_unit then
+						context.supplier_ids.extend (last_target_conversion_info.depend_unit)
+					end
 					l_target_type := last_target_conversion_info.target_type
 				else
 					left_id := left_constrained.associated_class.class_id
@@ -250,7 +247,9 @@ feature -- Type check, byte code and dead code removal
 						create parameters_convert_info.make (0, 1)
 					end
 					parameters_convert_info.put (last_argument_conversion_info, 1)
-					context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
+					if last_argument_conversion_info.has_depend_unit then
+						context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
+					end
 				end
 
 					-- Suppliers update

@@ -37,8 +37,16 @@ feature -- Status report
 
 feature -- Access
 
-	buffer: POINTER
-		-- C buffer correspond to the Eiffel STREAM.
+	item: POINTER
+			-- Direct access to stored/retrieved data
+
+	buffer: POINTER is
+			-- C buffer correspond to the Eiffel STREAM
+		obsolete
+			"Use `item' instead to directly access stored/retrieved data"
+		do
+			Result := default_pointer
+		end
 
 	buffer_size: INTEGER
 			-- Buffer's size.
@@ -50,9 +58,7 @@ feature -- Access
 			-- Create the C memory corresponding to the C
 			-- buffer.
 		do
-			check
-				not_implemented: False
-			end
+			item := item.memory_alloc (buffer_size)
 		end
 
 	retrieved: ANY is
@@ -62,11 +68,16 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		local
-			size: INTEGER
+			l_formatter: BINARY_FORMATTER
+			l_mem: SYSTEM_MEMORY_STREAM
+			l_buf: NATIVE_ARRAY [INTEGER_8]
 		do
-			check
-				not_implemented: False
-			end
+			create l_buf.make (buffer_size)
+			feature {MARSHAL}.copy (item, l_buf, 0, buffer_size)
+			create l_mem.make_from_buffer (l_buf)
+			create l_formatter.make
+			Result ?= l_formatter.deserialize (l_mem)
+			l_mem.close
 		end
 
 feature -- Element change
@@ -76,11 +87,20 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		local
-			size: INTEGER
+			l_formatter: BINARY_FORMATTER
+			l_mem: SYSTEM_MEMORY_STREAM
+			l_size: INTEGER
 		do
-			check
-				not_implemented: False
+			create l_mem.make (0)
+			create l_formatter.make
+			l_formatter.serialize (l_mem, object)
+			l_size := l_mem.length.to_integer_32
+			if l_size > buffer_size then
+				buffer_size := l_size
+				item := item.memory_realloc (l_size)
 			end
+			feature {MARSHAL}.copy (l_mem.get_buffer, 0, item, l_size)
+			l_mem.close
 		end
 
 	general_store (object: ANY) is
@@ -91,12 +111,8 @@ feature -- Element change
 			--| This feature may use a visible name of a class written
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
-		local
-			size: INTEGER
 		do
-			check
-				not_implemented: False
-			end
+			basic_store (object)
 		end
 
 	independent_store (object: ANY) is
@@ -104,21 +120,14 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
-		local
-			size: INTEGER
 		do
-			check
-				not_implemented: False
-			end
+			basic_store (object)
 		end
 
 	set_additional_size (new_size: INTEGER) is
 			-- Set `new_size' to BUFFER_SIZE, internal value used to
 			-- increment `buffer_size' during storable operations.
 		do
-			check
-				not_implemented: False
-			end
 		end
 
 feature -- Status report
@@ -163,10 +172,8 @@ feature -- Status setting
 			-- Close medium.
 		do
 			is_closed := True
-			buffer := default_pointer
-			check
-				not_implemented: False
-			end
+			item.memory_free
+			item := default_pointer
 		end
 
 feature -- Output

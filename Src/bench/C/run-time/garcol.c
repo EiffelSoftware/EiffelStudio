@@ -404,9 +404,9 @@ rt_public int acollect(void)
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
 	int allocated;					/* Memory used since last full collect */
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;			/* Was this the original entry point? */
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -502,9 +502,9 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -716,9 +716,9 @@ rt_public void mksp(void)
 	 */
 
 	EIF_GET_CONTEXT
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -2491,9 +2491,9 @@ rt_public void plsc(void)
 	 */
 
 	EIF_GET_CONTEXT
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -2563,9 +2563,9 @@ rt_shared void urgent_plsc(char **object)
 	 */
 
 	EIF_GET_CONTEXT
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -3458,9 +3458,9 @@ rt_public int collect(void)
 
 	EIF_GET_CONTEXT
 	int result;
+#if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;

@@ -255,38 +255,24 @@ feature -- Access
 	line (a_line: INTEGER): STRING is
 			-- Returns the content of line `a_line'.
 		local
-			a_start_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_end_iter: POINTER
-			temp_text: POINTER
-			a_success: BOOLEAN
-			i: INTEGER
+			first_pos: INTEGER
+			start_iter, end_iter: EV_GTK_TEXT_ITER_STRUCT
+			text_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
+			a_success: BOOLEAN
 		do
-			create a_start_iter.make
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_start_iter.item)
-			from
-				i := 1
-			until
-				i = a_line
-			loop
-				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_start_iter.item)
-				i := i + 1
-			end
+			first_pos := first_position_from_line_number (a_line)
+			create start_iter.make
+			create end_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, start_iter.item, first_pos -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, end_iter.item, first_pos -1)
 			
-			a_end_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_copy (a_start_iter.item)
-			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_end_iter)
+			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, end_iter.item)
 			
-			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_ends_line (a_end_iter) then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_char (a_end_iter)
-			end
-
+			text_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, start_iter.item, end_iter.item, False)
 			
-			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter, True)--False)
-			create a_cs.make_from_pointer (temp_text)
+			create a_cs.make_from_pointer (text_ptr)
 			Result := a_cs.string
-			
-			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
-			feature {EV_GTK_EXTERNALS}.g_free (a_end_iter)
 		end
 		
 	first_position_from_line_number (a_line: INTEGER): INTEGER is
@@ -306,7 +292,7 @@ feature -- Access
 				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1		
 		end
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER is
@@ -321,13 +307,12 @@ feature -- Access
 			from
 				i := 1
 			until
-				i = a_line
+				i > a_line
 			loop
 				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_iter.item)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item)	
 		end
 
 feature -- Status report

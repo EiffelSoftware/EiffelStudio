@@ -95,14 +95,12 @@ feature -- Query
 		end
 
 	current_cursor_position: INTEGER is
-			-- 
+			-- Character position of current cursor in text.
 		local
 			l_cursor: TEXT_CURSOR
 		do
 			l_cursor := text_displayed.cursor
-			Result := l_cursor.token.position + l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
-		ensure
-			position_valid: Result > 0
+			Result := l_cursor.token.position + l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)		
 		end		
 
 feature -- Cursor Management
@@ -272,6 +270,26 @@ feature -- Text Selection
 				invalidate_line (old_l_number, True)
 			end
  		end
+
+	select_lines (a_start, a_end: INTEGER) is
+			-- Select lines between `a_start' and `a_end'.  Do not scroll to new cursor position.
+			-- Selection will be from first character of `a_start' line and last character of `a_end' line.
+		require
+			start_valid: a_start > 0 and a_start <= number_of_lines
+			end_valid: a_end > 0 and a_end <= number_of_lines
+			range_valid: a_start <= a_end
+		local
+			l_first_line,
+			l_last_line: EDITOR_LINE
+			l_first_char,
+			l_last_char: INTEGER
+		do
+			l_first_line := text_displayed.line (a_start)
+			l_last_line := text_displayed.line (a_end)
+			l_first_char := text_displayed.line_pos_in_chars (l_first_line) 
+			l_last_char := text_displayed.line_pos_in_chars (l_last_line) + l_last_line.image.count + 1
+			select_region (l_first_char, l_last_char)
+		end		
 
 feature -- Status Setting
 

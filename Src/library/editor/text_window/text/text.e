@@ -177,6 +177,21 @@ feature -- Query
 			end
 		end
 
+	line_pos_in_chars (a_line: EDITOR_LINE): INTEGER is
+			-- Position in chars of start of `a_line'.
+		require
+			line_not_void: a_line /= Void
+		do
+			from
+				start
+			until
+				a_line = current_line or after
+			loop
+				Result := Result + current_line.image.count + 1
+				forth
+			end
+		end		
+
 feature -- Element Change
 
 	forth is

@@ -1,4 +1,7 @@
--- Internal representation of the Eiffel universe
+indexing
+	description: "Internal representation of the Eiffel universe."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class UNIVERSE_I
 
@@ -41,12 +44,20 @@ feature {NONE} -- Initialization
 			-- Create the hash table.
 		do
 			!! clusters.make (25)
+			assemblies_to_be_added := Void
+		ensure
+			clusters_not_void: clusters /= Void
+			assemblies_to_be_added_reset: assemblies_to_be_added = Void
 		end
 
 feature -- Properties
 
 	clusters: ARRAYED_LIST [CLUSTER_I]
 			-- Clusters of the universe
+			
+	assemblies_to_be_added: ARRAYED_LIST [ASSEMBLY_I]
+			-- List of assemblies that needs to be added in Ace file
+			-- before next compilation.
 
 	clusters_sorted_by_tag: ARRAYED_LIST [CLUSTER_I] is
 			-- Clusters sorted by their tags
@@ -329,6 +340,26 @@ feature -- Access
 
 feature -- Update
 
+	reset_assemblies_to_be_added is
+			-- Reset `assemblies_to_be_added'.
+		do
+			assemblies_to_be_added := Void
+		ensure
+			assemblies_to_be_added_reset: assemblies_to_be_added = Void
+		end
+		
+	add_new_assembly_in_ace (an_assembly: ASSEMBLY_I) is
+			-- Add `an_assembly' in list of assemblies that are not originally in Ace
+			-- but needs to.
+		require
+			an_assembly_not_void: an_assembly /= Void
+		do
+			if assemblies_to_be_added = Void then
+				create assemblies_to_be_added.make (10)
+			end
+			assemblies_to_be_added.extend (an_assembly)
+		end
+		
 	update_cluster_paths is
 			-- Update the paths of the clusters in the universe.
 			-- (Re-interpret environment variables)

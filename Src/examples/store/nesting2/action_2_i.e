@@ -24,7 +24,7 @@ feature
         execute is
 		local
 			tuple: DB_TUPLE
-			column_name: STRING
+--			column_name: STRING
 			i: INTEGER
 		do
 			create tuple.copy (selection.cursor)

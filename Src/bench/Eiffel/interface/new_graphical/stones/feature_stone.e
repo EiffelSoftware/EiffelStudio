@@ -1,28 +1,17 @@
 indexing
-
 	description: 
 		"Stone representing an eiffel feature stone."
 	date: "$Date$"
 	revision: "$Revision $"
 
-class FEATURE_STONE 
+class 
+	FEATURE_STONE 
 
 inherit
-
-	FILED_STONE
-		rename
-			origin_text as normal_origin_text,
-			is_valid as fs_valid
-		redefine
-			synchronized_stone, invalid_stone_message, same_as,
-			history_name
-		end
 	FILED_STONE
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message,
 			history_name, same_as, origin_text
-		select
-			is_valid, origin_text
 		end
 	SHARED_EIFFEL_PROJECT
 	HASHABLE_STONE
@@ -31,10 +20,8 @@ inherit
 			invalid_stone_message, history_name, same_as,
 			origin_text
 		end
---	WINDOWS
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -53,7 +40,10 @@ feature {NONE} -- Initialization
 feature -- Properties
  
 	e_feature: E_FEATURE
+		-- Feature associated with stone
+
 	e_class: CLASS_C
+		-- Class `e_feature' belongs to
 
 	start_position: INTEGER
 			-- Start position of the feature in
@@ -75,7 +65,7 @@ feature -- Access
 		local
 			temp: STRING
 		do
-			!!Result.make (0)
+			create Result.make (0)
 			Result.append (e_feature.name)
 			Result.append (" (")
 			temp := clone (e_class.name)
@@ -86,7 +76,7 @@ feature -- Access
 
 	header: STRING is
 		do
-			!!Result.make (0)
+			create Result.make (0)
 			Result.append ("Feature: ")
 			Result.append (e_feature.name)
 			Result.append (" Class: ")
@@ -96,7 +86,7 @@ feature -- Access
 	history_name: STRING is
 			-- Name used in the history list
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append (e_feature.name)
 			Result.append (" from ")
 			Result.append (e_class.name_in_upper)
@@ -125,7 +115,7 @@ feature -- dragging
 			Result.append (e_feature.written_class.name_in_upper)
 			Result.append ("%N%N%T")
 
-			temp := normal_origin_text
+			temp := Precursor {FILED_STONE}
 			if temp /= Void then
 				if 
 					temp.count >= end_position and 
@@ -148,19 +138,19 @@ feature -- dragging
 			temp: STRING
 			classc_stone: CLASSC_STONE
 		do 
-			!! Result.make (1, 2)
+			create Result.make (1, 2)
 			temp := "-- Version from class: "
 			sp := temp.count
 			ep := sp + e_feature.written_class.name.count
 
-			!! classc_stone.make (e_feature.written_class)
-			!! cs.make (classc_stone, sp, ep)
+			create classc_stone.make (e_feature.written_class)
+			create cs.make (classc_stone, sp, ep)
 			Result.put (cs, 1)
 
 			sp := ep + 3
 			ep := sp + end_position - start_position
 
-			!! cs.make (Current, sp, ep)
+			create cs.make (Current, sp, ep)
 			Result.put (cs, 2)
 		end
  
@@ -185,7 +175,7 @@ feature -- dragging
 
 	stone_type: INTEGER is 
 		do 
-			Result := Routine_type 
+			Result := Feature_type 
 		end
 
 --	stone_cursor: SCREEN_CURSOR is
@@ -219,7 +209,7 @@ feature -- dragging
 		end
 
 	line_number: INTEGER is
-			-- Line number of feature text.
+			-- Line number of feature text
 		require
 			valid_start_position: start_position > 0
 			valid_file_name: file_name /= Void 
@@ -227,7 +217,7 @@ feature -- dragging
 			file: RAW_FILE
 			start_line_pos: INTEGER
 		do
-			!! file.make (file_name)
+			create file.make (file_name)
 			if file.is_readable then
 				file.open_read
 				from
@@ -252,7 +242,7 @@ feature -- dragging
 					-- Body as cannot be found
 				Result := False
 			else
-				Result := fs_valid and then e_class /= Void 
+				Result := Precursor {FILED_STONE} and then e_class /= Void 
 						and then e_feature /= Void
 			end
 		end
@@ -284,7 +274,7 @@ feature -- dragging
 			if e_class /= Void and e_feature /= Void then
 				new_e_feature := e_feature.updated_version
 				if new_e_feature /= Void then
-					!! Result.make (new_e_feature)
+					create Result.make (new_e_feature)
 				end
 			end
 		end

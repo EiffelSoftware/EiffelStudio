@@ -135,16 +135,18 @@
 			<paragraph>Here is the general form:</paragraph>
 <code_block>
 Token_type_1 Regular_expression_1
-Token_type_2 Regular_expression_2<line_break/>...
+Token_type_2 Regular_expression_2
+...
 Token_type_m Regular_expression_m
-<line_break/>
+
+
 <bold>-- Keywords</bold>
-<line_break/>
-<line_break/>Keyword_1
-<line_break/>Keyword_2
-<line_break/>...
-<line_break/>Keyword_n
-<line_break/>
+
+Keyword_1
+Keyword_2
+...
+Keyword_n
+
 </code_block>
 			<paragraph>In other words: one or more lines, each containing the name of a token type and a 
 				<bold>regular expression</bold>; a line beginning with two dashes -- (the word 

@@ -5,8 +5,6 @@ Description:
 Allows the user to build a variety of data structures interactively
 from a menu, call the viewer on them, and use the facilities of 
 classes STORE and RETRIEVE to save/retrieve the state of the object.
-Structure of the program follows that described in Chapter 12 of
-"Object-oriented Software Construction."
 
 In response to the "Please enter parameter 'item'" prompt, an 
 integer is expected.

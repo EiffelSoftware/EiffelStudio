@@ -237,8 +237,6 @@ invariant
 			--| (See bridge pattern notes below.)
 	default_create_called: default_create_called
 
-end -- class EV_ANY
-
 indexing
 	bridge_pattern: "[
 	 The "bridge pattern" as used in Vision2
@@ -258,6 +256,8 @@ indexing
 	 - Sharing an implementation object among interface objects.
 	 - Delaying creation of implementation object.
 	]"
+
+end -- class EV_ANY
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.

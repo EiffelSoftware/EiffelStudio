@@ -77,7 +77,7 @@ feature -- Basic operations
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
 		do
-			a_factory.process_coclass_eiffel_client
+			a_factory.process_impl_interface_eiffel_client
 		end
 
 feature {NONE} -- Implementation

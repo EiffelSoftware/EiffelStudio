@@ -16,8 +16,13 @@ call make_formatter.bat
 gacutil -i ISE.Reflection.Formatter.dll
 copy ISE.Reflection.Formatter.dll ..\bin
 copy formatter.netmodule ..\bin
+goto formatter_registered
 
 :formatter_found
+gacutil -u ISE.Reflection.Formatter
+gacutil -i ISE.Reflection.Formatter.dll
+
+:formatter_registered
 cd ..
 
 echo *****************************************************************
@@ -45,6 +50,8 @@ if not exist EIFGEN goto generate_components
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.EiffelComponents.dll goto generate_components
+gacutil -u ISE.Reflection.EiffelComponents
+gacutil -i ISE.Reflection.EiffelComponents.dll
 cd ..
 cd ..
 goto components_generated
@@ -89,12 +96,13 @@ if not exist EIFGEN goto generate_notifier
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.dll goto generate_notifier
+gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
+gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 cd ..
 cd ..
 goto notifier_generated
 
 :generate_notifier
-
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 del *.epr
 rd /q /s EIFGEN
@@ -134,6 +142,8 @@ if not exist EIFGEN goto generate_support
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.Support.dll goto generate_support
+gacutil -u ISE.Reflection.Support
+gacutil -i ISE.Reflection.Support.dll
 cd ..
 cd ..
 goto support_generated
@@ -177,6 +187,8 @@ if not exist EIFGEN goto generate_cache_handler
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.EiffelAssemblyCacheHandler.dll goto generate_cache_handler
+gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
+gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 cd ..
 cd ..
 goto cache_handler_generated
@@ -221,6 +233,8 @@ if not exist EIFGEN goto generate_code_generator
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.CodeGenerator.dll goto generate_code_generator
+gacutil -u ISE.Reflection.CodeGenerator
+gacutil -i ISE.Reflection.CodeGenerator.dll
 cd ..
 cd ..
 goto code_generator_generated
@@ -264,6 +278,8 @@ if not exist EIFGEN goto generate_reflection_interface
 cd EIFGEN
 cd W_code
 if not exist ISE.Reflection.ReflectionInterface.dll goto generate_reflection_interface
+gacutil -u ISE.Reflection.ReflectionInterface
+gacutil -i ISE.Reflection.ReflectionInterface.dll
 cd ..
 cd ..
 goto reflection_interface_generated
@@ -312,7 +328,12 @@ call make.bat
 gacutil -i ISE.AssemblyManager.WindowsDirectoryExtractor.dll
 copy ISE.AssemblyManager.WindowsDirectoryExtractor.dll ..\..\bin
 copy windowsdirectoryextractor.netmodule ..\..\bin
+goto directory_extractor_registered
+
 :directory_extractor_generated
+gacutil -u ISE.AssemblyManager.WindowsDirectoryExtractor
+gacutil -i ISE.AssemblyManager.WindowsDirectoryExtractor.dll
+:directory_extractor_registered
 
 echo *************************************************************
 echo * Generating `FolderBrowser.dll' and `FolderDialog.dll'     *
@@ -330,7 +351,15 @@ gacutil -i FolderDialog.dll
 copy FolderBrowser.dll ..\..\..\bin
 copy FolderDialog.dll ..\..\..\bin
 copy folderdialog.netmodule ..\..\..\bin
+goto folder_dialog_registered
+
 :folder_dialog_generated
+gacutil -u FolderBrowser
+gacutil -u FolderDialog
+call build.bat
+gacutil -i FolderBrowser.dll
+gacutil -i FolderDialog.dll
+:folder_dialog_registered
 
 cd ..
 cd Clib
@@ -349,13 +378,12 @@ if not exist EIFGEN goto generate_folder_browser
 cd EIFGEN
 cd F_code
 if not exist folder_browser.dll goto generate_folder_browser
+regsvr32 folder_browser.dll
 cd ..
 cd ..
 goto folder_browser_generated
 
 :generate_folder_browser
-cd ..
-cd ..
 del *.epr
 rd /q /s EIFGEN
 ec -ace Ace.ace -finalize
@@ -381,7 +409,12 @@ sn -k Key
 call make.bat
 gacutil -i ISE.Reflection.Emitter.exe
 copy ISE.Reflection.Emitter.exe ..\bin
+goto emitter_registered
+
 :emitter_generated
+gacutil -u ISE.Reflection.Emitter
+gacutil -i ISE.Reflection.Emitter.exe
+:emitter_registered
 cd ..
 
 echo ******************************************
@@ -395,6 +428,8 @@ if not exist EIFGEN goto generate_assembly_manager
 cd EIFGEN
 cd W_code
 if not exist ISE.AssemblyManager.dll goto generate_assembly_manager
+gacutil -u ISE.AssemblyManager
+gacutil -i ISE.AssemblyManager.exe
 cd ..
 cd ..
 goto assembly_manager_generated

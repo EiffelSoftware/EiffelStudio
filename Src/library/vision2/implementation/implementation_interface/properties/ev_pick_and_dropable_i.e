@@ -15,6 +15,8 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_SHARED_TRANSPORT_I
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_I
 
@@ -231,9 +233,9 @@ feature {EV_ANY_I} -- Implementation
 			last_pointed_target_is_void: last_pointed_target = Void
 		end
 
-	pointer_x,
-	pointer_y: INTEGER
-			-- Destination screen position.
+--	pointer_x,
+--	pointer_y: INTEGER
+--			-- Destination screen position.
 
 	over_valid_target: BOOLEAN
 			-- Is the cursor over a target that accepts `pebble'?

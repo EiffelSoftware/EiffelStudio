@@ -1627,12 +1627,13 @@ feature
 	feature_table_file_id: INTEGER is
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
-		require
-			types_not_void: types /= Void
-			types_not_empty: not types.is_empty
 		do
 			if internal_feature_table_file_id = -1 then
-				Result := types.first.static_type_id
+				if has_types then
+					Result := types.first.static_type_id
+				else
+					Result := class_id
+				end
 				internal_feature_table_file_id := Result
 			else
 				Result := internal_feature_table_file_id

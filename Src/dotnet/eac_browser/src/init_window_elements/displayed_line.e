@@ -16,14 +16,19 @@ feature {NONE} -- Initialization
 			-- Initialiaze `entities'.
 		do
 			create entities.make
+			create path_icon.make_empty
 		ensure
 			non_void_entities: entities /= Void
+			non_void_path_icon: path_icon /= Void
 		end
 
 feature -- Access
 
 	entities: LINKED_LIST [ENTITY_LINE]
 			-- entities contained in line.
+			
+	path_icon: STRING
+			-- Path to icon.
 
 	selected: BOOLEAN
 			-- Is line selected?
@@ -36,6 +41,14 @@ feature -- Status Setting
 			selected := a_bool
 		ensure
 			selected_set: selected = a_bool
+		end
+		
+	set_path_icon (a_path: STRING) is
+			-- Set `path_icon' with `a_path'.
+		do
+			path_icon := a_path
+		ensure
+			path_icon_set: path_icon = a_path
 		end
 		
 
@@ -86,6 +99,7 @@ feature -- Basic Operation
 	
 invariant
 	non_void_entities: entities /= Void
+	non_void_path_icon: path_icon /= Void
 
 end -- class DISPLAYED_LINE
 

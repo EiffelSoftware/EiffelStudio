@@ -791,9 +791,19 @@ feature -- Generation (Linking rules)
 				i := i + 1
 			end
 
-			make_file.putchar (' ')
-			make_file.putstring (System_object_prefix)
-			make_file.putint (1)
+			from
+				baskets_count := system_baskets.count
+				i := 1
+			until
+				i > baskets_count
+			loop
+				if not system_baskets.item (i).empty then
+					make_file.putchar (' ')
+					make_file.putstring (System_object_prefix)
+					make_file.putint (i)
+				end
+				i := i + 1
+			end
 
 			make_file.new_line
 			make_file.new_line

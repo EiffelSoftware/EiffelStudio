@@ -13,7 +13,6 @@ root
 	
 default
 	assertion (require);
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base");
 	
 cluster
 
@@ -21,7 +20,6 @@ cluster
 
 	-- EiffelBase
 	kernel:			"$EIFFEL4\library\base\kernel";
-	routines:			"$EIFFEL4\library\base\routines";
 	support:			"$EIFFEL4\library\base\support";
 	access:			"$EIFFEL4\library\base\structures\access";
 	cursors:			"$EIFFEL4\library\base\structures\cursors";
@@ -35,7 +33,6 @@ cluster
 	table:			"$EIFFEL4\library\base\structures\table";
 	traversing:		"$EIFFEL4\library\base\structures\traversing";
 	tree:				"$EIFFEL4\library\base\structures\tree";
-	thread:			"$EIFFEL4\library\thread";
 
 	-- EiffelTime
 	time:	"$EIFFEL4\library\time";
@@ -69,8 +66,8 @@ cluster
 	
 external
 	object:	
-		"$EIFFEL4\library\time\Clib\datetime.lib",
-		"C:\MATISSE\lib\matisse.lib",
-		"$EIFFEL\library\matisse\matisse_externals\Clib\mt_support.lib";
+		"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib",
+		"$MTS_ROOT\lib\matisse.lib",
+		"$EIFFEL4\library\matisse\matisse_externals\Clib\mt_support.lib";
 
 end

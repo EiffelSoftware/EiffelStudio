@@ -66,7 +66,7 @@ feature {ROUTINE_WIN_MGR} -- Displaying
 			then
 				new_title.append ("   (stop)");		
 			end;
-			text_window.display_header (new_title);
+			tool.set_title (new_title);
 		end;
 
 feature -- Formatting
@@ -78,12 +78,12 @@ feature -- Formatting
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
 			e_class: E_CLASS;
-			class_text: CLASS_TEXT;
-			modified_class, position_saved: BOOLEAN;
-			last_cursor_position, last_top_position: INTEGER;
+			class_tool: CLASS_W;
+			modified_class: BOOLEAN;
 			retried: BOOLEAN;
 			same_stone, error: BOOLEAN;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			cur: CURSOR
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -101,11 +101,11 @@ feature -- Formatting
 				end;
 				if
 					do_format or filtered or modified_class or else
-					(text_window.last_format.associated_command /= Current or
-					not equal (stone, text_window.root_stone))
+					(tool.last_format.associated_command /= Current or
+					not stone.same_as (tool.stone))
 				then
 					if stone /= Void and then stone.is_valid then
-						same_stone := equal (stone, text_window.root_stone);
+						same_stone := equal (stone, tool.stone);
 						display_temp_header (stone);
 						!! mp.set_watch_cursor;
 						stone_text := stone.origin_text;
@@ -115,22 +115,24 @@ feature -- Formatting
 							if filed_stone /= Void then
 								if filed_stone.file_name /= Void then
 									error := true;
-									warner (text_window).gotcha_call 	
+									warner (popup_parent).gotcha_call 	
 									(w_Cannot_read_file (filed_stone.file_name))
 								else
 									error := true;
-									warner (text_window).gotcha_call 
+									warner (popup_parent).gotcha_call 
 										(w_No_associated_file)
 								end;
 							end			
 						end;
-						text_window.clean;
+						text_window.clear_window;
+						tool.set_editable_text;
 						filed_stone ?= stone;
 						if filed_stone /= Void then
-							text_window.set_file_name (file_name (filed_stone));
+							tool.set_file_name (file_name (filed_stone));
 						end;
-						text_window.set_root_stone (stone);
-						text_window.put_string (stone_text);
+						tool.set_stone (stone);
+						text_window.set_text (stone_text);
+						tool.show_editable_text;
 						if stone.clickable then
 							if modified_class then
 								if not error and not do_format then
@@ -139,41 +141,26 @@ feature -- Formatting
 										-- internally (resynchronization, ...)
 									class_name := classc_stone.e_class.name;
 									error := true;
-									warner (text_window).gotcha_call 
+									warner (popup_parent).gotcha_call 
 										(w_Class_modified (class_name))
 								end
 							else
-								click_list := stone.click_list;
-								if (click_list /= Void) then
-									text_window.share (click_list)
-								end
+								text_window.update_clickable_from_stone
 							end
 						end;
-						class_text ?= text_window;
+						class_tool ?= tool;
 						if 
-							class_text /= Void and then (
-							(same_stone and class_text.last_format = 
-										class_text.tool.showclick_frmt_holder) or
-							(do_format and class_text.last_format.associated_command = Current))
+							class_tool /= Void and then (
+							(same_stone and tool.last_format = 
+										class_tool.showclick_frmt_holder) or
+							(do_format and tool.last_format.associated_command = Current))
 						then
-							last_cursor_position := class_text.cursor_position;
-							last_top_position := class_text.top_character_position;
-							position_saved := true
+							cur := text_window.cursor;
 						end;
-						text_window.set_editable;
-						text_window.display;
-						text_window.set_mode_for_editing;
-						if position_saved then
-							if last_cursor_position > text_window.size then
-								last_cursor_position := text_window.size
-							end;
-							if last_top_position > text_window.size then
-								last_top_position := text_window.size
-							end;
-							text_window.set_cursor_position (last_cursor_position);
-							text_window.set_top_character_position (last_top_position)
+						if cur /= Void then
+							text_window.go_to (cur)
 						end;
-						text_window.set_last_format (holder);
+						tool.set_last_format (holder);
 						display_header (stone);
 						mp.restore
 					end;
@@ -182,7 +169,7 @@ feature -- Formatting
 			else
 				!! mp.do_nothing;
 				mp.restore
-				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
 			end
 		rescue
 			if original_exception = Io_exception then
@@ -193,20 +180,15 @@ feature -- Formatting
 			end
 		end;
 
-feature -- Clickables
-
-	click_list: ARRAY [CLICK_STONE]
-
-
 feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format.associated_command = Current then
-				text_window.display_header ("Producing text format...")
+			if tool.last_format.associated_command = Current then
+				tool.set_title ("Producing text format...")
 			else
-				text_window.display_header ("Switching to text format...")
+				tool.set_title ("Switching to text format...")
 			end
 		end;
 

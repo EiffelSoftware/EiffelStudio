@@ -12,12 +12,35 @@ deferred class
 inherit
 	EV_ANY_I
 
-	EV_TEXTABLE_I
+	EV_PIXMAPABLE_I
 
 feature -- Access
 
-	interface: EV_ITEM
-			-- Interface of the current item
+	text: STRING is
+			-- Current label of the item
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
+		require
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Make `txt' the new label of the item.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		deferred
+		ensure
+			text_set: text.is_equal (txt)
+		end
 
 feature -- Status settings
 
@@ -31,16 +54,6 @@ feature -- Status settings
 --		ensure
 --			parent_set: parent = par
 --		end
-
-	set_interface (an_interface: EV_ITEM) is
-			-- Make `an_interface' the new interface of the item.
-		require
-			an_interface /= Void
-		do
-			interface := an_interface
-		ensure
-			interface = an_interface
-		end
 
 feature -- Event : command association
 
@@ -61,6 +74,21 @@ feature -- Event : command association
 			valid_command: cmd /= Void
 		deferred
 		end	
+
+feature -- Implementation
+
+	interface: EV_ITEM
+			-- Interface of the current item
+
+	set_interface (an_interface: EV_ITEM) is
+			-- Make `an_interface' the new interface of the item.
+		require
+			an_interface /= Void
+		do
+			interface := an_interface
+		ensure
+			interface = an_interface
+		end
 
 end -- class EV_ITEM_I
 

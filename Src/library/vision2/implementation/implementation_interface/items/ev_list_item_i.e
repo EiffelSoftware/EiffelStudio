@@ -13,8 +13,6 @@ deferred class
 inherit
 	EV_ITEM_I
 
-	EV_PIXMAPABLE_I
-
 feature {NONE} -- Initialization
 
 	make (par: EV_LIST) is

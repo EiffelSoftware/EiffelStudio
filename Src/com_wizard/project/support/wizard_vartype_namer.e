@@ -152,6 +152,8 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_pintval, binary_or (Vt_byref, Vt_int))
 			variant_field_names.put (Variant_puintval, binary_or (Vt_byref, Vt_uint))
 			variant_field_names.put (Variant_pdecval, binary_or (Vt_byref, Vt_decimal))
+			variant_field_names.put (Variant_brecval, Vt_record)
+			variant_field_names.put (Variant_brecval, binary_or (Vt_byref, Vt_record))
 			variant_field_names.put (Variant_byref, binary_or (Vt_byref, Vt_void))
 
 			create ce_array_function_names.make (30)

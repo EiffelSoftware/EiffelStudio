@@ -522,22 +522,6 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 				// C.GTK_MAPPED_ENUM) \\ 2)
 			) = 1
 		end
-		
-	enable_pnd_prelight_state is
-			-- 
-		do
---			pre_pnd_state := C.gtk_widget_struct_state (c_object)
---			C.gtk_widget_set_state (c_object, C.Gtk_state_prelight_enum)
---			C.gtk_widget_draw (c_object, NULL)
-		end
-		
-	disable_pnd_prelight_state is
-		do
---			if C.gtk_widget_struct_state (c_object) = C.Gtk_state_prelight_enum then
---				C.gtk_widget_set_state (c_object, pre_pnd_state)
---				C.gtk_widget_draw (c_object, NULL)
---			end	
-		end
 	
 	pre_pnd_state: INTEGER
 	

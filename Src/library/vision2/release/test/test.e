@@ -38,7 +38,7 @@ feature
 			scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
-			menu_item: EV_MENU
+			menu_item: EV_MENU_ITEM
 			description_frame: EV_FRAME
 			timer: EV_TIMEOUT
 		do
@@ -163,7 +163,7 @@ feature
 			Result.extend (create {EV_LIST}.make_for_test)
 			Result.extend (create {EV_MULTI_COLUMN_LIST}.make_for_test)
 			Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
---|FIXME			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
@@ -242,7 +242,6 @@ feature
 			Result.extend (create {EV_ENVIRONMENT})
 			Result.extend (create {EV_FONT})
 			Result.extend (create {EV_FONT_CONSTANTS})
---|FIXME		Result.extend (create {EV_KEY_CODE})
 			Result.extend (create {EV_RECTANGLE})
 			Result.extend (create {EV_TIMEOUT})
 			Result.extend (create {EV_DRAWABLE_CONSTANTS})
@@ -304,7 +303,7 @@ feature
 			t: EV_TEXTABLE
 			s: STRING
 		do
-			create Result.make_with_text ("Widget packing heirachy")
+			create Result.make_with_text ("Widget packing hierarchy")
 			l := a_container.linear_representation
 			from l.start until l.after loop
 				c ?= l.item
@@ -351,6 +350,10 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/19 16:17:49  brendel
+--| Spelling.
+--| Changed MENU to MENU ITEM for non-widgets.
+--|
 --| Revision 1.18  2000/04/17 17:50:16  brendel
 --| Added EV_COMBO_BOX.
 --|

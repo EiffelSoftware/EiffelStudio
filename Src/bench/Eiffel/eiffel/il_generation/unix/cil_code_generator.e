@@ -1272,6 +1272,12 @@ feature -- Assertions
 		do
 		end
 
+	generate_raise_exception (a_code: INTEGER; a_tag: STRING) is
+			-- Generate an exception of type EIFFEL_EXCEPTION with code
+			-- `a_code' and with tag `a_tag'.
+		do
+		end
+
 	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
 			-- Generate `_invariant' that checks `current_class_type' invariants.
 		do

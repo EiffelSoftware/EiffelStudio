@@ -163,7 +163,7 @@ feature -- Directory
 				loop
 					l_char := a_dir.item (cnt)
 					if l_char = '/' or l_char = '\' and then not l_dir_string.is_empty then
-						Result.put (clone (l_dir_string), l_arr_index)
+						Result.put (l_dir_string.twin, l_arr_index)
 						l_dir_string.wipe_out
 						l_arr_index := l_arr_index + 1
 					else

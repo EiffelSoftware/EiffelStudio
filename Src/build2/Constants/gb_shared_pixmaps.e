@@ -144,6 +144,11 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("build_window")
 		end
+		
+	Icon_format_onces: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("format_onces")
+		end
 	
 	Icon_minimize: ARRAY [EV_PIXMAP] is
 		once

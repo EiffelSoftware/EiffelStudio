@@ -486,6 +486,17 @@ feature {NONE} -- Implementation
 			name_field.return_actions.extend (agent update_name_when_return_pressed)
 			attribute_editor_box.extend (name_field)
 			attribute_editor_box.disable_item_expand (name_field)
+			
+			if object.is_top_level_object then
+				create client_check_button.make_with_text ("Generate as client")
+				attribute_editor_box.extend (client_check_button)
+				attribute_editor_box.disable_item_expand (label)
+				if object.generate_as_client then
+						-- Ensure that the button reflects the current state of `object'.
+					client_check_button.enable_select
+				end
+				client_check_button.select_actions.extend (agent update_client_setting)
+			end
 
 			create separator
 			separator.set_minimum_height (Object_editor_padding_width * 2)
@@ -565,6 +576,18 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	update_client_setting is
+			-- Update client setting of `object'.
+		require
+			object_is_top_level: object.is_top_level_object
+		do
+			if client_check_button.is_selected then
+				object.enable_client_generation
+			else
+				object.disable_client_generation
+			end
+		end
+
 	show_event_dialog is
 			-- Display the event dialog
 		require
@@ -778,6 +801,9 @@ feature {NONE} -- Implementation
 	
 	control_holder: EV_VERTICAL_BOX
 		-- Holds the controls, and is placed in the scrollable area.
+		
+	client_check_button: EV_CHECK_BUTTON
+		-- Enables a user to specify if `Current' uses EiffelVision as a client or not.
 
 	for_all_input_fields (action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]]) is
 			-- For all input fields within `Current', call `action'.

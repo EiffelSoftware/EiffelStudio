@@ -37,7 +37,7 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item>Enabled creation of SPECIAL instances, no need to create an instance of TO_SPECIAL or ARRAY to get a SPECIAL instance. Now you can simply do:<code_block>my_special: <class_name>SPECIAL</class_name> [<class_name>INTEGER</class_name>]
+			<item>Enabled creation of <class_name>SPECIAL</class_name> instances, no need to create an instance of <class_name>TO_SPECIAL</class_name> or <class_name>ARRAY</class_name> to get a <class_name>SPECIAL</class_name> instance. Now you can simply do:<code_block>my_special: <class_name>SPECIAL</class_name> [<class_name>INTEGER</class_name>]
 <keyword>create</keyword> my_special.<feature_name>make</feature_name> (10)</code_block>
 			</item>
 			<item>Fixed issue about conformance checking of type containing a formal generic parameter. We would always evaluate the formal to its constraint, thus allowing the code below to be accepted where it should not have been:

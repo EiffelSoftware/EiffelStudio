@@ -12,7 +12,7 @@ root
 	WIDGETS: start
 
 default
-	assertion (all)
+	assertion (require)
 
 cluster
 	root_cluster:	"$ISE_EIFFEL/examples/vision2/widgets"

@@ -76,7 +76,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%T@echo $(LDFLAGS) /OUT:$appl.exe > $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $library  >> $@%N%
-%%T@echo USER32.lib WSOCK32.LIB ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
+%%T@echo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
 %%T@echo $appl.res >> $@%N%
 %%T@echo $precompilelib\precomp.lib >> $@%N%
 %%Tfor %%i in ($(OBJECTS)) do echo %%i >> $@%N%
@@ -98,7 +98,7 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%T$(RM) Makefile.SH%N%
 %%Tcopy Melted.eif preobj.obj%N%
 %%Tcopy $(EIFFEL4)\bench\spec\w32msc\es3sh\version.eif .%N%
-%%Tfor %%i in ($(SUBDIRS)) do del %%i /s /q%N%
+%%Tfor %%i in ($(SUBDIRS)) do echo y|del %%i%N%
 %%Tfor %%i in ($(SUBDIRS)) do rd %%i%N%
 %#%N%
 %working.ico:%N%
@@ -112,15 +112,15 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %driver.res: driver.rc working.ico%N%
 %%Trc -r driver.rc%N%
 %#%N%
-%$precompilelib\precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
+%precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
 %%T$(RM) $@%N%
-%%Tlib /OUT:$precompilelib\precomp.lib $(OBJECTS) $(EXTERNALS)%N%
+%%Tlib /OUT:precomp.lib $(OBJECTS) $(EXTERNALS)%N%
 %#%N%
-%driver.lnk: e1\emain.obj $precompilelib\precomp.lib driver.res $(EOBJECTS)%N%
+%driver.lnk: e1\emain.obj precomp.lib driver.res $(EOBJECTS)%N%
 %%Techo $(LDFLAGS) /OUT:driver.exe > $@%N%
 %%Techo e1\emain.obj >> $@%N%
-%%Techo $precompilelib\precomp.lib >> $@%N%
-%%Techo USER32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
+%%Techo precomp.lib >> $@%N%
+%%Techo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
 %%Techo $(EOBJECTS) >> $@%N%
 %%Techo $(EIFFEL4)\bench\spec\w32msc\lib\wkbench.lib  >> $@%N%
 %%Techo driver.res >> $@"

@@ -1,3 +1,7 @@
+lib_path: "C:\BC5\lib"
+
+include_path: "C:\BC5\include"
+
 eiffel4: "$(EIFFEL4)"
 
 platform: "w32bcc"
@@ -34,7 +38,7 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %..\..\$appl.rc:%N%
 %%Tif not exist ..\..\$appl.rc copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc ..\..\$appl.rc%N%
 %#%N%
-%$appl.rc: ..\..\$appl.rc $(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc%N%
+%$appl.rc: ..\..\$appl.rc $(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc%N
 %%Tcopy ..\..\$appl.rc+$(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc $appl.rc%N%
 %#%N%
 %$appl.res: $appl.rc working.ico appl.ico Makefile $appl.ico%N%
@@ -59,18 +63,18 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %%Tif not exist appl.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico .%N%
 %#%N%
 %object.lnk: $(OBJECTS) $(EOBJECTS) $(EXTERNALS)%N%
-%%Tdel $@%N%
+%del $@%N%
 %%T&echo $** + >> $@%N%
 %#%N%
 %$appl.lnk: object.lnk e1\emain.obj Makefile $appl.res%N%
 %%T$(RM) $@%N%
 %%Techo $(LDFLAGS) + > $@%N%
-%%Techo e1\emain.obj, + >> $@%N%
+%%Techo e1\emain.obj+$(LIB_PATH)\c0w32.obj, + >> $@%N%
 %%Techo $appl.exe,, + >> $@%N%
 %%Techo $library + >> $@%N%
 %%Techo CW32+IMPORT32.lib+ >> $@%N%
 %%Techo OLE2W32.LIB + >> $@%N%
-%%Techo $precompilelib\precomp.lib >> $@%N%
+%%Techo $precomplib\precomp.lib >> $@%N%
 %%Techo ,,$appl.res >> object.lnk%N%
 %%Techo @object.lnk >> $@%N%
 %#"
@@ -90,8 +94,8 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%T$(RM) *.bak%N%
 %%Tcopy Melted.eif preobj.obj%N%
 %%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\version.eif .%N%
-%%Tfor  in ($(SUBDIRS)) do del %%i /s /q%N%
-%%Tfor  in ($(SUBDIRS)) do rd %%i%N%
+%%Tfor %i in ($(SUBDIRS)) do del %i /s /q%N%
+%%Tfor %i in ($(SUBDIRS)) do rd %i%N%
 %#%N%
 %appl.ico:%N%
 %%Tif exist ..\..\console.ico copy ..\..\appl.ico .%N%
@@ -108,7 +112,7 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %driver.res: driver.rc appl.ico working.ico%N%
 %%Tbrc32 -i$(INCLUDE_PATH) -r driver.rc%N%
 %#%N%
-%$precompilelib\precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
+%precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
 %%T$(RM) $@%N%
 %%T&tlib /p128 /c $@ +$** %N%
 %#%N%
@@ -116,11 +120,11 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%T$(RM) $@%N%
 %%T&tlib /p128 /c $@ +$**%N%
 %#%N%
-%driver.lnk: e1\emain.obj $precompilelib\precomp.lib driver.res eobject.lib%N%
+%driver.lnk: e1\emain.obj precomp.lib driver.res eobject.lib%N%
 %%Techo $(LDFLAGS) + > $@%N%
-%%Techo e1\emain.obj, + >> $@%N%
+%%Techo e1\emain.obj+$(LIB_PATH)\c0w32.obj, + >> $@%N%
 %%Techo driver.exe,, + >> $@%N%
-%%Techo $precompilelib\precomp.lib + >> $@ %N%
+%%Techo precomp.lib + >> $@ %N%
 %%Techo CW32+IMPORT32.lib+ >> $@%N%
 %%Techo eobject.lib+ >> $@%N%
 %%Techo $(EIFFEL4)\bench\spec\w32bcc\lib\wkbench.lib + >> $@%N%
@@ -137,20 +141,25 @@ all: "all:: "
 intermediate_file_ext: "lib"
 
 make_intermediate: "%Tdel $@%N%
-%%T&tlib /p32 /c $@ +$**%N%
+%%Tdel tlib.dum%N%
+%%Techo Building library%N%
+%%T&echo +$** & >> tlib.dum%N%
+%%Techo +the_end >> tlib.dum%N%
+%%Ttlib /p128 /c $@ @tlib.dum%N%
+%%Tdel tlib.dum%N%
 %#%N%
 %.c.obj:%N%
 %%Tif exist t.cmp del t.cmp%N%
-%%Tfor %%i in ($(CFLAGS)) do echo %%i >> t.cmp%N%
-%%Tfor %%i in ($(INCLUDE_PATH)) do echo %%i >> t.cmp%N%
+%%Tfor %i in ($(CFLAGS)) do echo %i >> t.cmp%N%
+%%Tfor %i in ($(INCLUDE_PATH)) do echo %i >> t.cmp%N%
 %%T$(CC) @t.cmp $<%N%
 %%T@del t.cmp%N%
 %#%N%
 %.x.obj:%N%
 %%T$(EIFFEL4)\bench\spec\w32bcc\bin\x2c $< $*.c%N%
 %%Tif exist t.cmp del t.cmp%N%
-%%Tfor %%i in ($(CFLAGS)) do echo %%i >> t.cmp%N%
-%%Tfor %%i in ($(INCLUDE_PATH)) do echo %%i >> t.cmp%N%
+%%Tfor %i in ($(CFLAGS)) do echo %i >> t.cmp%N%
+%%Tfor %i in ($(INCLUDE_PATH)) do echo %i >> t.cmp%N%
 %%T$(CC) @t.cmp $*.c%N%
 %%Tdel t.cmp"
 

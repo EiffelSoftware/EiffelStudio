@@ -128,13 +128,6 @@ struct stchunk {
 #define GS_ON		0x00000002		/* Generation scavenging is set */
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
-/*
- * Garbage collector's statistics
- */
-#define GST_NBR		2				/* Number of distinct algorithms */
-#define GST_PART	0				/* Index for partial collection stats */
-#define GST_GEN		1				/* Index for generation collection stats */
-
 /* General-purpose exported functions */
 extern void plsc(void);					/* Partial scavenging */
 extern void urgent_plsc(char **object);			/* Partial scavenge with given local root */
@@ -158,10 +151,7 @@ extern void gfree(register union overhead *zone);	/* Garbage collector's free ro
 
 /* Exported data-structure declarations */
 extern struct stack loc_set;			/* Local variable stack */
-extern struct stack loc_stack;			/* Local indirection stack */
 extern struct stack once_set;			/* Once functions */
-extern struct gacinfo g_data;			/* Garbage collection status */
-extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
 extern struct stack moved_set;			/* Describes the new generation */
 extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
 extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */

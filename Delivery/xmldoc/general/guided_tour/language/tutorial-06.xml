@@ -12,7 +12,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>We now look at the overall organization of Eiffel software.  </paragraph>
-		<paragraph>References to  Eiffel Software -originated libraries appearing in subsequent examples include: 
+		<paragraph>References to Eiffel Software's libraries appearing in subsequent examples include: 
 			<bold>EiffelBase</bold>, the fundamental open-source library covering data structures and algorithms; the 
 			<bold>kernel library</bold>, a subset of EiffelBase covering the most basic notions such as arrays and strings; and 
 			<bold>EiffelVision 2</bold>, an advanced graphics and GUI library providing full compatibility across platforms (Unix, Windows, VMS) with native look-and-feel on each.
@@ -307,7 +307,7 @@
 				<keyword>alias</keyword>
 			</code> clause is optional, but here it is needed because the C name, starting with an underscore, is not valid as an Eiffel identifier.
 		</paragraph>
-		<paragraph>Similar syntax exists to interface with C++ classes.   Eiffel Software  Eiffel includes a tool called 
+		<paragraph>Similar syntax exists to interface with C++ classes. EiffelStudio includes a tool called 
 			Legacy++ which will automatically produce, from a C++ class, an Eiffel class that encapsulates its facilities, making them available to the rest of the Eiffel software as 
 			bona fide  Eiffel features.
 		</paragraph>

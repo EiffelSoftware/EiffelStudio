@@ -23,7 +23,7 @@ inherit
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
-			update_for_pick_and_drop, is_dockable_source, height
+			update_for_pick_and_drop, is_dockable_source
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -215,7 +215,7 @@ feature -- Status setting
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			if has_vertical_button_style then
-				set_style (default_style + Tbstyle_list)
+				set_style (default_style | Tbstyle_list)
 				update_buttons (interface, 1, count)
 			end
 		end
@@ -863,34 +863,17 @@ feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 			-- Default style used to create the control
-		local
-			Ccs_constants: WEL_CCS_CONSTANTS
 		once
-			create Ccs_constants
-
-			Result := 
-				Ws_visible + 
-				Ws_child + 
-				Ws_clipchildren +
-				Ws_clipsiblings +
-				Tbstyle_tooltips + 
-				Ccs_constants.Ccs_nodivider
+			Result := Ws_visible | Ws_child | Ws_clipchildren | Ws_clipsiblings |
+				Tbstyle_tooltips | feature {WEL_CCS_CONSTANTS}.Ccs_nodivider
 
 				-- Add the flat style if available.
 			if comctl32_version >= version_470 then
-				Result := Result + Tbstyle_flat
+				Result := Result | Tbstyle_flat
 			end
 		end
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
-
-	height: INTEGER is
-			-- Height of `Current'.
-			-- Redefined from EV_PRIMITIVE as we must not take the `max' of
-			-- `height' into account.
-		do
-			Result := minimum_height
-		end
 		
 	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when

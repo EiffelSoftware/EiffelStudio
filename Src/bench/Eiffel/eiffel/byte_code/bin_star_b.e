@@ -7,19 +7,13 @@ inherit
 			il_star as il_operator_constant
 		redefine
 			generate_operator, is_commutative,
-			is_simple, generate_simple,
-			is_reverted
+			is_simple, generate_simple
 		end
 	
 feature -- Status report
 
 	is_commutative: BOOLEAN is true
 			-- Operation is commutative.
-
-	is_reverted: BOOLEAN is true
-			-- Has result of expression to be converted back to original type of expression
-			-- so that result does not depend on implicit conversion performed by an underlying
-			-- platform to a type with higher precision?
 
 feature -- C code generation
 

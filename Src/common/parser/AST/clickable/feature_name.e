@@ -95,8 +95,7 @@ feature -- stoning
 			a_feature_i: FEATURE_I
 		do
 			a_feature_i := reference_class.feature_named (internal_name);
-io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: FIX ME%N");
-			!!Result.make (a_feature_i, reference_class, 0, 0)
+			Result := a_feature_i.stone (reference_class)
 		end
 
 feature -- Formatting

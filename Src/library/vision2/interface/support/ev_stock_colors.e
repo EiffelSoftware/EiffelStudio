@@ -112,49 +112,49 @@ feature -- Access
 			-- Used for dialog box background.
 			-- Name: "color dialog".
 		once
-			Result := default_color_imp.Color_3d_face
+			Result := implementation.Color_3d_face
 		end
 
 	Color_3d_highlight: EV_COLOR is
 			-- Used for 3D-effects (light color)
 			-- Name "color highlight"
 		once
-			Result := default_color_imp.Color_3d_highlight
+			Result := implementation.Color_3d_highlight
 		end
 
 	Color_3d_shadow: EV_COLOR is
 			-- Used for 3D-effects (dark color)
 			-- Name "color shadow"
 		once
-			Result := default_color_imp.Color_3d_shadow
+			Result := implementation.Color_3d_shadow
 		end
 
 	Color_read_only: EV_COLOR is
 			-- Used for background of editable when read-only.
 			-- Name: "color read only".
 		once
-			Result := default_color_imp.Color_read_only
+			Result := implementation.Color_read_only
 		end
 
 	Color_read_write: EV_COLOR is
 			-- Used for background of editable when write/write enabled.
 			-- Name: "color read write".
 		once
-			Result := default_color_imp.Color_read_write
+			Result := implementation.Color_read_write
 		end
 
 	Default_background_color: EV_COLOR is
 			-- Used for background of most widgets.
 			-- Name: "default background".
 		once
-			Result := default_color_imp.default_background_color
+			Result := implementation.default_background_color
 		end
 
 	Default_foreground_color: EV_COLOR is
 			-- Used for foreground of most widgets.
 			-- Name: "default foreground".
 		once
-			Result := default_color_imp.default_foreground_color
+			Result := implementation.default_foreground_color
 		end
 
 feature -- Basic operations
@@ -185,7 +185,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Default_color_imp: EV_STOCK_COLORS_IMP is
+	implementation: EV_STOCK_COLORS_IMP is
 			-- Responsible for interaction with native graphics toolkit.
 		once
 			create Result

@@ -29,6 +29,7 @@ feature -- Basic operations
 			local_counter: INTEGER
 			tmp_string: STRING
 		do
+			is_pointed := True
 			create pointed_visitor
 			pointed_visitor.visit (a_descriptor.pointed_data_type_descriptor)
 

@@ -639,6 +639,12 @@ feature -- Object editor properties
 	gb_ev_progress_bar_is_segmented_tooltip: STRING is "feature `is_segmented' from EV_PROGRESS_BAR"
 	
 	select_button_text: STRING is "Select..."
+	remove_button_text: STRING is "Remove"
+	set_with_named_file_text: STRING is "Set with named file..."
+	set_with_named_file_tooltip: STRING is "Set pixmap image with named file"
+	clear_text: STRING is "Clear"
+	clear_tooltip: STRING is "Clear pixmap image"
+	pixmap_missing_string: STRING is "Error - named pixmap missing."
 	
 feature -- Booleans
 

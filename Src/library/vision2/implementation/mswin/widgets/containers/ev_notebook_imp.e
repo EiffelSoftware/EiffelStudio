@@ -790,6 +790,14 @@ feature {NONE} -- Implementation
 			wel_win: WEL_WINDOW
 		do
 			v_imp ?= i_th (i).implementation
+				-- | FIXME The WEL_TAB_CONTROL hides and
+				-- shows the children depending on if the current tab is visible.
+				-- The next line ensures that when we remove the child,
+				-- it is always made visible again. This ignores the actual
+				-- state of the child set from Vision2, so at some point, we need
+				-- to fix this. This behaviour is deemed to be better than always being hidden.
+				-- Julian
+			v_imp.show
 			check
 				v_imp_not_void: v_imp /= Void
 			end

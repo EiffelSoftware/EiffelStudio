@@ -20,7 +20,6 @@
 #include "except.h"		/* For `eraise' */
 #include "sig.h"
 #include "hector.h"
-#include "string.h"
 #include "bits.h"
 #include <stdio.h>
 

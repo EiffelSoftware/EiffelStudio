@@ -13,7 +13,6 @@
 
 #include "config.h"
 #include "portable.h"
-#include "string.h"
 #include <ctype.h>
 
 #ifdef I_STRING

@@ -346,7 +346,9 @@ feature {NONE} -- Execution
 				window_manager.last_focused_development_window.Melt_project_cmd.execute
 			end
 
-			show
+			if not is_destroyed then
+				show_modal_to_window (parent_window)
+			end
 			update_preferences
 		end
 
@@ -414,8 +416,6 @@ feature {NONE} -- Execution
 			if create_project_dialog.success then
 				destroy
 				compile_project := create_project_dialog.compile_project
-			else
-				show_modal_to_window (parent_window)
 			end
 		end
 
@@ -455,15 +455,12 @@ feature {NONE} -- Execution
 			li := compiled_projects_list.selected_item
 			if li /= Void then
 				create open_project_cmd.make_with_parent (parent_window)
-				hide
 				set_pointer_style (Pixmaps.Wait_cursor)
 				open_project_cmd.execute_with_file (li.text)
 				set_pointer_style (Pixmaps.standard_cursor)
 
 				if Eiffel_project.initialized then
 					destroy
-				else
-					show_modal_to_window (parent_window)
 				end
 			else
 				create wd.make_with_text (Warning_messages.w_Select_project_to_load)
@@ -478,6 +475,8 @@ feature {NONE} -- Execution
 		local
 			open_project_cmd: EB_OPEN_PROJECT_COMMAND
 		do
+			hide
+
 			create open_project_cmd.make_with_parent (Current)
 			open_project_cmd.execute
 

@@ -52,7 +52,11 @@ feature -- Actions
 		do
 			validate_tabs
 			if last_validation_successful then
+					-- Store the settings into the current project
+					-- settings.
 				store_project_information
+					-- Save the current project settings to disk.
+				system_status.current_project_settings.save
 				hide
 			end
 			command_handler.update

@@ -19,9 +19,6 @@ inherit
 		end
 
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
-	--	undefine
-	--		default_create
-	--	end
 		
 	CONSTANTS
 		undefine
@@ -75,12 +72,9 @@ feature {GB_XML_STORE} -- Output
 					create new_pixmap
 					new_pixmap := clone (pixmap_constant.pixmap)
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-					--Result := string_constant.value
 				else
 					create new_pixmap
 					data := element_info.data
-					data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
-					data := constant_by_name ("pixmap_location") + data
 					create a_file_name.make_from_string (data)
 					create file.make (a_file_name)
 					if file.exists then
@@ -111,13 +105,11 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				if element_info.is_constant then
 					Result := ""
-					a_pixmap_string := element_info.data--constant_by_name (pixmap_path_string)
+					a_pixmap_string := element_info.data
 				else
 					info.enable_pixmaps_set
 					data := element_info.data
-					data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
-					data := "constant_by_name (%"pixmap_location%") + %"" + data
-					Result := pixmap_name + ".set_with_named_file (" + data + "%")"
+					Result := pixmap_name + ".set_with_named_file (%"" + data + "%")"
 					a_pixmap_string := pixmap_name
 				end
 

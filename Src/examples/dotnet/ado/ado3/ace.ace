@@ -75,7 +75,6 @@ assembly
 	Microsoft_visualC:	"Microsoft.VisualC",	"7.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
 	system_DirectoryServices:	"System.DirectoryServices",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
 	system_Runtime_Remoting:	"System.Runtime.Remoting",	"1.0.3300.0",	"neutral",	"b77a5c561934e089"
-	system_Runtime_Serialization_Formatters_Soap:	"System.Runtime.Serialization.Formatters.Soap",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
 	cscompmgd:	"cscompmgd",	"7.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
 
 

@@ -9,7 +9,7 @@ class E_STORE_CASE_INFO
 
 inherit
 
-	E_CMD
+	E_OUTPUT_CMD
 
 creation
 
@@ -21,7 +21,7 @@ feature -- Execution
 		local
 			format_storage: FORMAT_CASE_STORAGE
 		do
-			!! format_storage;
+			!! format_storage.make (output_window);
 			format_storage.execute
 		end;
 

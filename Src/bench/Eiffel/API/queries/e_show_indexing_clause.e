@@ -9,7 +9,7 @@ class E_SHOW_INDEXING_CLAUSE
 
 inherit
 
-	E_CMD;
+	E_OUTPUT_CMD;
 	SHARED_SERVER
 		export 
 			{NONE} all 
@@ -73,10 +73,10 @@ feature -- Execution
 				a_classi := classes.item (sorted_class_names.item);
 				a_class := a_classi.compiled_eclass;
 				if a_class /= Void then
-					a_class.append_clickable_signature (output_window);
+					a_class.append_signature (output_window);
 					display_indexing (a_class)
 				else
-					a_classi.append_clickable_name (output_window);
+					a_classi.append_name (output_window);
 					output_window.put_string ("  (not in system)")
 				end;
 				output_window.new_line;

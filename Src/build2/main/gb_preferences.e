@@ -27,6 +27,13 @@ inherit
 			default_create
 		end
 		
+	VISUAL_STUDIO_INFORMATION
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
 feature {NONE} -- Initialization
 
 	default_create is 
@@ -77,10 +84,16 @@ feature -- Basic operations
 		do
 			--| FIXME Ensure correct handling when used as Envision Wizard.
 			register_basic_graphical_types
-			create file_name.make_from_string (Eiffel_installation_dir_name)
-			file_name.extend ("build")
-			file_name.extend ("config")
-			file_name.extend ("default.xml")
+			if Is_visual_studio_wizard then
+				create file_name.make_from_string (wizard_installation_path)
+				file_name.extend ("config")
+				file_name.extend ("default.xml")
+			else
+				create file_name.make_from_string (Eiffel_installation_dir_name)
+				file_name.extend ("build")
+				file_name.extend ("config")
+				file_name.extend ("default.xml")
+			end
 			initialize (file_name, Eiffel_preferences)
 			directory := clone (Bitmaps_path)
 			directory.extend ("png")

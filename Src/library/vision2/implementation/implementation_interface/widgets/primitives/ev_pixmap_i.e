@@ -16,12 +16,7 @@ inherit
 			interface
 		end
 
---| FIXME
---| When pixmap is added to a container, it has to
---| Behave as a drawing area. Whenever the drawing
---| area gets exposed, we have to make sure it is updated
---| by blitting the pixmap data to the exposed area,
---| effectively making it a double buffered drawing area.
+--	EXCEPTIONS
 
 feature -- Initialization
 
@@ -30,6 +25,16 @@ feature -- Initialization
 		require
 			medium_data_readable: a_file.is_open_read
 			medium_data_is_binary: not a_file.is_plain_text
+		deferred
+		end
+
+	read_from_named_file (file_name: STRING) is
+			-- Load pixmap data from the file named `file_name'.
+			--
+			-- Exceptions: "Unable to retrieve icon information"
+		require
+			file_name_not_void: file_name /= Void
+			file_name_not_empty: not file_name.empty
 		deferred
 		end
 
@@ -54,6 +59,12 @@ feature -- Initialization
 		require
 			x_coordinate_valid: a_x > 0
 			y_coordinate_valid: a_y > 0
+		deferred
+		end
+
+feature  -- Duplication
+
+	copy_pixmap(other: EV_PIXMAP) is
 		deferred
 		end
 
@@ -84,6 +95,10 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/20 23:42:59  pichery
+--| Moved implementation of `read_from_named_file' from interface to
+--| implementation cluster.
+--|
 --| Revision 1.13  2000/03/07 01:16:15  brendel
 --| Cosmetics.
 --|

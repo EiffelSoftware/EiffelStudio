@@ -1,13 +1,13 @@
 indexing
 	description:
-		"Mutex synchronization object, allows threads to access global %
+		"Semaphore synchronization object, allows threads to access global %
 		%data through critical sections."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	MUTEX
+	SEMAPHORE
 
 inherit
 	OBJECT_OWNER
@@ -19,13 +19,15 @@ creation
 
 feature -- Initialization
 
-	make is
-			-- Create mutex.
+	make (count: INTEGER) is
+			-- Create semaphore.
+		require
+			count_positive:	count >= 0
 		do
 			record_owner
-			mutex_pointer := eif_thr_mutex_create
+			sem_pointer := eif_thr_sem_create (count)
 		ensure
-			valid_mutex: mutex_pointer /= default_pointer
+			valid_semaphore: sem_pointer /= default_pointer
 		end
 
 feature -- Access
@@ -33,91 +35,92 @@ feature -- Access
 	is_set: BOOLEAN is
 			-- Is mutex initialized?
 		do
-			Result := (mutex_pointer /= default_pointer)
+			Result := (sem_pointer /= default_pointer)
 		end
 
 feature -- Status setting
 
-	trylock, has_locked: BOOLEAN is
-			-- Has client been successful in locking mutex without waiting?
+	try_wait, trywait: BOOLEAN is
+			-- Has client been successful in decrementing semaphore
+			-- count without waiting?
 		require
-			valid_mutex: is_set
+			valid_semaphore: is_set
 		do
-			Result := eif_thr_mutex_trylock (mutex_pointer)
+			Result := eif_thr_sem_trywait (sem_pointer)
 		end
 
-	lock is
-			-- Lock mutex, waiting if necessary until that becomes possible.
+	wait is
+			-- Decrement semaphore count, waiting if necessary until 
+			-- that becomes possible.
 		require
-			valid_mutex: is_set
+			valid_semaphore: is_set
 		do
-			eif_thr_mutex_lock (mutex_pointer)
+			eif_thr_sem_wait (sem_pointer)
 		end
 
-	unlock is
-			-- Unlock mutex.
+	post is
+			-- Increment semaphore count.
 		require
-			valid_mutex: is_set
+			valid_semaphore: is_set
 		do
-			eif_thr_mutex_unlock (mutex_pointer)
+			eif_thr_sem_post (sem_pointer)
 		end
 
 	destroy is
-			-- Destroy mutex.
+			-- Destroy semaphore.
 		require
-			valid_mutex: is_set
+			valid_semaphore: is_set
 		do
-			eif_thr_mutex_destroy (mutex_pointer)
-			mutex_pointer := default_pointer
+			eif_thr_sem_destroy (sem_pointer)
+			sem_pointer := default_pointer
 		end
 
 
-feature {CONDITION_VARIABLE} -- Implementation
+feature {NONE} -- Implementation
 
-	mutex_pointer: POINTER
-			-- C reference to the mutex.
-
+	sem_pointer: POINTER
+			-- C reference to the semaphore.
 
 feature {NONE} -- Removal
 
 	dispose is
-			-- Called by the garbage collector when the mutex is
-			-- collected.
+			-- Called by the garbage collector when the semaphore
+			-- is collected.
 		do
 			if thread_is_owner and is_set then
-				eif_thr_mutex_destroy (mutex_pointer)
+				eif_thr_sem_destroy (sem_pointer)
 			end
 		end
 
 
 feature {NONE} -- Externals
 
-	eif_thr_mutex_create: POINTER is
+	eif_thr_sem_create (count: INTEGER): POINTER is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_lock (a_mutex_pointer: POINTER) is
+	eif_thr_sem_wait (a_sem_pointer: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_unlock (a_mutex_pointer: POINTER) is
+	eif_thr_sem_post (a_sem_pointer: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN is
+	eif_thr_sem_trywait (a_sem_pointer: POINTER): BOOLEAN is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_destroy (a_mutex_pointer: POINTER) is
+	eif_thr_sem_destroy (a_sem_pointer: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-end -- class MUTEX
+end -- class SEMAPHORE
 
 --|----------------------------------------------------------------
 --| EiffelThread: library of reusable components for ISE Eiffel.

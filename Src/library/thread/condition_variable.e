@@ -1,13 +1,12 @@
 indexing
 	description:
-		"Mutex synchronization object, allows threads to access global %
-		%data through critical sections."
+		"Class describing a condition variable."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	MUTEX
+	CONDITION_VARIABLE
 
 inherit
 	OBJECT_OWNER
@@ -20,99 +19,96 @@ creation
 feature -- Initialization
 
 	make is
-			-- Create mutex.
+			-- Create and initialize condition variable.
 		do
 			record_owner
-			mutex_pointer := eif_thr_mutex_create
-		ensure
-			valid_mutex: mutex_pointer /= default_pointer
+			cond_pointer := eif_thr_cond_create
 		end
 
 feature -- Access
 
 	is_set: BOOLEAN is
-			-- Is mutex initialized?
+			-- Is cond_pointer initialized?
 		do
-			Result := (mutex_pointer /= default_pointer)
+			Result := (cond_pointer /= cond_pointer)
 		end
 
 feature -- Status setting
 
-	trylock, has_locked: BOOLEAN is
-			-- Has client been successful in locking mutex without waiting?
+	signal is
+			-- Unblock one thread blocked on the current condition variable.
 		require
-			valid_mutex: is_set
+			valid_pointer: is_set
 		do
-			Result := eif_thr_mutex_trylock (mutex_pointer)
+			eif_thr_cond_signal (cond_pointer)
 		end
 
-	lock is
-			-- Lock mutex, waiting if necessary until that becomes possible.
+	broadcast is
+			-- Unblock all threads blocked on the current condition variable.
 		require
-			valid_mutex: is_set
+			valid_pointer: is_set
 		do
-			eif_thr_mutex_lock (mutex_pointer)
+			eif_thr_cond_broadcast (cond_pointer)
 		end
 
-	unlock is
-			-- Unlock mutex.
+	wait (a_mutex: MUTEX) is
+			-- Block calling thread on current condition variable.
 		require
-			valid_mutex: is_set
+			valid_pointer: is_set
 		do
-			eif_thr_mutex_unlock (mutex_pointer)
+			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
 		end
 
 	destroy is
-			-- Destroy mutex.
+			-- Destroy condition variable.
 		require
-			valid_mutex: is_set
+			valid_pointer: is_set
 		do
-			eif_thr_mutex_destroy (mutex_pointer)
-			mutex_pointer := default_pointer
+			eif_thr_cond_destroy (cond_pointer)
+			cond_pointer := default_pointer
 		end
 
 
-feature {CONDITION_VARIABLE} -- Implementation
+feature {NONE} -- Implementation
 
-	mutex_pointer: POINTER
-			-- C reference to the mutex.
-
+	cond_pointer: POINTER
+			-- C reference to the condition variable.
 
 feature {NONE} -- Removal
 
 	dispose is
-			-- Called by the garbage collector when the mutex is
-			-- collected.
+			-- Called by the garbage collector when the condition
+			-- variable is collected.
 		do
 			if thread_is_owner and is_set then
-				eif_thr_mutex_destroy (mutex_pointer)
+				eif_thr_cond_destroy (cond_pointer)
 			end
 		end
 
 
 feature {NONE} -- Externals
 
-	eif_thr_mutex_create: POINTER is
+	eif_thr_cond_create: POINTER is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_lock (a_mutex_pointer: POINTER) is
+	eif_thr_cond_broadcast (a_cond_ptr: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_unlock (a_mutex_pointer: POINTER) is
+	eif_thr_cond_signal (a_cond_ptr: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN is
+	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_destroy (a_mutex_pointer: POINTER) is
+	eif_thr_cond_destroy (a_mutex_ptr: POINTER) is
 		external
 			"C | %"eif_threads.h%""
 		end

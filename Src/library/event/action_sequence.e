@@ -98,7 +98,7 @@ feature -- Basic operations
 			then
 				debug ("EVENT_TRACE") print (" calling "+count.out+" actions...%N") end
 				from
-					cursor_stack.extend (index)
+					cursor_stack.extend (cursor)
 					is_aborted_stack.extend (False)
 					start
 				until
@@ -109,7 +109,7 @@ feature -- Basic operations
 					forth
 				end
 				is_aborted_stack.remove
-				go_i_th (cursor_stack.item)
+				go_to (cursor_stack.item)
 				cursor_stack.remove
 			when
 				Paused_state
@@ -282,9 +282,9 @@ feature {NONE} -- Implementation
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
 
-	cursor_stack: LINKED_STACK [INTEGER]
-			-- `item' holds position of cursor in
-			-- second from innermost of possibly recursive `call's.
+	cursor_stack: LINKED_STACK [CURSOR]
+			-- `item' holds position in second from innermost
+			-- of possibly recursive `call's.
 
 	call_buffer: LINKED_QUEUE [EVENT_DATA]
 			-- Holds calls made while `is_paused'
@@ -369,6 +369,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.9  1999/11/05 20:00:11  oconnor
+--| modified to stack CURSORs not just indexs
+--|
 --| Revision 1.8  1999/10/28 22:08:58  oconnor
 --| improved debug trace message
 --|

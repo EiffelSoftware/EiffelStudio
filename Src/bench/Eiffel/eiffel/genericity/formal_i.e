@@ -171,8 +171,6 @@ feature {NONE} -- Not applicable
 				-- FIXME: we should not call it, but in case we have decided that it
 				-- will always return a reference type
 			Result := Reference_c_type
-		ensure then
-			False
 		end
 
 	description: INTEGER_DESC is

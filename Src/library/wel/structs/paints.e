@@ -1,5 +1,5 @@
 indexing
-	description: "Contains informations about the Wm_paint message."
+	description: "Contains information about the Wm_paint message."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -445,7 +445,6 @@ feature {NONE} -- Implementation
 			widgets: ARRAYED_LIST [EV_WIDGET]
 			widget: EV_WIDGET
 		do
-			io.putstring ("draw widgets called")
 				-- Remove all previous figures from `world'.
 			world.wipe_out
 				-- We must  draw the grid if necessary.
@@ -543,37 +542,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
---	set_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
---			-- Set x_position of `widget' in `first' to `x_pos'.
---		do
---			--| FIXME
---			first.set_item_span_item_x_position (widget, x_pos)
---			--second.set_item_x_position (widget, x_pos)
---		end
---		
---	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
---			-- Set y_position of `widget' in `first' to `y_pos'.
---		do
---			--| FIXME
---			first.set_item_span_item_y_position (widget, y_pos)										
---			--second.set_item_y_position (widget, y_pos)
---		end
---		
---	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
---			-- Set width of `widget' in `first' to `new_width'.
---		do
---			--| FIXME
---			first.set_item_span_item_width (widget, new_width)
---			--second.set_item_width (widget, new_width)
---		end
---		
---	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
---			-- Set height of `widget' in `first' to `new_height'.
---		do
---			--| FIXME
---			first.set_item_span_item_height (widget, new_height)
---			--second.set_item_height (widget, new_height)
---		end	
 		
 	set_item_span (v: EV_WIDGET; columns, rows: INTEGER) is
 			-- Adjust `v' so that it spans `columns', `rows' within
@@ -723,12 +691,8 @@ feature {NONE} -- Implementation
 	
 				new_x := x - ((x - x_offset) \\ grid_size)
 				new_y := y - ((y - y_offset) \\ grid_size)	
-				io.putstring ("New positions : " + new_x.out + " : " + new_y.out + "%N")
-				io.putstring ("Column information : " + first.columns.out + " : " + first.item_column_span (selected_item).out + "%N")
-				io.putstring ("Row information : " + first.rows.out + " : " + first.item_row_span (selected_item).out + "%N")
 				temp_x := ((new_x - x_offset) // grid_size + 1).min (first.columns - first.item_column_span (selected_item) + 1).max (1)
 				temp_y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
-				io.putstring ("Track movement info : " + temp_x.out + " : " + temp_y.out + " : " + first.item_column_span (selected_item).out + " : " + first.item_row_span (selected_item).out + "%N")
 				if (first.item_column_position (selected_item) /= temp_x or first.item_row_position (selected_item) /= temp_y) and
 					first.area_clear_excluding_widget (selected_item, temp_x, temp_y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
 					set_item_position (selected_item, temp_x, temp_y)
@@ -948,6 +912,7 @@ feature {NONE} -- Implementation
 		local
 			widget: EV_WIDGET
 			widget_list: ARRAYED_LIST [EV_WIDGET]
+			temp_x, temp_y: INTEGER
 			column_position, row_position, column_span, row_span, end_column_position, end_row_position: INTEGER
 		do
 			--if selected_item = Void then
@@ -967,7 +932,6 @@ feature {NONE} -- Implementation
 				if a_button = 1 and not resizing_widget and not moving_widget then
 						-- Unset this, if this is not the case, as we have 8 checks which would need it
 						-- assigning otherwise
-					io.putstring ("resizing widget True in `button_pressed%N")
 					resizing_widget := True
 					if close_to (x, y, end_column_position, end_row_position) then
 						x_offset := column_span
@@ -1004,25 +968,27 @@ feature {NONE} -- Implementation
 --					--elseif
 					elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
 						moving_widget := True
-						io.putstring ("Resizing widget now false in `button_pressed'.%N")
 						resizing_widget := False
 						x_offset := x - column_position
 						y_offset := y - row_position
-						io.putstring ("Started moving widget")
 					else
 						resizing_widget := False
 					end
 					if resizing_widget or moving_widget then
---						drawing_area.enable_capture	
+						drawing_area.enable_capture	
 					end
 				end
 			
 			end
 				-- We need to highlight a widget if the action is
 				-- to select a widget.
-			io.putstring (resizing_widget.out + " " + moving_widget.out + "%N")
 			if a_button = 1 and not resizing_widget and not moving_widget then
-				selected_item := first.item (x // grid_size + 1, y // grid_size + 1)
+				temp_x := x // grid_size + 1
+				temp_y := y // grid_size + 1
+					-- Only perform the query if valid coordinates.
+				if temp_x <= first.columns and temp_y <= first.rows then
+					selected_item := first.item (temp_x, temp_y)	
+				end
 				draw_widgets
 			end
 		end
@@ -1037,14 +1003,13 @@ feature {NONE} -- Implementation
 --					end_x_scrolling
 --				end
 				if resizing_widget then
-					io.putstring ("Resizing widget now false in `button_released'.%N")
 					resizing_widget := False
 					set_all_pointer_styles (standard_cursor)
---					drawing_area.disable_capture
+					drawing_area.disable_capture
 				elseif moving_widget then
 					moving_widget := False
 					set_all_pointer_styles (standard_cursor)
---					drawing_area.disable_capture
+					drawing_area.disable_capture
 				end
 --			set_initial_area_size
 			draw_widgets

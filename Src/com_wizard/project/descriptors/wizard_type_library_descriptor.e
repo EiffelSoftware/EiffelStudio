@@ -55,6 +55,13 @@ inherit
 			is_equal
 		end
 
+	ECOM_TYPE_FLAGS
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 	make
 
@@ -354,8 +361,10 @@ feature -- Basic operations
 								not referees.item (i).empty) and 
 								not Non_generated_type_libraries.has (guid) 
 							then
-								create implemented_interface_descriptor.make_from_interface (interface_descriptor)
-								system_descriptor.interfaces.force (implemented_interface_descriptor)
+								if not (interface_descriptor.inherited_interface = Void) then
+									create implemented_interface_descriptor.make_from_interface (interface_descriptor)
+									system_descriptor.interfaces.force (implemented_interface_descriptor)
+								end
 							end
 						end
 					end

@@ -1,4 +1,5 @@
-system es4
+system
+	es4
 
 root
 	 ewb_windows (main): "make"
@@ -29,6 +30,7 @@ default
 	--debug ("DEBUG_RECV")
 	--debug ("PASS3")
 	--debug ("TRANSFER")
+	--debug("DEAD_CODE")
 
 cluster
 
@@ -37,7 +39,10 @@ cluster
 	structures(base):		"$\structures"
 
 	kernel(base):		"$\kernel"
-	routines(base):		"$\routines"
+--		default
+--			profile (yes)
+--		end
+
 	support(base):		"$\support"
 	access(structures):	"$\access"
 	cursors(structures):	"$\cursors"
@@ -127,10 +132,17 @@ cluster
 	ast_clickable_b(eiffel_comp):		"$\AST\clickable"
 
 	byte_code(eiffel_comp):			"$\byte_code"
+		--default
+			--profile (yes)
+		--end
 	cecil(eiffel_comp):			"$\cecil"
 	compiler(eiffel_comp):			"$\compiler"
 	eiffel_const(eiffel_comp):		"$\const"
 	generation(eiffel_comp):		"$\generation"
+		--default
+			--profile (yes)
+		--end
+
 	genericity(eiffel_comp):		"$\genericity"
 
 	compiler_ids(eiffel_comp):		"$\ids\compiler"
@@ -144,11 +156,19 @@ cluster
 	file_ids(eiffel_comp):			"$\ids\file"
 	pattern_ids(eiffel_comp):		"$\ids\pattern"
 	feature_as_ids(eiffel_comp): 		"$\ids\feature_as"
-
 	inheritance(eiffel_comp):		"$\inheritance"
 	eiffel_interface(eiffel_comp):	"$\interface"
+
 	polymorphism(eiffel_comp):		"$\polymorphism"
+		--default
+			--profile (yes)
+		--end
+
 	server(eiffel_comp): 			"$\server"
+		--default
+			--profile (yes)
+		--end
+
 	eiffel_shared(eiffel_comp):		"$\shared"
 	skeleton(eiffel_comp):			"$\skeleton"
 	eiffel_structures(eiffel_comp):	"$\structures"
@@ -224,6 +244,10 @@ cluster
 	drag_and_drop(interface):	"$\graphical\drag_and_drop"
 	formatters(interface):		"$\graphical\formatters"
 	main(interface):			"$\graphical\main"
+		--default
+			--profile (yes)
+		--end
+
 	graphical_shared(interface):	"$\graphical\shared"
 	stones(interface):		"$\graphical\stones"
 	text_window(interface):		"$\graphical\text_window"
@@ -237,7 +261,7 @@ cluster
 	platform_mswin(interface):		"$\graphical\spec\widgets\win32"
 	win_graphical_window(interface):		"$\graphical\spec\graphical_window\win32"
 	win_formatters(interface):		"$\graphical\spec\formatters\win32";	
-
+	win_commands(interface):			"$\graphical\spec\commands\win32";
 		-- Case
 	case_common(common):		"$\case_storage"
 	case_bench:			"$EIFFEL_SRC\Eiffel\case_storage\bench"

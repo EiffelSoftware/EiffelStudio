@@ -1,4 +1,9 @@
--- Eiffelbuild button that is focusable and has a symbol. 
+indexing
+	decription: "Eiffelbuild button that is focusable and has a symbol."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
+
 deferred class EB_BUTTON
 
 inherit

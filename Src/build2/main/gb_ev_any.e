@@ -74,6 +74,19 @@ feature -- Access
 	parent_editor: GB_OBJECT_EDITOR
 		-- Object editor containing `Current'.
 		
+	object: GB_OBJECT is
+			-- Object referenced by `Current', contained in `parent_editor'.
+			-- Sometimes `parent_editor' may be Void when we have just created `Current'
+			-- for a useful facility, such as code generation. In this situation,
+			-- you may not query `object' as there is no associated object.
+		require
+			parent_editor_not_void: parent_editor /= Void
+		do
+			Result := parent_editor.object
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 	type: STRING is
 			-- String representation of object_type modifyable by `Current'.
 		deferred

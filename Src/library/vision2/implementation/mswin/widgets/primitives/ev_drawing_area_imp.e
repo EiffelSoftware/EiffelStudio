@@ -15,6 +15,22 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
+			clear,
+			clear_rectangle,
+			draw_point,
+			draw_text,
+			draw_segment,
+			draw_straight_line,
+			draw_arc,
+			draw_pixmap,
+			draw_rectangle,
+			draw_ellipse,
+			draw_polyline,
+			draw_pie_slice,
+			fill_rectangle,
+			fill_ellipse,
+			fill_polygon,
+			fill_pie_slice,
 			initialize,
 			interface
 		end
@@ -93,11 +109,10 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "Drawing area")
 			create screen_dc.make (Current)
 			internal_paint_dc := screen_dc
-			screen_dc.get
+			dc.get
 			{EV_DRAWABLE_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
-			screen_dc.release
-			internal_paint_dc := Void
+			dc.release
 		end	
 
 feature -- Access
@@ -130,6 +145,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	in_paint: BOOLEAN
+			-- Are we inside an onPaint event?
+
+	to_be_cleared: BOOLEAN
+			-- Should the area be cleared?
+
 	class_background: WEL_BRUSH is
 			-- Set the class background to NULL in order
 			-- to have full control on the WM_ERASEBKG event
@@ -161,7 +182,10 @@ feature {NONE} -- Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
+				-- Switch the dc from screen_dc to paint_dc.
 			internal_paint_dc := paint_dc
+			in_paint := True
+			
 				-- Initialise the device for painting.
 			dc.set_background_opaque
 			dc.set_background_transparent
@@ -170,8 +194,12 @@ feature {NONE} -- Implementation
 			reset_pen
 			reset_brush
 
+				-- Call registered onPaint actions
 			interface.expose_actions.call ([invalid_rect.x, invalid_rect.y, invalid_rect.width, invalid_rect.height])
-			internal_paint_dc := Void
+
+				-- Switch back the dc fron paint_dc to screen_dc.
+			internal_paint_dc := screen_dc
+			in_paint := False
 		end
 
 	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
@@ -179,7 +207,12 @@ feature {NONE} -- Implementation
 		local
 			wel_rect: WEL_RECT
 		do
+				-- Set the rectangle to be cleared.
 			to_be_cleared := True
+
+				-- Ask windows to redraw the rectangle
+				-- Windows will then call on_background_erase and
+				-- then on_paint.
 			create wel_rect.make(x1, y1, x2 + 1, y2 + 1)
 			invalidate_rect(wel_rect, True)
 		end
@@ -187,7 +220,12 @@ feature {NONE} -- Implementation
 	clear_and_redraw is
 			-- Redraw the application screen
 		do
+				-- Set the rectangle to be cleared.
 			to_be_cleared := True
+
+				-- Ask windows to redraw the rectangle
+				-- Windows will then call on_background_erase and
+				-- then on_paint.
 			invalidate
 		end
 
@@ -196,6 +234,8 @@ feature {NONE} -- Implementation
 		local
 			wel_rect: WEL_RECT
 		do
+				-- Ask windows to redraw the rectangle
+				-- Windows will then call on_paint.
 			create wel_rect.make(x1, y1, x2 + 1, y2 + 1)
 			invalidate_rect(wel_rect, False)
 		end
@@ -203,6 +243,10 @@ feature {NONE} -- Implementation
 	redraw is
 			-- Redraw the application screen
 		do
+				-- Ask windows to redraw the entire window
+				-- Windows will call on_erase_background (which
+				-- will do nothing since to_be_cleared = False)
+				-- and then on_paint.
 			invalidate
 		end
 
@@ -211,9 +255,6 @@ feature {NONE} -- Implementation
 		do
 			Result := Ws_child + Ws_visible + Cs_owndc
 		end
-
-	to_be_cleared: BOOLEAN
-			-- Should the area be cleared?
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -264,6 +305,216 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature -- Drawing primitives
+
+	clear is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor
+				dc.release
+			else
+				Precursor
+			end
+		end
+
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (x1, y1, x2, y2)
+				dc.release
+			else
+				Precursor (x1, y1, x2, y2)
+			end
+		end
+
+	draw_point (a_x, a_y: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y)
+				dc.release
+			else
+				Precursor (a_x, a_y)
+			end
+		end
+
+	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_text)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_text)
+			end
+		end
+
+	draw_segment (x1, y1, x2, y2: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (x1, y2, x2, y2)
+				dc.release
+			else
+				Precursor (x1, y2, x2, y2)
+			end
+		end
+
+	draw_straight_line (x1, y1, x2, y2: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (x1, y1, x2, y2)
+				dc.release
+			else
+				Precursor (x1, y1, x2, y2)
+			end
+		end
+
+	draw_arc (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			end
+		end
+
+	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_pixmap)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_pixmap)
+			end
+		end
+
+	draw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_width, a_height)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_width, a_height)
+			end
+		end
+
+	draw_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
+			end
+		end
+
+	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (points, is_closed)
+				dc.release
+			else
+				Precursor (points, is_closed)
+			end
+		end
+
+	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			end
+		end
+
+	fill_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_width, a_height)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_width, a_height)
+			end
+		end
+
+	fill_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
+			end
+		end
+
+	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (points)
+				dc.release
+			else
+				Precursor (points)
+			end
+		end
+
+	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				dc.get
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				dc.release
+			else
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_DRAWING_AREA
@@ -291,6 +542,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/22 01:56:15  pichery
+--| added the possibility to draw on the drawing area outside onPaint events.
+--|
 --| Revision 1.30  2000/02/20 20:29:27  pichery
 --| created a factory that build WEL objects (pens & brushes). This factory
 --| keeps created objects into an hashtable in order to avoid multiple object

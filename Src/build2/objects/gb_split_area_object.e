@@ -37,6 +37,9 @@ feature -- Basic operation
 		local
 			widget: EV_WIDGET
 			widget2: EV_WIDGET
+			moved_object: GB_OBJECT
+			constructor: GB_LAYOUT_CONSTRUCTOR_ITEM
+			temp_widget: EV_WIDGET
 		do
 			widget ?= an_object.object
 			check
@@ -50,6 +53,20 @@ feature -- Basic operation
 				-- We need to put in the first position if
 				-- there is currently a second position.
 			if position = 1 or (position = 2 and object.second /=  Void) then
+					-- If we are trying to insert before the first item with a shift pick, then
+					-- we must first move the first item to the second position.
+				if (position = 1) and (not layout_item.is_empty and then layout_item.first /= Void) then
+					constructor ?= layout_item.first
+					moved_object ?= constructor.object
+						-- If we are doing a type change, we will have already unparented this, so we
+						-- must not do it again. There is no nice way to know whether we are currently
+						-- in a type change.
+					temp_widget ?= moved_object.object
+					if temp_widget.parent /= Void then
+						moved_object.unparent
+						add_child_object (moved_object, 2)
+					end
+				end
 				object.set_first (widget)
 				display_object.child.set_first (widget2)
 				if not layout_item.has (an_object.layout_item) then
@@ -59,7 +76,11 @@ feature -- Basic operation
 			else
 				object.set_second (widget)
 				display_object.child.set_second (widget2)
-				if not layout_item.has (an_object.layout_item) then
+					-- Special case when moving the first item to the
+					-- second position.
+				if position = 2 and (layout_item.is_empty) then
+					layout_item.extend (an_object.layout_item)
+				elseif not layout_item.has (an_object.layout_item) then
 					layout_item.go_i_th (2)
 					layout_item.put_left (an_object.layout_item)
 				end

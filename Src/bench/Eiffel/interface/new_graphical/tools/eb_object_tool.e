@@ -82,8 +82,6 @@ feature {NONE} -- Initialization
 			object_tree.key_press_actions.extend (~debug_value_key_action (object_tree, ?))
 			split.set_second (object_tree)
 			split.enable_flat_separator
-				--| FIXME XR: Use preferences to set the initial width.
-			saved_width := 300
 			expand_result := True
 			expand_args := True
 			expand_locals := True
@@ -456,9 +454,6 @@ feature {NONE} -- Implementation
 
 	split: EB_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `local_tree' and `object_tree'.
-
-	saved_width: INTEGER
-			-- Position of the splitter in the object tool.
 
 	icons: ARRAY [EV_PIXMAP] is
 			-- List of available icons for objects.

@@ -70,8 +70,8 @@ short number_connection=0;
 /* Messages */
 char *error_message;/*exported to Eiffel*/
 char *warn_message;/*exported to Eiffel*/
+int error_number;/*exported to Eiffel*/
 
-/*static*/ int error_number;/*exported to Eiffel*/
 static int tmp_int;
 static int data_type, size, max_size, * past_time;
 static char *tmp_st;

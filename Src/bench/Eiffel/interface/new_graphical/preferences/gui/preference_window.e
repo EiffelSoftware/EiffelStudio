@@ -1,5 +1,5 @@
 indexing
-	description: "Editor which edits a class"
+	description: "Window to edit the preferences"
 	author: "Pascal Freund and Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature -- Initialization
 --			sbar: EV_STATUS_BAR
 		do
 			default_create
-			set_title ("Preference tool")
+			set_title ("Preferences")
 			set_size (400, 300)
 
 			create menu
@@ -37,7 +37,6 @@ feature -- Initialization
 
 			create v0
 			extend (v0)
-			v0.disable_homogeneous
 
  			create split
 			v0.extend (split)
@@ -53,7 +52,6 @@ feature -- Initialization
 			right_list.set_column_titles (<<"Short Name","Litteral Value">>)
 			v2.extend (right_list)
 			right_list.select_actions.extend (~right_select)
---			right_list.disable_multiple_selection
 
 			create edit_box
 			v2.extend (edit_box)
@@ -152,11 +150,6 @@ feature -- Graphical Components.
 	font_selec: FONT_SELECTION_BOX
 			-- Box in which the user may change the value associated to a font.
 
---	save_preferences: SAVE_PREFERENCES is
---		once
---			create Result
---		end	
-
 feature -- Widgets.
 
 	menu: EV_MENU_BAR 
@@ -174,15 +167,6 @@ feature -- Widgets.
 	progression: EV_HORIZONTAL_PROGRESS_BAR
 
 feature -- Execution
-
---	left_select (it: EV_LIST_ITEM) is
---			-- Update right list.
---| FIXME
---| Christophe, 8 feb 2000
---| Maybe a more explicit name/comment would be useful.
---		do
---			fill_right_list (it)
---		end
 
 	right_select (l_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Allows change to a value.
@@ -253,7 +237,6 @@ feature --Menu
 	save is
 			-- Save Current Selection.
 		do
---			save_preferences.initialize (Current)
 			resources.save
 		end 
 
@@ -265,7 +248,7 @@ feature --Menu
 	ok is
 			-- Apply then popdown the Preferences Tool.
 		do
---			resources.reinitialize
+			apply
 			destroy
 		end 
 
@@ -339,10 +322,4 @@ feature -- Fill Lists
 			end
 		end
 
-feature -- savable parameters
-
-	get_height_name	: STRING	is "class_tool_height"
-	
-	get_width_name	: STRING	is "class_tool_width"
-
-end -- class CLASS_WINDOW
+end -- class PREFERENCE_WINDOW

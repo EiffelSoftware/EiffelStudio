@@ -110,6 +110,7 @@ feature -- Update
 			s: STRING
 			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
+			act_resource: RESOURCE
 		do
 				--| We update `child_list'
 			from
@@ -139,8 +140,13 @@ feature -- Update
 				s = Void
 			loop
 				create reg_resource.make (s, key_value (p_handle, s))
-				resource := reg_resource.value
-				structure.replace_resource (resource)
+				act_resource := reg_resource.value
+				
+				resource ?= structure.item (act_resource.name)
+				if resource /= Void then
+					resource.set_value (act_resource.value)
+				end
+
 				i := i + 1
 				s := enumerate_value (p_handle, i)
 			end

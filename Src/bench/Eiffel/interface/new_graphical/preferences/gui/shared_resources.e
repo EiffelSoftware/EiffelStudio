@@ -19,12 +19,12 @@ feature -- Access
 			environment: EXECUTION_ENVIRONMENT
 		once
 			if Platform_constants.is_windows then
-				create Result.make_from_location ("D:\46dev\bench.xml","HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+				create Result.make_from_location (System_general,"HKEY_CURRENT_USER\Software\ISE\Eiffel46")
 			else
 				create environment
 				create file_name.make_from_string (environment.home_directory_name)
 				file_name.set_file_name (".es4rc")
-				create Result.make_from_location ("/home/bonnard/bench.xml", file_name)
+				create Result.make_from_location (System_general, file_name)
 			end
 		end
 
@@ -190,6 +190,30 @@ feature -- Setting
 				resources.root_folder.resource_list.extend (resource_item)
 				resources.put_resource (resource_item)
 			end
+		end
+
+feature {NONE} -- File names
+
+	system_general: FILE_NAME is
+			-- General system level resource specification file
+			-- ($EIFFEL4/eifinit/application_name/general)
+		local
+			Eiffel4: STRING
+		do
+			Eiffel4 := Exec_environment.get ("EIFFEL4")
+			if Eiffel4 /= Void then
+				create Result.make_from_string (Eiffel4)
+				Result.extend_from_array (<<"eifinit", "bench">>)
+				Result.set_file_name ("default")
+				Result.add_extension ("xml")
+			end
+		end
+
+feature {NONE} -- Constants
+
+	Exec_environment: EXECUTION_ENVIRONMENT is
+		once	
+			create Result
 		end
 
 end -- class SHARED_RESOURCES

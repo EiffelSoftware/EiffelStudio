@@ -117,18 +117,10 @@ feature -- Implementation
 	update_key_value is
 			-- Gets the appropriate resource from `key_value'
 			-- if the type is unknown, it is assumed to be a string.
---		local
---			ir: INTEGER_RESOURCE
 		do
 			create key_value.make
---			ir ?= value
---			if ir /= Void then
---				key_value.set_type (key_value.Reg_dword)
---				key_value.set_dword_value (ir.actual_value)
---			else
-				key_value.set_type (key_value.Reg_sz)
-				key_value.set_string_value (value.value)
---			end
+			key_value.set_type (key_value.Reg_sz)
+			key_value.set_string_value (value.value)
 		end
 
 feature {NONE} -- Constants

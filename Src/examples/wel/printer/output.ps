@@ -1,8 +1,8 @@
 %!PS-Adobe-3.0
 %%Title: WEL Print Test
 %%Creator: PSCRIPT.DRV Version 4.0
-%%CreationDate: 11/13/95 23:40:28
-%%BoundingBox: 19 8 593 784 
+%%CreationDate: 08/30/96 08:56:28
+%%BoundingBox: 19 9 593 784 
 %%Pages: (atend)
 %%PageOrder: Special
 %%Requirements: 
@@ -12,6 +12,49 @@
 %%LanguageLevel: 1
 %%EndComments
 
+[{
+%%BeginFeature: *JobPatchFile 1
+
+save 
+/version23-manualfeedpatch where { pop false } { true }ifelse
+ % we don't do an explicit 'get' since product and version MAY
+ % be in systemdict or statusdict - this technique gets the lookup
+ % without failure
+statusdict begin
+  product (LaserWriter) eq        % true if LaserWriter
+  version cvr 23.0 eq             % true if version 23
+end
+
+and  % only install this patch if both are true
+and  % true only if patch is not installed and is for this printer
+     % save object and boolean on stack
+dup { exch restore }if
+% either true OR saveobject false
+dup
+{
+  /version23-manualfeedpatch true def
+  /oldversion23-showpage /showpage load def
+  /showpage       % this showpage will wait extra time if manualfeed is true
+  {%
+     statusdict /manualfeed known
+     {% manualfeed known in statusdict
+        statusdict /manualfeed get
+        {% if true then we loop for 5 seconds
+           usertime 5000 add       % target usertime
+           { % loop
+             dup usertime sub 0 lt
+             { exit }if
+           }loop
+           pop             % pop the usertime off the stac
+        }if
+     }if
+     oldversion23-showpage
+  }bind def
+}if
+not{ restore }if
+
+%%EndFeature
+} stopped cleartomark
 %%BeginProlog 
 %%BeginProcSet: Pscript_Win_ErrorHandler 1.0 1
 /currentpacking where{pop/oldpack currentpacking def/setpacking where{pop
@@ -220,10 +263,10 @@ pfprep setpattern K restore N}b}e
 end reinitialize
 userdict begin /pagesave save def end mysetup concat colspRefresh 
 
-0 0 N M 2391 3233 rr : 1.000 1.000 1.000 sco O ; 1 Lw 0 Lc 0 Lj 0 0 0 sco K : 0 0 2391 3233 rc 
-N 2390 3232 1195 1616 ellp : 1.000 1.000 1.000 sco O ; 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3233 rc 
-0 0 N M 2391 3233 - 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3233 rc 
-2391 0 N M -2391 3233 - 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3233 rc : 1.000 1.000 1.000 sco 1008 1595 375 42 rf ; pagesave restore
+0 0 N M 2391 3229 rr : 1.000 1.000 1.000 sco O ; 1 Lw 0 Lc 0 Lj 0 0 0 sco K : 0 0 2391 3229 rc 
+N 2390 3228 1195 1614 ellp : 1.000 1.000 1.000 sco O ; 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3229 rc 
+0 0 N M 2391 3229 - 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3229 rc 
+2391 0 N M -2391 3229 - 1 Lc 1 Lj 0 0 0 sco K ; : 0 0 2391 3229 rc : 1.000 1.000 1.000 sco 1008 1593 375 42 rf ; pagesave restore
 Pscript_Win_Driver_Incr begin
 %%BeginResource: file Pscript_Win_Encoding 2.0 0
 /bullets{{/bullet}repeat}b/ANSIEncoding[/grave/acute/circumflex/tilde/macron
@@ -269,12 +312,12 @@ uW sLT}b/sST{N/sW ~ |/ySP ~ |/xSP ~ |}b/sT{xSP ySP sW sLT}b/sR{: + R 0 0 M}b
 
 end reinitialize
 userdict begin /pagesave save def end mysetup concat colspRefresh 
-: 0 0 0 sco 1 Lw 0 Lc 0 Lj 0 0 2391 3233 rc 0 0 0 sco %%IncludeFont: Courier
+: 0 0 0 sco 1 Lw 0 Lc 0 Lj 0 0 2391 3229 rc 0 0 0 sco %%IncludeFont: Courier-Bold
 (F0) cvn
 0.810 
- (Courier) cvn /Type1 
+ (Courier-Bold) cvn /Type1 
 T 
-(Courier) cvn
+(Courier-Bold) cvn
 mF 
 (F0_42) cvn
 F0
@@ -282,7 +325,7 @@ F0
 xF 
 F0_42
 Ji 
-1008 1595 M 
+1008 1593 M 
 -0.200 0 (Hello, Printer!)A 
 ; 
 LH 
@@ -292,7 +335,7 @@ pagesave restore
 %%PageTrailer
 
 %%Trailer
-%%DocumentNeededFonts: Courier
+%%DocumentNeededFonts: Courier-Bold
 %%DocumentSuppliedFonts: 
 Pscript_Win_Driver_Incr dup /terminate get exec
 savelevel0 restore 

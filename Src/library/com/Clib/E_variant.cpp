@@ -658,364 +658,133 @@ void ccom_set_dispatch_interface_reference (VARIANT * variant, IDispatch *a_valu
 
 EIF_REFERENCE ccom_safearray_unsigned_integer (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	
-	return rt_ce.ccom_ce_safearray_long(a_result);
+	return rt_ce.ccom_ce_safearray_long(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_integer (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_long(a_result);
+	return rt_ce.ccom_ce_safearray_long(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_character (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_char(a_result);
+	return rt_ce.ccom_ce_safearray_char(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_character (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_char(a_result);
+	return rt_ce.ccom_ce_safearray_char(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_short (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-
-	return rt_ce.ccom_ce_safearray_short(a_result);
+	return rt_ce.ccom_ce_safearray_short(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_short (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	
-	return rt_ce.ccom_ce_safearray_short(a_result);
+	return rt_ce.ccom_ce_safearray_short(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_long (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_long(a_result);
+	return rt_ce.ccom_ce_safearray_long(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_long (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_long(a_result);
+	return rt_ce.ccom_ce_safearray_long(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_float (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_float(a_result);
+	return rt_ce.ccom_ce_safearray_float(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_double (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_double(a_result);
+	return rt_ce.ccom_ce_safearray_double(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_currency (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_currency(a_result);
+	return rt_ce.ccom_ce_safearray_currency(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_date (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_date(a_result);
+	return rt_ce.ccom_ce_safearray_date(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_bstr (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_bstr(a_result);
+	return rt_ce.ccom_ce_safearray_bstr(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_dispatch_interface (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_dispatch(a_result);
+	return rt_ce.ccom_ce_safearray_dispatch(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_hresult (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_hresult(a_result);
+	return rt_ce.ccom_ce_safearray_hresult(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_boolean (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_boolean(a_result);
+	return rt_ce.ccom_ce_safearray_boolean(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_variant (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_variant(a_result);
+	return rt_ce.ccom_ce_safearray_variant(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unknown_interface (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_unknown(a_result);
+	return rt_ce.ccom_ce_safearray_unknown(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_decimal (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, * an_array = NULL;
-	
-	an_array = V_ARRAY(variant);
-	if (an_array != NULL)
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (an_array, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_safearray_decimal(a_result);
+	return rt_ce.ccom_ce_safearray_decimal(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
@@ -1193,361 +962,133 @@ void ccom_set_safearray_decimal (VARIANT * variant, EIF_OBJECT a_value)
 
 EIF_REFERENCE ccom_safearray_unsigned_integer_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_long(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_integer_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_long(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_character_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_char(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_char(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_character_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_char(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_char(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_short_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_short(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_short(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_short_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_short(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_short(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unsigned_long_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_long(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_long_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_long(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_float_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_float(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_float(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_double_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_double(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_double(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_currency_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_currency(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_currency(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_date_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_date(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_date(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_bstr_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_bstr(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_bstr(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_dispatch_interface_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_dispatch(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_dispatch(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_hresult_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_hresult(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_hresult(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_boolean_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_boolean(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_boolean(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_variant_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_variant(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_variant(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_unknown_interface_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_unknown(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_unknown(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
 EIF_REFERENCE ccom_safearray_decimal_reference (VARIANT * variant)
 {
-	SAFEARRAY * a_result = NULL, ** an_array_ref = NULL;
-	
-	an_array_ref = V_ARRAYREF(variant);
-	if ((an_array_ref != NULL)&&(*an_array_ref != NULL))
-	{
-		HRESULT hr = 0;
-		hr = SafeArrayCopy (*an_array_ref, &a_result);
-		if (FAILED (hr))
-		{
-				com_eraise (f.c_format_message (hr), EN_PROG);
-		};
-	}
-	return rt_ce.ccom_ce_pointed_safearray_decimal(&a_result);
+	return rt_ce.ccom_ce_pointed_safearray_decimal(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 

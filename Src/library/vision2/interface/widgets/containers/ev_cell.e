@@ -20,6 +20,14 @@ inherit
 		redefine
 			implementation
 		end
+		
+	EV_DOCKABLE_TARGET
+		undefine
+			is_in_default_state
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 create
 	default_create
@@ -108,7 +116,7 @@ feature -- Conversion
 			Result := l
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_SHARED_TRANSPORT_I} -- Implementation
 
 	implementation: EV_CELL_I
 			-- Responsible for interaction with native graphics toolkit.

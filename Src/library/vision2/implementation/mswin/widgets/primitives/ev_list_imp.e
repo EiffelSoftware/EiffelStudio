@@ -133,6 +133,43 @@ feature -- Access
 			Result ?= (ev_children.i_th (index)).interface
 		end
 
+	selected_item: EV_LIST_ITEM is
+			-- Item which is currently selected, for a multiple
+			-- selection, it gives the item which has the focus.
+		do
+			if is_multiple_selection then
+				Result ?= (ev_children.i_th (caret_index + 1)).interface
+			else
+				Result ?= (ev_children.i_th (single_selected_item + 1)).interface
+			end
+		end
+
+	selected_items: LINKED_LIST [EV_LIST_ITEM] is
+			-- List of all the selected items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
+		local
+			index: INTEGER
+			an_item: EV_LIST_ITEM
+		do
+			!! Result.make
+			if is_multiple_selection then
+				from
+					index := multiple_selected_items.lower
+				until
+					index > multiple_selected_items.upper
+				loop
+					an_item ?= (ev_children.i_th(multiple_selected_items.item (index) + 1)).interface
+					Result.extend (an_item)
+					index := index + 1
+				end
+			else
+				Result.extend (selected_item)
+			end
+		end
+
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -148,41 +185,6 @@ feature -- Status report
 	is_multiple_selection: BOOLEAN
 			-- True if the user can choose several items,
 			-- False otherwise
-
-	selected_item: EV_LIST_ITEM_IMP is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
-		do
-			if is_multiple_selection then
-				Result := ev_children.i_th (caret_index + 1)
-			else
-				Result := ev_children.i_th (single_selected_item + 1)
-			end
-		end
-
-	selected_items: LINKED_LIST [EV_LIST_ITEM_IMP] is
-			-- List of all the selected items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
-		local
-			index: INTEGER
-		do
-			!! Result.make
-			if is_multiple_selection then
-				from
-					index := multiple_selected_items.lower
-				until
-					index > multiple_selected_items.upper
-				loop
-					Result.extend (ev_children.i_th(multiple_selected_items.item (index)))
-					index := index + 1
-				end
-			else
-				Result.extend (selected_item)
-			end
-		end
 
 feature -- Status setting
 
@@ -295,16 +297,26 @@ feature {NONE} -- Implementation
 
 	on_lbn_selchange is
 			-- The selection is about to change
+		local
+			item_imp: EV_LIST_ITEM_IMP
 		do
 			execute_command (Cmd_selection, Void)
-			selected_item.execute_command (Cmd_item_activate, Void)
+			item_imp ?= selected_item.implementation
+			if item_imp /= Void then
+				item_imp.execute_command (Cmd_item_activate, Void)
+			end
 		end
 
 	on_lbn_dblclk is
 			-- Double click on a string
+		local
+			item_imp: EV_LIST_ITEM_IMP
 		do
 			execute_command (Cmd_dblclk, Void)
-			selected_item.execute_command (Cmd_item_dblclk, Void)
+			item_imp ?= selected_item.implementation
+			if item_imp /= Void then
+				item_imp.execute_command (Cmd_item_dblclk, Void)
+			end
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation

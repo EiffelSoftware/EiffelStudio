@@ -689,6 +689,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/11 16:26:08  oconnor
+--| formatting
+--|
 --| Revision 1.9  2000/04/05 17:04:14  king
 --| Commented out debugging statements
 --|
@@ -821,7 +824,6 @@ end -- class EV_ANY_IMP
 --|
 --| Revision 1.4.2.3  1999/11/02 17:20:03  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

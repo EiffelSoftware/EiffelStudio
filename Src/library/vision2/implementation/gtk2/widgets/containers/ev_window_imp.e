@@ -284,12 +284,11 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
-			if not is_destroyed then
-				lower_bar.wipe_out
-				upper_bar.wipe_out
-				remove_menu_bar
-				Precursor {EV_CONTAINER_IMP}
-			end
+			lower_bar.wipe_out
+			upper_bar.wipe_out
+			remove_menu_bar
+			is_destroyed := True
+			Precursor {EV_CONTAINER_IMP}
 		end
 		
 	show is
@@ -439,6 +438,7 @@ feature -- Element change
 feature {EV_ANY_IMP} -- Implementation
 
 	set_focus_widget (a_focus_wid: EV_WIDGET_IMP) is
+			-- Set `a_focus_wid' to query for keyboard navigation blocking
 		do
 			focus_widget := a_focus_wid
 		end
@@ -641,6 +641,7 @@ feature {EV_CLIPBOARD_IMP} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WINDOW
+		-- Interface object of `Current'
 
 end -- class EV_WINDOW_IMP
 

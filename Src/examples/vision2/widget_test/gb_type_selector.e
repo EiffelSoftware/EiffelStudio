@@ -102,11 +102,7 @@ feature {NONE} -- Implementation
 			extension: STRING
 			file: RAW_FILE
 		do
-			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
-				extension := "ico"
-			else
-				extension := "png"
-			end
+			extension := "png"
 			if installation_location /= Void then
 				create filename.make_from_string (installation_location)
 				filename.extend ("bitmaps")

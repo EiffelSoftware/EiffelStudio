@@ -179,7 +179,7 @@ feature -- Basic operations
 
 				ec_function_body := ec_array_function_body_automation 
 						(vartype_namer.ec_array_function_name (element_visitor.vt_type),
-						dimension_count)
+						dimension_count, element_visitor.need_generate_ec)
 
 				ec_function_return_type.append (element_visitor.c_type)
 				ec_function_return_type.append (Asterisk)
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
 
-				-- an_array_element = (element_c_type *)&((ccom_c_array_element (an_array, i, element_c_type)));
+				-- an_array_element = (element_c_type *)(&(ccom_c_array_element (an_array, i, element_c_type)));
 				--                value of ^                                                               value of ^
 
 				Result.append ("an_array_element")
@@ -638,15 +638,18 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Open_parenthesis)
 				Result.append (element_c_type)
+
 				if is_element_structure then
-					Result.append (Space)
 					Result.append (Asterisk)
 				end
+
 				Result.append (Close_parenthesis)
+				Result.append (Open_parenthesis)
+
 				if is_element_structure then
 					Result.append (Ampersand)
 				end
-				Result.append (Open_parenthesis)
+
 				Result.append (Open_parenthesis)
 				Result.append ("ccom_c_array_element")
 				Result.append (Space)
@@ -664,7 +667,7 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab)
 
-				-- put (eif_access (intermediate_array), element_ce_function ((element_c_type)*an_array_element), i + 1);
+				-- put (eif_access (intermediate_array), element_ce_function ((element_c_type)an_array_element), i + 1);
 				--                                                         value of ^             value of ^
 
 				Result.append ("put")
@@ -680,15 +683,16 @@ feature {NONE} -- Implementation
 				Result.append (element_ce_function)
 				Result.append (Space)
 				Result.append (Open_parenthesis)
+
+				if is_element_structure then
+ 					Result.append (Asterisk)
+				end
 				Result.append (Open_parenthesis)
 				Result.append (element_c_type)
 				if is_element_structure then
 					Result.append (Asterisk)
-					Result.append (Close_parenthesis)
-				else
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
 				end
+				Result.append (Close_parenthesis)
 				Result.append ("an_array_element")
 				Result.append (Close_parenthesis)
 				Result.append (Comma)
@@ -1076,7 +1080,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.empty
 		end
 
-	ec_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER): STRING is
+	ec_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER; need_generate: BOOLEAN): STRING is
 			--
 		require
 			non_void_rt_function_name: rt_function_name /= Void
@@ -1085,11 +1089,17 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 
-			-- return `rt_functuion_name' (`A_ref', `dim_count', `Old_keyword');
+			-- return ec_mapper.`rt_functuion_name' (`A_ref', `dim_count', `Old_keyword');
 
 			Result.append (Tab)
 			Result.append (Return)
 			Result.append (Space)
+			if need_generate then
+				Result.append (Generated_ec_mapper)
+			else
+				Result.append (Ec_mapper)
+			end
+			Result.append (Dot)
 			Result.append (rt_function_name)
 			Result.append (Space)
 			Result.append (Open_parenthesis)

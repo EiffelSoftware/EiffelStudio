@@ -61,7 +61,7 @@ feature -- Initialize
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
 			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			

@@ -100,16 +100,14 @@ feature -- Status setting
 		deferred
 		end
 
-	set_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
+	enable_multiple_selection is
+			-- Allow more than one item to be selected.
 		require
 		deferred	
 		end
 
-	set_single_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
+	disable_multiple_selection is
+			-- Allow only one item to be selected.
 		require
 		deferred
 		end
@@ -239,6 +237,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/02 18:47:24  rogers
+--| Renamed set_multiple_selection -> enable_multiple_selection and set_single_seelction to disable_multiple_seelction.
+--|
 --| Revision 1.27  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

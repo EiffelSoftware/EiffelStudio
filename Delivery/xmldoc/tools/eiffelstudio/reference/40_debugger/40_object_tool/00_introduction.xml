@@ -29,9 +29,23 @@
 			</link> 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
-			</image>. The third command 
+			</image>.
+</paragraph><paragraph>	
+		
+			The third command 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
-			</image> can give an expanded display of the string relative to an object, by dropping the object onto the button. Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
+			</image> can give an 
+			<link>
+				<url>25_expanded_display_tool.xml</url>
+				<label>expanded display</label>
+			</link> 			
+			 of the string relative to an object, by dropping the object onto the button. Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
+</paragraph><paragraph>
+			And the last command 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_numeric_format_very_small_color.png</url>
+			</image> switch the display of integer values between decimal and hexa format.
+
 		</paragraph>
 	</paragraph></document>

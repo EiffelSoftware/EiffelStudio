@@ -104,7 +104,6 @@ rt_private int  next_gen_id  = 0;
 rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
 rt_private EIF_CONF_TAB **eif_conf_tab = (EIF_CONF_TAB **)0;
 rt_private EIF_ANC_ID_MAP **eif_anc_id_map = (EIF_ANC_ID_MAP **)0;
-rt_private int16 *rtud_inv = (int16 *) 0;
 rt_private int16 cid_array [3];
 rt_private int16 egc_character_dtype = -1;
 rt_private int16 egc_boolean_dtype = -1;

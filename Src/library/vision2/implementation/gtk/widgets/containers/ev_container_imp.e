@@ -279,6 +279,26 @@ feature -- Event handling
 			remove_radio_button (an_item)
 		end
 
+feature {NONE} -- Externals
+	
+	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
+			-- Convert `gslist' to Eiffel structure.
+		local
+			cur: POINTER
+		do
+			create Result.make (10)
+			from
+				cur := gslist
+			until
+				cur = NULL
+			loop
+				Result.extend (gslist_struct_data (cur))
+				cur := gslist_struct_next (cur)
+			end
+		ensure
+		--	same_size: Result.count = g_slist_length (gslist)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER

@@ -467,7 +467,7 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 		if (!strchr (vms_path_delimiters, p[strlen((char*)p) -1]))
 			strcat ((char *)p, "/");
 #else /* Not Windows or VMS: append unix delimiter */
-		if (p[strlen(p) - 1] != '/')
+		if (p[strlen((char *) p) - 1] != '/')
 			strcat ((char *)p, "/");
 
 #endif

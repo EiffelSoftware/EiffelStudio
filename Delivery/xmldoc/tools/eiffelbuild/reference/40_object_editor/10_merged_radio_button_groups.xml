@@ -12,7 +12,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/40_object_editor/index</url>
 				<label>object editor</label>
-			</link> contains an EV_CONTAINER 
+			</link> contains an <code><class_name>EV_CONTAINER</class_name></code> 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
@@ -23,7 +23,7 @@
 				<url>/images/eiffelbuild/screenshots/empty_radio_merge.png</url>
 			</image>
 		</paragraph>
-		<paragraph>With this control, you can merge two or more instances of EV_CONTAINER together, so that any EV_RADIO_BUTTON contained are grouped.</paragraph>
+		<paragraph>With this control, you can merge two or more instances of <code><class_name>EV_CONTAINER</class_name></code> together, so that any <code><class_name>EV_RADIO_BUTTON</class_name></code> contained are grouped.</paragraph>
 		<heading>
 			<size>2</size>Merging
 		</heading>
@@ -35,11 +35,11 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
-			</link> of type EV_CONTAINER, and 
+			</link> of type <code><class_name>EV_CONTAINER</class_name></code>, and 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>drop</label>
-			</link> it anywhere on the control. This will merge the radio button group of the EV_CONTAINER referenced in the object editor, to the transported one. Each merge, will show up as a new item in the control.
+			</link> it anywhere on the control. This will merge the radio button group of the <code><class_name>EV_CONTAINER</class_name></code> referenced in the object editor, to the transported one. Each merge, will show up as a new item in the control.
 			<note>
 				<bold>Note</bold>: Container objects may only be grouped once, and as such, you will not be permitted to add an 
 				<link>

@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("7", "Test flat_clusters", agent on_flat_clusters_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("8", "Test is_valid_name", agent on_is_valid_name_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("9", "Test remove_cluster", agent on_remove_cluster_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("10", "Test Cluster Properties with new cluster", agent on_test_cluster_properties_menu_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("10", "Test Cluster Properties", agent on_test_cluster_properties_menu_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("s", "Store", agent on_store_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Menu", Void))
 			menu.set_return_item (menu.items.last)

@@ -74,6 +74,8 @@ feature {NONE} -- Output
 			put_string (assembly_properties_interface.assembly_cluster_name)
 			put_string ("%N    assembly_public_key_token=")
 			put_string (assembly_properties_interface.assembly_public_key_token)
+			put_string ("%N    is_prefix_read_only=")
+			put_bool (assembly_properties_interface.is_prefix_read_only)
 			put_string ("%N  End%N")
 		end
 		

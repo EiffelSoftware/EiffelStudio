@@ -102,7 +102,7 @@ feature {NONE} -- Agents Routines
 		local
 			l_tests: COMPLETION_INFO_TESTER
 		do
-			create l_tests.make
+			create l_tests.make (project_manager.completion_information)
 		end
 		
 

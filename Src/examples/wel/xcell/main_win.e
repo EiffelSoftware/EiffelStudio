@@ -69,8 +69,8 @@ feature {NONE} -- Initialization
 			make_top ("Xcell")
 			!! client_dc.make (Current)
 			client_dc.get
-			!! virtual_dc.make (client_dc)
-			!! background_dc.make (client_dc)
+			!! virtual_dc.make_by_dc (client_dc)
+			!! background_dc.make_by_dc (client_dc)
 			!! virtual_bitmap.make_compatible (client_dc, scr_width, scr_height)
 			!! background_bitmap.make_compatible (client_dc, scr_width, scr_height)
 			virtual_dc.select_bitmap (virtual_bitmap)
@@ -93,10 +93,10 @@ feature {NONE} -- Implementation
 	started: BOOLEAN
 			-- Is the game started?
 
-	virtual_dc: WEL_COMPATIBLE_DC
+	virtual_dc: WEL_MEMORY_DC
 			-- DC for copying the invalidated card regions
 
-	background_dc: WEL_COMPATIBLE_DC
+	background_dc: WEL_MEMORY_DC
 			-- DC for copying the invalidated background
 
 	client_dc: WEL_CLIENT_DC

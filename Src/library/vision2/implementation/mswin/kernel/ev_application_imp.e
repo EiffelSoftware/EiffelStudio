@@ -31,6 +31,11 @@ inherit
 			message_loop
  		end
 
+	WEL_ICC_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -130,8 +135,11 @@ feature -- Implementation
 
 feature {NONE} -- WEL Implemenation
 
-	common_control_dll: WEL_COMMON_CONTROLS_DLL
-			-- Needed for the common controls.
+	controls_dll: WEL_INIT_COMMCTRL_EX
+			-- Needed for loading the common controls dlls.
+
+--	common_control_dll: WEL_COMMON_CONTROLS_DLL
+--			-- Needed for the common controls.
 
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit.
@@ -145,7 +153,8 @@ feature {NONE} -- WEL Implemenation
 	init_application is
 			-- Load the dll needed sometimes
 		do
-			!! common_control_dll.make
+			!! controls_dll.make_with_flags (Icc_userex_classes + Icc_win95_classes)
+--			!! common_control_dll.make
 			!! rich_edit_dll.make
 		end
 

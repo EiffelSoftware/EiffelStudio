@@ -10,7 +10,7 @@ class FOCUS_LABEL
 
 inherit
 	FOCUS_LABEL_I;
-	G_ANY_I; 
+	G_ANY_IMP; 
 	WEL_TTF_CONSTANTS
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ feature -- Initialization
 			-- Initialize Current.
 		do
 			!! fs_list.make (20);
-			!! common_controls_dll.make;
+			init_common_controls_dll
 		end;
 
 	initialize_widget (a_focusable: FOCUSABLE) is
@@ -47,14 +47,15 @@ feature -- Initialization
 			wti: WEL_TOOL_INFO;
 			ww: WEL_WINDOW;
 			wcw: WEL_COMPOSITE_WINDOW;
-			tooltip: WEL_TOOLTIP
 		do
 			if not fs_list.empty then
 				wcw ?= initializer.tooltip_parent.implementation;
-				!! tooltip.make (wcw, -1);
+				if tooltip = Void then
+					!! tooltip.make (wcw, -1);
 					-- tooltip will be collected when initializer
 					-- is collected
-				initializer.set_tooltip (tooltip);
+					initializer.set_tooltip (tooltip);
+				end
 				from
 					fs_list.start;
 				until
@@ -62,11 +63,11 @@ feature -- Initialization
 				loop
 					widget ?= fs_list.item
 					check
-						widget /= void
+						widget /= Void
 					end
 					ww ?= widget.implementation;
 					check 
-						ww /= void
+						ww /= Void
 					end
 					!! wti.make;
 					fs_list.item.set_tool_info (wti);
@@ -83,10 +84,9 @@ feature -- Initialization
 	fs_list: ARRAYED_LIST [FOCUSABLE]
 			-- List of FOCUSABLEs
 
-feature {NONE} -- Implementation
+feature {NONE}
 
-	common_controls_dll: WEL_COMMON_CONTROLS_DLL
-			-- Common controls dll
+	tooltip: WEL_TOOLTIP
 
 end -- class FOCUS_LABEL
 

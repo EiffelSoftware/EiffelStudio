@@ -20,7 +20,7 @@ inherit
 		end
 
 	EB_SYSTEM_TOOL_DATA
-
+	EB_GENERAL_DATA
 	NEW_EB_CONSTANTS
 
 creation
@@ -40,7 +40,7 @@ feature -- Execution
 			to_write: STRING
 			file_name, tmp_name: STRING
 			aok, create_backup: BOOLEAN
-			show_text: SHOW_TEXT
+--			show_text: SHOW_TEXT
 			default_name: FILE_NAME
 			wd: EV_WARNING_DIALOG
 		do

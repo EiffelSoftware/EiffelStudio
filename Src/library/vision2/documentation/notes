@@ -197,7 +197,7 @@ X   complete but found to have bugs
   Tool bar:
     widgets/primitives/ev_tool_bar.e                    o    *     *     .
     items/ev_tool_bar_item.e                            *    *     *     .
-    items/ev_tool_bar_button.e                          o    o     *     .
+    items/ev_tool_bar_button.e                          o    *     *     .
     items/ev_tool_bar_radio_button.e                    *    o     o     .
     items/ev_tool_bar_separator.e                       *    .     *     .
     items/ev_tool_bar_toggle_button.e                   *    o     *     .
@@ -216,3 +216,4 @@ X   complete but found to have bugs
     items/ev_multi_column_list_row.e                    *    o 1   o     .
 
                                                  totals        33
+

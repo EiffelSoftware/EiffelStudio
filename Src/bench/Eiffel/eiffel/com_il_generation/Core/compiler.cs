@@ -139,7 +139,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	}
 	
 	// Generate a class map between name and TypeID
-	public void GenerateClassMappings (string ClassName, int TypeID, int InterfaceID,
+	public void generate_class_mappings (string dotnet_name, string eiffel_name,
+		int TypeID, int InterfaceID,
 		string SourceFileName, string ElementTypeName)
 	{
 		#if DEBUG
@@ -150,7 +151,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			bool is_array = ElementTypeName.Length > 0;
 			CLASS eiffel_class;
 
-			switch (ClassName)
+			switch (dotnet_name)
 			{
 				case "System.Object": AnyID = TypeID; break;
 				case "System.Int32": Int32ID = TypeID; break;
@@ -168,7 +169,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
 			eiffel_class = new CLASS ();
 			Classes [TypeID] = eiffel_class;
-			eiffel_class.SetName (ClassName);
+			eiffel_class.set_name (dotnet_name);
+			eiffel_class.set_eiffel_name (eiffel_name);
 			eiffel_class.SetTypeID (TypeID);
 			eiffel_class.SetInterfaceID (InterfaceID);
 			eiffel_class.SetIsArray(is_array);
@@ -179,11 +181,47 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			}
 		}
 		catch (Exception error) {
-			LogError (error, "For class " + ClassName + " with TypeID "
+			LogError (error, "For class " + dotnet_name + " with TypeID "
 				+ TypeID + " and source file " + SourceFileName);
 		}
 	}
-	
+
+	public void generate_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.TYPE and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_type, type_id);
+	}
+
+	public void generate_class_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.CLASS_TYPE' and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_class_type, type_id);
+	}
+
+	public void generate_generic_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.GENERIC_TYPE and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_generic_type, type_id);
+	}
+
+	public void generate_formal_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.FORMAL_TYPE and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_formal_type, type_id);
+	}
+
+	public void generate_anchored_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.ANCHORED_TYPE and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_anchored_type, type_id);
+	}
+
+	public void generate_basic_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.BASIC_TYPE and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_basic_type, type_id);
+	}
+
 	// Generate class name and its specifier.
 	public void GenerateClassHeader (bool IsInterface,
 		bool IsDeferred, bool IsFrozen, bool IsExpanded,
@@ -199,10 +237,10 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			CLASS eiffel_class = Classes [TypeID];
 
 			if (IsExternal) {
-				ExternalType = TypeFromName (eiffel_class.Name);
+				ExternalType = TypeFromName (eiffel_class.name);
 				if (ExternalType == null)
 					throw (new ApplicationException ("Could not find type " +
-								eiffel_class.Name));
+								eiffel_class.name));
 				eiffel_class.SetTypeBuilder (ExternalType);
 			} else {
 				if (nb_classes_generated % nb_classes_per_module == 0) {
@@ -241,7 +279,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 				Log ("Declaring type: " +
 					 ((TypeBuilder)Classes [CurrentTypeID].Builder).DeclaringType);
 				Log ("Name: " +
-					 ((TypeBuilder)Classes [CurrentTypeID].Builder).Name);
+					 ((TypeBuilder)Classes [CurrentTypeID].Builder).name);
 				Log ("Reflected type: " +
 					 ((TypeBuilder)Classes [CurrentTypeID].Builder).ReflectedType);
 				Log ("Size: " +
@@ -420,7 +458,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		}
 		catch (Exception error) {
 			LogError (error, "In method " + CurrentMethod.name () + " from " +
-				Classes [CurrentTypeID].Name);
+				Classes [CurrentTypeID].name);
 		}
 	}
 
@@ -434,7 +472,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			ILGenerator Generator;
 			FEATURE RealEntryPoint;
 	
-			EntryType = main_module.DefineType (Classes [TypeID].Name + EntryTypeName);
+			EntryType = main_module.DefineType (Classes [TypeID].name + EntryTypeName);
 			EntryPoint = EntryType.DefineMethod (EntryPointName,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
@@ -598,12 +636,12 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	}
 	
 	// Add custom attribute constructor real argument
-	public void AddCARealArg (float Value) {
+	public void AddCARealArg (double Value) {
 		#if DEBUG
 			Log ("AddCARealArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			CAFactory.AddCAConstructorArg ((float) Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -716,12 +754,16 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	}
 	
 	// Add custom attribute constructor real argument
-	public void AddCAArrayRealArg (float[] Value) {
+	public void AddCAArrayRealArg (double [] Value) {
 		#if DEBUG
 			Log ("AddCAArrayRealArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			float [] values = new float[Value.Length];
+			for (int i = 0; i < Value.Length; i++) {
+				values [i] = (float) Value [i];
+			}
+			CAFactory.AddCAConstructorArg (values);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -787,6 +829,15 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		catch (Exception error) {
 			LogError (error, "In GenerateFeatureIL with FeatureID " + FeatureID);
 		}
+	}
+
+	public void generate_formal_feature (int feature_id)
+		// Prepare for code generation of formal derivation.
+	{
+		CurrentMethod = (FEATURE) Classes [CurrentTypeID].FeatureIDTable [feature_id];
+		Labels = new System.Collections.ArrayList();
+		MethodIL = ((MethodBuilder)CurrentMethod.method_builder).GetILGenerator();
+		Locals = new System.Collections.ArrayList();
 	}
 
 	// Generate info about current feature.
@@ -977,9 +1028,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 			int ExternalKind,
 			string[] ParameterTypes,
 			string ReturnType,
-			bool IsVirtual,
-			int TypeID,
-			int FeatureID)
+			bool IsVirtual)
 	{
 		Type NewType = null;
 		Type[] Parameters;
@@ -1125,14 +1174,6 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		}
 	}
 
-	public void SetEiffelType (int ExportedTypeID) {
-		if (!LastCreatedClass.IsExternal) {
-			MethodIL.Emit (OpCodes.Dup);
-			MethodIL.Emit (OpCodes.Ldc_I4, ExportedTypeID);
-			MethodIL.Emit (OpCodes.Call, LastCreatedClass.set_type_id);
-		}
-	}
-
 /* IL stack managment */
 
 	public void DuplicateTop() {
@@ -1229,7 +1270,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 				MethodIL.Emit (OpCodes.Call, Feature);
 		}
 		catch (Exception error) {
-			LogError (error, " in class " + ((CLASS)Classes [TypeID]).Name +
+			LogError (error, " in class " + ((CLASS)Classes [TypeID]).name +
 				" (TypeID = " + TypeID + ")for method " + ((FEATURE)Classes [TypeID].
 				FeatureIDTable [FeatureID]).name ()+ " (FeatureID = " + FeatureID + "): " + Feature);
 		}
@@ -1253,8 +1294,14 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		catch (Exception error) {
 			LogError (error, " in method " + ((FEATURE)Classes [TypeID].
 				FeatureIDTable [FeatureID]).name () + " from class " +
-				((CLASS)Classes [TypeID]).Name);
+				((CLASS)Classes [TypeID]).name);
 		}
+	}
+
+	public void put_type_token (int type_id)
+		// Put associated token to `type_id'.
+	{
+		MethodIL.Emit (OpCodes.Ldtoken, Classes [type_id].Builder);
 	}
 	
 	// Generate access to `n'-th argument of current feature.
@@ -1455,30 +1502,58 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
 	// Generate call to `item' of ARRAY.
 	public void GenerateArrayAccess (int Kind) {
+		OpCode op;
 		switch (Kind) {
-			case 30: MethodIL.Emit (OpCodes.Ldelem_I1); break;
-			case 31: MethodIL.Emit (OpCodes.Ldelem_I2); break;
-			case 32: MethodIL.Emit (OpCodes.Ldelem_I4); break;
-			case 33: MethodIL.Emit (OpCodes.Ldelem_I8); break;
-			case 34: MethodIL.Emit (OpCodes.Ldelem_R4); break;
-			case 35: MethodIL.Emit (OpCodes.Ldelem_R8); break;
-			case 36: MethodIL.Emit (OpCodes.Ldelem_Ref); break;
-			case 37: MethodIL.Emit (OpCodes.Ldelem_I); break;
+			case Il_i1: op = OpCodes.Ldelem_I1; break;
+			case Il_i2: op = OpCodes.Ldelem_I2; break;
+			case Il_i4: op = OpCodes.Ldelem_I4; break;
+			case Il_i8:
+			case Il_u8:
+				op = OpCodes.Ldelem_I8;
+				break;
+			case Il_r4: op = OpCodes.Ldelem_R4; break;
+			case Il_r8: op = OpCodes.Ldelem_R8; break;
+			case Il_ref: op = OpCodes.Ldelem_Ref; break;
+			case Il_i: op = OpCodes.Ldelem_I; break;
+			case Il_u1: op = OpCodes.Ldelem_U1; break;
+			case Il_u2: op = OpCodes.Ldelem_U2; break;
+			case Il_u4: op = OpCodes.Ldelem_U4; break;
+			default:
+				op = OpCodes.Nop;
+				break;
 		}
+		MethodIL.Emit (op);
 	}
 
 	// Generate call to `put' of ARRAY.
 	public void GenerateArrayWrite (int Kind) {
+		OpCode op;
 		switch (Kind) {
-			case 30: MethodIL.Emit (OpCodes.Stelem_I1); break;
-			case 31: MethodIL.Emit (OpCodes.Stelem_I2); break;
-			case 32: MethodIL.Emit (OpCodes.Stelem_I4); break;
-			case 33: MethodIL.Emit (OpCodes.Stelem_I8); break;
-			case 34: MethodIL.Emit (OpCodes.Stelem_R4); break;
-			case 35: MethodIL.Emit (OpCodes.Stelem_R8); break;
-			case 36: MethodIL.Emit (OpCodes.Stelem_Ref); break;
-			case 37: MethodIL.Emit (OpCodes.Stelem_I); break;
+			case Il_i1:
+			case Il_u1:
+				op = OpCodes.Stelem_I1;
+				break;
+			case Il_i2:
+			case Il_u2:
+				op = OpCodes.Stelem_I2;
+				break;
+			case Il_i4:
+			case Il_u4:
+				op = OpCodes.Stelem_I4;
+				break;
+			case Il_i8:
+			case Il_u8:
+				op = OpCodes.Stelem_I8;
+				break;
+			case Il_r4: op = OpCodes.Stelem_R4; break;
+			case Il_r8: op = OpCodes.Stelem_R8; break;
+			case Il_ref: op = OpCodes.Stelem_Ref; break;
+			case Il_i: op = OpCodes.Stelem_I; break;
+			default:
+				op = OpCodes.Nop;
+				break;
 		}
+		MethodIL.Emit (op);
 	}
 
 	// Create a new array.
@@ -1582,8 +1657,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	}
 
 		// Put `d' on IL stack.
-	public void PutRealConstant (float d) {
-		MethodIL.Emit (OpCodes.Ldc_R4, d);
+	public void PutRealConstant (double d) {
+		MethodIL.Emit (OpCodes.Ldc_R4, (float) d);
 	}
 
 	// Put `d' on IL stack.
@@ -1802,23 +1877,30 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	private void PrepareISERuntime() {
 		Type ISE_class;
 		AssemblyName name = new AssemblyName();
-		Assembly IseRuntimeAssembly;
+		Assembly ise_runtime_assembly;
 
 		name.Name = "ise_runtime";
 		name.Version = new Version (5,1,5,1);
 		name.SetPublicKeyToken (new byte[8] {0xde, 0xf2, 0x6f, 0x29, 0x6e, 0xfe, 0xf4, 0x69});
 		name.CultureInfo = new System.Globalization.CultureInfo ("");
-		IseRuntimeAssembly = Assembly.Load (name);
-		ExternalAssemblies.Add (IseRuntimeAssembly);
+		ise_runtime_assembly = Assembly.Load (name);
+		ExternalAssemblies.Add (ise_runtime_assembly);
 
-		ISE_class = IseRuntimeAssembly.GetType ("ISE.Runtime.RUN_TIME");
+		ISE_class = ise_runtime_assembly.GetType ("ISE.Runtime.RUN_TIME");
 		assertion_tag = ISE_class.GetField ("assertion_tag");
 		in_assertion = ISE_class.GetField ("in_assertion");
 
-		ISE_class = IseRuntimeAssembly.GetType ("ISE.Runtime.EXCEPTION_MANAGER");
+		ISE_class = ise_runtime_assembly.GetType ("ISE.Runtime.EXCEPTION_MANAGER");
 		last_exception = ISE_class.GetField ("last_exception");
 
-		ISE_EiffelInterface = IseRuntimeAssembly.GetType ("ISE.Runtime._EIFFEL_TYPE_INFO");
+		ISE_EiffelInterface = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_TYPE_INFO");
+		Ise_type = ise_runtime_assembly.GetType ("ISE.Runtime.TYPE");
+		Ise_class_type = ise_runtime_assembly.GetType ("ISE.Runtime.CLASS_TYPE");
+		Ise_generic_type = ise_runtime_assembly.GetType ("ISE.Runtime.GENERIC_TYPE");
+		Ise_formal_type = ise_runtime_assembly.GetType ("ISE.Runtime.FORMAL_TYPE");
+		Ise_anchored_type = ise_runtime_assembly.GetType ("ISE.Runtime.ANCHORED_TYPE");
+		Ise_basic_type = ise_runtime_assembly.GetType ("ISE.Runtime.BASIC_TYPE");
+		Ise_eiffel_derivation_type = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_DERIVATION");
 	}
 
 /* Perform Type lookup */
@@ -1856,6 +1938,22 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		Result = null;
 		CAFactory = null;
 		FileName = null;
+	}
+
+/*
+feature {NONE} -- Implementation
+*/
+	private void internal_generate_type_class_mapping (Type type, int type_id)
+		// Generate mapping between `type' and `type_id'.
+	{
+		CLASS eiffel_class = new CLASS ();
+		Classes [type_id] = eiffel_class;
+		eiffel_class.set_name (type.Name);
+		eiffel_class.SetTypeID (type_id);
+		eiffel_class.SetInterfaceID (type_id);
+		eiffel_class.SetIsInterface(true);
+		eiffel_class.SetIsExternal (true);
+		eiffel_class.SetTypeBuilder (type);
 	}
 
 /* Private */
@@ -1980,26 +2078,18 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 	// Eiffel `Result' keyword
 	internal static String ResultName = "Result";
 
-	// Store/Retrieve I1 element type to/from array
-	internal static int IlI1 = 30;
-
-	// Store/Retrieve I2 element type to/from array
-	internal static int IlI2 = 31;
-
-	// Store/Retrieve I4 element type to/from array
-	internal static int IlI4 = 32;
-
-	// Store/Retrieve I8 element type to/from array
-	internal static int IlI8 = 33;
-
-	// Store/Retrieve R4 element type to/from array
-	internal static int IlR4 = 34;
-
-	// Store/Retrieve R8 element type to/from array
-	internal static int IlR8 = 35;
-
-	// Store/Retrieve Reference element type to/from array
-	internal static int Ref = 36;
+	internal const int Il_i1 = 30;
+	internal const int Il_i2 = 31;
+	internal const int Il_i4 = 32;
+	internal const int Il_i8 = 33;
+	internal const int Il_r4 = 34;
+	internal const int Il_r8 = 35;
+	internal const int Il_ref = 36;
+	internal const int Il_i = 37;
+	internal const int Il_u1 = 38;
+	internal const int Il_u2 = 39;
+	internal const int Il_u4 = 40;
+	internal const int Il_u8 = 41;
 
 	// Log debug information
 	internal static void Log( String text )
@@ -2066,6 +2156,13 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
 	// Interface to which all Eiffel implementation classes inherits from.
 	public static Type ISE_EiffelInterface = null;
+	public static Type Ise_type = null;
+	public static Type Ise_class_type = null;
+	public static Type Ise_generic_type = null;
+	public static Type Ise_formal_type = null;
+	public static Type Ise_anchored_type = null;
+	public static Type Ise_basic_type = null;
+	public static Type Ise_eiffel_derivation_type = null;
 
 	// Last created Eiffel type
 	private static CLASS LastCreatedClass = null;

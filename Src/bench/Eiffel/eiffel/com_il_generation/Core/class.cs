@@ -41,8 +41,11 @@ internal class CLASS
 	// List of implemented Interfaces
 	public System.Collections.ArrayList Interfaces;
 	
-	// Type Name
-	public String Name;
+	public String name;
+		// Dotnet name of current class.
+
+	public String eiffel_name;
+		// Name of current class as seen in Eiffel.
 	
 	// Is class deferred?
 	public bool IsDeferred;
@@ -79,9 +82,6 @@ internal class CLASS
 
 	// Creation Routines
 	public FEATURE[] CreationRoutines;
-
-	// SetTypeID routine
-	public MethodBuilder set_type_id;
 
 	private string source_file_name = null;
 			// Location of Eiffel source file defining Current.
@@ -186,7 +186,7 @@ internal class CLASS
 				throw new ApplicationException( "SetIsDeferred: Type Builder already created" );
 			if( IsExpanded )
 				throw new ApplicationException( "SetIsDeferred: Type cannot be both expanded " +
-					"and an interface or deferred (" + Name + ")" );
+					"and an interface or deferred (" + eiffel_name + ")" );
 		#endif
 		IsDeferred = val;
 	}
@@ -269,16 +269,26 @@ internal class CLASS
 		ArrayElementName = a_name;
 	}
 	
-	// Set `IsInterface' with `true'
-	public void SetName( String ClassName )
+	// Set `name' with `class_name'
+	public void set_name (String class_name)
 	{
 	  	#if ASSERTIONS
 			if( TypeBuilderCreated )
-				throw new ApplicationException( "SetName: Type Builder already created" );
+				throw new ApplicationException( "set_name: Type Builder already created" );
 		#endif
-		Name = ClassName;
+		name = class_name;
 	}
-	
+
+	// Set `eiffel_name' with `class_name'
+	public void set_eiffel_name (String class_name)
+	{
+	  	#if ASSERTIONS
+			if (TypeBuilderCreated)
+				throw new ApplicationException( "set_eiffel_name: Type Builder already created" );
+		#endif
+		eiffel_name = class_name;
+	}
+
 	// Add Class with TypeID `ID' to list of parents
 	public void AddParent( int ID )
 	{
@@ -291,16 +301,16 @@ internal class CLASS
 		} else {
 			#if ASSERTIONS
 				if( BaseType != COMPILER.NoValue )
-					throw new ApplicationException( "AddParent: Class " + Name +
+					throw new ApplicationException( "AddParent: Class " + eiffel_name +
 						" already has a base type (" + COMPILER.Classes [BaseType].Builder +")");
 				if( IsInterface )
-					throw new ApplicationException( "AddParent: Class " + Name + " is an interface." );
+					throw new ApplicationException( "AddParent: Class " + eiffel_name + " is an interface." );
 			#endif
 			BaseType = ID;
 		}
 	}
 
-	// Add _EIFFEL_TYPE_INFO interface to implementation class
+	// Add EIFFEL_TYPE_INFO interface to implementation class
 	public void AddEiffelInterface (int ID) {
 		ExportedTypeID = ID;
 		IsImplementation = true;
@@ -364,61 +374,74 @@ internal class CLASS
 			ParentType = COMPILER.ObjectType;
 		if( IsDeferred && !IsInterface )
 		{
-			Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
+			Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
 			DefineDefaultConstructor();
 		}
 		else
 		{
 			if( IsInterface )
-					Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract, null,  LocalInterfaces );
+					Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract, null,  LocalInterfaces );
 			else
 				{
 					if( IsExpanded )
-						Builder = module.DefineType( Name, TypeAttributes.Public, ParentType, LocalInterfaces );
+						Builder = module.DefineType( name, TypeAttributes.Public, ParentType, LocalInterfaces );
 					else
 					{
-						Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Class, ParentType, LocalInterfaces );
+						Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Class, ParentType, LocalInterfaces );
 						DefineDefaultConstructor();
 					}
 				}
 		}
 
 		if (IsImplementation) {
-				// Add ____type_id and ____set_type_id feature
+				// Add ____type and ____set_type feature
 			TypeBuilder builder = (TypeBuilder) Builder;
+			MethodBuilder set_type, class_name;
 			MethodBuilder method;
 			FieldBuilder attribute;
-			Type int32_type = Type.GetType ("System.Int32");
+			Type type = COMPILER.Ise_eiffel_derivation_type;
 			ILGenerator MethodIL;
 
 				// Define storage of type information
-			attribute = builder.DefineField ("$$____type_id", int32_type, FieldAttributes.Family);
+			attribute = builder.DefineField ("$$____type", type, FieldAttributes.Family);
 
-				// Define access to type id info
+				// Implement `____type' to access type info.
 			method = builder.DefineMethod (
-				"____type_id",
+				"____type",
 				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
 					MethodAttributes.Public,
-				int32_type, Type.EmptyTypes);
+				type, Type.EmptyTypes);
 
 			MethodIL = method.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldarg_0);
 			MethodIL.Emit (OpCodes.Ldfld, attribute);
 			MethodIL.Emit (OpCodes.Ret);
 
-			set_type_id = builder.DefineMethod (
-				"____set_type_id",
+				// Implement `____set_type'.
+			set_type = builder.DefineMethod (
+				"____set_type",
 				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
 					MethodAttributes.Public,
 				COMPILER.VoidType,
-				new Type [1] {int32_type});
+				new Type [1] {type});
 
-			MethodIL = set_type_id.GetILGenerator();
+			MethodIL = set_type.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldarg_0);
 			MethodIL.Emit (OpCodes.Ldarg_1);
 			MethodIL.Emit (OpCodes.Stfld, attribute);
 			MethodIL.Emit (OpCodes.Ret);
 
+				// Implement `____class_name'.
+			class_name = builder.DefineMethod (
+				"____class_name",
+				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
+					MethodAttributes.Public,
+				typeof (String),
+				Type.EmptyTypes);
+
+			MethodIL = class_name.GetILGenerator();
+			MethodIL.Emit (OpCodes.Ldstr, eiffel_name);
+			MethodIL.Emit (OpCodes.Ret);
 		}
 		#if ASSERTIONS
 			TypeBuilderCreated = true;

@@ -66,8 +66,50 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_class_mappings_user_precondition (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING): BOOLEAN is
+	generate_class_mappings_user_precondition (dotnet_name: STRING; eiffel_name: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `generate_class_mappings'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_class_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_class_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_generic_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_generic_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_formal_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_formal_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_anchored_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_anchored_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_basic_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_basic_type_class_mapping'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -241,7 +283,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_careal_arg_user_precondition (a_value: REAL): BOOLEAN is
+	add_careal_arg_user_precondition (a_value: DOUBLE): BOOLEAN is
 			-- User-defined preconditions for `add_careal_arg'.
 			-- Redefine in descendants if needed.
 		do
@@ -283,7 +325,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_caarray_real_arg_user_precondition (a_value: ECOM_ARRAY [REAL]): BOOLEAN is
+	add_caarray_real_arg_user_precondition (a_value: ECOM_ARRAY [DOUBLE]): BOOLEAN is
 			-- User-defined preconditions for `add_caarray_real_arg'.
 			-- Redefine in descendants if needed.
 		do
@@ -313,6 +355,13 @@ feature -- Status Report
 
 	start_il_generation_user_precondition (type_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `start_il_generation'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_formal_feature_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_formal_feature'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -353,7 +402,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_external_call_user_precondition (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+	generate_external_call_user_precondition (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `generate_external_call'.
 			-- Redefine in descendants if needed.
 		do
@@ -390,13 +439,6 @@ feature -- Status Report
 
 	create_attribute_object_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `create_attribute_object'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_eiffel_type_user_precondition (exported_type_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `set_eiffel_type'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -537,6 +579,13 @@ feature -- Status Report
 
 	put_method_token_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `put_method_token'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	put_type_token_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `put_type_token'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -843,7 +892,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	put_real_constant_user_precondition (d: REAL): BOOLEAN is
+	put_real_constant_user_precondition (d: DOUBLE): BOOLEAN is
 			-- User-defined preconditions for `put_real_constant'.
 			-- Redefine in descendants if needed.
 		do
@@ -1168,15 +1217,70 @@ feature -- Basic Operations
 
 		end
 
-	generate_class_mappings (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
+	generate_class_mappings (dotnet_name: STRING; eiffel_name: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
-			-- `class_name1' [in].  
+			-- `dotnet_name' [in].  
+			-- `eiffel_name' [in].  
 			-- `type_id' [in].  
 			-- `interface_id' [in].  
 			-- `source_file_name' [in].  
 			-- `element_type_name' [in].  
 		require
-			generate_class_mappings_user_precondition: generate_class_mappings_user_precondition (class_name1, type_id, interface_id, source_file_name, element_type_name)
+			generate_class_mappings_user_precondition: generate_class_mappings_user_precondition (dotnet_name, eiffel_name, type_id, interface_id, source_file_name, element_type_name)
+		deferred
+
+		end
+
+	generate_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_type_class_mapping_user_precondition: generate_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_class_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_class_type_class_mapping_user_precondition: generate_class_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_generic_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_generic_type_class_mapping_user_precondition: generate_generic_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_formal_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_formal_type_class_mapping_user_precondition: generate_formal_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_anchored_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_anchored_type_class_mapping_user_precondition: generate_anchored_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_basic_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_basic_type_class_mapping_user_precondition: generate_basic_type_class_mapping_user_precondition (type_id)
 		deferred
 
 		end
@@ -1422,7 +1526,7 @@ feature -- Basic Operations
 
 		end
 
-	add_careal_arg (a_value: REAL) is
+	add_careal_arg (a_value: DOUBLE) is
 			-- No description available.
 			-- `a_value' [in].  
 		require
@@ -1478,7 +1582,7 @@ feature -- Basic Operations
 
 		end
 
-	add_caarray_real_arg (a_value: ECOM_ARRAY [REAL]) is
+	add_caarray_real_arg (a_value: ECOM_ARRAY [DOUBLE]) is
 			-- No description available.
 			-- `a_value' [in].  
 		require
@@ -1522,6 +1626,15 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		require
 			start_il_generation_user_precondition: start_il_generation_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_formal_feature (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		require
+			generate_formal_feature_user_precondition: generate_formal_feature_user_precondition (feature_id)
 		deferred
 
 		end
@@ -1575,7 +1688,7 @@ feature -- Basic Operations
 
 		end
 
-	generate_external_call (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	generate_external_call (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN) is
 			-- No description available.
 			-- `external_type_name' [in].  
 			-- `name' [in].  
@@ -1583,11 +1696,9 @@ feature -- Basic Operations
 			-- `parameter_types' [in].  
 			-- `return_type' [in].  
 			-- `is_virtual' [in].  
-			-- `type_id' [in].  
-			-- `feature_id' [in].  
 		require
 			non_void_parameter_types: parameter_types /= Void
-			generate_external_call_user_precondition: generate_external_call_user_precondition (external_type_name, name, external_kind, parameter_types, return_type, is_virtual, type_id, feature_id)
+			generate_external_call_user_precondition: generate_external_call_user_precondition (external_type_name, name, external_kind, parameter_types, return_type, is_virtual)
 		deferred
 
 		end
@@ -1634,15 +1745,6 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		require
 			create_attribute_object_user_precondition: create_attribute_object_user_precondition (type_id, feature_id)
-		deferred
-
-		end
-
-	set_eiffel_type (exported_type_id: INTEGER) is
-			-- No description available.
-			-- `exported_type_id' [in].  
-		require
-			set_eiffel_type_user_precondition: set_eiffel_type_user_precondition (exported_type_id)
 		deferred
 
 		end
@@ -1816,6 +1918,15 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		require
 			put_method_token_user_precondition: put_method_token_user_precondition (type_id, feature_id)
+		deferred
+
+		end
+
+	put_type_token (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			put_type_token_user_precondition: put_type_token_user_precondition (type_id)
 		deferred
 
 		end
@@ -2195,7 +2306,7 @@ feature -- Basic Operations
 
 		end
 
-	put_real_constant (d: REAL) is
+	put_real_constant (d: DOUBLE) is
 			-- No description available.
 			-- `d' [in].  
 		require

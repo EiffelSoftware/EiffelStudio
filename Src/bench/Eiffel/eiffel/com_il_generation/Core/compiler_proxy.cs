@@ -114,13 +114,44 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.StartClassMappings (nb);
 	}
 	
-	public void GenerateClassMappings (string ClassName, int TypeID, int InterfaceID,
+	public void generate_class_mappings (string dotnet_name, string eiffel_name,
+		int TypeID, int InterfaceID,
 		string SourceFileName, string ElementTypeName)
 	{
-		core.GenerateClassMappings (ClassName, TypeID, InterfaceID, SourceFileName,
-			ElementTypeName);
+		core.generate_class_mappings  (dotnet_name, eiffel_name, TypeID,
+			InterfaceID, SourceFileName, ElementTypeName);
 	}
 	
+	public void generate_type_class_mapping (int type_id)
+	{
+		core.generate_type_class_mapping (type_id);
+	}
+
+	public void generate_class_type_class_mapping (int type_id)
+	{
+		core.generate_class_type_class_mapping (type_id);
+	}
+
+	public void generate_generic_type_class_mapping (int type_id)
+	{
+		core.generate_generic_type_class_mapping (type_id);
+	}
+
+	public void generate_formal_type_class_mapping (int type_id)
+	{
+		core.generate_formal_type_class_mapping (type_id);
+	}
+
+	public void generate_anchored_type_class_mapping (int type_id)
+	{
+		core.generate_anchored_type_class_mapping (type_id);
+	}
+
+	public void generate_basic_type_class_mapping (int type_id)
+	{
+		core.generate_basic_type_class_mapping (type_id);
+	}
+
 	public void GenerateClassHeader (bool IsInterface,
 		bool IsDeferred, bool IsFrozen, bool IsExpanded,
 		bool IsExternal, int TypeID)
@@ -239,7 +270,7 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.AddCAStringArg (Value);
 	}
 	
-	public void AddCARealArg (float Value) {
+	public void AddCARealArg (double Value) {
 		core.AddCARealArg (Value);
 	}
 	
@@ -275,7 +306,7 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.AddCAArrayStringArg (Value);
 	}
 	
-	public void AddCAArrayRealArg (float[] Value) {
+	public void AddCAArrayRealArg (double[] Value) {
 		core.AddCAArrayRealArg (Value);
 	}
 	
@@ -299,6 +330,9 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateImplementationFeatureIL (FeatureID);
 	}
 
+	public void generate_formal_feature (int feature_id) {
+		core.generate_formal_feature (feature_id);
+	}
 	public void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID) {
 		core.GenerateFeatureIL (FeatureID, TypeID, CodeFeatureID);
 	}
@@ -321,12 +355,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 			int ExternalKind,
 			string[] ParameterTypes,
 			string ReturnType,
-			bool IsVirtual,
-			int TypeID,
-			int FeatureID)
+			bool IsVirtual)
 	{
 		core.GenerateExternalCall (ExternalTypeName, Name, ExternalKind, ParameterTypes,
-			ReturnType, IsVirtual, TypeID, FeatureID);
+			ReturnType, IsVirtual);
 	}
 
 	public void PutResultInfo (int TypeID) {
@@ -347,10 +379,6 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 
 	public void CreateAttributeObject (int TypeID, int FeatureID) {
 		core.CreateAttributeObject (TypeID, FeatureID);
-	}
-
-	public void SetEiffelType (int ExportedTypeID) {
-		core.SetEiffelType (ExportedTypeID);
 	}
 
 	public void DuplicateTop() {
@@ -423,6 +451,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 	
 	public void PutMethodToken (int TypeID, int FeatureID) {
 		core.PutMethodToken (TypeID, FeatureID);
+	}
+
+	public void put_type_token (int type_id) {
+		core.put_type_token (type_id);
 	}
 
 	public void GenerateArgument (int n) {
@@ -597,7 +629,7 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.PutDoubleConstant (d);
 	}
 
-	public void PutRealConstant (float d) {
+	public void PutRealConstant (double d) {
 		core.PutRealConstant (d);
 	}
 

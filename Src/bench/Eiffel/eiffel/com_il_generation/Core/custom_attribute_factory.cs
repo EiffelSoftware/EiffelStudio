@@ -31,7 +31,7 @@ internal class CustomAttributesFactory
 	public void AddCAConstructorArg( Object Value )
 	{
 		if( CurrentArgIndex >= ConstructorArguments.Length )
-			throw new ApplicationException( "Too many arguments for constructor of " + COMPILER.Classes [AttributeTypeID].Name );
+			throw new ApplicationException( "Too many arguments for constructor of " + COMPILER.Classes [AttributeTypeID].name );
 		ConstructorArguments [CurrentArgIndex] = Value;
 		ConstructorArgsTypes [CurrentArgIndex] = Value.GetType();
 		CurrentArgIndex++;
@@ -41,7 +41,7 @@ internal class CustomAttributesFactory
 	public void AddCAConstructorArg( Object Value, Type ArgType )
 	{
 		if( CurrentArgIndex >= ConstructorArguments.Length )
-			throw new ApplicationException( "Too many arguments for constructor of " + COMPILER.Classes [AttributeTypeID].Name );
+			throw new ApplicationException( "Too many arguments for constructor of " + COMPILER.Classes [AttributeTypeID].name );
 		ConstructorArguments [CurrentArgIndex] = Value;
 		ConstructorArgsTypes [CurrentArgIndex] = ArgType;
 		CurrentArgIndex++;
@@ -64,7 +64,7 @@ internal class CustomAttributesFactory
 			throw new ApplicationException( "Cannot find type with identifier " + TargetID.ToString());
 		FEATURE CurrentMethod = ( FEATURE ) CurrentClass.FeatureIDTable [FeatureID];
 		if( CurrentMethod == null )
-			throw new ApplicationException( "Cannot find method with identifier " + FeatureID.ToString() + " in class " + COMPILER.Classes [TargetID].Name );
+			throw new ApplicationException( "Cannot find method with identifier " + FeatureID.ToString() + " in class " + COMPILER.Classes [TargetID].name );
 		if( CurrentMethod.is_attribute )
 			(( FieldBuilder )CurrentMethod.attribute_builder ).SetCustomAttribute( GetCABuilder());
 		else

@@ -102,15 +102,58 @@ feature -- Basic Operations
 			ccom_start_class_mappings (initializer, class_count)
 		end
 
-	generate_class_mappings (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
+	generate_class_mappings (dotnet_name: STRING; eiffel_name: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
-			-- `class_name1' [in].  
+			-- `dotnet_name' [in].  
+			-- `eiffel_name' [in].  
 			-- `type_id' [in].  
 			-- `interface_id' [in].  
 			-- `source_file_name' [in].  
 			-- `element_type_name' [in].  
 		do
-			ccom_generate_class_mappings (initializer, class_name1, type_id, interface_id, source_file_name, element_type_name)
+			ccom_generate_class_mappings (initializer, dotnet_name, eiffel_name, type_id, interface_id, source_file_name, element_type_name)
+		end
+
+	generate_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_type_class_mapping (initializer, type_id)
+		end
+
+	generate_class_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_class_type_class_mapping (initializer, type_id)
+		end
+
+	generate_generic_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_generic_type_class_mapping (initializer, type_id)
+		end
+
+	generate_formal_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_formal_type_class_mapping (initializer, type_id)
+		end
+
+	generate_anchored_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_anchored_type_class_mapping (initializer, type_id)
+		end
+
+	generate_basic_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_basic_type_class_mapping (initializer, type_id)
 		end
 
 	generate_class_header (is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
@@ -298,7 +341,7 @@ feature -- Basic Operations
 			ccom_add_castring_arg (initializer, a_value)
 		end
 
-	add_careal_arg (a_value: REAL) is
+	add_careal_arg (a_value: DOUBLE) is
 			-- No description available.
 			-- `a_value' [in].  
 		do
@@ -340,7 +383,7 @@ feature -- Basic Operations
 			ccom_add_caarray_string_arg (initializer, a_value)
 		end
 
-	add_caarray_real_arg (a_value: ECOM_ARRAY [REAL]) is
+	add_caarray_real_arg (a_value: ECOM_ARRAY [DOUBLE]) is
 			-- No description available.
 			-- `a_value' [in].  
 		do
@@ -373,6 +416,13 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		do
 			ccom_start_il_generation (initializer, type_id)
+		end
+
+	generate_formal_feature (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		do
+			ccom_generate_formal_feature (initializer, feature_id)
 		end
 
 	generate_feature_il (feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER) is
@@ -414,7 +464,7 @@ feature -- Basic Operations
 			ccom_generate_creation_feature_il (initializer, feature_id)
 		end
 
-	generate_external_call (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	generate_external_call (external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN) is
 			-- No description available.
 			-- `external_type_name' [in].  
 			-- `name' [in].  
@@ -422,10 +472,8 @@ feature -- Basic Operations
 			-- `parameter_types' [in].  
 			-- `return_type' [in].  
 			-- `is_virtual' [in].  
-			-- `type_id' [in].  
-			-- `feature_id' [in].  
 		do
-			ccom_generate_external_call (initializer, external_type_name, name, external_kind, parameter_types, return_type, is_virtual, type_id, feature_id)
+			ccom_generate_external_call (initializer, external_type_name, name, external_kind, parameter_types, return_type, is_virtual)
 		end
 
 	put_result_info (type_id: INTEGER) is
@@ -462,13 +510,6 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		do
 			ccom_create_attribute_object (initializer, type_id, feature_id)
-		end
-
-	set_eiffel_type (exported_type_id: INTEGER) is
-			-- No description available.
-			-- `exported_type_id' [in].  
-		do
-			ccom_set_eiffel_type (initializer, exported_type_id)
 		end
 
 	duplicate_top is
@@ -602,6 +643,13 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		do
 			ccom_put_method_token (initializer, type_id, feature_id)
+		end
+
+	put_type_token (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_put_type_token (initializer, type_id)
 		end
 
 	generate_argument (n: INTEGER) is
@@ -893,7 +941,7 @@ feature -- Basic Operations
 			ccom_put_double_constant (initializer, d)
 		end
 
-	put_real_constant (d: REAL) is
+	put_real_constant (d: DOUBLE) is
 			-- No description available.
 			-- `d' [in].  
 		do
@@ -1172,10 +1220,46 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_class_mappings (cpp_obj: POINTER; class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
+	ccom_generate_class_mappings (cpp_obj: POINTER; dotnet_name: STRING; eiffel_name: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_generate_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_class_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_generic_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_formal_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_anchored_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_basic_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_class_header (cpp_obj: POINTER; is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
@@ -1322,10 +1406,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT)"
 		end
 
-	ccom_add_careal_arg (cpp_obj: POINTER; a_value: REAL) is
+	ccom_add_careal_arg (cpp_obj: POINTER; a_value: DOUBLE) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_REAL)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_DOUBLE)"
 		end
 
 	ccom_add_cadouble_arg (cpp_obj: POINTER; a_value: DOUBLE) is
@@ -1358,7 +1442,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT)"
 		end
 
-	ccom_add_caarray_real_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [REAL]) is
+	ccom_add_caarray_real_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [DOUBLE]) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT)"
@@ -1383,6 +1467,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_start_il_generation (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_formal_feature (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
@@ -1418,10 +1508,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_external_call (cpp_obj: POINTER; external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	ccom_generate_external_call (cpp_obj: POINTER; external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN,EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN)"
 		end
 
 	ccom_put_result_info (cpp_obj: POINTER; type_id: INTEGER) is
@@ -1452,12 +1542,6 @@ feature {NONE}  -- Externals
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER,EIF_INTEGER)"
-		end
-
-	ccom_set_eiffel_type (cpp_obj: POINTER; exported_type_id: INTEGER) is
-			-- No description available.
-		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
 	ccom_duplicate_top (cpp_obj: POINTER) is
@@ -1578,6 +1662,12 @@ feature {NONE}  -- Externals
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_put_type_token (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_argument (cpp_obj: POINTER; n: INTEGER) is
@@ -1838,10 +1928,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_DOUBLE)"
 		end
 
-	ccom_put_real_constant (cpp_obj: POINTER; d: REAL) is
+	ccom_put_real_constant (cpp_obj: POINTER; d: DOUBLE) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_REAL)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_DOUBLE)"
 		end
 
 	ccom_put_character_constant (cpp_obj: POINTER; c: INTEGER) is

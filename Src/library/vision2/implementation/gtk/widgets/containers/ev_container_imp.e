@@ -129,19 +129,27 @@ feature -- Status setting
 			peer: EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			if shared_pointer /= peer.shared_pointer then
-				l := gslist_to_eiffel (peer.radio_group)
-				from
-					l.start
-				until
-					l.off
-				loop
-					C.gtk_radio_button_set_group (l.item, radio_group)
-					set_radio_group (C.gtk_radio_button_group (l.item))
-					C.gtk_toggle_button_set_active (l.item, False)
-					l.forth
+			if peer = Void then
+				-- It's a widget that inherits from EV_CONTAINER,
+				-- but has implementation renamed.
+				-- If this is the case, on `a_container' this feature
+				-- had to be redefined.
+				a_container.merge_radio_button_groups (interface)
+			else
+				if shared_pointer /= peer.shared_pointer then
+					l := gslist_to_eiffel (peer.radio_group)
+					from
+						l.start
+					until
+						l.off
+					loop
+						C.gtk_radio_button_set_group (l.item, radio_group)
+						set_radio_group (C.gtk_radio_button_group (l.item))
+						C.gtk_toggle_button_set_active (l.item, False)
+						l.forth
+					end
+					peer.set_shared_pointer (shared_pointer)
 				end
-				peer.set_shared_pointer (shared_pointer)
 			end
 		end
 
@@ -238,6 +246,11 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/03 21:24:00  brendel
+--| Fixed bug in connect_radio_groups. When implementation of `a_container' is
+--| Void, target and argument of call are reversed, because on that class,
+--| this feature had to be redefined anyway.
+--|
 --| Revision 1.28  2000/02/29 23:18:11  brendel
 --| Fully implemented radio group merging by sharing the radio_group pointer
 --| using POINTER_REF.

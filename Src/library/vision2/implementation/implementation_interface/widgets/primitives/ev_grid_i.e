@@ -16,10 +16,26 @@ inherit
 		redefine
 			interface
 		end
+
+	EV_GRID_ACTION_SEQUENCES_I
 	
 	REFACTORING_HELPER
 
 feature -- Access
+
+	is_item_set (a_column, a_row: INTEGER): BOOLEAN is
+			-- Has the item at position (`a_column' , `a_row') been set?
+		require
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+		local
+			a_item: EV_GRID_ITEM_I
+		do
+			a_item := item_internal (a_column, a_row, False)
+			if a_item /= Void then
+				Result := not a_item.created_from_grid
+			end
+		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'
@@ -50,11 +66,20 @@ feature -- Access
 			i_column_not_greater_than_visible_column_count: i <= visible_column_count
 		local
 			a_col_i: EV_GRID_COLUMN_I
+			visible_counter, counter: INTEGER
 		do
-			a_col_i := columns @ i
-			if a_col_i /= Void then
-				Result := a_col_i.interface
+			from
+				counter := 1
+			until
+				visible_counter = i
+			loop
+				a_col_i := column_internal (counter)
+				if a_col_i.is_visible then
+					visible_counter := visible_counter + 1
+				end
+				counter := counter + 1
 			end
+			Result := a_col_i.interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -96,7 +121,7 @@ feature -- Access
 			sel_rows: like selected_rows
 		do
 			to_implement ("EV_GRID_I.selected_items")
-			if single_row_selection_enabled or multiple_row_selection_enabled then
+			if single_row_selection_enabled or else multiple_row_selection_enabled then
 				create Result.make (0)
 				from
 					sel_rows := selected_rows
@@ -121,26 +146,26 @@ feature -- Access
 			sel_items: like selected_items
 		do
 			fixme ("Implement EV_GRID_I.clear_selection")
-			if single_row_selection_enabled or multiple_row_selection_enabled then
-				sel_rows := selected_rows
-				from
-					sel_rows.start
-				until
-					sel_rows.after
-				loop
-					sel_rows.item.implementation.disable_select_internal
-					sel_rows.remove
-				end
-			else
-				sel_items := selected_items
-				from
-					sel_items.start
-				until
-					sel_items.after
-				loop
-					sel_items.item.implementation.disable_select_internal
-					sel_items.remove
-				end
+
+			if single_item_selection_enabled or else multiple_item_selection_enabled then
+					sel_items := selected_items
+					from
+						sel_items.start
+					until
+						sel_items.after
+					loop
+						sel_items.item.implementation.disable_select_internal
+						sel_items.remove
+					end				
+			end
+			sel_rows := selected_rows
+			from
+				sel_rows.start
+			until
+				sel_rows.after
+			loop
+				sel_rows.item.implementation.disable_select_internal
+				sel_rows.remove
 			end
 			redraw_client_area
 		ensure
@@ -708,25 +733,22 @@ feature -- Element change
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
-		local
-			a_grid_col_i: EV_GRID_COLUMN_I
-			a_grid_row_i: EV_GRID_ROW_I
-			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-				-- Create the corresponding row and column if not already present
-			a_grid_col_i :=  column_internal (a_column)
-			a_grid_row_i := row_internal (a_row)
-			
-				-- Set the appropriate parent values for grid, column and row
-			a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i)
-
-			a_row_data := internal_row_data @ a_row
-			if a_row_data.count < a_grid_col_i.physical_index + 1 then
-				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
-			end
-			internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)	
+			internal_set_item (a_column, a_row, a_item)
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
+			item_set: is_item_set (a_column, a_row)
+		end
+
+	unset_item (a_column, a_row: INTEGER) is
+			-- Replace grid item at position (`a_column', `a_row') with a default item
+		require
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+		do
+			internal_set_item (a_column, a_row, Void)
+		ensure
+			item_unset: not is_item_set (a_column, a_row)
 		end
 
 feature -- Removal
@@ -765,13 +787,17 @@ feature -- Removal
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
 		local
-			a_row_i: EV_GRID_ROW_I
+			a_row_i, removed_row: EV_GRID_ROW_I
 		do
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
 			
 				-- Remove row and its corresponding data from `rows' and `internal_row_data'
 			rows.go_i_th (a_row)
+			removed_row := rows.item
+			if removed_row /= Void then
+				removed_row.remove_parent_i
+			end
 			rows.remove
 			
 			internal_row_data.go_i_th (a_row)
@@ -1257,17 +1283,19 @@ feature {NONE} -- Drawing implementation
 			-- Recompute contents of `column_offsets'.
 		local
 			i: INTEGER
+			temp_columns: like columns
 		do
+			temp_columns := columns
 			create column_offsets.make (column_count)
 			column_offsets.extend (0)
 			from
-				columns.start
+				temp_columns.start
 			until
-				columns.off
+				temp_columns.off
 			loop
-				i := i + columns.item.width
+				i := i + temp_columns.item.width
 				column_offsets.extend (i)
-				columns.forth
+				temp_columns.forth
 			end
 		ensure
 			counts_equal: column_offsets.count = column_count + 1
@@ -1528,6 +1556,10 @@ feature {NONE} -- Event handling
 							pointed_item_row.expand
 						end
 					else
+						if not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
+								-- If the ctrl key is not pressed then we remove selection
+							remove_selection
+						end
 						pointed_item.enable_select
 					end
 				end
@@ -1542,7 +1574,7 @@ feature {NONE} -- Implementation
 		require
 			i_positive: a_index > 0
 		local
-			a_column_i: EV_GRID_COLUMN_I
+			a_column_i, replaced_column: EV_GRID_COLUMN_I
 		do
 			a_column_i := (create {EV_GRID_COLUMN}).implementation
 			
@@ -1557,6 +1589,10 @@ feature {NONE} -- Implementation
 
 			columns.go_i_th (a_index)
 			if replace_existing_item then
+				replaced_column := columns.item
+				if replaced_column /= Void then
+					replaced_column.remove_parent_i
+				end
 				columns.replace (a_column_i)
 			else
 				columns.put_left (a_column_i)
@@ -1588,10 +1624,10 @@ feature {NONE} -- Implementation
 		require
 			i_positive: a_index > 0
 		local
-			grid_row_i: EV_GRID_ROW_I
+			row_i, replaced_row: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-			grid_row_i := (create {EV_GRID_ROW}).implementation
+			row_i := (create {EV_GRID_ROW}).implementation
 			
 			create a_row_data.make (1)
 			if a_index > row_count then
@@ -1607,17 +1643,21 @@ feature {NONE} -- Implementation
 			internal_row_data.go_i_th (a_index)
 			if replace_existing_item then
 				internal_row_data.replace (a_row_data)
-				rows.replace (grid_row_i)
-				grid_row_i.set_internal_index (a_index)
+				replaced_row := rows.item
+				if replaced_row /= Void then
+					replaced_row.remove_parent_i
+				end
+				rows.replace (row_i)
+				row_i.set_internal_index (a_index)
 			else
 				internal_row_data.put_left (a_row_data)
-				rows.put_left (grid_row_i)
-					-- Update the index of `grid_row_i' and subsequent rows in `rows'
+				rows.put_left (row_i)
+					-- Update the index of `row_i' and subsequent rows in `rows'
 				update_grid_row_indices (a_index)
 			end
 
 				-- Set grid of `grid_row' to `Current'
-			grid_row_i.set_parent_i (Current)
+			row_i.set_parent_i (Current)
 
 			recompute_row_offsets (a_index)
 			recompute_vertical_scroll_bar
@@ -1628,15 +1668,17 @@ feature {NONE} -- Implementation
 		local
 			i, a_row_count: INTEGER
 			row_i: EV_GRID_ROW_I
+			temp_rows: like rows
 		do
 				-- Set subsequent indexes to their new values
+			temp_rows := rows
 			from
 				i := a_index
-				a_row_count := rows.count
+				a_row_count := temp_rows.count
 			until
 				i > a_row_count
 			loop
-				row_i := rows @ i
+				row_i := temp_rows @ i
 				if row_i /= Void then
 					row_i.set_internal_index (i)
 				end
@@ -1679,16 +1721,19 @@ feature {NONE} -- Implementation
 			-- Column number `a_column', returns a new column if it doesn't exist
 		require
 			a_column_positive: a_column > 0
+		local
+			temp_columns: like columns
 		do
-			if a_column > columns.count then
+			temp_columns := columns
+			if a_column > temp_columns.count then
 				from
 				until
-					columns.count = a_column
+					temp_columns.count = a_column
 				loop
-					add_column_at (columns.count + 1, True)
+					add_column_at (temp_columns.count + 1, True)
 				end
 			end
-			Result := columns @ a_column
+			Result := temp_columns @ a_column
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -1697,13 +1742,16 @@ feature {NONE} -- Implementation
 			-- Row `a_row',  creates a new one if it doesn't exist
 		require
 			a_row_positive: a_row > 0
+		local
+			temp_rows: like rows
 		do
-			if a_row <= rows.count then
-				Result := rows @ a_row
+			temp_rows := rows
+			if a_row <= temp_rows.count then
+				Result := temp_rows @ a_row
 			end
 			if Result = Void then
 				add_row_at (a_row, True)
-				Result := rows @ a_row
+				Result := temp_rows @ a_row
 			end
 		ensure
 			row_not_void: Result /= Void
@@ -1722,7 +1770,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'
 		do
-			if single_row_selection_enabled or (multiple_row_selection_enabled and then not (create {EV_ENVIRONMENT}).application.ctrl_pressed) then
+			if single_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
 				remove_selection			
 			end
@@ -1730,6 +1778,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					-- Add to grid's selected rows
 					if not internal_selected_rows.has (a_row_i.interface) then
 						internal_selected_rows.extend (a_row_i.interface)
+						if row_select_actions_internal /= Void then
+							row_select_actions_internal.call ([a_row_i.interface])
+						end
 					end
 			else
 				internal_selected_rows.prune_all (a_row_i.interface)
@@ -1739,7 +1790,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
 			-- Update the selection status for `a_item_i' in `Current'
 		do
-			if single_item_selection_enabled or multiple_item_selection_enabled then
+			if single_item_selection_enabled then
 					-- Deselect existing items and then remove from list
 				remove_selection			
 			end
@@ -1747,9 +1798,37 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					-- Add to grid's selected rows
 					if not internal_selected_items.has (a_item_i.interface) then
 						internal_selected_items.extend (a_item_i.interface)
+						if item_select_actions_internal /= Void then
+							item_select_actions_internal.call ([a_item_i.interface])
+						end
 					end
 			else
 				internal_selected_items.prune_all (a_item_i.interface)
+			end
+		end
+
+	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
+			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void as called by `unset_item'
+		require
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+		local
+			a_grid_col_i: EV_GRID_COLUMN_I
+			a_grid_row_i: EV_GRID_ROW_I
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+		do
+			a_grid_col_i := column_internal (a_column)
+			a_grid_row_i := row_internal (a_row)
+			a_row_data := internal_row_data @ a_row
+			if a_row_data.count < a_grid_col_i.physical_index + 1 then
+				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
+			end
+			
+			if a_item /= Void then
+				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i)
+				internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)
+			else
+				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
 			end
 		end
 
@@ -1791,6 +1870,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			if grid_item_i = Void and then create_item_if_void then
 				create a_item
 				grid_item_i := a_item.implementation
+				grid_item_i.set_created_from_grid
 				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
 				grid_row.put (grid_item_i, (col_index))
 			end

@@ -151,9 +151,12 @@ end;
 					-- First condition, `other' must have the feature
 					-- name. Second condition, `old_feature_i' and
 					-- `new_feature_i' must have the same interface
+					-- Finally, they must have the same `is_deferred' value
 				if not (	(new_feature_i /= Void
 							and then
-							old_feature_i.same_interface (new_feature_i))
+							old_feature_i.same_interface (new_feature_i)
+							and then
+							old_feature_i.is_deferred = new_feature_i.is_deferred)
 						or else
 							-- We don't want to trigger a third pass
 							-- on a client of the associated class

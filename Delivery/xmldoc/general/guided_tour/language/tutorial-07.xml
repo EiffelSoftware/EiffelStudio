@@ -1199,7 +1199,7 @@
 				<local_variable>x</local_variable>
 			</code> and would, if evaluated, yield an exception as explained in 
 			<link>
-				<url>tutorial-09. .xml</url><anchor_name>10722</anchor_name>
+				<url>tutorial-09.xml</url><anchor_name>10722</anchor_name>
 				<label>"Exception handling", page 46</label>
 			</link> below.)
 		</paragraph>

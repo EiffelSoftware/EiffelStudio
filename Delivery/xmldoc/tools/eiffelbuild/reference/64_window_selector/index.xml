@@ -19,7 +19,7 @@
 		</heading>
 		<paragraph>To add a window or dialog to your project, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> the window or dialog type from the 
 			<link>
@@ -27,7 +27,7 @@
 				<label>type selector</label>
 			</link>, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> into the Window Selector. There are two possible drop targets within the window selector:
 			<list ordered="false">
@@ -73,11 +73,11 @@
 			</note>
 			<paragraph>You may insert windows into a directory, or move a window between directories by 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 					<label>picking</label>
 				</link> the window from its representation in the Window Selector, and 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 					<label>dropping</label>
 				</link> on the desired directory.
 				<note>

@@ -10,7 +10,7 @@
 	<paragraph>
 		<paragraph>If the current 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> in the object editor is of type <code><class_name>EV_FIXED</class_name></code>,
 			<image>

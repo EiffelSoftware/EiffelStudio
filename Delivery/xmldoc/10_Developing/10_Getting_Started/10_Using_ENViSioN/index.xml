@@ -31,7 +31,7 @@
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 					<label>  Solution Explorer</label>
 				</link>
 			</item>
@@ -43,25 +43,25 @@
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.xml</url>
 					<label>  Object Browser</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.xml</url>
 					<label>  The Eiffel Editor</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/index.xml</url>
 					<label>  Compiling Projects</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.htm</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.xml</url>
 					<label>  Debugging Projects</label>
 				</link>
 			</item>
@@ -76,7 +76,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
+				<url>/20_Language/10_Eiffel_NET/index.xml</url>
 				<label>Eiffel for .Net Language</label>
 			</link>
 			<line_break/>

@@ -17,7 +17,7 @@
 				<label>kernel</label>
 			</link> facilities. <link><url>/libraries/base/reference/support/PRIMES_chart.xml</url><label>PRIMES</label></link>, <link><url>/libraries/base/reference/support/RANDOM_chart.xml</url><label>RANDOM</label></link> and <link><url>/libraries/base/reference/support/FIBONACCI_chart.xml</url><label>FIBONACCI</label></link> are part of the data structure taxonomy; the others are meant to be used as ancestors by  classes needing their features.
 		</paragraph>
-		<paragraph>Two classes provide basic mathematical functions such as logarithms and trigonometric functions: <link><url>/libraries/base/reference/support/SINGLE_MATH_chart.xml</url><label>SINGLE_MATH</label></link> for single precision and <link><url>/libraries/base/reference/support/DOUBLE_MATH_chart.xml</url><label>DOUBLE_MATH</label></link> for the double-precision variants.  <link><url>/libraries/base/reference/support/MATH_CONST_chart.xml</url><label>MATH_CONST</label></link> contains mathematical constants: 
+		<paragraph>Two classes provide basic mathematical functions such as logarithms and trigonometric functions: <link><url>/libraries/base/reference/support/classic/SINGLE_MATH_chart.xml</url><label>SINGLE_MATH</label></link> for single precision and <link><url>/libraries/base/reference/support/classic/DOUBLE_MATH_chart.xml</url><label>DOUBLE_MATH</label></link> for the double-precision variants.  <link><url>/libraries/base/reference/support/MATH_CONST_chart.xml</url><label>MATH_CONST</label></link> contains mathematical constants: 
 			<code>
 				<symbol>p</symbol>
 			</code>, the square root of two, Euler's constant 
@@ -33,7 +33,7 @@
 		<heading>
 			<size>2</size>Internal object structures
 		</heading>
-		<paragraph>Class <link><url>/libraries/base/reference/support/INTERNAL_chart.xml</url><label>INTERNAL</label></link> provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
+		<paragraph>Class <link><url>/libraries/base/reference/support/classic/INTERNAL_chart.xml</url><label>INTERNAL</label></link> provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
 			<line_break/> Here are some of the most useful calls and what they yield, 
 			<code>
 				<feature_name>obj</feature_name>
@@ -46,8 +46,8 @@
 			</code> an integer:
 		</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_class_name</anchor_name><label>class_name</label></link> (<code><feature_name>obj</feature_name></code>):  the name of the generator class for O.</item>
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_dynamic_type</anchor_name><label>dynamic_type </label></link>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_class_name</anchor_name><label>class_name</label></link> (<code><feature_name>obj</feature_name></code>):  the name of the generator class for O.</item>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_dynamic_type</anchor_name><label>dynamic_type </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>obj</feature_name>
@@ -57,7 +57,7 @@
 					<feature_name>O</feature_name>
 				</code>,  where each type in a system is identified by a unique code.
 			</item>
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_field_count</anchor_name><label>field_count </label></link>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_field_count</anchor_name><label>field_count </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>obj</feature_name>
@@ -67,7 +67,7 @@
 					<feature_name>O</feature_name>
 				</code>.
 			</item>
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_physical_size</anchor_name><label>physical_size </label></link>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_physical_size</anchor_name><label>physical_size </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>obj</feature_name>
@@ -96,7 +96,7 @@
 					<feature_name>O</feature_name>
 				</code>.
 			</item>
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_field</anchor_name><label>field </label></link>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_field</anchor_name><label>field </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>i</feature_name>
@@ -125,7 +125,7 @@
 					<feature_name>O</feature_name>
 				</code>, if of the corresponding type; each declared of the  appropriate type in the class.
 			</item>
-			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.xml</url><anchor_name>f_is_special</anchor_name><label>is_special </label></link>
+			<item><link><url>/libraries/base/reference/support/classic/INTERNAL_flatshort.xml</url><anchor_name>f_is_special</anchor_name><label>is_special </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>obj</feature_name>
@@ -137,6 +137,6 @@
 			</item>
 		</list>
 		<warning>
-			<bold>CAUTION:</bold> Only very special cases justify the use of this class. Unless you are writing the lowest level of an interface between an Eiffel application and external tools (such as a database management system), and this requires passing to those tools information about the internals of Eiffel objects, you almost certainly should not use <link><url>/libraries/base/reference/support/INTERNAL_chart.xml</url><label>INTERNAL</label></link>. 
+			<bold>CAUTION:</bold> Only very special cases justify the use of this class. Unless you are writing the lowest level of an interface between an Eiffel application and external tools (such as a database management system), and this requires passing to those tools information about the internals of Eiffel objects, you almost certainly should not use <link><url>/libraries/base/reference/support/classic/INTERNAL_chart.xml</url><label>INTERNAL</label></link>. 
 		</warning>
 	</paragraph></document>

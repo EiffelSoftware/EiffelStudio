@@ -26,7 +26,7 @@
 			<item>Select a row (or a set of rows using SHIFT or CTRL keys) from the multi column list.</item>
 			<item>Click on the 
 				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#delete</url>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>delete</anchor_name>
 					<label>delete<image><url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url></image></label>
 				</link>
 				<link>

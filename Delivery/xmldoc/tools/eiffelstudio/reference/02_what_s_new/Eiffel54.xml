@@ -50,7 +50,7 @@
 		<list ordered="false">
 			<item>Click 
 				<link>
-					<url>../30_compiler/60_version_history/04_54_release/00_53_to_54_changes.xml</url>
+					<url>../30_compiler/60_version_history/04_54_release/index.xml</url>
 					<label>here</label>
 				</link> for the compiler release notes.
 			</item>
@@ -97,7 +97,7 @@
 				<item>Added <code><feature_name>wait_with_timeout</feature_name></code> in <code><class_name>CONDITION_VARIABLE</class_name></code></item>
 				<item>Added <code><class_name>READ_WRITE_LOCK</class_name></code> class to be used in a system where few writes are done compare to reads. A typical example of its use would be to have a thread safe lookup table where few insertions are done.</item>
 				<item>Now a C externals that might block the execution of a system, should be marked `blocking'. <link>
-					<url>../30_compiler/60_version_history/04_54_release/00_53_to_54_changes.xml</url>
+					<url>../30_compiler/60_version_history/04_54_release/index.xml</url>
 					<label>See compiler changes for more details</label>
 				</link>.</item>
 			</list>

@@ -92,7 +92,7 @@
 		</heading>
 		<paragraph>Each Eiffel feature which is a routine, i.e. a function or procedure, can support one assertion for a precondition and one for a postcondition. We saw where precondition and postcondition fit into the structure of the routine in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features</url>
+				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
 			</link> . An assertion is expressed as one or more assertion clauses which are logically 
 			<code>
@@ -219,7 +219,7 @@
 				<feature_name>set_second</feature_name>
 			</code> has a chance of working correctly. As such, upon execution, the body of this routine will never be executed if an attempt is made to call it in a state that does not meet its precondition. Instead, the caller will incur a precondition violation exception. We will investigate more about what exceptions mean further in 
 			<link>
-				<url>60_exception_mechanism</url>
+				<url>60_exception_mechanism.xml</url>
 				<label>Exception Mechanism</label>
 			</link>.
 		</paragraph>
@@ -352,7 +352,7 @@
 		</paragraph>
 		<paragraph>The class invariant is an assertion like precondition and postcondition, but there is only one per class. Check 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes</url>
+				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link> to see how the class invariant fits into the class structure.
 		</paragraph>
@@ -449,7 +449,7 @@
 		</heading>
 		<paragraph>In the section 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features</url>
+				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
 			</link>, we promised to explain two issues during this discussion of Design by Contract.
 		</paragraph>
@@ -463,7 +463,7 @@
 		</heading>
 		<paragraph>In 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features</url>
+				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
 			</link>, we saw that we can categorize features as either queries or commands. A query will ask a question or make an observation about an instance. A command will tell the instance to take some action which may result in changing the instances internal state.
 		</paragraph>
@@ -599,7 +599,7 @@
 		</heading>
 		<paragraph>Let's close this discussion of Design by Contract with one more interesting and point to make about assertions. The precondition and postcondition parts of a routine are optional, as you may remember from 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features</url>
+				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label> Adding Class Features</label>
 			</link>. Suppose you write a routine and do not code either precondition or postcondition. You might be tempted to think that you have simply written a routine that has no contract. But, that would not be the case.
 		</paragraph>

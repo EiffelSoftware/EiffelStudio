@@ -65,7 +65,7 @@
 					<label>Create</label>
 				</link> a library object (an instance of 
 				<link>
-					<url>../../reference/desc/spec/win32/dll_32_chart.xml</url>
+					<url>../../reference/desc/spec/win32/DLL_32_chart.xml</url>
 					<label>DLL_32</label>
 				</link>) , providing the  library's name as argument to the creation procedure.
 			</item>
@@ -85,7 +85,7 @@
 					<label>Apply</label>
 				</link> procedure 
 				<link>
-					<url>../../reference/desc/spec/win32/dll_32_routine.xml</url><anchor_name>f_call</anchor_name>
+					<url>../../reference/desc/spec/win32/DLL_32_ROUTINE_chart.xml</url><anchor_name>f_call</anchor_name>
 					<label>call</label>
 				</link>  to the routine object, passing an array that contains the actual arguments  required by the external routine.
 			</item>

@@ -68,7 +68,7 @@
 		</paragraph>
 		<paragraph>It is not possible to modify a component once created, except to 
 			<link>
-				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml#delete_component</url>
+				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url><anchor_name>delete_component</anchor_name>
 				<label> delete</label>
 			</link> it. 
 			<link/>

@@ -18,13 +18,13 @@
 			</item>
 			<item>You can enter a name in the 
 				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#name</url>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>name</anchor_name>
 					<label>name field</label>
 				</link>, otherwise, the metric tool generates automatically a name for the saved measure.
 			</item>
 			<item>Click the 
 				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#add</url>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>add</anchor_name>
 					<label>add<image><url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url></image></label>
 				</link>
 				<link>

@@ -27,7 +27,7 @@
 		</heading>
 		<paragraph>This system is a demonstration of how to connect an event to one of the common message hooks available within WEL. See 
 			<link>
-				<url>/libraries/wel/content/common_concepts/index.xml#common_message_hooks</url>
+				<url>/libraries/wel/content/common_concepts/index.xml</url><anchor_name>common_message_hooks</anchor_name>
 				<label>Common message hooks</label>
 			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/WEL_WINDOW_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/WEL_MSG_BOX_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occuring. 
 		</paragraph>
@@ -42,7 +42,7 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/common_concepts/index.xml#common_message_hooks</url>
+					<url>/libraries/wel/content/common_concepts/index.xml</url><anchor_name>common_message_hooks</anchor_name>
 					<label>Common message hooks</label>
 				</link>
 				<line_break/>

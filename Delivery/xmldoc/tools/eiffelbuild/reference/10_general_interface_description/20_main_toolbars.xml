@@ -22,11 +22,11 @@ At the top of the EiffelBuild development window, one toolbar is displayed by de
 					</cell>
 					<cell>Delete 
 						<link>
-							<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+							<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 							<label>object</label>
 						</link>/
 						<link>
-							<url>/tools/eiffelbuild/reference/02_notation.xml#component</url>
+							<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>component</anchor_name>
 							<label>component</label>
 						</link>.
 					</cell>
@@ -65,7 +65,7 @@ At the top of the EiffelBuild development window, one toolbar is displayed by de
 					</cell>
 					<cell>
 						<link>
-							<url>/tools/eiffelbuild/reference/70_history/index.xml#undo</url>
+							<url>/tools/eiffelbuild/reference/70_history/index.xml</url><anchor_name>undo</anchor_name>
 							<label>Undo</label>
 						</link> last action.
 					</cell>
@@ -91,7 +91,7 @@ At the top of the EiffelBuild development window, one toolbar is displayed by de
 					</cell>
 					<cell>
 						<link>
-							<url>/tools/eiffelbuild/reference/70_history/index.xml#redo</url>
+							<url>/tools/eiffelbuild/reference/70_history/index.xml</url><anchor_name>redo</anchor_name>
 							<label>Redo</label>
 						</link> last undone action.
 					</cell>

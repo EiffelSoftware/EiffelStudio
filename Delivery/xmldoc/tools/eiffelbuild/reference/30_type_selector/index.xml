@@ -31,37 +31,37 @@
 			<size>2</size>Creating a new object
 		</heading>
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 			<label>Objects</label>
 		</link> are the building blocks used in EiffelBuild to construct your interface. To create a new 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 			<label>object</label>
 		</link> for use in your system, 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 			<label>pick</label>
 		</link> the type corresponding to the type of object you wish to create,and 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 			<label>drop</label>
 		</link> onto an 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 			<label>object</label>
 		</link> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 			<label>drop</label>
 		</link> on it.
 		<line_break/>
 		<paragraph>For example, if you have just started a new project, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> HORIZONTAL_BOX from the type selector, and drop it on the <code><class_name>EV_TITLED_WINDOW</class_name></code> 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> displayed in the 
 			<link>
@@ -69,37 +69,37 @@
 				<label> layout constructor</label>
 			</link>. This will build you a new 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> of type <code><class_name>EV_HORIZONTAL_BOX</class_name></code>, parented in the window. If you then 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> a BUTTON from the type selector, you will not be able to 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> it on the <code><class_name>EV_TITLED_WINDOW</class_name></code>, as a window may only contain one child and is therefore currently full. You may however, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> on the <code><class_name>EV_HORIZONTAL_BOX</class_name></code> object you had just created, as the box is empty, and has space for multiple children. Doing so, will create a new 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>of type <code><class_name>EV_BUTTON</class_name></code>, parented in the box.
 		</paragraph>
 		<paragraph>This shows how simple it is to Build new 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> in EiffelBuild, you just need access to the parent 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> to 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> the selected type into.
 		</paragraph>
@@ -115,30 +115,30 @@
 		</heading>
 		<paragraph>Why would you want to change the type of an existing 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>, when you could just delete it and create a new 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>?
 		</paragraph>
 		<paragraph>Imagine you have spent some time constructing a complicated interface. You have an EV_VERTICAL_BOX with children many levels deep. You realize that you wanted the <code><class_name>EV_VERTICAL_BOX</class_name></code> to be of type <code><class_name>EV_HORIZONTAL_BOX</class_name></code>. If you delete the object, all children contained will also be deleted, which in this case, is not what you want. Changing the type of the object does actually delete the object internally, but will automatically re-parent all of its children into the new object.</paragraph>
 		<paragraph>To perform a type change, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> that you wish to change, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> it on an item in the type selector representing the desired new type. All existing children of the old 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> will be automatically re-parented in the new object.
 		</paragraph>
@@ -146,13 +146,13 @@
 		<list ordered="false">
 			<item>The parent of the existing 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 					<label>object</label>
 				</link> must accept children of type corresponding to the new type.
 			</item>
 			<item>The new type must be able to accept all of the existing 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 					<label>objects</label>
 				</link> children.
 			</item>

@@ -33,7 +33,9 @@ inherit
 		export
 			{NONE} all
 			{APPLICATION_EXECUTION_IMP} optimized_jit_debugging_enabled
-		end		
+		end
+		
+	EB_SHARED_DEBUG_TOOLS
 		
 create {SHARED_APPLICATION_EXECUTION}
 	make
@@ -112,14 +114,14 @@ feature -- load and save
 			save_filename: FILE_NAME
 		do
 			create save_filename.make
-			save_filename.set_directory(Workbench_generation_path)
+			save_filename.set_directory (Workbench_generation_path)
 			save_filename.set_file_name (Debug_info_name)
 			save_filename.add_extension (Debug_info_extension)
 		
 			if debug_info = Void then
 				create debug_info.make
 			end
-			debug_info.save(save_filename)
+			debug_info.save (save_filename)
 		rescue
 			set_error_message ("Unable to save project properties%N%
 					%Cause: Unable to open " + save_filename + " for writing")
@@ -789,14 +791,14 @@ feature -- Implementation
 	imp_dotnet: APPLICATION_EXECUTION_DOTNET is
 		require
 			is_dotnet
-		do
+		once
 			Result ?= Imp_application
 		end
 
 	imp_classic: APPLICATION_EXECUTION_CLASSIC is
 		require
 			not is_dotnet
-		do
+		once
 			Result ?= Imp_application
 		end
 

@@ -48,8 +48,15 @@ feature -- Access
 	Attribute_count: STRING is "<ACNT>"
 			-- Tag to replace by the number of attributes.
 
-	Type_name: STRING is "<TN>"
+	Upper_type_name: STRING is "<TN:U>"
 			-- Tag to replace by the attribute type name (in uppercase).
+			
+	Lower_type_name: STRING is "<TN:L>"
+			-- Tag to replace by the attribute type name (in lowercase).
+			
+	Initcap_type_name: STRING is "<TN:I>"
+			-- Tag to replace by the attribute type name (in lowercase except
+			-- for the initial character).
 			
 	Type_default_value: STRING is "<TDV>"		
 			-- Tag to replace by the attribute type default value.

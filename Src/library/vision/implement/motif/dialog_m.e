@@ -194,10 +194,10 @@ feature
 		local
             window, display_pointer, void_pointer: POINTER
 		do
-			window := xt_window (xt_parent (screen_object));
+			window := d_xt_window (d_xt_parent (screen_object));
 			if window /= void_pointer then
-				display_pointer := xt_display (xt_parent (screen_object));
-				x_raise_window (display_pointer, window)
+				display_pointer := d_xt_display (d_xt_parent (screen_object));
+				d_x_raise_window (display_pointer, window)
 			end
 		end;
 

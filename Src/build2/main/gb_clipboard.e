@@ -35,7 +35,7 @@ inherit
 feature -- Access
 		
 	object: GB_OBJECT is
-			--
+			-- `Result' is a new object representation of the contents.
 		local
 			a_list: ARRAYED_LIST [GB_OBJECT]
 		do
@@ -49,8 +49,22 @@ feature -- Access
 				until
 					a_list.off
 				loop
+						-- Remove all names from the copied XML. There is no easy method
+						-- of keeping the original names as we perform a replace for all objects that
+						-- are top level instances within the XML. Can be done, but may be tricky. For later.
+					a_list.item.set_name ("")
 					a_list.item.set_id (new_id)
 					object_handler.add_object_to_objects (a_list.item)
+					a_list.forth
+				end
+					-- Perform the connection of the instance referers afterwards as
+					-- otherwise, the temporary object instance referers structure may
+					-- reference the sane object in a nested chain as all of the new ids have not yet been updated.
+				from
+					a_list.start
+				until
+					a_list.off
+				loop
 					if a_list.item.associated_top_level_object_on_loading > 0 then
 						a_list.item.update_object_as_instance_representation
 					end
@@ -75,7 +89,6 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 			-- This is a minimal representation and does not have it's id's updated, referers connected etc etc.
 			-- Used when you simply need a copy of the clipboard's contents for viewing.
 		do
-
 			if contents_cell.item /= Void then
 			
 				if system_status.is_in_debug_mode then

@@ -25,9 +25,7 @@ feature {NONE}
 	update_information is
 		do
 			edited_command.update_text;
-			if edited_command.has_instances then
-				App_editor.update_transitions_list (edited_command)
-			end
+			App_editor.update_transitions_list (edited_command)
 		end;
 
 end

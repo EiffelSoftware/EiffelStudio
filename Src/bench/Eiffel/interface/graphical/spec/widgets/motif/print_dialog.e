@@ -113,7 +113,9 @@ feature -- Update
 			set_title (a_cmd.tool.title);
 			mb ?= ok_b.implementation;
 			mb.set_show_as_default (1);
-			filterable_format ?= a_cmd.tool.last_format.associated_command;
+			if a_cmd.tool.last_format /= Void then
+				filterable_format ?= a_cmd.tool.last_format.associated_command;
+			end
 			if filterable_format = Void then
 				postscript_t.set_insensitive
 			else
@@ -172,7 +174,9 @@ feature {NONE} -- Implementation
 			if not cmd_string.empty then
 				cmd_string.replace_substring_all ("$target", file_name);
 			end;
-			filterable_format ?= last_command.tool.last_format.associated_command;
+			if last_command.tool.last_format /= Void then
+				filterable_format ?= last_command.tool.last_format.associated_command;
+			end
 			if filterable_format = Void or else not postscript_t.state then
 				new_text := last_command.text_window.text;
 			else

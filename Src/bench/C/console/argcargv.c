@@ -11,6 +11,7 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
+#include "shword.h"
 #include "eif_except.h"		/* For `eraise' */
 
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */

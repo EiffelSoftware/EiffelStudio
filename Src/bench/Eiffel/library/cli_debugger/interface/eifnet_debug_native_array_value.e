@@ -151,8 +151,6 @@ feature -- Output
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
-		local
-			l_max, l_min: INTEGER
 		do
 			Result := items
 			if Result = Void then

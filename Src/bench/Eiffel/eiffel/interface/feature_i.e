@@ -263,6 +263,19 @@ feature -- Type id
 
 feature -- Conveniences
 
+	is_obsolete: BOOLEAN is
+			-- Is Current feature obsolete?
+		do
+			Result := obsolete_message /= Void
+		end;
+
+	obsolete_message: STRING is
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+		do
+			-- Do nothing
+		end;
+
 	has_arguments: BOOLEAN is
 			-- Has the current feature some formal arguments ?
 		do
@@ -339,6 +352,12 @@ feature -- Conveniences
 			-- Is the feature declaring some postconditions ?
 		do
 			-- Do nothing
+		end;
+
+	has_assertion: BOOLEAN is
+			-- Is the feature declaring some pre or post conditions ?
+		do
+			Result := has_postcondition or else has_precondition
 		end;
 
 	is_ensure_then: BOOLEAN is
@@ -671,6 +690,7 @@ feature -- Signature checking
 			vffd8: VFFD8;
 			vtug1: VTUG1;
 			vtec1: VTEC1;
+			vtec2: VTEC2;
 			vtgg1: VTGG1;
 		do
 			if type.has_like and then is_once then
@@ -692,15 +712,20 @@ feature -- Signature checking
 			end;
 			if feat_table.associated_class = written_class then
 					-- Check validity of an expanded result type
-				if	solved_type.has_expanded
-					and then
-					not (solved_type.good_expanded1)
-				then
-					!!vtec1;
-					vtec1.set_class_id (written_in);	
-					vtec1.set_body_id (body_id);
-					vtec1.set_type (solved_type);
-					Error_handler.insert_error (vtec1);
+				if	solved_type.has_expanded then
+					if 	solved_type.expanded_deferred then
+						!!vtec1;
+						vtec1.set_class_id (written_in);	
+						vtec1.set_body_id (body_id);
+						vtec1.set_type (solved_type);
+						Error_handler.insert_error (vtec1);
+					elseif not solved_type.valid_expanded_creation then
+						!!vtec2;
+						vtec2.set_class_id (written_in);	
+						vtec2.set_body_id (body_id);
+						vtec2.set_type (solved_type);
+						Error_handler.insert_error (vtec2);
+					end
 				end;
 					-- Check valididty of a generic class type
 				if not solved_type.good_generics then
@@ -734,6 +759,9 @@ feature -- Signature checking
 				vffd7.set_class_id (written_in);
 				vffd7.set_body_id (body_id);
 				Error_handler.insert_error (vffd7);
+			end;
+			if solved_type /= Void then
+				solved_type.check_for_obsolete_class
 			end;
 			if arguments /= Void then
 				if is_infix and then argument_count /= 1 then

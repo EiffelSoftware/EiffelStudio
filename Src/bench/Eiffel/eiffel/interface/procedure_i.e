@@ -8,13 +8,15 @@ inherit
 		redefine
 			duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
-			is_require_else, is_procedure, argument_names, arguments
+			is_require_else, is_procedure, argument_names, arguments,
+			obsolete_message
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
-			is_require_else, is_procedure, argument_names, arguments
+			is_require_else, is_procedure, argument_names, arguments,
+			obsolete_message
 		select
 			transfer_to
 		end
@@ -37,6 +39,10 @@ feature
 	
 	has_postcondition: BOOLEAN;
 			-- Is the procedure declaring some postcondition ?
+
+	obsolete_message: STRING;
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
 
 	set_arguments (args: like arguments) is
 			-- Assign `args' to `arguments'.
@@ -67,6 +73,13 @@ feature
 		do
 			has_postcondition := b;
 		end;
+
+	set_obsolete_message (s: STRING) is
+			-- Assign `s' to `obsolete_message'
+		do
+			obsolete_message := s;
+		end;
+ 
 
 	argument_names: EIFFEL_LIST [ID_AS] is
 			-- Argument names
@@ -149,7 +162,8 @@ feature
 			basic_transfer_to (other);
 			other.set_arguments (arguments);
 			other.set_is_require_else (is_require_else);
-			other.set_is_ensure_then (is_ensure_then);
+			other.set_is_require_else (is_require_else);
+			other.set_obsolete_message (obsolete_message);
 			other.set_has_precondition (has_precondition);
 			other.set_has_postcondition (has_postcondition);
 		end;

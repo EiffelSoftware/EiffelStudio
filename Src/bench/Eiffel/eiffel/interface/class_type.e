@@ -292,12 +292,11 @@ feature -- Generation
 		end;
 
 	memory_dispose_id: INTEGER is
-			-- Memory dispose id (rout_id in final mode)
-			-- of current class type.
+			-- Memory dispose routine id of current class type.
 			-- Return 0 if the MEMORY class has not been compiled.
 			--! (Assumed memory must have a dispose routine).
 		require
-			final_mode: byte_context.final_mode
+			checked_desc: System.memory_descendants /= Void
 		local
 			found: BOOLEAN;
 			feature_i: FEATURE_I;
@@ -305,23 +304,8 @@ feature -- Generation
 			nbr, i: INTEGER;
 			id_array: ARRAY [CLASS_C]
 		once
-			id_array := System.id_array;
-			from
-				nbr := id_array.count;
-				i := 1
-			until
-				found or i > nbr
-			loop
-				class_c := id_array.item (i);
-				if	class_c /= Void and then
-					class_c.class_name.is_equal ("memory") 
-				then
-					found := true
-				else
-					i := i + 1;
-				end;
-			end;
-			if found then
+			class_c := System.memory_class;
+			if class_c /= Void then
 				feature_i :=
 					class_c.feature_table.item ("dispose");
 				if feature_i /= Void then
@@ -338,7 +322,7 @@ feature -- Generation
 			item: FEATURE_I
 		do
 			feature_table := associated_class.feature_table; 
-			if (memory_dispose_id /= 0) then
+			if (System.memory_class /= Void) then
 				from
 					feature_table.start
 				until
@@ -363,10 +347,11 @@ feature -- Generation
 			sub_skel: SKELETON;
 			i, nb_ref: INTEGER;
 			exp_desc: EXPANDED_DESC;
-			sub_class_type: CLASS_TYPE;
+			class_type, sub_class_type: CLASS_TYPE;
 			saved_pos: INTEGER;
-			c_name: STRING;
-			bits_desc: BITS_DESC
+			c_name, creat_name: STRING;
+			bits_desc: BITS_DESC;
+			creation_feature: FEATURE_I
 		do
 			c_name := init_procedure_name;
 			nb_ref := skeleton.nb_reference;
@@ -386,7 +371,7 @@ feature -- Generation
 			file.putstring ("RTLD;");
 			file.new_line;
 			file.new_line;
-			file.putstring ("RTLI(2);");
+			file.putstring ("RTLI(2);%N");
 			file.putstring ("l[0] = Current;");
 			file.new_line;
 			file.putstring ("l[1] = parent;");
@@ -456,6 +441,21 @@ feature -- Generation
 				file.putstring (" + (l[0] - l[1]);");
 				file.new_line;
 
+					-- Call creation of expanded if there is one
+				class_type := exp_desc.class_type;
+				creation_feature := 
+						class_type.associated_class.creation_feature;
+            	if creation_feature /= Void then
+					creat_name := 
+						Encoder.feature_name (class_type.id, creation_feature.body_id).duplicate;
+					file.putstring (creat_name);
+					file.putchar ('(');
+					file.putstring ("l[0] + ");
+					skeleton.generate(file);
+					skeleton.go (saved_pos);
+					file.putstring (");");	
+					file.new_line;
+				end;
 					-- If the expanded object also has expandeds, we need
 					-- to call the initialization routine too.
 				sub_class_type := exp_desc.class_type;
@@ -697,9 +697,21 @@ feature -- Skeleton generation
 					Skeleton_file.putint (0);
 				end;
 				Skeleton_file.putstring (",%N");
+
+					-- Class id 
+				Skeleton_file.putstring ("(int32) ");
+				Skeleton_file.putint (id - 1);
+				Skeleton_file.putstring (",%N");
 				
-					-- Dispose routine
-				Skeleton_file.putstring ("(void (*)()) 0,%N");
+					-- Dispose routine id
+				Skeleton_file.putstring ("(int32) ");
+				if System.memory_descendants.has (associated_class) then
+					Skeleton_file.putint (memory_dispose_id);
+				else
+					Skeleton_file.putint (0);
+				end;
+				Skeleton_file.putchar (',');
+				Skeleton_file.new_line;
 
 					-- Generate reference on routine id array
 				Skeleton_file.putstring ("ra");
@@ -844,6 +856,16 @@ feature -- Byte code generation
 			creation_feature := a_class.creation_feature;
 			if creation_feature /= Void then
 				ba.append_int32_integer (creation_feature.feature_id);
+			else
+				ba.append_int32_integer (0);
+			end;
+
+				-- Class id
+			ba.append_int32_integer (id - 1);
+
+				-- Dispose routine id of dispose
+			if System.memory_descendants.has (associated_class) then
+				ba.append_int32_integer (memory_dispose_id);
 			else
 				ba.append_int32_integer (0);
 			end;

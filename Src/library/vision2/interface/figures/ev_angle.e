@@ -98,7 +98,7 @@ feature -- Operations
 		do
 			Result := compute_sine(radians)
 		ensure
-			sine_within_range: 1.0 >= Result >= -1.0
+			sine_within_range: Result.abs <= 1.0
 		end
 
 	cosine: REAL is
@@ -106,7 +106,7 @@ feature -- Operations
 		do
 			Result := compute_cosine(radians)
 		ensure
-			cosine_within_range: 1.0 >= Result >= -1.0
+			cosine_within_range: Result.abs <= 1.0
 		end
 
 	tangent: REAL is

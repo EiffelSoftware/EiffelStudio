@@ -25,8 +25,6 @@ feature -- Access
 			Result := is_class_defined and then
 				is_feature_defined and then
 				called_feature /= Void
-		ensure then
-			valid_called_feature: Result implies called_feature /= Void
 		end
 
 feature -- Output

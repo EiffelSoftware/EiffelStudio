@@ -8,32 +8,26 @@ indexing
 class SHOW_PREFERENCE_TOOL
 
 inherit
-	ICONED_COMMAND;
+	ICONED_COMMAND
+		rename
+			init as make
+		end;
 	WINDOWS
 
 creation
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize Current
-		do
-			init (a_text_window)
-		end
-
 feature {NONE} -- Execution
 
 	work (arg: ANY) is
 		do
-			tool := Void;
-			!! tool.make ("Preference Tool", Project_tool.screen);
-			!! spc.make (tool);
-			!! cpc.make (tool);
-			tool.add_preference_category (spc);
-			tool.add_preference_category (cpc);
-			tool.display;
-			tool.raise
+			!! preference_tool.make ("Preference Tool", Project_tool.screen);
+			!! spc.make (preference_tool);
+			!! cpc.make (preference_tool);
+			preference_tool.add_preference_category (spc);
+			preference_tool.add_preference_category (cpc);
+			preference_tool.display;
+			preference_tool.raise
 		end
 
 feature -- Properties
@@ -46,7 +40,7 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	tool: PREFERENCE_TOOL;
+	preference_tool: PREFERENCE_TOOL;
 			-- The preference tool
 
 	spc: SYSTEM_PREF_CAT;

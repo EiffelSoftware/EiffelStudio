@@ -31,16 +31,15 @@ feature {NONE} -- Initialization
 			add_activate_action (a_cmd, a_cmd.text_window)
 		end;
 
-	make_button_only (cmd: like associated_command; a_parent: MENU) is
+	make_button_only (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize the button part.
 			-- Do not add any action.
 		require
-			non_void_cmd: cmd /= Void;
+			non_void_cmd: a_cmd /= Void;
 			non_void_parent: a_parent /= Void
 		do
-			associated_command := cmd;
-			button_make (menu_entry_name, a_parent);
-			set_text (entry_text)
+			button_make (a_cmd.name, a_parent);
+			set_text (a_cmd.name)
 		end
 
 feature -- Properties

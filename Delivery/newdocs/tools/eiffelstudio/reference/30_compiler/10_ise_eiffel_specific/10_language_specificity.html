@@ -97,6 +97,22 @@
             descendant of D.
           <li><a href="/general/guided_tour/language/tutorial-11.html">Tuples</a>
           <li><a href="/general/guided_tour/language/tutorial-12.html">Agents</a></li>
+          <li>Feature access:<br>
+          <pre>	<span class="ekeyword">local</span>
+		value: <span class="eclass">INTEGER</span>
+	<span class="ekeyword">do</span>
+		value := <span class="ekeyword">feature</span> {<span class="eclass">MY_CLASS</span>}.<span class="efeature">value</span>
+	<span class="ekeyword">end</span>          </pre>
+	<br>
+	The previous call is valid, if and only if:<ul>
+          <li><span class="efeature">value</span> is a feature representing a 
+          constant of a basic type (INTEGER, DOUBLE or CHARACTER)</li>
+          <li><span class="efeature">value</span> is a C/C++/DLL external 
+          feature</li>
+          <li><span class="efeature">value</span> is an IL static external 
+          feature</li>
+        </ul>
+          </li>
         </ul>
         <h2>Added external support</h2>
         <p>Look at the page for <a href="../30_external_features/10_c_externals.html">C</a>

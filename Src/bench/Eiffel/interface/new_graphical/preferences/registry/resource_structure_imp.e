@@ -7,32 +7,47 @@ class
 
 inherit
 	RESOURCE_STRUCTURE_I
-		rename
-			root_folder_i as root_folder_imp
-		redefine
-			root_folder_imp
-		end
 
 create
 	make
 
 feature -- Initialization
 
-	make (in: like interface) is
-		do
-			interface := in
-		end
-
-	initialize (default_file: STRING) is
+	initialize (default_file: STRING; loc: STRING) is
 		local
 			file_name: FILE_NAME
 		do
 			make_default (default_file)
-			if root_folder_imp /= Void then
-				update_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+			if root_folder_i /= Void then
+				update (loc)
 			else
-				make_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+				make_from_location (loc)
 			end
+		end
+
+	initialize_from_file (default_file: STRING; loc: STRING) is
+		local
+			file_name: FILE_NAME
+		do
+			make_default_for_file (default_file)
+			if root_folder_i /= Void then
+				update (loc)
+			else
+				create file_name.make_from_string (default_file)
+				make_from_file_name (file_name)
+			end
+		end
+
+	make_default_for_file (default_file: STRING) is
+				-- Initialize Current from file
+				-- named `default_file'.
+		local
+			file_name: FILE_NAME
+		do
+			create file_name.make_from_string (default_file)
+			create table.make (100)
+			create {RESOURCE_FOLDER_XML} root_folder_i.make_default_root (file_name, interface)
+			root_folder_i.create_interface
 		end
 
 	make_from_location (loc: STRING) is
@@ -42,32 +57,40 @@ feature -- Initialization
 		do
 			location := loc
 			create table.make (100)
-			create root_folder_imp.make_root (loc, interface)
-			root_folder_imp.create_interface
+			create {RESOURCE_FOLDER_IMP} root_folder_i.make_root (loc, interface)
+			root_folder_i.create_interface
 		end
 
-	update_from_location (loc: STRING) is
+	make_from_file_name (file_name: FILE_NAME) is
+				-- Initialize Current from file
+				-- named `file_name'.
+		do
+			location := file_name
+			create table.make (100)
+			create {RESOURCE_FOLDER_XML} root_folder_i.make_root (file_name, interface)
+			root_folder_i.create_interface
+		end
+
+feature -- Update
+
+	update (loc: STRING) is
 				-- Initialize Current from registry key `loc'.
 		local
 			s: STRING
-			folder_imp: RESOURCE_FOLDER_IMP
 		do
 			location := loc
---			folder_imp ?= root_folder.implementation
-			root_folder_imp.update_root (loc)
+			root_folder_i.update_root (loc)
 		end
 
 feature -- Access
 
 	location: STRING
 
-	root_folder_imp: RESOURCE_FOLDER_IMP
-
 feature -- Saving
 
 	save is
 		do
-			root_folder_imp.root_save (location)
+			root_folder_i.root_save (location)
 		end
 
 	save_resource (res: RESOURCE) is

@@ -123,7 +123,7 @@ RT_LNK int fcount;
 	}
 
 #define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
-	if (HEADER(y)->ov_size & EO_EXP) { \
+	if (HEADER(y)->ov_flags & EO_EXP) { \
 		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} else if (RTAG(y)) erembq((y)); \

@@ -175,6 +175,7 @@ feature -- Transformation
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
 				ost.set_associated_tree_item (attr_item)
+				ost.set_associated_debug_value (Void ) -- FIXME: JFIAT 2004/01/02
 				main_item.extend (attr_item)
 				attr_item.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				attr_item.expand_actions.extend (agent on_expand (attributes_id))
@@ -369,6 +370,7 @@ feature {NONE} -- Implementation
 					--| For now we don't support this for external type
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
 				ost.set_associated_tree_item (Result)
+				ost.set_associated_debug_value (dv)
 				Result.set_pebble (ost)
 				Result.set_accept_cursor (ost.stone_cursor)
 				Result.set_deny_cursor (ost.X_stone_cursor)

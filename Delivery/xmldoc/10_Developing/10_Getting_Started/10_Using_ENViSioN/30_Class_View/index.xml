@@ -18,7 +18,7 @@
 		<paragraph>
 			<image>
 				<alt_text>General Property Page</alt_text>
-				<url>General_class_view.png</url>
+				<url>general_class_view.png</url>
 			</image>
 		</paragraph>
 		<paragraph>  Looking at the screenshot, you can see that there is one root node in the Class  View, which corresponds to the fact that there is only one project, named  "sample", in the currently opened solution. If there is more than one project  in the current solution, then there will be multiple entries in the tree. </paragraph>

@@ -41,7 +41,7 @@
 		<paragraph>
 			<image>
 				<alt_text>BreakPoint Properties</alt_text>
-				<url>BreakPointProperties.png</url>
+				<url>BreakpointProperties.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The top half of the dialog displays read only information regarding the 
@@ -75,7 +75,7 @@
 			<paragraph>
 				<image>
 					<alt_text>BreakPoint Condition</alt_text>
-					<url>BreakPointCondition.png</url>
+					<url>BreakpointCondition.png</url>
 				</image>
 			</paragraph>
 			<paragraph>The condition may be contain any of the 
@@ -259,7 +259,7 @@
 			<paragraph>
 				<image>
 					<alt_text>BreakPoint Hit Count</alt_text>
-					<url>BreakPointHitCount.png</url>
+					<url>BreakpointHitCount.png</url>
 				</image>
 			</paragraph>
 			<line_break/>

@@ -44,7 +44,7 @@
 		<paragraph>
 			<image>
 				<alt_text>General Property Page</alt_text>
-				<url>General_editor.png</url>
+				<url>general_editor.png</url>
 			</image>
 		</paragraph>
 		<paragraph>  Once inside the editor you can edit the source code as you would any Eiffel 

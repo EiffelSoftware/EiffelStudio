@@ -47,7 +47,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Editor Window With BreakPoint Set</alt_text>
-				<url>EditorWindowWithBreakPointSet.png</url>
+				<url>EditorWindowWithBreakpointSet.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The screenshot above shows sample source code in the
@@ -67,7 +67,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Editor Window With BreakPoint Hit</alt_text>
-				<url>EditorWindowWithBreakPointHit.png</url>
+				<url>EditorWindowWithBreakpointHit.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The screenshot above demonstrates the appearence of the 

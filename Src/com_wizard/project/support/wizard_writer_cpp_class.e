@@ -56,6 +56,17 @@ feature -- Access
 			Result.append (Double_quote)
 			Result.append (New_line)
 
+			from
+				others_source.start
+			until
+				others_source.after
+			loop
+				Result.append (others_source.item)
+				others_source.forth
+				Result.append (New_line)
+				Result.append (New_line)
+			end
+
 			Result.append (Hash_if_def)
 			Result.append (Space)
 			Result.append (Cplusplus)
@@ -71,17 +82,6 @@ feature -- Access
 			Result.append (Hash_end_if)
 			Result.append (New_line)
 			Result.append (New_line)
-
-			from
-				others_source.start
-			until
-				others_source.after
-			loop
-				Result.append (others_source.item)
-				others_source.forth
-				Result.append (New_line)
-				Result.append (New_line)
-			end
 
 			from
 				extern_functions.start

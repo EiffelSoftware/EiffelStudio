@@ -89,63 +89,63 @@ feature -- Transformation
 		require
 			start_number_designated: start_number > 0
 		local
-			dstates: LINKED_DFA;
-			state, state_memory: STATE_OF_DFA;
-			set, e_set, old_move, current_set: FIXED_INTEGER_SET;
+			dstates: LINKED_DFA
+			state, state_memory: STATE_OF_DFA
+			set, e_set, old_move, current_set: FIXED_INTEGER_SET
 			input_doc, old_index: INTEGER
 		do
-			build_closures;
-			!! sets_list.make;
-			!! set_tree.make (nb_states, 0);
-			e_set := closure (start_number);
-			search_in_tree (e_set);
-			sets_list.put_right (e_set);
-			!! old_move.make (nb_states);
+			build_closures
+			create sets_list.make
+			create set_tree.make_filled (nb_states, 0)
+			e_set := closure (start_number)
+			search_in_tree (e_set)
+			sets_list.put_right (e_set)
+			create old_move.make (nb_states)
 			from
-				!! dstates.make (greatest_input);
+				create dstates.make (greatest_input)
 				dstates.set_state
 			until
 				dstates.after or dstates.is_empty
 			loop
-				state := dstates.item;
-				old_index := dstates.index;
-				sets_list.go_i_th (old_index);
-				current_set := sets_list.item;
+				state := dstates.item
+				old_index := dstates.index
+				sets_list.go_i_th (old_index)
+				current_set := sets_list.item
 				from
 					input_doc := 0
 				until
 					input_doc = greatest_input + 1
 				loop
-					set := move (current_set, input_doc);
+					set := move (current_set, input_doc)
 					if set /= Void then
 						if set.is_equal (old_move) then
 							state.append_transition (input_doc, state_memory)
 						else
-							old_move := set;
-							e_set := epsilon_closure (set);
-							search_in_tree (e_set);
+							old_move := set
+							e_set := epsilon_closure (set)
+							search_in_tree (e_set)
 							if new_set then
-								dstates.set_state;
-								sets_list.finish;
+								dstates.set_state
+								sets_list.finish
 								sets_list.put_right (e_set)
-							end;
-							dstates.go_i_th (set_position);
-							state_memory := dstates.item;
-							state.append_transition (input_doc, state_memory);
+							end
+							dstates.go_i_th (set_position)
+							state_memory := dstates.item
+							state.append_transition (input_doc, state_memory)
 						end
-					end;
+					end
 					input_doc := input_doc + 1
-				end;
-				dstates.go_i_th (old_index + 1);
-			end;
-			dfa := dstates.lcopy;
-			initial_final_designation;
+				end
+				dstates.go_i_th (old_index + 1)
+			end
+			dfa := dstates.lcopy
+			initial_final_designation
 			debug
 				dfa.trace
 			end
 		ensure
 			-- Current and dfa recognize the same language.
-		end; 
+		end
 
 feature {NONE} -- Implementation
 
@@ -225,10 +225,10 @@ feature {NONE} -- Implementation
 			current_tree, new_tree: FIXED_TREE [INTEGER]
 		do
 			debug
-				set.print;
-			end;
-			last_index := set.largest;
-			current_tree := set_tree;
+				set.print
+			end
+			last_index := set.largest
+			current_tree := set_tree
 			from
 				index := set.smallest
 			until
@@ -242,24 +242,24 @@ feature {NONE} -- Implementation
 					io.put_integer (index)
 					io.new_line
 				end
-				current_tree.child_go_i_th (index);
+				current_tree.child_go_i_th (index)
 				if current_tree.child = Void then
-					!! new_tree.make (nb_states, 0);
-					current_tree.put_child (new_tree)
-				end;
-				current_tree := current_tree.child;
+					create new_tree.make_filled (nb_states, 0)
+					current_tree.replace_child (new_tree)
+				end
+				current_tree := current_tree.child
 				index := set.next (index)
-			end;
-			set_position := current_tree.item;
+			end
+			set_position := current_tree.item
 			if set_position = 0 then
-				new_number := new_number + 1;
-				current_tree.put (new_number);
-				set_position := new_number;
+				new_number := new_number + 1
+				current_tree.put (new_number)
+				set_position := new_number
 				new_set := True
 			else
 				new_set := False
 			end
-		end; 
+		end
 
 	closure (i: INTEGER): FIXED_INTEGER_SET is
 			-- Epsilon_closure of ith state which means

@@ -233,28 +233,17 @@ feature -- IL code generation
 					(left_type.is_reference and right_type.is_basic)
 				then
 					left.generate_il	
-					if left_type.is_reference and right_type.is_basic then
-							-- Dereference `item' for left hand side.
-						cl_type ?= left_type
-						feat := cl_type.base_class.feature_table.
-							item_id (feature {PREDEFINED_NAMES}.item_name_id)
-						
-						il_generator.generate_feature_access (cl_type.associated_class_type.type,
-							feat.feature_id, feat.argument_count, feat.has_return_value, False)
+					if left_type.is_basic and right_type.is_reference then
+						left.generate_il_eiffel_metamorphose (left_type)
 					end
 
 					right.generate_il
-					if left_type.is_basic and right_type.is_reference then
-							-- Dereference `item' for right hand side.
-						cl_type ?= right_type
-						feat := cl_type.base_class.feature_table.
-							item_id (feature {PREDEFINED_NAMES}.item_name_id)
-						
-						il_generator.generate_feature_access (cl_type.associated_class_type.type,
-							feat.feature_id, feat.argument_count, feat.has_return_value, False)
+					if left_type.is_reference and right_type.is_basic then
+						right.generate_il_eiffel_metamorphose (right_type)
 					end
 
-					il_generator.generate_binary_operator (il_operator_constant)
+					il_generator.generate_object_equality_test
+					generate_il_modifier_opcode
 				else
 					generate_converted_standard_il
 				end
@@ -265,6 +254,12 @@ feature -- IL code generation
 			-- Put `True' or `False' on stack depending if we generate
 			-- an equality or an inequality operator.
 		deferred
+		end
+		
+	generate_il_modifier_opcode is
+			-- Generate a `not' opcode in case of BIN_NE_B
+		do
+			-- Do nothing by default.
 		end
 
 feature -- Byte code generation

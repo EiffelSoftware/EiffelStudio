@@ -9,7 +9,8 @@ inherit
 		redefine
 			generate_equal,
 			generate_operator, enlarged,
-			generate_bit_equal
+			generate_bit_equal,
+			generate_il_modifier_opcode
 		end;
 	
 feature
@@ -55,6 +56,12 @@ feature -- IL code generation
 			il_generator.put_boolean_constant (True)
 		end
 
+	generate_il_modifier_opcode is
+			-- Generate `not' operator.
+		do
+			il_generator.generate_unary_operator (Il_not)
+		end
+		
 feature -- Byte code generation
 	
     make_expanded_eq_test (ba: BYTE_ARRAY) is

@@ -1,20 +1,20 @@
-<document title="EiffelStudio 5.5 for Mac OS X (10.3 or higher)">
+<document title="EiffelStudio 5.5 for Mac OS X">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
 		<paragraph>
 			<table>
-				<row><cell>Computer/Processor</cell><cell>Macintosh with 200 MHz or higher</cell></row>
-				<row><cell>Operating System</cell><cell>Mac OS X 10.3</cell></row>
-				<row><cell>Memory</cell><cell>128 MB of RAM (256Mb recommended)</cell></row>
-				<row><cell>Hard Disk</cell><cell>300Mb uncompressed hard disk space (500Mb recommended) </cell></row>
+				<row><cell>Computer/Processor</cell><cell>G4</cell></row>
+				<row><cell>Operating System</cell><cell>Mac OS X 10.3 or higher with GTK+ 2.4</cell></row>
+				<row><cell>Memory</cell><cell>256 MB of RAM (512 Mb recommended)</cell></row>
+				<row><cell>Hard Disk</cell><cell>400Mb uncompressed hard disk space (1GB recommended) </cell></row>
 				<row><cell>Drive</cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads)</cell></row>
 				<row><cell>Display</cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor</cell></row>
 				<row><cell>Peripherals</cell><cell>Keyboard and mouse or compatible pointing device</cell></row>
 			</table>
 		</paragraph>
 		<heading><size>2</size>Installation</heading>
-<paragraph>The installation of the files is done by copying the files from the delivery medium to the hard disk, for example to directory /usr/local/Eiffel55.</paragraph>
+		<paragraph>The installation of the files is done by copying the files from the delivery medium to the hard disk, for example to directory /usr/local/Eiffel55.</paragraph>
 
 		<paragraph>If the delivery medium is a gzipped tar file, you need to untar the file to the desired location. For example:</paragraph>
 		<code_block>

@@ -16,7 +16,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-creation
+create
 
 	make
 

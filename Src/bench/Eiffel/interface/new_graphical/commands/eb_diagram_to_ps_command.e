@@ -96,7 +96,7 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -128,7 +128,7 @@ feature -- Basic operations
 	draw_bon_inheritance_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_inheritance_figure
+			Result := agent draw_bon_inheritance_figure
 		end
 
 	draw_bon_inheritance_figure (ihf: BON_INHERITANCE_FIGURE) is
@@ -139,7 +139,7 @@ feature -- Basic operations
 	draw_bon_client_supplier_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_client_supplier_figure
+			Result := agent draw_bon_client_supplier_figure
 		end
 
 	draw_bon_client_supplier_figure (csf: BON_CLIENT_SUPPLIER_FIGURE) is

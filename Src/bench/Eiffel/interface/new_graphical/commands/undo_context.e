@@ -94,7 +94,7 @@ feature -- Basic operations
 				check t /= Void end
 				action_array ?= t.item (1)
 				check action_array /= Void end
-				do_agent := (~procedure_array_call (action_array))
+				do_agent := (agent procedure_array_call (action_array))
 			end
 			undo_proc ?= undo_procedure
 			if undo_proc /= Void then
@@ -104,7 +104,7 @@ feature -- Basic operations
 				check t /= Void end
 				undo_array ?= t.item (1)
 				check undo_array /= Void end
-				undo_agent := (~procedure_array_call (undo_array))
+				undo_agent := (agent procedure_array_call (undo_array))
 			end
 			do_agent.call (Void)
 			create undo_pair.make (undo_agent, do_agent)

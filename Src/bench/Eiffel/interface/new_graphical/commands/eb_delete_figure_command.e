@@ -47,8 +47,8 @@ feature -- Basic operations
 			if cf /= Void and then cf /= cd.center_class then
 				history.do_named_undoable (
 					Interface_names.t_Diagram_delete_class_cmd,
-					[<<~remove_class_figure (cf), ~project>>],
-					[<<~restore_class_figure (cf), ~project>>])
+					[<<agent remove_class_figure (cf), agent project>>],
+					[<<agent restore_class_figure (cf), agent project>>])
 			end
 		end
 
@@ -71,8 +71,8 @@ feature -- Basic operations
 				if clf /= Void and then clf /= cd.center_cluster then
 					history.do_named_undoable (
 						Interface_names.t_Diagram_delete_cluster_cmd,
-						[<<~remove_cluster_figure (clf), ~project>>],
-						[<<~restore_cluster_figure (clf), ~project>>])
+						[<<agent remove_cluster_figure (clf), agent project>>],
+						[<<agent restore_cluster_figure (clf), agent project>>])
 				end
 			end
 		end
@@ -95,8 +95,8 @@ feature -- Basic operations
 				a_y := ((a_stone.point.y_abs - d.point.y) / d.scale_x).rounded
 				history.do_named_undoable (
 					Interface_names.t_Diagram_delete_midpoint_cmd,
-					[<<a_stone~remove, ~project>>],
-					a_stone~restore (i, a_x, a_y))
+					[<<agent a_stone.remove, agent project>>],
+					agent a_stone.restore (i, a_x, a_y))
 			end
 		end
 
@@ -105,10 +105,10 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
-			Result.drop_actions.extend (~execute_with_class_stone)
-			Result.drop_actions.extend (~execute_with_cluster_stone)
-			Result.drop_actions.extend (~execute_with_link_midpoint)
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_class_stone)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
+			Result.drop_actions.extend (agent execute_with_link_midpoint)
 		end
 
 feature {NONE} -- Implementation

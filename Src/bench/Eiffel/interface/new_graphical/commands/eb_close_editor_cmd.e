@@ -18,7 +18,7 @@ inherit
 
 	EB_CONFIRM_SAVE_CALLBACK
 
-creation
+create
 
 	make
 	

@@ -11,7 +11,7 @@ class
 inherit
 	EB_TOOL_COMMAND
 
-creation
+create
 	make
 
 feature -- Execution

@@ -13,7 +13,7 @@ inherit
 			tool
 		end
 
-creation
+create
 	make
 	
 feature -- Properties

@@ -84,7 +84,7 @@ feature -- Basic operations
 		--	create cursor_pixmap
 		--	development_window.set_pointer_style (cursor_pixmap.Wait_cursor)
 			disable_sensitive 
-			implementation.launch_and_refresh (ISE_assembly_manager_filename, "", ~on_refresh)
+			implementation.launch_and_refresh (ISE_assembly_manager_filename, "", agent on_refresh)
 		--	development_window.set_pointer_style (cursor_pixmap.Standard_cursor)
 			enable_sensitive
 		end

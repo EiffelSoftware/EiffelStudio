@@ -146,8 +146,8 @@ feature -- Basic operations
 			if window.unified_stone then
 				Result.toggle
 			end
-			Result.select_actions.extend (~execute)
-			Result.select_actions.extend (~toggle_buttons)
+			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
 			tt := clone (tooltip)
 			if accelerator /= Void then

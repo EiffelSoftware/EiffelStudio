@@ -12,7 +12,7 @@ inherit
 	EB_CONSTANTS
 	WINDOWS
 
-creation
+create
 	make_close_all,
 	make_raise_all
 

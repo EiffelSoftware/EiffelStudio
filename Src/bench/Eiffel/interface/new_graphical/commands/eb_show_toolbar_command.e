@@ -117,7 +117,7 @@ feature -- Basic operations
 			else
 				Result.disable_select
 			end
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 feature -- Access

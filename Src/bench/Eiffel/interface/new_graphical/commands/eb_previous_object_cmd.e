@@ -18,7 +18,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 				create wd.make_with_text (Warning_messages.w_System_not_stopped)
 				wd.show_modal
 			else
-				{EB_PREVIOUS_TARGET_CMD} Precursor
+				Precursor {EB_PREVIOUS_TARGET_CMD}
 			end
 		end;
 

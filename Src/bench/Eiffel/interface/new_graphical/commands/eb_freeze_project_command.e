@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_f7),
 				True, False, False)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature {NONE} -- Implementation
@@ -41,8 +41,8 @@ feature {NONE} -- Implementation
 				3, "confirm_freeze",
 				Warning_messages.w_Freeze_warning, Interface_names.l_Discard_freeze_dialog
 			)
-			cd.set_ok_action (~set_c_compilation_and_compile (True))
-			cd.set_no_action (~set_c_compilation_and_compile (False))
+			cd.set_ok_action (agent set_c_compilation_and_compile (True))
+			cd.set_no_action (agent set_c_compilation_and_compile (False))
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 

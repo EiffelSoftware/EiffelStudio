@@ -8,7 +8,7 @@ class
 
 inherit
 
-creation
+create
 	make
 
 end -- class EB_OPEN_SYSTEM_CMD

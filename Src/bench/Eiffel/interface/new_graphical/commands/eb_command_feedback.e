@@ -18,7 +18,7 @@ feature -- Initialization
 			a_button_non_void: a_button /= Void
 		do
 			button := a_button
-			button.select_actions.extend (~execute)
+			button.select_actions.extend (agent execute)
 		ensure
 			properly_set: button = a_button
 		end
@@ -29,7 +29,7 @@ feature -- Initialization
 			a_menu_item_non_void: a_menu_item /= Void
 		do
 			menu_item := a_menu_item
-			menu_item.select_actions.extend (~execute)
+			menu_item.select_actions.extend (agent execute)
 		ensure
 			properly_set: menu_item = a_menu_item
 		end

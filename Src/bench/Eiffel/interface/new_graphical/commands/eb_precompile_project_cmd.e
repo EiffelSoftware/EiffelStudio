@@ -42,8 +42,8 @@ feature {NONE} -- Implementation
 			qd: EV_QUESTION_DIALOG
 		do
 			create qd.make_with_text (Warning_messages.w_Precompile_warning)
-			qd.button ("Yes").select_actions.extend (~set_c_compilation_and_compile (True))
-			qd.button ("No").select_actions.extend (~set_c_compilation_and_compile (False))
+			qd.button ("Yes").select_actions.extend (agent set_c_compilation_and_compile (True))
+			qd.button ("No").select_actions.extend (agent set_c_compilation_and_compile (False))
 			qd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 

@@ -12,7 +12,7 @@ inherit
 
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 	default_create
 
 feature {NONE} -- Implementation

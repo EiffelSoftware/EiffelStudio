@@ -71,8 +71,8 @@ feature -- Access
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
-			Result.drop_actions.extend (~on_stone_dropped)
-			Result.drop_actions.set_veto_pebble_function (~accepts_stone)
+			Result.drop_actions.extend (agent on_stone_dropped)
+			Result.drop_actions.set_veto_pebble_function (agent accepts_stone)
 		end
 
 feature -- Status report

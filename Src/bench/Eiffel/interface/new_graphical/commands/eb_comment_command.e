@@ -52,7 +52,7 @@ feature -- Basic operations
 						Result.set_gray_pixmap (pixmap @ 2)
 					end
 				end
-				Result.select_actions.extend (~execute)
+				Result.select_actions.extend (agent execute)
 				if executable then
 					Result.enable_sensitive
 				else
@@ -70,7 +70,7 @@ feature -- Basic operations
 					-- Create the menu item
 				create Result.make (Current)
 				Result.set_text (menu_name)
-				Result.select_actions.extend (~execute)
+				Result.select_actions.extend (agent execute)
 				if executable then
 					Result.enable_sensitive
 				else

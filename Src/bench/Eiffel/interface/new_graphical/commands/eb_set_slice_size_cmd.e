@@ -141,8 +141,8 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
-			Result.drop_actions.extend (~drop_object_stone)
-			Result.drop_actions.set_veto_pebble_function (~is_resizable (?))
+			Result.drop_actions.extend (agent drop_object_stone)
+			Result.drop_actions.set_veto_pebble_function (agent is_resizable (?))
 		end
 
 	is_resizable (st: ANY): BOOLEAN is
@@ -300,9 +300,9 @@ feature {NONE} -- Implementation
 				-- Labels and text fields.
 			minf.set_minimum_width (70)
 			maxf.set_minimum_width (70)
-			minf.return_actions.extend (maxf~set_focus)
-			minf.return_actions.extend (maxf~select_all)
-			maxf.return_actions.extend (~get_limits (minf, maxf, dial))
+			minf.return_actions.extend (agent maxf.set_focus)
+			minf.return_actions.extend (agent maxf.select_all)
+			maxf.return_actions.extend (agent get_limits (minf, maxf, dial))
 
 			create vbox
 			create hbox
@@ -326,9 +326,9 @@ feature {NONE} -- Implementation
 
 				-- Buttons.
 			create okb.make_with_text (Interface_names.b_Ok)
-			okb.select_actions.extend (~get_limits (minf, maxf, dial))
+			okb.select_actions.extend (agent get_limits (minf, maxf, dial))
 			create cancelb.make_with_text (Interface_names.b_Cancel)
-			cancelb.select_actions.extend (dial~destroy)
+			cancelb.select_actions.extend (agent dial.destroy)
 
 			create sep
 			maincont.extend (sep)

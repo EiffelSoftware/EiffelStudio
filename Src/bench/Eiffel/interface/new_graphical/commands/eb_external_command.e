@@ -322,8 +322,8 @@ feature {NONE} -- Implementation
 			dialog.set_default_cancel_button (cb)
 			
 				-- Set up events.
-			okb.select_actions.extend (~on_ok)
-			cb.select_actions.extend (~destroy_dialog)
+			okb.select_actions.extend (agent on_ok)
+			cb.select_actions.extend (agent destroy_dialog)
 		end
 
 	on_ok is
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 			timer: EV_TIMEOUT
 			cmdexe: STRING
 		do
-			Window_manager.for_all_development_windows ({EB_DEVELOPMENT_WINDOW}~disable_sensitive)
+			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.disable_sensitive)
 			create output_file_name.make_temporary_name
 			create error_output_file_name.make_temporary_name
 			if platform_constants.is_windows then
@@ -400,12 +400,12 @@ feature {NONE} -- Implementation
 				cl.append (finished_file_name)
 			end
 			create timer.make_with_interval (500)
-			timer.actions.extend (~check_not_finished)
+			timer.actions.extend (agent check_not_finished)
 			execution_environment.launch (cl)
 			create running_dialog.make_initialized (1, "executing_command", Interface_names.l_Executing_command, Interface_names.L_do_not_show_again)
 			running_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			timer.destroy
-			Window_manager.for_all_development_windows ({EB_DEVELOPMENT_WINDOW}~enable_sensitive)
+			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.enable_sensitive)
 		end
 
 	running_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG

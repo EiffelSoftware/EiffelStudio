@@ -11,7 +11,7 @@ obsolete "use EB_SAVE_AS_COMMAND instead"
 inherit
 	EB_SAVE_FILE_AS_COMMAND
 
-creation
+create
 	make
 
 end

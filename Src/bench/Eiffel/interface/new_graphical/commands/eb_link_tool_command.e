@@ -36,8 +36,8 @@ feature -- Basic operations
 			project
 			history.register_named_undoable (
 				Interface_names.t_Diagram_put_right_angles_cmd,
-				[<<d~hide_links, ~project, d~redo_right_angles, d~show_links, ~project>>],
-				[<<d~hide_links, ~project, d~undo_right_angles, d~show_links, ~project>>])
+				[<<agent d.hide_links, agent project, agent d.redo_right_angles, agent d.show_links, agent project>>],
+				[<<agent d.hide_links, agent project, agent d.undo_right_angles, agent d.show_links, agent project>>])
 		end
 
 	execute_with_link_stone (a_stone: LINK_STONE) is
@@ -101,8 +101,8 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
-			Result.drop_actions.extend (~execute_with_link_stone)
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_link_stone)
 		end
 
 feature {EB_LINK_TOOL_DIALOG} -- Implementation
@@ -150,36 +150,36 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 						if link_tool_dialog.handle_left_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_left_cmd,
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (new_midpoints), 
-									lf~show, ~project>>],
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (saved_midpoints),
-									lf~show, ~project>>])
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints), 
+									agent lf.show, agent project>>],
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
+									agent lf.show, agent project>>])
 						elseif link_tool_dialog.handle_right_selected then			
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_right_cmd,
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (new_midpoints),
-									lf~show, ~project>>],
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (saved_midpoints),
-									lf~show, ~project>>])
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
+									agent lf.show, agent project>>],
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
+									agent lf.show, agent project>>])
 						elseif link_tool_dialog.two_handles_left_selected then			
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_two_handles_left_cmd,
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (new_midpoints),
-									lf~show, ~project>>],
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (saved_midpoints),
-									lf~show, ~project>>])
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
+									agent lf.show, agent project>>],
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
+									agent lf.show, agent project>>])
 						elseif link_tool_dialog.two_handles_right_selected then			
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_two_handles_right_cmd,
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (new_midpoints),
-									lf~show, ~project>>],
-								[<<lf~hide, ~project, lf~reset, lf~retrieve_midpoints (saved_midpoints),
-									lf~show, ~project>>])
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
+									agent lf.show, agent project>>],
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
+									agent lf.show, agent project>>])
 						elseif link_tool_dialog.reset_selected then
 							history.do_named_undoable (
 								Interface_names.t_Diagram_remove_handles_cmd,
-								[<<lf~hide, ~project, lf~reset, lf~show, ~project>>],
-								[<<lf~retrieve_midpoints (saved_midpoints), ~project>>])
+								[<<agent lf.hide, agent project, agent lf.reset, agent lf.show, agent project>>],
+								[<<agent lf.retrieve_midpoints (saved_midpoints), agent project>>])
 						end
 					end
 				else

@@ -64,8 +64,8 @@ feature -- Basic operations
 			end
 			history.do_named_undoable (
 				Interface_names.t_Diagram_change_color_cmd,
-				~change_color_all (class_list, new_color_table),
-				~change_color_all (class_list, old_color_table))
+				agent change_color_all (class_list, new_color_table),
+				agent change_color_all (class_list, old_color_table))
 		end
 
 	execute_with_stone (a_stone: CLASSI_STONE) is
@@ -93,8 +93,8 @@ feature -- Basic operations
 				if not change_color_dialog.color.is_equal (cf.color) then
 					history.do_named_undoable (
 						Interface_names.t_Diagram_change_color_cmd,
-						~change_color (cf, change_color_dialog.color),
-						~change_color (cf, cf.color))
+						agent change_color (cf, change_color_dialog.color),
+						agent change_color (cf, cf.color))
 				end
 			end
 		end
@@ -104,8 +104,8 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
-			Result.drop_actions.extend (~execute_with_stone)
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_stone)
 		end
 
 feature {NONE} -- Implementation

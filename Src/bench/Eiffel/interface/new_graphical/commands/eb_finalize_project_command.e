@@ -93,8 +93,8 @@ feature {NONE} -- Implementation
 				3, "confirm_finalize",
 				Warning_messages.w_Finalize_warning, Interface_names.l_Discard_freeze_dialog
 			)
-			cd.set_ok_action (~set_c_compilation_and_compile (True))
-			cd.set_no_action (~set_c_compilation_and_compile (False))
+			cd.set_ok_action (agent set_c_compilation_and_compile (True))
+			cd.set_no_action (agent set_c_compilation_and_compile (False))
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 

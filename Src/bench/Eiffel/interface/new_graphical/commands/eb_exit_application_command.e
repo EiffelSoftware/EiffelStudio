@@ -69,7 +69,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 					2, "confirm_on_exit",
 					Interface_names.l_Exit_application, Interface_names.l_Dont_ask_me_again
 				)
-				exit_confirmation_dialog.set_ok_action (~exit_application)
+				exit_confirmation_dialog.set_ok_action (agent exit_application)
 				exit_confirmation_dialog.show_modal_to_window (window_manager.last_focused_window.window)
 			else
 				exit_application
@@ -108,7 +108,7 @@ feature {NONE} -- Callbacks
 			if Application.is_running then
 				already_confirmed := True
 				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
-				cd.button ("OK").select_actions.extend (~confirm_and_exit)
+				cd.button ("OK").select_actions.extend (agent confirm_and_exit)
 				cd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
 				confirm_and_exit
@@ -123,8 +123,8 @@ feature {NONE} -- Callbacks
 			if window_manager.has_modified_windows then
 				already_confirmed := True
 				create qd.make_with_text (Interface_names.l_Exit_warning)
-				qd.button ("Yes").select_actions.extend (~save_and_exit)
-				qd.button ("No").select_actions.extend (~ask_confirmation)
+				qd.button ("Yes").select_actions.extend (agent save_and_exit)
+				qd.button ("No").select_actions.extend (agent ask_confirmation)
 				qd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
 				ask_confirmation
@@ -150,7 +150,7 @@ feature {NONE} -- Callbacks
 		require
 			Workbench.is_compiling
 		do
-			Workbench.Eiffel_project.stop_and_exit (~ask_confirmation)
+			Workbench.Eiffel_project.stop_and_exit (agent ask_confirmation)
 		end
 
 feature {NONE} -- Attributes

@@ -27,7 +27,7 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text, use_gray_icons)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 feature {NONE} -- Implementation

@@ -73,7 +73,7 @@
  * result back onto the stack. Of course, optimizations are here to avoid
  * useless stack manipulations.
  */
-rt_shared struct opstack op_stack = {
+rt_shared struct opstack op_stack = { /* %%ss mt */
 	(struct stochunk *) 0,		/* st_hd */
 	(struct stochunk *) 0,		/* st_tl */
 	(struct stochunk *) 0,		/* st_cur */
@@ -89,7 +89,7 @@ rt_shared struct opstack op_stack = {
  * to be fetched. Its behaviour is similar to the one of PC in a central
  * processing unit.
  */
-rt_public char *IC;				/* Interpreter Counter (like PC on a CPU) */
+rt_public char *IC = (char *)0;	/* Interpreter Counter (like PC on a CPU) */ /* %%ss mt */
 
 /* To speed-up access of the local parameters and variables, they are all
  * gathered in a separate array (automagically resized). The value of Current
@@ -100,10 +100,10 @@ rt_public char *IC;				/* Interpreter Counter (like PC on a CPU) */
  * of the interpreter's registers, but for faster access, they are copied
  * to C global vars--RAM.
  */
-rt_private struct item **iregs = (struct item **) 0;	/* Interpreter registers */
-rt_private int iregsz = 0;					/* Size of 'iregs' array (bytes) */
-rt_private int argnum;						/* Number of arguments */
-rt_private int locnum;						/* Number of locals */
+rt_private struct item **iregs = (struct item **) 0;	/* Interpreter registers */ /* %%ss mt */
+rt_private int iregsz = 0;	/* Size of 'iregs' array (bytes) */ /* %%ss mt */
+rt_private int argnum = 0;		/* Number of arguments */ /* %%ss mt */
+rt_private int locnum = 0;		/* Number of locals */ /* %%ss mt */
 
 /* To optimize registers resync, we keep track of a tag value which is updated
  * each time we enter in an interpreted routine. This gives us the ability to
@@ -111,7 +111,7 @@ rt_private int locnum;						/* Number of locals */
  * routine due to a function call. If none have been called, then the registers
  * have no reason to have changed.
  */
-rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */
+rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */ /* %%ss mr */
 
 /* Error message */
 rt_private char *botched = "Operational stack botched";
@@ -122,8 +122,8 @@ rt_private void monadic_op(int code);				/* Execute a monadic operation */
 rt_private void diadic_op(int code);				/* Execute a diadic operation */
 
 /* Assertion checking */
-rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
-rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
+rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
+rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
@@ -143,13 +143,13 @@ rt_private void write_address(char *where, char *value);			/* Write an address c
 
 /* Interpreter interface */
 rt_public void exp_call();				/* Sets IC before calling interpret */ /* %%ss undefine */
-rt_public void xinterp(EIF_CONTEXT char *icval);		/* Sets IC before calling interpret */
+rt_public void xinterp(EIF_CONTEXT char *icval);	/* Sets IC before calling interpret */
 rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(EIF_CONTEXT int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_private int icall(int fid, int stype, int is_extern);					/* Interpreter dispatcher (in water) */
-rt_private int ipcall(int32 origin, int32 offset, int is_extern);					/* Interpreter precomp dispatcher */
+rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern);					/* Interpreter dispatcher (in water) */
+rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
 rt_private void address(int32 fid, int stype);					/* Address of a routine */
@@ -157,10 +157,10 @@ rt_private void assign(long int fid, int stype, uint32 type);					/* Assignment 
 rt_private void passign(int32 origin, int32 f_offset, uint32 type);					/* Assignment in a precomp attribute */
 
 /* Calling protocol */
-rt_private void init_var(struct item *ptr, long int type);				/* Initialize to 0 a variable entity */
-rt_private void init_registers(void);			/* Intialize registers in callee */
-rt_private void allocate_registers(void);		/* Allocate the register array */
-rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top);			/* Resynchronize the register array */
+rt_private void init_var(struct item *ptr, long int type);	/* Initialize to 0 a variable entity */
+rt_private void init_registers(EIF_CONTEXT_NOARG);	/* Intialize registers in callee */
+rt_private void allocate_registers(EIF_CONTEXT_NOARG);		/* Allocate the register array */
+rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top);			/* Resynchronize the register array */
 rt_private void pop_registers(void);			/* Remove local vars and arguments */
 
 /* Operational stack handling routines */
@@ -305,7 +305,7 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 	dpop();								/* Remove calling context */
 }
 
-rt_public void xinitint(void)
+rt_public void xinitint(EIF_CONTEXT_NOARG)
 {
 	/* Creation of the register array. */
 
@@ -473,7 +473,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		}
 	
 		locnum = get_short();		/* Get the local number */
-		init_registers();			/* Initialize the registers */
+		init_registers(MTC);			/* Initialize the registers */
 
 		/* Expanded clone of arguments (if any) */
 		while (*IC++ != BC_NO_CLONE_ARG) {
@@ -525,7 +525,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			stop = op_stack.st_top;		/* needed for setjmp() and calls */
 			dostk();					/* Record position in calling context */
 			if (is_nested)
-				icheck_inv(icurrent->it_ref, scur, stop, 0);	/* Invariant */
+				icheck_inv(MTC icurrent->it_ref, scur, stop, 0);	/* Invariant */
 
 #ifdef DEBUG
 			dprintf(1)("\tFeature %s written in %s on 0x%lx [%s]\n",
@@ -575,14 +575,14 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					last->it_ref = RTLX(type & SK_DTYPE);
 					last->type = SK_EXP;	
 					if (tagval != stagval) 
-						sync_registers(scur, stop);
+						sync_registers(MTC scur, stop);
 					break;
 				case SK_BIT:
 					stagval = tagval;
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_bit = RTLB(type & SK_BMASK);
 					if (tagval != stagval) 
-						sync_registers(scur, stop);
+						sync_registers(MTC scur, stop);
 					last->type = SK_BIT;
 					break;
 				default:
@@ -598,7 +598,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->it_ref = RTLX(type & SK_DTYPE);	
 				last->type = SK_EXP;
 				if (tagval != stagval)
-					sync_registers(scur, stop);
+					sync_registers(MTC scur, stop);
 				if (once_done != (char *) 0) {
 					/* If the Result is an expanded, then we have an hector pointer
 					 * in place of the result.
@@ -678,7 +678,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		hec_stack.st_cur = h_cur;
 		if (h_cur) hec_stack.st_end = h_cur->sk_end;
 		hec_stack.st_top = h_top;
-		sync_registers(scur, stop);
+		sync_registers(MTC scur, stop);
 		RTEU;
 		break;
 
@@ -1118,7 +1118,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 										 * call the interpreter for creation
 										 * routines of expanded objects.
 										 */
-				sync_registers(scur, stop);
+				sync_registers(MTC scur, stop);
 			ecopy(ref, last->it_ref);	/* Copy to complete the clone */
 		}
 		break;
@@ -1362,7 +1362,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CREAT_INV\n");
 #endif
-		icheck_inv(opop()->it_ref, scur, stop, 1);    /* Invariant */
+		icheck_inv(MTC opop()->it_ref, scur, stop, 1);    /* Invariant */
 		break;
 
 	/*
@@ -1422,7 +1422,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 										 * Dispose to be called then sync_regs
 										 * has to be called. 
 										 */
-				sync_registers(scur, stop);
+				sync_registers(MTC scur, stop);
 		}
 		break;
 
@@ -1537,7 +1537,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->it_ref = new_obj;
 			}
 			if (tagval != stagval)				/* If G.C calls melted dispose */
-				sync_registers(scur, stop);
+				sync_registers(MTC scur, stop);
 		}
 		break;
 
@@ -1562,8 +1562,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall((int)offset, code, is_extern))
-			sync_registers(scur, stop);
+		if (icall(MTC (int)offset, code, is_extern))
+			sync_registers(MTC scur, stop);
 		is_extern = 0;
 		break;
 
@@ -1591,8 +1591,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 0;					/* Invariant check turned off */
-			if (ipcall(origin, offset, is_extern))
-				sync_registers(scur, stop);
+			if (ipcall(MTC origin, offset, is_extern))
+				sync_registers(MTC scur, stop);
 			is_extern = 0;
 			break;
 		}
@@ -1622,8 +1622,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall((int)offset, code, is_extern))
-			sync_registers(scur, stop);
+		if (icall(MTC (int)offset, code, is_extern))
+			sync_registers(MTC scur, stop);
 		is_extern = 0;						/* No side effect */
 		break;
 
@@ -1656,8 +1656,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
-			if (ipcall(origin, offset, is_extern))
-				sync_registers(scur, stop);
+			if (ipcall(MTC origin, offset, is_extern))
+				sync_registers(MTC scur, stop);
 			is_extern = 0;						/* No side effect */
 			break;
 		}
@@ -2204,7 +2204,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			IC = OLD_IC;
 			if (tagval != stagval)
-				sync_registers(scur, stop); /* If calls melted make of array */ 
+				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
 		
 			sp_area = *(char **) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
@@ -2292,7 +2292,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			IC = OLD_IC;
 			if (tagval != stagval)
-				sync_registers(scur, stop); /* If calls melted make of array */ 
+				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
 		
 			sp_area = *(char **) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
@@ -2438,7 +2438,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			}
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
-				sync_registers(scur, stop); /* If G.C calls melted dispose */
+				sync_registers(MTC scur, stop); /* If G.C calls melted dispose */
 			xfree ((char *) stripped);
 			last = iget();
 			last->type = SK_REF;
@@ -2474,7 +2474,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			last->type = SK_REF;
 			last->it_ref = str_obj;
 			if (tagval != stagval)
-				sync_registers(scur,stop);
+				sync_registers(MTC scur,stop);
 			break;
 		}
  
@@ -2626,17 +2626,17 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			}
 			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
 #ifdef SEP_DEBUG
-				printf("Now, test %d parameter: %lx\n", sep_para_index[tmp_tyc]+1, ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
-				if (Dtype(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref) != sep_obj_id) {
-					printf ("Error, Dtype(%d)=%d\n", tmp_tyc, Dtype(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref));
+				printf("Now, test %d parameter: %lx\n", sep_para_index[tmp_tyc]+1, ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+				if (Dtype(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref) != sep_obj_id) {
+					printf ("Error, Dtype(%d)=%d\n", tmp_tyc, Dtype(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref));
 				}
 				else {
-					printf("To Reserve <%s, %d, %d>\n", hostname_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref), pid_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref), oid_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)); 
+					printf("To Reserve <%s, %d, %d>\n", hostname_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref), pid_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref), oid_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)); 
 				}
 #endif
-				if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+				if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
 					for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-						CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+						CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 					}
 					tmp_tyc = 0;
 					CURRSFW;
@@ -2659,7 +2659,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			short tmp_tyc;
 			nb_of_sep_paras = get_short();
 			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				CURFSO(ivalue(IV_ARG, get_short())->it_ref);
+				CURFSO(ivalue(MTC IV_ARG, get_short())->it_ref);
 			}
 		}	
 		break;
@@ -2744,11 +2744,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-					if (icall((int)offset, code, is_extern))
-						sync_registers(scur, stop);
+					if (icall(MTC (int)offset, code, is_extern))
+						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
 					if (ipcall(origin, offset, is_extern))
-						sync_registers(scur, stop);
+						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
 				 * into a separate object.
@@ -2909,11 +2909,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-					if (icall((int)offset, code, is_extern))
-						sync_registers(scur, stop);
+					if (icall(MTC (int)offset, code, is_extern))
+						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
 					if (ipcall(origin, offset, is_extern))
-						sync_registers(scur, stop);
+						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
 				 * into a separate object.
@@ -3139,16 +3139,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				pre_success = '\01';
 				/* free the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-					CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+					CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 
 				}
 				/* wait some time */
 				CURCSPFW;
 				/* reserve the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
-					if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+					if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
 						for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-							CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+							CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 						}
 						tmp_tyc = 0;
 						CURRSFW;
@@ -3243,7 +3243,7 @@ fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop());
 null:
 
 		if (is_nested)		/* Nested feature call (dot notation) */
-			icheck_inv(icurrent->it_ref, scur, stop, 1);	/* Invariant */
+			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 		pop_registers();	/* Pop registers */
 		RTEE;				/* Remove vector pushed by RTEA */
 		return;
@@ -3268,11 +3268,11 @@ null:
  * Invariant checking
  */
 
-rt_private char *inv_mark_table;		/* Marking table to avoid checking the same
+rt_private char *inv_mark_table;	/* Marking table to avoid checking the same
 									 * invariant several times
-									 */
+									 */ /* %%ss mt */
 
-rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where)
+rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)
           
                       		/* Current chunk (stack context) */
                   			/* To save stack context */
@@ -3293,12 +3293,12 @@ rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, 
 
 	if (~in_assertion & WASC(dtype) & CK_INVARIANT) {
 		old_IC = IC;				/* Save IC */
-		irecursive_chkinv(dtype, obj, scur, stop, where);
+		irecursive_chkinv(MTC dtype, obj, scur, stop, where);
 		IC = old_IC;				/* Restore IC */
 	}
 }
 
-rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
+rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
           
           
                       		/* Current chunk (stack context) */
@@ -3330,7 +3330,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 	 */
 	while ((p_type = *cn_parents++) != -1)
 		/* Call to potential parent invariant */
-		irecursive_chkinv(p_type, obj, scur, stop, where);
+		irecursive_chkinv(MTC p_type, obj, scur, stop, where);
 
 	/* Invariant check */
 	{
@@ -3347,7 +3347,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 				((void (*)()) frozen[body_id])(obj, where);
 	
 				if (tagval != stagval)			/* Resynchronize registers */
-					sync_registers(scur, stop);
+					sync_registers(MTC scur, stop);
 	
 			} else 
 #ifndef DLE
@@ -3367,7 +3367,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 		 		*/
 				xiinv(MTC melt[body_id], where);
 
-				sync_registers(scur, stop);		/* Resynchronize registers */
+				sync_registers(MTC scur, stop);		/* Resynchronize registers */
 			}
 #else
 			if (body_id < dle_level) {
@@ -3376,22 +3376,22 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 				last->type = SK_REF;
 				last->it_ref = obj;
 
-				xiinv(melt[body_id], where);
-				sync_registers(scur, stop);		/* Resynchronize registers */
+				xiinv(MTC melt[body_id], where);
+				sync_registers(MTC scur, stop);		/* Resynchronize registers */
 			} else if (body_id < dle_zeroc) {
 					/* Dynamic frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
 				((void (*)()) dle_frozen[body_id])(obj, where);
 				if (tagval != stagval)			/* Resynchronize registers */
-					sync_registers(scur, stop);
+					sync_registers(MTC scur, stop);
 			} else {
 					/* Dynamic melted invariant */
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
 				last->it_ref = obj;
 
-				xiinv(dle_melt[body_id], where);
-				sync_registers(scur, stop);		/* Resynchronize registers */
+				xiinv(MTC dle_melt[body_id], where);
+				sync_registers(MTC scur, stop);		/* Resynchronize registers */
 			}
 #endif
 		}
@@ -3995,7 +3995,7 @@ rt_private void diadic_op(int code)
  * Function calling routines
  */
 
-rt_private int icall(int fid, int stype, int is_extern)
+rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
         				/* Feature ID */
           				/* Static type (entity where feature is applied) */
               			/* Is it an external or an Eiffel feature */
@@ -4045,7 +4045,7 @@ rt_private int icall(int fid, int stype, int is_extern)
 #else
 	if (body < dle_level) {
 			/* Static melted routine */
-		xinterp(melt[body]);
+		xinterp(MTC melt[body]);
 		result = 1;							/* Compulsory synchronisation */
 	} else if (body < dle_zeroc) {
 			/* Dynamic frozen routine */
@@ -4055,7 +4055,7 @@ rt_private int icall(int fid, int stype, int is_extern)
 			result = 1;				/* Resynchronize registers */
 	} else {
 			/* Dynamic melted routine */
-		xinterp(dle_melt[body]);
+		xinterp(MTC dle_melt[body]);
 		result = 1;							/* Compulsory synchronisation */
 	}
 #endif
@@ -4063,7 +4063,7 @@ rt_private int icall(int fid, int stype, int is_extern)
 	return result;
 }
 
-rt_private int ipcall(int32 origin, int32 offset, int is_extern)
+rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
              			/* Origin class ID of the feature.*/
              			/* offset of the feature in the origin class */
               			/* Is it an external or an Eiffel feature */
@@ -4111,7 +4111,7 @@ rt_private int ipcall(int32 origin, int32 offset, int is_extern)
 #else
 	if (body < dle_level) {
 			/* Static melted routine */
-		xinterp(melt[body]);
+		xinterp(MTC melt[body]);
 		result = 1;							/* Compulsory synchronisation */
 	} else if (body < dle_zeroc) {
 			/* Dynamic frozen routine */
@@ -4121,7 +4121,7 @@ rt_private int ipcall(int32 origin, int32 offset, int is_extern)
 			result = 1;				/* Resynchronize registers */
 	} else {
 			/* Dynamic melted routine */
-		xinterp(dle_melt[body]);
+		xinterp(MTC dle_melt[body]);
 		result = 1;							/* Compulsory synchronisation */
 	}
 #endif
@@ -4201,7 +4201,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	}
 }
 
-rt_private void assign(long int fid, int stype, uint32 type)
+rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
          				/* Feature ID */
           				/* Static type (entity where feature is applied) */
             			/* Attribute meta-type */
@@ -4265,7 +4265,7 @@ rt_private void assign(long int fid, int stype, uint32 type)
 #undef l
 }
 
-rt_private void passign(int32 origin, int32 f_offset, uint32 type)
+rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
              			/* Origin class ID of the attribute.*/
                			/* offset of the feature in the origin class */
             			/* Attribute meta-type */
@@ -4329,7 +4329,7 @@ rt_private void passign(int32 origin, int32 f_offset, uint32 type)
 #undef l
 }
 
-void call_disp(uint32 dtype, char *object)
+void call_disp(EIF_CONTEXT uint32 dtype, char *object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
@@ -4361,7 +4361,7 @@ rt_private void address(int32 fid, int stype)
  * Get constants from byte code in an hopefully portable (slow) way--RAM.
  */
 
-rt_private double get_double(void)
+rt_private double get_double(EIF_CONTEXT_NOARG)
 {
 	/* Get double stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4381,7 +4381,7 @@ rt_private double get_double(void)
 	return *(double *) &xdouble;	/* Correctly aligned by union */
 }
 
-rt_private float get_float(void)
+rt_private float get_float(EIF_CONTEXT_NOARG)
 {
 	/* Get float stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4401,7 +4401,7 @@ rt_private float get_float(void)
 	return *(float *) &xfloat;		/* Correctly aligned by union */
 }
 
-rt_private long get_long(void)
+rt_private long get_long(EIF_CONTEXT_NOARG)
 {
 	/* Get long int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4421,7 +4421,7 @@ rt_private long get_long(void)
 	return *(long *) &xlong;		/* Correctly aligned by union */
 }
 
-rt_private short get_short(void)
+rt_private short get_short(EIF_CONTEXT_NOARG)
 {
 	/* Get short int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4441,7 +4441,7 @@ rt_private short get_short(void)
 	return *(short *) &xshort;		/* Correctly aligned by union */
 }
 
-rt_private uint32 get_uint32(void)
+rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
 {
 	/* Get uint32 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4461,7 +4461,7 @@ rt_private uint32 get_uint32(void)
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
 }
 
-rt_private fnptr get_fnptr(void)
+rt_private fnptr get_fnptr(EIF_CONTEXT_NOARG)
 {
 	/* Get a fnptr stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4481,7 +4481,7 @@ rt_private fnptr get_fnptr(void)
 	return *(fnptr *) &xfnptr;		/* Correctly aligned by union */
 }
 
-rt_private char *get_address(void)
+rt_private char *get_address(EIF_CONTEXT_NOARG)
 {
 	/* Get an address stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4615,7 +4615,7 @@ rt_private void init_var(struct item *ptr, long int type)
 	}
 }
 
-rt_private void init_registers(void)
+rt_private void init_registers(EIF_CONTEXT_NOARG)
 {
 	/* Upon entry in a new feature, given that locnum and argnum are set,
 	 * initialize the register array, poping the registers from the stack,
@@ -4630,7 +4630,7 @@ rt_private void init_registers(void)
 	struct opstack op_context;		/* To save stack's context */
 	char *current;					/* Saved value of current */
 
-	allocate_registers();			/* Make sure array is big enough */
+	allocate_registers(MTC);			/* Make sure array is big enough */
 
 	current = opop()->it_ref;		/* Save value of current */
 
@@ -4691,7 +4691,7 @@ rt_private void init_registers(void)
 	last->it_long = argnum;			/* Got this from byte code */
 }
 
-rt_private void allocate_registers(void)
+rt_private void allocate_registers(EIF_CONTEXT_NOARG)
 {
 	/* Automagically increase/decrease the size of the register array. If its
 	 * size is too small, then of course we try to extend it. However, it it's
@@ -4730,7 +4730,7 @@ rt_private void allocate_registers(void)
 	}
 }
 
-rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top)
+rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top)
                            		/* Saved current chunk of op stack */
                        			/* Saved top of op stack */
 {
@@ -4766,7 +4766,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 
 	locnum = ilocnum->it_long;		/* # of local variables */
 	argnum = iargnum->it_long;		/* # of arguments */
-	allocate_registers();			/* `iregs' could have been reduced */
+	allocate_registers(MTC);			/* `iregs' could have been reduced */
 
 	/* Local variables also appear in reverse order */
 	for (n = 0, reg = iregs+locnum+SPECIAL_REG-1; n < locnum; n++, reg--)
@@ -4790,7 +4790,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 	dsync();						/* Resynchronize cached status */
 }
 
-rt_private void pop_registers(void)
+rt_private void pop_registers(EIF_CONTEXT_NOARG)
 {
 	/* This is the reverse operation of init_registers(). We remove all the
 	 * registers from the stack because the Eiffel function is now returning.
@@ -4829,7 +4829,7 @@ rt_private void pop_registers(void)
  * Operational stack handling.
  */
 
-rt_private struct item *stack_allocate(register int size)
+rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
                    					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -4865,7 +4865,7 @@ rt_private struct item *stack_allocate(register int size)
  * (char *) elements, we now store (struct item) ones.
  */
 
-rt_public struct item *opush(register struct item *val)
+rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 {
 	/* Push value 'val' on top of the operational stack. If it fails, raise
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
@@ -4908,7 +4908,7 @@ rt_public struct item *opush(register struct item *val)
 	return top;				/* Address of allocated item */
 }
 
-rt_private int stack_extend(register int size)
+rt_private int stack_extend(EIF_CONTEXT register int size)
                    					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.
@@ -4941,7 +4941,7 @@ rt_private int stack_extend(register int size)
 	return 0;			/* Everything is ok */
 }
 
-rt_public struct item *opop(void)
+rt_public struct item *opop(EIF_CONTEXT_NOARG)
 {
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
@@ -4979,7 +4979,7 @@ rt_public struct item *opop(void)
 	return op_stack.st_top;
 }
 
-rt_private void npop(register int nb_items)
+rt_private void npop(EIF_CONTEXT register int nb_items)
 {
 	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
 	 * try to truncate the unused chunks from the tail of the stack. We do
@@ -5047,7 +5047,7 @@ rt_private void npop(register int nb_items)
 		stack_truncate();			/* Eventually remove unused chunks */
 }
 
-rt_public struct item *otop(void)
+rt_public struct item *otop(EIF_CONTEXT_NOARG)
 {
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -5074,7 +5074,7 @@ rt_public struct item *otop(void)
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
-rt_private struct item *oitem(uint32 n)
+rt_private struct item *oitem(EIF_CONTEXT uint32 n)
 {
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -5100,7 +5100,7 @@ rt_private struct item *oitem(uint32 n)
 	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
 }
 
-rt_private void stack_truncate(void)
+rt_private void stack_truncate(EIF_CONTEXT_NOARG)
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
 	 * MIN_FREE locations, then we may free all the chunks starting with the
@@ -5152,7 +5152,7 @@ rt_private void wipe_out(register struct stochunk *chunk)
  */
 
 /* VARARGS1 */
-rt_public struct item *ivalue(int code, int num)
+rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
          		/* Request code */
         		/* Additional info for local and arguments */
 {

@@ -69,56 +69,18 @@ feature -- Generation
 			-- Generate HTML file from `a_doc' in `target'.  Resulting file stored in `last_generated_file'
 		require
 			document_not_void: a_doc /= Void
-			target_not_void: target /= Void
-		local
-			l_name, l_html: STRING
-			l_filename: FILE_NAME
-			filtered_document: FILTERED_DOCUMENT
-			l_target_dir: DIRECTORY
-			l_link: DOCUMENT_LINK
-			l_link_manager: LINK_MANAGER
-			l_images: ARRAYED_LIST [DOCUMENT_LINK]
+			target_not_void: target /= Void		
 		do				
-					-- First filter the document according to correct filter
-			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
-				
-					-- Now convert the filtered document to HTML
-			if filtered_document.text.is_empty then
-				l_html := "Error: After filtering the document the content is empty.%N%
-					%If this is not what you were expecting check your filter settings%
-					%and document filter tags and try again."
-			else
-				l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
-			end					
-
-					-- Copy generated HTML to a file in ``target'
-			l_name := target.name
-			create l_filename.make_from_string (l_name)
-			l_filename.extend (file_no_extension (short_name (a_doc.name)))
-			l_filename.add_extension ("html")
-			create last_generated_file.make_create_read_write (l_filename.string)
-			last_generated_file.put_string (l_html)
-			last_generated_file.close
-			
-					-- Finally copy the images referenced in `a_doc' so they are still visible from new file. FIXME: Do copy actual images.
-			if a_doc.is_valid_xml then				
-				create l_link_manager
-				l_images := l_link_manager.document_images (a_doc)
-				from
-					l_images.start
-				until
-					l_images.after
-				loop
-					l_link := l_images.item
-					create l_target_dir.make (temporary_html_location (l_link.url, False))
-					l_images.forth
-				end	
+			if file_type (a_doc.name).is_equal ("xml") then
+				generate_from_xml (a_doc, target)
+			elseif file_type (a_doc.name).is_equal ("html") or file_type (a_doc.name).is_equal ("htm") then
+				generate_from_html (a_doc, target)
 			end
 		ensure
 			has_last_generated_file: last_generated_file /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Generation
 
 	generate_directory (a_dir, target: DIRECTORY) is
 			-- Take XML from `a_dir' and generate HTML in `target' for files in `files'
@@ -127,6 +89,7 @@ feature {NONE} -- Implementation
 			sub_dir, src_sub_dir: DIRECTORY
 			bin_file, target_bin_file: RAW_FILE
 			doc_file: PLAIN_TEXT_FILE
+			l_file,
 			path: STRING
 			l_doc: DOCUMENT
 			l_filename: FILE_NAME
@@ -146,22 +109,24 @@ feature {NONE} -- Implementation
 							-- Create directory/filename
 					create l_filename.make_from_string (path)
 					l_filename.extend (a_dir.lastentry)
-					create src_sub_dir.make (l_filename.string)
-					progress_generator.set_status_text (l_filename.string)
+					l_file := l_filename.string
+					l_file.replace_substring_all ("\", "/")
+					create src_sub_dir.make (l_file)
+					progress_generator.set_status_text (l_file)
 					if not src_sub_dir.exists then
-						if files.has (l_filename.string) then
+						if files.has (l_file) then
 									-- This is a file in `files' so convert it to HTML
-							l_doc := Shared_document_manager.document_by_name (l_filename.string)
+							l_doc := Shared_document_manager.document_by_name (l_file)
 							if l_doc = Void then
-								create doc_file.make (l_filename.string)
+								create doc_file.make (l_file)
 								create l_doc.make_from_file (doc_file)								
 							end
 							if not is_code_document (l_doc) and l_doc.is_valid_xml and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
-						elseif file_types.has (file_type (l_filename.string)) then
+						elseif file_types.has (file_type (l_file)) then
 									-- Not XML but does need copying
-							create bin_file.make (l_filename.string)
+							create bin_file.make (l_file)
 							create l_filename.make_from_string (target.name)
 							l_filename.extend (a_dir.lastentry)
 							create target_bin_file.make (l_filename.string)
@@ -184,6 +149,80 @@ feature {NONE} -- Implementation
 			dir_counter := dir_counter - 1
 			a_dir.close
 		end
+
+	generate_from_xml (a_doc: DOCUMENT; target: DIRECTORY) is
+			-- Generate HTML from XML file
+		local
+			l_name, l_html: STRING
+			l_filename: FILE_NAME
+			filtered_document: FILTERED_DOCUMENT
+		do		
+					-- First filter the document according to correct filter
+			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
+				
+					-- Now convert the filtered document to HTML
+			if filtered_document.text.is_empty then
+				l_html := (create {MESSAGE_CONSTANTS}).empty_html_document
+			else
+				l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
+			end					
+
+					-- Copy generated HTML to a file in `target'
+			l_name := target.name
+			create l_filename.make_from_string (l_name)
+			l_filename.extend (file_no_extension (short_name (a_doc.name)))
+			l_filename.add_extension ("html")
+			create last_generated_file.make_create_read_write (l_filename.string)
+			last_generated_file.put_string (l_html)
+			last_generated_file.close
+			copy_images (a_doc)
+		end
+
+	generate_from_html (a_doc: DOCUMENT; target: DIRECTORY) is
+			-- Generate HTML from HTML file
+		local
+			l_filename: FILE_NAME
+		do				
+			create l_filename.make_from_string (target.name)
+			l_filename.extend (short_name (a_doc.name))
+			create last_generated_file.make_create_read_write (l_filename.string)
+			last_generated_file.put_string (a_doc.text)
+			last_generated_file.close
+		end
+
+feature {NONE} -- Implementation
+
+	copy_images (a_doc: DOCUMENT) is
+			-- Copy images referenced in `a_doc' so they are still visible from newly generated file.
+		local
+			l_link: DOCUMENT_LINK
+			l_link_manager: LINK_MANAGER
+			l_images: ARRAYED_LIST [DOCUMENT_LINK]
+			l_image_url: STRING
+			l_src, l_target: RAW_FILE
+		do
+			if a_doc.is_valid_xml then				
+				create l_link_manager
+				l_images := l_link_manager.document_images (a_doc)
+				from
+					l_images.start
+				until
+					l_images.after
+				loop
+					l_link := l_images.item
+					l_image_url := l_link.absolute_url	
+					create l_src.make (l_image_url)
+					if l_src.exists then
+							-- Determine absolute url and call `temporary location' to build directory
+							-- structure for storage of temporary image file, then copy file
+						l_image_url := temporary_html_location (l_image_url, True)
+						create l_target.make (l_image_url)
+						copy_file (l_src, l_target)
+					end						
+					l_images.forth
+				end	
+			end
+		end			
 
 	should_generate: BOOLEAN is
 			-- Should generate files

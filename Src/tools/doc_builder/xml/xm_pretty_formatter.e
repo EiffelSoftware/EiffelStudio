@@ -12,7 +12,7 @@ inherit
 			on_start_tag,
 			on_end_tag,
 			on_content
-		end		
+		end
 
 feature -- Status Setting
 
@@ -68,7 +68,7 @@ feature -- Tag
 		local
 			l_content: STRING
 		do
-			l_content := a_content		
+			l_content := a_content
 			if not in_ignore_element then
 				l_content.replace_substring_all ("%T", "")
 				l_content.replace_substring_all ("%N", "")
@@ -76,6 +76,9 @@ feature -- Tag
 					curr_has_content := not l_content.is_empty
 				end
 			else
+				if l_content.is_empty then
+					l_content := new_line
+				end
 				curr_has_content := True
 			end
 			Precursor (l_content)			

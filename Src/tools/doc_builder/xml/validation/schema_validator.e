@@ -33,19 +33,27 @@ feature -- Schema Validation
 			reader: XML_XML_TEXT_READER
 			validation_reader: XML_XML_VALIDATING_READER
 			event_handler: XML_VALIDATION_EVENT_HANDLER
+			retried: BOOLEAN
 		do
-			create reader.make_from_url (filename.to_cil)
-			create event_handler.make  (Current, $validation_callback)
-			create validation_reader.make_from_reader (reader)
-			validation_reader.add_validation_event_handler (event_handler)
-			validation_reader.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
-			from
-				is_valid := True
-				error_report := Void
-			until
-				not validation_reader.read 
-			loop
+			if not retried then
+				create reader.make_from_url (filename.to_cil)
+				create event_handler.make  (Current, $validation_callback)
+				create validation_reader.make_from_reader (reader)
+				validation_reader.add_validation_event_handler (event_handler)
+				validation_reader.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
+				from
+					is_valid := True
+					error_report := Void
+				until
+					not validation_reader.read 
+				loop
+				end
 			end
+		rescue
+			retried := True
+			is_valid := False
+			create error_report.make ("Invalid Schema Definition")
+			retry
 		end
 		
 feature -- Schema and file validation		
@@ -58,19 +66,27 @@ feature -- Schema and file validation
 			vr: XML_XML_VALIDATING_READER
 			reader: XML_XML_TEXT_READER
 			vr_handler: XML_VALIDATION_EVENT_HANDLER
+			retried: BOOLEAN
 		do  
-			create reader.make_from_url (a_filename.to_cil)
-	        create vr.make_from_reader (reader)
-	        vr.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
-	        create vr_handler.make (Current, $validation_callback)
-	        vr.add_validation_event_handler (vr_handler)
-            from
-            	is_valid := True
-            	error_report := Void
-            until
-            	not vr.read
-            loop            		
-            end
+			if not retried then
+				create reader.make_from_url (a_filename.to_cil)
+		        create vr.make_from_reader (reader)
+		        vr.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
+		        create vr_handler.make (Current, $validation_callback)
+		        vr.add_validation_event_handler (vr_handler)
+	            from
+	            	is_valid := True
+	            	error_report := Void
+	            until
+	            	not vr.read
+	            loop            		
+	            end           
+	      	end
+		rescue
+			retried := True
+			is_valid := False
+			create error_report.make ("Invalid Schema Definition")
+			retry
 		end	
 		
 	validate_against_text (text, schema_filename: STRING) is

@@ -106,11 +106,19 @@ feature -- Access
 			end
 		end
 
-	error_description: STRING
-			-- Error string
-
 	element_renamed: BOOLEAN
 			-- Indicates if an element was renamed through last call to `set_element_name'
+
+feature -- Error
+
+	error_description: STRING
+			-- Error string
+			
+	error_column: INTEGER
+			-- Error column
+	
+	error_line: INTEGER
+			-- Error line
 
 feature -- Status Setting
 
@@ -153,7 +161,7 @@ feature -- Status Setting
 					elseif l_attribute /= Void and then not a_value.is_empty then						
 						l_attribute.set_value (a_value)
 					elseif l_attribute = Void and then not a_value.is_empty then						
-						create l_attribute.make (a_attribute, Void, a_value, l_element)
+						create l_attribute.make (a_attribute, create {XM_NAMESPACE}.make_default, a_value, l_element)
 						l_element.put_first (l_attribute)
 					end			
 				end
@@ -348,10 +356,12 @@ feature -- Commands
 				if not l_tree_pipe.error.has_error then
 					Result := l_tree_pipe.document
 				else
-					error_description := l_tree_pipe.error.last_error
+					error_description := l_tree_pipe.last_error
 				end
 			else
 				error_description := l_parser.last_error_extended_description
+				error_column := l_parser.column
+				error_line := l_parser.line
 				Result := Void
 			end
 		end

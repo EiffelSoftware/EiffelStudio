@@ -132,6 +132,7 @@ feature -- Initialization
 			as115: EXTERNAL_LANG_AS_B;
 			as116: EXPR_ADDRESS_AS_B;
 			as117: SEPARATE_TYPE_AS_B;
+			as118: PRECURSOR_AS_B
 		do
 			!!as1;
 			as1.pass_address(class_as);
@@ -355,6 +356,8 @@ feature -- Initialization
 			as116.pass_address (expr_address_as);
 			!!as117;
 			as117.pass_address (separate_type_as);
+			!! as118;
+			as118.pass_address (precursor_as);
 		end;
 
 end -- class EBENCH_YACC_EIFFEL

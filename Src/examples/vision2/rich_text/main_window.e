@@ -70,14 +70,14 @@ feature {NONE} -- Initialization
 			
 				-- Add permitted font heights to `size_selection' combo box.
 			from
-				counter := 6
+				counter := 1
 			until
-				counter > 150
+				counter > point_font_heights.count
 			loop
-				create list_item.make_with_text (counter.out)
+				create list_item.make_with_text (point_font_heights.item (counter).out)
 				list_item.set_data (counter)
 				size_selection.extend (list_item)
-				counter := counter + 2 + (counter // 10)
+				counter := counter + 1
 			end
 			
 				-- Load contents of `rich_text' from rich text file "welcome.rtf"
@@ -118,9 +118,7 @@ feature {NONE} -- Initialization
 	--		timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
 		end
-		
-	
-		
+
 	window_shown is
 			-- `Current' has been shown. Perform necessary processing.
 		do
@@ -200,9 +198,11 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if size_selection.text.is_integer then
 					size := size_selection.text.to_integer
+					
 					if size >= 1 and size <= 200 then
 						font := format.font
-						font.set_height (size)
+												
+						font.set_height_in_points (size)
 						format.set_font (font)
 						create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 						rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
@@ -214,7 +214,7 @@ feature {NONE} -- Event handling
 					size := size_selection.text.to_integer
 					if size >= 1 and size <= 200 then
 						font :=format.font
-						font.set_height (size)
+						font.set_height_in_points (size)
 						format.set_font (font)
 						if rich_text.is_displayed then
 							rich_text.set_focus
@@ -516,325 +516,324 @@ feature {NONE} -- Event handling
 
 feature {NONE} -- Implementation
 
-		caret_moved (new_position: INTEGER) is
-				-- Caret of `rich_text' has moved to position `new_position'.
-			local
-				current_line_number: INTEGER
-				format: EV_CHARACTER_FORMAT
-				paragraph_format: EV_PARAGRAPH_FORMAT
-				x, y: INTEGER
-			do
-				current_line_number := rich_text.current_line_number
-				y := current_line_number
-				x := rich_text.first_position_from_line_number (y)
-				x := new_position - x + 1
-					
-					-- Display caret position in status bar.
-				caret_position_label.set_text (x.out + " " + y.out +  " " + new_position.out)
+	caret_moved (new_position: INTEGER) is
+			-- Caret of `rich_text' has moved to position `new_position'.
+		local
+			current_line_number: INTEGER
+			format: EV_CHARACTER_FORMAT
+			paragraph_format: EV_PARAGRAPH_FORMAT
+			x, y: INTEGER
+		do
+			current_line_number := rich_text.current_line_number
+			y := current_line_number
+			x := rich_text.first_position_from_line_number (y)
+			x := new_position - x + 1
 				
-					-- Update display corresponding to character formatting at
-					-- new caret position.
-				format := rich_text.character_format (new_position)
-				display_format (format)
-				
-	 			paragraph_format := rich_text.paragraph_format (new_position)
-				display_paragraph_format (paragraph_format)
+				-- Display caret position in status bar.
+			caret_position_label.set_text (x.out + " " + y.out)
+			
+				-- Update display corresponding to character formatting at
+				-- new caret position.
+			format := rich_text.character_format (new_position)
+			display_format (format)
+			
+ 			paragraph_format := rich_text.paragraph_format (new_position)
+			display_paragraph_format (paragraph_format)
+		end
+		
+	display_format (format: EV_CHARACTER_FORMAT) is
+			-- Udpate formatting toolbars to reflect formatting in `format'.
+		require
+			format_not_void: format /= Void
+		local
+			font: EV_FONT
+			name_matched: BOOLEAN
+			effects: EV_CHARACTER_FORMAT_EFFECTS
+		do
+			font := format.font
+			effects := format.effects
+			
+				-- Updated Displayed font weight
+			bold_button.select_actions.block
+			if font.weight = feature {EV_FONT_CONSTANTS}.weight_bold then					
+				bold_button.enable_select
+			else
+				bold_button.disable_select
+			end
+			bold_button.select_actions.resume
+			
+				-- Update displayed font shape.
+			italic_button.select_actions.block
+			if font.shape = feature {EV_FONT_CONSTANTS}.shape_italic then					
+				italic_button.enable_select
+			else
+				italic_button.disable_select
+			end
+			italic_button.select_actions.resume
+			
+				-- Update displayed font underline.
+			underlined_button.select_actions.block
+			if effects.is_underlined then					
+				underlined_button.enable_select
+			else
+				underlined_button.disable_select
+			end
+			underlined_button.select_actions.resume
+			
+				-- Update displayed font strike through.
+			striked_through_button.select_actions.block
+			if effects.is_striked_out then					
+				striked_through_button.enable_select
+			else
+				striked_through_button.disable_select
+			end
+			striked_through_button.select_actions.resume
+			
+				-- Update displayed vertical character offset
+			vertical_offset.change_actions.block
+			vertical_offset.set_value (effects.vertical_offset)
+			vertical_offset.change_actions.resume
+
+				-- Udpate displayed font size.
+			size_selection.set_text (font.height_in_points.out)
+			
+				-- Update displayed font name.
+			from
+				font_selection.start
+			until
+				font_selection.off or name_matched
+			loop
+				if font_selection.item.text.is_equal (font.name) then
+					font_selection.item.enable_select
+					name_matched := True
+				end
+				font_selection.forth
 			end
 			
-		display_format (format: EV_CHARACTER_FORMAT) is
-				-- Udpate formatting toolbars to reflect formatting in `format'.
-			require
-				format_not_void: format /= Void
-			local
-				font: EV_FONT
-				name_matched: BOOLEAN
-				effects: EV_CHARACTER_FORMAT_EFFECTS
-			do
-				font := format.font
-				effects := format.effects
+				-- Update displayed font color.
+			if not last_displayed_color.is_equal (format.color) then
+				update_color (format.color)
+			end
+				-- Update displayed font background color
+			if not last_displayed_background_color.is_equal (format.background_color) then
+				update_background_color (format.background_color)
+			end
+		end
+		
+	display_paragraph_format (paragraph_format: EV_PARAGRAPH_FORMAT) is
+			-- Update display to reflect paragraph formatting in `paragraph_format'.
+		do
+			if paragraph_format.is_left_aligned then
+				left_alignment_button.select_actions.block
+				unselect_all_buttons_except (left_alignment_button)
+				left_alignment_button.select_actions.resume
+			elseif paragraph_format.is_center_aligned then
+				center_alignment_button.select_actions.block
+				unselect_all_buttons_except (center_alignment_button)
+				center_alignment_button.select_actions.resume
+			elseif paragraph_format.is_right_aligned then
+				right_alignment_button.select_actions.block
+				unselect_all_buttons_except (right_alignment_button)
+				right_alignment_button.select_actions.resume
+			elseif paragraph_format.is_justified then
+				right_alignment_button.select_actions.resume
+				unselect_all_buttons_except (justified_button)
+				right_alignment_button.select_actions.resume
+			end
+			left_margin.change_actions.block
+			left_margin.set_value (paragraph_format.left_margin)
+			left_margin.change_actions.resume
+			
+			right_margin.change_actions.block
+			right_margin.set_value (paragraph_format.right_margin)
+			right_margin.change_actions.resume
+			
+			top_spacing.change_actions.block
+			top_spacing.set_value (paragraph_format.top_spacing)
+			top_spacing.change_actions.resume
+			
+			bottom_spacing.change_actions.block
+			bottom_spacing.set_value (paragraph_format.bottom_spacing)
+			bottom_spacing.change_actions.resume
+		end
+
+	selection_changed is
+			-- The selection in `rich_text' has changed, so update
+			-- formatting displayed in toolbar.
+		local
+			format: EV_CHARACTER_FORMAT
+			formatting: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+			paragraph_formatting: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			paragraph: EV_PARAGRAPH_FORMAT
+			current_value: STRING
+		do
+			if rich_text.has_selection then
+					-- Retrieve the format at the end of the selection.
+				format := rich_text.selected_character_format
 				
-					-- Updated Displayed font weight
+					-- Retrieve information regarding the consistency of formatting within selected range.
+				formatting := rich_text.character_format_range_information (rich_text.selection_start, rich_text.selection_end + 1)
+
+				if formatting.font_height then
+						-- Font height is consistent throughout complete selection so display this size.
+					current_value := format.font.height_in_points.out
+					if not size_selection.text.is_equal (current_value) then
+						from
+							size_selection.start
+						until
+							size_selection.off or current_value = Void
+						loop
+							if size_selection.item.text.is_equal (current_value) then
+								size_selection.select_actions.block
+								size_selection.item.enable_select
+								size_selection.select_actions.resume
+								current_value := Void
+							end
+							size_selection.forth
+						end
+						if current_value /= Void then
+							size_selection.set_text (current_value)
+						end
+					end
+				else
+						-- Font height is not consistent throughout complete selection so hide the size.
+					size_selection.remove_text
+					size_selection.remove_selection
+				end
+				
+				if formatting.font_family then
+						-- Font family is consistent throughout compelete selection so display the family.
+					current_value := format.font.name.out
+					if not font_selection.text.is_equal (current_value) then
+						from
+							font_selection.start
+						until
+							font_selection.off or current_value = Void
+						loop
+							if font_selection.item.text.is_equal (current_value) then
+								font_selection.select_actions.block
+								font_selection.item.enable_select
+								font_selection.select_actions.resume
+								current_value := Void
+							end
+							font_selection.forth
+						end
+					end
+				else
+						-- Font family is not consistent throughout complete selection so hide family.
+					font_selection.remove_text
+					font_Selection.remove_selection
+				end
+
+				if formatting.color then
+						-- Color is consistent throughout selection so update color display if not
+						-- already equivalent to the color.
+					if not format.color.is_equal (last_displayed_color) or color_undefined then
+						update_color (format.color)
+					end
+				elseif not color_undefined then
+						-- Color is not consistent throughout complete selection so display color as 
+					update_color_as_undefined
+				end
+				if formatting.background_color then
+						-- Background color is consistent throughout selection so update color display if not
+						-- already equivalent to the color.
+					if not format.background_color.is_equal (last_displayed_background_color) or background_color_undefined then
+						update_background_color (format.background_color)
+					end
+				elseif not background_color_undefined then
+						-- Color is not consistent throughout complete selection so display color as 
+					update_background_color_as_undefined
+				end
+				
+					-- Update bold display so that it is only displayed as bold if the formatting is
+					-- consistently bold.
 				bold_button.select_actions.block
-				if font.weight = feature {EV_FONT_CONSTANTS}.weight_bold then					
+				if formatting.font_weight and format.font.weight = (create {EV_FONT_CONSTANTS}).weight_bold then
 					bold_button.enable_select
 				else
 					bold_button.disable_select
 				end
 				bold_button.select_actions.resume
 				
-					-- Update displayed font shape.
+					-- Update italic display so that it is only displayed as italic if the formatting is
+					-- consistently italic.
 				italic_button.select_actions.block
-				if font.shape = feature {EV_FONT_CONSTANTS}.shape_italic then					
+				if formatting.font_shape and format.font.shape = (create {EV_FONT_CONSTANTS}).shape_italic then
 					italic_button.enable_select
 				else
-					italic_button.disable_select
+					italic_button.disable_select						
 				end
 				italic_button.select_actions.resume
 				
-					-- Update displayed font underline.
-				underlined_button.select_actions.block
-				if effects.is_underlined then					
-					underlined_button.enable_select
-				else
-					underlined_button.disable_select
-				end
-				underlined_button.select_actions.resume
-				
-					-- Update displayed font strike through.
-				striked_through_button.select_actions.block
-				if effects.is_striked_out then					
-					striked_through_button.enable_select
-				else
-					striked_through_button.disable_select
-				end
-				striked_through_button.select_actions.resume
-				
-					-- Update displayed vertical character offset
 				vertical_offset.change_actions.block
-				vertical_offset.set_value (effects.vertical_offset)
+				if formatting.effects_vertical_offset then
+					vertical_offset.set_value (format.effects.vertical_offset)
+				else
+					vertical_offset.remove_text
+				end
 				vertical_offset.change_actions.resume
 				
-					-- Udpate displayed font size.
-				size_selection.set_text (font.height.out)
-				
-					-- Update displayed font name.
-				from
-					font_selection.start
-				until
-					font_selection.off or name_matched
-				loop
-					if font_selection.item.text.is_equal (font.name) then
-						font_selection.item.enable_select
-						name_matched := True
-					end
-					font_selection.forth
-				end
-				
-					-- Update displayed font color.
-				if not last_displayed_color.is_equal (format.color) then
-					update_color (format.color)
-				end
-					-- Update displayed font background color
-				if not last_displayed_background_color.is_equal (format.background_color) then
-					update_background_color (format.background_color)
-				end
-			end
-			
-		display_paragraph_format (paragraph_format: EV_PARAGRAPH_FORMAT) is
-				-- Update display to reflect paragraph formatting in `paragraph_format'.
-			do
-				if paragraph_format.is_left_aligned then
-					left_alignment_button.select_actions.block
-					unselect_all_buttons_except (left_alignment_button)
-					left_alignment_button.select_actions.resume
-				elseif paragraph_format.is_center_aligned then
-					center_alignment_button.select_actions.block
-					unselect_all_buttons_except (center_alignment_button)
-					center_alignment_button.select_actions.resume
-				elseif paragraph_format.is_right_aligned then
-					right_alignment_button.select_actions.block
-					unselect_all_buttons_except (right_alignment_button)
-					right_alignment_button.select_actions.resume
-				elseif paragraph_format.is_justified then
-					right_alignment_button.select_actions.resume
-					unselect_all_buttons_except (justified_button)
-					right_alignment_button.select_actions.resume
-				end
-				left_margin.change_actions.block
-				left_margin.set_value (paragraph_format.left_margin)
-				left_margin.change_actions.resume
-				
-				right_margin.change_actions.block
-				right_margin.set_value (paragraph_format.right_margin)
-				right_margin.change_actions.resume
-				
-				top_spacing.change_actions.block
-				top_spacing.set_value (paragraph_format.top_spacing)
-				top_spacing.change_actions.resume
-				
-				bottom_spacing.change_actions.block
-				bottom_spacing.set_value (paragraph_format.bottom_spacing)
-				bottom_spacing.change_actions.resume
-			end
+					-- Now handle information regarding paragraphs.
+				paragraph := rich_text.selected_paragraph_format
+				paragraph_formatting := rich_text.paragraph_format_range_information (rich_text.selection_start,
+					rich_text.selection_end + 1)
 
-		selection_changed is
-				-- The selection in `rich_text' has changed, so update
-				-- formatting displayed in toolbar.
-			local
-				format: EV_CHARACTER_FORMAT
-				formatting: EV_CHARACTER_FORMAT_RANGE_INFORMATION
-				paragraph_formatting: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
-				paragraph: EV_PARAGRAPH_FORMAT
-				current_value: STRING
-			do
-
-				if rich_text.has_selection then
-						-- Retrieve the format at the end of the selection.
-					format := rich_text.selected_character_format
-					
-						-- Retrieve information regarding the consistency of formatting within selected range.
-					formatting := rich_text.character_format_range_information (rich_text.selection_start, rich_text.selection_end + 1)
-
-					if formatting.font_height then
-							-- Font height is consistent throughout complete selection so display this size.
-						current_value := format.font.height.out
-						if not size_selection.text.is_equal (current_value) then
-							from
-								size_selection.start
-							until
-								size_selection.off or current_value = Void
-							loop
-								if size_selection.item.text.is_equal (current_value) then
-									size_selection.select_actions.block
-									size_selection.item.enable_select
-									size_selection.select_actions.resume
-									current_value := Void
-								end
-								size_selection.forth
-							end
-							if current_value /= Void then
-								size_selection.set_text (current_value)
-							end
+				if paragraph_formatting.alignment then
+					if paragraph.is_left_aligned then
+						unselect_all_buttons_except (left_alignment_button)
+					elseif paragraph.is_center_aligned then
+						unselect_all_buttons_except (center_alignment_button)
+					elseif paragraph.is_right_aligned then
+						unselect_all_buttons_except (right_alignment_button)
+					elseif paragraph.is_justified then
+						unselect_all_buttons_except (justified_button)
+					else
+						check
+							invalid_alignment: False
 						end
-					else
-							-- Font height is not consistent throughout complete selection so hide the size.
-						size_selection.remove_text
-						size_selection.remove_selection
-					end
-					
-					if formatting.font_family then
-							-- Font family is consistent throughout compelete selection so display the family.
-						current_value := format.font.name.out
-						if not font_selection.text.is_equal (current_value) then
-							from
-								font_selection.start
-							until
-								font_selection.off or current_value = Void
-							loop
-								if font_selection.item.text.is_equal (current_value) then
-									font_selection.select_actions.block
-									font_selection.item.enable_select
-									font_selection.select_actions.resume
-									current_value := Void
-								end
-								font_selection.forth
-							end
-						end
-					else
-							-- Font family is not consistent throughout complete selection so hide family.
-						font_selection.remove_text
-						font_Selection.remove_selection
-					end
-
-					if formatting.color then
-							-- Color is consistent throughout selection so update color display if not
-							-- already equivalent to the color.
-						if not format.color.is_equal (last_displayed_color) or color_undefined then
-							update_color (format.color)
-						end
-					elseif not color_undefined then
-							-- Color is not consistent throughout complete selection so display color as 
-						update_color_as_undefined
-					end
-					if formatting.background_color then
-							-- Background color is consistent throughout selection so update color display if not
-							-- already equivalent to the color.
-						if not format.background_color.is_equal (last_displayed_background_color) or background_color_undefined then
-							update_background_color (format.background_color)
-						end
-					elseif not background_color_undefined then
-							-- Color is not consistent throughout complete selection so display color as 
-						update_background_color_as_undefined
-					end
-					
-						-- Update bold display so that it is only displayed as bold if the formatting is
-						-- consistently bold.
-					bold_button.select_actions.block
-					if formatting.font_weight and format.font.weight = (create {EV_FONT_CONSTANTS}).weight_bold then
-						bold_button.enable_select
-					else
-						bold_button.disable_select
-					end
-					bold_button.select_actions.resume
-					
-						-- Update italic display so that it is only displayed as italic if the formatting is
-						-- consistently italic.
-					italic_button.select_actions.block
-					if formatting.font_shape and format.font.shape = (create {EV_FONT_CONSTANTS}).shape_italic then
-						italic_button.enable_select
-					else
-						italic_button.disable_select						
-					end
-					italic_button.select_actions.resume
-					
-					vertical_offset.change_actions.block
-					if formatting.effects_vertical_offset then
-						vertical_offset.set_value (format.effects.vertical_offset)
-					else
-						vertical_offset.remove_text
-					end
-					vertical_offset.change_actions.resume
-					
-						-- Now handle information regarding paragraphs.
-					paragraph := rich_text.selected_paragraph_format
-					paragraph_formatting := rich_text.paragraph_format_range_information (rich_text.selection_start,
-						rich_text.selection_end + 1)
-
-					if paragraph_formatting.alignment then
-						if paragraph.is_left_aligned then
-							unselect_all_buttons_except (left_alignment_button)
-						elseif paragraph.is_center_aligned then
-							unselect_all_buttons_except (center_alignment_button)
-						elseif paragraph.is_right_aligned then
-							unselect_all_buttons_except (right_alignment_button)
-						elseif paragraph.is_justified then
-							unselect_all_buttons_except (justified_button)
-						else
-							check
-								invalid_alignment: False
-							end
-						end	
-					else
-						unselect_all_buttons (paragraph_toolbar)
-					end
-					if paragraph_formatting.left_margin then
-						left_margin.change_actions.block
-						left_margin.set_text (paragraph.left_margin.out)
-						left_margin.change_actions.resume
-					else
-						left_margin.remove_text
-					end
-					if paragraph_formatting.right_margin then
-						right_margin.change_actions.block
-						right_margin.set_text (paragraph.right_margin.out)
-						right_margin.change_actions.resume
-					else
-						right_margin.remove_text
-					end
-					if paragraph_formatting.top_spacing then
-						top_spacing.change_actions.block
-						top_spacing.set_text (paragraph.top_spacing.out)
-						top_spacing.change_actions.resume
-					else
-						top_spacing.remove_text
-					end
-					if paragraph_formatting.bottom_spacing then
-						bottom_spacing.change_actions.block
-						bottom_spacing.set_text (paragraph.bottom_spacing.out)
-						bottom_spacing.change_actions.resume
-					else
-						bottom_spacing.remove_text
-					end
+					end	
 				else
-						-- `selection_changed_actions' is fired once when the selection is removed,
-						-- so in this case, we treat the update identically to when the caret has moved
-						-- by calling `display_format'.
-					format := rich_text.character_format (rich_text.caret_position)
-					display_format (format)
-					paragraph := rich_text.paragraph_format (rich_text.caret_position)
-					display_paragraph_format (paragraph)
+					unselect_all_buttons (paragraph_toolbar)
 				end
+				if paragraph_formatting.left_margin then
+					left_margin.change_actions.block
+					left_margin.set_text (paragraph.left_margin.out)
+					left_margin.change_actions.resume
+				else
+					left_margin.remove_text
+				end
+				if paragraph_formatting.right_margin then
+					right_margin.change_actions.block
+					right_margin.set_text (paragraph.right_margin.out)
+					right_margin.change_actions.resume
+				else
+					right_margin.remove_text
+				end
+				if paragraph_formatting.top_spacing then
+					top_spacing.change_actions.block
+					top_spacing.set_text (paragraph.top_spacing.out)
+					top_spacing.change_actions.resume
+				else
+					top_spacing.remove_text
+				end
+				if paragraph_formatting.bottom_spacing then
+					bottom_spacing.change_actions.block
+					bottom_spacing.set_text (paragraph.bottom_spacing.out)
+					bottom_spacing.change_actions.resume
+				else
+					bottom_spacing.remove_text
+				end
+			else
+					-- `selection_changed_actions' is fired once when the selection is removed,
+					-- so in this case, we treat the update identically to when the caret has moved
+					-- by calling `display_format'.
+				format := rich_text.character_format (rich_text.caret_position)
+				display_format (format)
+				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				display_paragraph_format (paragraph)
 			end
+		end
 		
 	update_color (a_color: EV_COLOR) is
 			-- Update color displayed in color tool bar button based on `a_color'.
@@ -1115,6 +1114,12 @@ feature {NONE} -- Implementation
 			
 	background_color_undefined: BOOLEAN
 			-- Is the background color currently displayed undefined?
+			
+	point_font_heights: ARRAY [INTEGER] is
+			-- Heights in points to be added to `size_selection'.
+		once
+			Result := <<8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72>>
+		end
 			
 feature {NONE} -- To be removed
 

@@ -16,9 +16,7 @@ feature -- Dispatch
 			old_b, new_b: BOOLEAN_RESOURCE;
 			old_i, new_i: INTEGER_RESOURCE;
 			old_s, new_s: STRING_RESOURCE;
-			old_a, new_a: ARRAY_RESOURCE;
-			old_f, new_f: FONT_RESOURCE;
-			old_c, new_c: COLOR_RESOURCE
+			old_a, new_a: ARRAY_RESOURCE
 		do
 			old_b ?= old_res;
 			if old_b /= Void then
@@ -35,22 +33,10 @@ feature -- Dispatch
 						new_a ?= new_res;
 						update_array_resource (old_a, new_a)
 					else
-						old_f ?= old_res;
-						if old_f /= Void then
-							new_f ?= new_res;
-							update_font_resource (old_f, new_f)
-						else
-							old_c ?= old_res;
-							if old_c /= Void then
-								new_c ?= new_res
-								update_color_resource (old_c, new_c)
-							else
-								old_s ?= old_res;
-								if old_s /= Void then
-									new_s ?= new_res;
-									update_string_resource (old_s, new_s)
-								end
-							end
+						old_s ?= old_res;
+						if old_s /= Void then
+							new_s ?= new_res;
+							update_string_resource (old_s, new_s)
 						end
 					end
 				end
@@ -76,18 +62,6 @@ feature -- Dispatch
 		end;
 
 	update_array_resource (old_res, new_res: ARRAY_RESOURCE) is
-			-- Update Current to reflect changes in `a_modified_resource'.
-		do
-			old_res.update_with (new_res)
-		end;
-
-	update_font_resource (old_res, new_res: FONT_RESOURCE) is
-			-- Update Current to reflect changes in `a_modified_resource'.
-		do
-			old_res.update_with (new_res)
-		end;
-
-	update_color_resource (old_res, new_res: COLOR_RESOURCE) is
 			-- Update Current to reflect changes in `a_modified_resource'.
 		do
 			old_res.update_with (new_res)

@@ -1,0 +1,27 @@
+system
+	tutorial_step5
+
+root 
+	TUTORIAL_STEP5 (root_cluster): "make"
+
+default
+	assertion (all)
+
+cluster 
+	root_cluster:	"$ISE_EIFFEL\examples\wel\tutorial\step5\methode1"
+
+		-- WEL
+	all wel: 		"$ISE_EIFFEL\library\wel"
+
+		-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"
+			"desc"
+		end
+
+external
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+
+end -- tutorial_step5

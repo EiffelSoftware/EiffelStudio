@@ -1369,7 +1369,7 @@ void odbc_rollback ()
   //rc = SQLTransact(SQL_NULL_HENV, hdbc, SQL_ROLLBACK);
   rc = SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_ROLLBACK);
   if (rc)
-	odbc_error_handler(NULL,17);
+odbc_error_handler(NULL,17);
   /* Command ROLLBACK closes all open cursors; discards all statements */
   /* that were prepared in the current transaction.                    */
   for (count = 0; count < MAX_DESCRIPTOR; count++)
@@ -1377,6 +1377,10 @@ void odbc_rollback ()
       odbc_terminate_order (count);
     }
   odbc_tranNumber = 0;
+
+  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+  if (rc)
+odbc_error_handler(NULL, 12);
 }
 
 /*****************************************************************/
@@ -1395,7 +1399,7 @@ void odbc_commit ()
   //rc = SQLTransact(SQL_NULL_HENV, hdbc, SQL_COMMIT);
   rc = SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_COMMIT);
   if (rc)
-	odbc_error_handler(NULL,18);
+odbc_error_handler(NULL,18);
   /* Command  COMMIT  closes all open cursors; discards all statements */
   /* that were prepared in the current transaction.                    */
   for (count = 0; count < MAX_DESCRIPTOR; count++)
@@ -1403,6 +1407,10 @@ void odbc_commit ()
       odbc_terminate_order (count);
     }
   odbc_tranNumber = 0;
+
+  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+  if (rc)
+odbc_error_handler(NULL, 12);
 }
 
 /*****************************************************************/
@@ -1417,12 +1425,11 @@ void odbc_commit ()
 void odbc_begin ()
 {
   odbc_clear_error ();
-  /*
-  rc = SQLTransact(SQL_NULL_HENV, hdbc, SQL_BEGIN);
+
+  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF);
   if (rc)
-	odbc_error_handler(NULL,19);
-  */
-  /* ODBC Has no explicit Transact_begin statement. */
+odbc_error_handler(NULL, 12);
+
 }
 
 /*****************************************************************/

@@ -78,7 +78,8 @@ feature {NONE} -- Initialization
 			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
 			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
-			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)	
+			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
+			C.gtk_ctree_set_show_stub (list_widget, True)
 			C.gtk_scrolled_window_add_with_viewport (c_object, an_event_box)
 			C.gtk_widget_show (list_widget)
 			

@@ -117,5 +117,24 @@ feature -- Basic operations
 				containable_unparented: containable.parent = Void
 			end
 		end
+		
+	graphically_replace_window (new_window, existing_window: EV_TITLED_WINDOW) is
+			-- Hide `existing_window' and display `new_window', aligned to the
+			-- bottom right corner of `existing_window'.
+		require
+			windows_not_void: new_window /= Void and existing_window /= Void
+				-- FIXME see 
+			--new_window_hidden: not new_window.is_show_requested
+			existing_window_shown: existing_window.is_show_requested
+		do
+			new_window.set_position (existing_window.x_position + existing_window.width - new_window.width,
+				existing_window.y_position + existing_window.height - new_window.height)
+			new_window.show
+			existing_window.hide
+		ensure
+			new_window_shown: new_window.is_show_requested
+			existing_window_hidden: not existing_window.is_show_requested
+		end
+		
 
 end -- class GB_UTILITIES

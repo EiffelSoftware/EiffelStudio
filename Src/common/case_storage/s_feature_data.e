@@ -24,7 +24,9 @@ feature -- Properties
 
 	body: S_FREE_TEXT_DATA is
 			-- Body of the routine (if routine)
-		do --%%%%%% to avoid new attribute
+			--| Do end to avoid a new attribute (compatibility)
+			--| Is redefined as an attribute in descendants
+		do
 		end
 
 	comments: S_FREE_TEXT_DATA;
@@ -80,12 +82,14 @@ feature -- Setting
 			name_set: name = s;
 		end;
 
-	set_body (b: like body) is  --%%%%%%% 
-			-- Set bodys to `l'.
+	set_body (b: like body) is
+			-- Set `body' to `l'.
 		require
 			body_exists: b /= Void;
 			body_not_empty: not b.empty;
 		do
+			--| Cannot do an assignment here, since `body' is not an 
+			--| attribute. But is ok in descendants.
 		ensure
 			body_set: body = b
 		end;

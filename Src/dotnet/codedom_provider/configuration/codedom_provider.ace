@@ -54,7 +54,21 @@ cluster
 
 	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider\parser"
 		exclude
-			"CVS"; "interface"; "cluster_indexing_parser.e"; "external_parser.e"; "external_scanner.e"; "external_tokens.e"
+			"CVS"; "interface";
+		default
+			namespace ("EiffelSoftware.CodeDom.Parser")
+		end
+
+	eiffel_parser:		"$EIFFEL_SRC\Eiffel\common\parser\parser"
+		exclude
+			"CVS"; "cluster_indexing_parser.e"; "external_parser.e"; "external_scanner.e"; "external_tokens.e"
+		default
+			namespace ("EiffelSoftware.CodeDom.Parser")
+		end
+
+	eiffel_parser_addons:	"$EIFFEL_SRC\Eiffel\API\error\common"
+		exclude
+			"CVS"; "error_handler.e"; "syntax_error.e";
 		default
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end

@@ -1,6 +1,6 @@
 /*
 
-######  #  ######	     ####   ######  #####  #    #  #####       #    #
+######  #  ######        ####   ######  #####  #    #  #####       #    #
 #       #  #            #       #         #    #    #  #    #      #    #
 #####   #  #####         ####   #####     #    #    #  #    #      ######
 #       #  #                 #  #         #    #    #  #####  ###  #    #
@@ -18,7 +18,7 @@
 #include "eif_cecil.h"		/* eif_rtinit(), run-time initialization */
 
 #ifdef WORKBENCH
-#inlcude "eif_interp.h"		/* xinitint(), interpreter initialization */
+#include "eif_interp.h"		/* xinitint(), interpreter initialization */
 #endif
 
 /*

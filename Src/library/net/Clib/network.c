@@ -32,6 +32,10 @@
 #include <io.h>
 #endif
 
+#ifndef EIF_WIN32
+#include <sys/time.h>
+#endif
+
 #ifdef EIF_VMS
 #include "netvmsdef.h"
 #else
@@ -39,7 +43,7 @@
 #endif
 
 #ifndef EIF_WIN32
-#include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #include <errno.h>
@@ -63,7 +67,7 @@
 #include <sys/select.h>
 #endif
 
-#ifdef I_NETINET_IN
+#ifdef I_NETINET_I
 #include <netinet/in.h>
 #endif
 
@@ -74,9 +78,15 @@
 #if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 #else
 #include <sys/un.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
 #endif
 
+#include <string.h>
+
 #include "bitmask.h"
+
+
 
 #ifdef EIF_WIN32
 #define EIFNET_ERROR_HAPPENED SOCKET_ERROR
@@ -89,10 +99,9 @@
 void eif_net_check (int retcode) {
 	/* Check the return code of connect(), recv(), send(), ... */
 
+#ifdef EIF_WIN32
 	char buf[80]="Net error #";
 	int errcode;
-
-#ifdef EIF_WIN32
 	if (retcode == SOCKET_ERROR) {
 		errcode = WSAGetLastError();
 		if (errcode==WSANOTINITIALISED)

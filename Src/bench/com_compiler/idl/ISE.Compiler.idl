@@ -246,6 +246,25 @@ interface IEiffelException: IDispatch
 };
 
 //---------------------------------------------------------------------
+// IEiffelSupport
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IEIFFELSUPPORT),
+	helpstring ("A single exception object")
+]
+interface IEiffelSupport: IDispatch
+{
+	[id (DISPID_EiffelComCompiler_ExpandPath), helpstring ("Takes a path and expands it using the env vars.")]
+	HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
+	
+	[id (DISPID_EiffelComCompiler_EiffelClassNameToDotnetName), helpstring ("Takes an Eiffel class name and converts it to .NET convention.")]
+	HRESULT EiffelClassNameToDotnetName ([in] BSTR bstrClassName, [out, retval] BSTR* pbstrFormattedName);
+};
+
+
+//---------------------------------------------------------------------
 // IEiffelCompiler
 //---------------------------------------------------------------------
 [
@@ -291,9 +310,6 @@ interface IEiffelCompiler: IDispatch
 
 	[id (DISPID_EiffelComCompiler_DiscardAssertions), helpstring ("Should compiler discard assertions when finalizing?"), propput]
 	HRESULT DiscardAssertions ([in] VARIANT_BOOL vbDiscard);
-
-	[id (DISPID_EiffelComCompiler_ExpandPath), helpstring ("Takes a path and expands it using the env vars.")]
-	HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
 
 	[id (DISPID_EiffelComCompiler_GenerateMsilKeyFileName), helpstring ("Generate a cyrptographic key filename.")]
 	HRESULT GenerateMsilKeyFileName ([in] BSTR bstrFileName);
@@ -1468,6 +1484,9 @@ interface IEiffelProject: IDispatch
 
 	[id (DISPID_EiffelComCompiler_HtmlDocumentationGenerator), helpstring ("Help documentation generator"), propget]
 	HRESULT HtmlDocumentationGenerator ([out, retval] IEiffelHtmlDocumentationGenerator** ppIEiffelHtmlDocumentationGenerator);
+	
+	[id (DISPID_EiffelComCompiler_Support), helpstring ("Support"), propget]
+	HRESULT CompilerSupport ([out, retval] IEiffelSupport** ppIEiffelSupport);	
 };
 
 // =========================================================================
@@ -1516,6 +1535,7 @@ library EiffelComCompiler
 	interface IEiffelSystemAssemblies;
 	interface IEnumAssembly;
 	interface IEiffelAssemblyProperties;
+	interface IEiffelSupport;
 	interface IEiffelException;
 	
 	// =========================================================================

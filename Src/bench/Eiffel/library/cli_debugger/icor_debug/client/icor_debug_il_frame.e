@@ -50,17 +50,17 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_ip (item, $l_noffset, $l_cordebugmapping_result)
 			Result := l_noffset
 			debug ("DEBUGGER_EIFNET_DATA","DEBUGGER_TRACE_STEPPING")
-				io.error.put_string ("### ILFrame::GetIP -> 0x" + l_noffset.to_hex_string
+				io.error.put_string (generator + "::GetIP -> 0x" + l_noffset.to_hex_string
 							+ "  : MappingResult="
-	--						+"0x"+ l_cordebugmapping_result.to_hex_string
+--							+"0x"+ l_cordebugmapping_result.to_hex_string
 					)
 				inspect l_cordebugmapping_result 
-				when 1 then io.error.put_string ("MAPPING_PROLOG"); 				
-				when 2 then io.error.put_string ("MAPPING_EPILOG"); 				
-				when 3 then io.error.put_string ("MAPPING_NO_INFO"); 				
-				when 4 then io.error.put_string ("MAPPING_UNMAPPED_ADDRESS"); 				
-				when 16 then io.error.put_string ("MAPPING_EXACT"); 				
-				when 32 then io.error.put_string ("MAPPING_APPROXIMATE"); 						
+				when 0x1 then io.error.put_string ("MAPPING_PROLOG"); 				
+				when 0x2 then io.error.put_string ("MAPPING_EPILOG"); 				
+				when 0x4 then io.error.put_string ("MAPPING_NO_INFO"); 				
+				when 0x8 then io.error.put_string ("MAPPING_UNMAPPED_ADDRESS"); 				
+				when 0x10 then io.error.put_string ("MAPPING_EXACT"); 				
+				when 0x20 then io.error.put_string ("MAPPING_APPROXIMATE"); 						
 				else io.error.put_string ("???")				
 				end
 				io.error.put_string ("%N")

@@ -39,7 +39,6 @@ external
 		"$(ORACLE_HOME)\OCI\include"
 
 	object:
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\oracle_store.lib",
 		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 

@@ -40,7 +40,6 @@ cluster
 
 external
 	object:
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\sybase_store.lib",
 		"$(SYBASE)\lib\libsybdb.lib"
 

@@ -38,9 +38,7 @@ cluster
 
 external
 	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
-		"-lsupport",
 		"-lsybase_store",
-		"-ldatetime",
 		"$(SYBASE)/lib/libsybdb.a" 
 
 end

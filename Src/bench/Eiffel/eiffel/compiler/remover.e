@@ -108,6 +108,11 @@ end
 							-- with one redefine, one rename (cf the doc I MAY write 
 							-- about it)
 						mark_dead (body_id.id)
+debug ("DEAD_CODE")
+	print ("Since it was not treated, we marked bid: ")
+	print (body_id.id)
+	print (" dead%N")
+end
 						control.extend (depend_unit)
 					end
 

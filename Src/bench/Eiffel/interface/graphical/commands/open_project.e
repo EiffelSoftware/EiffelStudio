@@ -102,8 +102,8 @@ feature {NONE} -- Implementation
 		do
 			if not project_tool.initialized then
 				if has_project_name then
-					!! file.make (project_file_name)
-					if not file.exists then
+					!! file.make (valid_file_name (project_file_name))
+					if not file.exists or else file.is_directory then
 						warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (project_file_name), 
 								Interface_names.b_Ok, Void, Void)
@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (file_name), 
 								Interface_names.b_Ok, Void, Void)
 						else
-							!! file.make (file_name)
-							if not file.exists then
+							!! file.make (valid_file_name (file_name))
+							if not file.exists or else file.is_directory then
 								choose_again := True
 								warner (Project_tool).custom_call (Current,
 									Warning_messages.w_file_not_exist (file_name), 
@@ -156,8 +156,8 @@ feature {NONE} -- Implementation
 			else
 					-- A project has been opened, we need to open a new one
 				if has_project_name then
-					!! file.make (project_file_name)
-					if not file.exists then
+					!! file.make (valid_file_name (project_file_name))
+					if not file.exists or else file.is_directory then
 						warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (project_file_name), 
 								Interface_names.b_Ok, Void, Void)
@@ -195,8 +195,8 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (file_name), 
 								Interface_names.b_Ok, Void, Void)
 						else
-							!! file.make (file_name)
-							if not file.exists then
+							!! file.make (valid_file_name (file_name))
+							if not file.exists or else file.is_directory then
 								choose_again := True
 								warner (Project_tool).custom_call (Current,
 									Warning_messages.w_file_not_exist (file_name), 
@@ -223,8 +223,8 @@ feature -- Project Initialization
 		local
 			file: RAW_FILE
 		do
-			!! file.make (project_file_name)
-			if not file.exists then
+			!! file.make (valid_file_name (project_file_name))
+			if not file.exists or else file.is_directory then
 				warner (Project_tool).custom_call (Current,
 					Warning_messages.w_file_not_exist (project_file_name), 
 					Interface_names.b_Ok, Void, Void)
@@ -408,6 +408,26 @@ feature {NONE} -- Attributes
 		do
 			if not has_project_name then
 				Result := Interface_names.a_Open_project
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	valid_file_name (file_name: STRING): STRING is
+			-- Generate a valid file name from `file_name'
+			--| Useful when the file name is a directory with a 
+			--| directory separator at the end.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			last_char: CHARACTER
+		do
+			last_char := file_name.item (file_name.count)
+			if last_char = Directory_separator then
+				Result := clone (file_name)
+				Result.remove (file_name.count)
+			else
+				Result := file_name	
 			end
 		end
 

@@ -37,15 +37,13 @@ feature {NONE} -- Initialization
 			set_style (feature {WINFORMS_CONTROL_STYLES}.resize_redraw, True)
 
 			-- Load the image to be used for the background from the exe's resource fork
---			create l_background_image.make_from_original (create {DRAWING_BITMAP}.make_from_stream (feature {ASSEMBLY}.get_executing_assembly.get_manifest_resource_stream (("colorbars.jpg").to_cil)))
-			create l_background_image.make_from_original (create {DRAWING_BITMAP}.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\colorbars.jpg").to_cil))
+			create l_background_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\colorbars.jpg").to_cil)
 
 			-- Now create the brush we are going to use to paint the background
 			create background_brush.make_from_bitmap (l_background_image)
 
 			-- Load the image to be used for the textured text from the exe's resource fork
---			create l_text_image.make_from_original (create {DRAWING_BITMAP}.make_from_stream (feature {ASSEMBLY}.get_executing_assembly.get_manifest_resource_stream (("marble.jpg").to_cil)))
-			create l_text_image.make_from_original (create {DRAWING_BITMAP}.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\marble.jpg").to_cil))
+			create l_text_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\marble.jpg").to_cil)
 			create text_texture_brush.make_from_bitmap (l_text_image)
 
 			-- Load the fonts we want to use
@@ -57,16 +55,9 @@ feature {NONE} -- Initialization
 			create title_shadow_brush.make (feature {DRAWING_COLOR}.from_argb_integer_color (70, feature {DRAWING_COLOR}.black))
 
 			-- Set up fonts and brushes for printing japanese text
---			try {
---				japanese_font create {DRAWING_FONT}.make ("MS Mincho", 36)
---				linear_grad_brush = new LinearGradientBrush(new Point(0, 0), new Point(0, 45), feature {DRAWING_COLOR}.Blue, feature {DRAWING_COLOR}.Red)
---			} catch (Exception ex) {
---				MessageBox.Show("The Japanese font MS Mincho needs be present to run the Japanese part of this sample\n\n" + ex.Message)
---				do_japanese_sample = false
---			}
+			set_up_japanese_text
 
 			initialize_component
-			--dummy := show_dialog
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
@@ -103,14 +94,24 @@ feature -- Access
 			l_japanese_charecter: CHARACTER
 			l_japanese_string: NATIVE_ARRAY [CHARACTER]
 		once
-			--create Result.make (new char[] {(char)31169, (char)12398, (char)21517, (char)21069, (char)12399, (char)12463, (char)12522, (char)12473, (char)12391, (char)12377, (char)12290})
---			create l_japanese_charecter.make
-			create result.make_from_c_and_count ('#', 1)
+			create l_japanese_string.make (11)
+			l_japanese_string.put (0, (31169).to_character)
+			l_japanese_string.put (1, (12398).to_character)
+			l_japanese_string.put (2, (21517).to_character)
+			l_japanese_string.put (3, (21069).to_character)
+			l_japanese_string.put (4, (12399).to_character)
+			l_japanese_string.put (5, (12463).to_character)
+			l_japanese_string.put (6, (12522).to_character)
+			l_japanese_string.put (7, (12473).to_character)
+			l_japanese_string.put (8, (12391).to_character)
+			l_japanese_string.put (9, (12377).to_character)
+			l_japanese_string.put (10, (12290).to_character)
+			create result.make_from_value (l_japanese_string)
 		ensure
 			non_void_result: Result /= Void
 		end
 
-	do_japanese_sample: BOOLEAN is True
+	do_japanese_sample: BOOLEAN
 
 	serif_font_family: DRAWING_FONT_FAMILY
 
@@ -186,23 +187,24 @@ feature {NONE} -- Implementation
 			format.set_alignment (feature {DRAWING_STRING_ALIGNMENT}.center)
 			graph.draw_string_string_font_brush_rectangle_f_string_format (flowed_text_2, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Blue), rectangle_21, format)
 
-			-- Work out how many lines and characters we printed just now
+			-- Work out how many lines and characters we printed just now.
 --			dummy := e.graphics.measure_string_string_font_size_f_string_format_integer (flowed_text_2, text_font, rectangle_21.size, format, characters, lines)
---			what_rendered_text := feature {SYSTEM_STRING}.concact_string_string_string_string (("We printed ").to_cil + characters.to_string + (" characters and ").to_cil + lines.to_string + " lines")
---			e.graphics.draw_string (what_rendered_text, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Black), 400,440)
+			what_rendered_text :=(("").to_cil).concat_string_string_string_string (("We printed ").to_cil, characters.to_string, (" characters and ").to_cil, lines.to_string)
+			what_rendered_text := what_rendered_text.concat_string_string (what_rendered_text, (" lines").to_cil)
+			e.graphics.draw_string_string_font_brush_real_real (what_rendered_text, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Black), 400.0,440.0)
 
 			-- If we have the Japanese language pack draw some text in Japanese
 			-- Rotate it to make life truly exciting
---			if do_japanese_sample then
---				graph.rotate_transform (-30)
---				graph.translate_transform (-180, 300)
---				graph.draw_string_string_font_brush_real_real (japanese_text, japanese_font, linear_grad_brush, 200, 140)
---				graph.reset_transform
---			end
+			if do_japanese_sample then
+				graph.rotate_transform (-30)
+				graph.translate_transform (-180, 300)
+				graph.draw_string_string_font_brush_real_real (japanese_text, japanese_font, linear_grad_brush, 200, 140)
+				graph.reset_transform
+			end
 		end
 
 	initialize_component is
-			-- 
+			-- Initialize window components.
 		local
 			l_size: DRAWING_SIZE
 		do
@@ -212,5 +214,28 @@ feature {NONE} -- Implementation
 			set_text (("GDI+ Text Samples").to_cil)
 		end
 
+	set_up_japanese_text is
+			-- Set up japanese text.
+		local
+			retried: BOOLEAN
+			res: WINFORMS_DIALOG_RESULT
+		do
+			if not retried then
+				do_japanese_sample := True
+				-- Load the fonts we want to use
+				japanese_font := (create {DRAWING_FONT}.make_from_family_name_and_em_size (("MS Mincho").to_cil, 36))
+--				linear_grad_brush := create {DRAWING_LINEAR_GRADIENT_BRUSH}.make_with_point_1 (create {DRAWING_POINT}.make_from_x_y (0, 0), create {DRAWING_POINT}.make_from_x_y (0, 45), feature {DRAWING_COLOR}.Blue, feature {DRAWING_COLOR}.Red)
+					-- FIXME: uncomment the above line and delete the next one. (compiler problem).
+				do_japanese_sample := False
+			else
+				do_japanese_sample := False
+			end
+		rescue
+			res := feature {WINFORMS_MESSAGE_BOX}.show (
+				("The Japanese font MS Mincho needs be present to run the Japanese part of this sample\n\n").to_cil)
+			retried := True
+			retry
+		end
+		
 			
 end -- Class GDIP_TEXT

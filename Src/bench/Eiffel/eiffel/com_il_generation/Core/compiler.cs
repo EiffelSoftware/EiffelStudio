@@ -521,6 +521,7 @@ feature -- Generation Structure
 	
 			EntryType = main_module.DefineType (Classes [TypeID].name + EntryTypeName);
 
+
 			entry_point = EntryType.DefineMethod (Entry_point_name,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
@@ -542,6 +543,9 @@ feature -- Generation Structure
 			}
 
 			Generator.Emit (OpCodes.Call, eiffel_entry_point.method_builder);
+
+			Classes [TypeID].module.SetUserEntryPoint (eiffel_entry_point.method_builder);
+
 
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();

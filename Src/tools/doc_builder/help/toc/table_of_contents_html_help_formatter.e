@@ -8,92 +8,49 @@ class
 	
 inherit
 	TABLE_OF_CONTENTS_FORMATTER
-		redefine
-			make,
-			process_element
+		rename
+			text as html_help_text
 		end	
 	
 create
 	make
 
-feature -- Creation
-
-	make is
-			-- Create
-		do
-					-- Initialize text
-			create html_help_text.make_empty
-			html_help_text.append (html_help_header)
-			html_help_text.append ("<OBJECT type=%"text/site properties%">%N%
-				%%T<param name=%"ImageType%" value=%"Folder%">%N</OBJECT>")
-			Precursor			
-		end		
-
 feature -- Access
 
-	process_element (e: XM_ELEMENT) is
-			-- Process`e'
-		local
-			l_parent: BOOLEAN
-		do
-			add_node_item (e)
-			l_parent := not e.elements.is_empty
-			if l_parent then
-				html_help_text.append ("<UL>%N")
-			end	
-			Precursor (e)
-			if l_parent then
-				html_help_text.append ("</UL>%N")
-			end
-			if e.is_root_node then
-				html_help_text.append (html_help_footer)
-			end
-		end
-
-	invalid_urls: ARRAYED_LIST [STRING] is
-			-- Invalid url references
-		once
-			create Result.make (1)
-		end	
-
-	html_help_text: STRING
+	html_help_text: STRING is
 			-- HTML Help 1.x text
-
-feature {NONE} -- Status setting
-
-	add_node_item (e: XM_ELEMENT) is
-			-- Add new node item based on `e'
-		do	
-		 	if not e.is_root_node then
-		 		html_help_text.append (node_text (e))	
-		 	end				
-		end		
+		do
+			create Result.make_empty
+			Result.append (html_help_header)
+			Result.append ("<OBJECT type=%"text/site properties%">%N%
+				%%T<param name=%"ImageType%" value=%"Folder%">%N</OBJECT><UL>")	
+			Result.append (processed_text)
+			Result.append (html_help_footer)
+		end
 
 feature {NONE} -- Implementation
 
-	node_text (e: XM_ELEMENT): STRING is
-			-- HTML text representing `e' for TOC file
-		require
-			e_not_void: e /= Void
+	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+			-- Node text
 		local
 			l_url, l_name: STRING
 			is_dir_url: BOOLEAN
 			l_util: UTILITY_FUNCTIONS
 		do
+			create l_util
 			create Result.make_from_string ("<LI> <OBJECT type=%"text/sitemap%">%N<param name=%"Name%" value=%"")
 			
 					-- Append Title
-			Result.append (e.attribute_by_name (Title_string).value)
+			Result.append (a_node.title)
 			Result.append ("%">")	
 			
 					-- Append Url
-			l_url := e.attribute_by_name (Url_string).value
-			if l_url /= Void and then e.name.is_equal (Folder_string) then
-				is_dir_url := (create {UTILITY_FUNCTIONS}).file_type (l_url).is_empty
+			l_url := a_node.url
+			if l_url /= Void then
+				is_dir_url := l_util.file_type (l_url).is_empty	
 			end			
 			
 			if not is_dir_url then
-				create l_util
 				create l_name.make_from_string (l_util.toc_friendly_url (l_url))
 				l_name := l_util.file_no_extension (l_name)
 				l_name.append (".html")
@@ -103,6 +60,19 @@ feature {NONE} -- Implementation
 			end			
 			
 			Result.append ("%N</OBJECT>%N")
+			
+			if a_node.has_child then
+				Result.append ("<UL>%N")
+				from
+					a_node.children.start
+				until
+					a_node.children.after
+				loop
+					Result.append (node_text (a_node.children.item))
+					a_node.children.forth
+				end
+				Result.append ("</UL>%N")
+			end
 		end	
 
 end -- class TABLE_OF_CONTENTS_WIDGET_FORMATTER

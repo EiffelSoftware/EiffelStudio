@@ -101,8 +101,7 @@ feature {NONE} -- Implementation
 		local
 			l_formatter: TABLE_OF_CONTENTS_HTML_HELP_FORMATTER
 		do
-			create l_formatter.make
-			toc.process (l_formatter)
+			create l_formatter.make (toc)
 			Result := l_formatter.html_help_text
 		end
 

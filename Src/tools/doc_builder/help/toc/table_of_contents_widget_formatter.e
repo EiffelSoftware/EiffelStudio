@@ -1,18 +1,10 @@
 indexing
-	description: "Converts a table of contents file to a corresponding tree widget."
+	description: "Converts a table of contents structure to a corresponding tree widget."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TABLE_OF_CONTENTS_WIDGET_FORMATTER
-
-inherit
-	TABLE_OF_CONTENTS_FORMATTER
-		rename
-			make as make_formatter
-		redefine
-			process_element
-		end
 	
 create
 	make
@@ -23,71 +15,46 @@ feature -- Creation
 			-- Create
 		do
 			create toc_widget.make
-			element_stack.wipe_out
-			make_formatter
 		end		
 
 feature -- Access
 
-	process_element (e: XM_ELEMENT) is
-			-- Process`e'			
+	process_toc (a_toc: TABLE_OF_CONTENTS) is
+			-- Process `a_toc'			
 		do			
-			add_node_item (e)
-			Precursor (e)
-			if not e.is_empty and then not Element_stack.is_empty then
-				Element_stack.remove
-			end
+			process_toc_node (a_toc, toc_widget)
 		end
+		
+	process_toc_node (a_node: TABLE_OF_CONTENTS_NODE; a_node_list: EV_TREE_NODE_LIST) is
+			-- Process `a_node', creating widget nodes into `a_node_list'
+		require
+			a_node /= Void
+		local
+			l_item: TABLE_OF_CONTENTS_NODE
+			l_children: ARRAYED_LIST [like a_node]			
+			l_widget_item: TABLE_OF_CONTENTS_WIDGET_NODE
+			l_is_parent: BOOLEAN
+		do
+			if a_node.has_child then
+				l_children := a_node.children
+				from
+					l_children.start
+				until
+					l_children.after
+				loop
+					l_item := l_children.item
+					l_is_parent := l_item.url_is_directory or l_item.has_child
+					create l_widget_item.make (l_item.title, l_item.url, l_item.id, l_is_parent)
+					a_node_list.extend (l_widget_item)
+					if l_item.has_child then
+						process_toc_node (l_item, l_widget_item)
+					end
+					l_children.forth
+				end
+			end			
+		end		
 
 	toc_widget: TABLE_OF_CONTENTS_WIDGET
 			-- Tree widget
-
-feature {NONE} -- Status setting
-
-	add_node_item (e: XM_ELEMENT) is
-			-- Add new node item based on `e'
-		local
-			l_title, l_url: STRING
-			l_id: INTEGER
-			l_toc_node: TABLE_OF_CONTENTS_WIDGET_NODE
-			l_is_parent: BOOLEAN
-		do	
-					-- Extract attribute data
-			if not e.attributes.is_empty then
-				l_title := e.attribute_by_name (Title_string).value
-				if e.has_attribute_by_name (Url_string) then
-					l_url := e.attribute_by_name (Url_string).value
-				end				
-				l_id := e.attribute_by_name (Id_string).value.to_integer
-				l_is_parent := e.name.is_equal (Folder_string)
-				
-				create l_toc_node.make (l_title, l_url, l_id, l_is_parent)
-			
-						-- Create node widget
-				if Element_stack.is_empty then
-					toc_widget.extend (l_toc_node)
-				else
-					current_node_item.extend (l_toc_node)
-				end
-				
-				if not e.is_empty then						
-					element_stack.extend (l_toc_node)
-				end
-			end		
-		end		
-
-feature {NONE} -- Implementation
-
-	current_node_item: EV_TREE_ITEM is
-			-- Current node item for inserting new values
-		do
-			Result := element_stack.item
-		end
-
-	element_stack: ARRAYED_STACK [EV_TREE_ITEM] is
-			-- Element stack
-		once
-			create Result.make (0)
-		end
 
 end -- class TABLE_OF_CONTENTS_WIDGET_FORMATTER

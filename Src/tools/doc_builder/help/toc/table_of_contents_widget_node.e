@@ -16,12 +16,19 @@ inherit
 			is_equal
 		end
 
+	SHARED_OBJECTS
+		undefine
+			copy,
+			default_create,
+			is_equal
+		end
+
 create
 	make
 
 feature -- Creation
 
-	make (a_title, a_url: STRING; a_id: INTEGER; a_parent: BOOLEAN) is
+	make (a_title, a_url: STRING; a_id: INTEGER; heading: BOOLEAN) is
 			-- Create
 		require
 			has_title: a_title /= Void
@@ -29,8 +36,8 @@ feature -- Creation
 		do
 			default_create
 			id := a_id
-			file_url := a_url		
-			is_heading := a_parent
+			file_url := a_url
+			is_heading := heading
 			
 					-- Display
 			set_text (a_title)
@@ -46,10 +53,10 @@ feature -- Creation
 			drop_actions.set_veto_pebble_function (agent can_insert_node (?))			
 			
 					-- Gui Agents
-			pointer_double_press_actions.force_extend (agent open_file)
+			pointer_double_press_actions.force_extend (agent open_file)			
+			select_actions.extend (agent build_properties_list)
 			expand_actions.extend (agent set_pixmap (Folder_open_icon))
 			collapse_actions.extend (agent set_pixmap (Folder_closed_icon))
-			select_actions.extend (agent build_properties_list)
 		ensure
 			has_title: title /= Void
 			valid_id: id > 0
@@ -67,12 +74,10 @@ feature -- Access
 			-- Associated file url
 			
 	id: INTEGER
-			-- Unique identifier in widgt
-
-feature -- Query
+			-- Unique identifier in widget
 
 	is_heading: BOOLEAN
-			-- Is Current a heading topic?
+			-- Heading node?
 
 feature {NONE} -- Actions
 

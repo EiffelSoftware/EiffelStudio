@@ -75,7 +75,7 @@ feature -- Basic operations
 			i: INTEGER
 		do
 			if count > 0 then
-				snapshot := clone (Current)
+				snapshot := twin
 				if kamikazes /= Void then
 					call_action_list (kamikazes)
 					kamikazes := Void
@@ -120,9 +120,11 @@ feature -- Access
 	name: STRING is
 			-- Textual description.
 		do
-			Result := clone (name_internal)
+			if name_internal /= Void then
+				Result := name_internal.twin
+			end
 		ensure
-			equal_to_name_internal: Result.is_equal (name_internal)
+			equal_to_name_internal: equal (Result, name_internal)
 		end
 
 	dummy_event_data: EVENT_DATA is
@@ -265,7 +267,7 @@ feature {NONE} -- Implementation
 			snapshot: like actions
 			i: INTEGER
 		do
-			snapshot := clone (actions)
+			snapshot := actions.twin
 			from
 				i := 1
 			until

@@ -837,9 +837,9 @@ feature -- Duplication
 			-- Re-initialize from `other'.
 		do
 			standard_copy (other)
-			set_keys (clone (other.keys))
-			set_content (clone (other.content))
-			set_deleted_marks (clone (other.deleted_marks))
+			set_keys (other.keys.twin)
+			set_content (other.content.twin)
+			set_deleted_marks (other.deleted_marks.twin)
 		end
 
 feature {NONE} -- Transformation
@@ -1342,6 +1342,7 @@ invariant
 
 	keys_not_void: keys /= Void
 	content_not_void: content /= Void
+	deleted_marks_not_void: deleted_marks /= Void
 	keys_same_capacity_plus_one: keys.count = capacity + 1
 	content_same_capacity_plus_one: content.count = capacity + 1
 	deleted_same_capacity: deleted_marks.count = capacity

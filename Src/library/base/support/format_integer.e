@@ -364,7 +364,7 @@ feature -- Status setting
 			s.count >= 3
 			s.count \\ 3 = 0
 		do
-			sign_string := clone (s)
+			sign_string := s.twin
 		ensure
 			sign_string.is_equal (s)
 		end
@@ -403,7 +403,7 @@ feature -- Conversion
 			if not no_separator then
 				Result := split (unsigned.out)
 			else
-				Result := clone (unsigned.out)
+				Result := unsigned.out
 			end
 			if not ignore_sign or bracketted_negative then
 				Result := process_sign (Result, sign)

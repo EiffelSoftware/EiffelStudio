@@ -185,7 +185,7 @@ feature -- Conversion
 					fracs := pad_fraction (fraction)
 				end
 			else
-				ints := clone (integral.out)
+				ints := integral.out
 				fracs := pad_fraction (fraction)
 			end
 			create Result.make (width)

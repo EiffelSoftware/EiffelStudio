@@ -383,7 +383,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := feature_token_for_feat_and_class_type (a_feat, l_class_type)
 		end
 
-	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER, INTEGER] is
+	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- `_done' and `_result' Tokens for the once `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -697,9 +697,10 @@ feature {IL_CODE_GENERATOR} -- line debug recording
 
 feature {IL_CODE_GENERATOR} -- Token recording
 
-	record_once_info_for_class (a_data_class_token: INTEGER; a_once_done_token, a_once_result_token: INTEGER;
-								a_feature: FEATURE_I; a_class_c: CLASS_C) is
-			--  Record `_done' and `_result' tokens for once `a_once_name' from `a_class_type'.
+	record_once_info_for_class (a_data_class_token: INTEGER; 
+					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
+					a_feature: FEATURE_I; a_class_c: CLASS_C) is
+			--  Record `_done' `_result' and `_exception' tokens for once `a_once_name' from `a_class_type'.
 		local
 			l_class_types: LIST [CLASS_TYPE]
 		do
@@ -712,15 +713,17 @@ feature {IL_CODE_GENERATOR} -- Token recording
 				until
 					l_class_types.after						
 				loop
-					record_once_info_for_class_type	(a_data_class_token, a_once_done_token, a_once_result_token, 
-														a_feature, l_class_types.item)					
+					record_once_info_for_class_type	(a_data_class_token, 
+							a_once_done_token, a_once_result_token, a_once_exception_token,
+							a_feature, l_class_types.item)				
 					l_class_types.forth
 				end
 			end
 		end
 		
-	record_once_info_for_class_type (a_data_class_token: INTEGER; a_once_done_token, a_once_result_token: INTEGER; 
-									a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
+	record_once_info_for_class_type (a_data_class_token: INTEGER; 
+					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
+					a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
 		require
 			a_feature_i /= Void
 		local
@@ -739,11 +742,14 @@ feature {IL_CODE_GENERATOR} -- Token recording
 							+ "Done=0x" + a_once_done_token.to_hex_string
 							+ "::"
 							+ "Result=0x" + a_once_result_token.to_hex_string
+							+ "::"
+							+ "Exception=0x" + a_once_exception_token.to_hex_string
 							+ "%N")
 				end			
 				l_info_from_class_type := info_from_class_type (a_class_type, True)
-				l_info_from_class_type.record_once_tokens (-- a_data_class_token, 
-							a_data_class_token, a_once_done_token, a_once_result_token, a_feature_i)				
+				l_info_from_class_type.record_once_tokens (a_data_class_token, 
+						a_once_done_token, a_once_result_token, a_once_exception_token, 
+						a_feature_i)
 			end
 		end
 

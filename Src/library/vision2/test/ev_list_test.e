@@ -45,7 +45,7 @@ feature -- Basic operation
 			s: STRING
 			p: PROCEDURE [ANY, TUPLE []]
 		do
-			description := "Test results of " + subject_name + ":%N"
+			description := "Testing" + subject_name + "%N"
 			test_successful := True
 
 			create test_list.make
@@ -75,9 +75,10 @@ feature -- Basic operation
 			until
 				test_list.off
 			loop
+				sub_test_successful := True
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
-				description.append ("`" + s + "', ")
+				description.append (s + ":")
 				empty_and_test (p, s)
 				fill_start_and_test (p, s)
 				fill_go_middle_and_test (p, s)
@@ -85,9 +86,18 @@ feature -- Basic operation
 				fill_go_before_and_test (p, s)
 				fill_go_after_and_test (p, s)
 				test_list.forth
+				if sub_test_successful then
+					description.append (" passed%N")
+				else
+					description.append (" FAILED%N")
+					test_successful := False
+				end
 			end
+			description.append ("%N" + subject_name)
 			if test_successful then
-				description.append ("working correctly.")
+				description.append ("PASSED%N")
+			else
+				description.append ("FAILED%N")
 			end
 		rescue
 			test_successful := False
@@ -97,6 +107,7 @@ feature -- Basic operation
 			else
 				description.append ("%N" + meaning (exception) + "%N")
 			end
+			description.append ("%N")
 		end
 
 	empty_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
@@ -194,6 +205,9 @@ feature -- Access
 	last_item: G
 			-- Last retreived item.
 
+	sub_test_successful: BOOLEAN
+			-- Did the last subtest succeed?
+
 feature {NONE} -- Implementation
 
 	item_agent: FUNCTION [ANY, TUPLE [], G]
@@ -242,66 +256,62 @@ feature {NONE} -- Implementation
 			-- `test_state' failed.
 		do
 			if error_message /= Void then
-				description.append ("Testing feature `" + feature_name +
-					"' with state `" + test_state + "'...")
-				description.append (error_message + "%N")
-				test_successful := False
+				description.append (" "+test_state + "(" + error_message + ")")
+				sub_test_successful := False
 			end
 		end
 
 	error_message: STRING is
 		do
 			if list.count /= similar_list.count then
-				Result := "`count' incorrect."
+				Result := "count /= " + similar_list.count.out
 			elseif list.empty /= similar_list.empty then 
-				Result := "`empty' incorrect."
+				Result := "empty /= "  + similar_list.empty.out
 			elseif not similar_list.empty and then
 					list.first /= similar_list.first then 
-				Result := "`first' incorrect."
+				Result := "first failed"
 			elseif list.has (last_item) /= similar_list.has (last_item) then 
-				Result := "`has' incorrect."
+				Result := "has /= " + similar_list.has (last_item).out
 			elseif list.after /= similar_list.after then 
-				Result := "`after' incorrect."
-				description.append ("Your list's after: " + list.after.out + "; LINKED_LIST: " + similar_list.after.out + ".%N")
+				Result := "after /= " + similar_list.after.out
 			elseif list.before /= similar_list.before then 
-				Result := "`before' incorrect."
+				Result := "before /=" + similar_list.before.out
 			elseif list.off /= similar_list.off then 
-				Result := "`off' incorrect."
+				Result := "off /= " + similar_list.off.out
 			elseif similar_list.valid_index (1)
 					and then list.i_th (1) /= similar_list.i_th (1) then 
-				Result := "`i_th' incorrect."
+				Result := "i_th failed"
 			elseif list.index /= similar_list.index then
-				Result := "`index' incorrect.%N" +
-					"Your list's index: " + list.index.out +
-					"; LINKED_LIST: " + similar_list.index.out + "."
-			elseif list.index_of (last_item, 1) /= similar_list.index_of (
-					last_item, 1) then 
-				Result := "`index_of' incorrect."
+				Result := "index:" + list.index.out + " /= " + 
+					similar_list.index.out
+			elseif list.index_of (last_item, 1)
+				/= similar_list.index_of (last_item, 1) then 
+				Result := "index_of:" + list.index_of (last_item, 1).out +
+					" /= " + similar_list.index_of (last_item, 1).out
 			elseif (not similar_list.off)
 					and then list.item /=similar_list.item then 
-				Result := "`item' incorrect."
-				description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
+				Result := "item failed"
 			elseif not similar_list.empty
 					and then list.last /= similar_list.last then 
-				Result := "`last' incorrect."
+				Result := "last failed"
 			elseif list.sequential_occurrences (last_item) /=
 					similar_list.sequential_occurrences (last_item) then 
-				Result := "`sequential_occurrences' incorrect."
+				Result := "sequential_occurrences failed"
 			elseif list.occurrences (last_item) /=
 					similar_list.occurrences (last_item) then 
-				Result := "`occurrences' incorrect."
+				Result := "occurrences failed"
 			elseif list.empty /= similar_list.empty then 
-				Result := "`empty' incorrect."
+				Result := "empty failed"
 			elseif list.exhausted /= similar_list.exhausted then 
-				Result := "`exhausted' incorrect."
+				Result := "exhausted failed"
 			elseif list.full /= similar_list.full then 
-				Result := "`full' incorrect."
+				Result := "full failed."
 			elseif list.isfirst /= similar_list.isfirst then 
-				Result := "`isfirst' incorrect."
+				Result := "isfirst failed"
 			elseif list.islast /= similar_list.islast then 
-				Result := "`islast' incorrect."
+				Result := "islast failed."
 			elseif not items_equal then 
-				Result := "items incorrect."
+				Result := "incorrect items"
 			end
 		end
 
@@ -698,6 +708,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/15 21:11:45  oconnor
+--| modified output for regression testing
+--|
 --| Revision 1.20  2000/03/09 17:25:13  brendel
 --| Now inherits from renamed EV_TEST2.
 --|

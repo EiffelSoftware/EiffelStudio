@@ -1,0 +1,241 @@
+<HTML>
+<HEAD>
+<TITLE>Event-Driven Command Exacution</TITLE>
+<LINK REV="made" HREF="mailto:ise@eiffel.com">
+<link rel="stylesheet" type="text/css" href="../../../styles/tech.css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<P>
+<A HREF="complex_example.html#Title"><IMG SRC="next.gif" ALIGN=RIGHT ALT="Next" width="16" height="16"></A>
+<A HREF="toc.html"><IMG SRC="toc.gif" ALIGN=RIGHT ALT="TOC" width="16" height="16"></A>
+<A HREF="datagram_sockets.html#Title"><IMG SRC="previous.gif"
+ALT="Previous" ALIGN="RIGHT" width="16" height="16"></A>
+<H5>The EiffelNet Library</H5>
+</P>
+<hr>
+
+
+<H2><A NAME="Title">9 EVENT-DRIVEN COMMAND EXECUTION</A></H2>
+
+<CENTER>
+<TABLE BORDER=1 WIDTH=75%>
+<TR><TD>
+The example classes discussed in this section appear in the   
+subdirectory <I>polling </I>of the example directory                 
+</TD></TR>
+</TABLE>
+</CENTER>
+
+<H3><A NAME="Command and Events">9.1 Commands and events</A></H3>
+
+<P>In the preceding examples each participant in a communication had to get ready to send or receive at specific stages of its life. Although this did not preclude asynchronous communication, it is sometimes desirable to make the scheme even more asynchronous, and control more decentralized, by letting each system simply specify certain communication events that it wants to monitor, and certain commands to be executed on occurrence of the specified events.
+</P>
+<P>
+This event-command model of computation is of course not new with EiffelNet. In ISE Eiffel 3, it is already used in EiffelVision and especially in EiffelBuild, which makes it possible to build a graphical application by specifying which command should be executed in response to each of a set of specified interface events, such as mouse click or keyboard entry. The commands are objects, instances of a general-purpose class <I>COMMAND</I> or its proper descendants. Class <I>COMMAND</I> has, among its features, a procedure <I>execute</I> which executes the current command; some commands are undoable and have an <I>undo</I> procedure.
+</P>
+<P>
+Class <I>COMMAND </I>and related classes used to be in EiffelVision but because of their generality were moved to [2], although this occurred after the publication of [2].
+</P>
+<P>
+In EiffelNet the possible events associated with a socket will be of three kind: a read event; a write event; or a special event (out of bounds operation). The command classes will be descendants of <I>POLL_COMMAND</I>, an heir of <I>COMMAND</I>.
+</P>
+
+<H3><A NAME="HDR23"> 9.2  Command classes</A></H3>
+
+<P>The example uses four command classes: <I>CLIENT_DATAGRAM_READER</I>, <I>CLIENT_DATAGRAM_WRITER</I> and their counterpart for servers, representing operations that must be triggered in the case of a read event and a write event.
+</P>
+<P>Here is the reader command for clients:
+<ul><DL>
+<I>
+	<DT><B>class</B> CLIENT_DATAGRAM_READER <B>inherit</B>
+		<DT><DD>POLL_COMMAND
+		<DT><DL><DT><DD><B>redefine</B> active_medium <B>end</B></DL>
+	<DT><B>creation</B>
+		<DT><DD>make
+	<DT><B>feature</B>
+		<DT><DD>active_medium: NETWORK_DATAGRAM_SOCKET;
+<BR><BR>
+		<DT><DD>execute <B>is</B>
+				<DT><DL><DT><DL><DT><DD></I>-- Obtain a packet of ten characters and print them.<I></DL>
+			<DT><DD><B>local</B>
+				<DT><DL><DT><DD>rec_pack: DATAGRAM_PACKET;
+				<DT><DD>i: INTEGER</DL>
+			<DT><DD><B>do</B>
+				<DT><DL><DT><DD>rec_pack := active_medium.received (10, 0);
+				<DT><DD>io.putint (rec_pack.packet_number); io.new_line;
+				<DT><DD><B>from</B> i := 0 <B>until</B> i &gt; 9 <B>loop</B>
+					<DT><DL><DT><DD>io.putchar (rec_pack.element (i)); i := i + 1</DL>
+				<DT><DD><B>end</B>;
+				<DT><DD>io.new_line</DL>
+			<DT><DD><B>end</B></DL>
+	<DT><B>end</B> 
+</I></DL></ul>
+</P>
+<P>The <I>execute</I> procedure reads a packet of ten characters and prints these characters. Its counterpart in the writing command will produce these ten packets:
+<ul><DL>
+<I>
+	<DT><B>class</B> CLIENT_DATAGRAM_WRITER <B>inherit</B>
+		<DT><DD>POLL_COMMAND
+			<DT><DL><DT><DD><B>redefine</B> active_medium <B>end</B>;</DL>
+		<DT><DD>BASIC_ROUTINES
+	<DT><B>creation</B>
+		<DT><DD>make
+	<DT><B>feature</B>
+		<DT><DD>active_medium: NETWORK_DATAGRAM_SOCKET;
+		<DT><DD>execute <B>is</B>
+				<DT><DL><DT><DL><DT><DD></I>-- Make a packet with characters 'a' to 'k' in successive positions.<I></DL>
+			<DT><DD><B>local</B>
+				<DT><DL><DT><DD>sen_pack: DATAGRAM_PACKET; ccode: INTEGER</DL>
+			<DT><DD><B>do</B>
+				<DT><DL><DT><DD>!! sen_pack.make (10);
+				<DT><DD><B>from</B> ccode := charcode ('a') <B>until</B> ccode &gt; charcode ('k') <B>loop</B>
+					<DT><DL><DT><DD>sen_pack.put_element (charconv (ccode), ccode -- charcode ('a'));
+					<DT><DD>ccode := ccode + 1</DL>
+				<DT><DD><B>end</B>
+				<DT><DD>sen_pack.set_packet_number (1);
+				<DT><DD>active_medium.send (sen_pack, Void, 0)</DL>
+			<DT><DD><B>end</B></DL>
+	<DT><B>end</B>
+</I></DL></ul>
+</P>
+
+<H3><A NAME="Server and Client">9.3 The server and the client</A></H3>
+
+<P>
+Once the commands have been defined, it suffices for the server and the client to associate instances of these commands with the appropriate.
+</P>
+<P>
+The abstraction needed for this purpose is provided by class <I>MEDIUM_POLLER</I>. An instance of this class knows about a number of commands, each associated with a certain socket in read, write or special event mode. By applying procedure <I>execute</I> to such a medium poller, you direct it to monitor these sockets for the corresponding events and to execute the command associated with each event that will be received. Procedure <I>execute</I> takes two integer arguments: the maximum number of sockets to monitor, and the timeout in milliseconds.
+</P>
+<P>
+Here is the server built with this mechanism:
+<ul><DL>
+<I>
+	<DT><B>class</B> POLLING_SERVER <B>creation</B>
+		<DT><DD>make 
+	<DT><B>feature</B>
+		<DT><DD>make <B>is</B>
+				<DT><DL><DT><DL><DD></I>-- Create read and write commands, attach them to a poller,
+				<DT><DD>-- set up the poller for execution.<I></DL>
+			<DT><DD><B>local</B>
+				<DT><DL><DT><DD>soc: NETWORK_DATAGRAM_SOCKET;
+				<DT><DD>poller: MEDIUM_POLLER;
+				<DT><DD>readcomm: SERVER_DATAGRAM_READER;
+				<DT><DD>writecomm: SERVER_DATAGRAM_WRITER</DL>
+			<DT><DD><B>do</B>
+				<DT><DL><DT><DD>!! soc.make_server_by_port (6530);
+				<DT><DD>!! poller.make;
+				<DT><DD>!! readcomm.make (soc); poller.put_read_command (readcomm);
+				<DT><DD>!! writecomm.make (soc); poller.put_write_command (writecomm);
+				<DT><DD>poller.make_read_only; poller.execute (15, 20000);
+				<DT><DD>poller.make_write_only; poller.execute (15, 20000);
+				<DT><DD>soc.close</DL>
+			<DT><DD><B>end</B></DL>
+	<DT><B>end</B> 
+</I></DL></ul>
+</P>
+<P>
+Procedure <I>make</I> creates three objects: a socket, which it associates with a specific port; a poller; and a read command (an instance of <I>SERVER_DATAGRAM_READER</I>), which it attaches to the socket. It then enters the read command into the poller, and does the same thing with a write command. It sets up the poller to accept read commands only and then executes the poller; this will enable the server to get the read event triggered by the client's write command (as it appears below in the text of class <I>POLLING_CLIENT</I>). Then the server reverses the poller's set-up to write-only, and calls <I>execute</I> again.
+</P>
+<P>
+The procedures <I>make_read_only</I> and <I>make_write_only</I> are creation procedures, so that it is possible in a single instruction to create a poller and set it up for read-only or write-only, as in !! <I>poller</I><I></I>l<I></I><I>make_read_only</I>. For clarity, however, the above class and the next separate calls to these procedures from the creation of the poller, which uses <I>make</I> as creation procedure.
+</P>
+<P>
+The client follows the same scheme, reversing the order of read and write operations:
+<ul><DL>
+<I>
+	<DT><B>class</B> POLLING_CLIENT <B>creation</B>
+		<DT><DD>make
+	<DT><B>feature</B>
+		<DT><DD>make <B>is</B>
+				<DT><DL><DT><DL><DT><DD></I>-- Create read and write commands, attach them to a poller,
+				<DT><DD>-- set up the poller for execution.<I></DL>
+			<DT><DD><B>local</B>
+				<DT><DL><DT><DD>soc: NETWORK_DATAGRAM_SOCKET;
+				<DT><DD>poller>: MEDIUM_POLLER;
+				<DT><DD>readcomm: DATAGRAM_READER;
+				<DT><DD>writecomm>: DATAGRAM_WRITER</DL>
+			<DT><DD><B>do</B>
+				<DT><DL><DT><DD>!! soc.make_client_by_port (6530, "serverhost");
+				<DT><DD>!! poller.make;
+				<DT><DD>!! readcomm.make (soc); poller.put_read_command (readcomm);
+				<DT><DD>!! writecomm.make (soc); poller.put_write_command (writecomm);
+				<DT><DD>poller.make_write_only; poller.execute (15, 20000);
+				<DT><DD>poller.make_read_only; poller.execute (15, 20000);
+				<DT><DD>soc.close</DL>
+			<DT><DD><B>rescue</B>
+				<DT><DL><DT><DD><B>if</B> soc /= Void <B>and then</B> not soc.is_closed <B>then</B>
+					<DT><DL><DT><DD>soc.close</DL>
+				<DT><DD><B>end</B></DL>
+			<DT><DD><B>end</B></DL>
+	<DT><B>end</B>
+</I></DL></ul>
+
+<H3><A NAME="Less Deterministic Scheme">9.4 A less deterministic scheme</A></H3>
+
+<P>
+Although the example uses the event-driven mechanisms of EiffelNet, it is still relatively deterministic in that it follows a precise protocol defined by a strict sequence of read and write operations on both sides. This is why every call to <I>execute</I> is preceded by a call to either <I>make_read_only</I> or <I>make_write_only </I>to set up the poller in the appropriate mode.
+</P>
+<P>
+A less deterministic scheme may often be desirable, where you simply enter a number of commands (read, write, out of bounds processing) into a poller and then wait for arbitrary events to occur and trigger commands. There is no need with this scheme to know in advance the order in which events may occur: a read event will trigger the command entered into the poller through <I>put_read_command</I>; a write event will trigger the command entered through <I>put_write_command</I>.
+</P>
+<P>
+To achieve this behavior, simply create the poller using <I>make</I> as creation procedure. This will set up the poller so as to accept all socket events, and enter into event-driven command execution by calling <I>execute</I> on the poller.
+</P>
+
+<P>
+<A HREF="datagram_sockets.html#Title"><IMG SRC="previous.gif" ALT="Previous" width="16" height="16">Previous
+Chapter</A>
+<A HREF="toc.html"><IMG SRC="toc.gif" ALT="TOC" width="16" height="16">Table of Contents</A>
+<A HREF="complex_example.html#Title"><IMG SRC="next.gif" ALT="Next" width="16" height="16">Next Chapter</A>
+</P>
+
+<!-- ICON BAR -->
+<hr>
+<CENTER>
+<TABLE BORDER=3 CELLPADDING=1 CELLSPACING=3>
+<TR>
+<TD>
+<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
+<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../../Icons/quick.gif" width="40" height="40"></A></TD>
+<TD>
+<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../../Icons/feather.gif" width="40" height="40"></A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+<hr>
+<!-- END ICON BAR -->
+
+<!-- FOOTER -->
+<CENTER>
+<ADDRESS>
+<STRONG>
+- Copyright &copy; 1995 ISE Inc. <A HREF="MAILTO:info@eiffel.com">
+&lt;info@eiffel.com&gt;</A> -</STRONG><BR>
+Please send comments concerning our WWW-service to
+<A HREF="MAILTO:webmaster@eiffel.com">
+&lt;webmaster@eiffel.com&gt;</A>
+</ADDRESS>
+<FONT SIZE=-1>
+LAST UPDATE: 26 August 1995
+</FONT>
+</CENTER>
+<!-- END FOOTER -->
+
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

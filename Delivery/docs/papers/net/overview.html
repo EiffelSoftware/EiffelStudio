@@ -1,0 +1,255 @@
+<HTML>
+<HEAD>
+<TITLE>Overview of EiffelNet Mechanisms</TITLE>
+<LINK REV="made" HREF="mailto:ise@eiffel.com">
+<link rel="stylesheet" type="text/css" href="../../../styles/tech.css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<P>
+<A HREF="predefined_level.html#Title"><IMG SRC="next.gif" ALIGN=RIGHT ALT="Next" width="16" height="16"></A>
+<A HREF="toc.html"><IMG SRC="toc.gif" ALIGN=RIGHT ALT="TOC" width="16" height="16"></A>
+<A HREF="clients_and_servers.html#Title"><IMG SRC="previous.gif"
+ALT="Previous" ALIGN="RIGHT" width="16" height="16"></A>
+<H5>The EiffelNet Library</H5>
+</P>
+<hr>
+
+<H2><A NAME="Title">3 AN OVERVIEW OF EIFFELNET MECHANISMS</A></H2>
+
+<P>
+To enable clients and servers to exchange objects, you will have to ensure that they can refer to a common <B>address</B>. At the predefined level this is really the only notion that you need to know, although it is useful to get the bigger picture, in particular the concept of <B>socket </B>(which enables systems to set up communication channels), the various forms of communication (single-machine versus multi-machine, stream versus datagram), the kinds of object structure that may be exchanged, the notion of packet, and how to associate commands with communication events. The following paragraphs review these ideas and the corresponding EiffelNet abstractions.
+</P>
+
+<H3><A NAME="Address">3.1 Establishing a common address</A></H3>
+
+<P>
+When two systems need to communicate through sockets, they must establish a binding through some common point of reference, called an <B>address</B>. Predictably, the notion of address is one of the important internal abstractions of EiffelNet, although in most cases developers of applications using EiffelNet do not need to manipulate address objects directly.
+</P>
+<P>
+EiffelNet supports two modes of communication: single-machine and multi-machine. In the single-machine case, the two communicating systems are known to be running on the same machine. In the multi-machine case, also known as the <B>network</B> case, they may be running on different machines, and communication occurs through a network. These two modes clearly require a different binding mechanism.
+</P>
+<P>
+When a client and a server reside on the same machine, they both have access to that machine's file system. This provides a straightforward binding mechanism: the common address will simply be a "path name", the Unix terminology for the full name of a file in a hierarchically organized file system. In the examples below this file will be <I>/tmp/here </I>(file <I>here</I> in the <I>/tmp</I> directory, conventionally used for temporary files). This file must not exist prior to the communication; it will be created by the socket mechanisms and then removed.
+</P>
+<P>
+For the network style of communication, this simple device of using a path name is no longer applicable. To define a common address, we may use two elements of information: the name of a machine, and the indication of a <B>port</B> on that machine. More precisely:
+<ul>
+<li>The port will be identified by an integer. In the examples below port <I>2000</I> will be used.
+<BR>
+<li>The machine may be identified in either of two ways: its <B>host name</B> (the name assigned to the machine when the operating system was first installed on it) or its <B>Internet address</B>, a sequence of numbers separated by periods, such as <I>127.0.0.1</I>. EiffelNet routines that need an argument identifying a machine will indifferently take a host name or an Internet address, passed in either case as a string. In the examples below the identification will be a host name, given as the string <I>"serverhost"</I>.
+</ul>
+</P>
+<P>
+In network-style client-server communication, the mechanism will be dissymmetric, reflecting the possibility (noted earlier) of a single server catering to many clients. The clients will state both the machine identification of their intended server and the port on which they will talk to that server. The server, however, will only specify the port; this means that it makes itself available to any client that cares to talk to it on that port. This provides some of the essential flexibility of client-server communication, where only one of the partners needs to state beforehand whom it wants to talk to.
+</P>
+
+<H3><A NAME="Sockets">3.2 Sockets and communication modes</A></H3>
+
+<P>
+A software system will exchange objects with another by sending them to a socket. Although if you stay at the predefined level you will not need to manipulate sockets explicitly, it is useful to understand this concept and know about the corresponding EiffelNet classes.
+</P>
+<P>
+You may think of a socket as a communication port; by attaching sockets together you enable communication between the corresponding systems, for example a client and a server:
+</P>
+<CENTER>
+<IMG SRC="fig_2.gif" width="568" height="76">
+</CENTER>
+<P>
+EiffelNet has been designed so that sockets look very much like files. You send objects to a socket in the same way that you write objects onto a file, and receive objects from a socket in the same way that you read objects from a file. This fundamental commonality is reflected in the inheritance hierarchy of the corresponding classes:
+</P>
+<CENTER>
+<IMG SRC="fig_3.gif" width="592" height="413">
+</CENTER>
+<P>
+Note that the hierarchy as shown is not complete; in particular the full structure uses classes <I>STREAM </I>(of which the <I>STREAM_ </I>classes are heirs) and <I>DATAGRAM </I>for multiple inheritance<I>. </I>Only the classes below the dotted line are part of EiffelNet; the others are part of EiffelBase, the fundamental data structure and algorithm library of ISE Eiffel [2].
+</P>
+<P>
+The most important property of this inheritance hierarchy is that it shows how sockets fit within the overall structure. Thanks to the common ancestor <I>IO_MEDIUM</I>, socket classes have most of their features in common with files.
+</P>
+<P>
+In normal usage, the only socket classes that you will need are four classes appearing at the bottom of the above figure. They correspond to two separate distinctions: single-machine versus multi-machine, and reliable versus unreliable.
+</P>
+<P>
+On the first distinction:
+<ul>
+<li>If the communicating systems run on the same machine, you may use one of the <I>UNIX_</I> classes.
+<BR>
+<li>For systems that run on different machines, you must use one of the <I>NETWORK_ </I>classes. This will also work if the systems are on the same machine, but less efficiently since communication may go through the network.
+</ul>
+</P>
+<P>
+The use of the word <I>UNIX_ </I>does not mean that the machine must be running the Unix operating system; rather, it denotes a certain style of client-server communication, the Unix style. (This is comparable to the use of the name <I>UNIX_FILE</I> in EiffelBase, for a class describing files that behave in the Unix style even though they may be implemented on non-Unix machines.)
+</P>
+<P>
+The second distinction reflects two modes of socket communication: stream communication and datagram communication. Both of these modes support two-way communication between systems, but with different properties:
+<ul>
+<li>A stream socket, as provided by the <I>STREAM_ </I>classes, provides sequenced communication without any loss or duplication of data. Stream communication is normally synchronous: the sending system waits until it has established a connection to the receiving system and transmitted the data.
+<BR>
+<li>A datagram socket, as provided by the <I>DATAGRAM_ </I>classes, is asynchronous: the sending system emits its data and does not wait for an acknowledgment. Because the sender is not blocked, this mode is more efficient, but it does not guarantee sequencing, reliability or non-duplication.
+</ul>
+</P>
+
+<H3><A NAME="Simple Values">3.3 Sending and receiving simple values</A></H3>
+
+<P>
+<I>IO_MEDIUM </I>has all the basic input and output facilities applying to objects of basic types, as also offered in <I>FILE </I>(see the specification of <I>FILE</I> in reference [2]). So you can use sockets to send and receive characters, integers, real numbers in simple or double precision and strings. For example, if the type of <I>my_socket </I>is one of the socket classes shown on the preceding figures, any of the above calls will be valid:
+<ul><DL>
+<I>
+	<DT>my_socket.putstring ("Some text")
+	<DT>my_socket.readint; my_last_integer := my_socketllastint
+</I>
+</DL></ul>
+</P>
+<P>
+Since sockets are bidirectional, these instructions may all appear as part of the same class provided you make sure to guarantee proper synchronization between senders and receivers. You may also prefer to specialize certain sockets for sending and others for receiving.
+</P>
+
+<H3><A NAME="Object Structures">3.4 Sending and receiving object structures</A></H3>
+
+<P>
+In many cases, what you will want to send and receive is not just simple values but non-basic objects (instances of arbitrary classes, having as many fields as needed) and, more generally, entire object structures.
+</P>
+<P>
+The basic mechanism enabling a system to send objects through EiffelNet is also the basic mechanism for storing objects into a file: class <I>STORABLE</I> from EiffelBase.
+</P>
+<P>
+As documented in [2], <I>STORABLE</I> provides features to store and retrieve complete object structures. There are three storage procedures, called under the respective forms
+<ul><DL>
+<I>
+	<DT>struct1.basic_store (iom1)
+	<DT>struct1.general_store (iom1)
+	<DT>struct1.independent_store (iom1)
+</I>
+</DL></ul>
+</P>
+<P>
+Assuming that the type of <I>iom1 </I>is <I>IO_MEDIUM </I>or a conforming type such as <I>FILE</I> or one of the <I>_SOCKET</I> classes, and that the type of <I>struct1</I> conforms to <I>STORABLE.
+</P>
+<P>
+</I>Note that reference [2] in its original version does not include <I>independent_store</I>, and requires <I>iom</I> to be of type <I>FILE</I> rather than the more general <I>IO_MEDIUM</I>. The current version of EiffelBase, however, supports the more general properties described here.
+</P>
+<P>
+All three storage procedures have the effect of sending to <I>iom1 </I>(whether a file, a socket or some other IO-medium) a copy of the entire object structure starting at <I>struc1</I>. Together with the retrieval routines seen below, they apply the principle of reference completeness stated in [1] and [2]:
+</P>
+<CENTER>
+<TABLE BORDER=1 WIDTH=75%>
+<TR><TD>
+Whenever a routine of class <I>STORABLE</I> stores an object into an     
+external file, it stores with it the dependents of that object.   
+</TD><TD>
+Whenever one of the associated retrieval routines retrieves a     
+previously stored object, it also retrieves all its dependents.   
+</TD></TR>
+</TABLE>
+</CENTER>
+<P>
+For EiffelNet, of course, "storing" and "retrieving" mean sending and receiving. The rest of this section, which applies to sockets as well as to files, will continue to use the original terminology of storage and retrieval.
+</P>
+<P>
+The three storage procedures differ in their degree of generality:
+<ul>
+<li><I>basic_store</I> will only work if the sending and retrieving are performed by instances of the same system (the same executable module).
+<BR>
+<li><I>general_store</I> will work if the sender and retriever are different systems (using the same classes for the objects that they exchange), but these systems must run on machines of the same architecture, or at least of architectures that use the same data representation.
+<BR>
+<li><I>independent_store</I> will work in the most general case, with the sender and receiver possibly running on platforms using different data representations.
+</ul>
+</P>
+<P>
+The penalty for using more general representations is that the data representation (as stored into the file or sent to the socket) will have to include more information. So <I>basic_store </I>uses the most compact representation, and <I>independent_store</I> the most verbose.
+</P>
+<P>
+The scheme for accessing an object structure produced by one of these three procedures is the following, used in a descendant of class <I>STORABLE</I>:
+</P>
+<P>
+<ul><DL>
+<I>
+	<DT>struct2 ?= retrieved (iom2)
+</I>
+</DL></ul>
+</P>
+<P>
+Here <I>iom2</I> must be of a type conforming to <I>IO_MEDIUM</I>. The assignment attempt ?= checks that the root object of the structure produced by the corresponding call to one of the <I>_store</I> procedures is of a type that conforms to the type of <I>struct2</I>; if not, the assignment will assign to <I>struct2</I> a void reference.
+</P>
+<P>
+Although there are three separate storage procedures, there is only one retrieval routine, <I>retrieved</I>; the algorithm for <I>retrieved </I>is able to figure out, from the format of the retrieved objects, whether they were produced in the basic, general or independent mode.
+</P>
+
+<H3><A NAME="Packets">3.5 Packets</A></H3>
+
+<P>
+The classes <I>PACKET</I> and <I>DATAGRAM_PACKET </I>are used to represent packets of data that can be sent to sockets.
+</P>
+<P>
+Their main use is for a system that relies on datagram communication. As noted above, this mode does not guarantee sequencing, making each system responsible for checking that packets arrive in the proper order. This is possible through feature <I>number </I>of class <I>DATAGRAM_PACKET</I>, which<I> </I>gives the number of the current packet.
+</P>
+
+<H3><A NAME="Commands">3.6 Associating commands with events</A></H3>
+
+<P>
+EiffelNet supports a highly asynchronous (and hence efficient) mode of operation by offering mechanisms through which you can specify that a certain action must be executed whenever a certain medium becomes available for reading, writing or handling of special cases (out of bounds). This facility is provided by a set of related classes:
+<ul>
+<li>The actions are represented by class <I>POLL_COMMAND</I>, an heir of the EiffelBase class <I>COMMAND</I> with, in particular, the procedure <I>execute</I>.<I>
+<BR>
+<li></I>Using <I>MEDIUM_POLLER</I>, you can specify that a certain command (an instance of <I>POLL_COMMAND</I>) must be executed whenever a certain medium becomes available for the appropriate operation (read, write, handling of out-of-bounds cases).
+<BR>
+<li>Using <I>POLL_MASK</I>, you can set a mask to select the sockets or files on which your instance of <I>MEDIUM_POLLER</I> is working.
+</ul>
+</P>
+
+<P>
+<A HREF="clients_and_servers.html#Title"><IMG SRC="previous.gif" ALT="Previous" width="16" height="16">Previous
+Chapter</A>
+<A HREF="toc.html"><IMG SRC="toc.gif" ALT="TOC" width="16" height="16">Table of Contents</A>
+<A HREF="predefined_level.html#Title"><IMG SRC="next.gif" ALT="Next" width="16" height="16">Next Chapter</A>
+</P>
+
+<!-- ICON BAR -->
+<hr>
+<CENTER>
+<TABLE BORDER=3 CELLPADDING=1 CELLSPACING=3>
+<TR>
+<TD>
+<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
+<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../../Icons/quick.gif" width="40" height="40"></A></TD>
+<TD>
+<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../../Icons/feather.gif" width="40" height="40"></A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+<hr>
+<!-- END ICON BAR -->
+
+<!-- FOOTER -->
+<CENTER>
+<ADDRESS>
+<STRONG>
+- Copyright &copy; 1995 ISE Inc. <A HREF="MAILTO:info@eiffel.com">
+&lt;info@eiffel.com&gt;</A> -</STRONG><BR>
+Please send comments concerning our WWW-service to
+<A HREF="MAILTO:webmaster@eiffel.com">
+&lt;webmaster@eiffel.com&gt;</A>
+</ADDRESS>
+<FONT SIZE=-1>
+LAST UPDATE: 26 August 1995
+</FONT>
+</CENTER>
+<!-- END FOOTER -->
+
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

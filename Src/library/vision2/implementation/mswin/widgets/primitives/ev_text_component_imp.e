@@ -20,7 +20,8 @@ inherit
 			initialize,
 			wel_background_color,
 			wel_foreground_color,
-			background_color
+			background_color,
+			default_process_message
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
@@ -315,7 +316,55 @@ feature {NONE} -- Deferred features
 			end
 		end
 
+feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementation
+
+	override_context_menu: BOOLEAN
+		-- Should the context menu be overridden, so
+		-- it is not displayed?
+
+	disable_context_menu is
+			-- Assign `True' to `override_context_menu'.
+			-- This will stop the context menu appearing, the
+			-- next time that `allow_pick_and_drop' is executed.
+		do
+			override_context_menu := True
+		end
+		
+	enable_context_menu is
+			-- Assign `False' to `override_context_menu'.
+		do
+			override_context_menu := False
+		end
+
 feature {NONE} -- Implementation
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+			
+			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
+				allow_pick_and_drop
+			else
+				Precursor {EV_PRIMITIVE_IMP} (msg, wparam, lparam)
+			end
+		end
+		
+	allow_pick_and_drop is
+			-- Override context menu on `Current' if pick and drop
+			-- should be handled instead. We must handle two cases :-
+			-- 1. We are attempting to pick from `Current'.
+			-- 2. We are attempting to drop from `Current'.
+		do
+			if application_imp.pick_and_drop_source /= Void then
+				disable_default_processing
+			elseif pebble /= Void then
+				disable_default_processing
+			elseif override_context_menu then
+				disable_default_processing
+			end
+			enable_context_menu
+		end
 
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
@@ -327,6 +376,7 @@ feature {NONE} -- Implementation
 			Result := edit_control.text
 			edit_control.destroy
 		end
+		
 feature {NONE} -- interface
 
 	interface: EV_TEXT_COMPONENT

@@ -27,6 +27,12 @@ feature -- Properties
 
 feature -- Access
 
+	date_has_changed: BOOLEAN is
+			-- Has the date changed for the lace file
+		do
+			Result := Lace.date_has_changed
+		end;
+
 	ast: ACE_SD is
 			-- Ace AST description 
 		do

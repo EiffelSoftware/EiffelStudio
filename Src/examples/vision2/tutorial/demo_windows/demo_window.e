@@ -155,11 +155,31 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
---	gauge_tab: GAUGE_TAB is
---			-- Creation of the gauge tab
---		once
---			create Result.make (Void)
---		end
+
+
+	gauge_tab: GAUGE_TAB is
+			-- Creation of the gauge tab.
+		once
+			create Result.make (Void)
+		end
+
+	scroll_bar_tab: SCROLL_BAR_TAB is
+			-- Creation of the scroll bar tab.
+		once
+			create Result.make (Void)
+		end
+	
+	range_tab: RANGE_TAB is
+			-- Creation of the range tab.
+		once
+			create Result.make (Void)
+		end
+
+	spin_button_tab: SPIN_BUTTON_TAB is
+			-- Creation of the spin button tab.
+		once
+			create Result.make (Void)
+		end
 
 	textable_tab: TEXTABLE_TAB is
 			-- Creation of the textable tab.
@@ -220,6 +240,7 @@ feature -- Basic operation
 		once
 			create Result.make (Void)
 		end
+
 
 feature -- Deferred features
 

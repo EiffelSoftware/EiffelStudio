@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Set the tabs for the action window.
 		do
 			set_gauge_tabs
-			--tab_list.extend(range_tab)
+			tab_list.extend(range_tab)
 			create action_window.make(Current,tab_list)
 		end
 

@@ -25,22 +25,25 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)
+
+			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)	
+			set_gauge_tabs
+			tab_list.extend(scroll_bar_tab)
+			create action_window.make(Current,tab_list)
 			make_with_range (par, 0, 100)
-			set_parent (par)
---			create cmd.make (~execute1)
+			set_parent(par)
 		end
 
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
 			set_gauge_tabs
-			--tab_list.extend(scroll_bar_tab)
+			tab_list.extend(scroll_bar_tab)
 			create action_window.make(Current,tab_list)
+
 		end
 
 
-feature -- Access
 
 end -- class SCROLL_BAR_WINDOW
 

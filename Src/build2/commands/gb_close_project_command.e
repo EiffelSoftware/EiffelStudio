@@ -34,14 +34,20 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create `Current'.
+		local
+			acc: EV_ACCELERATOR
+			key: EV_KEY
 		do
 			Precursor {EB_STANDARD_CMD}
-			set_tooltip ("Close")
-			--set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_save)
-			set_name ("Close")
-			set_menu_name ("Close")
+			set_tooltip ("Close project")
+			set_name ("Close project")
+			set_menu_name ("Close project")
 			disable_sensitive
 			add_agent (agent execute)
+					-- Now add an accelerator for `Current'.
+			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_c)
+			create acc.make_with_key_combination (key, True, False, False)
+			set_accelerator (acc)
 		end
 		
 feature -- Access

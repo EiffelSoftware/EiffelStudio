@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision window, implementation interface."
-	keywords: window
+	description: "Eiffel Vision titled window, Implementation interface."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -32,7 +31,6 @@ feature  -- Access
 			-- Short form of application name to be
 			-- displayed by the window manager when
 			-- application is iconified.
-		require
 		deferred
 		end
 	
@@ -40,30 +38,24 @@ feature  -- Access
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular.
-		require
 		deferred
 		end
 
 	icon_pixmap: EV_PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon.
-		require
 		deferred
-		ensure
-			valid_result: Result /= Void
 		end
 
 feature -- Status report
 
  	is_minimized: BOOLEAN is
 			-- Is the window minimized (iconic state)?
-		require
 		deferred
 		end
 
 	is_maximized: BOOLEAN is
 			-- Is the window maximized (take the all screen).
-		require
 		deferred
 		end
 
@@ -72,20 +64,17 @@ feature -- Status setting
 	raise is
 			-- Raise a window. ie: put the window on the front
 			-- of the screen.
-		require
 		deferred
 		end
 
 	lower is
 			-- Lower a window. ie: put the window on the back
 			-- of the screen.
-		require
 		deferred
 		end
 
 	minimize is
 			-- Minimize the window.
-		require
 		deferred
 		ensure
 			is_minimized: is_minimized
@@ -93,7 +82,6 @@ feature -- Status setting
 
 	maximize is
 			-- Minimize the window.
-		require
 		deferred
 		ensure
 			is_maximized: is_maximized
@@ -102,12 +90,10 @@ feature -- Status setting
 	restore is
 			-- Restore the window when it is minimized or
 			-- maximized. Do nothing otherwise.
-		require
 		deferred
 		ensure
-			--| FIXME  post-conditions do not match the state of restore
-			not_minimized: not is_minimized
-			not_maximized: not is_maximized
+			minimize_restored: old is_minimized implies not is_minimized
+			maximize_restored: old is_maximized implies not is_maximized
 		end
 
 feature -- Element change
@@ -160,6 +146,10 @@ end -- class EV_TITLED_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/07 00:28:51  brendel
+--| Updated contracts from interface.
+--| Cosmetics.
+--|
 --| Revision 1.35  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

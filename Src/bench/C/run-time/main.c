@@ -56,7 +56,7 @@
 
 #define null (char *) 0					/* Null pointer */
 
-#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
+#if defined VXWORKS
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
 rt_public int cc_for_speed = 0;			/* Save memory */

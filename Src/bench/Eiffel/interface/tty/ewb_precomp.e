@@ -12,7 +12,8 @@ inherit
 	EWB_COMP
 		redefine
 			name, help_message, abbreviation,
-			execute, perform_compilation
+			execute, perform_compilation,
+			save_project_again
 		end
 
 feature -- Properties
@@ -54,6 +55,51 @@ feature {NONE} -- Execution
 	perform_compilation is
 		do
 			Eiffel_project.precompile
+		end;
+
+	save_project_again is
+			-- Try to save the project again.
+		local
+			finished: BOOLEAN;
+			temp: STRING
+		do
+			from
+			until
+				finished
+			loop
+				if Eiffel_project.precomp_save_error then
+					!! temp.make (0);
+					temp.append ("Error: could not write to ");
+					temp.append (Precompilation_file_name);
+					temp.append ("%NPlease check permissions and disk space");
+					io.error.putstring (temp);
+					io.error.new_line;
+					finished := stop_on_error or else
+						command_line_io.termination_requested;
+					if finished then
+						lic_die (-1)
+					else
+						Eiffel_project.save_precomp
+					end;
+				elseif Eiffel_project.save_error then
+					!! temp.make (0);
+					temp.append ("Error: could not write to ");
+					temp.append (Project_file_name);
+					temp.append ("%NPlease check permissions and disk space");
+					io.error.putstring (temp);
+					io.error.new_line;
+					finished := stop_on_error or else
+						command_line_io.termination_requested;
+					if finished then
+						lic_die (-1)
+					else
+						Eiffel_project.save_project;
+						if not Eiffel_project.save_error then
+							Eiffel_project.save_precomp
+						end
+					end
+				end
+			end
 		end;
 
 end -- class EWB_PRECOMP

@@ -11,9 +11,6 @@ inherit
 	EV_BUTTON_EVENT_DATA_I
 
 	EV_EVENT_DATA_IMP
-		undefine
-			print_contents
-		end	
 
 feature -- Access	
 

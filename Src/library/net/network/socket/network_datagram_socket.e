@@ -61,17 +61,19 @@ feature -- Initialization
 				is_hostname := (code /= 46 and then (code < 48 or else code > 57))
 				i := i + 1
 			end
-			!!h_address.make
-			if is_hostname then
-				h_address.set_address_from_name (a_peer_host)
-			else
-				h_address.set_host_address (a_peer_host)
+			if descriptor_available then
+				!!h_address.make
+				if is_hostname then
+					h_address.set_address_from_name (a_peer_host)
+				else
+					h_address.set_host_address (a_peer_host)
+				end
+				!!peer_address.make
+				peer_address.set_host_address (h_address)
+				peer_address.set_port (a_peer_port)
+				!!address.make
+				bind
 			end
-			!!peer_address.make
-			peer_address.set_host_address (h_address)
-			peer_address.set_port (a_peer_port)
-			!!address.make
-			bind
 		end
 
 	make_bound_client_by_port (a_local_port, a_peer_port: INTEGER; a_peer_host: STRING) is
@@ -89,18 +91,20 @@ feature -- Initialization
 				is_hostname := (code /= 46 and then (code < 48 or else code > 57))
 				i := i + 1
 			end
-			!!h_address.make
-			if is_hostname then
-				h_address.set_address_from_name (a_peer_host)
-			else
-				h_address.set_host_address (a_peer_host)
+			if descriptor_available then
+				!!h_address.make
+				if is_hostname then
+					h_address.set_address_from_name (a_peer_host)
+				else
+					h_address.set_host_address (a_peer_host)
+				end
+				!!peer_address.make
+				peer_address.set_host_address (h_address)
+				peer_address.set_port (a_peer_port)
+				!!address.make
+				address.set_port (a_local_port)
+				bind
 			end
-			!!peer_address.make
-			peer_address.set_host_address (h_address)
-			peer_address.set_port (a_peer_port)
-			!!address.make
-			address.set_port (a_local_port)
-			bind
 		end
 
 	make_server_by_port (a_port: INTEGER) is
@@ -110,12 +114,14 @@ feature -- Initialization
 			h_address: HOST_ADDRESS
 		do
 			make
-			!!h_address.make
-			h_address.set_in_address_any
-			!!address.make
-			address.set_host_address (h_address)
-			address.set_port (a_port)
-			bind
+			if descriptor_available then
+				!!h_address.make
+				h_address.set_in_address_any
+				!!address.make
+				address.set_host_address (h_address)
+				address.set_port (a_port)
+				bind
+			end
 		end
 
 feature -- Basic operation

@@ -22,7 +22,8 @@ feature  -- Initialization
 			-- Assign default values
 		do
 			Precursor
-			icon_location := wizard_resources_path + "\eiffel.ico"
+			icon_location := wizard_resources_path
+			icon_location := icon_location + "\eiffel.ico"
 			generate_dll := False
 			
 			create available_assemblies.make

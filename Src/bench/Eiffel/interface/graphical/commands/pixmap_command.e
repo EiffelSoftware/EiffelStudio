@@ -55,16 +55,9 @@ feature -- Execute
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into
 			-- watch shape.
-		local
-			f: FOCUSABLE
 		do
 			if is_sensitive then
-				if holder /= Void then
-					f ?= holder.associated_button
-				end;
-				if f /= Void then
-					f.popdown
-				end;
+				focus_label.popdown;
 				if last_warner /= Void and then
 						not last_warner.destroyed then
 					last_warner.popdown

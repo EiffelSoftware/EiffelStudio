@@ -196,7 +196,7 @@ feature -- Conveniences
 		require
 			type_exists: type /= Void
 		do
-			Result := System.class_of_id (type.base_id)
+			Result := System.class_of_id (type.class_id)
 		end
 
 	written_type (a_class: CLASS_C): CL_TYPE_I is

@@ -9,26 +9,22 @@ deferred class ISE_MENU_ENTRY feature
 
 feature {NONE} -- Initialization
 
-	make (cmd: like associated_command; a_parent: MENU) is
+	make (a_cmd: like associated_command; a_parent: MENU) is
 		require
-			non_void_cmd: cmd /= Void;
+			non_void_cmd: a_cmd /= Void;
 			non_void_parent: a_parent /= Void;
 		do
-			associated_command := cmd;
-			initialize_button (a_parent);
+			initialize_button (a_cmd, a_parent);
 		end;
 
-	initialize_button (a_parent: MENU) is
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize the button part of Current.
 		deferred
 		end;
 
 feature -- Properties
 
-	associated_command: COMMAND;
-			-- The associated command.
-
-	entry_text: STRING is
+	text: STRING is
 			-- Text as displayed on the button.
 		deferred
 		end;
@@ -37,6 +33,11 @@ feature -- Properties
 			-- Is Current insensitive for input from
 			-- the user?
 		deferred
+		end;
+
+	associated_command: COMMAND is
+			-- Command type that menu entry expects
+		do
 		end;
 
 feature -- Status setting

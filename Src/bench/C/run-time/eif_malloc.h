@@ -58,7 +58,7 @@ extern "C" {
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
 #else
-#define CHUNK_DEFAULT	65536		/* Number of bytes in standard chunk */
+#define CHUNK_DEFAULT	262144		/* Number of bytes in standard chunk */
 #endif
 
 /* Memory block types (for allocate_from_core)
@@ -85,11 +85,11 @@ extern "C" {
 /*
  * Generation scavenging parameters
  */
-#define GS_LIMIT		100		/* Max size for allocation in scavenge zone */
+#define GS_LIMIT		400		/* Max size for allocation in scavenge zone */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
-#define GS_ZONE_SZ_DEFAULT	300*1024	/* Size of a scavenge zone (300 K) */
+#define GS_ZONE_SZ_DEFAULT	307200	/* Size of a scavenge zone (300 K) */
 #endif
 #define GS_FLOATMARK (eif_scavenge_size >> 2 + \
 					  eif_scavenge_size >> 3 + \

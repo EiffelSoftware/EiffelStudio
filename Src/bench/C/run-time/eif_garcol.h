@@ -31,12 +31,12 @@ extern "C" {
 #define STACK_CHUNK		1000	/* Size of a stack chunk */
 #endif
 #define MIN_FREE		100		/* Below that, chunk is nearly full */
-#define TH_ALLOC		100000	/* Allocation threshold */
+#define TH_ALLOC		50000	/* Allocation threshold */
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
 #define TO_MAX			7		/* Maximum number of allocable 'to' */
 #define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
-#define PLSC_PER		3		/* Period of plsc in acollect */
-#define SPOILT_TBL		20		/* Size of spoilt chunks recording table */
+#define PLSC_PER		6		/* Period of plsc in acollect */
+#define SPOILT_TBL		3		/* Size of spoilt chunks recording table */
 
 /*
  * Eiffel flags -- edit with care.

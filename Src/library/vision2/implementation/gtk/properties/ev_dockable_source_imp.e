@@ -38,6 +38,9 @@ feature -- Status setting
 					gtkwid := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
+			if Result /= Void and then Result.is_destroyed then
+				Result := Void
+			end
 		end
 
 	start_dragable_filter (

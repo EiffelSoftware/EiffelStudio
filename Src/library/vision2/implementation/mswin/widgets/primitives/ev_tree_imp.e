@@ -74,7 +74,7 @@ feature -- Element change
 			insert_struct.set_tree_view_item (item_imp)
 			insert_item (insert_struct)
 			item_imp.set_h_item (last_item)
-			ev_children.extend (item_imp, last_item)
+			ev_children.force (item_imp, last_item)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is

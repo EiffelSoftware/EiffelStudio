@@ -37,8 +37,6 @@ feature
 feature {NONE}
 
 	reset_debugger is
-		local
-			execution_table: EXECUTION_TABLE
 		do
 			if Run_info.is_running then
 				quit_cmd.exit_now;
@@ -49,10 +47,6 @@ feature {NONE}
 				quit_cmd.recv_dead
 			end;
 			debug_info.wipe_out;
-			execution_table := System.execution_table;
-			if execution_table /= Void then
-				execution_table.reset_debug_counter
-			end;
 				-- Get rid of adopted objects.
 			addr_table.clear_all;
 			window_manager.object_win_mgr.reset

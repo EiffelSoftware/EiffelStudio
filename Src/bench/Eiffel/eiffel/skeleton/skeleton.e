@@ -154,8 +154,7 @@ feature
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
 		do
-			file.putchar ('@');
-			file.putstring ("OBJSIZ(");
+			file.putstring ("@OBJSIZ(");
 			file.putint (nb_reference + nb_expanded);
 			file.putchar (',');
 			file.putint (nb_character);
@@ -304,8 +303,7 @@ feature
 				file.putchar (')');
 			when Character_level then
 				nb_ref := nb_reference;
-				file.putchar ('@');
-				file.putstring ("CHROFF(");
+				file.putstring ("@CHROFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putstring (") + CHRACS(");
 				file.putint (index - nb_ref - 1);
@@ -313,8 +311,7 @@ feature
 			when Integer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				file.putchar ('@');
-				file.putstring ("LNGOFF(");
+				file.putstring ("@LNGOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_character);
@@ -325,8 +322,7 @@ feature
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
-				file.putchar ('@');
-				file.putstring ("FLTOFF(");
+				file.putstring ("@FLTOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
@@ -340,8 +336,7 @@ feature
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
-				file.putchar ('@');
-				file.putstring ("PTROFF(");
+				file.putstring ("@PTROFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
@@ -358,8 +353,7 @@ feature
 				nb_int := nb_integer;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				file.putchar ('@');
-				file.putstring ("DBLOFF(");
+				file.putstring ("@DBLOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
@@ -379,8 +373,7 @@ feature
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_dbl := nb_double;
-				file.putchar ('@');
-				file.putstring ("OBJSIZ(");
+				file.putstring ("@OBJSIZ(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);

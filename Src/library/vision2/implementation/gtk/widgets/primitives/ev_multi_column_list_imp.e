@@ -959,6 +959,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Ensure `a_item' is visible on the screen.
+		do
+			--| FIXME To be implemented
+		end
+
 	expand_column_count_to (a_columns: INTEGER) is
 		do
 			create_list (a_columns)
@@ -1094,6 +1100,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2001/06/25 21:40:43  king
+--| Made compilable
+--|
 --| Revision 1.73  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

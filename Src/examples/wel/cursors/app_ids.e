@@ -13,15 +13,14 @@ feature -- Access
 	Cmd_cursor_arrow: INTEGER is 101
 	Cmd_cursor_cross: INTEGER is 102
 	Cmd_cursor_ibeam: INTEGER is 103
-	Cmd_cursor_icon: INTEGER is 104
-	Cmd_cursor_size: INTEGER is 105
-	Cmd_cursor_sieznesw: INTEGER is 106
-	Cmd_cursor_sizens: INTEGER is 107
-	Cmd_cursor_sizeswne: INTEGER is 108
-	Cmd_cursor_sizewe: INTEGER is 109
-	Cmd_cursor_uparrow: INTEGER is 110
-	Cmd_cursor_wait: INTEGER is 111
-	Cmd_cursor_custom: INTEGER is 112
+	Cmd_cursor_size: INTEGER is 104
+	Cmd_cursor_sieznesw: INTEGER is 105
+	Cmd_cursor_sizens: INTEGER is 106
+	Cmd_cursor_sizeswne: INTEGER is 107
+	Cmd_cursor_sizewe: INTEGER is 108
+	Cmd_cursor_uparrow: INTEGER is 109
+	Cmd_cursor_wait: INTEGER is 110
+	Cmd_cursor_custom: INTEGER is 111
 
 end -- class APPLICATION_IDS
 

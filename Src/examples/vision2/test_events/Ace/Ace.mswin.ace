@@ -3,7 +3,7 @@ system
 
 root
 
-	test_events (main): "make"
+	test_events (ROOT_CLUSTER): "make"
 
 default
 

@@ -82,8 +82,8 @@ rt_public int eequal(register char *target, register char *source)
 
 	s_flags = HEADER(source)->ov_flags;
 	t_flags = HEADER(target)->ov_flags;
-	s_type = Deif_bid(s_flags & EO_TYPE);
-	t_type = Deif_bid(t_flags & EO_TYPE);
+	s_type = Deif_bid(s_flags);
+	t_type = Deif_bid(t_flags);
 
 	if (s_type == t_type) {
 		/* Dynamic type are the same: because of the intra-expanded
@@ -156,8 +156,8 @@ rt_public int eiso(char *target, char *source)
 
 #ifdef DEBUG
 	dprintf(2)("eiso: source = 0x%lx [%s] target = 0x%lx [%s]\n",
-		source, System(Deif_bid(s_flags & EO_TYPE)).cn_generator,
-		target, System(Deif_bid(t_flags & EO_TYPE)).cn_generator);
+		source, System(Deif_bid(s_flags)).cn_generator,
+		target, System(Deif_bid(t_flags)).cn_generator);
 #endif
 
 	if (s_flags & EO_C)
@@ -167,8 +167,8 @@ rt_public int eiso(char *target, char *source)
 		return FALSE;
 
 	/* Check if the dynamic types are the same */
-	dtype = Deif_bid(s_flags & EO_TYPE);
-	if (dtype != Deif_bid(t_flags & EO_TYPE))
+	dtype = Deif_bid(s_flags);
+	if (dtype != Deif_bid(t_flags))
 		return FALSE;
 	else
 		/* Check iomorphism */

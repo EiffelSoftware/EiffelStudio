@@ -184,10 +184,10 @@ rt_public char *ei_exp_type(long i, char *object)
 {
 	/* Returns the class name of the i-th expanded field of `object'. */
 
-	int dtype = (HEADER(ei_oref(i,object))->ov_flags) & EO_TYPE;
+	int dtype = Deif_bid(HEADER(ei_oref(i,object))->ov_flags);
 	char *s;
 
-	s = System(Deif_bid(dtype)).cn_generator;
+	s = System(dtype).cn_generator;
 	return makestr(s,strlen(s));
 }
 

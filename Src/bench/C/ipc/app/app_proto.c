@@ -1295,7 +1295,8 @@ rt_private void opush_dmpitem(struct item *item)
 	switch (item->type & SK_HEAD)
 		{
 		case SK_REF:
-			item->it_ref = eif_access(item->it_ref); /* unprotect this object */
+			if (item->it_ref != 0)
+				item->it_ref = eif_access(item->it_ref); /* unprotect this object */
 			break;
 		case SK_STRING:
 			item->it_ref = RTMS(item->it_ref);

@@ -84,22 +84,10 @@ EIF_OBJ request_dispatch (rqst)
 	char *eif_string;
 
 	switch (rqst.rq_type) {
-	/*	case JOB_DONE:  NOT IMPLEMENTED
-			sprintf(buf, "%d", rqst.rq_opaque.op_first);
-			eif_string = makestr(buf, strlen(buf));
-			(job_done_hldr_set)(eif_access(job_done_handler), eif_string);
-			return eif_access(job_done_handler);
-	*/
-	/*	case FAILURE: NOT IMPLEMENTED 
-			eif_string = makestr("Nothing", 7);
-			(failure_hdlr_set)(eif_access(failure_handler), eif_string);
-			return eif_access(failure_handler);
-	*/
-	/*	case MELT:	NOT IMPLEMENTED 
-			eif_string = makestr("Nothing", 7);
-			(melt_hdlr_set)(eif_access(failure_handler), eif_string);
-			return eif_access(failure_handler);
-	*/
+		case ASYNACK:
+			return (char *) 0;	
+		case ACKNLGE:
+			return (char *) 0;	
 		case DEAD:
 			eif_string = makestr ("Nothing", 7);
 			(dead_hdlr_set) (eif_access (dead_handler), eif_string);

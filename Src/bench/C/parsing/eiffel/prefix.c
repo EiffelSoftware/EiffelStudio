@@ -3,13 +3,13 @@
 
 
 
-#define MIN_WORD_LENGTH 0
+#define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 3
-#define MIN_HASH_VALUE 0
+#define MIN_HASH_VALUE 1
 #define MAX_HASH_VALUE 5
 /*
-    4 keywords
-    6 is the maximum key range
+    3 keywords
+    5 is the maximum key range
 */
 
 static int
@@ -19,7 +19,7 @@ hash (str, len)
 {
   static unsigned char hash_table[] =
     {
-     5, 5, 5, 5, 0, 5, 5, 5, 5, 5,
+     5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,

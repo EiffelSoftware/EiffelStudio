@@ -3,19 +3,17 @@
  * to a token structure. Due to gperf constraints, the structure has to
  * be declared here and in lex and cannot be held in an include file--RAM.
  */
-#include "_eiffel.h"
-#include "es.y.tab.h"
+#include "macros.h"
+#include "parser.h"
 %}
 struct token {
 	char *name;		/* The name is imposed by gperf */
 	int yaccval;	/* Value returned to yacc */
 };
 %%
-
 # Run this file through
 #   gperf -p -t -l -k 1,'$',4 eiffel.gperf > keyword.c
 # to produce a fast keyword recognition function.
-
 alias,			TE_ALIAS
 all,			TE_ALL
 and,			TE_AND

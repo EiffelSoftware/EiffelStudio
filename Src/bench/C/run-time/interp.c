@@ -27,7 +27,7 @@
 #include "sig.h"
 #include "bits.h"
 
-/*#define DEBUG 6	/**/
+#define DEBUG 6	/**/
 #define TEST
 #ifdef TEST
 #include <stdio.h>
@@ -438,6 +438,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			switch (last->type & SK_HEAD) {
+			case SK_REF:			/* Lovely comment */
 			case SK_EXP:
 				epush(&loc_stack, &ref);
 				last->it_ref = RTLN(get_short());
@@ -668,6 +669,8 @@ end:
 				last->it_long = d;
 				}
 				break;
+			case (SK_INT):
+				break;
 			default:
 				panic ("Illegal cast operation");
 			}
@@ -694,6 +697,8 @@ end:
 				last->it_float = d;
 				}
 				break;
+			case (SK_FLOAT):
+				break;
 			default:
 				panic ("Illegal cast operation");
 			}
@@ -719,6 +724,8 @@ end:
 				float f = last->it_float;
 				last->it_double = f;
 				}
+				break;
+			case (SK_DOUBLE):
 				break;
 			default:
 				panic ("Illegal cast operation");
@@ -1343,7 +1350,7 @@ end:
 				new_obj = b_clone(last->it_bit);
 				last = iget();
 				last->type = SK_REF;
-				last->it_bit = new_obj;
+				last->it_ref = new_obj;
 			}
 			if (tagval != stagval)				/* If G.C calls melted dispose */
 				sync_registers(scur, stop);
@@ -1565,6 +1572,18 @@ end:
 	case BC_FLOAT:
 #ifdef DEBUG
 		dprintf(2)("BC_FLOAT\n");
+#endif
+		last = iget();
+		last->type = SK_FLOAT;
+		last->it_float = (float) get_double();
+		break;
+
+	/*
+	 * Double constant.
+	 */
+	case BC_DOUBLE:
+#ifdef DEBUG
+		dprintf(2)("BC_DOUBLE\n");
 #endif
 		last = iget();
 		last->type = SK_DOUBLE;
@@ -1832,6 +1851,33 @@ end:
 		break;
 
 	/*
+	 * Beginning of old evaluation
+	 */
+	case BC_START_EVAL_OLD:
+#ifdef DEBUG
+		dprintf(2)("BC_START_EVAL_OLD\n");
+#endif
+		
+		offset = get_long();		/* Get offset for skipping old evaluation block */
+		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
+			in_assertion = ~0;
+		} else {
+			IC += offset;			/* Skip old evaulation */
+		}	
+		break;
+
+	/*
+	 * End of old evaluation
+	 */
+	case BC_END_EVAL_OLD:
+#ifdef DEBUG
+		dprintf(2)("BC_END_EVAL_OLD\n");
+#endif
+		
+		in_assertion = 0;
+		break;
+
+	/*
 	 * Place Old expression value into local register.
 	 */
 	case BC_OLD:
@@ -1840,16 +1886,7 @@ end:
 #endif
 		last = opop();
         code = get_short();     /* Get the local number (from 1 to locnum) */
-		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
-											/* Only clone if checking postcondition */
-			switch (last->type & SK_HEAD) {	
-				case SK_EXP:
-				case SK_REF:
-					last->it_ref = rtclone(last->it_ref); 	/* Clone ref */
-					break;
-			}
-        	bcopy(last, loc(code), ITEM_SZ);
-		}
+       	bcopy(last, loc(code), ITEM_SZ);
 		break;
 
 	/*
@@ -4060,6 +4097,7 @@ char *start;
 	int type;						/* Stores type informations, usually */
 	int i;
 	double d;
+	float f;
 
 	IC = start;
 	for (;;) {					/* Indentation is wrong on purpose--RAM */
@@ -4459,6 +4497,20 @@ char *start;
 	case BC_OLD:
 		fprintf(fd, "0x%X %s local #: %d\n", IC - 1, "BC_OLD", get_short());
 		break;
+
+	/*
+	 * Beginning of old evaluation
+	 */
+	case BC_START_EVAL_OLD:
+		fprintf(fd, "0x%X %s offset: %d\n", IC - 1, "BC_START_EVAL_OLD", get_long());
+		break;
+		
+	/*
+	 * End of old evaluation
+	 */
+	case BC_END_EVAL_OLD:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_EVAL_OLD");
+		break;
 	
 	/* 
 	 * Add strip fid 
@@ -4621,7 +4673,15 @@ char *start;
 	 */
 	case BC_FLOAT:
 		d = get_double();
-		fprintf(fd, "0x%X BC_FLOAT %f\n", IC - sizeof(double) - 1, d);
+		fprintf(fd, "0x%X BC_FLOAT %f\n", IC - sizeof(double) - 1, (float) d);
+		break;
+
+	/*
+	 * Double constant.
+	 */
+	case BC_DOUBLE:
+		d = get_double();
+		fprintf(fd, "0x%X BC_DOUBLE %f\n", IC - sizeof(double) - 1, d);
 		break;
 
 	/*

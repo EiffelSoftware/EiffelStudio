@@ -134,6 +134,8 @@ Cluster_clause          : /* empty */
 /* Recude/Reduce conflict here */
                         | Cluster_tag Name
 							{$$ = create_node3 (CLUSTER_SD,$1,$2,NULL);}
+                        | Cluster_tag Name LAC_END
+							{$$ = create_node3 (CLUSTER_SD,$1,$2,NULL);}
                         | Cluster_tag Name Cluster_properties LAC_END
 							{$$ = create_node3 (CLUSTER_SD,$1,$2,$3);}
                         ;
@@ -154,12 +156,14 @@ Use                     : /* empty */
 
 Include                 : /* empty */
 							{$$ = NULL;}
+						| LAC_INCLUDE {$$ = NULL;}
                         | LAC_INCLUDE {list_init();} Include_file_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
                         ;
 
 Exclude                 : /* empty */
 							{$$ = NULL;}
+						| LAC_EXCLUDE {$$ = NULL;}
                         | LAC_EXCLUDE {list_init();} Exclude_file_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
                         ;
@@ -182,9 +186,7 @@ File_list               : File_clause
 							{list_push($3);}
                         ;
 
-File_clause             : /* empty */
-							{$$ = NULL;}
-                        | Name
+File_clause             : Name
 							{$$ = $1;}
                         ;
 

@@ -209,8 +209,17 @@ feature {COMPILER_EXPORTER}
 				else
 					System.set_root_class_name (root_name);
 					file_name := a_class.file_name;
-						-- Void string if no creation routine
-					System.set_creation_name (creation_procedure_name);
+					if not compile_all then
+							-- If we are using NONE as root class, then creation
+							-- procedure, if specified, is useless.
+							-- When not specified, we get a Void string.
+						System.set_creation_name (creation_procedure_name);
+					else
+							-- Reset `creation_name' from SYSTEM_I in case
+							-- we have switched the root class of the Ace file 
+							-- from a meaningful class to NONE.
+						System.set_creation_name (Void)
+					end
 				end;
 			end;
 				-- Check sum error

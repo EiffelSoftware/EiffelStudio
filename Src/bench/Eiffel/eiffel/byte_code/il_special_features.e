@@ -47,7 +47,7 @@ feature -- Access
 			valid_feat: feat /= Void
 			target_type_not_void: target_type /= Void
 		do
-			Result := target_type.is_basic or else target_type.is_enum
+			Result := (target_type.is_basic and not target_type.is_bit) or else target_type.is_enum
 
 			if Result then
 				inspect 

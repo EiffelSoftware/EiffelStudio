@@ -15,7 +15,7 @@ inherit
 		
 	CONSTANTS
 		undefine
-			png_location, default_create
+			default_create
 		end
 		
 feature -- Access

@@ -113,38 +113,43 @@ feature -- Access: Platform specific
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
-			valid_position: (pos + Integer_8_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_8_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Integer_8_bytes)
+			($Result).memory_copy (item + pos, integer_8_bytes)
 		end
 
 	read_integer_16 (pos: INTEGER): INTEGER_16 is
 			-- Read INTEGER_16 at position `pos'.
 		require
-			valid_position: (pos + Integer_16_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_16_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Integer_16_bytes)
+			($Result).memory_copy (item + pos, integer_16_bytes)
 		end
 
 	read_integer_32 (pos: INTEGER): INTEGER is
 			-- Read INTEGER at position `pos'.
 		require
-			valid_position: (pos + Integer_32_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_32_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Integer_32_bytes)
+			($Result).memory_copy (item + pos, integer_32_bytes)
 		end		
 
 	read_integer_64 (pos: INTEGER): INTEGER_64 is
 			-- Read INTEGER_64 at position `pos'.
 		require
-			valid_position: (pos + Integer_64_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_64_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Integer_64_bytes)
+			($Result).memory_copy (item + pos, integer_64_bytes)
 		end
 
 	read_pointer (pos: INTEGER): POINTER is
 			-- Read POINTER at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Pointer_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Pointer_bytes)
@@ -153,6 +158,7 @@ feature -- Access: Platform specific
 	read_boolean (pos: INTEGER): BOOLEAN is
 			-- Read BOOLEAN at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Boolean_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Boolean_bytes)
@@ -161,6 +167,7 @@ feature -- Access: Platform specific
 	read_character (pos: INTEGER): CHARACTER is
 			-- Read CHARACTER at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Character_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Character_bytes)
@@ -169,6 +176,7 @@ feature -- Access: Platform specific
 	read_real (pos: INTEGER): REAL is
 			-- Read REAL at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Real_bytes)
@@ -177,6 +185,7 @@ feature -- Access: Platform specific
 	read_double (pos: INTEGER): DOUBLE is
 			-- Read DOUBLE at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Double_bytes) <= count
 		do
 			($Result).memory_copy (item + pos, Double_bytes)
@@ -185,6 +194,7 @@ feature -- Access: Platform specific
 	read_array (pos, a_count: INTEGER): ARRAY [INTEGER_8] is
 			-- Read `count' bytes at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			count_positive: a_count > 0
 			valid_position: (pos + a_count) <= count
 		local
@@ -208,9 +218,10 @@ feature -- Element change: Platform specific
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
-			valid_position: (pos + Integer_8_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_8_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, Integer_8_bytes)
+			(item + pos).memory_copy ($i, integer_8_bytes)
 		ensure
 			inserted: i = read_integer_8 (pos)
 		end
@@ -218,9 +229,10 @@ feature -- Element change: Platform specific
 	put_integer_16 (i: INTEGER_16; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
-			valid_position: (pos + Integer_16_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_16_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, Integer_16_bytes)
+			(item + pos).memory_copy ($i, integer_16_bytes)
 		ensure
 			inserted: i = read_integer_16 (pos)
 		end
@@ -228,9 +240,10 @@ feature -- Element change: Platform specific
 	put_integer_32 (i: INTEGER; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
-			valid_position: (pos + Integer_32_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_32_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, Integer_32_bytes)
+			(item + pos).memory_copy ($i, integer_32_bytes)
 		ensure
 			inserted: i = read_integer_32 (pos)
 		end
@@ -238,9 +251,10 @@ feature -- Element change: Platform specific
 	put_integer_64 (i: INTEGER_64; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
-			valid_position: (pos + Integer_64_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_64_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, Integer_64_bytes)
+			(item + pos).memory_copy ($i, integer_64_bytes)
 		ensure
 			inserted: i = read_integer_64 (pos)
 		end
@@ -248,6 +262,7 @@ feature -- Element change: Platform specific
 	put_pointer (p: POINTER; pos: INTEGER) is
 			-- Insert `p' at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Pointer_bytes) <= count
 		do
 			(item + pos).memory_copy ($p, Pointer_bytes)
@@ -258,6 +273,7 @@ feature -- Element change: Platform specific
 	put_boolean (b: BOOLEAN; pos: INTEGER) is
 			-- Insert `b' at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Boolean_bytes) <= count
 		do
 			(item + pos).memory_copy ($b, Boolean_bytes)
@@ -268,6 +284,7 @@ feature -- Element change: Platform specific
 	put_character (c: CHARACTER; pos: INTEGER) is
 			-- Insert `' at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Character_bytes) <= count
 		do
 			(item + pos).memory_copy ($c, Character_bytes)
@@ -278,6 +295,7 @@ feature -- Element change: Platform specific
 	put_real (r: REAL; pos: INTEGER) is
 			-- Insert `r' at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_bytes) <= count
 		do
 			(item + pos).memory_copy ($r, Real_bytes)
@@ -288,6 +306,7 @@ feature -- Element change: Platform specific
 	put_double (d: DOUBLE; pos: INTEGER) is
 			-- Insert `d' at position `pos'.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + Double_bytes) <= count
 		do
 			(item + pos).memory_copy ($d, Double_bytes)
@@ -299,6 +318,7 @@ feature -- Element change: Platform specific
 			-- Copy content of `data' into `item' at position `pos'.
 		require
 			data_not_void: data /= Void
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + data.count) <= count
 		local
 			l_sp: SPECIAL [INTEGER_8]
@@ -309,12 +329,114 @@ feature -- Element change: Platform specific
 			inserted: data.is_equal (read_array (pos, data.count))
 		end
 
+feature -- Access: Little-endian format
+
+	read_integer_8_le (pos: INTEGER): INTEGER_8 is
+			-- Read INTEGER_8 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_8_bytes) <= count
+		do
+			Result := read_integer_8 (pos)
+		end
+
+	read_integer_16_le (pos: INTEGER): INTEGER_16 is
+			-- Read INTEGER_16 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_16_bytes) <= count
+		local
+			l_high, l_low: INTEGER_16
+		do
+			l_low := 0x00FF & read_integer_8 (pos)
+			l_high := read_integer_8 (pos + integer_8_bytes)
+			Result := (l_high.to_integer_16 |<< 8) | l_low
+		end
+
+	read_integer_32_le (pos: INTEGER): INTEGER is
+			-- Read INTEGER at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_32_bytes) <= count
+		local
+			l_high, l_low: INTEGER
+		do
+			l_low := 0x0000FFFF & read_integer_16_le (pos)
+			l_high := read_integer_16_le (pos + integer_16_bytes)
+			Result := (l_high.to_integer_32 |<< 16) | l_low
+		end		
+
+	read_integer_64_le (pos: INTEGER): INTEGER_64 is
+			-- Read INTEGER_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_64_bytes) <= count
+		local
+			l_high, l_low: INTEGER_64
+		do
+			l_low := 0x00000000FFFFFFFF & read_integer_32_le (pos)
+			l_high := read_integer_32_le (pos + integer_32_bytes)
+			Result := (l_high.to_integer_64 |<< 32) | l_low
+		end
+
+feature -- Element change: Little-endian format
+
+	put_integer_8_le (i: INTEGER_8; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_8_bytes) <= count
+		do
+			put_integer_8 (i, pos)
+		ensure
+			inserted: i = read_integer_8_le (pos)
+		end
+		
+	put_integer_16_le (i: INTEGER_16; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_16_bytes) <= count
+		do
+			put_integer_8 ((i & 0x00FF).to_integer_8, pos)
+			put_integer_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_integer_8, pos + integer_8_bytes)
+		ensure
+			inserted: i = read_integer_16_le (pos)
+		end
+
+	put_integer_32_le (i: INTEGER; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_32_bytes) <= count
+		do
+			put_integer_16_le ((i & 0x0000FFFF).to_integer_16, pos)
+			put_integer_16_le ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_integer_16, pos + integer_16_bytes)
+		ensure
+			inserted: i = read_integer_32_le (pos)
+		end
+
+	put_integer_64_le (i: INTEGER_64; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_64_bytes) <= count
+		do
+			put_integer_32_le ((i & 0x00000000FFFFFFFF).to_integer_32, pos)
+			put_integer_32_le (
+				(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_integer_32,
+				pos+ integer_32_bytes)
+		ensure
+			inserted: i = read_integer_64_le (pos)
+		end
+
 feature -- Access: Big-endian format
 
 	read_integer_8_be (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
-			valid_position: (pos + Integer_8_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_8_bytes) <= count
 		do
 			Result := read_integer_8 (pos)
 		end
@@ -322,7 +444,8 @@ feature -- Access: Big-endian format
 	read_integer_16_be (pos: INTEGER): INTEGER_16 is
 			-- Read INTEGER_16 at position `pos'.
 		require
-			valid_position: (pos + Integer_16_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_16_bytes) <= count
 		local
 			l_high, l_low: INTEGER_16
 		do
@@ -334,7 +457,8 @@ feature -- Access: Big-endian format
 	read_integer_32_be (pos: INTEGER): INTEGER is
 			-- Read INTEGER at position `pos'.
 		require
-			valid_position: (pos + Integer_32_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_32_bytes) <= count
 		local
 			l_high, l_low: INTEGER
 		do
@@ -346,7 +470,8 @@ feature -- Access: Big-endian format
 	read_integer_64_be (pos: INTEGER): INTEGER_64 is
 			-- Read INTEGER_64 at position `pos'.
 		require
-			valid_position: (pos + Integer_64_bytes) <= count
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + integer_64_bytes) <= count
 		local
 			l_high, l_low: INTEGER_64
 		do
@@ -360,6 +485,7 @@ feature -- Element change: Big-endian format
 	put_integer_8_be (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
 			put_integer_8 (i, pos)
@@ -370,10 +496,11 @@ feature -- Element change: Big-endian format
 	put_integer_16_be (i: INTEGER_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
 			put_integer_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_integer_8, pos)
-			put_integer_8 ((i & 0x00FF).to_integer_8, pos + Integer_8_bytes)
+			put_integer_8 ((i & 0x00FF).to_integer_8, pos + integer_8_bytes)
 		ensure
 			inserted: i = read_integer_16_be (pos)
 		end
@@ -381,10 +508,11 @@ feature -- Element change: Big-endian format
 	put_integer_32_be (i: INTEGER; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
 			put_integer_16_be ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_integer_16, pos)
-			put_integer_16_be ((i & 0x0000FFFF).to_integer_16, pos + Integer_16_bytes)
+			put_integer_16_be ((i & 0x0000FFFF).to_integer_16, pos + integer_16_bytes)
 		ensure
 			inserted: i = read_integer_32_be (pos)
 		end
@@ -392,12 +520,13 @@ feature -- Element change: Big-endian format
 	put_integer_64_be (i: INTEGER_64; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
+			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
 			put_integer_32_be (
 				(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_integer_32, pos)
 			put_integer_32_be ((i & 0x00000000FFFFFFFF).to_integer_32,
-				pos + Integer_32_bytes)
+				pos + integer_32_bytes)
 		ensure
 			inserted: i = read_integer_64_be (pos)
 		end

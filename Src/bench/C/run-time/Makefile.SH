@@ -361,14 +361,18 @@ x2c: x2c.o
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ x2c.o $(JLDFLAGS) $(LIBS)
 
-all:: config.h portable.h
+all:: config.h portable.h confmagic.h
 
 local_realclean::
-	$(RM) config.h portable.h
+	$(RM) config.h portable.h confmagic.h
 
 config.h: $(TOP)/config.h
 	$(RM) $@
 	$(LN) $(TOP)/config.h .
+
+confmagic.h: $(TOP)/confmagic.h
+	$(RM) $@
+	$(LN) $(TOP)/confmagic.h .
 
 portable.h: $(TOP)/portable.h
 	$(RM) $@

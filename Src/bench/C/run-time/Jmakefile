@@ -86,13 +86,17 @@ SpecialLibraryTarget(ebench,$(EOBJ),/**/)
 
 SimpleProgramTarget(x2c)
 
-AllTarget(config.h portable.h)
+AllTarget(config.h portable.h confmagic.h)
 
 >RM
 >LN
 config.h: $(TOP)/config.h
 	$(RM) $@
 	$(LN) $(TOP)/config.h .
+
+confmagic.h: $(TOP)/confmagic.h
+	$(RM) $@
+	$(LN) $(TOP)/confmagic.h .
 
 portable.h: $(TOP)/portable.h
 	$(RM) $@

@@ -286,7 +286,8 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 
 /* HAS_STRERROR:
  *	This symbol, if defined, indicates that the strerror routine is
- *	available to translate error numbers to strings.
+ *	available to translate error numbers to strings. See the writeup
+ *	of strerror() in this file before you try to define your own.
  */
 /* HAS_SYS_ERRLIST:
  *	This symbol, if defined, indicates that the sys_errlist array is
@@ -348,7 +349,9 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 
 /* I_DIRENT:
  *	This symbol, if defined, indicates to the C program that it should
- *	include <dirent.h>.
+ *	include <dirent.h>. Using this symbol also triggers the definition
+ *	of the Direntry_t define which ends up being 'struct dirent' or
+ *	'struct direct' depending on the availability of <dirent.h>.
  */
 /* DIRNAMLEN:
  *	This symbol, if defined, indicates to the C program that the length
@@ -357,6 +360,11 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_dirent I_DIRENT		/**/
 #$d_dirnamlen DIRNAMLEN	/**/
+#ifdef I_DIRENT
+#define Direntry_t struct dirent
+#else
+#define Direntry_t struct direct
+#endif
 
 /* I_FCNTL:
  *	This manifest constant tells the C program to include <fcntl.h>.
@@ -424,12 +432,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	include <sys/resource.h>.
  */
 #$i_sysresrc I_SYS_RESOURCE		/**/
-
-/* I_SYS_SELECT:
- *	This symbol, if defined, indicates to the C program that it should
- *	include <sys/select.h> in order to get definition of struct timeval.
- */
-#$i_sysselct I_SYS_SELECT	/**/
 
 /* I_SYS_SOCKET:
  *	This symbol, if defined, indicates to the C program that it should
@@ -502,45 +504,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	If defined, this macro indicates that the C compiler can handle
  *	function prototypes.
  */
-/* DOTS:
- *	This macro is used to specify the ... in function prototypes which
- *	have arbitrary additional arguments.
- */
-/* NXT_ARG:
- *	This macro is used to separate arguments in the declared argument list.
- */
-/* P_FUNC:
- *	This macro is used to declare "private" (static) functions.
- *	It takes three arguments: the function type and name, a parenthesized
- *	traditional (comma separated) argument list, and the declared argument
- *	list (in which arguments are separated with NXT_ARG, and additional
- *	arbitrary arguments are specified with DOTS).  For example:
- *
- *		P_FUNC(int foo, (bar, baz), int bar NXT_ARG char *baz[])
- */
-/* P_FUNC_VOID:
- *	This macro is used to declare "private" (static) functions that have
- *	no arguments.  The macro takes one argument: the function type and name.
- *	For example:
- *
- *		P_FUNC_VOID(int subr)
- */
-/* V_FUNC:
- *	This macro is used to declare "public" (non-static) functions.
- *	It takes three arguments: the function type and name, a parenthesized
- *	traditional (comma separated) argument list, and the declared argument
- *	list (in which arguments are separated with NXT_ARG, and additional
- *	arbitrary arguments are specified with DOTS).  For example:
- *
- *		V_FUNC(int main, (argc, argv), int argc NXT_ARG char *argv[])
- */
-/* V_FUNC_VOID:
- *	This macro is used to declare "public" (non-static) functions that have
- *	no arguments.  The macro takes one argument: the function type and name.
- *	For example:
- *
- *		V_FUNC_VOID(int fork)
- */
 /* _:
  *	This macro is used to declare function parameters for folks who want
  *	to make declarations with prototypes using a different style than
@@ -550,20 +513,8 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$prototype	CAN_PROTOTYPE	/**/
 #ifdef CAN_PROTOTYPE
-#define	NXT_ARG ,
-#define	DOTS , ...
-#define	V_FUNC(name, arglist, args)name(args)
-#define	P_FUNC(name, arglist, args)static name(args)
-#define	V_FUNC_VOID(name)name(void)
-#define	P_FUNC_VOID(name)static name(void)
 #define	_(args) args
 #else
-#define	NXT_ARG ;
-#define	DOTS
-#define	V_FUNC(name, arglist, args)name arglist args;
-#define	P_FUNC(name, arglist, args)static name arglist args;
-#define	V_FUNC_VOID(name)name()
-#define	P_FUNC_VOID(name)static name()
 #define	_(args) ()
 #endif
 
@@ -582,6 +533,14 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #define register5 $reg5		/**/
 #define register6 $reg6		/**/
 #define register7 $reg7		/**/
+
+/* HAS_SMART_SBRK:
+ *	This symbol is defined when the sbrk() system call may be used with
+ *	a negative argument to lower the break value, therefore releasing
+ *	core to the system. If not, you'd probably be better off using the
+ *	mmap() system call.
+ */
+#$sbrksmart HAS_SMART_SBRK /**/
 
 /* Caddr_t:
  *	This symbol holds the type of a core address. It is inteded to be used
@@ -636,6 +595,15 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$add_log USE_ADD_LOG		/* Allow logging */
 #define LOGGING_LEVEL	9	/* Logging level */
+
+/* I_TMVAL_SYS_SELECT:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <sys/select.h> in order to get definition of struct timeval.
+ *.I_SYS_SELECT is not set correctly in the dist3.0 p22
+ * This unit overrides the default one. It checks the content of
+ * the include file <sys/select.h> to find the definition of timeval
+ */
+#$i_tmvlsyss I_TMVAL_SYS_SELECT	/**/
 
 /* MAY_PANIC:
  *	This symbol is defined if the run-time is to be compiled with extra

@@ -26,7 +26,7 @@
 # include <sys/time.h>
 # undef KERNEL
 #endif
-#ifdef I_SYS_SELECT
+#ifdef I_TMVAL_SYS_SELECT
 #include <sys/select.h>
 #endif
 

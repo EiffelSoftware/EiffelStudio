@@ -17,6 +17,9 @@
 #ifndef _config_h_
 #include "config.h"
 #endif
+
+#include "confmagic.h"
+
 /*
  * Standard types
  */

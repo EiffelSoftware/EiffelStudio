@@ -113,14 +113,65 @@ feature {NONE} -- Implementation
 	append_result is
 		do
 			if list.count /= similar_list.count then
-				description.append (" size incorrect.%N")
+				description.append (" `count' incorrect.%N")
+				test_successful := False
+			elseif not items_equal then 
+				description.append (" items incorrect.%N")
+				test_successful := False
+			elseif list.first /= similar_list.first then 
+				description.append (" `first' incorrect.%N")
+				test_successful := False
+			elseif list.has (last_item) /= similar_list.has (last_item) then 
+				description.append (" `has' incorrect.%N")
+				test_successful := False
+			elseif similar_list.valid_index (1) implies list.i_th (1) /= similar_list.i_th (1) then 
+				description.append (" `i_th' incorrect.%N")
 				test_successful := False
 			elseif list.index /= similar_list.index then
 				description.append (" index incorrect.%N")
 				description.append ("Your list's index: " + list.index.out + "; LINKED_LIST: " + similar_list.index.out + ".%N")
 				test_successful := False
-			elseif not items_equal then 
-				description.append (" items incorrect.%N")
+			elseif list.index_of (last_item, 1) /= similar_list.index_of (last_item, 1) then 
+				description.append (" `index_of' incorrect.%N")
+				test_successful := False
+			elseif not similar_list.off implies list.item /= similar_list.item then 
+				description.append (" `item' incorrect.%N")
+				test_successful := False
+			elseif not similar_list.empty implies list.last /= similar_list.last then 
+				description.append (" `last' incorrect.%N")
+				test_successful := False
+			elseif list.sequential_occurrences (last_item) /= similar_list.sequential_occurrences (last_item) then 
+				description.append (" `sequential_occurrences' incorrect.%N")
+				test_successful := False
+			elseif list.occurrences (last_item) /= similar_list.occurrences (last_item) then 
+				description.append (" `occurrences' incorrect.%N")
+				test_successful := False
+			elseif list.after /= similar_list.after then 
+				description.append (" `after' incorrect.%N")
+				test_successful := False
+			elseif list.before /= similar_list.before then 
+				description.append (" `before' incorrect.%N")
+				test_successful := False
+			elseif list.empty /= similar_list.empty then 
+				description.append (" `before' incorrect.%N")
+				test_successful := False
+			elseif list.exhausted /= similar_list.exhausted then 
+				description.append (" `exhausted' incorrect.%N")
+				test_successful := False
+			elseif list.full /= similar_list.full then 
+				description.append (" `full' incorrect.%N")
+				test_successful := False
+			elseif list.isfirst /= similar_list.isfirst then 
+				description.append (" `isfirst' incorrect.%N")
+				test_successful := False
+			elseif list.islast /= similar_list.islast then 
+				description.append (" `islast' incorrect.%N")
+				test_successful := False
+			elseif list.off /= similar_list.off then 
+				description.append (" `off' incorrect.%N")
+				test_successful := False
+			elseif list.off /= similar_list.off then 
+				description.append (" `off' incorrect.%N")
 				test_successful := False
 			else
 				description.append (" OK%N")
@@ -321,6 +372,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/03/01 16:44:00  brendel
+--| Added test of all relevant attributes.
+--|
 --| Revision 1.2  2000/03/01 16:18:17  brendel
 --| Added tests for all single-item-add features.
 --|

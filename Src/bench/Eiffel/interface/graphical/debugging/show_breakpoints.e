@@ -24,7 +24,8 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	SHARED_FORMAT_TABLES;
-	CUSTOM_CALLER
+	CUSTOM_CALLER;
+	EB_CONSTANTS
 
 creation
 
@@ -37,16 +38,22 @@ feature -- Initialization
 			-- Initialize the command.
 		do
 			init (a_text_window);
-		end; -- make
+			if tool = Project_tool then
+				do_flat := 
+					Project_tool_resources.debugger_do_flat_in_breakpoints.actual_value
+			else
+				do_flat := 
+					Feature_tool_resources.do_flat_in_breakpoints.actual_value
+			end
+		end; 
 
 feature -- Execution
 
 	execute_apply_action (a_cust_tool: like associated_custom_tool) is
 			-- Action performed when apply button is activated
 		do
-			if a_cust_tool.is_first_option_selected = do_simple_format then
-				do_simple_format :=
-					not a_cust_tool.is_first_option_selected;
+			if a_cust_tool.is_first_option_selected /= do_flat then
+				do_flat := a_cust_tool.is_first_option_selected;
 				if tool.last_format.associated_command = Current then
 					tool.synchronize
 				end
@@ -71,7 +78,7 @@ feature -- Execution
 				rcw.call (Current,
 						l_Showstops,
 						l_Non_clickable_showstops,
-						not do_simple_format)
+						do_flat)
 			else
 				old_execute (arg)
 			end
@@ -123,8 +130,8 @@ feature -- Formatting
 
 feature -- Properties
 
-	do_simple_format: BOOLEAN
-			-- If True, only do the simple format (no clickables)
+	do_flat: BOOLEAN
+			-- If True, do a flat
 
 	symbol: PIXMAP is
 			-- Pixmap for the button.
@@ -140,12 +147,12 @@ feature -- Properties
 
 feature -- Status setting
 
-	set_format_mode (b: like do_simple_format) is
-			-- Set `do_simple_format' to `b'.
+	set_format_mode (b: like do_flat) is
+			-- Set `do_flat' to `b'.
 		do	
-			do_simple_format := b
+			do_flat := b
 		ensure	
-			set: do_simple_format = b
+			set: do_flat = b
 		end
 
 feature {NONE} -- Implementation
@@ -153,10 +160,10 @@ feature {NONE} -- Implementation
 	display_info (s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
-			if do_simple_format then
-				text_window.process_text (simple_debug_context_text (s))
-			else
+			if do_flat then
 				text_window.process_text (debug_context_text (s))
+			else
+				text_window.process_text (simple_debug_context_text (s))
 			end
 		end;
 	
@@ -177,20 +184,20 @@ feature {NONE} -- Access
 	name: STRING is
 			-- Name for he command.
 		do
-			if do_simple_format then
-				Result := l_Non_clickable_showstops
-			else
+			if do_flat then
 				Result := l_Showstops
+			else
+				Result := l_Non_clickable_showstops
 			end
 		end;
 
 	title_part: STRING is
 			-- Part of the title.
 		do
-			if do_simple_format then
-				Result := l_Non_clickable_stoppoints_of
-			else
+			if do_flat then
 				Result := l_Stoppoints_of
+			else
+				Result := l_Non_clickable_stoppoints_of
 			end
 		end;
 

@@ -203,10 +203,16 @@ feature {NONE} -- File names
 			Eiffel4 := Exec_environment.get ("EIFFEL4")
 			if Eiffel4 /= Void then
 				create Result.make_from_string (Eiffel4)
-				Result.extend_from_array (<<"eifinit", "bench">>)
+				if Platform_constants.is_windows then
+					Result.extend_from_array (<<"eifinit", "bench", "spec", "windows">>)
+				else
+					Result.extend_from_array (<<"eifinit", "bench", "spec", "gtk">>)
+				end
 				Result.set_file_name ("default")
 				Result.add_extension ("xml")
 			end
+		ensure
+			Result_not_empty: Result /= Void
 		end
 
 feature {NONE} -- Constants

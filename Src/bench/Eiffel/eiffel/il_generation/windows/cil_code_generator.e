@@ -3348,8 +3348,19 @@ feature -- Addresses
 
 feature -- Assignments
 
-	generate_is_instance_of (type_i: TYPE_I) is
+	generate_is_true_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction.
+		require
+			type_i_not_void: type_i /= Void
+		do
+				-- We use `actual_class_type_token' because we really want to know
+				-- if we inherit really from ANY.
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst,
+				actual_class_type_token (type_i.static_type_id))
+		end
+
+	generate_is_instance_of (type_i: TYPE_I) is
+			-- Generate `Isinst' byte code instruction where ANY is replaced by SYSTEM_OBJECT.
 		require
 			type_i_not_void: type_i /= Void
 		do

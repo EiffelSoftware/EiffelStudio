@@ -3260,7 +3260,7 @@ feature -- Plug and Makefile file
 			Plug_file.generate_cpp_wrapper_end;
 
 				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("EIF_INTEGER eif_profiler_level = (EIF_INTEGER) ");
+			Plug_file.putstring ("EIF_INTEGER prof_enabled = (EIF_INTEGER) ");
 			if Lace.ace_options.has_profile then
 				Plug_file.putstring ("3;%N")
 			else

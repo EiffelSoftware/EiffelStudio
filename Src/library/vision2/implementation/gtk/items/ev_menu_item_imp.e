@@ -42,13 +42,29 @@ feature {NONE} -- Initialization
 		end
 	
 	initialize is
-			-- Call to both precursors.
+			-- Call to both precursors.		
 		do
-			signal_connect ("activate", agent on_activate, Void)
+			signal_connect ("activate", agent on_activate_callback_as.call ([c_object]), Void)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
 			{EV_ITEM_IMP} Precursor
+		end
+		
+	on_activate_callback_as: EV_NOTIFY_ACTION_SEQUENCE is
+			-- 
+		once
+			create Result
+			Result.extend (agent on_activate_callback (?))
+		end
+		
+	on_activate_callback (a_c_object: POINTER) is
+			-- 
+		local
+			menu_item_imp: EV_MENU_ITEM_IMP
+		do
+			menu_item_imp ?= eif_object_from_c (a_c_object)
+			menu_item_imp.on_activate
 		end
 
 	initialize_menu_item_box is
@@ -179,6 +195,14 @@ feature {EV_ANY_I} -- Implementation
 			if select_actions_internal /= Void then
 				select_actions_internal.call ([])
 			end
+		end
+		
+	default_menu_item_imp: EV_MENU_ITEM_IMP is
+		local
+			int: like interface
+		once
+			create int
+			Result ?= int.implementation
 		end
 
 	menu_item_box: POINTER is

@@ -17,17 +17,17 @@ feature {NONE} -- Eiffel Project Directories
 			-- File containing all the byte code to update
 		local
 			file_name: FILE_NAME
-		once
-			!!file_name.make_from_string (Workbench_generation_path);
-			file_name.set_file_name (Updt);
+		do
+			!!file_name.make_from_string (Workbench_generation_path)
+			file_name.set_file_name (Updt)
 			!!Result.make (file_name)
-		end;
+		end
 
 	Project_directory: DIRECTORY_NAME is
 			-- Shared project directory
 		once
 			!! Result.make
-		end;
+		end
 
 	Precompilation_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
 			-- Shared precompilation directories, indexed by precompilation ids
@@ -40,57 +40,57 @@ feature {NONE} -- Eiffel Project Directories
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend_from_array (<<Eiffelgen, Backup>>);
-		end;
+		end
 
 	Case_storage_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend_from_array (<<Casegen , Case_storage>>);
-		end;
+		end
 
 	Case_gen_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend (Casegen);
-		end;
+		end
 
 	Documentation_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend (Documentation);
-		end;
+		end
 
 	Profiler_path: DIRECTORY_NAME is
 			-- Directory of the profiler's output files
 		once
 			!! Result.make_from_string (Eiffel_gen_path);
 			Result.extend (Profiler)
-		end;
+		end
 
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend (Eiffelgen);
-		end;
+		end
 
 	Workbench_generation_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
-		end;
+		end
 
 	Final_generation_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend_from_array (<<Eiffelgen, F_code>>);
-		end;
+		end
 
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.extend_from_array (<<Eiffelgen, Comp>>);
-		end;
+		end
 
 	Project_file_name: FILE_NAME is
 			-- Full name of the file where the workbench is stored
@@ -98,7 +98,7 @@ feature {NONE} -- Eiffel Project Directories
 			!! Result.make_from_string (Project_directory);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Dot_workbench);
-		end;
+		end
 
 	Project_txt_name: FILE_NAME is
 			-- Full name of the file where the project text is stored
@@ -106,7 +106,7 @@ feature {NONE} -- Eiffel Project Directories
 			!! Result.make_from_string (Project_directory);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Project_txt);
-		end;
+		end
 
 	Precompilation_file_name: FILE_NAME is
 			-- Full name of file where current precompilation
@@ -121,7 +121,7 @@ feature {NONE} -- Eiffel Project Directories
 			-- Full name of the precompilation driver used
 		once
 			!! Result.make
-		end;
+		end
 
 feature {NONE} -- Directory creation
 
@@ -138,7 +138,7 @@ feature {NONE} -- Directory creation
 			if not d.exists then
 				d.create
 			end;
-		end;
+		end
 
 	Create_case_storage_directory is
 		local
@@ -152,7 +152,7 @@ feature {NONE} -- Directory creation
 			if not d.exists then
 				d.create
 			end;
-		end;
+		end
 
 	Create_eiffel_gen_directory is
 		local
@@ -189,15 +189,15 @@ feature {NONE} -- Directory creation
 
 feature {NONE} -- DLE Directories
 
-	Melted_dle_file: RAW_FILE is
+	Update_dle_file: RAW_FILE is
 			-- File containing all the melted byte code of the DC-set
 		local
 			file_name: FILE_NAME
-		once
+		do
 			!!file_name.make_from_string (Workbench_generation_path);
-			file_name.set_file_name (Melted_dle);
+			file_name.set_file_name (Updt_dle);
 			!!Result.make (file_name)
-		end;
+		end
 
 	Extendible_directory: REMOTE_PROJECT_DIRECTORY is
 			-- Directory of the project which is intended to

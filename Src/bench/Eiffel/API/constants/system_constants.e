@@ -135,7 +135,7 @@ feature {NONE}
 
 	Makefile_SH: STRING is "Makefile.SH"
 
-	Melted_dle: STRING is "melted.dle";
+	updt_dle: STRING is "melted.dle";
 
 	Precomp_eif: STRING is "precomp.eif"
 
@@ -144,7 +144,7 @@ feature {NONE}
 	Preobj: STRING is
 		once
 			Result := Platform_constants.Preobj
-		end;
+		end
 
 	Project_txt: STRING is "project.txt"
 

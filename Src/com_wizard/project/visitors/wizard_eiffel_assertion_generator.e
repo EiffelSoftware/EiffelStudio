@@ -106,7 +106,7 @@ feature -- Basic operation
 			create visitor
 			visitor.visit (a_type)
 
-			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) 
+			if not visitor.is_basic_type and not is_boolean (visitor.vt_type)
 					and not visitor.is_enumeration then
 				if ret_val then
 					tmp_tag := "non_void_"
@@ -154,6 +154,8 @@ feature {NONE}
 					tmp_body := clone (a_name)
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
+
+				elseif is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
 
 				elseif not visitor.is_basic_type_ref  then
 					tmp_tag := "valid_"

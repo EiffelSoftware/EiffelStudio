@@ -49,11 +49,13 @@ feature -- Basic operations
 
 			elseif is_boolean (result_type_visitor.vt_type) then
 				ccom_feature_writer.set_result_type (Eif_boolean)
+			elseif is_hresult (result_type_visitor.vt_type) or is_error (result_type_visitor.vt_type) then
+				ccom_feature_writer.set_result_type (Void_c_keyword)
 			else
 				ccom_feature_writer.set_result_type (Eif_reference)
 			end
 
-			if  result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
+			if result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
 				c_header_files.extend (result_type_visitor.c_header_file)
 			end
 
@@ -160,7 +162,7 @@ feature {NONE} -- Implementation
 						elseif 
 							visitor.is_interface_pointer or 
 							visitor.is_coclass_pointer or 
-							visitor.is_structure_pointer 
+							visitor.is_structure_pointer
 						then
 							tmp_string.append (visitor.c_type)
 	
@@ -169,6 +171,8 @@ feature {NONE} -- Implementation
 							tmp_string.append (Space)
 							tmp_string.append (Asterisk)
 
+						elseif is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
+							tmp_string.append (visitor.c_type)
 						else
 							tmp_string.append (Eif_object)
 						end
@@ -280,9 +284,11 @@ feature {NONE} -- Implementation
 					create visitor
 					visitor.visit (arguments.item.type)
 
-					if is_paramflag_fin (arguments.item.flags) then
-						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
-					else
+					if is_paramflag_fin (arguments.item.flags) and is_paramflag_fout (arguments.item.flags) then
+						Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))
+
+					elseif is_paramflag_fout (arguments.item.flags) then
+				
 						out_variable := True  
 						Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
 
@@ -290,6 +296,8 @@ feature {NONE} -- Implementation
 						 		visitor.is_interface_pointer and not visitor.is_coclass_pointer then
 							return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))
 						end
+					else
+						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
 					end
 
 					visitor := Void
@@ -446,6 +454,36 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	inout_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+			-- Code to set up "in" parameter.
+		require
+			non_void_visitor: visitor /= Void
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		local
+			tmp_value: STRING
+		do
+			if is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
+				Result := clone (New_line_tab)
+				Result.append (argument_type_set_up (position, visitor.vt_type))
+
+				tmp_value := clone (Ec_mapper)
+				tmp_value.append (Dot)
+				tmp_value.append (visitor.ec_function_name)
+				tmp_value.append (Space_open_parenthesis)
+				tmp_value.append (Eif_access)
+				tmp_value.append (Space_open_parenthesis)
+				tmp_value.append (name)
+				tmp_value.append (Close_parenthesis)
+				tmp_value.append (Comma_space)
+				tmp_value.append (Null)
+				tmp_value.append (Close_parenthesis)
+				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), tmp_value, visitor))
+			else
+				Result := in_parameter_set_up (name, position, visitor)
+			end
+		end
+
 	in_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up "in" parameter.
 		require
@@ -461,7 +499,8 @@ feature {NONE} -- Implementation
 			Result := clone (New_line_tab)
 			Result.append (argument_type_set_up (position, type))
 
-			if visitor.is_basic_type or visitor.is_enumeration then
+			if visitor.is_basic_type or visitor.is_enumeration or
+					is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
 				tmp_value := clone (name)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
@@ -646,10 +685,20 @@ feature {NONE} -- Implementation
 			Result := out_value_set_up (position, attribute_name)
 			Result.append (Space_equal_space)
 			Result.append (Open_parenthesis)
-			Result.append (visitor.c_type)
-			if (visitor.vt_type = Vt_variant) then
-				Result.append (Space)
+
+			if visitor.is_coclass then
+				Result.append (Iunknown_type)
+			elseif visitor.is_coclass_pointer then
+				Result.append (IUnknown_pointer)
+			elseif visitor.is_coclass_pointer_pointer then
+				Result.append (Iunknown_pointer)
 				Result.append (Asterisk)
+			else
+				Result.append (visitor.c_type)
+				if (visitor.vt_type = Vt_variant) then
+					Result.append (Space)
+					Result.append (Asterisk)
+				end
 			end
 			Result.append (Close_parenthesis)
 			Result.append (value)

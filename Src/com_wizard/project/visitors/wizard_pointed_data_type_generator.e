@@ -211,6 +211,11 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_pointed_long")
 				ce_function_name.append ("ccom_ce_pointed_long")
 
+			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
+				eiffel_type := clone (Ecom_hresult)
+				writable := True
+				ec_function_name := "ccom_ec_pointed_hresult"
+				ce_function_name := "ccom_ce_pointed_hresult"
 			else
 				if pointed_visitor.is_interface_pointer then
 					is_interface_pointer_pointer := True

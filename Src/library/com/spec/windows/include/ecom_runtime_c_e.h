@@ -55,6 +55,7 @@ public:
 
 	// Pointed
 
+	EIF_REFERENCE ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_short (short * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_integer (int * an_integer, EIF_OBJECT an_object);

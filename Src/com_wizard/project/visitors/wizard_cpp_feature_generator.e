@@ -364,8 +364,8 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 
-			elseif type = Vt_void then 
-				Result := (" ")
+			elseif type = Vt_void or is_hresult (type) or is_error (type) then 
+				Result := ("")
 			else
 				Result.append (Open_parenthesis)
 				Result.append (Eif_reference)
@@ -379,6 +379,11 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
+				if visitor.is_interface or visitor.is_interface_pointer then
+					Result.append (Open_parenthesis)
+					Result.append (visitor.c_type)
+					Result.append (Close_parenthesis)
+				end
 				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 
 				if visitor.writable then

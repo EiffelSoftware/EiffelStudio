@@ -62,12 +62,16 @@ feature {NONE} -- Initialization
 			extend (queries)
 			create commands
 			extend (commands)
-			create names
 			
-				create name_group
-				name_group.extend (name_label)
-				
-			names.extend (name_group)
+			create names
+			names.extend (name_label)
+			create properties
+			properties.hide
+			names.extend (properties)
+			create generics
+			generics.hide
+			names.extend (generics)
+			
 			extend (names)
 			real_border := 10
 			disable_scaling
@@ -97,7 +101,6 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			update
 		end
 		
 feature -- Access
@@ -105,13 +108,13 @@ feature -- Access
 	port_x: INTEGER is
 			-- x position where links starting.
 		do
-			Result := rectangle.x
+			Result := point_x--rectangle.x
 		end
 		
 	port_y: INTEGER is
 			-- y position where links starting.
 		do
-			Result := rectangle.y
+			Result := point_y--rectangle.y
 		end
 		
 	size: EV_RECTANGLE is
@@ -357,6 +360,7 @@ feature -- Store/Retrive
 				end
 				l_cursor.forth
 			end
+			update_positions
 			request_update
 		end
 		
@@ -369,34 +373,14 @@ feature {EV_MODEL_GROUP} -- Figure group
 		do
 			Precursor {EIFFEL_CLASS_FIGURE} (a_transformation)
 			real_border := real_border * a_transformation.item (1, 1)
-			request_update
+			update_border
 		end
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update is
 			-- Some properties may have changed.
-		local
-			min_size: like minimum_size
-			pos: INTEGER
-			l_border: like border
 		do
-			l_border := border
-			min_size := minimum_size
-			rectangle.set_point_a_position (min_size.left - l_border, min_size.top - l_border)
-			if commands.is_empty then
-				rectangle.set_point_b_position (min_size.right + l_border, min_size.bottom + l_border * 2)
-			else
-				rectangle.set_point_b_position (min_size.right + l_border, min_size.bottom + l_border)
-			end
-			pos := names.bounding_box.bottom + l_border // 2
-			queries_line.set_point_a_position (min_size.left - l_border, pos )
-			queries_line.set_point_b_position (min_size.right + l_border, pos)
-			
-			pos := queries.point_y + queries.bounding_box.height + l_border // 2
-			commands_line.set_point_a_position (min_size.left - l_border, pos)
-			commands_line.set_point_b_position (min_size.right + l_border, pos)
-				
 			is_update_required := False
 		end
 		
@@ -410,7 +394,6 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 		local
 			l_item: EV_MODEL_GROUP
 			pos: INTEGER
-			min_size: like minimum_size
 		do
 			queries.start
 			queries.search (fsv)
@@ -423,18 +406,18 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 					queries.after
 				loop
 					l_item ?= queries.item
-					l_item.set_point_position (l_item.point_x, pos)
+					l_item.set_point_position (queries.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					queries.forth
 				end
-				pos := pos + border
+				pos := commands.point_y
 				from
 					commands.start
 				until
 					commands.after
 				loop
 					l_item ?= commands.item
-					l_item.set_point_position (l_item.point_x, pos)
+					l_item.set_point_position (commands.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					commands.forth
 				end
@@ -449,15 +432,12 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 					commands.after
 				loop
 					l_item ?= commands.item
-					l_item.set_point_position (l_item.point_x, pos)
+					l_item.set_point_position (commands.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					commands.forth
 				end
 			end
-			names.hide
-			min_size := minimum_size
-			names.show
-			names.set_x (min_size.left + names.bounding_box.width.max (min_size.width) // 2)
+			update_positions
 			request_update
 			if world.is_right_angles then
 				world.apply_right_angles
@@ -501,19 +481,13 @@ feature {NONE} -- Implementation
 	commands: EV_MODEL_GROUP
 			-- Group of operations.
 			
-	name_group: EV_MODEL_GROUP
-			-- Group containing `name_label' and `generics'
-			
 	names: EV_MODEL_GROUP
-			-- Group of name, generics and properties.
+			-- Group of `properties', `name_lable', `generics'.
 			
 	generics: EV_MODEL_TEXT
 			-- Generics text.
 			
-	root_text: EV_MODEL_TEXT
-			-- Text indicating `Current' is root.
-			
-	properties_text: EV_MODEL_TEXT
+	properties: EV_MODEL_TEXT
 			-- Text for properties of class.
 			
 	expanded_sections: ARRAYED_LIST [FEATURE_SECTION]
@@ -592,6 +566,7 @@ feature {NONE} -- Implementation
 				queries.hide
 				commands.hide
 			end
+			update_positions
 		end
 
 	set_queries is
@@ -602,7 +577,6 @@ feature {NONE} -- Implementation
 			queries.wipe_out
 			queries.set_point_position (0, 0)
 			fill_group_with_features (queries, queries_list)
-			update_positions
 		end
 		
 	set_commands is
@@ -613,7 +587,6 @@ feature {NONE} -- Implementation
 			commands.wipe_out
 			commands.set_point_position (0, 0)
 			fill_group_with_features (commands, commands_list)
-			update_positions
 		end
 
 	set_is_selected (an_is_selected: like is_selected) is
@@ -824,18 +797,21 @@ feature {NONE} -- Implementation
 		do
 			a_text := model.generics
 			if a_text /= Void then
-				if name_group.has (generics) then
-					name_group.prune_all (generics)
+				if not generics.is_show_requested then
+					generics.show
 				end
-				create generics.make_with_text (a_text)
+				generics.set_text (a_text)
 				generics.set_identified_font (uml_generics_font)
 				generics.set_foreground_color (uml_generics_color)
 				if world /= Void and then world.scale_factor /= 1.0 then
 					generics.scale (world.scale_factor)
 				end
-				name_group.extend (generics)
-				update_positions
+			else
+				if generics.is_show_requested then
+					generics.hide
+				end
 			end
+			update_positions
 		end
 		
 	set_properties is
@@ -848,20 +824,14 @@ feature {NONE} -- Implementation
 			if model.is_deferred then
 				name_label.set_identified_font (uml_class_deferred_font)
 			end
-			if model.is_root_class then
-				if root_text = Void then
-					create root_text.make_with_text ("{root}")
-					set_properties_text_properties (root_text)
-					names.extend (root_text)
-				end
-			else
-				if root_text /= Void then
-					names.prune_all (root_text)
-					root_text := Void
-				end
-			end
 			prop_text := ""
+			if model.is_root_class then
+				prop_text.append ("root")
+			end
 			if model.is_effective then
+				if not prop_text.is_empty then
+					prop_text.append (", ")
+				end
 				prop_text.append ("effective")
 			end
 			if model.is_expanded then
@@ -889,19 +859,15 @@ feature {NONE} -- Implementation
 				prop_text.append ("reused")
 			end
 			if not prop_text.is_empty then
-				if properties_text = Void then
-					create properties_text
-					names.extend (properties_text)
+				if not properties.is_show_requested then
+					properties.show
 				end
 				prop_text.prepend ("{")
 				prop_text.append ("}")
-				properties_text.set_text (prop_text)
-				set_properties_text_properties (properties_text)
+				properties.set_text (prop_text)
+				set_properties_text_properties (properties)
 			else
-				if properties_text /= Void then
-					names.prune_all (properties_text)
-					properties_text := Void
-				end
+				properties.hide
 			end
 			update_positions
 		end
@@ -917,44 +883,105 @@ feature {NONE} -- Implementation
 		end
 		
 	update_positions is
-			-- Set positions for `root_text', `properties_text', `queries', `commands'
+			-- Set positions for `root_text', `properties_text', `queries', `commands' such that port position is the center.
 		local
-			w, w2: INTEGER
-			bbox: EV_RECTANGLE
+			h, cur_y, f_pos, r_pos: INTEGER
+			nbbox, qbbox, cbbox: EV_RECTANGLE
+			l_border: like border
 		do
-			if generics /= Void then
-				generics.set_point_position (name_label.bounding_box.width, name_label.point_y)
+			-- Align elements in `names'
+			
+			if properties.is_show_requested then
+				h := properties.height
 			end
-			if root_text /= Void then
-				root_text.set_x_y (name_group.x, name_group.point_y + name_label.height + root_text.height // 2)
+			h := h + name_label.height
+			if generics.is_show_requested then
+				h := h + generics.height
 			end
-			if properties_text /= Void then
-				properties_text.set_x_y (name_group.x, name_group.point_y - properties_text.height + properties_text.height // 2)
+			
+			cur_y := names.point_y - as_integer (h / 2)
+			properties.set_point_position (names.point_x - as_integer (properties.width / 2), cur_y)
+			if properties.is_show_requested then
+				cur_y := cur_y + properties.height
 			end
-			w := names.bounding_box.width.max (queries.bounding_box.width).max (commands.bounding_box.width)
-			w2 := w // 2
-			bbox := names.bounding_box
-			queries.set_point_position (names.x - w2, bbox.top + bbox.height + border)
-			if queries.is_empty then
-				if queries.is_show_requested then
-					queries.hide
-				end
-			else
-				if not queries.is_show_requested then
-					queries.show
-				end
+			name_label.set_point_position (names.point_x - as_integer (name_label.width / 2), cur_y)
+			cur_y := cur_y + name_label.height
+			generics.set_point_position (names.point_x - as_integer (generics.width / 2), cur_y)
+			
+			-- Align `names', `queries' and `commands'
+			
+			l_border := border
+			nbbox := names.bounding_box
+			f_pos := point_x - as_integer (nbbox.width / 2)
+			r_pos := point_x + as_integer (nbbox.width / 2)
+			h := nbbox.height
+			h := h + l_border
+			if queries.is_show_requested then
+				qbbox := queries.bounding_box
+				f_pos := f_pos.min (point_x - as_integer (qbbox.width / 2))
+				r_pos := r_pos.max (f_pos + qbbox.width)
+				h := h + qbbox.height
 			end
-			commands.set_point_position (names.x - w2, queries.point_y + queries.bounding_box.height + border)
-			if commands.is_empty then
-				if commands.is_show_requested then
-					commands.hide
-				end
-			else
-				if not commands.is_show_requested then
-					commands.show
-				end
+			h := h + l_border
+			if commands.is_show_requested then
+				cbbox := commands.bounding_box
+				f_pos := f_pos.min (point_x - as_integer (cbbox.width / 2))
+				r_pos := r_pos.max (f_pos + cbbox.width)
+				h := h + cbbox.height
 			end
+			
+			cur_y := point_y - as_integer (h / 2)
+			
+			rectangle.set_point_a_position (f_pos - border, cur_y - border)
+			
+			names.set_point_position (point_x, cur_y + as_integer (nbbox.height / 2))
+			cur_y := cur_y + nbbox.height + l_border
+			queries_line.set_point_a_position (f_pos - border, cur_y - l_border // 2)
+			queries_line.set_point_b_position (r_pos + border, cur_y - l_border // 2)
+			if queries.is_show_requested then
+				queries.set_point_position (f_pos, cur_y)
+				cur_y := cur_y + qbbox.height
+			end
+			cur_y := cur_y + l_border
+			commands_line.set_point_a_position (f_pos - border, cur_y - l_border // 2)
+			commands_line.set_point_b_position (r_pos + border, cur_y - l_border // 2)
+			if commands.is_show_requested then
+				commands.set_point_position (f_pos, cur_y)
+				cur_y := cur_y + cbbox.height
+			end
+			
+			rectangle.set_point_b_position (r_pos + border, cur_y + border)
+
 			request_update
+		end
+		
+	update_border is
+			-- Update border position (required because text is not scaled smoothley)
+		local
+			l_right: INTEGER
+		do
+			if commands.is_show_requested or else queries.is_show_requested then
+				if commands.is_show_requested then
+					l_right := commands.bounding_box.right
+					if queries.is_show_requested then
+						l_right := l_right.max (queries.bounding_box.right)
+					end
+				else
+					l_right := queries.bounding_box.right
+				end
+				if 
+					l_right > right or else
+					right > l_right + border 
+				then
+					l_right := l_right + border
+					rectangle.set_point_b_position (l_right, rectangle.point_b_y)
+					queries_line.set_point_a_position (queries_line.point_a_x, queries_line.point_a_y)
+					queries_line.set_point_b_position (l_right, queries_line.point_a_y)
+					
+					commands_line.set_point_a_position (commands_line.point_a_x, commands_line.point_a_y)
+					commands_line.set_point_b_position (l_right, commands_line.point_a_y)
+				end
+			end
 		end
 		
 	retrieve_preferences is
@@ -977,9 +1004,9 @@ feature {NONE} -- Implementation
 				generics.set_identified_font (uml_generics_font)
 				generics.set_foreground_color (uml_generics_color)
 			end
-			if properties_text /= Void then
-				properties_text.set_identified_font (uml_class_properties_font)
-				properties_text.set_foreground_color (uml_class_properties_color)
+			if properties /= Void then
+				properties.set_identified_font (uml_class_properties_font)
+				properties.set_foreground_color (uml_class_properties_color)
 			end
 			request_update
 		end
@@ -991,7 +1018,8 @@ invariant
 	queries_not_void: queries /= Void
 	commands_not_void: commands /= Void
 	names_not_Void: names /= Void
-	name_group_not_Void: name_group /= Void
+	properties_not_Void: properties /= Void
+	generics_not_Void: generics /= Void
 	border_positive: border >= 0
 
 end -- class UML_CLASS_FIGURE

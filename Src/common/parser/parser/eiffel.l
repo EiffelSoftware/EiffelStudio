@@ -845,10 +845,15 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (text_count)
 				last_token := TE_STRING
 			}
-\"[^\n"%]*\[/[ \t\r]*\n {
+\"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
 				token_buffer.clear_all
 				verbatim_marker.clear_all
+				if text_item (text_count) = '[' then
+					verbatim_marker.append_character (']')
+				else
+					verbatim_marker.append_character ('}')
+				end
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
 				current_position.go_to (text_count)
 				set_start_condition (VERBATIM_STR3)
@@ -867,6 +872,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
+				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+						-- Remove \r in \r\n.
+					token_buffer.remove (token_buffer.count - 1)
+				end
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			}
@@ -879,7 +888,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 <VERBATIM_STR1>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*\][^%\n"]*\" {
+	[ \t\r]*[\]\}][^\n"]*\" {
 				if is_verbatim_string_closer then
 					current_position.go_to (text_count)
 					set_start_condition (INITIAL)
@@ -896,6 +905,21 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					elseif token_buffer.count = 1 then
 						check new_line: token_buffer.item (1) = '%N' end
 						token_buffer.clear_all
+					end
+					if verbatim_marker.item (1) = ']' then
+						if not has_old_verbatim_strings then
+							align_left (token_buffer)
+						end
+						if has_old_verbatim_strings_warning then
+							Error_handler.insert_warning (
+								create {SYNTAX_WARNING}.make (
+									current_position.start_position,
+									current_position.end_position,
+									filename,
+									0,
+									"Default verbatim string handling is changed to follow standard semantics %
+									%with alignment instead of previous non-standard one without alignment."))
+						end
 					end
 					if token_buffer.is_empty then
 							-- Empty string.
@@ -920,6 +944,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
+				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+						-- Remove \r in \r\n.
+					token_buffer.remove (token_buffer.count - 1)
+				end
 			}
 	[^"\n]* {
 					-- No final bracket-double-quote.
@@ -943,6 +971,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
+				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+						-- Remove \r in \r\n.
+					token_buffer.remove (token_buffer.count - 1)
+				end
 				set_start_condition (VERBATIM_STR1)
 			}
 	.*		{

@@ -422,8 +422,6 @@ feature {NONE} -- Implementation
 			attribute_editor_box.extend (separator)
 			attribute_editor_box.disable_item_expand (separator)
 			
-			
-			
 			create handler
 			supported_types := clone (handler.supported_types)
 			from

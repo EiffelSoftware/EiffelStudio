@@ -140,16 +140,16 @@
 			</code>.
 		</paragraph>
 		<code_block>
-feature -- Access
+<keyword>feature</keyword><comment> -- Access</comment>
 
-    hour: INTEGER
-            -- Hour expressed as 24-hour value
+	<feature_name>hour</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<comment>-- Hour expressed as 24-hour value</comment>
 
-    minute: INTEGER
-            -- Minutes past the hour
+	<feature_name>minute</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<comment>-- Minutes past the hour</comment>
 
-    second: INTEGER
-            -- Seconds past the minute
+	<feature_name>second</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<comment>-- Seconds past the minute</comment>
 </code_block>
 		<paragraph>Below is the code for a procedure 
 			<code>
@@ -163,11 +163,11 @@ feature -- Access
 			</code> feature to the argurment.
 		</paragraph>
 		<code_block>
-    set_second (s: INTEGER) is
-            -- Set the second from `s'
-        do
-            second := s
-        end
+	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Set the second from `s'</comment>
+		<keyword>do</keyword>
+			<feature_name>second</feature_name> <symbol>:</symbol><symbol>=</symbol> s
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The routine is simple enough, but there is a problem with it. Suppose a client calls 
 			<code>
@@ -189,13 +189,13 @@ feature -- Access
 			</code> that expresses the need for valid arguments.
 		</paragraph>
 		<code_block>
-    set_second (s: INTEGER) is
-            -- Set the second from `s'
-        require
-             valid_argument_for_second: 0 &lt;= s and s &lt;= 59
-        do
-            second := s
-        end
+	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Set the second from `s'</comment>
+		<keyword>require</keyword>
+			valid_argument_for_second<symbol>:</symbol> 0 &lt;<symbol>=</symbol> s <keyword>and</keyword> s &lt;<symbol>=</symbol> 59
+		<keyword>do</keyword>
+			<feature_name>second</feature_name> <symbol>:</symbol><symbol>=</symbol> s
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The precondition is introduced by the keyword " 
 			<code>
@@ -232,15 +232,15 @@ feature -- Access
 			</code> should have the same value as the argument that was received from the caller. Below is the feature with the postcondition added.
 		</paragraph>
 		<code_block>
-    set_second (s: INTEGER) is
-            -- Set the second from `s'
-        require
-             valid_argument_for_second: 0 &lt;= s and s &lt;= 59
-        do
-            second := s
-        ensure
-            second_set: second = s
-        end
+	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Set the second from `s'</comment>
+		<keyword>require</keyword>
+			valid_argument_for_second<symbol>:</symbol> 0 &lt;<symbol>=</symbol> s <keyword>and</keyword> s &lt;<symbol>=</symbol> 59
+		<keyword>do</keyword>
+			<feature_name>second</feature_name> <symbol>:</symbol><symbol>=</symbol> s
+		<keyword>ensure</keyword>
+			second_set<symbol>:</symbol> <feature_name>second</feature_name> <symbol>=</symbol> s
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The postcondition is introduced by the keyword " 
 			<code>
@@ -262,13 +262,13 @@ feature -- Access
 		</heading>
 		<paragraph>If we remove the instructions from a routine and leave its signature, header comment and assertions, we have a specification for the routine.</paragraph>
 		<code_block>
-    set_second (s: INTEGER) is
-            -- Set the second from `s'
-        require
-             valid_argument_for_second: 0 &lt;= s and s &lt;= 59
-        ensure
-            second_set: second = s
-        end
+	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Set the second from `s'</comment>
+		<keyword>require</keyword>
+			valid_argument_for_second<symbol>:</symbol> 0 &lt;<symbol>=</symbol> s <keyword>and</keyword> s &lt;<symbol>=</symbol> 59
+		<keyword>ensure</keyword>
+			second_set<symbol>:</symbol> <feature_name>second</feature_name> <symbol>=</symbol> s
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>This specification of 
 			<code>
@@ -362,11 +362,11 @@ feature -- Access
 			</code>? An instance would be valid if its hour were between 0 and 23 inclusive, minute were between 0 and 59 inclusive, and its second were between 0 and 59 inclusive. We can code the invariant as shown below.
 		</paragraph>
 		<code_block>
-    invariant
+	<keyword>invariant</keyword>
 
-        hour_valid: 0 &lt;= hour and hour &lt;= 23
-        minute_valid: 0 &lt;= minute and minute &lt;= 59
-        second_valid: 0 &lt;= second and second &lt;= 59
+		hour_valid<symbol>:</symbol> 0 &lt;<symbol>=</symbol> <feature_name>hour</feature_name> <keyword>and</keyword> <feature_name>hour</feature_name> &lt;<symbol>=</symbol> 23
+		minute_valid<symbol>:</symbol> 0 &lt;<symbol>=</symbol> <feature_name>minute</feature_name> <keyword>and</keyword> <feature_name>minute</feature_name> &lt;<symbol>=</symbol> 59
+		second_valid<symbol>:</symbol> 0 &lt;<symbol>=</symbol> <feature_name>second</feature_name> <keyword>and</keyword> <feature_name>second</feature_name> &lt;<symbol>=</symbol> 59
 </code_block>
 		<paragraph>The name invariant implies that the assertion can never be false ... and that's true up to a point. It's really more like, "it must be true at times when it really counts".</paragraph>
 		<paragraph>At runtime the invariant must be true for an instance at anytime that the instance is available to clients. In general, this means that the invariant must be true before and after the execution of every exported routine.</paragraph>
@@ -415,16 +415,16 @@ feature -- Access
 			</code> which models data structures with a current item, and is an ancestor to many effective container type classes.
 		</paragraph>
 		<code_block>
-feature -- Element change
+<keyword>feature</keyword> <comment>-- Element change</comment>
 
-    replace (v: G) is
-            -- Replace current item by `v'.
-        require
-            writable: writable
-        deferred
-        ensure
-            item_replaced: item = v
-        end
+	<feature_name>replace</feature_name> <symbol>(</symbol>v<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Replace current item by `v'.</comment>
+		<keyword>require</keyword>
+			writable<symbol>:</symbol> <feature_name>writable</feature_name>
+		<keyword>deferred</keyword>
+		<keyword>ensure</keyword>
+			item_replaced<symbol>:</symbol> <feature_name>item</feature_name> <symbol>=</symbol> v
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>Feature 
 			<code>
@@ -479,58 +479,56 @@ feature -- Element change
 			<size>3</size>Non-Strict Booleans
 		</heading>
 		<paragraph>One is that, as you can probably imagine, it is not a good thing to cause an exception during the process of checking an assertion. One of the most common ways to cause such an exception is to apply a feature to a Void reference.</paragraph>
-		<paragraph>The way to avoid this is to use the non-strict booleans " 
+		<paragraph>The way to avoid this is to use the non-strict booleans "
 			<code>
 				<keyword>and then</keyword>
-			</code>" and " 
+			</code>" and "
 			<code>
 				<keyword>or else</keyword>
-			</code>". These forms of " 
+			</code>". These forms of "
 			<code>
 				<keyword>and</keyword>
-			</code>" and " 
+			</code>" and "
 			<code>
 				<keyword>or</keyword>
-			</code>" do not force the checking of all conditions. As soon as a determination can be made, they stop checking. It is typical to see " 
+			</code>" do not force the checking of all conditions. As soon as a determination can be made, they stop checking. It is typical to see "
 			<code>
 				<keyword>and then</keyword>
 			</code>" used to avoid applying a feature to a void reference in preconditons. Below is a creation procedure that uses a non-strict boolean in its precondition.
 		</paragraph>
 		<code_block>
-    make (a_nm: STRING; a_offset: INTEGER) is
-            -- Initalize with name `a_nm' and utcoffset `a_offset'
-        require
-            name_not_empty: a_nm /= Void and then not a_nm.is_empty
-            offset_valid: a_offset &gt;= -12 and a_offset &lt;= 12
-        do
-            name := clone (a_nm)
-            utcoffset := a_offset
-        ensure
-            name_initialized: name.is_equal (a_nm)
-            utcoffset_initialized: utcoffset = a_offset
-        end
+	<feature_name>make</feature_name> <symbol>(</symbol>a_nm<symbol>:</symbol> <class_name>STRING</class_name>; a_offset<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Initalize with name `a_nm' and utcoffset `a_offset'</comment>
+		<keyword>require</keyword>
+			name_not_empty<symbol>:</symbol> a_nm <symbol>/<symbol>=</symbol></symbol> Void <keyword>and</keyword> <keyword>then</keyword> <keyword>not</keyword> a_nm.<feature_name>is_empty</feature_name>
+			offset_valid<symbol>:</symbol> a_offset &gt;<symbol>=</symbol> -12 <keyword>and</keyword> a_offset &lt;<symbol>=</symbol> 12
+		<keyword>do</keyword>
+			<feature_name>name</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>clone </feature_name><symbol>(</symbol>a_nm<symbol>)</symbol>
+			<feature_name>utcoffset</feature_name> <symbol>:</symbol><symbol>=</symbol> a_offset
+		<keyword>ensure</keyword>
+			name_initialized<symbol>:</symbol> <feature_name>name</feature_name>.<feature_name>is_equal</feature_name> <symbol>(</symbol>a_nm<symbol>)</symbol>
+			utcoffset_initialized<symbol>:</symbol> <feature_name>utcoffset</feature_name> <symbol>=</symbol> a_offset
+		<keyword>end</keyword>
 </code_block>
 		<heading>
 			<size>3</size>Replacing Inherited Feature Assertions
 		</heading>
-		<paragraph>To replace a precondition on a feature you are effecting or redefining, you use the " 
+		<paragraph>To replace a precondition on a feature you are effecting or redefining, you use the "
 			<code>
 				<keyword>require</keyword>
-			</code>
+			</code> 
 			<code>
 				<keyword>else</keyword>
-			</code>" keywords to introduce new conditions. These conditions will be logically " 
+			</code>" keywords to introduce new conditions. These conditions will be logically "
 			<code>
 				<keyword>or</keyword>
 			</code>-ed" with the original precondition to form an new one.
 		</paragraph>
-		<paragraph>Likewise use " 
-			<code>
-				<keyword>and</keyword>
-			</code>
+		<paragraph>Likewise use "<code><keyword>and</keyword>
+			</code> 
 			<code>
 				<keyword>then</keyword>
-			</code>" to add conditions to a postcondition. The added conditions will be " 
+			</code>" to add conditions to a postcondition. The added conditions will be "
 			<code>
 				<keyword>and</keyword>
 			</code>-ed" to the original.
@@ -541,16 +539,16 @@ feature -- Element change
 			</code> in the Base Library.
 		</paragraph>
 		<code_block>
-    remove_left is
-            -- Remove item to the left of cursor position.
-            -- Do not move cursor.
-        require
-            left_exists: index &gt; 1
-        deferred
-        ensure
-            new_count: count = old count - 1
-            new_index: index = old index - 1
-       end
+	remove_left <keyword>is</keyword>
+			<comment>-- Remove item to the left of cursor position.</comment>
+			<comment>-- Do not move cursor.</comment>
+		<keyword>require</keyword>
+			<feature_name>left_exists</feature_name><symbol>:</symbol> index &gt; 1
+		<keyword>deferred</keyword>
+		<keyword>ensure</keyword>
+			new_count<symbol>:</symbol> <feature_name>count</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>count</feature_name> - 1
+			new_index<symbol>:</symbol> <feature_name>index</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>index</feature_name> - 1
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The next feature is from 
 			<code>
@@ -567,7 +565,7 @@ feature -- Element change
 			</code>. Originally in 
 			<code>
 				<class_name>DYNAMIC_CHAIN</class_name>
-			</code>, " 
+			</code>, "
 			<code>
 				<feature_name>index</feature_name>
 			</code> &gt; 1" was required for 
@@ -576,25 +574,25 @@ feature -- Element change
 			</code>. In 
 			<code>
 				<class_name>DYNAMIC_LIST</class_name>
-			</code> either " 
+			</code> either "
 			<code>
 				<feature_name>index</feature_name>
-			</code> &gt; 1" or " 
+			</code> &gt; 1" or "
 			<code>
 				<keyword>not</keyword>
-			</code>
+			</code> 
 			<code>
 				<feature_name>before</feature_name>
 			</code>" (or both) will suffice.
 		</paragraph>
 		<code_block>
-    remove_left is
-            -- Remove item to the left of cursor position.
-            -- Do not move cursor.
-        require else
-            not_before: not before
-        deferred
-        end
+	<feature_name>remove_left</feature_name> <keyword>is</keyword>
+			<comment>-- Remove item to the left of cursor position.</comment>
+			<comment>-- Do not move cursor.</comment>
+		<keyword>require</keyword> <keyword>else</keyword>
+			not_before<symbol>:</symbol> <keyword>not</keyword> <feature_name>before</feature_name>
+		<keyword>deferred</keyword>
+		<keyword>end</keyword>
 </code_block>
 		<heading>
 			<size>2</size>Not Writing Assertions
@@ -607,13 +605,13 @@ feature -- Element change
 		</paragraph>
 		<paragraph>The contract exists, even though you do not code it explicitly. If it were written out, it would look as follows.</paragraph>
 		<code_block>
-    my_routine is
-            -- My descriptive header comment
-        require
-            True
-        ensure
-            True
-       end
+	<feature_name>my_routine</feature_name> <keyword>is</keyword>
+			<comment>-- My descriptive header comment</comment>
+		<keyword>require</keyword>
+			True
+		<keyword>ensure</keyword>
+			True
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>What does this mean? It means that you have selected the weakest possible precondition and postcondition for your routine. Of course, this may be perfectly valid under some circumstances.</paragraph>
 		<paragraph>Just understand that if your routine could speak, it would be telling you, "I can always work successfully without any particular guarantees from you at all. On the other hand, I won't promise you any particular results when I get done."</paragraph>

@@ -48,7 +48,6 @@ feature -- Basic operation
 			combo_box_object: GB_COMBO_BOX_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			menu_object: GB_MENU_OBJECT
-			menu_item_object: GB_MENU_ITEM_OBJECT
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 				-- When we change the type of an object, we keep the
@@ -419,7 +418,6 @@ feature -- Basic operation
 		local
 			window_object: GB_CELL_OBJECT
 			window_child: GB_OBJECT
-			menu_bar_object: GB_MENU_BAR_OBJECT
 			layout_item, temp_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			window_object ?= objects.first

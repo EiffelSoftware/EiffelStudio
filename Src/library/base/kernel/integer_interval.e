@@ -160,9 +160,9 @@ feature -- Status report
 	valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' in interval?
 		do
-			Result := ((i >= lower) and (i >= upper))
+			Result := ((i >= lower) and (i <= upper))
 		ensure then
-			definition: Result = ((i >= lower) and (i >= upper))
+			definition: Result = ((i >= lower) and (i <= upper))
 		end
 
 feature -- Element change

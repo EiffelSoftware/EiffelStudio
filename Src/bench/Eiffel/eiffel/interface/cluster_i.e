@@ -162,12 +162,12 @@ feature -- Element change
 
 feature {COMPILER_EXPORTER} -- Conveniences
 
-	set_hide_implementation is
+	set_hide_implementation (is_hidden: BOOLEAN) is
 			-- Set `hide_implementation' to True.
 		do
-			hide_implementation := True
+			hide_implementation := is_hidden
 		ensure
-			hide_implementation: hide_implementation
+			hide_implementation: hide_implementation = is_hidden
 		end;
 
 	set_date (i: INTEGER) is

@@ -15,7 +15,18 @@ inherit
 	SHARED_MELT_ONLY;
 	PROJECT_CONTEXT
 
-feature -- Properties
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize the system.
+		do
+			!! sub_clusters.make (3);
+		end;
+
+feature -- Access
 
 	root_class_name: STRING is
 			-- Root class name
@@ -53,7 +64,10 @@ feature -- Properties
 			-- Void result implies no document generation
 		do	
 			Result := System.document_file_name
-		end
+		end;
+
+	sub_clusters: ARRAYED_LIST [CLUSTER_I]
+			-- List of top level clusters for Eiffel System
 
 feature -- Access
 
@@ -221,5 +235,30 @@ feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPAN
 		do
 			Result := System.class_types.item (i)
 		end
+
+feature {COMPILER_EXPORTER} -- Element change
+
+	add_sub_cluster (c: CLUSTER_I) is
+			-- Add cluster `c' to `sub_clusters.
+		require
+			valid_c: c /= Void;
+			not_added: sub_clusters /= Void
+		do
+			sub_clusters.extend (c)
+		end;
+
+feature {COMPILER_EXPORTER} -- Removal
+
+	wipe_out_sub_clusters is
+			-- Wipe out the sub_cluster list.
+		do
+			sub_clusters.wipe_out
+		ensure
+			empty_sub_clusters: sub_clusters /= Void
+		end;
+
+invariant
+
+	sub_clusters_exists: sub_clusters /= Void
 
 end -- class E_SYSTEM

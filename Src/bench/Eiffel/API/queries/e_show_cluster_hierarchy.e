@@ -20,24 +20,28 @@ feature -- Execution
 
 	execute is
 			-- Show classes in universe
-		local
-			clusters: LINKED_LIST [CLUSTER_I];
-			cursor: CURSOR;
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
-			a_classi: CLASS_I;
-			a_classe: E_CLASS;
 		do
-print ("to be implemented%N");
-			clusters := Eiffel_universe.clusters;
-			if not clusters.empty then
-				from 
-					clusters.start 
-				until 
-					clusters.after 
-				loop
-					clusters.forth
-				end;
+			display_clusters (Eiffel_system.sub_clusters, 0)
+		end;
+
+feature {NONE} -- Implementation
+
+	display_clusters (a_list: ARRAYED_LIST [CLUSTER_I]; indent: INTEGER) is
+			-- Display the `a_list' of cluster to `structured_text'.
+		local
+			a_cluster: CLUSTER_I
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				add_tabs (structured_text, indent);
+				a_cluster := a_list.item;
+				structured_text.add_cluster (a_cluster, a_cluster.cluster_name);
+				structured_text.add_new_line;
+				display_clusters (a_cluster.sub_clusters, indent + 1)
+				a_list.forth
 			end
 		end;
 

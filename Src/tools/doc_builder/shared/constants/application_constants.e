@@ -179,13 +179,7 @@ feature -- Table of Contents Preferences
 			create l_code_dir.make_from_string (l_project_root.string)
 			l_code_dir.extend ("eiffel2java")
 			l_code_dir.extend ("reference")
-			Result.extend (l_code_dir.string)
-			
-				-- Parse
-			create l_code_dir.make_from_string (l_project_root.string)
-			l_code_dir.extend ("parse")
-			l_code_dir.extend ("reference")
-			Result.extend (l_code_dir.string)
+			Result.extend (l_code_dir.string)			
 			
 				-- Net	
 			create l_code_dir.make_from_string (l_project_root.string)
@@ -205,6 +199,32 @@ feature -- Table of Contents Preferences
 			l_code_dir.extend ("reference")
 			Result.extend (l_code_dir.string)
 		end		
+			
+	studio_libraries: ARRAYED_LIST [STRING] is
+			-- Studio libraries
+		once
+			create Result.make (10)
+			Result.compare_objects
+			Result.extend ("base")
+			Result.extend ("wel")
+			Result.extend ("vision2")
+			Result.extend ("time")
+			Result.extend ("web")
+			Result.extend ("net")
+			Result.extend ("com")
+			Result.extend ("lex")
+			Result.extend ("eiffel2java")
+		end
+	
+	envision_libraries: ARRAYED_LIST [STRING] is
+			-- ENViSioN! libraries
+		once
+			create Result.make (10)
+			Result.compare_objects
+			Result.extend ("base")
+			Result.extend ("wel")
+			Result.extend ("vision2")
+		end	
 			
 feature -- Status Setting
 

@@ -680,6 +680,8 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_component_viewer_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_constants_dialog_command.new_toolbar_item (True, False))
+			Result.pointer_button_press_actions.force_extend (agent enter_debug_mode)
+			Result.pointer_leave_actions.extend (agent clear_debug_mode_entry)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -1158,6 +1160,30 @@ feature {NONE} -- Debugging Implementation
 		once
 			create Result
 		end
+		
+	enter_debug_mode (an_x, a_y, a_button: INTEGER) is
+			-- Record mouse input and enter debug mode if buttons pressed in certain order.
+		do
+			if debug_entry_key = Void then
+				debug_entry_key := ""
+			end
+			if an_x > tool_bar.width - 40 then
+				debug_entry_key.append (a_button.out)
+			end
+			if debug_entry_key.is_equal ("131311") then
+				set_timed_status_text ("Debug mode entered")
+				system_status.enable_debug_mode
+			end
+		end
+		
+	clear_debug_mode_entry is
+			-- Reset the current debug entry record.
+		do
+			debug_entry_key := ""
+		end
+		
+	debug_entry_key: STRING
+		-- The current key for entering debug mode.
 
 invariant
 	

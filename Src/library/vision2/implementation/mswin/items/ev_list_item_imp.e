@@ -17,8 +17,7 @@ inherit
 
 	EV_ITEM_IMP
 		undefine
-			parent,
-			set_pointer_style
+			parent
 		redefine
 			parent_imp,
 			interface,
@@ -140,16 +139,6 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
-
-	set_pointer_style (c: EV_CURSOR) is
-			-- Assign `c' to `parent_imp' pointer style.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_pointer_style (c)
-			end
-		end
-
 feature {EV_LIST_IMP, EV_COMBO_BOX_IMP} -- Implementation.
 
 	relative_y: INTEGER is
@@ -197,32 +186,6 @@ feature {NONE} -- Implementation
 	internal_text: STRING
 			-- Text of this item.
 
-feature {EV_LIST_IMP} -- Implementation
-
-	set_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_capture
-		end
-
-	release_capture is
-			-- Release user input.
-		do
-			parent_imp.release_capture
-		end
-
-	set_heavy_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_heavy_capture
-		end
-
-	release_heavy_capture is
-			-- Release user input.
-		do
-			parent_imp.release_heavy_capture
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST_ITEM
@@ -250,6 +213,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/21 22:09:26  rogers
+--| Removed set_capture, release_capture, set_heavy_capture,
+--| release_heavy_capture and set_pointer_style.
+--|
 --| Revision 1.50  2000/04/20 19:00:18  brendel
 --| Redefined wel_text and wel_set_text.
 --| Initialized internal_text to "".

@@ -23,6 +23,9 @@ feature -- Access
 feature -- Basic operations
 
 	display_error_message (a_relative_window: EV_WINDOW) is
+			-- Display error message relative to `a_relative_window'.
+		require
+			a_relative_windows_not_void: a_relative_window /= Void
 		local
 			error_dialog: EV_ERROR_DIALOG
 			error_string: STRING
@@ -41,14 +44,16 @@ feature -- Basic operations
 				end
 			end
 			create error_dialog.make_with_text (error_string)
-			error_dialog.set_buttons (<<Interface_names.b_Ok>>)
+			error_dialog.set_buttons (<<Interface_names.b_ok>>)
 			set_catch_exception (True)
 			debug ("display_exception_trace")
-				error_dialog.set_buttons (<<Interface_names.b_Ok, Interface_names.b_Display_Exception_Trace>>)
-				error_dialog.button (Interface_names.b_Display_Exception_Trace).select_actions.extend (~set_catch_exception(False))
+				error_dialog.set_buttons (<<Interface_names.b_ok,
+					Interface_names.b_Display_Exception_Trace>>)
+				error_dialog.button (Interface_names.b_Display_Exception_Trace).select_actions.
+					extend (agent set_catch_exception(False))
 			end
-			error_dialog.set_default_push_button (error_dialog.button (Interface_names.b_Ok))
-			error_dialog.set_default_cancel_button (error_dialog.button (Interface_names.b_Ok))
+			error_dialog.set_default_push_button (error_dialog.button (Interface_names.b_ok))
+			error_dialog.set_default_cancel_button (error_dialog.button (Interface_names.b_ok))
 			error_dialog.show_modal_to_window (a_relative_window)
 			clear_error_messages
 		end
@@ -60,6 +65,5 @@ feature {NONE} -- Implementation
 		do
 			catch_exception := new_state
 		end
-		
 	
 end -- class EB_GRAPHICAL_ERROR_MANAGER

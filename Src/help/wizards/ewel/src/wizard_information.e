@@ -30,7 +30,7 @@ feature  -- Initialization
 			icon_path.add_extension ("ico")
 			set_icon_location (icon_path)
 
-			set_dialog_application (True)
+			set_dialog_application (False)
 		end
 
 feature -- Setting

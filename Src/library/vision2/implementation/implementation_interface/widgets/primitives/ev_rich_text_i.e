@@ -349,6 +349,7 @@ feature -- Status setting
 			paragraph_indexes: ARRAYED_LIST [INTEGER]
 			paragraph_formats: ARRAYED_LIST [STRING]
 			paragraphs_exhausted: BOOLEAN
+			last_load_value, current_load_value: INTEGER
 		do
 			create buffer.set_rich_text (Current)
 			l_text := text
@@ -418,9 +419,20 @@ feature -- Status setting
 					buffer.append_text_for_rtf (l_text.substring (last_counter, (counter - 1).min (l_text.count)), current_format)
 					last_counter := counter
 				end
+
 				if file_access_actions_internal /= Void then
-					file_access_actions_internal.call ([counter])
+						-- We add 1 to `l_text_length' in this calculation
+						-- as counter is equal to  `l_text_length' + 1 on loop exit.
+					current_load_value := (counter * 100) // (l_text_length + 1)
+						-- Now only fire the actions if `current_load_value' has changed.
+					if current_load_value /= last_load_value then
+						last_load_value := current_load_value
+						file_access_actions_internal.call ([current_load_value])
+					end
 				end
+			end
+			check
+				counter_set_to_length_plus_one: counter = l_text_length + 1
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving

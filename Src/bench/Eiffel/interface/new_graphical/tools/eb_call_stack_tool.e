@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			tb_exception: EV_TOOL_BAR
 			tb_but_exception: EV_TOOL_BAR_BUTTON
 			box_thread: EV_HORIZONTAL_BOX
-			box_stop_clause: EV_HORIZONTAL_BOX
+			box_stop_cause: EV_HORIZONTAL_BOX
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
 		do
@@ -115,18 +115,18 @@ feature {NONE} -- Initialization
 			box_thread.disable_item_expand (t_label)
 			
 				--| Stop cause (step completed ...)
-			create box_stop_clause
+			create box_stop_cause
 			create t_label.make_with_text (" Status = ")
 			t_label.align_text_left
 			t_label.set_foreground_color (special_label_col)
 			
-			box_stop_clause.extend (t_label)
-			box_stop_clause.disable_item_expand (t_label)
-			box_stop_clause.set_foreground_color (special_label_col)
+			box_stop_cause.extend (t_label)
+			box_stop_cause.disable_item_expand (t_label)
+			box_stop_cause.set_foreground_color (special_label_col)
 			
 			create stop_cause
 			stop_cause.align_text_left			
-			box_stop_clause.extend (stop_cause)
+			box_stop_cause.extend (stop_cause)
 			
 				--| Exception message
 			create box_exception
@@ -149,8 +149,8 @@ feature {NONE} -- Initialization
 			box_extra.extend (extra_stack_info)
 
 				--| Top box2
-			box2.extend (box_stop_clause)
-			box2.disable_item_expand (stop_cause)
+			box2.extend (box_stop_cause)
+			box2.disable_item_expand (box_stop_cause)
 
 			box2.extend (box_extra)
 			box2.disable_item_expand (box_extra)

@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)is
+	make (an_interface: like interface) is
 			-- Create the row with one column by default.
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
@@ -88,8 +88,6 @@ feature {EV_ANY_I} -- Access
 	on_parented is
 			-- `Current' just parented.
 		do
-			dirty_child
-			parent_imp.update_children
 		end
 
 	set_parent_imp (par_imp: like parent_imp) is
@@ -100,6 +98,40 @@ feature {EV_ANY_I} -- Access
 				parent_imp := par_imp
 			else
 				parent_imp := Void
+			end
+		end
+		
+	set_pixmap (a_pix: EV_PIXMAP) is
+			-- Set the rows `pixmap' to `a_pix'.
+		do
+			internal_pixmap := clone (a_pix)
+			if parent_imp /= Void then
+				parent_imp.set_row_pixmap (parent_imp.ev_children.index_of (Current, 1), a_pix)
+			end
+		end
+		
+	remove_pixmap is
+			-- Set the rows `pixmap' to `a_pix'.
+		do
+			internal_pixmap := Void
+			if parent_imp /= Void then
+				parent_imp.remove_row_pixmap (parent_imp.ev_children.index_of (Current, 1))
+			end
+		end
+		
+	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been added to index `item_index'.
+		do
+			if parent_imp /= Void then
+				parent_imp.on_item_added_at (Current, an_item, item_index)
+			end
+		end
+
+	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been removed from index `item_index'.
+		do
+			if parent_imp /= Void then
+				parent_imp.on_item_removed_at (Current, an_item, item_index)
 			end
 		end
 

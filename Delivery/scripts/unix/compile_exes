@@ -113,7 +113,6 @@ safe_md $INSTALL_DIR/studio/config/$ISE_PLATFORM
 fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/eifinit/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/help/defaults/$ISE_PLATFORM
 move $INSTALL_DIR/studio/config/unix/* $INSTALL_DIR/studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM
@@ -122,7 +121,6 @@ move $INSTALL_DIR/studio/help/defaults/unix/* $INSTALL_DIR/studio/help/defaults/
 fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 fullrd $INSTALL_DIR/precomp/spec/unix
-fullrd $INSTALL_DIR/eifinit/studio/spec/unix
 fullrd $INSTALL_DIR/studio/help/defaults/unix
 
 

@@ -18,6 +18,7 @@ feature {NONE} -- Error Messages
 			-- errors table for project manager
 		once
 			create Result.make (13)
+			Result.put ("An unexpected error occurred within the Eiffel compiler.", eif_exceptions_unspecified)
 			Result.put ("A project has not been succesfully loaded.", eif_exceptions_no_project_loaded)
 			Result.put ("Project was compiled with an alternative version of the compiler.", eif_exceptions_project_incompatible)
 			Result.put ("Project file is corrurpted.", eif_exceptions_project_file_corrupted)

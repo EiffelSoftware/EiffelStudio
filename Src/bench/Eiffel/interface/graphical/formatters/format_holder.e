@@ -13,11 +13,22 @@ inherit
 			change_state as set_selected
 		redefine
 			associated_menu_entry, set_selected,
-			associated_command, associated_button
+			associated_command, associated_button,
+			make_plain
 		end
 
 creation
-	make, make_plain
+	make, 
+	make_plain
+
+feature -- Initialization
+
+	make_plain (a_command: like associated_command) is
+			-- Initialize Current, with `associated_command' as `a_command'.
+		do
+			associated_command := a_command;
+			a_command.set_holder (Current)
+		end;
 
 feature -- Properties
 

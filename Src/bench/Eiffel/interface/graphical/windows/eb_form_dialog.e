@@ -20,7 +20,8 @@ inherit
 			make as old_make
 		redefine
 			implementation, hide, show
-		end
+		end;
+	WINDOWS
 
 creation
 	make
@@ -69,7 +70,8 @@ feature -- Setting
 			if is_popped_up then
 				raise
 			else
-				popup
+				popup;
+				focus_label.initialize_focusables
 			end
 		end;
 
@@ -83,7 +85,7 @@ feature -- Setting
 			-- Show Current.
 		do
 			popup
-		end;
+		end
 
 feature {NONE} -- Implementation
 

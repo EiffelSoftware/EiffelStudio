@@ -20,7 +20,8 @@ inherit
 			make as old_make
 		redefine
 			implementation
-		end
+		end;
+	WINDOWS
 
 creation
 	make
@@ -58,7 +59,8 @@ feature -- Display
 					show
 				end
 			else
-				realize
+				realize;
+				focus_label.initialize_focusables
 			end
 		end;
 

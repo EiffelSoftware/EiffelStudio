@@ -42,4 +42,8 @@ feature -- Access
 	Menu_help_about_item: STRING is "&About..."
 			-- String for menu "Help/About"
 
+	Label_confirm_close_window: STRING is "You are about to close this window.%NClick OK to proceed."
+			-- String for the confirmation dialog box that appears
+			-- when the user try to close the first window.
+
 end -- class INTERFACE_NAMES

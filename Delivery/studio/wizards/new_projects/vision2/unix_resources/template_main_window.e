@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		undefine
-			default_create
+			default_create, copy
 		end
 
 create
@@ -34,7 +34,14 @@ feature {NONE} -- Initialization
 			build_main_container
 			extend (main_container)
 
+				-- Execute `request_close_window' when the user clicks
+				-- on the cross in the title bar.
+			close_request_actions.extend (agent request_close_window)
+
+				-- Set the title of the window
 			set_title (Window_title)
+
+				-- Set the initial size of the window
 			set_size (Window_width, Window_height)
 		end
 
@@ -48,6 +55,27 @@ feature {NONE} -- Initialization
 		end
 
 <FL_MENUBAR_INIT><FL_TOOLBAR_INIT><FL_STATUSBAR_INIT><FL_ABOUTDIALOG_INIT>
+feature {NONE} -- Implementation, Close event
+
+	request_close_window is
+			-- The user wants to close the window
+		local
+			question_dialog: EV_CONFIRMATION_DIALOG
+		do
+			create question_dialog.make_with_text (Label_confirm_close_window)
+			question_dialog.show_modal_to_window (Current)
+
+			if question_dialog.selected_button.is_equal (question_dialog.ev_ok) then
+					-- Destroy the window
+				destroy;
+				
+					-- End the application
+					--| TODO: Remove this line if you don't want the application
+					--|       to end when the first window is closed..
+				(create {EV_ENVIRONMENT}).application.destroy
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	main_container: EV_VERTICAL_BOX

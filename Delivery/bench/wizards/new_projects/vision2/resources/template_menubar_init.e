@@ -62,8 +62,10 @@ feature {NONE} -- Menu Implementation
 
 			file_menu.extend (create {EV_MENU_SEPARATOR})
 
+				-- Create the File/Exit menu item and make it call
+				-- `request_close_window' when it is selected.
 			create menu_item.make_with_text (Menu_file_exit_item)
-			menu_item.select_actions.extend (agent destroy)
+			menu_item.select_actions.extend (agent request_close_window)
 			file_menu.extend (menu_item)
 		ensure
 			file_menu_created: file_menu /= Void and then not file_menu.is_empty

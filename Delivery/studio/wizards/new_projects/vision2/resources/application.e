@@ -31,11 +31,6 @@ feature {NONE} -- Initialization
 				-- create and initialize the first window.
 			create first_window
 
-				-- End the application when the first window is closed.
-				--| TODO: Remove this line if you don't want the application
-				--|       to end when the first window is closed..
-			first_window.close_request_actions.extend (agent end_application)
-
 				-- Show the first window.
 				--| TODO: Remove this line if you don't want the first 
 				--|       window to be shown at the start of the program.
@@ -47,10 +42,4 @@ feature {NONE} -- Implementation
 	first_window: MAIN_WINDOW
 			-- Main window.
 	
-	end_application is
-			-- End the current application.
-		do
-			(create {EV_ENVIRONMENT}).application.destroy
-		end
-
 end -- class APPLICATION

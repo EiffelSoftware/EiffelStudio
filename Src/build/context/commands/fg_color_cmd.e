@@ -18,14 +18,9 @@ feature {NONE}
 
 	old_fg_color_name: STRING;
 
-	default_color: COLOR
-
 	context_work is
 		do
 			old_fg_color_name := context.fg_color_name
-			if (old_fg_color_name = Void) then
-				default_color := context.default_foreground_color
-			end
 		end
 
 	context_undo is
@@ -34,9 +29,6 @@ feature {NONE}
 		do
 			new_fg_color := context.fg_color_name
 			context.set_fg_color_name (old_fg_color_name)
-			if old_fg_color_name = Void then
-				context.set_default_foreground_color (default_color)
-			end
 			old_fg_color_name := new_fg_color
 		end
 

@@ -181,6 +181,15 @@ feature {EV_ANY_IMP} -- List and list item intermediary agent routines
 			l_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
 			l_list_item_list.select_callback (n_args, args)
 		end
+		
+	list_item_check_intermediary (a_c_object: POINTER) is
+			-- List item check button callback
+		local
+			l_list_item_imp: EV_LIST_ITEM_IMP
+		do
+			l_list_item_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			l_list_item_imp.check_callback
+		end
 
 	list_item_deselect_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER) is
 			-- Item deselect callback

@@ -52,7 +52,7 @@ inherit
 			interface
 		end
 	
-	WEL_TOOL_BAR
+	WEL_FLAT_TOOL_BAR
 		rename
 			make as wel_make,
 			button_count as count,
@@ -97,7 +97,6 @@ inherit
 			wel_resize,
 			wel_move,
 			wel_move_and_resize,
-			default_style,
 			default_process_message
 		end
 
@@ -127,21 +126,6 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			--create children.make (1)
 		end
-
-	--make_with_size (w, h: INTEGER) is
-	--		-- Create the tool-bar with a size (w, h).
-	--	do
-	--		make (Current)
-	--		set_bitmap_size (w, h)
-	--	end
-
-	--make_with_height (h: INTEGER) is
-	--		-- Create the tool-bar with all buttons of height (h)
-	--	--| FIXME needs implementing IEK 19990928
-	--	do
-	--		make (Current)
-	--		-- set_bitmap_size (0, h)
-	--	end
 
 feature -- Access
 
@@ -193,24 +177,10 @@ feature -- Access
 
 feature -- Status report
 
-	button_width: INTEGER is
-			-- Current width of the buttons
-		do
-			Result := cwin_lo_word (cwin_send_message_result (wel_item,
-						Tb_getbuttonsize, 0, 0))
-		end
-
 	separator_width: INTEGER is
 			-- Current width of a separator
 		do
 			Result := 8
-		end
-
-	button_height: INTEGER is
-			-- Current width of the buttons
-		do
-			Result := cwin_hi_word (cwin_send_message_result (wel_item,
-						Tb_getbuttonsize, 0, 0))
 		end
 
 	shown: BOOLEAN is
@@ -239,6 +209,9 @@ feature -- Element change
 			bmp: WEL_TOOL_BAR_BITMAP
 			but: WEL_TOOL_BAR_BUTTON
 			num: INTEGER
+			pixmap: EV_PIXMAP_IMP
+			gray_pixmap: EV_PIXMAP_IMP
+			button_text: STRING
 		do
 			-- We create the button
 			inspect button.type
@@ -255,16 +228,31 @@ feature -- Element change
 				but.set_command_id (button.id)
 			end
 	
-			-- First, we take care of the pixmap,
-			if button.pixmap_imp /= Void then
-				create bmp.make_from_bitmap (button.pixmap_imp.bitmap)
-				add_bitmaps (bmp, 1)
+				-- First, we take care of the pixmap,
+			pixmap := button.pixmap_imp
+			if pixmap /= Void then
+					-- The first bitmap added determine the size of all bitmaps
+				if not has_bitmap then
+					set_bitmap_size(pixmap.width, pixmap.height)
+				end
+
+				gray_pixmap := button.gray_pixmap_imp
+				if gray_pixmap /= Void then
+					add_masked_bitmap (gray_pixmap.bitmap, gray_pixmap.mask_bitmap)
+					add_hot_masked_bitmap(pixmap.bitmap, pixmap.mask_bitmap)
+				else
+						-- No gray pixmap, so both normal and hot state will
+						-- have the same bitmap.
+					add_masked_bitmap (pixmap.bitmap, pixmap.mask_bitmap)
+					add_hot_masked_bitmap(pixmap.bitmap, pixmap.mask_bitmap)
+				end
 				but.set_bitmap_index (last_bitmap_index)
 			end
 
-			-- Then, the text of the button.
-			if button.text /= Void and then text /= "" then
-				add_strings (<<button.text>>)
+				-- Then, the text of the button.
+			button_text := button.text -- Speed optimization
+			if button_text /= Void and then not button_text.empty then
+				add_strings (<<button_text>>)
 				but.set_string_index (last_string_index)
 			end
 
@@ -328,7 +316,7 @@ feature -- Basic operation
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
 			-- XX To update XX
-			-- This function is used each we change an attribute of a button as the
+			-- This function is used each time we change an attribute of a button as the
 			-- text or the pixmap. Yet, it should only be a Temporary implementation.
 			-- For now, no message is available to change the text of a button.
 			-- But this implementation should be changes as soon as windows allow
@@ -421,13 +409,6 @@ feature {NONE} -- WEL Implementation
 			bar.set_parent (a_parent)
 		end
 
-	default_style: INTEGER is
-			-- A new style to avoid a line on the top.
-		do
-			Result := {WEL_TOOL_BAR} Precursor + Tbstyle_flat
-					--	+ Tbstyle_list
-		end
-
 	default_process_message (msg, wparam, lparam: INTEGER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -438,13 +419,9 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_wm_ncpaint (wparam: INTEGER) is
-			-- Wm_paint message.
-			-- A WEL_DC and WEL_PAINT_STRUCT are created and
-			-- passed to the `on_paint' routine.
-			-- To be more efficient when the windows does not
-			-- need to paint something, this routine can be
-			-- redefined to do nothing (eg. The object creation are
-			-- useless).
+			-- Wm_ncpaint message (NON-CLIENT area PAINT)
+			-- Draw the part that is below the toolbar
+			-- i.e. the separation line.
 		require
 			exists: exists
 		local
@@ -666,6 +643,13 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/20 23:22:13  pichery
+--| - EV_TOOL_BAR_IMP now inherit from WEL_FLAT_TOOL_BAR
+--|    * ImageList can now be used internally for Comctrl32.dll > 4.70
+--|    * Gray Images can now be used
+--|    ...
+--| - Implemented the "gray pixmap" behaviour.
+--|
 --| Revision 1.29  2000/03/14 20:09:08  brendel
 --| Rearranged initialization
 --|

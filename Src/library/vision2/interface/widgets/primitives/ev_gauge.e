@@ -36,6 +36,7 @@ feature -- Access
 
 	value: INTEGER is
 			-- Current position within `range'.
+			-- Default: 0
 		do
 			Result := implementation.value
 		ensure
@@ -44,6 +45,7 @@ feature -- Access
 
 	step: INTEGER is
 			-- Size of change made by `step_forward' or `step_backward'.
+			-- Default: 1
 		do
 			Result := implementation.step
 		ensure
@@ -52,6 +54,7 @@ feature -- Access
 
 	leap: INTEGER is
 			-- Size of change made by `leap_forward' or `leap_backward'.
+			-- Default: 10
 		do
 			Result := implementation.leap
 		ensure
@@ -60,6 +63,7 @@ feature -- Access
 
 	maximum: INTEGER is
 			-- Top of `range'.
+			-- Default: 100
 		do
 			Result := implementation.maximum
 		ensure
@@ -68,6 +72,7 @@ feature -- Access
 
 	minimum: INTEGER is
 			-- Bottom of `range'.
+			-- Default: 0
 		do
 			Result := implementation.minimum
 		ensure
@@ -76,11 +81,23 @@ feature -- Access
 
 	range: INTEGER_INTERVAL is
 			-- Allowed values of `value'.
+			-- Default: 0 |..| 100
 		do
 			Result := implementation.range
 		ensure
 			bridge_ok: Result /= Void and then
 				Result.is_equal (implementation.range)
+		end
+
+feature -- Status report
+
+	proportion: REAL is
+			-- Relative position of `value' in `range'.
+			-- Range: [0, 1]. Default: 0.0
+		do
+			Result := implementation.proportion
+		ensure
+			bridge_ok: Result = implementation.proportion
 		end
 
 feature -- Status setting
@@ -122,9 +139,7 @@ feature -- Element change
 	set_value (a_value: INTEGER) is
 			-- Assign `a_value' to `value'.
 		require
-			--|FIXME this should use `range'.
-			a_value_within_bounds: a_value >= minimum
-				and then a_value <= maximum
+			a_value_within_bounds: range.has (a_value)
 		do
 			implementation.set_value (a_value)
 		ensure
@@ -153,11 +168,10 @@ feature -- Element change
 
 	set_minimum (a_minimum: INTEGER) is
 			-- Assign `a_minimum' to `minimum'.
-			-- Bring `value' within `range' if necisary.
 		require
 			a_minimum_not_greater_than_maximum:
 				a_minimum <= maximum
-			a_minimum_not_smaller_than_value:
+			a_minimum_not_greater_than_value:
 				a_minimum <= value			
 		do
 			implementation.set_minimum (a_minimum)
@@ -167,7 +181,6 @@ feature -- Element change
 
 	set_maximum (a_maximum: INTEGER) is
 			-- Assign `a_maximum' to `maximum'.
-			-- Bring `value' within `range' if necisary.
 		require
 			a_maximum_not_smaller_than_minimum:
 				a_maximum >= minimum
@@ -181,7 +194,6 @@ feature -- Element change
 
 	set_range (a_range: INTEGER_INTERVAL) is
 			-- Assign `a_range' to `range'.
-			-- Bring `value' within `range' if necisary.
 		require
 			a_range_not_void: a_range /= Void
 			a_range_not_empty: not a_range.empty
@@ -209,6 +221,16 @@ feature -- Element change
 			maximum_consistent: maximum = a_range.upper
 		end
 
+feature -- Status setting
+
+	set_proportion (a_proportion: REAL) is
+			-- Move `value' to `a_proportion' within `range'.
+		require
+			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
+		do
+			implementation.set_proportion (a_proportion)
+		end
+
 feature -- Event handling
 
 	change_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -231,14 +253,13 @@ feature {EV_ANY} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			--|FIXME feature comments should mention these values.
-			--|FIXME Why is minimum 1 and not 0??
 			Result := Precursor and then
 				maximum = 100 and then
-				minimum = 1 and then
-				value = 1 and then
+				minimum = 0 and then
+				value = 0 and then
 				step = 1 and then
-				leap = 10
+				leap = 10 and then
+				proportion = 0
 		end
 
 	make_for_test is
@@ -265,7 +286,14 @@ invariant
 		value >= minimum and then value <= maximum
 	step_positive: is_useable implies step > 0
 	leap_positive: is_useable implies leap > 0
-	change_actions_not_void: is_useable implies change_actions /= Void
+	change_actions_not_void: is_useable implies
+		change_actions /= Void
+	proportion_within_range: is_useable implies
+		proportion >= 0 and proportion <= 1
+	proportion_definition: is_useable implies
+		maximum = minimum implies proportion = 0.0
+	proportion_correct_value: (is_useable and maximum /= minimum) implies
+		value / (maximum - minimum) = proportion
 
 	--| FIXME VB 02/14/2000
 	--| This should work but it does not for melted code.
@@ -297,6 +325,10 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/13 18:01:18  brendel
+--| Revised. Added proportion and set_proportion.
+--| Default value for minimum is now 0.
+--|
 --| Revision 1.13  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

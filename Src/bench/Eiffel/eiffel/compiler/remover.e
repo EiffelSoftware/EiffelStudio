@@ -80,6 +80,7 @@ feature {NONE}
 		local
 			depend_unit: DEPEND_UNIT
 			body_id: BODY_ID
+			rout_id: ROUTINE_ID
 		do
 			from
 				depend_list.start
@@ -100,9 +101,9 @@ DEBUG ("DEAD_CODE")
 		io.putstring ("previously treated%N")
 	end
 end
-					if not (is_treated (body_id.id, depend_unit.rout_id) or else 
-						depend_unit.rout_id.is_attribute) then
-						mark_treated (body_id.id, depend_unit.rout_id)
+					rout_id := depend_unit.rout_id
+					if not (is_treated (body_id.id, rout_id) or else rout_id.is_attribute) then
+						mark_treated (body_id.id, rout_id)
 							-- we mark dead because if it was already alive and not
 							-- treated then we are in the case of a double inheritance
 							-- with one redefine, one rename (cf the doc I MAY write 

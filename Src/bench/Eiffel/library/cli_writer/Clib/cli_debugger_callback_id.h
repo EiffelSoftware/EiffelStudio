@@ -33,7 +33,8 @@
 
 
 enum e_callback_id {
-	CB_BREAKPOINT=1,
+	CB_NONE=0,
+	CB_BREAKPOINT,
 	CB_STEP_COMPLETE,
 	CB_BREAK,
 	CB_EXCEPTION,

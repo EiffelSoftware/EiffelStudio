@@ -10,6 +10,12 @@ class
 
 inherit
 	EOLE_UNKNOWN
+		export
+			{NONE}	create_ole_interface_ptr
+		redefine
+			interface_identifier,
+			is_initializable_from_eiffel
+		end
 
 	EOLE_STGC
 	
@@ -23,6 +29,18 @@ creation
 	make
 	
 feature -- Access
+
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_stream
+		end
+
+	is_initializable_from_eiffel: BOOLEAN is
+			-- Does interface support Callbacks?
+		once
+			Result := False
+		end
 
 	end_of_stream: BOOLEAN
 			-- Has end of stream been reached?

@@ -12,6 +12,12 @@ class
 
 inherit
 	EOLE_UNKNOWN
+		export
+			{NONE} create_ole_interface_ptr
+		redefine
+			interface_identifier,
+			is_initializable_from_eiffel
+		end
 
 	EOLE_GUID
 
@@ -20,6 +26,20 @@ inherit
 creation
 	make
 	
+feature -- Access
+
+	interface_identifier: STRING is
+			-- Unique interface identifier
+		once
+			Result := Iid_type_lib
+		end
+
+	is_initializable_from_eiffel: BOOLEAN is
+			-- Does interface support Callbacks?
+		once
+			Result := False
+		end
+
 feature -- Element change
 
 	load_type_lib (filename: FILE_NAME) is

@@ -23,8 +23,8 @@ feature -- Access
 			Result := ole2_paramdesc_flags (ole_ptr)
 		end
 
-	default: EOLE_VARIANT is
-			-- Defaul value for parameter if `flags'
+	default_value: EOLE_VARIANT is
+			-- Default value for parameter if `flags'
 			-- contain `Paramflag_fopt' and
 			-- `Paramflag_fhasdefault'
 		require

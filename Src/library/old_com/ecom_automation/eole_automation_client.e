@@ -49,9 +49,8 @@ feature -- Element change
 		do
 			make
 			!! class_factory.make
-			if co_initialize = S_false then
-				!! msg_box.make
-				msg_box.warning_message_box (Void, "CoInitialize returned S_FALSE", "COM Initialization")
+			if ole_initialize /= S_ok then
+				com_init_error_process
 			end
 			class_factory_ptr := co_get_class_object (class_id, 
 					Clsctx_local_server, Iid_class_factory)
@@ -98,6 +97,12 @@ feature -- Element change
 		end
 	
 feature {NONE} -- Implementation
+
+	com_init_error_process is
+			-- Process COM intialization error
+			-- By default: do nothing
+		do
+		end
 
 	function_result: EOLE_VARIANT is
 			-- Result of last `dispatch.invoke'

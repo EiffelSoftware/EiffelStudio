@@ -119,12 +119,12 @@ feature -- Access
 feature -- Element Change
 
 	register_server is
-			-- Register server
+			-- Register server.
 		deferred
 		end
 		
 	unregister_server is
-			-- Unregister server
+			-- Unregister server.
 		deferred
 		end
 
@@ -134,13 +134,14 @@ feature -- Element Change
 			exception: EXCEPTIONS
 		do
 			make
+			co_make
 			!! ole_dispatcher.make
 			add_ref
 			if ole_initialize /= S_ok then
-				exception.raise ("Could not initialize OLE")
+				com_init_error_process
 			end
 			token := co_register_class_object (class_identifier, Current, context, register_flags)
-			if status.succeeded then
+			if co_status.succeeded then
 				wel_appl_make
 			else
 				!! exception
@@ -150,7 +151,7 @@ feature -- Element Change
 		end
 		
 	terminate is
-			-- End use of server
+			-- End use of server.
 		local
 			revoke_exception: EXCEPTIONS
 			ref_counter: INTEGER
@@ -165,6 +166,12 @@ feature -- Element Change
 	
 feature {NONE} -- Implementation
 
+	com_init_error_process is
+			-- Process COM intialization error
+			-- By default: do nothing
+		do
+		end
+	
 	default_show_cmd: INTEGER
 			-- Default command used to show `main_window':
 			-- hidden if server has been called with switch

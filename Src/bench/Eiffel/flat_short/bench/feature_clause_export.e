@@ -1,5 +1,11 @@
--- A collection of features with common comment and export
--- policies
+indexing
+
+	description: 
+		"A collection of features with the same export policy and%
+		%comments. Features are sorted alphabetically (if option is%
+		%set - `order_same_as_text' is False)."
+	date: "$Date$";
+	revision: "$Revision $"
 
 class FEATURE_CLAUSE_EXPORT
 
@@ -9,100 +15,138 @@ inherit
 		undefine
 			is_equal
 		end;
-	SPECIAL_AST_B
+	SHARED_FORMAT_INFO;
+	SHARED_TEXT_ITEMS
 
 creation
 
 	make
 
+feature -- Initialization
 
-feature
-
-	make (ast: FEATURE_AS_B; f: FEATURE_I) is
+	make (feat_adapter: FEATURE_ADAPTER) is
+			-- Initialize Current.
+		require
+			valid_feat_adapter: feat_adapter /= Void;
 		do
-			reference := f.export_status;
-			!!features.make;
-			add (ast);
+			export_status := feat_adapter.target_feature.export_status;
+			!! features.make;
+			add (feat_adapter);
+		ensure
+			export_set: export_status = feat_adapter.target_feature.export_status;
+			has_feat_adapter: features.has (feat_adapter)
 		end;
 
-	features: SORTED_TWO_WAY_LIST [FEATURE_AS_B];
+feature -- Properties
+
+	features: SORTED_TWO_WAY_LIST [FEATURE_ADAPTER];
+			-- Features sorted on name within 
+			-- Current feature clause
 	
 	comment: EIFFEL_COMMENTS;
+			-- Comment for feature clause
+
+feature -- Setting
 
 	set_comment (c: like comment) is
+			-- Set comment to `c'.
 		do
 			comment := c;
+		ensure
+			comment = c
 		end;
 
-	
-	add (f: FEATURE_AS_B) is
-		do
-			if not order_same_as_text then
-				features.extend (f);
-			else
-				features.finish;
-				features.put_right (f)
-			end;
-		end;
+feature -- Access
 
 	empty: BOOLEAN is
+			-- Are there any features?
 		do
 			Result := features.empty;
 		end;
 
-			
+feature -- Comparison
+
 	infix "<" (other: like Current): BOOLEAN is
-			-- is other more export restrictive than current
+			-- Is Current less restrictive than `other'?
 		do
-			Result := other.reference.equiv (reference);
+			Result := not export_status.is_subset (other.export_status);
 		end;
 						
-			
 	compatible (other: like Current): BOOLEAN is
+			-- Is `other' clause compatible with Current?
 		do
-			Result := other.reference.same_as (reference);	
+			Result := other.export_status.same_as (export_status);	
 		end;
 
-	export_less_than (names: NAMES_LIST): BOOLEAN is
+	can_include (feat: FEATURE_I): BOOLEAN is
+			-- Can current include export status from `feat'?
 		do
-			--Result := reference  names.feature_i.export_status;
+			Result := export_status.same_as (feat.export_status);
 		end;
 
-	can_include (names: NAMES_LIST): BOOLEAN is
+feature -- Element change
+	
+	add (f: FEATURE_ADAPTER) is
+			-- Add feature adapter `f' to Current feature clause.
+		require
+			valid_f: f /= Void
 		do
-			Result := reference.same_as (names.feature_i.export_status);
+			features.finish;
+			features.put_right (f)
+		ensure
+			added: features.has (f)
 		end;
 
 	merge (other: like Current) is
+			-- Merge `other' clause with Current.
+		require
+			valid_other: other /= Void
 		do
 			features.merge (other.features);			
 		end;
 
+feature -- Context output
+
 	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text
+			-- Reconstitute text.
+		local
+			not_first: BOOLEAN
 		do
 			ctxt.put_text_item (ti_Before_feature_clause);
-			ctxt.begin;
-			ctxt.next_line;
 			ctxt.put_text_item (ti_Feature_keyword);
 			ctxt.put_space;
-			--clients_list.format (ctxt);
-			reference.format (ctxt);
+			export_status.format (ctxt);
 			ctxt.put_space;
-			ctxt.put_comment (comment);
-			ctxt.next_line;
-			ctxt.indent_one_more;
+			if comment = Void then
+				ctxt.new_line
+			else
+				ctxt.put_comment (comment);
+			end;
+			ctxt.indent;
+			ctxt.set_separator (Void);
+			ctxt.set_new_line_between_tokens;
+			if not order_same_as_text then
+					-- Sort features if needed
+				features.sort
+			end;
 			from
 				features.start
 			until
 				features.after
 			loop
+				if not_first then
+					not_first := True;
+					ctxt.put_separator
+				end;
 				features.item.format (ctxt);
 				features.forth;
 			end;
-			ctxt.commit;
 			ctxt.put_text_item (ti_After_feature_clause)
+			ctxt.exdent;
+			ctxt.new_line;
 		end
+
+feature -- EiffelCase output
 
 	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
 			-- List of features in case format within
@@ -119,12 +163,14 @@ feature
 			end;
 		end;	
 			
-feature {FEATURE_CLAUSE_EXPORT, CATEGORY}
+feature {FEATURE_CLAUSE_EXPORT, CATEGORY} -- Implementation
 
-	reference: EXPORT_I;
+	export_status: EXPORT_I;
+			-- Export status of Current feature clause
+
+invariant
+	
+	valid_features: features /= Void;
+	valid_export_status: export_status /= Void
 
 end
-
-
-
-	

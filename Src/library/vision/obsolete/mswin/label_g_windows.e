@@ -8,7 +8,7 @@ class
 	LABEL_G_WINDOWS
 
 inherit
-	LABEL_WINDOWS
+	LABEL_IMP
 
 	LABEL_G_I
  

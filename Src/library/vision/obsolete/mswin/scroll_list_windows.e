@@ -120,7 +120,7 @@ inherit
 			on_lbn_selchange
 		end
 
-	PRIMITIVE_WINDOWS
+	PRIMITIVE_IMP
 		redefine
 			realize, 
 			unrealize, 

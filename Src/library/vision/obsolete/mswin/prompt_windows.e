@@ -7,7 +7,7 @@ class
 	PROMPT_WINDOWS
 
 inherit
-	TERMINAL_WINDOWS
+	TERMINAL_IMP
 		rename
 			make as terminal_make
 		redefine

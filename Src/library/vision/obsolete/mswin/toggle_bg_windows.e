@@ -7,7 +7,7 @@ class
 	TOGGLE_BG_WINDOWS 
  
 inherit
-	TOGGLE_B_WINDOWS
+	TOGGLE_B_IMP
 
 	TOGGLE_BG_I
 

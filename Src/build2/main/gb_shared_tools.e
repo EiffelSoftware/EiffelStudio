@@ -120,8 +120,6 @@ feature -- Access
 			create Result
 		end
 
-		
-		
 	all_floating_tools: ARRAYED_LIST [EV_DIALOG] is
 			-- `Result' is all tools that are independent of the main window.
 			-- The `tools_always_on_top' command applies to these windows only.
@@ -133,46 +131,70 @@ feature -- Access
 			Result.extend (history_dialog)
 		end
 		
-	tool_by_name (name: STRING): EV_WIDGET is
+	all_storable_tools: ARRAYED_LIST [GB_STORABLE_TOOL] is
+			-- All tools that are storable.
+		do
+			create Result.make (4)	
+			Result.extend (Component_selector)
+			Result.extend (Layout_constructor)
+			Result.extend (Type_selector)
+			Result.extend (Window_selector)
+		end
+
+	tool_by_name (name: STRING): GB_STORABLE_TOOL is
 			-- `Result' is tool corresponding to `name'.
 		require
 			name_valid: valid_tool_name (name)
+		local
+			tools: ARRAYED_LIST [GB_STORABLE_TOOL]	
 		do
-			if name.is_equal (tool_name_as_storable (Type_selector_name)) then
-				Result := Type_selector
-			elseif name.is_equal (tool_name_as_storable (Component_selector_name)) then
-				Result := Component_selector
-			elseif name.is_equal (tool_name_as_storable (Window_selector_name)) then
-				Result := window_selector
+			tools := all_storable_tools
+			from
+				tools.start
+			until
+				tools.off or Result /= Void
+			loop
+				if name.is_equal (tools.item.storable_name) then
+					Result := tools.item
+				end
+				tools.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
-	name_by_tool (a_widget: EV_WIDGET): STRING is
+	name_by_tool (a_widget: GB_STORABLE_TOOL): STRING is
 			-- Result is STRING representation of tool `a_widget'
 			-- Will be displayed with tool.
 		require
 			a_widget_not_void: a_widget /= Void
+		local
+			tools: ARRAYED_LIST [GB_STORABLE_TOOL]	
 		do
-			if a_widget = Type_selector then
-				Result := Type_selector_name
-			elseif a_widget = Component_selector then
-				Result := Component_selector_name
-			elseif a_widget = Window_selector then
-				Result := Window_selector_name
+			tools := all_storable_tools
+			from
+				tools.start
+			until
+				tools.off or Result /= Void
+			loop
+				if tools.item = a_widget then
+					Result := tools.item.name
+				end
+				tools.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
-	storable_name_by_tool (a_widget: EV_WIDGET): STRING is
+	storable_name_by_tool (a_widget: GB_STORABLE_TOOL): STRING is
 			-- Result is a string representation of tool `a_widget'.
 			-- Used in the preferences representation.
 		require
 			a_widget_not_void: a_widget /= Void
+		local
+			tool: GB_STORABLE_TOOL
 		do
-			Result := tool_name_as_storable (name_by_tool (a_widget))
+			Result := a_widget.storable_name
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -211,6 +233,5 @@ feature {NONE} -- Implementation
 			Result.to_lower
 			Result.prune_all (' ')
 		end
-		
 
 end -- class GB_ACCESSIBLE

@@ -68,19 +68,23 @@ feature -- Basic operation
 				end
 				object.set_first (widget)
 				display_object.child.set_first (widget2)
-				layout_item.go_i_th (1)
-				layout_item.put_left (an_object.layout_item)
+				if layout_item.data = Void then
+					layout_item.go_i_th (1)
+					layout_item.put_left (an_object.layout_item)
+				end
 				add_child (an_object, 1)
 			else
 				object.set_second (widget)
 				display_object.child.set_second (widget2)
 					-- Special case when moving the first item to the
 					-- second position.
-				if position = 2 and (layout_item.is_empty) then
-					layout_item.extend (an_object.layout_item)
-				else
-					layout_item.go_i_th (2)
-					layout_item.put_left (an_object.layout_item)
+				if layout_item.data = Void then
+					if position = 2 and (layout_item.is_empty) then
+						layout_item.extend (an_object.layout_item)
+					else
+						layout_item.go_i_th (2)
+						layout_item.put_left (an_object.layout_item)
+					end
 				end
 				add_child (an_object, 2)
 			end

@@ -1717,20 +1717,17 @@
             <Directory Id="dotnet1" Name="dotnet">
               <Directory Id="vision23" Name="vision2">
                 <Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
-                  <File Id="ace_v1.0.ace" Name="ACE_V1~1.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
-                  <File Id="ace_v1.1.ace" Name="ACE_V1~2.ACE" LongName="ace_v1.1.ace" />
+                  <File Id="ace.ace2" Name="ace.ace" KeyPath="yes" />
                 </Component>
               </Directory>
               <Directory Id="wel2" Name="wel">
                 <Component Id="wel2" Guid="7B4957D5-F93E-4CB4-BF19-8F185BB0FF5E">
-                  <File Id="ace_v1.0.ace1" Name="ACE_V1~3.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
-                  <File Id="ace_v1.1.ace3" Name="ACE_V1~5.ACE" LongName="ace_v1.1.ace" />
+					<File Id="ace.ace3" Name="ace.ace" KeyPath="yes" />
                 </Component>
               </Directory>
               <Directory Id="base4" Name="base">
                 <Component Id="base4" Guid="23CFD01E-AE9F-40DE-96E5-2005039047B6">
-                  <File Id="ace_v1.0.ace2" Name="ACE_V1~4.ACE" LongName="ace_v1.0.ace" KeyPath="yes" />
-                  <File Id="ace_v1.1.ace4" Name="ACE_V1~6.ACE" LongName="ace_v1.1.ace" />
+                  <File Id="ace.ace4" Name="ace.ace" KeyPath="yes" />
                 </Component>
               </Directory>
             </Directory>

@@ -8,7 +8,7 @@ class INVALID feature
 		local
 			p: PARENT
 		do
-			!! p;
+			create p;
 			p.first_message (1)
 		end;
 

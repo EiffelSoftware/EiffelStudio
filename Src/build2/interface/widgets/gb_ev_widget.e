@@ -101,7 +101,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Minimum_width_string)
 			if element_info /= Void then
-				for_first_object (agent {EV_WIDGET}.set_minimum_height (element_info.data.to_integer))
+				for_first_object (agent {EV_WIDGET}.set_minimum_width (element_info.data.to_integer))
 			end
 			
 			element_info := full_information @ (Minimum_height_string)

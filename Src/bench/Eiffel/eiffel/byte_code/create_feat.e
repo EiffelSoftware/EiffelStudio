@@ -32,12 +32,9 @@ feature
 
 	rout_id: ROUTINE_ID is
 			-- Routine ID of the feature to be created
-		local
-			a_class: CLASS_C;
 		do
-			a_class := context.current_type.base_class;
-			Result := a_class.feature_table.item
-				(feature_name).rout_id_set.first;
+			Result := context.current_type.base_class.feature_table.
+						item (feature_name).rout_id_set.first;
 		ensure
 			routine_id_not_void: Result /= Void
 		end;
@@ -79,17 +76,16 @@ feature
 						-- Attribute is polymorphic
 					create_table_name := rout_id.type_table_name;
 					gen_file.putchar ('(');
-                    gen_file.putstring (create_table_name);
-                    gen_file.putchar ('-');
-                    gen_file.putint (entry.min_type_id - 1);
-                    gen_file.putchar (')');
-					gen_file.putchar ('[');
+					gen_file.putstring (create_table_name);
+					gen_file.putchar ('-');
+					gen_file.putint (entry.min_type_id - 1);
+					gen_file.putstring (")[");
 					context.generate_current_dtype;
 					gen_file.putchar (']');
 						-- Mark routine id used
 					Eiffel_table.mark_used (rout_id);
 						-- Remember extern declaration
-                    Extern_declarations.add_type_table (clone (create_table_name));
+					Extern_declarations.add_type_table (clone (create_table_name));
 				end;
 			else
 				if

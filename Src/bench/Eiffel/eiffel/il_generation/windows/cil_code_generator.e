@@ -3508,7 +3508,6 @@ feature -- Once management
 	generate_once_result_address is
 			-- Generate test on `done' of once feature `name'.
 		do
-			put_boolean_constant (True)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsflda, result_token)
 		end
 

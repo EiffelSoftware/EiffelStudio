@@ -73,7 +73,9 @@ feature {NONE}
 			window_c: WINDOW_C;
 			type_stone: TYPE_STONE
 		do
-			if not data.is_in_a_group then
+			if not data.is_in_a_group and then
+				not data.is_a_group
+			then
 				type_stone ?= dropped;
 				group_stone ?= type_stone;
 				if group_stone /= Void then
@@ -125,7 +127,9 @@ feature {NONE}
 			dropped_context: CONTEXT;
 			window_c: WINDOW_C;
 		do
-			if not data.is_in_a_group then
+			if not data.is_in_a_group and then
+				not data.is_a_group
+			then
 				dropped_context := dropped.data;
 				window_c ?= dropped_context;
 				if (window_c = Void) then

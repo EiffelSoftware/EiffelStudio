@@ -32,7 +32,6 @@ feature
 			end;
 		end;
 
-
 	set_expressions (e: like expressions) is
 			-- Assign `e' to `expressions'.
 		do
@@ -108,7 +107,7 @@ feature
 							ba.append (Bc_cast_double)
 						end
 					elseif target_type.is_float and then
-						actual_type.is_long
+						(actual_type.is_long or else actual_type.is_double)
 					then
 						ba.append (Bc_cast_float)
 					end

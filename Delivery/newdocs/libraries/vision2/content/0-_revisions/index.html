@@ -120,6 +120,8 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_TEXT_COMPONENT</b> - Fixed `text_length' which was returning incorrect value for all descendents.</li>
 	<li><b>EV_TEXT</b> - Fixed `line_count' which was previously returning the correct result + 1.</li>
 	<li><b>EV_SCROLLABLE_AREA</b> - Fixed crash which occurred when you attempted to use `set_x_offset' or `set_y_offset' before the area had been parented or displayed.</li>
+	<li><b>EV_FONTABLE</b> - Fixed bug when `font' was queried, `preferred_families' was not returned correctly, and would always be empty.</li>
+	<li><b>EV_CONTAINER</b> - `set_background_pixmap' was not correctly cloning the image of the pixmap, and the displayed image could then be modified after setting, by changing the image of the original pixmap.</li>
 	</ul>
   <li><b>Gtk</b>
     <ul>

@@ -206,11 +206,6 @@ feature -- Basic operations
 			compute_minimum_size
 			if parent_imp /= Void then
 				parent_imp.notify_change (type)
-			else
-				check
-					-- In EV_WINDOW_IMP, this feature is redefined.
-					not_called: False
-				end
 			end
 		end
 
@@ -343,6 +338,9 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/14 16:17:05  brendel
+--| Removed check since it was incorrect.
+--|
 --| Revision 1.13  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -254,6 +254,7 @@ feature {NONE}-- Initialization
 				--Connect events.
 			close_request_actions.extend (agent close_test)
 			file_exit.select_actions.extend (agent close_test)
+			help_about.select_actions.extend (agent display_about_dialog)
 			l_notebook_1.selection_actions.extend (agent clear_events)
 			select_all.select_actions.extend (agent select_all_events)
 			clear_all.select_actions.extend (agent clear_all_events)
@@ -313,6 +314,11 @@ feature {NONE} -- Implementation
 	
 	close_test is
 			-- Called by `close_request_actions' of `Current'.
+		deferred
+		end
+	
+	display_about_dialog is
+			-- Called by `select_actions' of `help_about'.
 		deferred
 		end
 	

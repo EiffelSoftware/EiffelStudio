@@ -65,6 +65,42 @@ feature {NONE} -- Implementation
 		do
 			text_entry.set_text (first.text)
 		end
+		
+	set_up_user_events (vision2_object, an_object: like ev_type) is
+			-- Add events necessary for `vision2_object'.
+		do
+			user_event_widget ?= vision2_object
+			if user_event_widget /= Void then
+				objects.extend (an_object)
+				objects.extend (vision2_object)
+				user_event_widget.change_actions.force_extend (agent start_timer)
+			end
+		end	
+	
+	start_timer is
+			-- Start a timer, which is used as a delay between an event begin
+			-- received by `user_event_widget' and `check_state'.
+		local
+			timer: EV_TIMEOUT
+		do
+			create timer.make_with_interval (10)
+			timer.actions.extend (agent check_state)
+			timer.actions.extend (agent timer.destroy)
+		end
+		
+	check_state is
+			-- Update the display window representation of
+			-- the gauge, to reflect change from user.
+		do
+			if user_event_widget.has_focus and then not user_event_widget.text.is_equal (objects.first.text) then
+				objects.first.set_text (user_event_widget.text)
+				update_editors
+				enable_project_modified
+			end
+		end
+		
+	user_event_widget: EV_TEXT_COMPONENT
+		-- Used to handle the events on the builder window.
 
 	set_text (a_text: STRING) is
 			-- Assign `text' of `text_entry' to all objects.

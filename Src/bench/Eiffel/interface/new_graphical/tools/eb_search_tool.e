@@ -443,7 +443,6 @@ feature {NONE} -- Implementation
 
 			create options_button.make_with_text (Interface_names.l_Search_options_hide)
 			options_button.set_pixmap (Pixmaps.Icon_nothing)
-			options_button.align_text_left
 			options_button.pointer_button_press_actions.force_extend (~toggle_options)
 			create options_toolbar
 			options_toolbar.extend (options_button)

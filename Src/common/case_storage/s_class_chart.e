@@ -6,15 +6,15 @@ inherit
 
 feature
 
-	queries: FIXED_LIST [S_TEXT_DATA];
+	queries: ARRAYED_LIST [S_TEXT_DATA];
 			-- Comments of current class functions,
 			-- as inputed in the chart view
 
-	commands: FIXED_LIST [S_TEXT_DATA];
+	commands: ARRAYED_LIST [S_TEXT_DATA];
 			-- Comments of current class routines,
 			-- as inputed in the chart view
 
-	constraints: FIXED_LIST [S_TEXT_DATA];
+	constraints: ARRAYED_LIST [S_TEXT_DATA];
 			-- Assertions and invariants of the current class,
 			-- as inputed in the chart view.
 

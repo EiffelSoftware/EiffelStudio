@@ -128,15 +128,71 @@ feature {NONE}
 	make (a_name: STRING) is
 		do
 			old_make (a_name);
-			!! disk_content;
+			!! disk_content.make;
 		end;
 
 feature
 
+	public_features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- All features 
+		local
+			f_clause: S_FEATURE_CLAUSE
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				f_clause := feature_clause_list.item;
+				if f_clause.export_i.is_all then
+					Result.append (f_clause.features);
+				end;
+				feature_clause_list.forth
+			end
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	private_features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- All features 
+		local
+			f_clause: S_FEATURE_CLAUSE
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				f_clause := feature_clause_list.item;
+				if f_clause.export_i.is_none then
+					Result.append (f_clause.features);
+				end;
+				feature_clause_list.forth
+			end
+		ensure
+			valid_result: Result /= Void
+		end;
+
 	features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- All features 
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				Result.append (feature_clause_list.item.features);
+				feature_clause_list.forth
+			end
+		end; 
+
+	feature_clause_list: ARRAYED_LIST [S_FEATURE_CLAUSE] is
 			-- Features of class
 		do
-			Result := disk_content.features
+			Result := disk_content.feature_clause_list
 		end;
  
 	invariants: FIXED_LIST [S_TAG_DATA] is
@@ -151,16 +207,16 @@ feature
 			Result := disk_content.chart
 		end;
 
-	set_features (l: like features) is
+	set_feature_clause_list (l: like feature_clause_list) is
 			-- Set features to `l'.
 			--| Allow empty features to be stored
 			--| to disk (because of bench).
 		require
 			valid_l: l /= Void;
 		do
-			disk_content.set_features (l)
+			disk_content.set_feature_clause_list (l)
 		ensure
-			features_set: features = l
+			features_set: feature_clause_list = l
 		end;
  
 	set_invariants (l: like invariants) is
@@ -170,7 +226,6 @@ feature
 			l_not_empty: not l.empty;
 			not_have_void: not l.has (Void)
 		do
-io.error.putstring ("");
 			disk_content.set_invariants (l)
 		ensure
 			invariants_set: invariants = l
@@ -300,5 +355,40 @@ feature -- Storing
 		do
 			Result := disk_content /= Void
 		end
+
+feature {CASE_RECORD_INHERIT_INFO}
+
+	add_feature (s_feature_data: S_FEATURE_DATA; exp: EXPORT_I) is
+		require
+			is_valid: is_valid;
+			valid_data: s_feature_data /= void;
+		local
+			export_i: S_EXPORT_I;
+			f_clause: S_FEATURE_CLAUSE;
+			feats: ARRAYED_LIST [S_FEATURE_DATA];
+		do
+			if exp = Void then
+				! S_EXPORT_ALL_I ! export_i	
+			else
+				export_i := exp.storage_info
+			end;
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after or else
+				feature_clause_list.item.same_export (export_i) 
+			loop
+				feature_clause_list.forth
+			end;
+			if feature_clause_list.after then
+					-- Not found then create clause
+				!! feats.make (1);
+				feats.extend (s_feature_data);
+				!! f_clause.make (feats, export_i);
+				feature_clause_list.extend (f_clause)	
+			else
+				feature_clause_list.item.features.extend (s_feature_data)
+			end
+		end;
 
 end

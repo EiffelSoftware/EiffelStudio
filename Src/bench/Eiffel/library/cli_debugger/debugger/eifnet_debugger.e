@@ -399,6 +399,7 @@ feature {NONE} -- Stepping Implementation
 		do
 			if last_stepper /= Void then
 				last_stepper.deactivate
+				last_stepper.release
 				last_stepper := Void				
 			end
 			
@@ -415,6 +416,7 @@ feature {NONE} -- Stepping Implementation
 				end	
 				Result := l_error = 0
 				last_stepper := l_stepper
+				last_stepper.add_ref
 			else
 				Result := False
 				eif_debug_display ("[DBG/WARNING] No thread available ...")

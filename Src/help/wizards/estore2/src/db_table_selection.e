@@ -26,7 +26,6 @@ feature -- basic Operations
 			h1: EV_HORIZONTAL_BOX
 			v1: EV_VERTICAL_BOX
 			lab: EV_LABEL
-			txt: WIZARD_SMART_TEXT
 		do 
 			create selected_items
 			create unselected_items
@@ -229,8 +228,6 @@ feature -- basic Operations
 
 	proceed_with_current_info is 
 			-- Process user entries
-		local
-			warning: EV_WARNING_DIALOG
 		do 
 			precursor
 			proceed_with_new_state (create {DB_GENERATION_TYPE}.make(wizard_information))

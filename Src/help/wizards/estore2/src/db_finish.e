@@ -57,8 +57,6 @@ feature -- basic Operations
 
 	build_finish is 
 			-- Build user entries.
-		local
-			h1: EV_HORIZONTAL_BOX
 		do
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
@@ -267,8 +265,7 @@ feature -- Processing
 			-- Replace the tags in 's' to match the columns names in the database.
 			-- 'rep' enables to get the attribute names of the loaded class.
 		local
-			i, index, type_code: INTEGER
-			extraction: STRING
+			i, type_code: INTEGER
 			g_replacing_string, g_repl_string_template, g_tmp: STRING
 			s_replacing_string, s_repl_string_template, s_tmp: STRING
 		do
@@ -360,9 +357,7 @@ feature -- Processing
 	load_management_classes is
 			-- Load classes to use EiffelStore. Modified by Cedric R.
 		local
-			f1, f_name: FILE_NAME
-			fi: PLAIN_TEXT_FILE
-			s: STRING
+			f_name: FILE_NAME
 		do
 			notify_user ("Importing database_manager ...")
 			copy_database_manager
@@ -485,9 +480,6 @@ feature -- Processing
 
 	generate_ace_file is
 			-- Generate the selected Ace File. Modified by Cedric R
-		local
-			f_name: FILE_NAME
-			fi: PLAIN_TEXT_FILE
 		do
 			notify_user ("Generating Ace File...")
 

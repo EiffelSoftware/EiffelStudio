@@ -63,7 +63,6 @@ feature -- basic Operations
 			user_typed_something: entries_changed
 		local
 			b: BOOLEAN
-			db_generation: DB_GENERATION
 		do
 			precursor
 			if not b then

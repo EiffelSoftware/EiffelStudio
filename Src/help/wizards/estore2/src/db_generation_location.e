@@ -81,8 +81,6 @@ feature -- basic Operations
 	proceed_with_current_info is 
 			-- Process user entries.
 		local
-			next_step: DB_FINISH
-			mess: EV_ERROR_DIALOG
 			dir: DIRECTORY
 		do 
 			create dir.make (location.text)

@@ -63,9 +63,7 @@ feature {NONE} -- Initialization
 				-- Build the tools and other widgets within `Current'.
 			build_widget_structure
 			set_minimum_size (640, 480)
-				-- Tell `system_settings' that `Current' is the
-				-- main window of the system.
-			system_status.set_main_window (Current)
+			
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
 		end

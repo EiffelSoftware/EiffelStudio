@@ -2,7 +2,7 @@ system
 	"ISE.Cache.Manager"
 
 root
-	ISE_COM_MANAGER: make
+	ISE_CACHE_MANAGER: make
 
 default
 	assertion (no)
@@ -42,7 +42,9 @@ cluster
 		exclude
 			"CVS"; 
 		visible
-			ISE_COM_CACHE_MANAGER
+			COM_ISE_CACHE_MANAGER
+			end,
+			COM_ASSEMBLY_INFORMATION
 			end
 		end
 

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_ACCELERATOR_SELECTION_DIALOG
+	EV_ACCELERATOR_DIALOG
 
 inherit
 	EV_SELECTION_DIALOG
@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a message dialog with `par' as parent.
 		do
-			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make (par)
+			create {EV_ACCELERATOR_DIALOG_IMP}implementation.make (par)
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a message dialog with `par' as parent.
 		do
-			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_text (par, txt)
+			create {EV_ACCELERATOR_DIALOG_IMP}implementation.make_with_text (par, txt)
 		end
 
 	make_with_actions (par: EV_CONTAINER; actions: LINKED_LIST [STRING]) is
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			valid_actions: actions /= Void
 			actions_not_empty: not actions.empty
 		do
-			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_actions (par, actions)
+			create {EV_ACCELERATOR_DIALOG_IMP}implementation.make_with_actions (par, actions)
 		end
 
 	make_with_all (par: EV_CONTAINER; txt: STRING; actions: LINKED_LIST [STRING]) is
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			valid_actions: actions /= Void
 			actions_not_empty: not actions.empty
 		do
-			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_all (par, txt, actions)
+			create {EV_ACCELERATOR_DIALOG_IMP}implementation.make_with_all (par, txt, actions)
 		end
 
 feature -- Access
@@ -85,10 +85,10 @@ feature -- Basic operation
 
 feature -- Implementation
 
-	implementation: EV_ACCELERATOR_SELECTION_DIALOG_I
+	implementation: EV_ACCELERATOR_DIALOG_I
 			-- Access to the implementation.
 
-end -- class EV_ACCELERATOR_SELECTION_DIALOG
+end -- class EV_ACCELERATOR_DIALOG
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

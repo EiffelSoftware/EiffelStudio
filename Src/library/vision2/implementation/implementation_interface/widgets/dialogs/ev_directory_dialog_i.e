@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_DIRECTORY_SELECTION_DIALOG_I
+	EV_DIRECTORY_DIALOG_I
 
 inherit
 	EV_SELECTION_DIALOG_I
@@ -47,7 +47,7 @@ feature -- Element change
 		deferred
 		end
 
-end -- class EV_DIRECTORY_SELECTION_DIALOG_I
+end -- class EV_DIRECTORY_DIALOG_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_COLOR_SELECTION_DIALOG_I
+	EV_COLOR_DIALOG_I
 
 inherit
 	EV_SELECTION_DIALOG_I
@@ -50,7 +50,7 @@ feature -- Event -- removing command association
 		deferred
 		end
 
-end -- class EV_COLOR_SELECTION_DIALOG_I
+end -- class EV_COLOR_DIALOG_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

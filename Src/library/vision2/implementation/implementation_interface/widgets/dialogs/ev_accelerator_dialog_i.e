@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ACCELERATOR_SELECTION_DIALOG_I
+	EV_ACCELERATOR_DIALOG_I
 
 inherit
 	EV_SELECTION_DIALOG_I
@@ -532,35 +532,7 @@ feature -- Execution features
 	changed: BOOLEAN
 			-- Did something changed in the user choice?
 
---feature -- Event - command association
---
---	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---			-- Add `cmd' to the list of commands to be executed when
---			-- the "OK" button is pressed.
---		do
----		end
---
---	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---			-- Add `cmd' to the list of commands to be executed when
---			-- the "Cancel" button is pressed.
---		do
---		end
-
---feature -- Event -- removing command association
---
----	remove_ok_commands is
---			-- Empty the list of commands to be executed when
---			-- "OK" button is pressed.
---		do
---		end
-
---	remove_cancel_commands is
---			-- Empty the list of commands to be executed when
---			-- "Cancel" button is pressed.
---		do
---		end
-
-end -- class EV_ACCELERATOR_SELECTION_DIALOG_I
+end -- class EV_ACCELERATOR_DIALOG_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

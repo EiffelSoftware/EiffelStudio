@@ -8,7 +8,7 @@ class
 	EV_FILE_OPEN_DIALOG
 
 inherit
-	EV_FILE_SELECTION_DIALOG
+	EV_FILE_DIALOG
 		redefine
 			implementation
 		end

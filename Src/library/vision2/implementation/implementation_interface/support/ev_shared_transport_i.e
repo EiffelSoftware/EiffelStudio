@@ -44,11 +44,11 @@ feature -- Access EV_PICK_AND_DROPABLE.
 
 feature -- Access EV_DRAGABLE_SOURCE.
 		
-	source_being_docked: EV_DOCKABLE_SOURCE_IMP
+	source_being_docked: EV_DOCKABLE_SOURCE_I
 		-- Dragable source currently being transported. May be a
 		-- WIDGET_IMP or an EV_TOOL_BAR_BUTTON_IMP.
 		
-	originating_source: EV_DOCKABLE_SOURCE_IMP
+	originating_source: EV_DOCKABLE_SOURCE_I
 		-- Dragable source that originated the transport of `source_being_dragged'.
 		
 	original_x_offset, original_y_offset: INTEGER
@@ -84,7 +84,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 				result_not_void: Result /= Void
 			end
 			
-	insert_label_imp: EV_CELL_IMP is
+	insert_label_imp: EV_CELL_I is
 			-- Once access to implementation of `insert_label'.
 		once
 			Result ?= insert_label.implementation
@@ -138,7 +138,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			Create Result
 		end
 		
-	insert_sep_imp: EV_TOOL_BAR_SEPARATOR_IMP is
+	insert_sep_imp: EV_TOOL_BAR_SEPARATOR_I is
 			-- Once access to implementation of `insert_sep'.
 		once
 			Result ?= insert_sep.implementation

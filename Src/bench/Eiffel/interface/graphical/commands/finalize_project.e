@@ -16,7 +16,7 @@ inherit
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile, name, menu_name, accelerator,
-			compilation_allowed, finalization_error, perform_compilation
+			finalization_error, perform_compilation
 		end;
 	UPDATE_PROJECT
 		rename
@@ -25,13 +25,12 @@ inherit
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile, name, menu_name, accelerator,
-			compilation_allowed, finalization_error, perform_compilation,
+			finalization_error, perform_compilation,
 			discard_assertions, keep_assertions
 		select
 			discard_assertions, keep_assertions
 		end;
 	SHARED_ERROR_HANDLER;
-	SHARED_MELT_ONLY
  
 creation
 
@@ -87,12 +86,6 @@ feature -- Callbacks
 		end;
  
 feature {NONE} -- Attributes
-
-	compilation_allowed: BOOLEAN is
-			-- Is a compilation allowed?
-		do
-			Result := not melt_only
-		end
 
 	c_code_directory: STRING is
 			-- Directory where the C code is stored.

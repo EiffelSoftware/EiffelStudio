@@ -13,7 +13,8 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			create_action_sequences
+			create_action_sequences,
+			make_for_test
 		end
 
 	EV_ITEM_LIST [EV_STATUS_BAR_ITEM]
@@ -23,9 +24,10 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_for_test
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -38,6 +40,20 @@ feature {NONE} -- Implementation
 		do
 			{EV_PRIMITIVE} Precursor
 			{EV_ITEM_LIST} Precursor
+		end
+
+	make_for_test is
+			-- Create and test.
+		local
+			sbi: EV_STATUS_BAR_ITEM
+		do
+			default_create
+			from until count = 5 loop
+				create sbi
+				sbi.set_text ("Item " + count.out)
+				sbi.set_width (20 + count * 10)
+				extend (sbi)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -68,6 +84,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/26 21:09:05  brendel
+--| Added make_for_test.
+--|
 --| Revision 1.15  2000/04/04 21:27:21  oconnor
 --| formatting
 --|

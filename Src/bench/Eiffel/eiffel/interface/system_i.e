@@ -2001,6 +2001,7 @@ end
 			-- Generate the "e*.c" files.
 		local
 			deg_output: DEGREE_OUTPUT
+			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
 			degree_message := "Generation of auxiliary files"
@@ -2018,7 +2019,9 @@ end
 			melted_conformance_table := Void
 
 			deg_output.display_degree_output (degree_message, 8, 12)
-			generate_plug
+			!! t.make (Current, byte_context)
+			t.generate_plug
+			--generate_plug
 
 			deg_output.display_degree_output (degree_message, 7, 12)
 			generate_init_file
@@ -2043,7 +2046,7 @@ end
 			generate_dle_file
 
 			deg_output.display_degree_output (degree_message, 0, 12)
-			generate_make_file
+			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
 			make_update (True)
@@ -2450,7 +2453,9 @@ feature -- Generation
 				-- table for `dle_max_min_used' to be initialized when
 				-- using DLE stuff.
 			deg_output.display_degree_output (degree_message, 3, 11)
-			generate_plug
+			!! t.make (Current, byte_context)
+			t.generate_plug
+			--generate_plug
 
 				-- Generate DLE file
 			deg_output.display_degree_output (degree_message, 2, 11)
@@ -2461,7 +2466,7 @@ feature -- Generation
 
 				-- Generate makefile
 			deg_output.display_degree_output (degree_message, 0, 11)
-			generate_make_file
+			t.generate_make_file
 
 			if System.has_separate then
 				generate_only_separate_pattern_table
@@ -3218,211 +3223,6 @@ end
 				i := i + 1
 			end
 			rout_table.write
-		end
-
-feature -- Plug and Makefile file
-
-	generate_plug is
-			-- Generate plug with run-time
-		local
-			string_cl, bit_cl, array_cl: CLASS_C
-			arr_type_id, str_type_id, type_id: INTEGER
-			id: TYPE_ID
-			to_c_feat, set_count_feat, creation_feature: FEATURE_I
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
-			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
-			arr_make_name: STRING
-			special_cl: SPECIAL_B
-			cl_type: CLASS_TYPE
-			final_mode: BOOLEAN
-			Plug_file: INDENT_FILE
-		do
-			final_mode := byte_context.final_mode
-
-			Plug_file := plug_f (final_mode)
-			Plug_file.open_write_c
-
-			Plug_file.putstring ("#include %"eif_project.h%"%N%N")
-			Plug_file.putstring ("#include %"eif_macros.h%"%N%N")
-
-				-- Extern declarations
-			string_cl := class_of_id (string_id)
-			cl_type := string_cl.types.first
-			id := cl_type.id
-			str_type_id := cl_type.type_id
-			creators := string_cl.creators
-			creators.start
-
-				-- Make string declaration
-			creation_feature := string_cl.feature_table.item (creators.key_for_iteration)
-			set_count_feat := string_cl.feature_table.item ("set_count")
-			str_make_name := creation_feature.body_id.feature_name (id)
-			set_count_name := set_count_feat.body_id.feature_name (id)
-			Plug_file.putstring ("extern void ")
-			Plug_file.putstring (str_make_name)
-			Plug_file.putstring ("();%N")
-			Plug_file.putstring ("extern void ")
-			Plug_file.putstring (set_count_name)
-			Plug_file.putstring ("();%N")
-			if has_separate then
-				to_c_feat := string_cl.feature_table.item ("to_c")
-				to_c_name := to_c_feat.body_id.feature_name (id)
-				Plug_file.putstring ("extern void ")
-				Plug_file.putstring (to_c_name)
-				Plug_file.putstring ("();%N")
-			end
-
-			--| make array declaration
-			--| Temporary solution. When a system uses precompiled information,
-			--| the C code for ARRAY[ANY] is never re-generated, but the computed
-			--| name of the make routine will (unfortunately) change. Therefore, the
-			--| name in the plug file might not match the name in the precompiled
-			--| C file... Heavy!
-			if (array_make_name = Void) or not uses_precompiled or final_mode then
-				array_cl := class_of_id (array_id)
-					--! Array ref type (i.e. ARRAY[ANY])
-				cl_type := Instantiator.Array_type.associated_class_type; 
-				id := cl_type.id
-				arr_type_id := cl_type.type_id
-				creators := array_cl.creators
-				creators.start
-				creation_feature := array_cl.feature_table.item (creators.key_for_iteration)
-				arr_make_name := creation_feature.body_id.feature_name (id)
-				array_make_name := clone (arr_make_name)
-			else
-				cl_type := Instantiator.Array_type.associated_class_type; 
-				arr_type_id := cl_type.type_id
-				arr_make_name := array_make_name
-			end
-
-			Plug_file.putstring ("extern void ")
-			Plug_file.putstring (arr_make_name)
-			Plug_file.putstring ("();%N")
-
-			if final_mode and then array_optimization_on then
-				array_optimizer.generate_plug_declarations (Plug_file, Table_prefix)
-			else
-				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
-										%long *eif_lower_table = (long *)0;%N")
-			end
-
-			if final_mode then
-
-					-- Do we need to protect the exception stack?
-				Plug_file.putstring ("EIF_BOOLEAN exception_stack_managed = (EIF_BOOLEAN) ")
-				if exception_stack_managed then
-					Plug_file.putint (1)
-				else
-					Plug_file.putint (0)
-				end
-				Plug_file.putstring (";%N")
-
-				init_name := Initialization_rout_id.table_name
-				dispose_name := Dispose_rout_id.table_name
-
-				Plug_file.putstring ("extern char *(*")
-				Plug_file.putstring (Table_prefix)
-				Plug_file.putstring (init_name)
-				Plug_file.putstring ("[])();%N%
-									%extern char *(*")
-				Plug_file.putstring (Table_prefix)
-				Plug_file.putstring (dispose_name)
-				Plug_file.putstring ("[])();%N%N")
-			end
-
-			if has_separate then
-					--Pointer on `to_c' of class STRING
-				Plug_file.putstring ("void (*eif_strtoc)() = ")
-				Plug_file.putstring (to_c_name)
-				Plug_file.putstring (";%N")
-			end
-
-			if final_mode then
-					-- Initialization routines
-				Plug_file.putstring ("char *(**ecreate)() = ")
-				Plug_file.putstring (Table_prefix)
-				Plug_file.putstring (init_name)
-				Plug_file.putstring (";%N")
-
-					-- Dispose routines
-				Plug_file.putstring ("void (**edispose)() = ")
-				Plug_file.putstring ("(void (**)()) ")
-				Plug_file.putstring (Table_prefix)
-				Plug_file.putstring (dispose_name)
-				Plug_file.putstring (";%N")
-
-			end
---JOCE
-				-- Declaration and definition of the egc_init_plug function.
-			Plug_file.putstring ("extern void egc_init_plug (void); ")
-			Plug_file.putstring ("void egc_init_plug (void)%N{")
---EGC_INIT_PLUG : BEGIN ----------------------
-				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("egc_prof_enabled = (EIF_INTEGER) ")
-			if Lace.ace_options.has_profile then
-				Plug_file.putstring ("3;%N")
-			else
-				Plug_file.putstring ("0;%N")
-			end
-
-				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("(egc_strmake) = ")
-			Plug_file.putstring (str_make_name)
-			Plug_file.putstring (";%N")
-				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("(egc_arrmake) = ")
-			Plug_file.putstring (arr_make_name)
-			Plug_file.putstring (";%N")
-
-				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("(egc_strset) = ")
-			Plug_file.putstring (set_count_name)
-			Plug_file.putstring (";%N")
-
-
-				-- Dynamic type of class STRING
-			Plug_file.putstring ("egc_str_dtype = ")
-			Plug_file.putint (str_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class ARRAY[ANY]
-			Plug_file.putstring ("egc_arr_dtype = ")
-			Plug_file.putint (arr_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dispose routine id from class MEMORY (if compiled) 
-			Plug_file.putstring ("egc_disp_rout_id = ")
-			if memory_class /= Void then
-				Plug_file.putint (memory_dispose_id.id)
-			else
-				Plug_file.putstring ("-1")
-			end
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class BIT_REF
-			bit_cl := class_of_id (bit_id)
-			type_id := bit_cl.types.first.type_id
-			Plug_file.putstring ("egc_bit_dtype = ")
-			Plug_file.putint (type_id - 1)
-			Plug_file.putstring (";%N")
-
-
-			special_cl ?= special_class.compiled_class
-			special_cl.generate_dynamic_types (plug_file)
-			generate_dynamic_ref_type
-
---EGC_INIT_PLUG : END ----------------------
-			Plug_file.putstring ("%N}")
-
-			Plug_file.close_c
-		end
-
-	generate_make_file is
-			-- Generate make file
-		do
-			makefile_generator.generate
-			makefile_generator.clear
-			makefile_generator := Void
 		end
 
 feature -- Dispatch and execution tables generation

@@ -8,8 +8,6 @@ class
 	AUXILIARY_FILES
 
 inherit
-	SHARED_BYTE_CONTEXT
-
 	SHARED_ROUT_ID
 
 	SHARED_CODE_FILES
@@ -26,6 +24,12 @@ feature -- Initialisation
 			system := current_system
 			context := current_context
 		end
+
+feature -- Access
+
+	system: SYSTEM_I
+
+	context: BYTE_CONTEXT
 
 feature -- Plug and Makefile file
 
@@ -51,6 +55,7 @@ feature -- Plug and Makefile file
 			Plug_file := plug_f (final_mode)
 			Plug_file.open_write_c
 
+			Plug_file.putstring ("#include %"eif_project.h%"%N%N")
 			Plug_file.putstring ("#include %"eif_macros.h%"%N%N")
 
 				-- Extern declarations
@@ -107,12 +112,11 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name)
 			Plug_file.putstring ("();%N")
 
-				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("EIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
-			if Lace.ace_options.has_profile then
-				Plug_file.putstring ("3;%N")
+			if final_mode and then System.array_optimization_on then
+				System.array_optimizer.generate_plug_declarations (Plug_file, table_prefix)
 			else
-				Plug_file.putstring ("0;%N")
+				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
+									%long *eif_lower_table = (long *)0;%N")
 			end
 
 			if final_mode then
@@ -138,60 +142,12 @@ feature -- Plug and Makefile file
 				Plug_file.putstring ("[])();%N%N")
 			end
 
-			if final_mode and then System.array_optimization_on then
-				System.array_optimizer.generate_plug_declarations (Plug_file, table_prefix)
-			else
-				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
-									%long *eif_lower_table = (long *)0;%N")
-			end
-
-				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER) = ")
-			Plug_file.putstring (str_make_name)
-			Plug_file.putstring (";%N")
-
-				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER) = ")
-			Plug_file.putstring (arr_make_name)
-			Plug_file.putstring (";%N")
-
-				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER) = ")
-			Plug_file.putstring (set_count_name)
-			Plug_file.putstring (";%N")
-
 			if system.has_separate then
 					--Pointer on `to_c' of class STRING
 				Plug_file.putstring ("void (*eif_strtoc)() = ")
 				Plug_file.putstring (to_c_name)
 				Plug_file.putstring (";%N")
 			end
-
-				-- Dynamic type of class STRING
-			Plug_file.putstring ("int egc_str_dtype = ")
-			Plug_file.putint (str_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class ARRAY[ANY]
-			Plug_file.putstring ("int egc_arr_dtype = ")
-			Plug_file.putint (arr_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dispose routine id from class MEMORY (if compiled) 
-			Plug_file.putstring ("int32 egc_disp_rout_id = ")
-			if System.memory_class /= Void then
-				Plug_file.putint (System.memory_dispose_id.id)
-			else
-				Plug_file.putstring ("-1")
-			end
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class BIT_REF
-			bit_cl := System.class_of_id (System.bit_id)
-			type_id := bit_cl.types.first.type_id
-			Plug_file.putstring ("int egc_bit_dtype = ")
-			Plug_file.putint (type_id - 1)
-			Plug_file.putstring (";%N")
 
 			if final_mode then
 					-- Initialization routines
@@ -209,9 +165,65 @@ feature -- Plug and Makefile file
 
 			end
 
+
+				-- Declaration and definition of the egc_init_plug function.
+			Plug_file.putstring ("extern void egc_init_plug (void); ")
+			Plug_file.putstring ("void egc_init_plug (void)%N{")
+
+				-- Do we need to collect GC data for the profiler?
+			Plug_file.putstring ("EIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
+			if Lace.ace_options.has_profile then
+				Plug_file.putstring ("3;%N")
+			else
+				Plug_file.putstring ("0;%N")
+			end
+
+				-- Pointer on creation feature of class STRING
+			Plug_file.putstring ("egc_strmake = ")
+			Plug_file.putstring (str_make_name)
+			Plug_file.putstring (";%N")
+
+				-- Pointer on creation feature of class ARRAY[ANY]
+			Plug_file.putstring ("egc_arrmake = ")
+			Plug_file.putstring (arr_make_name)
+			Plug_file.putstring (";%N")
+
+				--Pointer on `set_count' of class STRING
+			Plug_file.putstring ("egc_strset = ")
+			Plug_file.putstring (set_count_name)
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class STRING
+			Plug_file.putstring ("egc_str_dtype = ")
+			Plug_file.putint (str_type_id - 1)
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class ARRAY[ANY]
+			Plug_file.putstring ("egc_arr_dtype = ")
+			Plug_file.putint (arr_type_id - 1)
+			Plug_file.putstring (";%N")
+
+				-- Dispose routine id from class MEMORY (if compiled) 
+			Plug_file.putstring ("egc_disp_rout_id = ")
+			if System.memory_class /= Void then
+				Plug_file.putint (System.memory_dispose_id.id)
+			else
+				Plug_file.putstring ("-1")
+			end
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class BIT_REF
+			bit_cl := System.class_of_id (System.bit_id)
+			type_id := bit_cl.types.first.type_id
+			Plug_file.putstring ("egc_bit_dtype = ")
+			Plug_file.putint (type_id - 1)
+			Plug_file.putstring (";%N")
+
 			special_cl ?= System.special_class.compiled_class
 			special_cl.generate_dynamic_types (plug_file)
 			generate_dynamic_ref_type (plug_file)
+
+			Plug_file.putstring ("%N}")
 
 			Plug_file.close_c
 		end

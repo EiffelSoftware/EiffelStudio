@@ -369,28 +369,25 @@ feature {NONE} -- Implementation
 			Result.append (Shared_wizard_environment.destination_folder)
 			Result.append (Client)
 			Result.append (Double_quote)
+			Result.append (New_line_tab_tab)
+			Result.append (Visible)
+			Result.append (New_line_tab_tab_tab)
+
 			if Shared_wizard_environment.server then
-				Result.append (New_line_tab_tab)
-				Result.append (Visible)
-				Result.append (New_line_tab_tab_tab)
 				Result.append (Registration_class_name)
 				Result.append (Semicolon)
-				from
-					system_descriptor.coclasses.start
-				until
-					system_descriptor.coclasses.after
-				loop
-					if system_descriptor.is_generated_coclass (system_descriptor.coclasses.item) then
-						Result.append (New_line_tab_tab_tab)
-						Result.append (implemented_coclass_name (system_descriptor.coclasses.item.eiffel_class_name))
-						Result.append (Semicolon)
-					end
-					system_descriptor.coclasses.forth
-				end
-				Result.append (New_line_tab_tab)
-				Result.append (End_keyword)
-				Result.append (Semicolon)
+				Result.append (New_line)
 			end
+			from
+				system_descriptor.visible_classes.start
+			until
+				system_descriptor.visible_classes.after
+			loop
+				Result.append (system_descriptor.visible_classes.item.generated_code)
+				system_descriptor.visible_classes.forth
+			end
+			Result.append (New_line_tab_tab)
+			Result.append (End_keyword)
 			Result.append (New_line)
 			Result.append (New_line_tab)
 			Result.append (Common_cluster)
@@ -603,6 +600,7 @@ feature {NONE} -- Implementation
 		%			DOUBLE_REF;%N%
 		%			CELL;%N%
 		%			STRING;%N%
+		%			ARRAY;%N%
 		%		end;%N%N%
 		%	-- WEL%N%
 		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%
@@ -618,11 +616,94 @@ feature {NONE} -- Implementation
 		%	all ecom:						%"$EIFFEL4\library\com%"%N%
 		%		visible%N%
 		%			ECOM_CURRENCY;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
 		%			ECOM_DECIMAL;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_ARRAY;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_from_array%"%N%
+		%				end;%N%
+		%			ECOM_VARIANT;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_GUID;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_EXCEP_INFO;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_DISP_PARAMS;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_STATSTG;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_STREAM;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_STORAGE;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_ROOT_STORAGE;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_ENUM_STATSTG;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_HRESULT;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_from_integer%"%N%
+		%				end;%N%
+		%			ECOM_WIDE_STRING;%N%
+		%				export%N%
+		%					%"make_from_string%",%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_LARGE_INTEGER;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_from_integer%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_ULARGE_INTEGER;%N%
+		%				export%N%
+		%					%"make%",%N%
+		%					%"make_from_integer%",%N%
+		%					%"make_by_pointer%"%N%
+		%				end;%N%
+		%			ECOM_UNKNOWN_INTERFACE;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
+		%			ECOM_AUTOMATION_INTERFACE;%N%
+		%				export%N%
+		%					%"make_from_pointer%"%N%
+		%				end;%N%
 		%		end;%N%N%
 		%external%N%
 		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
-		%			%"$EIFFEL4\library\com\include%",%N"
+		%			%"$EIFFEL4\library\com\spec\windows\include%",%N"
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system

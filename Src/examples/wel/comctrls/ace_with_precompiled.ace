@@ -2,7 +2,7 @@ system
 	comctrls_demo
 
 root 
-	PRECOMP_COMCTRLS_DEMO (root_cluster): "make"
+	COMCTRLS_DEMO (root_cluster): "make"
 
 default
 	assertion (all)

@@ -6,7 +6,6 @@
 
 
 import "oaidl.idl";
-//import "common_enums.idl";
 
 interface IEiffelProject;
 interface IEiffelCompiler;

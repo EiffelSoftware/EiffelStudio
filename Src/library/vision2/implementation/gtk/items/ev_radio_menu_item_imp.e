@@ -21,7 +21,6 @@ inherit
 			on_activate,
 			interface,
 			make,
-			menu_item_type,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
 			pointer_double_press_actions_internal
@@ -65,13 +64,6 @@ feature -- Status setting
 				feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (c_object, True)
 				ignore_select_actions := False
 			end
-		end
-		
-feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
-
-	menu_item_type: INTEGER is
-		do
-			Result := Radio_type
 		end
 
 feature {EV_ANY_I} -- Implementation

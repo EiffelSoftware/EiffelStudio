@@ -53,6 +53,11 @@ feature -- Processing
 
 feature -- Output
 
+	kill_it: ANY is
+		once
+			!! Result
+		end;
+
 	termination_processing is
 			-- Print the termination message to the debug_window
 			-- and reset the object windows.

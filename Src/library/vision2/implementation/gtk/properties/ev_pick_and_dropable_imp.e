@@ -490,54 +490,29 @@ feature -- Implementation
 	draw_rubber_band is
 			-- Draw a segment between initial pick point and `destination'.
 		local
-			l_invert_gc, l_root_parent: POINTER
 		do
-			if
-				feature {EV_GTK_EXTERNALS}.gtk_events_pending <= 1
-			then
-				l_invert_gc := invert_gc
-				l_root_parent := root_parent
-				if rubber_band_is_drawn then
-					feature {EV_GTK_EXTERNALS}.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
-					rubber_band_is_drawn := False
-				end
+				erase_rubber_band
 				old_pointer_x := pointer_x
 				old_pointer_y := pointer_y
-				feature {EV_GTK_EXTERNALS}.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := True
-			end
 		end
 
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
 		do
 			if rubber_band_is_drawn then
-				feature {EV_GTK_EXTERNALS}.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
-		
-	root_parent: POINTER is
-			-- GdkWindow of X root window.
-		once
-			Result := feature {EV_GTK_EXTERNALS}.gdk_root_parent
-		end
 
-	invert_gc: POINTER is
-		local
-			col: POINTER
-			max_16_bit: INTEGER
+	pnd_screen: EV_SCREEN is
+			-- Screen object used for drawing PND transport line
 		once
-			max_16_bit := 65535
-			Result := feature {EV_GTK_EXTERNALS}.gdk_gc_new (feature {EV_GTK_EXTERNALS}.gdk_root_parent)
-			col := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (col, Max_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (col, Max_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (col, Max_16_bit)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (Result, col)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (Result, feature {EV_GTK_EXTERNALS}.Gdk_invert_enum)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (Result, feature {EV_GTK_EXTERNALS}.Gdk_include_inferiors_enum)
-			col.memory_free
+			create Result
+			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.set_invert_mode
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is

@@ -236,6 +236,20 @@ feature -- Status setting
 			end
 		end
 
+	set_form_size (new_width, new_height : INTEGER) is
+			-- Set the height to `new_height',
+			-- width to `new_width'.
+		do
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
+				private_attributes.set_width (new_width)
+				private_attributes.set_height (new_height)
+				if exists then
+					resize (new_width, new_height)
+				end
+			end
+		end
+
 	set_spacing (new_spacing: INTEGER) is
 			-- Set spacing between items to `new_spacing'.
 		do
@@ -442,7 +456,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			set_size (max_width, max_height)
+			set_form_size (max_width, max_height)
 		end
 
 	set_enclosing_same_size (managed_count, ew, eh: INTEGER) is
@@ -483,7 +497,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			set_size (max_width, max_height)
+			set_form_size (max_width, max_height)
 		end
 
 	set_children_in_columns (c : ARRAYED_LIST[WIDGET_WINDOWS]; largest_w : INTEGER) is

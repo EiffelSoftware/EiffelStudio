@@ -54,6 +54,7 @@ feature {NONE}
 				output_list := ol.duplicate;
 				update_history
 			end
+			update_interface
 		end; -- function_work
 
 	worked_on: STRING is

@@ -94,7 +94,14 @@ feature {NONE} -- Initialization
 			l_assembly_location: PATH_NAME
 		do
 				-- Initialize assembly info.
-			cluster_name := l_ass.out
+			cluster_name := l_ass.name.twin
+			cluster_name.append (", Version=")
+			cluster_name.append (l_ass.version)
+			cluster_name.append (", Culture=")
+			cluster_name.append (l_ass.culture)
+			cluster_name.append (", PublicKeyToken=")
+			cluster_name.append (l_ass.key)
+			
 			assembly_info_make (l_ass.location)
 			
 			is_local := True

@@ -20,7 +20,12 @@ inherit
 
 	SHARED_WORKBENCH;
 	
-	HASHABLE
+	HASHABLE_STONE
+		undefine
+			header
+		redefine
+			is_valid, synchronized_stone
+		end
 
 creation
 

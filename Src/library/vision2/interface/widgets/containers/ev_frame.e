@@ -91,6 +91,12 @@ feature {NONE} -- Implementation
 				next_style := Ev_frame_lowered
 			end
 			set_style (next_style)
+			inspect next_style
+				when Ev_frame_lowered then set_text ("Lowered")
+				when Ev_frame_raised then set_text ("Raised")
+				when Ev_frame_etched_in then set_text ("Etched in")
+				when Ev_frame_etched_out then set_text ("Etched out")
+			end
 		end
 
 	implementation: EV_FRAME_I
@@ -122,8 +128,8 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/04/27 17:11:58  brendel
---| Added `style' and `set_style'.
+--| Revision 1.13  2000/04/27 17:31:08  brendel
+--| Improved make_for_test.
 --|
 --| Revision 1.11  2000/03/17 23:48:19  oconnor
 --| comments

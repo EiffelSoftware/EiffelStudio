@@ -139,13 +139,6 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end
 
-	process_exported_feature_name_text (text: EXPORTED_FEATURE_NAME_TEXT) is
-			-- Process exported feature name text `text'.
-		require
-			text_not_void: text /= Void
-		deferred
-		end
-
 	process_feature_error (text: FEATURE_ERROR_TEXT) is
 			-- Process error feature text.
 		do

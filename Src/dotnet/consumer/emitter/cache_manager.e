@@ -98,8 +98,7 @@ feature -- Basic Oprtations
 			-- Consume assembly located `a_path'
 		require
 			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-			path_exists: (create {RAW_FILE}.make (a_path)).exists
+			valid_path: not a_path.is_empty			
 		local
 			l_paths: LIST [STRING]
 		do	

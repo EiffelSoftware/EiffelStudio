@@ -29,6 +29,8 @@ feature -- Initialization
 			create old_expressions.make
 			create inherited_assertion.make
 			create global_onces.make (5)
+			create once_manifest_string_count_table.make (100)
+			create once_manifest_string_table.make (100)
 		end
 
 feature -- Access
@@ -236,14 +238,274 @@ feature -- Setting
 			assertion_type := a
 		end
 
-	reset_global_onces is
-			-- Wipe out content of `global_onces'
+feature {NONE} -- Access: once manifest strings
+
+	once_manifest_string_count_table: HASH_TABLE [INTEGER, INTEGER]
+			-- Number of once manifest strings to be allocated for the given routine body index;
+			-- actual for the whole system
+
+	once_manifest_string_table: HASH_TABLE [ARRAY [STRING], INTEGER]
+			-- Once manifest strings to be created for the given routine body index;
+			-- actual for the current class
+			
+feature -- Access: once manifest strings
+
+	is_static_system_data_safe: BOOLEAN is
+			-- Is it safe to use system data stored in system-wide static memory?
 		do
-			global_onces.wipe_out
-		ensure
-			global_onces_is_empty: global_onces.is_empty
+			Result := final_mode and then not system.has_multithreaded
 		end
-		
+
+	once_manifest_string_count: INTEGER is
+			-- Number of once manifest strings in current routine body
+		require
+			is_static_system_data_safe: is_static_system_data_safe
+		do
+			Result := once_manifest_string_count_table.item (original_body_index)
+		ensure
+			non_negative_result: Result >= 0
+		end
+
+	once_manifest_string_value (number: INTEGER): STRING is
+			-- Value of once manifest string `number' in current routine body
+		require
+			is_static_system_data_safe: is_static_system_data_safe
+			valid_number: number > 0 and then number <= once_manifest_string_count
+		local
+			routine_once_manifest_strings: ARRAY [STRING]
+		do
+			routine_once_manifest_strings := once_manifest_string_table.item (original_body_index)
+			if routine_once_manifest_strings /= Void then
+				Result := routine_once_manifest_strings.item (number)
+			end
+		end
+
+	generate_once_manifest_string_declaration (buf: like buffer) is
+			-- Generate declarations for once manifest strings.
+		local
+			string_counts: like once_manifest_string_count_table
+			i: INTEGER
+		do
+			string_counts := once_manifest_string_count_table
+			from
+				string_counts.start
+			until
+				string_counts.off
+			loop
+					-- Declare one field for one routine body.
+				buf.put_string ("RTDOMS(")
+				buf.put_integer (string_counts.key_for_iteration - 1)
+				buf.put_character (',')
+				i := string_counts.item_for_iteration
+				buf.put_integer (i)
+				buf.put_character (')')
+					-- Set associated string values to NULL.
+					-- Objects will be created and assigned during module initialization.
+				buf.put_character ('=')
+				buf.put_character ('{')
+				from
+				until
+					i <= 0
+				loop
+					buf.put_string ("NULL")
+					i := i - 1
+					if i > 0 then
+						buffer.put_character (',')
+					end
+				end
+				buf.put_character ('}')
+				buf.put_character (';')
+				buf.put_new_line
+				string_counts.forth
+			end
+		end
+
+	generate_once_manifest_string_import (number: INTEGER) is
+			-- Generate extern declaration for `number' once manifest strings from current routine body.
+		require
+			non_negative_number: number >= 0
+			consistent_number:
+				is_static_system_data_safe and then once_manifest_string_count > 0 implies
+				once_manifest_string_count = number
+		local
+			buf: like buffer
+		do
+			if number > 0 and then is_static_system_data_safe then
+					-- Remember number of strings in current routine.
+				set_once_manifest_string_count (number)
+					-- Generate reference to once manifest string field
+				buf := buffer
+				buf.put_string ("RTEOMS(")
+				buf.put_integer (original_body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+				buf.put_new_line
+			end
+		ensure
+			once_manifest_string_count_set:
+				is_static_system_data_safe implies once_manifest_string_count = number
+		end
+
+	generate_once_manifest_string_allocation (number: INTEGER) is
+			-- Generate code to allocate memory for once manifest strings in current routine body.
+		require
+			non_negative_number: number >= 0
+			consistent_number: is_static_system_data_safe implies once_manifest_string_count = number
+		local
+			buf: like buffer
+		do
+			if number > 0 and then not is_static_system_data_safe then
+				buf := buffer
+				buf.put_string ("RTAOMS(")
+				buf.put_integer (original_body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			end
+		end
+
+	generate_once_manifest_string_initialization is
+			-- Generate code to initialize once manifest strings.
+		local
+			buf: like buffer
+			class_once_manifest_strings: like once_manifest_string_table
+			routine_once_manifest_strings: ARRAY [STRING]
+			body_index: like original_body_index
+			i: INTEGER
+			value: STRING
+		do
+			buf := buffer
+			buf.indent
+			class_once_manifest_strings := once_manifest_string_table
+			from
+				class_once_manifest_strings.start
+			until
+				class_once_manifest_strings.off
+			loop
+				body_index := class_once_manifest_strings.key_for_iteration
+				routine_once_manifest_strings := class_once_manifest_strings.item_for_iteration
+				from
+					i := routine_once_manifest_strings.count
+				until
+					i <= 0
+				loop
+					value := routine_once_manifest_strings.item (i)
+						-- RTPOMS is the macro used to create and store once manifest string
+						-- provided that it is not created and stored before
+					buf.put_string ("RTPOMS(")
+					buf.put_integer (body_index - 1)
+					buf.put_character (',')
+					buf.put_integer (i - 1)
+					buf.put_character (',')
+					buf.put_character ('%"')
+					buf.escape_string (value)
+					buf.put_character ('%"')
+					buf.put_character (',')
+					buf.put_integer (value.count)
+					buf.put_character (')')
+					buf.put_character (';')
+					buf.put_new_line
+					i := i - 1
+				end
+				class_once_manifest_strings.forth
+			end
+			buf.exdent
+		end
+
+	generate_once_manifest_string_access (register: REGISTRABLE; value: STRING; number: INTEGER) is
+			-- Generate access to once manifest string number `number' in the current routine body
+			-- with the given `value'; use `register' to store the result.
+		require
+			register_not_void: register /= Void
+			meaningful_register: register /= register.No_register
+			value_not_void: value /= Void
+			positive_number: number > 0
+			consistent_number: is_static_system_data_safe implies number <= once_manifest_string_count
+		local
+			buf: like buffer
+			body_index: like original_body_index
+		do
+			buf := buffer
+			body_index := original_body_index
+			if is_static_system_data_safe then
+					-- Register once manifest string for creation
+				register_once_manifest_string (value, number)
+					-- RTOMS is the macro used to retrieve previously created once manifest strings
+				register.print_register
+				buf.put_character ('=')
+				buf.put_string ("RTOMS(")
+				buf.put_integer (body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number - 1)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			else
+					-- RTCOMS is the macro used to retrieve previously created once manifest strings
+					-- or to create a new one if this is the first acceess to the string
+				buf.put_string ("RTCOMS(")
+				register.print_register
+				buf.put_character (',')
+				buf.put_integer (body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number - 1)
+				buf.put_character (',')
+				buf.put_character ('%"')
+				buf.escape_string (value)
+				buf.put_character ('%"')
+				buf.put_character (',')
+				buf.put_integer (value.count)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			end
+		ensure
+			registered: is_static_system_data_safe implies once_manifest_string_value (number) = value
+		end
+
+feature {NONE} -- Setting: once manifest strings
+
+	set_once_manifest_string_count (number: INTEGER) is
+			-- Set number of once manifest strings in current routine body to `number'.
+		require
+			positive_number: number > 0
+			same_if_set: once_manifest_string_count > 0 implies once_manifest_string_count = number
+		do
+			once_manifest_string_count_table.force (number, original_body_index)
+		ensure
+			once_manifest_string_count_set: once_manifest_string_count = number
+		end
+
+	register_once_manifest_string (value: STRING; number: INTEGER) is
+			-- Register that current routine body has once manifest string
+			-- with the given `number' of the given `value'.
+		require
+			is_static_system_data_safe: is_static_system_data_safe
+			non_void_value: value /= Void
+			valid_number: number > 0 and number <= once_manifest_string_count
+			same_if_registered: 
+				once_manifest_string_value (number) /= Void implies
+				once_manifest_string_value (number) = value
+		local
+			index: like original_body_index
+			routine_once_manifest_strings: ARRAY [STRING]
+		do
+			index := original_body_index
+			routine_once_manifest_strings := once_manifest_string_table.item (index)
+			if routine_once_manifest_strings = Void then
+				create routine_once_manifest_strings.make (1, once_manifest_string_count)
+				once_manifest_string_table.force (routine_once_manifest_strings, index)
+			end
+			routine_once_manifest_strings.put (value, number)
+		ensure
+			registered: once_manifest_string_value (number) = value
+		end
+
 feature -- Access
 
 	Current_register: REGISTRABLE is
@@ -786,62 +1048,6 @@ feature -- Access
 			need_gc_hook := tmp
 		end
 
-	clear_old_expressions is
-			-- Clear old expressions.
-		do
-				--! Did this so it won't effect any old_expression
-				--! referencing this object.
-			create old_expressions.make
-		end
-
-	clear_all is
-			-- Reset internal data structures.
-		do
-			local_vars.clear_all
-			local_index_table.clear_all
-			associated_register_table.clear_all
-			local_index_counter := 0
-			dt_current := 0
-			inlined_dt_current := 0
-			dftype_current := 0
-			inlined_dftype_current := 0
-			is_first_precondition_block_generated := False
-			is_new_precondition_block := False
-			result_used := False
-			current_feature := Void
-			original_body_index := 0
-			current_used := False
-			current_used_count := 0
-			need_gc_hook := False
-			label := 0
-			non_gc_reg_vars := 0
-			non_gc_tmp_vars := 0
-			local_list.wipe_out
-			breakpoint_slots_number := 0;
-				-- This should not be necessary but may limit the
-				-- effect of bugs in register allocation (if any).
-			register_server.clear_all
-		end
-
-	array_opt_clear is
-			-- Clear during the array optimization
-		do
-			class_type := Void
-			byte_code := Void
-		end
-
-	wipe_out is
-			-- Clear the structure
-		do
-			clear_all
-			local_vars := Void
-			local_index_table := Void
-			associated_register_table := Void
-			class_type := Void
-			original_class_type := Void
-			byte_code := Void
-		end
-
 	make_from_context (other: like Current) is
 			-- Save context for later restoration. This makes the
 			-- use of unanalyze possible and meaningful.
@@ -1158,6 +1364,72 @@ feature -- Access
 			local_list.put_right (t)
 		end
 
+feature -- Clearing
+
+	clear_old_expressions is
+			-- Clear old expressions.
+		do
+				--! Did this so it won't effect any old_expression
+				--! referencing this object.
+			create old_expressions.make
+		end
+
+	array_opt_clear is
+			-- Clear during the array optimization
+		do
+			class_type := Void
+			byte_code := Void
+		end
+
+	clear_feature_data is
+			-- Clear feature-specific data.
+		do
+			local_vars.clear_all
+			local_index_table.clear_all
+			associated_register_table.clear_all
+			local_index_counter := 0
+			dt_current := 0
+			inlined_dt_current := 0
+			dftype_current := 0
+			inlined_dftype_current := 0
+			is_first_precondition_block_generated := False
+			is_new_precondition_block := False
+			result_used := False
+			current_feature := Void
+			original_body_index := 0
+			current_used := False
+			current_used_count := 0
+			need_gc_hook := False
+			label := 0
+			non_gc_reg_vars := 0
+			non_gc_tmp_vars := 0
+			local_list.wipe_out
+			breakpoint_slots_number := 0;
+				-- This should not be necessary but may limit the
+				-- effect of bugs in register allocation (if any).
+			register_server.clear_all
+		end
+
+	clear_class_type_data is
+			-- Clear class-type-specific data.
+		do
+				-- Wipe out content of `global_onces'.
+			global_onces.wipe_out
+				-- Wipe out once manifest strings records.
+			once_manifest_string_table.wipe_out
+		ensure
+			global_onces_is_empty: global_onces.is_empty
+			once_manifest_string_table_is_empty: once_manifest_string_table.is_empty
+		end
+
+	clear_system_data is
+			-- Clear system-wide data.
+		do
+			once_manifest_string_count_table.wipe_out
+		ensure
+			once_manifest_string_count_table_is_empty: once_manifest_string_count_table.is_empty
+		end
+
 feature -- Debugger
 
 	instruction_line: LINE [AST_EIFFEL]
@@ -1221,6 +1493,8 @@ feature -- Inlining
 
 invariant
 	global_onces_not_void: global_onces /= Void
+	once_manifest_string_count_table_not_void: once_manifest_string_count_table /= Void
+	once_manifest_string_table_not_void: once_manifest_string_table /= Void
 	class_type_valid_with_current_type: class_type /= Void implies class_type.type = current_type
 
 end

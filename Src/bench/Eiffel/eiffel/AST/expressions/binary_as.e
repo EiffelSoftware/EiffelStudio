@@ -110,7 +110,7 @@ feature -- Type check, byte code and dead code removal
 				else
 					if
 						not System.do_not_check_vape and then
-						context.level4 and then context.check_for_vape and then
+						context.is_checking_precondition and then context.check_for_vape and then
 						not context.current_feature.export_status.is_subset (l_infix.export_status) 
 					then
 							-- In precondition and checking for vape
@@ -254,7 +254,7 @@ feature -- Type check, byte code and dead code removal
 				end
 
 					-- Suppliers update
-				create depend_unit.make (left_id, last_infix)
+				create depend_unit.make_with_level (left_id, last_infix, context.depend_unit_level)
 				context.supplier_ids.extend (depend_unit)
 
 

@@ -113,7 +113,7 @@ feature -- Type check, byte code and dead code removal
 
 			if
 				not System.do_not_check_vape and then
-				context.level4 and then context.check_for_vape and then
+				context.is_checking_precondition and then context.check_for_vape and then
 				not context.current_feature.export_status.is_subset (prefix_feature.export_status) 
 			then
 					-- In precondition and checking for vape
@@ -125,7 +125,8 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Suppliers update
-			create depend_unit.make (last_class.class_id, prefix_feature)
+			create depend_unit.make_with_level (last_class.class_id, prefix_feature,
+				context.depend_unit_level)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Assumes here that a prefix feature has no argument

@@ -9,7 +9,7 @@ class EWB_STATISTICS
 
 inherit
 
-	EWB_SYSTEM
+	EWB_FILTER_SYSTEM
 		rename
 			name as statistics_cmd_name, 
 			help_message as statistics_help, 

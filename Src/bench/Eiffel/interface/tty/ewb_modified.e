@@ -10,7 +10,7 @@ class EWB_MODIFIED
 
 inherit
 
-	EWB_SYSTEM
+	EWB_FILTER_SYSTEM
 		rename
 			name as modified_cmd_name, 
 			help_message as modified_help, 

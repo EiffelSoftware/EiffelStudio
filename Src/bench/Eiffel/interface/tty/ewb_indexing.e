@@ -10,7 +10,7 @@ class EWB_INDEXING
 
 inherit
 
-	EWB_SYSTEM
+	EWB_FILTER_SYSTEM
 		rename
 			name as indexing_cmd_name, 
 			help_message as indexing_help, 

@@ -9,13 +9,14 @@ class EWB_TEXT
 
 inherit
 
-	EWB_CLASS
+	EWB_FILTER_CLASS
 		rename
 			name as text_cmd_name,
 			help_message as text_help,
 			abbreviation as text_abb
 		redefine
-			process_uncompiled_class
+			process_uncompiled_class, process_compiled_class,
+			want_compiled_class
 		end
 
 creation
@@ -32,6 +33,39 @@ feature {NONE} -- Implementation
 			check
 				not_be_called: false
 			end
+		end;
+
+feature {NONE} -- Execution
+
+	want_compiled_class: BOOLEAN is
+			-- Does Current want a compiled class?
+			--| If the class is in the system: True
+			--| else: False.
+		local
+			class_i: CLASS_I
+		do
+			class_i := Eiffel_universe.class_with_name (class_name);
+			Result := class_i.compiled_eclass /= Void
+		end;
+
+	process_compiled_class (e_class: E_CLASS) is
+			-- Display the (may be) filtered text of `e_class'.
+		local
+			ctxt: CLASS_TEXT_FORMATTER;
+			filter: TEXT_FILTER
+		do
+			!! ctxt;
+			ctxt.set_one_class_only;
+			ctxt.set_order_same_as_text;
+			ctxt.format (e_class);
+			if filter_name.empty then
+				output_window.put_string (ctxt.text.image);
+			else
+				!! filter.make (filter_name);
+				filter.process_text (ctxt.text);
+				output_window.put_string (filter.image);
+			end;
+			output_window.new_line;
 		end;
 
 	process_uncompiled_class (class_i: CLASS_I) is

@@ -10,42 +10,19 @@ deferred class EWB_FILTER_CLASS
 
 inherit
 
+	EWB_FILTER;
 	EWB_CLASS
 		redefine
 			process_compiled_class, loop_action
 		end
 
-feature -- Initialization
-
-	init (fn: STRING) is
-			-- Initialize Current with class_name as `cn'
-			-- and filter_name as `fn'.
-		require
-			fn_not_void: fn /= Void
-		do
-			filter_name := fn
-		ensure
-			filter_set: filter_name = fn
-		end;
-
-feature -- Properties
-
-	filter_name: STRING;
-			-- Name of the filter to be used
-
-
-feature {NONE} -- Properties
+feature {NONE} -- Execution
 
 	associated_cmd: E_CLASS_CMD is
-			-- Associated class command to be executed
-			-- after successfully retrieving the compiled
-			-- class
+			-- Command to be executed after successful
+			-- retrieving of the class text.
 		deferred
-		ensure
-			non_void_result: Result /= Void
 		end;
-
-feature {NONE} -- Execution
 
 	process_compiled_class (e_class: E_CLASS) is
 			-- Execute associated command

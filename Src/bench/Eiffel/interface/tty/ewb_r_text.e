@@ -37,13 +37,16 @@ feature {NONE} -- Implementation
 	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
 			-- Process feature `e_feature' defined in `e_class'.
 		local
-			text: STRING;
+			text: STRUCTURED_TEXT;
+			filter: TEXT_FILTER
 		do
 			if e_class.file_name /= Void then
-				text := e_feature.text.image;
+				text := e_feature.text;
 			end;
 			if text /= Void then
-				output_window.put_string (text);
+				!! filter.make (filter_name);
+				filter.process_text (text);
+				output_window.put_string (filter.image);
 				output_window.new_line;
 			else
 				output_window.put_string ("Cannot open ");

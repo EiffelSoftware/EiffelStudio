@@ -26,7 +26,8 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		undefine
-			pnd_press
+			pnd_press,
+			check_drag_and_drop_release
 		redefine
 			interface,
 			make,
@@ -136,6 +137,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/27 23:12:49  rogers
+--| Undefined check_drag_and_drop_Release from EV_MENU_ITEM_LIST_IMP.
+--|
 --| Revision 1.21  2000/04/11 19:02:16  brendel
 --| Improved FIXME's and Copyright notice.
 --|

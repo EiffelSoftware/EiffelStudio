@@ -422,12 +422,10 @@ feature -- Access
 			l_name: STRING
 			l_eiffel_name: EIFFEL_NAME_ATTRIBUTE
 			k, nb: INTEGER
-			l_ids: like id_to_fields_name
 			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 			l_field: FIELD_INFO
 		do
-			l_ids := id_to_fields_name
-			l_native_array := l_ids.item (type_id)
+			l_native_array := id_to_fields_name.item (type_id)
 			if l_native_array = Void then
 				from
 					l_members := get_members (type_id)
@@ -451,7 +449,7 @@ feature -- Access
 					l_native_array.put (k, l_name)
 					k := k + 1
 				end
-				l_ids.force (l_native_array, type_id)
+				id_to_fields_name.put (l_native_array, type_id)
 			end
 			Result := l_native_array.item (i)
 		ensure
@@ -493,10 +491,8 @@ feature -- Access
 			l_members: NATIVE_ARRAY [FIELD_INFO]
 			l_abstract_type: INTEGER
 			k, nb: INTEGER
-			l_ids: like id_to_fields_abstract_type
 		do
-			l_ids := id_to_fields_abstract_type
-			l_native_array := l_ids.item (type_id)
+			l_native_array := id_to_fields_abstract_type.item (type_id)	
 			if l_native_array = Void then
 				from
 					l_members := get_members (type_id)
@@ -519,7 +515,7 @@ feature -- Access
 					l_native_array.put (k, l_abstract_type)
 					k := k + 1
 				end
-				l_ids.force (l_native_array, type_id)
+				id_to_fields_abstract_type.put (l_native_array, type_id)
 			end
 			Result := l_native_array.item (i)
 		ensure
@@ -942,23 +938,6 @@ feature {NONE} -- Implementation
 			next_dynamic_type_id_not_void: Result /= Void
 		end
 
-	next_meta_dynamic_type_id: CELL [INTEGER] is
-			-- ID for dynamic type (each generic derivation which contains a different
-			-- expanded type get a new ID)
-		once
-			create Result.put (max_predefined_type + 1)
-		ensure
-			next_meta_dynamic_type_id_not_void: Result /= Void
-		end
-
-	cid_mapping: NATIVE_ARRAY [INTEGER] is
-			-- Mapping between `dynamic_type_id' and `meta_dynamic_type_id'.
-		once
-			create Result.make (100)
-		ensure
-			cid_mapping_not_void: Result /= Void
-		end
-
 	pure_implementation_type (type_id: INTEGER): RT_CLASS_TYPE is
 			-- Given `type_id' which might include some reference to interface type,
 			-- returns the corresponding implementation type.
@@ -968,7 +947,7 @@ feature {NONE} -- Implementation
 			Result := id_to_eiffel_implementation_type.item (type_id)
 			if Result = Void then
 				Result := internal_pure_implementation_type (id_to_eiffel_type.item (type_id))
-				id_to_eiffel_implementation_type.force (Result, type_id)
+				id_to_eiffel_implementation_type.put (Result, type_id)
 			end
 		end
 
@@ -1108,7 +1087,8 @@ feature {NONE} -- Implementation
 					Result := next_dynamic_type_id.item
 					next_dynamic_type_id.put (Result + 1)
 					eiffel_type_to_id.set_item (a_class_type, Result)
-					id_to_eiffel_type.force (a_class_type, Result)
+					resize_arrays (Result)
+					id_to_eiffel_type.put (a_class_type, Result)
 				end
 			end
 		ensure
@@ -1463,25 +1443,9 @@ feature {NONE} -- Implementation
 			-- Key: RT_CLASS_TYPE
 			-- Value: dynamic type
 		once
-			create Result.make (50)
+			create Result.make (chunk_size)
 		ensure
 			eiffel_type_to_id_not_void: Result /= Void
-		end
-
-	id_to_eiffel_type: ARRAY [RT_CLASS_TYPE] is
-			-- Mapping between dynamic type id and Eiffel types.
-		once
-			create Result.make (0, 50)
-		ensure
-			id_to_eiffel_type_not_void: Result /= Void
-		end
-
-	id_to_eiffel_implementation_type: ARRAY [RT_CLASS_TYPE] is
-			-- Mapping between dynamic type id and Eiffel implementation types.
-		once
-			create Result.make (0, 50)
-		ensure
-			id_to_eiffel_type_not_void: Result /= Void
 		end
 
 	eiffel_meta_type_mapping: HASH_TABLE [ARRAYED_LIST [RT_CLASS_TYPE], STRING] is
@@ -1491,7 +1455,7 @@ feature {NONE} -- Implementation
 			-- exists in the system A [INTEGER_16], A [STRING], A [ANY], it only
 			-- contains A [INTEGER_16] and A [REFERENCE_TYPE].
 		once
-			create Result.make (50)
+			create Result.make (chunk_size)
 		ensure
 			eiffel_meta_type_mapping_not_void: Result /= Void
 		end
@@ -1499,7 +1463,7 @@ feature {NONE} -- Implementation
 	interface_to_implementation: HASHTABLE is
 			-- Mapping from interface to associated implementation.
 		once
-			create Result.make (50)
+			create Result.make (chunk_size)
 		ensure
 			interface_to_implementation_not_void: Result /= Void
 		end
@@ -1507,7 +1471,7 @@ feature {NONE} -- Implementation
 	implementation_to_interface: HASHTABLE is
 			-- Mapping from implementation to associated interface.
 		once
-			create Result.make (50)
+			create Result.make (chunk_size)
 		ensure
 			implementation_to_interface_not_void: Result /= Void
 		end
@@ -1548,10 +1512,8 @@ feature {NONE} -- Implementation
 			l_cv_f_name: STRING
 			l_type: SYSTEM_TYPE
 			l_fields: ARRAYED_LIST [FIELD_INFO]
-			l_ids: like id_to_fields
 		do
-			l_ids := id_to_fields
-			Result := l_ids.item (type_id)
+			Result := id_to_fields.item (type_id)	
 			if Result = Void then
 				l_type := implementation_type (id_to_eiffel_type.item (type_id).dotnet_type)
 				allm := l_type.get_members_binding_flags ({BINDING_FLAGS}.instance |
@@ -1582,7 +1544,7 @@ feature {NONE} -- Implementation
 					l_fields.forth
 					i := i + 1
 				end
-				l_ids.force (Result, type_id)
+				id_to_fields.put (Result, type_id)
 			end
 		end
 
@@ -1595,10 +1557,44 @@ feature {NONE} -- Implementation
 			get_members (dynamic_type (object)).item (i).set_value (object, value)
 		end
 
+	resize_arrays (max_type_id: INTEGER) is
+			-- Resize all arrays indexed by type_id so that they can accomodate
+			-- `max_type_id'.
+		local
+			l_new_count: INTEGER
+		do
+			l_new_count := array_upper_cell.item
+			if max_type_id > l_new_count then
+				l_new_count := l_new_count * 2
+				array_upper_cell.put (l_new_count)
+				id_to_eiffel_type.grow (l_new_count)
+				id_to_eiffel_implementation_type.grow (l_new_count)
+				id_to_fields.grow (l_new_count)
+				id_to_fields_abstract_type.grow (l_new_count)
+				id_to_fields_name.grow (l_new_count)
+			end
+		end
+
+	id_to_eiffel_type: ARRAY [RT_CLASS_TYPE] is
+			-- Mapping between dynamic type id and Eiffel types.
+		once
+			create Result.make (0, array_upper_cell.item)
+		ensure
+			id_to_eiffel_type_not_void: Result /= Void
+		end
+
+	id_to_eiffel_implementation_type: ARRAY [RT_CLASS_TYPE] is
+			-- Mapping between dynamic type id and Eiffel implementation types.
+		once
+			create Result.make (0, array_upper_cell.item)
+		ensure
+			id_to_eiffel_type_not_void: Result /= Void
+		end
+
 	id_to_fields: ARRAY [NATIVE_ARRAY [FIELD_INFO]] is
 			-- Buffer for `get_members' lookups index by type_id.
 		once
-			create Result.make (0, 50)
+			create Result.make (0, array_upper_cell.item)
 		ensure
 			id_to_fields_not_void: Result /= Void
 		end
@@ -1606,7 +1602,7 @@ feature {NONE} -- Implementation
 	id_to_fields_abstract_type: ARRAY [NATIVE_ARRAY [INTEGER]] is
 			-- Buffer for `field_type_of_type' lookups index by type_id.
 		once
-			create Result.make (0, 50)
+			create Result.make (0, array_upper_cell.item)
 		ensure
 			id_to_fields_abstract_type_not_void: Result /= Void
 		end
@@ -1614,7 +1610,7 @@ feature {NONE} -- Implementation
 	id_to_fields_name: ARRAY [NATIVE_ARRAY [STRING]] is
 			-- Buffer for `field_name_of_type' lookups index by type_id.
 		once
-			create Result.make (0, 50)
+			create Result.make (0, array_upper_cell.item)
 		ensure
 			id_to_fields_name_not_void: Result /= Void
 		end
@@ -1622,9 +1618,20 @@ feature {NONE} -- Implementation
 	marked_objects: HASHTABLE is
 			-- Contains all objects marked.
 		once
-			create Result.make_from_capacity (50)
+			create Result.make_from_capacity (chunk_size)
 		end
-	
+
+	chunk_size: INTEGER is 50;
+			-- Default initial size for tables.
+
+	array_upper_cell: CELL [INTEGER] is
+			-- Store upper index for all arrays indexed by type id.
+		once
+			create Result.put (chunk_size)
+		ensure
+			array_upper_cell: Result /= Void
+		end
+
 indexing
 
 	library: "[

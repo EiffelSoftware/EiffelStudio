@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create preferred_families
 			family := Family_sans
 			set_face_name (app_implementation.default_font_name)
-			set_height (App_implementation.default_font_size_internal)
+			set_height_in_points (App_implementation.default_font_point_height_internal)
 			set_shape (App_implementation.default_font_style_internal)
 			set_weight (App_implementation.default_font_weight_internal)
 			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 					weight = app_implementation.default_font_weight_internal and then
 					shape = app_implementation.default_font_style_internal and then
 					name.is_equal (app_implementation.default_font_name_internal) and then
-					height = app_implementation.default_font_size_internal
+					height_in_points = app_implementation.default_font_point_height_internal
 		end
 
 feature -- Access
@@ -67,8 +67,11 @@ feature -- Access
 	shape: INTEGER
 			-- Preferred font slant.
 
-	height: INTEGER
+	height: INTEGER is
 			-- Preferred font height measured in screen pixels.
+		do
+			Result := app_implementation.pixel_value_from_point_value (height_in_points)
+		end
 
 	height_in_points: INTEGER
 			-- Preferred font height measured in points.
@@ -111,8 +114,7 @@ feature -- Element change
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			height := a_height
-			height_in_points := app_implementation.point_value_from_pixel_value (height)
+			height_in_points := app_implementation.point_value_from_pixel_value (a_height)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
 		end
 
@@ -120,7 +122,6 @@ feature -- Element change
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height_in_points := a_height
-			height := app_implementation.pixel_value_from_point_value (height_in_points)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
 		end
 

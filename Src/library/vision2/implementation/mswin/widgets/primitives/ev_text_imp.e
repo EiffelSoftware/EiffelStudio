@@ -209,9 +209,11 @@ feature -- Access
 			-- Current position of caret.
 		local
 			new_lines_to_caret_position: INTEGER
+			internal_pos: INTEGER
 		do
-			new_lines_to_caret_position := wel_text.substring (1, internal_caret_position).occurrences ('%R')
-			Result := internal_caret_position + 1 - new_lines_to_caret_position
+			internal_pos := internal_caret_position
+			new_lines_to_caret_position := wel_text.substring (1, internal_pos).occurrences ('%R')
+			Result := internal_pos + 1 - new_lines_to_caret_position
 		end
 		
 	insert_text (txt: STRING) is
@@ -364,13 +366,15 @@ feature -- Status Settings
 				counter := 0
 				nb := pos - 1
 			until
-				counter > nb
+				counter >= nb
 			loop
 				if a.item (counter) = '%R' then
 					new_lines := new_lines + 1
 					nb := nb + 1
+					counter := counter + 2
+				else
+					counter := counter + 1
 				end
-				counter := counter + 1
 			end
 				-- We store `pos' so caret position can be restored
 				-- after operations that should not move caret, but do.

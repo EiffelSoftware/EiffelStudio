@@ -135,6 +135,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			-- Nothing to perform here.
+		end
+
 	default_object_by_type (a_type: STRING): EV_ANY is
 			-- `Result' is a default object that corresponds to `a_type'.
 		deferred

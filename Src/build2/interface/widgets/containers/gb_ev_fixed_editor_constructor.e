@@ -76,6 +76,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			-- Nothing to do here.
+		end
+
 	layout_window: EV_DIALOG is
 			-- Window for laying out children of fixed.
 		local

@@ -13,12 +13,11 @@
 #ifndef _logfile_h_
 #define _logfile_h_
 
+extern void dexit(int);				/* Exit from the program by adding a log */
 #ifdef USE_ADD_LOG
 
 #include <sys/types.h>
 #include "eif_config.h"
-
-extern void dexit(int);				/* Exit from the program by adding a log */
 
 /* Routine defined by logging package */
 #ifdef EIF_WIN32

@@ -58,6 +58,10 @@ feature {NONE} -- Implementation
 	window_shown is
 			-- Called by `show_actions' of `gb_tip_of_the_day_dialog'.
 		do
+			if blocking_window /= Void then
+				set_position (blocking_window.x_position + blocking_window.width // 2 - width // 2,
+					blocking_window.y_position + blocking_window.height // 2 - height // 2)
+			end
 		end
 
 	next_tip_selected is

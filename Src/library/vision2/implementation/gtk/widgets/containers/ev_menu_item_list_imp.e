@@ -152,7 +152,7 @@ feature {NONE} -- implementation
 			until
 				interface.off or else an_index = cur_item
 			loop
-				sep_imp ?= interface.item
+				sep_imp ?= interface.item.implementation
 				if sep_imp /= Void then
 					Result := sep_imp
 				end
@@ -218,6 +218,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/25 23:50:34  king
+--| Corrected separator_imp_by_index
+--|
 --| Revision 1.12  2000/04/25 22:51:11  king
 --| Corrected radio selection
 --|

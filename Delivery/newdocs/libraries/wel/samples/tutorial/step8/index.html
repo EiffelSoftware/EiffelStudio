@@ -9,8 +9,9 @@
 
 	<BODY>
 		<H1>Tutorial Step 8</H1>
-		<P> This sample shows you how to set up your first <A HREF="/libraries/wel/support/wel_application_chart.html">WEL_APPLICATION</A> which consists of a <A HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. This
-		is one of the simplest WEL applications you can write, and the output is shown below:
+		<P>This sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step7/index.html">step 7</A>, and also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> and
+		a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_save_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A>.
+		The output is shown below:
 		</P>
 		<CENTER><IMG SRC="step8.png" ALT="step8" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
@@ -20,23 +21,38 @@
 		<UL>
 			<LI>Launch [BENCH].
 			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
-			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step1\</I>.
+			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step8\</I>.
 			<LI>Choose <I>Ace.ace</I>
 			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
+		<P>After launching the sample, you should see a <A CLASS="eclass" HREF="/Libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
+		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line"
+		menu, will bring up a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> which allows you to change the thickness of the line that is drawn.
+		If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. Selecting "Save" from the "File"
+		menu will bring up a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_save_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> which allows you to specify the filename and location of the picture you have drawn.
+		Selecting "Open" from the "File" menu will bring up a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> which allows you to specify a previously saved drawing
+		to open.
+		</P>
 		<H2>Under the Hood</H2>
+		The <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> and the <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_save_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> are both activated from
+		the redefinition of <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window_chart.html#f_on_menu_command">on_menu_command</A>.
+		A new class, <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/lines_chart.html">LINES</A> is now used to store the lines drawn by the user and this inherits <A HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>
+		which allows it to be easily stored and retrieved.
+		
 
 		<P>This sample contains the following classes:
 			<UL>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/tutorial_step6_chart.html">TUTORIAL_STEP6</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/line_thickness_dialog_chart.html">LINE_THICKNESS_DIALOG_CHART</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/point_chart.html">POINT</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/root_cluster/line_chart.html">LINE</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/tutorial_step8_chart.html">TUTORIAL_STEP6</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/line_thickness_dialog_chart.html">LINE_THICKNESS_DIALOG_CHART</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/point_chart.html">POINT</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/lines_chart.html">LINES</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/line_chart.html">LINE</A>
 			</UL>
 		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/reference/stddlgs/wel_save_file_dialog.html">Save file dialog</A><BR><A HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog.html">Open file dialog</A></P>
 	</BODY>
 </HTML>

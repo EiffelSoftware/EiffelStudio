@@ -14,9 +14,12 @@
 #ifndef _eif_types_h_
 #define _eif_types_h_
 
-#include "eif_constants.h"
+#include "portable.h"
 
-	/* except.h */
+	/*------------*/
+	/*  except.h  */
+	/*------------*/
+
 /* Structure used as the execution vector. This is for both the execution
  * stack (eif_stack) and the exception trace stack (eif_trace).
  */
@@ -89,9 +92,66 @@ typedef struct _smart_string {
 } SMART_STRING;
 
 
-	/* ----------------------------------------------------------------- */
-	/*	interp.h */
-	/* ----------------------------------------------------------------- */
+	/*------------*/
+	/*	garcol.h  */
+	/*------------*/
+
+/*
+ * General information structure.
+ */
+struct gacinfo {
+	unsigned long nb_full;		/* Number of full GC collections */
+	unsigned long nb_partial;	/* Number of partial collections */
+	unsigned long mem_used;		/* State of memory after previous run */
+	unsigned long mem_copied;	/* Amount of memory copied by the scavenging */
+	unsigned long mem_move;		/* Size of the 'from' spaces */
+	int gc_to;					/* Number of 'to' zone allocated for plsc */
+	char status;				/* Describes the collecting status */
+};
+
+struct gacstat {
+	long mem_used;			/* State of memory after previous run */
+	long mem_collect;		/* Memory collected during previous run */
+	long mem_avg;			/* Average memory collected in a cycle */
+	long real_avg;			/* Average amount of real cs used by plsc() */
+	long real_time;			/* Amount of real cs used by last plsc() */
+	long real_iavg;			/* Average real time between two collections */
+	long real_itime;		/* Real time between two collections */
+	double cpu_avg;			/* Average amount of CPU used by plsc() */
+	double sys_avg;			/* Average kernel time used by plsc() */
+	double cpu_iavg;		/* Average CPU time between two collections */
+	double sys_iavg;		/* Average kernel time between collections */
+	double cpu_time;		/* Amount of CPU used by last plsc() */
+	double sys_time;		/* Average kernel time used by last plsc() */
+	double cpu_itime;		/* CPU time between two collections */
+	double sys_itime;		/* Average kernel time between collections */
+};
+
+/*
+ * Stack used by local variables, remembered set, etc... It is implemented
+ * with small chunks linked together.
+ */
+struct stack {
+	struct stchunk *st_hd;	/* Head of chunk list */
+	struct stchunk *st_tl;	/* Tail of chunk list */
+	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
+	char **st_top;			/* Top in chunk (pointer to next free location) */
+	char **st_end;			/* Pointer to first element beyond current chunk */
+};
+
+struct stchunk {
+	struct stchunk *sk_next;	/* Next chunk in stack */
+	struct stchunk *sk_prev;	/* Previous chunk in stack */
+	char **sk_arena;			/* Arena where objects are stored */
+	char **sk_end;				/* Pointer to first element beyond the chunk */
+};
+
+
+
+
+	/*------------*/
+	/*	interp.h  */
+	/*------------*/
 
 	/* Stack data structures */
 struct item {
@@ -124,9 +184,10 @@ struct stochunk {
 };
 
 
-	/* ----------------------------------------------------------------- */
-	/*	malloc.h */
-	/* ----------------------------------------------------------------- */
+
+	/*------------*/
+	/*	malloc.h  */
+	/*------------*/
 
 /* Overhead for each memory segment allocated. All these objects
  * are linked by size when they are free. This link field is used
@@ -206,19 +267,17 @@ struct sc_zone {
 };
 
 
-	/* ----------------------------------------------------------------- */
-	/*	sig.h */
-	/* ----------------------------------------------------------------- */
+	/*------------*/
+	/*	search.h  */
+	/*------------*/
 
-/* Structure used as FIFO stack for signal buffering. I really do not expect
- * this stack to overflow, so it has a huge fixed size--RAM. Should it really
- * overflow, we would panic immediately :-(.
+/*
+ * Search table declarations.
  */
-struct s_stack {
-	int s_min;				/* Minimum value of circular buffer */
-	int s_max;				/* Maximum value of circular buffer */
-	char s_pending;			/* Are any signals pending? */
-	char s_buf[SIGSTACK];	/* The circular buffer used as a FIFO stack */
+struct s_table {
+	uint32 s_size;		/* Search table size */
+	uint32 s_count;		/* Count of inserted keys */
+	char **s_keys;		/* Search table keys */
 };
 
 

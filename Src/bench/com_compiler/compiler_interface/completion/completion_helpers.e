@@ -185,7 +185,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_lookup (current_class: CLASS_I; target_type: TYPE; targets: LIST [STRING]; feature_table: FEATURE_TABLE; exact_match: BOOLEAN): FEATURE_TABLE is
+	recursive_lookup (current_class: CLASS_I; target_type: TYPE_AS; targets: LIST [STRING]; feature_table: FEATURE_TABLE; exact_match: BOOLEAN): FEATURE_TABLE is
 			-- Available features after resolution of `targets' in `target_type'
 		require
 			non_void_target_type : target_type /= Void
@@ -193,7 +193,7 @@ feature -- Basic operations
 		local
 			l_feature_table: FEATURE_TABLE
 			l_cl_type: CL_TYPE_A
-			l_type: TYPE
+			l_type: TYPE_AS
 		do
 			l_cl_type ?= target_type.actual_type
 			if l_cl_type /= Void then
@@ -219,13 +219,13 @@ feature -- Basic operations
 			end
 		end
 
-	feature_variables (locals, arguments: HASH_TABLE [STRING, STRING]; fi: FEATURE_I; feature_table: FEATURE_TABLE): HASH_TABLE [TYPE, STRING] is
+	feature_variables (locals, arguments: HASH_TABLE [STRING, STRING]; fi: FEATURE_I; feature_table: FEATURE_TABLE): HASH_TABLE [TYPE_AS, STRING] is
 			-- Local and arguments types of feature `fi' from table `feature_table'.
 			-- Result is indexed by name of variable.
 		require
 			non_void_feature: fi /= Void
 		local
-			type: TYPE
+			type: TYPE_AS
 			r_type: TYPE_A
 		do
 			create Result.make (10)
@@ -259,7 +259,7 @@ feature -- Basic operations
 			end
 		end
 
-	type_of_target (target: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE, STRING]; class_i: CLASS_I): TYPE is
+	type_of_target (target: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE_AS, STRING]; class_i: CLASS_I): TYPE_AS is
 			-- Type of expression `target'
 		require
 			non_void_target: target /= Void
@@ -358,7 +358,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	instantiated_type (a_class: CLASS_I; a_parent_type: CL_TYPE_A; a_type: TYPE): TYPE_A is
+	instantiated_type (a_class: CLASS_I; a_parent_type: CL_TYPE_A; a_type: TYPE_AS): TYPE_A is
 			-- Instantiation of `a_type' in `a_parent_type' in the context of `a_class' assuming
 			-- `a_parent_type' is not void; otherwise only in the context of `a_class'.
 			--| FIXME: Should be replaced by factored code in compiler when it exists
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly: a_assembly /= Void
 		do
-			if a_assembly.is_local then
+			if a_assembly.assembly_path /= Void and then not a_assembly.assembly_path.is_empty then
 				Result := a_assembly.assembly_path
 			else
 				Result := Assembly_information.path_to_assembly_dll (a_assembly.assembly_name)
@@ -559,8 +559,8 @@ feature {NONE} -- Implementation
 			Result.right_adjust
 		end
 
-	type_from_type_name (name: STRING): TYPE is
-			-- Instance of {TYPE} from type name
+	type_from_type_name (name: STRING): TYPE_AS is
+			-- Instance of {TYPE_AS} from type name
 			-- (export status {NONE})
 		require
 			non_void_name: name /= void
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 			create Result.make_type_parser
 		end
 
-	resolved_type (type: TYPE; feature_table: FEATURE_TABLE; fi: FEATURE_I): TYPE_A is
+	resolved_type (type: TYPE_AS; feature_table: FEATURE_TABLE; fi: FEATURE_I): TYPE_A is
 			-- Solve type `type' within feature `fi' in table `feature_table'.
 			-- (export status {NONE})
 		require
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	identifier_type (id: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE, STRING]): TYPE is
+	identifier_type (id: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE_AS, STRING]): TYPE_AS is
 			-- Type of identifier `id' if defined in either `table' or `ids'
 			-- (export status {NONE})
 		require
@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	extracted_type: TYPE
+	extracted_type: TYPE_AS
 			-- Type extracted from last call to `extract_type'
 
 	type_extracted: BOOLEAN

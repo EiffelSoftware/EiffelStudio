@@ -132,8 +132,8 @@ feature {NONE} -- Implementation
 		end
 		
 invariant
-	name_not_void: name /= Void
-	type_not_void: type /= Void
+	name_not_void: name /= Void and not name.is_empty
+	type_not_void: type /= Void and not type.is_empty
 	referers_not_void: referers /= Void
 
 end -- class GB_CONSTANT

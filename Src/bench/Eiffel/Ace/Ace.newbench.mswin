@@ -1,7 +1,7 @@
 system es4
 
 root
-	 EWB_WINDOWS (main): "make"
+	 EB_KERNEL (new_main): "make"
 
 default
 	assertion (require);
@@ -281,36 +281,9 @@ cluster
 
 		-- tty interace
 	tty(interface): 			"$\tty"
-
-		-- graphical interface (bench):
-	bench_common(interface):	"$\graphical\common"
-	case_tool(interface):		"$\graphical\case_tool"
-	commands(interface):		"$\graphical\commands"
 		exclude
-			"tools_management.e"
-		end;
-	debugging_tool (interface):	"$\graphical\debugging"
-	drag_and_drop(interface):	"$\graphical\drag_and_drop"
-	formatters(interface):		"$\graphical\formatters"
-	main(interface):			"$\graphical\main"
-		--default
-			--profile (yes)
-		--end
-
-	graphical_shared(interface):	"$\graphical\shared"
-	stones(interface):		"$\graphical\stones"
-	text_window(interface):		"$\graphical\text_window"
-	windows(interface):		"$\graphical\windows"
-		exclude
-			"bar_and_text.e";"project_w.e";"window_mgr.e"
-		end;
-	preference_tool(interface):	"$\graphical\preference_tool"
-		exclude
-			"eb_preference_tool.e"
-		end;
-	profile_tool(interface):	"$\graphical\profile_tool"
-	wizard_common(interface):	"$\graphical\wizard\common"
-	wizard_bench(interface):	"$\graphical\wizard\bench"
+			"ewb_case_storage.e"
+		end
 
 		-- new graphical interface (bench):
 --	new_bench_common(interface):	"$\new_graphical\common";
@@ -323,7 +296,7 @@ cluster
 	new_formatters(interface):	"$\new_graphical\formatters";
 	new_main(interface):		"$\new_graphical\main";
 	new_graphical_shared(interface):"$\new_graphical\shared";
---	new_stones(interface):		"$\new_graphical\stones";
+	new_stones(interface):		"$\new_graphical\stones";
 	new_text_window(interface):	"$\new_graphical\text_window";
 	new_windows(interface):		"$\new_graphical\windows";
 	new_preference_tool(interface):	"$\new_graphical\preference_tool";
@@ -332,12 +305,6 @@ cluster
 --	new_wizard_common(interface):	"$\new_graphical\wizard\common";
 --	new_wizard_bench(interface):	"$\new_graphical\wizard\bench";
 	to_be_moved(interface):		"$\new_graphical\to_be_moved";
-
-		-- Windows specific classes
-	platform_mswin(interface):		"$\graphical\spec\widgets\win32"
-	win_graphical_window(interface):		"$\graphical\spec\graphical_window\win32"
-	win_formatters(interface):		"$\graphical\spec\formatters\win32";
-	win_commands(interface):			"$\graphical\spec\commands\win32"	
 
 		-- Case
 	case_common(common):		"$\case_storage"

@@ -25,14 +25,14 @@ feature
 				-- Make sure there is no interference with
 				-- the Bench regular license.
 			discard_licence;
-			get_registration_info;
-			set_version (3);
+			set_version (3.5);
 			set_application_name ("eiffeldle");
-			Result := connected;
+			get_licence;
+			Result := licensed;
 			discard
 		end;
 
-	handle_error (s: STRING) is
+	handle_error is
 		do
 		end;
 

@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-
+			initialize_pixmaps
 			real_signal_connect (
 				list_widget,
 				"select_child",
@@ -312,11 +312,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to end of list.
 			-- (from EV_ITEM_LIST_IMP)
 			-- (export status {NONE})
 		do
+			if v_imp.internal_pixmap /= Void then
+				v_imp.internal_set_pixmap (v_imp.internal_pixmap, pixmaps_width, pixmaps_height)
+			end
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 

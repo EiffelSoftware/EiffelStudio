@@ -222,57 +222,77 @@ feature {EV_ANY_I} -- Status Setting
 	
 	set_with_rtf (rtf_text: STRING) is
 			-- Set `text' and formatting of `Current' from `rtf_text' in RTF format.
+		require
+			rtf_text_not_void: rtf_text /= Void
+			rtf_text_not_empty: not rtf_text.is_empty
 		local
 			current_character: CHARACTER
+			found_opening_brace: BOOLEAN
 		do
-			create format_stack.make (8)
-			create all_fonts.make (0, 50)
-			create all_colors.make (0, 50)
-			create all_formats.make (50)
-			first_color_is_auto := False
-			last_colorred := -1
-			last_colorgreen := -1
-			last_colorblue := -1
-				-- These three values are set to -1 as we use this to determine
-				-- if the auto color is set as color 0 in the color table.
-			
-			create current_format
-			plain_text := ""
-			from
-				main_iterator := 1
-			until
-				main_iterator > rtf_text.count
-			loop
-				current_character := get_character (rtf_text, main_iterator)
-				if current_character = '{' then
-						-- Store state on stack
-					format_stack.extend (current_format.twin)
-				elseif current_character = '}' then
-						-- retrieve state from stack.
-					current_format := format_stack.item
-					format_stack.remove
-				elseif current_character = '\' then
-					process_keyword (rtf_text, main_iterator)
-				elseif current_character = ' '  then
-					process_text (rtf_text, main_iterator)
-				elseif current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
-						-- We are now one character past the tag for the text. This may occur when a keyword
-						-- is ended with a '%N' or we have just skipped a bracket section that contained the "\*"
-						-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
-						-- from the previous position, as the first index is ignored.
-					process_text (rtf_text, main_iterator - 1)
+			last_load_successful := True
+			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
+				create format_stack.make (8)
+				create all_fonts.make (0, 50)
+				create all_colors.make (0, 50)
+				create all_formats.make (50)
+				current_depth := 0
+				first_color_is_auto := False
+				last_colorred := -1
+				last_colorgreen := -1
+				last_colorblue := -1
+					-- These three values are set to -1 as we use this to determine
+					-- if the auto color is set as color 0 in the color table.
+				create current_format
+				plain_text := ""
+				from
+					main_iterator := 1
+				until
+					main_iterator > rtf_text.count or (found_opening_brace and current_depth = 0)
+				loop
+					current_character := get_character (rtf_text, main_iterator)
+					if found_opening_brace then
+						if current_character = '{' then
+								-- Store state on stack
+							format_stack.extend (current_format.twin)
+						elseif current_character = '}' then
+								-- retrieve state from stack.
+							current_format := format_stack.item
+							format_stack.remove
+						elseif current_character = '\' then
+							process_keyword (rtf_text, main_iterator)
+						elseif current_character = ' '  then
+							process_text (rtf_text, main_iterator)
+						elseif main_iterator >= 2 and then current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
+								-- We are now one character past the tag for the text. This may occur when a keyword
+								-- is ended with a '%N' or we have just skipped a bracket section that contained the "\*"
+								-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
+								-- from the previous position, as the first index is ignored.
+							process_text (rtf_text, main_iterator - 1)
+						end
+					elseif current_character = '{' then
+							-- Store state on stack
+						format_stack.extend (current_format.twin)
+						current_depth := current_depth + 1
+						found_opening_brace := True
+					end
+					
+					move_main_iterator (1)
+						-- Move the iterator by one. This may or may not be required
+						-- if other routines have just called it within this loop.
+					
+					update_main_iterator
 				end
-				move_main_iterator (1)
-					-- Move the iterator by one. This may or may not be required
-					-- if other routines have just called it within this loop.
-				
-				update_main_iterator
+				check
+					no_carriage_returns: not plain_text.has ('%R')
+				end
+				rich_text.flush_buffer
+			else
+				last_load_successful := False
 			end
-			check
-				no_carriage_returns: not plain_text.has ('%R')
-			end
-			rich_text.flush_buffer
 		end
+		
+	last_load_successful: BOOLEAN
+		-- Was last call to `set_with_rtf' successful?
 		
 	generate_complete_rtf_from_buffering is
 			-- Generate the rtf heading for buffered operations into `internal_text'.
@@ -315,13 +335,17 @@ feature {NONE} -- Implementation
 			from
 				l_index := 1
 			until
-				text_completed
+				text_completed or l_index + index > rtf_text.count
 			loop
 				current_character := get_character (rtf_text, l_index + index)
 				if current_character /= '%N' and current_character /= '%R' then
 						-- New line characters have no effect on the RTF contents, so
 						-- simply ignore these characters.
-					if current_character = '\' or current_character = '}' or current_character = '{' then
+					if current_character = '\' then
+						text_completed := True
+					elseif current_character = '}' then
+						text_completed := True
+					elseif current_character = '{' then
 						text_completed := True
 					end
 					if not text_completed then
@@ -333,8 +357,7 @@ feature {NONE} -- Implementation
 	
 				--| FIXME should this ever be empty?
 			if current_text.count > 0 then
-				move_main_iterator (current_text.count)
-				
+				move_main_iterator (current_text.count)			
 				buffer_formatting (current_text)
 			end			
 		end
@@ -397,6 +420,14 @@ feature {NONE} -- Implementation
 			valid_index: rtf_text.valid_index (index)
 		do
 			Result := rtf_text.item (index)
+			if Result = '{' then
+				current_depth := current_depth + 1
+			elseif Result = '}' then
+				current_depth := current_depth - 1
+				if current_depth = 1 then
+					current_depth := 0
+				end
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -663,6 +694,10 @@ feature {NONE} -- Implementation
 				end
 				move_main_iterator (1)
 			end
+				-- Decrease `current_depth' as the opening "{" for the fonttable
+				-- was found in the keyword loop, but the keyword loop will not
+				-- process the "}"
+			current_depth := current_depth - 1
 		end
 		
 	process_colortable (rtf_text: STRING) is
@@ -706,6 +741,11 @@ feature {NONE} -- Implementation
 				end
 				move_main_iterator (1)
 			end
+			
+				-- Decrease `current_depth' as the opening "{" for the fonttable
+				-- was found in the keyword loop, but the keyword loop will not
+				-- process the "}"
+			current_depth := current_depth - 1
 		end
 		
 	first_color_is_auto: BOOLEAN
@@ -731,6 +771,11 @@ feature {NONE} -- Implementation
 		
 	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
 		-- All unique formats retreived during parsing.
+		
+	current_depth: INTEGER
+			-- Current depth of rtf parsing as determined by openeing "{" and
+			-- closing "}". Valid rtf opens as many as are closed.
+		
 		
 	process_fontname (rtf_text:STRING) is
 			-- Process a font name found in RTF text `rtf_text' starting at position `main_iterator'.
@@ -758,17 +803,19 @@ feature {NONE} -- Implementation
 						current_text.append_character (current_character)
 					end
 				end
-				if (text_completed and current_character = ';') or not text_completed then
-						-- If there is no ended ';' character for the font name
-						-- the do not increase the main iterator, as when we jump
-						-- out of this loop, the closing brace must be found and processed.
+				if not text_completed then
 					move_main_iterator (1)
-				elseif text_completed and current_character = '}' then
-					temp_iterator := temp_iterator - 1
-					main_iterator := main_iterator - 1
 				else
-					check
-						unhandled_condition: False
+					if current_character = ';' then
+						current_depth := current_depth + 1
+					elseif current_character = '}' then
+						temp_iterator := temp_iterator - 1
+						main_iterator := main_iterator - 1
+						current_depth := current_depth + 1
+					else
+						check
+							unhandled_condition: False
+						end
 					end
 				end
 			end

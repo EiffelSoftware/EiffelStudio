@@ -81,12 +81,14 @@ feature {NONE}-- Initialization
 			l_horizontal_box_24.set_border_width (10)
 			l_horizontal_box_24.disable_item_expand (ok_button)
 			l_horizontal_box_24.disable_item_expand (cancel_button)
+			ok_button.disable_sensitive
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
 			cancel_button.set_minimum_width (default_button_width)
 			
 			directory_name_field.change_actions.extend (agent text_changed)
+			directory_name_field.return_actions.extend (agent return_pressed)
 			ok_button.select_actions.extend (agent ok_button_pressed)
 			cancel_button.select_actions.extend (agent cancel_button_pressed)
 				-- Close the application when an interface close
@@ -119,6 +121,11 @@ feature {NONE} -- Implementation
 	
 	text_changed is
 			-- Called by `change_actions' of `directory_name_field'.
+		deferred
+		end
+	
+	return_pressed is
+			-- Called by `return_actions' of `directory_name_field'.
 		deferred
 		end
 	

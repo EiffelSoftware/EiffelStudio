@@ -60,10 +60,31 @@ feature {GB_XML_HANDLER} -- Implementation
 			gb_cell_object: GB_CELL_OBJECT
 			gb_container_object: GB_CONTAINER_OBJECT
 			gb_primitive_object: GB_PRIMITIVE_OBJECT
-			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			layout_item, current_layout_item, t_layout: GB_LAYOUT_CONSTRUCTOR_ITEM
+			gb_titled_window_object: GB_TITLED_WINDOW_OBJECT
 			new_widget_element: XML_ELEMENT
+			gb_object: GB_OBJECT
+			gb_menu_bar_object: GB_MENU_BAR_OBJECT
+			gb_menu_object: GB_MENU_OBJECT
 		do
 			output_attributes (an_object, element, add_names)
+				gb_titled_window_object ?= an_object
+				if gb_titled_window_object /= Void then
+					if not gb_titled_window_object.layout_item.is_empty then
+						layout_item ?= gb_titled_window_object.layout_item
+							from
+								layout_item.start
+							until
+								layout_item.off
+							loop
+								current_layout_item ?= layout_item.item
+								new_widget_element := create_widget_instance (element, current_layout_item.object.type)
+								element.force_last (new_widget_element)
+								add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
+								layout_item.forth
+							end
+					end
+				else
 				gb_cell_object ?= an_object
 				if gb_cell_object /= Void then
 					if not gb_cell_object.layout_item.is_empty then
@@ -81,6 +102,16 @@ feature {GB_XML_HANDLER} -- Implementation
 					if gb_primitive_object /= Void then
 						layout_item ?= gb_primitive_object.layout_item
 					end
+					
+					gb_menu_bar_object ?= an_object
+					if gb_menu_bar_object /= Void then
+						layout_item ?= gb_menu_bar_object.layout_item
+					end
+					
+					gb_menu_object ?= an_object
+					if gb_menu_object /= Void then
+						layout_item ?= gb_menu_object.layout_item
+					end
 
 					if layout_item /= Void and then not layout_item.is_empty then
 						from
@@ -95,6 +126,7 @@ feature {GB_XML_HANDLER} -- Implementation
 							layout_item.forth
 						end
 					end
+				end
 				end
 		end
 		

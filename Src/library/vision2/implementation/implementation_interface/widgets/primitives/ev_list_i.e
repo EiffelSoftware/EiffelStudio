@@ -13,20 +13,19 @@ inherit
 	
 	EV_PRIMITIVE_I
 		redefine
-			initialize_colors
+			build
 		end
 
 feature {EV_WIDGET} -- Initialization
 
-	initialize_colors is
-			-- Called after the creation of the widget and after
-			-- having stored the parent. It define the default
-			-- colors of a widget which are the same than the
-			-- parent. This feature is redefined by several
-			-- children.
+	build is
+			-- Common initializations for Gtk and Windows.
 		local
 			color: EV_COLOR
 		do
+			set_expand (True)
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
 			!! color.make_rgb (255, 255, 255)
 			set_background_color (color)
 			!! color.make_rgb (0, 0, 0)
@@ -36,7 +35,7 @@ feature {EV_WIDGET} -- Initialization
 feature -- Access
 
 	get_item (index: INTEGER): EV_LIST_ITEM is
-			-- Give the item of the list at the one-base
+			-- Give the item of the list at the zero-base
 			-- `index'.
 		require
 			exists: not destroyed
@@ -81,6 +80,24 @@ feature -- Status setting
 	set_single_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
+		require
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when an item is
+			-- selected.
 		require
 			exists: not destroyed
 		deferred

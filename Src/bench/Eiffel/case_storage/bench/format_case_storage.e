@@ -48,44 +48,48 @@ feature -- Execution
 
 	rescued: BOOLEAN
 
-	check_path ( path : STRING ) is
+	check_path (path: STRING) is
 			-- check the path + add the system.ecr file ( empty )	
-	local
-		f : PLAIN_TEXT_FILE
-		fn : FILE_NAME
-		dir : DIRECTORY		
-	do
-		-- check the path and set the correponding variables if correct
-		if path.count>0 and then (path.item(path.count).is_equal('/') or path.item(path.count).is_equal('\')) then
-			path.remove(path.count)
-		end
-		!! dir.make ( path)
-		if dir.exists then
-			-- we set the variables
-			Case_storage_path.wipe_out
-			Case_storage_path.extend ( path)
-			Case_storage_path.extend_from_array (<<Casegen,	Case_storage>>)
-			Case_gen_path.wipe_out
-			Case_gen_path.extend(path)
-			Case_gen_path.extend(Casegen)
+		local
+			f : PLAIN_TEXT_FILE
+			fn : FILE_NAME
+			dir : DIRECTORY		
+		do
+				-- Check the path and set the correponding variables if correct
+			if
+				path.count > 0 and then
+				(path.item(path.count).is_equal('/') or path.item(path.count).is_equal('\'))
+			then
+				path.remove(path.count)
+			end
+
+			!! dir.make ( path)
+			if dir.exists then
+					-- We set the variables
+				Case_storage_path.wipe_out
+				Case_storage_path.extend ( path)
+				Case_storage_path.extend_from_array (<<Casegen,	Case_storage>>)
+				Case_gen_path.wipe_out
+				Case_gen_path.extend(path)
+				Case_gen_path.extend(Casegen)
+			end
+	
+				-- Create if needed the system.ecr file	
+			if dir.exists then
+				!! fn.make_from_string (path)
+			else
+				!! fn.make_from_string(Project_directory_name)
+			end
+			fn.extend (clone (System.system_name))
+			fn.add_extension ("ecr")
+			!! f.make(fn)
+			if not f.exists then
+				f.create_read_write
+				f.close
+			end
 		end
 
-		-- create if needed the system.ecr file	
-		if dir.exists then
-			!! fn.make_from_string (path)
-		else
-			!! fn.make_from_string(Project_directory_name)
-		end
-		fn.extend("system")
-		fn.add_extension("ecr")
-		!! f.make(fn)
-		if not f.exists then
-			f.create_read_write
-			f.close
-		end
-	end
-
-	execute ( path : STRING ) is
+	execute (path : STRING) is
 			-- Format storage structures
 			-- so it can be read in from EiffelCase.
 		local

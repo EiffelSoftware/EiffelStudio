@@ -17,6 +17,7 @@
 #include "eif_portable.h"
 
 #include "eif_err_msg.h"
+#include "rt_assert.h"
 
 #include <sys/types.h>
 #include "eif_logfile.h"
@@ -107,11 +108,62 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
 	STREAM *sp;					/* Stream used for communications with ewb */
-	char **argv;				/* Argument vector for exec() */
 #endif
+	char **argv;				/* Argument vector */
 
-	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
+	argv = shword(cmd);					/* Split command into words */
 
+		/* Set MELT_PATH */
+	if (handle_meltpath) {
+		char *meltpath, *appname, *envstring;	/* set MELT_PATH */
+
+		meltpath = (char *) (strdup (argv [0]));
+		if (meltpath == (char *)0){
+			dexit (1);
+		}
+
+#ifdef EIF_VMS
+		appname = rindex (meltpath, ']');
+		if (appname) 
+			*(++appname) = 0;
+		else
+			strcpy (meltpath, "[]");
+#elif defined(EIF_WIN32)
+		appname = rindex (meltpath, '\\');
+		if (appname)
+			*appname = 0;
+		else
+			strcpy (meltpath, ".");
+#else
+		appname = rindex (meltpath, '/');
+		if (appname)
+			*appname = 0;
+		else
+			strcpy (meltpath, ".");
+#endif /* EIF_VMS */
+
+		envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+		if (!envstring){
+			dexit (1);
+		}
+		sprintf (envstring, "MELT_PATH=%s", meltpath);
+		putenv (envstring);
+	
+			/* Set working directory to where project is located. We look
+			 * 14 characters before the end of `meltpath' to ensure there
+			 * is only one occurrence of EIFGEN in `meltpath'. */
+		CHECK("Valid melted path", strlen (meltpath) >= 14);
+					
+		appname= strstr (meltpath + strlen (meltpath) - 14, "EIFGEN");
+		if (appname) {
+			*(appname - 1) = (char) 0;
+			chdir (meltpath);
+#ifdef EIF_WIN32
+			startpath = strdup (meltpath);
+#endif
+		}
+		free (meltpath);
+	}
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
 	 * opened, one for downwards communications (ised -> ewb) and one for
 	 * upwards (ewb -> ised).
@@ -210,32 +262,13 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	}
 
 		/* Working directory */
-	if (cwd)
-		startpath = strdup (cwd);
-	else {
+	if (cwd) {
+		chdir (cwd);
+		free (startpath);
+		startpath = getcwd (NULL, PATH_MAX);
+	} else if (!handle_meltpath) {
 		startpath = strdup (cmd2);
 		*(strrchr (startpath, '\\')) = '\0';
-	}
-
-		/* Set MELT_PATH */
-	if (handle_meltpath) {
-		meltpath = strdup (cmd2);
-		if (meltpath == (char *)0){
-			dexit (1);
-		}
-
-		appname = rindex (meltpath, '\\');
-		if (appname)
-			*appname = 0;
-		else
-			strcpy (meltpath, ".");
-
-		envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
-		if (!envstring){
-			dexit (1);
-		}
-		sprintf (envstring, "MELT_PATH=%s", meltpath);
-		putenv (envstring);
 	}
 
 	/* Encode the pipes to start the child */
@@ -397,7 +430,6 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			}
 		}
 		/* Now exec command. A successful launch should not return */
-		argv = shword(cmd);					/* Split command into words */
 		if (argv != (char **) 0) {
 
 				/* Working directory */
@@ -405,33 +437,6 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 				chdir (cwd);
 			}
 
-			if (handle_meltpath) {
-				meltpath = (char *) (strdup (argv [0]));
-				if (meltpath == (char *)0){
-					dexit (1);
-				}
-
-#ifdef EIF_VMS
-				appname = rindex (meltpath, ']');
-				if (appname) 
-					*(++appname) = 0;
-				else
-					strcpy (meltpath, "[]");
-#else
-				appname = rindex (meltpath, '/');
-				if (appname)
-					*appname = 0;
-				else
-					strcpy (meltpath, ".");
-#endif /* EIF_VMS */
-
-				envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
-				if (!envstring){
-					dexit (1);
-				}
-				sprintf (envstring, "MELT_PATH=%s", meltpath);
-				putenv (envstring);
-			}
 #ifdef EIF_VMS
 			execv(argv[0], argv);
 #else
@@ -530,9 +535,9 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			*child_process_id = piProcInfo.dwProcessId;
 	}
 
-	free (startpath);
 	free (cmdline);
 	free (cmd2);
+	free (startpath);
 #else
 	if (child_pid != (Pid_t *) 0)
 		*child_pid = pid;

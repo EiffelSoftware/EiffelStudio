@@ -99,22 +99,22 @@ feature -- Basic Operations
 			valid_name: not a_name.is_empty
 		local
 			i: INTEGER
-			privious_upper: BOOLEAN
+			previous_upper: BOOLEAN
 		do
 			create Result.make (100)
 			from
 				i := 1
-				privious_upper := True
+				previous_upper := True
 			variant 
 				a_name.count - i + 1
 			until
 				i > a_name.count
 			loop
-				if a_name.item (i).is_upper and not privious_upper then
+				if a_name.item (i).is_upper and not previous_upper then
 					Result.append (Underscore)
 				end
 				Result.extend (a_name.item (i))
-				privious_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
+				previous_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
 				i := i + 1
 			end
 			if (Result.item (1) = '_') then

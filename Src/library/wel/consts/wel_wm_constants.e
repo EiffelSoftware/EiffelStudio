@@ -954,6 +954,13 @@ feature -- Access
 			"WM_NOTIFY"
 		end
 
+	Wm_seticon: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"WM_SETICON"
+		end
+
 end -- class WEL_WM_CONSTANTS
 
 --|----------------------------------------------------------------

@@ -60,6 +60,17 @@ feature -- Access
 			Result_not_empty: not Result.is_empty
 		end
 
+	cluster_path: STRING is
+			-- Path of added cluster
+		require
+			cluster_added: is_selected
+		do
+			Result := path_field.path
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
 feature -- Status
 
 	is_selected: BOOLEAN
@@ -72,6 +83,9 @@ feature {NONE} -- Access
 			
 	name_field: EV_TEXT_FIELD
 			-- Name of new cluster.
+
+	path_field: EV_PATH_FIELD
+			-- Path of new cluster.
 
 feature {NONE} -- Implementation
 
@@ -100,6 +114,10 @@ feature {NONE} -- Implementation
 			vbox2.disable_item_expand (name_field)
 			vbox1.extend (vbox2)
 			vbox1.disable_item_expand (vbox2)
+
+			create path_field.make_with_text_and_parent ("Cluster path: ", Current)
+			vbox1.extend (path_field)
+			vbox1.disable_item_expand (path_field)
 
 			create vbox2
 			vbox2.set_padding (Layout_constants.Tiny_padding_size)

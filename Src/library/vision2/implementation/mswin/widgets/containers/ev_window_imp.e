@@ -717,10 +717,26 @@ feature {NONE} -- Implementation
 	
 	on_wm_close is
 		do
+			on_wm_close_executed := True
 			interface.close_actions.call ([])
 				-- Call the close events
 			set_default_processing (False)
+		ensure then
+			on_wm_close_executed_true: on_wm_close_executed /= False
 		end
+
+	on_wm_close_executed: BOOLEAN
+		-- `interface.close_actions' already called.
+		--| There are two cases for destroying a window.
+		--| #1. The user calls destroy.
+		--| #2. The user clicks on the cross.
+		--| if #1 there is no problem, destroy is called, which calls the
+		--| close actions only once.
+		--| if #2 then destroy is called from within the close actions
+		--| which would then call the close_actions again if we do not have
+		--| this variable which tells us that during case #2, on_wm_close
+		--| has already been called and therefore we know not to call the
+		--| close actions again.
 
 feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 
@@ -855,6 +871,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/03 16:40:34  rogers
+--| Added on_wm_close_executed.
+--|
 --| Revision 1.33  2000/03/29 19:12:30  pichery
 --| changed `enable_modal' & `disable_modal' to avoid them to capture
 --| the mouse with the "heavy" method which should be reserved to the

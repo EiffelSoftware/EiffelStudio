@@ -56,6 +56,8 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	--| We must propagate all the events to `parent'.
+
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
 			-- We verify that there is indeed a command to avoid
@@ -195,7 +197,9 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
-			-- No use
+			-- Default style of `Current'.
+			-- This is deferred from WEL_WINDOW but is not needed in `Current'
+			-- so implemented to return 0.
 		do
 			Result := 0
 		end
@@ -223,6 +227,9 @@ end -- class EV_INTERNAL_COMBO_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/18 22:24:01  rogers
+--| Improved comments.
+--|
 --| Revision 1.6  2001/06/07 23:08:13  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

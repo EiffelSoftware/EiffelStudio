@@ -14,7 +14,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	make is
 			-- Create the progress bar.

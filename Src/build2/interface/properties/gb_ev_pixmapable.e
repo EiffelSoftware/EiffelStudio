@@ -99,8 +99,6 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
-		local
-			deselectable: EV_DESELECTABLE
 		do
 			if first.pixmap_path /= Void then
 				add_element_containing_string (element, pixmap_path_string, objects.first.pixmap_path)

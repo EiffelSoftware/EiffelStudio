@@ -85,8 +85,7 @@ feature {NONE}
 	is_popped_up_ref: BOOLEAN_REF;
 
 	is_poped_up_ref: BOOLEAN_REF is
-		obsolete "Use is_popped_up_ref instead, corrected feature
-spelling."
+		obsolete "Use is_popped_up_ref instead, corrected feature spelling."
 		do
 			Result := is_popped_up-ref
 		end

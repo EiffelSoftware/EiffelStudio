@@ -10,8 +10,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node,
-			fill_calls_list, replicate
+			type_check, byte_node
 		end
 
 	SHARED_TYPES
@@ -337,44 +336,6 @@ feature -- Type check, byte code and dead code removal
 						 type.type_i, tuple_b, open_b, closed_b)
 		end
 
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current.
-		do
-			if target_ast /= Void then
-				target_ast.fill_calls_list (l)
-				l.stop_filling
-			end
-			if call_ast /= Void then
-				call_ast.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication.
-		do
-			Result := clone (Current)
-			ctxt.adapt_name (feature_name)
-			Result.set_feature_name (ctxt.adapted_name)
-
-			if operands /= Void then
-				Result.set_operands (operands.replicate (ctxt.new_ctxt))
-			end
-
-			if target /= Void then
-				Result.set_target (target.replicate (ctxt.new_ctxt))
-			end
-
-			if target_ast /= Void then
-				Result.set_target_ast (target_ast.replicate (ctxt.new_ctxt))
-			end
-
-			if call_ast /= Void then
-				Result.set_call_ast (call_ast.replicate (ctxt.new_ctxt))
-			end
-		end
-
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -481,9 +442,7 @@ feature {NONE} -- Type
 					-- generics are: base_type, open_types, result_type
 				create generics.make (1, 3)
 
-				create Result.make (generics)
-				Result.set_base_class_id (System.function_class_id)
-
+				create Result.make (System.function_class_id, generics)
 
 					-- Look for declared type of feature
 				solved_type := Creation_evaluator.evaluated_type (
@@ -496,8 +455,7 @@ feature {NONE} -- Type
 					-- generics are: base_type, open_types
 				create generics.make (1, 2)
 
-				create Result.make (generics)
-				Result.set_base_class_id (System.procedure_class_id)
+				create Result.make (System.procedure_class_id, generics)
 			end
 
 				-- FIXME: Emmanuel STAPF 10/27/99
@@ -652,14 +610,12 @@ feature {NONE} -- Type
 			end
 
 				-- Create open argument type tuple
-			create tuple.make (oargtypes)
-			tuple.set_base_class_id (System.tuple_id)
+			create tuple.make (System.tuple_id, oargtypes)
 
 			generics.put (tuple, 2)
 
 				-- Create closed argument type tuple
-			create tuple.make (cargtypes)
-			tuple.set_base_class_id (System.tuple_id)
+			create tuple.make (System.tuple_id, cargtypes)
 
 			closed_type := tuple
 		ensure
@@ -676,8 +632,7 @@ feature {NONE} -- Type
 			create generics.make (1,1)
 			create  int_a.make (32)
 			generics.put (int_a, 1)
-			create type_a.make (generics)
-			type_a.set_base_class_id (System.array_id)
+			create type_a.make (System.array_id, generics)
 
 			Result := type_a.type_i
 		end

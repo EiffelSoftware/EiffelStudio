@@ -176,7 +176,9 @@ feature {NONE} -- Implementation
 						counter := counter - 1
 					end	
 				end
-				start_pos := all_space_indexes.i_th (counter) + 1
+				if all_space_indexes.valid_index (counter) then
+					start_pos := all_space_indexes.i_th (counter) + 1
+				end
 				lines.extend (last_string)
 			end
 			

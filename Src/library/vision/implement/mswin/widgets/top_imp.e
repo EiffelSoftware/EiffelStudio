@@ -138,6 +138,16 @@ feature -- Status setting
 			end
 		end
 
+	set_maximized_state is
+			-- Set start state if the application to be maximized.
+		do
+			private_iconic_state := false
+			private_maximized_state := True
+			if exists then
+				maximize
+			end
+		end
+
 feature -- Status report
 
 	closeable: BOOLEAN is
@@ -159,6 +169,16 @@ feature -- Status report
 				Result := minimized
 			else
 				Result := private_iconic_state
+			end
+		end
+
+	is_maximized_state: BOOLEAN is
+			-- Does application start in maximized state?
+		do
+			if exists then
+				Result := maximized
+			else
+				Result := private_maximized_state
 			end
 		end
 
@@ -205,6 +225,9 @@ feature {NONE} -- Implementation
 	private_iconic_state: BOOLEAN
 			-- Implementation of iconic state
 
+	private_maximized_state: BOOLEAN
+			-- Implementation of maximized state
+
 	class_icon: WEL_ICON;
 			-- Icon for top window
 
@@ -214,6 +237,10 @@ feature {NONE} -- Implementation
 			Result := Ws_overlappedwindow
 			if private_iconic_state then
 				Result := Result + ws_minimize
+			end
+
+			if private_maximized_state then
+				Result := Result + ws_maximize
 			end
 		end
 

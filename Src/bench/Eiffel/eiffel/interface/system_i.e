@@ -6,37 +6,51 @@ class SYSTEM_I
 inherit
 	BASIC_SYSTEM_I
 
-	SHARED_TMP_SERVER
+	SYSTEM_SERVER
+		rename
+			make as server_make
+		end
+
+	SYSTEM_OPTIONS
+
+	SYSTEM_DESCRIPTION
+
+	SYSTEM_DOCUMENTATION
+
 	SHARED_EXPANDED_CHECKER
 	SHARED_TYPEID_TABLE
 	SHARED_TABLE
 	SHARED_CODE_FILES
 	SHARED_GENERATOR
+
 	SHARED_ERROR_HANDLER
 		export
 			{ANY} Error_handler
 		end
+
 	SHARED_TIME
 	SHARED_CECIL
 	SHARED_ROUT_ID
 	SHARED_BODY_ID
 	SHARED_USED_TABLE
+
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
 		export
 			{ANY} byte_context
-		end;
+		end
+
 	SHARED_ARRAY_BYTE
 	SHARED_DECLARATIONS
 	SHARED_PASS
 	SHARED_RESCUE_STATUS
 	SHARED_DLE
 	COMPILER_EXPORTER
-	SHARED_ID
 	SHARED_EIFFEL_PROJECT
 	SHARED_CONFIGURE_RESOURCES
 	SHARED_BENCH_LICENSES
+
 
 feature -- Counters
 
@@ -75,24 +89,6 @@ feature -- Counters
 			pattern_table.pattern_id_counter.init_counter
 		end;
 
-	compilation_id: INTEGER
-			-- Precompilation identifier
-
-	set_compilation_id is
-			-- Set `compilation_id' value.
-		local
-			str: ANY
-		do
-			if Compilation_modes.is_precompiling then
-				str := Project_directory.to_c;
-				compilation_id := eif_date ($str)
-			elseif Compilation_modes.is_extending then
-				compilation_id := Dle_compilation
-			else
-				compilation_id := Normal_compilation
-			end
-		end
-
 feature -- Properties
 
 	project_classes: ARRAY [CLASS_C] is
@@ -116,57 +112,6 @@ feature -- Properties
 	type_id_counter: COUNTER;
 			-- Counter of valid instances of CLASS_TYPE
 
-	feat_tbl_server: FEAT_TBL_SERVER;
-			-- Server for feature tables
-
-	body_server: BODY_SERVER;
-			-- Server for instances of EIFFEL_FEAT
-
-	ast_server: AST_SERVER;
-			-- Server for abstract syntax trees
-
-	byte_server: BYTE_SERVER;
-			-- Server for byte code trees
-
-	rep_server: REP_SERVER;
-			-- Server for class that has replicated features 
-
-	rep_feat_server: REP_FEAT_SERVER;
-			-- Server for replicated features 
-
-	class_info_server: CLASS_INFO_SERVER;
-			-- Server for class information produced bu first pass
-
-	inv_ast_server: INV_AST_SERVER;
-			-- Server for abstract syntax description of invariant clause
-
-	inv_byte_server: INV_BYTE_SERVER;
-			-- Server for invariant byte code
-
-	depend_server: DEPEND_SERVER;
-			-- Server for dependances for incremental type check
-
-	rep_depend_server: REP_DEPEND_SERVER;
-			-- Server for dependances for replicated features 
-
-	m_feat_tbl_server: M_FEAT_TBL_SERVER;
-			-- Server of byte code description of melted feature tables
-
-	m_feature_server: M_FEATURE_SERVER;
-			-- Server of melted feature byte code
-
-	m_rout_id_server: M_ROUT_ID_SERVER;
-			-- Server for routine id array byte code
-
-	m_desc_server: M_DESC_SERVER;
-			-- Server for class type descriptors
-
-	class_comments_server: CLASS_COMMENTS_SERVER;
-			-- Server for class comments 
-
-	classes: CLASS_C_SERVER;
-			-- Server for compiled classes
-
 	class_types: ARRAY [CLASS_TYPE];
 			-- Array of class types indexed by their `type_id'
 
@@ -188,7 +133,7 @@ feature -- Properties
 		do
 			if not java_generation then
 				Result := (not Lace.compile_all_classes) and
-					(private_freeze or else	Compilation_modes.is_freezing)
+					(private_freeze or else Compilation_modes.is_freezing)
 			else
 				-- Avoid freezing or re-freezing at all costs!
 			end
@@ -206,30 +151,6 @@ feature -- Properties
 
 	externals: EXTERNALS;
 			-- Table of external names currently used by the system
-
-	system_name: STRING;
-			-- System name
-
-	root_cluster: CLUSTER_I;
-			-- Root class of the system
-
-	root_class_name: STRING;
-			-- Root class name
-
-	creation_name: STRING;
-			-- Creation procedure name
-
-	c_file_names: FIXED_LIST [STRING];
-			-- C file names to include
-
-	include_paths: FIXED_LIST [STRING];
-			-- Include paths to add in the Makefile C flags
-
-	object_file_names: FIXED_LIST [STRING];
-			-- Object file names to link with the application
-
-	makefile_names: FIXED_LIST [STRING];
-			-- Makefile names to execute before the linking
 
 	executable_directory: STRING;
 			-- Directory for the executable file
@@ -327,27 +248,17 @@ feature -- Properties
 	execution_table: EXECUTION_TABLE;
 			-- Execution table
 
-	server_controler: SERVER_CONTROL;
-			-- Controler of servers
-
 	remover: REMOVER;
 			-- Dead code removal control
 
-	remover_off: BOOLEAN;
-			-- Is the remover off (by specifying the Ace option)
+	inliner: INLINER
+			-- Inliner control		
+
+	array_optimizer: ARRAY_OPTIMIZER
+			-- Array optimizer control
 
 	keep_assertions: BOOLEAN;
 			-- Are the assertions kept in final mode?
-
-	code_replication_off: BOOLEAN;
-			-- Is code replication off (by specifying the Ace option)
-
-	exception_stack_managed: BOOLEAN;
-			-- Is the exception stack managed in final mode
-
-	has_expanded: BOOLEAN;
-			-- Is there an expanded declaration in the system,
-			-- i.e. some extra check must be done after pass2 ?
 
 	current_pass: PASS;
 			-- Current compiler pass
@@ -355,19 +266,6 @@ feature -- Properties
 
 	current_class: CLASS_C;
 			-- Current processed class
-
-	is_precompiled: BOOLEAN;
-			-- Is the Current system from a precompilation?
-
-	uses_precompiled: BOOLEAN;
-			-- Does current system use a precompiled library?
-
-	has_precompiled_preobj: BOOLEAN;
-			-- Does a `preobj' file exist for the current precompiled project?
-			-- This file might not exist as a result of merging precompilations
-
-	licensed_precompilation: BOOLEAN
-			-- Is the precompiled library protected by a license?
 
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
@@ -399,8 +297,10 @@ feature -- Properties
 	make is
 			-- Create the system.
 		do
-			set_compilation_id;
-			!! server_controler.make;
+			set_compilation_id
+
+				-- Creation of all the servers.
+			server_make
 
 				-- Creation of the system hash table
 			!! class_types.make (1, System_chunk);
@@ -408,25 +308,6 @@ feature -- Properties
 
 				-- Creation of a topological sorter
 			!! sorter.make;
-
-				-- Creation of servers
-			!! feat_tbl_server.make;
-			!! class_comments_server.make;
-			!! body_server.make;
-			!! byte_server.make;
-			!! ast_server.make;
-			!! rep_server.make;
-			!! rep_feat_server.make;
-			!! class_info_server.make;
-			!! inv_ast_server.make;
-			!! inv_byte_server.make;
-			!! depend_server.make;
-			!! rep_depend_server.make;
-			!! m_feat_tbl_server.make;
-			!! m_feature_server.make;
-			!! m_rout_id_server.make;
-			!! m_desc_server.make;
-			!! classes.make;
 
 				-- Counter creation
 			!! routine_id_counter.make;
@@ -772,12 +653,6 @@ end;
 			end;
 		end;
 
-	nb_of_classes: INTEGER is
-			-- Number of classes in the system
-		do
-			Result := classes.count
-		end;
-		
 	class_of_id (id: CLASS_ID): CLASS_C is
 			-- Class of id `id'
 		require
@@ -2288,6 +2163,7 @@ feature -- Final mode generation
 			if not remover_off then
 				remover_off := keep_assertions;
 			end;
+
 			if not exception_stack_managed then
 				exception_stack_managed := keep_assertions;
 			end;
@@ -2299,6 +2175,16 @@ feature -- Final mode generation
 			byte_context.set_final_mode;
 
 			degree_minus_4;
+			
+			if inlining_on then
+				!! inliner.make
+			end
+
+			if array_optimization_on then
+				!! array_optimizer.make
+					-- record the descendants of ARRAY
+				array_optimizer.record_array_descendants
+			end
 
 				-- Dead code removal
 			if not remover_off then
@@ -2347,7 +2233,10 @@ feature -- Final mode generation
 			end;
 			Tmp_opt_byte_server.clear;
 
-			remover := Void;
+			remover := Void
+			inliner := Void
+			array_optimizer := Void
+
 			remover_off := old_remover_off;
 			exception_stack_managed := old_exception_stack_managed;
 			inlining_on := old_inlining_on;
@@ -2445,12 +2334,6 @@ feature -- Final mode generation
 
 feature -- Dead code removal
 
-	set_remover_off (b: BOOLEAN) is
-			-- Assign `b' to `remover_off'
-		do
-			remover_off := b;
-		end;
-
 	remove_dead_code is
 			-- Dead code removal
 		local
@@ -2460,12 +2343,7 @@ feature -- Dead code removal
 			root_feat: FEATURE_I;
 			ct: CLASS_TYPE;
 		do
-			!!remover.make;
-
-				-- record the descendants of ARRAY;
-			if array_optimization_on then
-				remover.record_array_descendants
-			end;
+			!! remover.make (array_optimizer, inliner);
 
 				-- First, inspection of the Eiffel code
 			if creation_name /= Void then
@@ -2536,74 +2414,6 @@ feature -- Dead code removal
 			good_argument: f /= Void;
 		do
 			Result := remover_off or else remover.is_alive (f)
-		end;
-
-feature -- In-lining optimization
-
-	array_optimization_on: BOOLEAN;
-			-- Is array optimization on?
-
-	set_array_optimization_on (b: BOOLEAN) is
-		do
-			array_optimization_on := b;
-		end;
-
-	inlining_on: BOOLEAN;
-			-- Is inlining on ?
-
-	set_inlining_on (b: BOOLEAN) is
-		do
-			inlining_on := b
-		end;
-
-	inlining_size: INTEGER
-
-	set_inlining_size (i: INTEGER) is
-		do
-debug ("INLINING")
-	io.error.putstring ("Inlining size: ");
-	io.error.putint (i)
-	io.error.new_line
-end
-			inlining_size := i
-		end;
-
-feature
-
-	do_not_check_vape: BOOLEAN;
-
-	set_do_not_check_vape (b: BOOLEAN) is
-		do
-			do_not_check_vape := b;
-		end;
-
-	address_expression_allowed: BOOLEAN;
-	
-	allow_address_expression (b: BOOLEAN) is
-		do
-			address_expression_allowed := b
-		end
-
-feature -- Java byte-code generation
-
-	java_generation : BOOLEAN;
-
-	set_java_generation (b: BOOLEAN) is
-		do
-			java_generation := b;
-		ensure
-			jave_generation_set : java_generation = b
-		end;
-
-feature -- Line number generation in the C-code
-
-	line_generation : BOOLEAN;
-
-	set_line_generation (b: BOOLEAN) is
-		do
-			line_generation := b;
-		ensure
-			line_generation_set : line_generation = b
 		end;
 
 feature -- Generation
@@ -3533,8 +3343,7 @@ feature -- Plug and Makefile file
 			end;
 
 			if final_mode and then array_optimization_on then
-				remover.array_optimizer.generate_plug_declarations
-						(Plug_file, Table_prefix)
+				array_optimizer.generate_plug_declarations (Plug_file, Table_prefix)
 			else
 				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
 										%long *eif_lower_table = (long *)0;%N");
@@ -4104,43 +3913,6 @@ feature --Workbench option file generation
 
 feature 
 
-	set_precompilation (b: BOOLEAN) is
-		do
-			is_precompiled := b
-		end;
-
-	set_has_precompiled_preobj (b: BOOLEAN) is
-			-- Set `has_precompiled_preobj' to `b'.
-		do
-			has_precompiled_preobj := b
-		end
-
-	set_licensed_precompilation (b: BOOLEAN) is
-			-- Set `licensed_precompilation' to `b'.
-		do
-			licensed_precompilation := b
-		end
-
-	set_code_replication_off (b: BOOLEAN) is
-			-- Assign `b' to `replication_off'
-		do
-			code_replication_off := b;
-		end;
-
-	set_exception_stack_managed (b: BOOLEAN) is
-		do
-			exception_stack_managed := b;
-		end;
-
-	set_has_expanded is
-			-- Set `has_expanded' to True
-		do
-debug ("ACTIVITY")
-	io.error.putstring ("%N%NSystem has expanded%N%N");
-end;
-			has_expanded := True;
-		end;
-
 	process_pass (a_pass: PASS) is
 			-- Process `a_pass'
 		do
@@ -4159,99 +3931,9 @@ end;
 			Result := (current_pass = pass3_controler)
 		end;
 
-	clear is
-				-- Clear the servers
-		do
-			Tmp_ast_server.clear;
-			Tmp_feat_tbl_server.clear;
-			Tmp_body_server.clear;
-			Tmp_class_info_server.clear;
-			Tmp_rep_info_server.clear;
-			Tmp_byte_server.clear;
-			Tmp_inv_byte_server.clear;
-			Tmp_inv_ast_server.clear;
-			Tmp_depend_server.clear;
-			Tmp_rep_depend_server.clear;
-			Tmp_rep_server.clear;
-			Tmp_rep_feat_server.clear;
-			Tmp_rep_info_server.clear;
-		end
-
 	System_chunk: INTEGER is 500;
 
-feature -- Purge of compilation files
-
-	purge is
-			-- Purge compilation files and delete useless datas.
-		require
-			successful
-		do
-				-- Transfer datas from servers to temporary servers
-			feat_tbl_server.purge;
-			depend_server.purge;
-			rep_depend_server.purge;
-			class_info_server.purge;
-			inv_byte_server.purge;
-			byte_server.purge;
-			ast_server.purge;
-			m_feat_tbl_server.purge;
-			m_feature_server.purge;
-			m_rout_id_server.purge;
-			m_desc_server.purge;
-			rep_server.purge;
-
-			server_controler.remove_useless_files;
-		end;
-
 feature -- Conveniences
-
-	set_system_name (s: STRING) is
-			-- Assign `s' to `system_name'.
-		do
-			system_name := s;
-		end;
-
-	set_root_cluster (c: CLUSTER_I) is
-			-- Assign `c' to `root_cluster'.
-		do
-			root_cluster := c;
-		end;
-
-	set_root_class_name (s: STRING) is
-			-- Assign `s' to `root_class_name'.
-		do
-			root_class_name := s;
-		end;
-
-	set_creation_name (s: STRING) is
-			-- Assign `s' to `creation_name'.
-		do
-			creation_name := s;
-		end;
-
-	set_c_file_names (l: like c_file_names) is
-			-- Assign `l' to `c_file_names'.
-		do
-			c_file_names := l;
-		end;
-
-	set_include_paths (l: like include_paths) is
-			-- Assign `l' to `include_paths'.
-		do
-			include_paths := l;
-		end;
-
-	set_object_file_names (l: like object_file_names) is
-			-- Assign `l' to `object_file_names'.
-		do
-			object_file_names := l;
-		end;
-
-	set_makefile_names (l: like makefile_names) is
-			-- Assign `l' to `makefile_names'.
-		do
-			makefile_names := l;
-		end;
 
 	reset_external_clause is
 			-- Reset the external clause
@@ -4431,50 +4113,6 @@ feature -- Debug purpose
 			end;
 		end;
 
-feature -- Document processing
-
-	No_word: STRING is "no";
-
-	document_file_name: FILE_NAME is
-			-- File name specified for the cluster text generation
-			-- Void result implies no document generation
-		local
-			tmp: STRING
-		do
-			tmp := document_path;
-			if tmp /= Void then
-				!! Result.make_from_string (tmp);
-				Result.extend (system_name);
-			end
-		end;
-	
-	document_path: DIRECTORY_NAME is
-			-- Path specified for the documents directory for classes.
-			-- Void result implies no document generation
-		local
-			tmp: STRING
-		do
-			tmp := private_document_path;
-			if tmp = Void then
-				Result := Documentation_path
-			elseif not tmp.is_equal (No_word) then
-				!! Result.make_from_string (tmp)
-			end;
-		end
-
-	set_document_path (a_path: like document_path) is
-			-- Set `document_path' to `a_path'
-		do
-			private_document_path := a_path
-		ensure
-			set: document_path = a_path
-		end;
-
-feature {NONE} -- Document processing
-
-	private_document_path: STRING
-			-- Path specified in Ace for the documents directory
-
 feature {SYSTEM_I} -- Implementation
 
 	private_freeze: BOOLEAN;
@@ -4484,12 +4122,6 @@ feature {SYSTEM_I} -- Implementation
 feature {NONE} -- External features
 
 	write_int (f: POINTER; v: INTEGER) is
-		external
-			"C"
-		end;
-
-	eif_date (s: POINTER): INTEGER is
-			-- Date of file of name `s'.
 		external
 			"C"
 		end;

@@ -1,3 +1,6 @@
+#ifndef _CONCURRENT_ERRMSG_
+#define _CONCURRENT_ERRMSG_
+
 /* the following several macros are used to display request info */
 #define GET_CMD_MSG1	"\n%d/%d Got command %s "
 #define GET_CMD_MSG2	" OID:%d, CLASS:%s, FEATURE:%s, ACK:%d "
@@ -24,15 +27,15 @@
 
 /* The following are implementation error messages */
 #define CURIMPERR1	"    Expect REGISTER_ACK but got %s (in 'create_sep_obj'). "
-#define CURIMPERR2	"    Expect MESSAGE_ACK but got %s (in 'send_command')."
+#define CURIMPERR2	"    Expect %s but got %s (in `%s')."
 #define CURIMPERR3	"    Expect REGISTER_ACK_WITH_ROOT_OID but got %s (in 'remote_server')."
 #define CURIMPERR4	"    Expect REGISTER/REGISTER_FIRST_FROM_PARENT/SEP_CHILD/SEP_CHILD_INFO\nbut got %s (in 'wait_sep_child')\n-- caused by the crash of the new-born separate child object."
 
 
 /* The following are application error messages */
-#define CURAPPERR1  "    Error in reserving separate object\n--caused by the crash of other separate object(s)."
+#define CURAPPERR1  "    Error in reserving separate object. Expect ACKNOWLEDGE_TO_RESERVE_SEP_OBJ\nor REJECT_TO_RESERVE_SEP_OBJ but got %s \n--maybe caused by the crash of other separate object(s)."
 #define CURAPPERR2	"    Crash happened in child processor(s) of the current processor(%s)."
-#define CURAPPERR3	"    One of the current processor's server is dead(%s)."
+#define CURAPPERR3	"    One of the current processor's client/servers is dead(%s)\n--got unexpected command %s."
 #define CURAPPERR4	"    After ACCEPT get command %s  para_number: %d\n-- caused by the crash of other separate object(s)."
 #define CURAPPERR5	"    The index(%d) for Remote Server exceeds \nthe number of remote servers specified in configure file(%d)."
 #define CURAPPERR6	"    The remote server name(%s) does not exist in configure file."
@@ -73,7 +76,7 @@
 #define CURAPPERR24 "    Syntax error in configure file's EXTERNAL part around line: \n%s"
 #define CURAPPERR25 "    Syntax error in configure file's EXTERNAL part around line: \n%s\n-- expect 'end'."
 #define CURAPPERR26 "    Syntax error in configure file's CREATION part around line:\n%s\n-- expect only key word 'creation' in the line to begin the CREATION part."
-#define CURAPPERR27 "    Syntax error in configure file's CREATION part around line:\n%s\n-- expect ':' for level name."
+#define CURAPPERR27 "    Syntax error in configure file's CREATION part around line:\n%s\n-- expect `:' for level name or `end' to terminate the CREATION part."
 #define CURAPPERR28 "    Syntax error in configure file's CREATION part around line:\n%s\n-- expect only key word 'system' in the line."
 #define CURAPPERR29 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect host name quoted in '\"'."
 #define CURAPPERR30 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect host name."
@@ -112,16 +115,18 @@
 
 /* The following are implementation error messages */
 #define CURIMPERR9	"    Error happened when get host name."
+#define CURIMPERR18	"    Error happened when get host name--name is long than buffer."
 #define CURIMPERR10	"    Error happened when get current directory."
 #define CURIMPERR11	"    Error happened when get user name."
 #define CURIMPERR12	"    Error happened when send signal to parent process\n-- parent process crashed or the parameters were not correct."
-#define CURIMPERR13	"    Error happened when connect to a network server(%s)."
-#define CURIMPERR14	"    Error happened when Set Up Client(increase the try times(default: 1))."
+#define CURIMPERR13	"    Error happened when connect to a network server<%s, %d>(%s)."
+#define CURIMPERR14	"    Error happened when Set Up Client with <%s, %d>(increase the try times(default:%d))."
 
 /* The following are application error messages */
 
 /* The following are error messages whose causes are not clear  */
 #define CURERR6		"    Error happened when  read data from network\n-- maybe other separate object crashed or was killed by user. "		
+#define CURERR10	"    Error happened when Set Up Client with DAEMON<%s, %d>\nMake sure that the Daemon is up or increase the try times(default:%d)."
 
 
 
@@ -138,7 +143,9 @@
 /* The following are error messages whose causes are not clear  */
 #define CURERR7 	"    Invalid number of parameters to the creation feature\n-- correct format is: your_executable init parameters_if_any."
 #define CURERR8 	"    The first parameter of service file must be `init' or `creation'."
-#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON\non host <%s>. Please make sure that the SCOOP DAEMON is up.\n"	
+#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up.\n"	
+#define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number.\n"	
+#define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number.\n"	
 	
 
 
@@ -158,7 +165,7 @@
 
 /* The following are error messages whose causes are not clear  */
 /*
-#define CURERR10	
+#define CURERR13	
 */
 
 
@@ -168,7 +175,7 @@
 
 /* The following are implementation error messages */
 /*
-#define CURIMPERR18	
+#define CURIMPERR19	
 */
 
 /* The following are application error messages */
@@ -178,6 +185,7 @@
 
 /* The following are error messages whose causes are not clear  */
 /*
-#define CURERR10	
+#define CURERR13	
 */
 
+#endif

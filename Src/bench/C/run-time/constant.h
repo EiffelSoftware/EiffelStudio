@@ -5,7 +5,12 @@ direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
 
-#define WORK_BENCH
+#ifndef _CONCURRENT_CONSTANT_
+#define _CONCURRENT_CONSTANT_
+
+/*
+#define WORKBENCH
+*/
 
 #define tDISP_LIST
 /* if you want to display some run time information, such as
@@ -13,22 +18,31 @@ to indicate indirect(also called Eiffel or protected) address.
  * client list, child list, exported object list, reference table 
  * and imported object table, define DISP_LIST, otherwise undefine it.
 */
+
 #define tDISP_MSG
 /* if you want to display the REQUESTs communicated, 
  * define DISP_MSG, otherwise undefine it.
 */
 
-#define SIGNAL
+#define tSIGNAL
 /* if you want to use our own mechanism to display error message of
  * concurrent applications, defines SIGNAL, otherwise undefine it.
 */
+
 #define SEP_OBJ
 /* if class SEP_OBJ is still used, please define it. */
 
+#define tGC_ON_CPU_TIME
+/* Concurrent Eiffel call GC once after a certain period. If we 
+ * want the period is calculated based on CPU time, define the symbol,
+ * otherwise, undefine it.
+*/
+
 #ifdef EIF_WIN32
+#include <winsock.h>
 #else
 #include <sys/wait.h>
-#include <sys/stat.h>
+/*#include <sys/stat.h>*/
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <string.h>
@@ -44,6 +58,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #include "hector.h"
 #include "macros.h"
 #include "object_id.h"
+#include "timer.h"
 
 /*----------------------------------------------------------*/
 /*    CONSTANTS used only in SUBS.c                         */
@@ -97,6 +112,7 @@ typedef unsigned char   EIF_BOOLEAN;
 /*    The following define DATA LENGTHes                    */
 /*----------------------------------------------------------*/
 
+#define constant_command_buffer_len		1024 /* buffer length for sending command */
 #define constant_crash_info_len 		1024 /* buffer length for crash info */
 #define constant_size_of_data_buf 		1024 /* data buffer length in con_make */
 #define constant_size_of_line_buf 		1024 /* line buffer length in con_make */
@@ -119,6 +135,11 @@ typedef unsigned char   EIF_BOOLEAN;
 #define constant_sizeofint				sizeof(EIF_INTEGER)
 #define constant_sizeofreal				sizeof(EIF_REAL)
 #define constant_sizeofdouble			sizeof(EIF_DOUBLE)
+
+
+#define constant_max_number_of_sep_paras	10 /* the constant is used by the
+												* interpreter of Concurrent Eiffel.
+											   */
 
 /*----------------------------------------------------------*/
 /*    The following define COMMAND(REQUEST) CODEs           */
@@ -205,13 +226,19 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_procedure_with_ack				1
 #define	constant_import_separate_object			10
 #define	constant_query							2
-#define	constant_period							0.05
+#define	constant_cpu_period						1000		
+#define	constant_absolute_period				10000		
 /* the period to call "full_collect" to collect discarded SEP_OBJ
  * proxies.
 */
-/* The period is calculated in the application's cpu time, so don't set 
- * it too big. It is a double. The unit of the constant: Second.
+/* if the period is calculated in the application's cpu time, don't set 
+ * it too big. The unit of the constant: Macro-Second.
 */
+#ifdef GC_ON_CPU_TIME 
+#define	constant_period							10*constant_cpu_period		
+#else
+#define	constant_period							constant_absolute_period		
+#endif
 #define	constant_client							0 /* Not Used anymore */
 #define	constant_parent							1 /* Not Used anymore */
 #define	constant_child							2 /* Not Used anymore */
@@ -385,10 +412,16 @@ typedef struct _my_string {
     long size;  /* the total length of the area */
 } MY_STRING ;
 
+typedef struct _select_mask {
+int low; /* the smallest socket identifier in the corresponding `fd_set' */
+int up;  /* the biggest socket identifier in the corresponding `fd_set' */
+} MASK_LIMIT; /* a struct used to specify the limits of a `fd_set' */
 
 /*----------------------------------------------------------*/
 /*    The following define MACROs used by the C-library     */
 /*----------------------------------------------------------*/
+
+#define init_string(s) s->used = 0
 
 #define def_resc()	default_rescue()
 
@@ -414,6 +447,11 @@ typedef struct _my_string {
 	if (_concur_para_num) \
 		get_data(x)
 
+#define directly_get_cmd_data(x) \
+	directly_get_command(x); \
+	if (_concur_para_num) \
+		get_data(x)
+
 #define eif_str_to_c_str(eif_str) (eif_strtoc)(eif_str)
 #define adjust_parameter_array(size) _concur_paras_size = adjust_array(&_concur_paras, _concur_paras_size, size)
 
@@ -432,6 +470,25 @@ typedef struct _my_string {
 #define CONCUR_RESC_FIRE2  longjmp(_concur_exenv2, 1)
 #define CONCUR_RESC_FIRE3  longjmp(_concur_exenv3, 1)
 #define CONCUR_RESC_FIRE4  longjmp(_concur_exenv4, 1)
+
+
+#define set_mask(fd) \
+	if (fd>0) { \
+		FD_SET(fd, &_concur_mask); \
+		if (fd < _concur_mask_limit.low) \
+			_concur_mask_limit.low = fd; \
+		if (fd > _concur_mask_limit.up) \
+			_concur_mask_limit.up = fd; \
+	}
+
+#define unset_mask(fd) \
+	if (fd>0) { \
+		FD_CLR(fd, &_concur_mask); \
+		if (fd == _concur_mask_limit.low) \
+			_concur_mask_limit.low = fd + 1; \
+		if (fd == _concur_mask_limit.up) \
+			_concur_mask_limit.up = fd - 1; \
+	}
 
 
 /*----------------------------------------------------------*/
@@ -597,8 +654,11 @@ typedef struct _my_string {
 		_concur_alt_paras_size = adjust_array(&_concur_alt_paras, _concur_alt_paras_size, _concur_alt_para_num)
 
 #define CURCC(child) \
+	sprintf(_concur_crash_info, CURERR11, _concur_hosts[_concur_resource_index].host); \
 	send_command(_concur_scoop_dog->sock);\
+	sprintf(_concur_crash_info, CURERR12, _concur_hosts[_concur_resource_index].host); \
 	wait_scoop_daemon(); \
+	_concur_crash_info[0] = '\0'; \
 	child = create_child(); \
 	wait_sep_child_obj(child); \
 	_concur_is_creating_sep_child = 0
@@ -824,6 +884,16 @@ typedef struct _my_string {
 
 /* CURRSO(x)	try to reserve separate object `x'.
  * CURFSO(x)	free separate object `x'.
+ * CURSLEEP  sleep some time when the precondition involving separate object(s)
+ *      is evaluated to be False.
 */
 #define CURRSO(x) reserve_sep_obj(x)
 #define CURFSO(x) free_sep_obj(x)
+
+#ifdef EIF_WIN32
+#define CURSLEEP    Sleep((_concur_pid % 2) * 10 + (_concur_pid % 10) * 5)
+#else
+#define CURSLEEP    usleep((_concur_pid % 2) * 10000 + (_concur_pid % 10) * 5000)
+#endif
+
+#endif

@@ -37,7 +37,7 @@ EIF_POINTER p;
 EIF_BOOLEAN c_is_volume_name_valid (p)
 EIF_POINTER p;
 {
-		/* Test to see if `p' is a valid volume name
+		/* Test to see if `p' is a valid volume name */
 	return FALSE;
 }
 
@@ -45,6 +45,13 @@ EIF_BOOLEAN c_is_file_name_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid file name (no directory part) */
+	return TRUE;
+}
+
+EIF_BOOLEAN c_is_extension_valid (p)
+EIF_POINTER p;
+{
+		/* Test to see if `p' is a valid extension */
 	return TRUE;
 }
 
@@ -60,23 +67,6 @@ EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 	return TRUE;
-}
-
-/* Existence */
-
-EIF_BOOLEAN c_file_exists(p)
-EIF_POINTER p;
-{
-		/* Test to see if `p' exists and if the correcponding file is NOT a directory */
-	int status;						/* System call status */
-	struct stat buf;				/* Buffer to get file statistics */
-
-	status = stat((char *)p, &buf);	/* Attempt to stat file */
-	if (status == -1)
-		return FALSE;
-	else
-			/* File is NOT a directory */
-		return ((buf.st_mode & S_IFDIR) ? FALSE : TRUE);
 }
 
 /* Concatenation */

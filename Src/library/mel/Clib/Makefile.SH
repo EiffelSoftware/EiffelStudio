@@ -31,8 +31,6 @@ MEL_LIBS = libMel.a libmtMel.a libMel.so libmtMel.so
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-.c.o:
-	$(CC) $(CFLAGS) $(DEFINES) -c $<
 
 all: $(MEL_LIBS)
 
@@ -61,40 +59,40 @@ MT_OBJECTS= MTxt_support.o MTcallback.o MTcreation.o MTpixmap.o MTfont.o \
 		MTc_support.o MTg_context.o MTfont_box.o
 
 MTxt_support.o: xt_support.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTcallback.o: callback.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTcreation.o: creation.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTpixmap.o: pixmap.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTfont.o: font.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTmel_string.o: mel_string.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTpixel.o: pixel.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTpointer.o: pointer.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTxm_support.o: xm_support.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTc_support.o: c_support.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTg_context.o: g_context.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTfont_box.o: font_box.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 libmtMel.a: $(MT_OBJECTS)
 	$(RM) libmtMel.a

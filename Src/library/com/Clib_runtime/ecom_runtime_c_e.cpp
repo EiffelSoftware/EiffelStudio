@@ -10,25 +10,9 @@
 //--------------------------------------------------------------------------
 
 #include "ecom_runtime_c_e.h"
-#include "ecom_rt_globals.h"
 
 ecom_runtime_ce rt_ce;
-//-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
-
-// Create Eiffel object ECOM_CURRENCY from C	
-{
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_currency_id;
-	EIF_PROC currency_make;
-	
-	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
-	currency_make = eif_proc ("make_by_pointer", eif_currency_id);
-	result = eif_create (eif_currency_id);
-	currency_make (eif_access (result), (EIF_POINTER)&a_currency);
-	return eif_wean (result);
-};
 //-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
@@ -99,22 +83,6 @@ EIF_BOOLEAN ecom_runtime_ce::ccom_ce_boolean (VARIANT_BOOL a_bool)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
-
-// Create ECOM_DECIMAL from C 
-{
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_decimal_id;
-	EIF_PROC make;
-				
-	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
-	make = eif_proc ("make_by_pointer", eif_decimal_id);
-	result = eif_create (eif_decimal_id);
-	make (eif_access (result), (EIF_POINTER)&a_decimal);
-	return eif_wean (result);
-};
-//-------------------------------------------------------------------------
-
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
 
 // Create Eiffel STRING from LPSTR	
@@ -138,7 +106,26 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT * a_variant)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string)
+
+// Create Eiffel String from LPWSTR
+{
+	EIF_OBJ local_obj;
+	char * string;
+	size_t size, size_wide;
+
+	size_wide = wcslen(a_string);
+	size = wcstombs (NULL, a_string, size_wide + 1);
+	string = (char *)malloc(size + 1);
+
+	wcstombs (string, a_string, size_wide + 1);
+	local_obj = henter(RTMS(string));
+	free (string);
+	return eif_wean (local_obj);
+};
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 
 // Create Eiffel ECOM_VARIANT from C
 {
@@ -154,7 +141,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT * a_variant)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_unknown (IUnknown * a_unknown)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unknown (IUnknown * a_unknown)
 
 // Create Eiffel ECOM_GENERIC_INTERFACE from C
 {
@@ -170,7 +157,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_unknown (IUnknown * a_unknown)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_dispatch (IDispatch * a_dispatch)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 
 // Create Eiffel ECOM_GENERIC_DISPINTERFACE from C
 {
@@ -346,6 +333,38 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_interface (void * a_interface_poi
 };
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long_long (LARGE_INTEGER * a_large_integer)
+
+// Create Eiffel object ECOM_LARGE_INTEGER
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID eif_large_integer_id;
+	EIF_PROC large_integer_make;
+	
+	eif_large_integer_id = eif_type_id ("ECOM_LARGE_INTEGER");
+	large_integer_make = eif_proc ("make_by_pointer", eif_large_integer_id);
+	result = eif_create (eif_large_integer_id);
+	large_integer_make (eif_access (result), (EIF_POINTER)a_large_integer);
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_ularge_integer)
+
+// Create Eiffel object ECOM_ULARGE_INTEGER
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID eif_ularge_integer_id;
+	EIF_PROC ularge_integer_make;
+	
+	eif_ularge_integer_id = eif_type_id ("ECOM_ULARGE_INTEGER");
+	ularge_integer_make = eif_proc ("make_by_pointer", eif_ularge_integer_id);
+	result = eif_create (eif_ularge_integer_id);
+	ularge_integer_make (eif_access (result), (EIF_POINTER)an_ularge_integer);
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short (short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
 
 // Create Eiffel ARRAY from C array of short.
@@ -510,7 +529,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr (EIF_POINTER an_array, EIF_INT
 	EIF_PROCEDURE make, put;	
 	int i;
 	EIF_INTEGER * lower_indeces;
-	BSTR * an_array_element;
+	BSTR an_array_element;
 	
 	type_id = eif_type_id ("ARRAY [STRING]");
 	make = eif_procedure ("make", type_id);
@@ -522,8 +541,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr (EIF_POINTER an_array, EIF_INT
 	
 	for (i = 0; i < element_number; i++)
 	{
-		an_array_element = (BSTR *)&((ccom_c_array_element (an_array, i, BSTR)));
-		put (eif_access (intermediate_array), ccom_ce_bstr ((BSTR)*an_array_element), i + 1);
+		an_array_element = (BSTR )((ccom_c_array_element (an_array, i, BSTR)));
+		put (eif_access (intermediate_array), ccom_ce_bstr ((BSTR)an_array_element), i + 1);
 	}
 	if ( dim_count == 1)
 	{
@@ -779,7 +798,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant (EIF_POINTER an_array, EIF_
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (VARIANT *)&(ccom_c_array_element (an_array, i, VARIANT));
-		put (eif_access (intermediate_array), ccom_ce_variant ((VARIANT *) an_array_element), i + 1);
+		put (eif_access (intermediate_array), ccom_ce_pointed_variant ((VARIANT *) an_array_element), i + 1);
 	}
 	if ( dim_count == 1)
 	{
@@ -883,6 +902,264 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult (EIF_POINTER an_array, EIF_
 };
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr (EIF_POINTER an_array, 
+			EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+
+// Create Eiffel Array from C array of LPSTR
+{
+	EIF_INTEGER element_number;
+	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	
+	EIF_TYPE_ID type_id, int_array_id;
+	EIF_PROCEDURE make, put;	
+	int i;
+	EIF_INTEGER * lower_indeces;
+	LPSTR an_array_element;
+	
+	type_id = eif_type_id ("ARRAY [STRING]");
+	make = eif_procedure ("make", type_id);
+	put = eif_procedure ("put", type_id);
+	
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+	intermediate_array = eif_create (type_id);
+	make (eif_access (intermediate_array), 1, element_number);
+	
+	for (i = 0; i < element_number; i++)
+	{
+		an_array_element = (LPSTR )((ccom_c_array_element (an_array, i, LPSTR)));
+		put (eif_access (intermediate_array), ccom_ce_lpstr ((LPSTR)an_array_element), i + 1);
+	}
+	if ( dim_count == 1)
+	{
+		result = intermediate_array;
+	}
+	else
+	{
+		// Create array of lower indeces
+		int_array_id = eif_type_id ("ARRAY [INTEGER]");
+		make = eif_procedure ("make", int_array_id);
+		eif_lower_indeces = eif_create (int_array_id);
+		make (eif_access (eif_lower_indeces), 1, dim_count);
+						
+		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+		for ( i = 0; i < dim_count; i++)
+			lower_indeces [i] = 1;
+																			
+		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+		free (lower_indeces);
+		
+		// Create array of element counts
+		eif_element_count = eif_create (int_array_id);
+		make (eif_access (eif_element_count), 1, dim_count);
+						
+		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+		
+		// Create ECOM_ARRAY [STRING]
+		type_id = eif_type_id ("ECOM_ARRAY [STRING]");
+		make = eif_procedure ("make_from_array", type_id);
+		
+		result = eif_create (type_id);
+		make (eif_access (result), eif_access (intermediate_array), 
+				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+		eif_wean (intermediate_array);
+	}
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr (EIF_POINTER an_array, 
+			EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+
+// Create Eiffel Array from C array of LPWSTR
+{
+	EIF_INTEGER element_number;
+	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	
+	EIF_TYPE_ID type_id, int_array_id;
+	EIF_PROCEDURE make, put;	
+	int i;
+	EIF_INTEGER * lower_indeces;
+	LPWSTR an_array_element;
+	
+	type_id = eif_type_id ("ARRAY [STRING]");
+	make = eif_procedure ("make", type_id);
+	put = eif_procedure ("put", type_id);
+	
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+	intermediate_array = eif_create (type_id);
+	make (eif_access (intermediate_array), 1, element_number);
+	
+	for (i = 0; i < element_number; i++)
+	{
+		an_array_element = (LPWSTR)((ccom_c_array_element (an_array, i, LPWSTR)));
+		put (eif_access (intermediate_array), ccom_ce_lpwstr ((LPWSTR)an_array_element), i + 1);
+	}
+	if ( dim_count == 1)
+	{
+		result = intermediate_array;
+	}
+	else
+	{
+		// Create array of lower indeces
+		int_array_id = eif_type_id ("ARRAY [INTEGER]");
+		make = eif_procedure ("make", int_array_id);
+		eif_lower_indeces = eif_create (int_array_id);
+		make (eif_access (eif_lower_indeces), 1, dim_count);
+						
+		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+		for ( i = 0; i < dim_count; i++)
+			lower_indeces [i] = 1;
+																			
+		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+		free (lower_indeces);
+		
+		// Create array of element counts
+		eif_element_count = eif_create (int_array_id);
+		make (eif_access (eif_element_count), 1, dim_count);
+						
+		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+		
+		// Create ECOM_ARRAY [STRING]
+		type_id = eif_type_id ("ECOM_ARRAY [STRING]");
+		make = eif_procedure ("make_from_array", type_id);
+		
+		result = eif_create (type_id);
+		make (eif_access (result), eif_access (intermediate_array), 
+				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+		eif_wean (intermediate_array);
+	}
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+
+// Create Eiffel Array from C array of LARGE_INTEGER
+{
+	EIF_INTEGER element_number;
+	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	
+	EIF_TYPE_ID type_id, int_array_id;
+	EIF_PROCEDURE make, put;	
+	int i;
+	EIF_INTEGER * lower_indeces;
+	LARGE_INTEGER * an_array_element;
+	
+	type_id = eif_type_id ("ARRAY [ECOM_LARGE_INTEGER]");
+	make = eif_procedure ("make", type_id);
+	put = eif_procedure ("put", type_id);
+	
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+	intermediate_array = eif_create (type_id);
+	make (eif_access (intermediate_array), 1, element_number);
+	
+	for (i = 0; i < element_number; i++)
+	{
+		an_array_element = (LARGE_INTEGER *)&((ccom_c_array_element (an_array, i, LARGE_INTEGER)));
+		put (eif_access (intermediate_array), ccom_ce_pointed_long_long (an_array_element), i + 1);
+	}
+	if ( dim_count == 1)
+	{
+		result = intermediate_array;
+	}
+	else
+	{
+		// Create array of lower indeces
+		int_array_id = eif_type_id ("ARRAY [INTEGER]");
+		make = eif_procedure ("make", int_array_id);
+		eif_lower_indeces = eif_create (int_array_id);
+		make (eif_access (eif_lower_indeces), 1, dim_count);
+						
+		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+		for ( i = 0; i < dim_count; i++)
+			lower_indeces [i] = 1;
+																			
+		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+		free (lower_indeces);
+		
+		// Create array of element counts
+		eif_element_count = eif_create (int_array_id);
+		make (eif_access (eif_element_count), 1, dim_count);
+						
+		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+		
+		// Create ECOM_ARRAY [ECOM_LARGE_INTEGER]
+		type_id = eif_type_id ("ECOM_ARRAY [ECOM_LARGE_INTEGER]");
+		make = eif_procedure ("make_from_array", type_id);
+		
+		result = eif_create (type_id);
+		make (eif_access (result), eif_access (intermediate_array), 
+				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+		eif_wean (intermediate_array);
+	}
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
+
+// Create Eiffel Array from C array of ULARGE_INTEGER
+{
+	EIF_INTEGER element_number;
+	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	
+	EIF_TYPE_ID type_id, int_array_id;
+	EIF_PROCEDURE make, put;	
+	int i;
+	EIF_INTEGER * lower_indeces;
+	ULARGE_INTEGER * an_array_element;
+	
+	type_id = eif_type_id ("ARRAY [ECOM_ULARGE_INTEGER]");
+	make = eif_procedure ("make", type_id);
+	put = eif_procedure ("put", type_id);
+	
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+	intermediate_array = eif_create (type_id);
+	make (eif_access (intermediate_array), 1, element_number);
+	
+	for (i = 0; i < element_number; i++)
+	{
+		an_array_element = (ULARGE_INTEGER *)&((ccom_c_array_element (an_array, i, ULARGE_INTEGER)));
+		put (eif_access (intermediate_array), ccom_ce_pointed_ulong_long (an_array_element), i + 1);
+	}
+	if ( dim_count == 1)
+	{
+		result = intermediate_array;
+	}
+	else
+	{
+		// Create array of lower indeces
+		int_array_id = eif_type_id ("ARRAY [INTEGER]");
+		make = eif_procedure ("make", int_array_id);
+		eif_lower_indeces = eif_create (int_array_id);
+		make (eif_access (eif_lower_indeces), 1, dim_count);
+						
+		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+		for ( i = 0; i < dim_count; i++)
+			lower_indeces [i] = 1;
+																			
+		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
+		free (lower_indeces);
+		
+		// Create array of element counts
+		eif_element_count = eif_create (int_array_id);
+		make (eif_access (eif_element_count), 1, dim_count);
+						
+		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
+		
+		// Create ECOM_ARRAY [ECOM_ULARGE_INTEGER]
+		type_id = eif_type_id ("ECOM_ARRAY [ECOM_ULARGE_INTEGER]");
+		make = eif_procedure ("make_from_array", type_id);
+		
+		result = eif_create (type_id);
+		make (eif_access (result), eif_access (intermediate_array), 
+				dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+		eif_wean (intermediate_array);
+	}
+	return eif_wean (result);
+};
+//----------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
 
 // Create Eiffel ARRAY from C array of IUnknown *.
@@ -907,7 +1184,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown (EIF_POINTER an_array, EIF_
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (IUnknown *)&((ccom_c_array_element (an_array, i, IUnknown *)));
-		put (eif_access (intermediate_array), ccom_ce_unknown ((IUnknown *)an_array_element), i + 1);
+		put (eif_access (intermediate_array), ccom_ce_pointed_unknown ((IUnknown *)an_array_element), i + 1);
 	}
 	if ( dim_count == 1)
 	{
@@ -971,7 +1248,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch (EIF_POINTER an_array, EIF
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (IDispatch *)&((ccom_c_array_element (an_array, i, IDispatch *)));
-		put (eif_access (intermediate_array), ccom_ce_unknown ((IDispatch *)an_array_element), i + 1);
+		put (eif_access (intermediate_array), ccom_ce_pointed_unknown ((IDispatch *)an_array_element), i + 1);
 	}
 	if ( dim_count == 1)
 	{
@@ -2422,7 +2699,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
 		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
-		put (eif_access (result), ccom_ce_unknown (sa_element), eif_access (eif_index));
+		put (eif_access (result), ccom_ce_pointed_unknown (sa_element), eif_access (eif_index));
 		sa_element->AddRef();
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2531,7 +2808,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
 		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
-		put (eif_access (result), ccom_ce_dispatch (sa_element), eif_access (eif_index));
+		put (eif_access (result), ccom_ce_pointed_dispatch (sa_element), eif_access (eif_index));
 		sa_element->AddRef();
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));

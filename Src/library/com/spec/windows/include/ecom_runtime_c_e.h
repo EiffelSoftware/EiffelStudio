@@ -21,9 +21,6 @@
 #include "eif_except.h"
 
 
-
-
-
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))
 
 class ecom_runtime_ce
@@ -48,9 +45,7 @@ public:
 	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
-	EIF_REFERENCE ccom_ce_variant (VARIANT * a_variant);
-	EIF_REFERENCE ccom_ce_dispatch (IDispatch * a_dispatch);
-	EIF_REFERENCE ccom_ce_unknown (IUnknown * a_unknown);
+	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
 
 	// Pointed 
 	
@@ -62,10 +57,15 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_currency (CURRENCY * a_currency);
 	EIF_REFERENCE ccom_ce_pointed_decimal (DECIMAL * a_decimal);
 	EIF_REFERENCE ccom_ce_pointed_hresult (HRESULT * a_hresult);
-	
+	EIF_REFERENCE ccom_ce_pointed_variant (VARIANT * a_variant);
+	EIF_REFERENCE ccom_ce_pointed_long_long (LARGE_INTEGER * a_large_int);
+	EIF_REFERENCE ccom_ce_pointed_ulong_long (ULARGE_INTEGER * a_ularge_int);
+
 	EIF_REFERENCE ccom_ce_pointed_record (void * a_record_pointer, char * a_class_name);
 	EIF_REFERENCE ccom_ce_pointed_interface (void * a_interface_pointer, char * a_class_name);
-	
+	EIF_REFERENCE ccom_ce_pointed_dispatch (IDispatch * a_dispatch);
+	EIF_REFERENCE ccom_ce_pointed_unknown (IUnknown * a_unknown);
+
 	// Safearray
 	
 	EIF_REFERENCE ccom_ce_safearray_short (SAFEARRAY * a_safearray);
@@ -99,6 +99,10 @@ public:
 	EIF_REFERENCE ccom_ce_array_decimal (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_character (char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_record (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
+	EIF_REFERENCE ccom_ce_array_lpstr (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
+	EIF_REFERENCE ccom_ce_array_lpwstr (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
+	EIF_REFERENCE ccom_ce_array_long_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
+	EIF_REFERENCE ccom_ce_array_ulong_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_dispatch (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_unknown (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	
@@ -112,5 +116,6 @@ public:
 	
 	// Interface
 };
+#include "ecom_rt_globals.h"
 
 #endif // !__ECOM_RUNTIME_CE_H_INC__

@@ -11,7 +11,7 @@ inherit
 feature -- Status Report
 
 	apply_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `appply'.
+			-- User-defined preconditions for `apply'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -311,7 +311,7 @@ feature -- Basic Operations
 
 	compilation_type: INTEGER is
 			-- Compilation type.
-			-- See ECOM_X__EIF_COMPILATON_TYPES_ENUM for possible `Result' values.
+			-- See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `Result' values.
 		require
 			compilation_type_user_precondition: compilation_type_user_precondition
 		deferred
@@ -320,7 +320,7 @@ feature -- Basic Operations
 
 	set_compilation_type (return_value: INTEGER) is
 			-- Compilation type.
-			-- `return_value' [in]. See ECOM_X__EIF_COMPILATON_TYPES_ENUM for possible `return_value' values. 
+			-- `return_value' [in]. See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `return_value' values. 
 		require
 			set_compilation_type_user_precondition: set_compilation_type_user_precondition (return_value)
 		deferred

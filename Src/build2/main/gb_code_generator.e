@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 							else
 								generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
 								"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "Once" + Indent + "create Result" + Indent + 
-								"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.extend (%"" + pixmap_constant.filename +"%")" +
+								"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.set_file_name (%"" + pixmap_constant.filename +"%")" +
 								indent + "set_with_named_file (Result, a_file_name)" + Indent_less_one + "end" + "%N"
 							end
 						end

@@ -5,9 +5,17 @@ inherit
 		redefine
 			is_boolean,
 			dump,
-			same_as,
+			same_as, element_type,
 			description, hash_code, sk_value, generate_cecil_value,
 			generated_id, typecode
+		end
+
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean
 		end
 
 feature

@@ -7,9 +7,17 @@ inherit
 			is_feature_pointer,
 			same_as,
 			description, sk_value, hash_code, generate_cecil_value,
-			generated_id, typecode
+			generated_id, typecode, element_type
 		end
 
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i
+		end
+		
 feature
 
 	level: INTEGER is

@@ -18,6 +18,16 @@ inherit
 			{NONE} all
 		end
 
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Formal element type. Should not be called.
+		do
+			check
+				False
+			end
+		end
+
 feature -- Access
 
 	position: INTEGER
@@ -142,7 +152,7 @@ feature -- Generic conformance for IL
 			il_generator.generate_current
 			l_decl_type := il_generator.implemented_type (l_formal.origin_class_id,
 				context.current_type)
-			il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, True)
+			il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, 0, True, True)
 		end
 
 feature {NONE} -- Code generation

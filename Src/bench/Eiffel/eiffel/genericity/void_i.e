@@ -15,6 +15,14 @@ inherit
 
 	SHARED_C_LEVEL
 
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Void element type
+		do
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_void
+		end
+		
 feature
 
 	level: INTEGER is

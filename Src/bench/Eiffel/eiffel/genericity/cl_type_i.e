@@ -212,6 +212,22 @@ feature -- Access
 
 feature -- Status
 
+	element_type: INTEGER_8 is
+			-- Void element type
+		do
+			if is_expanded then
+				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
+			else
+				if base_class = System.system_string_class.compiled_class then
+					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_string
+				elseif base_class.class_id = System.system_object_id then
+					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
+				else
+					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_class
+				end
+			end
+		end
+
 	is_true_expanded: BOOLEAN
 			-- Is the type expanded?
 

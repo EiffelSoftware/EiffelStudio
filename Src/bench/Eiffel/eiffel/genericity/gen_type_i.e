@@ -445,7 +445,7 @@ feature {NONE} -- Implementation: generic conformance
 				-- Create array that will hold values to create appropriate
 				-- type in case of an instance of a generic type.
 			il_generator.put_integer_32_constant (cnt)
-			il_generator.generate_array_creation (il_generator.type_id)
+			il_generator.generate_array_creation (il_generator.runtime_type_id)
 		end
 		
 feature -- Comparison

@@ -101,41 +101,46 @@ feature -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_system_var_value,
-			l_local_var_value: LIST [STRING]
+			l_system_var_values,
+			l_local_var_values: LIST [STRING]
 			l_new_var_value: STRING
+			l_value, l_name: WEL_STRING
+			success: BOOLEAN
 		do
-				-- Get the environment variable value for this process.
-			l_local_var_value := variables.item (a_string).split (';')	
-			if l_local_var_value /= Void and not l_local_var_value.is_empty then
-					-- Get the corresponding system environment variable.
-				l_system_var_value := env.get (a_string).split (';')
-				if l_system_var_value /= Void and not l_system_var_value.is_empty then
+			create l_name.make (a_string)
+					-- Get the environment variable value for this process.
+			l_local_var_values := variables.item (a_string).split (';')	
+			if l_local_var_values /= Void and not l_local_var_values.is_empty then
+						-- Get the corresponding system environment variable.
+				l_system_var_values := env.get (a_string).split (';')
+				if l_system_var_values /= Void and not l_system_var_values.is_empty then
 					create l_new_var_value.make_empty
 					from
-						l_system_var_value.start
+						l_system_var_values.start
 					until
-						l_system_var_value.after
+						l_system_var_values.after
 					loop
-						if not l_local_var_value.has (l_system_var_value.item) then
-							l_local_var_value.extend (l_system_var_value.item)
+						if not l_local_var_values.has (l_system_var_values.item) then
+							l_local_var_values.extend (l_system_var_values.item)
 						end
-						l_system_var_value.forth
+						l_system_var_values.forth
 					end
-						-- Now extract the full value containing all options.
+							-- Now extract the full value containing all options.
 					from
-						l_local_var_value.start
+						l_local_var_values.start
 					until
-						l_local_var_value.after
+						l_local_var_values.after
 					loop
-						l_new_var_value.append (l_local_var_value.item + ";")
-						l_local_var_value.forth 
+						l_new_var_value.append (l_local_var_values.item + ";")
+						l_local_var_values.forth 
 					end
-					env.put (l_new_var_value, a_string)
+					create l_value.make (l_new_var_value)
+					success := set_environment_variable (l_name.item, l_value.item)
 				else
-					-- There is no system variable known by 'a_string' or it is empty
-					-- so just set the local one.
-					env.put (variables.item (a_string), a_string)
+						-- There is no system variable known by 'a_string' or it is empty
+						-- so just set the local one.
+					create l_value.make (variables.item (a_string))
+					success := set_environment_variable (l_name.item, l_value.item)
 				end
 			end
 		end
@@ -219,6 +224,17 @@ feature -- Access
 			-- Was a version for VS installed?
 		do
 			Result := vs_version = 6 or vs_version = 7
+		end
+		
+feature -- Externals
+
+	set_environment_variable (name, value: POINTER): BOOLEAN is
+			-- Set environment variable `name' with value `value'.
+			-- Return True if successful.
+		external
+			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"
+		alias
+			"SetEnvironmentVariable"
 		end
 		
 end -- class VS_SETUP

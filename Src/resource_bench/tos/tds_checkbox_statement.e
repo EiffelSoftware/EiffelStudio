@@ -1,14 +1,14 @@
 indexing
-	description: "Defpushbutton statement representation in the tds"
+	description: "Checkbox statement representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_DEFPUSHBUTTON_STATEMENT
+	TDS_CHECKBOX_STATEMENT
 
 inherit
-	TDS_CONTROL_STATEMENT 
+	TDS_CONTROL_STATEMENT
 
 	TDS_CONTROL_CONSTANTS
 		export
@@ -18,16 +18,16 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature -- Initalization
 
 	finish_control_setup is
 		do
-			set_variable_name ("default_push_button")
-			set_type (C_defpushbutton)
-			set_wel_class_name ("WEL_PUSH_BUTTON")
+			set_variable_name ("checkbox")
+			set_wel_class_name ("WEL_CHECK_BOX")
+			set_type (C_checkbox)
 		end
 
-feature -- Code Generation
+feature -- Code generation
 
 	display is
 		do
@@ -37,7 +37,7 @@ feature -- Code Generation
 				after
 
 			loop
-				io.putstring ("%NDEFPUSHBUTTON ")
+				io.putstring ("%NCHECKBOX ")
 
 				io.putstring (item.text)
 
@@ -66,18 +66,18 @@ feature -- Code Generation
 
 				forth
 			end
-	end
+		end
 
 	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
 			-- Generate `a_resource_file' from the tds memory structure.
 		do
-			from 
+		    	from 
 				start
 			until
 				after
 
 			loop
-				a_resource_file.putstring ("%N%TDEFPUSHBUTTON ")
+				a_resource_file.putstring ("%N%TCHECKBOX ")
 
 				a_resource_file.putstring (item.text)
 
@@ -110,7 +110,7 @@ feature -- Code Generation
 			end
 		end
 
-end -- class TDS_DEFPUSHBUTTON_STATEMENT
+end -- class TDS_CHECKBOX_STATEMENT
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

@@ -26,8 +26,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_font: EV_FONT
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
@@ -35,7 +33,6 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create output_outter_box
 			create wizard_output_upper_box
-			create output_text
 			create progress_bar_box
 			create progress_bar_inner_box
 			create progress_bar
@@ -61,7 +58,6 @@ feature {NONE}-- Initialization
 				-- Build_widget_structure.
 			extend (output_outter_box)
 			output_outter_box.extend (wizard_output_upper_box)
-			wizard_output_upper_box.extend (output_text)
 			output_outter_box.extend (progress_bar_box)
 			progress_bar_box.extend (progress_bar_inner_box)
 			progress_bar_inner_box.extend (progress_bar)
@@ -89,15 +85,6 @@ feature {NONE}-- Initialization
 			output_outter_box.disable_item_expand (progress_bar_box)
 			output_outter_box.disable_item_expand (final_message_box)
 			wizard_output_upper_box.set_padding_width (5)
-			output_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (121, 252, 65))
-			create internal_font
-			internal_font.set_family (4)
-			internal_font.set_weight (7)
-			internal_font.set_shape (10)
-			internal_font.set_height_in_points (8)
-			internal_font.preferred_families.extend ("Lucida Console")
-			output_text.set_font (internal_font)
-			output_text.disable_edit
 			progress_bar_box.set_padding_width (11)
 			progress_bar_box.disable_item_expand (progress_bar_inner_box)
 			progress_bar_inner_box.set_padding_width (7)
@@ -113,7 +100,7 @@ feature {NONE}-- Initialization
 			progress_bar_label.set_text ("Progress:")
 			progress_bar_label.align_text_left
 			stop_button.disable_sensitive
-			stop_button.set_text ("Stop")
+			stop_button.set_text ("Cancel")
 			stop_button.set_minimum_width (100)
 			final_message_box.hide
 			final_message_box.set_padding_width (5)
@@ -134,8 +121,8 @@ feature {NONE}-- Initialization
 			save_button.set_text ("Save")
 			save_button.set_minimum_width (100)
 			open_eiffelstudio_button.disable_sensitive
-			open_eiffelstudio_button.set_text ("Launch EiffelStudio")
-			open_eiffelstudio_button.set_minimum_width (120)
+			open_eiffelstudio_button.set_text ("EiffelStudio")
+			open_eiffelstudio_button.set_minimum_width (100)
 			exit_button.set_text ("Exit")
 			exit_button.set_minimum_width (100)
 			set_padding_width (7)
@@ -159,16 +146,14 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	output_text: EV_RICH_TEXT
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-	output_outter_box, wizard_output_upper_box, progress_bar_box,
-	wizard_output_middle_box: EV_VERTICAL_BOX
-	progress_bar_inner_box, inner_progress_label_box, progress_label_box,
-	final_message_box, output_buttons_box: EV_HORIZONTAL_BOX
-	percentage_label, percent_label, progress_bar_label,
-	final_message_label, destination_path_label: EV_LABEL
-	stop_button, save_button, open_eiffelstudio_button,
-	exit_button: EV_BUTTON
+	output_outter_box, wizard_output_upper_box, progress_bar_box, wizard_output_middle_box: EV_VERTICAL_BOX
+	progress_bar_inner_box,
+	inner_progress_label_box, progress_label_box, final_message_box, output_buttons_box: EV_HORIZONTAL_BOX
+	percentage_label,
+	percent_label, progress_bar_label, final_message_label, destination_path_label: EV_LABEL
+	stop_button,
+	save_button, open_eiffelstudio_button, exit_button: EV_BUTTON
 	left_output_padding_cell, right_output_padding_cell: EV_CELL
 
 feature {NONE} -- Implementation

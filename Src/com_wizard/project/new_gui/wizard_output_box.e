@@ -29,15 +29,6 @@ inherit
 			default_create
 		end
 
-	WIZARD_OUTPUT_FORMAT_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			is_equal,
-			copy,
-			default_create
-		end
-
 	WIZARD_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -55,15 +46,21 @@ inherit
 			copy,
 			default_create
 		end
-
+	
 feature {NONE} -- Initialization
 
 	user_initialization is
 			-- called by `initialize'.
 		do
+			create output_text
+			output_text.hide_scroll_bars
+			wizard_output_upper_box.extend (output_text)
 			progress_bar.disable_segmentation
 			progress_bar_label.set_text ("Ready.")
-			output_text.set_background_color ((create {EV_STOCK_COLORS}).Color_read_write)
+			create title_indices.make (20)
+			create warning_indices.make (400)
+			create error_indices.make (2)
+			create text.make (256 * 1024)
 		end
 
 feature -- Access
@@ -93,7 +90,11 @@ feature -- Basic Operations
 	clear is
 			-- Clear output.
 		do
-			output_text.remove_text
+			output_text.set_text ("")
+			text.wipe_out
+			title_indices.wipe_out
+			error_indices.wipe_out
+			warning_indices.wipe_out
 		end
 	
 	process_event (a_event: EV_THREAD_EVENT) is
@@ -104,31 +105,21 @@ feature -- Basic Operations
 			l_output_event: WIZARD_OUTPUT_EVENT
 			l_progress_event: WIZARD_PROGRESS_EVENT
 			l_percent: INTEGER
-			l_text, l_underline, l_event_text: STRING
 		do
 			l_output_event ?= a_event
 			if l_output_event /= Void then
-				l_event_text := l_output_event.text
 				inspect
 					l_output_event.id
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_title then
-					create l_underline.make (l_event_text.count)
-					l_underline.fill_with ('-')
-					create l_text.make (1 + 2 * l_event_text.count + 3)
-					l_text.append_character ('%N')
-					l_text.append (l_event_text)
-					l_text.append_character ('%N')
-					l_text.append (l_underline)
-					l_text.append ("%N%N")
-					add_output (l_text, Title_format)
+					add_title (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_text then
-					add_output (l_event_text, Message_format)
+					add_text (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_message then
-					add_output (l_event_text + "%N", Message_format)
+					add_message (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
-					add_output (l_event_text + "%N", Warning_format)
+					add_warning (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_error then
-					add_output (l_event_text + "%N", Error_format)
+					add_error (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Clear then
 					clear
 				else
@@ -150,7 +141,9 @@ feature -- Basic Operations
 						open_eiffelstudio_button.disable_sensitive
 						final_message_box.hide
 						progress_bar_label.set_foreground_color ((create {EV_STOCK_COLORS}).Black)
+						output_text.hide_scroll_bars
 					when feature {WIZARD_PROGRESS_EVENT_ID}.Finish then
+						set_output
 						progress_bar_box.hide
 						progress_bar_label.set_text ("Ready.")
 						stop_button.disable_sensitive
@@ -167,6 +160,7 @@ feature -- Basic Operations
 						end
 						destination_path_label.set_text (environment.destination_folder)
 						final_message_box.show
+						output_text.show_scroll_bars
 					when feature {WIZARD_PROGRESS_EVENT_ID}.Step then
 						check
 							not_finished: not environment.abort implies (progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower))
@@ -261,37 +255,116 @@ feature {NONE} -- GUI Events Handling
 			l_file_name: STRING
 		do
 			create l_dialog.make_with_title ("Browse for log file")
-			l_dialog.filters.extend (["*.rtf", "Rich Text File (*.rtf)"])
-			l_dialog.set_file_name (environment.project_name + "_log.rtf")
+			l_dialog.filters.extend (["*.log", "Log File (*.log)"])
+			l_dialog.filters.extend (["*.txt", "Plain Text File (*.txt)"])
+			l_dialog.filters.extend (["*.*", "All Files (*.*)"])
+			l_dialog.set_file_name (environment.project_name + ".log")
 			l_dialog.set_start_directory (environment.destination_folder)
 			l_dialog.show_modal_to_window ((create {EV_UTILITIES}).parent_window (Current))
 			l_file_name := l_dialog.file_name.as_lower
 			if not l_file_name.is_empty then
-				if l_file_name.substring_index (".rtf", l_dialog.file_name.count - 3) = 0 then
-					l_file_name.append (".rtf")
+				if l_file_name.substring_index (".log", l_dialog.file_name.count - 3) = 0 then
+					l_file_name.append (".log")
 				end
-				output_text.save_to_named_file (l_file_name)
+				output_text.save (l_file_name)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	add_output (a_text: STRING; a_format: EV_CHARACTER_FORMAT) is
-			-- Append `a_text' to content of `output_text' using format `a_format'.
+	add_title (a_title: STRING) is
+			-- Append title `a_title' to content of `output_text'.
 		require
-			non_void_text: a_text /= Void
-			non_void_format: a_format /= Void
+			non_void_title: a_title /= Void
 		local
-			l_length, l_start_line, l_end_line: INTEGER
+			l_underline: STRING
 		do
-			output_text.buffered_append (a_text, a_format)
-			l_length := output_text.text_length
-			output_text.flush_buffer_to (l_length + 1, l_length + 1)
-			l_start_line := output_text.line_number_from_position (output_text.index_from_position (0, 0))
-			l_end_line := output_text.line_number_from_position (output_text.index_from_position (0, output_text.height))
-			output_text.scroll_to_line (output_text.line_count - (l_end_line - l_start_line) + 1)
+			title_indices.extend (text.count + 2)
+			create l_underline.make (a_title.count)
+			l_underline.fill_character ('-')
+			text.append ("%R%N")
+			text.append (a_title)
+			text.append ("%R%N")
+			text.append (l_underline)
+			text.append ("%R%N%R%N")
+			title_indices.extend (text.count - 1)
+			update_output
 		end
 
+	add_error (a_error: STRING) is
+			-- Append error `a_error' to content of `output_text'.
+		require
+			non_void_error: a_error /= Void
+		do
+			error_indices.extend (text.count + 1)
+			text.append ("%R%NERROR: ")
+			text.append (a_error)
+			text.append ("%R%N")
+			error_indices.extend (text.count)
+			update_output
+		end
+
+	add_warning (a_warning: STRING) is
+			-- Append warning `a_warning' to content of `output_text'.
+		require
+			non_void_warning: a_warning /= Void
+		do
+			warning_indices.extend (text.count)
+			text.append (a_warning)
+			text.append ("%R%N")
+			warning_indices.extend (text.count)
+			update_output
+		end
+
+	add_message (a_message: STRING) is
+			-- Append message `a_message' to content of `output_text'.
+		require
+			non_void_message: a_message /= Void
+		do
+			text.append (a_message)
+			text.append ("%R%N")
+			update_output
+		end
+				
+	add_text (a_text: STRING) is
+			-- Append text `a_text' to content of `output_text'.
+		require
+			non_void_text: a_text /= Void
+		do
+			text.append (a_text)
+			update_output
+		end
+	
+	update_output is
+			-- Append `a_text' to content of `output_text' using format `a_format'.
+		local
+			l_visible_lines, i, l_index: INTEGER
+			l_displayed_text: STRING
+		do
+			l_visible_lines := output_text.visible_lines_count
+			from
+				l_index := text.count
+			until
+				i >= l_visible_lines or l_index <= 0
+			loop
+				l_index := text.last_index_of ('%N', l_index) - 1
+				i := i + 1
+			end
+			if l_index > 0 then
+				l_displayed_text := text.substring (text.count.min (l_index + 2), text.count)
+			else
+				l_displayed_text := text
+			end
+			output_text.set_text (l_displayed_text)
+		end
+
+	set_output is
+			-- Set content of `output_text' with `text'
+		do
+			output_text.set_text (text)
+			output_text.scroll_to_line (output_text.line_count - output_text.visible_lines_count)
+		end
+		
 	eiffelstudio_command (a_folder: STRING): STRING is
 			-- Launch EiffelBench with first project in `a_folder'
 		require
@@ -326,6 +399,36 @@ feature {NONE} -- Implementation
 				Result := Void
 			end
 		end
+
+feature {NONE} -- Private Access
+
+	text: STRING
+			-- Output text
+
+	title_indices: ARRAYED_LIST [INTEGER]
+			-- Array of title indices
+	
+	warning_indices: ARRAYED_LIST [INTEGER]
+			-- Array of warning indices
+	
+	error_indices: ARRAYED_LIST [INTEGER]
+			-- Array of error indices
+	
+	output_text: WIZARD_TEXT
+			-- Output text
+
+	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
+			-- Default parent for creation of `rich_text'
+		once
+			create Result.make_top ("Output")
+		ensure
+			valid_parent: Result /= Void
+		end
+
+invariant
+	valid_title_indices: title_indices /= Void implies title_indices.count \\ 2 = 0
+	valid_warning_indices: warning_indices /= Void implies warning_indices.count \\ 2 = 0
+	valid_error_indices: error_indices /= Void implies error_indices.count \\ 2 = 0
 
 end -- class WIZARD_OUTPUT_BOX
 

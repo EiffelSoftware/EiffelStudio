@@ -110,6 +110,7 @@ feature {NONE} -- Commands
 					filter.clear
 					create l_parser.make					
 					l_parser.set_callbacks (standard_callbacks_pipe (<<filter>>))
+					l_parser.set_string_mode_mixed
 					l_parser.parse_from_string (text)
 					check
 						ok_parsing: l_parser.is_correct
@@ -132,9 +133,8 @@ feature {NONE} -- Implementation
 		do
 			if True then
 					-- TODO: put options here for custom xml formatting
-				xml.add_custom_elements
-				Result := xml.text.twin
-				--xml.remove_custom_elements														
+				xml.pre_process
+				Result := xml.text.twin												
 			else
 				Result := xml.text
 			end

@@ -5,7 +5,7 @@ inherit
 		redefine
 			transfer_to, duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
-			is_require_else, is_procedure, argument_names, arguments,
+			is_require_else, is_procedure, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
 		end
@@ -78,12 +78,6 @@ feature
 			obsolete_message := s;
 		end;
 
-	argument_names: EIFFEL_LIST [ID_AS] is
-			-- Argument names
-		do
-			Result := arguments.argument_names;
-		end;
-
 	duplicate_arguments is
 			-- Do a clone of the arguments (for replication)
 		do
@@ -123,7 +117,7 @@ feature
 			i, j, count, dec_count, nb_arg: INTEGER;
 			arg_type: TYPE;
 			arg_dec: TYPE_DEC_AS;
-			id_list: EIFFEL_LIST [ID_AS];
+			id_list: ARRAYED_LIST [INTEGER];
 		do
 				-- Calculate the number of arguments.
 			from

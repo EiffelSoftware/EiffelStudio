@@ -63,7 +63,6 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			-- Nothing to perform here.
 			execution_agents.put (agent set_pixmapable_constant, pixmap_path_string)
 		end
 

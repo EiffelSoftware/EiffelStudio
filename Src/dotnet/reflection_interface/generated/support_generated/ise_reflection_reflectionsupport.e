@@ -92,6 +92,13 @@ feature -- Basic Operations
 			"AssembliesFolderPath"
 		end
 
+	Key: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
+		alias
+			"Key"
+		end
+
 	XmlTypeFilename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; type_full_external_name: STRING): STRING is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor, System.String): System.String use ISE.Reflection.ReflectionSupport"

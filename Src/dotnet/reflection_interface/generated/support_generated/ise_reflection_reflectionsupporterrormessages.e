@@ -20,13 +20,6 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	HashValueComputationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
-		alias
-			"HashValueComputationFailed"
-		end
-
 	NoAssemblyDescriptionMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
@@ -34,11 +27,18 @@ feature -- Basic Operations
 			"NoAssemblyDescriptionMessage"
 		end
 
-	NoTypeDescriptionMessage: STRING is
+	HashValueComputationFailed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"NoTypeDescriptionMessage"
+			"HashValueComputationFailed"
+		end
+
+	NoTypeDescription: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
+		alias
+			"NoTypeDescription"
 		end
 
 	NoAssemblyDescription: STRING is
@@ -48,11 +48,11 @@ feature -- Basic Operations
 			"NoAssemblyDescription"
 		end
 
-	NoTypeDescription: STRING is
+	NoTypeDescriptionMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"NoTypeDescription"
+			"NoTypeDescriptionMessage"
 		end
 
 	HashValueComputationFailedMessage: STRING is

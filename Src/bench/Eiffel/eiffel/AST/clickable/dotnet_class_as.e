@@ -208,17 +208,25 @@ feature {NONE} -- Initialization
 			-- Set all constrcutor for the .NET class.
 		require
 			a_consumed_not_void: a_consumed /= Void
+		local
+			i, nb: INTEGER
+			l_constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 		do
-			create constructors.make (5)
-			if not a_consumed.constructors.is_empty then
+			l_constructors := a_consumed.constructors
+			if l_constructors = Void or else l_constructors.is_empty then
+				create constructors.make (0)
+			else
 				from
-					loop_counter := 1
+					i := 1
+					nb := l_constructors.count
+					create constructors.make (nb)
 				until
-					loop_counter > a_consumed.constructors.count
+					i > nb
 				loop
-					constructors.extend (a_consumed.constructors.item (loop_counter))
-					loop_counter := loop_counter + 1
+					constructors.extend (l_constructors.item (i))
+					i := i + 1
 				end
+				loop_counter := i
 			end
 		ensure
 			constructors_set: constructors /= Void
@@ -230,23 +238,37 @@ feature {NONE} -- Initialization
 			a_consumed_not_void: a_consumed /= Void
 		local
 			l_c_parent: CONSUMED_REFERENCED_TYPE
+			l_interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
+			i, nb: INTEGER
 		do
-			create ancestors.make (5)
-			if a_consumed.parent /= Void then
-				ancestors.extend (a_consumed.parent)
-			end
-			if not a_consumed.interfaces.is_empty then
+			l_interfaces := a_consumed.interfaces
+			if l_interfaces = Void or else l_interfaces.is_empty then
+				if a_consumed.parent /= Void then
+					create ancestors.make (1)
+					ancestors.extend (a_consumed.parent)
+				else
+					create ancestors.make (0)
+				end
+			else
+				nb := a_consumed.interfaces.count
+				if a_consumed.parent /= Void then
+					create ancestors.make (nb + 1)
+					ancestors.extend (a_consumed.parent)
+				else
+					create ancestors.make (nb)
+				end
 				from
-					loop_counter := 1
+					i := 1
 				until
-					loop_counter > a_consumed.interfaces.count
+					i > nb
 				loop
-					l_c_parent ?= a_consumed.interfaces.item (loop_counter)
+					l_c_parent := l_interfaces.item (i)
 					if l_c_parent /= Void then
 						ancestors.extend (l_c_parent)
 					end
-					loop_counter := loop_counter + 1
+					i := i + 1
 				end
+				loop_counter := i
 			end
 		ensure
 			ancestors_set: ancestors /= Void

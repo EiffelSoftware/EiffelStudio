@@ -104,6 +104,7 @@ feature -- Settings
 					if elsif_list = Void and else_part = Void then
 						create {INSTR_LIST_B} Result.make (null_byte_node)
 					elseif elsif_list = Void then
+							-- Here we are guaranteed that `else_part' is not Void.
 						else_part.enlarge_tree
 						create {INSTR_LIST_B} Result.make (else_part)
 					else
@@ -153,7 +154,10 @@ feature -- Settings
 							if not elsif_list.is_empty then
 								l_if_b.set_elsif_list (elsif_list)
 							end
-							else_part.enlarge_tree
+							if else_part /= Void then
+									-- Can be Void. Check eweasel test term125.
+								else_part.enlarge_tree
+							end
 							l_if_b.set_else_part (else_part)
 							Result := l_if_b
 						else

@@ -75,7 +75,7 @@ feature -- Element change
 			a: ANY
 		do
 			a := a_string.to_c
-			c_strcpy (item, $a)
+			memory_copy ($a, a_string.count + 1)
 		ensure
 			string_set: a_string.is_equal (a_string)
 		end
@@ -86,16 +86,6 @@ feature -- Measurement
 			-- String length
 		do
 			Result := capacity
-		end
-
-feature {NONE} -- Externals
-
-	c_strcpy (destination_ptr, source_ptr: POINTER) is
-			-- C strcpy
-		external
-			"C [macro <string.h>] (char *, char *)"
-		alias
-			"strcpy"
 		end
 
 invariant

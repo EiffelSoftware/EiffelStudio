@@ -1641,7 +1641,7 @@ feature -- PS
 				loop
 					a_clickable.put_string (arguments.argument_names.i_th (arguments.position));
 					a_clickable.put_string (": ");
-					a_clickable.put_string (arguments.item.actual_type.dump);
+					arguments.item.actual_type.append_clickable_signature (a_clickable);
 					arguments.forth;
 					if not arguments.offright then
 						a_clickable.put_string (", ")
@@ -1651,7 +1651,7 @@ feature -- PS
 			end;
 			if not type.is_void then
 				a_clickable.put_string (": ");
-				a_clickable.put_string (type.dump)
+				type.append_clickable_signature (a_clickable);
 			end;
 			end;
 		rescue

@@ -46,18 +46,22 @@ feature
 			last_unit := item (t);
 			if (last_unit = Void) then
 				counter := counter + 1;
-io.error.putstring ("New item at position ");
-io.error.putint (counter);
-io.error.new_line;
+debug ("REFREEZING")
+	io.error.putstring ("New item at position ");
+	io.error.putint (counter);
+	io.error.new_line;
+end;
 				search_table_put (t);
 				t.set_index (counter);
 				last_unit := t;
-else
+			else
+debug ("REFREEZING")
 	io.error.putstring ("Item already in table%NNew type: ");
 	io.error.putstring (t.generator);
 	io.error.new_line;
 	io.error.putstring (last_unit.generator);
 	io.error.new_line;
+end;
 			end;
 		end;
 
@@ -91,16 +95,18 @@ feature {CENTRAL_TABLE,  SYSTEM_I} -- Shake the table
 				-- The precompiled units are kept anyway
 				-- (`melt_all' can make some units unvalid but they
 				-- MUST be kept in the table)
-io.error.putstring ("SHAKE (");
-io.error.putstring (generator);
-io.error.putstring (")%N");
-io.error.putstring ("Frozen level: ");
-io.error.putint (frozen_level);
-io.error.new_line;
-io.error.putstring ("Precomp level: ");
-io.error.putint (precomp_level);
-io.error.new_line;
-display_useless_ids;
+debug ("REFREEZING")
+	io.error.putstring ("SHAKE (");
+	io.error.putstring (generator);
+	io.error.putstring (")%N");
+	io.error.putstring ("Frozen level: ");
+	io.error.putint (frozen_level);
+	io.error.new_line;
+	io.error.putstring ("Precomp level: ");
+	io.error.putint (precomp_level);
+	io.error.new_line;
+	display_useless_ids;
+end;
 			from
 				start
 			until
@@ -137,11 +143,13 @@ display_useless_ids;
 				then
 						-- Moving the unit
 					new_index := useless_ids.first;
-io.error.putstring ("Moving ");
-io.error.putint (unit_index);
-io.error.putstring (" to ");
-io.error.putint (new_index);
-io.error.new_line;
+debug ("REFREEZING")
+	io.error.putstring ("Moving ");
+	io.error.putint (unit_index);
+	io.error.putstring (" to ");
+	io.error.putint (new_index);
+	io.error.new_line;
+end;
 					useless_ids.remove_all_occurrences (new_index);
 					useless_ids.add (unit_index);
 					u.set_index (new_index);
@@ -174,12 +182,14 @@ display_useless_ids;
 				end;
 			end;
 
-display_useless_ids;
 				-- Reset the value of counter
 			counter := frozen_level;
-io.error.putstring ("Frozen level: ");
-io.error.putint (counter);
-io.error.new_line;
+debug ("REFREEZING")
+	display_useless_ids;
+	io.error.putstring ("Frozen level: ");
+	io.error.putint (counter);
+	io.error.new_line;
+end;
 		end;
 
 feature {NONE} -- Keep track of the holes in the table

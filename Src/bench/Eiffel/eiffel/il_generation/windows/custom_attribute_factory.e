@@ -114,6 +114,8 @@ feature {IL_CODE_GENERATOR} -- Generation
 				param := cb.call.parameters
 				if param /= Void then
 					count := param.count
+				else
+					count := 0
 				end
 
 					-- Start initialization of custom attribute.

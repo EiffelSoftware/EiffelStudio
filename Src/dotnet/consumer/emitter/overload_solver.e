@@ -78,7 +78,7 @@ feature -- Basic Operations
 			name, type: STRING
 			i, index, param_count: INTEGER
 			is_unique, same_param_count: BOOLEAN
-			
+			l_dotnet_name: STRING
 			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
 			from
@@ -107,8 +107,12 @@ feature -- Basic Operations
 				loop
 					method := method_list.item
 					same_param_count := same_param_count and method.arguments.count = param_count
+					l_dotnet_name := method.dotnet_name
+					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
+					end
 					from
-						name := formatted_feature_name (method.dotnet_name)
+						name := formatted_feature_name (l_dotnet_name)
 						is_unique := is_unique_signature (method, method_list, 0)
 						i := 1
 					until
@@ -129,8 +133,12 @@ feature -- Basic Operations
 					method_list.forth
 				end
 				if same_param_count then
+					l_dotnet_name := method.dotnet_name
+					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
+					end
 					from
-						name := formatted_feature_name (first_method.dotnet_name)
+						name := formatted_feature_name (l_dotnet_name)
 						i := 1
 					until
 						i > param_count
@@ -142,7 +150,11 @@ feature -- Basic Operations
 					end
 					first_method.set_eiffel_name (unique_feature_name (name))
 				else
-					first_method.set_eiffel_name (unique_feature_name (first_method.dotnet_name))
+					l_dotnet_name := first_method.dotnet_name
+					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
+					end
+					first_method.set_eiffel_name (unique_feature_name (l_dotnet_name))
 				end
 				method_table.forth
 			end

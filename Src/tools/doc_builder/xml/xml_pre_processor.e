@@ -43,6 +43,9 @@ feature -- Commands
 			if preferences.process_footer then
 				insert_footer
 			end
+			if preferences.include_navigation_links then
+				insert_navigation_links
+			end
 		end		
 
 feature {NONE} -- Processing
@@ -122,7 +125,78 @@ feature {NONE} -- Processing
 				end
 			end
 		end		
-	
+		
+	insert_navigation_links is
+			-- Insert project navigation links
+		local
+			l_toc: TABLE_OF_CONTENTS
+			l_node,
+			l_parent: TABLE_OF_CONTENTS_NODE
+			l_no_higher: BOOLEAN
+			l_links_xml,
+			l_link_xml,
+			l_label,
+			l_url,
+			l_separator: STRING		
+			l_xm_parent, l_xm_link, l_xm_label, l_xm_url: XM_ELEMENT
+			l_doc_link: DOCUMENT_LINK
+		do
+			l_toc := shared_constants.help_constants.toc
+			if l_toc /= Void then
+					-- Get node matching document
+				l_node := l_toc.node_by_url (internal_xml.name)
+				if l_node /= Void then
+					
+						-- Determine element in which to put link xml
+					l_xm_parent := internal_xml.element_by_name ("document")
+					if l_xm_parent /= Void then
+						l_xm_parent := l_xm_parent.element_by_name ("paragraph").element_by_name ("span").element_by_name ("table").elements.item (2).elements.item (2)
+					end
+					
+					if l_node.url /= Void then
+						create l_doc_link.make (l_node.url.twin, l_node.url.twin)
+					end
+											
+					from					
+						l_separator := " &gt; "
+						l_parent := l_node.parent
+					until
+						l_parent = Void
+					loop
+							-- Take parent information of node recursively and build XML link
+						if l_parent.title /= Void then							
+							l_label := l_parent.title.twin	
+						end
+						if l_parent.url /= Void then
+							if l_doc_link /= Void then
+								l_doc_link.set_url (l_parent.url.twin)
+								l_url := l_doc_link.relative_url
+							end
+						end
+						l_node := l_parent
+						l_parent := l_node.parent
+						if l_label /= Void then
+							create l_xm_link.make_child (l_xm_parent, "link", Void)
+							create l_xm_label.make_child (l_xm_link, "label", Void)							
+							l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, l_label))
+							l_xm_link.put_first (l_xm_label)
+							if l_url /= Void then
+								create l_xm_url.make_child (l_xm_link, "url", Void)
+								l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, l_url))
+								l_xm_link.put_first (l_xm_url)								
+							end
+							if l_parent /= Void then								
+								l_xm_parent.put_first (l_xm_link)	
+								if l_parent.parent /= Void then
+									l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
+								end
+							end
+						end					
+					end
+				end
+			end
+		end		
+
 feature {NONE} -- Implementation
 
 	internal_xml: DOCUMENT_XML

@@ -12,6 +12,8 @@ inherit
 		redefine
 			object, display_object, is_full
 		end
+		
+	GB_PARENT_OBJECT
 
 	GB_SHARED_TOOLS
 	
@@ -37,7 +39,7 @@ feature -- Access
 
 feature -- Basic operations
 		
-	add_child_object (an_object: GB_OBJECT) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
 		require
 			object_empty: object.is_empty

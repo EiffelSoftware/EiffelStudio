@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 	interface_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE177-D98D-4CF5-8247-C33186E0C22A") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE160-8346-4145-B994-9677FA8E275A") end
 
 deferred class
 	I_COM_CACHE_MANAGER

@@ -99,7 +99,6 @@ feature {NONE} -- Initialization
 			internal_minimum_height := -1
 			
 			initialize_events	
-			set_default_colors
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
@@ -320,18 +319,12 @@ feature -- Status report
 			-- See also `is_displayed'.
 		do
 			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
-			check
-				Result = (((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)// feature {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM) \\ 2) = 1)
-			end
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
 			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
-			check
-				Result = ((((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)// feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)) = 1)
-			end
 		end
 
 	has_focus: BOOLEAN is
@@ -344,12 +337,6 @@ feature -- Status report
 			-- Has capture?
 		do
 			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
-			check
-				Result = (((
-					(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)
-					// feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM) \\ 2)
-				) = 1)
-			end
 		end
 
 feature -- Status setting

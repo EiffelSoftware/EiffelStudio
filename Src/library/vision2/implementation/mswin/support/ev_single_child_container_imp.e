@@ -120,6 +120,26 @@ feature -- Basic operations
 			end
 		end
 
+feature {EV_ANY_I} -- WEL Implementation
+
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+			-- Is the control of handle `hwnd_control'
+			-- located inside the current window?
+		local
+			hwnd_current: POINTER
+		do
+			hwnd_current := wel_item
+			if hwnd_control = hwnd_current then
+				Result := True
+			else
+				if item_imp /= Void then
+					Result := item_imp.is_control_in_window (hwnd_control)
+				else
+					Result := False
+				end
+			end
+		end
+
 feature -- Obsolete
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -180,6 +200,11 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/01 19:33:24  pichery
+--| Added feature `is_control_in_window' used
+--| to determine if a certain control is contained
+--| inside the current window.
+--|
 --| Revision 1.12  2000/04/28 23:38:55  brendel
 --| Improved all features in obsolete clause (My idea of a good time.)
 --|

@@ -100,7 +100,6 @@ feature -- Access
 			-- Cursor used currently on the widget.
 		do
 			if cursor_imp = Void then
---				!! Result.make
 				Result := Void
 			else
 				Result ?= cursor_imp.interface
@@ -144,7 +143,7 @@ feature -- Access
 	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
 			-- A default parent for creation of the widgets.
 		once
-			!! Result.make_top ("Eiffel Vision default parent window")
+			create Result.make_top ("Eiffel Vision default parent window")
 		ensure
 			valid_parent: Result /= Void
 		end
@@ -152,7 +151,7 @@ feature -- Access
 	focus_on_widget: CELL [EV_WIDGET_IMP] is
 			-- Widget that has currently the focus.
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
@@ -162,7 +161,7 @@ feature -- Access
 			-- it is used for the `mouse_enter' and `mouse_leave'
 			-- events.
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -745,6 +744,12 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Deferred features
 
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+			-- Is the control of handle `hwnd_control'
+			-- located inside the current window?
+		deferred
+		end
+
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		deferred
@@ -901,6 +906,11 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/05/01 19:33:59  pichery
+--| Added feature `is_control_in_window' used
+--| to determine if a certain control is contained
+--| inside the current window.
+--|
 --| Revision 1.69  2000/04/29 03:21:26  pichery
 --| Removed Constants from inheritance
 --|

@@ -108,7 +108,7 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+--				constant_context: GB_CONSTANT_CONTEXT
 		do
 --			Constants.remove_constant (internal_constant)
 --			editors := all_editors

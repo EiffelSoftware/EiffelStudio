@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Initialize `text_buffer' events
 		do
 			Precursor {EV_TEXT_IMP}
-			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), Void)
 		end
 
 	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is

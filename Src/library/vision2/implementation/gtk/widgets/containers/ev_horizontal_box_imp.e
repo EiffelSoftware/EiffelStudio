@@ -56,6 +56,9 @@ feature {EV_BOX} -- Implementation
 			    child_imp.expandable,
 			    child_imp.vertical_resizable, 0)
 
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
+
 			gtk_object_unref (child_imp.widget)
 				-- After putting child_imp.widget in child_imp.box_widget
 				-- its number of references reached 2, so we have to

@@ -33,9 +33,13 @@ feature {AST_FACTORY} -- Initialization
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
+		local
+			l_int: INTEGER
 		do
 			make (s.count)
 			append_string (s)
+				-- Force computation of `hash_code' so that it gets stored in AST.
+			l_int := hash_code
 		end
 
 feature -- Visitor
@@ -115,9 +119,13 @@ feature -- Conveniences
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences
 
 	load (s: STRING) is
+		local
+			l_int: INTEGER
 		do
 			wipe_out
 			append (s)
+				-- Force computation of `hash_code' so that it gets stored in AST.
+			l_int := hash_code
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -605,9 +605,29 @@ end;
 		end;
 
 	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
-			-- Feature found in routine table rout_id
+			-- Feature with routine ID `rout_id'.
+		require
+			valid_rout_id: rout_id > 0
 		do
 			Result := origin_table.item (rout_id)
+		end
+
+	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I is
+			-- Feature with routine ID `rout_id'.
+		require
+			rout_id_set_not_void: rout_id_set /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := rout_id_set.count
+			until
+				i > nb or Result /= Void
+			loop
+				Result := origin_table.item (rout_id_set.item (i))
+				i := i + 1
+			end
 		end
 
 	update_instantiator2 is

@@ -127,27 +127,25 @@ feature
 			Result := body_id.feature_name (class_type.id)
 		end;
 
-	generate_declaration (file: INDENT_FILE) is
+	generate_declaration (buffer: GENERATION_BUFFER) is
 			-- Generate external declaration for the compound routine
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: buffer /= Void;
 		do
-			file.putstring ("extern ");
-			type.generate (file);
-			file.putstring (compound_name);
-			file.putstring ("();%N");
+			buffer.putstring ("extern ");
+			type.generate (buffer);
+			buffer.putstring (compound_name);
+			buffer.putstring ("();%N");
 		end;
 
-	generate (file: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generate compound pointer
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: buffer /= Void;
 		do
-			file.putstring ("(fnptr) ");
-			file.putstring (compound_name);
-			file.putstring (",%N");
+			buffer.putstring ("(fnptr) ");
+			buffer.putstring (compound_name);
+			buffer.putstring (",%N");
 		end;
 
 feature -- Debug

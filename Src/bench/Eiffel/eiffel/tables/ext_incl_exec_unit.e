@@ -26,7 +26,7 @@ feature
 			include_list := deep_clone (f.include_list)
 		end
 
-	generate_declaration (file: INDENT_FILE) is
+	generate_declaration (buffer: GENERATION_BUFFER) is
 		local
 			i, n: INTEGER;
 			include_set: LINKED_SET[STRING]

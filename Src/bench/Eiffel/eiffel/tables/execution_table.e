@@ -111,11 +111,10 @@ end
 			write_int (file.file_pointer, -1)
 		end
 
-	generate (file: INDENT_FILE) is
-			-- Generate the frozen execution table in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate the frozen execution table in `buffer'.
 		require
-			good_argument: file /= Void
-			is_open: file.is_open_write
+			good_argument: buffer /= Void
 		local
 			values: ARRAY [EXECUTION_UNIT]
 			unit: EXECUTION_UNIT
@@ -139,7 +138,7 @@ end
 				!! include_set.make
 				include_set.compare_objects
 				i := 1
-				file.putstring ("#include %"eif_project.h%"%N%
+				buffer.putstring ("#include %"eif_project.h%"%N%
 								%#include %"eif_macros.h%"%N%
 								%#include %"eif_struct.h%"%N%N")
 			until
@@ -147,7 +146,7 @@ end
 			loop
 				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate_declaration (file)
+					unit.generate_declaration (buffer)
 				end
 				i := i + 1
 			end
@@ -161,39 +160,39 @@ end
 			until
 				include_set.after
 			loop
-				file.putstring ("#include ")
-				file.putstring (include_set.item)
+				buffer.putstring ("#include ")
+				buffer.putstring (include_set.item)
 
-				file.putstring ("%N%N")
+				buffer.putstring ("%N%N")
 				include_set.forth
 			end
 			include_set := Void
 
 			from
-				file.new_line
+				buffer.new_line
 				!!temp.make (0)
 				i := 1
 				temp.append ("%Nint egc_fpatidtab_init[] = {%N")
-				file.putstring ("fnptr egc_frozen_init[] = {%N")
+				buffer.putstring ("fnptr egc_frozen_init[] = {%N")
 			until
 				i > nb
 			loop
 				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate (file)
+					unit.generate (buffer)
 					temp.append_integer (unit.real_pattern_id)
 					temp.append (",%N")
 				else
-					file.putstring ("(char *(*)()) 0,%N")
+					buffer.putstring ("(char *(*)()) 0,%N")
 					temp.append ("-1,%N")
 				end
 				i := i + 1
 			end
-			file.putstring ("};%N")
+			buffer.putstring ("};%N")
 			temp.put ('%N', temp.count - 1)
 			temp.put ('}', temp.count)
 			temp.append (";%N")
-			file.putstring (temp)
+			buffer.putstring (temp)
 		end
 
 feature {EXT_INCL_EXEC_UNIT} -- Include set

@@ -193,11 +193,15 @@ feature -- Properties
 			Result := 1
 		end
 
-	freeze_set1: LINKED_SET [CLASS_ID]
+	melted_set: LINKED_SET [CLASS_C]
+			-- Set of class ids for which feature table needs to be updated
+			-- when melting
+
+	freeze_set1: LINKED_SET [CLASS_C]
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
 
-	freeze_set2: LINKED_SET [CLASS_ID]
+	freeze_set2: LINKED_SET [CLASS_C]
 			-- List of class ids for which a hash table recompilation
 			-- is needed when freezing
 
@@ -209,10 +213,6 @@ feature -- Properties
 			-- table.
 			--| Once melted, it is kept in memory so it won't be re-processed
 			--| each time
-
-	melted_set: LINKED_SET [CLASS_ID]
-			-- Set of class ids for which feature table needs to be updated
-			-- when melting
 
 	frozen_level: INTEGER
 			-- Frozen level
@@ -322,9 +322,7 @@ feature -- Properties
 
 				-- Freeze control sets creation
 			!! freeze_set1.make
-			freeze_set1.compare_objects
 			!! freeze_set2.make
-			freeze_set2.compare_objects
 
 				-- Body index table creation
 			!! body_index_table.make (System_chunk)
@@ -334,7 +332,6 @@ feature -- Properties
 			!! dispatch_table.make
 			!! execution_table.make
 			!! melted_set.make
-			melted_set.compare_objects
 			!! rout_info_table.make (500)
 			!! onbidt.make (50)
 			!! optimization_tables.make
@@ -433,10 +430,10 @@ feature -- Properties
 			-- Protected classes are GENERAL, ANY, DOUBLE, REAL,
 			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING
 
-	insert_new_class (c: CLASS_C) is
+	insert_new_class (a_class: CLASS_C) is
 			-- Add new class `c' to the system.
 		require
-			good_argument: c /= Void
+			good_argument: a_class /= Void
 		local
 			new_id: CLASS_ID
 		do
@@ -446,19 +443,19 @@ feature -- Properties
 				new_id := class_counter.next_id
 			end
 				-- Give a compiled class a frozen id
-			c.set_id (new_id)
+			a_class.set_id (new_id)
 debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ")
-io.error.putstring (c.name)
+io.error.putstring (a_class.name)
 new_id.trace
 io.error.new_line
 end
 
 				-- Give a class id to class `c' which maybe changed 
 				-- during the topological sort of a recompilation.
-			c.set_topological_id (new_id.id)
+			a_class.set_topological_id (new_id.id)
 				-- Insert the class
-			classes.put (c, new_id)
+			classes.put (a_class, new_id)
 
 				-- Update control flags of the topological sort
 			moved := True
@@ -468,13 +465,13 @@ end
 				-- included in `freeze_set1' after the second pass and so
 				-- not been generated. (we need a source file even if the
 				-- class is empty in terms of features written in it.).
-			freeze_set1.put (new_id)
-			freeze_set2.put (new_id)
+			freeze_set1.put (a_class)
+			freeze_set2.put (a_class)
 
-			melted_set.put (new_id)
+			melted_set.put (a_class)
 
 		ensure
-			class_id_set: c.id /= Void
+			class_id_set: a_class.id /= Void
 		end
 
 	record_new_class_i (a_class: CLASS_I) is
@@ -594,9 +591,9 @@ end
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
-				freeze_set1.prune (id)
-				freeze_set2.prune (id)
-				melted_set.prune (id)
+				freeze_set1.prune (a_class)
+				freeze_set2.prune (a_class)
+				melted_set.prune (a_class)
 				classes.remove (id)
 					-- Remove `id' from the set of dynamic class ids
 					-- when associated class is part of DC-set.
@@ -825,13 +822,13 @@ feature -- Recompilation
 		do
 			freezing_occurred := False
 
-			check_precompiled_licenses
-
 			If System.uses_precompiled then
+				check_precompiled_licenses
 					-- Validate the precompilation.
 				!! precomp_r
 				precomp_r.check_version_number
 			end
+
 			do_recompilation
 			successful := True
 		rescue
@@ -1030,10 +1027,9 @@ end
 					if a_class /= Void then
 						if
 							a_class.generics /= Void
-						and then
 							-- If the class is changed then `pass1' has been
 							-- done successfully on the class
-							not a_class.changed
+							and then not a_class.changed
 						then
 							a_class.check_generic_parameters
 						end
@@ -1356,7 +1352,7 @@ end
 			no_error: not Error_handler.has_error
 		local
 			a_class: CLASS_C
-			id_list: LINKED_LIST [CLASS_ID]
+			class_list: LINKED_LIST [CLASS_C]
 			i: INTEGER
 			deg_output: DEGREE_OUTPUT
 		do
@@ -1375,15 +1371,15 @@ end
 					-- Open first the file for writing on disk melted feature
 					-- tables
 				from
-					id_list := melted_set
-					i := id_list.count
+					class_list := melted_set
+					i := class_list.count
 					deg_output := Degree_output
 					deg_output.put_start_degree (1, i)
-					id_list.start
+					class_list.start
 				until
-					id_list.after
+					class_list.after
 				loop
-					a_class := class_of_id (id_list.item)
+					a_class := class_list.item
 						-- Verbose
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1394,7 +1390,7 @@ end
 					deg_output.put_degree_1 (a_class, i)
 					a_class.melt_feature_table
 					a_class.melt_descriptor_tables
-					id_list.forth
+					class_list.forth
 					i := i - 1
 				end
 				deg_output.put_end_degree
@@ -1502,8 +1498,7 @@ end
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
 		local
-			id_list: LINKED_LIST [CLASS_ID]
-			a_class: CLASS_C
+			class_list: LINKED_LIST [CLASS_C]
 			types: TYPE_LIST
 			nb_tables: INTEGER
 			feat_tbl: MELTED_FEATURE_TABLE
@@ -1512,21 +1507,19 @@ debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature tables%N")
 end
 				-- Count of feature tables to update
-			id_list := freeze_set2
 			from
-				id_list.start
+				class_list := freeze_set2
+				class_list.start
 			until
-				id_list.after
+				class_list.after
 			loop
-				a_class := class_of_id (id_list.item)
-
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T")
-	io.error.putstring (a_class.name)
+	io.error.putstring (class_list.item.name)
 	io.error.new_line
 end
-				nb_tables := nb_tables + a_class.nb_modifiable_types
-				id_list.forth
+				nb_tables := nb_tables + class_list.item.types.nb_modifiable_types
+				class_list.forth
 			end
 
 				-- Write the number of feature tables to update
@@ -1538,18 +1531,16 @@ end
 
 				-- Write then the byte code for feature tables to update.
 			from
-				id_list.start
+				class_list.start
 			until
-				id_list.after
+				class_list.after
 			loop
-				a_class := class_of_id (id_list.item)
-
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T")
-	io.error.putstring (a_class.name)
+	io.error.putstring (class_list.item.name)
 	io.error.new_line
 end
-				types := a_class.types
+				types := class_list.item.types
 				from
 					types.start
 				until
@@ -1567,7 +1558,7 @@ end
 					end
 					types.forth
 				end
-				id_list.forth
+				class_list.forth
 			end
 		end
 
@@ -1578,7 +1569,6 @@ end
 			file_open_write: file.is_open_write
 		local
 			class_id: CLASS_ID
-			a_class: CLASS_C
 			file_pointer: POINTER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -1594,17 +1584,15 @@ end
 				m_rout_id_server.after
 			loop
 				class_id := m_rout_id_server.key_for_iteration
-				a_class := class_of_id (class_id)
-
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ")
 class_id.trace
-io.error.putstring (a_class.name)
+io.error.putstring (class_of_id (class_id).name)
 io.error.new_line
 end
 				write_int (file_pointer, class_id.id)
 				m_rout_id_server.item (class_id).store (file)
-				types := a_class.types
+				types := class_of_id (class_id).types
 				from
 					types.start
 				until
@@ -1832,7 +1820,7 @@ feature -- Freeezing
 			root_class.compiled
 		local
 			a_class: CLASS_C
-			id_list: LINKED_LIST [CLASS_ID]
+			class_list: LINKED_LIST [CLASS_C]
 			i, nb: INTEGER
 			temp: STRING
 			descriptors: ARRAY [CLASS_ID]
@@ -1879,14 +1867,14 @@ end
 				-- Generation of the descriptor tables
 			if First_compilation then
 				from
-					id_list := freeze_set2
-					i := id_list.count
+					class_list := freeze_set2
+					i := class_list.count
 					deg_output.put_start_degree (-1, i)
-					id_list.start
+					class_list.start
 				until
-					id_list.after
+					class_list.after
 				loop
-					a_class := class_of_id (id_list.item)
+					a_class := class_list.item
 					deg_output.put_degree_minus_1 (a_class, i)
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1896,7 +1884,7 @@ end
 					a_class.generate_descriptor_tables
 
 					i := i - 1
-					id_list.forth
+					class_list.forth
 				end
 			else
 				from
@@ -1908,20 +1896,20 @@ end
 				loop
 					a_class := class_of_id (descriptors.item (i))
 					if a_class /= Void then
-						melted_set.put (a_class.id)
+						melted_set.put (a_class)
 					end
 					i := i + 1
 				end
 
 				from
-					id_list := melted_set
-					i := id_list.count
+					class_list := melted_set
+					i := class_list.count
 					deg_output.put_start_degree (-1, i)
-					id_list.start
+					class_list.start
 				until
-					id_list.after
+					class_list.after
 				loop
-					a_class := class_of_id (id_list.item)
+					a_class := class_list.item
 debug ("COUNT")
 	io.error.putstring ("[")
 	io.error.putint (i)
@@ -1932,7 +1920,7 @@ end
 						a_class.generate_descriptor_tables
 					end
 					i := i - 1
-					id_list.forth
+					class_list.forth
 				end
 			end
 			deg_output.put_end_degree
@@ -1941,15 +1929,15 @@ end
 			melted_set.wipe_out
 
 			from
-				id_list := freeze_set1
-				i := id_list.count
-				id_list.start
+				class_list := freeze_set1
+				i := class_list.count
+				class_list.start
 				deg_output.put_start_degree (-2, i)
 				open_log_files
 			until
-				id_list.after
+				class_list.after
 			loop
-				a_class := class_of_id (id_list.item)
+				a_class := class_list.item
 				deg_output.put_degree_minus_2 (a_class, i)
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1958,7 +1946,7 @@ debug ("COUNT")
 end
 				a_class.pass4
 
-				id_list.forth
+				class_list.forth
 				i := i - 1
 			end
 			deg_output.put_end_degree
@@ -1966,14 +1954,14 @@ end
 
 			if not Compilation_modes.is_precompiling then
 				from
-					id_list := freeze_set2
-					i := id_list.count
+					class_list := freeze_set2
+					i := class_list.count
 					deg_output.put_start_degree (-3, i)
-					id_list.start
+					class_list.start
 				until
-					id_list.after
+					class_list.after
 				loop
-					a_class := class_of_id (id_list.item)
+					a_class := class_list.item
 debug ("COUNT")
 	io.error.putstring ("[")
 	io.error.putint (i)
@@ -1985,7 +1973,7 @@ end
 						a_class.generate_feature_table
 					end
 
-					id_list.forth
+					class_list.forth
 					i := i - 1
 				end
 				deg_output.put_end_degree
@@ -2053,22 +2041,20 @@ end
 
 				-- Create an empty update file ("melted.eif")
 			make_update (True)
-
-			deg_output.put_end_degree
 		end
 
 	update_valid_body_ids is
 		local
-			id_list: LINKED_LIST [CLASS_ID]
+			class_list: LINKED_LIST [CLASS_C]
 		do
 			from
-				id_list := freeze_set1
-				id_list.start
+				class_list := freeze_set1
+				class_list.start
 			until
-				id_list.after
+				class_list.after
 			loop
-				class_of_id (id_list.item).update_valid_body_ids
-				id_list.forth
+				class_list.item.update_valid_body_ids
+				class_list.forth
 			end
 		end
 
@@ -2084,7 +2070,8 @@ end
 
 			update_valid_body_ids
 
-			shake_tables
+			execution_table.shake
+			dispatch_table.shake
 
 			from
 				execution_table.start
@@ -2115,10 +2102,7 @@ end
 		end
 
 	shake_tables is
-			-- Compress dispatch and execution tables.
 		do
-			execution_table.shake
-			dispatch_table.shake
 		end
 
 feature -- Final mode generation
@@ -2475,8 +2459,6 @@ feature -- Generation
 			if System.has_separate then
 				generate_only_separate_pattern_table
 			end
-
-			deg_output.put_end_degree
 		end
 
 	process_dynamic_types is
@@ -2929,7 +2911,7 @@ end
 				Extern_declarations.generate_header (f_name)
 				Extern_declarations.generate (f_name)
 				Extern_declarations.wipe_out
-				Cecil_file.putstring ("%Nstruct ctable fce_rname[] = {%N")
+				Cecil_file.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
 				from
 					i := 1
 					nb := Type_id_counter.value
@@ -2946,7 +2928,6 @@ end
 					i := i + 1
 				end
 				Cecil_file.putstring ("};%N")
-				Cecil_file.putstring ("struct ctable *egc_ce_rname_init = fce_rname;%N%N")
 
 				if System.has_separate then
 						-- Now, generate for Concurrent Eiffel

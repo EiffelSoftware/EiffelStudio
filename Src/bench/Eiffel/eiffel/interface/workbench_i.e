@@ -548,6 +548,7 @@ feature {E_PROJECT} -- Status update
 			-- Warn the interface that a new compilation is beginning.
 		do
 			is_compiling := True
+			Eiffel_universe.reset_internals
 			Eiffel_project.Manager.on_project_compiles
 		end
 

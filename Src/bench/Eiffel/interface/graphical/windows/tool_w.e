@@ -11,7 +11,6 @@ deferred class TOOL_W
 inherit
 
 	NAMER;
-	WINDOWS;
 	EB_CONSTANTS;
 	HOLE
 		export
@@ -832,7 +831,7 @@ feature {PROJECT_W} -- Implementation
 		require
 			valid_ed: ed /= Void;
 		do
-			-- If it not redefined the postcondition is still meet.
+			-- If it is not redefined the postcondition is still meet.
 		ensure
 			set: read_only_text_window = ed
 		end;

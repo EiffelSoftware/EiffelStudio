@@ -96,7 +96,7 @@ feature -- Initialization
 			export_set: EXPORT_SET_I
 			client_i: CLIENT_I
 		do
-			if clients.count = 1 and then ("none").is_equal (clients.first) then
+			if clients.count = 1 and then ("NONE").is_equal (clients.first) then
 			   Result := Export_none
 			else
 				create client_i
@@ -188,7 +188,7 @@ feature {AST_EIFFEL} -- Output
 				until
 					clients.after
 				loop
-					ctxt.put_class_name (clients.item.as_upper)
+					ctxt.put_class_name (clients.item)
 					clients.forth
 					if not clients.after then
 						ctxt.put_text_item_without_tabs (ti_Comma)

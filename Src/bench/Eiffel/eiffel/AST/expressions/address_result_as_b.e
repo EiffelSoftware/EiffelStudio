@@ -1,19 +1,15 @@
-class ADDRESS_RESULT_AS
+class ADDRESS_RESULT_AS_B
 
 inherit
 
-	EXPR_AS
+	ADDRESS_RESULT_AS;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format
 		end
-
-feature
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -32,11 +28,12 @@ feature -- Type check, byte code and dead code removal
 			!!Result.make (result_access);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Dollar);
 			ctxt.put_string ("Result");
 			ctxt.always_succeed;
 		end;
-end
+
+end -- class ADDRESS_RESULT_AS_B

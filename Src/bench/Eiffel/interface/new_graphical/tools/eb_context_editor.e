@@ -348,7 +348,7 @@ feature {NONE} -- Initialization
 				view_menu.extend (menu_item)
 				l_list.forth
 			end
-			view_menu.show
+			view_menu.show_at (view_menu_button, 0, view_menu_button.height)
 		end
 		
 	select_view (a_name: STRING) is

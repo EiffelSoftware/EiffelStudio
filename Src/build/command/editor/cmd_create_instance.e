@@ -18,40 +18,40 @@ feature {NONE}
 		do
 			cmd_instance := an_instance
 			execute (an_associated_command)
-		end;
+		end
 
-	cmd_instance: CMD_INSTANCE;
+	cmd_instance: CMD_INSTANCE
 
 	c_name: STRING is
 		do
 			Result := Command_names.cmd_create_instance_cmd_name
-		end;
+		end
 
 	command_work is
 		do
-		end;
+		end
 
 	redo is
 		local
-			command_tool: COMMAND_TOOL_TOP_SHELL
+			command_tool: COMMAND_TOOL
 		do
 			if not cmd_instance.edited then
-				command_tool := window_mgr.command_tool;
-				command_tool.set_instance (cmd_instance);
+				command_tool := window_mgr.command_tool
+				command_tool.set_instance (cmd_instance)
 				window_mgr.display (command_tool)
 			end
-		end;
+		end
 
 	undo is
 		do
 			if cmd_instance.edited then
 				cmd_instance.command_tool.close
-			end;
-		end;
+			end
+		end
 
 	worked_on: STRING is
 		do
 			Result := cmd_instance.label
-		end;
+		end
 
 end

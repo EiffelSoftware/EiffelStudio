@@ -1,4 +1,4 @@
-isciindexing
+indexing
 	description: "A data packet for sending and receiving on a socket.";
 	status: "See notice at end of class";
 	date: "$Date$";

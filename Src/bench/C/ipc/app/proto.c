@@ -12,7 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
-#include <stdio.h>		/* For error reports -- FIXME */
+#include "err_msg.h"
 #include <sys/types.h>
 #include <sys/signal.h>
 #include "request.h"
@@ -166,7 +166,7 @@ Request *rqst;		/* The request to be sent */
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
 #endif
-		fprintf(stderr, "cannot serialize request, %d\n", rqst->rq_type);
+		print_err_msg(stderr, "cannot serialize request, %d\n", rqst->rq_type);
 		esdie(1);
 	}
 
@@ -175,7 +175,7 @@ Request *rqst;		/* The request to be sent */
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 #endif
-		fprintf(stderr, "cannot send request\n");
+		print_err_msg(stderr, "cannot send request\n");
 		signal (SIGABRT, SIG_DFL);
 		signal (SIGQUIT, SIG_DFL);
 		abort ();

@@ -13,7 +13,7 @@
 
 #include "lace_y.h"
 #include "limits.h"
-/*#include <malloc.h>*/
+#include "err_msg.h"
 #include <ctype.h>
 
 /* private functions for lex */
@@ -102,7 +102,7 @@ int token_code;
 			token_str[i] = tolower(c);
 	}
 #ifdef GETDEBUG
-	fprintf(stderr,"Name = %s\n", token_str);
+	print_err_msg(stderr,"Name = %s\n", token_str);
 #endif
 
 	/* Check for a keyword */

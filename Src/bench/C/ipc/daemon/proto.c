@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "proto.h"
@@ -55,7 +56,7 @@ extern int errno;					/* System call error number */
 public void prt_init()
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE)) {
-		fprintf(stderr, "cannot initialize streams\n");
+		print_err_msg(stderr, "cannot initialize streams\n");
 		exit(1);
 	}
 }

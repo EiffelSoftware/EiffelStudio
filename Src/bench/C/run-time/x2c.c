@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "size.h"
+#include "err_msg.h"
 #include <stdio.h>
 #include <ctype.h>
 
@@ -20,6 +21,7 @@
 #else
 #include <strings.h>
 #endif
+
 
 long chroff(), lngoff(), fltoff(), ptroff(), dbloff(), remainder(), padding();
 long objsiz(), nextarg();
@@ -97,7 +99,7 @@ void main()
 			putchar(c);
 			continue;
 		} else {
-			fprintf(stderr, "x2c: impossible state.\n");
+			print_err_msg(stderr, "x2c: impossible state.\n");
 			exit(1);
 		}
 		if (!in_word) {
@@ -167,7 +169,7 @@ char *name;			/* Macro name (used only for error message) */
 	for (i = 0; i < n; i++) {
 		val = nextarg();
 		if (val == -1) {
-			fprintf(stderr,
+			print_err_msg(stderr,
 				"x2c: warning: macro %s has %d argument%s, expected %d\n",
 				name, i, i == 1 ? "" : "s", n);
 			for (; i < n; i++)

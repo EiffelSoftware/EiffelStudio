@@ -10,8 +10,8 @@
 		Routine for Lace syntax analysis
 */
 
-#include <stdio.h>
 #include "config.h"
+#include "err_msg.h"
 #include "lace_c.h"
 #include "hector.h"
 #include "plug.h"
@@ -122,7 +122,7 @@ char *filename;
 
 	if (cancel) {
 		rn_ast = (char *) 0;
-		fprintf(stderr, "Syntax analysis canceled\n");
+		print_err_msg(stderr, "Syntax analysis canceled\n");
 		exit(1);
 	}
 	return rn_ast;

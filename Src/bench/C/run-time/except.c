@@ -22,6 +22,7 @@
 #include "sig.h"				/* For signal description */
 #include "macros.h"
 #include "debug.h"
+#include "err_msg.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -1416,28 +1417,28 @@ public void esfail()
 	if (!print_history_table)
 		return;
 
+
 	/* Signals failure. If the out of memory flags are set, mention it */
-	fputc('\n', stderr);
-	fprintf(stderr, "%s: system execution failed.\n", ename);
-	fprintf(stderr, "Following is the set of recorded exceptions");
+	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);
+	print_err_msg(stderr, "Following is the set of recorded exceptions");
 	if (echmem & MEM_FSTK) {
-		fprintf(stderr,
+		print_err_msg(stderr,
 	".\nDue to a lack of memory, the sequence is incomplete near the end");
 	}
 	if (echmem & MEM_FULL) {
 		if (echmem & MEM_FSTK) {
-			fprintf(stderr,
+			print_err_msg(stderr,
 	".\nMoreover, an 'out of memory' may have led to an untrustworthy stack");
 		} else {
-			fprintf(stderr,
+			print_err_msg(stderr,
 	".\nHowever, an 'out of memory' occurred and might have spoilt the stack");
 		}
 	}
 	if (echmem & MEM_PANIC) {
-		fprintf(stderr,
+		print_err_msg(stderr,
 ".\nNB: The raised panic may have induced completely inconsistent information");
 	}
-	fprintf(stderr, ":\n\n");
+	print_err_msg(stderr, ":\n\n");
 
 	echmem |= MEM_PANIC;		/* Backtrack won't attempt any longjmp */
 	(void) backtrack();			/* Unwind the whole stack */
@@ -1505,11 +1506,11 @@ char *msg;
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
 	if (done++) {
-		fprintf(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n",
+		print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n",
 			ename, msg);
 		exit(2);
 	} else
-		fprintf(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+		print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
 
 	/* If we are already in panic mode, ouch... We've been printing our message
 	 * on stderr, and something really weird must be happening, but there is
@@ -1526,7 +1527,7 @@ char *msg;
 	}
 	echtg = msg;					/* Associated tag */
 	esfail();						/* Raise system failure and stack dump */
-	fputc('\n', stderr);			/* Skip one line */
+	print_err_msg(stderr, "\n");	/* Skip one line */
 	dump_core();					/* Before dumping a core */
 	/* NOTREACHED */
 }
@@ -1551,11 +1552,11 @@ char *msg;
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
 	if (done++) {
-		fprintf(stderr, "\n%s: FATAL CASCADE: %s -- Giving up...\n",
+		print_err_msg(stderr, "\n%s: FATAL CASCADE: %s -- Giving up...\n",
 			ename, msg);
 		exit(2);
 	} else
-		fprintf(stderr, "\n%s: FATAL: %s ...\n", ename, msg);
+		print_err_msg(stderr, "\n%s: FATAL: %s ...\n", ename, msg);
 
 	/* If we are already in fatal mode, ouch... We've been printing our message
 	 * on stderr, and something really weird must be happening, but there is
@@ -1593,7 +1594,7 @@ private void dump_core()
 	signal(ABORTSIG, SIG_DFL);	/* Make sure abort() will dump a core */
 
 	/* Stdout has already been flushed */
-	fprintf(stderr, "%s: dumping core to generate debugging information...\n",
+	print_err_msg(stderr, "%s: dumping core to generate debugging information...\n",
 		ename);
 	if (-1 == abort()) {
 		perror("Failed");
@@ -1730,10 +1731,10 @@ private void dump_trace_stack()
 	eif_trace.st_cur = eif_trace.st_hd;				/* Is now where bottom is */
 
 	/* Print header of history table */
-	fprintf(stderr, "%s\n", failed);
-	fprintf(stderr, "%-19.19s %-22.22s %-29.29s %-6.6s\n",
+	print_err_msg(stderr, "%s\n", failed);
+	print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s %-6.6s\n",
 		"Class / Object", "Routine", "Nature of exception", "Effect");
-	fprintf(stderr, "%s\n", failed);
+	print_err_msg(stderr, "%s\n", failed);
 
 	/* Print body of history table. A little look-ahead is necessary, in order
 	 * to give meaningful routine names and effects (retried, rescued, failed).
@@ -1770,11 +1771,11 @@ register1 int level;
 			(void) exnext();			/* Skip pseudo-vector "New level" */
 			if (exend())
 				return;					/* Exit if at the end of the stack */
-			fprintf(stderr, branch_enter, trace->ex_lvl);
-			fprintf(stderr, "\n%s\n", failed);
+			print_err_msg(stderr, branch_enter, trace->ex_lvl);
+			print_err_msg(stderr, "\n%s\n", failed);
 			recursive_dump(level + 1);	/* Dump the new level */
-			fprintf(stderr, branch_exit, level);
-			fprintf(stderr, "\n%s\n", failed);
+			print_err_msg(stderr, branch_exit, level);
+			print_err_msg(stderr, "\n%s\n", failed);
 			find_call();				/* Restore global exception structure */
 			break;
 		case EN_OLVL:					/* Exiting a level */
@@ -1860,10 +1861,10 @@ private void print_top()
 		buf[0] = '\0';
 
 	if (except.from >= 0)
-		fprintf(stderr, "%-19.19s %-22.22s %-29.29s\n",
+		print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
 			Class(except.obj_id), except.rname, buf);
 	else
-		fprintf(stderr, "%-19.19s %-22.22s %-29.29s\n",
+		print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
 			"RUN-TIME", except.rname, buf);
 
 	/* There is no need to compute the origin of a routine if it is the same
@@ -1879,7 +1880,7 @@ private void print_top()
 	else
 		buf[0] = '\0';
 
-	fprintf(stderr, "<%08X>          %-22.22s %-29.29s ",
+	print_err_msg(stderr, "<%08X>          %-22.22s %-29.29s ",
 		except.obj_id, buf, exception_string(code));
 		
 	/* Start panic effect when we reach the EN_BYE record */
@@ -1903,26 +1904,26 @@ private void print_top()
 
 	if (echval == EN_BYE) {		/* A run-time panic was raised */
 		if (except.last)
-			fprintf(stderr, "Bye\n%s\n", failed);	/* Good bye! */
+			print_err_msg(stderr, "Bye\n%s\n", failed);	/* Good bye! */
 		else
-			fprintf(stderr, "Panic\n%s\n", failed);	/* Panic propagation */
+			print_err_msg(stderr, "Panic\n%s\n", failed);	/* Panic propagation */
 		return;
 	} else if (echval == EN_FATAL) {
 		if (except.last)
-			fprintf(stderr, "Bye\n%s\n", failed);	/* Good bye! */
+			print_err_msg(stderr, "Bye\n%s\n", failed);	/* Good bye! */
 		else
-			fprintf(stderr, "Fatal\n%s\n", failed);	/* Fatal propagation */
+			print_err_msg(stderr, "Fatal\n%s\n", failed);	/* Fatal propagation */
 		return;
 	} else if (except.last) {						/* Last record => exit */
-		fprintf(stderr, "Exit\n%s\n", failed);
+		print_err_msg(stderr, "Exit\n%s\n", failed);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
 		if (except.retried)
-			fprintf(stderr, "Retry\n%s\n", retried);
+			print_err_msg(stderr, "Retry\n%s\n", retried);
 		else if (except.rescued)
-			fprintf(stderr, "Rescue\n%s\n", failed);
+			print_err_msg(stderr, "Rescue\n%s\n", failed);
 		else
-			fprintf(stderr, "Fail\n%s\n", failed);
+			print_err_msg(stderr, "Fail\n%s\n", failed);
 		return;
 	}
 
@@ -1940,11 +1941,11 @@ private void print_top()
 
 	if (code == EN_FAIL || code == EN_RES) {
 		if (except.retried)
-			fprintf(stderr, "Retry\n%s\n", retried);
+			print_err_msg(stderr, "Retry\n%s\n", retried);
 		else
-			fprintf(stderr, "Fail\n%s\n", failed);
+			print_err_msg(stderr, "Fail\n%s\n", failed);
 	} else
-		fprintf(stderr, "Pass\n%s\n", failed);
+		print_err_msg(stderr, "Pass\n%s\n", failed);
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one

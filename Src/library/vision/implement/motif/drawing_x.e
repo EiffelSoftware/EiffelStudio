@@ -14,13 +14,20 @@ inherit
 	DOUBLE_MATH
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end;
 
-	DRAWING_I;
+	DRAWING_I
+		undefine
+			is_equal
+		end;
 
 	G_CONTEXT_X
 		rename
-			gc_logical_mode as logical_mode
+			is_destroyed as gc_destroyed,
+			gc_logical_mode as logical_mode,
+			destroy as gc_destroy
 		end;
 
 	MEL_DRAWING
@@ -31,6 +38,8 @@ inherit
 			fill_arc as mel_fill_arc,
 			fill_polygon as mel_fill_polygon,
 			fill_rectangle as mel_fill_rectangle
+		undefine
+			is_equal
 		end;
 
 feature -- Access

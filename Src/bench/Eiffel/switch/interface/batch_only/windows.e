@@ -1,5 +1,6 @@
 
 -- Pseudo windows for degenerated input output
+--	$Id$	
 
 class WINDOWS
 
@@ -13,7 +14,7 @@ feature
 	info_window: TERM_WINDOW is
 		once
 			Result := error_window
-		en;
+		end;
 
 	debug_window: TERM_WINDOW is
 		once

@@ -102,7 +102,7 @@ extern struct stack hec_saved;	/* Saved indirection pointers */
 #if defined EIF_NONPOSIX_TSD || defined POSIX_10034A
 #define EIF_GET_CONTEXT \
 	eif_global_context_t * EIF_VOLATILE eif_globals; \
-	int ctxt_return = pthread_getspecific(eif_global_key,(void **)&eif_globals);
+	(void) pthread_getspecific(eif_global_key,(void **)&eif_globals);
 #else /* EIF_NONPOSIX_TSD */
 #define EIF_GET_CONTEXT \
 	eif_global_context_t * EIF_VOLATILE eif_globals = pthread_getspecific (eif_global_key);
@@ -120,7 +120,7 @@ extern struct stack hec_saved;	/* Saved indirection pointers */
 #elif defined SOLARIS_THREADS	/* Solaris Threads */
 #define EIF_GET_CONTEXT \
 	eif_global_context_t * EIF_VOLATILE eif_globals; \
-	int ctxt_return = thr_getspecific (eif_global_key, (void **)&eif_globals);
+	(void) thr_getspecific (eif_global_key, (void **)&eif_globals);
 
 #else
 	Platform not supported for multithreading, check that you are using

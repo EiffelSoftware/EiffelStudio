@@ -14,9 +14,24 @@ feature
 			valid_argument: dropped /= Void
 		do
 			if stone_type = Stone_types.any_type then
+debug ("TRANSPORT")
+	io.error.putstring ("any stone dropped%N");
+end;
 				process_any (dropped);
 			elseif compatible (dropped) then
+debug ("TRANSPORT")
+	io.error.putstring ("compatible stone dropped%N");
+end;
 				dropped.process (Current)
+			else
+debug ("TRANSPORT")
+	io.error.putstring ("in compatible stone dropped%N");
+	io.error.putstring ("stone type: ");
+	io.error.putint (stone_type)
+	io.error.putstring ("dropped stone type: ");
+	io.error.putint (dropped.stone_type)
+	io.error.new_line
+end;
 			end
 		end;
 

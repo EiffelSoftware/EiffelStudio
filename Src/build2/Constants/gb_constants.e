@@ -103,6 +103,8 @@ feature -- String representations of class names.
 	
 	Ev_list_item_string: STRING is "EV_LIST_ITEM"
 	
+	Ev_spin_button_string: STRING is "EV_SPIN_BUTTON"
+	
 feature -- GB_EV_FIXED
 
 	select_widget_prompt: STRING is "Please select desired widget."

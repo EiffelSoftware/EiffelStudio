@@ -59,7 +59,9 @@ inherit
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			text as wel_text,
+			set_text as wel_set_text
 		undefine
 			window_process_message,
 			remove_command,
@@ -83,7 +85,7 @@ inherit
 			default_style,
 			wel_background_color,
 			wel_foreground_color,
-			set_text
+			wel_set_text
 		end
 
 creation
@@ -145,7 +147,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Set the window text
 		do
 			{WEL_STATIC} Precursor (txt)
@@ -252,6 +254,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.36  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

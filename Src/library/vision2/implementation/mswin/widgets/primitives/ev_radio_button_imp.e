@@ -42,14 +42,15 @@ inherit
 			destroy as wel_destroy,
 			width as wel_width,
 			height as wel_height,
-			text as wel_text,
 			item as wel_item,
 			enabled as is_sensitive,
 			x as x_position,
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			text as wel_text,
+			set_text as wel_set_text
 		undefine
 			make_by_id,
 			window_process_message,
@@ -71,7 +72,7 @@ inherit
 			on_set_cursor,
 			on_size,
 			process_notification,
-			set_text,
+			wel_set_text,
 			show,
 			hide
 		redefine
@@ -158,6 +159,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.27  2000/03/22 00:53:15  brendel
 --| Added FIXME.
 --|
@@ -174,7 +178,8 @@ end -- class EV_RADIO_BUTTON_IMP
 --| Before, both were available.
 --|
 --| Revision 1.25  2000/03/07 17:40:06  rogers
---| Undefined on_size from WEL_RADIO_BUTTON as this is now inherited from EV_BUTTON_IMP.
+--| Undefined on_size from WEL_RADIO_BUTTON as this is now inherited from
+--| EV_BUTTON_IMP.
 --|
 --| Revision 1.24  2000/03/04 04:19:22  pichery
 --| Modified the inheritance since WEL_BITMAP_BUTTON now redefine make
@@ -205,7 +210,10 @@ end -- class EV_RADIO_BUTTON_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.17.10.2  2000/01/10 19:58:50  rogers
---| Altered to comply with the major Vision2 changes. See diff for redefinitions. Added set_peer and remove_from_group which should not be called as they are not yet implemented. I am not sure if this is possible on Windows. This needs to be fixed soon.
+--| Altered to comply with the major Vision2 changes. See diff for
+--| redefinitions. Added set_peer and remove_from_group which should not be
+--| called as they are not yet implemented. I am not sure if this is possible
+--| on Windows. This needs to be fixed soon.
 --|
 --| Revision 1.17.10.1  1999/11/24 17:30:33  oconnor
 --| merged with DEVEL branch

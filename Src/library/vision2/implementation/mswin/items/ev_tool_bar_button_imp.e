@@ -57,7 +57,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	wel_text: STRING is
+			-- Text of `Current'
+		do
+			Result := clone (real_text)
+		end
+
+	real_text: STRING
+			-- Internal `text'. Not to be returned directly. Use clone.
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -120,10 +127,10 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := clone (txt)
+			real_text := clone (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 				parent_imp.auto_size
@@ -305,6 +312,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.15  2000/03/27 22:28:33  rogers
 --| Added set_heavy_capture and release_heavy_capture.
 --|
@@ -334,8 +344,8 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.9.6.7  2000/01/27 01:10:56  rogers
---| renamed is_insensitive to is_sensitive, and replaced set_insensitive with enable_sensitive and 
---| disable_sensitive.
+--| renamed is_insensitive to is_sensitive, and replaced set_insensitive with
+--| enable_sensitive and disable_sensitive.
 --|
 --| Revision 1.9.6.6  2000/01/25 17:37:51  brendel
 --| Removed code associated with old events.
@@ -345,14 +355,15 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| Added a better explanation of type.
 --|
 --| Revision 1.9.6.4  2000/01/20 17:04:48  rogers
---| In make, base make now is passed an_interface, and initialize is implemented.
+--| In make, base make now is passed an_interface, and initialize is
+--| implemented.
 --|
 --| Revision 1.9.6.3  1999/12/22 18:21:15  rogers
 --| Removed undefinition of pixmap_size_ok, as it is no longer inherited at all.
 --|
 --| Revision 1.9.6.2  1999/12/17 17:30:28  rogers
---| Altered to fit in with the review branch. Make takes an interface. Now inherits from 
---| EV_PICK_AND_DROPABLE_IMP.
+--| Altered to fit in with the review branch. Make takes an interface. Now
+--| inherits from EV_PICK_AND_DROPABLE_IMP.
 --|
 --| Revision 1.9.6.1  1999/11/24 17:30:16  oconnor
 --| merged with DEVEL branch

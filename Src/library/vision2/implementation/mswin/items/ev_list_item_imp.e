@@ -80,7 +80,8 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 				parent_not_void: list_imp /= Void
 			end
 			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
+					a_screen_y)
 				list_imp.set_source_true
 				list_imp.set_pnd_child_source (Current)
 				list_imp.set_t_item_true
@@ -109,8 +110,14 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 
 feature -- Status report
 
-	text: STRING
-		-- Text of `Current'		
+	wel_text: STRING is
+			-- Text of `Current'
+		do
+			Result := clone (real_text)
+		end
+
+	real_text: STRING
+			-- Internal `text'. Not to be returned directly. Use clone.
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
@@ -151,12 +158,12 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := clone (txt)
+			real_text := clone (txt)
 			if parent_imp /= Void then
-				parent_imp.internal_set_text (Current.interface, clone (txt))
+				parent_imp.internal_set_text (Current.interface, real_text)
 			end
 		end
 
@@ -251,6 +258,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.38  2000/03/27 21:52:46  pichery
 --| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
 --| `set_heavy_capture' and `release_heavy_capture'.
@@ -271,10 +281,12 @@ end -- class EV_LIST_ITEM_IMP
 --| Improved comments and removed old command association.
 --|
 --| Revision 1.32  2000/03/15 16:51:53  rogers
---| Removed commented out destroyed;. Added relative_y which returns the relative coordinate of the item to its parent.
+--| Removed commented out destroyed;. Added relative_y which returns the
+--| relative coordinate of the item to its parent.
 --|
 --| Revision 1.31  2000/03/10 00:32:00  rogers
---| Added set_capture and release_capture with a fixme and a check False so they compile. They need to be fixed.
+--| Added set_capture and release_capture with a fixme and a check False so
+--| they compile. They need to be fixed.
 --|
 --| Revision 1.30  2000/03/02 16:58:33  rogers
 --| Set_text now sets the text to a clone of the passed text.
@@ -283,7 +295,8 @@ end -- class EV_LIST_ITEM_IMP
 --| Changed type of parent_imp from EV_LIST_IMP to EV_LIST_ITEM_HOLDER_IMP.
 --|
 --| Revision 1.28  2000/02/25 17:44:27  rogers
---| Removed call to precursor in set_text, and replaced with text := txt as text is now an attribute of this class directly.
+--| Removed call to precursor in set_text, and replaced with text := txt as
+--| text is now an attribute of this class directly.
 --|
 --| Revision 1.27  2000/02/19 06:23:05  oconnor
 --| removed command stuff
@@ -298,13 +311,15 @@ end -- class EV_LIST_ITEM_IMP
 --| Commented out useless destroy feature
 --|
 --| Revision 1.24.6.5  2000/02/02 21:08:45  rogers
---| Removed commented make_with_text references. changed the type of parent_imp from EV_LIST_ITEM_HOLDER_IMP to EV_LIST_IMP.
+--| Removed commented make_with_text references. changed the type of
+--| parent_imp from EV_LIST_ITEM_HOLDER_IMP to EV_LIST_IMP.
 --|
 --| Revision 1.24.6.4  2000/01/27 19:30:07  oconnor
 --| added --| FIXME Not for release
 --|
 --| Revision 1.24.6.3  2000/01/18 23:39:01  rogers
---| The body of set_text had been commented out. It has been uncommented as it is required.
+--| The body of set_text had been commented out. It has been uncommented as it
+--| is required.
 --|
 --| Revision 1.24.6.2  1999/12/17 17:35:07  rogers
 --| Altered to fit in with the review branch. Make takes an interface.

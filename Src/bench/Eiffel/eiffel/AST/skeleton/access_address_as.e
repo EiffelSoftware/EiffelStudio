@@ -1,5 +1,4 @@
 indexing
-
 	description: "Access for the address operator. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,15 +13,20 @@ inherit
 
 	SHARED_TYPES
 
-creation
+create
 	make
 
 feature
 
 	make (s: ID_AS) is
 			-- Initialization
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
 		do
 			feature_name := s
+		ensure
+			feature_name_set: feature_name = s
 		end
 
 feature -- Type check
@@ -46,32 +50,34 @@ feature -- Type check
 
 			a_feature := last_class.feature_table.item (feature_name)
 
-			if (a_feature = Void) then
-				!! veen
+			if not valid_feature (a_feature) then
+				create veen
 				context.init_error (veen)
 				veen.set_identifier (feature_name)
 				Error_handler.insert_error (veen)
-			elseif (a_feature.is_constant) then
-				!! vzaa1
-				context.init_error (vzaa1)
-				vzaa1.set_address_name (feature_name)
-				Error_handler.insert_error (vzaa1)
 			else
-				if a_feature.is_attribute then
-					Result ?= a_feature.type
-					Result := Result.conformance_type
-					Result := Result.instantiation_in (last_type, last_id).actual_type
+				if a_feature.is_constant then
+					create vzaa1
+					context.init_error (vzaa1)
+					vzaa1.set_address_name (feature_name)
+					Error_handler.insert_error (vzaa1)
 				else
-					Result := Pointer_type
+					if a_feature.is_attribute then
+						Result ?= a_feature.type
+						Result := Result.conformance_type
+						Result := Result.instantiation_in (last_type, last_id).actual_type
+					else
+						Result := Pointer_type
+					end
+
+						-- Dependance
+					create depend_unit.make (last_id, a_feature)
+					context.supplier_ids.extend (depend_unit)
+
+						-- Access managment
+					access_b := a_feature.access (Result.type_i)
+					context.access_line.insert (access_b)
 				end
-
-					-- Dependance
-				!! depend_unit.make (last_id, a_feature)
-				context.supplier_ids.extend (depend_unit)
-
-					-- Access managment
-				access_b := a_feature.access (Result.type_i)
-				context.access_line.insert (access_b)
 			end
 			Error_handler.checksum
 		end
@@ -82,7 +88,7 @@ feature -- Type check
 			ctxt.begin
 			ctxt.new_expression
 			ctxt.prepare_for_feature (feature_name, Void)
-			ctxt.put_text_item_without_tabs (ti_Dollar)
+			ctxt.put_text_item_without_tabs (ti_dollar)
 			ctxt.put_current_feature
 			if ctxt.last_was_printed then
 				ctxt.commit
@@ -98,7 +104,7 @@ feature {NONE} -- Output
 		do
 			ctxt.new_expression
 			ctxt.prepare_for_feature (feature_name, Void)
-			ctxt.put_text_item_without_tabs (ti_Dollar)
+			ctxt.put_text_item_without_tabs (ti_dollar)
 			ctxt.put_current_feature
 		end
 

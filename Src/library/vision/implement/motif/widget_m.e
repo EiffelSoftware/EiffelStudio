@@ -559,17 +559,6 @@ feature {SCREEN_CURSOR_X, ALL_CURS_X}
 		end;
 
 feature {NONE} -- Implementation
-
-	mel_vision_callback (cmd: COMMAND): MEL_VISION_CALLBACK is
-			-- Convenience routine to create the motif
-			-- callback handler for vision actions
-		require
-			non_void_cmd: cmd /= Void
-		do
-			!! Result.make (cmd)
-		end;
-
-feature {NONE} -- Implementation
 	
 	click_actions_table: HASH_TABLE [BUTTON_CLICK_HAND_X, POINTER] is
 			-- Table of click actions for all widgets

@@ -60,7 +60,7 @@ feature -- Cleaning
 				s.clean_on_dispose
 				pending_steppers.forth
 			end
-			pending_steppers.wipe_out			
+			pending_steppers.wipe_out
 		end		
 
 feature -- Access
@@ -99,8 +99,8 @@ feature -- Access
 				end	
 				if l_error = 0 or l_error = 1 then
 					Result := l_stepper
---					Result.add_ref
---					add_icd_stepper (Result.item)
+					Result.add_ref
+					add_icd_stepper (Result.item)
 				end
 			end
 		end		
@@ -108,13 +108,16 @@ feature -- Access
 feature -- Change
 
 	add_icd_stepper (p: POINTER) is
+			-- Add pointer to Stepper
+			--
+			-- Nota: call AddRef before adding it
+			--		maybe later, we'll do it here
 		require
 			stepper_not_null: p /= Default_pointer
 		local
 			s: ICOR_DEBUG_STEPPER
 		do
 			create s.make_by_pointer (p)
-			s.add_ref
 			pending_steppers.put (s, p)
 		end
 		

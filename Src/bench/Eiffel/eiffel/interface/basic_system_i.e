@@ -7,8 +7,6 @@ inherit
 	
 feature 
 
-	plug_file: INDENT_FILE
-
 	general_class: CLASS_I
 			-- Class GENERAL
 

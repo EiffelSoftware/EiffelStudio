@@ -223,6 +223,14 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_lstat HAS_LSTAT		/**/
 
+/* HAS_MEMMOVE:
+ *	This symbol, if defined, indicates that the memmove routine is available
+ *	to copy potentially overlapping blocks of memory. This should be used
+ *	only when HAS_SAFE_BCOPY is not defined. If neither is there, roll your
+ *	own version.
+ */
+#$d_memmove HAS_MEMMOVE	/**/
+
 /* HAS_MKDIR:
  *	This symbol, if defined, indicates that the mkdir routine is available
  *	to create directories.  Otherwise you should fork off a new process to
@@ -270,6 +278,22 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	Inclusion of <sys/resource.h> and <sys/time.h> may be necessary.
  */
 #$d_rusage HAS_GETRUSAGE		/**/
+
+/* HAS_SAFE_BCOPY:
+ *	This symbol, if defined, indicates that the bcopy routine is available
+ *	to copy potentially overlapping memory blocks. Otherwise you should
+ *	probably use memmove() or memcpy(). If neither is defined, roll your
+ *	own version.
+ */
+#$d_safebcpy HAS_SAFE_BCOPY	/**/
+
+/* HAS_SAFE_MEMCPY:
+ *	This symbol, if defined, indicates that the memcpy routine is available
+ *	to copy potentially overlapping memory blocks. Otherwise you should
+ *	probably use memmove() or memcpy(). If neither is defined, roll your
+ *	own version.
+ */
+#$d_safemcpy HAS_SAFE_MEMCPY	/**/
 
 /* HAS_SBRK:
  *	This symbol, if defined, indicates that the sbrk system call is

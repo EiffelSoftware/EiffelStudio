@@ -25,13 +25,13 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgvar' [in].  
 			-- `pcelt_fetched' [out].  
 		do
-			ccom_next (initializer, celt, rgvar.item, pcelt_fetched)
+			ccom_next (initializer, celt, rgvar, pcelt_fetched)
 		end
 
 	skip (celt: INTEGER) is
@@ -64,10 +64,10 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgvar: POINTER; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](EIF_INTEGER,VARIANT *,EIF_OBJECT)"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is

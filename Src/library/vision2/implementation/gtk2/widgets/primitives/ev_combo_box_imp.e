@@ -114,6 +114,9 @@ feature {NONE} -- Initialization
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			initialize_combo_box_style (container_widget)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
+
+				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
 			
@@ -128,9 +131,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := "text"
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
-
-				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end

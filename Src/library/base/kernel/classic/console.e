@@ -352,25 +352,25 @@ feature {NONE} -- Implementation
 	console_readreal (file: POINTER): REAL is
 			-- Read a real number from the console
 		external
-			"C (FILE *): EIF_REAL | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
 		end
 
 	console_readchar (file: POINTER): CHARACTER is
 			-- Read a character from the console
 		external
-			"C (FILE *): EIF_CHARACTER | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
 		end
 
 	console_readint (file: POINTER): INTEGER is
 			-- Read an integer from the console
 		external
-			"C (FILE *): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_readdouble (file: POINTER): DOUBLE is
 			-- Read a double from the console
 		external
-			"C (FILE *): EIF_DOUBLE | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_DOUBLE use %"eif_console.h%""
 		end
 
 	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -381,25 +381,25 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1,
 			-- otherwise result is number of characters read.
 		external
-			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_next_line (file: POINTER) is
 			-- Move to next input line on standard input.
 		external
-			"C (FILE *) | %"eif_console.h%""
+			"C blocking signature (FILE *) use %"eif_console.h%""
 		end
 
 	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	file_close (file: POINTER) is

@@ -400,6 +400,7 @@ feature {NONE} -- Generation
 			rout_info: ROUT_INFO
 			l_type_id: INTEGER
 			l_current_name: STRING
+			l_is_implemented: BOOLEAN
 		do
 			feature_id := a_feature.feature_id
 			rout_id := a_feature.rout_id_set.first
@@ -425,7 +426,6 @@ feature {NONE} -- Generation
 				types.after
 			loop
 				a_type := types.item
-
 				cursor := types.cursor
 
 				function_name := Encoder.address_table_name (feature_id, a_type.static_type_id)
@@ -463,6 +463,10 @@ feature {NONE} -- Generation
 				buffer.putstring ("%N%T")
 
 				if final_mode then
+						-- Routine is always implemented unless found otherwise (Deferred routine 
+						-- with no implementation).
+					l_is_implemented := True
+
 					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
@@ -495,15 +499,25 @@ feature {NONE} -- Generation
 						else
 							rout_table ?= entry
 							rout_table.goto_implemented (l_type_id)
-							function_name := rout_table.feature_name
-							buffer.putstring (function_name)
-							buffer.putstring (")(")
-							buffer.putstring (l_current_name)
-							extern_declarations.add_routine_with_signature (c_return_type,
-								function_name, <<>>)
+							if rout_table.is_implemented then
+								function_name := rout_table.feature_name
+								buffer.putstring (function_name)
+								buffer.putstring (")(")
+								buffer.putstring (l_current_name)
+								extern_declarations.add_routine_with_signature (c_return_type,
+									function_name, <<>>)
+							else
+									-- Function pointer associated to a deferred feature
+									-- without any implementation. We mark `l_is_implemented'
+									-- to False to not generate the argument list since
+									-- RTNR takes only one argument.
+								l_is_implemented := False
+								buffer.putstring ("RTNR) (")
+								buffer.putstring (l_current_name)
+							end
 						end
 
-						if has_arguments then
+						if l_is_implemented and has_arguments then
 							if is_for_routine then
 								generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
 							else

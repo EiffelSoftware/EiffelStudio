@@ -11,6 +11,9 @@ class
 
 inherit
 	EV_CLOSED_FIGURE
+		redefine
+			bounding_box
+		end
 
 	EV_DOUBLE_POINTED_FIGURE
 		undefine
@@ -30,6 +33,7 @@ feature -- Events
 			w, h: INTEGER
 			xa, ya: INTEGER
 			c: EV_COORDINATE
+			counter: INTEGER
 		do
 			sin_a := sine (point_a.angle_abs)
 			cos_a := cosine (point_a.angle_abs)
@@ -89,6 +93,7 @@ feature -- Status report
 			if Result < 0 then
 				Result := - Result
 			end
+			Result := Result + 1
 		end
 
 	height: INTEGER is
@@ -102,6 +107,7 @@ feature -- Status report
 			if Result < 0 then
 				Result := - Result
 			end
+			Result := Result + 1
 		end
 
 	center: EV_COORDINATE is
@@ -128,6 +134,37 @@ feature -- Status report
 				top := point_a.y_abs
 			end
 			create Result.set (left, top)
+		end
+		
+	bounding_box: EV_RECTANGLE is
+			-- Smallest orthogonal rectangular area `Current' fits in.
+		local
+			first, second: EV_RELATIVE_POINT
+			point1: EV_RELATIVE_POINT
+			point2: EV_RELATIVE_POINT
+			parray: ARRAY [EV_COORDINATE]
+			coor: EV_COORDINATE
+		do
+			if points.is_empty then
+				create Result
+			else
+				parray := polygon_array
+				coor := parray @ 1
+				create Result.make (coor.x, coor.y, 1, 1)
+				coor := parray @ 2
+				Result.include (coor.x, coor.y)
+				coor := parray @ 3
+				Result.include (coor.x, coor.y)
+				coor := parray @ 4
+				Result.include (coor.x, coor.y)
+					 -- We must increase the rectangle size by one pixel
+					 -- as an EV_RECTANGLE does not include the last pixel to the
+					 -- right and bottom.
+					 --| FIXME Find a standard for EV_RECTANGLE so this does not have to
+					 --| be performed.
+				Result.set_width (Result.width + 1)
+				Result.set_height (Result.height + 1)
+			end
 		end
 
 end -- class EV_FIGURE_RECTANGLE

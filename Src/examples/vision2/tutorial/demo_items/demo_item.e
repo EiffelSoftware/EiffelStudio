@@ -18,7 +18,7 @@ inherit
 
 	EV_COMMAND
 
-creation
+create
 	make_with_title
 
 feature {NONE} -- Initialization
@@ -52,9 +52,9 @@ feature -- Access
 			cmd: EV_ROUTINE_COMMAND
 		once
 			create Result.make_with_text (Void, "Actions")
-			create cmd.make (~action_activate)
+			create cmd.make (agent action_activate)
 			Result.add_click_command (cmd, Void)
-			create cmd.make (~event_activate)
+			create cmd.make (agent event_activate)
 			Result.add_click_command (cmd, Void)
 		end
 
@@ -64,7 +64,7 @@ feature -- Access
 			cmd: EV_ROUTINE_COMMAND
 		once
 			create Result.make_with_text (Void, "Events")
-			create cmd.make (~event_activate)
+			create cmd.make (agent event_activate)
 			Result.add_click_command (cmd, Void)
 		end
 	
@@ -110,7 +110,7 @@ feature -- Access
 	current_demo: CELL [DEMO_WINDOW] is
 			-- Demo currently in action
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 feature -- Basic operation

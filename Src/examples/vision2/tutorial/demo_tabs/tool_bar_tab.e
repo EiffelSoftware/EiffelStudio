@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 			local
 				l1: EV_LABEL			
 			do
-				{ANY_TAB} Precursor (Void)
+				Precursor {ANY_TAB} (Void)
 					-- Creates the objects and their commands.
 				create l1.make_with_text(Current,"EV_TOOLBAR has no new features which are%N interactive in this demo.")
 			set_child_position (l1, 0, 0, 1, 1)

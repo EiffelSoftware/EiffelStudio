@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -52,10 +52,10 @@ feature -- Execution features
 			if dialog /= Void then
 				dialog.show
 			else
-				!! dialog.make_with_text (parent, "This is an EiffelVision Directory Selection dialog")
-				!! cmd.make (~execute2)
+				create dialog.make_with_text (parent, "This is an EiffelVision Directory Selection dialog")
+				create cmd.make (agent execute2)
 				dialog.add_ok_command (cmd, Void)
-				!! cmd.make (~execute3)
+				create cmd.make (agent execute3)
 				dialog.add_cancel_command (cmd, Void)
 				dialog.show
 			end

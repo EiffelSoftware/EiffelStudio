@@ -13,7 +13,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 			-- closed. The parent of window is a window 
 			-- (and not any EV_CONTAINER).
 		do
-			{EV_WINDOW} Precursor (par)
+			Precursor {EV_WINDOW} (par)
 		end
 
 	set_tabs is

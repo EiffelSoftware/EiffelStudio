@@ -15,7 +15,7 @@ inherit
 			make_top_level
 		end
 
-creation
+create
 	make_top_level
 
 feature --Access
@@ -52,7 +52,7 @@ feature -- Initialization
 			item: DEMO_ITEM [WINDOW_WINDOW]
 			setp: EV_HORIZONTAL_SEPARATOR
 		do
-			{EV_WINDOW} Precursor
+			Precursor {EV_WINDOW}
 			set_minimum_size (500, 310)
 			set_size (800, 600)
 			set_title ("EiffelVision Tutorial")

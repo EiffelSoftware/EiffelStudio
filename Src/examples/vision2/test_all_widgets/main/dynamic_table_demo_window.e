@@ -17,7 +17,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -25,7 +25,7 @@ feature -- Access
 	main_widget: EV_DYNAMIC_TABLE is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_row_layout
 			Result.set_finite_dimension (2)
 		end
@@ -39,17 +39,17 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!!button.make_with_text (main_widget, "Element 1")
-			!!button.make_with_text (main_widget, "Element 2")
-			!!button.make_with_text (main_widget, "Element 3")
-			!!button.make_with_text (main_widget, "Element 4")
-			!!button.make_with_text (main_widget, "Element 5")
-			!!button.make_with_text (main_widget, "Element 6")
-			!!button.make_with_text (main_widget, "Element 7")
-			!!button.make_with_text (main_widget, "Element 8")
-			!!button.make_with_text (main_widget, "Element 9")
-			!!button.make_with_text (main_widget, "Element 10")
-			!!button.make_with_text (main_widget, "Element 11")
+			create button.make_with_text (main_widget, "Element 1")
+			create button.make_with_text (main_widget, "Element 2")
+			create button.make_with_text (main_widget, "Element 3")
+			create button.make_with_text (main_widget, "Element 4")
+			create button.make_with_text (main_widget, "Element 5")
+			create button.make_with_text (main_widget, "Element 6")
+			create button.make_with_text (main_widget, "Element 7")
+			create button.make_with_text (main_widget, "Element 8")
+			create button.make_with_text (main_widget, "Element 9")
+			create button.make_with_text (main_widget, "Element 10")
+			create button.make_with_text (main_widget, "Element 11")
 		end
 	
 	set_values is

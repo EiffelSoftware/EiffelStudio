@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,10 +25,10 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 				--Commands used by the tab.
 		do
-		{ANY_TAB} Precursor (Void)
+		Precursor {ANY_TAB} (Void)
 			
-		create cmd1.make (~set_maximum_text_length)
-		create cmd2.make (~get_maximum_text_length)
+		create cmd1.make (agent set_maximum_text_length)
+		create cmd2.make (agent get_maximum_text_length)
 		create f1.make (Current, 0, 0, "Maximum Text Length", cmd1, cmd2)	
 
 		set_parent (par)

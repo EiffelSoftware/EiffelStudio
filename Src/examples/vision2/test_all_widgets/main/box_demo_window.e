@@ -19,7 +19,7 @@ inherit
 			set_values
 		end
 	
-creation
+create
 	make
 
 feature -- Access
@@ -27,7 +27,7 @@ feature -- Access
 	main_widget: EV_HORIZONTAL_BOX is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 			Result.set_border_width (10)
 		end
 	
@@ -43,9 +43,9 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!!button1.make (main_widget)
-			!!button2.make (main_widget)
-			!!button3.make (main_widget)
+			create button1.make (main_widget)
+			create button2.make (main_widget)
+			create button3.make (main_widget)
 		end
 	
 feature -- Status setting

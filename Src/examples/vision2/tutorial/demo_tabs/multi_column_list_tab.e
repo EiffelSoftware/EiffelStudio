@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,36 +25,36 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (par)
+			Precursor {ANY_TAB} (par)
 
-			create cmd2.make (~get_rows)
+			create cmd2.make (agent get_rows)
 			create f1.make (Current, 0, 0, "Rows", Void, cmd2)
 
-			create cmd2.make (~get_columns)
+			create cmd2.make (agent get_columns)
 			create f2.make (Current, 1, 0, "Columns", Void, cmd2)
 
-			create cmd1.make (~set_left_alignment)
+			create cmd1.make (agent set_left_alignment)
 			create f3.make (Current, 2, 0, "Set Left Alignment", cmd1, cmd1)
 
-			create cmd1.make (~set_center_alignment)
+			create cmd1.make (agent set_center_alignment)
 			create f4.make (Current, 3, 0, "Set Center Alignment", cmd1, cmd1)
 
-			create cmd1.make (~set_right_alignment)
+			create cmd1.make (agent set_right_alignment)
 			create f5.make (Current, 4, 0, "Set Right Alignment", cmd1, cmd1)
 			create h1.make (Current)
 			set_child_position (h1, 5, 0, 6, 3)
 
-			create cmd1.make (~multiple_or_single)
+			create cmd1.make (agent multiple_or_single)
 			create b1.make_with_text (Current,"Multiple Selection")
 			b1.add_click_command (cmd1, Void)
 			b1.set_vertical_Resize (False)
 			set_child_position (b1, 6, 0, 7, 1)
-			create cmd1.make (~clear_selection)
+			create cmd1.make (agent clear_selection)
 			create b2.make_with_text (Current, "Clear Selection")
 			b2.add_click_command (cmd1, Void)
 			b2.set_vertical_resize (False)
 			set_child_position (b2, 6, 1, 7, 2)
-			create cmd1.make (~toggle_title_row)
+			create cmd1.make (agent toggle_title_row)
 			create b3.make_with_text (Current, "Hide Title Row")
 			b3.add_click_command (cmd1, Void)
 			b3.set_vertical_resize (False)

@@ -15,7 +15,7 @@ inherit
 			make as ev_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 			ev_make (par)
 			value := 0
 			set_title (a_title)
-			!! label.make_with_text (display_area, question)
-			!! cmd.make (~ok_execute)
-			!! field.make_with_text (display_area, "0")
+			create label.make_with_text (display_area, question)
+			create cmd.make (agent ok_execute)
+			create field.make_with_text (display_area, "0")
 			field.add_activate_command (cmd, Void)
-			!! button.make_with_text (action_area, "OK")
+			create button.make_with_text (action_area, "OK")
 			button.add_click_command (cmd, Void)
-			!! button.make_with_text (action_area, "Cancel")
-			!! cmd.make (~cancel_execute)
+			create button.make_with_text (action_area, "Cancel")
+			create cmd.make (agent cancel_execute)
 			button.add_click_command (cmd, Void)
 			show
 		end
@@ -60,7 +60,7 @@ feature -- Command execute
 				value := field.text.to_integer
 				hide
 			else
-				!! error.make_default (parent, "Error", "Enter an interger value !")
+				create error.make_default (parent, "Error", "Enter an interger value !")
 			end
 		end
 

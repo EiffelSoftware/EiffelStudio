@@ -14,7 +14,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature -- Access
 
 	create_demo is
 	do
-		!! demo_window.make (demo_page)
+		create demo_window.make (demo_page)
 	end
 
 	demo_window : TEST_WINDOW

@@ -20,7 +20,7 @@ inherit
 	
 	EV_COMMAND
 
-creation
+create
 	make
 
 feature -- Access
@@ -28,7 +28,7 @@ feature -- Access
 	main_widget: EV_FIXED is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(300,300)
 		end
 
@@ -40,8 +40,8 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!!button1.make (main_widget)
-			!!button2.make (main_widget)
+			create button1.make (main_widget)
+			create button2.make (main_widget)
 		end
 	
 feature -- Status setting

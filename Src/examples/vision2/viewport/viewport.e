@@ -37,8 +37,8 @@ feature {NONE} -- Implementation
 			create spin_button_x.make_with_value_range (range)
 			create range.make (0, 440)
 			create spin_button_y.make_with_value_range (range)
-			spin_button_x.change_actions.extend (~on_spin_button_x_changed (?))
-			spin_button_y.change_actions.extend (~on_spin_button_y_changed (?))
+			spin_button_x.change_actions.extend (agent on_spin_button_x_changed (?))
+			spin_button_y.change_actions.extend (agent on_spin_button_y_changed (?))
 			spin_button_x.set_step (10)
 			spin_button_y.set_step (10)
 			create vertical_box

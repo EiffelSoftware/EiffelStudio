@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 	
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_LABEL is
 			-- Main widget of the window
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(200,200)
 			Result.set_center_alignment
 		end

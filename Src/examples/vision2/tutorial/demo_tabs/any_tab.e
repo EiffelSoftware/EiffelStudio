@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects
 		do
-			{EV_TABLE} Precursor (par)
+			Precursor {EV_TABLE} (par)
 			set_row_spacing (10)
 			set_column_spacing (5)		
 		end

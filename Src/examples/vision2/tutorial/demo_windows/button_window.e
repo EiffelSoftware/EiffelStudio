@@ -18,7 +18,7 @@ inherit
 	WIDGET_COMMANDS
 	BUTTON_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			color: EV_COLOR
 			set_col: EV_COLOR
 		do
-			{EV_BUTTON} Precursor (par)
+			Precursor {EV_BUTTON} (par)
 			hide
 			make_with_text (par, "Button")
 			create color.make_rgb (100,0,0)

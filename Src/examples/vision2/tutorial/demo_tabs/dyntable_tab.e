@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,24 +25,24 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 		
 			-- Creates the objects and their commands
-			create cmd2.make (~get_row_layout)
+			create cmd2.make (agent get_row_layout)
 			create f1.make (Current, 0, 0, "Uses Row Layout?", cmd1, cmd2)
 
-			create cmd1.make (~set_finite_dimens)
-			create cmd2.make (~get_finite_dimens)
+			create cmd1.make (agent set_finite_dimens)
+			create cmd2.make (agent get_finite_dimens)
 			create f2.make (Current, 1, 0, "Finite Dimension", cmd1, cmd2)
 			create h1.make (Current)
 			set_child_position (h1, 2, 0, 3, 3)
 
-			create cmd1.make(~set_row_layout)
+			create cmd1.make(agent set_row_layout)
 			create b1.make_with_text (Current, "Row Layout")
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
 			set_child_position (b1, 3, 0, 4, 1)
-			create cmd1.make (~set_column_layout)
+			create cmd1.make (agent set_column_layout)
 			create b2.make_with_text (Current, "Column layout")
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)

@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,18 +24,18 @@ feature -- Initialization
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{ANY_TAB} Precursor (par)
+			Precursor {ANY_TAB} (par)
 		
 			-- Creates the objects and their commands
-			create cmd.make (~get_icon_name)
+			create cmd.make (agent get_icon_name)
 			create f1.make (Current, 0, 0, "Icon Name", Void, cmd)
 
-			create cmd.make (~raise_window)
+			create cmd.make (agent raise_window)
 			create f2.make (Current, 1, 0, "Z-order", cmd, Void)
 			f2.add_item ("Raise", Void)
 			f2.add_item ("Lower", Void)
 
-			create cmd.make (~minimize_window)
+			create cmd.make (agent minimize_window)
 			create f3.make (Current, 2, 0, "Status", cmd, Void)
 			f3.add_item ("Minimize", Void)
 			f3.add_item ("Maximize", Void)

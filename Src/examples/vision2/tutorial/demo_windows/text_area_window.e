@@ -17,7 +17,7 @@ inherit
 	WIDGET_COMMANDS
 	TEXT_COMPONENT_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		do
-			{EV_TEXT} Precursor (par)
+			Precursor {EV_TEXT} (par)
 			append_text ("This is a text area.")
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "text area")

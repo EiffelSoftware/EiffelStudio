@@ -16,7 +16,7 @@ inherit
 			set_values
 		end
 	
-creation
+create
 	make
 
 feature -- Access
@@ -24,7 +24,7 @@ feature -- Access
 	main_widget: EV_TREE is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(200,200)
 		end
 
@@ -38,14 +38,14 @@ feature -- Status setting
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			!! tree_item.make_with_text (main_widget, "Item")
-			!! tree_item2.make_with_text (tree_item, "Item 2")
-			!! tree_item.make_with_text (main_widget, "Item 3")
-			!! tree_item.make_with_text (main_widget, "Item 4")
-			!! tree_item3.make_with_text (tree_item, "Item 5")
-			!! tree_item2.make_with_text (tree_item, "Item 6")
-			!! tree_item.make_with_text (tree_item2, "Click Me !")
-			!! cmd.make (~execute1)
+			create tree_item.make_with_text (main_widget, "Item")
+			create tree_item2.make_with_text (tree_item, "Item 2")
+			create tree_item.make_with_text (main_widget, "Item 3")
+			create tree_item.make_with_text (main_widget, "Item 4")
+			create tree_item3.make_with_text (tree_item, "Item 5")
+			create tree_item2.make_with_text (tree_item, "Item 6")
+			create tree_item.make_with_text (tree_item2, "Click Me !")
+			create cmd.make (agent execute1)
 			tree_item.add_activate_command (cmd, Void)
 		end
 	

@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			cmd: EV_ROUTINE_COMMAND
 			sep: EV_MENU_SEPARATOR
 		do
-			{EV_FIXED} Precursor (par)
+			Precursor {EV_FIXED} (par)
 	
-			create cmd.make (~popup_cmd)
+			create cmd.make (agent popup_cmd)
 			add_button_press_command (3, cmd, Void)
 
 			create button.make_with_text (Current, "I move")
@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 
 			create popup.make (Current)
 			create item.make_with_text (popup, "GO")
-			create cmd.make (~plus_command)
+			create cmd.make (agent plus_command)
 			item.add_select_command (cmd, Void)
 			create sep.make (popup)
 			create item.make_with_text (popup, "BACK")
-			create cmd.make (~less_command)
+			create cmd.make (agent less_command)
 			item.add_select_command (cmd, Void)
 		end
 	

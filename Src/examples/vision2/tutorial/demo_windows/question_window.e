@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			create cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -48,12 +48,12 @@ feature -- Execution features
 			arg1: EV_ARGUMENT1 [STRING]
 			arg2: EV_ARGUMENT1 [STRING]
 		do
-			!! question.make_default (parent, "Question Dialog", "Are you alright ?")
+			create question.make_default (parent, "Question Dialog", "Are you alright ?")
 				-- creation of the question dialog.
 
 			create arg1.make ("Yes")
 			create arg2.make ("No")
-			create cmd.make (~execute2)
+			create cmd.make (agent execute2)
 			question.add_yes_command ( cmd, arg1)
 			question.add_no_command ( cmd, arg2)
 		end

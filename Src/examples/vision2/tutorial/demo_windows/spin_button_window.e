@@ -19,7 +19,7 @@ inherit
 	TEXT_FIELD_COMMANDS
 	
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- We create the spin button first without parent because it
 			-- is faster.
 		do
-			{EV_SPIN_BUTTON} Precursor (par)
+			Precursor {EV_SPIN_BUTTON} (par)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "spin button")
 			add_text_component_commands (Current, event_window, "Spin button")

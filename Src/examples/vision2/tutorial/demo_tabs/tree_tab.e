@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -27,14 +27,14 @@ feature -- Initialization
 			h1: EV_HORIZONTAL_SEPARATOR
 			
 		do
-			{ANY_TAB} Precursor (Void)
-			create cmd2.make (~add_item)
+			Precursor {ANY_TAB} (Void)
+			create cmd2.make (agent add_item)
 			create f1.make (Current, 0, 0, "Add Item To Subtree", cmd2, cmd2)
-			create cmd2.make (~selected)
+			create cmd2.make (agent selected)
 			create f2.make (Current, 1, 0, "Selected", Void, cmd2)
-			create cmd2.make (~selected_item)
+			create cmd2.make (agent selected_item)
 			create f3.make (Current, 2, 0, "Selected Item", Void, cmd2)
-			create cmd1.make (~remove_tree)
+			create cmd1.make (agent remove_tree)
 			create h1.make (Current)
 			set_child_position (h1, 3, 0, 4, 3)
 			create b1.make_with_text (Current, "Remove All Children")

@@ -25,11 +25,11 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 				
 				-- Creates the objects and their commands
-			create cmd1.make (~set_extended_height)
-			create cmd2.make (~get_extended_height)
+			create cmd1.make (agent set_extended_height)
+			create cmd2.make (agent get_extended_height)
 			create f1.make(Current, 0, 0,"Extended Height", cmd1, cmd2)
 			set_parent(par)
 		end

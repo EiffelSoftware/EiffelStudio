@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -27,11 +27,11 @@ feature -- Initialization
 			h1: EV_HORIZONTAL_SEPARATOR
 			
 		do
-		{ANY_TAB} Precursor (Void)
+		Precursor {ANY_TAB} (Void)
 
-		create cmd1.make (~search)
+		create cmd1.make (agent search)
 		create f1.make (Current, 0, 0, "Find Text", cmd1, cmd1)
-		create cmd1.make (~put_new_line)
+		create cmd1.make (agent put_new_line)
 		create h1.make (Current)
 		set_child_position (h1, 1, 0, 2, 3)
 		create b1.make_with_text (Current, "Put New Line")

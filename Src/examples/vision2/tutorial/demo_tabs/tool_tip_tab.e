@@ -14,7 +14,7 @@ inherit
 		end
 	EV_BASIC_COLORS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -28,14 +28,14 @@ feature -- Initialization
 				--i1: EV_LIST_ITEM
 				l1: EV_LIST_ITEM	
 			do
-				{ANY_TAB} Precursor (Void)
+				Precursor {ANY_TAB} (Void)
 					-- Creates the objects and their commands.
-				create cmd1.make (~set_delay)
-				create cmd2.make (~delay)
+				create cmd1.make (agent set_delay)
+				create cmd2.make (agent delay)
 				create f1.make (Current, 0, 0, "Delay", cmd1, cmd2)
-				create cmd2.make (~set_tforeground_color)
+				create cmd2.make (agent set_tforeground_color)
 				create f2.make (Current, 1, 0, "Foreground Color", cmd2, cmd2)
-				create cmd2.make (~set_tbackground_color)
+				create cmd2.make (agent set_tbackground_color)
 				create f3.make (Current, 2, 0, "Background Color", cmd2, cmd2)
 				available_colors:= all_colors
 				from
@@ -54,12 +54,12 @@ feature -- Initialization
 				create b1.make_with_text (Current, "Enable")
 				b1.set_vertical_Resize (False)
 				set_child_position (b1, 4, 0, 5, 1)
-				create cmd1.make (~enable)
+				create cmd1.make (agent enable)
 				b1.add_click_command (cmd1, Void)
 				create b2.make_with_text (Current, "Disable")
 				b2.set_vertical_Resize (False)
 				set_child_position (b2, 4, 1, 5, 2)
-				create cmd1.make (~disable)
+				create cmd1.make (agent disable)
 				b2.add_click_command (cmd1, Void)
 				b1.set_insensitive (True)
 

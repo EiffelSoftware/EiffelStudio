@@ -10,7 +10,7 @@ class
 inherit
 	FIGURE_ITEM
 
-creation
+create
 	make_with_title
 
 feature -- Access
@@ -19,8 +19,8 @@ feature -- Access
 		local
 			pt: EV_POINT
 		do
-			!! Result.make
-			!! pt.set (150, 150)
+			create Result.make
+			create pt.set (150, 150)
 			Result.set_center (pt)
 			Result.set_radius (40)
 			Result.path.set_line_width (2)

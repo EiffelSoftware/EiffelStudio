@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -27,21 +27,21 @@ feature -- Initialization
 			but: EV_BUTTON
 			item: EV_LIST_ITEM
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 
 			-- Creates the objects and their commands
-			create cmd1.make (~set_homogeneous_value)
-			create cmd2.make (~get_homogeneous_value)
+			create cmd1.make (agent set_homogeneous_value)
+			create cmd2.make (agent get_homogeneous_value)
 			create f1.make (Current, 0, 0, "Homogeneous", cmd1, cmd2)
 			create iTrue.make_with_text (f1.combo, "True")
 			create iFalse.make_with_text (f1.combo, "False")
 
-			create cmd1.make (~set_border_width_val)
-			create cmd2.make (~get_border_width_val)
+			create cmd1.make (agent set_border_width_val)
+			create cmd2.make (agent get_border_width_val)
 			create f2.make (Current, 1, 0, "Border Width", cmd1, cmd2)
 			
-			create cmd1.make (~set_spacing_val)
-			create cmd2.make (~get_spacing_val)
+			create cmd1.make (agent set_spacing_val)
+			create cmd2.make (agent get_spacing_val)
 			create f3.make (Current, 2, 0, "Spacing", cmd1, cmd2)
 
 			set_parent(par)

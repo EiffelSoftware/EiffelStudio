@@ -17,7 +17,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			lab: EV_LABEL
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_VERTICAL_PROGRESS_BAR} Precursor (Void)
+			Precursor {EV_VERTICAL_PROGRESS_BAR} (Void)
 
 			make_with_range (par, 0, 100)
 			-- Set the tabs for the action window

@@ -18,7 +18,7 @@ feature -- Initialization
 			text_component_current_name := name
 			text_component_e_window := e
 			component ?= w
-			create cmd.make (~change_command)
+			create cmd.make (agent change_command)
 			component.add_change_command (cmd, Void)
 		end
 

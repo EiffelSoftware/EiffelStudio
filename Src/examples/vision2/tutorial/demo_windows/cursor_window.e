@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,41 +27,41 @@ feature {NONE} -- Initialization
 			color: EV_BASIC_COLORS
 			code: EV_CURSOR_CODE
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
-			!! color
-			!! code.make
+			Precursor {EV_VERTICAL_BOX} (par)
+			create color
+			create code.make
 
-			!! frame.make_with_text (Current, "Normal Cursor")
+			create frame.make_with_text (Current, "Normal Cursor")
 
-			!! frame.make_with_text (Current, "Busy Cursor")
-			!! cur.make_by_code (code.busy)
+			create frame.make_with_text (Current, "Busy Cursor")
+			create cur.make_by_code (code.busy)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Crosshair Cursor")
-			!! cur.make_by_code (code.crosshair)
+			create frame.make_with_text (Current, "Crosshair Cursor")
+			create cur.make_by_code (code.crosshair)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Help Cursor")
-			!! cur.make_by_code (code.help)
+			create frame.make_with_text (Current, "Help Cursor")
+			create cur.make_by_code (code.help)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Ibeam Cursor")
-			!! cur.make_by_code (code.ibeam)
+			create frame.make_with_text (Current, "Ibeam Cursor")
+			create cur.make_by_code (code.ibeam)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "No Cursor")
-			!! cur.make_by_code (code.no)
+			create frame.make_with_text (Current, "No Cursor")
+			create cur.make_by_code (code.no)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Sizeall Cursor")
-			!! cur.make_by_code (code.sizeall)
+			create frame.make_with_text (Current, "Sizeall Cursor")
+			create cur.make_by_code (code.sizeall)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Sizens Cursor")
-			!! cur.make_by_code (code.sizens)
+			create frame.make_with_text (Current, "Sizens Cursor")
+			create cur.make_by_code (code.sizens)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Sizewe Cursor")
-			!! cur.make_by_code (code.sizewe)
+			create frame.make_with_text (Current, "Sizewe Cursor")
+			create cur.make_by_code (code.sizewe)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Uparrow Cursor")
-			!! cur.make_by_code (code.uparrow)
+			create frame.make_with_text (Current, "Uparrow Cursor")
+			create cur.make_by_code (code.uparrow)
 			frame.set_cursor (cur)
-			!! frame.make_with_text (Current, "Wait Cursor")
-			!! cur.make_by_code (code.wait)
+			create frame.make_with_text (Current, "Wait Cursor")
+			create cur.make_by_code (code.wait)
 			frame.set_cursor (cur)
 		end
 

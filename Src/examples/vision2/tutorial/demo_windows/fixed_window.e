@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,11 +25,11 @@ feature {NONE} -- Initialization
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_FIXED} Precursor (par)
+			Precursor {EV_FIXED} (par)
 
-			!!button1.make_with_text (Current, "Press me")
-			!!button2.make_with_text (Current, "Me too!")
-			!! cmd.make (~execute1)
+			create button1.make_with_text (Current, "Press me")
+			create button2.make_with_text (Current, "Me too!")
+			create cmd.make (agent execute1)
 			button1.add_click_command (cmd, Void)
 			button1.set_x_y (10, 20)
 			button2.set_x_y (200, 50)

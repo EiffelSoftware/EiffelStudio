@@ -19,7 +19,7 @@ inherit
 			activate
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -27,7 +27,7 @@ feature -- Access
 	main_widget: EV_FIXED is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 		end
 
 	status: EV_STATUS_BAR
@@ -44,16 +44,16 @@ feature -- Status setting
 			s: STRING
 			i: INTEGER
 		do
-			!! status.make (Current)
-			!! sbi.make_with_text (status, "Item 1")
-			!! sbi.make (status)
+			create status.make (Current)
+			create sbi.make_with_text (status, "Item 1")
+			create sbi.make (status)
 			sbi.set_width (100)
 			sbi.set_text ("Sad Item 2")
-			!! sbi.make_with_text (status, "Item 3")
+			create sbi.make_with_text (status, "Item 3")
 
-			!! sb.make (Current)
-			!! menu.make_with_text (sb, "&Premiere")
-			!! menu.make_with_text (sb, "&Seconde")
+			create sb.make (Current)
+			create menu.make_with_text (sb, "&Premiere")
+			create menu.make_with_text (sb, "&Seconde")
 		end
 	
 	set_values is
@@ -70,7 +70,7 @@ feature -- Show the window
 		do
 			show
 			win.set_insensitive (True)
-			!! arg1.make (Current)
+			create arg1.make (Current)
 			add_close_command (win, arg1)
 	end
 

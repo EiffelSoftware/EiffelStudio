@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_COMBO_BOX is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 		end
 
 	item1, item2, item3: EV_LIST_ITEM
@@ -37,9 +37,9 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!! item1.make_with_text (main_widget, "item1")
-			!! item2.make_with_text (main_widget, "item2")
-			!! item3.make_with_text (main_widget, "item3")
+			create item1.make_with_text (main_widget, "item1")
+			create item2.make_with_text (main_widget, "item2")
+			create item3.make_with_text (main_widget, "item3")
 			main_widget.set_text ("edit me")
 		end
 	

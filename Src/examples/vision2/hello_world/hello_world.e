@@ -22,7 +22,7 @@ feature -- Initialization
 			b: EV_BUTTON
 		do
 			create b.make_with_text ("Hello world")
-			b.select_actions.extend (~on_button_select)
+			b.select_actions.extend (agent on_button_select)
 			first_window.extend (b)
 		end
 

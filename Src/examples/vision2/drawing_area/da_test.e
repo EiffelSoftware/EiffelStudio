@@ -61,8 +61,8 @@ feature -- Initialization
 				-- Add widgets to our window
 			first_window.extend(my_container)
 
-			idle_actions.extend (~on_idle_action)
-			da_paint.expose_actions.extend (~on_paint)
+			idle_actions.extend (agent on_idle_action)
+			da_paint.expose_actions.extend (agent on_paint)
 		end
 
 	first_window: EV_TITLED_WINDOW is
@@ -276,13 +276,13 @@ feature {NONE} -- Random Drawing
 	initialize_drawing_operations is
 		do
 			create drawing_operations.make (0, Number_drawing_operations)
-			drawing_operations.put (~draw_polyline, 0)
-			drawing_operations.put (~draw_text, 1)
-			drawing_operations.put (~draw_arc, 2)
-			drawing_operations.put (~draw_point, 3)
-			drawing_operations.put (~draw_ellipse, 4)
-			drawing_operations.put (~draw_rectangle, 5)
-			drawing_operations.put (~draw_pixmap, 6)
+			drawing_operations.put (agent draw_polyline, 0)
+			drawing_operations.put (agent draw_text, 1)
+			drawing_operations.put (agent draw_arc, 2)
+			drawing_operations.put (agent draw_point, 3)
+			drawing_operations.put (agent draw_ellipse, 4)
+			drawing_operations.put (agent draw_rectangle, 5)
+			drawing_operations.put (agent draw_pixmap, 6)
 		end
 
 feature {NONE} -- Random Implementation

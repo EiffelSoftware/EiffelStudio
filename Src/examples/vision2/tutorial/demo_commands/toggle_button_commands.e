@@ -18,7 +18,7 @@ feature -- Initialization
 			toggle_button_current_name := name
 			toggle_button_e_window := e
 			button ?= w
-			create cmd.make (~toggle_command)
+			create cmd.make (agent toggle_command)
 			button.add_toggle_command (cmd, Void)
 		end
 

@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,25 +27,25 @@ feature {NONE} -- Initialization
 			arg: EV_ARGUMENT1 [BOOLEAN]
 			color: EV_COLOR
 		do
-			{EV_DRAWING_AREA} Precursor (par)
+			Precursor {EV_DRAWING_AREA} (par)
 			set_minimum_size (300, 300)
 
 			-- Command on the drawing area
-			!! cmd.make (~execute_expose)
+			create cmd.make (agent execute_expose)
 			add_paint_command (cmd, Void)
-			!! cmd.make (~execute_press)
+			create cmd.make (agent execute_press)
 			add_button_press_command (1, cmd, Void)
-			!! cmd.make (~execute_motion)
+			create cmd.make (agent execute_motion)
 			add_motion_notify_command (cmd, Void)
-			!! cmd.make (~execute_release)
+			create cmd.make (agent execute_release)
 			add_button_release_command (1, cmd, Void)
-			!! cmd.make (~execute_right_click)
+			create cmd.make (agent execute_right_click)
 			add_button_press_command (3, cmd, Void)
 
 			-- Colors of the drawing area
-			!! color.make_rgb (0, 255, 0)
+			create color.make_rgb (0, 255, 0)
 			set_foreground_color (color)
-			!! color.make_rgb (0, 122, 122)
+			create color.make_rgb (0, 122, 122)
 			set_background_color (color)
 		end
 
@@ -66,7 +66,7 @@ feature -- Status setting
 		do
 			figure := f
 			figure.attach_drawing (Current)
-			!! pt.set (150, 150)
+			create pt.set (150, 150)
 			figure.set_origin (pt)
 		end
 
@@ -99,7 +99,7 @@ feature -- Execute command
 			create pt.set (data.x, data.y)
 			if figure.contains (pt) then
 				button_click := True
-				!! point.set (data.x, data.y)
+				create point.set (data.x, data.y)
 			end
 		end
 
@@ -110,7 +110,7 @@ feature -- Execute command
 			vector: EV_VECTOR
 		do
 			if button_click then
-				!! pt.set (data.x, data.y)
+				create pt.set (data.x, data.y)
 				vector := pt - point
 				point := pt
 				figure.translate (vector)
@@ -131,7 +131,7 @@ feature -- Execute command
 		do
 			angle := (angle + 11) \\ 360
 			create ang.make_in_degrees (angle)
-			!! pt.set (data.x, data.y)
+			create pt.set (data.x, data.y)
 			figure.rotate (ang, pt)
 			figure.draw
 		end

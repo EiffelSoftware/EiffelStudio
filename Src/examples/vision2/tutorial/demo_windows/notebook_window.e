@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,20 +27,20 @@ feature {NONE} -- Initialization
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_NOTEBOOK} Precursor (Void)
-			!! button1.make (Current)
-			!! box.make (Current)
-			!! button_box.make_with_text (box, "button 1")
-			!! button_box.make_with_text (box, "button 2")
-			!! button_box.make_with_text (box, "button 3")
-			!! button_box.make_with_text (box, "button 4")
+			Precursor {EV_NOTEBOOK} (Void)
+			create button1.make (Current)
+			create box.make (Current)
+			create button_box.make_with_text (box, "button 1")
+			create button_box.make_with_text (box, "button 2")
+			create button_box.make_with_text (box, "button 3")
+			create button_box.make_with_text (box, "button 4")
 			button1.set_text ("Button")			
 			append_page (button1, "Button")
 			append_page (box, "Pixmap 2")
 			set_current_page (2)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "notebook")
-			create cmd.make (~switch_command)
+			create cmd.make (agent switch_command)
 			add_switch_command (cmd, Void)
 			set_parent (par)			
 		end

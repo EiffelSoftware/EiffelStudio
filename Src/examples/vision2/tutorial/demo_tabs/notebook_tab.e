@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,25 +25,25 @@ feature -- Initialization
 			cmd1, cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 		
 				-- Create the objects and their commands
-			create cmd1.make (~set_cp)
-			create cmd2.make (~get_cp)
+			create cmd1.make (agent set_cp)
+			create cmd2.make (agent get_cp)
 			create f1.make (Current, 0, 0, "Current Page", cmd1, cmd2)			
 
-			create cmd2.make (~get_count)
+			create cmd2.make (agent get_count)
 			create f2.make (Current, 1, 0, "Pages", cmd1, cmd2)
 			create h1.make (Current)
 			set_child_position (h1, 2, 0, 3, 3)
 
 			create b1.make_with_text(Current,"Add New Page")
-			create cmd1.make (~add_page)
+			create cmd1.make (agent add_page)
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
 			set_child_position (b1, 3, 0, 4, 1)	
 			create b2.make_with_text(Current,"Move Tabs")
-			create cmd1.make (~move_tabs)
+			create cmd1.make (agent move_tabs)
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)
 			set_child_position (b2, 3, 1, 4, 2)

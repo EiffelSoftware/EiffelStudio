@@ -78,20 +78,20 @@ feature -- Initialization
 
 			create add_pixmap_button
 			add_pixmap_button.set_text ("Add pixmaps")
-			add_pixmap_button.select_actions.extend (~add_pixmap_button_pushed)
+			add_pixmap_button.select_actions.extend (agent add_pixmap_button_pushed)
 			create remove_pixmap_button
 			remove_pixmap_button.set_text ("Remove pixmaps")
-			remove_pixmap_button.select_actions.extend (~remove_pixmap_button_pushed)
+			remove_pixmap_button.select_actions.extend (agent remove_pixmap_button_pushed)
 			create size_pixmap_button
 			size_pixmap_button.set_text ("Pixmaps Size")
 			size_pixmap_button.set_value (16)
-			size_pixmap_button.change_actions.extend (~size_pixmap_button_pushed)
+			size_pixmap_button.change_actions.extend (agent size_pixmap_button_pushed)
 			create large_pixmap_button
 			large_pixmap_button.set_text ("Large pixmaps")
-			large_pixmap_button.select_actions.extend (~large_pixmap_button_pushed)
+			large_pixmap_button.select_actions.extend (agent large_pixmap_button_pushed)
 			create small_pixmap_button
 			small_pixmap_button.set_text ("Small pixmaps")
-			small_pixmap_button.select_actions.extend (~small_pixmap_button_pushed)
+			small_pixmap_button.select_actions.extend (agent small_pixmap_button_pushed)
 
 
 			create button_container

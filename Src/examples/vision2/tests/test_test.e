@@ -39,25 +39,25 @@ feature -- Initialization
 			hb.extend (mb)
 			mb.extend (cb)
 			vb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button1", ~prepend_button (vb, "Extra!")))
+				"Button1", agent prepend_button (vb, "Extra!")))
 			vb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button2", ~append_button (vb, "Extra!")))
+				"Button2", agent append_button (vb, "Extra!")))
 			hb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button3", ~prepend_button (hb, "Extra!")))
+				"Button3", agent prepend_button (hb, "Extra!")))
 			hb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button4", ~append_button (hb, "Extra!")))
+				"Button4", agent append_button (hb, "Extra!")))
 			mb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button5", ~prepend_button (mb, "Extra!")))
+				"Button5", agent prepend_button (mb, "Extra!")))
 			mb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button6", ~append_button (mb, "Extra!")))
+				"Button6", agent append_button (mb, "Extra!")))
 			cb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button7", ~prepend_button (cb, "Extra!")))
+				"Button7", agent prepend_button (cb, "Extra!")))
 			cb.extend (create {EV_BUTTON}.make_with_text_and_action (
-				"Button8", ~append_button (cb, "Extra!")))
+				"Button8", agent append_button (cb, "Extra!")))
 			first_window.extend (vb)
 			vb.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
-			first_window.key_press_actions.extend (~on_key_press)
-			first_window.key_release_actions.extend (~on_key_release)
+			first_window.key_press_actions.extend (agent on_key_press)
+			first_window.key_release_actions.extend (agent on_key_release)
 
 		create ob.make_with_text ("Optieeeebuttonnn")
 		ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("Sod off"))

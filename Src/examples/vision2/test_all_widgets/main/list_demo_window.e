@@ -17,7 +17,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -25,7 +25,7 @@ feature -- Access
 	main_widget: EV_LIST is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 	
 feature -- Access
@@ -41,12 +41,12 @@ feature -- Status setting
 			pixmap: EV_PIXMAP
 			arg: EV_ARGUMENT1[LIST_DEMO_WINDOW]
 		do
-			!! item1.make (main_widget)
+			create item1.make (main_widget)
 --			!! pixmap.make_from_file (the_parent.pixname("menu"))
 			item1.set_text("This is item1")
-			!!item2.make (main_widget)
+			create item2.make (main_widget)
 --			!! pixmap.make_from_file (the_parent.pixname("menu"))
-			!!item3.make (main_widget)
+			create item3.make (main_widget)
 --			!! pixmap.make_from_file (the_parent.pixname("menu"))
 			item3.set_text ("item3")
        	end

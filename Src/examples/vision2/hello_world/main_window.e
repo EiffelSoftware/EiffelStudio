@@ -15,7 +15,7 @@ inherit
 			make_top_level
 		end
 
-creation
+create
 	make_top_level
 
 feature --Access
@@ -28,7 +28,7 @@ feature -- Initialization
 	make_top_level is
 			-- Creation of the window.
 		do
-			{EV_WINDOW} Precursor
+			Precursor {EV_WINDOW}
 			create button.make (Current)
 			set_values
 			set_commands

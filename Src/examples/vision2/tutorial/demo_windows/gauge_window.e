@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_TABLE} Precursor (Void)
+			Precursor {EV_TABLE} (Void)
 
 			create g1.make(Current)
 			set_child_position(g1,0,1,1,2)

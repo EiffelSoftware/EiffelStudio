@@ -13,7 +13,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -52,7 +52,7 @@ feature -- Execution features
 			if dialog /= Void then
 				dialog.show
 			else
-				!! dialog.make (parent)
+				create dialog.make (parent)
 --				!! cmd.make (~execute2)
 --				dialog.add_ok_command (cmd, Void)
 --				!! cmd.make (~execute3)

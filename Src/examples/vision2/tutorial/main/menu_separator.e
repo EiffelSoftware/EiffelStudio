@@ -13,7 +13,7 @@ inherit
 				demo_window
 			end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -27,7 +27,7 @@ feature -- Initialization
 	create_demo is
 			-- Create the demo_window
 		do
-			!! demo_window.make (demo_page)
+			create demo_window.make (demo_page)
 		end
 
 feature -- Access

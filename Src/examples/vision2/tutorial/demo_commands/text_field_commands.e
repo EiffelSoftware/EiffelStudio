@@ -18,7 +18,7 @@ feature -- Initialization
 			text_field_current_name := name
 			text_field_e_window := e
 			field ?= w
-			create cmd.make (~return_command)
+			create cmd.make (agent return_command)
 			field.add_return_command (cmd, Void)
 		end
 

@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -50,7 +50,7 @@ feature -- Execution features
 			if warning /= Void then
 				warning.show
 			else
-				!! warning.make_default (parent, "Warning Dialog", "Be carefull !")
+				create warning.make_default (parent, "Warning Dialog", "Be carefull !")
 			end
 		end
 

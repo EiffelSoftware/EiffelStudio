@@ -16,7 +16,7 @@ inherit
 	EV_BASIC_COLORS
 	PIXMAP_PATH
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -31,7 +31,7 @@ feature -- Initialization
 				-- List of drawing styles.
 
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 			create n1.make (Current)
 			n1.set_tab_bottom
 			set_child_position(n1, 0, 0, 2, 2)
@@ -39,19 +39,19 @@ feature -- Initialization
 			create t2.make (n1)
 			n1.append_page (t1, "Attributes")
 			n1.append_page (t2, "Geometrics")
-			create cmd1.make (~set_line_width)
-			create cmd2.make (~get_line_width)		
+			create cmd1.make (agent set_line_width)
+			create cmd2.make (agent get_line_width)		
 			create f3.make (t1, 2, 0, "Line Width", cmd1, cmd2)
-			create cmd1.make (~set_logical_mode)
-			create cmd2.make (~get_logical_mode)
+			create cmd1.make (agent set_logical_mode)
+			create cmd2.make (agent get_logical_mode)
 			create f4.make (t1, 3, 0, "Drawing Mode", cmd1, cmd2)
-			create cmd2.make (~drawable)
+			create cmd2.make (agent drawable)
 			create f5.make (t1, 4, 0, "Drawable", Void, cmd2)
 			
 			-- Set up `list1'.
 			create list1.make (t2)
 			t2.set_child_position (list1, 0, 0, 2, 2)
-			create cmd1.make (~select_drawing_item)
+			create cmd1.make (agent select_drawing_item)
 			list1.add_select_command (cmd1, Void)
 			create i1.make_with_text (list1, "Point")
 			create i1.make_with_text (list1, "Text")
@@ -69,23 +69,23 @@ feature -- Initialization
 			create i1.make_with_text (list1, "Clear Rect")
 
 				-- Create buttons for tab.			
-			create cmd1.make (~draw_item)
+			create cmd1.make (agent draw_item)
 			create b1.make_with_text (t2, "Draw")
 			b1.set_vertical_resize (False)
 			b1.add_click_command (cmd1, Void)
 			t2.set_child_position (b1, 2, 0, 3, 2)
-			create cmd1.make (~clear)
+			create cmd1.make (agent clear)
 			create b2.make_with_text (t2, "Clear Drawing")
 			b2.set_vertical_resize (False)
 			b2.add_click_command (cmd1, Void)
 			t2.set_child_position (b2, 3, 0, 4, 2)
-			create cmd1.make (~add_to_list)
+			create cmd1.make (agent add_to_list)
 			create b3.make_with_text (t2, "Add ")
 			b3.set_vertical_Resize (False)
 			b3.add_click_command (cmd1, Void)
 			t2.set_child_position (b3, 3, 2, 4, 3)
 			b3.hide
-			create cmd1.make (~clear_list)
+			create cmd1.make (agent clear_list)
 			create b4.make_with_text (t2, "Clear List")
 			b4.add_click_command (cmd1, Void)
 			t2.set_child_position (b4, 3, 3, 4, 4)

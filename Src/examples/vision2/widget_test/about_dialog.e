@@ -28,7 +28,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

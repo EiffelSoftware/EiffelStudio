@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -26,7 +26,7 @@ feature -- Initialization
 				-- Commands used by the tab.
 			
 		do
-		{ANY_TAB} Precursor (Void)
+		Precursor {ANY_TAB} (Void)
 
 		set_parent (par)
 		end

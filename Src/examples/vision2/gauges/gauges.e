@@ -53,18 +53,18 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_LABEL}.make_with_text ("Max: "))
 			hb.extend (max_field)
 
-			min_field.change_actions.extend (~on_min_change (?))
-			max_field.change_actions.extend (~on_max_change (?))
-			sb.change_actions.extend (~on_sb_change (?))
-			val_field.change_actions.extend (~on_val_change (?))
-			hr.change_actions.extend (~on_hr_change (?))
+			min_field.change_actions.extend (agent on_min_change (?))
+			max_field.change_actions.extend (agent on_max_change (?))
+			sb.change_actions.extend (agent on_sb_change (?))
+			val_field.change_actions.extend (agent on_val_change (?))
+			hr.change_actions.extend (agent on_hr_change (?))
 
 			val_field.value_range.adapt (min_field.value |..| max_field.value)
 			sb.value_range.adapt (min_field.value |..| max_field.value)
 			pb.value_range.adapt (min_field.value |..| max_field.value)
 			hr.value_range.adapt (min_field.value |..| max_field.value)
 
-			first_window.close_request_actions.extend (~destroy)
+			first_window.close_request_actions.extend (agent destroy)
 			
 			first_window.set_maximum_height (250)
 			first_window.show

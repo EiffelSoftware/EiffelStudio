@@ -16,7 +16,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- We create the table first without parent as it
 			-- is faster.
 		do
-			{EV_HORIZONTAL_RANGE} Precursor (par)
+			Precursor {EV_HORIZONTAL_RANGE} (par)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "range")
 			set_parent (par)

@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,10 +25,10 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 
-			create cmd1.make (~set_font_style)
-			create cmd2.make (~get_font_style)
+			create cmd1.make (agent set_font_style)
+			create cmd2.make (agent get_font_style)
 			create c1.make (Current, 0, 0, "Font Style", cmd1, cmd2)
 			create normal.make_with_text (c1.combo, "Normal")
 			create bold.make_with_text (c1.combo, "Bold")
@@ -36,30 +36,30 @@ feature -- Initialization
 
 
 
-			create cmd1.make (~set_font_color)
-			create cmd2.make (~get_font_color)
+			create cmd1.make (agent set_font_color)
+			create cmd2.make (agent get_font_color)
 			create c2.make (Current, 1, 0, "Font Color", cmd1, cmd2)
 			create red.make_with_text (c2.combo, "Red")
 			create green.make_with_text (c2.combo, "Green")
 			create blue.make_with_text (c2.combo, "Blue")
 
 
-			create cmd1.make (~set_font)
-			create cmd2.make (~get_font)
+			create cmd1.make (agent set_font)
+			create cmd2.make (agent get_font)
 			create c3.make (Current, 2, 0, "Type Face", cmd1, cmd2)
 			create font1.make_with_text (c3.combo, "Times New Roman")
 			create font2.make_with_text (c3.combo, "Arial")
 			create font3.make_with_text (c3.combo, "Wingdings")
 
-			create cmd1.make (~set_font_size)
-			create cmd2.make (~get_font_size)
+			create cmd1.make (agent set_font_size)
+			create cmd2.make (agent get_font_size)
 			create f1.make (Current, 3, 0, "Font Size", cmd1, cmd2)
 
-			create cmd1.make (~set_line_number)
-			create cmd2.make (~get_line_number)
+			create cmd1.make (agent set_line_number)
+			create cmd2.make (agent get_line_number)
 			create f2.make (Current, 4, 0, "Line Number", cmd1, cmd2)
 			
-			create cmd1.make (~remove_text)
+			create cmd1.make (agent remove_text)
 			create b1.make_with_text (Current, "Remove Selected Text")
 			b1.add_click_command(cmd1, Void)
 			set_child_position (b1, 7, 1, 8, 2)

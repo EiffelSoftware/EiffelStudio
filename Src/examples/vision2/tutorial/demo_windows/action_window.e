@@ -16,7 +16,7 @@ class
 		
 		
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -49,7 +49,7 @@ feature -- Initialization
 				
 				tabs.forth
 			end
-			create cmd.make (~my_function)
+			create cmd.make (agent my_function)
 			create arg.make (1)
 			add_close_command (cmd, arg)
 		end

@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_VERTICAL_BOX is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			create Result.make (Current)
 		end
 
 	TextField: EV_TEXT_FIELD
@@ -42,10 +42,10 @@ feature -- Status setting
 		local
 			frame: EV_FRAME
 		do
-			!! frame.make_with_text (main_widget, "A Text Field")
-			!! textfield.make_with_text (frame, "Edit me")
-			!! frame.make_with_text (main_widget, "A Password Field")
-			!! passwordfield.make_with_text (frame, "Me too")
+			create frame.make_with_text (main_widget, "A Text Field")
+			create textfield.make_with_text (frame, "Edit me")
+			create frame.make_with_text (main_widget, "A Password Field")
+			create passwordfield.make_with_text (frame, "Me too")
 		end
 	
 	set_values is

@@ -19,7 +19,7 @@ inherit
 
 	PIXMAP_PATH
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			arg: EV_ARGUMENT1 [INTEGER]
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			Precursor {EV_VERTICAL_BOX} (Void)
 
 			set_spacing (5)
 			set_border_width (10)

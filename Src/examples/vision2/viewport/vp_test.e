@@ -35,11 +35,11 @@ feature -- Initialization
 			hb.set_minimum_size (350, 20)
 			hb.extend (create {EV_LABEL}.make_with_text ("EV_VIEWPORT"))
 			create sb_x
-			sb_x.change_actions.extend (~on_sb_x_changed)
+			sb_x.change_actions.extend (agent on_sb_x_changed)
 			hb.extend (create {EV_LABEL}.make_with_text ("x_offset:"))
 			hb.extend (sb_x)
 			create sb_y
-			sb_y.change_actions.extend (~on_sb_y_changed)
+			sb_y.change_actions.extend (agent on_sb_y_changed)
 			hb.extend (create {EV_LABEL}.make_with_text ("y_offset:"))
 			hb.extend (sb_y)
 			vb.extend (hb)
@@ -51,7 +51,7 @@ feature -- Initialization
 			vb.disable_item_expand (vb.last)
 			create sa.make_for_test
 			vb.extend (sa)
-			first_window.resize_actions.extend (~on_geometry)
+			first_window.resize_actions.extend (agent on_geometry)
 		end
 
 	on_geometry (x, y, w, h: INTEGER) is

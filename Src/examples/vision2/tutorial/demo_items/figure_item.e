@@ -28,7 +28,7 @@ feature {DEMO_ITEM} -- Execution commands
 			-- window and the options. The previous demo
 			-- get a Void parent
 		do
-			{DEMO_ITEM} Precursor (arg, ev_data)
+			Precursor {DEMO_ITEM} (arg, ev_data)
 			demo_window.set_figure (figure)
 		end
 

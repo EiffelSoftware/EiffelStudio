@@ -20,7 +20,7 @@ inherit
 	TEXT_COMPONENT_COMMANDS
 	
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			color: EV_COLOR
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_RICH_TEXT} Precursor (Void)
+			Precursor {EV_RICH_TEXT} (Void)
 			add_button_release_command (3, Current, Void)
 			set_minimum_size (200, 200)
 			set_text ("Hello,%N%NThis is a rich edit.%N%
@@ -41,15 +41,15 @@ feature {NONE} -- Initialization
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "rich edit")
 			add_text_component_commands (Current, event_window, "Rich window")
-			create cmd.make (~insert_text_command)
+			create cmd.make (agent insert_text_command)
 			add_insert_text_command (cmd, Void)
-			create cmd.make (~delete_text_command)
+			create cmd.make (agent delete_text_command)
 			add_delete_text_command (cmd, Void)
-			create cmd.make (~delete_right_character_command)
+			create cmd.make (agent delete_right_character_command)
 			add_delete_right_character_command (cmd, Void)
-			create cmd.make (~undo_command)
+			create cmd.make (agent undo_command)
 			add_undo_command (cmd, Void)
-			create cmd.make (~redo_command)
+			create cmd.make (agent redo_command)
 			add_redo_command (cmd, Void)
 			set_parent (par)
 		end
@@ -80,18 +80,18 @@ feature -- Basic operation
 			color: EV_COLOR
 			font: EV_FONT
 		do
-			!! Result.make
+			create Result.make
 
-			!! format.make
-			!! color.make_rgb (0, 0, 255)
+			create format.make
+			create color.make_rgb (0, 0, 255)
 			format.set_color (color)
 			set_character_format (format)
 			Result.add_character_format_with_regions (format, <<1, 8, 86, 89, 93, 108>>)		
 
-			!! format.make
-			!! font.make_by_system_name ("tahoma,24,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
+			create format.make
+			create font.make_by_system_name ("tahoma,24,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
 			format.set_font (font)
-			!! color.make_rgb (255, 0, 0)
+			create color.make_rgb (255, 0, 0)
 			format.set_color (color)
 			format.set_italic (True)
 			set_character_format (format)
@@ -111,7 +111,7 @@ feature -- Command execution
 			format.set_italic (False)
 		--	!! ft.make_by_name ("Symbol")
 			create ft.make_by_name ("Times New Roman")
-			!! colors
+			create colors
 			format.set_color (colors.black)
 			format.set_font (ft)
 			set_character_format (format)

@@ -67,10 +67,10 @@ feature -- Output
 			Result.append_integer (position);
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Generic #");
-			ow.put_int (position);
+			st.add_string ("Generic #");
+			st.add_int (position);
 		end;
 
 feature {COMPILER_EXPORTER}

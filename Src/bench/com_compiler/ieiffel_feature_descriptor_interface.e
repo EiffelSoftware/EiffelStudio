@@ -334,7 +334,6 @@ feature -- Basic Operations
 			-- `line_number' [in, out].  
 		require
 			non_void_file_path: file_path /= Void
-			valid_file_path: file_path.item /= Void
 			non_void_line_number: line_number /= Void
 			feature_location_user_precondition: feature_location_user_precondition (file_path, line_number)
 		deferred

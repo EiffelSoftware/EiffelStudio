@@ -186,7 +186,7 @@ feature {NONE} -- Processing
 					else
 						write_element (e, is_start, True)
 					end
-						-- Url
+						-- Url				
 				elseif e.is_equal ("url") then
 					Attribute_stack.extend (e)					
 					if l_previous.is_equal ("image") then
@@ -220,6 +220,11 @@ feature {NONE} -- Processing
 					l_name := e
 					output_string.remove_tail (4)
 					output_string.append ("</body>")
+				elseif e.is_equal ("meta_data") then
+						-- Meta Data
+					if title /= Void then
+						output_string.append ("<title>" + title + "</title>")
+					end
 				elseif e.is_equal ("list")then
 						-- List					
 					if list_type_stack.item then						
@@ -298,7 +303,10 @@ feature {NONE} -- Processing
 					l_att := " " + a_name + "=%"" + a_value + "%""
 				end				
 										
-				if l_prev_element.is_equal ("list") then
+				if l_prev_element.is_equal ("document") and then a_name.is_equal ("title") then
+						-- Document
+					title := a_value
+				elseif l_prev_element.is_equal ("list") then
 						-- List
 					if a_value.is_equal ("true") then
 						write_element ("list_ordered", True, True)
@@ -604,5 +612,8 @@ feature {NONE} -- Implementation
 
 	restore_attribute_value: INTEGER
 			-- Value to restore `attribute_value_write_position' to after regaulr attribute processing
+	
+	title: STRING
+			-- Document title
 	
 end -- class HTML_FILTER

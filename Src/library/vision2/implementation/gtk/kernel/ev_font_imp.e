@@ -281,14 +281,15 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 
-			if temp_font = Void then
-				name := ""
-				io.put_string ("Error: no fonts installed%N")
+			if temp_font.c_object = NULL then
+				-- The font cannot be found so we do nothing and stick with the last found font.
+				--name := ""
+				--full_name := ""
 				--| FIXME Raise exception?
+			else
+				c_object := temp_font.c_object
+				full_name := temp_font.full_name
 			end
-
-			full_name := temp_font.full_name
-			c_object := temp_font.c_object
 		end
 
 	match_name (pattern: STRING): STRING is

@@ -10,17 +10,16 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
+		redefine
+			parent_imp
+		end
 
 	EV_SEPARATOR_ITEM_IMP
-		undefine
-			top_parent_imp
 		redefine
 			parent_imp
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
-		undefine
-			top_parent_imp
 		redefine
 			type,
 			parent_imp

@@ -15,7 +15,6 @@ inherit
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
-			top_parent_imp,
 			pixmap_size_ok
 		redefine
 			set_text,

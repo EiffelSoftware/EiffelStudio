@@ -12,8 +12,6 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_SIMPLE_ITEM_IMP
-		undefine
-			top_parent_imp
 		redefine
 			parent_imp,
 			set_text

@@ -46,6 +46,12 @@ feature -- Sizing policy
 
 feature -- Element change
 
+	set_proportion (p:INTEGER) is
+			-- Set the split proportion from 1 to 99.
+		do
+			proportion := p
+		end
+
 	set_first_child (a_window: SPLIT_WINDOW_CHILD) is
 			-- set `first_child' to `a_window'.
 		require

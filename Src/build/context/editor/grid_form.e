@@ -69,6 +69,11 @@ feature {NONE}
 			bg_pixmap: PIXMAP
 		do
 			bg_pixmap := context.widget.background_pixmap;
+			no_grid.set_toggle_off;
+			grid5.set_toggle_off;
+			grid10.set_toggle_off;
+			grid15.set_toggle_off;
+			grid20.set_toggle_off;
 			if (bg_pixmap = Pixmaps.grid5_pixmap) then
 				grid5.set_toggle_on
 			elseif (bg_pixmap = Pixmaps.grid10_pixmap) then
@@ -77,6 +82,8 @@ feature {NONE}
 				grid15.set_toggle_on
 			elseif (bg_pixmap = Pixmaps.grid20_pixmap) then
 				grid20.set_toggle_on
+			else
+				no_grid.set_toggle_on	
 			end
 		end
 	

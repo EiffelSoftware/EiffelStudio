@@ -23,10 +23,10 @@ feature {AST_FACTORY} -- Initialization
 			vtbt: VTBT_SIMPLE
 		do
 			bits_value := v
-			if (bits_value.value <= 0) then
+			if (bits_value.integer_32_value <= 0) then
 				create vtbt
 				vtbt.set_class (System.current_class)
-				vtbt.set_value (bits_value.value)
+				vtbt.set_value (bits_value.integer_32_value)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -64,11 +64,11 @@ feature -- Type evaluation
 		local
 			vtbt: VTBT
 		do
-			if (bits_value.value <= 0) then
+			if (bits_value.integer_32_value <= 0) then
 				create vtbt
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
-				vtbt.set_value (bits_value.value)
+				vtbt.set_value (bits_value.integer_32_value)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -79,7 +79,7 @@ feature -- Type evaluation
 	actual_type: BITS_A is
 			-- Actual bits type
 		do
-			create Result.make (bits_value.value)
+			create Result.make (bits_value.integer_32_value)
 		end
 
 feature -- Output
@@ -89,7 +89,7 @@ feature -- Output
 		do
 			create Result.make (10)
 			Result.append ("BIT ")
-			Result.append_integer (bits_value.value)
+			Result.append_integer (bits_value.integer_32_value)
 		end
 
 end -- class BITS_AS

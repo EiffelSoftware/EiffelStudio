@@ -94,8 +94,6 @@ feature {NONE} -- Initialization
 				if select_actions_internal /= Void then
 					select_actions_internal.call (Void)
 				end
-			else
-				set_text ("")
 			end
 			if previous_selected_item_imp /= Void then
 					if previous_selected_item_imp.deselect_actions_internal /= Void then

@@ -1285,6 +1285,17 @@ feature -- Object creation
 				False)			
 		end
 
+	load_type is
+			-- Load on stack type of object on top of stack.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.generate_external_call (generic_conformance_class_name,
+				"load_type_of_object", Static_type, <<type_info_class_name>>,
+				type_class_name,
+				False)			
+		end
+		
 	create_type is
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.

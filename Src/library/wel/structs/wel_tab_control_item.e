@@ -93,6 +93,14 @@ feature -- Access
 				Result := window_of_item (window_hwmd)
 			end
 		end
+		
+	iimage: INTEGER is
+			-- Index of image applied to `Current' from the tab
+			-- controls image list.
+		do
+			Result := cwel_tc_item_get_iimage (item)
+		end
+		
 
 feature -- Element change
 
@@ -125,6 +133,13 @@ feature -- Element change
 			cwel_tc_item_set_lparam (item, a_window.to_integer)
 		ensure
 			window_set: window = a_window
+		end
+		
+	set_iimage (image_index: INTEGER) is
+			-- Apply image using image at position `image_index'
+			-- within the parent's image list.
+		do
+			cwel_tc_item_set_iimage (item, image_index)
 		end
 
 feature -- Measurement

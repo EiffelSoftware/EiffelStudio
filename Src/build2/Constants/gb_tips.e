@@ -34,6 +34,8 @@ feature -- Access
 	
 	loading_constants: STRING is "Selecting %"Load constants from file%" within the project%Nsettings, ensures that constants are generated into a%Nfile, and loaded automatically when your generated system is executed.%NBy having different versions of this file, languages may be easily changed."
 	
+	importing: STRING is "You may import the contents of an existing .BPR%Nfile into your project, by selecting the 'File', 'Import Project...'%Ncommand, and selecting the existing project to be added."
+	
 	all_tips: ARRAYED_LIST [STRING] is
 			-- All tips avaialable from `Current'.
 		once
@@ -51,6 +53,7 @@ feature -- Access
 			Result.extend (renaming_window)
 			Result.extend (directory_addition)
 			Result.extend (loading_constants)
+			Result.extend (importing)
 		end
 	
 	tip_count: INTEGER is

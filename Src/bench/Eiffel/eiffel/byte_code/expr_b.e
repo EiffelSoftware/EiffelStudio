@@ -99,6 +99,11 @@ feature
 		do
 		end;
 
+	allocates_memory: BOOLEAN is
+			-- Does the expression allocates memory ?
+		do
+		end;
+
 	unanalyze is
 			-- Undo the effect of analyze.
 		do

@@ -10,7 +10,7 @@ inherit
 			has_gcable_variable, is_single, enlarged,
 			propagate, print_register, free_register,
 			unanalyze, analyze, analyze_on, generate, generate_on,
-			make_byte_code
+			make_byte_code, allocates_memory
 		end
 	
 feature 
@@ -157,6 +157,11 @@ feature
 			end;
 			Result := Current;
 		end;
+
+	allocates_memory: BOOLEAN is
+		do
+			Result := value.is_string or else value.is_bit
+		end
 
 feature -- Byte code generation
 

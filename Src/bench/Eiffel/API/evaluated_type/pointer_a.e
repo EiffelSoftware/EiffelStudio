@@ -28,7 +28,7 @@ feature {COMPILER_EXPORTER}
 	type_i: POINTER_I is
 			-- Pointer C type
 		once
-			!!Result
+			Result := Pointer_c_type
 		end
 
 	same_as (other: TYPE_A): BOOLEAN is

@@ -62,7 +62,7 @@ feature {COMPILER_EXPORTER}
 	type_i: NONE_I is
 			-- Void C type
 		once
-			!!Result
+			Result := None_c_type
 		end
 
 	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is

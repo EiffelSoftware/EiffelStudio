@@ -15,7 +15,14 @@ deferred class
 inherit
 	EV_ITEM
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
+		end
+
+	EV_PICK_AND_DROPABLE
+		redefine
+			implementation,
+			create_action_sequences
 		end
 
 feature {NONE} -- Initialization
@@ -170,7 +177,15 @@ feature -- Assertion features
 			Result := implementation.pixmaps_size_ok (pix_array)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+		do
+			{EV_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_COMPOSED_ITEM_I
 		-- Platform dependent access
@@ -198,6 +213,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/10 01:27:27  king
+--| Now inherits from PND
+--|
 --| Revision 1.12  2000/03/03 00:36:21  rogers
 --| Make_with_text now sets the count of the item before setting the texts.
 --|

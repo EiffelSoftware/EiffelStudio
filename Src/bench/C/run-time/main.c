@@ -367,7 +367,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	if (eif_timeout != (char *) 0)		/* Environment variable set */
 		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
-		TIMEOUT = 120;
+		TIMEOUT = 15;
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */

@@ -109,7 +109,7 @@ rt_public void init_bench(int argc, char **argv)
 	if (eif_timeout != (char *) 0)			/* Environment variable set */
 		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
-		TIMEOUT = 120;
+		TIMEOUT = 15;
 
 	/* Compute program name, removing any leading path to keep only the name
 	 * of the executable file.

@@ -35,7 +35,7 @@ feature -- Status setting
 			-- Used to share an editor between several formatters.
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
-			an_editor.show_breakpoints
+			an_editor.enable_has_breakable_slots
 			editor.drop_actions.extend (agent on_breakable_drop)
 		end
 
@@ -92,7 +92,7 @@ feature -- Formatting
 						end
 					end
 					if editor.current_text /= formatted_text then
-						editor.show_breakpoints
+						editor.enable_has_breakable_slots
 						editor.process_text (formatted_text)
 						if app_stopped then
 							selected_line := stel.break_index
@@ -213,5 +213,8 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+
+	has_breakpoints: BOOLEAN is True
+			-- Should breakpoints be shown in Current?
 
 end -- class EB_ROUTINE_FLAT_FORMATTER

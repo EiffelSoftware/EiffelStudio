@@ -15,6 +15,8 @@ inherit
 			feature_cmd,
 			is_dotnet_formatter
 		end
+		
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -122,11 +124,14 @@ feature {NONE} -- Implementation
 			associated_feature_non_void: associated_feature /= Void
 		do
 			create feature_cmd.make (associated_feature)
-			if show_all_callers then
+			if preferences.feature_tool_data.show_all_callers then
 				feature_cmd.set_all_callers
 			end
 			feature_cmd.set_flag (flag)
 		end
+
+	has_breakpoints: BOOLEAN is False
+			-- Should breakpoints be shown in Current?
 
 end -- class EB_CALLERS_FORMATTER
 

@@ -62,6 +62,9 @@ feature {NONE} -- Implementation
 		do
 			create feature_cmd.make (associated_feature)
 		end
+		
+	has_breakpoints: BOOLEAN is False
+			-- Should breakpoints be shown in Current?
 
 end -- class EB_ROUTINE_DESCENDANTS_FORMATTER
 

@@ -13,7 +13,8 @@ inherit
 			generate_text,
 			set_stone,
 			is_dotnet_formatter,
-			formatted_text
+			formatted_text,
+			line_numbers_allowed
 		end
 
 	EB_SHARED_FORMAT_TABLES
@@ -100,9 +101,9 @@ feature {NONE} -- Implementation
 					last_was_error := False
 				end
 				if has_breakpoints then
-					editor.show_breakpoints
+					editor.enable_has_breakable_slots
 				else
-					editor.hide_breakpoints
+					editor.enable_has_breakable_slots
 				end
 			else
 				last_was_error := True
@@ -111,6 +112,12 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+
+	has_breakpoints: BOOLEAN is False
+		-- Should `Current' display breakpoints?
+
+	line_numbers_allowed: BOOLEAN is False
+			-- Does it make sense to show line numbers in Current?
 
 feature -- Status setting
 

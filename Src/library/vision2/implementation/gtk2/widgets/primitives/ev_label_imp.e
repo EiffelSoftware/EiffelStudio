@@ -24,12 +24,14 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_text
 		end
 
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_font
 		end
 
 create
@@ -47,6 +49,37 @@ feature {NONE} -- Initialization
 			set_c_object (text_label)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 			align_text_center
+		end
+
+	set_font (a_font: EV_FONT) is
+			-- Assign `a_font' to `font'.
+		do
+			Precursor {EV_FONTABLE_IMP} (a_font)
+			update_minimum_size
+		end
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			Precursor {EV_TEXTABLE_IMP} (a_text)
+			update_minimum_size
+		end
+
+	update_minimum_size is
+			-- 
+		local
+			a_string_size: TUPLE [INTEGER, INTEGER]
+		do
+			if private_font /= Void then
+				a_string_size := private_font.string_size (text)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (
+					text_label,
+					a_string_size.integer_32_item (1)
+					- a_string_size.integer_32_item (3)
+					+ a_string_size.integer_32_item (4)
+					, a_string_size.integer_32_item (2)
+				)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

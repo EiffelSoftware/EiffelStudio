@@ -57,7 +57,7 @@ feature -- Access bytes size
 			"sizeof(EIF_INTEGER_16)"
 		end
 
-	Integer_bytes: INTEGER is
+	Integer_32_bytes, Integer_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER'
 		external
 			"C [macro %"eif_misc.h%"]"

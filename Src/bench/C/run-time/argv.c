@@ -18,7 +18,7 @@ doc:<file name="argv.c" header="eif_argv.h" version="$Id$" summary="Initializati
 #include "eif_malloc.h"				/* For cmalloc() */
 #include "eif_plug.h"				/* For makestr() */
 #include "eif_except.h"				/* For fatal_error() */
-#include "eif_argv.h"
+#include "rt_argv.h"
 #include <string.h>				/* For strcpy(), strlen() */
 
 /*

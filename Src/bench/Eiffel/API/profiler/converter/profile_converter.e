@@ -327,7 +327,7 @@ debug("PROFILE_CONVERT")
 	io.error.new_line;
 end;
 						!! e_function.make (Void, class_n, feature_n);
-						e_function.set_class (eclass);
+						e_function.set_class_id (class_id + 1);
 						is_eiffel := true;
 						is_c := false;
 						is_cycle := false

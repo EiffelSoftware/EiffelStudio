@@ -1091,7 +1091,7 @@ feature -- Implementation
 		deferred
 		end
 
-	set_z_order (z_order: INTEGER) is
+	set_z_order (z_order: POINTER) is
 			-- Set the z-order of the window.
 		deferred
 		end

@@ -289,11 +289,16 @@ feature -- Status report
 			length: INTEGER
 			a: ANY
 		do
-			length := text_length + 1
-			!! Result.make (length)
-			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_window_text (item, $a, length))
+			length := text_length
+			if length > 0 then
+				length := length + 1
+				!! Result.make (length)
+				Result.fill_blank
+				a := Result.to_c
+				Result.head (cwin_get_window_text (item, $a, length))
+			else
+				!! Result.make (0)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

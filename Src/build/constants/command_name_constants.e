@@ -116,6 +116,7 @@ feature -- Command Instance commands
 
 feature -- Misc commands
 
+	Generate_tool_cmd_name: STRING is "Generate tool for"
 	Import_cmd_name: STRING is "Import";
 	Set_visual_name_cmd_name: STRING is "Set visual name";
 

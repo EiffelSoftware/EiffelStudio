@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
+		require
+			valid_parent: parent_needed implies par /= Void
 		deferred
 		end
 
@@ -456,6 +458,14 @@ feature -- Resizing
 			implementation.set_y (value)
 		ensure
 			y_set: implementation.y_set (x)		
+		end
+
+feature -- Assertion features
+
+	parent_needed: BOOLEAN is
+			-- Is a parent needed by the widget
+		do
+			Result := False
 		end
 
 feature -- Event - command association

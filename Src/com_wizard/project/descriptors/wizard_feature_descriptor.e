@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	name: STRING
@@ -43,7 +48,7 @@ feature -- Transformation
 			non_void_interface_descriptor: an_interface_descriptor /= Void
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
-			tmp_name: STRING
+			tmp_name, tmp_precondition_name: STRING
 		do
 			if a_coclass_descriptor.feature_c_names.has (name) then
 				name.prepend (Underscore)
@@ -56,7 +61,12 @@ feature -- Transformation
 				end
 			end
 			tmp_name := clone (interface_eiffel_name)
-			if a_coclass_descriptor.feature_eiffel_names.has (tmp_name) then
+			tmp_precondition_name := clone (tmp_name)
+			tmp_precondition_name.append ("_user_precondition")
+			if 
+				a_coclass_descriptor.feature_eiffel_names.has (tmp_name) or
+				a_coclass_descriptor.feature_eiffel_names.has (tmp_precondition_name)
+			then
 				tmp_name.prepend (Underscore)
 				tmp_name.prepend (an_interface_descriptor.name)
 				tmp_name := name_for_feature (tmp_name)
@@ -69,8 +79,36 @@ feature -- Transformation
 				add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
 			end
 			a_coclass_descriptor.feature_eiffel_names.force (clone (tmp_name))
+			tmp_name.append ("_user_precondition")
+			a_coclass_descriptor.feature_eiffel_names.force (clone (tmp_name))
+			
 			a_coclass_descriptor.feature_c_names.force (clone (name))
 			an_interface_descriptor.feature_c_names.force (clone (name))
+		end
+
+	disambiguate_eiffel_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Disambiguate names for interface.
+		require
+			non_void_interface: an_interface_descriptor /= Void
+		local
+			tmp_string, tmp_string2: STRING
+		do
+			tmp_string := clone (interface_eiffel_name)
+			tmp_string.to_lower
+			tmp_string2 := clone (tmp_string)
+			tmp_string2.append ("_user_precondition")
+			if 
+				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
+				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) or
+				eiffel_key_words.has (tmp_string)
+			then
+				interface_eiffel_name.append_integer (counter)
+			end
+			tmp_string := clone (interface_eiffel_name)
+			tmp_string2 := clone (tmp_string)
+			tmp_string2.append ("_user_precondition")
+			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
+			an_interface_descriptor.feature_eiffel_names.force (tmp_string2)
 		end
 
 feature -- Basic operations
@@ -107,6 +145,22 @@ feature -- Basic operations
 			name := clone (a_name)
 		ensure
 			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+		end
+
+feature {NONE} -- Implementation
+
+	counter: INTEGER is
+			-- Counter
+		do
+			Result := counter_impl.item
+			counter_impl.set_item (Result + 1)
+		end
+
+	counter_impl: INTEGER_REF is
+			-- Global counter
+		once
+			create Result
+			Result.set_item (1)
 		end
 
 end -- class WIZARD_FEATURE_DESCRIPTOR

@@ -24,6 +24,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	tool_tip_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `tool_tip'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	classes_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `classes'.
 			-- Redefine in descendants if needed.
@@ -59,6 +66,34 @@ feature -- Status Report
 			Result := True
 		end
 
+	relative_path_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `relative_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_override_cluster_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_override_cluster'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_library_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_library'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_recursive_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_recursive'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	name: STRING is
@@ -73,6 +108,14 @@ feature -- Basic Operations
 			-- Cluster description.
 		require
 			description_user_precondition: description_user_precondition
+		deferred
+
+		end
+
+	tool_tip: STRING is
+			-- Cluster Tool Tip.
+		require
+			tool_tip_user_precondition: tool_tip_user_precondition
 		deferred
 
 		end
@@ -113,6 +156,38 @@ feature -- Basic Operations
 			-- Full path to cluster.
 		require
 			cluster_path_user_precondition: cluster_path_user_precondition
+		deferred
+
+		end
+
+	relative_path: STRING is
+			-- Relative path to cluster.
+		require
+			relative_path_user_precondition: relative_path_user_precondition
+		deferred
+
+		end
+
+	is_override_cluster: BOOLEAN is
+			-- Should this cluster classes take priority over other classes with same name?
+		require
+			is_override_cluster_user_precondition: is_override_cluster_user_precondition
+		deferred
+
+		end
+
+	is_library: BOOLEAN is
+			-- Should this cluster be treated as library?
+		require
+			is_library_user_precondition: is_library_user_precondition
+		deferred
+
+		end
+
+	is_recursive: BOOLEAN is
+			-- Should subclusters be included recursively?
+		require
+			is_recursive_user_precondition: is_recursive_user_precondition
 		deferred
 
 		end

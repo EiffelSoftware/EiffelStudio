@@ -43,6 +43,18 @@ feature -- Access
 			Result := ccom_external_name (initializer)
 		end
 
+	tool_tip: STRING is
+			-- Class Tool Tip.
+		do
+			Result := ccom_tool_tip (initializer)
+		end
+
+	is_in_system: BOOLEAN is
+			-- Is class in system?
+		do
+			Result := ccom_is_in_system (initializer)
+		end
+
 	feature_names: ECOM_ARRAY [STRING] is
 			-- List of names of class features.
 		do
@@ -171,6 +183,18 @@ feature {NONE}  -- Externals
 			-- Class external name.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_tool_tip (cpp_obj: POINTER): STRING is
+			-- Class Tool Tip.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_is_in_system (cpp_obj: POINTER): BOOLEAN is
+			-- Is class in system?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_feature_names (cpp_obj: POINTER): ECOM_ARRAY [STRING] is

@@ -37,6 +37,12 @@ feature -- Access
 			Result := ccom_description (initializer)
 		end
 
+	tool_tip: STRING is
+			-- Cluster Tool Tip.
+		do
+			Result := ccom_tool_tip (initializer)
+		end
+
 	classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
@@ -67,6 +73,30 @@ feature -- Access
 			Result := ccom_cluster_path (initializer)
 		end
 
+	relative_path: STRING is
+			-- Relative path to cluster.
+		do
+			Result := ccom_relative_path (initializer)
+		end
+
+	is_override_cluster: BOOLEAN is
+			-- Should this cluster classes take priority over other classes with same name?
+		do
+			Result := ccom_is_override_cluster (initializer)
+		end
+
+	is_library: BOOLEAN is
+			-- Should this cluster be treated as library?
+		do
+			Result := ccom_is_library (initializer)
+		end
+
+	is_recursive: BOOLEAN is
+			-- Should subclusters be included recursively?
+		do
+			Result := ccom_is_recursive (initializer)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -85,6 +115,12 @@ feature {NONE}  -- Externals
 
 	ccom_description (cpp_obj: POINTER): STRING is
 			-- Cluster description.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_tool_tip (cpp_obj: POINTER): STRING is
+			-- Cluster Tool Tip.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
@@ -117,6 +153,30 @@ feature {NONE}  -- Externals
 			-- Full path to cluster.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_relative_path (cpp_obj: POINTER): STRING is
+			-- Relative path to cluster.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_is_override_cluster (cpp_obj: POINTER): BOOLEAN is
+			-- Should this cluster classes take priority over other classes with same name?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_library (cpp_obj: POINTER): BOOLEAN is
+			-- Should this cluster be treated as library?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_recursive (cpp_obj: POINTER): BOOLEAN is
+			-- Should subclusters be included recursively?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_cluster_descriptor_impl_proxy (a_pointer: POINTER) is

@@ -42,17 +42,20 @@ debug ("SPLIT")
 			io.put_integer (new_width)
 			io.put_string ("%N%Tnew_height = ");
 			io.put_integer (new_height)
+			io.put_string ("%N%TMinimum Pane = ");
+			io.put_integer (pane_minimum);
+			io.put_string ("%N%TMaximum Pane = ");
+			io.put_integer (pane_maximum);
 			io.new_line
 end
 			if parent.is_vertical then
-				set_pane_minimum ( new_width.abs)
+				set_pane_minimum (new_width.abs)
 			else
-				set_pane_minimum ( new_height.abs)
+				set_pane_minimum (new_height.abs)
 			end
 
-			Precursor (new_width.abs,new_height.abs)
+			{FORM} Precursor (new_width.abs,new_height.abs)
 			set_pane_minimum (1)
-
 		end
 
 	
@@ -124,6 +127,16 @@ feature --PanedWindow...
 			set_xt_dimension (screen_object, XmNpaneMaximum, a_dimension)
 		end;
 
+	pane_minimum: INTEGER is
+			-- Get the value of `XmNpaneMinimun'.
+		do
+			Result := get_xt_dimension (screen_object, XmNpaneMinimum)
+		end
 
+	pane_maximum: INTEGER is
+			-- Get the value of `XmNpaneMaximum'.
+		do
+			Result := get_xt_dimension (screen_object, XmNpaneMaximum)
+		end
 
 end -- class SPLIT_WINDOW_CHILD_IMP

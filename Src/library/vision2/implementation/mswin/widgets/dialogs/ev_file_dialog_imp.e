@@ -38,7 +38,7 @@ feature -- Access
 			if selected then
 				Result := wel_file_name
 			else
-				Result := Void
+				Result := ""
 			end
 		end
 
@@ -54,7 +54,7 @@ feature -- Status report
 			-- `file_name' without its path.
 		do
 			Result := file_name
-			if Result /= Void then
+			if not Result.is_empty then
 				Result := Result.substring (
 					Result.last_index_of ('\', Result.count) + 1,
 					Result.count)
@@ -65,7 +65,7 @@ feature -- Status report
 			-- Path of `file_name'.
 		do
 			Result := file_name
-			if Result /= Void then
+			if not Result.is_empty then
 				Result := Result.substring (
 					1,
 					Result.last_index_of ('\', Result.count) - 1)

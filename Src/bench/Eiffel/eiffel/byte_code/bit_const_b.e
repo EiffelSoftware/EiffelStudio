@@ -1,22 +1,37 @@
-class BIT_CONST_B 
+indexing
+	description: "BIT constant byte node."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	BIT_CONST_B 
 
 inherit
-
 	EXPR_B
 		redefine
-			enlarged, make_byte_code, generate_il
+			enlarged, make_byte_code, generate_il, is_simple_expr, allocates_memory
 		end
 
-feature 
+feature -- Access
 
 	value: STRING;
 			-- Bit value (sequence of 0 and 1)
+
+feature -- Settings
 
 	set_value (v: STRING) is
 			-- Assign `v' to `value'.
 		do
 			value := v;
 		end;
+
+feature -- Status report
+
+	is_simple_expr: BOOLEAN is True
+			-- A string is a simple expression
+
+	allocates_memory: BOOLEAN is True
+
 
 	type: BIT_I is
 			-- Integer type

@@ -177,6 +177,7 @@ feature -- Start output
 			if not exists then
 				create_window
 			end;
+			cancel_b.disable;
 			set_text (Interface_names.d_Documentation);
 			icon_name := Project_tool.icon_name;
 			total_number := total_num;
@@ -358,12 +359,14 @@ feature -- Per entity output
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for ECase.
 		local
-			a_per: INTEGER
+			a_per: INTEGER;
+			to_go: INTEGER
 		do
-			a_per := percentage_calculation (processed);
+			to_go := total_number - processed;
+			a_per := percentage_calculation (to_go);
 			processed := processed + 1;
 			progress_bar.set_position (a_per);
-			update_interface (a_class.name_in_upper, total_number - processed, a_per);
+			update_interface (a_class.name_in_upper, to_go, a_per);
 
 			process_messages
 		end

@@ -169,9 +169,7 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						-- For now, the wizard will generate everything so that generated files that include
-						-- header files from the standard type libraries still compile.
-						True -- not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
+						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
 					end
@@ -186,9 +184,7 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						-- For now, the wizard will generate everything so that generated files that include
-						-- header files from the standard type libraries still compile.
-						True -- not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
+						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						from
 							i := 1
@@ -330,6 +326,11 @@ feature {NONE} -- Implementation
 				clean_all
 				progress_report.finish
 			end
+		end
+	
+	generate_user_ace_file is
+			-- Generate ace file that uses generated precompiled library.
+		do
 		end
 		
 	finish is

@@ -102,8 +102,9 @@ feature {NONE} -- Initialization
 							interface.post_launch_actions.call (Void)
 							post_launch_actions_called := True
 						end
-						if not internal_idle_actions.is_empty or else internal_idle_actions /= Void then
-							call_idle_actions
+						if not internal_idle_actions.is_empty or else
+							(idle_actions_internal /= Void and then not idle_actions_internal.is_empty) then
+								call_idle_actions
 						else
 									-- Block loop by running a gmain loop iteration with blocking enabled.
 							main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
@@ -227,8 +228,8 @@ feature -- Basic operation
 				until 
 					feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
 				loop
-					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
-						-- We only want to process the current events so we don't want any blocking.
+						main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+							-- We only want to process the current events so we don't want any blocking.
 				end
 				processing_events := False
 			end

@@ -215,17 +215,19 @@ feature -- Element change
 			end		
 			if l_feature /= Void then
 				text.add_feature (l_feature, dotnet_name_of_current_feature)
-				if not use_dotnet_name_only then				
+				if not use_dotnet_name_only and not dotnet_name_of_current_feature.is_equal (name_of_current_feature) then				
 					text.add_char (',')
 					text.add_new_line
+					text.add_indent
 					text.add_feature (l_feature, name_of_current_feature)
 				end
 			else
 				create {LOCAL_TEXT} l_txt.make (dotnet_name_of_current_feature)
 				text.add (l_txt)
-				if not use_dotnet_name_only then				
+				if not use_dotnet_name_only and not dotnet_name_of_current_feature.is_equal (name_of_current_feature) then				
 					text.add_char (',')
 					text.add_new_line
+					text.add_indent
 					text.add (create {LOCAL_TEXT}.make (name_of_current_feature))
 				end
 			end
@@ -470,7 +472,7 @@ feature {NONE} -- Element Change
 			if is_inherited then
 				text.add_new_line
 				text.add_indents (3)
-				text.add_comment ("-- from (")
+				text.add_comment ("-- (from ")
 				text.add_class (class_i.type_from_consumed_type (declared_type))
 				text.add_char (')')
 			end
@@ -607,8 +609,37 @@ feature {NONE} -- Element Change
 			if Result = Void then
 				Result := event_or_property_feature_from_type (a_consumed_type, a_feature)
 			end
+			if Result = Void then
+				Result := creation_routine_from_type (a_consumed_type, a_feature)
+			end
 		end
 		
+	creation_routine_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
+			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed constructor.
+		require
+			a_consumed_type_not_void: a_consumed_type /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_constructors: ARRAY [CONSUMED_CONSTRUCTOR]
+			i, l_count: INTEGER
+			l_found: BOOLEAN
+		do
+			l_constructors := a_consumed_type.constructors
+			from
+				i := 1
+				l_count := l_constructors.count
+			until
+				i > l_count or l_found
+			loop
+				Result := l_constructors.item (i)
+				l_found := Result.eiffel_name.is_equal (a_feature.name)
+				i := i + 1
+			end
+			if not l_found then
+				Result := Void
+			end
+		end
+
 	event_or_property_feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed feature.
 		require

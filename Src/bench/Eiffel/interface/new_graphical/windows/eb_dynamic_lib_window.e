@@ -22,6 +22,11 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 	SHARED_RESOURCES
+		rename
+			initialized as resources_initialized
+		export
+			{NONE} all
+		end
 
 	PLATFORM_CONSTANTS
 
@@ -688,8 +693,8 @@ feature {NONE} -- Implementation: Graphical interface
 	save_width_and_height is
 			-- Save current width and height to the preferences.
 		do
-			set_integer ("dyn_lib_window_width", window.width)
-			set_integer ("dyn_lib_window_height", window.height)
+			set_integer_resource ("dyn_lib_window_width", window.width)
+			set_integer_resource ("dyn_lib_window_height", window.height)
 		ensure
 			size_saved: initial_width = window.width and 
 						initial_height = window.height

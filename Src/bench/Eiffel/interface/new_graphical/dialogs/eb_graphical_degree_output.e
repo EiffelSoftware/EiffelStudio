@@ -31,6 +31,11 @@ inherit
 			put_initializing_documentation
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 create
 	make_with_dialog
 
@@ -48,7 +53,7 @@ feature -- Start output features
 			-- Put message indicating the start of degree six
 			-- with `total_nbr' passes to be done.
 		do
-			dialog.set_title (Interface_names.d_Compilation_progress)
+			dialog.set_title (title_for_compilation)
 
 			total_number := total_nbr
 			current_degree := 6
@@ -78,7 +83,7 @@ feature -- Start output features
 			-- Put message indicating the start of a degree 
 			-- with `total_nbr' passes to be done.
 		do
-			dialog.set_title (Interface_names.d_Compilation_progress)
+			dialog.set_title (title_for_compilation)
 
 			total_number := total_nbr
 			current_degree := degree_nbr
@@ -309,6 +314,12 @@ feature -- Output on per class
 
 feature {NONE} -- Implementation
 
+	title_for_compilation: STRING is
+			-- Title for progression dialog when compiling
+		do
+			Result := Interface_names.D_compilation_progress + System.name
+		end
+		
 	update_interface (a_name: STRING nbr_to_go: INTEGER; a_per: INTEGER) is
 			-- Update the interface for entity `a_name' with `nbr_to_go'
 			-- and `a_per' done.

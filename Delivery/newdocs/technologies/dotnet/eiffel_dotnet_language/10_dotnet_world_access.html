@@ -11,7 +11,7 @@
 <h1>Accessing the .NET world</h1>
 
 <h2>Introduction</h2>
-<p>ISE  provides Eiffel.NET libraries that wrap the Microsoft framework.
+<p>ISE  provides Eiffel for .NET libraries that wrap the Microsoft framework.
 These libraries include wrappers for the Base Class Library, Windows Forms,  Web
 Forms and other standard assemblies. The Base Class Library includes the definition of the basic types needed
 for any system, such as collections, remoting services, threading services,
@@ -20,7 +20,7 @@ security, and IO access.</p>
 wrapper around the Win32 APIs that provides a clean object model to build a GUI.
 Web Forms also provide a way to build GUIs on the Web; they include such types
 as <b>DataGrid</b> or <b>HTMLImage</b>.</p>
-<p>These three libraries are distributed with Eiffel.NET so you can reuse these
+<p>These three libraries are distributed with Eiffel for .NET so you can reuse these
 classes directly in your system.</p>
 <h2>External Classes</h2>
 <p>They are many ways of reusing existing .NET classes. One would have been to
@@ -33,7 +33,8 @@ class as an Eiffel
 class. This Eiffel class follows a particular non-standard Eiffel syntax that we
 will describe below. We call them .NET external classes.</p>
 <p>The .NET external classes do not include any logic;
-they are just needed for the Eiffel type system. This means that the Eiffel.NET
+they are just needed for the Eiffel type system. This means that the Eiffel for 
+.NET
 compiler does not generate any IL code for these classes. Any call to functions
 on classes are direct calls to the .NET Framework;
 there are no indirections and thus no performance penalty. Those classes can only include external features (features that are
@@ -51,10 +52,11 @@ following syntax:</p>
 <p>The string that follows <SPAN CLASS="etag">external_name:</SPAN> contains the name of
 the .NET Framework type that the Eiffel class wraps. Since .NET Framework types
 might be <i>sealed</i> (they might forbid other types to inherit from them) and
-since such a concept does not exist in Eiffel, Eiffel.NET introduces a new use
+since such a concept does not exist in Eiffel, Eiffel for .NET introduces a new use
 for the Eiffel keyword <SPAN CLASS="ekeyword">frozen</SPAN>. You may use
-<SPAN CLASS="ekeyword">frozen</SPAN> in front of <SPAN CLASS="ekeyword">external</SPAN> to tell the Eiffel.NET compiler
-that no Eiffel.NET class should inherit from the .NET Framework type.</p>
+<SPAN CLASS="ekeyword">frozen</SPAN> in front of <SPAN CLASS="ekeyword">external</SPAN> to tell the 
+Eiffel for .NET compiler
+that no Eiffel for .NET class should inherit from the .NET Framework type.</p>
 <p>The external class should then list all the features you need to access. All
 these features are external features. The syntax for an external .NET Framework
 feature is the following:</p>
@@ -81,7 +83,7 @@ be redefined in a descendant
 <p class="note"><b>Note</b>: You may redefine external features if they
 are virtual</i>, in which case <span class="ekeyword">frozen</span> should not be
 used
-<p><span class="efeature">read_line</span> is the Eiffel.NET feature name, and
+<p><span class="efeature">read_line</span> is the Eiffel for .NET feature name, and
 <span class="eclass">STRING</span> the
 return type of the feature. The string that follows the <span class="ekeyword">external</span>
 keyword specifies the kind of external, the .NET Framework function signature,
@@ -89,7 +91,7 @@ as well as the .NET Framework type on which the function is defined. The string
 following the <SPAN CLASS="ekeyword">alias</SPAN>
 keyword contains the .NET Framework name of the
 function. There are different kinds of external features depending on the type
-of method they provide access to. Eiffel.NET defines seven new kinds of
+of method they provide access to. Eiffel for .NET defines seven new kinds of
 externals listed in the following table:</p>
 <table class="data">
   <tbody>
@@ -181,13 +183,13 @@ creation of </span><span class="elocal">io</span><br>
 &nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span></code><p>
 <p>This code is also valid for static field access.
 Other kinds of externals do require the wrapper to be instantiated.</p>
-<h2>Eiffel.NET Libraries</h2>
-<p>The Eiffel.NET compiler comes together with an Eiffel.NET Base Class library,
+<h2>Eiffel for .NET Libraries</h2>
+<p>The Eiffel for .NET compiler comes together with an Eiffel for .NET Base Class library,
 which follows the design principles found in the standard EiffelBase library.
 This library makes extensive use of genericity and contracts to provide a clean
 and powerful set of data structures you can reuse in your system. This library
 uses the external classes that wrap the .NET Framework Base Class Library, also
-provided with Eiffel.NET.</p>
+provided with Eiffel for .NET.</p>
 <p>The other sets of classes provided with the compiler wrap the standard Framework
 assemblies so that you can easily reuse the corresponding types in you
 applications.</p>

@@ -48,20 +48,65 @@ extern "C" {
 #define EIF_CONTEXT			/* EIF_CONTEXT_NOARG, */
 #define EIF_STATIC_OPT
 
+	/*
+	 * Definition of the macros EIF_GET_CONTEXT and EIF_END_GET_CONTEXT
+	 *
+	 * EIF_GET_CONTEXT used to contain an opening curly brace `{'. It is
+	 * now changed in order not to need it anymore: it is part of the local
+	 * variables declarations.
+	 * EIF_END_GET_CONTEXT is now empty
+	 */
+
+#define EIF_END_GET_CONTEXT
+
+#if defined EIF_POSIX_THREADS	/* POSIX Threads */
+#if !defined EIF_NONPOSIX_TSD
 #define EIF_GET_CONTEXT \
-	eif_global_context_t *eif_globals;\
-	EIF_TSD_GET((eif_global_context_t *),eif_global_key,eif_globals,"Thread data not available"); \
-	{
-#define EIF_END_GET_CONTEXT }
+	eif_global_context_t *eif_globals = pthread_getspecific (eif_global_key);
+#else /* EIF_NONPOSIX_TSD */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t *eif_globals; \
+	int ctxt_return = pthread_getspecific(eif_global_key,(void **)&eif_globals);
+#endif /* EIF_NONPOSIX_TSD */
+
+#elif defined VXWORKS			/* VxWorks Threads */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t *eif_globals = eif_global_key;
+
+#elif defined EIF_WIN32			/* Windows Threads */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t *eif_globals = \
+		(eif_global_context_t *) TlsGetValue (eif_global_key);
+
+#elif defined SOLARIS_THREADS	/* Solaris Threads */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t *eif_globals; \
+	int ctxt_return = thr_getspecific (eif_global_key, (void **)&eif_globals);
+
+#else
+	Platform not supported for multithreading, check that you are using
+	the correct -D???_THREADS
+#endif
+
+	/* - Former EIF_GET_CONTEXT macro (not used anymore):
+	 * 
+	 * #define EIF_GET_CONTEXT \
+	 * eif_global_context_t *eif_globals;\
+	 * EIF_TSD_GET((eif_global_context_t *),eif_global_key,eif_globals,
+	 * "Thread data not available"); \
+	 * {
+	 * #define EIF_END_GET_CONTEXT }
+	 */
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
-		/*debug.c */
-#if !defined (CUSTOM) || defined (NEED_DEBUG_H)
+		/* cecil.c */
+	unsigned char ign_invisible;	/* Raise exception when class not visible? */
+
+		/* debug.c */
 	struct dbstack db_stack;		/* Debugging stack. */
 	struct dbinfo d_data;			/* Global debugger information */
 	struct pgcontext d_cxt;			/* Main program context */
-#endif
 
 		/* eif_threads.c */
 	start_routine_ctxt_t *eif_thr_context;
@@ -104,7 +149,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack free_stack;		/* Entries free in hector */
 
 		/* interp.c */
-#if !defined (CUSTOM) || defined (NEED_INTERP_H)
 	struct opstack op_stack;		/* Operational stack */
 	char *IC;						/* Interpreter Counter (like PC on a CPU) */
 	struct item **iregs;			/* Interpreter registers */
@@ -113,7 +157,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int locnum;						/* Number of locals */
 	unsigned long tagval;			/* Records number of interpreter's call */
 	char *inv_mark_table;			/* Marking table to avoid checking the same invariant several times */
-#endif
 
 		/* malloc.c */
 	struct emallinfo m_data;		/* general information about the memory */
@@ -130,9 +173,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	long eiffel_usage;					/* Monitor Eiffel memory usage */
 	uint32 *type_use;					/* Object usage table by dynamic type */
 	uint32 c_mem;						/* C memory used (bytes) */
+	int chunk_size;					/* Size of memory chunks (bytes) */
+	int scavenge_size;				/* Size of scavenge zones (bytes) */
+	int max_mem;					/* Maximum memory that can be allocated */
 
 		/* memory.c */
-	int m_largest;						/* Size of the largest coalesced block */
+	int m_largest;						/* Size of largest coalesced block */
 	struct emallinfo mem_stats;			/* Memory usage.*/
 	struct gacstat gc_stats;			/* GC statistics.*/
 	long gc_count;						/* GC statistics.*/
@@ -185,14 +231,17 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char r_fstoretype;				/* File storage type used for retrieve */
 #endif
 
-#ifndef EIF_NO_JOIN_ALL
 	int n_children;					/* Number or child threads */
-	int *n_brothers;				/* Number of "brother" threads, including 
-									   self - protected by mutex */
-#endif
 	EIF_THR_TYPE *last_child;		/* Task id of the last created thread */
+	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for join, join_all */
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_TYPE *children_cond;	/* Condition variable for join, join_all */
+#endif
 
 } eif_global_context_t;
+
+	/* cecil.c */
+#define eif_ignore_invisible (eif_globals->ign_invisible)
 
 	/* debug.c */
 #define db_stack		(eif_globals->db_stack)		/* rt_shared */
@@ -280,6 +329,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define eiffel_usage	(eif_globals->eiffel_usage)	/* rt_public */
 #define type_use		(eif_globals->type_use)		/* rt_private */
 #define c_mem			(eif_globals->c_mem)		/* rt_private */
+#define eif_chunk_size	(eif_globals->chunk_size)	/* rt_shared? */
+#define eif_scavenge_size (eif_globals->scavenge_size)	/* rt_shared? */
+#define eif_max_mem		(eif_globals->max_mem)
 
 	/* memory.c */
 #define m_largest		(eif_globals->m_largest)	/* rt_private */
@@ -318,7 +370,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 /*extern char r_fstoretype;		/* File storage type use for retrieve */
 
 #define n_children		(eif_globals->n_children)
-#define n_brothers		(eif_globals->n_brothers)
+#define eif_children_mutex (eif_globals->children_mutex)
+#define eif_children_cond (eif_globals->children_cond)
 #define last_child		(eif_globals->last_child)
 
 extern EIF_TSD_TYPE eif_global_key;
@@ -402,6 +455,9 @@ extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
 extern long eiffel_usage;			/* For memory statistics */
+extern int eif_chunk_size;			/* Size of memory chunks */
+extern int eif_scavenge_size;		/* Size of scavenge zones */
+extern int eif_max_mem;				/* Maximum memory that can be allocated */
 
 	/* plug.c */
 extern int nstcall;	/* Nested call global variable: signals a nested call and

@@ -75,6 +75,9 @@ feature {NONE}
 			new_class_name: STRING;
 			changed: BOOLEAN;
 		do
+				-- Time check only the valid classes
+			if System.class_of_id (a_class.id) /= Void then
+
 				-- Check the date of the associated file of class
 				-- `a_class'.
 			str := a_class.file_name.to_c;
@@ -87,17 +90,24 @@ feature {NONE}
 				if new_date /= a_class.date then
 					changed := True;
 					Workbench.change_class (a_class.lace_class);
-						-- Check class name: if changed then recompile clients
-						-- also.
-					!!file.make (a_class.file_name);
-					file.open_read;
-					new_class_name := c_clname (file.file_pointer);
-					new_class_name.to_lower;
-					file.close;
-					if not new_class_name.is_equal (a_class.class_name) then
-							-- Update class_name
-						a_class.change_name (new_class_name);
-					end;
+
+				-- Useless: the association file <=> CLASS_I is done in CLUSTER_I (fill)
+				-- The name of the filename is updated there so class_name and new_class_name
+				-- are always the same.
+
+--						-- Check class name: if changed then recompile clients
+--						-- also.
+--					!!file.make (a_class.file_name);
+--					file.open_read;
+--					new_class_name := c_clname (file.file_pointer);
+--					new_class_name.to_lower;
+--					file.close;
+--					if not new_class_name.is_equal (a_class.class_name) then
+--							-- Update class_name
+--						a_class.change_name (new_class_name);
+--					end;
+				else
+					a_class.check_suppliers_and_parents;
 				end;
 			end;
 			
@@ -126,6 +136,7 @@ end;
 					end;
 				end;
 				suppliers.forth;
+			end;
 			end;
 
 		ensure

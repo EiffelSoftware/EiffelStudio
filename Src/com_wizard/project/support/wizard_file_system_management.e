@@ -1,8 +1,8 @@
 indexing
 	description: "File system management (file copy, deletion)."
 	status: "See notice at end of class."
-	date: "$$"
-	revision: "$$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_FILE_SYSTEM_MANAGEMENT

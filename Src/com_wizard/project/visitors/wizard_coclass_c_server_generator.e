@@ -62,8 +62,6 @@ feature -- Basic operations
 			cpp_class_writer.add_other (clsid_declaration (a_coclass.c_type_name))
 			cpp_class_writer.add_other_source (clsid_definition (a_coclass.c_type_name, a_coclass.guid))
 
-
-			-- Process functions
 			process_interfaces	(a_coclass)			
 
 			if dispatch_interface then

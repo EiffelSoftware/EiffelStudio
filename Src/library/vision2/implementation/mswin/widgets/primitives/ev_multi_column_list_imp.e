@@ -102,7 +102,11 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create ev_children.make (0)
+			create internal_selected_items.make (2)
+
+				-- Create the WEL LISTVIEW.
 			wel_make (default_parent, 0, 0, 0, 0, 0)
+			enable_multiple_selection
 		end
 
 	initialize is
@@ -133,28 +137,27 @@ feature -- Access
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items')
+			--
+			-- Void if there is no selection
+		local
+			local_selected_index: INTEGER
 		do
-			Result ?= selected_items.last
+			local_selected_index := wel_selected_item
+			if local_selected_index >= 0 then
+				Result := (ev_children @ (local_selected_index + 1)).interface
+			end
 		end
 
-	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- Currently selected items.
-		local
-			i: INTEGER
-			interf: like selected_item
-			c: like ev_children
 		do
-			from
-				c := ev_children
-				create Result.make
-				i := 0
-			until
-				i = selected_count
-			loop
-				interf ?= (c @ (wel_selected_items @ i + 1)).interface
-				Result.extend (interf)
-				i := i + 1
-			end			
+			if not internal_selected_items_uptodate then
+				internal_selected_items := retrieve_selected_items
+				internal_selected_items_uptodate := True
+			end
+			Result := clone (internal_selected_items)
+		ensure then
+			valid_result: Result.is_equal(retrieve_selected_items)
 		end
 
 	row_height: INTEGER
@@ -213,28 +216,40 @@ feature -- Status setting
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
 		do
-			if not multiple_selection_enabled and parent_imp /= Void then
+			if not multiple_selection_enabled then
+				if has_headers then
+					set_style (default_style - Lvs_singlesel)
+				else
+					set_style (default_style - Lvs_singlesel + Lvs_nocolumnheader)
+				end
+				multiple_selection_enabled := True
+			end
+		end
+
+	disable_multiple_selection is
+			-- Allow only one item to be selected.
+		local
+			old_selected_item: EV_MULTI_COLUMN_LIST_ROW
+		do
+			if multiple_selection_enabled then
+					-- Unselect all selected and remember the top
+					-- most selected item.
+				old_selected_item := selected_item
+				clear_selection
+
+					-- Set the new style
 				if has_headers then
 					set_style (default_style)
 				else
 					set_style (default_style + Lvs_nocolumnheader)
 				end
-			end
-			multiple_selection_enabled := True
-		end
+				multiple_selection_enabled := False
 
-	disable_multiple_selection is
-			-- Allow only one item to be selected.
-		do
-			if multiple_selection_enabled and parent_imp /= Void then
-				if has_headers then
-					set_style (default_style + Lvs_singlesel)
-				else
-					set_style (default_style + Lvs_singlesel + 
-						Lvs_nocolumnheader)
+					-- Reselect the top most item
+				if old_selected_item /= Void then
+					old_selected_item.enable_select
 				end
 			end
-			multiple_selection_enabled := False
 		end
 
 	show_title_row is
@@ -634,6 +649,36 @@ feature {NONE} -- Implementation, Pixmap handling
 			end
 		end
 
+feature {NONE} -- Selection implementation
+
+	internal_selected_items_uptodate: BOOLEAN
+			-- Is `internal_selected_items' sorted?
+
+	internal_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			-- Cached version of all selected items.
+
+	retrieve_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+			-- Current selected items (non cached version)
+		local
+			i: INTEGER
+			interf: EV_MULTI_COLUMN_LIST_ROW
+			c: like ev_children
+			wel_sel_items: like wel_selected_items
+		do
+			create Result.make (selected_count)
+			c := ev_children
+			wel_sel_items := wel_selected_items
+			from
+				i := 0
+			until
+				i = selected_count
+			loop
+				interf ?= (c @ (wel_sel_items @ i + 1)).interface
+				Result.extend (interf)
+				i := i + 1
+			end		
+		end
+
 feature {NONE} -- WEL Implementation
 
 	updating_column_width: BOOLEAN
@@ -779,7 +824,9 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
-				+ Lvs_report + Lvs_showselalways
+				+ Lvs_report
+				+ Lvs_showselalways
+				+ Lvs_singlesel
 		end
 
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
@@ -796,12 +843,19 @@ feature {NONE} -- WEL Implementation
 		do
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
-						not flag_set(info.uoldstate, Lvis_selected) then
+						not flag_set(info.uoldstate, Lvis_selected)
+				then
+						-- Item is being selected
+					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.interface.select_actions.call ([])
 					interface.select_actions.call ([item_imp.interface])
+
 				elseif flag_set(info.uoldstate, Lvis_selected) and
-					not flag_set(info.unewstate, Lvis_selected) then
+					not flag_set(info.unewstate, Lvis_selected)
+				then
+						-- Item is being deselected
+					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.interface.deselect_actions.call ([])
 					interface.deselect_actions.call ([item_imp.interface])
@@ -921,6 +975,14 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.95  2000/04/27 17:50:19  pichery
+--| - changed the type of `selected_items' from
+--|   LINKED_LIST to ARRAYED_LIST.
+--| - Cached the `selected_items'
+--| - Fix bug with multiple_selection (it was not
+--| possible to disable the multiple selection if
+--| the mclist was not in a container).
+--|
 --| Revision 1.94  2000/04/26 22:14:29  rogers
 --| Removed redundent local.
 --|

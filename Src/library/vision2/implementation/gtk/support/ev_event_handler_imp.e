@@ -57,7 +57,7 @@ feature {NONE} -- Status report
 			event_not_void: ev_str/=void
 --			mouse_button_ok: (mouse_but>=0 and mouse_but<=3) 
 --				and ((mouse_but=0) = not (ev_str.is_equal ("button_press_event") or ev_str.is_equal ("button_release_event")))
--- alex
+-- 
 -- also requires that event is one of the following events:
 			
 		do
@@ -221,7 +221,7 @@ feature {NONE} -- Status setting
 			check
 				successfull_connect: con_id > 0
 			end
--- alex
+ 
 			-- Updating the `event_command_array' by including the new command :
 
 			-- select the right `event_id' corresponding to the `event'
@@ -259,7 +259,7 @@ feature {NONE} -- Status setting
 		local
 			ev_str: ANY
 			con_id: INTEGER
--- alex
+
 			list_com: EV_GTK_COMMAND_LIST
 			event_id: INTEGER
 		do
@@ -280,7 +280,7 @@ feature {NONE} -- Status setting
 				successfull_connect: con_id > 0		
 			end
 
--- alex
+
 			-- Updating the `event_command_array' by including the new command :
 
 			-- select the right event_id corresponding to the `event'
@@ -345,7 +345,6 @@ feature {NONE} -- Status setting
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
 			list_com: EV_GTK_COMMAND_LIST
-
 		do
 			if event_command_array /= Void and then 
 					(event_command_array @ event_id) /= Void then
@@ -363,7 +362,6 @@ feature {NONE} -- Status setting
 					list_com.search (cmd)
 				end
 			end
-
 		end
 
 

@@ -37,7 +37,6 @@ estudio.res: estudio.rc
 	$resource_compiler -r estudio.rc
 
 estudio.lmk: $(OBJECTS) estudio.res
-	del estudio.lmk
 	echo $(OBJECTS) > estudio.lmk
 	echo GDI32.LIB ADVAPI32.LIB USER32.LIB estudio.res >> estudio.lmk
 

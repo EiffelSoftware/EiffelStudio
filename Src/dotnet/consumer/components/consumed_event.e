@@ -19,61 +19,14 @@ inherit
 		end
 
 create
-	make,
-	my_make
+	make
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; pub, has_adder, has_remover: BOOLEAN; handler_type: CONSUMED_REFERENCED_TYPE; rais: CONSUMED_PROCEDURE; decl_type: CONSUMED_REFERENCED_TYPE) is
+	make (dn: STRING; pub: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_raiser, cp_adder, cp_remover: CONSUMED_PROCEDURE) is
 			-- Initialize property with name `n' and type `type'.
 		require
-			non_void_eiffel_name: en /= Void
 			non_void_dotnet_name: dn /= Void
-			valid_eiffel_name: not en.is_empty
-			valid_dotnet_name: not dn.is_empty
-			non_void_handler_type: handler_type /= Void
-			non_void_declaring_type: decl_type /= Void
-		local
-			args: ARRAY [CONSUMED_ARGUMENT]
-		do
-			dotnet_name := dn
-			is_public := pub
-			create args.make (1, 1)
-			args.put (create {CONSUMED_ARGUMENT}.make ("Value", "value", handler_type, False), 1)
-			entity_make (en, pub, decl_type)
-			if has_adder then
-				create adder.make (
-									"add_" + en,
-									"add_" + dn,
-									args,
-									False, False, False, pub, True,
-									decl_type)
-			end
-			if has_remover then
-				create remover.make (
-									"remove_" + en,
-									"remove_" + dn,
-									args,
-									False, False, False, pub, True,
-									decl_type)
-			end
-			raiser := rais
-		ensure
-			dotnet_name_set: dotnet_name = dn
-			adder_set: has_adder implies adder /= Void
-			valid_adder: has_adder implies adder.is_property_or_event
-			remover_set: has_remover implies remover /= Void
-			valid_remover: has_remover implies remover.is_property_or_event
-			raiser_set: raiser = rais
-			valid_raiser: raiser /= Void implies raiser.is_property_or_event
-		end
-
-	my_make (en, dn: STRING; pub: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_raiser, cp_adder, cp_remover: CONSUMED_PROCEDURE) is
-			-- Initialize property with name `n' and type `type'.
-		require
-			non_void_eiffel_name: en /= Void
-			non_void_dotnet_name: dn /= Void
-			valid_eiffel_name: not en.is_empty
 			valid_dotnet_name: not dn.is_empty
 			non_void_declaring_type: decl_type /= Void
 		local
@@ -81,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			dotnet_name := dn
 			is_public := pub
-			entity_make (en, pub, decl_type)
+			entity_make (dn, pub, decl_type)
 			raiser := cp_raiser
 			adder := cp_adder
 			remover := cp_remover

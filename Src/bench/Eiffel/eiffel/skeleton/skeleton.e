@@ -261,7 +261,7 @@ feature
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in file `file'.
 		require
-			has_feature_id (feature_id);
+			has_feature_id: has_feature_id (feature_id);
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
 		do
@@ -273,7 +273,7 @@ feature
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in file `file' in workbench mode only.
 		require
-			has_feature_id (feature_id);
+			has_feature_id: has_feature_id (feature_id);
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
 		do
@@ -594,7 +594,7 @@ feature
 			-- Generate byte code description of the feature of
 			-- feature `feature_id' in `ba'.
 		require
-			has_feature_id (feature_id);
+			has_feature_id: has_feature_id (feature_id);
 		do
 			search_feature_id (feature_id);
 			make_offset (ba);

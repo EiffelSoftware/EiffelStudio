@@ -90,8 +90,8 @@ feature {CATALOG}
 			not_void_form: button_rc /= Void;
 		do	
 --samik			set_focus_string ("DEFAULT_CAT_PAGE_LABEL")
-			!! button.make (Current, button_rc)
-			button.set_symbol (symbol);
+			!! button.make (Current, button_rc, symbol)
+--			button.set_symbol (symbol);
 			button.set_focus_string ("DEFAULT_CAT_PAGE_LABEL")
 			button.initialize_focus			
 --samik			initialize_focus

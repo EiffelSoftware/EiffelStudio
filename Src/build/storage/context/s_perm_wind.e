@@ -22,9 +22,9 @@ feature
 	make (node: PERM_WIND_C) is
 		do
 			save_attributes (node);
-			if node.title_modified then
-				title := node.title
-			end;
+			--if node.title_modified then
+				--title := node.title
+			--end;
 			if node.icon_name_modified then
 				icon_name := node.icon_name
 			end;

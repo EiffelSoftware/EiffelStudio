@@ -72,6 +72,9 @@ feature
 			if partial_objects = 1 then
 				partial_objects := 0;
 			end;
+			if (partial_objects = 0) and System.precompilation then
+				partial_objects := 1	
+			end;
 				-- Now genrate the objects lists
 			generate_objects_lists;
 				-- Generate external objects
@@ -259,6 +262,11 @@ feature
 					%%T$(RUN_TIME3)/x2c < $< > $*.c%N%
 					%%T$(CC) $(CFLAGS) -c $*.c%N%
 					%%T$(RM) $*.c%N%N");
+			elseif System.precompilation then
+				Make_file.putstring ("%
+					%.c.o:%N%
+					%%T$(CC) $(CFLAGS) -c $<%N%
+					%%T$(RM) $*.c%N%N");
 			else
 				Make_file.putstring ("%
 					%.c.o:%N%
@@ -409,7 +417,11 @@ feature
 			generate_objects_macros;
 			Make_file.new_line;
 			Make_file.putstring ("%T$(CC) -o ");
-			Make_file.putstring (System.system_name);
+			if System.precompilation then
+				Make_file.putstring ("driver")
+			else
+				Make_file.putstring (System.system_name);
+			end;
 			Make_file.putstring ("%
 				% $(CFLAGS) $(LDFLAGS) ");
 			generate_objects_macros;
@@ -422,11 +434,17 @@ feature
 			end;
 			Make_file.putstring (run_time);
 			Make_file.putstring (" $(LIBS)%N");
-			if partial_objects > 0 then
-				Make_file.putstring ("%T$(RM) ");
-				generate_objects_macros;
-				Make_file.new_line;
-			end;
+
+--
+-- Commented out by Frederic Deramat 20/5/93.
+-- Intermediate object files are kept.
+--
+--			if partial_objects > 0 then
+--				Make_file.putstring ("%T$(RM) ");
+--				generate_objects_macros;
+--				Make_file.new_line;
+--			end;
+
 			Make_file.new_line;
 		end;
 
@@ -455,6 +473,11 @@ feature
 				Make_file.putstring (".o $(OBJ");
 				Make_file.putint (i);
 				Make_file.putchar (')');
+				if System.precompilation then
+					Make_file.putstring ("%N%T$(RM) $(OBJ");
+					Make_file.putint (i);
+					Make_file.putchar (')');
+				end;
 				Make_file.new_line;
 				Make_file.new_line;
 				i := i +1 ;

@@ -955,12 +955,16 @@ feature -- Workbench feature and descriptor table generation
 
 	generate_descriptor_tables is
 			-- Generation of workbench mode descriptor tables
-			-- of associated class types
+			-- of associated class types.
+			--|Note: when precompiling a system a class might
+			--|have no generic derivations
 		local
 			sel_tbl: SELECT_TABLE
 		do
-			sel_tbl := feature_table.origin_table;
-			sel_tbl.generate (Current);
+			if has_types then
+				sel_tbl := feature_table.origin_table;
+				sel_tbl.generate (Current);
+			end;
 		end;
 
 	full_file_name: STRING is

@@ -63,7 +63,7 @@ feature -- Status Setting
 		do
 			if not retried then
 				reflection_interface.search (a_descriptor)
-				Result := reflection_interface.found
+				Result := reflection_interface.get_found
 			else
 				Result := False
 			end

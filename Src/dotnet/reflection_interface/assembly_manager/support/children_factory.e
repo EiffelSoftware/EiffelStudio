@@ -107,13 +107,13 @@ feature {NONE} -- Implementation
 			loop
 				a_type ?= types.get_item (i)
 				if a_type /= Void then
-					parents_enumerator := a_type.parents.get_keys.get_enumerator
+					parents_enumerator := a_type.get_parents.get_keys.get_enumerator
 					from
 					until
 						not parents_enumerator.move_next
 					loop
 						a_parent ?= parents_enumerator.get_current
-						if a_parent.to_lower.equals_string (a_class.eiffel_name.to_lower) and not Result.contains (a_type) then
+						if a_parent.to_lower.equals_string (a_class.get_eiffel_name.to_lower) and not Result.contains (a_type) then
 							added := Result.add (a_type)
 						end
 					end

@@ -40,7 +40,6 @@ feature -- Status Setting
 			external_name: "SetTypeEiffelName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.get_length > 0
 		do
 			type_eiffel_name := a_name
 		ensure
@@ -53,7 +52,6 @@ feature -- Status Setting
 			external_name: "SetTypeFullExternalName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.get_length > 0
 		do
 			type_full_external_name := a_name
 		ensure

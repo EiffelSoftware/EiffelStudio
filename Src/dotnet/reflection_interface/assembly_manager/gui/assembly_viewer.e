@@ -506,10 +506,14 @@ feature -- Basic Operations
 			toolbar_button_click_delegate: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONCLICKEVENTHANDLER
 			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARAPPEARANCE
 			style: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
+			a_size: SYSTEM_DRAWING_SIZE
 		do
 			create toolbar.make_toolbar
 			toolbar.set_appearance (appearance.Flat)
-			toolbar.set_auto_size (True)
+			--toolbar.set_auto_size (True)
+			a_size.set_width (get_width)
+			--a_size.set_height (32)
+			toolbar.set_size (a_size)
 			
 			build_image_list
 			
@@ -767,6 +771,7 @@ feature -- Event handling
 			a_size.set_width (get_width - dictionary.Margin // 2)
 			a_size.set_height (get_height - 4 * dictionary.Row_height)
 			data_grid.set_Size (a_size)
+			toolbar.set_width (get_width)
 			resize_columns
 			if data_table.get_rows /= Void and then data_table.get_rows.get_count > 0 then
 				fill_data_grid
@@ -1238,16 +1243,16 @@ feature {NONE} -- Implementation
 			Result.get_Table.get_Default_View.set_Allow_New (False)
 			Result.get_Table.get_Default_View.set_Allow_Delete (False)
 			if columns.contains (dictionary.Assembly_name_column_title) then
-				Result.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.name)
+				Result.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.get_name)
 			end
 			if columns.contains (dictionary.Assembly_version_column_title) then
-				Result.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.version)
+				Result.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.get_version)
 			end
 			if columns.contains (dictionary.Assembly_culture_column_title) then
-				Result.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.culture)
+				Result.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.get_culture)
 			end
 			if columns.contains (dictionary.Assembly_public_key_column_title) then
-				Result.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.public_key)
+				Result.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.get_public_key)
 			end			
 			if columns.contains (dictionary.Dependancies_column_title) then
 				dependancies := support.dependancies_from_info (a_descriptor)

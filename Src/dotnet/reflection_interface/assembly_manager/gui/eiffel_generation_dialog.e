@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
+			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.get_name.get_length > 0
 			non_void_eiffel_path: an_eiffel_path /= Void
 		local
 			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 							create reflection_interface.make_reflectioninterface
 							reflection_interface.make_reflection_interface
 							reflection_interface.search (assembly_descriptor)
-							eiffel_assembly := reflection_interface.search_result
+							eiffel_assembly := reflection_interface.get_search_result
 							if eiffel_assembly /= Void then
 								assembly_types := eiffel_assembly.types
 								if destination_path_text_box.get_text.to_lower.equals_string (eiffel_path.to_lower) then
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 									loop
 										a_type ?= assembly_types.get_item (i)
 										if a_type /= Void then
-											type_filename := support.Xml_type_filename (assembly_descriptor, a_type.full_external_name)
+											type_filename := support.Xml_type_filename (assembly_descriptor, a_type.get_full_external_name)
 											type_filename := type_filename.replace (support.Eiffel_key, support.Eiffel_delivery_path)
 											code_generator_from_xml.generate_eiffel_code_from_xml (type_filename)
 										end
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 									loop
 										a_type ?= assembly_types.get_item (i)
 										if a_type /= Void then
-											type_filename := support.Xml_type_filename (assembly_descriptor, a_type.full_external_name)
+											type_filename := support.Xml_type_filename (assembly_descriptor, a_type.get_full_external_name)
 											code_generator_from_xml.generate_eiffel_code_from_xml_and_path (type_filename, destination_path_text_box.get_text)
 										end
 										i := i + 1

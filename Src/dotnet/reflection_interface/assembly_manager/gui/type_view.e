@@ -24,11 +24,11 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
+			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.get_name.get_length > 0
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_name: an_eiffel_class.eiffel_name /= Void
-			not_empty_eiffel_name: an_eiffel_class.eiffel_name.get_length > 0
+			non_void_eiffel_name: an_eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_name: an_eiffel_class.get_eiffel_name.get_length > 0
 			non_void_children_list: children_list /= Void
 			non_void_assembly_view: an_assembly_view /= Void
 		local
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			children := children_list
 			assembly_view := an_assembly_view
 			create eiffel_dictionary.make_eiffelcodegeneratordictionary
-			create type_modifications.make_from_info (eiffel_class.eiffel_name)
+			create type_modifications.make_from_info (eiffel_class.get_eiffel_name)
 			initialize_gui
 			return_value := show_dialog
 		ensure
@@ -100,7 +100,7 @@ feature -- Access
 			non_void_assembly_view: assembly_view /= Void
 			non_void_assembly: assembly_view.assembly /= Void
 		once
-			Result := assembly_view.assembly.eiffel_cluster_path
+			Result := assembly_view.assembly.get_eiffel_cluster_path
 		ensure
 			non_void_path: Result /= Void 
 			not_empty_path: Result.get_length > 0
@@ -176,7 +176,7 @@ feature -- Basic Operations
 			set_icon (dictionary.Edit_icon)
 
 				-- `Selected assembly: '
-			create_form_label (assembly_descriptor.name, dictionary.Margin, dictionary.Margin)
+			create_form_label (assembly_descriptor.get_name, dictionary.Margin, dictionary.Margin)
 			create_assembly_labels
 				
 				-- Build editable class
@@ -358,7 +358,7 @@ feature -- Event handling
 								if type_modifications.features_modifications.contains (modified_feature) then
 									feature_modifications ?= type_modifications.features_modifications.get_item (modified_feature)
 								else
-									create feature_modifications.make_from_info (modified_feature.eiffel_name)
+									create feature_modifications.make_from_info (modified_feature.get_eiffel_name)
 								end
 							end									
 						end							
@@ -517,7 +517,7 @@ feature -- Event handling
 					if assembly_filename /= Void and then assembly_filename.get_length > 0 then
 						create code_generator_from_xml.make1
 						code_generator_from_xml.make_from_info (assembly_filename)
-						type_filename := support.Xml_type_filename (assembly_descriptor, eiffel_class.full_external_name)
+						type_filename := support.Xml_type_filename (assembly_descriptor, eiffel_class.get_full_external_name)
 						type_filename := type_filename.replace (support.Eiffel_key, support.Eiffel_delivery_path)
 						code_generator_from_xml.generate_eiffel_code_from_xml (type_filename)
 						from
@@ -526,7 +526,7 @@ feature -- Event handling
 						loop
 							a_child ?= children.get_item (i)
 							if a_child /= Void then
-								type_filename := support.Xml_type_filename (assembly_descriptor, a_child.full_external_name)
+								type_filename := support.Xml_type_filename (assembly_descriptor, a_child.get_full_external_name)
 								type_filename := type_filename.replace (support.Eiffel_key, support.Eiffel_delivery_path)
 								code_generator_from_xml.generate_eiffel_code_from_xml (type_filename)
 							end
@@ -599,13 +599,6 @@ feature {NONE} -- Implementation
 			external_name: "PanelHeight"
 		end
 
-	special_classes: ARRAY [STRING]
-			-- | ["ANY", "INTEGER", "INTEGER_64", "INTEGER_16", "INTEGER_8", "CHARACTER",  "DOUBLE", "REAL", "BOOLEAN"]
-		indexing
-			description: "Special classes"
-			external_name: "SpecialClasses"
-		end
-
 	feature_names_boxes: SYSTEM_COLLECTIONS_HASHTABLE
 			-- | Key: text box
 			-- | Value: `ISE_REFLECTION_EIFFELFEATURE'
@@ -668,19 +661,19 @@ feature {NONE} -- Implementation
 			
 			create formatter.make
 			an_external_name := eiffel_dictionary.Inverted_comma
-			an_external_name := an_external_name.concat_string_string_string (an_external_name, formatter.format_strong_name (an_eiffel_class.full_external_name), eiffel_dictionary.Inverted_comma)
+			an_external_name := an_external_name.concat_string_string_string (an_external_name, formatter.format_strong_name (an_eiffel_class.get_full_external_name), eiffel_dictionary.Inverted_comma)
 			create_label (an_external_name, 3 * dictionary.Margin + label_width, dictionary.Margin + dictionary.Label_height, dictionary.Comment_color, False)
 			
 			panel_height := dictionary.Margin + 2 * dictionary.Label_height
 			
 				-- Enum type
-			if an_eiffel_class.Enum_Type /= Void and then an_eiffel_class.Enum_Type.get_length > 0 then
+			if an_eiffel_class.get_Enum_Type /= Void and then an_eiffel_class.get_Enum_Type.get_length > 0 then
 				an_enum_type_clause := eiffel_dictionary.Enum_Type_Keyword
 				an_enum_type_clause := an_enum_type_clause.concat_string_string (an_enum_type_clause, eiffel_dictionary.Colon)
 				create_label (an_enum_type_clause, 3 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 				
 				an_enum_type := eiffel_dictionary.Inverted_comma
-				an_enum_type := an_enum_type.concat_string_string_string (an_enum_type, an_eiffel_class.Enum_Type, eiffel_dictionary.Inverted_comma)
+				an_enum_type := an_enum_type.concat_string_string_string (an_enum_type, an_eiffel_class.get_Enum_Type, eiffel_dictionary.Inverted_comma)
 				create_label (an_enum_type, 3 * dictionary.Margin + label_width, panel_height, dictionary.Comment_color, False)
 				panel_height := panel_height + dictionary.Label_height
 			end
@@ -688,24 +681,24 @@ feature {NONE} -- Implementation
 			panel_height := panel_height + dictionary.Margin + dictionary.Label_height
 			new_label_width := dictionary.Margin
 				-- frozen
-			if an_eiffel_class.Is_Frozen then
+			if an_eiffel_class.get_Is_Frozen then
 				create_label (eiffel_dictionary.Frozen_keyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 				new_label_width := new_label_width + label_width
 			end				
 				-- expanded
-			if an_eiffel_class.Is_Expanded then
+			if an_eiffel_class.get_Is_Expanded then
 				create_label (eiffel_dictionary.Expanded_keyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 				new_label_width := new_label_width + label_width
 			end
 				-- deferred
-			if an_eiffel_class.Is_Deferred then
+			if an_eiffel_class.get_Is_Deferred then
 				create_label (eiffel_dictionary.Deferred_keyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 				new_label_width := new_label_width + label_width
 			end
 			
 				-- external class
 				-- 	CLASS_NAME
-			if an_eiffel_class.is_frozen or an_eiffel_class.is_deferred or an_eiffel_class.is_expanded then
+			if an_eiffel_class.get_is_frozen or an_eiffel_class.get_is_deferred or an_eiffel_class.get_is_expanded then
 				external_class :=	eiffel_dictionary.External_keyword
 				external_class := external_class.concat_string_string_string (external_class, eiffel_dictionary.Space, eiffel_dictionary.Class_keyword)
 				create_label (external_class, new_label_width, panel_height, dictionary.Keyword_color, True)
@@ -717,7 +710,7 @@ feature {NONE} -- Implementation
 			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
 			--class_name_width := text_box_width_from_text (an_eiffel_class.eiffelname.toupper, a_font)
 			--set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, panel_height, class_name_width, dictionary.Class_color)
-			create_label (an_eiffel_class.eiffel_name.to_upper, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
+			create_label (an_eiffel_class.get_eiffel_name.to_upper, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
 			
 			--create on_class_name_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
 			--class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
@@ -747,7 +740,7 @@ feature {NONE} -- Implementation
 			end_class := end_class.concat_string_string_string_string (end_class, eiffel_dictionary.Space, eiffel_dictionary.Dashes, eiffel_dictionary.Space)
 			end_class := end_class.concat_string_string (end_class, eiffel_dictionary.Class_keyword)
 			create_label (end_class, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-			create_label (an_eiffel_class.eiffel_name.to_upper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
+			create_label (an_eiffel_class.get_eiffel_name.to_upper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
 			end_class_name_label := created_label
 		end
 	
@@ -906,7 +899,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			label_width := 0
-			parents := an_eiffel_class.Parents
+			parents := an_eiffel_class.get_Parents
 			
 			if parents.get_Count > 1 or has_any_in_clause or (parents.get_Count = 1 and (not parents.Contains (eiffel_dictionary.Any_class))) then
 				create_label (eiffel_dictionary.Inherit_keyword, dictionary.Margin, dictionary.Margin + panel_height, dictionary.Keyword_color, True)
@@ -1062,24 +1055,14 @@ feature {NONE} -- Implementation
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			new_label_width: INTEGER
+			value: STRING
 		do
 			label_width := 0
-			creation_routines := an_eiffel_class.Creation_Routines
-			
-			create special_classes.make (9)
-			special_classes.put (0, eiffel_dictionary.Any_class)
-			special_classes.put (1, eiffel_dictionary.Integer_class)
-			special_classes.put (2, eiffel_dictionary.Integer64_class)
-			special_classes.put (3, eiffel_dictionary.Integer16_class)
-			special_classes.put (4, eiffel_dictionary.Integer8_class)
-			special_classes.put (5, eiffel_dictionary.Character_class)
-			special_classes.put (6, eiffel_dictionary.Double_class)
-			special_classes.put (7, eiffel_dictionary.Real_class)
-			special_classes.put (8, eiffel_dictionary.Boolean_class)
+			creation_routines := an_eiffel_class.get_Creation_Routines
 
-			if an_eiffel_class.Creation_Routines.get_Count > 0 and not an_eiffel_class.Is_Deferred and not is_special_class (an_eiffel_class) then			
+			if an_eiffel_class.get_Creation_Routines.get_Count > 0 and not an_eiffel_class.get_Is_Deferred and not is_special_class (an_eiffel_class) then			
 					-- Do not generate creation clause for expanded classes
-				if not an_eiffel_class.Is_Expanded then
+				if not an_eiffel_class.get_Is_Expanded then
 					create_label (eiffel_dictionary.Create_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 					panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 					from
@@ -1100,7 +1083,7 @@ feature {NONE} -- Implementation
 					end
 					panel_height := panel_height + dictionary.Label_height * creation_routines.get_count
 				end				
-			elseif an_eiffel_class.Creation_Routines.get_Count = 0 and not an_eiffel_class.Is_Deferred and not an_eiffel_class.is_expanded then
+			elseif an_eiffel_class.get_Creation_Routines.get_Count = 0 and not an_eiffel_class.get_Is_Deferred and not an_eiffel_class.get_is_expanded then
 				create_label (eiffel_dictionary.Create_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				new_label_width := dictionary.Margin + label_width
 				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
@@ -1111,19 +1094,21 @@ feature {NONE} -- Implementation
 				panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 			end
 			
-			if an_eiffel_class.Initialization_Features.get_Count > 0 and not an_eiffel_class.Is_Deferred and not is_special_class (an_eiffel_class) then
+			if an_eiffel_class.get_Initialization_Features.get_Count > 0 and not an_eiffel_class.get_Is_Deferred and not is_special_class (an_eiffel_class) then
 					-- Generate initialization feature clause.
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				new_label_width := dictionary.Margin + label_width
-				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				new_label_width := new_label_width + label_width
-				create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
-				new_label_width := new_label_width + label_width
-				create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				new_label_width := new_label_width + label_width
+				if not an_eiffel_class.get_is_expanded then
+					create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
+					new_label_width := new_label_width + label_width
+					create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
+					new_label_width := new_label_width + label_width
+					create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
+					new_label_width := new_label_width + label_width
+				end
 				create_label (dictionary.Initialization_comment, new_label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				initialization_features := an_eiffel_class.Initialization_Features
+				initialization_features := an_eiffel_class.get_Initialization_Features
 				from
 					i := 0
 				until
@@ -1131,7 +1116,14 @@ feature {NONE} -- Implementation
 				loop
 					a_feature ?= initialization_features.get_Item (i)
 					if a_feature /= Void then
-						build_eiffel_feature (an_eiffel_class, a_feature)
+						if a_feature.get_Is_Field and a_feature.get_Is_Static and not a_feature.get_is_enum_literal and a_feature.get_is_literal then							
+							value := a_feature.get_literal_value
+							if value /= Void and then value.get_length > 0 then
+								build_eiffel_feature (an_eiffel_class, a_feature)
+							end
+						else
+							build_eiffel_feature (an_eiffel_class, a_feature)
+						end
 					end
 					i := i + 1
 				end			
@@ -1146,15 +1138,30 @@ feature {NONE} -- Implementation
 			non_void_special_classes: special_classes /= Void
 			non_void_eiffel_class: an_eiffel_class /= Void
 		local
-			i: INTEGER
+			eiffel_class_name: STRING
 		do
-			from
-			until
-				i = special_classes.count or Result
-			loop
-				Result := an_eiffel_class.eiffel_name.equals_string (special_classes.item (i))
-				i := i + 1
-			end
+			eiffel_class_name ?= an_eiffel_class.get_eiffel_name.clone
+			eiffel_class_name := eiffel_class_name.to_upper
+			Result := special_classes.contains_key (eiffel_class_name)
+		end
+
+	special_classes: SYSTEM_COLLECTIONS_HASHTABLE is
+		indexing
+			description: "Special classes for which no creation routine should be generated"
+			external_name: "SpecialClasses"
+		once
+			create Result.make
+			Result.add (eiffel_dictionary.Integer_class, eiffel_dictionary.Integer_class)
+			Result.add (eiffel_dictionary.Integer16_class, eiffel_dictionary.Integer16_class)
+			Result.add (eiffel_dictionary.Integer64_class, eiffel_dictionary.Integer64_class)
+			Result.add (eiffel_dictionary.Integer8_class, eiffel_dictionary.Integer8_class)
+			Result.add (eiffel_dictionary.Double_class, eiffel_dictionary.Double_class)
+			Result.add (eiffel_dictionary.Real_class, eiffel_dictionary.Real_class)
+			Result.add (eiffel_dictionary.Boolean_class, eiffel_dictionary.Boolean_class)
+			Result.add (eiffel_dictionary.Character_class, eiffel_dictionary.Character_class)
+		ensure
+			special_classes_created: Result /= Void 
+			valid_special_classes: Result.get_count = 8
 		end
 
 	build_class_features (an_eiffel_class: like eiffel_class) is
@@ -1175,7 +1182,7 @@ feature {NONE} -- Implementation
 			label_width := 0
 			
 				-- Generate access feature clause.
-			access_features := an_eiffel_class.Access_Features
+			access_features := an_eiffel_class.get_Access_Features
 			if access_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Access_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1184,7 +1191,7 @@ feature {NONE} -- Implementation
 			end	
 				
 				-- Generate element change feature clause.
-			element_change_features := an_eiffel_class.Element_Change_Features
+			element_change_features := an_eiffel_class.get_Element_Change_Features
 			if element_change_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Element_change_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1193,7 +1200,7 @@ feature {NONE} -- Implementation
 			end					
 
 				-- Generate basic operations feature clause.
-			basic_operations_features := an_eiffel_class.Basic_Operations
+			basic_operations_features := an_eiffel_class.get_Basic_Operations
 			if basic_operations_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Basic_operations_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1202,7 +1209,7 @@ feature {NONE} -- Implementation
 			end	
 
 				-- Generate unary operators feature clause.
-			unary_operators_features := an_eiffel_class.Unary_Operators_Features
+			unary_operators_features := an_eiffel_class.get_Unary_Operators_Features
 			if unary_operators_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Unary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1211,7 +1218,7 @@ feature {NONE} -- Implementation
 			end	
 
 				-- Generate binary operators feature clause.
-			binary_operators_features := an_eiffel_class.Binary_Operators_Features
+			binary_operators_features := an_eiffel_class.get_Binary_Operators_Features
 			if binary_operators_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Binary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1220,7 +1227,7 @@ feature {NONE} -- Implementation
 			end	
 
 				-- Generate specials feature clause.
-			specials_features := an_eiffel_class.Special_Features
+			specials_features := an_eiffel_class.get_Special_Features
 			if specials_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Specials_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1229,7 +1236,7 @@ feature {NONE} -- Implementation
 			end	
 
 				-- Generate implementation feature clause.
-			implementation_features := an_eiffel_class.Implementation_Features
+			implementation_features := an_eiffel_class.get_Implementation_Features
 			if implementation_features.get_Count > 0 then
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Implementation_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
@@ -1249,15 +1256,24 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
+			value: STRING 
 		do
 			from
 			until
 				i = a_list.get_Count
 			loop
 				a_feature ?= a_list.get_Item (i)
-				if a_feature /= Void and then (a_feature.Eiffel_Name /= Void and a_feature.Eiffel_Name.get_length > 0) then
-					build_eiffel_feature (an_eiffel_class, a_feature)
-					panel_height := panel_height + dictionary.Margin
+				if a_feature /= Void and then (a_feature.get_Eiffel_Name /= Void and a_feature.get_Eiffel_Name.get_length > 0) then
+					if a_feature.get_Is_Field and a_feature.get_Is_Static and not a_feature.get_is_enum_literal and a_feature.get_is_literal then							
+						value := a_feature.get_literal_value
+						if value /= Void and then value.get_length > 0 then
+							build_eiffel_feature (an_eiffel_class, a_feature)
+							panel_height := panel_height + dictionary.Margin
+						end
+					else
+						build_eiffel_feature (an_eiffel_class, a_feature)
+						panel_height := panel_height + dictionary.Margin
+					end
 				end
 				i := i + 1
 			end		
@@ -1269,8 +1285,8 @@ feature {NONE} -- Implementation
 			external_name: "BuildEiffelFeature"
 		require
 			non_void_feature: a_feature /= Void
-			non_void_feature_name: a_feature.Eiffel_Name /= Void
-			not_empty_feature_name: a_feature.Eiffel_Name.get_length > 0
+			non_void_feature_name: a_feature.get_Eiffel_Name /= Void
+			not_empty_feature_name: a_feature.get_Eiffel_Name.get_length > 0
 			non_void_eiffel_class: an_eiffel_class /= Void
 		local
 			is_unary_operator: BOOLEAN
@@ -1291,13 +1307,13 @@ feature {NONE} -- Implementation
 			is_editable_feature: BOOLEAN
 			style: SYSTEM_DRAWING_FONTSTYLE
 		do
-			is_unary_operator := an_eiffel_class.Unary_Operators_Features.Contains (a_feature)	
+			is_unary_operator := an_eiffel_class.get_Unary_Operators_Features.Contains (a_feature)	
 			label_width := 0
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Italic)
-			is_editable_feature := a_feature.new_slot
+			is_editable_feature := a_feature.get_new_slot
 			
 				-- frozen
-			if a_feature.Is_Frozen then
+			if a_feature.get_Is_Frozen then
 				create_label (eiffel_dictionary.Frozen_keyword, 3 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 			end
 				
@@ -1305,47 +1321,47 @@ feature {NONE} -- Implementation
 			create a_text_box.make_textbox
 			create tmp_label.make_label
 			new_label_width := 3 * dictionary.Margin + label_width
-			if is_unary_operator and a_feature.Is_Prefix then				
+			if is_unary_operator and a_feature.get_Is_Prefix then				
 				create_label (eiffel_dictionary.Prefix_keyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 				new_label_width := new_label_width + label_width
-				if a_feature.is_creation_routine then
-					create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
+				if a_feature.get_is_creation_routine then
+					create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
 					feature_name_width := label_width
 				else					
 					if is_editable_feature then
-						feature_name_width := text_box_width_from_text (a_feature.eiffel_name, a_font)
-						set_editable_text_box_properties (a_text_box, a_feature.eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+						feature_name_width := text_box_width_from_text (a_feature.get_eiffel_name, a_font)
+						set_editable_text_box_properties (a_text_box, a_feature.get_eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
 					else
-						create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
+						create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
 						feature_name_width := label_width
 					end
 				end
 			else
-				if a_feature.Is_Infix then
+				if a_feature.get_Is_Infix then
 					create_label (eiffel_dictionary.Infix_keyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 					new_label_width := new_label_width + label_width
-					if a_feature.is_creation_routine then
-						create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
+					if a_feature.get_is_creation_routine then
+						create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
 						feature_name_width := label_width
 					else
 						if is_editable_feature then
-							feature_name_width := text_box_width_from_text (a_feature.eiffel_name, a_font)		
-							set_editable_text_box_properties (a_text_box, a_feature.eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+							feature_name_width := text_box_width_from_text (a_feature.get_eiffel_name, a_font)		
+							set_editable_text_box_properties (a_text_box, a_feature.get_eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
 						else
-							create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
+							create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
 							feature_name_width := label_width
 						end
 					end
 				else
-					if a_feature.is_creation_routine then
-						create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
+					if a_feature.get_is_creation_routine then
+						create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)	
 						feature_name_width := label_width
 					else
 						if is_editable_feature then
-							feature_name_width := text_box_width_from_text (a_feature.eiffel_name, a_font)			
-							set_editable_text_box_properties (a_text_box, a_feature.eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+							feature_name_width := text_box_width_from_text (a_feature.get_eiffel_name, a_font)			
+							set_editable_text_box_properties (a_text_box, a_feature.get_eiffel_name, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
 						else
-							create_label (a_feature.eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
+							create_label (a_feature.get_eiffel_name, new_label_width, panel_height, dictionary.Feature_color, False)
 							feature_name_width := label_width
 						end
 					end
@@ -1355,7 +1371,7 @@ feature {NONE} -- Implementation
 			feature_names_boxes.add (a_text_box, a_feature)
 			
 				-- feature arguments
-			arguments := a_feature.Arguments
+			arguments := a_feature.get_Arguments
 			if not is_unary_operator and arguments.get_Count > 0 then
 				create_label (eiffel_dictionary.Opening_round_bracket, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
@@ -1366,10 +1382,10 @@ feature {NONE} -- Implementation
 				loop
 					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then						
-						argument_name := an_argument.eiffel_name
-						argument_type := an_argument.type_eiffel_name
+						argument_name := an_argument.get_eiffel_name
+						argument_type := an_argument.get_type_eiffel_name
 					end
-					if a_feature.is_creation_routine then
+					if a_feature.get_is_creation_routine then
 						create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
 						new_label_width := new_label_width + label_width 
 					else
@@ -1404,15 +1420,15 @@ feature {NONE} -- Implementation
 			end
 		
 				-- feature return type
-			if a_feature.Is_Method and then a_feature.Return_Type /= Void and then a_feature.return_type.type_eiffel_name /= Void and then a_feature.return_type.type_eiffel_name.get_length > 0 then
+			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_return_type.get_type_eiffel_name /= Void and then a_feature.get_return_type.get_type_eiffel_name.get_length > 0 then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width 
-				create_label (a_feature.return_type.type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
+				create_label (a_feature.get_return_type.get_type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
 			end
-			if a_feature.Is_Field and not a_feature.Eiffel_Name.Starts_With (eiffel_dictionary.Property_set_prefix) then
+			if a_feature.get_Is_Field and not a_feature.get_Eiffel_Name.Starts_With (eiffel_dictionary.Property_set_prefix) then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				create_label (a_feature.return_type.type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
+				create_label (a_feature.get_return_type.get_type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
 			end
 			panel_height := panel_height + dictionary.Label_height
 		end	
@@ -1458,7 +1474,7 @@ feature {NONE} -- Implementation
 					a_feature ?= an_array.item (0)
 					an_argument ?= an_array.item (1)
 					if (a_feature /= Void and then a_feature = modified_feature) and an_argument /= Void then
-						if not an_argument.eiffel_name.to_lower.equals_string (text_box.get_text.to_lower) then
+						if not an_argument.get_eiffel_name.to_lower.equals_string (text_box.get_text.to_lower) then
 							feature_modifications.add_argument_modification (an_argument, text_box.get_text)
 							type_modifications.add_feature_modification (modified_feature, feature_modifications)
 						end
@@ -1602,7 +1618,7 @@ feature {NONE} -- Implementation
 		do
 			Result := dictionary.Error
 			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Feature_string)
-			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.eiffel_name)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.get_eiffel_name)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
 			Result := Result.concat_string_string (Result, an_error_message)
 		ensure
@@ -1622,9 +1638,9 @@ feature {NONE} -- Implementation
 		do
 			Result := dictionary.Error
 			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Feature_string)
-			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.eiffel_name)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.get_eiffel_name)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Comma_separator, dictionary.Space, dictionary.Argument_string)
-			Result := Result.concat_string_string_string_string (Result, Dictionary.Colon, dictionary.Space, an_argument.eiffel_name)
+			Result := Result.concat_string_string_string_string (Result, Dictionary.Colon, dictionary.Space, an_argument.get_eiffel_name)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
 			Result := Result.concat_string_string (Result, an_error_message)
 		ensure
@@ -1678,7 +1694,7 @@ feature {NONE} -- Implementation
 				a_text_box ?= enumerator.get_current
 				if a_text_box /= Void then
 					corresponding_feature ?= feature_names_boxes.get_item (a_text_box)
-					if corresponding_feature /= Void and then corresponding_feature.eiffel_name.to_lower.equals_string (a_feature.eiffel_name.to_lower) then
+					if corresponding_feature /= Void and then corresponding_feature.get_eiffel_name.to_lower.equals_string (a_feature.get_eiffel_name.to_lower) then
 						Result := a_text_box
 					end
 				end
@@ -1713,7 +1729,7 @@ feature {NONE} -- Implementation
 					if an_array /= Void then
 						corresponding_feature ?= an_array.item (0)
 						corresponding_argument ?= an_array.item (1)				
-						if (corresponding_feature /= Void and then corresponding_feature.eiffel_name.to_lower.equals_string (a_feature.eiffel_name.to_lower)) and (corresponding_argument /= Void and then corresponding_argument.eiffel_name.to_lower.equals_string (an_argument.eiffel_name.to_lower)) then
+						if (corresponding_feature /= Void and then corresponding_feature.get_eiffel_name.to_lower.equals_string (a_feature.get_eiffel_name.to_lower)) and (corresponding_argument /= Void and then corresponding_argument.get_eiffel_name.to_lower.equals_string (an_argument.get_eiffel_name.to_lower)) then
 							Result := a_text_box
 						end
 					end

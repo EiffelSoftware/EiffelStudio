@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			make_form
 			assembly := an_assembly
-			assembly_descriptor := an_assembly.assembly_descriptor
+			assembly_descriptor := an_assembly.get_assembly_descriptor
 			type_list := assembly.types
 			sort_classes
 			create types.make
@@ -89,7 +89,7 @@ feature -- Basic Operations
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
-			assembly_label.set_text (assembly_descriptor.name)
+			assembly_label.set_text (assembly_descriptor.get_name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
@@ -432,8 +432,8 @@ feature {NONE} -- Implementation
 			loop
 				a_class ?= type_list.get_Item (i)
 				if a_class /= Void then
-					if not types.contains (a_class.eiffel_name) then
-						types.add (a_class.eiffel_name, a_class)
+					if not types.contains (a_class.get_eiffel_name) then
+						types.add (a_class.get_eiffel_name, a_class)
 					end
 					build_row (a_class, row_count)
 					row_count := row_count + 1
@@ -458,8 +458,8 @@ feature {NONE} -- Implementation
 			row.get_Table.get_Default_View.set_Allow_Edit (False)
 			row.get_Table.get_Default_View.set_Allow_New (False)
 			row.get_Table.get_Default_View.set_Allow_Delete (False)
-			row.set_Item_String (dictionary.Eiffel_name_column_title, a_class.eiffel_name)
-			row.set_Item_String (dictionary.External_name_column_title, a_class.external_name)			
+			row.set_Item_String (dictionary.Eiffel_name_column_title, a_class.get_eiffel_name)
+			row.set_Item_String (dictionary.External_name_column_title, a_class.get_external_name)			
 		end
 
 	build_empty_row (row_count: INTEGER) is 

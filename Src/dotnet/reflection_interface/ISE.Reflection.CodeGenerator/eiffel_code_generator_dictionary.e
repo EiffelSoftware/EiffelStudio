@@ -103,6 +103,12 @@ feature -- Access
 			description: "Deferred keyword"
 			external_name: "DeferredKeyword"
 		end
+	
+	Do_keyword: STRING is "do"
+		indexing
+			description: "do keyword"
+			external_name: "DoKeyword"
+		end
 		
 	Double_class: STRING is "DOUBLE"
 		indexing
@@ -218,10 +224,16 @@ feature -- Access
 			external_name: "InheritKeyword"
 		end
 		
-	Initialization_feature_clause: STRING is "feature {NONE} -- Initialization"
+	Initialization_feature_clause: STRING is "feature -- Initialization"
 		indexing
 			description: "Initialization feature clause"
 			external_name: "InitializationFeatureClause"
+		end
+
+	Initialization_feature_clause_exported_to_none: STRING is "feature {NONE} -- Initialization"
+		indexing
+			description: "Initialization feature clause with `NONE' export clause"
+			external_name: "InitializationFeatureClauseExportedToNone"
 		end
 		
 	Integer_class: STRING is "INTEGER"
@@ -373,7 +385,7 @@ feature -- Access
 			description: "Use"
 			external_name: "Use"
 		end
-
+	
 	Windows_new_line: STRING is "%R%N"
 		indexing
 			description: "New line as a string"

@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.get_Length > 0
+			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.get_name.get_Length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 		local
 			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
@@ -98,7 +98,7 @@ feature -- Status Setting
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
-			Result := non_removable_assemblies.contains (a_descriptor.name.to_lower)
+			Result := non_removable_assemblies.contains (a_descriptor.get_name.to_lower)
 		end
 		
 feature -- Basic Operations
@@ -128,7 +128,7 @@ feature -- Basic Operations
 
 				-- Assembly name
 			create assembly_label.make_label
-			assembly_label.set_text (assembly_descriptor.name)
+			assembly_label.set_text (assembly_descriptor.get_name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
@@ -234,8 +234,8 @@ feature {NONE} -- Implementation
 				reflection_interface.Make_Reflection_Interface
 				reflection_interface.remove_assembly (assembly_descriptor)
 			else
-				if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
-					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				if reflection_interface.get_last_error /= Void and then reflection_interface.get_last_error.get_description /= Void and then reflection_interface.get_last_error.get_description.get_length > 0 then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.get_last_error.get_description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
 			end
 		rescue

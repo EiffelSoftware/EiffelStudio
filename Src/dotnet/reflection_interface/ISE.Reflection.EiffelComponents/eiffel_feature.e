@@ -77,6 +77,12 @@ feature -- Access
 			external_name: "Comments"
 		end
 
+	literal_value: STRING
+		indexing
+			description: "Literal value (in case feature is a literal)"
+			external_name: "LiteralValue"
+		end
+		
 feature -- Eiffel names from .NET information
 
 	argument_from_info (info: SYSTEM_REFLECTION_PARAMETERINFO): ARRAY [STRING] is 
@@ -186,6 +192,12 @@ feature -- Status Report
 			description: "Is feature a literal enum?"
 			external_name: "IsEnumLiteral"
 		end
+	
+	is_literal: BOOLEAN
+		indexing
+			description: "Is feature a literal?"
+			external_name: "IsLiteral"
+		end
 		
 feature -- Status Setting
 
@@ -291,12 +303,22 @@ feature -- Status Setting
 
 	set_enum_literal is
 		indexing
-			description: "Set `enum_literal' with `True'."
+			description: "Set `is_enum_literal' with `True'."
 			external_name: "SetEnumLiteral"
 		do
 			is_enum_literal := True
 		ensure
 			is_enum_literal: is_enum_literal
+		end
+
+	set_literal is
+		indexing
+			description: "Set `is_literal' with `True'."
+			external_name: "SetLiteral"
+		do
+			is_literal := True
+		ensure
+			is_literal: is_literal
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is
@@ -336,6 +358,18 @@ feature -- Status Setting
 		ensure
 			return_type_set: return_type = a_type
 		end
+
+	set_literal_value (a_value: like literal_value) is
+		indexing
+			description: "Set `literal_value' with `a_value'."
+			external_name: "SetLiteralValue"
+		require
+			non_void_value: a_value /= Void
+		do
+			literal_value := a_value
+		ensure
+			literal_value_set: literal_value.equals_string (a_value)
+		end	
 
 feature -- Basic Operations
 

@@ -307,6 +307,12 @@ feature -- Status Report
 			description: "Has current class been modified (i.e. have features been renamed)?"
 			external_name: "Modified"
 		end
+	
+	bit_or_infix: BOOLEAN
+		indexing
+			description: "Has a `bit_or' feature to be generated in current type?"
+			external_name: "BitOrInfix"
+		end
 		
 feature -- Status Setting
 
@@ -358,6 +364,16 @@ feature -- Status Setting
 			modified := True
 		ensure
 			modified: modified
+		end
+
+	set_bit_or_infix is
+		indexing
+			description: "Set `bit_or_infix' with `True'."
+			external_name: "SetBitOrInfix"
+		do
+			bit_or_infix := True
+		ensure
+			bit_or_infix: bit_or_infix
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is

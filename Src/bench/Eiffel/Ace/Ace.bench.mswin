@@ -32,7 +32,9 @@ cluster
 
 	-- General compilation:
 
-		flat_short:			"$BENCH/Eiffel/flat_short";
+		flat_short:			"$BENCH/Eiffel/flat_short/abstract";
+		flat_short_b:		"$BENCH/Eiffel/flat_short/bench";
+
 		special_ast:		"$BENCH/Eiffel/special_ast";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
@@ -49,10 +51,16 @@ cluster
 
 	-- Eiffel compilation:
 
-		instructions:		"$BENCH/Eiffel/eiffel/AST/instructions";
-		expressions:		"$BENCH/Eiffel/eiffel/AST/expressions";
-		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/skeleton";
-		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/stonables";
+		instructions:		"$BENCH/Eiffel/eiffel/AST/abstract/instructions";
+		expressions:		"$BENCH/Eiffel/eiffel/AST/abstract/expressions";
+		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/abstract/skeleton";
+		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/abstract/stonables";
+
+		instructions_b:		"$BENCH/Eiffel/eiffel/AST/bench/instructions";
+		expressions_b:		"$BENCH/Eiffel/eiffel/AST/bench/expressions";
+		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/bench/skeleton";
+		ast_stonables_b:		"$BENCH/Eiffel/eiffel/AST/bench/stonables";
+
 		actual_type:		"$BENCH/Eiffel/eiffel/actual_type";
 		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
 		cecil:				"$BENCH/Eiffel/eiffel/cecil";

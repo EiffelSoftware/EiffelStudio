@@ -70,12 +70,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Is the assembly local
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_signed(  /* [out, retval] */ VARIANT_BOOL * a_bool ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Assembly cluster name.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP assembly_cluster_name(  /* [out, retval] */ BSTR * return_value ) = 0;

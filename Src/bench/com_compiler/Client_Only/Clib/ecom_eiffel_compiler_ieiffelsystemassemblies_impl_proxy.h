@@ -77,6 +77,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Add a local assembly to the project.
+	-----------------------------------------------------------*/
+	void ccom_add_local_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT a_path );
+
+
+	/*-----------------------------------------------------------
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	void ccom_remove_assembly(  /* [in] */ EIF_OBJECT assembly_identifier );
@@ -128,12 +134,6 @@ public:
 	Is 'prefix' a valid assembly prefix
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_is_valid_prefix(  /* [in] */ EIF_OBJECT assembly_prefix );
-
-
-	/*-----------------------------------------------------------
-	Has the 'prefix' already been allocated to another assembly
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_prefix_allocated(  /* [in] */ EIF_OBJECT assembly_prefix );
 
 
 	/*-----------------------------------------------------------

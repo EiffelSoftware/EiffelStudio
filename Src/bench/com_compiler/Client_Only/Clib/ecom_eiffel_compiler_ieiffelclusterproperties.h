@@ -186,12 +186,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Name of the parent cluster.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_parent_name(  /* [in] */ BSTR return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Does the current cluster have a parent cluster?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;

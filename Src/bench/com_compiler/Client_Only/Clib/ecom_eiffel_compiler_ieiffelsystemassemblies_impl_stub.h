@@ -51,6 +51,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Add a local assembly to the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP add_local_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_path );
+
+
+	/*-----------------------------------------------------------
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_assembly(  /* [in] */ BSTR assembly_identifier );
@@ -102,12 +108,6 @@ public:
 	Is 'prefix' a valid assembly prefix
 	-----------------------------------------------------------*/
 	STDMETHODIMP is_valid_prefix(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Has the 'prefix' already been allocated to another assembly
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_prefix_allocated(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------

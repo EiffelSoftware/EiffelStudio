@@ -95,12 +95,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return ISE_EIFFEL environment var.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ise_eiffel(  );
-
-
-	/*-----------------------------------------------------------
 	Takes a path and expands it using the env vars.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_expand_path(  /* [in] */ EIF_OBJECT a_path );
@@ -152,6 +146,12 @@ public:
 	Is compiler output sent to pipe `output_pipe_name'
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_is_output_piped(  );
+
+
+	/*-----------------------------------------------------------
+	Can product be run? (i.e. is it activated or was run less than 10 times)
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_can_run(  );
 
 
 	/*-----------------------------------------------------------

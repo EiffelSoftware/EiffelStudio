@@ -94,12 +94,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return ISE_EIFFEL environment var.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ise_eiffel(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Takes a path and expands it using the env vars.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value ) = 0;

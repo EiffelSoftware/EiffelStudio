@@ -79,17 +79,42 @@ feature -- Status report
 
 feature -- Queries
 
-	load_integer_with_select (s: STRING): INTEGER is
+	load_integer_with_select (s: STRING): ANY is
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
 		local
-			int_sel: DB_INTEGER_SELECTION
+--			int_sel: DB_INTEGER_SELECTION
+			rescued: BOOLEAN
+			tuple: DB_TUPLE
 		do
-			create int_sel.make
-			int_sel.set_query (s)
-			int_sel.execute_query
-			Result := int_sel.load_result
+--			create int_sel.make
+--			int_sel.set_query (s)
+--			int_sel.execute_query
+--			Result := int_sel.load_result
+			if not rescued then
+				has_error := False
+				create db_selection.make
+				db_selection.set_query (s)
+				db_selection.execute_query
+				db_selection.load_result
+				db_selection.terminate
+				if db_selection.is_ok then
+					create tuple.copy (db_selection.cursor)
+					Result := tuple.item (1)
+				else
+					has_error := True
+					error_message := db_selection.error_m
+				end
+			else
+				has_error := True
+				error_message := "An error occured while reading the database.%NQuery was: '" + s
+		--FIXME				+ "'.%N Database error message is: " +
+						+ "%NPlease keep this dialog open and contact your DBA."
+			end
+		rescue
+			rescued := TRUE
+			retry
 		end
 
 	load_list_with_select (s: STRING; an_obj: ANY): ARRAYED_LIST [like an_obj] is
@@ -112,9 +137,13 @@ feature -- Queries
 				db_selection.set_action (db_actions)
 				db_selection.execute_query
 				db_selection.load_result
-
 				db_selection.terminate
-				Result := db_actions.list
+				if db_selection.is_ok then
+					Result := db_actions.list
+				else
+					has_error := True
+					error_message := db_selection.error_m
+				end
 			else
 				has_error := True
 				error_message := "An error occured while reading the database.%NQuery was: '" + s
@@ -143,7 +172,7 @@ feature -- Queries without result to load.
 				db_change.set_query (a_query)
 				db_change.execute_query
 				updater_build := True
-				session_control.commit		
+				commit
 			else
 				has_error := True
 				error_message := "Database query execution failure : " + s
@@ -172,6 +201,8 @@ feature -- Queries without result to load.
 		end
 
 	execute_query_from_updater (a_query: STRING) is
+				-- Execute `a_query' in the database.
+				-- Warning: query executed is not committed.
 		require
 			not_void: a_query /= Void
 			updater_build: updater_build
@@ -192,21 +223,24 @@ feature -- Queries without result to load.
 			retry
 		end
 
-	commit_query is
+	commit is
 			-- Commit updates in the database
-		require
-			updater_build: updater_build
 		local
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				session_control.commit		
+				if session_control.is_ok then
+					session_control.commit
+				else
+					has_error := True
+					error_message := session_control.error_message
+				end
 			else
 				has_error := True
 				error_message := "Database commit failure."
 			end
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry
 		end
 
@@ -224,7 +258,7 @@ feature -- Queries without result to load.
 				rep.load
 				store_objects.set_repository (rep)
 				store_objects.put (an_obj)
-				session_control.commit
+				commit
 			else
 				has_error := True
 				error_message := "An error occured while creating a table row in the database.%NTable%

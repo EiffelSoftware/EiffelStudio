@@ -82,6 +82,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int gc_monitor;					/* Disable GC time-monitoring by default */
 	char *root_obj;					/* Address of the 'root' object */
 
+		/* hector.c */
+	struct stack hec_stack;			/* Indirection table "hector" */
+	struct stack hec_saved;			/* Entries free in hector */
+	struct stack free_stack;		/* Entries free in hector */
+
 		/* interp.c */
 	struct opstack op_stack;		/* Operational stack */
 	char *IC;						/* Interpreter Counter (like PC on a CPU) */
@@ -211,6 +216,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define gc_monitor		(eif_globals->gc_monitor)	/* rt_public */
 #define root_obj		(eif_globals->root_obj)		/* rt_public */
 
+	/* hector.c */
+#define hec_stack		(eif_globals->hec_stack)	/* rt_public */
+#define hec_saved		(eif_globals->hec_saved)	/* rt_public */
+#define free_stack		(eif_globals->free_stack)	/* rt_private */
+
 	/* interp.c */
 #define op_stack		(eif_globals->op_stack)		/* rt_shared */
 #define IC				(eif_globals->IC)			/* rt_public */
@@ -326,6 +336,9 @@ extern long th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
 extern char *root_obj;			/* Address of the 'root' object */
 
+	/* hector.c */
+extern struct stack hec_stack;		/* Indirection table "hector" */
+extern struct stack hec_saved;		/* Saved indirection pointers */
 
 	/* interp.h */
 extern struct opstack op_stack;	/* Operational stack */

@@ -23,21 +23,21 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster:		"$EIFFEL4\examples\vision2\multicolumn_list"
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\multicolumn_list"
 
 		-- EiffelBase
-	all base: 			"$EIFFEL4\library\base"
+	all base: 			"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- WEL
-	all wel:			"$EIFFEL4\library\wel"
+	all wel:			"$ISE_EIFFEL\library\wel"
 
 		-- Vision2
-	event:				"$EIFFEL4\library\event"
+	event:				"$ISE_EIFFEL\library\event"
 
-	all vision2:		"$EIFFEL4\library\vision2"
+	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude 
 			"gtk"
 			"EIFGEN"
@@ -49,12 +49,12 @@ cluster
 		end
 
 external
-	include_path:		"$(EIFFEL4)\library\vision2\spec\include",
-						"$(EIFFEL4)\library\wel\spec\windows\include"
+	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
+						"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 
-	object: 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
-						"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
+			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
+			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
+						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 
 end -- mclist_example

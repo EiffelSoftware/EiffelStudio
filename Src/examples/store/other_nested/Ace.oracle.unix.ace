@@ -16,35 +16,35 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base");
 
 
 cluster
 	
-	root_cluster: "$EIFFEL4/examples/store/other_nested";
+	root_cluster: "$ISE_EIFFEL/examples/store/other_nested";
 
-	thread:						"$EIFFEL4/library/thread"
+	thread:						"$ISE_EIFFEL/library/thread"
 
 	-- EiffelTime
-	time:				"$EIFFEL4/library/time";
+	time:				"$ISE_EIFFEL/library/time";
 	time_format(time):	"$/format";
 	time_english(time):	"$/format/english";
 
 	-- EiffelStore
-	estore_support:		"$EIFFEL4/library/store/support"
-	estore_interface:	"$EIFFEL4/library/store/interface"
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support"
-	estore_rdbms:		"$EIFFEL4/library/store/dbms/rdbms/oracle"
+	estore_support:		"$ISE_EIFFEL/library/store/support"
+	estore_interface:	"$ISE_EIFFEL/library/store/interface"
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support"
+	estore_rdbms:		"$ISE_EIFFEL/library/store/dbms/rdbms/oracle"
 
 
 external
 	include_path:		
-						"$(EIFFEL4)/library/store/dbms/rdbms/oracle/Clib",
+						"$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
 						"$(ORACLE_HOME)/rdbms/public"
 
-	object: 			"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/libsupport.a",
-						"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/libdatetime.a",
-						"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/liboracle.a",
+	object: 			"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/libsupport.a",
+						"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/libdatetime.a",
+						"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/liboracle.a",
 						"-L$(ORACLE_HOME)/lib -lcntsh"
 
 end

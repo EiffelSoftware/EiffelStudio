@@ -5,22 +5,22 @@ root
 	eiffel_scan (ROOT_CLUSTER): "make"
 
 default
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/lex";
+	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/lex";
 				-- If you intend to modify any of the examples,
-				-- copy all the files of $EIFFEL4/examples/lex
+				-- copy all the files of $ISE_EIFFEL/examples/lex
 				-- into one of your directories, and replace
-				-- $EIFFEL4/examples/lex by the name of that directory
+				-- $ISE_EIFFEL/examples/lex by the name of that directory
 				-- on the above line.
 
 		-- EiffelLex
-	lex:				"$EIFFEL4/library/lex";
+	lex:				"$ISE_EIFFEL/library/lex";
 
 		-- EiffelBase:
-	all base:		"$EIFFEL4/library/base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end

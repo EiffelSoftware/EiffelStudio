@@ -5,14 +5,14 @@ root
 	polling_client (ROOT_CLUSTER): "make"
 
 default
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-	ROOT_CLUSTER: 	"$EIFFEL4/examples/net/polling/client";
-	common_classes:	"$EIFFEL4/examples/net/polling/common";
+	ROOT_CLUSTER: 	"$ISE_EIFFEL/examples/net/polling/client";
+	common_classes:	"$ISE_EIFFEL/examples/net/polling/common";
 
 		-- EiffelNet
-	net:				"$EIFFEL4/library/net";
+	net:				"$ISE_EIFFEL/library/net";
 	abstract_socket (net):		"$/abstract/socket";
 	net_socket (net):		"$/network/socket";
 	local_socket (net):		"$/local/socket";
@@ -26,7 +26,7 @@ cluster
 	local_client_server (net):	"$/local/client_server";
 
 		-- EiffelBase
-	all base:			"$EIFFEL4/library/base"
+	all base:			"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
@@ -34,6 +34,6 @@ cluster
 external
 	-- External EiffelNet library 
 	object:
--- unix		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
-		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+-- unix		"$(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a"
+		"$(ISE_EIFFEL)/library/net/spec/$(ISE_COMPILER)/lib/net.lib"
 end

@@ -1,12 +1,12 @@
 CC = cl
 MAKE = nmake
-INCLUDE_PATH = $(EIFFEL4)\bench\spec\windows\include
+INCLUDE_PATH = $(ISE_EIFFEL)\bench\spec\windows\include
 DELDIR = rmdir /S
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(EIFFEL4)\bench\spec\windows\bin\finish_freezing
-ES4 = $(EIFFEL4)\bench\spec\windows\bin\es4
+FINISH_FREEZING = $(ISE_EIFFEL)\bench\spec\windows\bin\finish_freezing
+ES4 = $(ISE_EIFFEL)\bench\spec\windows\bin\es4
 CFLAGS = -DEIF_WIN32
 LIBS = 
 OBJECT = main.obj

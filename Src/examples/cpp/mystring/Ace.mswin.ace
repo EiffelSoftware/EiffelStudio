@@ -6,26 +6,26 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base");
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
 
 cluster 
-	ROOT_CLUSTER:		"$EIFFEL4\examples\cpp\mystring";
+	ROOT_CLUSTER:		"$ISE_EIFFEL\examples\cpp\mystring";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $EIFFEL4\examples\cpp\mystring
+				-- copy all the files of $ISE_EIFFEL\examples\cpp\mystring
 				-- into one of your directories, and replace
-				-- $EIFFEL4\examples\cpp\mystring by the name of
+				-- $ISE_EIFFEL\examples\cpp\mystring by the name of
 				-- that directory on the above line.
 
 
 		-- EiffelBase:
-	all base:		"$EIFFEL4\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 
 external
-	include_path:		"$(EIFFEL4)\examples\cpp\mystring";
-	object: 		"$(EIFFEL4)\examples\cpp\mystring\mystring.obj";
+	include_path:		"$(ISE_EIFFEL)\examples\cpp\mystring";
+	object: 		"$(ISE_EIFFEL)\examples\cpp\mystring\mystring.obj";
 
 end

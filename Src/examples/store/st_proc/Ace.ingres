@@ -7,25 +7,25 @@ root
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
 	root_cluster:		".";
-	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
-	ingres_handle:		"$EIFFEL4/library/store/examples/Utilities/ingres";
+	estore_examples_objects:"$ISE_EIFFEL/library/store/examples/Utilities";
+	ingres_handle:		"$ISE_EIFFEL/library/store/examples/Utilities/ingres";
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_date:		"$EIFFEL4/library/store/date_and_time";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_ingres:		"$EIFFEL4/library/store/dbms/rdbms/ingres";
+	estore_support:		"$ISE_EIFFEL/library/store/support";
+	estore_interface:	"$ISE_EIFFEL/library/store/interface";
+	estore_date:		"$ISE_EIFFEL/library/store/date_and_time";
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
+	estore_ingres:		"$ISE_EIFFEL/library/store/dbms/rdbms/ingres";
 
 external
 
-	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
+	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib";
 		"-lsys_time";
 		"-lsupport";
 		"-lingres_store";

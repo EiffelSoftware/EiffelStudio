@@ -8,20 +8,20 @@ default
 	assertion (all)
 
 cluster 
-	root_cluster:	"$EIFFEL4\examples\wel\magnify"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\magnify"
 
 		-- WEL
-	all wel: 		"$EIFFEL4\library\wel"
+	all wel: 		"$ISE_EIFFEL\library\wel"
 
 		-- EiffelBase
-	all base: 		"$EIFFEL4\library\base"
+	all base: 		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"
 			"desc"
 		end
 
 external
-	include_path:	"$EIFFEL4\library\wel\spec\windows\include"
-	object: 		"$EIFFEL4\library\wel\spec\msc\lib\wel.lib"
+	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include"
+	object: 		"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib"
 
 end -- magnify_demo

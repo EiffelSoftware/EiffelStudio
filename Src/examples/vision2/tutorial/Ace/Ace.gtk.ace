@@ -9,8 +9,8 @@ root
 
 default
 
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision2")
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+--	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision2")
+--	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 	assertion (all)
 
 cluster
@@ -28,7 +28,7 @@ demo_tab (tutorial):				"$/demo_tabs"
 
 -- EiffelBase:
 
-base:						"$EIFFEL4/library/base";
+base:						"$ISE_EIFFEL/library/base";
 structures(base):				"$/structures";
 
 kernel(base):					"$/kernel";
@@ -97,9 +97,9 @@ vision_imp_uncommon_widgets (vision_imp_widgets):"$/uncommon_widgets";
 external
 
 	include_path:
-		"$EIFFEL4/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+		"$ISE_EIFFEL/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
 	object:
-		"$(EIFFEL4)/library/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
+		"$(ISE_EIFFEL)/library/vision2/implementation/gtk/spec/$(ISE_PLATFORM)/gtk_eiffel.o",
 		"`gtk-config --libs`"
 
 end

@@ -30,7 +30,7 @@ Assertions should not be turned on with any version of the eiffel compiler
 anterior to 4.3. Assertions are only MT-safe since the 4.3 release.
 
 Check first if you have the precompiled base-mt library in your
-$EIFFEL4/precomp/spec/$PLATFORM/base-mt directory. If not, you
+$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt directory. If not, you
 will need to comment the relevant line in the Ace file and
 freeze your entire system.
  

@@ -7,42 +7,42 @@ root
 default
 	assertion (no);
 	multithreaded (yes);
---	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel");
+--	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel");
 
 cluster
 	root_cluster:	".";
 	-- WEL
-	wel_constants:		"$EIFFEL4\library\wel\consts";
-	wel_controls:		"$EIFFEL4\library\wel\controls";
-	wel_gdi:		"$EIFFEL4\library\wel\gdi";
-	wel_gdi_stocks: 	"$EIFFEL4\library\wel\gdistock";
-	wel_messages:		"$EIFFEL4\library\wel\messages";
-	wel_standard_dialogs:	"$EIFFEL4\library\wel\stddlgs";
-	wel_structures: 	"$EIFFEL4\library\wel\structs";
-	wel_support:		"$EIFFEL4\library\wel\support";
-	wel_windows:		"$EIFFEL4\library\wel\windows";
+	wel_constants:		"$ISE_EIFFEL\library\wel\consts";
+	wel_controls:		"$ISE_EIFFEL\library\wel\controls";
+	wel_gdi:		"$ISE_EIFFEL\library\wel\gdi";
+	wel_gdi_stocks: 	"$ISE_EIFFEL\library\wel\gdistock";
+	wel_messages:		"$ISE_EIFFEL\library\wel\messages";
+	wel_standard_dialogs:	"$ISE_EIFFEL\library\wel\stddlgs";
+	wel_structures: 	"$ISE_EIFFEL\library\wel\structs";
+	wel_support:		"$ISE_EIFFEL\library\wel\support";
+	wel_windows:		"$ISE_EIFFEL\library\wel\windows";
 
 	-- EiffelBase
-	kernel: 		"$EIFFEL4\library\base\kernel";
-	support:		"$EIFFEL4\library\base\support";
-	access: 		"$EIFFEL4\library\base\structures\access";
-	cursors:		"$EIFFEL4\library\base\structures\cursors";
-	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
-	iteration:		"$EIFFEL4\library\base\structures\iteration";
-	list:			"$EIFFEL4\library\base\structures\list";
-	set:			"$EIFFEL4\library\base\structures\set";
-	sort:			"$EIFFEL4\library\base\structures\sort";
-	storage:		"$EIFFEL4\library\base\structures\storage";
-	table:			"$EIFFEL4\library\base\structures\table";
-	traversing:		"$EIFFEL4\library\base\structures\traversing";
-	tree:			"$EIFFEL4\library\base\structures\tree";
+	kernel: 		"$ISE_EIFFEL\library\base\kernel";
+	support:		"$ISE_EIFFEL\library\base\support";
+	access: 		"$ISE_EIFFEL\library\base\structures\access";
+	cursors:		"$ISE_EIFFEL\library\base\structures\cursors";
+	cursor_tree:		"$ISE_EIFFEL\library\base\structures\cursor_tree";
+	dispenser:		"$ISE_EIFFEL\library\base\structures\dispenser";
+	iteration:		"$ISE_EIFFEL\library\base\structures\iteration";
+	list:			"$ISE_EIFFEL\library\base\structures\list";
+	set:			"$ISE_EIFFEL\library\base\structures\set";
+	sort:			"$ISE_EIFFEL\library\base\structures\sort";
+	storage:		"$ISE_EIFFEL\library\base\structures\storage";
+	table:			"$ISE_EIFFEL\library\base\structures\table";
+	traversing:		"$ISE_EIFFEL\library\base\structures\traversing";
+	tree:			"$ISE_EIFFEL\library\base\structures\tree";
 
 	-- EiffelThread
-	thread: 		"$EIFFEL4\library\thread";
+	thread: 		"$ISE_EIFFEL\library\thread";
 
 external
-	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include";
-	object: 	"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\mtwel.lib";
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+	object: 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\mtwel.lib";
 
 end

@@ -4,19 +4,19 @@ root
 	TESTROOT  (ROOT_CLUSTER): "make"
 
 default
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
-	ROOT_CLUSTER:		"$EIFFEL4/examples/bench/tour";
+	ROOT_CLUSTER:		"$ISE_EIFFEL/examples/bench/tour";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $EIFFEL4/examples/bench/tour
+				-- copy all the files of $ISE_EIFFEL/examples/bench/tour
 				-- into one of your directories, and replace
-				-- $EIFFEL4/examples/bench/tour by the name of
+				-- $ISE_EIFFEL/examples/bench/tour by the name of
 				-- that directory on the above line.
 
 		-- EiffelBase:
-	all base:		"$EIFFEL4/library/base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end

@@ -14,17 +14,17 @@ cluster
 	root_cluster: ".";
 
 	-- Base
-	all base:		"$EIFFEL4\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end;
 
 	-- WEL
-	all wel:		"$EIFFEL4\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
 
 	-- EiffelCOM
-	all ecom:		"$EIFFEL4\library\com"
+	all ecom:		"$ISE_EIFFEL\library\com"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
@@ -32,9 +32,9 @@ cluster
 
 external
 
-	include_path:	"$(EIFFEL4)\library\com\spec\windows\include",
-				"$(EIFFEL4)\library\wel\spec\windows\include";
+	include_path:	"$(ISE_EIFFEL)\library\com\spec\windows\include",
+				"$(ISE_EIFFEL)\library\wel\spec\windows\include";
 
-	object:		"$(EIFFEL4)\library\com\spec\$(COMPILER)\lib\com.lib",
-				"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	object:		"$(ISE_EIFFEL)\library\com\spec\$(ISE_COMPILER)\lib\com.lib",
+				"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 end

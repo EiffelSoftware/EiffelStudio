@@ -6,9 +6,9 @@ root
 
 default
 	assertion (all)
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
-	root_cluster:	"$EIFFEL4\examples\wel\ctlcolor"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\ctlcolor"
 
 end -- ctlcolor_demo

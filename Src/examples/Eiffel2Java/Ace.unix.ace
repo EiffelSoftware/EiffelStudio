@@ -10,19 +10,19 @@ default
 
 cluster
 
-	root_cluster: "$EIFFEL4/examples/Eiffel2Java";
+	root_cluster: "$ISE_EIFFEL/examples/Eiffel2Java";
 
 		-- EiffelBase
-	all base:						"$EIFFEL4/library/base"
+	all base:						"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	java:		"$EIFFEL4/library/Eiffel2Java"
+	java:		"$ISE_EIFFEL/library/Eiffel2Java"
 
 external
 	object:
-		"$(EIFFEL4)/library/Eiffel2Java/Clib/e2j.obj",
+		"$(ISE_EIFFEL)/library/Eiffel2Java/Clib/e2j.obj",
 		"D:/apps/jdk1.1.8/lib/javai.lib"
 		
 

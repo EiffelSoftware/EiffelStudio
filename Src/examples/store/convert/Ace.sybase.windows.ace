@@ -11,41 +11,41 @@ default
 
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/convert";
-	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
-	sybase_handle:		"$EIFFEL4/examples/store/Utilities/sybase";
+	root_cluster:		"$ISE_EIFFEL/examples/store/convert";
+	estore_examples_objects:"$ISE_EIFFEL/examples/store/Utilities";
+	sybase_handle:		"$ISE_EIFFEL/examples/store/Utilities/sybase";
 
 -- EiffelBase
 
-	all base:			"$EIFFEL4/library/base"
+	all base:			"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_sybase:		"$EIFFEL4/library/store/dbms/rdbms/sybase";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_converter:	"$EIFFEL4/library/store/converter";
+	estore_support:		"$ISE_EIFFEL/library/store/support";
+	estore_interface:	"$ISE_EIFFEL/library/store/interface";
+	estore_sybase:		"$ISE_EIFFEL/library/store/dbms/rdbms/sybase";
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
+	estore_converter:	"$ISE_EIFFEL/library/store/converter";
 
 -- EiffelTime
 	
-	time:				"$EIFFEL4/library/time";
-	time_format:		"$EIFFEL4/library/time/format";
-	time_english:		"$EIFFEL4/library/time/format/english";		
+	time:				"$ISE_EIFFEL/library/time";
+	time_format:		"$ISE_EIFFEL/library/time/format";
+	time_english:		"$ISE_EIFFEL/library/time/format/english";		
 	
 -- EiffelLex
 	
-	lexical:			"$EIFFEL4/library/lex";
+	lexical:			"$ISE_EIFFEL/library/lex";
 
 external
 
 	object:
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
-		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/sybase_store.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/sybase_store.lib",
 		"$(SYBASE)/lib/libsybdb.lib" 
 
 end

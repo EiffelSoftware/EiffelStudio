@@ -11,7 +11,7 @@ and run
 From scratch, on Windows: (adjust your flags CC, CFLAGS if you are not using VC++)
 In the Ace.ace file comment and uncomment the indicated lines (in external clause).
 type
-	set EIFFEL4=<INSTALL_DIRECTORY> 
+	set ISE_EIFFEL=<INSTALL_DIRECTORY> 
 		where <YOUR_INSTALLATION_DIRECTORY> is the directory where you installed
 		the Eiffel 4 delivery (ex: c:\Eiffel4)
 	nmake -f Makefile.win

@@ -22,7 +22,7 @@ all vision2(dev):				"$\vision2"
 		"gtk" "obsolete" "EIFGEN" "tmp"
 	end
 
-all base(dev):					"$EIFFEL4\library\base"
+all base(dev):					"$ISE_EIFFEL\library\base"
 	exclude
 		"table_eiffel3"
 	end
@@ -33,8 +33,8 @@ external
 			"c:\work\wel\spec\windows\include",
 			"c:\work\vision2\spec\include"
         object:
-			"c:\work\wel\spec\$(COMPILER)\lib\wel.lib",
-			"c:\work\vision2\spec\$(COMPILER)\lib\libpng.lib",
-			"c:\work\vision2\spec\$(COMPILER)\lib\zlib.lib",
-			"c:\work\vision2\spec\$(COMPILER)\lib\vision2.lib"
+			"c:\work\wel\spec\$(ISE_COMPILER)\lib\wel.lib",
+			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
+			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
+			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib"
 end

@@ -17,21 +17,21 @@ Together with these classes there is an example to demostrate their usage.
 NEW CLASSES:
 ------------
 
-in cluster: $EIFFEL4/library/vision/oui/kernel
+in cluster: $ISE_EIFFEL/library/vision/oui/kernel
 
 	class FOCUSABLE
 	
 	class TOOLTIP_INITIALIZER
 	
-in cluster: $EIFFEL4/library/vision/implement/toolkit
+in cluster: $ISE_EIFFEL/library/vision/implement/toolkit
 
 	class FOCUS_LABEL_I
 	
-in cluster: $EIFFEL4/library/vision/implement/mswin/commands
+in cluster: $ISE_EIFFEL/library/vision/implement/mswin/commands
 
 	class FOCUS_LABEL
 	
-in cluster: $EIFFEL4/library/vision/implement/motif
+in cluster: $ISE_EIFFEL/library/vision/implement/motif
 
 	class FOCUS_LABEL
 
@@ -41,7 +41,7 @@ in cluster: $EIFFEL4/library/vision/implement/motif
 	
 ############################################################################
 
-NEW EXAMPLE :  $EIFFEL4/examples/vision/explanation_label
+NEW EXAMPLE :  $ISE_EIFFEL/examples/vision/explanation_label
 -------------
 
 Ace file: Ace.ace 

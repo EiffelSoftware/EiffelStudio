@@ -23,21 +23,21 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster:		"$EIFFEL4/examples/vision2/multicolumn_list"
+	root_cluster:		"$ISE_EIFFEL/examples/vision2/multicolumn_list"
 
 		-- EiffelBase
-	all base: 			"$EIFFEL4/library/base"
+	all base: 			"$ISE_EIFFEL/library/base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- GEL
-	all gel:			"$EIFFEL4/library/gel"
+	all gel:			"$ISE_EIFFEL/library/gel"
 
 		-- Vision2
-	event:				"$EIFFEL4/library/event"
+	event:				"$ISE_EIFFEL/library/event"
 
-	all vision2:		"$EIFFEL4/library/vision2"
+	all vision2:		"$ISE_EIFFEL/library/vision2"
 		exclude 
 			"mswin"
 			"EIFGEN"
@@ -47,7 +47,7 @@ cluster
 		end
 
 external
-	include_path:		"$EIFFEL4/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
-	object:			"$(EIFFEL4)/library/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
+	include_path:		"$ISE_EIFFEL/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:			"$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
 
 end -- mclist_example

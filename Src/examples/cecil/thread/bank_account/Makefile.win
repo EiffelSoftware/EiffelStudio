@@ -1,5 +1,5 @@
 CC = cl
-CFLAGS = -MT -DEIF_THREADS -I. -I$(EIFFEL4)\bench\spec\windows\include 
+CFLAGS = -MT -DEIF_THREADS -I. -I$(ISE_EIFFEL)\bench\spec\windows\include 
 OBJECTS = main.obj fext.obj
 EIFLIB = libbank_account.lib
 LD = link

@@ -42,8 +42,8 @@ Compilation
 
 	
 	- With the Makefile.win and VC++:
-		set EIFFEL4=<INSTALL_DIRECTORY> 
-	(ex: set EIFFEL4=c:\Eiffel4)
+		set ISE_EIFFEL=<INSTALL_DIRECTORY> 
+	(ex: set ISE_EIFFEL=c:\Eiffel4)
 		nmake -f Makefile.win
 	  Without the Makefile.win file:		
 		Compile the Eiffel system in frozen or finalize mode

@@ -77,7 +77,7 @@ feature
 			resources_x_make;
 			!!bitmaps.make
 		ensure
-			not (bitmaps = Void)
+			valid_bitmaps: bitmaps /= Void
 		end; 
 
 	depth: INTEGER is
@@ -89,7 +89,6 @@ feature
 			Result >= 1
 		end; 
 
-	
 feature {NONE}
 
 	dispose is

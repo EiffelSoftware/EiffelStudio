@@ -21,26 +21,82 @@ public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int 
 public class RUN_TIME
 {
 /*
-feature -- Access
+feature -- Assertions
 */
-	public static bool in_assertion;
-			// Flag used during assertion checking to make sure
-			// that assertions are not checked within an assertion
-			// checking.
+	
+	public static bool in_assertion ()
+		// Is checking of assertions needed?
+	{
+		return (!internal_is_assertion_checked || internal_in_assertion);
+	}
 
-	public static string assertion_tag;
-			// Tag of last checked assertion
+	public static void set_in_assertion (bool val)
+		// Set `internal_in_assertion' with `val'.
+	{
+		internal_in_assertion = val;
+	}
 
-
-	public static bool is_assertion_checked = true;
-			// Are assertions checked?
-
-	public static bool check_assert (bool val) {
-			// Enable or disable checking of assertions?
-		bool tmp = is_assertion_checked;
-		is_assertion_checked = val;
+	public static bool check_assert (bool val)
+		// Enable or disable checking of assertions?
+	{
+		bool tmp = internal_is_assertion_checked;
+		internal_is_assertion_checked = val;
 		return tmp;
 	}
+
+	[System.Diagnostics.DebuggerHiddenAttribute]
+  	[System.Diagnostics.DebuggerStepThroughAttribute]
+	public static void check_invariant (object o)
+		// Given object `o' if it has some invariant to be checked, make
+		// sure that they are checked and recursively goes to inherited
+		// invariants and check them too.
+	{
+		EIFFEL_TYPE_INFO target;
+		Type object_type;
+
+		if (!in_assertion ()) {
+			if (o is EIFFEL_TYPE_INFO) {
+				set_in_assertion (true);
+				target = (EIFFEL_TYPE_INFO) o;
+
+				invariant_checked_table = new Hashtable (10);
+
+					// Check current invariant defined in `object_type'.
+				target._invariant ();
+
+				set_in_assertion (false);
+			}
+		}
+	}
+
+	public static bool is_invariant_checked_for (RuntimeTypeHandle type_handle)
+		// Is `invariant' for type `type_handle' already processed?
+	{
+		bool Result = invariant_checked_table.ContainsKey (type_handle);
+		if (!Result) {
+			invariant_checked_table.Add (type_handle, true);
+		}
+		return Result;
+	}
+
+	public static string assertion_tag;
+		// Tag of last checked assertion
+
+/*
+feature {NONE} -- Implementations: Assertions
+*/
+
+	private static Hashtable invariant_checked_table;
+		// Equivalent of an HASH_TABLE [Boolean, RuntimeTypeHandle]
+		// For each type we have processed, key is True.
+
+	private static bool internal_is_assertion_checked = true;
+		// Are assertions checked?
+
+	private static bool internal_in_assertion = false;
+		// Flag used during assertion checking to make sure
+		// that assertions are not checked within an assertion
+		// checking.
 
 /*
 feature -- Status report

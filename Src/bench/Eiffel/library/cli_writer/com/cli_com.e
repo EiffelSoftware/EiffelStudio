@@ -12,7 +12,7 @@ feature -- Access
 			-- Call to `CoInitialize' to initialize COM.
 			-- To be done once.
 		external
-			"C use %"pe_writer.h%""
+			"C use %"cli_writer.h%""
 		end
 
 	release (a_pointer: POINTER) is

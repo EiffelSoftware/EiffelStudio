@@ -34,7 +34,7 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of CLI_IMPORT_ADDRESS_TABLE.
 		external
-			"C macro use %"pe_writer.h%""
+			"C macro use %"cli_writer.h%""
 		alias
 			"sizeof(CLI_IMPORT_ADDRESS_TABLE)"
 		end
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `ImportByNameRVA' to `i'.
 		external
-			"C struct CLI_IMPORT_ADDRESS_TABLE access ImportByNameRVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_ADDRESS_TABLE access ImportByNameRVA type DWORD use %"cli_writer.h%""
 		end
 		
 end -- class CLI_IMPORT_ADDRESS_TABLE

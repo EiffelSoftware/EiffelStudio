@@ -38,7 +38,7 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of `CLI_ENTRY' structure.
 		external
-			"C macro use %"pe_writer.h%""
+			"C macro use %"cli_writer.h%""
 		alias
 			"sizeof(CLI_ENTRY)"
 		end
@@ -63,19 +63,19 @@ feature {NONE} -- Initialization
 	c_set_jump_inst_high (an_item: POINTER; i: INTEGER_8) is
 			-- Set `JumpInstH' to `i'.
 		external
-			"C struct CLI_ENTRY access JumpInstH type BYTE use %"pe_writer.h%""
+			"C struct CLI_ENTRY access JumpInstH type BYTE use %"cli_writer.h%""
 		end
 			
 	c_set_jump_inst_low (an_item: POINTER; i: INTEGER_8) is
 			-- Set `JumpInstL' to `i'.
 		external
-			"C struct CLI_ENTRY access JumpInstL type BYTE use %"pe_writer.h%""
+			"C struct CLI_ENTRY access JumpInstL type BYTE use %"cli_writer.h%""
 		end
 	
 	c_set_iat_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `IAT_RVA' to `i'.
 		external
-			"C struct CLI_ENTRY access IAT_RVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_ENTRY access IAT_RVA type DWORD use %"cli_writer.h%""
 		end
 
 end -- class CLI_ENTRY

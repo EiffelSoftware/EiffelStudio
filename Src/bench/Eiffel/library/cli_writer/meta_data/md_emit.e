@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 	c_query_assembly_emit (an_item: POINTER): POINTER is
 			-- Call `QueryInterface(IID_IMetaDataAssemblyEmit, (void **)&imda)' on `an_item'.
 		external
-			"C use %"pe_writer.h%""
+			"C use %"cli_writer.h%""
 		end
 
 	c_set_module_props (an_item, name: POINTER): INTEGER is

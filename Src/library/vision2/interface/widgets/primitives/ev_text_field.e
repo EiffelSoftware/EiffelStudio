@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a text area with `par' as
 			-- parent and `txt' as text.
+		require
+			valid_parent: parent_needed implies par /= Void
 		do
 			!EV_TEXT_FIELD_IMP!implementation.make_with_text (txt)
 			widget_make (par)

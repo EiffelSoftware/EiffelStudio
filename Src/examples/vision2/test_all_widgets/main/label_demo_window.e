@@ -28,6 +28,7 @@ feature -- Access
 		once
 			!!Result.make (Current)
 			Result.set_minimum_size(200,200)
+			Result.set_center_alignment
 		end
 	
 feature -- Status setting

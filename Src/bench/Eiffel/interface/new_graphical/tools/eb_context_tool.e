@@ -222,9 +222,13 @@ feature -- Status setting
 				if not conv_dev.unified_stone then
 					if stone /= Void then
 						stone := stone.synchronized_stone
-						set_stone (stone)
 					end
-					refresh
+					class_view.invalidate
+					feature_view.invalidate
+					set_stone (stone)
+					if has_case then
+						editor.synchronize
+					end
 				end
 			else
 				if stone /= Void then

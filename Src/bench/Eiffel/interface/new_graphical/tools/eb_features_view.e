@@ -216,6 +216,20 @@ feature -- Status setting
 			end
 		end
 
+	invalidate is
+			-- Contexts need to be updated because of recompilation
+			-- or similar action that needs resynchonization.
+		do
+			from
+				managed_formatters.start
+			until
+				managed_formatters.after
+			loop
+				managed_formatters.item.invalidate
+				managed_formatters.forth
+			end
+		end
+
 	quick_refresh is
 			-- Refresh the editor.
 		do

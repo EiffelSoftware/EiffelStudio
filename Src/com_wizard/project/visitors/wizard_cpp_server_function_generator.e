@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 					Result.append (arg_name)
 				else
 					Result.append (Eif_wean)
-					Result.append (Space_opne_parenthesis)
+					Result.append (Space_open_parenthesis)
 					Result.append (Tmp_clause)
 					Result.append (arg_name)
 					Result.append (Close_parenthesis)

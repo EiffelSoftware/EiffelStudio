@@ -166,7 +166,7 @@ feature -- Basic operations
 
 				ce_function_body := 
 						ce_array_function_body_automation (vartype_namer.ce_array_function_name (element_visitor.vt_type), 
-							dimension_count, array_size, element_visitor.is_structure)
+							dimension_count, array_size, is_array_basic_type)
 
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)

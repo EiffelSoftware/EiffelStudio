@@ -33,7 +33,7 @@ feature -- Initialization
 			-- Creation routine
 		do
 			implementation := handle.database.db_dyn_change
-			!! ht.make (name_table_size)
+			create ht.make (name_table_size)
 			implementation.set_ht (ht)
 			init
 			implementation.init_implementation (parameters_value, parameters)

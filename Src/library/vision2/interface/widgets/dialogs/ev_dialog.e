@@ -44,7 +44,8 @@ feature -- Access
 
 	default_push_button: EV_BUTTON is
 			-- Default pushed button. This is the button that
-			-- is pushed if the user press the enter key.
+			-- is pushed if the user press the enter key unless
+			-- a push button is currently focused.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -151,9 +152,10 @@ feature -- Basic operations
 					-- otherwise, close the dialog.
 					-- If there is no `default_cancel_button', do nothing.	
 			-- If enter is pressed at any time then
-				-- If there is a default push button which is sensitive,
-				-- call its `select_actions'.
-					
+				-- If a push button is currently focused then call its
+				-- `select_actions'. If no push button has the focus, then
+				-- call the `select_actions' of the default push button if
+				-- it is sensitive.
 		do
 			implementation.dialog_key_press_action (a_key)
 		end

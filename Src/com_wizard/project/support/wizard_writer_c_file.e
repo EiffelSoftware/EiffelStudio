@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 		do
 			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} functions.make
 			create {LINKED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make
+			create {LINKED_LIST [STRING]} others_forward.make
 			create {LINKED_LIST [STRING]} others.make
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [STRING]} import_files.make
@@ -52,6 +53,19 @@ feature -- Access
 			Result.append (define)
 			Result.append (Space)
 			Result.append (header_protector (header_file_name))
+			Result.append (New_line)
+
+			from
+				others_forward.start
+			until
+				others_forward.after
+			loop
+				Result.append (New_line)
+				Result.append (New_line)
+				Result.append (others_forward.item)
+				others_forward.forth
+			end
+			Result.append (New_line)
 			Result.append (New_line)
 
 			from

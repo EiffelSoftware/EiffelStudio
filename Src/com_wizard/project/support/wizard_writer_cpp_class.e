@@ -180,6 +180,13 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
+			Result.append (C_class_keyword)
+			Result.append (Space)
+			Result.append (name)
+			Result.append (Semicolon)
+			Result.append (New_line)
+			Result.append (New_line)
+
 			from
 				import_files.start
 			until

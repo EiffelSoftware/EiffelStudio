@@ -15,6 +15,9 @@ feature -- Access
 	import_files: LIST [STRING]
 			-- Imported header files
 
+	others_forward: LIST [STRING]
+			-- Forward declarations of C types;
+
 	others: LIST [STRING]
 			-- Other C constructs (typedef, etc...)
 
@@ -88,6 +91,16 @@ feature -- Basic operations
 			end
 		ensure
 			added: import_files.has (an_import_file)
+		end
+
+	add_other_forward (a_other: STRING) is
+			-- Add `a_other' to `others_forward'.
+		require
+			non_void_other: a_other /= Void
+		do
+			others_forward.extend (a_other)
+		ensure
+			added: others_forward.last = a_other
 		end
 
 	add_other (a_other: STRING) is

@@ -151,6 +151,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack free_stack_cx;		/* Entries free in hector */
 
 		/* interp.c */
+#ifdef WORKBENCH
 	struct opstack op_stack_cx;		/* Operational stack */
 	char *IC_cx;						/* Interpreter Counter (like PC on a CPU) */
 	struct item **iregs_cx;			/* Interpreter registers */
@@ -159,6 +160,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int locnum_cx;						/* Number of locals */
 	unsigned long tagval_cx;			/* Records number of interpreter's call */
 	char *inv_mark_table_cx;			/* Marking table to avoid checking the same invariant several times */
+#endif	/* WORKBENCH */
 
 		/* malloc.c */
 	struct emallinfo m_data_cx;		/* general information about the memory */
@@ -242,6 +244,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 } eif_global_context_t;
 
+/*
+ *	Macros definitions.
+ *
+ */
+
 	/* cecil.c */
 #define eif_ignore_invisible (eif_globals->ign_invisible_cx)
 
@@ -312,6 +319,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define hec_saved		(eif_globals->hec_saved_cx)	/* rt_public */
 #define free_stack		(eif_globals->free_stack_cx)	/* rt_private */
 
+#ifdef WORKBENCH
+
 	/* interp.c */
 #define op_stack		(eif_globals->op_stack_cx)		/* rt_shared */
 #define IC				(eif_globals->IC_cx)			/* rt_public */
@@ -321,6 +330,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define locnum			(eif_globals->locnum_cx)		/* rt_private */
 #define tagval			(eif_globals->tagval_cx)		/* rt_private */
 #define inv_mark_table	(eif_globals->inv_mark_table_cx)	/* rt_private */
+
+#endif	/* WORKBENCH */
 
 	/* malloc.c */
 #define m_data			(eif_globals->m_data_cx)		/* rt_shared */

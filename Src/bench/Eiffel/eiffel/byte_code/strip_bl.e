@@ -44,23 +44,29 @@ feature
 		do
 			buf := buffer
 			cl_type := Context.class_type;
-			buf.putchar ('{');
-			buf.new_line;
+			buf.put_character ('{');
+			buf.put_new_line;
 			buf.indent;
 			generate_attribute_names_list;
 			print_register;
-			buf.putstring (" = ");
-			buf.putstring ("RTST(");
+			buf.put_string (" = ");
+			buf.put_string ("RTST(");
 			Context.Current_register.print_register;
-			buf.putstring (gc_comma);
-			buf.putint (cl_type.type_id - 1);
-			buf.putstring (", items, ");
-			buf.putint (feature_ids.count);
-			buf.putstring ("L);");
-			buf.new_line;
+			buf.put_string (gc_comma);
+			if context.workbench_mode then
+				buf.put_string ("RTUD(")
+				buf.put_static_type_id (cl_type.static_type_id)
+				buf.put_character (')')
+			else
+				buf.put_type_id (cl_type.type_id)
+			end
+			buf.put_string (", items, ");
+			buf.put_integer (feature_ids.count);
+			buf.put_string ("L);");
+			buf.put_new_line;
 			buf.exdent;
-			buf.putstring (" }");
-			buf.new_line;
+			buf.put_string (" }");
+			buf.put_new_line;
 		end;
 
 	generate_attribute_names_list is
@@ -74,26 +80,26 @@ feature
 			buf := buffer
 			attr_names := attribute_names;
 			if not attr_names.is_empty then
-				buf.putstring ("static char *items[");
-				buf.putstring ("] = { ");
+				buf.put_string ("static char *items[");
+				buf.put_string ("] = { ");
 				from
 					attr_names.start
 				until
 					attr_names.after
 				loop
-					buf.putchar ('"');
-					buf.putstring (attr_names.item);
-					buf.putchar ('"');
+					buf.put_character ('"');
+					buf.put_string (attr_names.item);
+					buf.put_character ('"');
 					attr_names.forth;
 					if not attr_names.after then
-						buf.putstring (gc_comma);
+						buf.put_string (gc_comma);
 					end;	
 				end;
-				buf.putstring (" };");
+				buf.put_string (" };");
 			else
-				buf.putstring ("static char **items = NULL;")
+				buf.put_string ("static char **items = NULL;")
 			end
-			buf.new_line;
+			buf.put_new_line;
 		end;
 
 	set_feature_ids (ids: like feature_ids) is

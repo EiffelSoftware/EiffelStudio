@@ -141,7 +141,21 @@ feature -- Access
 
 	feature_c_names: LINKED_LIST [STRING]
 			-- List of feature C names.
-	
+
+	implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR is
+			-- Implemented interface descriptor.
+		do
+			if instance_implemented_interface /= Void then
+				Result := instance_implemented_interface
+			else
+				create Result.make_from_interface (Current)
+				instance_implemented_interface := Result
+			end
+		ensure
+			non_void_instance_interface: instance_implemented_interface /= Void
+			non_void_implemnted_interface: Result /= Void
+		end
+
 feature -- Element Change
 
 	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
@@ -383,6 +397,9 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_item (1)
 		end
+
+	instance_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			-- Implemented interface descriptor.
 
 end -- class WIZARD_INTERFACE_DESCRIPTOR
 

@@ -41,6 +41,12 @@ feature {TEXT_ITEM} -- Text processing
 			put_feature_name (text.image, text.e_class)
 		end;
 
+	process_feature_text (text: FEATURE_TEXT) is
+			-- Process feature text `text'.
+		do
+			put_feature_text (text.image, text.e_feature, text.e_class)
+		end;
+
 	process_breakpoint is
 			-- Process breakpoint.
 		do
@@ -207,9 +213,18 @@ feature -- Ouput
 	put_feature_name (f_name: STRING; e_class: E_CLASS) is
 			-- Put feature name `f_name' defined in `e_class'.
 		require
-			valid_f_name: f_name /= Void;
+			valid_f_name: f_name /= Void
 		do
 			put_string (f_name)
+		end;
+
+	put_feature_text (f_text: STRING; e_feature: E_FEATURE; e_class: E_CLASS) is
+			-- Put feature text `f_text', from `e_feature' defined in `e_class'
+			-- at the current text position.
+		require
+			f_text_valid: f_text /= Void
+		do
+			put_string (f_text)
 		end;
 
 	put_address (address: STRING; e_class: E_CLASS) is

@@ -32,7 +32,7 @@ default
 	line_generation(no)
 	profile(no)
 	trace(no)
-	<FL_TAG_PRECOMPILED>precompiled ("$ISE_EIFFEL/precomp/spec/$PLATFORM/base");
+	<FL_TAG_PRECOMPILED>precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base");
 
 cluster
 	all root_cluster:		"<FL_PATH>"
@@ -76,17 +76,15 @@ external
 		"$ISE_EIFFEL\library\wel\spec\windows\include",
 		"$ISE_EIFFEL\library\vision2\spec\include",
 		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle\Clib",
-		"$(ORACLE_HOME)\OCI\include",
-		"$ISE_EIFFEL\library\time\Clib"
+		"$(ORACLE_HOME)\OCI\include"
 
 	object:
-		"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\support.lib",
-		"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+		"$ISE_EIFFEL\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+		"$ISE_EIFFEL\library\store\spec\$(ISE_C_COMPILER)\lib\oracle_store.lib",
 		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib",
-		"$ISE_EIFFEL\library\time\spec\$(COMPILER)\lib\datetime.lib",
 		"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib",
-		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 
 end

@@ -32,7 +32,7 @@ default
 	line_generation(no)
 	profile(no)
 	trace(no)
-	<FL_TAG_PRECOMPILED>precompiled ("$ISE_EIFFEL/precomp/spec/$PLATFORM/base");
+	<FL_TAG_PRECOMPILED>precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base");
 
 cluster
 	all root_cluster:		"<FL_PATH>"
@@ -71,22 +71,18 @@ cluster
 	all dataview:		"$ISE_EIFFEL\library\store\dataview"
 
 external
-
 	include_path:
 						"$ISE_EIFFEL\library\store\dbms\rdbms\odbc\Clib",
 						"$ISE_EIFFEL\library\wel\spec\windows\include",
-						"$ISE_EIFFEL\library\vision2\spec\include",
-						"$ISE_EIFFEL\library\time\Clib"
-
+						"$ISE_EIFFEL\library\vision2\spec\include"
 
 	object:
-						"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\support.lib",
-						"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\odbc32.lib",
+						"$ISE_EIFFEL\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+						"$ISE_EIFFEL\library\store\spec\$(ISE_C_COMPILER)\lib\odbc32.lib",
 						"$ISE_EIFFEL\library\\store\spec\msc\lib\odbc_store.lib",
-						"$ISE_EIFFEL\library\time\spec\$(COMPILER)\lib\datetime.lib",
 						"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib",
-						"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-						"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-						"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+						"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+						"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+						"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 end
 

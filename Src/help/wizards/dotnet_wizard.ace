@@ -144,21 +144,19 @@ external
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
-		"$(EIFFEL_SRC)\library\time\Clib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib",
 		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\zlib.lib",
-		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\libpng.lib",
-		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
-		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib",
-		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\spec\$(ISE_C_COMPILER)\lib\cli_writer.lib",
 		"corguids.lib"
 
 end

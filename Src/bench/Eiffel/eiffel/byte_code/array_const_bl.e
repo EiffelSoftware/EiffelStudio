@@ -1,4 +1,7 @@
--- Enlarged byte code for manifest arrays
+indexing
+	description: "Enlarged byte code for manifest arrays"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAY_CONST_BL
 
@@ -231,13 +234,14 @@ feature {NONE} -- C code generation
 					if metamorphosed then
 						metamorphose_reg.print_register
 					else
+						target_type.c_type.generate_cast (buf);
 						expr.print_register;
 					end;
-					buf.putchar (';');
-					buf.new_line
 						-- Generation of the RTAS_OPT protection
 						-- if the array contains references
 					if target_type.is_reference or target_type.is_bit then
+						buf.putchar (';');
+						buf.new_line
 						buf.putstring ("RTAS_OPT(");
 						if metamorphosed then
 							metamorphose_reg.print_register
@@ -249,7 +253,6 @@ feature {NONE} -- C code generation
 						buf.putchar (',');
 						array_area_reg.print_register;
 						buf.putchar (')');
-						buf.new_line;
 					end
 				end
 				buf.putchar (';')

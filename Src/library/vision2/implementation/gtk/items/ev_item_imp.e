@@ -27,6 +27,12 @@ inherit
 			interface as widget_interface,
 			parent as widget_parent,
 			initialize as widget_initialize
+		export {NONE}
+			widget_parent_imp,
+			widget_parent_set,
+			widget_interface,
+			widget_parent,
+			widget_initialize
 		undefine
 			has_parent
 		end
@@ -141,6 +147,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/05/01 21:32:20  king
+--| Exporting redundant features to none
+--|
 --| Revision 1.27  2000/04/19 20:42:39  oconnor
 --| formatting
 --|

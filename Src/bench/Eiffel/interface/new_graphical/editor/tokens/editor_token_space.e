@@ -57,7 +57,7 @@ feature -- Width & Height
 
 feature {NONE} -- Implementation
 
-	display_blanks(d_x, d_y: INTEGER; device: EV_DRAWING_AREA; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
+	display_blanks(d_x, d_y: INTEGER; device: EV_PIXMAP; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
 		local
 			old_text_color		: EV_COLOR
 			old_background_color: EV_COLOR

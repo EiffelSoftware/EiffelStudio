@@ -35,7 +35,7 @@ feature -- Display
 --			Result := 0
 --		end
 	
-	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
+	display_end_token_normal(d_y: INTEGER; a_device: EV_PIXMAP; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its normal state.
@@ -43,7 +43,7 @@ feature -- Display
 			display_end_token(d_y, a_device, a_width, False)
 		end
 
-	display_end_token_selected(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
+	display_end_token_selected(d_y: INTEGER; a_device: EV_PIXMAP; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its selected state.
@@ -51,7 +51,7 @@ feature -- Display
 			display_end_token(d_y, a_device, a_width, True)
 		end
 
-	display(d_y: INTEGER; a_device: EV_DRAWING_AREA) is
+	display(d_y: INTEGER; a_device: EV_PIXMAP) is
 		do
 			-- Do nothing.
 		end
@@ -81,7 +81,7 @@ feature {NONE} -- Private Constants
 
 feature {NONE} -- Implementation
 
-	display_end_token(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER; selected: BOOLEAN) is
+	display_end_token(d_y: INTEGER; a_device: EV_PIXMAP; a_width: INTEGER; selected: BOOLEAN) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- If `selected' is set, then the token is displayed in its selected

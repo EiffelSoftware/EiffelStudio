@@ -72,13 +72,13 @@ feature -- Linkable functions
 
 feature -- Display
 
-	display(d_y: INTEGER; device: EV_DRAWING_AREA) is
+	display(d_y: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		deferred
 		end
 
-	display_selected(d_y: INTEGER; device: EV_DRAWING_AREA) is
+	display_selected(d_y: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -88,7 +88,7 @@ feature -- Display
 			display(d_y, device)
 		end
 
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWING_AREA) is
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'

@@ -498,7 +498,11 @@ void exitprf(void)
 	 * Store information to disk and deallocate structures.
 	 */
 
-	if(egc_prof_enabled) {
+	/* Check against `init_date' as `initprf' (which initializes `init_date')
+	 * might not be called if user disabled profiling in the Ace file and 
+	 * enabled it through the PROFILING_SETTING class. */
+
+	if (egc_prof_enabled && init_date) {
 
 #ifdef HAS_GETRUSAGE
 		struct prof_rusage *execution_time;

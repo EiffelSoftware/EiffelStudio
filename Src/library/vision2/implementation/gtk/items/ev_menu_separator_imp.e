@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
 			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (box)
+			feature {EV_GTK_EXTERNALS}.gtk_object_sink (box)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end

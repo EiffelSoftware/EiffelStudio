@@ -42,6 +42,12 @@ feature -- Access
 		deferred
 		end;
  
+	coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		deferred
+		end;
+
 	x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.

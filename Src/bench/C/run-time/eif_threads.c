@@ -255,6 +255,9 @@ rt_public EIF_BOOLEAN eif_thr_is_root()
 	 */
 
 	RT_GET_CONTEXT
+
+	REQUIRE("Has per thread data initialized", rt_globals);
+
 	return (eif_thr_context ? EIF_FALSE : EIF_TRUE);
 }
 

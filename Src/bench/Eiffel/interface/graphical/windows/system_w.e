@@ -282,16 +282,16 @@ feature -- Graphical Interface
 			if not realized then
 				set_default_format;
 				set_default_position;
-				eb_shell.realize;
-				init_text_window;
+				eb_shell.display;
+				init_text_window
 			elseif not shown then
 				set_default_format;
 				init_text_window;
 				set_default_position;
-				show;
+				show
 			end;
 			raise;
-			set_in_use (true);
+			set_in_use (true)
 		end;
 
 	hide is

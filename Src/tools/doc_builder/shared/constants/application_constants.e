@@ -213,6 +213,18 @@ feature -- Table of Contents Preferences
 			l_code_dir.extend ("web")
 			l_code_dir.extend ("reference")
 			Result.extend (l_code_dir.string)
+			
+				-- Store
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("store")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Thread
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("thread")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
 		end		
 			
 	studio_libraries: ARRAYED_LIST [STRING] is

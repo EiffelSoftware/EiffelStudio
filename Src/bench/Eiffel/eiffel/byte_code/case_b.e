@@ -90,28 +90,38 @@ feature -- IL generation
 	generate_il_case (end_label: IL_LABEL) is
 			-- Generate IL code.
 		local
-			case_label, compound_label: IL_LABEL
+			next_case_label, compound_label: IL_LABEL
 			need_label: BOOLEAN
 			interval_b: INTERVAL_B
+			i, nb: INTEGER
 		do
 			generate_il_line_info
-			case_label := il_label_factory.new_label
-			need_label := interval.count > 1
+			nb := interval.count
+			need_label := nb > 1
 			if need_label then
-				compound_label := il_label_factory.new_label
+				compound_label := il_label_factory.new_label	
 			end
+			
 			from
-				interval.start
+				i := 1
 			until
-				interval.after
+				i > nb
 			loop
-				interval_b ?= interval.item
-				interval_b.generate_il_interval (case_label)
+				interval_b ?= interval.i_th (i)
+				if i > 1 then
+					check
+						label_computed: next_case_label /= Void
+					end
+					il_generator.mark_label (next_case_label)
+				end
+				next_case_label := il_label_factory.new_label
+				interval_b.generate_il_interval (next_case_label)
 				interval.forth
 
-				if need_label and then not interval.after then
+				if need_label and then i <= nb then
 					il_generator.branch_to (compound_label)
 				end
+				i := i + 1
 			end
 
 			if need_label then
@@ -125,7 +135,7 @@ feature -- IL generation
 			il_generator.branch_to (end_label)
 
 				-- Branch to next `when' statement.
-			il_generator.mark_label (case_label)
+			il_generator.mark_label (next_case_label)
 		end
 
 feature -- Byte code generation

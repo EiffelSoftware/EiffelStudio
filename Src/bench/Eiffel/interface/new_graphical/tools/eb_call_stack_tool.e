@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 				--| OK, now `fn' represents a file that does not exist.
 			fd.set_file_name (fn)
-			fd.ok_actions.extend (~save_call_stack_to_file (fd))
+			fd.save_actions.extend (~save_call_stack_to_file (fd))
 			fd.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end
 

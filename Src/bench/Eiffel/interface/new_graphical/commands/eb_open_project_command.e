@@ -137,7 +137,7 @@ feature -- Execution
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
 			fod.set_filter ("*.epr")
-			fod.ok_actions.extend (agent file_choice_callback (fod))
+			fod.open_actions.extend (agent file_choice_callback (fod))
 			fod.show_modal_to_window (parent_window)
 		end
 

@@ -296,7 +296,7 @@ feature -- Action
 			save_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			save_dialog.ok_actions.extend (~confirm_new_archive (current_directory))
+			save_dialog.save_actions.extend (~confirm_new_archive (current_directory))
 			save_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -367,7 +367,7 @@ feature -- Action
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.ok_actions.extend (~confirm_update_archive (current_directory))
+			open_dialog.open_actions.extend (~confirm_update_archive (current_directory))
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -473,7 +473,7 @@ feature -- Action
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.ok_actions.extend (~on_browse_archive (current_directory))
+			open_dialog.open_actions.extend (~on_browse_archive (current_directory))
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 

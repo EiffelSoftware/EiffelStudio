@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
 			fod.set_filter ("*.ace")
-			fod.ok_actions.extend (agent retrieve_ace_file (fod))
+			fod.open_actions.extend (agent retrieve_ace_file (fod))
 			fod.show_modal_to_window (Current)
 		end
 

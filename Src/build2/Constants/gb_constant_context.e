@@ -94,16 +94,18 @@ feature -- Destruction
 			is_destroyed := True
 			constant.remove_referer (Current)
 			object.constants.remove (property + attribute)
+			object := Void
+			constant := Void
 		ensure
 			is_destroyed: is_destroyed = True
-			unreferenced: not constant.referers.has (Current) and
-				not object.constants.has (property + attribute)
+			unreferenced: not (old constant).referers.has (Current) and
+				not (old object).constants.has (property + attribute)
 		end
 		
 
 invariant
-	constant_not_void: constant /= Void
-	object_not_void: object /= Void
+	constant_not_void: not is_destroyed implies constant /= Void
+	object_not_void: not is_destroyed implies object /= Void
 	property_not_void: property /= Void and not property.is_empty
 	attribute_not_void: attribute /= Void and not attribute.is_empty
 

@@ -233,6 +233,7 @@ feature -- Convenience
 			-- Otherwise, deselect `w' if selected.
 		require
 			w_not_void: w /= Void
+			w_not_destroyed: not w.is_destroyed
 		do
 			if v and then not w.is_selected then
 				w.enable_select
@@ -285,7 +286,6 @@ feature -- Convenience
 		do
 			create Result.make_with_text (st)
 			box.extend (Result)
-			box.disable_item_expand (Result)
 		ensure
 			result_not_void: Result /= Void
 		end

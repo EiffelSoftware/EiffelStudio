@@ -1,0 +1,128 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Structures</TITLE>
+		<LINK REL=StyleSheet HREF="../../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Structures</H1>
+		<p>A <a HREF="../reference/Structures/index.html">Structures</a>
+                  cluster includes wrappers for COM structures and additional
+                  data structures.</p>
+        <h2>ECOM_ARRAY</h2>
+        <p>ECOM_ARRAY is multidimensional, resizable array.&nbsp; It is
+        converted to SAFEARRAY at the COM runtime level.&nbsp; Most languages support
+        only SAFEARRAYs of OLE automation types.</p>
+        <h2>ECOM_EXCEPTION</h2>
+        <p>ECOM_EXCEPTION provides support for triggering and catching
+        exceptions.&nbsp; According to the COM specification, every feature of a
+        COM interface should return a status code of type HRESULT.&nbsp; HRESULT
+        is a 32 bit integer.&nbsp; The COM specification defines possible
+        exception codes and corresponding human-readable
+        descriptions.&nbsp;&nbsp;</p>
+        
+        <p>The status code is mapped by the EiffelCOM runtime to Eiffel
+        exceptions.&nbsp; To raise
+        COM-specific exceptions, the class ECOM_EXCEPTION provides feature
+        trigger:</p>
+        
+        <p class="code"><span class= "efeature">trigger</span> (code: 
+        <span class="eclass">INTEGER</span>) <br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- Raise exception with code `code'.<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- See class ECOM_EXCEPTION_CODES for possible values.</span></p>
+
+        <p>The class also has several features that help to interpret exceptions
+        and error codes received from the COM runtime.&nbsp;&nbsp; </p>
+
+        <p class="code">	<span class= "efeature">hresult</span>: 
+        <span class="eclass">INTEGER&nbsp; </span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="ecomment">-- Original HRESULT.</span><br>
+		&nbsp;&nbsp;&nbsp;<span class="ekeyword">require</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			applicable: is_developer_exception<br>
+        <br>
+	<span class= "efeature">hresult_code</span>: <span class="eclass">INTEGER&nbsp; </span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="ecomment">-- Status code.</span><br>
+		&nbsp;&nbsp;&nbsp;<span class="ekeyword">require</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			applicable: is_developer_exception<br>
+        <br>
+	<span class= "efeature">hresult_facility</span>: <span class="eclass">INTEGER</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="ecomment">-- Facility code.</span><br>
+		&nbsp;&nbsp;&nbsp;<span class="ekeyword">require</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			applicable: is_developer_exception<br>
+        <br>
+	<span class= "efeature">hresult_message</span>: <span class="eclass">STRING</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="ecomment">-- Error message.</span><br>
+		&nbsp;&nbsp;&nbsp;<span class="ekeyword">require</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			applicable: is_developer_exception </p>
+
+        <p>&nbsp;Every call to the COM layer should be wrapped
+        into the <span class="ekeyword">rescue</span>-clause as following: </p>
+
+        <p class="code"> 
+        <span class= "efeature">some_feature</span> <span class="ekeyword">is</span><br>
+        &nbsp;&nbsp;&nbsp;<span class="ekeyword">local</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retried: <span class="eclass">BOOLEAN</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+        &nbsp;&nbsp;&nbsp;<span class="ekeyword">do</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">if not </span>
+        retried <span class="ekeyword">then</span><br>
+       
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- Call to COM.</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span><br>
+
+		 &nbsp;&nbsp;&nbsp;<span class="ekeyword">rescue</span><br>
+ 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">if</span> is_developer_exception <span class="ekeyword">then</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">--&nbsp;Compare `hresult' to some predefined
+        value<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--
+        and handle various cases,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--
+        or display a dialog box with an error message<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--
+        `hresult_message'.</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retried := <span class="ekeyword">True</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">retry</span><br>
+        &nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span><br>
+        
+        </p>
+
+        <h2>&nbsp;ECOM_STRUCTURE </h2>
+
+        <p>ECOM_STRUCTURE is a deferred class, which inherit from WEL_STRUCTURE.
+        All wrappers of COM structures inherit from ECOM_STRUCTURE.&nbsp;&nbsp; </p>
+
+        <h2>ECOM_VARIANT </h2>
+
+        <p>ECOM_VARIANT is a wrapper of the VARIANT structure.&nbsp; VARIANT is
+        Visual Basic equivalent of ANY.&nbsp; In Visual Basic variable of any
+        type conforms to VARIANT.&nbsp; Since semantics and binary layout of Visual Basic
+        is different from those of Eiffel, there is no simple way to
+        map VARIANT to ANY. Instead, we created a simple wrapper of the VARIANT
+        structure. </p>
+
+        <p>It has the feature&nbsp; </p>
+
+        <p class="code">
+
+ &nbsp;&nbsp;&nbsp;<A NAME="f_variable_type"></a><A CLASS="efeature" HREF="../reference/Structures/ecom_variant.html#f_variable_type">variable_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Variable type.
+ See class ECOM_VAR_TYPE for possible values.</SPAN> </p>
+
+        <p>&nbsp;which specifies the type of the wrapped variable. The class has
+        multiple feature for typed access and setting of variables. </p>
+
+	</BODY>
+</HTML>

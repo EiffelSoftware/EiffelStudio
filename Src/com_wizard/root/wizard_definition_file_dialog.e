@@ -50,6 +50,7 @@ feature -- Behavior
 	setup_dialog is
 			-- Initialize dialog's controls.
 		do
+			Precursor {WIZARD_DIALOG}
 			if shared_wizard_environment.idl and shared_wizard_environment.idl_file_name /= Void then
 				definition_file_edit.set_text (shared_wizard_environment.idl_file_name)
 			elseif not shared_wizard_environment.idl and shared_wizard_environment.type_library_file_name /= Void then

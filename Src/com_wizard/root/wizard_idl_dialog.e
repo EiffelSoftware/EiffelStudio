@@ -42,6 +42,7 @@ feature -- Behavior
 	setup_dialog is
 			-- Initialize radio buttons.
 		do
+			Precursor {WIZARD_DIALOG}
 			uncheck_all
 			if Shared_wizard_environment.automation then
 				automation_radio.set_checked

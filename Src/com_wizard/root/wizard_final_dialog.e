@@ -8,7 +8,8 @@ inherit
 	WIZARD_DIALOG
 		redefine
 			setup_dialog,
-			on_ok
+			on_ok,
+			notify
 		end
 
 	APPLICATION_IDS
@@ -41,6 +42,7 @@ feature -- Behavior
 	setup_dialog is
 			-- Initialize dialog.
 		do
+			Precursor {WIZARD_DIALOG}
 			information_check.set_unchecked
 			warnings_check.set_unchecked
 			if Shared_wizard_environment.output_level = Shared_wizard_environment.Output_all then
@@ -62,6 +64,16 @@ feature -- Behavior
 				Shared_wizard_environment.set_no_output
 			end
 			Precursor {WIZARD_DIALOG}
+		end
+
+	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+			-- A `notify_code' is received for `control'.
+		do
+			if control = warnings_check and not warnings_check.checked then
+				information_check.set_unchecked
+			elseif control = information_check and information_check.checked then
+				warnings_check.set_checked
+			end
 		end
 
 feature -- Access

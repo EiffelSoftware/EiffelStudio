@@ -44,6 +44,7 @@ feature -- Behavior
 	setup_dialog is
 			-- Initialize dialog's controls.
 		do
+			Precursor {WIZARD_DIALOG}
 			uncheck_all
 			if shared_wizard_environment.client then
 				client_check.set_checked

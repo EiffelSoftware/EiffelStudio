@@ -8,7 +8,8 @@ inherit
 	WEL_MODAL_DIALOG
 		redefine
 			on_cancel,
-			on_control_command
+			on_control_command,
+			setup_dialog
 		end
 
 	APPLICATION_IDS
@@ -52,7 +53,13 @@ feature -- Behavior
 				terminate (Idcancel)
 			end
 		end
-	
+
+	setup_dialog is
+			-- Give focus to Next button.
+		do
+			id_ok.set_focus
+		end
+
 end -- class WIZARD_DIALOG
 
 --|-------------------------------------------------------------------

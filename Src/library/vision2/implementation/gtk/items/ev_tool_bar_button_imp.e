@@ -165,140 +165,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.27  2001/06/07 23:08:02  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.15.2.20  2001/06/05 22:42:03  king
---| Corrected set_gray_pixmap to use clone instead of copy
---|
---| Revision 1.15.2.19  2001/06/04 17:20:58  rogers
---| We now use copy instead of ev_clone.
---|
---| Revision 1.15.2.18  2000/11/02 01:04:19  etienne
---| Made compilable with parent_imp change in ev_widget
---|
---| Revision 1.15.2.17  2000/10/09 18:01:48  king
---| Made compilable
---|
---| Revision 1.15.2.16  2000/08/17 16:28:55  king
---| Made compilable with change to button_imp
---|
---| Revision 1.15.2.15  2000/08/11 23:59:40  king
---| No need for translate agent
---|
---| Revision 1.15.2.14  2000/08/09 20:57:07  oconnor
---| use ev_clone instead of clone as per instructions of manus
---|
---| Revision 1.15.2.13  2000/08/08 20:59:13  king
---| Changed ev_clone call to clone
---|
---| Revision 1.15.2.12  2000/08/04 17:25:33  king
---| Redefining AS creation procs
---|
---| Revision 1.15.2.11  2000/08/03 19:23:41  king
---| Redefining create_select_actions
---|
---| Revision 1.15.2.10  2000/08/01 21:31:38  king
---| Removed connect_signals which is done on action sequence creation
---|
---| Revision 1.15.2.9  2000/07/24 21:33:39  oconnor
---| inherit action sequences _IMP class
---|
---| Revision 1.15.2.8  2000/06/29 19:08:20  king
---| Removed unnecessary creation of grey_pixmap from set_grey_pixmap
---|
---| Revision 1.15.2.6  2000/06/12 17:32:54  king
---| Accounted for widget_imp obsolete feature removal
---|
---| Revision 1.15.2.5  2000/06/06 00:40:41  king
---| Undefined button_press_switch
---|
---| Revision 1.15.2.4  2000/06/01 22:03:38  king
---| Using pointer over widget from EV_BUTTON_IMP
---|
---| Revision 1.15.2.3  2000/05/16 16:23:48  king
---| Removed refererence to now defunct parent_imp
---|
---| Revision 1.15.2.2  2000/05/10 23:02:54  king
---| Integrated inital tooltipable changes
---|
---| Revision 1.15.2.1  2000/05/03 19:08:36  oconnor
---| mergred from HEAD
---|
---| Revision 1.24  2000/05/02 18:55:19  oconnor
---| Use NULL instread of Defualt_pointer in C code.
---| Use eiffel_to_c (a) instead of a.to_c.
---|
---| Revision 1.23  2000/04/18 16:50:04  king
---| Replaced press-actions -> select_actions
---|
---| Revision 1.22  2000/04/13 21:59:47  king
---| Correct pointer equivalance from Void to NULL
---|
---| Revision 1.21  2000/04/07 22:35:53  brendel
---| Removed EV_SIMPLE_ITEM_IMP from inheritance.
---|
---| Revision 1.20  2000/04/04 20:50:18  oconnor
---| updated signal connection for new marshaling scheme
---|
---| Revision 1.19  2000/03/20 23:42:06  pichery
---| Fixed bug (contract in deferred class, not in implementation)
---|
---| Revision 1.18  2000/03/20 23:40:04  pichery
---| Added gray pixmap notion (not currently implemented on GTK)
---|
---| Revision 1.17  2000/02/22 18:39:34  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.16  2000/02/14 11:40:27  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.15.4.7  2000/02/04 21:22:08  king
---| Changed packing options for pix and text box
---|
---| Revision 1.15.4.6  2000/02/04 04:25:36  oconnor
---| released
---|
---| Revision 1.15.4.5  2000/02/01 20:05:57  king
---| extracted a connect signals to be redefined in tb_rad_but
---|
---| Revision 1.15.4.4  2000/01/28 18:43:00  king
---| Updated initialize to use pixmapable and textable initialize nam changes
---|
---| Revision 1.15.4.3  2000/01/27 19:29:26  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.15.4.2  2000/01/26 23:20:44  king
---| Implemented to fit in with new structure, index and ordering need
---| implementing, removed redundant features
---|
---| Revision 1.15.4.1  1999/11/24 17:29:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.13.2.2  1999/11/02 17:20:02  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -191,119 +191,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_MENU_ITEM_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.48  2001/06/07 23:08:01  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.36.4.7  2001/02/23 17:26:08  king
---| Re-implemented `filter_ampersand'.
---| Added `u_lined_filter' to be used for underlined accelerators.
---|
---| Revision 1.36.4.6  2000/08/10 17:22:25  oconnor
---| call parent before self on select
---|
---| Revision 1.36.4.5  2000/08/02 23:08:16  king
---| Fixed on_activate to call AS only if not void
---|
---| Revision 1.36.4.4  2000/07/24 21:33:39  oconnor
---| inherit action sequences _IMP class
---|
---| Revision 1.36.4.3  2000/06/02 21:00:42  king
---| Removed previous bug fix, reimplement in radio menu item
---|
---| Revision 1.36.4.2  2000/06/02 20:55:43  king
---| Bug fix for select_actions firing on deselection
---|
---| Revision 1.36.4.1  2000/05/03 19:08:35  oconnor
---| mergred from HEAD
---|
---| Revision 1.46  2000/05/02 18:55:19  oconnor
---| Use NULL instread of Defualt_pointer in C code.
---| Use eiffel_to_c (a) instead of a.to_c.
---|
---| Revision 1.45  2000/04/07 22:35:53  brendel
---| Removed EV_SIMPLE_ITEM_IMP from inheritance.
---|
---| Revision 1.44  2000/04/04 20:50:18  oconnor
---| updated signal connection for new marshaling scheme
---|
---| Revision 1.43  2000/03/27 18:04:59  brendel
---| Redefined `text', `set_text' and `remove_text' as specified in the note
---| in EV_MENU_ITEM.
---| Replaced press_actions with select_actions.
---|
---| Revision 1.42  2000/03/24 00:13:16  brendel
---| Removed ampersand filtering for the moment. Will be handled by future
---| class EV_MENU_TEXTABLE (or something).
---|
---| Revision 1.41  2000/03/23 19:32:41  brendel
---| redefined text ans set_text to ignore ampersands which are used as menu
---| shortcuts on Windows.
---|
---| Revision 1.40  2000/03/23 02:27:13  brendel
---| Added call to item_select_actions.
---|
---| Revision 1.39  2000/03/06 23:51:51  brendel
---| Moved connection of action sequence to initialize, to make sure that it
---| is called by descendants.
---|
---| Revision 1.38  2000/02/22 18:39:34  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.37  2000/02/14 11:40:27  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.36.6.8  2000/02/05 01:37:14  brendel
---| Cleanup.
---|
---| Revision 1.36.6.7  2000/02/04 04:25:36  oconnor
---| released
---|
---| Revision 1.36.6.6  2000/02/04 01:15:02  brendel
---| Added connect to activate signal in creation.
---|
---| Revision 1.36.6.5  2000/02/03 23:31:59  brendel
---| Revised.
---| Changed inheritance structure.
---|
---| Revision 1.36.6.4  2000/02/02 00:06:44  oconnor
---| hacking menus
---|
---| Revision 1.36.6.3  2000/01/27 19:29:25  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.36.6.2  1999/11/30 17:25:13  brendel
---| Added redefine of initialize because of change in EV_TEXTABLE_IMP.
---|
---| Revision 1.36.6.1  1999/11/24 17:29:42  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.36.2.3  1999/11/09 16:53:14  oconnor
---| reworking dead object cleanup
---|
---| Revision 1.36.2.2  1999/11/02 17:20:02  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -143,152 +143,19 @@ feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
 end -- class EV_ITEM_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.32  2001/06/07 23:08:01  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.17.4.11  2000/11/01 01:07:05  andrew
---| Renamed wid_imp parent_imp to widget_parent_imp
---|
---| Revision 1.17.4.10  2000/09/06 23:18:38  king
---| Reviewed
---|
---| Revision 1.17.4.9  2000/08/03 21:37:31  king
---| Redefining button action sequences to connect swtich agent
---|
---| Revision 1.17.4.8  2000/07/28 21:11:12  king
---| Corrected log message
---|
---| Revision 1.17.4.7  2000/07/28 21:09:33  king
---| Corrected initialize so no qualified calls are made through interface
---|
---| Revision 1.17.4.6  2000/07/24 21:33:39  oconnor
---| inherit action sequences _IMP class
---|
---| Revision 1.17.4.5  2000/06/12 16:22:56  oconnor
---| removed references to obsolete features
---|
---| Revision 1.17.4.4  2000/06/05 23:47:40  oconnor
---| support double click
---|
---| Revision 1.17.4.3  2000/06/01 22:02:10  king
---| Removed direct inheritence from EV_PND as we have it from EV_WIDGET_IMP
---|
---| Revision 1.17.4.2  2000/05/13 00:04:09  king
---| Converted to new EV_CONTAINABLE class
---|
---| Revision 1.17.4.1  2000/05/03 19:08:35  oconnor
---| mergred from HEAD
---|
---| Revision 1.29  2000/05/02 18:55:19  oconnor
---| Use NULL instread of Defualt_pointer in C code.
---| Use eiffel_to_c (a) instead of a.to_c.
---|
---| Revision 1.28  2000/05/01 21:32:20  king
---| Exporting redundant features to none
---|
---| Revision 1.27  2000/04/19 20:42:39  oconnor
---| formatting
---|
---| Revision 1.26  2000/04/07 22:35:53  brendel
---| Removed EV_SIMPLE_ITEM_IMP from inheritance.
---|
---| Revision 1.25  2000/04/04 20:50:18  oconnor
---| updated signal connection for new marshaling scheme
---|
---| Revision 1.24  2000/03/24 02:20:29  oconnor
---| removed c-ed out code
---|
---| Revision 1.23  2000/03/09 01:15:27  king
---| Corrected comment of set_parent_imp
---|
---| Revision 1.21  2000/03/08 22:20:39  king
---| Made set_combo_parent_imp generic to deal with tree items
---|
---| Revision 1.20  2000/03/08 21:34:34  king
---| Removed obsolete parenting functions, add combo box parent hack
---|
---| Revision 1.19  2000/02/22 18:39:34  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.18  2000/02/14 11:40:27  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.17.6.16  2000/02/04 21:20:05  king
---| Removed unused body code from set_parent and set_parent_with_index
---|
---| Revision 1.17.6.15  2000/02/04 04:25:36  oconnor
---| released
---|
---| Revision 1.17.6.14  2000/02/02 00:41:06  king
---| Implemented parent_imp, obsoleted set_parent
---|
---| Revision 1.17.6.13  2000/01/28 18:39:37  king
---| Set is_initialized to true
---|
---| Revision 1.17.6.12  2000/01/27 19:29:24  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.17.6.11  2000/01/18 23:13:40  king
---| Set is_initialized to true
---|
---| Revision 1.17.6.10  1999/12/17 23:27:38  oconnor
---| marked set_parent_and_index obsolete
---|
---| Revision 1.17.6.9  1999/12/15 00:22:05  oconnor
---|  removed create  global_pnd_targets, it is now once
---|
---| Revision 1.17.6.8  1999/12/13 19:44:49  oconnor
---| added global_pnd_targets
---|
---| Revision 1.17.6.7  1999/12/08 17:42:27  oconnor
---| removed more inherited externals
---|
---| Revision 1.17.6.6  1999/12/06 17:28:44  oconnor
---| tweak to compile, be fixed later
---|
---| Revision 1.17.6.5  1999/12/04 18:59:12  oconnor
---| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
---|
---| Revision 1.17.6.4  1999/12/03 07:49:32  oconnor
---| use new  connect_signal_to_actions
---|
---| Revision 1.17.6.3  1999/12/01 01:02:32  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that
---| relied on specific things like return value BOOLEAN instead of INTEGER.
---|
---| Revision 1.17.6.2  1999/11/30 22:52:43  oconnor
---| added action sequence
---|
---| Revision 1.17.6.1  1999/11/24 17:29:42  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.17.2.3  1999/11/09 16:53:14  oconnor
---| reworking dead object cleanup
---|
---| Revision 1.17.2.2  1999/11/02 17:20:02  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -88,15 +88,15 @@ feature -- Access
 		
 	context: INTEGER is
 			-- Associated class context
-			-- See EOLE_CLSCTX for `Result value'
+			-- See EOLE_CLSCTX for `Result' value.
 		deferred
 		ensure
 			valid_clsctx: is_valid_clsctx (Result)
 		end
-		
+	
 	register_flags: INTEGER is
 			-- Register flags
-			-- See EOLE_REGISTER_FLAGS for `Result' value
+			-- See EOLE_REGISTER_FLAGS for `Result' value.
 		deferred
 		ensure
 			valid_register_flags: is_valid_register_flag (Result)

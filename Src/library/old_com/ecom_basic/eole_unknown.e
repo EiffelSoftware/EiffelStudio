@@ -77,7 +77,8 @@ feature -- Element change
 		end
 		
 	frozen set_last_hresult (hresult: INTEGER) is
-			-- Set last result with `code'
+			-- Set last result with `code'.
+			-- Shortcut for `status.set_last_hresult'.
 		do
 			status.set_last_hresult (hresult)
 		end

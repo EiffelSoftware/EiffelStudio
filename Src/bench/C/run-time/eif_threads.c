@@ -438,7 +438,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	start_routine_ctxt_t *routine_ctxt;
-	EIF_INTEGER l_is_initialized = 0;
+	volatile EIF_INTEGER l_is_initialized = 0;
 	EIF_OBJECT root_object = NULL;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 
@@ -1006,7 +1006,6 @@ rt_shared pid_t eif_thread_fork(void) {
 #endif
 
 	if (result == 0) {
-		char s[1024];
 		eif_global_context_t * l_old_eif_globals = eif_globals;
 		rt_global_context_t * l_old_rt_globals = rt_globals;
 

@@ -31,10 +31,14 @@ feature -- Access
 			Result := <<XmCR_COMMAND_ENTERED, XmCR_COMMAND_CHANGED>>
 		end
 
-	value: MEL_SHARED_STRING is
-			-- String in command area
+	value: MEL_STRING is
+			-- String in command area (value is `shared')
 		do
-			!! Result.make_from_existing (c_value (handle))
+			!! Result.make_from_existing (c_value (handle));
+			Result.set_shared
+		ensure
+			Result_not_void: Result /= Void;
+			Result_is_shared: Result.shared
 		end;
 
 	length: INTEGER is

@@ -9,7 +9,6 @@ inherit
 		redefine
 			init_project_directory
 		end;
-	SHARED_WORKBENCH;
 	ICONED_COMMAND;
 	SHARED_RESCUE_STATUS;
 	SHARED_LICENSE
@@ -203,33 +202,6 @@ feature
 				retried := True;
 				retry
 			end
-		end;
-
-	is_project_readable: BOOLEAN is
-			-- May the project be used for browsing and debugging?
-		do
-			Result := 
-				(Update_file.exists and then Update_file.is_readable) and then 
-				System.server_controler.is_readable
-		end;
-
-	is_project_writable: BOOLEAN is
-			-- May the project be both compiled and used for browsing?
-		local
-			w_code_dir, f_code_dir, comp_dir: RAW_FILE;
-			project_file: RAW_FILE
-		do
-			!! w_code_dir.make (Workbench_generation_path);
-			!! f_code_dir.make (Final_generation_path);
-			!! comp_dir.make (Compilation_path);
-			!! project_file.make (Project_file_name);
-			Result := project_file.is_writable and then
-				Update_file.exists and then
-				(Update_file.is_readable and Update_file.is_writable) and then
-				(w_code_dir.exists and then w_code_dir.is_writable) and then 
-				(f_code_dir.exists and then f_code_dir.is_writable) and then
-				(f_code_dir.exists and then comp_dir.is_writable) and then
-				System.server_controler.is_writable
 		end;
 
 	symbol: PIXMAP is

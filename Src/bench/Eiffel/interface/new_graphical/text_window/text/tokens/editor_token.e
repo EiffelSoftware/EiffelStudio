@@ -221,26 +221,10 @@ feature {EB_TOKEN_TOOLKIT, SMART_TEXT} -- implementation of clickable and editab
 		do
 		end
 
-
---! FIXME
-	platform_is_windows: BOOLEAN is
-			-- Is the current platform Windows?
-		once
-			Result := (create {PLATFORM_CONSTANTS}).is_windows
-		end
-
 	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING; device: EV_PIXMAP) is
 		do
-			if platform_is_windows then
-				device.draw_text_top_left (pos, d_y, text_to_be_drawn)
-			else
-				device.draw_text_top_left (pos, d_y + height // 8, text_to_be_drawn)
-			end
+			device.draw_text (pos, d_y + font_offset, text_to_be_drawn)
 		end
-
--- end FIXME
-
-
 
 invariant
 	image_not_void: image /= Void

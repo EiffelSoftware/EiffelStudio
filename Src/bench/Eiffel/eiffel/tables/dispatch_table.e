@@ -188,7 +188,7 @@ end;
 			end;
 			from
 				i := 1;
-				file.putstring ("#include %"portable.h%"%N%N");
+				file.putstring ("#include %"eif_portable.h%"%N%N");
 				file.putstring ("uint32 fdispatch[] = {%N")
 			until
 				i > nb
@@ -238,9 +238,9 @@ feature -- DLE
 			end;
 			from
 				i := nb - counter.current_count + 1;
-				file.putstring ("#include %"struct.h%"");
+				file.putstring ("#include %"eif_struct.h%"");
 				file.new_line;
-				file.putstring ("#include %"portable.h%"");
+				file.putstring ("#include %"eif_portable.h%"");
 				file.new_line;
 				file.new_line;
 				file.putstring ("void dle_edisptch(void)");

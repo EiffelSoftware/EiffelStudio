@@ -144,8 +144,8 @@ end;
 				!! include_set.make;
 				include_set.compare_objects;
 				i := 1;
-				file.putstring ("#include %"macros.h%"%N%
-								%#include %"struct.h%"%N%N");
+				file.putstring ("#include %"eif_macros.h%"%N%
+								%#include %"eif_struct.h%"%N%N");
 			until
 				i > nb
 			loop
@@ -165,11 +165,11 @@ end;
 			until
 				include_set.after
 			loop
-				if not (include_set.item.is_equal("%"eiffel.h%"")) then
+				if not (include_set.item.is_equal("%"eif_eiffel.h%"")) then
 					file.putstring ("#include ");
 					file.putstring (include_set.item);
 				else
-					file.putstring ("/* #include %"eiffel.h%" */");
+					file.putstring ("/* #include %"eif_eiffel.h%" */");
 				end
 				file.putstring ("%N%N");
 				include_set.forth
@@ -328,8 +328,8 @@ end;
 				!! include_set.make;
 				include_set.compare_objects;
 				i := nb - counter.current_count + 1;
-				file.putstring ("#include %"struct.h%"%N%
-								%#include %"macros.h%"%N%N");
+				file.putstring ("#include %"eif_struct.h%"%N%
+								%#include %"eif_macros.h%"%N%N");
 			until
 				i > nb
 			loop

@@ -9,10 +9,9 @@ class
 	DATE_VALUE
 
 inherit
-	DATE_CONSTANTS
 
-creation
-
+	DATE_MEASUREMENT
+		
 feature -- Access
 
 	day: INTEGER is
@@ -36,6 +35,28 @@ feature -- Access
 	compact_date: INTEGER
 			-- Day, month and year coded.
 
+feature -- Element change
+
+	set_day (d: INTEGER) is
+			-- Set `day' to `d'.
+		do
+			c_set_day (d, $compact_date)
+		end
+
+	
+	set_month (m: INTEGER) is
+			-- Set `month' to `m'.
+			-- `day' must be small enough.
+		do
+			c_set_month (m, $compact_date)
+		end
+	
+	set_year (y: INTEGER) is
+			-- Set `year' to `y'.
+		do
+			c_set_year (y, $compact_date)
+		end
+
 feature {NONE} -- External
 
 	c_day (c_d: INTEGER): INTEGER is
@@ -52,6 +73,24 @@ feature {NONE} -- External
 		external
 			"C"
 		end
+
+	c_set_day (d:INTEGER; c_d: POINTER) is
+			-- Initialize the day in `compact_date'.
+		external
+			"C"
+		end;
+
+	c_set_month (m: INTEGER; c_d: POINTER) is
+			-- Initialize the month in `compact_date'.
+		external
+			"C"
+		end;
+
+	c_set_year (y:INTEGER; c_d: POINTER) is
+			-- Initialize the year in `compact_date'.
+		external
+			"C"
+		end;
 
 end -- class DATE_VALUE
 

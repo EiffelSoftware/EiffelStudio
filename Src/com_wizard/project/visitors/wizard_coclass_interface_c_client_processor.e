@@ -23,7 +23,9 @@ feature -- Basic operations
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			if
-				not has_descendants_in_coclass (coclass, an_interface)
+				not has_descendants_in_coclass (coclass, an_interface) and
+				not an_interface.c_type_name.is_equal (Iunknown_type) and
+				not an_interface.c_type_name.is_equal (Idispatch_type)
 			then
 				coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 				coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))

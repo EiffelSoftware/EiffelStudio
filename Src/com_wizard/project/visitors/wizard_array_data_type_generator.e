@@ -48,7 +48,9 @@ feature -- Basic operations
 			need_generate_ec := True
 
 			dimension_count := an_array_descriptor.dimension_count
-			an_element_type := an_array_descriptor.array_element_descriptor.type
+			element_descriptor := an_array_descriptor.array_element_descriptor
+			element_visitor := element_descriptor.visitor
+			an_element_type := element_visitor.vt_type
 			array_size := clone (an_array_descriptor.array_size)
 
 			from
@@ -69,8 +71,6 @@ feature -- Basic operations
 			writable := True
 
 			create c_header_file.make (100)
-			element_descriptor := an_array_descriptor.array_element_descriptor
-			element_visitor := element_descriptor.visitor
 
 			if is_void (an_element_type) then
 				message_output.add_warning (Current, message_output.void_array)
@@ -138,7 +138,7 @@ feature -- Basic operations
 				ce_function_name.append (element_visitor.c_type)
 				ce_function_name.append (Underscore)
 				ce_function_name.append_integer (local_counter)
-				ce_function_name.to_lower
+				to_legal_name_for_c_function (ce_function_name)
 
 				ec_function_name.append ("ccom_ec_array_automation")
 				ec_function_name.append_integer (local_counter)
@@ -268,9 +268,7 @@ feature {NONE} -- Implementation
 				Result.append (Eif_pointer)
 				Result.append (Close_parenthesis)
 			end
-			Result.append (Ampersand)
 			Result.append ("an_array")
-			Result.append (zero_index)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append_integer (dim_count)

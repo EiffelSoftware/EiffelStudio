@@ -423,7 +423,9 @@ feature -- Generation constants
 	Create_command_string: STRING is "create "
 			-- String corresponding to creation instruction in generated_code.
 
-	Optimal_string: STRING is "Optimal"
+	False_optimal_string: STRING is "Optimal"
+	
+	False_non_exported_string: STRING is "False_exported"
 	
 	item_text_string: STRING is "Item_text"
 		-- Constant used for referencing notebook item texts in XML.

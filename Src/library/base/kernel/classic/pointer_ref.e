@@ -52,6 +52,29 @@ feature -- Operations
 			Result := c_offset_pointer (item, offset)
 		end
 
+feature {NONE} -- Initialization
+
+	make_from_reference (v: POINTER_REF) is
+			-- Initialize `Current' with `v.item'.
+		require
+			v_not_void: v /= Void
+		do
+			item := v.item
+		ensure
+			item_set: item = v.item	
+		end
+
+feature -- Conversion
+
+	to_reference: POINTER_REF is
+			-- Associated reference of Current
+		do
+			create Result
+			Result.set_item (item)
+		ensure
+			to_reference_not_void: Result /= Void
+		end
+
 feature -- Memory copy
 
 	memory_copy (a_source: POINTER; a_size: INTEGER) is

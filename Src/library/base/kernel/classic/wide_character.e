@@ -15,31 +15,8 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({reference WIDE_CHARACTER}),
-	to_reference: {reference WIDE_CHARACTER}
-
-feature {NONE} -- Initialization
-
-	make_from_reference (v: reference WIDE_CHARACTER) is
-			-- Initialize `Current' with `v.item'.
-		require
-			v_not_void: V /= Void
-		do
---			item := v.item
-		ensure
---			item_set: item = v.item	
-		end
-
-feature -- Conversion
-
-	to_reference: reference WIDE_CHARACTER is
-			-- Associated reference of Current
-		do
-			create Result
---			Result.set_item (item)
-		ensure
-			to_reference_not_void: Result /= Void
-		end
+	make_from_reference ({WIDE_CHARACTER_REF}),
+	to_reference: {WIDE_CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
 
 indexing
 

@@ -23,7 +23,7 @@ create
 
 convert
 	to_pointer: {POINTER},
-	to_reference: {reference TYPED_POINTER [G]}
+	to_reference: {POINTER_REF, HASHABLE, ANY}
 
 feature -- Conversion
 
@@ -33,13 +33,6 @@ feature -- Conversion
 			-- Built-in
 		end
 
-	to_reference: reference TYPED_POINTER [G] is
-			-- 
-		do
-			create Result
---			Result.set_item (pointer_item)
-		end
-		
 indexing
 
 	library: "[

@@ -19,7 +19,7 @@ class BIT_REF inherit
 		end
 	
 convert
-	to_reference: {BIT_REF}
+	to_reference: {BIT_REF, ANY}
 	
 feature -- Access
 

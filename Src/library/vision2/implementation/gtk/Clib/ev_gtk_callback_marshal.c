@@ -188,22 +188,6 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 	return (connection_id);
 }
 
-guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT agent)
-        // Call an `agent' when idle.
-{
-            guint connection_id;
-            connection_id = gtk_idle_add_full (
-				GTK_PRIORITY_DEFAULT,      // Priority.
-				(GtkFunction)               // Function pointer to attach.
-				c_ev_gtk_callback_marshal_true_callback,
-				NULL,                      // Function marshal.
-				eif_adopt (agent),         // User data for function.
-				(GtkDestroyNotify)
-				eif_wean                   // To call on hook disconnect.
-			);
- 	return (connection_id);
-}
-
 guint c_ev_gtk_callback_marshal_delete_connect (
 	GtkObject* c_object, EIF_OBJECT agent
 )
@@ -249,6 +233,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.15  2003/08/13 20:33:08  king
+// Removed idle handling code as we now perform this in our main loop
+//
 // Revision 1.14  2003/08/13 20:26:59  king
 // Made C code easy to read and follow
 //

@@ -125,14 +125,6 @@ feature -- Commands
 			Shared_document_editor.close_documents
 		end
 
-	build_toc is
-			-- Build a TOC tree from Current			
-		do
-			if can_build_toc then
-				Shared_toc_manager.build_toc (create {DIRECTORY}.make (root_directory))				
-			end
-		end
-
 	load_documents is
 			-- Load all document under root
 		do

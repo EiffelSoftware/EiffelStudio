@@ -254,9 +254,9 @@ feature -- Store/Retrive
 			xqueries, xcommands, xsection: XM_ELEMENT
 			l_item: FEATURE_SECTION_VIEW
 			i, nb: INTEGER
-			expanded_sections: ARRAYED_LIST [FEATURE_SECTION_VIEW]
+			l_expanded_sections: ARRAYED_LIST [FEATURE_SECTION_VIEW]
 		do
-			create expanded_sections.make (0)
+			create l_expanded_sections.make (0)
 			create xqueries.make (node, "QUERIES_SECTIONS", xml_namespace)
 			from
 				i := 1
@@ -270,7 +270,7 @@ feature -- Store/Retrive
 					xsection.add_attribute ("NAME", xml_namespace, l_item.feature_section.first_feature_name)
 					xqueries.put_last (xsection)
 					l_item.collabse
-					expanded_sections.extend (l_item)
+					l_expanded_sections.extend (l_item)
 				end
 				i := i + 1
 			end
@@ -287,7 +287,7 @@ feature -- Store/Retrive
 					xsection.add_attribute ("NAME", xml_namespace, l_item.feature_section.first_feature_name)
 					xcommands.put_last (xsection)
 					l_item.collabse
-					expanded_sections.extend (l_item)
+					l_expanded_sections.extend (l_item)
 				end
 				i := i + 1
 			end
@@ -299,12 +299,12 @@ feature -- Store/Retrive
 			Result.put_last (xcommands)
 			
 			from
-				expanded_sections.start
+				l_expanded_sections.start
 			until
-				expanded_sections.after
+				l_expanded_sections.after
 			loop
-				expanded_sections.item.expand
-				expanded_sections.forth
+				l_expanded_sections.item.expand
+				l_expanded_sections.forth
 			end
 		end
 		
@@ -462,7 +462,6 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
---			update_fade
 		end
 		
 	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN is
@@ -517,6 +516,9 @@ feature {NONE} -- Implementation
 	properties_text: EV_MODEL_TEXT
 			-- Text for properties of class.
 			
+	expanded_sections: ARRAYED_LIST [FEATURE_SECTION]
+			-- Expanded sections.
+			
 	query_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW is
 			-- Return feature section view with first feature name `a_name' if any.
 		local
@@ -555,8 +557,34 @@ feature {NONE} -- Implementation
 
 	set_queries_commands is
 			-- Set `queries' and `commands' according to `model'.`feature_clause_list'.
+		local
+			l_item: FEATURE_SECTION_VIEW
 		do
 			if model.is_compiled then
+				create expanded_sections.make (0)
+				expanded_sections.compare_objects
+				from
+					queries.start
+				until
+					queries.after
+				loop
+					l_item ?= queries.item
+					if l_item.is_expanded then
+						expanded_sections.extend (l_item.feature_section)
+					end
+					queries.forth
+				end
+				from
+					commands.start
+				until
+					commands.after
+				loop
+					l_item ?= commands.item
+					if l_item.is_expanded then
+						expanded_sections.extend (l_item.feature_section)
+					end
+					commands.forth
+				end
 				build_queries_commands_list
 				set_queries
 				set_commands
@@ -622,6 +650,9 @@ feature {NONE} -- Implementation
 				
 				create l_fsv.make (l_item, Current)
 				l_fsv.set_point_position (a_group.point_x, a_group.point_y + attr_height)
+				if expanded_sections.has (l_item) then
+					l_fsv.expand
+				end
 				attr_height := attr_height + l_fsv.bounding_box.height
 				a_group.extend (l_fsv)
 				feature_sections.forth
@@ -645,50 +676,59 @@ feature {NONE} -- Implementation
 			l_feature: FEATURE_AS
 			l_features_list: like features_list
 			q_section, c_section: FEATURE_SECTION
+			is_retried: BOOLEAN
 		do
-			l_features_list := features_list (model.class_c) 
-			from
+			if is_retried then
 				create queries_list.make (0)
 				create commands_list.make (0)
-				l_features_list.start
-			until
-				l_features_list.after
-			loop
-				l_item := l_features_list.item
-				create q_section.make_empty (l_item.name, model.class_c)
-				create c_section.make_empty (l_item.name, model.class_c)
-				if l_item.is_none then
-					q_section.enable_is_none
-					c_section.enable_is_none
-				elseif l_item.is_some then
-					q_section.enable_is_some
-					c_section.enable_is_some
-				end
+			else
+				l_features_list := features_list (model.class_c) 
 				from
-					l_features := l_item.features
-					l_features.start
+					create queries_list.make (0)
+					create commands_list.make (0)
+					l_features_list.start
 				until
-					l_features.after
+					l_features_list.after
 				loop
-					l_feature := l_features.item
-					if l_feature.is_function or else l_feature.is_attribute then
-						q_section.features.extend (l_feature)
-					else
-						c_section.features.extend (l_feature)
+					l_item := l_features_list.item
+					create q_section.make_empty (l_item.name, model.class_c)
+					create c_section.make_empty (l_item.name, model.class_c)
+					if l_item.is_none then
+						q_section.enable_is_none
+						c_section.enable_is_none
+					elseif l_item.is_some then
+						q_section.enable_is_some
+						c_section.enable_is_some
 					end
-					l_features.forth
+					from
+						l_features := l_item.features
+						l_features.start
+					until
+						l_features.after
+					loop
+						l_feature := l_features.item
+						if l_feature.is_function or else l_feature.is_attribute then
+							q_section.features.extend (l_feature)
+						else
+							c_section.features.extend (l_feature)
+						end
+						l_features.forth
+					end
+					if not q_section.features.is_empty then
+						queries_list.extend (q_section)
+					end
+					if not c_section.features.is_empty then
+						commands_list.extend (c_section)
+					end
+					l_features_list.forth
 				end
-				if not q_section.features.is_empty then
-					queries_list.extend (q_section)
-				end
-				if not c_section.features.is_empty then
-					commands_list.extend (c_section)
-				end
-				l_features_list.forth
 			end
 		ensure
 			queries_list_not_Void: queries_list /= Void
 			commands_list_not_Void: commands_list /= Void
+		rescue
+			is_retried := True
+			retry
 		end
 		
 	features_list (compiled_class: CLASS_C): LIST [FEATURE_SECTION] is

@@ -11,6 +11,8 @@ inherit
 	FEATURE_NAME_EXTRACTOR
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 		
 create
@@ -83,6 +85,16 @@ feature -- Status report
 			
 	is_any: BOOLEAN
 			-- Are `features' exported to ANY?
+			
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' equal `Current'?
+		do
+			if other.features.is_empty or features.is_empty then
+				Result := False
+			else
+				Result := first_feature_name.is_equal (other.first_feature_name)
+			end
+		end
 
 feature -- Status setting
 

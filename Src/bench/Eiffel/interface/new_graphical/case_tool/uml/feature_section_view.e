@@ -161,7 +161,9 @@ feature -- Element change
 			feature_group.show
 			enable_pick_and_drop
 			is_expanded := True
-			container.update_size (Current)
+			if container.has_section (Current) then
+				container.update_size (Current)
+			end
 		ensure
 			is_expanded: is_expanded
 		end
@@ -175,7 +177,9 @@ feature -- Element change
 			feature_group.hide
 			disable_pick_and_drop
 			is_expanded := False
-			container.update_size (Current)
+			if container.has_section (Current) then
+				container.update_size (Current)
+			end
 		ensure
 			is_collabsed: not is_expanded
 		end

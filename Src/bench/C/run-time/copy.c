@@ -790,7 +790,6 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 
 	union overhead *zone;			/* Malloc information zone */
 	EIF_INTEGER count, elem_size;
-	int dftype;
 	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
@@ -798,15 +797,14 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	count = RT_SPECIAL_COUNT_WITH_INFO(ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 
+		/* Reset all memory to zero. */
+	memset (spobj, 0, count * elem_size);
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */
-		ref = spobj + OVERHEAD;
-		dftype = HEADER(ref)->ov_flags & EO_TYPE;
-		memset (spobj, 0, count * elem_size);
+		uint32 exp_dftype = eif_gen_param_id (-1, (int16) Dftype(spobj), 1);
 			/* Initialize new expanded elements, if any */
-		sp_init (spobj, dftype, 0, count - 1);
-	} else
-		memset (spobj, 0, count * elem_size);
+		sp_init (spobj, exp_dftype, 0, count - 1);
+	}
 }
 
 /*

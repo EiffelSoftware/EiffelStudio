@@ -145,77 +145,65 @@ feature -- Basic operations
 feature {NONE} -- Externals
 
 	ccom_decimal_value_zero (a_ptr: POINTER) is
-	--	external
-	--		"C (EIF_POINTER)|%"E_Decimal.h%""
-		do
+		external
+			"C (DECIMAL *)|%"E_Decimal.h%""
 		end
 
 	ccom_decimal_value_one (a_ptr: POINTER) is
-	--	external
-	--		"C (EIF_POINTER)|%"E_Decimal.h%""
-		do
+		external
+			"C (DECIMAL *)|%"E_Decimal.h%""
 		end
 
 	ccom_decimal_divide (a_ptr, b_ptr, c_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
 	ccom_decimal_round (a_ptr: POINTER; a_value: INTEGER; b_ptr:POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_INTEGER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, EIF_INTEGER, DECIMAL *)"
 		end
 		
 	ccom_decimal_negative (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
 	ccom_decimal_integer (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
 	ccom_decimal_fix (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
 	ccom_decimal_absolute (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
 	c_size_of_decimal: INTEGER is
-	--	external 
-	--		"C [macro <wtypes.h>]"
-	--	alias
-	--		"sizeof(DECIMAL)"
-		do
+		external 
+			"C [macro <wtypes.h>]"
+		alias
+			"sizeof(DECIMAL)"
 		end
 
 	ccom_decimal_add (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
 	ccom_decimal_multiply (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"C [macro %"E_Decimal.h%"](EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 	
 	ccom_decimal_subtract (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"c [macro %"E_Decimal.h%"] (EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"c [macro %"E_Decimal.h%"] (DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
 end -- class ECOM_DECIMAL

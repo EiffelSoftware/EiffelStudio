@@ -148,6 +148,7 @@ feature {NONE} -- Implementation
 			i, a_range: INTEGER
 			Clib_folder_name: STRING
 			outproc_reg_gen: WIZARD_OUTPROC_EIFFEL_REGISTRATION_GENERATOR
+			inproc_reg_gen: WIZARD_INPROC_EIFFEL_REGISTRATION_GENERATOR
 			c_reg_gen: WIZARD_C_REGISTRATION_CODE_GENERATOR
 		do
 			-- Initialization

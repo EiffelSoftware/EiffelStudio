@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			-- Create the toolkit.
                         -- `application_class' is used for the resource specifications.
 		do 
+			runable := True
 			if application_class /= Void then
 				app_class := clone (application_class)
 			end

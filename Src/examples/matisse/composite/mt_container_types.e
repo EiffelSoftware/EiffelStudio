@@ -26,3 +26,5 @@ feature {NONE}
 			create Result.make(20)
 		end
 
+end
+

@@ -61,6 +61,8 @@ feature {NONE}
 
 	Edispatch: STRING is "edisptch"
 
+	Edle: STRING is "edle"
+
 	Efrozen: STRING is "efrozen"
 
 	Ehisto: STRING is "ehisto"
@@ -110,6 +112,8 @@ feature {NONE}
 
 	Makefile_SH: STRING is "Makefile.SH"
 
+	Melted_dle: STRING is "melted.dle";
+
 	Prelink_script: STRING is "prelink"
 
 	Preobj: STRING is
@@ -118,6 +122,8 @@ feature {NONE}
 		end;
 
 	Removed_log_file_name: STRING is "REMOVED";
+
+	Static_log_file_name: STRING is "STATIC";
 
 	System_object_prefix: STRING is "E";
 

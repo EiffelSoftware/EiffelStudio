@@ -138,7 +138,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
 					-- If a PND is in action and the Esc key is pressed then cancel it
-				a_capture_widget_imp ?= App_implementation.capture_widget.implementation
+				a_capture_widget_imp ?= App_implementation.captured_widget.implementation
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
 			else
 				if a_key_press then
@@ -388,9 +388,9 @@ feature -- Status setting
 			--| Used by pick and drop.
 		local
 			i: INTEGER
-		do
+		do		
 			disable_debugger
-			App_implementation.set_capture_widget (interface)
+			App_implementation.set_captured_widget (interface)
 			feature {EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
@@ -412,13 +412,13 @@ feature -- Status setting
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
-			App_implementation.set_capture_widget (Void)
+			App_implementation.set_captured_widget (Void)
 			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
 			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
 			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
-			enable_debugger
+			enable_debugger				
 		end
 
 feature -- Element change

@@ -219,6 +219,15 @@ feature -- Basic operation
 			end
 		end
 
+	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+			-- Extend `idle_actions' with `a_idle_action'.
+			-- Thread safe
+		require
+			a_idle_action_not_void: a_idle_action /= Void
+		do
+			idle_actions.extend (a_idle_action)
+		end
+
 feature -- Events
 
 	internal_idle_actions: EV_NOTIFY_ACTION_SEQUENCE

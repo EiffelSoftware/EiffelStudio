@@ -991,7 +991,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 		do
 			if not retried then
 				debug ("debugger_il_info_trace")
-					print ("Importing IL Info from [" + a_fn.out + "] %N")
+					print ("Importing IL Info from [" + a_fn + "] %N")
 				end
 				Result := True
 

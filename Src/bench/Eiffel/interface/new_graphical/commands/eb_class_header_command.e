@@ -173,7 +173,6 @@ feature {NONE} -- Implementation
 		local
 			cg: CLASS_TEXT_MODIFIER
 			cur_cluster: CLUSTER_I
-			new_name_in_lower: STRING
 		do
 			cg := a_class.code_generator
 			cg.prepare_for_modification
@@ -190,8 +189,7 @@ feature {NONE} -- Implementation
 				a_class.update
 				cur_cluster := a_class.class_i.cluster
 				cur_cluster.classes.remove (a_class.class_i.name)
-				new_name_in_lower := new_name.as_lower
-				a_class.class_i.set_name (new_name_in_lower)
+				a_class.class_i.set_name (new_name.as_upper)
 				cur_cluster.add_new_classs (a_class.class_i)
 			end
 		end

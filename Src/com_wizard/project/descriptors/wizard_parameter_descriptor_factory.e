@@ -57,7 +57,9 @@ feature -- Basic operations
 			type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, an_elem_desc.type_desc,
 					a_system_descriptor)
 			flags := an_elem_desc.param_desc.flags
-
+			if has_fopt_and_fhasdefault (flags) then
+				default_value := an_elem_desc.param_desc.default_value.default_value.out
+			end
 			create Result.make (Current)
 		ensure
 			valid_name: name /= Void and then name.count /= 0
@@ -72,6 +74,7 @@ feature -- Basic operations
 			a_descriptor.set_name (name)
 			a_descriptor.set_type (type)
 			a_descriptor.set_flags (flags)
+			a_descriptor.set_description (description)
 		end
 
 feature {NONE} -- Implementation
@@ -79,20 +82,17 @@ feature {NONE} -- Implementation
 	name: STRING
 			-- Argument name
 
+	default_value: STRING
+			-- Default value.
+
 	description: STRING is
 			-- Type description
 		do
-			if is_paramflag_fin (flags) then
-				if is_paramflag_fout (flags) then
-					Result := clone (Inout)
-				else
-					Result := clone (In)
-				end
-			elseif is_paramflag_fout (flags) then
-				Result := clone (Out_keyword)
-			end
-			if is_paramflag_fretval (flags) then
-				Result := clone (Result)
+			create Result.make (0)
+			if has_fopt_and_fhasdefault (flags) then
+				Result.append ("Optional, default value = ")
+				Result.append (default_value)
+				Result.append (".")
 			end
 		end
 

@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			read_buffer (a_buffer_length)
 
 			a := buffer.area
-			c_memcpy (a_buffer, $a, buffer.count)
+			a_buffer.memory_copy ($a, buffer.count)
 			cwel_set_integer_reference_value (a_data_length, buffer.count)
 			
 			Result := stream_result

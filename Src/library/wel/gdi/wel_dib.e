@@ -154,10 +154,9 @@ feature -- Basic operations
 			until
 				i = num_color
 			loop
-				c_memcpy (cwel_integer_to_pointer (
-					cwel_pointer_to_integer (item) +
-					info_header.structure_size + i *
-					rgb_quad_size // 2), $i, 1)
+				cwel_integer_to_pointer (cwel_pointer_to_integer (item) +
+					info_header.structure_size + i * rgb_quad_size // 2).
+						memory_copy ($i, 1)
 				i := i + 1
 			end
 		end

@@ -321,7 +321,7 @@ feature -- Status report
 		local
 			p, null: POINTER
 		do
-			p := c_calloc (1, structure_size)
+			p := p.memory_calloc (1, Structure_size)
 			if p /= null then
 				if atom = 0 then
 						-- Not yet registered or already unregistered
@@ -339,7 +339,7 @@ feature -- Status report
 							main_args.current_instance.item,
 							cwel_integer_to_pointer (atom), p) 
 				end
-				c_free (p)
+				p.memory_free
 			end
 		end
 

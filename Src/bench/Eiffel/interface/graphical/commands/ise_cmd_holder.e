@@ -20,14 +20,11 @@ feature -- Initialization
 		ensure
 			button_set: associated_button = a_button;
 			menu_entry_set: associated_menu_entry = a_menu_entry;
-			sensitive: is_sensitive
 		end;
 
 	make_plain is
 			-- Initialize Current, with `associated_command' as `a_command'.
 		deferred
-		ensure
-			sensitive: is_sensitive
 		end;
 
 feature -- Setting
@@ -56,12 +53,6 @@ feature -- Setting
 		deferred
 		end;
 
-	set_sensitive (sensitivity: BOOLEAN) is
-			-- Set both the `associated_button' and `associated_menu_entry'
-			-- to be sensitive or not, according to `sensitivity'.
-		deferred
-		end;
-
 feature -- Properties
 
 	associated_button: ISE_BUTTON;
@@ -69,8 +60,5 @@ feature -- Properties
 
 	associated_menu_entry: ISE_MENU_ENTRY;
 			-- Menu entry in the menus.
-
-	is_sensitive: BOOLEAN
-			-- Can `associated_command' be executed?
 
 end -- class ISE_CMD_HOLDER

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.CodeGenerationSupport"
+	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "2ef5239aeb372f26"
 
 external class
 	ISE_REFLECTION_CODEGENERATIONSUPPORT
@@ -183,20 +184,13 @@ feature -- Basic Operations
 			"GenerateClassFooter"
 		end
 
-	is_valid_directory_path (a_path: STRING): BOOLEAN is
+	valid_path (a_path: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"IsValidDirectoryPath"
+			"ValidPath"
 		end
 
-	is_valid_filename (a_filename: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"IsValidFilename"
-		end
-		
 	generic_name_base: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"

@@ -1,12 +1,16 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.RenameClause"
+	assembly: "ISE.Reflection.EiffelComponents", "0.0.0.0", "neutral", "e0f9d13739fa815f"
 
 external class
 	ISE_REFLECTION_RENAMECLAUSE
 
 inherit
 	ISE_REFLECTION_INHERITANCECLAUSE
+		redefine
+			is_equal
+		end
 
 create
 	make_renameclause
@@ -36,25 +40,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	equals_rename_clause (obj: ISE_REFLECTION_RENAMECLAUSE): BOOLEAN is
-		external
-			"IL signature (ISE.Reflection.RenameClause): System.Boolean use ISE.Reflection.RenameClause"
-		alias
-			"Equals"
-		end
-
-	space: STRING is
+	eiffel_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"Space"
-		end
-
-	make_from_info (a_source_name: STRING; a_target_name: STRING) is
-		external
-			"IL signature (System.String, System.String): System.Void use ISE.Reflection.RenameClause"
-		alias
-			"MakeFromInfo"
+			"EiffelKeyword"
 		end
 
 	string_representation: STRING is
@@ -64,11 +54,18 @@ feature -- Basic Operations
 			"StringRepresentation"
 		end
 
-	set_target_name (a_target_name: STRING) is
+	as_keyword: STRING is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"SetTargetName"
+			"AsKeyword"
+		end
+
+	is_equal (obj: ANY): BOOLEAN is
+		external
+			"IL signature (System.Object): System.Boolean use ISE.Reflection.RenameClause"
+		alias
+			"Equals"
 		end
 
 	rename_keyword: STRING is
@@ -78,18 +75,18 @@ feature -- Basic Operations
 			"RenameKeyword"
 		end
 
-	eiffel_keyword: STRING is
+	set_target_name (a_target_name: STRING) is
 		external
-			"IL signature (): System.String use ISE.Reflection.RenameClause"
+			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
 		alias
-			"EiffelKeyword"
+			"SetTargetName"
 		end
 
-	as_keyword: STRING is
+	space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"AsKeyword"
+			"Space"
 		end
 
 end -- class ISE_REFLECTION_RENAMECLAUSE

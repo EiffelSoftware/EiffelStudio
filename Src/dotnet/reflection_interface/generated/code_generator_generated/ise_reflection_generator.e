@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.Generator"
+	assembly: "ISE.Reflection.CodeGenerator", "0.0.0.0", "neutral", "8742b5c9f9654554"
 
 external class
 	ISE_REFLECTION_GENERATOR

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Base.PartComparable"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5fadf94dea1743a"
 
 deferred external class
 	ISE_BASE_PARTCOMPARABLE

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "EiffelMethodFactory"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
 
 external class
 	EIFFELMETHODFACTORY
@@ -39,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen is_polymorphic: BOOLEAN is
+	frozen get_is_polymorphic: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use EiffelMethodFactory"
 		alias
@@ -47,13 +48,6 @@ feature -- Access
 		end
 
 feature -- Basic Operations
-
-	compare_to (obj: ANY): INTEGER is
-		external
-			"IL signature (System.Object): System.Int32 use EiffelMethodFactory"
-		alias
-			"CompareTo"
-		end
 
 	get_hash_code: INTEGER is
 		external
@@ -74,6 +68,13 @@ feature -- Basic Operations
 			"IL signature (System.Object): System.Boolean use EiffelMethodFactory"
 		alias
 			"Equals"
+		end
+
+	compare_to (obj: ANY): INTEGER is
+		external
+			"IL signature (System.Object): System.Int32 use EiffelMethodFactory"
+		alias
+			"CompareTo"
 		end
 
 feature {NONE} -- Implementation

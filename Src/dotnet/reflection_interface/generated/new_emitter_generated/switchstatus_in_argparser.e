@@ -1,13 +1,14 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ArgParser+SwitchStatus"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
 	enum_type: "INTEGER"
 
 frozen expanded external class
 	SWITCHSTATUS_IN_ARGPARSER
 
 inherit
-	SYSTEM_ENUM
+	ENUM
 	SYSTEM_ICOMPARABLE
 		rename
 			equals as equals_object
@@ -31,13 +32,6 @@ feature -- Access
 			"IL enum signature :ArgParser+SwitchStatus use ArgParser+SwitchStatus"
 		alias
 			"1"
-		end
-
-	frozen value__: INTEGER is
-		external
-			"IL field signature :System.Int32 use ArgParser+SwitchStatus"
-		alias
-			"value__"
 		end
 
 	frozen show_usage: SWITCHSTATUS_IN_ARGPARSER is

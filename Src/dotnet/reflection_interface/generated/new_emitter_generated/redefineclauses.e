@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "RedefineClauses"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
 
 external class
 	REDEFINECLAUSES

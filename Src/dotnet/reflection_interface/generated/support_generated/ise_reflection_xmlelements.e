@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.XmlElements"
+	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "2ef5239aeb372f26"
 
 external class
 	ISE_REFLECTION_XMLELEMENTS
@@ -118,11 +119,11 @@ feature -- Basic Operations
 			"ArgumentExternalNameElement"
 		end
 
-	arguments_element: STRING is
+	argument_type_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ArgumentsElement"
+			"ArgumentTypeElement"
 		end
 
 	precondition_element: STRING is
@@ -188,11 +189,11 @@ feature -- Basic Operations
 			"BitOrInfixElement"
 		end
 
-	argument_type_element: STRING is
+	body_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ArgumentTypeElement"
+			"BodyElement"
 		end
 
 	invariant_text_element: STRING is
@@ -419,13 +420,6 @@ feature -- Basic Operations
 			"FieldElement"
 		end
 
-	body_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"BodyElement"
-		end
-
 	return_type_generic_parameter_index_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -466,6 +460,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"GenericDerivationElement"
+		end
+
+	arguments_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentsElement"
 		end
 
 	literal_value_element: STRING is

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.NotifierHandle"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheNotifier", "0.0.0.0", "neutral", "3a8ce9be7fa5624b"
 
 external class
 	ISE_REFLECTION_NOTIFIERHANDLE

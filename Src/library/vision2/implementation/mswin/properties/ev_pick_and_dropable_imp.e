@@ -191,7 +191,7 @@ feature -- Implementation
 			--				wel_point.screen_to_client (tree)
 			--				tg := tree.find_item_at_position (wel_point.x, wel_point.y).interface
 			--			end
-			--		end
+					end
 				end
 				if tg = Void then
 					tg := widget_pointed.interface
@@ -202,7 +202,7 @@ feature -- Implementation
 					Result ?= interface.id_object (global_pnd_targets.item)
 				end
 			end
-		end
+		end 
 
 feature {EV_ANY_I} -- Implementation
 
@@ -300,6 +300,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/21 18:28:59  rogers
+--| Removed commented out 'end' within pointed target as it is required.
+--|
 --| Revision 1.14  2000/02/19 07:51:49  oconnor
 --| temp removal or ref to EV_TREE
 --|

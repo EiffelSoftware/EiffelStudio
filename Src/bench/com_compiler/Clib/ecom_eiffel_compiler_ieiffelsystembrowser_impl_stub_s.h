@@ -61,7 +61,7 @@ public:
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------

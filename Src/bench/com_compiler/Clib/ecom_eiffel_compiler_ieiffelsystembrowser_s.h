@@ -110,7 +110,7 @@ public:
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

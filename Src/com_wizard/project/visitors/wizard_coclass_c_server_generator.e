@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			-- Add constructor.
 		local
 			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
-			a_signature, a_body: STRING
+			a_signature: STRING
 		do
 			create constructor_writer.make
 
@@ -136,16 +136,7 @@ feature {NONE} -- Implementation
 
 			constructor_writer.set_signature (a_signature)
 
-			create a_body.make (1000)
-			a_body.append (Tab)
-			a_body.append (Type_id)
-			a_body.append (Space_equal_space)
-			a_body.append (Type_id_variable_name)
-			a_body.append (Semicolon)
-
-			a_body.append (constructor_body)
-
-			constructor_writer.set_body (a_body)
+			constructor_writer.set_body (constructor_body)
 		
 			check
 				valid_constructor_writer: constructor_writer.can_generate

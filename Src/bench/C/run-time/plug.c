@@ -59,7 +59,7 @@ char **argv;
 	array = emalloc(arr_dtype);		/* If we return, it succeeded */
 	epush(&loc_stack, &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
-	(arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
+	(eif_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(char **) array;			/* Get the area of the ARRAY */
 	epush (&loc_stack, &sp);		/* Protect the area */
 
@@ -124,7 +124,7 @@ register4 long nbr;
 	array = emalloc(arr_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, &array); 	/* Protect address in case it moves */
 	nstcall = 0;
-	(arrmake)(array, 1L, stripped_nbr);	
+	(eif_arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 	sp = *(char **) array;
 	epush (&loc_stack, &sp);	/* Protect address in case it moves */
@@ -206,9 +206,9 @@ register2 int len;
 	string = emalloc(str_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, &string);		/* Protect address in case it moves */
 	nstcall = 0;
-	(strmake)(string, len);			/* Call feature `make' in class STRING */
+	(eif_strmake)(string, len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
-	(strset)(string, len);			/* Call feature `set_count' in STRING */
+	(eif_strset)(string, len);		/* Call feature `set_count' in STRING */
 
 	/* Copy C string `s' in special object `area' of the new string
 	 * descriptor `string'. We know the `area' is the very first reference

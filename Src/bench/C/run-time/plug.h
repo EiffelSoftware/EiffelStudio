@@ -43,9 +43,9 @@ extern int str_dtype;				/* Dynamic type for string */
 extern int bit_dtype;				/* Dynamic type for bit */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 extern int32 disp_rout_id;			/* Dispose routine id */ 
-extern void (*strmake)();			/* STRING creation feature */
-extern void (*strset)();			/* STRING `set_count' feature */
-extern void (*arrmake)();			/* STRING creation feature */
+extern void (*eif_strmake)();		/* STRING creation feature */
+extern void (*eif_strset)();		/* STRING `set_count' feature */
+extern void (*eif_arrmake)();		/* STRING creation feature */
 extern char *argarr();				/* ARRAY[STRING] creation from command line arguments */
 
 #ifdef WORKBENCH

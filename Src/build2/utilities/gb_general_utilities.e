@@ -130,5 +130,26 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	replace_final_class_name_comment (class_text, old_name, new_name: STRING) is
+			-- Replace instance of `old_name' with `new_name' when located in `clas_text'
+			-- after the final "end".
+		require
+			class_text_not_void: class_text /= Void
+			old_name_not_void: old_name /= Void
+			new_name_not_void: new_name /= Void
+		local
+			reversed: STRING
+			sub_index: INTEGER
+			index_of_old_name: INTEGER
+		do
+			reversed := clone (class_text)
+			reversed.mirror
+			sub_index := reversed.substring_index ("dne", 1)
+			index_of_old_name := class_text.substring_index (old_name, class_text.count - sub_index)
+			class_text.replace_substring (new_name, index_of_old_name, index_of_old_name + old_name.count - 1)
+		ensure
+			count_changed_accordingly: old class_text.count = class_text.count + new_name.count - old_name.count
+		end
 
 end -- class GB_GENERAL_UTILITIES

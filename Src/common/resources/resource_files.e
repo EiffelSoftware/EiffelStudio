@@ -23,7 +23,7 @@ feature -- Initialization
 			Eiffel3 := get ("EIFFEL3");
 			Platform := get ("PLATFORM");
 			Home := get ("HOME");
-			Eifdefaults := get ("EIFDEFAULTS")
+			Eifdefaults := get ("EIF_DEFAULTS")
 		ensure
 			application_name = new_name
 		end;

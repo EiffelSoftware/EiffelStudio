@@ -316,18 +316,17 @@ feature {NONE} -- Generation of AST
 			v: OPT_VAL_SD
 			l_type_name: STRING
 		do
-			l_type_name := free_option_names.item (type_id)
-			argument_sd := new_free_option_sd (new_id_sd (l_type_name, False))
+			create argument_sd.make (type_id)
 			if a_name /= Void then
-				v := new_name_sd (new_id_sd (a_name, True))
+				create v.make (new_id_sd (a_name, True))
 			else
 				if flag then
-					v := new_yes_sd (new_id_sd ("yes", False))
+					create v.make_yes
 				else
-					v := new_no_sd (new_id_sd ("no", False))
+					create v.make_no
 				end
 			end
-			Result := new_d_option_sd (argument_sd, v)
+			create Result.initialize (argument_sd, v)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -358,13 +357,13 @@ feature {NONE} -- Generation of AST
 			trace_sd: TRACE_SD
 			v: OPT_VAL_SD
 		do
-			trace_sd := new_trace_sd
+			create trace_sd
 			if enabled then
-				v := new_yes_sd (new_id_sd ("yes", False))
+				create v.make_yes
 			else
-				v := new_no_sd (new_id_sd ("no", False))
+				create v.make_no
 			end
-			Result := new_d_option_sd (trace_sd, v)
+			create Result.initialize (trace_sd, v)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -377,14 +376,6 @@ feature {NONE} -- Implementation
 	internal_is_valid: BOOLEAN
 			-- Is content of current pane valid for Ace file.
 			-- Set by call to `perform_check'.
-
-	free_option_names: ARRAY [STRING] is
-			-- List all option names used in FREE_OPTION_SD
-		once
-			Result := (create {FREE_OPTION_SD}).option_names
-		ensure
-			result_not_void: Result /= Void
-		end
 
 invariant
 	msil_specific_widgets_not_void: msil_specific_widgets /= Void

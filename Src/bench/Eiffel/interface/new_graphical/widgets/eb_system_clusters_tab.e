@@ -313,8 +313,8 @@ feature {NONE} -- Cluster display and saving
 			has_cluster_of_name: clusters.has (tree_item.text)
 		local
 			cl: CLUSTER_SD
-			incl: LACE_LIST [INCLUDE_SD]
-			excl: LACE_LIST [EXCLUDE_SD]
+			incl: LACE_LIST [FILE_NAME_SD]
+			excl: LACE_LIST [FILE_NAME_SD]
 			visib: LACE_LIST [CLAS_VISI_SD]
 			default_options: LACE_LIST [D_OPTION_SD]
 			l_item: EV_LIST_ITEM
@@ -472,8 +472,8 @@ feature {NONE} -- Cluster display and saving
 		local
 			cl: CLUSTER_SD
 			prop: CLUST_PROP_SD
-			l_include: LACE_LIST [INCLUDE_SD]
-			l_exclude: LACE_LIST [EXCLUDE_SD]
+			l_include: LACE_LIST [FILE_NAME_SD]
+			l_exclude: LACE_LIST [FILE_NAME_SD]
 			l_visible: LACE_LIST [CLAS_VISI_SD]
 			default_options: LACE_LIST [D_OPTION_SD]
 			cl_name: STRING
@@ -507,7 +507,7 @@ feature {NONE} -- Cluster display and saving
 				-- Setting cluster properties.
 			prop := cl.cluster_properties
 			if prop = Void then
-				prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void) 
+				create prop
 				cl.set_cluster_properties (prop)
 			end
 
@@ -518,31 +518,32 @@ feature {NONE} -- Cluster display and saving
 			if not include_list.is_empty then
 				l_include := prop.include_option
 				if l_include = Void then
-					l_include := new_lace_list_include_sd (include_list.count)
+					create l_include.make (include_list.count)
 					prop.set_include_option (l_include)
 				end
 
-				fill_list (l_include, include_list.list, ~new_include_sd (?), True)
+				fill_list (l_include, include_list.list, agent new_file_name_sd (?), True)
 			end
 
 			if not exclude_list.is_empty then
 				l_exclude := prop.exclude_option
 				if l_exclude = Void then
-					l_exclude := new_lace_list_exclude_sd (exclude_list.count)
+					create l_exclude.make (exclude_list.count)
 					prop.set_exclude_option (l_exclude)
 				end
 
-				fill_list (l_exclude, exclude_list.list, ~new_exclude_sd (?), True)
+				fill_list (l_exclude, exclude_list.list, agent new_file_name_sd (?), True)
 			end
 
 			if visible_list.is_sensitive and then not visible_list.is_empty then
 				l_visible := prop.visible_option
 				if l_visible = Void then
-					l_visible := new_lace_list_clas_visi_sd (visible_list.count)
+					create l_visible.make (visible_list.count)
 					prop.set_visible_option (l_visible)
 				end
 
-				fill_list (l_visible, visible_list.list, ~new_clas_visi_sd (?, Void, Void, Void, Void), False)
+				fill_list (l_visible, visible_list.list,
+					agent new_clas_visi_sd (?, Void, Void, Void, Void), False)
 			end
 
 			if default_options = Void then
@@ -577,43 +578,43 @@ feature {NONE} -- Cluster display and saving
 				default_options := prop.default_option
 				if check_check.is_selected then
 					had_assertion := True
-					v := new_check_sd (new_id_sd ("check", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_check
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if require_check.is_selected then
 					had_assertion := True
-					v := new_require_sd (new_id_sd ("require", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_require
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if ensure_check.is_selected then
 					had_assertion := True
-					v := new_ensure_sd (new_id_sd ("ensure", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_ensure
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if loop_check.is_selected then
 					had_assertion := True
-					v := new_loop_sd (new_id_sd ("loop", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_loop
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if invariant_check.is_selected then
 					had_assertion := True
-					v := new_invariant_sd (new_id_sd ("invariant", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_invariant
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if not had_assertion then
-					v := new_no_sd (new_id_sd ("no", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_no
+					create ass
+					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 			end
@@ -1114,7 +1115,7 @@ feature {NONE} -- Cluster addition implementation
 		do
 			if parent_name = Void then
 				cluster_tree.extend (new_cluster_item (cl_name))
-				cluster_sd := new_cluster_sd (
+				create cluster_sd.initialize (
 					new_id_sd (cl_name, False), Void, new_id_sd (path, True), Void, False, False)
 				clusters.put (cluster_sd, cl_name)
 			else
@@ -1148,7 +1149,7 @@ feature {NONE} -- Cluster addition implementation
 		do
 			if tree.text.is_equal (parent_name) then
 				tree.extend (new_cluster_item (cl_name))
-				cluster_sd := new_cluster_sd (
+				create cluster_sd.initialize (
 					new_id_sd (cl_name, False), new_id_sd (parent_name, False),
 					new_id_sd (path, True), Void, False, False)
 				clusters.put (cluster_sd, cl_name)

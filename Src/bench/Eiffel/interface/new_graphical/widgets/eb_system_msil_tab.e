@@ -105,8 +105,8 @@ feature -- Store/Retrieve
 				end
 
 				if not assembly_list.is_empty then
-					cl.extend (new_lang_trib_sd (
-						new_language_name_sd (new_id_sd ("assembly", False)),
+					cl.extend (create {LANG_TRIB_SD}.initialize (
+						create {LANGUAGE_NAME_SD}.initialize (new_id_sd ("assembly", False)),
 						new_lace_list (assembly_list.list)))
 				end
 			end
@@ -190,8 +190,8 @@ feature {NONE} -- Filling
 			-- Initialize check buttons and text field associated with `a_opt'.
 		require
 			a_opt_not_void: a_opt /= Void
-			a_opt_not_precompiled_option: not a_opt.conforms_to (create {D_PRECOMPILED_SD})
-			a_opt_not_optional_option: not a_opt.conforms_to (create {O_OPTION_SD})
+			a_opt_not_precompiled_option: not a_opt.is_precompiled
+			a_opt_not_optional_option: not a_opt.is_optional
 			a_opt_has_option: a_opt.option /= Void
 			a_opt_has_no_precompiled_option: not a_opt.option.is_precompiled
 			a_opt_has_value: a_opt.value /= Void
@@ -297,7 +297,7 @@ feature {NONE} -- Initialization
 			create Result.make_with_text (st)
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
-			vbox.set_padding (Layout_constants.Small_padding_size)
+			vbox.set_padding (Layout_constants.Tiny_padding_size)
 
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
@@ -352,17 +352,24 @@ feature {NONE} -- Initialization
 			st_not_empty: not st.is_empty
 		local
 			vbox: EV_VERTICAL_BOX
+			hbox: EV_HORIZONTAL_BOX
 		do
 			create Result.make_with_text (st)
+			
+			create hbox
+			hbox.set_border_width (Layout_constants.Small_border_size)
+			
 			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
-
 			cls_compliant_check := new_check_button (vbox, "CLS compliant")
 			dotnet_naming_convention_check := new_check_button (vbox, "Follow .NET naming guidelines")
+			hbox.extend (vbox)
+			
+			create vbox
 			verifiable_check := new_check_button (vbox, "Verifiable")
 			dll_check := new_check_button (vbox, "Generate DLL")
+			hbox.extend (vbox)
 
-			Result.extend (vbox)
+			Result.extend (hbox)
 		end
 		
 feature {NONE} -- Implementation

@@ -40,6 +40,7 @@ feature -- Creation
 			-- Create the state_scr_list.
 		do
 			list_create (a_name, a_parent);
+			compare_objects;
 			application_editor := editor;
 			register;
 			add_button_press_action (3, Current, Void);

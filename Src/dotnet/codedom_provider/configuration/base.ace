@@ -11,7 +11,6 @@ default
  	cls_compliant (yes)
  	dotnet_naming_convention (yes)
  	msil_generation_type ("dll")
-	msil_clr_version ("v1.1.4322")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
  	use_all_cluster_name_as_namespace (no)
  	use_cluster_name_as_namespace (yes)

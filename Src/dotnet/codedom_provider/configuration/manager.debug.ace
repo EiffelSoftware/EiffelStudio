@@ -7,7 +7,6 @@ root
 default
 	assertion (all)
 	msil_generation (yes)
-	msil_clr_version ("v1.1.4322")
 	il_verifiable (yes)
 	cls_compliant (yes)
 	line_generation (yes)

@@ -532,8 +532,10 @@ feature {NONE} -- Implementation
 			if Application.status /= Void then
 				pretty_print_cmd.refresh
 				if Application.status.is_stopped then
-					build_local_tree
-					build_object_tree
+					if application.has_valid_call_stack then
+						build_local_tree
+						build_object_tree
+					end
 				else
 					if current_object /= Void then
 							-- We are after an execution step, save the current object's display.

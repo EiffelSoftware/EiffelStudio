@@ -123,6 +123,16 @@ feature -- Properties
 
 	status: APPLICATION_STATUS
 			-- Status of the running application
+			
+	has_valid_call_stack: BOOLEAN is
+			-- Has a valid callstack ?
+		do
+			if status /= Void and then status.is_stopped then
+				if status.where /= Void and then status.where.count > 0 then
+					Result := True
+				end
+			end
+		end		
 		
 --	termination_command: E_CMD
 --			-- Command executed after application has been terminated

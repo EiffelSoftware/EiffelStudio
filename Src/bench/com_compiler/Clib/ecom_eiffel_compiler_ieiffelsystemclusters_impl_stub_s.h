@@ -47,6 +47,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Cluster in a flat form.
+	-----------------------------------------------------------*/
+	STDMETHODIMP flat_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value );
+
+
+	/*-----------------------------------------------------------
 	Save changes.
 	-----------------------------------------------------------*/
 	STDMETHODIMP store( void );
@@ -86,6 +92,12 @@ public:
 	Checks to see if a cluster name is valid
 	-----------------------------------------------------------*/
 	STDMETHODIMP is_valid_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Retrieves a clusters full name from its name
+	-----------------------------------------------------------*/
+	STDMETHODIMP get_cluster_fullname(  /* [in] */ BSTR cluster_name, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

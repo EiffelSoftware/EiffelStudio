@@ -116,10 +116,58 @@ feature -- Access
 			Result := ccom_assemblies (initializer)
 		end
 
-	working_directory: STRING is
-			-- Project working directory.
+	title: STRING is
+			-- Project title.
 		do
-			Result := ccom_working_directory (initializer)
+			Result := ccom_title (initializer)
+		end
+
+	description: STRING is
+			-- Project description.
+		do
+			Result := ccom_description (initializer)
+		end
+
+	company: STRING is
+			-- Project company.
+		do
+			Result := ccom_company (initializer)
+		end
+
+	product: STRING is
+			-- Product.
+		do
+			Result := ccom_product (initializer)
+		end
+
+	version: STRING is
+			-- Project version.
+		do
+			Result := ccom_version (initializer)
+		end
+
+	trademark: STRING is
+			-- Project trademark.
+		do
+			Result := ccom_trademark (initializer)
+		end
+
+	copyright: STRING is
+			-- Project copyright.
+		do
+			Result := ccom_copyright (initializer)
+		end
+
+	key_file_name: STRING is
+			-- Asembly signing key file name.
+		do
+			Result := ccom_key_file_name (initializer)
+		end
+
+	culture: STRING is
+			-- Asembly culture.
+		do
+			Result := ccom_culture (initializer)
 		end
 
 feature -- Status Report
@@ -234,25 +282,67 @@ feature -- Basic Operations
 			ccom_set_default_namespace (initializer, return_value)
 		end
 
-	set_working_directory (return_value: STRING) is
-			-- Project working directory.
+	set_title (return_value: STRING) is
+			-- Project title.
 			-- `return_value' [in].  
 		do
-			ccom_set_working_directory (initializer, return_value)
+			ccom_set_title (initializer, return_value)
 		end
 
-	update_project_ace_file (project_ace_file_name: STRING) is
-			-- Update the project Ace file according to the current settings.
-			-- `project_ace_file_name' [in].  
+	set_description (return_value: STRING) is
+			-- Project description.
+			-- `return_value' [in].  
 		do
-			ccom_update_project_ace_file (initializer, project_ace_file_name)
+			ccom_set_description (initializer, return_value)
 		end
 
-	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
-			-- Synchronize the current settings with the project Ace file.
-			-- `project_ace_file_name' [in].  
+	set_company (return_value: STRING) is
+			-- Project company.
+			-- `return_value' [in].  
 		do
-			ccom_synchronize_with_project_ace_file (initializer, project_ace_file_name)
+			ccom_set_company (initializer, return_value)
+		end
+
+	set_product (return_value: STRING) is
+			-- Product.
+			-- `return_value' [in].  
+		do
+			ccom_set_product (initializer, return_value)
+		end
+
+	set_version (return_value: STRING) is
+			-- Project version.
+			-- `return_value' [in].  
+		do
+			ccom_set_version (initializer, return_value)
+		end
+
+	set_trademark (return_value: STRING) is
+			-- Project trademark.
+			-- `return_value' [in].  
+		do
+			ccom_set_trademark (initializer, return_value)
+		end
+
+	set_copyright (return_value: STRING) is
+			-- Project copyright.
+			-- `return_value' [in].  
+		do
+			ccom_set_copyright (initializer, return_value)
+		end
+
+	set_key_file_name (return_value: STRING) is
+			-- Asembly signing key file name.
+			-- `return_value' [in].  
+		do
+			ccom_set_key_file_name (initializer, return_value)
+		end
+
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
+		do
+			ccom_set_culture (initializer, return_value)
 		end
 
 	apply is
@@ -433,26 +523,110 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_working_directory (cpp_obj: POINTER): STRING is
-			-- Project working directory.
+	ccom_title (cpp_obj: POINTER): STRING is
+			-- Project title.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_working_directory (cpp_obj: POINTER; return_value: STRING) is
-			-- Project working directory.
+	ccom_set_title (cpp_obj: POINTER; return_value: STRING) is
+			-- Project title.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_update_project_ace_file (cpp_obj: POINTER; project_ace_file_name: STRING) is
-			-- Update the project Ace file according to the current settings.
+	ccom_description (cpp_obj: POINTER): STRING is
+			-- Project description.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_description (cpp_obj: POINTER; return_value: STRING) is
+			-- Project description.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_synchronize_with_project_ace_file (cpp_obj: POINTER; project_ace_file_name: STRING) is
-			-- Synchronize the current settings with the project Ace file.
+	ccom_company (cpp_obj: POINTER): STRING is
+			-- Project company.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_company (cpp_obj: POINTER; return_value: STRING) is
+			-- Project company.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_product (cpp_obj: POINTER): STRING is
+			-- Product.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_product (cpp_obj: POINTER; return_value: STRING) is
+			-- Product.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_version (cpp_obj: POINTER): STRING is
+			-- Project version.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_version (cpp_obj: POINTER; return_value: STRING) is
+			-- Project version.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_trademark (cpp_obj: POINTER): STRING is
+			-- Project trademark.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_trademark (cpp_obj: POINTER; return_value: STRING) is
+			-- Project trademark.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_copyright (cpp_obj: POINTER): STRING is
+			-- Project copyright.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_copyright (cpp_obj: POINTER; return_value: STRING) is
+			-- Project copyright.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_key_file_name (cpp_obj: POINTER): STRING is
+			-- Asembly signing key file name.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_key_file_name (cpp_obj: POINTER; return_value: STRING) is
+			-- Asembly signing key file name.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_culture (cpp_obj: POINTER): STRING is
+			-- Asembly culture.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_culture (cpp_obj: POINTER; return_value: STRING) is
+			-- Asembly culture.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end

@@ -229,27 +229,111 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_working_directory(  );
+	EIF_REFERENCE ccom_title(  );
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	void ccom_set_working_directory(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_title(  /* [in] */ EIF_OBJECT return_value );
 
 
 	/*-----------------------------------------------------------
-	Update the project Ace file according to the current settings.
+	Project description.
 	-----------------------------------------------------------*/
-	void ccom_update_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name );
+	EIF_REFERENCE ccom_description(  );
 
 
 	/*-----------------------------------------------------------
-	Synchronize the current settings with the project Ace file.
+	Project description.
 	-----------------------------------------------------------*/
-	void ccom_synchronize_with_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name );
+	void ccom_set_description(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_company(  );
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	void ccom_set_company(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_product(  );
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	void ccom_set_product(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_version(  );
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	void ccom_set_version(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_trademark(  );
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	void ccom_set_trademark(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_copyright(  );
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	void ccom_set_copyright(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_key_file_name(  );
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	void ccom_set_key_file_name(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_culture(  );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	void ccom_set_culture(  /* [in] */ EIF_OBJECT return_value );
 
 
 	/*-----------------------------------------------------------

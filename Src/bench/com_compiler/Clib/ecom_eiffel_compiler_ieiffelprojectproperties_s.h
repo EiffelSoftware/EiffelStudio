@@ -232,27 +232,111 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP title(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_working_directory(  /* [in] */ BSTR return_value ) = 0;
+	virtual STDMETHODIMP set_title(  /* [in] */ BSTR return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Update the project Ace file according to the current settings.
+	Project description.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP update_project_ace_file(  /* [in] */ BSTR project_ace_file_name ) = 0;
+	virtual STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Synchronize the current settings with the project Ace file.
+	Project description.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP synchronize_with_project_ace_file(  /* [in] */ BSTR project_ace_file_name ) = 0;
+	virtual STDMETHODIMP set_description(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP company(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_company(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP product(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_product(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP version(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_version(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP trademark(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_trademark(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP copyright(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_copyright(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP key_file_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_key_file_name(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP culture(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_culture(  /* [in] */ BSTR return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

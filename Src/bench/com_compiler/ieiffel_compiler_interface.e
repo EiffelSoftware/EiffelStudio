@@ -66,6 +66,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	has_signable_generation_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `has_signable_generation'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	remove_file_locks_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `remove_file_locks'.
 			-- Redefine in descendants if needed.
@@ -135,6 +142,14 @@ feature -- Basic Operations
 			-- Eiffel Freeze command arguments
 		require
 			freeze_command_arguments_user_precondition: freeze_command_arguments_user_precondition
+		deferred
+
+		end
+
+	has_signable_generation: BOOLEAN is
+			-- Is the compiler a trial version.
+		require
+			has_signable_generation_user_precondition: has_signable_generation_user_precondition
 		deferred
 
 		end

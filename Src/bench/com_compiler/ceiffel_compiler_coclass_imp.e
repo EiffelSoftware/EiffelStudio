@@ -65,6 +65,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	has_signable_generation: BOOLEAN is
+			-- Is the compiler a trial version.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	create_item is

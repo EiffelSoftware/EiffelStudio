@@ -61,6 +61,12 @@ feature -- Access
 			Result := ccom_freeze_command_arguments (initializer)
 		end
 
+	has_signable_generation: BOOLEAN is
+			-- Is the compiler a trial version.
+		do
+			Result := ccom_has_signable_generation (initializer)
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -137,6 +143,12 @@ feature {NONE}  -- Externals
 			-- Eiffel Freeze command arguments
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_has_signable_generation (cpp_obj: POINTER): BOOLEAN is
+			-- Is the compiler a trial version.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_remove_file_locks (cpp_obj: POINTER) is

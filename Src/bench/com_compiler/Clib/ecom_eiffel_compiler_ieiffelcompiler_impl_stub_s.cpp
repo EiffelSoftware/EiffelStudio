@@ -230,6 +230,29 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::freeze_command_arg
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::has_signable_generation(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is the compiler a trial version.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("has_signable_generation", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "has_signable_generation", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::remove_file_locks( void )
 
 /*-----------------------------------------------------------

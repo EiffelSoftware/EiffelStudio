@@ -17,6 +17,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	flat_clusters_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `flat_clusters'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	store_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `store'.
 			-- Redefine in descendants if needed.
@@ -66,12 +73,27 @@ feature -- Status Report
 			Result := True
 		end
 
+	get_cluster_fullname_user_precondition (cluster_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `get_cluster_fullname'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
 			-- Cluster tree.
 		require
 			cluster_tree_user_precondition: cluster_tree_user_precondition
+		deferred
+
+		end
+
+	flat_clusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Cluster in a flat form.
+		require
+			flat_clusters_user_precondition: flat_clusters_user_precondition
 		deferred
 
 		end
@@ -137,6 +159,15 @@ feature -- Basic Operations
 			-- `cluster_name' [in].  
 		require
 			is_valid_name_user_precondition: is_valid_name_user_precondition (cluster_name)
+		deferred
+
+		end
+
+	get_cluster_fullname (cluster_name: STRING): STRING is
+			-- Retrieves a clusters full name from its name
+			-- `cluster_name' [in].  
+		require
+			get_cluster_fullname_user_precondition: get_cluster_fullname_user_precondition (cluster_name)
 		deferred
 
 		end

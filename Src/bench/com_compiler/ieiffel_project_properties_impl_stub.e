@@ -102,8 +102,56 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	working_directory: STRING is
-			-- Project working directory.
+	title: STRING is
+			-- Project title.
+		do
+			-- Put Implementation here.
+		end
+
+	description: STRING is
+			-- Project description.
+		do
+			-- Put Implementation here.
+		end
+
+	company: STRING is
+			-- Project company.
+		do
+			-- Put Implementation here.
+		end
+
+	product: STRING is
+			-- Product.
+		do
+			-- Put Implementation here.
+		end
+
+	version: STRING is
+			-- Project version.
+		do
+			-- Put Implementation here.
+		end
+
+	trademark: STRING is
+			-- Project trademark.
+		do
+			-- Put Implementation here.
+		end
+
+	copyright: STRING is
+			-- Project copyright.
+		do
+			-- Put Implementation here.
+		end
+
+	key_file_name: STRING is
+			-- Asembly signing key file name.
+		do
+			-- Put Implementation here.
+		end
+
+	culture: STRING is
+			-- Asembly culture.
 		do
 			-- Put Implementation here.
 		end
@@ -194,23 +242,65 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_working_directory (return_value: STRING) is
-			-- Project working directory.
+	set_title (return_value: STRING) is
+			-- Project title.
 			-- `return_value' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	update_project_ace_file (project_ace_file_name: STRING) is
-			-- Update the project Ace file according to the current settings.
-			-- `project_ace_file_name' [in].  
+	set_description (return_value: STRING) is
+			-- Project description.
+			-- `return_value' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
-			-- Synchronize the current settings with the project Ace file.
-			-- `project_ace_file_name' [in].  
+	set_company (return_value: STRING) is
+			-- Project company.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_product (return_value: STRING) is
+			-- Product.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_version (return_value: STRING) is
+			-- Project version.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_trademark (return_value: STRING) is
+			-- Project trademark.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_copyright (return_value: STRING) is
+			-- Project copyright.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_key_file_name (return_value: STRING) is
+			-- Asembly signing key file name.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
 		do
 			-- Put Implementation here.
 		end

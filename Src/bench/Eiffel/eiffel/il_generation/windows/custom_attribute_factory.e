@@ -10,22 +10,21 @@ class
 	CUSTOM_ATTRIBUTE_FACTORY
 
 inherit
+	ANY
+
 	SHARED_IL_CODE_GENERATOR
 		export
-			{NONE} il_generator, Il_label_factory
-			{ANY} all
+			{NONE} all
 		end
 		
 	SHARED_INST_CONTEXT
 		export
-			{NONE} inst_context
-			{ANY} all
+			{NONE} all
 		end
 
 	SHARED_AST_CONTEXT
 		export
-			{NONE} context
-			{ANY} all
+			{NONE} all
 		end
 
 feature -- Settings
@@ -52,7 +51,7 @@ feature -- Settings
 							-- Initialize data structures needed to perform a `type_check'
 							-- and to create a `byte_node' for every creation expression
 							-- that represent the custom attribute
-						l_class_c := il_generator.current_class_type.associated_class
+						l_class_c := cil_generator.current_class_type.associated_class
 						Inst_context.set_cluster (l_class_c.cluster)
 						context.clear2
 						context.set_current_class (l_class_c)
@@ -160,7 +159,7 @@ feature {CIL_CODE_GENERATOR} -- Generation
 				end
 				
 					-- Assign `l_ca' to `a_owner_token'.
-				il_generator.define_custom_attribute (a_owner_token, l_ctor_token, l_ca)
+				cil_generator.define_custom_attribute (a_owner_token, l_ctor_token, l_ca)
 
 				ca.forth
 			end

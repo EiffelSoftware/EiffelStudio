@@ -278,7 +278,7 @@ feature -- Access
 			end
   		end
 
-	entity (entities_list: LINKED_LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [TYPE]): CONSUMED_ENTITY is
+	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [TYPE]): CONSUMED_ENTITY is
 			-- return `consumed_entity' corresponding to parameters.
 			-- `entities_list' is given by `entities'.
 		require
@@ -320,7 +320,7 @@ feature -- Access
 			end
 		end
 
-	entities (t: TYPE; dotnet_feature_name: STRING): LINKED_LIST [CONSUMED_ENTITY] is
+	entities (t: TYPE; dotnet_feature_name: STRING): LIST [CONSUMED_ENTITY] is
 			-- Return list of Eiffel Eiffel entities associated to `dotnet_feature_name'.
 		require
 			non_void_t: t /= Void
@@ -334,7 +334,7 @@ feature -- Access
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 			i: INTEGER
 		do
-			create Result.make
+			create {ARRAYED_LIST [CONSUMED_ENTITY]} Result.make (24)
 
 			Types_cache.search (t.full_name)
 			if Types_cache.found then

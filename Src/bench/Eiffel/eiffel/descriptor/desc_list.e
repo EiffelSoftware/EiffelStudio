@@ -33,7 +33,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Creation
@@ -48,7 +47,7 @@ feature -- Creation
 			base_class := c;
 			class_types := c.types;
 
-			fl_make (class_types.count);
+			make_filled (class_types.count);
 			from
 				start;
 				class_types.start

@@ -20,8 +20,11 @@ feature {NONE}
 
 	merge_hole: S_MERGE_HOLE;
 
+	trash_hole: CUT_HOLE;
+
 	unregister_holes is
 		do
+			trash_hole.unregister;
 			edit_hole.unregister;
 			merge_hole.unregister;
 		end;
@@ -32,6 +35,7 @@ feature {NONE}
 		do
 			form_create (a_name, a_parent);
 			!! focus_label.make (Current);
+			!! trash_hole.make (Current, focus_label);
 			!! edit_hole.make (ed, Current);
 			!! merge_hole.make (ed, Current);
 			!! close_button.make (ed, Current, focus_label);
@@ -39,15 +43,18 @@ feature {NONE}
 			attach_top (close_button, 0);
 			attach_top (merge_hole, 0);
 			attach_top (focus_label, 0);
+			attach_top (trash_hole, 0);
 			attach_left (edit_hole, 0);
 			attach_right (close_button, 0);
 			attach_left_widget (edit_hole, merge_hole, 0);
-			attach_left_widget (merge_hole, focus_label, 60);
-			attach_right_widget (close_button, focus_label, 60);
+			attach_left_widget (merge_hole, trash_hole, 0);
+			attach_left_widget (trash_hole, focus_label, 0);
+			attach_right_widget (close_button, focus_label, 0);
 			attach_bottom (focus_label, 0);
 			attach_bottom (edit_hole, 0);
 			attach_bottom (close_button, 0);
 			attach_bottom (merge_hole, 0);
+			attach_bottom (trash_hole, 0);
 		end;
 
 feature

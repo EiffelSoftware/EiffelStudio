@@ -56,6 +56,8 @@ inherit
 			set_horizontal_position as wel_set_horizontal_position,
 			set_vertical_position as wel_set_vertical_position
 		undefine
+			on_show,
+			on_hide,
 			on_size,
 			on_move,
 			on_right_button_up,
@@ -113,9 +115,6 @@ feature -- Status setting
 				!! scroller.make_with_options (Current, 0, 1, 0, 1,
 					granularity, granularity * 10,
 					granularity, granularity * 10)
-				debug ("SCROLLED_W")
-					print ("SCROLLED_WINDOW_WINDOWS.realize")
-				end
 				realized := True
 				set_scroll_range
 				set_scroll_position
@@ -241,58 +240,78 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			local_horizontal_scroll_bar_shown: BOOLEAN
-			local_vertical_scroll_bar_shown: BOOLEAN
+			has_vertical_bar: BOOLEAN
+			has_horizontal_bar: BOOLEAN
 		do
 			if working_area /= Void and then realized then
-				if working_area.width > width then
-					local_horizontal_scroll_bar_shown := has_horizontal_scroll_bar
-					local_vertical_scroll_bar_shown := has_vertical_scroll_bar
-					show_horizontal_scroll_bar
-					set_horizontal_range (0, maximum_x)
-					if working_area.height > height -  horizontal_scroll_bar_arrow_height then
-						show_vertical_scroll_bar
-						set_vertical_range (0, maximum_y)
-						set_horizontal_range (0, (working_area.width - width + 2 + vertical_scroll_bar_arrow_width).max (1))
+				has_horizontal_bar := (working_area.width > width)
+				has_vertical_bar := (working_area.height  > height)
+				if has_horizontal_bar then
+					has_vertical_bar := (working_area.height > height - horizontal_scroll_bar_arrow_height)
+				end
+				if has_vertical_bar then
+					has_horizontal_bar := (working_area.width > width - vertical_scroll_bar_arrow_width)
+				end
+				if has_horizontal_bar then
+					has_vertical_bar := (working_area.height > height - horizontal_scroll_bar_arrow_height)
+				end
+				if has_horizontal_bar then
+					if has_vertical_bar then
+						maximum_x := working_area.width - width + vertical_scroll_bar_arrow_width + 2
 					else
-						hide_vertical_scroll_bar
-						working_area.set_x_y (working_area.x, 0)
-						set_horizontal_range (0, (working_area.width - width + 2).max (1))
-						if local_vertical_scroll_bar_shown then
-							working_area.set_x_y (working_area.x + vertical_scroll_bar_arrow_width, working_area.y)
-						end
-					end			
+						maximum_x := working_area.width - width + 2
+					end
+					set_horizontal_range (0, maximum_x)
 				else
 					hide_horizontal_scroll_bar
 					working_area.set_x_y (0, working_area.y)
-					if working_area.height > height then
-						show_vertical_scroll_bar
-						set_vertical_range (0, maximum_y)
-					else
-						hide_vertical_scroll_bar
-						working_area.set_x_y (working_area.x, 0)
-					end
+					maximum_x := 0
 				end
-			else
-				hide_horizontal_scroll_bar
-				hide_vertical_scroll_bar
+				if has_vertical_bar then
+					if has_horizontal_bar then
+						maximum_y := working_area.height - height + horizontal_scroll_bar_arrow_height + 2
+					else
+						maximum_y := working_area.height - height + 2
+					end
+					set_vertical_range (0, maximum_y)
+				else
+					hide_vertical_scroll_bar
+					working_area.set_x_y (working_area.x, 0)
+					maximum_y := 0
+				end
 			end
 		end
 
 	set_scroll_position is
-			-- Set the appropriate scroll_position
+			-- Set the appropriate scroll_position.
 		require
-			working_area_not_void: working_area /= Void
+			exists: exists
 		do
-			if has_horizontal_scroll_bar then
-				working_area.set_x_y (working_area.x.max (width - working_area.width),
-					working_area.y)
-				wel_set_horizontal_position ( - working_area.x)
-			end
-			if has_vertical_scroll_bar then
-				working_area.set_x_y (x,
-					working_area.y.max (height - working_area.height))
-				wel_set_vertical_position ( - working_area.y)
+			if working_area /= Void and then realized then
+				if has_horizontal_scroll_bar then
+					if has_vertical_scroll_bar then
+						working_area.set_x_y (working_area.x.max (width -
+							vertical_scroll_bar_arrow_width - working_area.width).min (0),
+							working_area.y)
+					else
+						working_area.set_x_y (working_area.x.max (width -
+							working_area.width).min (0),
+							working_area.y)
+					end
+					wel_set_horizontal_position ( - working_area.x)
+				end
+				if has_vertical_scroll_bar then
+					if has_horizontal_scroll_bar then
+						working_area.set_x_y (x,
+							working_area.y.max (height -
+							horizontal_scroll_bar_arrow_height - working_area.height).min (0))
+					else
+						working_area.set_x_y (x,
+							working_area.y.max (height -
+							working_area.height).min (0))						
+					end
+					wel_set_vertical_position ( - working_area.y)
+				end
 			end
 		end
 
@@ -309,44 +328,22 @@ feature {NONE} -- Implementation
 			-- Value of the amount to move the slider and modify
 			-- the slide position value when a move action occurs
 
-	maximum_x: INTEGER is
-			-- Maximum scrolling value in x axis
-		require
-			working_area_not_void: working_area /= Void
-		do
-			if working_area.height > height then
-				Result := (working_area.width - width + 2 + vertical_scroll_bar_arrow_width).max (1)
-			else
-				Result := (working_area.width - width + 2).max (1)
-			end			
-		ensure
-			positive_result: Result > 0
-		end
-
 	minimum_x: INTEGER is 0
 			-- Minimum scrolling value in x axis
 
-	maximum_y: INTEGER is
+	maximum_x: INTEGER
 			-- Maximum scrolling value in x axis
-		require
-			working_area_not_void: working_area /= Void
-		do
-			if working_area.width > width then
-				Result := (working_area.height - height + 2 + horizontal_scroll_bar_arrow_height).max (1)
-			else
-				Result := (working_area.height - height + 2).max (1)
-			end
-		ensure
-			positive_result: Result > 0
-		end
+
+	minimum_y: INTEGER is 0
+			-- Minimum scrolling value in y axis
+
+	maximum_y: INTEGER
+			-- Maximum scrolling value in x axis
 
 	default_style: INTEGER is
 		once
 			Result := Ws_child + Ws_visible + Ws_border
 		end
-
-	minimum_y: INTEGER is 0
-			-- Minimum scrolling value in y axis
 
 	class_name: STRING is
 			-- Class name

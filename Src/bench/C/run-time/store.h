@@ -87,6 +87,9 @@ extern unsigned int **sorted_attributes;
 extern void sort_attributes(int dtype);
 extern void free_sorted_attributes(void);
 
+extern void eestore(EIF_INTEGER file_desc, char *object);
+extern void sstore (EIF_INTEGER fd, char *object);
+
 #ifdef __cplusplus
 }
 #endif

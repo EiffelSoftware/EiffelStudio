@@ -33,9 +33,9 @@ extern "C" {
 /* 
  * Functions declarations
  */
-rt_public EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
-
-extern char *b_clone(char *bit);			/* Clones bit */
+extern EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
+extern char *b_eout(char *bit);					/* Eiffel string for out representation of a bit */
+extern char *b_clone(char *bit);				/* Clones bit */
 extern void b_copy(char *a, char *b);			/* Copies bit */
 extern char *bmalloc(long int size);			/* Bit object creation */
 extern void b_put(char *bit, char value, int at);
@@ -54,5 +54,7 @@ extern int bit_dtype;
 #ifdef __cplusplus
 }
 #endif
+
+extern long b_count(char *bit);
 
 #endif

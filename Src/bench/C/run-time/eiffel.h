@@ -39,7 +39,25 @@ extern "C" {
 
 #include "macros.h"
 
+/* Functions defined in math.c */
+
+extern float math_rcos(float v);
+extern float math_rsin(float v);
+extern float math_rtan(float v);
+extern float math_racos(float v);
+extern float math_rasin(float v);
+extern float math_ratan(float v);
+extern float math_rsqrt(float v);
+extern float math_rlog(float v);
+extern float math_rlog10(float v);
+extern float math_rfloor(float v);
+extern float math_rceil(float v);
+extern float math_rfabs(float v);
 extern double math_power (double v1, double v2);
+
+/* defined in pattern.c */
+
+extern int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy);
 
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"

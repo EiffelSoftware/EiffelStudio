@@ -97,9 +97,9 @@ feature {NONE} -- Initialization
 			create final_dialog.make (Current)
 			create first_choice_dialog.make (Current)
 			resize (600, 400)
+			set_z_order (Hwnd_top)
 			show
 			first_choice_dialog.activate
-			set_z_order (Hwnd_top)
 		end
 
 feature -- GUI Elements

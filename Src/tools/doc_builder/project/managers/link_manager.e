@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 				if do_check then
 					l_doc.check_links
 					if not l_doc.invalid_links.is_empty then
-						error_report.append_report (l_doc.invalid_links) 
+						error_report.append_report (l_doc.invalid_links)
 					end
 				end
 				documents.forth

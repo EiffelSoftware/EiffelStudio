@@ -16,6 +16,7 @@ feature
 		require
 			valid_id: a_id > 0
 		do
+			clear
 			identifier := a_id
 			create output_string.make_empty
 		end		

@@ -38,7 +38,7 @@ feature -- Tag
 			-- Start of tag.
 		do
 			 	-- Debugging
-			if a_local_part.is_equal ("list") then
+			if a_local_part.is_equal ("character") then
 				io.putstring (a_local_part)
 			end 	
 			 
@@ -49,6 +49,8 @@ feature -- Tag
 				write_element (a_local_part, True, False)
 			elseif Element_attribute_mappings.has (a_local_part) then
 				process_attribute_element (a_local_part)
+			elseif Element_style_mappings.has (a_local_part) then
+				process_class_attribute_element (a_local_part)
 			else
 				can_write_content := Content_elements.has (a_local_part)
 			end
@@ -62,6 +64,11 @@ feature -- Tag
 				process_complex_element (a_local_part, False)
 			elseif Basic_element_mappings.has (a_local_part) then
 				write_element (a_local_part, False, False)
+			elseif Element_style_mappings.has (a_local_part) then
+				write_element ("span", False, False)
+			elseif Bufferable.has (a_local_part) then
+				output_string.append (Buffered_tags.item)
+				Buffered_tags.remove
 			end
 			if Element_attribute_mappings.has (a_local_part) then
 				Attribute_stack.remove
@@ -78,23 +85,26 @@ feature -- Tag
 	on_content (a_content: STRING) is
 			-- Forward content.
 		local
+			l_tag,
 			l_content: STRING
 		do			
 			if can_write_content then
 				if Previous_elements.item.is_equal ("size") then
 					if a_content.is_equal ("1") then
-						l_content := "<h1></h1>"
+						l_tag := "h1"
 					elseif a_content.is_equal ("2") then
-						l_content := "<h2></h2>"
+						l_tag := "h2"
 					elseif a_content.is_equal ("3") then
-						l_content := "<h3></h3>"
+						l_tag := "h3"
 					elseif a_content.is_equal ("4") then
-						l_content := "<h4></h4>"
+						l_tag := "h4"
 					elseif a_content.is_equal ("5") then
-						l_content := "<h5></h5>"
+						l_tag := "h5"
 					elseif a_content.is_equal ("6") then
-						l_content := "<h6></h6>"
+						l_tag := "h6"
 					end
+					l_content := "<" + l_tag + ">"
+					Buffered_tags.extend ("</" + l_tag + ">")
 				else
 					l_content := a_content
 				end
@@ -131,11 +141,11 @@ feature {NONE} -- Processing
 					end
 						-- Url
 				elseif e.is_equal ("url") then
-					Attribute_stack.extend (e)
-					if l_previous.is_equal ("link") or l_previous.is_equal ("area") or l_previous.is_equal ("image_link") then						
-						write_attribute (e)
-					elseif l_previous.is_equal ("image") then
-						write_attribute ("image_url")										
+					Attribute_stack.extend (e)					
+					if l_previous.is_equal ("image") then
+						write_attribute ("image_url", False)
+					else
+						write_attribute (e, False)
 					end
 				else
 					write_element (e, is_start, True)
@@ -190,7 +200,15 @@ feature {NONE} -- Processing
 			e_not_void: e /= Void
 		do
 			attribute_stack.extend (e)				
-			write_attribute (e)
+			write_attribute (e, False)
+		end
+		
+	process_class_attribute_element (e: STRING) is
+			-- Process class attribute element `e'
+		require
+			e_not_void: e /= Void
+		do						
+			write_attribute (e, True)
 		end
 
 	process_attribute (a_name, a_value: STRING) is
@@ -199,9 +217,11 @@ feature {NONE} -- Processing
 			name_not_void: a_name /= Void
 			value_not_void: a_value /= Void
 		local
-			l_prev_element: STRING
+			l_prev_element,
+			l_att: STRING
 		do
 			l_prev_element := Previous_elements.item
+			l_att := " " + a_name + "=%"" + a_value + "%""
 			if l_prev_element /= Void then
 						-- List
 				if l_prev_element.is_equal ("list") then
@@ -210,8 +230,11 @@ feature {NONE} -- Processing
 					elseif a_value.is_equal ("false") then						
 						write_element ("list_unordered", True, True)
 					end
+				elseif l_prev_element.is_equal ("stylesheet") then
+					output_string.insert_string (l_att, attribute_write_position)
+					attribute_write_position := output_string.count
 				end
-			end
+			end					
 			previous_attribute := [a_name, a_value]
 		end		
 
@@ -237,6 +260,9 @@ feature {NONE} -- Access
 	attribute_write_position,
 	attribute_value_write_position: INTEGER
 			-- Position to write attribute and attribute value
+	
+	content_offset: INTEGER
+			-- Content offset
 	
 	content_write_position: INTEGER is
 			-- Position to write current content text(s)
@@ -286,15 +312,23 @@ feature {NONE} -- Output
 			end
 		end
 
-	write_attribute (e: STRING) is
+	write_attribute (e: STRING; is_class: BOOLEAN) is
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
-			e_is_attribute_element: Element_attribute_mappings.has (e)
+			e_is_vald_element: Element_attribute_mappings.has (e) or Element_style_mappings.has (e)
 			processing_in_attribute: in_attribute
+		local
+			l_att: STRING
 		do			
-			output_string.insert_string (" " + Element_attribute_mappings.item (e) + "=", attribute_write_position)
-			attribute_value_write_position := attribute_write_position + Element_attribute_mappings.item (e).count + 2
+			if is_class then
+				write_element ("span", True, False)
+				l_att := " class=%"" + e + "%""
+			else
+				l_att := " " + Element_attribute_mappings.item (e) + "="
+				attribute_value_write_position := attribute_write_position + Element_attribute_mappings.item (e).count + 2
+			end
+			output_string.insert_string (l_att, attribute_write_position)
 		end
 
 feature {NONE} -- Mapping Tables
@@ -305,7 +339,7 @@ feature {NONE} -- Mapping Tables
 			create Result.make (15)
 			Result.compare_objects
 			Result.extend ("html", "document")
-			Result.extend ("head", "help")
+			Result.extend ("head", "meta_data")
 			Result.extend ("table", "table")
 			Result.extend ("tr", "row")
 			Result.extend ("td", "cell")
@@ -317,7 +351,9 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("i", "italic")
 			Result.extend ("br", "line_break")					
 			Result.extend ("a", "link")
-			Result.extend ("img", "image")			
+			Result.extend ("img", "image")
+			Result.extend ("link", "stylesheet")
+			Result.extend ("title", "title")	
 		end
 		
 	complex_element_mappings: HASH_TABLE [STRING, STRING] is
@@ -357,7 +393,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("alt_text", "alt_text")
 			Result.extend ("usemap", "usemap")
 			Result.extend ("shape", "shape")
-			Result.extend ("co-ordinates", "co-ordinates")
+			Result.extend ("co-ordinates", "co-ordinates")		
 --			Result.extend ("class_name", "class_name")
 --			Result.extend ("string", "string")
 --			Result.extend ("keywords", "keywords")
@@ -393,6 +429,9 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("indexing_tag")
 			Result.extend ("keyword")
 			Result.extend ("syntax")
+			Result.extend ("class_name")
+			Result.extend ("cluster_name")
+			Result.extend ("feature_name")
 		end	
 		
 	content_elements: ARRAYED_LIST [STRING] is
@@ -401,6 +440,10 @@ feature {NONE} -- Mapping Tables
 			create Result.make (5)
 			Result.compare_objects
 			Result.extend ("label")
+			Result.extend ("size")
+			Result.extend ("content")
+			Result.extend ("code")
+			Result.extend ("character")
 		end
 
 	attributable_elements: ARRAYED_LIST [STRING] is
@@ -414,6 +457,8 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("meta")
 			Result.extend ("map")
 			Result.extend ("list")
+			Result.extend ("stylesheet")
+			Result.extend ("span")
 		end
 		
 	attributes: ARRAYED_LIST [STRING] is
@@ -426,7 +471,21 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("title")
 		end
 
+	bufferable: ARRAYED_LIST [STRING] is
+			-- Bufferable elements
+		once
+			create Result.make (5)
+			Result.compare_objects
+			Result.extend ("heading")
+		end
+
 feature {NONE} -- Implementation
+
+	buffered_tags: ARRAYED_STACK [STRING] is
+			-- Buffered tag
+		once
+			create Result.make (1)
+		end
 
 	previous_elements: ARRAYED_STACK [STRING] is
 			-- Previously processed element name

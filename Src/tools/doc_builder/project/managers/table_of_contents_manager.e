@@ -136,6 +136,7 @@ feature -- Commands
 			loaded_toc.set_filter_skipped_sub_elements (not sub_elements)			
 			loaded_toc.set_filter_alphabetically (alpha)
 			loaded_toc.sort	
+			loaded_tocs.extend (loaded_toc, loaded_toc.filename)
 			load_toc (loaded_toc.filename)
 			Progress_generator.close
 		end		

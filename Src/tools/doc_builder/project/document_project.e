@@ -121,18 +121,6 @@ feature -- Commands
 			end
 		end
 
-	update_links (a_old, a_new: DOCUMENT_LINK) is
-			-- Update all document links to `a_old' to link to `a_new'
-		require
-			old_link_not_void: a_old /= Void
-			new_link_not_void: a_new /= void
-		local
-			l_link_manager: LINK_MANAGER
-		do
-			create l_link_manager.make_with_documents (documents)
-			l_link_manager.run (a_old, a_new, False, False)
-		end	
-
 feature {VALIDATOR_TOOL_DIALOG} -- Validation
 
 	validate_files is
@@ -152,13 +140,31 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 			show_error_report
 		end
 
-	validate_links (a_dir: DIRECTORY) is
+	validate_links is
 			-- Validate links in all files recursively.
 		local
 			l_link_manager: LINK_MANAGER
 		do
 			create l_link_manager.make_with_documents (documents)
-			l_link_manager.check_links
+			Progress_generator.set_title ("Link Validation")
+			Progress_generator.set_procedure (agent l_link_manager.check_links)
+			Progress_generator.set_heading_text ("Validating Links in file...")
+			Progress_generator.set_upper_range (documents.count)
+			Progress_generator.generate
+		end	
+
+feature -- Links
+
+	update_links (a_old, a_new: DOCUMENT_LINK) is
+			-- Update all document links to `a_old' to link to `a_new'
+		require
+			old_link_not_void: a_old /= Void
+			new_link_not_void: a_new /= void
+		local
+			l_link_manager: LINK_MANAGER
+		do
+			create l_link_manager.make_with_documents (documents)
+			l_link_manager.run (a_old, a_new, False, False)
 		end	
 
 feature -- Status Setting	

@@ -557,9 +557,8 @@ feature {NONE} -- Implementation
 			(objects @ 2).set_item_span (second_widget, columns, rows)
 		end
 		
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
-			-- Adjust `v' so that its new position is  `a_column', `a_row' within
-			-- objects.
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
+			-- Move `v' to `a_column', `a_row' and resize to `columns', `rows'.
 		local
 			second_widget: EV_WIDGET
 		do
@@ -567,9 +566,10 @@ feature {NONE} -- Implementation
 				-- second place. We must do this before we move the first widget.
 			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
 
-			first.set_item_position (v, a_column, a_row)
-			(objects @ 2).set_item_position (second_widget, a_column, a_row)
+			first.set_item_position_and_span (v, a_column, a_row, columns, rows)
+			(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
 		end
+		
 
 	track_movement (x, y: INTEGER) is
 			-- Track `x', `y' position of cursor, and 
@@ -640,12 +640,14 @@ feature {NONE} -- Implementation
 						end_position := ((first.item_column_position (selected_item) + first.item_column_span (selected_item)))
 						current_x_position := (((x + half_grid_size) // grid_size + 1).max (1)).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
-							move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
+							--move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
+							set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
 						else
 							current_x_position := first_filled_horizontal_space (selected_item, end_position - 1, first.item_row_position (selected_item), first.item_row_span (selected_item))-- + 1
 								-- We need to change the order depending on the movement that we are performing. This
 								-- ensures that we stay within valid bounds.
-						 	move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
+						 	--move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
+						 	set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
 						end
 					else
 						new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
@@ -660,10 +662,12 @@ feature {NONE} -- Implementation
 						end_position := ((first.item_row_position (selected_item) + first.item_row_span (selected_item)))
 						current_y_position := ((y + half_grid_size) // grid_size + 1).max (1).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
-							move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
+							--move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
+							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 						else
 							current_y_position := first_filled_vertical_space (selected_item, end_position - 1, first.item_column_position (selected_item), first.item_column_span (selected_item))-- + 1
-							move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
+							--move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
+							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
 						end
 					else
 						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
@@ -684,27 +688,14 @@ feature {NONE} -- Implementation
 				temp_y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
 				if (first.item_column_position (selected_item) /= temp_x or first.item_row_position (selected_item) /= temp_y) and
 					first.area_clear_excluding_widget (selected_item, temp_x, temp_y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
-					set_item_position (selected_item, temp_x, temp_y)
+					set_item_position_and_span (selected_item, temp_x, temp_y, first.item_column_span (selected_item), first.item_row_span (selected_item))
 				end
 				draw_widgets
 			end
 		end
 		
-	move_and_resize (v: EV_WIDGET; column, row, column_span, row_span: INTEGER) is
-			--
-		do
-			if first.item_column_position (v) + column_span <= first.columns then
-				set_item_span (v, column_span, row_span)
-				set_item_position (v, column, row)
-			else
-				set_item_position (v, column, row)
-				set_item_span (v, column_span, row_span)
-			end
-		end
-		
-		
 	first_filled_horizontal_space (widget: EV_WIDGET; a_column, a_row, a_row_span: INTEGER): INTEGER is
-			-- `Result' is first column, counting down from `a_column' which has the rows
+			-- `Result' is lowest column value, counting down from `a_column' which has the rows
 			-- `a_row' to `a_row' + `a_row_span' free from items.
 		local
 			row_counter, column_counter: INTEGER
@@ -729,7 +720,7 @@ feature {NONE} -- Implementation
 		end
 		
 	first_filled_vertical_space (widget: EV_WIDGET; a_row, a_column, a_column_span: INTEGER): INTEGER is
-			-- `Result' is first row, counting down from `a_row' which has the columns
+			-- `Result' is lowest row value, counting down from `a_row' which has the columns
 			-- `a_column' to `a_column' + `a_column_span' free from items.
 		local
 			row_counter, column_counter: INTEGER

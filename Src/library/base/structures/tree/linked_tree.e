@@ -227,11 +227,15 @@ feature -- Element change
 				if left_child /= Void then
 					-- when `n' is after the first item.
 					left_child.l_put_right (l_child.right_sibling)
-					child := left_child
+					if child = n then
+						child := left_child
+					end
 				else
 					-- when `n' is the first item.
 					first_child := first_child.right_sibling
-					child := first_child
+					if n = child then
+						child := first_child
+					end
 				end;
 
 				arity := arity - 1;
@@ -240,6 +244,7 @@ feature -- Element change
 				end;
 
 				n.attach_to_parent (Void)
+				n.forget_right
 			end;
 		end;
 

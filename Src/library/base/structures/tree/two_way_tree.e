@@ -214,19 +214,28 @@ feature -- Element change
 			until
 				l_child = Void or l_child = n
 			loop
-				first_child := first_child.right_sibling
+				l_child := l_child.right_sibling
 			end;
 			
 			if l_child /= Void then
 				if l_child = first_child then
 					first_child := first_child.right_sibling
-					child := first_child
+					if child = n then
+						child := first_child
+					end
+					if l_child = last_child then
+						last_child := last_child.left_sibling
+					end
 				elseif l_child = last_child then
 					last_child := last_child.left_sibling
-					child := last_child
+					if child = n then
+						child := last_child
+					end
 				else
 					l_child.right_sibling.bl_put_left (l_child.left_sibling);
-					child := l_child
+					if child = n then
+						child := l_child.left_sibling
+					end
 				end;
 
 				arity := arity - 1;
@@ -237,6 +246,8 @@ feature -- Element change
 					child_after := true
 				end;
 				n.attach_to_parent (Void)
+				n.simple_forget_left
+				n.simple_forget_right
 			end;
 		end;
 

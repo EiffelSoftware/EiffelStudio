@@ -46,7 +46,8 @@ feature {NONE} -- Initialization
 feature -- Events
 
 	actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when `key' is pressed.
+			-- Actions to be performed when key combination is recieved by the window within which
+			-- `Current' is parented.
 		require
 			not_destroyed: not is_destroyed
 		do

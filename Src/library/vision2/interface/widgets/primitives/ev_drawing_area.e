@@ -15,6 +15,11 @@ class
 
 inherit
 	EV_DRAWABLE
+		undefine
+			background_color,
+			foreground_color,
+			set_background_color,
+			set_foreground_color
 		redefine
 			implementation
 		end
@@ -37,13 +42,38 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create an empty drawing area.
 		do
-			!EV_DRAWING_AREA_IMP! implementation.make (par)
+			!EV_DRAWING_AREA_IMP! implementation.make
 			widget_make (par)
+		end
+
+feature -- Event - command association
+
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of action to be executed when
+			-- current area is resized.
+			-- `arg' will be passed to `cmd' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_resize_command (cmd, arg)
+		end
+
+feature -- Event - command removal
+
+	remove_resize_commands is
+			-- Remove the list of commands to be executed when
+			-- current area is resized.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_resize_commands
 		end
 
 feature -- Implementation
 
-	implementation: EV_DRAWING_AREA_I
+	implementation: EV_DRAWING_AREA_IMP
 
 end -- class EV_DRAWING_AREA
 

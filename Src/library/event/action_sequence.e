@@ -274,8 +274,8 @@ feature  -- Element Change
 
 	set_source_connection_agent
 				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
-			-- Set `a_connecting_agent' that will connect sequence to an actual
-			-- event source. The agent will be called when the first action is
+			-- Set `a_source_connection_agent' that will connect sequence to an
+			-- actual event source. The agent will be called when the first action is
 			-- added to the sequence. If there are already actions in the
 			-- sequence the agent is called immediately.
 		require
@@ -284,7 +284,7 @@ feature  -- Element Change
 			source_connection_agent_not_void: a_source_connection_agent /= Void
 		do
 			if is_initialized then
-				source_connection_agent.call ([])
+				a_source_connection_agent.call ([])
 			else
 				source_connection_agent := a_source_connection_agent
 			end 
@@ -297,7 +297,6 @@ feature  -- Element Change
 		end
 
 	set_source_connection_agent_called: BOOLEAN
-		
 
 feature  {LINKED_LIST} -- Implementation
 
@@ -406,6 +405,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.16  2000/03/23 19:19:29  oconnor
+--| Fixed source connection glitch.
+--|
 --| Revision 1.15  2000/03/01 03:08:58  oconnor
 --| fixed look invariant in call
 --|

@@ -16,40 +16,6 @@ inherit
 
 feature {CACHE_READER} -- Access
 
-	relative_assembly_path (name: ASSEMBLY_NAME): STRING is
-			-- Path to folder containing `name' types relative to `Eac_path'
-			-- Always return a value even if `name' in not in EAC
-		require
-			non_void_assembly: name /= Void
-			--valid_assembly: name.get_public_key_token /= Void
-		local
-			key: STRING
-		do
-			if name.get_public_key_token /= Void then
-				key := encoded_key (name.get_public_key_token)				
-				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + key.count + 4)
-			else
-				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + 4)
-			end
-			--| FIXME IEK Refactor code so that both assembly_path functions call the same abstracted function.
-	
-			Result.append (create {STRING}.make_from_cil (name.name))
-			Result.append ("-")
-			Result.append (create {STRING}.make_from_cil (name.version.to_string.replace_character ('.', '_')))
-			Result.append ("-")
-			Result.append (create {STRING}.make_from_cil (name.culture_info.name))
-			
-			-- local unsigned assemblies will not have this attribute, and so we must test to see if it is null or not
-			if key /= Void and then not key.is_empty then
-				Result.append ("-")
-				Result.append (key)
-			end
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-		ensure
-			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
-		end
-		
 	relative_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Path to folder containing `ca' types relative to `Eac_path'
 		require
@@ -75,6 +41,51 @@ feature {CACHE_READER} -- Access
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
+	relative_assembly_path (name: ASSEMBLY_NAME): STRING is
+			-- Absolute path to folder containing `name' types.
+			-- Always return a value even if `name' in not in EAC
+		require
+			non_void_assembly: name /= Void
+			valid_assembly: name.get_public_key_token /= Void
+		local
+			cr: CACHE_READER
+			l_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			i: INTEGER
+			relative_path, l_assembly_location: STRING
+		do
+			create cr
+			l_assemblies_info := cr.consumed_assemblies_info
+			if name.code_base /= Void and then name.code_base.length > 0 then
+				create l_assembly_location.make_from_cil (name.code_base)
+				if l_assembly_location.substring (1, 8).is_equal ("file:///") then
+					l_assembly_location.remove_head (8)
+					l_assembly_location.replace_substring_all ("/", "\")
+					l_assembly_location.to_lower
+				end
+			end
+			from
+				i := 1
+			until
+				i > l_assemblies_info.count or relative_path /= Void 
+				or l_assembly_location = Void
+			loop
+				if l_assemblies_info.item (i).assembly.out.is_equal (create {STRING}.make_from_cil (name.full_name)) then
+					if l_assemblies_info.item (i).location.is_equal (l_assembly_location) then
+						relative_path := l_assemblies_info.item (i).directory
+					end
+				end
+				i := i + 1
+			end
+			if relative_path = Void then
+				relative_path := create_relative_assembly_path (name)
+			end
+			relative_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			Result := relative_path
+		ensure
+			non_void_path: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 	absolute_assembly_path (name: ASSEMBLY_NAME): STRING is
 			-- Absolute path to folder containing `name' types.
 			-- Always return a value even if `name' in not in EAC
@@ -93,7 +104,48 @@ feature {CACHE_READER} -- Access
 			non_void_path: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-		
+
+	absolute_assembly_path_from_location (ass_location: STRING): STRING is
+			-- Absolute path to folder containing `ass_location' types.
+			-- Always return a value even if `ass_location' in not in EAC
+		require
+			non_void_location: ass_location /= Void
+			not_empty_location: not ass_location.is_empty
+			valid_location: feature {SYSTEM_FILE}.exists (ass_location.to_cil)
+		local
+			cr: CACHE_READER
+			l_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			l_assembly_directory: STRING
+			i: INTEGER
+		do
+			create cr
+			l_assemblies_info := cr.consumed_assemblies_info
+			from
+				i := 1
+			until
+				i > l_assemblies_info.count or l_assembly_directory /= Void
+			loop
+				if l_assemblies_info.item (i).location.is_equal (ass_location) then
+					l_assembly_directory := l_assemblies_info.item (i).directory
+				end
+				i := i + 1
+			end
+			if l_assembly_directory = Void then
+				l_assembly_directory := create_relative_assembly_path (feature {ASSEMBLY_NAME}.get_assembly_name (ass_location.to_cil))
+			end
+			check
+				non_void_assembly_directory: l_assembly_directory /= Void
+			end
+			create Result.make (Eiffel_path.count + Eac_path.count + l_assembly_directory.count + 1)
+			Result.append (Eiffel_path)
+			Result.append (Eac_path)
+			Result.append (l_assembly_directory)
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+		ensure
+			non_void_path: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `ca' types.
 		require
@@ -238,5 +290,55 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+
+	create_relative_assembly_path (name: ASSEMBLY_NAME): STRING is
+			-- Path to folder containing `name' types relative to `Eac_path'
+			-- Always return a value even if `name' in not in EAC
+		require
+			non_void_assembly: name /= Void
+			--valid_assembly: name.get_public_key_token /= Void
+		local
+			key: STRING
+			l_absolut_directoy_path: STRING
+			i: INTEGER
+		do
+			if name.get_public_key_token /= Void then
+				key := encoded_key (name.get_public_key_token)				
+				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + key.count + 4)
+			else
+				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + 4)
+			end
+			--| FIXME IEK Refactor code so that both assembly_path functions call the same abstracted function.
+	
+			Result.append (create {STRING}.make_from_cil (name.name))
+			Result.append ("-")
+			Result.append (create {STRING}.make_from_cil (name.version.to_string.replace_character ('.', '_')))
+			Result.append ("-")
+			Result.append (create {STRING}.make_from_cil (name.culture_info.name))
+			
+			-- local unsigned assemblies will not have this attribute, and so we must test to see if it is null or not
+			if key /= Void and then not key.is_empty then
+				Result.append ("-")
+				Result.append (key)
+			end
+
+			from
+				i := 1
+			until
+				i = 100
+			loop
+				create l_absolut_directoy_path.make_from_string (Eiffel_path + Eac_path + Result + "_" + i.out)
+				if not feature {SYSTEM_DIRECTORY}.exists (l_absolut_directoy_path.to_cil) then
+					Result := Result + "_" + i.out
+					i := 100
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			non_void_path: Result /= Void
+--			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 end
 

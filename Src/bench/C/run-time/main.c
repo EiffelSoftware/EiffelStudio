@@ -231,7 +231,7 @@ doc:	</attribute>
 rt_public long *esize;						/* Size of objects */
 
 /*
-doc:	<attribute name="nbref" return_type="long *" export="public">
+doc:	<attribute name="nbref" return_type="long *" export="shared">
 doc:		<summary>Number of references per dynamic type for finalized mode only. Done this way to avoid page fault by loading large `esystem' table.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<indexing>Dtype</indexing>
@@ -239,7 +239,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `main.c'.</synchronization>
 doc:	</attribute>
 */
-rt_public long *nbref;						/* Gives # of references */
+rt_shared long *nbref;						/* Gives # of references */
 #endif
 
 #define exvec() exset(NULL, 0, NULL)	/* How to get an execution vector */

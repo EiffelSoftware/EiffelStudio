@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_return_value, return_type
+			has_return_value, return_type, is_static, is_attribute
 		end
 
 create
@@ -47,6 +47,9 @@ feature -- Status report
 
 	is_static: BOOLEAN
 			-- Is field static?
+
+	is_attribute: BOOLEAN is True
+			-- Current is an attribute.
 
 	has_return_value: BOOLEAN is True
 			-- An attribute always return a value.

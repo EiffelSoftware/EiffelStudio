@@ -49,6 +49,11 @@ feature -- Basic Operations
 			an_image: SYSTEM_DRAWING_IMAGE
 			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
 			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
@@ -56,7 +61,11 @@ feature -- Basic Operations
 			a_size.set_height (dictionary.Window_height)
 			set_size (a_size)
 			set_border_style (border_style.fixed_single)
-			set_icon (dictionary.Assembly_manager_icon)
+			if not retried then
+				set_icon (dictionary.Assembly_manager_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
 			set_back_color (dictionary.White_color)
 			set_maximize_box (False)
 			
@@ -80,6 +89,9 @@ feature -- Basic Operations
 			get_controls.add (main_panel)
 			
 			display_text
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

@@ -223,6 +223,7 @@ feature -- Basic Operations
 			separator: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
 			toolbar_button_click_delegate: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONCLICKEVENTHANDLER
 			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
+			retried: BOOLEAN
 		do
 			--Precursor {ASSEMBLY_VIEWER}
 			build_toolbar_assembly_viewer
@@ -234,11 +235,13 @@ feature -- Basic Operations
 			create separator.make_toolbarbutton
 			
 				-- Set icons to toolbar buttons.
-			path_toolbar_button.set_image_index (7)
-			edit_toolbar_button.set_image_index (8)
-			remove_toolbar_button.set_image_index (9)
-			eiffel_generation_toolbar_button.set_image_index (10)
-			import_toolbar_button.set_image_index (11)
+			if not retried then
+				path_toolbar_button.set_image_index (7)
+				edit_toolbar_button.set_image_index (8)
+				remove_toolbar_button.set_image_index (9)
+				eiffel_generation_toolbar_button.set_image_index (10)
+				import_toolbar_button.set_image_index (11)
+			end
 			
 				-- Set tooltips.
 			path_toolbar_button.set_tool_tip_text (dictionary.Path_menu_item)
@@ -272,6 +275,9 @@ feature -- Basic Operations
 			added := toolbar.get_buttons.add_tool_bar_button (separator)
 			added := toolbar.get_buttons.add_tool_bar_button (help_toolbar_button)
 			get_controls.add (toolbar)
+		rescue
+			retried := True
+			retry
 		end
 
 	build_image_list is
@@ -286,24 +292,58 @@ feature -- Basic Operations
 			import_image: SYSTEM_DRAWING_IMAGE
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
+			file: SYSTEM_IO_FILE
 		do
-			--Precursor {ASSEMBLY_VIEWER}
-			build_image_list_assembly_viewer
-				-- Create icons
-			path_image := image_factory.from_file (dictionary.Path_icon_filename)
-			edit_image := image_factory.from_file (dictionary.Edit_icon_filename)
-			remove_image := image_factory.from_file (dictionary.Remove_icon_filename)
-			eiffel_generation_image := image_factory.from_file (dictionary.Eiffel_generation_icon_filename)
-			import_image := image_factory.from_file (dictionary.Import_icon_filename)
-			
-				-- Add icons to `image_list'.
-			image_list := toolbar.get_image_list
-			images := image_list.get_images
-			images.add (path_image)
-			images.add (edit_image)
-			images.add (remove_image)
-			images.add (eiffel_generation_image)
-			images.add (import_image)
+			if not retried then
+				--Precursor {ASSEMBLY_VIEWER}
+				build_image_list_assembly_viewer
+					-- Create icons
+				
+				if file.exists (dictionary.Path_icon_filename) then
+					path_image := image_factory.from_file (dictionary.Path_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Path_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)		
+				end
+				if file.exists (dictionary.Edit_icon_filename) then
+					edit_image := image_factory.from_file (dictionary.Edit_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Edit_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Remove_icon_filename) then
+					remove_image := image_factory.from_file (dictionary.Remove_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Remove_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Eiffel_generation_icon_filename) then
+					eiffel_generation_image := image_factory.from_file (dictionary.Eiffel_generation_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Eiffel_generation_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Import_icon_filename) then
+					import_image := image_factory.from_file (dictionary.Import_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Import_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+
+					-- Add icons to `image_list'.
+				image_list := toolbar.get_image_list
+				images := image_list.get_images
+				images.add (path_image)
+				images.add (edit_image)
+				images.add (remove_image)
+				images.add (eiffel_generation_image)
+				images.add (import_image)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	build_data_table is

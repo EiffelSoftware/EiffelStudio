@@ -167,14 +167,22 @@ feature -- Basic Operations
 			on_ok_delegate: SYSTEM_EVENTHANDLER
 			on_cancel_delegate: SYSTEM_EVENTHANDLER
 			on_resize_delegate: SYSTEM_EVENTHANDLER
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)
-			set_icon (dictionary.Edit_icon)
-
+			if not retried then
+				set_icon (dictionary.Edit_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end			
 				-- `Selected assembly: '
 			create_form_label (assembly_descriptor.get_name, dictionary.Margin, dictionary.Margin)
 			create_assembly_labels
@@ -214,6 +222,9 @@ feature -- Basic Operations
 			add_closed (on_cancel_delegate)
 			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
 			add_resize (on_resize_delegate)
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Event handling

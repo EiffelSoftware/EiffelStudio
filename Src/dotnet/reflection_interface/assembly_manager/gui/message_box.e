@@ -71,6 +71,12 @@ feature -- Basic Operations
 			an_image: SYSTEM_DRAWING_IMAGE
 			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
 			style: SYSTEM_DRAWING_FONTSTYLE
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			file: SYSTEM_IO_FILE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
@@ -79,7 +85,15 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_maximize_box (False)
-			set_icon (dictionary.Assembly_manager_icon)	
+			if not retried then
+				if file.exists (dictionary.Assembly_manager_icon_filename) then
+					set_icon (dictionary.Assembly_manager_icon)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
 			
 			create message_label.make_label
 			a_point.set_x (dictionary.Margin)
@@ -102,15 +116,38 @@ feature -- Basic Operations
 			get_controls.add (a_label)
 			
 				-- Image
-			an_image := image_factory.from_file (dictionary.Watch_icon_filename)
-			create a_panel.make_panel
-			a_panel.set_height (an_image.get_height)
-			a_panel.set_width (an_image.get_width)
-			a_panel.set_background_image (an_image)	
-			a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - an_image.get_width)
-			a_point.set_y (2 * dictionary.Margin)
-			a_panel.set_location (a_point)
+			if not retried then
+				if file.exists (dictionary.Watch_icon_filename) then
+					an_image := image_factory.from_file (dictionary.Watch_icon_filename)
+					create a_panel.make_panel
+					a_panel.set_height (an_image.get_height)
+					a_panel.set_width (an_image.get_width)
+					a_panel.set_background_image (an_image)	
+					a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - an_image.get_width)
+					a_point.set_y (2 * dictionary.Margin)
+					a_panel.set_location (a_point)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Watch_pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					create a_panel.make_panel
+					a_panel.set_height (dictionary.Image_height)
+					a_panel.set_width (dictionary.Image_width)
+					a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - dictionary.Image_width)
+					a_point.set_y (2 * dictionary.Margin)
+					a_panel.set_location (a_point)				
+				end
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Watch_pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				create a_panel.make_panel
+				a_panel.set_height (dictionary.Image_height)
+				a_panel.set_width (dictionary.Image_width)
+				a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - dictionary.Image_width)
+				a_point.set_y (2 * dictionary.Margin)
+				a_panel.set_location (a_point)
+			end
 			get_controls.add (a_panel)	
+		rescue 
+			retried := True
+			retry
 		end
 		
 feature {NONE} -- Implementation

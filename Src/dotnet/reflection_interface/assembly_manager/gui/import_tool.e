@@ -136,6 +136,7 @@ feature -- Basic Operations
 			added: INTEGER
 			separator: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
 			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
+			retried: BOOLEAN
 		do			
 			build_toolbar_assembly_viewer
 			
@@ -143,11 +144,15 @@ feature -- Basic Operations
 			create import_toolbar_button.make_toolbarbutton
 			create separator.make_toolbarbutton
 			
-			open_toolbar_button.set_image_index (7)
+			if not retried then
+				open_toolbar_button.set_image_index (7)
+			end
 			open_toolbar_button.set_tool_tip_text (dictionary.Open_menu_item)
 			open_toolbar_button.set_style (appearance.Push_button)
 			
-			import_toolbar_button.set_image_index (8)
+			if not retried then
+				import_toolbar_button.set_image_index (8)
+			end
 			import_toolbar_button.set_tool_tip_text (dictionary.Import_menu_item)
 			import_toolbar_button.set_style (appearance.Push_button)
 			separator.set_style (appearance.Separator)
@@ -168,6 +173,9 @@ feature -- Basic Operations
 			added := toolbar.get_buttons.add_tool_bar_button (separator)
 			added := toolbar.get_buttons.add_tool_bar_button (help_toolbar_button)
 			get_controls.add (toolbar)
+		rescue
+			retried := True
+			retry
 		end
 
 	build_image_list is
@@ -179,17 +187,38 @@ feature -- Basic Operations
 			open_image: SYSTEM_DRAWING_IMAGE
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			file: SYSTEM_IO_FILE
 		do
-			build_image_list_assembly_viewer
-			set_icon (dictionary.Import_tool_icon)		
-			
-			open_image := image_factory.from_file (dictionary.Open_icon_filename)
-			import_image := image_factory.from_file (dictionary.Import_icon_filename)
-			
-			image_list := toolbar.get_image_list
-			images := image_list.get_images
-			images.add (open_image)
-			images.add (import_image)
+			if not retried then
+				build_image_list_assembly_viewer
+				set_icon (dictionary.Import_tool_icon)		
+
+				if file.exists (dictionary.Open_icon_filename) then
+					open_image := image_factory.from_file (dictionary.Open_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Open_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Import_icon_filename) then
+					import_image := image_factory.from_file (dictionary.Import_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Import_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)				
+				end
+
+				image_list := toolbar.get_image_list
+				images := image_list.get_images
+				images.add (open_image)
+				images.add (import_image)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	build_data_table is

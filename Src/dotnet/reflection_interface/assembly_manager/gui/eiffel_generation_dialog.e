@@ -69,14 +69,23 @@ feature -- Basic Operations
 			on_ok_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_cancel_event_handler_delegate: SYSTEM_EVENTHANDLER
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do	
 			initialize
 			set_text (dictionary.Title)
 			a_size.set_Height (dictionary.Window_height)
 			a_size.set_Width (dictionary.Window_width)
 			set_size (a_size)
-			set_icon (dictionary.Eiffel_generation_icon)
-			
+			if not retried then
+				set_icon (dictionary.Eiffel_generation_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
+
 			create support.make_codegenerationsupport
 			support.make
 			if not support.valid_path (eiffel_path) then
@@ -109,6 +118,9 @@ feature -- Basic Operations
 				-- Addition of get_controls
 			get_controls.add (ok_button)
 			get_controls.add (cancel_button)
+		rescue
+			retried := True
+			retry
 		end
 		
 feature -- Event handling
@@ -148,10 +160,6 @@ feature {NONE} -- Implementation
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 			non_void_sender: sender /= Void
 		local
-			--assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			--assembly: SYSTEM_REFLECTION_ASSEMBLY
-			--conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			--emitter: NEWEIFFELCLASSGENERATOR
 			support: ISE_REFLECTION_REFLECTIONSUPPORT
 			assembly_filename: STRING
 			type_filename: STRING
@@ -172,22 +180,7 @@ feature {NONE} -- Implementation
 			if message_box /= Void then
 				message_box.refresh
 				if not retried then
-					--create conversion_support.make_conversionsupport
-					--assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
-					--assembly := assembly.load (assembly_name)
 					close
-					--create emitter.make_neweiffelclassgenerator
-					--if destination_path_text_box.text /= Void and then destination_path_text_box.text.get_length > 0 then
-					--	if destination_path_text_box.text.tolower.equals_string (eiffel_path.tolower) then
-					--		emitter.generateeiffelclassesfromxml (assembly)
-					--		message_box.close
-					--	else
-					--		emitter.generateeiffelclassesfromxmlandpathname (assembly, destination_path_text_box.text)
-					--		message_box.close
-					--	end
-					--else
-					--	returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-					--end
 					create support.make_reflectionsupport
 					support.make
 					assembly_filename := support.Xml_assembly_filename (assembly_descriptor)

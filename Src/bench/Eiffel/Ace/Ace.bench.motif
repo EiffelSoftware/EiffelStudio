@@ -75,16 +75,16 @@ cluster
 				-- This is excluded, because there is a class with
 				-- the same name in compiler sources (motif only)
 				-- Check this!!!!!
-            "text_figure.e"; "line.e"
+			"text_figure.e"; "line.e"
 		end
 
 	vision_tools (vision):          "$/tools";
 
 		-- Toolkit
-    vision_toolkit (vision): "$/implement/toolkit";
-    vision_toolkit_kernel (vision_toolkit): "$/kernel";
-    vision_toolkit_widgets (vision_toolkit): "$/widgets";
-    vision_toolkit_support (vision_toolkit): "$/support";
+	vision_toolkit (vision): "$/implement/toolkit";
+	vision_toolkit_kernel (vision_toolkit): "$/kernel";
+	vision_toolkit_widgets (vision_toolkit): "$/widgets";
+	vision_toolkit_support (vision_toolkit): "$/support";
 
 		-- Implementation clusters for x/Motif
 	vision_imp (vision):          		"$/implement/motif";
@@ -101,9 +101,25 @@ cluster
 	liman:				"$EIFFEL_SRC/Eiffel/limand";
 
 	liman_bench(liman):		"$/bench";
+	liman_client(liman):		"$/client";
+	liman_shared(liman):		"$/shared";
 	liman_bench_graphical(liman):	"$/bench_graphical";
 	liman_abstract(liman):		"$/abstract";
 	liman_graphical(liman):		"$/graphical";
+
+-- EiffelNet
+	net:                            "$EIFFEL_SRC/library/net";
+	abstract_socket (net):          "$/abstract/socket";
+	net_socket (net):               "$/network/socket";
+	local_socket (net):             "$/local/socket";
+
+	polling_abstract (net):         "$/polling/abstract";
+	polling_implementation (net):   "$/polling/implementation";
+
+	abstract_client_server (net):   "$/abstract/client_server";
+	net_client_server (net):        "$/network/client_server";
+	local_client_server (net):      "$/local/client_server";
+
 
 	beurk:			"$EIFFEL_SRC/Eiffel/beurk";
 	compiler_support:		"$EIFFEL_SRC/Eiffel/support";
@@ -213,8 +229,8 @@ cluster
 	switch:			"$EIFFEL_SRC/Eiffel/switch";
 	interface_switch(switch):	"$/interface/graphical";
 	--dle_switch(switch):	"$/dle/no_dle";
-	--license_switch(switch): "$/license/license";  	--unix
-	license_switch(switch): "$/license/no_license";	--win
+	license_switch(switch): "$/license/license";  	--unix
+	--license_switch(switch): "$/license/no_license";	--win
 
 		-- Communications
 	communications (switch):		"$/communication";

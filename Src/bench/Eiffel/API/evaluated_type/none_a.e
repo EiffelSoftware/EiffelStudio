@@ -68,14 +68,8 @@ feature {COMPILER_EXPORTER}
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		do
-				-- If `other' is a basic, a BIT or an expanded type, it is not
-				-- conform to NONE.
-				--| When doing the check for `is_basic', we also check that `other'
-				--| can be a BIT type, so we do not need to add the check `other.is_bits'.
--- FIXME: This test needs to be done, but since it's causing to much trouble for now
--- we just desactivated it and we are back to the previous implementation
---			Result := not (other.is_basic or else other.is_expanded)
-			Result := not other.actual_type.is_void
+				-- If `other' is expanded, then it does not conform to NONE.
+			Result := not other.is_expanded
 		end
 
 end -- class NONE_A

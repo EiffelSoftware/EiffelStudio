@@ -575,12 +575,18 @@ feature -- Basic operations
 														current_horizontal_pos < current_item_x_position or loop_parent_row = Void
 													loop
 														current_horizontal_pos := current_horizontal_pos - subrow_indent
-														if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
-																-- If the current item is the last one contained within the parent then a line must be drawn. As this is
-																-- computed in a nested fashion, the subnode count is used recursively.
-																
-															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
-																-- Draw the vertical line from the bottom of the item to the top.
+														if current_horizontal_pos < current_item_x_position + current_column_width then
+																-- It is possible that the current vertical line segment that we must draw is outside the right hand
+																-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
+																-- drawing.
+															
+															if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
+																	-- If the current item is the last one contained within the parent then a line must be drawn. As this is
+																	-- computed in a nested fashion, the subnode count is used recursively.
+																	
+																grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+																	-- Draw the vertical line from the bottom of the item to the top.
+															end
 														end
 														
 															-- Move one position upwards within the parenting node structure

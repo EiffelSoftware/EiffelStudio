@@ -42,22 +42,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): EV_ITEM is
-			-- Find a child with data equal to `data'.
-		do
-			check
-				To_be_implemented: False
-			end
-		end
-
-feature -- Deferred features
-
---	interface: EV_ANY is
---		deferred
---		end
-
 end -- class EV_MENU_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------

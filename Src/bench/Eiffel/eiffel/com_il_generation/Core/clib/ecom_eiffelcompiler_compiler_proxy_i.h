@@ -1008,7 +1008,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP PutLineInfo(  /* [in] */ LONG n ) = 0;
+	virtual STDMETHODIMP put_line_info(  /* [in] */ LONG line_number, /* [in] */ LONG start_column, /* [in] */ LONG end_column ) = 0;
 
 
 	/*-----------------------------------------------------------

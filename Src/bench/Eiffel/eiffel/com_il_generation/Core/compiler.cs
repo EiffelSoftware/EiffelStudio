@@ -505,29 +505,34 @@ feature -- Generation Structure
 		try
 		{
 			TypeBuilder EntryType;
-			MethodBuilder EntryPoint;
+			MethodBuilder entry_point;
 			ILGenerator Generator;
-			FEATURE RealEntryPoint;
+			FEATURE eiffel_entry_point;
 	
 			EntryType = main_module.DefineType (Classes [TypeID].name + EntryTypeName);
-			EntryPoint = EntryType.DefineMethod (EntryPointName,
+			entry_point = EntryType.DefineMethod (Entry_point_name,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
-			Generator = EntryPoint.GetILGenerator();
-			RealEntryPoint = ((FEATURE) (Classes [TypeID].
+
+			entry_point.SetCustomAttribute (FEATURE.debugger_hidden_attr ());
+			entry_point.SetCustomAttribute (FEATURE.debugger_step_through_attr ());
+			
+			Generator = entry_point.GetILGenerator();
+			eiffel_entry_point = ((FEATURE) (Classes [TypeID].
 				StaticFeatureIDTable [FeatureID]));
-			if (RealEntryPoint == null)
+			if (eiffel_entry_point == null)
 				throw new ApplicationException ("DefineEntryPoint: Real entry point " + 
 					"not found (TypeID: " + TypeID + ", FeatureID: " + FeatureID + ")");
 
 			Generator.Emit ( OpCodes.Newobj, Classes [CreationTypeID].DefaultConstructor);
-			if (RealEntryPoint.argument_count > 1) {
+			if (eiffel_entry_point.argument_count > 1) {
 				Generator.Emit (OpCodes.Ldarg_0);
 			}
-			Generator.Emit (OpCodes.Call, RealEntryPoint.method_builder);
+
+			Generator.Emit (OpCodes.Call, eiffel_entry_point.method_builder);
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();
-			assembly.SetEntryPoint (EntryPoint, application_kind);
+			assembly.SetEntryPoint (entry_point, application_kind);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -1897,10 +1902,14 @@ feature -- Generation Structure
 
 /* Line info */
 
-	// Generate `n' to enable to find corresponding
-	// Eiffel class file in IL code.
-	public void PutLineInfo (int n) {
-		MethodIL.MarkSequencePoint (Classes [CurrentTypeID].Document, n, 0, n, 1000);
+	public void put_line_info (int line_number, int start_column, int end_column)
+		// Generate debug information to enable to find corresponding
+		// Eiffel class file in IL code.
+	{
+		MethodIL.MarkSequencePoint (
+			Classes [CurrentTypeID].Document,
+			line_number, start_column,
+			line_number, end_column);
 	}
 
 /* Labels creation */
@@ -2156,7 +2165,7 @@ feature -- Statics
 	internal static String EntryTypeName = "_STARTUP";
 
 	// Name of entry point
-	internal static String EntryPointName = "Main";
+	internal static String Entry_point_name = "Main";
 
 	// Lower Bound of arrays
 	internal static System.Reflection.MethodInfo GetLowerBound = Type.GetType( "System.Array" ).GetMethod( "GetLowerBound" );

@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(473A4EAB-5CA2-3F90-BB94-F1F5F7BF7E01),
+      uuid(0137A789-12A5-3504-9B31-B3233D27D4E7),
       version(1.0),
       oleautomation
     ]
@@ -272,7 +272,10 @@ library EiffelCompiler
         HRESULT _stdcall GenerateUMinus();
         HRESULT _stdcall GenerateNot();
         HRESULT _stdcall GenerateBitwiseNot();
-        HRESULT _stdcall PutLineInfo([in] long n);
+        HRESULT _stdcall put_line_info(
+                        [in] long line_number, 
+                        [in] long start_column, 
+                        [in] long end_column);
         HRESULT _stdcall CreateLabel([out, retval] long* pRetVal);
         HRESULT _stdcall SetForInterfaces();
         HRESULT _stdcall SetForImplementations();

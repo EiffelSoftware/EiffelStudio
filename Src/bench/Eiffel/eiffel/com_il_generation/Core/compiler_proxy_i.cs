@@ -540,9 +540,9 @@ feature -- Generation structure
 
 /* Line info */
 
-	// Generate `n' to enable to find corresponding
-	// Eiffel class file in IL code.
-	void PutLineInfo( int n );
+	void put_line_info (int line_number, int start_column, int end_column);
+		// Generate `n' to enable to find corresponding
+		// Eiffel class file in IL code.
 
 /* Labels creation */
 

@@ -1,10 +1,10 @@
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
-CFLAGS = -O2 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+CFLAGS = -O2 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 LN = copy
 MAKE = make
 RANLIB = echo
-RM = del
+RM = -del
 
 SOURCES =  $(LSRCS)
 OBJECTS =  $(OBJS) $(WOBJS)
@@ -30,7 +30,7 @@ clean:
 
 net.lib: $(OBJS)
 	$(RM) $@
-	$(AR) $@ /c +network_r.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
+	$(AR) $@ +network_r.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcb mkdir ..\spec\bcb

@@ -1,6 +1,6 @@
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
-CFLAGS = -O2 -I$(ORACLE_HOME)\OCI\INCLUDE
+CFLAGS = -O2 -I$(ORACLE_HOME)\OCI\INCLUDE -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib
 OBJ = oracle.obj
 
 all:: clean oracle_store.lib 

@@ -132,9 +132,17 @@ feature
 			tree.display (context);
 		end;
 
-	redo_without_func_cut is
+	redo is
 			-- Used for redo	
 		do
+			from
+				behavior_cut_list.start
+			until
+				behavior_cut_list.after
+			loop
+				behavior_cut_list.item.redo;
+				behavior_cut_list.forth
+			end;
 			from
 				context_list.start
 			until
@@ -158,20 +166,6 @@ feature
 			end;
 		end;
 
-	redo is
-		do
-			from
-				behavior_cut_list.start
-			until
-				behavior_cut_list.after
-			loop
-				behavior_cut_list.item.redo;
-				behavior_cut_list.forth
-			end;
-			redo_without_func_cut;
-		end;
-
-	
 feature {NONE}
 
 	context_work is

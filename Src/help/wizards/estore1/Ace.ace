@@ -17,59 +17,62 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+	--precompiled ("$EIFFEL_SRC/precomp/spec/$PLATFORM/base");
 
 
 cluster
 	
-	root_cluster: "d:\Src\help\Wizards\estore1"
+	root_cluster: "d:\46dev\wizards\estore1"
 	wizard(root_cluster): "$\src"
 
 
 		-- EiffelBase
-	all base:				"$EIFFEL4/library/base"
+	all base:				"$EIFFEL_SRC\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	all vision2: 			"$EIFFEL4\library\new_vision"
+	all vision2: 			"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk"
 			"test"
 		end
 
-	all Events:				"$EIFFEL4\library\events"
+	all Events:				"$EIFFEL_SRC\library\event"
 
-	all web: 				"$EIFFEL4\library\new_wel"
+	all web: 				"$EIFFEL_SRC\library\wel"
 
-	all wizard_tool:				"$EIFFEL4\tools\wizard"
+	all wizard_tool:				"$EIFFEL_SRC\library\wizard"
+		exclude
+			"unix"
+		end
 
 -- EiffelTime
-	time:				"$EIFFEL4\library\time";
+	time:				"$EIFFEL_SRC\library\time";
 	time_format(time):	"$\format";
 	time_english(time):	"$\format\english";
 
 	-- EiffelStore
-	estore_support:		"$EIFFEL4\library\store\support"
-	estore_interface:	"$EIFFEL4\library\store\interface"
-	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
-	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
---	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc"
+	estore_support:		"$EIFFEL_SRC\library\store\support"
+	estore_interface:	"$EIFFEL_SRC\library\store\interface"
+	estore_db_support:	"$EIFFEL_SRC\library\store\dbms\support"
+	estore_rdbms:		"$EIFFEL_SRC\library\store\dbms\rdbms\oracle"
+--	estore_odbc:		"$EIFFEL_SRC\library\store\dbms\rdbms\odbc"
 
 
 external
 	include_path:		
-						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
---						"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib",
-						"$EIFFEL4\library\new_wel\spec\windows\include",
+						"$EIFFEL_SRC\library\store\dbms\rdbms\oracle\Clib",
+--						"$EIFFEL_SRC\library\store\dbms\rdbms\odbc\Clib",
+						"$EIFFEL_SRC\library\new_wel\spec\windows\include",
 						"$(ORACLE_HOME)\OCI\include"
 
-	object: 			"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
-						"$EIFFEL4\library\new_wel\spec\msc\lib\wel.lib",
-						"$EIFFEL4\library\time\clib\datetime.lib",
-						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
---						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
---						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
+	object: 			"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\support.lib",
+						"$EIFFEL_SRC\library\new_wel\spec\msc\lib\wel.lib",
+						"$EIFFEL_SRC\library\time\clib\datetime.lib",
+						"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+--						"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\odbc32.lib",
+--						"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
 						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 end
 

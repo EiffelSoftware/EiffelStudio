@@ -49,7 +49,7 @@ feature -- basic Operations
 					title.set_text ("GENERATION")
 					message.set_text ("The EiffelStore Wizard will now generate your project.%
 										%%NYou have chosen not to compile it now; you may compile it later%
-										%%Nusing EiffelBench.")
+										%%Nusing EiffelStudio.")
 				end
 			else
 				title.set_text ("GENERATION")
@@ -207,7 +207,7 @@ feature {NONE} -- Processing
 		end
 
 	add_error (mess: STRING) is
-			-- Inform the user of a problem that occured
+			-- Inform the user of a problem that occurred
 			-- during operations.
 		require
 			not_void: mess /= Void
@@ -222,13 +222,13 @@ feature {NONE} -- Processing
 			-- Warning messages list.
 
 	send_errors is
-			-- Sends a report on the errors occured to the user.
+			-- Sends a report on the errors occurred to the user.
 		local
 			dialog: EV_WARNING_DIALOG
 			mess: STRING
 		do
 			if warning_list /= Void and then not warning_list.is_empty then
-				mess := "Errors occured during the process.%NPlease read the following error report:%N%N"
+				mess := "Errors occurred during the process.%NPlease read the following error report:%N%N"
 				from
 					warning_list.start
 				until

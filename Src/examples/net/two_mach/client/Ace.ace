@@ -4,7 +4,8 @@ root
 	our_client (ROOT_CLUSTER): "make"
 
 default
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/net")
 
 cluster
 	ROOT_CLUSTER: 	".";
@@ -40,9 +41,9 @@ cluster
 	traversing (base):	"$/structures/traversing";
 	tree (base):		"$/structures/tree";
 
-external
+--external
 	-- External EiffelNet library 
-	object:
-		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+	--object:
+		--"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
 -- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

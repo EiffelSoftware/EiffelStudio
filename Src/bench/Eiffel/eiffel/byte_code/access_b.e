@@ -201,7 +201,7 @@ feature
 					Result := a_parent.target.type;
 				end;
 			end;
-			Result := real_type (Result);
+			Result := Context.real_type (Result);
 		end;
 
 	sub_enlarged (p: NESTED_BL): ACCESS_B is
@@ -430,7 +430,6 @@ feature -- Byte code generation
 						-- metamorphose and simple attachment
 					basic_type ?= source_type;
 					ba.append (Bc_metamorphose);
-					ba.append_short_integer (basic_type.associated_dtype);
 				elseif source_type.is_expanded then
 						-- Source is expanded and target is a reference: clone
 						-- and simple attachment
@@ -490,7 +489,6 @@ feature -- Byte code generation
 						-- metamorphose and simple attachment
 					basic_type ?= source_type;
 					ba.append (Bc_metamorphose);
-					ba.append_short_integer (basic_type.associated_dtype);
 				elseif source_type.is_expanded then
 						-- Source is expanded and target is a reference: clone
 						-- and simple attachment

@@ -237,7 +237,6 @@ feature -- Byte code generation
 			if (lt.is_basic and then rt.is_reference) then
 				basic_type ?= lt;
 				ba.append (Bc_metamorphose);
-				ba.append_short_integer (basic_type.associated_dtype);
 				flag := True;
 			end;
 
@@ -245,7 +244,6 @@ feature -- Byte code generation
 			if (lt.is_reference and then rt.is_basic) then
 				basic_type ?= rt;
 				ba.append (Bc_metamorphose);
-				ba.append_short_integer (basic_type.associated_dtype);
 				flag := true;
 			end;
 

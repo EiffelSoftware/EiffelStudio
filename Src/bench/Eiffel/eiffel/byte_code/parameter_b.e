@@ -109,7 +109,6 @@ feature -- Byte code generation
 						-- metamorphose
 					basic_type ?= source_type;
 					ba.append (Bc_metamorphose);
-					ba.append_short_integer (basic_type.associated_dtype);
 				elseif source_type.is_expanded then
 						-- Source is expanded and target is a reference:
 						-- clone

@@ -73,7 +73,10 @@ feature
 			-- Used to record successive byte code informations for assertions
 
 	old_expressions: LINKED_LIST [UN_OLD_B];
-			-- Used to record old expressions in Pass 3; 
+			-- Used to record old expressions in Pass 3.
+
+	c_old_expressions: LINKED_LIST [UN_OLD_BL];
+			-- Used to record old expressions for C generation.
 
 	make is
 			-- Initialization
@@ -86,6 +89,7 @@ feature
 			!!byte_stack.make;
 			!!local_list.make;
 			!!old_expressions.make;
+			!!c_old_expressions.make;
 		end;
 
 	set_class_type (c: CLASS_TYPE) is
@@ -500,7 +504,7 @@ feature
 		do
 				--! Did this so it won't effect any old_expression 
 				--! referencing this object.
-			!!old_expressions.make
+			!!old_expressions.make;
 		end;
 
 	clear_all is
@@ -525,6 +529,7 @@ feature
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
 			register_server.clear_all;
+			c_old_expressions.wipe_out;
 		end;
 
 	wipe_out is

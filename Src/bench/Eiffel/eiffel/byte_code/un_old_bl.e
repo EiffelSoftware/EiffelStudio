@@ -37,21 +37,15 @@ feature
 			-- Initialize the value of the old variable.
 		do
 			expr.generate;
-			if 	not (type.is_basic and then
-				(expr.register.register_name.is_equal (expr.register.register_name)))
-			then
+			if not type.is_basic then
 				register.print_register;
 				generated_file.putstring (" = ");
-				if type.is_basic then
-					expr.print_register;
-				else
-					generated_file.putstring ("RTCL(");
-					expr.print_register;
-					generated_file.putchar(')');
-				end;
-				generated_file.putchar (';');
-				generated_file.new_line;
-			end
+				generated_file.putstring ("RTCL(");
+				expr.print_register;
+				generated_file.putchar(')');
+			end;
+			generated_file.putchar (';');
+			generated_file.new_line;
 		end;
 
 	unanalyze is

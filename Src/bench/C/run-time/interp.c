@@ -1087,26 +1087,29 @@ end:
 		{	char *new_obj;
 			uint32 head_type;
 
-			code = get_short();			/* Get the dynamic type to create */
 			last = opop();
 			head_type = last->type & SK_HEAD;
 			if (head_type != SK_BIT) {
-				new_obj = RTLN(code);
 				switch (last->type) {
 				case SK_BOOL:
 				case SK_CHAR:	
+					new_obj = RTLN(char_ref_dtype);
 					*new_obj = last->it_char;
 					break;
 				case SK_INT:
+					new_obj = RTLN(int_ref_dtype);
 					*(long *) new_obj = last->it_long;
 					break;
 				case SK_FLOAT:
+					new_obj = RTLN(real_ref_dtype);
 					*(float *) new_obj = last->it_float;
 					break;
 				case SK_DOUBLE:
+					new_obj = RTLN(doub_ref_dtype);
 					*(double *) new_obj = last->it_double;
 					break;
 				case SK_POINTER:
+					new_obj = RTLN(point_ref_dtype);
 					*(fnptr *) new_obj = last->it_ptr;
 					break;
 				default:
@@ -4063,9 +4066,8 @@ char *start;
 	 * Call on a simple type.
 	 */
 	case BC_METAMORPHOSE:
-		code = get_short();			/* Get the dynamic type to create */
-		fprintf(fd, "0x%X %s dt=%d\n", IC - sizeof(short) - 1,
-			"BC_METAMORPHOSE", code);
+		fprintf(fd, "0x%X %s\n", IC - sizeof(short) - 1,
+			"BC_METAMORPHOSE");
 		break;
 
 	/* 

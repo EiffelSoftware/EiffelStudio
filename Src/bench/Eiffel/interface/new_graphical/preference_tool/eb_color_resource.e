@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			string_non_void: a_string /= Void
 		do
 			name := a_name
-
 			actual_value := color_from_table (a_string)
 		end
  
@@ -47,7 +46,7 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		do
 			make_from_string (a_name, rt.get_string (a_name, def_value.name))
-			default_value := def_value
+			default_string_value := def_value.name
 		end
 
 	make_default (a_name: STRING; rt: RESOURCE_TABLE; def_name: STRING) is
@@ -92,7 +91,7 @@ feature -- Status report
 	is_default: BOOLEAN is
 			-- Has the resource not changed from the default value?
 		do
-			Result := equal (default_value, actual_value)
+			Result := equal (default_string_value, value)
 		end
 
 feature -- Element Change

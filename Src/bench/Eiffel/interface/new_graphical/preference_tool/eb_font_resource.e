@@ -101,7 +101,7 @@ feature -- Status report
 	is_default: BOOLEAN is
 			-- Has the resource not changed from the default value?
 		do
-			Result := equal (default_value, actual_value)
+			Result := equal (default_string_value, value)
 		end
 
 feature -- Status Setting

@@ -52,11 +52,8 @@ feature -- Access
 --		end
 			-- actual resource value
 
---	default_value: like actual_value is
---		deferred
---		end
-			-- actual resource value
-
+	default_string_value: STRING
+			-- Default string resource value (used for storage).
 
 	value: STRING is
 			-- value as a string of the resource.
@@ -73,8 +70,8 @@ feature -- Status report
 
 	is_default: BOOLEAN is
 			-- Is the resource equal to its default value?
---		require
---			default_value /= Void
+		require
+			default_string_value /= Void
 		deferred
 		end
 

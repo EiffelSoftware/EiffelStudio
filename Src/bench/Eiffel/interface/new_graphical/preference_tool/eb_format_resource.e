@@ -36,13 +36,7 @@ feature {NONE} -- Initialization
 			c: EV_COLOR
 		do
 			name := a_name
-
-			create default_value.make
-			create f.make_by_system_name (a_font_name)
-			default_value.set_font (f)
-			c := color_from_table (a_color_name)
-			default_value.set_color (c)
-
+			default_string_value := clone (a_color_name) + a_font_name
 			create actual_value.make
 			create f.make_by_system_name (rt.get_string (font_name, a_font_name))
 			actual_value.set_font (f)
@@ -52,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_value, actual_value: EV_CHARACTER_FORMAT
+	actual_value: EV_CHARACTER_FORMAT
 			-- Value represented by Current
 
 	value: STRING is
@@ -65,14 +59,14 @@ feature -- Access
 			-- Name associated with font value
 		do
 			Result := clone (name)
-			Result.append (" font")
+			Result.append ("_font")
 		end
 
 	color_name: STRING is
 			-- Name associated with color value
 		do
 			Result := clone (name)
-			Result.append (" color")
+			Result.append ("_color")
 		end
 
 	font_resource: EB_FONT_RESOURCE is
@@ -94,9 +88,8 @@ feature -- Status setting
 		end
 
 	is_default: BOOLEAN is
-			-- Has the resource not changed from the default value?
 		do
-			Result := actual_value = default_value
+			Result := font_resource.is_default and color_resource.is_default
 		end
 
 feature -- Element change

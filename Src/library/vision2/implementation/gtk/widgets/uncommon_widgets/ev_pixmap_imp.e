@@ -346,10 +346,10 @@ feature -- Access
 			a_visual_type, a_pixel: INTEGER
 			a_color: POINTER
 			a_color_map: POINTER
-			color_struct_size: INTEGER
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
 			array_area: SPECIAL [CHARACTER]
+			color_struct_size: INTEGER
 temp_alpha: CHARACTER
 temp_alpha_int: INTEGER
 		do
@@ -361,9 +361,10 @@ temp_alpha_int: INTEGER
 				a_color_map := C.gdk_rgb_get_cmap
 				a_visual := C.gdk_colormap_get_visual (a_color_map)
 				a_visual_type := C.gdk_visual_struct_type (a_visual)
-				color_struct_size := C.c_gdk_color_struct_size
+				a_color := C.c_gdk_color_struct_allocate
 				array_size := a_width * height
 				array_area := Result.area
+				color_struct_size := C.c_gdk_color_struct_size
 temp_alpha_int := 255
 temp_alpha := temp_alpha_int.ascii_char
 			until
@@ -374,17 +375,15 @@ temp_alpha := temp_alpha_int.ascii_char
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				if a_visual_type = C.gdk_visual_pseudo_color_enum then
-					a_color := C.gdk_colormap_struct_colors (a_color_map) + (a_pixel * color_struct_size)
-					array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
-					array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
-					array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
-					array_area.put (temp_alpha, array_offset + 3)					
-				end
-
+				C.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
+				array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
+				array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
+				array_area.put (temp_alpha, array_offset + 3)
 				--| FIXME IEK Add support for pixmap alpha.
 				array_offset := array_offset + 4
 			end
+			C.c_gdk_color_struct_free (a_color)
 			C.gdk_image_destroy (a_gdkimage)
 		end
 
@@ -527,6 +526,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2001/07/02 16:19:30  king
+--| Corrected pixmap data retrieval
+--|
 --| Revision 1.42  2001/06/27 00:17:00  king
 --| Added gdk image destruction, thanks to DH for reporting Wild bug number 6
 --|

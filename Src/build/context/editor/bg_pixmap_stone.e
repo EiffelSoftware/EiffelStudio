@@ -7,14 +7,19 @@ inherit
 
 feature {NONE}
 
+	focus_string: STRING is
+		do
+			Result := Focus_labels.bg_pixmap_att_label
+		end;
+
 	command: BG_P_STONE_CMD is
 		once
 			!!Result
 		end;
 
-	pixmap: PIXMAP is
+	symbol: PIXMAP is
 		do
-			Result := Pixmaps.color_stone_pixmap
+			Result := Pixmaps.bg_pixmap_stone_pixmap
 		end;
 
 feature 

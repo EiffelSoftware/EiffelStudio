@@ -14,6 +14,7 @@ inherit
 			on_right_button_up as widget_on_right_button_up,
 			set_cursor_position as wel_set_cursor_position
 		redefine
+			set_foreground_color,
 			set_background_color,
 			realize,
 			unrealize
@@ -23,6 +24,7 @@ inherit
 		rename
 			set_cursor_position as wel_set_cursor_position
 		redefine
+			set_foreground_color,
 			set_background_color,
 			on_right_button_down,
 			on_right_button_up,
@@ -294,25 +296,27 @@ feature -- Status report
 		do
 			if exists then
 				Result := wel_text
-					-- Remove the garbage characters added by the edit control
-				if Result.valid_index (Result.count) and then
-					Result.item (Result.count).code = 0 then
-					Result.remove (Result.count)
-				end
-				if not is_multi_line_mode then
-					from
-					until
-						Result.empty or Result.item (Result.count).code >= 32 
-					loop
+				if not Result.empty then
+						-- Remove the garbage characters added by the edit control
+					if Result.valid_index (Result.count) and then
+						Result.item (Result.count).code = 0 then
 						Result.remove (Result.count)
 					end
-				end
-				if text_translated then
-					Result.prune_all ('%R')
-				elseif special_translation then
-					Result.replace_substring_all ("%R%N", "%N")
-					Result.prune_all ('%R')
-					Result.replace_substring_all ("%N", "%R%N")
+					if not is_multi_line_mode then
+						from
+						until
+							Result.empty or Result.item (Result.count).code >= 32 
+						loop
+							Result.remove (Result.count)
+						end
+					end
+					if text_translated then
+						Result.prune_all ('%R')
+					elseif special_translation then
+						Result.replace_substring_all ("%R%N", "%N")
+						Result.prune_all ('%R')
+						Result.replace_substring_all ("%N", "%R%N")
+					end
 				end
 			else
 				Result := private_text
@@ -379,6 +383,34 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_foreground_color (c: COLOR) is
+			-- Set the foreground color of current widget.
+		local
+			char_format: WEL_CHARACTER_FORMAT
+			windows_color: WEL_COLOR_REF
+			text_count: INTEGER
+		do
+			private_foreground_color := c
+			if exists then
+				if has_selection then
+					unselect
+				end
+				windows_color ?= c.implementation
+				!! char_format.make
+				char_format.set_text_color (windows_color)
+				text_count := text.count
+				if text_count > 1 then
+					set_selection (1, text_count)
+					set_character_format_selection (char_format)
+					unselect
+					set_cursor_position (text_count)
+					set_character_format_selection (char_format)
+				else
+					set_character_format_selection (char_format)
+				end
+			end
+		end
 
 	set_background_color (a_color: COLOR) is
 			-- Set the background color to `a_color'
@@ -492,13 +524,12 @@ feature -- Status setting
 			--| Will not move the cursor if a selection
 			--| is active.
 		do
-			if not has_selection then
-				if exists then
+			private_cursor_position := pos
+			if exists then
+				if not has_selection then
 					enable_scroll_caret_at_selection
 					set_caret_position (eiffel_position_to_windows (pos))
 					disable_scroll_caret_at_selection
-				else
-					private_cursor_position := pos
 				end
 			end
 		end
@@ -506,14 +537,10 @@ feature -- Status setting
 	set_editable is
 			-- Set the text in editable mode
 		do
-			if is_read_only then
-				if exists then
-					wel_set_read_write
-				end
-				private_is_read_only := False
+			if exists then
+				wel_set_read_write
 			end
-		ensure then
-			not is_read_only
+			private_is_read_only := False
 		end
 
 	set_margin_height (new_height: INTEGER) is
@@ -553,10 +580,8 @@ feature -- Status setting
 		do
 			if exists then
 				wel_set_read_only
-			end 
+			end
 			private_is_read_only := True
-		ensure then
-			is_read_only: is_read_only
 		end
 
 	set_selection (first, last: INTEGER) is
@@ -630,7 +655,7 @@ feature -- Status setting
 		do
 			is_multi_line_mode := true
 		end
- 
+
 feature -- Element change
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
@@ -791,9 +816,6 @@ feature {NONE} -- Implementation
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
 			end
-			if is_read_only then
-				Result := Result + Es_readonly
-			end
 		end
 
 	windows_position_to_eiffel (pos: INTEGER) : INTEGER is
@@ -852,11 +874,13 @@ feature {NONE} -- Implementation
 			-- Translate a piece of text to "Windows" text.
 		do
 			Result := clone (s)
-			if Result.occurrences ('%N') /= Result.occurrences ('%R') then
-				Result.replace_substring_all ("%R%N", "%N")
-				Result.replace_substring_all ("%N", "%R%N")
-			else
-				Result.replace_substring_all ("%N", "%R%N")
+			if not Result.empty then
+				if Result.occurrences ('%N') /= Result.occurrences ('%R') then
+					Result.replace_substring_all ("%R%N", "%N")
+					Result.replace_substring_all ("%N", "%R%N")
+				else
+					Result.replace_substring_all ("%N", "%R%N")
+				end
 			end
 		end
 

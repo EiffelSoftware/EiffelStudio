@@ -37,11 +37,11 @@ feature -- Access
 		once
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
-			Result := reflection_support.Eiffeldeliverypath
+			Result := reflection_support.Eiffel_delivery_path
 			Result := Result.Concat_string_string (Result, Dotnet_library_relative_path)
 		ensure
 			non_void_path: Result /= Void
-			not_empty_path: Result.length > 0
+			not_empty_path: Result.get_length > 0
 		end
 		
 	Dependancies_check_box_text: STRING is "Import assembly dependencies"
@@ -81,7 +81,7 @@ feature -- Access
 			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.length > 0
+			not_empty_filename: Result.get_length > 0
 		end
 				
 	Title: STRING is "Import a .NET assembly"

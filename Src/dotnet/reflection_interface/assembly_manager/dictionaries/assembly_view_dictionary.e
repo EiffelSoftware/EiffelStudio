@@ -10,12 +10,6 @@ inherit
 	
 feature -- Access
 
-	Cancel: INTEGER is 2
-		indexing
-			description: "Value indicating that the `Cancel' button of the message box has been clicked"
-			external_name: "Cancel"
-		end
-		
 	Caption_text: STRING is "Types"
 		indexing
 			description: "Text that appears in the blue header of the data grid"

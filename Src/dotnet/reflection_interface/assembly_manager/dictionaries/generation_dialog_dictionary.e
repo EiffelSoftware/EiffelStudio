@@ -21,12 +21,6 @@ feature -- Access
 			description: "Browse button label"
 			external_name: "BrowseButtonLabel"
 		end
-
-	Cancel: INTEGER is 2
-		indexing
-			description: "Value indicating that the `Cancel' button of the message box has been clicked"
-			external_name: "Cancel"
-		end
 		
 	Cancel_button_label: STRING is "Cancel"
 		indexing

@@ -26,7 +26,7 @@
 					Trees and their immediate generalization, forests, are useful for any system that
 					manipulates hierarchically organized information. The range of applications is broad,
 					from abstract syntax trees in compilers through document structures in text processing
-					systems to company organization charts in business software.<BR>
+					systems to company organization charts in business software.<BR />
 					Trees, in particular binary trees and their variants, also provide convenient
 					implementations of container data structures.</P>
 					
@@ -120,7 +120,7 @@
 					<P>This will attach my_tree to a new one-node tree, with root_value at the root node.
 					Here my_tree must be declared of type
 					<A HREF="../../reference/structures/tree/two_way_tree_chart.html">TWO_WA Y_TREE</A>
-					[MY_TYPE] for some type MY_TYPE, and root_value must be of type MY_TYPE.<BR>
+					[MY_TYPE] for some type MY_TYPE, and root_value must be of type MY_TYPE.<BR />
 					A class with a similar interface but using arrays rather than lists to represent nodes
 					is also available: <A HREF="../../reference/structures/tree/arrayed_tree_chart.html">ARRAYED_TREE
 					</A>. This class is more efficient in both time and space for trees whose nodes have
@@ -172,10 +172,10 @@
 					Whether fixed or dynamic, recursive trees fully enjoy their dual origin. This means in
 					particular that each node is viewed as a list of its children, and can apply to this list the
 					features inherited from <A HREF="../../reference/structures/list/list_chart.html">LIST</A>,
-					appropriately renamed; for example:<BR>
-					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put_left">child_put_left</A><BR>
-					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_forth">child_forth</A><BR>
-					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put">child_put</A><BR>
+					appropriately renamed; for example:<BR />
+					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put_left">child_put_left</A><BR />
+					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_forth">child_forth</A><BR />
+					<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put">child_put</A><BR />
 					and so on. Feature <A HREF="../../reference/structures/tree/dynamic_tree.html#f_count">count</A>,
 					inherited from <A HREF="../../reference/structures/list/list_chart.html">LIST</A>, indicates
 					the number of children; it is renamed arity to conform to accepted
@@ -190,8 +190,8 @@
 					<H3>Basic binary trees</H3>
 					
 					<P>Class <A HREF="../../reference/structures/tree/binary_tree_chart.html">BINARY_TREE</A>
-					describes binary trees.<BR><BR>
-					<CENTER><IMG SRC="binary_tree.png" ALT="binary_tree"/></CENTER><BR><BR>
+					describes binary trees.<BR /><BR />
+					<CENTER><IMG SRC="binary_tree.png" ALT="binary_tree"/></CENTER><BR /><BR />
 					The children are represented by features
 					<A HREF="../../reference/structures/tree/binary_tree.html#f_left_child">left_child</A>and
 					<A HREF="../../reference/structures/tree/binary_tree.html#f_right_child">right_child</A>.
@@ -209,11 +209,11 @@
 					corresponds to <I>fr</I>; its left subtree is obtained recursively from the forest made by the
 					subtrees of <I>fr</I>; and its right subtree is obtained recursively from the original forest
 					deprived of the tree rooted at <I>fr</I>. If you start from a tree rather than a forest the binary
-					tree’s root will have no right child.<BR>
+					tree’s root will have no right child.<BR />
 					
 					Function <A HREF="../../reference/structures/tree/tree.html#f_binary_representation">binary_representation</A>,
 					in <A HREF="../../reference/structures/tree/tree_chart.html">TREE</A>, creates a binary tree
-					representation (the function’s result) obtained from the current tree.<BR>
+					representation (the function’s result) obtained from the current tree.<BR />
 					Procedure <A HREF="../../reference/structures/tree/dynamic_tree.html#f_fill_from_binary">fill_ from_binary</A>,
 					in	<A HREF="../../reference/structures/tree/dynamic_tree_chart.html">DYNAMIC_TREE</A>,
 					reconstructs a tree from a binary tree representation passed as	argument.</P>
@@ -221,13 +221,13 @@
 					<H3>Binary search trees</H3>
 					
 					<P>Class <A HREF="../../reference/structures/tree/binary_search_tree_chart.html">BINARY_SEARCH_TREE</A>
-					describes binary search trees, an implementation of	bags which is appropriate for comparable items.<BR>
+					describes binary search trees, an implementation of	bags which is appropriate for comparable items.<BR />
 					Binary search trees rely for insertion on a policy whereby any item less than the
 					root is inserted (recursively) into the left subtree, and any item greater than the root into
 					the right subtree. So if the insertion order is reasonably random the items will distribute
 					evenly among the various branches, This means that the average height of the tree will
 					be not much more than the optimal: [log2 n] where n is the number of nodes and [x],
-					for any x, is the integer part of x.<BR>
+					for any x, is the integer part of x.<BR />
 					Since search operations will follow the same principle (search left if smaller than
 					the root, and so on), the time to find an item or ascertain that it is not there is
 					proportional to the average height. In normal cases this means about [log2 n] basic
@@ -269,7 +269,7 @@
 					(before a leftmost sibling),
 					<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>
 					(after a rightmost sibling.) As with linear structures, fictitious sentinel elements are
-					assumed to be present to the left, right, top and bottom.<BR>
+					assumed to be present to the left, right, top and bottom.<BR />
 					
 					Various procedures are available to move the cursor in all directions:</P>
 				
@@ -322,7 +322,7 @@
 					to be false, and the precondition of
 					<A HREF="/libraries/base/reference/structures/cursor_tree/cursor_tree_chart.html#f_put_right">put_right</A>
 					requires <A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>
-					to be false.<BR>
+					to be false.<BR />
 					It is possible to move down from an
 					<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>
 					position; in an empty tree this brings the cursor
@@ -333,7 +333,7 @@
 					<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>,
 					right from
 					<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>.
-					<BR>
+					<BR />
 					The sentinel element above the tree’s root is considered to be the root of a forest
 					containing just one tree. This view justifies the convention for the result of arity when
 					the cursor is above: 0 if the tree
@@ -352,7 +352,7 @@
 					<H3>Traversals</H3>
 					
 					<P>A useful notion associated with trees and particularly applicable to cursor trees is that of
-					traversal.<BR>
+					traversal.<BR />
 					A traversal is a certain policy for ordering all the nodes in a tree - usually to apply
 					an operation to all these nodes in the resulting order.
 					<A HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> and its

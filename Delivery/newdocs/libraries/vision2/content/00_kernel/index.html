@@ -1,16 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
 	<XML>
-			<MSHelp:Keyword INDEX="K" TERM="EiffelVision, Kernel" />
-			<MSHelp:Attr NAME="Product" VALUE="Eiffel"/>
-			<MSHelp:Attr NAME="Locale" VALUE="kbEnglish"/>
+			<MSHelp:Keyword Index="K" Term="EiffelVision, Kernel" />
+			<MSHelp:Attr Name="Product" Value="Eiffel"/>
+			<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
 	</XML>
 	<HEAD>
 		<TITLE>EiffelVision Kernel</TITLE>
 		<LINK HREF="/default.css" TYPE="text/css" REL="STYLESHEET"></LINK>
 	</HEAD>
 	<BODY>
-		<TABLE CLASS="HEADER" ID="Table1">
+		<TABLE CLASS="HEADER">
 			<TR>
 				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
 			</TR>
@@ -18,7 +18,7 @@
 				<TD CLASS="SUBHEADER">EiffelVision Kernel</TD>
 			</TR>
 		</TABLE>
-		<TABLE CLASS="FRAME" ID="Table2">
+		<TABLE CLASS="FRAME">
 			<TR>
 				<TD>
 					<P>
@@ -62,59 +62,59 @@
 						shown below.</P>
 						<P>&nbsp;</P>
 						<P CLASS="code">
-						<SPAN CLASS="ekeyword">class</SPAN><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">create</SPAN><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">feature</SPAN><BR>
-						<BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Create the application.</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+						<SPAN CLASS="ekeyword">class</SPAN><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">inherit</SPAN><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">create</SPAN><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">feature</SPAN><BR />
+						<BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Create the application.</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</a></SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">default_create</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!)</SPAN><BR>
+						<SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</a></SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">default_create</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!)</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.close_request_actions.extend
-						(agent destroy)&nbsp;</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.show</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">launch</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
-						<BR>
-						<SPAN CLASS="ekeyword">end</SPAN><BR>
+						(agent destroy)&nbsp;</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.show</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">launch</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR />
+						<BR />
+						<SPAN CLASS="ekeyword">end</SPAN><BR />
 						</P>
 						<P>&nbsp;</P>
 						<P>This is the same Vision2 application but instead using <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html"><A href="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A></SPAN> 
 						in a client/supplier relationship.</P>
 						<P>&nbsp;</P>
 						<P Class="code">
-						<SPAN CLASS="ekeyword">class</SPAN><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">create</SPAN><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">feature</SPAN><BR><BR>
-						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><BR>
+						<SPAN CLASS="ekeyword">class</SPAN><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">create</SPAN><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">feature</SPAN><BR /><BR />
+						&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Create
-						the Vision2 application with a helloworld window.</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR>
+						the Vision2 application with a helloworld window.</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html"> EV_TITLED_WINDOW</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR>
+						<SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html"> EV_TITLED_WINDOW</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> 
-						<SPAN CLASS="efeature">app</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!&quot;</SPAN>)<BR>
+						<SPAN CLASS="efeature">app</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!&quot;</SPAN>)<BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.close_request_actions.extend
-						(agent app.destroy)</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.show</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>.<SPAN CLASS="efeature">launch</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR><BR>
-						<SPAN CLASS="ekeyword">end</SPAN><BR>
+						(agent app.destroy)</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.show</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>.<SPAN CLASS="efeature">launch</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR /><BR />
+						<SPAN CLASS="ekeyword">end</SPAN><BR />
 						</P>
 						<P>
 							&nbsp;
@@ -151,7 +151,7 @@
 				</TD>
 			</TR>
 		</TABLE>
-		<TABLE CLASS="FOOTER" ID="Table3">
+		<TABLE CLASS="FOOTER">
 			<TR>
 				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
 			</TR>

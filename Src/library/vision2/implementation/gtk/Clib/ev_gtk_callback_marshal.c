@@ -147,7 +147,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 	return connection_id;
 }
 
-void c_ev_gtk_callback_marshal_signal_connect_true (
+guint c_ev_gtk_callback_marshal_signal_connect_true (
     GtkObject* c_object,
     const gchar* signal,
     EIF_OBJECT agent
@@ -155,6 +155,8 @@ void c_ev_gtk_callback_marshal_signal_connect_true (
 		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
 		// Callback always returns true.
 {
+	// local
+			guint connection_id;
     // debug
 		/*
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
@@ -172,7 +174,7 @@ void c_ev_gtk_callback_marshal_signal_connect_true (
             g_assert (ev_gtk_callback_marshal_object != NULL);
             g_assert (ev_gtk_callback_marshal != NULL);
     // do
-            gtk_signal_connect_full (
+            connection_id = gtk_signal_connect_full (
                 c_object,                  // Object which emits the signal.
                 signal,                    // Name of the signal.
                 (GtkSignalFunc) c_ev_gtk_callback_marshal_true_event_callback,  // Function pointer to attach.
@@ -183,7 +185,10 @@ void c_ev_gtk_callback_marshal_signal_connect_true (
                 FALSE,                     // This is an object signal.
                 FALSE                      // Invoke handler after the signal.
             );
+	//ensure
+			g_assert (connection_id > 0);
 	// end
+	return connection_id;
 }
 
 
@@ -432,6 +437,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.12  2001/06/29 19:55:20  king
+// Returning signal connection on signal connect true
+//
 // Revision 1.11  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.
 //

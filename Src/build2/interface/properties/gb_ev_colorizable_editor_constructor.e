@@ -153,7 +153,6 @@ feature {NONE} -- Implementation
 			for_all_objects (p)
 			update_editors
 			update_attribute_editor
-			background_color_entry.update_constant_display (first.background_color)
 		end
 		
 	restore_foreground_color is
@@ -173,7 +172,6 @@ feature {NONE} -- Implementation
 			for_all_objects (p)
 			update_editors
 			update_attribute_editor
-			foreground_color_entry.update_constant_display (first.foreground_color)
 		end
 
 	update_background_color is

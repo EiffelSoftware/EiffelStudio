@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 				v_imp.c_object,
 				"key-press-event",
 				~on_key_pressed,
-				~key_event_translate
+				key_event_translate_agent
 			)	
 			v_imp.key_press_actions.extend (~on_key_pressed)
 		end

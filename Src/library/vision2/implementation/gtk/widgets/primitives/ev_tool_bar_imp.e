@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision2 toolbar, implementation interface."
 	status: "See notice at end of class."

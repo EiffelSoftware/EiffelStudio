@@ -89,13 +89,13 @@ feature {NONE} -- Initialization
 					entry_widget,
 					"key_press_event",
 					~on_key_event,
-					~key_event_translate
+					key_event_translate_agent
 				)
 			real_signal_connect (
 					entry_widget,
 					"key_release_event",
 					~on_key_event,
-					~key_event_translate)
+					key_event_translate_agent)
 			
 			create timer.make_with_interval (0)
 			timer.actions.extend (~launch_select_actions)
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_parent_imp (Current)
 			temp_sig_id := c_signal_connect (imp.c_object, eiffel_to_c ("button-press-event"), agent on_item_clicked)
-			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, agent key_event_translate)
+			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
 			if count = 1 and is_sensitive then
 				imp.enable_select
 			end

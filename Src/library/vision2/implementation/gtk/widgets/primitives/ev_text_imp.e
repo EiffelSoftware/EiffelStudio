@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -198,13 +197,14 @@ feature -- Status setting
 		end
 	
 	append_text (txt: STRING) is
+			-- Append `txt' to `text'.
 		do
 			C.gtk_text_set_point (c_object, text_length)
 			insert_text (txt)
 		end
 	
 	prepend_text (txt: STRING) is
-			-- prepend 'txt' to text
+			-- Prepend 'txt' to `text'.
 		do
 			C.gtk_text_set_point (c_object, 0)
 			insert_text (txt)

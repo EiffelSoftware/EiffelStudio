@@ -123,7 +123,8 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.height")
+			Result := 16
+			fixme ("Needs to be properly computed")
 		ensure
 			result_not_negative: Result >= 0
 		end

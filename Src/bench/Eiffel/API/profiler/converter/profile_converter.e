@@ -782,7 +782,7 @@ feature {NONE} -- Attributes
 	profile_information: PROFILE_INFORMATION;
 		-- Information about the profiled application
 
-	functions: STORABLE_FUNCTION_TABLE [EIFFEL_FUNCTION, STRING];
+	functions: HASH_TABLE [EIFFEL_FUNCTION, STRING];
 
 	translat_string: STRING;
 

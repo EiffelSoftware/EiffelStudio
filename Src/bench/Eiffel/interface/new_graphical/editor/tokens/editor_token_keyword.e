@@ -18,12 +18,12 @@ create
 
 feature {NONE} -- Implementation
 	
-	text_color: WEL_COLOR_REF is
+	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.keyword_text_color
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: EV_COLOR is
 		do
 			Result := editor_preferences.keyword_background_color
 		end

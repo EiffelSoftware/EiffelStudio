@@ -35,9 +35,7 @@ feature -- Miscellaneous
 	width: INTEGER is
 			-- Width in pixel of the entire token.
 		do
-			dc.select_font(font)
-			Result := dc.string_width(image)
-			dc.unselect_font
+			Result := font.string_width(image)
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -47,9 +45,7 @@ feature -- Miscellaneous
 			if n = 0 then
 				Result := 0
 			else
-				dc.select_font(font)
-				Result := dc.string_width(image.substring(1,n))
-				dc.unselect_font
+				Result := font.string_width(image.substring(1,n))
 			end
 		end
 
@@ -57,156 +53,136 @@ feature -- Miscellaneous
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local
-			space_width: INTEGER
 			current_position: INTEGER
-			current_width: INTEGER
-			next_width: INTEGER
+			current_width	: INTEGER
+			next_width		: INTEGER
 		do
-			dc.select_font(font)
-
 				-- precompute an estimation of the current_position
-			space_width := dc.string_width(" ")
-			current_position := a_width // space_width
+			current_position := a_width // font.width
 
 				-- We have now to check that our current position is the good one.
 				-- If we are above, we decrease current_position, and the opposite.
 			from
-				current_width := dc.string_width(image.substring(1,current_position))
-				next_width := dc.string_width(image.substring(1,current_position+1))
+				current_width := font.string_width(image.substring(1,current_position))
+				next_width := font.string_width(image.substring(1,current_position+1))
 			until
 				a_width >= current_width and then a_width < next_width
 			loop
 				if a_width < current_width then
 					current_position := current_position - 1
 					next_width := current_width
-					current_width := dc.string_width(image.substring(1,current_position))
+					current_width := font.string_width(image.substring(1,current_position))
 				else
 					current_position := current_position + 1
 					current_width := next_width
-					next_width := dc.string_width(image.substring(1,current_position+1))
+					next_width := font.string_width(image.substring(1,current_position+1))
 				end
 			end
-			dc.unselect_font
 
 			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
-	display(d_y: INTEGER; a_dc: WEL_DC) is
+	display(d_y: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
-			display_with_colors(d_y, text_color, background_color, a_dc)
+			display_with_colors(d_y, text_color, background_color, device)
 		end
 
-	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
+	display_selected(d_y: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
 		do
-			display_with_colors(d_y, selected_text_color, selected_background_color, a_dc)
+			display_with_colors(d_y, selected_text_color, selected_background_color, device)
 		end
 
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'
 		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
+			old_text_color: EV_COLOR
+			old_background_color: EV_COLOR
 			local_position: INTEGER
+			local_string: STRING
+			text_width: INTEGER
 		do
-				-- Save current drawing style
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
 			local_position := position
 
 				-- Change drawing style here.
-			a_dc.select_font(font)
+			device.set_font(font)
 
-			-----------------------------------------------------------------------------------------
+			-- Draw unselected text (first part) ----------------------------------------------------
 
 			if start_selection /= 1 then
+				local_string := image.substring(1,start_selection-1)
+				text_width := font.string_width(local_string)
+
 					-- Set drawing style to "normal" text
-				a_dc.set_text_color(text_color)
-				a_dc.set_background_color(background_color)
+				device.set_foreground_color(text_color)
+				if background_color /= Void then
+					device.set_background_color(background_color)
+					device.clear_rectangle (local_position, d_y, local_position + text_width, d_y + font.height)
+				end
 
 					-- Display the beginning of the text.
-				a_dc.text_out (local_position, d_y, image.substring(1,start_selection-1))
-				local_position := local_position + a_dc.string_width(image.substring(1,start_selection-1))
+				device.draw_text (local_position, d_y, local_string)
+				local_position := local_position + text_width
 			end
 
-			-----------------------------------------------------------------------------------------
+			-- Draw selected text -------------------------------------------------------------------
+
+			local_string := image.substring(start_selection,end_selection-1)
+			text_width := font.string_width(local_string)
 
 				-- Set drawing style to "selected" text
-			a_dc.set_text_color(selected_text_color)
-			a_dc.set_background_color(selected_background_color)
-
-				-- Display the "selected" text.
-			a_dc.text_out (local_position, d_y, image.substring(start_selection,end_selection-1))
-			local_position := local_position + a_dc.string_width(image.substring(start_selection,end_selection-1))
-
-			-----------------------------------------------------------------------------------------
-
-			if end_selection <= length then
-					-- Set drawing style to "normal" text
-				a_dc.set_text_color(text_color)
-				a_dc.set_background_color(background_color)
-
-					-- Display the end of the text.
-				a_dc.text_out (local_position, d_y, image.substring(end_selection,length))
+			device.set_foreground_color(selected_text_color)
+			if selected_background_color /= Void then
+				device.set_background_color(selected_background_color)
+				device.clear_rectangle (local_position, d_y, local_position + text_width, d_y + font.height)
 			end
 
-			-----------------------------------------------------------------------------------------
+				-- Display the "selected" text.
+			device.draw_text (local_position, d_y, local_string)
+			local_position := local_position + text_width
 
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			if font /= Void then
-				a_dc.unselect_font
+			-- Draw unselected text (last part) -----------------------------------------------------
+
+			if end_selection <= length then
+
+				local_string := image.substring(end_selection,length)
+				text_width := font.string_width(local_string)
+
+					-- Set drawing style to "normal" text
+				device.set_foreground_color(text_color)
+				if background_color /= Void then
+					device.set_background_color(background_color)
+				device.clear_rectangle (local_position, d_y, local_position + text_width, d_y + font.height)
+				end
+
+					-- Display the end of the text.
+				device.draw_text (local_position, d_y, local_string)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	display_with_colors(d_y: INTEGER; a_text_color: WEL_COLOR_REF; a_background_color: WEL_COLOR_REF; a_dc: WEL_DC) is
-		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
+	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWING_AREA) is
 		do
-				-- Change drawing style here.
-			if a_text_color /= Void then
-				old_text_color := a_dc.text_color
-				a_dc.set_text_color(a_text_color)
-			end
+ 				-- Change drawing style here.
+ 			device.set_font(font)
+			device.set_foreground_color(a_text_color)
+
 			if a_background_color /= Void then
-				old_background_color := a_dc.background_color
-				a_dc.set_background_color(a_background_color)
-			end
-			if font /= Void then
-				a_dc.select_font(font)
+				device.set_background_color(a_background_color)
+				device.clear_rectangle (position, d_y, position + font.string_width(image), d_y + font.height)
 			end
 
-				-- Display the text.
-			a_dc.text_out (position, d_y, image)
-
-				-- Restore drawing style here.
-			if text_color /= Void then
-				a_dc.set_text_color(old_text_color)
-			end
-			if background_color /= Void then
-				a_dc.set_background_color(old_background_color)
-			end
-			if font /= Void then
-				a_dc.unselect_font
-			end
+ 				-- Display the text.
+ 			device.draw_text (position, d_y, image)
 		end
 
 feature {NONE} -- Properties used to display the token
-
-	dc: WEL_MEMORY_DC is
-		once
-			create Result.make
-		end
-
 
 end -- class EDITOR_TOKEN

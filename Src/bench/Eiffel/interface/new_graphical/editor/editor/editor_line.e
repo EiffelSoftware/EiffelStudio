@@ -9,11 +9,6 @@ class
 
 inherit
 	TREE_ITEM
-		rename
-			tree as paragraph
-		redefine
-			paragraph
-		end
 
 create
 	make_empty_line,
@@ -38,8 +33,10 @@ feature -- Initialisation
 		require
 			lexer_exists: lexer /= Void
 		local
-			t_eol: EDITOR_TOKEN_EOL
-			t: EDITOR_TOKEN
+			t_eol		: EDITOR_TOKEN_EOL
+			t			: EDITOR_TOKEN
+			loop_token	: EDITOR_TOKEN
+			rel_point	: EV_RELATIVE_POINT
 		do
 			create t_eol.make
 			t := lexer.end_token
@@ -107,9 +104,6 @@ feature -- Transformation
 		end
 
 feature -- Access
-
-	paragraph: PARAGRAPH
-		-- This line belongs to the paragraph `paragraph'
 
 	first_token: EDITOR_TOKEN
 		-- First token in the
@@ -215,7 +209,7 @@ feature -- Status Report
 			Result_not_void: Result /= Void
 		end
 
-	image_from_start_to_cursor(text_cursor: TEXT_CURSOR): STRING is
+	image_from_start_to_cursor(text_cursor: EDITOR_CURSOR): STRING is
 			-- Substring of the line starting at the beggining of
 			-- the line and ending at the cursor position (not
 			-- included)
@@ -246,7 +240,7 @@ feature -- Status Report
 			Result_not_void: Result /= Void
 		end
 
-	image_from_cursor_to_end(text_cursor: TEXT_CURSOR): STRING is
+	image_from_cursor_to_end(text_cursor: EDITOR_CURSOR): STRING is
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		require

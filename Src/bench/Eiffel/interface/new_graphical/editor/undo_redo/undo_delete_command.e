@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (tc: TEXT_CURSOR; s: STRING; w: CHILD_WINDOW) is
+	make_from_string (tc: EDITOR_CURSOR; s: STRING; w: EDITOR_WINDOW) is
 		do
 			y_start := tc.y_in_lines
 			x_start := tc.x_in_characters
@@ -46,7 +46,7 @@ feature -- Element change
 			message.extend (c)
 		end
 
-	prepend (tc: TEXT_CURSOR; c: CHARACTER) is
+	prepend (tc: EDITOR_CURSOR; c: CHARACTER) is
 		do
 			y_start := tc.y_in_lines
 			x_start := tc.x_in_characters
@@ -69,7 +69,7 @@ feature -- Basic operations
 
 	undo	is
 		local
-			cur: TEXT_CURSOR
+			cur: EDITOR_CURSOR
 		do
 			cur := chwin.cursor
 			chwin.set_selection_start (cur)
@@ -79,7 +79,7 @@ feature -- Basic operations
 
 	redo is
 		local
-			cur: TEXT_CURSOR
+			cur: EDITOR_CURSOR
 		do
 			cur := chwin.cursor
 			chwin.forget_selection
@@ -93,7 +93,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	chwin : CHILD_WINDOW
+	chwin : EDITOR_WINDOW
 
 invariant
 	invariant_clause: -- Your invariant here

@@ -16,10 +16,17 @@ create
 feature -- Initialisation
 
 	make(number: INTEGER) is
+		require
+			number_valid: number > 0
+		local
+			relative_point: EV_RELATIVE_POINT
 		do
 			length := number
 			create image.make(number)
 			image.fill_character('%T')
+		ensure
+			image_not_void: image /= Void
+			length_positive: length > 0
 		end
 
 feature -- Width & Height
@@ -66,12 +73,12 @@ feature -- Width & Height
 
 feature {NONE} -- Implementation
 
-	display_blanks(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; start_tab, end_tab: INTEGER): INTEGER is
+	display_blanks(d_x, d_y: INTEGER; device: EV_DRAWING_AREA; selected: BOOLEAN; start_tab, end_tab: INTEGER): INTEGER is
 		local
-			old_text_color		: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
-			the_text_color		: WEL_COLOR_REF
-			the_background_brush: WEL_BRUSH
+			old_text_color		: EV_COLOR
+			old_background_color: EV_COLOR
+			the_text_color		: EV_COLOR
+			the_background_color: EV_COLOR
 			the_text			: STRING
 			local_width			: INTEGER
 			symbol_position		: INTEGER
@@ -80,88 +87,75 @@ feature {NONE} -- Implementation
 			i					: INTEGER
 			local_position		: INTEGER
 		do
-				-- Initialisations
-			view_tabulation_symbol := editor_preferences.view_invisible_symbols
-			local_position := d_x
-
-				-- Select the drawing style we will use.
-			if selected then
-				the_text_color := selected_text_color
-				the_background_brush := selected_background_brush
-			else
-				the_text_color := text_color
-				the_background_brush := normal_background_brush
+ 				-- Initialisations
+ 			view_tabulation_symbol := editor_preferences.view_invisible_symbols
+ 			local_position := d_x
+ 
+ 				-- Select the drawing style we will use.
+ 			if selected then
+ 				the_text_color := selected_text_color
+ 				the_background_color := selected_background_color
+ 			else
+ 				the_text_color := text_color
+ 				the_background_color := background_color
+ 			end
+ 
+ 				-- Backup drawing style & set the new one
+ 			device.set_font(font)
+ 			device.set_foreground_color(the_text_color)
+			if the_background_color /= Void then
+				device.set_background_color(the_background_color)
 			end
-
-				-- Backup drawing style & set the new one
-			old_text_color := a_dc.text_color
-			a_dc.set_text_color(the_text_color)
-			a_dc.set_background_transparent
-			a_dc.select_font(font)
-
-				-- Display the first tabulation
-			from
-				i := start_tab
-			until
-				i > end_tab
-			loop
-					-- Compute the width of the tabulation
-				if i = start_tab then
-					local_width := get_substring_width(1)
-				else
-					local_width := tabulation_width
+ 
+ 				-- Display the first tabulation
+ 			from
+ 				i := start_tab
+ 			until
+ 				i > end_tab
+ 			loop
+ 					-- Compute the width of the tabulation
+ 				if i = start_tab then
+ 					local_width := get_substring_width(1)
+ 				else
+ 					local_width := tabulation_width
+ 				end
+ 			
+ 					-- Compute the position of the tabulation symbol
+ 				if view_tabulation_symbol then
+ 					symbol_position := local_position + ( local_width - tabulation_symbol_width ) // 2
+ 				end
+ 
+ 					-- Fill the rectangle occupied by the tabulation
+				if the_background_color /= Void then
+	 				device.clear_rectangle(local_position, d_y, local_position + local_width, d_y + height)
 				end
-			
-					-- Compute the position of the tabulation symbol
-				if view_tabulation_symbol then
-					symbol_position := local_position + ( local_width - tabulation_symbol_width ) // 2
-				end
-
-					-- Fill the rectangle occupied by the tabulation
-				create wel_rect.make(local_position, d_y, local_position + local_width, d_y + height)
-				a_dc.fill_rect(wel_rect, the_background_brush)
-
-					-- Display the tabulation symbol
-				if view_tabulation_symbol then
-					a_dc.text_out(symbol_position, d_y, tabulation_symbol)
-				end
-
-					-- update the local position & prepare next iteration
-				local_position := local_position + local_width
-				i := i + 1
-			end
-
-				-- Restore old drawing style
-			a_dc.unselect_font
-			a_dc.set_background_opaque
-			a_dc.set_text_color(old_text_color)
-
-			Result := local_position
+ 
+ 					-- Display the tabulation symbol
+ 				if view_tabulation_symbol then
+ 					device.draw_text(symbol_position, d_y, tabulation_symbol)
+ 				end
+ 
+ 					-- update the local position & prepare next iteration
+ 				local_position := local_position + local_width
+ 				i := i + 1
+ 			end
+ 
+ 			Result := local_position
 		end
 
 feature {NONE} -- Private characteristics & constants
 
 	tabulation_width: INTEGER is
-		local
-			dc: WEL_MEMORY_DC
-		once
+		do
 				-- Compute the number of pixels represented by a tabulation based on
-				-- user preferences.
-			create dc.make
-			dc.select_font(font)
-			Result := editor_preferences.tabulation_spaces * dc.string_width(" ")
-			dc.unselect_font
+				-- user preferences number of spaces per tabulation.
+			Result := editor_preferences.tabulation_spaces * font.string_width(" ")
 		end
 
 	tabulation_symbol_width: INTEGER is
-		local
-			dc: WEL_MEMORY_DC
-		once
+		do
 				-- Compute the number of pixels represented by the tabulation symbol
-			create dc.make
-			dc.select_font(font)
-			Result := dc.string_width(tabulation_symbol)
-			dc.unselect_font
+			Result := font.string_width(tabulation_symbol)
 		end
 
 	tabulation_symbol: STRING is

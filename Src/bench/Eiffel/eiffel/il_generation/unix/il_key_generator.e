@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "To generate private key for .NET systems."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,5 +18,13 @@ feature -- Initialization
 				False
 			end
 		end
+
+feature -- Status report
+
+	successful: BOOLEAN
+			-- Was call to `generate_key' successful?
+
+	error_message: STRING is "No supported on UNIX systems."
+			-- Associated error message if not successful.
 
 end -- class IL_KEY_GENERATOR

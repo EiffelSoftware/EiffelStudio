@@ -16,17 +16,17 @@ feature -- Properties
 	icon_name: STRING is
 			-- Icon name for tool when editing Current 
 		deferred
-		end;
+		end
 
 	stone_name: STRING is 
 			-- Name of the Current stone for the UI.
 		deferred 
-		end;
+		end
 
 	stone_type: INTEGER is 
 			-- Type determining compatibility and cursor shape
 		deferred 
-		end;
+		end
 
 --	stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
@@ -34,7 +34,7 @@ feature -- Properties
 --		deferred
 --		ensure
 --			non_void: Result /= Void
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
@@ -42,7 +42,7 @@ feature -- Properties
 --		deferred
 --		ensure
 --			non_void: Result /= Void
---		end;
+--		end
 
 feature -- Update
 
@@ -51,7 +51,7 @@ feature -- Update
 --		require
 --			non_void_hole: hole /= Void
 --		deferred
---		end;
+--		end
 
 feature  -- Access
 
@@ -59,14 +59,14 @@ feature  -- Access
 			-- Explaination of what current element means,
 			-- "No help available" by default
 		once
-			!! Result.make;
+			create Result.make
 			Result.put_front (Interface_names.h_No_help_available)
-		end;
+		end
 
 	click_list: ARRAY [CLICK_STONE] is 
 			-- Structure to make clickable the display of `origin_text'
 		deferred 
-		end;
+		end
 
 	origin_text: STRING is
 			-- What's shown by default usually. The others representations are
@@ -77,37 +77,37 @@ feature  -- Access
 		require
 			valid_stone: is_valid
 		deferred
-		end;
+		end
 
 	stone_signature: STRING is 
 			-- Short string to explain Current
 		deferred 
-		end;
+		end
 
 	header: STRING is 
 			-- Short string to explain Current
 			-- (By default, it is the stone_signature)
 		do 
 			Result := stone_signature 
-		end;
+		end
 
 	history_name: STRING is 
 			-- Name used in the history list
 			-- (By default, it is the stone_signature)
 		do 
 			Result := stone_signature 
-		end;
+		end
 
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
 			Result := True
-		end;
+		end
 
 	invalid_stone_message: STRING is
 			-- Message displayed for an invalid_stone
 		do
-		end;
+		end
 
 	synchronized_stone: STONE is
 			-- Clone of `Current' after a recompilation
@@ -116,7 +116,7 @@ feature  -- Access
 			Result := clone (Current)
 		ensure
 			valid_stone: Result /= Void implies Result.is_valid
-		end;
+		end
 
 	same_as (other: STONE): BOOLEAN is
 			-- Is `other' same as Current?
@@ -125,7 +125,7 @@ feature  -- Access
 			o: like Current
 		do
 				-- System level validity problems
-			o ?= other;
+			o ?= other
 			Result := equal (Current, o)
 		end
 

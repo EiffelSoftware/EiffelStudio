@@ -79,6 +79,17 @@ feature -- Access
 			create Result.make
 		end
 		
+	redo_command: GB_REDO_COMMAND is
+			-- Command representing a redo.
+		once
+			create Result.make
+		end
+		
+	undo_command: GB_UNDO_COMMAND is
+			-- Command representing undo.
+		once
+			create Result.make
+		end
 		
 
 feature -- Basic operation
@@ -122,6 +133,8 @@ feature {NONE} -- Implementation
 			Result.extend (show_history_command)
 			Result.extend (delete_object_command)
 			Result.extend (object_editor_command)
+			Result.extend (undo_command)
+			Result.extend (redo_command)
 		end
 		
 

@@ -13,7 +13,7 @@ class
 inherit
 	ECOM_WRAPPER
 
-creation
+create
 	make_from_pointer
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 		do
 			ptr := ccom_next_item (initializer)
 			if (ptr /= default_pointer) then
-				!! Result.make_from_pointer (ptr)
+				create Result.make_from_pointer (ptr)
 			end
 		end
 
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			-- Creates another enumerator that has 
 			-- same enumeration state as `Current'. 
 		do
-			!! Result.make_from_pointer (ccom_clone (initializer))
+			create Result.make_from_pointer (ccom_clone (initializer))
 		ensure
 			Result /= Void
 		end

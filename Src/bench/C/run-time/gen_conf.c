@@ -124,7 +124,6 @@ rt_public void eif_gen_conf_init (int max_dtype)
 		enomem();
 	bzero ((char *) eif_derivations, eif_cid_size * sizeof (EIF_GEN_DER *));
 
-
 	eif_conf_tab = (EIF_CONF_TAB **) cmalloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
 	if (eif_conf_tab == (EIF_CONF_TAB **) 0)
 		enomem();
@@ -133,11 +132,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	/* Setup a 1-1 mapping and initialize the arrays */
 
 	for (dt = 0; dt < eif_cid_size; ++dt)
-	{
-		eif_cid_map [dt]     = (int16) dt;
-		eif_derivations [dt] = (EIF_GEN_DER *) 0;
-		eif_conf_tab [dt]    = (EIF_CONF_TAB *) 0;
-	}
+		eif_cid_map [dt] = (int16) dt;
 
 	/* Now initialize egc_xxx_dtypes */
 
@@ -303,7 +298,7 @@ rt_public int16 eif_gen_param_id (char *obj, int pos)
 	char is_exp;
 	long nr_bits;
 
-	return eif_gen_param (obj, pos, &is_exp, &nr_bits)
+	return eif_gen_param (obj, pos, &is_exp, &nr_bits);
 }
 
 /*------------------------------------------------------------------*/

@@ -46,6 +46,8 @@ feature -- Status report
 		local
 			keysym: CHARACTER;
 			pos: INTEGER;
+			pull: MEL_PULLDOWN_MENU;
+			acc_text: MEL_STRING
 		do
 			Result := label_as_string
 			keysym := mnemonic;
@@ -55,6 +57,17 @@ feature -- Status report
 				end;
 				pos := Result.index_of (keysym, 1);
 				Result.insert ("&", pos)
+			end;
+			pull ?= parent;
+			if pull /= Void then
+				-- Parent is menu pull.
+				-- Check to see for accelerators.
+				acc_text := accelerator_text;
+				if acc_text /= Void then
+					Result.extend ('%T');
+					Result.append (acc_text.to_eiffel_string);
+					acc_text.destroy
+				end
 			end
 		end; 
 
@@ -68,7 +81,11 @@ feature -- Status setting
 			menu_m: MENU_M;
 			button_text: STRING
 		do
-			set_mnemonic_from_text (a_text, True)
+			if a_text.empty then
+				set_label_as_string (a_text)
+			else
+				set_mnemonic_from_text (a_text, True)
+			end
 		ensure
 			text_set: text.is_equal (a_text)
 		end;
@@ -105,52 +122,72 @@ feature {NONE} -- Implementation
 	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN) is
 			-- Extract the mnemonic from `a_text' and set it and then
 			-- set the button text to `a_text' if `set_text_explicity' is True.
+		require
+			valid_text: a_text /= Void 
 		local
 			count, pos: INTEGER;
 			finished: BOOLEAN;
 			button_text: STRING;
-			keysym: CHARACTER
+			keysym: CHARACTER;
+			pull: MEL_PULLDOWN_MENU;
+			acc_text: MEL_STRING;
+			acc_set: BOOLEAN
 		do
-			if is_able_have_accerlators then
-				count := a_text.count;
-				if count > 0 then
+			if not a_text.empty then
+				if is_able_have_accerlators then
+					count := a_text.count;
+					pull ?= parent;
+					button_text := a_text;
+					if pull /= Void then
+							-- Find the %T tag and anything after this
+							-- is the accelerator text
+						pos := button_text.index_of ('%T', 1);
+						if pos > 1 and then pos /= count then
+							!! acc_text.make_localized (button_text.substring (pos + 1, count));
+							set_accelerator_text (acc_text);
+							button_text := button_text.substring (1, pos - 1);
+							acc_set := True;
+						elseif set_text_explicity then
+							set_accelerator_text (Void);
+						end
+					end;
 					from
 						pos := 1
 					until
 						finished
 					loop
-						pos := a_text.index_of ('&', pos);
+						pos := button_text.index_of ('&', pos);
 						if pos = 0 then
 							finished := True
 						elseif pos = count then
 							pos := 0;
 							finished := True
-						elseif a_text.item (pos + 1) /= '&' then	
+						elseif button_text.item (pos + 1) /= '&' then	
 							finished := True
 						else
 							pos := pos + 1
 						end	
 					end
-				end
-				if pos = 0 then
-					if set_text_explicity then
-						set_label_as_string (a_text)
-						if mnemonic /= '%U' then
-							set_mnemonic ('%U');
+					if pos = 0 then
+						if set_text_explicity or else acc_set then
+							set_label_as_string (button_text)
+							if mnemonic /= '%U' then
+								set_mnemonic ('%U');
+							end
 						end
+					else
+						keysym := button_text.item (pos + 1);
+						set_mnemonic (keysym);
+						button_text := clone (button_text);
+						button_text.remove (pos) -- Remove the `&'
+						set_label_as_string (button_text)
 					end
-				else
-					keysym := a_text.item (pos + 1);
-					set_mnemonic (keysym);
-					button_text := clone (a_text);
-					button_text.remove (pos) -- Remove the `&'
-					set_label_as_string (button_text)
-				end
-			elseif set_text_explicity then
-				set_label_as_string (a_text)
-			end;
+				elseif set_text_explicity then
+					set_label_as_string (a_text)
+				end;
+			end
 		end
-
+	
 end -- class BUTTON_M
 
 --|----------------------------------------------------------------

@@ -272,6 +272,11 @@ cluster
 			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
 		end
 
+	all graph:		"$EIFFEL_SRC\library\graph"
+		exclude
+			"CVS";
+		end
+
 external
 
 	include_path:

@@ -45,7 +45,6 @@ feature -- Status setting
 		do
 			update_request_size
 			w_imp ?= a_widget.implementation
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (w_imp.c_object, an_x, a_y)
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (visual_widget, w_imp.c_object, an_x, a_y)
 			set_minimum_size (minimum_width.max (w_imp.width + an_x), minimum_height.max (w_imp.height + a_y))
 		end

@@ -747,7 +747,8 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 						+ Ws_tabstop + Ws_vscroll
-						+ Cbs_autohscroll
+						+ Cbs_autohscroll + Ws_clipchildren
+						+ Ws_clipsiblings
 		end
 
 	old_selected_item: EV_LIST_ITEM_IMP

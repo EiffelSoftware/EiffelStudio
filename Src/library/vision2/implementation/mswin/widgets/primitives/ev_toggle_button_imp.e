@@ -87,6 +87,7 @@ inherit
 			on_sys_key_up,
 			default_process_message
 		redefine
+			default_style,
 			enable_select,
 			disable_select
 		end	
@@ -131,6 +132,14 @@ feature {NONE} -- Implementation, focus event
 			-- remove any bold border to the other buttons.
 		do
 		end
+		
+	default_style: INTEGER is
+			-- Default style used to create `Current'.
+		do
+			Result := Ws_visible + Ws_child + 
+				Ws_group + Ws_tabstop + Bs_autocheckbox +
+				Bs_pushlike + Ws_clipchildren + Ws_clipsiblings
+ 		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -79,7 +79,8 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control.
 		do
 			Result := Ws_visible + Ws_child + Ws_group
-				+ Ws_tabstop + Tbs_tooltips
+				+ Ws_tabstop + Tbs_tooltips + Ws_clipchildren
+				+ Ws_clipsiblings
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

@@ -37,6 +37,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create `Current'.
 		do
 			Result := Ws_visible + Ws_child + Pbs_vertical
+				+ Ws_clipchildren + Ws_clipsiblings
 	end
 
 feature {EV_ANY_I} -- Implementation

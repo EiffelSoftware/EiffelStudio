@@ -377,7 +377,8 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible + Ws_group 
 					+ Ws_tabstop + Ws_border + Es_left
 					+ Es_multiline + Es_wantreturn
-					+ Es_autovscroll
+					+ Es_autovscroll + Ws_clipchildren
+					+ Ws_clipsiblings
 		end
 
 	default_ex_style: INTEGER is

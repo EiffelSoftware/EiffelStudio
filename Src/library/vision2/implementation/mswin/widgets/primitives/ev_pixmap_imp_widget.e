@@ -632,7 +632,8 @@ feature {NONE} -- Private Implementation
 	default_style: INTEGER is
 			-- Default style that memories the drawings.
 		do
-			Result := Ws_child + Ws_visible
+			Result := Ws_child + Ws_visible + Ws_clipchildren
+				+ Ws_clipsiblings
 		end
 
 	class_style: INTEGER is
@@ -640,7 +641,7 @@ feature {NONE} -- Private Implementation
    			-- Can be redefined to return a user-defined style.
    			-- (from WEL_FRAME_WINDOW)
    		once
-			Result := 
+			Result :=
 				cs_hredraw + 
 				cs_vredraw + 
 				cs_dblclks + 

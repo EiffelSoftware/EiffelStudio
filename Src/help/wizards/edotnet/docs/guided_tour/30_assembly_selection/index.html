@@ -38,19 +38,48 @@
 
 		<a name = import></a>
 		<h2>Importing .NET assemblies</h2>
-        <p>To import new assemblies in the list of available assemblies, click
-        on <i>ISE Assembly Manager</i>.<br>
-			For more information about the Assembly Manager, <a href="../../../../../../dotnet/reflection_interface/docs/index.html"> see</a> the corresponding help topics.
+
+		<h3>Importing signed assemblies</h3>
+
+			<p>To import new signed assemblies in the list of available assemblies, click
+			on <i>ISE Assembly Manager</i>.<br>
+				For more information about the Assembly Manager, <a href="../../../../../../dotnet/reflection_interface/docs/index.html"> see</a> the corresponding help topics.
+			</p>
+			<p>
+				The list of selected assemblies is updated upon closing the Assembly
+				Manager: new assemblies available in the <a href="../../../../../../dotnet/reflection_interface/docs/reference/00_definitions/eiffel_assembly_cache.html">Eiffel
+				Assembly Cache</a> are automatically added to the list.
+			</p>
+
+		<h3>Importing local assemblies</h3>
+
+			<p>
+				To import non-signed assemblies locally, click on <i>Import Local Assemblies</i>. The following screen appears:
+			</p>
+			<p>
+				<center>
+					<img src = "../../images/import_local_assemblies_screen.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li>Select the non-signed assembly you want to import by typing in the corresponding text field and/or browse for a .NET Assembly by clicking on <i>Browse...</i>.</li><br>
+				<li>Choose a directory where the Eiffel classes should be generated. By default, the assembly will be imported in the directory <i>$ISE_EIFFEL\library.net</i> (where <i>$ISE_EIFFEL</i> is the path to your Eiffel delivery).</li><br>
+				<li>The option <i>Generate Eiffel-friendly names</i> is checked by default, i.e. the generated code will be in lower case with underscores as recommended in Eiffel. Nevertheless, you may want to keep the original .NET syntax by unchecking this option.</li>
+			</ul>
+			<p>
+				The list of selected assemblies is updated upon completing Eiffel code generation: the newly imported assembly is automatically added to the list (only the name of the assembly appears since it is a non-signed assembly).
+			</p>
+			<p class = "note">
+				<b>Note</b>: If you happen to choose a signed assembly, the .NET Wizard automatically imports the selected assembly and its dependencies into the <a href="../../../../../../dotnet/reflection_interface/docs/reference/00_definitions/eiffel_assembly_cache.html">Eiffel
+				Assembly Cache</a> and the new assemblies available are automatically added to the list of selected assemblies.
+			</p>
+
+		<br>
+		<p>To remove an assembly from the selected list, select the assembly
+		name and click <i>Remove</i>: the assembly name will be moved to the
+		list of available assemblies.
 		</p>
-		<p>
-            The list of selected assemblies is updated upon closing the Assembly
-            Manager: new assemblies available in the <a href="../../../../../../dotnet/reflection_interface/docs/reference/00_definitions/eiffel_assembly_cache.html">Eiffel
-            Assembly Cache</a> are automatically added to the list.
-		</p>
-        <p>To remove an assembly from the selected list, select the assembly
-        name and click <i>Remove</i>: the assembly name will be moved to the
-        list of available assemblies.
-		</p>
+
 		<p align = right><a href = "../40_settings_summary/index.html">>> NEXT</a></p>
 	</body>
 </html>

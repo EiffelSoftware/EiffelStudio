@@ -77,12 +77,15 @@ feature -- IL Generation
 				-- Define all features used by ISE runtime.
 			define_runtime_features (class_type)
 
+				-- First generate anchored features as they might be needed by current class
+				-- features for code generation when current class is frozen.
+			generate_il_type_features (class_c, class_type, class_c.generic_features)
+			generate_il_type_features (class_c, class_type, class_c.anchored_features)
+
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_implementation_parents (class_interface)
-			generate_il_type_features (class_c, class_type, class_c.generic_features)
-			generate_il_type_features (class_c, class_type, class_c.anchored_features)
 
 				-- FIXME: We are hard-coding code generation of some routines
 				-- of System.Object which are frozen in ANY. However, some like

@@ -40,8 +40,6 @@ feature {NONE} -- Initialization
 			-- Set values for GUI elements.
 		do
 			details_button.set_right
-			arguments.set_row_layout
-			arguments.set_spacing (5)
 			command_hole.set_parent_command_tool (Current)
 			command_hole.set_empty_symbol
 		end

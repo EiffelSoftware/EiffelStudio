@@ -63,6 +63,17 @@ feature -- Access
 			add_button_press_command (3, com, arg)
 		end
 
+	desactivate_pick_and_drop is
+			-- Desactivate the pick and drop mechanism.
+		local
+			interf: EV_PND_SOURCE
+		do
+			interf ?= interface
+			interf.set_transported_data (Void)
+			interf.set_data_type (Void)
+			remove_pick_and_drop
+		end
+
 	set_pick_position (a_x, a_y: INTEGER) is
 			-- Set the initial position for the pick and drop.
 		do
@@ -118,12 +129,17 @@ feature {EV_PND_SOURCE_I} -- Implementation
 		deferred
 		end
 
+	remove_pick_and_drop is
+			-- Remove pick and drop command.
+		deferred
+		end
+
 feature {EV_PND_TRANSPORTER_I} -- Implemented in descendants
 
-	terminate_transport (transporter: EV_PND_TRANSPORTER_I; cmd: EV_INTERNAL_COMMAND) is
+	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
 			-- Terminate the pick and drop mechanim.
-	deferred
-	end
+		deferred
+		end
 
 	widget_source: EV_WIDGET_IMP is
 			-- Widget drag source used for transport

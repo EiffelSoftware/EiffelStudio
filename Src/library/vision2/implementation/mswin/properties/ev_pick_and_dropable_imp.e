@@ -21,7 +21,6 @@ feature -- Implementation
 	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		local
-			transporter: EV_PND_TRANSPORTER_IMP
 			arg: EV_ARGUMENT2 [like Current, EV_INTERNAL_COMMAND]
 			arg1: EV_ARGUMENT1 [like Current]
 		do
@@ -55,25 +54,16 @@ feature -- Implementation
 			end
 		end
 
-	terminate_transport (transporter: EV_PND_TRANSPORTER_IMP; cmd: EV_INTERNAL_COMMAND) is
+	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
 			-- Terminate the pick and drop mechanim.
 		local
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]
 		do
+			remove_pick_and_drop
 			create com.make (~initialize_transport)
 			create arg.make (cmd, com)
-
-			-- We remove the commands added before
-			widget_source.remove_single_command (Cmd_button_three_press, drop_cmd)
-			widget_source.remove_single_command (Cmd_button_one_press, cancel_cmd)
-			widget_source.remove_single_command (Cmd_button_two_press, cancel_cmd)
-			drop_cmd := Void
-			cancel_cmd := Void
 			add_command (Cmd_button_three_press, com, arg)
-
-			-- We remove the drawing command
-			widget_source.remove_single_command (Cmd_motion_notify, transporter)
 		end
 
 feature {EV_PND_TRANSPORTER_IMP} -- Implemented in descendants.
@@ -92,6 +82,27 @@ feature {EV_PND_TRANSPORTER_IMP} -- Implemented in descendants.
 		end
 
 feature {NONE} -- Implementation
+
+	remove_pick_and_drop is
+			-- Desactivate the pick and drop mechanism.
+			-- We remove the commands for the pick and drop.
+		do
+			if drop_cmd /= Void then
+				widget_source.remove_single_command (Cmd_button_three_press, drop_cmd)
+				drop_cmd := Void
+			end
+			if cancel_cmd /= Void then
+				widget_source.remove_single_command (Cmd_button_one_press, cancel_cmd)
+				widget_source.remove_single_command (Cmd_button_two_press, cancel_cmd)
+				cancel_cmd := Void
+			end
+			if transporter /= Void then
+				widget_source.remove_single_command (Cmd_motion_notify, transporter)
+				transporter := Void
+			end
+		end
+
+	transporter: EV_PND_TRANSPORTER_IMP
 
 	drop_cmd, cancel_cmd: EV_ROUTINE_COMMAND
 			-- Pick and Drop commands

@@ -83,12 +83,11 @@ feature {NONE} -- Initialization
 			end
 			
 			if gtk_mic_ver < 8 then
-				print ("This application requires Gtk 1.2.8 or greater%N")
-			else
-				is_in_gtk_main := True
-				C.gtk_main
-				is_in_gtk_main := False
+				print ("This application is designed for Gtk 1.2.8 and above, this version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
+			is_in_gtk_main := True
+			C.gtk_main
+			is_in_gtk_main := False
 			
 			-- Unhook marshal object.
 			gtk_marshal.destroy
@@ -269,14 +268,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					pnd_targets.remove
 					pnd_targets.go_i_th (i)
 				else
-					if
-						trg.drop_actions.accepts_pebble (a_pebble)
-					then
-						imp ?= trg.implementation
-						if imp /= Void and then imp.is_displayed then
-							imp.enable_pnd_prelight_state
-						end
-					end
 					pnd_targets.forth
 				end
 			end
@@ -291,28 +282,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
-			cur := pnd_targets.cursor
-			from
-				pnd_targets.start
-			until
-				pnd_targets.after
-			loop
-				trg ?= id_object (pnd_targets.item)
-				if trg = Void or else trg.is_destroyed then
-					pnd_targets.forth
-				else
-					if
-						trg.drop_actions.accepts_pebble (a_pebble)
-					then
-						imp ?= trg.implementation
-						if imp /= Void then
-							imp.disable_pnd_prelight_state
-						end
-					end
-					pnd_targets.forth
-				end
-			end
-			pnd_targets.go_to (cur)
+			--| Do nothing, for future implementation
 		end
 
 feature {EV_ANY_IMP} -- Implementation

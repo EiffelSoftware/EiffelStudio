@@ -43,7 +43,7 @@ feature -- Status setting
 			-- Create the widgets inside the window
 		local
 			show_button, hide_button, get_size_b, set_size_b: ACTIONS_WINDOW_BUTTON
-			width_entry, height_entry, min_width_entry, min_height_entry: EV_ENTRY_WITH_LABEL
+			width_entry, height_entry, min_width_entry, min_height_entry: EV_TEXT_FIELD_WITH_LABEL
 			common_box, tmp: EV_HORIZONTAL_BOX 
 			buttons_box, entries_box: EV_VERTICAL_BOX
 			hide_c: HIDE_COMMAND
@@ -53,7 +53,7 @@ feature -- Status setting
 			s_ms_c: SET_MIN_SIZE_COMMAND			
 			g_ms_c: GET_MIN_SIZE_COMMAND			
 			a: EV_ARGUMENT1 [EV_WIDGET]
-			aaa: EV_ARGUMENT3 [EV_WIDGET, EV_ENTRY, EV_ENTRY]
+			aaa: EV_ARGUMENT3 [EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]
                 do
 			!!main_box.make (Current)
 			!!common_box.make (main_box)

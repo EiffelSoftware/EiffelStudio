@@ -41,8 +41,8 @@ feature -- Initialization
 			c2: FIXED_DEMO_WINDOW
 			c3: BOX_DEMO_WINDOW
 			c4: NOTEBOOK_DEMO_WINDOW
-			c5: ENTRY_DEMO_WINDOW
-			c6: MULTI_LINE_ENTRY_DEMO_WINDOW
+			c5: TEXT_FIELD_DEMO_WINDOW
+			c6: TEXT_AREA_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -64,9 +64,9 @@ feature -- Initialization
 			buttons.extend (b)
 			!!b.make_button (Current, "Notebook", c4)
 			buttons.extend (b)
-			!!b.make_button (Current, "Entry", c5)
+			!!b.make_button (Current, "Text field", c5)
 			buttons.extend (b)
-			!!b.make_button (Current, "Multi line entry", c6)
+			!!b.make_button (Current, "Text area", c6)
 			buttons.extend (b)
 			
 			set_values

@@ -1,20 +1,24 @@
 indexing
 
 	description: 
-		"EiffelVision multi line entry, implementation interface."
+		"EiffelVision text field, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	EV_MULTI_LINE_ENTRY_I
+	
+	EV_TEXT_FIELD_I
 	
 inherit
-	EV_ENTRY_I
+	
+	EV_TEXT_COMPONENT_I
+
+	EV_BAR_ITEM_I
 	
 
-end --class EV_ENTRY_I
+end --class EV_TEXT_FIELD_I
 
 
 --|----------------------------------------------------------------

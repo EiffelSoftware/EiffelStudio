@@ -2,6 +2,6 @@ class EV_SPINBOX
 
 inherit
 
-	SINGLE_LINE_ENTRY
+	EV_TEXT_FIELD
 
 end -- class EV_SPINBOX

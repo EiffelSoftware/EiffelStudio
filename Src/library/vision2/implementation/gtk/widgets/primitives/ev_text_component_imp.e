@@ -1,48 +1,24 @@
 indexing
 
 	description: 
-	"TEXT_FIELD_DEMO_WINDOW, demo window to test text_field widget. Belongs to EiffelVision example."
+		"EiffelVision text component, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class 
-	TEXT_FIELD_DEMO_WINDOW
-
+deferred class
+	EV_TEXT_COMPONENT_IMP
+	
 inherit
-
-	DEMO_WINDOW
+	EV_TEXT_COMPONENT_I
 	
-
-creation
-
-	make
-
-feature -- Access
-
-	main_widget: EV_TEXT_FIELD is
-		once
-			!!Result.make (Current)
-		end
+	EV_PRIMITIVE_IMP
 	
-
-feature -- Status setting
-	
-	set_widgets is
-		do
-			main_widget.set_text ("edit me")
-		end
-	
-	set_values is
-		do
-			set_title ("Text field demo")
-		end
-	
-end
+end -- class EV_TEXT_COMPONENT_IMP
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable  components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

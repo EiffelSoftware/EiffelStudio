@@ -1,88 +1,70 @@
 indexing
 
 	description: 
-	"EiffelVision single line entry. To query a single line of text from the user"
+	"EiffelVision text component. Common ancestor for text classes like% 
+	%text field and text area."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_SINGLE_LINE_ENTRY
+deferred class 
+	
+	EV_TEXT_COMPONENT
 
 inherit
 
-	EV_ENTRY
+	EV_PRIMITIVE
 		redefine
-			make, implementation
+			implementation
 		end
 	
 	EV_BAR_ITEM
 	
-creation
-	
-	make
-	
-	
-feature {NONE} -- Initialization
-
-        make (par: EV_CONTAINER) is
-                        -- Create a push button with, `par' as
-                        -- parent
-		do
-			!EV_SINGLE_LINE_ENTRY_IMP!implementation.make (par)
-			widget_make (par)
-		end
 	
 feature -- Access
 
         text: STRING is
-                        -- Text of current label
+                        -- Text in component
                 require
                         exists: not destroyed
                 do
                         Result:= implementation.text
                 end 
-
+	
 feature -- Status setting
 	
 	set_text (txt: STRING) is
-			-- set text entry to 'txt'
+			-- set text in component to 'txt'
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
 		do
+			implementation.set_text (txt)
 		ensure
 			text_set: text.is_equal (txt)
 		end
 	
-	set_text (txt: STRING) is
-			-- set text entry to 'txt'
-		require
-			exist: not destroyed			
-			not_void: txt /= Void		
-		do
-		ensure
-                        text_set: text.is_equal (txt)
-		end
-	
 	append_text (txt: STRING) is
-			-- append 'txt' to entry
-		require
-			exist: not destroyed			
-			not_void: txt /= Voiddo
-		do
-		ensure
-			text_appended: text.is_equal (text.append (txt))
-		end
-	
-	prepend_text (txt: STRING) is
-			-- prepend 'txt' to text
+			-- append 'txt' into component
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
 		do
+			implementation.append_text (txt)
 		ensure
-			text_prepended: text.is_equal (text.append (txt))
+			text_appended:
+		end
+	
+	prepend_text (txt: STRING) is
+			-- prepend 'txt' into component
+		require
+			exist: not destroyed			
+			not_void: txt /= Void
+		do
+			implementation.prepend_text (txt)
+		ensure
+			text_prepended: 
 		end
 	
 	set_position (pos: INTEGER) is
@@ -91,13 +73,16 @@ feature -- Status setting
 			exist: not destroyed			
 			valid_pos: pos > 0 and pos <= text.count
 		do
+			implementation.set_position (pos)
 		end
 	
-	set_maximum_line_length (lenght: INTEGER) is
+	set_maximum_line_length (len: INTEGER) is
 			-- Maximum number of charachters on line
+			-- If len < text.cout then the text is truncated
 		require
 			exist: not destroyed			
 		do
+			implementation.set_maximum_line_length (len)
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is
@@ -108,15 +93,17 @@ feature -- Status setting
 			valid_start: start_pos > 0 and start_pos <= text.count
 			valid_end: end_pos > 0 and end_pos <= text.count
 		do
+			implementation.select_region (start_pos, end_pos)
 		ensure
+			-- region selected
 		end
 	
 feature {NONE} -- Implementation
 
-	implementation: EV_SINGLE_LINE_ENTRY_I
-			-- Implementation of button
+	implementation: EV_TEXT_COMPONENT_I
+			-- Implementation
 			
-end -- class EV_SINGLE_LINE_ENTRY
+end -- class EV_TEXT_COMPONENT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

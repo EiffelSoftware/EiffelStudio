@@ -1,45 +1,46 @@
 indexing
 
 	description: 
-	"TEXT_FIELD_DEMO_WINDOW, demo window to test text_field widget. Belongs to EiffelVision example."
+	"EiffelVision text field. To query single line of text from the user"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class 
-	TEXT_FIELD_DEMO_WINDOW
+	EV_TEXT_FIELD
 
 inherit
 
-	DEMO_WINDOW
-	
+	EV_TEXT_COMPONENT
+		redefine
+			make, implementation
+		end
 
+	EV_BAR_ITEM
+	
 creation
-
+	
 	make
-
-feature -- Access
-
-	main_widget: EV_TEXT_FIELD is
-		once
-			!!Result.make (Current)
-		end
 	
-
-feature -- Status setting
 	
-	set_widgets is
+feature {NONE} -- Initialization
+
+        make (par: EV_CONTAINER) is
+                        -- Create a text field with, `par' as
+                        -- parent
 		do
-			main_widget.set_text ("edit me")
+			!EV_TEXT_FIELD_IMP!implementation.make (par)
+			widget_make (par)
 		end
 	
-	set_values is
-		do
-			set_title ("Text field demo")
-		end
-	
-end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_TEXT_FIELD_I
+			-- Implementation 
+			
+end -- class EV_TEXT_AREA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -56,3 +57,4 @@ end
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

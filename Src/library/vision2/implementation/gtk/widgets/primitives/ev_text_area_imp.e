@@ -1,19 +1,20 @@
 indexing
 
 	description: 
-		"EiffelVision multi line entry, gtk implementation."
+		"EiffelVision text area, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 class
-	EV_MULTI_LINE_ENTRY_IMP
+	EV_TEXT_AREA_IMP
 	
 inherit
-	EV_MULTI_LINE_ENTRY_I
+	EV_TEXT_AREA_I
 
-	EV_PRIMITIVE_IMP	
+	EV_TEXT_COMPONENT_IMP	
+	
 creation
 
 	make
@@ -23,14 +24,14 @@ feature {NONE} -- Initialization
         make (parent: EV_CONTAINER) is
                         -- Create a gtk label.
                 do
-                        widget := gtk_text_new (Default_pointer, Default_pointer)
+                        widget := gtk_text_new (Default_pointer, 
+						Default_pointer)
 			gtk_text_set_editable (widget, True)
                 end
 
 feature -- Access
 
         text: STRING is
-                        -- Text the entry
 		local
 			p: POINTER
 		do
@@ -42,7 +43,6 @@ feature -- Access
 feature -- Status setting
 	
 	insert_text (txt: STRING) is
-			-- set text entry to 'txt'
 		local
 			a: ANY
 		do
@@ -51,7 +51,6 @@ feature -- Status setting
 		end
 	
 	set_text (txt: STRING) is
-			-- set text entry to 'txt'
 		local
 			a: ANY
 		do
@@ -60,7 +59,6 @@ feature -- Status setting
 		end
 	
 	append_text (txt: STRING) is
-			-- append 'txt' to entry
 		do
 			set_position (0)
 			insert_text (txt)
@@ -92,7 +90,7 @@ feature -- Status setting
 	--		gtk_entry_select_region (widget, start_pos-1, end_pos-1)
 		end	
 	
-end -- class EV_MULTI_LINE_ENTRY_IMP
+end -- class EV_TEXT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable  components for ISE Eiffel.

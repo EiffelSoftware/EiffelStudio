@@ -1,101 +1,97 @@
 indexing
 
 	description: 
-		"EiffelVision entry, gtk implementation."
+		"EiffelVision text component, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class
-	EV_ENTRY_IMP
+deferred class
+	EV_TEXT_COMPONENT_I
 	
 inherit
-	EV_ENTRY_I
+	EV_PRIMITIVE_I
 	
-	EV_PRIMITIVE_IMP
 	
-	EV_BAR_ITEM_IMP
-
-	
-                
-creation
-
-	make
-
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
-                        -- Create a gtk label.
-                do
-                        widget := gtk_entry_new ()
-                end
-
-
+        make (par: EV_CONTAINER) is
+		deferred
+		end
+	
 feature -- Access
 
         text: STRING is
-                        -- Text the entry
-		local
-			p: POINTER
-		do
-			p := gtk_entry_get_text (widget)
-			!!Result.make (0)
-			Result.from_c (p)
-		end
+                        -- Text of current label
+                require
+                        exists: not destroyed
+                deferred
+                end 
 
 feature -- Status setting
 	
 	set_text (txt: STRING) is
-			-- set text entry to 'txt'
-		local
-			a: ANY
-		do
-			a ?= txt.to_c
-			gtk_entry_set_text (widget, $a)
+			-- set text in component to 'txt'
+		require
+			exist: not destroyed			
+			not_void: txt /= Void
+		deferred		
+		ensure
+			text_set: text.is_equal (txt)
 		end
 	
 	append_text (txt: STRING) is
-			-- append 'txt' to entry
-		local
-			a: ANY
-		do
-			a ?= txt.to_c
-			gtk_entry_append_text (widget, $a)
+			-- append 'txt' into component
+		require
+			exist: not destroyed			
+			not_void: txt /= Void
+		deferred
+		ensure
+			text_appended:
 		end
 	
 	prepend_text (txt: STRING) is
-			-- prepend 'txt' to text
-		local
-			a: ANY
-		do
-			a ?= txt.to_c
-			gtk_entry_prepend_text (widget, $a)
+			-- prepend 'txt' into component
+		require
+			exist: not destroyed			
+			not_void: txt /= Void
+		deferred
+		ensure
+			text_prepended:
 		end
 	
 	set_position (pos: INTEGER) is
 			-- set current insertion position
-		do
-			gtk_entry_set_position (widget, pos)
+		require
+			exist: not destroyed			
+			valid_pos: pos > 0 and pos <= text.count
+		deferred
 		end
 	
-	set_maximum_line_length (len: INTEGER) is
+	set_maximum_line_length (lenght: INTEGER) is
 			-- Maximum number of charachters on line
-		do
-			gtk_entry_set_max_length (widget, len)
+		require
+			exist: not destroyed			
+		deferred
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
-		do
-			gtk_entry_select_region (widget, start_pos-1, end_pos-1)
+		require
+			exist: not destroyed
+			valid_start: start_pos > 0 and start_pos <= text.count
+			valid_end: end_pos > 0 and end_pos <= text.count
+		deferred
+		ensure
 		end	
-	
-end -- class EV_ENTRY_IMP
+
+end --class EV_TEXT_COMPONENT_I
+
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable  components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

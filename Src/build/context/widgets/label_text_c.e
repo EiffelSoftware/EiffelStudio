@@ -162,7 +162,9 @@ feature {CONTEXT}
 						"set_center_alignment");
 			end;
 			if resize_policy_disabled_modified then
-				cond_f_to_string (Result, resize_policy_disabled, context_name, "forbid_recompute_size", "allow_recompute_size");
+				cond_f_to_string (Result, resize_policy_disabled, context_name, 
+						"forbid_recompute_size", 
+						"allow_recompute_size");
 			end;
 		end;
 

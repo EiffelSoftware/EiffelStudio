@@ -41,7 +41,6 @@ feature {NONE}
 
 feature 
 
-
 	intermediate_name: STRING is
 		do
 			Result := parent.intermediate_name;

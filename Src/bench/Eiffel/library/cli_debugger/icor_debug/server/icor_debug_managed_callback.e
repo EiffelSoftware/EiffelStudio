@@ -85,7 +85,7 @@ feature -- Initialization
 		end
 
 feature {NONE} -- debugger behavior
-	
+
 	begin_of_managed_callback (cb_id: INTEGER) is
 			-- called at each beginning of callback
 		local
@@ -135,7 +135,7 @@ feature {NONE} -- debugger behavior
 					execution_stopped := True
 				end
 			else
-				--| Let's continue, we don't stop on this callback
+					--| Let's continue, we don't stop on this callback
 				if Eifnet_debugger_info.icd_process /= Void then
 					Eifnet_debugger_info.controller.do_continue
 				else
@@ -150,6 +150,17 @@ feature {NONE} -- debugger behavior
 			-- Process end_of_breakpoint_callback and then return if is stopped.
 		require
 			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
+		do
+			if Eifnet_debugger_info.last_control_mode_is_stepping then
+				Result := execution_stopped_on_end_of_breakpoint_callback_while_stepping
+			else 
+					--| not stepping, so real breakpoint stopping
+				Result := True				
+			end
+		end
+		
+	execution_stopped_on_end_of_breakpoint_callback_while_stepping: BOOLEAN is
+			-- Do we stop on this bp slot, if we are in stepping action ?
 		local
 			l_previous_stack_info, l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 			l_copy: EIFNET_DEBUGGER_STACK_INFO
@@ -158,39 +169,33 @@ feature {NONE} -- debugger behavior
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
 		do
-			if Eifnet_debugger_info.last_control_mode_is_stepping then
-				l_previous_stack_info := Eifnet_debugger_info.previous_stack_info
-				l_current_stack_info := Eifnet_debugger_info.current_stack_info
-				
-				create l_copy
-				l_copy.copy (l_previous_stack_info)
-				
-				l_il_debug_info := Eifnet_debugger_info.controller.Il_debug_info_recorder
-				l_feat := l_il_debug_info.feature_i_by_module_class_token (
-							l_copy.current_module_name, 
-							l_copy.current_class_token, 
-							l_copy.current_feature_token
-						)
-				l_class_type := l_il_debug_info.class_type_for_module_class_token (
-							l_copy.current_module_name,				
-							l_copy.current_class_token
-						)
-						
-				l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
-					--| current il offset if corresponding to a bp slot, or approximate offset.
+			l_previous_stack_info := Eifnet_debugger_info.previous_stack_info
+			l_current_stack_info := Eifnet_debugger_info.current_stack_info
+							
+			create l_copy.make_copy (l_previous_stack_info)
+			
+			l_il_debug_info := Eifnet_debugger_info.controller.Il_debug_info_recorder
+			l_feat := l_il_debug_info.feature_i_by_module_class_token (
+						l_copy.current_module_name, 
+						l_copy.current_class_token, 
+						l_copy.current_feature_token
+					)
+			l_class_type := l_il_debug_info.class_type_for_module_class_token (
+						l_copy.current_module_name,				
+						l_copy.current_class_token
+					)
 					
-				l_copy.set_current_il_offset (l_potential_il_offset)
-				if l_copy.is_equal (l_current_stack_info) then
-					Eifnet_debugger_info.controller.do_continue				
-					Result := False
-				else
-					Result := True
-				end
-			else
+			l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
+				--| current il offset if corresponding to a bp slot, or approximate offset.
+				
+			l_copy.set_current_il_offset (l_potential_il_offset)
+			if l_copy.is_equal (l_current_stack_info) then
+				Eifnet_debugger_info.controller.do_continue				
+				Result := False
+			else			
 				Result := True
-			end
+			end		
 		end
-
 
 	execution_stopped_on_end_of_step_complete_callback: BOOLEAN is
 			-- Process end_of_step_complete_callback and then return if is stopped.

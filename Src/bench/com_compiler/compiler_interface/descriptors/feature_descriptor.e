@@ -78,48 +78,51 @@ feature -- Access
     name: STRING is
             -- Feature name.
         do
-            Result := clone (compiler_feature.feature_name)
-            if is_infix then
-                Result.replace_substring_all ("_infix_", "")
-                if Result.is_equal ("ge") then
-                    Result := ">="
-                elseif Result.is_equal ("gt") then
-                    Result := ">"
-                elseif Result.is_equal ("le") then
-                    Result := "<="
-                elseif Result.is_equal ("lt") then
-                    Result := "<"
-                elseif Result.is_equal ("and_then") then
-                    Result := "and then"
-                elseif Result.is_equal ("or_else") then
-                    Result := "or else"
-                elseif Result.is_equal ("minus") then
-                    Result := "-"
-                elseif Result.is_equal ("plus") then
-                    Result := "+"
-                elseif Result.is_equal ("power") then
-                    Result := "^"
-                elseif Result.is_equal ("slash") then
-                    Result := "/"
-                elseif Result.is_equal ("star") then
-                    Result := "*"
-                elseif Result.is_equal ("mod") then
-                    Result := "\\"
-                elseif Result.is_equal ("div") then
-                    Result := "//"
-                end
-            end
-            if is_prefix then
-                Result.replace_substring_all ("_prefix_", "")
-                if Result.is_equal ("minus") then
-                    Result := "-"
-                elseif Result.is_equal ("plus") then
-                    Result := "+"
-                end
-            end
-        ensure then
-            result_exists: Result /= void
-        end
+        	if internal_name = Void then
+	            internal_name := clone (compiler_feature.feature_name)
+	            if is_infix then
+	                internal_name.replace_substring_all ("_infix_", "")
+	                if internal_name.is_equal ("ge") then
+	                    internal_name := ">="
+	                elseif internal_name.is_equal ("gt") then
+	                    internal_name := ">"
+	                elseif internal_name.is_equal ("le") then
+	                    internal_name := "<="
+	                elseif internal_name.is_equal ("lt") then
+	                    internal_name := "<"
+	                elseif internal_name.is_equal ("and_then") then
+	                    internal_name := "and then"
+	                elseif internal_name.is_equal ("or_else") then
+	                    internal_name := "or else"
+	                elseif internal_name.is_equal ("minus") then
+	                    internal_name := "-"
+	                elseif internal_name.is_equal ("plus") then
+	                    internal_name := "+"
+	                elseif internal_name.is_equal ("power") then
+	                    internal_name := "^"
+	                elseif internal_name.is_equal ("slash") then
+	                    internal_name := "/"
+	                elseif internal_name.is_equal ("star") then
+	                    internal_name := "*"
+	                elseif internal_name.is_equal ("mod") then
+	                    internal_name := "\\"
+	                elseif internal_name.is_equal ("div") then
+	                    internal_name := "//"
+	                end
+	            end
+	            if is_prefix then
+					internal_name.replace_substring_all ("_prefix_", "")
+					if internal_name.is_equal ("minus") then
+						internal_name := "-"
+					elseif internal_name.is_equal ("plus") then
+						internal_name := "+"
+					end
+				end
+			end
+			Result := internal_name
+		ensure then
+			result_exists: Result /= void
+		end
 
     parameters: PARAMETER_ENUMERATOR is
             -- Feature parameters.
@@ -516,6 +519,19 @@ feature -- Basic Operations
             end
         end
 
+feature {FEATURES_LISTER} -- Element settings
+
+	set_name (a_name: like internal_name) is
+			-- Set `name' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			internal_name := a_name
+		ensure
+			name_set: name = a_name
+		end
+		
 feature {FEATURE_DESCRIPTOR} -- Implementation
         
     local_callers_internal: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] is
@@ -561,6 +577,9 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
         end
 
 feature {NONE} -- Implementation
+
+	internal_name: STRING
+			-- Feature name
 
     compiler_feature: FEATURE_I
             -- Associated compiler structure.

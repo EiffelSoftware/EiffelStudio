@@ -196,6 +196,10 @@ feature -- Generation constants
 	Generation_directory: STRING is "generated"
 		-- Directory name to hold the generated files.
 		
+	pixmap_name: STRING is "internal_pixmap"
+		-- Name of temporary pixmap used during generation
+		-- of pixmap setting code.
+		
 		
 feature -- XML saving
 

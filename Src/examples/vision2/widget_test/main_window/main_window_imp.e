@@ -73,9 +73,7 @@ feature {NONE}-- Initialization
 			create l_vertical_box_4
 			create select_all
 			create clear_all
-			create l_vertical_box_5
-			create object_editor
-			create padding_cell
+			create object_editor_parent
 			create main_notebook_tests
 			create l_vertical_split_area_1
 			create l_horizontal_box_4
@@ -142,9 +140,7 @@ feature {NONE}-- Initialization
 			l_horizontal_box_3.extend (l_vertical_box_4)
 			l_vertical_box_4.extend (select_all)
 			l_vertical_box_4.extend (clear_all)
-			main_notebook_properties_item.extend (l_vertical_box_5)
-			l_vertical_box_5.extend (object_editor)
-			l_vertical_box_5.extend (padding_cell)
+			main_notebook_properties_item.extend (object_editor_parent)
 			main_notebook.extend (main_notebook_tests)
 			main_notebook_tests.extend (l_vertical_split_area_1)
 			l_vertical_split_area_1.extend (l_horizontal_box_4)
@@ -205,7 +201,7 @@ feature {NONE}-- Initialization
 			main_notebook.set_item_text (main_notebook_properties_item, "Properties")
 			main_notebook.set_item_text (main_notebook_tests, "Tests")
 			main_notebook.set_item_text (flat_short_display_parent, "Documentation")
-			main_notebook_properties_item.disable_item_expand (l_vertical_box_5)
+			main_notebook_properties_item.disable_item_expand (object_editor_parent)
 			l_vertical_box_3.disable_item_expand (scrollable_parent)
 			scrollable_widget_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
 			scrollable_widget_area.set_minimum_width (330)
@@ -242,9 +238,6 @@ feature {NONE}-- Initialization
 			select_all.set_tooltip ("Select all events")
 			clear_all.set_text ("Clear All")
 			clear_all.set_tooltip ("Clear all events")
-			l_vertical_box_5.disable_item_expand (object_editor)
-			object_editor.set_border_width (3)
-			padding_cell.set_minimum_width (180)
 			test_class_display.disable_edit
 			flat_short_display_parent.disable_item_expand (search_parent_box)
 			flat_short_display.disable_edit
@@ -305,7 +298,7 @@ feature {NONE} -- Implementation
 	file_generate, file_exit, help_about: EV_MENU_ITEM
 	l_menu_separator_1: EV_MENU_SEPARATOR
 	l_vertical_box_1, l_vertical_box_2, main_box, l_vertical_box_3, vertical_spacing_box, 
-	l_vertical_box_4, l_vertical_box_5, object_editor, flat_short_display_parent: EV_VERTICAL_BOX
+	l_vertical_box_4, object_editor_parent, flat_short_display_parent: EV_VERTICAL_BOX
 	l_horizontal_separator_1, l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_horizontal_box_1, main_notebook_properties_item, horizontal_spacing_box, l_horizontal_box_2, 
 	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5, 
@@ -313,8 +306,7 @@ feature {NONE} -- Implementation
 	l_tool_bar_1, l_tool_bar_2, l_tool_bar_3, l_tool_bar_4: EV_TOOL_BAR
 	generate_button: EV_TOOL_BAR_BUTTON
 	l_cell_1, l_cell_2, widget_selector_parent, left_spacing_cell, top_spacing_cell, 
-	widget_holder, bottom_spacing_cell, right_spacing_cell, padding_cell, controller_parent, 
-	l_cell_3: EV_CELL
+	widget_holder, bottom_spacing_cell, right_spacing_cell, controller_parent, l_cell_3: EV_CELL
 	l_vertical_separator_1: EV_VERTICAL_SEPARATOR
 	properties_button, tests_button, documentation_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	main_split_area: EV_HORIZONTAL_SPLIT_AREA

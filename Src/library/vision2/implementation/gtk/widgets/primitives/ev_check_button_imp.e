@@ -15,6 +15,8 @@ inherit
 		end
 	
 	EV_TOGGLE_BUTTON_IMP
+		undefine
+			default_alignment
 		redefine
 			make, set_text, interface, visual_widget
 		end

@@ -46,18 +46,18 @@ feature -- Access
 			create Result.make_from_c (p)
 		end
 
-	alignment: EV_TEXT_ALIGNMENT is
+	text_alignment: INTEGER is
 			-- Alignment of the text in the label.
 		local
 			an_alignment_code: INTEGER
 		do
 			an_alignment_code := C.gtk_label_struct_jtype (text_label)
 			if an_alignment_code = C.Gtk_justify_center_enum then
-				create Result.make_with_center_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 			elseif an_alignment_code = C.Gtk_justify_left_enum then
-				create Result.make_with_left_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 			elseif an_alignment_code = C.Gtk_justify_right_enum then
-				create Result.make_with_right_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 			else
 				check alignment_code_not_set: False end
 			end

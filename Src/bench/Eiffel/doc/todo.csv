@@ -82,7 +82,7 @@ Formats,,,,,,,
 ,3,Being able to query location of creation of class instance,Manus,FMT0010,,
 ,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
 ,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,
-
+,3,Have a command line option for ec that does the same as flat-short/short but just the clickable format,Glenn Maughan,FMT0013,,
 
 
 

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (gtk_window_dialog_enum))
+			set_c_object (create_gtk_dialog)
 				-- Cannot use popup window as Window manager cannot give focus to it.
 		end
 		

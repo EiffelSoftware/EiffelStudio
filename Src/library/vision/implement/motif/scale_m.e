@@ -549,7 +549,7 @@ feature -- Removal
 		local
 			list: BUTTON_HAND_X
 		do
-			--list := vision_command_list (scroll_bar.event_command (ButtonPressMask));
+			list := button_command (scroll_bar.event_command (ButtonPressMask));
 			if list /= Void then
 				list.remove_command (number, a_command, argument)
 			end
@@ -562,7 +562,7 @@ feature -- Removal
 		local
 			list: BUTTON_HAND_X
 		do
-			--list := vision_command_list (scroll_bar.event_command (ButtonReleaseMask));
+			list := button_command (scroll_bar.event_command (ButtonReleaseMask));
 			if list /= Void then
 				list.remove_command (number, a_command, argument)
 			end

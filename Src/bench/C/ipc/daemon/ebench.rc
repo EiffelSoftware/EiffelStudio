@@ -1,0 +1,3 @@
+#define splash_id 1024
+
+splash_id BITMAP "splash.bmp"

@@ -1,0 +1,125 @@
+<HTML>
+	<HEAD>
+		<TITLE>Calculator</TITLE>
+		<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+	</HEAD>
+	<BODY>
+		<H1>The Selector Sample</H1>
+        <P>
+			This sample creates a DB_BOOK table in your database, enters sample
+            data in it and lets you select rows from this table with author's
+            name.
+		<P>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch EiffelBench.
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\store\select\</I>.
+			<LI>Choose the file that fits your platform and the DBMS you want to
+              use:
+              <ul>
+                <li><i>Ace.odbc.windows.ace</i> on Windows platforms for ODBC
+                  DBMS drivers</li>
+                <li><i>Ace.oracle.windows.ace</i> on Window platforms for Oracle
+                  DBMS</li>
+                <li><i>Ace.oracle.unix.ace</i> on Unix platforms for Oracle DBMS</li>
+              </ul>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<P>
+		<H2>Running</H2>
+        <P>Before running this sample, one must do link a specific file to data.sql as follows:
+		</P>
+        <P>With Oracle:
+		</P>
+        <P><i>ln data.sql.oracle data.sql</i>
+		</P>
+        <P>With ODBC:
+		</P>
+        <P><i>ln data.sql.odbc data.sql</i>
+		</P>
+        <P class="warning"><b>Caution:</b> the <i>data.sql</i> file must be
+        available in the sample application current directory. If you run the
+        sample from EiffelStudio, this directory should be the <i>EIFGEN/W_CODE/</i>
+        directory of your project.
+		</P>
+        <P>This sample lets you interact with your database through a console.
+		</P>
+		<P>
+            First you have to enter the database
+            connection information:
+		</P>
+        <ul>
+          <li>For ODBC:</li>
+		<PRE>Database user authentication:
+Data Source Name: handson
+Name: smith
+Password: mypass</PRE>
+          <P CLASS="note">
+			<B>Note:</B>  <i>Name</i> and <i>Password</i> are no required with
+          ODBC. If you don't need <i>Name</i> and <i>Password</i>,<i> </i>you
+          can simply hit <b>Return</b> when prompted<i>.</i>
+		</P>
+       </ul>
+        <ul>
+          <li>For Oracle:</li>
+ 
+		<PRE>Database user authentication:
+Name: smith@HANDSON
+Password: mypass</PRE>
+          <P CLASS="note">
+			<B>Note:</B>   you have to specify the Oracle User Name and Net
+          Service Name with the syntax <i>&lt;user&gt;@&lt;service&gt; </i>where
+          <i>&lt;user&gt;</i> stands for the User Name and <i>&lt;service&gt;</i>
+          stands for the Net Service Name.
+		</P>
+        </ul>
+        <P>Then you can select rows from this table with author's name, for
+        instance:
+		</P>
+		<PRE>Author? ('exit' to terminate):Bertrand Meyer
+Seeking for books whose author's name match: Bertrand Meyer
+
+Author:Bertrand Meyer
+Title:Eiffel The Libraries
+Quantity:11
+Price:20
+double_value:435.60000610351562
+First publication:07/01/1994 12:00:00.0 AM
+
+
+Author:Bertrand Meyer
+Title:Eiffel The Language
+Quantity:9
+Price:51
+double_value:775.22998046875
+First publication:07/01/1992 12:00:00.0 AM
+
+
+
+Author? ('exit' to terminate):</PRE>
+		<P class="note">
+			<B>Note:</B>   enter <i>exit</i> to quit the application.
+		</P>
+		<H2>Under the Hood</H2>
+		<P>
+            This sample showcases the use of the <a href="../../reference/interface/db_selection_chart.html">DB_SELECTION</a>
+            class to perform smart <i>select</i> queries, using:
+		</P>
+        <ul>
+          <li><a href="../../content/10_interface_layer/50_data_object_coupling/index.html">Database
+            data and Eiffel objects Coupling</a>.</li>
+          <li><a href="../../content/10_interface_layer/60_query_variables/index.html">Variables
+            Binding</a>.</li>
+        </ul>
+        <p>The whole sample code is contained in the root class:</p>
+        <ul>
+          <li><a href="root_cluster/selector_chart.html">SELECTOR</a> for Oracle.</li>
+          <li><a href="root_cluster/selector_odbc_chart.html">SELECTOR_ODBC</a> for ODBC.</li>
+        </ul>
+	</BODY>
+</HTML>

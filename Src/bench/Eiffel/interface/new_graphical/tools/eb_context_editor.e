@@ -301,7 +301,7 @@ feature {NONE} -- Initialization
 				view_menu.extend (view_label)
 				view_menu.disable_item_expand (view_label)
 
-				create view_selector.make_with_text ("DEFAULT")
+				create view_selector.make_with_text (world.default_view_name)
 				view_selector.return_actions.extend (agent on_view_changed)
 				view_selector.set_minimum_size (100, 20)
 				view_menu.extend (view_selector)
@@ -984,68 +984,96 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 			bon_cluster: BON_CLUSTER_DIAGRAM
 			f: RAW_FILE
 		do
-			create f.make (diagram_file_name (graph))
-			if f.exists then
-				f.open_read
-			else
-				f.open_write
-			end
-			world.store (f)
+			
 			
 			if is_force_directed_used then
 				disable_force_directed
 			end
 			if world.is_uml then
-				world.recycle
-				if class_graph /= Void then
-					create bon_class.make (class_graph, Current)
-					if world.scale_factor /= 1.0 then
-						bon_class.scale (world.scale_factor)	
-					end
-					world_cell.set_world (bon_class)
-					reset_tool_bar_for_class_view
+				if world.available_views.has ("DEFAULT:BON") then
+					view_selector.set_text ("DEFAULT:BON")
+					on_view_changed
 				else
-					create bon_cluster.make (cluster_graph, Current)
-					if world.scale_factor /= 1.0 then
-						bon_cluster.scale (world.scale_factor)	
+					create f.make (diagram_file_name (graph))
+					if f.exists then
+						f.open_read
+					else
+						f.open_write
 					end
-					world_cell.set_world (bon_cluster)
-					reset_tool_bar_for_cluster_view
+					world.store (f)
+					world.recycle
+					if class_graph /= Void then
+						create bon_class.make (class_graph, Current)
+						if world.scale_factor /= 1.0 then
+							bon_class.scale (world.scale_factor)	
+						end
+						world_cell.set_world (bon_class)
+						reset_tool_bar_for_class_view
+					else
+						create bon_cluster.make (cluster_graph, Current)
+						if world.scale_factor /= 1.0 then
+							bon_cluster.scale (world.scale_factor)	
+						end
+						world_cell.set_world (bon_cluster)
+						reset_tool_bar_for_cluster_view
+					end
+					layout.set_spacing (40, 40)
+					layout.set_world (world)
+					force_directed_layout.set_world (world)
+					layout.layout
+					world.load_available_views (f)
+					reset_tool_bar_toggles
+					reset_view_selector
+					crop_diagram
+					world.figure_change_end_actions.extend (agent on_figure_change_end)
+					world.figure_change_start_actions.extend (agent on_figure_change_start)
+					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+					on_cluster_legend_pin
 				end
-				layout.set_spacing (40, 40)
 			else
-				world.recycle
-				if class_graph /= Void then
-					create uml_class.make (class_graph, Current)
-					uml_class.set_current_view (world.current_view)
-					if world.scale_factor /= 1.0 then
-						uml_class.scale (world.scale_factor)	
-					end
-					world_cell.set_world (uml_class)
-					reset_tool_bar_for_uml_class_view
+				if world.available_views.has ("DEFAULT:UML") then
+					view_selector.set_text ("DEFAULT:UML")
+					on_view_changed
 				else
-					create uml_cluster.make (cluster_graph, Current)
-					uml_cluster.set_current_view (world.current_view)
-					if world.scale_factor /= 1.0 then
-						uml_cluster.scale (world.scale_factor)	
+					create f.make (diagram_file_name (graph))
+					if f.exists then
+						f.open_read
+					else
+						f.open_write
 					end
-					world_cell.set_world (uml_cluster)
-					reset_tool_bar_for_uml_cluster_view
+					world.store (f)
+					world.recycle
+					if class_graph /= Void then
+						create uml_class.make (class_graph, Current)
+						if world.scale_factor /= 1.0 then
+							uml_class.scale (world.scale_factor)	
+						end
+						world_cell.set_world (uml_class)
+						reset_tool_bar_for_uml_class_view
+					else
+						create uml_cluster.make (cluster_graph, Current)
+						if world.scale_factor /= 1.0 then
+							uml_cluster.scale (world.scale_factor)	
+						end
+						world_cell.set_world (uml_cluster)
+						reset_tool_bar_for_uml_cluster_view
+					end
+					layout.set_spacing (150, 150)
+					layout.set_world (world)
+					force_directed_layout.set_world (world)
+					layout.layout
+					world.load_available_views (f)
+					reset_tool_bar_toggles
+					reset_view_selector
+					crop_diagram
+					world.figure_change_end_actions.extend (agent on_figure_change_end)
+					world.figure_change_start_actions.extend (agent on_figure_change_start)
+					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+					on_cluster_legend_pin
 				end
-				layout.set_spacing (150, 150)
 			end
-			layout.set_world (world)
-			force_directed_layout.set_world (world)
-			layout.layout
-			world.load_available_views (f)
-			reset_tool_bar_toggles
-			reset_view_selector
-			crop_diagram
-			world.figure_change_end_actions.extend (agent on_figure_change_end)
-			world.figure_change_start_actions.extend (agent on_figure_change_start)
-			world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
-			world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
-			on_cluster_legend_pin
 		end
 		
 	is_uml: BOOLEAN is
@@ -1460,7 +1488,7 @@ feature {NONE} -- Events
 				update_excluded_class_figures
 				world_cell.disable_resize
 				projector.disable_painting
-			
+				
 				world.retrieve_view (view_selector.text)
 
 				projector.enable_painting
@@ -1537,7 +1565,7 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 			-- Delete view of `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			not_default: not a_name.is_equal ("DEFAULT")
+			not_default: not a_name.has_substring ("DEFAULT")
 		local
 			cancelled: BOOLEAN
 		do

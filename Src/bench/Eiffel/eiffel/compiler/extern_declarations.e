@@ -105,6 +105,22 @@ feature
 			end;
 		end;
 
+	generate_header (file_name: STRING) is
+			-- Generate the run-time header file includes
+		require
+			file_name_exists: file_name /= Void;
+		local
+			f: INDENT_FILE;
+		do
+			!!f.make (file_name);
+			f.open_write;
+
+			f.putstring ("#include %"portable.h%"%N%
+						%#include %"macros.h%"%N%N");
+
+			f.close
+		end
+
 	generate (file_name: STRING) is
 			-- Generate declarations in a file of name `file_name'.
 		require
@@ -115,11 +131,10 @@ feature
 			!!f.make (file_name);
 			f.open_write;
 
-			f.putstring ("#include %"portable.h%"%N%N");
-
-				-- now generate the include files required by externals
+				-- generate the include files required by externals
 			generate_header_files (f);
 
+			f.generate_cpp_wrapper_start;
 			from
 				routines.start
 			until
@@ -131,36 +146,38 @@ feature
 				f.putstring ("();%N");
 				routines.forth;
 			end;
+			f.generate_cpp_wrapper_end;
+
 			from
 				routine_tables.start
 			until
 				routine_tables.after
 			loop
 				f.putstring ("extern fnptr ");
-                f.putstring (routine_tables.item_for_iteration);
-                f.putstring ("[];%N");
-                routine_tables.forth;
-            end;
+				f.putstring (routine_tables.item_for_iteration);
+				f.putstring ("[];%N");
+				routine_tables.forth;
+			end;
 			from
-                attribute_tables.start
-            until
-                attribute_tables.after
-            loop
-                f.putstring ("extern long ");
-                f.putstring (attribute_tables.item_for_iteration);
-                f.putstring ("[];%N");
-                attribute_tables.forth;
-            end;
+				attribute_tables.start
+			until
+				attribute_tables.after
+			loop
+				f.putstring ("extern long ");
+				f.putstring (attribute_tables.item_for_iteration);
+				f.putstring ("[];%N");
+				attribute_tables.forth;
+			end;
 			from
 				type_tables.start
 			until
 				type_tables.after
 			loop
 				f.putstring ("extern int16 ");
-                f.putstring (type_tables.item_for_iteration);
-                f.putstring ("[];%N");
-                type_tables.forth;
-            end;
+				f.putstring (type_tables.item_for_iteration);
+				f.putstring ("[];%N");
+				type_tables.forth;
+			end;
 
 			f.close;
 		end;

@@ -39,11 +39,16 @@ feature -- Access
 			Result.append_integer (count)
 		end
 
-	conforms_to (other: BIT_REF): BOOLEAN is
+	conforms_to (other: ANY): BOOLEAN is
 			-- Is dynamic type of current object a descendant of
 			-- dynamic type of `other'?
+		local
+			b: BIT_REF
 		do
-			Result := count <= other.count
+			b ?= other
+			if b /= Void then
+				Result := count <= b.count
+			end
 		end
 
 feature -- Measurement

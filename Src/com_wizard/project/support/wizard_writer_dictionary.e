@@ -745,7 +745,7 @@ feature -- Generator constants -- 8
 
 	Null_coclass_test: STRING is "if (eiffel_coclass == NULL)%<%N"
 
-	Type_id_variable: STRING is "EIF_TYPE_ID tid;%N"
+	Type_id_variable: STRING is "EIF_TYPE_ID tid = -1;%N"
 
 	Type_id_variable_name: STRING is "tid"
 

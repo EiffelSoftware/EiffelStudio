@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 							if precomp_ids.has (dir_name) then
 									-- Check compatibility between
 									-- precompiled libraries.
-								if id /= precomp_ids.item (dir_name) then
+								if id /= precomp_ids.found_item then
 									!! vd45;	
 									vd45.set_path (dir_name);
 									Error_handler.insert_error (vd45);
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 						if precomp_ids.has (dir_name) then
 								-- Check compatibility between
 								-- precompiled libraries.
-							if id /= precomp_ids.item (dir_name) then
+							if id /= precomp_ids.found_item then
 								!! vd45;	
 								vd45.set_path (dir_name);
 								Error_handler.insert_error (vd45);

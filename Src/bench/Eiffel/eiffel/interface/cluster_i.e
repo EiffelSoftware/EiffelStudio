@@ -542,12 +542,12 @@ feature {COMPILER_EXPORTER} -- Element change
 		local
 			l_is_override: BOOLEAN
 		do
-			l_is_override := Universe.has_override_cluster and then
-				Universe.override_cluster_name.is_equal (name)
+			l_is_override := Universe.has_override_cluster_of_name (name)
 				
-				-- If the cluster has changed,
+				-- If the cluster has changed or if it is an override cluster,
 				-- do a degree 6
 			if
+				l_is_override or
 				not (is_lib and is_lib = is_library) and then
 				(changed (ex_l, inc_l) or else
 				process_subclusters /= is_recursive)
@@ -963,25 +963,12 @@ feature {COMPILER_EXPORTER} -- Element change
 			-- Remove the CLASS_C if the class was compiled before
 			-- and propagate recompilation of the clients.
 			-- Can only be called by compiler tools, not by compiler itself.
+			-- (export status {COMPILER_EXPORTER})
+		require
+			has_a_class: classes.has (a_class.name)
 		do
-			debug ("REMOVE_CLASS")
-				io.error.putstring ("Removing class ")
-				io.error.putstring (a_class.name)
-				io.error.new_line
-			end
 			classes.remove (a_class.name)
-
-				-- If a_class has already be compiled,
-				-- all its clients must recheck their suppliers
-			remove_class_from_system (a_class)
-
-				-- Remove it from unreferenced classes of system
-				-- if it was only referenced from there.
-			System.remove_unref_class (a_class)
-
-			if Workbench.automatic_backup then
-				record_removed_class (a_class.name)
-			end
+			internal_remove_class (a_class)
 		end
 
 	reset_options is
@@ -1096,16 +1083,14 @@ feature {COMPILER_EXPORTER} -- Element change
 	remove_cluster is
 			-- Remove all the classes from the current cluster
 			-- i.e. the cluster has been removed from the system
+			-- Very similar to `process_removed_classes' except that we do
+			-- not play between `current' and  `old_cluster'. Here we are the
+			-- old cluster.
 		local
 			vd40: VD40
+			l_class: CLASS_I
+			l_classes, l_overriden_classes: LIST [CLASS_I]
 		do
-			if classes.has ("any") then
-					-- It means that it is the kernel cluster.
-				create vd40
-				vd40.set_cluster (Current)
-				Error_handler.insert_error (vd40)
-				Error_handler.raise_error
-			end
 			debug ("REMOVE_CLASS")
 				io.error.putstring ("Removing cluster ")
 				io.error.putstring (cluster_name)
@@ -1113,13 +1098,82 @@ feature {COMPILER_EXPORTER} -- Element change
 				io.error.putstring (path)
 				io.error.new_line
 			end
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				remove_class_from_system (classes.item_for_iteration)
-				classes.forth
+			if is_override_cluster then
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					l_class := classes.item_for_iteration
+					l_overriden_classes := universe.overriden_classes_with_name (l_class.name)
+					if not l_overriden_classes.is_empty then
+							-- Class was previously overriden, let's check that if it is not
+							-- in another override cluster.
+						l_classes := universe.classes_with_name (l_class.name)
+						if not l_classes.is_empty then
+							check
+								in_override_cluster: l_classes.first.cluster.is_override_cluster
+							end
+								-- Move compiled info from one override cluster to another one
+							restore_compiled_class (l_classes.first, l_class)
+						else
+								-- Class has only been moved to a non-override cluster. We restore the CLASS_C
+								-- information only for the first one found.
+							restore_compiled_class (l_overriden_classes.first, l_class)
+								-- Now remove all overriden classes of universe.
+							from
+								l_overriden_classes.start
+							until
+								l_overriden_classes.after
+							loop
+								l_class := l_overriden_classes.item
+								l_class.cluster.overriden_classes.remove (l_class.name)
+								l_class.cluster.classes.put (l_class, l_class.name)
+								l_overriden_classes.forth
+							end
+						end
+					else
+							-- Looks like this class from the override cluster was not in any
+							-- other clusters. So let's try to find it in another cluster,
+							-- before really removing it from system.
+						l_classes := universe.classes_with_name (l_class.name)
+						if not l_classes.is_empty then
+								-- Class has only been moved.
+							restore_compiled_class (l_classes.first, l_class)
+						else
+								-- Class has been removed.
+							internal_remove_class (l_class)
+						end
+					end
+					classes.forth
+				end
+			else
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					l_class := classes.item_for_iteration
+					l_classes := universe.classes_with_name (l_class.name)
+					if not l_classes.is_empty then
+							-- Class has only been moved. We restore the CLASS_C
+							-- information only for the first one found.
+						restore_compiled_class (l_classes.first, l_class)
+					else
+							-- Class has been removed.
+						internal_remove_class (l_class)
+					end
+					classes.forth
+				end
+			end
+			l_classes := universe.classes_with_name ("any")
+			if l_classes.is_empty then
+					-- It means that we cannot find ANY in universe. We are in big
+					-- trouble.
+				create vd40
+				vd40.set_cluster (Current)
+				Error_handler.insert_error (vd40)
+				Error_handler.raise_error
 			end
 		end
 
@@ -1303,6 +1357,52 @@ feature {NONE} -- Implementation
 					private_merge (a_classes, clus.sub_clusters.item)
 					clus.sub_clusters.forth
 				end
+			end
+		end
+
+	internal_remove_class (a_class: CLASS_I) is
+			-- Remove a class from the cluster (Exclude clause)
+			-- Remove the CLASS_C if the class was compiled before
+			-- and propagate recompilation of the clients.
+			-- Can only be called by compiler tools, not by compiler itself.
+		do
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Removing class ")
+				io.error.putstring (a_class.name)
+				io.error.new_line
+			end
+
+				-- If a_class has already be compiled,
+				-- all its clients must recheck their suppliers
+			remove_class_from_system (a_class)
+
+				-- Remove it from unreferenced classes of system
+				-- if it was only referenced from there.
+			System.remove_unref_class (a_class)
+
+			if Workbench.automatic_backup then
+				record_removed_class (a_class.name)
+			end
+		end
+
+	remove_class_from_system (a_class: CLASS_I) is
+			-- Remove a class_c that is not present in system any more
+		require
+			a_class_not_void: a_class /= Void
+		local
+			class_c: CLASS_C
+		do
+			debug ("REMOVE_CLASS")
+				io.error.putstring ("Removing class from system ")
+				io.error.putstring (a_class.name)
+				io.error.new_line
+			end
+			class_c := a_class.compiled_class
+			if class_c /= Void then
+					-- Recompile all the clients
+				class_c.recompile_syntactical_clients
+					-- remove class_c from the system
+				System.remove_class (class_c)
 			end
 		end
 
@@ -1521,7 +1621,7 @@ feature {NONE} -- Implementation
 		local
 			old_classes: like classes
 			old_class, new_class: CLASS_I
-			l_classes: LIST [CLASS_I]
+			l_overriden_classes, l_classes: LIST [CLASS_I]
 		do
 			if is_override_cluster then
 				from
@@ -1533,21 +1633,32 @@ feature {NONE} -- Implementation
 					old_class := old_classes.item_for_iteration
 					if not classes.has (old_class.name) then
 							-- Class has been moved or removed
-						l_classes := universe.overriden_classes_with_name (old_class.name)
-						if not l_classes.is_empty then
-								-- Class has only been moved. We restore the CLASS_C
-								-- information only for the first one found.
-							restore_compiled_class (l_classes.first, old_class)
-								-- Now remove all overriden classes of universe.
-							from
-								l_classes.start
-							until
-								l_classes.after
-							loop
-								new_class := l_classes.item
-								new_class.cluster.overriden_classes.remove (new_class.name)
-								new_class.cluster.classes.put (new_class, new_class.name)
-								l_classes.forth
+						l_overriden_classes := universe.overriden_classes_with_name (old_class.name)
+						if not l_overriden_classes.is_empty then
+								-- Class was previously overriden, let's check that if it is not
+								-- in another override cluster.
+							l_classes := universe.classes_with_name (old_class.name)
+							if not l_classes.is_empty then
+								check
+									in_override_cluster: l_classes.first.cluster.is_override_cluster
+								end
+									-- Move compiled info from one override cluster to another one
+								restore_compiled_class (l_classes.first, old_class)
+							else
+									-- Class has only been moved to a non-override cluster. We restore the CLASS_C
+									-- information only for the first one found.
+								restore_compiled_class (l_overriden_classes.first, old_class)
+									-- Now remove all overriden classes of universe.
+								from
+									l_overriden_classes.start
+								until
+									l_overriden_classes.after
+								loop
+									new_class := l_overriden_classes.item
+									new_class.cluster.overriden_classes.remove (new_class.name)
+									new_class.cluster.classes.put (new_class, new_class.name)
+									l_overriden_classes.forth
+								end
 							end
 						else
 								-- Looks like this class from the override cluster was not in any
@@ -1559,7 +1670,7 @@ feature {NONE} -- Implementation
 								restore_compiled_class (l_classes.first, old_class)
 							else
 									-- Class has been removed.
-								old_cluster.remove_class (old_class)
+								internal_remove_class (old_class)
 							end
 						end
 					end
@@ -1585,32 +1696,11 @@ feature {NONE} -- Implementation
 							restore_compiled_class (l_classes.first, old_class)
 						else
 								-- Class has been removed.
-							old_cluster.remove_class (old_class)
+							internal_remove_class (old_class)
 						end
 					end
 					old_classes.forth
 				end
-			end
-		end
-
-	remove_class_from_system (a_class: CLASS_I) is
-			-- Remove a class_c that is not present in system any more
-		require
-			a_class_not_void: a_class /= Void
-		local
-			class_c: CLASS_C
-		do
-			debug ("REMOVE_CLASS")
-				io.error.putstring ("Removing class from system ")
-				io.error.putstring (a_class.name)
-				io.error.new_line
-			end
-			class_c := a_class.compiled_class
-			if class_c /= Void then
-					-- Recompile all the clients
-				class_c.recompile_syntactical_clients
-					-- remove class_c from the system
-				System.remove_class (class_c)
 			end
 		end
 

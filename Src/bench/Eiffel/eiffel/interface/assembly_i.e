@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			create l_file.make (environ.interpreted_string (an_assembly))
 			if not l_file.exists then
 					-- Assembly file was not found.
-				create l_vd63.make (an_assembly)
+				create l_vd63.make (an_assembly, environ.interpreted_string (an_assembly))
 				Error_handler.insert_error (l_vd63)
 			else
 				l_emitter := new_il_emitter
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 					l_emitter.retrieve_assembly_info (environ.interpreted_string (an_assembly))
 					if not l_emitter.assembly_found then
 							-- Looks like it is not a valid assembly file.
-						create l_vd65.make (an_assembly)
+						create l_vd65.make (an_assembly, environ.interpreted_string (an_assembly))
 						Error_handler.insert_error (l_vd65)
 					else
 							-- Initialize current with data.

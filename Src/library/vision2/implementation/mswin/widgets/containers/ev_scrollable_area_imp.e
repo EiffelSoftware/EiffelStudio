@@ -16,11 +16,12 @@ inherit
 		end
 
 	EV_VIEWPORT_IMP
+		rename
+			show_horizontal_scroll_bar as wel_show_horizontal_scroll_bar,
+			show_vertical_scroll_bar as wel_show_vertical_scroll_bar,
+			hide_horizontal_scroll_bar as wel_hide_horizontal_scroll_bar,
+			hide_vertical_scroll_bar as wel_hide_vertical_scroll_bar
 		redefine
-			show_horizontal_scroll_bar,
-			show_vertical_scroll_bar,
-			hide_horizontal_scroll_bar,
-			hide_vertical_scroll_bar,
 			interface,	
 			make,
 			initialize,
@@ -56,8 +57,13 @@ feature {NONE} -- Initialization
 			create scroller.make (Current, 50, 50, 10, 30)
 			enable_horizontal_scroll_bar
 			enable_vertical_scroll_bar
-			hide_horizontal_scroll_bar
-			hide_vertical_scroll_bar
+			
+			wel_hide_horizontal_scroll_bar
+			wel_hide_vertical_scroll_bar
+				-- Ensure that the scroll bars will be displayed
+				-- when required.
+			is_horizontal_scroll_bar_visible := True
+			is_vertical_scroll_bar_visible := True
 		end
 
 feature -- Access
@@ -76,12 +82,6 @@ feature -- Access
 			Result := scroller.vertical_line
 		end
 
-	is_horizontal_scroll_bar_visible: BOOLEAN
-			-- Should horizontal scroll bar be displayed?
-
-	is_vertical_scroll_bar_visible: BOOLEAN
-			-- Should vertical scrollbar be displayed?
-
 feature -- Element change
 
 	set_horizontal_step (a_step: INTEGER) is
@@ -99,29 +99,45 @@ feature -- Element change
 	show_horizontal_scroll_bar is
 			-- Display horizontal scroll bar.
 		do
-			Precursor {EV_VIEWPORT_IMP}
 			is_horizontal_scroll_bar_visible := True
+			wel_show_horizontal_scroll_bar
 		end
 
 	hide_horizontal_scroll_bar is
 			-- Do not display horizontal scroll bar.
 		do
-			Precursor {EV_VIEWPORT_IMP}
 			is_horizontal_scroll_bar_visible := False
+			wel_hide_horizontal_scroll_bar
 		end
 
 	show_vertical_scroll_bar is
 			-- Display vertical scroll bar.
 		do
-			Precursor {EV_VIEWPORT_IMP}
 			is_vertical_scroll_bar_visible := True
+			wel_show_vertical_scroll_bar
 		end
 
 	hide_vertical_scroll_bar is
 			-- Do not display vertical scroll bar.
 		do
-			Precursor {EV_VIEWPORT_IMP}
 			is_vertical_scroll_bar_visible := False
+			wel_hide_vertical_scroll_bar
+		end
+		
+	internal_show_vertical_scroll_bar is
+			-- Display vertical scroll bar if `is_vertical_scroll_bar_visible'.
+		do
+			if is_vertical_scroll_bar_visible then
+				show_vertical_scroll_bar
+			end
+		end
+		
+	internal_show_horizontal_scroll_bar is
+			-- Display horizontal scroll bar if `is_horizontal_scroll_bar_visible'.
+		do
+			if is_horizontal_scroll_bar_visible then
+				show_horizontal_scroll_bar
+			end
 		end
 
 feature -- Access
@@ -186,8 +202,8 @@ feature {NONE} -- Implementation
 			Precursor {EV_VIEWPORT_IMP} (a_x_position, a_y_position,
 				a_width, a_height, repaint)
 			if item_imp = Void then
-				hide_vertical_scroll_bar
-				hide_horizontal_scroll_bar
+				wel_hide_vertical_scroll_bar
+				wel_hide_horizontal_scroll_bar
 			end
 		end
 
@@ -218,7 +234,7 @@ feature {NONE} -- Implementation
 				
 				if cw > 0 then
 						-- Item is too big to fit in width.
-					show_horizontal_scroll_bar
+					internal_show_horizontal_scroll_bar
 
 						-- Recompute new `ch' that takes into account the new
 						-- client_height which could changed due to the apparition
@@ -227,9 +243,9 @@ feature {NONE} -- Implementation
 					ch := imp_h - cl_height
 					if ch > 0 then
 							-- Item is too big to fit in height.
-						show_vertical_scroll_bar
+						internal_show_vertical_scroll_bar
 					else
-						hide_vertical_scroll_bar
+						wel_hide_vertical_scroll_bar
 					end
 
 						-- Recompute new client_width which could have changed
@@ -237,7 +253,7 @@ feature {NONE} -- Implementation
 					cl_width := client_width
 					cw := imp_w - cl_width
 				else
-					hide_horizontal_scroll_bar
+					wel_hide_horizontal_scroll_bar
 
 						-- Recompute new `ch' that takes into account the new
 						-- client_height which could changed due to the removal
@@ -246,9 +262,9 @@ feature {NONE} -- Implementation
 					ch := imp_h - cl_height
 
 					if ch > 0 then
-						show_vertical_scroll_bar
+						internal_show_vertical_scroll_bar
 					else
-						hide_vertical_scroll_bar
+						wel_hide_vertical_scroll_bar
 					end
 
 						-- Recompute new client_width which could have changed
@@ -275,10 +291,11 @@ feature {NONE} -- Implementation
 					new_x := new_x.min (0)
 
 						-- Set scrolling values to reflect new settings
-					set_horizontal_position (new_x.abs)
-					set_horizontal_range (0, imp_w)
-					scroller.set_horizontal_page (cl_width)
-
+					if is_horizontal_scroll_bar_visible then
+						set_horizontal_position (new_x.abs)
+						set_horizontal_range (0, imp_w)
+						scroller.set_horizontal_page (cl_width)	
+					end			
 					if ch > 0 then
 							-- Here client_height isn't too small to contain `item', we need
 							-- to move down `item' at the correct place. Meaning that the
@@ -295,9 +312,11 @@ feature {NONE} -- Implementation
 						new_y := new_y.min (0)
 
 							-- Set scrolling values to reflect new settings.
-						set_vertical_range (0, imp_h)
-						set_vertical_position (new_y.abs)
-						scroller.set_vertical_page (cl_height)
+						if is_vertical_scroll_bar_visible then
+							set_vertical_range (0, imp_h)
+							set_vertical_position (new_y.abs)
+							scroller.set_vertical_page (cl_height)				
+						end
 
 						if originator then
 								-- Move item at new position
@@ -314,7 +333,7 @@ feature {NONE} -- Implementation
 								(-ch) // 2, imp_w, imp_h)
 						else
 							imp.ev_apply_new_size (new_x,
-								(-ch) // 2, imp_w, imp_h, True)
+							(-ch) // 2, imp_w, imp_h, True)
 						end
 					end
 				else
@@ -327,9 +346,11 @@ feature {NONE} -- Implementation
 							new_y := -ch
 						end
 						new_y := new_y.min (0)
-						set_vertical_range (0, imp_h)
-						set_vertical_position (new_y.abs)
-						scroller.set_vertical_page (cl_height)
+						if is_vertical_scroll_bar_visible then
+							set_vertical_range (0, imp_h)
+							set_vertical_position (new_y.abs)
+							scroller.set_vertical_page (cl_height)
+						end
 						if originator then
 							imp.set_move_and_size ((-cw) // 2,
 								new_y, imp_w, imp_h)

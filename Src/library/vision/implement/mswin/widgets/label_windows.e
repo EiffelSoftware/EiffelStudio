@@ -19,6 +19,7 @@ inherit
 	PRIMITIVE_WINDOWS
 		rename
 			set_font as fontable_set_font
+		end
 
 	LABEL_I
 
@@ -193,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			if not fixed_size_flag then
 				fw ?= font.implementation
-				set_size (f.width_of_string (text), fw.string_height (Current, text))
+				set_size (font.width_of_string (text), fw.string_height (Current, text))
 				if exists then
 					invalidate
 				end

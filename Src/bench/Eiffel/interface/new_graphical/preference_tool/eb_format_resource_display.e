@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 		require
 --			font_is_valid: is_valid (font)
 --			color_is_valid: is_valid (color)
-			valid_parent: par /= Void 
 		do
 			make (par)
 			

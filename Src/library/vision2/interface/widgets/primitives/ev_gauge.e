@@ -19,12 +19,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_range (a_minimum, a_maximum: INTEGER) is
+	make_with_range (a_range: INTEGER_INTERVAL) is
 			-- Initialize with `a_maximum' and `a_minimum'.
 			-- Initialize `value' with `a_minimum'.
+		require
+			a_range_not_void: a_range /= Void
+			a_range_upper_greater_than_or_equal_to_a_range_lower:
+				a_range.upper >= a_range.lower
 		do
 			default_create
-			reset_with_range (a_minimum, a_maximum)
+			reset_with_range (a_range)
 		end
 
 feature -- Events
@@ -72,6 +76,14 @@ feature -- Access
 			Result := implementation.maximum
 		ensure
 			bridge_ok: Result = implementation.maximum
+		end
+
+	range: INTEGER_INTERVAL is
+			-- Get `minimum' and `maximum' as interval.
+		do
+			Result := implementation.range
+		ensure
+			bridge_ok: Result = implementation.range
 		end
 
 feature -- Status setting
@@ -167,32 +179,36 @@ feature -- Element change
 			assigned: maximum = a_maximum
 		end
 
-	set_range (a_minimum, a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
+	set_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
 		require
-			a_maximum_greater_than_or_equal_to_a_minimum:
-				a_maximum >= a_minimum
+			a_range_not_void: a_range /= Void
+			a_range_upper_greater_than_or_equal_to_a_range_lower:
+				a_range.upper >= a_range.lower
 			value_within_bounds:
-				value >= a_minimum and then value <= a_maximum
+				value >= a_range.lower and then value <= a_range.upper
 		do
-			implementation.set_range (a_minimum, a_maximum)
+			implementation.set_range (a_range)
 		ensure
-			minimum_assigned: minimum = a_minimum
-			maximum_assigned: maximum = a_maximum
+			minimum_assigned: minimum = a_range.lower
+			maximum_assigned: maximum = a_range.upper
+			assigned: range.is_equal (a_range)
 		end
 
-	reset_with_range (a_minimum, a_maximum: INTEGER) is
-			-- Re-initialize with `a_maximum' and `a_minimum'.
-			-- Set `value' to `a_minimum'.
+	reset_with_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
+			-- Set `value' to `a_range.lower'.
 		require
-			a_maximum_greater_than_or_equal_to_a_minimum:
-				a_maximum >= a_minimum
+			a_range_not_void: a_range /= Void
+			a_range_upper_greater_than_or_equal_to_a_range_lower:
+				a_range.upper >= a_range.lower
 		do
-			implementation.reset_with_range (a_minimum, a_maximum)
+			implementation.reset_with_range (a_range)
 		ensure
-			value_assigned: value = a_minimum
-			minimum_assigned: minimum = a_minimum
-			maximum_assigned: maximum = a_maximum
+			value_assigned: value = a_range.lower
+			minimum_assigned: minimum = a_range.lower
+			maximum_assigned: maximum = a_range.upper
+			assigned: range.is_equal (a_range)
 		end
 
 feature {NONE} -- Implementation
@@ -235,6 +251,10 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/14 22:19:51  brendel
+--| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
+--| This is to take advantage of the newly introduced operator |..|.
+--|
 --| Revision 1.3  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

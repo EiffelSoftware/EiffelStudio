@@ -106,12 +106,15 @@ feature -- Tool generation
 				end
 				form_list.forth
 			end
+			if counter = 0 then
+				max_height := height
+			end
 			counter := counter + 1
 			!! ok_push_b_c
 			ok_push_b_c := ok_push_b_c.create_context (perm_wind)
 			ok_push_b_c.set_x_y (width * counter - 100, height)
 			ok_push_b_c.set_visual_name ("OK")
-			height := height + ok_push_b_c.height
+			max_height := max_height + ok_push_b_c.height
 			perm_wind.set_size (width * counter, max_height)
 			perm_wind.set_x_y (0, 0)
 		end

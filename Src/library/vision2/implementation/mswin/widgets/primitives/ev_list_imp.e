@@ -18,7 +18,7 @@ inherit
 	EV_LIST_I
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
-	
+
 	EV_ITEM_CONTAINER_IMP
 		redefine
 			ev_children
@@ -26,7 +26,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			initialize_colors
+			build
 		redefine
 			make
 		end
@@ -226,6 +226,22 @@ feature -- Status setting
 			end
 		end
 
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		do
+			add_command (Cmd_selection, a_command, arguments)
+		end
+
+	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when an item is
+			-- selected.
+		do
+			add_command (Cmd_dblclk, a_command, arguments)
+		end
+
 feature {NONE} -- Implementation
 
 	copy_list is
@@ -280,12 +296,14 @@ feature {NONE} -- Implementation
 	on_lbn_selchange is
 			-- The selection is about to change
 		do
+			execute_command (Cmd_selection, Void)
 			selected_item.execute_command (Cmd_item_activate, Void)
 		end
 
 	on_lbn_dblclk is
 			-- Double click on a string
 		do
+			execute_command (Cmd_dblclk, Void)
 			selected_item.execute_command (Cmd_item_dblclk, Void)
 		end
 

@@ -144,6 +144,14 @@ feature -- Element change
 			resizer_bottom_left.move_actions.prune_all (agent on_move_bottom_left)
 		end
 		
+	reset_user_size is
+			-- Set `user_size' to Void
+		do
+			user_size := Void
+		ensure
+			set: user_size = Void
+		end
+		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			
 	update is

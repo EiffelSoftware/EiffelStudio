@@ -17,8 +17,6 @@ inherit
 	EV_BOX_I
 
 	EV_INVISIBLE_CONTAINER_IMP
-		undefine
-			add_child
 		redefine
 			parent_ask_resize,
 			set_width,
@@ -30,9 +28,14 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 				-- Create the box with the default options.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			test_and_set_parent (par)
-			!! wel_window.make (parent_imp.wel_window)
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
+			wel_make (par_imp, "Box")
 			initialize
 			is_homogeneous := True --Default_homogeneous
 			spacing := 0 --Default spacing
@@ -47,8 +50,13 @@ feature {EV_BOX_IMP} -- Access
 	spacing: INTEGER
 			-- Space between the objects in the box
 
-	total_spacing: INTEGER
-			-- Total space occupied by spacing
+	total_spacing: INTEGER is
+			-- Total space occupied by spacing.
+			-- There is (spacing//2) on the left and on on the
+			-- right of the box.
+		do
+			Result := spacing * children.count
+		end
 
 	
 feature -- Status setting (box specific)
@@ -64,19 +72,10 @@ feature -- Status setting (box specific)
 --			set_minimum_size
 		end
 
-	set_spacing (new_spacing: INTEGER) is
-			-- set `spacing' to `new_spacing'
-			-- and tell the box that a child has resized to
-			-- refresh the display of the container
+	set_spacing (value: INTEGER) is
+			-- Make `value' the new spacing of the box.
 		do
-			spacing := new_spacing
-			set_total_spacing
-		end
-
-	set_total_spacing is
-			-- set `total_spacing' to the proper value
-		do
-			total_spacing := spacing * (children.count - 1)
+			spacing := value
 		end
 
 feature -- Resizing
@@ -104,13 +103,6 @@ feature {NONE} -- Basic operation
 		end
 
 feature {NONE} -- Implementation
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite at the level position.
-		do
-			Precursor (child_imp)
-			set_total_spacing
-		end
 
 --	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove a given child of the composite
@@ -157,3 +149,4 @@ end -- class EV_BOX_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

@@ -13,7 +13,7 @@ verbose
 open dakar.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel52_deliv.tgz Eiffel52_solaris.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.tgz Eiffel52_solaris.tgz
 get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.iso Eiffel52_enterprise_solaris.iso
 close 
 EOF

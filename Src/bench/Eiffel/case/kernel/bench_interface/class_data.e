@@ -113,7 +113,7 @@ feature -- Internal Properties
 	default_color: EV_COLOR is
 			-- Default color
 		do
-			Result := Resources.class_interior_color
+			Result := Resources.get_color("class_interior_color")
 		ensure then 
 			Color_not_void : Result /= Void	
 		end

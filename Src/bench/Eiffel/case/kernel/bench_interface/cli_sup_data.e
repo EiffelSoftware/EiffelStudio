@@ -264,7 +264,7 @@ feature -- Properties
 	default_color : EV_COLOR is
 			--default color
 		do
-				Result := Resources.cli_link_color
+				Result := Resources.get_color("link_supplier") 
 		end
 
 	has_supplier_name	( s : STRING )	: BOOLEAN	is

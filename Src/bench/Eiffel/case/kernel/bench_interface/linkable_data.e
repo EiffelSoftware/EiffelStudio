@@ -1174,11 +1174,11 @@ feature -- Generation for the reverse
 			s.append_integer(y)
 			fi.put_string(s)
 			fi.put_new_line
-			if color_name=VOid then
-				fi.put_string(Resources.class_color.name)
-			else
-				fi.put_string(color_name)
-			end
+		--	if color_name=VOid then
+		--		fi.put_string(Resources.get_color(class_color).name))
+		--	else
+		--		fi.put_string(color_name)
+		--	end
 			fi.put_new_line
 			if is_hidden then fi.put_string("TRUE") else fi.put_string("FALSE") end
 			if is_class then

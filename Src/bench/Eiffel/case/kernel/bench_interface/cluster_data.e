@@ -145,7 +145,7 @@ feature -- Access
 		require else
 			valid_resources	: resources	/= void
 		do
-			Result := Resources.cluster_color
+			Result := Resources.get_color("cluster_color")
 		end
 
 	hash_code: INTEGER is

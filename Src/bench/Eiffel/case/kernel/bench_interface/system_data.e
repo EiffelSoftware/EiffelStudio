@@ -909,11 +909,11 @@ feature -- Output
 			valid_path_or_command: path_or_command /= Void;
 			valid_filter: filter_format /= Void
 		local
-			file: INDENT_FILE;
+		--	file: INDENT_FILE;
 			temp_file_name, file_name: FILE_NAME;
 			cluster_list: SORTED_TWO_WAY_LIST [CLUSTER_DATA];
 			class_list: SORTED_TWO_WAY_LIST [CLASS_DATA];
-			parser: FILTER_PARSER;
+	--		parser: FILTER_PARSER;
 		do
 --			if not rescued then
 --				temp_file_name := Environment.temporary_file_name;
@@ -2328,7 +2328,7 @@ feature {NONE} -- Generation
 		require
 			valid_root_cluster	: root_cluster	/= void
 		local	
-			file: INDENT_FILE;
+		--	file: INDENT_FILE;
 			file_name: FILE_NAME;
 			name: STRING;
 			rel_path: STRING;
@@ -2452,16 +2452,16 @@ feature {NONE} -- Generation
 			end
 		end;
 
-	generate_cluster_line_for_ace (cluster: CLUSTER_DATA;
-				ace_file: INDENT_FILE; rel_path: STRING) is
-		require
-			valid_ace_valid	: ace_file	/= void
-			valid_cluster	: cluster	/= void
-		local
-			clusters: LINKED_LIST [CLUSTER_DATA];
-			tmp: DIRECTORY_NAME
-		do
-			--if not cluster.is_root 
+	--generate_cluster_line_for_ace (cluster: CLUSTER_DATA;
+	--			ace_file: INDENT_FILE; rel_path: STRING) is
+	--	require
+	--		valid_ace_valid	: ace_file	/= void
+	--		valid_cluster	: cluster	/= void
+	--	local
+	--		clusters: LINKED_LIST [CLUSTER_DATA];
+	--		tmp: DIRECTORY_NAME
+	--	do
+	--		--if not cluster.is_root 
 			--	then
 			--		cluster.set_re_file_name_from_parent
 			--end
@@ -2490,7 +2490,7 @@ feature {NONE} -- Generation
 		--				clone(cluster.name_in_lower_case))
 		--		clusters.forth
 		--	end
-		end;
+	--	end;
 
 feature -- directories for the Tools ( used by the file selector )
 		

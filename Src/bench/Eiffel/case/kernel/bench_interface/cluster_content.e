@@ -521,7 +521,7 @@ feature {CLUSTER_DATA} -- Output
 	generate_code_to_disk (path: STRING) is
 			-- Generate code in directory `path'.
 		local
-			file: INDENT_FILE;
+		--	file: INDENT_FILE;
 			dir: DIRECTORY;
 			file_name: FILE_NAME
 			a_class: CLASS_DATA

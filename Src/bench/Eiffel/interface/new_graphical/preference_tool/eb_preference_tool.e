@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EB_PREFERENCE_TOOL
+class
+	EB_PREFERENCE_TOOL
 
 inherit
 	EB_TOOL
@@ -21,9 +22,6 @@ feature {NONE} -- Initialization
 			-- Create Current with manager `par', then
 			-- show Current on the screen.
 		local
-			separator: EV_VERTICAL_SEPARATOR
-			sep2: EV_HORIZONTAL_SEPARATOR
-
 			tree: EV_TREE
 			leaves: ARRAY [EV_TREE_ITEM]
 			item: EV_TREE_ITEM
@@ -48,6 +46,8 @@ feature {NONE} -- Initialization
 			Create container.make (par)
 			container.set_minimum_size (500,340)
 --			container.forbid_resize
+			container.set_border_width (4)	
+			container.set_spacing (4)	
 
 
 				-- toolbar construction
@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 
 				-- tree+panel container construction
 			Create panels_box.make (container)
+			panels_box.set_spacing (4)	
 
 				-- tree construction
 
@@ -89,9 +90,6 @@ feature {NONE} -- Initialization
 				panel_list.forth
 			end
 
-				-- separator
-			Create separator.make (panels_box)			
-
 				-- panel dispatching
 
 --			if not panel_list.empty then
@@ -107,9 +105,6 @@ feature {NONE} -- Initialization
 --			end
 
 			display_panel (panel_list.first)
-
-				-- separator
-			Create sep2.make (container)			
 
 				-- buttons addition
 			Create button_bar.make (container)
@@ -218,7 +213,7 @@ feature -- Access
 				is_all_valid := is_all_valid and then pl.item.is_all_valid
 				pl.forth
 			end
-		end;
+		end
 
 	is_all_valid: BOOLEAN
 			-- Are all panels valid?

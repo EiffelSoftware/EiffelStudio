@@ -14,7 +14,7 @@ creation
 
 feature -- Removal
 
-	deregister (widget: WIDGET_WINDOWS) is
+	deregister (widget: WIDGET_IMP) is
 			-- Remove `widget' from all action managers in list
 		do
 			from

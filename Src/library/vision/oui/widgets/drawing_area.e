@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.drawing_area (Current, man, a_parent);
+			!DRAWING_AREA_IMP!implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -115,7 +115,7 @@ feature -- Removal
 	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaiton
 
-	implementation: D_AREA_I;
+	implementation: DRAWING_AREA_I;
 			-- Implementation of drawing area
 
 feature {NONE} -- Implementaiton

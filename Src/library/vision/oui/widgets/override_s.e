@@ -32,7 +32,7 @@ feature {NONE} -- Initializatin
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.override_s (current, a_parent);
+			!OVERRIDE_S_IMP!implementation.make (current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.font_box_d (Current, a_parent);
+			!FONT_BOX_D_IMP!implementation.make (Current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	implementation: FONT_B_D_I;
+	implementation: FONT_BOX_D_I;
 			-- Implementation of current font box
 
 end -- class FONT_BOX_D

@@ -30,7 +30,7 @@ feature -- Initialization
 	make is
 			-- Create a task.
 		do
-			implementation := toolkit.task (Current)
+			!TASK_IMP!implementation.make 
 		end;
 
 feature -- Status report

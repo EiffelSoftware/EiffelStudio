@@ -92,7 +92,7 @@ feature
 			end
 		end;
 
-feature {WIDGET_WINDOWS, ACCELERABLE_WINDOWS} -- Implementation
+feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 
 	parse (s: STRING) is
 		local
@@ -236,7 +236,7 @@ feature {WIDGET_WINDOWS, ACCELERABLE_WINDOWS} -- Implementation
 			end
 		end
 
-feature {WIDGET_ACTIONS, WIDGET_WINDOWS, ACCELERABLE_WINDOWS}
+feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 
 	equiv (other: TRANSLATION_COMMAND) : BOOLEAN is
 		do
@@ -356,7 +356,7 @@ feature {WIDGET_ACTIONS}
 	exact: BOOLEAN
 			-- There must be an exact match of this translation
 
-feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
+feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 
 	command: COMMAND
 

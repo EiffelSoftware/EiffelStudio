@@ -26,7 +26,7 @@ feature -- Initialization
 			-- Create a font list corresponding to `a_screen'.
 		do
 			screen := a_screen;
-			implementation := toolkit.font_list (Current)
+			!FONT_LIST_IMP!implementation.make (Current)
 		end;
 	
 feature -- Access

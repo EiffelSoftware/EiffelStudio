@@ -11,13 +11,13 @@ class
 
 inherit
 
-	WIDGET_M
+	WIDGET_IMP
 		redefine
 			remove_action, set_action,
 			set_background_color, set_background_pixmap
 		end;
 
-	FONTABLE_M;
+	FONTABLE_IMP;
 
 	MEL_LABEL_GADGET
 		rename
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			-- True if it is not a label and not in an
 			-- option pull
 		local
-			menu_m: MENU_M;
+			menu_m: MENU_IMP;
 			a_text: STRING
 		do
 			if not is_label then

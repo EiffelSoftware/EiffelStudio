@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a color
 		do
-			implementation := toolkit.color (Current)
+			!COLOR_IMP!implementation.make (Current)
 		end;
 
 	make_for_screen (a_screen: SCREEN) is
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
 		do
-			implementation := toolkit.color_for_screen (Current, a_screen)
+			!COLOR_IMP!implementation.make_for_screen (Current, a_screen)
 		end;
 
 feature -- Access

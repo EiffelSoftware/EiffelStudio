@@ -12,7 +12,7 @@ inherit
 
 	SEPARATO_G_I;
 
-	WIDGET_M
+	WIDGET_IMP
 		rename
 			is_shown as shown
 		redefine

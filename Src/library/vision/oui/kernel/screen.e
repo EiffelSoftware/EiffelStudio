@@ -35,7 +35,7 @@ feature -- Initialization
 			screen_name_exists: a_screen_name /= Void
 		do
 			screen_name := clone (a_screen_name);
-			implementation := toolkit.screen (current)
+			!SCREEN_IMP!implementation.make (current)
 		end;
 
 feature -- Access

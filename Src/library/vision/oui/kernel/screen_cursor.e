@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a cursor.
 		do
-			implementation := toolkit.screen_cursor (current)
+			!SCREEN_CURSOR_IMP!implementation.make (current)
 		end;
 
 	make_for_screen (a_screen: SCREEN) is
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
 		do
-			implementation := toolkit.screen_cursor_for_screen (Current, a_screen)
+			!SCREEN_CURSOR_IMP!implementation.make_for_screen (Current, a_screen)
 		end;
 
 feature -- Access

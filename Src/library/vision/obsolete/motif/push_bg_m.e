@@ -18,7 +18,7 @@ inherit
 			create_callback_struct
 		end;
 
-	FONTABLE_M;
+	FONTABLE_IMP;
 
 	MEL_PUSH_BUTTON_GADGET
 		rename

@@ -117,7 +117,8 @@ feature {NONE} -- Attributes
 	separator: THREE_D_SEPARATOR
 			-- Separator between the column row and the list of commands
 
-feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, GENERATE_OBJECT_TOOL_CMD}
+feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, 
+			GENERATE_OBJECT_TOOL_CMD, GENERATE_OBJECT_COMMAND_CMD}
 
 	user_defined_commands1: USER_DEF_CMDS
 	user_defined_commands2: USER_DEF_CMDS

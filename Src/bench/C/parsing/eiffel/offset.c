@@ -35,7 +35,7 @@ long nb_ref;
 	/* Return offset of first character after `nb_ref' references
 	 */
 
-	return nb_ref * REFSIZ + padding(nb_ref * REFSIZ, CHRSIZ);
+	return nb_ref * REFSIZ + padding(nb_ref * REFSIZ, (long)CHRSIZ);
 }
 
 long lngoff(nb_ref,nb_char)
@@ -46,7 +46,7 @@ long nb_ref, nb_char;
 	 */
 	long to_add = chroff(nb_ref) + nb_char *CHRSIZ;
 
-	return to_add + padding(to_add,LNGSIZ);
+	return to_add + padding(to_add, (long)LNGSIZ);
 }
 
 long fltoff(nb_ref,nb_char,nb_int)
@@ -57,7 +57,7 @@ long nb_ref, nb_char, nb_int;
 	 */
 	long to_add = lngoff(nb_ref,nb_char) + nb_int * LNGSIZ;
 
-	return to_add + padding(to_add,FLTSIZ);
+	return to_add + padding(to_add, (long)FLTSIZ);
 }
 
 long ptroff(nb_ref,nb_char,nb_int,nb_flt)
@@ -68,7 +68,7 @@ long nb_ref, nb_char, nb_int, nb_flt;
 	 */
 	long to_add = fltoff(nb_ref,nb_char,nb_int) + nb_flt * FLTSIZ;
 
-	return to_add + padding(to_add,PTRSIZ);
+	return to_add + padding(to_add, (long)PTRSIZ);
 }
 
 long dbloff(nb_ref,nb_char,nb_int,nb_flt,nb_ptr)
@@ -81,7 +81,7 @@ long nb_ref, nb_char, nb_int, nb_flt, nb_ptr;
 	long to_add = ptroff(nb_ref,nb_char,nb_int,nb_flt)
 					+ nb_ptr * PTRSIZ;
 
-	return to_add + padding(to_add,DBLSIZ);
+	return to_add + padding(to_add, (long)DBLSIZ);
 }
 
 long objsiz(nb_ref,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl)

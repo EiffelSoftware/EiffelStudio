@@ -807,9 +807,17 @@ int op;
 	case 5: /* Is file sticky */
 		return (mode & S_ISVTX) ? '\01' : '\0';
 	case 6: /* Is file owned by effective UID */
+#ifdef HAS_GETEUID
 		return (uid == geteuid()) ? '\01' : '\0';
+#else
+		return '\01'
+#endif
 	case 7: /* Is file owned by real UID */
+#ifdef HAS_GETEUID
 		return (uid == getuid()) ? '\01' : '\0';
+#else
+		return '\01'
+#endif
 	default:
 		panic("illegal access request");
 	}
@@ -1249,7 +1257,7 @@ int gid;
 	else
 		strcpy(str, gp->gr_name);		/* Available: fetch login name */
 #else
-	sprintf(str, "%d", uid);			/* Not available: use UID */
+	sprintf(str, "%d", gid);			/* Not available: use UID */
 #endif
 	
 	return makestr(str, strlen(str));

@@ -563,16 +563,3 @@ void pos_stack_end ()
 		free (pos_stack);
 }
 
-
-
-
-
-
-
-
-
-
-		
-	
-
-

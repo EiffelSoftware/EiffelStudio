@@ -2,7 +2,7 @@
  * Jmakefile for main C library
  */
 
-LSRC = yacc.c strsave.c env.c yacc_err.c click.c
+LSRC = yacc.c strsave.c yacc_err.c click.c
 
 LOBJ = \
 |expand f!$(LSRC)!

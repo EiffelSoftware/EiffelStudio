@@ -74,12 +74,11 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-LSRC = yacc.c strsave.c env.c yacc_err.c click.c
+LSRC = yacc.c strsave.c yacc_err.c click.c
 
 LOBJ = \
 	yacc.o \
 	strsave.o \
-	env.o \
 	yacc_err.o \
 	click.o 
 

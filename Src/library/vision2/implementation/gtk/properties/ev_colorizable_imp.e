@@ -18,6 +18,8 @@ inherit
 		end
 
 	EV_ANY_IMP
+		undefine
+			destroy
 		redefine
 			interface
 		end

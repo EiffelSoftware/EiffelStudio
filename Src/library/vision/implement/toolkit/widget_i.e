@@ -385,6 +385,10 @@ feature
 		deferred
 		end; -- set_size
 
+	set_widget_default is
+		deferred
+		end
+
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
 		require

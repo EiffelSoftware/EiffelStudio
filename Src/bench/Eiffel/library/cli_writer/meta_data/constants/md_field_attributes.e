@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Available properties for field."
 	date: "$Date$"
 	revision: "$Revision$"
 

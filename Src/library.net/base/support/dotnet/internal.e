@@ -235,8 +235,64 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			not_special: not is_special (object)
+		local
+			l_obj: SYSTEM_OBJECT
+			l_int8: INTEGER_8
+			l_int16: INTEGER_16
+			l_int32: INTEGER
+			l_int64: INTEGER_64
+			l_char: CHARACTER
+			l_boolean: BOOLEAN
+			l_real: REAL
+			l_double: DOUBLE
+			l_pointer: POINTER
 		do
-			Result := field_of_type (i, object, dynamic_type (object))
+			l_obj := field_of_type (i, object, dynamic_type (object))
+			Result ?= l_obj
+			if l_obj /= Void and then Result = Void then
+					-- We are most likely facing a basic type or a non-Eiffel type
+				inspect
+					field_type (i, object)
+				when Pointer_type then
+					l_pointer ?= l_obj
+					Result := l_pointer
+
+				when Character_type then
+					l_char ?= l_obj
+					Result := l_char
+
+				when Boolean_type then
+					l_boolean ?= l_obj
+					Result := l_boolean
+
+				when Integer_8_type then
+					l_int8 ?= l_obj
+					Result := l_int8
+
+				when Integer_16_type then
+					l_int16 ?= l_obj
+					Result := l_int16
+
+				when Integer_32_type then
+					l_int32 ?= l_obj
+					Result := l_int32
+
+				when Integer_64_type then
+					l_int64 ?= l_obj
+					Result := l_int64
+
+				when Real_type then
+					l_real ?= l_obj
+					Result := l_real
+
+				when Double_type then
+					l_double ?= l_obj
+					Result := l_double
+				else
+					-- Not a valid Eiffel type.
+				end
+			end
+
 		end
 
 	field_name (i: INTEGER; object: ANY): STRING is
@@ -354,7 +410,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			character_field: field_type (i, object) = Character_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	boolean_field (i: INTEGER; object: ANY): BOOLEAN is
@@ -365,7 +421,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			boolean_field: field_type (i, object) = Boolean_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
@@ -376,7 +432,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_8_field: field_type (i, object) = Integer_8_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	integer_16_field (i: INTEGER; object: ANY): INTEGER_16 is
@@ -387,7 +443,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_16_field: field_type (i, object) = Integer_16_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	integer_field (i: INTEGER; object: ANY): INTEGER is
@@ -398,7 +454,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_field: field_type (i, object) = Integer_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	integer_64_field (i: INTEGER; object: ANY): INTEGER_64 is
@@ -409,7 +465,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_64_field: field_type (i, object) = Integer_64_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	real_field (i: INTEGER; object: ANY): REAL is
@@ -420,7 +476,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			real_field: field_type (i, object) = Real_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	pointer_field (i: INTEGER; object: ANY): POINTER is
@@ -431,7 +487,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			pointer_field: field_type (i, object) = Pointer_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 	double_field (i: INTEGER; object: ANY): DOUBLE is
@@ -442,7 +498,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			double_field: field_type (i, object) = Double_type
 		do
-			Result ?= field (i, object)
+			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
 feature -- Version
@@ -626,7 +682,7 @@ feature {NONE} -- Implementation
 			Result := (14).to_integer
 		end
 
-	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): ANY is
+	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): SYSTEM_OBJECT is
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
 		require
@@ -640,16 +696,6 @@ feature {NONE} -- Implementation
 			a: MEMBER_INFO
 			cv_f: FIELD_INFO
 			cv_p: PROPERTY_INFO
-			an_obj: SYSTEM_OBJECT
-			an_int8: INTEGER_8
-			an_int16: INTEGER_16
-			an_int32: INTEGER
-			an_int64: INTEGER_64
-			a_char: CHARACTER
-			a_boolean: BOOLEAN
-			a_real: REAL
-			a_double: DOUBLE
-			a_pointer: POINTER
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
@@ -657,57 +703,9 @@ feature {NONE} -- Implementation
 				cv_f ?= a
 				cv_p ?= a
 				if cv_f /= Void then
-					an_obj := cv_f.get_value (object)
+					Result := cv_f.get_value (object)
 				elseif cv_p /= Void then
-					an_obj := cv_p.get_value (object, Void)
-				end
-				
-				Result ?= an_obj
-				if an_obj /= Void and then Result = Void then
-						-- We are most likely facing a basic type or a non-Eiffel type
-					inspect
-						field_type (i, object)
-					when Pointer_type then
-						a_pointer ?= an_obj
-						Result := a_pointer
-
-					when Character_type then
-						a_char ?= an_obj
-						Result := a_char
-
-					when Boolean_type then
-						a_boolean ?= an_obj
-						Result := a_boolean
-
-					when Integer_8_type then
-						an_int8 ?= an_obj
-						Result := an_int8
-
-					when Integer_16_type then
-						an_int16 ?= an_obj
-						Result := an_int16
-
-					when Integer_32_type then
-						an_int32 ?= an_obj
-						Result := an_int32
-
-					when Integer_64_type then
-						an_int64 ?= an_obj
-						Result := an_int64
-
-					when Real_type then
-						a_real ?= an_obj
-						Result := a_real
-
-					when Double_type then
-						a_double ?= an_obj
-						Result := a_double
-
-					else
-						check
-							not_supported: False
-						end
-					end
+					Result := cv_p.get_value (object, Void)
 				end
 			end
 		end

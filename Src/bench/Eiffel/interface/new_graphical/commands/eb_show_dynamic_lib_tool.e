@@ -26,6 +26,8 @@ inherit
 
 	NEW_EB_CONSTANTS
 
+	EB_CONFIRM_SAVE_CALLBACK
+
 creation
 	make
 
@@ -77,29 +79,32 @@ feature {EB_CHOOSE_DYNAMIC_LIB_DIALOG}-- Callbacks
 
 	load_chosen is
 			-- Used when first open the dynamic_tool.
-			-- and when we click on the dynamic_lib button, to say, SAVE (OK).
 		local
-			fc: PLAIN_TEXT_FILE
 			fod: EV_FILE_OPEN_DIALOG
 			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 		do
-			if Eiffel_dynamic_lib /= Void and then Eiffel_dynamic_lib.modified then
-				dynamic_lib_tool.save_text
-					-- ??
-				create fc.make_open_read (eiffel_dynamic_lib.file_name)
-				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
-					dynamic_lib_tool.synchronize
-				end
-				fc.close
-				eiffel_dynamic_lib.set_modified(false)
-			else
-				create fod.make (associated_window)
-				fod.set_filter (<<"Dynamic Library Definition File (*.def)">>, <<"*.def">>)
-				create arg.make (fod)
-				fod.add_ok_command (Current, arg)
-				fod.show
-			end
+			create fod.make (associated_window)
+			fod.set_filter (<<"Dynamic Library Definition File (*.def)">>, <<"*.def">>)
+			create arg.make (fod)
+			fod.add_ok_command (Current, arg)
+			fod.show
 		end
+
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
+
+	process is
+			-- and when we click on the dynamic_lib button, to say, SAVE (OK).
+		local
+			fc: PLAIN_TEXT_FILE
+		do
+			create fc.make_open_read (eiffel_dynamic_lib.file_name)
+			if eiffel_dynamic_lib.parse_exports_from_file(fc) then
+				dynamic_lib_tool.synchronize
+			end
+			fc.close
+			eiffel_dynamic_lib.set_modified(false)
+		end
+	
 
 feature -- Properties
 
@@ -207,6 +212,7 @@ feature {NONE} -- Execution
 			dl_win: EB_DYNAMIC_LIB_WINDOW
 			wd: EV_WARNING_DIALOG
 			dialog: EB_CHOOSE_DYNAMIC_LIB_DIALOG			
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if Project_tool.initialized and then Eiffel_project.system /= Void then
 				if Eiffel_dynamic_lib = Void then
@@ -256,15 +262,9 @@ feature {NONE} -- Execution
 						set_dynamic_lib_tool (dl_win.tool)
 						dynamic_lib_tool.show_file_content (Eiffel_dynamic_lib.file_name)
 					elseif Eiffel_dynamic_lib.modified then
---						warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+						create csd.make_and_launch (dynamic_lib_tool, Current)
 					else
-						create f.make_open_read (Eiffel_dynamic_lib.file_name)
-						if Eiffel_dynamic_lib.parse_exports_from_file(f) then
-							dynamic_lib_tool.synchronize
-						end
-						f.close
-						Eiffel_dynamic_lib.set_modified(False)
+						process
 					end
 					dynamic_lib_tool.show
 						-- should be `raise'

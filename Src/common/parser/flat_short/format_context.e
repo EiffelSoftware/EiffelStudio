@@ -326,6 +326,17 @@ feature -- Output
 			text.add_default_string (s);
 		end;
 
+	put_class_name (s: STRING) is
+			-- Append `s' to `text'.
+		require
+			s_exists: s /= Void;
+		do
+			if not tabs_emitted then
+				emit_tabs;
+			end;
+			text.add_default_string (s);
+		end;
+
 	put_space is
 			-- Append space.
 		do

@@ -59,7 +59,7 @@ feature {CONSTRUCT} -- Implementation
 			b: BOOLEAN
 		do
 			if not check_recursion_list.has (production) then
-				check_recursion_list.put_left (production);
+				check_recursion_list.extend (production);
 				if print_mode.item then
 					print_children
 				end;

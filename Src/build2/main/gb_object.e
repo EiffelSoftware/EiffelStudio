@@ -893,40 +893,30 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			object_representation_not_void: object_representation /= Void
 		local
 			env: EV_ENVIRONMENT
-			an_object, local_parent_object: GB_OBJECT
-			a_component: GB_COMPONENT
+			local_parent_object: GB_OBJECT
+--			a_component: GB_COMPONENT
 			new_short_type, new_type: STRING
 			funct_result: BOOLEAN
 			color_stone: GB_COLOR_STONE
 			colorizeable: EV_COLORIZABLE
 			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
 			actual_object: GB_OBJECT
+			an_object_stone: GB_OBJECT_STONE
+			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
 			color_stone ?= object_representation
 			if color_stone /= Void then
 				colorizeable ?= object
 				Result := colorizeable /= Void
 			else
-				an_object ?= object_representation
-					-- We get the new type of the object to be added. With this
-					-- information, we can then see if `Current' will accept
-					-- a child of this type.
-				if an_object /= Void then
-					new_type := an_object.type
-					new_short_type := an_object.short_type
-				else
-					-- If we are not an object, then we must be a component.
-					a_component ?= object_representation
-					check
-						is_component: a_component /= Void
-					end
-					new_type := a_component.root_element_type
-					new_short_type := new_type.substring (4, new_type.count)
-				end
+				an_object_stone ?= object_representation
+				new_type := an_object_stone.object_type
+				new_short_type := new_type.substring (4, new_type.count)				
 				Result := True
+
 				create env
 					-- If shift is pressed `object_representation' must be added to the parent.
-				if env.application.shift_pressed and not an_object.is_instance_of_top_level_object then
+				if env.application.shift_pressed and not an_object_stone.is_instance_of_top_level_object then
 					local_parent_object := parent_object
 				else
 					local_parent_object := Current
@@ -939,20 +929,23 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 				
 					-- Now restrict the dropping of top level structures into other top level structures
 					-- that would cause a cyclic inheritance hierarchy.
-				if Result and an_object /= Void and then an_object.window_selector_item /= Void then
-					create all_dependents.make (4)
-					all_dependents_recursive (an_object, all_dependents)
-					all_dependents.extend (an_object, an_object.id)
+				if Result then
+					standard_object_stone ?= an_object_stone
+					if standard_object_stone /= Void and then standard_object_stone.object.window_selector_item /= Void then
+						create all_dependents.make (4)
+					all_dependents_recursive (standard_object_stone.object, all_dependents)
+					all_dependents.extend (standard_object_stone.object, standard_object_stone.object.id)
 					Result := not all_dependents.has (Current.id)
 					if not Result then
 						set_status_text (cyclic_inheritance_error)
 					end
+					end
 				end
-				if Result and an_object /= Void and then an_object.is_instance_of_top_level_object then
+				if Result and an_object_stone /= Void and then an_object_stone.is_instance_of_top_level_object then
 					create all_dependents.make (4)
-					actual_object := object_handler.deep_object_from_id (an_object.associated_top_level_object)
+					actual_object := object_handler.deep_object_from_id (an_object_stone.associated_top_level_object)
 					all_dependents_recursive (actual_object, all_dependents)
-					all_dependents.extend (actual_object, an_object.id)
+					all_dependents.extend (actual_object, actual_object.id)
 					Result := not all_dependents.has (Current.id)
 					if not Result then
 						set_status_text (cyclic_inheritance_error)
@@ -968,12 +961,13 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 					Result := not local_parent_object.is_full
 							-- We only need to check this if we are not a component,
 							-- as this means there is no way we could be contained in `Current'.
-					if an_object /= Void then
-						funct_result := local_parent_object.override_drop_on_child (an_object)
+					standard_object_stone ?= an_object_stone
+					if standard_object_stone /= Void then
+						funct_result := local_parent_object.override_drop_on_child (standard_object_stone.object)
 						if not funct_result then
 								-- Now display output if we are attempting to insert the object in itself
 								-- or one of its children.
-							display_parent_in_child_message (an_object, local_parent_object, new_type)			
+							display_parent_in_child_message (standard_object_stone.object, local_parent_object, new_type)			
 						end
 						Result := Result and funct_result
 					end
@@ -1284,8 +1278,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 				
 					-- Now connect the new events
 				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
-				pick_and_dropable.drop_actions.extend (agent add_new_component_wrapper (?))
-				pick_and_dropable.drop_actions.extend (agent add_new_object_wrapper (?))
+				pick_and_dropable.drop_actions.extend (agent handle_object_drop (?))
 				pick_and_dropable.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 				pick_and_dropable.drop_actions.extend (agent set_color)
 			end
@@ -1330,14 +1323,14 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			if application.ctrl_pressed and application.shift_pressed then
 					-- If ctrl and shift is pressed, we must highlight
 					-- the object in the layout constructor.
-				Layout_constructor.highlight_object (Current)
+				Layout_constructor.highlight_object (create {GB_STANDARD_OBJECT_STONE}.make_with_object (Current))
 			elseif application.ctrl_pressed then
 					-- If the ctrl key is pressed, then we must
 					-- start a new object editor for `Current', instead
 					-- of beginning the pick and drop.
 				new_object_editor (Current)
 			else
-				Result := Current
+				Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (Current)
 			end
 		end
 
@@ -1463,12 +1456,24 @@ feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 			tree_item_not_void: tree_item /= Void
 		do
 			tree_item.drop_actions.wipe_out
-			tree_item.drop_actions.extend (agent add_new_object_wrapper (?))
-			tree_item.drop_actions.extend (agent add_new_component_wrapper (?))
+			tree_item.drop_actions.extend (agent handle_object_drop (?))
 			tree_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 		
-feature {GB_BUILDER_WINDOW} -- Implementation
+feature {GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM} -- Implementation
+
+	handle_object_drop (object_pebble: GB_OBJECT_STONE) is
+			--
+		local
+			component_pebble: GB_COMPONENT_OBJECT_STONE
+		do
+			component_pebble ?= object_pebble
+			if component_pebble /= Void then
+				add_new_component_wrapper (component_pebble.component)
+			else
+				add_new_object_wrapper (object_pebble.object)
+			end
+		end
 
 	add_new_object_wrapper (an_object: GB_OBJECT) is
 			-- If shift pressed then add `an_object' to

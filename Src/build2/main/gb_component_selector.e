@@ -106,19 +106,23 @@ feature -- Access
 
 feature -- Basic operation
 		
-	add_new_component (an_object: GB_OBJECT) is
-			-- Add a new component representing `an_object'.
+	add_new_component (object_stone: GB_OBJECT_STONE) is
+			-- Add a new component representing `object_stone'.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
 		local
 			component_item: GB_COMPONENT_SELECTOR_ITEM
 			dialog: GB_NAMING_DIALOG
+			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
-			create dialog.make_with_values (unique_name_from_array (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
-			dialog.show_modal_to_window (parent_window (Current))
-			if not dialog.cancelled then
-				create component_item.make_from_object (an_object, dialog.name)	
-				extend (component_item)
+			standard_object_stone ?= object_stone
+			if standard_object_stone /= Void then
+				create dialog.make_with_values (unique_name_from_array (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
+				dialog.show_modal_to_window (parent_window (Current))
+				if not dialog.cancelled then
+					create component_item.make_from_object (standard_object_stone.object, dialog.name)	
+					extend (component_item)
+				end
 			end
 		end
 		
@@ -171,18 +175,29 @@ feature -- Basic operation
 			end
 		end
 
-	is_valid_object (an_object: GB_OBJECT): BOOLEAN is
+	is_valid_object (object_stone: GB_OBJECT_STONE): BOOLEAN is
 			-- Is `an_object' a valid object which may be dropped
 			-- in Current?
+		require
+			object_stone_not_void: object_stone /= Void
+		local
+			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
+			standard_object_stone ?= object_stone
+			if standard_object_stone /= Void then
+			
 				-- Checks that we are not transporting from the type
 				-- selector tool.
-			if an_object.object /= Void then
+			if standard_object_stone.object.object /= Void then
 				Result := True
 			end
-				-- Components made from WINDOWS are not allowed, as
-				-- only one window is currently allowed in the system.
-			if an_object.type.is_equal (Ev_titled_window_string) then
+
+				--|FIXME Why can we not support windows and dialogs?
+			if standard_object_stone.object_type.is_equal (Ev_titled_window_string) or
+				standard_object_stone.object_type.is_equal (ev_dialog_string) then
+				Result := False
+			end
+			else
 				Result := False
 			end
 		end

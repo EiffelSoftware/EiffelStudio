@@ -106,53 +106,22 @@ feature -- Access
 		
 	can_add_child (object_representation: ANY): BOOLEAN is
 			-- May an object represented by `object_representation' be added
-			-- to `Current'. `object_representation' may be either a GB_COMPONENT or a 
-			-- GB_OBJECT. We do not just create an object from the component and use that,
-			-- as this can be very slow, and this feature is called many times during
-			-- a pick and drop.
+			-- to `Current'?
 		local
-			an_object: GB_OBJECT
-			menu_bar_object: GB_MENU_BAR_OBJECT
-			component: GB_COMPONENT
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			color_stone: GB_COLOR_STONE
+			object_stone: GB_OBJECT_STONE
 		do
 			Result := Precursor {GB_CELL_OBJECT} (object_representation)
 			color_stone ?= object_representation
 			if color_stone = Void then
-				component ?= object_representation
-				an_object ?= object_representation
-					-- We must update `Result' taken from Precursor, to handle menus
-					-- correctly. Set to False if `object_representation' is a menu bar.
-				if ((component /= Void and then component.root_element_type.is_equal (Ev_menu_bar_string))
-					or (an_object /= Void and then an_object.type.is_equal (Ev_menu_bar_string))) and object.menu_bar /= Void then
-					Result := False
-				end
-				
-				titled_window_object ?= an_object
-				if titled_window_object /= Void then
-						-- Windows may not be parented in other windows.
-						-- We do not need to check components, as window may not be made into
-						-- a component.
-					Result := False
-				end
-				
-				check
-					object_is_a_component_or_an_object: component /= Void or an_object /= Void
-				end
-					-- We now allow a menu bar child if we are dropping an object and
-					-- there is not a menu bar already contained in `Current'.
-				menu_bar_object ?= an_object
-				if menu_bar_object /= Void then
-					if object.menu_bar = Void then
-						Result := True
+				object_stone ?= object_representation
+				if object_stone /= Void then
+					if object_stone.object_type.is_equal (ev_menu_bar_string) then
+						Result := object.menu_bar = Void
 					end
-				end
-					-- We now allow child addition if we are dropping a component and
-					-- there is not a menu bar already contained in `Current'.
-				if component /= Void and then component.root_element_type.is_equal (Ev_menu_bar_string) and
-					object.menu_bar = Void then
-					Result := True
+					if object_stone.object_type.is_equal (ev_titled_window_string) or object_stone.object_type.is_equal (ev_dialog_string) then
+						Result := False
+					end
 				end
 			end
 		end
@@ -342,16 +311,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			create builder_win
 			builder_win.set_size (Default_window_dimension, Default_window_dimension)
 			set_display_object (builder_win)
-			display_object.set_pebble_function (agent retrieve_pebble)
-			display_object.child.set_pebble_function (agent retrieve_pebble)
-			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
-			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
-			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-			display_object.drop_actions.extend (agent set_color)
-			display_object.child.drop_actions.extend (agent set_color)
+			connect_display_object_events
 		end
 		
 	set_display_object  (display_win: GB_BUILDER_WINDOW) is

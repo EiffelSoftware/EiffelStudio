@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 		
-	generate_pebble: GB_COMPONENT is
+	generate_pebble: GB_COMPONENT_OBJECT_STONE is
 			-- `Result' is used for a pick and drop.
 		local
 			component: GB_COMPONENT
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 					show_hide_component_viewer_command.execute
 				end
 			else
-				create Result.make_with_name (text)
+				create Result.make_with_component (create {GB_COMPONENT}.make_with_name (text))
 			end
 		end
 

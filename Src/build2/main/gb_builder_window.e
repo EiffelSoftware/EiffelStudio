@@ -76,8 +76,7 @@ feature -- Status setting
 				-- been set. This is because we must do the processing within the
 				-- object.
 			drop_actions.wipe_out
-			drop_actions.extend (agent object.add_new_object_wrapper (?))
-			drop_actions.extend (agent object.add_new_component_wrapper (?))
+			drop_actions.extend (agent object.handle_object_drop (?))
 			drop_actions.set_veto_pebble_function (agent object.can_add_child (?))		
 		end
 		

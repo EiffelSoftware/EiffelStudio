@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 class
-	HKEY
+	WEL_HKEY
 
 feature -- Access
 
@@ -59,7 +59,7 @@ feature -- Access
 			"HKEY_DYN_DATA"
 		end
 
-end -- class HKEY
+end -- class WEL_HKEY
 	
 --|-------------------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -1,5 +1,5 @@
 /*
- * ESTREAM.C
+ * REGISTRY.C
  *
  * Functions used by the class WEL_REGISTRY.
  *
@@ -23,9 +23,9 @@ EIF_INTEGER cwin_reg_create_key(
 	EIF_PROC SetDisposition;
 	LPDWORD lpdwDisposition;
 
-	// Get the cecil Id of class EOLE_REGISTRY
-    eti = Dtype (eif_access(main_obj));
-    SetDisposition = eif_proc("set_create_disposition_result", eti);
+	// Get the cecil Id of class WEL_REGISTRY
+    eti = eif_type_id ("WEL_REGISTRY");
+    SetDisposition = eif_proc ("set_create_disposition_result", eti);
 	lpdwDisposition = (LPDWORD)malloc(sizeof (DWORD));
 
     result = RegCreateKeyEx(
@@ -64,14 +64,13 @@ EIF_INTEGER cwin_reg_open_key(
     LONG result;
 	LPSECURITY_ATTRIBUTES lpSecurityAttributes;
 	LPDWORD lpdwDisposition;
-
+	
     result = RegOpenKeyEx(
             (HKEY)parent_key ,
             (LPCTSTR)keyName,
             (DWORD)0,
             (REGSAM)access_mode,
             (PHKEY)&key);
-
     if( result != ERROR_SUCCESS )
     {
         return 0;
@@ -79,10 +78,24 @@ EIF_INTEGER cwin_reg_open_key(
     return (EIF_INTEGER)key;
 }
 
-
 //---------------------------------------------------------------------------
 
-EIF_INTEGER cwin_reg_set_key_value(
+EIF_BOOLEAN cwin_reg_delete_key(
+		EIF_INTEGER parent_key,
+		EIF_POINTER keyName )
+{
+	LONG result;
+
+	result = RegDeleteKey (
+		(HKEY)parent_key,
+		(LPCTSTR)keyName);
+	if (result == ERROR_SUCCESS)
+		return EIF_TRUE;
+	return EIF_FALSE;
+}
+//---------------------------------------------------------------------------
+
+void cwin_reg_set_key_value(
         EIF_INTEGER key,
         EIF_POINTER keyname,
         EIF_POINTER keyvalue )
@@ -94,9 +107,9 @@ EIF_INTEGER cwin_reg_set_key_value(
             (HKEY)key ,
             (LPCTSTR)keyname,
             0,
-            REG_SZ,
-			(CONST BYTE *)keyvalue,
-            strlen(keyvalue)*sizeof(char) );
+            ((REG_VALUE *)keyvalue)->type,
+			((REG_VALUE *)keyvalue)->data,
+            ((REG_VALUE *)keyvalue)->length );
 }
 
 
@@ -112,21 +125,40 @@ void cwin_reg_close_key( EIF_INTEGER key )
 
 //---------------------------------------------------------------------------
 
-EIF_POINTER cwin_reg_query_value(
+void cwin_reg_query_value(
         EIF_INTEGER key, EIF_POINTER value_name )
 {
     LONG result;
     LONG charCount;
+	DWORD type;
     static char buffer[256];
 
     buffer[0] = 0;
     charCount = sizeof( buffer ) - 1;
-    result = RegQueryValue( (HKEY)key ,
-        (LPCTSTR)value_name,
+    result = RegQueryValueEx( (HKEY)key ,
+        (LPTSTR)value_name,
+		NULL,
+		&type,
         (LPTSTR)buffer,
         &charCount );
+	g_type = type;
+	g_buffer = buffer;
+	g_length = charCount;
+}
 
-    return (EIF_POINTER)buffer;
+EIF_INTEGER cwin_reg_value_type()
+{
+	return (EIF_INTEGER)g_type;
+}
+
+EIF_POINTER cwin_reg_value_data()
+{
+	return (EIF_POINTER)g_buffer;
+}
+
+EIF_INTEGER cwin_reg_value_length()
+{
+	return (EIF_INTEGER)g_length;
 }
 
 /*

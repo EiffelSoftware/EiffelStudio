@@ -25,7 +25,7 @@ inherit
 	WEL_SINGLE_LINE_EDIT
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -91,6 +91,19 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- WEL Implementation
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	default_style: INTEGER is
 			-- We specified the Es_autovscroll style otherwise
@@ -222,6 +235,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/18 17:13:00  rogers
+--| Added wel_window_parent fix.
+--|
 --| Revision 1.35  2000/03/17 00:01:52  rogers
 --| move is now correctly re-named to wel_move.
 --|

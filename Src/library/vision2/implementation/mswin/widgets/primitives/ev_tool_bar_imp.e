@@ -151,30 +151,6 @@ feature -- Access
 			end
 		end
 
-	separator_count: INTEGER is
-			-- Number of separators in the toolbar.
-			-- Necessary for the implementation of the minimum_width
-			-- of the toolbar. As soon as the message Tb_getmaxsize
-			-- is available, this feature should not be so usefull.
-		local
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
-			original_index: INTEGER
-		do
-			from
-				original_index := index
-				list := ev_children
-				list.start
-			until
-				list.after
-			loop
-				if list.item.type = 5 then
-					Result := Result + 1
-				end
-				list.forth
-			end
-			ev_children.go_i_th (original_index)
-		end
-
 feature -- Status report
 
 	separator_width: INTEGER is
@@ -206,7 +182,6 @@ feature -- Element change
 	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; an_index: INTEGER) is
 			-- Insert `button' at the `an_index' position in the tool-bar.
 		local
---			bmp: WEL_TOOL_BAR_BITMAP
 			but: WEL_TOOL_BAR_BUTTON
 			num: INTEGER
 			pixmap: EV_PIXMAP_IMP
@@ -305,15 +280,27 @@ feature -- Basic operation
 		local
 			num: INTEGER
 		do
-			num := separator_count
-			num := (count - num) * buttons_width + num * separator_width
-			internal_set_minimum_width (num)
+			if comctl32_version >= version_471 then
+					-- New version using API available starting with IE4.
+				internal_set_minimum_width (get_max_width)
+			else
+					-- Old version
+				num := separator_count
+				num := (count - num) * buttons_width + num * separator_width
+				internal_set_minimum_width (num)
+			end
 		end
 
 	compute_minimum_height is
 			-- Update the minimum-size of the tool-bar.
 		do
-			internal_set_minimum_height (buttons_height + 6)
+			if comctl32_version >= version_471 then
+					-- New version using API available starting with IE4.
+				internal_set_minimum_height (get_max_height)
+			else
+					-- No API available, we only guess the right value...
+				internal_set_minimum_height (buttons_height + 6)
+			end
 		end
 
 	compute_minimum_size is
@@ -382,6 +369,30 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	separator_count: INTEGER is
+			-- Number of separators in the toolbar.
+			-- Necessary for the implementation of the minimum_width
+			-- of the toolbar. As soon as the message Tb_getmaxsize
+			-- is available, this feature should not be so usefull.
+		local
+			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			original_index: INTEGER
+		do
+			from
+				original_index := index
+				list := ev_children
+				list.start
+			until
+				list.after
+			loop
+				if list.item.type = 5 then
+					Result := Result + 1
+				end
+				list.forth
+			end
+			ev_children.go_i_th (original_index)
+		end
+
 feature {NONE} -- WEL Implementation
 
 	wel_move_and_resize (
@@ -437,17 +448,23 @@ feature {NONE} -- WEL Implementation
 			dc: WEL_WINDOW_DC
 			color: WEL_COLOR_REF
 			pen: WEL_PEN
-			int: INTEGER
 		do
-			create color.make_system (Color_menu)
-			create pen.make_solid (2, color)
 			create dc.make (Current)
 			dc.get
-				dc.select_pen (pen)
-				int := width
-				int := height
-				dc.line (-1, 1, width, 1)
-			dc.release
+
+			create color.make_system (Color_btnshadow)
+			create pen.make_solid (1, color)
+			dc.select_pen (pen)
+			dc.line (-1, y_position, width, y_position)
+			dc.unselect_pen
+
+			create color.make_system (Color_btnhighlight)
+			create pen.make_solid (1, color)
+			dc.select_pen (pen)
+			dc.line (-1, y_position + 1, width, y_position + 1)
+			dc.unselect_pen
+
+			dc.quick_release
 			disable_default_processing
 		end
 
@@ -660,6 +677,14 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/22 04:12:36  pichery
+--| - Improved the minimum width and height function by using function
+--|   from Comctrl32.dll version 4.71 and above when available.
+--|
+--| - Moved feature `separator_count'.
+--|
+--| - Fixed the feature `on_wm_ncpaint' which did not work...Now it works !!
+--|
 --| Revision 1.32  2000/03/22 03:01:39  pichery
 --| Changed the implementation of `find_item_at_position'. The new
 --| implementation has been valided.

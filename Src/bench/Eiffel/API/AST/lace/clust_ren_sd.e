@@ -100,7 +100,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				end;
 					-- Check for new name clashes in `cluster'.
 				classes := cluster.classes;
-				from renamed_classes.start until renamed_classes.after loop
+				from
+					renamed_classes.start
+				until
+					renamed_classes.after
+				loop
 					new_name := renamed_classes.item_for_iteration;
 					if
 						classes.has (new_name) and
@@ -110,7 +114,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							-- in cluster `cluster'.
 						!!vscn;
 						vscn.set_cluster (cluster);
-						vscn.set_first (classes.item (new_name));
+						vscn.set_first (classes.found_item);
 						vscn.set_second (classes.item (renamed_classes.key_for_iteration));
 						Error_handler.insert_error (vscn)
 					end;

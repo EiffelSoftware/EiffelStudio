@@ -1677,6 +1677,7 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 {
 	EIF_CONF_TAB *stab;
+	EIF_GEN_DER *sgdp, *tgdp;
 	int16 *ptypes;
 	int i, idx, result;
 	unsigned char mask;
@@ -1764,14 +1765,12 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 		/* We have to compute it now (once!) */
 
+		sgdp = eif_derivations [stype];
+		tgdp = eif_derivations [ttype];
 
 		if (stype >= first_gen_id)
 		{
-			EIF_GEN_DER *sgdp, *tgdp;
-
-				/* Both ids generated here */
-			tgdp = eif_derivations [ttype];
-			sgdp = eif_derivations [stype];
+			/* Both ids generated here */
 		
 			if (sgdp->first_id == tgdp->first_id)
 			{
@@ -1842,34 +1841,20 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 				result = 1;
 				goto done;
 			}
+		}
 
-			/* Target is generic.
-				We need to check every parent of the source
-				against the target */
+		/* Target is generic.
+		   We need to check every parent of the source
+		   against the target */
 
-			ptypes = sgdp->ptypes;
-			result = 0;
-			while (!result && (*ptypes != TERMINATOR)) {
-				result = eif_gen_conf (*ptypes, ttype);
-				++ptypes;
-			}
-		} else {
-				/* Source is not generic, but target is.
-				 * We need to check every parent of the source
-				 * against the target */
+		ptypes = sgdp->ptypes;
 
-				/* Compiler generated id */
-			ptypes = par_info (RTUD_INV (source_type))->parents;
-			result = 0;
+		result = 0;
 
-			while (!result && (*ptypes != TERMINATOR)) {
-				CHECK ("Not a formal type", *ptypes > FORMAL_TYPE);
-				if (*ptypes < 0)
-					result = eif_gen_conf (*ptypes, ttype);
-				else
-					result = eif_gen_conf ((int16) RTUD(*ptypes), ttype);
-				++ptypes;
-			}
+		while (!result && (*ptypes != TERMINATOR))
+		{
+			result = eif_gen_conf (*ptypes, ttype);
+			++ptypes;
 		}
 
 done:
@@ -2032,7 +2017,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 			gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
 
-			if (gdp == NULL) 
+			if ((gdp == NULL) || (gdp->size == 0))
 			{
 				/* The static call context is not a generic class.
 				   Hence we have to take 'obj_type'. */
@@ -3023,11 +3008,11 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 rt_private void eif_compute_ctab (int16 dftype)
 
 {
-	int16 outtab [256], *outtable, *intable, nulltab[]={TERMINATOR};
-	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes = NULL;
+	int16 outtab [256], *outtable, *intable;
+	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
 	int i, count, offset, pcount;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
-	char is_expanded, cachable, is_generic;
+	char is_expanded, cachable;
 	struct eif_par_types *pt;
 	EIF_CONF_TAB *ctab, *pctab;
 	EIF_GEN_DER *gdp;
@@ -3039,7 +3024,6 @@ rt_private void eif_compute_ctab (int16 dftype)
 		/* Compiler generated id */
 	pt = par_info (RTUD_INV(dtype));
 
-	is_generic = pt->nb_generics > 0;
 	is_expanded = pt->is_expanded;
 
 	/* Compute the ranges of the bit tables */
@@ -3047,8 +3031,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 	outtable = outtab;
 	intable = pt->parents;
 
-	if (intable == (int16 *)0)
-		intable = nulltab;
+	CHECK ("Parents never NULL", intable);
 
 	min_low = next_gen_id;
 	max_low = 0;
@@ -3101,32 +3084,30 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	eif_conf_tab [dftype] = ctab;
 
-	/* Create generic derivation of Current type,
-	 * only if Current type is generic */
-	if (is_generic) {
-		gdp = eif_derivations [dftype];
+	/* Create table of parent types */
 
-		if (gdp == (EIF_GEN_DER *) 0)
-		{
-			gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
+	gdp = eif_derivations [dftype];
 
-			eif_derivations [dftype] = gdp;
-		}
+	if (gdp == (EIF_GEN_DER *) 0)
+	{
+		gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
 
-		if (pcount <= 8)
-		{
-			/* Use small table */
-			gdp->ptypes = ptypes = gdp->sptypes;
-		}
-		else
-		{
-			ptypes = (int16 *) eif_malloc (sizeof (int16)*pcount);
+		eif_derivations [dftype] = gdp;
+	}
 
-			if (ptypes == (int16 *) 0)
-				enomem ();
+	if (pcount <= 8)
+	{
+		/* Use small table */
+		gdp->ptypes = ptypes = gdp->sptypes;
+	}
+	else
+	{
+		ptypes = (int16 *) eif_malloc (sizeof (int16)*pcount);
 
-			gdp->ptypes = ptypes;
-		}
+		if (ptypes == (int16 *) 0)
+			enomem ();
+
+		gdp->ptypes = ptypes;
 	}
 
 	/* Fill bit tables */
@@ -3134,8 +3115,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 	outtable = outtab;
 	intable = pt->parents;
 
-	if (intable == (int16 *)0)
-		intable = nulltab;
+	CHECK ("Parents never NULL", intable);
 
 	while (*intable != TERMINATOR)
 	{
@@ -3144,8 +3124,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 		/* Register parent type */
 
-		if (is_generic)
-			*(ptypes++) = pftype;
+		*(ptypes++) = pftype;
 
 		if ((min_low <= max_low) && (pctab->min_low_id <= pctab->max_low_id))
 		{
@@ -3205,8 +3184,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 		}
 	}
 
-	if (is_generic)
-		*ptypes = TERMINATOR;
+	*ptypes = TERMINATOR;
 
 	/* Put own type in table if it's not expanded */
 
@@ -3239,7 +3217,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 rt_private void eif_compute_anc_id_map (int16 dftype)
 
 {
-	int16 outtab [256], *outtable, *intable, nulltab[]={TERMINATOR};
+	int16 outtab [256], *outtable, *intable;
 	int16 min_id, max_id, pftype, dtype;
 	int i, count, offset;
 	int16 *src, *dest;
@@ -3259,8 +3237,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	outtable = outtab;
 	intable = pt->parents;
 
-	if (intable == (int16 *)0)
-		intable = nulltab;
+	CHECK ("Parents never NULL", intable);
 
 	min_id = max_id = RTUD_INV(dtype);
 
@@ -3293,8 +3270,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	outtable = outtab;
 	intable = pt->parents;
 
-	if (intable == (int16 *)0)
-		intable = nulltab;
+	CHECK ("Parents never NULL", intable);
 
 	while (*intable != TERMINATOR)
 	{

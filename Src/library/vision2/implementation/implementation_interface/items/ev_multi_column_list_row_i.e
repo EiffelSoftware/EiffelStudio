@@ -81,7 +81,7 @@ feature -- Basic operations
 				app := (create {EV_ENVIRONMENT}).application.implementation
 				if not app.once_idle_actions.has (
 						parent_imp.update_children_agent) then
-					app.once_idle_actions.extend (
+					app.do_once_on_idle (
 						parent_imp.update_children_agent)
 				end
 			end
@@ -129,6 +129,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/25 01:45:14  brendel
+--| Replaced once_on_idle_actions.extend with do_once_on_idle.
+--|
 --| Revision 1.35  2000/03/24 17:29:34  brendel
 --| Moved platform independent update code here.
 --|

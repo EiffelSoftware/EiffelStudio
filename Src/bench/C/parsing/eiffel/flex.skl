@@ -12,7 +12,7 @@
 /* Original skeleton (flex 2.4.7) modified for OS2 port */
 #include "eif_config.h"
  
-#ifdef EIF_OS2
+#ifdef EIF_WIN32
 #include <io.h>
 #endif
  

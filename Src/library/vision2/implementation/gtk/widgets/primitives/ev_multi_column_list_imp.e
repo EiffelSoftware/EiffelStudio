@@ -1136,8 +1136,8 @@ feature {NONE} -- Implementation
 					item_imp.index - 1,
 					i - 1
 				)
-				-- Insert `v' in to ev_children list.
-				
+				-- Reinsert `v' in to ev_children list at position `i'.
+				ev_children.prune_all (item_imp)
 				ev_children.go_i_th (i)
 				ev_children.put_left (item_imp)
 			end

@@ -80,7 +80,8 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of the array (in bytes)
 		do
-			Result := Integer_size * count
+				-- We need to return at least 1 to preserve the postcondition.
+			Result := (Integer_size * count).max (1)
 		end
 		
 feature {NONE} -- Constants

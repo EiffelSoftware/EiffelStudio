@@ -297,7 +297,8 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := (y_in_lines < other.y_in_lines) or else (x_in_pixels < other.x_in_pixels)
+			Result := (y_in_lines < other.y_in_lines) or else
+				((y_in_lines = other.y_in_lines) and then (x_in_pixels < other.x_in_pixels))
 		end
 
 	is_equal (other: like Current): BOOLEAN is
@@ -405,7 +406,11 @@ feature -- Transformation
 				line.make_from_lexer (whole_text.lexer)
 				from
 					cline := line
-					j := aux.index_of ('%N', i+1)
+					if i = aux.count then
+						j := 0
+					else
+						j := aux.index_of ('%N', i+1)
+					end
 				until
 					j = 0
 				loop
@@ -414,6 +419,11 @@ feature -- Transformation
 					cline.add_right (new_line)
 					cline := new_line
 					i := j
+					if j = aux.count then
+						j := 0
+					else
+						j := aux.index_of ('%N', i+1)
+					end
 				end
 				whole_text.lexer.execute (aux.substring (i+1, aux.count) + last_image)
 				create new_line.make_from_lexer (whole_text.lexer)

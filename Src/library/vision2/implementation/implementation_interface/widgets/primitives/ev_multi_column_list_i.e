@@ -59,8 +59,8 @@ feature -- Access
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the last selected item.
+			-- Item which is currently selected in a single
+			-- selection mode.
 		require
 			exists: not destroyed
 			single_selection: not is_multiple_selection
@@ -96,6 +96,31 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' the list.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= columns
+		deferred
+		end
+
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= columns
+		deferred
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		require
+			exists: not destroyed
+		deferred
+		end
 
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
@@ -260,8 +285,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
 
-	add_item (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Add `item' to the list
+		deferred
+		end
+
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Remove `item' from the list
 		deferred
 		end
 

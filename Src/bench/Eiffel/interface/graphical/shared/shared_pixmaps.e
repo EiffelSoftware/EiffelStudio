@@ -470,10 +470,10 @@ feature {NONE} -- Update
 		local
 			full_path: FILE_NAME
 		do
-			!! full_path.make_from_string (Bitmap_path)
+			create full_path.make_from_string (Bitmap_path)
 			full_path.set_file_name (fn)
 			full_path.add_extension (Pixmap_suffix)
-			!! Result.make
+			create Result.make
 			Result.read_from_file (full_path)
 			if not Result.is_valid then
 				io.error.putstring ("Warning: cannot read pixmap file ")

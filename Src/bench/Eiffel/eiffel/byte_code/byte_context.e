@@ -543,6 +543,9 @@ feature
 			constant_b: CONSTANT_B;
 			compound: BYTE_LIST [BYTE_NODE];
 			rassign: REVERSE_BL
+
+			source_type: TYPE_I;
+			target_type: TYPE_I;
 		do
 				-- We won't need any RTLI if the only statement is an expanded
 				-- assignment in Result or a single call.
@@ -571,14 +574,22 @@ feature
 										Result := True
 									else
 										constant_b ?= call;
+										if (constant_b /= Void) then
 												-- If it is a constant. we don't need registers
-										Result := (constant_b = Void) and then
+											Result := False
+										elseif assign.target.is_result then
 												-- If we can optimize result := call, no registers
-											not assign.target.is_result and then
+												-- except if metamorphosis on Result
+											target_type := real_type (assign.target.type);
+											source_type := real_type (call.type);
+											Result := not (target_type.is_basic or else
+												(not source_type.is_basic))
+										else
 												-- If it is not an instruction result := call but the
 												-- source is a predefined item (local, current, result
 												-- or argument), we can still optimize. Xavier
-											not call.is_predefined;
+											Result := not call.is_predefined
+										end
 									end;
 								end;
 							end;

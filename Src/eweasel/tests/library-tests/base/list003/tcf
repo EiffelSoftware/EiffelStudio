@@ -1,5 +1,5 @@
 test_name clone-list
-test_description Cloning of lists (using the new implementation of `copy')
+test_description Cloning of lists (using the new implementation of `copy'
 
 define OUTPUT $TEST
 copy_sub 	Ace $TEST Ace

@@ -94,6 +94,7 @@
 					<li>Fixed `select_region' which was selecting an incorrect region starting on any line except the first, when the `text' spanned multiple lines. </li>
 					<li>Fixed `selection_start' and `selection_end' which were incorrect when the selection was not completely contained on the first line.</li>
 					<li>Fixed `first_position_from_line_number' and `last_position_from_line_number' which were returning incorrect values when the text was wrapped.</li>
+					<li>Fixed `caret_position' and `set_caret_position' which were incorrect when the text spanned multiple lines, and the caret was not on the first line.</li>
 						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>

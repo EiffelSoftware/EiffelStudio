@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>INTERNAL</title>
+</head>
+
+<body>
+<h1>INTERNAL</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>TYPE, OBJECT (ANY)
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{ANY}.get_type, get_type_string
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>When retrieving members of a type, all members are returned, but this needs ReflectionPermission.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>SecurityException is raised when attempting to read members of a type without ReflectionPermission.
+</ul>
+<h2>Other notes</h2>
+<p>Since I don't see what stands for expanded types and BIT, there are empty locations in the list of known types.
+BIT has to be fixed when there is a convention for namespaces.
+For the same reason, CHARACTER and WIDE_CHARACTER are equivalent.
+<p>Didn't find how to implement generic_dynamic_type.
+<p>Field_offset is pretty random, just as bit_size and physical_size ^.^
+<p>compiler_version has to be built-in, just as it is in normal Eiffel.
+
+</body>
+
+</html>

@@ -1,9 +1,6 @@
 indexing
 	description: "[
-			Common routines for XML extraction
-			
-		FIXME: inheritance of XM_EIFFEL_PARSER is here only because
-		XM_ELEMENT.`add_attribute' is not exported to ANY in gobo 3.1
+			Common shared routines for XML extraction, saving and deserialization
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,238 +9,136 @@ class
 	SHARED_XML_ROUTINES
 
 inherit
-	EXCEPTIONS
-    	rename
-    		tag_name as exceptions_tag_name,
-    		class_name as exceptions_class_names
-    	end
-
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
-	XM_EIFFEL_PARSER
-		rename
-			make as make_xm_eiffel_parser,
-			name as name_xm_eiffel_parser,
-			clear_all as clear_all_xm_eiffel_parser,
-			reset as reset_xm_eiffel_parser,
-			source as source_xm_eiffel_parser,
-			line as line_xm_eiffel_parser,
-			eq as eq_xm_eiffel_parser
-		export
-			{NONE} all
+feature {NONE} -- Implementation
+
+	Xml_routines: XML_ROUTINES is
+			-- Access the common xml routines.
+		once
+			create Result.default_create
+		ensure
+			non_void_Xml_routines: Xml_routines /= Void
 		end
 
-feature {SHARED_XML_ROUTINES} -- Status report
+feature {NONE} -- Redirection
 
-	valid_tags: INTEGER
-			-- Number of valid tags read.
+	deserialize_document (a_file_path: STRING): XM_DOCUMENT is
+			-- Redirection
+		require
+			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
+		do
+			Result := Xml_routines.deserialize_document (a_file_path)
+		end
+		
+	save_xml_document (ptf: FILE; a_doc: XM_DOCUMENT) is
+			-- Redirection
+		do
+			Xml_routines.save_xml_document (ptf, a_doc)
+		end
 
-feature {SHARED_XML_ROUTINES} -- Status setting
-	
+	valid_tags: INTEGER is
+			-- Redirection
+		do
+			Result := Xml_routines.valid_tags
+		end
+
 	reset_valid_tags is
-			-- Reset `valid_tags'.
+			-- Redirection
 		do
-			valid_tags := 0
-		ensure
-			valid_tags_is_nul: valid_tags = 0
+			Xml_routines.reset_valid_tags
 		end
-
-	valid_tags_read is
-			-- A valid tag was just read.
-		do
-			valid_tags := valid_tags + 1
-		ensure
-			valid_tags_incremented: valid_tags = old valid_tags + 1
-		end
-
-feature -- Processing
 
 	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER is
-			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
-		local
-			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			-- Redirection
+		require
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_integer then
-							Result := cd.content.to_integer
-							valid_tags_read
-						end
-					end
-				end
-			end
+			Result := Xml_routines.xml_integer (elem, a_name)
 		end
 
 	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN is
-			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
-		local
-			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			-- Redirection
+		require
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_boolean then
-							Result := cd.content.to_boolean
-							valid_tags_read
-						end
-					end
-				end
-			end
+			Result := Xml_routines.xml_boolean (elem, a_name)
 		end
 
 	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE is
-			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
-		local
-			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			-- Redirection
+		require
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_double then
-							Result := cd.content.to_double
-							valid_tags_read
-						end
-					end
-				end
-			end
+			Result := Xml_routines.xml_double (elem, a_name)
 		end
 
 	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING is
-			-- Find in sub-elememt of `elem' string item with tag `a_name'.
-		local
-			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			-- Redirection
+		require
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						Result := cd.content
-						valid_tags_read
-					end
-				end
-			end
+			Result := Xml_routines.xml_string (elem, a_name)
 		end
 
 	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR is
-			-- Find in sub-elememt of `elem' color item with tag `a_name'.
-		local
-			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
-			s: STRING
-			sc1, sc2: INTEGER
-			r, g, b: INTEGER
-		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				cd ?= e.first
-				if cd /= Void then
-					s := cd.content
-				end
-			end
-			if s /= Void then
-				check
-					two_semicolons: s.occurrences (';') = 2
-				end
-				sc1 := s.index_of (';', 1)
-				r := s.substring (1, sc1 - 1).to_integer
-				sc2 := s.index_of (';', sc1 + 1)
-				g := s.substring (sc1 + 1, sc2 - 1).to_integer
-				b := s.substring (sc2 + 1, s.count).to_integer
-				create Result.make_with_8_bit_rgb (r, g, b)
-				valid_tags_read
-			end
-		end
-
-	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT is
-			-- Find in sub-elemement of `e' an element with tag `n'.
+			-- Redirection
 		require
-			e_not_void: e /= Void
-		local
-			i: INTEGER
-			f: XM_ELEMENT
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			from
-				i := 1
-			until
-				Result /= Void or i > e.count
-			loop
-				f ?= e.item (i)
-				if f /= Void and then f.name.is_equal (n) then
-					Result := f
-				end
-				i := i + 1
-			end
+			Result := Xml_routines.xml_color (elem, a_name)
 		end
 
-	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA is
-			-- New node with `s' as content.
+	element_by_name (elem: XM_ELEMENT; a_name: STRING): XM_ELEMENT is
+			-- Redirection
+		require
+			non_void_element: elem /= Void
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			create Result.make (a_parent, s)
+			Result := Xml_routines.element_by_name (elem, a_name)
 		end
 
 	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT is
-			-- New node with `s' as content and named `tag_name'.
-		local
-			l_namespace: XM_NAMESPACE
-		do
-			create l_namespace.make ("", "")
-			create Result.make_child (a_parent, tag_name, l_namespace)
-			Result.put_last (xml_string_node (Result, content))
-		end
-
-feature {NONE} -- Saving
-
-	save_xml_document (ptf: FILE; a_doc: XM_DOCUMENT) is
-			-- Save `a_doc' in `ptf'
+			-- Redirection
 		require
-			file_not_void: ptf /= Void
-			file_exists: ptf /= Void
-			valid_document: a_doc /= Void and then a_doc.root_element.name.is_equal ("CLUSTER_DIAGRAM")
-		local
-			retried: BOOLEAN
-			l_formatter: XM_FORMATTER
-			l_output_file: KL_TEXT_OUTPUT_FILE
+			non_void_parent: a_parent /= Void
+			valid_tag_name: tag_name /= Void and then not tag_name.is_empty
+			valid_tag_name: content /= Void and then not content.is_empty
 		do
-			if not retried then
-					-- Write document
-				create l_formatter.make
-				l_formatter.process_document (a_doc)
-				create l_output_file.make (ptf.name)
-				l_output_file.open_write
-				if l_output_file.is_open_write then
-					l_output_file.put_string (l_formatter.last_string)
-					l_output_file.flush
-					l_output_file.close
-				end
-			end
-		rescue
-			retried := True
-			create error_window
-			if ptf /= Void then
-				error_window.set_text ("Unable to write file: " + ptf.name)
-			else
-				error_window.set_text ("Unable to write file.")
-			end
-			error_window.show
-			retry
+			Result := Xml_routines.xml_node (a_parent, tag_name, content)
 		end
 
-feature {NONE} -- Implementation
+	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING; a_parent: XM_ELEMENT) is
+			-- Redirection
+		require
+			a_name_not_void: a_name /= void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= void
+			a_parent_not_void: a_parent /= Void
+		do
+			Xml_routines.add_attribute (a_name, a_ns, a_value, a_parent)
+		end
 
-	error_window: EV_WARNING_DIALOG
-			-- Window that warns user of wrong ".ead" file.
+	display_warning_message (a_warning_msg: STRING) is
+			-- Redirection.
+		require
+			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
+		do
+			Xml_routines.display_warning_message (a_warning_msg)
+		end
 
-end -- class SHARED_XML_ROUTINES
+	display_error_message (an_error_msg: STRING) is
+			-- Redirection.
+		require
+			valid_error_message: an_error_msg /= Void and then not an_error_msg.is_empty
+		do
+			Xml_routines.display_error_message (an_error_msg)
+		end
+
+end -- Class SHARED_XML_ROUTINES

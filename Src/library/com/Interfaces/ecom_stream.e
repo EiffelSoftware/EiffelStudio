@@ -1,5 +1,6 @@
 indexing
 	description: "encapsulation of standard implementation of IStream interface"
+	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,10 +9,7 @@ class
 
 inherit
 	
-	MEMORY
-		redefine
-			dispose
-		end
+	ECOM_INTERFACE
 	
 	ECOM_STAT_FLAGS
 	
@@ -21,49 +19,176 @@ inherit
 
 	ECOM_STAT_FLAGS
 
+	EXCEPTIONS
+
 creation
 
-	make_from_stream
-
-feature {NONE} -- Initialization 
-
-	make_from_stream (p_stream: POINTER) is
-			-- Create new object giving IStream interface pointer.
-		require
-			valid_stream: p_stream /= Default_pointer
-		do
-			initializer := ccom_create_c_istream;
-			ccom_initialize_stream (initializer, p_stream);
-			item := ccom_stream (initializer)
-		ensure
-			stream_created: item /= Default_pointer;
-		end
+	make_from_pointer
 
 feature -- Basic Operations
+
+	update_end_of_stream is
+			-- update value of `end_of_stream'
+		do
+			end_of_stream := (ccom_end_of_stream_reached (initializer) = 1)
+		end
 
 	read (buffer: POINTER; bytes: INTEGER) is
 			-- Reads `bytes' number of bytes from stream 
 			-- into memory starting at current seek pointer.
 		require
-			valid_buffer: buffer /= Default_pointer
+			valid_buffer: buffer /= default_pointer
+		local
+			tried: BOOLEAN
 		do
-			ccom_read (initializer, buffer, bytes)
+			if not tried then
+				ccom_read (initializer, buffer, bytes)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
 		end
 	
+	read_character is
+			-- Read character from stream.
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				last_character := ccom_read_character (initializer)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
+		end
+
+	read_integer is
+			-- Read integer from stream.
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				last_integer := ccom_read_integer (initializer)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
+		end
+
+	read_real is
+			-- Read real from stream.
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				last_real := ccom_read_real (initializer)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
+		end
+
+	read_boolean is
+			-- Read boolean from stream.
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				last_boolean := ccom_read_boolean (initializer)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
+		end
+
+	read_string is
+			-- Read string from stream.
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				last_string := ccom_read_string (initializer)
+				end_of_stream := False
+			end
+		rescue
+			if exception = E_end_of_stream then
+				end_of_stream := True
+				tried := True
+				retry
+			end
+		end
+
 	write (buffer: POINTER; bytes: INTEGER) is
 			-- Writes `bytes' number of bytes into stream
 			-- starting at current seek pointer.
 		require
-			valid_buffer: buffer /= Default_pointer
+			valid_buffer: buffer /= default_pointer
 		do
 			ccom_write (initializer, buffer, bytes)
 		end
 
+	write_character (character: CHARACTER) is
+			-- Write `character' into stream.
+	
+		do
+			ccom_write_character (initializer, character)
+		end
+
+	write_integer (integer: INTEGER) is
+			-- Write `integer' into stream.
+	
+		do
+			ccom_write_integer (initializer, integer)
+		end
+
+	write_real (real: REAL) is
+			-- Write `real' into stream.
+		do
+			ccom_write_real (initializer, real)
+		end
+
+	write_boolean (boolean: BOOLEAN) is
+			-- Write `boolean' into stream.
+	
+		do
+			ccom_write_boolean (initializer, boolean)
+		end
+
+	write_string (string: STRING) is
+			-- Write `string' into stream.
+		require
+			string /= Void
+		local
+			wel_string: WEL_STRING
+		do
+			!!wel_string.make (string)
+			ccom_write_string (initializer, wel_string.item)
+		end
+
 	seek (displacement: ECOM_LARGE_INTEGER; origin: INTEGER) is
-			-- New position of seek pointer
-			-- move seek pointer by `displacement' 
-			-- relative to `origin'
-			-- see class ECOM_STREAM_SEEK for `origin' values
+			-- Move seek pointer by `displacement' 
+			-- relative to `origin'.
+			-- See class ECOM_STREAM_SEEK for `origin' values.
 		require
 			valid_displacement: displacement /= Void and then
 					displacement.item /= Default_pointer;
@@ -71,9 +196,33 @@ feature -- Basic Operations
 		do
 			ccom_seek (initializer, displacement.item, origin)	
 		end
-		
+	
+	start is
+			-- Set seek pointer to beginning of stream.
+		local
+			large_integer: ECOM_LARGE_INTEGER
+		do
+			!!large_integer.make_from_integer (0)
+			seek (large_integer, Stream_seek_set)
+			end_of_stream := False
+		ensure
+			not_end: not end_of_stream
+		end
+	
+	finish is
+			-- Set seek pointer to end of stream.
+		local
+			large_integer: ECOM_LARGE_INTEGER
+		do
+			!!large_integer.make_from_integer (0)
+			seek (large_integer, Stream_seek_end)
+			end_of_stream := True
+		ensure
+			at_end: end_of_stream
+		end
+
 	set_size (new_size: ECOM_ULARGE_INTEGER) is
-			-- change size of steram object to `new_size'
+			-- Change size of stream to `new_size'.
 		require
 			valid_new_size: new_size /= Void and then
 				new_size.item /= Default_pointer;
@@ -84,21 +233,21 @@ feature -- Basic Operations
 		end
 		
 	copy_to (destination: ECOM_STREAM; bytes: ECOM_ULARGE_INTEGER) is
-			-- copy `bytes' number of bytes from current seek pointer
+			-- Copy `bytes' number of bytes from current seek pointer
 			-- in stream to current seek pointer in 
-			-- `destination'
+			-- `destination'.
 		require
 			valid_destination: destination /= Void 
-					and then destination.item /= Default_pointer
+					and then destination.interface /= Default_pointer
 			valid_bytes_number: bytes /= Void and then
 					bytes.item /= Default_pointer
 		do
-			ccom_copy_to (initializer, destination.item, bytes.item)
+			ccom_copy_to (initializer, destination.interface, bytes.item)
 		end
 	
 	lock_region (offset, count: ECOM_ULARGE_INTEGER; lock: INTEGER) is
-			-- restricts access to range of bytes defined by
-			-- `offset' and `count'
+			-- Restricts access to range of bytes defined by
+			-- `offset' and `count'.
 		require
 			valid_offset: offset /= Void and then offset.item /= Default_pointer
 			valid_count: count /= Void and then count.item /= Default_pointer
@@ -108,8 +257,8 @@ feature -- Basic Operations
 		end
 	
 	unlock_region (offset, count: ECOM_ULARGE_INTEGER; lock: INTEGER) is
-			-- removes access restriction to range of bytes defined by
-			-- `offset' and `count'
+			-- Removes access restriction to range of bytes defined by
+			-- `offset' and `count'.
 		require
 			valid_offset: offset /= Void and then offset.item /= Default_pointer
 			valid_count: count /= Void and then count.item /= Default_pointer
@@ -119,41 +268,54 @@ feature -- Basic Operations
 		end
 
 	clone_stream: ECOM_STREAM is
-			-- creates new stream that references
-			-- the same bytes as original stream
+			-- New stream referencing
+			-- the same bytes as Current
+			-- Seek pointer is also cloned
 		do
-			!!Result.make_from_stream(ccom_clone(initializer))
+			!!Result.make_from_pointer(ccom_clone(initializer))
 		ensure
-			clone_created: Result.item /= Default_pointer
+			clone_created: Result /= Void and then Result.interface /= Default_pointer
 		end
 
 feature -- Access
 
+	end_of_stream: BOOLEAN
+			-- Is current seek pointer at end of stream?
+			-- Valid only after `read' ,`update_end_of_stream', `start', or `finish'.
+
+	last_character: CHARACTER
+			-- last read CHARACTER 
+
+	last_integer: INTEGER
+			-- last read INTEGER
+
+	last_real: REAL
+			-- last read REAL
+
+	last_boolean: BOOLEAN
+			-- last read BOOLEAN
+
+	last_string: STRING
+			-- last read STRING
+
 	description (stat_flag: INTEGER): ECOM_STATSTG is
 			-- STATSTG structure
+			-- See class ECOM_STAT_FLAGS for `stat_flag' values.
 		require
 			valid_stat_flag: is_valid_stat_flag (stat_flag)
 		local
 			ptr: POINTER
 		do
 			ptr := ccom_stat (initializer, stat_flag);
-			!!Result.make_from_statstg (ptr);
+			!!Result.make_from_pointer (ptr);
 		ensure
 			Result /= Void
 		end
 
 	name: STRING is
-			-- name
+			-- Name
 		do
 			Result := description(Statflag_default).name
-		end
-
-	is_same_name (a_name: STRING): BOOLEAN is
-			-- Is name equal to `a_name'
-		require
-			valid_a_name: a_name /= Void
-		do
-			Result := description(Statflag_default).is_same_name (a_name)
 		end
 
 	size: ECOM_ULARGE_INTEGER is
@@ -162,19 +324,19 @@ feature -- Access
 			Result := description(Statflag_noname).size
 		end
 
-	modification_time: POINTER is
-			-- modification time
+	modification_time: WEL_FILE_TIME is
+			-- Modification time
 		do
 			Result := description(Statflag_noname).modification_time
 		end
 
-	creation_time: POINTER is
-			-- creation time
+	creation_time: WEL_FILE_TIME is
+			-- Creation time
 		do
 			Result := description(Statflag_noname).creation_time
 		end
 
-	access_time: POINTER is
+	access_time: WEL_FILE_TIME is
 			-- Access time
 		do
 			Result := description(Statflag_noname).access_time
@@ -188,15 +350,15 @@ feature -- Access
 	
 feature {ECOM_STREAM, ECOM_STORAGE}
 
-	item: POINTER 
-			-- Pointer to IStream interface
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER
-			-- Pointer to structure
+	create_wrapper (a_pointer: POINTER): POINTER is
+		do
+			Result := ccom_create_c_istream (a_pointer)
+		end
 
-	dispose is
+	release_interface is
 			-- Close root compound file
 		do
 			ccom_delete_c_stream (initializer);
@@ -205,9 +367,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_c_istream: POINTER is
+	ccom_create_c_istream(a_pointer: POINTER): POINTER is
 		external
-			"C++ [new E_IStream %"E_IStream.h%"]()"
+			"C++ [new E_IStream %"E_IStream.h%"](IStream *)"
 		end
 
 	ccom_delete_c_stream (cpp_obj: POINTER) is
@@ -215,9 +377,9 @@ feature {NONE} -- Externals
 			"C++ [delete E_IStream %"E_IStream.h%"]()"
 		end
 
-	ccom_initialize_stream (cpp_obj: POINTER; p_stream: POINTER) is
+	ccom_end_of_stream_reached (cpp_obj: POINTER): INTEGER is
 		external
-			"C++ [E_IStream %"E_IStream.h%"] (IStream *)"
+			"C++ [E_IStream %"E_IStream.h%"](): EIF_INTEGER"
 		end
 
 	ccom_read (cpp_obj: POINTER; buffer: POINTER; byte_num: INTEGER) is
@@ -225,9 +387,59 @@ feature {NONE} -- Externals
 			"C++ [E_IStream %"E_IStream.h%"] (void *, ULONG)"
 		end
 
+	ccom_read_character (cpp_obj: POINTER): CHARACTER is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (): EIF_CHARACTER"
+		end
+
+	ccom_read_integer (cpp_obj: POINTER): INTEGER is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (): EIF_INTEGER"
+		end
+
+	ccom_read_real (cpp_obj: POINTER): REAL is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (): EIF_REAL"
+		end
+
+	ccom_read_boolean (cpp_obj: POINTER): BOOLEAN is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (): EIF_BOOLEAN"
+		end
+
+	ccom_read_string (cpp_obj: POINTER): STRING is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (): EIF_REFERENCE"
+		end
+
 	ccom_write (cpp_obj: POINTER; buffer: POINTER; byte_num: INTEGER) is
 		external
 			"C++ [E_IStream %"E_IStream.h%"] (void *, ULONG)"
+		end
+
+	ccom_write_character (cpp_obj: POINTER; character: CHARACTER) is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (EIF_CHARACTER)"
+		end
+
+	ccom_write_integer (cpp_obj: POINTER; integer: INTEGER) is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (EIF_INTEGER)"
+		end
+
+	ccom_write_real (cpp_obj: POINTER; real: REAL) is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (EIF_REAL)"
+		end
+
+	ccom_write_boolean (cpp_obj: POINTER; boolean: BOOLEAN) is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (EIF_BOOLEAN)"
+		end
+
+	ccom_write_string (cpp_obj: POINTER; string: POINTER) is
+		external
+			"C++ [E_IStream %"E_IStream.h%"] (EIF_POINTER)"
 		end
 
 	ccom_seek (cpp_obj: POINTER; displacement: POINTER; origin: INTEGER) is
@@ -272,10 +484,21 @@ feature {NONE} -- Externals
 			"C++ [E_IStream %"E_IStream.h%"] (): EIF_POINTER"
 		end
 
-
-invariant 
-
-	valid_cpp_object: initializer /= Default_pointer and then
-						item /= Default_pointer;
-	
 end -- class ECOM_STREAM
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

@@ -8,27 +8,11 @@ class
 
 inherit
 
-	MEMORY
-		redefine
-			dispose
-		end
-
+	ECOM_INTERFACE
 
 creation
-	make_from_iroot_storage
+	make_from_pointer
 
-feature {NONE} -- Initialization
-
-	make_from_iroot_storage (p_root_storage: POINTER) is
-			-- Create new instance giving IRootStorage interface pointer
-		require
-			valid_storage: p_root_storage /= Default_pointer
-		do
-			initializer := ccom_create_c_iroot_storage;
-			ccom_initialize_root_storage (initializer, p_root_storage);
-		ensure
-			storage_created: item /= Default_pointer
-		end
 
 feature -- Basic Operations
 
@@ -45,10 +29,12 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER
-			-- Pointer to structure
+	create_wrapper (a_pointer: POINTER): POINTER is
+		do
+			Result := ccom_create_c_iroot_storage(a_pointer)
+		end
 
-	dispose is
+	release_interface is
 			-- delete structure
 		do
 			ccom_delete_c_iroot_storage (initializer);
@@ -57,26 +43,16 @@ feature {NONE} -- Implementation
 
 feature {ECOM_ROOT_STORAGE}
 
-	item: POINTER  is
-		do
-			Result := ccom_iroot_storage(initializer)
-		end
-
 feature {NONE} -- Externals
 
-	ccom_create_c_iroot_storage: POINTER is
+	ccom_create_c_iroot_storage(a_pointer: POINTER): POINTER is
 		external
-			"C++ [new E_IRootStorage %"E_IRootStorage.h%"]()"
+			"C++ [new E_IRootStorage %"E_IRootStorage.h%"](EIF_POINTER)"
 		end
 
 	ccom_delete_c_iroot_storage (cpp_obj: POINTER) is
 		external
 			"C++ [delete E_IRootStorage %"E_IRootStorage.h%"]()"
-		end
-
-	ccom_initialize_root_storage (cpp_obj: POINTER; p_root_storage: POINTER) is
-		external
-			"C++ [E_IRootStorage %"E_IRootStorage.h%"](EIF_POINTER)"
 		end
 
 	ccom_iroot_storage (cpp_obj: POINTER): POINTER is
@@ -90,3 +66,20 @@ feature {NONE} -- Externals
 		end
 
 end -- class ECOM_ROOT_STORAGE
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

@@ -19,24 +19,18 @@ feature -- Access
 
 	next_id: DLE_CLASS_ID is
 			-- Next class id
-		local
-			dle_system: DLE_SYSTEM_I
 		do
 			count := count + 1;
 			!! Result.make (count);
-			dle_system ?= System;
-			dle_system.dynamic_class_ids.put (Result)
+			System.dynamic_class_ids.put (Result)
 		end;
 
 	next_protected_id: DLE_CLASS_ID is
 			-- Next protected class id
-		local
-			dle_system: DLE_SYSTEM_I
 		do
 			count := count + 1;
 			!DLE_PROTECTED_CLASS_ID! Result.make (count);
-			dle_system ?= System;
-			dle_system.dynamic_class_ids.put (Result)
+			System.dynamic_class_ids.put (Result)
 		end
 
 end -- class DLE_CLASS_SUBCOUNTER

@@ -130,10 +130,16 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_selected_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
-					for_all_objects (agent {EV_DESELECTABLE}.enable_select)
-				else
-					for_all_objects (agent {EV_DESELECTABLE}.disable_select)
+					if element_info.data.is_equal (True_string) then
+						if first.is_selectable then
+								-- In the case of a item components, we will create it
+								-- before inserting it into the parent. Therefore, `is_selectable'
+								-- is not True. This is a very obscure case, but
+								-- posible, hence the check here.
+							for_all_objects (agent {EV_DESELECTABLE}.enable_select)	
+						end
+					else
+						for_all_objects (agent {EV_DESELECTABLE}.disable_select)
 				end
 			end
 		end

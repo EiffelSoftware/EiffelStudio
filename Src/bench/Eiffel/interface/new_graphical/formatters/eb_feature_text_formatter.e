@@ -13,7 +13,7 @@ inherit
 			new_button
 		end
 		
-	EB_SHARED_INTERFACE_TOOLS
+	SHARED_EIFFEL_PROJECT
 
 feature -- Access
 

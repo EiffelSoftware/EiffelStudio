@@ -23,22 +23,23 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} 
 					interfaces.make
 			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
-			create {LINKED_LIST [STRING]} eiffel_names.make
+			create eiffel_names.make (100)
 			eiffel_names.compare_objects
 
-			eiffel_names.force ("FONT_AUTO_INTERFACE")
-			eiffel_names.force ("FONT_EVENTS_AUTO_INTERFACE")
-			eiffel_names.force ("FONT_EVENTS_IMPL_PROXY")
-			eiffel_names.force ("FONT_IMPL_PROXY")
-			eiffel_names.force ("IENUM_VARIANT_INTERFACE")
-			eiffel_names.force ("IENUM_VARIANT_IMPL_PROXY")
-			eiffel_names.force ("IFONT_IMPL_PROXY")
-			eiffel_names.force ("IFONT_INTERFACE")
-			eiffel_names.force ("IPICTURE_INTERFACE")
-			eiffel_names.force ("PICTURE_AUTO_INTERFACE")
-			eiffel_names.force ("PICTURE_IMPL_PROXY")
-			eiffel_names.force ("STD_FONT_PROXY")
-			eiffel_names.force ("STD_PICTURE_PROXY")
+			eiffel_names.force ("FONT_AUTO_INTERFACE", "FONT_AUTO_INTERFACE")
+			eiffel_names.force ("FONT_INTERFACE", "FONT_INTERFACE")
+			eiffel_names.force ("FONT_EVENTS_AUTO_INTERFACE", "FONT_EVENTS_AUTO_INTERFACE")
+			eiffel_names.force ("FONT_EVENTS_INTERFACE", "FONT_EVENTS_INTERFACE")
+			eiffel_names.force ("FONT_EVENTS_IMPL_PROXY", "FONT_EVENTS_IMPL_PROXY")
+			eiffel_names.force ("FONT_IMPL_PROXY", "FONT_IMPL_PROXY")
+			eiffel_names.force ("IENUM_VARIANT_INTERFACE", "IENUM_VARIANT_INTERFACE")
+			eiffel_names.force ("IENUM_VARIANT_IMPL_PROXY", "IENUM_VARIANT_IMPL_PROXY")
+			eiffel_names.force ("IFONT_IMPL_PROXY", "IFONT_IMPL_PROXY")
+			eiffel_names.force ("IFONT_INTERFACE", "IFONT_INTERFACE")
+			eiffel_names.force ("IPICTURE_INTERFACE", "IPICTURE_INTERFACE")
+			eiffel_names.force ("PICTURE_AUTO_INTERFACE", "PICTURE_AUTO_INTERFACE")
+			eiffel_names.force ("PICTURE_INTERFACE", "PICTURE_INTERFACE")
+			eiffel_names.force ("PICTURE_IMPL_PROXY", "PICTURE_IMPL_PROXY")
 
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_client.make
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_server.make
@@ -107,7 +108,7 @@ feature -- Access
 	is_iunknown: BOOLEAN
 			-- Is IUnknown referenced as data type in system?
 
-	eiffel_names: LIST [STRING]
+	eiffel_names:HASH_TABLE [STRING, STRING]
 			-- List of Eiffel names in system.
 
 	c_types: HASH_TABLE [STRING, STRING]
@@ -152,10 +153,28 @@ feature -- Basic operations
 			until
 				after
 			loop
+				a_type_library_descriptor := library_descriptor_for_iteration
+				a_type_library_descriptor.set_complete
+				a_type_library_descriptor.finalize_inherited_interfaces
+				forth
+			end
+			from
+				start
+			until
+				after
+			loop
+				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
+					library_descriptor_for_iteration.finalize_interface_features
+				end
+				forth
+			end
+			from
+				start
+			until
+				after
+			loop
 				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
 					a_type_library_descriptor := library_descriptor_for_iteration
-					a_type_library_descriptor.set_complete
-					a_type_library_descriptor.finalize_inherited_interfaces
 					a_type_library_descriptor.finalize_aliases
 					a_type_library_descriptor.finalize_names
 					a_type_library_descriptor.finalize_interface_feature_names

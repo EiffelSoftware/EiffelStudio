@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Wizard wrapper to EXECUTION_ENVIRONMENT"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,6 +10,14 @@ class
 create
 	default_create
 
+feature -- Access
+
+	Eiffel4_location: STRING is
+			-- Location of Eiffel compiler.
+		once
+			Result := execution_environment.get (Eiffel4)
+		end
+
 feature {NONE} -- Implementation
 
 	execution_environment: EXECUTION_ENVIRONMENT is
@@ -17,6 +25,9 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+
+	Eiffel4: STRING is "EIFFEL4"
+			-- Eiffel4 environmnent variable
 
 end -- class WIZARD_EXECUTION_ENVIRONMENT
 

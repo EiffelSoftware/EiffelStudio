@@ -272,6 +272,12 @@ feature -- C keywords -- 3
 
 	Assert: STRING is "assert"
 
+	String_copy_function: STRING is "strcpy"
+
+	Get_current_directory_function: STRING is "getcwd"
+
+	String_length_function: STRING is "strlen"
+
 	Unicode_string_copy_function: STRING is "lstrcpy"
 
 	Non_unicode_string_copy_function: STRING is "mbstowcs"

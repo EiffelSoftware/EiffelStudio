@@ -118,6 +118,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Completion information
+	-----------------------------------------------------------*/
+	STDMETHODIMP completion_information(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelCompletionInfo * * return_value );
+
+
+	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

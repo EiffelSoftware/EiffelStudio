@@ -23,6 +23,8 @@ class IEiffelFeatureDescriptor;
 
 #include "eif_eiffel.h"
 
+#include "ecom_eiffel_compiler_IEiffelCompletionEntry_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,17 +45,11 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelFeatureDescriptor_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelFeatureDescriptor : public IUnknown
+class IEiffelFeatureDescriptor : public ecom_eiffel_compiler::IEiffelCompletionEntry
 {
 public:
 	IEiffelFeatureDescriptor () {};
 	~IEiffelFeatureDescriptor () {};
-
-	/*-----------------------------------------------------------
-	Feature name.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
-
 
 	/*-----------------------------------------------------------
 	Feature external name.
@@ -83,12 +79,6 @@ public:
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Feature signature.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

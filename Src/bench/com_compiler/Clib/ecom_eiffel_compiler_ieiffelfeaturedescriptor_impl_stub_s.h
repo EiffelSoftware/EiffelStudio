@@ -47,6 +47,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Feature signature.
+	-----------------------------------------------------------*/
+	STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Is entry a feature?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_feature(  /* [out] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	Feature external name.
 	-----------------------------------------------------------*/
 	STDMETHODIMP external_name(  /* [out, retval] */ BSTR * return_value );
@@ -74,12 +86,6 @@ public:
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
 	STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number );
-
-
-	/*-----------------------------------------------------------
-	Feature signature.
-	-----------------------------------------------------------*/
-	STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

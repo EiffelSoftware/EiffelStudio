@@ -65,7 +65,7 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_next(  /* [out] */ EIF
 	};
 	};
 	ecom_eiffel_compiler::IEiffelAssemblyProperties * * tmp_rgelt = 0;
-	tmp_rgelt = (ecom_eiffel_compiler::IEiffelAssemblyProperties * *)grt_ec_ISE.ccom_ec_pointed_cell_191 (eif_access (rgelt), NULL);
+	tmp_rgelt = (ecom_eiffel_compiler::IEiffelAssemblyProperties * *)grt_ec_ISE.ccom_ec_pointed_cell_195 (eif_access (rgelt), NULL);
 	ULONG * tmp_pcelt_fetched = 0;
 	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
 	
@@ -76,11 +76,11 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_next(  /* [out] */ EIF
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_191 ((ecom_eiffel_compiler::IEiffelAssemblyProperties * *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_195 ((ecom_eiffel_compiler::IEiffelAssemblyProperties * *)tmp_rgelt, rgelt);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_191 (tmp_rgelt);
-grt_ce_ISE.ccom_free_memory_pointed_212 (tmp_pcelt_fetched);
+	grt_ce_ISE.ccom_free_memory_pointed_195 (tmp_rgelt);
+grt_ce_ISE.ccom_free_memory_pointed_216 (tmp_pcelt_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_clone1(  /* [out] */ E
 	};
 	};
 	ecom_eiffel_compiler::IEnumAssembly * * tmp_ppenum = 0;
-	tmp_ppenum = (ecom_eiffel_compiler::IEnumAssembly * *)grt_ec_ISE.ccom_ec_pointed_cell_202 (eif_access (ppenum), NULL);
+	tmp_ppenum = (ecom_eiffel_compiler::IEnumAssembly * *)grt_ec_ISE.ccom_ec_pointed_cell_206 (eif_access (ppenum), NULL);
 	
 	hr = p_IEnumAssembly->Clone(tmp_ppenum);
 	if (FAILED (hr))
@@ -171,9 +171,9 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_clone1(  /* [out] */ E
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_202 ((ecom_eiffel_compiler::IEnumAssembly * *)tmp_ppenum, ppenum);
+	grt_ce_ISE.ccom_ce_pointed_cell_206 ((ecom_eiffel_compiler::IEnumAssembly * *)tmp_ppenum, ppenum);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_202 (tmp_ppenum);
+	grt_ce_ISE.ccom_free_memory_pointed_206 (tmp_ppenum);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_ith_item(  /* [in] */ 
 	ULONG tmp_an_index = 0;
 	tmp_an_index = (ULONG)an_index;
 	ecom_eiffel_compiler::IEiffelAssemblyProperties * * tmp_rgelt = 0;
-	tmp_rgelt = (ecom_eiffel_compiler::IEiffelAssemblyProperties * *)grt_ec_ISE.ccom_ec_pointed_cell_191 (eif_access (rgelt), NULL);
+	tmp_rgelt = (ecom_eiffel_compiler::IEiffelAssemblyProperties * *)grt_ec_ISE.ccom_ec_pointed_cell_195 (eif_access (rgelt), NULL);
 	
 	hr = p_IEnumAssembly->ith_item(tmp_an_index,tmp_rgelt);
 	if (FAILED (hr))
@@ -207,9 +207,9 @@ void ecom_eiffel_compiler::IEnumAssembly_impl_proxy::ccom_ith_item(  /* [in] */ 
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_191 ((ecom_eiffel_compiler::IEiffelAssemblyProperties * *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_195 ((ecom_eiffel_compiler::IEiffelAssemblyProperties * *)tmp_rgelt, rgelt);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_191 (tmp_rgelt);
+	grt_ce_ISE.ccom_free_memory_pointed_195 (tmp_rgelt);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

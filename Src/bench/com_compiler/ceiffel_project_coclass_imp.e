@@ -93,6 +93,12 @@ feature -- Access
 			Result := compiler_kernel.project_properties
 		end
 
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information
+		do
+			Result := compiler_kernel.completion_information
+		end
+
 feature -- Basic Operations
 
 	create_item is

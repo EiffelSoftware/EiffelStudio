@@ -712,6 +712,7 @@ feature -- Removal
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
 			
+				-- Remove row and its corresponding data from `grid_rows' and `internal_row_data'
 			grid_rows.go_i_th (a_row)
 			grid_rows.remove
 			
@@ -719,8 +720,7 @@ feature -- Removal
 			internal_row_data.remove
 			
 			update_grid_row_indices (a_row)
-			
-			
+
 			to_implement ("EV_GRID_I.remove_row redraw plus subnode removal handling")
 		ensure
 			row_count_updated: row_count = old row_count - 1

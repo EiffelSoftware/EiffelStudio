@@ -83,7 +83,6 @@ feature -- Element change
 		require
 			id_not_void: id /= Void
 			removable: id.compilation_id = System.compilation_id
-			--valid_id: current_classes.valid_index (id.internal_id)
 		local
 			internal_id: INTEGER
 		do

@@ -38,6 +38,15 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+	file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Actions to be performed while loading or saving.
+			-- Event data is percentage of file written (0-100).
+		do
+			Result := implementation.file_access_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 end
 

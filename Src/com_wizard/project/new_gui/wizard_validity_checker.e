@@ -6,6 +6,12 @@ indexing
 class
 	WIZARD_VALIDITY_CHECKER
 
+inherit
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	initialize_checker is
@@ -13,14 +19,6 @@ feature -- Initialization
 		do
 			create {ARRAYED_LIST [STRING]} errors.make (5)
 			errors.compare_objects
-		end
-		
-	set_validator (a_validator: like validator) is
-			-- Set `validator' with `a_validator'.
-		do
-			validator := a_validator
-		ensure
-			validator_set: validator = a_validator
 		end
 		
 feature -- Access
@@ -34,31 +32,39 @@ feature -- Access
 	errors: LIST [STRING]
 			-- Errors caused by validity checking
 
-	validator: ROUTINE [ANY, TUPLE[]]
+	validity_change_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Callback routine called when validity state changes
+		do
+			if internal_validity_change_request_actions = Void then
+				create internal_validity_change_request_actions
+			end
+			Result := internal_validity_change_request_actions
+		end
 
 feature -- Basic Operations
 
-	set_error (a_is_valid: BOOLEAN; a_error_message: STRING) is
-			-- Remove `a_error_message' from errors if present and `a_is_valid'.
+	set_status (a_status: WIZARD_VALIDITY_STATUS) is
+			-- Remove `a_status.error_message' from errors if present and not `a_status.is_error'.
 			-- Add it otherwise.
 		require
-			non_void_error_message: a_error_message /= Void
+			non_void_status: a_status /= Void
 		local
 			l_valid: BOOLEAN
+			l_message: STRING
 		do
 			l_valid := is_valid
-			if a_is_valid then
-				if errors.has (a_error_message) then
-					errors.prune_all (a_error_message)
+			l_message := a_status.error_message
+			if a_status.is_error then
+				if not errors.has (l_message) then
+					errors.extend (l_message)
 				end
 			else
-				if not errors.has (a_error_message) then
-					errors.extend (a_error_message)
+				if errors.has (l_message) then
+					errors.prune_all (l_message)
 				end
 			end
-			if is_valid /= l_valid and validator /= Void then
-				validator.call ([])
+			if is_valid /= l_valid then
+				validity_change_request_actions.call ([])
 			end
 		end
 
@@ -68,17 +74,36 @@ feature {NONE} -- Helpers
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_folder /= Void
+		local
+			l_expanded_path: STRING
 		do
-			Result := not a_folder.is_empty and then (create {DIRECTORY}.make (a_folder)).exists
+			if a_folder.count > 1 then
+				l_expanded_path := environment.expanded_path (a_folder)
+				Result := not l_expanded_path.is_empty and then (create {DIRECTORY}.make (l_expanded_path)).exists
+			end
 		end
 
 	is_valid_file (a_file: STRING): BOOLEAN is
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_file /= Void
+		local
+			l_expanded_path: STRING
+			l_file: RAW_FILE
 		do
-			Result := not a_file.is_empty and then (create {RAW_FILE}.make (a_file)).exists
+			if a_file.count > 1 then
+				l_expanded_path := environment.expanded_path (a_file)
+				if not l_expanded_path.is_empty then
+					create l_file.make (l_expanded_path)
+					Result := l_file.exists and then not l_file.is_directory
+				end
+			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_validity_change_request_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Once per object implementation of `validity_change_request_actions'
 
 invariant
 	non_void_errors: errors /= Void

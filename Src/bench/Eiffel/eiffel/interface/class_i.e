@@ -191,7 +191,11 @@ feature -- Status report
 			-- Class name in upper case.
 		do
 			Result := clone (name)
-			Result.to_upper
+			if Result /= Void then
+				Result.to_upper
+			else
+				Result := "Name not yet set"
+			end
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
@@ -314,6 +318,14 @@ feature -- Setting
 			namespace := s
 		ensure
 			namespace_set: namespace = s
+		end
+
+	set_actual_namespace is
+			-- Compute `actual_namespace' and store its value in `internal_namespace'.
+		local
+			l_name: STRING
+		do
+			l_name := actual_namespace
 		end
 	
 	set_file_details (s: like name; b: like base_name) is 

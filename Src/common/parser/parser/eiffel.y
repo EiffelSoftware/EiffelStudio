@@ -532,10 +532,6 @@ ASemi: -- Empty
 	|	TE_SEMICOLON
 	;
 
-Optional_semicolons: -- Empty
-	|	Optional_semicolons TE_SEMICOLON
-	;
-
 Feature_declaration: New_feature_list Declaration_body Optional_semicolons
 			{
 					-- Generate a syntax error when `feature_indexes' is not
@@ -929,9 +925,9 @@ Local_declarations: -- Empty
 			{ $$ := $2 }
 	;
 
-Compound: Opt_Semi
+Compound: Optional_semicolons
 			-- { $$ := Void }
-	|	Opt_Semi Instruction_list
+	|	Optional_semicolons Instruction_list
 			{ $$ := $2 }
 	;
 
@@ -947,12 +943,12 @@ Instruction_list: Instruction
 			}
 	;
 
-Instruction: Set_position Instruction_impl Opt_Semi
+Instruction: Set_position Instruction_impl Optional_semicolons
 			{ $$ := $2 }
 	;
 
-Opt_Semi: -- Empty
-	|	Opt_Semi TE_SEMICOLON
+Optional_semicolons: -- Empty
+	|	Optional_semicolons TE_SEMICOLON
 	;
 
 Instruction_impl: Creation

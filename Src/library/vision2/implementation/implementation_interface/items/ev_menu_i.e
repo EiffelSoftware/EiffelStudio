@@ -26,20 +26,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
-			-- Number of items in the menu.
-		deferred
-		end
-
-	get_item (index: INTEGER): EV_MENU_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: (index <= count) and (index >= 0)
-		deferred
-		end
-
 	text: STRING is
 			-- Label of the current menu
 		require
@@ -51,15 +37,6 @@ feature -- Element change
 
 	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the item.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature {EV_MENU_ITEM_IMP, EV_OPTION_BUTTON_IMP} -- Implementation
-
-	clear_ev_children is
-			-- Clear all the items of the list.
 		require
 			exists: not destroyed
 		deferred

@@ -153,7 +153,7 @@ feature -- Status report
 						when feature {TUPLE}.character_code then
 							a_character_ref ?= arg
 							mismatch := a_character_ref = Void
-						when feature {TUPLE}.double_code then
+						when feature {TUPLE}.real_64_code then
 							a_double_ref ?= arg
 							mismatch := a_double_ref = Void
 						when feature {TUPLE}.integer_64_code then
@@ -179,7 +179,7 @@ feature -- Status report
 						when feature {TUPLE}.pointer_code then
 							a_pointer_ref ?= arg
 							mismatch := a_pointer_ref = Void
-						when feature {TUPLE}.real_code then
+						when feature {TUPLE}.real_32_code then
 							a_real_ref ?= arg
 							mismatch := a_real_ref = Void
 						when feature {TUPLE}.reference_code then

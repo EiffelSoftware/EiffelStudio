@@ -37,8 +37,8 @@ feature -- Access
 			when boolean_code then Result := eif_boolean_item ($Current, index)
 			when character_code then Result := eif_character_item ($Current, index)
 			when wide_character_code then Result := eif_wide_character_item ($Current, index)
-			when double_code then Result := eif_double_item ($Current, index)
-			when real_code then Result := eif_real_item ($Current, index)
+			when real_64_code then Result := eif_real_64_item ($Current, index)
+			when real_32_code then Result := eif_real_32_item ($Current, index)
 			when pointer_code then Result := eif_pointer_item ($Current, index)
 			when integer_8_code then Result := eif_integer_8_item ($Current, index)
 			when integer_16_code then Result := eif_integer_16_item ($Current, index)
@@ -95,12 +95,12 @@ feature -- Access
 			when integer_16_code then Result := eif_integer_16_item ($Current, index)
 			when integer_32_code then Result := eif_integer_32_item ($Current, index)
 			when integer_64_code then Result := eif_integer_64_item ($Current, index)
-			when real_code then Result := eif_real_item ($Current, index)
+			when real_32_code then Result := eif_real_32_item ($Current, index)
 			else
 				check
-					is_double: eif_item_type ($Current, index) = double_code
+					is_double: eif_item_type ($Current, index) = real_64_code
 				end
-				Result := eif_double_item ($Current, index)
+				Result := eif_real_64_item ($Current, index)
 			end
 		end
 
@@ -160,14 +160,14 @@ feature -- Access
 			when integer_16_code then Result := eif_integer_16_item ($Current, index)
 			when integer_32_code then Result := eif_integer_32_item ($Current, index)
 			when integer_64_code then Result := eif_integer_64_item ($Current, index)
-			when double_code then
+			when real_64_code then
 					-- Special case of manifest tuple.
-				Result := eif_double_item ($Current, index).truncated_to_real
+				Result := eif_real_64_item ($Current, index).truncated_to_real
 			else
 				check
-					is_real: eif_item_type ($Current, index) = real_code
+					is_real: eif_item_type ($Current, index) = real_32_code
 				end
-				Result := eif_real_item ($Current, index)
+				Result := eif_real_32_item ($Current, index)
 			end
 		end
 
@@ -190,8 +190,8 @@ feature -- Status report
 				when boolean_code then l_hash := eif_boolean_item ($Current, i).hash_code
 				when character_code then l_hash := eif_character_item ($Current, i).hash_code
 				when wide_character_code then l_hash := eif_wide_character_item ($Current, i).hash_code
-				when double_code then l_hash := eif_double_item ($Current, i).hash_code
-				when real_code then l_hash := eif_real_item ($Current, i).hash_code
+				when real_64_code then l_hash := eif_real_64_item ($Current, i).hash_code
+				when real_32_code then l_hash := eif_real_32_item ($Current, i).hash_code
 				when pointer_code then l_hash := eif_pointer_item ($Current, i).hash_code
 				when integer_8_code then l_hash := eif_integer_8_item ($Current, i).hash_code
 				when integer_16_code then l_hash := eif_integer_16_item ($Current, i).hash_code
@@ -243,8 +243,8 @@ feature -- Status report
 				when boolean_code then l_b ?= v; Result := l_b /= Void
 				when character_code then l_c ?= v; Result := l_c /= Void
 				when wide_character_code then l_wc ?= v; Result := l_wc /= Void
-				when double_code then l_d ?= v; Result := l_d /= Void
-				when real_code then l_r ?= v; Result := l_r /= Void
+				when real_64_code then l_d ?= v; Result := l_d /= Void
+				when real_32_code then l_r ?= v; Result := l_r /= Void
 				when pointer_code then l_p ?= v; Result := l_p /= Void
 				when integer_8_code then l_i8 ?= v; Result := l_i8 /= Void
 				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
@@ -296,8 +296,8 @@ feature -- Element change
 			when boolean_code then eif_put_boolean_item_with_object ($Current, index, $v)
 			when character_code then eif_put_character_item_with_object ($Current, index, $v)
 			when wide_character_code then eif_put_wide_character_item_with_object ($Current, index, $v)
-			when double_code then eif_put_double_item_with_object ($Current, index, $v)
-			when real_code then eif_put_real_item_with_object ($Current, index, $v)
+			when real_64_code then eif_put_real_64_item_with_object ($Current, index, $v)
+			when real_32_code then eif_put_real_32_item_with_object ($Current, index, $v)
 			when pointer_code then eif_put_pointer_item_with_object ($Current, index, $v)
 			when integer_8_code then eif_put_integer_8_item_with_object ($Current, index, $v)
 			when integer_16_code then eif_put_integer_16_item_with_object ($Current, index, $v)
@@ -349,7 +349,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_double_item (index)
 		do
-			eif_put_double_item ($Current, index, v)
+			eif_put_real_64_item ($Current, index, v)
 		end
 		
 	put_real (v: REAL; index: INTEGER) is
@@ -358,7 +358,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_real_item (index)
 		do
-			eif_put_real_item ($Current, index, v)
+			eif_put_real_32_item ($Current, index, v)
 		end
 		
 	put_pointer (v: POINTER; index: INTEGER) is
@@ -437,7 +437,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_item_type ($Current, index) = double_code)
+			Result := (eif_item_type ($Current, index) = real_64_code)
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN is
@@ -485,7 +485,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_item_type ($Current, index) = real_code)
+			Result := (eif_item_type ($Current, index) = real_32_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -505,8 +505,8 @@ feature -- Type queries
 		do
 			tcode := eif_item_type ($Current, index)
 			Result := (tcode = integer_32_code) or else
-					 (tcode = real_code) or else
-					 (tcode = double_code)
+					 (tcode = real_32_code) or else
+					 (tcode = real_64_code)
 		end
 
 	is_uniform: BOOLEAN is
@@ -544,7 +544,7 @@ feature -- Type queries
 	is_uniform_double: BOOLEAN is
 			-- Are all items of type DOUBLE?
 		do
-			Result := is_tuple_uniform (double_code)
+			Result := is_tuple_uniform (real_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -592,7 +592,7 @@ feature -- Type queries
 	is_uniform_real: BOOLEAN is
 			-- Are all items of type REAL?
 		do
-			Result := is_tuple_uniform (real_code)
+			Result := is_tuple_uniform (real_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -622,8 +622,8 @@ feature -- Type conversion queries
 			loop
 				tcode := eif_item_type ($Current, i)
 				Result := (tcode = integer_32_code) or else 
-						 (tcode = real_code) or else 
-						 (tcode = double_code)
+						 (tcode = real_32_code) or else 
+						 (tcode = real_64_code)
 				i := i + 1
 			end
 		ensure
@@ -644,7 +644,7 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_item_type ($Current, i)
-				Result := (tcode = integer_32_code) or else (tcode = real_code)
+				Result := (tcode = integer_32_code) or else (tcode = real_32_code)
 				i := i + 1
 			end
 		ensure
@@ -886,8 +886,8 @@ feature {ROUTINE} -- Internal constant code
 	reference_code: INTEGER_8 is 0x00
 	boolean_code: INTEGER_8 is 0x01
 	character_code: INTEGER_8 is 0x02
-	double_code: INTEGER_8 is 0x03
-	real_code: INTEGER_8 is 0x04
+	real_64_code: INTEGER_8 is 0x03
+	real_32_code: INTEGER_8 is 0x04
 	pointer_code: INTEGER_8 is 0x05
 	integer_8_code: INTEGER_8 is 0x06
 	integer_16_code: INTEGER_8 is 0x07
@@ -964,13 +964,13 @@ feature {NONE} -- Externals: Access
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_double_item (obj: POINTER; pos: INTEGER): DOUBLE is
+	eif_real_64_item (obj: POINTER; pos: INTEGER): DOUBLE is
 			-- Double item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_real_item (obj: POINTER; pos: INTEGER): REAL is
+	eif_real_32_item (obj: POINTER; pos: INTEGER): REAL is
 			-- Real item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
@@ -1032,13 +1032,13 @@ feature {NONE} -- Externals: Setting
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_double_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+	eif_put_real_64_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set double item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_real_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+	eif_put_real_32_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set real item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
@@ -1098,13 +1098,13 @@ feature {NONE} -- Externals: Setting
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_double_item (obj: POINTER; pos: INTEGER; v: DOUBLE) is
+	eif_put_real_64_item (obj: POINTER; pos: INTEGER; v: DOUBLE) is
 			-- Set double item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_real_item (obj: POINTER; pos: INTEGER; v: REAL) is
+	eif_put_real_32_item (obj: POINTER; pos: INTEGER; v: REAL) is
 			-- Set real item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""

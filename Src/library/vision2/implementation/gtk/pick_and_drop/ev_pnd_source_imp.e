@@ -10,10 +10,12 @@ deferred class
 
 inherit
 	EV_PND_SOURCE_I
+-- alex
+	EV_EVENT_HANDLER_IMP
 
 feature {EV_PND_SOURCE_I} -- Implementation
 
-	initialize_transport (arg: EV_ARGUMENT2 [INTEGER, EV_COMMAND]; data: EV_EVENT_DATA) is
+	initialize_transport (arg: EV_ARGUMENT3 [INTEGER, TUPLE[EV_COMMAND, EV_ARGUMENT],EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		do
 			check

@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			implementation.box.extend (split_box)
 			first_cell.merge_radio_button_groups (second_cell)
 			previous_split_position := -1
+			split_position := Half_sep_dimension
 			sep.pointer_button_press_actions.extend (~on_click)
 			split_box.resize_actions.extend (~on_fixed_resized)
 			layout_widgets
@@ -177,8 +178,6 @@ feature -- Status report
 			if first_cell.readable then
 				Result := select_from (first.minimum_width,
 					first.minimum_height)
-			else
-				Result := 1
 			end
 			Result := Result + Half_sep_dimension
 		ensure
@@ -195,8 +194,6 @@ feature -- Status report
 			if second_cell.readable then
 				Result := select_from (second.minimum_width,
 					second.minimum_height)
-			else
-				Result := 1
 			end
 			Result := Result + Half_sep_dimension
 		ensure
@@ -503,19 +500,19 @@ feature {NONE} -- Implementation
 			-- Current cursor position.
 
 	previous_split_position: INTEGER
-		-- Previous split_position.
+			-- Previous split_position.
 
 	first_cell, second_cell: EV_AGGREGATE_CELL
-		-- Two client areas.
+			-- Two client areas.
 
 	split_box: EV_FIXED
-		-- Contains `first_cell', `sep' and `second_cell'.
+			-- Contains `first_cell', `sep' and `second_cell'.
 
 	sep: EV_SEPARATOR
-		-- Separator used to split between the two items.
+			-- Separator used to split between the two items.
 
 	scr: EV_SCREEN
-		-- Used for drawing guideline on screen.
+			-- Used for drawing guideline on screen.
 
 	implementation: EV_AGGREGATE_WIDGET_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -560,6 +557,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/05/03 17:44:06  brendel
+--| Added initialize of split_position.
+--|
 --| Revision 1.37  2000/05/03 17:29:26  brendel
 --| Added call to layout_widgets at initialize.
 --|

@@ -103,7 +103,6 @@ feature -- Properties
 			-- by default, but their value might be able to fit
 			-- on an integer of size `8' or `16' as well.
 
-
 	is_integer: BOOLEAN is True
 			-- Is it an integer value ?
 
@@ -171,7 +170,7 @@ feature -- Type checking
 			Result := t.is_integer 
 			if Result then
 				int_a ?= t
-				Result := int_a.compatibility_size >= compatibility_size
+				Result := int_a.size >= compatibility_size
 			end
 		end
 
@@ -179,7 +178,7 @@ feature -- Type checking
 			-- Type check an integer type
 		do
 				-- Put onto the type stack an integer actual type
-			ast_context.put (create {INTEGER_A}.make_for_constant (size, compatibility_size))
+			ast_context.put (create {MANIFEST_INTEGER_A}.make_for_constant (size, compatibility_size))
 		end
 
 	byte_node: INTEGER_CONSTANT is
@@ -258,16 +257,16 @@ feature -- Settings
 			-- possible that we entered an INTEGER_8 constant value.
 		do
 			check
-				compatible: t.compatibility_size >= compatibility_size
+				compatible: t.size >= compatibility_size
 			end
-			size := t.compatibility_size
+			size := t.size
 			inspect	size
 			when 8 then lower := lower.to_integer_8
 			when 16 then lower := lower.to_integer_16
 			else
 			end
 		ensure then
-			size_set: size = t.compatibility_size
+			size_set: size = t.size
 		end
 
 feature -- Output

@@ -91,12 +91,6 @@ fullrd vision
 fullrd build
 cd dotnet
 fullrd envision
-copy studio\convert_10_to_11.btm .
-copy studio\ace_10_to_11.btm .
-call convert_10_to_11.btm
-del convert_10_to_11.btm
-del ace_10_to_11.btm
-fullrd studio
 fullrd winforms\data\simple_binding
 cd ..
 cd vision2

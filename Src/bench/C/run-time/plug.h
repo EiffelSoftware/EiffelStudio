@@ -109,7 +109,7 @@ extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
  * Miscellaneous routines.
  */
 
-extern char econfg();			/* Conformance query in class GENERAL */
+extern EIF_BOOLEAN econfg();	/* Conformance query in class GENERAL */
 extern int econfm();			/* Conformance query for assignment attempt */
 extern long sp_count();			/* Count of a special object */
 extern void chkinv();			/* Invariant control call */

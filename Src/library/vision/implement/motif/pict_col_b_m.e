@@ -18,6 +18,8 @@ inherit
 			make as push_b_m_make,
 			pixmap as mel_pixmap,
 			set_pixmap as mel_set_pixmap
+		redefine
+			set_background_color_from_imp
 		end
 
 creation
@@ -55,6 +57,9 @@ feature -- Status report
 			Result := private_pixmap
 		end;
 
+	is_pressed: BOOLEAN
+			-- Is the pict color button pressed?
+
 feature -- Status setting
 
 	set_pixmap (a_pixmap: PIXMAP) is
@@ -74,6 +79,20 @@ feature -- Status setting
 			set_insensitive_pixmap (pixmap_implementation)
 		end;
 
+	set_pressed (b: like is_pressed) is
+			-- Set `is_pressed' to `b'.
+		local
+			t_color, b_color: MEL_PIXEL
+		do
+			if is_pressed /= b then
+				is_pressed := b
+				t_color := top_shadow_color;
+				b_color := bottom_shadow_color;
+				set_top_shadow_color (b_color);	
+				set_bottom_shadow_color (t_color);	
+			end
+		end;
+
 feature {PIXMAP_X} -- Implementation
 
 	private_pixmap: PIXMAP;
@@ -87,8 +106,22 @@ feature {PIXMAP_X} -- Implementation
 			pixmap_implementation ?= private_pixmap.implementation;
 			mel_set_pixmap (pixmap_implementation);
 			set_insensitive_pixmap (pixmap_implementation)
-		end
+		end;
 
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		do
+			mel_set_background_color (color_imp);
+			xm_change_color (screen_object, color_imp.identifier);
+			if is_pressed then	
+				set_pressed (False);
+				is_pressed := True
+			end;
+            if private_foreground_color /= Void then
+                update_foreground_color
+            end
+		end;
+ 
 end -- PICT_COL_B_M
 
 --|----------------------------------------------------------------

@@ -44,6 +44,13 @@ feature -- Element change
 		do
 			pixmap_imp.unreference
 			pixmap_imp ?= Void
+			invalidate
+		end
+
+feature {NONE} -- deferred features
+
+	invalidate is
+			deferred
 		end
 
 end -- class EV_PIXMAPABLE_IMP

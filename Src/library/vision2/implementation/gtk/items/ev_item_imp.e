@@ -107,7 +107,6 @@ feature -- Access
 					if c_parent /= NULL then
 						Result_imp ?= eif_object_from_c (c_parent)
 						if Result_imp /= Void then
-							print ("Parent imp has not been set directly " + generator + "%N")
 							Result := Result_imp
 						end
 					end

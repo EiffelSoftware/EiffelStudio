@@ -4,6 +4,7 @@
 	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
 		<HEAD>Global preferences</HEAD>
 		<TEXT DESCRIPTION="Show tip of the day at start up">show_tip_of_the_day<BOOLEAN>True</BOOLEAN></TEXT>
+		<TEXT DESCRIPTION="Number of projects kept in the recent project list" IMMEDIATE_EFFECT="yes">number_of_recent_projects<INTEGER>10</INTEGER></TEXT>
 	</TOPIC>
 	
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
@@ -35,6 +36,7 @@
 			<TEXT>tool_order<LIST_STRING>typeselector_normal_200_200;componentselector_normal_200_200;windowselector_normal_200_200</LIST_STRING></TEXT>
 			<TEXT>external_tool_order<LIST_STRING></LIST_STRING></TEXT>
 			<TEXT>tip_of_day_index<INTEGER>1</INTEGER></TEXT>
+			<TEXT>recent_projects<LIST_STRING></LIST_STRING></TEXT>
 			
 	</TOPIC>
 </TOPIC>

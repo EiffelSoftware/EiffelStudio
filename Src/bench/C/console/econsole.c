@@ -31,8 +31,8 @@ static BOOL eif_console_allocated = FALSE;
 rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
 #endif
 
-rt_private void eif_show_console();					/* Show the DOS console if needed */
-rt_private void safe_readconsole (char **buffer, int *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
+rt_private void eif_show_console(void);					/* Show the DOS console if needed */
+rt_private void safe_readconsole (char **buffer, DWORD *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
 
 EIF_INTEGER eif_console_readint()
 {
@@ -79,7 +79,7 @@ EIF_DOUBLE eif_console_readdouble()
 	return lastdouble;
 }
 
-EIF_CHARACTER eif_console_readchar()
+EIF_CHARACTER eif_console_readchar(void)
 {
 	DWORD buffer_length = (DWORD) 0;
 
@@ -150,8 +150,8 @@ long eif_console_readstream(char *s, long bound)
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	char c;						/* Last char read */
 	long i = 0;					/* Counter */
-	long to_be_read = 0;		/* Number of characters that will be read by ReadConsole */
-	long read = 0;				/* Number of characters remainings for ReadConsole */
+	long to_be_read;		/* Number of characters that will be read by ReadConsole */
+	long read;				/* Number of characters remainings for ReadConsole */
 	DWORD buffer_length = (DWORD) 0;
 	char done = (char) 0;
 	
@@ -263,7 +263,8 @@ long eif_console_readword(char *s, long bound, long start)
 
 void eif_console_putint (long l)
 {
-	int t = 0, dummy_length;
+	int t;
+	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
 
@@ -273,23 +274,24 @@ void eif_console_putint (long l)
 
 void eif_console_putchar (EIF_CHARACTER c)
 {
-	int dummy_length;
+	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
-
 	WriteFile(eif_conoutfile, &c,1, &dummy_length, NULL);
 }
 
 void eif_console_putstring (EIF_POINTER s, long length)
 {
-	int dummy_length;
+	DWORD dummy_length = (DWORD) 0;
+
 	eif_show_console();
 	WriteFile(eif_conoutfile,s, length, &dummy_length, NULL);
 }
 
 void eif_console_putreal (EIF_REAL r)
 {
-	int t = 0, dummy_length;
+	int t;
+	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
 
@@ -299,7 +301,8 @@ void eif_console_putreal (EIF_REAL r)
 
 void eif_console_putdouble (EIF_DOUBLE d)
 {
-	int t = 0, dummy_length;
+	int t;
+	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
 
@@ -325,7 +328,7 @@ void eif_console_next_line()
 					done = (EIF_BOOLEAN) (eif_console_readchar() == KEY_LF);
 					break;
 				case KEY_LF:
-					done == EIF_TRUE;
+					done = EIF_TRUE;
 					break;
 			}
 		}
@@ -373,7 +376,6 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 void eif_console_cleanup (void)
 {
 	BOOL b;
-	DWORD buffer_length = (DWORD) 0;
 	EIF_CHARACTER c;
 
 	if (eif_console_allocated) {
@@ -392,7 +394,7 @@ void eif_console_cleanup (void)
 	}  
 }
 
-rt_private void eif_show_console()
+rt_private void eif_show_console(void)
 {
 	if (!eif_console_allocated) {
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -445,7 +447,7 @@ rt_private void eif_show_console()
 	}
 }
 
-rt_private void safe_readconsole (char **buffer, int *size)
+rt_private void safe_readconsole (char **buffer, DWORD *size)
 	/* Clean the input buffer of KEY_CR and KEY_LF */
 {
 	int done = 0;

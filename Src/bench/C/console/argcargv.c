@@ -52,7 +52,7 @@ void get_argcargv (int *argc, char ***argv)
 }
 
 
-void eif_cleanup()
+void eif_cleanup(void)
 /*
 	Call each cleanup function that has been registered
 */

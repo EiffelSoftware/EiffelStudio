@@ -121,7 +121,7 @@ feature -- Contract Support
 			-- on the current platform. The following characters are not permitted,
 			-- and this list may not be exhaustive:
 			-- Windows - " * < > ? |
-			-- Linux - & *
+			-- Linux - *
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -133,7 +133,7 @@ feature -- Contract Support
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:
 			-- Windows - " * / : < > ? \ |
-			-- Linux - & *
+			-- Linux - *
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -12,8 +12,21 @@ feature -- Access
 
 	display_window: GB_DISPLAY_WINDOW is
 			-- Displays the current window that has been built.
+		do
+			Result := Display_window_cell.item
+		end
+		
+	set_display_window (a_display_window: GB_DISPLAY_WINDOW) is
+			-- Store `a_display_window' in `Display_window_cell'.
+		do
+			Display_window_cell.put (a_display_window)
+		end		
+	
+	Display_window_cell: CELL [GB_DISPLAY_WINDOW] is
+			-- A cell to hold `display_window' which allows the
+			-- window to be replaced.
 		once
-			Create Result
+			Create Result.put (Void)
 		ensure
 			exists: Result /= Void
 		end
@@ -21,9 +34,22 @@ feature -- Access
 	builder_window: GB_BUILDER_WINDOW is
 			-- A representation of the current window that has been built,
 			-- with all containers visible.
+		do
+			Result := builder_window_cell.item
+		end
+		
+	set_builder_window (a_builder_window: GB_BUILDER_WINDOW) is
+			-- Store `a_builder_window' in `builder_window_cell'.
+		do
+			Builder_window_cell.put (a_builder_Window)
+			a_builder_window.set_size (400, 300)
+		end
+
+	builder_window_cell: CELL [GB_BUILDER_WINDOW] is
+			-- A cell to hold `builder_window' which allows
+			-- the window to be replaced.
 		once
-			Create Result
-			Result.set_size (400, 300)
+			create Result.put (Void)
 		ensure
 			exists: Result /= Void
 		end
@@ -84,7 +110,7 @@ feature -- Access
 	all_floating_tools: ARRAYED_LIST [EV_DIALOG] is
 			-- `Result' is all tools that are independent of the main window.
 			-- The `tools_always_on_top' command applies to these windows only.
-		once
+		do
 			create Result.make (4)
 			Result.extend (builder_window)
 			Result.extend (display_window)

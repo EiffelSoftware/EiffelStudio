@@ -35,6 +35,8 @@ feature {NONE} -- Initialization
 			import_files_after.compare_objects
 			create {LINKED_LIST [STRING]} others.make
 			others.compare_objects
+			create {LINKED_LIST [STRING]} others_forward.make
+			others_forward.compare_objects
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]} constructors.make
 			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
@@ -523,7 +525,6 @@ feature -- Element Change
 		require
 			non_void_destructor: a_destructor_body /= Void
 			valid_destructor: not a_destructor_body.empty
-			valid_syntax: a_destructor_body.item (1) /= '%N' and a_destructor_body.item (a_destructor_body.count) /= '%N'
 		do
 			destructor_body := a_destructor_body
 		ensure

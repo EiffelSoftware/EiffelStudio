@@ -321,7 +321,9 @@ feature -- Basic operations
 			tmp_string.append (Registration_class_creation_routine)
 			tmp_string.append (Double_quote)
 
-			Result.replace_substring_all (Any_type, tmp_string)
+			if not system_descriptor.coclasses.empty then
+				Result.replace_substring_all (Any_type, tmp_string)
+			end
 			if Shared_wizard_environment.in_process_server then
 				Result.replace_substring_all (Default_keyword, Shared_library_option)
 			end
@@ -366,7 +368,10 @@ feature -- Basic operations
 			Result.append (Visible)
 			Result.append (New_line_tab_tab_tab)
 
-			if Shared_wizard_environment.server then
+			if 
+				Shared_wizard_environment.server  and
+				not system_descriptor.coclasses.empty
+			then
 				Result.append (Registration_class_name)
 				Result.append (Semicolon)
 				Result.append (New_line)

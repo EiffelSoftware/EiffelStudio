@@ -15,7 +15,6 @@ inherit
 	IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
 		redefine
  			is_local,
-			is_signed,
 			assembly_prefix,
 			assembly_name,
 			assembly_version,
@@ -28,35 +27,61 @@ inherit
 	
 create
 	make,
+	make_local,
 	make_with_assembly_sd
 	
 feature {NONE} -- initalization
 
-	make (a_cluster_name, a_assembly_name, a_prefix, a_version, a_culture, a_public_key_token: STRING) is
+	make (a_cluster_name, a_name, a_prefix, a_version, a_culture, a_public_key_token: STRING) is
 			-- create a new instance 
+		require
+			non_void_cluster_name: a_cluster_name /= Void
+			valid_cluster_name: not a_cluster_name.is_empty
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			non_void_version: a_version /= Void
+			valid_version: not a_version.is_empty
+			non_void_culture: a_culture /= Void
+			valid_culture: not a_culture.is_empty
+			non_void_public_key_token: a_public_key_token /= Void
+			valid_public_key_token: not a_public_key_token.is_empty
 		local
-			asm_cluster_name: ID_SD
-			asm_name: ID_SD
-			asm_version: ID_SD
-			asm_culture: ID_SD
-			asm_public_key_token: ID_SD
+			l_cluster_name_sd: ID_SD
+			l_name_sd: ID_SD
+			l_version_sd: ID_SD
+			l_culture_sd: ID_SD
+			l_public_key_token_sd: ID_SD
 		do
-			asm_cluster_name := new_id_sd(a_cluster_name, false)
-			asm_name := new_id_sd(a_assembly_name, true)
+			l_cluster_name_sd := new_id_sd(a_cluster_name, false)
+			l_name_sd := new_id_sd(a_name, true)
 			
-			if a_version /= Void and a_version.count > 0 then
-				asm_version := new_id_sd(a_version, true)
-			end
-			if a_culture /= Void and a_culture.count > 0 then
-				asm_culture := new_id_sd(a_culture, true)	
-			end
-			if a_public_key_token /= Void and a_public_key_token.count > 0 then
-				asm_public_key_token := new_id_sd(a_public_key_token, true)	
-			end
+			l_version_sd := new_id_sd(a_version, true)
+			l_culture_sd := new_id_sd(a_culture, true)	
+			l_public_key_token_sd := new_id_sd(a_public_key_token, true)	
+		
+			create assembly_sd.initialize (l_cluster_name_sd, l_name_sd, Void, l_version_sd, l_culture_sd, l_public_key_token_sd)
+			is_local := False
 			
-			create assembly_sd.initialize (asm_cluster_name, asm_name, Void, asm_version, asm_culture, asm_public_key_token)
 			set_assembly_prefix(a_prefix)
-			set_assembly_type
+		end
+		
+	make_local (a_cluster_name, a_assembly_path, a_prefix: STRING) is
+			-- create a new instance defining a local assembly
+		require
+			non_void_cluster_name: a_cluster_name /= VOid
+			valid_cluster_path: not a_cluster_name.is_empty
+			non_void_assembly_path: a_assembly_path /= Void
+			valid_assembly_path: not a_assembly_path.is_empty
+		local
+			l_cluster_name_sd: ID_SD
+			l_path_sd: ID_SD
+		do
+			l_cluster_name_sd := new_id_sd(a_cluster_name, false)
+			l_path_sd := new_id_sd(a_assembly_path, true)
+			
+			is_local := True
+			create assembly_sd.initialize (l_cluster_name_sd, l_path_sd, Void, Void, Void, Void)
+			set_assembly_prefix(a_prefix)
 		end
 		
 	make_with_assembly_sd (a_assembly: ASSEMBLY_SD) is
@@ -65,63 +90,29 @@ feature {NONE} -- initalization
 			non_void_assembly: a_assembly /= Void
 		do
 			assembly_sd := a_assembly
-			set_assembly_type
-		ensure
-			non_void_assembly_sd: assembly_sd /= Void
-		end
-		
-	set_assembly_type is
-			-- set the is_signed and is_local features corresponding to the acutal the assembly declaration
-		local
-			assembly_name_copy: STRING
-		do
-			-- if 'a_public_key' is Void then the assembly is not signed
-			if assembly_public_key_token = Void or assembly_public_key_token.count = 0 then
-				is_signed := false
-				is_local := true
+			if assembly_public_key_token.count > 0 then
+				is_local := False
 			else
-				if (assembly_name.count >= 4) then
-					assembly_name_copy := assembly_name.clone(assembly_name)
-					assembly_name_copy.to_lower
-					
-					-- if the assembly name ends in either a .dll or .exe then it is a local assembly					
-					if assembly_name_copy.substring_index(".dll", assembly_name_copy.count - 4) > 0 then
-						is_local := true
-					else
-						if assembly_name_copy.substring_index(".exe", assembly_name_copy.count - 4) > 0 then
-							is_local := true
-						else
-							is_local := false
-							is_signed := true
-						end
-					end
-				else
-					-- you cannot have an assembly called .dll or .exe so if the assembly name is 4 chars or
-					-- less then the assembly has to be signed.
-					is_local := false
-					is_signed := true
-				end
+				is_local := True
 			end
 		end
-		
+
 feature -- Status setting
 
 	set_assembly_prefix (a_prefix: STRING) is
-			-- set the assembly prefix
+			-- set 'assembly_prefix' with 'a_prefix'
 		local
 			asm_prefix: ID_SD
 		do
-			if a_prefix /= Void and then a_prefix.count > 0 then
+			if a_prefix /= Void and not a_prefix.is_empty then
 				asm_prefix := new_id_sd(a_prefix.clone(a_prefix), true)
 				asm_prefix.to_upper				
 				assembly_sd.set_prefix_name (asm_prefix)
 			else
 				assembly_sd.set_prefix_name (Void)
 			end
-
-
 		end
-		
+
 feature -- Access
 
 	assembly_prefix: STRING is
@@ -136,40 +127,71 @@ feature -- Access
 				Result := a_prefix
 				Result.to_upper
 			end
+		ensure
+			non_void_Result: Result /= Void
 		end
 		
 	assembly_cluster_name: STRING is
 			-- the cluster name for the assembly
 		do
 			Result := assembly_sd.cluster_name
+		ensure
+			non_void_Result: Result /= Void
 		end
 		
 	assembly_name: STRING is
 				-- the name/path for the assembly
 		do
 			Result := assembly_sd.assembly_name
+		ensure
+			non_void_Result: Result /= Void
 		end
 		
 	assembly_version: STRING is
 				-- the version for the assembly
 		do
 			Result := assembly_sd.version
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			non_void_Result: Result /= Void
 		end
 		
 	assembly_culture: STRING is
 			-- the culture for the assembly
 		do
 			Result := assembly_sd.culture
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			non_void_Result: Result /= Void
 		end
 		
 	assembly_public_key_token: STRING is
 				-- the public key token of the assembly
 		do
 			Result := assembly_sd.public_key_token
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			non_void_Result: Result /= Void
 		end
 	
 	is_local: BOOLEAN
-	is_signed: BOOLEAN
-	assembly_sd: ASSEMBLY_SD	
+			-- is assembly local?
+			
+	assembly_sd: ASSEMBLY_SD
+			-- lace assembly object
+			
+invariant
+	non_void_cluster_name: assembly_cluster_name /= Void
+	non_void_name: assembly_name /= Void
+	non_void_version: not is_local implies (assembly_version /= Void and not assembly_version.is_empty)
+	non_void_culture: not is_local implies (assembly_culture /= Void and not assembly_culture.is_empty)
+	non_void_public_key: not is_local implies (assembly_public_key_token /= Void and not assembly_public_key_token.is_empty)
+	non_void_sd: assembly_sd /= Void
 	
 end -- class ASSEMBLY_PROPERTIES

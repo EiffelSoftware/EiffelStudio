@@ -40,6 +40,7 @@ feature -- Status setting
 			project_open: project_open
 		do
 			current_project_settings := Void
+			disable_project_modified
 		end
 		
 	enable_project_modified is

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (0)
 
 			tree_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
-			feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
+			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
 	
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
 			create_list (2)
 			
-			set_row_height (App_implementation.default_font_height + 10)
+			set_row_height (App_implementation.default_font_height + 5)
 				-- We explicitly set the row height to be proportional to the default gtk application font
 			
 			previous_selection := selected_items
@@ -903,15 +903,17 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
-				end
-			elseif mode_is_pick_and_drop and not is_destroyed then
-					signal_emit_stop (visual_widget, "button-press-event")
+			if a_button > 0  then
+				if pnd_row_imp /= Void and not is_destroyed then
+					if pnd_row_imp.mode_is_pick_and_drop then
+						signal_emit_stop (visual_widget, "button-press-event")
+					end
+				elseif mode_is_pick_and_drop and not is_destroyed then
+						signal_emit_stop (visual_widget, "button-press-event")
+				end				
 			end
 
 			App_implementation.on_drop (pebble)

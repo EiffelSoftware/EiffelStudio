@@ -1,22 +1,25 @@
 <VisualStudioProject>
     <CSHARP
         ProjectType = "Local"
-        ProductVersion = "7.0.9466"
-        SchemaVersion = "1.0"
+        ProductVersion = "7.10.2346"
+        SchemaVersion = "2.0"
         ProjectGuid = "{37441A0A-37F3-48EB-850C-E90D611F3658}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "ise_runtime"
+                AssemblyName = "ISE.Runtime"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
                 OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
                 RootNamespace = "ISE.Runtime"
+                RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
                 <Config
@@ -25,11 +28,13 @@
                     BaseAddress = "285212672"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "ASSERTIONS"
+                    DefineConstants = "ASSERTIONS, VS_DEVEL"
                     DocumentationFile = ""
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "true"
+                    NoStdLib = "false"
+                    NoWarn = ""
                     Optimize = "false"
                     OutputPath = ".\"
                     RegisterForComInterop = "false"
@@ -48,6 +53,8 @@
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
                     Optimize = "true"
                     OutputPath = ".\"
                     RegisterForComInterop = "false"
@@ -112,7 +119,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "custom_attributes\assertion_level_attribute.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "custom_attributes\eiffel_class_name_attribute.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "enums\assertion_level_enum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -14,12 +14,12 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_CONTAINER) is
+	make is
 			-- Create an empty menu.
 		deferred
 		end	
 
-	make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create an empty menu with `label' as label. 
 		deferred
 		end	
@@ -43,6 +43,13 @@ feature -- Element change
 			-- implementation
 		do
 			interface := an_interface
+		end
+
+	set_parent (par: EV_MENU_CONTAINER) is
+			-- Make `par' the new parent of the item.
+		require
+			exists: not destroyed
+		deferred
 		end
 
 end -- class EV_MENU_I

@@ -17,19 +17,19 @@ feature -- Event association
 		deferred
 		end
 
-feature {EV_MENU_CONTAINER} -- Implementation
+feature {EV_MENU_IMP} -- Implementation
 
-	add_menu (menu: EV_MENU) is
+	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
-		local
-			menu_imp: EV_MENU_IMP
 		do
-			menu_imp ?= menu.implementation
-			check
-				menu_imp /= Void
-			end
 			menu_container.append_popup (menu_imp, menu_imp.text)
 			menu_imp.set_position (menu_container.count)
+		end
+
+	remove_menu (menu_imp: EV_MENU_IMP) is
+			-- Remove menu_imp from the container.
+		do
+			menu_container.delete_position (menu_imp.position)
 		end
 
 feature {EV_MENU_IMP} -- Implementation

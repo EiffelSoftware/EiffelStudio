@@ -88,6 +88,7 @@ feature -- Lace recompilation
 			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (directory_name);
+				cluster.set_new_id;
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
 debug ("REMOVE_CLASS")
@@ -165,6 +166,12 @@ feature -- DLE
 
 	build_dle is
 			-- Build the cluster.
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME: Merge with standard build: only diff is is_precompiled/is_static ...
+
 		require
 			dynamic_system: System.is_dynamic
 		local
@@ -210,6 +217,7 @@ feature -- DLE
 			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (directory_name);
+				cluster.set_new_id;
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
 debug ("REMOVE_CLASS")

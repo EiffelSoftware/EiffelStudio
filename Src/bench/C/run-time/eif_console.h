@@ -41,6 +41,8 @@ RT_LNK void console_next_line(FILE *f);
 RT_LNK EIF_INTEGER console_readstream(FILE *f, char *s, EIF_INTEGER bound);
 RT_LNK void console_file_close (FILE *f);
 
+RT_LNK int compiler_need_flush;
+
 #ifdef __cplusplus
 }
 #endif

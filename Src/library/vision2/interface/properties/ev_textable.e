@@ -43,48 +43,6 @@ feature -- Access
 			cloned: Result /= implementation.text
 		end
 
-	alignment: EV_TEXT_ALIGNMENT is
-			-- Current text positioning.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.alignment
-		ensure
-			alignment_not_void: Result /= Void
-		end
-
-feature -- Status setting
-
-	align_text_center is
-			-- Display `text' centered.
-		require
-			not_destroyed: not is_destroyed
-		do
-			implementation.align_text_center
-		ensure
-			alignment_set: alignment.is_center_aligned
-		end
-
-	align_text_right is
-			-- Display `text' right aligned.
-		require
-			not_destroyed: not is_destroyed
-		do
-			implementation.align_text_right
-		ensure
-			alignment_set: alignment.is_right_aligned
-		end
-        
-	align_text_left is
-			-- Display `text' left aligned.
-		require
-			not_destroyed: not is_destroyed
-		do
-			implementation.align_text_left
-		ensure
-			alignment_set: alignment.is_left_aligned
-		end
-
 feature -- Element change
 
 	set_text (a_text: STRING) is

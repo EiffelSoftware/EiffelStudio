@@ -76,7 +76,7 @@ extern "C" {
  * Generation scavenging parameters
  */
 #define GS_LIMIT		100		/* Max size for allocation in scavenge zone */
-#ifdef VXWORKS
+#ifndef VXWORKS
 #define GS_ZONE_SZ		150*1024	/* Size of a scavenge zone (150K) */
 #else
 #define GS_ZONE_SZ		2*PAGESIZE_VALUE	/* Size of a scavenge zone */

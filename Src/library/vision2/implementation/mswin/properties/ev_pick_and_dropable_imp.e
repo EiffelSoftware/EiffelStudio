@@ -398,11 +398,13 @@ feature {EV_ANY_I} -- Implementation
 							-- Execute drop_actions for the application.
 						application_imp.disable_drop_actions_executing
 					else
-						env.application.cancel_actions.call ([pebble])
+						call_cancel_actions (pebble)
 					end
+				else
+					call_cancel_actions (pebble)
 				end
 			else
-				env.application.cancel_actions.call ([pebble])
+				call_cancel_actions (pebble)
 			end
 
 			abstract_pick_and_dropable ?= target
@@ -434,6 +436,18 @@ feature {EV_ANY_I} -- Implementation
 			press_action_Reset: press_action = Ev_pnd_start_transport
 			not_has_capture: internal_capture_status.item = False
 		end
+		
+	call_cancel_actions (a_pebble: ANY) is
+			-- Call `cancel_actions' of application with `a_pebble' as
+			-- event data if the cancel actions exist (i.e. used via interface)
+		require
+			pebble_not_void: a_pebble /= Void
+		do
+			if application_imp.cancel_actions_internal /= Void then
+				application_imp.cancel_actions_internal.call ([a_pebble])	
+			end
+		end
+		
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position

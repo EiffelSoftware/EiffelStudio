@@ -14,7 +14,8 @@ inherit
 		undefine
 			is_equal
 		end
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_TEXT_ITEMS
 
 creation
 
@@ -84,6 +85,13 @@ feature -- Access
 				Result := b_name.is_equal (classes.item_for_iteration.base_name);
 				classes.forth
 			end
+		end;
+
+	name_in_upper: STRING is
+			-- Cluster name in upper case
+		do
+			Result := clone (cluster_name);
+			Result.to_upper
 		end;
 
 feature -- Element change
@@ -312,7 +320,7 @@ debug ("REMOVE_CLASS")
 end;
 				Result.fill (ex_l, inc_l);
 			else
-				Degree_output.skip_degree_6;
+				Degree_output.skip_entity;
 				!! Result.make_from_old_cluster (Current)
 				Universe.insert_cluster (Result);
 			end;
@@ -977,6 +985,12 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			d: DIRECTORY
 		do
 			!! Result.make_from_string (Workbench.backup_subdirectory)
+			!! d.make (Result)
+			if not d.exists then
+				-- Create the backup directory again just in
+				-- case the user removes it.
+				d.create
+			end
 			Result.extend (backup_subdirectory)
 
 			!! d.make (Result)
@@ -1075,7 +1089,52 @@ feature {COMPILER_EXPORTER} -- DLE
 			end
 		end;
 
+feature -- Output
+
+	generate_class_list (st: STRUCTURED_TEXT) is
+			-- Generate the class list for cluster to `st'.
+		require
+			valid_st: st /= Void
+		local
+			c: E_CLASS
+		do
+			st.add (ti_Before_class_declaration);
+			st.add_cluster (Current, name_in_upper);
+			st.add_new_line
+			st.add_new_line;
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				c := classes.item_for_iteration.compiled_eclass;
+				if c /= Void then
+					st.add_indent;
+					st.add_classi (c.lace_class, c.name_in_upper);
+					st.add_new_line
+				end;
+				classes.forth
+			end
+			st.add (ti_After_class_declaration);
+		end;
+
 feature -- Document processing
+
+	document_file_name: FILE_NAME is
+			-- File name specified for the cluster text generation
+			-- Void result implies no document generation
+		local
+			tmp: STRING;
+			c_name: STRING
+		do
+			tmp := document_path;
+			if tmp /= Void then
+				!! Result.make_from_string (tmp);
+				c_name := "_cluster_";
+				c_name.append (cluster_name);
+				Result.set_file_name (c_name)
+			end	
+		end;
 
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory.
@@ -1085,7 +1144,8 @@ feature -- Document processing
 		do
 			tmp := private_document_path;
 			if tmp = Void then
-				Result := System.document_path
+				!! Result.make_from_string (System.document_path);
+				Result.extend (cluster_name)
 			elseif not tmp.is_equal (No_word) then
 				!! Result.make_from_string (tmp)
 			end;
@@ -1107,15 +1167,11 @@ feature -- Document processing
 		local
 			a_path: like private_document_path
 		do
-			a_path := private_document_path;
+			a_path := document_path;
 			if a_path = Void then
-				a_path := System.document_path;
-				if a_path = Void then
-					private_document_path := No_word
-				else
-					private_document_path := a_path
-				end
+				a_path := No_word
 			end
+			private_document_path := a_path
 		ensure
 			document_path_not_void: document_path /= Void
 		end;

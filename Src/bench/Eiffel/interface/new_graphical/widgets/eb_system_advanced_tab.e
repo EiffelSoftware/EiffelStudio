@@ -103,6 +103,7 @@ feature -- Store/Retrieve
 			-- Store content of widget into `root_ast'.
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
+			l_name: STRING
 		do
 			defaults := root_ast.defaults
 			if defaults = Void then
@@ -155,8 +156,12 @@ feature -- Store/Retrieve
 				defaults.extend (new_special_option_sd ("multithreaded", Void,
 					mt_runtime_check.is_selected))
 				if shared_library_check.is_selected then
+					l_name := shared_library_field.text
+					if l_name = Void then
+						l_name := " "
+					end
 					defaults.extend (new_special_option_sd ("shared_library_definition",
-						shared_library_field.text, True))
+						l_name, True))
 				end
 			end
 		end

@@ -43,10 +43,10 @@ feature
 			file_name: STRING;
 			i, nb: INTEGER;
 		do
-			add_in_system_basket (Eref);
-			add_in_system_basket (Esize);
+			add_in_primary_system_basket (Eref);
+			add_in_primary_system_basket (Esize);
 			if System.has_separate then
-				add_in_system_basket (Epattern);
+				add_in_primary_system_basket (Epattern);
 			end;
 
 				-- Routine tables.
@@ -57,23 +57,9 @@ feature
 				i > nb
 			loop
 				!!file_name.make (16);
-				file_name.append (Erout);
+				file_name.append (Epoly);
 				file_name.append_integer (i);
-				add_in_system_basket(file_name);
-				i := i + 1;
-			end;
- 
-				-- Attribute tables.
-			from
-				i := 1;
-				nb := Attr_generator.file_counter - 1;
-			until
-				i > nb
-			loop
-				!!file_name.make (16);
-				file_name.append (Eattr);
-				file_name.append_integer (i);
-				add_in_system_basket(file_name);
+				add_in_system_basket(file_name, i // System_packet_number + 2);
 				i := i + 1;
 			end;
 		end;
@@ -84,7 +70,6 @@ feature
 		do
 			if not System.has_multithreaded then
 				cecil_basket := cecil_rt_basket
-				cecil_basket.extend ("math.o"); cecil_basket.finish
 				cecil_basket.extend ("malloc.o"); cecil_basket.finish
 				cecil_basket.extend ("garcol.o"); cecil_basket.finish
 				cecil_basket.extend ("local.o"); cecil_basket.finish

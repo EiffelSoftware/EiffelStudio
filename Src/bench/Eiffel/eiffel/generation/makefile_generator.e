@@ -23,9 +23,11 @@ feature -- Attributes
 			-- * C code for descriptors
 			-- * C code for feature tables
 
-	system_basket: LINKED_LIST [STRING]
+	system_baskets: ARRAY [LINKED_LIST [STRING]]
 			-- The entire set of system object files we have 
-			-- to make
+			-- to make is generated in the first entry. The
+			-- other entries contain the polymorphic routine
+			-- and attribute tables.
 
 	cecil_rt_basket: LINKED_LIST [STRING]
 			-- Run-time object files to be put in the Cecil
@@ -46,7 +48,7 @@ feature -- Attributes
 	Final_packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase in Final mode.
 
-	System_packet_number: INTEGER is 100
+	System_packet_number: INTEGER is 20
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization
@@ -54,26 +56,35 @@ feature -- Initialization
 	make is
 			-- Creation
 		do
-			!!system_basket.make
-			!!cecil_rt_basket.make
-			!!empty_class_types.make (50)
+			create cecil_rt_basket.make
+			create empty_class_types.make (50)
 		end
 
 	init_objects_baskets is
 			-- Create objects baskets.
 		local
 			basket_nb, i: INTEGER
+			system_basket_nb: INTEGER
 			basket: LINKED_LIST [STRING]
 		do
 			if System.in_final_mode then
 				basket_nb := 1 + System.static_type_id_counter.current_count // Final_packet_number
+				system_basket_nb := (Rout_generator.file_counter - 1) // System_packet_number + 2
 			else
 				basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
+				system_basket_nb := 1
 			end
-			!!object_baskets.make (1, basket_nb)
+			create object_baskets.make (1, basket_nb)
 			from i := 1 until i > basket_nb loop
-				!!basket.make
+				create basket.make
 				object_baskets.put (basket, i)
+				i := i + 1
+			end
+
+			create system_baskets.make (1, system_basket_nb)
+			from i := 1 until i > system_basket_nb loop
+				create basket.make
+				system_baskets.put (basket, i)
 				i := i + 1
 			end
 		end
@@ -82,7 +93,7 @@ feature -- Initialization
 			-- Forget the lists
 		do
 			object_baskets := Void
-			system_basket := Void
+			system_baskets := Void
 			cecil_rt_basket := Void
 			empty_class_types := Void
 		end
@@ -112,7 +123,7 @@ feature -- Object basket managment
 		deferred
 		end
 
-	add_in_system_basket (base_name: STRING) is
+	add_in_primary_system_basket (base_name: STRING) is
 		local	
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
@@ -120,7 +131,20 @@ feature -- Object basket managment
 			!!object_name.make (0)
 			object_name.append (base_name)
 			object_name.append (".o")
- 			string_list := system_basket
+ 			string_list := system_baskets.item (1)
+			string_list.extend (object_name)
+ 			string_list.forth 
+		end
+
+	add_in_system_basket (base_name: STRING; basket_number: INTEGER) is
+		local	
+			object_name: STRING
+ 			string_list: LINKED_LIST [STRING]
+		do
+			!!object_name.make (0)
+			object_name.append (base_name)
+			object_name.append (".o")
+ 			string_list := system_baskets.item (basket_number)
 			string_list.extend (object_name)
  			string_list.forth 
 		end
@@ -128,23 +152,14 @@ feature -- Object basket managment
 	add_common_objects is
 			-- Add common objects file
 		do
-			add_in_system_basket (Eplug)
-			add_in_system_basket (Eskelet)
-			add_in_system_basket (Evisib)
-			add_in_system_basket (Ececil)
-			add_in_system_basket (Einit)
-			add_in_system_basket (Eparents)
+			add_in_primary_system_basket (Eplug)
+			add_in_primary_system_basket (Eskelet)
+			add_in_primary_system_basket (Evisib)
+			add_in_primary_system_basket (Ececil)
+			add_in_primary_system_basket (Einit)
+			add_in_primary_system_basket (Eparents)
 		end
 
-	compute_partial_system_objects is
-			-- Compute number of partial system objects needed.
-		do
-			partial_system_objects := system_basket.count // System_packet_number
-			if (system_basket.count \\ System_packet_number) /= 0 then
-				partial_system_objects := partial_system_objects + 1
-			end
-		end
-	
 feature -- Cecil
 
 	add_cecil_objects is
@@ -163,22 +178,14 @@ feature -- Cecil
 
 			make_file.putstring ("cecil: $(STATIC_CECIL)%N")
 			make_file.putstring ("$(STATIC_CECIL): ")
---			generate_objects_macros
---			make_file.putchar (' ')
---			generate_system_objects_macros
 			make_file.putchar (' ')
 			make_file.putstring ("$(OBJECTS) %N")
---			make_file.putstring (" Makefile%N")
 			make_file.putstring ("%T$(AR) x ")
 			make_file.putstring ("$(EIFLIB)")
 			make_file.new_line
 			make_file.putstring ("%T$(AR) cr ")
 			make_file.putstring ("$(STATIC_CECIL)")
 			make_file.putchar (' ')
---			generate_objects_macros
---			make_file.putchar (' ')
---			generate_system_objects_macros
---			make_file.putchar (' ')
 			make_file.putstring ("$(OBJECTS) ")
 			make_file.putchar (continuation)
 			make_file.new_line
@@ -197,7 +204,7 @@ feature -- Cecil
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
-			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) E1/emain.o $precompilelibs %N")
+			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EIFLIB) E1/emain.o $precompilelibs %N")
 			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
 			make_file.putstring ("$(SHARED_CECIL) : $(SHARED_CECIL_OBJECT) %N")
 			make_file.putstring ("%T$(RM) $(SHARED_CECIL) %N")
@@ -258,7 +265,7 @@ feature -- Generate Dynamic Library
 			make_file.putstring ("%N%T cd ..")
 
 			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
-			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) E1/edynlib.o E1/egc_dynlib.o $precompilelibs %N")
+			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EIFLIB) E1/edynlib.o E1/egc_dynlib.o $precompilelibs %N")
 			make_file.putstring ("DYNLIBSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
 			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB) : $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
@@ -285,13 +292,9 @@ feature -- Actual generation
 			add_common_objects
 			add_cecil_objects
 
-				-- Compute number of partial system objects needed
-				-- and generate corresponding object lists.
-			compute_partial_system_objects
-
 				-- Generate makefile in subdirectories.
 			generate_sub_makefiles (C_prefix, object_baskets)
-			generate_system_makefile
+			generate_sub_makefiles (System_object_prefix, system_baskets)
 
 			make_file := make_f (system.in_final_mode)
 			make_file.open_write
@@ -325,7 +328,7 @@ feature -- Actual generation
 
 			make_file.close
 			object_baskets := Void
-			system_basket.wipe_out
+			system_baskets := Void
 			cecil_rt_basket.wipe_out
 		end
 
@@ -386,64 +389,6 @@ feature -- Sub makefile generation
 				end
 				i := i + 1
 			end
-			make_file := old_makefile
-		end
-
-	generate_system_makefile is
-			-- Create makefile to build system objects.
-		local
-			new_makefile, old_makefile: INDENT_FILE
-			baskets_count, i, nb: INTEGER
-			f_name: FILE_NAME
-			subdir_name: STRING
-		do
-			old_makefile := make_file
-			if system.in_final_mode then
-				!!f_name.make_from_string (Final_generation_path)
-			else
-				!!f_name.make_from_string (Workbench_generation_path)
-			end
-			subdir_name := clone (System_object_prefix)
-			subdir_name.append_integer (1)
-			f_name.extend (subdir_name)
-			f_name.set_file_name (Makefile_SH)
-			!! new_makefile.make (f_name)
-			make_file := new_makefile
-			make_file.open_write
-
-				-- Generate main /bin/sh preamble
-			generate_sub_preamble
-
-				-- Customize main Makefile macros
-			generate_customization
-
-				-- How to produce a .o from a .c file
-			generate_compilation_rule
-
-				-- Generate object list.
-			generate_system_objects_lists
-
-				-- Generate partial object.
-			make_file.putstring ("all: emain.o")
-			from i := 1 until i > partial_system_objects loop
-				make_file.putchar (' ')
-				make_file.putstring (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
-				make_file.putstring (".o")
-				i := i + 1
-			end
-			make_file.new_line
-			make_file.new_line
-
-			generate_partial_system_objects_linking
-
-				-- Generate cleaning rules
-			generate_sub_cleaning
-
-				-- End production.
-			generate_ending
-			make_file.close
 			make_file := old_makefile
 		end
 
@@ -614,65 +559,6 @@ feature -- Generation, Header
 
 feature -- Generation, Object list(s)
 
-	generate_system_objects_lists is
-			-- Generate the EOBJECTS/OBJECTS,OBJECTS2,OBJECTS3... macros in Makefile
-		local
-			i: INTEGER
-			macro_name: STRING
-		do
-			from
-				i := 1
-			until
-				i > partial_system_objects
-			loop
-				!!macro_name.make (4)
-				macro_name.append ("OBJECTS")
-				if i /= 1 then
-					macro_name.append_integer (i)
-				end
-				generate_system_macro (macro_name)
-				i := i + 1
-			end
-		end
-
-	generate_system_macro (mname: STRING) is
-			-- Generate a bunch of objects to be put in macro `mname'
-			--| Remove elements from the `system_basket' during
-			--| generation
-		local
-			size: INTEGER
-			file_name: STRING
-			basket: LINKED_LIST [STRING]
-			i: INTEGER
-		do
-			basket := system_basket
-			make_file.putstring (mname)
-			make_file.putstring (" = ")
-			from
-				basket.start
-				size := mname.count + 3
-			until
-				i = System_packet_number or else basket.after
-			loop
-				file_name := basket.item
-				size := size + file_name.count + 1
-				if size > 78 then
-					make_file.putchar (Continuation)
-					make_file.new_line
-					make_file.putchar ('%T')
-					size := 8 + file_name.count + 1
-					make_file.putstring (file_name)
-				else
-					make_file.putstring (file_name)
-				end
-				make_file.putchar (' ')
-				i := i + 1
-				basket.remove
-			end
-			make_file.new_line
-			make_file.new_line
-		end
-
 	generate_macro (mname: STRING; basket: LINKED_LIST [STRING]) is
 			-- Generate a bunch of objects to be put in macro `mname'
 		local
@@ -794,7 +680,6 @@ feature -- Generation (Linking rules)
 			generate_partial_system_objects_dependencies
 			generate_simple_executable
 		end
-	
 
 	generate_simple_executable is
 			-- Generate rule to produce simple executable, linked in
@@ -861,26 +746,9 @@ feature -- Generation (Linking rules)
 	generate_system_objects_macros is
 			-- Generate the system object macros 
 			-- (dependencies for final executable).
-		local
-			i: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > partial_system_objects
-			loop
-				if i > 1 then
-					make_file.putchar (' ')
-				end
-				make_file.putstring (System_object_prefix)
-				make_file.putint (1)
-				make_file.putchar ('/')
-				make_file.putstring (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
-				make_file.putstring (".o")
-				i := i + 1
-			end
+				-- System object files.
+			generate_basket_objects (System_baskets, C_prefix)
 		end
 
 	generate_objects_macros is
@@ -890,38 +758,6 @@ feature -- Generation (Linking rules)
 			generate_basket_objects (object_baskets, C_prefix)
 		end
 
-	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: STRING) is
-			-- Generate the object macros in `baskets'.
-		require
-			baskets_not_void: baskets /= Void
-			dir_prefix_not_void: dir_prefix /= Void
-		local
-			i, baskets_count: INTEGER
-			not_first: BOOLEAN
-		do
-			from
-				baskets_count := baskets.count
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not baskets.item (i).empty then
-					if not_first then
-						make_file.putchar (' ')
-					else
-						not_first := true
-					end
-					make_file.putstring (dir_prefix)
-					make_file.putint (i)
-					make_file.putchar ('/')
-					make_file.putstring (dir_prefix)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o")
-				end
-				i := i + 1
-			end
-		end
 
 	generate_subdir_names is
 			-- Generate the subdirectories' names.
@@ -987,47 +823,6 @@ feature -- Generation (Linking rules)
 			make_file.new_line
 		end
 
-	generate_partial_system_objects_linking is
-			-- Generate rules to produce partial linking and the
-			-- final executable linked in with `run_time'.
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > partial_system_objects
-			loop
-				make_file.putstring (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
-				make_file.putstring (".o: $(OBJECTS")
-				if i /= 1 then
-					make_file.putint (i)
-				end
-				make_file.putstring (") Makefile")
-				make_file.new_line
-					-- The following is not portable (if people want to use
-					-- their own linker).
-					-- FIXME
-				make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
-				make_file.putstring (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
-				make_file.putstring (".o $(OBJECTS")
-				if i /= 1 then
-					make_file.putint (i)
-				end
-				make_file.putchar (')')
-
-				make_file.putstring ("%N%T$(CREATE_TEST)")
-
-				make_file.new_line
-				make_file.new_line
-				i := i + 1
-			end
-		end
-
 	generate_partial_system_objects_dependencies is
 			-- Depencies to update partial system objects in subdirectories.
 		local
@@ -1071,9 +866,14 @@ feature -- Generation (Linking rules)
 			make_file.putint (1)
 			make_file.putstring (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
-			from i := 1 until i > partial_system_objects loop
+			from
+				i := 1
+				nb := system_baskets.count
+			until
+				i > nb
+			loop
 				make_file.putstring (System_object_prefix)
-				make_file.putint (1)
+				make_file.putint (i)
 				make_file.putchar ('/')
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
@@ -1187,6 +987,41 @@ feature -- Removal of empty classes
 			-- are not generated
 		do
 			empty_class_types.put (a_class_type)
+		end
+
+feature {NONE} -- Implementation
+
+	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: STRING) is
+			-- Generate the object macros in `baskets'.
+		require
+			baskets_not_void: baskets /= Void
+			dir_prefix_not_void: dir_prefix /= Void
+		local
+			i, baskets_count: INTEGER
+			not_first: BOOLEAN
+		do
+			from
+				baskets_count := baskets.count
+				i := 1
+			until
+				i > baskets_count
+			loop
+				if not baskets.item (i).empty then
+					if not_first then
+						make_file.putchar (' ')
+					else
+						not_first := true
+					end
+					make_file.putstring (dir_prefix)
+					make_file.putint (i)
+					make_file.putchar ('/')
+					make_file.putstring (dir_prefix)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o")
+				end
+				i := i + 1
+			end
 		end
 
 end

@@ -86,26 +86,6 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
-feature -- Event - command association
-	
---|FIXME	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add 'cmd' to the list of commands to be executed 
---|FIXME			-- when the text field is activated, ie when the user
---|FIXME			-- press the enter key.
---|FIXME		do
---|FIXME			add_command (Cmd_activate, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_return_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the text field is activated, ie when the user
---|FIXME			-- press the enter key.
---|FIXME		do
---|FIXME			remove_command (Cmd_activate)
---|FIXME		end
-
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
@@ -143,8 +123,7 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			--|FIXME Now need to use the new events.
-			--execute_command (Cmd_change, Void)
+			interface.change_actions.call ([])
 		end
 
 	enable is
@@ -239,6 +218,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/02/23 01:49:08  rogers
+--| Removed old command association. Change events are now fired when the text of changes.
+--|
 --| Revision 1.31  2000/02/23 01:32:17  rogers
 --| Added the call to the new events when return is pressed.
 --|

@@ -1,8 +1,8 @@
 indexing
 	description: "Objects that ..."
 	author: ""
-	date: "$Date: 1999/09/07 03:00:42 $"
-	revision: "$Revision: 1.4 $"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 class
 	$classname
@@ -25,14 +25,6 @@ create
 	default_create
 
 feature -- Initialization
-
-	make is
-			-- Initialize
-		do
-			-- Your instructions here
-		ensure
-			postcondition_clause: -- Your postcondition here
-		end
 
 feature -- Access
 
@@ -67,6 +59,6 @@ feature -- Inapplicable
 feature {NONE} -- Implementation
 
 invariant
-	invariant_clause: True -- Your invariant here
+	invariant_clause: -- Your invariant here
 
 end -- class $classname

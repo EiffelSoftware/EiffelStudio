@@ -186,6 +186,10 @@ feature {NONE}
 			Result.append ("Do you want to compile the generated C code?")
 		end;
 
+	w_Melt_only: STRING is"%
+			%This feature is not available in the personal version.%N%
+			%Please upgrade to the professional version of ISE Eiffel 3";
+
 	w_Must_compile_first: STRING is "You must compile a system first";
 
 	w_No_associated_file: STRING is "There is no associated file for %

@@ -8,11 +8,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-external class
+frozen external class
 	ISE_RUNTIME
 
 inherit
 	SYSTEM_OBJECT
+
+create {NONE}
 
 feature -- Equality
 

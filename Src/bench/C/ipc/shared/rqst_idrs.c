@@ -62,6 +62,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ MODIFY_ATTR, idr_Opaque },
 	{ DYNAMIC_EVAL, idr_Opaque },
 	{ DUMP_VARIABLES, idr_Opaque },
+	{ OVERFLOW_DETECT, idr_Opaque },
 	{ __dontcare__, idr_void },
 };
 

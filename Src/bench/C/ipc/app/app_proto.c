@@ -91,6 +91,8 @@ rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type);
 extern struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
+extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
+extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
 /* Private Constants */
 #define NO_CURRMODIF	0
@@ -221,6 +223,7 @@ static int curr_modify = NO_CURRMODIF;
 	case RESUME:					/* Resume execution */
 		if (!gc_stopped) gc_run();
 		set_breakpoint_count (arg_2);
+		critical_stack_depth = (uint32) arg_3;
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
 
 #ifdef EIF_WIN32
@@ -297,6 +300,10 @@ static int curr_modify = NO_CURRMODIF;
 #else
 		(void) rem_input(s);		/* exit listening loop */
 #endif
+		break;
+	case OVERFLOW_DETECT:
+		critical_stack_depth = (uint32) arg_3; /* We convert int => uint32, so that passing -1 never checks for stack overflows */
+		already_warned = 0;
 		break;
 	}
 

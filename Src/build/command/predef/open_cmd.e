@@ -4,44 +4,39 @@ class OPEN_CMD
 
 inherit
 
-	PREDEF_CMD_IDENTIFIERS;
-	PREDEF_CMD;
-	WINDOWS
+	PREDEF_CMD
 
 creation
 
 	make
 
-	
 feature 
+
+	eiffel_type: STRING is "Open";
 
 	identifier: INTEGER is
 		do
 			Result := - open_cmd_id
 		end;
 
-	eiffel_type: STRING is "Open";
-
-	make is
+	arguments: EB_LINKED_LIST [ARG] is
 		local
 			arg: ARG;
-			lab: CMD_LABEL;
-		do
-			!!arguments.make;
-			!!labels.make;
-			!!lab.make ("open");
-			labels.put_right (lab);
-			!!lab.make ("cancel");
-			labels.extend (lab);
-			!!arg.session_init (context_catalog.text_type);
-			arguments.extend (arg);
-			set_symbol (Pixmaps.file_pixmap);
-			set_label (eiffel_type);
-			predefined_command_table.put (Current, identifier * -1)
+		once
+			!! Result.make;
+			!! arg.session_init (context_catalog.text_type);
+			Result.extend (arg);
 		end;
 
-	arguments: EB_LINKED_LIST [ARG];
-
-	labels: EB_LINKED_LIST [CMD_LABEL];
+	labels: EB_LINKED_LIST [CMD_LABEL] is
+		local
+			lab: CMD_LABEL;
+		once
+			!! Result.make;
+			!! lab.make ("open");
+			Result.extend (lab);
+			!! lab.make ("cancel");
+			Result.extend (lab);
+		end;
 
 end

@@ -16,14 +16,14 @@ feature
 			Result := Pixmaps.check_box_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.set_page.check_box_type
 		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make_unmanaged (entity_name, a_parent);
+			!! widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: CHECK_BOX;

@@ -8,41 +8,69 @@ inherit
 			make as make_drawing_area
 		end;
 	HOLE
+		redefine
+			process_any	
+		end;
+	DRAG_SOURCE;
+	COMMAND;
+	WINDOWS
 
 creation
 
 	make
 	
-feature -- Creation
+feature {NONE} -- Creation 
 
-	make (a_name: STRING; a_parent: COMPOSITE; appl: APP_EDITOR) is
+	make is
+		do
+		end;
+
+feature
+
+	make_visible (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the drawing area.
 		do
 			make_drawing_area (a_name, a_parent);
-			application_editor := appl;
-			register
+			add_button_press_action (3, Current, Void);
+			register;
+			initialize_transport
 		end; -- Create
 
 feature 
 
-	target: WIDGET is
+	source, target: WIDGET is
 		do
 			Result := Current
 		end;
-	
+
+feature -- Stone transportion
+
+	stone: STONE;
+
+	execute (arg: ANY) is
+		do
+			app_editor.find_selected_figure;
+			stone := app_editor.selected_figure_stone
+		end;
+
+feature {NONE} -- Removable
+
+	remove_yourself is
+			-- Remove source_figure.
+		do
+			app_editor.remove_selected_figure
+		end;
+
 feature {NONE}
 
 	new_state: STATE;
-		-- New state added
 
-	application_editor: APP_EDITOR;
+	stone_type: INTEGER is 
+		do 		
+			Result := Stone_types.any_type
+		end;
 
-	add_line_command: APP_ADD_LINE;
-	add_state_command: APP_ADD_STATE;
-	update_trans_command: APP_UPDATE_TRANS;
-			-- Application commands 
-
-	process_stone is
+	process_any (dropped: STONE) is
 			-- Update the drawing area appropriately 
 			-- using the dropped stone. 
 			-- Either 
@@ -52,59 +80,43 @@ feature {NONE}
 			--		. copy a state
 			--		. add a line between two circles
 		local
-			figures: APP_FIGURES;
+			drawing_area: APP_DR_AREA;
 			label_list: LABEL_SCR_L;
 			state_list: STATE_SCR_L;
 			circle: STATE_CIRCLE;
 			new_state_stone: NEW_STATE_STONE;
+			update_trans_command: APP_UPDATE_TRANS;
 			state_stone: STATE_STONE
 		do
-			label_list ?= stone;
-			if 
-				not (label_list = Void) 
-			then
+			label_list ?= dropped;
+			if label_list /= Void then
 					-- A label has been dragged from the scrolled
 					-- list of the application editor.
 				!!update_trans_command;
-				update_trans_command.execute (label_list.label)
+				update_trans_command.execute (label_list.selected_label)
 			else
-			 	figures ?= stone;
-				if 
-					not (figures = Void) 
-				then
+			 	circle ?= dropped;
+				if circle /= Void then
 						-- A figure was dragged and dropped from
 						-- within the drawing area.
-					circle ?= figures.source_figure;
-					if
-						not (circle = Void)
-					then
-						update_figures (circle)
-					end
+					update_figures (circle)
 				else
-					new_state_stone ?= stone;
-					if 
-						not (new_state_stone = Void) 
-					then
+					new_state_stone ?= dropped;
+					if new_state_stone /= Void then
 						add_new_state;
 						-- A state stone has been brought in
 						-- from the outside.
 					else
-						state_list ?= stone;
-						if
-							not (state_list = Void)
-						then
+						state_list ?= dropped;
+						if state_list /= Void then
 							circle ?= state_list.selected_circle;
-							if
-								not (circle = Void)
-							then
+							if circle /= Void then
 								update_figures (circle)
 							end
 						else
-							state_stone ?= stone;
-							if
-								state_stone /= Void
-							then
-								copy_state (state_stone.original_stone)
+							state_stone ?= dropped.data;
+							if state_stone /= Void then
+								copy_state (state_stone.data)
 							end
 						end	
 					end
@@ -118,9 +130,10 @@ feature {NONE}
 			-- If circle not found then add state circle.
 			
 		local
-			figures: APP_FIGURES
+			figures: APP_FIGURES;
+			add_line_command: APP_ADD_LINE;
 		do
-			figures := application_editor.figures;
+			figures := app_editor.figures;
 			figures.find;
 			if
 				figures.found
@@ -129,7 +142,7 @@ feature {NONE}
 				add_line_command.set_source_circle (circle);
 				add_line_command.execute (figures.figure);
 			else
-				copy_state (circle.original_stone);
+				copy_state (circle.data);
 			end
 		end; -- add_line
 
@@ -150,10 +163,11 @@ feature {NONE}
 		local
 			figures: APP_FIGURES;
 			circle: STATE_CIRCLE;
+			add_state_command: APP_ADD_STATE;
 		do
 			!!new_state.make;
 			new_state.set_internal_name ("");
-			figures := application_editor.figures;
+			figures := app_editor.figures;
 			figures.find;	
 			!!add_state_command;
 			add_state_command.execute (new_state)

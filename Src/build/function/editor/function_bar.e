@@ -7,7 +7,6 @@ inherit
 		rename
 			make as form_create
 		end;
-	LABELS;
 	CONSTANTS
 
 creation
@@ -22,10 +21,6 @@ feature
 
 	make (a_name: STRING; a_parent: COMPOSITE; func: FUNC_EDITOR) is
 			-- To allow proper compilation.
-		do
-		end;
-
-	set_function (f: FUNCTION) is
 		do
 		end;
 

@@ -3,15 +3,12 @@ class ARG_ICON
 
 inherit
 
-	ARG_STONE
-		export
-			{NONE} all
-		end;
+	TYPE_STONE;
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	REMOVABLE
 
@@ -37,26 +34,9 @@ feature
 
 	remove_yourself is
 		do
-			cmd_editor.remove_argument (original_stone)
+			cmd_editor.remove_argument (data)
 		end;
 
--- **************
--- Stone features
--- **************
-
-	original_stone: ARG;
-
-	
-feature {NONE}
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
-
-	type: CONTEXT_TYPE is
-		do
-			Result := original_stone.type
-		end;
+	data: ARG;
 
 end

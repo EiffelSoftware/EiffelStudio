@@ -21,10 +21,20 @@ feature
 				fg_color_modified := True;
 				!!a_color.make;
 				a_color.set_name (a_name);
-				widget.set_foreground (a_color)
+				widget.set_foreground_color (a_color)
 			else
 				fg_color_modified := False
 			end;
+		end;
+
+	default_foreground_color: COLOR is
+		do
+			Result := widget.foreground_color
+		end;
+
+	set_default_foreground_color (color: COLOR) is
+		do
+			widget.set_foreground_color (color)
 		end;
 
 end

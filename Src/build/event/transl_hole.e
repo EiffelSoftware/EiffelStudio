@@ -3,94 +3,83 @@ class TRANSL_HOLE
 
 inherit
 
-	ICON_HOLE
+	DRAG_SOURCE;
+	EVENT_STONE;
+	HOLE
 		redefine
-			stone, compatible, set_widget_default
-		select
-			button, same
+			process_event
 		end;
-	EV_ICON_STONE
-		undefine
-			same
-		redefine
-			original_stone, transportable, set_widget_default
-		end;
+	EB_BUTTON_COM
 
 creation
 
 	make
 	
-feature 
+feature {NONE} -- Stone information
 
-	original_stone: TRANSLATION;
-
-	transportable: BOOLEAN is
+	eiffel_text: STRING is
 		do
-			Result := original_stone /= Void;
+			Result := data.eiffel_text
 		end;
 
-	reset is 
+	data: TRANSLATION is
 		do
-			if original_stone /= Void then
-				original_stone := Void;
-				set_symbol (Pixmaps.event_pixmap);
-				set_label ("");
-			end;
+			Result := editor.edited_translation
 		end;
 
-	stone: EV_ICON_STONE;
-
-	compatible (s: EV_ICON_STONE): BOOLEAN is
+	source, target: WIDGET is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Current
 		end;
-	
-feature 
-
-	editor: TRANSL_EDITOR;
-
-	make (ed: TRANSL_EDITOR) is
-		do
-			editor := ed;
-			set_symbol (Pixmaps.event_pixmap);
-			make_visible (editor);
-		end;
-
-	set_translation (t: like original_stone) is
-		do
-			original_stone := t;
-			set_label (t.label);
-			set_symbol (t.symbol);
-		end;
-
-	set_widget_default is
-		do
-			initialize_transport
-		end;
-
-	update_name is
-		do
-			set_label (trans_label)
-		end;
-
-	trans_label: STRING is
-		do
-			Result := original_stone.label
-		end
-
-
 
 feature {NONE}
 
-	process_stone is
+	editor: TRANSL_EDITOR;
+
+	make (ed: TRANSL_EDITOR; a_parent: COMPOSITE) is
+		do
+			editor := ed;
+			make_visible (a_parent);
+			initialize_transport
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.event_pixmap
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := editor.focus_label
+		end;
+
+	focus_string: STRING is
+		do	
+			Result := Focus_labels.translation_label
+		end;
+
+feature {NONE}
+
+	process_event (dropped: EVENT_STONE) is
 		local
 			translation: TRANSLATION;
 		do
-			translation ?= stone.original_stone;
-			if not (translation = Void) then
+			translation ?= dropped.data;
+			if translation /= Void then
 				editor.set_edited_translation (translation);
 			end;
+		end;
+
+	execute (arg: ANY) is
+		local
+			transl_add: TRANSL_ADD;
+			edited_translation: TRANSLATION
+		do
+			!!transl_add;
+			!!edited_translation.make;
+			edited_translation.generate_internal_name;
+			editor.set_edited_translation (edited_translation);
+			transl_add.execute (edited_translation);
 		end;
 
 end

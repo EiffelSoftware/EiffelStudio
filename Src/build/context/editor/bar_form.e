@@ -56,6 +56,11 @@ feature {NONE}
 			Result := Context_const.bar_sm_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.submenu_format_nbr
+		end;
+
 	apply is
 		do
 		end;

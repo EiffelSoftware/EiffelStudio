@@ -23,7 +23,7 @@ feature
 
 	eiffel_type: STRING is "LABEL";
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.label_type
 		end;

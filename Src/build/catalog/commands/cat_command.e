@@ -10,9 +10,9 @@ inherit
 	
 feature {NONE}
 
-	page: ICON_BOX [STONE];
+	page: ICON_BOX [DATA];
 
-	element: STONE;
+	element: DATA;
 
 	work (argument: ANY) is	
 		do

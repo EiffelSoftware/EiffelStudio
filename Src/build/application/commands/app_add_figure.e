@@ -41,7 +41,7 @@ feature
 			if not figures.after then
 				figures.remove
 			end;
-			transitions.remove_element (figure.original_stone);
+			transitions.remove_element (figure.data);
 			if 			-- currently selected
 				sel_figure = figure
 			then
@@ -56,7 +56,7 @@ feature {NONE}
 
 	do_specific_work is
 			-- Add figure to the figures and draw it, and 
-			-- update the transitions with the figures original_stone. 
+			-- update the transitions with the figures data. 
 		local
 			figures: APP_FIGURES;
 			transitions: TRANSITION;
@@ -64,7 +64,7 @@ feature {NONE}
 		do
 			figures := application_editor.figures;
 			transitions := application_editor.transitions;
-			transitions.init_element (figure.original_stone); 
+			transitions.init_element (figure.data); 
 			figures.append (figure); 
 			!!point;
 			point.set (x, y);

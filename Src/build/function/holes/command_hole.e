@@ -13,14 +13,13 @@ class COMMAND_HOLE
 
 inherit
 
-	LABELS;
 	ELMT_HOLE
 		rename
 			make as elmt_hole_make
 		redefine
-			stone, associated_function,
+			associated_function,
 			associated_symbol, associated_label,
-			compatible
+			stone_type, process_instance
 		end
 
 
@@ -36,12 +35,9 @@ feature
 			elmt_hole_make (a_parent, func);
 		end;
 
-	stone: CMD_INST_STONE;
-	
-	compatible (s: CMD_INST_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.instance_type
 		end;
 
 feature {NONE}
@@ -55,7 +51,12 @@ feature {NONE}
 
 	associated_label: STRING is
 		do
-			Result := Command_label
-		end
+			Result := Widget_names.command_label
+		end;
+
+	process_instance (cmd_instance: CMD_INST_STONE) is
+        do
+            associated_function.update_output_hole (cmd_instance);
+        end;
 
 end

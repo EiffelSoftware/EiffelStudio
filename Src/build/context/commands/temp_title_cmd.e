@@ -33,11 +33,9 @@ feature {NONE}
 		local
 			new_title: STRING;
 		do
-			if not (old_title = Void) then
-				new_title := context.title;
-				context.set_title (old_title);
-				old_title := new_title;
-			end;
+			new_title := context.title;
+			context.set_visual_name (old_title);
+			old_title := new_title;
 		end;
 
 end

@@ -8,9 +8,6 @@ inherit
 			realize as shell_realize,
 			make as top_shell_make,
 			destroy as shell_destroy
-		export
-			{NONE} all;
-			{ANY} raise, set_x_y, x, y, width, height, set_size
 		end;
 	TOP_SHELL
 		redefine
@@ -43,6 +40,27 @@ creation
 
 	make
 
+feature -- Input/output
+
+	input_hole: CONTEXT_HOLE; 
+	input_stone: FUNC_CON_STONE; 
+
+	output_hole: BEHAVIOR_HOLE;
+	output_stone: FUNC_BEH_STONE;
+
+	input_list: CON_BOX;
+	output_list: B_BOX;
+
+feature -- Edited features
+
+	edited_function: STATE;
+
+	set_edited_function (f: like edited_function) is
+		do
+			old_set_edited_function (f);
+			update_title
+		end;
+
 feature 
 
 	empty: BOOLEAN is
@@ -56,8 +74,6 @@ feature
 			shell_destroy
 		end;
 	
-feature 
-
 	reset_stones is
 		do
 			input_stone.reset;
@@ -71,19 +87,17 @@ feature
 		end;
 
 	clear is
-		local
-			void_state: STATE
 		do
 			old_clear;
 			set_title (Widget_names.state_editor);
 			set_icon_name (Widget_names.state_editor);
-			menu_bar.set_function (void_state);
 		end;
 
-	set_edited_function (f: like edited_function) is
+
+	realize is
 		do
-			old_set_edited_function (f);
-			update_title
+			shell_realize;
+			hide_stones;
 		end;
 
 	update_title is
@@ -98,53 +112,6 @@ feature
 			set_icon_name (tmp)
 		end;
 
--- ***************
--- Anchor features
--- ***************
-
-	
-feature {NONE}
-
-	input_hole: CONTEXT_HOLE; 
-	input_stone: FUNC_CON_STONE; 
-
-	output_hole: BEHAVIOR_HOLE;
-	output_stone: FUNC_BEH_STONE;
-
-	
-feature 
-
-	input_list: CON_BOX;
-	output_list: B_BOX;
-	
-	
-feature {NONE}
-
-	menu_bar: STATE_BAR;
-	
-	
-feature 
-
-	edited_function: STATE;
-
--- ********************
--- EiffelVision Section
--- ********************
-
-	make (a_name: STRING; a_screen: SCREEN) is
-		local
-			del_com: DELETE_WINDOW
-		do
-			top_shell_make (a_name, a_screen);
-			set_title (a_name);
-			set_icon_name (a_name);
-			set_icon_pixmap (Pixmaps.state_pixmap);
-			initialize (Widget_names.form, Current);
-			!! del_com.make (Current);
-			set_delete_command (del_com);
-		end;
-
-	
 feature {NONE}
 
 	focus_label: FOCUS_LABEL is
@@ -165,21 +132,21 @@ feature {NONE}
 			input_stone.make_visible (a_parent);
 		end;
 
+feature {NONE} -- Interface
+
+	menu_bar: STATE_BAR;
 	
-feature 
-
-	realize is
+	make (a_name: STRING; a_screen: SCREEN) is
+		local
+			del_com: DELETE_WINDOW
 		do
-			shell_realize;
-			hide_stones;
-			if (edited_function = Void) then
-				menu_bar.hide_edit_stone
-			end
-		end;
-
-	update_name is
-		do
-			menu_bar.update_name
+			top_shell_make (a_name, a_screen);
+			set_title (a_name);
+			set_icon_name (a_name);
+			set_icon_pixmap (Pixmaps.state_pixmap);
+			initialize (Widget_names.form, Current);
+			!! del_com.make (Current);
+			set_delete_command (del_com);
 		end;
 
 end

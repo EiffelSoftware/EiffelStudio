@@ -16,11 +16,18 @@ feature
 
 	retrieved_data: LINKED_LIST [LINKED_LIST [USER_CMD]];
 
-	store (file_name: STRING) is
+	file_name: STRING is
+		do
+			Result := Environment.commands_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		do
 			retrieved := Void;
 			build_stored_data;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_data := Void
 		end;
 
@@ -60,14 +67,14 @@ feature {NONE}
 	
 feature 
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		local
 			sc: S_COMMAND;
 			cmd: USER_CMD;
 			cmd_list: LINKED_LIST [USER_CMD];
 			sc_list: LINKED_LIST [S_COMMAND];
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			stored_data := retrieved.stored_data;
 			!!retrieved_data.make;
 			from
@@ -108,7 +115,7 @@ feature
 				loop
 					sc := sc_list.item;
 					cmd := cmd_list.item;
-					sc.update (cmd, file_name);
+					sc.update (cmd, dir_name);
 					cmd_list.forth;
 					sc_list.forth
 				end;

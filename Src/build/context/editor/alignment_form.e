@@ -111,7 +111,7 @@ feature {ALIGNMENT_HOLE}
 			until
 				found or else context_list.after
 			loop
-				if context_list.item.original_stone = item then
+				if context_list.item.data = item then
 					found := true
 				else
 					context_list.forth
@@ -137,7 +137,7 @@ feature {NONE}
 			list_width, list_height: INTEGER;
 			i: INTEGER;
 		do
-			if reference.stone /= Void then
+			if reference.context /= Void then
 				ref_context := reference.context;
 				list_width := ref_context.width;
 				list_height := ref_context.height;
@@ -146,7 +146,7 @@ feature {NONE}
 				until	
 					context_list.after
 				loop
-					a_context := context_list.item.original_stone;
+					a_context := context_list.item.data;
 					i := i + 1;
 					if vertical.state then
 						if offset.state then
@@ -203,6 +203,11 @@ feature {NONE}
 	form_number: INTEGER is
 		do
 			Result := Context_const.alignment_form_nbr
+		end;
+
+	format_number: INTEGER is
+		do
+			Result := Context_const.align_format_nbr
 		end;
 
 	command: ALIGNMENT_CMD is

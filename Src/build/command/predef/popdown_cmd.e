@@ -4,42 +4,37 @@ class POPDOWN_CMD
 
 inherit
 
-	PREDEF_CMD_IDENTIFIERS;
-	PREDEF_CMD;
-	WINDOWS
+	PREDEF_CMD
 
 creation
 
 	make
 
-	
 feature 
+
+	eiffel_type: STRING is "Popdown_cmd";
 
 	identifier: INTEGER is
 		do
 			Result := - popdown_cmd_id
 		end;
 
-	eiffel_type: STRING is "Popdown_cmd";
-
-	make is
+	arguments: EB_LINKED_LIST [ARG] is
 		local
 			arg: ARG;
-			lab: CMD_LABEL
-		do
-			!!arguments.make;
-			!!labels.make;
-			!!lab.make ("popdown");
-			labels.extend (lab);
-			!!arg.session_init (context_catalog.temp_wind_type);
-			arguments.extend (arg);
-			set_symbol (Pixmaps.windows_pixmap);
-			set_label (eiffel_type);
-			predefined_command_table.put (Current, identifier * -1)
+		once
+			!! Result.make;
+			!! arg.session_init (context_catalog.temp_wind_type);
+			Result.extend (arg);
 		end;
 
-	arguments: EB_LINKED_LIST [ARG];
-
-	labels: EB_LINKED_LIST [CMD_LABEL];
+	labels: EB_LINKED_LIST [CMD_LABEL] is
+		local
+			lab: CMD_LABEL
+		once
+			!! Result.make;
+			!! lab.make ("popdown");
+			Result.extend (lab);
+		end;
 
 end

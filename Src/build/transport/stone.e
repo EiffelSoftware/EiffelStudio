@@ -1,35 +1,52 @@
---=========================== class STONE ==========================
---
--- Author: Deramat
--- Last revision: 03/30/92
---
 -- General notion of stone, i.e. element that may transported
--- and dropped into a hole. 
--- Each stone caries at least a symbol (pixmap) and a label (plain text).
--- and usually more specific information about a given interface 
--- specification object.
--- The source of the stone, i.e. the widget which, when clicked on with
--- the right mouse button, initializes the transport must be defined in
--- descendants.
---
---===================================================================
+-- and dropped into a hole.
+-- Each stone carries data which has specific information about 
+-- stone object.
 
-deferred class STONE 
+deferred class STONE
 
 inherit
 
-	STONE_PARENT
-		redefine
-			original_stone
-		end
+	CONSTANTS;
 	
 feature 
 
-	original_stone: STONE is
+	stone: STONE is
+			-- Current stone.
+			--| Convenient routine. Useful when
+			--| merging stone and drag source together
+		do
+			Result := Current
+		ensure
+			result_is_current: Result = Current
+		end;
+
+feature {HOLE}
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		require
+			valid_hole: hole /= Void
+		deferred
+		end;
+
+	stone_type: INTEGER is
+		deferred
+		end;
+
+feature 
+
+	data: DATA is
 			-- Canonical representative of 
 			-- current stone.
 			-- For copy and multiple references 
 			-- purposes.
+		deferred
+		end;
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with 
+			-- current stone during transport.
 		deferred
 		end;
 

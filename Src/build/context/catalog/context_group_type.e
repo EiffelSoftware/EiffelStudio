@@ -11,13 +11,11 @@ inherit
 			dummy_context
 		end
 
-
 creation
 
 	make
-
 	
-feature 
+feature  {NONE}
 
 	make (a_name: STRING; a_context: GROUP_C) is
 			-- create a context type associated with `a_context'
@@ -27,12 +25,8 @@ feature
 			identifier := group.identifier;
 		end;
 
-	
-feature {NONE}
-
 	dummy_context: GROUP_C;
 			-- Reference to a context, descendant of current type
-
 	
 feature 
 

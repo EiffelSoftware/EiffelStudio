@@ -7,11 +7,7 @@ inherit
 		redefine
 			context_data_useful
 		end;
-
 	WINDOWS
-		export
-			{NONE} all
-		end
 	
 feature 
 
@@ -21,14 +17,18 @@ feature
 		end;
 
 
-	work (argument: STONE) is
+	work (argument: ANY) is
 		local
 			button_p_data: BTPRESS_DATA;
+			drag_source: DRAG_SOURCE
 		do
-			if argument.transportable  then
-				argument.update_before_transport;
-				button_p_data ?= context_data;
-				main_panel.base.transport (argument, button_p_data.absolute_x, button_p_data.absolute_y)
+			button_p_data ?= context_data;
+			drag_source ?= argument;
+			if drag_source.transportable then
+				drag_source.update_before_transport;
+				main_panel.base.transport (drag_source.stone, 
+					button_p_data.absolute_x, 
+					button_p_data.absolute_y)
 			end
 		end;
 

@@ -50,16 +50,17 @@ feature {NONE}
 	import_application (import_window: IMPORT_WINDOW) is
 		local
 			import_directory: STRING;
-			import_path_name: FILE_NAME;
+			import_path: PLAIN_TEXT_FILE;
 			mp: MOUSE_PTR;
 		do
 			if not rescued then
 				clear_uneeded;
 				import_directory := clone (import_window.file_selec.selected_file);
-				if import_directory /= Void and then not import_directory.empty then
-					!!import_path_name.make (import_directory.count);
-					import_path_name.from_string (import_directory);
-					if import_path_name.exists then
+				if import_directory /= Void and then not 
+					import_directory.empty 
+				then
+					!!import_path.make (import_directory);
+					if import_path.exists then
 						import_from_file (import_window)
 					else
 						error_box.popup (Current, 	
@@ -190,13 +191,7 @@ feature {NONE}
 				application_storer.retrieve (fn);
 
 				application_storer.rebuild_graph;
-				if app_editor.realized and then
-					app_editor.shown
-				then
-					app_editor.draw_figures;
-				end;
-				app_editor.display_states;
-				app_editor.display_transitions;
+				app_editor.update_display;
 			end;
 			retrieved_contexts := Void;
 			retrieved_commands := Void;

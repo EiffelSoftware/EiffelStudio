@@ -27,17 +27,16 @@ feature {NONE}
 
 	load_colors is
 		local
-			eb_color: EB_COLOR;
+			eb_color: COLOR_STONE;
 			position: INTEGER;
 			color_name_file: PLAIN_TEXT_FILE;
-			file_name: FILE_NAME;
+			file: PLAIN_TEXT_FILE;
 			temp: STRING;
-			top_widget, left_widget: EB_COLOR;
+			top_widget, left_widget: COLOR_STONE;
 		do
 			temp := Environment.color_names_file;
-			!! file_name.make (0);
-			file_name.from_string (temp);
-			if file_name.exists and file_name.readable then
+			!! file.make (temp);
+			if file.exists and file.is_readable then
 				from
 					!!color_name_file.make_open_read (temp);
 					color_name_file.readline;

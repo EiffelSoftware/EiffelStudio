@@ -21,17 +21,15 @@ feature {NONE}
 			Result := Command_names.cont_fg_color_cmd_name
 		end;
 
-	old_fg_color: STRING;
+	old_fg_color_name: STRING;
 
-	old_color: COLOR
-
-	pixel_value: POINTER;
+	default_color: COLOR
 
 	context_work is
 		do
-			old_fg_color := context.fg_color_name
-			if (old_fg_color = Void) then
-				old_color := context.widget.foreground_color
+			old_fg_color_name := context.fg_color_name
+			if (old_fg_color_name = Void) then
+				default_color := context.default_foreground_color
 			end
 		end
 
@@ -40,11 +38,11 @@ feature {NONE}
 			new_fg_color: STRING
 		do
 			new_fg_color := context.fg_color_name
-			context.set_fg_color_name (old_fg_color)
-			if old_fg_color = Void then
-				context.widget.set_foreground_color (old_color)
+			context.set_fg_color_name (old_fg_color_name)
+			if old_fg_color_name = Void then
+				context.set_default_foreground_color (default_color)
 			end
-			old_fg_color := new_fg_color
+			old_fg_color_name := new_fg_color
 		end
 
 end

@@ -3,33 +3,63 @@ class BEHAVIOR
 
 inherit
 
-	BEHAVIOR_STONE;
 	FUNCTION
 		redefine
 			func_editor, 
-			input_stone, output_stone
+			input_data, output_data
 		end;
 
 creation
 
 	make
 
--- ************
--- Anchor types
--- ************
+feature {NONE}
 
+	make is
+		do
+			!!input_list.make;
+			!!output_list.make;
+			int_generator.next;
+			identifier := int_generator.value;
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.behavior_pixmap_small
+		end;
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.behavior_help_fn
+		end;
 	
 feature 
 
-	input_stone: EVENT;
+	input_data: EVENT;
 
-	output_stone: CMD_INSTANCE;
+	output_data: CMD_INSTANCE;
 
 	func_editor: BEHAVIOR_EDITOR;
 
--- **************
--- Command labels
--- **************
+feature -- Query
+
+	has_command (cmd: CMD): BOOLEAN is
+		local
+			old_pos: INTEGER;
+		do
+			old_pos := output_list.index;
+			from
+				output_list.start
+			until
+				output_list.after 
+			loop
+				Result := output_list.item.associated_command = cmd;
+				output_list.forth
+			end;
+			output_list.go_i_th (old_pos)
+		end;
+
+feature -- Command labels
 
 	labels: LINKED_LIST [CMD_LABEL] is
 			-- Command labels contained in Current
@@ -40,12 +70,12 @@ feature
 		do
 			!!Result.make;
 			from
-				old_pos := position;
-				start
+				old_pos := output_list.index;
+				output_list.start
 			until
-				off
+				output_list.after
 			loop
-				sublist := output.labels;
+				sublist := output_list.item.labels;
 				from
 					sublist.start
 				until
@@ -54,33 +84,20 @@ feature
 					Result.put_right (sublist.item);
 					sublist.forth
 				end;
-				forth
+				output_list.forth
 			end;
-			go_i_th (old_pos)
-		end;
-
--- ********
--- Creation
--- ********
-
-	make is
-		do
-			set_symbol (Pixmaps.behavior_pixmap_small);
-			!!input_list.make;
-			!!output_list.make;
-			int_generator.next;
-			identifier := int_generator.value;
+			output_list.go_i_th (old_pos)
 		end;
 
 	set_internal_name (s: STRING) is
-        do
-            if s.empty then
-                namer.next;
-                set_label (namer.value)
-            else
-                set_label (s);
-            end;
-        end;
+		do
+			if s.empty then
+				namer.next;
+				set_label (namer.value)
+			else
+				set_label (s);
+			end;
+		end;
 	
 feature {NONE}
 
@@ -95,11 +112,7 @@ feature {NONE}
 			!!Result.make ("Behavior")
 		end;
 
--- ****************
--- Editing features
--- ****************
-	
-feature 
+feature  -- Editing features
 
 	label: STRING;
 
@@ -109,7 +122,7 @@ feature
 	set_context (c: CONTEXT_STONE) is
 			-- Set context to `c'.
 		do
-			context := c.original_stone
+			context := c.data
 		end;
 
 	copy_lists (func: like Current) is
@@ -122,21 +135,11 @@ feature
 			label := s
 		end;
 
--- **************
--- Stone features
--- **************
-
-	
-feature {NONE}
-
-	source: WIDGET is do end;
-
-	
-feature 
+feature -- Datum features
 
 	identifier: INTEGER;
 
-	original_stone: BEHAVIOR is
+	data: BEHAVIOR is
 		do
 			Result := Current
 		end;

@@ -49,7 +49,7 @@ feature
 			editor ?= argument;
 			context ?= editor.edited_context;
 			context_work;
-			editor.current_form.apply;
+			editor.apply_current_form;
 		end;
 
 	
@@ -74,7 +74,7 @@ feature
 			context_undo;
 			editor := context_catalog.editor (context, associated_form);
 			if editor /= Void then
-				editor.current_form.reset
+				editor.reset_current_form
 			end;
 		end;
 

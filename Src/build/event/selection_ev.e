@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.selection_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.selection_pixmap);
-			set_label (Event_const.selection_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.selection_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.selection_label
 		end;
 
 	eiffel_text: STRING is "add_selection_action (";	

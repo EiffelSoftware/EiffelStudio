@@ -9,7 +9,7 @@ inherit
 		redefine
 			associated_catalog, 
 			new_icon, create_new_icon, 
-			button, create_button
+			button
 		end;
 	WINDOWS;
 	ERROR_POPUPER
@@ -33,11 +33,6 @@ feature {NONE}
 	create_new_icon is
 		do
 			!!new_icon.make (Current);
-		end;
-
-	create_button is
-		do
-			!!button.make (Current, associated_catalog.button_rc)
 		end;
 
 feature 

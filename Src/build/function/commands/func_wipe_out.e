@@ -7,7 +7,7 @@ inherit
 		
 feature {NONE}
 
-	input_list, output_list: EB_LINKED_LIST [STONE];
+	input_list, output_list: EB_LINKED_LIST [DATA];
 
     c_name: STRING is
         do

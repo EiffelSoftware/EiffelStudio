@@ -28,6 +28,7 @@ feature
 	generate_code_label: STRING is "generate code";
 	geometry_label: STRING is "geometry";
 	grid_label: STRING is "grid";
+	group_label: STRING is "create group";
 	groups_label: STRING is "groups";
 	help_label: STRING is "help";
 	import_code_label: STRING is "import EiffelBuild code";
@@ -36,7 +37,8 @@ feature
 	listen_label: STRING is "listen";
 	menus_label: STRING is "menus";
 	merge_label: STRING is "merge";
-	mouse_label: STRING is "mouse"
+	mouse_label: STRING is "mouse";
+	namer_label: STRING is "namer";
 	parent_label: STRING is "parent";
 	primitives_label: STRING is "primitives";
 	quit_label: STRING is "exit application";
@@ -55,6 +57,7 @@ feature
 	text_label: STRING is "text";
 	text_field_label: STRING is "text field";
 	translation_label: STRING is "translation";
+	transition_line_label: STRING is "transition line";
 	user_label: STRING is "user ";
 	wastebasket_label: STRING is "wastebasket"
 	windows_label: STRING is "windows";

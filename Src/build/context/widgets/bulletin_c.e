@@ -5,7 +5,7 @@ inherit
 	COMPOSITE_C
 		redefine
 			widget, stored_node, is_bulletin,
-			original_stone, intermediate_name
+			data, intermediate_name
 		end
 	
 feature 
@@ -15,7 +15,7 @@ feature
 			Result := Pixmaps.bulletin_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.set_page.bulletin_type
 		end
@@ -27,7 +27,7 @@ feature
 			set_size (40, 40)
 		end
 
-	widget: EBUILD_BULLETIN
+	widget: EB_BULLETIN
 
 feature {NONE}
 
@@ -94,7 +94,7 @@ feature
 	transformed_in_group: BOOLEAN
 		-- For the callbacks in the selection manager
 
-	original_stone: CONTEXT is
+	data: CONTEXT is
 		do
 			if transformed_in_group then
 				Result := group_context

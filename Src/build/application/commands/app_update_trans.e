@@ -102,8 +102,8 @@ feature {NONE}
 				then
 					dest_figure := lines.line.destination;
 					source_circle ?= lines.line.source;
-					source_element := source_circle.original_stone;
-					dest_element := dest_figure.original_stone;
+					source_element := source_circle.data;
+					dest_element := dest_figure.data;
 					old_dest_element := transitions.destination_element (source_element, cmd_label);
 					if
 						not (old_dest_element = dest_element)
@@ -115,8 +115,8 @@ feature {NONE}
 			else
 				source_circle ?= application_editor.selected_figure;
 				dest_figure := figures.figure;
-				source_element := source_circle.original_stone;
-				dest_element := dest_figure.original_stone;
+				source_element := source_circle.data;
+				dest_element := dest_figure.data;
 				old_dest_element := transitions.destination_element (source_element, cmd_label);
 				if
 					not (old_dest_element = dest_element)
@@ -138,7 +138,7 @@ feature {NONE}
 			sel_figure := application_editor.selected_figure;
 			if
 				not (sel_figure = Void) and
-				(sel_figure.original_stone = source_element)
+				(sel_figure.data = source_element)
 			then
 				application_editor.display_transitions		
 			end;

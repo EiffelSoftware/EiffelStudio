@@ -33,6 +33,12 @@ feature
 			-- and pop it up at the pointer position.
 		do
 			fill (l);
+			set_y (eb_screen.y);
+			if eb_screen.x + width > eb_screen.width then
+				set_x (eb_screen.width - width);
+			else
+				set_x (eb_screen.x);
+			end
 			set_x_y (eb_screen.x, eb_screen.y);
 			old_popup;
 		end;
@@ -42,9 +48,7 @@ feature {NONE}
 	fill (l: LINKED_LIST [STRING]) is
 		do
 			list.wipe_out;
-			if
-				l.empty
-			then
+			if l.empty then
 				list.put_right ("Cancel");
 				list.forth;
 				list.put_right ("--no items--");
@@ -62,7 +66,11 @@ feature {NONE}
 					l.forth;
 					list.forth
 				end;
-				list.set_visible_item_count (list.count);
+				if list.count >= 10 then
+					list.set_visible_item_count (10);
+				else
+					list.set_visible_item_count (list.count);
+				end
 			end
 		end;	
 
@@ -75,6 +83,7 @@ feature -- EiffelVision
 			!!list.make (Widget_names.list, Current);
 			allow_resize;
 			list.add_selection_action (Current, Void);
+			set_exclusive_grab
 		end;
 
 feature {NONE}

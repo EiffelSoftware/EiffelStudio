@@ -11,7 +11,7 @@ inherit
 
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.toggle_b_type
 		end;
@@ -19,6 +19,7 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
+			set_left_alignment (False);
 			widget.forbid_recompute_size;
 		end;
 
@@ -44,9 +45,13 @@ feature
 -- Storage features
 -- ****************
 
-	stored_node: S_TOGGLE_B is
+	stored_node: S_TOGGLE_B_R1 is
+		local
+			foobar: S_TOGGLE_B
 		do
 			!!Result.make (Current);
+			if foobar = Void then end;
+				-- So it won't be dead code removed
 		end;
 
 end

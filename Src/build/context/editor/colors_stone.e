@@ -37,12 +37,10 @@ feature
 			if (not (bg_color_name = Void) and then not bg_color_name.empty) or else
 				(not (fg_color_name = Void) and then not fg_color_name.empty) then
 				!!cmd.make (command);
-				cmd.execute (new_context);
-				modify_contexts (new_context);
+				cmd.execute (editor);
 			end;
 		end;
 
-	
 feature {NONE}
 
 	modify_context (new_context: CONTEXT) is

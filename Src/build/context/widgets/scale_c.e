@@ -27,7 +27,7 @@ feature
 			Result := Pixmaps.scale_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.primitive_page.scale_type
 		end;

@@ -10,8 +10,8 @@ feature {NONE}
 	position: INTEGER;
 			-- Position of the removed element
 
-	input_stone, output_stone: STONE;
-			-- Input and output stones removed from box
+	input_data, output_data: DATA;
+			-- Input and output datum removed from box
 
 	c_name: STRING is
 		do
@@ -20,33 +20,33 @@ feature {NONE}
 
 	redo_work is
 		do
-			edited_function.remove_element_line (input_stone, False)
+			edited_function.remove_element_line (input_data, False)
 		end; -- redo
 
 	undo_work is
 		do
-			edited_function.add_element_line (position, input_stone,
-							output_stone);
+			edited_function.add_element_line (position, input_data,
+							output_data);
 		end; -- undo
 
 	function_work is
 		local
-			input_list, output_list: EB_LINKED_LIST [STONE]
+			input_list, output_list: EB_LINKED_LIST [DATA]
 		do
 			input_list := edited_function.input_list;
 			output_list := edited_function.output_list;
 			position := input_list.index;
-			input_stone := input_list.item.original_stone;
-			output_stone := output_list.item.original_stone;
+			input_data := input_list.item;
+			output_data := output_list.item;
 			update_history
 		end; -- function_work
 
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (input_stone.label);
+			Result.append (input_data.label);
 			Result.append (" and ");
-			Result.append (output_stone.label);
+			Result.append (output_data.label);
 		end; -- worked_on
 
 end

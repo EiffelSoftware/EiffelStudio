@@ -19,21 +19,16 @@ feature {NONE}
 			!!new_icon.make (Current);
 		end;
 
-	create_button is
-		do
-			!! button
-		end;
-	
 feature 
 
 	hide_button is 
 		do 
-			button.hide 
+			button.unmanage 
 		end;
 
 	show_button is 
 		do 
-			button.show 
+			button.manage 
 		end;
 
 end -- class EVENT_PAGE   

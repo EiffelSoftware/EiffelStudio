@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.key_release_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.key_release_pixmap);
-			set_label (Event_const.key_release_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.key_release_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.key_release_label
 		end;
 
 	eiffel_text: STRING is "add_key_release_action (";	

@@ -6,8 +6,7 @@ inherit
 	MERGE_HOLE
 		redefine
 			associated_function,
-			function,
-			set_function
+			process_state
 		end
 
 creation
@@ -21,9 +20,16 @@ feature {NONE}
 	associated_function: STATE_EDITOR;
 			-- Function associated with current hole
 
-	set_function is
+	stone_type: INTEGER is
 		do
-			function ?= stone.original_stone
-		end; -- set_function;
+			Result := Stone_types.state_type
+		end;
+
+	process_state (dropped: STATE_STONE) is
+		do
+			if associated_function.edited_function /= dropped.data then
+				associated_function.edited_function.merge (dropped.data)
+			end
+		end;
 
 end

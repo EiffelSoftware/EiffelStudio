@@ -7,7 +7,8 @@ inherit
 		redefine
 			inner_figure, outer_figure, text
 		end;
-	STATE_STONE
+	STATE_STONE;
+	REMOVABLE
 
 creation
 
@@ -15,13 +16,24 @@ creation
 	
 feature -- Creation
 
-    make is
-            -- Create the figures.
-        do
-            !!inner_figure.make;
-            !!outer_figure.make;
-            !!text_image.make;
-        end; -- create
+	data: STATE;
+
+	make is
+			-- Create the figures.
+		do
+			!!inner_figure.make;
+			!!outer_figure.make;
+			!!text_image.make;
+		end; -- create
+
+	remove_yourself is
+			-- Remove source_figure.
+		local
+			cut_figure_command: APP_CUT_FIGURE;
+		do
+			!!cut_figure_command;
+			cut_figure_command.execute (Current)
+		end;
 
 feature
 
@@ -36,22 +48,18 @@ feature
 		end;
 
  	set_stone (state: STATE) is
-			-- Set original_stone to `state' and update the
-			-- text to the original_stone label.
+			-- Set data to `state' and update the
+			-- text to the data label.
 		require else
 				not_void_state: not (state = Void)
 		do
-			original_stone := state;
+			data := state;
 			update_text
 		end; -- set_stone
 
 	update_text is
 		do
-			if not (original_stone.visual_name = Void) then
-				text_image.set_text (original_stone.visual_name);
-			else
-				text_image.set_text (original_stone.internal_name);
-			end;
+			text_image.set_text (label);
 			text_image.set_middle_center (center)
 		end;
 
@@ -60,7 +68,16 @@ feature
 			Result := outer_figure.radius
 		end;
 
-	original_stone: STATE;
+	set_center (p: COORD_XY_FIG) is
+			-- Set the center of the figure and the 
+			-- text_image field.
+		do
+			inner_figure.set_center (p);
+			outer_figure.set_center (p);
+			if text_image.drawing /= Void then
+				text_image.set_middle_center (p);
+			end;
+		end
 
 	moving_figure: CIRCLE is
 			-- Create a new circle. This circle has the same radius and
@@ -92,50 +109,15 @@ feature
 			outer_figure.set_radius (i);
 		end;
 
-	set_center (p: COORD_XY_FIG) is
-				-- Set the center of the circle and the
-				-- text_image field.
-		do
-			inner_figure.set_center (p);
-			outer_figure.set_center (p);
-			text_image.set_middle_center (p);
-		end; -- set_center
-
-	
-	
 feature 
 
 	text: STRING is
 			-- Text of Current.
 		require else
-			not_void_original_stone: not (original_stone = Void)
+			not_void_data: not (data = Void)
 		do
 			Result := label 
 		end; -- text
-
-feature -- Stone
-
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
-
-feature {NONE}
-
-	symbol: PIXMAP  is
-		do
-			Result := original_stone.symbol
-		end;
-
-	labels: LINKED_LIST [CMD_LABEL] is
-		do
-			Result := original_stone.labels
-		end;
 
 feature {NONE}
 

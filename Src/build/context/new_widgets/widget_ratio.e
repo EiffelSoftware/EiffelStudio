@@ -8,73 +8,97 @@ inherit
 			{NONE} all
 		end
 
-
 creation
 
-	make
+	make, make_with_widget
 
-	
-feature 
+feature  {NONE}
 
-	make (a_widget: WIDGET) is
+	make (a_widget: WIDGET; 
+			to_foll_x, to_foll_y,
+			width_res, height_res: BOOLEAN) is
 		do
 			widget := a_widget;
-			is_x_fixed := True;
-			is_y_fixed := True;
+			to_follow_x := to_foll_x;
+			to_follow_y := to_foll_y;
+			is_width_resizeable := width_res;
+			is_height_resizeable := height_res
 		end;
 
-	set_ratios (parent_width, parent_height ,x, y, w, h: INTEGER) is
+	make_with_widget (a_widget: WIDGET) is
 		do
-			x_ratio := x / parent_width;
-			y_ratio := y / parent_height;
-			width_ratio := w / parent_height;
-			height_ratio := h / parent_height;
-			initialized := True;
+			widget := a_widget
 		end;
 
-	initialized: BOOLEAN;
+feature
 
-	
+	set_ratios (parent_width, parent_height: INTEGER) is
+		require
+			valid_parent_width: parent_width > 0;
+			valid_parent_height: parent_height > 0;
+		do
+			x_ratio := widget.x / parent_width;
+			y_ratio := widget.y / parent_height;
+			width_ratio := widget.width / parent_width;
+			height_ratio := widget.height / parent_height;
+		end;
+
 feature {NONE}
 
+		
 	is_width_resizeable: BOOLEAN;
 	is_height_resizeable: BOOLEAN;
-	is_x_fixed: BOOLEAN;
-	is_y_fixed: BOOLEAN;
-
+	to_follow_x: BOOLEAN;
+	to_follow_y: BOOLEAN;
 	
+		-- Ratios
+	x_ratio: REAL;
+	y_ratio: REAL;
+	width_ratio: REAL;
+	height_ratio: REAL;
+
 feature 
 
-	useless: BOOLEAN is
-			-- The widget ratio is useless in the list,
-			-- i.e. the widget geometry will not be
-			-- modified if the size of the parent is modified
-		do
-			Result := is_x_fixed and is_y_fixed and
-				not is_width_resizeable and
-				not is_height_resizeable
-		end;
+	widget: WIDGET;
 
 	update_widget (parent_width, parent_height: INTEGER) is
 		require
 			widget_not_destroyed: not widget.destroyed
 		do
 			if widget.managed then
-				widget.set_managed (False);
+				if widget.managed then
+					widget.unmanage
+				end;
 				if is_width_resizeable then
-					widget.set_width (real_to_integer (parent_width * width_ratio));
+					widget.set_width (real_to_integer 
+							(parent_width * width_ratio));
 				end;
 				if is_height_resizeable then
-					widget.set_height (real_to_integer (parent_height * height_ratio));
+					widget.set_height (real_to_integer
+							(parent_height * height_ratio));
 				end;
-				if not is_x_fixed then
-					widget.set_x (real_to_integer (parent_width * x_ratio));
+				if to_follow_x then
+					widget.set_x (real_to_integer
+							(parent_width * x_ratio));
 				end;
-				if not is_y_fixed then
-					widget.set_y (real_to_integer (parent_height * y_ratio));
+				if to_follow_y then
+					widget.set_y (real_to_integer
+							(parent_height * y_ratio));
 				end;
-				widget.set_managed (True);
+				widget.manage
 			end;
+		end;
+
+feature {SCALABLE}
+
+	useless: BOOLEAN is
+		-- The widget ratio is useless in the list,
+		-- i.e. the widget geometry will not be
+		-- modified if the size of the parent is modified
+		do
+			Result := not to_follow_x and not to_follow_y and
+				not is_width_resizeable and
+				not is_height_resizeable
 		end;
 
 	width_resizeable (flag: BOOLEAN) is
@@ -89,26 +113,13 @@ feature
 
 	follow_x (flag: BOOLEAN) is
 		do
-			is_x_fixed := not flag
+			to_follow_x := flag
 		end;
 
 	follow_y (flag: BOOLEAN) is
 		do
-			is_y_fixed := not flag
+			to_follow_y := flag
 		end;
-
-	widget: WIDGET;
-
-	
-feature {NONE}
-
-	x_ratio: REAL;
-
-	y_ratio: REAL;
-
-	width_ratio: REAL;
-
-	height_ratio: REAL;
 
 end
 

@@ -28,12 +28,35 @@ feature {NONE}
 			Result := Pixmaps.save_pixmap
 		end;
 
+	unsaved_symbol: PIXMAP is
+		do
+			Result := Pixmaps.unsave_pixmap
+		end;
+
 	execute (arg: ANY) is
 		local
 			save_proj: SAVE_PROJECT
 		do
-			!!save_proj;
-			save_proj.execute (Void);
+			if main_panel.project_initialized then
+				!!save_proj;
+				save_proj.execute (Void);
+			end
 		end
+
+feature
+
+	set_saved_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end;
+
+	set_unsaved_symbol is
+		do
+			if pixmap /= unsaved_symbol then
+				set_symbol (unsaved_symbol)
+			end
+		end;
 
 end

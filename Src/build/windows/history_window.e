@@ -53,20 +53,36 @@ feature
 
 	set_unsaved_application is
 		do
-			saved_application := False;
+			set_unsaved;
 			last_command_saved := Void;
 		end;
 
 	set_saved_application is
 			-- Set saved_application to True.
 		do
-			saved_application := True;
+			set_saved;
 			if list.selected_item /= Void then
 				last_command_saved := history_list.last;
 			else
 				last_command_saved := Void
 			end;
 		end;
+
+feature {NONE}
+
+	set_saved is
+		do
+			saved_application := True
+			main_panel.set_saved_symbol
+		end;
+
+	set_unsaved is
+		do
+			saved_application := False;
+			main_panel.set_unsaved_symbol
+		end;
+
+feature
 
 	forth is
 			-- Move forward in history list
@@ -77,9 +93,9 @@ feature
 				list.forth;
 				select_item;
 				if history_list.item = last_command_saved then
-					saved_application := True
+					set_saved
 				else
-					saved_application := False
+					set_unsaved
 				end;
 				item.redo;
 			end
@@ -98,9 +114,9 @@ feature
 					or ((not history_list.before) 
 						and (history_list.item = last_command_saved))
 				then
-					saved_application := True
+					set_saved
 				else
-					saved_application := False
+					set_unsaved
 				end;
 				if list.before then
 					list.deselect_item
@@ -153,18 +169,14 @@ feature
 			-- item. Remove all commands bellow.
 		local
 			cut_cmd: CONTEXT_CUT_CMD;
-			grp_cmd: GROUP_CMD
 		do
 			remove_tail;
 			if history_list.count = History_count then
 				history_list.start;
 					-- Special case (destroy widgets)
 				cut_cmd ?= history_list.item;
-				grp_cmd ?= history_list.item;
 				if cut_cmd /= Void then
 					cut_cmd.destroy_widgets
-				elseif grp_cmd /= Void then
-					grp_cmd.destroy_widgets
 				end;
 				list.start;
 				list.remove;
@@ -174,9 +186,9 @@ feature
 			end;
 			history_list.put_right (cmd);
 			history_list.forth;
-			list.put_right (cmd.n_ame);
+			list.put_right (cmd.name);
 			list.forth;
-			saved_application := False;
+			set_unsaved;
 			select_item
 		end;
 
@@ -185,7 +197,8 @@ feature {NONE}
 
 	remove_tail is
 		local
-			create_cont: CONTEXT_CREATE_CMD
+			create_cont: CONTEXT_CREATE_CMD;
+			grp_cmd: GROUP_CMD
 		do
 			if (not history_list.islast) and then
 				(not history_list.empty)
@@ -197,8 +210,11 @@ feature {NONE}
 					history_list.after
 				loop
 					create_cont ?= history_list.item;
+					grp_cmd ?= history_list.item;
 					if create_cont /= Void then
 						create_cont.destroy_widgets
+					elseif grp_cmd /= Void then
+						grp_cmd.destroy_widgets
 					end;
 					list.remove;
 					history_list.remove
@@ -296,7 +312,7 @@ feature -- Interface
 			redo_button.add_activate_action (Current, Second);
 			list.add_single_action (Current, Fourth);
 			!!history_list.make;
-			saved_application := True;
+			set_saved;
 
 			list.set_visible_item_count (10);
 			set_title (Widget_names.history_window);

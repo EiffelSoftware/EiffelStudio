@@ -3,9 +3,10 @@ class B_STATE_H
 
 inherit
 
-	ICON_HOLE
+	EB_BUTTON;
+	HOLE
 		redefine
-			stone, set_widget_default, compatible
+			process_state
 		end;
 	WINDOWS;
 	SHARED_APPLICATION;
@@ -15,19 +16,34 @@ creation
 
 	make
 
-	
 feature 
 
-	make (ed: BEHAVIOR_EDITOR) is
+	make (ed: BEHAVIOR_EDITOR; a_parent: COMPOSITE) is
 		do
 			associated_editor := ed;
-			set_symbol (Pixmaps.state_pixmap);
+			make_visible (a_parent);
+			register;
+			add_button_press_action (3, Current, Void);
 		end;
 
-	set_widget_default is
+	symbol: PIXMAP is
 		do
-			register;
-			button.add_button_press_action (2, Current, Void);
+			Result := Pixmaps.state_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.state_label
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := associated_editor.focus_label
+		end;
+
+	target: WIDGET is
+		do
+			Result := Current
 		end;
 
 	set_state (s: STRING) is
@@ -40,35 +56,23 @@ feature
 			end
 		end;
 
-feature {STATES_WND}
-
-	reset_callback is
-		local
-			Nothing: ANY;
-		do
-			button.add_button_press_action (2, Current, Nothing);
-		end;
-
 feature {NONE}
 
 	associated_editor: BEHAVIOR_EDITOR;
-
-	stone: STATE_STONE;
-	
-	compatible (s: STATE_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
 
 	states_wnd: STATES_WND is
 		do
 			!!Result.make (associated_editor.form, Current)
 		end;
 
-	process_stone is
+	stone_type: INTEGER is
 		do
-			update_behavior_editor (stone.original_stone)
+			Result := Stone_types.state_type
+		end;
+
+	process_state (dropped: STATE_STONE) is
+		do
+			update_behavior_editor (dropped.data)
 		end;
 
 	update_behavior_editor (s: STATE) is
@@ -80,7 +84,7 @@ feature {NONE}
 			c := associated_editor.edited_context;
 			s.find_input (c);
 			if not s.after then
-				b := s.output.original_stone
+				b := s.output.data
 			else	
 				!!b.make;
 				b.set_internal_name ("");
@@ -92,10 +96,7 @@ feature {NONE}
 		end;
 
 	execute (argument: ANY) is
-		local
-			Nothing: ANY;
 		do
-			button.remove_button_press_action (2, Current, Nothing);
 			states_wnd.popup (Shared_app_graph.state_names);
 		end;
 

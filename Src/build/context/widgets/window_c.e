@@ -17,7 +17,7 @@ inherit
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name,
 			raise, x, y, set_real_x_y, is_window,
-			add_to_window_list
+			add_to_window_list, retrieve_set_visual_name
 		end;
 	COMPOSITE_C
 		rename
@@ -31,7 +31,7 @@ inherit
 			set_x_y, set_size, set_visual_name,
 			reset_modified_flags,
 			raise, x, y, set_real_x_y, is_window,
-			add_to_window_list
+			add_to_window_list, retrieve_set_visual_name
 		select
 			reset_modified_flags, undo_cut
 		end
@@ -64,7 +64,7 @@ feature -- Setting values
 		do
 			title_modified := True
 			widget_set_title (new_title)
-			visual_name := clone (new_title)
+			visual_name := clone (new_title);
 			update_tree_element
 		end;
 
@@ -111,15 +111,24 @@ feature
 			start_hidden := flag
 		end
 
+	retrieve_set_visual_name (s: STRING) is
+		do
+			visual_name := clone (s);
+			title_modified := True
+			widget_set_title (label)
+		end
+
 	set_visual_name (s: STRING) is
 		do
 			if (s = Void) then
-				visual_name := Void
-				update_tree_element
-				set_title (label)
+				visual_name := Void;
+				title_modified := False
 			else
-				set_title (s)
-			end
+				visual_name := clone (s);
+				title_modified := True
+			end;
+			widget_set_title (label)
+			update_tree_element
 		end
 
 	is_bulletin: BOOLEAN is
@@ -213,12 +222,11 @@ feature
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
 		local
-			void_parent: COMPOSITE
 			create_command: CONTEXT_CREATE_CMD
 		do
 			Result := New
 			Result.generate_internal_name
-			Result.oui_create (void_parent)
+			Result.oui_create (Void)
 				-- Void if context created for catalog
 			if widget /= Void then
 				Result.set_size (width, height)

@@ -9,15 +9,15 @@ feature {NONE}
 
 	find_figure (state: STATE) is
 			-- Move figures cursor to position 
-			-- where figure original_stone
+			-- where figure data
 			-- is equal to `state'; go off right if none.
 		do
 			from
 				figures.start
 			until
 				figures.after or 
-				(figures.figure.original_stone 
-					= state.original_stone)
+				(figures.figure.data 
+					= state.data)
 			loop
 				figures.forth
 			end;

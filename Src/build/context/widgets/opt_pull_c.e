@@ -10,7 +10,7 @@ inherit
 		redefine
 			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, widget, 
-			remove_widget_callbacks, initialize_transport, add_widget_callbacks,
+			initialize_transport, add_widget_callbacks,
 			add_to_option_list
 		end;
 
@@ -18,7 +18,7 @@ inherit
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			remove_widget_callbacks, initialize_transport, add_widget_callbacks,
+			initialize_transport, add_widget_callbacks,
 			add_to_option_list
 		select
 			context_initialization
@@ -26,7 +26,7 @@ inherit
 
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.menu_page.option_btn_type
 		end;
@@ -52,12 +52,6 @@ feature {NONE}
 			widget.button.add_button_press_action (3, transport_command, Current);
 		end;
 
-	remove_widget_callbacks is
-		do
-			widget.button.remove_button_press_action (3, transport_command, Current);
-		end;
-
-	
 feature 
 
 	caption_modified: BOOLEAN;

@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.expose_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.expose_pixmap);
-			set_label (Event_const.expose_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.expose_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.expose_label
 		end;
 
 	eiffel_text: STRING is "add_expose_action (";	

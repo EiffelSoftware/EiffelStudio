@@ -1,5 +1,24 @@
 class CONTEXT_CONSTANTS
 
+feature -- Selected color for widget selection
+
+	selected_color: COLOR is
+			-- Selected color when context
+			-- is control left clicked
+		once
+			!! Result.make;
+			Result.set_name ("grey")
+		end;
+
+	second_selected_color: COLOR is
+			-- Second selected color just in
+			-- case that the current widget
+			-- has the selected color
+		once
+			!! Result.make;
+			Result.set_name ("black");
+		end;
+
 feature -- Format numbers for buttom formats in Context Editor
 
 	geometry_format_nbr: INTEGER is 1

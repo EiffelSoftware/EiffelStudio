@@ -7,7 +7,7 @@ inherit
 	
 feature {NONE}
 
-	catalog: CATALOG [STONE] is
+	catalog: CATALOG [DATA] is
 		deferred
 		end;	
 
@@ -22,15 +22,10 @@ feature
 
 	undo is
 		do
-			if
-				position = 1 and
-				page.empty 
-			then
+			if position = 1 and then page.empty then
 				page.extend (element)
 			else
-				if
-					page.count <= (position - 1)
-				then
+				if page.count <= (position - 1) then
 					page.extend (element)
 				else
 					page.go_i_th (position -1);
@@ -43,7 +38,7 @@ feature
 		local
 			p: like page;
 			found: BOOLEAN;
-			pages: LINKED_LIST [CAT_PAGE [STONE]]
+			pages: LINKED_LIST [CAT_PAGE [DATA]]
 		do
 			page.start;
 			page.search (element);

@@ -3,6 +3,9 @@ class CMD_I_ED_HOLE
 inherit
 
 	EDIT_BUTTON
+		redefine
+			process_instance
+		end
 
 creation
 
@@ -26,6 +29,16 @@ feature {NONE}
 		do
 			editor := window_mgr.cmd_inst_editor;
 			window_mgr.display (editor)
-		end
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.instance_type
+		end;
+
+	process_instance (dropped: CMD_INST_STONE) is
+		do
+			dropped.data.create_editor
+		end;
 	
 end

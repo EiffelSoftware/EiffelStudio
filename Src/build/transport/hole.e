@@ -8,24 +8,21 @@ inherit
 	
 feature 
 
-	stone: STONE;
-			-- Stone present in current
-			-- hole.
-
 	receive (dropped: STONE) is
 			-- Receive dropped stone.
 		require
 			valid_argument: dropped /= Void
 		do
-			if compatible (dropped) then
-				process_stone;
-			end;
+			if stone_type = Stone_types.any_type then
+				process_any (dropped);
+			elseif compatible (dropped) then
+				dropped.process (Current)
+			end
 		end;
 
 	compatible (s: STONE): BOOLEAN is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := s.stone_type = stone_type;
 		end;
 	
 	target: WIDGET is
@@ -47,11 +44,89 @@ feature
 			transporter.register (Current)
 		end;
 
-feature {NONE}
+feature {STONE}
 
-	process_stone is
-			-- Process stone in current hole.
+	stone_type: INTEGER is
+			-- Stone type that Current hole accepts
 		deferred
 		end;
-	
+
+	process_new_state is
+		do
+		end;
+
+	process_attribute (dropped: ATTRIB_STONE) is
+			-- Accept all stone types
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_any (dropped: STONE) is
+			-- Accept all stone types
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_behavior (dropped: BEHAVIOR_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_color (dropped: STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_command (dropped: CMD_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_event (dropped: EVENT_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_label (dropped: LABEL_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_instance (dropped: CMD_INST_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_state (dropped: STATE_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_transition (dropped: TRANS_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
+	process_type (dropped: TYPE_STONE) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
 end

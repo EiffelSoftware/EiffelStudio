@@ -43,6 +43,7 @@ feature {NONE}
 		do
 			make_visible (Widget_names.form, a_parent);
 			!! button.make (Current, button_parent);
+			initialize_focus;
 			build_interface
 		end;
 

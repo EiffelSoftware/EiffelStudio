@@ -7,7 +7,7 @@ inherit
 	
 feature {NONE}
 
-	input_stone, output_stone: STONE;
+	input_data, output_data: DATA;
 
 	c_name: STRING is
 		do
@@ -16,30 +16,30 @@ feature {NONE}
 
 	redo_work is
 		do
-			if not edited_function.has_input (input_stone) then
-				edited_function.add (input_stone, output_stone)
+			if not edited_function.has_input (input_data) then
+				edited_function.add (input_data, output_data)
 			end;
 		end; -- redo
 
 	undo_work is
 		do
-			edited_function.remove_element_line (input_stone, False)
+			edited_function.remove_element_line (input_data, False)
 		end; -- undo
 
 	function_work is
 		do
 			edited_function.finish;
-			output_stone := edited_function.output;
-			input_stone := edited_function.input;
+			output_data := edited_function.output;
+			input_data := edited_function.input;
 			update_history
 		end; -- function_work
 
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (input_stone.label);
+			Result.append (input_data.label);
 			Result.append (" and ");
-			Result.append (output_stone.label);
+			Result.append (output_data.label);
 		end; -- worked_on
 
 end

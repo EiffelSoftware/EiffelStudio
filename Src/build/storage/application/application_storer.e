@@ -18,7 +18,6 @@ feature
 feature {NONE}
 
 	No_initial_circle: INTEGER is -1;
-
 	
 feature 
 
@@ -35,7 +34,14 @@ feature
 
 	stored_lines: LINKED_LIST [S_LINE];	
 
-	store (file_name: STRING) is
+	file_name: STRING is
+		do
+			Result := Environment.application_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		local
 			s_circle: S_CIRCLE;
 			s_line: S_LINE;
@@ -46,7 +52,7 @@ feature
 			if (app_editor.initial_state_circle = Void) then
 				initial_circle := No_initial_circle;
 			else
-				initial_circle := app_editor.initial_state_circle.identifier
+				initial_circle := app_editor.initial_state_circle.data.identifier
 			end;
 			build_stored_graph;
 			!!stored_circles.make;
@@ -75,7 +81,7 @@ feature
 				stored_lines.extend (s_line);
 				app_lines.forth
 			end;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_circles := Void;
 			stored_lines := Void;
 			stored_graph := Void
@@ -126,14 +132,14 @@ feature {NONE}
 	
 feature 
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		local
 			figures: APP_FIGURES;
 			lines: APP_LINES;
 			line: STATE_LINE;
 			circle: STATE_CIRCLE
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			stored_circles := retrieved.stored_circles;
 			stored_lines := retrieved.stored_lines;
 			stored_graph := retrieved.stored_graph;

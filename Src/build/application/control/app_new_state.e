@@ -4,19 +4,29 @@ class APP_NEW_STATE
 inherit
 
 	COMMAND;
+	DRAG_SOURCE
+		redefine
+			transportable
+		end;
 	APP_EDITOR_HOLE
 		rename
 			make as app_make
 		redefine
-			stone, compatible
+			process_state, compatible
 		end;
 	NEW_STATE_STONE
+
 
 creation
 
 	make
 	
 feature 
+
+	transportable: BOOLEAN is
+		do
+			Result := True
+		end;
 
 	source: WIDGET is
 		do
@@ -40,25 +50,22 @@ feature
 			add_activate_action (Current, Void)
 		end;
 
-	original_stone: STATE;
+	data: STATE;
 
 feature {NONE}
 
-	stone: STATE_STONE;
-
-	compatible (s: STATE_STONE): BOOLEAN is
+	compatible (st: STONE): BOOLEAN is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := st.stone_type = Stone_types.state_type
 		end;
-	
-	process_stone is
+
+	process_state (dropped: STATE_STONE) is
 			-- Create a editor for the stone dropped
 			-- if it is not already being edited.
 		local
 			state: STATE;
 		do
-			state := stone.original_stone;
+			state := dropped.data;
 			if state /= Void then
 				state.create_editor
 			end

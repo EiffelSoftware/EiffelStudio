@@ -20,10 +20,11 @@ inherit
 		end;
 	TOP_SHELL
 		rename
-			make as top_create
+			make as top_create,
+			realize as shell_realize
 		export
 			{NONE} all;
-			{ANY} realize, realized, set_cursor, 
+			{ANY}realized, set_cursor, 
 			cursor, hide, show, shown, ungrab
 		end;
 	WINDOWS;
@@ -53,11 +54,13 @@ feature -- Drawing area
 
 	clear is
 		do
-			--initial_state_circle.original_stone.reset_namer;
+			--initial_state_circle.data.reset_namer;
 			figures.wipe_out;
 			lines.wipe_out;
 			Shared_app_graph.clear_all;
-			drawing_area.clear
+			if implementation /= Void then
+				drawing_area.clear
+			end
 			--create_initial_state;
 		end;
 
@@ -90,6 +93,38 @@ feature -- Drawing area
 			figures.draw;
 		end;
 
+	find_selected_figure is
+		do
+			-- Search classes first
+			figures.find;
+			if not figures.found then
+				lines.find;
+			end;
+		end;
+
+	selected_figure_stone: STONE is
+		do
+			if figures.found then
+				Result := figures.element
+			elseif lines.found then
+				Result := lines.line
+			end	
+		end;
+
+	remove_selected_figure is
+		local
+			cut_figure_command: APP_CUT_FIGURE;
+			cut_line_command: APP_CUT_LINE;
+		do
+			if figures.found then
+				!!cut_figure_command;
+				cut_figure_command.execute (figures.element)
+			elseif lines.found then
+				!!cut_line_command;
+				cut_line_command.execute (lines.line)
+			end	
+		end;
+
 	create_initial_state is
 			-- Create an initial state of the application
 		local
@@ -109,16 +144,17 @@ feature -- Drawing area
 			circle.set_center (point);
 			circle.set_double_thickness;
 			set_initial_state_circle (circle);
-			display_states;
 		end; -- Create
 
 	set_default_selected is
 		do
-			figures.start;
-			if not figures.after then
-				set_selected (figures.figure);
-				display_states;
-				display_transitions;
+			if implementation /= Void and then realized then
+				figures.start;
+				if not figures.after then
+					set_selected (figures.figure);
+					display_states;
+					display_transitions;
+				end
 			end;
 		end;
 
@@ -159,7 +195,7 @@ feature -- Drawing area
 		require
 			valid_state: s /= Void
 		do
-			if (initial_state_circle.original_stone /= s) then
+			if (initial_state_circle.data /= s) then
 				find_figure (s);
 				if not figures.after then
 					set_initial_state_circle (figures.figure);
@@ -178,7 +214,7 @@ feature -- Drawing area
 			end;
 			initial_state_circle := a_circle;
 			initial_state_circle.set_double_thickness;
-			Shared_app_graph.set_initial_state (initial_state_circle.original_stone)
+			Shared_app_graph.set_initial_state (initial_state_circle.data)
 		end; 
 	
 	update_circle_text (s: STATE) is
@@ -195,13 +231,13 @@ feature -- Drawing area
 					eds.start
 				until
 					eds.after or else 
-					eds.item.edited_function.original_stone.equivalent (s)
+					eds.item.edited_function.data = s
 				--! There is only one editor per function
 				loop
 					eds.forth
 				end;	
 				if not eds.after then
-					eds.item.update_name
+					eds.item.update_title
 				end
 			end	
 		end;
@@ -240,10 +276,8 @@ feature {NONE}
 		local
 			state: STATE
 		do
-			if
-				not (selected_figure = Void) 
-			then
-				state := selected_figure.original_stone;	
+			if selected_figure /= Void then
+				state := selected_figure.data;	
 				if
 					not (state = Void)
 				then
@@ -298,13 +332,15 @@ feature {NONE} -- State and transition list
 			end;
 		end; -- highlight_state
 
+feature {STATE_LINE}
+
 	popup_labels_window (l: STATE_LINE) is
 			-- Popup a window with a list of labels for `line'.
 		local
 			source, dest: STATE;
 		do
-			source ?= l.source.original_stone;
-			dest ?= l.destination.original_stone;
+			source ?= l.source.data;
+			dest ?= l.destination.data;
 			if source /= Void and then 
 				dest /= Void and then
 				not labels_wnd.is_popped_up
@@ -389,9 +425,58 @@ feature {NONE} -- EiffelVision Section
 
 	transition_list: LABEL_SCR_L;
 	
-feature 
+feature
 
-	make (a_screen: SCREEN) is
+	realize is
+		local
+			mp: MOUSE_PTR
+		do
+			!! mp;
+			mp.set_watch_shape;
+			make_visible;
+			figures.attach_to_drawing_area;
+			lines.attach_to_drawing_area;
+			set_default_selected;
+			shell_realize;
+			mp.restore
+		end;
+
+	update_display is
+		do
+			if implementation /= Void and then realized then
+				app_editor.display_states;
+				app_editor.display_transitions;
+				app_editor.draw_figures;
+			end
+		end;
+
+	update_transitions_list (cmd: CMD) is
+			-- Update the transition list for
+			-- modified command `cmd'.
+		do
+			if implementation /= Void and then realized then
+				if selected_figure.data.has_command (cmd) then
+					app_editor.display_transitions;
+				end
+			end
+		end;
+
+	is_initialized: BOOLEAN is
+		do
+			Result := implementation /= Void
+		end;
+
+feature {NONE}
+
+	make is
+		do
+			!!drawing_area.make;
+			!!transitions;
+			!!lines.make (drawing_area);
+			!!figures.make (drawing_area);
+		end;
+
+	make_visible is
 			-- Create app_editor interface 
 		local
 			del_com: DELETE_WINDOW;
@@ -399,11 +484,11 @@ feature
 				-- **************
 				-- Create widgets
 				-- **************
-			top_create (Widget_names.application_editor, a_screen);
+			top_create (Widget_names.application_editor, Eb_screen);
 			!!form.make (Widget_names.form, Current);
 			!!form1.make (Widget_names.form1, form);
 			!!drawing_sw.make (Widget_names.scroll, form);
-			!!drawing_area.make (Widget_names.drawingarea, drawing_sw, Current);
+			drawing_area.make_visible (Widget_names.drawingarea, drawing_sw);
 			!!menu_bar.make (Widget_names.bar, form, Current);
 			!!state_label.make (Widget_names.state_name, form1);
 			!!transition_label.make (Widget_names.transition_name, form1);
@@ -412,6 +497,7 @@ feature
 				-- *******************
 				-- Perform attachments
 				-- *******************
+			figures.add_callbacks;
 			form.set_fraction_base (4);
 			form.attach_right_position (drawing_sw, 3);
 			form.attach_left_position (form1, 3);
@@ -447,9 +533,6 @@ feature
 				-- **********
 			transition_list.set_single_selection;
 			state_list.set_single_selection;
-			!!transitions;
-			!!lines.make (drawing_area);
-			!!figures.make (drawing_area, Current);
 			figures.set_showable_area (drawing_sw);
 			drawing_sw.set_working_area (drawing_area);
 			drawing_area.set_background_color (App_const.white);
@@ -462,7 +545,6 @@ feature
 				-- made after the 'figures' callbacks are
 				-- executed.
 			drawing_area.add_expose_action (Current, expose_action);
-			drawing_area.add_button_press_action (3, Current, popup_labels_action);
 			drawing_area.set_action ("Ctrl<Btn1Down>", Current, ctrl_select_action);
 			state_list.add_selection_action (Current, set_state_action);
 			transition_list.add_selection_action (Current, set_label_action);
@@ -491,7 +573,7 @@ feature
 				end;
 			elseif argument = ctrl_select_action then
 				figures.find;
-				if not figures.after then	
+				if figures.found then	
 					set_selected (figures.figure);
 					display_states;
 					draw_figures;
@@ -514,11 +596,6 @@ feature
 				else
 					current_label := transition_list.selected_item;
 				end;
-			elseif argument = popup_labels_action then
-				lines.find;
-				if lines.found then	
-					popup_labels_window (lines.line)
-				end
 			end;
 		end; 
 

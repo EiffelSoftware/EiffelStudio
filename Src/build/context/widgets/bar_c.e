@@ -16,7 +16,7 @@ feature
 			Result := Pixmaps.bar_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.menu_page.bar_type
 		end;

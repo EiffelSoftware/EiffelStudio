@@ -3,6 +3,7 @@ deferred class EVENT
 
 inherit
 
+	DATA;
 	EVENT_STONE;
 	SHARED_STORAGE_INFO;
 	EB_HASHABLE
@@ -24,37 +25,46 @@ feature {NONE}
 		once
 			!! Result
 		end;
+
+	make is
+		do
+			event_table.put (Current, - identifier)
+		end;
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.event_help_fn
+		end;
 	
 feature 
 
-	original_stone: EVENT is
+	data: EVENT is
 		do
 			Result := Current
 		end;
 
-	source: WIDGET is do end;
-
-	symbol: PIXMAP;
+	symbol: PIXMAP is
+		deferred
+		end;
 
 	label: STRING is
 		do
 			Result := internal_name
 		end;
 
-	internal_name: STRING;
-	
-feature {NONE}
-
-	set_symbol (s: PIXMAP) is
-		do
-			symbol := s
-		end;
-	
-	set_label (s: STRING) is
-		do
-			internal_name := s
+	internal_name: STRING is
+		deferred
 		end;
 
+	identifier: INTEGER is
+			-- Identifier for current event
+		deferred
+		end;
+	
+	eiffel_text: STRING is
+			-- Eiffel Text for current event
+		deferred
+		end;
 	
 feature 
 

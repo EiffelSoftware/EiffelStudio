@@ -65,6 +65,11 @@ feature {NONE}
 			Result := Context_const.drawing_box_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	drawing_box_cmd: DR_BOX_CMD is
 		once
 			!! Result

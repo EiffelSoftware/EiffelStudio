@@ -6,9 +6,9 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	EVENT_STONE;
 	EB_HASHABLE
@@ -34,19 +34,19 @@ feature
 			initialize_transport
 		end;
 			
-	original_stone: EVENT;
+	data: EVENT;
 
 	
 feature {NONE}
 
 	eiffel_text: STRING is
 		do
-			Result := original_stone.eiffel_text
+			Result := data.eiffel_text
 		end;
 
 	identifier: INTEGER is
 		do
-			Result := original_stone.identifier
+			Result := data.identifier
 		end;
 
 end

@@ -64,19 +64,19 @@ feature {NONE}
 		deferred
 		end;
 
-	original_stone: STONE is
+	data: DATA is
 		deferred
 		end;
 
-	update_stone (s: like original_stone) is
+	update_stone (s: like data) is
 		do
-			old_set_original_stone (s);
+			old_set_data (s);
 			if realized then
 				show;
 			end;
 		end;
 
-	old_set_original_stone (s: like original_stone) is
+	old_set_data (s: like data) is
 		deferred
 		end
 

@@ -30,7 +30,6 @@ feature
 
 	-- Context edited in the context editor
 	edited_context: CONTEXT
-	current_form: EDITOR_FORM
 	current_form_number: INTEGER
 
 	
@@ -61,6 +60,8 @@ feature {NONE}
 
 feature 
 
+	color_form: COLOR_FORM
+
 	format_list: FORMAT_LIST;
 
 	focus_label: FOCUS_LABEL;
@@ -84,7 +85,6 @@ feature
 			scale_form: SCALE_FORM
 			pulldown_form: PULLDOWN_FORM
 			text_field_form: TEXT_FIELD_FORM
-			color_form: COLOR_FORM
 			drawing_box_form: DRAWING_BOX_FORM
 			bull_resize_form: BULL_RESIZE_FORM
 			grid_form: GRID_FORM;
@@ -161,7 +161,7 @@ feature
 
 			!! format_list.make (formats_rc, Current)
 
-			current_form_number := 1;
+			current_form_number := 0;
 			!! del_com.make (Current);
 			set_delete_command (del_com)
 		end
@@ -187,16 +187,20 @@ feature
 			if other_editor = Void then
 				if new_context /= edited_context then
 					option_list := new_context.option_list
-
-						-- Test if the current form is defined for the context
-					from
-						i := 1;
-						count := option_list.count;
-					until
-						i > count or else
-						option_list @ i = current_form_number
-					loop
-						i := i + 1
+					count := option_list.count;
+					if current_form_number = 0 then
+						i := count + 1
+					else
+							-- Test if the current form 
+							-- is defined for the context
+						from
+							i := 1;
+						until
+							i > count or else
+							option_list @ i = current_form_number
+						loop
+							i := i + 1
+						end
 					end
 					if i > count then
 							-- Could not find. Check to see if the first
@@ -253,30 +257,39 @@ feature
 	set_form (a_form_number: INTEGER) is
 			-- Display 'a_form' in the context editor window
 		local
-			new_form: EDITOR_FORM
-			mp: MOUSE_PTR
-			msg: STRING
+			prev_form, new_form: EDITOR_FORM;
+			mp: MOUSE_PTR;
+			msg: STRING;
+			prev_form_number: INTEGER;
+			format: FORMAT_BUTTON
 		do
+			prev_form_number := current_form_number;
+			if prev_form_number /= 0 then
+				prev_form := form_list @ (prev_form_number);
+			end;
 			current_form_number := a_form_number;
 			new_form := form_list @ (current_form_number);
 			if not new_form.is_initialized then
-				if current_form /= void then
-					current_form.hide
-				end;
 				!!mp;
 				mp.set_watch_shape;
 				new_form.make_visible (top_form);
-				mp.restore
-			elseif current_form /= Void and then
-				current_form /= new_form
+				mp.restore;
+				if prev_form /= Void then
+					prev_form.hide;
+					format := prev_form.associated_format_button;
+					format.unselect_symbol
+				end;
+			elseif prev_form /= Void and then
+				prev_form /= new_form
 			then
-				current_form.hide;
+				prev_form.hide;
+				format := prev_form.associated_format_button;
+				format.unselect_symbol
 			end;
-			if not new_form.shown then
-				new_form.show
-			end;
-			current_form := new_form;
-			current_form.reset;
+			format := new_form.associated_format_button;
+			format.set_selected_symbol;
+			new_form.show;
+			new_form.reset;
 		end
 
 	behavior_form_shown: BOOLEAN is
@@ -314,6 +327,7 @@ feature -- Reseting
 		do
 			behavior_form.unregister_holes;
 			alignment_form.unregister_holes;
+			color_form.unregister_holes;
 			context_hole.unregister;
 			shell_destroy
 		end;
@@ -336,16 +350,62 @@ feature -- Reseting
 
 	clear is
 			-- Reset the hole of the context editor
+		local
+			current_form: EDITOR_FORM
 		do
 			if current_form /= Void then
 				reset_behavior_editor
 				edited_context := Void
-				current_form.hide
-				current_form := Void
-				current_form_number := 1
+				if current_form_number /= 0 then
+					current_form := form_list @ (current_form_number);
+					current_form.hide;
+				end;
 			end;
+			current_form_number := 0;
 			set_title (Widget_names.context_editor);
 			set_icon_name (Widget_names.context_editor);
-		end
+		end;
+
+	apply_current_form is
+		require
+			valid_form_number: current_form_number /= 0
+		local
+			current_form: EDITOR_FORM
+		do
+			current_form := form_list @ (current_form_number);
+			current_form.apply;
+		end;
+
+	reset_current_form is
+		require
+			valid_form_number: current_form_number /= 0
+		local
+			current_form: EDITOR_FORM
+		do
+			current_form := form_list @ (current_form_number);
+			current_form.reset;
+		end;
+
+	reset_geometry_form is
+		local
+			geo_form: GEOMETRY_FORM
+		do
+			if current_form_number /= 0 then
+				geo_form ?= form_list @ (current_form_number);
+				if geo_form /= Void then
+					geo_form.reset;
+				end;
+			end;
+		end;
+
+	update_translation_page is
+		require
+			behaviour_form_shown: behavior_form_shown 
+		local
+			beh_form: BEHAVIOR_FORM
+		do
+			beh_form ?= form_list @ (current_form_number);
+			beh_form.update_translation_page;
+		end;
 
 end

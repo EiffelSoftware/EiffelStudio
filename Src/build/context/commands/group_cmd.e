@@ -33,15 +33,6 @@ feature
 
 	destroy_widgets is
 		do
-			cut_old_command.destroy_widgets;
-			from
-				old_contexts.start
-			until
-				old_contexts.after
-			loop
-				old_contexts.item.widget.destroy
-				old_contexts.forth
-			end;
 			context.widget.destroy
 		end;
 
@@ -64,15 +55,6 @@ feature
 			!! cut_old_command;
 			cut_old_command.work (old_contexts.first);
 
-			from
-				new_contexts.start
-			until
-				new_contexts.after
-			loop
-				new_contexts.item.remove_callbacks;
-				new_contexts.forth
-			end;
-
 			change_widgets;
 				-- Erase the new elements
 			group_c.hide_tree_elements;
@@ -92,14 +74,14 @@ feature
 				-- undo cut on old_contexts
 			undo_cut_old_contexts;
 
-			from
-				old_contexts.start
-			until
-				old_contexts.after
-			loop
-				old_contexts.item.reset_callbacks;
-				old_contexts.forth
-			end;
+			--from
+				--old_contexts.start
+			--until
+				--old_contexts.after
+			--loop
+				--old_contexts.item.reset_callbacks;
+				--old_contexts.forth
+			--end;
 		end;
 
 	work (argument: ANY) is

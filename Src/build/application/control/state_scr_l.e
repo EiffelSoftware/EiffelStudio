@@ -8,16 +8,17 @@ inherit
 		rename 
 			First as First_arg
 		end;
+	DRAG_SOURCE
+		redefine
+			transportable
+		end;
 	HOLE
 		rename
 			target as source
 		redefine
-			stone, compatible
+			process_state
 		end;
-	STATE_STONE
-		redefine
-			transportable
-		end;
+	STATE_STONE;
 	SCROLL_LIST
 		rename 
 			identifier as oui_identifier,
@@ -43,18 +44,10 @@ feature -- Creation
 	
 feature 
 
-	original_stone: STATE;
-			-- Current original_stone
+	data: STATE;
+			-- Current data
 
 feature {NONE} -- Stone
-
-	stone: STATE_STONE;
-	
-	compatible (s: STATE_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
 
 	source: STATE_SCR_L is
 		do
@@ -62,21 +55,7 @@ feature {NONE} -- Stone
 		end;
 
 	transportable: BOOLEAN;
-			-- Is the original_stone able to be transported ?
-
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
-	labels: LINKED_LIST [CMD_LABEL] is
-		do
-		end;
-
-	symbol: PIXMAP is
-		do
-			Result := original_stone.symbol
-		end;
+			-- Is the data able to be transported ?
 
 feature {NONE} -- Removable
 
@@ -87,14 +66,8 @@ feature {NONE} -- Removable
 			!!cut_figure_command;
 			cut_figure_command.execute (selected_circle)
 		end;
-
 	
 feature 
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
 
 	selected_circle: STATE_CIRCLE;
 			-- Current state_figure 
@@ -109,9 +82,9 @@ feature {NONE}
 
 	application_editor: APP_EDITOR;
 
-	process_stone is
+	process_state (dropped: STATE_STONE) is
 		do
-			application_editor.update_selected (stone.original_stone)
+			application_editor.update_selected (dropped.data)
 		end; -- process_stone
 
 	
@@ -125,7 +98,7 @@ feature {NONE} -- Execute
 			then
 				transportable := false
 			else
-				original_stone := selected_circle.original_stone;
+				data := selected_circle.data;
 				transportable := true;
 			end;
 		end; -- execute

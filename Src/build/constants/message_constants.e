@@ -8,6 +8,8 @@ feature -- Error messages
 	Add_parent_er: STRING is "Cannot add parent for predefined command!";
 	Cannot_ret_dir_er: STRING is "Cannot retrieve from directory %%X!";
 	Cannot_save_er: STRING is "Could not save project to%N%%X!";
+	Cannot_save_os_er: STRING is 
+			"Could not save project!%NReason: %%X";
 	Cannot_save_dir_er: STRING is 
 			"Directory %%X %Nalready exists. Cannot save!";
 	Cannot_save_file_er: STRING is 
@@ -24,8 +26,10 @@ feature -- Error messages
 	Instance_rem_arg_er: STRING is "Command has instances: Cannot remove argument!";
 	Instance_rem_com_er: STRING is 
 			"Command has instances. Cannot remove command!";
+	Eb_project_not_exists_er: STRING is 
+			"Project directory :%N %%X does not exist!";
 	Not_eb_project_er: STRING is 
-			"Project directory :%N %%Xis not an Eiffel build project!";
+			"Project directory :%N %%X is not an Eiffel build project!";
 	Remove_init_state_er: STRING is "Cannot remove initial state!";
 	Remove_parent_er: STRING is "Cannot remove parent for predefined command!";
 	Retrieve_er: STRING is 
@@ -37,6 +41,7 @@ feature -- Error messages
 feature -- Question messages
 
 	Exit_qu: STRING is "Do you wish to exit?";
+	Override_qu: STRING is "Directory %%X%Nalready exists, Override it ?";
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
 			%Do you wish to retrieve backup files?%N";

@@ -8,7 +8,7 @@ inherit
 
 	CMD
 		redefine
-			set_editor, original_stone,
+			set_editor, data,
 			set_eiffel_text
 		end;
 	NAMABLE;
@@ -24,11 +24,20 @@ feature -- Creation
 			-- Initialize current user
 			-- command.
 		do
-			set_symbol (Pixmaps.command_pixmap);
 			int_generator.next;
 			identifier := int_generator.value;
 			!!arguments.make;
 			!!labels.make;
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.user_command_pixmap
+		end;
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.user_command_help_fn
 		end;
 
 	session_init is
@@ -49,12 +58,12 @@ feature -- Creation
 			eiffel_text := s;
 			parent_type := p;
 			set_internal_name (in);
-			set_visual_name (vn)	
+			visual_name := clone (vn)	
 		end;
 
 feature -- Stone
 
-	original_stone: USER_CMD is
+	data: USER_CMD is
 		do
 			Result := Current
 		end;
@@ -125,7 +134,7 @@ feature -- Namable
 					until
 						s.after 
 					loop
-						b := s.output.original_stone;
+						b := s.output.data;
 						from
 							b.start
 						until
@@ -434,7 +443,7 @@ feature  -- Generation
 					arg_entity_namer.next;
 					Result.append (arg_entity_namer.value);
 					Result.append (": ");
-					Result.append (arguments.item.eiffel_type);
+					Result.append (arguments.item.data.eiffel_type);
 					Result.append (";%N%N");
 				end;
 				arguments.forth
@@ -473,7 +482,7 @@ feature  -- Generation
 					arg_param_namer.next;
 					Result.append (arg_param_namer.value);
 					Result.append (": ");
-					Result.append (arguments.item.eiffel_type);
+					Result.append (arguments.item.data.eiffel_type);
 					arguments.forth;
 					if not arguments.after then
 						Result.append (";%N%T%T")

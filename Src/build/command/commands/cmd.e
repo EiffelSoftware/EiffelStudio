@@ -3,7 +3,7 @@ deferred class CMD
 
 inherit
 
-	CMD_STONE;
+	DATA;
 	SHARED_APPLICATION;
 	WINDOWS;
 	EDITABLE
@@ -41,7 +41,7 @@ feature -- Instance
 					until
 						s.after or Result
 					loop
-						b := s.output.original_stone;
+						b := s.output.data;
 						from
 							b.start
 						until
@@ -71,18 +71,40 @@ feature -- Instance
 
 feature -- Stone
 
-	original_stone: CMD is
+	identifier: INTEGER is
+		deferred
+		end;
+
+	eiffel_type: STRING is
+			-- Name of the class representing
+			-- Current command
+		deferred
+		end;
+
+	arguments: EB_LINKED_LIST [ARG] is
+			-- Arguments of Current command
+			-- (Currently restricted to contexts)
+		deferred
+		end;
+
+	labels: EB_LINKED_LIST [CMD_LABEL] is
+			-- Exit labels of Current command
+		deferred
+		end;
+
+	eiffel_text: STRING is
+			-- Eiffel class text of Current
+			-- command
+		deferred
+		end;
+
+	data: CMD is
 		do
 			Result := Current
 		end;
 
-	source: WIDGET is do end;
-
-	symbol: PIXMAP;
-
-	set_symbol (p: PIXMAP) is
-		do
-			symbol := p
+	symbol: PIXMAP is
+		deferred
 		end;
 
 feature -- Editing

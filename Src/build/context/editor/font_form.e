@@ -18,6 +18,11 @@ feature {NONE} -- Interface
 			Result := Context_const.font_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.font_format_nbr
+		end;
+
 	command: FONT_CMD is
 		once
 			!! Result

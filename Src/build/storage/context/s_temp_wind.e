@@ -52,8 +52,8 @@ feature
 	
 	set_attributes (c: WINDOW_C) is
 		do
-			if not (visual_name = Void) then
-				c.set_visual_name (visual_name);
+			if visual_name /= Void then
+				c.retrieve_set_visual_name (visual_name);
 			end;
 			if size_modified then
 				c.set_size (width, height);
@@ -73,11 +73,10 @@ feature
 			if not (resize_policy = Void) then
 				c.set_resize_policy (resize_policy.resize_policy (c))
 			end;
-                -- Set x and y regardless if position is not modified
-            c.set_x_y (x, y);
-            c.set_default_position (position_modified)
+				-- Set x and y regardless if position is not modified
+			c.set_x_y (x, y);
+			c.set_default_position (position_modified)
 		end;
-
 
 	parent_name: STRING;
 

@@ -13,16 +13,10 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end;
-	HELPABLE
 	
 feature {NONE}
-
-	help_file_name: STRING is
-		do
-			Result := label
-		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
@@ -31,16 +25,19 @@ feature {NONE}
 	
 feature 
 
-	identifier: INTEGER is
+	data: EVENT is
 		deferred
 		end;
 
-	eiffel_text: STRING is
-		deferred
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.event_type
 		end;
 
-	original_stone: EVENT is
-		deferred
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_event (Current)
 		end;
 
 end

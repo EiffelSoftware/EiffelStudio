@@ -10,6 +10,11 @@ creation
 
 feature 
 
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_font_pixmap
+		end;
+
 	symbol: PIXMAP is
 		once
 			Result := Pixmaps.font_pixmap

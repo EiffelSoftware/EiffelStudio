@@ -8,30 +8,31 @@ inherit
 		rename
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags,
-			initialize_transport as old_initialize_transport,
-			remove_widget_callbacks as old_remove_widget_callbacks
+			initialize_transport as old_initialize_transport
 		redefine
-			add_widget_callbacks, stored_node, context_initialization, widget
+			add_widget_callbacks, stored_node, 
+			context_initialization, widget
 		end;
 
 	CONTEXT
 		redefine
-			remove_widget_callbacks, initialize_transport, 
+			initialize_transport, 
 			reset_modified_flags, copy_attributes,
-			add_widget_callbacks, stored_node, context_initialization, widget
+			add_widget_callbacks, stored_node, 
+			context_initialization, widget
 		select
 			reset_modified_flags, copy_attributes,
-			remove_widget_callbacks, initialize_transport
+			initialize_transport
 		end
 
 feature 
 
-    symbol: PIXMAP is
-        do
-            Result := Pixmaps.drawing_area_pixmap
-        end;
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.drawing_area_pixmap
+		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.scroll_page.drawing_area_type
 		end;
@@ -55,14 +56,6 @@ feature {NONE}
 			if (parent = Void) or else not parent.is_group_composite then
 				 widget.scrolled_window.add_enter_action (eb_selection_mgr, Current);
 			end;
-		end;
-
-	remove_widget_callbacks is
-		do
-			old_remove_widget_callbacks;
-			widget.scrolled_window.remove_button_press_action (2, show_command, Current);
-			widget.scrolled_window.remove_button_release_action (2, show_command, Void);
-			widget.scrolled_window.remove_button_press_action (3, transport_command, Current);
 		end;
 
 	initialize_transport is
@@ -90,7 +83,7 @@ feature
 
 	-- ***********************
 	-- * specific attributes *
-	-- ***********************
+	-- **,*********************
 
 	set_fg_color_name (a_name: STRING) is
 		local
@@ -105,6 +98,16 @@ feature
 			else
 				fg_color_modified := False
 			end;
+		end;
+
+	default_foreground_color: COLOR is
+		do
+			Result := widget.foreground_color
+		end;
+
+	set_default_foreground_color (color: COLOR) is
+		do
+			widget.set_foreground_color (color)
 		end;
 
 	drawing_area_width: INTEGER is

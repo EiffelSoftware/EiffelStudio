@@ -5,7 +5,8 @@ inherit
 
 	HOLE;
 	EB_BUTTON;
-	REMOVABLE
+	REMOVABLE;
+	DRAG_SOURCE
 
 feature 
 

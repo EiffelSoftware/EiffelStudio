@@ -143,18 +143,8 @@ feature {NONE}
 					cmd.execute (context);
 					if cursor_shape /= Cursors.move_cursor then
 							-- Resize
-						if width > context.width or else
-							height > context.height then
-								-- The order is important if the
-								-- parent is a bulletin because if the
-								-- widget is outside the bulletin, its
-								-- dimensions are not updated correctly
-							move_context;
-							context.set_size (width + 2, height + 2);
-						else
-							context.set_size (width + 2, height + 2);
-							move_context;
-						end;
+						context.set_size (width + 2, height + 2);
+						move_context;
 					else
 						move_context;
 					end;
@@ -165,30 +155,11 @@ feature {NONE}
 		end;
 
 	end_group_composite is
-		local
-			new_number: INTEGER;
-			context_height: INTEGER;
-			delta: INTEGER;
-			arity: INTEGER;
 		do
 			widget.ungrab;
 			grabbed := false;
 			draw_grouped_items;
-			arity := context.arity;
-			if 
-				arity > 0 and then (width > 0) and then (height > 0)
-			then
-				context.set_size (width + 2, height + 2);
-				context_height := context.first_child.height+3;
-				new_number := height // context_height - arity;
-				delta := new_number * context_height;
-				if cursor_shape = Cursors.top_right_corner_cursor or
-					cursor_shape = Cursors.top_left_corner_cursor 
-				then
-						-- move y pos
-					context.set_real_x_y (context.x, context.y - delta);
-				end;
-			end;
+			move_context
 		end;
 
 	end_shift_action is

@@ -42,7 +42,7 @@ feature {NONE}
 			dest_element: GRAPH_ELEMENT
 		do
 			cmd_label := l;
-			source_element := application_editor.selected_figure.original_stone;
+			source_element := application_editor.selected_figure.data;
 			transitions := application_editor.transitions;
 			old_dest_element := transitions.destination_element (source_element, cmd_label);
 			temp_trans := Shared_app_graph.item (source_element);
@@ -81,7 +81,7 @@ feature {NONE}
 			sel_figure := application_editor.selected_figure;
 			if
 				not (sel_figure = Void) and
-				(sel_figure.original_stone = source_element)
+				(sel_figure.data = source_element)
 			then
 				application_editor.display_transitions
 			end

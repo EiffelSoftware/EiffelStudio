@@ -10,7 +10,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone, compatible
+			process_event
 		end;
 	REMOVABLE
 
@@ -18,23 +18,13 @@ creation
 
 	make
 	
-feature {NONE}
-
-	stone: like Current;
-
-	compatible (s: like Current): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-	
 feature 
 
 	remove_yourself is
 		local
 			r: REMOVABLE
 		do
-			r ?= original_stone;
+			r ?= data;
 			if r /= Void then
 				r.remove_yourself
 			end
@@ -50,16 +40,16 @@ feature
 
 	update_name is
 		do
-			if original_stone /= Void then
-				set_label (original_stone.label)
+			if data /= Void then
+				set_label (data.label)
 			end
 		end;
 	
 feature {NONE}
 
-	process_stone is
+	process_event (dropped: EVENT_STONE) is
 		do
-			page.insert_after (original_stone, stone.original_stone)
+			page.insert_after (data, dropped.data)
 		end;
 
 end

@@ -172,6 +172,11 @@ feature -- General Pixmaps
  			Result := symbol_file_content ("edit_stone.symb")
 		end;
 
+	EiffelBuild_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("ebuild.symb");
+		end;
+
 	Empty_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("empty.symb");
@@ -302,6 +307,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("parent.symb")
 		end;
 
+	Predef_command_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("pred_cmd.symb")
+		end;
+
 	Predefined_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("windows.symb")
@@ -332,9 +342,29 @@ feature -- General Pixmaps
  			Result := symbol_file_content ("save_as.symb")
 		end;
 
+	Selected_alignment_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_align.symb")
+		end;
+
+	Selected_attribute_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_attrib.symb")
+		end;
+
+	Selected_behavior_format_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_beh_format.symb")
+		end;
+
 	Selected_button_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("sel_button.icon")
+			Result := symbol_file_content ("sel_button.symb")
+		end;
+
+ 	Selected_color_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("sel_color.symb")
 		end;
 
 	Selected_command_page_pixmap: PIXMAP is
@@ -352,9 +382,24 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("sel_file.symb");
 		end;
 
+	Selected_font_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_font.symb")
+		end;
+
 	Selected_general_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("sel_general.symb")
+		end;
+
+	Selected_geometry_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_geometry.symb")
+		end;
+
+ 	Selected_grid_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("sel_grid.symb")
 		end;
 
 	Selected_list_pixmap: PIXMAP is
@@ -365,6 +410,11 @@ feature -- General Pixmaps
 	Selected_scrolled_w_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("sel_scrolled_w.symb")
+		end;
+
+	Selected_resize_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_resize.symb");
 		end;
 
 	Selected_windows_pixmap: PIXMAP is
@@ -400,6 +450,11 @@ feature -- General Pixmaps
  	Selected_sets_pixmap: PIXMAP is
  		once
  			Result := symbol_file_content ("sel_sets.symb")
+		end;
+
+	Selected_submenu_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_submenu.symb");
 		end;
 
 	Selected_text_pixmap: PIXMAP is
@@ -452,9 +507,24 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("return.symb")
 		end;
 
+	Transition_line_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("transition.symb");
+		end;
+
 	Type_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("type.symb")
+		end;
+
+	Unsave_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("unsave.symb")
+		end;
+
+	User_command_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("user_cmd.symb")
 		end;
 
 	User_defined_pixmap: PIXMAP is

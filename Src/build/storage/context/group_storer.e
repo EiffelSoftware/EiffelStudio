@@ -15,16 +15,23 @@ feature
 
 	retrieved_data: LINKED_LIST [GROUP];
 
-	store (file_name: STRING) is
+	file_name: STRING is
+		do
+			Result := Environment.groups_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= void
 		do
 			stored_data := Shared_group_list;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_data := Void
 		end;
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			retrieved_data := retrieved.stored_data;
 			from
 				retrieved_data.start

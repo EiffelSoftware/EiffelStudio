@@ -31,7 +31,7 @@ feature
 			Result := Pixmaps.pict_color_b_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.primitive_page.pict_color_b_type
 		end;
@@ -186,9 +186,13 @@ feature {CONTEXT}
 	
 feature 
 
-	stored_node: S_PICT_COLOR_B is
+	stored_node: S_PICT_COLOR_B_R1 is
+		local
+			foobar: S_PICT_COLOR_B
 		do
 			!!Result.make (Current);
+			if foobar = Void then end;
+				-- So it won't be dead code removed
 		end;
 
 end

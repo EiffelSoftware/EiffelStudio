@@ -6,7 +6,6 @@ inherit
 			make_visible as make
 		end;
 	WINDOWS;
-	LICENCE_COMMAND
 
 creation
 
@@ -31,12 +30,12 @@ feature {NONE} -- Focusable
 
 feature {NONE} -- Execute
 
-	work (argument: ANY) is
+	execute (argument: ANY) is
 		local
 			pw: SAVE_AS_PROJ_WIN	
 		do
 			if main_panel.project_initialized then
-				!!pw.make (Widget_names.save_project_as, main_panel.base)
+				!!pw.make (main_panel.base)
 				pw.popup
 			end
 		end

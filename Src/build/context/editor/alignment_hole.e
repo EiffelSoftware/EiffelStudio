@@ -5,9 +5,8 @@ inherit
 
 	ICON_HOLE
 		redefine
-			stone, compatible
+			process_context
 		end
-
 
 creation
 
@@ -29,25 +28,22 @@ feature
 			set_symbol (Pixmaps.context_pixmap);
 		end;
 
-	stone: CONTEXT_STONE;
-
-	compatible (s: CONTEXT_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.context_type
 		end;
-	
+
 feature {NONE}
 
-	process_stone is
+	process_context (dropped: CONTEXT_STONE) is
 			-- Add the context in the list of contexts
 			-- to align if it is valid
 		local
 			list: LINKED_LIST [CONTEXT]
 		do
-			if stone.original_stone.grouped then
+			if dropped.data.grouped then
 				from
-					list := stone.original_stone.group;
+					list := dropped.data.group;
 					list.start;
 				until
 					list.after
@@ -57,8 +53,8 @@ feature {NONE}
 					end;
 					list.forth;
 				end;
-			elseif is_context_valid (stone.original_stone) then
-				alignment_form.add_item (stone.original_stone)
+			elseif is_context_valid (dropped.data) then
+				alignment_form.add_item (dropped.data)
 			end
 		end;
 

@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.widget_dest_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.widget_destroy_pixmap);
-			set_label (Event_const.widget_destroy_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.widget_destroy_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.widget_destroy_label
 		end;
 
 	eiffel_text: STRING is "add_destroy_action (";	

@@ -15,9 +15,9 @@ feature -- Interface
 		do
 			initialize (Widget_names.bulletin_form_name, a_parent);
 
-			!! follow_x.make (Widget_names.follow_y_name, Current, 
+			!! follow_x.make (Widget_names.follow_x_name, Current, 
 						Resize_policy_cmd, editor);
-			!! follow_y.make (Widget_names.follow_x_name, Current, 
+			!! follow_y.make (Widget_names.follow_y_name, Current, 
 						Resize_policy_cmd, editor);
 			!! width_resizeable.make (Widget_names.width_resizable_name,
 						Current, Resize_policy_cmd, editor);
@@ -43,6 +43,11 @@ feature {NONE}
 			Result := Context_const.bulletin_resize_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.resize_format_nbr
+		end;
+
 	follow_x, follow_y, width_resizeable, height_resizeable: EB_TOGGLE_B;
 
 	Resize_policy_cmd: RESIZE_CMD is
@@ -56,8 +61,15 @@ feature {NONE}
 			-- reset the content of the form
 		do
 			resize_policy := context.resize_policy;
-			follow_x.set_state (not resize_policy.x_fixed);
-			follow_y.set_state (not resize_policy.y_fixed);
+			follow_x.set_state (resize_policy.to_follow_x);
+			follow_y.set_state (resize_policy.to_follow_y);
+			if context.is_group_composite then
+				width_resizeable.unmanage;
+				height_resizeable.unmanage;
+			elseif height_resizeable.managed then
+				width_resizeable.manage;
+				height_resizeable.manage;
+			end;
 			width_resizeable.set_state (resize_policy.is_width_resizeable);
 			height_resizeable.set_state (resize_policy.is_height_resizeable);
 		end;
@@ -65,10 +77,10 @@ feature {NONE}
 	apply is
 			-- update the context according to the content of the form
 		do
-			if follow_x.state = resize_policy.x_fixed then
+			if follow_x.state /= resize_policy.to_follow_x then
 				resize_policy.follow_x (follow_x.state)
 			end;
-			if follow_y.state = resize_policy.y_fixed then
+			if follow_y.state /= resize_policy.to_follow_y then
 				resize_policy.follow_y (follow_y.state)
 			end;
 			if width_resizeable.state /= resize_policy.is_width_resizeable then

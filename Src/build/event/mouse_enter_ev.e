@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.mouse_enter_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.mouse_Enter_pixmap);
-			set_label (Event_const.mouse_Enter_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.mouse_Enter_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.mouse_enter_label
 		end;
 
 	eiffel_text: STRING is "add_enter_action (";	

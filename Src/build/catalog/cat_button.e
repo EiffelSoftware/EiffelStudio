@@ -5,14 +5,18 @@ inherit
 	CONSTANTS;
 	PICT_COLOR_B
 		rename
-			make as button_make
-		end;		
+			make as make_visible,
+			pixmap as symbol
+		end;
+	COMMAND
 
 creation
 
 	make
 
 feature {NONE}
+
+	catalog_page: CAT_PAGE [DATA];
 
 	make (cat_page: like catalog_page; 
 			a_parent: COMPOSITE) is
@@ -21,9 +25,11 @@ feature {NONE}
 			valid_a_parent: a_parent /= Void
 		do
 			catalog_page := cat_page;
-			button_make (Widget_names.pcbutton, a_parent)
-			set_symbol (symbol)
+			make_visible (Widget_names.pcbutton, a_parent);
+			add_activate_action (Current, Void);
 		end;
+
+feature
 
 	set_symbol (s: PIXMAP) is
 			-- Set icon symbol.
@@ -35,66 +41,11 @@ feature {NONE}
 			end
 		end;
 
-feature 
-
-	catalog_page: CAT_PAGE [STONE];
-
 feature {NONE}
 
 	execute (arg: ANY) is
 		do
-			if not selected then
-				select_it
-			end;
-		end;
-
-	selected_symbol: PIXMAP is
-		do
-			Result := catalog_page.selected_symbol
-		end;
-
-	symbol: PIXMAP is
-		do
-			Result := catalog_page.symbol
-		end;
-
-feature
-
-	selected: BOOLEAN is
-		do
-			Result := pixmap = selected_symbol
-		end;
-
-	select_it is
-			-- Select catalog_page to be current
-			-- viewing page on the context catalog.
-		require
-			not_selected: not selected
-		do
-			set_symbol (selected_symbol);
-			catalog_page.update_page (Current)
-		ensure
-			selected: selected
-		end;
-
-	deselect is
-		require
-			selected: selected
-		do
-			set_symbol (symbol);
-			catalog_page.hide
-		ensure
-			not_selected: not selected
-		end;
-
-	set_selected is
-			-- Set symbol to selected symbol
-		require
-			not_selected: not selected
-		do
-			set_symbol (selected_symbol);
-		ensure
-			selected: selected
+			catalog_page.select_it
 		end;
 
 end

@@ -35,7 +35,7 @@ feature
 				failed := True
 			else
 				list.start;
-				context := list.item.original_stone;
+				context := list.item.data;
 				!!cmd_list.make;
 				from
 				until
@@ -43,11 +43,11 @@ feature
 				loop
 					!!cmd;
 						-- work does not put the command in the history
-					cmd.work (list.item.original_stone);
+					cmd.work (list.item.data);
 					cmd_list.put_right (cmd);
 					list.forth;
 				end;
-				editor.current_form.apply;
+				editor.apply_current_form;
 				context_catalog.update_editors (context, editor.current_form_number);
 			end;
 		end;

@@ -9,11 +9,12 @@ inherit
 			First as unused,
 			Second as set_show_action,
 			Third as set_label_action
-		end
-	LABEL_STONE
+		end;
+	DRAG_SOURCE
 		redefine
 			transportable
 		end;
+	LABEL_STONE;
 	SCROLL_LIST
 		rename 
 			make as list_make,
@@ -50,7 +51,7 @@ feature -- Creation
 
 feature
 
-	label: STRING is
+	selected_label: STRING is
 			-- Current label selected
 		do
 			if selected_item /= Void then
@@ -62,23 +63,19 @@ feature
 				loop
 					label_names.forth;
 				end;
-            	if
-               		not label_names.after 
-            	then
-       				Result := label_names.item.label_name 
+				if not label_names.after  then
+	   				Result := label_names.item.label_name 
 				end;
-            end;
+			end;
 		end;
 
 	merge_right (l: SORTED_TWO_WAY_LIST [TRAN_NAME]) is
 			-- Merge right of cursor position put `l'. Construct label_names
 			-- from `l'.
-		require else
-			not_void_l: l /= Void;
 		do
-				l.start;
-				label_names := l.duplicate (l.count);	
-				list_merge_right (l);
+			l.start;
+			label_names := l.duplicate (l.count);	
+			list_merge_right (l);
 		end;
 
 feature {NONE}
@@ -94,11 +91,7 @@ feature {NONE}
 	transportable: BOOLEAN;
 			-- Is the stone able to be transported ?
 
-	original_stone: CMD_LABEL is
-		do
-		end;
-
-	symbol:PIXMAP is
+	data: CMD_LABEL is
 		do
 		end;
 

@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.mouse_leave_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.mouse_leave_pixmap);
-			set_label (Event_const.mouse_leave_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.mouse_leave_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.mouse_leave_label
 		end;
 
 	eiffel_text: STRING is "add_leave_action (";	

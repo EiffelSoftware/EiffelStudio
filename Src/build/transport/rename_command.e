@@ -4,32 +4,26 @@ inherit
 
 	COMMAND
 	WINDOWS
-		export
-			{NONE} all
-		end
 	
 feature 
 
-	new_name: STRING
-	named_object: NAMABLE
-
-	execute (arg: ANY) is
-		do
-			named_object ?= arg
-			if named_object /= Void then
-				pop_up_namer
-			end
+	namer_window: NAMER_WINDOW is
+		once
+			!! Result.make (Eb_screen)
 		end;
 
-	pop_up_namer is
-		-- put up a prompter to get user input for our name
+	execute (arg: ANY) is
 		local
-			namer_window: NAMER_WINDOW
+			stone: STONE;
+			namable: NAMABLE
 		do
-			!!namer_window.make("namer", eb_screen, Current)
-			if namer_window.text.text /= "" then
-				new_name := namer_window.text.text  
-			end 
+			stone ?= arg;
+			if stone /= Void then
+				namable ?= stone.data;
+				if namable /= Void then
+					namer_window.popup_with (namable)
+				end
+			end
 		end
 
-end -- class RENAME_COMMAND
+end 

@@ -118,7 +118,6 @@ feature
 				set_parent_contexts.item.set_parent (Void);
 				set_parent_contexts.forth;
 			end;
-			context.widget.set_managed (False);
 			if parent = Void then
 				tree.display (context)
 			else

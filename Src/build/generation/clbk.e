@@ -93,7 +93,7 @@ feature
 			behavior: BEHAVIOR;
 			old_pos: INTEGER
 		do
-			behavior := b.original_stone;
+			behavior := b.data;
 			from
 				old_pos := behavior.position;
 				behavior.start;

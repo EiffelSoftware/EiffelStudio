@@ -29,7 +29,7 @@ feature
 			Result := Pixmaps.separator_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.primitive_page.separator_type
 		end;

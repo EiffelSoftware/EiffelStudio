@@ -12,19 +12,22 @@ inherit
 	
 feature {NONE}
 
-	bg_cmd: BG_STONE_CMD;
+	bg_cmd: BG_COLOR_CMD;
 
-	fg_cmd: FG_STONE_CMD;
+	fg_cmd: FG_COLOR_CMD;
 
 feature 
 
-	work (argument: CONTEXT) is
+	work (argument: ANY) is
+		local
+			ed: CONTEXT_EDITOR
 		do
-			context := argument;
+			ed ?= argument;
+			context := ed.edited_context;
 			!!bg_cmd;
-			bg_cmd.work (context);
+			bg_cmd.work (ed);
 			!!fg_cmd;
-			fg_cmd.work (context);
+			fg_cmd.work (ed);
 		end;
 
 feature {NONE}

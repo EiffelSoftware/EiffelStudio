@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.but_arm_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.button_arm_pixmap);
-			set_label (Event_const.button_arm_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.button_arm_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.button_arm_label
 		end;
 
 	eiffel_text: STRING is "add_arm_action (";

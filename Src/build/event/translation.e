@@ -5,7 +5,8 @@ inherit
 
 	EVENT
 		redefine
-			label, original_stone
+			label, data, make,
+			internal_name
 		end;
 	EVENT_LABELS;
 	REMOVABLE;
@@ -15,9 +16,25 @@ creation
 
 	make
 
-feature 
+feature {NONE}
 
-	original_stone: TRANSLATION is
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.translation_pixmap
+		end;
+
+	make is
+		do
+			identifier := integer_generator.value;
+			integer_generator.next;
+			text := "<Key>";
+		ensure then
+			translation_is_x: text.is_equal ("<Key>")
+		end;
+
+feature
+
+	data: TRANSLATION is
 		do
 			Result := Current
 		end;
@@ -70,6 +87,9 @@ feature
 			editor := Void
 		end;
 
+feature -- Translation names
+
+	internal_name: STRING;
 	text: STRING;
 
 	set_text (s: STRING) is
@@ -81,16 +101,6 @@ feature
 	label: STRING is
 		do
 			Result := text
-		end;
-
-	make is
-		do
-			set_symbol (Pixmaps.translation_pixmap);
-			identifier := integer_generator.value;
-			integer_generator.next;
-			text := "<Key>";
-		ensure
-			translation_is_x: text.is_equal ("<Key>")
 		end;
 
 	set_internal_name (s: STRING) is

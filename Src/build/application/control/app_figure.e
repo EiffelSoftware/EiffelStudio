@@ -18,21 +18,26 @@ feature
 		deferred
 		end;
 
-	original_stone: GRAPH_ELEMENT is
+	data: GRAPH_ELEMENT is
 		deferred
 		end; 
 
 	label: STRING is
-		deferred
+		do
+			Result := data.label
 		end;
 
 	set_stone (state: GRAPH_ELEMENT) is
-			-- Set original_stone to `state' and update the
-			-- text to the original_stone label.
+			-- Set data to `state' and update the
+			-- text to the data label.
 		require
 			not_void_state: not (state = Void)
 		deferred
 		end; -- set_stone
+
+	update_text is
+		deferred
+		end;
 	
 	attach_drawing (a_drawing: DRAWING) is
 			-- Attach a drawing to the figure
@@ -40,6 +45,7 @@ feature
 			inner_figure.attach_drawing (a_drawing);
 			outer_figure.attach_drawing (a_drawing);
 			text_image.attach_drawing (a_drawing);
+			update_text;
 		end; -- attach_drawing_imp
 
 	attach_drawing_imp (a_drawing_imp: DRAWING_I) is
@@ -68,6 +74,12 @@ feature
 			temp_int.set_foreground_color (App_const.white);
 			draw;
 		end; -- deselect
+
+	set_center (p: COORD_XY_FIG) is
+			-- Set the center of the figure and the 
+			-- text_image field.
+		deferred
+		end; -- set_center
 
 	draw is
 			-- Draw the figure. 
@@ -112,11 +124,6 @@ feature
 			temp_int.set_foreground_color (App_const.black);
 			draw
 		end;
-
-	set_center (p: COORD_XY_FIG) is
-			-- Set the center of the figure
-		deferred
-		end; 
 
 	set_radius (i: INTEGER) is
 			-- Set the radius of the figure

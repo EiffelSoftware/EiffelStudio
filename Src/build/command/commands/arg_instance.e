@@ -1,16 +1,13 @@
+-- Argument which is instantiated.
+-- It may not be instantiated if the
+-- corresponding context was deleted.
 
 class ARG_INSTANCE 
 
 inherit
 
-	ARG_INST_STONE
+	TYPE_DATA
  
-
-
--- ***********************
--- Initialization features
--- ***********************
-
 creation
 
 	session_init, storage_init
@@ -28,16 +25,16 @@ feature
 			context := c
 		end;
 
--- ****
--- Data
--- ****
-
+	instantiated: BOOLEAN is
+		do
+			Result := not (context = Void or else
+				context.deleted)
+		end
 	
 feature {NONE}
 
 	associated_icon_stone: ARG_INST_ICON;
 
-	
 feature 
 
 	reset_context is 
@@ -63,7 +60,7 @@ feature
 		require
 			not_void_other: not (other = Void)
 		do
-			context := other;
+			context := other.data;
 			if associated_icon_stone /= Void then
 				associated_icon_stone.set_symbol (context.symbol);
 				associated_icon_stone.set_label (context.label);
@@ -72,7 +69,7 @@ feature
 
 	type: CONTEXT_TYPE;
 
-	context: CONTEXT_STONE;
+	context: CONTEXT;
 
 -- **************
 -- Stone features
@@ -89,7 +86,7 @@ feature
 			end
 		end;
 
-	original_stone: ARG_INSTANCE is
+	data: ARG_INSTANCE is
 		do
 			Result := Current
 		end;
@@ -115,7 +112,7 @@ feature
 	source: WIDGET is
 		do
 			if instantiated then
-				Result := context.original_stone.widget
+				Result := context.widget
 			end;
 		end;
 
@@ -126,7 +123,7 @@ feature
 	context_name: STRING is
 		do
 			if not (context = Void) then
-				Result := context.original_stone.full_name
+				Result := context.full_name
 			else
 				Result := ""
 			end

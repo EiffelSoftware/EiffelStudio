@@ -35,7 +35,7 @@ feature
 	execute (argument: CONTEXT) is
 		do
 			if not (current_argument.context = Void) then
-				previous_context := current_argument.context.original_stone;
+				previous_context := current_argument.context.data;
 			end;
 			current_context := argument;
 			current_argument.set_context (current_context);

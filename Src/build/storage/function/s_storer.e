@@ -16,11 +16,18 @@ feature
 
 	retrieved_data: LINKED_LIST [STATE];
 
-	store (file_name: STRING) is
+	file_name: STRING is
+		do
+			Result := Environment.states_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		do
 			retrieved := Void;
 			build_stored_data;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_data := Void
 		end;
 
@@ -48,12 +55,12 @@ feature {NONE}
 	
 feature 
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		local
 			sb: S_STATE;
 			b: STATE
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			stored_data := retrieved.stored_data;
 			!!retrieved_data.make;
 			from

@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.mouse1d_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.mouse1d_pixmap);
-			set_label (Event_const.mouse1d_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.mouse1d_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.mouse1d_label
 		end;
 
 	eiffel_text: STRING is "add_button_press_action (1, ";	

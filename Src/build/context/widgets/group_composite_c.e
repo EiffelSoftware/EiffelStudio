@@ -7,25 +7,27 @@ inherit
 		rename
 			create_context as old_create_context
 		redefine
-			is_group_composite, set_size, full_name,
-			retrieve_oui_widget, import_oui_widget
+			is_group_composite, set_size, 
+			retrieve_oui_widget, import_oui_widget,
+			set_width, set_size_for_group_comp
 		end;
 
 	COMPOSITE_C
 		redefine
-			create_context, is_group_composite, set_size, full_name,
-			retrieve_oui_widget, import_oui_widget
+			create_context, is_group_composite, set_size, 
+			retrieve_oui_widget, import_oui_widget,
+			set_width, set_size_for_group_comp
 		select
 			create_context
 		end
 	
 feature 
 
-	full_name: STRING is
+	--full_name: STRING is
 			-- full name of the context i.e. with root, group, ...
-		do
-			Result := intermediate_name;
-		end;
+		--do
+			--Result := intermediate_name;
+		--end;
 
 	is_group_composite: BOOLEAN is
 		do
@@ -35,6 +37,8 @@ feature
 	create_new_child: CONTEXT is
 		do
 			Result := context_catalog.toggle_b_type.create_context (Current);
+			Result.remove_resize_policy;
+			Result.widget.manage
 		end;
 
 	create_context (a_parent: COMPOSITE_C): like Current is
@@ -61,8 +65,8 @@ feature
 			modification: BOOLEAN;
 		do
 			size_modified := True;
-			widget.set_managed (False);
-			widget.set_size (new_w, new_h);
+			widget.unmanage;
+			widget.set_height (new_h);
 			children_number := arity;
 			if children_number = 0 then
 					-- Create first child
@@ -97,12 +101,59 @@ feature
 				modification := True;
 			end;
 			if modification then
-				realize;
 				tree.display (Current);
 			end;
-			widget.set_managed (True);
+			set_width (new_w);
+			widget.manage
 		end;
 
+	set_width (new_w: INTEGER) is
+		do
+			if new_w /= width then
+				widget.set_width (new_w);
+				from
+					child_start
+				until
+					child_offright
+				loop
+					child.widget.unmanage;
+					child.set_width (new_w);
+					child_forth
+				end;
+				from
+					child_start
+				until
+					child_offright
+				loop
+					child.widget.manage;
+					child_forth
+				end;
+			end;
+		end;
+
+	set_size_for_group_comp (new_w, new_h: INTEGER) is
+		do
+			if new_w /= width then
+				widget.set_width (new_w);
+				from
+					child_start
+				until
+					child_offright
+				loop
+					child.widget.unmanage;
+					child.set_size_for_group_comp (new_w, new_h);
+					child_forth
+				end;
+				from
+					child_start
+				until
+					child_offright
+				loop
+					child.widget.manage;
+					child_forth
+				end;
+			end;
+		end;
 
 	retrieve_oui_widget is
 		local

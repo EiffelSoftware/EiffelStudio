@@ -5,10 +5,7 @@ inherit
 
 	CONSTANTS;
 	SHARED_CONTEXT;
-	CONTEXT_STONE
-		redefine
-			transportable
-		end;
+	CONTEXT_STONE;
 	DRAWING_AREA
 		rename
 			make as dr_area_create,
@@ -38,8 +35,10 @@ inherit
 		end;
 	HOLE
 		redefine
-			stone, compatible
+			compatible, process_type, process_context,
+			process_attribute
 		end;
+	CONTEXT_DRAG_SOURCE;
 	REMOVABLE;
 	CLOSEABLE
 
@@ -53,7 +52,7 @@ feature
 			-- Remove context represented by
 			-- Current context stone of tree.
 		do
-			original_stone.remove_yourself
+			data.remove_yourself
 		end;
 
 	target: WIDGET is
@@ -68,13 +67,16 @@ feature
 			top_shell.hide
 		end;
 	
+feature -- Stone
+
+	data: CONTEXT;
+
 feature {NONE}
 
 	source: WIDGET is
 		do
 			Result := Current
 		end;
-
 	
 feature 
 
@@ -95,7 +97,7 @@ feature
 		do
 			display_elt := True;
 			from
-				a_parent := elt.original_stone.parent
+				a_parent := elt.data.parent
 			until
 				(a_parent = Void) or not display_elt
 			loop
@@ -320,15 +322,13 @@ feature {NONE}
 			else
 				find;
 				if not found then
-					original_stone := Void;	
-					transportable := False;
+					data := Void;	
 				elseif (argument = Third) then
 						-- Selection before show command or transport.
-					transportable := True;
-					original_stone := element.original_stone;
+					data := element.data;
 				elseif (argument = Fourth) then
 						-- Group
-					a_context := element.original_stone;
+					a_context := element.data;
 					a_group := a_context.group;
 					if a_context.grouped then
 						a_group.start;
@@ -342,7 +342,7 @@ feature {NONE}
 					end;
 					display (a_context);
 				else
-					a_context := element.original_stone;
+					a_context := element.data;
 					if (a_context.parent = Void) or else
 					   a_context.parent.is_bulletin 
 					then
@@ -363,139 +363,126 @@ feature {NONE}
 			end;
 		end;
 
-	-- *****************
-	-- * Stone section *
-	-- *****************
+feature -- Hole
 
-	transportable: BOOLEAN;
-
-	symbol: PIXMAP is
+	compatible (st: STONE): BOOLEAN is
 		do
-			Result := original_stone.symbol
+			Result :=
+				st.stone_type = Stone_types.attribute_type or else
+				st.stone_type = Stone_types.context_type or else
+				st.stone_type = Stone_types.type_stone_type
 		end;
 
-	label: STRING is
+	process_attribute (dropped: ATTRIB_STONE) is
 		do
-			Result := original_stone.label
+			dropped.copy_attribute (element.data);
 		end;
 
-	original_stone: CONTEXT;
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.eiffel_type
-		end;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
-
-	entity_name: STRING is
-		do
-			Result := original_stone.entity_name
-		end;
-
-	eiffel_text: STRING is
-		do
-			Result := original_stone.eiffel_text
-		end;
-
-	-- ****************
-	-- * Hole section *
-	-- ****************
-
-	stone: TYPE_STONE;
-
-	compatible (s: TYPE_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-
-	process_stone is
+	process_type (dropped: TYPE_STONE) is
 		-- Process stone in current hole
 		local
 			a_composite_c: COMPOSITE_C;
-			context_stone: CONTEXT_STONE;
 			context_type: CONTEXT_TYPE;
 			group_stone: GROUP_ICON_STONE;
-			attrib_stone: ATTRIB_STONE;
-			window_c: WINDOW_C;
 			new_context: CONTEXT;
 			temp_w_context: TEMP_WIND_C;
 			perm_w_context: PERM_WIND_C;
+			st: like dropped
 		do
-			group_stone ?= stone;
-			if not (group_stone = Void) then
-				stone := group_stone.original_stone;
+			st := dropped;
+			group_stone ?= dropped;
+			if group_stone /= Void then
+				st := group_stone.data;
 			end;
-			context_stone ?= stone;
-			context_type ?= stone;
-			attrib_stone ?= stone;
-			if context_stone /= Void then
-				window_c ?= context_stone.original_stone;
-			end;
+			context_type ?= st;
 			if context_type /= Void and then
-				context_type.equivalent (context_catalog.perm_wind_type) then
-					new_context := context_type.create_context (a_composite_c);
+				context_type = context_catalog.perm_wind_type then
+					new_context := context_type.create_context (Void);
 						-- arm the interface button
 					main_panel.interface_t.arm
 			elseif context_type /= Void and then
-				context_type.equivalent (context_catalog.temp_wind_type) then
+				context_type = context_catalog.temp_wind_type then
 					find;
 					if found then
-						perm_w_context ?= element.original_stone.root;
+						perm_w_context ?= element.data.root;
 						if perm_w_context /= Void then		
 							new_context := context_type.create_context (perm_w_context);
 						else
-							temp_w_context ?= element.original_stone.root;
+							temp_w_context ?= element.data.root;
 							perm_w_context ?= temp_w_context.parent;
 							if perm_w_context /= Void then	
 								new_context := context_type.create_context (perm_w_context);
 							end;
 						end;
 					end;
-			elseif window_c /= Void then
-				temp_w_context ?= window_c;
-				if temp_w_context /= Void then
+			else
+				find;
+				if found then
+					a_composite_c ?= element.data;
+					if a_composite_c /= Void and then
+						not a_composite_c.is_in_a_group then
+						if not (context_type = Void) then
+							new_context := context_type.create_context (a_composite_c);
+						end;
+					end
+				end
+			end;
+			process_new_context (new_context)
+		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+		-- Process stone in current hole
+		local
+			a_composite_c: COMPOSITE_C;
+			context_stone: CONTEXT_STONE;
+			window_c: WINDOW_C;
+			new_context: CONTEXT;
+			temp_w_context: TEMP_WIND_C;
+			perm_w_context: PERM_WIND_C;
+		do
+			context_stone := dropped;
+			window_c ?= context_stone.data;
+			if window_c /= Void then
+				if window_c.is_perm_window then
+					new_context := window_c.create_context (Void);
+				else
 					find;
 					if found then
-						perm_w_context ?= element.original_stone.root;
+						perm_w_context ?= element.data.root;
 						if perm_w_context /= Void then			
 							new_context := window_c.create_context (perm_w_context);
 						else
-							temp_w_context ?= element.original_stone.root;
+							temp_w_context ?= element.data.root;
 							perm_w_context ?= temp_w_context.parent;
 							if perm_w_context /= Void then	
 								new_context := window_c.create_context (perm_w_context);
 							end;
 						end;
 					end;
-				else
-					new_context := window_c.create_context (a_composite_c);
 				end;
 			else
 				find;
 				if found then
-					a_composite_c ?= element.original_stone;
-					if not (attrib_stone = Void) then
-						attrib_stone.copy_attribute (element.original_stone);
-					elseif not (a_composite_c = Void) and then
-						not a_composite_c.is_in_a_group then
-						if not (context_stone = Void) then
-							new_context := context_stone.original_stone.create_context (a_composite_c);
-						elseif not (context_type = Void) then
-							new_context := context_type.create_context (a_composite_c);
-						end;
+					a_composite_c ?= element.data;
+					if a_composite_c /= Void and then
+						not a_composite_c.is_in_a_group 
+					then
+						new_context := context_stone.data.create_context (a_composite_c);
 					end
 				end
 			end;
+			process_new_context (new_context)
+		end;
+
+	process_new_context (new_context: CONTEXT) is
+		local
+			temp_w_context: TEMP_WIND_C;
+		do
 			if new_context /= Void then
 				new_context.realize;
 				new_context.widget.manage;
+				temp_w_context ?= new_context;
 				if temp_w_context /= Void then
-					temp_w_context ?= new_context;
 					temp_w_context.popup;
 				end;
 				display (new_context);

@@ -102,7 +102,7 @@ feature {NONE}
 	set_attributes (c: CONTEXT) is
 		do
 			if not (visual_name = Void) then
-				c.set_visual_name (visual_name);
+				c.retrieve_set_visual_name (visual_name);
 			end;
 			if position_modified then
 				c.set_x_y (x, y);

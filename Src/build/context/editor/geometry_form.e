@@ -24,6 +24,11 @@ feature {NONE}
 			Result := Context_const.geometry_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.geometry_format_nbr
+		end;
+
 	Set_position_cmd: SET_POSITION_CMD is
 		once
 			!!Result
@@ -58,11 +63,12 @@ feature
 
 	label_height: LABEL_G;
 
+	label_width: LABEL_G;
+
 	make_visible (a_parent: COMPOSITE) is
 		local
 			label_x: LABEL_G;
 			label_y: LABEL_G;
-			label_width: LABEL_G;
 		do
 			initialize (Widget_names.geometry_form_name, a_parent);
 
@@ -118,8 +124,7 @@ feature
 			show_current
 		end;
 
-	
-feature {NONE}
+feature
 
 	reset is
 		local
@@ -130,12 +135,16 @@ feature {NONE}
 			text_field_y.set_int_value (context.y);
 			text_field_width.set_int_value (context.width);
 			if scroll_list = Void then
-				text_field_height.show;
+				text_field_height.manage;
 				label_height.manage;
 				text_field_height.set_int_value (context.height);
+				if not label_width.managed then
+					label_width.manage;
+					text_field_width.manage
+				end;
 			else
 				label_height.unmanage;
-				text_field_height.hide
+				text_field_height.unmanage;
 			end;
 		end;
 

@@ -5,7 +5,8 @@ inherit
 
 	HOLE
 		redefine
-			process_stone
+			compatible, process_command,
+			process_instance
 		end;
 	EB_BUTTON_COM
 
@@ -44,24 +45,31 @@ feature {NONE}
 
 feature {NONE}
 
-	process_stone is
-		require else
-			valid_stone: stone /= void;
-		local
-			inst_editor: CMD_INST_EDITOR;
-			inst: CMD_INSTANCE;
-			com_type: CMD;
-			com_inst: CMD_INSTANCE
+	stone_type: INTEGER is
 		do
-			com_type ?= stone.original_stone;
-			com_inst ?= stone.original_stone;
-			if (com_type /= Void) then
-				!!inst.session_init (com_type);
-				inst.create_editor
-			elseif (com_inst /= Void) then
-				!!inst.session_init (com_inst.associated_command);
-				inst.create_editor
-			end					
+		end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result :=
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type
+		end;
+
+	process_command (cmd_stone: CMD_STONE) is
+		local
+			inst: CMD_INSTANCE
+		do
+			!!inst.session_init (cmd_stone.data);
+			inst.create_editor
+		end;
+
+	process_instance (cmd_inst_stone: CMD_INST_STONE) is
+		local
+			inst: CMD_INSTANCE
+		do
+			!!inst.session_init (cmd_inst_stone.associated_command);
+			inst.create_editor
 		end;
 
 	execute (argument: ANY) is

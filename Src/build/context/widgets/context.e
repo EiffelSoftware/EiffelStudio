@@ -19,24 +19,24 @@ inherit
 			First as first_arg,
 			Second as second_arg
 		end;
-	CONTEXT_STONE
-		rename
-			source as widget
-		redefine
-			initialize_transport
-		end;
+	CONTEXT_STONE;
 	EB_HASHABLE;
 	CALLBACK_GENE;
 	HOLE
 		rename
 			target as widget
 		redefine
-			stone, compatible
+			process_attribute, compatible
 		end;
 	REMOVABLE;
 	NAMABLE;
 	DEFERRED_CREATOR;
-	EDITABLE
+	EDITABLE;
+	DRAG_SOURCE
+		rename
+			source as widget
+		end;
+	TYPE_DATA
 	
 feature -- Editable
 
@@ -59,12 +59,18 @@ feature -- Editable
 			end;
 		end;
 
+	eiffel_type: STRING is
+			-- Name of the class associated
+			-- with current data
+		deferred
+		end;
+
 feature {NONE}
 
 	update_tree_element is
 		do
 			tree_element.set_text (label);
-			tree.display (original_stone);
+			tree.display (data);
 			context_catalog.update_name_in_editors (Current);
 		end;
 	
@@ -101,37 +107,28 @@ feature -- Removable
 				-- Applied on original stone because of
 				-- the bulletin_c that can be transformed
 				-- in group_c
-			command.execute (original_stone);
+			command.execute (data);
 			tree.display (a_parent);
 		end;
 
 	
 feature {NONE}
 
-	stone: TYPE_STONE;
-
-	compatible (s: TYPE_STONE): BOOLEAN is
+	compatible (st: STONE): BOOLEAN is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := st.stone_type = Stone_types.attribute_type
 		end;
 
-	process_stone is
+	process_attribute (dropped: ATTRIB_STONE) is
 			-- Process stone in current hole.
 			-- By default, process only the attrib_stones
-		local
-			attrib_stone: ATTRIB_STONE;
 		do
-			attrib_stone ?= stone;
-			if not (attrib_stone = Void) then
-				attrib_stone.copy_attribute (original_stone);
-			end;
+			dropped.copy_attribute (data);
 		end;
 
 	-- ************************
 	-- * Hash coding features *
 	-- ************************
-
 	
 feature 
 
@@ -192,7 +189,7 @@ feature
 			end;
 		end;
 
-	original_stone: CONTEXT is
+	data: CONTEXT is
 			-- Canonical representative of current stone
 		do
 			Result := Current
@@ -208,7 +205,7 @@ feature {NONE}
 	
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		deferred
 		end;
 
@@ -284,9 +281,7 @@ feature
 	oui_create (a_parent: COMPOSITE) is
 			-- Create the widget and define the callbacks
 		do
-			initialize;
-			create_oui_widget (a_parent);
-			add_widget_callbacks;
+			retrieve_oui_create (a_parent);
 			!!tree_element.make (Current);
 		end;
 
@@ -359,18 +354,10 @@ feature
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			!! resize_policy.make;
-			resize_policy.set_context (Current)
 		end;
 
 	
 feature {NONE}
-
-	initialize_transport is
-		do
-			widget.set_action ("!<Btn3Down>", transport_command, Current);
-			widget.set_action ("!Shift<Btn3Down>", name_command, Current)
-		end;
 
 	add_widget_callbacks is
 			-- Define the general behavior of the widget
@@ -401,28 +388,6 @@ feature {NONE}
 			a_widget.set_action ("<Key>osfDown", Eb_selection_mgr, Nineth);
 				-- Cursor shape
 			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg);
-		end;
-
-	remove_widget_callbacks is
-		do
-			widget.remove_button_press_action (2, show_command, Current);
-			widget.remove_button_release_action (2, show_command, Void);
-			widget.remove_button_press_action (3, transport_command, Current);
-		end;
-	
-feature 
-
-	remove_callbacks is
-		do
-			remove_widget_callbacks;
-			from
-				child_start
-			until
-				child_offright
-			loop
-				child.remove_callbacks;
-				child_forth
-			end;
 		end;
 
 	
@@ -607,22 +572,34 @@ feature
 			-- Set new size of widget
 		require
 			valid_parent: parent /= Void;
-			parent_is_bulletin: parent.is_bulletin
 		local
 			eb_bulletin: SCALABLE;
-			not_managed: BOOLEAN
+			not_managed: BOOLEAN;
+			group_composite: GROUP_COMPOSITE_C
 		do
 			size_modified := True;
-			if widget.managed then
-				not_managed := True
-				widget.unmanage
-			end;
-			widget.set_size (new_w, new_h);
-			if not_managed then
-				widget.manage
-			end;
-			eb_bulletin ?= parent.widget;
-			eb_bulletin.update_ratios (widget);
+			if parent.is_bulletin then
+				if widget.managed then
+					not_managed := True
+					widget.unmanage
+				end;
+				widget.set_size (new_w, new_h);
+				eb_bulletin ?= parent.widget;
+				eb_bulletin.update_ratios (widget);
+				if not_managed then
+					widget.manage
+				end
+			else
+					-- Widgets in radio box, check box ...
+				group_composite ?= parent;
+				if group_composite = Void then
+					widget.set_size (new_w, new_h)
+				else
+					group_composite.widget.unmanage;
+					group_composite.set_size_for_group_comp (new_w, new_h);
+					group_composite.widget.manage;
+				end;
+			end
 		end;
 
 	size_modified: BOOLEAN;
@@ -655,9 +632,21 @@ feature
 			end
 		end;
 
-	-- ***********************
-	-- EiffelVision attributes
-	-- ***********************
+feature {GROUP_COMPOSITE_C}
+
+	set_size_for_group_comp (new_w, new_h: INTEGER) is
+		do
+			size_modified := True;
+			widget.set_size (new_w, new_h);
+		end;
+
+	set_width (new_w: INTEGER) is
+		do
+			size_modified := True;
+			widget.set_width (new_w);
+		end;
+
+feature -- EiffelVision attributes
 
 	bg_pixmap_name: STRING;
 
@@ -745,7 +734,37 @@ feature
 	set_fg_color_name (a_color_name: STRING) is
 		require
 			never_empty_name: a_color_name /= Void implies 
-							not a_color_name.empty
+							not a_color_name.empty;
+		deferred
+		end;
+
+	default_background_color: COLOR is
+		require
+			bg_color_is_void: bg_color_name = Void
+		do
+			Result := widget.background_color
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	set_default_background_color (color: COLOR) is
+		require
+			valid_color: color /= Void
+		do
+			widget.set_background_color (color)
+		end;
+
+	default_foreground_color: COLOR is
+		require
+			fg_color_is_void: fg_color_name = Void
+		deferred
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	set_default_foreground_color (color: COLOR) is
+		require
+			valid_color: color /= Void
 		deferred
 		end;
 
@@ -825,7 +844,12 @@ feature
 
 	resize_policy: RESIZE_POLICY;
 
-	set_resize_policy (new_elmt: RESIZE_POLICY) is
+	remove_resize_policy is
+		do
+			resize_policy := Void;
+		end;
+
+	set_resize_policy (new_elmt: like resize_policy) is
 		do
 			resize_policy := new_elmt;
 			resize_policy.update;
@@ -880,6 +904,30 @@ feature
 
 	grouped: BOOLEAN;
 			-- Is current context in the group list
+
+	previous_bg_color: COLOR;
+			-- Previous background color
+
+	set_selected_color is
+		do
+			previous_bg_color := widget.background_color;
+			if equal (previous_bg_color.name, 
+				Context_const.selected_color.name) 
+			then
+				widget.set_background_color (Context_const.second_selected_color);
+			else	
+				widget.set_background_color (Context_const.selected_color);
+			end
+		ensure
+			valid_previouse_color: previous_bg_color /= Void
+		end;
+
+	deselect_color is
+		require
+			valid_previouse_color: previous_bg_color /= Void
+		do
+			widget.set_background_color (previous_bg_color);
+		end;
 
 	set_grouped (flag: BOOLEAN) is
 			-- Set `grouped' to `flag'
@@ -956,8 +1004,6 @@ feature
 
 	undo_cut is
 			-- Undelete the context
-		require
-			widget_unmanaged: not widget.managed
 		do
 				-- If the parent is a group_c, the only link is
 				-- the value of parent, the tree is not updated
@@ -966,7 +1012,9 @@ feature
 				link_to_parent;
 			end;
 			tree.append (tree_element);
-			widget.set_managed (True);
+			if not widget.managed then
+				widget.set_managed (True);
+			end;
 		ensure
 			widget_shown: widget.managed
 		end;
@@ -1114,7 +1162,9 @@ feature {CONTEXT}
 			!!Result.make (0);
 			Result.append ("%T%T%T!!");
 			Result.append (entity_name);
-			Result.append (".make (%"");
+			Result.extend ('.');
+			Result.append (widget_creation_routine_name);
+			Result.append (" (%"");
 			Result.append (entity_name);
 			Result.append ("%", ");
 			Result.append (parent_name);
@@ -1126,6 +1176,11 @@ feature {CONTEXT}
 			Result.append ("%N");
 			Result.append (children_creation (entity_name))
 		end;
+
+	widget_creation_routine_name: STRING is
+		once
+			Result := "make"
+		end
 
 	children_initialization: STRING is
 			-- Generated string for the initialization of all the
@@ -1214,28 +1269,9 @@ feature {CONTEXT}
 				Result.prepend (comment_text);
 			end;
 			Result.append (children_initialization);
---			Result.append (form_attachments_text (context_name));
 			Result.append (bulletin_resize_text (context_name));
 		end;
 
---	form_attachments_text (context_name: STRING): STRING is
---			-- Text generated for the attachments of
---			-- the children if the context is a form
---		do
---			Result.Create (0);
---			if is_form then
---				from
---					child_start
---				until
---					child_offright
---				loop
---					Result.append (child.attachments.generated_text (context_name));
---					child_forth
---				end;
---			end;
---		end;
-
-	
 feature {NONE}
 
 	bulletin_resize_text (context_name: STRING): STRING is
@@ -1493,8 +1529,8 @@ feature
 			Result.append (context_initialization (""));
 			Result.append (font_creation (""));
 			Result.append (children_initialization);
-			Result.append (bulletin_resize_text (""));
 			Result.append (position_initialization (""));
+			Result.append (bulletin_resize_text (""));
 
 				-- Colors
 
@@ -1519,6 +1555,24 @@ feature
 -- Storage and retrieval features
 -- ******************************
 
+	retrieved_node: S_CONTEXT;
+
+	retrieve_oui_create (a_parent: COMPOSITE) is
+			-- Create the widget and define the callbacks
+			--| This oui_create does not create the
+			--| tree element since it will be done
+			--| after retrieving the attributes from
+			--| the storer (an optimization)
+		do
+			initialize;
+			create_oui_widget (a_parent);
+			if not is_window then
+				!! resize_policy;
+				resize_policy.set_context (Current)
+			end;
+			add_widget_callbacks;
+		end;
+
 	stored_node: S_CONTEXT is
 		deferred
 		end;
@@ -1528,7 +1582,12 @@ feature
 			retrieved_node := a_node;
 		end;
 
-	retrieved_node: S_CONTEXT;
+	retrieve_set_visual_name (s: STRING) is
+		require
+			valid_s: s /= Void
+		do
+			visual_name := clone (s);
+		end;
 
 	retrieve_oui_widget is
 		local
@@ -1537,8 +1596,9 @@ feature
 			if parent /= Void then
 				parent_widget ?= parent.widget;
 			end;
-			oui_create (parent_widget);
+			retrieve_oui_create (parent_widget);
 			retrieved_node.set_context_attributes (Current);
+			!!tree_element.make (Current);
 			from
 				child_start
 			until
@@ -1562,8 +1622,9 @@ feature
 			if not (parent = Void) then
 				parent_widget ?= parent.widget;
 			end;
-			oui_create (parent_widget);
+			retrieve_oui_create (parent_widget);
 			retrieved_node.set_context_attributes (Current);
+			!!tree_element.make (Current);
 			from
 				child_start
 			until

@@ -7,7 +7,6 @@ inherit
 	FUNCTION_BAR
 		redefine
 			edit_hole,
-			set_function,
 			make,
 			unregister_holes
 		end
@@ -20,9 +19,12 @@ feature {NONE}
 
 	edit_hole: B_EDIT_HOLE;
 
+	state_hole: B_STATE_H;
+
 	unregister_holes is
 		do
-			edit_hole.unregister
+			edit_hole.unregister;
+			state_hole.unregister
 		end;
 
 feature 
@@ -31,16 +33,13 @@ feature
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: BEHAVIOR_EDITOR) is
 		local
-			state_hole: B_STATE_H;
 			label: LABEL_G;
 		do
 			form_create (a_name, a_parent);
 			!!edit_hole.make (ed, Current);
-			!!state_hole.make (ed);
-			state_hole.make_visible (Current);
-			!!label.make (Widget_names.label, Current);
-			!!label1.make (Widget_names.label1, Current);
-			label.set_text (Behaviour_state_label);
+			!!state_hole.make (ed, Current);
+			!!label.make (Widget_names.behaviour_state_label, Current);
+			!!label1.make (Widget_names.label, Current);
 
 			set_fraction_base (2);
 			attach_top (label, 1);
@@ -56,11 +55,6 @@ feature
 			attach_left_widget (edit_hole, label, 1);
 			attach_left_position (state_hole, 1);
 			attach_left_widget (state_hole, label1, 1);
-		end;
-
-	set_function (b: BEHAVIOR) is
-		do
-			edit_hole.set_original_stone (b)
 		end;
 
 end

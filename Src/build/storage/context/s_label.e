@@ -37,9 +37,10 @@ feature
 
 	set_context_attributes (a_context: LABEL_C) is
 		do
-			if not (text = Void) then
-				a_context.set_text (text)
-			end;
+			--if not (text = Void) then
+				--a_context.set_text (text)
+			--end; 
+			-- alias visual_name
 			if left_alignment_modified then
 				a_context.set_left_alignment (left_alignment);
 			end;
@@ -53,6 +54,7 @@ feature
 feature {NONE}
 
 	text: STRING;
+		-- to be removed
 
 	left_alignment: BOOLEAN;
 

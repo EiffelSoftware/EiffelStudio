@@ -4,14 +4,12 @@ class COMMAND_CMD
 
 inherit
 
-	PREDEF_CMD_IDENTIFIERS;
 	PREDEF_CMD
 		redefine
 			eiffel_inherit_text,
 			eiffel_body_text,
 			eiffel_creation_text
-		end;
-	WINDOWS
+		end
 
 creation
 
@@ -20,24 +18,20 @@ creation
 	
 feature 
 
+	eiffel_type: STRING is "Cmd";
+
 	identifier: INTEGER is
 		do
 			Result := - command_cmd_id
 		end;
 
-	eiffel_type: STRING is "Cmd";
-
-	make is
-		do
-			set_symbol (Pixmaps.command_pixmap);
-			set_label (eiffel_type);
-			predefined_command_table.put (Current, identifier * -1)
+	arguments: EB_LINKED_LIST [ARG] is 
+		once 
+			!!Result.make 
 		end;
 
-	arguments: EB_LINKED_LIST [ARG] is do !!Result.make end;
-
 	labels: EB_LINKED_LIST [CMD_LABEL] is
-		do 
+		once 
 			!!Result.make;
 		end;
 
@@ -59,6 +53,9 @@ feature
 			Result.append ("%Texecute is%N%T%Tdo%N%T%Tend; -- execute%N%N");
 		end;
 
-	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is do !!Result.make (0) end;
+	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is 
+		do 
+			!!Result.make (0) 
+		end;
 
 end

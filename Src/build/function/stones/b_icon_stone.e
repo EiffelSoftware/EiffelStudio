@@ -6,9 +6,9 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	BEHAVIOR_STONE
 	
@@ -19,24 +19,6 @@ feature
 			initialize_transport
 		end;
 			
-	original_stone: BEHAVIOR;
-
-	
-feature {NONE}
-
-	context: CONTEXT is
-		do
-			Result := original_stone.context
-		end;
-
-	labels: LINKED_LIST [CMD_LABEL] is
-		do
-			Result := original_stone.labels
-		end;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
+	data: BEHAVIOR;
 
 end

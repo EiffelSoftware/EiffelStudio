@@ -33,11 +33,13 @@ feature
 			tmp: STRING
 		do
 			caller := c;
-			tmp := s
-			if extra_message /= Void then
+			if extra_message = Void then
+				tmp := s;
+			else
+				tmp := clone (s);
 				tmp.replace_substring_all ("%%X", extra_message)
 			end;
-			set_message (s);
+			set_message (tmp);
 			old_popup
 		end;
 

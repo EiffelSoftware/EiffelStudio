@@ -6,27 +6,52 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone
+			transportable	
 		end;
-	TYPE_STONE;
+	STONE
+		redefine
+			process, stone_type
+		end;
 	WINDOWS;
-	CONSTANTS
+	CONSTANTS;
+	DATA
 	
 feature 
-
-	identifier: INTEGER is
-		do
-		end;
 
 	copy_attribute (new_context: CONTEXT) is
 			-- Copy the attribute "transported" by the stone
 		deferred
 		end;
 
-	
 feature {NONE}
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.attribute_help_fn
+		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.type_cursor
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.attribute_type
+		end;
+
+	transportable: BOOLEAN is
+		do
+			Result := True
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_attribute (Current);
+		end;
 
 	modify_context (a_context: CONTEXT) is
 			-- Modify the attribute of a context
@@ -54,20 +79,14 @@ feature {NONE}
 			end;
 		end;
 
-	
-feature 
-
-	original_stone: TYPE_STONE;
-	
 feature {NONE}
 
 	editor: CONTEXT_EDITOR;
 		-- Editor where the current stone is defined
-
 	
 feature 
 
-	make (a_parent: FORM; an_editor: CONTEXT_EDITOR) is
+	make (a_parent: COMPOSITE; an_editor: CONTEXT_EDITOR) is
 			-- Create the visual stone
 		do
 			editor := an_editor;

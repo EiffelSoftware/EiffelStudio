@@ -14,20 +14,29 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end
 	
 feature 
 
-	original_stone: STATE is
+	data: STATE is
 		deferred
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.new_state_type
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_new_state
 		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.state_cursor
 		end;
-
-	label: STRING is "";
 
 end

@@ -14,36 +14,29 @@ inherit
 
 	STONE
 		redefine
-			original_stone
-		end;
-	HELPABLE
-	
-feature {NONE}
-
-	help_file_name: STRING is
-		do
-			Result := eiffel_type
-		end;
+			data
+		end
 	
 feature 
 
-	identifier: INTEGER is
+	data: TYPE_DATA is
 		deferred
 		end;
 
-	original_stone: TYPE_STONE is
-		deferred
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.type_stone_type
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_type (Current)
 		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.type_cursor
-		end;
-
-	eiffel_type: STRING is
-			-- Name of the class associated 
-			-- with current stone
-		deferred
 		end;
 
 end

@@ -5,15 +5,10 @@ inherit
 
 	FUNC_EDIT_HOLE
 		redefine
-			process_stone, function_editor, stone,
-			compatible, set_widget_default
+			process_behavior, function_editor, 
+			set_widget_default
 		end;
 	BEHAVIOR_STONE
-		export
-			{NONE} all
-		redefine
-			transportable
-		end;
 
 creation
 
@@ -21,15 +16,7 @@ creation
 	
 feature {NONE}
 
-	stone: BEHAVIOR_STONE;
-
 	function_editor: BEHAVIOR_EDITOR;
-
-	compatible (s: BEHAVIOR_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
 
 	set_widget_default is
 		do
@@ -53,44 +40,19 @@ feature {NONE}
 
 	label: STRING is
 		do
-			Result := original_stone.label
+			Result := data.label
 		end;
 
 feature {NONE}
 
-	original_stone: BEHAVIOR;
-
-	transportable: BOOLEAN is
+	data: BEHAVIOR is
 		do
-			Result := original_stone /= Void;
+			Result := function_editor.edited_function;
 		end;
 
-	identifier: INTEGER is
+	process_behavior (dropped: BEHAVIOR_STONE) is
 		do
-			Result := original_stone.identifier
-		end;
-
-	context: CONTEXT is
-		do
-			Result := original_stone.context
-		end;
-
-	labels: LINKED_LIST [CMD_LABEL] is
-		do
-			Result := original_stone.labels
-		end;
-
-	process_stone is
-		do
-			original_stone.merge (stone.original_stone)
-		end;
-
-	
-feature 
-
-	set_original_stone (b: BEHAVIOR) is
-		do
-			original_stone := b
+			data.merge (dropped.data)
 		end;
 
 end

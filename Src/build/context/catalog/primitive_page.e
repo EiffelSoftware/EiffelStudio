@@ -113,14 +113,14 @@ feature {NONE}
 			!!arrow_b_type.make (Widget_names.arrow_b_name, arrow_b_c);
 			arrow_b_type.initialize_callbacks (arrow_right);
 
-			sep_single := create_separator (False, single_line);
-			sep_double := create_separator (False, double_line);
-			sep_single_dashed := create_separator (False, single_dashed_line);
-			sep_double_dashed := create_separator (False, double_dashed_line);
-			v_sep_single := create_separator (True, single_line);
-			v_sep_double := create_separator (True, double_line);
-			v_sep_single_dashed := create_separator (True, single_dashed_line);
-			v_sep_double_dashed := create_separator (True, double_dashed_line);
+			sep_single := create_separator (False, Context_const.single_line);
+			sep_double := create_separator (False, Context_const.double_line);
+			sep_single_dashed := create_separator (False, Context_const.single_dashed_line);
+			sep_double_dashed := create_separator (False, Context_const.double_dashed_line);
+			v_sep_single := create_separator (True, Context_const.single_line);
+			v_sep_double := create_separator (True, Context_const.double_line);
+			v_sep_single_dashed := create_separator (True, Context_const.single_dashed_line);
+			v_sep_double_dashed := create_separator (True, Context_const.double_dashed_line);
 
 			!!scale_c;
 			!!scale.make (scale_c.eiffel_type, Current);
@@ -178,9 +178,6 @@ feature {NONE}
 			attach_top_widget (toggle_b, v_sep_single_dashed, 15);
 			attach_top_widget (toggle_b, v_sep_double_dashed, 15);
 		end;
-
-	single_line, double_line: INTEGER is unique;
-	single_dashed_line, double_dashed_line: INTEGER is unique;
 
 	create_separator (vertical: BOOLEAN; line_mode: INTEGER): SEPARATOR is
 		do

@@ -6,6 +6,9 @@ inherit
 	CMD_EDITOR_HOLE
 		rename
 			make as old_make
+		redefine
+			compatible, process_command,
+			process_instance
 		end
 	WINDOWS;
 	COMMAND
@@ -51,20 +54,27 @@ feature {NONE}
 				window_mgr.display (inst_editor)	
 			end
 		end;
- 
-	process_stone is
-		local
-			cmd_type: CMD_STONE;
-			cmd_inst: CMD_INST_STONE
+
+	stone_type: INTEGER is
 		do
-			cmd_type ?= stone;
-			cmd_inst ?= stone;
-			if not (cmd_type = Void) then
-				create_instance_editor (cmd_type.original_stone);
-			elseif not (cmd_inst = Void) then
-				create_instance_editor (cmd_inst.associated_command)
-			end
-		end; -- process_stone
+		end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result := 
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type
+		end;
+ 
+	process_command (cmd_stone: CMD_STONE) is
+		do
+			create_instance_editor (cmd_stone.data);
+		end;
+
+	process_instance (inst_stone: CMD_INST_STONE) is
+		do
+			create_instance_editor (inst_stone.associated_command)
+		end; 
 
 	execute (argument: ANY) is
 		do

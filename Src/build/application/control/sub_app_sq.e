@@ -21,7 +21,7 @@ inherit
 		end;
 	
 
-        
+		
 feature 
 
 
@@ -29,14 +29,14 @@ feature
 	visual_name: STRING is do end;
 
 	set_stone (state: STATE) is
-                        -- Set original_stone to `state' and update the
-                        -- text to the original_stone label.
-                require else
-                        not_void_state: not (state = Void)
-                do
-                        --original_stone := state;
-                        text_image.set_text (label);
-                end; -- set_stone
+			-- Set data to `state' and update the
+			-- text to the data label.
+		require else
+			not_void_state: not (state = Void)
+		do
+			--data := state;
+			text_image.set_text (label);
+		end; -- set_stone
 
 	radius: INTEGER is
 		do
@@ -48,13 +48,29 @@ feature
 			text_image.set_text (s)
 		end;
 
-	original_stone: SUB_APP_SQ is
+	data: SUB_APP_SQ is
 			-- Only temporary
 		do
 			Result := Current
 		end;
 
-	
+	set_center (p: COORD_XY_FIG) is
+			-- Set the center of the figure and the 
+			-- text_image field.
+		do
+			inner_figure.set_center (p);
+			outer_figure.set_center (p);
+			if text_image.drawing /= Void then
+				text_image.set_middle_center (p);
+			end;
+		end;
+
+	update_text is
+		do
+		   text_image.set_text (label);
+		   text_image.set_middle_center (center)	
+		end;
+
 feature {NONE}
 
 	init_radius: INTEGER is
@@ -66,7 +82,7 @@ feature {NONE}
 		do
 			!!Result;
 			Result.set (center.x, 
-				    center.y - (outer_figure.size_of_side // 2));
+					center.y - (outer_figure.size_of_side // 2));
 			
 		end; -- top_middle
 
@@ -74,21 +90,21 @@ feature {NONE}
 		do
 			!!Result;
 			Result.set (center.x - (outer_figure.size_of_side // 2),
-				    center.y)
+					center.y)
 		end; -- top_middle
 
 	right_middle: COORD_XY_FIG is
 		do
 			!!Result;
 			Result.set (center.x + (outer_figure.size_of_side // 2),
-				    center.y)
+					center.y)
 		end; -- top_middle
 
 	bottom_middle: COORD_XY_FIG is
 		do
 			!!Result;
 			Result.set (center.x, 
-				    center.y + (outer_figure.size_of_side // 2))
+					center.y + (outer_figure.size_of_side // 2))
 		end; -- top_middle
 
 	inner_figure: SQUARE;
@@ -147,15 +163,6 @@ feature
 			Result.interior.set_xor_mode; 
 			Result.set_center (a_center); 
 		end; -- moving_fig
-			
-	set_center (p: COORD_XY_FIG) is
-			-- Set the center of the figure and the 
-			-- text_image field.
-		do
-			inner_figure.set_center (p);
-			outer_figure.set_center (p);
-			text_image.set_middle_center (p);
-		end; -- set_center
 
 	set_radius (i: INTEGER) is
 		local
@@ -168,38 +175,37 @@ feature
 
 	text: STRING is
 			-- Text of Current.
-                do
+				do
 			--Result := text_image.text 
-                end; -- text
+				end; -- text
 
 	select_figure is do end;
 	
 	deselect is do end;
 
 
-        -- ***** Stone Details ***** --
+		-- ***** Stone Details ***** --
 
-        
+		
 feature {NONE}
 
 	source: WIDGET is
-                do
-                end;
-
-        
+		do
+		end;
+		
 feature 
 
 	label: STRING is
-                do
+		do
 			Result := text_image.text
-                end;
+		end;
 
-        
+		
 feature {NONE}
 
 	symbol: PIXMAP  is
-                do
-                end;
+		do
+		end;
 
 	labels: LINKED_LIST [CMD_LABEL] is
 		do

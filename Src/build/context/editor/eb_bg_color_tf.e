@@ -9,7 +9,7 @@ inherit
 		end;
 	HOLE
 		redefine
-			stone, compatible
+			process_color
 		end;
 	CONSTANTS
 
@@ -17,47 +17,42 @@ creation
 
 	make
 
-	
 feature {NONE}
 
 	editor: CONTEXT_EDITOR;
 
-	
-feature 
+	Bg_color_cmd: BG_COLOR_CMD is
+		once
+			!!Result
+		end;
 
-	make (a_name: STRING; a_parent: COMPOSITE; cmd: COMMAND; an_editor: CONTEXT_EDITOR) is
+	make (a_name: STRING; a_parent: COMPOSITE; an_editor: CONTEXT_EDITOR) is
 		do
 			editor := an_editor;
-			old_create (a_name, a_parent, cmd, an_editor);
+			old_create (a_name, a_parent, Bg_color_cmd, an_editor);
 			register;
 		end;
 
 	
 feature {NONE}
 
-	stone: EB_COLOR;
-	
-	compatible (s: EB_COLOR): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-
 	target: WIDGET is
 		do
 			Result := Current
 		end;
 
-	process_stone is
-		local
-			a_context: CONTEXT;
-			cmd: BG_STONE_CMD;
+	stone_type: INTEGER is
 		do
-			a_context := editor.edited_context;
-			!!cmd;
-			cmd.execute (a_context);
-			a_context.set_bg_color_name (stone.color_name);
-			context_catalog.update_editors (a_context, Context_const.color_form_nbr);
+			Result := Stone_types.color_type
+		end;
+
+	process_color (dropped: COLOR_STONE) is
+		local
+			cmd: like Bg_color_cmd
+		do
+			set_text (dropped.color_name);
+			!! cmd;
+			cmd.execute (editor);
 		end;
 
 end

@@ -1,5 +1,5 @@
 
-deferred class EB_BOX [T->STONE_PARENT] 
+deferred class EB_BOX [T->DATA] 
 
 inherit
 
@@ -102,7 +102,7 @@ feature -- List operations
 				until
 					other.after
 				loop
-					list_put_right (other.item.original_stone);
+					list_put_right (other.item);
 					other.forth;
 					forth
 				end;
@@ -113,11 +113,11 @@ feature -- List operations
 	
 	put (v: like item) is
 			-- Put item v at cursor position. Also
-			-- put item v as the original_stone in
+			-- put item v as the data in
 			-- icons.
 		do
-			list_put (v.original_stone);
-			icons.item.set_original_stone (item)
+			list_put (v);
+			icons.item.set_data (item)
 		end; -- put
 
 
@@ -140,7 +140,7 @@ feature -- List operations
 				loop
 					current_icon := icons.item;
 					if not after then
-						current_icon.set_original_stone (item);
+						current_icon.set_data (item);
 						icons.forth;
 						forth
 					else
@@ -291,7 +291,7 @@ feature -- Other features
 			until
 				other.after
 			loop
-				list_put_right (other.item.original_stone);
+				list_put_right (other.item);
 				other.forth;
 				forth
 			end;
@@ -339,8 +339,8 @@ feature {NONE}
 				icons.after or after
 			loop
 				icon := icons.item;
-				if icon.original_stone /= item then
-					icon.set_original_stone (item);
+				if icon.data /= item then
+					icon.set_data (item);
 				end;
 				if not icon.managed then
 					icons.item.set_managed (True)
@@ -363,7 +363,7 @@ feature {NONE}
 			until
 				icons.after or after
 			loop
-				icons.item.set_original_stone (item);
+				icons.item.set_data (item);
 				icons.item.set_managed (True);
 				icons.forth;
 				forth;
@@ -388,16 +388,19 @@ feature -- Unregisting holes
 		local
 			hole: HOLE
 		do
-			from
-				icons.start
-			until
-				icons.after
-			loop
-				hole ?= icons.item;
-				if hole /= Void then
-					hole.unregister;
-				end;
-				icons.forth
+			if implementation /= Void then
+					-- Current widget has been created
+				from
+					icons.start
+				until
+					icons.after
+				loop
+					hole ?= icons.item;
+					if hole /= Void then
+						hole.unregister;
+					end;
+					icons.forth
+				end
 			end
 		end;
 

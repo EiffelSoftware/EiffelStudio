@@ -20,8 +20,6 @@ feature -- Interface
 			label_pixmap: LABEL;
 			label_fg_color: LABEL;
 			label_colors: LABEL;
-			bg_color_stone: BG_COLOR_STONE;
-			fg_color_stone: FG_COLOR_STONE;
 			colors_stone: COLORS_STONE;
 			bg_pixmap_stone: BG_PIXMAP_STONE;
 		do
@@ -29,24 +27,20 @@ feature -- Interface
 
 			!!label_fg_color.make (Widget_names.foreground_color_name, 
 						Current);
-			!!fgr_color.make (Widget_names.textfield, Current, 
-					Fg_color_cmd, editor);
+			!!fgr_color.make (Widget_names.textfield, Current, editor);
 			!!label_bg_color.make (Widget_names.background_color_name, Current);
 			!!label_colors.make (Widget_names.colors_name, Current);
-			!!backgr_color.make (Widget_names.textfield, Current, 
-					Bg_color_cmd, editor);
+			!!backgr_color.make (Widget_names.textfield, Current, editor);
 			!!label_pixmap.make (Widget_names.background_pixmap_name, Current);
 			!!backgr_pixmap.make (Widget_names.textfield, Current, 
 					Bg_pixmap_cmd, editor);
 			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
 			!!color_set.make (Widget_names.color_form_name, Current);
 
-			!!bg_color_stone;
-			!!fg_color_stone;
 			!!colors_stone;
 			!!bg_pixmap_stone;
-			bg_color_stone.make (Current, editor);
-			fg_color_stone.make (Current, editor);
+			!!bg_color_stone.make (Current, backgr_color, editor);
+			!!fg_color_stone.make (Current, fgr_color, editor);
 			colors_stone.make (Current, editor);
 			bg_pixmap_stone.make (Current, editor);
 
@@ -86,6 +80,8 @@ feature -- Interface
 	unregister_holes is
 		do
 			if is_initialized then
+				bg_color_stone.unregister;
+				fg_color_stone.unregister;
 				backgr_color.unregister;
 				fgr_color.unregister;
 			end;
@@ -97,6 +93,9 @@ feature {NONE}
 
 	backgr_pixmap: EB_TEXT_FIELD;
 
+	bg_color_stone: BG_COLOR_STONE;
+	fg_color_stone: FG_COLOR_STONE;
+
 	fgr_color: EB_FG_COLOR_TF;
 
 	pixmap_selection_box: PIXMAP_FILE_BOX;
@@ -106,14 +105,9 @@ feature {NONE}
 			Result := Context_const.color_form_nbr
 		end;
 
-	Fg_color_cmd: FG_COLOR_CMD is
-		once
-			!!Result
-		end;
-
-	Bg_color_cmd: BG_COLOR_CMD is
-		once
-			!!Result
+	format_number: INTEGER is
+		do
+			Result := Context_const.color_format_nbr
 		end;
 
 	Bg_pixmap_cmd: BG_PIXMAP_CMD is

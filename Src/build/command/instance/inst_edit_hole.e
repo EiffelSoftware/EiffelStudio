@@ -6,12 +6,10 @@ inherit
 	EB_BUTTON_COM;
 	HOLE
 		redefine
-			stone, compatible
+			process_instance
 		end;
-	CMD_INST_STONE
-		redefine
-			transportable
-		end;
+	DRAG_SOURCE;
+	CMD_INST_STONE;
 	COMMAND;
 
 creation
@@ -23,21 +21,11 @@ feature {NONE}
 	instance_editor: CMD_INST_EDITOR;
 			-- Associated instance editor
 
-	transportable: BOOLEAN is
-		do
-			Result := original_stone /= Void
-		end;
-
 feature 
 
-	original_stone: CMD_INSTANCE is
+	data: CMD_INSTANCE is
 		do
-			Result := instance_editor.command_instance.original_stone
-		end;
-
-	arguments: LINKED_LIST [ARG_INSTANCE] is
-		do
-			Result := original_stone.arguments;
+			Result := instance_editor.command_instance.data
 		end;
 
 	target, source: WIDGET is
@@ -57,15 +45,7 @@ feature
 
 	associated_command: CMD is
 		do
-			Result := original_stone.associated_command;
-		end;
-
-	stone: CMD_INST_STONE;
-
-	compatible (s: CMD_INST_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := data.associated_command;
 		end;
 
 	make (ed: CMD_INST_EDITOR; a_parent: COMPOSITE) is
@@ -77,6 +57,7 @@ feature
 			instance_editor := ed;
 			make_visible (a_parent);
 			register;
+			initialize_transport
 		end; 
 
 	symbol: PIXMAP is
@@ -84,18 +65,13 @@ feature
 			Result := Pixmaps.command_instance_pixmap
 		end;
 
-	label: STRING is
-		do
-			Result := stone.label
-		end
-	
 feature {NONE}
 
-	process_stone is
+	process_instance (dropped: CMD_INST_STONE) is
 		local
 			inst: CMD_INSTANCE
 		do
-			inst := stone.original_stone;
+			inst := dropped.data;
 			if inst.edited then
 				inst.inst_editor.raise
 			else
@@ -107,8 +83,8 @@ feature {NONE}
 		local
 			inst: CMD_INSTANCE
 		do
-			if (original_stone /= Void) then
-				!!inst.session_init (original_stone.associated_command);
+			if (data /= Void) then
+				!!inst.session_init (data.associated_command);
 				instance_editor.set_instance (inst)
 			end 
 		end;

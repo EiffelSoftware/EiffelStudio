@@ -7,9 +7,6 @@ inherit
 		rename
 			make as top_shell_create,
 			realize as top_shell_realize
-		export
-			{NONE} all;
-			{ANY} show, hide, shown
 		end;
 	WINDOWS;
 	SHARED_TRANSLATIONS;
@@ -363,7 +360,7 @@ feature -- Group management
 		do
 			other_editor := editor (a_context, a_form_number);
 			if other_editor /= Void then
-				other_editor.current_form.reset
+				other_editor.reset_current_form
 			end
 		end;
 
@@ -429,8 +426,7 @@ feature -- Group management
 				editor_list.after 
 			loop
 				if editor_list.item.behavior_form_shown then
-					beh_form ?= editor_list.item.current_form;
-					beh_form.update_translation_page
+					editor_list.item.update_translation_page;
 				end;
 				editor_list.forth;
 			end;
@@ -446,7 +442,7 @@ feature -- Group management
 			until
 				editor_list.after
 			loop
-				if editor_list.item.edited_context =  a_context then
+				if editor_list.item.edited_context = a_context then
 					editor_list.item.clear
 				end;
 				editor_list.forth;

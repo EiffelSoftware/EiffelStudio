@@ -35,25 +35,6 @@ feature {NONE}
 
 feature 
 
-	empty_editor: like editor_type is
-			-- Retrieve an empty editor. If not found
-			-- then create one.
-		do
-			from
-				active_editors.start
-			until
-				active_editors.after
-				or is_empty (active_editors.item)
-			loop
-				active_editors.forth
-			end;
-			if not active_editors.after then
-				Result := active_editors.item
-			else
-				Result := editor
-			end
-		end;
-
 	editor: like editor_type is
 			-- Creates a new editor or retrieves a previously destroyed
 			-- (i.e. hidden) editor. 
@@ -70,6 +51,7 @@ feature
 				!!mp;
 				mp.set_watch_shape;
 				!!Result.make (identifier, screen);
+				Result.set_x_y (screen.x, screen.y);
 				mp.restore;
 			end;
 			active_editors.extend (Result);
@@ -80,14 +62,12 @@ feature
 			Result := active_editors.has (ed)
 		end;
 
-	
 feature {NONE}
 
-	is_empty (ed: like editor_type): BOOLEAN is
+	clear_editor (ed: like editor_type) is
 		do
 		end;
 
-	
 feature 
 
 	remove (ed: like editor_type) is
@@ -96,13 +76,25 @@ feature
 			active_editors.search (ed);
 			if not active_editors.after then
 				active_editors.remove;
-				ed.unrealize;
+				ed.hide;
 				if free_list.count >= free_list_max then
 					ed.destroy
 				else
 					free_list.extend (ed)
 				end
 			end
+		end;
+
+	clear_editors is
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				clear_editor (active_editors.item);
+				active_editors.forth
+			end;
 		end;
 
 	hide_editors is

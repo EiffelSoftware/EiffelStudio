@@ -5,9 +5,8 @@ inherit
 
 	APP_EDITOR_HOLE
 		redefine
-			stone, compatible
-		end;
-	LABELS
+			process_state
+		end
 
 creation
 
@@ -27,22 +26,19 @@ feature {NONE}
 	
 feature {NONE}
 
-	stone: STATE_STONE;
-
-	compatible (s: STATE_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.state_type
 		end;
 
-	process_stone is
+	process_state (dropped: STATE_STONE) is
 			-- Update the initial state of the application editor
 			-- with stone droppped. 
 		local
 			set_initial_state_command: APP_SET_INIT_STATE;
 		do
 			!!set_initial_state_command;
-			set_initial_state_command.execute (stone.original_stone);
+			set_initial_state_command.execute (dropped.data);
 		end; -- process_stone
 
 end

@@ -5,8 +5,8 @@ inherit
 
 	CMD_EDITOR_HOLE
 		redefine
-			stone, compatible
-		end;
+			process_type, process_context, compatible
+		end
 
 creation
 
@@ -14,12 +14,15 @@ creation
 
 feature 
 
-	stone: TYPE_STONE;
-
-	compatible (s: TYPE_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+		end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result := 
+				st.stone_type = Stone_types.context_type or else
+				st.stone_type = Stone_types.type_stone_type
 		end;
 
 	symbol: PIXMAP is
@@ -34,16 +37,21 @@ feature
 	
 feature {NONE}
 
-	process_stone is
+	process_type (dropped: TYPE_STONE) is
 		local
 			c: GROUP_C;
 			t: CONTEXT_GROUP_TYPE
 		do
-			c ?= stone.original_stone;
-			t ?= stone.original_stone;
+			c ?= dropped.data;
+			t ?= dropped.data;
 			if (c = Void) and (t = Void) then
-				command_editor.add_argument (stone)
+				command_editor.add_argument (dropped)
 			end;
+		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+		do
+			process_type (dropped)
 		end;
 
 end

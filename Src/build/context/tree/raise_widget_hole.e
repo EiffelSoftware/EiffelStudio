@@ -4,7 +4,7 @@ inherit
 
 	HOLE
 		redefine
-			stone, compatible
+			process_context
 		end;
 	EB_BUTTON 
 
@@ -13,8 +13,6 @@ creation
 	make
 
 feature {NONE}
-
-	stone: CONTEXT_STONE;
 
 	focus_string: STRING is
 		do
@@ -35,15 +33,14 @@ feature {NONE}
 			Result := Current;
 		end;
 
-	compatible (s: CONTEXT_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.context_type
 		end;
 
-	process_stone is
+	process_context (dropped: CONTEXT_STONE) is
 		do
-			stone.original_stone.raise
+			dropped.data.raise
 		end;
 
 	symbol: PIXMAP is

@@ -5,13 +5,11 @@ inherit
 
 	HOLE
 		redefine
-			process_stone
+			process_instance, process_command, compatible 
 		end;
 	EB_BUTTON_COM;
-	STONE
-		redefine
-			original_stone
-		end;	
+	STONE;
+	DRAG_SOURCE
 
 creation
 
@@ -19,32 +17,43 @@ creation
 
 feature {NONE}
 
-	original_stone: like Current;
+	data: DATA is
+		do
+		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.command_cursor
 		end;
-	
-	process_stone is
-		require else
-			valid_stone: stone /= Void;
-		local
-			cmd_type: CMD;
-			cmd_inst: CMD_INSTANCE
+
+	stone_type: INTEGER is
 		do
-			cmd_type ?= stone.original_stone;
-			cmd_inst ?= stone.original_stone;
-			if not (cmd_type = Void) then
-				cmd_type.create_editor
-			elseif not (cmd_inst = Void) then
-				cmd_inst.associated_command.create_editor
-			end
+		end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result :=
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type
+		end;
+
+	process (hole: HOLE) is
+		do
+		end;
+	
+	process_command (cmd_stone: CMD_STONE) is
+		do
+			cmd_stone.data.create_editor
+		end;
+
+	process_instance (cmd_instance: CMD_INST_STONE) is
+		do
+			cmd_instance.associated_command.create_editor
 		end;
 
 feature {NONE}
 
-	label, focus_string: STRING is
+	focus_string: STRING is
 		do
 			Result := Focus_labels.create_edit_label
 		end;

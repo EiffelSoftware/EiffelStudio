@@ -8,13 +8,11 @@ inherit
 		rename
 			make as old_make
 		redefine
-			stone, compatible
+			process_command
 		end;
 	WINDOWS;
-	CMD_STONE
-		redefine
-			transportable
-		end;
+	DRAG_SOURCE;
+	CMD_STONE;
 	REMOVABLE
 
 creation
@@ -23,26 +21,13 @@ creation
 
 feature 
 
-	stone: CMD_STONE;
-
 	focus_string: STRING is
 		do
-			if original_stone = Void then
+			if data = Void then
 				Result := focus_labels.parent_label
 			else
-				Result := label
+				Result := data.label
 			end;
-		end;
-
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
-	compatible (s: CMD_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
 		end;
 
 	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
@@ -63,7 +48,7 @@ feature
 
 feature {NONE}
 
-	original_stone: CMD is
+	data: CMD is
 		local
 			user_cmd: USER_CMD
 		do
@@ -73,39 +58,9 @@ feature {NONE}
 			end
 		end;
 
-	transportable: BOOLEAN is
+	process_command (dropped: CMD_STONE) is
 		do
-			Result := original_stone /= Void;
-		end;
-
-	identifier: INTEGER is
-		do 
-			Result := original_stone.identifier
-		end;
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.eiffel_type
-		end;
-
-	arguments: EB_LINKED_LIST [ARG] is
-		do
-			Result := original_stone.arguments
-		end;
-
-	labels: EB_LINKED_LIST [CMD_LABEL] is
-		do
-			Result := original_stone.labels
-		end;
-
-	eiffel_text: STRING is
-		do
-			Result := original_stone.eiffel_text
-		end;
-	
-	process_stone is
-		do
-			command_editor.set_parent (stone.original_stone)
+			command_editor.set_parent (dropped.data)
 		end;
 
 	remove_yourself is

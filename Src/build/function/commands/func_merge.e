@@ -27,9 +27,9 @@ feature
 
 feature {NONE}
 
-	input_list, output_list: EB_LINKED_LIST [STONE];
+	input_list, output_list: EB_LINKED_LIST [DATA];
 
-	old_input_list, old_output_list:  EB_LINKED_LIST [STONE];
+	old_input_list, old_output_list:  EB_LINKED_LIST [DATA];
 
 	redo_work is
 		do

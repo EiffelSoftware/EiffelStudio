@@ -36,14 +36,12 @@ feature {NONE}
 	
 feature {NONE}
 
-	pw: OPEN_PROJ_WIN
-
 	work (argument: ANY) is
+		local
+			pw: OPEN_PROJ_WIN
 		do
 			if not main_panel.project_initialized then
-				if pw = Void then
-					!!pw.make (Widget_names.load_project, main_panel.base)
-				end
+				!!pw.make (main_panel.base)
 				pw.popup
 			else
 				if not history_window.saved_application then
@@ -58,14 +56,14 @@ feature {NONE}
 feature {NONE}
 
 	continue_after_popdown (box: QUESTION_BOX yes: BOOLEAN) is
+		local
+			pw: OPEN_PROJ_WIN
 		do
 			if box = question_box then
 				if yes then
 					open_new_application
 				else
-					if pw = Void then
-						!!pw.make ("Open project", main_panel.base) 
-					end
+					!!pw.make (main_panel.base) 
 					pw.popup
 				end
 			end
@@ -73,16 +71,15 @@ feature {NONE}
 
 	open_new_application is
 		local
-			save_proj: SAVE_PROJECT
+			save_proj: SAVE_PROJECT;
+			pw: OPEN_PROJ_WIN
 		do
 			if main_panel.project_initialized then
 				!!save_proj
 				save_proj.execute (Void)
 			end
 			if save_proj.completed then
-				if pw = Void then
-					!!pw.make ("Open project", main_panel.base)
-				end
+				!!pw.make (main_panel.base)
 				pw.popup
 			end
 		end

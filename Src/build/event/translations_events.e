@@ -50,8 +50,8 @@ feature
 					after
 				loop
 					icon := icons.item;
-					if icon.original_stone /= item then
-						icon.set_original_stone (item)
+					if icon.data /= item then
+						icon.set_data (item)
 					else
 						icon.update_name
 					end;
@@ -107,7 +107,7 @@ feature {NONE}
 
 	translation_editor: TRANSL_EDITOR is
 		once
-			!!Result.make (main_panel.base);
+			!! Result.make;
 		end;
 
 	execute (argument: ANY) is

@@ -256,10 +256,15 @@ feature -- Command/Instance editors
 
 feature -- Misc
 
+	Behaviour_state_label: STRING is "behavior for state:";
+	Behaviour_label: STRING is "Behavior";
+	Context_label: STRING is "Context";
+	Event_label: STRING is "Event";
 	Page_label: STRING is "Page";
 	Redo_label: STRING is "Redo";
 	Rows_label: STRING is "row(s)";
 	Undo_label: STRING is "Undo";
+	Visual_name_label: STRING is "Name: ";
 
 feature -- Names for Widget Windows
 
@@ -270,12 +275,16 @@ feature -- Names for Widget Windows
 	Command_Catalog: STRING is "Command Catalog";
 	Command_type_editor: STRING is "Command Type Editor";
 	Cmd_instance_editor: STRING is "Command Instance Editor";
+	Create_project_window: STRING is "Create Project";
 	Error_window: STRING is "Error Window";
 	Event_Catalog: STRING is "Event Catalog"
 	Help_window: STRING is "Help Window";
 	History_window: STRING is "History Window";
+	Load_project_window: STRING is "Load Project";
 	Main_panel: STRING is "EiffelBuild";
+	Namer_window: STRING is "Namer Window";
 	Question_window: STRING is "Question Window";
+	Save_project_as_window: STRING is "Save project as...";
 	State_Editor: STRING is "State Editor";
 	Translation_editor: STRING is "Translation Editor";
 	Warning_window: STRING is "Warning Window";
@@ -286,12 +295,12 @@ feature -- Names for Main Panel
 	Create_project_label: STRING is "Creating new project...";
 	Interface_toggle: STRING is "Interface";
 	Interface_only_toggle: STRING is "Interface only";
-	Load_project: STRING is "Load project";
-	Save_project_as: STRING is "Save project as...";
+	Retrieving_project_label: STRING is "Retrieving project...";
 	Visibility_label:STRING is "Visibility"
 
 feature -- Translation editor
 
+	translation_name: STRING is "Translation"
 	negate_name: STRING is "negate"
 	Save_name: STRING is "Save"
 

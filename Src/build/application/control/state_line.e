@@ -3,6 +3,7 @@ class STATE_LINE
 
 inherit
 
+	DATA;
 	ARROW_LINE
 		rename
            	make as arrow_create,
@@ -21,11 +22,9 @@ inherit
 			attach_drawing, attach_drawing_imp, contains, make, draw
 		end;
 	BASIC_ROUTINES;
-	TRANS_STONE
-		rename 
-			source as w_source
-		end;
-			
+	TRANS_STONE;
+	EDITABLE;
+	WINDOWS;
 
 creation
 
@@ -39,7 +38,19 @@ feature -- Creation
 			init_line;
 			init_selection_square;
 		end; -- Create
-	
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.transition_help_fn
+		end;
+
+feature -- Editor creation
+
+	create_editor is
+		do
+			App_editor.popup_labels_window (Current)
+		end;
+
 feature 
 
 	source: APP_FIGURE;
@@ -89,24 +100,17 @@ feature
 		local
 			temp: FIXED_LIST [COORD_XY_FIG];
 			point1, point2: COORD_XY_FIG;
-			sub_app: SUB_APP_SQ;
+			--sub_app: SUB_APP_SQ;
 			real_nbr: REAL
 		do
 			temp := find_limit_points (source.center, destination.center);
 			point1 := temp.i_th (1);
-			sub_app ?= destination;
-			if
-				(sub_app = Void)
-			then
-				point2 := temp.i_th (2);
-				if
-					bi_directional
-				then
-					point1.rotate (20, source.center);
-					point2.rotate (340, destination.center);
-				end
-			else
-				point2 := sub_app.closest_point (point1);
+			--sub_app ?= destination;
+			point2 := temp.i_th (2);
+			if bi_directional then
+				point1.rotate (20, source.center);
+				point2.rotate (340, destination.center);
+				--point2 := sub_app.closest_point (point1);
 			end;
 			set_from_points (point1, point2);
 		end; -- calculate
@@ -216,7 +220,7 @@ feature {NONE}
 
 feature -- Stone
 
-	original_stone: STATE_LINE is
+	data: STATE_LINE is
 		do
 			Result := Current
 		end;

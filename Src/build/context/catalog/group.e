@@ -135,7 +135,7 @@ feature
 				create_command.group_create (group_c, context_list);
 				create_command.execute (group_c);
 
-				group_c.realize;
+				group_c.widget.manage;
 			end;
 
 				-- Save the text generated

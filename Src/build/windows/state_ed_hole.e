@@ -3,6 +3,9 @@ class STATE_ED_HOLE
 inherit
 
 	EDIT_BUTTON
+		redefine
+			process_state
+		end
 
 creation
 
@@ -27,5 +30,15 @@ feature {NONE}
 			editor := Window_mgr.state_editor;
 			window_mgr.display (editor)
 		end;
+
+	stone_type: INTEGER is
+		do
+			Result := stone_types.state_type
+		end;
+
+	process_state (dropped: STATE_STONE) is
+		do
+			dropped.data.create_editor
+		end
 	
 end

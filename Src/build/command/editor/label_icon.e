@@ -5,9 +5,9 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	LABEL_STONE;
 	REMOVABLE
@@ -23,7 +23,7 @@ feature {NONE}
 	
 feature 
 
-	original_stone: CMD_LABEL;
+	data: CMD_LABEL;
 
 	make (ed: CMD_EDITOR) is
 		do
@@ -37,7 +37,7 @@ feature
 
 	remove_yourself is
 		do
-			cmd_editor.remove_label (original_stone)
+			cmd_editor.remove_label (data)
 		end;
 
 end

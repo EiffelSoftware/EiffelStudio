@@ -11,29 +11,19 @@ feature {NONE}
 
 	focus_label: FOCUS_LABEL;
 
-	make (a_parent: COMPOSITE; label: FOCUS_LABEL) is
+	make (a_parent: COMPOSITE; label: like focus_label) is
 		require
 			valid_a_parent: a_parent /= Void;
 			valid_label: label /= Void
 		do
-			focus_label := label;
 			make_visible (a_parent);
+			focus_label := label;
 			register
 		end;
 
 	target: WIDGET is
 		do
 			Result := Current;
-		end;
-
-	process_stone is
-		local
-			editable: EDITABLE
-		do
-			editable ?= stone.original_stone;
-			if (editable /= Void) then
-				editable.create_editor
-			end			
 		end;
 
 	execute (arg: ANY) is

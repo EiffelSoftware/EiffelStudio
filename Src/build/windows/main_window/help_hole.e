@@ -1,13 +1,11 @@
-
+-- General help hole.
 class HELP_HOLE 
 
 inherit
 
 	EDIT_BUTTON
-		rename
-			make as button_make
 		redefine
-			process_stone
+			process_any
 		end
 
 creation
@@ -16,20 +14,9 @@ creation
 
 feature {NONE}
 
-	associated_window: HELP_WINDOW;
-
 	focus_string: STRING is 
 		do
 			Result := Focus_labels.help_label
-		end;
-
-	make (hw: HELP_WINDOW; a_parent: COMPOSITE; l: FOCUS_LABEL) is
-		require
-			valid_a_parent: a_parent /= Void;
-			valid_l: l /= Void
-		do
-			associated_window := hw;
-			button_make (a_parent, l);
 		end;
 
 	symbol: PIXMAP is
@@ -39,31 +26,26 @@ feature {NONE}
 	
 feature {NONE}
 
-	process_stone is
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.any_type
+		end;
+
+	process_any (dropped: STONE) is
 		local
-			helpable: HELPABLE;
 			hw: HELP_WINDOW
 		do
-			helpable ?= stone;
-			if helpable /= Void then
-				if (associated_window = Void) then
-					!! hw.make (eb_screen);
-					hw.set_text (helpable.help_text);
-					hw.realize
-				else
-					associated_window.set_text (helpable.help_text);
-				end;
-			end
+			!! hw.make (eb_screen);
+			hw.update_text (dropped.data);
+			hw.realize
 		end;
 
 	create_empty_editor is
 		local
 			hw: HELP_WINDOW
 		do
-			if associated_window = Void then
-				!! hw.make (eb_screen);
-				hw.realize;
-			end
+			!! hw.make (eb_screen);
+			hw.realize;
 		end;	
 
 end

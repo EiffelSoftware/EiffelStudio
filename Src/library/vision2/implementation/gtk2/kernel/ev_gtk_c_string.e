@@ -49,8 +49,12 @@ feature -- Access
 			bytes_read, bytes_written, gerror: INTEGER
 		do
 			str_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, -1, $bytes_read, $bytes_written, $gerror)
-			create string_value.make_by_pointer (str_ptr)
-			Result := string_value.string
+			if str_ptr /= default_pointer then
+				create string_value.make_by_pointer (str_ptr)
+				Result := string_value.string				
+			else
+				create Result.make_from_c (item)
+			end
 		end	
 
 feature {NONE} -- Implementation

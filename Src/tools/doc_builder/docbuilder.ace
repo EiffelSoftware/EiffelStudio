@@ -59,24 +59,17 @@ default
 cluster
 	root_cluster:		"$ISE_DOC_BUILDER"
 
-
 	project (root_cluster):		"$\project"
 
 	templates (project):		"$\templates"
 
 	interface (root_cluster):		"$\interface"
 
-	interface_gui (interface):		"$\interface"
+	interface_widgets (interface):			"$\widgets"
 
-	interface_implementation (interface):		"$\implementation"
-
-	widgets (interface):		"$\widgets"		
+	interface_app (interface):			"$\application"
 	
-	dialogs (interface):		"$\dialogs"
-
-	dialogs_gui (dialogs):		"$\interface"
-
-	dialogs_implementation (dialogs):		"$\implementation"
+	interface_wizard (interface):			"$\wizard"
 
 	shared (root_cluster):		"$\shared"
 
@@ -99,6 +92,8 @@ cluster
 	help_shared (help):		"$\shared"
 
 	help_project (help):		"$\project"
+	
+	help_new (help_project):	"$\new"
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
@@ -111,10 +106,10 @@ cluster
 		end
 
 assembly
-	"AxSHDocVw":	"$ISE_DOC_BUILDER\resources\modules\AxSHDocVw.dll"
+	"AxSHDocVw":	"$ISE_DOC_BUILDER\AxSHDocVw.dll"
 		
 
-	"SHDocVw":	"$ISE_DOC_BUILDER\resources\modules\SHDocVw.dll"
+	"SHDocVw":	"$ISE_DOC_BUILDER\SHDocVw.dll"
 		prefix
 			SH_
 		end

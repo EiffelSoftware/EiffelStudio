@@ -72,9 +72,6 @@ feature {NONE} -- Implementation
 			if world.is_show_requested then
 				project_figure_group (world, rectangle)
 			end
-			--if world.points_visible then
-			--	project_rel_point (world.point)
-			--end
 			add_footer
 		end
 

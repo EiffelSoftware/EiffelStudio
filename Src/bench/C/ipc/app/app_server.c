@@ -22,6 +22,7 @@
 #include "transfer.h"
 #include "listen.h"
 #include "eif_logfile.h"
+#include <signal.h>
 #include "rqst_const.h"
 #include "server.h"
 

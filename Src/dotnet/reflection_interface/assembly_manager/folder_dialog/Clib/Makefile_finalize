@@ -9,15 +9,15 @@ OBJ_SERVER = ecom_folderbrowser_folderbrowser_s.obj ecom_folderbrowser_ifolderbr
 
 all: ecom_client.lib ecom_server.lib
 
-ecom_client.lib: $(OBJ_ClIENT)
-	if exist $@ del $@
-	lib /OUT:$@ $(OBJ_CLIENT)
-	del *.obj
-
 ecom_server.lib: $(OBJ_SERVER)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ_SERVER)
 	del *.obj
 	
+ecom_client.lib: $(OBJ_CLIENT)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ_CLIENT)
+	del *.obj
+
 .cpp.obj:
 	$(CC) $(CFLAGS) $<

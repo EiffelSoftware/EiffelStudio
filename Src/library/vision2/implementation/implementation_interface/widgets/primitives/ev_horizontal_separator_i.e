@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 	set_default_options is
 			-- Common initializations for Gtk and Windows.
 		do
-			{EV_SEPARATOR_I} Precursor
 			set_horizontal_resize (True)
 			set_vertical_resize (False)
 		end

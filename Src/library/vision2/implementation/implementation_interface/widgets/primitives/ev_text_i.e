@@ -119,7 +119,7 @@ feature -- Status settings
 	set_default_options is
 			-- Initialize the options of the widget.
 		do
-			set_expand (True)
+--			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
 		end

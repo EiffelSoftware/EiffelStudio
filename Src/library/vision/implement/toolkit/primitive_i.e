@@ -31,11 +31,6 @@ feature
 			foreground_set: foreground_color = new_color
 		end;
 
-	update_foreground is obsolete "Use ``update_foreground_color''"
-		do
-			update_foreground_color
-		end;
-
 	update_foreground_color is
 		deferred
 		end;

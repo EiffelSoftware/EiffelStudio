@@ -31,7 +31,7 @@ extern "C" {
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
 #else
-#define CHUNK_DEFAULT	262144		/* Number of bytes in standard chunk */
+#define CHUNK_DEFAULT	524288		/* Number of bytes in standard chunk */
 #endif
 
 #ifdef ISE_GC
@@ -64,7 +64,7 @@ extern "C" {
 #else
 
 #ifdef EIF_GSZ_ALLOC_OPTIMIZATION
-#define GS_ZONE_SZ_DEFAULT	2097152	/* Size of a scavenge zone (2MB) */
+#define GS_ZONE_SZ_DEFAULT	4194304	/* Size of a scavenge zone (4MB) */
 #else
 #define GS_ZONE_SZ_DEFAULT 307200	/* Size is 300K by default. */
 #endif
@@ -77,11 +77,6 @@ extern "C" {
 												 * We are doing this to improve the 
 												 * preformance of the computation */
 #define GS_WATERMARK (eif_scavenge_size - 1024)	/* Collect to be run after this */
-
-/* Memory block types (for allocate_from_core)
- */
-#define MB_EO		0				/* Memory block for regular Eiffel object */
-#define MB_CHUNK	1				/* Memory block for big memory chunk */
 
 /*
  * Private macros used by low-level routines.
@@ -124,7 +119,10 @@ extern long eiffel_usage;			/* For memory statistics */
 extern int eif_max_mem;				/* Maximum memory that can be allocated */
 
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;	/* GC mutex */
+extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;
+extern EIF_LW_MUTEX_TYPE *eif_free_list_mutex;
+extern EIF_LW_MUTEX_TYPE *eiffel_usage_mutex;
+extern EIF_LW_MUTEX_TYPE *trigger_gc_mutex;
 #endif
 
 #endif
@@ -136,9 +134,8 @@ extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C objec
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 
 #ifdef ISE_GC
-extern EIF_REFERENCE gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
+extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes);				/* Garbage collector's allocation */
 extern struct emallinfo *meminfo(int type);	/* Memory statistics */
-extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
 
 /*
  * Shared routines

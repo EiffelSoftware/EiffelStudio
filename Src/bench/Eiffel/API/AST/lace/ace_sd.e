@@ -151,9 +151,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			process_options;
 		end;
 
-	precomp_project_name: STRING is
+	precomp_project_names: LINKED_LIST [STRING] is
 		local
-			found: BOOLEAN;
 			d_option: D_OPTION_SD;
 			value: OPT_VAL_SD;
 			vd38: VD38;
@@ -167,28 +166,22 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					d_option := defaults.item;
 					if d_option.option.is_precompiled then
-						if found then
-							!!vd38;
-							Error_handler.insert_error (vd38);
-							Error_handler.raise_error;
-						elseif Compilation_modes.is_precompiling then
-								-- Do not call the once function `System'
-								-- directly since it's value may be replaced
-								-- during the first compilation (as soon as
-								-- we figured out whether the system describes
-								-- a Dynamic Class Set or not).
-							!!vd44;
-							Error_handler.insert_error (vd44);
-							Error_handler.raise_error;
-						else
-							found := True;
+						if Result /= Void then
 							value := d_option.value;
 							if value.is_name then
 									-- If it is not a NAME_SD, the normal
 									-- adapt will trigger the error
-								Result := value.value;
-							end;
-						end;
+								Result.extend (value.value)
+							end
+						else
+							value := d_option.value;
+							if value.is_name then
+									-- If it is not a NAME_SD, the normal
+									-- adapt will trigger the error
+								!! Result.make;
+								Result.extend (value.value)
+							end
+						end
 					end;
 					defaults.forth
 				end
@@ -202,9 +195,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				not Compilation_modes.is_precompiling and then
 				Result = Void
 			then
-					-- For the melt_only version, if no precompiled project is specified,
-					-- return $EIFFEL3/precomp/spec/$PLATFORM/base
-				Result := Default_precompiled_base_location
+					-- For the melt_only version, if no precompiled project is
+					-- specified, return $EIFFEL3/precomp/spec/$PLATFORM/base
+				!! Result.make;
+				Result.extend (Default_precompiled_base_location)
 			end
 		end;
 

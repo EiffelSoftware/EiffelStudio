@@ -566,9 +566,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 							from
 								creation_constraint_list.start
 							until
-								matched or else creation_constraint_list.after
+								not matched or else creation_constraint_list.after
 							loop
-								matched := creators_table.has (creation_constraint_list.item.feature_name)
+								creators_table.search (creation_constraint_list.item.feature_name)
+								matched := creators_table.found and then creators_table.found_item.valid_for (context_class)
 								creation_constraint_list.forth
 							end
 						end

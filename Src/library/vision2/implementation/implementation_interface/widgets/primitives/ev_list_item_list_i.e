@@ -17,6 +17,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_ITEM_PIXMAP_SCALER_I
+		redefine
+			interface
+		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_I
 

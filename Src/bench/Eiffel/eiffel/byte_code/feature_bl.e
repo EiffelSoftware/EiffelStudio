@@ -146,7 +146,7 @@ end
 		do
 			type_i := context_type
 			class_type ?= type_i
-			is_polymorphic_access := not type_i.is_basic and then
+			is_polymorphic_access := not type_i.is_basic and then precursor_type = Void and then
 					class_type /= Void and then
 					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
 			if reg.is_current and is_polymorphic_access then

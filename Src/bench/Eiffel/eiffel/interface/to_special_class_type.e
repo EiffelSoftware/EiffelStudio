@@ -47,6 +47,7 @@ feature
 			expanded_type, non_expanded_type: CL_TYPE_I;
 			exp_class_type: CLASS_TYPE;
 			gen_type: GEN_TYPE_I;
+			gen_ptype: GEN_TYPE_I;
 			dtype: INTEGER;
 			c_name: STRING;
 			final_mode: BOOLEAN;
@@ -128,27 +129,57 @@ feature
 				-- Header evaluation
 				--		zone = HEADER(l[1]);
 			buffer.putstring ("%Tzone = HEADER(l[1]);%N");
-			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);%N");
+			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);");
 
 				-- Set dynamic type
+			buffer.new_line
+			buffer.indent
+			buffer.putchar ('{')
+			buffer.new_line
+			buffer.indent
+
 			!!gen_type;
 			gen_type.set_base_id (System.special_id);
 			gen_type.set_meta_generic (clone (type.meta_generic));
 			gen_type.set_true_generics (clone (type.true_generics));
-			buffer.putstring ("%Tzone->ov_flags |= ");
-			if final_mode then
-				buffer.putint (gen_type.type_id - 1);
+
+			if gen_type.is_explicit then
+				-- Optimize: Use static array
+				buffer.putstring ("static int16 typarr [] = {")
 			else
-				buffer.putstring ("RTUD(");
-				gen_type.associated_class_type.id.generated_id (buffer)
-				buffer.putchar (')');
-			end;
+				buffer.putstring ("int16 typarr [] = {")
+			end
+
+			buffer.putint (byte_context.current_type.generated_id (final_mode))
+			buffer.putstring (", ")
+			gen_type.generate_cid (buffer, final_mode, True)
+			buffer.putstring ("-1};")
+			buffer.new_line
+			buffer.putstring ("int16 typres;")
+			buffer.new_line
+			buffer.putstring ("static int16 typcache = -1;")
+			buffer.new_line
+			buffer.new_line
+			buffer.putstring ("typres = RTCID(&typcache, l[0],")
+
+			buffer.putint (gen_type.generated_id (final_mode))
+			buffer.putstring (", typarr);")
+			buffer.new_line
+
+			buffer.putstring ("zone->ov_flags |= typres");
 			if gen_param.is_reference or else gen_param.is_bit then
 				buffer.putstring (" | EO_REF");
 			end;
 
+			buffer.putchar (';')
+			buffer.new_line
+			buffer.exdent
+			buffer.putchar ('}')
+			buffer.new_line
+			buffer.exdent
+
 				-- Set count
-			buffer.putstring (";%N%T*(long *) ref = arg1;%N");
+			buffer.putstring ("%T*(long *) ref = arg1;%N");
 
 				-- Set element size
 			buffer.putstring ("%T*(long *) (ref + sizeof(long)) = ");
@@ -168,7 +199,52 @@ feature
 					buffer.putstring ("%
 						%%T{%N%
 						%%T%Tchar *ref;%N%
-						%%T%Tlong i;%N");
+						%%T%Tlong i;%N%
+						%%T%Tint16 pdtype;");
+
+					buffer.new_line
+
+					gen_ptype ?= expanded_type
+
+					if gen_ptype = Void then
+						-- Parameter type is not generic
+						buffer.putstring ("%T%Tpdtype = ")
+						buffer.putint (dtype)
+						buffer.putstring (";%N")
+					else
+						-- Parameter is generic
+						buffer.indent
+						buffer.indent
+						buffer.putchar ('{')
+						buffer.new_line
+						buffer.indent
+
+						if gen_ptype.is_explicit then
+							-- Optimize: Use static array
+							buffer.putstring ("static int16 typarr [] = {")
+						else
+							buffer.putstring ("int16 typarr [] = {")
+						end
+
+						buffer.putint (byte_context.current_type.generated_id (final_mode))
+						buffer.putstring (", ")
+						gen_ptype.generate_cid (buffer, final_mode, True)
+						buffer.putstring ("-1};")
+						buffer.new_line
+						buffer.putstring ("static int16 typcache = -1;")
+						buffer.new_line
+						buffer.new_line
+						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
+
+						buffer.putint (gen_ptype.generated_id (final_mode))
+						buffer.putstring (", typarr);")
+						buffer.new_line
+						buffer.exdent
+						buffer.putchar ('}')
+						buffer.new_line
+						buffer.exdent
+						buffer.exdent
+					end
 
 					if has_init then
 							-- Call initialization routines
@@ -183,8 +259,7 @@ feature
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
 						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
-						%%T%T%THEADER(ref)->ov_flags = ");
-					buffer.putint (dtype);
+						%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N")
 
 						-- FIXME: call to creation routine?????
@@ -209,7 +284,52 @@ feature
 									%%T%Tchar *ref;%N%
 									%%T%Tlong i;%N%
 									%%T%Tfnptr init;%N%
-									%%T%Tinit = XCreate(");
+									%%T%Tint16 pdtype;")
+
+					buffer.new_line
+					gen_ptype ?= expanded_type
+
+					if gen_ptype = Void then
+						-- Parameter type is not generic
+						buffer.putstring ("%T%Tpdtype = ")
+						buffer.putint (dtype)
+						buffer.putstring (";%N")
+					else
+						-- Parameter is generic
+						buffer.indent
+						buffer.indent
+						buffer.putchar ('{')
+						buffer.new_line
+						buffer.indent
+
+						if gen_ptype.is_explicit then
+							-- Optimize: Use static array
+							buffer.putstring ("static int16 typarr [] = {")
+						else
+							buffer.putstring ("int16 typarr [] = {")
+						end
+
+						buffer.putint (byte_context.current_type.generated_id (final_mode))
+						buffer.putstring (", ")
+						gen_ptype.generate_cid (buffer, final_mode, True)
+						buffer.putstring ("-1};")
+						buffer.new_line
+						buffer.putstring ("static int16 typcache = -1;")
+						buffer.new_line
+						buffer.new_line
+						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
+
+						buffer.putint (gen_ptype.generated_id (final_mode))
+						buffer.putstring (", typarr);")
+						buffer.new_line
+						buffer.exdent
+						buffer.putchar ('}')
+						buffer.new_line
+						buffer.exdent
+						buffer.exdent
+					end
+
+					buffer.putstring ("%T%Tinit = XCreate(");
 					buffer.putint (dtype);
 					buffer.putstring (");%N%
 									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
@@ -217,8 +337,7 @@ feature
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
 									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
-				   					%%T%T%THEADER(ref)->ov_flags = ");
-					buffer.putint (dtype);
+									%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N%
 									%%T%T%Tif ((char *(*)()) 0 != init)%N%
 									%%T%T%T%T(init)(ref, l[1]);%N%
@@ -234,6 +353,7 @@ feature
 			buffer.putstring (" = l[1];%N%
 							%%TRTLE;%N}%N%N");
 		end;
+
 
 	first_generic: TYPE_I is
 			-- First generic parameter type

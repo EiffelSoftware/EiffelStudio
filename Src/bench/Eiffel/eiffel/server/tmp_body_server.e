@@ -50,12 +50,14 @@ feature -- Update
 		require
 			body_index_positive: a_body_index >= 0
 		do
-			debug
-				io.error.putstring ("TMP_BODY_SERVER.desactivate ")
-				io.error.putint (a_body_index)
-				io.error.new_line
+			if a_body_index > 0 then
+				debug
+					io.error.putstring ("TMP_BODY_SERVER.desactivate ")
+					io.error.putint (a_body_index)
+					io.error.new_line
+				end
+				useless_body_indexes.force (a_body_index)
 			end
-			useless_body_indexes.force (a_body_index)
 		end
 
 	reactivate (a_body_index: INTEGER) is
@@ -66,14 +68,16 @@ feature -- Update
 		local
 			l_useless: like useless_body_indexes
 		do
-			debug
-				io.error.putstring ("TMP_BODY_SERVER.reactivate ")
-				io.error.putint (a_body_index)
-				io.error.new_line
-			end
-			l_useless := useless_body_indexes
-			if l_useless.count > 0 then
-				useless_body_indexes.remove (a_body_index)
+			if a_body_index > 0 then
+				debug
+					io.error.putstring ("TMP_BODY_SERVER.reactivate ")
+					io.error.putint (a_body_index)
+					io.error.new_line
+				end
+				l_useless := useless_body_indexes
+				if l_useless.count > 0 then
+					useless_body_indexes.remove (a_body_index)
+				end
 			end
 		end
 

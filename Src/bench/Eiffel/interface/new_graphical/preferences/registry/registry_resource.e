@@ -58,8 +58,8 @@ feature -- Implementation
 		do
 			if key_value.type = key_value.Reg_dword then
 				type := integer_type
-			elseif key_value.type = key_value.Reg_multi_sz then
-				type := array_type
+--			elseif key_value.type = key_value.Reg_multi_sz then
+--				type := array_type
 			else
 				s := key_value.string_value
 				type := string_type
@@ -73,6 +73,9 @@ feature -- Implementation
 						name := name.substring (8, name.count)
 					elseif equal (sprefix, "EIFFNT_") then
 						type := font_type
+						name := name.substring (8, name.count)
+					elseif equal (sprefix, "EIFARR_") then
+						type := array_type
 						name := name.substring (8, name.count)
 					end
 				end
@@ -107,7 +110,7 @@ feature -- Implementation
 			--cr: COLOR_RESOURCE
 			--fr: FONT_RESOURCE
 			--sr: STRING_RESOURCE
-			ar: ARRAY_RESOURCE
+			--ar: ARRAY_RESOURCE
 		do
 			create key_value.make
 			ir ?= value
@@ -115,16 +118,21 @@ feature -- Implementation
 				key_value.set_type (key_value.Reg_dword)
 				key_value.set_dword_value (ir.actual_value)
 			else
-				ar ?= value
-				if ar /= void then
-					key_value.set_type (key_value.Reg_multi_sz)
-					key_value.set_string_value (ar.value)
-				else
+--				ar ?= value
+--				if ar /= void then
+--					key_value.set_type (key_value.Reg_multi_sz)
+--					key_value.set_string_value (ar.value)
+--				else
 					key_value.set_type (key_value.Reg_sz)
 					key_value.set_string_value (value.value)
-				end
+--				end
 			end
 		end
+
+--| FIXME
+--| Christophe, 30 jun 2000
+--| WEL Reg_muli_sz handling do not work properly, and are not Win95 compatible.
+--| Decide whether to implement it or discard it.
 
 feature {NONE} -- Constants
 

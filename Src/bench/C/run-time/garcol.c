@@ -6316,7 +6316,7 @@ rt_shared void gfree(register union overhead *zone)
 
 	EIF_GET_CONTEXT
 	char gc_status;					/* Saved GC status */
-	char saved_in_assertion;		/* Saved in_assertion value */
+	int saved_in_assertion;		/* Saved in_assertion value */
 	register2 uint32 dtype;			/* Dynamic type of object */
 
 /*

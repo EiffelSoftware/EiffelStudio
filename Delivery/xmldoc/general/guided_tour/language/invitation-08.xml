@@ -17,8 +17,7 @@
 		<paragraph>A routine may, however, handle an exception through a 
 			<code>
 				<keyword>rescue</keyword>
-			</code> clause.  This optional clause attempts to "patch things up" by bringing the current object to a stable state (one satisfying the class invariant).  Then it can terminate in either of two ways:
-		</paragraph>
+			</code> clause.  This optional clause attempts to "patch things up" by bringing the current object to a stable state (one satisfying the class invariant).  Then it can terminate in either of two ways:<line_break/>
 		<list ordered="false">
 			<item>The 
 				<code>
@@ -43,11 +42,11 @@
 				</code>, then the routine fails: it returns to its caller, immediately triggering an exception.  (The caller's 
 				<code>
 					<keyword>rescue</keyword>
-				</code> clause will be executed according to the same rules.  )
+				</code> clause will be executed according to the same rules.)
 			</item>
-		</list>
+		</list></paragraph>
 		<paragraph>The principle is that 
-			<bold>a routine must either succeed or fail</bold> : it either fulfills its contract, or not; in the latter case it must notify its caller by triggering an exception.  
+			<bold>a routine must either succeed or fail</bold>: it either fulfills its contract, or not; in the latter case it must notify its caller by triggering an exception.  
 		</paragraph>
 		<paragraph>Usually, only a few routines of a system will explicitly include a 
 			<code>
@@ -57,33 +56,33 @@
 				<keyword>rescue</keyword>
 			</code> is considered to have an implicit one, which calls a routine 
 			<code>
-				<string>default_rescue</string>
+				<feature_name>default_rescue</feature_name>
 			</code> that by default does nothing, so that an exception will cause the routine to fail immediately, propagating the exception to the caller.  
 		</paragraph>
 		<paragraph>An example using the exception mechanism is a routine 
 			<code>
-				<string>attempt_transmission</string>
+				<feature_name>attempt_transmission</feature_name>
 			</code> that tries to transmit a message over a phone line.  The actual transmission is performed by an external, low-level routine 
 			<code>
-				<string>transmit</string>
+				<feature_name>transmit</feature_name>
 			</code>; once started, however, 
 			<code>
-				<string>transmit</string>
+				<feature_name>transmit</feature_name>
 			</code> may abruptly fail, triggering an exception, if the line is disconnected.  Routine 
 			<code>
-				<string>attempt_transmission</string>
+				<feature_name>attempt_transmission</feature_name>
 			</code> tries the transmission at most 50 times; before returning to its caller, it sets a boolean attribute 
 			<code>
-				<string>successful</string>
+				<feature_name>successful</feature_name>
 			</code> to  
 			<code>
-				<string>True</string>
+				<keyword>True</keyword>
 			</code>
 			<code>
 				<keyword> or </keyword>
 			</code>  
 			<code>
-				<string>False</string>
+				<keyword>False</keyword>
 			</code> depending on the outcome.  Here is the text of the routine:
 		</paragraph>
 		<code_block>
@@ -106,7 +105,7 @@
 </code_block>
 		<paragraph>Initialization rules ensure that 
 			<code>
-				<string>failures</string>
+				<local_variable>failures</local_variable>
 			</code>, a local entity, is set to zero on entry.  
 		</paragraph>
 		<paragraph>This example illustrates the simplicity of the mechanism: the 

@@ -29,7 +29,8 @@
 		<paragraph>The third fundamental factor is 
 			<bold>reliability, </bold> the ability to produce software that is correct and robust -- that is to say, bug-free.  Eiffel techniques such as static typing, assertions, disciplined exception handling and automatic garbage collection are essential here.  
 		</paragraph>
-		<paragraph>Three other factors are also part of Eiffel's principal goals:</paragraph>
+		<paragraph>Three other factors are also part of Eiffel's principal goals:
+		<line_break/>
 		<list ordered="false">
 			<item>The language enables implementers to produce high 
 				<bold>efficiency</bold> compilers, so that systems developed with Professional Eiffel may run under speed and space conditions similar to those of programs written in lower-level languages.  
@@ -40,5 +41,5 @@
 			<item>Guaranteeing 
 				<bold>portability</bold> by a platform-independent language definition, so that the same semantics may be supported on many different platforms.  
 			</item>
-		</list>
+		</list></paragraph>
 	</paragraph></document>

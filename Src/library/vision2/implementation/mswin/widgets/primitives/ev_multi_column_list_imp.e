@@ -370,7 +370,10 @@ feature -- Access
 			pt: WEL_POINT
 			info: WEL_LV_HITTESTINFO
 		do
-			create pt.make (x_pos, y_pos)
+			create pt.make (16, y_pos)
+			--|FIXME 16 is used as it will always be within the selected part of the
+			--| row. Need to make the whole row selectable, see the extended style in this
+			--| class. However, this is not working yet.
 			create info.make_with_point (pt)
 			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel)
@@ -560,7 +563,6 @@ feature {NONE} -- WEL Implementation
 		local 
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos) 
 			pt := client_to_screen (x_pos, y_pos)
@@ -570,11 +572,19 @@ feature {NONE} -- WEL Implementation
 					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				end
 			if mcl_row /= Void then 
-				offsets := mcl_row.relative_position
 				mcl_row.interface.pointer_button_press_actions.call ([x_pos,
-				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				y_pos - relative_y (mcl_row), button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end 
-		end 
+		end
+
+	relative_y (a_row: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
+			-- `Result' is relative y_position of `a_row' to `Current'
+		local
+			point: WEL_POINT
+		do
+			point := get_item_position (a_row.index - 1)
+			Result := point.y
+		end
 
 	process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
@@ -649,14 +659,12 @@ feature {NONE} -- WEL Implementation
 		local
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void then
-				offsets := mcl_row.relative_position
-				mcl_row.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+				mcl_row.interface.pointer_motion_actions.call ([x_pos, -- - offsets.integer_arrayed @ 1 + 1,
+				y_pos - relative_y (mcl_row), 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
@@ -748,9 +756,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.88  2000/04/21 18:04:56  rogers
---| Removed row_height as it was only used to set default_minimum_size
---| and is not actually the correct row height.
+--| Revision 1.89  2000/04/21 18:39:05  rogers
+--| Modified find_item_at_position, so any x position is part
+--| of the item. Added relative_y which is now used to simplify both
+--| on_mouse_move and internal_propagate_pointer_press.
 --|
 --| Revision 1.87  2000/04/21 16:58:01  rogers
 --| Removed child_x and wel_window_parent fix.

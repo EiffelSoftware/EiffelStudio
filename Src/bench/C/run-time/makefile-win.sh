@@ -421,8 +421,8 @@ $(OUTDIR)\ebench.$lib: $(EOBJECTS)
 
 all:: x2c.exe
 
-x2c.exe: x2c.c
-	$(CC) -I./include -I$(TOP) x2c.c -ox2c.exe
+x2c.exe: x2c.c eif_size.h
+	$(CC) $ccflags $optimize -I./include -I$(TOP) x2c.c
 
 all:: eif_config.h eif_portable.h
 
@@ -725,9 +725,6 @@ $(INDIR)\wumain.$obj: $(RTSRC)\umain.c
 
 $(INDIR)\wurgent.$obj: $(RTSRC)\urgent.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\urgent.c
-
-$(INDIR)\x2c.$obj: $(RTSRC)\x2c.c
-	$(CC) $(JCFLAGS) $(RTSRC)\x2c.c
 
 final: finalized.$lib
 work: wkbench.$lib
@@ -1149,8 +1146,6 @@ $(INDIR)\memory.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hect
 $(INDIR)\argv.$obj : eif_malloc.h eif_plug.h
 
 $(INDIR)\search.$obj : include\rt_search.h eif_tools.h
-
-$(INDIR)\x2c.$obj : eif_size.h
 
 $(INDIR)\debug.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.h include\rt_hashin.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_sig.h \

@@ -49,7 +49,6 @@ extern char *b_xor(char *a, char *b);
 extern char *b_not(char *a);
 extern char *b_out(char *bit);
 extern char *b_mirror(char *a);
-extern int bit_dtype;
 
 #ifdef __cplusplus
 }

@@ -479,6 +479,7 @@ feature -- Incrementality
 				and then same_signature (other)
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
+				and then is_once = other.is_once
 debug ("ACTIVITY")
 	if not Result then
 			io.error.putbool (written_in = other.written_in) io.error.new_line;
@@ -492,6 +493,7 @@ debug ("ACTIVITY")
 			io.error.putbool (same_signature (other)) io.error.new_line;
 			io.error.putbool (has_precondition = other.has_precondition) io.error.new_line;
 			io.error.putbool (has_postcondition = other.has_postcondition) io.error.new_line;
+			io.error.putbool (is_once = other.is_once) io.error.new_line;
 	end
 end
 			if Result then

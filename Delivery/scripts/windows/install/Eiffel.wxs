@@ -18,6 +18,7 @@
 				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)" >
 					<Registry Id="registry" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe,0" />
 				</Component>
+				<!--
 				<?if $(var.EDITION)="free" ?>
 					<Merge Id="ec" Language="1033" src="MSMs\ec_free.msm" DiskId="1" />
 					<Merge Id="build" Language="1033" src="MSMs\build_free.msm" DiskId="1" />
@@ -38,6 +39,7 @@
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
 				<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
+				-->
 			</Directory>
 
 			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="MyProjects" />
@@ -49,7 +51,7 @@
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="3" Display="hidden">
 				<ComponentRef Id="display_icon" />
 			</Feature>
-
+			<!--
 			<Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="build" />
 			</Feature>
@@ -88,7 +90,7 @@
 				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
 				<MergeRef Id="borland" />
 			</Feature>
-
+			-->
 		</Feature>
 		
 		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" Win64="$(var.IsWin64)" />
@@ -100,7 +102,7 @@
 			<Property Id="DefaultUIFont">DlgFont8</Property>
 			<Property Id="ErrorDialog">ErrorDlg</Property>
 
-			<Dialog Id="AdminWelcomeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="AdminWelcomeDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Property="InstallMode" Value="Server Image">1</Publish>
 					<Publish Event="NewDialog" Value="AdminRegistrationDlg">1</Publish>
@@ -119,7 +121,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="PrepareDlg" Width="375" Height="270" Title="[ProductName] [Setup]" Modeless="yes">
+			<Dialog Id="PrepareDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" Modeless="yes">
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
 				</Control>
@@ -141,7 +143,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="ProgressDlg" Width="375" Height="270" Title="[ProductName] [Setup]" Modeless="yes">
+			<Dialog Id="ProgressDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" Modeless="yes">
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
 				</Control>
@@ -165,7 +167,7 @@
 				<Control Id="StatusLabel" Type="Text" X="35" Y="100" Width="35" Height="10" Text="Status:" />
 			</Dialog>
 
-			<Dialog Id="UserExit" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="UserExit" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Finish]">
 					<Publish Event="EndDialog" Value="Exit">1</Publish>
 				</Control>
@@ -184,7 +186,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="FatalError" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="FatalError" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Finish]">
 					<Publish Event="EndDialog" Value="Exit">1</Publish>
 				</Control>
@@ -203,7 +205,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="ExitDialog" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="ExitDialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Finish]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
@@ -219,7 +221,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="AdminBrowseDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="AdminBrowseDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="PathEdit" Type="PathEdit" X="84" Y="202" Width="261" Height="17" Property="TARGETDIR" />
 				<Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_OK]">
 					<Publish Event="SetTargetPath" Value="TARGETDIR">1</Publish>
@@ -252,7 +254,7 @@
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="AdminInstallPointDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="AdminInstallPointDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Text" Type="Text" X="25" Y="80" Width="320" Height="10" TabSkip="no">
 					<Text>&amp;Enter a new network location or click Browse to browse to one.</Text>
 				</Control>
@@ -281,7 +283,7 @@
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="AdminRegistrationDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="AdminRegistrationDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="OrganizationLabel" Type="Text" X="45" Y="71" Width="285" Height="30" TabSkip="no">
 					<Text>&amp;Please enter the name of your organization in the box below. This will be used as default company name for subsequent installations of [ProductName]:</Text>
 				</Control>
@@ -311,7 +313,7 @@
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="BrowseDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="BrowseDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="PathEdit" Type="PathEdit" X="84" Y="202" Width="261" Height="18" Property="_BrowseProperty" Indirect="yes" />
 				<Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_OK]">
 					<Publish Event="SetTargetPath" Value="[_BrowseProperty]">1</Publish>
@@ -341,7 +343,7 @@
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="CancelDlg" Width="260" Height="85" Title="[ProductName] [Setup]">
+			<Dialog Id="CancelDlg" Width="260" Height="85" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="No" Type="PushButton" X="132" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_No]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
@@ -354,7 +356,7 @@
 				<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="Information icon" FixedSize="yes" IconSize="32" Text="[InfoIcon]" />
 			</Dialog>
 
-			<Dialog Id="DiskCostDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="DiskCostDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_OK]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
@@ -401,7 +403,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="FilesInUse" Width="375" Height="270" Title="[ProductName] [Setup]" KeepModeless="yes">
+			<Dialog Id="FilesInUse" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" KeepModeless="yes">
 				<Control Id="Retry" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Retry]">
 					<Publish Event="EndDialog" Value="Retry">1</Publish>
 				</Control>
@@ -456,11 +458,10 @@
 					<Text>{\DlgTitleFont}End-User License Agreement</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-		 	<Dialog Id="UserRegistrationDlg" Width="375" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+		 	<Dialog Id="UserRegistrationDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" NoMinimize="yes">
 				<Control Id="NameLabel" Type="Text" X="45" Y="73" Width="100" Height="15" TabSkip="no" Text="&amp;User Name:" />
 				<Control Id="NameEdit" Type="Edit" X="45" Y="85" Width="220" Height="18" Property="USERNAME" Text="{80}" />
 				<Control Id="OrganizationLabel" Type="Text" X="45" Y="110" Width="100" Height="15" TabSkip="no" Text="&amp;Organization:" />
@@ -489,11 +490,10 @@
 					<Text>{\DlgTitleFont}Customer Information</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="InvalidPidDlg" Width="260" Height="85" Title="[ProductName] [Setup]" NoMinimize="yes">
+			<Dialog Id="InvalidPidDlg" Width="260" Height="85" Title="[ProductName] $(var.EDITIONNAME) [Setup]" NoMinimize="yes">
 				<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="Information icon" FixedSize="yes" IconSize="32" Text="[ExclamationIcon]" />
 				<Control Id="Return" Type="PushButton" X="100" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_OK]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
@@ -503,7 +503,7 @@
 				</Control>
 			</Dialog>
 
-			<Dialog Id="Single_Feature_Destination" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
+			<Dialog Id="Single_Feature_Destination" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<?if $(var.EDITION)="enterprise" ?>
 						<Publish Event="NewDialog" Value="UserRegistrationDlg">1</Publish>
@@ -546,11 +546,10 @@ To install into a different folder, click the Browse button, and select another 
 				<Control Id="Text42a" Type="Text" X="30" Y="100" Width="312" Height="30">
 					<Text>You can choose not to install [ProductName] by clicking Cancel to exit the Installation Wizard.</Text>
 				</Control>
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="C_Compiler_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
+			<Dialog Id="C_Compiler_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
 					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
@@ -580,11 +579,10 @@ If you have the Microsoft Visual Studio C++ compiler version 6.0 or above then s
 Otherwise select "Install and use the free Borland C++ 5.5 compiler". This will install the Borland compiler and configure the Eiffel compiler to use it.</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="Dotnet_Error_Dialog" Width="279" Height="153" Title="[ProductName] [Setup]" CustomPalette="yes">
+			<Dialog Id="Dotnet_Error_Dialog" Width="279" Height="153" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
 				<Control Id="Previous" Type="PushButton" X="15" Y="120" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination">1</Publish>
 				</Control>
@@ -601,7 +599,7 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 				</Control>
 			</Dialog>
 
-			<Dialog Id="Precompile_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
+			<Dialog Id="Precompile_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="C_Compiler_Dialog">1</Publish>
 				</Control>
@@ -625,11 +623,10 @@ WEL gives access to most of the Windows API in an object-oriented way.
 Vision2 is a graphic library that is easy-to-use, powerful and platform-independent.</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="Project_Path_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
+			<Dialog Id="Project_Path_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
 				</Control>
@@ -642,7 +639,6 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="Text19" Type="Text" X="23" Y="23" Width="221" Height="14" Transparent="yes">
 					<Text>Select a path where new projects will be created.</Text>
 				</Control>
-				<Control Id="Text20" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 				<Control Id="Text18" Type="Text" X="8" Y="8" Width="150" Height="13" Transparent="yes">
 					<Text>{\DlgTitleFont}New Project Path</Text>
 				</Control>
@@ -661,11 +657,10 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 					<Text>Enter the path where you would like new projects to be created by default.</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="MaintenanceTypeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="MaintenanceTypeDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="RepairLabel" Type="Text" X="105" Y="114" Width="100" Height="10" TabSkip="no">
 					<Text>{\DlgTitleFont}Re&amp;pair</Text>
 				</Control>
@@ -708,7 +703,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<Dialog Id="MaintenanceWelcomeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="MaintenanceWelcomeDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
 					<Publish Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
@@ -727,7 +722,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<Dialog Id="OutOfDiskDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="OutOfDiskDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_OK]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
@@ -748,7 +743,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<Dialog Id="OutOfRbDiskDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="OutOfRbDiskDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="No" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_No]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
@@ -776,7 +771,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<Dialog Id="ResumeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="ResumeDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Install]">
 					<Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
 					<Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
@@ -799,7 +794,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<Dialog Id="VerifyReadyDlg" Width="375" Height="270" Title="[ProductName] [Setup]" TrackDiskSpace="yes">
+			<Dialog Id="VerifyReadyDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" TrackDiskSpace="yes">
 				<Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Install]">
 					<Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
 					<Publish Event="SpawnDialog" Value="OutOfRbDiskDlg"><![CDATA[OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)]]></Publish>
@@ -826,11 +821,10 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 					<Text>{\DlgTitleFont}Ready to Install</Text>
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
-				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="375" Height="1" />
 			</Dialog>
 
-			<Dialog Id="VerifyRemoveDlg" Width="375" Height="270" Title="[ProductName] [Setup]" TrackDiskSpace="yes">
+			<Dialog Id="VerifyRemoveDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" TrackDiskSpace="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
 				</Control>
@@ -859,7 +853,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="VerifyRepairDlg" Width="375" Height="270" Title="[ProductName] [Setup]" TrackDiskSpace="yes">
+			<Dialog Id="VerifyRepairDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" TrackDiskSpace="yes">
 				<Control Id="Repair" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Repair]">
 					<Publish Event="ReinstallMode" Value="ecmus"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
 					<Publish Event="Reinstall" Value="All"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
@@ -889,7 +883,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 			</Dialog>
 
-			<Dialog Id="WaitForCostingDlg" Width="260" Height="85" Title="[ProductName] [Setup]">
+			<Dialog Id="WaitForCostingDlg" Width="260" Height="85" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Return" Type="PushButton" X="102" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_Return]">
 					<Publish Event="EndDialog" Value="Exit">1</Publish>
 				</Control>
@@ -899,7 +893,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="Exclamation icon" FixedSize="yes" IconSize="32" Text="[ExclamationIcon]" />
 			</Dialog>
 
-			<Dialog Id="WelcomeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
+			<Dialog Id="WelcomeDlg" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]">
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
 				</Control>
@@ -1092,8 +1086,8 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 			<Error Id="21">Gathering required information...</Error>
 			<Error Id="22">Removing older versions of this application...</Error>
 			<Error Id="23">Preparing to remove older versions of this application...</Error>
-			<Error Id="32">{[ProductName] }Setup completed successfully.</Error>
-			<Error Id="33">{[ProductName] }Setup failed.</Error>
+			<Error Id="32">{[ProductName] $(var.EDITIONNAME)}Setup completed successfully.</Error>
+			<Error Id="33">{[ProductName] $(var.EDITIONNAME)}Setup failed.</Error>
 			<Error Id="1101">Error reading from file: [2]. {{ System error [3].}}	Verify that the file exists and that you can access it.</Error>
 			<Error Id="1301">Cannot create the file '[2]'. A directory with this name already exists. Cancel the install and try installing to a different location.</Error>
 			<Error Id="1302">Please insert the disk: [2]</Error>

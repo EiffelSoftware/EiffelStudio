@@ -434,6 +434,7 @@ feature -- Element change
 			v_not_contained: not has (v)
 			v_parent_void: v.parent = Void
 			v_not_parent_of_current: not is_parent_recursive (v)
+			v_containable: may_contain (v)
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
 			column_span_positive: column_span >= 1

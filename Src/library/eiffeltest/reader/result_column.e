@@ -23,7 +23,7 @@ feature -- Status report
 	input_accepted (s: STRING): BOOLEAN is
 			-- Is `s' acceptable input for this column?
 		do
-			Result := expected_result (s) /= Void
+			Result := s /= Void and then expected_result (s) /= Void
 		end
 
 feature {NONE} -- Implementation

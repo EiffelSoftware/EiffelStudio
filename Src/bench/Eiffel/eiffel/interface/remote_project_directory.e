@@ -76,6 +76,14 @@ feature -- Status setting
 			system_name := n
 		end
 
+	set_il_generation (v: BOOLEAN) is
+			-- Set `il_generation' to `v'.
+		do
+			il_generation := v
+		ensure
+			il_generation_set: il_generation = v
+		end
+		
 feature -- Access
 
 	dollar_name: STRING
@@ -164,6 +172,9 @@ feature -- Access
 	system_name: STRING
 			-- Name of the precompiled library
 
+	il_generation: BOOLEAN
+			-- Is current project made for IL code generation?
+
 feature -- Check
 
 	check_version_number (precomp_id: INTEGER)is
@@ -208,14 +219,23 @@ feature -- Check
 			check_project_directory
 				-- EIFGEN/precomp.eif file must be readable.
 			check_file (<<Eiffelgen>>, Shared_precomp_eif);
-				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
-				-- should be present. If they are not, issue a warning.
-			check_precompiled_optional (<<Eiffelgen, W_code>>, Platform_constants.Driver);
---			if has_precompiled_preobj then
---				check_precompiled_optional (<<Eiffelgen, W_code>>, Platform_constants.Preobj)
---			end;
 		end
 
+	check_optional is
+			-- Check that `Current' is ready to be used for execution.
+		do
+				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
+				-- should be present. If they are not, issue a warning.
+			if il_generation then
+				check_precompiled_optional (assembly_driver);
+			else
+				check_precompiled_optional (precompiled_driver);
+				if has_precompiled_preobj then
+					check_precompiled_optional (precompiled_preobj)
+				end
+			end
+		end
+		
 feature {COMPILER_EXPORTER, E_PROJECT} -- Update
 
 	update_path is
@@ -323,7 +343,10 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	check_precompiled_optional (directories: ARRAY [STRING]; rn: STRING) is
+	check_precompiled_optional (rn: STRING) is
+			-- Check that `rn' is a valid path.
+		require
+			rn_not_void: rn /= Void
 		local
 			f: RAW_FILE;
 			fn: FILE_NAME;
@@ -331,26 +354,17 @@ feature {NONE} -- Implementation
 			ok: BOOLEAN
 			i: INTEGER;
 		do
-			if is_valid then
-				!!fn.make_from_string (name);
-				from
-					i := directories.lower
-				until
-					i > directories.upper
-				loop
-					fn.extend (directories.item (i))
-					i := i + 1
-				end
-				fn.set_file_name (rn);
-				!! f.make (fn);
+			if is_valid and not il_generation then
+				create fn.make_from_string (rn)
+				create f.make (fn)
 				ok :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not ok then
-					!! vd43;
-					vd43.set_path (fn);
-					Error_handler.insert_warning (vd43);
+					create vd43
+					vd43.set_path (fn)
+					Error_handler.insert_warning (vd43)
 				end
 			end
 		end

@@ -38,13 +38,13 @@ feature -- Access
 			-- Generated header file
 		do
 			create Result.make (100)
-			Result.append ("%T/*-----------------------------------------------------------%R%N%T")
+			Result.append ("%T/*-----------------------------------------------------------%N%T")
 			Result.append (comment)
-			Result.append ("%R%N%T-----------------------------------------------------------*/%R%N%T")
+			Result.append ("%N%T-----------------------------------------------------------*/%N%T")
 			Result.append (result_type)
 			Result.append (" ")
 			Result.append (name)
-			Result.append (";%R%N")
+			Result.append (";%N")
 		end
 
 	can_generate: BOOLEAN is

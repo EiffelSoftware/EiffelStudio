@@ -57,11 +57,11 @@ feature -- Access
 		do
 			create Result.make (4096)
 			Result.append ("/*-----------------------------------------------------------")
-			Result.append ("%R%N")
+			Result.append ("%N")
 			Result.append (header)
-			Result.append ("%R%N-----------------------------------------------------------*/%R%N%R%N#include %"")
+			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
 			Result.append (definition_header_file_name)
-			Result.append ("%"%R%N")
+			Result.append ("%"%N")
 			from
 				others_source.start
 			until
@@ -69,11 +69,11 @@ feature -- Access
 			loop
 				Result.append (others_source.item)
 				others_source.forth
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 			end
 
 			Result.append (cpp_protector_start)
-			Result.append ("%R%N%R%N")
+			Result.append ("%N%N")
 
 			from
 				extern_functions.start
@@ -82,7 +82,7 @@ feature -- Access
 			loop
 				Result.append ("extern %"C%" ")
 				Result.append (extern_functions.item.generated_code)
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 				extern_functions.forth
 			end
 
@@ -93,7 +93,7 @@ feature -- Access
 			loop
 				Result.append (ordered_elements.item.generated_code)
 				ordered_elements.forth
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 			end
 
 			from
@@ -109,7 +109,7 @@ feature -- Access
 				Result.append ("::")
 				Result.append (name)
 				Result.append (constructors.item.generated_code)
-				Result.append ("%R%N/*----------------------------------------------------------------------------------------------------------------------*/%R%N%R%N")
+				Result.append ("%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
 				constructors.forth
 			end
 			if destructor_body /= Void and then not destructor_body.is_empty then
@@ -120,9 +120,9 @@ feature -- Access
 				Result.append (name)
 				Result.append ("::~")
 				Result.append (name)
-				Result.append ("()%R%N{%R%N")
+				Result.append ("()%N{%N")
 				Result.append (destructor_body)
-				Result.append ("%R%N};%R%N/*----------------------------------------------------------------------------------------------------------------------*/%R%N%R%N")
+				Result.append ("%N};%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
 			end
 			from
 				functions.start
@@ -136,13 +136,13 @@ feature -- Access
 					l_writers.after
 				loop
 					Result.append (generated_function_code (l_writers.item))
-					Result.append ("%R%N/*----------------------------------------------------------------------------------------------------------------------*/%R%N%R%N")
+					Result.append ("%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
 					l_writers.forth
 				end
 				functions.forth
 			end
 
-			Result.append ("%R%N")
+			Result.append ("%N")
 			Result.append (cpp_protector_end)
 		end
 
@@ -159,21 +159,21 @@ feature -- Access
 		do
 			if declaration_header_file_name /= Void then
 				create Result.make (4096)
-				Result.append ("/*-----------------------------------------------------------%R%N")
+				Result.append ("/*-----------------------------------------------------------%N")
 				Result.append ("Forward declaration of ")
 				Result.append (name)
-				Result.append ("%R%N-----------------------------------------------------------*/%R%N%R%N#ifndef ")
+				Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
 				l_name := header_protector (declaration_header_file_name)
 				Result.append (l_name)
-				Result.append ("%R%N#define ")
+				Result.append ("%N#define ")
 				Result.append (l_name)
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 				Result.append (cpp_protector_start1)
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 				create l_declaration.make (name, namespace, abstract)
 				Result.append (l_declaration.generated_code)
 				Result.append (cpp_protector_end1)
-				Result.append ("%R%N#endif")
+				Result.append ("%N#endif")
 			end
 		end
 
@@ -188,19 +188,19 @@ feature -- Access
 				conversion_include
 			end
 			create Result.make (4096)
-			Result.append ("/*-----------------------------------------------------------%R%N")
+			Result.append ("/*-----------------------------------------------------------%N")
 			Result.append (header)
-			Result.append ("%R%N-----------------------------------------------------------*/%R%N%R%N#ifndef ")
+			Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
 			l_protector := header_protector (definition_header_file_name)
 			Result.append (l_protector)
-			Result.append ("%R%N#define ")
+			Result.append ("%N#define ")
 			Result.append (l_protector)
 			if declaration_header_file_name /= Void then
-				Result.append ("%R%N%R%N#include %"")
+				Result.append ("%N%N#include %"")
 				Result.append (declaration_header_file_name)
 				Result.append ("%"")
 			end
-			Result.append ("%R%N%R%N")
+			Result.append ("%N%N")
 
 			from
 				import_files.start
@@ -209,12 +209,12 @@ feature -- Access
 			loop
 				Result.append ("#include %"")
 				Result.append (import_files.item)
-				Result.append ("%"%R%N%R%N")
+				Result.append ("%"%N%N")
 				import_files.forth
 			end
 
 			Result.append (cpp_protector_start)
-			Result.append ("%R%N%R%N")
+			Result.append ("%N%N")
 
 			from
 				global_variables.start
@@ -222,7 +222,7 @@ feature -- Access
 				global_variables.after
 			loop
 				Result.append (global_variables.item.generated_header_file)
-				Result.append ("%R%N")
+				Result.append ("%N")
 				global_variables.forth
 			end
 
@@ -233,7 +233,7 @@ feature -- Access
 			loop
 				Result.append (others.item)
 				others.forth
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 			end
 
 			from
@@ -243,7 +243,7 @@ feature -- Access
 			loop
 				Result.append ("extern %"C%" ")
 				Result.append (extern_functions.item.generated_header_file)
-				Result.append ("%R%N%R%N")
+				Result.append ("%N%N")
 				extern_functions.forth
 			end
 
@@ -259,15 +259,15 @@ feature -- Access
 
 				Result.append ("#ifndef ")
 				Result.append (l_protector)
-				Result.append ("%R%N#define ")
+				Result.append ("%N#define ")
 				Result.append (l_protector)
-				Result.append ("%R%N")
+				Result.append ("%N")
 			end
 
 			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
-				Result.append ("%R%N{%R%N")
+				Result.append ("%N{%N")
 			end
 
 			Result.append ("class ")
@@ -294,9 +294,9 @@ feature -- Access
 					parents.forth
 				end
 			end
-			Result.append ("%R%N{%R%N")
+			Result.append ("%N{%N")
 			Result.append (cpp_status_keywords.item (Public))
-			Result.append (":%R%N")
+			Result.append (":%N")
 			from
 				constructors.start
 			until
@@ -308,14 +308,14 @@ feature -- Access
 				if constructors.item.signature /= Void then
 					Result.append (constructors.item.signature)
 				end
-				Result.append (");%R%N")
+				Result.append (");%N")
 				constructors.forth
 			end
 
 			if constructors.is_empty then
 				Result.append ("%T")
 				Result.append (name)
-				Result.append (" () {};%R%N")
+				Result.append (" () {};%N")
 			end
 
 			Result.append ("%T")
@@ -328,30 +328,30 @@ feature -- Access
 			if destructor_body = Void or else destructor_body.is_empty then
 				Result.append (" {}")
 			end
-			Result.append (";%R%N")
+			Result.append (";%N")
 			Result.append (generate_members (members, Public))
 			Result.append (generate_members (functions, Public))
 			Result.append (cpp_status_keywords.item (Protected))
-			Result.append (":%R%N")
+			Result.append (":%N")
 			Result.append (generate_members (members, Protected))
 			Result.append (generate_members (functions, Protected))
 			Result.append (cpp_status_keywords.item (Private))
-			Result.append (":%R%N")
+			Result.append (":%N")
 			Result.append (generate_members (members, Private))
 			Result.append (generate_members (functions, Private))
-			Result.append ("};%R%N")
+			Result.append ("};%N")
 
 			if namespace /= Void and then not namespace.is_empty then
-				Result.append ("}%R%N")
+				Result.append ("}%N")
 			end
 
 			if abstract then
-				Result.append ("#endif%R%N")
+				Result.append ("#endif%N")
 			end
 			Result.append (cpp_protector_end1)
-			Result.append ("%R%N%R%N")
+			Result.append ("%N%N")
 			Result.append (cpp_protector_end)
-			Result.append ("%R%N")
+			Result.append ("%N")
 
 			from
 				import_files_after.start
@@ -360,11 +360,11 @@ feature -- Access
 			loop
 				Result.append ("#include %"")
 				Result.append (import_files_after.item)
-				Result.append ("%"%R%N%R%N")
+				Result.append ("%"%N%N")
 				import_files_after.forth
 			end
 
-			Result.append ("%R%N#endif")
+			Result.append ("%N#endif")
 		end
 
 	can_generate: BOOLEAN is
@@ -503,7 +503,7 @@ feature -- Element Change
 			-- Set `header' with `a_header'.
 		require
 			non_void_header: a_header /= Void
-			valid_syntax: a_header.item (1) /= '%R' and a_header.item (a_header.count) /= '%N'
+			valid_syntax: not a_header.is_empty implies a_header.item (1) /= '%R' and a_header.item (a_header.count) /= '%N'
 		do
 			header := a_header
 		ensure
@@ -603,11 +603,11 @@ feature {NONE} -- Implementation
 					l_writers.after
 				loop
 					Result.append (l_writers.item.generated_header_file)
-					Result.append ("%R%N%R%N")
+					Result.append ("%N%N")
 					l_writers.forth
 				end
 			end
-			Result.append ("%R%N")
+			Result.append ("%N")
 		end
 					
 	generated_function_code (a_function: WIZARD_WRITER_C_FUNCTION): STRING is
@@ -632,11 +632,11 @@ feature {NONE} -- Implementation
 				Result.append (" ")
 			end
 			Result.append (")")
-			Result.append ("%R%N%R%N/*-----------------------------------------------------------%R%N%T")
+			Result.append ("%N%N/*-----------------------------------------------------------%N%T")
 			Result.append (a_function.comment)
-			Result.append ("%R%N-----------------------------------------------------------*/%R%N{%R%N")
+			Result.append ("%N-----------------------------------------------------------*/%N{%N")
 			Result.append (a_function.body)
-			Result.append ("%R%N};")
+			Result.append ("%N};")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

@@ -177,6 +177,7 @@ feature -- Status setting
 		require
 			menu_realized: realized
 		local
+			push_b: PUSH_BUTTON_WINDOWS
 			button: BUTTON_WINDOWS
 			toggle_b: TOGGLE_B_WINDOWS
 			separator: SEPARATOR_WINDOWS
@@ -195,6 +196,12 @@ feature -- Status setting
 						associated_root.add (button)
 						button.set_hash_code
 						id_children.put (associated_root.value, button)
+						push_b ?= button
+						if push_b /= Void then
+							if push_b.has_accelerator then
+								push_b.new_accelerator_id (associated_root.value)
+							end
+						end
 						append_string (button.text, associated_root.value)
 					end
 					toggle_b ?= widget
@@ -204,6 +211,10 @@ feature -- Status setting
 						else
 							uncheck_item (associated_root.value)
 						end
+						if toggle_b.has_accelerator then
+							toggle_b.new_accelerator_id (associated_root.value)
+						end
+
 					end
 				end
 			else
@@ -245,6 +256,8 @@ feature -- Element change
 			mp: MENU_PULL_WINDOWS
 			m: MENU_WINDOWS
 			b: BUTTON_WINDOWS
+			push_b: PUSH_BUTTON_WINDOWS
+			toggle_b: TOGGLE_B_WINDOWS
 			s: SEPARATOR_WINDOWS
 		do
 			b ?= w
@@ -257,6 +270,19 @@ feature -- Element change
 				mp.insert_button (b, associated_root.value)
 				b.set_hash_code
 				id_children.put (associated_root.value, b)
+				push_b ?= b
+				if push_b /= Void then
+					if push_b.has_accelerator then
+						push_b.new_accelerator_id (associated_root.value)
+					end
+				else
+					toggle_b ?= b
+					if toggle_b /= Void then
+						if toggle_b.has_accelerator then
+							toggle_b.new_accelerator_id (associated_root.value)
+						end
+					end
+				end
 			else
 				s ?= w
 				if s /= Void then
@@ -287,6 +313,8 @@ feature -- Element change
 			ba: BAR_WINDOWS
 			s: SEPARATOR_WINDOWS
 			b: BUTTON_WINDOWS
+			tb: TOGGLE_B_WINDOWS
+			pb: PUSH_BUTTON_WINDOWS
 			mp: MENU_PULL_WINDOWS
 		do
 			b ?= w
@@ -300,6 +328,19 @@ feature -- Element change
 				end
 				associated_root.remove (id_children.item (b))
 				id_children.remove (b)
+				pb ?= b
+				if pb /= Void then
+					if pb.has_accelerator then
+						pb.new_accelerator_id (-1)
+					end
+				else
+					tb ?= b
+					if tb /= Void then
+						if tb.has_accelerator then
+							tb.new_accelerator_id (-1)
+						end
+					end
+				end
 			else
 				s ?= w
 				if s /= Void then

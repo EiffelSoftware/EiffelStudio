@@ -53,7 +53,10 @@ feature -- Callbacks
 	set_assertion_flag_and_compile (keep_assertions: BOOLEAN) is
 		do
 			assertions_included := keep_assertions
-			if System.keep_assertions /= keep_assertions then
+			if
+				Workbench.system_defined and then
+				System.keep_assertions /= keep_assertions
+			then
 					-- Force refinalization when user changed is mind since
 					-- last time.
 				System.set_finalize

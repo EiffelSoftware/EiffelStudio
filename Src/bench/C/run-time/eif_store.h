@@ -47,8 +47,6 @@ extern "C" {
 /* Setting of `eif_is_new_independent_format' */
 #define eif_set_new_independent_format(v)	eif_is_new_independent_format = (EIF_BOOLEAN) (v)
 
-extern char rt_kind_version;
-
 /*
  * Utilities
  */

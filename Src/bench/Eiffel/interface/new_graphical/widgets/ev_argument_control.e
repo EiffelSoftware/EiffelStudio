@@ -327,7 +327,7 @@ feature {NONE} -- GUI
 	execution_frame: EV_VERTICAL_BOX is
 			-- Frame widget containing argument controls.
 		local
-			vbox, vbox2: EV_VERTICAL_BOX
+			vbox: EV_VERTICAL_BOX
 			l_frame: EV_FRAME
 		do
 				-- Create all widgets.
@@ -677,8 +677,6 @@ feature {NONE} -- Actions
 
 	on_tab_changed is
 			-- Action to be taken when user has changed mode.
-		local
-			l_arg: STRING
 		do
 			if mode = 1 then
 				set_mode (2)

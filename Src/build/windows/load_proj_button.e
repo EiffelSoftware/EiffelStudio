@@ -47,7 +47,7 @@ feature {NONE}
 					popup_window
 				else
 					question_box.popup (Current, 
-						Messages.save_project_qu, Void)
+						Messages.open_project_qu, Void)
 				end
 			end
 		end
@@ -59,8 +59,6 @@ feature {NONE}
 			pw: OPEN_PROJ_WIN
 		do
 			if yes then
-				open_new_application
-			else
 				popup_window
 			end
 		end

@@ -14,6 +14,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
+		undefine
+			show
 		redefine
 			interface
 		end
@@ -25,6 +27,25 @@ inherit
 
 create
 	make
+
+feature -- Basic operations
+
+	show is
+			-- Pop up on the current pointer position.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+			-- Pop up on `a_x', `a_y' relative to the top-left corner
+			-- of `a_widget'.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 feature {EV_WINDOW_IMP} -- Implementation
 
@@ -69,6 +90,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/22 22:57:55  brendel
+--| Added show and show_at. Marked as "to be implemented".
+--|
 --| Revision 1.25  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

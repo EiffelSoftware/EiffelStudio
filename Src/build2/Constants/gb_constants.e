@@ -428,9 +428,11 @@ feature -- Warning Dialogs
 
 	Delete_component_warning: STRING is "Are you sure you wish to delete the component from the system?"
 
-	Class_invalid_name_warning: STRING is " is not a valid Class name.%NClass names should only include%N%
+	Class_invalid_name_warning: STRING is "' is not a valid Class name.%NClass names should only include%N%
 		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
-		%please select a different Class name."
+		%Please select a different class name."
+		
+	Reserved_word_warning: STRING is "' is a reserved word.%NPlease select a different class name."
 
 	Component_invalid_name_warning: STRING is " is not a valid Component name.%NComponent names should only include%N%
 		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%

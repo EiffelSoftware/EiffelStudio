@@ -38,6 +38,7 @@ feature -- Initialization
 			all_existing_names := names
 			all_existing_names.compare_objects
 			name_field.set_text (unique_name (names, "Component"))
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 	
 

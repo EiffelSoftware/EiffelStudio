@@ -37,14 +37,17 @@ feature -- dragging
 			-- Textual representation of the breakable mark.
 			-- Two different representations whether the breakpoint
 			-- is set or not.
+		local
+			status: APPLICATION_STATUS
 		do
+			status := Application.status;
 			if 
-				Run_info.is_running and Run_info.is_stopped and 
-				Run_info.is_at (routine, index) 
+				status /= Void and status.is_stopped and 
+				status.is_at (routine, index) 
 			then
 					-- Execution stopped at that point.
 				Result := "->|"
-			elseif Debug_info.is_breakpoint_set (routine, index) then
+			elseif Application.is_breakpoint_set (routine, index) then
 				Result := "|||"
 			else
 				Result := ":::"

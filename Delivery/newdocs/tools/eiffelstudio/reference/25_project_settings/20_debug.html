@@ -1,0 +1,53 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+</head>
+
+<body>
+
+<h1>Debug Tab</h1>
+
+<p>Here is what the debug tab look like when you haven't compiled your system
+you just created.</p>
+
+<p><img border="0" src="../../../../images/eiffelstudio/project_settings/debug_tab.gif" width="605" height="506"></p>
+
+<p>&nbsp;</p>
+<h2>Execution parameter</h2>
+<p>You can specify the location from where your program will run. By default the
+location is `your_project_path/EIFGEN/W_code'. This is useful when your
+application relies on the use of resource files located at a precise location.</p>
+<p>You can also specify one or more command line arguments. To add one, simply
+type your command line arguments in the combo box and press enter. To remove
+one, select it from the combo box and then click on the red cross.</p>
+<p>&nbsp;</p>
+<h2>Miscellaneous options</h2>
+<ul>
+  <li>line number generation when selected will generate in either .NET
+    generation or C generation some extra information that will enable a .NET
+    debugger or a C debugger to step through the Eiffel code rather than MSIL
+    code or C code.</li>
+  <li>call tracing when selected will in C generation mode only display on the
+    console all the features that are called during the system execution.</li>
+  <li>profiling when selected will in C generation mode turn on the Eiffel
+    profiler during execution. The results can be seen at the end of the
+    execution in <a href="../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.html">the
+    profiler window</a>.</li>
+</ul>
+<p>&nbsp;</p>
+<h2>Debug options</h2>
+<p>By default all debug clauses are turned off. To enable them, you have to
+select them manually. Before you compile for the first time your project, you
+won't see any debug clauses. They will automatically be added by the compiler
+after your first compilation by looking at your code. When this is done, you can
+enable/disable each of them.</p>
+
+</body>
+
+</html>

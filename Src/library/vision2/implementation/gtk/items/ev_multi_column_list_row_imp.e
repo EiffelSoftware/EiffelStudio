@@ -15,7 +15,9 @@ inherit
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_index,
+	make_with_all
 
 feature {NONE} -- Initialization
 
@@ -42,6 +44,17 @@ feature {NONE} -- Initialization
 			end
  		end
 
+	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		do
+		end
+
+	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		do
+		end
+
 feature -- Access
 
 	parent: EV_MULTI_COLUMN_LIST is
@@ -58,6 +71,9 @@ feature -- Access
 		do
 			Result := text.count
 		end
+
+	index: INTEGER
+			-- Index of the row in the list
 
 feature -- Status report
 	
@@ -86,6 +102,12 @@ feature -- Status setting
 			text := Void
 			pixmaps := Void
 			parent_imp := Void	
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item.
+		do
+			index := value
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -203,14 +225,6 @@ feature -- Event -- removing command association
 			check false end
 		end
 
-feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index.
-		do
-			index := value
-		end
-
 feature {NONE} -- Implementation
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
@@ -223,9 +237,6 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	text: LINKED_LIST [STRING]
 		-- Text in the cells
-
-	index: INTEGER
-		-- index of the row in the multi column list
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

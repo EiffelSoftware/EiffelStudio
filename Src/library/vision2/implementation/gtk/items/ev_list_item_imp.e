@@ -21,7 +21,7 @@ inherit
 creation
 	make,
 	make_with_text,
-	make_with_pixmap,
+	make_with_index,
 	make_with_all
 
 feature {NONE} -- Initialization
@@ -45,26 +45,28 @@ feature {NONE} -- Initialization
 			create_text_label (txt)
 		end
 
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create a list item with `par' as parent and `pix'
-			-- as pixmap.
+	make_with_index (par: EV_LIST; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
 		do
-			make
-			-- Not implemented
 		end
 
-	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create a list item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
+	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `value' as index.
 		do
-			make_with_text (txt)
-			-- Not implemented
 		end
 
-feature -- Acces
+feature -- Access
 
 	parent_imp: EV_LIST_IMP
 			-- Parent of the Current item
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := gtk_list_child_position(parent_imp.widget, Current.widget) + 1 
+		end
 
 feature -- Status report
 
@@ -72,12 +74,6 @@ feature -- Status report
 			-- Is the item selected
 		do
 			Result := False
-		end
-
-	index: INTEGER is
-			-- Index of the current item.
-		do
-			Result := gtk_list_child_position(parent_imp.widget, Current.widget) + 1 
 		end
 
 	is_first: BOOLEAN is
@@ -109,6 +105,12 @@ feature -- Status setting
 			-- opposit status.
 		do
 			set_selected (not is_selected)
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		do
 		end
 
 	create_text_label (txt: STRING) is

@@ -14,7 +14,7 @@ RT_LNK void eif_gen_conf_init (int);
 rt_shared void eif_gen_conf_cleanup (void);
 
 /* Creation type of a gen. feat. in final mode */
-RT_LNK int16 eif_final_id (int16, int16 *ttable, int16 **gttable, EIF_REFERENCE object);
+RT_LNK int16 eif_final_id (int16, int16 *ttable, int16 **gttable, EIF_REFERENCE object, int offset);
 
 /* Converts an array of type ids to a single id */
 RT_LNK int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 dyn_type, int16 *typearr);

@@ -71,8 +71,10 @@ feature {ICOR_EXPORTER} -- Access
 										cwin_debug_no_specials_options,
 										$icordebug_process
 									)
-			Result := icordebug_process
-			l_hr := feature {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
+			if last_call_succeed then
+				Result := icordebug_process
+				l_hr := feature {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
+			end
 		end
 
 	set_managed_handler (a_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK) is
@@ -117,11 +119,12 @@ feature {ICOR_EXPORTER} -- Access
 			-- Clean used data for the previous debugging session
 		local
 			l_hr: INTEGER
-		do	
+		do
 			l_hr := cwin_close_handle (last_icor_debug_process_handle)
 			l_hr := cwin_close_handle (process_info.process_handle)
 			l_hr := cwin_close_handle (process_info.thread_handle)
 		end
+		
 
 feature {NONE} -- Implementation
 

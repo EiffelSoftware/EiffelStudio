@@ -236,6 +236,7 @@ feature -- Debugging session Termination ...
 	terminate_debugger_session is
 			-- Terminate debugging session and clean what need to be cleaned
 		do
+			is_debugging := False
 			stop_dbg_timer
 			terminate_dbg_synchronisation
 			eifnet_dbg_evaluator.reset
@@ -279,7 +280,6 @@ feature -- Debugging session Termination ...
 			-- On ExitProcess callback
 		do
 			eif_debug_display ("[EIFDBG] execution exiting")
-			is_debugging := False
 			terminate_debugger_session
 		ensure
 			not is_debugging
@@ -294,6 +294,11 @@ feature -- Debugging session Termination ...
 feature -- Status
 
 	last_dbg_call_success: INTEGER
+	
+	last_dbg_call_succeed: BOOLEAN is
+		do
+			Result := (last_dbg_call_success = 0)
+		end		
 
 feature -- Callback notification about synchro
 
@@ -312,10 +317,11 @@ feature -- Interaction with .Net Debugger
 			n: INTEGER
 		do
 			l_icd_process := icor_debug.create_process (debug_param_executable + " " + debug_param_arguments, debug_param_directory)
-			n := feature {CLI_COM}.add_ref (l_icd_process)
-			set_last_controller_by_pointer (l_icd_process)
-			n := feature {CLI_COM}.release (l_icd_process)
---| FIXME jfiat [2004/07/02] : check if the order matters
+			if icor_debug.last_call_succeed then
+				n := feature {CLI_COM}.add_ref (l_icd_process)
+				set_last_controller_by_pointer (l_icd_process)
+				n := feature {CLI_COM}.release (l_icd_process)
+			end
 		end
 
 	waiting_debugger_callback (a_title: STRING) is

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+if [ "$1" == "local" ]; then
+	echo $1
+	export REMOTE=dakar
+	cp -f make_solaris ~/
+	# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_solaris ."
+	rsh $REMOTE "cd local/TEST_DELIV ; bash ./make_solaris"
+
+ftp -n << EOF 
+verbose 
+open dakar.ise 
+user manus manus 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel51_deliv.tgz Eiffel51_solaris.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel51.iso Eiffel51_solaris.iso
+close 
+EOF
+
+	echo Solaris compilation done
+else
+	rm -rf PorterPackage
+	tar xvfz ~/PorterPackage_enterprise.tgz
+	cd PorterPackage
+	export ISE_PLATFORM=solaris-2.5+
+	bash compile_exes
+	bash make_images
+fi

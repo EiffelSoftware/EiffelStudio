@@ -41,31 +41,6 @@ feature -- Status setting
 			layout_set: is_row_layout = flag
 		end
 
-feature {EV_DYNAMIC_TABLE} -- Implementation
-
---	add_child (child_imp: EV_WIDGET_IMP) is
---			-- Add child into composite. Several children
---			-- possible.
---		do
---			{EV_TABLE_IMP} Precursor (child_imp)
----			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
-	--		if is_row_layout then
---				if column_index + 1 >= finite_dimension then
---					row_index := row_index + 1
---					column_index := 0
---				else
---					column_index := column_index + 1
---				end
---			else
---				if row_index + 1 >= finite_dimension then
---					column_index := column_index + 1
---					row_index := 0
---				else
---					row_index := row_index + 1
---				end
---			end			
---		end
-
 feature {NONE} -- Implementation
 
 	row_index:  INTEGER

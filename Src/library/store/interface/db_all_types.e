@@ -10,7 +10,7 @@ class DB_ALL_TYPES inherit
 
 	HANDLE_USE
 
-creation
+create
 
 	make
 

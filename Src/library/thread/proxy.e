@@ -12,7 +12,7 @@ class
 obsolete
 	"Not needed anymore since object does not need protection"
 
-creation
+create
 	make, put
 
 feature {NONE} -- Initialization

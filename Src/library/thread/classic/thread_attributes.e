@@ -8,7 +8,7 @@ indexing
 class
 	THREAD_ATTRIBUTES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

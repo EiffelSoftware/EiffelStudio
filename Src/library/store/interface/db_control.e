@@ -26,7 +26,7 @@ inherit
 			{ANY} numeric_null_value, set_numeric_null_value
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

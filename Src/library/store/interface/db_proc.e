@@ -16,7 +16,7 @@ class DB_PROC inherit
 			{ANY} is_connected
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 	
 	make
 

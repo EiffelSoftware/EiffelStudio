@@ -13,7 +13,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

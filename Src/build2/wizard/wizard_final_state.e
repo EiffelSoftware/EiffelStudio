@@ -25,6 +25,8 @@ inherit
 	GB_CONSTANTS
 	
 	GB_SHARED_SYSTEM_STATUS
+	
+	GB_SHARED_OBJECT_HANDLER
 
 creation
 	make
@@ -62,7 +64,9 @@ feature {NONE} -- Implementation
 		local
 			code_generator: GB_CODE_GENERATOR
 			output_file_name: FILE_NAME
-			output_file: RAW_FILE
+			output_file: PLAIN_TEXT_FILE
+			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 				-- The wizard generated code seems to leave the
 				-- window locked, so we unlock it. We check first,
@@ -80,12 +84,39 @@ feature {NONE} -- Implementation
 				-- about wizard completion. Whichever process launched the
 				-- wizard can then query the contents, to find out
 				-- status.
-			
 			output_file_name := clone (generated_path)
 			output_file_name.extend (wizard_completion_file_name)
 			create output_file.make_open_write (output_file_name)
 			output_file.start
-			output_file.putstring ((system_status.current_project_settings.main_window_class_name + class_implementation_extension + ".e").as_lower)
+
+			from 
+				window_selector.start
+			until
+				window_selector.off
+			loop
+				window_selector_item ?= window_selector.item
+				 if window_selector_item /= Void then
+				 	output_file.putstring ((window_selector_item.object.name + "_IMP%N").as_upper)
+				end
+				window_selector_layout ?= window_selector.item
+				if window_selector_layout /= Void then
+					from
+						window_selector_layout.start
+					until
+						window_selector_layout.off
+					loop
+						window_selector_item ?= window_selector_layout.item
+						if window_selector_item /= Void then
+							output_file.putstring ((window_selector_layout.text + "\" + window_selector_item.object.name + "_IMP%N").as_upper)
+						end
+						window_selector_layout.forth
+					end
+				end
+				check
+					item_is_directory_or_window: window_selector_item /= Void or window_selector_layout /= Void
+				end
+				window_selector.forth
+			end			
 			output_file.close
 			
 			--| Add here the action of your wizard.
@@ -103,10 +134,23 @@ feature {NONE} -- Implementation
 
 	proceed_with_current_info is
 			-- User has clicked "finish", proceed...
+		local
+			objects: ARRAYED_LIST [GB_OBJECT]
+			confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
-			build_finish
-			process_info
-			Precursor
+			objects := Window_selector.objects
+			if not object_handler.objects_all_named (objects) then
+				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
+				confirmation_dialog.show_modal_to_window (main_window)
+				if confirmation_dialog.selected_button.is_equal ("OK") then
+					object_handler.add_default_names (objects)
+				end
+			end
+			if object_handler.objects_all_named (objects) then
+				build_finish
+				process_info
+				Precursor
+			end
 		end
 		
 	display is

@@ -76,11 +76,15 @@ rt_public char* eif_vms_getenv (const char* name)
 	    sts = sys$trnlnm (&tran_attr, (void*)&tab_dx, &lnm_dx, 0, &items);
 	    if (VMS_FAILURE(sts)) break;
 	    if (name_attr & LNM$M_CONCEALED) {
+#ifdef moose	/* this was a bad idea, it causes all sorts of other problems. */
 		/* return colon terminated name */
-		static char badidea[LNM$C_NAMLENGTH +1];    /* NOT THREAD SAFE! */
+		static char badidea[LNM$C_NAMLENGTH +2];    /* NOT THREAD SAFE! */
 		if (!strchr (strcpy (badidea, name), ':'))
 		    strcat (badidea, ":");
 		return badidea;
+#endif
+		/* return the (untranslated) name */
+		return (char*) name;
 	    }
 	    valbuf[vallen] = '\0';
 	    if ( !(p = strchr (valbuf, ':')) )

@@ -19,7 +19,7 @@ feature -- Access
 				n := 1024
 					-- We allocate 2 * n bytes, as `p' will hold a unicode string.
 				p := p.memory_alloc (2 * n)
-				n := get_core_system_directory (p, n, $n)
+				n := get_core_system_directory (p, n ,n)
 				p.memory_free
 				Result := True
 			else
@@ -46,7 +46,7 @@ feature -- Access
 			n := 1024
 				-- We allocate 2 * n bytes, as `p' will hold a unicode string.
 			p := p.memory_alloc (2 * n)
-			if get_core_system_directory (p, n, $len) = 0 then
+			if get_core_system_directory (p, n, len) = 0 then
 				create path.make_empty (len + 1)
 				n := wcstombs (path.item, p, len)
 				Result := path.string
@@ -99,8 +99,7 @@ feature -- Query
 	Dotnet_debugger_path (a_debug: STRING): STRING is
 			-- The path to the .NET debugger associated with 'a_debug'.
 		local
-			l_path,
-			l_debugger_string: STRING
+			l_path: STRING
 		do
 			l_path := Dotnet_framework_sdk_bin_path
 			if l_path /= Void then
@@ -114,7 +113,18 @@ feature -- Query
 	
 feature {NONE} -- Implementation
 
-	get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: POINTER): INTEGER is
+	get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: INTEGER): INTEGER is
+			-- Initializes a wide character `path' of size `buf_size' characters
+			-- with path to .NET Framework SDK location. Number of characters set in `path'
+			-- is given by `filled_length'.
+		local
+			n: INTEGER
+		do
+			n := filled_length
+			Result := internal_get_core_system_directory (path, buf_size, $n);
+		end
+
+	internal_get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: POINTER): INTEGER is
 			-- Initializes a wide character `path' of size `buf_size' characters
 			-- with path to .NET Framework SDK location. Number of characters set in `path'
 			-- is given by `filled_length'.

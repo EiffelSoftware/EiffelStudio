@@ -80,7 +80,7 @@ feature -- Status Setting
 	set_initial_input_focus (a_widget: WIDGET) is
 			-- Set child which will initially have input focus
 		local
-                       widget_implementation: WIDGET_M
+			widget_implementation: WIDGET_M
 		do
 			widget_implementation ?= a_widget.implementation
 			check

@@ -93,7 +93,7 @@ feature
 	is_special: BOOLEAN is True
 			-- Is the class special ?
 	
-	generate_dynamic_types is
+	generate_dynamic_types (plug_file: INDENT_FILE) is
 			-- Generate dynamic types of type classes available in the system
 		local
 			class_type: CLASS_TYPE
@@ -102,7 +102,6 @@ feature
 			dtype, char_dtype, long_dtype,
 			float_dtype, double_dtype,
 			pointer_dtype, boolean_dtype: INTEGER
-			Plug_file: INDENT_FILE
 		do
 			from
 				char_dtype := -1

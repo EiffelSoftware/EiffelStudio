@@ -1264,13 +1264,21 @@ end
 			body_index: INTEGER
 		do
 			body_index := feature_i.body_index
-			if dependances.has (body_index) then
-				dependances.remove (body_index)
+				-- If `body_index' is 0, it means that `feature_i' is declared
+				-- in an external class.
+			check
+				written_in_external_class: body_index = 0 implies
+					feature_i.written_class.is_true_external
 			end
-			create f_suppliers.make
-			f_suppliers.set_feature_name_id (feature_i.feature_name_id)
-			feature_i.record_suppliers (f_suppliers)
-			dependances.put (f_suppliers, body_index)
+			if body_index /= 0 then
+				if dependances.has (body_index) then
+					dependances.remove (body_index)
+				end
+				create f_suppliers.make
+				f_suppliers.set_feature_name_id (feature_i.feature_name_id)
+				feature_i.record_suppliers (f_suppliers)
+				dependances.put (f_suppliers, body_index)
+			end
 		ensure
 			inserted: dependances.has (feature_i.body_index)
 		end

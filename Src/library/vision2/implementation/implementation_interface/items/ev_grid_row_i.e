@@ -169,7 +169,6 @@ feature -- Status report
 			is_parented: parent /= Void
 		do
 			Result := internal_index
-			
 			check
 				indexes_equivalent: parent_grid_i.grid_rows.i_th (internal_index) = Current
 			end

@@ -29,21 +29,23 @@ feature -- Access
 			child: POINTER
 			imp: EV_ANY_IMP
 		do
-			child := C.g_list_nth_data (
-				C.gtk_container_children (c_object),
-				index - 1
-			)
-			check
-				child_not_void: child /= Default_pointer
-			end
-			imp := eif_object_from_c (child)
-			check
-				imp_not_void: imp /= Void
-					-- C object should have Eiffel object.
-			end
-			Result ?= imp.interface
-			check
-				Result_not_void: Result /= Void
+			if index > 0 and then index <= count then
+				child := C.g_list_nth_data (
+					C.gtk_container_children (c_object),
+					index - 1
+				)
+				check
+					child_not_void: child /= Default_pointer
+				end
+				imp := eif_object_from_c (child)
+				check
+					imp_not_void: imp /= Void
+						-- C object should have Eiffel object.
+				end
+				Result ?= imp.interface
+				check
+					Result_not_void: Result /= Void
+				end
 			end
 		end
 
@@ -312,6 +314,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/20 18:15:12  brendel
+--| Fixed bug in `item'.
+--|
 --| Revision 1.12  2000/03/03 19:28:53  brendel
 --| Removed feature `put_left'.
 --|

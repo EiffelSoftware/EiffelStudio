@@ -49,10 +49,19 @@ feature -- Event handling
 		end
 
 
+	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
+			-- Actions to be performed when a column has been resized.
+		do
+			Result := implementation.column_resized_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
 	column_resize_actions: EV_COLUMN_ACTION_SEQUENCE is
 			-- Actions to be performed when a column is resized.
+		obsolete "Use `column_resized_actions' instead."
 		do
-			Result := implementation.column_resize_actions
+			Result := implementation.column_resized_actions
 		ensure
 			not_void: Result /= Void
 		end

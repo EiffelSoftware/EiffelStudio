@@ -49,9 +49,7 @@ feature -- Get the C extension
 			Result.set_base_class (base_class)
 			if sig /= Void then
 				Result.set_argument_types (sig.arguments_id_array)
-				if (sig.return_type_id = 0) then
-					Result.set_return_type (Names_heap.void_name_id)
-				else
+				if sig.return_type_id /= 0 and sig.return_type_id /= Void_name_id then
 					Result.set_return_type (sig.return_type_id)
 				end
 			end
@@ -71,5 +69,15 @@ feature -- Byte code
 			init_byte_node (Result)
 		end
 
+feature {NONE} -- Constants
+
+	void_name_id: INTEGER is
+			-- Value for `System.Void'.
+		once
+			Result := Names_heap.id_of ("System.Void")
+		ensure
+			result_not_null: Result > 0
+		end
+		
 end -- class IL_EXTENSION_AS
 

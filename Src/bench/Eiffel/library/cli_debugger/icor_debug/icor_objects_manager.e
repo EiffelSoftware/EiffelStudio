@@ -92,9 +92,9 @@ feature {ICOR_EXPORTER} -- Access
 				create Result.make_by_pointer (p)
 				Result.add_ref
 				modules.force (Result, p)
-				if Result.item = Default_pointer then
-					Result.update_item (p)
-				end
+			end
+			if Result.item = Default_pointer then
+				Result.update_item (p)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -112,7 +112,11 @@ feature {ICOR_EXPORTER} -- Access
 				create Result.make_by_pointer (p)
 				Result.add_ref
 				classes.force (Result, p)
+				Result := classes.item (p)
 			end
+			if Result.item = Default_pointer then
+				Result.update_item (p)
+			end			
 		ensure
 			result_not_void: Result /= Void
 			result_pointer_set: Result.item = p
@@ -130,6 +134,9 @@ feature {ICOR_EXPORTER} -- Access
 				Result.add_ref
 				functions.force (Result, p)
 			end
+			if Result.item = Default_pointer then
+				Result.update_item (p)
+			end			
 		ensure
 			result_not_void: Result /= Void
 			result_pointer_set: Result.item = p

@@ -165,7 +165,7 @@ feature {NONE} -- WEL Implementation
 			-- tab to another control.
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (character_code, key_data)
-			if not has_focus then
+			if not has_focus or character_code = Vk_return then
 				disable_default_processing
 			end
 		end

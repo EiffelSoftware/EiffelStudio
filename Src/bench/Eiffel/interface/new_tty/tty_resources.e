@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			resource_files_parser: RESOURCE_FILES_PARSER;
 			test_file: RAW_FILE
 			retried: BOOLEAN
-			error_message: STRING
+			error_msg: STRING
 		once
 			if retried then
 				error_occurred := True
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 					system_general /= Void
 						-- if system_general is void, no exception should be thown.
 				end
-				error_message := warning_messages.w_cannot_read_file (system_general)
+				error_msg := warning_messages.w_cannot_read_file (system_general)
 			else
 				if system_general /= Void then
 					create test_file.make (system_general)
@@ -50,16 +50,16 @@ feature {NONE} -- Initialization
 						Eiffel_project.set_tmp_directory (general_tmp_path)
 					else
 						error_occurred := True
-						error_message := clone(system_general)
-						error_message.append (Warning_messages.w_file_does_not_exist_execution_impossible)
+						error_msg := clone(system_general)
+						error_msg.append (Warning_messages.w_file_does_not_exist_execution_impossible)
 					end
 				else
 					error_occurred := True
-					error_message := Warning_messages.w_Environment_not_initialized
+					error_msg := Warning_messages.w_Environment_not_initialized
 				end
 			end
-			if error_message /= Void then
-				io.error.putstring (error_message)
+			if error_msg /= Void then
+				io.error.putstring (error_msg)
 			end
 		rescue
 			retried := True

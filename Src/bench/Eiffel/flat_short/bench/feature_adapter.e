@@ -77,7 +77,7 @@ feature -- Element change
 					!! comment.make (40);
 					i := 1;
 					l_count := names.count;
-					comment.append ("Was declared in ");
+					comment.append (" Was declared in ");
 					tmp := clone (format_reg.current_class.name);
 					tmp.to_upper;
 					comment.append (tmp);

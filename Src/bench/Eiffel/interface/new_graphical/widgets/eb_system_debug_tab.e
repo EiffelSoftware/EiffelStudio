@@ -117,14 +117,7 @@ feature -- Store/Retrieve
 			if trace_check.is_sensitive then
 				defaults.extend (new_trace_option_sd (trace_check.is_selected))
 			end
-
-			wd := arguments_control.working_directory_path
-			if not wd.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.working_directory, wd, True))
-			end
-			if Workbench.system_defined then
-				Lace.set_application_working_directory (wd)
-			end
+			
 		end
 
 	retrieve (root_ast: ACE_SD) is
@@ -209,8 +202,7 @@ feature {NONE} -- Filling GUI
 						defaults.forth
 					end
 				end
---				add_default_argument
---				enable_select (arguments_control.first)
+				arguments_control.update
 			end
 		end
 		
@@ -230,7 +222,6 @@ feature {NONE} -- Filling GUI
 			val: OPT_VAL_SD
 			debug_sd: DEBUG_SD
 			free_option: FREE_OPTION_SD
-			argument_value: STRING
 		do
 			is_item_removable := False
 			opt := a_opt.option
@@ -276,28 +267,6 @@ feature {NONE} -- Filling GUI
 			end
 		end
 
---	add_default_argument is
---			-- Add the argument labeled "(No argument)" if it does not exists yet.
---		require
---			arguments_exists: arguments /= Void
---		local
---			found: BOOLEAN
---		do
---			from
---				arguments.start
---			until
---				found or else arguments.after
---			loop
---				found := arguments.item.text.is_equal (No_argument_string)
---				arguments.forth
---			end
---			if not found then
---				arguments.extend (create {EV_LIST_ITEM}.make_with_text (No_argument_string))
---			end				
---		ensure
---			arguments_not_empty: not arguments.is_empty
---		end
-
 	debug_table: HASH_TABLE [BOOLEAN, STRING]
 			-- List of debug clauses indexed by name. Items are status
 			-- of debug clause.
@@ -307,7 +276,7 @@ feature {NONE} -- Filling AST
 	store_arguments (root_ast: ACE_SD) is
 			-- Store content of `arguments' into `root_ast'.
 		do
-			arguments_control.store_arguments
+			arguments_control.store_arguments (root_ast)
 		end
 
 	store_debug (root_ast: ACE_SD) is
@@ -389,8 +358,6 @@ feature -- Initialization
 			-- Set graphical elements to their default value.
 		do
 			Precursor {EB_SYSTEM_TAB}
---			arguments.remove_text
---			arguments.wipe_out
 			disable_select (debug_check)
 			clean_debug_list
 			disable_select (line_generation)
@@ -398,7 +365,6 @@ feature -- Initialization
 				disable_select (profile_check)
 			end
 			disable_select (trace_check)
---			working_directory.remove_path
 		end
 
 feature {NONE} -- Graphical initialization
@@ -414,16 +380,12 @@ feature {NONE} -- Graphical initialization
 			set_border_width (Layout_constants.Small_border_size)
 			set_padding (Layout_constants.Small_padding_size)
 
-				-- Execution option
-			create arguments_control.make (system_window.window)
-			extend (arguments_control)
+				-- Execution options notebook
+			extend (execution_notebook)			
 
 				-- Miscellaneous option
 			extend (miscellaneous_frame ("Miscellaneous"))
 			disable_item_expand (i_th (2))
-
-				-- Debug clauses
-			extend (debug_frame ("Default debug clauses"))
 
 				-- Add C specific widgets
 			c_specific_widgets.extend (trace_check)
@@ -432,73 +394,47 @@ feature {NONE} -- Graphical initialization
 			end
 		end
 
+	execution_notebook: EV_NOTEBOOK is
+			-- A note book containing tabs for displaying system arguments
+			-- and system debug options.
+		local
+			l_debug: EV_FRAME
+		do
+			create Result.default_create
+				
+				-- Debug clauses
+			l_debug := debug_frame ("Default debug clauses")
+			Result.extend (l_debug)
+			Result.set_item_text (l_debug, "Default debug clauses")
+				
+				-- Argument Control
+			create arguments_control.make (system_window.window)
+			Result.extend (arguments_control)
+			Result.set_item_text (arguments_control, "Program Arguments")
+		end
+
 	miscellaneous_frame (st: STRING): EV_FRAME is
 			-- Frame containing all generation option
 		require
 			st_not_void: st /= Void
 		local
-			vbox: EV_VERTICAL_BOX
+			hbox: EV_HORIZONTAL_BOX
 		do
 			create Result.make_with_text (st)
-			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
+			create hbox
+			hbox.set_border_width (Layout_constants.Small_border_size)
 
-			line_generation := new_check_button (vbox, "Line number generation")
+			line_generation := new_check_button (hbox, "Line number generation")
 
 			if Has_profiler then
 				create profile_check.make_with_text ("Profiling")
-				vbox.extend (profile_check)
-				vbox.disable_item_expand (profile_check)
+				hbox.extend (profile_check)
 			end
 
-			trace_check := new_check_button (vbox, "Call tracing")
+			trace_check := new_check_button (hbox, "Call tracing")
 
-			Result.extend (vbox)
+			Result.extend (hbox)
 		end
-
---	execution_frame (st: STRING): EV_FRAME is
---			-- Frame containing all execution option
---		require
---			st_not_void: st /= Void
---		local
---			vbox: EV_VERTICAL_BOX
---			hbox: EV_HORIZONTAL_BOX
---			label: EV_LABEL
---			item_box: EV_VERTICAL_BOX
---		do
---			create Result.make_with_text (st)
---			create vbox
---			vbox.set_border_width (Layout_constants.Small_border_size)
---			vbox.set_padding (Layout_constants.Small_padding_size)
---
---			create arguments_control.make (system_window.window)
---
-----			create working_directory.make_with_text_and_parent ("Working directory: ", system_window.window)
-----			vbox.extend (working_directory)
-----
-----			create label.make_with_text ("Program arguments: ")
-----			label.align_text_left
-----			create item_box
-----			item_box.set_padding (Default_item_padding)
-----			item_box.extend (label)
-----
-----			create hbox
-----			hbox.set_padding (Layout_constants.Small_padding_size)
-----			create arguments
-----			arguments.key_press_actions.extend (~add_new_arguments)
-----			arguments.select_actions.extend (~changed_arguments)
-----			hbox.extend (arguments)
-----			create delete_button
-----			delete_button.set_pixmap ((create {EB_SHARED_PIXMAPS}).icon_delete_small.item (1))
-----			delete_button.select_actions.extend (~remove_arguments)
-----			hbox.extend (delete_button)
-----			hbox.disable_item_expand (delete_button)
-----			item_box.extend (hbox)
-----			vbox.extend (item_box)
---
---			vbox.extend (arguments_control)
---			Result.extend (vbox)
---		end
 
 	debug_frame (st: STRING): EV_FRAME is
 			-- Frame containing all debug option
@@ -546,115 +482,7 @@ feature {NONE} -- Graphical initialization
 			debug_list.extend (row)
 		end
 
---	delete_button: EV_BUTTON
-			-- Delete arguments entry button.
-
 feature {NONE} -- Action
-
---	add_new_arguments (key: EV_KEY) is
---			-- Action performed when a new arguments is entered.
---		require
---			arguments_not_void: arguments /= Void
---		local
---			argument_text: STRING
---			arg_pos: INTEGER
---		do
---			if key /= Void and then key.code = (create {EV_KEY_CONSTANTS}).key_enter then
---				argument_text := arguments.text
---				if argument_text.is_empty or else argument_text.is_equal (" ") then
---					argument_text := No_argument_string
---				end
---				
---				arg_pos := argument_position (argument_text)
---				if arg_pos /= 0 then
---					arguments.go_i_th (arg_pos)
---					arguments.remove
---				end
---				arguments.put_front (create {EV_LIST_ITEM}.make_with_text (argument_text))
---				enable_select (arguments.first)
---			end
---		end
-		
---	escape_argument (argument_text: STRING): STRING is
---			-- Turn `argument_text' into a string that can be safely added to
---			-- the ace file. Escape all special characters.
---		do
---			if argument_text = Void or else argument_text.is_empty or else argument_text.is_equal (No_argument_string) then
---				Result := " "
---			else
---				Result := clone (argument_text)
---				Result.replace_substring_all ("%%", "%%%%")
---				Result.replace_substring_all ("%"", "%%%"")
---			end
---		ensure
---			valid_result: Result /= Void
---		end
---
---	remove_arguments is
---			-- Action performed when removing entries from `arguments' combo box.
---		require
---			arguments_not_void: arguments /= Void
---		local
---			selected: EV_LIST_ITEM
---		do
---			selected := arguments.selected_item
---			if selected /= Void and then not selected.text.is_equal (No_argument_string) then
---				arguments.prune (selected)
---				if not arguments.is_empty then
---					enable_select (arguments.first)
---				else
---					arguments.extend (create {EV_LIST_ITEM}.make_with_text (No_argument_string))
---					enable_select (arguments.first)
---				end
---			end
---		end
---		
---	changed_arguments is
---			-- Action performed when changing the selected item in `arguments' combo box.
---		require
---			arguments_not_void: arguments /= Void
---		local
---			selected: EV_LIST_ITEM
---		do
---			selected := arguments.selected_item
---			if selected /= Void then
---			
---					-- The following line fix a bug of Vision2/Windows. `arguments.text' was set to
---					-- the first 260 character of `selected.text' only.
---				arguments.set_text (selected.text)
---			
---				if selected.text.is_equal (No_argument_string) then
---					if delete_button.is_sensitive then
---						delete_button.disable_sensitive
---					end
---				else
---					if not delete_button.is_sensitive then
---						delete_button.enable_sensitive
---					end
---				end
---			end
---		end
-		
---	argument_position (argument_text: STRING): INTEGER is
---			-- one-indexed Position of `argument_text' in `arguments', or zero if
---			-- `argument_text' is not present in `arguments'.
---		require
---			argument_text_not_void: argument_text /= Void
---		local
---			i: INTEGER
---		do
---			from
---				arguments.start
---			until
---				(Result /= 0) or else arguments.after
---			loop
---				if argument_text.is_equal (arguments.item.text) then
---					Result := i + 1
---				end
---				i := i + 1
---				arguments.forth
---			end
---		end
 
 	context_menu (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_row: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Action performed on right click on `a_row' from `debug_list' which

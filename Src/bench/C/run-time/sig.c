@@ -312,7 +312,9 @@ rt_public int esigvec(void)
 	 * is missing. This raises an external event exception.
 	 */
 
-	eraise("sigvec() absent", EN_EXT);
+	eraise("sigvec() absent", EN_EXT); 
+/* NOT REACHED */
+	return -1;
 }
 #else
 #define HAS_SIGVEC

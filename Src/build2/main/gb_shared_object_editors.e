@@ -187,23 +187,55 @@ feature {NONE} -- Implementation
 	new_object_editor (object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		local
-			window: EV_TITLED_WINDOW
+			window: EV_DIALOG
 			editor: GB_OBJECT_EDITOR
+			button: EV_BUTTON
+			wizard_shared: WIZARD_SHARED
 		do
 			create window
+				-- We must now temporarily create a new button, and add it to `Current'
+				-- as the default cancel button. We then remove it. This is necessary so
+				-- that we have access to the minimize, maximize and close buttons.
+				-- Note that we have custom implementations of EV_DIALOG_IMP, in order to
+				-- fire these actions when the button is not visible.
+			create button
+			window.extend (button)
+			button.select_actions.extend (agent remove_floating_object_editor (window))
+			button.select_actions.extend (agent window.destroy)
+
+			window.set_default_cancel_button (button)
+			window.prune (button)
+
 			window.set_height (Default_floating_object_editor_height)
 			window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_object_window @ 1)
-			window.close_request_actions.extend (agent remove_floating_object_editor (window))
-			window.close_request_actions.extend (agent window.destroy)
 			create editor
 			window.extend (editor)
 			floating_object_editors.extend (editor)
 			editor.set_object (object)
-			window.show
+			if Visual_studio_information.Is_visual_studio_wizard then
+				--| FIXME not a very optimal solution, to create the object every time,
+				--| but maybe the referencing of shared information can be modified.
+				--| speed should not be an issue here, anyway, as this only gets executed
+				--| infrequently, as a direct response to a user action.
+				create wizard_shared
+				window.show_relative_to_window (wizard_shared.first_window)
+			else
+				window.show
+			end
 			window.set_maximum_width (window.width)
 		end
 		
 feature {NONE} -- Implementation
+
+	visual_studio_information: VISUAL_STUDIO_INFORMATION is
+			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
+			-- Is a Once, as the state will never change during the
+			-- execution of Build.
+		once
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	remove_floating_object_editor (a_window: EV_WINDOW) is
 			-- Remove object editor contained in `a_window'

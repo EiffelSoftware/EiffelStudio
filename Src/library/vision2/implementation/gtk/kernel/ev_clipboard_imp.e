@@ -56,7 +56,7 @@ feature -- Access
 				clipboard_widget,
 				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs1.item, 1),
 				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs2.item, 1),
-				C.GDK_CURRENT_TIME
+				feature {EV_GTK_EXTERNALS}.GDK_CURRENT_TIME
 			)
 			edit_chars := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (clipboard_widget, 0, -1)
 			create Result.make_from_c (edit_chars)

@@ -15,9 +15,47 @@ feature {NONE} -- Implementation
 
 	pointed_target: EV_PND_TARGET_I is
 			-- Hole at mouse position
+		local
+			toolbar: EV_TOOL_BAR_IMP
+			tbutton: EV_TOOL_BAR_BUTTON_IMP
+			mc_list: EV_MULTI_COLUMN_LIST_IMP
+			tree: EV_TREE_IMP
+			tg: EV_PND_TARGET_I
+			widget_pointed: EV_WIDGET_IMP
 		do
-			check
-				not_yet_implemented: false
+
+		--	widget_pointed ?= Widget that is currently pointed on by mouse
+
+
+			if widget_pointed /= Void then
+				toolbar ?= widget_pointed
+				if toolbar /= Void then
+		--			wel_point.screen_to_client (toolbar)
+		--			tbutton := toolbar.find_item_at_position (wel_point.x, wel_point.y)
+					if tbutton /= Void and then not tbutton.is_insensitive then
+						tg := tbutton
+					end
+				else
+					mc_list ?= widget_pointed
+					if mc_list /= Void then
+		--				wel_point.screen_to_client (mc_list)
+		--				tg := mc_list.find_item_at_position (wel_point.x, wel_point.y)
+					else
+						tree ?= widget_pointed
+						if tree /= Void then
+		--					wel_point.screen_to_client (tree)
+		--					tg := tree.find_item_at_position (wel_point.x, wel_point.y)
+						end
+					end
+				end
+				if tg = Void then
+					tg := widget_pointed
+				end
+				targets.start
+				targets.search (tg)
+				if not targets.exhausted then
+					Result := targets.item
+				end
 			end
 		end
 

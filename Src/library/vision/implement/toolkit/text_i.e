@@ -37,7 +37,10 @@ feature -- Access
 		end;
 
 	show_selection is
-		require
+			-- Show the selection when there is one.
+			-- The text will scroll if the selection is out
+			-- of range.
+	 	require
 			realized: realized
 		deferred
 		ensure
@@ -45,6 +48,9 @@ feature -- Access
 		end
 
 	hide_selection is
+			-- Hide the selection when there is one.
+			-- The text will not scroll if the selection is out
+			-- of range.
 		require
 			realized: realized
 		deferred

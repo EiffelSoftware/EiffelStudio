@@ -57,7 +57,10 @@ inherit
 			is_shown as shown,
 			set_single_line_edit_mode as set_single_line_mode,
 			set_multi_line_edit_mode as set_multi_line_mode,
-			set_cursor_position_visible as mel_set_cursor_position_visible
+			set_cursor_position_visible as mel_set_cursor_position_visible,
+			show_auto_cursor_position as show_selection,
+			hide_auto_show_cursor_position as hide_selection,
+			is_auto_show_cursor_position as is_selection_visible
 		end
 
 creation

@@ -60,6 +60,8 @@ feature {NONE} -- Implementation
 
 	application_main_window_cell: CELL [WEL_COMPOSITE_WINDOW] is
 			-- Application's main window cell
+		indexing
+			once_status: global
 		once
 			create Result.put (Void)
 		ensure
@@ -68,6 +70,8 @@ feature {NONE} -- Implementation
 
 	application_cell: CELL [WEL_APPLICATION] is
 			-- Application cell
+		indexing
+			once_status: global
 		once
 			create Result.put (Void)
 		ensure

@@ -226,7 +226,7 @@ feature -- Basic operation
 		end
 		
 	is_child (child_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
-			--
+			-- Is `child_object' a direct child of `an_item'?
 		local
 			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
@@ -326,6 +326,31 @@ feature -- Basic operation
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	clear_all_objects is
+			-- Remove all objects, so we are back in the intial
+			-- state of the system. This relies on the fact that the
+			-- first item in `objects' is the root window.
+			-- This will almost certainly change at some point in the future.
+		local
+			window_object: GB_CELL_OBJECT
+			window_child: GB_OBJECT
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			window_object ?= objects.first
+			check
+				window_found: window_object /= Void
+			end
+			layout_item ?= window_object.layout_item.first
+			window_child ?= layout_item.object
+			check
+				window_child_not_void: window_child /= Void
+			end
+			window_child.unparent
+			objects.wipe_out
+			objects.extend (window_object)
+		end
+		
 		
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 

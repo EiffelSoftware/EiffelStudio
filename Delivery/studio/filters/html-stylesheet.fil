@@ -85,6 +85,7 @@ multiple_spaces			|&nbsp%;
 escape>					|&gt;
 escape<					|&lt;
 escape&					|&#38;
+escape"					|&quot;
 
 --!-----------------------------------------------------------------------------
 --! Interactive Software Engineering Inc.

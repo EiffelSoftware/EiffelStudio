@@ -53,8 +53,8 @@ feature -- Access
 			vertical_box.extend (horizontal_box)
 			create frame
 			create b_area
-			b_area.set_pebble_function (agent retrieve_color (b_area))
-			b_area.drop_actions.extend (agent actually_set_background_color)
+			b_area.set_pebble_function (agent retrieve_color (b_area, False))
+			b_area.drop_actions.extend (agent accept_background_color_stone (?))
 			frame.set_minimum_width (40)
 			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
 			create button.make_with_text (Select_button_text)
@@ -92,8 +92,8 @@ feature -- Access
 			vertical_box.extend (horizontal_box)
 			create frame
 			create f_area
-			f_area.set_pebble_function (agent retrieve_color (f_area))
-			f_area.drop_actions.extend (agent actually_set_foreground_color)
+			f_area.set_pebble_function (agent retrieve_color (f_area, True))
+			f_area.drop_actions.extend (agent accept_foreground_color_stone (?))
 			frame.set_minimum_width (40)
 			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
 			create button.make_with_text (Select_button_text)
@@ -135,6 +135,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	accept_foreground_color_stone (stone: GB_COLOR_STONE) is
+			-- Set foreground color, based on settings of `stone'.
+		require
+			stone_not_void: stone /= Void
+		do
+			actually_set_foreground_color (stone.color)
+		end
+		
+	accept_background_color_stone (stone: GB_COLOR_STONE) is
+			-- Set background color, based on settings of `stone'.
+		require
+			stone_not_void: stone /= Void
+		do
+			actually_set_background_color (stone.color)
+		end
+
 	initialize_agents is
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
@@ -147,11 +163,15 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	retrieve_color (label: EV_DRAWING_AREA): EV_COLOR is
+	retrieve_color (label: EV_DRAWING_AREA; is_foreground: BOOLEAN): GB_COLOR_STONE is
 			-- `Result' is color for pick and drop, retrieved
 			-- from `background_color' of `label'.
 		do
-			Result := label.background_color
+			if is_foreground then
+				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color, True)
+			else
+				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color, False)
+			end
 		end
 
 	restore_background_color is
@@ -188,14 +208,22 @@ feature {NONE} -- Implementation
 		
 	actually_set_background_color (color: EV_COLOR) is
 			-- Actually update the background colors.
+		local
+			container: EV_CONTAINER
 		do
 			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (color))
+			container ?= objects.i_th (2)
+			if container /= Void then
+				container ?= container.parent
+				if container /= Void then
+					container.set_background_color (color)
+				end
+			end
 			background_color := color
 			update_editors
 			update_background_display
 		end
-		
-		
+
 	update_background_display is
 			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do

@@ -3214,11 +3214,9 @@ feature -- Plug and Makefile file
 			final_mode := byte_context.final_mode;
 
 			Plug_file := plug_f (final_mode);
-			Plug_file.open_write;
+			Plug_file.open_write_c;
 
 			Plug_file.putstring ("#include %"macros.h%"%N%N");
-
-			Plug_file.generate_cpp_wrapper_start;
 
 				-- Extern declarations
 			string_cl := class_of_id (string_id);
@@ -3275,8 +3273,6 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
-
-			Plug_file.generate_cpp_wrapper_end;
 
 				-- Do we need to collect GC data for the profiler?
 			Plug_file.putstring ("EIF_INTEGER prof_enabled = (EIF_INTEGER) ");
@@ -3398,7 +3394,7 @@ feature -- Plug and Makefile file
 			special_cl.generate_dynamic_types;
 			generate_dynamic_ref_type;
 
-			Plug_file.close;
+			Plug_file.close_c;
 			Plug_file := Void;
 		end;
 
@@ -3426,10 +3422,10 @@ feature -- Dispatch and execution tables generation
 	generate_exec_table is
 			-- Generate `execution_table'.
 		do
-			Frozen_file.open_write;
+			Frozen_file.open_write_c;
 			execution_table.generate (Frozen_file);
 			execution_table.freeze;
-			Frozen_file.close;
+			Frozen_file.close_c;
 				-- The melted list of the execution table
 				-- is now empty
 		end
@@ -3457,13 +3453,13 @@ feature -- Main file generation
 			Main_file: INDENT_FILE;
 		do
 			Main_file := Main_f (byte_context.final_mode);
-			Main_file.open_write;
+			Main_file.open_write_c;
 
 			Main_file.putstring ("%N%
 				%#include %"macros.h%"%N%
 				%#include %"sig.h%"%N");
 
-			Main_file.generate_protected_extern_declaration ("void", "emain", <<"int", "char **">>);
+			Main_file.generate_extern_declaration ("void", "emain", <<"int", "char **">>);
 
 			if has_separate then
 				Main_file.putstring ("#include %"curextern.h%"%N");
@@ -3499,7 +3495,7 @@ feature -- Main file generation
 				%%Treclaim();%N%
 				%%Texit(0);%N%TEDCX%N}%N}%N"); -- ss MT
 
-			Main_file.close;
+			Main_file.close_c;
 		end;
 
 	generate_init_file is
@@ -3548,7 +3544,7 @@ feature -- Main file generation
 				rcorigin := -1
 			end;
 
-			Initialization_file.open_write;
+			Initialization_file.open_write_c;
 
 			Initialization_file.putstring ("%
 				%#include %"macros.h%"%N%
@@ -3583,10 +3579,10 @@ feature -- Main file generation
 					rout_table ?= Eiffel_table.poly_table (rout_id);
 					c_name := rout_table.feature_name (cl_type.id.id);
 					if root_feat.has_arguments then
-						Initialization_file.generate_protected_extern_declaration
+						Initialization_file.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
 					else
-						Initialization_file.generate_protected_extern_declaration
+						Initialization_file.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE">>)
 					end
 				end
@@ -3700,7 +3696,6 @@ feature -- Main file generation
 
 			if not final_mode then
 					-- Prototypes
-				Initialization_file.generate_cpp_wrapper_start;
 				Initialization_file.generate_extern_declaration ("void", "tabinit", <<>>);
 				from
 					i := 1;
@@ -3714,7 +3709,6 @@ feature -- Main file generation
 					end
 					i := i + 1
 				end
-				Initialization_file.generate_cpp_wrapper_end;
 
 				Initialization_file.putstring ("%Nvoid tabinit()%N{%N");
 				from
@@ -3760,7 +3754,7 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N%TEDCX%N}%N"); -- MT
 			end;
 
-			Initialization_file.close;
+			Initialization_file.close_c;
 		end;
 
 feature -- Workbench routine info table file generation

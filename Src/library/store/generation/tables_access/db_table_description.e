@@ -50,8 +50,7 @@ feature -- Access
 			-- foreign key for this table.
 			-- Deletion on this table may imply deletions on
 			-- depending tables. 
-		do
-		--should be deferred
+		deferred
 		end
 
 	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
@@ -59,8 +58,7 @@ feature -- Access
 			-- linking foreign keys.
 			-- Creation on this table may imply creations on
 			-- associated necessary tables.
-		do
-		--should be deferred
+		deferred
 		end
 
 	attribute (code: INTEGER): ANY is
@@ -94,11 +92,15 @@ feature -- Access
 			Result := description_list.i_th (Id_code)
 		end
 
-	Id_code: INTEGER is 1
---			-- Table ID attribute code.
---			--| 1 in general.
---		deferred
---		end
+	Id_code: INTEGER is
+			-- Table ID attribute code.
+			--| 1 in general.
+		deferred
+		end
+
+	No_id: INTEGER is 0
+			-- `Id_code' value when no ID exists or ID constraint is not
+			-- located to a single attribute.
 
 	new_parameter_list: ARRAYED_LIST [STRING] is
 			-- Feature parameter name list: a parameter name
@@ -141,9 +143,15 @@ feature -- Access
 		end
 
 	id: ANY is
-			-- Get ID of table row.
+			-- Table row ID.
 		do
 			Result := attribute (Id_code)
+		end
+
+	printable_id: STRING is
+			-- String value of table row ID.
+		do
+			Result := id.out
 		end
 
 	selected_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [ANY] is
@@ -187,12 +195,12 @@ feature -- Access
 		do
 			create Result.make (Attribute_number)
 			from
-				feature_list.start
+				attribute_code_list.start
 			until
-				feature_list.after
+				attribute_code_list.after
 			loop
-				Result.extend (attribute (feature_list.item))
-				feature_list.forth
+				Result.extend (attribute (attribute_code_list.item))
+				attribute_code_list.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -203,23 +211,23 @@ feature -- Access
 		do
 			create Result.make (Attribute_number)
 			from
-				feature_list.start
+				attribute_code_list.start
 			until
-				feature_list.after
+				attribute_code_list.after
 			loop
-				Result.extend (printable_attribute (feature_list.item))
-				feature_list.forth
+				Result.extend (printable_attribute (attribute_code_list.item))
+				attribute_code_list.forth
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	set_id_value (value: ANY) is
+	set_id (value: ANY) is
 			-- Set ID of table row to `value'.
 			-- `value' must be of type STRING, INTEGER
 			-- (reference created automatically) or DATE_TIME.
 		do
-			set_feature_value (Id_code, value)
+			set_attribute (Id_code, value)
 		end
 
 	update_from (other: DB_TABLE) is
@@ -231,15 +239,15 @@ feature -- Access
 		do
 			other_description := other.table_description
 			from
-				feature_list.start
+				attribute_code_list.start
 			until
-				feature_list.after
+				attribute_code_list.after
 			loop
-				tmp := other_description.get_feature_value (feature_list.item)
+				tmp := other_description.attribute (attribute_code_list.item)
 				if tmp /= Void then
-					set_feature_value (feature_list.item, tmp)
+					set_attribute (attribute_code_list.item, tmp)
 				end
-				feature_list.forth
+				attribute_code_list.forth
 			end
 		end
 

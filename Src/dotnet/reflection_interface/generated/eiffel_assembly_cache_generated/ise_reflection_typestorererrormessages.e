@@ -69,6 +69,13 @@ feature -- Basic Operations
 			"XmlClassFeaturesGenerationFailedMessage"
 		end
 
+	assembly_description_update_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"AssemblyDescriptionUpdateFailedMessage"
+		end
+
 	xml_feature_assertions_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
@@ -158,6 +165,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
 			"XmlAliasElementGenerationFailed"
+		end
+
+	assembly_description_update_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"AssemblyDescriptionUpdateFailed"
 		end
 
 	xml_class_features_generation_failed: STRING is

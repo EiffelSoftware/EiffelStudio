@@ -62,9 +62,9 @@ feature -- Access
 			"_internal_LastWriteSuccessful"
 		end
 
-	frozen a_internal_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+	frozen a_internal_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY is
 		external
-			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"_internal_EiffelAssembly"
 		end
@@ -111,9 +111,9 @@ feature -- Access
 			"get_last_error"
 		end
 
-	get_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+	get_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY is
 		external
-			"IL signature (): ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (): ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"get_EiffelAssembly"
 		end
@@ -141,9 +141,9 @@ feature -- Basic Operations
 			"HasReadLockCode"
 		end
 
-	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): ISE_REFLECTION_TYPESTORER is
+	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): ISE_REFLECTION_TYPESTORER is
 		external
-			"IL signature (ISE.Reflection.EiffelAssemblyFactory): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (ISE.Reflection.EiffelAssembly): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"StoreAssembly"
 		end

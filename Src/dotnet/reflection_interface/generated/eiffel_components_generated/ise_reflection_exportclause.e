@@ -27,6 +27,13 @@ feature -- Access
 			"_internal_ExportationList"
 		end
 
+	get_feature_names: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ExportClause"
+		alias
+			"get_FeatureNames"
+		end
+
 	get_exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ExportClause"
@@ -34,41 +41,34 @@ feature -- Access
 			"get_ExportationList"
 		end
 
+	frozen a_internal_feature_names: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.ExportClause"
+		alias
+			"_internal_FeatureNames"
+		end
+
+	frozen a_internal_all_features_exported: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.ExportClause"
+		alias
+			"_internal_AllFeaturesExported"
+		end
+
+	get_all_features_exported: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.ExportClause"
+		alias
+			"get_AllFeaturesExported"
+		end
+
 feature -- Basic Operations
 
-	add_exportation (a_class_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.ExportClause"
-		alias
-			"AddExportation"
-		end
-
-	closing_curl_bracket: STRING is
+	eiffel_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
-			"ClosingCurlBracket"
-		end
-
-	space: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ExportClause"
-		alias
-			"Space"
-		end
-
-	set_exportation_list (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.ExportClause"
-		alias
-			"SetExportationList"
-		end
-
-	string_representation: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ExportClause"
-		alias
-			"StringRepresentation"
+			"EiffelKeyword"
 		end
 
 	opening_curl_bracket: STRING is
@@ -78,18 +78,74 @@ feature -- Basic Operations
 			"OpeningCurlBracket"
 		end
 
-	comma: STRING is
+	set_exportation_list (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
-			"IL signature (): System.String use ISE.Reflection.ExportClause"
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.ExportClause"
 		alias
-			"Comma"
+			"SetExportationList"
 		end
 
-	eiffel_keyword: STRING is
+	make_void is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"Make"
+		end
+
+	empty_string: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
-			"EiffelKeyword"
+			"EmptyString"
+		end
+
+	frozen a_invariant (current_object: ISE_REFLECTION_EXPORTCLAUSE) is
+		external
+			"IL static signature (ISE.Reflection.ExportClause): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"_invariant"
+		end
+
+	set_all is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"SetAll"
+		end
+
+	closing_curl_bracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"ClosingCurlBracket"
+		end
+
+	add_feature_name (a_feature_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"AddFeatureName"
+		end
+
+	add_exportation (a_class_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"AddExportation"
+		end
+
+	string_representation: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"StringRepresentation"
+		end
+
+	set_feature_names (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"SetFeatureNames"
 		end
 
 	export_keyword: STRING is
@@ -97,6 +153,41 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
 			"ExportKeyword"
+		end
+
+	intern_string_representation: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"InternStringRepresentation"
+		end
+
+	equals_export_clause (obj: ISE_REFLECTION_EXPORTCLAUSE): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.ExportClause): System.Boolean use ISE.Reflection.ExportClause"
+		alias
+			"Equals"
+		end
+
+	space: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"Space"
+		end
+
+	comma: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"Comma"
+		end
+
+	all_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"AllKeyword"
 		end
 
 end -- class ISE_REFLECTION_EXPORTCLAUSE

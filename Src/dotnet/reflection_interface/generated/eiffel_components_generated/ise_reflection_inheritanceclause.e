@@ -44,6 +44,13 @@ feature -- Basic Operations
 			"Make"
 		end
 
+	equals_inheritance_clause (obj: ISE_REFLECTION_INHERITANCECLAUSE): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.InheritanceClause): System.Boolean use ISE.Reflection.InheritanceClause"
+		alias
+			"Equals"
+		end
+
 	set_source_name (a_source_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.InheritanceClause"

@@ -1230,11 +1230,14 @@ feature -- Access
 			-- correctly into correct integer value.
 		end
 
-	new_integer_as_from_hexa (s: STRING): INTEGER_CONSTANT is
+	new_integer_as_from_hexa (is_negative: BOOLEAN; buffer: STRING): INTEGER_CONSTANT is
 			-- New INTEGER AST node
+		require
+			buffer_not_void: buffer /= Void
+			buffer_not_empty: not buffer.is_empty
 		do
 			create Result.make_default
-			Result.initialize_from_hexa (s)
+			Result.initialize_from_hexa (is_negative, buffer)
 		ensure
 			integer_as_not_void: Result /= Void
 			-- value_set: Make sure we translated `s'

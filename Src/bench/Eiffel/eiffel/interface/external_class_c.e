@@ -1242,7 +1242,7 @@ feature {NONE} -- Implementation
 				-- does not work, but I did not check yet why.
 			if a_external_type.is_double then
 				create l_int.make_default
-				l_int.initialize_from_hexa ("0x" + a_value)
+				l_int.initialize_from_hexa (false, "0x" + a_value)
 				l_int32 := l_int.upper;
 				($l_double).memory_copy ($l_int32, 4)
 				l_int32 := l_int.lower;
@@ -1251,7 +1251,7 @@ feature {NONE} -- Implementation
 				create {REAL_VALUE_I} l_value.make_double (l_double)
 			elseif a_external_type.is_real then
 				create l_int.make_default
-				l_int.initialize_from_hexa ("0x" + a_value)
+				l_int.initialize_from_hexa (false, "0x" + a_value)
 				l_int32 := l_int.lower;
 				($l_real).memory_copy ($l_int32, 4)
 

@@ -52,6 +52,9 @@ feature {NONE}-- Initialization
 			create case_sensitive_check_button
 			create codedom_trees_frame
 			create codedom_trees_box
+			create tree_bottom_split_area
+			create codedom_tree
+			create codedom_node_info_text
 			create codedom_tree_buttons_box
 			create left_buttons_padding_cell
 			create add_button
@@ -204,6 +207,9 @@ feature {NONE}-- Initialization
 			case_sensitive_box.extend (case_sensitive_check_button)
 			left_box.extend (codedom_trees_frame)
 			codedom_trees_frame.extend (codedom_trees_box)
+			codedom_trees_box.extend (tree_bottom_split_area)
+			tree_bottom_split_area.extend (codedom_tree)
+			tree_bottom_split_area.extend (codedom_node_info_text)
 			codedom_trees_box.extend (codedom_tree_buttons_box)
 			codedom_tree_buttons_box.extend (left_buttons_padding_cell)
 			codedom_tree_buttons_box.extend (add_button)
@@ -386,7 +392,17 @@ feature {NONE}-- Initialization
 			codedom_trees_box.set_padding_width (5)
 			codedom_trees_box.set_border_width (5)
 			codedom_trees_box.disable_item_expand (codedom_tree_buttons_box)
+			create internal_font
+			internal_font.set_family (4)
+			internal_font.set_weight (7)
+			internal_font.set_shape (10)
+			internal_font.set_height (11)
+			internal_font.preferred_families.extend ("Courier New")
+			codedom_node_info_text.set_font (internal_font)
+			codedom_node_info_text.disable_edit
 			codedom_tree_buttons_box.set_padding_width (5)
+			codedom_tree_buttons_box.disable_item_expand (add_button)
+			codedom_tree_buttons_box.disable_item_expand (remove_button)
 			add_button.set_text ("Add")
 			add_button.set_minimum_width (100)
 			remove_button.disable_sensitive
@@ -756,6 +772,9 @@ feature -- Access
 	parse_button: EV_BUTTON
 	case_sensitive_check_button, blank_lines_check_button, else_at_closing_check_button, 
 	generate_executable_check_button, generate_in_memory_check_button, include_debug_check_button: EV_CHECK_BUTTON
+	tree_bottom_split_area: EV_VERTICAL_SPLIT_AREA
+	codedom_tree: EV_TREE
+	codedom_node_info_text, source_text, output_text: EV_TEXT
 	left_buttons_padding_cell, right_buttons_padding_cell, referenced_assemblies_right_padding_cell, 
 	parse_button_padding_cell, code_parser_padding_cell: EV_CELL
 	tests_notebook: EV_NOTEBOOK
@@ -766,7 +785,6 @@ feature -- Access
 	resource_text_field, new_reference_text_field, parse_file_text_field, serialized_folder_text_field, 
 	serialized_filename_text_field: EV_TEXT_FIELD
 	supports_list, non_supports_list, referenced_assemblies_list: EV_LIST
-	source_text, output_text: EV_TEXT
 
 feature {NONE} -- Implementation
 

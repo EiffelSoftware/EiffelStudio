@@ -53,11 +53,15 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			select_item as wel_select_item,
-			move as move_to,
+			move as wel_move,
 			item as wel_item,
 			enabled as is_sensitive,
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -186,8 +190,8 @@ feature -- Status setting
 			if not multiple_selection_enabled then
 				last_selected_item := Void
 				wel_imp ?= parent_imp
-				a := x
-				b := y
+				a := x_position
+				b := y_position
 				c := width
 				d := height
 				wel_destroy
@@ -208,8 +212,8 @@ feature -- Status setting
 		do
 			if multiple_selection_enabled then
 				wel_imp ?= parent_imp
-				a := x
-				b := y
+				a := x_position
+				b := y_position
 				c := width
 				d := height
 				wel_destroy
@@ -530,6 +534,15 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/03/14 19:24:14  rogers
+--| renamed
+--| 	move -> wel_move
+--| 	height -> wel_height
+--| 	x -> x_position
+--| 	y -> y_position
+--| 	resize -> wel_resize
+--| 	move_and_resize -> wel_move_and_resize
+--|
 --| Revision 1.45  2000/03/07 17:53:53  rogers
 --| Redefined on_size from WEL_LIST_BOX, so the resize_actions can be called.
 --|

@@ -21,7 +21,7 @@ inherit
 			make as old_make
 		end
 
-feature {EV_MESSAGE_DIALOG_IMP} -- Execute procedure
+feature {EV_STANDARD_DIALOG_IMP} -- Execute procedure
 
 	execute (argument: EV_ARGUMENT1[EV_STANDARD_DIALOG_I]; data: EV_EVENT_DATA) is
 			-- Command to close the dialog

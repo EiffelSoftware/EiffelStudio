@@ -9,7 +9,7 @@ inherit
 			transfer_to, equiv, update_api,
 			melt, execution_unit, generate,
 			access, is_external, new_rout_entry, valid_body_id,
-			can_be_inlined
+			can_be_inlined, set_feature_name
 		end;
 	
 feature -- Attributes for externals
@@ -107,6 +107,15 @@ feature
 		do
 			alias_name := s;
 		end;
+
+	set_feature_name (s: STRING) is
+			-- Assign `s' to `featurename'.
+		do
+			if alias_name = Void then
+				alias_name := feature_name
+			end
+			feature_name := s
+		end
 
 	set_encapsulated (b: BOOLEAN) is
 			-- Assign `b' to `encapsulated'.

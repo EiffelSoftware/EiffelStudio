@@ -119,7 +119,7 @@ feature -- Code generation
 				expr ?= parameters @ 2
 				expr.print_register
 			end
-			generated_file.putstring (gc_rparan_comma);
+			generated_file.put_character (')');
 		end
 
 end

@@ -800,10 +800,18 @@ feature -- Recompilation
 		local
 			root_class_c: CLASS_C
 			d1, d2: DATE_TIME
+			l_il_env: IL_ENVIRONMENT
 		do
 			debug ("timing")
 				create d1.make_now
 			end
+
+				-- Set ISE_DOTNET_FRAMEWORK environment variable			
+			if il_generation then
+				create l_il_env.make (clr_runtime_version)
+				l_il_env.register_environment_variable
+			end
+
 				-- Recompilation initialization
 			init_recompilation
 			if Compilation_modes.is_precompiling and il_generation then

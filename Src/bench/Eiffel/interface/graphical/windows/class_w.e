@@ -399,21 +399,21 @@ feature -- Update
 					e_class.parse_ast
 					syn_error := e_class.last_syntax_error
 
-
 					if syn_error /= Void then	
-						txt := "Class has syntax error"
 						msg := syn_error.syntax_message
 						error_message := syn_error.error_message
 						error_code := syn_error.error_code
+
+						txt := "Class has syntax error number `"
+						txt.append_integer (error_code)
+						txt.append ("'")
 						if not msg.empty then
-							txt.append (" (")
+							txt.append (": (")
 							txt.append (msg)
 							txt.extend (')')
 						end
-						if error_code /= Void then
-							txt.append ("%N<")
-							txt.append_integer (error_code)
-							txt.append ("> ")
+						if error_message /= Void then
+							txt.append ("%N")
 							txt.append (error_message)
 						end
 						txt.append (".%NSee highlighted area.")

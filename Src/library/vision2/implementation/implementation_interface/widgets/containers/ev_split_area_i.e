@@ -13,7 +13,8 @@ inherit
 	EV_CONTAINER_I
 		redefine
 			interface,
-			item
+			item,
+			extend
 		end
 
 feature -- Access
@@ -175,6 +176,21 @@ feature -- Status setting
 feature -- Element change
 
 	put (an_item: like item) is
+			-- Replace `item' with `an_item'.
+		do
+			if item = first then
+				prune (first)
+				set_first (an_item)
+			elseif item = second then
+				prune (second)
+				set_second (an_item)
+			end
+		ensure
+			item_position_not_changed: (old item = old first implies item = first) or
+				(old item = old second implies item = second)
+		end
+		
+	extend (an_item: like item) is
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do

@@ -15,7 +15,7 @@ create
 
 feature -- Classes: 1
 
-	list_of_classes_in_cluster (s: EB_METRIC_SCOPE): LINKED_LIST [CLASS_C] is
+	list_of_classes_in_cluster (s: EB_METRIC_SCOPE): ARRAYED_LIST [CLASS_C] is
 			-- Return list of classes included in cluster and recursicely in sub-clusters of `s.cluster_i'.
 		require
 			scope_not_void: s /= Void
@@ -27,7 +27,7 @@ feature -- Classes: 1
 			classes: HASH_TABLE [CLASS_I, STRING]
 			scope: EB_METRIC_SCOPE
 		do
-			create Result.make
+			create Result.make (1000)
 				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
 			scope := clone (s)
@@ -58,7 +58,7 @@ feature -- Classes: 1
 			end
 		end
 
-	list_of_classes_in_system (s: EB_METRIC_SCOPE): LINKED_LIST [CLASS_C] is
+	list_of_classes_in_system (s: EB_METRIC_SCOPE): ARRAYED_LIST [CLASS_C] is
 			-- Return list of classes included in system `s.system_i'.
 		require
 			scope_not_void: s /= Void
@@ -68,7 +68,7 @@ feature -- Classes: 1
 			i: INTEGER
 			array_classes: ARRAY [CLASS_C]
 		do
-			create Result.make
+			create Result.make (1000)
 			array_classes:= s.system_i.classes.sorted_classes
 			from
 				i := 1
@@ -109,7 +109,7 @@ feature -- Classes: 1
 			scope_is_cluster: s.index = Cluster_scope
 			cluster_set: s.cluster_i /= Void
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: ARRAYED_LIST [CLASS_C]
 		do
 			class_list := list_of_classes_in_cluster (s)
 			from
@@ -131,7 +131,7 @@ feature -- Classes: 1
 			scope_is_system: s.index = System_scope
 			system_set: s.system_i /= Void
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: ARRAYED_LIST [CLASS_C]
 		do
 			class_list := list_of_classes_in_system (s)
 			from
@@ -185,7 +185,7 @@ feature -- Classes: 1
 			scope_is_cluster: s.index = Cluster_scope
 			cluster_set: s.cluster_i /= Void
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: ARRAYED_LIST [CLASS_C]
 		do
 			class_list := list_of_classes_in_cluster (s)
 			from
@@ -207,7 +207,7 @@ feature -- Classes: 1
 			scope_is_system: s.index = System_scope
 			system_set: s.system_i /= Void
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: ARRAYED_LIST [CLASS_C]
 		do
 			class_list := list_of_classes_in_system (s)
 			from
@@ -1145,7 +1145,7 @@ feature -- Comments:
 --			class_comments_server: CLASS_COMMENTS_SERVER
 --			class_comments: CLASS_COMMENTS
 --			id: INTEGER
---			file_ids: LINKED_SET [INTEGER]
+--			file_ids: ARRAYED_LIST [INTEGER]
 		do
 --			file_ids := s.class_c.class_comments_server.file_ids
 --			id := s.class_c.class_id

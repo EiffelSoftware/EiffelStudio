@@ -87,7 +87,6 @@ feature -- Implementation
 			scope_combobox.set_minimum_size (80, 26)
 			scope_combobox.select_actions.extend (agent scope_action)
 			scope_combobox.disable_edit
-			create scopes.make
 
 				-- `available_scopes' is created just to call `list_of_scopes'.
 			create available_scopes
@@ -184,8 +183,7 @@ feature -- Implementation
 			widget.extend (sep)
 			widget.disable_item_expand (sep)
 
-			create metrics.make
-			create user_metrics_xml_list.make
+			create user_metrics_xml_list.make (5)
 			metrics := basic_metrics.list_of_basic_metrics (Current)
 			nb_basic_metrics := metrics.count
 			raw_metric_list := basic_metrics.raw_metric_list
@@ -337,7 +335,7 @@ feature -- Scope
 			scopes.go_to (cursor)
 		end
 
-	scopes: LINKED_LIST [EB_METRIC_SCOPE]
+	scopes: ARRAYED_LIST [EB_METRIC_SCOPE]
 		-- List of all scopes already defined. They are not necessarily displayed in
 		-- `scope_combobox' at any time.
 
@@ -479,17 +477,17 @@ feature -- Metric
 			metrics.go_to (cursor)
 		end
 
-	metrics: LINKED_LIST [EB_METRIC]
+	metrics: ARRAYED_LIST [EB_METRIC]
 		-- List of all metrics (basic or not) previously defined. They are not necessarily
 		-- sensitive in `metric_menu' at any time.
 
-	raw_metric_list: LINKED_LIST [EB_METRIC]
+	raw_metric_list: ARRAYED_LIST [EB_METRIC]
 		-- List of basic metrics displayed in main menu of `metric_menu'.
 
-	derived_metric_list: LINKED_LIST [EB_METRIC]
+	derived_metric_list: ARRAYED_LIST [EB_METRIC]
 		-- List of basic metrics displayed in sub-menus of `metric_menu'.
 
-	user_metrics_xml_list: LINKED_LIST [XM_ELEMENT]
+	user_metrics_xml_list: ARRAYED_LIST [XM_ELEMENT]
 		-- List of composite metric definitions, as stored in `file_manager.metric_file'.
 
 	nb_basic_metrics: INTEGER
@@ -1345,7 +1343,7 @@ feature -- Storing results.
 			update_displayed_dialogs
 		end
 		
-	notify_management_metric (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
+	notify_management_metric (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
 			-- The state of the manager has changed. Metrics have been changed. Update `Current'.
 		local
 			old_metric_displayed: EB_METRIC

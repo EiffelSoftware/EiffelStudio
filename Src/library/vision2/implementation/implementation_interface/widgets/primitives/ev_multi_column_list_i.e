@@ -201,7 +201,7 @@ feature -- Element change
 				old_count := column_titles.count
 				column_titles.wipe_out
 			until
-				i > column_titles.count
+				i > titles.count
 			loop
 				column_title_changed (titles @ i, i)
 				column_titles.extend (clone (titles @ i))
@@ -254,7 +254,7 @@ feature -- Element change
 				old_count := column_widths.count
 				column_widths.wipe_out
 			until
-				i > column_widths.count
+				i > widths.count
 			loop
 				column_width_changed (widths @ i, i)
 				column_widths.extend (widths @ i)
@@ -436,6 +436,10 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/28 18:27:22  brendel
+--| Fixed bug in set_column_titles and set_column_widths where it took the
+--| count from the recently wiped out list instead of the parameter.
+--|
 --| Revision 1.41  2000/03/28 00:34:37  king
 --| Optimized update_children to only expand list once on iteratation of children
 --|

@@ -19,14 +19,14 @@
  * Eiffel object (Abstract Systac Nodes0 creation
  */
 
-extern char		*create_node(),
-				*create_node1(),
-				*create_node2(),
-				*create_node3(),
-				*create_node4(),
-				*create_node5(),
-				*create_node6(),
-				*create_node7();
+extern char	*create_node(int dyn_type);
+extern char *create_node1(int dyn_type, char * arg1);
+extern char *create_node2(int dyn_type, char *arg1, char *arg2);
+extern char *create_node3(int dyn_type, char *arg1, char *arg2, char *arg3);
+extern char *create_node4(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4);
+extern char *create_node5(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5);
+extern char *create_node6(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5, char *arg6);
+extern char *create_node7(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5, char *arg6, char *arg7);
 
 
 /*
@@ -59,9 +59,9 @@ extern int *count_stack;			/* Stack for count of fixed list */
 extern int count_size;				/* Current count stack size */
 extern int count_top;				/* Top index of stack `count_stack' */
 
-extern void list_init();
-extern void list_push();
-extern char *list_new();
+extern void list_init(void);
+extern void list_push(char *obj);
+extern char *list_new(int list_type);
 
 /*
  * Click list managment
@@ -70,13 +70,13 @@ extern char **click_stack;			/* Object stack for fixed list creation */
 extern int click_top;				/* Top index of stack `click_stack' */
 extern int click_size;				/* Current object stack size */
 
-extern int click_list_push();
-extern char *click_list_new();
-extern void click_list_init();
+extern int click_list_push(void);
+extern char *click_list_new(void);
+extern void click_list_init(void);
 extern int start_position, end_position;
-extern void click_list_set();		/* click_set routine for CLICK_INDIR */
-extern int click_list_start();		/* start_position function of CLICK_INDIR */
-extern char *click_list_elem();     /* node_function routine for CLICK_INDIR */
+extern void click_list_set(char *an_ast, int index);	/* click_set routine for CLICK_INDIR */
+extern int click_list_start(int remembered_index);		/* start_position function of CLICK_INDIR */
+extern char *click_list_elem(int remembered_index);     /* node_function routine for CLICK_INDIR */
 
 /*
  * Declarations for argument passing  between Eiffel and Yacc
@@ -113,5 +113,5 @@ extern int start_position, end_position;
  * etc
  */
 
-extern char *rn_ast;				/* Result of a parsing */
-extern void internal_error();		/* Internal error */
+extern char *rn_ast;					/* Result of a parsing */
+extern void internal_error(char *s);	/* Internal error */

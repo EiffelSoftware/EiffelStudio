@@ -31,14 +31,14 @@
 #define EWB			"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
 
 /* Function declaration */
-rt_public void dexit();			/* Daemon's exit */
-rt_private void die();				/* A termination signal was trapped */
-rt_private Signal_t handler();		/* Signal handler */
-rt_private void set_signal();		/* Set up the signal handler */
+rt_public void dexit(int code);			/* Daemon's exit */
+rt_private void die(void);				/* A termination signal was trapped */
+rt_private Signal_t handler(int sig);		/* Signal handler */
+rt_private void set_signal(void);		/* Set up the signal handler */
 
-extern STREAM *spawn_child();	/* Start up child with ipc link */
-extern char *getenv();			/* Get environment variable value */
-extern Malloc_t malloc();		/* Memory allocation */
+extern STREAM *spawn_child(char *cmd, pid_t *child_pid);	/* Start up child with ipc link */
+extern char *getenv(const char *);			/* Get environment variable value */
+extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 rt_public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
 rt_public struct d_flags d_data = {	/* Internal daemon's flags */
@@ -52,9 +52,7 @@ rt_public struct d_flags d_data = {	/* Internal daemon's flags */
 rt_public char *progname;	/* Otherwise defined in logfile.c */
 #endif
 
-rt_public void main(argc, argv)
-int argc;
-char **argv;
+rt_public void main(int argc, char **argv)
 {
 	/* This is the main entry point for the ISE daemon */
 
@@ -148,7 +146,7 @@ char **argv;
 	dexit(0);		/* Workbench died, so do we */
 }
 
-rt_private void set_signal()
+rt_private void set_signal(void)
 {
 	/* Set up the signal handler */
 
@@ -171,8 +169,7 @@ rt_private void set_signal()
 #endif
 }
 
-rt_private Signal_t handler(sig)
-int sig;
+rt_private Signal_t handler(int sig)
 {
 	/* A signal was caught */
 
@@ -186,7 +183,7 @@ int sig;
 	dexit(0);
 }
 
-rt_private void die()
+rt_private void die(void)
 {
 #ifdef USE_ADD_LOG
 	add_log(9, "going down on termination signal");
@@ -194,8 +191,7 @@ rt_private void die()
 	dexit(0);
 }
 
-rt_public void dexit(code)
-int code;
+rt_public void dexit(int code)
 {
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", code);
@@ -205,8 +201,7 @@ int code;
 
 #ifndef HAS_STRDUP
 
-rt_public char *strdup (s)
-char * s;
+rt_public char *strdup (char *s)
 {
 	char *new;
 	int l = strlen (s) + 1;

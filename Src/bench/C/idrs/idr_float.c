@@ -20,9 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_float(idrs, fp)
-IDR *idrs;
-float *fp;
+rt_public bool_t idr_float(IDR *idrs, float *fp)
 {
 	/* Serialize a long byte */
 

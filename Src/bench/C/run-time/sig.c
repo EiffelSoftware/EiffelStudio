@@ -173,7 +173,7 @@ rt_public Signal_t exfpe(int sig)
 	xraise(EN_FLOAT);		/* Raise a floating point exception */
 }
 
-rt_shared void trapsig(void (*handler) (int))
+rt_shared void trapsig(Signal_t (*handler) (int))
                       		/* The signal handler provided */
 {
 	/* This routine is usually called only by the main() when something wrong
@@ -260,7 +260,7 @@ rt_shared void esdpch(void)
  * Kernel signal interface.
  */
 
-rt_public Signal_t (*esignal(int sig, void (*func) (int)))(int)
+rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
         				/* Signal to handle */
                    		/* Handler to be associated with signal */
 {

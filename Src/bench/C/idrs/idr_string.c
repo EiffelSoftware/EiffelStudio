@@ -20,10 +20,10 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_string(idrs, sp, maxlen)
-IDR *idrs;				/* The serializing stream */
-char **sp;				/* Pointer to area where string address is stored */
-unsigned int maxlen;	/* Maximum length, 0 = no limit */
+rt_public bool_t idr_string(IDR *idrs, char **sp, unsigned int maxlen)
+          				/* The serializing stream */
+          				/* Pointer to area where string address is stored */
+                    	/* Maximum length, 0 = no limit */
 {
 	/* Serialize a string. Dynamic allocation for data storage is done when
 	 * deserializing if the address of the string is NULL. There is a big

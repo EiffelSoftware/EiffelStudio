@@ -30,24 +30,19 @@ rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
 rt_private char *server;		/* Current server used */
 
-rt_private long pst_store();	/* Recursive store */
-rt_private void partial_store_write();
+rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
+rt_private void partial_store_write(void);
 
 #undef DEBUG
 
-void c_sv_init(f_desc)
-EIF_INTEGER f_desc;
+void c_sv_init(EIF_INTEGER f_desc)
 {
 	/* Position file `f' at the end. */
     if (lseek((int)f_desc,0,SEEK_END) == -1)
 		esys();
 }
 
-long store_append(f_desc, o, mid, nid, s)
-EIF_INTEGER f_desc;
-char *o;
-fnptr mid, nid;
-char *s;
+long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 {
 	/* Append `o' in file `f', and applies routine `mid'
 	 * on server `s'. Return position in the file where the object is
@@ -82,7 +77,7 @@ char *s;
 	allocate_gen_buffer();
 
 	/* Write in file `fides' the count of stored objects */
-	buffer_write(&obj_nb, sizeof(long));
+	buffer_write((char *) (&obj_nb), sizeof(long));
 
 #ifndef DEBUG
 	(void) pst_store(o,0L);		/* Recursive store process */
@@ -108,9 +103,7 @@ char *s;
 	return result;
 }
 
-rt_private long pst_store(object, object_count)
-char *object;
-long object_count;
+rt_private long pst_store(char *object, long int object_count)
 {
 	/* Second pass of the store mechanism: writing on the disk.
 	 */
@@ -201,8 +194,7 @@ zone->ov_flags);
 	return object_count;
 }
 
-long fpos2(file_desc)
-EIF_INTEGER file_desc;
+long fpos2(EIF_INTEGER file_desc)
 {
 	register long result = (long) lseek((int)file_desc, 0, SEEK_CUR);
 
@@ -212,7 +204,7 @@ EIF_INTEGER file_desc;
 	return result;
 }
 
-rt_private void partial_store_write()
+rt_private void partial_store_write(void)
 {
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;

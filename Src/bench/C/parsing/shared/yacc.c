@@ -85,10 +85,7 @@ int end_position;
  * Building the interface
  */
 
-void c_get_address (n, obj, rout)
-int32 n;
-char *obj;
-fnptr rout;
+void c_get_address (int32 n, char *obj, fnptr rout)
 {
 	/* Initialize Eiffel-yacc interface for dynamic type `n'. */
 
@@ -96,16 +93,14 @@ fnptr rout;
 	init_array[n] = rout;
 }
 
-void getid_area(to_c)
-fnptr to_c;
+void getid_area(fnptr to_c)
 {
 	/* Initializa access to special objets of ids. */
 
 	c_id_area = to_c;
 }
 
-void getid_create(create)
-fnptr create;
+void getid_create(fnptr create)
 {
 	/* Initializa access to special objets of ids. */
 
@@ -118,15 +113,14 @@ fnptr create;
  * and another one for the list counts `count_stack'.
  */
 
-void c_get_list_area(to_c)
-fnptr to_c;
+void c_get_list_area(fnptr to_c)
 {
 	/* Initialize access to special objects of fixed lists. */
 
 	c_list_area = to_c;
 }
 
-void list_init()
+void list_init(void)
 {
 	/* Yacc is beginning to parse a list: index of stack `count_stack' must
 	 * be increase by 1. Take care of possible reallocation.
@@ -137,13 +131,12 @@ void list_init()
 		/* reallocation */
 		count_size += STACK_CHUNK;
 		if ((count_stack = (int *) xrealloc
-				(count_stack, count_size * sizeof(int), GC_OFF)) == 0)
+				((char *) count_stack, count_size * sizeof(int), GC_OFF)) == 0)
 			internal_error("Memory allocation failed\n");
 	}
 }
 
-char *list_new(list_type)
-int list_type;
+char *list_new(int list_type)
 {
 	/* Yacc finished parsing a list. Return a pointer on a Eiffel fixed
 	 * list.
@@ -188,8 +181,7 @@ int list_type;
 	return result;
 }
 
-void list_push(obj)
-char *obj;
+void list_push(char *obj)
 {
 	/* A list element `obj' is pushed onto the object stack `object_stack'.
 	 * The object counter in the stack `count_stack' must be increment
@@ -205,7 +197,7 @@ char *obj;
 	printf("Object stack reallocation\n");
 #endif
 		if ((object_stack = (char * *) xrealloc
-				(object_stack, object_size * sizeof(char *), GC_OFF)) == 0)
+				((char *) object_stack, object_size * sizeof(char *), GC_OFF)) == 0)
 			internal_error("Memory allocation failed\n");
 	}
 #ifdef DEBUG
@@ -219,45 +211,40 @@ char *obj;
  * Passing arguments between Yacc and Eiffel
  */
 
-char *yacc_arg(i)
-long i;
+char *yacc_arg(long i)
 {
 	/* Returns the i_th argument in `object_arg'. */
 
 	return object_arg[i];
 }
 
-char yacc_bool_arg(i)
-long i;
+char yacc_bool_arg(long i)
 {
 	/* Returns the i_th boolean argument in `bool_arg' */
 
 	return bool_arg [i];
 }
 
-long yacc_int_arg(i)
-char i;
+long yacc_int_arg(char i)
 {
 	/* Returns the i_th integer argument in `int_arg'. */
 
 	return int_arg[i];
 }
 
-float yacc_real_arg(i)
-long i;
+float yacc_real_arg(long i)
 {
 	/* Returns the i_th real argument in `real_arg'. */
 
 	return real_arg[i];
 }
 
-char yacc_char_arg()
+char yacc_char_arg(void)
 {
 	return char_arg;
 }
 
-char *create_node(dyn_type)
-int dyn_type;
+char *create_node(int dyn_type)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type'.
 	 * Return an Eiffel object pointer.
@@ -266,9 +253,7 @@ int dyn_type;
 	return emalloc(yy_dt_array[dyn_type]);
 }
 
-char *create_node1(dyn_type, arg1)
-int dyn_type;
-char * arg1;
+char *create_node1(int dyn_type, char * arg1)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a one-argument routine.
@@ -282,9 +267,7 @@ char * arg1;
 	return result;
 }
 
-char *create_node2(dyn_type, arg1, arg2)
-int dyn_type;
-char *arg1, *arg2;
+char *create_node2(int dyn_type, char *arg1, char *arg2)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a two-argument routine.
@@ -299,9 +282,7 @@ char *arg1, *arg2;
 	return result;
 }
 
-char *create_node3(dyn_type, arg1, arg2, arg3)
-int dyn_type;
-char *arg1, *arg2, *arg3;
+char *create_node3(int dyn_type, char *arg1, char *arg2, char *arg3)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a three-argument routine.
@@ -317,9 +298,7 @@ char *arg1, *arg2, *arg3;
 	return result;
 }
 
-char *create_node4(dyn_type, arg1, arg2, arg3, arg4)
-int dyn_type;
-char *arg1, *arg2, *arg3, *arg4;
+char *create_node4(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a four-argument routine.
@@ -336,9 +315,7 @@ char *arg1, *arg2, *arg3, *arg4;
 	return result;
 }
 
-char *create_node5(dyn_type, arg1, arg2, arg3, arg4, arg5)
-int dyn_type;
-char *arg1, *arg2, *arg3, *arg4, *arg5;
+char *create_node5( int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a five-argument routine.
@@ -356,9 +333,7 @@ char *arg1, *arg2, *arg3, *arg4, *arg5;
 	return result;
 }
 
-char *create_node6(dyn_type, arg1, arg2, arg3, arg4, arg5, arg6)
-int dyn_type;
-char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6;
+char *create_node6(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5, char *arg6)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a five-argument routine.
@@ -377,9 +352,7 @@ char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6;
 	return result;
 }
 
-char *create_node7(dyn_type, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
-int dyn_type;
-char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6, *arg7;
+char *create_node7(int dyn_type, char *arg1, char *arg2, char *arg3, char *arg4, char *arg5, char *arg6, char *arg7)
 {
 	/* Create an Eiffel object of dynamic type `dyn_type' and initialiaze
 	 * it with a five-argument routine.
@@ -399,8 +372,7 @@ char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6, *arg7;
 	return result;
 }
 
-void internal_error (s)
-char *s;
+void internal_error (char *s)
 {
 	print_err_msg(stderr,"Internal Error: %s\n", s);
 	exit (1);
@@ -410,32 +382,28 @@ char *s;
  * Test for instance of FEATURE_AS and INVARIANT_AS
  */
 
-void set_dtype1(obj)
-char *obj;
+void set_dtype1(char *obj)
 {
 	/* Assign to `feature_as_dtype' the dynamic type of `obj'. */
 
 	feature_as_dtype = Dtype(obj);
 }
 
-void set_dtype2(obj)
-char *obj;
+void set_dtype2(char *obj)
 {
 	/* Assign to `invariant_as_dtype' the dynamic type of `obj'. */
 
 	invariant_as_dtype = Dtype(obj);
 }
 
-char is_feature_as(obj)
-char *obj;
+char is_feature_as(char *obj)
 {
 	/* Is `obj' an instance of FEATURE_AS ? */
 
 	return Dtype(obj) == feature_as_dtype ? '\01' : '\0';
 }
 
-char is_invariant_as(obj)
-char *obj;
+char is_invariant_as(char *obj)
 {
 	/* Is `obj' an instance of INVARIANT_AS ? */
 

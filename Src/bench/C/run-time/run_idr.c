@@ -500,18 +500,18 @@ rt_public void ridr_multi_any (char *obj, int num)
 	cap = IDRF_SIZE / s;
 
 	if ((num - cap) <= 0) {
-		run_ulong (&idrf.i_decode, (long *) obj, num, s);
+		run_ulong (&idrf.i_decode, (long unsigned int *) obj, num, s);
 	} else {
 		int count = num / cap;
 		int left_over = num % cap;
 		long *lptr = (long *) obj;
 
 		while (count) {
-                	run_ulong (&idrf.i_decode, lptr, cap, s);
+                	run_ulong (&idrf.i_decode, (long unsigned int *) lptr, cap, s);
 			lptr += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_decode, lptr, left_over, s);
+                run_ulong (&idrf.i_decode, (long unsigned int *) lptr, left_over, s);
 	}
 }
 
@@ -525,18 +525,18 @@ rt_public void widr_multi_any (char *obj, int num)
 	idrf.i_encode.i_ptr += sizeof (char);
 
 	if ((num - cap) <= 0) {
-		run_ulong (&idrf.i_encode, (long *) obj, num, sizeof (char *));
+		run_ulong (&idrf.i_encode, (long unsigned int *) obj, num, sizeof (char *));
 	} else {
 		int count = num / cap;
 		int left_over = num % cap;
 		long *lptr = (long *) obj;
 
 		while (count) {
-                	run_ulong (&idrf.i_encode, lptr, cap, sizeof (char *));
+                	run_ulong (&idrf.i_encode, (long unsigned int *) lptr, cap, sizeof (char *));
 			lptr += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_encode, lptr, left_over, sizeof (char *));
+                run_ulong (&idrf.i_encode, (long unsigned int *) lptr, left_over, sizeof (char *));
 	}
 }
 
@@ -552,17 +552,17 @@ rt_public void ridr_multi_int (long int *obj, int num)
 	cap = IDRF_SIZE / s;
 
 	if ((num - cap) <= 0) {
-		run_ulong (&idrf.i_decode, obj, num, s);
+		run_ulong (&idrf.i_decode, (long unsigned int *) obj, num, s);
 	} else {
 		int count = num / cap;
 		int left_over = num % cap;
 
 		while (count) {
-                	run_ulong (&idrf.i_decode, obj, cap, s);
+                	run_ulong (&idrf.i_decode, (long unsigned int *) obj, cap, s);
 			obj += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_decode, obj, left_over, s);
+                run_ulong (&idrf.i_decode, (long unsigned int *) obj, left_over, s);
 	}
 }
 
@@ -576,17 +576,17 @@ rt_public void widr_multi_int (long int *obj, int num)
 	idrf.i_encode.i_ptr += sizeof (char);
 
 	if ((num - cap) <= 0) {
-		run_ulong (&idrf.i_encode, obj, num, sizeof (long));
+		run_ulong (&idrf.i_encode, (long unsigned int *) obj, num, sizeof (long));
 	} else {
 		int count = num / cap;
 		int left_over = num % cap;
 
 		while (count) {
-                	run_ulong (&idrf.i_encode, obj, cap, sizeof (long));
+                	run_ulong (&idrf.i_encode, (long unsigned int *) obj, cap, sizeof (long));
 			obj += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_encode, obj, left_over, sizeof (long));
+                run_ulong (&idrf.i_encode, (long unsigned int *) obj, left_over, sizeof (long));
 	}
 }
 
@@ -673,7 +673,7 @@ rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 	uint32 *iptr = ARENA (obj);
 
 
-	run_int (&idrf.i_decode, &number_of_bits, 1);
+	run_int (&idrf.i_decode, (uint32 *) (&number_of_bits), 1);
 	siz = BIT_NBPACK (number_of_bits);
 	cap = IDRF_SIZE / (siz * sizeof (uint32));
 

@@ -32,31 +32,31 @@
 #include "bits.h"
 #include "eiffel.h"
 
-extern void set_breakpoint_number();		/* Sets the breakpoint interrupt number */
+extern void set_breakpoint_number(int num);	/* Sets the breakpoint interrupt number */
 rt_public int rqstcnt = 0;				/* Request count */
 rt_private char gc_stopped;
 
-rt_private void process_request();		/* Dispatch request processing */
-rt_private void inspect();				/* Object inspection */
-rt_private void adopt();				/* Adopt object */
-rt_private void ipc_access();			/* Access object through hector */
-rt_private void wean();				/* Wean adopted object */
-rt_private void load_bc();				/* Load byte code information */
-rt_private void obj_inspect();
-rt_private void bit_inspect();
-rt_private void string_inspect();		/* String object inspection */
-rt_private void once_inspect();		/* Once routines inspection */
+rt_private void process_request(int s, Request *rqst);		/* Dispatch request processing */
+rt_private void inspect(int s, Opaque *what);				/* Object inspection */
+rt_private void adopt(int s, Opaque *what);				/* Adopt object */
+rt_private void ipc_access(int s, Opaque *what);			/* Access object through hector */
+rt_private void wean(int s, Opaque *what);				/* Wean adopted object */
+rt_private void load_bc(int slots, int amount);				/* Load byte code information */
+rt_private void obj_inspect(EIF_OBJ object);
+rt_private void bit_inspect(EIF_OBJ object);
+rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
+rt_private void once_inspect(int s, Opaque *what);		/* Once routines inspection */
 
 rt_private long sp_lower, sp_upper; /* Special objects' bounds to be inspected */
 rt_private IDRF idrf;			/* IDR filter for serialize communications */
 
-extern char *simple_out();	/* Out routine for simple time (from run-time) */
+extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
 /*
  * IDR protocol initialization.
  */
 
-rt_public void prt_init()
+rt_public void prt_init(void)
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
@@ -66,8 +66,7 @@ rt_public void prt_init()
  * Handling requests.
  */
 
-rt_public void arqsthandle(s)
-int s;
+rt_public void arqsthandle(int s)
 {
 	/* Given a connected socket, wait for a request and process it. Since it
 	 * is an error at the application level to not be able to receive a packet,
@@ -81,9 +80,9 @@ int s;
 	process_request(s, &rqst);	/* Process the received request */
 }
 
-rt_private void process_request(s, rqst)
-int s;						/* The connected socket */
-Request *rqst;				/* The received request to be processed */
+rt_private void process_request(int s, Request *rqst)
+      						/* The connected socket */
+              				/* The received request to be processed */
 {
 	/* Process the received request */
 
@@ -168,9 +167,9 @@ Request *rqst;				/* The received request to be processed */
  * Sending requests - Receiving answers
  */
 
-rt_public void send_packet(s, rqst)
-int s;				/* The connected socket */
-Request *rqst;		/* The request to be sent */
+rt_public void send_packet(int s, Request *rqst)
+      				/* The connected socket */
+              		/* The request to be sent */
 {
 	/* Sends an answer to the client */
 	
@@ -202,9 +201,9 @@ Request *rqst;		/* The request to be sent */
 #endif
 }
 
-rt_public int recv_packet(s, dans)
-int s;				/* The connected socket */
-Request *dans;		/* The daemon's answer */
+rt_public int recv_packet(int s, Request *dans)
+      				/* The connected socket */
+              		/* The daemon's answer */
 {
 	/* Wait for an answer and fill in the Request structure, then de-serialize
 	 * it. If an error occurs, exit immediately. The signature has to be 'int',
@@ -234,8 +233,7 @@ Request *dans;		/* The daemon's answer */
  * Protocol specific routines
  */
 
-rt_public void stop_rqst(s)
-int s;
+rt_public void stop_rqst(int s)
 {
 	/* Send a stop request, using the Where structure to give the program
 	 * current location. We also indicate why the program stopped and set
@@ -295,9 +293,9 @@ int s;
 	send_packet(s, &rqst);	/* Send stopped notification */
 }
 
-rt_private void inspect(s, what)
-int s;
-Opaque *what;		/* Generic structure describing request */
+rt_private void inspect(int s, Opaque *what)
+      
+             		/* Generic structure describing request */
 {
 	/* Inspect an object and return its tagged out form back to ewb. The
 	 * opaque structure describes the object we want. Note that the address
@@ -313,7 +311,7 @@ Opaque *what;		/* Generic structure describing request */
 	switch (what->op_first) {		/* First value describes request */
 	case IN_H_ADDR:					/* Hector address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
-		obj_inspect(&(eif_access((EIF_OBJ) addr)));
+		obj_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
 		return;
 	case IN_BIT_ADDR:				/* Bit address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
@@ -321,7 +319,7 @@ Opaque *what;		/* Generic structure describing request */
 		return;
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_third;		/* long -> (char *) */
-		string_inspect(&(eif_access((EIF_OBJ) addr)));
+		string_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
 		return;
 	case IN_ADDRESS:				/* Address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
@@ -354,9 +352,9 @@ Opaque *what;		/* Generic structure describing request */
 	free(out);
 }
 
-rt_private void once_inspect(s, what)
-int s;				/* The connected socket */
-Opaque *what;		/* Generic structure describing request */
+rt_private void once_inspect(int s, Opaque *what)
+      				/* The connected socket */
+             		/* Generic structure describing request */
 {
 	/* Check whether a once routine has already been called. In this case
 	 * its result may be ask by ewb.
@@ -381,9 +379,9 @@ Opaque *what;		/* Generic structure describing request */
 	}
 }
 
-rt_private void adopt(s, what)
-int s;
-Opaque *what;		/* Generic structure describing request */
+rt_private void adopt(int s, Opaque *what)
+      
+             		/* Generic structure describing request */
 {
 	/* Adopt an object and return its hector address back to ewb. The
 	 * opaque structure describes the object. Note that the address
@@ -400,9 +398,9 @@ Opaque *what;		/* Generic structure describing request */
 	twrite(hector_addr, strlen(hector_addr));
 }
 
-rt_private void ipc_access(s, what)
-int s;
-Opaque *what;		/* Generic structure describing request */
+rt_private void ipc_access(int s, Opaque *what)
+      
+             		/* Generic structure describing request */
 {
 	/* Access an object through hector and return its physical address 
 	 * back to ewb. The opaque structure describes the object. Note 
@@ -419,9 +417,9 @@ Opaque *what;		/* Generic structure describing request */
 	twrite(physical_addr, strlen(physical_addr));
 }
 
-rt_private void wean(s, what)
-int s;
-Opaque *what;		/* Generic structure describing request */
+rt_private void wean(int s, Opaque *what)
+      
+             		/* Generic structure describing request */
 {
 	/* Wean an adopted object. The opaque structure describes the object.
 	 * Note that the address is stored as a long, because XDR cannot pass 
@@ -435,9 +433,9 @@ Opaque *what;		/* Generic structure describing request */
 	eif_wean((EIF_OBJ) hector_addr);
 }
 
-rt_private void load_bc(slots, amount)
-int slots;		/* Number of new slots needed in the melting table */
-int amount;		/* Amount of byte codes to be downloaded */
+rt_private void load_bc(int slots, int amount)
+          		/* Number of new slots needed in the melting table */
+           		/* Amount of byte codes to be downloaded */
 {
 	/* Upon receiving a LOAD request, the application attempts to download the
 	 * byte code from the compiler. The 'slots' parameters indicates the amount
@@ -497,11 +495,10 @@ int amount;		/* Amount of byte codes to be downloaded */
 #define BUF_SIZE 512
 rt_private char buffer[BUF_SIZE];
 
-rt_private void rec_inspect();
-rt_private void rec_sinspect();
+rt_private void rec_inspect(register1 char *object);
+rt_private void rec_sinspect(register1 char *object);
 
-rt_private void obj_inspect(object)
-EIF_OBJ object;
+rt_private void obj_inspect(EIF_OBJ object)
 {
 	uint32 flags;		/* Object flags */
 
@@ -524,8 +521,7 @@ EIF_OBJ object;
 	}
 }
 
-rt_private void rec_inspect(object)
-register1 char *object;
+rt_private void rec_inspect(register1 char *object)
 {
 	/* Inspect recursively `object''s attribute */
 
@@ -675,8 +671,7 @@ register1 char *object;
 	}
 }
 
-rt_private void rec_sinspect(object)
-register1 char *object;
+rt_private void rec_sinspect(register1 char *object)
 {
 	/* Inspect special object */
 
@@ -811,15 +806,15 @@ register1 char *object;
 		}
 }
 
-rt_private void bit_inspect(object)
-EIF_OBJ object;		/* Reference to a bit object (= BIT_REF) */
+rt_private void bit_inspect(EIF_OBJ object)
+               		/* Reference to a bit object (= BIT_REF) */
 {
 	sprintf(buffer, "%s", b_out(*(char **)object));
 	twrite (buffer, strlen(buffer));
 }
 
-rt_private void string_inspect(object)
-EIF_OBJ object;		/* Reference to a string object */
+rt_private void string_inspect(EIF_OBJ object)
+               		/* Reference to a string object */
 {
 		/* Inspect the string object to get the string value */
 

@@ -20,10 +20,10 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_opaque(idrs, p, len)
-IDR *idrs;		/* The serializing stream */
-char *p;		/* Start of opaque data */
-int len;		/* Length of opaque data */
+rt_public bool_t idr_opaque(IDR *idrs, char *p, int len)
+          		/* The serializing stream */
+        		/* Start of opaque data */
+        		/* Length of opaque data */
 {
 	/* Opaque data are not machine portable, unless they represent something
 	 * which has been made portable, like IDR data or known machine-independant

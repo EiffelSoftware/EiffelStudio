@@ -22,10 +22,9 @@
 
 rt_private STREAM *sp;				/* Stream used for communications */
 
-extern Malloc_t malloc();		/* Memory allocation */
+extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 
-rt_public void tpipe(stream)
-STREAM *stream;
+rt_public void tpipe(STREAM *stream)
 {
 	/* Initialize the file descriptor to be used in data exchanges with the
 	 * remote process. This enables us to omit this parameter whenever an I/O
@@ -42,8 +41,8 @@ STREAM *stream;
 #endif
 }
 
-rt_public char *tread(size)
-int *size;		/* Filled in with size of read string */
+rt_public char *tread(int *size)
+          		/* Filled in with size of read string */
 {
 	/* Read bytes from the "pipe" and put them into a new allocated buffer.
 	 * Returns the address of that buffer or a null pointer in case of errors.
@@ -102,9 +101,7 @@ int *size;		/* Filled in with size of read string */
 	return buffer;
 }
 
-rt_public int twrite(buffer, size)
-char *buffer;
-int size;
+rt_public int twrite(char *buffer, int size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occured.
@@ -133,9 +130,7 @@ int size;
 	return net_send(writefd(sp), buffer, size);
 }
 
-rt_public void swallow(fd, size)
-int fd;
-int size;
+rt_public void swallow(int fd, int size)
 {
 	/* Swallow 'size' bytes from 'fd' and discard them */
 

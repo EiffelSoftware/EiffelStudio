@@ -45,6 +45,6 @@
 		return FALSE; \
 	}
 
-extern Malloc_t malloc();
+extern Malloc_t malloc(register unsigned int size_t);
 
 #endif

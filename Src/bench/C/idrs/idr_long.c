@@ -21,9 +21,7 @@
 #include "idr.h"
 #include "size.h"
 
-rt_public bool_t idr_long(idrs, lp)
-IDR *idrs;
-long *lp;
+rt_public bool_t idr_long(IDR *idrs, long int *lp)
 {
 	/* Serialize a long byte */
 

@@ -20,9 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_u_short(idrs, sp)
-IDR *idrs;
-unsigned short *sp;
+rt_public bool_t idr_u_short(IDR *idrs, short unsigned int *sp)
 {
 	return idr_short(idrs, (short *) sp);
 }

@@ -14,8 +14,7 @@
 #include "eiffel.h"
 #include "stack.h"
 
-rt_public void send_rqst_0 (code) 
-long code;
+rt_public void send_rqst_0 (long int code)
 {
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
@@ -30,9 +29,7 @@ long code;
 	send_packet(writefd(sp), &rqst);
 }
 
-rt_public void send_rqst_1 (code, info1) 
-long code;
-long info1;
+rt_public void send_rqst_1 (long int code, long int info1)
 {
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
@@ -47,10 +44,7 @@ long info1;
 	send_packet(writefd(sp), &rqst);
 }
 
-rt_public void send_rqst_2 (code, info1, info2) 
-long code;
-long info1;
-long info2;
+rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 {
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
@@ -66,11 +60,7 @@ long info2;
 	send_packet(writefd(sp), &rqst);
 }
 
-rt_public void send_rqst_3 (code, info1, info2, info3) 
-long code;
-long info1;
-long info2;
-long info3;
+rt_public void send_rqst_3 (long int code, long int info1, long int info2, long int info3)
 {
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
@@ -87,7 +77,7 @@ long info3;
 	send_packet(writefd(sp), &rqst);
 }
 
-rt_public EIF_BOOLEAN recv_ack ()
+rt_public EIF_BOOLEAN recv_ack (void)
 {
 	Request pack;
 	STREAM *sp = stream_by_fd[EWBOUT];
@@ -121,7 +111,7 @@ rt_public EIF_BOOLEAN recv_ack ()
 	}
 }
 
-rt_public EIF_BOOLEAN recv_dead ()
+rt_public EIF_BOOLEAN recv_dead (void)
 {
 		/* Wait for a message saying that the application is dead */
 
@@ -144,21 +134,18 @@ rt_public EIF_BOOLEAN recv_dead ()
 	}
 }
 
-rt_public void c_send_str (s)
-char *s;
+rt_public void c_send_str (char *s)
 {
 	STREAM *sp = stream_by_fd[EWBOUT];
 	send_str (sp, s);
 }
 
-rt_public void c_twrite (s, l)
-char *s;
-long l;
+rt_public void c_twrite (char *s, long int l)
 {
 	twrite (s, (int) l);
 }
 
-EIF_REFERENCE c_tread () 
+EIF_REFERENCE c_tread (void)
 {
 
 	int size;
@@ -171,8 +158,7 @@ EIF_REFERENCE c_tread ()
 	return e_str;
 }
 
-rt_public int async_shell(cmd)
-char *cmd;
+rt_public int async_shell(char *cmd)
 {
 	/* Send a shell command to be performed in the background and return the
 	 * job number of the request. The daemon will fork and execute the command,
@@ -182,10 +168,7 @@ char *cmd;
 	return background(cmd);
 }
 
-rt_public void send_run_request(code, buf, len)
-long code;
-char *buf;
-long len;
+rt_public void send_run_request(long int code, char *buf, long int len)
 {
 /*
 	Request rqst;
@@ -204,7 +187,7 @@ long len;
 }
 
 
-request_dump ()
+request_dump (void)
 {
 	send_rqst_1 (DUMP, 2L /* ST_FULL */);
 }

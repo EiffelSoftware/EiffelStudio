@@ -13,10 +13,12 @@
 #ifndef _proto_h_
 #define _proto_h_
 
+#include "request.h" 	/* %%ss added */
+
 extern int rqstcnt;				/* Request count (number of requests sent) */
 
-extern void prt_init();			/* Initialize IDR filters */
-extern void send_packet();		/* Send IDR packet to ised */
-extern int recv_packet();		/* Receive IDR packet from ised */
+extern void prt_init(void);			/* Initialize IDR filters */
+extern void send_packet(int s, Request *rqst);		/* Send IDR packet to ised */
+extern int recv_packet(int s, Request *dans);		/* Receive IDR packet from ised */
 
 #endif

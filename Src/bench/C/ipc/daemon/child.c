@@ -38,17 +38,17 @@ extern unsigned TIMEOUT;	/* Time to let the child initialize */
 
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-rt_private Signal_t broken();	/* Signal handler for SIGPIPE */
+rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 
 /* Function declaration */
-rt_private int comfort_child();	/* Reassure child, make him confident */
-rt_private void close_on_exec();	/* Ensure this file will be closed by exec */
+rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
+rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 
-extern char **shword();			/* Shell word parsing of command string */
+extern char **shword(char *cmd);			/* Shell word parsing of command string */
 
-rt_public STREAM *spawn_child(cmd, child_pid)
-char *cmd;			/* The child command process */
-Pid_t *child_pid;	/* Where pid of the child is writtten */
+rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
+          			/* The child command process */
+                 	/* Where pid of the child is writtten */
 {
 	/* Launch the child process 'cmd' and return the stream structure which can
 	 * be used to communicate with the child. Note that this function only
@@ -142,7 +142,7 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 		/* Now exec command. A successful launch should not return */
 		argv = shword(cmd);					/* Split command into words */
 		if (argv != (char **) 0) {
-			meltpath = strdup (argv [0]);
+			meltpath = (char *) (strdup (argv [0]));
 			if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
 				add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
@@ -231,8 +231,8 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 	return sp;			/* Stream used to speak to child process */
 }
 
-rt_private int comfort_child(sp)
-STREAM *sp;		/* Stream used to talk to the child */
+rt_private int comfort_child(STREAM *sp)
+           		/* Stream used to talk to the child */
 {
 	/* Tell the child his parent is here, and make sure he responds. The
 	 * comforting protocol is the following: parent writes a null byte and
@@ -247,7 +247,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 	FD_ZERO(&mask);
 	FD_SET(writefd(sp), &mask);				/* We want to write to child */
 
-	oldpipe = signal(SIGPIPE, broken);	/* Trap SIGPIPE within this function */
+	oldpipe = signal(SIGPIPE, (void (*)(int))broken); /* Trap SIGPIPE within this function */
 
 	/* If we get a SIGPIPE signal, come back here */
 	if (0 != setjmp(env)) {
@@ -327,8 +327,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 	return 0;
 }
 
-rt_private void close_on_exec(fd)
-int fd;
+rt_private void close_on_exec(int fd)
 {
 	/* Set the close on exec flag for file descriptor 'fd' */
 
@@ -346,7 +345,7 @@ int fd;
 #endif
 }
 
-rt_private Signal_t broken()
+rt_private Signal_t broken(void)
 {
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */

@@ -20,13 +20,13 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_array(idrs, ap, lp, maxlength, elemsize, idr_elem)
-IDR *idrs;				/* The serializing stream */
-char **ap;				/* Where address of arena is stored */
-int *lp;				/* Where actual size of the array is stored */
-int maxlength;			/* Maximum length (hint to know size of lp) */
-int elemsize;			/* Size of each item */
-bool_t (*idr_elem)();	/* How to encode each item */
+rt_public bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (/* ??? */))
+          				/* The serializing stream */
+          				/* Where address of arena is stored */
+        				/* Where actual size of the array is stored */
+              			/* Maximum length (hint to know size of lp) */
+             			/* Size of each item */
+                     	/* How to encode each item */
 {
 	/* Encode a dynamically sized array. The parameter ap must point to a
 	 * variable of type 'char *' holding the address of the array's arena.

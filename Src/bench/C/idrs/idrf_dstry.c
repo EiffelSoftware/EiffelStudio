@@ -18,8 +18,7 @@
 #include "portable.h"
 #include "idrf.h"
 
-rt_public void idrf_destroy(idrf)
-IDRF *idrf;
+rt_public void idrf_destroy(IDRF *idrf)
 {
 	/* Release the memory used by the IDR streams */
 

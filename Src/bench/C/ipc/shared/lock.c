@@ -31,14 +31,14 @@
 rt_private char lockfile[MAX_STRING];		/* Location of lock file */
 rt_private int locked = 0;					/* Did we lock successfully? */
 
-rt_private void check_lock();				/* Make sure lockfile is not too old */
+rt_private void check_lock(char *file);				/* Make sure lockfile is not too old */
 
 extern int errno;						/* System error status */
-extern Time_t time();					/* Current time */
-extern int usleep();					/* Micro sleeps */
+extern Time_t time(Time_t *t);					/* Current time */
+extern int usleep(unsigned int);					/* Micro sleeps */
 
-rt_public int lock_file(file)
-char *file;						/* Where lockfile should be written */
+rt_public int lock_file(char *file)
+           						/* Where lockfile should be written */
 {
 	/* Note: this locking is not completly safe w.r.t. race conditions, but the
 	 * mailagent will do its own locking checks in a rather safe way.
@@ -71,7 +71,7 @@ char *file;						/* Where lockfile should be written */
 	return locked ? 0 : -1;
 }
 
-rt_public void release_lock()
+rt_public void release_lock(void)
 {
 	if (locked && -1 == unlink(lockfile)) {
 #ifdef USE_ADD_LOG
@@ -82,13 +82,12 @@ rt_public void release_lock()
 	locked = 0;
 }
 
-rt_public int is_locked()
+rt_public int is_locked(void)
 {
 	return locked;			/* Do we have a lock file active or not? */
 }
 
-rt_private void check_lock(file)
-char *file;
+rt_private void check_lock(char *file)
 {
 	/* Make sure the lock file is not older than MAX_TIME seconds, otherwise
 	 * unlink it (something must have gone wrong).

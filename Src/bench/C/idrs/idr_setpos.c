@@ -20,9 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_setpos(idrs, pos)
-IDR *idrs;
-int pos;
+rt_public bool_t idr_setpos(IDR *idrs, int pos)
 {
 	/* Set the position of the stream to pos and return true if it is possible,
 	 * false otherwise.

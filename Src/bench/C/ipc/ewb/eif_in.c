@@ -14,10 +14,7 @@ EIF_PROC failure_hdlr_set;
 EIF_PROC dead_hdlr_set;
 EIF_PROC stopped_hdlr_set;
 
-void rqst_handler_to_c(eif_rqst_hdlr, rqst_type, eif_set)
-EIF_OBJ eif_rqst_hdlr;
-EIF_INTEGER rqst_type;
-EIF_PROC eif_set;
+void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC eif_set)
 {
 	/* Keep a reference in C to the Eiffel objects 
 	 * handling the requests from ised.
@@ -39,9 +36,9 @@ EIF_PROC eif_set;
 	}
 }
 
-EIF_OBJ request_dispatch ();
+EIF_OBJ request_dispatch (Request rqst);
 
-EIF_OBJ request_handler ()
+EIF_OBJ request_handler (void)
 {
 	/* Dispatch request from ised to
 	 * proper RQST_HANDLER Eiffel object 
@@ -59,8 +56,7 @@ EIF_OBJ request_handler ()
 }
 
 
-EIF_OBJ request_dispatch (rqst)
-	Request rqst;
+EIF_OBJ request_dispatch (Request rqst)
 {
 	char *buf;
 	char *eif_string;
@@ -112,10 +108,7 @@ EIF_OBJ request_dispatch (rqst)
 	request handlers (RQST_HANDLER classes).
 */
 
-rt_public void send_byte_code (real_body_index, real_body_id, byte_array, size)
-EIF_INTEGER real_body_index, real_body_id;
-char *byte_array;
-EIF_INTEGER size;
+rt_public void send_byte_code (EIF_INTEGER real_body_index, EIF_INTEGER real_body_id, char *byte_array, EIF_INTEGER size)
 {
 
 /*
@@ -144,10 +137,7 @@ EIF_INTEGER size;
 
 }
 
-rt_public int send_breakpoint (real_body_id, offset, opcode)
-long real_body_id;
-long offset;
-EIF_BOOLEAN opcode;
+rt_public int send_breakpoint (long int real_body_id, long int offset, EIF_BOOLEAN opcode)
 {
 
 /*
@@ -170,7 +160,7 @@ EIF_BOOLEAN opcode;
 */
 }
 
-rt_public void send_ack_end ()
+rt_public void send_ack_end (void)
 {
 /*
 	STREAM *sp = stream_by_fd [EWBOUT];

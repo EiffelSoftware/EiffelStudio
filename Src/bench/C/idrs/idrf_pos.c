@@ -18,8 +18,7 @@
 #include "portable.h"
 #include "idrf.h"
 
-rt_public void idrf_pos(idrf)
-IDRF *idrf;
+rt_public void idrf_pos(IDRF *idrf)
 {
 	/* This routine should be called before any IDR operation,
 	 * in order to reposition the memory streams.

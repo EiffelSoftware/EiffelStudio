@@ -342,7 +342,7 @@ rt_public char *rt_nmake(long int objectCount)
 
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
-			uint32 count, elm_size;
+			/*uint32 count, elm_size;*/ /* %%ss unused */
 
 			/* Special object: read the saved size */
 			buffer_read((char *)(&spec_size), (sizeof(uint32)));
@@ -821,7 +821,7 @@ rt_private void rt_clean(void)
 	/* after having cleaned the hash table */
 	/* and allocated memory and reset function pointers. */
 
-	struct rt_struct *rt_info;
+	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
 	if (rt_table != (struct htable *) 0) {
 		struct rt_struct *rt_info = (struct rt_struct *) rt_table->h_values;
@@ -941,7 +941,7 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 	union overhead *zone = HEADER(new);
 	char* addr;
 	long size;				/* New object size */
-	struct rt_struct *rt_info;
+	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
 	flags = zone->ov_flags;
 	if (flags & EO_SPEC) {				/* Special object */

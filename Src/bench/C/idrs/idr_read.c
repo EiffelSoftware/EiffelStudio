@@ -20,11 +20,11 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_read(idrs, fd, bp, idr_bp)
-IDR *idrs;			/* The deserializing stream */
-int fd;				/* File descriptor we want to read */
-char *bp;			/* Pointer to structure which must be filled with data */
-bool_t (*idr_bp)();	/* The IDR routine called to deserialize into bp */
+rt_public bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */))
+          			/* The deserializing stream */
+       				/* File descriptor we want to read */
+         			/* Pointer to structure which must be filled with data */
+                   	/* The IDR routine called to deserialize into bp */
 {
 	/* Read bytes from the file and deserialize them into the structure pointed
 	 * to by bp. The number of bytes read is the size of the incoming buffer

@@ -47,23 +47,20 @@
 rt_private int logfile = -2;			/* File descriptor used for logging */
 rt_private char *logname = (char *) 0;	/* Name of the logfile in use */
 rt_private int loglvl = 20;			/* Logging level */
-rt_private void expand();				/* Run the %m %e expansion on the string */
-rt_private int add_error();			/* Prints description of error in errno */
-rt_private int add_errcode();			/* Print the symbolic error name */
+rt_private void expand(char *, char*);	/* Run the %m %e expansion on the string */
+rt_private int add_error(char *);			/* Prints description of error in errno */
+rt_private int add_errcode(char *);			/* Print the symbolic error name */
 
 rt_public char *progname = "ram";	/* Program name */
 rt_public Pid_t progpid = 0;		/* Program PID */
 
-extern Time_t time();			/* Time in seconds since the Epoch */
+extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
 extern int errno;				/* System error report variable */
-extern int file_lock();			/* Obtain a lock file with .lock extension */
-extern void release_lock();		/* Release previous lock */
+extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
+extern void release_lock(void);		/* Release previous lock */
 
 /* VARARGS2 */
-rt_public void add_log(level, format, arg1, arg2, arg3, arg4, arg5)
-int level;
-char *format;
-int arg1, arg2, arg3, arg4, arg5;
+rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5)
 {
 	/* Add logging informations at specified level. Note that the arguments are
 	 * declared as 'int', but it should work fine, even when we give doubles,
@@ -102,8 +99,7 @@ int arg1, arg2, arg3, arg4, arg5;
 	(void) write(fd, buffer, strlen(buffer));
 }
 
-rt_public int open_log(name)
-char *name;
+rt_public int open_log(char *name)
 {
 	/* Open log file 'name' for logging. If a previous log file was opened,
 	 * it is closed before. The routine returns -1 in case of error.
@@ -125,7 +121,7 @@ char *name;
 	return 0;
 }
 
-rt_public void close_log()
+rt_public void close_log(void)
 {
 	/* Close log file */
 
@@ -135,7 +131,7 @@ rt_public void close_log()
 	logfile = -2;				/* Mark file as closed */
 }
 
-rt_public int reopen_log()
+rt_public int reopen_log(void)
 {
 	/* Reopen logfile with same name as before (useful when child wants to start
 	 * with a fresh new file descriptor).
@@ -147,17 +143,14 @@ rt_public int reopen_log()
 	return -1;						/* No previously opened logfile */
 }
 
-rt_public void set_loglvl(level)
-int level;
+rt_public void set_loglvl(int level)
 {
 	/* Set logging level to 'level' */
 
 	loglvl = level;
 }
 
-rt_private void expand(from, to)
-char *from;
-char *to;
+rt_private void expand(char *from, char *to)
 {
 	/* The string held in 'from' is copied into 'to' and every '%m' is expanded
 	 * into the error message deduced from the value of errno.
@@ -181,8 +174,7 @@ char *to;
 			}
 }
 
-rt_private int add_error(where)
-char *where;
+rt_private int add_error(char *where)
 {
 	/* Prints a description of the error code held in 'errno' into 'where' if
 	 * it is available, otherwise simply print the error code number.
@@ -202,8 +194,7 @@ char *where;
 	return strlen(where);		/* FIXME */
 }
 
-rt_private int add_errcode(where)
-char *where;
+rt_private int add_errcode(char *where)
 {
 	/* Prints the symbolic description of the error code heldin in 'errno' into
 	 * 'where' if possible. Otherwise, prints the error number.

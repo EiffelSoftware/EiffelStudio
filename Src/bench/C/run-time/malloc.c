@@ -3265,7 +3265,7 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
 	register3 char *end;				/* First address beyond chunk */
-	register4 uint32 flags;				/* Eiffel flags */
+	/*register4 uint32 flags;*/	/* Eiffel flags */ /* %%ss removed unused */
 
 	switch (type) {
 	case CHUNK_T:

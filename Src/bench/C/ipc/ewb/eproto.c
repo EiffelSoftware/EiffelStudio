@@ -29,8 +29,7 @@
  * Protocol specific routines
  */
 
-rt_public int shell(cmd)
-char *cmd;
+rt_public int shell(char *cmd)
 {
 	/* Run specified shell command synchronously and return its execution
 	 * status (0 for ok, 1 for failure).
@@ -54,8 +53,7 @@ char *cmd;
 	return AK_OK == rqst.rq_ack.ak_type ? 0 : 1;
 }
 
-rt_public int background(cmd)
-char *cmd;
+rt_public int background(char *cmd)
 {
 	/* Run specified shell command asynchronously, and return the job number
 	 * attached to it. The application will be notified with an ASYNACK when
@@ -81,8 +79,8 @@ char *cmd;
 	return rqst.rq_opaque.op_first;		/* The command's job number */
 }
 
-rt_public int app_start(cmd)
-char *cmd;			/* The command string (without i/o redirection) */
+rt_public int app_start(char *cmd)
+          			/* The command string (without i/o redirection) */
 {
 	/* Start application under ised control and establish communication link
 	 * with ewb for debugging purpose. Return 0 if ok, -1 for failure.

@@ -23,14 +23,14 @@
  * Function declarations.
  */
 
-void 	eif000(),
-		eif011(),
-		eif101();
+void 	eif000(char *eiffel_string, long int i, long int j),
+		eif011(char *eiffel_string, long int i),
+		eif101(char *eiffel_string, long int i);
 /*
  * Static declarations.
  */
 
-static void encode();				/* Encoder function */
+static void encode(char *s, uint32 n);				/* Encoder function */
 static char encode_tbl[] = {		/* Corespondance table */
 	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 	'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -42,9 +42,7 @@ static char encode_tbl[] = {		/* Corespondance table */
  * Function definitions.
  */
 
-void eif000(eiffel_string, i, j)
-char *eiffel_string;
-long i, j;
+void eif000(char *eiffel_string, long int i, long int j)
 {
 	/*
 	 * Initialize the Eiffel string `eiffel_string' with an internal name
@@ -63,9 +61,7 @@ long i, j;
 	encode(s, ((uint32) i) + ((uint32) j << 15) + FEAT_NAME_FLAG);
 }
 
-void eif011(eiffel_string, i)
-char *eiffel_string;
-long i;
+void eif011(char *eiffel_string, long int i)
 {
 	char *s;
 
@@ -82,9 +78,7 @@ long i;
 	encode(s, ((uint32) i) + ROUT_TABLE_FLAG);
 }
 
-void eif101(eiffel_string, i)
-char *eiffel_string;
-long i;
+void eif101(char *eiffel_string, long int i)
 {
 	char *s;
 
@@ -101,9 +95,7 @@ long i;
  * Encoding of a number into a six-character string
  */
 
-static void encode(s, n)
-char *s;
-uint32 n;
+static void encode(char *s, uint32 n)
 {
 	int t;
 
@@ -118,8 +110,7 @@ uint32 n;
 
 #ifdef TEST
 
-static uint32 decode(s)
-char *s;
+static uint32 decode(char *s)
 {
 	/* Decode number 's' in base BASE from string 's' */
 
@@ -136,8 +127,7 @@ char *s;
 	return n;
 }
 
-static int value(c)
-char c;
+static int value(char c)
 {
 	/* Value of digit 'c' in base BASE */
 	
@@ -152,7 +142,7 @@ char c;
 
 #include <stdio.h>
 
-main()
+main(void)
 {
 	char l[100];
 	uint32 value;

@@ -38,7 +38,7 @@ void lp_init()
 
 	/* Allocation of an Eiffel ID */
 	id_string = create_node(ID_SD);
-	id_string = eif_freeze(&id_string);	/* Object shouldn't move */
+	id_string = eif_freeze((EIF_OBJ) (&id_string));	/* Object shouldn't move */
 
 	/* Initialization of the buffer with Eiffel routine 'make' of
 	 * class ID_SD.

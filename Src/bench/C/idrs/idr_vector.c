@@ -20,12 +20,12 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_vector(idrs, array, size, elemsize, idr_elem)
-IDR *idrs;				/* The serializing stream */
-char *array;			/* Pointer on the base of the array */
-int size;				/* Fixed size of the array */
-int elemsize;			/* Size of each item */
-bool_t (*idr_elem)();	/* How to encode each item */
+rt_public bool_t idr_vector(IDR *idrs, char *array, int size, int elemsize, bool_t (*idr_elem) (/* ??? */))
+          				/* The serializing stream */
+            			/* Pointer on the base of the array */
+         				/* Fixed size of the array */
+             			/* Size of each item */
+                     	/* How to encode each item */
 {
 	/* Encode a fixed size array. The parameter array must point (when decoding)
 	 * to a preallocated array, if not a statically allocated one, because IDR

@@ -14,9 +14,10 @@
 
 #include "config.h"
 #include "portable.h"
+#include "timehdr.h" 	/* %%ss moved */
 #include "select.h"
 #include <errno.h>
-#include "timehdr.h"
+/* #include "timehdr.h" */
 #include "bitmask.h"
 
 #define TMP_TIMEOUT	200000	/* Number of micro-seconds for temporary select */
@@ -70,9 +71,9 @@ extern int errno;						/* System call error status */
  * Setting the parameters.
  */
 
-rt_public int add_input(fd, call)
-int fd;					/* File descriptor on which select must be done */
-void (*call)();			/* Function to be called when input is available */
+rt_public int add_input(int fd, void (*call) (/* ??? */))
+       					/* File descriptor on which select must be done */
+               			/* Function to be called when input is available */
 {
 	/* Add an input condition on file descriptor 'fd', with associated call
 	 * back procedure and update internal informations.
@@ -102,8 +103,7 @@ void (*call)();			/* Function to be called when input is available */
 	return 0;			/* Ok status */
 }
 
-rt_public int tmp_input(fd)
-int fd;
+rt_public int tmp_input(int fd)
 {
 	/* Temporarily reset the selection for 'fd' in the temporary read mask. In
 	 * effect, we won't select for this file in the next TMP_TIMEOUT seconds.
@@ -125,9 +125,9 @@ int fd;
 	return 0;
 }
 
-rt_public void (*new_callback(fd, call))()
-int fd;					/* File descriptor on which select must be done */
-void (*call)();			/* New function to be called when input is available */
+rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
+       					/* File descriptor on which select must be done */
+               			/* New function to be called when input is available */
 {
 	/* Change the call back associated with the file descriptor and return the
 	 * old call back. If no input was associated with that file descriptor,
@@ -154,8 +154,8 @@ void (*call)();			/* New function to be called when input is available */
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-rt_public void (*rem_input(fd))()
-int fd;					/* File descriptor on which no select is to be done */
+rt_public void (*rem_input(int fd))(void)
+       					/* File descriptor on which no select is to be done */
 {
 	/* This function removes the input and associated callback for 'fd' and
 	 * returns the old callback value.
@@ -195,7 +195,7 @@ int fd;					/* File descriptor on which no select is to be done */
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-rt_public int has_input(fd)
+rt_public int has_input(int fd)
 {
 	/* Returns 1 if the associated 'fd' has an input callback recorded, 0 if
 	 * the file is not selected, and -1 in case of error.
@@ -216,7 +216,7 @@ rt_public int has_input(fd)
  * Description of errors.
  */
 
-rt_public char *s_strerror()
+rt_public char *s_strerror(void)
 {
 	/* Return a description of the last error, as described by 's_errno' */
 
@@ -226,7 +226,7 @@ rt_public char *s_strerror()
 	return s_errlist[s_errno];				/* English description */
 }
 
-rt_public char *s_strname()
+rt_public char *s_strname(void)
 {
 	/* Return the symbolic name of the last error, as described by 's_errno' */
 
@@ -240,8 +240,7 @@ rt_public char *s_strname()
  * Altering the result from select
  */
 
-rt_public void clear_fd(f)
-int f;
+rt_public void clear_fd(int f)
 {
 	/* It could happen that while processing one file descriptor, we have to
 	 * read another one (e.g. in streams, when we select on both the socket
@@ -264,8 +263,7 @@ int f;
  * Perform select system call.
  */
 
-rt_public int do_select(timeout)
-struct timeval *timeout;
+rt_public int do_select(struct timeval *timeout)
 {
 	/* Finally, this runs the select call with the computed read mask, with the
 	 * specified timeout. The return value is simply the propagated status we

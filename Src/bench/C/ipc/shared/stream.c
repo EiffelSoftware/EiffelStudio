@@ -21,16 +21,14 @@
 
 #define MAX_FILE_DESC	64		/* To be Configured--FIXME */
 
-extern Malloc_t malloc();
+extern Malloc_t malloc(register unsigned int nbytes); /* %%ss complete type */
 
 /* All the recorded streams are recorded in an array, which makes it possible
  * to map an file descriptor to its associated stream structure.
  */
 rt_public STREAM *stream_by_fd[MAX_FILE_DESC];
 
-rt_public STREAM *new_stream(read_fd, write_fd)
-int read_fd;
-int write_fd;
+rt_public STREAM *new_stream(int read_fd, int write_fd)
 {
 	/* Records the new stream and returns a pointer to a freshly allocated
 	 * stream structure. A null pointer is returned in case of error.
@@ -51,8 +49,7 @@ int write_fd;
 	return sp;			/* Associated stream structure */
 }
 
-rt_public void close_stream(sp)
-STREAM *sp;
+rt_public void close_stream(STREAM *sp)
 {
 	/* Close the stream connection */
 

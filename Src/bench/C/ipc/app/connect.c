@@ -52,9 +52,9 @@ rt_private struct sockaddr_un peeraddr_un;	/* For peer socket address */
 rt_private char spath[MAXPATH];	/* The named socket location */
 
 extern int errno;
-extern char *getenv();
+extern char *getenv(const char *);
 
-rt_private void compute_sock_name()
+rt_private void compute_sock_name(void)
 {
 	char *name;
 
@@ -66,7 +66,7 @@ rt_private void compute_sock_name()
 	strncpy(spath, name, MAXPATH - 1);
 }
 
-rt_public void connect_daemon()
+rt_public void connect_daemon(void)
 {
 	/* Connect to daemon */
 

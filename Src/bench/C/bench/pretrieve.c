@@ -22,9 +22,7 @@
 #include <io.h>
 #endif
 
-char *partial_retrieve(f_desc, position, nb_obj)
-EIF_INTEGER f_desc;
-long position, nb_obj;
+char *partial_retrieve(EIF_INTEGER f_desc, long int position, long int nb_obj)
 {
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
@@ -45,9 +43,7 @@ long position, nb_obj;
 	return result;
 }
 
-char *retrieve_all(f_desc, position)
-EIF_INTEGER f_desc;
-long position;
+char *retrieve_all(EIF_INTEGER f_desc, long int position)
 {
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */

@@ -44,13 +44,13 @@ static char *formals[MAX_GENERICS];			/* Array of formals: Shared Eiffel instanc
 									 * of class FORMAL_AS.
 									 */
 
-static int is_free();
+static int is_free(char *s);
 
 /*
  * Definitions
  */
 
-void eif_init()
+void eif_init(void)
 {
 	/* Initialization of the Eiffel-yacc interface: must be done
 	 * after calling feature `init' on instance of YACC_INIT.
@@ -61,7 +61,7 @@ void eif_init()
 
 	/* Allocation of an Eiffel ID */
 	id_string = create_node(ID_AS);
-	id_string = eif_freeze(&id_string);	/* Object shouldn't move */
+	id_string = eif_freeze((EIF_OBJ) (&id_string));	/* Object shouldn't move */
 
 	/* Initialization of the buffer with Eiffel routine 'Create' of
 	 * class ID_AS.
@@ -72,25 +72,23 @@ void eif_init()
 	for(i=0; i<MAX_GENERICS; i++) {
 		int_arg[0] = i + 1;
 		formal = create_node(FORMAL_AS);
-		formal = eif_freeze(&formal);	/* Object shouldn't move */
+		formal = eif_freeze((EIF_OBJ) (&formal));	/* Object shouldn't move */
 		(*init_array[FORMAL_AS])(formal);
 	}
 
 }
 
-char *c_parse(f,filename)
-FILE *f;
-char *filename;
+char *c_parse(FILE *f, char *filename)
 {
 	/* Parse Eiffel source file named `filename'.
 	 * Return root node fo the corresponding abstract syntax tree
 	 */
 
 	extern FILE *yyin;					/* Yacc source file pointer */
-	extern int yyparse();				/* Yacc parsing */
+	extern int yyparse(void);				/* Yacc parsing */
 	extern int yylineno;				/* Lex line number */
 	extern char *yacc_file_name;		/* Eiffel file name */
-	extern void reset_eiffel_lex_parser();
+	extern void reset_eiffel_lex_parser(void);
 #ifdef YYDEBUG
 	extern int yydebug;
 #endif
@@ -150,8 +148,7 @@ char *filename;
 	return rn_ast;
 }
 
-void c_get_set_put(put)
-fnptr put;
+void c_get_set_put(fnptr put)
 {
 	/* Initialize pointer on feature `put' of class SUPPLIERS_AS. */
 
@@ -166,7 +163,7 @@ fnptr put;
  * creates instances fo FORMAL_AS with their `position' well calculated.
  */
 
-void generic_inc()
+void generic_inc(void)
 {
 	/* Increment the number of formal generic parameter found. */
 	generic_count++;
@@ -175,7 +172,7 @@ void generic_inc()
 /*
  * Default clause for an inspect instruction
  */
-char *inspect_else()
+char *inspect_else(void)
 {
 	/* Return an instruction list as default part of a
 	 * multi-branch instruction. This list cannot be empty. */
@@ -189,9 +186,7 @@ char *inspect_else()
 	return result;
 }
 
-char *create_generic(gen_name,constrained)
-char gen_name[];
-char *constrained;
+char *create_generic(char *gen_name, char *constrained)
 {
 	/* Return a formal generic parameter. */
 
@@ -229,11 +224,7 @@ char *constrained;
  * Creating Eiffel objects
  */
 
-char *create_class(cl_name, deferred, expanded, separate, indexes, generics, obsolete,
-parents, creators, features, invariant, cl_list, end_pos)
-char *cl_name, *obsolete, *indexes, *generics, *parents, *creators, *features, *invariant, *cl_list;
-char deferred, expanded, separate;
-int end_pos;
+char *create_class(char *cl_name, char deferred, char expanded, char separate, char *indexes, char *generics, char *obsolete, char *parents, char *creators, char *features, char *invariant, char *cl_list, int end_pos)
 {
 	/* Create an instance of CLASS_AS */
 	
@@ -262,8 +253,7 @@ int end_pos;
 	return result;
 }
 
-char *create_id(s)
-char s[];
+char *create_id(char *s)
 {
 	/* Create an instance of ID_AS with string `s' and test
 	 * the hash table where all the different ids are stored in
@@ -292,8 +282,7 @@ char s[];
 	return result;
 }
 
-char *create_type_class(id, generics)
-char *generics, *id;
+char *create_type_class(char *id, char *generics)
 {
 	/* Create a class type. Take care of formal generics. */
 
@@ -362,34 +351,26 @@ printf("Generic #%d recognized\n", i);
 	/* NOTREACHED */
 }
 
-char *create_fclause_as(clients, feature_list, start_pos)
-char *clients, *feature_list;
-int start_pos;
+char *create_fclause_as(char *clients, char *feature_list, int start_pos)
 {
 	int_arg[0] = start_pos;
 	return create_node2(FEATURE_CLAUSE_AS,clients,feature_list);
 }
 
-char *create_feature_as(names, declaration, start_pos, end_pos)
-char *names, *declaration;
-int start_pos, end_pos;
+char *create_feature_as(char *names, char *declaration, int start_pos, int end_pos)
 {
 	int_arg[0] = start_pos;
 	int_arg[1] = end_pos;
 	return create_node2(FEATURE_AS,names,declaration);
 }
 
-char *create_routine_as(obsolete, start_pos, precs, locals, body, posts, rescue)
-char *obsolete;
-int start_pos;
-char *precs, *locals, *body, *posts, *rescue;
+char *create_routine_as(char *obsolete, int start_pos, char *precs, char *locals, char *body, char *posts, char *rescue)
 {
 	int_arg[0] = start_pos;
 	return create_node6(ROUTINE_AS,obsolete,precs,locals,body,posts,rescue);
 }
 
-char *create_exp_class_type(id, generics)
-char *id, *generics;
+char *create_exp_class_type(char *id, char *generics)
 {
 	/* Create an expanded class type. Update supplier list `suppliers'. */
 
@@ -399,8 +380,7 @@ char *id, *generics;
 	return create_node2(EXP_TYPE_AS,id,generics);
 }
 
-char *create_separate_class_type(id, generics)
-char *id, *generics;
+char *create_separate_class_type(char *id, char *generics)
 {
 	/* Create a separate class type. Update supplier list `suppliers'. */
 
@@ -410,9 +390,7 @@ char *id, *generics;
 	return create_node2(SEPARATE_TYPE_AS,id,generics);
 }
 
-char *create_int(an_int, sign)
-char an_int[];
-int sign;
+char *create_int(char *an_int, int sign)
 {
 	/* Return pointer on Eiffel instance of INTEGER_AS */
 	long value;
@@ -432,9 +410,7 @@ int sign;
 	return result;
 }
 
-char *create_real(a_real, sign)
-char a_real[];
-int sign;
+char *create_real(char *a_real, int sign)
 {
 	/* Return a pointer on an Eiffel instance of REAL_AS. */
  
@@ -453,8 +429,7 @@ int sign;
 	return result;
 }
 
-char *create_char(a_char)
-char a_char[];
+char *create_char(char *a_char)
 {
 	/* Return a pointer on an Eiffel instance of CHAR_AS. */
 	char *result;
@@ -466,8 +441,7 @@ char a_char[];
 	return result;
 }
 
-char *create_bool(b)
-int b;
+char *create_bool(int b)
 {
 	/* Return an Eiffel instance of BOOL_AS. */
 	char *result;
@@ -482,18 +456,14 @@ int b;
 	return result;
 }
 
-char *create_string(s)
-char s[];
+char *create_string(char *s)
 {
 	/* Return pointer on Eiffel instance of STRING_AS */
 
 	return create_node1(STRING_AS, RTMS(s));
 }
 
-char *create_feature_name(dyn_type,name,is_frozen)
-int dyn_type;
-char *name;
-char is_frozen;
+char *create_feature_name(int dyn_type, char *name, char is_frozen)
 {
 	/* Create an instance descendant of FEATURE_NAME */
 
@@ -511,15 +481,14 @@ char is_frozen;
  * Prefix/Infix operator analysis primitives
  */
 
-rt_public int is_infix(s)
-char *s;
+rt_public int is_infix(char *s)
 {
 	/* Is `s' a valid infix operator ? */
 
 	char *str;
 	char c;
 	int i, length;
-	extern char *std_infix();	/* Hash table query */
+	extern char *std_infix(register char *str, register unsigned int len);	/* Hash table query */
 
 	/*
 	 * Convert s to lower before comparing it to the standard
@@ -548,15 +517,14 @@ char *s;
 	}
 }
 
-rt_public int is_prefix(s)
-char *s;
+rt_public int is_prefix(char *s)
 {
 	/* Is `s' a valid prefix operator ? */
 
 	char *str;
 	char c;
 	int i, length;
-	extern char *std_prefix();	/* Hash table query */
+	extern char *std_prefix(register char *str, register unsigned int len);	/* Hash table query */
 
 	/*
 	 * Convert s to lower before comparing it to the standard
@@ -586,8 +554,7 @@ char *s;
 }
 
 
-rt_private int is_free(s)
-char *s;
+rt_private int is_free(char *s)
 {
 	/* Is `s' a free operator ?
 	 * The first character needs to be one of: @, #, |, &

@@ -15,8 +15,8 @@
 
 extern int rqstcnt;				/* Request count (number of requests sent) */
 
-extern void arqsthandle();		/* General request handler */
-extern void stop_rqst();		/* Stop notification to workbench */
-extern void prt_init();			/* Initialize IDR filters */
+extern void arqsthandle(int s);		/* General request handler */
+extern void stop_rqst(int s);		/* Stop notification to workbench */
+extern void prt_init(void);			/* Initialize IDR filters */
 
 #endif

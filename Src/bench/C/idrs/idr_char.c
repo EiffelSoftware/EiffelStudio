@@ -20,9 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_char(idrs, cp)
-IDR *idrs;
-char *cp;
+rt_public bool_t idr_char(IDR *idrs, char *cp)
 {
 	/* Serialize a single byte */
 

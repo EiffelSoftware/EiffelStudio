@@ -71,7 +71,7 @@ rt_private void ist_write(char *object);
 rt_private void gst_write(char *object);
 rt_private void make_header(void);				/* Make header */
 rt_private void imake_header(void);				/* Make header */
-rt_private int store_buffer();		/* %%ss undefined */
+rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
@@ -405,7 +405,7 @@ rt_private void gst_write(char *object)
 
 	register2 union overhead *zone;
 	uint32 flags;
-	register1 uint32 nb_char;
+	/*register1 uint32 nb_char;*/ /* %%ss removed unused */
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -450,7 +450,7 @@ rt_private void ist_write(char *object)
 
 	register2 union overhead *zone;
 	uint32 flags;
-	register1 uint32 nb_char;
+	/* register1 uint32 nb_char;*/ /* %%ss removed unused */
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -563,7 +563,7 @@ rt_private void gen_object_write(char *object)
 					break;
 				case SK_BIT:
 					{
-						int q;
+						/* int q;*/ /* %%ss removed unused */
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
 						buffer_write((char *)(&(HEADER(bptr)->ov_flags)), sizeof(uint32));
 						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));

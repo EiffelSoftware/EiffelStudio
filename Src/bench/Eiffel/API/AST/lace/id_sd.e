@@ -22,7 +22,7 @@ inherit
 			set as string_set
 		end
 
-creation {ROOT_SD, ID_SD, YACC_LACE, D_PRECOMPILED_SD}
+creation {AST_LACE, YACC_LACE}
 
 	make
 

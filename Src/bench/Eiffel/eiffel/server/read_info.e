@@ -6,7 +6,7 @@ inherit
 
 	COMPILER_EXPORTER
 	
-feature 
+feature -- Access
 
 	offset: INTEGER;
 			-- Offset in file
@@ -17,16 +17,7 @@ feature
 	object_count: INTEGER;
 			-- Number of objects to retrieve
 
-	trace is
-		do
-			io.error.putstring ("READ_INFO:%NOffset: ");
-			io.error.putint (offset);
-			io.error.putstring ("%NClass_id: ");
-			class_id.trace;
-			io.error.putstring ("%Nobject_count: ");
-			io.error.putint (object_count);
-			io.error.new_line;
-		end;
+feature -- Update
 
 	set_offset (i: INTEGER) is
 			-- Assign `i' to `offset'.
@@ -44,6 +35,19 @@ feature
 			-- Assign `i' to `class_id'.
 		do
 			class_id := i;
+		end;
+
+feature -- Trace
+
+	trace is
+		do
+			io.error.putstring ("READ_INFO:%NOffset: ");
+			io.error.putint (offset);
+			io.error.putstring ("%NClass_id: ");
+			class_id.trace;
+			io.error.putstring ("%Nobject_count: ");
+			io.error.putint (object_count);
+			io.error.new_line;
 		end;
 
 end

@@ -147,7 +147,7 @@ end;
 		local
 			opened_file: SERVER_FILE;
 		do
-			if full then
+			if is_full then
 					-- Remove one opened file from cache
 				opened_file := item;
 				opened_file.close;

@@ -102,7 +102,7 @@ feature
 				Result := partial_retrieve
 					(server_file.descriptor, offset, info.object_count);
 					-- Insert it in the queue
-				if cache.full then
+				if cache.is_full then
 						-- If cache is full, oldest is removed
 					cache.remove;
 				end;

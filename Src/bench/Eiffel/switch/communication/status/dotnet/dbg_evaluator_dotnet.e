@@ -100,7 +100,17 @@ feature -- Access
 			else
 				Result := dmp
 			end
-		end		
+		end
+		
+	last_once_available: BOOLEAN is
+		do
+			Result := eifnet_debugger.last_once_available
+		end
+		
+	last_once_failed: BOOLEAN is
+		do
+			Result := eifnet_debugger.last_once_failed
+		end
 
 	dotnet_evaluate_once_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; 
 				params: LIST [DUMP_VALUE]): DUMP_VALUE is

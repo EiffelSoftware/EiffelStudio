@@ -135,7 +135,7 @@ feature -- IL generation
 
  					-- Generate expression
  				expr.generate_il
- 				if actual_type /= Void and then actual_type.is_basic then 
+ 				if actual_type /= Void and then actual_type.is_expanded then 
  						-- We generate a metamorphosed version of type.
  					expr.generate_il_metamorphose (actual_type, Void, True)
  				end

@@ -15,7 +15,9 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	path_name.c dle.c object_id.c
+	run_idr.c path_name.c dle.c object_id.c
+
+++SOURCES console.c option.c
 
 /*
  * The following files need a special treatment.
@@ -25,7 +27,7 @@ OTHER = main.c except.c
 /*
  * Files addedd only for workbench-type archive
  */
-WADD = debug.c interp.c option.c update.c wbench.c
+WADD = debug.c interp.c update.c wbench.c
 
 /*
  * File belonging to workbench archive but built externally (no source).
@@ -37,6 +39,8 @@ NETWORK = network.o
  * the normal run-time archive.
  */
 WSRC = \
+	console.c \
+	woption.c \
 |expand f!$(LSRC) $(OTHER)!
 	w!f \
 -expand \\
@@ -46,6 +50,7 @@ WSRC = \
  * and avoid eating its own tail..., when using ebench in workbench mode).
  */
 ESRC = \
+	console.c \
 |expand f!$(LSRC)!
 	w!f \
 -expand
@@ -57,6 +62,8 @@ ESRC = \
  * Object files for run-time archive
  */
 LOBJ = \
+	console.o \
+	option.o \
 |expand f!$(LSRC) $(OTHER)!
 	!f:\.c=.o \
 -expand \\
@@ -74,6 +81,7 @@ WOBJ = \
  * Object files for ebench archive
  */
 EOBJ = \
+	woption.o \
 |expand f!$(ESRC) $(WADD)!
 	!f:\.c=.o \
 -expand \\
@@ -125,7 +133,7 @@ LintTarget()
 
 >LN
 >RM
-|expand f!$(LSRC) $(OTHER)!
+|expand f!$(LSRC) $(OTHER) option.c!
 w!f: !f
 	$(RM) w!f
 	$(LN) !f w!f
@@ -134,8 +142,8 @@ remove::
 
 -expand
 
-|expand f!$(WSRC)!
-!f:\.c=.o: !f
+|expand f!option.c $(LSRC) $(OTHER)!
+w!f:\.c=.o: w!f
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 

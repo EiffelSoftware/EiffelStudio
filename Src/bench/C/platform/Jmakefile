@@ -3,11 +3,11 @@
  */
 
 ;# Files used to build the daemon
-SRC = names.c commands.c
+LSRC = names.c commands.c
 
 ;# Derived object file names
-OBJ = \
-|expand f!$(SRC)!
+LOBJ = \
+|expand f!$(LSRC)!
     !f:\.c=.o \
 -expand \\
 
@@ -18,6 +18,6 @@ LIBRUN = ../run-time
 DPFLAGS = -I$(TOP) -I$(LIBRUN)
 CFLAGS = $(DPFLAGS)
 
-NormalLibraryTarget(platform,$(SRC),$(OBJ))
+NormalLibraryTarget(platform,$(LSRC),$(LOBJ))
 DependTarget()
 LintTarget()

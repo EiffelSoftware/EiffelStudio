@@ -2,12 +2,14 @@
  * Jmakefile for IDR library
  */
 
-DPFLAGS = -I$(TOP)
++RUN_TIME=../run-time
+
+DPFLAGS = -I$(TOP) -I$(RUN_TIME)
 CFLAGS = $(DPFLAGS)
 
 LSRC = \
-	idr_float.c \
 	idr_double.c \
+	idr_float.c \
 	idr_array.c \
 	idr_char.c \
 	idr_getpos.c \

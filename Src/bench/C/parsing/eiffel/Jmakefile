@@ -1,15 +1,17 @@
+#include "../../Jmake_ise.rules"
+
 /*
  * Jmakefile for Eiffel C library
  */
 
-RUN_TIME = ../../run-time
-SHARED_CLIB = ../shared
++RUN_TIME = ../../run-time
++SHARED_CLIB = ../shared
 DPFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP)
 CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
 SRCS = eiffel_c.c eif_err.c encode.c pretrieve.c date.c keyword.c \
-	byte.c offset.c parser.y lexic.l infix.c prefix.c
+	byte.c offset.c parser.y lexic.c infix.c prefix.c
 
 /* The following file needs to be compiled both in workbench mode and in
  * final mode to get the correct macros definitions from the run-time.
@@ -65,7 +67,7 @@ local_clean:: remove
 
 NormalLibraryTarget(eiffel,$(LSRCS),$(OBJS))
 NormalLibraryTarget(weiffel,$(LSRCS),$(WOBJS))
-NormalParserTarget(libeiffel.a,lexic,parser)
+SpecialParserTarget_1(libeiffel.a,lexic,parser)
 DependTarget()
 
 /* Since keyword.c is produced via gperf, and that program is not installed

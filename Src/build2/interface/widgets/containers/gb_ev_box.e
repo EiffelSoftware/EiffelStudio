@@ -168,6 +168,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			temp_string: STRING
 			box_parent1, box_parent2: EV_BOX
 			child_object: GB_OBJECT
+			children: ARRAYED_LIST [GB_OBJECT]
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_item_expanded_string)
@@ -181,6 +182,10 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				check
 					string_matches: temp_string.count = first.count
 				end
+				children := object.children
+				check
+					children_consistent: children.count = first.count
+				end
 				from
 					first.start
 					second.start
@@ -193,10 +198,9 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					else
 						box_parent1.disable_item_expand (first.item)
 						box_parent2.disable_item_expand (second.item)
-
---| FIXME temporarily commented out to enable the Vision2 tour to compile.
---						child_object := Object_handler.object_from_display_widget (first.item)
---						child_object.disable_expanded_in_box
+						
+							-- Now flag the child object as non expanded.
+						children.i_th (first.index).disable_expanded_in_box
 					end
 					first.forth
 					second.forth

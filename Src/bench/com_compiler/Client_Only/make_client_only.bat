@@ -34,5 +34,6 @@ copy to_replace\*.* Clib\
 
 cd Clib
 call make_msc.bat
+nmake makefile_server.msc
 
 cd ..

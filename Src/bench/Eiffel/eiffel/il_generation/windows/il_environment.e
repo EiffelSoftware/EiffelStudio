@@ -66,9 +66,16 @@ feature -- Access
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
 				feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 			if p /= default_pointer then
-				key := reg.key_value (p, "sdkInstallRoot")
+				key := reg.key_value (p, "sdkInstallRootv1.1")
+				if key /= Void then
+					Result := key.string_value
+				else
+					key := reg.key_value (p, "sdkInstallRoot")
+					if key /= Void then
+						Result := key.string_value
+					end
+				end
 				reg.close_key (p)		
-				Result := key.string_value
 			end
 		end
 		

@@ -41,7 +41,7 @@ feature -- Access
 	type: TYPE_I is
 			-- Type of the prefixed feature
 		do
-			Result := access.type
+			Result := context.real_type (access.type)
 		end
 
 feature -- Settings
@@ -172,6 +172,7 @@ feature -- C code generation
 	print_register is
 			-- Print expression value
 		do
+			type.c_type.generate_cast (buffer)
 			generate_operator
 			expr.print_register
 		end

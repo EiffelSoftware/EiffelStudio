@@ -1,8 +1,5 @@
 #include "eif_setup.h"
 #include "eif_eiffel.h"
-#if VERSION < 43
-#include "version.h"
-#endif
 
 int main(int argc,char **argv,char **envp);
 void eiff_call (char *class_name, char *proc_name, EIF_OBJECT target);
@@ -196,11 +193,7 @@ void cecil_test() {
 	printf ("\tEiffel type id of STRING = %d\n", string_id);
 
 		/* Get the type id of class LINKED_LIST [STRING]. */
-#if VERSION < 43
-	linked_list_id = eif_generic_id("LINKED_LIST", string_id); 
-#else	/* `eif_generic_id' does not exist any longer in v4.3. */
 	linked_list_id = eif_type_id ("LINKED_LIST[STRING]");
-#endif	/* VERSION */
 	if (linked_list_id == EIF_NO_TYPE)
 		eif_panic ("No type id for LINKED_LIST[STRING]");
    	printf ("\tEiffel type id of LINKED_LIST [STRING] = %d\n", linked_list_id);

@@ -75,7 +75,7 @@ feature -- Access
 		end
 
 	minimum: INTEGER is
-			-- Maximum position
+			-- Minimum position
 		do
 			Result := cwin_send_message_result (item,
 				Tbm_getrangemin, 0, 0)

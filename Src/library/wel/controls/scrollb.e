@@ -81,7 +81,7 @@ feature -- Access
 		end
 
 	minimum: INTEGER is
-			-- Maximum position
+			-- Minimum position
 		local
 			min, max: INTEGER
 		do

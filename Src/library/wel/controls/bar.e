@@ -23,7 +23,7 @@ feature -- Status report
 		end
 
 	minimum: INTEGER is
-			-- Maximum position
+			-- Minimum position
 		require
 			exists: exists
 		deferred

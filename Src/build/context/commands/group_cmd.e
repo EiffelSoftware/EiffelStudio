@@ -117,6 +117,7 @@ feature
 			undo_cut_old_contexts;
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
+			--context_catalog.remove_group (context.group_type);
 			mp.restore
 		end;
 
@@ -150,6 +151,7 @@ feature
 			undo_cut_old_contexts;
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
+			--context_catalog.add_new_group (context.group_type);
 			mp.restore
 		end;
 

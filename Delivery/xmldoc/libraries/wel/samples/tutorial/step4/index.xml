@@ -9,17 +9,17 @@
 	<paragraph>
 		<paragraph>This sample builds on the knowledge learnt in the previous tutorials (
 			<link>
-				<url>/libraries/wel/samples/tutorial/step1/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step1/index.xml</url>
 				<label>1</label>
 			</link>, 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step2/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step2/index.xml</url>
 				<label>2</label>
 			</link> and 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step3/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step3/index.xml</url>
 				<label>3</label>
-			</link>) and again demonstrates the use of a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.html</url><label>WEL_CLIENT_DC</label></link>. 
+			</link>) and again demonstrates the use of a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.xml</url><label>WEL_CLIENT_DC</label></link>. 
 		</paragraph>
 		<image> 
 			<url>step4.png</url> 
@@ -33,17 +33,17 @@
 		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client area of the window. Pressing the right mouse button within the window will clear the client area of the window. 
+		</heading> After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client area of the window. Pressing the right mouse button within the window will clear the client area of the window. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>This system is an improvement over tutorial 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step3/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step3/index.xml</url>
 				<label>step3</label>
 			</link> and only uses WEL techniques demonstrated in previous 
 			<link>
-				<url>/libraries/wel/samples/tutorial/index.html</url>
+				<url>/libraries/wel/samples/tutorial/index.xml</url>
 				<label>tutorials</label>
 			</link> to allow you to draw on the client DC of the window. 
 		</paragraph>

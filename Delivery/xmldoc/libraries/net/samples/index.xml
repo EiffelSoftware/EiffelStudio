@@ -10,31 +10,31 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>10_advanced/index.html</url>
+					<url>10_advanced/index.xml</url>
 					<label>Advanced</label>
 				</link>: for Unix Operating            systems.
 			</item>
 			<item>
 				<link>
-					<url>20_polling/index.html</url>
+					<url>20_polling/index.xml</url>
 					<label>Polling</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>30_predef/index.html</url>
+					<url>30_predef/index.xml</url>
 					<label>Predef</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>40_same_mach/index.html</url>
+					<url>40_same_mach/index.xml</url>
 					<label>Same mach</label>
 				</link>: for Unix            Operating systems.
 			</item>
 			<item>
 				<link>
-					<url>50_two_mach/index.html</url>
+					<url>50_two_mach/index.xml</url>
 					<label>Two mach</label>
 				</link>
 			</item>

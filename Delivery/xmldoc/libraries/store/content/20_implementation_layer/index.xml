@@ -3,10 +3,10 @@
 	<paragraph>
 		<paragraph>Each interface class has an implementation counterpart that implements specific DBMS handling. The class prefix indicates clearly its layer, for instance:</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link> is the interface to perform a database selection query.</item>
-			<item><link><url>/libraries/store/reference/dbms/support/DATABASE_SELECTION_flatshort.html</url><label>DATABASE_SELECTION</label></link> [<link><url>/libraries/store/reference/dbms/support/DATABASE_flatshort.html</url><label>DATABASE</label></link>] is its implementation. </item>
+			<item><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> is the interface to perform a database selection query.</item>
+			<item><link><url>/libraries/store/reference/dbms/support/DATABASE_SELECTION_flatshort.xml</url><label>DATABASE_SELECTION</label></link> [<link><url>/libraries/store/reference/dbms/support/DATABASE_flatshort.xml</url><label>DATABASE</label></link>] is its implementation. </item>
 		</list>
-		<paragraph>The abstract <link><url>/libraries/store/reference/dbms/support/DATABASE_flatshort.html</url><label>DATABASE</label></link> class represents a DBMS, i.e. it is the Eiffel-side database call interface. It is inherited for instance by the instantiable <code><class_name>ORACLE</class_name></code> and <code><class_name>ODBC</class_name></code> classes.</paragraph>
+		<paragraph>The abstract <link><url>/libraries/store/reference/dbms/support/DATABASE_flatshort.xml</url><label>DATABASE</label></link> class represents a DBMS, i.e. it is the Eiffel-side database call interface. It is inherited for instance by the instantiable <code><class_name>ORACLE</class_name></code> and <code><class_name>ODBC</class_name></code> classes.</paragraph>
 		<paragraph>EiffelStore enables to link common interface objects with database-specific implementation objects using a 
 			<bold>handle</bold>. This handle also enables to switch between different databases.
 		</paragraph>

@@ -9,14 +9,14 @@
 	<paragraph>
 		<paragraph>  Pick and drop is a mechanism which allows data to be transported from a 
 			<bold>source</bold> object to a 
-			<bold>target</bold>. Any Vision2 object inheriting  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.html</url><label>EV_PICK_AND_DROPABLE</label></link>  can be used to transport or receive data. 
+			<bold>target</bold>. Any Vision2 object inheriting  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.xml</url><label>EV_PICK_AND_DROPABLE</label></link>  can be used to transport or receive data. 
 		</paragraph>
 		<heading>
 			<size>2</size>A simple pick and drop example
 		</heading>
 		<paragraph>  Two necessary components for a pick and drop transport are a 
 			<bold>source</bold> and a 
-			<bold>target</bold>, both of which must conform to  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.html</url><label>EV_PICK_AND_DROPABLE</label></link>. The data that is to be transported is known as a 
+			<bold>target</bold>, both of which must conform to  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.xml</url><label>EV_PICK_AND_DROPABLE</label></link>. The data that is to be transported is known as a 
 			<bold>pebble</bold>.
 		</paragraph>
 		<paragraph>  The following steps need to be undertaken to set up a simple pick and drop:  
@@ -37,7 +37,7 @@
 </code_block>
 			<paragraph>  As print takes an argument of type  
 				<link>
-					<url>.../../reference/kernel/STRING_chart.html</url>
+					<url>.../../reference/kernel/STRING_chart.xml</url>
 					<label>STRING</label>
 				</link>, button2 becomes a  valid target for the pebble contained in button1. Right clicking  the mouse pointer over the 
 				<bold>source</bold> will start the transport, and right clicking  with the mouse pointer over a valid 

@@ -6,7 +6,7 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph> A <link><url>../../reference/controls/WEL_TOOLTIP_chart.html</url><label>WEL_TOOLTIP</label></link> is an encapsulation of the Win32 tooltip control, and controls pop-up windows which display text. Each tooltip may control multiple pop-up windows, which are added to the tooltip using <code><feature_name>add_tool</feature_name></code>.   
+	<paragraph> A <link><url>../../reference/controls/WEL_TOOLTIP_chart.xml</url><label>WEL_TOOLTIP</label></link> is an encapsulation of the Win32 tooltip control, and controls pop-up windows which display text. Each tooltip may control multiple pop-up windows, which are added to the tooltip using <code><feature_name>add_tool</feature_name></code>.   
 		<heading>
 			<size>2</size>Appearance
 		</heading>

@@ -7,11 +7,11 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A <link><url>../../reference/controls/WEL_GROUP_BOX_chart.html</url><label>WEL_GROUP_BOX</label></link> is used to enclose other  controls, and certain controls such as a 
+		<paragraph>  A <link><url>../../reference/controls/WEL_GROUP_BOX_chart.xml</url><label>WEL_GROUP_BOX</label></link> is used to enclose other  controls, and certain controls such as a 
 			<link>
 				<url>/libraries/wel/content/controls/wel_radio_button.xml</url>
 				<label>WEL_RADIO_BUTTON</label>
-			</link> have special  behaviour when parented in a <link><url>../../reference/controls/WEL_GROUP_BOX_chart.html</url><label>WEL_GROUP_BOX</label></link>. 
+			</link> have special  behaviour when parented in a <link><url>../../reference/controls/WEL_GROUP_BOX_chart.xml</url><label>WEL_GROUP_BOX</label></link>. 
 		</paragraph>
 		<heading>
 			<size>2</size>Appearance

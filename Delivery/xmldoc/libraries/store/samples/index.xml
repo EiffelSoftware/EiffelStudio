@@ -8,19 +8,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>10_esql/index.html</url>
+					<url>10_esql/index.xml</url>
 					<label>esql</label>
 				</link>: A command line SQL parser: very useful to test your Database connection!
 			</item>
 			<item>
 				<link>
-					<url>20_select/index.html</url>
+					<url>20_select/index.xml</url>
 					<label>select</label>
 				</link>: A basic example to            perform smart database queries.
 			</item>
 			<item>
 				<link>
-					<url>30_insert/index.html</url>
+					<url>30_insert/index.xml</url>
 					<label>insert</label>
 				</link>: A basic example to easily insert data in your database.
 			</item>

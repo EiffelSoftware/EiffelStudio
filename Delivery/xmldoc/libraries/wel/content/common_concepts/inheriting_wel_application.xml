@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  For most WEL applications that you write, you will need to inherit <link><url>../../reference/support/WEL_APPLICATION_chart.html</url><label>WEL_APPLICATION</label></link>. </paragraph>
+		<paragraph>  For most WEL applications that you write, you will need to inherit <link><url>../../reference/support/WEL_APPLICATION_chart.xml</url><label>WEL_APPLICATION</label></link>. </paragraph>
 		<note>
 			<bold>Note</bold>. See 
 			<link>

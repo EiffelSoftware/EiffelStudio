@@ -30,15 +30,15 @@
 		</list>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the sample, you should see a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the 
+		</heading> After launching the sample, you should see a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the 
 		<link>
-			<url>/libraries/wel/reference/controls/wel_push_button_chart.html</url>
+			<url>/libraries/wel/reference/controls/wel_push_button_chart.xml</url>
 			<label>WEL_PUSH_BUTTON</label>
 		</link> marked "Clear" will clear the client area of the window. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>A <link><url>../../reference/gdi/WEL_CLIENT_DC_chart.html</url><label>WEL_CLIENT_DC</label></link> is used to display output in the client area of the window during the execution of <code><feature_name>on_left_button_down</feature_name></code> which has been redefined in <code><class_name>MAIN_WINDOW</class_name></code>.</paragraph>
+		<paragraph>A <link><url>../../reference/gdi/WEL_CLIENT_DC_chart.xml</url><label>WEL_CLIENT_DC</label></link> is used to display output in the client area of the window during the execution of <code><feature_name>on_left_button_down</feature_name></code> which has been redefined in <code><class_name>MAIN_WINDOW</class_name></code>.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>XY_DEMO</class_name></code></item>
@@ -49,12 +49,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/samples/tutorial/step3/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step3/index.xml</url>
 				<label>tutorial_step3</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/content/controls/wel_push_button.html</url>
+				<url>/libraries/wel/content/controls/wel_push_button.xml</url>
 				<label>WEL_PUSH_BUTTON</label>
 			</link>
 			<line_break/>

@@ -39,22 +39,22 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/EV_SENSITIVE_chart.html</url>
+						<url>../../reference/interface/properties/EV_SENSITIVE_chart.xml</url>
 						<label>EV_SENSITIVE</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_SENSITIVE_chart.html</url><label>EV_SENSITIVE</label></link>, it can be   made to ignore events.
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_SENSITIVE_chart.xml</url><label>EV_SENSITIVE</label></link>, it can be   made to ignore events.
 							<line_break/>   Use <code><feature_name>disable_sensitive</feature_name></code> to   disable event handling, and <code><feature_name>enable_sensitive</feature_name></code> to restore event handling.
 						</item>
 					</list>
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/EV_COLORIZABLE_chart.html</url>
+						<url>../../reference/interface/properties/EV_COLORIZABLE_chart.xml</url>
 						<label>EV_COLORIZABLE</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_COLORIZABLE_chart.html</url><label>EV_COLORIZABLE</label></link> it has facilites   for modifying its foreground and background colors.
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_COLORIZABLE_chart.xml</url><label>EV_COLORIZABLE</label></link> it has facilites   for modifying its foreground and background colors.
 							<line_break/>   Use <code><feature_name>set_foreground_color</feature_name></code> to set the <code><feature_name>foreground_color</feature_name></code> and   <code><feature_name>set_background_color</feature_name></code> to set the <code><feature_name>background_color</feature_name></code>.
 							<line_break/>   Use <code><feature_name>set_default_colors</feature_name></code> to restore the colors to their defaults.
 						</item>
@@ -62,20 +62,20 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/EV_HELP_CONTEXTABLE_chart.html</url>
+						<url>../../reference/interface/properties/EV_HELP_CONTEXTABLE_chart.xml</url>
 						<label>EV_HELP_CONTEXTABLE</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_HELP_CONTEXTABLE_chart.html</url><label>EV_HELP_CONTEXTABLE</label></link>,  facilities are provided for associating help to the component when F1 or Shift F1 is pressed.</item>
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_HELP_CONTEXTABLE_chart.xml</url><label>EV_HELP_CONTEXTABLE</label></link>,  facilities are provided for associating help to the component when F1 or Shift F1 is pressed.</item>
 					</list>
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/EV_POSITIONED_chart.html</url>
+						<url>../../reference/interface/properties/EV_POSITIONED_chart.xml</url>
 						<label>EV_POSITIONED</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_POSITIONED_chart.html</url><label>EV_POSITIONED</label></link> it is possible to query   its current position, size and minimum size.
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_POSITIONED_chart.xml</url><label>EV_POSITIONED</label></link> it is possible to query   its current position, size and minimum size.
 							<line_break/>   Use <code><class_name>x_position</class_name></code> and   <code><class_name>y_position</class_name></code> to find its position relative to its parent.
 							<line_break/>   Use <code><class_name>width</class_name></code> and <code><class_name>height</class_name></code> to find its size.
 							<line_break/>   Use <code><class_name>minimum_width</class_name></code> and   <code><class_name>minimum_height</class_name></code> to find its size.
@@ -84,28 +84,28 @@
 				</item>
 				<item>
 					<link>
-						<url>../../reference/interface/properties/EV_CONTAINABLE_chart.html</url>
+						<url>../../reference/interface/properties/EV_CONTAINABLE_chart.xml</url>
 						<label>EV_CONTAINABLE</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_CONTAINABLE_chart.html</url><label>EV_CONTAINABLE</label></link>   it is able question its parent.   Use parent to query the current parent.</item>
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/EV_CONTAINABLE_chart.xml</url><label>EV_CONTAINABLE</label></link>   it is able question its parent.   Use parent to query the current parent.</item>
 					</list>
 				</item>
 			</list>
 		</paragraph>
 		<note>
-			<bold>Note:</bold> <link><url>../../reference/interface/properties/EV_CONTAINABLE_chart.html</url><label>EV_CONTAINABLE</label></link> has no features  for setting the parent. In Vision2, a child has no features for setting its parent, while a parent such as ev_container  contains routines for adding children (one example is <code><feature_name>extend</feature_name></code>). 
+			<bold>Note:</bold> <link><url>../../reference/interface/properties/EV_CONTAINABLE_chart.xml</url><label>EV_CONTAINABLE</label></link> has no features  for setting the parent. In Vision2, a child has no features for setting its parent, while a parent such as ev_container  contains routines for adding children (one example is <code><feature_name>extend</feature_name></code>). 
 		</note>
 		<paragraph>  The following properties are also used within Vision2:  
 			<list ordered="false">
-				<item><link><url>../../reference/interface/properties/EV_DESELECTABLE_chart.html</url><label>EV_DESELECTABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_DRAWABLE_chart.html</url><label>EV_DRAWABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_FONTABLE_chart.html</url><label>EV_FONTABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_PIXMAPABLE_chart.html</url><label>EV_PIXMAPABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_POSITIONABLE_chart.html</url><label>EV_POSITIONABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_SELECTABLE_chart.html</url><label>EV_SELECTABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_TEXTABLE_chart.html</url><label>EV_TEXTABLE</label></link></item>
-				<item><link><url>../../reference/interface/properties/EV_TOOLTIPABLE_chart.html</url><label>EV_TOOLTIPABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_DESELECTABLE_chart.xml</url><label>EV_DESELECTABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_DRAWABLE_chart.xml</url><label>EV_DRAWABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_FONTABLE_chart.xml</url><label>EV_FONTABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_PIXMAPABLE_chart.xml</url><label>EV_PIXMAPABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_POSITIONABLE_chart.xml</url><label>EV_POSITIONABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_SELECTABLE_chart.xml</url><label>EV_SELECTABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_TEXTABLE_chart.xml</url><label>EV_TEXTABLE</label></link></item>
+				<item><link><url>../../reference/interface/properties/EV_TOOLTIPABLE_chart.xml</url><label>EV_TOOLTIPABLE</label></link></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

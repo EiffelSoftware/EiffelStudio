@@ -10,49 +10,49 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step1/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step1/index.xml</url>
 					<label>Step1</label>
 				</link> - A Basic WEL Application.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step2/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step2/index.xml</url>
 					<label>Step2</label>
 				</link> - Responding to an event.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step3/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step3/index.xml</url>
 					<label>Step3</label>
 				</link> - Displaying output on a WEL_CLIENT_DC.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step4/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step4/index.xml</url>
 					<label>Step4</label>
 				</link> - A very basic drawing program.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step5/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step5/index.xml</url>
 					<label>Step5</label>
 				</link> - Using a WEL_MODAL_DIALOG.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step6/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step6/index.xml</url>
 					<label>Step6</label>
 				</link> - Re-drawing a window by redefining on_paint.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step7/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step7/index.xml</url>
 					<label>Step7</label>
 				</link> - Adding menus.  
 			</item>
 			<item>
 				<link>
-					<url>/libraries/wel/samples/tutorial/step8/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step8/index.xml</url>
 					<label>Step8</label>
 				</link> - Using a WEL_OPEN_FILE_DIALOG and a WEL_SAVE_FILE_DIALOG.
 			</item>

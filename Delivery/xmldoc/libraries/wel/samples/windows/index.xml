@@ -35,7 +35,7 @@
 			<heading>
 				<size>2</size>Under the Hood
 			</heading>
-			<paragraph>The <code><class_name>ON_OFF_CONTROL</class_name></code> inherits <link><url>../../reference/windows/WEL_CONTROL_WINDOW_chart.html</url><label>WEL_CONTROL_WINDOW</label></link> and demonstrates how to build your controls. The classes <code><class_name>MODAL</class_name></code> and <code><class_name>MODELESS</class_name></code> inherit <link><url>../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> and <link><url>../../reference/windows/WEL_MODELESS_DIALOG_chart.html</url><label>WEL_MODELESS_DIALOG</label></link> respectively. </paragraph>
+			<paragraph>The <code><class_name>ON_OFF_CONTROL</class_name></code> inherits <link><url>../../reference/windows/WEL_CONTROL_WINDOW_chart.xml</url><label>WEL_CONTROL_WINDOW</label></link> and demonstrates how to build your controls. The classes <code><class_name>MODAL</class_name></code> and <code><class_name>MODELESS</class_name></code> inherit <link><url>../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and <link><url>../../reference/windows/WEL_MODELESS_DIALOG_chart.xml</url><label>WEL_MODELESS_DIALOG</label></link> respectively. </paragraph>
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
 					<item><code><class_name>APPLICATION_IDS</class_name></code></item>

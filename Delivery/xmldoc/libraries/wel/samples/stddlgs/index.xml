@@ -44,22 +44,22 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.html</url>
+					<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.xml</url>
 					<label>WEL_OPEN_FILE_DIALOG</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/stddlgs/wel_choose_font_dialog.html</url>
+					<url>/libraries/wel/content/stddlgs/wel_choose_font_dialog.xml</url>
 					<label>WEL_CHOOSE_FONT_DIALOG</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/stddlgs/wel_choose_color_dialog.html</url>
+					<url>/libraries/wel/content/stddlgs/wel_choose_color_dialog.xml</url>
 					<label>WEL_CHOOSE_COLOR_DIALOG</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/stddlgs/wel_print_dialog.html</url>
+					<url>/libraries/wel/content/stddlgs/wel_print_dialog.xml</url>
 					<label>WEL_PRINT_DIALOG</label>
 				</link>
 			</seealso>

@@ -9,9 +9,9 @@
 	<paragraph>
 		<paragraph>This sample builds on tutorial 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step6/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step6/index.xml</url>
 				<label>step 6</label>
-			</link>, and also demonstrates the use of a <link><url>../../../reference/support/WEL_MENU_chart.html</url><label>WEL_MENU</label></link>. The output is shown below: 
+			</link>, and also demonstrates the use of a <link><url>../../../reference/support/WEL_MENU_chart.xml</url><label>WEL_MENU</label></link>. The output is shown below: 
 		</paragraph>
 		<image> 
 			<url>step7.png</url> 
@@ -26,7 +26,7 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line" menu, will bring up a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> which allows you to change the thickness of the line that is drawn. If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. The other menu options on the "File" menu do nothing in this example. </paragraph>
+		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line" menu, will bring up a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> which allows you to change the thickness of the line that is drawn. If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. The other menu options on the "File" menu do nothing in this example. </paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>

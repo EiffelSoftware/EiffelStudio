@@ -9,15 +9,15 @@
 	<paragraph>
 		<paragraph>  The support cluster contains many classes providing useful facilities within the library. Many of the classes within this cluster are constant  classes, which are filled with constant values for specific contexts, generally indicated by their names. The following constant classes are available within this cluster:  
 			<list ordered="false">
-				<item><link><url>../../reference/interface/support/EV_DIALOG_CONSTANTS_chart.html</url><label>EV_DIALOG_CONSTANTS</label></link></item>
-				<item><link><url>../../reference/interface/support/EV_DRAWABLE_CONSTANTS_chart.html</url><label>EV_DRAWABLE_CONSTANTS</label></link></item>
-				<item><link><url>../../reference/interface/support/EV_FONT_CONSTANTS_chart.html</url><label>EV_FONT_CONSTANTS</label></link></item>
-				<item><link><url>../../reference/interface/support/EV_KEY_CONSTANTS_chart.html</url><label>EV_KEY_CONSTANTS</label></link></item>
-				<item><link><url>../../reference/interface/support/EV_POSTSCRIPT_PAGE_CONSTANTS_chart.html</url><label>EV_POSTSCRIPT_PAGE_CONSTANTS</label></link></item>
-			</list>  In a similar vein to constant classes, the two following classes are provided to provide support for  default <link><url>../../reference/interface/kernel/EV_COLOR_chart.html</url><label>EV_COLOR</label></link>'s  and <link><url>../../reference/interface/widgets/primitives/EV_PIXMAP_flatshort.html</url><label>EV_PIXMAP</label></link>'s.  
+				<item><link><url>../../reference/interface/support/EV_DIALOG_CONSTANTS_chart.xml</url><label>EV_DIALOG_CONSTANTS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_DRAWABLE_CONSTANTS_chart.xml</url><label>EV_DRAWABLE_CONSTANTS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_FONT_CONSTANTS_chart.xml</url><label>EV_FONT_CONSTANTS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_KEY_CONSTANTS_chart.xml</url><label>EV_KEY_CONSTANTS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_POSTSCRIPT_PAGE_CONSTANTS_chart.xml</url><label>EV_POSTSCRIPT_PAGE_CONSTANTS</label></link></item>
+			</list>  In a similar vein to constant classes, the two following classes are provided to provide support for  default <link><url>../../reference/interface/kernel/EV_COLOR_chart.xml</url><label>EV_COLOR</label></link>'s  and <link><url>../../reference/interface/widgets/primitives/EV_PIXMAP_flatshort.xml</url><label>EV_PIXMAP</label></link>'s.  
 			<list ordered="false">
-				<item><link><url>../../reference/interface/support/EV_STOCK_COLORS_chart.html</url><label>EV_STOCK_COLORS</label></link></item>
-				<item><link><url>../../reference/interface/support/EV_STOCK_PIXMAPS_chart.html</url><label>EV_STOCK_PIXMAPS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_STOCK_COLORS_chart.xml</url><label>EV_STOCK_COLORS</label></link></item>
+				<item><link><url>../../reference/interface/support/EV_STOCK_PIXMAPS_chart.xml</url><label>EV_STOCK_PIXMAPS</label></link></item>
 			</list>  Click 
 			<link>
 				<url>/libraries/vision2/reference/interface/support/index.xml</url>

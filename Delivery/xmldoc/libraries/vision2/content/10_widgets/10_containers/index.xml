@@ -7,15 +7,15 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  All Vision2 containers inherit <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.html</url><label>EV_CONTAINER</label></link></paragraph>
+		<paragraph>  All Vision2 containers inherit <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.xml</url><label>EV_CONTAINER</label></link></paragraph>
 		<heading>
 			<size>2</size>What is a container?
 		</heading>
-		<paragraph>  A container is a Vision2 widget that may contain other widgets. Some containers such as <link><url>../../../reference/interface/widgets/containers/EV_CELL_chart.html</url><label>EV_CELL</label></link>  may only hold one widget while containers such as <link><url>../../../reference/interface/widgets/containers/EV_BOX_chart.html</url><label>EV_BOX</label></link> may hold multiple widgets. As a container is  of type <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.html</url><label>EV_WIDGET</label></link>, this means that a container may be placed within a container.  A list of the classes held within the container cluster can be found 
+		<paragraph>  A container is a Vision2 widget that may contain other widgets. Some containers such as <link><url>../../../reference/interface/widgets/containers/EV_CELL_chart.xml</url><label>EV_CELL</label></link>  may only hold one widget while containers such as <link><url>../../../reference/interface/widgets/containers/EV_BOX_chart.xml</url><label>EV_BOX</label></link> may hold multiple widgets. As a container is  of type <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.xml</url><label>EV_WIDGET</label></link>, this means that a container may be placed within a container.  A list of the classes held within the container cluster can be found 
 			<link>
 				<url>../../../reference/interface/widgets/containers/index.xml</url>
 				<label>here</label>
-			</link>.  Windows inherit from <link><url>../../../reference/interface/widgets/containers/EV_CELL_chart.html</url><label>EV_CELL</label></link>  and are therefore classed as containers  also. 
+			</link>.  Windows inherit from <link><url>../../../reference/interface/widgets/containers/EV_CELL_chart.xml</url><label>EV_CELL</label></link>  and are therefore classed as containers  also. 
 		</paragraph>
 		<note>
 			<bold>Note: </bold>Containers may only contain other  widgets. Items may only be placed in certain primitives. For  example, an 
@@ -42,7 +42,7 @@
 				<item>The underlying structures used have been tried and tested for many years and their design has been proved to be robust and effective.</item>
 				<item>It provides powerful methods of querying the contents. In the original Vision library, you needed to keep reference to widgets as you could not query the contents of a container.</item>  
 			</list>
-			<paragraph>  For example, <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.html</url><label>EV_CONTAINER</label></link> inherits <code><class_name>BOX</class_name></code> and <code><class_name>COLLECTION</class_name></code>. Descendents of <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.html</url><label>EV_CONTAINER</label></link> such as <link><url>../../../reference/interface/widgets/containers/EV_BOX_chart.html</url><label>EV_BOX</label></link> may also inherit other structures from 
+			<paragraph>  For example, <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.xml</url><label>EV_CONTAINER</label></link> inherits <code><class_name>BOX</class_name></code> and <code><class_name>COLLECTION</class_name></code>. Descendents of <link><url>../../../reference/interface/widgets/containers/EV_CONTAINER_chart.xml</url><label>EV_CONTAINER</label></link> such as <link><url>../../../reference/interface/widgets/containers/EV_BOX_chart.xml</url><label>EV_BOX</label></link> may also inherit other structures from 
 				<link>
 					<url>/libraries/base/index.xml</url>
 					<label>Base</label>
@@ -100,10 +100,10 @@
 						</paragraph>
 						<heading>
 							<size>2</size>Sizing of containers
-						</heading>   As <link><url>../../reference/interface/widgets/containers/EV_CONTAINER_chart.html</url><label>EV_CONTAINER</label></link> is of type <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.html</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width,  set_minimum_height and set_minimum_size. It is important to remember that as a general rule,
+						</heading>   As <link><url>../../reference/interface/widgets/containers/EV_CONTAINER_chart.xml</url><label>EV_CONTAINER</label></link> is of type <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width,  set_minimum_height and set_minimum_size. It is important to remember that as a general rule,
 						<bold>the current size of a container is always at least the minimum size of all its contents.</bold>
 						<note>
-							<bold>Note: </bold>The exception to this is: <link><url>../../../reference/interface/widgets/containers/EV_FIXED_chart.html</url><label>EV_FIXED</label></link>, <link><url>../../../reference/interface/widgets/containers/EV_VIEWPORT_chart.html</url><label>EV_VIEWPORT</label></link> and <link><url>../../../reference/interface/widgets/containers/EV_SCROLLABLE_AREA_chart.html</url><label>EV_SCROLLABLE_AREA</label></link> which do actually allow their contents to be larger than their current size. 
+							<bold>Note: </bold>The exception to this is: <link><url>../../../reference/interface/widgets/containers/EV_FIXED_chart.xml</url><label>EV_FIXED</label></link>, <link><url>../../../reference/interface/widgets/containers/EV_VIEWPORT_chart.xml</url><label>EV_VIEWPORT</label></link> and <link><url>../../../reference/interface/widgets/containers/EV_SCROLLABLE_AREA_chart.xml</url><label>EV_SCROLLABLE_AREA</label></link> which do actually allow their contents to be larger than their current size. 
 							<line_break/>
 						</note>
 					</paragraph>

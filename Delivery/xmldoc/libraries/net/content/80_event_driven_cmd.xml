@@ -19,7 +19,7 @@
 		<paragraph>Class <code><class_name>COMMAND</class_name></code>
 			and related classes used to be in EiffelVision    but because of their generality were moved to [2], although this    occurred after the publication of [2].
 		</paragraph>
-		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of <link><url>/libraries/net/reference/polling/abstract/poll_command_chart.html</url><label>POLL_COMMAND</label></link>,    an heir of <code><class_name>COMMAND</class_name></code>.</paragraph>
+		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of <link><url>/libraries/net/reference/polling/abstract/poll_command_chart.xml</url><label>POLL_COMMAND</label></link>,    an heir of <code><class_name>COMMAND</class_name></code>.</paragraph>
 		<heading>
 			<size>3</size>9.2 Command classes
 		</heading>

@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  All Vision2 primitives inherit <link><url>../../reference/interface/widgets/primitives/EV_PRIMITIVE_chart.html</url><label>EV_PRIMITIVE</label></link>. </paragraph>
+		<paragraph>  All Vision2 primitives inherit <link><url>../../reference/interface/widgets/primitives/EV_PRIMITIVE_chart.xml</url><label>EV_PRIMITIVE</label></link>. </paragraph>
 		<heading>
 			<size>2</size>What is a primitive?
 		</heading> A primitive is a Vision2 widget that may not contain other widgets. Primitives may be placed in 
@@ -18,7 +18,7 @@
 		<link>
 			<url>../index.xml</url>
 			<label>widget </label>
-		</link>may not contain any child widgets. Some examples of primitives are <link><url>../../reference/interface/widgets/primitives/EV_BUTTON_chart.html</url><label>EV_BUTTON</label></link> and <link><url>../../reference/interface/widgets/primitives/EV_LABEL_chart.html</url><label>EV_LABEL</label></link>. A list of all the classes in the primitives cluster may be found 
+		</link>may not contain any child widgets. Some examples of primitives are <link><url>../../reference/interface/widgets/primitives/EV_BUTTON_chart.xml</url><label>EV_BUTTON</label></link> and <link><url>../../reference/interface/widgets/primitives/EV_LABEL_chart.xml</url><label>EV_LABEL</label></link>. A list of all the classes in the primitives cluster may be found 
 		<link>
 			<url>/libraries/vision2/reference/interface/widgets/primitives/index.xml</url>
 			<label>here</label>
@@ -26,7 +26,7 @@
 		<heading>
 			<size>2</size>Features of a primitive
 		</heading>
-		<paragraph>  All primitives inherit from <link><url>../../../reference/interface/properties/EV_TOOLTIPABLE_chart.html</url><label>EV_TOOLTIPABLE</label></link> and therefore can have tooltips assigned to them. They all inherit many features from <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.html</url><label>EV_WIDGET</label></link>  Each descendent of <link><url>../../reference/interface/widgets/primitives/EV_PRIMITIVE_chart.html</url><label>EV_PRIMITIVE</label></link> will typically have many available features, specific to their type. For example,  <link><url>../../reference/interface/widgets/primitives/EV_SEPARATOR_chart.html</url><label>EV_SEPARATOR</label></link> has no extra features, but  <link><url>../../reference/interface/widgets/primitives/EV_LABEL_chart.html</url><label>EV_LABEL</label></link> has features for modifying the current font and also the text to de displayed. </paragraph>
+		<paragraph>  All primitives inherit from <link><url>../../../reference/interface/properties/EV_TOOLTIPABLE_chart.xml</url><label>EV_TOOLTIPABLE</label></link> and therefore can have tooltips assigned to them. They all inherit many features from <link><url>../../../reference/interface/widgets/EV_WIDGET_chart.xml</url><label>EV_WIDGET</label></link>  Each descendent of <link><url>../../reference/interface/widgets/primitives/EV_PRIMITIVE_chart.xml</url><label>EV_PRIMITIVE</label></link> will typically have many available features, specific to their type. For example,  <link><url>../../reference/interface/widgets/primitives/EV_SEPARATOR_chart.xml</url><label>EV_SEPARATOR</label></link> has no extra features, but  <link><url>../../reference/interface/widgets/primitives/EV_LABEL_chart.xml</url><label>EV_LABEL</label></link> has features for modifying the current font and also the text to de displayed. </paragraph>
 		<heading>
 			<size>2</size>Widgets as item holders
 		</heading>

@@ -35,7 +35,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>MAIN_DIALOG</class_name></code> inherits from <link><url>../../reference/windows/WEL_MAIN_DIALOG_chart.html</url><label>WEL_MAIN_DIALOG</label></link> and also <link><url></url><label>WEL_FONT_FAMILY_ENUMERATOR</label></link>.  <code><class_name>MAIN_DIALOG</class_name></code> implements action which was deferred from WEL_FONT_ENUMERATOR and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the <link><url>../../reference/controls/WEL_LIST_VIEW_chart.html</url><label>WEL_LIST_VIEW</label></link></paragraph>
+		<paragraph><code><class_name>MAIN_DIALOG</class_name></code> inherits from <link><url>../../reference/windows/WEL_MAIN_DIALOG_chart.xml</url><label>WEL_MAIN_DIALOG</label></link> and also <link><url></url><label>WEL_FONT_FAMILY_ENUMERATOR</label></link>.  <code><class_name>MAIN_DIALOG</class_name></code> implements action which was deferred from WEL_FONT_ENUMERATOR and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the <link><url>../../reference/controls/WEL_LIST_VIEW_chart.xml</url><label>WEL_LIST_VIEW</label></link></paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION_IDS</class_name></code></item>

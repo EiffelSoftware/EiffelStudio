@@ -15,9 +15,6 @@ inherit
             is_equal
 		end
 	COMPARABLE
-		undefine
---samik			is_equal
-		end;
 	CLICKABLE_AST
 		undefine
 			is_equal

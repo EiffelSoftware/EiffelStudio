@@ -175,6 +175,12 @@
 						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="Libraries\Base\Examples\introduction.html"></OBJECT>
 					</UL>
 				</UL>
+
+				<LI> <OBJECT type="text/sitemap"><param name="Name" value="Com"><param name="Local" value="Libraries\com\index.html"></OBJECT>
+				<UL>
+					<LI> <OBJECT type="text/sitemap"><param name="Name" value="Reference"><param name="Local" value="Libraries\com\Reference\index.html"></OBJECT>
+				</UL>
+
 				<LI> <OBJECT type="text/sitemap"><param name="Name" value="Eiffel2Java"></OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="Libraries\Eiffel2Java\introduction.html"></OBJECT>

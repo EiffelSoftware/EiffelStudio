@@ -296,8 +296,9 @@ feature -- Element change
 		do
 			-- if the widget had a parent, we remove it:
 			if parent_imp /= Void then
-				if (box_widget = default_pointer) then
-					-- the widget is not contained in a box.
+				if (vbox_widget = default_pointer) then
+					-- the widget is not contained in the boxes
+					-- `vbox_widget' and `hbox_widget'.
 					gtk_object_ref (widget)
 				end
 				parent_imp.remove_child (Current)
@@ -312,8 +313,9 @@ feature -- Element change
 				parent_imp ?= par_imp
 				par_imp.add_child (Current)
 				show
-				if (box_widget = default_pointer) then
-					-- the widget is not contained in a box.
+				if (vbox_widget = default_pointer) then
+					-- the widget is not contained in the boxes
+					-- `vbox_widget' and `hbox_widget'.
 					gtk_object_unref (widget)
 				end
 			end
@@ -331,8 +333,9 @@ feature -- Element change
 			-- Make `color' the new `background_color'.
 		do
 			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
-			if box_widget /= default_pointer then
-				c_gtk_widget_set_bg_color (box_widget, color.red, color.green, color.blue)
+			if (vbox_widget /= default_pointer and hbox_widget /= default_pointer) then
+				c_gtk_widget_set_bg_color (vbox_widget, color.red, color.green, color.blue)
+				c_gtk_widget_set_bg_color (hbox_widget, color.red, color.green, color.blue)
 			end
 		end
 
@@ -340,8 +343,9 @@ feature -- Element change
 			-- Make `color' the new `foreground_color'
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
-			if box_widget /= default_pointer then
-				c_gtk_widget_set_fg_color (box_widget, color.red, color.green, color.blue)
+			if (vbox_widget /= default_pointer and hbox_widget /= default_pointer) then
+				c_gtk_widget_set_fg_color (vbox_widget, color.red, color.green, color.blue)
+				c_gtk_widget_set_fg_color (hbox_widget, color.red, color.green, color.blue)
 			end
 		end
 	
@@ -813,16 +817,28 @@ feature -- Implementation
 	
 	widget: POINTER
                         -- pointer to the C structure representing this widget
-	box_widget: POINTER
+	vbox_widget: POINTER
                         -- pointer to the C structure representing the
-			-- box in which the widget will be in.
-			-- we need this vbox or hbox only to allow
-			-- vertical or horizontal resizing options
+			-- vbox in which the widget will be in.
+			-- we need this vbox only to allow
+			-- vertical resizing options
 
-	set_box_widget (box_wid: POINTER) is
-			-- sets `box_widget' to `box_wid'
+	hbox_widget: POINTER
+                        -- pointer to the C structure representing the
+			-- hbox in which the widget will be in.
+			-- we need this hbox only to allow
+			-- vertical resizing options
+
+	set_vbox_widget (box_wid: POINTER) is
+			-- sets `vbox_widget' to `box_wid'
 		do
-			box_widget := box_wid
+			vbox_widget := box_wid
+		end
+
+	set_hbox_widget (box_wid: POINTER) is
+			-- sets `hbox_widget' to `box_wid'
+		do
+			hbox_widget := box_wid
 		end
 
 feature -- Removal

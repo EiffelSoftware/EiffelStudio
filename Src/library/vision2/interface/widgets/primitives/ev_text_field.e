@@ -14,36 +14,37 @@ inherit
 
 	EV_TEXT_COMPONENT
 		redefine
-			make, implementation
+			make,
+			implementation
 		end
 
 	EV_BAR_ITEM
-		redefine
-			make, implementation
-		end
+--		redefine
+--			make,
+--			implementation
+--		end
+
 creation
-	
 	make
-	
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a text field with, `par' as
-                        -- parent
+	make (par: EV_CONTAINER) is
+			-- Create a text field with, `par' as
+			-- parent
 		do
 			!EV_TEXT_FIELD_IMP!implementation.make (par)
 			widget_make (par)
 		end
-	
 
 feature -- Event - command association
 	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
+	add_activate_command ( command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add 'command' to the list of commands to be
-			-- executed when the text field is activated
+			-- executed when the text field is activated, ie when
+			-- the user press the enter key.
 		require
+			exists: not destroyed
 			valid_command: command /= Void
 		do
 			implementation.add_activate_command ( command, 

@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
+		undefine
+			on_draw_menu_item_left_part
 		redefine
 			interface,
 			on_activate,
@@ -26,6 +28,8 @@ inherit
 		redefine
 			interface
 		end
+
+	EV_CHECKABLE_MENU_ITEM_IMP
 
 create
 	make
@@ -85,6 +89,12 @@ feature {NONE} -- Implementation
 		do
 			enable_select
 			Precursor
+		end
+
+	check_mark_bitmap_constant: INTEGER is
+			-- Constant coding for the check mark used in Current.
+		do
+			Result := Wel_drawing_constants.Dfcs_menubullet
 		end
 
 end -- class EV_RADIO_MENU_ITEM_IMP

@@ -897,29 +897,16 @@ rt_private int16 *wtype_array(int16 *target)
 rt_private char *wclass_name(void)
 {
 	/* Next class name. Create new string. */
-	/* Maximum length is hardwired to 256. */
-	char *np, name [258], c;
-	int cnt;
 
-	np = name;
-	cnt = 0;
+	short str_count;		/* String count */
+	char *str;			/* String to allocate */
 
-	do
-	{
-		wread(&c, 1);
-		*(np++) = c;
-		++cnt;
+	str_count = wshort();
+	SAFE_ALLOC(str, char, str_count + 1);
+	wread(str, str_count * sizeof(char));
+	str[str_count] = '\0';
 
-		if (cnt > 257)
-			eif_panic(MTC "class name longer than 256 characters");
-
-	} while (c);
-
-	SAFE_ALLOC(np, char, cnt);
-
-	memcpy (np,name,cnt*sizeof(char));
-
-	return np;
+	return str;
 }
 
 rt_private void write_long(char *where, EIF_INTEGER value)

@@ -650,8 +650,7 @@ static  void    read_byte_code ()
 static  void    analyze_parents ()
 
 {
-	short   dtype, gcount;
-	char    c;
+	short   dtype, gcount, class_name_count;
 
 	printf ("Analyzing Parents\n");
 
@@ -674,13 +673,12 @@ static  void    analyze_parents ()
 
 		gcount = rshort ();
 
-/*
-		i = rshort ();
-*/
 		/* Read class name */
 
-		while ((c = rchar ()))
-			fprintf (mfp, "%c", c);
+		class_name_count = rshort ();
+
+		while (class_name_count--)
+			fprintf (mfp, "%c", rchar ());
 
 		if (rchar ())
 			fprintf (mfp, " E ");     /* Expanded */

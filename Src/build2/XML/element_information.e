@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that hold both a name, a piece of data%
-		% and an XML_ELEMENT. For use by application generator."
+		% and an XM_ELEMENT. For use by application generator."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ feature -- Access
 	data: STRING
 		-- Data associated with `Name'.
 
-	element: XML_ELEMENT
+	element: XM_ELEMENT
 		-- Element associated with `Name'.
 
 feature -- Status setting
@@ -37,7 +37,7 @@ feature -- Status setting
 			data := a_data
 		end
 
-	set_element (an_element: XML_ELEMENT) is
+	set_element (an_element: XM_ELEMENT) is
 			-- Assign `an_element' to `element'.
 		do
 			element := an_element

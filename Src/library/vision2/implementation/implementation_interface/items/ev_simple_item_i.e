@@ -10,6 +10,8 @@ deferred class
 	EV_ITEM_I
 
 inherit
+	EV_ANY_I
+
 	EV_TEXT_CONTAINER_I
 
 feature -- Access
@@ -17,24 +19,25 @@ feature -- Access
 	interface: EV_ITEM
 			-- Interface of the current item
 
-feature -- Status report
+--feature -- Status report
 
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		deferred
-		end
+--	destroyed: BOOLEAN is
+--			-- Is current object destroyed
+--		deferred
+--		end
 
-feature -- Status setting
+--feature -- Status setting
+--
+--	destroy is
+--			-- Destroy the current item
+--		require
+--			exists: not destroyed
+--		deferred
+--		ensure
+--			destroyed: destroyed
+--		end
 
-	destroy is
-			-- Destroy the current item
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			destroyed: destroyed
-		end
-
+-- XX to implement
 --	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void.

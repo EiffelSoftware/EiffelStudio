@@ -158,6 +158,9 @@ feature -- Initialization
 				elseif parent.shown then
 					shown := true
 				end
+				if private_is_read_only then
+					set_read_only
+				end
 			end
 		end
 
@@ -322,7 +325,8 @@ feature -- Status report
 		local
 			win_point: WEL_POINT
 		do
-			win_point := position_from_character_index (char_pos)
+			win_point := position_from_character_index (
+				eiffel_position_to_windows (char_pos))
 			!! Result
 			Result.set (win_point.x, win_point.y)
 		end
@@ -332,7 +336,7 @@ feature -- Status report
 			-- of current text widget at character position `char_pos'
 		do
 			if exists then
-				Result := position_from_character_index (char_pos).x
+				Result := position_from_character_index (eiffel_position_to_windows (char_pos)).x
 			end
 		end
 
@@ -341,7 +345,7 @@ feature -- Status report
 			-- of current text widget at character position `char_pos'
 		do
 			if exists then
-				Result := position_from_character_index (char_pos).y
+				Result := position_from_character_index (eiffel_position_to_windows (char_pos)).y
 			end
 		end
 
@@ -566,7 +570,7 @@ feature -- Status setting
 			if exists then
 				top_pos := top_character_position
 				wel_set_selection (eiffel_position_to_windows
-					(first) - 1, eiffel_position_to_windows (last) - 1)
+					(first), eiffel_position_to_windows (last))
 				set_top_character_position (top_pos)
 			end
 		end
@@ -665,7 +669,7 @@ feature -- Element change
 					unselect
 				end
 				set_caret_position (eiffel_position_to_windows (text.count))
-				replace_selection (s)
+				replace_selection (translate_to_windows_text (s))
 			end
 		end
 
@@ -687,7 +691,7 @@ feature -- Element change
 					unselect
 				end
 				set_caret_position (eiffel_position_to_windows (a_position))
-				replace_selection (s)
+				replace_selection (translate_to_windows_text (s))
 			end
 		end
 
@@ -709,10 +713,10 @@ feature -- Element change
 				end
 				if from_position = to_position then
 					set_caret_position (eiffel_position_to_windows (from_position))
-					replace_selection (s)
+					replace_selection (translate_to_windows_text (s))
 				else
 					set_selection (from_position, to_position)
-					replace_selection (s)
+					replace_selection (translate_to_windows_text (s))
 				end
 			end
 		end
@@ -841,6 +845,18 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				Result := result + i - 1
+			end
+		end
+
+	translate_to_windows_text (s: STRING): STRING is
+			-- Translate a piece of text to "Windows" text.
+		do
+			Result := clone (s)
+			if Result.occurrences ('%N') /= Result.occurrences ('%R') then
+				Result.replace_substring_all ("%R%N", "%N")
+				Result.replace_substring_all ("%N", "%R%N")
+			else
+				Result.replace_substring_all ("%N", "%R%N")
 			end
 		end
 

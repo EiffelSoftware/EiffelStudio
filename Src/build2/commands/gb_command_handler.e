@@ -129,37 +129,49 @@ feature -- Access
 			create Result.make
 			Result.enable_selected
 		end
-		
 
 feature -- Basic operation
 
 	update is
-			-- For every command in `all_commands',
-			-- update their state.
+			-- For every command in `all_standard_commands',
+			--  and `all_two_state_commands', update their state.
 		local
 			current_command: EB_STANDARD_CMD
+			two_state_command: GB_TWO_STATE_COMMAND
 		do
 			from
-				all_commands.start
+				all_standard_commands.start
 			until
-				all_commands.off
+				all_standard_commands.off
 			loop
-				current_command := all_commands.item
+				current_command := all_standard_commands.item
 				if current_command.executable then
 					current_command.enable_sensitive
 				else
 					current_command.disable_sensitive
 				end
-				all_commands.forth
+				all_standard_commands.forth
+			end
+			from
+				all_two_state_commands.start
+			until
+				all_two_state_commands.off
+			loop
+				two_state_command := all_two_state_commands.item
+				if two_state_command.executable then
+					two_state_command.enable_sensitive
+				else
+					two_state_command.disable_sensitive
+				end
+				all_two_state_commands.forth
 			end
 		end
-		
 
 feature {GB_MAIN_WINDOW} -- Implementation
 
 
-	all_commands: ARRAYED_LIST [EB_STANDARD_CMD] is
-			-- All the commands accessible through `Current'.
+	all_standard_commands: ARRAYED_LIST [EB_STANDARD_CMD] is
+			-- All the standard commands accessible through `Current'.
 			-- This assumes that the commands are static and no new
 			-- commands are created during the programs execution.
 		once
@@ -176,5 +188,15 @@ feature {GB_MAIN_WINDOW} -- Implementation
 			Result.extend (generation_command)
 		end
 		
-
+	all_two_state_commands: ARRAYED_LIST [GB_TWO_STATE_COMMAND] IS
+			-- All the two state commands accessible through `Current'.
+		once
+			create Result.make (0)
+			Result.extend (Show_hide_builder_window_command)
+			Result.extend (Show_hide_display_window_command)
+			Result.extend (Show_hide_history_command)
+			Result.extend (Show_hide_constants_dialog_command)
+			Result.extend (Show_hide_component_viewer_command)
+		end
+		
 end -- class GB_COMMAND_HANDLER

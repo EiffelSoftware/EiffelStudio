@@ -424,17 +424,14 @@ feature -- Text window creation
 					!TABBED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 				end;
 			else
-				!GRAPHICAL_TEXT_WINDOW! 
-					ro_text_window.make_from_tool (new_name, Current)
+				!GRAPHICAL_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 			end;
 			set_read_only_text_window (ro_text_window);
 			if has_editable_text and then not ro_text_window.is_editable then
 				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! 
-						ed_text_window.make_from_tool (new_name, Current)
+					!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
 				else
-					!TABBED_TEXT_WINDOW! 
-						ed_text_window.make_from_tool (new_name, Current)
+					!TABBED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
 				end;
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window;

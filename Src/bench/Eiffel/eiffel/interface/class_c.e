@@ -4184,9 +4184,11 @@ feature -- Genericity
 		local
 			l_formals: like generic_features
 			l_formal: FORMAL_A
+			l_cursor: CURSOR
 		do
 			from
 				l_formals := generic_features
+				l_cursor := l_formals.cursor
 				l_formals.start
 			until
 				l_formals.after or Result /= Void
@@ -4197,6 +4199,7 @@ feature -- Genericity
 				end
 				l_formals.forth
 			end
+			l_formals.go_to (l_cursor)
 		ensure
 			result_not_void: Result /= Void
 		end

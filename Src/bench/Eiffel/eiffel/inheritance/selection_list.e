@@ -36,9 +36,11 @@ inherit
 creation
 	make
 	
-feature 
+feature -- Access
 
 	selected_rout_id_set: ROUT_ID_SET
+
+feature -- Selection
 
 	selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE): FEATURE_I is
 			-- Feautre selected in the list.
@@ -53,12 +55,9 @@ feature
 				detect_replication (parents, new_t)
 			end
 			first_feature := first.a_feature
-			if one_body_only
-			and then
-				(	first_feature.written_class.generics = Void
-					or else
-					same_parent_type
-				)
+			if
+				one_body_only and then
+				(first_feature.written_class.generics = Void or else same_parent_type)
 			then
 				Result := first_feature;
 			else

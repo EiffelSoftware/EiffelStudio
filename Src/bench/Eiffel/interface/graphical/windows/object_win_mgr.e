@@ -5,7 +5,7 @@ inherit
 
 	EDITOR_MGR
 		redefine
-			editor_type, synchronize
+			editor_type, synchronize, editor
 		end
 
 creation
@@ -66,6 +66,29 @@ feature
 				active_editors.forth
 			end
 		end;
+
+feature {WINDOW_MGR}
+
+	editor: like editor_type is
+			-- Creates new editor. (Either creates one or
+			-- retrieves one from the free_list).
+		do
+			if	not free_list.empty	then
+				free_list.start;
+				Result := free_list.item;
+				Result.set_x_y (screen.x, screen.y);
+				Result.text_window.set_tab_length_to_default;
+				Result.text_window.set_font_to_default;
+				Result.text_window.set_default_sp_bounds;
+				free_list.remove
+			else
+				set_global_cursor (watch_cursor);
+				!!Result.make (screen);
+				restore_cursors
+			end;
+			active_editors.extend (Result)
+		end;
+
 
 feature {NONE}
 

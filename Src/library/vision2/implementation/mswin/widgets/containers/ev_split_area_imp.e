@@ -21,7 +21,8 @@ inherit
 			on_left_button_up,
 			on_mouse_move
 		redefine
-			set_insensitive
+			set_insensitive,
+			on_first_display
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -172,6 +173,17 @@ feature {NONE} -- Implementation for automatic size compute
 		end
 
 feature {NONE} -- Implementation
+
+  	on_first_display is
+   		do
+ 			if child1 /= Void then
+ 				child1.on_first_display
+ 			end
+			if child2 /= Void then
+				child2.on_first_display
+			end
+ 			already_displayed := True
+ 		end
 
 	on_split (value: INTEGER): BOOLEAN is
 			-- Is a point with `value' as the coordinate on the split?

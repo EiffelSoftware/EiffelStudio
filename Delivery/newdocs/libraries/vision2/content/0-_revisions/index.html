@@ -93,7 +93,7 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_CONTAINER</b> - Fixed `propagate_foreground_color' and `propagate_background_color' which failed when one of the children was a descendent of EV_CELL.</li>
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - `drop_actions' was being fired even when the pick and drop was cancelled.</li>
 	<li><b>EV_PIXMAP</b> - Previously, if you were to add an agent to an action sequence of the pixmap, before it was parented, the agent would be removed during the parenting.</li>
-	<li><b>EV_MENU</b> - Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still contained in the menu would cause occasional crashes. Previously, when adding an EV_MENU_SEPARATOR, followed by multiple EV_RADIO_MENU_ITEMS, all the items were being selected.</li>
+	<li><b>EV_MENU</b> - Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still contained in the menu would cause occasional crashes. Previously, when adding an EV_MENU_SEPARATOR, followed by multiple EV_RADIO_MENU_ITEMS, all the items were being selected. Fixed bug in `destroy' which was causing postcondition failures.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

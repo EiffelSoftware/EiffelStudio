@@ -311,6 +311,7 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `string_item'.
 		do
 			name_field.enable_edit
+			name_field.enable_sensitive
 			name_field.remove_text
 			new_button.set_text (New_button_add_text)
 			new_button.disable_sensitive
@@ -331,6 +332,7 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `integer_item'.
 		do
 			name_field.enable_edit
+			name_field.enable_sensitive
 			name_field.remove_text
 			new_button.disable_sensitive
 			new_button.set_text (New_button_add_text)
@@ -350,6 +352,7 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `directory_item'.
 		do
 			name_field.enable_edit
+			name_field.enable_sensitive
 			name_field.remove_text
 			new_button.disable_sensitive
 			new_button.set_text (New_button_text)
@@ -373,6 +376,7 @@ feature {NONE} -- Implementation
 			box: EV_HORIZONTAL_BOX
 		do
 			name_field.disable_edit
+			name_field.disable_sensitive
 			name_field.remove_text
 			new_button.disable_sensitive
 			new_button.set_text (New_button_text)
@@ -417,27 +421,22 @@ feature {NONE} -- Implementation
 				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text))
 				add_constant_command.execute
 				string_input.remove_text
+				new_button.disable_sensitive
 			elseif integer_input.parent /= Void then
 				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value))
 				add_constant_command.execute
+				new_button.disable_sensitive
 			elseif directory_input.parent /= Void then
 				create directory_dialog
 				directory_dialog.show_modal_to_window (Current)
 				if not directory_dialog.directory.is_empty then
 					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, directory_dialog.directory))
 					add_constant_command.execute
+					name_field.remove_text
 				end
 			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
 				select_pixmap
-			end
-			
-				-- Now disable the new button as you may not add the same constant twice.
-				-- For pixmaps or directories, the new button must not be disabled,
-				-- as a dialog is popped up instead of using the current settings.
-			if not type_combo_box.selected_item.text.is_equal (Directory_string) and
-				not type_combo_box.selected_item.text.is_equal (Pixmap_constant_type)then
-				new_button.disable_sensitive	
-			end
+			end	
 		end
 		
 

@@ -10,14 +10,12 @@ class
 	EV_FRAME_IMP
 
 inherit
-
 	EV_FRAME_I
 
 	EV_CONTAINER_IMP
 		redefine
 			client_width,
 			client_height,
-			parent_ask_resize,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
@@ -43,12 +41,13 @@ inherit
 			on_char,
 			on_key_up,
 			on_draw_item,
+			background_brush,
 			on_menu_command
 		redefine
 			default_style,
 			default_ex_style,
 			on_paint,
-			background_brush
+			move_and_resize
 		end
 
 creation
@@ -80,37 +79,17 @@ feature -- Access
 	client_width: INTEGER is
 			-- Width of the client area of container
 		do
-			Result := client_rect.width - 2 * box_width
+			Result := (client_rect.width - 2 * box_width).max (0)
 		end
 	
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
-			Result := client_rect.height - box_text_height - 2 * box_height
+			Result := (client_rect.height - box_text_height - 2 * box_height).max (0)
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {NONE} -- Implementation for automatic size compute.
 
-	parent_ask_resize (a_width, a_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			child_cell.resize (minimum_width.max(a_width), minimum_height.max (a_height))
-			if resize_type = 3 then
-				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
-			elseif resize_type = 2 then
-				move_and_resize ((child_cell.width - width)//2 + child_cell.x, child_cell.y, minimum_width, child_cell.height, True)
-			elseif resize_type = 1 then
-				move_and_resize (child_cell.x, (child_cell.height - height)//2 + child_cell.y, child_cell.width, minimum_height, True)
-			else
-				move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, minimum_width, minimum_height, True)
-			end
-			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_height, 
-										client_width, client_height)
-			end
-		end
-	
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
@@ -131,7 +110,19 @@ feature {EV_WIDGET_IMP} -- Implementation
 			set_minimum_height (value + box_text_height + 2 * box_height)
 		end
 
-feature {NONE} -- Implementation : WEL features
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+		do
+			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, True)
+			if child /= Void then
+				child.set_move_and_size (box_width, box_text_height + box_height, 
+										client_width, client_height)
+			end
+		end
+
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		do
@@ -142,17 +133,6 @@ feature {NONE} -- Implementation : WEL features
 	default_ex_style: INTEGER is
 		do
 			Result := Ws_ex_controlparent
-		end
-
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-			if background_color /= Void then
-				!! Result.make_solid (background_color_imp)
---				disable_default_processing
-			end
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is

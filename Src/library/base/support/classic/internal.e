@@ -443,6 +443,9 @@ feature -- Element change
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			reference_field: field_type (i, object) = Reference_type
+			value_conforms_to_field_static_type:
+				type_conforms_to (dynamic_type (value), 
+					field_static_type_of_type (i, dynamic_type (object))) 
 		do
 			c_set_reference_field (i - 1, $object, $value)
 		end

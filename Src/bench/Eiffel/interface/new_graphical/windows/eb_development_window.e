@@ -2265,15 +2265,11 @@ feature -- Multiple editor management
 
 	update_paste_cmd is
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
-		local
-			txt: STRING
 		do
-			txt := current_editor.clipboard.text
 			if
 				not current_editor.is_empty and then
 				current_editor.is_editable and then
-				txt /= Void and then
-				not txt.is_empty
+				current_editor.clipboard.has_text
 			then
 				editor_paste_cmd.enable_sensitive
 			else

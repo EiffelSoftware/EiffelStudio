@@ -193,7 +193,7 @@ EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget);
 /* set widget name */
 void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name);
 
-void c_gtk_widget_set_bg_color (GtkWidget *widget, int r, int g, int b);
+extern void c_gtk_widget_set_bg_color (GtkWidget *widget, int r, int g, int b);
 void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
 void c_gtk_widget_set_fg_color (GtkWidget *widget, int r, int g, int b);
 void c_gtk_widget_get_fg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
@@ -482,6 +482,14 @@ EIF_POINTER c_gtk_statusbar_item_create_pixmap_place (GtkWidget *statusbar);
 
 /* Unsets the pixmap of the status bar item */
 void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap);
+/* Sets the background of the status bar item */
+void c_gtk_statusbar_item_set_bg_color (GtkWidget *statusbar, int r, int g, int b);
+
+/* Pointer to the label of the status bar */
+#define c_gtk_statusbar_item_label(p) ((EIF_POINTER) ((GtkStatusbar *)p)->label)  /*GtkWidget**/
+
+/* Pointer to the frame of the status bar */
+#define c_gtk_statusbar_item_frame(p) ((EIF_POINTER) ((GtkStatusbar *)p)->frame)  /*GtkWidget**/
 
 /*==============================================================================
  gtk_pixmap functions

@@ -20,7 +20,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Clusters Property Page</alt_text>
-				<url>ClustersPPG.PNG</url>
+				<url>ClustersPPG.png</url>
 			</image>
 		</paragraph>
 		<heading>
@@ -172,7 +172,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Exclude Subdirectories and File Dialog</alt_text>
-				<url>ExcludeDirFile.PNG</url>
+				<url>ExcludeDirFile.png</url>
 			</image>
 		</paragraph>
 		<paragraph> The dialog here is split vertically into two sections. The top half is the list of all subdirectories taken from the selected clusters path. All of the checked items in the list are those that havebeen chosen to be excluded. To add or remove a directory simple check or uncheck the corresponding folder respectively. 

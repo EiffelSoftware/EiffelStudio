@@ -27,7 +27,7 @@
 		<paragraph>
 			<image>
 				<alt_text>projects</alt_text>
-				<url>projects.PNG</url>
+				<url>projects.png</url>
 			</image>
 		</paragraph>
 		<paragraph> To start a new Eiffel Project, browse to Eiffel Projects in the project types browser, and select the desired wizard. Be sure to select the correct name and location for your new project before you click OK, as this cannot be changed once a wizard is launched. </paragraph>

@@ -21,7 +21,7 @@
 			<paragraph>
 				<image>
 					<alt_text>class_view_context_menu</alt_text>
-					<url>class_view_context_menu.PNG</url>
+					<url>class_view_context_menu.png</url>
 				</image>
 			</paragraph>
 			<paragraph>In this example, the tree node representing the Eiffel class ROOT_CLASS is the  subject of the context menu, which was opened as the result of a right click.  The entriesavailable on the context menu perform the following actions:</paragraph>

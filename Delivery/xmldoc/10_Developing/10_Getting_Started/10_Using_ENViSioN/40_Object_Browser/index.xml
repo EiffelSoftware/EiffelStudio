@@ -26,7 +26,7 @@
 			<paragraph>
 				<image>
 					<alt_text>Object Browser</alt_text>
-					<url>ObjectBrowser.PNG</url>
+					<url>ObjectBrowser.png</url>
 				</image>
 			</paragraph>
 			<paragraph>Looking at the screenshot, you can see that there is one root node in the object  browser, which corresponds to the fact that there is only one project, named  "sample", in the currentlyopened solution. If there is more than one project  in the current solution, then there will be multiple entries in the tree.</paragraph>

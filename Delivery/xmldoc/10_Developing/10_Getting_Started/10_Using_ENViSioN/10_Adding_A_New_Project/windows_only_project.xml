@@ -44,7 +44,7 @@
 			<paragraph>
 				<image>
 					<alt_text>windows_only_wizard</alt_text>
-					<url>windows_only_wizard.PNG</url>
+					<url>windows_only_wizard.png</url>
 				</image>
 			</paragraph>
 			<paragraph>This page allows you to modify the type of application that the wizard will generate upon completion. You may select one of the following two options:</paragraph>

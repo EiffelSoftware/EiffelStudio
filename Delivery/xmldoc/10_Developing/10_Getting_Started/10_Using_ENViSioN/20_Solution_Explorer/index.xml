@@ -17,7 +17,7 @@
 		<paragraph>
 			<image>
 				<alt_text></alt_text>
-				<url>./solution_explorer.PNG</url>
+				<url>./solution_explorer.png</url>
 			</image>
 		</paragraph>
 		<paragraph>From the picture above we can see that we have a Solution open called 'My Solution', contained within is an Eiffel Project named 'My Eiffel Project'. The Solution Explorer for Eiffel projects allows you to view the three different types of files that are included/referenced in 'My Eiffel Project'. These files types are distinguished within the project by having their own folder, the file types available being:</paragraph>

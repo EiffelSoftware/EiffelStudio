@@ -21,7 +21,7 @@
 			<paragraph>
 				<image>
 					<alt_text>Object Browser With Full Context Menu</alt_text>
-					<url>ObjectBrowserWithFullContextMenu.PNG</url>
+					<url>ObjectBrowserWithFullContextMenu.png</url>
 				</image>
 			</paragraph>
 			<paragraph>In this example, the tree node representing the Eiffel class ROOT_CLASS is the  subject of the context menu, which was opened as the result of a right click.  The entries available on thecontext menu perform the following actions:</paragraph>

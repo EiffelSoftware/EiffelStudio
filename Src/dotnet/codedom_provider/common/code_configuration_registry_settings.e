@@ -78,15 +78,17 @@ feature -- Access
 		local
 			l_retried: BOOLEAN
 			l_conf: STRING
+			l_configs: LIST [STRING]
 		do
 			if not l_retried then
-				Result := Config_table.linear_representation
-			end
-			if Result = Void then
-				create {ARRAYED_LIST [STRING]} Result.make (1)
+				create {ARRAYED_LIST [STRING]} Result.make (10)
 				l_conf := default_config_file_path
 				if l_conf /= Void then
 					Result.extend (l_conf)
+				end
+				l_configs := Config_table.linear_representation
+				if l_configs /= Void then
+					Result.append (l_configs)
 				end
 			end
 		rescue

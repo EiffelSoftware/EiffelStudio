@@ -237,6 +237,58 @@ feature -- Commands
 			pass4_controler.insert_new_class (class_to_recompile);
 		end;
 
+feature -- DLE
+
+	extendible_directory_name: STRING;
+			-- Name of the dynamically extendible directory
+
+	set_extendible_directory_name (s: STRING) is
+		do
+			extendible_directory_name := s
+		end;
+
+	change_all_new_dynamic_classes is
+			-- Record all the dynamic classes which have been changed
+			-- in the universe as changed
+		require
+			dynamic_system: System.is_dynamic
+		local
+			class_list: EXTEND_TABLE [CLASS_I, STRING];
+			c: CLUSTER_I;
+			cl: CLASS_I;
+			file_date: INTEGER;
+			str: ANY
+		do
+			from
+				Universe.clusters.start
+			until
+				Universe.clusters.after
+			loop
+				c := Universe.clusters.item;
+				if c.is_dynamic then
+					from
+						class_list := c.classes;
+						class_list.start
+					until
+						class_list.after
+					loop
+						cl := class_list.item_for_iteration;
+						if cl.compiled then
+							str := cl.file_name.to_c;
+							file_date := eif_date ($str);
+							if file_date /= cl.date then
+								change_class (class_list.item_for_iteration);
+							end;
+						else
+							change_class (class_list.item_for_iteration);
+						end;
+						class_list.forth
+					end;
+				end;
+				Universe.clusters.forth
+			end;
+		end;
+
 feature {NONE} -- Externals
 
 	eiffel_parser_init is

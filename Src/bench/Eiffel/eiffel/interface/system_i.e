@@ -37,7 +37,8 @@ inherit
 	C_COMPILE_ACTIONS
 		rename
 			freeze_system as c_comp_actions_freeze_system
-		end
+		end;
+	SHARED_DLE
 
 feature 
 
@@ -382,7 +383,8 @@ feature
 			!!melted_set.make;
 			!!rout_info_table.make;
 			!!onbidt.make (50);
-			!!optimization_tables.make
+			!!optimization_tables.make;
+			!!dle_frozen_nobid_table.make (50)
 		end;
 
 	reset_debug_counter is
@@ -804,16 +806,14 @@ end;
 			end;
 			new_class := False;
 
-			if not (precompilation or else Lace.compile_all_classes) then
+			if not precompilation and not Lace.compile_all_classes then
 					-- The root class is not generic
 				root_class_c := root_class.compiled_class;
 				current_class := root_class_c;
 				root_class_c.check_non_genericity_of_root_class;
 				current_class := Void;
-			end;
-
-			if not (precompilation or else Lace.compile_all_classes) then
-					-- Remove useless classes i.e classes without syntactical clients
+					-- Remove useless classes i.e classes without 
+					-- syntactical clients
 				remove_useless_classes;
 			end;
 
@@ -850,14 +850,14 @@ end;
 				-- heirs after
 			process_pass (pass2_controler);
 
-			if not (precompilation or else Lace.compile_all_classes) then
+			if not precompilation and not Lace.compile_all_classes then
 				root_class_c.check_root_class_creators;
 			end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
 
-			if not (precompilation or else Lace.compile_all_classes) then
+			if not precompilation and not Lace.compile_all_classes then
 					-- Externals incrementality
 				freeze := freeze or else not externals.equiv;
 			end;
@@ -886,9 +886,11 @@ end;
 					-- Verbose
 				io.error.putstring ("Melting changes%N");
 
-				make_update;
+				execution_table.set_levels;
+				dispatch_table.set_levels;
+				make_update
 debug ("VERBOSE")
-	io.error.putstring ("Saving .workbench%N");
+	io.error.putstring ("Saving melted.eif%N");
 end;
 			end;
 			first_compilation := False;
@@ -1068,8 +1070,8 @@ io.error.putstring ("%N");
 end;
 					-- Process skeleton(s) for `a_class'.
 				if
-					(not (precompilation or else Lace.compile_all_classes)) or else
-					a_class.has_types
+					(not (precompilation or else Lace.compile_all_classes))
+					or else a_class.has_types
 				then
 					a_class.process_skeleton;
 
@@ -1178,7 +1180,7 @@ end;
 			process_pass (pass4_controler);
 			current_pass := Void;
 
-				-- The dispatch and execution tables are know updated.
+				-- The dispatch and execution tables are now updated.
 
 			if not freeze then
 debug ("COUNT")
@@ -1233,7 +1235,7 @@ end;
 			has_argument: INTEGER;
 		do
 debug ("ACTIVITY")
-	io.error.putstring ("Updating .UPDT%N");
+	io.error.putstring ("Updating melted.eif%N");
 end;
 			Update_file.open_write;
 			file_pointer := Update_file.file_pointer;
@@ -1261,6 +1263,9 @@ end;
 			write_int (file_pointer, type_id_counter.value);
 				-- Write the number of classes now available
 			write_int (file_pointer, class_counter.value);
+				-- Write the new `dle_level' 
+				-- (`dle_frozen_level' has the same value).
+			write_int (file_pointer, dle_level);
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature tables%N");
@@ -1351,27 +1356,29 @@ end;
 					cl_type := types.item;
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1);
-						-- Write original dynamic type (forst freezing)
+						-- Write original dynamic type (first freezing)
 					write_int (file_pointer, cl_type.id - 1);
 					types.forth
 				end;
-				write_int (Update_file.file_pointer, -1);
+				write_int (file_pointer, -1);
 				m_rout_id_server.forth;
 			end;
 			write_int (file_pointer, -1);
 
+				-- Write first the new size of the dispatch table
+			Dispatch_table.write_dispatch_count (Update_file);
 				-- Update the dispatch table
-			dispatch_table.make_update (Update_file);
+			Dispatch_table.make_update (Update_file);
 
 				-- Open the file for reading byte code for melted features
 				-- Update the execution table
 			execution_table.make_update (Update_file);
 
-			make_conformance_table_byte_code;
+			make_conformance_table_byte_code (Update_file);
 
-			make_option_table;
+			make_option_table (Update_file);
 
-			make_rout_info_table;
+			make_rout_info_table (Update_file);
 
 				-- Melted descriptors
 			from
@@ -1400,8 +1407,8 @@ end;
 			melted_conformance_table := Void;
 		end;
 
-	make_conformance_table_byte_code is
-			-- Generates conformance tables byte code.
+	make_conformance_table_byte_code (file: RAW_FILE) is
+			-- Generates conformance tables byte code in `file'.
 		local
 			i, nb: INTEGER;
 			cl_type: CLASS_TYPE;
@@ -1450,12 +1457,12 @@ end;
 				to_append := Byte_array.character_array
 			end;
 
-				-- Put the condormance table in `Update_file'.
-			to_append.store (Update_file);
+				-- Put the condormance table in `file'.
+			to_append.store (file);
 
 		end;
 
-	make_option_table is
+	make_option_table (file: RAW_FILE) is
 			-- Generate byte code for the option table.
 		local
 			i, nb: INTEGER;
@@ -1492,14 +1499,14 @@ end;
 
 				-- Put the byte code description of the option table
 				-- in update file
-			Byte_array.character_array.store (Update_file);
+			Byte_array.character_array.store (file);
 		end;
 
-	make_rout_info_table is
+	make_rout_info_table (file: RAW_FILE) is
 			-- Generate byte code for the routine info table
-			-- and store it to disk.
+			-- and store it in `file'.
 		do
-			Rout_info_table.melted.store (Update_file)
+			Rout_info_table.melted.store (file)
 		end;
 
 	finalize is
@@ -1553,6 +1560,11 @@ end;
 
 			-- NO !!!!!!! See comment in `init_recompilation'
 			--original_body_index_table := Void
+
+				-- DLE: get rid of the data stored during the last
+				-- final mode compilation normally used when finalizing
+				-- the Dynamic Class Set.
+			clear_dle_finalization_data
 		end;
 
 feature -- Freeezing
@@ -1568,6 +1580,8 @@ feature -- Freeezing
 			i, nb: INTEGER;
 			temp: STRING
 		do
+			dle_frozen_nobid_table.clear_all;
+			dle_frozen_nobid_table.set_threshold (body_id_counter.value);
 			freezing_occurred := True;
 			if precompilation then
 				!PRECOMP_MAKER!makefile_generator.make
@@ -1767,7 +1781,8 @@ end;
 
 			generate_make_file;
 
-			generate_exec_tables;
+			generate_dispatch_table;
+			generate_exec_table;
 
 				-- Empty update file
 			generate_empty_update_file;
@@ -1838,6 +1853,8 @@ end;
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
 			frozen_level := execution_table.frozen_level;
+			execution_table.set_levels;
+			dispatch_table.set_levels;
 
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication
@@ -1865,7 +1882,13 @@ feature -- Final mode generation
 			old_exception_stack_managed: BOOLEAN;
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 		do
+
 			keep_assertions := keep_assert and then Lace.has_assertions;
+
+			if extendible then
+					-- Table of statically bound feature calls.
+				!! dle_static_calls.make
+			end;
 
 				-- Save the value of `remover_off'
 				-- and `exception_stack_managed'
@@ -1976,15 +1999,30 @@ end;
 			generate_main_file;
 			generate_init_file;
 
+			if extendible then
+					-- Keep track of the generated data for the
+					-- DC-Set finalization.
+				generate_static_log_file;
+				dle_poly_server := Tmp_poly_server;
+				dle_poly_server.flush;
+				dle_static_calls.flush;
+				!! dle_eiffel_table.make (Eiffel_table);
+				dle_remover := remover;
+				if dle_remover /= Void then
+					dle_remover.dle_clean
+				end;
+			else
+				Tmp_poly_server.clear
+			end;
+
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
-			Tmp_poly_server.clear;
 			Tmp_opt_byte_server.clear;
 
 			remover := Void;
 			remover_off := old_remover_off;
-			exception_stack_managed := old_exception_stack_managed
-			inlining_on := old_inlining_on	
+			exception_stack_managed := old_exception_stack_managed;
+			inlining_on := old_inlining_on;
 			array_optimization_on := old_array_optimization_on
 		rescue
 				-- Clean the servers if the finalization is aborted
@@ -1992,6 +2030,7 @@ end;
 			Tmp_poly_server.clear;
 			Tmp_opt_byte_server.flush;
 			Tmp_opt_byte_server.clear;
+			clear_dle_finalization_data
 		end;
 
 feature -- Dead code removal
@@ -2266,7 +2305,7 @@ end;
 				nb := type_id_counter.value;
 				file.open_write;
 				file.putstring ("#include %"macros.h%"%N%N");
-				file.putstring ("long esize[] = {%N");
+				file.putstring ("long fsize[] = {%N");
 			until
 				i > nb
 			loop
@@ -2297,7 +2336,7 @@ end;
 				i := 1;
 				nb := type_id_counter.value;
 				Reference_file.open_write;
-				Reference_file.putstring ("long nbref[] = {%N");
+				Reference_file.putstring ("long fnbref[] = {%N");
 			until
 				i > nb
 			loop
@@ -2331,9 +2370,6 @@ end;
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE];
-			subdir: DIRECTORY;
-			f_name: FILE_NAME;
-			dir_name: DIRECTORY_NAME
 		do
 			nb := Type_id_counter.value;
 			final_mode := byte_context.final_mode;
@@ -2359,19 +2395,7 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
-				temp := clone (System_object_prefix);
-				temp.append_integer (1);
-				!!dir_name.make_from_string (Final_generation_path);
-				dir_name.extend (temp);
-				!! subdir.make (dir_name);
-				if not subdir.exists then
-					subdir.create
-				end;
-				!!f_name.make_from_string (dir_name);
-				temp := clone (Eskelet);
-				temp.append (Dot_h);
-				f_name.set_file_name (temp);
-				Extern_declarations.generate (f_name);
+				Extern_declarations.generate (final_file_name (Eskelet, Dot_h));
 				Extern_declarations.wipe_out;
 			else
 					-- Hash table extern declaration in workbench mode
@@ -2438,11 +2462,7 @@ end;
 				i := i + 1;
 			end;
 
-			if final_mode then
-				Skeleton_file.putstring ("struct cnode esystem[] = {");
-			else
-				Skeleton_file.putstring ("struct cnode fsystem[] = {");
-			end;
+			Skeleton_file.putstring ("struct cnode fsystem[] = {");
 			Skeleton_file.new_line;
 			from
 				i := 1;
@@ -2457,9 +2477,12 @@ else
 	if final_mode then
 		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}");
 	else
-		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0,0,%N");
-		Skeleton_file.putstring ("'\0', '\0', 0, 0 , '\0', 0 , {0,0,0,0}}");
-	end;
+		Skeleton_file.putstring 
+			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
+			%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
+			%(int32) 0,%N(int32) 0,%N'\0',%N(int32*) 0,%N%
+			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}");
+	end
 end;
 				Skeleton_file.putstring (",%N");
 				i := i + 1;
@@ -2470,12 +2493,9 @@ end;
 					-- Generate the array of routine id arrays
 				Skeleton_file.putstring ("int32 *fcall[] = {%N");
 				from
-					i := 1
+					i := 1;
+					nb := static_type_id_counter.value
 				until
-						-- FIXME: `nb' should be replaced by `static_type_id_counter.value'
-						--| It's working because the two counters have the same value
-						--| but once the FIXMEs (Void class types) will be removed, it won't
-						--| work anymore.
 					i > nb
 				loop
 					cl_type := cltype_array.item (i);
@@ -2565,7 +2585,7 @@ end;
 				f_name.set_file_name ("ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
-				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");
+				Cecil_file.putstring ("%Nstruct ctable fce_rname[] = {%N");
 				from
 					i := 1;
 					nb := Type_id_counter.value;
@@ -2581,7 +2601,10 @@ end;
 					Cecil_file.putstring (",%N");
 					i := i + 1;
 				end;
-				Cecil_file.putstring ("};%N%N");
+				Cecil_file.putstring ("};%N");
+				Cecil_file.putstring ("struct ctable *ce_rname = fce_rname;");
+				Cecil_file.new_line;
+				Cecil_file.new_line
 			end;
 
 			make_cecil_tables;
@@ -2661,13 +2684,8 @@ end;
 				i := i + 1;
 			end;
 
-			if byte_context.final_mode then
-				Conformance_file.putstring
-								("struct conform *co_table[] = {%N");
-			else
-				Conformance_file.putstring
-								("struct conform *fco_table[] = {%N");
-			end;
+			Conformance_file.putstring ("struct conform *fco_table[] = {%N");
+
 			from
 				i := 1;
 			until
@@ -2698,7 +2716,7 @@ end;
 			class_type: CLASS_TYPE;
 		do
 			from
-				!!rout_table.make;
+				rout_table := new_special_table;
 				rout_table.set_rout_id (Initialization_id);
 				i := 1;
 				nb := Type_id_counter.value;
@@ -2719,6 +2737,20 @@ end;
 				i := i + 1;
 			end;
 			rout_table.write;
+		end;
+
+	new_special_table: SPECIAL_TABLE is
+			-- New special routine table used during the generation
+			-- of the dispose routine table and the initialization
+			-- routine table
+		do
+			if extendible then
+				!STAT_SPECIAL_TABLE! Result.make
+			elseif is_dynamic then
+				!DYN_SPECIAL_TABLE! Result.make
+			else
+				!! Result.make
+			end
 		end;
 
 feature -- Dispose routine
@@ -2808,7 +2840,7 @@ feature -- Dispose routine
 			written_class: CLASS_C
 		do
 			from
-				!!rout_table.make;
+				rout_table := new_special_table;
 				rout_table.set_rout_id (Dispose_id);
 				i := 1;
 				nb := Type_id_counter.value;
@@ -2935,15 +2967,18 @@ feature -- Plug and Makefile file
 						clone (Encoder.table_name (Dispose_id))
 
 				Plug_file.putstring ("extern char *(*");
+				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (init_name);
 				Plug_file.putstring ("[])();%N");
 				Plug_file.putstring ("extern char *(*");
+				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (dispose_name);
 				Plug_file.putstring ("[])();%N%N");
 			end;
 
 			if final_mode and then array_optimization_on then
-				remover.array_optimizer.generate_plug_declarations (Plug_file)
+				remover.array_optimizer.generate_plug_declarations
+						(Plug_file, Table_prefix)
 			else
 				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
 										%long *eif_lower_table = (long *)0;%N");
@@ -2992,12 +3027,14 @@ feature -- Plug and Makefile file
 			if final_mode then
 					-- Initialization routines
 				Plug_file.putstring ("char *(**ecreate)() = ");
+				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (init_name);
 				Plug_file.putstring (";%N");
 
 					-- Dispose routines
 				Plug_file.putstring ("void (**edispose)() = ");
 				Plug_file.putstring ("(void (**)()) ");
+				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (dispose_name);
 				Plug_file.putstring (";%N");
 
@@ -3020,21 +3057,26 @@ feature -- Plug and Makefile file
 
 feature -- Dispatch and execution tables generation
 
-	generate_exec_tables is
-			-- Generate `dispatch_table' and `execution_table'.
+	generate_dispatch_table is
+			-- Generate `dispatch_table'.
 		do
 			Dispatch_file.open_write;
 			dispatch_table.generate (Dispatch_file);
 			dispatch_table.freeze;
 			Dispatch_file.close;
+				-- The melted list of the dispatch table
+				-- is now empty
+		end;
 
+	generate_exec_table is
+			-- Generate `execution_table'.
+		do
 			Frozen_file.open_write;
 			execution_table.generate (Frozen_file);
 			execution_table.freeze;
 			Frozen_file.close;
-
-				-- The melted list of the dispatch and execution tables
-				-- are now empty
+				-- The melted list of the execution table
+				-- is now empty
 		end
 
 feature -- Main file generation
@@ -3053,9 +3095,8 @@ feature -- Main file generation
 				%extern void failure();%N%
 				%extern void initsig();%N%
 				%extern void initstk();%N%
-				%extern void eif_rtinit();%N%N");
-
-			Main_file.putstring ("void main(argc, argv, envp)%N%
+				%extern void eif_rtinit();%N%N%
+				%void main(argc, argv, envp)%N%
 				%int argc;%N%
 				%char **argv;%N%
 				%char **envp;%N%
@@ -3071,8 +3112,7 @@ feature -- Main file generation
 				%%Teif_rtinit(argc, argv, envp);%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
-				%%Texit(0);%N%
-				%}%N");
+				%%Texit(0);%N}%N");
 
 			Main_file.close;
 		end;
@@ -3150,12 +3190,12 @@ feature -- Main file generation
 					c_name := rout_table.feature_name (cl_type.id);
 					Initialization_file.putstring ("%Textern void ");
 					Initialization_file.putstring (c_name);
-					Initialization_file.putstring (" ();%N%N");
+					Initialization_file.putstring ("();%N%N");
 				end;
 			end;
 
-			-- Set C variable `scount'.
 			if final_mode then
+					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ");
 				Initialization_file.putint (type_id_counter.value);
 				Initialization_file.putstring (";%N");
@@ -3229,6 +3269,12 @@ feature -- Main file generation
 					-- Set the frozen level
 				Initialization_file.putstring (";%N%Tzeroc = ");
 				Initialization_file.putint (frozen_level);
+					-- Set the dle level
+				Initialization_file.putstring (";%N%Tdle_level = ");
+				Initialization_file.putint (dle_level);
+					-- Set the dle zeroc
+				Initialization_file.putstring (";%N%Tdle_zeroc = ");
+				Initialization_file.putint (dle_frozen_level);
 				Initialization_file.putstring (";%N}%N");
 			end;
 
@@ -3632,5 +3678,204 @@ feature {NONE} -- External features
 		external
 			"C"
 		end;
+
+feature -- DLE
+
+	is_dynamic: BOOLEAN is do end;
+			-- Is the current system a Dynamic Class Set?
+
+	extendible: BOOLEAN;
+			-- Is the current system dynamically extendible?
+
+	set_extendible (b: BOOLEAN) is
+			-- Assign `b' to `extendible'.
+		do
+			extendible := b
+		end;
+
+	dle_finalize: BOOLEAN;
+			-- Has the user asked for a finalization?
+
+	set_dle_finalize (b: BOOLEAN) is
+			-- Assign `b' to `finalize'.
+		do
+			dle_finalize := b
+		end;
+
+	Table_prefix: STRING is
+			-- Prefix of table names in DLE mode
+		once
+			if System.extendible then
+				Result := static_prefix
+			elseif System.is_dynamic then
+				Result := dynamic_prefix
+			else
+				Result := ""
+			end
+		end;
+
+	dle_max_dr_class_id: INTEGER is
+			-- Greatest class id of the static system
+			--| Only used in the DC-Set system
+		require
+			dymanic_system: is_dynamic
+		do
+		end;
+
+	dle_max_topo_id: INTEGER is
+			-- Greatest topological class id of the static system
+			--| Only used in the DC-Set system
+		require
+			dymanic_system: is_dynamic
+		do
+		end;
+
+	dle_max_dr_type_id: INTEGER is
+			-- Greatest class_type type_id of the static system
+			--| Only used in the DC-Set system
+		require
+			dymanic_system: is_dynamic
+		do
+		end;
+
+	dle_max_dr_static_type_id: INTEGER is
+			-- Greatest class_type (static) id of the static system
+			--| Only used in the DC-Set system
+		require
+			dymanic_system: is_dynamic
+		do
+		end;
+
+	dle_type_set: ROUT_ID_SET is
+			-- Set of the routine ids for which a type table should
+			-- have been generated in the extendible system
+			--| Only used in the DC-Set system
+		require
+			dymanic_system: is_dynamic
+		do
+		end;
+
+	dle_level: INTEGER is
+			-- If the body_id of a routine is greater than this value,
+			-- then this routine is part of the Dynamic Class Set
+		do
+			Result := execution_table.dle_level
+		end;
+
+	dle_frozen_level: INTEGER is
+			-- Limit between frozen and melted body_ids in the
+			-- Dynamic Class Set
+		do
+			Result := execution_table.dle_frozen_level
+		end;
+
+	dle_poly_server: TMP_POLY_SERVER;
+			-- Server of polymorphic unit tables generated when
+			-- finalizing a dynamically extendible system
+
+	dle_eiffel_table: DLE_EIFFEL_HISTORY;
+			-- Array of data tables for the final Eiffel executable
+			-- (Generated when finalizing an extendible system)
+
+	dle_frozen_nobid_table: NEW_OLD_TABLE;
+			-- Frozen New/Old body id table; Keep track of body_id
+			-- modifications since last time the static system has
+			-- been frozen
+
+	dle_finalized_nobid_table: NEW_OLD_TABLE is
+			-- Finalized New/Old body id table; Keep track of body_id
+			-- modifications between finalization of the static system
+			-- and finalization of the dynamic system
+		require
+			dynamic_system: System.is_dynamic
+		do
+		end;
+
+	dle_static_calls: STAT_CALL_SERVER;
+			-- Feature calls which have been statically bound during
+			-- the last finalization of the extendible system
+
+	dle_remover: REMOVER;
+			-- Dead code removal control of the static system
+
+	dle_system_name: STRING is
+			-- Name of the static system
+		require
+			dynamic_system: is_dynamic
+		do
+		end;
+
+	was_used (f: FEATURE_I): BOOLEAN is
+			-- Was feature `f' used in the static system?
+		require
+			dynamic_system: is_dynamic;
+			good_argument: f /= Void
+		do
+			Result := dle_remover = Void or else dle_remover.was_alive (f)
+		end;
+
+	clear_dle_finalization_data is
+			-- Get rid of the data stored during the last
+			-- final mode compilation normally used when finalizing
+			-- the Dynamic Class Set.
+		do
+			if dle_poly_server /= Void then
+				dle_poly_server.clear
+			end;
+			dle_poly_server := Void;
+			dle_eiffel_table := Void;
+			dle_remover := Void;
+			if dle_static_calls /= Void then
+				dle_static_calls.clear;
+				dle_static_calls := Void
+			end
+		end;
+
+	check_dle_finalize is
+			-- If the user asked for a finalization of a DC-set,
+			-- then check whether the static system has been finalized as well.
+		do
+			dle_finalize := false
+		end;
+
+	generate_static_log_file is
+			-- Generate the names of the statically bound feature calls
+		require
+			final_mode: in_final_mode;
+			dle_static_calls_not_void: dle_static_calls /= Void
+		local
+			log_file: REMOVED_FEAT_LOG_FILE;
+			f_name: FILE_NAME;
+			rout_id, type_id: INTEGER;
+			rout_ids: DLE_STATIC_CALLS;
+			feature_table: FEATURE_TABLE;
+			feat: FEATURE_I;
+			c_type: CLASS_TYPE
+		do
+			!!f_name.make_from_string (Final_generation_path);
+			f_name.set_file_name (Static_log_file_name);
+			!! log_file.make (f_name);
+			log_file.open_write;
+			from dle_static_calls.start until dle_static_calls.after loop
+				type_id := dle_static_calls.key_for_iteration;
+				rout_ids := dle_static_calls.item (type_id);
+				c_type := class_types.item (type_id);
+				feature_table := c_type.associated_class.feature_table;
+				from rout_ids.start until rout_ids.after loop
+					rout_id := rout_ids.item;
+					feat := feature_table.feature_of_rout_id (rout_id);
+					if feat /= Void then
+						log_file.add (c_type, feat.feature_name)
+					end;
+					rout_ids.forth
+				end;
+				dle_static_calls.forth
+			end;
+			log_file.close
+		end;
+
+invariant
+
+	dle_constraint: not (is_dynamic and extendible)
 
 end

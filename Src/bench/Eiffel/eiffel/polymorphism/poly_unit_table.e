@@ -133,4 +133,45 @@ feature -- Trace
 			end
 		end;
 
+feature -- DLE
+
+	dle_poly_table: POLY_TABLE [ENTRY] is
+			-- Polymorphic table to generate in final mode
+			-- for the static system
+		require
+			dynamic_system: System.is_dynamic
+		local
+			types: TYPE_LIST;
+			unit: T;
+			associated_class: CLASS_C;
+			cl_type: CLASS_TYPE
+		do
+			Result := new_poly_table;
+			from
+				start
+			until
+				after
+			loop
+				unit := item;
+				associated_class := System.class_of_id (unit.id);
+				if associated_class /= Void then
+						-- Classes could be removed
+					from
+						types := associated_class.types;
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item;
+						if cl_type.is_static then
+								-- Generate only what was in the static system.
+							Result.extend (unit.entry (cl_type))
+						end;
+						types.forth
+					end
+				end;
+				forth
+			end
+		end
+
 end

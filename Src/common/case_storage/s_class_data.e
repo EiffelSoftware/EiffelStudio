@@ -2,17 +2,19 @@ class S_CLASS_DATA
 
 inherit
 
+	HASHABLE
+		rename
+			hash_code as view_id
+		end;
 	S_LINKABLE_DATA
 		rename
 			make as old_make
+		undefine
+			is_equal
 		redefine
 			chart, set_chart
 		end;
 	S_CASE_INFO;
-	COMPARABLE
-		undefine
-			is_equal
-		end
 
 creation
 
@@ -326,6 +328,19 @@ feature -- Storing
 			internal_file: RAW_FILE;
 		do
 			!! internal_file.make (file_path (storage_path, view_id, True));
+			if internal_file.exists then
+				internal_file.delete
+			end
+		end;
+
+	remove_file (storage_path: STRING) is
+			-- Remove file associated with Current.
+		require
+			valid_storage_path: storage_path /= Void
+		local
+			internal_file: RAW_FILE;
+		do
+			!! internal_file.make (file_path (storage_path, view_id, False));
 			if internal_file.exists then
 				internal_file.delete
 			end

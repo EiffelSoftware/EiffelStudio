@@ -95,6 +95,8 @@ feature -- Output
 							line_pos := unused_local_warning.associated_feature.ast.location.line_number
 							col_pos := unused_local_warning.associated_feature.ast.location.start_column_position
 							short_warning := "'" + unused_local_warning.associated_local + "' is declared but never used."
+						else
+							short_warning := clone (warning_string)
 						end
 						if display_warnings then
 							compiler_coclass.event_output_warning (warning_string, short_warning, warning.code, warning_file, line_pos, col_pos)							
@@ -163,6 +165,8 @@ feature -- Output
 							line_pos := syntax_error.line_number
 							col_pos := syntax_error.start_position
 							short_error := "Syntax Error: " + syntax_error.syntax_message
+						else
+							short_error := clone (error_string)
 						end
 						compiler_coclass.event_output_error (error_string, short_error, error.code, error_file, line_pos, col_pos)
 					end

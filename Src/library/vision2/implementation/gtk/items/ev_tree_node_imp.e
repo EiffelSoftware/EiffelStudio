@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
 		do
-			{EV_ITEM_LIST_IMP} Precursor
+			Precursor {EV_ITEM_LIST_IMP}
 			is_initialized := True
 		end
 		

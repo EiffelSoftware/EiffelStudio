@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			initialize_menu_item_box
 			real_text := ""
-			{EV_ITEM_IMP} Precursor
+			Precursor {EV_ITEM_IMP}
 		end
 
 	initialize_menu_item_box is

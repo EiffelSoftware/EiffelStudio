@@ -11,12 +11,26 @@ class
 inherit
 	EV_ACCELERATOR_I
 
+	EV_WEL_KEY_CONVERSION
+
 	WEL_ACCELERATOR
 		rename
 			make as wel_make,
 			key as wel_key,
 			set_key as wel_set_key
 		end
+
+	WEL_ACCELERATOR_FLAG_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
+	EV_ID_IMP
 
 create
 	make
@@ -27,6 +41,8 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
+			make_id
+			wel_make (key_code_to_wel ((create {EV_KEY}).code), id, Fvirtkey)
 		end
 
 	initialize is
@@ -39,69 +55,74 @@ feature -- Access
 	key: EV_KEY is
 			-- Key that has to pressed to trigger actions.
 		do
-			check
-				to_be_implemented: False
-			end
+			create Result.make_with_code (key_code_from_wel (wel_key))
 		end
 
-	shift_key: BOOLEAN
+	shift_key: BOOLEAN is
 			-- Must the shift key be pressed?
+		do
+			Result := flag_set (flags, Fshift)
+		end
 
-	alt_key: BOOLEAN
+	alt_key: BOOLEAN is
 			-- Must the alt key be pressed?
+		do
+			Result := flag_set (flags, Falt)
+		end
 
-	control_key: BOOLEAN
+	control_key: BOOLEAN is
 			-- Must the control key be pressed?
+		do
+			Result := flag_set (flags, Fcontrol)
+		end
 
 feature -- Element change
 
 	set_key (a_key: EV_KEY) is
 			-- Set `a_key_code' as new key that has to be pressed.
 		do
-			check
-				to_be_implemented: False
-			end
+			wel_set_key (key_code_to_wel (a_key.code))
 		end
 
 	enable_shift_key is
 			-- "Shift" must be pressed for the key combination.
 		do
-			shift_key := True
+			set_flags (set_flag (flags, Fshift))
 		end
 
 	disable_shift_key is
 			-- "Shift" is not part of the key combination.
 		do
-			shift_key := False
+			set_flags (clear_flag (flags, Fshift))
 		end
 
 	enable_alt_key is
 			-- "Alt" must be pressed for the key combination.
 		do
-			alt_key := True
+			set_flags (set_flag (flags, Falt))
 		end
 
 	disable_alt_key is
 			-- "Alt" is not part of the key combination.
 		do
-			alt_key := False
+			set_flags (clear_flag (flags, Falt))
 		end
 
 	enable_control_key is
 			-- "Control" must be pressed for the key combination.
 		do
-			control_key := True
+			set_flags (set_flag (flags, Fcontrol))
 		end
 
 	disable_control_key is
 			-- "Control" is not part of the key combination.
 		do
-			control_key := False
+			set_flags (clear_flag (flags, Fcontrol))
 		end
 
 feature {NONE} -- Implementation
 
-	id: INTEGER is
+	id4: INTEGER is
 			-- Integer representation of key combination.
 		do
 			Result := key.code
@@ -141,6 +162,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/16 17:11:24  brendel
+--| Implemented.
+--|
 --| Revision 1.5  2000/03/15 21:16:17  brendel
 --| Changed key_code to key.
 --|

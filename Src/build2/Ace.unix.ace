@@ -1,5 +1,6 @@
 system
-	test
+
+	build	
 
 root
 	GB: execute
@@ -118,18 +119,16 @@ cluster
 external
 
 	include_path:
-		"D:\work\library\expat\xmlparse",
-		"d:\work\library\wel\spec\windows\include",
-		"d:\work\library\vision2\spec\include",
-		"d:\work\library\gobo_16\library\kernel\include",
-		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib"
+		"$EIFFEL_SRC/library/expat/xmlparse",
+		"$EIFFEL_SRC/library/vision2/spec/include",
+		"$WS/gobo_16/library/kernel/include",
+		"$WS/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib",
+                "$EIFFEL_SRC/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+                "$EIFFEL_SRC/library/vision2/spec/include"
 
 	object:
-		"d:\work\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
-		"d:\work\library\expat\lib\xmlparse.lib"
-
+		"$(WS)/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib/exml_expat.a",
+                "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+                "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+                "-lpng -lz -lXtst -lexpat"
 end

@@ -14,7 +14,7 @@
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram.png"></p>
 <P CLASS="note"><B>Note</B>: The screenshot above shows the window inheriting from EV_TITLED_WINDOW. If "client of windows" is selected from the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, a client supplier relationship exists instead.</P>
 <H2>Project build type</H2>
-<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then all the classes listed above are generated, along with the following:</P>
+<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then all the classes listed above in "Generated classes" are generated, along with the following:</P>
 	<UL>
 		<LI>Two ace files, "ace.Unix.ace" for unix based platforms, and "ace.Windows.ace" for Windows platforms.</li>
 		<LI>An application class which launches the root window of the project.</LI>
@@ -24,7 +24,7 @@
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/complete_project_diagram.png"></p>
 </P>
 <H2>Modifying code after generation</H2>
-<P>The choice to generate an interface and an implementation class for the window was to enable modification of the interface using EiffelBuild, once you had hand edited code. The rule is that the implementation window class will be re-generated every time, but the interface will not. It follows from this that you should not add hand written code to the implementation of the window, as any changes you make will be lost when re-generation takes place.</P>
+<P>The choice to generate an interface and an implementation class for the windows and constants was to enable modification of the interface using EiffelBuild, once you had hand edited code. The rule is that the implementation classes are not re-generated every time, but the interface classes are. It follows from this that you should not add hand written code to the implementation classes (ending in _IMP), as any changes you make will be lost when re-generation takes place.</P>
 <P>Using this mechanism, you can generate your initial system using EiffelBuild, and implement any event features that have been generated (in the interface) by EiffelBuild. If you then decide that you wish to modify the look and the feel of the interface, you can return to EiffelBuild, make the necessary adjustments and then re-generate the system.</P>
 
 

@@ -24,7 +24,7 @@ feature
 			until
 				i > 255
 			loop
-		            	Result.put ("", i)
+				Result.put ("", i)
 				i := i + 1
 			end
 			Result.put ("LBUTTON", Vk_lbutton) 
@@ -57,6 +57,7 @@ feature
 			Result.put ("INSERT", Vk_insert)
 			Result.put ("DELETE", Vk_delete)
 			Result.put ("HELP", Vk_help)
+
 			Result.put ("0", 48)
 			Result.put ("1", 49)
 			Result.put ("2", 50)
@@ -67,32 +68,33 @@ feature
 			Result.put ("7", 55)
 			Result.put ("8", 56)
 			Result.put ("9", 57)
-			Result.put ("A", 58)
-			Result.put ("B", 59)
-			Result.put ("C", 60)
-			Result.put ("D", 61)
-			Result.put ("E", 62)
-			Result.put ("F", 63)
-			Result.put ("G", 64)
-			Result.put ("H", 65)
-			Result.put ("I", 66)
-			Result.put ("J", 67)
-			Result.put ("K", 68)
-			Result.put ("L", 69)
-			Result.put ("M", 70)
-			Result.put ("N", 71)
-			Result.put ("O", 72)
-			Result.put ("P", 73)
-			Result.put ("Q", 74)
-			Result.put ("R", 75)
-			Result.put ("S", 76)
-			Result.put ("T", 77)
-			Result.put ("U", 78)
-			Result.put ("V", 79)
-			Result.put ("W", 80)
-			Result.put ("X", 81)
-			Result.put ("Y", 82)
-			Result.put ("Z", 83)
+			Result.put ("A", 65)
+			Result.put ("B", 66)
+			Result.put ("C", 67)
+			Result.put ("D", 68)
+			Result.put ("E", 69)
+			Result.put ("F", 70)
+			Result.put ("G", 71)
+			Result.put ("H", 72)
+			Result.put ("I", 73)
+			Result.put ("J", 74)
+			Result.put ("K", 75)
+			Result.put ("L", 76)
+			Result.put ("M", 77)
+			Result.put ("N", 78)
+			Result.put ("O", 79)
+			Result.put ("P", 80)
+			Result.put ("Q", 81)
+			Result.put ("R", 82)
+			Result.put ("S", 83)
+			Result.put ("T", 84)
+			Result.put ("U", 85)
+			Result.put ("V", 86)
+			Result.put ("W", 87)
+			Result.put ("X", 88)
+			Result.put ("Y", 89)
+			Result.put ("Z", 90)
+
 			Result.put ("NUMPAD0", Vk_numpad0)
 			Result.put ("NUMPAD1", Vk_numpad1)
 			Result.put ("NUMPAD2", Vk_numpad2)
@@ -142,7 +144,7 @@ end -- class VIRTUAL_KEYS_WINDOWS
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
---|   Engineering Inc.
+--|			Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

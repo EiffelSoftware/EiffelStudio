@@ -106,8 +106,7 @@ feature
 						buffer.putstring ("), (");
 
 						buffer.putstring (table_name);
-						buffer.putstring ("_gen_type");
-						buffer.putchar ('-');
+						buffer.putstring ("_gen_type-");
 						buffer.putint (table.min_type_id - 1);
 						buffer.putstring ("), ");
 						context.Current_register.print_register_by_name

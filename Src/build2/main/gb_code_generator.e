@@ -746,16 +746,18 @@ feature {NONE} -- Implementation
 		end
 		
 	add_event_connection (event: STRING) is
-			--
+			-- Add `indent' and `event' to `event_connection_string'.
+			-- Create `event_connection_string' if empty.
 		do
 			if event_connection_string = Void then
-				event_connection_string := ""
+				event_connection_string := connect_events_comment-- Connect events."
 			end
 			event_connection_string := event_connection_string + indent + event
 		end
 		
 	add_event_declaration (event: STRING) is
-			--
+			-- Add `indent' and `event' to `event_declaration_string'.
+			-- Create `event_declaration_string' if empty.
 		do
 			if event_declaration_string = Void then
 				event_declaration_string := ""
@@ -764,7 +766,8 @@ feature {NONE} -- Implementation
 		end
 		
 	add_event_implementation (event: STRING) is
-			--
+			-- Add `indent' and `event' to `event_implementation_string.
+			-- Create `event_implementation_string' if empty.
 		do
 			if event_implementation_string = Void then
 				event_implementation_string := ""

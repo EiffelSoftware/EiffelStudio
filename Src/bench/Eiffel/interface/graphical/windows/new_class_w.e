@@ -159,7 +159,6 @@ feature -- Access
 			str, str2: STRING;
 			clus_list: LINKED_LIST [CLUSTER_I];
 			str_el: SCROLLABLE_LIST_STRING_ELEMENT;
-			selected_pos: INTEGER;
 			clus: CLUSTER_I
 		do
 			cluster := cl;
@@ -177,7 +176,6 @@ feature -- Access
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.empty then
 				from
-					selected_pos := 1;
 					clus_list.start
 				until
 					clus_list.after
@@ -186,15 +184,24 @@ feature -- Access
 					if not clus.is_precompiled then
 						!! str_el.make (0);
 						str_el.append (clus.cluster_name);
-						if clus = cl then	
-							selected_pos := clus_list.index
-						end;
 						cluster_list.extend (str_el);
 					end;
 					clus_list.forth
 				end;
-				if not cluster_list.empty then
-					cluster_list.select_i_th (selected_pos);
+				if cluster_list.empty then
+					warner (tool.popup_parent).gotcha_call 
+						(Warning_messages.w_Cannot_create_class (class_name))
+				else
+					cluster_list.start;
+					cluster_list.compare_objects;
+					!! str_el.make (0);
+					str_el.append (cl.cluster_name);
+					cluster_list.search (str_el);
+					if cluster_list.after then
+						cluster_list.select_i_th (1);
+					else
+						cluster_list.select_item
+					end;
 					if cluster_list.count < 10 then
 						cluster_list.set_visible_item_count (cluster_list.count)
 					else

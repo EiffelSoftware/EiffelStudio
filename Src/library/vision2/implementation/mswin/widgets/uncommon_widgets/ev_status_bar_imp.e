@@ -289,9 +289,9 @@ feature {EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation
 			current_item := ev_children @ item_id
 			pixmap ?= current_item.pixmap.implementation
 			bitmap := pixmap.internal_bitmap
-			dc.draw_bitmap (bitmap, rect.left, rect.top, bitmap.width, bitmap.height)
+			dc.draw_bitmap (bitmap, rect.left + 1, rect.top + 1, bitmap.width, bitmap.height)
 				-- Draw `bitmap'
-			create rect2.make (bitmap.width + rect.left, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
+			create rect2.make (bitmap.width + rect.left + 2, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
 			dc.set_background_transparent
 			dc.draw_text (current_item.text, rect2, Dt_left)
 				-- Draw text associated with status bar item.

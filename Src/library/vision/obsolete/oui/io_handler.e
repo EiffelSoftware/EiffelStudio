@@ -28,8 +28,14 @@ feature
 
 	make is
 			-- Create a io_handler.
+		local
+			ot: OBSOLETE_TOOLKIT
 		do
-			implementation := toolkit.io_handler (Current)
+			ot ?= toolkit;
+			check
+				obsolete_toolkit_instantiated: ot /= Void
+			end;
+			implementation := ot.io_handler (Current)
 		end;
 
 feature {NONE}

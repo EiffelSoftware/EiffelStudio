@@ -75,6 +75,7 @@
 			<TEXT>feature_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>feature_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>do_flat_in_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Object_tool_preferences">

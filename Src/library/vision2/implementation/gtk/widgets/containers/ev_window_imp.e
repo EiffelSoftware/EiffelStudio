@@ -273,7 +273,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command_with_event_data ("delete_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "delete_event", cmd, arg, ev_data, 0, False)
 			has_close_command := True
 		end
 
@@ -284,7 +284,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("configure_event", cmd, arg, ev_data, 2, False)
+			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 2, False)
 		end
 
 	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -294,7 +294,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("configure_event", cmd, arg, ev_data, 1, False)
+			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 1, False)
 		end
 
 feature -- Event -- removing command association
@@ -304,21 +304,21 @@ feature -- Event -- removing command association
 			-- when the window is closed.
 		do
 			has_close_command := False
-			remove_commands (close_event_id)
+			remove_commands (widget, close_event_id)
 		end
 
 	remove_resize_commands is
 			-- Empty the list of commands to be executed
 			-- when the window is resized.
 		do
-			remove_commands (resize_event_id)
+			remove_commands (widget, resize_event_id)
 		end
 
 	remove_move_commands is
 			-- Empty the list of commands to be executed
 			-- when the widget is resized.
 		do
-			remove_commands (move_event_id)
+			remove_commands (widget, move_event_id)
 		end
 
 feature -- Assertion test

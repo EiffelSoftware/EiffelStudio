@@ -32,16 +32,16 @@ feature -- Redefined
 			end
 		end
 
-	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC
 		do
-			Assembly_types_cache.search (aname.full_name)
-			if Assembly_types_cache.found then
-				Result := Assembly_types_cache.found_item
+			assembly_types_cache.search (a_assembly.gac_path)
+			if assembly_types_cache.found then
+				Result := assembly_types_cache.found_item
 			else
-				Result := Precursor {CACHE_READER} (aname)
+				Result := Precursor {CACHE_READER} (a_assembly)
 				if Result /= Void then
-					Assembly_types_cache.put (Result, aname.full_name)
+					assembly_types_cache.put (Result, a_assembly.gac_path)
 				end
 			end
 		end
@@ -112,9 +112,9 @@ feature -- Access
 			am: ARRAY [CONSUMED_ASSEMBLY]
 		do
 			ct := consumed_type (t)
-			am := assembly_mapping_array (t.assembly.get_name)
+			ca := consumed_assembly_from_path (t.assembly.location)
+			am := assembly_mapping_array (ca)
 			if ct /= Void and am /= Void then
-				ca := Consumed_assembly_factory.consumed_assembly (t.assembly)
 				if dotnet_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
 					if constructors /= Void then
@@ -134,7 +134,7 @@ feature -- Access
 								loop
 									crt := cargs.item (j).type
 									found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-										am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
+										am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
 									j := j + 1
 								end
 							end
@@ -163,7 +163,7 @@ feature -- Access
 									loop
 										crt := cargs.item (j).type
 										found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-											am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
+											am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
 										j := j + 1
 									end
 								end
@@ -193,7 +193,7 @@ feature -- Access
 										loop
 											crt := cargs.item (j).type
 											found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-												am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
+												am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
 											j := j + 1
 										end
 									end
@@ -257,21 +257,18 @@ feature -- Access
 			end
 		end
 
- 	assembly_mapping_array (aname: ASSEMBLY_NAME): ARRAY [CONSUMED_ASSEMBLY] is
- 			-- Assembly mapping for assembly `aname'.
+ 	assembly_mapping_array (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
+ 			-- Assembly mapping for assembly `a_assembly'.
  		require
- 			non_void_name: aname /= Void
-			assembly_in_cache: is_assembly_in_cache (aname)
- 		local
-  			name: STRING
+ 			non_void_assembly: a_assembly /= Void
+			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
  		do
-			create name.make_from_cil (aname.to_string)
-			assemblies_mappings_cache.search (name)
+			assemblies_mappings_cache.search (a_assembly.gac_path)
 			if assemblies_mappings_cache.found then
 				Result := assemblies_mappings_cache.found_item
 			else
-				Result := assembly_mapping (aname).assemblies
-				assemblies_mappings_cache.put (Result, name)
+				Result := assembly_mapping_from_consumed_assembly (a_assembly).assemblies
+				assemblies_mappings_cache.put (Result, a_assembly.gac_path)
 			end
   		end
 
@@ -288,7 +285,7 @@ feature -- Access
 			i: INTEGER
 --			am: ARRAY [CONSUMED_ASSEMBLY]
 		do
---			am := assembly_mapping_array (t.assembly.get_name)
+--			am := assembly_mapping_array (consumed_assembly_from_path (t.assembly.location))
 			from
 				entities_list.start
 			until
@@ -305,7 +302,7 @@ feature -- Access
 					loop
 						crt := cargs.item (i).type
 						found := crt.name.to_cil.equals (args.item (i - 1).full_name) 
---							and then am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (i - 1).assembly))
+--							and then am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (i - 1).assembly.location))
 						i := i + 1
 					end
 					if found then
@@ -344,7 +341,7 @@ feature -- Access
 				end
 			end
 			if ct /= Void then
-				ca := Consumed_assembly_factory.consumed_assembly (t.assembly)
+				ca := consumed_assembly_from_path (t.assembly.location)
 				if dotnet_feature_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
 					if constructors /= Void then

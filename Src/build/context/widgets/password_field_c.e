@@ -27,6 +27,20 @@ feature -- Type data
 			Result := context_catalog.text_page.passwd_field_type
 		end
 
+feature -- Status report
+
+	character: CHARACTER is
+		do
+			Result := gui_object.character
+		end
+
+feature -- Status setting
+
+	set_character (char: CHARACTER) is
+		do
+			gui_object.set_character (char)
+		end
+
 feature {NONE} -- Internal namer
 
 	namer: NAMER is
@@ -39,7 +53,6 @@ feature -- Code generation
 	eiffel_type: STRING is "EV_PASSWORD_FIELD"
 
 	full_type_name: STRING is "Password field"
-
 
 feature -- Implementation
 

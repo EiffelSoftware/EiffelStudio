@@ -8,7 +8,7 @@ class
 	MENU_ITEM_C
 
 inherit
-	ITEM_C
+	SIMPLE_ITEM_C
 		redefine
 			gui_object,
 			create_context
@@ -40,7 +40,7 @@ feature -- Context creation
 	create_context (a_parent: MENU_ITEM_HOLDER_C): like Current is
 			-- Create a context of the same type.
 		do
-			Result ?= {ITEM_C} Precursor (a_parent)
+			Result ?= {SIMPLE_ITEM_C} Precursor (a_parent)
 			a_parent.append (Result)
 		end
 

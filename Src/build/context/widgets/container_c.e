@@ -75,21 +75,26 @@ feature -- Status report
 			Result := True
 		end
 
-feature -- Basic operations
- 
-	transform_in_group (a_group: GROUP_C) is
-			-- Transform the bulletin and its content in a group instance
-			-- (Creation of the group)
+	accept_child: BOOLEAN is
 		do
-			parent.child_start
-			parent.search_same_child (Current)
-			parent.remove_child
-			tree_element.destroy
-			context_catalog.clear_editors (Current)
-			transformed_in_group := True
-			group_context :=  a_group
-			set_new_parent (a_group)
+			Result := gui_object.accept_child
 		end
+
+feature -- Basic operations
+
+--	transform_in_group (a_group: GROUP_C) is
+--			-- Transform the bulletin and its content in a group instance
+--			-- (Creation of the group)
+--		do
+--			parent.child_start
+--			parent.search_same_child (Current)
+--			parent.remove_child
+--			tree_element.destroy
+--			context_catalog.clear_editors (Current)
+--			transformed_in_group := True
+--			group_context :=  a_group
+--			set_new_parent (a_group)
+--		end
 
 	transform_in_bulletin is
 			-- Undo the transformation from bulletin to group instance
@@ -101,8 +106,8 @@ feature -- Basic operations
 			set_new_parent (Current)
 		end
 
-	group_context: GROUP_C
-		-- For the callbacks in the selection manager
+--	group_context: GROUP_C
+--		-- For the callbacks in the selection manager
 
 	transformed_in_group: BOOLEAN
 		-- For the callbacks in the selection manager

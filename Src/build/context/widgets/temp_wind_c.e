@@ -10,9 +10,9 @@ class TEMP_WIND_C
 inherit
 	WINDOW_C
 		redefine
-			copy_attributes, context_initialization, 
+			create_context,
+			context_initialization, 
 			position_initialization,
-			update_visual_name_in_editor,
 			description_text, creation_procedure_text
 		end
 
@@ -26,6 +26,15 @@ feature -- Type data
 	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.container_page.temp_wind_type
+		end
+
+feature -- Context creation
+
+	create_context (a_parent: WINDOW_C): like Current is
+			-- Create a context of the same type
+		do
+			Result ?= {WINDOW_C} Precursor (a_parent)
+			a_parent.append (Result)
 		end
 
 feature -- GUI object creation
@@ -45,33 +54,32 @@ feature -- GUI object creation
 				set_x_y (x1, y1)
 --				set_start_hidden (True)
 --			end
-			add_to_window_list
 			gui_object.show
 		end
 
 feature {NONE} -- Internal namer
 
--- 	find_parent (parent_name: STRING): COMPOSITE_C is
--- 		local
--- 			cursor: CURSOR
--- 			found_parent: CONTEXT
--- 			e_name: STRING
--- 		do
--- 			cursor := Shared_window_list.cursor
--- 			from
--- 				Shared_window_list.start
--- 			until
--- 				Shared_window_list.after or
--- 				Result /= Void
--- 			loop
--- 				e_name := Shared_window_list.item.entity_name
--- 				if e_name.is_equal (parent_name) then
--- 					Result := Shared_window_list.item
--- 				end
--- 				Shared_window_list.forth
--- 			end
--- 			Shared_window_list.go_to (cursor)
--- 		end
+--	find_parent (parent_name: STRING): COMPOSITE_C is
+--		local
+--			cursor: CURSOR
+--			found_parent: CONTEXT
+--			e_name: STRING
+--		do
+--			cursor := Shared_window_list.cursor
+--			from
+--				Shared_window_list.start
+--			until
+--				Shared_window_list.after or
+--				Result /= Void
+--			loop
+--				e_name := Shared_window_list.item.entity_name
+--				if e_name.is_equal (parent_name) then
+--					Result := Shared_window_list.item
+--				end
+--				Shared_window_list.forth
+--			end
+--			Shared_window_list.go_to (cursor)
+--		end
 
 	Window_seed: STRING is "Temp_wind"
 
@@ -93,17 +101,6 @@ feature {NONE} -- Internal namer
 -- 			opt_list.put (Context_const.temp_wind_att_form_nbr,
 -- 						Context_const.attribute_format_nbr)
 -- 		end
-
-	update_visual_name_in_editor is
-		local
---			editor: CONTEXT_EDITOR
-		do
--- 			editor := context_catalog.editor (Current, 
--- 					Context_const.temp_wind_att_form_nbr)
--- 			if editor /= Void then
--- 				editor.reset_current_form
--- 			end
-		end
 
 feature -- Code generation
 
@@ -136,19 +133,6 @@ feature {CONTEXT}
 		end
 
 feature {NONE} -- Code generation
-
-	copy_attributes (other_context: like Current) is
-		do
-			if title_modified then
-				other_context.set_title (title)
-			end
-			if resize_policy_modified then
-				other_context.disable_resize_policy (resize_policy_disabled)
-			end
-			Precursor (other_context)
---			other_context.set_start_hidden (start_hidden)
-			other_context.set_size (width, height)
-		end
 
 	description_text: STRING is
 			-- Description text in indexing clause.

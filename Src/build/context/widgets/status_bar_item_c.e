@@ -1,11 +1,11 @@
 indexing
-	description: "Context that represents a list item (EV_LIST_ITEM)."
-	author: ""
+	description: "Context that represents a status bar item (EV_STATUS_BAR_ITEM)."
+	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LIST_ITEM_C
+	STATUS_BAR_ITEM_C
 
 inherit
 	SIMPLE_ITEM_C
@@ -23,23 +23,23 @@ feature -- Type data
 
 	type: CONTEXT_TYPE is
 		do
-			Result := context_catalog.text_page.list_item_type
+			Result := context_catalog.menu_page.status_bar_item_type
 		end
 
 feature -- Context creation
 
-	create_context (a_parent: LIST_C): like Current is
+	create_context (par: STATUS_BAR_C): like Current is
 			-- Create a context of the same type.
 		do
-			Result ?= {SIMPLE_ITEM_C} Precursor (a_parent)
-			a_parent.append (Result)
+			Result ?= {SIMPLE_ITEM_C} Precursor (par)
+			par.append (Result)
 		end
 
 feature -- GUI object creation
 
-	create_gui_object (a_parent: EV_LIST) is
+	create_gui_object (par: EV_STATUS_BAR) is
 		do
-			create gui_object.make_with_text (a_parent, label)
+			create gui_object.make (par)
 		end
 
 feature -- Status report
@@ -53,7 +53,7 @@ feature -- Status setting
 
 	show is
 		local
-			a_list: LIST_C
+			a_list: STATUS_BAR_C
 		do
 			a_list ?= parent
 			gui_object.set_parent (a_list.gui_object)
@@ -68,18 +68,18 @@ feature {NONE} -- Internal namer
 
 	namer: NAMER is
 		once
-			create Result.make ("List_item")
+			create Result.make ("Status_bar_item")
 		end
 
 feature -- Code generation
 
-	eiffel_type: STRING is "EV_LIST_ITEM"
+	eiffel_type: STRING is "EV_STATUS_BAR_ITEM"
 
-	full_type_name: STRING is "List item"
+	full_type_name: STRING is "Status bar item"
 
 feature -- Implementation
 
-	gui_object: EV_LIST_ITEM
+	gui_object: EV_STATUS_BAR_ITEM
 
-end -- class LIST_ITEM_C
+end -- class STATUS_BAR_ITEM_C
 

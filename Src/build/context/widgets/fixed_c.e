@@ -47,6 +47,57 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+	border_width: INTEGER is
+			-- Border width of the container
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	spacing: INTEGER is
+			-- Spacing of the container
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	is_homogeneous: BOOLEAN is
+			-- Is the container homogeneous
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+feature -- Status setting
+
+	set_border_width (w: INTEGER) is
+			-- Set the border width of the container.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	set_spacing (value: INTEGER) is
+			-- Set the spacing of the container
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	set_homogeneous (flag: BOOLEAN) is
+			-- Set `is_homogeneous' to `flag'.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
 feature {NONE} -- Internal namer
 
 	namer: NAMER is

@@ -113,23 +113,23 @@ feature -- Editable
 --			end
 		end
 
--- 	default_option_number: INTEGER is
--- 			-- Default option list number
--- 		local
--- 			i: INTEGER
--- 			opt_list: ARRAY [INTEGER]
--- 		do
--- 			opt_list := option_list
--- 			from
--- 				i := 1
--- 			until
--- 				Result /= 0 or else
--- 					i > opt_list.count
--- 			loop
--- 				Result := opt_list.item (i)
--- 				i := i + 1
--- 			end
--- 		end
+	default_option_number: INTEGER is
+			-- Default option list number
+		local
+			i: INTEGER
+			opt_list: ARRAY [INTEGER]
+		do
+			opt_list := option_list
+			from
+				i := 1
+			until
+				Result /= 0 or else
+					i > opt_list.count
+			loop
+				Result := opt_list.item (i)
+				i := i + 1
+			end
+		end
 
 	update_instance_name_in_editor is
 			-- Update the command instance name
@@ -300,15 +300,16 @@ feature {GROUP, CONTEXT} -- Update group name in context tree
 --			end
 --		end
 
-feature {CONTEXT, TREE_ELEMENT, SHOW_WINDOW_HOLE}
+feature {CONTEXT, TREE_ELEMENT, SHOW_WINDOW_HOLE, EXPAND_PARENT_HOLE}
 
 	update_tree_element is
 		do
-			tree_element.set_text (title_label)
---?			tree.display (data)
+			if not tree_element.destroyed then
+				tree_element.set_text (title_label)
+			end
 			update_visual_name_in_editor
---			context_catalog.update_name_in_editors (Current)
---			App_editor.update_context_name_in_editors (Current)
+			context_catalog.update_name_in_editors (Current)
+			app_editor.update_context_name_in_editors (Current)
 		end
 
 	update_visual_name_in_editor is
@@ -322,52 +323,46 @@ feature {CONTEXT, TREE_ELEMENT, SHOW_WINDOW_HOLE}
 			-- Text element associated with the context
 			-- in the context tree window
 
-	-- *********************************
-	-- * choices in the context editor *
-	-- *********************************
+feature {CONTEXT_EDITOR} -- Choices in the context editor
 
-feature
+	option_list: ARRAY [INTEGER] is
+			-- Array of the different forms
+			-- which define the attributes of
+			-- the context
+		do
+			create Result.make (1, Context_const.number_of_formats)
+--			add_to_option_list (Result)
+			Result.put (Context_const.behavior_form_nbr, 
+						Context_const.behaviour_format_nbr)
+			if is_fixed then
+				Result.put (Context_const.alignment_form_nbr, 
+							Context_const.align_format_nbr)
+			end
+--			if resize_policy /= Void then
+--				Result.put (Context_const.bulletin_resize_form_nbr, 
+--							Context_const.resize_format_nbr)
+--			end
+--			Result.put (Context_const.color_form_nbr,
+--						Context_const.color_format_nbr)
+--			if is_fontable then
+--				Result.put (Context_const.font_form_nbr, 
+--							Context_const.font_format_nbr)
+--			end
+		ensure
+			valid_result: Result /= Void
+			result_not_empty: not Result.empty
+			valid_result_count: Result.count = 9
+		end
 
--- 	option_list: ARRAY [INTEGER] is
--- 			-- Array of the different forms
--- 			-- which define the attributes of
--- 			-- the context
--- 		do
--- 			!! Result.make (1, Context_const.number_of_formats)
--- 			add_to_option_list (Result)
--- 			Result.put (Context_const.behavior_form_nbr, 
--- 				Context_const.behaviour_format_nbr)
--- 			if is_bulletin then
--- 				Result.put (Context_const.alignment_form_nbr, 
--- 					Context_const.align_format_nbr)
--- 				Result.put (Context_const.grid_form_nbr, 
--- 					Context_const.grid_format_nbr)
--- 			end
--- 			if resize_policy /= Void then
--- 				Result.put (Context_const.bulletin_resize_form_nbr, 
--- 				Context_const.resize_format_nbr)
--- 			end
--- 			Result.put (Context_const.color_form_nbr, 
--- 				Context_const.color_format_nbr)
--- 			if is_fontable then
--- 				Result.put (Context_const.font_form_nbr, 
--- 					Context_const.font_format_nbr)
--- 			end
--- 		ensure
--- 			valid_result: Result /= Void
--- 			result_not_empty: not Result.empty
--- 			valid_result_count: Result.count = 9
--- 		end
-
--- 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
--- 			-- List of specific forms for Current
--- 			-- Context
--- 		require
--- 			valid_opt_list: opt_list /= Void
--- 			option_list_has_correct_count: 
--- 					opt_list.count = Context_const.number_of_formats
--- 		deferred
--- 		end
+--	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+--			-- List of specific forms for Current
+--			-- Context
+--		require
+--			valid_opt_list: opt_list /= Void
+--			option_list_has_correct_count: 
+--					opt_list.count = Context_const.number_of_formats
+--		deferred
+--		end
 
 feature
 
@@ -1187,7 +1182,6 @@ feature {CONTEXT}
 			-- and all its descendants
 		local
 			context_name: STRING
-			comment: STRING
 		do
 			!!Result.make (0)
 			if group_name = Void then

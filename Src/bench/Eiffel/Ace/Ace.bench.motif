@@ -94,6 +94,7 @@ cluster
 	-- Switch:
 	
 		switch:				"$BENCH/Eiffel/batch_bench/bench";
+		melt_only_switch:	"$BENCH/Eiffel/batch_bench/professional";
 
 	-- graphical interface (bench):
 

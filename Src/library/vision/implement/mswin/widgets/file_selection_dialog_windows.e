@@ -50,9 +50,6 @@ feature -- Initialization
 			!! private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
 			title := clone (a_file_sel_dialog.identifier)
-			pattern := ""
-			directory := ""
-			filter := "*.*"
 		end
 
 	realize is
@@ -111,7 +108,7 @@ feature -- Status report
 			-- Current selected file
 		do
 			if directory_selection then
-				if directory_dialog /= Void and  directory_dialog.selection_made then
+				if directory_dialog /= Void and directory_dialog.selection_made then
 					Result := clone (directory_dialog.directory)
 				end
 			else
@@ -146,7 +143,7 @@ feature -- Status setting
 			if directory_selection then
 				!! directory_dialog.make (wc, Current)
 				directory_dialog.set_title (title)
-				directory_dialog.set_search_directory (filter)
+				directory_dialog.set_search_directory (directory)
 				directory_dialog.set_no_selection_made
 				directory_dialog.activate
 			else
@@ -159,9 +156,10 @@ feature -- Status setting
 				end
 				wel_file_dialog.add_flag (Ofn_nochangedir)
 				wel_file_dialog.set_title (title)
-				wel_file_dialog.set_file_name (pattern)
-				wel_file_dialog.set_filter (<<filter>>, <<"">>)
-				if directory.is_equal ("") then
+				if pattern /= Void then
+					wel_file_dialog.set_filter (<<pattern>>, <<"search pattern">>)
+				end
+				if directory = Void then
 					wel_file_dialog.set_initial_directory_as_current
 				else
 					wel_file_dialog.set_initial_directory (directory)
@@ -184,7 +182,7 @@ feature -- Status setting
 		do
 			title := clone (a_title)
 		end
-	
+
 	set_pattern (s: STRING) is
 			-- Set the pattern to `s'
 		do
@@ -196,22 +194,51 @@ feature -- Status setting
 		local
 			string_count: INTEGER
 			f: STRING
+			c: CHARACTER
 		do
 			string_count := s.count
-			if s @ string_count = '\' or s @ string_count = '/' then
-				string_count := string_count - 1
+			c := s @ string_count
+			if
+				c = '\' or else
+				c = '/' or else
+				c = ':'
+			then
+				directory := clone (s)
+				directory.replace_substring_all ("/", "\")
+				if c = ':' then
+					directory.append_character ('\')
+				end
+			else
+				from
+					f := ""
+				until
+					c = '\' or else
+					c = '/' or else
+					c = ':' or else
+					string_count = 1
+				loop
+					f.prepend_character (c)
+					string_count := string_count - 1
+					c := s @ string_count
+				end
+				if string_count /= 1 then
+					if has_wildcard (f) then
+						filter := f
+						directory.set (s, 1, string_count)
+					else
+						directory := s
+						directory.append_character ('\')
+					end
+					directory.replace_substring_all ("/", "\")
+				else
+					directory := "c:\"
+					filter := "*.*"
+				end
 			end
-			from
-				f := ""
-			until
-				s @ string_count = '\' or
-				s @ string_count = '/'
-			loop
-				f.prepend_character (s @ string_count)
-				string_count := string_count - 1
+			if has_wildcard (directory) then
+				directory := "c:\"
+				filter := "*.*"
 			end
-			filter := f
-			directory.set (s, 1, string_count)
 		end
 
 	set_directory (s: STRING) is
@@ -219,6 +246,10 @@ feature -- Status setting
 			-- to be displayed to `a_directory_name'.
 		do
 			directory := clone (s)
+			directory.replace_substring_all ("/", "\")
+			if directory @ directory.count /= '\' then
+				directory.append_character ('\')
+			end
 		end
 
 	set_open_file is
@@ -393,6 +424,13 @@ feature -- Implementation
 			-- WEL dialog for file selection
 
 feature {NONE} -- Implementation
+
+	has_wildcard (s: STRING): BOOLEAN is
+			-- Has string `s' a wildcard?
+		do
+			Result := s.substring_index ("?", 1) /= 0 or else
+				s.substring_index ("*", 1) /= 0
+		end
 
 	class_name: STRING is
 			-- Class name

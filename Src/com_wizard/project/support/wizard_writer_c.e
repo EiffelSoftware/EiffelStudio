@@ -48,7 +48,7 @@ feature -- Basic operations
 			non_void_name: a_header_file_name /= Void
 			valid_name: not a_header_file_name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append ("__")
 			Result.append (a_header_file_name)
 			Result.append ("__")

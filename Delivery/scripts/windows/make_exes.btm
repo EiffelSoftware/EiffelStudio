@@ -3,7 +3,6 @@ remtrace Update all source files.
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
-exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
@@ -25,9 +24,7 @@ remtrace Compile a run-time for Borland
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
-alias pause echo
 call configure win32 b >>& %INSTALL_LOG
-unalias pause
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\bcb
@@ -37,11 +34,7 @@ remtrace Compile a run-time for Microsoft
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
-sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-alias pause echo
 call configure win32 m >>& %INSTALL_LOG
-unalias pause
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
@@ -56,16 +49,13 @@ copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
 remtrace Compile a dynamic run-time
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C
-sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-alias pause echo
+cd %EIFFEL_SRC\C/CONFIGS
+sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86 >> new_windows-msc-x86
+move new_windows-msc-x86 windows-msc-x86
+sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86 >> new_windows-msc-x86
+move new_windows-msc-x86 windows-msc-x86
+cd %EIFFEL_SRC\C
 call configure win32 m >>& %INSTALL_LOG
-unalias pause
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 fullrf C\run-time\LIB\*.exp
@@ -83,25 +73,6 @@ cd %EIFFEL_SRC
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library
 fullrd .libs
-
-remtrace expat
-cd %EIFFEL_SRC\C_library\expat
-safe_md %EIFFEL_SRC\C_library\expat\lib
-msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
-iff not exist %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll then
-	remtrace Couldn't recompile xmlparse.dll
-	CANCEL
-endiff
-iff not exist %EIFFEL_SRC\C_library\expat\bin\xmltok.dll then
-	remtrace Couldn't recompile xmltok.dll
-	CANCEL
-endiff
-copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-copy %EIFFEL_SRC\C_library\expat\bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
-copy %EIFFEL_SRC\C_library\expat\bin\xmltok.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
-copy %EIFFEL_SRC\C_library\expat\xmlparse\Release\xmlparse.lib %EIFFEL_SRC\C_library\expat\lib
-copy %EIFFEL_SRC\C_library\expat\xmltok\Release\xmltok.lib %EIFFEL_SRC\C_library\expat\lib
 
 remtrace libpng
 cd %EIFFEL_SRC\C_library\libpng

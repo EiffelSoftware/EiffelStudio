@@ -218,8 +218,11 @@ feature -- Access
 			other_notempty: not other.empty
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
+		local
+			a: ANY
 		do
-			Result := str_str (area, other.area, count, other.count, start, 0);
+			a := other.area
+			Result := substr_search ($area, $a, start, count);
 		ensure
 			correct_place: Result > 0 implies
 				substring (Result, Result+other.count - 1).is_equal (other)
@@ -1117,6 +1120,15 @@ feature {STRING} -- Implementation
 		external
 			"C | %"eif_eiffel.h%""
 		end;
+
+	substr_search (c_str, o_str: POINTER; i, len: INTEGER): INTEGER is
+			-- Forward search of `o_str' within `c_str' starting at `i'.
+			-- Return the index within `c_str' where the pattern was
+			-- located, 0 if not found.
+		external
+			"C | %"eif_eiffel.h%""
+		end;
+
 
 	c_p_i: INTEGER is
 			-- Number of characters per INTEGER

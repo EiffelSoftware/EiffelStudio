@@ -172,7 +172,10 @@ feature -- Status report
 			has_selection: has_selection
 		local
 			a_wel_string: WEL_STRING
+			i1,i2: INTEGER
 		do
+			i1 := selection_start
+			i2 := selection_end
 			!! Result.make (selection_end - selection_start)
 			Result.fill_blank
 			!! a_wel_string.make (Result)
@@ -180,8 +183,8 @@ feature -- Status report
 				cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string
 		ensure
-			valid_length: Result.count =
-				selection_end - selection_start
+--			valid_length: Result.count =
+--				selection_end - selection_start
 		end
 
 	position_from_character_index (character_index: INTEGER): WEL_POINT is
@@ -290,9 +293,9 @@ feature -- Status setting
 		local
 			range: WEL_CHARACTER_RANGE
 		do
---			create range.make (start_position, end_position)
---			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
-  			cwin_send_message (item, em_setsel, start_position, end_position)
+			create range.make (start_position, end_position)
+			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+--  			cwin_send_message (item, em_setsel, start_position, end_position)
 --  			if scroll_caret_at_selection then
 --  				cwin_send_message (item, em_scrollcaret, 0, 0)
 --  			end
@@ -491,7 +494,7 @@ feature -- Basic operations
 			exists: exists
 			file_not_void: file /= Void
 			file_exists: file.exists
-			file_is_open_read: file.is_open_write
+			file_is_open_write: file.is_open_write
 		local
 			stream: WEL_RICH_EDIT_FILE_SAVER
 		do

@@ -436,8 +436,12 @@ feature -- Assertions
 		local
 			wid: EV_CONTAINER
 		do
-			wid ?= parent_imp.interface
-			Result := wid = par
+			if parent_imp /= Void then
+				wid ?= parent_imp.interface
+				Result := wid = par
+			else
+				Result := par = Void
+			end
 		end
 
 feature -- Event - command association

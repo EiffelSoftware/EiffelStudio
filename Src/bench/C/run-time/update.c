@@ -84,7 +84,7 @@ rt_public void update(char ignore_updt)
 	}
 
 /* TEMPORARY */
-#define UPDTLEN 10
+#define UPDTLEN 16
 
 #ifdef EIF_WIN32
 #	define UPDT_NAME "\\melted.eif"

@@ -14,7 +14,7 @@
 		<heading>
 			<size>2</size>Global setting
 		</heading>
-		<paragraph>As you might have notice, the project settings is a simple facade to the Ace file. Every modification that is done in this window is saved in the Ace file of your project. Since it is just a facade, it does not provide all the 
+		<paragraph>As you might have noticed, the project settings is a simple facade to the Ace file. Every modification that is done in this window is saved in the Ace file of your project. Since it is just a facade, it does not provide all the 
 			<link>
 				<url>../30_compiler/50_technology/20_lace_syntax.xml</url>
 				<label>available options in the Ace file</label>

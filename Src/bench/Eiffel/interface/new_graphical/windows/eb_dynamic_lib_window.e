@@ -1295,15 +1295,11 @@ feature {NONE} -- Implementation: Properties dialog
 	valid_properties_dialog: BOOLEAN is
 			-- Contract support.
 		do
-			if is_windows then
-				Result := properties_dialog /= Void and 
-						class_field /= Void and feature_field /= Void and
-						creation_combo /= Void and alias_field /= Void and
-						index_field /= Void and call_combo /= Void
-			else
-				Result := properties_dialog /= Void and 
-						class_field /= Void and feature_field /= Void and
-						creation_combo /= Void and alias_field /= Void
+			Result := properties_dialog /= Void and
+				class_field /= Void and feature_field /= Void and
+				creation_combo /= Void and alias_field /= Void
+			if Result and is_windows then
+				Result := index_field /= Void and call_combo /= Void
 			end
 		end
 
@@ -1472,8 +1468,10 @@ feature {NONE} -- Implementation: Properties dialog
 				end
 			end
 			al := alias_field.text
-			ind := index_field.value
-			cc := call_combo.selected_item.text
+			if is_windows then
+				ind := index_field.value
+				cc := call_combo.selected_item.text
+			end
 			if not valid_export_parameters (cl, cr, f, al, ind, cc) then
 				if cl = Void then
 					create cd.make_with_text (Warning_messages.w_Not_a_compiled_class (class_field.text))

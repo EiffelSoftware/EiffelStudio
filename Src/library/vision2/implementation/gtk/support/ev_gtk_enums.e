@@ -183,6 +183,27 @@ feature -- GdkCursor enums
 			"GDK_QUESTION_ARROW"
 		end
 
+	frozen Gdk_left_ptr_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_LEFT_PTR"
+		end
+
+	frozen Gdk_fleur_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FLEUR"
+		end
+
+	frozen Gdk_size_sb_v_double_arrow_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_SB_V_DOUBLE_ARROW"
+		end
+
 end -- class EV_GTK_ENUMS
 
 --|----------------------------------------------------------------

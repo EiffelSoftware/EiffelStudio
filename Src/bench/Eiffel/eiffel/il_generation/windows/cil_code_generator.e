@@ -495,7 +495,7 @@ feature -- Generation Structure
 			assembly_name := a_assembly_name
 			
 				-- Set CLR host to proper version if not yet done.
-			l_host := (create {CLR_HOST_FACTORY}).runtime_host (System.clr_runtime_version, 0)
+			l_host := (create {CLR_HOST_FACTORY}).runtime_host (System.clr_runtime_version)
 			check
 				l_host_not_void: l_host /= Void
 			end

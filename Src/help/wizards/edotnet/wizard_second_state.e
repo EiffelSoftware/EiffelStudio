@@ -39,7 +39,8 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: ARRAY [STRING]
+			l_runtimes: LINEAR [STRING]
+			l_item: EV_LIST_ITEM
 		do 
 			create rb_project_type_exe.make_with_text (Exe_type)
 			rb_project_type_exe.select_actions.extend (agent on_change_generation_type)
@@ -98,13 +99,23 @@ feature -- Basic Operation
 			choice_box.extend (create {EV_CELL})
 			
 			create l_il_env
-			l_runtimes ?= l_il_env.installed_runtimes
+			l_runtimes := l_il_env.installed_runtimes
 			
-			if l_runtimes /= Void then
-				create clr_version_cb.make_with_strings (l_runtimes)
-				clr_version_cb.set_minimum_width (80)				
+			create clr_version_cb
+			clr_version_cb.set_minimum_width (130)
+			
+			from
+				l_runtimes.start
+			until
+				l_runtimes.after
+			loop
+				create l_item.make_with_text (l_runtimes.item)
+				clr_version_cb.extend (l_item)
+				l_runtimes.forth
 			end
 			
+			clr_version_cb.disable_edit
+
 			from
 				clr_version_cb.start
 			until

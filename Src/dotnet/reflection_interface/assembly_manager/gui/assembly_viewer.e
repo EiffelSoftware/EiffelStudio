@@ -338,12 +338,20 @@ feature -- Event handling
 		require
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
+		local
+			desc: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			ar: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			dial: IMPORT_DIALOG
 		do
 			if imported_assemblies_button.checked then
 				imported_assemblies_button.set_text (dictionary.Imported_assemblies_button_label)
 			else
 				imported_assemblies_button.set_text (dictionary.All_assemblies_button_label)
 			end
+			create desc.make1
+			desc.make( "j", "jh", "j" ,"j")
+			create ar.make (1)
+			create dial.make (desc, ar )
 		end
 
 	on_double_click_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is

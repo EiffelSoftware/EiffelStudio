@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><application xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant><type>STRING</type>
 		<Name>close_text</Name>
 		<Value>Close</Value>
@@ -172,7 +172,7 @@
 <EV_WIDGET><Minimum_width>300</Minimum_width>
 	<Minimum_height>400</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[Component viewer]]></Title>
+<EV_WINDOW><Title>Component viewer</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -215,7 +215,7 @@
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE><Tooltip><![CDATA[Target component into tool]]></Tooltip>
+<EV_TOOLTIPABLE><Tooltip>Target component into tool</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>icon_component_viewer_color_png</Constant>
 		</Pixmap_path>
@@ -236,7 +236,7 @@
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE><Tooltip><![CDATA[Display view]]></Tooltip>
+<EV_TOOLTIPABLE><Tooltip>Display view</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>icon_component_display_view_color_png</Constant>
 		</Pixmap_path>
@@ -251,7 +251,7 @@
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE><Tooltip><![CDATA[Builder view]]></Tooltip>
+<EV_TOOLTIPABLE><Tooltip>Builder view</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>icon_component_build_view_color_png</Constant>
 		</Pixmap_path>
@@ -357,7 +357,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Constants Defined]]></Text>
+<EV_TEXTABLE><Text>Constants Defined</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -413,7 +413,7 @@
 <EV_DESELECTABLE><Is_selected>True</Is_selected>
 	</EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Show all types]]></Text>
+<EV_TEXTABLE><Text>Show all types</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -488,7 +488,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Type]]></Text>
+<EV_TEXTABLE><Text>Type</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -504,7 +504,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[DIRECTORY]]></Text>
+<EV_TEXTABLE><Text>DIRECTORY</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>80</Minimum_width>
@@ -517,7 +517,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[STRING]]></Text>
+<EV_TEXTABLE><Text>STRING</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -530,7 +530,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[INTEGER]]></Text>
+<EV_TEXTABLE><Text>INTEGER</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -544,7 +544,7 @@
 	</Internal_properties>
 <EV_DESELECTABLE><Is_selected>True</Is_selected>
 	</EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[DIRECTORY]]></Text>
+<EV_TEXTABLE><Text>DIRECTORY</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -557,7 +557,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[PIXMAP]]></Text>
+<EV_TEXTABLE><Text>PIXMAP</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -570,7 +570,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[COLOR]]></Text>
+<EV_TEXTABLE><Text>COLOR</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -583,7 +583,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text><![CDATA[FONT]]></Text>
+<EV_TEXTABLE><Text>FONT</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -635,7 +635,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Name]]></Text>
+<EV_TEXTABLE><Text>Name</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -702,7 +702,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Value]]></Text>
+<EV_TEXTABLE><Text>Value</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -888,7 +888,7 @@
 <EV_WIDGET><Minimum_width>300</Minimum_width>
 	<Minimum_height>250</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[EV_FIXED child positioner]]></Title>
+<EV_WINDOW><Title>EV_FIXED child positioner</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -1021,7 +1021,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Grid properties]]></Text>
+<EV_TEXTABLE><Text>Grid properties</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -1048,7 +1048,7 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Snap to grid]]></Text>
+<EV_TEXTABLE><Text>Snap to grid</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1064,7 +1064,7 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Visible]]></Text>
+<EV_TEXTABLE><Text>Visible</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1164,7 +1164,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Done]]></Text>
+<EV_TEXTABLE><Text>Done</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1194,7 +1194,7 @@
 <EV_WIDGET><Minimum_width>250</Minimum_width>
 	<Minimum_height>120</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[Display window]]></Title>
+<EV_WINDOW><Title>Display window</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -1364,7 +1364,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[EV_TABLE child positioner]]></Title>
+<EV_WINDOW><Title>EV_TABLE child positioner</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -1492,7 +1492,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Table properties]]></Text>
+<EV_TEXTABLE><Text>Table properties</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -1599,7 +1599,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Done]]></Text>
+<EV_TEXTABLE><Text>Done</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1657,7 +1657,7 @@
 <EV_WIDGET><Minimum_width>250</Minimum_width>
 	<Minimum_height>250</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[History]]></Title>
+<EV_WINDOW><Title>History</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -1774,7 +1774,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[The following naming conflicts were resolved:]]></Text>
+<EV_TEXTABLE><Text>The following naming conflicts were resolved:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1856,7 +1856,7 @@
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
-	<Title><![CDATA[EiffelBuild - Environment Fatal Error]]></Title>
+	<Title>EiffelBuild - Environment Fatal Error</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -1960,7 +1960,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width><Constant>default_button_width</Constant>
@@ -2092,9 +2092,9 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[You have not specified a DIRECTORY constant for one or more relative PIXMAP
+<EV_TEXTABLE><Text>You have not specified a DIRECTORY constant for one or more relative PIXMAP
 constants, and no matching directory constant is available. 
-Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
+Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2133,7 +2133,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Use DIRECTORY constant named:]]></Text>
+<EV_TEXTABLE><Text>Use DIRECTORY constant named:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2251,7 +2251,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
-	<Title><![CDATA[Object still referenced]]></Title>
+	<Title>Object still referenced</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -2473,7 +2473,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Select Individual ...]]></Text>
+<EV_TEXTABLE><Text>Select Individual ...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2502,7 +2502,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Select Directory...]]></Text>
+<EV_TEXTABLE><Text>Select Directory...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2611,9 +2611,9 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Check all]]></Text>
+<EV_TEXTABLE><Text>Check all</Text>
 	</EV_TEXTABLE>
-<EV_TOOLTIPABLE><Tooltip><![CDATA[Check all items, for inclusion as new pixmap constants]]></Tooltip>
+<EV_TOOLTIPABLE><Tooltip>Check all items, for inclusion as new pixmap constants</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
@@ -2629,9 +2629,9 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Uncheck all]]></Text>
+<EV_TEXTABLE><Text>Uncheck all</Text>
 	</EV_TEXTABLE>
-<EV_TOOLTIPABLE><Tooltip><![CDATA[Uncheck all items]]></Tooltip>
+<EV_TOOLTIPABLE><Tooltip>Uncheck all items</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
@@ -2665,7 +2665,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Pixmap location:]]></Text>
+<EV_TEXTABLE><Text>Pixmap location:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2696,7 +2696,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Built from]]></Text>
+<EV_TEXTABLE><Text>Built from</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -2746,7 +2746,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Absolute PIXMAP constant named]]></Text>
+<EV_TEXTABLE><Text>Absolute PIXMAP constant named</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2854,7 +2854,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Relative PIXMAP constant named:]]></Text>
+<EV_TEXTABLE><Text>Relative PIXMAP constant named:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2896,7 +2896,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Comprised of DIRECTORY: ]]></Text>
+<EV_TEXTABLE><Text>Comprised of DIRECTORY: </Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3063,7 +3063,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Project Location:]]></Text>
+<EV_TEXTABLE><Text>Project Location:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3092,8 +3092,8 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_NOTEBOOK><Item_texts><Item_text1><![CDATA[Build]]></Item_text1>
-		<Item_text2><![CDATA[Generation]]></Item_text2>
+<EV_NOTEBOOK><Item_texts><Item_text1>Build</Item_text1>
+		<Item_text2>Generation</Item_text2>
 		</Item_texts>
 	<Item_pixmaps></Item_pixmaps>
 	</EV_NOTEBOOK>
@@ -3121,7 +3121,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Build Type]]></Text>
+<EV_TEXTABLE><Text>Build Type</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -3161,7 +3161,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Project]]></Text>
+<EV_TEXTABLE><Text>Project</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3179,7 +3179,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Always rebuild ace?]]></Text>
+<EV_TEXTABLE><Text>Always rebuild ace?</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3207,7 +3207,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Class]]></Text>
+<EV_TEXTABLE><Text>Class</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3227,7 +3227,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Names]]></Text>
+<EV_TEXTABLE><Text>Names</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -3266,7 +3266,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Project name:]]></Text>
+<EV_TEXTABLE><Text>Project name:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3293,7 +3293,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Application class name:]]></Text>
+<EV_TEXTABLE><Text>Application class name:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3321,7 +3321,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Constants class name:]]></Text>
+<EV_TEXTABLE><Text>Constants class name:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3366,7 +3366,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Attribute declarations]]></Text>
+<EV_TEXTABLE><Text>Attribute declarations</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -3394,7 +3394,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Local]]></Text>
+<EV_TEXTABLE><Text>Local</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3411,7 +3411,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Attributes]]></Text>
+<EV_TEXTABLE><Text>Attributes</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3463,7 +3463,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Export all]]></Text>
+<EV_TEXTABLE><Text>Export all</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3478,7 +3478,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Export only named]]></Text>
+<EV_TEXTABLE><Text>Export only named</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3493,7 +3493,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Export none]]></Text>
+<EV_TEXTABLE><Text>Export none</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3511,7 +3511,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Grouped?]]></Text>
+<EV_TEXTABLE><Text>Grouped?</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3529,7 +3529,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Generate debugging information?]]></Text>
+<EV_TEXTABLE><Text>Generate debugging information?</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3545,7 +3545,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Load constants from file?]]></Text>
+<EV_TEXTABLE><Text>Load constants from file?</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3689,7 +3689,8 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
-<EV_FRAME></EV_FRAME>
+<EV_FRAME><Style>1</Style>
+	</EV_FRAME>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -3781,7 +3782,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Did you know...]]></Text>
+<EV_TEXTABLE><Text>Did you know...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3896,7 +3897,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Show tips at startup]]></Text>
+<EV_TEXTABLE><Text>Show tips at startup</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>

@@ -11,11 +11,6 @@ class
 inherit
 	EXCEPTIONS
 
-	MEMORY
-		redefine
-			dispose
-		end
-
 creation
 	make, make_with_key
 
@@ -36,6 +31,14 @@ feature -- Initialization
 		do
 			des_init (1)
 			set_key (key)
+		end
+
+feature -- Disposal
+
+	terminate is
+			-- Dispose the allocated structures.
+		do
+			desdone
 		end
 
 feature -- Encryption
@@ -107,14 +110,6 @@ feature -- Status
 			c_string := key.to_c;
 			setkey ($c_string);
 		end;
-
-feature -- Disposal
-
-	dispose is
-			-- Dispose the allocated structures.
-		do
-			desdone
-		end
 
 feature {NONE}
 

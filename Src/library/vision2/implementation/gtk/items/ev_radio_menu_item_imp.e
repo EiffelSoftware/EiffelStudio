@@ -1,101 +1,40 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-	description:
-		"EiffelVision radio menu item. gtk implementation."
+	description: "Eiffel Vision radio menu item. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EV_RADIO_MENU_ITEM_IMP
+class
+	EV_RADIO_MENU_ITEM_IMP
 
 inherit
 	EV_RADIO_MENU_ITEM_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
-			make,
-			--make_with_text,
-			parent_imp
+			interface,
+			make
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a radio menu item.
+	make (an_interface: like interface) is
+			-- Create a menu item.
 		do
-			dummy_item := gtk_radio_menu_item_new (Default_pointer)
-			widget := gtk_radio_menu_item_new (Default_pointer)
-			gtk_object_ref (widget)
-
-			gtk_radio_menu_item_set_group (widget,
-			gtk_radio_menu_item_group (dummy_item));
-			set_state (False)
-			gtk_check_menu_item_set_show_toggle (widget, True)
-
-			initialize
-
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+			base_make (an_interface)
+			set_c_object (C.gtk_radio_menu_item_new (Default_pointer))
+			C.gtk_check_menu_item_set_show_toggle (c_object, True)
 		end
 
-feature -- Access
+feature {NONE} -- Implementation
 
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-			-- Parent of the item
-
-feature -- Status report
-
-	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
-			-- Is this item in same group as peer
-		local
-			peer_imp: EV_RADIO_MENU_ITEM_IMP
-		do
-			peer_imp ?= peer.implementation
-			check
-				valid_peer_implementation: peer_imp /= Void
-			end
-			Result := group /= Default_pointer and group = peer_imp.group
-		end
-
-
-feature -- Status Setting
-
-	set_peer (peer: EV_RADIO_MENU_ITEM) is
-			-- Put in same group as peer
-		local
-			peer_imp: EV_RADIO_MENU_ITEM_IMP
-		do
-			peer_imp ?= peer.implementation
-			check
-				valid_peer_implementation: peer_imp /= Void
-			end
-			gtk_radio_menu_item_set_group (widget, peer_imp.group)
-		end
-
-feature {EV_RADIO_MENU_ITEM_IMP} -- Implementation
-
-	group: POINTER is
-			-- GSList* that represents group
-		require
-		do
-			Result := gtk_radio_menu_item_group (widget)
-		ensure
-			valid_group: Result /= Default_pointer
-		end
-
-	dummy_item: POINTER
+	interface: EV_RADIO_MENU_ITEM
 
 end -- class EV_RADIO_MENU_ITEM_IMP
 
@@ -120,6 +59,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/22 20:03:40  brendel
+--| Removed old implementation, since grouping is now handled by
+--| EV_MENU_ITEM_LIST_IMP.
+--|
 --| Revision 1.13  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

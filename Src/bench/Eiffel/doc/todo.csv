@@ -210,7 +210,7 @@ Wizards,,,,
 ,3,Add a test wizard,Xavier,WIZ0002
 ,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,WIZ0004
-
+,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005
 
 
 

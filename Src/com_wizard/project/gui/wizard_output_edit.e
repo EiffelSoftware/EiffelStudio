@@ -107,8 +107,8 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	add_text (a_text: STRING) is
-			-- Insert `a_text' in rich edit `edit'.
+	add_continuous_text (a_text: STRING) is
+			-- Insert `a_text' in rich edit `edit' without ending new line.
 			-- Set text format according to `title_format', `warning_format' and `error_format'.
 		local
 			retried: BOOLEAN
@@ -137,7 +137,6 @@ feature -- Basic Operations
 				else
 					output_edit.insert_text (a_text)
 				end
-				output_edit.insert_text (New_line)
 				new_height := output_edit.position_from_character_index (output_edit.count).y
 				if new_height > height then
 					scroller.set_vertical_range (1,  new_height - height)
@@ -154,6 +153,19 @@ feature -- Basic Operations
 			if not failed_on_rescue then
 				retried := True
 				retry
+			end
+		end
+		
+	add_text (a_text: STRING) is
+			-- Insert `a_text' in rich edit `edit' with ending new line.
+			-- Set text format according to `title_format', `warning_format' and `error_format'.
+		local
+			a_complete_text: STRING
+		do
+			if a_text /= Void then
+				a_complete_text := clone (a_text)
+				a_complete_text.append (New_line)
+				add_continuous_text (a_complete_text)
 			end
 		end
 

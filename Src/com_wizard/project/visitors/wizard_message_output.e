@@ -58,7 +58,7 @@ feature -- Basic operations
 		end
 
 	add_message (origin: ANY; reason: STRING) is
-			-- Display message.
+			-- Display message `reason' from `origin'.
 		do
 			if Shared_wizard_environment.output_level = Output_all then
 				output_window.add_message (reason)
@@ -66,6 +66,15 @@ feature -- Basic operations
 			add_log (Message, origin, reason)
 		end
 
+	add_continuous_message (origin: ANY; reason: STRING) is
+			-- Display message `reason' from `origin' without adding a new line.
+			-- Do not log (to avoid multiple logs for the same event).
+		do
+			if Shared_wizard_environment.output_level = Output_all then
+				output_window.add_continuous_message (reason)
+			end
+		end
+			
 	add_warning (origin: ANY; reason: STRING) is
 			-- Display warning.
 		do

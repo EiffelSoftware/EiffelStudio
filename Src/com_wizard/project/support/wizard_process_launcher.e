@@ -8,6 +8,11 @@ class
 	WIZARD_PROCESS_LAUNCHER
 
 inherit
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all
@@ -36,6 +41,21 @@ feature {NONE} -- Initialization
 			message_output := a_message_output
 		ensure
 			message_output_set: message_output = a_message_output
+		end
+
+feature -- Access
+
+	displayed_while_running: BOOLEAN
+			-- Should process output be displayed while the process is running?
+
+feature -- Element Change
+
+	set_displayed_while_running (a_boolean: BOOLEAN) is
+			-- Set `displayed_while_running' to `a_boolean'.
+		do
+			displayed_while_running := a_boolean
+		ensure
+			set: displayed_while_running = a_boolean
 		end
 
 feature -- Basic Operations
@@ -75,20 +95,28 @@ feature -- Basic Operations
 				output_pipe.read_stream (Block_size)
 				create a_output.make (0)
 			until
-				not output_pipe.last_read_successful
+				not output_pipe.last_read_successful or Shared_wizard_environment.abort
 			loop
-				a_output.append (output_pipe.last_string)
+				if displayed_while_running then
+					message_output.add_continuous_message (Current, output_pipe.last_string)
+				else
+					a_output.append (output_pipe.last_string)
+				end
 				output_pipe.read_stream (Block_size)
 			end
-			a_output.replace_substring_all ("%R%N", "%N")
-			message_output.add_message (Current, a_output)
-			an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
-			check
-				valid_external_call: an_integer = cwin_wait_object_0
+			if not displayed_while_running then
+				a_output.replace_substring_all ("%R%N", "%N")
+				message_output.add_message (Current, a_output)
 			end
-			a_boolean := cwin_exit_code_process (process_info.process_handle, $a_last_process_result)
-			check
-				valid_external_call: a_boolean
+			if not Shared_wizard_environment.abort then
+				an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
+				check
+					valid_external_call: an_integer = cwin_wait_object_0
+				end
+				a_boolean := cwin_exit_code_process (process_info.process_handle, $a_last_process_result)
+				check
+					valid_external_call: a_boolean
+				end
 			end
 			cwin_close_handle (process_info.process_handle)
 			output_pipe.close_output

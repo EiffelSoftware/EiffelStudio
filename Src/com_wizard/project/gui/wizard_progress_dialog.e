@@ -68,6 +68,19 @@ feature {NONE} -- Behavior
 	setup_dialog is
 			-- Disable parent when active.
 		do
+			if (parent.x + parent.width + width) <= full_screen_client_area_width then
+				set_x (parent.x + parent.width)
+				set_y (parent.y)
+			elseif width <= parent.x then
+				set_x (0)
+				set_y (parent.y)
+			elseif (parent.y + parent.height + height) <= full_screen_client_area_height then
+				set_y (parent.y + parent.height)
+				set_x (parent.x)
+			elseif parent.y >= height then
+				set_y (0)
+				set_x (parent.x)
+			end
 			parent.disable
 		end
 

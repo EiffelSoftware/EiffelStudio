@@ -233,6 +233,13 @@ feature -- Output
 			output_edit.add_text (a_text)
 		end
 	
+	add_continuous_message (a_text: STRING) is
+			-- Add text `a_text' into window's text.
+			-- Do not add new line.
+		do
+			output_edit.add_continuous_text (a_text)
+		end
+	
 	add_title (a_title: STRING) is
 			-- Add title `a_title' to window's text.
 		do

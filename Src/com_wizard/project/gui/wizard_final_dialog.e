@@ -52,6 +52,9 @@ feature -- Behavior
 			elseif Shared_wizard_environment.output_level = Shared_wizard_environment.Output_warnings then
 				warnings_check.set_checked
 			end
+			if not Shared_wizard_environment.stop_on_error then
+				stop_check.set_checked
+			end
 		end
 
 	on_ok is

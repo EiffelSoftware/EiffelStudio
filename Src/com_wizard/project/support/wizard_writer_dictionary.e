@@ -1100,6 +1100,10 @@ feature -- Eiffel keywords -- 14
 
 	Unique_keyword: STRING is "Unique"
 
+feature -- Lace keywords 15
+
+	System_keyword: STRING is "system"
+
 end -- class WIZARD_WRITER_DICTIONARY
 
 --|----------------------------------------------------------------

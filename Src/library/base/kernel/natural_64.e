@@ -1,10 +1,12 @@
 indexing
 	description: "Unsigned integer values coded on 64 bits"
 	status: "See notice at end of class"
+	external_name: "System.UInt64"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class NATURAL_64
+frozen expanded class NATURAL_64
 
 inherit
 	NATURAL_64_REF

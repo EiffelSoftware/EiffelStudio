@@ -1,25 +1,26 @@
 indexing
-
-	description: "Integer values coded on 16 bits"
+	description: "Unsigned integer values coded on 32 bits."
 	status: "See notice at end of class"
+	external_name: "System.UInt32"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class INTEGER_16 inherit
+frozen expanded class NATURAL_32 inherit
 
-	INTEGER_16_REF
+	NATURAL_32_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({INTEGER_16_REF}),
-	to_reference: {INTEGER_16_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	to_real: {REAL},
-	to_double: {DOUBLE},
-	to_integer_32: {INTEGER},
-	to_integer_64: {INTEGER_64}
+	make_from_reference ({NATURAL_32_REF}),
+	to_reference: {NATURAL_32_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
+	to_real_32: {REAL},
+	to_real_64: {DOUBLE},
+	to_integer_64: {INTEGER_64},
+	to_natural_64: {NATURAL_64}
 
 indexing
 
@@ -53,7 +54,4 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class INTEGER_16
-
-
-
+end

@@ -1,13 +1,12 @@
 indexing
-
-	description:
-		"Integer values"
-
+	description: "Integer values"
 	status: "See notice at end of class"
+	external_name: "System.Int32"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class INTEGER inherit
+frozen expanded class INTEGER inherit
 
 	INTEGER_REF
 

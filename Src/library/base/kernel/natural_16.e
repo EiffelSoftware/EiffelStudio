@@ -1,27 +1,27 @@
 indexing
-
-	description: "Integer values coded on 8 bits"
+	description: "Unsigned integer values coded on 16 bits"
 	status: "See notice at end of class"
+	external_name: "System.UInt16"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class NATURAL_8 inherit
+frozen expanded class NATURAL_16
 
-	NATURAL_8_REF
+inherit
+	NATURAL_16_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({NATURAL_8_REF}),
-	to_reference: {NATURAL_8_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
+	make_from_reference ({NATURAL_16_REF}),
+	to_reference: {NATURAL_16_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real_32: {REAL},
 	to_real_64: {DOUBLE},
-	to_integer_16: {INTEGER_16},
 	to_integer_32: {INTEGER},
 	to_integer_64: {INTEGER_64},
-	to_natural_16: {NATURAL_16},
 	to_natural_32: {NATURAL_32},
 	to_natural_64: {NATURAL_64}
 

@@ -21,7 +21,7 @@ feature
 
 	allocate_space (minindex, maxindex: INTEGER) is
 			--  Allocate memory and initialize indexes.
-		require -- from ARRAY
+		require
 			valid_indices: maxindex >= minindex
 		do
 			lower := minindex;
@@ -133,7 +133,7 @@ feature
 		local
 			size: INTEGER;
 		do
-			size := capacity;
+			size := array_seq_capacity;
 			put_i_th (t, (in_index + size - 1) \\ size)
 		end;
 

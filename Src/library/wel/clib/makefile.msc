@@ -1,9 +1,8 @@
 # wel.lib - Makefile for Microsoft C
 
-EIFFEL_SRC2="d:\Eiffel43c"
-EIFFEL_SRC="d:\Eiffel43c"
+EIFFEL_SRC="d:\Eiffel42"
 CC = cl
-CFLAGS = -c -Ox -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
+CFLAGS = -c -Ox -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

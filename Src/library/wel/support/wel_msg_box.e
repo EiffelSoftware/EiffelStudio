@@ -86,7 +86,7 @@ feature -- Basic operations
 
 	basic_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING; a_style: INTEGER) is
 			-- Show a basic message box with `a_text' inside and
-			-- `a_title' using `a_style'. Basic means `a_style' should not contains
+			-- `a_title' using `a_style'. Basic means `a_style' should not contain
 			-- the flag `MB_USERICON'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
 		require
@@ -133,8 +133,7 @@ feature -- Basic operations
 feature -- Status report
 
 	message_box_result: INTEGER
-			-- Last result for the `message_box' and
-			-- `error_message_box' routines.
+			-- Last result for all `xxx_message_box' routines.
 			-- See class WEL_ID_CONSTANTS for values.
 
 	language: INTEGER

@@ -77,7 +77,7 @@ feature -- Access to windows
 			end
 		end
 
-	popup_select_results_window ( to_display : LINKED_LIST [ANY] ; row_titles : ARRAY [STRING] ) is
+	popup_select_results_window ( to_display : ARRAYED_LIST [DB_TABLE] ; row_titles : ARRAY [STRING] ) is
 			-- Popup Select Results Window 'to_display' with feature names 'row_titles'
 			-- Ensure the unicity of the window at run-time.
 		do
@@ -121,18 +121,19 @@ feature -- Access to windows
 	destroy_windows is
 			-- Destroys all windows popped up through APPLICATION	
 		do
-			if first_window /= Void and then not first_window.is_destroyed then
-				first_window.destroy
-			end
-			if select_window /= Void and then not select_window.is_destroyed then
-				select_window.destroy
-			end
-			if select_results_window /= Void and then not select_results_window.is_destroyed then
-				select_results_window.destroy
-			end
-			if insert_window /= Void and then not insert_window.is_destroyed then
-				insert_window.destroy
-			end
+			destroy
+--			if first_window /= Void and then not first_window.is_destroyed then
+--				first_window.destroy
+--			end
+--			if select_window /= Void and then not select_window.is_destroyed then
+--				select_window.destroy
+--			end
+--			if select_results_window /= Void and then not select_results_window.is_destroyed then
+--				select_results_window.destroy
+--			end
+--			if insert_window /= Void and then not insert_window.is_destroyed then
+--				insert_window.destroy
+--			end
 		end
 
 end -- class APPLICATION

@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = Void
 			exists: exists
-			name_set: text.is_equal (a_name)
+			name_set: a_name /= Void implies text.is_equal (a_name)
 		end
 
 feature -- Standard window class values

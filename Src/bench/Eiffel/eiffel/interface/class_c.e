@@ -2864,7 +2864,7 @@ feature -- Dead code removal
 				tbl.after
 			loop
 				a_feature := tbl.item_for_iteration;
-				pos := tbl.pos_for_iter
+				pos := tbl.iteration_position
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end;

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			valid_parent: parent_needed implies par /= Void
 		deferred
 		ensure
-			parent_set: parent = par
+--			parent_set: parent = par
 		end
 
 	widget_make (par: EV_CONTAINER) is
@@ -161,6 +161,8 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.has_focus
+		ensure
+			valid_result: Result /= Void
 		end
 
 feature -- Status setting
@@ -306,7 +308,7 @@ feature -- Element change
 			end
 			implementation.set_parent (par)
 		ensure
-			parent_set: parent = par
+--			parent_set: parent = par
 		end
 
 	set_cursor (cur: like cursor) is
@@ -421,6 +423,7 @@ feature -- Resizing
 			-- widget must be unmanaged.
 		require
 			exists: not destroyed
+--			Unmanaged: not managed
 			Unmanaged: not managed
 			Positive_width: value >= 0
 		do

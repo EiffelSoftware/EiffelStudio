@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"BOX_DEMO_WINDOW, demo window to test box widget. Belongs to EiffelVision example."
+		"BOX_DEMO_WINDOW, demo window to test box widget.%
+		% Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	BOX_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			actions_window,
@@ -21,12 +20,12 @@ inherit
 		end
 	
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_HORIZONTAL_BOX is
+			-- The main widget of the demo
 		once
 			!!Result.make (Current)
 			Result.set_border_width (10)
@@ -36,13 +35,13 @@ feature -- Access
 	
 	actions_window: BOX_ACTIONS_WINDOW
 
-	button1: EV_BUTTON
-	button2: EV_BUTTON
-	button3: EV_BUTTON
-			-- Push buttons
+	button1, button2, button3: EV_BUTTON
+			-- Buttons for the demo
+
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
 			!!button1.make (main_widget)
 			!!button2.make (main_widget)
@@ -52,6 +51,7 @@ feature -- Status setting
 feature -- Status setting
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Box demo")
 			button1.set_text ("Press me")
@@ -60,8 +60,7 @@ feature -- Status setting
 			main_widget.set_homogeneous (False)
 		end
 
-
-end
+end -- class BOX_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

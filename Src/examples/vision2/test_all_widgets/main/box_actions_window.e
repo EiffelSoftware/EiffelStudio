@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"BOX_ACTIONS_WINDOW, base class for all actions windows. Belongs to EiffelVision example test_all_widgets."
+	"BOX_ACTIONS_WINDOW, base class for all actions windows.%
+	% Belongs to EiffelVision example test_all_widgets."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -15,10 +15,8 @@ inherit
 		redefine
 			set_widgets
 		end
-	
-	
+
 creation
-	
 	make_with_main_widget
 
 feature -- Status setting
@@ -36,25 +34,26 @@ feature -- Status setting
 			hsep: EV_HORIZONTAL_SEPARATOR
                 do
 			{ACTIONS_WINDOW} Precursor
-			!!hsep.make (table)
+			!! hsep.make (table)
 			table.set_child_position (hsep, 8, 0, 9, 4)
 			hsep.set_minimum_height (10)
 
-			!!homogeneous_tb.make_with_text (table, "Homogeneous")
+			!! homogeneous_tb.make_with_text (table, "Homogeneous")
 			table.set_child_position (homogeneous_tb, 9, 0, 10, 2)
-			!!set_h_c
+			!! set_h_c
 			box_widget ?= active_widget
-			!!a.make_2 (box_widget, homogeneous_tb)
+			!! a.make_2 (box_widget, homogeneous_tb)
 			homogeneous_tb.add_click_command (set_h_c, a)
 			
-			!!spacing_entry.make_with_label (table, "Spacing:")
+			!! spacing_entry.make_with_label (table, "Spacing:")
 			table.set_child_position (spacing_entry.box, 9, 2, 10, 4)
-			!!a2.make_2 (box_widget, spacing_entry)
-			!!set_spacing_c
+			!! a2.make_2 (box_widget, spacing_entry)
+			!! set_spacing_c
 			spacing_entry.add_activate_command (set_spacing_c, a2)
 		end
 	
-end
+end -- class BOX_ACTION_WINDOW
+
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

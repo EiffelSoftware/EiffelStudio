@@ -1,7 +1,7 @@
 indexing
-
-	description: 
-	"LABEL_DEMO_WINDOW, demo window to test label widget. Belongs to EiffelVision example test_all_widgets."
+description: 
+		"LABEL_DEMO_WINDOW, demo window to test label widget.%
+		% Belongs to EiffelVision example test_all_widgets."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	LABEL_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,12 +19,12 @@ inherit
 		end
 	
 creation
-	
 	make
 
 feature -- Access
 
 	main_widget: EV_LABEL is
+			-- Main widget of the window
 		once
 			!!Result.make (Current)
 			Result.set_minimum_size(200,200)
@@ -34,15 +33,19 @@ feature -- Access
 feature -- Status setting
         
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
-                end
+		end
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			main_widget.set_text ("Label")
 			set_title ("Label demo")
 		end
-end
+
+end -- class LABEL_DEMO_WINDOW
+
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

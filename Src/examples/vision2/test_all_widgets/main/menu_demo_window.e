@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"MENU_DEMO_WINDOW, demo window to test menu widget. Belongs to EiffelVision example."
+		"MENU_DEMO_WINDOW, demo window to test menu widget.%
+		% Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	MENU_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,14 +19,14 @@ inherit
 		end
 	
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_OPTION_BUTTON is
+			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 			Result.set_minimum_size(300,100)
 		end
 	
@@ -43,9 +42,10 @@ feature -- Access
 feature -- Status setting
 
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		local
-			c: DESTROY_COMMAND
-			a: EV_ARGUMENT1 [EV_WIDGET]
+			cmd: DESTROY_COMMAND
+			arg: EV_ARGUMENT1 [EV_WIDGET]
 			pixmap: EV_PIXMAP
 		do
 			!! menu.make_with_text (main_widget, "Menu")
@@ -61,40 +61,40 @@ feature -- Status setting
 			!! menu_item.make_with_text (menu2, "Item 2")
 			!! menu_item.make_with_text (menu2, "Item 3")
 
-			!!static.make (Current)
-			!!menu.make_with_text (static, "File")
-			!!menu_item.make_with_text (menu, "New")
-			!!menu_item.make_with_text (menu, "Open")
-			!!menu_item.make_with_text (menu, "Save")
+			!! static.make (Current)
+			!! menu.make_with_text (static, "File")
+			!! menu_item.make_with_text (menu, "New")
+			!! menu_item.make_with_text (menu, "Open")
+			!! menu_item.make_with_text (menu, "Save")
 			menu_item.set_insensitive (True)
-			!!check_menu_item.make_with_text (menu, "Auto save")
-			!!menu_item.make_with_text (menu, "Quit")
-			!!c
-			!!a.make (Current)
-			menu_item.add_activate_command (c, a)
+			!! check_menu_item.make_with_text (menu, "Auto save")
+			!! menu_item.make_with_text (menu, "Quit")
+			!! cmd
+			!! arg.make (Current)
+			menu_item.add_activate_command (cmd, arg)
 						
-			!!menu.make_with_text (static, "Edit")
-			!!menu_item.make_with_text (menu, "Cut")
-			!!menu_item.make_with_text (menu, "Copy")
+			!! menu.make_with_text (static, "Edit")
+			!! menu_item.make_with_text (menu, "Cut")
+			!! menu_item.make_with_text (menu, "Copy")
 --			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
-			!!menu_item.make_with_text (menu, "Paste")
+			!! menu_item.make_with_text (menu, "Paste")
 			
-			!!menu.make_with_text (static, "Test")
-			!!menu_item.make_with_text (menu, "Sub menu1")
-			!!menu_item2.make_with_text (menu_item, "Selection 1")
-			!!menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
-			!!menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
-
+			!! menu.make_with_text (static, "Test")
+			!! menu_item.make_with_text (menu, "Sub menu1")
+			!! menu_item2.make_with_text (menu_item, "Selection 1")
+			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
+			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
 		end
 	
 feature -- Status setting
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Menu demo")
 		end
 
-end
+end -- class MENU_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

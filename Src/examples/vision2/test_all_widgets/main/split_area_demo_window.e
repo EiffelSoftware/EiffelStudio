@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"SPLIT_AREA_DEMO_WINDOW, demo window to test split_area widget. Belongs to EiffelVision example."
+		"SPLIT_AREA_DEMO_WINDOW, demo window to test split_area%
+		% widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	SPLIT_AREA_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,52 +19,51 @@ inherit
 		end
 	
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_VERTICAL_SPLIT_AREA is
+			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 		end
 	
 	
 	h: EV_HORIZONTAL_SPLIT_AREA
-	
-			
-			-- Push buttons
+		-- A split area for the demo
+
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		local
-			c: DESTROY_COMMAND
-			a: EV_ARGUMENT1 [EV_WIDGET]
-			b: EV_BUTTON
-			t: EV_TEXT_AREA
+			button: EV_BUTTON
+			texta: EV_TEXT_AREA
 		do
 			-- The first child of the vertical split area
 			-- is a horizontal split area
-			!!h.make (main_widget)
+			!! h.make (main_widget)
 			-- The first child of the horizontal split
 			-- area is a button
-			!!b.make_with_text (h, "Hello")
+			!! button.make_with_text (h, "Hello")
 			-- There is no second child for the horizontal
 			-- split area (this is acceptable)
 			
 			-- The second child of the vertical split area
 			-- is a text area
-			!!t.make (main_widget)
+			!! texta.make (main_widget)
 		end
 	
 feature -- Status setting
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Split area demo")
 		end
 
-end
+end -- class SPLIT_AREA_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -10,7 +10,6 @@ class
 	BUTTONS_DEMO_WINDOW
 
 inherit
-	
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -18,38 +17,33 @@ inherit
 			set_values
 		end
 
-	EV_COMMAND
-
 creation
 	make
-
 
 feature -- Access
 
 	main_widget: EV_VERTICAL_BOX is
+			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 		end
 	
 feature -- Access
 
 	b1, b2, b3, b4: EV_BUTTON
 	pixmap: EV_PIXMAP
-	
 	toggle_b: EV_TOGGLE_BUTTON
-
 	check_b: EV_CHECK_BUTTON
-
 	radio1_b: EV_RADIO_BUTTON
 	radio2_b: EV_RADIO_BUTTON
 	radio3_b: EV_RADIO_BUTTON
-
 	frame: EV_FRAME
 	box: EV_VERTICAL_BOX
 
 feature -- Status setting
         
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		local
 			a: EV_ARGUMENT1[BUTTONS_DEMO_WINDOW]
 		do
@@ -61,7 +55,6 @@ feature -- Status setting
 			!! pixmap.make_from_file (b2, the_parent.pixname("power_small"))
 			!! toggle_b.make_with_text (main_widget, "Toggle Button")
 			!! check_b.make_with_text (main_widget, "Check Button")
-			--!! pixmap.make_from_file (check_b, "pixmaps/power_small")
 
 			!! frame.make_with_text (main_widget, "Frame")
 			frame.set_foreground_color (blue)
@@ -71,21 +64,13 @@ feature -- Status setting
 			!! radio3_b.make_with_text (box, "Radio 3")
 			!! a.make (Current)
 			toggle_b.add_destroy_command (Current, a)
-        	end
+       	end
 
-	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("All buttons demo")
 		end
-
-	execute (arg: EV_ARGUMENT1[BUTTONS_DEMO_WINDOW]; data: EV_EVENT_DATA) is
-			-- test command
-		local
-			b: EV_VERTICAL_BOX
-		do
-			b := box
- 		end
 
 feature -- Color
 
@@ -94,7 +79,8 @@ feature -- Color
 			!! Result.make_rgb (0, 0, 255)
 		end
 
-end
+end -- class BUTTONS_DEMO_WINDOW
+
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

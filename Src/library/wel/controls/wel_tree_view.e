@@ -153,14 +153,14 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_selected)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := flag_set (an_item.state, Tvis_selected)
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_state)
+			wel_tree_view_item.set_statemask (Tvis_selected)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := flag_set (wel_tree_view_item.state, Tvis_selected)
 		end
 
 	is_expanded (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -169,14 +169,14 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_expanded)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := flag_set (an_item.state, Tvis_expanded)
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_state)
+			wel_tree_view_item.set_statemask (Tvis_expanded)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := flag_set (wel_tree_view_item.state, Tvis_expanded)
 		end
 
 	is_cut (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -186,14 +186,14 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_cut)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := flag_set (an_item.state, Tvis_cut)
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_state)
+			wel_tree_view_item.set_statemask (Tvis_cut)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := flag_set (wel_tree_view_item.state, Tvis_cut)
 		end
 
 	is_bold (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -202,14 +202,14 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_bold)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := flag_set (an_item.state, Tvis_bold)
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_state)
+			wel_tree_view_item.set_statemask (Tvis_bold)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := flag_set (wel_tree_view_item.state, Tvis_bold)
 		end
 
 	is_drophilited (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -218,14 +218,14 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_drophilited)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := flag_set (an_item.state, Tvis_drophilited)
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_state)
+			wel_tree_view_item.set_statemask (Tvis_drophilited)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := flag_set (wel_tree_view_item.state, Tvis_drophilited)
 		end
 
 	is_parent (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -234,13 +234,13 @@ feature -- Status report
 			exists: exists
 			valid_item: has_item (an_item)
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_children)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := an_item.children = 1
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (Tvif_children)
+			cwin_send_message (item, Tvm_getitem, 0, wel_tree_view_item.to_integer)
+			Result := wel_tree_view_item.children = 1
 		end
 
 	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -250,12 +250,12 @@ feature -- Status report
 			item_not_void: an_item /= Void
 			item_valid: an_item.exists
 		local
-			mask: INTEGER
+			wel_tree_view_item: WEL_TREE_VIEW_ITEM
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_handle)
-			Result := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
-			an_item.set_mask (mask)
+			create wel_tree_view_item.make
+			wel_tree_view_item.set_h_item (an_item.h_item)
+			wel_tree_view_item.set_mask (tvif_handle)
+			Result := cwin_send_message_result (item, Tvm_getitem, 0, wel_tree_view_item.to_integer) /= 0
 		ensure
 			mask_unchanged: an_item.mask = old an_item.mask
 		end

@@ -1,0 +1,2 @@
+Error: target of assignment attempt is expanded.
+What to do: make sure the target is of a reference type. 

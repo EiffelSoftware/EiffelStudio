@@ -1,0 +1,28 @@
+/* XPM */
+static char *explain[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        4            1",
+/* colors */
+". c #c0c0c0",
+"# c #ffffff",
+"a c #ffff00",
+"b c #000000",
+/* pixels */
+"................",
+"......bbb##.....",
+".....baaaaa#....",
+"....baaaaaaa#...",
+"...baaaaaaaaa#..",
+"..baaaaaaaaaaa#.",
+"..baaaaaaaaaaa#.",
+"..baaaaaaaaaaa#.",
+"..baaaaaaaaaaa#.",
+"..baaaaaaaaaaa#.",
+"...baaaaaaaaa#..",
+"....baaaaaaa#...",
+".....baaaaa#....",
+"....baaa###.....",
+"...baa##........",
+"....##.........."
+};
+SIMPLE  =                    T                                                  BITPIX  =                    8                                                  NAXIS   =                    2                                                  NAXIS1  =                   16                                                  NAXIS2  =                   16                                                  HISTORY Written by XV 3.10a                                                     END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ¿¿¿¿ˇˇ¿¿¿¿¿¿¿¿¿¿¿¿¿

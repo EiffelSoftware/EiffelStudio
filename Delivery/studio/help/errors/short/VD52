@@ -1,0 +1,3 @@
+Lace error: cannot retrieve precompiled system (incompatible version numbers).
+What to do: make sure that the version of the precompiled system was
+compiled with the current version of the compiler.

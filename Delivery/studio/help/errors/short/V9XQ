@@ -1,0 +1,3 @@
+Lace error: an Ace file used for precompilation may not contain an
+  `extending' clause.
+What to do: remove the `extending' clause from the Ace file.

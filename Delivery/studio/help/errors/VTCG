@@ -1,0 +1,13 @@
+VTCG, chapter 12 (Types), page 203
+
+     Constrained Genericity rule
+
+     Let `C' be a constrained generic class. A  Class_type
+     `CT' having `C' as base class is valid if and only if
+     `CT'  satisfies  the  Unconstrained  Genericity  rule
+     (VTUG, page 201) and, in addition:
+
+        3  For  any  Formal_generic   parameter   in   the
+          declaration  of  `C'  having a constraint of the
+          form ->  `D',  the  corresponding  Type  in  the
+          Actual_generics list of `CT' conforms to `D'.

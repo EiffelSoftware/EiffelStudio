@@ -1,0 +1,3 @@
+Error: local entities may not be used in this context.
+What to do: make sure that local entities are only used 
+  in routine bodies, local declarations or rescue clauses.

@@ -1,0 +1,3 @@
+Lace error: cannot retrieve precompiled system (it might be corrupted).
+What to do: make sure that the directory specified in the Ace file does
+  indeed contain a precompiled system.

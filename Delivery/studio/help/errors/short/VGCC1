@@ -1,0 +1,3 @@
+Type error: creation instruction applies to target of generic type.
+What to do: make sure that type of creation target is not a formal
+  generic parameter of the enclosing class. 

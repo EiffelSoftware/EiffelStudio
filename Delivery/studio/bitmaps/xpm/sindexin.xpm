@@ -1,0 +1,27 @@
+/* XPM */
+static char *sindexin[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        3            1",
+/* colors */
+". c #c0c0c0",
+"# c #ffff00",
+"a c #000000",
+/* pixels */
+"..a#a###a.......",
+".a##a###a.......",
+"a#a#a###a.......",
+"aaaaa#aaaaaa....",
+"a####a#a###a....",
+"a###a##a###a....",
+"a###aaaa##aaaaa.",
+"a###a####a####a.",
+"aaaaa###a#####a.",
+"....a##a######a.",
+"....a##a######a.",
+"....aaaa######a.",
+".......a######a.",
+".......a######a.",
+".......a######a.",
+".......aaaaaaaa."
+};
+SIMPLE  =                    T                                                  BITPIX  =                    8                                                  NAXIS   =                    2                                                  NAXIS1  =                   16                                                  NAXIS2  =                   16                                                  HISTORY Written by XV 3.10a                                                     END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             응응응�

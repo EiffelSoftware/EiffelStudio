@@ -1,0 +1,22 @@
+/* XPM */
+static char * gbreakpt [] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"14 14 2 1 -1 -1",
+/* colors */
+" 	s iconColor2	m white	c white",
+".	s iconColor1	m black	c black",
+/* pixels */
+"              ",
+"              ",
+"              ",
+"..............",
+".            .",
+" . ........ . ",
+"  . ...... .  ",
+"  . ..... .   ",
+"   . .... .   ",
+"    . .. .    ",
+"     .  .     ",
+"     ....     ",
+"      ..      ",
+"              "};

@@ -67,7 +67,7 @@ feature -- Basic operations
 			if c_keywords.has (tmp_name) then
 				tmp_string := tmp_name.twin
 				tmp_string.append (" is C/C++ keyword, please choose another feature name")
-				message_output.add_warning (Current, tmp_string)
+				message_output.add_warning (tmp_string)
 			end
 			create midl_feature.make (tmp_name)
 

@@ -148,7 +148,7 @@ feature -- Basic operations
 				can_free := True
 				writable := True
 			else
-				message_output.add_warning (Current, "Data type is not supported")
+				message_output.add_warning ("Data type is not supported")
 			end
 
 			create c_definition_header_file_name.make (0)

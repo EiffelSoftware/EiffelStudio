@@ -77,7 +77,7 @@ feature -- Basic operations
 	generate is
 			-- Code generation
 		do			
-			message_output.add_title (Current, Generation_title)
+			message_output.add_title (Generation_title)
 			create_generated_ce_mapper
 			create_generated_ec_mapper
 			create_alias_c_writer 
@@ -98,9 +98,6 @@ feature -- Basic operations
 			end
 			if not environment.abort then
 				generate_makefiles 
-			end
-			if not environment.abort then
-				message_output.add_title (Current, Generation_Successful)
 			end
 		end
 
@@ -123,7 +120,7 @@ feature -- Basic operations
 
 			from
 				system_descriptor.start
-				progress_report.set_task_title (Generation_title)
+				progress_report.set_title (Generation_title)
 			until
 				system_descriptor.after or
 				environment.abort
@@ -164,31 +161,27 @@ feature -- Basic operations
 			l_eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
 			l_interfaces: LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]
 		do
-			if environment.abort then
-				message_output.add_message (Current, Generation_Aborted)
-			else
-				message_output.add_message (Current, Interface_generation_title)
+			message_output.add_message (Interface_generation_title)
 
-				create l_c_client_visitor
-				create l_eiffel_client_visitor
-				create l_c_server_visitor
-				create l_eiffel_server_visitor
+			create l_c_client_visitor
+			create l_eiffel_client_visitor
+			create l_c_server_visitor
+			create l_eiffel_server_visitor
 
-				l_interfaces := system_descriptor.interfaces
-				from
-					l_interfaces.start
-					progress_report.set_task_title (Interface_generation_title)
-				until
-					l_interfaces.after or environment.abort
-				loop
-					l_interface := l_interfaces.item
-					l_c_client_visitor.visit (l_interface)
-					l_eiffel_client_visitor.visit (l_interface)
-					l_c_server_visitor.visit (l_interface)
-					l_eiffel_server_visitor.visit (l_interface)
-					l_interfaces.forth
-					progress_report.step
-				end
+			l_interfaces := system_descriptor.interfaces
+			from
+				l_interfaces.start
+				progress_report.set_title (Interface_generation_title)
+			until
+				l_interfaces.after or environment.abort
+			loop
+				l_interface := l_interfaces.item
+				l_c_client_visitor.visit (l_interface)
+				l_eiffel_client_visitor.visit (l_interface)
+				l_c_server_visitor.visit (l_interface)
+				l_eiffel_server_visitor.visit (l_interface)
+				l_interfaces.forth
+				progress_report.step
 			end
 		end
 
@@ -200,7 +193,7 @@ feature -- Basic operations
 			c_reg_gen: WIZARD_C_REGISTRATION_CODE_GENERATOR
 		do
 			if environment.abort then
-				message_output.add_message (Current, Generation_Aborted)
+				message_output.add_message (Generation_Aborted)
 			elseif not environment.is_client and not system_descriptor.coclasses.is_empty then
 				if environment.is_out_of_process then
 					create outproc_reg_gen
@@ -220,32 +213,28 @@ feature -- Basic operations
 		local
 			generated_globals: WIZARD_GENERATED_RT_GLOBALS_GENERATOR
 		do
-			if environment.abort then
-				message_output.add_message (Current, Generation_Aborted)
-			else
-				message_output.add_message (Current, Runtime_functions_generation)
-				progress_report.set_task_title (Runtime_functions_generation)
-				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
-				progress_report.step
-				Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-				progress_report.step
-				Generated_ce_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)	
-				Generated_ce_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)	
-				progress_report.step
-				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-				progress_report.step
-				Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-				progress_report.step
-				Generated_ec_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
-				Generated_ec_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
-				progress_report.step
-				Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
-				progress_report.step
-				Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-				progress_report.step
-				create generated_globals.generate 
-				progress_report.step
-			end
+			message_output.add_message (Runtime_functions_generation)
+			progress_report.set_title (Runtime_functions_generation)
+			Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
+			progress_report.step
+			Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+			progress_report.step
+			Generated_ce_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)	
+			Generated_ce_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)	
+			progress_report.step
+			Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
+			progress_report.step
+			Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+			progress_report.step
+			Generated_ec_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+			Generated_ec_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
+			progress_report.step
+			Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
+			progress_report.step
+			Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+			progress_report.step
+			create generated_globals.generate 
+			progress_report.step
 			set_generated_ce_mapper (Void)
 			set_generated_ec_mapper (Void)
 			set_alias_c_writer (Void)
@@ -260,21 +249,17 @@ feature -- Basic operations
 		do
 			create ace_generator
 			create resource_generator
-			if environment.abort then
-				message_output.add_message (Current, Generation_Aborted)
-			else
-				message_output.add_message (Current, Ace_file_generation)
-				if not environment.is_client then
-					ace_generator.generate (Server)
-					resource_generator.generate (Server)
-					if environment.is_in_process and not system_descriptor.coclasses.is_empty then
-						create definition_file_generator
-						definition_file_generator.generate
-					end
-				else
-					ace_generator.generate (Client)
-					resource_generator.generate (Client)
+			message_output.add_message (Ace_file_generation)
+			if not environment.is_client then
+				ace_generator.generate (Server)
+				resource_generator.generate (Server)
+				if environment.is_in_process and not system_descriptor.coclasses.is_empty then
+					create definition_file_generator
+					definition_file_generator.generate
 				end
+			else
+				ace_generator.generate (Client)
+				resource_generator.generate (Client)
 			end
 			ace_file_generated := True
 			resource_file_generated := True
@@ -287,39 +272,28 @@ feature -- Basic operations
 			Clib_folder_name: STRING
 		do
 			create makefile_generator
-			if environment.abort then
-				message_output.add_message (Current, Generation_Aborted)
-			else
-				message_output.add_message (Current, Makefile_generation)
-				progress_report.set_task_title (Makefile_generation)
-				Env.change_working_directory (environment.destination_folder)
+			message_output.add_message (Makefile_generation)
+			progress_report.set_title (Makefile_generation)
+			Env.change_working_directory (environment.destination_folder)
 
-				if not environment.abort then
-					Clib_folder_name := Client.twin
-					Clib_folder_name.append_character (Directory_separator)
-					Clib_folder_name.append (Clib)
-					
-					makefile_generator.generate (Clib_folder_name, CLib_name)
-					progress_report.step
-				end
-				if not environment.abort then
-					Clib_folder_name := Server.twin
-					Clib_folder_name.append_character (Directory_separator)
-					Clib_folder_name.append (Clib)
-					
-					makefile_generator.generate (Clib_folder_name, CLib_name)
-					progress_report.step
-				end
-				if not environment.abort then
-					Clib_folder_name := Common.twin
-					Clib_folder_name.append_character (Directory_separator)
-					Clib_folder_name.append (Clib)
-					
-					makefile_generator.generate (Clib_folder_name, CLib_name)
-					progress_report.step
-				end
-				
-			end
+			Clib_folder_name := Client.twin
+			Clib_folder_name.append_character (Directory_separator)
+			Clib_folder_name.append (Clib)
+			makefile_generator.generate (Clib_folder_name, CLib_name)
+			progress_report.step
+
+			Clib_folder_name := Server.twin
+			Clib_folder_name.append_character (Directory_separator)
+			Clib_folder_name.append (Clib)
+			makefile_generator.generate (Clib_folder_name, CLib_name)
+			progress_report.step
+
+			Clib_folder_name := Common.twin
+			Clib_folder_name.append_character (Directory_separator)
+			Clib_folder_name.append (Clib)
+			makefile_generator.generate (Clib_folder_name, CLib_name)
+			progress_report.step
+
 			makefile_generated := True
 		end
 		

@@ -112,7 +112,7 @@ feature -- Processing
 		require
 			non_void_descrioptor: union_descriptor /= Void
 		do
-			message_output.add_warning (Current, "Unions are not supported")
+			message_output.add_warning ("Unions are not supported")
 		end
 
 end -- class WIZARD_TYPE_VISITOR

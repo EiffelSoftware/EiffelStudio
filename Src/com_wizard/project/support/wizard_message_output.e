@@ -7,6 +7,12 @@ indexing
 class
 	WIZARD_MESSAGE_OUTPUT
 
+inherit
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -29,34 +35,36 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_title (origin: ANY; reason: STRING) is
+	add_title (reason: STRING) is
 			-- Display title.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_title, reason)])
 		end
 
-	add_message (origin: ANY; reason: STRING) is
+	add_message (reason: STRING) is
 			-- Display message `reason' from `origin'.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_message, reason)])
 		end
 
-	add_text (origin: ANY; reason: STRING) is
+	add_text (reason: STRING) is
 			-- Display text `reason' from `origin'.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_text, reason)])
 		end
 
-	add_warning (origin: ANY; reason: STRING) is
+	add_warning (reason: STRING) is
 			-- Display warning.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning, reason)])
 		end
 
-	add_error (origin: ANY; reason: STRING) is
-			-- Display error.
+	display_error is
+			-- Display current error.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_error, reason)])
+			if environment.abort and environment.is_valid_error_code (environment.error_code) then
+				event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_error, environment.error_message)])
+			end
 		end
 
 	clear is

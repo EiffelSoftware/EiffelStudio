@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			a_message.append (language)
 			a_message.append (" ")
 			a_message.append (module_type)
-			message_output.add_message (Current, a_message)
+			message_output.add_message (a_message)
 		end
 
 	language: STRING is

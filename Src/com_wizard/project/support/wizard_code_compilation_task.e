@@ -36,41 +36,37 @@ feature {NONE} -- Implementation
 			-- Use `step' `steps_count' times unless `stop' is called.
 		do
 			-- Compiling generated C code
-			message_output.add_title (Current, Compilation_title_c)
+			message_output.add_title (Compilation_title_c)
 			Env.change_working_directory (environment.destination_folder)
 			if not environment.abort then
-				progress_report.set_task_title (C_client_compilation_title)
+				progress_report.set_title (C_client_compilation_title)
 				compiler.compile_folder ("Client\Clib")
 				progress_report.step
 			end
 			if not environment.abort then
-				progress_report.set_task_title (C_server_compilation_title)
+				progress_report.set_title (C_server_compilation_title)
 				compiler.compile_folder ("Server\Clib")
 				progress_report.step
 			end
 			if not environment.abort then		
-				message_output.add_message (Current, Compilation_Successful)
-			else
-				message_output.add_error (Current, Compilation_failed)
-			end
+				message_output.add_message (Compilation_Successful)
 			
-			-- Compiling Eiffel
-			if not environment.abort and environment.compile_eiffel then
-				message_output.add_title (Current, Compilation_title_eiffel)
-				if environment.is_client then
-					progress_report.set_task_title (Eiffel_compilation_title)
-					compiler.compile_eiffel (Client)
-					progress_report.step
-				else
-					progress_report.set_task_title (Eiffel_compilation_title)
-					compiler.compile_eiffel (Server)
-					progress_report.step
+				-- Compiling Eiffel
+				if environment.compile_eiffel then
+					message_output.add_title (Compilation_title_eiffel)
+					if environment.is_client then
+						progress_report.set_title (Eiffel_compilation_title)
+						compiler.compile_eiffel (Client)
+						progress_report.step
+					else
+						progress_report.set_title (Eiffel_compilation_title)
+						compiler.compile_eiffel (Server)
+						progress_report.step
+					end
 				end
 			end
 			if not environment.abort then		
-				message_output.add_title (Current, Compilation_Successful)
-			else
-				message_output.add_error (Current, Compilation_failed)
+				message_output.add_title (Compilation_Successful)
 			end
 		end
 

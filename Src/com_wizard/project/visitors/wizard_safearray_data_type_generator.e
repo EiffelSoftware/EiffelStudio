@@ -267,7 +267,7 @@ feature -- Basic operations
 				create tmp_string.make (100)
 				tmp_string.append ("Unknown type of SAFEARRAY element: ")
 				tmp_string.append (element_visitor.c_type)
-				message_output.add_warning (Current, tmp_string)
+				message_output.add_warning (tmp_string)
 			end
 			set_visitor_atributes (a_visitor)
 		end

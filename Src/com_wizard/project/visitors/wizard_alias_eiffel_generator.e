@@ -119,7 +119,7 @@ feature -- Processing
 				create a_warning.make (500)
 				a_warning.append ("Alias type not supported: ")
 				a_warning.append (a_data_type_visitor.eiffel_type)
-				message_output.add_warning (Current, a_warning)
+				message_output.add_warning (a_warning)
 
 			end
 		end
@@ -187,7 +187,7 @@ feature -- Processing
 			elseif a_data_type_visitor.is_enumeration then
 
 			else
-				message_output.add_warning (Current, "Alias type not supported: " + a_user_defined_descriptor.name)
+				message_output.add_warning ("Alias type not supported: " + a_user_defined_descriptor.name)
 			end
 		end
 

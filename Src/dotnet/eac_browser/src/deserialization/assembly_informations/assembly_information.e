@@ -79,7 +79,7 @@ feature -- Basic Operations
 
 	find_type (assembly_type_name: STRING; a_full_dotnet_type: STRING): MEMBER_INFORMATION is
 			-- Find comments relative to `a_full_dotnet_type'.
-		require else
+		require
 			non_void_assembly_type_name: assembly_type_name /= Void
 			not_empty_assembly_type_name: not assembly_type_name.is_empty
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
@@ -102,8 +102,7 @@ feature -- Basic Operations
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
 			-- Attribute signature: attribute_name
-		require else
-			non_void_assembly_type: assembly_type /= Void
+		require
 			non_void_assembly_type_name: assembly_type_name /= Void
 			not_empty_assembly_type_name: not assembly_type_name.is_empty
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty

@@ -4956,7 +4956,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			Result := internal_il_modules.item (l_type_id)
 			if Result = Void then
 				create l_output.make_from_string (location_path)
-				l_module_name := assembly_name + "_module_" + l_type_id.out + ".dll"
+				l_module_name := "module_" + l_type_id.out + ".dll"
 				l_output.set_file_name (l_module_name)
 				create Result.make (
 					l_module_name,

@@ -186,9 +186,9 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			internal_set_minimum_size (system_metrics.window_minimum_width, system_metrics.window_minimum_height)
-			set_maximum_width (system_metrics.screen_width)
-			set_maximum_height (system_metrics.screen_height)
+			internal_set_minimum_size (window_minimum_width, window_minimum_height)
+			set_maximum_width (maximized_window_width)
+			set_maximum_height (maximized_window_height)
 		end
 
 --	set_horizontal_resize (flag: BOOLEAN) is
@@ -418,8 +418,8 @@ feature -- Assertion features
 			-- we must redefine it because windows do not
 			-- allow as little windows as we want.
 		do
-			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width) or else width = maximum_width) and then
-				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height)or else height = maximum_height)
+			Result := (width = new_width or else width = minimum_width.max (window_minimum_width) or else width = maximum_width) and then
+				  (height = new_height or else height = minimum_height.max (window_minimum_height)or else height = maximum_height)
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
@@ -666,8 +666,8 @@ feature {NONE} -- Implementation
 			min_track, max_track: WEL_POINT
 			w, h: BOOLEAN
 		do
-			w := bit_set (internal_changes, 16)
-			h := bit_set (internal_changes, 32)
+			w := horizontal_resizable
+			h := vertical_resizable
 			if w and h then
 				!! min_track.make (internal_minimum_width, internal_minimum_height)
 				!! max_track.make (maximum_width, maximum_height)
@@ -693,13 +693,6 @@ feature {NONE} -- Implementation
 			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
 				parent_imp.set_insensitive (False)
 			end
-		end
-
-	system_metrics: WEL_SYSTEM_METRICS is
-			-- System metrics to query things like
-			-- window_frame_width
-		once
-			!!Result
 		end
 
 	on_wm_mouseactivate (wparam, lparam: INTEGER) is

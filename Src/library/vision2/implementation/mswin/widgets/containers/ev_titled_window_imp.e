@@ -14,6 +14,10 @@ inherit
 	EV_WINDOW_I
 
 	EV_UNTITLED_WINDOW_IMP
+		rename
+			-- Rename because the postconditions crashes.
+			maximize as wel_maximize,
+			minimize as wel_minimize
 		redefine
 			make,
 			make_with_owner,
@@ -23,7 +27,8 @@ inherit
 			title,
 			set_title,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			restore
 		end
 
 creation
@@ -97,13 +102,15 @@ feature -- Status report
 	is_minimized: BOOLEAN is
 			-- Is the window minimized (iconic state)?
 		do
-			Result := flag_set (style, Ws_minimize)
+			Result := flag_set (style, Ws_minimize) or
+						(not shown and bit_set (internal_changes, 1028))
 		end
 
 	is_maximized: BOOLEAN is
 			-- Is the window maximized (take the all screen).
 		do
-			Result := flag_set (style, Ws_maximize)
+			Result := (shown and flag_set (style, Ws_maximize)) or
+						(not shown and bit_set (internal_changes, 256))
 		end
 
 feature -- Status setting
@@ -121,6 +128,44 @@ feature -- Status setting
 			-- of the screen.
 		do
 			set_z_order (hwnd_bottom)
+		end
+
+	minimize is
+			-- Minimize the window.
+			-- Shows the window too.
+		do
+			if shown then
+				wel_minimize
+			else
+				internal_changes := set_bit (internal_changes, 1028, True)
+			end
+		end
+
+	maximize is
+			-- Maximize the window.
+			-- If the window is not shown, it gives it the screen
+			-- size, but do not call the precursor otherwise, it
+			-- shows the window.
+		do
+			if shown then
+				wel_maximize
+			else
+				internal_changes := set_bit (internal_changes, 256, True)
+			end
+		end
+
+	restore is
+			-- Restore the window when it is minimized or
+			-- maximized. Do nothing otherwise.
+			-- If the window is not shown, it simply regive it
+			-- its freedom to resize.
+		do
+			if shown then
+				{EV_UNTITLED_WINDOW_IMP} Precursor
+			else
+				internal_changes := set_bit (internal_changes, 256, False)
+				internal_changes := set_bit (internal_changes, 1028, False)
+			end
 		end
 
 feature -- Element change
@@ -229,29 +274,37 @@ feature {NONE} -- WEL Implementation
 		local
 			w, h: INTEGER
 		do
-			-- The width to give to the window
-			if bit_set (internal_changes, 64) then
-				w := width
-				internal_changes := set_bit (internal_changes, 64, False)
-			else
-				w := 0
-			end
-
-			-- The height to give to the window
-			if bit_set (internal_changes, 128) then
-				h := height
-				internal_changes := set_bit (internal_changes, 128, False)
-			else
-				h := 0
-			end
-
 			-- We check if there is a menu
 			if has_menu then
 				draw_menu
 			end
 
-			-- We resize everything and draw the menu.
-			resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+			-- Different behaviors if the window was maximized or not.
+			if is_maximized then
+				integrate_changes
+				wel_maximize
+			elseif is_minimized then
+				integrate_changes
+				wel_minimize
+			else
+				-- The width to give to the window
+				if bit_set (internal_changes, 64) then
+					w := width
+					internal_changes := set_bit (internal_changes, 64, False)
+				else
+					w := 0
+				end
+	
+				-- The height to give to the window
+				if bit_set (internal_changes, 128) then
+					h := height
+					internal_changes := set_bit (internal_changes, 128, False)
+				else
+					h := 0
+				end
+	
+				resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+			end
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

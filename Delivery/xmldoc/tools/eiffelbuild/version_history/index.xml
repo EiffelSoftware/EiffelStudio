@@ -7,6 +7,13 @@
 			<line_break/>
 			Availability: Student and Enterprise versions.
 			<line_break/>
+		<heading><size>2</size>5.5 Release</heading>
+		<list ordered="false">
+		<item>Added support for EV_RICH_TEXT which has been added to EiffelVision2.</item>
+		<item>Notebook item texts may now be set to string constants.</item>
+		<item>Better support for corrupt installations with warning dialogs now displayed.</item>
+		<item>Fixed bug with generated code for notebooks often hiding the first item when they were actually displayed.</item>
+		</list>
 		<heading><size>2</size>5.4 Release</heading>
 		<list ordered="false">
 			<item>Added support for multiple windows, including dialogs.</item>

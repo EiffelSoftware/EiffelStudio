@@ -120,7 +120,7 @@ feature -- Access
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
-			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.width)
+			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
 		
 	height: INTEGER is
@@ -961,13 +961,14 @@ feature {NONE} -- Implementation
 			l_right: INTEGER
 		do
 			if commands.is_show_requested or else queries.is_show_requested then
+				l_right := names.bounding_box.right
 				if commands.is_show_requested then
-					l_right := commands.bounding_box.right
+					l_right := l_right.max (commands.bounding_box.right)
 					if queries.is_show_requested then
 						l_right := l_right.max (queries.bounding_box.right)
 					end
 				else
-					l_right := queries.bounding_box.right
+					l_right := l_right.max (queries.bounding_box.right)
 				end
 				if 
 					l_right > right or else

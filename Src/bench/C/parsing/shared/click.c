@@ -6,8 +6,8 @@
  * Id position managment
  */
  
-int start_position;
-int end_position;
+extern int start_position;
+extern int end_position;
 
 /*
  * Declarations for click_list managment

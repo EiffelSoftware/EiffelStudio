@@ -314,60 +314,110 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Add `item_imp' at the end of the list
-		local
-			i: INTEGER
 		do
-			item_imp.set_rows (rows)
-			wel_insert_item (item_imp)
-			from
-				i := 2
-			until
-				i = columns + 1
-			loop
-				cwin_send_message (item, Lvm_setitem, 0, (item_imp.subitems @ i).to_integer)
-				i := i + 1
-			end
-			ev_children.force (item_imp)
+			insert_item (item_imp, rows + 1)
 		end
 
-	insert_item (index: INTEGER; item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; index: INTEGER) is
 			-- Insert `item_imp' in the list at the index `index'.
 		local
-
+			list: ARRAYED_LIST [STRING]
+			litem: WEL_LIST_VIEW_ITEM
+			rw: INTEGER
 		do
+			-- First, we insert the graphical object.
+			list := item_imp.internal_text
+			from
+				list.start
+				create litem.make_with_attributes (Lvif_text, index - 1, 0, 0, list.item)
+				wel_insert_item (litem)
+				list.forth
+			until
+				list.after
+			loop
+				create litem.make_with_attributes (Lvif_text, index - 1, list.index - 1, 0, list.item)
+				cwin_send_message (item, Lvm_setitem, 0, litem.to_integer)
+				list.forth
+			end
 
+			-- Then, we update ev_children
+			ev_children.go_i_th (index - 1)
+			ev_children.put_right (item_imp)
+		end
+
+	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; index: INTEGER) is
+			-- Move the given item to the given position.
+		local
+			bool: BOOLEAN
+		do
+			bool := item_imp.is_selected
+			remove_item (item_imp)
+			insert_item (item_imp, index)
+			if bool then
+				item_imp.set_selected (True)
+			end
 		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Remove `item' from the list
-		do
-			ev_children.prune_all (item_imp)
-			delete_item (item_imp.iitem)
-		end
-
-	move_item (index: INTEGER; item_imp: WEL_LIST_VIEW_ITEM) is
-			-- Move the given item to the given position.
 		local
-			success: INTEGER
+			index: INTEGER
 		do
-			success := cwin_send_message_result (item, 
-					Lvm_setitemposition, index - 1, 0)
-			check
-				succesfullcommand: success /= 0
-			end
+			-- First, we remove the child from the graphical component
+			index := ev_children.index_of (item_imp, 1) - 1
+			delete_item (index)
+
+			-- Then, we update the children
+			ev_children.go_i_th (index)
+			ev_children.remove
 		end
 
-	update_state (index: INTEGER; an_item: WEL_LIST_VIEW_ITEM) is
-			-- Update the state of the given item.
+	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
+			-- Return the index of `item' in the list.
 		do
-			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
+			Result := ev_children.index_of (item_imp, 1)
+		end
+
+	internal_is_selected (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): BOOLEAN is
+			-- Is `item_imp' selected in the list?
+		local
+			index: INTEGER
+		do
+			index := ev_children.index_of (item_imp, 1) - 1
+			index := get_item_state (index, Lvis_selected)
+			Result := flag_set (index, Lvis_selected)
+		end
+
+	internal_select (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Select `item_imp' in the list.
+		local
+			index, flags: INTEGER
+			litem: WEL_LIST_VIEW_ITEM
+		do
+			index := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, index, 0, 0, "")
+			litem.set_state (Lvis_selected)
+			litem.set_statemask (Lvis_selected)	
+			cwin_send_message (item, Lvm_setitemstate, index, litem.to_integer)
+		end
+
+	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Deselect `item_imp' in the list.
+		local
+			index, flags: INTEGER
+			litem: WEL_LIST_VIEW_ITEM
+		do
+			index := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, index, 0, 0, "")
+			litem.set_state (0)
+			litem.set_statemask (Lvis_selected)	
+			cwin_send_message (item, Lvm_setitemstate, index, litem.to_integer)
 		end
 
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
-			-- No ws_child and ws_visible at creation,
-			-- but ws_popup because it has no parent.
+			-- Style of the current window.
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren

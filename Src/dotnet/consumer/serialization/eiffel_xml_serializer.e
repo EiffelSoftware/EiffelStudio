@@ -383,6 +383,7 @@ feature {NONE} -- Implementation
 			non_void_file: f /= Void
 		local
 			i, nb, dtype: INTEGER
+			l_name: STRING
 		do
 			dtype := dynamic_type (obj)
 			write_tabs (f, tab_count)
@@ -395,12 +396,15 @@ feature {NONE} -- Implementation
 			f.write_string (End_element)
 			f.write_string (New_line)
 			from
-				i := 2
+				i := 1
 				nb := field_count_of_type (dtype)
 			until
 				i > nb
 			loop
-				internal_serialize (field_name_of_type (i, dtype), field_of_type (i, obj, dtype), tab_count + 1, f)						
+				l_name := field_name_of_type (i, dtype)
+				if l_name.item (1) /= '_' then
+					internal_serialize (l_name, field_of_type (i, obj, dtype), tab_count + 1, f)
+				end
 				i := i + 1
 			end
 			write_tabs (f, tab_count)

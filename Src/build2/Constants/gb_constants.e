@@ -292,9 +292,33 @@ feature -- Generation constants
 			Result := "<PROJECT_NAME>"
 		end
 		
+	inheritance_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the inheritance.
+		once
+			Result := "<INHERITANCE>"
+		end
 		
+	precursor_tag: STRING is
+			-- `Result' is tag used in tamples
+			-- for precursor.
+		once
+			Result := "<PRECURSOR>"
+		end
+		
+	creation_tag: STRING is
+			--`Result' is tag used in templates
+			-- for creation.
+		once
+			Result := "<CREATION>"
+		end
+		
+	custom_feature_tag: STRING is
+			-- `Result' is tag used in templates for custom features.
+		once
+			Result := "<CUSTOM_FEATURE>"
+		end
 	
-		
 	indent: STRING is
 			-- String representing standard indent
 			-- for code generation.
@@ -357,7 +381,49 @@ feature -- Generation constants
 		end
 		
 	merged_groups_string: STRING is "merged_radio_button_groups"
+	
+	redefined_creation: STRING is
+			--Definition of `make_with_window' and `default_create' to be used in window implementation when
+			-- we are a client of the window, and not inheriting it.
+		once
+			Result := "create" + indent_less_two + "default_create," + indent_less_two +
+				"make_with_window%N%N" + "feature {NONE} -- Initialization%N" + indent_less_two +
+				"make_with_window (a_window: EV_TITLED_WINDOW) is" + indent + "-- Create `Current' in `a_window'." +
+				indent_less_one + "require" + indent + "window_not_void: a_window /= Void" +
+				indent + "window_empty: a_window.is_empty" + indent + "no_menu_bar: a_window.menu_bar = Void" +
+				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + "end%N" +
+				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
+				"create window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_not_void: window /= Void" + indent + "end"
+		end
+	
+	default_create_redefinition: STRING is
+			-- Redefinition of `default_create' used when we are a client of the window.
+		once
+			Result := indent_less_one + "redefine" + indent + "default_create" + indent_less_one + "end"
+		end
 		
+	show_feature: STRING is
+			-- `Show' for the window implementation when we are a client of the window.
+		once
+			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent +
+			"window.show" + indent_less_one + "end"
+		end
+		
+		
+	window_inheritance: STRING is
+			-- String used to generate inheritance from window in implementation class.
+		once
+			Result := "inherit" + Indent_less_two + "EV_TITLED_WINDOW" + Indent_less_one + "redefine" + indent +
+			"initialize, is_in_default_state" + Indent_less_one + "end"
+		end
+		
+	window_access: STRING is
+			-- String used to define window when we are a client of window.
+		once
+			Result := "feature -- Access%N" + indent_less_two + "window: EV_TITLED_WINDOW" + indent_less_one +
+			"-- `Result' is window with which `Current' is implemented"
+		end
+
 feature -- Wizard
 
 	wizard_completion_file_name: STRING is "completion_status.txt"

@@ -119,6 +119,22 @@ feature -- Status Setting
 
 feature -- Basic operations
 
+	enable_maximize is
+			-- Add maximize button to `Current'.
+		do
+			-- Does nothing on Gtk implementation
+			-- Should never be called, but is referenced in
+			-- common system classes, so must be available.
+		end
+		
+	disable_maximize is
+			-- Remove maximize button from `Current'.
+		do
+			-- Does nothing on Gtk implementation
+			-- Should never be called, but is referenced in
+			-- common system classes, so must be available.
+		end
+
 	show_modal_to_hwnd (hwnd: INTEGER) is
 			-- Show `Current' modally to Window with
 			-- handle `hwnd'.

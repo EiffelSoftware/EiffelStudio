@@ -8,27 +8,27 @@ indexing
 class EV_GDK_EXTERNALS
 
 
-feature {NONE} -- GTK extenals for the fonts
+--feature {NONE} -- GDK extenals for the fonts
 
-	gdk_font_load (name: POINTER): POINTER is
-		external
-			"C | <gdk/gdk.h>"
-		end
+--	gdk_font_load (name: POINTER): POINTER is
+--		external
+--			"C | <gdk/gdk.h>"
+--		end
 
-	gdk_string_width (font, str: POINTER): INTEGER is
-		external
-			"C | <gdk/gdk.h>"
-		end
+--	gdk_string_width (font, str: POINTER): INTEGER is
+--		external
+--			"C | <gdk/gdk.h>"
+--		end
 
-	c_gdk_font_ascent (font: POINTER): INTEGER is
-		external
-			"C [macro %"gdk_eiffel.h%"]"
-		end
+--	c_gdk_font_ascent (font: POINTER): INTEGER is
+--		external
+--			"C [macro %"gdk_eiffel.h%"]"
+--		end
 
-	c_gdk_font_descent  (font: POINTER): INTEGER is
-		external
-			"C [macro %"gdk_eiffel.h%"]"
-		end
+--	c_gdk_font_descent  (font: POINTER): INTEGER is
+--		external
+--			"C [macro %"gdk_eiffel.h%"]"
+--		end
 
 feature {NONE} -- GTK macros for casting types
 	

@@ -1,36 +1,26 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "undo/redo command stack"
+	author: "Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	UNDO_REDO_STACK
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
 	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
-
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
 
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make (w: CHILD_WINDOW) is
 		do
 			create undo_list.make
 			create redo_list.make
 			current_status := move
+			chwin := w
 		end
 
 feature -- Access
@@ -42,6 +32,12 @@ feature -- Access
 	item: UNDO_COMMAND is
 		do
 			Result := undo_list.first
+		end
+
+	nothing_has_been_done: BOOLEAN is
+			-- Has a change been done (and not undone after)?
+		do
+			Result := undo_list.empty
 		end
 
 feature -- Measurement
@@ -82,9 +78,23 @@ feature -- Element change
 			end
 		end
 
+	record_insert_eol is
+		do
+			record_insert ('%N')
+		end
+
+	record_paste (s: STRING) is
+		local
+			uic: UNDO_INSERT_COMMAND
+		do
+			create uic.make_from_string (chwin.cursor, s, chwin)
+			put (uic)
+			current_status := paste
+		end
+
 	record_delete (c: CHARACTER) is
 		local
-			uic: UNDO_DELETE_COMMAND
+			udc: UNDO_DELETE_COMMAND
 		do
 			if current_status = delete_char then
 				udc ?= item
@@ -94,8 +104,18 @@ feature -- Element change
 				udc.extend (c)
 			else
 				create udc.make_from_string (chwin.cursor, c.out, chwin)
+				put (udc)
 				current_status := delete_char
 			end
+		end
+
+	record_delete_selection (s: STRING) is
+		local
+			udc: UNDO_DELETE_COMMAND
+		do
+			create udc.make_from_string (chwin.cursor, s, chwin)
+			put (udc)
+			current_status := cut_selection
 		end
 
 feature -- Removal
@@ -125,6 +145,7 @@ feature -- Basic operations
 				uc.undo
 				redo_list.put_front (uc)
 				undo_list.remove
+				current_status := move
 			end
 		end
 
@@ -135,9 +156,10 @@ feature -- Basic operations
 			if not redo_list.empty then
 				redo_list.start
 				uc := redo_list.item
-				uc.undo
+				uc.redo
 				undo_list.put_front (uc)
 				redo_list.remove
+				current_status := move
 			end
 		end
 
@@ -148,6 +170,13 @@ feature -- Basic operations
 			current_status := move
 		end
 
+	forget_past is
+			-- Destroy past undos. Used by "save" commands.
+		do
+			undo_list.wipe_out
+			current_status := move
+		end
+
 feature -- Obsolete
 
 feature -- Inapplicable
@@ -155,6 +184,8 @@ feature -- Inapplicable
 feature {NONE} -- Implementation
 
 	current_status: INTEGER
+
+	chwin: CHILD_WINDOW
 
 invariant
 	invariant_clause: -- Your invariant here

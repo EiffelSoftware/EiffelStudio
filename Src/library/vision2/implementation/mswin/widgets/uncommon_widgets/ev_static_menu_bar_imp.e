@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a menu widget with `par' as parent window.
 		do
 			wel_make
-			initialize
+			!! ev_children.make
 			parent_imp ?= par.implementation
 			check
 				parent_imp /= Void
@@ -35,7 +35,8 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is the current menu destroyed ?
 		do
-			Result := parent_imp.menu /= Current
+			Result := False
+	--		Result := not equal (parent_imp.menu, Current)
 		end
 
 feature -- Status setting

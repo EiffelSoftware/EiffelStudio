@@ -55,9 +55,4 @@ feature -- Type check and dead code removal
 		do
 		end;
 
-	string_value: STRING is
-		do
-			!! Result.make (0)
-		end;
-
 end -- class ATOMIC_AS

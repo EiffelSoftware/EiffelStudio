@@ -110,6 +110,14 @@ feature -- Status report
 			"eelcode"
 		end;
 
+	exception_trace: STRING is
+			-- String representation of the exception trace
+		external
+			"C"
+		alias
+			"stack_trace_string"
+		end;
+
 	original_tag_name: STRING is
 			-- Assertion tag for original form of last
 			-- assertion violation.
@@ -177,7 +185,16 @@ feature -- Status setting
 			eraise ($str, Developer_exception);
 		end;
 
-	new_die (code: INTEGER) is
+	die (code: INTEGER) is
+			-- Terminate execution with exit status `code',
+			-- without triggering an exception.
+		external
+			"C"
+		alias
+			"esdie"
+		end;
+
+	new_die (code: INTEGER) is obsolete "Use ``die''"
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external

@@ -76,6 +76,16 @@ A, it points to the following function:</p>
 
 <p>&nbsp;</p>
 
+<h2>Multi-dot calls</h2>
+
+<ul>
+  <li>Performing multi-dot calls should be as efficient as possible. Therefore 
+  when you have a.b.c.d and that b is an expanded type, we should make sure that 
+  all calls on expanded are done through a reference to the expanded whenever possible.
+  That is to say that inlining should do a good job to figure out that no real copy
+  is needed.</li>
+</ul>
+
 </body>
 
 </html>

@@ -75,7 +75,7 @@ feature -- Execution
 				when Routine_type then
 					new_tool := window_manager.routine_window
 				when Object_type then
-					new_tool := window_manager.dialog_object_window
+					new_tool := window_manager.object_window
 				when Explain_type then
 					new_tool := window_manager.explain_window
 				when System_type then

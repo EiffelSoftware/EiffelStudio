@@ -522,6 +522,7 @@ feature {NONE} -- Implementation
 			-- Wm_command message.
 		local
 			text_field_imp: EV_TEXT_FIELD_IMP
+			original_top_window: EV_WINDOW_IMP
 		do
 				-- Escape has been pressed in `Current', so we 
 				-- call the `select_actions' of the default_cancel_button.
@@ -536,13 +537,20 @@ feature {NONE} -- Implementation
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			elseif wparam = bn_clicked or (wparam = idok and lparam = 0) then
 				if focus_on_widget.item /= Void then
+					original_top_window := Focus_on_widget.item.top_level_window_imp
 						-- We must now call the `return_actions' on the text_field.
 					text_field_imp ?= focus_on_widget.item
 					if text_field_imp /= Void then
 						text_field_imp.return_actions.call ([])
 					end
-					
-					focus_on_widget.item.process_standard_key_press (Vk_return)
+						-- If something in the text field return actions has caused the
+						-- dialog to close, we do not process the standard key press.
+						-- If you display a dialog modally to another dialog, and destroy
+						-- the top dialog from the return actions of a text field, the default
+						-- push button of the lower dialog would be fired.
+					if focus_on_widget.item.top_level_window_imp = original_top_window then
+						focus_on_widget.item.process_standard_key_press (Vk_return)	
+					end
 				end
 			else
 				Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)

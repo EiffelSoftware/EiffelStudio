@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (10)
+			Result.set_height_in_points (10)
 			Result.unset_bold
 			Result.set_text_color (Text_color)
 		end
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (14)
+			Result.set_height_in_points (14)
 			Result.set_bold
 			Result.set_text_color (Title_color)
 		end
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (10)
+			Result.set_height_in_points (10)
 			Result.set_bold
 			Result.set_text_color (Warning_color)
 		end
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (10)
+			Result.set_height_in_points (10)
 			Result.set_bold
 			Result.set_text_color (Error_color)
 		end

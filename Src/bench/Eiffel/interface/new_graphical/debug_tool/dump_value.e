@@ -626,7 +626,7 @@ feature -- Access
 					l_generating_type_string := value_class_name				
 				elseif dynamic_class.is_true_external then
 					l_generating_type_string := dynamic_class.external_class_name
-				elseif dynamic_class.is_generic then
+				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
 					l_generating_type_string := generating_type_evaluated_string
 				end
 				if l_generating_type_string	/= Void then
@@ -661,7 +661,7 @@ feature -- Access
 				elseif dynamic_class /= Void then
 					if dynamic_class.is_true_external then
 						l_generating_type_string := dynamic_class.external_class_name
-					elseif dynamic_class.is_generic then
+					elseif dynamic_class.is_generic or dynamic_class.is_tuple then
 						l_generating_type_string := generating_type_evaluated_string
 					end
 					if l_generating_type_string	/= Void then

@@ -33,6 +33,13 @@ inherit
 			copy
 		end
 
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make_with_values
@@ -284,6 +291,40 @@ feature -- Basic operations
 			)
 		end
 
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- Visualization on pixmap.
+		local
+			sa: EV_SCROLLABLE_AREA
+			p: EV_PIXMAP
+			test_subject: EV_FONT
+		do
+			create sa
+			create p.make_with_size (300, 250)
+			sa.extend (p)
+			create test_subject
+			test_subject.set_family (Ev_font_family_screen)
+			test_subject.set_weight (Ev_font_weight_regular)
+			test_subject.set_shape (Ev_font_shape_regular)
+			test_subject.set_height (36)
+			p.set_font (test_subject)
+			p.draw_text (3, 40, "Screen")
+			test_subject.set_family (Ev_font_family_roman)
+			p.set_font (test_subject)
+			p.draw_text (3, 80, "Roman")
+			test_subject.set_family (Ev_font_family_sans)
+			p.set_font (test_subject)
+			p.draw_text (3, 120, "Sans")
+			test_subject.set_family (Ev_font_family_typewriter)
+			p.set_font (test_subject)
+			p.draw_text (3, 160, "Typewriter")
+			test_subject.set_family (Ev_font_family_modern)
+			p.set_font (test_subject)
+			p.draw_text (3, 200, "Modern")
+			Result := sa
+		end
+
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -391,6 +432,9 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/05/01 21:20:06  brendel
+--| Added test_widget.
+--|
 --| Revision 1.21  2000/03/28 21:48:44  brendel
 --| Now uses new set_values in _I.
 --|

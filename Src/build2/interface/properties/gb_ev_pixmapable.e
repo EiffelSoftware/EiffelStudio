@@ -141,7 +141,6 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			container: EV_CONTAINER
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)

@@ -184,16 +184,16 @@ feature -- Keys
 			else
 				check_for_vs6 := True
 			end
-			
+
 			if check_for_vs6 then
 						-- Since previous failed now look for Version 6.0 instead.
-				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\MicrosoftVisualC++",
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\MicrosoftVisual C++",
 					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				if p /= default_pointer then
 					key := reg.key_value (p, "ProductDir")
 					reg.close_key (p)
 					if key /= Void then
-						Result := key.string_value
+						Result := key.string_value + "\"
 						vs_version := 6
 					end
 				end
@@ -213,8 +213,13 @@ feature -- Access
 		local
 			l_vc_vars: RAW_FILE
 		once
-			create l_vc_vars.make (Vcvars32_bat_path_and_filename)
-			Result := l_vc_vars.exists
+			
+			if Vcvars32_bat_path_and_filename /= Void then
+				create l_vc_vars.make (Vcvars32_bat_path_and_filename)
+				Result := l_vc_vars.exists
+			else
+				Result := False
+			end
 		end
 
 	env: EXECUTION_ENVIRONMENT is

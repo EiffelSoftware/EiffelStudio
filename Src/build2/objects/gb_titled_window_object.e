@@ -10,7 +10,7 @@ class
 inherit
 	GB_CELL_OBJECT
 		redefine
-			object, display_object, is_full, build_display_object, build_drop_actions_for_layout_item,
+			object, display_object, is_full, build_display_object,
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
 			generate_xml, modify_from_xml
 		end
@@ -54,16 +54,6 @@ feature -- Access
 			-- Is `Current' full?
 		do
 			Result := object.full
-		end
-		
-	build_drop_actions_for_layout_item is
-			-- Build the drop actions for the layout item.
-			-- Wipe out any existing actions.
-		do
-			layout_item.drop_actions.wipe_out
-			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
-			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
-			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 
 	add_new_object_wrapper (an_object: GB_OBJECT) is

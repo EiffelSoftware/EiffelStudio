@@ -50,7 +50,6 @@ feature {NONE} -- Initialization
 		do
 			set_application_main_window (main_window)
 			run
-			--destroy_application
 		end
 
 feature -- Basic operation
@@ -92,18 +91,6 @@ feature -- Root window
 			Result ?= root_windows.first.implementation
 		end
 
-feature -- Status setting
-
---	destroy_application is
---			-- Destroy few objects before to leave.
---		do
---		end
-
---	set_root_window (a_window: EV_WINDOW_IMP)is
---		do
---			set_application_main_window (a_window)
---		end
-
 feature -- Element change
 
 	add_root_window (w: EV_WINDOW) is
@@ -116,7 +103,11 @@ feature -- Element change
 			-- Remove `w' from the root windows list.
 		do
 			root_windows.prune_all (w)
-			set_application_main_window (main_window)
+			if root_windows.empty then
+				cwin_post_quit_message (0)
+			else
+				set_application_main_window (main_window)
+			end
 		end
 
 feature -- Status report
@@ -144,9 +135,16 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
+			from
+				root_windows.start
+			until
+				root_windows.empty
+			loop
+				root_windows.item.destroy
+			end
+			quit_requested := True
 			destroy_just_called := True
 			is_destroyed := True
-			root_windows.wipe_out
 		end
 
 feature {NONE} -- WEL Implemenation
@@ -168,6 +166,10 @@ feature {NONE} -- WEL Implemenation
 
 feature {NONE} -- Implementation
 
+	quit_requested: BOOLEAN
+			-- Has a Wm_quit message been processed?
+			-- Or has destroy been called?
+
 	message_loop is
 			-- Windows message loop.
 			--| Redefined to add accelerator functionality.
@@ -177,7 +179,7 @@ feature {NONE} -- Implementation
 			from
 				create msg.make
 			until
-				root_windows.empty
+				quit_requested
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -202,7 +204,7 @@ feature {NONE} -- Implementation
 		do
 			if msg.last_boolean_result then
 				if msg.quit then
-					root_windows.wipe_out
+					quit_requested := True
 				else
 					dlg := cwin_get_last_active_popup (main_window.wel_item)
 					if is_dialog (dlg) then
@@ -264,7 +266,7 @@ feature {NONE} -- Inapplicable
 			end
  		end
 
-feature -- External Implementation
+feature {NONE} -- Externals
 
 	c_sleep (v: INTEGER) is
 			-- Sleep for `v' milliseconds
@@ -272,6 +274,14 @@ feature -- External Implementation
 			"C | <winbase.h>"
 		alias
 			"Sleep"
+		end
+
+	cwin_post_quit_message (exit_code: INTEGER) is
+			-- SDK PostQuitMessage
+		external
+			"C [macro <wel.h>] (int)"
+		alias
+			"PostQuitMessage"
 		end
 
 end -- class EV_APPLICATION_IMP
@@ -297,6 +307,11 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/20 18:26:54  brendel
+--| Cleanup.
+--| Application quits when every window is destroyed.
+--| Every window is destroyed and app quits when destroy gets called.
+--|
 --| Revision 1.32  2000/04/20 00:40:47  brendel
 --| process_events now also uses extended message processing that message
 --| loop has.

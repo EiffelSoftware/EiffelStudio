@@ -12,7 +12,11 @@
 
 #include "config.h"
 #include "size.h"
+#ifdef EIF_WINDOWS
+#define print_err_msg printf
+#else
 #include "err_msg.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

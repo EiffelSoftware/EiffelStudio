@@ -84,15 +84,6 @@ feature -- Parsing
 						stop := true
 					end
 				end
-debug("RESOURCE_PARSING")
-	io.error.putstring ("Resource name parsed: ");
-	if last_token /= Void then
-		io.error.putstring (last_token)
-	else
-		io.error.putstring ("SYNTAX ERROR...")
-	end;
-	io.error.new_line
-end
 			end
 		end;
 
@@ -115,101 +106,13 @@ end
 			-- A value is either a word (characters with not blank)
 			-- or an Eiffel string.
 		local
-			stop: BOOLEAN;
-			rsl: RESOURCE_STRING_LEX
+			stop: BOOLEAN
 		do
 			parse_separators;
 			if end_of_file then
 				last_token := Void
 			elseif last_character = '%"' then
-				from
-					!! last_token.make (10)
-					last_token.extend (last_character);
-					read_character
-				until
-					stop
-				loop
-debug("RESOURCE_PARSING")
-	io.error.putstring ("Position ");
-	io.error.putint (position);
-	io.error.putstring (" in line of length ");
-	io.error.putint (line.count);
-	io.error.new_line
-end;
-					if end_of_line then
-						last_token.extend ('%N');
-						read_line;
-					elseif last_character = '%"' then
-						stop := true
-					elseif last_character = '%%' and then
-							position <= line.count - 2 and then 
-							line.item (position + 1) = '%"'
-					then
-debug("RESOURCE_PARSING")
-	io.error.putstring ("[S-B 1] Last character during reading E-S: `");
-	io.error.putchar (last_character);
-	io.error.putstring ("'.");
-	io.error.new_line
-end;
-						last_token.extend (last_character);
-						read_character;
-debug("RESOURCE_PARSING")
-	io.error.putstring ("[S-B 2] Last character during reading E-S: `");
-	io.error.putchar (last_character);
-	io.error.putstring ("'.");
-	io.error.new_line
-end;
-						last_token.extend (last_character);
-						read_character
-debug("RESOURCE_PARSING")
-	io.error.putstring ("[S-B 3] Last character during reading E-S: `");
-	io.error.putchar (last_character);
-	io.error.putstring ("'.");
-	io.error.new_line
-end;
-					else
-debug("RESOURCE_PARSING")
-	io.error.putstring ("Last character during reading E-S: `");
-	io.error.putchar (last_character);
-	io.error.putstring ("'.");
-	io.error.new_line
-end;
-						last_token.extend (last_character);
-						read_character
-					end
-				end;
-				last_token.extend (last_character);
-				read_character;
-debug("RESOURCE_PARSING")
-	io.error.putstring ("Manifest string read. Value is:");
-	io.error.new_line;
-	io.error.putstring (last_token);
-	io.error.new_line
-end;
-				!! rsl;
-debug("RESOURCE_VALIDATE")
-	io.error.putstring ("`last_token' is ");
-	if last_token = Void then
-		io.error.putstring ("Void")
-	else
-		io.error.putstring (last_token)
-	end;
-	io.error.putstring (".");
-	io.error.new_line
-end;
-				if last_token /= Void and then not rsl.is_value_valid (last_token) then
-					last_token := Void
-				end
-debug("RESOURCE_VALIDATE")
-	io.error.putstring ("After validation, `last_token' is ");
-	if last_token = Void then
-		io.error.putstring ("Void")
-	else
-		io.error.putstring (last_token)
-	end;
-	io.error.putstring (".");
-	io.error.new_line
-end;
+				parse_string
 			else
 				from
 					!! last_token.make (10)
@@ -255,7 +158,6 @@ end;
 							not end_of_line and then 
 							last_character = '%%' 
 						then
-
 							read_character
 						else
 							last_token := Void
@@ -424,9 +326,7 @@ feature -- Status report
 	end_of_file: BOOLEAN is
 			-- Has the end of the `resource_file' been reached?
 		do
-			Result := end_of_line and 
-				(resource_file /= Void and then
-					(resource_file.end_of_file or resource_file.empty))
+			Result := end_of_line and resource_file.end_of_file
 		end;
 
 feature -- Access

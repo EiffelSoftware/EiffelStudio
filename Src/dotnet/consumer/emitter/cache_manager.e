@@ -150,8 +150,18 @@ feature -- Basic Oprtations
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
+		local
+			l_assembly: ASSEMBLY
 		do
-			Result := cache_writer.consumed_assembly_from_path (a_path)
+			if cache_reader.is_assembly_in_cache (a_path, False) then
+				Result := cache_writer.consumed_assembly_from_path (a_path)	
+			end
+			if Result = Void then
+				l_assembly := load_from_gac_or_path (a_path)
+				if l_assembly /= Void then
+					Result := cache_writer.consumed_assembly_from_path (l_assembly.location)		
+				end
+			end
 		ensure
 			non_void_result: Result /= Void
 		end		

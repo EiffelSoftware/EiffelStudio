@@ -229,6 +229,7 @@ feature {NONE} -- Implementation
 			Result.append_integer (func_desc.member_id)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+
 			Result.append ("LCID lcid = (LCID) ")
 			Result.append_integer (lcid)
 			Result.append (Semicolon)
@@ -236,11 +237,14 @@ feature {NONE} -- Implementation
 
 			Result.append (Empty_dispparams)
 			Result.append (New_line_tab)
+
 			Result.append (Return_variant_variable)
 			Result.append (New_line_tab)
 			Result.append (New_line)
+
 			Result.append (initialize_excepinfo)
 			Result.append (New_line_tab)
+
 			Result.append ("unsigned int nArgErr")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -692,9 +696,18 @@ feature {NONE} -- Implementation
 
 			if visitor.is_coclass then
 				Result.append (Iunknown_type)
-			elseif visitor.is_coclass_pointer or visitor.is_interface_pointer then
+			elseif 
+				(visitor.is_coclass_pointer or 
+				visitor.is_interface_pointer) and 
+				not is_dispatch (visitor.vt_type)
+			then
 				Result.append (IUnknown_pointer)
-			elseif visitor.is_coclass_pointer_pointer or visitor.is_interface_pointer_pointer then
+
+			elseif 
+				(visitor.is_coclass_pointer_pointer or 
+				visitor.is_interface_pointer_pointer) and 
+				not is_dispatch (visitor.vt_type)
+			then
 				Result.append (Iunknown_pointer)
 				Result.append (Asterisk)
 			else

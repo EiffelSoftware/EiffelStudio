@@ -134,6 +134,7 @@ feature {NONE} -- Implementation
 			tmp_body.append_integer (member_id)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+
 			tmp_body.append ("LCID lcid = (LCID) ")
 			tmp_body.append_integer (lcid)
 			tmp_body.append (Semicolon)
@@ -142,67 +143,94 @@ feature {NONE} -- Implementation
 			-- Set up parameter
 			tmp_body.append ("DISPPARAMS args;")
 			tmp_body.append (New_line_tab)
-			tmp_body.append ("VARIANTARG arg;")
 
+			tmp_body.append ("VARIANTARG arg;")
 			tmp_body.append (New_line)
 			tmp_body.append (New_line_tab)
-			tmp_body.append (visitor.c_type)
-			tmp_body.append (Space)
-			tmp_body.append (Tmp_variable_name)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
 
-			tmp_body.append (Tmp_variable_name)
-			tmp_body.append (Space_equal_space)
-
-			if is_byref (type) then
-				pointer_var.extend (Tmp_variable_name)
-			end
-
-			if visitor.is_basic_type or visitor.is_enumeration then
-				tmp_body.append (Open_parenthesis)
+			if not visitor.is_structure then
 				tmp_body.append (visitor.c_type)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Argument_name)
+				tmp_body.append (Space)
+				tmp_body.append (Tmp_variable_name)
+				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab)
 
-			elseif visitor.is_structure then
-				tmp_body.append (Asterisk)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (visitor.c_type)
-				tmp_body.append (Asterisk)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Argument_name)
+				tmp_body.append (Tmp_variable_name)
+				tmp_body.append (Space_equal_space)
 
-			else
-				if visitor.need_generate_ec then
-					tmp_body.append (Generated_ec_mapper)
-				else
-					tmp_body.append (Ec_mapper)
+				if is_byref (type) then
+					pointer_var.extend (Tmp_variable_name)
 				end
 
-				tmp_body.append (Dot)
-				tmp_body.append (visitor.ec_function_name)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Argument_name)
-				tmp_body.append (Close_parenthesis)
+				if 
+					visitor.is_basic_type or 
+					visitor.is_enumeration  or
+					visitor.is_interface_pointer or 
+					visitor.is_coclass_pointer or
+					visitor.is_array_basic_type or
+					visitor.is_structure_pointer
+				then
+					tmp_body.append (Open_parenthesis)
+					tmp_body.append (visitor.c_type)
+					tmp_body.append (Close_parenthesis)
+					tmp_body.append (Argument_name)
+
+				elseif visitor.is_structure then
+					tmp_body.append (Asterisk)
+					tmp_body.append (Open_parenthesis)
+					tmp_body.append (visitor.c_type)
+					tmp_body.append (Asterisk)
+					tmp_body.append (Close_parenthesis)
+					tmp_body.append (Argument_name)
+
+				else
+					if visitor.need_generate_ec then
+						tmp_body.append (Generated_ec_mapper)
+					else
+						tmp_body.append (Ec_mapper)
+					end
+
+					tmp_body.append (Dot)
+					tmp_body.append (visitor.ec_function_name)
+					tmp_body.append (Space_open_parenthesis)
+					tmp_body.append (Argument_name)
+					tmp_body.append (Close_parenthesis)
+				end
+				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab)
 			end
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
 
 			tmp_body.append ("arg.vt")
 			tmp_body.append (Space_equal_space)
 			tmp_body.append_integer (type)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
-			tmp_body.append ("arg.")
 
-			tmp_body.append (vartype_namer.variant_field_name (visitor))
-
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Tmp_variable_name)
+			if visitor.is_structure then
+				tmp_body.append (Memcpy)
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (Ampersand)
+				tmp_body.append (Open_parenthesis)
+				tmp_body.append ("arg.")
+				tmp_body.append (vartype_namer.variant_field_name (visitor))
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (Comma_space)
+				tmp_body.append (Argument_name)
+				tmp_body.append (Comma_space)
+				tmp_body.append (Sizeof)
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (visitor.c_type)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (Close_parenthesis)
+			else
+				tmp_body.append ("arg.")
+				tmp_body.append (vartype_namer.variant_field_name (visitor))
+				tmp_body.append (Space_equal_space)
+				tmp_body.append (Tmp_variable_name)
+			end
 			tmp_body.append (Semicolon)
-
 			tmp_body.append (New_line_tab)
+
 			tmp_body.append ("args.cArgs = 1")
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)

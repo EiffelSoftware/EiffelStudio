@@ -57,7 +57,7 @@ feature {NONE}
 
 	help_cmd_name: STRING is "help"
 
-	implementers_cmd_name: STRING is "implementers"
+	implementers_cmd_name: STRING is "implementors"
 
 	indexing_cmd_name: STRING is "indexing"
 

@@ -243,7 +243,7 @@ feature {COMPILER_EXPORTER}
 					loop
 						l_class := Universe.class_named (l_clients.item, current_cluster)
 						l_index := l_clients.index
-						if l_class /= Void and then l_class.compiled then
+						if l_class /= Void and then l_class.is_compiled then
 							Result := other_set.valid_for (l_class.compiled_class)
 						end
 						l_clients.go_i_th (l_index)

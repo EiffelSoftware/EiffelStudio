@@ -852,7 +852,7 @@ end;
 						a_class.set_read_only (is_library)
 						str := class_path.to_c;
 						if eif_file_has_changed ($str, a_class.date) then
-							if a_class.compiled then
+							if a_class.is_compiled then
 									-- The class has changed
 								Workbench.change_class (a_class);
 							end;
@@ -1094,7 +1094,7 @@ end;
 						classes.remove (a_class.name);
 						ov_class.set_old_location_info (Current, a_class.base_name)
 						ov_class.reset_class_c_information (a_class.compiled_class)
-						if a_class.compiled then
+						if a_class.is_compiled then
 								-- Add class to system only if it was already part
 								-- of system before.
 							Workbench.change_class (ov_class)

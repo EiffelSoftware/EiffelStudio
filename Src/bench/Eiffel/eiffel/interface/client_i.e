@@ -92,7 +92,7 @@ feature -- Query
 				supplier_class := Universe.class_named (clients.item, cluster)
 				if
 					supplier_class /= Void and then
-					supplier_class.compiled
+					supplier_class.is_compiled
 				then
 					Result := client.conform_to (supplier_class.compiled_class)
 				end

@@ -158,7 +158,7 @@ feature -- Status report
 			if type = Type_string then
 				Result := True
 			elseif type = Type_object and not is_void then
-				if Eiffel_system.string_class.compiled then
+				if Eiffel_system.string_class.is_compiled then
 					if dynamic_type.simple_conform_to (Eiffel_system.string_class.compiled_class) then
 						Result := True
 					else

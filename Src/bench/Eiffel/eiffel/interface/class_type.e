@@ -216,7 +216,7 @@ feature -- Conveniences
 			Result := type.il_type_name
 			l_class := associated_class
 			if not l_class.is_external then
-				l_name := l_class.lace_class.namespace
+				l_name := l_class.lace_class.actual_namespace
 				if not l_name.is_empty then
 					l_name := il_casing.namespace_casing (l_name) + "."
 				end
@@ -236,7 +236,7 @@ feature -- Conveniences
 			Result := type.il_type_name
 			l_class := associated_class
 			if not l_class.is_external then
-				l_name := l_class.lace_class.namespace
+				l_name := l_class.lace_class.actual_namespace
 				if l_name.is_empty then
 					l_name := "Impl."
 				else

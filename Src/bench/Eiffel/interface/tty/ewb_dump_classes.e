@@ -51,7 +51,7 @@ feature
 						l.after
 					loop
 						if
-							l.item.compiled and
+							l.item.is_compiled and
 							not l.item.compiled_class.is_deferred and
 							l.item.compiled_class.creators.has ("default_create")
 						then

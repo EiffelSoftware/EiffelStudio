@@ -113,7 +113,7 @@ feature -- Access
 			-- Id of class ANY
 		require
 			any_class_exists: any_class /= Void
-			compiled: any_class.compiled
+			compiled: any_class.is_compiled
 		do
 			Result := any_class.compiled_class.class_id
 		ensure
@@ -124,7 +124,7 @@ feature -- Access
 			-- Id of class SYSTEM_OBJECT
 		require
 			system_object_class_exists: system_object_class /= Void
-			compiled: system_object_class.compiled
+			compiled: system_object_class.is_compiled
 		do
 			Result := system_object_class.compiled_class.class_id
 		ensure
@@ -135,7 +135,7 @@ feature -- Access
 			-- Id of class ARRAY
 		require
 			array_class_exists: array_class /= Void
-			compiled: array_class.compiled
+			compiled: array_class.is_compiled
 		do
 			Result := array_class.compiled_class.class_id
 		ensure
@@ -146,7 +146,7 @@ feature -- Access
 			-- Id of class STRING
 		require
 			string_class_exists: string_class /= Void
-			compiled: string_class.compiled
+			compiled: string_class.is_compiled
 		do
 			Result := string_class.compiled_class.class_id
 		ensure
@@ -157,7 +157,7 @@ feature -- Access
 			-- Id of class SPECIAL
 		require
 			special_class_exists: special_class /= Void
-			compiled: special_class.compiled
+			compiled: special_class.is_compiled
 		do
 			Result := special_class.compiled_class.class_id
 		ensure
@@ -168,7 +168,7 @@ feature -- Access
 			-- Id of class TO_SPECIAL
 		require
 			to_special_class_exists: to_special_class /= Void
-			compiled: to_special_class.compiled
+			compiled: to_special_class.is_compiled
 		do
 			Result := to_special_class.compiled_class.class_id
 		ensure
@@ -179,7 +179,7 @@ feature -- Access
 			-- Id of class BIT_REF
 		require
 			bit_class_exists: bit_class /= Void
-			compiled: bit_class.compiled
+			compiled: bit_class.is_compiled
 		do
 			Result := bit_class.compiled_class.class_id
 		ensure
@@ -190,7 +190,7 @@ feature -- Access
 			-- Id of class TUPLE
 		require
 			tuple_class_exists: tuple_class /= Void
-			compiled: tuple_class.compiled
+			compiled: tuple_class.is_compiled
 		do
 			Result := tuple_class.compiled_class.class_id
 		ensure
@@ -201,7 +201,7 @@ feature -- Access
 			-- Id of class ROUTINE
 		require
 			routine_class_exists: routine_class /= Void
-			compiled: routine_class.compiled
+			compiled: routine_class.is_compiled
 		do
 			Result := routine_class.compiled_class.class_id
 		ensure
@@ -212,7 +212,7 @@ feature -- Access
 			-- Id of class PROCEDURE
 		require
 			procedure_class_exists: procedure_class /= Void
-			compiled: procedure_class.compiled
+			compiled: procedure_class.is_compiled
 		do
 			Result := procedure_class.compiled_class.class_id
 		ensure
@@ -223,7 +223,7 @@ feature -- Access
 			-- Id of class FUNCTION
 		require
 			function_class_exists: function_class /= Void
-			compiled: function_class.compiled
+			compiled: function_class.is_compiled
 		do
 			Result := function_class.compiled_class.class_id
 		ensure
@@ -234,7 +234,7 @@ feature -- Access
 			-- Id of class POINTER_REF
 		require
 			pointer_ref_class_exists: pointer_ref_class /= Void
-			compiled: pointer_ref_class.compiled
+			compiled: pointer_ref_class.is_compiled
 		do
 			Result := pointer_ref_class.compiled_class.types.first.type_id
 		ensure
@@ -245,7 +245,7 @@ feature -- Access
 			-- Dynamic type_id of class DOUBLE_REF
 		require
 			double_ref_class_exists: double_ref_class /= Void
-			compiled: double_ref_class.compiled
+			compiled: double_ref_class.is_compiled
 		do
 			Result := double_ref_class.compiled_class.types.first.type_id
 		ensure
@@ -256,7 +256,7 @@ feature -- Access
 			-- Dynamic type_id of class REAL_REF
 		require
 			real_ref_class_exists: real_ref_class /= Void
-			compiled: real_ref_class.compiled
+			compiled: real_ref_class.is_compiled
 		do
 			Result := real_ref_class.compiled_class.types.first.type_id
 		ensure
@@ -270,10 +270,10 @@ feature -- Access
 						integer_16_ref_class /= Void and then
 						integer_32_ref_class /= Void and then
 						integer_64_ref_class /= Void
-			compiled: integer_8_ref_class.compiled and then
-						integer_16_ref_class.compiled and then
-						integer_32_ref_class.compiled and then
-						integer_64_ref_class.compiled
+			compiled: integer_8_ref_class.is_compiled and then
+						integer_16_ref_class.is_compiled and then
+						integer_32_ref_class.is_compiled and then
+						integer_64_ref_class.is_compiled
 		do
 			inspect n
 			when 8 then Result := integer_8_ref_class.compiled_class.types.first.type_id
@@ -289,7 +289,7 @@ feature -- Access
 			-- Dynamic type_id of class BOOLEAN_REF
 		require
 			bool_ref_class_exists: boolean_ref_class /= Void
-			compiled: boolean_ref_class.compiled
+			compiled: boolean_ref_class.is_compiled
 		do
 			Result := boolean_ref_class.compiled_class.types.first.type_id
 		ensure
@@ -300,7 +300,7 @@ feature -- Access
 			-- Dynamic type_id of class CHARACTER_REF
 		require
 			char_ref_class_exists: character_ref_class /= Void
-			compiled: character_ref_class.compiled
+			compiled: character_ref_class.is_compiled
 		do
 			Result := character_ref_class.compiled_class.types.first.type_id
 		ensure
@@ -311,7 +311,7 @@ feature -- Access
 			-- Dynamic type_id of class UNICODE_CHARACTER_REF
 		require
 			unicode_char_ref_class_exists: wide_char_ref_class /= Void
-			compiled: wide_char_ref_class.compiled
+			compiled: wide_char_ref_class.is_compiled
 		do
 			Result := wide_char_ref_class.compiled_class.types.first.type_id
 		ensure

@@ -11,7 +11,7 @@ feature -- Access
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.6.0103)"
+			Result := "EiffelBuild (5.6.0106)"
 		end
 
 	t_Copyright_info: STRING is
@@ -34,17 +34,6 @@ feature -- Access
 				%Web Customer Support: http://support.eiffel.com%N%
 				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)
-		end
-
-	t_borland: STRING is
-			-- Text for Borland.
-		once
-			create Result.make (256)
-			Result.append (
-				"Includes Free Borland command-line%N%
-				%C++ compiler.%N%
-				%Visit http://www.borland.com/bcppbuilder")
-
 		end
 
 invariant

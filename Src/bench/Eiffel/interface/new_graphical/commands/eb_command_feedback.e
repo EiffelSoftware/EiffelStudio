@@ -1,5 +1,6 @@
 indexing
-	description: "Objects that ..."
+	description: "Command linked with insensitivable widgets"
+	author: "Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,18 +36,6 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Set both `button' and `menu_entry'
-			-- to be selected or not, according to `flag'.
-		do
---			if button /= Void then
---				button.set_selected (flag)
---			end
-			if menu_item /= Void then
-				menu_item.set_selected (flag)
-			end
-		end
-
 	set_insensitive (flag: BOOLEAN) is
 			-- Set both the `associated_button' and `associated_menu_entry'
 			-- to be insensitive or not, according to `flag'.
@@ -62,10 +51,8 @@ feature -- Status setting
 
 feature -- Access
 
---	button: EV_TOOL_BAR_TOGGLE_BUTTON
---			-- Button on the toolbars.
-
-	button: EV_BUTTON
+	button: EV_TOOL_BAR_BUTTON
+			-- Button on the toolbars.
 
 	menu_item: EV_MENU_ITEM
 			-- Menu entry in the menus.

@@ -10,10 +10,12 @@ class
 
 inherit
 	EB_TOOL
+		rename
+			empty_tool_name as tool_name
 		redefine
 			make,
 			show, hide, destroy,
-			init_commands
+			init_commands, tool_name
 		end
 
 	EB_PROFILE_TOOL_DATA
@@ -61,8 +63,8 @@ feature {NONE} -- Initialization
 --			 	top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen)
 --			end
 			
-			set_title (Interface_names.t_Profile_tool)
---			set_icon_name (Interface_names.t_Profile_tool)
+			set_title (tool_name)
+--			set_icon_name (tool_name)
 
 
 				-- User Interface Components
@@ -147,6 +149,12 @@ feature {NONE} -- Initialization
 			create run_prof_query_cmd.make (Current)
 		end
 	
+feature -- Access
+
+	tool_name: STRING is
+		do
+			Result := Interface_names.t_Profile_tool
+		end
 
 feature -- Updating
 
@@ -217,7 +225,7 @@ feature {EB_RUN_PROFILE_QUERY_CMD} -- Access
 			parser: QUERY_PARSER
 			filename: STRING
 			i: INTEGER
-			-- warner: EV_WARNING_DIALOG
+			wd: EV_WARNING_DIALOG
 		do
 			i := shared_values.language_names.lower
 
@@ -276,7 +284,7 @@ feature {EB_RUN_PROFILE_QUERY_CMD} -- Access
 				Result := parser.parse (query_text.text, shared_values)
 			else
 				Result := false
-				-- create warner.make_default (Current, "Warning", "Verify your query!")
+				create wd.make_default (parent, "Warning", "Verify your query!")
 			end
 		end
 
@@ -382,7 +390,7 @@ feature {NONE} -- Implementation
 			create name_chooser.make (container)
 			name_chooser.set_title (Interface_names.t_Browse)
 			name_chooser.set_default_extension ("pfi")
-			name_chooser.set_filter ( <<"Profile File Info (*.pfi)">> , <<"*.pfi">>)
+--			name_chooser.set_filter ( <<"Profile File Info (*.pfi)">> , <<"*.pfi">>)
 			create arg.make (name_chooser)
 			name_chooser.add_ok_command (Current, arg)
 			name_chooser.show

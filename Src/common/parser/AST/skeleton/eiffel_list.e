@@ -19,7 +19,7 @@ inherit
 
 	CONSTRUCT_LIST [T]
 		redefine
-			make_filled
+			make, make_filled
 		end
 
 creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
@@ -27,7 +27,15 @@ creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
 
 feature {NONE} -- Initialization
 
+	make (n: INTEGER) is
+			-- Creation of the list with the comparison set on object
+		do
+			{CONSTRUCT_LIST} precursor (n)
+			compare_objects
+		end
+
 	make_filled (n: INTEGER) is
+			-- Creation of the list with the comparison set on object
 		do
 			{CONSTRUCT_LIST} precursor (n)
 			compare_objects

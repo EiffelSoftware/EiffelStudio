@@ -62,16 +62,19 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize Window
 		local
-			e: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
 		do
 			{EV_WINDOW_IMP} Precursor
-			create e
-			e.application.add_root_window (interface)
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_imp.add_root_window (interface)
 			interface.close_actions.extend (interface~destroy)
 			is_initialized := True
 		end
 
-feature {EV_TITLED_WINDOW} -- Accelerators
+feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
+
+	accel: WEL_ACCELERATORS
+			-- Group of accelerators.
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Connect key combination `an_accel' to this window.
@@ -377,6 +380,10 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/16 17:20:59  brendel
+--| Calling {EV_APPLICATION_IMP}.add_root_window immediately instead of
+--| through interface.
+--|
 --| Revision 1.56  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -2,7 +2,17 @@ system es3
 
 root
 
-	ewb_windows (root_cluster): "make"
+	ewb_windows (main): "make"
+
+default
+	assertion (require);
+	--trace(yes)
+	--debug ("DRAWING")
+	--debug ("PARSE")
+	--debug ("FLAT_SHORT");
+	--debug ("LOCAL_FEAT_ADAPTATION");
+	--debug ("ACTIVITY")
+	--debug ("DEBUG_RECV")
 
 cluster
 
@@ -24,52 +34,40 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
-		liman_client:		"$BENCH/Eiffel/limand/client";
-		liman_shared:		"$BENCH/Eiffel/limand/shared";
+		--liman_shared:		"$BENCH/Eiffel/limand/shared";
+		--liman_client:		"$BENCH/Eiffel/limand/client";
+		--liman_bench:		"$BENCH/Eiffel/limand/bench";
+		liman_abstract:		"$BENCH/Eiffel/limand/abstract";
+		liman_graphical:	"$BENCH/Eiffel/limand/graphical";
 		beurk:				"$BENCH/Eiffel/beurk";
+		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
-		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- General compilation:
 
 		flat_short:			"$BENCH/Eiffel/flat_short/abstract";
 		flat_short_b:		"$BENCH/Eiffel/flat_short/bench";
 
-		special_ast:		"$BENCH/Eiffel/special_ast";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
-		error:				"$BENCH/Eiffel/error";
-		struct_text:		"$BENCH/Eiffel/structured_text";
 
 	-- Lace compilation:
 
-		lace_AST:			"$BENCH/Eiffel/lace/AST";
 		env:				"$BENCH/Eiffel/lace/env";
-		lace_error:			"$BENCH/Eiffel/lace/error";
 		lace_compile:		"$BENCH/Eiffel/lace/lace_compile";
 		lace_shared:		"$BENCH/Eiffel/lace/shared";
 
 	-- Eiffel compilation:
 
-		instructions:		"$BENCH/Eiffel/eiffel/AST/abstract/instructions";
-		expressions:		"$BENCH/Eiffel/eiffel/AST/abstract/expressions";
-		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/abstract/skeleton";
-		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/abstract/stonables";
+		instructions_b:		"$BENCH/Eiffel/eiffel/AST/instructions";
+		expressions_b:		"$BENCH/Eiffel/eiffel/AST/expressions";
+		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/skeleton";
+		ast_clickable_b:	"$BENCH/Eiffel/eiffel/AST/clickable";
 
-		instructions_b:		"$BENCH/Eiffel/eiffel/AST/bench/instructions";
-		expressions_b:		"$BENCH/Eiffel/eiffel/AST/bench/expressions";
-		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/bench/skeleton";
-		ast_stonables_b:		"$BENCH/Eiffel/eiffel/AST/bench/stonables";
-
-		actual_type:		"$BENCH/Eiffel/eiffel/actual_type";
 		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
 		cecil:				"$BENCH/Eiffel/eiffel/cecil";
 		compiler:			"$BENCH/Eiffel/eiffel/compiler";
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
-		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
-		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
-		eiffel_error_redefined:			"$BENCH/Eiffel/eiffel/error/redefined";
-		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
 		compiler_ids:		"$BENCH/Eiffel/eiffel/ids/compiler";
@@ -93,67 +91,123 @@ cluster
 		tables:				"$BENCH/Eiffel/eiffel/tables";
 		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
 
--- SHARED BETWEEN COMPILER AND INTERFACE:
 
-		clicking:			"$BENCH/Eiffel/shared/clicking";
-		stones:				"$BENCH/Eiffel/shared/stones";
-		tops:				"$BENCH/Eiffel/shared/tops";
+-- API cluster
+
+		api_constants:	  	"$BENCH/Eiffel/API/constants";
+		api_shared:		 	"$BENCH/Eiffel/API/shared";
+		api_ids:		  	"$BENCH/Eiffel/API/ids";
+		api_queries:		"$BENCH/Eiffel/API/queries";
+		api_interface:	  	"$BENCH/Eiffel/API/interface";
+		api_common:			"$BENCH/Eiffel/API/common";
+		communication:		"$BENCH/Eiffel/API/communication";
+		output:		 		"$BENCH/Eiffel/API/output";
+		evaluated_type:		"$BENCH/Eiffel/API/evaluated_type";
+			-- Error processing
+		error_common:		"$BENCH/Eiffel/API/error/common";
+		lace_error:			"$BENCH/Eiffel/API/error/lace";
+		feature_error:		"$BENCH/Eiffel/API/error/eiffel/feature";
+		parents_error:		"$BENCH/Eiffel/API/error/eiffel/parents";
+		redefined_error:	"$BENCH/Eiffel/API/error/eiffel/redefined";
+		unredefined_error:	"$BENCH/Eiffel/API/error/eiffel/unredefined";
+			-- Resources
+		resources:			"$BENCH/Eiffel/API/resources/common";
+			-- Profiling
+		converter:			"$BENCH/Eiffel/API/profiler/converter";
+		profiling:			"$BENCH/Eiffel/API/profiler/profiling";
+		querying:		  	"$BENCH/Eiffel/API/profiler/querying";
+		filters:			"$BENCH/Eiffel/API/profiler/filters";
+		matching:		  	"$BENCH/Eiffel/API/profiler/matching";
+		struct_text:		"$BENCH/Eiffel/API/structured_text";
+			-- AST structures
+		lace_AST:			"$BENCH/Eiffel/API/AST/lace";
+		instructions:		"$BENCH/Eiffel/API/AST/eiffel/instructions";
+		expressions:		"$BENCH/Eiffel/API/AST/eiffel/expressions";
+		ast_skeleton:		"$BENCH/Eiffel/API/AST/eiffel/skeleton";
+		ast_stonables:		"$BENCH/Eiffel/API/AST/eiffel/clickable";
+
+-- SWITCH clusters (chose one cluster per directory in switch directory)
+	
+		licence: 			"$BENCH/Eiffel/switch/license/no_license";	
+		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
+		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
+		interface_switch:	"$BENCH/Eiffel/switch/interface/graphical";
+		tty_switch: 		"$BENCH/Eiffel/switch/tty/professional";
 
 -- INTERFACE CLUSTERS
 
--- Root
+		interface_shared:	"$BENCH/Eiffel/interface/shared";
 
-		root_cluster:		"$BENCH/Eiffel/root";
-
-	-- Switch:
-	
-		switch:				"$BENCH/Eiffel/batch_bench/bench";
-		dle:				"$BENCH/Eiffel/dle/no_dle";
-		license_switch:		"$BENCH/Eiffel/license/no_license";
+	-- tty interace
+		
+		tty: 				"$BENCH/Eiffel/interface/tty";
 
 	-- graphical interface (bench):
 
-		windows:			"$BENCH/Eiffel/interface/windows";
-		commands:			"$BENCH/Eiffel/interface/commands";
-		formatters:			"$BENCH/Eiffel/interface/formatters";
-		debugging:			"$BENCH/Eiffel/interface/debugging";
-		archi_text:			"$BENCH/Eiffel/interface/archi_text";
-		shared_interface:	"$BENCH/Eiffel/interface/shared";
-
 		bench_common:		"$BENCH/Eiffel/interface/graphical/common";
-		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
-		platform_windows:	"$BENCH/Eiffel/interface/graphical/spec/windows";
+		commands:			"$BENCH/Eiffel/interface/graphical/commands";
+		debugging:			"$BENCH/Eiffel/interface/graphical/debugging";
+		drag_and_drop:		"$BENCH/Eiffel/interface/graphical/drag_and_drop";
+		formatters:			"$BENCH/Eiffel/interface/graphical/formatters";
+		main:				"$BENCH/Eiffel/interface/graphical/main";
+		graphical_shared:	"$BENCH/Eiffel/interface/graphical/shared";
+		stones:				"$BENCH/Eiffel/interface/graphical/stones";
+		text_window:		"$BENCH/Eiffel/interface/graphical/text_window";
+		windows:			"$BENCH/Eiffel/interface/graphical/windows";
+		preference_tool:	"$BENCH/Eiffel/interface/graphical/preference_tool";
+		profile_tool:	   "$BENCH/Eiffel/interface/graphical/profile_tool";
+		wizard_common:		"$BENCH/Eiffel/interface/graphical/wizard/common";
+		wizard_bench:		"$BENCH/Eiffel/interface/graphical/wizard/bench";
+
+		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/widgets/common";
+		platform_mswin:		"$BENCH/Eiffel/interface/graphical/spec/widgets/win32";
+		motif_graphical_window:
+			"$BENCH/Eiffel/interface/graphical/spec/graphical_window/win32";
+
+	-- Communications
 
 		ipc:				"$BENCH/Eiffel/ipc";
+		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- Case
 		case_common:		"$BENCH/Eiffel/case_storage/common";
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
-	-- Resources
-		resources_common:	"$BENCH/Eiffel/resources/common";
-		resources_bench:	"$BENCH/Eiffel/resources/bench";
+-- Vision
 
-	-- Vision
-		graph_resources:	"$EIFFEL3/library/vision/implement/mswin/resource";
-		graph_widgets:		"$EIFFEL3/library/vision/implement/mswin/widget";
-		graph_command:		"$EIFFEL3/library/vision/implement/mswin/command";
-		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
-		graph_X:			"$EIFFEL3/library/vision/implement/X";
-		graph_commands:		"$EIFFEL3/library/vision/oui/commands";
-		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
-		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
-		graph_tools:		"$EIFFEL3/library/vision/tools";
+	graph_context_data:	"$EIFFEL3\library\vision\oui\context_data";
+        graph_kernel:           "$EIFFEL3\library\vision\oui\kernel";
+        graph_oui:              "$EIFFEL3\library\vision\oui\widgets";
+        graph_toolkit:          "$EIFFEL3\library\vision\implement\toolkit";
+        graph_widgets:          "$EIFFEL3\library\vision\implement\mswin\widgets";
+        graph_command:          "$EIFFEL3\library\vision\implement\mswin\commands";
+
+-- Wel
+
+        wel_constants:          "$EIFFEL3\library\wel\consts";
+        wel_controls:           "$EIFFEL3\library\wel\controls";
+        wel_gdi:                "$EIFFEL3\library\wel\gdi";
+        wel_gdi_stocks:         "$EIFFEL3\library\wel\gdistock";
+        wel_standard_dialogs:   "$EIFFEL3\library\wel\stddlgs";
+        wel_structures:         "$EIFFEL3\library\wel\structs";
+        wel_support:            "$EIFFEL3\library\wel\support";
+        wel_windows:            "$EIFFEL3\library\wel\windows";
+        wel_win32:            	"$EIFFEL3\library\wel\win32";
 
 external
 
+	include_path: 	"$(EIFFEL3)\library\wel\spec\windows\include",
+			"d:/work/c/parsing/shared";
+
 	object:
-		"$(BENCH)\C\parsing\eiffel\eiffel.lib",
-		"$(BENCH)\C\parsing\lace\lace.lib",
-		"$(BENCH)\C\parsing\shared\parsing.lib",
-		"$(BENCH)\C\platform\platform.lib",
-		"$(BENCH)\C\ipc\ewb\ewb.lib",
-		"$(BENCH)\C\ipc\shared\ipc.lib",
-		"$(BENCH)\C\idrs\idr.lib"
+		"$(EIFFEL3)/library/wel/spec/$(PLATFORM)/lib/wel.lib",
+		"$(EIFFEL3)/bench/spec\$(PLATFORM)\lib\wnetwork.lib",
+		"$(C)\extra\win32\ipc\shared\ipc.lmb",
+		"$(C)\extra\win32\ipc\ewb\ewb.lmb",
+		"$(C)\parsing\eiffel\weiffel.lmb",
+		"$(C)\parsing\lace\lace.lmb",
+		"$(C)\parsing\shared\parsing.lmb",
+		"$(C)\platform\platform.lmb",
+		"$(C)\idrs\idr.lmb"
 
 end

@@ -15,17 +15,18 @@ class
 	TABLE_CONSTRAINTS_GENERATOR
 
 inherit
-	WIZARD_SPECIFIC
+	WIZARD_PROJECT_MANAGER
 
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make (code: INTEGER) is
 			-- Initialize.
 		do
-			create db_subset_selection.make (db_manager)
+			dbms_code := code
+			create db_subset_selection.make (db_manager (dbms_code))
 			db_subset_selection.set_object (create {USER_CONSTRAINTS}.make)
 			db_subset_selection.set_extract_function (~table_name_from_user_constraints)
 		end
@@ -133,6 +134,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	dbms_code: INTEGER
+			-- Selected DBMS code.
+
 	table_name: STRING
 			-- Table name.
 	
@@ -148,7 +152,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			q := select_with_constraint_name (constraint_id)
-			res_list := db_manager.load_list_with_select (q, Result)
+			res_list := db_manager (dbms_code).load_list_with_select (q, Result)
 			if res_list.count = 1 then
 				Result := res_list.first
 			else
@@ -220,7 +224,7 @@ feature {NONE} -- Implementation
 			cons_descr: USER_CONS_COLUMNS
 			fkey_n, table_n: STRING
 		do
-			if is_oracle then
+			if is_oracle (dbms_code) then
 				cons_list := constraints_from_type_and_table (Oracle_fkey_type, table_name)
 				check
 					Result_not_void: cons_list /= Void
@@ -255,7 +259,7 @@ feature {NONE} -- Implementation
 		do
 				-- Assume that there is no ID constraint.
 			id_constraint := Void
-			if is_oracle then
+			if is_oracle (dbms_code) then
 				cons_list := constraints_from_type_and_table (Oracle_pkey_type, table_name)
 				check
 					Result_not_void: cons_list /= Void
@@ -275,7 +279,7 @@ feature {NONE} -- Implementation
 			item: USER_CONSTRAINTS
 			table_n, fkey_n: STRING
 		do
-			if is_oracle then
+			if is_oracle (dbms_code) then
 				if id_constraint /= Void then
 					cons_list := constraints_from_foreign_key_ref (id_constraint.constraint_name)
 					check

@@ -12,6 +12,13 @@
 */
 
 #include "config.h"
+
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 #include "malloc.h"
 #include "garcol.h"
 #include "cecil.h"
@@ -27,12 +34,6 @@
 #ifdef I_VARARGS
 #include <varargs.h>
 #endif
-#endif
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
 #endif
 
 #define GEN_MAX	4				/* Maximum number of generic parameters */

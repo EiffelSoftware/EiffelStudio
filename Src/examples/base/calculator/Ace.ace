@@ -11,8 +11,7 @@ default
 
 cluster
 
---	ROOT_CLUSTER: 		"$EIFFEL4/examples/base/calculator";
-	ROOT_CLUSTER:		".";
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/base/calculator";
 				-- If you intend to modify any part of the example,
 				-- copy all the files of $EIFFEL4/examples/base/calculator
 				-- into one of your directories, and replace

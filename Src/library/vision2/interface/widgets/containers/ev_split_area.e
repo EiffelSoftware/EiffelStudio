@@ -246,6 +246,7 @@ feature -- Element change
 			second_item_used_second:
 				old first /= Void implies second = an_item
 			has_an_item: has (an_item)
+			item_is_old_item: item = old item
 		end
 
 	replace (an_item: like item) is
@@ -556,6 +557,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/20 19:39:52  king
+--| Added item_is_old_item postcond on extend
+--|
 --| Revision 1.27  2000/03/20 18:38:01  king
 --| Corrected linear repsentation bug
 --|

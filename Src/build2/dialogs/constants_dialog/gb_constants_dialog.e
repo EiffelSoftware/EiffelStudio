@@ -89,6 +89,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -105,9 +112,12 @@ feature {NONE} -- Initialization
 			string_input.change_actions.extend (agent update_add_button)
 			create integer_input
 			integer_input.value_range.adapt (create {INTEGER_INTERVAL}.make (-32000, 32000))
+			integer_input.change_actions.force_extend (agent update_add_button)
+			integer_input.text_change_actions.force_extend (agent update_add_button)
 			create directory_input
 			directory_input.change_actions.extend (agent update_add_button)
-			create pixmap_select_button.make_with_text ("Select...")
+			create pixmap_select_button.make_with_text ("New...")
+			pixmap_select_button.set_minimum_width (Default_button_width)
 			pixmap_select_button.select_actions.extend (agent select_pixmap)
 			create filename_input
 			filename_input.change_actions.extend (agent update_add_button)
@@ -156,9 +166,7 @@ feature -- Basic operation
 				end
 			end
 		end
-		
-	
-		
+
 feature {GB_CONSTANTS_HANDLER} -- Implementation
 
 	reset_list is
@@ -173,6 +181,10 @@ feature {NONE} -- Implementation
 
 	modify_constant: GB_CONSTANT
 		-- Constant that is to be modified.
+		
+	modify_constant_index: INTEGER
+		-- Index of `modify_constant', only valid if
+		-- `modify_constant' /= Void.
 
 	string_input: EV_TEXT_FIELD
 		-- Input field for STRING constants.
@@ -193,6 +205,7 @@ feature {NONE} -- Implementation
 			-- Ensure that `entry_selection_parent' is empty
 		do
 			entry_selection_parent.wipe_out
+			new_button_holder.wipe_out
 		ensure
 			is_empty: entry_selection_parent.is_empty
 		end
@@ -205,19 +218,17 @@ feature {NONE} -- Implementation
 			current_text := name_field.text.as_lower
 			if not valid_class_name (current_text) or not object_handler.valid_constant_name (current_text) or
 				reserved_words.has (current_text) or Build_reserved_words.has (current_text) or
-				(Constants.string_is_constant_name (current_text) and not (modify_constant /= Void and then modify_constant.name.is_equal (current_text))) then
+				(Constants.string_is_constant_name (current_text) and then not constants.all_constants.item (current_text).type.is_equal (type_combo_box.text)) then
 				name_field.set_foreground_color (red)
 				disable_add_button
 			else
 				name_field.set_foreground_color (black)
+				if (Constants.string_is_constant_name (current_text) and then constants.all_constants.item (current_text).type.is_equal (type_combo_box.text)) then
+					add_button.set_text ("Modify")
+				else
+					add_button.set_text ("Add")
+				end
 				update_add_button
-			end
-			
-				-- Update add button based on current named entered.
-			if modify_constant /= Void and then modify_constant.name.is_equal (current_text) then
-				add_button.set_text ("Modify")
-			else
-				add_button.set_text ("Add")
 			end
 		end
 		
@@ -245,18 +256,32 @@ feature {NONE} -- Implementation
 				Result := not directory_input.text.is_empty
 			elseif filename_input.parent /= Void then
 				Result := not filename_input.text.is_empty
+			elseif pixmap_select_button.parent /= Void then
+				Result := True
 			end
 		end
 		
-	update_add_button is
-			--
+	update_add_button is 
+			-- Update status of `add_button' based on state of current input.
 		do
 			if entry_valid and name_field_valid then
 				add_button.enable_sensitive
 			else
 				add_button.disable_sensitive
 			end
+			disable_add_button_if_constant_not_changed
 		end
+		
+	disable_add_button_if_constant_not_changed is
+			--
+		do
+			if type_combo_box.selected_item.text.is_equal (String_constant_type) and modify_constant /= Void and then modify_constant.value_as_string.is_equal (string_input.text) and add_button.text.is_equal ("Modify") then
+				add_button.disable_sensitive
+			elseif type_combo_box.selected_item.text.is_equal (Integer_constant_type) and modify_constant /= Void and then modify_constant.value_as_string.to_integer = integer_input.value and add_button.text.is_equal ("Modify") then
+				add_button.disable_sensitive
+			end
+		end
+		
 		
 	disable_add_button is
 			-- Ensure that `add_button' is non sensitive.
@@ -265,11 +290,11 @@ feature {NONE} -- Implementation
 		ensure
 			not_sensitive: not add_button.is_sensitive
 		end
-		
 
 	string_item_selected is
 			-- Called by `select_actions' of `string_item'.
 		do
+			name_field.enable_edit
 			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
@@ -279,10 +304,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	integer_item_selected is
 			-- Called by `select_actions' of `integer_item'.
 		do
+			name_field.enable_edit
 			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
@@ -292,10 +317,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	directory_item_selected is
 			-- Called by `select_actions' of `directory_item'.
 		do
+			name_field.enable_edit
 			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
@@ -308,6 +333,7 @@ feature {NONE} -- Implementation
 	file_name_item_selected is
 			-- Called by `select_actions' of `file_name_item'.
 		do
+			name_field.enable_edit
 			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
@@ -321,9 +347,10 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `pixmap_item'.
 		do
 			name_field.remove_text
+			name_field.disable_edit
 			add_button.disable_sensitive
 			remove_displayed_input_field
-			entry_selection_parent.extend (pixmap_select_button)
+			new_button_holder.extend (pixmap_select_button)
 			if not display_all_types.is_selected then
 				rebuild_for_selected_type (pixmap_item.text)
 			end
@@ -334,25 +361,78 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `add_button'.
 		local
 			add_constant_command: GB_COMMAND_ADD_CONSTANT
+			an_integer_constant: GB_INTEGER_CONSTANT
+			a_string_constant: GB_STRING_CONSTANT
+			error_dialog: EV_ERROR_DIALOG
+			row: EV_MULTI_COLUMN_LIST_ROW
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			pixmap_dialog: GB_PIXMAP_SETTINGS_DIALOG
+			directory_constant: GB_DIRECTORY_CONSTANT
+			directory_dialog: EV_DIRECTORY_DIALOG
+			--error_sho
 		do
-				-- As only one entry field may be parented, we check the
-				-- `parent' to determine which one must be validated
-			if string_input.parent /= Void then
-				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text))
-				add_constant_command.execute
-				string_input.remove_text
-			elseif integer_input.parent /= Void then
-				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value))
-				add_constant_command.execute
-			elseif directory_input.parent /= Void then
-				create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, directory_input.text))
-				add_constant_command.execute
+			if add_button.text.is_equal ("Add") then
+				-- There is no constant selected for modification, so this must be an add.
+					-- As only one entry field may be parented, we check the
+					-- `parent' to determine which one must be validated
+				if string_input.parent /= Void then
+					create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text))
+					add_constant_command.execute
+					string_input.remove_text
+				elseif integer_input.parent /= Void then
+					create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value))
+					add_constant_command.execute
+				elseif directory_input.parent /= Void then
+					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, directory_input.text))
+					add_constant_command.execute
+				end
+				name_field.remove_text
+				
+					-- Update system to reflect a change.
+				system_status.enable_project_modified
+				command_handler.update
+			else
+				check
+					button_has_modify_text: add_button.text.is_equal ("Modify")
+				end
+					-- An existing constant must now be modified.
+				an_integer_constant ?= modify_constant
+				a_string_constant ?= modify_constant
+				pixmap_constant ?= modify_constant
+				directory_constant ?= modify_constant
+				if an_integer_constant /= Void and then an_integer_constant.can_modify_to_value (integer_input.value) then
+						an_integer_constant.modify_value (integer_input.value)
+							-- Now update the representation of the constant in the list.
+						row := constants_list.i_th (modify_constant_index)
+						row.put_i_th (an_integer_constant.value_as_string, 3)
+				elseif a_string_constant /= Void and then a_string_constant.can_modify_to_value (string_input.text) then
+					a_string_constant.modify_value (string_input.text)
+						-- Now update the representation of the constant in the list.
+					row := constants_list.i_th (modify_constant_index)
+					row.put_i_th (a_string_constant.value_as_string, 3)
+				elseif pixmap_constant /= Void then
+					create pixmap_dialog.make_in_modify_mode (pixmap_constant.name)
+					pixmap_dialog.show_modal_to_window (Current)
+					row := constants_list.i_th (modify_constant_index)
+					row.set_pixmap (pixmap_constant.small_pixmap)
+				elseif directory_constant /= Void then
+					create directory_dialog
+					directory_dialog.set_start_directory (directory_constant.value)
+					directory_dialog.show_modal_to_window (Current)
+					if not directory_dialog.directory.is_empty then
+						directory_constant.modify_value (directory_dialog.directory)
+							-- Now update the representation of the constant in the list.
+						row := constants_list.i_th (modify_constant_index)
+						row.put_i_th (directory_constant.value_as_string, 3)
+					end
+				else
+					create error_dialog.make_with_text ("Unable to change as one or more refers may not be set to this value.")
+					error_dialog.show_modal_to_window (Current)
+				end
+					-- Update system to reflect a change.
+				system_status.enable_project_modified
+				command_handler.update
 			end
-			name_field.remove_text
-			
-				-- Update system to reflect a change.
-			system_status.enable_project_modified
-			command_handler.update
 		end
 	
 	remove_selected_constant is
@@ -365,7 +445,7 @@ feature {NONE} -- Implementation
 			delete_constant_command: GB_COMMAND_DELETE_CONSTANT
 			dialog: EV_CONFIRMATION_DIALOG
 			cross_referer_dialog: EV_WARNING_DIALOG
-			cancelled: BOOLEAN
+			cancelled: BOOLEAN_REF
 			referers_dialog_already_displayed: BOOLEAN
 			cross_referers_dialog_already_displayed: BOOLEAN
 			directory_constant: GB_DIRECTORY_CONSTANT
@@ -373,7 +453,10 @@ feature {NONE} -- Implementation
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			ordered_selected_items: ARRAYED_LIST [GB_CONSTANT]
 			counted_pixmaps: INTEGER
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
+			create cancelled
+				-- We must use a boolean ref so that it may be set from an agent.
 			selected_items := constants_list.selected_items
 			create ordered_selected_items.make (4)
 			create all_pixmap_constants.make (1)
@@ -414,7 +497,7 @@ feature {NONE} -- Implementation
 				from
 					ordered_selected_items.start
 				until
-					ordered_selected_items.off or cancelled
+					ordered_selected_items.off or cancelled.item
 				loop
 					constant := ordered_selected_items.item
 					directory_constant ?= constant
@@ -423,22 +506,22 @@ feature {NONE} -- Implementation
 							create cross_referer_dialog.make_with_text ("One or more constants you are deleting are still required by other constants in the system.%NPlease removed any such dependencies before trying to delete these constants.")
 							cross_referer_dialog.show_modal_to_window (Current)
 							cross_referers_dialog_already_displayed := True
-							cancelled := True
+							cancelled.set_item (True)
 						end
 					end
 					if not constant.referers.is_empty and not referers_dialog_already_displayed and not cross_referers_dialog_already_displayed then
-							-- We ensure that `dialog' is only displayed once.
-						create dialog.make_with_text ("One or more constants you are deleting are still referenced by objects in the system.%NIf you delete them, all references will be converted to manifest values.%NAre you sure you wish to perform this?")
-						dialog.show_modal_to_window (Current)
+						create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+						warning_dialog.set_ok_action (agent do_nothing)
+						warning_dialog.set_title ("Constant still referenced")
+						warning_dialog.set_cancel_action (agent cancelled.set_item (True))
+						warning_dialog.show_modal_to_window (Current)
+						preferences.save_resources
 						referers_dialog_already_displayed := True
-						if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-							cancelled := True
-						end
 					end
 					ordered_selected_items.forth
 				end
 				
-				if not cancelled then
+				if not cancelled.item then
 					from
 						ordered_selected_items.start
 					until
@@ -468,21 +551,27 @@ feature {NONE} -- Implementation
 						end
 					end
 				if not constant.referers.is_empty and not cross_referers_dialog_already_displayed then
-					create dialog.make_with_text ("Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?")
-					dialog.show_modal_to_window (Current)
-					if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-						cancelled := True
-					end
+					create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+					warning_dialog.set_ok_action (agent do_nothing)
+					warning_dialog.set_title ("Constant still referenced")
+					warning_dialog.set_cancel_action (agent cancelled.set_item (True))
+					warning_dialog.show_modal_to_window (Current)
 				end
-				if not cancelled then
+				if not cancelled.item then
 					create delete_constant_command.make (constant)
 					delete_constant_command.execute
 				end
 			end
-
-				-- Update system to reflect a change.
-			system_status.enable_project_modified
-			command_handler.update
+			if not cancelled.item then
+					-- Now clear input fields
+				name_field.remove_text
+				string_input.remove_text
+				integer_input.remove_text
+	
+					-- Update system to reflect a change.
+				system_status.enable_project_modified
+				command_handler.update
+			end
 		end
 		
 	directory_constant_deletable (directory_constant: GB_DIRECTORY_CONSTANT; all_pixmaps_for_deletion: ARRAYED_LIST [GB_CONSTANT]): BOOLEAN is
@@ -548,7 +637,7 @@ feature {NONE} -- Implementation
 			pixmap_dialog: GB_PIXMAP_SETTINGS_DIALOG
 		do
 			create pixmap_dialog
-			pixmap_dialog.show_relative_to_window (Current)
+			pixmap_dialog.show_modal_to_window (Current)
 		end
 		
 		
@@ -569,6 +658,7 @@ feature {NONE} -- Implementation
 		do
 			lock_update
 			modify_constant ?= an_item.data
+			modify_constant_index := an_item.parent.index_of (an_item, 1)
 			check
 				modify_constant_not_void: modify_constant /= Void
 			end
@@ -583,6 +673,7 @@ feature {NONE} -- Implementation
 			elseif integer_input.parent /= Void then
 				integer_input.set_value ((an_item.i_th (3)).to_integer)
 			end
+			update_add_button
 			unlock_update
 		end
 	

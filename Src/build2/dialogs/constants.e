@@ -29,46 +29,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cancel_button_text: STRING is
-			-- `Result' is STRING constant named `cancel_button_text'.
+	no_directory_dialog: STRING is
+			-- `Result' is STRING constant named `no_directory_dialog'.
 		once
-			Result := "Cancel"
+			Result := "No Matching DIRECTORY Constant"
 		end
 
-	large_spacing_width: INTEGER is 
-			-- `Result' is INTEGER constant named large_spacing_width.
+	negative: INTEGER is 
+			-- `Result' is INTEGER constant named negative.
 		once
-			Result := 12
-		end
-
-	next_tip_text: STRING is
-			-- `Result' is STRING constant named `next_tip_text'.
-		once
-			Result := "Next tip"
-		end
-
-	ok_button_text: STRING is
-			-- `Result' is STRING constant named `ok_button_text'.
-		once
-			Result := "OK"
-		end
-
-	png_location: STRING is
-			-- `Result' is DIRECTORY constant named `png_location'.
-		once
-			Result := "C:\Documents and Settings\rogers\Desktop"
-		end
-
-	default_button_width: INTEGER is 
-			-- `Result' is INTEGER constant named default_button_width.
-		once
-			Result := 80
-		end
-
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
-		once
-			Result := "Close"
+			Result := -100
 		end
 
 	lightbulb_png: EV_PIXMAP is
@@ -79,6 +49,78 @@ feature -- Access
 			create a_file_name.make_from_string (png_location)
 			a_file_name.extend ("lightbulb.png")
 			Result.set_with_named_file (a_file_name)
+		end
+
+	constants_dialog_title: STRING is
+			-- `Result' is STRING constant named `constants_dialog_title'.
+		once
+			Result := "Constants"
+		end
+
+	next_tip_text: STRING is
+			-- `Result' is STRING constant named `next_tip_text'.
+		once
+			Result := "Next tip"
+		end
+
+	system_window_title: STRING is
+			-- `Result' is STRING constant named `system_window_title'.
+		once
+			Result := "Project Configuration"
+		end
+
+	tip_of_day_dialog_title: STRING is
+			-- `Result' is STRING constant named `tip_of_day_dialog_title'.
+		once
+			Result := "Tip of the Day"
+		end
+
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
+		once
+			Result := 4
+		end
+
+	pixmap_settings_dialog_title: STRING is
+			-- `Result' is STRING constant named `pixmap_settings_dialog_title'.
+		once
+			Result := "Pixmap Selection"
+		end
+
+	default_button_width: INTEGER is 
+			-- `Result' is INTEGER constant named default_button_width.
+		once
+			Result := 80
+		end
+
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
+		end
+
+	large_spacing_width: INTEGER is 
+			-- `Result' is INTEGER constant named large_spacing_width.
+		once
+			Result := 12
+		end
+
+	cancel_button_text: STRING is
+			-- `Result' is STRING constant named `cancel_button_text'.
+		once
+			Result := "Cancel"
+		end
+
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
+		once
+			Result := "Close"
+		end
+
+	png_location: STRING is
+			-- `Result' is DIRECTORY constant named `png_location'.
+		once
+			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 

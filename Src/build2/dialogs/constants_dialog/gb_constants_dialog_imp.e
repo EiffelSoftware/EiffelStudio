@@ -38,23 +38,37 @@ feature {NONE}-- Initialization
 			create constants_list
 			create l_horizontal_box_2
 			create display_all_types
+			create l_horizontal_separator_1
 			create l_horizontal_box_3
+			create l_vertical_box_3
+			create l_horizontal_box_4
+			create l_cell_1
+			create l_label_1
 			create type_combo_box
 			create string_item
 			create integer_item
 			create directory_item
 			create file_name_item
 			create pixmap_item
-			create name_field
-			create entry_selection_parent
-			create l_cell_1
-			create l_horizontal_box_4
+			create l_vertical_box_4
+			create l_horizontal_box_5
 			create l_cell_2
+			create l_label_2
+			create name_field
+			create l_vertical_box_5
+			create l_horizontal_box_6
+			create l_cell_3
+			create l_label_3
+			create entry_selection_parent
+			create l_cell_4
+			create l_horizontal_box_7
+			create l_cell_5
+			create new_button_holder
 			create add_button
 			create remove_button
-			create l_vertical_box_3
+			create l_vertical_box_6
 			create ok_button
-			create l_cell_3
+			create l_cell_6
 			
 			extend (l_vertical_box_1)
 			l_vertical_box_1.extend (l_horizontal_box_1)
@@ -63,40 +77,62 @@ feature {NONE}-- Initialization
 			l_vertical_box_2.extend (constants_list)
 			l_vertical_box_2.extend (l_horizontal_box_2)
 			l_horizontal_box_2.extend (display_all_types)
+			l_vertical_box_2.extend (l_horizontal_separator_1)
 			l_vertical_box_2.extend (l_horizontal_box_3)
-			l_horizontal_box_3.extend (type_combo_box)
+			l_horizontal_box_3.extend (l_vertical_box_3)
+			l_vertical_box_3.extend (l_horizontal_box_4)
+			l_horizontal_box_4.extend (l_cell_1)
+			l_horizontal_box_4.extend (l_label_1)
+			l_vertical_box_3.extend (type_combo_box)
 			type_combo_box.extend (string_item)
 			type_combo_box.extend (integer_item)
 			type_combo_box.extend (directory_item)
 			type_combo_box.extend (file_name_item)
 			type_combo_box.extend (pixmap_item)
-			l_horizontal_box_3.extend (name_field)
-			l_horizontal_box_3.extend (entry_selection_parent)
-			l_vertical_box_2.extend (l_cell_1)
-			l_vertical_box_2.extend (l_horizontal_box_4)
-			l_horizontal_box_4.extend (l_cell_2)
-			l_horizontal_box_4.extend (add_button)
-			l_horizontal_box_4.extend (remove_button)
-			l_horizontal_box_1.extend (l_vertical_box_3)
-			l_vertical_box_3.extend (ok_button)
-			l_vertical_box_3.extend (l_cell_3)
+			l_horizontal_box_3.extend (l_vertical_box_4)
+			l_vertical_box_4.extend (l_horizontal_box_5)
+			l_horizontal_box_5.extend (l_cell_2)
+			l_horizontal_box_5.extend (l_label_2)
+			l_vertical_box_4.extend (name_field)
+			l_horizontal_box_3.extend (l_vertical_box_5)
+			l_vertical_box_5.extend (l_horizontal_box_6)
+			l_horizontal_box_6.extend (l_cell_3)
+			l_horizontal_box_6.extend (l_label_3)
+			l_vertical_box_5.extend (entry_selection_parent)
+			l_vertical_box_2.extend (l_cell_4)
+			l_vertical_box_2.extend (l_horizontal_box_7)
+			l_horizontal_box_7.extend (l_cell_5)
+			l_horizontal_box_7.extend (new_button_holder)
+			l_horizontal_box_7.extend (add_button)
+			l_horizontal_box_7.extend (remove_button)
+			l_horizontal_box_1.extend (l_vertical_box_6)
+			l_vertical_box_6.extend (ok_button)
+			l_vertical_box_6.extend (l_cell_6)
 			
 			set_minimum_width (640)
 			set_minimum_height (480)
-			set_title ("Constants")
+			set_title (constants_dialog_title)
 			l_vertical_box_1.set_padding_width (10)
 			l_vertical_box_1.set_border_width (5)
-			l_horizontal_box_1.disable_item_expand (l_vertical_box_3)
+			l_horizontal_box_1.disable_item_expand (l_vertical_box_6)
 			l_frame_1.set_text ("Constants Defined")
 			l_vertical_box_2.set_padding_width (1)
 			l_vertical_box_2.set_border_width (2)
 			l_vertical_box_2.disable_item_expand (l_horizontal_box_2)
+			l_vertical_box_2.disable_item_expand (l_horizontal_separator_1)
 			l_vertical_box_2.disable_item_expand (l_horizontal_box_3)
-			l_vertical_box_2.disable_item_expand (l_cell_1)
-			l_vertical_box_2.disable_item_expand (l_horizontal_box_4)
+			l_vertical_box_2.disable_item_expand (l_cell_4)
+			l_vertical_box_2.disable_item_expand (l_horizontal_box_7)
 			display_all_types.enable_select
 			display_all_types.set_text ("Show all types")
+			l_horizontal_box_3.enable_homogeneous
 			l_horizontal_box_3.set_padding_width (5)
+			l_vertical_box_3.set_padding_width (small_padding)
+			l_vertical_box_3.disable_item_expand (l_horizontal_box_4)
+			l_horizontal_box_4.disable_item_expand (l_cell_1)
+			l_cell_1.set_minimum_width (small_padding)
+			l_label_1.set_text ("Type")
+			l_label_1.align_text_left
 			type_combo_box.set_text ("DIRECTORY")
 			type_combo_box.set_minimum_width (80)
 			type_combo_box.disable_edit
@@ -106,17 +142,30 @@ feature {NONE}-- Initialization
 			directory_item.set_text ("DIRECTORY")
 			file_name_item.set_text ("FILE_NAME")
 			pixmap_item.set_text ("PIXMAP")
-			l_cell_1.set_minimum_height (5)
-			l_horizontal_box_4.set_padding_width (5)
-			l_horizontal_box_4.disable_item_expand (add_button)
-			l_horizontal_box_4.disable_item_expand (remove_button)
+			l_vertical_box_4.set_padding_width (small_padding)
+			l_vertical_box_4.disable_item_expand (l_horizontal_box_5)
+			l_horizontal_box_5.disable_item_expand (l_cell_2)
+			l_cell_2.set_minimum_width (small_padding)
+			l_label_2.set_text ("Name")
+			l_label_2.align_text_left
+			l_vertical_box_5.set_padding_width (small_padding)
+			l_vertical_box_5.disable_item_expand (l_horizontal_box_6)
+			l_horizontal_box_6.disable_item_expand (l_cell_3)
+			l_cell_3.set_minimum_width (small_padding)
+			l_label_3.set_text ("Value")
+			l_label_3.align_text_left
+			l_cell_4.set_minimum_height (5)
+			l_horizontal_box_7.set_padding_width (5)
+			l_horizontal_box_7.disable_item_expand (new_button_holder)
+			l_horizontal_box_7.disable_item_expand (add_button)
+			l_horizontal_box_7.disable_item_expand (remove_button)
 			add_button.set_text ("Add")
 			add_button.set_minimum_width (default_button_width)
 			remove_button.disable_sensitive
 			remove_button.set_text ("Remove")
 			remove_button.set_minimum_width (default_button_width)
-			l_vertical_box_3.set_border_width (10)
-			l_vertical_box_3.disable_item_expand (ok_button)
+			l_vertical_box_6.set_border_width (10)
+			l_vertical_box_6.disable_item_expand (ok_button)
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
 			
@@ -154,15 +203,20 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	l_vertical_box_1, l_vertical_box_2, l_vertical_box_3: EV_VERTICAL_BOX
-	l_horizontal_box_1, l_horizontal_box_2, l_horizontal_box_3, l_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_vertical_box_1, l_vertical_box_2, l_vertical_box_3, l_vertical_box_4, l_vertical_box_5, 
+	l_vertical_box_6: EV_VERTICAL_BOX
+	l_horizontal_box_1, l_horizontal_box_2, l_horizontal_box_3, l_horizontal_box_4, 
+	l_horizontal_box_5, l_horizontal_box_6, l_horizontal_box_7: EV_HORIZONTAL_BOX
 	l_frame_1: EV_FRAME
 	constants_list: EV_MULTI_COLUMN_LIST
 	display_all_types: EV_CHECK_BUTTON
+	l_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	l_cell_1, l_cell_2, l_cell_3, entry_selection_parent, l_cell_4, l_cell_5, new_button_holder, 
+	l_cell_6: EV_CELL
+	l_label_1, l_label_2, l_label_3: EV_LABEL
 	type_combo_box: EV_COMBO_BOX
 	string_item, integer_item, directory_item, file_name_item, pixmap_item: EV_LIST_ITEM
 	name_field: EV_TEXT_FIELD
-	entry_selection_parent, l_cell_1, l_cell_2, l_cell_3: EV_CELL
 	add_button, remove_button, ok_button: EV_BUTTON
 	
 	item_selected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is

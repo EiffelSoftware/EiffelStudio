@@ -132,7 +132,13 @@ feature -- Input
 						--|The string must be consistently set before
 						--|resizing.
 					last_string.set_count (str_cap);
-					last_string.resize (str_cap + 1024);
+					if str_cap < 2048 then
+						last_string.grow (str_cap + 1024)
+					else
+							-- Increase capacity by `Growth_percentage' as
+							-- defined in RESIZABLE.
+						last_string.automatic_grow
+					end
 					str_area := last_string.area;
 					str_cap := last_string.capacity;
 					read := read - 1;	-- True amount of byte read
@@ -180,7 +186,13 @@ feature -- Input
 					console_readword (file_pointer, $str_area, str_cap, read);
 				if read > str_cap then
 						-- End of word not reached yet
-					last_string.resize (str_cap + 1024);
+					if str_cap < 2048 then
+						last_string.grow (str_cap + 1024)
+					else
+							-- Increase capacity by `Growth_percentage' as
+							-- defined in RESIZABLE.
+						last_string.automatic_grow
+					end
 					str_area := last_string.area;
 					str_cap := last_string.capacity;
 					read := read - 1;	-- True amount of byte read

@@ -73,7 +73,7 @@ feature -- Comparison
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
-			Result := internal_type.equals (other.internal_type)
+			Result := internal_type.equals_type (other.internal_type)
 		end
 
 feature {TYPE_NAME_SOLVER, ASSEMBLY_CONSUMER} -- Implementation

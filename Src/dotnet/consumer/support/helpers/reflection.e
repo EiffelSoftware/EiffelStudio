@@ -19,7 +19,7 @@ feature -- Status Report
 				if not Result then
 					if t.get_is_nested_public or t.get_is_nested_family or t.get_is_nested_fam_orassem then
 						parent_name := t.get_full_name
-						parent_name := parent_name.substring_int32_int32 (0, parent_name.index_of_char ('+'))
+						parent_name := parent_name.substring_integer_32_integer_32 (0, parent_name.index_of_character ('+'))
 						parent_type := t.get_assembly.get_type_string (parent_name)
 						Result := parent_type /= Void and then parent_type.get_is_public
 					end

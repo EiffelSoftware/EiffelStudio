@@ -29,7 +29,7 @@ feature {CACHE_READER} -- Access
 			create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + key.count + 4)
 			Result.append (create {STRING}.make_from_cil (name.get_name))
 			Result.append ("-")
-			Result.append (create {STRING}.make_from_cil (name.get_version.to_string.replace_char ('.', '_')))
+			Result.append (create {STRING}.make_from_cil (name.get_version.to_string.replace_character ('.', '_')))
 			Result.append ("-")
 			Result.append (create {STRING}.make_from_cil (name.get_culture_info.get_name))
 			Result.append ("-")

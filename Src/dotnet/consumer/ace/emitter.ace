@@ -35,7 +35,7 @@ cluster
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
-			"CVS"; 
+			"CVS"; "support.net"; "system_object.e"
 		end
 
 	helpers:		"$EIFFEL_SRC\dotnet\helpers"
@@ -58,16 +58,6 @@ cluster
 			"CVS"; 
 		end
 
-	library xml:		"$ISE_EIFFEL\library.net\xml"
-		exclude
-			"CVS"; 
-		end
-
-	library system_:		"$ISE_EIFFEL\library.net\system"
-		exclude
-			"CVS"; 
-		end
-
 	cache:		"$EIFFEL_SRC\dotnet\consumer\cache"
 		exclude
 			"CVS"; 
@@ -78,9 +68,9 @@ cluster
 			"CVS"; 
 		end
 
-external
-
-	include_path:
-		"\$(EIFFEL_SRC)\library\wel\spec\windows\include"
+assembly
+	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
 end

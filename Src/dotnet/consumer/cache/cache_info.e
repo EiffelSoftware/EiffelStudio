@@ -18,7 +18,7 @@ feature {NONE} -- Initalization
 			info_path: STRING
 		do
 			info_path := (create {CACHE_READER}).Absolute_info_path
-			create di.make_directory_info (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
+			create di.make (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
 			di.create_
 			create assemblies.make (1, 0)
 		ensure

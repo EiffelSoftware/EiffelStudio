@@ -32,7 +32,7 @@ feature -- Access
 					if t.get_is_array then
 						create {CONSUMED_ARRAY_TYPE} Result.make (
 							create {STRING}.make_from_cil (
-								t.get_full_name.substring_int32_int32 (0,
+								t.get_full_name.substring_integer_32_integer_32 (0,
 								t.get_full_name.get_length - 2)),
 							am.found_item)
 					else

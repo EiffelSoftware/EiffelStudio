@@ -33,7 +33,7 @@ feature -- Basic Operations
 			name: ASSEMBLY_NAME
 			assembly: ASSEMBLY
 		do
-			assembly := feature {ASSEMBLY}.load (aname)
+			assembly := feature {ASSEMBLY}.load_assembly_name (aname)
 			if assembly /= Void then
 				create cr
 				create dir.make (cr.absolute_assembly_path (aname))

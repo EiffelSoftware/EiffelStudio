@@ -75,7 +75,7 @@ feature -- Basic Operations
 		local
 			ass: ASSEMBLY
 		do
-			ass := feature {ASSEMBLY}.load (aname)
+			ass := feature {ASSEMBLY}.load_assembly_name (aname)
 			if ass = Void then
 				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
 			else

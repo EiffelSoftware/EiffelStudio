@@ -26,9 +26,6 @@ feature -- Basic operation
 	set_pointer_position (a_x, a_y: INTEGER) is
 			-- Set `pointer_position' to (`a_x',`a_y`).		
 		deferred
-		ensure
-			--pointer_position_set:
-				--pointer_position.x = x and pointer_position.y = y
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
@@ -94,6 +91,9 @@ end -- class EV_SCREEN_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/25 22:54:11  king
+--| Removed invalid post-condition on set_pointer_position
+--|
 --| Revision 1.6  2000/04/11 18:53:04  king
 --| Added pointer manipulation deferrals
 --|

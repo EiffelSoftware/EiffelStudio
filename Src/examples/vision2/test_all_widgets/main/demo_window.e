@@ -13,7 +13,14 @@ deferred class
 inherit
 
 	EV_WINDOW
+		rename
+			make as parent_make
+		end
+	
+	EV_WINDOW
 		redefine	
+			make
+		select 
 			make
 		end
 	
@@ -25,18 +32,12 @@ feature --Access
 		deferred
 		end
 	
-	actions_window: ACTIONS_WINDOW is
-		once
-			!ACTIONS_WINDOW!Result.make (main_widget)
-		end
+	actions_window: ACTIONS_WINDOW
 	
 feature -- Initialization
 	
 	make is
 		do
-			Precursor
-			set_widgets
-			set_values
 		end
 	
 feature -- Status setting
@@ -55,10 +56,16 @@ feature -- Status setting
 	
 feature -- Command executing
 	
-	execute (argument: EV_ARGUMENT1[STRING]) is
+	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]) is
 		do
+			parent_make
+			set_widgets
+			set_values
 			show
+			!!actions_window.make_with_main_widget (main_widget)
 			actions_window.show
+			argument.first.set_insensitive (True)
+			set_delete_command (argument.first)
 		end
 end
 --|----------------------------------------------------------------

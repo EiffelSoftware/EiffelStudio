@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-	"WINDOW1, main window for the application. Belongs to EiffelVision example."
+	"MAIND_WINDOW, main window for the application. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -17,15 +17,17 @@ inherit
 			make
 		end
 	
+	EV_COMMAND
+	
 
 creation
 
 	make
 
 feature --Access
-
-	label_b, fixed_b, box_b, notebook_b, entry_b, multi_line_entry_b: EV_BUTTON
-	box: EV_VERTICAL_BOX
+	
+	buttons: LINKED_LIST[MAIN_WINDOW_BUTTON]
+	container: EV_VERTICAL_BOX
 			-- Push buttons
 	
 	current_demo_window: DEMO_WINDOW
@@ -33,60 +35,61 @@ feature --Access
 feature -- Initialization
 	
 	make is
-		do
-			Precursor
-			!!box.make (Current)
-			!!label_b.make (box)
-			!!fixed_b.make (box)
-			!!box_b.make (box)
-			!!notebook_b.make (box)
-			!!entry_b.make (box)
-			!!multi_line_entry_b.make (box)
-			set_values
-			set_commands
-		end
-	
-feature -- Status setting
-	
-	set_values is
-		do
-			set_title ("Test all widgets")
---			label_b.set_width (300)
-			label_b.set_text ("Label")
-			fixed_b.set_text ("Fixed")
-			box_b.set_text ("Box")
-			notebook_b.set_text ("Notebook")
-			entry_b.set_text ("Entry")
-			multi_line_entry_b.set_text ("Multi line entry")
-		end
-
-
-	set_commands is
 		local
+			b: MAIN_WINDOW_BUTTON
 			c1: LABEL_DEMO_WINDOW
 			c2: FIXED_DEMO_WINDOW
 			c3: BOX_DEMO_WINDOW
 			c4: NOTEBOOK_DEMO_WINDOW
 			c5: ENTRY_DEMO_WINDOW
 			c6: MULTI_LINE_ENTRY_DEMO_WINDOW
-			e: EV_EVENT
-			a: EV_ARGUMENT1 [STRING]
 		do
-			!!e.make ("clicked")
-			!!a.make ("sss")
+			Precursor
+			!!container.make (Current)
+			
+			
 			!!c1.make
 			!!c2.make
 			!!c3.make
 			!!c4.make
 			!!c5.make
 			!!c6.make
-			label_b.add_command (e, c1, a)
-			fixed_b.add_command (e, c2, a)
-			box_b.add_command (e, c3, a)
-			notebook_b.add_command (e, c4, a)
-			entry_b.add_command (e, c5, a)
-			multi_line_entry_b.add_command (e, c6, a)
+			
+			!!buttons.make
+			!!b.make_button (Current, "Label", c1)
+			buttons.extend (b)
+			!!b.make_button (Current, "Fixed", c2)
+			buttons.extend (b)
+			!!b.make_button (Current, "Box", c3)
+			buttons.extend (b)
+			!!b.make_button (Current, "Notebook", c4)
+			buttons.extend (b)
+			!!b.make_button (Current, "Entry", c5)
+			buttons.extend (b)
+			!!b.make_button (Current, "Multi line entry", c6)
+			buttons.extend (b)
+			
+			set_values
 		end
+	
+feature -- Status setting
+	
+
+	
+	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]) is
+		-- called when actions window is deleted
+		do
+ 			arg.first.actions_window.destroy
+			set_insensitive (False)
+		end
+		
+feature -- Status setting
+	
+	set_values is
+		do
+			set_title ("Test all widgets")
+		end
+
 end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -10,7 +10,7 @@ class
 inherit
 	EV_DIALOG
 	
-	GB_EV_EVENTS
+	GB_SUPPORTED_EVENTS
 		export
 			{NONE} all
 		undefine

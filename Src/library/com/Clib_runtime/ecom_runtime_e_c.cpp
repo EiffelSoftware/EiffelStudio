@@ -584,7 +584,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT
 
 // ARRAY
 
-DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension)
+DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, DATE * old)
 
 // Create C array of DATE from Eiffel array
 {
@@ -623,12 +623,18 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension)
 	}
 
 	eif_wean (eif_date_array);
-
-	return date_array;
+	
+	if (old != NULL)
+	{
+		memcpy (old, date_array, capacity*(sizeof(DATE)));
+		return NULL;
+	}
+	else
+		return date_array;
 };
 //----------------------------------------------------------------------------
 
-short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension)
+short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension, short * old)
 
 // Create C array of short from Eiffel array.
 {
@@ -667,12 +673,17 @@ short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension
 	}
 
 	eif_wean (e_short_array);
-
-	return short_array;
+	if (old != NULL)
+	{
+		memcpy (old, short_array, capacity*(sizeof(short)));
+		return NULL;
+	}
+	else
+		return short_array;
 };
 //----------------------------------------------------------------------------
 
-HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimension)
+HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimension, HRESULT * old)
 
 // Create C array of HRESULT from Eiffel array.
 {
@@ -712,12 +723,17 @@ HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimen
 	}
 
 	eif_wean (e_hresult_array);
-
-	return hresult_array;
+	if (old != NULL)
+	{
+		memcpy (old, hresult_array, capacity*(sizeof(HRESULT)));
+		return NULL;
+	}
+	else
+		return hresult_array;
 };
 //----------------------------------------------------------------------------
 
-CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dimension)
+CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dimension, CURRENCY * old)
 
 // Create C array of CURRENCY from Eiffel array.
 {
@@ -758,11 +774,17 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
 
 	eif_wean (e_currency_array);
 
-	return currency_array;
+	if (old != NULL)
+	{
+		memcpy (old, currency_array, capacity*(sizeof(CURRENCY)));
+		return NULL;
+	}
+	else
+		return currency_array;
 };
 //----------------------------------------------------------------------------
 
-VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimension)
+VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimension, VARIANT * old)
 
 // Create C array of VARIANT from Eiffel array.
 {
@@ -803,11 +825,17 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
 
 	eif_wean (e_variant_array);
 
-	return variant_array;
+	if (old != NULL)
+	{
+		memcpy (old, variant_array, capacity*(sizeof(VARIANT)));
+		return NULL;
+	}
+	else
+		return variant_array;
 };
 //----------------------------------------------------------------------------
 
-DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimension)
+DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimension, DECIMAL * old)
 
 // Create C array of DECIMAL from Eiffel array.
 {
@@ -848,11 +876,17 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
 
 	eif_wean (e_decimal_array);
 
-	return decimal_array;
+	if (old != NULL)
+	{
+		memcpy (old, decimal_array, capacity*(sizeof(DECIMAL)));
+		return NULL;
+	}
+	else
+		return decimal_array;
 };
 //----------------------------------------------------------------------------
 
-VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int dimension)
+VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int dimension, VARIANT_BOOL * old)
 
 // Create C array of Boolean from Eiffel array.
 {
@@ -893,11 +927,17 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
 
 	eif_wean (e_boolean_array);
 
-	return boolean_array;
+	if (old != NULL)
+	{
+		memcpy (old, boolean_array, capacity*(sizeof(VARIANT_BOOL)));
+		return NULL;
+	}
+	else
+		return boolean_array;
 };
 //-----------------------------------------------------------------------
 
-LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension)
+LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LARGE_INTEGER * old)
 
 // Create C array of LARGE_INTEGER from Eiffel array.
 {
@@ -939,11 +979,17 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, i
 
 	eif_wean (e_large_integer_array);
 
-	return int_array;
+	if (old != NULL)
+	{
+		memcpy (old, int_array, capacity*(sizeof(LARGE_INTEGER)));
+		return NULL;
+	}
+	else
+		return int_array;
 };
 //-----------------------------------------------------------------------
 
-ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension)
+ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULARGE_INTEGER * old)
 
 // Create C array of ULARGE_INTEGER from Eiffel array.
 {
@@ -981,11 +1027,18 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref,
 		memcpy ((ULARGE_INTEGER *)int_array, p_int, sizeof (ULARGE_INTEGER));
 	}
 	eif_wean (e_ularge_integer_array);
-	return int_array;
+
+	if (old != NULL)
+	{
+		memcpy (old, int_array, capacity*(sizeof(ULARGE_INTEGER)));
+		return NULL;
+	}
+	else
+		return int_array;
 };
 //------------------------------------------------------------------------------------
 
-IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int dimension)
+IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int dimension, IDispatch * old)
 
 // Create C array of IDispatch from Eiffel array.
 {
@@ -1026,11 +1079,17 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
 
 	eif_wean (e_dispatch_array);
 
-	return dispatch_array;
+	if (old != NULL)
+	{
+		memcpy (old, dispatch_array, capacity*(sizeof(IDispatch *)));
+		return NULL;
+	}
+	else
+		return dispatch_array;
 };
 //-----------------------------------------------------------------------------------------------
 
-IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension)
+IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension, IUnknown * old)
 
 // Create C array of IUnknown from Eiffel array.
 {
@@ -1071,11 +1130,17 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
 
 	eif_wean (e_unknown_array);
 
-	return unknown_array;
+	if (old != NULL)
+	{
+		memcpy (old, unknown_array, capacity*(sizeof(IUnknown *)));
+		return NULL;
+	}
+	else
+		return unknown_array;
 };
 //-------------------------------------------------------------------------------------------
 
-LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension)
+LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension, LPWSTR * old)
 
 // Create C array of LPWSTR from Eiffel array.
 {
@@ -1116,11 +1181,17 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
 
 	eif_wean (e_lpwstr_array);
 
-	return lpwstr_array;
+	if (old != NULL)
+	{
+		memcpy (old, lpwstr_array, capacity*(sizeof(LPWSTR)));
+		return NULL;
+	}
+	else
+		return lpwstr_array;
 };
 //----------------------------------------------------------------------------------------
 
-LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension)
+LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension, LPSTR * old)
 
 // Create C array of LPSTR from Eiffel array.
 {
@@ -1161,11 +1232,17 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
 
 	eif_wean (e_lpstr_array);
 
-	return lpstr_array;
+	if (old != NULL)
+	{
+		memcpy (old, lpstr_array, capacity*(sizeof(LPSTR)));
+		return NULL;
+	}
+	else
+		return lpstr_array;
 };
 //---------------------------------------------------------------------------------------------
 
-BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension)
+BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, BSTR * old)
 
 // Create C array of BSTR from Eiffel array.
 {
@@ -1206,7 +1283,13 @@ BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension)
 
 	eif_wean (e_bstr_array);
 
-	return bstr_array;
+	if (old != NULL)
+	{
+		memcpy (old, bstr_array, capacity*(sizeof(BSTR)));
+		return NULL;
+	}
+	else
+		return bstr_array;
 };
 //------------------------------------------------------------------------------------
 

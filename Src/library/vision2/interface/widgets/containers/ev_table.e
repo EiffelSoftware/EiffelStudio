@@ -50,6 +50,22 @@ feature -- Status report
 			Result := implementation.columns
 		end
 
+	row_spacing: INTEGER is
+			-- Spacing between two rows
+		require
+			exists: not destroyed
+		do
+			Result := implementation.row_spacing
+		end
+
+	column_spacing: INTEGER is
+			-- Spacing between two columns
+		require
+			exists: not destroyed
+		do
+			Result := implementation.column_spacing
+		end
+
 feature -- Status settings
 
 	set_homogeneous (flag: BOOLEAN) is

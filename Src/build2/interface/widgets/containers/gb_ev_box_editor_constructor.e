@@ -17,12 +17,12 @@ inherit
 		undefine
 			default_create
 		end
-		
-	GB_SHARED_OBJECT_HANDLER	
-		undefine
-			default_create
-		end
-		
+--| FIXME temporarily commented out to enable compilation for the Vision2 Tour.
+--	GB_SHARED_OBJECT_HANDLER	
+--		undefine
+--			default_create
+--		end
+--		
 feature -- Access
 
 	ev_type: EV_BOX
@@ -146,20 +146,20 @@ feature {NONE} -- Implementation
 			check
 				parent_is_box: box_parent /= Void
 			end
-			child_object := Object_handler.object_from_display_widget (w)
+--			child_object := Object_handler.object_from_display_widget (w)
 				-- As this is called twice, once for the display, and once
 				-- for the builder window, `child_object' may be `Void'.
 				-- We only need to perform the setting if `child_object' is non `Void'.
 			if check_button.is_selected then
 				box_parent.enable_item_expand (w)
-				if child_object /= Void then
-					child_object.enable_expanded_in_box
-				end
+--				if child_object /= Void then
+--					child_object.enable_expanded_in_box
+--				end
 			else
 				box_parent.disable_item_expand (w)
-				if child_object /= Void then
-					child_object.disable_expanded_in_box
-				end
+--				if child_object /= Void then
+--					child_object.disable_expanded_in_box
+--				end
 			end
 			
 			enable_project_modified

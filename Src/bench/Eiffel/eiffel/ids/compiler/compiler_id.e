@@ -50,6 +50,10 @@ feature -- Status report
 		do
 			Result := id < other.id
 		end
+	dummy_id: INTEGER is
+		do
+			Result := internal_id
+		end
 
 feature {COMPILER_SUBCOUNTER, COMPILER_EXPORTER, CACHE} -- Implementation
 

@@ -493,7 +493,6 @@ rt_public char *strrealloc(char *ptr, long int nbitems)
 	union overhead *zone;		/* Malloc information zone */
 	char *ref, *object;
 	long count, elem_size;
-	int dtype, dftype;
 	int size;		/* New size of string. */
 
 	/* At the end of the special object arena, there are two long values which

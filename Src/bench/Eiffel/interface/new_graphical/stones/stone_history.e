@@ -26,11 +26,22 @@ creation
 feature -- Initialization
 
 	make is
-			-- Initialze Current
+			-- Initialize Current
 		do
 			{TWO_WAY_LIST} Precursor
 			register
 			Object_comparison := True
+		end
+
+feature -- Destruction
+
+	destroy is
+			-- Remove Current from list of objects to
+			-- be updated when resources change. This
+			-- function has to be called for Current to
+			-- be recyclied by the garbage collector.
+		do
+			unregister
 		end
 
 feature -- Access
@@ -41,16 +52,23 @@ feature -- Access
 feature -- Resource Update
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("history_size")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			rearrange_history
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("history_size")
 		end

@@ -116,11 +116,11 @@ feature
 --				buf.new_line
 --				buf.indent
 --			end
-			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, False)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, False)
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := rout_id.table_name
+				table_name := routine_id.table_name
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')
@@ -137,7 +137,7 @@ feature
 				end
 				buf.putchar (']')
 					-- Mark attribute offset table used.
-				Eiffel_table.mark_used (rout_id)
+				Eiffel_table.mark_used (routine_id)
 					-- Remember external attribute offset declaration
 				Extern_declarations.add_attribute_table (table_name)
 			else

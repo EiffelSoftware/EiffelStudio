@@ -43,6 +43,7 @@ feature
 		do
 			attribute_name := a.feature_name
 			attribute_id := a.feature_id
+			routine_id := a.rout_id_set.first
 		end
 
 	is_attribute: BOOLEAN is True

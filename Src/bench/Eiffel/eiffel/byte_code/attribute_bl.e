@@ -138,7 +138,7 @@ end
 			if reg.is_current then
 				class_type ?= context_type
 				if class_type /= Void then
-					if Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False) >= 0 then
+					if Eiffel_table.is_polymorphic (routine_id, class_type.type_id, False) >= 0 then
 						context.add_dt_current
 					end
 				end
@@ -154,7 +154,7 @@ end
 			type_i := context_type
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				Result := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, False) >= 0
 			end
 		end
 
@@ -201,11 +201,11 @@ end
 --				buf.new_line
 --				buf.indent
 --			end
-			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, False)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, False)
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := rout_id.table_name
+				table_name := routine_id.table_name
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')
@@ -221,7 +221,7 @@ end
 				end
 				buf.putchar (']')
 					-- Mark attribute offset table used.
-				Eiffel_table.mark_used (rout_id)
+				Eiffel_table.mark_used (routine_id)
 					-- Remember external attribute offset declaration
 				Extern_declarations.add_attribute_table (table_name)
 			else
@@ -245,6 +245,7 @@ end
 			attribute_name := a.attribute_name
 			attribute_id := a.attribute_id
 			type := a.type
+			routine_id := a.routine_id
 		end
 
 	has_call: BOOLEAN is true

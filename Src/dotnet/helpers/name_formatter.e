@@ -261,6 +261,7 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_DATE_TIME", "DateTime")
 			Result.put ("SYSTEM_SORTED_LIST", "SortedList")
 			Result.put ("SYSTEM_RANDOM", "Random")
+			Result.put ("SYSTEM_CONTAINER", "Container")
 		end
 
 	variable_mapping_table: HASH_TABLE [STRING, STRING] is

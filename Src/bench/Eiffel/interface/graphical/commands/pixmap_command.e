@@ -14,7 +14,6 @@ inherit
 	SHARED_PIXMAPS;
 	LICENCED_COMMAND
 		rename
-			raise as raise_exception,
 			parent_window as Project_tool
 		end;
 	SHARED_ACCELERATOR

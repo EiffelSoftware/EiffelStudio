@@ -1,6 +1,6 @@
 indexing
 	description: "Eiffel server visitor"
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,9 +76,10 @@ feature -- Processing
 			-- every functiom of interface
 		local
 			interface_server_generator: WIZARD_INTERFACE_EIFFEL_SERVER_GENERATOR
+			eiffel_class_interface_generator: WIZARD_EIFFEL_CLASS_INTERFACE_GENERATOR
 		do
+			Precursor (interface_descriptor)
 			if not shared_wizard_environment.new_eiffel_project then
-				Precursor (interface_descriptor)
 				if 
 					not interface_descriptor.name.is_equal (Iunknown_type) and
 					not interface_descriptor.name.is_equal (Idispatch_type)
@@ -86,6 +87,9 @@ feature -- Processing
 					create interface_server_generator
 					interface_server_generator.generate (interface_descriptor)
 				end
+			else
+				create eiffel_class_interface_generator
+				eiffel_class_interface_generator.generate (interface_descriptor)
 			end
 		end
 

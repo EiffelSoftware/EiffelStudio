@@ -27,6 +27,7 @@ feature {NONE} -- Implementation
                         -- parent.
 		do
 			widget := gtk_table_new (0, 0, Default_homogeneous)
+				-- table created with 0 row and 0 column.
 			gtk_object_ref (widget)
 		end
 
@@ -50,19 +51,19 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			gtk_table_set_homogeneous (GTK_TABLE(widget), flag)
+			gtk_table_set_homogeneous (GTK_TABLE (widget), flag)
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Spacing between two rows of the table
 		do
-			gtk_table_set_row_spacings (GTK_TABLE(widget), value)
+			gtk_table_set_row_spacings (GTK_TABLE (widget), value)
 		end
 
 	set_column_spacing (value: INTEGER) is
 			-- Spacing between two columns of the table
 		do
-			gtk_table_set_col_spacings (GTK_TABLE(widget), value)
+			gtk_table_set_col_spacings (GTK_TABLE (widget), value)
 		end
 
 	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
@@ -75,7 +76,18 @@ feature -- Status settings
 		do
 			child_imp ?= the_child.implementation
 			gtk_table_attach_defaults (GTK_TABLE(widget), child_imp.widget,
-				left, right, top, bottom)
+						left, right, top, bottom)
+
+			-- we have to decrement the number of reference which is here 2
+			-- (the value had been incremented by the gtk function
+			-- 'gtk_table_attach_defaults').
+			gtk_object_unref (child_imp.widget)	
+
+			-- we set the spacings if needed. This function has been create
+			-- because of a GTK bug: when adding a new child in the table,
+			-- the spacings are not set for it. As soon as the bug is fixed, we
+			-- can erase this function.
+			c_gtk_table_set_spacing_if_needed (GTK_TABLE (widget))		
 		end
 
 feature -- Element change
@@ -84,9 +96,10 @@ feature -- Element change
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			check
-				Nothing_to_do: True
-			end
+			-- there is nothing to do here except add a reference
+			-- to the child otherwise, the later will be destroyed
+			-- after the gtk_object_unref in the set_parent.
+			gtk_object_ref (child_imp.widget)
 		end
 
 feature -- Assertion test

@@ -175,8 +175,19 @@ feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
+		local
+			item_pointer: POINTER
+				-- Single element glist holding `a_child'.
 		do
-			check to_be_implemented: False end
+			item_pointer := C.g_list_nth (
+						C.gtk_container_children (a_container),
+						C.gtk_list_child_position (a_container, a_child)
+					)
+			check
+				item_pointer_not_null: item_pointer /= Default_pointer
+			end
+			C.gtk_list_remove_items_no_unref (a_container, item_pointer)
+			C.gtk_list_insert_items (a_container, item_pointer, a_position)
 		end
 
 	list_widget: POINTER
@@ -185,7 +196,7 @@ feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 			-- and a gtk_list (pointed by `list_widget').
 			-- Exported to EV_LIST_ITEM_IMP. 
 
-	interface : EV_LIST
+	interface: EV_LIST
 
 invariant
 	list_widget_not_void: is_initialized implies list_widget /= Void
@@ -213,6 +224,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/13 19:07:04  king
+--| Implemented gtk_reorder_child
+--|
 --| Revision 1.31  2000/03/08 21:39:04  king
 --| Reimplemented to be compatible with combo box
 --|

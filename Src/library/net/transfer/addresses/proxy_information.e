@@ -49,6 +49,16 @@ feature -- Status setting
 			host_set: host = h
 		end
 			
+	set_port (p: INTEGER) is
+			-- Set port to `p'.
+		require
+			port_non_negative: p >= 0
+		do
+			port := p
+		ensure
+			port_set: port = p
+		end
+
 invariant
 
 	host_not_empty: host /= Void and then not host.is_empty

@@ -1525,8 +1525,8 @@ feature {NONE} -- Implementation
 	enlarge_row (a_index, new_count: INTEGER) is
 			-- Enlarge the row at index `a_index' to `new_count'.
 		require
-			row_exists: row_list @ (a_index - 1) /= Void
-			row_can_expand: (row_list @ (a_index - 1)).count < new_count
+			row_exists: internal_row_data @ (a_index) /= Void
+			row_can_expand: (internal_row_data @ (a_index)).count < new_count
 		local
 			a_row: SPECIAL [EV_GRID_ITEM_I]
 		do

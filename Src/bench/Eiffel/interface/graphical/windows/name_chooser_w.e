@@ -121,6 +121,15 @@ feature {NONE} -- Properties
 			!! Result.make (0);
 		end
 
+feature 
+
+	set_last_directory_viewed(st:STRING) is
+			-- Set the last directory viewed.
+		do
+			last_directory_viewed.wipe_out
+			last_directory_viewed.append(st)
+		end
+
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is

@@ -1554,7 +1554,11 @@ end;
 			melted_file.open_write;
 
 				-- There is something to update
-			melted_file.putchar ('%/001/');
+			if empty then
+				melted_file.putchar ('%/000/');
+			else
+				melted_file.putchar ('%/001/');
+			end
 
 				-- Flag indicating whether it's Java or Eiffel byte-code
 			if java_generation then

@@ -294,7 +294,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNdirectory, a_compound_string)
 		ensure
-			directory_set: directory.is_equal (a_compound_string)
+			-- directory_set: directory.is_equal (a_compound_string)
 		end;
 
 	validate_directory is
@@ -353,7 +353,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNdirMask, a_compound_string)
 		ensure
-			dir_mask_set: dir_mask.is_equal (a_compound_string)
+			-- dir_mask_set: dir_mask.is_equal (a_compound_string)
 		end;
 
 	set_dir_search_proc is

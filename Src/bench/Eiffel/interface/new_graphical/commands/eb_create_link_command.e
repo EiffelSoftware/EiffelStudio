@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 			menu_item.select_actions.extend (agent select_type (Aggregate))
 			menu.extend (menu_item)
-			menu.show
+			menu.show_at (current_button.parent, current_button.parent.pointer_position.x, current_button.parent.height)
 		end
 
 feature {EB_CONTEXT_EDITOR} -- Implementation

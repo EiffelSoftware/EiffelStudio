@@ -86,8 +86,6 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			--| 1-1 mapping between implementation and interface
 			--| objects.
 
-feature {EV_ANY_I, EV_ANY} -- Implementation
-
 	base_make_called: BOOLEAN
 			-- Was `base_make' called?
 
@@ -96,6 +94,32 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
+
+	set_interface (an_interface: like interface) is
+			-- Assign `an_interface' to `interface'. 
+			-- Should only ever be called by {EV_ANY}.replace_implementation.
+		do
+			check
+				called_by_replace_implementation_only: false
+					-- replace_implementation calls turns assertions off.
+			end
+			interface := new_interface
+		ensure
+			interface_assigned: interface = new_interface
+		end
+
+	set_initialized is
+			-- Set the implementation to be initialized
+			-- Should only ever be called by {EV_ANY}.replace_implementation.
+		do
+			check
+				called_by_replace_implementation_only: false
+					-- replace_implementation calls turns assertions off.
+			end
+			is_initialized := True
+		ensure
+			is_initialized: is_initialized
+		end
 
 feature {EV_ANY_I, EV_ANY} -- Contract support
 
@@ -117,13 +141,14 @@ feature {NONE} -- Contract support
 		end
 
 	is_useable: BOOLEAN is
-			-- Is `Current' unsable?
+			-- Is `Current' useable?
 		do
 			Result := is_initialized and not is_destroyed
 		end
 
 invariant
-	interface_coupled: interface /= Void and then interface.implementation = Current
+	interface_coupled:
+		interface /= Void and then interface.implementation = Current
 	base_make_called: base_make_called
 	no_calls_after_destroy: not last_call_was_destroy implies not is_destroyed
 
@@ -150,6 +175,9 @@ end -- class EV_ANY_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/11 17:29:43  oconnor
+--| added set_interface and set_initialized
+--|
 --| Revision 1.8  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|
@@ -197,7 +225,6 @@ end -- class EV_ANY_I
 --|
 --| Revision 1.6.2.4  1999/10/14 21:59:41  oconnor
 --| added cvs log
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

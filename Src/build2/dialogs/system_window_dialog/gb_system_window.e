@@ -65,6 +65,18 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Events
 
+	attributes_local_selected is
+			-- Called by `select_actions' of `attributes_local_check_button'.
+		do
+			attribute_class_box.disable_sensitive
+		end
+	
+	attributes_class_selected is
+			-- Called by `select_actions' of `attributes_class_check_button'.
+		do
+			attribute_class_box.enable_sensitive
+		end
+
 	class_build_type_selected is
 			-- Called by `select_actions' of `project_radio_button'.
 		do
@@ -146,9 +158,14 @@ feature {NONE} -- Implementation
 			if project_settings.attributes_local.is_equal (True_string) then
 				attributes_local_check_button.enable_select
 			elseif project_settings.attributes_local.is_equal (False_string) then
-				attributes_non_local_check_button.enable_select
-			elseif project_settings.attributes_local.is_equal (Optimal_string) then
-				attributes_optimal_local_check_button.enable_select
+				attributes_class_check_button.enable_select
+				attributes_exported_check_button.enable_select
+			elseif project_settings.attributes_local.is_equal (False_optimal_string) then
+				attributes_class_check_button.enable_select
+				attributes_optimal_check_button.enable_select
+			elseif project_settings.attributes_local.is_equal (False_non_exported_string) then
+				attributes_class_check_button.enable_select
+				attributes_not_exported_check_button.enable_Select
 			end
 			if project_settings.load_constants then
 				load_constants_check_button.enable_select
@@ -192,10 +209,12 @@ feature {NONE} -- Implementation
 			end
 			if attributes_local_check_button.is_selected then
 				project_settings.set_attributes_locality (True_string)
-			elseif attributes_non_local_check_button.is_selected then
-				project_settings.set_attributes_locality (False_string)
-			elseif attributes_optimal_local_check_button.is_selected then
-				project_settings.set_attributes_locality (Optimal_string)
+			elseif attributes_not_exported_check_button.is_selected then
+				project_settings.set_attributes_locality (false_non_exported_string)
+			elseif attributes_optimal_check_button.is_selected then
+				project_settings.set_attributes_locality (False_optimal_string)
+			elseif attributes_exported_check_button.is_selected then
+				project_settings.set_attributes_locality (false_string)
 			end
 			if load_constants_check_button.is_selected then
 				project_settings.enable_constant_loading

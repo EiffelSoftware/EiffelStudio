@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_VARIABLE_NAME_MAPPER
-		export
-			{NONE} all
-		end
-
 feature -- Basic operations
 
 	process (a_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR;

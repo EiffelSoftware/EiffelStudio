@@ -29,11 +29,11 @@ feature {NONE} -- Status report
 	is_ok: BOOLEAN is
 			-- Is last SQL statement ok ?
 		do
-			if handle.status.is_ok_mat /= void then
+			if handle.status.is_ok_mat /= Void then
 				Result := handle.status.is_ok_mat or handle.status.error_code = 0
 			else 
 				Result := handle.status.error_code = 0
-			end -- if
+			end
 		end
 
 	is_ok_mat: BOOLEAN is

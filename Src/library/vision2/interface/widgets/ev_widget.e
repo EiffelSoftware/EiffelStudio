@@ -540,7 +540,7 @@ feature -- Event - command association
 		end
 	
 
-feature {EV_WIDGET} -- Implementation
+feature {EV_WIDGET, EV_WIDGET_IMP} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget

@@ -31,13 +31,6 @@ creation
 
 feature {NONE} -- Initialization
 	
-	old_make_with_text (par: EV_CONTAINER; txt: STRING) is
-		do
-			check
-				do_not_call: False
-			end
-		end
-	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 			-- Create menu item
 		local
@@ -49,6 +42,13 @@ feature {NONE} -- Initialization
 		end		
 	
 feature {NONE} -- Implementation
+	
+	set_label_widget (new_label_widget: POINTER) is
+		do
+			check
+				do_not_call: False
+			end
+		end
 	
         label_widget: POINTER is
                         -- gtk widget of the label inside the button

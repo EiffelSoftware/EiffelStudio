@@ -39,7 +39,7 @@ feature -- Initialization
 			c1: LABEL_DEMO_WINDOW
 			c2: FIXED_DEMO_WINDOW
 			c3: BOX_DEMO_WINDOW
---			c4: NOTEBOOK_DEMO_WINDOW
+			c4: NOTEBOOK_DEMO_WINDOW
 			c5: TEXT_FIELD_DEMO_WINDOW
 			c6: TEXT_AREA_DEMO_WINDOW
 			c7: MENU_DEMO_WINDOW
@@ -49,11 +49,10 @@ feature -- Initialization
 		do
 			Precursor
 			!!container.make (Current)
-			
 			!!c1.make (Current)
 			!!c2.make (Current)
 			!!c3.make (Current)
---			!!c4.make (Current)
+			!!c4.make (Current)
 			!!c5.make (Current)
 			!!c6.make (Current)
 			!!c7.make (Current)
@@ -61,16 +60,16 @@ feature -- Initialization
 			!!c9.make (Current)
 			!!c10.make (Current)
 			
-			!!b.make_button (Current, "Label", c1)
-			!!b.make_button (Current, "Buttons", c10)
-			!!b.make_button (Current, "Fixed", c2)
-			!!b.make_button (Current, "Box", c3)
---			!!b.make_button (Current, "Notebook", c4)
-			!!b.make_button (Current, "Text field", c5)
-			!!b.make_button (Current, "Text area", c6)
-			!!b.make_button (Current, "Menu", c7)
-			!!b.make_button (Current, "Split area", c8)
-			!!b.make_button (Current, "Scrollable area", c9)
+			!!b.make_button (Current, "Label", "", c1)
+			!!b.make_button (Current, "Buttons", "../pixmaps/panel-arrow-right.xpm", c10)
+			!!b.make_button (Current, "Fixed", "../pixmaps/folder.xpm", c2)
+			!!b.make_button (Current, "Box", "../pixmaps/panel-arrow-right.xpm", c3)
+			!!b.make_button (Current, "Notebook", "../pixmaps/note.xpm", c4)
+			!!b.make_button (Current, "Text field", "../pixmaps/folder.xpm", c5)
+			!!b.make_button (Current, "Text area", "../pixmaps/page.xpm", c6)
+			!!b.make_button (Current, "Menu", "../pixmaps/panel-arrow-right.xpm", c7)
+			!!b.make_button (Current, "Split area", "../pixmaps/panel-arrow-right.xpm", c8)
+			!!b.make_button (Current, "Scrollable area", "../pixmaps/panel-arrow-right.xpm", c9)
 			
 			set_values
 		end

@@ -18,22 +18,31 @@ inherit
 	EV_BAR_ITEM_IMP
         
 	EV_TEXT_CONTAINER_IMP
+		redefine
+			make
+		end
+	
         
 creation
 
-        make_with_text
+        make, make_with_text
 
 feature {NONE} -- Initialization
 	
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-                        -- Create a gtk push button.
-                local
-                        a: ANY
+	make (par: EV_CONTAINER) is
 		do
-			a ?= txt.to_c
-                        widget := gtk_button_new_with_label ($a)
-                end
+			widget := gtk_button_new
+			initialize
+		end
 	
+	initialize is
+			-- Common initialization for buttons
+		do
+			box := gtk_hbox_new (False, 0)
+			gtk_container_add (GTK_CONTAINER (widget), box)
+		end			
+	
+		
 feature -- Event - command association
 	
 	add_click_command ( command: EV_COMMAND; 
@@ -43,17 +52,22 @@ feature -- Event - command association
 		do
 			add_command ( "clicked", command,  arguments )
 		end
-			
+	
+	
 feature {NONE} -- Implementation
 	
 	gtk_command_id: INTEGER
                         -- Id of the command handler
         
-        
-        label_widget: POINTER is
+	set_label_widget (new_label_widget: POINTER) is
+		do
+			label_widget := new_label_widget
+		end        
+	
+        label_widget: POINTER 
                         -- gtk widget of the label inside the button
-                do
-                        Result := c_gtk_get_label_widget (widget)
-                end
-
+           --     do
+            --            Result := c_gtk_get_label_widget (widget)
+             --   end
+	
 end

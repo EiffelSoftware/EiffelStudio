@@ -21,7 +21,7 @@ inherit
 	
 	EV_TEXT_CONTAINER
 		redefine
-			implementation
+			implementation, make
 		end
 
 	EV_FONTABLE
@@ -34,18 +34,33 @@ creation
 
 	
 feature {NONE} -- Initialization
-
+	
+ 	make (par: EV_CONTAINER) is
+ 		-- Empty button
+		do
+ 			!EV_BUTTON_IMP!implementation.make (par)
+ 			initialize (par)
+ 		end
+	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
 		do
 			!EV_BUTTON_IMP!implementation.make_with_text (par, txt)
-			widget_make (par)
+			initialize (par)
 		end			
+	
+	initialize (par: EV_CONTAINER) is
+		-- Common initialization for buttons
+		do
+			widget_make (par)
+			!!pixmap_container.make_from_primitive (Current)
+		end
+	
 	
 feature -- Access
 
---	pixmap: PIXMAP
+	pixmap_container: EV_PIXMAP_CONTAINER
 			-- Pixmap inside button
 	
 	
@@ -62,7 +77,7 @@ feature -- Event - command association
 							   arguments )
 		end	
 	
-feature {NONE} -- Implementation
+feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
 
 	implementation: EV_BUTTON_I
 			-- Implementation of button

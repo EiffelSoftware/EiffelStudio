@@ -13,47 +13,22 @@ class
 inherit
         EV_CHECK_BUTTON_I
 	
-	EV_BUTTON_IMP
+	EV_TOGGLE_BUTTON_IMP
 		redefine
-			make_with_text
+			make
 		end
         
 creation
 
-         make_with_text
+         make, make_with_text
 
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_CONTAINER; txt: STRING) is
-                        -- Create a gtk push button.
-                local
-                        a: ANY
+        make (par: EV_CONTAINER) is
+                        -- Create a gtk check button.
 		do
-			a ?= txt.to_c
-                        widget := gtk_check_button_new_with_label ($a)
+                        widget := gtk_check_button_new
+			initialize
                 end
 	
-feature -- Status report
-	
-	pressed: BOOLEAN is
-                        -- Is toggle pressed
-                do
-			Result := c_gtk_toggle_button_active (widget)
-                end 
-	
-feature -- Status setting
-
-        set_pressed (button_pressed: BOOLEAN) is
-                        -- Set Current toggle on and set
-                        -- pressed to True.
-                do
-			gtk_toggle_button_set_state (widget, button_pressed)
-                end
-
-        toggle is
-			-- Change the state of the toggle button to
-			-- opposite
-		do
-			gtk_toggle_button_toggled (widget)
-                end
 end

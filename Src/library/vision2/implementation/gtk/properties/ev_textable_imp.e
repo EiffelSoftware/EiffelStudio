@@ -21,12 +21,29 @@ feature {NONE} -- Initialization
 	
 	make (par: EV_CONTAINER) is
  		do
- 			make_with_text (par, "")
+			check
+				do_not_call: False
+			end
  		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
-		deferred
-		end
+		do
+			make (par)
+			create_text_label (txt)
+                end
+	
+	create_text_label (txt: STRING) is
+		require
+			call_only_once: label_widget = Default_pointer
+		local
+                        a: ANY	
+		do
+			a ?= txt.to_c
+			
+			set_label_widget (gtk_label_new ($a))
+			gtk_box_pack_end (GTK_BOX (box), label_widget, True, True, 0)
+		end			
+	
 	
 feature -- Access
 
@@ -34,9 +51,11 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			gtk_label_get (label_widget, $p)
 			!!Result.make (0)
-			Result.from_c (p)
+			if label_widget /= Default_pointer then
+				gtk_label_get (label_widget, $p)
+				Result.from_c (p)
+			end
 		end
 	
 feature -- Status setting
@@ -72,11 +91,25 @@ feature -- Element change
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
-			gtk_label_set (label_widget, $a)
+			if label_widget = Default_pointer then
+				create_text_label (txt)	
+			else
+				a ?= txt.to_c
+				gtk_label_set (label_widget, $a)
+			end
 		end
 	
+feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
+	
+	box: POINTER
+			-- Box inside the text container
+
 feature {NONE} -- Implementation
+	
+	set_label_widget (new_label_widget: POINTER) is
+			-- new pointer for label_widget 
+		deferred
+		end
 	
 	label_widget: POINTER is
 			-- This has to be defined to be the actual 

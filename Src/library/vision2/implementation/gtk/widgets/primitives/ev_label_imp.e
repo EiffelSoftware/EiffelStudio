@@ -20,6 +20,8 @@ inherit
 	EV_TEXT_CONTAINER_IMP
                 rename
                         label_widget as widget
+		redefine
+			make_with_text
                 end
 creation
 
@@ -35,10 +37,15 @@ feature {NONE} -- Initialization
                         a ?= txt.to_c
                         widget := gtk_label_new ($a)
                 end
+	
+feature {NONE} -- Implementation
+	
+	set_label_widget (new_label_widget: POINTER) is
+		do
+			widget := new_label_widget
+		end
 
-
-
-end --class LABEL_I
+end --class LABEL_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

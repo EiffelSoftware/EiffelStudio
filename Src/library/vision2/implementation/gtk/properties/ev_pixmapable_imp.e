@@ -1,46 +1,61 @@
 indexing
-	description: "EiffelVision Check button. Widget that has a check box %
-				% and a text."
+
+	description: 
+		"EiffelVision pixmap container, gtk implementation."
 	status: "See notice at end of class"
-	id: "$$"
-	date: "$$"
-	revision: "$$"
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 	
-class 
-	EV_CHECK_BUTTON
-
+class
+	
+	EV_PIXMAP_CONTAINER_IMP
+	
 inherit
-	EV_TOGGLE_BUTTON
+	
+	EV_PIXMAP_CONTAINER_I
+		
+	EV_CONTAINER_IMP
 		redefine
-			make, make_with_text, 
-			implementation
+			add_child
 		end
+	
+	
+creation	
 
-creation
-	make_with_text
+	make_from_primitive
 
 feature {NONE} -- Initialization
-
+	
 	make (par: EV_CONTAINER) is
-		-- Empty check button
 		do
-			!EV_CHECK_BUTTON_IMP!implementation.make (par)
-			initialize (par)
+			check
+				do_not_call: False
+			end
+		end
+	
+	make_from_primitive (primitive: EV_BUTTON) is
+			-- Create pixmap container inside of 'primitive'
+		local
+			primitive_imp: EV_BUTTON_IMP
+		do
+			primitive_imp ?= primitive.implementation
+			check
+				valid_primitive: primitive_imp /= Void
+			end
+			
+			widget := primitive_imp.box
 		end	
 	
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Check button with `par' as parent and `txt' as
-			-- text label
+feature {EV_CONTAINER} -- Element change
+	
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite
 		do
-			!EV_CHECK_BUTTON_IMP!implementation.make_with_text (par, txt)
-			widget_make (par)
+			gtk_box_pack_start (GTK_BOX (widget), child_imp.widget, True, False, 0)
 		end
-
-feature {NONE} -- Implementation
-
-	implementation: EV_CHECK_BUTTON_I
-
-end -- class EV_CHECK_BUTTON
+	
+end
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

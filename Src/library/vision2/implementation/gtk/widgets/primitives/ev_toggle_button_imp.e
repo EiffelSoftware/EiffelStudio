@@ -15,22 +15,20 @@ inherit
 	
 	EV_BUTTON_IMP
 		redefine
-			make_with_text
+			make
 		end
         
 creation
 
-         make_with_text
+         make, make_with_text
 
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_CONTAINER; txt: STRING) is
-                        -- Create a gtk push button.
-                local
-                        a: ANY
+        make (par: EV_CONTAINER) is
+                        -- Create a gtk toggle button.
 		do
-			a ?= txt.to_c
-                        widget := gtk_toggle_button_new_with_label ($a)
+                        widget := gtk_toggle_button_new
+			initialize 
                 end
 	
 feature -- Status report

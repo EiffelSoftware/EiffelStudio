@@ -226,7 +226,7 @@ feature -- Duplication
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		do
-			Result ?= feature {ISE_RUNTIME}.deep_clone (Current)
+			Result ?= feature {ISE_RUNTIME}.deep_twin (Current)
 		ensure
 			deep_equal: deep_equal (Current, Result)
 		end

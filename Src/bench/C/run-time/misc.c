@@ -225,7 +225,7 @@ EIF_OBJ k;
 {
 #ifdef __WATCOMC__
 	char *ini;
-	static buf[128];
+	static char buf[128];
 	extern char **_argv;
 
 	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)

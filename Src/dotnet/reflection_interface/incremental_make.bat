@@ -33,6 +33,7 @@ cd generated
 cd formatter_generated
 if exist *.e goto formatter_emitted
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.Formatter.dll
+del .\tuple.e
 :formatter_emitted
 cd ..
 cd ..
@@ -83,7 +84,7 @@ cd generated
 cd eiffel_components_generated
 if exist *.e goto components_emitted
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.EiffelComponents.dll 
-del .\generated\eiffel_components_generated\tuple.e
+del .\tuple.e
 :components_emitted
 cd ..
 cd ..
@@ -133,6 +134,7 @@ cd notifier_generated
 if exist *.e goto notifier_emitted
 copy ..\..\bin\ISE.Reflection.EiffelComponents.dll ..\..\..\..\tools\emitter
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll
+del .\tuple.e
 :notifier_emitted
 cd ..
 cd ..
@@ -181,6 +183,7 @@ cd support_generated
 if exist *.e goto support_emitted
 copy ..\..\bin\ISE.Reflection.Formatter.dll ..\..\..\..\tools\emitter
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.Support.dll 
+del .\tuple.e
 :support_emitted
 cd ..
 cd ..
@@ -230,6 +233,7 @@ if exist *.e goto cache_handler_emitted
 copy ..\..\bin\ISE.Reflection.Support.dll ..\..\..\..\tools\emitter
 copy ..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\..\..\tools\emitter
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll 
+del .\tuple.e
 :cache_handler_emitted
 cd ..
 cd ..
@@ -278,6 +282,7 @@ cd code_generator_generated
 if exist *.e goto code_generator_emitted
 copy ..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\..\..\tools\emitter
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.CodeGenerator.dll 
+del .\tuple.e
 :code_generator_emitted
 cd ..
 cd ..
@@ -325,6 +330,7 @@ cd generated
 cd reflection_interface_generated
 if exist *.e goto reflection_interface_emitted
 ..\..\..\..\tools\emitter\emitter.exe /t ..\..\bin\ISE.Reflection.ReflectionInterface.dll 
+del .\tuple.e
 :reflection_interface_emitted
 cd ..
 cd ..

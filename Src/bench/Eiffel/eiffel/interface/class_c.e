@@ -233,6 +233,14 @@ feature -- Access
 			Result := Ast_server.has (class_id)
 		end
 
+feature -- Access: Convertibility
+
+	convert_to: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+			-- Set of feature name IDs indexed by type to which they convert to.
+	
+	convert_from: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+			-- Set of feature name IDs indexed by type to which they convert from.
+
 feature -- Access: CLI implementation
 
 	class_interface: CLASS_INTERFACE
@@ -3104,6 +3112,22 @@ feature -- Convenience features
 			skeleton_set: skeleton = s
 		end
 
+	set_convert_to (c: like convert_to) is
+			-- Assign `c' to `convert_to'.
+		do
+			convert_to := c
+		ensure
+			convert_to_set: convert_to = c
+		end
+
+	set_convert_from (c: like convert_from) is
+			-- Assign `c' to `convert_from'.
+		do
+			convert_from := c
+		ensure
+			convert_from_set: convert_from = c
+		end
+
 	set_creators (c: like creators) is
 			-- Assign `c' to `creators'.
 		do
@@ -3210,6 +3234,33 @@ feature -- Convenience features
 		end
 
 feature -- Actual class type
+
+	constraint_actual_type: CL_TYPE_A is
+			-- Actual type of class where all formals are replaced by their constraint.
+		local
+			i, count: INTEGER
+			actual_generic: ARRAY [TYPE_A]
+			formal: FORMAL_A
+		do
+			if generics = Void then
+				Result := actual_type
+			else
+				from
+					i := 1
+					count := generics.count
+					create actual_generic.make (1, count)
+					create {GEN_TYPE_A} Result.make (class_id, actual_generic)
+				until
+					i > count
+				loop
+					actual_generic.put (constraint (i), i)
+					i := i + 1
+				end
+				Result.set_is_true_expanded (is_expanded)
+			end
+		ensure
+			constraint_actual_type_not_void: Result /= Void
+		end
 
 	actual_type: CL_TYPE_A is
 			-- Actual type of the class
@@ -3491,7 +3542,7 @@ feature -- Validity class
 				l_cor_mism := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
 				if
 					l_cor_mism = void or else 
-					not l_cor_mism.is_procedure or l_cor_mism.argument_count > 0
+					not l_cor_mism.is_routine or l_cor_mism.argument_count > 0
 				then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))

@@ -173,6 +173,7 @@ feature -- Setting
 			-- Set the breakpoint to be removed.
 		do	
 			bench_status := Bench_breakpoint_not_set
+			condition := Void
 		ensure
 			breakpoint_is_removed: bench_status = Bench_breakpoint_not_set
 		end
@@ -192,6 +193,7 @@ feature -- Setting
 		do
 			if bench_status = Bench_breakpoint_set then
 				bench_status := Bench_breakpoint_not_set
+				condition := Void
 			else
 				bench_status := Bench_breakpoint_set
 			end
@@ -325,7 +327,7 @@ feature -- Comparison
 			-- We use 'body_index' because it does not change after
 			-- a recompilation
 		do
-			Result := (other.breakable_line_number = breakable_line_number) and equal (other.body_index, body_index)
+			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
 		end
 
 feature -- Public constants

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<title>Introduction</title>
+<META NAME="MS-HKWD" CONTENT="call stack">
+<META NAME="MS-HKWD" CONTENT="dynamic call stack information">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>Introduction</h1>
+<p>The call stack is the list of features that have been entered and not exited since the program started. It is a stack since before a feature exits, all
+the features it calls must exit too. The last entered feature is the top of the
+stack whereas the program root feature is its bottom.<p>There is one level in
+the call stack, apart from the top, that has a special status and corresponds
+to a special call stack element. It is the level to which all debugging tools
+refer. It is user-definable, so that it is possible to move along the call stack
+and have information about any level, by setting each level as the current call
+stack level in its turn.<p>To keep trace of a call stack (for example in order
+to indicate to other people where a problem occurred), it is possible to <a HREF="40_save_call_stack.html">save
+the call stack</a> to a text file.<p>Information concerning the call stack is
+spread over several graphical components:
+<ul>
+	<li>Information concerning the call stack in its globality is displayed in the <a HREF="10_call_stack_tool.html">call stack
+      tool</a>.
+	<li><a HREF="20_current_level_information.html">Information concerning the current call stack element</a> is displayed in the feature view and the locals
+      view.
+</body>
+
+</html>

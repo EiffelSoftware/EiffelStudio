@@ -1,0 +1,36 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<title>Information relative to a stack element</title>
+<META NAME="MS-HKWD" CONTENT="local variables display">
+<META NAME="MS-HKWD" CONTENT="parameters display">
+<META NAME="MS-HKWD" CONTENT="feature debugging">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>Information relative to a stack element</h1>
+<p>In addition to the <A HREF="10_call_stack_tool.html">call stack tool</A> that provides
+ information concerning the call stack in its
+globality, some other debug tools give information concerning the <A HREF="10_call_stack_tool.html">current call
+stack element</a>.<p>In debug mode, the context tool is automatically switched
+to the feature view in flat form, and displays the feature which corresponds to
+the current call stack element. In the left margin, a yellow arrow ( <IMG SRC="/images/eiffelbench/icon_bpslot_top.gif"> ) marks the
+execution line where the program is currently stopped, whereas a green arrow ( <IMG SRC="/images/eiffelbench/icon_bpslot_stopped.gif"> )
+indicates the execution line that was attained in the feature in the current
+call stack element. Therefore, if a feature is recursive, and appears several
+times in the call stack, changing the current call stack element may cause green
+arrows to be displayed at different places in the same feature (if the different
+did not reach the same execution point). On the other hand, the yellow arrow can
+only appear at one place as long as the application is not started again.
+<p>The <a HREF="../40_object_tool/15_local_view.html">left part of the object tool</a>
+gives valuable information concerning parameters that were passed to the feature
+corresponding to the current call stack, the current value of the local
+variables, and, if it is a function, the current value of its result.</p>
+
+
+</body>
+
+</html>

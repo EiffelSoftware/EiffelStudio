@@ -74,7 +74,7 @@ cluster
 
 	observer (patterns):		"$\observer"
 
-	xml (root_cluster):		"$\xml"	
+	xml (root_cluster):		"$\xml"
 
 	xsl (xml):		"$\xslt"
 		exclude
@@ -114,8 +114,9 @@ cluster
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "xm_formatter.e"; "xm_named_node.e"; "xm_content_concatenator.e";
+			"other";
 		end
-	
+
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			"CVS"; 

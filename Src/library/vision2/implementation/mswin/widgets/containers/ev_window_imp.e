@@ -777,12 +777,7 @@ feature {EV_ANY_I} -- Implementation
 			min_track, max_track: WEL_POINT
 		do
 			create min_track.make (minimum_width, minimum_height)
-				-- Use an arbitarily large number to create `max_track'
-				-- This effectively allows the user to resize `Current' as
-				-- large as they wish. The size used to be limited to the
-				-- current screen resolution, but this lead to problems on
-				-- multiple monitors with different screen resolutions.
-			create max_track.make (32000, 32000)
+			create max_track.make (maximum_width, maximum_height)
 			min_max_info.set_min_track_size (min_track)
 			min_max_info.set_max_track_size (max_track)
 		end
@@ -1233,6 +1228,11 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2001/07/10 00:00:03  rogers
+--| Fixed `on_get_min_max_info'. We now actually take into account
+--| `maximum_width' and `maximum_height'. Previsouly, calling `set_maximum_*'
+--| would not actually cause the size to be limitied.
+--|
 --| Revision 1.56  2001/06/28 22:53:40  rogers
 --| `window_process_message' now  always uses `application_imp'.
 --|

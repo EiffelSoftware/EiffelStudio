@@ -53,4 +53,12 @@ feature -- Access
 	dialog_application: BOOLEAN
 			-- Does the user want to generate a dialog application
 
+feature {NONE} -- Implementation
+
+	Default_project_name: STRING is
+			-- Default project name
+		do
+			Result := "my_wel_application"
+		end
+
 end -- class WIZARD_INFORMATION

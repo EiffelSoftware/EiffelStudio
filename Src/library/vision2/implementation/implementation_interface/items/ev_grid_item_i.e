@@ -100,11 +100,14 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				if parent_grid_i.single_row_selection_enabled then
+				if parent_grid_i.single_row_selection_enabled or else parent_grid_i.multiple_row_selection_enabled then
+						-- We are in row selection mode so we manipulate the parent row directly
 					parent_row_i.enable_select
 				else
-					internal_is_selected := True
-					parent_row_i.increase_selected_item_count
+					enable_select_internal
+					if parent_row_i.is_selected then
+						parent_grid_i.update_row_selection_status (parent_row_i)
+					end
 					parent_grid_i.redraw_client_area
 					fixme ("Perform a more optimal redraw when available")
 				end
@@ -115,8 +118,7 @@ feature -- Status setting
 			-- Set `is_selected' `False'.
 		do
 			if is_selected then
-				internal_is_selected := False
-				parent_row_i.decrease_selected_item_count
+				disable_select_internal
 				parent_grid_i.redraw_client_area
 				fixme ("Perform a more optimal redraw when available")				
 			end
@@ -154,10 +156,34 @@ feature -- Element change
 			internal_background_color := a_color.twin
 		end
 		
-feature {EV_GRID_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
+
+	enable_select_internal is
+			-- Set up internal data to signify `Current' has been selected
+		require
+			item_is_not_selected: not is_selected
+		do
+			internal_is_selected := True
+			parent_row_i.increase_selected_item_count
+			parent_column_i.increase_selected_item_count					
+		end
+
+	disable_select_internal is
+			-- Set up internal data to signify that `Current' has been deselected
+		require
+			item_is_selected: is_selected
+		do
+			internal_is_selected := False
+			parent_row_i.decrease_selected_item_count
+			parent_column_i.decrease_selected_item_count
+		end
+
+feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 	internal_is_selected: BOOLEAN
 		-- Has `enable_select' been called on `Current'
+
+feature {EV_GRID_I} -- Implementation
 
 	set_parents (a_parent_grid_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
 			-- Set the appropriate grid, column and row parents

@@ -8,8 +8,6 @@ class EWB_DOCUMENTATION
 inherit
 	TTY_CONSTANTS
 
-	WINDOWS
-
 	EWB_FILTER_SYSTEM
 		redefine
 			execute, loop_action
@@ -127,18 +125,18 @@ feature -- Execution
 			inspect 
 				format_type
 			when flat_type then
-				!! cmd.make_flat (filter_name, Progress_dialog)
+				!! cmd.make_flat (filter_name, degree_output)
 			when flat_short_type then
-				!! cmd.make_flat_short (filter_name, Progress_dialog)
+				!! cmd.make_flat_short (filter_name, degree_output)
 			when text_type then
-				!! cmd.make_text (filter_name, Progress_dialog)
+				!! cmd.make_text (filter_name, degree_output)
 			when short_type then
-				!! cmd.make_short (filter_name, Progress_dialog)
+				!! cmd.make_short (filter_name, degree_output)
 			end
 			if do_parents then
 				cmd.set_do_parents
 			end;
-			cmd.set_error_window (Error_window);
+			cmd.set_error_window (Output_window);
 			cmd.set_feature_clause_order
 				(Class_resources.feature_clause_order.actual_value);
 			cmd.execute;

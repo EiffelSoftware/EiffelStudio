@@ -50,31 +50,35 @@ feature {NONE} -- Execution
 		do
 			if index <= subqueries.count then
 				subqueries.go_i_th (index);
-				subqueries.item.inactivate;
-				from
-				until
-					subqueries.after or else subqueries.item.is_active
-				loop
-					subqueries.forth;
-				end;
-				if subqueries.after then
+				if not subqueries.off and then subqueries.item /= Void then
+					subqueries.item.inactivate;
 					from
-						subquery_operators.finish;
 					until
-						subquery_operators.before or else 
-							subquery_operators.item.is_active
+						subqueries.after or else subqueries.item.is_active
 					loop
-						subquery_operators.back;
+						subqueries.forth;
 					end;
-					if not subquery_operators.before then
-						subquery_operators.item.inactivate;
+					if subqueries.after then
+						from
+							subquery_operators.finish;
+						until
+							subquery_operators.before or else 
+								subquery_operators.item.is_active
+						loop
+							subquery_operators.back;
+						end;
+						if not subquery_operators.before then
+							subquery_operators.item.inactivate;
+						end;
+					else
+						if index <= subquery_operators.count then
+							subquery_operators.go_i_th (index);
+							subquery_operators.item.inactivate;
+						end;
 					end;
 				else
-					if index <= subquery_operators.count then
-						subquery_operators.go_i_th (index);
-						subquery_operators.item.inactivate;
-					end;
-				end;
+					io.putstring ("There is no items available at this index.%N")
+				end
 			else
 				io.putstring ("Index must be valid.%N");
 			end;

@@ -18,7 +18,11 @@ inherit
 		undefine
 			default_alignment
 		redefine
-			make, set_text, interface, visual_widget
+			make,
+			set_text,
+			interface,
+			visual_widget,
+			initialize
 		end
 
 create
@@ -35,10 +39,13 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, visual_widget)
 		end
-
-	visual_widget: POINTER 
-			-- Pointer to gtkbutton widget as c_object is event box.
-			
+		
+	initialize is
+			-- Initialize 'Current'
+		do
+			Precursor {EV_TOGGLE_BUTTON_IMP}
+			align_text_left
+		end
 
 feature -- Element change
 
@@ -55,6 +62,11 @@ feature -- Element change
 				feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
 			end				
 		end
+		
+feature {NONE} -- Implementation
+
+	visual_widget: POINTER 
+			-- Pointer to gtkbutton widget as c_object is event box.
 
 feature {EV_ANY_I}
 

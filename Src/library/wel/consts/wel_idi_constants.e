@@ -17,7 +17,7 @@ feature -- Access
 			"IDI_APPLICATION"
 		end
 
-	Idi_hand: POINTER is
+	Idi_hand, Idi_error: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
@@ -31,14 +31,14 @@ feature -- Access
 			"IDI_QUESTION"
 		end
 
-	Idi_exclamation: POINTER is
+	Idi_exclamation, Idi_warning: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_EXCLAMATION"
 		end
 
-	Idi_asterisk: POINTER is
+	Idi_asterisk, Idi_information: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias

@@ -14,23 +14,32 @@ inherit
 creation
 	make,
 	make_by_name,
+	make_by_system_name,
 	make_by_wel
 
 feature {EV_FONTABLE_IMP} -- Initialization
 
-	make (ft: EV_FONT) is
+	make is
 			-- Create a font
 		do
 			!WEL_SYSTEM_FONT! wel_font.make
 			!! wel_log_font.make_by_font (wel_font)
 		end
 
-	make_by_name (ft: EV_FONT; str: STRING) is
+	make_by_name (str: STRING) is
 			-- Create the font corresponding to the given name.
 			-- The font is directly readed on a file.
 		do
 			!! wel_log_font.make (10, str)
 			!! wel_font.make_indirect (wel_log_font)
+		end
+
+	make_by_system_name (str: STRING) is
+			-- Create the font corresponding to the given system
+			-- name.
+			-- The font is directly readed on a file.
+		do
+			-- To do
 		end
 
 	make_by_wel (a_wel_font: WEL_FONT) is

@@ -74,7 +74,6 @@ feature {NONE} -- Implementation
 			label: EV_LABEL
 			list: EV_LIST
 			multi_column_list: EV_MULTI_COLUMN_LIST
-			option_button: EV_OPTION_BUTTON
 			password_field: EV_PASSWORD_FIELD
 			pixmap: EV_PIXMAP
 			radio_button: EV_RADIO_BUTTON
@@ -102,6 +101,7 @@ feature {NONE} -- Implementation
 			gb_ev_frame: GB_EV_FRAME
 			gb_ev_box: GB_EV_BOX
 			gb_ev_textable: GB_EV_TEXTABLE
+			gb_ev_text_alignable: GB_EV_TEXT_ALIGNABLE
 			gb_ev_deselectable: GB_EV_DESELECTABLE
 			gb_ev_colorizable: GB_EV_COLORIZABLE
 			gb_ev_widget: GB_EV_WIDGET

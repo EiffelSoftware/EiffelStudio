@@ -304,6 +304,10 @@ feature {NONE} -- GTK C functions for menu
 		external "C | <gtk/gtk.h>"
 		end		
 
+	gtk_menu_prepend (menu: POINTER; menu_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end		
+
 feature {NONE} -- GTK C functions for menu item
 
 	gtk_menu_bar_new: POINTER is

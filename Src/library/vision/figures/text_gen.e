@@ -428,10 +428,10 @@ feature {CONFIGURE_NOTIFY} -- Updating
 	conf_recompute is
 		do
 			if drawing /= Void and
-				font.implementation.is_valid (drawing_i_to_widget_i (drawing)) then
-					ascent := font.implementation.ascent  (drawing_i_to_widget_i (drawing));
-					descent :=font.implementation.descent (drawing_i_to_widget_i (drawing));
-					string_width := font.implementation.string_width (drawing_i_to_widget_i (drawing), text);
+				font.implementation.is_valid then
+					ascent := font.implementation.ascent
+					descent :=font.implementation.descent
+					string_width := font.implementation.width_of_string (text);
 					unset_conf_modified;
 			end;
 			surround_box.set (top_left.x, top_left.y, bottom_right.x - top_left.x, bottom_right.y - top_left.y)

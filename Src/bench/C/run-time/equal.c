@@ -94,7 +94,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		 * the target.
 		 */
 		if (!(s_flags & EO_COMP))	/* Perform a block comparison */
-			return EIF_TEST(!bcmp(source, target, Size(s_type)));
+			return EIF_TEST(!bcmp(source, target, EIF_Size(s_type)));
 		else
 			return e_field_equal(target, source, s_type);
 	}

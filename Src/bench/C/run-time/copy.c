@@ -238,7 +238,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	 * its dynamic type.
 	 */
 	if (flags & EO_EXP)						/* Object is expanded */
-		size = Size(Deif_bid(flags));		/* Get its size though skeleton */
+		size = EIF_Size(Deif_bid(flags));		/* Get its size though skeleton */
 	else
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
 
@@ -414,7 +414,7 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	enclosing = target;					/* By default */
 	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
 		enclosing -= t_zone->ov_size & B_SIZE;
-		size = Size(Deif_bid(t_flags));
+		size = EIF_Size(Deif_bid(t_flags));
 		}
 	else
 		size = s_zone->ov_size & B_SIZE;

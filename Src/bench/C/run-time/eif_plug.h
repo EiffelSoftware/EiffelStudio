@@ -67,13 +67,13 @@ extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
 
 #ifndef WORKBENCH
 #define References(type)	nbref[type] 	/* # of references */
-#define Size(type)		esize[type] 	/* Object's size */
+#define EIF_Size(type)		esize[type] 	/* Object's size */
 #define Dispose(type)		egc_edispose[type]	/* Dispose routine */
 #define Disp_rout(type)	Dispose(type)	/* Does type have disp routine */
 #define XCreate(type)		egc_ecreate[type]	/* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref
-#define Size(type)		esystem[type].size
+#define EIF_Size(type)		esystem[type].size
 #define Disp_rout(type)	esystem[type].cn_disposed
 								/* Does type have disp routine ? */
 #define Dispose(type) ((void (*)()) wdisp(type));

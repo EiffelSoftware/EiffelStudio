@@ -205,7 +205,7 @@ rt_public long ei_size(EIF_REFERENCE object)
 	if (HEADER(object)->ov_flags & EO_SPEC)
 		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 	else
-		return (long) Size(Dtype(object));
+		return (long) EIF_Size(Dtype(object));
 }
 
 rt_public char ei_special(EIF_REFERENCE object)

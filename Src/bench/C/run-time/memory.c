@@ -47,7 +47,7 @@ rt_public void mem_free(EIF_REFERENCE object)
 	EIF_GET_CONTEXT
 	union overhead *zone = HEADER(object);
 	uint32 flags = zone->ov_flags;
-	unsigned int nbytes = Size(Dtype(object));
+	unsigned int nbytes = EIF_Size(Dtype(object));
 
 	if (0 == (flags & (EO_OLD | EO_NEW)))	/* Neither old nor new */
 		return;							/* Object in scavenge zone */

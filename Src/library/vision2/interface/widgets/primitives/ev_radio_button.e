@@ -26,7 +26,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_with_text_and_action
 
 feature {NONE} -- Initialization
 
@@ -75,6 +76,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/29 02:13:58  brendel
+--| Added `make_with_text_and_action' creation procedure.
+--|
 --| Revision 1.16  2000/02/25 22:33:40  brendel
 --| Formatting.
 --|

@@ -347,8 +347,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_use_header_file (a_flag: BOOLEAN) is
 			-- Set `use_header_file'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			use_header_file := a_flag
 		ensure
@@ -357,8 +355,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		
 	set_use_footer_file (a_flag: BOOLEAN) is
 			-- Set `use_footer_file'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			use_footer_file := a_flag
 		ensure
@@ -367,8 +363,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_override_file_header_declarations (a_flag: BOOLEAN) is
 			-- Set `override_file_header_declarations'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			override_file_header_declarations := a_flag
 		ensure
@@ -377,8 +371,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		
 	set_override_file_footer_declarations (a_flag: BOOLEAN) is
 			-- Set `override_file_footer_declarations'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			override_file_footer_declarations := a_flag
 		ensure
@@ -387,8 +379,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_process_includes (a_flag: BOOLEAN) is
 			-- Set if includes should be processed when converting documents
-		require
-			flag_not_void: a_flag /= Void
 		do
 			process_includes := a_flag
 		ensure
@@ -397,8 +387,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_include_header (a_flag: BOOLEAN) is
 			-- Set if header should be including during conversion
-		require
-			flag_not_void: a_flag /= Void
 		do
 			process_header := a_flag
 		ensure
@@ -407,8 +395,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		
 	set_include_footer (a_flag: BOOLEAN) is
 			-- Set if footer should be included during conversion
-		require
-			flag_not_void: a_flag /= Void
 		do
 			process_footer := a_flag
 		ensure
@@ -417,8 +403,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_include_html_stylesheet (a_flag: BOOLEAN) is
 			-- Set if HTML stylesheet should be included during conversion
-		require
-			flag_not_void: a_flag /= Void
 		do
 			process_html_stylesheet := a_flag
 		ensure
@@ -427,8 +411,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		
 	set_include_nav_links (a_flag: BOOLEAN) is
 			-- Set if naviaation links should be added to output
-		require
-			flag_not_void: a_flag /= Void
 		do
 			include_navigation_links := a_flag
 		ensure
@@ -437,8 +419,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		
 	set_generate_dhtml_filter (a_flag: BOOLEAN) is
 			-- Set if DHTML filter should be built for web based outputting
-		require
-			flag_not_void: a_flag /= Void
 		do
 			generate_dhtml_filter := a_flag
 		ensure
@@ -447,8 +427,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 	set_generate_feature_nodes (a_flag: BOOLEAN) is
 			-- Set if feature nodes should be generated into the toc
-		require
-			flag_not_void: a_flag /= Void
 		do
 			generate_feature_nodes := a_flag
 		ensure

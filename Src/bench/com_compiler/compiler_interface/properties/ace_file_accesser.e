@@ -530,7 +530,7 @@ feature -- Element change
 				create root.initialize (id_sd, Void, Void)
 				root_ast.set_root (root)
 			else
-				root_ast.root.set_root_name (new_id_sd (new_name, False))
+				root_ast.root.set_root_name (new_id_sd (new_name, True))
 			end
 		end
 
@@ -538,7 +538,7 @@ feature -- Element change
 			-- Set `a_creation_routine_name' as new creation routine.
 		do
 			if new_name /= Void and not new_name.is_empty then
-				root_ast.root.set_creation_procedure_name (new_id_sd (new_name, False))				
+				root_ast.root.set_creation_procedure_name (new_id_sd (new_name, True))
 			else
 				root_ast.root.set_creation_procedure_name (Void)
 			end

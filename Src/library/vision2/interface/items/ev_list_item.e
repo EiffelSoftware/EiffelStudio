@@ -13,7 +13,8 @@ class
 inherit
 	EV_ITEM
 		redefine
-			implementation
+			implementation,
+			parent
 		end
 
 creation
@@ -63,10 +64,8 @@ feature -- Access
 
 	parent: EV_LIST is
 			-- Parent of the current item.
-		require
-			exists: not destroyed
 		do
-			Result := implementation.parent
+			Result ?= {EV_ITEM} Precursor
 		end
 
 feature -- Status report

@@ -66,6 +66,7 @@ feature -- Access
 				horizontal_box.extend (constants_combo_box)
 				constants_combo_box.hide
 				create constants_button
+				constants_button.set_tooltip (Select_constant_tooltip)
 				constants_button.set_pixmap (Icon_format_onces @ 1)
 				constants_button.select_actions.extend (agent switch_constants_mode)
 				horizontal_box.extend (constants_button)

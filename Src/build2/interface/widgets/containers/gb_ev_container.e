@@ -69,9 +69,11 @@ feature -- Access
 			hbox1, hbox2: EV_HORIZONTAL_BOX
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text ("Merged radio button groups")
+			create label.make_with_text (gb_ev_container_radio_groups)
+			label.set_tooltip (gb_ev_container_radio_groups_tooltip)
 			Result.extend (label)
 			create merged_list
+			merged_list.set_tooltip (gb_ev_container_radio_groups_tooltip)
 			merged_list.set_minimum_height (100)
 			merged_list.drop_actions.extend (agent new_merge)
 			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))

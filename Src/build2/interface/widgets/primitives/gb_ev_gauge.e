@@ -41,11 +41,16 @@ feature -- Access
 			Result := Precursor {GB_EV_ANY}
 			
 			
-			create value_entry.make (Current, Result, "Value", agent set_value (?), agent valid_value (?))
-			create step_entry.make (Current, Result, "Step", agent set_step (?), agent positive_value (?))
-			create leap_entry.make (Current, Result, "Leap", agent set_leap (?), agent positive_value (?))
-			create upper_entry.make (Current, Result, "Upper", agent set_upper (?), agent valid_upper (?))
-			create lower_entry.make (Current, Result, "Lower", agent set_lower (?), agent valid_lower (?))
+			create value_entry.make (Current, Result, gb_ev_gauge_value, gb_ev_gauge_value_tooltip,
+				agent set_value (?), agent valid_value (?))
+			create step_entry.make (Current, Result, gb_ev_gauge_step, gb_ev_gauge_step_tooltip,
+				agent set_step (?), agent positive_value (?))
+			create leap_entry.make (Current, Result, gb_ev_gauge_leap, gb_ev_gauge_leap_tooltip,
+				agent set_leap (?), agent positive_value (?))
+			create upper_entry.make (Current, Result, gb_ev_gauge_upper, gb_ev_gauge_upper_tooltip,
+				agent set_upper (?), agent valid_upper (?))
+			create lower_entry.make (Current, Result, gb_ev_gauge_lower, gb_ev_gauge_lower_tooltip,
+				agent set_lower (?), agent valid_lower (?))
 			
 			update_attribute_editor
 			

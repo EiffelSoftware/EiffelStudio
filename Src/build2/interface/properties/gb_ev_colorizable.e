@@ -56,13 +56,15 @@ feature -- Access
 			Result := Precursor {GB_EV_ANY}
 			create color_dialog
 			first_object := objects.first
-			create label.make_with_text (Background_color_string + ":")
+			create label.make_with_text (gb_ev_colorizable_background_color)
+			label.set_tooltip (gb_ev_colorizable_background_color_tooltip)
 			Result.extend (label)
 			create horizontal_box
 			Result.extend (horizontal_box)
 			create frame
 			create b_area
-			create button.make_with_text ("Select...")
+			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
+			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select background color")
 			background_color := first_object.background_color	
 			frame.extend (b_area)
@@ -76,14 +78,16 @@ feature -- Access
 			b_area.expose_actions.force_extend (agent b_area.clear)
 			button.select_actions.extend (agent update_background_color)
 
-			create label.make_with_text (Foreground_color_string + ":")
+			create label.make_with_text (gb_ev_colorizable_foreground_color)
+			label.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
 			Result.extend (label)
 
 			create horizontal_box
 			Result.extend (horizontal_box)
 			create frame
 			create f_area
-			create button.make_with_text ("Select...")
+			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
+			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select foreground color")
 			foreground_color := first_object.foreground_color	
 			frame.extend (f_area)

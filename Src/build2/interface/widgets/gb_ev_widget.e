@@ -40,8 +40,8 @@ feature -- Access
 			-- of items held in `objects'.
 		do
 			Result := Precursor {GB_EV_ANY}
-			create minimum_width_entry.make (Current, Result, "Minimum_width", agent set_minimum_width (?), agent valid_minimum_dimension (?))
-			create minimum_height_entry.make (Current, Result, "Minimum_height", agent set_minimum_height (?), agent valid_minimum_dimension (?))
+			create minimum_width_entry.make (Current, Result, gb_ev_widget_minimum_width, gb_ev_widget_minimum_width_tooltip, agent set_minimum_width (?), agent valid_minimum_dimension (?))
+			create minimum_height_entry.make (Current, Result, gb_ev_widget_minimum_height, gb_ev_widget_minimum_height_tooltip, agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			
 			update_attribute_editor
 			

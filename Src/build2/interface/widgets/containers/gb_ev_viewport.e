@@ -45,10 +45,14 @@ feature -- Access
 		do
 			Result := Precursor {GB_EV_ANY}
 			
-			create x_offset_entry.make (Current, Result, "X_offset", agent set_x_offset (?), agent valid_position (?))
-			create y_offset_entry.make (Current, Result, "Y_offset", agent set_y_offset (?), agent valid_position (?))
-			create item_width_entry.make (Current, Result, "Item_width", agent set_item_width (?), agent valid_item_width (?))
-			create item_height_entry.make (Current, Result, "Item_height", agent set_item_height (?), agent valid_item_height (?))
+			create x_offset_entry.make (Current, Result, gb_ev_viewport_x_offset, gb_ev_viewport_x_offset_tooltip,
+				agent set_x_offset (?), agent valid_position (?))
+			create y_offset_entry.make (Current, Result, gb_ev_viewport_y_offset, gb_ev_viewport_y_offset_tooltip,
+				agent set_y_offset (?), agent valid_position (?))
+			create item_width_entry.make (Current, Result, gb_ev_viewport_item_width, gb_ev_viewport_item_width_tooltip,
+				agent set_item_width (?), agent valid_item_width (?))
+			create item_height_entry.make (Current, Result, gb_ev_viewport_item_height, gb_ev_viewport_item_height_tooltip,
+				agent set_item_height (?), agent valid_item_height (?))
 			
 			update_attribute_editor
 			

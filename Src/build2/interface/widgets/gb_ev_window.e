@@ -45,15 +45,18 @@ feature -- Access
 		do
 			Result := Precursor {GB_EV_ANY}
 				-- Set up `user_can_resize'.
-			create user_can_resize.make_with_text ("User can resize?")
+			create user_can_resize.make_with_text (gb_ev_window_user_can_resize)
+			user_can_resize.set_tooltip (gb_ev_window_user_can_resize_tooltip)
 			Result.extend (user_can_resize)
 			user_can_resize.select_actions.extend (agent update_user_can_resize)
 			user_can_resize.select_actions.extend (agent update_editors)
 			
 				-- Set up maximum_width and maximum_height.
 			
-			create maximum_width_input.make (Current, Result, "Maximum_width", agent set_maximum_width (?), agent valid_maximum_width (?))
-			create maximum_height_input.make (Current, Result, "Maximum_height", agent set_maximum_height (?), agent valid_maximum_height (?))
+			create maximum_width_input.make (Current, Result, gb_ev_window_maximum_width, gb_ev_window_maximum_width_tooltip,
+				agent set_maximum_width (?), agent valid_maximum_width (?))
+			create maximum_height_input.make (Current, Result, gb_ev_window_maximum_height,gb_ev_window_maximum_height_tooltip,
+				agent set_maximum_height (?), agent valid_maximum_height (?))
 			
 				-- Set up title.
 			create title_label.make_with_text ("Title")

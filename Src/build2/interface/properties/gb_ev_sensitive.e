@@ -36,7 +36,8 @@ feature -- Access
 			-- of items held in `objects'.
 		do
 			Result := Precursor {GB_EV_ANY}
-			create check_button.make_with_text ("Sensitive?")
+			create check_button.make_with_text (gb_ev_sensitive_is_sensitive)
+			check_button.set_tooltip (gb_ev_sensitive_is_sensitive_tooltip)
 			update_attribute_editor
 			Result.extend (check_button)
 			check_button.select_actions.extend (agent toggle_sensitivity)

@@ -183,7 +183,8 @@
 					
 						</ul>
 					</LI>
-<LI><B>EV_COMBO_BOX_IMP</B> - Fixed `set_foreground_color' and `set_background_color' which previously did nothing.</li>
+<LI><B>EV_COMBO_BOX_IMP</B><UL><LI>Fixed `set_foreground_color' and `set_background_color' which previously did nothing.</li>
+				<LI>Fixed bug in selection. If during execution of the `select_actions' of an item contained, you called `enable_select' on another item within the combo box, subsequently selecting the originally selected item would no longer fire its `select_actions'.</UL>
 				</ul>
 			<li>
 				<b>Gtk</b>

@@ -43,15 +43,21 @@ feature -- Status setting
 			p1, p2: EV_RELATIVE_POINT
 			angle: REAL
 		do
-			p1 := vertices.i_th (vertices.count - 1)
-			p2 := ancestor.point
-			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			ancestor.update_edge_point (lines.last.point_b, angle)
-
 			p1 := vertices.i_th (2)
 			p2 := descendant.point
 			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
 			descendant.update_edge_point (lines.first.point_a, angle)
+
+			if vertices.count = 2 then
+					-- There is a simple relation between the two angles, let's take
+					-- it to save some CPU time.
+				angle := pi + angle
+			else
+				p1 := vertices.i_th (vertices.count - 1)
+				p2 := ancestor.point
+				angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
+			end
+			ancestor.update_edge_point (lines.last.point_b, angle)
 		end
 
 feature {CONTEXT_DIAGRAM} -- XML

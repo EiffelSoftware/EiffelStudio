@@ -78,6 +78,8 @@ feature
 		do
 debug
 io.error.putstring ("In attribute_bl%N");
+io.error.putstring (attribute_name);
+io.error.new_line;
 end;
 			if not type.is_none then
 				analyze_on (Current_register);

@@ -360,7 +360,6 @@ extern void cur_set_daemon_port();
 /* From "sep_obj.c" */
 extern EIF_REFERENCE sep_obj_create();
 extern void sep_obj_make(EIF_REFERENCE s_obj, EIF_INTEGER haddr, EIF_INTEGER port, EIF_INTEGER oid);
-extern void sep_obj_make_without_connection(EIF_REFERENCE sep_obj, EIF_INTEGER oid);
 extern void sep_obj_dispose(char *obj);
 #endif
 

@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: EV_TEXT) is
+	make_with_text (a_text: EV_RICH_TEXT) is
 			-- Create `Current' and and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -50,7 +50,7 @@ feature -- Status setting
 			application.idle_actions.prune (application.idle_actions.first)
 			file_name := class_name (widget)
 			file_name.to_lower
-			file_name.append ("_flatshort.txt")
+			file_name.append ("_flatshort.rtf")
 			if installation_location /= Void then
 				create directory_name.make_from_string (installation_location)
 				directory_name.extend ("flatshort")
@@ -59,18 +59,31 @@ feature -- Status setting
 				create file.make (full_filename)
 			end
 			if installation_location /= Void and then file.exists then
-				file.open_read
-				file.readstream (file.count)
-				text.set_text (file.last_string)
-				file.close
+				text.set_with_named_file (full_filename)
 			else
 				text.set_text ("Unable to locate the documentation for " + test_widget_type + ".%N%N" + location_error_message)
 			end
+			update_text_size
+		end
+		
+	update_text_size is
+			-- adjust font size of `flat_short_display' by `value'.
+		local
+			font: EV_FONT
+			format_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+			format: EV_CHARACTER_FORMAT
+		do
+			format := text.character_format (1)
+			font := format.font
+			font.set_height (current_text_size)
+			format.set_font (font)
+			create format_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
+			text.modify_region (1, text.text_length, format, format_info)
 		end
 
 feature {NONE} -- Implementation
 
-	text: EV_TEXT
+	text: EV_RICH_TEXT
 		-- All class output is displayed on this widget.
 
 invariant

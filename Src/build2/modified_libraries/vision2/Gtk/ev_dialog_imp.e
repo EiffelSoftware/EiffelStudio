@@ -49,6 +49,10 @@ feature -- Status Report
 			Result := is_dialog_closeable
 		end
 
+	is_relative: BOOLEAN is
+		do
+		end
+
 feature -- Status Setting
 	
 	enable_closeable is

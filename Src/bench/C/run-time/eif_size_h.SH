@@ -41,6 +41,7 @@ $spitshell >eif_size.h <<!GROK!THIS!
 #define PTRSIZ	$ptrsize		/* Size of a function pointer: FIXME */
 #define BYTSIZ	$bitpbyte		/* Size of a byte, in bits */
 #define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
+#define LNGPAD_2 $lngpad_2	/* equivalent to LNGPAD(2) */
 !GROK!THIS!
 
 : In the following dollars and backticks do not need the extra backslash.
@@ -63,7 +64,6 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
-#define LNGPAD_2 $lngpad_2
 
 #endif
 !NO!SUBS!

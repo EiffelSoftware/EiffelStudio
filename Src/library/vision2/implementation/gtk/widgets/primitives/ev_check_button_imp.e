@@ -15,7 +15,8 @@ inherit
 	
 	EV_TOGGLE_BUTTON_IMP
 		redefine
-			make
+			make,
+			create_pixmap_place
 		end
         
 creation
@@ -37,6 +38,24 @@ feature {NONE} -- Initialization
 			-- Create the label with a text set to "".
 			create_text_label ("")
                 end
+
+	create_pixmap_place is
+			-- prepare the place for the pixmap in the `box'.
+			-- For that, we add a pixmap with a default gdk pixmap
+			-- in the `box'.
+			-- Redefined because we want the pixmap to be on the left.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			-- create the pixmap with a default xpm.
+			pixmap_widget := c_gtk_pixmap_create_empty (box)
+
+			-- Set the pixmap in the `box'.
+			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, False, False, 0)
+
+			-- show the pixmap now that it has a parent.
+			gtk_widget_show (pixmap_widget)
+		end					
 
 end -- class EV_CHECK_BUTTON_IMP
 

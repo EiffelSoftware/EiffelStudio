@@ -120,7 +120,7 @@ compiler,,,,
 ,3,"once per object, per thread, per process, per generic instantiatio",Arnaud,CMP0016
 ,3,"Separate error messages in warnings, obsoletes and errors",Arnaud,CMP0017
 ,4,"If a precompiled library is missing, try to compile anyway (compiler option? Ace option?)",Xavier,CMP0018
-
+,3,Report an error when an invalid .def file is specified in `shared_library_definition'.,Manus,CMP0019
 
 
 libraries,,,,

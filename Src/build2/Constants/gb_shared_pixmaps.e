@@ -235,7 +235,19 @@ feature -- Pngs
 			result_not_void: Result /= Void
 		end
 		
-		
+	png_location: STRING is
+			-- `Result' is directory containing png files.
+		once
+			if visual_studio_information.is_visual_studio_wizard then
+				create Result.make_from_string (visual_studio_information.wizard_installation_path)
+				Result.append ("bitmaps")
+				Result.append ("png")
+			else
+				Result := Bitmap_path
+			end		
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 feature {NONE} -- Update
 

@@ -1816,23 +1816,14 @@ feature {NONE} -- Removal
 			-- Called by GC and `item' is still not equal to default_pointer,
 			-- meaning that `destroy' has not been called. We need to call it.
 		local
-			p, null: POINTER
+			p, hwnd, null: POINTER
 			object_id: INTEGER
 		do
-			if is_window (item) then
+			hwnd := item
+			if is_window (hwnd) then
 					-- Our Window has not been destroyed by Windows yet. We can clean
 					-- our stuff then.
-				object_id := internal_data
-				check
-						-- `internal_data' cannot be 0 when the Window has not yet been
-						-- destroyed by Windows.
-					valid_id: object_id > 0
-				end
-
-				eif_object_id_free (object_id)
-
-					-- Remove `object_id' from `internal_data' of Current.
-				set_internal_data (0)
+				destroy_item
 
 					-- Save protected reference to `dispatcher' object.
 				p := cwel_dispatcher_pointer
@@ -1842,13 +1833,11 @@ feature {NONE} -- Removal
 				cwel_set_dispatcher_pointer (null)
 
 					-- Destroying the window.
-				cwin_destroy_window (item)
+				cwin_destroy_window (hwnd)
 
 					-- Restore `dispatcher' object so that dispatching can proceed.
 				cwel_set_dispatcher_pointer (p)
 			end
-
-			item := default_pointer
 		end
 
 feature {NONE} -- Constants

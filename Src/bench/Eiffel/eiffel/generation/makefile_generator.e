@@ -626,6 +626,9 @@ feature -- Generation, Header
 				make_file.putstring ("IL_SYSTEM = lib")
 				make_file.putstring (system_name)
 				make_file.putstring ("$shared_suffix %N")
+				make_file.putstring ("IL_RESOURCE = ")
+				make_file.putstring (system_name)
+				make_file.new_line
 			end
 
 			make_file.putstring ("%
@@ -754,7 +757,7 @@ feature -- Generation (Linking rules)
 
 			make_file.putstring ("OBJECTS= lib")
 			make_file.putstring (system_name)
-			make_file.putstring (".obj")
+			make_file.putstring (".obj $(IL_RESOURCE).res")
 			make_file.new_line
 			
 				-- Continue the declaration for the IL_SYSTEM
@@ -763,7 +766,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("$(IL_SYSTEM): $(IL_SYSTEM_OBJ) %N")
 			make_file.putstring ("%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N")
 			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(IL_SYSTEM_OBJ) $(SHAREDLIBS) %N")
-			make_file.putstring ("%T$(RM) $(IL_SYSTEM_OBJ)%N")
+			make_file.putstring ("%T$(RM) $(OBJECTS)%N")
 			make_file.putstring ("%Techo Success > completed.eif")
 			make_file.new_line
 			make_file.new_line

@@ -180,8 +180,9 @@ feature -- Element change
 			-- classes.
 		require
 			valid_target_class: target_class /= Void
+		local
+			l: LINKED_LIST [CLASS_C]
 		do
-		-- initialize
 			target_feature_table := feat_tbl_server.item (target_class.id);
 			if not current_class_only then
 				target_replicated_feature_table := 
@@ -190,8 +191,11 @@ feature -- Element change
 			if current_class_only then
 				!! assert_server.make_for_class_only
 			else
-				!! assert_server.make (target_feature_table, client);
+				!! assert_server.make (target_feature_table.count);
 			end;
+			!! l.make;
+			l.extend (System.general_class.compiled_class);
+			register_skipped_classes_assertions (l);
 			current_class := target_class;
 			System.set_current_class (current_class);
 debug ("FLAT_SHORT")
@@ -511,6 +515,49 @@ end;
 				end;
 				parents.forth;
 			end;
+		end;
+
+	register_skipped_classes_assertions (l: LINKED_LIST [CLASS_C]) is
+			-- Register the assertions of classes that have
+			-- been skipped (eg ANY)
+		local
+			f: FEATURE_I;
+			t: FEATURE_TABLE;
+			id: CLASS_ID;
+			f_adapter: FEATURE_ADAPTER
+		do
+debug ("FLAT_SHORT")
+	io.error.putstring ("%TSkipped classes assertions.");
+	io.error.new_line;
+end
+			from
+				l.start
+			until
+				l.after
+			loop
+				t := l.item.feature_table;
+				id := t.feat_tbl_id;
+				from
+					t.start
+				until
+					t.after
+				loop
+					f := t.item_for_iteration;
+					if id.is_equal (f.written_in) and then 
+						f.has_assertion
+					then	
+						!! f_adapter;
+						f_adapter.register_for_assertions (f);
+						assert_server.register_adapter (f_adapter);
+					end
+					t.forth
+				end
+				l.forth
+			end
+debug ("FLAT_SHORT")
+	io.error.putstring ("%TFinished registrating skipped classes.");
+	io.error.new_line;
+end
 		end;
 
 	register_current_ast is

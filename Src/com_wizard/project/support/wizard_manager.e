@@ -91,39 +91,29 @@ feature -- Basic Operations
 					end
 					message_output.add_title (Current, Idl_compilation_title)
 					compiler.compile_idl
-					if shared_wizard_environment.abort then
-						finish
-					else
+					if not shared_wizard_environment.abort then
 						progress_report.step
 						-- Create Proxy/Stub
-						if not shared_wizard_environment.use_universal_marshaller then
+						if not shared_wizard_environment.use_universal_marshaller and Shared_wizard_environment.server then
 							-- Compile c iid file
 							message_output.add_title (Current, Iid_compilation_title)
 							compiler.compile_iid
-							if shared_wizard_environment.abort then
-								finish
-							else
+							if not shared_wizard_environment.abort then
 								progress_report.step
 								-- Compile c dlldata file
 								message_output.add_title (Current, Data_compilation_title)
 								compiler.compile_data
-								if shared_wizard_environment.abort then
-									finish
-								else
+								if not shared_wizard_environment.abort then
 									progress_report.step
 									-- Compile c proxy/stub file
 									message_output.add_title (Current, Ps_compilation_title)
 									compiler.compile_ps
-									if shared_wizard_environment.abort then
-										finish
-									else
+									if not shared_wizard_environment.abort then
 										progress_report.step
 										-- Final link
 										message_output.add_title (Current, Link_title)
 										compiler.link
-										if shared_wizard_environment.abort then
-											finish
-										else
+										if not shared_wizard_environment.abort then
 											progress_report.step
 											generate
 										end
@@ -131,7 +121,6 @@ feature -- Basic Operations
 								end
 							end
 						else
-
 							generate
 						end
 					end
@@ -139,6 +128,9 @@ feature -- Basic Operations
 					generate
 				end
 				message_output.close_log_file
+				if Shared_wizard_environment.abort then
+					finish
+				end
 			end
 		rescue
 			if not failed_on_rescue then
@@ -303,8 +295,8 @@ feature {NONE} -- Implementation
 								compiler.compile_folder (Clib_folder_name)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
-							if Shared_wizard_environment.compile_eiffel then
-								if not Shared_wizard_environment.abort and Shared_wizard_environment.client then
+							if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
+								if Shared_wizard_environment.client then
 									progress_report.set_title (Eiffel_compilation_title)
 									compiler.compile_eiffel (Client)
 								end

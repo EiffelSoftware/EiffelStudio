@@ -253,11 +253,13 @@ void odbc_pre_immediate(int no_desc, int argNum) {
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(NULL, 202);
 		strcat(error_message, "\nInvalid Descriptor Number!");
+		return;
 	}
 	if (argNum > 0) {
 		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SDWORD *) malloc(sizeof(SDWORD)*argNum));
-	} else
-	pcbValue[no_desc] = NULL;
+	} else {
+		pcbValue[no_desc] = NULL;
+	}
 }
 
 /*****************************************************************/
@@ -338,6 +340,7 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(NULL, 203);
 		strcat(error_message, "\nInvalid Descriptor Number!");
+		return;
 	}
 	odbc_unhide_qualifier(order);
 	odbc_tranNumber = 1;
@@ -446,6 +449,7 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 				odbc_descriptor[no_desc] = NULL;
 				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+				return;
 			}
 		}
 	}
@@ -477,7 +481,7 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 void odbc_start_order (int no_desc)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
-	short colNum;
+	short colNum = 0;
 	int i;
 	//int j;
 	int type;
@@ -520,6 +524,7 @@ void odbc_start_order (int no_desc)
 							pcbValue[no_desc] = NULL;
 						}
 						rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+						return;
 					}
 				}
 				if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO){
@@ -533,6 +538,7 @@ void odbc_start_order (int no_desc)
 								pcbValue[no_desc] = NULL;
 							}
 							rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+							return;
 						}
 					}
 					/*memcpy( (SQL_C_CHAR *)(&(odbc_indicator[no_des][1]), (SQL_C_CHAR *)(&cbCatalog)), DB_SIZEOF_CHAR);
@@ -597,6 +603,7 @@ void odbc_start_order (int no_desc)
 			}
 			//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+			return;
 		}
 	}
 
@@ -616,6 +623,7 @@ void odbc_start_order (int no_desc)
 		}
 		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+		return;
 	}
 
 	if (colNum > 0)
@@ -705,6 +713,7 @@ void odbc_start_order (int no_desc)
 		}
 		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+		return;
 	}
 
 	/* allocate the data  buffer, and then assign the data buffer to */
@@ -745,23 +754,23 @@ void odbc_terminate_order (int no_des)
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
 	int colNum;
 
-		if (dap != NULL) {
-	    	if (dap != (ODBCSQLDA *)(0x1)) {
-			colNum = GetColNum(dap);
-			if (colNum)
-				free(GetDbColPtr(dap,0));
-			free(dap);
-			free(odbc_indicator[no_des]);
-			odbc_indicator[no_des] = NULL;
-		    }
-	 	    odbc_descriptor[no_des] = NULL;
-		    if (pcbValue[no_des] != NULL) {
-		        free(pcbValue[no_des]);
-			pcbValue[no_des] = NULL;
-		    }
-		    //rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
-			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
+	if (dap != NULL) {
+		if (dap != (ODBCSQLDA *)(0x1)) {
+		colNum = GetColNum(dap);
+		if (colNum)
+			free(GetDbColPtr(dap,0));
+		free(dap);
+		free(odbc_indicator[no_des]);
+		odbc_indicator[no_des] = NULL;
 		}
+		odbc_descriptor[no_des] = NULL;
+		if (pcbValue[no_des] != NULL) {
+			free(pcbValue[no_des]);
+		pcbValue[no_des] = NULL;
+		}
+		//rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
+		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
+	}
 }
 
 /*****************************************************************/
@@ -961,9 +970,12 @@ TIMESTAMP_STRUCT *dp;
 			odbc_error_handler(NULL, 204);
 			strcat(error_message, "\nInvalid Data Type in odbc_set_parameter");
 			odbc_error_handler(NULL, 110);
+			return;
 	}
-	if (rc)
+	if (rc) {
 		odbc_error_handler(hstmt[no_desc], rc);
+		return;
+	}
 }
 
 

@@ -59,10 +59,6 @@ OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-.c.o:
-	\$(RM) \$@
-	\$(CC) -c \$(JCFLAGS) \$<
-
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
@@ -113,40 +109,40 @@ libmtipc.a: $(MT_LOBJ)
 
 
 MTcom.o: com.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTidentify.o: identify.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTlogfile.o: logfile.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTnetwork.o: network.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTselect.o: select.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTshword.o: shword.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTstream.o: stream.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTsystem.o: system.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTstack.o: stack.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTtransfer.o: transfer.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTrqst_idrs.o: rqst_idrs.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTlock.o: lock.c
-	$(CC) -c $(JMTCFLAGS) $< -o $@
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 LOBJ = \
 	com.o \

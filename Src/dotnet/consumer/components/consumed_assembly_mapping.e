@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			create assemblies.make (1, assembly_ids.count)
+			assemblies.compare_objects
 			from
 				assembly_ids.start
 				i := 1

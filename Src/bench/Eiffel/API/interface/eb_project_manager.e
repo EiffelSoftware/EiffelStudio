@@ -104,7 +104,7 @@ feature -- Basic operations
 			until
 				load_agents.after
 			loop
-				load_agents.item.call (create {TUPLE}.make)
+				load_agents.item.call (Void)
 				load_agents.forth
 			end
 		end
@@ -120,7 +120,7 @@ feature -- Basic operations
 			until
 				create_agents.after
 			loop
-				create_agents.item.call (create {TUPLE}.make)
+				create_agents.item.call (Void)
 				create_agents.forth
 			end
 		end
@@ -140,7 +140,7 @@ feature -- Basic operations
 			until
 				close_agents.after
 			loop
-				close_agents.item.call (create {TUPLE}.make)
+				close_agents.item.call (Void)
 				close_agents.forth
 			end
 		end

@@ -117,7 +117,7 @@ feature -- Basic Operations
 						finished := True
 					else
 						if a_refresh_handler /= Void then
-							a_refresh_handler.call (create {TUPLE}.make)
+							a_refresh_handler.call (Void)
 						end
 					end
 				else

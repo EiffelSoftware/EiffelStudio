@@ -8,8 +8,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		end
 
 	ANY
@@ -24,6 +22,7 @@ feature {NONE} -- Initialization
 		local
 			res: SYSTEM_OBJECT
 			mi_file, mi_format: WINFORMS_MENU_ITEM
+			l_menu_item: WINFORMS_MENU_ITEM
 			l_array_menu_item: NATIVE_ARRAY [WINFORMS_MENU_ITEM]
 			l_text: STRING
 		do
@@ -38,9 +37,15 @@ feature {NONE} -- Initialization
 
 				-- Add File Menu
 			mi_file := main_menu.menu_items.add ("&File")
-			res := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make ("&Open...", create {EVENT_HANDLER}.make (Current, $file_open_clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
+			res := mi_file.menu_items.add_menu_item (
+				create {WINFORMS_MENU_ITEM}.make ("&Open...",
+					create {EVENT_HANDLER}.make (Current, $file_open_clicked),
+					feature {WINFORMS_SHORTCUT}.ctrl_o))
 			res := mi_file.menu_items.add ("-")
-			res := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make ("E&xit", create {EVENT_HANDLER}.make (Current, $file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
+			res := mi_file.menu_items.add_menu_item (
+				create {WINFORMS_MENU_ITEM}.make ("E&xit",
+					create {EVENT_HANDLER}.make (Current, $file_exit_clicked),
+					feature {WINFORMS_SHORTCUT}.ctrl_x))
 
 				-- Add Format Menu
 			mi_format := main_menu.menu_items.add ("F&ormat")
@@ -48,15 +53,18 @@ feature {NONE} -- Initialization
 				-- Font Face sub-menu
 			l_text := "&1. "
 			l_text.append (sans_serif_font_family.name)
-			create mmi_sans_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			create mmi_sans_serif.make (l_text,
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			mmi_sans_serif.set_checked (True)
 			mmi_sans_serif.set_default_item (True)
 			l_text := "&2. "
 			l_text.append (serif_font_family.name)
-			create mmi_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			create mmi_serif.make (l_text,
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			l_text := "&3. "
 			l_text.append (mono_space_font_family.name)
-			create mmi_mono_space.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			create mmi_mono_space.make (l_text,
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
@@ -65,11 +73,14 @@ feature {NONE} -- Initialization
 			res := mi_format.menu_items.add ("Font &Face", l_array_menu_item)
 
 				-- Font Size sub-menu
-			create mmi_small.make ("&Small", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
-			create mmi_medium.make ("&Medium", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_small.make ("&Small",
+				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_medium.make ("&Medium",
+				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			mmi_medium.set_checked (True) 
 			mmi_medium.set_default_item (True) 
-			create mmi_large.make ("&Large", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_large.make ("&Large",
+				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_small)
@@ -82,12 +93,13 @@ feature {NONE} -- Initialization
 			res := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
 
 				--  Set up the context menu items - we use these to check and uncheck items
-			cmi_sans_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (0)
-			cmi_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (1)
-			cmi_mono_space := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (2)
-			cmi_small := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (0)
-			cmi_medium := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (1)
-			cmi_large := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (2)
+			l_menu_item := label_1_context_menu.menu_items.item (0)
+			cmi_sans_serif := l_menu_item.menu_items.item (0).menu_items.item (0)
+			cmi_serif := l_menu_item.menu_items.item (0).menu_items.item (1)
+			cmi_mono_space := l_menu_item.menu_items.item (0).menu_items.item (2)
+			cmi_small := l_menu_item.menu_items.item (1).menu_items.item (0)
+			cmi_medium := l_menu_item.menu_items.item (1).menu_items.item (1)
+			cmi_large := l_menu_item.menu_items.item (1).menu_items.item (2)
 
 				-- We use these to track which menu items are checked
 				-- This is made more complex because we have both a menu and a context menu

@@ -138,10 +138,7 @@ feature -- Basic Operations
 			a_string.append (last_make_command)
 			launch (a_string, shared_wizard_environment.destination_folder)
 			check_return_code
-			a_string := clone (shared_wizard_environment.destination_folder)
-			a_string.append (clone (shared_wizard_environment.project_name))
-			a_string.append (Dll_file_extension)
-			shared_wizard_environment.set_proxy_stub_file_name (a_string)
+			shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_name)
 		end
 
 	compile_eiffel (a_folder: STRING) is
@@ -236,7 +233,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Proxy_stub_file_name: STRING is
+	proxy_stub_file_name: STRING is
 			-- Proxy/Stub fil name
 		once
 			Result := clone (shared_wizard_environment.destination_folder)

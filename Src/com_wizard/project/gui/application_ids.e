@@ -26,7 +26,7 @@ feature -- Access
 	Code_type_static_constant: INTEGER is 1052
 	Proxy_stub_input_edit_constant: INTEGER is 1030
 	Open_string_constant: INTEGER is 2
-	Server_check_constant: INTEGER is 1020
+	Radio_check_constant: INTEGER is 1020
 	Progress_static_constant: INTEGER is 1046
 	Save_string_constant: INTEGER is 3
 	Destination_folder_browse_button_constant: INTEGER is 1012
@@ -51,7 +51,7 @@ feature -- Access
 	Wizard_definition_file_dialog_constant: INTEGER is 101
 	Destination_folder_static_constant: INTEGER is 1044
 	Wizard_idl_dialog_constant: INTEGER is 102
-	Client_check_constant: INTEGER is 1019
+	Client_radio_constant: INTEGER is 1061
 	Output_question_static_constant: INTEGER is 1033
 	Marshalling_static_constant: INTEGER is 1044
 	Destination_folder_input_static_constant: INTEGER is 1016
@@ -64,6 +64,7 @@ feature -- Access
 	Progress_bar_constant: INTEGER is 1045
 	Wizard_first_choice_dialog_constant: INTEGER is 123
 	Title_question_static_constant: INTEGER is 1044
+	Server_radio_constant: INTEGER is 1062
 
 end -- class APPLICATION_IDS
 

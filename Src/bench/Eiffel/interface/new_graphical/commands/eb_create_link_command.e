@@ -67,7 +67,7 @@ feature -- Basic operations
 				Result.disable_sensitive
 			end
 			current_button := Result
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)
@@ -98,7 +98,7 @@ feature -- Status setting
 			selected_type := a_type
 			execute
 			
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)

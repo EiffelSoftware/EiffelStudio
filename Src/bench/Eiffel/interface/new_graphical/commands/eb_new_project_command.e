@@ -129,7 +129,7 @@ feature -- Project initialization
 					epr_file_name /= Void or else curr_directory.lastentry = Void
 				loop
 					if (curr_directory.lastentry.substring_index (".epr", 1) /= 0) then
-						epr_file_name := clone (curr_directory.lastentry)
+						epr_file_name := curr_directory.lastentry.twin
 					end
 					curr_directory.readentry
 				end
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 				end
 
 				if Eiffel_project.initialized then
-					msg := clone (Interface_names.t_New_project)
+					msg := Interface_names.t_New_project.twin
 					msg.append (": ")
 					msg.append (project_dir.name)
 
@@ -221,7 +221,6 @@ feature {NONE} -- Implementation
 		do
 			
 		end
-		
 
 	build_deleting_dialog is
 			-- Build the dialog displayed to have the user wait during the
@@ -236,7 +235,7 @@ feature {NONE} -- Implementation
 			cancel_button: EV_BUTTON
 		do
 				-- Create and display a dialog to have the user wait.
-			pixmap := clone ((create {EV_STOCK_PIXMAPS}).Information_pixmap)
+			pixmap := (create {EV_STOCK_PIXMAPS}).Information_pixmap.twin
 			create pixmap_box
 			pixmap_box.extend (pixmap)
 			pixmap_box.set_minimum_size (pixmap.width, pixmap.height)
@@ -340,7 +339,7 @@ feature {NONE} -- Callbacks
 				if not Eiffel_Project.initialized then
 					create_project (dir_name, True)
 				else
-					ebench_name := clone (Estudio_command_name)
+					ebench_name := Estudio_command_name.twin
 					ebench_name.append (" -create ")
 					ebench_name.append (dir_name)
 					launch_ebench (ebench_name)

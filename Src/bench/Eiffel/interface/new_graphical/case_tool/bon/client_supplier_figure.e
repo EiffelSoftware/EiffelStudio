@@ -417,7 +417,7 @@ feature {CLIENT_SUPPLIER_FIGURE, CONTEXT_DIAGRAM, EB_DELETE_DIAGRAM_ITEM_COMMAND
 			if is_valid then
 				cf ?= supplier
 				if cf /= Void then
-					label := clone (name)
+					label := name.twin
 					if not supplier_data.is_single then
 						label.append (": ")
 						label.append (supplier_data.type_label (cf.class_i))
@@ -429,7 +429,7 @@ feature {CLIENT_SUPPLIER_FIGURE, CONTEXT_DIAGRAM, EB_DELETE_DIAGRAM_ITEM_COMMAND
 			elseif not children_figures.is_empty then
 				cf ?= children_figures.first.supplier
 				if cf /= Void then
-					label := clone (children_figures.first.name)
+					label := children_figures.first.name.twin
 					if not supplier_data.is_single then
 						label.append (": ")
 						label.append (supplier_data.type_label (cf.class_i))

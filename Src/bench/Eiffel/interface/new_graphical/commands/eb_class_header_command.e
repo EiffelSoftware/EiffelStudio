@@ -58,12 +58,12 @@ feature -- Basic operations
 					until
 						not invalid_name
 					loop
-						old_name := clone (src.name)
+						old_name := src.name.twin
 						create change_name_dialog
 						change_name_dialog.set_name (src.name)
 						if src.generics /= Void then
 							change_name_dialog.set_generics (src.generics)
-							old_generics := clone (src.generics)
+							old_generics := src.generics.twin
 						else
 							change_name_dialog.set_generics ("")
 							old_generics := ""
@@ -190,8 +190,7 @@ feature {NONE} -- Implementation
 				a_class.update
 				cur_cluster := a_class.class_i.cluster
 				cur_cluster.classes.remove (a_class.class_i.name)
-				new_name_in_lower := clone (new_name)
-				new_name_in_lower.to_lower
+				new_name_in_lower := new_name.as_lower
 				a_class.class_i.set_name (new_name_in_lower)
 				cur_cluster.add_new_classs (a_class.class_i)
 			end

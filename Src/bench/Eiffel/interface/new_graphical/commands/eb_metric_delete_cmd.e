@@ -54,7 +54,7 @@ feature -- Actions
 			selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			index_deleted_row: INTEGER
 		do
-			selected_items := clone (tool.multi_column_list.selected_items)
+			selected_items := tool.multi_column_list.selected_items.twin
 			from
 				selected_items.start
 			until

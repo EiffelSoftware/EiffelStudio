@@ -123,13 +123,9 @@ feature -- Access
 		require
 			a_supplier_not_void: a_supplier /= Void
 			has_a_supplier: has_supplier (a_supplier)
-		local
-			up: STRING
 		do
-			Result := clone (type_as_string)
-			up := clone (a_supplier.name)
-			up.to_upper
-			Result.replace_substring_all (up, "...")
+			Result := type_as_string.twin
+			Result.replace_substring_all (a_supplier.name_in_upper, "...")
 		end
 
 	name: STRING is
@@ -137,12 +133,12 @@ feature -- Access
 			--| FIXME Multiple names?
 		do
 			if e_feature /= Void then
-				Result := clone (e_feature.name)
+				Result := e_feature.name.twin
 				if e_feature.is_once or e_feature.is_constant then
 					Result.put ((Result @ 1).upper, 1)
 				end
 			else
-				Result := clone (feature_as.feature_name)
+				Result := feature_as.feature_name.twin
 			end
 		end
 

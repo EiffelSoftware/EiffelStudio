@@ -456,9 +456,9 @@ feature {CONTEXT_DIAGRAM} -- Status setting
 	set_right_angle is
 			-- Make `Current' use right angles.
 		do
-			unset_do_stack.put (clone (midpoints))
+			unset_do_stack.put (midpoints.twin)
 			apply_right_angles
-			reset_do_stack.put (clone (midpoints))			
+			reset_do_stack.put (midpoints.twin)
 		end
 		
 	unset_right_angle is
@@ -756,6 +756,8 @@ feature {EB_LINK_TOOL_COMMAND, EB_DELETE_DIAGRAM_ITEM_COMMAND} -- Implementation
 		
 	retrieve_midpoints (retrieved_midpoints: like midpoints) is
 			-- Add lines corresponding to the points in `retrieved_midpoints'.
+		require
+			retrieved_midpoints_not_void: retrieved_midpoints /= Void
 		local
 			mp: LINK_MIDPOINT
 			i: INTEGER

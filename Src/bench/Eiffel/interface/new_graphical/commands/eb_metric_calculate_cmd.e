@@ -229,7 +229,7 @@ feature -- Displayed messages in text form.
 												selected_feature, selected_class, selected_cluster, selected_system)
 					selected_name2 := ""
 					tool.add.set_scope_type (scope.name)
-					tool.add.set_scope_name (clone (selected_name1))
+					tool.add.set_scope_name (selected_name1.twin)
 				end
 				metric_result := calculate_metric (current_metric, scope)
 				percentage := current_metric.percentage
@@ -254,8 +254,7 @@ feature -- Displayed messages in text form.
 
 			when Class_scope then
 				a_scope.set_class_c (cla)
-				Result := clone (cla.name)
-				Result.to_upper
+				Result := cla.name_in_upper
 
 			when Cluster_scope then
 				a_scope.set_cluster_i (clu)
@@ -281,8 +280,8 @@ feature -- Displayed messages in text form.
 		do
 			composite_metric ?= a_metric
 			if composite_metric /= Void and then composite_metric.is_scope_ratio then
-				scope_num := clone (composite_metric.scope_num)
-				scope_den := clone (composite_metric.scope_den)
+				scope_num := composite_metric.scope_num.twin
+				scope_den := composite_metric.scope_den.twin
 				num_result := composite_metric.value (scope_num)
 				den_result := composite_metric.value (scope_den)
 				if den_result = 0 then

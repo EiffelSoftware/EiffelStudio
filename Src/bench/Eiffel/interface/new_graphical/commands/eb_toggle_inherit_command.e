@@ -72,7 +72,7 @@ feature -- Basic operations
 			end
 			current_button := Result
 			Result.toggle
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)

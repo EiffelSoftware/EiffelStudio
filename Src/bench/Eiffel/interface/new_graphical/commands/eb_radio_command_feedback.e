@@ -114,12 +114,8 @@ feature -- Implementation
 	is_lower_case (str: STRING): BOOLEAN is
 			-- Is `str' lower case?
 			--| Cannot be in a non exported part because post conditions use it.
-		local
-			str2: STRING
 		do
-			str2 := clone (str)
-			str2.to_lower
-			Result := str2.is_equal (str)
+			Result := str.as_lower.is_equal (str)
 		end
 
 feature {NONE} -- Implementation

@@ -149,7 +149,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)

@@ -182,8 +182,7 @@ feature {NONE} -- Implementation
 					not class_i.is_read_only and then
 					not class_i.cluster.is_precompiled
 				then
-					str := clone (class_i.name)
-					str.to_upper
+					str := class_i.name_in_upper
 					if Application.is_running then
 						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
 						cd.show_modal_to_window (window.window)
@@ -203,7 +202,7 @@ feature {NONE} -- Implementation
 					not cluster_i.is_library and
 					not cluster_i.is_precompiled
 				then
-					str := clone (cluster_i.cluster_name)
+					str := cluster_i.cluster_name.twin
 					if Application.is_running then
 						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_cluster>>)
 						cd.show_modal_to_window (window.window)

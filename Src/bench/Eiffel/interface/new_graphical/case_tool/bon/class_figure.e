@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			else
 				create {CLASSI_FIGURE_STONE} pebble.make (Current)
 			end
-			set_target_name (clone (name))
+			set_target_name (name)
 			drop_actions.extend (agent on_class_drop)
 			set_accept_cursor (Cursors.cur_Class)
 			set_deny_cursor (Cursors.cur_X_class)
@@ -434,14 +434,11 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		local
-			name_in_lower: STRING
 			l_namespace: XM_NAMESPACE
 		do
-			name_in_lower := clone (class_i.name)
-			name_in_lower.to_lower
 			create l_namespace.make_default
 			create Result.make (a_parent, "CLASS_FIGURE", l_namespace)
-			Xml_routines.add_attribute ("NAME", l_namespace, name_in_lower, Result)
+			Xml_routines.add_attribute ("NAME", l_namespace, class_i.name_in_upper, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", point.y.out))
 			Result.put_last (Xml_routines.xml_node (Result, "COLOR",
@@ -702,8 +699,7 @@ feature {NONE} -- Implementation
 			class_c: CLASS_C
 		do
 			if name = Void then
-				name := clone (class_i.name)
-				name.to_upper
+				name := class_i.name_in_upper
 			end
 			if generics = Void then
 				class_c := class_i.compiled_class

@@ -100,7 +100,7 @@ feature -- Execution
 						end
 		
 							-- Create a backup of the file in case there will be a problem during the savings.
-						tmp_name := clone (target.file_name)
+						tmp_name := target.file_name.twin
 						tmp_name.append (".swp")
 						create tmp_file.make (tmp_name)
 						create_backup := not tmp_file.exists and then tmp_file.is_creatable

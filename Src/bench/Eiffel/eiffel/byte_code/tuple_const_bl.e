@@ -139,7 +139,6 @@ feature {NONE} -- C code generation
 		local
 			expr: EXPR_B
 			actual_type: TYPE_I
-			basic_i: BASIC_I
 			metamorphosed: BOOLEAN
 			i: INTEGER
 			buf: GENERATION_BUFFER

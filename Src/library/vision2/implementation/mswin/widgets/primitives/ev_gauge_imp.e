@@ -32,6 +32,14 @@ feature {NONE} -- Initialization
 			wel_set_value (1)
 		end
 
+feature -- Access
+
+	range: INTEGER_INTERVAL is
+			-- Get `minimum' and `maximum' as interval.
+		do
+			create Result.make (minimum, maximum)
+		end
+
 feature -- Status setting
 
 	step_forward is
@@ -163,6 +171,9 @@ end -- class EV_GAUGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/15 16:49:25  brendel
+--| Implementation of feature `range' moved to _IMP.
+--|
 --| Revision 1.5  2000/02/15 03:18:08  brendel
 --| Cleanup.
 --| Released.

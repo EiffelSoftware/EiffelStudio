@@ -5,7 +5,16 @@ class DISPATCH_TABLE
 
 inherit
 
-	CENTRAL_TABLE [DISPATCH_UNIT];
+	CENTRAL_TABLE [DISPATCH_UNIT]
+		rename
+			append as central_append
+		end;
+	CENTRAL_TABLE [DISPATCH_UNIT]
+		redefine
+			append
+		select
+			append
+		end;
 	SHARED_SERVER
 		undefine
 			copy, setup, consistent, is_equal
@@ -82,6 +91,17 @@ feature -- Refreezing
 			-- Set `dle_frozen_level' to `level'.
 		do
 			dle_frozen_level := level
+		end
+
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append  `other' to `Current'.
+			-- Used when merging precompilations.
+		do
+			central_append (other);
+			frozen_level := counter.total_count;
+			dle_frozen_level := frozen_level
 		end
 
 feature	-- Melting and C Generation

@@ -235,6 +235,21 @@ feature -- Re_freezing
 			dle_frozen_level: dle_frozen_level = level
 		end
 
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append  `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		do
+			counter.append (other.counter);
+			from other.start until other.after loop
+				force (other.item_for_iteration);
+				other.forth
+			end
+		end
+
 feature -- DLE
 
 	init_dle is

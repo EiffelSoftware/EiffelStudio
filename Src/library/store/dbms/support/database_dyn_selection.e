@@ -8,8 +8,14 @@ class
 
 inherit
 	DATABASE_SELECTION [G]
-		redefine
+		undefine
+			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all,
 			replacement_string
+		end
+
+	PARAMETER_HDL
+		undefine
+			out, copy, is_equal
 		end
 
 creation
@@ -29,10 +35,8 @@ feature
 			ArgNum: INTEGER
 		do
 			sql_string := clone (s)
-
 			s.wipe_out
 			s.append (parse (sql_string))
-
 			ArgNum := s.occurrences('?')
 
 			descriptor := db_spec.new_descriptor
@@ -40,7 +44,6 @@ feature
 				parsed := db_spec.parse (descriptor, ht, handle, s)	
 			end
 			if not parsed then
---				parsed_s := parse (s)
 				parsed_s := s
 				if is_ok then
 					handle.status.set (db_spec.init_order (descriptor, parsed_s))
@@ -49,16 +52,25 @@ feature
 					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
 				end
 			end
+			set_executed (FALSE)
+			set_prepared (TRUE)
+		ensure
+			prepared_statement: is_prepared
+			prepared_statement: not is_executed
 		end
 
 	bind_parameter is
 			-- Bind of the prarameters of the sql statement 
+		require
+			prepared_statement: is_prepared
 		do
 			db_spec.bind_parameter (parameters_value, parameters_value, descriptor, handle, "")	
 		end
 
 	execute is
 			-- Execute the sql statement
+		require
+			prepared_statement: is_prepared
 		do
 			if is_ok then
 				handle.status.set (db_spec.unset_catalog_flag(descriptor))
@@ -69,59 +81,23 @@ feature
 			if is_ok then
 				handle.status.set (db_spec.result_order (descriptor))
 			end
-
 			next
-
---			if is_ok then
---				handle.status.set (db_spec.pre_immediate (descriptor, last))
---			end
+			set_executed (TRUE)
+		ensure
+			prepared_statement: is_executed
 		end
 
-	set_value (v: ANY) is
-			-- Set the values of the parameters
+	reset_cursor is
 		require
-			value_exists: v /= Void
+			prepared_statement: is_prepared
 		do
-			last := last + 1
-			parameters_value.force (v, last)
+			if is_ok then
+				handle.status.set (db_spec.close_cursor (descriptor))
+			end
 		end
 
-	retrieve (table: ARRAY [ANY]) is
-			-- Execute the sql statement with `table' as 
-			-- the array of values for the parameters
-		do
-			parameters_value.copy (table)
-			bind_parameter
-			execute
-		end
 
 feature {NONE} -- Implementation
-
-	parameters_value: ARRAY [ANY] is
-			-- Values of the parameters of the sql statement
-		once
-			last := 1
-			!! Result.make (1, 0)
-		end
-	
-	replacement_string (key, destination: STRING) is
-			-- Replace object associated with `key' by a '?' in `destination'.
-			-- and, fill chronologically, the parameters_value array.
-		local
-			object: ANY
-		do
-			object := ht.item (key);
-			if object /= void then
-				destination.append ("?")
-				parameters_value.force (object, last)
-				last := last + 1
-			else
-				destination.append (null_string)
-			end
-		end;
-
-	last: INTEGER
-			-- Last value added
 
 	sql_string: STRING
 

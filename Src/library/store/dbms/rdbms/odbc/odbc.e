@@ -116,30 +116,86 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
-		local
+--	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
+--		local
+--			i: INTEGER
+--			obj: ANY
+--			uht: HASH_TABLE [ANY, STRING]
+--		do
+--			!! uht.make (table.count)
+--			from 
+--				i := table.lower
+--			until 
+--				i > table.upper
+--			loop
+--				uht.put (table.item (i), i.out)
+--				i := i + 1
+--			end
+--			if para /= Void then
+--				para.resize(uht.count)
+--			else
+--				!! para.make(uht.count)
+--			end
+--
+--			bind_args_value (descriptor, uht, uhandle)
+--		end
+
+	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING)   is
+			-- Append map variables name from to `s'.
+			-- Map variables are used for set input arguments.
+		local 
 			i: INTEGER
-			obj: ANY
-			uht: HASH_TABLE [ANY, STRING]
+			tmp_str: STRING
+			tmp_c: ANY
+			tmp_p: POINTER
+			tmp_date: DATE_TIME
+			type: INTEGER
 		do
-			!! uht.make (table.count)
-			from 
-				i := 1
-			until 
-				i > table.count
-			loop
-				uht.put (table.item (i), i.out)
-				i := i + 1
+			check
+				table_defined: table.lower = 1
 			end
+			!! tmp_str.make(1)
 			if para /= Void then
-				para.resize(uht.count)
+				para.resize(table.count)
 			else
-				!! para.make(uht.count)
+				!! para.make(table.count)
 			end
 
-			bind_args_value (descriptor, uht, uhandle)
+			from
+				i:= table.lower
+			until
+				i > table.count
+			loop
+				type := -1
+				if obj_is_string(table.item(i)) then
+					type := c_string_type
+				elseif obj_is_integer(table.item(i)) then
+					type := c_integer_type
+				elseif obj_is_date(table.item(i)) then
+					type := c_date_type
+					tmp_date ?= table.item(i)
+				elseif obj_is_character(table.item(i)) then
+					type := c_character_type
+				elseif obj_is_real(table.item(i)) then
+					type := c_real_type
+				elseif obj_is_double(table.item(i)) then
+					type := c_float_type
+				elseif obj_is_boolean(table.item(i)) then
+					type := c_boolean_type
+				end
+				tmp_str.wipe_out
+				if type = c_date_type  then
+					para.set(odbc_stru_of_date(tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+				else
+					tmp_str.append((table.item(i)).out)
+				        tmp_c := tmp_str.to_c
+					para.set(odbc_str_from_str($tmp_c), i)
+				end
+				uhandle.status.set (odbc_set_parameter(descriptor, i, 1, type, para.get(i)))
+				i := i + 1
+			end
 		end
-			  
+	  
 feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
@@ -436,6 +492,11 @@ feature -- External
 			Result := odbc_next_row(no_descriptor)
 		end
 
+	close_cursor (no_descriptor: INTEGER): INTEGER is
+		do
+			Result := odbc_close_cursor (no_descriptor)
+		end
+
 	terminate_order (no_descriptor: INTEGER): INTEGER is
 		do
 			Result := odbc_terminate_order(no_descriptor)
@@ -691,6 +752,13 @@ feature {NONE} -- External features
 		external
 			"C"
 		end
+
+
+	odbc_close_cursor (no_descriptor: INTEGER): INTEGER is
+		external
+			"C"
+		end
+
 
 	odbc_exec_immediate (no_descriptor: INTEGER; command: POINTER): INTEGER is
 		external

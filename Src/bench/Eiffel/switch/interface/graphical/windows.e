@@ -147,7 +147,7 @@ feature {NONE}
 	Argument_window: ARGUMENT_W is
 			-- General argument window.
 		once
-			!! Result.make_plain
+			!! Result.make
 		end
 
 	Preference_tool: EB_PREFERENCE_TOOL is

@@ -777,7 +777,7 @@ end
 
 feature -- Byte code computation
 
-	compute_byte_code is
+	compute_byte_code (has_default_rescue: BOOLEAN) is
 			-- Compute byte code for melted feature
 		require
 			in_pass3: in_pass3
@@ -787,6 +787,8 @@ feature -- Byte code computation
 				-- Process byte code
 			byte_code := body.byte_node
 			byte_code.set_byte_id (body_id)
+			byte_code.set_default_rescue (has_default_rescue)
+
 				-- Put it in the temporary byte code server
 			if not byte_context.old_expressions.empty then
 				byte_code.set_old_expressions (byte_context.old_expressions)
@@ -1060,6 +1062,7 @@ feature -- Signature checking
 				-- anchored types.
 			solved_type := Result_evaluator.evaluated_type
 												(type, feat_table, Current)
+
 			check
 					-- If an anchored cannot be valuated then an
 					-- exection is triggered by the type evaluator.

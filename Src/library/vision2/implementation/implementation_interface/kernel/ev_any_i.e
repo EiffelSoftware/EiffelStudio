@@ -64,7 +64,17 @@ feature {EV_ANY} -- Initialization
 			is_initialized: is_initialized
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Command
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	frozen safe_destroy is
+			-- Protection against multiple calls of destroy whilst in the process of destruction
+			-- Called directly from `interface'.destroy
+		do
+			if not is_in_destroy then
+				is_in_destroy := True
+				destroy
+			end
+		end
 
 	destroy is
 			-- Destroy underlying native toolkit objects.
@@ -73,6 +83,7 @@ feature {EV_ANY, EV_ANY_I} -- Command
 			-- invalid.
 		deferred
 		ensure
+			is_in_destroy_set: is_in_destroy
 			is_destroyed_set: is_destroyed
 		end
 
@@ -95,6 +106,10 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
+
+	is_in_destroy: BOOLEAN
+			-- Is `Current' in the process of being destroyed?
+			-- Needed for call protection when in the process of `destroy' to prevent multiple calls as a result of destruction.
 
 	set_interface (an_interface: like interface) is
 			-- Assign `an_interface' to `interface'. 

@@ -527,7 +527,7 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 		printf ("STRREALLOC_DEBUG: special string %x=%s reallocation, new size= %d, old_size = %d\n", ptr, ptr, size, HEADER(ptr)->ov_size & B_SIZE);
 #endif	/* STRREALLOC_DEBUG */
 
-	epush(&loc_stack, (EIF_REFERENCE)ptr);	/* Object may move if GC called */
+	epush(&loc_stack, (EIF_REFERENCE) (&ptr));	/* Object may move if GC called */
 
 	/* FIXME with the case we realloc a smaller area. */
 	assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
@@ -660,7 +660,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	 * references somthing valid (although the area is no longer shared)--RAM.
 	 */
 
-	epush(&loc_stack, (EIF_REFERENCE) (ptr));	/* Object may move if GC called */
+	epush(&loc_stack, (EIF_REFERENCE) (&ptr));	/* Object may move if GC called */
 	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD_2), GC_ON | GC_FREE);
 	if ((EIF_REFERENCE) 0 == object) {
 		eraise("special reallocation", EN_MEM);
@@ -2216,7 +2216,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 	if (gc_flag & GC_ON) {
 		safeptr = ptr;
-		if (-1 == epush(&loc_stack, (EIF_REFERENCE) (safeptr))) {	/* Protect against moves */
+		if (-1 == epush(&loc_stack, (EIF_REFERENCE) (&safeptr))) {	/* Protect against moves */
 			eraise("object reallocation", EN_MEM);	/* No more memory */
 			return (EIF_REFERENCE) 0;						/* They ignored it */
 		}

@@ -36,7 +36,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	set_width (value: INTEGER) is
+	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -72,6 +72,9 @@ end -- class EV_STATUS_BAR_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/26 21:55:02  brendel
+--| value -> a_width.
+--|
 --| Revision 1.14  2000/04/26 21:21:36  brendel
 --| Revised
 --|

@@ -30,6 +30,9 @@ feature {NONE} -- Initialization
 			-- Make a rectangle and set `left', `top',
 			-- `right', `bottom' with `a_left', `a_top',
 			-- `a_right', `a_bottom'
+		require
+			right_larger_than_left: a_right >= a_left
+			bottom_larger_than_top: a_bottom >= a_top
 		do
 			structure_make
 			set_rect (a_left, a_top, a_right, a_bottom)
@@ -51,6 +54,7 @@ feature {NONE} -- Initialization
 		ensure
 			left_equal_zero: left = 0
 			top_equal_zero: top = 0
+			client_rect_set: is_equal (window.client_rect)
 		end
 
 	make_window (window: WEL_WINDOW) is
@@ -62,6 +66,8 @@ feature {NONE} -- Initialization
 		do
 			structure_make
 			cwin_get_window_rect (window.item, item)
+		ensure
+			window_rect_set: is_equal (window.window_rect)
 		end
 
 feature -- Access
@@ -122,6 +128,8 @@ feature -- Element change
 			-- respectively.
 		require
 			exists: exists
+			right_larger_than_left: a_right >= a_left
+			bottom_larger_than_top: a_bottom >= a_top
 		do
 			cwin_set_rect (item, a_left, a_top, a_right, a_bottom)
 		ensure
@@ -135,6 +143,7 @@ feature -- Element change
 			-- Set `left' with `a_left'
 		require
 			exists: exists
+			left_smaller_than_right: a_left <= right
 		do
 			cwel_rect_set_left (item, a_left)
 		ensure
@@ -145,6 +154,7 @@ feature -- Element change
 			-- Set `top' with `a_top'
 		require
 			exists: exists
+			top_smaller_than_bottom: a_top <= bottom
 		do
 			cwel_rect_set_top (item, a_top)
 		ensure
@@ -155,6 +165,7 @@ feature -- Element change
 			-- Set `right' with `a_right'
 		require
 			exists: exists
+			right_larger_than_left: a_right >= left
 		do
 			cwel_rect_set_right (item, a_right)
 		ensure
@@ -165,6 +176,7 @@ feature -- Element change
 			-- Set `bottom' with `a_bottom'
 		require
 			exists: exists
+			bottom_larger_than_top: a_bottom >= top
 		do
 			cwel_rect_set_bottom (item, a_bottom)
 		ensure
@@ -248,7 +260,7 @@ feature -- Status report
 	empty: BOOLEAN is
 			-- Is it empty?
 			-- A rectangle is empty if the coordinate of the right
-			-- side is less than equal or equal to the coordinate
+			-- side is less than or equal to the coordinate
 			-- of the left side, or the coordinate of the bottom
 			-- side is less than or equal to the coordinate of
 			-- the top side.
@@ -368,11 +380,10 @@ feature {NONE} -- Externals
 
 	cwin_pt_in_rect (ptr, point: POINTER): BOOLEAN is
 			-- SDK PtInRect
-			--| Special case since the second
-			--| parameter is a POINT and
-			--| not a POINT *. So a macro is used.
+			--| Special case since the second parameter is a POINT
+			--| and not a POINT *. So a macro is used.
 		external
-			"C [macro <point.h>]"
+			"C [macro <rect.h>]"
 		end
 
 	cwin_offset_rect (ptr: POINTER; a_x, a_y: INTEGER) is
@@ -422,6 +433,12 @@ feature {NONE} -- Externals
 		alias
 			"EqualRect"
 		end
+
+invariant
+	right_larger_than_left: exists implies right >= left
+	bottom_larger_than_top: exists implies bottom >= top
+	positive_width: exists implies width >= 0
+	positive_height: exists implies height >= 0
 
 end -- class WEL_RECT
 

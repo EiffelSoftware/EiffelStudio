@@ -150,6 +150,9 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 		local
 			linkable_figure: EG_LINKABLE_FIGURE
 			cluster_figure: EIFFEL_CLUSTER_FIGURE
+			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
+			l_item: EG_LINK_FIGURE
+			i, nb: INTEGER
 		do
 			from
 				start
@@ -162,13 +165,16 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 						linkable_figure.hide
 						linkable_figure.disable_sensitive
 						from
-							linkable_figure.links.start
+							l_links := linkable_figure.links
+							i := 1
+							nb := l_links.count
 						until
-							linkable_figure.links.after
+							i > nb
 						loop
-							linkable_figure.links.item.hide
-							linkable_figure.links.item.disable_sensitive
-							linkable_figure.links.forth
+							l_item := l_links.i_th (i)
+							l_item.hide
+							l_item.disable_sensitive
+							i := i + 1
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then
@@ -192,6 +198,8 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			l_link: EG_LINK_FIGURE
 			cluster_figure: EIFFEL_CLUSTER_FIGURE
 			e_item: ES_ITEM
+			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
+			i, nb: INTEGER
 		do
 			from
 				start
@@ -205,11 +213,13 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 						linkable_figure.show
 						linkable_figure.enable_sensitive
 						from
-							linkable_figure.links.start
+							l_links := linkable_figure.links
+							i := 1
+							nb := l_links.count
 						until
-							linkable_figure.links.after
+							i > nb
 						loop
-							l_link := linkable_figure.links.item
+							l_link := l_links.i_th (i)
 							if l_link.source = linkable_figure then
 								l_other := l_link.target
 							else
@@ -219,7 +229,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 								l_link.show
 								l_link.enable_sensitive
 							end
-							linkable_figure.links.forth
+							i := i + 1
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then

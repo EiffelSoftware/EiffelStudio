@@ -5,14 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CREATE_ACE
+class ACE_BUILDER
 
 inherit
 	WIZARD_ACTION;
 	EIFFEL_ENV;
 	PROJECT_CONTEXT;
 	WINDOWS;
-	WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES;
+	EB_CONSTANTS
 
 creation
 	make
@@ -53,7 +54,7 @@ feature -- Graphical User Interface
 			!! precomp_label.make ("precomp_label", dialog.action_form);
 			!! assertion_label.make ("assertion_label", dialog.action_form);
 
-			!! precomp_radio.make ("precomp_radios", dialog.action_form);
+			!! precomp_box.make ("precomp_box", dialog.action_form);
 			from
 				twl := precompiles;
 				twl.start;
@@ -62,7 +63,7 @@ feature -- Graphical User Interface
 			until
 				twl.after
 			loop
-				!! toggle.make ("toggle", precomp_radio);
+				!! toggle.make ("toggle", precomp_box);
 				!! subdir.make_from_string (twl.item);
 				l_s_d := last_sub_dir (subdir);
 				l_s_d_lower := clone (l_s_d);
@@ -122,7 +123,6 @@ feature -- Graphical User Interface
 			all_ass.set_text ("All");
 			all_ass.set_toggle_off;
 
-			precomp_radio.set_always_one (True);
 			assertion_radio.set_always_one (True);
 
 			dialog.action_form.attach_top (dir_label, 15);
@@ -153,11 +153,11 @@ feature -- Graphical User Interface
 			dialog.action_form.attach_left (precomp_label, 10);
 			dialog.action_form.attach_top_widget (creation_procedure_edit, precomp_label, 15);
 
-			dialog.action_form.attach_left (precomp_radio, 10);
-			dialog.action_form.attach_top_widget (precomp_label, precomp_radio, 10);
+			dialog.action_form.attach_left (precomp_box, 10);
+			dialog.action_form.attach_top_widget (precomp_label, precomp_box, 10);
 
 			dialog.action_form.attach_left (assertion_label, 10);
-			dialog.action_form.attach_top_widget (precomp_radio, assertion_label, 10);
+			dialog.action_form.attach_top_widget (precomp_box, assertion_label, 10);
 
 			dialog.action_form.attach_left (assertion_radio, 10);
 			dialog.action_form.attach_top_widget (assertion_label, assertion_radio, 10);
@@ -185,30 +185,60 @@ feature -- Information Handling
 
 	process_information is
 		local
-			id: IDENTIFIER
+			id: IDENTIFIER;
+			contents, c_name: STRING;
+			new_ace: PLAIN_TEXT_FILE
 		do
+			!! new_ace.make ("Ace.ace");
 			!! id.make (0);
 			id.append (system_edit.text);
-			if not id.is_valid then
-				warner (dialog).gotcha_call ("Invalid system name.%N");
+			if not new_ace.is_writable then
+				warner (dialog).gotcha_call 
+						(Warning_messages.w_Not_writable (new_ace.name))
+				processed := False;
+			elseif not id.is_valid then
+				warner (dialog).gotcha_call 
+						(Warning_messages.w_Invalid_system_name (id))
 				processed := False;
 			else
 				!! id.make (0);
 				id.append (root_class_edit.text);
+				id.to_upper;
+				!! c_name.make (0);
+				c_name.append (id);
 				if not id.is_valid then
-					warner (dialog).gotcha_call ("Invalid root class name.%N");
+					warner (dialog).gotcha_call 
+						(Warning_messages.w_Invalid_root_class_name (id))
 					processed := False;
 				else
 					!! id.make (0);
 					id.append (creation_procedure_edit.text);
-					if not id.is_valid then
-						warner (dialog).gotcha_call ("Invalid creation procedure name.%N");
+					id.to_lower;
+					if not ((id.empty and then
+						(c_name.is_equal ("ANY") or else
+						c_name.is_equal ("NONE"))) or else
+						id.is_valid)
+					then
+						warner (dialog).gotcha_call 
+							(Warning_messages.w_Invalid_creation_name (id))
 						processed := False;
 					else
-						processed := True;
-						create_ace_file;
-						create_root_class;
-						caller.perform_post_creation
+						contents := default_ace_file_contents;
+						if contents = Void then
+							warner (dialog).gotcha_call 
+								(Warning_messages.w_Default_ace_file_not_exist (default_ace_name))
+							processed := False;
+						else
+							processed := True;
+							generate_ace_file (contents);
+							save_ace_file (contents);
+							if not (c_name.is_equal ("ANY") or else
+								c_name.is_equal ("NONE"))
+							then
+								create_root_class;
+							end
+							caller.perform_post_creation
+						end
 					end
 				end
 			end
@@ -282,11 +312,11 @@ feature -- Text labels
 
 feature -- Radio Boxes
 
-	precomp_radio: RADIO_BOX;
-			-- Radio box to display all precompiles.
+	precomp_box: CHECK_BOX;
+			-- Check box to display all precompiles
 
 	assertion_radio: RADIO_BOX;
-			-- Radio box to display assertion checking options.
+			-- Radio box to display assertion checking options
 
 feature {NONE} -- Properties
 
@@ -338,6 +368,9 @@ feature -- Standard precompiles
 			Result.put ("EiffelVision", "vision");
 			Result.put ("EiffelParse", "parse");
 			Result.put ("Windows Eiffel Library", "wel");
+			Result.put ("MOTIF Eiffel Library", "mel");
+			Result.put ("Eiffel Math Library", "math");
+			Result.put ("EiffelNet", "net");
 			Result.compare_objects
 		end;
 
@@ -380,82 +413,79 @@ feature -- Subdirs from a directory name
 
 feature {NONE} -- Implementation
 
-	create_ace_file is
+	generate_ace_file (contents: STRING) is
 			-- Creates the ace file.
+		require
+			valid_contents: contents /= Void
 		local
-			new_ace: PLAIN_TEXT_FILE;
 			child: ARRAYED_LIST [WIDGET];
 			toggle: TOGGLE_B;
-			t: STRING
+			t: STRING;
+			assert, precomp_lines, root_class_line: STRING;
+			d_name: DIRECTORY_NAME;
+			root_cluster_line: STRING;
+			is_first: BOOLEAN
 		do
-			!! new_ace.make_open_write ("Ace.ace");
-			new_ace.putstring ("system%N%T");
-			new_ace.putstring (system_edit.text);
-			new_ace.putstring ("%N%T%T-- Name of the system.%N%Nroot%N%T%"");
-			t := clone (root_class_edit.text);
-			t.to_upper;
-			new_ace.putstring (t);
-			new_ace.putstring ("%" (root_cluster): %"");
-			new_ace.putstring (creation_procedure_edit.text);
-			new_ace.putstring ("%"%N%T%T-- Execute system by creating instance of class `");
-			new_ace.putstring (t);
-			new_ace.putstring ("'%N%T%T-- from cluster `root_cluster', using creation procedure `");
-			new_ace.putstring (creation_procedure_edit.text);
-			new_ace.putstring ("'.%N");
-			new_ace.putstring ("%Ndefault%N%T");
-
-			child := precomp_radio.children;
+			contents.replace_substring_all ("$system_name", system_edit.text);	
+			root_class_line := clone (root_class_edit.text);
+			root_class_line.to_upper;
+			if not creation_procedure_edit.text.empty then
+				root_class_line.append (" (root_cluster): %"");
+				root_class_line.append (creation_procedure_edit.text);
+				root_class_line.extend ('"');
+			end;
+			contents.replace_substring_all ("$root_class_line", root_class_line);	
+			child := precomp_box.children;
+			!! precomp_lines.make (0);
 			if child.count > 0 then
 				from
-					child.start;
-					toggle ?= child.item
+					is_first := True;
+					child.start
 				until
-					child.after or else toggle.state
+					child.after 
 				loop
-					child.forth;
 					toggle ?= child.item
+					if toggle.state then
+						if is_first then	
+							is_first := False
+						else
+							precomp_lines.extend ('%T')
+						end;
+						precomp_lines.append ("precompiled (");
+						!! d_name.make;
+						d_name.extend_from_array (
+							<<"$EIFFEL3", "precomp", "spec", "$PLATFORM">>);
+						d_name.set_directory (standard_precompiles_reverse.item (toggle.text));
+						precomp_lines.append (d_name);
+						precomp_lines.append (");%N")
+					end;
+					child.forth;
 				end;
 			end;
-			if not child.after then
-				new_ace.putstring ("precompiled (%"$EIFFEL3");
-				new_ace.putchar (Operating_environment.Directory_separator);
-				new_ace.putstring ("precomp");
-				new_ace.putchar (Operating_environment.Directory_separator);
-				new_ace.putstring ("spec");
-				new_ace.putchar (Operating_environment.Directory_separator);
-				new_ace.putstring ("$PLATFORM");
-				new_ace.putchar (Operating_environment.Directory_separator);
-				new_ace.putstring (standard_precompiles_reverse.item (toggle.text));
-				new_ace.putstring ("%");%N");
-			end;
-			new_ace.putstring ("%Tassertion (");
+			contents.replace_substring_all ("$precompile", precomp_lines);
 			if no_ass.state then
-				new_ace.putstring ("no");
+				assert := "no"
+			elseif require_ass.state then
+				assert := "require"
+			elseif ensure_ass.state then
+				assert := "ensure"
+			elseif invariant_ass.state then
+				assert := "invariant"
+			elseif loop_ass.state then
+				assert := "loop"
+			elseif check_ass.state then
+				assert := "check"
+			elseif all_ass.state then
+				assert := "all"
 			end;
-			if require_ass.state then
-				new_ace.putstring ("require");
+			contents.replace_substring_all ("$assertion_value", assert);	
+			!! root_cluster_line.make (0);
+			if not creation_procedure_edit.text.empty then
+				root_cluster_line.append ("%N%Troot_cluster: %"");
+				root_cluster_line.append (Project_directory);
+				root_cluster_line.append ("%";");
 			end;
-			if ensure_ass.state then
-				new_ace.putstring ("ensure");
-			end;
-			if invariant_ass.state then
-				new_ace.putstring ("invariant");
-			end;
-			if loop_ass.state then
-				new_ace.putstring ("loop");
-			end;
-			if check_ass.state then
-				new_ace.putstring ("check");
-			end;
-			if all_ass.state then
-				new_ace.putstring ("all");
-			end;
-			new_ace.putstring (");%N%Ncluster%N%Troot_cluster:%T%T%"");
-			new_ace.putstring (Project_directory);
-			new_ace.putstring ("%";%N%Nend -- system ");
-			new_ace.putstring (system_edit.text);
-			new_ace.putstring ("%N");
-			new_ace.close
+			contents.replace_substring_all ("$root_cluster_line", root_cluster_line);	
 		end;
 
 	create_root_class is
@@ -489,10 +519,9 @@ feature {NONE} -- Implementation
 					%%T%T%T--| (Automatically generated.)%N");
 				new_class.putstring ("%T%Tdo%N");
 				new_class.putstring ("%T%T%Tio.putstring (%"Welcome to ISE Eiffel!%%N%");%N");
-				new_class.putstring ("%T%T%Tio.readline%N");
-					-- FIXME **********************************************
-					-- UNIX: `ebench &' will not work with this.
-					-- FIXME **********************************************
+				if Platform_constants.is_windows then
+					new_class.putstring ("%T%T%Tio.readline%N");
+				end;
 				new_class.putstring ("%T%Tend;%N");
 				new_class.putstring ("%Nend -- class ");
 				new_class.putstring (t);
@@ -501,4 +530,45 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-end -- class CREATE_ACE
+	save_ace_file (contents: STRING) is
+			-- Save the ace file `content'.
+		require
+			valid_contents: contents /= Void
+		local
+			new_file: RAW_FILE;
+			char: CHARACTER
+		do
+			!! new_file.make ("Ace.ace");
+			if new_file.is_writable then
+				new_file.open_write;
+				if not contents.empty then
+					new_file.putstring (contents);
+					char := contents.item (contents.count);
+					if Platform_constants.is_unix and 
+						then char /= '%N' and
+						then char /= '%R'
+							-- Add a carriage return like vi if there's none at
+							-- the end
+					then
+						new_file.new_line
+					end
+				end;
+				new_file.close;
+			end;
+		end;
+
+	default_ace_file_contents: STRING is
+			-- Contents of the default ace file
+		local
+			a_file: RAW_FILE
+		do
+			!! a_file.make (Default_ace_name);
+			if a_file.exists and then a_file.is_readable then
+				a_file.open_read;
+				a_file.readstream (a_file.count);
+				a_file.close;
+				Result := a_file.laststring
+			end
+		end;
+
+end -- class ACE_BUILDER

@@ -57,6 +57,9 @@ feature {NONE} -- Implementation
 				else
 					chooser := name_chooser (popup_parent);
 					chooser.set_open_file;
+					chooser.set_pattern ("*.ace")
+					chooser.set_pattern_name ("System File (*.ace)")
+
 					last_name_chooser.call (Current) 
 				end
 			end

@@ -50,14 +50,15 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 
 	fides = (int)f_desc;				/* For use of `st_write' */
 	result = lseek (fides, 0, SEEK_CUR);
-	if (result==-1) esys();
+	if (result==-1)
+		esys();
 
 	make_index = mid;
 	need_index = nid;
 	server = s;
 	gc_stopped = !gc_ison();
-	gc_stop();					/* Procedure `make_index' may call the GC
-								 * while creating objects. */
+	gc_stop();		/* Procedure `make_index' may call the GC
+				 * while creating objects. */
 
 #ifdef DEBUG
 	(void) nomark(o);

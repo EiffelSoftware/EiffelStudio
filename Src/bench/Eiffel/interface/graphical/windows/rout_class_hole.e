@@ -49,7 +49,7 @@ feature -- Properties
 	
 	name: STRING is
 		do
-			Result := Interface_names.f_New_class
+			Result := Interface_names.s_Class_stone
 		end;
 
 	menu_name: STRING is

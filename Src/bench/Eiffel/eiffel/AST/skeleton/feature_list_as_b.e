@@ -1,24 +1,23 @@
-class FEATURE_LIST_AS
+class FEATURE_LIST_AS_B
 
 inherit
 
-	FEATURE_SET_AS
+	FEATURE_LIST_AS
+		redefine
+			features
+		end;
+
+	FEATURE_SET_AS_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Attributes
 
-	features: EIFFEL_LIST [FEATURE_NAME];
+	features: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- List of feature names
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			features ?= yacc_arg (0);
-		end;
 
 feature -- Export status computing
 
@@ -50,8 +49,7 @@ feature -- Export status computing
 			end;
 		end;
 	
-	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 			--| what if multiple names in ancestors?
 		do
@@ -62,6 +60,5 @@ feature -- Export status computing
 			features.format (ctxt);
 			ctxt.commit;
 		end;
-
 			
-end
+end -- class FEATURE_LIST_AS_B

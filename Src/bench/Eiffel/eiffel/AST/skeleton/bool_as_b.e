@@ -1,26 +1,21 @@
--- Node for boolean constant
+indexing
 
-class BOOL_AS
+	description: "Node for boolean constant. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class BOOL_AS_B
 
 inherit
 
-	ATOMIC_AS
+	BOOL_AS;
+
+	ATOMIC_AS_B
+		undefine
+			simple_format, string_value
 		redefine
 			type_check, byte_node, value_i, format
 		end
-
-feature -- Attributes
-
-	value: BOOLEAN;
-			-- Integer value
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value := yacc_bool_arg (0);
-		end;
 
 feature -- Type check
 
@@ -45,7 +40,7 @@ feature -- Type check
 
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.always_succeed;
 			if value then
@@ -55,4 +50,4 @@ feature -- formatter
 			end
 		end;
 
-end
+end -- class BOOL_AS_B

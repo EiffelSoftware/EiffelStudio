@@ -1,18 +1,22 @@
-class REQUIRE_ELSE_AS
+class REQUIRE_ELSE_AS_B
 
 inherit
 
-	REQUIRE_AS
-		redefine
+	REQUIRE_ELSE_AS
+		undefine
+			clause_name, put_clause_keywords,
+			reset, format_assertions
+		select
+			assertions
+		end;
+
+	REQUIRE_AS_B
+		rename
+			assertions as old_else_assertions
+		undefine
 			is_else
 		end
 
 feature
 
-	is_else: BOOLEAN is
-			-- Is the assertion list a require else ?
-		do
-			Result := true;
-		end;
-
-end
+end -- class REQUIRE_ELSE_AS_B

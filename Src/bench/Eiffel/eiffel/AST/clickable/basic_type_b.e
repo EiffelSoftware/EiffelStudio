@@ -1,44 +1,45 @@
--- Abstract class for Eiffel basic types
+indexing
 
-deferred class BASIC_TYPE
+	description: "Abstract class for Eiffel basic types. Bench version.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class BASIC_TYPE_B
 
 inherit
 
+	BASIC_TYPE
+		undefine
+			is_deep_equal, same_as
+		end;
+
 	STONABLE;
-	TYPE
+
+	TYPE_B
 		redefine 
 			format, append_clickable_signature
-		end;
+		end
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
-
-feature -- signature
+feature -- Signature
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			actual_type.append_clickable_signature (a_clickable)
 		end;
 
-feature -- stoning
+feature -- Stoning
 
 	stone (reference_class: CLASS_C): CLASSC_STONE is
 		do
 			!!Result.make (actual_type.associated_class)
 		end;
 
-feature -- formatting
+feature -- Formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
+	format (ctxt: FORMAT_CONTEXT_B) is
+			-- Reconstitute text.
 		do
 			ctxt.put_class_name (actual_type.associated_class);
 		end;
-			
 
-end
+end -- class BASIC_TYPE_B

@@ -1,28 +1,32 @@
--- List used in abstract syntax trees.
+indexing
 
-class EIFFEL_LIST [T->AST_EIFFEL]
+	description: "List used in abstract syntax trees. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class EIFFEL_LIST_B [T->AST_EIFFEL_B]
 
 inherit
 
-	AST_EIFFEL
+	EIFFEL_LIST [T];
+
+	AST_EIFFEL_B
 		rename
 			position as text_position
 		undefine
-			pass_address, copy, setup, consistent, is_equal
+			pass_address, copy, setup, 
+			consistent, is_equal, simple_format
 		redefine
 			byte_node, type_check,
-			find_breakable,
-			format,
+			find_breakable, format,
 			fill_calls_list, replicate
 		end;
-	CONSTRUCT_LIST [T]
 
 creation
 
 	make
 
 feature -- Type check, byte code and dead code removal
-
 
 	type_check is
 			-- Type check iteration
@@ -92,10 +96,9 @@ feature -- Debugger
 			end;
 		end;
 
-
 feature -- Formatter
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 		local
 			i, l_count: INTEGER;
 			failure: BOOLEAN;
@@ -135,7 +138,7 @@ feature -- Formatter
 			end;
 		end;
 
-	reversed_format (ctxt : FORMAT_CONTEXT) is
+	reversed_format (ctxt : FORMAT_CONTEXT_B) is
 			-- Build the structured text of the list in the reverse order.
 		local
 			i: INTEGER;
@@ -213,7 +216,5 @@ feature -- Replication
 				i := i + 1;
 			end;
 		end;
-		
 
-end
-
+end -- class EIFFEL_LIST_B

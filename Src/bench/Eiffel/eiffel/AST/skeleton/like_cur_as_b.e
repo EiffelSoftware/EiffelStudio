@@ -1,26 +1,26 @@
--- Node for "like Current" type
+indexing
 
-class LIKE_CUR_AS
+	description: "Node for `like Current' type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class LIKE_CUR_AS_B
 
 inherit
 
-	TYPE
+	LIKE_CUR_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	TYPE_B
+		undefine
+			has_like, simple_format
 		redefine
-			has_like, format
+			format
 		end;
 
 feature
-		
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end; -- set
-
-feature
-
-	has_like: BOOLEAN is True;
-			-- Does the type have anchor in its definition ?
 
 	actual_type: TYPE_A is
 			-- Useless
@@ -30,17 +30,14 @@ feature
 			False
 		end;
 
-	dump: STRING is "like Current";
-			-- Dump trace
-
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
-           -- Calcutate the effective type
-        do
-            !!Result;
-            Result.set_actual_type (feat_table.associated_class.actual_type);
-        end;
+		   -- Calcutate the effective type
+		do
+			!!Result;
+			Result.set_actual_type (feat_table.associated_class.actual_type);
+		end;
 		
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Like_keyword);
@@ -48,4 +45,4 @@ feature
 			ctxt.always_succeed;
 		end;
 
-end
+end -- class LIKE_CUR_AS_B

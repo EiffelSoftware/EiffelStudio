@@ -1,26 +1,21 @@
--- Node for real constant
+indexing
 
-class REAL_AS
+	description: "Node for real constant. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class REAL_AS_B
 
 inherit
 
-	ATOMIC_AS
+	REAL_AS;
+
+	ATOMIC_AS_B
+		undefine
+			simple_format, string_value
 		redefine
 			type_check, byte_node, value_i, format
 		end
-
-feature -- Attribute
-
-	value: STRING;
-			-- Real value
-
-feature -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0);
-		end;
 
 feature -- Type check and byte code
 
@@ -44,12 +39,11 @@ feature -- Type check and byte code
 			Result.set_value (value);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do	
 			ctxt.always_succeed;
 			ctxt.put_string(value);
 		end;
 		
-
-end
+end -- class REAL_AS_B

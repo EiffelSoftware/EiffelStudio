@@ -1,10 +1,17 @@
 -- Abstract description of an Eiffel feature
 
-class BODY_AS
+class BODY_AS_B
 
 inherit
 
-	AST_EIFFEL
+	BODY_AS
+		redefine
+			arguments, type, content, is_assertion_equiv
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable,
@@ -14,27 +21,14 @@ inherit
 
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS];
+	arguments: EIFFEL_LIST_B [TYPE_DEC_AS_B];
 			-- List (of list) of arguments
 
-	type: TYPE;
+	type: TYPE_B;
 			-- Type if any
 
-	content: CONTENT_AS;
+	content: CONTENT_AS_B;
 			-- Content of the body: constant or regular body
-
-feature -- Initialization
-	
-	set is
-			-- Yacc initialization
-		do
-			arguments ?= yacc_arg (0);
-			type ?= yacc_arg (1);
-			content ?= yacc_arg (2);
-				-- Constant value or standard feature body
-		ensure then
-			(content /= Void) or else (type /= Void);
-		end; -- set
 
 feature -- Type check, byte code and dead code removal
 
@@ -44,20 +38,6 @@ feature -- Type check, byte code and dead code removal
 			if content /= Void then
 					-- i.e: if it not the content of an attribute
 				content.type_check;
-			end;
-		end;
-
-	is_unique: BOOLEAN is
-		do
-			Result := content /= Void and then content.is_unique
-		end;
-
-	check_local_names is
-			-- Check conflicts between local names and feature names
-		do
-			if content /= Void then
-					-- i.e: if it not the content of an attribute
-				content.check_local_names;
 			end;
 		end;
 
@@ -82,8 +62,8 @@ feature -- New feature description
 		local
 			attr: ATTRIBUTE_I;
 			const: CONSTANT_I;
-			constant: CONSTANT_AS;
-			routine: ROUTINE_AS;
+			constant: CONSTANT_AS_B;
+			routine: ROUTINE_AS_B;
 			dyn_proc: DYN_PROC_I;
 			def_func: DEF_FUNC_I;
 			once_func: ONCE_FUNC_I;
@@ -91,16 +71,16 @@ feature -- New feature description
 			proc, func: PROCEDURE_I;
 			extern_proc: EXTERNAL_I;
 			extern_func: EXTERNAL_FUNC_I;
-			external_body: EXTERNAL_AS;
+			external_body: EXTERNAL_AS_B;
 				-- Hack Hack Hack
 				-- A litteral numeric value is interpreted as 
 				-- a DOUBLE. In the case of a constant REAL
 				-- declaration that wont do!
-			ras: REAL_TYPE_AS;
+			ras: REAL_TYPE_AS_B;
 			rvi: REAL_VALUE_I;
 			fvi: FLOAT_VALUE_I;
 			cvi: VALUE_I;
-			ext_lang: EXTERNAL_LANG_AS;
+			ext_lang: EXTERNAL_LANG_AS_B;
 		do
 			if content = Void then
 					-- It is an attribute
@@ -244,37 +224,6 @@ feature -- New feature description
 			end;
 		end;
 
-	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the body of current feature equivalent to 
-			-- body of `other' ?
-		do
-			Result := deep_equal (type, other.type) and then
-					deep_equal (arguments, other.arguments);
-debug
-	io.error.putstring ("BODY_AS.is_body_equiv%N");
-	if not Result then
-		io.error.putstring ("Different signatures%N");
-	end;
-end;
-			if Result then
-				if (content = Void) and (other.content = Void) then
-				elseif (content = Void) or else (other.content = Void) then
-					Result := False
-				elseif (content.is_constant = other.content.is_constant) then
-						-- The two objects are of the same type.
-						-- There is no global typing problem.
-					Result := content.is_body_equiv (other.content)
-debug
-	if not Result then
-		io.error.putstring ("Different bodies%N");
-	end;
-end
-				else
-					Result := False
-				end;
-			end;
-		end;
- 
 	is_assertion_equiv (other: like Current): BOOLEAN is
 			-- Is the assertion of Current feature equivalent to 
 			-- assertion of `other' ?
@@ -293,7 +242,7 @@ end
 			--|table, for all possible combinations of the values (CONSTANT_AS,
 			--|ROUTINE_AS, Void) of content and other.content)
 		local
-			r1, r2: ROUTINE_AS
+			r1, r2: ROUTINE_AS_B
 		do
 			r1 ?= content; r2 ?= other.content;
 			if 
@@ -317,10 +266,10 @@ feature -- Debugger
  
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		local
-			routine_as: ROUTINE_AS;
+			routine_as: ROUTINE_AS_B;
 		do
 			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
@@ -379,21 +328,4 @@ feature -- Replication
 			end
 		end;
 		
-feature {BODY_AS, FEATURE_AS}	-- Replication & Flat/short
-
-	set_arguments (a: like arguments) is
-		do
-			arguments := a
-		end;
-
-	set_type (t: like type) is
-		do
-			type := t
-		end;
-
-	set_content (c: like content) is
-		do
-			content := c
-		end;
-
-end
+end -- class BODY_AS_B

@@ -1,45 +1,34 @@
--- Abstract description for formal generic type
+indexing
 
-class FORMAL_AS
+	description:
+			"Abstract description for formal generic type. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class FORMAL_AS_B
 
 inherit
 
-	TYPE
+	FORMAL_AS
+		undefine
+			is_deep_equal, same_as
+		select
+			text_position
+		end;
+
+	TYPE_B
 		rename
-			position as text_position
+			position as text_b_position
+		undefine
+			simple_format
 		redefine
 			format
 		end;
+
 	STONABLE;
 
 feature
-
-	position: INTEGER;
-			-- Position of the formal parameter in the declaration
-			-- array
-
-	set_position (i: INTEGER) is
-			-- Assign `i' to `position'.
-		do
-			position := i;
-		end;
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			position := yacc_int_arg (0);
-		end;
-
-feature
-
-	dump: STRING is
-		do
-			!!Result.make (12);
-			Result.append ("Generic #");
-			Result.append_integer (position);
-		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): FORMAL_A is
 			-- Calculated type in function of the feature `f' which has
@@ -55,7 +44,7 @@ feature
 			Result.set_base_type (position);
 		end;
 
-feature -- stoning
+feature -- Stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is
 		local
@@ -68,11 +57,11 @@ feature -- stoning
 
 feature -- Formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		local
 			s: STRING; 
-			new_type: TYPE;
+			new_type: TYPE_B;
 		do
 			new_type := ctxt.format.global_types.adapted_type (Current);
 			if new_type = void then
@@ -81,4 +70,5 @@ feature -- Formatting
 				new_type.format (ctxt);
 			end
 		end;
-end
+
+end -- class FORMAL_AS_B

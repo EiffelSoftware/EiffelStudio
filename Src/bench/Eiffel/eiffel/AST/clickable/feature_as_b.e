@@ -1,21 +1,37 @@
--- Abstract class for abstract descritpion of Eiffel features
+indexing
 
-class FEATURE_AS
+	description:
+			"Abstract class for abstract description of Eiffel features. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class FEATURE_AS_B
 		
 inherit
 
-	AST_EIFFEL
+	FEATURE_AS
 		redefine
-			is_feature_obj, type_check, byte_node,
-			find_breakable, format,
-			fill_calls_list, replicate
+			feature_names, body, set_unique_values,
+			new_ast, set
 		end;
+
+	AST_EIFFEL_B
+		undefine
+			is_feature_obj, simple_format
+		redefine
+			type_check, byte_node, find_breakable, 
+			format, fill_calls_list, replicate
+		end;
+
 	IDABLE
 		rename
 			id as body_id,
 			set_id as set_body_id
 		end;
+
 	STONABLE;
+
 	COMPARABLE
 		undefine
 			is_equal
@@ -23,18 +39,10 @@ inherit
 
 feature -- Attributes
 
-	body_id: INTEGER;
-			-- Id for the feature server
-
-	id: INTEGER;
-			-- Id of the current instance used by the temporary AST
-			-- server.
-
-	feature_names: EIFFEL_LIST [FEATURE_NAME];
+	feature_names: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Names of feature
 
-
-	body: BODY_AS;
+	body: BODY_AS_B;
 			-- Feature body: this attribute will be compared during
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
@@ -56,11 +64,6 @@ feature -- Initialization
 		ensure then
 			feature_names /= Void;
 			body /= Void;
-		end;
-
-	set_start_position is
-		do
-			start_position := start_position - feature_names.first.offset
 		end;
 
 	set_unique_values is
@@ -88,73 +91,6 @@ feature -- Initialization
 			end
 		end;
 
-	set_names (names: like feature_names) is
-		do
-			feature_names := names;
-		end;
-
-	set_content (other: like Current) is
-		require
-			good_argument: other /= void
-		do
-			body := other.body;
-			start_position := other.start_position;
-			end_position := other.end_position;
-			id := other.id;
-		end;
-
-	trace is
-		do
-			io.error.putstring ("FEATURE_AS");
-			io.error.putint (body_id);
-			io.error.new_line;
-			io.error.putint (end_position);
-			io.error.new_line;
-			io.error.putint (start_position);
-			io.error.new_line;
-			io.error.putstring (feature_names.first.internal_name);
-			io.error.new_line;
-			io.error.putint (id);
-			io.error.new_line;
-		end;
-
-feature -- Conveniences
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
-		end;
-
-	is_feature_obj: BOOLEAN is
-			-- Is the current object an instance of FEATURE_AS ?
-		do
-			Result := True;
-		end;
-
-	infix "<" (other: like Current): BOOLEAN is
-		do	
-			Result := feature_names.first < other.feature_names.first;
-		end;
-
-feature -- Incrementality
-
-	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
-		require
-			valid_body: body /= Void
-		do
-			Result := body.is_body_equiv (other.body);
-		end;
- 
-	is_assertion_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
-		require
-			valid_body: body /= Void
-		do
-			Result := body.is_assertion_equiv (other.body);
-		end;
-
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -164,13 +100,6 @@ feature -- Type check, byte code and dead code removal
 			context.begin_expression;
 				-- Type check
 			body.type_check;
-		end;
-
-	check_local_names is
-			-- Check the name conflicts between local variables and
-			-- feature names
-		do
-			body.check_local_names
 		end;
 
 	byte_node: BYTE_CODE is
@@ -194,19 +123,17 @@ feature -- Type check, byte code and dead code removal
 			Result := body.local_table (f);
 		end;
 
-feature -- stoning
+feature -- Stoning
  
 	stone (reference_class: CLASS_C): FEATURE_STONE is
 		local
 			a_feature_i: FEATURE_I
 		do
-			a_feature_i := reference_class.feature_named (feature_names.first.internal_name);
-			!!Result.make (a_feature_i, reference_class, start_position, end_position)
+			a_feature_i := reference_class.feature_named 
+								(feature_names.first.internal_name);
+			!!Result.make (a_feature_i, reference_class, start_position, 
+											end_position)
 		end;
-
-	start_position, end_position: INTEGER
-			-- Start and end of the text of the feature in origin file
-
 
 feature -- Debugger
  
@@ -221,7 +148,7 @@ feature -- Debugger
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -244,9 +171,9 @@ feature -- Formatter
 			end;
 		end;
 
-	new_ast: FEATURE_AS is
+	new_ast: FEATURE_AS_B is
 		local
-			rout_as: ROUTINE_AS;
+			rout_as: ROUTINE_AS_B;
 			rout_fsas: ROUTINE_FSAS;
 		do
 			rout_as ?= body.content;
@@ -290,22 +217,7 @@ feature -- Replication
 		end;
 
 
-feature {ASSERT_SERVER, FEATURE_AS, NAMES_ADAPTER}	-- Replication
-
-	set_feature_names (f: like feature_names) is
-		do
-			feature_names := f
-		end;
-
-	set_body (b: like body) is
-		do
-			body := b
-		end;				
-
-	set_id (i: like id) is
-		do
-			id := i
-		end;				
+feature {ASSERT_SERVER, FEATURE_AS_B, NAMES_ADAPTER}	-- Replication
 
 	set_feature_assertions (feat: FEATURE_I; a: CHAINED_ASSERT) is
 		require
@@ -318,7 +230,7 @@ feature {ASSERT_SERVER, FEATURE_AS, NAMES_ADAPTER}	-- Replication
 			rout_fsas.set_feature_assertions (feat, Current, a);
 		end;
 
-feature {FEATURE_CLAUSE_AS, FEATURE_CLAUSE_EXPORT} -- Case storage
+feature {FEATURE_CLAUSE_AS_B, FEATURE_CLAUSE_EXPORT} -- Case storage
 
 	storage_info: S_FEATURE_DATA is
 			-- Storage information for Current
@@ -327,14 +239,14 @@ feature {FEATURE_CLAUSE_AS, FEATURE_CLAUSE_EXPORT} -- Case storage
 		do
 		end;
 
-feature {FEATURE_AS, CASE_RECORD_INHERIT_INFO} -- Case storage
+feature {FEATURE_AS_B, CASE_RECORD_INHERIT_INFO} -- Case storage
 
 	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
 			-- Store current information into `f'.
 		require
 			valid_f: f /= Void
 		local
-			rout_as: ROUTINE_AS;
+			rout_as: ROUTINE_AS_B;
 		do
 			rout_as ?= body.content;
 			if rout_as /= Void then
@@ -342,4 +254,4 @@ feature {FEATURE_AS, CASE_RECORD_INHERIT_INFO} -- Case storage
 			end
 		end;
 
-end
+end -- class FEATURE_AS_B

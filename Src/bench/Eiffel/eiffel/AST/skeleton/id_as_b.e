@@ -1,19 +1,29 @@
--- Node for id
+indexing
 
-class ID_AS
+    description: "Node for id. Version for Bench.";
+    date: "$Date$";
+    revision: "$Revision$"
+
+class ID_AS_B
 
 inherit
 
-	ATOMIC_AS
-		undefine
-			copy, out, is_equal, setup, consistent
+	ID_AS
 		redefine
-			pass_address, is_id,
+			good_integer, good_character,
+			record_dependances
+		end;
+
+	ATOMIC_AS_B
+		undefine
+			copy, out, is_equal, setup, consistent,
+			pass_address, is_id, string_value, simple_format
+		redefine
 			good_integer, good_character,
 			make_integer, make_character,
-			record_dependances,
-			format, string_value
+			record_dependances, format
 		end;
+
 	STRING
 		rename
 			set as string_set,
@@ -23,39 +33,6 @@ inherit
 creation
 
 	make
-
-feature
-
--- SHOULD BE OBSOLETE
---	start_position: INTEGER;
-			-- Start position of the string
---	end_position: INTEGER;
-			-- Ending position of the string
-
-	is_id: BOOLEAN is
-			-- Is the current atomic node an id ?
-		do
-			Result := True;
-		end;
-
-	pass_address (n: INTEGER) is
-			-- Eiffel-Yacc interface
-		do
-			c_get_address (n, $Current, $set);
-			getid_create ($make);
-			getid_area ($to_c);
-		end;
-	
-	set is
-			-- Yacc initialization
-		local
-			s: STRING;
-		do
-			s ?= yacc_arg (0);
-			append (s);
-		ensure then
-			not_empty: not empty;
-		end;
 
 feature -- Conveniences
 
@@ -113,36 +90,11 @@ feature -- Conveniences
 			!!Result.make (char_value.char_val, constant_i);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_string (Current);
 			ctxt.always_succeed;
 		end;
 
-	load (s: STRING) is
-		do
-			wipe_out;
-			append (s);
-		end;
-
-	string_value: STRING is
-		do
-			!! Result.make (0);
-			Result.append (Current)
-		end
-			
-
-feature {NONE}
-
-	getid_create (ptr: POINTER) is
-		external
-			"C"
-		end;
-
-	getid_area (ptr: POINTER) is
-		external
-			"C"
-		end;
-
-end
+end -- class ID_AS_B

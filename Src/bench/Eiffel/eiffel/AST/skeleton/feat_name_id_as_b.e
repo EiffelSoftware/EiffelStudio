@@ -1,28 +1,39 @@
--- Node for Eiffel feature name
+indexing
 
-class FEAT_NAME_ID_AS
+	description: "Node for Eiffel feature name. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class FEAT_NAME_ID_AS_B
 
 inherit
 
-	FEATURE_NAME
+	FEAT_NAME_ID_AS
+		undefine
+			temp_name, main_feature_format
+		redefine
+			feature_name, internal_name, infix "<"
+		end;
+
+	FEATURE_NAME_B
 
 feature -- Attributes
 
-	feature_name: ID_AS;
+	feature_name: ID_AS_B;
 			-- Feature name
 
 feature -- Conveniences
 
-	internal_name: ID_AS is
+	internal_name: ID_AS_B is
 			-- Internal name used by the compiler
 		do
 			Result := feature_name
 		end;
 
-	infix "<" (other: FEATURE_NAME): BOOLEAN is
+	infix "<" (other: FEATURE_NAME_B): BOOLEAN is
 		local
 			normal_feature: like Current;
-			infix_feature: INFIX_AS;
+			infix_feature: INFIX_AS_B;
 		do
 			normal_feature ?= other;
 			infix_feature ?= other;
@@ -37,23 +48,4 @@ feature -- Conveniences
 			end;
 		end;
 		
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0);
-			is_frozen := yacc_bool_arg (0);
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end;
-
-	set_name (s: STRING) is
-		do
-			!!feature_name.make (0);
-			feature_name.load (s);
-		end;
-		
-
-end
+end -- class FEAT_NAME_ID_AS_B

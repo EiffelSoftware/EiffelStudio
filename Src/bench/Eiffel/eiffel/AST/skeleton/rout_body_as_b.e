@@ -1,31 +1,13 @@
-deferred class ROUT_BODY_AS
+deferred class ROUT_BODY_AS_B
 
 inherit
 
-	AST_EIFFEL
+	ROUT_BODY_AS;
+
+	AST_EIFFEL_B
 		redefine
 			byte_node
 		end
-
-feature -- Conveniences
-
-	is_once: BOOLEAN is
-			-- Is the routine body a once one ?
-		do
-			-- Do nothing
-		end;
-
-	is_deferred: BOOLEAN is
-			-- Is the routine body a deferred one ?
-		do
-			-- Do nothing
-		end;
-
-	is_external: BOOLEAN is
-			-- Is the routine body an external one ?
-		do
-			-- Do nothing
-		end;
 
 feature -- Byte code
 
@@ -35,4 +17,4 @@ feature -- Byte code
 			-- Do nothing
 		end;
 
-end
+end -- class ROUT_BODY_AS_B

@@ -1,12 +1,24 @@
--- Node for type INTEGER
+indexing
 
-class NONE_TYPE_AS
+	description: "Node for NONE type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class NONE_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
-		redefine format
-	end
+	NONE_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
+		undefine
+			simple_format
+		redefine 
+			format
+		end
 
 feature
 
@@ -17,20 +29,17 @@ feature
 			Result := actual_type;
 		end;
 
-	dump: STRING is "NONE";
-			-- Dumped trace
-
 	actual_type: NONE_A is
 			-- Actual integer type
 		once
 			!!Result;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.put_string ("NONE");
 			ctxt.always_succeed;
 		end;
 
-end
+end -- class NONE_TYPE_AS_B

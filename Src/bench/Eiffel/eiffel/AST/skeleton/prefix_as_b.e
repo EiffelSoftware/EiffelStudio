@@ -1,33 +1,30 @@
--- Abstract description of an Eiffel prefixed feature name
+indexing
 
-class PREFIX_AS
+	description:
+			"Abstract description of an Eiffel prefixed feature name. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class PREFIX_AS_B
 
 inherit
 
-	INFIX_AS
-		redefine
+	PREFIX_AS
+		rename
+			fix_operator as old_fix_operator
+		undefine
+			internal_name, infix "<", 
+			main_feature_format, temp_name
+		end;
+
+	INFIX_AS_B
+		undefine
 			Fix_notation, is_infix, is_prefix
+		select
+			fix_operator
 		end
 
 feature
 
-	Fix_notation: STRING is
-			-- Prefix for prefixed Eiffel feature name used by
-			-- the compiler
-		once
-			Result := "_prefix_"
-		end;
-
-	is_infix: BOOLEAN is
-			-- is the current feature name an infixed notation ?
-		do
-			Result := False;
-		end;
-
-	is_prefix: BOOLEAN is
-			-- Is the current feature name a prefixed notation ?
-		do
-			Result := True;
-		end;
-
-end
+end -- class PREFIX_AS_B

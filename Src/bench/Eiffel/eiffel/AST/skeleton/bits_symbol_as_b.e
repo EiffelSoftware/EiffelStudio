@@ -1,31 +1,32 @@
-class BITS_SYMBOL_AS
+class BITS_SYMBOL_AS_B
 
 inherit
 
-	BASIC_TYPE
+	BITS_SYMBOL_AS
+		undefine
+			same_as
 		redefine
-			set, append_clickable_signature, format,
-			is_deep_equal
+			bits_symbol, is_deep_equal
+		end;
+
+	BASIC_TYPE_B
+		undefine
+			simple_format, is_deep_equal, set
+		redefine
+			append_clickable_signature, format
 		end
 
 feature -- Attributes
 
-	bits_symbol: ID_AS;
+	bits_symbol: ID_AS_B;
 			-- Bits value
 
-feature -- Initialization
+feature 
 
-	set is
-			-- Yacc initilization
-		do
-			bits_symbol ?= yacc_arg (0);
-		ensure then
-			bits_symbol_exists: bits_symbol /= Void
-		end;
-
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
+			-- ATTENTION: May be this feature should be deferred now...
 		local
-			o: BITS_SYMBOL_AS
+			o: BITS_SYMBOL_AS_B
 		do
 			o ?= other;
 			Result := o /= Void and then
@@ -90,21 +91,13 @@ feature -- Initialization
 			False
 		end; -- actual_type
 
-	dump: STRING is
-			-- Debug purpose
-		do
-			!!Result.make (5 + bits_symbol.count);
-			Result.append ("BIT ");
-			Result.append (bits_symbol);
-   		end;
-
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string ("BIT ");
 			a_clickable.put_string (bits_symbol);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -114,4 +107,4 @@ feature -- Initialization
 			ctxt.commit;
 		end
 
-end
+end -- class BITS_SYMBOL_AS_B

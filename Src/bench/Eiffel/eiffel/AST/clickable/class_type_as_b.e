@@ -1,53 +1,45 @@
--- Node for normal class type
+indexing
 
-class CLASS_TYPE_AS
+	description: "Node for normal class type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CLASS_TYPE_AS_B
 
 inherit
 
-	TYPE
+	CLASS_TYPE_AS
+		undefine
+			same_as
 		redefine
-			has_like, format, fill_calls_list, replicate,
-			check_constraint_type, is_deep_equal
+			class_name, generics, is_deep_equal
 		end;
+
+	TYPE_B
+		undefine
+			is_deep_equal, has_like, simple_format
+		redefine
+			format, fill_calls_list, replicate,
+			check_constraint_type
+		end;
+
 	SHARED_INST_CONTEXT;
+
 	STONABLE
 
 feature -- Attributes
 
-	class_name: ID_AS;
+	class_name: ID_AS_B;
 			-- Class type name
 
-	generics: EIFFEL_LIST [TYPE];
+	generics: EIFFEL_LIST_B [TYPE_B];
 			-- Possible generical parameters
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			class_name ?= yacc_arg (0);
-			generics ?= yacc_arg (1);
-		ensure then
-			class_name_exists: class_name /= Void;
-		end;
 
 feature -- Conveniences
 
-	set_class_name (s: like class_name) is
-			-- Assign `s' to `class_name'.
-		do
-			class_name := s
-		end;
-
-	set_generics (g: like generics) is
-			-- Assign `g' to `generics'.
-		do
-			generics := g;
-		end;
-
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
-			o: CLASS_TYPE_AS;
+			o: CLASS_TYPE_AS_B;
 			o_g: like generics;
 			p, o_p: INTEGER
 		do
@@ -176,25 +168,10 @@ feature -- Conveniences
 			end;
 		end;
 
-	has_like: BOOLEAN is
-			-- Does the type have anchored type in its definition ?
-		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_like;
-					generics.forth
-				end;
-			end;
-		end;
-
 	check_constraint_type (a_class: CLASS_C) is
 		local
 			associated_class: CLASS_C;
-			temp, cl_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			temp, cl_generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			class_i: CLASS_I;
 			cluster: CLUSTER_I;
 			vcfg3: VCFG3;
@@ -202,7 +179,7 @@ feature -- Conveniences
 			vtug: VTUG;
 			error: BOOLEAN;
 			nb_errors: INTEGER;
-			t1, t2: TYPE;
+			t1, t2: TYPE_B;
 			pos: INTEGER
 		do
 			if has_like then
@@ -274,36 +251,7 @@ feature -- Conveniences
 			end;
 		end;
 
-	dump: STRING is
-			-- Dumped string
-		local
-			dumped_class_name: STRING;
-		do
--- FIXME append_clickable_signature should be redefined
--- some parts of the signature can be clickable !!!
-
-			!!Result.make (class_name.count);
-			dumped_class_name := clone (class_name)
-			dumped_class_name.to_upper;
-			Result.append (dumped_class_name);
-			if generics /= Void then
-				from
-					generics.start; 
-					Result.append (" [");
-				until
-					generics.after
-				loop
-					Result.append (generics.item.dump);
-					if not generics.islast then
-						Result.append (", ");
-					end;
-					generics.forth;
-				end;
-				Result.append ("]");
-			end;
-		end;
-
-feature -- stoning
+feature -- Stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is
 		local
@@ -321,8 +269,7 @@ feature -- stoning
 			end
 		end;
 
-
-	format (ctxt: FORMAT_CONTEXT) is 
+	format (ctxt: FORMAT_CONTEXT_B) is 
 			-- Reconstitute text
 		local
 			s: STRING;
@@ -362,5 +309,4 @@ feature -- Replication
 			end;
 		end;
 
-
-end
+end -- class CLASS_TYPE_AS_B

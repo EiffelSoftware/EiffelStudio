@@ -1,27 +1,27 @@
-class CLIENT_AS
+class CLIENT_AS_B
 
 inherit
 
-	AST_EIFFEL
+	CLIENT_AS
+		redefine
+			clients
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end;
+
 	SHARED_EXPORT_STATUS
 
 feature -- Attributes
 
-	clients: EIFFEL_LIST [ID_AS];
+	clients: EIFFEL_LIST_B [ID_AS_B];
 			-- Client list
 
 feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0);
-		ensure then
-			not (clients = Void or else clients.empty);
-		end;
 
 	export_status: EXPORT_I is
 			-- Associated export status
@@ -45,7 +45,7 @@ feature -- Initialization
 			end;
 		end;
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 		local
 			temp: STRING;
 			cluster: CLUSTER_I;
@@ -92,4 +92,4 @@ feature -- Initialization
 			end;
 		end;
 
-end
+end -- class CLIENT_AS_B

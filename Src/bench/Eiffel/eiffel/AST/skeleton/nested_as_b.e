@@ -1,10 +1,23 @@
--- Abstract description of a nested call `target.message'
+indexing
 
-class NESTED_AS
+	description:
+			"Abstract description of a nested call `target.message' %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class NESTED_AS_B
 
 inherit
 
-	CALL_AS
+	NESTED_AS
+		redefine
+			target, message
+		end;
+
+	CALL_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,23 +25,11 @@ inherit
 
 feature -- Attributes
 
-	target: ACCESS_AS;
+	target: ACCESS_AS_B;
 			-- Target of the call
 
-	message: CALL_AS;
+	message: CALL_AS_B;
 			-- Message send to the target
-
-feature -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			target ?= yacc_arg (0);
-			message ?= yacc_arg (1);
-		ensure then
-			target_exists: target /= Void;
-			message_exists: message /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -67,10 +68,8 @@ feature -- Type check, byte code and dead code removal
 			m.set_parent (Result);
 			Result.set_message (m);
 		end;
-
-
 	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -107,21 +106,4 @@ feature -- Replication
 			Result.set_message (message.replicate (ctxt));
 		end;
 
-feature {NESTED_AS} -- Replication
-
-	set_target (t: like target) is
-		require
-			valid_arg: t /= Void 
-		do
-			target := t;
-		end;
-
-
-	set_message (m: like message) is
-		require
-			valid_arg: m /= Void 
-		do
-			message := m;
-		end;
-						
-end
+end -- class NESTED_AS_B

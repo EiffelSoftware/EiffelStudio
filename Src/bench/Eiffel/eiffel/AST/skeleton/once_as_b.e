@@ -1,19 +1,22 @@
-class ONCE_AS
+class ONCE_AS_B
 
 inherit
 
-	INTERNAL_AS
+	ONCE_AS
+		rename
+			compound as old_compound
+		end;
+
+	INTERNAL_AS_B
+		undefine
+			is_once
 		redefine
-			is_once, byte_node
+			byte_node
+		select
+			compound
 		end;
 
 feature
-
-	is_once: BOOLEAN is
-			-- Is the current routine body a once one ?
-		do
-			Result := true;
-		end;
 
 	byte_node: ONCE_BYTE_CODE is
 			-- Byte code for once body
@@ -24,12 +27,4 @@ feature
 			end;
 		end;
 
-feature {}
-
-	begin_keyword: BASIC_TEXT is
-			-- "once" keyword
-		once
-			Result := ti_Once_keyword
-		end;
-
-end
+end -- class ONCE_AS_B

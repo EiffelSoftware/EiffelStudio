@@ -1,46 +1,46 @@
--- Abstract description for "like id" type
+indexing
 
-class LIKE_ID_AS
+	description: "Abstract description for `like id' type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class LIKE_ID_AS_B
 
 inherit
 
-	TYPE
+	LIKE_ID_AS
+		undefine
+			same_as
 		redefine
-			has_like, format, fill_calls_list, replicate, is_deep_equal
+			anchor, is_deep_equal
 		end;
+
+	TYPE_B
+		undefine
+			is_deep_equal, has_like, simple_format
+		redefine
+			format, fill_calls_list, replicate
+		end;
+
 	SHARED_LIKE_CONTROLER;
 
 feature -- Attributes
 
-	anchor: ID_AS;
+	anchor: ID_AS_B;
 			-- Anchor name
 
-feature -- Initialization
+feature
 
-	set is
-			-- Yacc initialization
-		do
-			anchor ?= yacc_arg (0);
-		ensure then
-			anchor_exists: anchor /= Void
-		end;
-
-feature -- Implementation of inherited deferred features
-
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
-			o: LIKE_ID_AS
+			o: like Current
 		do
 			o ?= other;
 			Result := o /= Void and then
 				anchor.is_equal (o.anchor);
 		end;
 
-	has_like: BOOLEAN is
-			-- Has the type anchored type in its definition ?
-		do
-			Result := True;
-		end;
+feature -- Implementation of inherited deferred features
 
 	actual_type: TYPE_A is
 			-- Useless
@@ -50,14 +50,6 @@ feature -- Implementation of inherited deferred features
 			False
 		end;
 
-	dump: STRING is
-			-- Dump string
-		do
-			!!Result.make (5 + anchor.count);
-			Result.append ("like ");
-			Result.append (anchor);
-		end;
-	
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table'
@@ -67,7 +59,7 @@ feature -- Implementation of inherited deferred features
 		local
 			anchor_feature: FEATURE_I;
 			like_feature: LIKE_FEATURE;
-			anchor_type, argument_type: TYPE;
+			anchor_type, argument_type: TYPE_B;
 			argument_position, rout_id: INTEGER;
 			like_argument: LIKE_ARGUMENT;
 			depend_unit: DEPEND_UNIT;
@@ -145,7 +137,7 @@ feature -- Implementation of inherited deferred features
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -169,11 +161,4 @@ feature -- Replication
 			Result.set_anchor (anchor.replicate (ctxt))
 		end;
 
-feature {LIKE_ID_AS}	-- Replication
-
-	set_anchor (a: like anchor) is
-		do
-			anchor := a
-		end;
-
-end
+end -- class LIKE_ID_AS_B

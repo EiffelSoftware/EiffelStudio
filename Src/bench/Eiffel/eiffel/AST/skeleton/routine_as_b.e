@@ -1,116 +1,58 @@
--- Abstract description of the content of a standard feature
+indexing
 
-class ROUTINE_AS
+	description:
+			"Abstract description of the content of a standard %
+			%feature. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ROUTINE_AS_B
 
 inherit
 
-	CONTENT_AS
+	ROUTINE_AS
 		redefine
-			is_require_else, is_ensure_then,
-			has_precondition, has_postcondition, has_rescue,
-			type_check, byte_node, check_local_names,
-			find_breakable, 
+			obsolete_message, precondition,
+			locals, routine_body, postcondition,
+			rescue_clause, check_local_names
+		end;
+
+	CONTENT_AS_B
+		undefine
+			simple_format, is_require_else, is_ensure_then,
+			has_rescue, has_precondition, has_postcondition,
+			check_local_names
+		redefine
+			type_check, byte_node, find_breakable, 
 			fill_calls_list, replicate, local_table
 		end;
+
 	SHARED_INSTANTIATOR;
+
 	SHARED_CONSTRAINT_ERROR;
+
 	SHARED_EVALUATOR;
 
 feature -- Attributes
 
-	obsolete_message: STRING_AS;
+	obsolete_message: STRING_AS_B;
 			-- Obsolete clause message
 			-- (Void if was not present)
 
-	precondition: REQUIRE_AS;
+	precondition: REQUIRE_AS_B;
 			-- Precondition list
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS];
+	locals: EIFFEL_LIST_B [TYPE_DEC_AS_B];
 			-- Local declarations
 
-	routine_body: ROUT_BODY_AS;
+	routine_body: ROUT_BODY_AS_B;
 			-- Routine body
 
-	postcondition: ENSURE_AS;
+	postcondition: ENSURE_AS_B;
 			-- Routine postconditions
 
-	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS];
+	rescue_clause: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Rescue compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			obsolete_message ?= yacc_arg (0);
-			precondition ?= yacc_arg (1);
-			locals ?= yacc_arg (2);
-			routine_body ?= yacc_arg (3);
-			postcondition ?= yacc_arg (4);
-			rescue_clause ?= yacc_arg (5);
-		ensure then
-			routine_body /= Void
-		end;
-
-feature -- Conveniences
-
-	is_require_else: BOOLEAN is
-			-- Is the precondition block of the content preceeded by
-			-- `require else' ?
-			--|Note: It is valid to not include a precondition in 
-			--|a redefined feature (it is equivalent to "require else False")
-		do
-			Result := precondition = Void or else precondition.is_else;
-		end;
-
-	is_ensure_then: BOOLEAN is
-			-- Is the postcondition block of the content preceeded by
-			-- `ensure then' ?
-			--|Note: It is valid to not include a postcondition in 
-			--|a redefined feature (it is equivalent to "ensure then True"
-		do
-			Result := postcondition = Void or else postcondition.is_then;
-		end;
-
-	has_precondition: BOOLEAN is
-			-- Has the routine content a preconditions ?
-		do
-			Result := not (	precondition = Void
-							or else
-							precondition.assertions = Void)
-		end;
-
-	has_postcondition: BOOLEAN is
-			-- Has the routine content postconditions ?
-		do
-			Result := not (	postcondition = Void
-							or else
-							postcondition.assertions = Void)
-		end;
-
-	has_rescue: BOOLEAN is
-			-- Has the routine a rescue clause ?
-		do
-			Result := rescue_clause /= Void;
-		end;
-
-	is_deferred: BOOLEAN is
-			-- Is the routine body a deferred one ?
-		do
-			Result := routine_body.is_deferred;
-		end;
-
-	is_once: BOOLEAN is
-			-- Is the routine body a once one ?
-		do
-			Result := routine_body.is_once;
-		end;
-
-	is_external: BOOLEAN is
-			-- Is the routine body an external one ?
-		do
-			Result := routine_body.is_external;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -191,10 +133,10 @@ feature -- Type check, byte code and dead code removal
 	check_local_names is
 			-- Check conflicts between local names and feature names
 		local
-			id_list: EIFFEL_LIST [ID_AS];
+			id_list: EIFFEL_LIST_B [ID_AS_B];
 			f_table: FEATURE_TABLE;
 			vrle1: VRLE1;
-			local_name: ID_AS;
+			local_name: ID_AS_B;
 		do
 			if locals /= Void then
 				from
@@ -234,10 +176,10 @@ feature -- Type check, byte code and dead code removal
 			-- Also an external or a deferred routine cannot have
 			-- locals.
 		local
-			id_list: EIFFEL_LIST [ID_AS];
-			local_type: TYPE;
+			id_list: EIFFEL_LIST_B [ID_AS_B];
+			local_type: TYPE_B;
 			local_class_c: CLASS_C;
-			local_name: ID_AS;
+			local_name: ID_AS_B;
 			solved_type: TYPE_A;
 			context_class: CLASS_C;
 			gen_type: GEN_TYPE_A;
@@ -394,11 +336,11 @@ feature -- Type check, byte code and dead code removal
 			-- Local table for dead code removal
 		local
 			feat_tbl: FEATURE_TABLE;
-			id_list: EIFFEL_LIST [ID_AS];
+			id_list: EIFFEL_LIST_B [ID_AS_B];
 			solved_type: TYPE_A;
 			local_info: LOCAL_INFO;
 			local_name: STRING;
-			local_type: TYPE;
+			local_type: TYPE_B;
 		do
 			if locals /= Void then
 				from
@@ -452,58 +394,6 @@ feature -- Debugger
 			end;
 		end;
 
-feature -- Equivalent
-
-	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
-		require else
-			valid_other: other /= Void
-		do
-			reset_locals;
-			other.reset_locals;
-			Result :=	deep_equal (routine_body, other.routine_body) and then
-						deep_equal (locals, other.locals) and then
-						deep_equal (rescue_clause, other.rescue_clause) and then
-						deep_equal (obsolete_message, other.obsolete_message)
-		end;
- 
-	is_assertion_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
-		require else
-			valid_other: other /= Void
-		do
-			reset_assertions;
-			other.reset_assertions;
-			Result :=   deep_equal (precondition, other.precondition) and then
-				deep_equal (postcondition, other.postcondition)
-		end;
-
-	reset_locals is
-			-- Reset the positions in the list
-		do
-			if locals /= Void then
-				from
-					locals.start
-				until
-					locals.after
-				loop
-					locals.item.reset;
-					locals.forth
-				end;
-				locals.start;
-			end;
-		end;
-
-	reset_assertions is
-		do
-			if precondition /= Void then
-				precondition.reset;
-			end;
-			if postcondition /= Void then
-				postcondition.reset;
-			end;
-		end;
-
 feature	-- Replication
 	
 	fill_calls_list (l: CALLS_LIST) is
@@ -544,40 +434,6 @@ feature	-- Replication
 			end;
 		end;
 
-feature	{ROUTINE_AS, FEATURE_AS}  -- Replication and for flattening of a routine
-
-	set_precondition (p: like precondition) is
-		do
-			precondition := p
-		end;
-
-	set_locals (l: like locals) is
-		do
-			locals := l
-		end;
-
-	set_routine_body (r: like routine_body) is
-		require
-			valid_arg: r /= Void
-		do
-			routine_body := r
-		end;
-
-	set_postcondition (p: like postcondition) is
-		do
-			postcondition := p
-		end;
-
-	set_rescue_clause (r: like rescue_clause) is
-		do	
-			rescue_clause := r
-		end;
-
-	set_obsolete_message (m: like obsolete_message) is
-		do	
-			obsolete_message := m
-		end;
-
 feature -- Case storage
 
 	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
@@ -585,12 +441,14 @@ feature -- Case storage
 		require
 			valid_f: f /= Void
 		do
-			if precondition /= Void and then precondition.assertions /= Void then
+			if precondition /= Void and then 
+									precondition.assertions /= Void then
 				f.set_preconditions (precondition.storage_info (classc));
 			end;
-			if postcondition /= Void and then postcondition.assertions /= Void then
+			if postcondition /= Void and then 
+									postcondition.assertions /= Void then
 				f.set_postconditions (postcondition.storage_info (classc));
 			end;
 		end;
 
-end
+end -- class ROUTINE_AS_B

@@ -1,47 +1,31 @@
--- Description of class invariant
+indexing
 
-class INVARIANT_AS
+	description: "Description of class invariant. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INVARIANT_AS_B
 
 inherit
 
-	AST_EIFFEL
+	INVARIANT_AS
+		redefine
+			assertion_list, format_assertions
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format, is_invariant_obj
 		redefine
 			is_invariant_obj, type_check, byte_node, format
 		end;
+
 	IDABLE
 
-feature -- Identity
+feature -- Attribute
 
-	id: INTEGER;
-			-- Class id of the class to which current is the invariant
-			-- description
-
-	set_id (i: INTEGER) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end; -- set_id
-
-feature -- Information
-
-	assertion_list: EIFFEL_LIST [TAGGED_AS];
+	assertion_list: EIFFEL_LIST_B [TAGGED_AS_B];
 			-- Assertion list
-
-feature -- Initialization
-
-	set is
-			-- Initialization routine
-		do
-			assertion_list ?= yacc_arg (0);
-		end;
-
-feature -- Conveniences
-
-	is_invariant_obj: BOOLEAN is
-			-- Is the current object an instance of INVARIANT_AS ?
-		do
-			Result := True;
-		end;
 
 feature -- Type check and byte code
 
@@ -70,11 +54,10 @@ feature -- Type check and byte code
 				Result := assertion_list.byte_node;
 			end;
 		end;
-
 	
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -96,7 +79,7 @@ feature -- Formatter
 			end
 		end;
 
-	format_assertions (ctxt: FORMAT_CONTEXT) is
+	format_assertions (ctxt: FORMAT_CONTEXT_B) is
 		local
 			i, l_count: INTEGER;
 			not_first: BOOLEAN
@@ -138,7 +121,7 @@ feature -- Case Storage
 		require
 			valid_assertions: assertion_list /= Void
 		local	
-			ctxt: FORMAT_CONTEXT;
+			ctxt: FORMAT_CONTEXT_B;
 		do
 			!! Result.make (assertion_list.count);
 			!! ctxt.make_for_case (classc);
@@ -154,4 +137,4 @@ feature -- Case Storage
 			end
 		end;
 
-end
+end -- class INVARIANT_AS_B

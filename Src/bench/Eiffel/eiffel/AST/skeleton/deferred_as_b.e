@@ -1,27 +1,16 @@
-class DEFERRED_AS
+class DEFERRED_AS_B
 
 inherit
 
-	ROUT_BODY_AS
+	DEFERRED_AS;
+
+	ROUT_BODY_AS_B
+		undefine
+			is_deferred, has_instruction, index_of_instruction,
+			simple_format
 		redefine
 			is_deferred, byte_node, format
 		end
-
-feature -- Intialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
-
-feature -- Conveniences
-
-	is_deferred: BOOLEAN is
-			-- Is the current routine body a defferred one ?
-		do
-			Result := True;
-		end;
 
 feature -- byte code
 
@@ -33,9 +22,10 @@ feature -- byte code
 
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.always_succeed;
 			ctxt.put_text_item (ti_Deferred_keyword);
 		end;
-end
+
+end -- class DEFERRED_AS_B

@@ -1,21 +1,23 @@
--- Abstract description to access to `Current'
+indexing
 
-class CURRENT_AS
+	description:
+		"Abstract description to access to `Current'. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CURRENT_AS_B
 
 inherit
 
-	ACCESS_AS
+	CURRENT_AS;
+
+	ACCESS_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format, replicate
 		end
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check and byte code
 
@@ -43,18 +45,13 @@ feature -- Type check and byte code
 			access_line.forth;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
 			ctxt.prepare_for_current;
 			ctxt.put_string (ctxt.new_types.final_name);
 			ctxt.commit;
 			--ctxt.set_types_back_to_global;
-		end;
-
-	access_name: STRING is
-		once
-			Result := "Current"
 		end;
 
 feature -- Replication
@@ -64,4 +61,5 @@ feature -- Replication
 			ctxt.adapt_current;
 			Result := clone (Current)
 		end;
-end
+
+end -- class CURRENT_AS_B

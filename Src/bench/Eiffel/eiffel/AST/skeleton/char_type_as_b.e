@@ -1,10 +1,19 @@
--- Node for type CHARACTER
+indexing
 
-class CHAR_TYPE_AS
+	description: "Node for type CHARACTER. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CHAR_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
+	CHAR_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
 
 feature
 
@@ -21,7 +30,4 @@ feature
 			!!Result;
 		end;
 
-	dump: STRING is "CHARACTER";
-			-- Dumped trace
-
-end
+end -- class CHAR_TYPE_AS_B

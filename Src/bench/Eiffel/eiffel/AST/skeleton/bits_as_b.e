@@ -1,26 +1,25 @@
-class BITS_AS
+class BITS_AS_B
 
 inherit
 
-	BASIC_TYPE
+	BITS_AS
+		undefine
+			is_deep_equal, same_as
+		redefine
+			bits_value
+		end;
+
+	BASIC_TYPE_B
+		undefine
+			simple_format, set
 		redefine
 			set, format, append_clickable_signature
 		end
 
 feature -- Attributes
 
-	bits_value: INTEGER_AS;
+	bits_value: INTEGER_AS_B;
 			-- Bits value
-
-feature -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			bits_value ?= yacc_arg (0);
-		ensure then
-			bits_value_exists: bits_value /= Void
-		end;
 
 feature
 
@@ -49,21 +48,13 @@ feature
 			Result.set_base_type (bits_value.value);
 		end;
 
-	dump: STRING is
-			-- Debug purpose
-		do
-			!!Result.make (10);
-			Result.append ("BIT ");
-			Result.append_integer (bits_value.value);
-		end;
-
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string ("BIT ");
 			a_clickable.put_int (bits_value.value);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.always_succeed;
@@ -71,4 +62,4 @@ feature
 			ctxt.put_string (bits_value.value.out);
 		end
 
-end
+end -- class BITS_AS_B

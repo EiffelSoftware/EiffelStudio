@@ -135,7 +135,9 @@ feature {NONE} -- Implementation
 			lower := lower_entry.text.to_integer
 			create interval.make (lower, integer)
 			first.value_range.adapt (interval)
-			(objects @ 2).value_range.adapt (interval)
+			if objects @ 2 /= Void then
+				(objects @ 2).value_range.adapt (interval)	
+			end
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
@@ -160,7 +162,9 @@ feature {NONE} -- Implementation
 			upper := upper_entry.text.to_integer
 			create interval.make (integer, upper)
 			first.value_range.adapt (interval)
-			(objects @ 2).value_range.adapt (interval)
+			if objects @ 2 /= Void then
+				(objects @ 2).value_range.adapt (interval)	
+			end
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save

@@ -260,7 +260,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	union overhead *zone;			/* Malloc info zone */
 	uint32 flags;					/* Object's flags */
 	uint32 size;					/* Object's size */
-	EIF_OBJECT *hash_zone;				/* Hash table entry recording duplication */
+	EIF_REFERENCE *hash_zone;				/* Hash table entry recording duplication */
 	EIF_REFERENCE clone;					/* Where clone is allocated */
 
 	zone = HEADER(source);			/* Where eif_malloc stores its information */

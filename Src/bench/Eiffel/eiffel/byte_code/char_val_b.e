@@ -59,6 +59,14 @@ feature -- Measurement
 			Result := (other.value |-| value).abs
 		end
 		
+feature -- Evaluation
+
+	make_interval (upper: like Current): CHAR_INTER_B is
+			-- Create a new interval with lower set to `Current' and upper set to `upper'.
+		do
+			create Result.make (Current, upper)
+		end
+
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is

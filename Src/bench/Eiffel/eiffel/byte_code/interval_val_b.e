@@ -52,6 +52,19 @@ feature -- Iteration
 		deferred
 		end
 
+feature -- Evaluation
+
+	make_interval (upper: like Current): INTERVAL_B is
+			-- Create a new interval with lower set to `Current' and upper set to `upper'.
+		require
+			upper_not_void: upper /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			lower_set: Result.lower = Current
+			upper_set: Result.upper = upper
+		end
+
 feature -- IL code generation
 
 	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is

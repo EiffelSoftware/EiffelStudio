@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			-- Create a slice.
 		do
 			Precursor
-			create angle1.make (0)
-			create angle2.make (Pi * 2)
+			create angle1.make_radians (0)
+			create angle2.make_radians (Pi * 2)
 		end
 
 feature -- Access

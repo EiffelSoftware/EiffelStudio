@@ -181,19 +181,19 @@ feature -- Information Handling
 			!! id.make (0);
 			id.append (system_edit.text);
 			if not id.is_valid then
-				warner (dialog).gotcha_call ("Invalid system name.%NTry again.");
+				warner (dialog).gotcha_call ("Invalid system name.%N");
 				processed := False;
 			else
 				!! id.make (0);
 				id.append (root_class_edit.text);
 				if not id.is_valid then
-					warner (dialog).gotcha_call ("Invalid root class name.%NTry again.");
+					warner (dialog).gotcha_call ("Invalid root class name.%N");
 					processed := False;
 				else
 					!! id.make (0);
 					id.append (creation_procedure_edit.text);
 					if not id.is_valid then
-						warner (dialog).gotcha_call ("Invalid creation procedure name.%NTry again.");
+						warner (dialog).gotcha_call ("Invalid creation procedure name.%N");
 						processed := False;
 					else
 						processed := True;
@@ -379,17 +379,20 @@ feature {NONE} -- Implementation
 		local
 			new_ace: PLAIN_TEXT_FILE;
 			child: ARRAYED_LIST [WIDGET];
-			toggle: TOGGLE_B
+			toggle: TOGGLE_B;
+			t: STRING
 		do
 			!! new_ace.make_open_write ("Ace.ace");
 			new_ace.putstring ("system%N%T");
 			new_ace.putstring (system_edit.text);
 			new_ace.putstring ("%N%T%T-- Name of the system.%N%Nroot%N%T%"");
-			new_ace.putstring (root_class_edit.text);
+			t := clone (root_class_edit.text);
+			t.to_upper;
+			new_ace.putstring (t);
 			new_ace.putstring ("%" (root_cluster): %"");
 			new_ace.putstring (creation_procedure_edit.text);
 			new_ace.putstring ("%"%N%T%T-- Create object of class `");
-			new_ace.putstring (root_class_edit.text);
+			new_ace.putstring (t);
 			new_ace.putstring ("' in cluster `root_cluster'%N");
 			new_ace.putstring ("%T%T-- use creation procedure `");
 			new_ace.putstring (creation_procedure_edit.text);
@@ -444,7 +447,7 @@ feature {NONE} -- Implementation
 			end;
 			new_ace.putstring (");%N%Ncluster%N%Troot_cluster:%T%T%"");
 			new_ace.putstring (Project_directory);
-			new_ace.putstring ("%"%N%Nend -- system ");
+			new_ace.putstring ("%";%N%Nend -- system ");
 			new_ace.putstring (system_edit.text);
 			new_ace.putstring ("%N");
 			new_ace.close
@@ -453,8 +456,9 @@ feature {NONE} -- Implementation
 	create_root_class is
 			-- Create the root class.
 		local
-			rc: STRING
-			new_class: PLAIN_TEXT_FILE
+			rc: STRING;
+			new_class: PLAIN_TEXT_FILE;
+			t: STRING
 		do
 			rc := clone (root_class_edit.text);
 			rc.to_lower;
@@ -463,7 +467,9 @@ feature {NONE} -- Implementation
 			if not new_class.exists then
 				new_class.open_write;
 				new_class.putstring ("class ");
-				new_class.putstring (root_class_edit.text);
+				t := clone (root_class_edit.text);
+				t.to_upper;
+				new_class.putstring (t);
 				new_class.putstring ("%N%N");
 				new_class.putstring ("creation%N%T");
 				new_class.putstring (creation_procedure_edit.text);
@@ -474,9 +480,13 @@ feature {NONE} -- Implementation
 				new_class.putstring ("%T%T%T-- Automatically generated root class and creation procedure.%N");
 				new_class.putstring ("%T%Tdo%N");
 				new_class.putstring ("%T%T%Tio.putstring (%"Welcome to ISE Eiffel.%%N%")%N");
+				new_class.putstring ("%T%T%Tio.readline%N");
+					-- FIXME **********************************************
+					-- UNIX: `ebench &' will not work with this.
+					-- FIXME **********************************************
 				new_class.putstring ("%T%Tend;%N");
 				new_class.putstring ("%Nend -- class ");
-				new_class.putstring (root_class_edit.text);
+				new_class.putstring (t);
 				new_class.putstring ("%N");
 				new_class.close
 			end

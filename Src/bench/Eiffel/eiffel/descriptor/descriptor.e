@@ -61,6 +61,7 @@ feature -- Generation
 			descriptor_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 			class_id_string: STRING
+			is_precompiling: BOOLEAN
 		do
 				-- Retrieve the buffer and clear it
 			buffer := generation_buffer
@@ -69,13 +70,15 @@ feature -- Generation
 			class_id_string := class_type.id.id.out
 			class_id_string.prepend ("_")
 
+			is_precompiling := Compilation_modes.is_precompiling
 			buffer.append ("#include %"eif_macros.h%"%N%N");
+			if is_precompiling then
+				buffer.append ("#include %"eif_wbench.h%"%N%N")	
+			end
 			Class_counter.generate_extern_offsets (buffer);
 			Static_type_id_counter.generate_extern_offsets (buffer);
-			if Compilation_modes.is_precompiling then
+			if is_precompiling then
 				Real_body_index_counter.generate_extern_offsets (buffer);
-				buffer.new_line
-				buffer.putstring ("%Textern char desc_fill;")
 				buffer.new_line
 				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<"void">>);
 				buffer.new_line

@@ -9,6 +9,9 @@ default
 	assertion (require)
 	assertion (ensure)
 	arguments ("-g")
+	arguments ("--client=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
+	arguments ("com_wizard.exe --server=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated")
+	arguments ("--client=C:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=C:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("refactor_fixme")
@@ -127,6 +130,10 @@ cluster
 
 	library eclop:		"$EIFFEL_SRC\free_add_ons\eclop"
 
+	all help_engine:		"$EIFFEL_SRC\Eiffel\interface\new_graphical\help"
+		exclude
+			"gtk"; 
+		end
 
 external
 
@@ -141,6 +148,7 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib"
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib",
+		"htmlhelp.lib"
 
 end

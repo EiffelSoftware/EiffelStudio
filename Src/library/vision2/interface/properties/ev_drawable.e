@@ -433,6 +433,15 @@ feature -- Obsolete
 			set_drawing_mode (a_mode)
 		end
 
+	clear_rect (x1, y1, x2, y2: INTEGER) is
+			-- Erase rectangle (`x1, `y1') - (`x2', `y2') with
+			-- `background_color'.
+		obsolete
+			"Use: clear_rectangle"
+		do
+			implementation.clear_rectangle (x1, y1, x2, y2)
+		end
+
 invariant
 	font_not_void: font /= Void
 	background_color_not_void: background_color /= Void
@@ -463,6 +472,11 @@ end -- class EV_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/21 18:13:54  brendel
+--| Added obsolete declaration of clear_rect, since, because the interfaces
+--| have been frozen, any feature that is being renamed has to be
+--| well-documented, so that customers do not have any more problems.
+--|
 --| Revision 1.18  2000/02/19 20:24:42  brendel
 --| Updated copyright to 1986-2000.
 --|

@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			set_text (a_name)
 			set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
 			drop_actions.extend (agent add_window_object)
+			set_pebble (Current)
 		ensure
 			name_set: a_name.is_equal (text)
 		end	

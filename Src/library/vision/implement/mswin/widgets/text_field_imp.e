@@ -13,7 +13,8 @@ inherit
 			realize, 
 			unrealize,
 			on_key_down,
-			on_key_up
+			on_key_up,
+			set_height
 		end
 
 	TEXT_FIELD_I
@@ -186,21 +187,37 @@ feature -- Status setting
 	clear is
 			-- Clear current text field.
 		do
-                        set_text ("")
+			set_text ("")
 		end
 
 	set_maximum_size (a_max: INTEGER) is
-                        -- Set maximum_size to `a_max'.
+			-- Set maximum_size to `a_max'.
 		do
 			maximum_size := a_max
 		end
 
 	set_text (a_text: STRING) is
-                        -- Set `text' to `a_text'.
+			-- Set `text' to `a_text'.
 		do
 			private_text := clone (a_text)
 			if exists then
 				wel_set_text (a_text)
+			end
+		end
+
+	set_height (a_height: INTEGER) is
+			-- Set height to `new_height'.
+		do
+			if private_attributes.height /= a_height then
+				if exists then
+					private_attributes.set_height (a_height + 2 * window_border_height)
+					wel_set_height (a_height + 2 * window_border_height)
+				else
+					private_attributes.set_height (a_height)
+				end;
+				if parent /= Void then
+					parent.child_has_resized
+				end
 			end
 		end
 

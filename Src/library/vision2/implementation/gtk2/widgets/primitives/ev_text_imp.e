@@ -13,7 +13,8 @@ class
 inherit
 	EV_TEXT_I
 		redefine
-			interface
+			interface,
+			text_length
 		end
 
 	EV_TEXT_COMPONENT_IMP
@@ -22,7 +23,9 @@ inherit
 			insert_text,
 			initialize,
 			create_change_actions,
-			dispose
+			dispose,
+			text_length,
+			remove_selection_on_lose_focus
 		end
 		
 	EV_FONTABLE_IMP
@@ -76,6 +79,22 @@ feature -- Access
 
 feature -- Status report
 
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			from
+				create a_text_iter.make
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, i - 1)
+			until
+				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_text_iter.item)
+			loop
+				Result := Result + 1
+			end
+			Result := Result.max (1)
+		end
+
 	is_editable: BOOLEAN
 			-- Is the text editable by the user?
 
@@ -87,36 +106,14 @@ feature -- Status report
 
 	selection_start: INTEGER is
 			-- Index of the first character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
 		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.min (a_end_offset) + 1
-			end
+			Result := selection_start_internal
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
 		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.max (a_end_offset)
-			end
+			Result := selection_end_internal
 		end
 
 feature -- Status setting
@@ -233,13 +230,13 @@ feature -- Access
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			temp_text: POINTER
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_start_iter.make
 			create a_end_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
 			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
-			create a_cs.make_from_utf8_pointer (temp_text)
+			create a_cs.make_from_pointer (temp_text)
 			Result := a_cs.string
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
 		end
@@ -252,7 +249,7 @@ feature -- Access
 			temp_text: POINTER
 			a_success: BOOLEAN
 			i: INTEGER
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_start_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_start_iter.item)
@@ -267,8 +264,14 @@ feature -- Access
 			
 			a_end_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_copy (a_start_iter.item)
 			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_end_iter)
-			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter, False)
-			create a_cs.make_from_utf8_pointer (temp_text)
+			
+			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_ends_line (a_end_iter) then
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_char (a_end_iter)
+			end
+
+			
+			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter, True)--False)
+			create a_cs.make_from_pointer (temp_text)
 			Result := a_cs.string
 			
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
@@ -313,10 +316,16 @@ feature -- Access
 				i := i + 1
 			end
 			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_iter.item)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) - a_line
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
 
 feature -- Status report
+
+	text_length: INTEGER is
+			-- Number of characters in `Current'
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer)
+		end
 
 	line_count: INTEGER is
 			-- Number of display lines present in widget.
@@ -350,12 +359,11 @@ feature -- Status report
 									feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
 				)
 			until
-				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_iter.item)
 			loop
 				Result := Result + 1
-			end
-				-- Take this result from the total number of display lines to work out current line.
-			Result := line_count - Result
+			end			
+			Result := Result.max (1)
 		end
 
 	caret_position: INTEGER is
@@ -380,7 +388,7 @@ feature -- Status setting
 	
 	insert_text (a_text: STRING) is
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)
@@ -396,7 +404,7 @@ feature -- Status setting
 	
 	set_text (a_text: STRING) is
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
@@ -411,7 +419,7 @@ feature -- Status setting
 	prepend_text (a_text: STRING) is
 			-- Prepend 'txt' to `text'.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)
@@ -435,12 +443,6 @@ feature -- Status setting
 		end
 
 feature -- Basic operation
-
-	put_new_line is
-			-- Go to the beginning of the following line.
-		do
-			insert_text ("%N")
-		end
 
 	scroll_to_line (i: INTEGER) is
 		local
@@ -476,19 +478,48 @@ feature -- Basic operation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_none_enum)
 			has_word_wrapping := False
 		end
-
-feature -- Assertions
-
-	last_line_not_empty: BOOLEAN is
-			-- Has the line at least one character?
-		local
-			temp_text: STRING
-		do
-			temp_text := text
-			Result := not ((temp_text @ temp_text.count) = '%N')
-		end
 		
 feature {NONE} -- Implementation
+
+	remove_selection_on_lose_focus: BOOLEAN is
+			-- Should `Current' lose selection when focus is lost?
+		do
+			Result := False
+		end
+
+	selection_start_internal: INTEGER is
+			-- Index of the first character selected.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.min (a_end_offset) + 1
+			end
+		end
+
+	selection_end_internal: INTEGER is
+			-- Index of the last character selected.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.max (a_end_offset)
+			end
+		end
 
 	dispose is
 			-- Clean up `Current'
@@ -506,7 +537,7 @@ feature {NONE} -- Implementation
 	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
 			-- Append `txt' to `text'.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)
@@ -514,16 +545,6 @@ feature {NONE} -- Implementation
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
-		end
-
-	line_height: INTEGER is
-			-- Height of the text lines in the widget.
-		do
-			if private_font /= Void then
-				Result := private_font.ascent + private_font.descent
-			else
-				Result := App_implementation.Default_font_ascent + App_implementation.Default_font_descent
-			end
 		end
 		
 	text_view: POINTER

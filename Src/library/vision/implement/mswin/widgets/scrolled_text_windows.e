@@ -40,10 +40,13 @@ feature -- Initialization
 			init_rich_edit_dll
 			!! private_attributes
 			is_multi_line_mode := True
+			is_horizontal_scrollbar := True
+			is_vertical_scrollbar := True
 			parent ?= oui_parent.implementation
 			!! private_text.make (0)
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
+			set_maximum_size (90000)
 		end
 
 	realize is
@@ -63,7 +66,6 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
-				set_text_limit (90000)
 				enable_standard_notifications
 				if private_background_color /= Void then
 					set_background_color (private_background_color)

@@ -159,8 +159,6 @@ feature -- Basic Operations
 					end
 					progress_bar.step_forward
 					task_progress_bar.step_forward
-			print ("total: " + progress_bar.value.out + " / " + (progress_bar.value_range.upper - progress_bar.value_range.lower).out + "%N")
-			print ("task:  " + task_progress_bar.value.out + " / " + (task_progress_bar.value_range.upper - task_progress_bar.value_range.lower).out + "%N%N")
 					l_percent := ((progress_bar.value / (progress_bar.value_range.upper - progress_bar.value_range.lower)) * 100).rounded
 					percentage_label.set_text (l_percent.out)
 					l_percent := ((task_progress_bar.value / (task_progress_bar.value_range.upper - task_progress_bar.value_range.lower)) * 100).rounded

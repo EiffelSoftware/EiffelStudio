@@ -20,7 +20,6 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			parent_ask_resize,
 			set_editable
 		end
 		
@@ -74,7 +73,6 @@ feature {NONE} -- Initialization
 			end
 			is_editable := True
 			wel_make (par_imp, 0, 0, 0, 90, 0)
-			set_minimum_height (height)
 			!! ev_children.make
 		end
 
@@ -178,28 +176,6 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		do
 			Result := (an_id = wel_selected_item + 1)
 		end
-
-feature {EV_CONTAINER_IMP} -- Implementation
-
-   	parent_ask_resize (a_width, a_height: INTEGER) is
-   			-- When we resize a combo-box, we resize the list,
-			-- and not the appearance, it's why, we must not
-			-- change the height of the combo_box.
-		local
-			cc: EV_CHILD_CELL_IMP
-		do
-			cc := child_cell
-			cc.resize (minimum_width.max (a_width), minimum_height.max (a_height))
- 			if resize_type = 3 then
- 				move_and_resize (cc.x, cc.y, cc.width, height, True)
- 			elseif resize_type = 2 then
- 				move_and_resize ((cc.width - width) // 2 + cc.x, cc.y, width, height, True)
- 			elseif resize_type = 1 then
- 				move_and_resize (cc.x, (cc.height - height) // 2 + cc.y, cc.width, height, True)
-			else
- 				move ((cc.width - width) // 2 + cc.x, (cc.height - height) // 2 + cc.y)
- 			end
- 		end
 
 feature {NONE} -- Implementation
 

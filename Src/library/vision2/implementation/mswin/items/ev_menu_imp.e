@@ -9,6 +9,8 @@ class
 	
 inherit
 	EV_MENU_I
+		undefine
+			parent
 		redefine
 			interface
 		end
@@ -73,6 +75,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/24 01:39:48  brendel
+--| Added undefine of the parent from the interface.
+--|
 --| Revision 1.15  2000/02/19 05:45:01  oconnor
 --| released
 --|

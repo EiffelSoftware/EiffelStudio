@@ -9,7 +9,6 @@
 
 	Eiffel storing mechanism.
 */
-#include <assert.h>
 #include "eif_project.h" /* for egc_ce_gtype */
 #include "eif_config.h"
 #include "eif_portable.h"

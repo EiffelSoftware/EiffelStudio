@@ -212,11 +212,9 @@ feature -- Queries
 				if has_object_interface then
 					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
 				else
---				end
---				if Result = Void then
 					Result := Eiffel_system.System.system_object_class.compiled_class.types.first
-					--| FIXME jfiat 2004/03/29 : Any smarter way to find the real type ?
-					-- even in case of external type ?
+						--| FIXME jfiat 2004/03/29 : Any smarter way to find the real type ?
+						-- even in case of external type ?
 				end
 				once_value_class_type := Result
 			end

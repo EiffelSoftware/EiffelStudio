@@ -1,7 +1,49 @@
 #include "config.h"
 
+#ifdef EIF_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <winsock.h>
+#define EWOULDBLOCK             WSAEWOULDBLOCK
+#define EINPROGRESS             WSAEINPROGRESS
+#define EALREADY                WSAEALREADY
+#define ENOTSOCK                WSAENOTSOCK
+#define EDESTADDRREQ            WSAEDESTADDRREQ
+#define EMSGSIZE                WSAEMSGSIZE
+#define EPROTOTYPE              WSAEPROTOTYPE
+#define ENOPROTOOPT             WSAENOPROTOOPT
+#define EPROTONOSUPPORT         WSAEPROTONOSUPPORT
+#define ESOCKTNOSUPPORT         WSAESOCKTNOSUPPORT
+#define EOPNOTSUPP              WSAEOPNOTSUPP
+#define EPFNOSUPPORT            WSAEPFNOSUPPORT
+#define EAFNOSUPPORT            WSAEAFNOSUPPORT
+#define EADDRINUSE              WSAEADDRINUSE
+#define EADDRNOTAVAIL           WSAEADDRNOTAVAIL
+#define ENETDOWN                WSAENETDOWN
+#define ENETUNREACH             WSAENETUNREACH
+#define ENETRESET               WSAENETRESET
+#define ECONNABORTED            WSAECONNABORTED
+#define ECONNRESET              WSAECONNRESET
+#define ENOBUFS                 WSAENOBUFS
+#define EISCONN                 WSAEISCONN
+#define ENOTCONN                WSAENOTCONN
+#define ESHUTDOWN               WSAESHUTDOWN
+#define ETOOMANYREFS            WSAETOOMANYREFS
+#define ETIMEDOUT               WSAETIMEDOUT
+#define ECONNREFUSED            WSAECONNREFUSED
+#define ELOOP                   WSAELOOP
+#define EHOSTDOWN               WSAEHOSTDOWN
+#define EHOSTUNREACH            WSAEHOSTUNREACH
+#define EPROCLIM                WSAEPROCLIM
+#define EUSERS                  WSAEUSERS
+#define EDQUOT                  WSAEDQUOT
+#define ESTALE                  WSAESTALE
+#define EREMOTE                 WSAEREMOTE
+#endif
+
 #include <sys/types.h>
+#ifndef EIF_WIN32
 #include <sys/time.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include "cecil.h"
@@ -17,8 +59,10 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
+#ifndef EIF_WIN32
 #include <sys/un.h>
 #include <netinet/tcp.h>
+#endif
 #ifdef SOC_XNS
 #include <netns/ns.h>
 #endif
@@ -318,7 +362,11 @@ EIF_INTEGER ipoptions ()
 
 EIF_INTEGER tcpmax_seg ()
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) TCP_MAXSEG;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER tcpno_delay ()
@@ -446,22 +494,38 @@ EIF_INTEGER c_fsetown ()
 
 EIF_INTEGER c_fgetfl ()
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) F_GETFL;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER c_fsetfl ()
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) F_SETFL;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER c_fndelay ()
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) FNDELAY;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER c_fasync ()
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) FASYNC;
+#else
+	return (EIF_INTEGER) 0;
+#endif
 }
 
 EIF_INTEGER c_einprogress ()

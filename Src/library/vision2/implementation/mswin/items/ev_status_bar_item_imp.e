@@ -19,6 +19,7 @@ inherit
 		redefine
 			set_text,
 			set_pixmap,
+			unset_pixmap,
 			parent_imp
 		end
 
@@ -115,7 +116,14 @@ feature -- Status setting
 			-- Notify parent to set owner draw for `Current'
 		do
 			{EV_SIMPLE_ITEM_IMP} Precursor (pix)
-			parent_imp.set_child_owner_draw (Current)
+			parent_imp.set_child_owner_draw (Current, True)
+		end
+
+	unset_pixmap is
+			-- If a pixmap is set, then unset it.
+		do
+			{EV_SIMPLE_ITEM_IMP} Precursor
+			parent_imp.set_child_owner_draw (Current, False)
 		end
 
 end -- class EV_STATUS_BAR_ITEM_IMP

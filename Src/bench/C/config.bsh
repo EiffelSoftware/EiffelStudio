@@ -36,7 +36,6 @@ cc='bcc32'
 resource_compiler='brc32'
 output_cmd='-o'
 input_cmd=''
-extra_object_files=''
 compiler_path='d:\apps\borland\Cbuilder4'
 all_dependency=''
 #

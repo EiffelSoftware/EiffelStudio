@@ -24,7 +24,6 @@ output_cmd='-o'
 input_cmd=''
 cc='gcc'
 resource_compiler='windres'
-extra_object_files=''
 compiler_path='d:\apps\Cygnus\cygwin-b20\H-i586-cygwin32'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

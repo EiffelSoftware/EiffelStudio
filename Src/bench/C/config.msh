@@ -9,7 +9,6 @@ make='$compiler_path\bin\nmake'
 output_cmd='-Fo'
 input_cmd='-Fd$(INDIR)\\'
 resource_compiler='rc'
-extra_object_files=''
 #
 obj='obj'
 lib='lib'

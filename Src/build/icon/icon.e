@@ -16,7 +16,7 @@ inherit
 			make_unmanaged as bulletin_make_unmanaged,
 			identifier as oui_identifier
 		redefine
-			set_managed,
+			manage, unmanage,
 			add_button_press_action,
 			set_size,
 			set_width,
@@ -26,6 +26,8 @@ inherit
 feature 
 
 	init_y: INTEGER is 24	
+
+	visible_length: INTEGER is 17
 
 	source_button: PICT_COLOR_B is
 		do
@@ -60,13 +62,21 @@ feature
 			not_void: s /= Void
 		local
 			was_managed: BOOLEAN
+			cut_label: STRING
 		do
 			label := clone (s)
+			cut_label := clone (s)
 			if widget_created then
-				icon_label.unmanage
+				unmanage
+				if cut_label.count > visible_length then
+					cut_label.head (visible_length - 3)
+					cut_label.append ("...")
+				end	
+				button.set_focus_string (label)
+				icon_label.set_focus_string (label)
 				icon_label.set_y (init_y)
-				icon_label.set_text (label)
-				icon_label.manage
+				icon_label.set_text (cut_label)
+				manage
 			end
 			if icon_label /= Void then
 				if button /= Void then
@@ -107,8 +117,8 @@ feature
 
 feature {NONE} -- Interface section
 
-	button: ACTIVE_PICT_COLOR_B
-	icon_label: LABEL
+	button: FOCUSABLE_PICT_COLOR_B
+	icon_label: FOCUSABLE_LABEL
 	
 	update_label is
 		do
@@ -140,14 +150,14 @@ feature  -- Interface section
 			!! icon_label.make_unmanaged (Widget_names.label, Current)
 			icon_label.set_left_alignment
 			icon_label.allow_recompute_size
+			update_positions
+			set_widget_default
 			if (label /= Void) and then not label.empty then
 				icon_label.set_y (init_y)
 				icon_label.set_text (label)
 			else
 				icon_label.set_text ("")
 			end
-			update_positions
-			set_widget_default
 		end
 
 	frozen make_visible (a_parent: COMPOSITE) is
@@ -178,23 +188,32 @@ feature  -- Interface section
 			button.add_button_press_action (i, a_command, an_argument)
 		end
 
-	set_managed (b: BOOLEAN) is
+feature -- Display
+
+	manage is
+		local
+			ti: TOOLTIP_INITIALIZER
 		do
-			if b then 
-				if not icon_label.text.empty then
-					icon_label.manage
-				end
-				button.manage
-				manage
-				update_positions
-			else 
-				unmanage
-				if button.managed then
-					button.unmanage
-				end
-				if icon_label.managed then
-					icon_label.unmanage
-				end
+			button.manage
+			if not icon_label.text.empty then
+				icon_label.manage
+			end
+			Precursor
+			update_positions
+			if realized then
+				ti ?= top
+				ti.tooltip_realize
+			end
+		end
+
+	unmanage is
+		do
+			Precursor
+			if button.managed then
+				button.unmanage
+			end
+			if icon_label.managed then
+				icon_label.unmanage
 			end
 		end
 

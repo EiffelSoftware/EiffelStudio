@@ -26,6 +26,8 @@ feature -- Access
 	
 	main_split__position: STRING is "main_split__position"
 	
+	tip_of_day_index: STRING is "tip_of_day_index"
+	
 	tool_order: STRING is "tool_order"
 	
 	external_tool_order: STRING is "external_tool_order"

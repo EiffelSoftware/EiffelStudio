@@ -295,10 +295,10 @@ feature
 		end;
 
 	
-	Current_register: CURRENT_BL is
+	Current_register: REGISTRABLE is
 			-- The "Current" entity
-		once
-			!!Result;
+		do
+			Result := Context.Current_register
 		end;
 
 	analyze_on (reg: REGISTRABLE) is
@@ -312,7 +312,7 @@ feature
 	generate is
 			-- Generate C code for the access.
 		do
-			generate_parameters;
+			generate_parameters (current_register);
 			if register /= No_register then
 						-- Procedures have a void return type
 				if register /= Void then
@@ -335,8 +335,10 @@ feature
 		do
 		end;
 	
-	generate_parameters is
+	generate_parameters (reg: REGISTRABLE) is
 			-- Generate code for parameters computation.
+			-- `reg' ("Current") is not used except for
+			-- inlining
 		do
 			if parameters /= Void then
 				parameters.generate;

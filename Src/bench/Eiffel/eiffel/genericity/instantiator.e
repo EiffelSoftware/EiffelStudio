@@ -164,7 +164,7 @@ io.error.put_string ("Removing a type of ");
 io.error.put_string (a_class.name);
 io.error.put_new_line;
 end;
-							System.class_types.put (Void, class_type.type_id);
+							System.remove_class_type (class_type)
 							types.remove;
 						else
 							types.forth

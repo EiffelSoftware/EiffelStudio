@@ -71,7 +71,6 @@ feature -- Element change
 				w ?= interface.item.implementation
 				C.gtk_object_ref (w.c_object)
 				C.gtk_container_remove (container_widget, w.c_object)
-				C.gtk_object_unref (w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
@@ -219,13 +218,23 @@ feature -- Status setting
 		do
 			pix_imp ?= a_pixmap.implementation
 			C.gdk_window_set_back_pixmap (
-				C.gtk_widget_struct_window (pix_imp.c_object),
+				C.gtk_widget_struct_window (c_object),
 				C.gtk_pixmap_struct_pixmap (pix_imp.c_object),
 				False
 			)
 			background_pixmap := clone (a_pixmap)
 		end
-			-- FIXME NPC
+
+	remove_background_pixmap is
+			-- Make background pixmap Void.
+		do
+			C.gdk_window_set_back_pixmap (
+				C.gtk_widget_struct_window (c_object),
+				NULL,
+				False
+			)
+			background_pixmap := Void
+		end
 
 feature -- Basic operations
 

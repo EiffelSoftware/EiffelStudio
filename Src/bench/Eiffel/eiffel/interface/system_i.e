@@ -3531,7 +3531,7 @@ feature -- Main file generation
 
 			if final_mode then
 				if creation_name /= Void then
-					Initialization_file.putchar ('%T');
+					Initialization_file.putstring ("%T%T");
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring ("(root_obj");
 					if root_feat.has_arguments then

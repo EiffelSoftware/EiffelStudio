@@ -231,6 +231,7 @@ feature {NONE} -- Execution
 				else
 					if tool = Project_tool then
 						if dynamic_lib_tool /= Void then
+							dynamic_lib_tool.force_raise
 							dynamic_lib_tool.display
 							dynamic_lib_tool.show_file_content (Eiffel_dynamic_lib.file_name)
 						end
@@ -238,7 +239,6 @@ feature {NONE} -- Execution
 						if Eiffel_dynamic_lib.modified then
 							warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
 							Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
-
 						else
 							!! f.make_open_read (Eiffel_dynamic_lib.file_name)
 							if Eiffel_dynamic_lib.parse_exports_from_file(f) then

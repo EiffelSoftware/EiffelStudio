@@ -46,7 +46,7 @@
 		</Constant>
 	</item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>109</id>
+	<id>102</id>
 	<name>wizard_output_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -59,7 +59,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>154</id>
+	<id>143</id>
 	<name>output_outter_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -68,12 +68,12 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>10</Padding>
 	<Border>7</Border>
-	<Is_item_expanded>1000</Is_item_expanded>
+	<Is_item_expanded>100</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>131</id>
+	<id>120</id>
 	<name>wizard_output_upper_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -86,13 +86,18 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RICH_TEXT"><Internal_properties>
-	<id>110</id>
+	<id>103</id>
 	<name>output_text</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color>121252065</Background_color>
 	</EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
+<EV_FONTABLE><Family>4</Family>
+	<Weight>7</Weight>
+	<Shape>10</Shape>
+	<Height_in_points>8</Height_in_points>
+	<Preferred_family>Lucida Console</Preferred_family>
+	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
@@ -102,7 +107,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>111</id>
+	<id>181</id>
 	<name>progress_bar_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -116,7 +121,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>215</id>
+	<id>189</id>
 	<name>progress_label_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -129,14 +134,14 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>112</id>
+	<id>182</id>
 	<name>progress_bar_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Total Progress:]]></Text>
+<EV_TEXTABLE><Text><![CDATA[Progress:]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -144,7 +149,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>220</id>
+	<id>193</id>
 	<name>inner_progress_label_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -156,7 +161,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>211</id>
+	<id>192</id>
 	<name>percentage_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -170,7 +175,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>213</id>
+	<id>196</id>
 	<name>percent_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -187,7 +192,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>120</id>
+	<id>184</id>
 	<name>progress_bar_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -195,12 +200,12 @@
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>1</Is_item_expanded>
+	<Is_item_expanded>10</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>113</id>
+	<id>183</id>
 	<name>progress_bar</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -211,120 +216,8 @@
 <EV_GAUGE></EV_GAUGE>
 <EV_PROGRESS_BAR></EV_PROGRESS_BAR>
 </item>
-</item>
-</item>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>196</id>
-	<name>task_progress_bar_box</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Is_show_requested>False</Is_show_requested>
-	</EV_WIDGET>
-<EV_BOX><Padding>5</Padding>
-	<Is_item_expanded>10</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>205</id>
-	<name>task_progress_label_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>01</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>197</id>
-	<name>task_progress_bar_label</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Progress:]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>224</id>
-	<name>inner_task_progress_label_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>01</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>208</id>
-	<name>task_percentage_label</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-<item type="EV_LABEL"><Internal_properties>
-	<id>227</id>
-	<name>task_percent_label</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[%]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-</item>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>199</id>
-	<name>task_progress_bar_inner_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>10</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>198</id>
-	<name>task_progress_bar</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
-<EV_PROGRESS_BAR></EV_PROGRESS_BAR>
-</item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>121</id>
+	<id>110</id>
 	<name>stop_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -345,7 +238,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>182</id>
+	<id>167</id>
 	<name>final_message_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -359,7 +252,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>181</id>
+	<id>166</id>
 	<name>final_message_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -374,7 +267,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>185</id>
+	<id>170</id>
 	<name>destination_path_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -394,7 +287,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>189</id>
+	<id>174</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -406,7 +299,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>114</id>
+	<id>104</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -415,7 +308,7 @@
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>132</id>
+	<id>121</id>
 	<name>wizard_output_middle_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -429,7 +322,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>115</id>
+	<id>105</id>
 	<name>output_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -442,7 +335,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>187</id>
+	<id>172</id>
 	<name>save_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -461,7 +354,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>116</id>
+	<id>106</id>
 	<name>left_output_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -472,7 +365,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>117</id>
+	<id>107</id>
 	<name>open_eiffelstudio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -491,7 +384,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>118</id>
+	<id>108</id>
 	<name>right_output_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -502,7 +395,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>119</id>
+	<id>109</id>
 	<name>exit_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -523,86 +416,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>74</id>
-	<name>wizard_bottom_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>00</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>75</id>
-	<name>separator</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>76</id>
-	<name>buttons_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Border>7</Border>
-	<Is_item_expanded>101</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_CELL"><Internal_properties>
-	<id>77</id>
-	<name>left_padding_cell</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
-	<id>78</id>
-	<name>next_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Next >>]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width>100</Minimum_width>
-	</EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_next</Event>
-	</Events>
-</item>
-<item type="EV_CELL"><Internal_properties>
-	<id>79</id>
-	<name>right_padding_cell</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-</item>
-</item>
-</item>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>32</id>
+	<id>31</id>
 	<name>wizard_com_project_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -616,7 +430,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>137</id>
+	<id>126</id>
 	<name>definition_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -629,14 +443,14 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>11</id>
+	<id>10</id>
 	<name>com_project_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[A definition file is either a Interface Definition file (*.idl) or a type library file (*.tlb).
+<EV_TEXTABLE><Text><![CDATA[An definition file is either a Interface Definition file (*.idl) or a type library file (*.tlb).
 A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
@@ -645,10 +459,10 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>33</id>
+	<id>32</id>
 	<name>definition_file_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>62</reference_id>
+	<reference_id>61</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -660,7 +474,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>100</id>
+	<id>93</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -674,7 +488,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>34</id>
+	<id>33</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -686,7 +500,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>176</id>
+	<id>161</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -704,7 +518,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>35</id>
+	<id>34</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -722,7 +536,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>144</id>
+	<id>133</id>
 	<name>marshaller_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -735,7 +549,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>146</id>
+	<id>135</id>
 	<name>marshaller_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -751,7 +565,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>149</id>
+	<id>138</id>
 	<name>marshaller_hbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -763,7 +577,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>151</id>
+	<id>140</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -774,7 +588,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>148</id>
+	<id>137</id>
 	<name>marshaller_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -795,7 +609,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>14</id>
+	<id>13</id>
 	<name>wizard_eiffel_project_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -808,10 +622,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>20</id>
+	<id>19</id>
 	<name>epr_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>62</reference_id>
+	<reference_id>61</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -823,7 +637,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>96</id>
+	<id>89</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -837,7 +651,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>21</id>
+	<id>20</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -849,7 +663,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>178</id>
+	<id>163</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -867,7 +681,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>22</id>
+	<id>21</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -884,10 +698,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>23</id>
+	<id>22</id>
 	<name>ace_file_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>62</reference_id>
+	<reference_id>61</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -899,7 +713,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>98</id>
+	<id>91</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -913,7 +727,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>24</id>
+	<id>23</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -925,7 +739,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>174</id>
+	<id>159</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -943,7 +757,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>25</id>
+	<id>24</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -960,10 +774,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>26</id>
+	<id>25</id>
 	<name>facade_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>18</reference_id>
+	<reference_id>17</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -975,7 +789,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>27</id>
+	<id>26</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -990,7 +804,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>169</id>
+	<id>154</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1009,10 +823,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>28</id>
+	<id>27</id>
 	<name>facade_cluster_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>18</reference_id>
+	<reference_id>17</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1024,7 +838,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>29</id>
+	<id>28</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1039,7 +853,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>171</id>
+	<id>156</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1059,7 +873,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>18</id>
+	<id>17</id>
 	<name>wizard_field_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1072,7 +886,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>19</id>
+	<id>18</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1087,7 +901,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>30</id>
+	<id>29</id>
 	<name>field_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1098,7 +912,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
-<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_return</Event>
+<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_select</Event>
 	<Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_change</Event>
 	<Event>return_actions EV_TEXT_FIELD_ACTION_SEQUENCES on_return</Event>
 	<Event>focus_in_actions EV_WIDGET_ACTION_SEQUENCES on_mouse_enter</Event>
@@ -1107,7 +921,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>62</id>
+	<id>61</id>
 	<name>wizard_file_path_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1120,7 +934,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>66</id>
+	<id>65</id>
 	<name>path_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1135,7 +949,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>63</id>
+	<id>62</id>
 	<name>path_text_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1148,7 +962,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>67</id>
+	<id>66</id>
 	<name>path_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1159,7 +973,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
-<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_return</Event>
+<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_select</Event>
 	<Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_change</Event>
 	<Event>return_actions EV_TEXT_FIELD_ACTION_SEQUENCES on_return</Event>
 	<Event>focus_in_actions EV_WIDGET_ACTION_SEQUENCES on_mouse_enter</Event>
@@ -1167,7 +981,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>64</id>
+	<id>63</id>
 	<name>path_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1187,7 +1001,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>95</id>
+	<id>88</id>
 	<name>wizard_folder_path_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1200,7 +1014,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>101</id>
+	<id>94</id>
 	<name>path_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1215,7 +1029,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>102</id>
+	<id>95</id>
 	<name>path_text_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1228,7 +1042,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>104</id>
+	<id>97</id>
 	<name>path_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1239,7 +1053,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
-<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_return</Event>
+<Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES on_select</Event>
 	<Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_change</Event>
 	<Event>return_actions EV_TEXT_FIELD_ACTION_SEQUENCES on_return</Event>
 	<Event>focus_in_actions EV_WIDGET_ACTION_SEQUENCES on_mouse_enter</Event>
@@ -1247,7 +1061,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>103</id>
+	<id>96</id>
 	<name>path_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1267,7 +1081,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_TITLED_WINDOW"><Internal_properties>
-	<id>3</id>
+	<id>2</id>
 	<name>wizard_main_window</name>
 	<Expanded>1</Expanded>
 	<Is_root_window>True</Is_root_window>
@@ -1280,12 +1094,12 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_MENU_BAR"><Internal_properties>
-	<id>7</id>
+	<id>6</id>
 	<name>menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <item type="EV_MENU"><Internal_properties>
-	<id>8</id>
+	<id>7</id>
 	<name>file_menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1294,7 +1108,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
-	<id>10</id>
+	<id>9</id>
 	<name>exit_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1305,7 +1119,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_MENU"><Internal_properties>
-	<id>9</id>
+	<id>8</id>
 	<name>help_menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1314,7 +1128,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
-	<id>39</id>
+	<id>38</id>
 	<name>help_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1328,7 +1142,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_MENU_SEPARATOR"><Internal_properties>
-	<id>12</id>
+	<id>11</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1336,7 +1150,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_MENU_ITEM"><Internal_properties>
-	<id>13</id>
+	<id>12</id>
 	<name>about_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1348,7 +1162,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_NOTEBOOK"><Internal_properties>
-	<id>61</id>
+	<id>60</id>
 	<name>notebook</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1371,7 +1185,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>16</id>
+	<id>15</id>
 	<name>settings_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1384,7 +1198,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>129</id>
+	<id>118</id>
 	<name>settings_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1398,7 +1212,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>128</id>
+	<id>117</id>
 	<name>project_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1413,7 +1227,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>133</id>
+	<id>122</id>
 	<name>project_outter_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1427,10 +1241,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>126</id>
+	<id>115</id>
 	<name>project_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>18</reference_id>
+	<reference_id>17</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1441,7 +1255,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>127</id>
+	<id>116</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1456,7 +1270,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>173</id>
+	<id>158</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1475,7 +1289,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>135</id>
+	<id>124</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1486,7 +1300,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>136</id>
+	<id>125</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1496,8 +1310,8 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>134</id>
-	<name>project_delete_button</name>
+	<id>123</id>
+	<name>project_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1511,14 +1325,14 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_delete_project</Event>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_project_button_select</Event>
 	</Events>
 </item>
 </item>
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>36</id>
+	<id>35</id>
 	<name>project_type_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1533,7 +1347,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>37</id>
+	<id>36</id>
 	<name>project_type_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1547,7 +1361,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>40</id>
+	<id>39</id>
 	<name>project_type_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1562,7 +1376,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>41</id>
+	<id>40</id>
 	<name>project_type_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1574,7 +1388,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>43</id>
+	<id>42</id>
 	<name>project_types_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1586,7 +1400,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>42</id>
+	<id>41</id>
 	<name>project_type_internal_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1598,41 +1412,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>65</id>
-	<name>eiffel_project_radio_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Add a COM interface to an existing Eiffel project]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_select_eiffel_project</Event>
-	</Events>
-</item>
-<item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>38</id>
-	<name>com_server_project_radio_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Create a new COM component from scratch]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_select_com_server</Event>
-	</Events>
-</item>
-<item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>49</id>
+	<id>48</id>
 	<name>com_client_project_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1648,9 +1428,43 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_select_com_client</Event>
 	</Events>
 </item>
+<item type="EV_RADIO_BUTTON"><Internal_properties>
+	<id>37</id>
+	<name>com_server_project_radio_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Create a new COM component]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_select_com_server</Event>
+	</Events>
+</item>
+<item type="EV_RADIO_BUTTON"><Internal_properties>
+	<id>64</id>
+	<name>eiffel_project_radio_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Add a COM interface to an existing Eiffel project]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_select_eiffel_project</Event>
+	</Events>
+</item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>56</id>
+	<id>55</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1663,7 +1477,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>68</id>
+	<id>67</id>
 	<name>general_settings_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1678,7 +1492,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>72</id>
+	<id>71</id>
 	<name>general_settings_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1692,10 +1506,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>83</id>
+	<id>76</id>
 	<name>eiffel_project_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>14</reference_id>
+	<reference_id>13</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1706,7 +1520,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>84</id>
+	<id>77</id>
 	<name>epr_box</name>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
@@ -1720,7 +1534,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>97</id>
+	<id>90</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1734,7 +1548,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>85</id>
+	<id>78</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1746,7 +1560,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>179</id>
+	<id>164</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1764,7 +1578,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>86</id>
+	<id>79</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1781,7 +1595,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>87</id>
+	<id>80</id>
 	<name>ace_file_box</name>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
@@ -1795,7 +1609,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>99</id>
+	<id>92</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1809,7 +1623,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>88</id>
+	<id>81</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1821,7 +1635,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>175</id>
+	<id>160</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1839,7 +1653,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>89</id>
+	<id>82</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1856,7 +1670,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>90</id>
+	<id>83</id>
 	<name>facade_box</name>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
@@ -1870,7 +1684,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>91</id>
+	<id>84</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1885,7 +1699,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>170</id>
+	<id>155</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1904,7 +1718,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>92</id>
+	<id>85</id>
 	<name>facade_cluster_box</name>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
@@ -1918,7 +1732,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>93</id>
+	<id>86</id>
 	<name>field_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1933,7 +1747,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>172</id>
+	<id>157</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -1953,10 +1767,10 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>94</id>
+	<id>87</id>
 	<name>com_project_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>32</reference_id>
+	<reference_id>31</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1968,7 +1782,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>138</id>
+	<id>127</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1980,13 +1794,13 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>139</id>
+	<id>128</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[A definition file is either a Interface Definition file (*.idl) or a type library file (*.tlb).
+<EV_TEXTABLE><Text><![CDATA[An definition file is either a Interface Definition file (*.idl) or a type library file (*.tlb).
 A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
@@ -1995,7 +1809,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>140</id>
+	<id>129</id>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
@@ -2008,7 +1822,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>141</id>
+	<id>130</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2022,7 +1836,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>142</id>
+	<id>131</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2034,7 +1848,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>177</id>
+	<id>162</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color><Constant>inactive_background</Constant>
@@ -2052,7 +1866,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>143</id>
+	<id>132</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2070,7 +1884,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>145</id>
+	<id>134</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2082,7 +1896,7 @@ A type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ]]></Te
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>147</id>
+	<id>136</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2097,7 +1911,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>150</id>
+	<id>139</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2108,7 +1922,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>152</id>
+	<id>141</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2119,7 +1933,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>153</id>
+	<id>142</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2140,7 +1954,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>47</id>
+	<id>46</id>
 	<name>settings_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2151,10 +1965,9 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>5</id>
+	<id>4</id>
 	<name>settings_bottom_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>74</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2166,8 +1979,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>6</id>
-	<name>separator</name>
+	<id>5</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2176,7 +1988,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>46</id>
+	<id>45</id>
 	<name>buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2190,8 +2002,49 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>45</id>
+	<id>44</id>
 	<name>left_padding_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_width>100</Minimum_width>
+	</EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>201</id>
+	<name>first_generate_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Generate]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>100</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_generate</Event>
+	</Events>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>202</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>10</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>58</id>
+	<name>right_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2201,7 +2054,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>17</id>
+	<id>16</id>
 	<name>next_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2215,25 +2068,17 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_next</Event>
+	</Events>
 </item>
-<item type="EV_CELL"><Internal_properties>
-	<id>59</id>
-	<name>right_padding_cell</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
 </item>
 </item>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>73</id>
+	<id>72</id>
 	<name>generation_options_outter_box</name>
-	<Expanded>1</Expanded>
+	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2244,7 +2089,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>130</id>
+	<id>119</id>
 	<name>generation_options_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2258,7 +2103,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>54</id>
+	<id>53</id>
 	<name>component_type_outter_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2270,7 +2115,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>50</id>
+	<id>49</id>
 	<name>component_type_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2285,7 +2130,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>51</id>
+	<id>50</id>
 	<name>component_type_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2299,7 +2144,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>122</id>
+	<id>111</id>
 	<name>component_type_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2315,7 +2160,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>124</id>
+	<id>113</id>
 	<name>component_type_hbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2327,7 +2172,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>125</id>
+	<id>114</id>
 	<name>component_type_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2339,7 +2184,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>123</id>
+	<id>112</id>
 	<name>component_type_vbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2351,7 +2196,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>52</id>
+	<id>51</id>
 	<name>in_process_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2368,7 +2213,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>53</id>
+	<id>52</id>
 	<name>out_of_process_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2390,7 +2235,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>44</id>
+	<id>43</id>
 	<name>generation_options_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2405,7 +2250,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>70</id>
+	<id>69</id>
 	<name>generation_options_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2419,10 +2264,10 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>105</id>
+	<id>98</id>
 	<name>destination_folder_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>95</reference_id>
+	<reference_id>88</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2433,7 +2278,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>106</id>
+	<id>99</id>
 	<name>path_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2448,7 +2293,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>107</id>
+	<id>100</id>
 	<name>path_text_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2461,7 +2306,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>180</id>
+	<id>165</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2477,7 +2322,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>108</id>
+	<id>101</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2494,7 +2339,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>55</id>
+	<id>54</id>
 	<name>compilation_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2507,7 +2352,7 @@ or in-process (i.e. a DLL that is loaded in the client process). Is the COM comp
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>71</id>
+	<id>70</id>
 	<name>compile_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2523,7 +2368,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>48</id>
+	<id>47</id>
 	<name>compile_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2535,7 +2380,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>69</id>
+	<id>68</id>
 	<name>compile_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2547,7 +2392,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>2</id>
+	<id>1</id>
 	<name>compile_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2559,7 +2404,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>58</id>
+	<id>57</id>
 	<name>compile_eiffel_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2578,7 +2423,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>57</id>
+	<id>56</id>
 	<name>compile_c_code_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2599,7 +2444,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>195</id>
+	<id>180</id>
 	<name>backup_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2611,7 +2456,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>193</id>
+	<id>178</id>
 	<name>backup_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2626,7 +2471,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>194</id>
+	<id>179</id>
 	<name>backup_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2638,7 +2483,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>191</id>
+	<id>176</id>
 	<name>backup_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2650,7 +2495,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>192</id>
+	<id>177</id>
 	<name>backup_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2674,7 +2519,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>31</id>
+	<id>30</id>
 	<name>generation_options_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2685,10 +2530,9 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>80</id>
+	<id>73</id>
 	<name>general_options_bottom_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>74</reference_id>
 	<generate_as_client>True</generate_as_client>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2700,7 +2544,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>81</id>
+	<id>74</id>
 	<name>separator</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2710,8 +2554,8 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>82</id>
-	<name>buttons_box</name>
+	<id>75</id>
+	<name>general_options_bottom_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2723,41 +2567,72 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
-<item type="EV_CELL"><Internal_properties>
-	<id>1</id>
-	<name>left_padding_cell</name>
-	<Expanded>0</Expanded>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>203</id>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
-</item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>15</id>
-	<name>next_button</name>
+	<id>14</id>
+	<name>previous_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Next >>]]></Text>
+<EV_TEXTABLE><Text><![CDATA[<< Previous]]></Text>
+			</EV_TEXTABLE>
+		<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+		<EV_WIDGET><Minimum_width>100</Minimum_width>
+			</EV_WIDGET>
+		<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+		<EV_PIXMAPABLE></EV_PIXMAPABLE>
+		<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_previous</Event>
+			</Events>
+		</item>
+	<item type="EV_CELL"><Internal_properties>
+		<id>204</id>
+		<Expanded>0</Expanded>
+		</Internal_properties>
+	<EV_COLORIZABLE></EV_COLORIZABLE>
+	<EV_SENSITIVE></EV_SENSITIVE>
+	<EV_WIDGET></EV_WIDGET>
+	<EV_PIXMAPABLE></EV_PIXMAPABLE>
+	<EV_CONTAINER></EV_CONTAINER>
+	</item>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>200</id>
+	<name>second_generate_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Generate]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
 	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_generate</Event>
+	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>4</id>
-	<name>right_padding_cell</name>
+	<id>3</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
+<EV_WIDGET><Minimum_width>100</Minimum_width>
+	</EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
@@ -2765,10 +2640,10 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>60</id>
+	<id>59</id>
 	<name>output_box</name>
 	<Expanded>1</Expanded>
-	<reference_id>109</reference_id>
+	<reference_id>102</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2779,7 +2654,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>155</id>
+	<id>144</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2787,12 +2662,12 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>10</Padding>
 	<Border>7</Border>
-	<Is_item_expanded>1000</Is_item_expanded>
+	<Is_item_expanded>100</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>156</id>
+	<id>145</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2804,13 +2679,18 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RICH_TEXT"><Internal_properties>
-	<id>157</id>
+	<id>146</id>
 	<name>output_text</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Background_color>121252065</Background_color>
 	</EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
+<EV_FONTABLE><Family>4</Family>
+	<Weight>7</Weight>
+	<Shape>10</Shape>
+	<Height_in_points>8</Height_in_points>
+	<Preferred_family>Lucida Console</Preferred_family>
+	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
@@ -2820,7 +2700,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>158</id>
+	<id>185</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2833,7 +2713,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>216</id>
+	<id>190</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2845,113 +2725,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>217</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Total Progress:]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>221</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>11</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>222</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-<item type="EV_LABEL"><Internal_properties>
-	<id>223</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[%]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-</item>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>160</id>
-	<name>progress_bar_inner_box</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>1</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>161</id>
-	<name>progress_bar</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
-<EV_PROGRESS_BAR></EV_PROGRESS_BAR>
-</item>
-</item>
-</item>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>200</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Is_show_requested>False</Is_show_requested>
-	</EV_WIDGET>
-<EV_BOX><Padding>5</Padding>
-	<Is_item_expanded>10</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>206</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>7</Padding>
-	<Is_item_expanded>11</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>207</id>
+	<id>191</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2965,7 +2739,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>225</id>
+	<id>194</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2976,7 +2750,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>226</id>
+	<id>195</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2989,7 +2763,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>228</id>
+	<id>197</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3005,7 +2779,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>202</id>
+	<id>186</id>
 	<name>progress_bar_inner_box1</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -3018,7 +2792,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>203</id>
+	<id>187</id>
 	<name>progress_bar1</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3030,7 +2804,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PROGRESS_BAR></EV_PROGRESS_BAR>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>204</id>
+	<id>188</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3050,7 +2824,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>183</id>
+	<id>168</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3063,7 +2837,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>184</id>
+	<id>169</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3077,7 +2851,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>186</id>
+	<id>171</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE><Foreground_color>086140231</Foreground_color>
@@ -3091,7 +2865,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>190</id>
+	<id>175</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3103,7 +2877,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>162</id>
+	<id>147</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3112,7 +2886,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>163</id>
+	<id>148</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3125,7 +2899,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>164</id>
+	<id>149</id>
 	<name>output_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -3138,7 +2912,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>188</id>
+	<id>173</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3154,7 +2928,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>165</id>
+	<id>150</id>
 	<name>left_output_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3165,7 +2939,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>166</id>
+	<id>151</id>
 	<name>open_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3182,7 +2956,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>167</id>
+	<id>152</id>
 	<name>right_output_padding_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3193,7 +2967,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>168</id>
+	<id>153</id>
 	<name>exit_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>

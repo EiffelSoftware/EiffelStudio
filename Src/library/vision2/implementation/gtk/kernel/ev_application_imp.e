@@ -437,6 +437,27 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
 		
+	bg_color: POINTER is
+			-- Default allocated background color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := C.c_gdk_color_struct_allocate
+			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
+		end
+		
+	fg_color: POINTER is
+			-- Default allocate foreground color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := C.c_gdk_color_struct_allocate
+			C.set_gdk_color_struct_red (Result, 65535)
+			C.set_gdk_color_struct_green (Result, 65535)
+			C.set_gdk_color_struct_blue (Result, 65535)
+			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
+		end
+		
 feature -- External implementation
 
 	enable_ev_gtk_log (a_mode: INTEGER) is

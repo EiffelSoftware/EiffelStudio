@@ -125,7 +125,7 @@ feature -- Type check, byte code and dead code removal
 			formal_dec: FORMAL_DEC_AS
 			formal_position: INTEGER
 			constraint_type: TYPE_A
-			is_formal_creation: BOOLEAN
+			is_formal_creation, is_default_creation: BOOLEAN
 			dcr_feat: FEATURE_I
 			dcr_id: ID_AS
 			the_call: like call
@@ -272,17 +272,28 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.raise_error
 				end
 
-				if call = Void and then 
-						creation_class.allows_default_creation then
-					-- Use default_create
-					-- if it actually does something.
-					dcr_feat := creation_class.default_create_feature
+				if
+					call = Void and then
+					(creation_class.allows_default_creation or
+					(is_formal_creation and then formal_dec.has_default_create))
+				then
+					if not is_formal_creation then
+						dcr_feat := creation_class.default_create_feature
+					else
+						dcr_feat := creation_class.feature_table.feature_of_rout_id (
+											System.default_create_id)
+					end
 
-					if not dcr_feat.empty_body then
+						-- Use default_create
+						-- if it actually does something or if it is a formal
+						-- creation (because we need to keep the call for polymorphic
+						-- reasons).
+					if is_formal_creation or else not dcr_feat.empty_body then
 						dcr_id := default_call.feature_name
 						dcr_id.load (dcr_feat.feature_name)
 						the_call := default_call
 					end
+					is_default_creation := True
 				else
 					the_call := call
 				end
@@ -335,7 +346,7 @@ feature -- Type check, byte code and dead code removal
 					end
 				else
 					if not is_formal_creation then
-						if (creators = Void) then
+						if (creators = Void) or is_default_creation then
 						elseif creators.empty then
 							!!vgcc5
 							context.init_error (vgcc5)

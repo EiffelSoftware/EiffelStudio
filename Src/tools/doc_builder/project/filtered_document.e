@@ -115,7 +115,7 @@ feature {NONE} -- Commands
 					check
 						ok_parsing: l_parser.is_correct
 					end
-					text := filter.output_string
+					text := filter.output_string					
 				end
 			end
 		rescue
@@ -145,25 +145,27 @@ feature {NONE} -- Implementation
 		local
 			l_element, l_toc_element: XM_ELEMENT
 		do
-			l_element ?= xml.root_element.element_by_name ("meta_data")
-			if l_element /= Void then
-				l_element ?= l_element.element_by_name ("help")
-				if l_element /= Void  then
-					l_toc_element := l_element.element_by_name ("toc")
-				end	
-			end			
-		
-			if l_toc_element /= Void then
-				l_element := l_toc_element.element_by_name (tag_name)
+			if xml /= Void then
+				l_element ?= xml.root_element.element_by_name ("meta_data")
 				if l_element /= Void then
-					Result := l_element.text
+					l_element ?= l_element.element_by_name ("help")
+					if l_element /= Void  then
+						l_toc_element := l_element.element_by_name ("toc")
+					end	
 				end			
-			end
 			
-			if Result /= Void then
-				Result.prune_all ('%N')
-				Result.prune_all ('%T')
-			end
+				if l_toc_element /= Void then
+					l_element := l_toc_element.element_by_name (tag_name)
+					if l_element /= Void then
+						Result := l_element.text
+					end			
+				end
+				
+				if Result /= Void then
+					Result.prune_all ('%N')
+					Result.prune_all ('%T')
+				end
+			end			
 		end
 
 	output_constants: OUTPUT_CONSTANTS is

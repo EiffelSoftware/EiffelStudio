@@ -50,7 +50,6 @@ inherit
 			shown as is_displayed,
 			font as wel_font,
 			set_font as wel_set_font,
-			column_count as columns,
 			selected_items as wel_selected_items,
 			get_item as wel_get_item,
 			insert_item as wel_insert_item,
@@ -287,9 +286,15 @@ feature {NONE} -- Implementation
 			set_cell_text (a_x - 1, a_y - 1, a_text)
 		end
 
-	expand_columns_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER) is
 			-- Set `columns' to `a_columns'.
 		do
+			from
+			until
+				column_count > a_columns
+			loop
+				add_column
+			end
 		end
 
 	add_column is
@@ -309,7 +314,7 @@ feature {NONE} -- Implementation
 		local
 			txt: STRING
 		do
-			if a_column > columns then
+			if a_column > column_count then
 				txt := a_title
 				if txt = Void then
 					txt := ""
@@ -321,7 +326,7 @@ feature {NONE} -- Implementation
 	column_width_changed (a_width, a_column: INTEGER) is
 			-- Replace width of `a_column' with `a_width' if column present.
 		do
-			if a_column > columns then
+			if a_column > column_count then
 				wel_set_column_width (a_width, a_column - 1)
 			end
 		end
@@ -443,7 +448,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-	--| FIXME			set_columns (v.count)
+	--| FIXME			set_column_count (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -454,7 +459,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-	--| FIXME			set_columns (v.count)
+	--| FIXME			set_column_count (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -467,7 +472,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-	--| FIXME			set_columns (v.count)
+	--| FIXME			set_column_count (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -475,7 +480,7 @@ feature -- Status setting
 
 	first_addition: Boolean
 		-- Is this the first addition?
-		-- We need this, as if set_columns has not already been called then
+		-- We need this, as if set_column_count has not already been called then
 		-- we must set the number of columns before adding the row.
 
 	--set_column_alignment (type: INTEGER; column: INTEGER) is
@@ -529,10 +534,10 @@ feature -- Element change
 			from
 				counter := 1
 			until
-				counter = columns + 1
+				counter = column_count + 1
 			loop
 				-- For every column in the mc list.
-				if counter = columns then
+				if counter = column_count then
 					if current_width > last_column_width_setting then
 						wel_set_column_width 
 							(current_width, counter - 1)
@@ -906,6 +911,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/03/27 17:20:38  brendel
+--| columns -> column_count
+--|
 --| Revision 1.67  2000/03/27 16:16:09  brendel
 --| Added expand_columns_to. To be implemented.
 --|

@@ -49,10 +49,9 @@ feature
 			until
 				visible_features.after
 			loop
-				a_feature := feat_table.item
-										(visible_features.item_for_iteration);
+				a_feature := feat_table.item (visible_features.item_for_iteration);
 
-				if	a_feature /= Void then
+				if a_feature /= Void then
 					remover.record (a_feature, a_feature.written_class)
 				end;
 
@@ -120,10 +119,8 @@ feature
 			until
 				visible_features.after
 			loop
-				a_feature := feat_table.item
-							(visible_features.item_for_iteration);
-				if not (a_feature.is_deferred or else a_feature.is_attribute)
-				then
+				a_feature := feat_table.item (visible_features.item_for_iteration);
+				if not (a_feature.is_deferred or else a_feature.is_attribute) then
 					Cecil1.put (a_feature, real_name (a_feature));
 				end;
 				visible_features.forth;
@@ -143,10 +140,8 @@ feature
 			until
 				visible_features.after
 			loop
-				a_feature := feat_table.item
-							(visible_features.item_for_iteration);
-				if a_feature /= Void and then not (a_feature.is_deferred or else a_feature.is_attribute)
-				then
+				a_feature := feat_table.item (visible_features.item_for_iteration);
+				if a_feature /= Void and then not (a_feature.is_deferred or else a_feature.is_attribute)	then
 					Result := Result + 1;
 				end;
 				visible_features.forth;

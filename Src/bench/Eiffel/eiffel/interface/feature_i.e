@@ -2018,8 +2018,7 @@ feature -- Case storage informatio
 			classc := written_class;
 			if not type_a.is_void then;
 				if type_a.has_generics then
-					!! result_type.make 
-						(Void, type_a.storage_info_with_name (classc))
+					!! result_type.make (Void, type_a.storage_info_with_name (classc))
 				else
 					!! result_type.make (Void, type_a.storage_info (classc))
 				end

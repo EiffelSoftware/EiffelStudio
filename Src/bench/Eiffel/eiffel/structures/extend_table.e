@@ -1,16 +1,16 @@
 class EXTEND_TABLE [T, U->HASHABLE]
 
 inherit
-
 	HASH_TABLE [T, U]
 
 creation
-
 	make
 
 feature -- Iterartion
 
-	offright: BOOLEAN is obsolete "Use `after'"
+	offright: BOOLEAN is
+		obsolete
+			"Use `after'"
 		do
 			Result := after
 		end;

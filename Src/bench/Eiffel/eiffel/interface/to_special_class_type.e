@@ -94,11 +94,9 @@ feature
 				associated_class.assertion_level.check_precond
 			then
 				if not final_mode then
-					file.putstring
-						("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring
-						("%Tif (~in_assertion) {%N");
+					file.putstring ("%Tif (~in_assertion) {%N");
 				end;
 					-- Precondition
 					--		RTCT("positive_argument", EX_PRE);
@@ -112,11 +110,8 @@ feature
 					%%T%TRTCK;%N%
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
-				if not final_mode then
-					file.putstring ("%T}%N");
-				else
-					file.putstring ("%T}%N");
-				end;
+
+				file.putstring ("%T}%N");
 			end;
 
 				-- Allocation of a special object
@@ -139,8 +134,7 @@ feature
 				-- Header evaluation
 				--		zone = HEADER(l[1]);
 			file.putstring ("%Tzone = HEADER(l[1]);%N");
-			file.putstring ("%
-				%%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);%N");
+			file.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);%N");
 
 				-- Set dynamic type
 			!!gen_type;
@@ -157,10 +151,9 @@ feature
 			if gen_param.is_reference or else gen_param.is_bit then
 				file.putstring (" | EO_REF");
 			end;
-			file.putstring (";%N");
 
 				-- Set count
-			file.putstring ("%T*(long *) ref = arg1;%N");
+			file.putstring (";%N%T*(long *) ref = arg1;%N");
 
 				-- Set element size
 			file.putstring ("%T*(long *) (ref + sizeof(long)) = ");
@@ -212,44 +205,39 @@ feature
 
 					file.putstring ("Size(");
 					file.putint (dtype);
-					file.putstring (") + OVERHEAD;%N");
-					file.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
+					file.putstring (") + OVERHEAD;%N%
+									%%Tzone->ov_flags |= EO_COMP;%N");
 				
 						-- Call initialization routines
 					file.putstring ("%
-						%%T{%N%
-						%%T%Tchar *ref;%N%
-						%%T%Tlong i;%N%
-						%%T%Tfnptr init;%N%
-						%%T%Tinit = XCreate(");
+									%%T{%N%
+									%%T%Tchar *ref;%N%
+									%%T%Tlong i;%N%
+									%%T%Tfnptr init;%N%
+									%%T%Tinit = XCreate(");
 					file.putint (dtype);
 					file.putstring (");%N%
-						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
-								%ref += Size(");
+									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
+									%ref += Size(");
 					file.putint (dtype);
 					file.putstring (")+OVERHEAD){%N%
-						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
-				   	%%T%T%THEADER(ref)->ov_flags = ");
+									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
+				   					%%T%T%THEADER(ref)->ov_flags = ");
 					file.putint (dtype);
 					file.putstring (" + EO_EXP;%N%
-						%%T%T%Tif ((fnptr) 0 != init)%N%
-						%%T%T%T%T(init)(ref, l[1]);%N%
-						%%T%T};%N%T};%N");
+									%%T%T%Tif ((fnptr) 0 != init)%N%
+									%%T%T%T%T(init)(ref, l[1]);%N%
+									%%T%T};%N%T};%N");
 				end
 			else
 				type_c.generate_size (file);
 				file.putstring (";%N");
 			end;
 				-- Assignment of result to `area'.
-			file.putstring ("%TRTAR(l[1], l[0]);%N");
-			file.putchar ('%T');
+			file.putstring ("%TRTAR(l[1], l[0]);%N%T");
 			generate_area_access (file);
-			file.putstring (" = l[1];%N");
-				
-			file.putstring ("%TRTLE;%N");
-
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
-
+			file.putstring (" = l[1];%N%
+							%%TRTLE;%N}%N%N");
 		end;
 
 	first_generic: TYPE_I is

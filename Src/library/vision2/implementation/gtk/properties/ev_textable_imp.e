@@ -17,6 +17,7 @@ inherit
 	
 	EV_GTK_CONTAINERS_EXTERNALS
 	EV_GTK_EXTERNALS
+	EV_GTK_WIDGETS_EXTERNALS
 	EV_GTK_TYPES_EXTERNALS
 	
 feature {NONE} -- Initialization
@@ -38,11 +39,12 @@ feature {NONE} -- Initialization
 		require
 			call_only_once: label_widget = Default_pointer
 		local
-                        a: ANY	
+                        a: ANY
 		do
 			a ?= txt.to_c
 			
 			set_label_widget (gtk_label_new ($a))
+			gtk_widget_show (label_widget)
 			gtk_box_pack_end (GTK_BOX (box), label_widget, True, True, 0)
 		end			
 	

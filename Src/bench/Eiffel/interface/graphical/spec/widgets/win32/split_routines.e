@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		end
 
 	face_pen: WEL_PEN is
-			-- Pen with the face coloe
+			-- Pen with the face color
 		local
 			color: WEL_COLOR_REF
 		once

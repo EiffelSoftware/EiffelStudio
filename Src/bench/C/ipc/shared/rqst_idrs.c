@@ -23,11 +23,12 @@
 /* Initialization routines */
 
 /* Internal (de)serialization */
-rt_private bool_t idr_Opaque(IDR *idrs, Opaque *ext);
-rt_private bool_t idr_Acknlge(IDR *idrs, Acknlge *ext);
-rt_private bool_t idr_Where(IDR *idrs, Where *ext);
-rt_private bool_t idr_Stop(IDR *idrs, Stop *ext);
-rt_private bool_t idr_Dumped(IDR *idrs, Dump *ext);
+rt_private bool_t idr_Opaque(IDR *idrs, void *ext);
+rt_private bool_t idr_Acknlge(IDR *idrs, void *ext);
+rt_private bool_t idr_Where(IDR *idrs, void *ext);
+rt_private bool_t idr_Stop(IDR *idrs, void *ext);
+rt_private bool_t idr_Dumped(IDR *idrs, void *ext);
+rt_private bool_t idr_Item (IDR *idrs, struct item *ext);
 
 /* Main encoding/decoding routine */
 rt_public bool_t idr_Request(IDR *idrs, Request *ext);
@@ -60,37 +61,104 @@ rt_private struct idr_discrim u_Request[] = {
 };
 
 /*
+ * Public (de)serializing routine.
+ */
+
+rt_public bool_t idr_Request(IDR *idrs, Request *ext)
+{
+	return idr_union(idrs, &ext->rq_type, (char *) (&ext->rqu), u_Request, idr_void);
+}
+
+/*
  * Private encoding routines (one for each structure).
  */
 
-rt_private bool_t idr_Opaque(IDR *idrs, Opaque *ext)
+rt_private bool_t idr_Opaque(IDR *idrs, void *ext)
 {
-	return idr_int(idrs, &ext->op_type) &&
-			idr_int(idrs, &ext->op_cmd) &&
-			idr_u_long(idrs, (long unsigned int *) (&ext->op_size));
+	Opaque *opa = (Opaque *) ext;
+	return idr_int(idrs, &opa->op_type) &&
+			idr_int(idrs, &opa->op_cmd) &&
+			idr_u_long(idrs, (long unsigned int *) (&opa->op_size));
 }
 
-rt_private bool_t idr_Acknlge(IDR *idrs, Acknlge *ext)
+rt_private bool_t idr_Acknlge(IDR *idrs, void *ext)
 {
-	return idr_int(idrs, &ext->ak_type);
+	return idr_int(idrs, &((Acknlge *)ext)->ak_type);
 }
 
-rt_private bool_t idr_Where(IDR *idrs, Where *ext)
+rt_private bool_t idr_Where(IDR *idrs, void *ext)
 {
-	return idr_string(idrs, &ext->wh_name, -MAX_STRLEN) &&
-			idr_u_long(idrs, (long unsigned int *)(&ext->wh_obj)) &&
-			idr_int(idrs, &ext->wh_origin) &&
-			idr_int(idrs, &ext->wh_type) &&
-			idr_u_long(idrs, (long unsigned int *)(&ext->wh_offset));
+	Where *whe = (Where *) ext;
+	return idr_string(idrs, &whe->wh_name, -MAX_STRLEN) &&
+			idr_u_long(idrs, (long unsigned int *)(&whe->wh_obj)) &&
+			idr_int(idrs, &whe->wh_origin) &&
+			idr_int(idrs, &whe->wh_type) &&
+			idr_u_long(idrs, (long unsigned int *)(&whe->wh_offset));
 }
 
-rt_private bool_t idr_Stop(IDR *idrs, Stop *ext)
+rt_private bool_t idr_Stop(IDR *idrs, void *ext)
 {
-	return idr_Where(idrs, &ext->st_where) &&
-			idr_int(idrs, &ext->st_why) &&
-			idr_int(idrs, &ext->st_code) &&
-			idr_string(idrs, &ext->st_tag, -MAX_STRLEN);
+	Stop *sto = (Stop *) ext;
+	return idr_Where(idrs, &sto->st_where) &&
+			idr_int(idrs, &sto->st_why) &&
+			idr_int(idrs, &sto->st_code) &&
+			idr_string(idrs, &sto->st_tag, -MAX_STRLEN);
 }
+
+rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
+{
+	Dump *dum = (Dump *) ext;
+	struct ex_vect *exv;
+	struct item *exi;
+
+	if (!idr_int (idrs, &dum->dmp_type))
+		return 0;
+	switch (dum -> dmp_type) {
+	case DMP_VECT:
+	case DMP_MELTED:
+		exv = dum -> dmpu.dmpu_vect;
+		if (exv == 0) {
+			exv = (struct ex_vect *) malloc (sizeof (struct ex_vect));
+			bzero (exv, sizeof (struct ex_vect));
+			dum -> dmpu.dmpu_vect = exv;
+		}
+		if (exv == 0)
+			return 0;		/* lack of memory. Abort */
+		if (! (idr_char (idrs, (char *) (&exv->ex_type))
+			&& idr_char (idrs, (char *) (&exv->ex_retry))
+			&& idr_char (idrs, (char *) (&exv->ex_rescue))))
+			return 0;
+		switch (exv->ex_type){
+		case EX_RESC:
+		case EX_RETY:
+		case EX_CALL:
+			return idr_u_long (idrs, (long unsigned int *) (&exv->exu.exur.exur_id))
+				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_STRLEN)
+				&& idr_int (idrs, &exv -> exu.exur.exur_orig);
+		default:
+			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
+				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
+				&& idr_int (idrs, &exv->exu.exua.exua_from)
+				&& idr_u_long (idrs, (long unsigned int *) (&exv->exu.exua.exua_oid));
+		}
+	case DMP_ITEM:
+		exi = dum -> dmpu.dmpu_item;
+		if (exi == 0){
+			exi = (struct item *) malloc (sizeof (struct item));
+			bzero (exi, sizeof (struct item));
+			dum -> dmpu.dmpu_item = exi;
+		}
+		if (exi == 0)
+			return 0; /* lack of memory. Abort */
+		return idr_Item (idrs, exi);
+	case DMP_OBJ:
+		return 1;
+	case DMP_VOID:
+		return 1;
+	}
+	return 0; /* not a proper dumped */
+}
+
 
 rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 {
@@ -114,64 +182,3 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 }
 
 
-rt_private bool_t idr_Dumped (IDR *idrs, Dump *ext)
-{
-struct ex_vect *exv;
-struct item *exi;
-
-	if (!idr_int (idrs, &ext->dmp_type))
-		return 0;
-	switch (ext -> dmp_type) {
-	case DMP_VECT:
-	case DMP_MELTED:
-		exv = ext -> dmpu.dmpu_vect;
-		if (exv == 0) {
-			exv = (struct ex_vect *) malloc (sizeof (struct ex_vect));
-			bzero (exv, sizeof (struct ex_vect));
-			ext -> dmpu.dmpu_vect = exv;
-		}
-		if (exv == 0)
-			return 0;		/* lack of memory. Abort */
-		if (! (idr_char (idrs, (char *) (&exv->ex_type))
-			&& idr_char (idrs, (char *) (&exv->ex_retry))
-			&& idr_char (idrs, (char *) (&exv->ex_rescue))))
-			return 0;
-		switch (exv->ex_type){
-		case EX_RESC:
-		case EX_RETY:
-		case EX_CALL:
-			return idr_u_long (idrs, (long unsigned int *) (&exv->exu.exur.exur_id))
-				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_STRLEN)
-				&& idr_int (idrs, &exv -> exu.exur.exur_orig);
-		default:
-			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
-				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
-				&& idr_int (idrs, &exv->exu.exua.exua_from)
-				&& idr_u_long (idrs, (long unsigned int *) (&exv->exu.exua.exua_oid));
-		}
-	case DMP_ITEM:
-		exi = ext -> dmpu.dmpu_item;
-		if (exi == 0){
-			exi = (struct item *) malloc (sizeof (struct item));
-			bzero (exi, sizeof (struct item));
-			ext -> dmpu.dmpu_item = exi;
-		}
-		if (exi == 0)
-			return 0; /* lack of memory. Abort */
-		return idr_Item (idrs, exi);
-	case DMP_OBJ:
-		return 1;
-	case DMP_VOID:
-		return 1;
-	}
-	return 0; /* not a proper dumped */
-}
-
-/*
- * Public (de)serializing routine.
- */
-
-rt_public bool_t idr_Request(IDR *idrs, Request *ext)
-{
-	return idr_union(idrs, &ext->rq_type, (char *) (&ext->rqu), u_Request, idr_void);
-}

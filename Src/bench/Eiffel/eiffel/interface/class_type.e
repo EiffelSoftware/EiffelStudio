@@ -1475,7 +1475,7 @@ feature -- Skeleton generation
 				buffer.putstring (",%N")
 					
 					-- Dispose routine id
-				if System.memory_descendants.has (associated_class) then
+				if System.disposable_descendants.has (associated_class) then
 					buffer.putstring ("'\01',%N")
 				else
 					buffer.putstring ("'\0',%N")
@@ -1608,7 +1608,7 @@ feature -- Byte code generation
 			ba.append_int32_integer (static_type_id - 1)
 
 				-- Dispose routine id of dispose
-			if System.memory_descendants.has (associated_class) then
+			if System.disposable_descendants.has (associated_class) then
 				ba.append ('%/001/')
 			else
 				ba.append ('%U')

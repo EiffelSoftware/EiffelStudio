@@ -640,10 +640,10 @@ feature -- Plug and Makefile file
 			buffer.putint (system.tuple_class.compiled_class.types.first.type_id - 1)
 			buffer.putstring (";%N")
 
-				-- Dispose routine id from class MEMORY (if compiled) 
+				-- Dispose routine id from class DISPOSABLE (if compiled) 
 			buffer.putstring ("%Tegc_disp_rout_id = ")
 			if has_dispose then
-				buffer.putint (System.memory_dispose_id)
+				buffer.putint (System.disposable_dispose_id)
 			else
 				buffer.putstring ("-1")
 			end

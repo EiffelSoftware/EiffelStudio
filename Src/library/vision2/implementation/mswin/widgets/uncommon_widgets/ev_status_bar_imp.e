@@ -49,6 +49,8 @@ inherit
 			on_set_cursor,
 			hide,
 			show
+		redefine
+			default_style
 		end
 
 creation
@@ -192,6 +194,14 @@ feature -- Implementation
 			if number_of_parts > count then
 				set_text_part (number_of_parts - 1, "")
 			end
+		end
+
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		do
+			Result := Ws_visible + Ws_child + Sbars_sizegrip
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

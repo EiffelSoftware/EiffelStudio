@@ -60,15 +60,21 @@ feature {NONE} -- Initialization
 
 			!! display_area.make (dbox)
 			display_area.set_spacing (3)
-			display_area.set_height (100)
-			display_area.set_width (250)
+--			display_area.set_height (100)
+			display_area.set_minimum_height (100)
+--			display_area.set_width (250)
+			display_area.set_minimum_width (250)
 
 			!! action_area.make (dbox)
 			action_area.set_border_width (3)
 			action_area.set_spacing (4)
-			action_area.set_expand (False)
+--			action_area.set_expand (False)
+--			dbox.set_child_expandable (action_area, False)
 			action_area.set_minimum_height (30)
-			action_area.set_width (250)
+--			action_area.set_width (250)
+			action_area.set_minimum_width (250)
+
+--			forbid_resize
 
 			-- Current build
 			icon_build (display_area)		
@@ -160,7 +166,8 @@ feature -- Status settings
 		do
 			if help_button = Void then
 				!!help_button.make_with_text (action_area, "Help")
-				help_button.set_expand(True)
+--				help_button.set_expand(True)
+				action_area.set_child_expandable (help_button, True)
 			end
 		end
 
@@ -297,21 +304,24 @@ feature {NONE} -- Basic operation
 			when 1 then
 				if first_button = Void then
 					!! first_button.make_with_text (action_area, label)
-					first_button.set_expand(True)
+--					first_button.set_expand(True)
+					action_area.set_child_expandable (first_button, True)
 				else
 					first_button.set_text (label)
 				end
 			when 2 then
 				if second_button = Void then
 					!! second_button.make_with_text (action_area, label)
-					second_button.set_expand(True)
+--					second_button.set_expand(True)
+					action_area.set_child_expandable (second_button, True)
 				else
 					second_button.set_text (label)
 				end
 			when 3 then
 				if third_button = Void then
 					!! third_button.make_with_text (action_area, label)
-					third_button.set_expand(True)
+--					third_button.set_expand(True)
+					action_area.set_child_expandable (third_button, True)
 				else
 					third_button.set_text (label)
 				end

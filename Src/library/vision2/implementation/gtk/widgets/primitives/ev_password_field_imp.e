@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create password field with `*'.
 		do
-			Precursor
+			Precursor {EV_TEXT_FIELD_IMP}
 			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)		
 		end
 

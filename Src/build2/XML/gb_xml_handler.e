@@ -30,11 +30,6 @@ inherit
 			{NONE} all
 		end
 	
-	TOE_TREE_FACTORY
-		export
-			{NONE} all
-		end
-	
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
@@ -52,8 +47,7 @@ feature -- Access
 		do
 			Result := component_document /= Void
 		end
-		
-		
+
 feature -- Basic operations
 
 	save is
@@ -73,16 +67,21 @@ feature -- Basic operations
 			create xml_load
 			xml_load.load
 		end
+		
+	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+			-- Create unique callback pipe.
+		once
+			create Result.make
+		end
 	
 	load_components is
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
 		local
 			file: RAW_FILE
-			an_element, component_element: XML_ELEMENT
-			toe_document: TOE_DOCUMENT
+			an_element, component_element: XM_ELEMENT
 			buffer: STRING
-			parser: XML_TREE_PARSER
+			parser: XM_EIFFEL_PARSER
 		do
 			check
 				component_doc_void: component_document = Void
@@ -90,26 +89,25 @@ feature -- Basic operations
 			create file.make (component_filename)
 			if file.exists then
 					-- Load the existing file into `component document'
-				parser := create_tree_parser
+				create parser.make
 				file.make_open_read (component_filename)
 				create buffer.make (file.count)
 				file.start
 				file.read_stream (file.count)
 				buffer := file.last_string
+				parser.set_callbacks (pipe_callback.start)
 				parser.parse_from_string (buffer)
-				parser.set_end_of_document
-				component_document := parser.document
+				parser.finish_incremental
+				component_document := pipe_callback.document
 				an_element ?= component_document.first
 				component_element ?= an_element.first
 				
 				component_selector.add_components (all_child_element_names (an_element))
 			else
 					-- Create `component_document'.
-				component_element := new_root_element ("components", "")
-				add_attribute_to_element (component_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")
-				create toe_document.make
-				create component_document.make_from_imp (toe_document)
-				component_document.start
+				create component_element.make_root ("Components", create {XM_NAMESPACE}.make ("", ""))
+				add_attribute_to_element (component_element, "xsi", "xmlns", Schema_instance)
+				create component_document.make
 				component_document.force_first (component_element)
 			end
 		ensure
@@ -124,9 +122,9 @@ feature -- Basic operations
 			name_ok: component_name /= Void and not component_name.is_empty
 		local
 			xml_store: GB_XML_STORE
-			first_element: XML_ELEMENT
-			component_element: XML_ELEMENT
-			new_element: XML_ELEMENT
+			first_element: XM_ELEMENT
+			component_element: XM_ELEMENT
+			new_element: XM_ELEMENT
 		do
 			create xml_store
 			first_element ?= component_document.first
@@ -168,14 +166,14 @@ feature -- Basic operations
 			-- Actually perform saving of components.
 		local
 			file: RAW_FILE
-			formater: XML_FORMATER
+			formater: XM_FORMATTER
 		do
 			create formater.make
 			formater.process_document (component_document)
 			create file.make_open_write (component_filename)			
 			file.start
 			file.putstring (xml_format)
-			file.putstring (formater.last_string.to_utf8)
+			file.putstring (formater.last_string)
 			file.close
 		end
 		
@@ -184,8 +182,8 @@ feature -- Basic operations
 		require
 			vaid_component_name: component_name /= Void and not component_name.is_empty
 		local
-			an_element: XML_ELEMENT
-			element_to_remove: XML_ELEMENT
+			an_element: XM_ELEMENT
+			element_to_remove: XM_ELEMENT
 		do
 			an_element ?= component_document.first
 			element_to_remove := child_element_by_name (an_element, component_name)
@@ -194,11 +192,11 @@ feature -- Basic operations
 
 feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
-	xml_element_representing_named_component (a_name: STRING): XML_ELEMENT is
+	xml_element_representing_named_component (a_name: STRING): XM_ELEMENT is
 			-- `Result' is the element representing component `a_name' in
 			-- `component_document'.
 		local
-			an_element: XML_ELEMENT
+			an_element: XM_ELEMENT
 		do
 			an_element ?= component_document.first
 			Result := child_element_by_name (an_element, a_name)
@@ -210,9 +208,9 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 			-- `Result' is the type of object representing the root element
 			-- of the component. i.e. "EV_BUTTON".
 		local
-			an_element: XML_ELEMENT
-			component_element: XML_ELEMENT
-			internal_element: XML_ELEMENT
+			an_element: XM_ELEMENT
+			component_element: XM_ELEMENT
+			internal_element: XM_ELEMENT
 			current_name: STRING
 		do
 			an_element ?= component_document.first
@@ -223,9 +221,9 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 				component_element.off or Result /= Void
 			loop
 				internal_element ?= component_element.item_for_iteration
-				current_name := internal_element.name.to_utf8
+				current_name := internal_element.name
 				if current_name.is_equal (Item_string) then
-					Result := internal_element.attribute_by_name (type_string).value.to_utf8
+					Result := internal_element.attribute_by_name (type_string).value
 				end
 				component_element.forth
 			end
@@ -265,7 +263,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	component_document: XML_DOCUMENT
+	component_document: XM_DOCUMENT
 		-- Document which contains representations of all components
 		-- that have been defined by the user.
 

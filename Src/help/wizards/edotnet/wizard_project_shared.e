@@ -44,6 +44,9 @@ feature {NONE} -- Constants
 	
 	Tab: STRING is "%T"
 			-- Tabulation
+
+	Unrelevant_data: STRING is "-- Unrelevant data: root class is NONE --"
+			-- Message appearing in window text fields in case the root class is NONE
 			
 	Windows_new_line: STRING is "%R%N"
 			-- New line on Windows platform

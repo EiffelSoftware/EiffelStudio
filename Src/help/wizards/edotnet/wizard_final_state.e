@@ -288,12 +288,28 @@ feature {NONE} -- Constants
 	
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
+		local
+			root_class_external_name: STRING
+			creation_routine_name: STRING
+			creation_routine_external_name: STRING
 		once
 			Result := "You have specified the following settings:" + New_line + New_line +
 					"Project name: " + Tab + wizard_information.project_name + New_line +
 					"Location: " + Tab + wizard_information.project_location + New_line + New_line +
-					"Root class name: " + Tab + wizard_information.root_class_name + New_line +
-					"Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line + New_line
+					"Root class name: " + Tab + wizard_information.root_class_name + New_line 
+			root_class_external_name := wizard_information.root_class_external_name
+			if root_class_external_name /= Void and then root_class_external_name.is_empty and then not root_class_external_name.is_equal (Unrelevant_data) then
+				Result.append ("Root class external name: " + Tab + root_class_external_name + New_line)
+			end
+			creation_routine_name := wizard_information.creation_routine_name
+			if creation_routine_name /= Void and then not creation_routine_name.is_empty and then not creation_routine_name.is_equal (Unrelevant_data) then
+				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
+			end
+			creation_routine_external_name := wizard_information.creation_routine_external_name
+			if creation_routine_external_name /= Void and then not creation_routine_external_name.is_empty and then not creation_routine_external_name.is_equal (Unrelevant_data) then
+				Result.append ("Creation routine external name: " + Tab + wizard_information.creation_routine_external_name + New_line)
+			end
+			Result.append (New_line)
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty

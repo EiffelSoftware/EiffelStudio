@@ -105,37 +105,45 @@ feature -- Basic Operation
 
 	proceed_with_current_info is 
 		local
+			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
 			retried: BOOLEAN
 		do
-			if not retried then
+			if not retried then				
 				if root_class_name.text /= Void and then not root_class_name.text.is_empty then
-					if is_valid_identifier (root_class_name.text) then
-						if creation_routine_name.text /= Void and then not creation_routine_name.text.is_empty then
-							if is_valid_identifier (creation_routine_name.text) then
-								if root_class_external_name.text /= Void and then not root_class_external_name.text.is_empty then
-									if creation_routine_external_name.text /= Void and then not creation_routine_external_name.text.is_empty then
-										Precursor
-										create {WIZARD_THIRD_STATE} next_window.make (wizard_information)
+					root_class_name_text := clone (root_class_name.text)
+					root_class_name_text.to_lower
+					if root_class_name_text.is_equal (None_class) then
+						Precursor
+						create {WIZARD_THIRD_STATE} next_window.make (wizard_information)
+					else
+						if is_valid_identifier (root_class_name.text) then
+							if creation_routine_name.text /= Void and then not creation_routine_name.text.is_empty then
+								if is_valid_identifier (creation_routine_name.text) then
+									if root_class_external_name.text /= Void and then not root_class_external_name.text.is_empty then
+										if creation_routine_external_name.text /= Void and then not creation_routine_external_name.text.is_empty then
+											Precursor
+											create {WIZARD_THIRD_STATE} next_window.make (wizard_information)
+										else
+											-- Ask for a non empty creation routine external name
+											create {WIZARD_ERROR_EMPTY_CREATION_ROUTINE_EXTERNAL_NAME} next_window.make (wizard_information)
+										end
 									else
-										-- Ask for a non empty creation routine external name
-										create {WIZARD_ERROR_EMPTY_CREATION_ROUTINE_EXTERNAL_NAME} next_window.make (wizard_information)
+										-- Ask for a non empty root class external name
+										create {WIZARD_ERROR_EMPTY_ROOT_CLASS_EXTERNAL_NAME} next_window.make (wizard_information)
 									end
 								else
-									-- Ask for a non empty root class external name
-									create {WIZARD_ERROR_EMPTY_ROOT_CLASS_EXTERNAL_NAME} next_window.make (wizard_information)
+										-- Ask for a valid creation routine name (in the sense of an Eiffel valid identifier).
+									create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
 								end
 							else
-									-- Ask for a valid creation routine name (in the sense of an Eiffel valid identifier).
+									-- Ask for a valid creation routine name.
 								create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
 							end
 						else
-								-- Ask for a valid creation routine name.
-							create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
+								-- Ask for a valid root class name (in the sense of an Eiffel valid identifier).
+							create {WIZARD_ERROR_VALID_ROOT_CLASS_NAME} next_window.make (wizard_information)
 						end
-					else
-							-- Ask for a valid root class name (in the sense of an Eiffel valid identifier).
-						create {WIZARD_ERROR_VALID_ROOT_CLASS_NAME} next_window.make (wizard_information)
 					end
 				else
 						-- Ask for a valid root class name.
@@ -213,7 +221,24 @@ feature {NONE} -- Implementation
 
 	on_change_root_class_name is
 			-- Action performed when the user changes the root class name of the application
+		local
+			lower_case_root_class_name: STRING
 		do
+			lower_case_root_class_name := clone (root_class_name.text)
+			if lower_case_root_class_name /= Void then
+				lower_case_root_class_name.to_lower
+				if lower_case_root_class_name.is_equal (None_class) then
+					root_class_external_name.set_text (Unrelevant_data)
+					creation_routine_name.set_text (Unrelevant_data)
+					creation_routine_external_name.set_text (Unrelevant_data)
+				else
+					if root_class_external_name.text /= Void and then root_class_external_name.text.is_equal (Unrelevant_data) then
+						root_class_external_name.remove_text
+						creation_routine_name.remove_text
+						creation_routine_external_name.remove_text			
+					end
+				end
+			end
 		end
 
 	on_change_root_class_external_name is
@@ -239,7 +264,10 @@ feature {NONE} -- Constants
 	Dll_type: STRING is "Dynamic-Link Library"
 			-- Meaning of DLL
 	
+	None_class: STRING is "none"
+			-- `NONE' class
+		
 	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
 					%and select the names of the root class and its creation routine."
-
+			
 end -- class WIZARD_SECOND_STATE

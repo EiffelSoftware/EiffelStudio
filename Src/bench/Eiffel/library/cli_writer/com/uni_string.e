@@ -28,7 +28,7 @@ feature --{NONE} -- Initialization
 			count := nb
 			make_empty (nb)
 			a := a_string.to_c
-			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0,
+			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_acp, 0,
 				$a, nb, managed_data.item, managed_data.count)
 		end
 
@@ -63,7 +63,7 @@ feature -- Access
 			nb: INTEGER
 		do
 			create u_string.make_empty (length)
-			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0, item,
+			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_acp, 0, item,
 				length, u_string.item, u_string.capacity, default_pointer, default_pointer)
 			create Result.make_from_c (u_string.item)
 		end
@@ -112,7 +112,7 @@ feature -- Element change
 				managed_data.resize (new_size)
 			end
 
-			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0,
+			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_acp, 0,
 				$a, nb, managed_data.item, managed_data.count)
 
 			managed_data.put_integer_16 (0, nb * 2)

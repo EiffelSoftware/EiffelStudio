@@ -117,13 +117,13 @@ feature -- Basic Operations
 			if operators.found then
 				Result := operators.found_item
 			else
-				l_name := name.twin
-				if name.item (1) = '_'  then
+				l_name := formatted_variable_name (name)
+				if l_name.item (1) = '_'  then
 					l_name.prepend_character ('m')
-				elseif name.item (1).is_digit then
+				elseif l_name.item (1).is_digit then
 					l_name.prepend ("m_")
 				end
-				Result := formatted_variable_name (l_name)
+				Result := l_name
 			end
 			Result := Result.twin
 		ensure
@@ -140,13 +140,13 @@ feature -- Basic Operations
 			if name.is_empty then
 				Result := "arg_" + pos.out
 			else
-				l_name := name.twin
-				if name.item (1) = '_'  then
+				l_name := formatted_variable_name (name)
+				if l_name.item (1) = '_'  then
 					l_name.prepend_character ('a')
-				elseif name.item (1).is_digit then
+				elseif l_name.item (1).is_digit then
 					l_name.prepend ("a_")
 				end
-				Result := formatted_variable_name (l_name)
+				Result := l_name
 			end
 		ensure
 			formatted_argument_name_not_void: Result /= Void
@@ -223,10 +223,13 @@ feature -- Basic Operations
 						Result.append (array_string)
 					end
 					Result.replace_substring_all (".", single_underscore_string)
-					Result.replace_substring_all (triple_underscore_string,
-						single_underscore_string)
-					Result.replace_substring_all (double_underscore_string,
-						single_underscore_string)
+					Result.replace_substring_all (triple_underscore_string, single_underscore_string)
+					Result.replace_substring_all (double_underscore_string, single_underscore_string)
+					if Result.item (1) = '_' then
+						Result.prepend_character ('C')
+					elseif Result.item (1).is_digit then
+						Result.prepend ("C_")
+					end
 					Result := eiffel_format (Result, True)
 				end
 			end
@@ -629,4 +632,3 @@ feature {NONE} -- Constants
 			-- To save time in creating those strings in current class.
 
 end -- class NAME_FORMATTER
-

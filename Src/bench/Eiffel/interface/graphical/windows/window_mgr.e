@@ -145,6 +145,7 @@ feature -- Graphical Interface
 		end;
 
 	show_all_editors is
+			-- Show all the editors.
 		do
 			routine_win_mgr.show_editors;
 			class_win_mgr.show_editors;
@@ -153,11 +154,21 @@ feature -- Graphical Interface
 		end;
 
 	close_all_editors is
+			-- Close all the editors.
 		do
 			routine_win_mgr.close_editors;
 			class_win_mgr.close_editors;
 			object_win_mgr.close_editors;
 			explain_win_mgr.close_editors
+		end;
+
+	raise_all_editors is
+			-- Raise all the editors.
+		do
+			explain_win_mgr.raise_editors
+			object_win_mgr.raise_editors;
+			routine_win_mgr.raise_editors;
+			class_win_mgr.raise_editors;
 		end;
 
 	raise_class_windows is
@@ -254,6 +265,9 @@ feature -- Update
 				need_to_update_attributes := False
 			end
 			if need_to_resynchronize then
+				if Profile_tool /= Void then	
+					Profile_tool.update_graphical_resources
+				end;
 				Project_tool.update_graphical_resources;
 				System_tool.update_graphical_resources;
 				routine_win_mgr.update_graphical_resources;

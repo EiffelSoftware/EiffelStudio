@@ -13,10 +13,7 @@ inherit
 
 	FORM_D_I;
 
-	DIALOG_M
-		redefine
-			screen_object
-		end;
+	DIALOG_M;
 
 	FORM_M
 		rename
@@ -25,10 +22,10 @@ inherit
 			lower, raise, 
 			hide, show, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			is_stackable, clean_up,
+			is_stackable, created_dialog_automatically,
 			form_make, create_widget
 		redefine
-			screen_object
+			parent
 		end;
 
 	MEL_FORM_DIALOG
@@ -43,20 +40,21 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-			attach_right as mel_attach_right,
-			attach_left as mel_attach_left,
-			attach_top as mel_attach_top,
-			attach_bottom as mel_attach_bottom,
-			detach_right as mel_detach_right,
-			detach_left as mel_detach_left,
-			detach_top as mel_detach_top,
-			detach_bottom as mel_detach_bottom,
-            is_shown as shown
+			attach_right as child_attach_right,
+			attach_left as child_attach_left,
+			attach_top as child_attach_top,
+			attach_bottom as child_attach_bottom,
+			detach_right as child_detach_right,
+			detach_left as child_detach_left,
+			detach_top as child_detach_top,
+			detach_bottom as child_detach_bottom,
+			is_shown as shown,
+			is_valid as is_widget_valid
 		undefine
 			set_x, set_y, set_x_y, raise, lower, 
 			show, hide
 		redefine
-			screen_object
+			parent
 		select
 			form_make_no_auto_unmanage
 		end
@@ -69,19 +67,20 @@ feature {NONE} -- Initialization
 
 	make (a_form_dialog: FORM_D; oui_parent: COMPOSITE) is
 			-- Create a motif form dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_make_no_auto_unmanage (a_form_dialog.identifier,
-				mel_parent (a_form_dialog, widget_index));
+			mel_make_no_auto_unmanage (a_form_dialog.identifier, mc);
 			a_form_dialog.set_dialog_imp (Current);
-			action_target := screen_object;
-			initialize (dialog_shell)
+			initialize (parent)
 		end;
 
 feature -- Access
 
-	screen_object: POINTER
-			-- Associated C widget pointer
+	parent: MEL_DIALOG_SHELL
+			-- Dialog shell of the working dialog
 
 end -- class FORM_D
 

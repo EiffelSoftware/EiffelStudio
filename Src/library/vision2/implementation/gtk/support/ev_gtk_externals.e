@@ -6,6 +6,27 @@ class
 		
 feature -- MACROS
 
+	frozen gtk_maj_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_major_version"
+		end
+
+	frozen gtk_min_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_minor_version"
+		end
+		
+	frozen gtk_mic_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_micro_version"
+		end
+
 	frozen gtk_signal_emit_by_name (a_object: POINTER; a_signal: POINTER) is
 		external
 			"C(GtkObject*, gchar*) | <gtk/gtk.h>"

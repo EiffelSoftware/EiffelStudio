@@ -8,6 +8,33 @@ class
 
 feature -- Externals
 
+	frozen gdk_pixbuf_get_formats: POINTER is
+		external
+			"C signature (): GSList* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_format_is_writable (a_pixbuf_format: POINTER): BOOLEAN is
+		external
+			"C signature (GdkPixbufFormat*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_format_get_name (a_pixbuf_format: POINTER): POINTER is
+		external
+			"C signature (GdkPixbufFormat*): gchar* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_save (a_pixbuf, a_file_handle, a_filetype: POINTER; a_error: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_save ((GdkPixbuf*) $a_pixbuf, (char*) $a_file_handle, (char*) $a_filetype, (GError**) $a_error, NULL)"
+		end
+
+	frozen gdk_pixbuf_get_from_drawable (a_pixbuf, a_drawable, a_colormap: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
+		external
+			"C signature (GdkPixbuf*, GdkDrawable*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <gtk/gtk.h>"
+		end
+
 	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
 		external
 			"C signature (GdkPixbuf*, GdkPixmap**, GdkBitmap**, int) use <gtk/gtk.h>"

@@ -9,9 +9,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.3  1998/02/02 18:10:34  raphaels
-// Added ITypeComp support.
-// Corrected some bugs in ITypeLib and ITypeInfo.
+// Revision 1.4  1998/02/09 19:20:12  raphaels
+// Mainly cosmetics. Added `character' to EOLE_VARIANT.
 //
 // Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
 // First version of EiffelCOM

@@ -9,9 +9,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.5  1998/02/02 18:10:28  raphaels
-// Added ITypeComp support.
-// Corrected some bugs in ITypeLib and ITypeInfo.
+// Revision 1.6  1998/02/09 19:20:08  raphaels
+// Mainly cosmetics. Added `character' to EOLE_VARIANT.
 //
 // Revision 1.3  1998/01/20 23:47:54  raphaels
 // Removed obsolete files.
@@ -502,10 +501,33 @@ extern "C" EIF_INTEGER eole2_typelib_get_type_info_type (EIF_POINTER pTypeLib, E
 }
 
 extern "C" EIF_POINTER eole2_typelib_get_type_comp (EIF_POINTER pTypeLib) {
-   ITypeComp FAR* pTComp;
+   ITypeComp FAR* FAR* ppTComp;
 
-   g_hrStatusCode = E_ITypeLib_GetTypeComp (pTypeLib, &pTComp);
-   return (EIF_POINTER)pTComp;
+    OLECHAR FAR* szName;
+  
+    unsigned long lHashVal;  
+  
+    ITypeInfo FAR*FAR* ppTInfo;
+  
+    DESCKIND FAR* pDescKind;
+  
+    BINDPTR FAR* pBindPtr;
+	char name[5] = "pget";
+	HRESULT res;
+
+   ppTInfo = (ITypeInfo FAR* FAR*)malloc (sizeof (ITypeInfo FAR*));
+   pDescKind = (DESCKIND*)malloc (sizeof (DESCKIND));
+   pBindPtr = (BINDPTR*)malloc (sizeof (BINDPTR));
+   szName = Eif2OleString (name);
+   lHashVal = LHashValOfName (0, szName);
+
+   ppTComp = (ITypeComp FAR* FAR*)malloc (sizeof (ITypeComp FAR*));
+   g_hrStatusCode = E_ITypeLib_GetTypeComp (pTypeLib, ppTComp);
+
+   res = (((ITypeComp*)(*ppTComp))->Bind (szName, lHashVal, 0, ppTInfo, pDescKind, pBindPtr));
+ 
+
+   return (EIF_POINTER)(*ppTComp);
 }
 
 extern "C" EIF_POINTER eole2_typelib_get_lib_attr (EIF_POINTER pTypeLib) {
@@ -1018,7 +1040,7 @@ extern "C" HRESULT E_ITypeInfo_GetRefTypeInfo(
         HREFTYPE hreftype,
         ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo )
 {
-    if( incomingCall )
+    if( incomingCall ) // Always false
     {
       *pptinfo = (ITypeInfo __RPC_FAR *) Ocxdisp_TypeInfoGetRefTypeInfo (eif_access (eoleOcxDisp), eif_access (ptr), 
 	  																(EIF_INTEGER)hreftype);
@@ -1213,33 +1235,37 @@ extern "C" EIF_OBJ eole2_tinfo_get_dll_entry(
 	EIF_OBJ eif_bstr_entry_point;				// Attribut `entry_point_name' of EOLE_DLL_ENTRY
 	EIF_TYPE_ID eif_dll_entry_id;				// Type id of EOLE_DLL_ENTRY
 	EIF_TYPE_ID eif_bstr_id;					// Type id of EOLE_BSTR
-	EIF_PROC eif_dll_entry_make;				// Feature `make' of EOLE_DLL_ENTRY
 	EIF_PROC eif_dll_entry_set_name;			// Feature `set_name' of EOLE_DLL_ENTRY
 	EIF_PROC eif_dll_entry_set_entry_point;		// Feature `set_entry_point' of EOLE_DLL_ENTRY
 	EIF_PROC eif_dll_entry_set_ordinal;			// Feature `set_ordinal' of EOLE_DLL_ENTRY
 	EIF_PROC eif_bstr_make_from_ptr;            // Feature `make_from_ptr'of EOLE_BSTR
 
+	entry_point_name = (BSTR*)malloc (sizeof (BSTR));				// Allocate
+	dll_name = (BSTR*)malloc (sizeof (BSTR));						// arguments
+	ordinal = (WORD*)malloc (sizeof (WORD));
     g_hrStatusCode = E_ITypeInfo_GetDllEntry( ptInfo, FALSE,		// Call to the function that will set C++ out arguments
             (MEMBERID)mem_id, (INVOKEKIND)invoke_ind,
             dll_name, entry_point_name, ordinal );
 
-	eif_dll_entry_id = eif_type_id ("EOLE_DLL_ENTRY");	// Initialization of all type ids and features
-	eif_bstr_id = eif_type_id ("EOLE_BSTR");
-	eif_dll_entry_make = eif_proc ("make", eif_dll_entry_id);
-	eif_dll_entry_set_name = eif_proc ("set_name", eif_dll_entry_id);
-	eif_dll_entry_set_entry_point = eif_proc ("set_entry_point", eif_dll_entry_id);
-	eif_dll_entry_set_ordinal = eif_proc ("set_ordinal", eif_dll_entry_id);
-	eif_bstr_make_from_ptr = eif_proc ("make_from_ptr", eif_bstr_id);
-	result = eif_create (eif_dll_entry_id);		// Creation of Eiffel result object
-    eif_bstr_name = eif_create (eif_bstr_id);
-	eif_bstr_entry_point = eif_create (eif_bstr_id);
-	eif_bstr_make_from_ptr (eif_access (eif_bstr_name), dll_name);
-	eif_bstr_make_from_ptr (eif_access (eif_bstr_entry_point), entry_point_name);
-	eif_dll_entry_set_name (eif_access (result), eif_access (eif_bstr_name));
-	eif_dll_entry_set_entry_point (eif_access (result), eif_access (eif_bstr_entry_point));
-	eif_dll_entry_set_ordinal ((EIF_POINTER)*ordinal);
+	if (SUCCEEDED (g_hrStatusCode)) {
+		eif_dll_entry_id = eif_type_id ("EOLE_DLL_ENTRY");	// Initialization of all type ids and features
+		eif_bstr_id = eif_type_id ("EOLE_BSTR");
+		eif_dll_entry_set_name = eif_proc ("set_name", eif_dll_entry_id);
+		eif_dll_entry_set_entry_point = eif_proc ("set_entry_point", eif_dll_entry_id);
+		eif_dll_entry_set_ordinal = eif_proc ("set_ordinal", eif_dll_entry_id);
+		eif_bstr_make_from_ptr = eif_proc ("make_from_ptr", eif_bstr_id);
+		result = eif_create (eif_dll_entry_id);		// Creation of Eiffel result object
+		eif_bstr_name = eif_create (eif_bstr_id);
+		eif_bstr_entry_point = eif_create (eif_bstr_id);
+		eif_bstr_make_from_ptr (eif_access (eif_bstr_name), dll_name);
+		eif_bstr_make_from_ptr (eif_access (eif_bstr_entry_point), entry_point_name);
+		eif_dll_entry_set_name (eif_access (result), eif_access (eif_bstr_name));
+		eif_dll_entry_set_entry_point (eif_access (result), eif_access (eif_bstr_entry_point));
+		eif_dll_entry_set_ordinal (eif_access (result), (EIF_POINTER)*ordinal);
 	
-	return eif_access (result);
+		return eif_access (result);
+	}
+	return NULL;
 }
 
 //---------------------------------------------------------------------------
@@ -1369,11 +1395,13 @@ extern "C" EIF_POINTER eole2_tinfo_get_ref_type_info(
       EIF_POINTER ptInfo,
       EIF_INTEGER type_ref_handle )
 {
-    ITypeInfo* pInfo = 0;
-    g_hrStatusCode = E_ITypeInfo_GetRefTypeInfo( ptInfo, FALSE,
-            type_ref_handle, &pInfo );
+    ITypeInfo FAR* FAR* ppInfo;
 
-    return (EIF_POINTER)pInfo;
+	ppInfo = (ITypeInfo FAR* FAR*)malloc (sizeof (ITypeInfo FAR*));
+    g_hrStatusCode = E_ITypeInfo_GetRefTypeInfo( ptInfo, FALSE,
+            type_ref_handle, ppInfo );
+
+    return (EIF_POINTER)(FAR *ppInfo);
 }
 
 //---------------------------------------------------------------------------
@@ -1400,10 +1428,11 @@ extern "C" EIF_POINTER eole2_tinfo_get_type_attr( EIF_POINTER ptInfo )
 
 extern "C" EIF_POINTER eole2_tinfo_get_type_comp( EIF_POINTER ptInfo )
 {
-    ITypeComp* pTypeComp = 0;
+    ITypeComp** ppTypeComp;
 
-    g_hrStatusCode = E_ITypeInfo_GetTypeComp( ptInfo, FALSE, &pTypeComp );
-    return (EIF_POINTER)pTypeComp;
+	ppTypeComp = (ITypeComp **)malloc (sizeof (ITypeComp *));
+    g_hrStatusCode = E_ITypeInfo_GetTypeComp( ptInfo, FALSE, ppTypeComp );
+    return (EIF_POINTER)(*ppTypeComp);
 }
 
 //---------------------------------------------------------------------------

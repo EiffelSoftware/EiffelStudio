@@ -14,7 +14,7 @@ inherit
 feature -- Access
 
 	type_info: EOLE_TYPE_INFO is
-			-- if `desc_kind' is Var_desc or Func_desce,
+			-- if `desc_kind' is Var_desc or Func_desc,
 			-- pointer to type description that contains 
 			-- item to which it is bound
 		require

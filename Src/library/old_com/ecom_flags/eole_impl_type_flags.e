@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	impltypeflag_fdefault: INTEGER is
+	Impltypeflag_fdefault: INTEGER is
 			-- Interface or dispinterface represents default for
 			-- source or sink
 		external
@@ -22,7 +22,7 @@ feature -- Access
 			"IMPLTYPEFLAG_FDEFAULT"
 		end
 		
-	impltypeflag_fsource: INTEGER is
+	Impltypeflag_fsource: INTEGER is
 			-- Member of coclass called rather than implemented
 		external
 			"C [macro <oaidl.h>]"
@@ -30,7 +30,7 @@ feature -- Access
 			"IMPLTYPEFLAG_FSOURCE"
 		end
 		
-	impltypeflag_frestricted: INTEGER is
+	Impltypeflag_frestricted: INTEGER is
 			-- Member should not be displayed or programmable by users
 		external
 			"C [macro <oaidl.h>]"
@@ -38,13 +38,21 @@ feature -- Access
 			"IMPLTYPEFLAG_FRESTRICTED"
 		end
 
+	Impltypeflag_fdefaultvtable: INTEGER is
+			-- Sink receive events through the VTABLE.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"IMPLTYPEFLAG_FDEFAULTVTABLE"
+		end
+		
 	is_valid_impltypeflag (flag: INTEGER): BOOLEAN is
 			-- Is `flag' a valid combination of impltypeflags?
 		do
-			Result := c_and (impltypeflag_fdefault + impltypeflag_fsource
-						+ impltypeflag_frestricted, flag)
-						= impltypeflag_fdefault + impltypeflag_fsource
-						+ impltypeflag_frestricted
+			Result := c_and (Impltypeflag_fdefault + Impltypeflag_fsource
+						+ Impltypeflag_frestricted + Impltypeflag_fdefaultvtable, flag)
+						= Impltypeflag_fdefault + Impltypeflag_fsource
+						+ Impltypeflag_frestricted + Impltypeflag_fdefaultvtable
 		end
 		
 end -- class EOLE_IMPLTYPEFLAGS

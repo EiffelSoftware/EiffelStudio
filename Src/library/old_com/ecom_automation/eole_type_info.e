@@ -15,6 +15,8 @@ inherit
 	
 	EOLE_TYPE_KIND
 
+	EOLE_IMPL_TYPE_FLAGS
+
 creation
 	make
 		
@@ -28,19 +30,20 @@ feature -- Message Transmission
 			Result := ole2_typeinfo_address_of_member (ole_interface_ptr, member_id, invoke_ind)
 		end
 
-	create_instance (punk_outer: POINTER; clsid: STRING): POINTER is
+	create_instance (punk_outer: POINTER; riid: STRING): POINTER is
 			-- Create new instance of type that describes component object class.
+			-- `rrid' indicates which interface is requested.
 		require
 			valid_interface: is_valid_interface
 			is_com_class: is_com_class
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (clsid)
+			!! wel_string.make (riid)
 			Result := ole2_typeinfo_create_instance (ole_interface_ptr, punk_outer, wel_string.item)
 		end
 
-	get_containing_typelib: EOLE_TYPE_LIB is
+	get_containing_type_lib: EOLE_TYPE_LIB is
 			-- Containing type library and index of type description within that type library
 		require
 			valid_interface: is_valid_interface
@@ -54,14 +57,14 @@ feature -- Message Transmission
 			end
 		end
 
-	get_dll_entry (mem_id, invoke_ind: INTEGER): EOLE_DLL_ENTRY is
+	get_dll_entry (mem_id, invoke_kind: INTEGER): EOLE_DLL_ENTRY is
 			-- Description or specification for entry point of
 			-- function with member identifier `mem_id' and member
 			-- kind `invoke_kind'.
 		require
 			valid_interface: is_valid_interface
 		do
-			Result := ole2_typeinfo_get_dll_entry (ole_interface_ptr, mem_id, invoke_ind)
+			Result := ole2_typeinfo_get_dll_entry (ole_interface_ptr, mem_id, invoke_kind)
 		end
 
 	get_documentation (index: INTEGER): EOLE_DOCUMENTATION is
@@ -134,19 +137,27 @@ feature -- Message Transmission
 		end
 
 	get_impl_type_flags (index: INTEGER): INTEGER is
-			-- Enumeration for one implemented interface or base interface in a type description
+			-- IMPLTYPEFLAGS for a base or implemented interface
+			-- See class EOLE_IMPL_TYPE_FLAGS for Result values.
 		require
 			valid_interface: is_valid_interface
 		do
 			Result := ole2_typeinfo_get_impl_type_flags (ole_interface_ptr, index)
+		ensure
+			valid_impl_type_flags: is_valid_impltypeflag (Result)
 		end
 
 	get_mops (member_id: INTEGER): EOLE_BSTR is
 			-- Marshaling information
 		require
 			valid_interface: is_valid_interface
+		local
+			ptr: POINTER
 		do
-			!! Result.make_from_ptr (ole2_typeinfo_get_mops (ole_interface_ptr, member_id))
+			ptr := ole2_typeinfo_get_mops (ole_interface_ptr, member_id)
+			if ptr /= default_pointer then
+				!! Result.make_from_ptr (ptr)
+			end
 		end
 
 	get_names (member_id: INTEGER): ARRAY [STRING] is
@@ -159,7 +170,7 @@ feature -- Message Transmission
 			str: STRING
 		do
 			count := ole2_typeinfo_get_names_and_count (ole_interface_ptr, member_id)
-			!! Result.make (1, count);
+			!! Result.make (1, count)
 			from
 				i := 0
 			until
@@ -215,8 +226,13 @@ feature -- Message Transmission
 			-- Set `var_desc' with description of variable at `var_index'.
 		require
 			valid_interface: is_valid_interface
+		local
+			ptr: POINTER
 		do
-			var_desc.attach (ole2_typeinfo_get_var_desc (ole_interface_ptr, var_index))
+			ptr := ole2_typeinfo_get_var_desc (ole_interface_ptr, var_index)
+			if ptr /= default_pointer then
+				var_desc.attach (ptr)
+			end
 		end
 
 	invoke (dispid, flag: INTEGER; params: EOLE_DISPPARAMS; res: EOLE_VARIANT; exception: EOLE_EXCEPINFO) is

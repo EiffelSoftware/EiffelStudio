@@ -9,9 +9,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.5  1998/02/02 18:10:29  raphaels
-// Added ITypeComp support.
-// Corrected some bugs in ITypeLib and ITypeInfo.
+// Revision 1.6  1998/02/09 19:20:09  raphaels
+// Mainly cosmetics. Added `character' to EOLE_VARIANT.
 //
 // Revision 1.2  1998/01/20 00:25:55  raphaels
 // Modified sources to be compatible with Borland compiler.

@@ -26,14 +26,6 @@ feature -- Access
 			"VT_NULL"
 		end
 		
-	Vt_i1: INTEGER is
-			-- 1-byte signed integer
-		external
-			"C [macro <wtypes.h>]"
-		alias
-			"VT_I1"
-		end
-		
 	Vt_i2: INTEGER is
 			-- 2-byte signed integer
 		external

@@ -79,13 +79,13 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 				end
 			elseif flags = Dispatch_propertyput then
 				if dispid = Dispid_font_name then
-					if params.argument (0).vartype = Vt_bstr then
+					if params.argument (0).var_type = Vt_bstr then
 						put_name (params.argument (0).bstr)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_size then
-					if params.argument (0).vartype = Vt_cy then
+					if params.argument (0).var_type = Vt_cy then
 						!! currency
 						currency.set_lo (params.argument (0).currency_lo)
 						currency.set_hi (params.argument (0).currency_hi)
@@ -94,37 +94,37 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_bold then
-					if params.argument (0).vartype = Vt_bool then
+					if params.argument (0).var_type = Vt_bool then
 						put_bold(params.argument (0).boolean)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_italic then
-					if params.argument (0).vartype = Vt_bool then
+					if params.argument (0).var_type = Vt_bool then
 						put_italic (params.argument (0).boolean)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_under then
-					if params.argument (0).vartype = Vt_bool then
+					if params.argument (0).var_type = Vt_bool then
 						put_underline (params.argument (0).boolean)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_strike then
-					if params.argument (0).vartype = Vt_bool then
+					if params.argument (0).var_type = Vt_bool then
 						put_strikethrough (params.argument (0).boolean)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_weight then
-					if params.argument (0).vartype = Vt_i2 then
+					if params.argument (0).var_type = Vt_i2 then
 						put_weight (params.argument (0).integer2)
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
 				elseif dispid = Dispid_font_charset then
-					if params.argument (0).vartype = Vt_i2 then
+					if params.argument (0).var_type = Vt_i2 then
 						put_charset (params.argument (0).integer2)
 					else
 						exception.set_error_code (Disp_e_typemismatch)

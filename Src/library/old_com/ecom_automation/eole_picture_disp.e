@@ -74,47 +74,47 @@ feature -- Callback
 				end
 			elseif flags = Dispatch_method then
 				if dispid = Dispid_pict_render then
-					if params.argument (0).vartype = Vt_i4 then
+					if params.argument (0).var_type = Vt_i4 then
 						hdc := params.argument(0).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (1).vartype = Vt_i4 then
+					if params.argument (1).var_type = Vt_i4 then
 						x := params.argument(1).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (2).vartype = Vt_i4 then
+					if params.argument (2).var_type = Vt_i4 then
 						y := params.argument(2).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (3).vartype = Vt_i4 then
+					if params.argument (3).var_type = Vt_i4 then
 						cx := params.argument(3).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (4).vartype = Vt_i4 then
+					if params.argument (4).var_type = Vt_i4 then
 						cy := params.argument(4).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (5).vartype = Vt_i4 then
+					if params.argument (5).var_type = Vt_i4 then
 						x_src := params.argument(5).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (6).vartype = Vt_i4 then
+					if params.argument (6).var_type = Vt_i4 then
 						y_src := params.argument(6).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (7).vartype = Vt_i4 then
+					if params.argument (7).var_type = Vt_i4 then
 						cx_src := params.argument(7).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)
 					end
-					if params.argument (8).vartype = Vt_i4 then
+					if params.argument (8).var_type = Vt_i4 then
 						cy_src := params.argument(8).integer4
 					else
 						exception.set_error_code (Disp_e_typemismatch)

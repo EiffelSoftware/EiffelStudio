@@ -101,6 +101,15 @@ extern "C" void eole2_var_set_vartype (EIF_POINTER ptr, EIF_INTEGER vartype) {
 
 //---------------------------------------------------------------------------
 
+extern "C" void eole2_var_set_character ( EIF_POINTER ptr, EIF_CHARACTER ch )
+{
+    VARIANT* v = (VARIANT*)ptr;
+    v->vt = (VARTYPE)VT_I1;
+    v->iVal = (unsigned char)ch;
+}
+
+//---------------------------------------------------------------------------
+
 extern "C" void eole2_var_set_integer2( EIF_POINTER ptr, EIF_INTEGER int2 )
 {
     VARIANT* v = (VARIANT*)ptr;
@@ -269,6 +278,16 @@ extern "C" EIF_INTEGER eole2_var_get_type( EIF_POINTER ptr )
 {
     VARIANT* v = (VARIANT*)ptr;
     return (EIF_INTEGER)v->vt;
+}
+
+//---------------------------------------------------------------------------
+
+extern "C" EIF_CHARACTER eole2_var_get_character ( EIF_POINTER ptr )
+{
+    VARIANT* v = (VARIANT*)ptr;
+    if( v->vt & VT_BYREF )
+        return (EIF_CHARACTER) *(v->piVal);
+    return (EIF_CHARACTER)v->iVal;
 }
 
 //---------------------------------------------------------------------------

@@ -30,6 +30,9 @@ feature -- Access
 			-- Table of Contents is generated from a physical location on 
 			-- disk rather than other structure such as tree widget or XML file
 
+	compile: BOOLEAN
+			-- Should HTML Help be compiled?
+
 feature -- Path Locations
 
 	toc_path: DIRECTORY_NAME is
@@ -88,6 +91,12 @@ feature -- Status Setting
 		do
 			toc := a_toc
 		end
+		
+	set_compile (a_flag: BOOLEAN) is
+			-- Set compile option
+		do
+			compile := a_flag
+		end	
 		
 	set_help_project_name (a_name: STRING) is
 			-- Set name for help project

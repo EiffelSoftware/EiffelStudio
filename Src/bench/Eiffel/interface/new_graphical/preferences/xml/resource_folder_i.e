@@ -92,9 +92,11 @@ feature -- Initialization
 				error_message := " does not exist%N"
 				error_message.prepend (file_name)
 			end
-			if error_message /= Void then
-				io.put_string (error_message)
-			end
+--| FIXME ARNAUD, use an error manager
+--			if error_message /= Void then
+--				io.put_string (error_message)
+--			end
+--| END FIXME
 		end
 
 	load_default_attributes (xml_elem: XML_ELEMENT) is

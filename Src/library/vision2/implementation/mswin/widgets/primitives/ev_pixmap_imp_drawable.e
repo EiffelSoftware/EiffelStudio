@@ -14,7 +14,8 @@ inherit
 	EV_PIXMAP_I
 		redefine
 			interface,
-			on_parented
+			on_parented,
+			set_with_default
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -140,6 +141,23 @@ feature {NONE} -- Initialization
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
 			simple_pixmap.read_from_named_file(file_name)
+			
+				-- Adapt the current object to the simple
+				-- pixmap just created
+			adapt_from_simple(simple_pixmap)
+		end
+
+	set_with_default (pixmap_name: STRING) is
+			-- Initialize the pixmap with the default
+			-- image named `pixmap_name'.
+			--
+			-- Exceptions "Unable to retrieve icon information", 
+		local
+			simple_pixmap: EV_PIXMAP_IMP
+		do
+				-- Create a simple pixmap
+			simple_pixmap := create_simple_pixmap
+			simple_pixmap.set_with_default (pixmap_name)
 			
 				-- Adapt the current object to the simple
 				-- pixmap just created
@@ -813,6 +831,10 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/28 16:32:43  pichery
+--| Added feature `set_with_default' To load a default
+--| pixmap.
+--|
 --| Revision 1.4  2000/04/20 22:48:20  pichery
 --| Improved invariant.
 --|

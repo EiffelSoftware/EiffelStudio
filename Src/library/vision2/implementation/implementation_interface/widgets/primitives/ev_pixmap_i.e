@@ -49,6 +49,18 @@ feature -- Initialization
 		deferred
 		end
 
+	set_with_default (pixmap_name: STRING) is
+			-- Initialized the pixmap with the default
+			-- image named `pixmap_name'.
+		require
+			valid_pixmap_name: 
+				pixmap_name.is_equal("Information") or
+				pixmap_name.is_equal("Error") or
+				pixmap_name.is_equal("Question") or
+				pixmap_name.is_equal("Warning")
+		do
+		end
+
 	set_size (a_x, a_y: INTEGER) is
 			-- Set the size of the pixmap to `a_x' by `a_y'.
 		require
@@ -98,6 +110,10 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/28 16:31:58  pichery
+--| Added feature `set_with_default' To load a default
+--| pixmap.
+--|
 --| Revision 1.18  2000/04/14 20:56:45  brendel
 --| Removed on_parented since it is now in EV_WIDGET_I.
 --|

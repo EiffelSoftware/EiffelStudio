@@ -39,6 +39,7 @@ inherit
 create
 	default_create,
 	make_with_size,
+	make_with_default,
 	make_for_test
 
 feature {NONE} -- Initialization
@@ -56,6 +57,20 @@ feature {NONE} -- Initialization
 			height_assigned: height = a_height
 		end
 
+	make_with_default (pixmap_name: STRING) is
+			-- Create a pixmap initialized with the default
+			-- image named `pixmap_name'.
+		require
+			valid_pixmap_name: 
+				pixmap_name.is_equal("Information") or
+				pixmap_name.is_equal("Error") or
+				pixmap_name.is_equal("Question") or
+				pixmap_name.is_equal("Warning")
+		do
+			default_create
+			implementation.set_with_default (pixmap_name)
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -67,12 +82,6 @@ feature -- Comparison
 					width = other.width and
 					height = other.height
 				)
-if Result = False then
-io.putstring ("width ="+width.out+"%N")
-io.putstring ("height ="+width.out+"%N")
-io.putstring ("other.width ="+other.width.out+"%N")
-io.putstring ("other.height ="+other.height.out+"%N")
-end
 			end
 		end
 
@@ -207,6 +216,10 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/28 16:33:04  pichery
+--| Added feature `set_with_default' To load a default
+--| pixmap.
+--|
 --| Revision 1.30  2000/04/26 04:03:23  pichery
 --| Changed export clause for `implementation'.
 --|

@@ -931,6 +931,7 @@ end;
 			-- Remove a class from the cluster (Exclude clause)
 			-- Remove the CLASS_C if the class was compiled before
 			-- and propagate recompilation of the clients.
+			-- Can only be called by compiler tools, not by compiler itself.
 		do
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Removing class ");
@@ -942,6 +943,10 @@ end;
 				-- If a_class has already be compiled,
 				-- all its clients must recheck their suppliers
 			remove_class_from_system (a_class);
+
+				-- Remove it from unreferenced classes of system
+				-- if it was only referenced from there.
+			System.remove_unref_class (a_class)
 		end;
 
 	remove_class_from_system (a_class: CLASS_I) is

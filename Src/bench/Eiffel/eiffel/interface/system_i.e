@@ -456,6 +456,21 @@ feature -- Properties
 			melt_forced: private_melt
 		end
 
+	remove_unref_class (a_class: CLASS_I) is
+			-- Remove `a_class' from list of non-referenced classes.
+			-- Force a recompilation for next compilation of system
+			-- to take into account the change.
+		require
+			a_class_not_void: a_class /= Void
+		do
+				-- Force a recompilation of the system.
+			set_melt
+			unref_classes.prune_all (a_class)
+		ensure
+			unref_classes_updated: not unref_classes.has (a_class)
+			melt_forced: private_melt
+		end
+
 	protected_classes_level: INTEGER
 			-- Useful for remove_useless_classes
 			-- Protected classes are ANY, DOUBLE, REAL,

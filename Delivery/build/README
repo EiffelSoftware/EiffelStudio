@@ -1,0 +1,10 @@
+To run EiffelBuild set up licence as per environment manual.
+Copy XeiffelBuild to the app default directory for X11.
+
+	This is normally /usr/lib/X11/app_defaults
+
+If you are unable to do this then you will need to load
+the defaults using the following command.
+
+		xrdb -load XeiffelBuild
+

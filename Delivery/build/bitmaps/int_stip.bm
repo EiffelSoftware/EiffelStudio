@@ -1,0 +1,4 @@
+#define int_stip_width 2
+#define int_stip_height 2
+static char int_stip_bits[] = {
+   0x01, 0x02};

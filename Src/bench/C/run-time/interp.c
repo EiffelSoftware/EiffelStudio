@@ -34,6 +34,7 @@
 #include "x2c.h"		/* For LNGPAD */
 #include "eif_misc.h"
 #include "rt_assert.h"
+#include "server.h" /* For debug_mode: we need to move dynamic_eval */
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
@@ -4809,7 +4810,7 @@ rt_private void eif_interp_bit_operations (void)
  */
 
 rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop)
-						/* Feature ID */
+						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
@@ -4821,9 +4822,15 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	 * called to push the parameters on the "C stack" correctly. Otherwise,
 	 * the interpreter is called. The function returns 1 to the caller if a
 	 * resynchronization of registers is needed.
+	 * FIXME XR: I believe we save and restore things which are not needed
+	 * (in particular we save the stack context but xinterp does it too)
+	 * so if someone understands what I have written and feels like clearing it up,
+	 * they're welcome to do so (I give up: I think it works and that's enough).
 	 */
 
 	EIF_GET_CONTEXT
+	RTED;
+	int				saved_debug_mode = debug_mode;
 	uint16 			body_id = 0;		/* Value of selected body ID */
 	unsigned long 	stagval = tagval;	/* Save tag value */
 	unsigned char *	OLD_IC = NULL;		/* IC back-up */
@@ -4834,11 +4841,43 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	struct stochunk *previous_scur = saved_scur;
 	struct item		*previous_stop = saved_stop;
 	uint32			type = 0;			/* Dynamic type of the result */
+	uint32 EIF_VOLATILE db_cstack;
+	STACK_PRESERVE;
+	RTXD; /* declares the variables used to save the run-time stacks context */
+	RTLXD;
 	
-	rout_id = Routids(stype)[fid];
-	CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+	if (! is_precompiled) {
+		rout_id = Routids(stype)[fid];
+		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+	}
+	else {
+		body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
+	}
 	OLD_IC = IC;					/* IC back up */
 	discard_breakpoints();			/* discard all breakpoints. We don't want to stop */ 
+	debug_mode = 0; /* We don't want exceptions to be caught */
+
+	RTLXL;
+	dstart();
+	SAVE(db_stack, dcur, dtop);
+	SAVE(op_stack, scur, stop);
+	db_cstack = d_data.db_callstack_depth;
+
+	excatch(&exenv);
+	if (setjmp(exenv)) {
+		RESTORE(op_stack,scur,stop);
+		RESTORE(db_stack,dcur,dtop);
+		dpop();
+		RTLXE;
+		debug_mode = saved_debug_mode;
+		undiscard_breakpoints();
+		IC = OLD_IC;
+		d_data.db_callstack_depth = db_cstack;
+		RTXSC;
+		tagval = stagval;
+		return NULL;
+	}
+
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
@@ -4860,15 +4899,19 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 
 	}
 
-	undiscard_breakpoints();		/* restore previous state. */
-	IC = OLD_IC;					/* Restore IC back-up */
+	expop(&eif_stack);
+	dpop();
+	debug_mode = saved_debug_mode;
 	
 	/* restore operational stack if needed */
 	if (sync_needed==1 && previous_scur!=NULL && previous_stop!=NULL)
 		sync_registers(previous_scur, previous_stop); 
 
+	undiscard_breakpoints();		/* restore previous state. */
+	d_data.db_callstack_depth = db_cstack;
+	IC = OLD_IC;					/* Restore IC back-up */
 	return result;
-	}
+}
 
 rt_private int icall(int fid, int stype, int is_extern, int ptype)
 						/* Feature ID */

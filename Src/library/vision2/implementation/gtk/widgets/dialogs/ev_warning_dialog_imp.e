@@ -13,9 +13,22 @@ inherit
 
 	EV_WARNING_DIALOG_I
 
-creation
+	EV_MESSAGE_DIALOG_IMP
 
-	make
+creation
+	make,
+	make_default,
+	make_with_text
+
+feature {NONE} -- Implementation		
+
+	icon_build (par: EV_CONTAINER) is
+			-- Load the icon
+		local
+			icon: EV_PIXMAP
+		do
+			--!!icon.make (par)
+		end
 
 end -- class EV_WARNING_DIALOG_IMP
 

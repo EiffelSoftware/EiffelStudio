@@ -66,6 +66,15 @@ feature {NONE} -- Initialization
 			create {DBG_EXPRESSION_B} dbg_expression.make_with_expression (new_expr)
 		end
 
+feature -- Recycling
+
+	recycle is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
+		do
+			reset_expression_evaluator
+		end
+
 feature {NONE} -- Expression validator
 
 	valid_expression (expr: STRING): BOOLEAN is

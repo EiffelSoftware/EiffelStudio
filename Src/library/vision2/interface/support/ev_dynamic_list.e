@@ -229,7 +229,7 @@ feature -- Element change
 		end
 
 	put_right (v: like item) is
-			-- Add `v' to the right of cursor position. Do not move cursor.
+			-- Add `v' to right of cursor position. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
 			extendible: extendible
@@ -356,7 +356,7 @@ feature -- Removal
 		end
 
 	remove_left is
-			-- Remove item to the left of cursor position.
+			-- Remove item to left of cursor position.
 			-- Do not move cursor.
 		do
 			implementation.remove_left
@@ -367,7 +367,7 @@ feature -- Removal
 		end
 
 	remove_right is
-			-- Remove item to the right of cursor position.
+			-- Remove item to right of cursor position.
 			-- Do not move cursor.
 		do
 			implementation.remove_right

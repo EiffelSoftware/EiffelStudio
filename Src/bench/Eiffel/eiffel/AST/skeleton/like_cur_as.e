@@ -35,11 +35,12 @@ feature -- Properties
 
 feature
 
-	actual_type: UNEVALUATED_LIKE_TYPE is
+	actual_type: LIKE_TYPE_A is
 			-- Useless
 		do
-			!! Result.make ("Current")
-			Result.set_like_current
+			check
+				not_called: False
+			end
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is

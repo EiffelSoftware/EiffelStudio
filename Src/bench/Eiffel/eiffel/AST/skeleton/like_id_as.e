@@ -9,8 +9,7 @@ class
 inherit
 	TYPE
 		redefine
-			has_like, simple_format,
-			fill_calls_list, replicate
+			has_like, simple_format
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -47,10 +46,12 @@ feature -- Access
 
 feature -- Implementation of inherited deferred features
 
-	actual_type: UNEVALUATED_LIKE_TYPE is
-			-- Create an UNEVALUATED_LIKE_TYPE
+	actual_type: LIKE_TYPE_A is
+			-- Not called.
 		do
-			create Result.make (anchor)
+			check
+				not_called: False
+			end
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
@@ -87,7 +88,6 @@ feature -- Implementation of inherited deferred features
 					Like_control.put (rout_id)
 						-- Create instance of LIKE_FEATURE
 					!! like_feature.make (anchor_feature)
-					like_feature.set_rout_id (rout_id)
 					like_feature.set_actual_type (anchor_type.solved_type (feat_table, anchor_feature).actual_type)
 					Result := like_feature
 					if System.in_pass3 then
@@ -133,19 +133,6 @@ feature -- Implementation of inherited deferred features
 					Result_actual_type_exists: Result.actual_type /= Void
 				end
 			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			l.add (anchor)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			Result.set_anchor (anchor.replicate (ctxt))
 		end
 
 feature -- Output

@@ -15,13 +15,6 @@ inherit
 		redefine
 			reset, init			
 		end
-
-	EIFNET_DEBUGGER_MESSAGE_INFO
-		export
-			{EIFNET_DEBUGGER_INFO_ACCESSOR} all
-		redefine
-			reset, init
-		end
 		
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
 		rename
@@ -54,10 +47,9 @@ feature {NONE}
 		end
 		
 	init is
-			-- 
+			-- Initialize
 		do
 			Precursor {EIFNET_DEBUGGER_CALLBACK_INFO}					
-			Precursor {EIFNET_DEBUGGER_MESSAGE_INFO}					
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
 		end
 
@@ -76,39 +68,49 @@ feature -- Reset
 		do
 			data_changed                := False
 
-			--| ICorDebug |--
+				--| ICorDebug |--
 			last_icd                    := Void
 			last_icd_updated            := True
 			last_p_icd                  := Default_pointer
-			--| AppDomain |--
+				--| AppDomain |--
 			last_icd_app_domain         := Void
 			last_icd_app_domain_updated := True
 			last_p_icd_app_domain       := Default_pointer
-			--| Breakpoint |--
+				--| Breakpoint |--
 			last_icd_breakpoint         := Void
 			last_icd_breakpoint_updated := True
 			last_p_icd_breakpoint       := Default_pointer
-			--| Exception |--
+				--| Exception |--
 			last_icd_exception          := Void
 			last_icd_exception_updated  := True
 			last_p_icd_exception        := Default_pointer
-			--| Process |--
+				--| Process |--
 			last_icd_process            := Void
 			last_icd_process_updated    := True
 			last_p_icd_process          := Default_pointer
-			--| Thread |--
+				--| Thread |--
 			last_icd_thread             := Void
 			last_icd_thread_updated     := True
 			last_p_icd_thread           := Default_pointer		
-			--| StepComplete |--
+				--| StepComplete |--
 			last_step_complete_reason   := 0
 			
-			--| Ancestors |--
+				--| Param   |--
+			param_arguments := Void
+			param_executable := Void
+			param_directory := Void
+			
+				--| Various |--
+			current_stack_info := Void
+			previous_stack_info := Void
+			current_callstack_initialized := False
+			
+			last_control_mode := 0
+			
+				--| Ancestors |--
 			
 			reset_jit_info
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
-			Precursor {EIFNET_DEBUGGER_MESSAGE_INFO}
-
 		end
 
 feature -- Current CallStack

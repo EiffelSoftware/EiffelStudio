@@ -67,18 +67,6 @@ feature -- Callback actions
 			end
 		end
 
-feature -- Messages
-
-	debugger_messages: LIST [STRING] is
-		do
-			Result := Eifnet_debugger_info.messages
-		end
-
-	wipeout_debugger_messages is
-		do
-			Eifnet_debugger_info.messages.wipe_out
-		end
-
 feature -- Access
 
 	icor_debug: ICOR_DEBUG is

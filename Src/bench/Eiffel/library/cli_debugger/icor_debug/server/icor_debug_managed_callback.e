@@ -418,7 +418,6 @@ feature -- Basic Operations
 			if not retried then
 				debug ("DEBUGGER_TRACE_MESSAGE")
 					-- unhandled :=  --| TRUE = 1 , FALSE = 0
-					debugger_messages.extend ("Exception :: param:unhandled = " + (unhandled /= 0).out + "%N")
 				end
 				begin_of_managed_callback (Cst_managed_cb_exception)
 				set_last_app_domain_by_pointer (p_app_domain)
@@ -773,13 +772,12 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_load_assembly)
 				set_last_app_domain_by_pointer (p_app_domain)
 
-				debug ("DEBUGGER_TRACE_MESSAGE")
-					--| Get Assembly Name
-					create mp.make (256 * 2)
-					l_hr := feature {ICOR_DEBUG_ASSEMBLY}.cpp_get_name (p_assembly, 256, $p_cchname, mp.item)
-					debugger_messages.extend ("Assembly :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)	
-					--|
-				end
+--				debug ("DEBUGGER_TRACE_MESSAGE")
+--					--| Get Assembly Name
+--					create mp.make (256 * 2)
+--					l_hr := feature {ICOR_DEBUG_ASSEMBLY}.cpp_get_name (p_assembly, 256, $p_cchname, mp.item)
+--					--|
+--				end
 				
 				end_of_managed_callback (Cst_managed_cb_load_assembly)
 			end

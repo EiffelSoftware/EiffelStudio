@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			frame.extend (horizontal_box)
 			create label.make_with_text (a_display_name)
 			display_name := a_display_name
-			label.align_text_left
+			label.align_text_left	
 			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (label)
 			create temp_cell
@@ -118,9 +118,12 @@ feature {NONE} -- Initialization
 				dialog.close_request_actions.wipe_out
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
 				parent_area.linear_representation.prune_all (tool)
-				parent_area.external_representation.extend (tool)
+				if not parent_area.is_item_external (tool) then
+					parent_area.external_representation.extend (tool)
+				end
 				dialog.set_width (original_width)
 				dialog.set_height (original_height)
+				parent_area.rebuild
 			end
 			if parent /= Void then
 				parent.prune (Current)
@@ -145,23 +148,6 @@ feature {NONE} -- Initialization
 			end
 			parent_area.remove_docking_areas
 			parent_window (parent_area).unlock_update
-		end
-		
-	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
-			-- Destroy `dialog' and restore `Current' into `parent_area'.
-		require
-			dialog_not_void: dialog /= Void
-			parented_in_dialog: parent_dockable_dialog (tool) = dialog
-		do
-			tool.parent.prune_all (tool)
-			parent_area.all_holders.prune_all (Current)
-			dialog.destroy
-			parent_window (parent_area).lock_update
-			parent_area.external_representation.prune_all (tool)
-			parent_area.insert_widget (tool, display_name, original_parent_position.min (parent_area.count + 1))
-			parent_window (parent_area).unlock_update
-		ensure
-			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end
 		
 	original_parent_position: INTEGER
@@ -305,6 +291,24 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 			result_valid: original_parent_position >= 1 and original_parent_position <= parent_area.all_holders.count
 		end
 		
+feature {MULTIPLE_SPLIT_AREA} -- Implementation
+		
+	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
+			-- Destroy `dialog' and restore `Current' into `parent_area'.
+		require
+			dialog_not_void: dialog /= Void
+			parented_in_dialog: parent_dockable_dialog (tool) = dialog
+		do
+			tool.parent.prune_all (tool)
+			parent_area.all_holders.prune_all (Current)
+			dialog.destroy
+			parent_window (parent_area).lock_update
+			parent_area.external_representation.prune_all (tool)
+			parent_area.insert_widget (tool, display_name, (original_parent_position.min (parent_area.count + 1)).max (1))
+			parent_window (parent_area).unlock_update
+		ensure
+			put_back_in_split_area: parent_area.linear_representation.has (tool)
+		end
 
 feature {NONE} -- Implementation
 

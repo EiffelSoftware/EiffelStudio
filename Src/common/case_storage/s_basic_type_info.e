@@ -1,9 +1,9 @@
 indexing
 
 	description: 
-		"Basic class type that does not have explicit%
-		%declaration of class types. Basic class type%
-		% are `like features', `formal' type and%
+		"Basic class type that does not have explicit %
+		%declaration of class types. Basic class type %
+		%are `like features', `formal' type and %
 		%`like current' type";
 	date: "$Date$";
 	revision: "$Revision $"

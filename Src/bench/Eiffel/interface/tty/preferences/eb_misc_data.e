@@ -86,31 +86,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := general_shell_command_preference.value
 		end
 
-	general_filter_name: STRING is
-		do
-			Result := general_filter_name_preference.value
-		end
-
-	general_filter_command: STRING is
-		do
-			Result := general_filter_command_preference.value
-		end
-
-	general_filter_path: STRING is
-		do
-			Result := general_filter_path_preference.value
-		end
-
-	general_profile_path: STRING is
-		do
-			Result := general_profile_path_preference.value
-		end
-
-	general_tmp_path: STRING is
-		do
-			Result := general_tmp_path_preference.value
-		end
-
 	browsing_facilities: BOOLEAN is
 		do
 			Result := browsing_facilities_preference.value
@@ -230,11 +205,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	shell_editor_preference: STRING_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
-	general_filter_name_preference: STRING_PREFERENCE
-	general_filter_command_preference: STRING_PREFERENCE
-	general_filter_path_preference: STRING_PREFERENCE
-	general_profile_path_preference: STRING_PREFERENCE
-	general_tmp_path_preference: STRING_PREFERENCE
 	browsing_facilities_preference: BOOLEAN_PREFERENCE
 	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
@@ -262,11 +232,6 @@ feature {NONE} -- Preference Strings
 	shell_editor_string: STRING is "misc.editor"
 	internet_browser_string: STRING is "misc.internet_browser"
 	general_shell_command_string: STRING is "misc.shell_command"
-	general_filter_name_string: STRING is "misc.filter_name"
-	general_filter_command_string: STRING is "misc.filter_command"
-	general_filter_path_string: STRING is "misc.filter_directory"
-	general_profile_path_string: STRING is "misc.profile_directory"
-	general_tmp_path_string: STRING is "misc.temporary_directory"
 	browsing_facilities_string: STRING is "misc.highlight clickable areas"
 	editor_left_side_string: STRING is "misc.editor_left_side"
 	dyn_lib_window_width_string: STRING is "misc.dynamic_library_window_width"
@@ -312,11 +277,6 @@ feature {NONE} -- Implementation
 			shell_editor_preference := l_manager.new_string_resource_value (l_manager, shell_editor_string, "vi")
 			internet_browser_preference := l_manager.new_string_resource_value (l_manager, internet_browser_string, "netscape $url")
 			general_shell_command_preference := l_manager.new_string_resource_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")			
-			general_filter_name_preference := l_manager.new_string_resource_value (l_manager, general_filter_name_string, "PostScript")			
-			general_filter_command_preference := l_manager.new_string_resource_value (l_manager, general_filter_command_string, "")			
-			general_filter_path_preference := l_manager.new_string_resource_value (l_manager, general_filter_path_string, filter_path.twin)			
-			general_profile_path_preference := l_manager.new_string_resource_value (l_manager, general_profile_path_string, profile_path.twin)			
-			general_tmp_path_preference := l_manager.new_string_resource_value (l_manager, general_tmp_path_string, tmp_directory.twin)			
 			browsing_facilities_preference:= l_manager.new_boolean_resource_value (l_manager, browsing_facilities_string, True)						
 			editor_left_side_preference := l_manager.new_boolean_resource_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
@@ -347,11 +307,6 @@ invariant
 	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void	
 	shell_editor_preference_not_void: shell_editor_preference /= Void
 	general_shell_command_preference_not_void: general_shell_command_preference /= Void
-	general_filter_name_preference_not_void: general_filter_name_preference /= Void
-	general_filter_command_preference_not_void: general_filter_command_preference /= Void
-	general_filter_path_preference_not_void: general_filter_path_preference /= Void
-	general_profile_path_preference_not_void: general_profile_path_preference /= Void
-	general_tmp_path_preference_not_void: general_tmp_path_preference /= Void
 	browsing_facilities_preference_not_void: browsing_facilities_preference /= Void	
 	ctrl_right_click_receiver_preference_not_void: ctrl_right_click_receiver_preference /= Void
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void

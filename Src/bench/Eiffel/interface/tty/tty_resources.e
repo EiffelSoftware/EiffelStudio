@@ -49,11 +49,6 @@ feature {NONE} -- Initialization
 				-- Read `general.cfg' file
 			resource_files_parser.set_extension ("cfg")
 			resource_files_parser.parse_files (Configure_resources)
-
-				-- Initialize directories in Eiffel Project
-			Eiffel_project.set_filter_path (preferences.misc_data.general_filter_path)
-			Eiffel_project.set_profile_path (preferences.misc_data.general_profile_path)
-			Eiffel_project.set_tmp_directory (preferences.misc_data.general_tmp_path)
 		end
 
 feature -- Status report

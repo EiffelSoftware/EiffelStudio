@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a save command."
+	description: "Objects that represent a generation command."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

@@ -7,25 +7,25 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
 	root_cluster:	".";
-	estore_examples_objects:"$EIFFEL3/library/store/examples/Utilities";
-	sybase_handle: "$EIFFEL3/library/store/examples/Utilities/sybase";
+	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
+	sybase_handle: "$EIFFEL4/library/store/examples/Utilities/sybase";
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL3/library/store/support";
-	estore_interface:	"$EIFFEL3/library/store/interface";
-	estore_date:		"$EIFFEL3/library/store/date_and_time";
-	estore_db_support:	"$EIFFEL3/library/store/dbms/support";
-	estore_sybase:		"$EIFFEL3/library/store/dbms/rdbms/sybase";
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_date:		"$EIFFEL4/library/store/date_and_time";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+	estore_sybase:		"$EIFFEL4/library/store/dbms/rdbms/sybase";
 
 external
 
-	Object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
+	Object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
 		"-lsupport";
 		"-lsybase";
 		"-lsys_time";

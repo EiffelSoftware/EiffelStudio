@@ -150,7 +150,7 @@ feature -- Basic operation
 			-- We have to handle all items seperately. There may be a better
 			-- way to do this at some point.
 			
-				-- Rest our previous widgets, as `component'
+				-- Reset our previous widgets, as `component'
 				-- has now changed.
 			display_widget := Void
 			builder_widget := Void
@@ -216,7 +216,7 @@ feature -- Basic operation
 				end
 					-- A menu bar is not a widget or an item, so we must handle it specially.
 			elseif a_menu_bar /= Void then
-					-- We may already haev another menu bar being displayed in `Current',
+					-- We may already have another menu bar being displayed in `Current',
 					-- so remove it.
 				if menu_bar /= Void then
 					remove_menu_bar
@@ -228,9 +228,13 @@ feature -- Basic operation
 			else
 				display_button.enable_sensitive
 				builder_button.enable_sensitive
-				new_object := component.object
-				widget ?= new_object.object
+				new_object := component.object	
 				object_handler.recursive_do_all (new_object, agent force_object_to_component)
+				if display_view_enabled then
+					widget ?= new_object.object	
+				else
+					widget ?= new_object.display_object
+				end
 				check
 					widget_not_void: widget /= Void
 				end

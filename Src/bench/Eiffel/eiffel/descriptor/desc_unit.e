@@ -231,8 +231,6 @@ feature -- Generation
 		local
 			i, j: INTEGER
 			l_count: INTEGER
-			re: ROUT_ENTRY
-			ae: ATTR_ENTRY
 			entry_item: ENTRY
 			static_decl, start_decl, end_decl: STRING
 		do

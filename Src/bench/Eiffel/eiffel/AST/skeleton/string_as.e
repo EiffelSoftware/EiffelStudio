@@ -109,7 +109,7 @@ feature {AST_EIFFEL, DOCUMENTATION_ROUTINES} -- Output
 			st.add_indexing_string (s.substring (1, n + 1) + "%%")
 			st.add_new_line
 			st.add_indents (ind)
-			s.tail (s.count - n - 1)
+			s.remove_head (n + 1)
 			from
 				n := s.substring_index ("%%N", 1)
 			until
@@ -121,7 +121,7 @@ feature {AST_EIFFEL, DOCUMENTATION_ROUTINES} -- Output
 					n := n + 1
 				end
 				sb := s.substring (1, n)
-				s.tail (s.count - n)
+				s.remove_head (n)
 				st.add_indexing_string ("%%" + sb + "%%")
 				st.add_new_line
 				st.add_indents (ind)
@@ -148,7 +148,7 @@ feature {DOCUMENTATION_ROUTINES} -- Output
 			st.add_indexing_string (s.substring (1, n - 1))
 			st.add_new_line
 			st.add_indents (ind)
-			s.tail (s.count - n - 1)
+			s.remove_head (n + 1)
 			from
 				n := s.substring_index ("%%N", 1)
 			until
@@ -160,7 +160,7 @@ feature {DOCUMENTATION_ROUTINES} -- Output
 					n := n + 1
 				end
 				sb := s.substring (1, n - 2)
-				s.tail (s.count - n)
+				s.remove_head (n)
 				st.add_indexing_string (sb)
 				st.add_new_line
 				st.add_indents (ind)
@@ -192,7 +192,7 @@ feature {DOCUMENTATION_ROUTINES} -- Output
 				n = 0
 			loop
 				sb := s.substring (1, n - 1)
-				s.tail (s.count - n)
+				s.remove_head (n)
 				if not sb.is_empty then
 					if in_index then
 						st.add_indexing_string (sb)

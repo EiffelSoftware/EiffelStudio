@@ -569,7 +569,7 @@ feature {TEXT_FILTER} -- Document processing
 					bname.item (i - 1) = Dot and then
 					valid_class_file_extension (bname.item (i))
 				then
-					bname.head (i - 2);
+					bname.keep_head (i - 2);
 				end;
 				Result.set_file_name (bname)
 			end

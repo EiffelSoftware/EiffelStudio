@@ -334,7 +334,7 @@ end
 				raise_error ("Invalid include file")
 			end
 			class_header_file := special.substring (1, end_keyword)
-			special.tail (special.count - end_keyword)
+			special.remove_head (end_keyword)
 			special.left_adjust
 			if not special.is_empty then
 				 raise_error ("Invalid character after include file")

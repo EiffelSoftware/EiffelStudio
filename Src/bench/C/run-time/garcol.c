@@ -904,7 +904,9 @@ rt_public void reclaim(void)
 	EIF_GET_CONTEXT
 
 	struct chunk *c, *cn;
+#ifdef EIF_THREADS
 	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
+#endif
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: collecting all objects...\n");

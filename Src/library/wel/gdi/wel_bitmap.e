@@ -37,6 +37,7 @@ creation
 	make_by_name,
 	make_by_dib,
 	make_compatible,
+	make_direct,
 	make_indirect,
 	make_by_pointer,
 	make_by_bitmap
@@ -107,6 +108,25 @@ feature {NONE} -- Initialization
 			a_log_bitmap_not_void: a_log_bitmap /= Void
 		do
 			item := cwin_create_bitmap_indirect (a_log_bitmap.item)
+			gdi_make
+		end
+
+	make_direct (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: STRING) is
+			-- Make a bitmap of dimension `a_width' x `a_height' that has `a_planes' number
+			-- of color planes and `a_bits_per_pixel' (number of bits to identify color).
+			-- `a_data' contains color data array.
+		require
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
+			positive_planes: a_planes >= 0
+			positive_bits_per_pixel: a_bits_per_pixel >= 0
+			data_not_void: a_data /= Void
+			data_count_big_enough: a_data.count >= 2 * (a_width * a_height * a_bits_per_pixel * a_planes) // 8
+		local
+			a: ANY
+		do
+			a := a_data.to_c
+			item := cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel, $a)
 			gdi_make
 		end
 
@@ -220,6 +240,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (BITMAP *): EIF_POINTER"
 		alias
 			"CreateBitmapIndirect"
+		end
+
+	cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: POINTER): POINTER is
+			-- SDK CreateBitmapt
+		external
+			"C [macro <wel.h>] (int, int, UINT, UINT, CONST VOID *): EIF_POINTER"
+		alias
+			"CreateBitmap"
 		end
 
 	Cbm_init: INTEGER is

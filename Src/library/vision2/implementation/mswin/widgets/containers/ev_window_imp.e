@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 		do
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			if resize_on_idle_agent = Void then
-				resize_on_idle_agent := ~integrate_changes
+				resize_on_idle_agent := ~compute_minimum_size
 			end
 			app_imp.do_once_on_idle (resize_on_idle_agent)
 		end
@@ -871,6 +871,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/17 23:40:41  brendel
+--| Reverted.
+--|
 --| Revision 1.35  2000/04/17 17:36:08  brendel
 --| Resize agent is now ~integrate_changes.
 --|

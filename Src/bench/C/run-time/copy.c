@@ -516,7 +516,9 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	 */
 
 	uint32 field_size;
+#ifdef ISE_GC
 	uint32 flags;
+#endif
 
 	REQUIRE ("source not null", source);
 	REQUIRE ("target not null", target);
@@ -557,7 +559,9 @@ rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE
 	 */
 
 	uint32 field_size;
+#ifdef ISE_GC
 	uint32 flags;
+#endif
 
 	REQUIRE ("source not null", source);
 	REQUIRE ("target not null", target);
@@ -730,7 +734,9 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 
 	EIF_INTEGER elem_size, count;
 	EIF_REFERENCE ref;
+#ifdef ISE_GC
 	uint32 flags;
+#endif
 
 	REQUIRE ("source not null", source);
 	REQUIRE ("target not null", target);

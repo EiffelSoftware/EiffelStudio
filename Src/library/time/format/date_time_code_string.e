@@ -95,7 +95,7 @@ feature -- Interface
 			from
 				i := 1
 			until
-				pos1 >= s.count
+				pos1 > s.count
 				or Result = False
 			loop
 				pos2 := find_separator (s, pos1)
@@ -125,7 +125,7 @@ feature -- Interface
 					end
 					code := value.item (i+1)
 					if code /= Void then
-						Result := Result and substrg2.is_equal (code.value)
+						Result := Result and (pos2 /= s.count) and substrg2.is_equal (code.value)
 					end
 					pos1 := pos2 + 1
 					i := i + 2

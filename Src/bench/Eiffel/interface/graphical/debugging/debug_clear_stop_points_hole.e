@@ -90,6 +90,8 @@ feature -- Update
 					Application.remove_feature (f);
 					!! disp_bp.do_nothing;
 					disp_bp.work (Void);	
+					Window_manager.routine_win_mgr.resynchronize_debugger (Void);
+					Project_tool.resynchronize_debugger;
 					mp.restore
 				end
 			end
@@ -106,6 +108,8 @@ feature -- Update
 				Application.remove_class (cs.e_class);
 				!! disp_bp.do_nothing;
 				disp_bp.work (Void);	
+				Window_manager.routine_win_mgr.resynchronize_debugger (Void);
+				Project_tool.resynchronize_debugger;
 				mp.restore
 			end
 		end

@@ -118,8 +118,10 @@ feature -- Status report
 		do
 			if is_editable then
 				Result := {WEL_DROP_DOWN_COMBO_BOX_EX} Precursor
-			else
+			elseif selected then
 				Result := selected_string
+			else
+				Result := ""
 			end
 		end
 

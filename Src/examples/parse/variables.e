@@ -11,7 +11,7 @@ class VARIABLES
 
 inherit
 
-	SEQUENCES
+	AGGREGATE
 		redefine
 			post_action
 		end;

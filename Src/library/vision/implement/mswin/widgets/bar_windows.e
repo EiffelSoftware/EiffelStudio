@@ -67,6 +67,7 @@ feature -- Initialization
 			-- Make a bar.
 		do
 			parent ?= oui_parent.implementation
+			!! private_attributes
 			managed := man
 			make_root
 		end

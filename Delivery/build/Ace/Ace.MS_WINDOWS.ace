@@ -32,7 +32,7 @@ cluster
 
 
 -- EiffelBase:
-        base:                           "$EIFFEL4\library\base";
+	base:                           "$EIFFEL4\library\base";
 	structures(base):               "$\structures";
 	
 	kernel(base):           	"$\kernel";
@@ -41,7 +41,7 @@ cluster
 	cursors(structures):    	"$\cursors";
 	
 	dispenser(structures):  	"$\dispenser";
-        list(structures):               "$\list";
+	list(structures):               "$\list";
 	set(structures):                "$\set";
 	sort(structures):               "$\sort";
 	storage(structures):    	"$\storage";
@@ -62,13 +62,13 @@ cluster
 
 
 -- Eiffelvision
-        vision:                        	"$EIFFEL4\library\vision";
-        vision_figures (vision):        "$\figures";
-        vision_imp_mswin (vision):      "$\implement\mswin";
+	vision:                        	"$EIFFEL4\library\vision";
+	vision_figures (vision):        "$\figures";
+	vision_imp_mswin (vision):      "$\implement\mswin";
 	vision_widgets (vision_imp_mswin):	"$\widgets";
 	vision_commands (vision_imp_mswin):	"$\commands";
-	vision_imp_toolkit (vision):	"$\implement\toolkit";
-        vision_context_data (vision):   "$\oui\context_data";
+	vision_toolkit (vision):	"$\implement\toolkit";
+	vision_context_data (vision):   "$\oui\context_data";
 	vision_kernel (vision):         "$\oui\kernel";
 	vision_oui_widgets (vision):        "$\oui\widgets";
 	vision_tools (vision):          "$\tools";

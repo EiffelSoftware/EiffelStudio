@@ -48,6 +48,18 @@ feature -- Initialize
 
 feature -- Implementation
 
+	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER is
+			-- 
+		do
+			Result := (a_point_value / 72 * 96).rounded
+		end
+
+	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER is
+			--
+		do
+			Result := (a_pixel_value / 96 * 72).rounded
+		end
+
 	pango_layout: POINTER is
 			-- 
 		local
@@ -67,12 +79,14 @@ feature -- Implementation
 			-- 
 		once
 			Result := pixbuf_formats (True)
+			Result.compare_objects
 		end
 		
 	readable_pixbuf_formats: ARRAYED_LIST [STRING] is
 			-- 
 		once
 			Result := pixbuf_formats (False)
+			Result.compare_objects
 		end
 
 	pixbuf_formats (a_writeable: BOOLEAN): ARRAYED_LIST [STRING] is
@@ -133,7 +147,7 @@ feature -- Implementation
 			
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
-			default_font_size_internal := split_values.last.to_integer
+			default_font_size_internal := pixel_value_from_point_value (split_values.last.to_integer)
 			
 			if split_values.has ("italic") or else split_values.has ("oblique") then
 				default_font_style_internal := feature {EV_FONT_CONSTANTS}.shape_italic

@@ -16,8 +16,6 @@ class
 
 inherit
 	SYSTEM_DLL_CODE_DOM_PROVIDER
-		undefine
-			finalize, equals, get_hash_code, to_string
 		redefine
 			file_extension,
 			language_options,

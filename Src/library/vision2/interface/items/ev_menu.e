@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			-- Create an empty menu.
 		do
 			!EV_MENU_IMP!implementation.make (par)
+			implementation.set_interface (Current)
 			par.implementation.add_menu (Current)
 		end
 
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 			-- parent
 		do
 			!EV_MENU_IMP!implementation.make_with_text (par, label)
+			implementation.set_interface (Current)
 			par.implementation.add_menu (Current)
 		end	
 

@@ -2,7 +2,7 @@ system
 	"ISE.Reflection.EiffelAssemblyCacheNotifier"
 
 root
-	NOTIFIER (root_cluster): "make"
+	NOTIFIER_HANDLE (root_cluster): "make"
 
 default
 	assertion (all)

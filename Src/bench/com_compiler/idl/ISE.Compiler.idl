@@ -1392,37 +1392,6 @@ interface IEiffelProject: IDispatch
 };
 
 // =========================================================================
-//                                                      CoClass Declarations
-
-//---------------------------------------------------------------------
-// CEiffelProject
-//---------------------------------------------------------------------
-[uuid (UUID_CEiffelProject)]
-coclass CEiffelProject
-{
-	[default] interface IEiffelProject;
-};
-
-//---------------------------------------------------------------------
-// CEiffelCompiler
-//---------------------------------------------------------------------
-[uuid (UUID_CEiffelCompiler), noncreatable]
-coclass CEiffelCompiler
-{
-	[default] interface IEiffelCompiler;
-	[default, source] interface IEiffelCompilerEvents;
-};
-
-//---------------------------------------------------------------------
-// CEiffelCompletionInfo
-//---------------------------------------------------------------------
-[uuid (UUID_CEiffelCompletionInfo), noncreatable]
-coclass CEiffelCompletionInfo
-{
-	[default] interface IEiffelCompletionInfo;
-};
-
-// =========================================================================
 //                                                            Type Libraries
 
 [
@@ -1467,6 +1436,37 @@ library EiffelComCompiler
 	interface IEnumAssembly;
 	interface IEiffelAssemblyProperties;
 	interface IEiffelException;
+	
+	// =========================================================================
+	//                                                      CoClass Declarations
+
+	//---------------------------------------------------------------------
+	// CEiffelProject
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelProject)]
+	coclass CEiffelProject
+	{
+		[default] interface IEiffelProject;
+	};
+
+	//---------------------------------------------------------------------
+	// CEiffelCompiler
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelCompiler), noncreatable]
+	coclass CEiffelCompiler
+	{
+		[default] interface IEiffelCompiler;
+		[default, source] interface IEiffelCompilerEvents;
+	};
+
+	//---------------------------------------------------------------------
+	// CEiffelCompletionInfo
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelCompletionInfo), noncreatable]
+	coclass CEiffelCompletionInfo
+	{
+		[default] interface IEiffelCompletionInfo;
+	};
 };
 
 //|--------------------------------------------------------------------

@@ -24,9 +24,7 @@ inherit
 			copy, is_equal, default_create
 		end
 		
-	EXECUTION_ENVIRONMENT
-		rename
-			put as execution_environment_put
+	INSTALLATION_LOCATOR
 		undefine
 			copy, is_equal, default_create
 		end
@@ -95,22 +93,13 @@ feature {NONE} -- Implementation
 			extension: STRING
 			file_location: STRING
 		do
-			file_location := get ("ISE_VISION2_TOUR")
-			if file_location = Void then
-				file_location := get ("ISE_EIFFEL")
-				if file_location /= Void then
-					create filename.make_from_string (file_location)
-					filename.extend ("vision2_tour")
-				end
-			else
-				create filename.make_from_string (file_location)
-			end
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				extension := "ico"
 			else
 				extension := "png"
 			end
-			if file_location /= Void then
+			if location /= Void then
+				create filename.make_from_string (location)
 				filename.extend ("bitmaps")
 				filename.extend (extension)
 				filename.extend (a_type.as_lower + "." + extension)

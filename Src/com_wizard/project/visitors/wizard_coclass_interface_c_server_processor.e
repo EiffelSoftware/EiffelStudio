@@ -37,6 +37,11 @@ feature -- Basic operations
 			interface_generator.generate_functions_and_properties (an_interface)
 		end
 
+	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Generate source interface features.
+		do
+		end
+
 end -- class WIZARD_COCLASS_INTERFACE_C_SERVER_PROCESSOR
 
 --|----------------------------------------------------------------

@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 
 			create debug_run_cmd.make
 			can_debug := True
+			maximum_stack_depth := default_maximum_stack_depth
 			init_commands
 			object_split_position := 200
 		end
@@ -191,6 +192,10 @@ feature -- Status report
 	can_debug: BOOLEAN
 			-- Is graphical debugging allowed?
 
+	maximum_stack_depth: INTEGER
+			-- Maximum number of call stack elements displayed.
+			-- -1 means display all elements.
+
 feature -- Status setting
 
 	enable_debug is
@@ -213,6 +218,31 @@ feature -- Status setting
 			end
 		end
 
+	set_maximum_stack_depth (nb: INTEGER) is
+			-- Set the maximum number of stack elements to be displayed to `nb'.
+		require
+			valid_nb: nb = -1 or nb > 0
+		local
+			pos: INTEGER
+			cst: CALL_STACK_STONE
+		do
+			maximum_stack_depth := nb
+			if Application.is_running then
+				Application.status.set_max_depth (nb)
+				if Application.is_stopped then
+					pos := Application.current_execution_stack_number
+					Application.status.reload_call_stack
+					if pos > Application.status.where.count then
+							-- We reloaded less elements than there were.
+						pos := 1
+					end
+					call_stack_tool.update
+					create cst.make (pos)
+					launch_stone (cst)
+				end
+			end
+		end
+
 	on_compile_start is
 			-- A new compilation has started. Kill any debugged application and gray out all run* commands.
 		do
@@ -232,7 +262,6 @@ feature -- Status setting
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
 			step_cmd.enable_sensitive
-			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 			enable_debug
 		end
@@ -479,6 +508,7 @@ feature -- Debugging events
 		require
 --			debugging_window_set: debugging_window /= Void
 		do
+			Application.status.set_max_depth (maximum_stack_depth)
 			if debugging_window = Void then
 				debugging_window ?= Window_manager.last_focused_window
 				if debugging_window = Void then
@@ -498,7 +528,6 @@ feature -- Debugging events
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
 			step_cmd.disable_sensitive
-			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 		end
 
@@ -587,7 +616,6 @@ feature -- Debugging events
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
 			step_cmd.enable_sensitive
-			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 				-- Modify the debugging window display.
 			window_manager.quick_refresh_all
@@ -779,7 +807,6 @@ feature {NONE} -- Implementation
 			no_stop_cmd.enable_sensitive
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
-			out_cmd.enable_sensitive
 			display_error_help_cmd.enable_sensitive
 			if
 				display_dotnet_cmd and then

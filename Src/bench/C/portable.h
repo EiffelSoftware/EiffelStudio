@@ -18,10 +18,10 @@
 #include "config.h"
 #endif
 
-#ifndef __WATCOMC__
-#include "confmagic.h"
-#else
+#ifdef __WATCOMC__
 #include "confmagc.h"
+#else
+#include "confmagic.h"
 #endif
 
 #ifdef __VMS

@@ -23,7 +23,7 @@ feature
 				!!special_error.make (Case_15, Current);
 				Error_handler.insert_error (special_error);
 			end;
-			skelet := types.first.skeleton;
+			skelet := types.first.skeleton
 			if skelet.count /= 1 or else not valid (skelet.first) then
 				!!special_error.make (Case_15, Current);
 				Error_handler.insert_error (special_error);

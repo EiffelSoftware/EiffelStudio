@@ -193,13 +193,21 @@ feature {NONE} -- Implementation
 		local
 			conv_folder: CLUSTER_STONE
 			conv_st: CLASSI_STONE
+			fs: FEATURE_STONE
 		do
 			conv_folder ?= a_pebble
 			if conv_folder /= Void then
 				Result := not cluster_contains_class (conv_folder.cluster_i)
 			else
 				conv_st ?= a_pebble
-				Result := conv_st /= Void and then conv_st.class_i /= data
+				fs ?= a_pebble
+				Result :=
+						-- We have a class stone...
+					conv_st /= Void and then
+						-- ...from a different cluster...
+					conv_st.class_i.cluster /= data.cluster and then
+						-- ...and that is not a feature.
+					fs = Void
 			end
 		end
 

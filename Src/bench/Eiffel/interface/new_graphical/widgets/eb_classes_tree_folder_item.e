@@ -351,6 +351,7 @@ feature {NONE} -- Implementation
 			-- Can user drop `a_pebble' on `Current'?
 		local
 			a_folder: CLUSTER_STONE
+			fs: FEATURE_STONE
 		do
 			a_folder ?= a_pebble
 			if a_folder /= Void then
@@ -358,7 +359,8 @@ feature {NONE} -- Implementation
 				Result := not cluster_contains_current (a_folder.cluster_i) --a_folder.cluster_i /= data.actual_cluster and then (not cluster_contains_current (a_folder.cluster_i))
 			else
 					-- Some class stone was selected.
-				Result := True
+				fs ?= a_pebble
+				Result := fs = Void
 			end
 		end
 

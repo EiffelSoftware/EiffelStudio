@@ -51,7 +51,6 @@ feature -- Comparison
 
 feature -- Element change
 
-
 	set_item (i: INTEGER) is
 			-- Make `i' the `item' value.
 		do

@@ -611,7 +611,7 @@ feature -- Input
 			until
 				amount_read = size
 			loop
-				return_val := c_receive (descriptor, $ext_data, size - amount_read, flags);
+				return_val := c_receive (descriptor, ext_data, size - amount_read, flags);
 				if return_val > 0 then
 					create recv_packet.make_from_pointer (ext_data, return_val)
 					if l_data = Void then

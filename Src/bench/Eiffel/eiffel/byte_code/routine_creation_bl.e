@@ -8,7 +8,7 @@ inherit
 		redefine
 			analyze, generate, 
 			register, set_register, free_register,
-			unanalyze, allocates_memory
+			unanalyze
 		end
 	SHARED_C_LEVEL
 	SHARED_TABLE
@@ -70,8 +70,6 @@ feature
 				closed_map.free_register
 			end
 		end
-
-	allocates_memory: BOOLEAN is True
 
 	generate is
 			-- Generate expression

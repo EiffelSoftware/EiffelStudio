@@ -1,20 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Lexical analyzers
-
 indexing
 
+	description:
+		"Lexical analyzers";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LEXICAL
-
-inherit
+class LEXICAL inherit
 
 	TEXT_FILLER;
 
@@ -355,7 +348,7 @@ feature
 					Result := -1
 				end
 			else
-				lower_word := word.duplicate;
+				lower_word := clone (word);
 				lower_word.to_lower;
 				if keyword_h_table.has (lower_word) then
 					Result := keyword_h_table.position
@@ -516,10 +509,24 @@ feature {NONE}
 		do
 			Result := token_type = keyword_h_table.item (word);
 			if not Result and not keywords_case_sensitive then
-				lower_word := word.duplicate;
+				lower_word := clone (word);
 				lower_word.to_lower;
 				Result := token_type = keyword_h_table.item (lower_word)
 			end
 		end -- is_keyword
 
 end -- class LEXICAL
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

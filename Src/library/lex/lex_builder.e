@@ -1,21 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Class for building lexical analyzers.
--- sets of inputs.
-
 indexing
 
+	description:
+		"General mechanisms for building lexical analyzers";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LEX_BUILDER
-
-inherit
+class LEX_BUILDER inherit
 
 	PDFA
 		rename
@@ -141,18 +133,18 @@ feature
 			tool_list.add_right (fa);
 			if bb /= ee then
 				!!c_name.make (8);
-				c_name.append_character ('%'');
+				c_name.extend ('%'');
 				c_name.append (readable_form (b));
-				c_name.append_character ('%'');
+				c_name.extend ('%'');
 				c_name.append ("..");
-				c_name.append_character ('%'');
+				c_name.extend ('%'');
 				c_name.append (readable_form (e));
-				c_name.append_character ('%'')
+				c_name.extend ('%'')
 			else
 				!!c_name.make (3);
-				c_name.append_character ('%'');
+				c_name.extend ('%'');
 				c_name.append (readable_form (b));
-				c_name.append_character ('%'')
+				c_name.extend ('%'')
 			end;
 			tool_names.finish;
 			tool_names.add_right (c_name)
@@ -244,10 +236,10 @@ feature
 			!!c_name.make (0);
 			tool_names.go_i_th (r);
 			c_name.append (tool_names.item);
-			c_name.append_character ('-');
-			c_name.append_character ('%'');
-			c_name.append_character (c);
-			c_name.append_character ('%'');
+			c_name.extend ('-');
+			c_name.extend ('%'');
+			c_name.extend (c);
+			c_name.extend ('%'');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- difference
@@ -283,7 +275,7 @@ feature
 			!!c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
-			c_name.append_character (' ');
+			c_name.extend (' ');
 			tool_names.go_i_th (s);
 			c_name.append (tool_names.item);
 			tool_names.finish;
@@ -322,11 +314,11 @@ feature
 			!!c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
-			c_name.append_character (' ');
-			c_name.append_character ('[');
+			c_name.extend (' ');
+			c_name.extend ('[');
 			tool_names.go_i_th (s);
 			c_name.append (tool_names.item);
-			c_name.append_character (']');
+			c_name.extend (']');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- append_optional
@@ -361,11 +353,11 @@ feature
 			tool_list.finish;
 			tool_list.add_right (new);
 			!!c_name.make (0);
-			c_name.append_character ('[');
+			c_name.extend ('[');
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
-			c_name.append_character (']');
-			c_name.append_character (' ');
+			c_name.extend (']');
+			c_name.extend (' ');
 			tool_names.go_i_th (s);
 			c_name.append (tool_names.item);
 			tool_names.finish;
@@ -393,10 +385,10 @@ feature
 			tool_list.add_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
-			c_name.append_character ('~');
-			c_name.append_character ('(');
+			c_name.extend ('~');
+			c_name.extend ('(');
 			c_name.append (tool_names.item);
-			c_name.append_character (')');
+			c_name.extend (')');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- case_insensitive
@@ -425,9 +417,9 @@ feature
 			tool_list.add_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
-			c_name.append_character ('[');
+			c_name.extend ('[');
 			c_name.append (tool_names.item);
-			c_name.append_character (']');
+			c_name.extend (']');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- optional
@@ -457,9 +449,9 @@ feature
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.precede ('+');
-			c_name.append_character ('(');
+			c_name.extend ('(');
 			c_name.append (tool_names.item);
-			c_name.append_character (')');
+			c_name.extend (')');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- iteration1
@@ -490,9 +482,9 @@ feature
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.precede ('*');
-			c_name.append_character ('(');
+			c_name.extend ('(');
 			c_name.append (tool_names.item);
-			c_name.append_character (')');
+			c_name.extend (')');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- iteration
@@ -534,9 +526,9 @@ feature
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.append (n.out);
-			c_name.append_character ('(');
+			c_name.extend ('(');
 			c_name.append (tool_names.item);
-			c_name.append_character (')');
+			c_name.extend (')');
 			tool_names.finish;
 			tool_names.add_right (c_name)
 		end; -- iteration_n
@@ -597,7 +589,7 @@ feature
 			!!c_name.make (0);
 			tool_names.go_i_th (a);
 			c_name.append (tool_names.item);
-			c_name.append_character ('|');
+			c_name.extend ('|');
 			tool_names.go_i_th (b);
 			c_name.append (tool_names.item);
 			tool_names.finish;
@@ -688,7 +680,7 @@ feature
 				tool_names.index = b
 			loop
 				c_name.append (tool_names.item);
-				c_name.append_character ('|');
+				c_name.extend ('|');
 				tool_names.forth
 			end;
 			c_name.append (tool_names.item);
@@ -726,9 +718,9 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.add_right (new_tool);
-			tool_name := word.duplicate;
+			tool_name := clone (word);
 			tool_name.precede ('"');
-			tool_name.append_character ('"');
+			tool_name.extend ('"');
 			tool_names.finish;
 			tool_names.add_right (tool_name)
 		end; -- set_word
@@ -789,11 +781,11 @@ feature
 			tool_list.finish;
 			tool_list.add_right (new_tool);
 			!!r_name.make (4);
-			r_name.append_character ('-');
-			r_name.append_character ('>');
-			r_name.append_character ('"');
+			r_name.extend ('-');
+			r_name.extend ('>');
+			r_name.extend ('"');
 			r_name.append (word);
-			r_name.append_character ('"');
+			r_name.extend ('"');
 			tool_names.finish;
 			tool_names.add_right (r_name)
 		end; -- up_to
@@ -815,10 +807,10 @@ feature
 			tool_list.item.add_keyword (s);
 			last_declared_keyword := last_declared_keyword + 1;
 			if not keywords_case_sensitive then
-				l := s.duplicate;
+				l := clone (s);
 				l.to_lower;
 				tool_list.item.add_keyword (l);
-				u := s.duplicate;
+				u := clone (s);
 				u.to_upper;
 				tool_list.item.add_keyword (u);
 				last_declared_keyword := last_declared_keyword + 2
@@ -984,7 +976,7 @@ feature {NONE}
 				Result := "%%R"
 			else
 				!!Result.make (1);
-				Result.append_character (c)
+				Result.extend (c)
 			end
 		end; -- readable_form
 
@@ -1239,7 +1231,7 @@ feature {NONE}
 			message.append (" is not recognized by ");
 			tool_names.go_i_th (t);
 			message.append (tool_names.item);
-			message.append_character ('.');
+			message.extend ('.');
 			error_list.add_message (message)
 		end -- error_keyword
 
@@ -1248,3 +1240,17 @@ invariant
 	last_created: tool_list = Void or else last_created_tool = tool_list.count
 
 end -- class LEX_BUILDER
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,20 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) 1993 Interactive Software Engineering, Inc. --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Handling of input documents through a lexical analyzer
-
 indexing
 
+	description:
+		"Handling of input documents through a lexical analyzer";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INPUT 
-
-inherit
+class INPUT inherit
 
 	LINKED_LIST [TOKEN]
 		rename 
@@ -178,3 +171,17 @@ feature
 		end  -- raise_syntax_error
 
 end -- class INPUT
+ 
+
+--|----------------------------------------------------------------
+--| EiffelParse: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,29 +1,15 @@
---|---------------------------------------------------------------
---|    Copyright (C) Interactive Software Engineering, Inc.     --
---|     270 Storke Road, Suite 7 Goleta, California 93117       --
---|                     (805) 685-1006                          --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Buffered files or strings
--- When the buffer is filled, the columns forbidden by exclude
--- are not copied in the buffer, but the last one, which is always
--- a carriage return.
--- The routine filling the buffer fills also the two arrays
--- "line_nb_array", and "column_nb_array", recording the position
--- of each character of the buffer in the original text.
--- The class is deferred, to let an heir resetting its datas each
--- time it fills the buffer.
--- Do not forget to create the buffers before using this class.
-
 indexing
 
+	description:
+		"Buffered files or strings for lexical analysis";
+	comment:
+		"See detailed comment at end of class";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TEXT_FILLER
-
-feature
+deferred class TEXT_FILLER feature
 
 	buffer: STRING;
 			-- Buffer filled by fill_buffer
@@ -89,7 +75,7 @@ feature
          if buf >= buffer_size then
             previous_buffer_size := buffer_size;
             buffer_size := buf;
-            previous_buffer := buffer.duplicate;
+            previous_buffer := clone (buffer);
             buffer.resize (buffer_size);
             buffer.append (previous_buffer);
             line_nb_array.resize (1, buffer_size);
@@ -225,7 +211,7 @@ feature
 			fill_buffer (buffer_size)
 		end -- fill_whole_buffer
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	line_length: INTEGER;
 			-- Maximal number of characters in a line
@@ -258,7 +244,7 @@ feature {NONE}
 		deferred
 		end -- reset_data
 
-feature {NONE} -- External features
+feature {NONE} -- External
 
 	reset is
 		external
@@ -277,4 +263,30 @@ feature {NONE} -- External features
 			"C"
 		end -- fill_buf
 
+
+-- Buffered files or strings
+-- When the buffer is filled, the columns forbidden by exclude
+-- are not copied in the buffer, but the last one, which is always
+-- a carriage return.
+-- The routine filling the buffer fills also the two arrays
+-- "line_nb_array", and "column_nb_array", recording the position
+-- of each character of the buffer in the original text.
+-- The class is deferred, to let an heir resetting its datas each
+-- time it fills the buffer.
+-- Do not forget to create the buffers before using this class.
+
 end -- class TEXT_FILLER
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

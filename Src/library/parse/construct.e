@@ -1,22 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) 1993 Interactive Software Engineering, Inc. --
---|	270 Storke Road, Suite 7 Goleta, California 93117			--
---|				   (805) 685-1006								--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- The general notion of language construct, 
--- characterized by a grammatical production
--- and associated semantic actions
-
 indexing
 
+	description:
+		"The general notion of language construct,  %
+		%characterized by a grammatical production %
+		%and associated semantic actions";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CONSTRUCT 
-
-inherit
+deferred class CONSTRUCT inherit
 
 	TWO_WAY_TREE [CONSTRUCT]
 		rename
@@ -235,7 +228,7 @@ feature {NONE}
 		local
 			s2 : STRING
 		do  
-			s2 := s.duplicate;
+			s2 := clone (s);
 			s2.append (" in "); 
 			s2.append (construct_name); 
 			if parent /= Void then
@@ -398,3 +391,17 @@ feature {NONE}
 		end  -- parse_child
 
 end -- class CONSTRUCT
+ 
+
+--|----------------------------------------------------------------
+--| EiffelParse: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

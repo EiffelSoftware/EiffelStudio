@@ -13,9 +13,3 @@ cd %EIFFEL_SRC\help\wizards
 set DELIVERY=%INSTALL_DIR
 remtrace Launch the actual wizard compilation
 call make_wizards.btm
-
-remtrace Move the wizards to a special location
-cdd %INSTALL_DIR
-md start_wizards
-move /s %INSTALL_DIR\studio\wizards\new_projects start_wizards
-

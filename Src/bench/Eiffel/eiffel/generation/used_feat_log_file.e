@@ -17,6 +17,7 @@ feature
 			putstring (feature_name);
 			putchar ('%T');
 			putstring (encoded_name);
+			putchar ('%T');
 			putstring (class_type.relative_file_name);
 			new_line;
 		end

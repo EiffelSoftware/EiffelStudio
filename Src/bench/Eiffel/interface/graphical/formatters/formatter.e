@@ -68,16 +68,10 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
 		local
-			mp: MOUSE_PTR;
-			f: FOCUSABLE
+			mp: MOUSE_PTR
 		do
 			if is_sensitive then
-				if holder /= Void then
-					f ?= holder.associated_button
-				end;
-				if f /= Void then
-					f.popdown
-				end;
+				focus_label.popdown
 
 				if last_warner /= Void then
 					last_warner.popdown
@@ -234,25 +228,6 @@ feature {NONE} -- Properties
 				!!Result.make (0)
 			end;
 		end;
-
-	tabs (i: INTEGER): STRING is
-			-- String of `i' tabs, each tab is `indent' blank characters
-		local
-			j: INTEGER
-		do
-			from
-				!!Result.make (i*indent);
-				j := i*indent
-			until
-				j = 0
-			loop
-				Result.extend (' ');
-				j := j - 1
-			end
-		end;
-
-	indent: INTEGER
-			-- Number of blank characters in a tab
 
 feature {ROUTINE_W} -- Implementation
 

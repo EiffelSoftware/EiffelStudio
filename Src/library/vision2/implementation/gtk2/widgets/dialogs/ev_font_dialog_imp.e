@@ -125,9 +125,16 @@ feature -- Element change
 			a_success_flag: BOOLEAN
 			font_imp: EV_FONT_IMP
 			a_cs: EV_GTK_C_STRING
+			a_font_des_str: POINTER
 		do
 			font_imp ?= a_font.implementation
-			create a_cs.make (font_imp.name + " " + font_imp.height_in_points.out)
+			a_font_des_str := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
+			if a_font_des_str /= default_pointer then
+				create a_cs.make_from_pointer (a_font_des_str)
+				feature {EV_GTK_EXTERNALS}.g_free (a_font_des_str)
+			else
+				create a_cs.make (font_imp.name + " " + font_imp.height_in_points.out)
+			end
 			a_success_flag := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 							c_object,
 							a_cs.item

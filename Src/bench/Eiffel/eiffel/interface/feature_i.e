@@ -532,7 +532,7 @@ feature -- Setting
 	duplicate: like Current is
 			-- Clone
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 	duplicate_arguments is

@@ -136,7 +136,7 @@ feature -- Conveniences
 			-- Set `melted_file_name' to `upate_file_name'.
 		do
 			if update_file_name /= Void and then not update_file_name.is_empty then
-				melted_file_name := clone (update_file_name)
+				melted_file_name := update_file_name.twin
 			else
 				melted_file_name := Void
 			end

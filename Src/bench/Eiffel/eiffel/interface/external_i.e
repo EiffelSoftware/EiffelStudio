@@ -45,7 +45,7 @@ feature -- Duplication
 			-- Duplicate current external feature.
 		do
 			Result := Precursor {PROCEDURE_I}
-			Result.set_extension (clone (extension))
+			Result.set_extension (extension.twin)
 		end
 
 feature -- Attributes for externals

@@ -33,7 +33,7 @@ feature -- Access
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class
 		do
-			Result := clone (true_generics.item (1).il_type_name (a_prefix))
+			Result := true_generics.item (1).il_type_name (a_prefix).twin
 			Result.append ("[]")
 		end
 
@@ -63,7 +63,7 @@ feature -- Duplication
 	duplicate: NATIVE_ARRAY_TYPE_I is
 			-- Duplicate current.
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 	copy (other: like Current) is
@@ -73,7 +73,7 @@ feature -- Duplication
 			l_meta: like meta_generic
 		do
 			standard_copy (other)
-			l_meta := clone (meta_generic)
+			l_meta := meta_generic.twin
 			meta_generic := l_meta
 			true_generics := l_meta
 		end

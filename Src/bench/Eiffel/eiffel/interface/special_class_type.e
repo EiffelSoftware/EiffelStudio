@@ -134,7 +134,7 @@ feature {NONE} -- C code generation
 
 					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
 					non_expanded_type ?= gen_param;
-					non_expanded_type := clone (non_expanded_type);
+					non_expanded_type := non_expanded_type.twin
 					non_expanded_type.set_is_true_expanded (False);
 					buffer.putint (non_expanded_type.type_id - 1);
 					buffer.putstring (") + OVERHEAD));%N")
@@ -195,7 +195,7 @@ feature {NONE} -- C code generation
 
 					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
 					non_expanded_type ?= gen_param;
-					non_expanded_type := clone (non_expanded_type);
+					non_expanded_type := non_expanded_type.twin
 					non_expanded_type.set_is_true_expanded (False);
 					buffer.putint (non_expanded_type.type_id - 1);
 					buffer.putstring (") + OVERHEAD);%N")

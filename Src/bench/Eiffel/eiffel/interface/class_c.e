@@ -292,7 +292,7 @@ feature -- Action
 						object_name.append (cl_type.base_file_name)
 						object_name.append_character (Descriptor_file_suffix)
 						object_name.append (Dot_c)
-						finished_file_name := clone (c_file_name)
+						finished_file_name := c_file_name.twin
 						c_file_name.set_file_name (object_name)
 						create file.make (c_file_name)
 						file_exists := file.exists
@@ -315,8 +315,8 @@ feature -- Action
 						object_name.append_character (C_prefix)
 						object_name.append_integer (packet_nb)
 						c_file_name.extend (object_name)
-						finished_file_name := clone (c_file_name)
-						cpp_file_name := clone (c_file_name)
+						finished_file_name := c_file_name.twin
+						cpp_file_name := c_file_name.twin
 						create object_name.make (12)
 						object_name.append (cl_type.base_file_name)
 						object_name.append (Dot_c)
@@ -355,7 +355,7 @@ feature -- Action
 					object_name.append_character (C_prefix)
 					object_name.append_integer (packet_number)
 					c_file_name.extend (object_name)
-					finished_file_name := clone (c_file_name)
+					finished_file_name := c_file_name.twin
 					create object_name.make (12)
 					object_name.append (base_file_name)
 					object_name.append_integer (feature_table_file_id)
@@ -535,7 +535,7 @@ if System.class_of_id (class_id) /= Void then
  
 				-- Save index left by the temporary ast server into the
 				-- class information.
-			class_info.set_index (clone (Tmp_ast_server.index))
+			class_info.set_index (Tmp_ast_server.index.twin)
 			invariant_info := Tmp_ast_server.invariant_info
 			if invariant_info /= Void then
 				class_info.set_invariant_info (Tmp_ast_server.invariant_info)
@@ -1026,7 +1026,7 @@ end
 
 									-- We need to duplicate `f_suppliers' now, otherwise
 									-- we will be wiped out in `ast_context.clear2'.
-								f_suppliers := clone (f_suppliers)
+								f_suppliers := f_suppliers.twin
 
 								f_suppliers.set_feature_name_id (feature_name_id)
 								dependances.put (f_suppliers, feature_i.body_index)
@@ -1191,7 +1191,7 @@ end
 						end
 							-- We need to duplicate `f_suppliers' now, otherwise
 							-- we will be wiped out in `ast_context.clear2'.
-						f_suppliers := clone (ast_context.supplier_ids)
+						f_suppliers := ast_context.supplier_ids.twin
 						if invariant_feature /= Void then
 							f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
 							dependances.put (f_suppliers, invariant_feature.body_index)
@@ -1385,7 +1385,7 @@ end
 --							new_suppliers.remove_occurrence (f_suppliers)
 --							dependances.remove ("_invariant")
 --						end
---						f_suppliers := clone (ast_context.supplier_ids)
+--						f_suppliers := ast_context.supplier_ids.twin
 --						dependances.put (f_suppliers, "_invariant")
 --						new_suppliers.add_occurrence (f_suppliers)
 --
@@ -1671,9 +1671,9 @@ feature
 			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
-				dir_name := clone (Final_generation_path)
+				dir_name := Final_generation_path.twin
 			else
-				dir_name := clone (Workbench_generation_path)
+				dir_name := Workbench_generation_path.twin
 			end
 
 			create subdirectory.make (5)
@@ -3894,8 +3894,7 @@ feature -- Properties
 			if private_external_name /= Void then
 				Result := private_external_name
 			else
-				Result := clone (name)
-				Result.to_upper
+				Result := name.as_upper
 			end
 		end
 

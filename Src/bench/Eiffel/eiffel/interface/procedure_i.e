@@ -77,7 +77,7 @@ feature -- Initialization
 			-- Do a clone of the arguments (for replication)
 		do
 			if arguments /= Void then
-				arguments := clone (arguments)
+				arguments := arguments.twin
 			end
 		end
 
@@ -97,10 +97,10 @@ feature -- Initialization
 		do
 			Result := Precursor {FEATURE_I}
 			if arguments /= Void then
-				Result.set_arguments (clone (arguments))
+				Result.set_arguments (arguments.twin)
 			end
 			if type /= Void then
-				Result.set_type (clone (type))
+				Result.set_type (type.twin)
 			end
 		end
 

@@ -316,8 +316,10 @@ feature -- Properties
 
 	set_array_make_name (a_name: STRING) is
 			-- Set `name' to `array_make_name'.
+		require
+			a_name_not_void: a_name /= Void
 		do
-			array_make_name := clone (a_name)
+			array_make_name := a_name.twin
 		end
 
 	tuple_make_name: STRING
@@ -1352,9 +1354,9 @@ end
 				-- the life cycle of the project, this can be detected by checking that
 				-- `melted_file_name' from WORKBENCH_I has not been reset.
 			if workbench.melted_file_name /= Void then
-				l_name := clone (Workbench.melted_file_name)
+				l_name := Workbench.melted_file_name.twin
 			else
-				l_name := clone (name)
+				l_name := name.twin
 			end
 
 			l_name.append (".melted")
@@ -3204,8 +3206,7 @@ end
 			from i := 1 until i > nb loop
 				a_class := class_array.item (i)
 				if a_class /= Void then
-					upper_class_name := clone (a_class.external_name)
-					upper_class_name.to_upper
+					upper_class_name := a_class.external_name.as_upper
 					if a_class.generics = Void then
 						Cecil2.put (a_class, upper_class_name)
 					else
@@ -3444,7 +3445,7 @@ feature -- Pattern table generation
 					check
 						is_implemented: rout_table.is_implemented
 					end
-					c_name := clone (rout_table.feature_name)
+					c_name := rout_table.feature_name.twin
 					if root_feat.has_arguments then
 						buffer.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)

@@ -73,7 +73,7 @@ feature
 				end
 			end
 			if not l_is_precompiled then
-				Result := internal_il_type_name (clone (l_class_c.name), a_prefix)
+				Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
 			end
 		end
 

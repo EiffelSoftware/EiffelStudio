@@ -62,9 +62,7 @@ feature -- Update
 	popup_choice_window is
 			-- Popup the choice window.
 		do
-			if choice /= Void then
-				execute (Void)
-			end
+			execute (Void)
 		end
 
 	close_choice_window is

@@ -36,25 +36,11 @@ creation
 feature -- making
 
 	make (a_featurei: FEATURE_I; a_class: CLASS_C; s, e: INTEGER) is
-		local
-			temp: STRING
 		do
 			feature_i := a_featurei;
 			start_position := s;
 			end_position := e;
-			class_c := a_class;
-				-- Recompute `end_position' to get rid of 
-				-- unwanted white spaces.
-			temp := normal_origin_text;
-			if 
-				temp /= Void and then
-				temp.count >= end_position and 
-				start_position < end_position 
-			then
-				temp := temp.substring (start_position + 1, end_position);
-				temp.right_adjust;
-				end_position := start_position + temp.count
-			end
+			class_c := a_class
 		end;
  
 	feature_i: FEATURE_I;
@@ -199,23 +185,9 @@ feature -- dragging
 	set_positions (s, e: INTEGER) is
 			-- Assign `s' to start_position.
 			-- Assign `e' to end_position.
-		local
-			temp: STRING
 		do
-			start_position := s
-			end_position := e;
-				-- Recompute `end_position' to get rid of 
-				-- unwanted white spaces.
-			temp := normal_origin_text;
-			if 
-				temp /= Void and then
-				temp.count >= end_position and 
-				start_position < end_position 
-			then
-				temp := temp.substring (start_position + 1, end_position);
-				temp.right_adjust;
-				end_position := start_position + temp.count
-			end
+			start_position := s;
+			end_position := e
 		end;
 
 	synchronized_stone: FEATURE_STONE is

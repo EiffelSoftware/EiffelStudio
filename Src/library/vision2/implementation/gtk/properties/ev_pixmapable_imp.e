@@ -43,7 +43,6 @@ feature -- Element change
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to `pixmap'.
 		do
-			remove_pixmap
 			--internal_pixmap := clone (a_pixmap)
 			internal_pixmap ?= a_pixmap.implementation	
 			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
@@ -64,9 +63,9 @@ feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 		local
 			gtk_pix_wid: POINTER
 		do
+			internal_remove_pixmap
 			if a_width /= internal_pixmap.width or else a_height /= internal_pixmap.height then
-				-- We need to scale pixmap before it is placed in to pixmap holder
-				internal_remove_pixmap
+				-- We need to scale pixmap before it is placed in to pixmap holder			
 				a_pixmap_imp.stretch (a_width, a_height)
 			end
 			gtk_pix_wid := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pixmap_imp.drawable, a_pixmap_imp.mask)

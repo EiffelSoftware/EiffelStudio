@@ -53,6 +53,15 @@
         <h2>Changes</h2>
         
         
+        <ul>
+          <li>Changed the way we generate calls to C/C++ external routines. It 
+          is possible that because of this change, code that used to C compile, 
+          will not compile anymore. This happens mostly when mixing C and C++ 
+          code and the C call being made is incorrect but was not previously 
+          checked against the C header files if provided.</li>
+</ul>
+        
+        
         <h2>Bug fixes</h2>
         
         
@@ -66,6 +75,12 @@
           only if <span class="efeature">call</span> is exported to <span class="eclass">MY_CLASS</span>.</li>
           <li>Allowed type specification for open operands in agent creation, 
           i.e. one can now write: <span class="ekeyword">agent</span> <span class="efeature">f</span> ({<span class="eclass">A</span>}).</li>
+          <li>Fixed bug which allowed compiler to accept the following incorrect 
+          code: <span class="efeature">char</span>: <span class="eclass">CHARACTER</span> <span class="ekeyword">is</span> <span class="estring">&quot;rdsf&quot;</span></li>
+          <li>Fixed bug in error reporting for incompatible <span class="eclass">BIT</span> types 
+          involving bit manifest constants. It would 
+          always report <span class="eclass">BIT 0</span>, instead of the actual number of bits in the bit 
+          manifest constant.</li>
 </ul>
         
         

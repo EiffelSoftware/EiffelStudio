@@ -99,27 +99,31 @@ feature -- Access
 
 	compute_feature (name: STRING): FEATURE_I is
 			-- Compute feature with feature name `name' using
-			-- source class. 
+			-- source class.
+		require
+			name_not_void: name /= Void
 		local
-			source_classc: CLASS_C;
+			l_source_class: like source_class
 		do
-			source_classc := source_class;
-			if source_classc /= Void then
-				Result := source_classc.feature_named (name);
+			l_source_class := source_class
+			if l_source_class /= Void then
+				Result := l_source_class.feature_named (name)
 			end
-		end;
+		end
 
 	adapted_type (f: FORMAL_AS): TYPE_A is
-			-- Adapted type of `source_class' for format `f'\
+			-- Adapted type of `source_class' for format `f'.
+		require
+			formal_not_void: f /= Void
 		local
 			l_source_class: like source_class
 		do
 			l_source_class := source_class
 			if l_source_class /= Void then
 				Result := f.actual_type.
-					instantiation_in (source_type, l_source_class.class_id);
+					instantiation_in (target_type, l_source_class.class_id)
 			end
-		end;
+		end
 
 feature -- Setting
 

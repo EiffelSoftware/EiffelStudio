@@ -59,8 +59,6 @@ feature -- Basic operations
 					parsed_feature.set_comment (l_comment)
 				end
 			end
-		ensure
-			parse_succeed: parsed_feature /= Void
 		end
 
 feature {NONE} -- Implementation

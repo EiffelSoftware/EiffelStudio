@@ -65,8 +65,7 @@ feature -- Basic operations
 							input_file.read_line
 
 							if not input_file.last_string.empty then
-								if input_file.last_string.substring_index (Feature_indicator, 1) > 0 then
-									if raw_features /= Void and not raw_features.empty then
+								if input_file.last_string.substring_index (Feature_indicator, 1) > 0 then									if raw_features /= Void and not raw_features.empty then
 										create feature_parser
 										feature_parser.parse_routine (raw_features)
 										if feature_parser.succeed then

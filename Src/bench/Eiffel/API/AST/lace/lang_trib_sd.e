@@ -45,6 +45,8 @@ feature -- Lace compilation
 				System.set_c_file_names (file_names);
 			elseif language_name.is_object then
 				System.set_object_file_names (file_names);
+			elseif language_name.is_include_path then
+				System.set_include_paths (file_names);
 			else
 				!!vd34;
 				vd34.set_language_name (language_name.language_name);

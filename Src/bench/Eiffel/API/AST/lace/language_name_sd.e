@@ -33,6 +33,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_include_path: BOOLEAN is
+			-- Is the language "Include_path" ?
+		do
+			-- Do nothing
+		end;
+
 	set is
 			-- Yacc initialization
 		do

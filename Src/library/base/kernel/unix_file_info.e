@@ -101,7 +101,6 @@ feature -- Access
 			Result := file_info ($buffered_file_info, 10);
 		end;
 
-
 	owner_name: STRING is
 			-- Name of the file owner, if available from /etc/passwd.
 			-- Otherwise, the UID

@@ -17,10 +17,7 @@ inherit
 		rename
 			command_line as arguments_line
 		end
-	SHARED_LICENSE
-		redefine
-			new_license
-		end;
+	SHARED_LICENSE;
 	SHARED_CONFIGURE_RESOURCES;
 	SHARED_BATCH_COMPILER;
 	SHARED_EIFFEL_PROJECT
@@ -41,13 +38,13 @@ feature -- Initialization
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
-					new_die (-1)
+					die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
-					new_die (-1)
+					die (-1)
 				end;
 
 					-- Read the resource files
@@ -58,25 +55,25 @@ feature -- Initialization
 				then
 					Eiffel_project.set_batch_mode (False);
 					init_connection (argument (1).is_equal ("-bench"));
-					if init_licence then
+					if init_license then
 						if toolkit = Void then end;
 						init_windowing;
 						iterate
 					end;
 				else
 					Eiffel_project.set_batch_mode (True);
-					if init_licence then
+					if init_license then
 						!! new_resources.initialize;
 						start_batch_compiler;
-						discard_licence;
+						discard_licenses;
 					end;
 				end;
 			else
 					-- Ensure clean exit in case of exception
-				new_die (-1)
+				die (-1)
 			end;
 		rescue
-			discard_licence;
+			discard_licenses;
 			if not Eiffel_project.batch_mode then
 					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel4: Session aborted%N");
@@ -97,20 +94,5 @@ feature -- Properties
 
 	retried: BOOLEAN;
 			-- For rescues
-
-feature -- Access
-
-	init_licence: BOOLEAN is
-		do
-			licence.set_version (4.0);
-			licence.set_application_name ("eiffelbench");
-			licence.get_licence;
-			Result := licence.licensed;
-		end;
-
-	new_license: LICENCE is
-		do
-			!BENCH_LICENCE!Result.make
-		end
 
 end -- class EWB

@@ -1,9 +1,14 @@
 indexing
-	description	: "System's root class"
-	note		: "Initial version automatically generated"
+	description	: "Adapt EiffelStudio samples Ace files to ENViSioN!"
 
 class
 	ES_TO_ENVISION
+
+inherit
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -12,47 +17,67 @@ feature -- Initialization
 
 	make is
 			-- Creation procedure.
-		local
-			ace_file_content: STRING
 		do
-			ace_file_content := open_ace_file
-			if ace_file_content /= Void and then not ace_file_content.is_empty then
-				ace_file_content := add_data_ace_file (ace_file_content)
-				save_ace_file (ace_file_content)
+			if Command_line.Argument_count < 2 then
+				show_usage
 			else
-				--file_not found!
+				if not Command_line.argument (1).substring (1, Ise_src_key.count).is_equal (Ise_src_key) then
+					io.put_string ("Ace file path must start with " + Ise_src_key)
+					io.read_line
+					die (1)
+				end
+				read_ace_file
+				if ace_file_content /= Void and then not ace_file_content.is_empty then
+					modify_ace_file_content
+					save_ace_file
+				else
+					io.put_string ("Ace file not found!")
+					io.read_line
+					die (1)
+				end
 			end
 		end
 
 feature -- File management
 
-	ace_file: PLAIN_TEXT_FILE
-			-- machine.config file.
+	ace_file_content: STRING
+			-- Ace file content to be modified
 
-	ace_file_path: STRING
-			-- Ace file path.
-
-	root_path: STRING
-			-- Root path of project.
-
-	open_ace_file: STRING is
-			-- machine.config file.
---		local
---			l_ace_file_path: STRING
+	read_ace_file is
+			-- Set `ace_file_content' with content of Ace file
+			-- whose path was given as argument to the system.
+		require
+			not_already_read: ace_file_content = Void
+		local
+			path: STRING
+			ace_file: PLAIN_TEXT_FILE
 		do
---			if command_line.argument_array.count /= 1 then
---				print ("Wrong number of parameter")
---			else
-				ace_file_path := command_line.argument_array.item (1)
-				ace_file_path.replace_substring_all (Ise_src_key, Src_path)
-				ace_file_path.replace_substring_all ("\\", "\")
-				create ace_file.make_open_read_write (ace_file_path)
-				if ace_file.access_exists then
-					ace_file.read_stream (ace_file.count)
-					Result := ace_file.last_string
-				end
---			end
+			path := command_line.argument_array.item (1)
+			check
+				valid_path: path.substring (1, Ise_src_key.count).is_equal (Ise_src_key)
+			end
+			create ace_file.make (resolved_path (path))
+			if ace_file.exists then
+				ace_file.open_read
+				ace_file.read_stream (ace_file.count)
+				ace_file_content := ace_file.last_string
+				ace_file.close
+			end
 		ensure
+			read: (create {RAW_FILE}.make (resolved_path (Command_line.argument (1)))).exists implies ace_file_content /= Void
+		end
+
+	resolved_path (relative_path: STRING): STRING is
+			-- Evaluate EIFFEL_SRC and replace with value.
+		require
+			non_void_path: relative_path /= Void
+		do
+			Result := clone (relative_path)
+			Result.replace_substring_all (Ise_src_key, Src_path)
+			Result.replace_substring_all ("\\", "\")
+		ensure
+			non_void_resolved_path: Result /= Void
+			valid_resolved_path: Result.substring_index (Ise_src_key, 1) = 0 and Result.substring_index ("\\", 1) = 0
 		end
 
 	command_line: ARGUMENTS is
@@ -61,19 +86,30 @@ feature -- File management
 			create Result
 		end
 		
-	save_ace_file (a_string: STRING) is
-			-- save `a_string' in `Machine_config'.
+	save_ace_file is
+			-- Save ace file.
 		require
-			non_void_a_string: a_string /= Void
-			not_empty_a_string: not a_string.is_empty
-			ace_file_writable: ace_file.is_writable
+			non_void_content: ace_file_content /= Void
+			valid_content: not ace_file_content.is_empty
+		local
+			ace_file: PLAIN_TEXT_FILE
+			path: STRING
 		do
-			create ace_file.make_open_write (src_path + "examples\dotnet\envision\samples\" + "envision.ace")--"e:\titi.ace")
-			ace_file.put_string (a_string)
+			path := src_path + "examples\dotnet\envision\samples"
+			if (create {DIRECTORY}.make (path)).exists then
+				create ace_file.make_open_write (path + "\envision.ace")
+				ace_file.put_string (ace_file_content)
+				ace_file.close				
+			else
+				io.put_string ("Cannot open folder " + path + "%N")
+			end
 		end
 
+	Relative_ace_file_path: STRING is "examples\dotnet\envision\samples\envision.ace"
+			-- Path to ace file from sanmples delivery root
+
 	Ise_src_key: STRING is "EIFFEL_SRC"
-			-- Environment variable $ISE_EIFFEL.
+			-- Environment variable $EIFFEL_SRC.
 
 	src_path: STRING is
 			-- Path to Eiffel installation.
@@ -83,14 +119,13 @@ feature -- File management
 			if not retried then   
 				Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_src_key)
 				check
-					Ise_eiffel_defined: Result /= Void
+					variable_defined: Result /= Void
 				end
 				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
 					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 				end
 			else   
-				-- FIXME: Manu 05/14/2002: we should raise an error here.   
-				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")   
+				io.error.put_string (Ise_src_key + " environment variable is not defined!%N")   
 			end 
 		ensure
 			exist: Result /= Void
@@ -100,37 +135,38 @@ feature -- File management
 			retry   
 		end
 
-feature 
+feature -- Basic Operations
 
-	add_data_ace_file (a_string: STRING): STRING is
-			-- Add a line in `a_sting'.
+	show_usage is
+			-- Display usage information
+		do
+			io.put_string ("EiffelStudio to ENViSioN! Ace Files Converter Utility 1.0%NCopyright (C) Eiffel Software 2002. All right reserved.%N")
+			io.put_string ("%NSyntax: es_to_envision ace_file_path envision_cluster_path")
+		end
+		
+feature {NONE} -- Implementation
+
+	modify_ace_file_content is
+			-- Replace `eiffel_studio_samples_path' with system's second argument.
 		require
-			non_void_a_string: a_string /= Void
-			not_empty_a_string: not a_string.is_empty
+			non_void_ace_file_content: ace_file_content /= Void
+			valid_argument_count: Command_line.Argument_count >= 2
 		local
 			index, index_2: INTEGER
-			l_root_sample_path: STRING
+			s: STRING
 		do
---			index := a_string.substring_index (eiffel_studio_samples_path, 1)
---			if index /= 0 then
---				l_root_sample_path := Command_line.argument (2)
---				a_string.replace_substring_all (eiffel_studio_samples_path, envision_samples_path)
---			end
-			l_root_sample_path := Command_line.argument (2)
-			index := a_string.substring_index (eiffel_studio_samples_path, 1)
-			if index /= 0 then
-				index_2 := a_string.substring_index ("%"", index)
-				a_string.replace_substring (l_root_sample_path, index, index_2 - 1)
+			s := Command_line.argument (2)
+			index := ace_file_content.substring_index (eiffel_studio_samples_path, 1)
+			if index > 0 then
+				index_2 := ace_file_content.substring_index ("%"", index)
+				ace_file_content.replace_substring (s, index, index_2 - 1)
 			end
-			Result := a_string				
-		ensure
-			non_void_result: Result /= Void
-			not_empty_result: not Result.is_empty
 		end
 
-	envision_samples_path: STRING is "$ISE_EIFFEL\..\samples\"
-
 	eiffel_studio_samples_path: STRING is "$ISE_EIFFEL\examples\"
+			-- Path to EiffelStudio samples as set in Ace file
 
-		
-end -- class EIFFEL_STUD_TO_ENVISION
+invariant
+	valid_arguments_count: Command_line.Argument_count > 1
+	
+end -- class ES_TO_ENVISION

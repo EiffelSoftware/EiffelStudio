@@ -484,6 +484,14 @@ feature -- Access
 		ensure
 			widget_exists: Result /= Void
 		end;
+	
+	password (a_password: PASSWORD; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): PASSWORD_I is
+			-- Toolkit implementation of `a_password'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN; 
 		oui_parent: COMPOSITE): TOGGLE_B_I is

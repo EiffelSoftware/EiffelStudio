@@ -359,6 +359,13 @@ feature -- Icons
 		once
 			Result := build_text_pixmap ("debug_run")
 		end
+
+	Icon_run_debug_continue: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_text_pixmap ("debug_run_continue")
+		end
 		
 	Icon_save_call_stack: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap

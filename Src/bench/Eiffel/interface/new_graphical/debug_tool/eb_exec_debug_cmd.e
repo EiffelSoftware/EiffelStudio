@@ -32,12 +32,43 @@ feature -- Initialization
 			accelerator.actions.extend (agent execute)
 		end
 
+feature -- Access
+
+	set_launched (a_launched: BOOLEAN) is
+		local
+			toolbar_items: like managed_toolbar_items
+		do
+			toolbar_items := managed_toolbar_items
+			if toolbar_items /= Void then
+				from
+					toolbar_items.start
+				until
+					toolbar_items.after
+				loop
+					if a_launched then
+						toolbar_items.item.remove_pixmap
+						toolbar_items.item.set_pixmap (pixmap_continue @ 2)
+					else
+						toolbar_items.item.remove_pixmap						
+						toolbar_items.item.set_pixmap (pixmap @ 2)
+					end
+					toolbar_items.forth
+				end
+			end
+		end
+
 feature {NONE} -- Attributes
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap for the button.
 		once
 			Result := Pixmaps.Icon_run_debug
+		end
+
+	pixmap_continue: ARRAY [EV_PIXMAP] is
+			-- Pixmap for the button.
+		once
+			Result := Pixmaps.Icon_run_debug_continue
 		end
 
 	name: STRING is "Exec_debug"
@@ -56,6 +87,3 @@ feature {NONE} -- Attributes
 		end
 
 end -- class EB_EXEC_NO_STOP_CMD
-
-
-

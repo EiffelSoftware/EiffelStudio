@@ -48,12 +48,7 @@ rt_public void esys(void)
 	 * If errno is zero, the 'External event' exception is generated instead.
 	 */
 
-
-#ifdef EIF_WIN32
-	if ((errno == 0) && (_doserrno == 0)) /* Function did not set errno? */
-#else
 	if (errno == 0)					/* Function did not set errno? */
-#endif
 		xraise(EN_EXT);				/* External event */
 
 	xraise(EN_SYS);					/* Operating system error */
@@ -67,13 +62,3 @@ rt_public void eio(void)
 
 	xraise(EN_IO);					/* I/O error */
 }
-
-rt_public int get_errno(void)
-{
-	/* Return the value of errno to Eiffel (waiting for Eiffel external
-	 * attributes support)--RAM.
-	 */
-
-	return errno;
-}
-

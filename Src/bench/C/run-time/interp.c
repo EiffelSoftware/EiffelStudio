@@ -165,6 +165,7 @@ private struct item *stack_allocate();	/* Allocates first chunk */
 private int stack_extend();				/* Extend stack's size */
 private void npop();					/* Pop 'n' items */
 public struct item *otop();				/* Pointer to value at the top */
+private struct item *oitem();			/* Pointer to value at position `n' down the stack */
 private void stack_truncate();			/* Truncate stack if necessary */
 private void wipe_out();				/* Remove unneeded chunk from stack */
 #ifdef DEBUG
@@ -2018,12 +2019,22 @@ end:
 		break;
 
 	/*
+	 * Reserved space (for object address)
+	 */
+	case BC_RESERVE:
+#ifdef DEBUG
+		dprintf(2)("BC_RESERVE\n");
+#endif
+		last = iget();
+		break;
+	/*
 	 * Object address operator.
 	 */
 	case BC_OBJECT_ADDR:
 		{
 		struct item *pointed_object;
-	 	EIF_BOOLEAN is_attribute = (EIF_BOOLEAN) 0;
+	 	EIF_BOOLEAN is_attribute = EIF_FALSE;
+		uint32 value_offset = get_uint32();
 #ifdef DEBUG
 		dprintf(2)("BC_OBJECT_ADDR\n");
 #endif
@@ -2043,7 +2054,7 @@ end:
 			case BC_CURRENT:
 				switch (*IC++) {
 				case BC_ATTRIBUTE:
-					is_attribute = (EIF_BOOLEAN) 1;
+					is_attribute = EIF_TRUE;
 					offset = get_long();		/* Get feature id */
 					code = get_short();			/* Get static type */
 					type = get_uint32();		/* Get attribute meta-type */
@@ -2053,7 +2064,7 @@ end:
 					{
 					int32 origin, ooffset;
 
-					is_attribute = (EIF_BOOLEAN) 1;
+					is_attribute = EIF_TRUE;
 					origin = get_long();		/* Get the origin class id */
 					ooffset = get_long();		/* Get the offset in origin */
 					type = get_uint32();		/* Get attribute meta-type */
@@ -2064,15 +2075,15 @@ end:
 					panic("illegal access to Current");
 				}
 
-				last = iget();
+				last = oitem(value_offset);
 				last->type = SK_POINTER;
 				last->it_ref = (char *) (icurrent->it_ref+offset);
 				break;
 			default:
 				panic("illegal address access");
 			}
-			if (is_attribute == (EIF_BOOLEAN) 0){
-				last = iget();
+			if (is_attribute == EIF_FALSE){
+				last = oitem(value_offset);
 				last->type = SK_POINTER;
 
 				switch (pointed_object->type & SK_HEAD) {
@@ -2089,6 +2100,52 @@ end:
 			}
 		break;
 		}
+
+	/*
+	 * Expression address: $(s.to_c)
+	 */
+	case BC_OBJECT_EXPR_ADDR: 
+#ifdef DEBUG
+	dprintf(2)("BC_OBJECT_EXPR_ADDR\n");
+#endif
+		{
+		uint32 ptr_pos, value_pos;
+        struct item *pointed_object;
+
+		ptr_pos = get_uint32();
+		value_pos = get_uint32();
+
+		pointed_object = oitem(value_pos);
+		last = oitem(ptr_pos);
+		last->type = SK_POINTER;
+
+		switch (pointed_object->type & SK_HEAD) {
+			case SK_BOOL:
+			case SK_CHAR: last->it_ref = (char *) (&(pointed_object->it_char)); break;
+			case SK_INT: last->it_ref = (char *) (&(pointed_object->it_long)); break;
+			case SK_FLOAT: last->it_ref = (char *) (&(pointed_object->it_float)); break;
+			case SK_DOUBLE: last->it_ref = (char *) (&(pointed_object->it_double)); break;
+			case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
+			case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
+			default:
+				panic("illegal type for address access");
+			}
+		}
+		break;
+
+	/*
+	 * Pop `n' elements from the stack (resynchronization after expression address operator)
+	 */
+	case BC_POP:
+#ifdef DEBUG
+		dprintf(2)("BC_POP\n");
+#endif
+		{
+		uint32 i, nb_uint32 = get_uint32();
+		for (i = 0; i < nb_uint32; i++)
+			opop();
+		}
+		break;
 
 	/*
 	 * Manifest array
@@ -4353,6 +4410,33 @@ public struct item *otop()
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
+private struct item *oitem(n)
+uint32 n;
+{
+	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if
+	 * stack is empty. I assume a value has already been pushed (i.e. the
+	 * stack has been created).
+	 */
+	
+	register1 struct item *last_item;		/* Address of last item stored */
+	register2 struct stochunk *prev;		/* Previous chunk in stack */
+
+	last_item = op_stack.st_top - 1 -n;
+	if (last_item >= op_stack.st_cur->sk_arena)
+		return last_item;
+
+	/* It seems the item is at the left edge of a chunk. Look for previous chunk then...
+	 */
+	prev = op_stack.st_cur->sk_prev;
+
+#ifdef MAY_PANIC
+	if (prev == (struct stochunk *) 0)
+		panic("operational stack is empty");
+#endif
+
+	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
+}
+
 private void stack_truncate()
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
@@ -5667,10 +5751,43 @@ char *start;
 		break;
 
 	/*
+	 * Reserved space (for object address)
+	 */
+	case BC_RESERVE:
+		fprintf(fd, "0x%lX BC_RESERVE\n", IC - 1);
+		break;
+
+	/*
 	 * Object address operator.
 	 */
 	case BC_OBJECT_ADDR:
-		fprintf(fd, "0x%lX BC_OBJECT_ADDR\n", IC - 1);
+		{
+		uint32 nb_uint32 = get_uint32();
+		fprintf(fd, "0x%lX BC_OBJECT_ADDR offset=%d\n", IC - sizeof(uint32) - 1, nb_uint32);
+		}
+		break;
+
+	/*
+	 * Object expression address operator.
+	 */
+	case BC_OBJECT_EXPR_ADDR:
+		{
+		uint32 ptr_pos, value_pos;
+		ptr_pos = get_uint32();
+		value_pos = get_uint32();
+		fprintf(fd, "0x%lX BC_OBJECT_EXPR_ADDR ptr:%d value: %d\n",
+					IC - 2 * sizeof(uint32) - 1, ptr_pos, value_pos);
+		}
+		break;
+
+	/*
+	 * Pop.
+	 */
+	case BC_POP:
+		{
+		uint32 nb_uint32 = get_uint32();
+		fprintf(fd, "0x%lX BC_POP %d\n", IC - sizeof(uint32) - 1, nb_uint32);
+		}
 		break;
 
 	/*

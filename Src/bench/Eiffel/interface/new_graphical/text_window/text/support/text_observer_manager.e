@@ -149,7 +149,6 @@ feature {NONE} -- Updates
 			-- not via another tool or wizard.
 		local
 			tmp_is_notifying: BOOLEAN
-			index: INTEGER
 			l_cur: CURSOR
 		do
 			tmp_is_notifying := is_notifying

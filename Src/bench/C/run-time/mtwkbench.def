@@ -239,6 +239,8 @@ EXPORTS
 	eif_extracted_paths
 	eif_get_chunk_size
 	eif_get_max_mem
+	eif_set_coalesc_period
+	eif_coalesc_period
 	eif_getenv
 	eif_hInstance
 	eif_hPrevInstance
@@ -433,6 +435,7 @@ EXPORTS
 	str_tail
 	str_take
 	str_upper
+	strrealloc
 	stream_sstore
 	stream_eestore
 	stream_estore

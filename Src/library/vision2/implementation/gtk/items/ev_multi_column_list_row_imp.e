@@ -59,36 +59,38 @@ feature -- Access
 			Result := internal_text.count
 		end
 
-	background_color: EV_COLOR is
+	--| FIXME Not used in interface. 
+	--background_color: EV_COLOR is
 			-- Color used for the background of the widget
 			-- Currently, on windows, we can only set the color
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
-		local
-			r, g, b: INTEGER
-		do
-			C.c_gtk_clist_get_bg_color (
-				parent_imp.list_widget,
-				index - 1, $r, $g, $b
-			)
-			create Result.make_with_rgb (r, g, b)
-		end
+		--local
+		--	r, g, b: INTEGER
+		--do
+		--	C.c_gtk_clist_get_bg_color (
+		--		parent_imp.list_widget,
+		--		index - 1, $r, $g, $b
+		--	)
+		--	create Result.make_with_rgb (r, g, b)
+		--end
 
-	foreground_color: EV_COLOR is
+	--| FIXME Not used in interface.
+	--foreground_color: EV_COLOR is
 			-- Color used for the foreground of the widget,
 			-- usually the text.
 			-- Currently, on windows, we can only set the color
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
-		local
-			r, g, b: INTEGER
-		do
-			C.c_gtk_clist_get_fg_color (
-				parent_imp.list_widget,
-				index - 1, $r, $g, $b
-			)
-			create Result.make_with_rgb (r, g, b)
-		end
+	--	local
+	--		r, g, b: INTEGER
+	--	do
+	--		C.c_gtk_clist_get_fg_color (
+	--			parent_imp.list_widget,
+	--			index - 1, $r, $g, $b
+	--		)
+	--		create Result.make_with_rgb (r, g, b)
+	--	end
 
 feature -- Status report
 	
@@ -253,29 +255,31 @@ feature -- Element Change
 			)
 		end
 
-	set_background_color (color: EV_COLOR) is
+	--| FIXME Not used in interface.
+	--set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'.
 			-- Currently, on windows, we can only set the color
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
-		do
+	--	do
 			--| FIXME IEK External expects integers for colors
 			--C.c_gtk_clist_set_bg_color
 			--		(parent_imp.list_widget,
 			-- index - 1, color.red, color.green, color.blue)
-		end
+	--	end
 
-	set_foreground_color (color: EV_COLOR) is
+	--| FIXME Not used in interface.
+	--set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'.
 			-- Currently, on windows, we can only set the color
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
-		do
+	--	do
 			--| FIXME IEK External expects integers for colors
 			--C.c_gtk_clist_set_fg_color
 			--	(parent_imp.list_widget,
 			--	index - 1, color.red, color.green, color.blue)
-		end
+	--	end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -323,6 +327,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/04 00:23:46  king
+--| Commented out redundant color features
+--|
 --| Revision 1.33  2000/03/03 18:17:43  king
 --| Fixed bug in set_columns
 --|

@@ -195,14 +195,14 @@ feature -- Element change
 					Application_windows_id.start
 				until
 					Application_windows_id.after or else 
-					is_window (Application_windows_id.item.item)
+					is_window (Application_windows_id.item)
 				loop
 					Application_windows_id.forth
 				end
 				check
 					not_after: not Application_windows_id.after
 				end
-				window ?= window_of_item (Application_windows_id.item.item)
+				window ?= window_of_item (Application_windows_id.item)
 				check
 					window_is_assigned_correctly: window /= Void
 				end

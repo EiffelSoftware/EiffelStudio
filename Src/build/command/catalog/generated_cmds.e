@@ -18,7 +18,7 @@ creation
 
 feature {NONE}
 
-	make (i: INTEGER; cmd_catalog: COMMAND_CATALOG) is
+	make (cmd_catalog: COMMAND_CATALOG) is
 		do
 			old_make (cmd_catalog)
 		end

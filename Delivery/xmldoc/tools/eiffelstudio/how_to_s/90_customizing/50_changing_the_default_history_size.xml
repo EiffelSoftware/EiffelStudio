@@ -7,11 +7,12 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>By default, there may not be more than 10 items in the history of a development window. It means that combo boxes in the 
+	<paragraph>
+	By default, there may not be more than 10 items in the history of a development window. It means that combo boxes in the 
 		<link>
 			<url>../../reference/10_browsing_tools/10_address_bars/10_main_address_bar.xml</url>
 			<label>address bar</label>
-		</link> will let you choose between at most 10possibilities. You can change this number.
+		</link> will let you choose between at most 10 possibilities. You can change this number.
 		<paragraph>To do so, use the 
 			<link>
 				<url>../../reference/85_preferences/10_overview.xml</url>

@@ -28,7 +28,7 @@ feature -- Output
 		local
 			is_not_first: BOOLEAN
 		do
-			ctxt.save_global_adapt;
+			ctxt.save_adaptations;
 			ctxt.begin;
 			start;
 			if not empty then
@@ -83,7 +83,7 @@ feature -- Output
 			else
 				ctxt.rollback
 			end;
-			ctxt.restore_global_adapt;
+			ctxt.restore_adaptations;
 		end;
 
 	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
@@ -91,7 +91,7 @@ feature -- Output
 		local
 			is_not_first: BOOLEAN;
 		do
-			ctxt.save_global_adapt;
+			ctxt.save_adaptations;
 			ctxt.begin;
 			set_in_assertion;
 			from
@@ -117,7 +117,7 @@ feature -- Output
 			else
 				ctxt.rollback
 			end;
-			ctxt.restore_global_adapt;
+			ctxt.restore_adaptations;
 		end;
 
 feature -- Debug

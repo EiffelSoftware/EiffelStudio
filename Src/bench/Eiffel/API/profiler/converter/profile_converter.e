@@ -266,7 +266,9 @@ end;
 			space, number: INTEGER;
 			num_str: STRING;
 			class_n, feature_n, cluster_n: STRING;
-			class_id, temp_int: INTEGER
+			class_id, temp_int: INTEGER;
+			eclass: E_CLASS;
+			a_cluster: CLUSTER_I
 		do
 			if config.get_function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -302,7 +304,9 @@ end;
 							system_defined and then
 							Eiffel_system.valid_dynamic_id (class_id + 1)
 						then
-							class_n := Eiffel_system.class_of_dynamic_id (class_id + 1).name_in_upper
+							eclass := Eiffel_system.class_of_dynamic_id (class_id + 1)
+							class_n := eclass.name_in_upper
+							a_cluster := eclass.cluster;
 						else
 							temp_int := class_id + 1;
 							class_n := temp_int.out
@@ -321,14 +325,18 @@ debug("PROFILE_CONVERT")
 	io.error.putstring (class_n);
 	io.error.new_line
 end;
-						--cluster_n := project.Eiffel_universe.class_with_name (class_n).cluster.cluster_name;
-						cluster_n := "<cluster_tag>"
+				
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Cluster name: ");
-	io.error.putstring (cluster_n);
+	if a_cluster = Void then
+		io.error.putstring ("<unknown_cluster>");
+	else
+		io.error.putstring (a_cluster.cluster_name);
+	end;
 	io.error.new_line;
 end;
-						!! e_function.make (cluster_n, class_n, feature_n);
+						!! e_function.make (Void, class_n, feature_n);
+						e_function.set_class (eclass);
 						is_eiffel := true;
 						is_c := false;
 						is_cycle := false;
@@ -745,7 +753,7 @@ feature {NONE} -- Commands
 				c_name.append_string (translat_line.substring (first_tab, second_tab - 1));
 
 					-- Put function-feature in the hash table.
-				!!new_function.make (cluster_name, cl_name, feature_name)
+				!! new_function.make (cluster_name, cl_name, feature_name)
 				functions.put (new_function, c_name)
 			end
 			!! object_file.make_open_write (filename)

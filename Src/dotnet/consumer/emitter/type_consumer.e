@@ -285,6 +285,7 @@ feature {NONE} -- Implementation
 					referenced_type_from_type (info.get_field_type),
 					info.get_is_static,
 					info.get_is_public,
+					info.get_is_init_only,
 					referenced_type_from_type (l_type))
 			end
 		end

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			non_void_value: val /= Void
 			a_type_not_void: a_type /= Void
 		do
-			field_make (en, dn, rt, static, pub, a_type)
+			field_make (en, dn, rt, static, pub, True, a_type)
 			value := val
 		ensure
 			eiffel_name_set: eiffel_name = en

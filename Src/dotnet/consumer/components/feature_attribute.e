@@ -16,6 +16,7 @@ feature -- Access
 	Is_public: INTEGER is 32
 	Is_artificially_added: INTEGER is 64
 	Is_property_or_event: INTEGER is 128
+	Is_init_only: INTEGER is 256
 			-- Possible attributes of a feature.
 
 end -- class FEATURE_ATTRIBUTE

@@ -77,7 +77,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				ass := feature {ASSEMBLY}.load_assembly_name(aname)
+				ass := feature {ASSEMBLY}.load_assembly_name (aname)
 				check
 					assembly_loaded: ass /= Void
 				end

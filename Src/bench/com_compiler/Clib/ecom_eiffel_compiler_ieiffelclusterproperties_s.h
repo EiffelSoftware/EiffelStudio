@@ -215,6 +215,48 @@ public:
 	virtual STDMETHODIMP cluster_id(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Is the cluster in the Eiffel library
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_eiffel_library(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Full path to cluster with ISE_EIFFEL env var expanded.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP expanded_cluster_path(  /* [out, retval] */ BSTR * path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Does the path to the cluster exsit
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP cluster_path_exists(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Create the cluster path if it doesnt exist
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP create_cluster_path(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Does parent cluster have all set and does the cluster path extend upon the parents
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP all_cluster_path_not_excluded(  /* [out, retval] */ VARIANT_BOOL * exists1 ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Cluster namespace.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP cluster_namespace(  /* [out, retval] */ BSTR * a_namespace ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Cluster namespace.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_cluster_namespace(  /* [in] */ BSTR a_namespace ) = 0;
+
+
 
 protected:
 

@@ -24,11 +24,9 @@ class IEiffelProjectProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelSystemClusters_s.h"
 
-#include "ecom_eiffel_compiler_IEnumImportedAssemblies_s.h"
+#include "ecom_eiffel_compiler_IEiffelSystemExternals_s.h"
 
-#include "ecom_eiffel_compiler_IEnumIncludePaths_s.h"
-
-#include "ecom_eiffel_compiler_IEnumObjectFiles_s.h"
+#include "ecom_eiffel_compiler_IEiffelSystemAssemblies_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -207,57 +205,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Imported assemblies.
+	Externals.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_externals(  );
+
+
+	/*-----------------------------------------------------------
+	Default namespace.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_default_namespace(  );
+
+
+	/*-----------------------------------------------------------
+	Default namespace.
+	-----------------------------------------------------------*/
+	void ccom_set_default_namespace(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Assemblies.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_assemblies(  );
-
-
-	/*-----------------------------------------------------------
-	Add an assembly to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_assembly(  /* [in] */ EIF_OBJECT assembly_path );
-
-
-	/*-----------------------------------------------------------
-	Remove an assembly from the project.
-	-----------------------------------------------------------*/
-	void ccom_remove_assembly(  /* [in] */ EIF_OBJECT assembly_path );
-
-
-	/*-----------------------------------------------------------
-	Included Paths.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_include_paths(  );
-
-
-	/*-----------------------------------------------------------
-	Add an include path to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_include_path(  /* [in] */ EIF_OBJECT include_path );
-
-
-	/*-----------------------------------------------------------
-	Remove an include path from the project.
-	-----------------------------------------------------------*/
-	void ccom_remove_include_path(  /* [in] */ EIF_OBJECT include_path );
-
-
-	/*-----------------------------------------------------------
-	Object Files.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_object_files(  );
-
-
-	/*-----------------------------------------------------------
-	Add an object file to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_object_file(  /* [in] */ EIF_OBJECT object_file );
-
-
-	/*-----------------------------------------------------------
-	Remove an object file from the project.
-	-----------------------------------------------------------*/
-	void ccom_remove_object_file(  /* [in] */ EIF_OBJECT object_file );
 
 
 	/*-----------------------------------------------------------

@@ -65,7 +65,7 @@ void ecom_eiffel_compiler::IEnumClusterExcludes_impl_proxy::ccom_next(  /* [out]
 	};
 	};
 	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_153 (eif_access (rgelt), NULL);
+	tmp_rgelt = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_159 (eif_access (rgelt), NULL);
 	ULONG * tmp_pcelt_fetched = 0;
 	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
 	
@@ -76,11 +76,11 @@ void ecom_eiffel_compiler::IEnumClusterExcludes_impl_proxy::ccom_next(  /* [out]
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_Eif_compiler.ccom_ce_pointed_cell_153 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_Eif_compiler.ccom_ce_pointed_cell_159 ((BSTR *)tmp_rgelt, rgelt);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 	
-	grt_ce_Eif_compiler.ccom_free_memory_pointed_153 (tmp_rgelt);
-grt_ce_Eif_compiler.ccom_free_memory_pointed_154 (tmp_pcelt_fetched);
+	grt_ce_Eif_compiler.ccom_free_memory_pointed_159 (tmp_rgelt);
+grt_ce_Eif_compiler.ccom_free_memory_pointed_160 (tmp_pcelt_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ void ecom_eiffel_compiler::IEnumClusterExcludes_impl_proxy::ccom_ith_item(  /* [
 	ULONG tmp_an_index = 0;
 	tmp_an_index = (ULONG)an_index;
 	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_155 (eif_access (rgelt), NULL);
+	tmp_rgelt = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_161 (eif_access (rgelt), NULL);
 	
 	hr = p_IEnumClusterExcludes->ith_item(tmp_an_index,tmp_rgelt);
 	if (FAILED (hr))
@@ -207,9 +207,9 @@ void ecom_eiffel_compiler::IEnumClusterExcludes_impl_proxy::ccom_ith_item(  /* [
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_Eif_compiler.ccom_ce_pointed_cell_155 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_Eif_compiler.ccom_ce_pointed_cell_161 ((BSTR *)tmp_rgelt, rgelt);
 	
-	grt_ce_Eif_compiler.ccom_free_memory_pointed_155 (tmp_rgelt);
+	grt_ce_Eif_compiler.ccom_free_memory_pointed_161 (tmp_rgelt);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

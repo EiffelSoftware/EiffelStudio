@@ -70,6 +70,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Return ISE_EIFFEL environment var.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP ise_eiffel(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Eiffel Freeze command name
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value ) = 0;

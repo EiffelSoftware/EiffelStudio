@@ -197,6 +197,48 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Is the cluster in the Eiffel library
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_eiffel_library(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Full path to cluster with ISE_EIFFEL env var expanded.
+	-----------------------------------------------------------*/
+	STDMETHODIMP expanded_cluster_path(  /* [out, retval] */ BSTR * path );
+
+
+	/*-----------------------------------------------------------
+	Does the path to the cluster exsit
+	-----------------------------------------------------------*/
+	STDMETHODIMP cluster_path_exists(  /* [out, retval] */ VARIANT_BOOL * exists1 );
+
+
+	/*-----------------------------------------------------------
+	Create the cluster path if it doesnt exist
+	-----------------------------------------------------------*/
+	STDMETHODIMP create_cluster_path(  /* [out, retval] */ VARIANT_BOOL * exists1 );
+
+
+	/*-----------------------------------------------------------
+	Does parent cluster have all set and does the cluster path extend upon the parents
+	-----------------------------------------------------------*/
+	STDMETHODIMP all_cluster_path_not_excluded(  /* [out, retval] */ VARIANT_BOOL * exists1 );
+
+
+	/*-----------------------------------------------------------
+	Cluster namespace.
+	-----------------------------------------------------------*/
+	STDMETHODIMP cluster_namespace(  /* [out, retval] */ BSTR * a_namespace );
+
+
+	/*-----------------------------------------------------------
+	Cluster namespace.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_cluster_namespace(  /* [in] */ BSTR a_namespace );
+
+
+	/*-----------------------------------------------------------
 	Get type info
 	-----------------------------------------------------------*/
 	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );

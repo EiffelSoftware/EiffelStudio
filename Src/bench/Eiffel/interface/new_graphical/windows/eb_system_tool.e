@@ -7,27 +7,27 @@ class
 	EB_SYSTEM_TOOL 
 
 inherit
-	EB_MULTIFORMAT_EDIT_TOOL
+	EB_EDIT_TOOL
 		rename
-			edit_bar as system_toolbar,
-			build_edit_bar as build_system_toolbar
+			toolbar as system_toolbar,
+			build_toolbar as build_system_toolbar
 --			System_type as stone_type
 		redefine
 			make,
 			init_commands,
-			save_text,
 			empty_tool_name, stone, 
 			synchronise_stone,
 --			process_system,
 			format_list,
-			parse_file,
 --			process_class, process_classi,
 --			process_ace_syntax, compatible,
 			set_mode_for_editing,
 			has_editable_text,
 			able_to_edit,
 			build_file_menu,
-			build_special_menu
+			build_special_menu,
+			parse_file,
+			open_cmd, save_cmd
 		end
 
 	EB_SYSTEM_TOOL_DATA
@@ -42,6 +42,7 @@ creation
 feature -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
+			-- Build Current with `man' as manager.
 		do
 			Precursor (man)
 --			set_default_size
@@ -50,12 +51,15 @@ feature -- Initialization
 		end
 
 	init_formatters is
+			-- Create the list of formats,
+			-- initialize default format values.
 		do
 			create format_list.make (Current)
 			set_last_format (format_list.default_format)
 		end
 
 	init_commands is
+			-- Initialize commands.
 		do
 			Precursor
 			create open_cmd.make (Current)
@@ -68,16 +72,10 @@ feature -- Initialization
 feature -- Access
 
 	stone: SYSTEM_STONE
-
---	help_index: INTEGER is 7
-		
---	icon_id: INTEGER is
---			-- Icon id of Current window (only for windows)
---		do
---			Result := Interface_names.i_System_id
---		end
+		-- Tool stone
 
 	format_list: EB_SYSTEM_FORMATTER_LIST
+		-- List of formats available in the tool
 
 feature -- Window Settings
 
@@ -89,6 +87,8 @@ feature -- Window Settings
 feature -- Access
 
 	format_bar_is_used: Boolean is False
+			-- Do the tool need an effective format_bar?
+			-- (a: No)
 
 --	compatible (a_stone: STONE): BOOLEAN is
 --			-- Is Current hole compatible with `a_stone'?
@@ -99,7 +99,7 @@ feature -- Access
 --		end
 
 	has_editable_text: BOOLEAN is
-			-- Does Current tool have an editable text window?
+			-- Does Current tool have an editable text area?
 		do
 			Result := (last_format = format_list.text_format)
 		end
@@ -111,8 +111,9 @@ feature -- Access
 		end
 
 	changed: BOOLEAN is
+			-- Has text changed?
 		do
-			Result := text_window.changed
+			Result := text_area.changed
 		end
 
 feature -- Status setting
@@ -120,12 +121,14 @@ feature -- Status setting
 	set_mode_for_editing is
 			-- Set edit mode on.
 		do
-			text_window.set_editable (True)
+			text_area.set_editable (True)
 		end
 
 feature -- Parsing
 
-	parse_file: BOOLEAN is
+	parse_file is
+			-- Parse file, if possible.
+			-- If not, display an error message.
 		local
 			retried: BOOLEAN
 			syntax_error: SYNTAX_ERROR
@@ -152,31 +155,38 @@ feature -- Parsing
 				Parser.clear_syntax_error
 				create wd.make_default (parent, Interface_names.t_Warning, error_msg)
 			else
-				text_window.update_clickable_from_stone (stone)
-				Result := True
+--				text_area.update_clickable_from_stone (stone)
+				synchronise_stone
 			end
 		end
 
 feature -- Update
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("system_tool_bar")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			if system_tool_bar then
 				system_toolbar.show
 			else
 				system_toolbar.hide
 			end
-			if edit_bar_menu_item /= Void then
-				edit_bar_menu_item.set_selected (system_tool_bar)
+			if toolbar_menu_item /= Void then
+				toolbar_menu_item.set_selected (system_tool_bar)
 			end
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("system_tool_bar")
 		end
@@ -195,9 +205,9 @@ feature -- Update
 		do
 			create arg.make (syn)
 			format_list.text_format.launch_cmd.execute (arg, Void)
-			text_window.deselect_all
-			text_window.set_position (syn.start_position)
-			text_window.highlight_selected (syn.start_position, syn.end_position)
+			text_area.deselect_all
+			text_area.set_position (syn.start_position)
+			text_area.highlight_selected (syn.start_position, syn.end_position)
 			update_save_symbol
 		end
 
@@ -207,7 +217,7 @@ feature -- Update
 			--| If the text has been modified we do not do anything,
 			--| So the result can be messy
 		do
-			text_window.search_stone (a_stone)
+			text_area.search_stone (a_stone)
 		end
 
 	process_classi (a_stone: CLASSI_STONE) is
@@ -216,7 +226,7 @@ feature -- Update
 			--| If the text has been modified we do not do anything,
 			--| So the result can be messy
 		do
-			text_window.search_stone (a_stone)
+			text_area.search_stone (a_stone)
 		end
 
 	synchronise_stone is
@@ -228,7 +238,7 @@ feature -- Update
 		do
 			if stone /= Void then
 				last_f := last_format
-				!! system_stone
+				create system_stone
 				old_do_format := last_f.do_format
 				last_f.set_do_format (true)
 				last_f.format (system_stone)
@@ -245,16 +255,17 @@ feature -- Update
 			create a_file.make_open_read (a_file_name)
 			a_file.readstream (a_file.count)
 			a_file.close
-			text_window.clear_window
+			text_area.clear_window
 --			set_editable_text
 --			show_editable_text
-			text_window.set_text (a_file.laststring)
+			text_area.set_text (a_file.laststring)
 			set_file_name (a_file_name)
+			set_last_saving_date (a_file.date)
 			set_mode_for_editing
 			update_save_symbol
 			reset_stone
 		ensure
-			up_to_date: not text_window.changed
+			up_to_date: not text_area.changed
 			no_stone: stone = Void
 		end
 
@@ -266,8 +277,8 @@ feature {NONE} -- Implementation Graphical Interface
 --			save_as_cmd: SAVE_AS_SYSTEM
 --			save_as_menu_entry: EB_MENU_ENTRY
 --		do
---			!! save_as_cmd.make (Current)
---			!! save_as_menu_entry.make (save_as_cmd, file_menu)
+--			create save_as_cmd.make (Current)
+--			create save_as_menu_entry.make (save_as_cmd, file_menu)
 --		end
 
 --	create_toolbar (a_parent: COMPOSITE) is
@@ -275,15 +286,15 @@ feature {NONE} -- Implementation Graphical Interface
 --		local
 --			sep: THREE_D_SEPARATOR
 --		do
---			!! toolbar_parent.make (new_name, a_parent)
---			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+--			create toolbar_parent.make (new_name, a_parent)
+--			create sep.make (Interface_names.t_Empty, toolbar_parent)
 --			toolbar_parent.set_column_layout
 --			toolbar_parent.set_free_size	
 --			toolbar_parent.set_margin_height (0)
 --			toolbar_parent.set_spacing (1)
---			!! system_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+--			create system_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 --			if not Platform_constants.is_windows then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+--				create sep.make (Interface_names.t_Empty, toolbar_parent)
 --			else
 --				system_toolbar.set_height (22)
 --			end
@@ -295,12 +306,13 @@ feature {NONE} -- Implementation Graphical Interface
 --			sep: SEPARATOR
 --			toolbar_t: TOGGLE_B
 --		do
---			!! sep.make (Interface_names.t_Empty, special_menu)
---			!! toolbar_t.make (system_toolbar.identifier, special_menu)
+--			create sep.make (Interface_names.t_Empty, special_menu)
+--			create toolbar_t.make (system_toolbar.identifier, special_menu)
 --			system_toolbar.init_toggle (toolbar_t)
 --		end
 
-	build_system_toolbar (a_toolbar: EV_BOX) is
+	build_system_toolbar (tb: EV_BOX) is
+			-- create edit toolbar items inside `tb'
 		local
 --			quit_cmd: QUIT_SYSTEM
 --			has_close_button: BOOLEAN
@@ -310,34 +322,34 @@ feature {NONE} -- Implementation Graphical Interface
 			b: EV_BUTTON
 			sep: EV_VERTICAL_SEPARATOR
 		do
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Open)
 			b.add_click_command (open_cmd, Void)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Save)
 			b.add_click_command (save_cmd, Void)
 
-			create sep.make (a_toolbar)
+			create sep.make (tb)
 
 --			create hole.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_System_dot)
 --			b.add_click_command (hole, Void)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Shell)
 --			shell_button.add_button_press_action (3, shell_cmd, Void)
 			b.add_click_command (shell_cmd, Void)
 
-			create sep.make (a_toolbar)
+			create sep.make (tb)
 
-			create format_bar.make (a_toolbar)
+			create format_bar.make (tb)
 
 				-- Should we have a close button?
 			if close_button_in_every_tool then
-				create sep.make (a_toolbar)
-				create b.make (a_toolbar)
+				create sep.make (tb)
+				create b.make (tb)
 				b.set_pixmap (Pixmaps.bm_Quit)
 				b.add_click_command (close_cmd, Void)
 			end
@@ -346,6 +358,7 @@ feature {NONE} -- Implementation Graphical Interface
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Fill `a_menu' with file managing entries
 		local
 			i: EV_MENU_ITEM
 		do
@@ -367,6 +380,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		end
 
 	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Fill `a_menu' with "special menu" entries
 		local
 			i: EV_MENU_ITEM
 		do
@@ -382,7 +396,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 feature {NONE} -- Attributes
 
 	empty_tool_name: STRING is
-			-- Name of the tool represented by Current.
+			-- Default tool name. Used when tool is empty.
 		do
 			Result := Interface_names.t_System
 		end
@@ -391,14 +405,6 @@ feature {NONE} -- Attributes
 
 	editable:BOOLEAN is True
 			-- Is Current editable?
-
-feature
-
-	save_text is
-			-- launches the save command, if any.
-		do
-			save_cmd.execute (Void, Void)
-		end
 
 feature {NONE} -- Attributes Forms And Holes
 

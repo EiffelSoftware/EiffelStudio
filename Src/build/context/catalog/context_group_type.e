@@ -8,7 +8,7 @@ inherit
 		rename
 			make as context_type_create
 		redefine
-			dummy_context
+			dummy_context, help_file_name
 		end;
 	NAMABLE
 		redefine
@@ -44,6 +44,11 @@ feature
 		do
 			Result := dummy_context.group_text
 		end
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.group_help_fn
+		end;
 
 feature {NONE} -- Namable
 
@@ -92,7 +97,7 @@ feature {NONE} -- Namable
 
 	popuper_parent: COMPOSITE is
 		do
-			Result := Context_catalog
+			Result := Namer_window
 		end;
 
 end

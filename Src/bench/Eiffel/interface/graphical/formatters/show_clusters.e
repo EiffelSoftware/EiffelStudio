@@ -8,7 +8,7 @@ inherit
 	SHARED_WORKBENCH;
 	FORMATTER
 		redefine
-			file_name
+			file_name, dark_symbol
 		end
 
 creation
@@ -25,6 +25,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showclusters 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showclusters 
 		end;
  
 	

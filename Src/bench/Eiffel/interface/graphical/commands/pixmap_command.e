@@ -25,7 +25,7 @@ feature {NONE}
 			!!get_in; !!get_out;
 			add_enter_action (Current, get_in);
 			add_leave_action (Current, get_out);
-			add_button_press_action (1, Current, a_text_window);
+			add_activate_action (Current, a_text_window);
 			text_window := a_text_window
 		ensure
 			parent = a_composite

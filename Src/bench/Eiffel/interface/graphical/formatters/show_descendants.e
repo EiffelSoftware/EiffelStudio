@@ -6,6 +6,9 @@ class SHOW_DESCENDANTS
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -24,6 +27,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showdescendants 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showdescendants 
 		end;
  
 	

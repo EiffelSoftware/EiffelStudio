@@ -17,7 +17,7 @@ class MULTI_ARRAY_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		redefine
 			start, finish, move, has, first, last, prune_all, search,
-			remove, duplicate, wipe_out, put_left, put_right, 
+			remove, duplicate, wipe_out, put_left, put_right,
 			put_front, extend
 		end;
 
@@ -37,7 +37,7 @@ feature -- Initialization
 			last_element := first_element;
 			active := first_element
 		end;
-			
+
 feature -- Access
 
 	item: G is
@@ -171,7 +171,7 @@ feature -- Cursor movement
 					end
 				end
 			end;
-			index := index - 1	
+			index := index - 1
 		end;
 
 	move (i: INTEGER) is
@@ -186,7 +186,7 @@ feature -- Cursor movement
 			current_array := cell.item;
 			if i > 0 then
 				from
-					counter := i + active.item.index 
+					counter := i + active.item.index
 				until
 					counter <= current_array.count or cell = Void
 				loop
@@ -230,7 +230,7 @@ feature -- Cursor movement
 				end;
 			end;
 		end;
-			
+
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'
 		local
@@ -268,7 +268,7 @@ feature -- Cursor movement
 				cell := cell.right;
 				index := index + current_array.count - old_index + 1
 			else
-				index := index + current_array.index - old_index 
+				index := index + current_array.index - old_index
 			end;
 			from
 			invariant
@@ -286,12 +286,12 @@ feature -- Cursor movement
 				current_array.search (v);
 				if current_array.after then
 					cell := cell.right
-					index := index + current_array.count 
+					index := index + current_array.count
 				else
 					index := index + current_array.index - 1
 				end
 			end;
-			if cell /= Void then 
+			if cell /= Void then
 				active := cell
 			else
 				active := last_element
@@ -316,7 +316,7 @@ feature -- Element change
 			if current_array.count = block_size then
 				!!current_array.make (block_size);
 				last_element.put_right (new_cell (current_array));
-				last_element := last_element.right	
+				last_element := last_element.right
 			end;
 			current_array.extend (v);
 			count := count + 1
@@ -345,7 +345,7 @@ feature -- Element change
 			if not before then index := index + 1 end;
 			count := count + 1
 		end;
-	
+
 	put_left (v: like item) is
 			-- Add `v' to the left of current position.
 			-- Do not move cursor.
@@ -359,7 +359,7 @@ feature -- Element change
 			if after then
 				extend (v)
 			elseif
-				active /= first_element 
+				active /= first_element
 				and then not active.left.item.full
 			then
 				active.left.item.extend (v)
@@ -402,7 +402,7 @@ feature -- Element change
 			back;
 			back;
 		end;
-						
+
 feature -- Removal
 
 	wipe_out is
@@ -429,7 +429,7 @@ feature -- Removal
 					if active /= last_element then
 						first_element := active.right;
 						first_element.forget_left
-					end;	
+					end;
 				elseif active = last_element then
 					last_element := active.left;
 					last_element.forget_right;
@@ -502,7 +502,7 @@ feature -- Removal
 			active := last_element;
 			index := count + 1
 		end;
-		
+
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is

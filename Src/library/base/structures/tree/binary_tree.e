@@ -14,7 +14,7 @@ indexing
 class BINARY_TREE [G] inherit
 
 		CELL [G];
-		
+
 		TREE [G]
 			redefine
 				parent,
@@ -45,16 +45,16 @@ feature -- Access
 
 	parent: BINARY_TREE [G];
 			-- Parent of current node
-	
+
 	child_index: INTEGER;
 			-- Index of cursor position
-	
+
 	left_child: like parent;
 			-- Left child, if any
-	
+
 	right_child: like parent;
 			-- Right child, if any
-	
+
 	left_item: like item is
 			-- Value of left child
 		require
@@ -62,7 +62,7 @@ feature -- Access
 		do
 			Result := left_child.item
 		end;
-		
+
 	right_item: like item is
 			-- Value of right child
 		require
@@ -70,19 +70,19 @@ feature -- Access
 		do
 			Result := right_child.item
 		end;
-	
+
 	first_child: like parent is
 			-- Left child
 		do
 			Result := left_child
 		end;
-		
+
 	last_child: like parent is
 			-- Right child
 		do
 			Result := right_child
 		end;
-		
+
 	child: like parent is
 			-- Child at cursor position
 		do
@@ -94,13 +94,13 @@ feature -- Access
 				Result := right_child
 			end
 		end;
-		
+
 	child_cursor: CURSOR is
 			-- Current cursor position
 		do
 			!ARRAYED_LIST_CURSOR! Result.make (child_index)
 		end;
-		
+
 	left_sibling: like parent is
 			-- Left neighbor, if any
 		do
@@ -108,7 +108,7 @@ feature -- Access
 				Result := parent.left_child
 			end
 		end;
-		
+
 	right_sibling: like parent is
 			-- Right neighbor, if any
 		do
@@ -144,7 +144,7 @@ feature -- Status report
 		do
 			Result := left_child = Void and right_child = Void
 		end;
-		
+
 	has_left: BOOLEAN is
 			-- Has current node a left child?
 		do
@@ -152,7 +152,7 @@ feature -- Status report
 		ensure
 			Result = (left_child /= Void)
 		end;
-		
+
 	has_right: BOOLEAN is
 			-- Has current node a right child?
 		do
@@ -160,7 +160,7 @@ feature -- Status report
 		ensure
 			Result = (right_child /= Void)
 		end;
-		
+
 	has_both: BOOLEAN is
 			-- Has current node two children?
 		do
@@ -168,7 +168,7 @@ feature -- Status report
 		ensure
 			Result = (has_left and has_right)
 		end;
-		
+
 
 feature -- Element change
 
@@ -185,7 +185,7 @@ feature -- Element change
 			end
 			left_child := n
 		end;
-		
+
 	put_right_child (n: like parent) is
 			-- Set `right_child' to `n'.
 		require
@@ -199,7 +199,7 @@ feature -- Element change
 			end
 			right_child := n
 		end;
-		
+
 	child_put, child_replace (v: like item) is
 			-- Put `v' at current child position.
 		do
@@ -229,7 +229,7 @@ feature -- Removal
 		ensure
 			not has_left
 		end;
-		
+
 	remove_right_child is
 		do
 			if right_child /= Void then
@@ -269,31 +269,31 @@ feature	-- Cursor movement
 		do
 			--child_index := p.child_index
 		end;
-		
+
 	child_start is
 			-- Move to first child.
 		do
 			child_index := 1
 		end;
-		
+
 	child_finish is
 			-- Move cursor to last child.
 		do
 			child_index := 2
 		end;
-		
+
 	child_forth is
 			-- Move cursor to next child.
 		do
 			child_index := child_index + 1
 		end;
-		
+
 	child_back is
 			-- Move cursor to previous child.
 		do
 			child_index := child_index - 1
 		end;
-	
+
 	child_go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th child.
 		do
@@ -301,7 +301,7 @@ feature	-- Cursor movement
 		end;
 
 feature -- Duplication
-		
+
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
@@ -315,7 +315,7 @@ feature -- Duplication
 				Result.put_right_child (right_child.duplicate_all)
 			end
 		end;
-		
+
 	duplicate_all: like Current is
 		do
 			Result := new_tree;
@@ -341,7 +341,7 @@ feature {BINARY_TREE} -- Implementation
 				right_child.fill_list (al)
 			end
 		end;
-		
+
 feature {NONE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is
@@ -352,8 +352,8 @@ feature {NONE} -- Implementation
 			if right_child /= Void and not Result then
 				Result := right_child.has (v)
 			end
-		end;		
-				
+		end;
+
 	subtree_count: INTEGER is
 		do
 			if left_child /= Void then
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 				Result := Result + right_child.count
 			end
 		end;
-		
+
 	fill_subtree (other: BINARY_TREE [G]) is
 		do
 			if not other.is_leaf then
@@ -372,19 +372,19 @@ feature {NONE} -- Implementation
 			if other.arity >= 2 then
 				put_right_child (other.right_child.duplicate_all);
 			end;
-		end;				
-		
+		end;
+
 	new_tree: like Current is
 		do
 			!!Result.make (item)
 		end;
-		
+
 	child_capacity: INTEGER is 2;
-	
+
 invariant
 
 	child_capacity = 2
-	
+
 end -- class BINARY_TREE
 
 

@@ -27,7 +27,7 @@ deferred class BILINEAR [G] inherit
 			search, off
 		select
 			search
-		end 
+		end
 
 feature -- Access
 
@@ -40,7 +40,7 @@ feature -- Access
 feature -- Cursor movement
 
 	before: BOOLEAN is
-			-- Is there no valid position to the left of current one?	
+			-- Is there no valid position to the left of current one?
 		deferred
 		end;
 

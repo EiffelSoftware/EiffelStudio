@@ -19,7 +19,7 @@ deferred class PART_SORTED_LIST [G -> PART_COMPARABLE] inherit
 		end;
 
 feature -- Access
-	
+
 	has (v: G): BOOLEAN is
 			-- Does structure include `v'?
  			-- (Reference or object equality,

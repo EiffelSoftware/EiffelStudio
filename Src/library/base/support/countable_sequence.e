@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE}
 					fill, prune_all, put,
-					prune, 
+					prune,
 					wipe_out, replace, remove
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Inapplicable
 		end;
 
 	replace (v: G) is
-			-- Replace by `v' item at current position. 
+			-- Replace by `v' item at current position.
 		do
 		end;
 

@@ -18,7 +18,7 @@ deferred class LIST [G] inherit
 		end;
 feature -- Cursor movement
 
-	forth is 
+	forth is
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		deferred

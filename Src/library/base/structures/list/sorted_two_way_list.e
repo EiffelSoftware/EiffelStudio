@@ -137,7 +137,7 @@ feature -- Status report
 				go_to (c)
 			end
 		end;
-				
+
 feature {SORTED_TWO_WAY_LIST} -- Implementation
 
 	new_chain: like Current is

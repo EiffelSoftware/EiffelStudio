@@ -48,7 +48,7 @@ class ARRAY2 [G] inherit
 				all;
 			{ARRAY2}
 				array_put;
-			{ANY} 
+			{ANY}
 				area
 		redefine
 			wipe_out

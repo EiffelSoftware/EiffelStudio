@@ -49,35 +49,35 @@ feature -- Access
 
 	default_seed: INTEGER is
 			-- Default value 123,457;
-			-- may be redefined for a new generator.	
+			-- may be redefined for a new generator.
 		once
 			Result := 123_457
 		end
 
 	modulus: INTEGER is
 			-- Default value 2^31 -1 = 2,147,483,647;
-			-- may be redefined for a new generator.	
+			-- may be redefined for a new generator.
 		once
 			Result := 2_147_483_647
 		end
 
-	multiplier: INTEGER is 
+	multiplier: INTEGER is
 			-- Default value 7^5 = 16,807;
-			-- may be redefined for a new generator.	
+			-- may be redefined for a new generator.
 		once
 			Result := 16_807
 		end
 
-	increment: INTEGER is 
+	increment: INTEGER is
 			-- Default value 0;
-			-- may be redefined for a new generator.	
+			-- may be redefined for a new generator.
 		once
 			Result :=  0
 		end
 
 	seed: INTEGER
 			-- Seed for sequence.
-			
+
 	next_random (n: INTEGER): INTEGER is
 			-- Next random number after `n'
 			-- in pseudo-random order
@@ -112,7 +112,7 @@ feature -- Access
 			end
 			from
 			until
-				count = i 
+				count = i
 			loop
 				Result := randomize (Result)
 				count := count + 1
@@ -128,7 +128,7 @@ feature -- Access
 		local
 			r1, r2: REAL
 		do
-			r1 := item 
+			r1 := item
 			r2 := modulus
 			Result := r1 / r2
 		end
@@ -138,7 +138,7 @@ feature -- Access
 		local
 			d: DOUBLE
 		do
-			d := item 
+			d := item
 			Result := d / dmod
 		end
 
@@ -178,32 +178,32 @@ feature {NONE} -- Implementation
 			Result := x - (floor (x / m) * m)
 		end
 
-	last_item: INTEGER 
-			-- Last `item' requested 
-			--| this can be used for optimising 
+	last_item: INTEGER
+			-- Last `item' requested
+			--| this can be used for optimising
 			--| calls to item.
 
 	last_result: INTEGER
 			-- Value from last call to `item'
 
 	dmod: DOUBLE is
-			-- Double value for modulus 
-		once	
+			-- Double value for modulus
+		once
 			Result := modulus
 		end
 
 	dmul: DOUBLE is
 			-- Double value for multiplier
-		once	
+		once
 			Result := multiplier
 		end
 
 	dinc: DOUBLE is
 			-- Double value for increment
-		once	
+		once
 			Result := increment
 		end
-		
+
 invariant
 	non_negative_seed: seed >= 0
 	non_negative_increment: increment >= 0
@@ -213,12 +213,12 @@ invariant
 end -- class RANDOM
 
 --| This class is adapted from work in:
---| Discrete-Event System Simulation 
---| by Jerry Banks & John S. Carson, II 
---| Prentice-Hall International Series in 
+--| Discrete-Event System Simulation
+--| by Jerry Banks & John S. Carson, II
+--| Prentice-Hall International Series in
 --| Industrial and Systems Engineering 1984
 --| Example 7.12 p 266 which is from
---| IMSL Scientific Subroutine Package [1978], 
+--| IMSL Scientific Subroutine Package [1978],
 --| written in Fortran for IBM 360/370 computers.
 
 --|----------------------------------------------------------------

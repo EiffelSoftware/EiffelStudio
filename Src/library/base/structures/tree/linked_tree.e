@@ -74,11 +74,11 @@ class LINKED_TREE [G] inherit
 			start as child_start,
 			writable as child_writable
 		export
-			{ANY} 
+			{ANY}
 				child;
 			{NONE}
 				ll_make, ll_has,
-			 	ll_merge_left, ll_merge_right, 
+			 	ll_merge_left, ll_merge_right,
 			 	ll_fill, ll_duplicate, ll_full;
 		undefine
 			child_readable, is_leaf,
@@ -199,7 +199,7 @@ feature -- Element change
 			attach (other);
 			ll_merge_right (other)
 		end;
-		
+
 	prune (n: like first_child) is
 		local
 			l_child: like first_child;
@@ -262,9 +262,9 @@ feature {NONE} -- Implementation
 			end;
 			other.child_go_to (cursor)
 		end;
-		
+
 invariant
-	
+
 	no_void_child: readable_child = child_readable
 
 end -- class LINKED_TREE

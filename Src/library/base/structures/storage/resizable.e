@@ -28,12 +28,12 @@ feature -- Measurement
 		do
 			Result := Minimal_increase.max (capacity * Growth_percentage // 100)
 		ensure
-			At_least_one: Result >= 1	
+			At_least_one: Result >= 1
 		end;
 
 feature -- Status report
 
-	resizable: BOOLEAN is 
+	resizable: BOOLEAN is
 			-- May `capacity' be changed? (Answer: yes.)
 		do
 			Result := true

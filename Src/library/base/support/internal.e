@@ -82,7 +82,7 @@ feature -- Access
 		end;
 
 
-	field_type (i: INTEGER; object: ANY): INTEGER is	
+	field_type (i: INTEGER; object: ANY): INTEGER is
 			-- Type of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
@@ -93,7 +93,7 @@ feature -- Access
 		end;
 
 	expanded_field_type (i: INTEGER; object: ANY): STRING is
-			-- Class name associated with the `i'-th 
+			-- Class name associated with the `i'-th
 			-- expanded field of `object'
 		require
 			object_not_void: object /= Void;
@@ -180,7 +180,7 @@ feature -- Access
 			Result := c_is_special ($object)
 		end;
 
-feature -- Element change 
+feature -- Element change
 
 	set_reference_field (i: INTEGER; object: ANY; value: ANY) is
 		require

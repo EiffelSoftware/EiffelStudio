@@ -22,12 +22,12 @@ class FIXED_TREE [G] inherit
 	TREE [G]
 		undefine
 			child_off, child_after, child_before,
-			is_equal, copy, setup, consistent, 
+			is_equal, copy, setup, consistent,
 			child_item
 		redefine
 			parent, attach_to_parent
 		select
-			linear_representation, 
+			linear_representation,
 			sequential_representation,
 			changeable_comparison_criterion,
 			object_comparison,
@@ -255,7 +255,7 @@ feature -- Duplication
 
 feature -- Obsolete
 
-	add (v: G) is 
+	add (v: G) is
 		obsolete "Use ``put'' instead."
 		do
 		end;

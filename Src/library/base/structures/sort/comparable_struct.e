@@ -38,7 +38,7 @@ feature -- Measurement
 		ensure
 		--	smallest: For every item `it' in structure, `Result' <= `it'
 		end;
-			
+
 	max: like item is
 			-- Maximum item
 		require
@@ -76,7 +76,7 @@ feature {NONE} -- Inapplicable
 		end
 
 invariant
-	
+
 	empty_constraint: min_max_available implies not empty
 
 end -- class COMPARABLE_STRUCT

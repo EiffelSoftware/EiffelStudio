@@ -97,7 +97,7 @@ feature	-- Status report
 		do
 			Result := true;
 			if
-				has_left and left_item > item 
+				has_left and left_item > item
 				or has_right and right_item < item
 			then
 				Result := false
@@ -202,7 +202,7 @@ feature -- Transformation
 			--| it is balanced
 		local
 			seq: LINEAR [G];
-			temp: ARRAY [G];	
+			temp: ARRAY [G];
 			heap: HEAP_PRIORITY_QUEUE [G];
 			i: INTEGER
 		do
@@ -217,7 +217,7 @@ feature -- Transformation
 			loop
 				heap.put (seq.item);
 				seq.forth;
-			end;	
+			end;
 			from
 				!! temp.make (1, heap.count)
 			until
@@ -232,7 +232,7 @@ feature -- Transformation
 		ensure
 			is_sorted: sorted
 		end;
-					
+
 feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 
@@ -247,7 +247,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 				Result := right_child.is_subset (other)
 			end
 		end;
-	
+
 	intersect (other: BINARY_SEARCH_TREE [G]) is
 			-- Remove all items not in `other'.
 		do
@@ -356,7 +356,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 				end
 			end
 		end;
-				
+
 	min_node: like Current is
 			-- node containing min
 		do
@@ -365,7 +365,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			else
 				Result := Current
 			end
-		end;				
+		end;
 
 	max_node: like Current is
 			-- node containing max
@@ -376,7 +376,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 				Result := Current
 			end
 		end;
-			
+
 feature  {NONE} -- Implementation
 
 	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
@@ -394,7 +394,7 @@ feature  {NONE} -- Implementation
 				fill_from_sorted_special (t, m + 1, e)
 			end;
 		end;
-			
+
 end -- class BINARY_SEARCH_TREE
 
 

@@ -19,11 +19,11 @@ feature -- Access
 		end
 
 	current_working_directory: STRING is
-			-- Directory of current execution 
+			-- Directory of current execution
 		external
 			"C"
 		alias
-			"dir_current"	
+			"dir_current"
 		end
 
 	change_working_directory (path: STRING) is
@@ -56,7 +56,7 @@ feature -- Access
 				!!Result.make (0)
 				Result.from_c (c_string)
 			end
-		end	
+		end
 
 	home_directory_name: STRING is
 			-- Directory name corresponding to the home directory.
@@ -76,11 +76,11 @@ feature -- Access
 
 feature -- Status
 
-	return_code : INTEGER 
+	return_code : INTEGER
 			--  Status code set by last call to `system' or `put'
 
 feature -- Status setting
-	
+
 	put (value,key: STRING) is
 			-- Set the environment variable `key' to `value'.
 		require
@@ -118,13 +118,13 @@ feature {NONE} -- External
 	eif_getenv (s : POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
-			"C"	
+			"C"
 		end
 
 	eif_putenv (v, k: ANY): INTEGER is
 			-- Set `s' in the environment.
 		external
-			"C"	
+			"C"
 		end
 
 	eif_chdir (s: ANY): INTEGER is
@@ -137,7 +137,7 @@ feature {NONE} -- External
 			-- Pass to the operating system a request to execute `s'.
 		external
 			"C"
-		alias 
+		alias
 			"eif_system"
 		end
 

@@ -12,8 +12,8 @@ class DOUBLE_MATH inherit
 		export
 			{NONE} all
 		end
-	
-feature -- Access 
+
+feature -- Access
 
 	log_2 (v: DOUBLE): DOUBLE is
 			-- Base 2 logarithm of `v'
@@ -83,7 +83,7 @@ feature -- Access
 		external
 			"C"
 		end;
-	
+
 	log (v: DOUBLE): DOUBLE is
 			-- Natural logarithm of `v'
 		external
@@ -95,7 +95,7 @@ feature -- Access
 		external
 			"C"
 		end;
-	
+
 	floor (v: DOUBLE): DOUBLE is
 			-- Greatest integral less than or equal to `v'
 		external

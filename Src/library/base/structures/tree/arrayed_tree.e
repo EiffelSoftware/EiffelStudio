@@ -72,14 +72,14 @@ class ARRAYED_TREE [G] inherit
 			put_right as al_put_right,
 			merge_left as al_merge_left,
 			merge_right as al_merge_right,
-			object_comparison as al_object_comparison			
+			object_comparison as al_object_comparison
 		export
 			{NONE}
 				al_extend, al_duplicate,
-				al_remove, al_make, 
+				al_remove, al_make,
 				al_put, al_replace, al_has,
 				al_fill, al_full,
-				al_remove_left, al_remove_right, al_lin_rep, 
+				al_remove_left, al_remove_right, al_lin_rep,
 				al_seq_rep, al_put_left, al_put_right,
 				al_merge_left, al_merge_right, al_object_comparison;
 		undefine
@@ -114,7 +114,7 @@ feature -- Access
 
 	parent: ARRAYED_TREE [G];
 			-- Parent of current node
-			
+
 	left_sibling: like parent is
 			-- Left neighbor if any
 		do
@@ -130,7 +130,7 @@ feature -- Access
 				Result := parent.array_item (position_in_parent + 1)
 			end
 		end;
-		
+
 feature -- Element change
 
 	child_put, child_replace (v: like item) is
@@ -138,7 +138,7 @@ feature -- Element change
 		do
 			child.replace (v)
 		end;
-		
+
 	replace_child (n: like parent) is
 			-- Make `n' the node's current child.
 		do
@@ -154,21 +154,21 @@ feature -- Element change
 		do
 			al_extend (new_cell (v))
 		end;
-		
+
 	child_put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
 		do
 			al_put_left (new_cell (v))
 		end;
-		
+
 	child_put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
 		do
 			al_put_right (new_cell (v))
 		end;
-		
+
 	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
@@ -176,7 +176,7 @@ feature -- Element change
 			al_put_left (n);
 			n.attach_to_parent (Current)
 		end;
-		
+
 	put_child_right (n: like parent) is
 			-- Add `n' to the right of the cursor position.
 			-- Do not move cursor.
@@ -184,7 +184,7 @@ feature -- Element change
 			al_put_right (n);
 			n.attach_to_parent (Current)
 		end;
-	
+
 	put_child (n: like parent) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
@@ -192,7 +192,7 @@ feature -- Element change
 			al_extend (n);
 			n.attach_to_parent (Current)
 		end;
-			
+
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
@@ -210,7 +210,7 @@ feature -- Element change
 			attach (other);
 			al_merge_right (other)
 		end;
-		
+
 feature -- Removal
 
 	remove_child is
@@ -237,7 +237,7 @@ feature -- Removal
 			remove_child;
 			child_back
 		end;
-			
+
 
 feature -- Duplication
 
@@ -247,7 +247,7 @@ feature -- Duplication
 			-- children.
 		local
 			counter: INTEGER;
-			pos: CURSOR		
+			pos: CURSOR
 		do
 			from
 				Result := new_node;
@@ -340,14 +340,14 @@ feature {NONE} -- Implementation
 		do
 			!! Result.make (0, item);
 		end;
-	
+
 	new_cell (v: like item): like Current is
 			-- New node with value `v' and no children.
 		do
 			!! Result.make (0, v);
 			Result.attach_to_parent (Current)
 		end;
-		
+
 	position_in_parent: INTEGER is
 			-- Position of current node in parent
 		do
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 				c.attach_to_parent (Current)
 			end;
 		end;
-			
+
 end -- class ARRAYED_TREE
 
 

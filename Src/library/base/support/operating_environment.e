@@ -31,7 +31,7 @@ feature
 		alias
 			"eif_home_dir_supported"
 		end
-	
+
 	root_directory_supported: BOOLEAN is
 			-- Is the notion of root directory supported on this platform?
 		external

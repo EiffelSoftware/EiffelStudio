@@ -44,7 +44,7 @@ feature -- Access
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
 		do
-			Result := area.item (i - 1) 
+			Result := area.item (i - 1)
 		end;
 
 feature -- Measurement
@@ -65,7 +65,7 @@ feature -- Element change
 			index_small_enough: i <= count
 		do
 			area.put (v, i - 1)
-		end; 
+		end;
 
 	all_true is
 			-- Set all booleans to true.
@@ -110,7 +110,7 @@ feature -- Basic operations
 		end;
 
 	infix "xor" (other: like Current): like Current is
-		-- Logical exclusive or of 'Current' and `other'	
+		-- Logical exclusive or of 'Current' and `other'
 		require
 			other_not_void: other /= Void;
 			same_size: other.count = count
@@ -128,7 +128,7 @@ feature -- Basic operations
 		local
 			result_area: like area;
 		do
-			!! Result.make (count);	
+			!! Result.make (count);
 			result_area := Result.area;
 			bl_str_not ($area, $result_area, count);
 		end;

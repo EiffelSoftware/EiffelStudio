@@ -13,7 +13,7 @@ deferred class UNBOUNDED [G] inherit
 	FINITE [G]
 
 feature -- Status report
-	
+
 	--extendible: BOOLEAN is true;
 		-- Can new items be added? (Answer: yes)
 

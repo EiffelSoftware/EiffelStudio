@@ -3,7 +3,7 @@ indexing
 	description:
 		"The ASCII character set. %
 		%This class may be used as ancestor by classes needing its facilities.";
-		
+
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ feature -- Access
 	Ctrl_f: INTEGER is 6; Ack: INTEGER is 6;
 	Ctrl_g: INTEGER is 7; Bel: INTEGER is 7;
 	Ctrl_h: INTEGER is 8; Bs: INTEGER is 8; Back_space: INTEGER is 8;
-	Ctrl_i: INTEGER is 9; Ht: INTEGER is 9; Tabulation: INTEGER is 9; 
+	Ctrl_i: INTEGER is 9; Ht: INTEGER is 9; Tabulation: INTEGER is 9;
 	Ctrl_j: INTEGER is 10; Nl: INTEGER is 10; Line_feed: INTEGER is 10;
 	Ctrl_k: INTEGER is 11; Vt: INTEGER is 11;
 	Ctrl_l: INTEGER is 12; Np: INTEGER is 12;

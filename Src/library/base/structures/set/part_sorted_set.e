@@ -33,7 +33,7 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 			{ANY}
 				merge, duplicate,
 				forth, item, after, start,
-				put_left, finish 
+				put_left, finish
 			{NONE} all
 		redefine
 			merge, duplicate
@@ -106,13 +106,13 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v : like item) is			
+	prune (v : like item) is
 		-- Remove `v' if present.
-		do	
+		do
 			start
 			pstwl_prune (v)
 		end
-	
+
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -203,7 +203,7 @@ feature -- Basic operations
 				other.forth
 			end
 		end;
-		
+
 end -- class PART_SORTED_SET
 
 

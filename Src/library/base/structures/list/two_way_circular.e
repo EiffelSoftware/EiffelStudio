@@ -24,7 +24,7 @@ feature -- Implementation
 
 	list: TWO_WAY_LIST [G]
 
-end -- class TWO_WAY_CIRCULAR 
+end -- class TWO_WAY_CIRCULAR
 
 
 --|----------------------------------------------------------------

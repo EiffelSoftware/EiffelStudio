@@ -11,7 +11,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
   BINARY_SEARCH_TREE_SET [G -> COMPARABLE]
 
 inherit
@@ -139,7 +139,7 @@ feature -- Cursor movement
 						or else prev_node = active_node.left_child
 					loop
 						prev_node := active_node;
-						active_node := active_node.parent	
+						active_node := active_node.parent
 					end;
 					if active_node = Void then
 						active_node := tree;
@@ -171,7 +171,7 @@ feature -- Cursor movement
 						or else prev_node = active_node.right_child
 					loop
 						prev_node := active_node;
-						active_node := active_node.parent	
+						active_node := active_node.parent
 					end;
 					if active_node = Void then
 						active_node := tree;
@@ -180,7 +180,7 @@ feature -- Cursor movement
 				end
 			end
 		end;
-						
+
 feature -- Comparison
 
 	is_subset (other: like Current): BOOLEAN is
@@ -206,7 +206,7 @@ feature -- Element change
 				tree := new_tree (v)
 			else
 				tree.extend (v)
-			end   
+			end
 		end;
 
 feature -- Removal
@@ -246,26 +246,26 @@ feature -- Basic operations
 			m: like tree;
 		do
 			if other.tree = Void or tree = Void then
-				tree := Void 
+				tree := Void
 			else
 				if tree.has_left then
 					tree.left_child.intersect (other.tree)
 				end;
 				if tree.has_right then
 					tree.right_child.intersect (other.tree)
-				end; 
+				end;
 				if not other.has (tree.item) then
 					if not tree.has_left then
 						tree := tree.right_child
 					elseif not tree.has_right then
 						tree := tree.left_child
-					else	
+					else
 						m := tree.min_node;
 						m.remove_node;
 						tree.replace (m.item)
 					end
 				end
-			end 
+			end
 		end;
 
 	subtract (other: like Current) is
@@ -292,7 +292,7 @@ feature -- Basic operations
 						m.remove_node;
 						tree.replace (m.item)
 					end
-				end 
+				end
 			end
 		end;
 

@@ -151,6 +151,13 @@ cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
 system_dynlib: "%T/def:$(DEF_FILE) \%N%
 	%%T/OUT:$(SYSTEM_IN_DYNAMIC_LIB) /IMPLIB:dll_$appl.lib $appl.res%N"
 
+il_resource: "%
+	%..\..\$(IL_RESOURCE).rc:%N%
+	%%Tif not exist ..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\$(IL_RESOURCE).rc%N%
+	%%N%
+	%$(IL_RESOURCE).res: ..\..\$(IL_RESOURCE).rc Makefile%N%
+	%%Trc -r -fo$(IL_RESOURCE).res ..\..\$(IL_RESOURCE).rc%N"
+
 -- done
 completed: "%Techo done > completed.eif"
 

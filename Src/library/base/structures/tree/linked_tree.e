@@ -103,7 +103,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (v: like item) is
 			-- Create single node with item `v'.
@@ -120,7 +120,7 @@ feature -- Access
 	first_child: like parent;
 			-- First child of `Current'
 
-   left_sibling: like parent is
+   	left_sibling: like parent is
 			-- Left neighbor of `Current' (if any)
 			do
 				if parent /= Void then
@@ -134,7 +134,7 @@ feature -- Access
 				end
 			end
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	child_add (v: like item) is
 			-- Add `v' to the children list of `Current'.
@@ -255,22 +255,7 @@ feature -- Insertion
 			ll_merge_right (other)
 		end;
 
-feature {NONE} -- Insertion
-
-	attach (other: like first_child) is
-				-- Attach all children of `other' to `Current'.
-		do
-			from
-				other.child_start
-			until
-				other.child_off
-			loop
-				other.child.attach_to_parent (Current);
-				other.child_forth
-			end
-		end;
-
-feature {LINKED_TREE} -- Creation
+feature  {LINKED_TREE} -- Initialization
 
 	new_cell (v: like item): like first_child is
 		do
@@ -286,6 +271,23 @@ feature {LINKED_TREE} -- Creation
 		do
 			!!Result.make (item)
 		end;
+
+
+feature  {NONE} -- Modification & Insertion
+
+	attach (other: like first_child) is
+				-- Attach all children of `other' to `Current'.
+		do
+			from
+				other.child_start
+			until
+				other.child_off
+			loop
+				other.child.attach_to_parent (Current);
+				other.child_forth
+			end
+		end;
+
 
 invariant
 

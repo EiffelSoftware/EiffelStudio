@@ -5,6 +5,9 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Universal features. All classes inherit from ANY
+-- which inherits from PLATFORM, itself an heir of GENERAL.
+
 indexing
 
 	date: "$Date$";

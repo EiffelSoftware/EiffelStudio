@@ -17,17 +17,20 @@ deferred class FINITE inherit
 
 	BOX
 
-feature -- Number of elements
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of elements in `Current'
+		deferred
+		end;
+
+feature -- Status report
 
 	empty: BOOLEAN is
 			-- Is `Current' empty ?
 		do
 			Result := count = 0
-		end;
-
-	count: INTEGER is
-			-- Number of elements in `Current'
-		deferred
 		end;
 
 invariant

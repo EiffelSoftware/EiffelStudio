@@ -54,23 +54,9 @@ feature -- Access
 			Result := first_element.item
 		end;
 
-feature -- Insertion
 
-	add (v: like item) is
-			-- Push `v' onto `Current'.
-		do
-			add_front (v)
-		end;
 
-feature -- Deletion
-
-	remove is
-			-- Remove top item.
-		do
-			remove_right
-		end;
-
-feature -- Transformation
+feature -- Conversion
 
 	sequential_representation: ARRAY_SEQUENCE [G] is
 			-- Sequential representation of `Current'.
@@ -98,6 +84,10 @@ feature -- Transformation
 				-- has been redefined and selected.
 		end;
 
+feature -- Duplication
+
+
+
     duplicate (n: INTEGER): like Current is
             -- Return a stack with the `n' latest items pushed
             -- on `Current'. If `n' is greater than `count', it
@@ -121,8 +111,25 @@ feature -- Transformation
             back;
         end;
 
+
+feature -- Modification & Insertion
+
+	add (v: like item) is
+			-- Push `v' onto `Current'.
+		do
+			add_front (v)
+		end;
+
+feature -- Removal
+
+	remove is
+			-- Remove top item.
+		do
+			remove_right
+		end;
+
 invariant
 
 	is_always_before: before
 
-end
+end -- class LINKED_STACK

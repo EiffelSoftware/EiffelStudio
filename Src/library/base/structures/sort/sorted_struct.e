@@ -32,7 +32,7 @@ deferred class SORTED_STRUCT [G -> PART_COMPARABLE] inherit
 	
 	LINEAR [G]
 
-feature -- Access
+feature -- Measurement
 
 	min: like item is
 			-- Minimum in `Current'
@@ -80,7 +80,7 @@ feature -- Transformation
 			is_sorted: sorted
 		end;
 
-feature -- Assertion check
+feature -- Status report
 
 	sorted: BOOLEAN is
 			-- Is `Current' sorted?

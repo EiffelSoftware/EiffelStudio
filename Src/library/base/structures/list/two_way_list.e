@@ -57,19 +57,22 @@ creation
 
 	make_sublist, make
 
-feature {TWO_WAY_LIST} -- Access
+feature -- Access
 
-	previous: like first_element is
-			-- Element left of cursor
-		do
-			if after then
-				Result := active
-			elseif active /= Void then
-				Result := active.left
-			end
-		end;
+	first_element: BI_LINKABLE [G];
+			-- Head of list
+			-- (Anchor redefinition)
 
-feature -- Insertion
+	last_element: like first_element;
+			-- Tail of the list
+
+	sublist: like Current;
+			-- Result produced by last `split'
+
+ 
+
+
+feature -- Modification & Insertion
 
 	add_front (v: like item) is
 			-- Add `v' to the beginning of `Current'.
@@ -180,7 +183,7 @@ feature -- Insertion
 			ll_merge_right (other);
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove is
 			-- Remove current item.
@@ -270,8 +273,6 @@ feature -- Deletion
 			last_element := Void
 		end;
 
-feature -- Transformation
-
 	split (n: INTEGER) is
 			-- Remove from current list
 			-- min (`n', `count' - `index' - 1) items
@@ -319,10 +320,11 @@ feature -- Transformation
 			end
 		end;
 
-	sublist: like Current;
-			-- Result produced by last `split'
 
-feature -- Cursor
+
+
+
+feature -- Cursor movement
 
 	finish is
 			-- Move cursor to last position.
@@ -371,6 +373,8 @@ feature -- Cursor
 			end
 		end;
 
+feature -- Status report
+
 	islast: BOOLEAN is
 			-- Is cursor at last position in `Current'?
 		do
@@ -379,16 +383,8 @@ feature -- Cursor
 				and then not before
 		end;
 
-feature -- Representation
 
-	first_element: BI_LINKABLE [G];
-			-- Head of list
-			-- (Anchor redefinition)
-
-	last_element: like first_element;
-			-- Tail of the list
-
-feature {TWO_WAY_LIST} -- Creation
+feature  {TWO_WAY_LIST} -- Initialization
 
 	make_sublist (first_item, last_item: like first_element; n: INTEGER) is
 			-- Create an empty sublist
@@ -414,4 +410,19 @@ feature {TWO_WAY_LIST} -- Creation
 			Result /= Void
 		end;
 
-end
+
+feature  {TWO_WAY_LIST} -- Access
+
+	previous: like first_element is
+			-- Element left of cursor
+		do
+			if after then
+				Result := active
+			elseif active /= Void then
+				Result := active.left
+			end
+		end;
+
+
+
+end -- class TWO_WAY_LIST

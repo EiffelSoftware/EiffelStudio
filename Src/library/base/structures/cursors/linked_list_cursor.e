@@ -22,7 +22,7 @@ creation
 	
 	make
 
-feature {LINKED_LIST} -- Creation
+feature  {LINKED_LIST} -- Initialization
 
 	make (active_element: like active; aft, bef: BOOLEAN) is
 			-- Create a cursor and set it up on `active_element'.
@@ -32,10 +32,12 @@ feature {LINKED_LIST} -- Creation
 			before := bef
 		end;
 
-feature {LINKED_LIST} -- Representation
+feature  {LINKED_LIST} -- Access
 
 	active: LINKABLE [G];
 			-- Current element in linked list
+
+feature  {LINKED_LIST} -- Status report
 
 	after: BOOLEAN;
 			-- Is `Current' after the end of the list?

@@ -25,14 +25,8 @@ deferred class CIRCULAR [G] inherit
 			valid_cursor_index
 		end
 
-feature -- Access
 
-	exhausted: BOOLEAN is
-			-- Are there no more items to be read?
-		deferred
-		end;
-
-feature -- Cursor
+feature -- Cursor movement
 
 	forth is
 			-- Move to next item in `Current'.
@@ -48,7 +42,13 @@ feature -- Cursor
 			not_off: not off
 		end;
 
-feature -- Assertion check
+feature -- Status report
+
+	exhausted: BOOLEAN is
+			-- Are there no more items to be read?
+		deferred
+		end;
+
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is
 			-- Is `i' correctly bounded for cursor movement?

@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Useful basic type  when passed as arguments to external routines
+
 indexing
 
 	date: "$Date$";

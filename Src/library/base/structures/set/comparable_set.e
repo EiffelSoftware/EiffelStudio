@@ -28,7 +28,7 @@ deferred class COMPARABLE_SET [G -> PART_COMPARABLE] inherit
 				all
 		end
 
-feature -- Access
+feature -- Measurement
 
 	min: G is
 			-- Minimum in `Current'
@@ -52,4 +52,4 @@ feature -- Access
 				-- for all `elements in `Current': `element <= Result'
 		end;
 
-end
+end -- class COMPARABLE_SET

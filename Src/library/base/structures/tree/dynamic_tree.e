@@ -25,10 +25,35 @@ deferred class DYNAMIC_TREE [G] inherit
 
 feature -- Access
 
+
 	parent: DYNAMIC_TREE [G];
 			-- Parent of `Current'
 
-feature -- Insertion
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-tree beginning at cursor position and
+			-- having min (`n', `arity' - `child_index' + 1)
+			-- children
+		local
+			pos: CURSOR;
+			counter: INTEGER
+		do
+			from
+				Result := new_tree;
+				pos := child_cursor
+			until
+				child_after or else (counter = n)
+			loop
+				Result.add_child (child.duplicate_all);
+				child_forth;
+				counter := counter + 1
+			end;
+			child_go_to (pos)
+		end;
+
+
+feature -- Modification & Insertion
 
 	add (v: like item) is
 			-- Add `v' to `Current'.
@@ -123,79 +148,8 @@ feature -- Insertion
 			other_is_leaf: other.is_leaf
 		end;
 
-	extensible: BOOLEAN is true;
-			-- May new items be added to `Current'?
-
-feature {DYNAMIC_TREE} -- Insertion
-
-	fill_subtree (other: TREE [G]) is
-			-- Fill children with children of `other'.
-		do
-			from
-				other.child_start
-			until
-				other.child_off
-			loop
-				child_add (other.item);
-				other.child_forth
-			end;
-			from
-				child_start;
-				other.child_start
-			until
-				child_off
-			loop
-				child.fill_subtree (other.child);
-				other.child_forth;
-				child_forth
-			end
-		end;
-
-feature -- Transformation
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-tree beginning at cursor position and
-			-- having min (`n', `arity' - `child_index' + 1)
-			-- children
-		local
-			pos: CURSOR;
-			counter: INTEGER
-		do
-			from
-				Result := new_tree;
-				pos := child_cursor
-			until
-				child_after or else (counter = n)
-			loop
-				Result.add_child (child.duplicate_all);
-				child_forth;
-				counter := counter + 1
-			end;
-			child_go_to (pos)
-		end;
-
-feature {DYNAMIC_TREE} -- Transformation
-
-	duplicate_all: like Current is
-			-- Copy of sub-tree including all children
-		local
-			pos: CURSOR
-		do
-			from
-				Result := new_tree;
-				pos := child_cursor;
-				child_start
-			until
-				child_off
-			loop
-				Result.add_child (child.duplicate_all);
-				Result.child_forth;
-				child_forth
-			end;
-			child_go_to (pos)
-		end;
-
-feature -- Deletion
+	
+feature -- Removal
 
 	remove_left_child is
 			-- Remove item to the left of cursor position.
@@ -205,9 +159,9 @@ feature -- Deletion
 			child_contractable: child_contractable
 		deferred
 		ensure
-	--		new_count: count = old count - 1;
-	--		new_arity: arity = old arity - 1;
-	--		new_child_index: child_index = old child_index - 1
+	 		new_count: count = old count - 1;
+	 		new_arity: arity = old arity - 1;
+	 		new_child_index: child_index = old child_index - 1
 		end;
 
 	remove_right_child is
@@ -218,9 +172,9 @@ feature -- Deletion
 			child_contractable: child_contractable
 		deferred
 		ensure
-	--	  new_count: count = old count - 1;
-	--	  new_arity: arity = old arity - 1;
-	--	  new_child_index: child_index = old child_index
+	 	  new_count: count = old count - 1;
+	 	  new_arity: arity = old arity - 1;
+	 	  new_child_index: child_index = old child_index
 		end;
 
 	wipe_out is
@@ -228,27 +182,21 @@ feature -- Deletion
 		deferred
 		end;
 
+	
+
+
+feature -- Status report
+
+	extensible: BOOLEAN is true;
+			-- May new items be added to `Current'?
+
 	child_contractable: BOOLEAN is
 			-- May items be removed from `Current'?
 		do
 			Result := not child_off
 		end;
 
-feature {DYNAMIC_TREE} -- Creation
-
-	new_tree: like Current is
-			-- Instance of class `like Current'.
-			-- This feature should be implemented in
-			-- every effective descendant of DYNAMIC_TREE,
-			-- so as to return an adequately allocated and
-			-- initialized object.
-		deferred
-		ensure
-			result_exists: Result /= Void;
-			result_item: Result.item = item
-		end;
-
-feature -- Obsolete features
+feature -- Obsolete, Removal
 
 	remove_child_left (n: INTEGER) is
 			obsolete "Use ``remove_left_child'' repeatedly"
@@ -283,6 +231,71 @@ feature -- Obsolete features
 				counter := counter + 1
 			end
 		end;
+
+feature  {DYNAMIC_TREE} -- Initialization
+
+	new_tree: like Current is
+			-- Instance of class `like Current'.
+			-- This feature should be implemented in
+			-- every effective descendant of DYNAMIC_TREE,
+			-- so as to return an adequately allocated and
+			-- initialized object.
+		deferred
+		ensure
+			result_exists: Result /= Void;
+			result_item: Result.item = item
+		end;
+
+
+
+feature  {DYNAMIC_TREE} -- Duplication
+
+	duplicate_all: like Current is
+			-- Copy of sub-tree including all children
+		local
+			pos: CURSOR
+		do
+			from
+				Result := new_tree;
+				pos := child_cursor;
+				child_start
+			until
+				child_off
+			loop
+				Result.add_child (child.duplicate_all);
+				Result.child_forth;
+				child_forth
+			end;
+			child_go_to (pos)
+		end;
+
+
+
+feature  {DYNAMIC_TREE} -- Modification & Insertion
+
+	fill_subtree (other: TREE [G]) is
+			-- Fill children with children of `other'.
+		do
+			from
+				other.child_start
+			until
+				other.child_off
+			loop
+				child_add (other.item);
+				other.child_forth
+			end;
+			from
+				child_start;
+				other.child_start
+			until
+				child_off
+			loop
+				child.fill_subtree (other.child);
+				other.child_forth;
+				child_forth
+			end
+		end;
+
 
 invariant
 

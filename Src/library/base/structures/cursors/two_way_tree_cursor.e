@@ -23,7 +23,7 @@ class TWO_WAY_TREE_CURSOR [G] inherit
 			active
 		end
 
-feature {TWO_WAY_CURSOR_TREE} -- Representation
+feature  {TWO_WAY_CURSOR_TREE} -- Access
 
 	active: TWO_WAY_TREE [G]
 			-- Current node

@@ -14,23 +14,23 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class INFINITE inherit
+class INFINITE inherit
 
 	BOX
 
-feature -- Number of elements
+feature -- Status report
 
-	empty: BOOLEAN is false
+	empty: BOOLEAN is false;
 			-- Is `Current' empty?
 
-	full: BOOLEAN is true
+	full: BOOLEAN is true;
 			-- Is `Current' full?
 			-- (You can't add something to an infinite
 			-- data structure.)
 
 invariant
 
-	never_empty: not empty
+	never_empty: not empty;
 	always_full: full
 
 end -- class INFINITE

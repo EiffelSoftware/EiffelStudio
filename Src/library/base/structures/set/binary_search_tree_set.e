@@ -45,7 +45,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make is
 			-- Create node with void item.
@@ -65,6 +65,24 @@ feature -- Access
 		do
 			Result := (tree_item /= Void) and then tree_has (v)
 		end;
+
+feature -- Measurement
+
+ 
+	count: INTEGER is
+			-- Number of elements in `Current'
+		do
+			if right_child /= Void then
+				Result := right_child.count
+			end;
+			if left_child /= Void then
+				Result := Result + left_child.count
+			end;
+			if tree_item /= Void then
+				Result := Result + 1
+			end
+		end;
+
 
 	min: like tree_item is
 			-- Minimum in `Current'
@@ -86,13 +104,54 @@ feature -- Access
 			end
 		end;
 
-feature {NONE} -- Access
 
-	parent: like Current;
-			-- Parent of `Current'
-			-- (Now of type `Current')
+feature -- Comparison
 
-feature -- Insertion
+	is_subset (other: like Current): BOOLEAN is
+			-- Is `Current' a subset of `other'?
+		do
+			Result := (right_child = Void) or else
+				right_child.is_subset (other);
+			Result := Result and (left_child = Void or else
+				left_child.is_subset (other));
+			Result := Result and then (tree_item = Void or else
+				other.has (tree_item))
+		end;
+
+feature -- Basic operation
+
+	intersect (other: like Current) is
+			-- Remove all items not in `other'.
+		do
+			if right_child /= Void then
+				right_child.intersect (other)
+			end;
+			if left_child /= Void then
+				left_child.intersect (other)
+			end;
+			if not other.has (tree_item) then
+				remove_tree_item
+			end
+		end;
+
+	subtract (other: like Current) is
+			-- Remove all items also in `other'.
+		require
+			set_exists: other /= Void
+		do
+			if right_child /= Void then
+				right_child.subtract (other)
+			end;
+			if left_child /= Void then
+				left_child.subtract (other)
+			end;
+			if other.has (tree_item) then
+				remove_tree_item
+			end;
+		end;
+
+
+feature -- Modification & Insertion
 
 	add (v: like tree_item) is
 			-- Put `v' at proper position in set
@@ -135,7 +194,7 @@ feature -- Insertion
 			end
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove_item (v: like tree_item) is
 			-- Remove `v' from `Current' if it is already present.
@@ -159,7 +218,24 @@ feature -- Deletion
 			depth := -1
 		end;
 
-feature {BINARY_SEARCH_TREE_SET} -- Deletion
+
+feature  {NONE} -- Initialization
+
+	new_tree (v: like tree_item): like Current is
+			-- New allocated node with `tree_item' set to `v'
+		do
+			!!Result.make;
+			Result.tree_put (v)
+		end;
+
+feature  {NONE} -- Access
+
+	parent: like Current;
+			-- Parent of `Current'
+			-- (Now of type `Current')
+
+
+feature  {BINARY_SEARCH_TREE_SET} -- Removal
 
 	clean_child is
 			-- Get rid of useless references.
@@ -195,74 +271,5 @@ feature {BINARY_SEARCH_TREE_SET} -- Deletion
 			end
 		end;
 
-feature -- Transformation
-
-	intersect (other: like Current) is
-			-- Remove all items not in `other'.
-		do
-			if right_child /= Void then
-				right_child.intersect (other)
-			end;
-			if left_child /= Void then
-				left_child.intersect (other)
-			end;
-			if not other.has (tree_item) then
-				remove_tree_item
-			end
-		end;
-
-	subtract (other: like Current) is
-			-- Remove all items also in `other'.
-		require
-			set_exists: other /= Void
-		do
-			if right_child /= Void then
-				right_child.subtract (other)
-			end;
-			if left_child /= Void then
-				left_child.subtract (other)
-			end;
-			if other.has (tree_item) then
-				remove_tree_item
-			end;
-		end;
-
-feature -- Comparison
-
-	is_subset (other: like Current): BOOLEAN is
-			-- Is `Current' a subset of `other'?
-		do
-			Result := (right_child = Void) or else
-				right_child.is_subset (other);
-			Result := Result and (left_child = Void or else
-				left_child.is_subset (other));
-			Result := Result and then (tree_item = Void or else
-				other.has (tree_item))
-		end;
-
-feature -- Number of elements
-
-	count: INTEGER is
-			-- Number of elements in `Current'
-		do
-			if right_child /= Void then
-				Result := right_child.count
-			end;
-			if left_child /= Void then
-				Result := Result + left_child.count
-			end;
-			if tree_item /= Void then
-				Result := Result + 1
-			end
-		end;
-
-feature {NONE} -- Creation
-
-	new_tree (v: like tree_item): like Current is
-			-- New allocated node with `tree_item' set to `v'
-		do
-			!!Result.make;
-			Result.tree_put (v)
-		end;
 
 end -- class BINARY_SEARCH_TREE_SET

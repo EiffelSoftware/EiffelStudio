@@ -6,7 +6,7 @@
 --|---------------------------------------------------------------
 
 -- Garbage collector statistics
--- TIme accouting is relevant only if `enable_time_accounting'
+-- Time accouting is relevant only if `enable_time_accounting'
 -- has been called in MEMORY
 
 indexing
@@ -24,7 +24,37 @@ creation
 
 	make
 
-feature
+feature -- Initialization
+
+	
+	make, update (memory: INTEGER) is
+			-- Fill in statistics for `memory' type
+		do
+			gc_stat (memory);
+			cycle_count := gc_info (0);
+			memory_used := gc_info (1);
+			collected := gc_info (2);
+			collected_average := gc_info (3);
+			real_time := gc_info (4);
+			real_time_average := gc_info (5);
+			real_interval_time := gc_info (6);
+			real_interval_time_average := gc_info (7);
+			cpu_time := gc_infod (8);
+			cpu_time_average := gc_infod (9);
+			cpu_interval_time := gc_infod (10);
+			cpu_interval_time_average := gc_infod (11);
+			sys_time := gc_infod (12);
+			sys_time_average := gc_infod (13);
+			sys_interval_time := gc_infod (14);
+			sys_interval_time_average := gc_infod (15);
+		end;
+
+feature -- Access
+
+type: INTEGER;
+			-- Collector type (Full, Collect),
+			-- for `type' and before last call to `update
+ 
 
 	cycle_count: INTEGER;
 			-- Number of collection cycles for `type' and before last call to
@@ -97,33 +127,8 @@ feature
 			-- Average amount of kernel time between two cycles,
 			-- for `type' and before last call to `update
 
-	type: INTEGER;
-			-- Collector type (Full, Collect),
-			-- for `type' and before last call to `update
-
-	make, update (memory: INTEGER) is
-			-- Fill in statistics for `memory' type
-		do
-			gc_stat (memory);
-			cycle_count := gc_info (0);
-			memory_used := gc_info (1);
-			collected := gc_info (2);
-			collected_average := gc_info (3);
-			real_time := gc_info (4);
-			real_time_average := gc_info (5);
-			real_interval_time := gc_info (6);
-			real_interval_time_average := gc_info (7);
-			cpu_time := gc_infod (8);
-			cpu_time_average := gc_infod (9);
-			cpu_interval_time := gc_infod (10);
-			cpu_interval_time_average := gc_infod (11);
-			sys_time := gc_infod (12);
-			sys_time_average := gc_infod (13);
-			sys_interval_time := gc_infod (14);
-			sys_interval_time_average := gc_infod (15);
-		end;
 	
-feature {NONE}
+feature  {NONE} -- External, Access
 
 	gc_stat (mem: INTEGER) is
 			-- Initialize run-time buffer used by gc_info to retrieve the
@@ -144,4 +149,4 @@ feature {NONE}
 			"C"
 		end
 
-end
+end -- class GC_INFO

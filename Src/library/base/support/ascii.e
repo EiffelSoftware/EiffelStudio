@@ -15,7 +15,7 @@ indexing
 
 class ASCII
 
-feature -- General constants:
+feature -- Access
 
 	Character_set_size: INTEGER is 128;
 	Last_ascii: INTEGER is 127;
@@ -24,8 +24,6 @@ feature -- General constants:
 	Letter_layout: INTEGER is 70;
 	Case_diff: INTEGER is 32;
 			-- Lower_a - Upper_a
-
-feature -- For each character:
 
 	Buf_overflow: INTEGER is -9;
 	Overflow: INTEGER is -8;
@@ -164,4 +162,4 @@ feature -- For each character:
 	Tilde: INTEGER is 126;
 	Ctrl_questmark: INTEGER is 127; Del: INTEGER is 127;
 
-end
+end -- class ASCII

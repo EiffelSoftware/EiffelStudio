@@ -36,30 +36,26 @@ creation
 
 	make
 
-feature -- Insertion
+feature -- Comparison
 
-	add (v: G) is
-			-- Include `v' in `Current'.
+	is_subset (other: like Current): BOOLEAN is
+			-- Is `Current' a subset of `other'?
 		do
-			if empty or else not has (v) then
-				ll_add (v)
+			if not other.empty then
+				from
+					start
+				until
+					off or else not other.has (item)
+				loop
+					forth
+				end;
+				if off then Result := true end
+			elseif empty then
+				Result := true
 			end
 		end;
 
-	merge (other: like Current) is
-			-- Add all items of `other'.
-		do
-			from
-				other.start
-			until
-				other.off
-			loop
-				add (other.item);
-				other.forth
-			end
-		end;
-
-feature -- Transformation
+feature -- Basic operation
 
 	intersect (other: like Current) is
 			-- Remove all items not in `other'.
@@ -102,23 +98,31 @@ feature -- Transformation
 			end
 		end;
 
-feature -- Comparison
+feature -- Modification & Insertion
 
-	is_subset (other: like Current): BOOLEAN is
-			-- Is `Current' a subset of `other'?
+	add (v: G) is
+			-- Include `v' in `Current'.
 		do
-			if not other.empty then
-				from
-					start
-				until
-					off or else not other.has (item)
-				loop
-					forth
-				end;
-				if off then Result := true end
-			elseif empty then
-				Result := true
+			if empty or else not has (v) then
+				ll_add (v)
 			end
 		end;
+
+	merge (other: like Current) is
+			-- Add all items of `other'.
+		do
+			from
+				other.start
+			until
+				other.off
+			loop
+				add (other.item);
+				other.forth
+			end
+		end;
+
+
+
+
 
 end -- class LINKED_SET

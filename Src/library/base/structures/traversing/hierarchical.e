@@ -20,7 +20,16 @@ deferred class HIERARCHICAL [G] inherit
 
 	TRAVERSABLE [G]
 
-feature -- Cursor
+feature -- Access
+
+	nb_of_successors: INTEGER is
+			-- Number of successors of `item'
+		require
+			not_off: not off
+		deferred
+		end;
+
+feature -- Cursor movement
 
 	back is
 			-- Move to predecessor.
@@ -37,14 +46,7 @@ feature -- Cursor
 		deferred
 		end;
 
-feature -- Number of elements
 
-	nb_of_successors: INTEGER is
-			-- Number of successors of `item'
-		require
-			not_off: not off
-		deferred
-		end;
 
 invariant
 

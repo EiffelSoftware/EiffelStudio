@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Built-in boolean expressions
+
 indexing
 
 	date: "$Date$";
@@ -25,7 +27,7 @@ inherit
 			infix "xor"
 		end
 
-feature -- Boolean
+feature -- Basic operation
 
 	infix "and" (other: BOOLEAN): BOOLEAN is
 			-- Boolean conjunction of `Current' and `other'

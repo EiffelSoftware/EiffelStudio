@@ -29,7 +29,7 @@ deferred class LIST [G] inherit
 			has, index_of
 		end
 
-feature -- Cursor
+feature -- Status report
 
 	after: BOOLEAN is
 			-- Is there no position to the right of the cursor?
@@ -43,7 +43,7 @@ feature -- Cursor
 			Result := index = 0
 		end;
 
-feature -- Obsolete features
+feature -- Obsolete, Status report
 
 	offleft: BOOLEAN is obsolete "Use ``before''"
 		do

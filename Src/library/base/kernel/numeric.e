@@ -5,6 +5,10 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+
+-- basic arithmetic statements
+
+
 indexing
 
 	date: "$Date$";
@@ -12,7 +16,7 @@ indexing
 
 deferred class NUMERIC
 
-feature -- Numeric
+feature -- Basic operation
 
 	infix "+" (other: NUMERIC): NUMERIC is
 			-- Sum of `Current' and `other'

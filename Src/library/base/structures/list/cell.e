@@ -25,8 +25,7 @@ feature -- Access
 	item: G;
 			-- Content of `Current'
 
-feature -- Insertion
-
+feature -- Modification & Insertion
 	put (v : like item) is
 			-- Assign `v' to `item'.
 		do
@@ -35,4 +34,4 @@ feature -- Insertion
 			item_inserted: item = v
 		end;
 
-end
+end -- class CELL

@@ -18,7 +18,7 @@ creation
 
 	make, make_open_read
 
-feature -- Creation
+feature -- Initialization
 
 	make (dn: STRING) is
 			-- Create an Eiffel Directory with `dn'
@@ -40,27 +40,20 @@ feature -- Creation
 			open_read;
 		end;
 
-    create is
-            -- Create a physical directory if it doesn't already exists.
-        require
-            physical_not_exists: not exists
-        local
-            external_name: ANY
-        do
-            external_name := name.to_c;
-            file_mkdir ($external_name);
-        end;
+    	create is
+            -- Create a physical directory.(d.H) 	
+		require
+            		physical_not_exists: not exists
+        	local
+            		external_name: ANY
+        	do
+           	 	external_name := name.to_c;
+            		file_mkdir ($external_name);
+        	end;
 
 feature -- Access
 
-	exists: BOOLEAN is
-			-- Does the directory exist ?
-		local
-			external_name: ANY;
-		do
-			external_name := name.to_c;
-			Result := file_exists ($external_name)
-		end;
+	
 
 	readentry is
 			-- Read next directory entry and
@@ -72,6 +65,11 @@ feature -- Access
 		do
 			lastentry := dir_next (directory_pointer);
 		end;
+
+	
+
+	name: STRING;
+			-- Directory name
 
 	has_entry (entry_name: STRING): BOOLEAN is
 			-- Has directory the entry `entry_name'?
@@ -91,14 +89,6 @@ feature -- Access
 							$ext_entry_name);
 			Result := dir_entry /= Void;
 		end;
-
-	name: STRING;
-			-- Directory name
-
-	lastentry: STRING;
-			-- Last entry read by `readentry'
-
-feature -- Directory handling
 
 	open_read is
 			-- Open directory `name' for reading.
@@ -126,13 +116,11 @@ feature -- Directory handling
 		do
 			dir_rewind (directory_pointer);
 		end;
+	
 
-feature {DIRECTORY} -- Directory handling
 
-	directory_pointer: POINTER;
-			-- Directory pointer as required in C
 
-feature -- Number of entries
+feature -- Measurement
 
 	count: INTEGER is
 			-- Number of entries in `Current'.
@@ -152,8 +140,10 @@ feature -- Number of entries
 			end;
 			Result := counter;
 		end;
+
 	
-feature -- Transformation
+feature -- Conversion
+
 
 	sequential_representation: ARRAY_SEQUENCE [STRING] is
 			-- Sequential representation of the entries
@@ -173,8 +163,11 @@ feature -- Transformation
 				dir_temp.readentry
 			end;
 		end;
+
 				
-feature -- Status
+feature -- Status report	
+	lastentry: STRING;
+			-- Last entry read by `readentry'
 
 	is_closed: BOOLEAN is
 			-- Is current directory closed?
@@ -182,7 +175,22 @@ feature -- Status
 			Result := mode = Close_directory;
 		end;
 
-feature {NONE} -- Status
+	exists: BOOLEAN is
+			-- Does the directory exist ?
+		local
+			external_name: ANY;
+		do
+			external_name := name.to_c;
+			Result := file_exists ($external_name)
+		end;
+
+
+feature  {DIRECTORY} -- Access
+
+	directory_pointer: POINTER;
+			-- Directory pointer as required in C
+
+feature  {NONE} -- Status report
 
 	mode: INTEGER;
 			-- Status mode of the directory.
@@ -192,16 +200,16 @@ feature {NONE} -- Status
 
 	Read_directory: INTEGER is unique;
 
-feature {DIRECTORY} -- External
 
-	dir_search (dir_ptr: POINTER; entry: ANY): ANY is
-			-- Return the `DIRENTRY' structure corresponding
-			-- to the name `entry' of directory `dir_ptr'.
-		external
-			"C"
-		end;
+feature  {NONE} -- External, Initialization
 
-feature {NONE} -- Externals
+	file_mkdir (dir_name: ANY) is
+            -- Make directory `dir_name'.
+        	external
+            		"C"
+        	end;
+
+feature  {NONE} -- External, Access
 
 	dir_open (dir_name: ANY): POINTER is
 			-- Open the directory `dir_name'.
@@ -222,21 +230,26 @@ feature {NONE} -- Externals
 		end;
 
 	dir_next (dir_ptr: POINTER): STRING is
-			-- Return the next entry for directory.
+			-- Return the next entry for directory 'dir_ptr'.(d.H)
 		external
 			"C"
 		end;
+
+feature  {DIRECTORY} -- External, Access
+
+	dir_search (dir_ptr: POINTER; entry: ANY): ANY is
+			-- Return the `DIRENTRY' structure corresponding
+			-- to the name `entry' of directory `dir_ptr'.
+		external
+			"C"
+		end;
+
+feature  {NONE} -- External, Status report
 
 	file_exists (dir_name: ANY): BOOLEAN is
-			-- Does `dir_name' exist.
+			-- Does `dir_name' exist ?
 		external
 			"C"
 		end;
 
-    file_mkdir (dir_name: ANY) is
-            -- Make directory `dir_name'.
-        external
-            "C"
-        end;
-
-end
+end --class DIRECTORY

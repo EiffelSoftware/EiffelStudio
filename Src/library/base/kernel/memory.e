@@ -18,47 +18,8 @@ inherit
 
 	MEM_CONST
 
-feature
 
-	collect is
-			-- Force a partial collection cycle if the garbage collector is
-			-- enabled; do nothing otherwise.
-		external
-			"C"
-		end;
-	
-	full_collect is
-			-- Force a full collection cycle if the garbage collector is
-			-- enabled; do nothing otherwise.
-		external
-			"C"
-		alias
-			"plsc"
-		end;
-	
-	collection_off is
-			-- Disable the garbage collector.
-		external
-			"C"
-		alias
-			"gc_stop"
-		end;
-	
-	collection_on is
-			-- Enable the garbage collector.
-		external
-			"C"
-		alias
-			"gc_run"
-		end;
-
-	collecting: BOOLEAN is
-			-- Is the garbage collector running?
-		external
-			"C"
-		alias
-			"gc_ison"
-		end;
+feature -- Measurement
 
 	memory_statistics (memory_type: INTEGER): MEM_INFO is
 			-- Memory usage information for `memory_type'
@@ -79,6 +40,37 @@ feature
 			-- class MEM_CONST)
 		do
 			!! Result.make (collector_type);
+		end;
+
+
+feature -- Removal
+
+	dispose is
+			-- Called when the garbage collector reclaims the object.
+			-- This is only intended to enable cleaning of external resources.
+			-- The object should not do remote calls on other objects since
+			-- those may also be dead and have already been reclaimed. Once the
+			-- final instruction of dispose has been reached, the object is
+			-- freed.
+		do
+		end;
+
+feature -- External, Access
+
+	collection_off is
+			-- Disable the garbage collector.
+		external
+			"C"
+		alias
+			"gc_stop"
+		end;
+	
+	collection_on is
+			-- Enable the garbage collector.
+		external
+			"C"
+		alias
+			"gc_run"
 		end;
 
 	allocate_fast is
@@ -108,61 +100,6 @@ feature
 			"mem_tiny"
 		end;
 
-	full_coalesce is
-			-- Coalesce the whole memory, merge adjacent free blocks
-			-- together so as to reduce fragmentation.
-		external
-			"C"
-		alias
-			"mem_coalesc"
-		end;
-
-	largest_coalesced_block: INTEGER is
-			-- Size of largest coalesced block since last call to
-			-- `largest_coalesced'; 0 if none
-		external
-			"C"
-		alias
-			"mem_largest"
-		end;
-
-	memory_threshold: INTEGER is
-			-- Minimum amount of bytes to be allocated before an
-			-- automatic garbage collection is raised.
-		external
-			"C"
-		alias
-			"mem_tget"
-		end;
-
-	set_memory_threshold (value: INTEGER) is
-			-- Set a new `memory_threshold'.
-		require
-			positive_value: value > 0;
-		external
-			"C"
-		alias
-			"mem_tset"
-		end;
-
-	collection_period: INTEGER is
-			-- Period of full collection.
-		external
-			"C"
-		alias
-			"mem_pget"
-		end;
-
-	set_collection_period (value: INTEGER) is
-			-- Set `collection_period'.
-		require
-			positive_value: value > 0;
-		external
-			"C"
-		alias
-			"mem_pset"
-		end;
-
 	enable_time_accounting is
 			-- Enable GC time accouting, accessible in `gc_statistics'.
 		do
@@ -175,25 +112,8 @@ feature
 			gc_monitoring (false);
 		end;
 
-	dispose is
-			-- Called when the garbage collector reclaims the object.
-			-- This is only intended to enable cleaning of external resources.
-			-- The object should not do remote calls on other objects since
-			-- those may also be dead and have already been reclaimed. Once the
-			-- final instruction of dispose has been reached, the object is
-			-- freed.
-		do
-		end;
+feature  {NONE} -- External, Access
 
-	free (object: ANY) is
-			-- Free `object', by-passing the garbage collector.
-			-- Behavior is undefined if the object is still referenced.
-		do
-			mem_free ($object)
-		end
-
-
-feature {NONE}
 
 	gc_monitoring (flag: BOOLEAN) is
 			-- Set up GC monitoring according to `flag'
@@ -203,10 +123,106 @@ feature {NONE}
 			"gc_mon"
 		end;
 
-	mem_free (obj: ANY) is
-			-- Free object held at `obj'.
+
+
+feature -- External, Measurement
+
+	memory_threshold: INTEGER is
+			-- Minimum amount of bytes to be allocated before an
+			-- automatic garbage collection is raised.
+		external
+			"C"
+		alias
+			"mem_tget"
+		end;
+
+	collection_period: INTEGER is
+			-- Period of full collection.
+		external
+			"C"
+		alias
+			"mem_pget"
+		end;	
+
+
+	
+
+
+feature -- External, Modification & Insertion
+
+	full_coalesce is
+			-- Coalesce the whole memory, merge adjacent free blocks
+			-- together so as to reduce fragmentation.
+		external
+			"C"
+		alias
+			"mem_coalesc"
+		end;
+
+	
+
+
+	set_memory_threshold (value: INTEGER) is
+			-- Set a new `memory_threshold'.
+		require
+			positive_value: value > 0;
+		external
+			"C"
+		alias
+			"mem_tset"
+		end;
+
+	
+
+	set_collection_period (value: INTEGER) is
+			-- Set `collection_period'.
+		require
+			positive_value: value > 0;
+		external
+			"C"
+		alias
+			"mem_pset"
+		end;
+
+
+feature -- External, Removal
+
+	collect is
+			-- Force a partial collection cycle if the garbage collector is
+			-- enabled; do nothing otherwise.
 		external
 			"C"
 		end;
+	
+	full_collect is
+			-- Force a full collection cycle if the garbage collector is
+			-- enabled; do nothing otherwise.
+		external
+			"C"
+		alias
+			"plsc"
+		end;
+	
+feature -- External, Status report
+	
 
-end
+	collecting: BOOLEAN is
+			-- Is the garbage collector running?
+		external
+			"C"
+		alias
+			"gc_ison"
+		end;
+
+	largest_coalesced_block: INTEGER is
+			-- Size of largest coalesced block since last call to
+			-- `largest_coalesced'; 0 if none
+		external
+			"C"
+		alias
+			"mem_largest"
+		end;
+
+
+
+end -- class MEMORY

@@ -1,7 +1,7 @@
 --|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.		--
---|    270 Storke Road, Suite 7 Goleta, California 93117		--
---|                   (805) 685-1006							--
+--|   Copyright (C) Interactive Software Engineering, Inc.	--
+--|    270 Storke Road, Suite 7 Goleta, California 93117	--
+--|                   (805) 685-1006				--
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
@@ -29,7 +29,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make is
 			-- Create an empty tree.
@@ -43,7 +43,7 @@ feature -- Creation
 			is_empty: empty
 		end;
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	add_right (v: G) is
 			-- Put `v' to the right of cursor position.
@@ -63,12 +63,12 @@ feature -- Insertion
 			end
 		end;
 
-feature -- Number of elements
+feature -- Status report
 
 	full: BOOLEAN is false;
 			-- Is `Current' full?
 
-feature {LINKED_CURSOR_TREE} -- Creation
+feature  {LINKED_CURSOR_TREE} -- Initialization
 
 	new_tree: like Current is
 			-- Instance of class `like Current'.
@@ -76,14 +76,12 @@ feature {LINKED_CURSOR_TREE} -- Creation
 			!! Result.make
 		end;
 
-feature {NONE} -- Cursor
+feature  {NONE} -- Access
 
 	cursor_anchor: LINKED_TREE_CURSOR [G];
 			-- Anchor for definitions concerning cursors
 
-feature {NONE} -- Representation
-
 	active: LINKED_TREE [G];
 			-- Current node
 
-end
+end -- class LINKED_CURSOR_TREE

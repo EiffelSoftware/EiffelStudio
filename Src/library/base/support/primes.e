@@ -17,15 +17,20 @@ class PRIMES
 
 feature -- Access
 
+	 Smallest_prime: INTEGER is 2;
+
+         Smallest_odd_prime: INTEGER is 3;
+
+
 	next_prime (n: INTEGER): INTEGER is
 			-- Lowest prime greater than or equal to `n'
 		do
-			if n <= 2 then
-				Result := 2
+			if n <= Smallest_prime then
+				Result := Smallest_prime
 			else
-					-- `n' > 2
+					-- `n' > Smallest_prime
 				from
-					if n \\ 2 = 0 then
+					if n \\ Smallest_prime = 0 then
 							-- make sure that `Result' is odd
 						Result := n + 1
 					else
@@ -34,7 +39,7 @@ feature -- Access
 				until
 					test_prime (Result)
 				loop
-					Result := Result + 2
+					Result := Result + Smallest_prime
 				end
 			end
 		end;
@@ -42,14 +47,14 @@ feature -- Access
 	former_prime (n: INTEGER): INTEGER is
 			-- Greatest prime lower than or equal to `n'
 		require
-			argument_big_enough: n >= 2
+			argument_big_enough: n >= Smallest_prime
 		do
-			if n = 2 then
-				Result := 2
+			if n = Smallest_prime then
+				Result := Smallest_prime
 			else
-					-- `n' > 2
+					-- `n' > Smallest_prime
 				from
-					if n \\ 2 = 0 then
+					if n \\ Smallest_prime = 0 then
 							-- make sure that `Result' is odd
 						Result := n - 1
 					else
@@ -58,7 +63,7 @@ feature -- Access
 				until
 					test_prime (Result)
 				loop
-					Result := Result - 2
+					Result := Result - Smallest_prime
 				end
 			end
 		end;
@@ -77,15 +82,15 @@ feature -- Access
 				i > n
 			loop
 				Result.put (true, i);
-				i := i + 2
+				i := i + Smallest_prime
 			end;
-				-- 2 is the lowest prime number
-			if n >= 2 then
-				Result.put (true, 2);
+				-- Smallest_prime is the lowest prime number
+			if n >= Smallest_prime then
+				Result.put (true, Smallest_prime);
 			end;
 				-- Remove all multiples of primes
 			from
-				i := 3
+				i := Smallest_odd_prime
 			until
 				i * i > n
 			loop
@@ -96,14 +101,12 @@ feature -- Access
 						j > n
 					loop
 						Result.put (false, j);
-						j := j + 2 * i
+						j := j + Smallest_prime * i
 					end
 				end;
-				i := i + 2
+				i := i + Smallest_prime
 			end
 		end;
-
-feature -- Comparison
 
 	test_prime (n: INTEGER): BOOLEAN is
 			-- Is `n' a prime number?
@@ -114,15 +117,15 @@ feature -- Comparison
 		do
 			if n <= 1 then
 				Result := false
-			elseif n = 2 then
+			elseif n = Smallest_prime then
 				Result := true
-			elseif n \\ 2 /= 0 then
+			elseif n \\ Smallest_prime /= 0 then
 				from
-					divisor := 3
+					divisor := Smallest_odd_prime
 				until
 					(n \\ divisor = 0) or else (divisor * divisor >= n)
 				loop
-					divisor := divisor + 2
+					divisor := divisor + Smallest_prime
 				end;
 				if divisor * divisor > n then
 					Result := true

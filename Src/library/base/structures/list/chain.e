@@ -124,66 +124,12 @@ feature -- Access
 			go_to (pos)
 		end;
 
-feature -- Insertion
-
-	put (v: like item) is
-			-- Replace current item by `v'.
-			-- (Synonym for `replace')
-		require
-			writable: writable
-		do
-			replace (v)
-		ensure
-	--		same_count: count = old count;
-			item_inserted: has (v)
-		end;
-
-	put_i_th (v: like item; i: INTEGER) is
-			-- Put `v' at `i'-th position.
-		require else
-			valid_index: valid_index (i)
-		local
-			pos: CURSOR
-		do
-			pos := cursor;
-			go_i_th (i);
-			replace (v);
-			go_to (pos)
-		ensure then
-			item_inserted: i_th (i) = v
-		end;
-
-feature -- Deletion
-
-	contractable: BOOLEAN is
-			-- May items be removed from `Current'?
-			--|This feature has to be a function!
-		do
-			Result := false
-		end;
-
-feature {NONE} -- Deletion
-
-	remove_item (v: G) is
-			-- Remove `v' from `Current'.
-		do
-		end;
-
-	remove is
-			-- Remove current item.
-		do
+	index: INTEGER is
+			-- Current cursor index
+		deferred
 		end;
 
 feature -- Transformation
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
-		require
-			not_off: not off;
-			valid_subchain: n >= 1
-		deferred
-		end;
 
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
@@ -203,11 +149,54 @@ feature -- Transformation
 			go_to (pos);
 			replace (new_item)
 		ensure
-	--		item = old i_th (i);
-	--		i_th (i) = old item
+	 		item = old i_th (i);
+	 		i_th (i) = old item
 		end;
 
-feature -- Cursor
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-chain beginning at cursor position
+			-- and having min (`n', `count' - `index' + 1) items
+		require
+			not_off: not off;
+			valid_subchain: n >= 1
+		deferred
+		end;
+
+
+
+feature -- Modification & Insertion
+
+	put (v: like item) is
+			-- Replace current item by `v'.
+			-- (Synonym for `replace')
+		require
+			writable: writable
+		do
+			replace (v)
+		ensure
+	 		same_count: count = old count;
+			item_inserted: has (v)
+		end;
+
+	put_i_th (v: like item; i: INTEGER) is
+			-- Put `v' at `i'-th position.
+		require else
+			valid_index: valid_index (i)
+		local
+			pos: CURSOR
+		do
+			pos := cursor;
+			go_i_th (i);
+			replace (v);
+			go_to (pos)
+		ensure then
+			item_inserted: i_th (i) = v
+		end;
+
+
+feature -- Cursor movement
 
 	start is
 			-- Move cursor to first position.
@@ -255,7 +244,7 @@ feature -- Cursor
 				end
 			end
 		ensure
-	--		(not off) implies (index = old index + i)
+	 		(not off) implies (index = old index + i)
 		end;
 
 	go_i_th (i: INTEGER) is
@@ -268,10 +257,25 @@ feature -- Cursor
 			position_expected: index = i
 		end;
 
-	index: INTEGER is
-			-- Current cursor index
-		deferred
+
+
+ feature -- Status report
+
+	contractable: BOOLEAN is
+			-- May items be removed from `Current'?
+			--|This feature has to be a function!
+		do
+			Result := false
 		end;
+
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' correctly bounded?
+		do
+			Result := (i >= 1) and (i <= count)
+		ensure then
+			valid_index_definition: Result = (i >= 1) and (i <= count)
+		end;
+
 
 	isfirst: BOOLEAN is
 			-- Is cursor at first position?
@@ -295,15 +299,6 @@ feature -- Cursor
 			Result := (index = 0) or (index = count + 1)
 		end;
 
-feature -- Assertion check
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' correctly bounded?
-		do
-			Result := (i >= 1) and (i <= count)
-		ensure then
-			valid_index_definition: Result = (i >= 1) and (i <= count)
-		end;
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is
 			-- Is `i' correctly bounded for cursor movement?
@@ -313,14 +308,22 @@ feature -- Assertion check
 			valid_cursor_index_definition: Result = (i >= 0) and (i <= count + 1)
 		end;
 
-feature -- Obsolete features
+feature -- Obsolete, Access
+
+	position: INTEGER is obsolete "Use ``index''"
+		do
+			Result := index
+		end;
+
+
+feature -- Obsolete, Cursor movement
 
 	mark_stack: LINKED_STACK [CURSOR];
 			-- Stack used by `mark' and `return'
 			-- To be removed as soon as `mark' and `return' are removed.
---		once
---			!! Result.make;
---		end;
+-- 		once
+-- 			!! Result.make;
+--  		end;
 		
 	mark is obsolete "Use ``pos := cursor''"
 			-- Mark cursor position.
@@ -341,10 +344,7 @@ feature -- Obsolete features
 			mark_stack.remove
 		end;
 
-	position: INTEGER is obsolete "Use ``index''"
-		do
-			Result := index
-		end;
+
 
 	go (i: INTEGER) is obsolete "Use ``go_i_th''"
 			-- Move cursor to `i'-th position.
@@ -356,6 +356,20 @@ feature -- Obsolete features
 			position_expected: index = i
 		end;
 
+
+feature  {NONE} -- Removal
+
+	remove_item (v: G) is
+			-- Remove `v' from `Current'.
+		do
+		end;
+
+	remove is
+			-- Remove current item.
+		do
+		end;
+
+
 invariant
 
 	empty_list: empty implies off;
@@ -366,4 +380,4 @@ invariant
 --	islast_definition: islast = (not empty) and (index = count);
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
 
-end
+end -- class CHAIN

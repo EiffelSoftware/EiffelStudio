@@ -37,37 +37,6 @@ creation
 
 	make
 
-feature -- Insertion
-
-	add (v: like item) is
-			-- Put `v' at proper position in list.
-			-- The cursor ends up on the newly inserted
-			-- item.
-		do
-			search_after (v);
-			add_left (v);
-			back
-		end;
-
-feature -- Deletion
-
-	remove_all_occurrences (v: like item) is
-			-- Remove all items identical to `v'.
-			-- (According to the currently adopted
-			-- discrimination rule in `search')
-			-- Leave cursor `off'.
-		do
-			from
-				start;
-				search (v)
-			until
-				off or else v < item
-			loop
-				remove
-			end;
-			if not off then finish; forth end
-		end;
-
 feature -- Transformation
 
 	sort is
@@ -116,7 +85,40 @@ feature -- Transformation
 			end
 		end;
 
-feature {SORTED_TWO_WAY_LIST} -- Creation
+
+feature -- Modification & Insertion
+
+	add (v: like item) is
+			-- Put `v' at proper position in list.
+			-- The cursor ends up on the newly inserted
+			-- item.
+		do
+			search_after (v);
+			add_left (v);
+			back
+		end;
+
+feature -- Removal
+
+	remove_all_occurrences (v: like item) is
+			-- Remove all items identical to `v'.
+			-- (According to the currently adopted
+			-- discrimination rule in `search')
+			-- Leave cursor `off'.
+		do
+			from
+				start;
+				search (v)
+			until
+				off or else v < item
+			loop
+				remove
+			end;
+			if not off then finish; forth end
+		end;
+
+
+feature  {SORTED_TWO_WAY_LIST} -- Initialization
 
 	new_chain: like Current is
 			-- Instance of class `like Current'.
@@ -124,4 +126,4 @@ feature {SORTED_TWO_WAY_LIST} -- Creation
 			!! Result.make
 		end;
 
-end
+end -- class SORTED_TWO_WAY_LIST

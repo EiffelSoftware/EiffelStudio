@@ -23,33 +23,8 @@ deferred class RESIZABLE inherit
 			{NONE} all
 		end
 
-feature -- Number of elements
+feature -- Measurement
 
-	automatic_grow is
-			-- Change the capacity of `Current' to
-			-- accommodate at least `Growth_percentage' more items.
-			--| Trade space for time:
-			--| allocate large chunks of memory but not very often.
-		do
-			grow (capacity + capacity * Growth_percentage // 100 + 1)
-		ensure
-	--		capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
-		end;
-
-	grow (i: INTEGER) is
-			-- Change the capacity of `Current' to at least `i'.
-		deferred
-		ensure
-			new_capacity: capacity >= i
-		end;
-	
-	additional_space: INTEGER is
-			-- Proposed number of additional elements
-			--| Return a "reasonable" value:
-			--| compromise between time and space
-		do
-			Result := max (capacity // Extra_percentage, Minimal_increase)
-		end;
 
 	Growth_percentage: INTEGER is 50;
 			-- Percentage by which `Current' grows automatically
@@ -60,5 +35,36 @@ feature -- Number of elements
 	Minimal_increase: INTEGER is 5;
 			-- Minimal number of additional elements
 
-end -- class RESIZABLE
+	additional_space: INTEGER is
+			-- Proposed number of additional elements
+			--| Return a "reasonable" value:
+			--| compromise between time and space
+		do
+			Result := max (capacity // Extra_percentage, Minimal_increase)
+		end;
 
+feature -- Resizing
+
+	automatic_grow is
+			-- Change the capacity of `Current' to
+			-- accommodate at least `Growth_percentage' more items.
+			--| Trade space for time:
+			--| allocate large chunks of memory but not very often.
+		do
+			grow (capacity + capacity * Growth_percentage // 100 + 1)
+		ensure
+			capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
+		end;
+
+	grow (i: INTEGER) is
+			-- Change the capacity of `Current' to at least `i'.
+		deferred
+		ensure
+			new_capacity: capacity >= i
+		end;
+	
+	
+
+
+
+end -- class RESIZABLE

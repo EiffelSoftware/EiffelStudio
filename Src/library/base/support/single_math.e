@@ -13,7 +13,16 @@ inherit
 
 	MATH_CONST
 
-feature 
+feature -- Access
+
+	log_2 (v: REAL): REAL is
+			-- Base 2 logarithm of `v'
+		require
+			v > 0.0
+		do
+			Result := log (v)/ log (2.0)
+		end;
+ 
 
 	cosine (v: REAL): REAL is
 			-- Trigonometric cosine of radian `v' approximated
@@ -90,7 +99,7 @@ feature
 			Result := math_rceil (v)
 		end;
 	
-feature {NONE}
+feature  {NONE} -- Access
 
 	rabs (v: REAL): REAL is
 			-- Absolute value of `v'
@@ -98,17 +107,10 @@ feature {NONE}
 			Result := math_rfabs (v)
 		end;
 
-feature 
+ 
 
-	log_2 (v: REAL): REAL is
-			-- Base 2 logarithm of `v'
-		require
-			v > 0.0
-		do
-			Result := log (v)/ log (2.0)
-		end;
 
-feature {NONE} -- External features
+feature  {NONE} -- External, Access
 
 	math_rcos (v: REAL): REAL is
 		external
@@ -170,4 +172,4 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-end
+end -- class SINGLE_MATH

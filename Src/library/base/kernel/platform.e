@@ -5,6 +5,11 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- With 'GENERAL' as its single parent, introduces a few
+-- constant attributes such as Integer_bits denoting
+-- constant  values which depend on the local platform
+
+
 indexing
 
 	date: "$Date$";
@@ -16,7 +21,7 @@ inherit
 
 	GENERAL
 
-feature
+feature -- Access
 
 	Character_bits: INTEGER is 8;
 

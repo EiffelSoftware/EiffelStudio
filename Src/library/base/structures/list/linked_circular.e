@@ -48,7 +48,7 @@ creation
 
 	make
 
-feature -- Cursor
+feature -- Cursor movement
 
 	forth is
 			-- Move to next item in `Current'.
@@ -83,7 +83,17 @@ feature -- Cursor
 			ll_move (modulo (ind + i, count) - ind)
 		end;
 
-feature {LINKED_CIRCULAR} -- Secret
+
+feature  {LINKED_CIRCULAR} -- Initialization
+
+	new_chain: like Current is
+			-- Instance of class `like Current'.
+		do
+			!! Result.make
+		end;
+
+
+feature  {LINKED_CIRCULAR} -- Miscellaneous
 
 	modulo (n1, n2: INTEGER): INTEGER is
 			-- Modulus, plus one; 0 if `n2' = 0
@@ -98,14 +108,6 @@ feature {LINKED_CIRCULAR} -- Secret
 			end
 		ensure
 			Result >= 0 and Result <= n2
-		end;
-
-feature {LINKED_CIRCULAR} -- Creation
-
-	new_chain: like Current is
-			-- Instance of class `like Current'.
-		do
-			!! Result.make
 		end;
 
 end -- class LINKED_CIRCULAR

@@ -5,6 +5,10 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Double representation of real number
+-- uses at most 'Double_bits'  from constant 
+-- attribute in class 'PLATFORM' 
+
 indexing
 
 	date: "$Date$";
@@ -24,22 +28,11 @@ inherit
             out
         end
 
-feature
+feature -- Access
 
 	item: DOUBLE;
 			-- Numeric double value
 
-	set_item (d: DOUBLE) is
-			-- Assign `d' to `item'.
-		do
-			item := d
-		end;
-
-	out: STRING is
-			-- Return a printable representation of ~Current'.
-		do
-			Result := c_outd ($item)
-		end;
 
 feature -- Comparison
 
@@ -51,7 +44,7 @@ feature -- Comparison
 			Result := item < other.item
 		end;
 
-feature	-- Numeric
+feature -- Basic operation 
 
 	infix "+" (other: DOUBLE_REF): DOUBLE_REF is
 			-- Sum of `Current' and `other'
@@ -97,8 +90,25 @@ feature	-- Numeric
 			Result.set_item (- item)
 		end;
 
-feature {NONE}
-			-- External
+feature -- Modification & Insertion
+
+	set_item (d: DOUBLE) is
+			-- Assign `d' to `item'.
+		do
+			item := d
+		end;
+
+feature -- Ouput
+
+
+	out: STRING is
+			-- Return a printable representation of ~Current'.
+		do
+			Result := c_outd ($item)
+		end;
+
+
+feature  {NONE} -- External, Ouput
 
 
 	c_outd (d: DOUBLE): STRING is

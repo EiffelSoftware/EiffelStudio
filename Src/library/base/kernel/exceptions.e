@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- facilities for controlling exception handling
+
 indexing
 
 	date: "$Date$";
@@ -12,33 +14,9 @@ indexing
 
 class EXCEPTIONS
 
-feature
 
-	exception: INTEGER is
-			-- Last exception code
-		external
-			"C"
-		alias
-			"eecode"
-		end;
 
-	is_programmer_exception (tag: STRING): BOOLEAN is
-			-- Is the last exception a programmer exception of tag `tag' ?
-		do
-			Result := 	exception = Programmer_exception
-						and then
-						equal (tag, programmer_exception_name)
-		end;
-
-	programmer_exception_name: STRING is
-			-- Last programmer exception tag
-		external
-			"C"
-		alias
-			"eetag"
-		end;
-
-feature
+feature -- Ouput
 
 	raise (tag: STRING) is
 			-- Raise a user exception of tag `tag'.
@@ -51,13 +29,24 @@ feature
 			eraise ($str, Programmer_exception);
 		end;
 
-feature {NONE}	-- Predefined exception constants.
+feature -- Status report
+
+	is_programmer_exception (tag: STRING): BOOLEAN is
+			-- Is the last exception a programmer exception of tag `tag' ?
+		do
+			Result := 	exception = Programmer_exception
+						and then
+						equal (tag, programmer_exception_name)
+		end;
+
+feature  {NONE} -- Access
 				--| Those values cannot be changed and match with run-time
 				--| C constants
 
 	Programmer_exception: INTEGER is 24;
 
-feature {NONE} -- Externals
+
+feature  {NONE} -- External, Ouput
 
 	eraise (str: ANY; code: INTEGER) is
 			-- Raise an exception
@@ -65,4 +54,24 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+
+feature -- External, Status report
+
+	exception: INTEGER is
+			-- Last exception code
+		external
+			"C"
+		alias
+			"eecode"
+		end;
+
+
+	programmer_exception_name: STRING is
+			-- Last programmer exception tag
+		external
+			"C"
+		alias
+			"eetag"
+		end;
+
+end -- class EXCEPTIONS

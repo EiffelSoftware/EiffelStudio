@@ -39,7 +39,7 @@ feature -- Access
 	left: like Current;
 			-- Left neighbor
 
-feature {CELL, CHAIN} -- Insertion
+feature  {CELL, CHAIN} -- Modification & Insertion
 
 	put_right (other: like Current) is
 			-- Put `other' to the right of `Current'.
@@ -63,7 +63,7 @@ feature {CELL, CHAIN} -- Insertion
 			chained: left = other
 		end;
 
-feature {CELL, CHAIN} -- Deletion
+feature  {CELL, CHAIN} -- Removal
 
 	forget_right is
 			-- Remove links with right neighbor.
@@ -73,8 +73,8 @@ feature {CELL, CHAIN} -- Deletion
 				right := Void
 			end
 		ensure then
-	--		not_chained:
-	--			(old right /= Void) implies ((old right).left = Void)
+	 		right_not_chained:
+	 			(old right /= Void) implies ((old right).left = Void)
 		end;
 
 	forget_left is
@@ -85,12 +85,12 @@ feature {CELL, CHAIN} -- Deletion
 				left := Void
 			end
 		ensure
-			not_chained:
+			left_not_chained:
 				left = Void;
-	--			(old left /= Void) implies ((old left).right = Void)
+	 			(old left /= Void) implies ((old left).right = Void)
 		end;
 
-feature {BI_LINKABLE, TWO_WAY_LIST} -- Deletion
+feature  {BI_LINKABLE, TWO_WAY_LIST} -- Removal
 
 	simple_forget_left is
 			-- Remove left link (do nothing to left neighbor).
@@ -107,4 +107,4 @@ invariant
 	left_symmetry:
 		(left /= Void) implies (left.right = Current)
 
-end
+end -- class BI_LINKABLE

@@ -35,7 +35,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (v: like item) is
 			-- Create single node with item `v'.
@@ -72,6 +72,8 @@ feature -- Access
             end
    		end;
 
+feature -- Measurement
+
 	min: like item is
 			-- Minimum in `Current'
 		do
@@ -102,7 +104,61 @@ feature -- Access
 			Result := item
 		end;
 
-feature -- Insertion
+feature -- Transformation
+
+	sort is
+			-- Sort `Current'.
+			--| Very dumb implementation: insert all nodes from
+			--| a `sequential_representation'.
+		local
+			seq: SEQUENTIAL [G]
+		do
+			seq := sequential_representation;
+			from
+				seq.start;
+				wipe_out
+			until
+				seq.off
+			loop
+				put (seq.item);
+				seq.forth
+			end;
+			balance
+		end;
+
+	balance is
+			-- Balance current tree: depths of children will
+			-- differ by 0 or 1.
+		local
+			dd: INTEGER;
+		do
+			if not balanced then
+				from
+					dd := depth_difference
+				until
+					balanced
+				loop
+					if dd > 1 then
+						balance_child_right
+					elseif dd < - 1 then
+						balance_child_left
+					else
+						balanced := true;
+						if left_child.depth > right_child.depth then
+							depth := left_child.depth + 1
+						else
+							depth := right_child.depth + 1
+						end
+					end;
+					dd := depth_difference
+				end
+			end
+		ensure
+			is_balanced: balanced
+		end;
+
+
+feature -- Modification & Insertion
 
 	put (v: like item) is
 			-- Put `v' at proper position in tree
@@ -132,29 +188,8 @@ feature -- Insertion
 			item_inserted: has (v)
 		end;
 
-feature -- Transformation
 
-	sort is
-			-- Sort `Current'.
-			--| Very dumb implementation: insert all nodes from
-			--| a `sequential_representation'.
-		local
-			seq: SEQUENTIAL [G]
-		do
-			seq := sequential_representation;
-			from
-				seq.start;
-				wipe_out
-			until
-				seq.off
-			loop
-				put (seq.item);
-				seq.forth
-			end;
-			balance
-		end;
-
-feature -- Cursor
+feature -- Cursor movement
 
 	node_action (v: like item) is
 			-- Operation on node item,
@@ -204,59 +239,65 @@ feature -- Cursor
 			node_action (item)
 		end;
 
-feature -- Implementation features
+feature -- Status report
 
 	balanced: BOOLEAN;
 			-- Is the node balanced ?
 			-- true if depths of children differ by 0 or 1
 
-	balance is
-			-- Balance current tree: depths of children will
-			-- differ by 0 or 1.
-		local
-			dd: INTEGER;
-		do
-			if not balanced then
-				from
-					dd := depth_difference
-				until
-					balanced
-				loop
-					if dd > 1 then
-						balance_child_right
-					elseif dd < - 1 then
-						balance_child_left
-					else
-						balanced := true;
-						if left_child.depth > right_child.depth then
-							depth := left_child.depth + 1
-						else
-							depth := right_child.depth + 1
-						end
-					end;
-					dd := depth_difference
-				end
-			end
-		ensure
-			is_balanced: balanced
-		end;
+feature  {NONE} -- Initialization
 
-feature {BINARY_SEARCH_TREE} -- Number of elements
+	new_tree (v: like item): like Current is
+			-- Newly allocated node with `tree_item' set to `v'.
+		do
+			!! Result.make (v)
+		ensure
+			new_tree_exist: Result /= Void;
+			new_tree_item: Result.item = v
+		end
+
+
+
+
+feature  {BINARY_SEARCH_TREE} -- Measurement
 
 	depth: INTEGER;
 			-- Depth of tree whose root is `Current'.
 			-- Meaningful only when balanced is true
 
-feature {BINARY_SEARCH_TREE} -- Implementation features
-
-	set_unbalanced is
-			-- Set `balanced' to `false'.
-			-- Depth is not meaningful anymore.
+	depth_difference: INTEGER is
+			-- Difference in depth between the left
+			-- and the right sibling
 		do
-			balanced := false
+			if right_child = Void then
+				if left_child = Void then
+					balanced := true;
+					depth := 0;
+					Result := 0
+				else
+					left_child.balance;
+					if left_child.depth = 0 then
+						balanced := true;
+						depth := 1
+					end;
+					Result := - 1 - left_child.depth
+				end
+			elseif left_child = Void then
+				right_child.balance;
+				if right_child.depth = 0 then
+					balanced := true;
+					depth := 1
+				end;
+				Result := right_child.depth + 1
+			else
+				right_child.balance;
+				left_child.balance;
+				Result := right_child.depth - left_child.depth
+			end
 		end;
 
-feature {NONE} -- Secret
+
+feature  {NONE} -- Transformation
 
 	balance_child_left is
 			-- Balance on the left side.
@@ -352,47 +393,16 @@ feature {NONE} -- Secret
 			end
 		end;
 
-	depth_difference: INTEGER is
-			-- Difference in depth between the left
-			-- and the right sibling
+feature  {BINARY_SEARCH_TREE} -- Modification & Insertion
+
+	set_unbalanced is
+			-- Set `balanced' to `false'.
+			-- Depth is not meaningful anymore.
 		do
-			if right_child = Void then
-				if left_child = Void then
-					balanced := true;
-					depth := 0;
-					Result := 0
-				else
-					left_child.balance;
-					if left_child.depth = 0 then
-						balanced := true;
-						depth := 1
-					end;
-					Result := - 1 - left_child.depth
-				end
-			elseif left_child = Void then
-				right_child.balance;
-				if right_child.depth = 0 then
-					balanced := true;
-					depth := 1
-				end;
-				Result := right_child.depth + 1
-			else
-				right_child.balance;
-				left_child.balance;
-				Result := right_child.depth - left_child.depth
-			end
+			balanced := false
 		end;
 
-feature {NONE} -- Creation
 
-	new_tree (v: like item): like Current is
-			-- Newly allocated node with `tree_item' set to `v'.
-		do
-			!! Result.make (v)
-		ensure
-			new_tree_exist: Result /= Void;
-			new_tree_item: Result.item = v
-		end
 
 feature
 

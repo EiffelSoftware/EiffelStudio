@@ -5,6 +5,9 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- The only class with no parent, introduces the platform
+-- independent universal feature such as clone and out.  
+
 indexing
 
 	date: "$Date$";
@@ -12,7 +15,26 @@ indexing
 
 class GENERAL
 
-feature -- Equality, clone, copy
+
+feature -- Access
+
+	generator: STRING is
+			-- Name of current object's generating class
+			-- (base class of the type of which it is a direct instance)
+		do
+			Result := c_generator ($Current);
+		end;
+ 
+	conforms_to (other: like Current): BOOLEAN is
+			-- Is dynamic type of current object a descendant of
+			-- dynamic type `other' ?
+		require
+			other_not_void: other /= Void
+		do
+			Result := c_conforms_to ($Current, $other)
+		end;
+
+feature -- Comparison
 
 	is_equal, frozen standard_is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object field-by-field identical
@@ -41,6 +63,8 @@ feature -- Equality, clone, copy
 							some.is_equal (other)
 						)
 		end;
+
+feature -- Duplication
 
 	copy, frozen standard_copy (other: like Current) is
 			-- Copy every field of `other' onto corresponding field
@@ -120,8 +144,7 @@ feature -- Equality, clone, copy
 			deep_equal: deep_equal (Current, other)
 		end; 
 
-	deep_equal, frozen standard_deep_equal
-		(some: GENERAL; other: like some): BOOLEAN is
+	deep_equal, frozen standard_deep_equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached recursively
 			-- isomrphic object structures ?
 		do
@@ -130,10 +153,10 @@ feature -- Equality, clone, copy
 						(	some /= Void and then other /= Void
 							and then
 							c_deep_equal ($some, $other)
-						)
+					)
 		end;
 
-feature -- Simple input and output
+feature -- Ouput
 	
 	io: STD_FILES is
 			-- Standard files access
@@ -158,25 +181,21 @@ feature -- Simple input and output
 			end
 		end; 
 
-	generator: STRING is
-			-- Name of current object's generating class
-			-- (base class of the type of which it is a direct instance)
-		do
-			Result := c_generator ($Current);
-		end; 
+feature -- Miscellaneous
 
-feature -- Conformance
-
-	conforms_to (other: like Current): BOOLEAN is
-			-- Is dynamic type of current object a descendant of
-			-- dynamic type `other' ?
-		require
-			other_not_void: other /= Void
+	frozen do_nothing is
 		do
-			Result := c_conforms_to ($Current, $other)
 		end;
 
-feature -- Exit feature
+ 
+
+feature  {NONE} -- Access
+
+	Void: NONE;
+			-- Void reference
+
+
+feature -- External, Access
 
 	die (code: INTEGER) is
 			-- Exit program with exit status `code'.
@@ -186,12 +205,18 @@ feature -- Exit feature
 			"esdie"
 		end;
 
-feature {NONE} -- Void value
+feature -- External, Access
 
-	Void: NONE;
-			-- Void reference
+	frozen c_conforms_to (obj1, obj2: GENERAL): BOOLEAN is
+			-- Does dynamic type of object attached to `obj1' conform to
+			-- dynamic type of object attached to `obj2' ?
+		external
+			"C"
+		alias
+			"econfg"
+		end;
 
-feature {NONE} -- C externals for copy, cloning and equality
+feature  {NONE} -- External, Comparison
 
 	c_standard_is_equal (target, source: GENERAL): BOOLEAN is
 			-- C external performing standard equality
@@ -201,6 +226,8 @@ feature {NONE} -- C externals for copy, cloning and equality
 		alias
 			"eequal"
 		end;
+
+feature  {NONE} -- External, Duplication
 
 	c_standard_copy (source, target: GENERAL) is
 			-- C external performing standard copy
@@ -238,7 +265,7 @@ feature {NONE} -- C externals for copy, cloning and equality
 			"ediso"
 		end;
 
-feature {} -- Externals for object printing
+feature  {NONE} -- External, Ouput
 
 	frozen c_tagged_out (some: GENERAL): STRING is
 			-- Printable representation of `some'
@@ -252,15 +279,5 @@ feature {} -- Externals for object printing
 			"C"
 		end;
 
-feature {NONE} -- External for conformance query
-
-	frozen c_conforms_to (obj1, obj2: GENERAL): BOOLEAN is
-			-- Does dynamic type of object attached to `obj1' conform to
-			-- dynamic type of object attached to `obj2' ?
-		external
-			"C"
-		alias
-			"econfg"
-		end;
-
-end
+ 
+end -- class GENERAL

@@ -28,12 +28,12 @@ feature -- Access
 		deferred
 		end;
 
-   item: G is
+   	item: G is
 			-- Item in current node
 		deferred
 		end; -- item
 
-   child_item: like item is
+   	child_item: like item is
 		deferred
 		end; -- child_item
 
@@ -46,8 +46,7 @@ feature -- Access
 		deferred
 		end;
 
-	child_go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
+	child_index: INTEGER is
 		deferred
 		end;
 
@@ -91,66 +90,52 @@ feature -- Access
 			Result := v = item or else subtree_has (v)
 		end;
 
-	readable: BOOLEAN is true;
+feature -- Measurement
 
-	child_readable: BOOLEAN is
-			-- Is there a current `child_item' to be read?
+	count: INTEGER is
+			-- Number of elements in `Current'
 		do
-			Result := not child_off and then (child /= Void)
+			Result := subtree_count + 1
 		end;
 
-	readable_child: BOOLEAN is
-			-- Is there a current child to be read?
+
+
+feature -- Conversion
+
+	sequential_representation: SEQUENTIAL [G] is
+			-- Sequential representation of `Current'.
+			-- This feature enables you to manipulate each
+			-- item of `Current' regardless of its
+			-- actual structure.
+		local
+			fl: FIXED_LIST [G]
 		do
-			Result := not child_off
+			!!fl.make (count);
+			fl.start;
+			fl.replace (item);
+			fl.forth;
+			fill_list (fl);
+			Result := fl
 		end;
 
-	child_off: BOOLEAN is
+
+
+
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-tree beginning at cursor position and
+			-- having min (`n', `arity' - `child_index' + 1)
+			-- children.
+		require
+			not_child_off: not child_off;
+			valid_sublist: n >= 0
 		deferred
 		end;
 
-	child_before: BOOLEAN is
-		deferred
-		end;
 
-	child_after: BOOLEAN is
-		deferred
-		end;
-
-	child_index: INTEGER is
-		deferred
-		end;
-
-feature {TREE} -- Access
-
-	subtree_has (v: G): BOOLEAN is
-			-- Do the children of `Current' include `v'?
-			-- (According to the currently adopted
-			-- discrimination rule)
-		do
-			from
-				child_start
-			until
-				child_off or else Result
-			loop
-				if child /= Void then
-					Result := equal (v, child_item)
-				end;
-				child_forth
-			end;
-			from
-				child_start
-			until
-				child_off or else Result
-			loop
-				if child /= Void then
-					Result := child.subtree_has (v)
-				end;
-				child_forth
-			end
-		end;
-
-feature -- Insertion
+feature -- Modification & Insertion
 
 	replace (v: like item) is
 			-- Replace item in `Current' by `v'.
@@ -223,149 +208,12 @@ feature -- Insertion
 			fill_subtree (other)
 		end;
 
-	writable: BOOLEAN is true;
-			-- Is there a current item that may be modified?
+feature -- Cursor movement
 
-	child_writable: BOOLEAN is
-			-- Is there a current `child_item' that may be modified?
-		do
-			Result := not child_off and then (child /= Void)
-		end;
-
-	writable_child: BOOLEAN is
-			-- Is there a current child that may be modified?
-		do
-			Result := not child_off
-		end
-
-feature {TREE} -- Insertion
-
-	attach_to_parent (n: like parent) is
-			-- Make `n' parent of `Current'.
-		do
-			parent := n
-		ensure
-			new_parent: parent = n
-		end;
-
-	fill_subtree (s: TREE [G]) is
-			-- Fill children with children of `other'.
+	child_go_to (p: CURSOR) is
+			-- Move cursor to position `p'.
 		deferred
 		end;
-
-feature -- Deletion
-
-	contractable: BOOLEAN is false;
-			-- May items be removed from `Current'?
-
-feature {NONE} -- Deletion
-
-	remove is
-			-- Remove current item
-		do
-		end;
-
-	child_remove is
-			-- Remove item of current child
-		do
-		end;
-
-feature -- Transformation
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-tree beginning at cursor position and
-			-- having min (`n', `arity' - `child_index' + 1)
-			-- children.
-		require
-			not_child_off: not child_off;
-			valid_sublist: n >= 0
-		deferred
-		end;
-
-	sequential_representation: SEQUENTIAL [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
-		local
-			fl: FIXED_LIST [G]
-		do
-			!!fl.make (count);
-			fl.start;
-			fl.replace (item);
-			fl.forth;
-			fill_list (fl);
-			Result := fl
-		end;
-
-feature {TREE} -- Transformation
-
-	fill_list (fl: FIXED_LIST [G]) is
-			-- Fill `fl' with all the childrens items.
-		do
-			from
-				child_start
-			until
-				child_off
-			loop
-				if child /= Void then
-					fl.replace (child_item);
-					fl.forth;
-					child.fill_list (fl)
-				end;
-				child_forth
-			end
-		end;
-
-feature -- Number of elements
-
-	count: INTEGER is
-			-- Number of elements in `Current'
-		do
-			Result := subtree_count + 1
-		end;
-
-	empty: BOOLEAN is
-			-- Is `Current' empty?
-		do
-			Result := false
-		end;
-
-	is_leaf: BOOLEAN is
-			-- Has `Current' no children?
-		do
-			Result := arity = 0
-		end;
-
-	is_root: BOOLEAN is
-			-- Has `Current' no parent?
-		do
-			Result := parent = Void
-		end;
-
-feature {TREE} -- Number of elements
-
-	subtree_count: INTEGER is
-			-- Number of elements in children
-		local
-			pos: CURSOR
-		do
-			Result := arity;
-			from
-				pos := child_cursor;
-				child_start
-			until
-				child_off
-			loop
-				if child /= Void then
-					Result := Result + child.subtree_count
-				end;
-				child_forth
-			end;
-			child_go_to (pos)
-		end;
-
-feature -- Cursor
 
 	child_start is
 			-- Move to first child in `Current'.
@@ -396,6 +244,76 @@ feature -- Cursor
 			is_after: (i = arity + 1) implies child_after
 		end;
 
+
+
+feature -- Status report
+	
+	readable: BOOLEAN is true;
+
+	child_readable: BOOLEAN is
+			-- Is there a current `child_item' to be read?
+		do
+			Result := not child_off and then (child /= Void)
+		end;
+
+	readable_child: BOOLEAN is
+			-- Is there a current child to be read?
+		do
+			Result := not child_off
+		end;
+
+	writable: BOOLEAN is true;
+			-- Is there a current item that may be modified?
+
+	child_writable: BOOLEAN is
+			-- Is there a current `child_item' that may be modified?
+		do
+			Result := not child_off and then (child /= Void)
+		end;
+
+	writable_child: BOOLEAN is
+			-- Is there a current child that may be modified?
+		do
+			Result := not child_off
+		end;
+
+	contractable: BOOLEAN is false;
+			-- May items be removed from `Current'?
+
+
+
+	child_off: BOOLEAN is
+		deferred
+		end;
+
+	child_before: BOOLEAN is
+		deferred
+		end;
+
+	child_after: BOOLEAN is
+		deferred
+		end;
+
+
+
+	empty: BOOLEAN is
+			-- Is `Current' empty?
+		do
+			Result := false
+		end;
+
+	is_leaf: BOOLEAN is
+			-- Has `Current' no children?
+		do
+			Result := arity = 0
+		end;
+
+	is_root: BOOLEAN is
+			-- Has `Current' no parent?
+		do
+			Result := parent = Void
+		end;
+
 	child_isfirst: BOOLEAN is
 			-- Is cursor under first child?
 		do
@@ -412,8 +330,6 @@ feature -- Cursor
 			Result implies (not empty)
 		end;
 
-feature -- Assertion check
-
 	valid_cursor_index (i: INTEGER): BOOLEAN is
 			-- Is `i' correctly bounded for cursor movement?
 		do
@@ -422,7 +338,28 @@ feature -- Assertion check
 			valid_index_definition: Result = (i >= 0) and (i <= arity + 1)
 		end;
 
-feature -- Obsolete features
+
+feature -- Obsolete, Access
+
+	child_position: INTEGER is obsolete "Use ``child_index''"
+			-- Position of child cursor
+		do
+			Result := child_index
+		end;
+feature -- Obsolete, Cursor movement
+
+	child_go (i: INTEGER) is obsolete "Use ``child_go_i_th''"
+			-- Move cursor to `i'-th position.
+		require
+			valid_cursor_index: valid_cursor_index (i)
+		do
+			child_go_i_th (i)
+		ensure
+			position_espected: child_index = i
+		end;
+
+
+feature -- Obsolete, Status report
 
 	child_offleft: BOOLEAN is obsolete "Use ``child_before''"
 			-- Is child cursor left of leftmost child?
@@ -436,21 +373,112 @@ feature -- Obsolete features
 			Result := child_after
 		end;
 
-	child_position: INTEGER is obsolete "Use ``child_index''"
-			-- Position of child cursor
+
+
+
+feature  {TREE} -- Access
+
+	subtree_has (v: G): BOOLEAN is
+			-- Do the children of `Current' include `v'?
+			-- (According to the currently adopted
+			-- discrimination rule)
 		do
-			Result := child_index
+			from
+				child_start
+			until
+				child_off or else Result
+			loop
+				if child /= Void then
+					Result := equal (v, child_item)
+				end;
+				child_forth
+			end;
+			from
+				child_start
+			until
+				child_off or else Result
+			loop
+				if child /= Void then
+					Result := child.subtree_has (v)
+				end;
+				child_forth
+			end
 		end;
 
-	child_go (i: INTEGER) is obsolete "Use ``child_go_i_th''"
-			-- Move cursor to `i'-th position.
-		require
-			valid_cursor_index: valid_cursor_index (i)
+
+feature  {TREE} -- Measurement
+
+	subtree_count: INTEGER is
+			-- Number of elements in children
+		local
+			pos: CURSOR
 		do
-			child_go_i_th (i)
-		ensure
-			position_espected: child_index = i
+			Result := arity;
+			from
+				pos := child_cursor;
+				child_start
+			until
+				child_off
+			loop
+				if child /= Void then
+					Result := Result + child.subtree_count
+				end;
+				child_forth
+			end;
+			child_go_to (pos)
 		end;
+
+
+feature  {TREE} -- Duplication
+
+	fill_list (fl: FIXED_LIST [G]) is
+			-- Fill `fl' with all the childrens items.
+		do
+			from
+				child_start
+			until
+				child_off
+			loop
+				if child /= Void then
+					fl.replace (child_item);
+					fl.forth;
+					child.fill_list (fl)
+				end;
+				child_forth
+			end
+		end;
+
+
+
+feature  {TREE} -- Modification & Insertion
+
+	attach_to_parent (n: like parent) is
+			-- Make `n' parent of `Current'.
+		do
+			parent := n
+		ensure
+			new_parent: parent = n
+		end;
+
+	fill_subtree (s: TREE [G]) is
+			-- Fill children with children of `other'.
+		deferred
+		end;
+
+ 
+
+feature  {NONE} -- Removal
+
+	remove is
+			-- Remove current item
+		do
+		end;
+
+	child_remove is
+			-- Remove item of current child
+		do
+		end;
+
 
 invariant
 

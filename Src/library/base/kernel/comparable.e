@@ -15,19 +15,19 @@ indexing
 
 deferred class COMPARABLE inherit
 
-	PART_COMPARABLE
-		redefine
-			infix "<", infix "<=",
-			infix ">", infix ">="
-		end
+		PART_COMPARABLE
+			redefine
+				infix "<", infix "<=",
+				infix ">", infix ">="
+			end
 
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `Current' less than `other'?
 		deferred
---		ensure then
---			Result implies not (Current >= other)
+		ensure then
+			Result implies not (Current >= other)
 		end;
 
 	infix "<=" (other: like Current): BOOLEAN is
@@ -50,8 +50,8 @@ feature -- Comparison
 			-- Is `Current' greater than or equal to `other'?
 		do
 			Result := not (Current < other)
-		ensure then
+ 		ensure then
 			Result implies not (Current < other)
 		end;
 
-end
+end -- class COMPARABLE

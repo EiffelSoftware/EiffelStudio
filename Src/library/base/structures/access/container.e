@@ -22,21 +22,19 @@ feature -- Access
 
 	has (v: G): BOOLEAN is
 			-- Does `Current' include `v'?
-			-- (According to the currently 
+			-- (According to the currently adopted 
 			-- discrimination rule used in `search')
 		deferred
 		end;
 
-feature -- Deletion
+feature -- Measurement
 
-	wipe_out is
-			-- Empty `Current'.
+	count: INTEGER is
+			-- Number of elements in `Current'
 		deferred
-		ensure
-			wiped_out: empty
 		end;
 
-feature -- Transformation
+feature -- Conversion
 
 	sequential_representation: SEQUENTIAL [G] is
 			-- Sequential representation of `Current'.
@@ -46,12 +44,17 @@ feature -- Transformation
 		deferred
 		end;
 
-feature -- Number of elements
 
-	count: INTEGER is
-			-- Number of elements in `Current'
+feature -- Removal
+
+	wipe_out is
+			-- Empty `Current'.
 		deferred
+		ensure
+			wiped_out: empty
 		end;
+
+feature -- Status report
 
 	empty: BOOLEAN is
 			-- Is `Current' empty?

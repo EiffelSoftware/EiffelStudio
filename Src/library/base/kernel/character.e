@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+--Built-in character
+
 indexing
 
 	date: "$Date$";
@@ -20,18 +22,19 @@ inherit
 			code
 		end
 
-feature	-- Comparison
+feature -- Access
 
-	infix "<" (other: CHARACTER): BOOLEAN is
-			-- Is `other' greater than Current ?
+	code: INTEGER is
+			-- Associated integer value
 		do
 			-- Built-in
 		end;
 
-feature -- Code value
 
-	code: INTEGER is
-			-- Associated integer value
+feature -- Comparison
+
+	infix "<" (other: CHARACTER): BOOLEAN is
+			-- Is `other' greater than 'Current' ?
 		do
 			-- Built-in
 		end;

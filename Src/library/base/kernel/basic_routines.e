@@ -5,6 +5,9 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Routines applied to basic types
+
+
 indexing
 
 	date: "$Date$";
@@ -12,55 +15,7 @@ indexing
 
 class BASIC_ROUTINES
 
-feature -- Conversion
-
-	charconv (i: INTEGER): CHARACTER is
-			-- Character corresponding to ascii code `i'
-		external
-			"C"
-		alias
-			"chconv"
-		end;
-
-	charcode (c: CHARACTER): INTEGER is
-			-- Integer ascii code corresponding to `c'
-		external
-			"C"
-		alias
-			"chcode"
-		end;
-
-	integer_to_real (n: INTEGER): REAL is
-			-- Real conversion of `n'
-		external
-			"C"
-		alias
-			"conv_ir"
-		end;
-
-	real_to_integer (r: REAL): INTEGER is
-			-- Integer conversion (truncation) of `r'
-		external
-			"C"
-		alias
-			"conv_ri"
-		end;
-
-	double_to_real (d: DOUBLE): REAL is
-			-- Real conversion (truncation) of `d'
-		external
-            "C"
-        alias
-            "conv_dr"
-		end;
-
-	real_to_double (r: REAL): DOUBLE is
-			-- Double conversion of `r'
-		do
-			Result := r
-		end;
-
-feature -- Numeric
+feature -- Basic operation
 
 	abs (n: INTEGER): INTEGER is
 			-- Absolute value of `n'
@@ -156,8 +111,10 @@ feature -- Numeric
 			(r2 <= r1) = (Result = r2) or else (r1 < r2) = (Result = r1)
 		end;
 
+feature -- External, Basic operation
+
 	bottom_int_div (n1, n2: INTEGER): INTEGER is
-			-- Integer part of the integer division of `n1' by `n2'
+			-- Greatest lower bound of the integer division of `n1' by `n2'
 		external
 			"C"
 		alias
@@ -165,11 +122,61 @@ feature -- Numeric
 		end;
 	
 	up_int_div (n1, n2: INTEGER): INTEGER is
-			-- Upper bound of the integer division of `n1' by `n2'
+			-- Least upper bound of the integer division of `n1' by `n2'
 		external
 			"C"
 		alias
 			"upintdiv"
 		end;
 
-end
+
+feature -- External, Conversion
+
+	charconv (i: INTEGER): CHARACTER is
+			-- Character corresponding to ascii code `i'
+		external
+			"C"
+		alias
+			"chconv"
+		end;
+
+	charcode (c: CHARACTER): INTEGER is
+			-- Integer ascii code corresponding to `c'
+		external
+			"C"
+		alias
+			"chcode"
+		end;
+
+	integer_to_real (n: INTEGER): REAL is
+			-- Real conversion of `n'
+		external
+			"C"
+		alias
+			"conv_ir"
+		end;
+
+	real_to_integer (r: REAL): INTEGER is
+			-- Integer conversion (truncation) of `r'
+		external
+			"C"
+		alias
+			"conv_ri"
+		end;
+
+	double_to_real (d: DOUBLE): REAL is
+			-- Real conversion (truncation) of `d'
+		external
+            		"C"
+        	alias
+            		"conv_dr"
+		end;
+
+	real_to_double (r: REAL): DOUBLE is
+			-- Double conversion of `r'
+		do
+			Result := r
+		end;
+
+
+end -- class BASIC_ROUTINES

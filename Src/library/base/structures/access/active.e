@@ -30,12 +30,8 @@ feature -- Access
 		deferred
 		end;
 
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		deferred
-		end;
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	replace (v: G) is
 			-- Replace current item by `v'.
@@ -44,15 +40,12 @@ feature -- Insertion
 		deferred
 		ensure
 			item_replaced: item = v;
-	--		same_count: count = old count
+			same_count: count = old count
 		end;
 
-	writable: BOOLEAN is
-			-- Is there a current item that may be modified?
-		deferred
-		end;
+	
 
-feature -- Deletion
+feature -- Removal
 
 	remove is
 			-- Remove current item.
@@ -61,11 +54,23 @@ feature -- Deletion
 		deferred
 		ensure
 			not_full: not full;
-	--		new_count: count = (old count - 1)
+			new_count: count = (old count - 1)
 		end;
+
+feature -- Status report
+
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
+		deferred
+		end;
+
+	writable: BOOLEAN is
+			-- Is there a current item that may be modified?
+		deferred
+		end;	
 
 invariant
 
 	empty_constraint: empty implies (not readable) and (not writable)
 
-end
+end -- class ACTIVE

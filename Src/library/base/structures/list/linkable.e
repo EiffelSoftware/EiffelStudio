@@ -28,7 +28,7 @@ feature -- Access
 	right: like Current;
 			-- Right neighbor
 
-feature {CELL, CHAIN} -- Insertion
+feature  {CELL, CHAIN} -- Modification & Insertion
 
 	put_right (other: like Current) is
 			-- Put `other' to the right of `Current'.
@@ -53,7 +53,7 @@ feature {CELL, CHAIN} -- Insertion
 			chained: right = aft
 		end;
 
-feature {CELL, CHAIN} -- Deletion
+feature  {CELL, CHAIN} -- Removal
 
 	forget_right is
 			-- Remove right link.
@@ -63,4 +63,4 @@ feature {CELL, CHAIN} -- Deletion
 			not_chained: right = Void
 		end;
 
-end
+end -- class LINKABLE

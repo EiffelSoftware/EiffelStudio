@@ -20,4 +20,4 @@ deferred class PRIORITY_QUEUE [G -> PART_COMPARABLE] inherit
 
 	DISPENSER [G]
 
-end
+end -- class PRIORITY-QUEUE

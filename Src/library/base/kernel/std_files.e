@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+--- Standard input and output
+
 indexing
 
 	date: "$Date$";
@@ -12,7 +14,8 @@ indexing
 
 class STD_FILES
 
-feature {GENERAL}
+feature  {GENERAL} -- Access
+
 
 	input: UNIX_FILE is
 			-- Standard input file
@@ -48,6 +51,62 @@ feature {GENERAL}
 			end;
 		end;
 
+	readint is
+			-- Read a new integer from standard input.
+		do
+			input.readint
+		end;
+
+	readreal is
+			-- Read a new real from standard input.
+		do
+			input.readreal
+		end;
+
+	readdouble is
+			-- Read a new double from standard input.
+		do
+			input.readdouble
+		end;
+
+	readline is
+			-- Read a line from standard input.
+		do
+			input.readline
+		end;
+
+	readstream (nb_char: INTEGER) is
+ 			-- Read a string of at most `nb_char' bound characters
+			-- from standard input.
+		do
+			input.readstream (nb_char)
+		end;
+
+	readword is
+			-- Read a new word from standard input.
+		do
+			input.readword
+		end;
+
+	readchar is
+			-- Read a new character from standard input.
+		do
+			input.readchar
+		end;
+
+
+	next_line is
+			-- Move to next input line on standard input.
+		do
+			input.next_line
+		end;
+
+
+
+
+
+feature  {GENERAL} -- Modification & Insertion
+
 	set_output_default is
 			-- Use standard output as default output.
 		do
@@ -59,6 +118,8 @@ feature {GENERAL}
 		do
 			default_output := error;
 		end;
+
+
 
 	putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
@@ -109,54 +170,8 @@ feature {GENERAL}
 			file_tnwl (standard_default.file_pointer)
 		end;
 
-	readint is
-			-- Read a new integer from standard input.
-		do
-			input.readint
-		end;
-
-	readreal is
-			-- Read a new real from standard input.
-		do
-			input.readreal
-		end;
-
-	readdouble is
-			-- Read a new double from standard input.
-		do
-			input.readdouble
-		end;
-
-	readline is
-			-- Read a line from standard input.
-		do
-			input.readline
-		end;
-
-	readstream (nb_char: INTEGER) is
- 			-- Read a string of at most `nb_char' bound characters
-			-- from standard input.
-		do
-			input.readstream (nb_char)
-		end;
-
-	readword is
-			-- Read a new word from standard input.
-		do
-			input.readword
-		end;
-
-	readchar is
-			-- Read a new character from standard input.
-		do
-			input.readchar
-		end;
-
-	next_line is
-			-- Move to next input line on standard input.
-		do
-			input.next_line
-		end;
+feature  {GENERAL} -- Status report
+	
 
 	lastchar: CHARACTER is
 			-- Last character read by readchar
@@ -187,8 +202,7 @@ feature {GENERAL}
 			Result := input.lastdouble
 		end;
 
-feature {NONE}
-			-- Externals
+feature  {NONE} -- External, Modification & Insertion
 
 	file_pc (file: POINTER; c: CHARACTER) is
 		-- Write character `c' at end of `file'
@@ -221,7 +235,7 @@ feature {NONE}
 		end;
 
 	file_tnwl (file: POINTER) is
-			-- Print a new_line to `file'
+			-- Write a new_line to `file'
 		external
 			"C"
 		end;

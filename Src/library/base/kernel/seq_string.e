@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Characters of the STRING are accessed in SEQUENCE only
+
 class SEQ_STRING inherit
 
 	STRING
@@ -58,20 +60,6 @@ creation
 
 feature -- Access
 
-	current_item: CHARACTER is
-			-- Current item
-		do
-			Result := item (index)
-		end;
-	
-	has (c: CHARACTER): BOOLEAN is
-			-- Does `Current' include `c'?
-		do
-			if not empty then
-				Result := (index_of (c, 1) /= 0)
-			end
-		end;
-	
 	search_after (c: CHARACTER) is
 			-- Move cursor to first position
 			-- (at or after current cursor position)
@@ -146,6 +134,20 @@ feature -- Access
 			end
 		end;
 
+ 
+
+ 
+	current_item: CHARACTER is
+			-- Current item
+		do
+			Result := item (index)
+		end;
+
+	index: INTEGER;
+			-- Index of `current_item', if valid
+			-- Valid values are between 1 and `count' (if `count' > 0).
+	
+	
 	index_of (c: CHARACTER; i: INTEGER): INTEGER is
 			-- Index of the first occurrence of `c' equal or
 			-- following the position `i'; 0 if not found.
@@ -186,70 +188,19 @@ feature -- Access
 		ensure then
 			Index_value: (Result = 0) or item (Result) = c
 		end;
- 
-feature -- Insertion
 
-	replace (c: CHARACTER) is
-			-- Replace current item by `c'.
-		do 
-			put (c, index)
-		end;
 
-	precede (c: CHARACTER) is
-			-- Add `c' at front.
+
+	has (c: CHARACTER): BOOLEAN is
+			-- Does `Current' include `c'?
 		do
-			string_precede (c);
-			index := index + 1;
---		ensure
---			New_index: index = old index + 1;
-		end;
-
-	prepend (s: STRING) is
-			-- Prepend a copy of `s' at front of `Current'.
-		require
-			argument_not_void: s /= Void
-		do
-			string_prepend (s);
-			index := index + s.count;
---		ensure
---			New_index: index = old index + s.count;
-		end;
-
-feature -- Deletion
-
-	remove_item (c: CHARACTER) is
-			-- Remove `c' from `Current'.
-		local
-			i: INTEGER
-		do
-			if count /= 0 then
-				i := index_of (c, 1);
-				if i /= 0 then
-					remove (i)
-				end
+			if not empty then
+				Result := (index_of (c, 1) /= 0)
 			end
 		end;
 
-	remove_current_item is
-			-- Remove current item.
-		do
-			remove (index)
-		end;
 
-	wipe_out is
-			-- Clear out `Current'.
-		do
-			string_wipe_out;
-			index := 0;
-		end;
-
-	contractable: BOOLEAN is
-			-- May items by removed from `Current'?
-		do
-			Result := not off
-		end;
-
-feature -- Transformation
+feature -- Duplication
 
 	mirrored: like Current is
 			-- Current string read from right to left.
@@ -283,10 +234,22 @@ feature -- Transformation
 			string_mirror;
 			index := count + 1 - index;
 		ensure
-		--  same_count: count = old count;
-		--  mirrored_index: index = count - old index + 1;
-		--  reverse_entries:
+		   same_count: count = old count;
+		   mirrored_index: index = count - old index + 1;
+		--   reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
+		end;
+
+
+
+
+
+feature -- Modification & Insertion
+
+	replace (c: CHARACTER) is
+			-- Replace current item by `c'.
+		do 
+			put (c, index)
 		end;
 
 	share (other: like Current) is
@@ -297,10 +260,58 @@ feature -- Transformation
 			string_share (other);
 			index := other.index;
 		ensure
-			Shared_index: other.index = index;
+			shared_index: other.index = index;
 		end;
 
-feature -- Cursor
+	precede (c: CHARACTER) is
+			-- Add `c' at front.
+		do
+			string_precede (c);
+			index := index + 1;
+ 		ensure
+ 			new_index: index = old index + 1;
+		end;
+
+	prepend (s: STRING) is
+			-- Prepend a copy of `s' at front of `Current'.
+		require
+			argument_not_void: s /= Void
+		do
+			string_prepend (s);
+			index := index + s.count;
+  		ensure
+ 			new_index: index = old index + s.count;
+		end;
+
+feature -- Removal
+
+	remove_item (c: CHARACTER) is
+			-- Remove `c' from `Current'.
+		local
+			i: INTEGER
+		do
+			if count /= 0 then
+				i := index_of (c, 1);
+				if i /= 0 then
+					remove (i)
+				end
+			end
+		end;
+
+	remove_current_item is
+			-- Remove current item.
+		do
+			remove (index)
+		end;
+
+	wipe_out is
+			-- Clear out `Current'.
+		do
+			string_wipe_out;
+			index := 0;
+		end;
+
+feature -- Cursor movement
 
 	start is
 			-- Move to first position.
@@ -326,6 +337,16 @@ feature -- Cursor
 			index := index + 1
 		end;
 
+
+
+feature -- Status report
+
+	contractable: BOOLEAN is
+			-- May items by removed from `Current'?
+		do
+			Result := not off
+		end;
+
 	before: BOOLEAN is
 			-- Is there no position to the left of the cursor?
 		do
@@ -338,13 +359,10 @@ feature -- Cursor
 			Result := index > count
 		end;
 
-	index: INTEGER;
-			-- Index of `current_item', if valid
-			-- Valid values are between 1 and `count' (if `count' > 0).
 
 invariant
 
 	contractable = not off;
 	extensible = true
 
-end
+end -- class SEQ_STRING

@@ -23,7 +23,7 @@ deferred class STACK [G] inherit
 			add, fill, put
 		end
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	add (v: like item) is
 			-- Push `v' onto `Current'.
@@ -78,4 +78,4 @@ feature -- Insertion
 			end
 		end;
 
-end
+end -- class STACK

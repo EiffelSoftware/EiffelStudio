@@ -23,7 +23,7 @@ class LINKED_TREE_CURSOR [G] inherit
 			active
 		end
 
-feature {LINKED_CURSOR_TREE} -- Representation
+feature  {LINKED_CURSOR_TREE} -- Access
 
 	active: LINKED_TREE [G]
 			-- Current node

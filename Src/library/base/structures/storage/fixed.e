@@ -21,7 +21,7 @@ deferred class FIXED inherit
 			full
 		end
 
-feature -- Number of elements
+feature -- Status report
 
 	full: BOOLEAN is true;
 			-- Is `Current' full?

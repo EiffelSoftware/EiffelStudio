@@ -22,7 +22,7 @@ creation {RECURSIVE_CURSOR_TREE}
 
 	make
 
-feature {RECURSIVE_CURSOR_TREE} -- Creation
+feature  {RECURSIVE_CURSOR_TREE} -- Initialization
 
 	make (active_node, parent_of_active: like active;
 			aft, bef, bel: BOOLEAN) is
@@ -35,13 +35,15 @@ feature {RECURSIVE_CURSOR_TREE} -- Creation
 			below := bel
 		end;
 
-feature {RECURSIVE_CURSOR_TREE} -- Representation
+feature  {RECURSIVE_CURSOR_TREE} -- Access
 
 	active: TREE [G];
 			-- Current node
 
 	active_parent: like active;
 			-- Parent of current node
+
+feature  {RECURSIVE_CURSOR_TREE} -- Status report
 
 	after: BOOLEAN;
 			-- Is `Current' after the end of the tree?

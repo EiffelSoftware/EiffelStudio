@@ -5,6 +5,11 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+
+-- Representation of real number in single floating-point
+-- uses at most 'Real_bits' bits defined in class 'PLATFORM' 
+
+
 indexing
 
 	date: "$Date$";
@@ -24,22 +29,10 @@ inherit
             out
         end
 
-feature
+feature -- Access
 
 	item: REAL;
 			-- Numeric real value
-
-	set_item (r: REAL) is
-			-- Assign `r' to item'.
-		do
-			item := r
-		end;
-
-	out: STRING is
-			-- Return a printable representation of `Current'.
-		do
-			Result := c_outr ($item)
-		end; -- out
 
 feature -- Comparison
 
@@ -51,7 +44,7 @@ feature -- Comparison
 			Result := item < other.item
 		end; -- "<"
 
-feature	-- Numeric
+feature -- Basic operation
 
 	infix "+" (other: REAL_REF): REAL_REF is
 			-- Sum of `Current' and `other'
@@ -97,8 +90,25 @@ feature	-- Numeric
 			Result.set_item (- item)
 		end; -- prefix "-"
 
-feature {NONE}
-			-- External
+
+feature -- Modification & Insertion
+
+	set_item (r: REAL) is
+			-- Assign `r' to item'.
+		do
+			item := r
+		end;
+
+feature -- Ouput
+
+
+	out: STRING is
+			-- Return a printable representation of `Current'.
+		do
+			Result := c_outr ($item)
+		end; -- out
+
+feature  {NONE} -- External, Ouput
 
 	c_outr (r: REAL): STRING is
 			-- Return a prinatble representation of `Current'.

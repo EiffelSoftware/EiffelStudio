@@ -9,7 +9,7 @@
 
 class MATH_CONST
 
-feature {NONE}
+feature  {NONE} -- Access
 
     Pi: REAL is 3.14159265358979323846;
 
@@ -19,4 +19,4 @@ feature {NONE}
     Euler: REAL is 2.7182818284590452354;
             -- Logarithm base
 
-end
+end -- class MATH_CONST

@@ -31,25 +31,8 @@ deferred class SORTED_LIST [G -> PART_COMPARABLE] inherit
 			min, max, has, search, search_equal
 		end
 
+
 feature -- Access
-
-	min: like item is
-			-- Minimum in `Current'
-		do
-			Result := first
-		end;
-			
-	max: like item is
-			-- Maximum in `Current'
-		do
-			Result := last
-		end;
-
-	median: like item is
-			-- Median in `Current'
-		do
-			Result := i_th ((count + 1) // 2)
-		end;
 	
 	has (v: G): BOOLEAN is
 			-- Does `Current' include `v'?
@@ -120,27 +103,48 @@ feature -- Access
 			(not off) implies (item <= v)
 		end;
 
-    search_equal (v: like item) is
-            -- Move cursor to first position
-            -- (at or after current cursor position)
-            -- where item and `v' are identical.
-            -- (according to the `equal' rule)
-            -- Move cursor after if
-            -- `Current' doesn't include `v'
-            -- `exhausted' becomes true if `Current'
-            -- does not include `v'.
-        do
-            from
-                if before then forth end;
-            until
-                exhausted
-                or else equal (item, v)
-            loop
-                forth;
-            end
-        end;
+    	search_equal (v: like item) is
+            		-- Move cursor to first position
+            		-- (at or after current cursor position)
+            		-- where item and `v' are identical.
+            		-- (according to the `equal' rule)
+            		-- Move cursor after if
+            		-- `Current' doesn't include `v'
+            		-- `exhausted' becomes true if `Current'
+            		-- does not include `v'.
+        	do
+            		from
+                		if before then forth end;
+            		until
+                		exhausted
+                		or else equal (item, v)
+            		loop
+                		forth;
+            		end
+        	end;
 
-feature -- Insertion
+feature -- Measurement
+
+	min: like item is
+			-- Minimum in `Current'
+		do
+			Result := first
+		end;
+			
+	max: like item is
+			-- Maximum in `Current'
+		do
+			Result := last
+		end;
+
+	median: like item is
+			-- Median in `Current'
+		do
+			Result := i_th ((count + 1) // 2)
+		end;
+
+
+feature -- Modification & Insertion
 
 	add (v: like item) is
 			-- Put `v' at proper position in list.
@@ -148,7 +152,7 @@ feature -- Insertion
 			-- item.
 		deferred
 		ensure then
-	--		remains_sorted: old sorted implies sorted;
+	 		remains_sorted: old sorted implies sorted;
 			item_inserted: item = v
 		end;
 
@@ -164,7 +168,7 @@ feature -- Insertion
 				other.forth
 			end
 		ensure then
-	--		remains_sorted: old sorted implies sorted
+	 		remains_sorted: old sorted implies sorted
 		end;
 
-end
+end -- class SORTED_LIST

@@ -100,7 +100,6 @@ feature
 			classes: CLASS_C_SERVER;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
-			old_cursor: CURSOR
 		do
 			classes := System.classes;
 			from classes.start until classes.after loop
@@ -116,12 +115,13 @@ feature
 							types.after
 						loop
 							cl_type := types.item;
-							old_cursor := types.cursor;
-							types.search (cl_type.type);
-							if types.item = cl_type then
-								-- Do not generate twice the same type if it
-								-- has been derived in two different merged
-								-- precompiled libraries.
+							if
+								types.has_type (cl_type.type)
+								and then types.found_item = cl_type
+							then
+									--| Do not generate twice the same type if it
+									--| has been derived in two different merged
+									--| precompiled libraries.
 		
 								if (not cl_type.is_precompiled) then
 										-- C code
@@ -137,12 +137,10 @@ feature
 									file_name.append (object_name);
 									file_name.append_character (Descriptor_file_suffix);
 									file_name.append (".o");
-									descriptor_baskets.item
-										(cl_type.packet_number).extend (file_name);
+									descriptor_baskets.item (cl_type.packet_number).extend (file_name);
 								end;
 
 							end;
-							types.go_to (old_cursor);
 							types.forth
 						end
 					end

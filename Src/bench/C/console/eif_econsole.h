@@ -20,6 +20,7 @@ RT_LNK HINSTANCE eif_hPrevInstance;
 RT_LNK LPSTR eif_lpCmdLine;
 RT_LNK int eif_nCmdShow;
 
+extern void eif_show_console(void);					/* Show the DOS console if needed */
 extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_console_next_line(void);
 extern void eif_console_putint(EIF_INTEGER);

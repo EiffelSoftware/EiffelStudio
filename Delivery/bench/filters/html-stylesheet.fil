@@ -1,5 +1,5 @@
 --!-----------------------------------------------------------------------------
---! Styled HTML filter for EiffelBench documentation output.
+--! Styled HTML filter for EiffelStudio documentation output.
 --!-----------------------------------------------------------------------------
 --! default.css is copied into documentation root directory.
 --! goto.html is generated in documentation root directory.

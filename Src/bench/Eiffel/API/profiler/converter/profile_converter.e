@@ -46,10 +46,45 @@ feature {PROFILE_CONVERTER} -- analyzing
 		do
 			from
 				init_analyse;
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Done initializing the analyzation.");
+	io.error.new_line;
+	io.error.putstring ("String_token: ");
+	io.error.putint (String_token);
+	io.error.new_line;
+	io.error.putstring ("Number_token: ");
+	io.error.putint (Number_token);
+	io.error.new_line;
+	io.error.putstring ("Real_token: ");
+	io.error.putint (Real_token);
+	io.error.new_line;
+	io.error.putstring ("Index_token: ");
+	io.error.putint (Index_token);
+	io.error.new_line;
+	io.error.putstring ("Newline_token: ");
+	io.error.putint (Newline_token);
+	io.error.new_line;
+	io.error.putstring ("Whitespace_token: ");
+	io.error.putint (Whitespace_token);
+	io.error.new_line;
+	io.error.putstring ("Error_token: ");
+	io.error.putint (Error_token);
+	io.error.new_line;
+	io.error.putstring ("Profile string is: ");
+	io.error.putstring (profile_string);
+	io.error.new_line;
+	io.error.putstring ("Configuration:%N==============%N");
+	config.spit_info;
+end;
 			until
 				string_idx >= profile_string.count
 			loop
 				retrieve_first_next_token;
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Token type of first next token: ");
+	io.error.putint (token_type);
+	io.error.new_line;
+end;
 				if token_type = Error_token then
 					resync_line;
 				elseif token_type = Whitespace_token then
@@ -82,17 +117,37 @@ feature {PROFILE_CONVERTER} -- analyzing
 			-- Reports end of analization and writes information to
 			-- disk.
 		local
-				file: RAW_FILE;
-				a: ANY
+			file: RAW_FILE;
+			a: ANY
 		do
 			redo_cyclics;
 			io.putstring ("Ready with analysis.%N%N");
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Cyclics are re-done.");
+	io.error.new_line;
+	io.error.putstring ("About to store the information on disk.");
+	io.error.new_line;
+	io.error.putstring ("Will use `independent_store'.");
+	io.error.new_line;
+end;
 			profilename.append (Profile_extension);
 			!! file.make (profilename);
 			if (file.exists and then file.is_writable) or else
 					file.is_creatable then
 				file.open_write;
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Calling `spit_info' on `profile_information'.");
+	io.error.new_line;
+	profile_information.spit_info;
+	io.error.putstring ("Store is called right now ...%N");
+end;
 				profile_information.independent_store (file);
+debug("PROFILE_CONVERT")
+	io.error.putstring ("`");
+	io.error.putstring (profilename);
+	io.error.putstring ("' successfully stored on disk.");
+	io.error.new_line;
+end;
 				file.close;
 			else
 				a := ("write permission failure").to_c;
@@ -140,14 +195,34 @@ feature {PROFILE_CONVERTER} -- analyzing
 			-- the line.
 		do
 			if token_type = Real_token then
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Performing real token");
+	io.error.new_line;
+end;
 				perform_real_token;
 			elseif token_type = Number_token then
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Performing number token");
+	io.error.new_line;
+end;
 				perform_number_token;
 			elseif token_type = Index_token then
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Perorming index token");
+	io.error.new_line;
+end;
 				perform_index_token;
 			elseif token_type = String_token then
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Performing string token");
+	io.error.new_line;
+end;
 				perform_string_token;
 			elseif token_type = Newline_token then
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Perfoming new line token.");
+	io.error.new_line;
+end;
 				perform_newline_token;
 			end;
 		end
@@ -188,6 +263,8 @@ feature {PROFILE_CONVERTER} -- analyzing
 		local
 			space, number: INTEGER;
 			num_str: STRING;
+			class_n, feature_n, cluster_n: STRING;
+			project: SHARED_EIFFEL_PROJECT
 		do
 			if config.get_function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -204,6 +281,29 @@ feature {PROFILE_CONVERTER} -- analyzing
 
 					if functions.has (function_name) then
 						e_function := functions.item (function_name)
+						is_eiffel := true;
+						is_c := false;
+						is_cycle := false;
+					elseif function_name.substring_index (" from ", 1) > 0 then
+						!! project;
+						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1));
+						class_n := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count);
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Feature name: ");
+	io.error.putstring (feature_n);
+	io.error.new_line;
+	io.error.putstring ("Class name: ");
+	io.error.putstring (class_n);
+	io.error.new_line;
+end;
+						--cluster_n := project.Eiffel_universe.class_with_name (class_n).cluster.cluster_name;
+						cluster_n := "<cluster_tag>"
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Cluster name: ");
+	io.error.putstring (cluster_n);
+	io.error.new_line;
+end;
+						!! e_function.make (cluster_n, class_n, feature_n);
 						is_eiffel := true;
 						is_c := false;
 						is_cycle := false;
@@ -375,6 +475,42 @@ feature {PROFILE_CONVERTER} -- analyzing
 					string_idx := string_idx + 1;
 					next_char := profile_string.item (string_idx);
 				end;
+
+					-- Eiffel generates ` from ABC' as well...
+
+debug("PROFILE_CIONVERT")
+	io.error.putstring ("Substring (string_idx, string_idx + 4) is: ");
+	io.error.putstring (profile_string.substring (string_idx, string_idx + 4));
+	io.error.new_line;
+end;
+
+				if profile_string.substring (string_idx, string_idx + 4).is_equal (" from") then
+					token_string.append (" from ");
+					string_idx := string_idx + 6;
+
+debug("PROFILE_CONVERT");
+	io.error.putstring ("Detecting Eiffel feature name...");
+	io.error.new_line;
+	io.error.putstring ("Character at string_idx is ");
+	io.error.putchar (profile_string @ string_idx);
+	io.error.new_line
+end;
+
+						-- Reading class name...
+					from
+						next_char := profile_string.item (string_idx)
+					until
+						not (next_char.is_alpha) and then
+						not (next_char = '_') and then
+						not (next_char.is_digit)
+					loop
+						token_string.extend (next_char);
+						string_idx := string_idx + 1;
+						next_char := profile_string.item (string_idx)
+					end
+				end;
+
+					-- Remove the leading underscore if necessary.
 				if config.get_leading_underscore then
 					if token_string.item(1) = '_' then
 						token_string := token_string.substring (2, token_string.count);
@@ -535,46 +671,50 @@ feature {NONE} -- Commands
 			new_function: EIFFEL_FUNCTION
 			object_file: RAW_FILE
 		do
-			from
-				!!functions.make (20);
-				io.putstring ("Creating function table. Please wait...%N")
-			until
-				translat_string.count = 0
-			loop
-					-- Initialize function / feature name.
-				!!c_name.make (0);
-				!!cluster_name.make (0);
-				!!cl_name.make (0);
-				!!feature_name.make (0);
-
-					-- Get a single line from the string.
-				translat_line := get_translat_line;
-
-					-- Get cludter name for Eiffel feature
-				first_tab := translat_line.index_of ('%T', 1);
-				cluster_name.append_string (translat_line.substring (1, first_tab - 1));
-
-					-- Get class name (plus actual generics) for Eiffel feature
-				second_tab := translat_line.index_of ('%T', first_tab + 1);
-				cl_name.append_string (translat_line.substring (first_tab + 1, second_tab - 1));
-
-					-- Get feature name for Eiffel feature
-				first_tab := second_tab + 1;
-				second_tab := translat_line.index_of ('%T', first_tab);
-				feature_name.append_string (translat_line.substring (first_tab, second_tab - 1));
-
-					-- Get function name for C function
-				first_tab := second_tab + 1;
-				second_tab := translat_line.index_of ('%T', first_tab);
-				c_name.append_string (translat_line.substring (first_tab, second_tab - 1));
-
-					-- Put function-feature in the hash table.
-				!!new_function.make (cluster_name, cl_name, feature_name)
-				functions.put (new_function, c_name)
+			if not config.get_config_name.is_equal ("eiffel") then
+				from
+					!!functions.make (20);
+					io.putstring ("Creating function table. Please wait...%N")
+				until
+					translat_string.count = 0
+				loop
+						-- Initialize function / feature name.
+					!!c_name.make (0);
+					!!cluster_name.make (0);
+					!!cl_name.make (0);
+					!!feature_name.make (0);
+	
+						-- Get a single line from the string.
+					translat_line := get_translat_line;
+	
+						-- Get cludter name for Eiffel feature
+					first_tab := translat_line.index_of ('%T', 1);
+					cluster_name.append_string (translat_line.substring (1, first_tab - 1));
+	
+						-- Get class name (plus actual generics) for Eiffel feature
+					second_tab := translat_line.index_of ('%T', first_tab + 1);
+					cl_name.append_string (translat_line.substring (first_tab + 1, second_tab - 1));
+	
+						-- Get feature name for Eiffel feature
+					first_tab := second_tab + 1;
+					second_tab := translat_line.index_of ('%T', first_tab);
+					feature_name.append_string (translat_line.substring (first_tab, second_tab - 1));
+	
+						-- Get function name for C function
+					first_tab := second_tab + 1;
+					second_tab := translat_line.index_of ('%T', first_tab);
+					c_name.append_string (translat_line.substring (first_tab, second_tab - 1));
+	
+						-- Put function-feature in the hash table.
+					!!new_function.make (cluster_name, cl_name, feature_name)
+					functions.put (new_function, c_name)
+				end
+				!! object_file.make_open_write (filename)
+				functions.independent_store(object_file)
+				object_file.close
+			else
+				!!functions.make (0);
 			end
-			!! object_file.make_open_write (filename)
-			functions.independent_store(object_file)
-			object_file.close
 		end
 
 	get_translat_line : STRING is

@@ -419,8 +419,8 @@ feature {COMPILER_EXPORTER} -- Access
 		require
 			type_not_void: a_type /= Void
 			numeric_or_bit_type:
-				is_numeric and then a_type.is_numeric or
-				is_bits implies a_type.is_bits
+				(is_numeric and then a_type.is_numeric) or
+				(is_bits and then a_type.is_bits)
 		do
 		ensure
 			heaviest_not_void: Result /= Void

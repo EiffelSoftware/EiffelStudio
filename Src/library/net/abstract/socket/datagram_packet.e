@@ -68,7 +68,7 @@ feature -- Status_report
 		end;
 
 	valid_position (pos: INTEGER): BOOLEAN is
-			-- Is the position `pos' a valid data position ?
+			-- Is the position `pos' a valid data position?
 		do
 			Result := (pos >= 0 and pos < data_area_size)
 		end;

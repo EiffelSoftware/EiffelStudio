@@ -42,8 +42,6 @@ feature -- Measurement
 
 	count: INTEGER is
 			-- Size of data resource
-		local
-			str: STRING
 		do
 			if is_count_valid then Result := content_length end
 		end

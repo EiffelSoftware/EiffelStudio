@@ -102,7 +102,7 @@ feature
 feature --  blocking features
 
 	wait: BOOLEAN;
-		-- Poller blocks until event ?
+		-- Poller blocks until event?
 		-- (otherwise, returns after timeout)
 
 	set_wait is
@@ -216,13 +216,13 @@ feature -- medium masks
 feature -- booleans to decide whether to include each mask in the select call
 
 	ignore_read: BOOLEAN;
-			-- Is read mask ignored ?
+			-- Is read mask ignored?
 
 	ignore_write: BOOLEAN;
-			-- Is write mask ignored ?
+			-- Is write mask ignored?
 
 	ignore_exception: BOOLEAN;
-			-- Is Exception mask ignored ?
+			-- Is Exception mask ignored?
 
 	set_exception is
 			-- Set exception mask to be looked up.

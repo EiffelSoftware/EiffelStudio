@@ -1,26 +1,18 @@
-
 indexing
-
-	description:
-		"Objects identified, uniquely during any session, by an integer"
-
+	description: "Objects identified, uniquely during any session, by an integer"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class IDENTIFIED inherit
+class
+	IDENTIFIED
 
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose, is_equal, copy
-		end
-
-	ANY
+inherit
+	DISPOSABLE
 		redefine
 			is_equal, copy
 		end
+
 			
 feature -- Access
 

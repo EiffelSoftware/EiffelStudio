@@ -9,15 +9,12 @@ indexing
 class DIRECTORY
 
 inherit
-	MEMORY
+	DISPOSABLE
 		export
 			{NONE} all
-		redefine
-			dispose
 		end
 
 create
-
 	make, make_open_read
 
 feature -- Initialization

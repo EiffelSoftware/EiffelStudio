@@ -13,12 +13,7 @@ inherit
 			{NONE} all
 		end
 
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 	WEL_WM_CONSTANTS
 		export

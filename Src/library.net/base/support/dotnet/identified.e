@@ -7,11 +7,9 @@ indexing
 class IDENTIFIED
 
 inherit
-	MEMORY
-		export
-			{NONE} all
+	DISPOSABLE
 		redefine
-			dispose, is_equal, copy
+			is_equal, copy
 		end
 
 feature -- Access

@@ -10,10 +10,7 @@ class
 	SEMAPHORE
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

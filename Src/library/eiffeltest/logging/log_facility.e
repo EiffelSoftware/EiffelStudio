@@ -12,12 +12,7 @@ class LOG_FACILITY inherit
 
 	FORMAT_FACTORY
 
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	

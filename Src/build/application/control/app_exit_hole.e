@@ -17,7 +17,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_TOOL_BAR) is
 		local
 			cmd: APP_SET_EXIT
 		do

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			list_create (par)
 --			compare_objects
 
-			activate_pick_and_drop (3, Current, Void)
+			activate_pick_and_drop (Current, Void)
 			set_data_type (Pnd_types.state_type)
 			create rout_cmd.make (~process_state)
 			create arg.make (editor)

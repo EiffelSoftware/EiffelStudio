@@ -17,7 +17,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (a_parent: EV_CONTAINER) is
+	make (a_parent: EV_TOOL_BAR) is
 		local
 			cmd: APP_CUT_LABEL
 		do

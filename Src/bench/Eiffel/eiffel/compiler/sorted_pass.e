@@ -10,7 +10,7 @@ inherit
 
 feature
 
-	changed_classes: SORTED_TWO_WAY_LIST [COMP_PASS_C];
+	changed_classes: PART_SORTED_TWO_WAY_LIST [COMP_PASS_C];
 
 	new_controler (a_class: CLASS_C): COMP_PASS_C is
 		deferred
@@ -44,7 +44,7 @@ feature
 			end;
 			if not found then
 				Result := new_controler (a_class);
-				changed_classes.add (Result);
+				changed_classes.extend (Result);
 			end;
 			changed_classes.go_i_th (position);
 		ensure then

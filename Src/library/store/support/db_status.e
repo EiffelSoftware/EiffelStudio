@@ -63,13 +63,6 @@ feature -- Status report
 			Result := warning_message_stored
 		end
 
-	is_ok_mat : BOOLEAN is
-			-- Has the last transaction successfully completed?
-			-- Only for OODBMS (MATISSE)
-		do
-			Result := implementation.is_ok_mat
-		end
-
 feature -- Status setting
 
 	set_connect (new_value: BOOLEAN) is

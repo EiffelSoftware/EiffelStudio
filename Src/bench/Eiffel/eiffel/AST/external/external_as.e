@@ -110,7 +110,7 @@ feature -- Byte code
 					create ext_byte_code
 				end
 
-				ext_byte_code.set_external_name (extern.external_name)
+				ext_byte_code.set_external_name_id (extern.external_name_id)
 				ext_byte_code.set_encapsulated (extern.encapsulated)
 
 				if

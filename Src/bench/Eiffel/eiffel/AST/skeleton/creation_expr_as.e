@@ -238,8 +238,6 @@ feature
 		do
 			!! Result.make
 
-
-
 			if call /= Void then
 				call_access ?= call.byte_node
 

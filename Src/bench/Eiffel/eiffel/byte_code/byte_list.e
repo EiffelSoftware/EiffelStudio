@@ -6,7 +6,7 @@ class BYTE_LIST [T -> BYTE_NODE]
 inherit
 	BYTE_NODE
 		undefine
-			copy, setup, is_equal, consistent
+			copy, is_equal
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
 			assigns_to, is_unsafe, optimized_byte_node,

@@ -17,26 +17,19 @@ feature {NONE}  -- Creation
 	
 	make is
 		do
-			!EV_EVENT_DATA_IMP!implementation.make (Current)
-		end
-	
-		
-feature -- Access
-	
-	widget: EV_WIDGET
-			-- The mouse pointer was over this widget 
-			-- when event happened
-	
-feature -- Debug
-	
-	print_contents is
-		do
-			io.put_string ("EV_EVENT_DATA: ")
-			print (widget)
-			io.put_string ("%N")
+			!EV_EVENT_DATA_IMP! implementation
 		end
 
-feature {EV_WIDGET_IMP, EV_WEL_COMMAND} -- Implementation
+feature -- Access
+
+	widget: EV_WIDGET is
+			-- The mouse pointer was over this widget 
+			-- when event happened
+		do
+			Result := implementation.widget
+		end
+	
+feature -- Implementation
 	
 	implementation: EV_EVENT_DATA_I
 	

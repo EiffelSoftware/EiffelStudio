@@ -11,10 +11,21 @@ class
 
 inherit
 	EV_BUTTON_EVENT_DATA
-	
+		redefine
+			make,
+			implementation
+		end
+
 creation
 	make
+
+feature {NONE} -- Initialization
 	
+	make is
+		do
+			!EV_PND_EVENT_DATA_IMP! implementation
+		end
+
 feature -- Access	
 	
 	data: EV_PND_DATA
@@ -34,7 +45,11 @@ feature {EV_PND_TARGET_I} -- Element change
 		do
 			data_type := new_type
 		end
+
+feature {EV_PND_TARGET_I} -- Implementation
 	
+	implementation: EV_PND_EVENT_DATA_I
+
 end -- class EV_PND_EVENT_DATA
 
 --|----------------------------------------------------------------

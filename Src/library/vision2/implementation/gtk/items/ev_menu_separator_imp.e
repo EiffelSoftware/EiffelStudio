@@ -15,6 +15,9 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
+			enable_sensitive,
+			disable_sensitive,
+			is_sensitive,
 			make,
 			interface,
 			initialize,
@@ -33,6 +36,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_item_new)
 			C.gtk_widget_show (c_object)
+			C.gtk_widget_set_sensitive (c_object, False)
 		end
 
 	initialize is
@@ -44,7 +48,6 @@ feature {NONE} -- Initialization
 			initialize_menu_sep_box
 			create radio_group_ref
 			is_initialized := True
-			disable_sensitive
 		end
 
 	initialize_menu_sep_box is
@@ -56,8 +59,23 @@ feature {NONE} -- Initialization
 			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 		
+feature {NONE} -- Implementation
+
+	is_sensitive: BOOLEAN
+	
+	enable_sensitive is
+			-- Implemented to fulfill assertions but leave c_object unsensitive.
+		do
+			is_sensitive := True
+		end
+
+	disable_sensitive is
+			-- Implemented to fulfill assertions but leave c_object unsensitive.
+		do
+			is_sensitive := False
+		end	
 		
-feature {EV_MENU_IMP} -- Implementation
+feature {EV_MENU_IMP} -- Implementation	
 
 	menu_item_type: INTEGER is
 		once

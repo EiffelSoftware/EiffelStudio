@@ -212,16 +212,7 @@ feature {NONE} -- Implementation
 
 	init_colors is
 			-- Initialize the colors.
-		local
-			c: EV_COLOR
 		do
-			Create c.make_rgb (255, 0, 0)
-			set_foreground_color (c)
-			propagate_foreground_color
-
-			Create c.make_rgb (255, 255, 0)
-			set_background_color (c)
-			propagate_background_color
 		end
 
 end -- class EB_ENTRY_PANEL

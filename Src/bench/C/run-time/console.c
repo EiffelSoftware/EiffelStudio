@@ -32,6 +32,7 @@ rt_public EIF_POINTER file_def(int file)
 	}
 
 	/* NOTREACHED */
+	return 0; /* to avoid a warning */
 }
 
 rt_public EIF_POINTER console_def(int file)

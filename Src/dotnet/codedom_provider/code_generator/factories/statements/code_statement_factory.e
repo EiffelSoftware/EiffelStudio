@@ -9,6 +9,11 @@ class
 inherit
 	CODE_FACTORY
 
+	CODE_ASSIGNMENT_TYPES
+		export
+			{NONE} all
+		end
+
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_assign_statement (a_source: SYSTEM_DLL_CODE_ASSIGN_STATEMENT) is
@@ -17,18 +22,29 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_property_expr: CODE_PROPERTY_REFERENCE_EXPRESSION
+			l_field_expr: CODE_ATTRIBUTE_REFERENCE_EXPRESSION
 			l_target: CODE_EXPRESSION
-			l_is_set_property: BOOLEAN
+			l_assignment_type: INTEGER
 		do
 			if a_source.left /= Void then
 				if a_source.right /= Void then
 					code_dom_generator.generate_expression_from_dom (a_source.left)
 					l_target := last_expression
 					l_property_expr ?= l_target
-					l_is_set_property := l_property_expr /= Void
-					l_property_expr.set_is_set_reference (l_is_set_property)
+					if l_property_expr /= Void then
+						l_assignment_type := Property_assignment
+						l_property_expr.set_is_set_reference (True)
+					else
+						l_field_expr ?= l_target
+						if l_field_expr /= Void then
+							l_assignment_type := Field_assignment
+							l_field_expr.set_is_set_reference (True)
+						else
+							l_assignment_type := Default_assignment
+						end
+					end
 					code_dom_generator.generate_expression_from_dom (a_source.right)			
-					set_last_statement (create {CODE_ASSIGN_STATEMENT}.make (l_target, last_expression, l_is_set_property))
+					set_last_statement (create {CODE_ASSIGN_STATEMENT}.make (l_target, last_expression, l_assignment_type))
 				else
 					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_assignment_source, [current_context])
 				end

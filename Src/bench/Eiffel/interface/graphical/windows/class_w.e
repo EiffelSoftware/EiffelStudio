@@ -47,7 +47,8 @@ feature
 	make (a_screen: SCREEN) is
 			-- Create a class tool.
 		do
-			normal_create (a_screen)
+			normal_create (a_screen);
+			set_composite_attributes (Current)
 		end;
 
 	text_window: CLASS_TEXT;
@@ -145,12 +146,25 @@ feature
 			default_attach_all;
 			global_form.detach_right (text_window);
 			global_form.attach_right (command_bar, 0);
-			global_form.attach_bottom_widget (format_bar, command_bar, 10);
+			global_form.attach_bottom_widget (format_bar, command_bar, 0);
 			global_form.attach_right_widget (command_bar, text_window, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_right (format_bar, 0);
 		end;
 
+feature
+
+	raise_shell_popup is
+			-- Raise the shell command popup window if it is popped up.
+		local
+			shell_window: SHELL_W
+		do
+			shell_window := shell_command.shell_window;
+			if shell_window.is_popped_up then
+				shell_window.raise
+			end
+		end;
+			
 feature {NONE}
 
 	editable: BOOLEAN is True;
@@ -197,7 +211,7 @@ feature {NONE}
 		do
 			!!shell_command.make (command_bar, text_window);
 			command_bar.attach_left (shell_command, 0);
-			command_bar.attach_bottom (shell_command, 0);
+			command_bar.attach_bottom (shell_command, 10);
 			!! filter_command.make (command_bar, text_window);
 			command_bar.attach_left (filter_command, 0);
 			command_bar.attach_right (filter_command, 0);

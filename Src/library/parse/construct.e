@@ -152,7 +152,9 @@ feature -- Output
 	print_name is
 			-- Print the construct name on standard output.
 		do
-			io.put_string (construct_name)
+			if construct_name /= Void then
+				io.put_string (construct_name)
+			end
 		end;
 
 feature {CONSTRUCT} -- Implementation

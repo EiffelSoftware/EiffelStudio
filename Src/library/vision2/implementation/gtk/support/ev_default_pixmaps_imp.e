@@ -92,7 +92,7 @@ feature -- Access
 	Default_window_icon: EV_PIXMAP is
 			-- Pixmap used as default icon for new windows.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: EV_PIXMAP_I
 		do
 				-- Create a default pixmap
 			create Result

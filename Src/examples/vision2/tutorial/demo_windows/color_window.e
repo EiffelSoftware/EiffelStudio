@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			cmd: EV_ROUTINE_COMMAND
 		do
 			make_with_text (par, " Show ")
+			pparent:= par
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
 			!! cmd.make (~execute1)
@@ -42,6 +43,7 @@ feature -- Access
 
 	dialog: EV_COLOR_DIALOG
 			-- The dialog
+	pparent: EV_CONTAINER
 
 feature -- Execution features
 
@@ -49,11 +51,14 @@ feature -- Execution features
 			-- Executed when we press the first button
 		local
 			cmd: EV_ROUTINE_COMMAND
+			col: EV_COLOR
 		do
 			if dialog /= Void then
 				dialog.show
 			else
 				!! dialog.make (parent)
+				create col.make_rgb (134, 23, 57)
+				dialog.select_color (col)
 				dialog.show
 			end
 		end

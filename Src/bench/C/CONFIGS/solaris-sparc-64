@@ -17,7 +17,7 @@
 #--|----------------------------------------------------------------
 
 #Computation/sizes
-byteorder='87654321'
+byteorder='4321'
 pagesize='8192'
 alignbytes='8'
 doublesize='8'

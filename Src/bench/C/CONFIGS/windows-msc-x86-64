@@ -56,7 +56,7 @@ all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h ei
 #
 
 #Computation/sizes
-byteorder='12345678'
+byteorder='1234'
 pagesize='4096'
 alignbytes='8'
 doublesize='8'

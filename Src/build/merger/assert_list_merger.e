@@ -2,8 +2,8 @@ class ASSERT_LIST_MERGER
 
 feature
 	
-	merge2 (a1, a2: EIFFEL_LIST [TAGGED_AS]) is
-			-- Merge assertions `a1' and `a2'.
+	merge2 (user, new_tmp: EIFFEL_LIST [TAGGED_AS]) is
+			-- Merge assertions `user' and `new_tmp'.
 			-- It will be allowed to have more
 			-- than one tag with the same value
 			-- as long as the expressions differ
@@ -11,37 +11,44 @@ feature
 			temp_assertions: LINKED_LIST [TAGGED_AS]
 			assertion_found: BOOLEAN
 		do
+
+			-- Temporarily storing assertions that
+			-- should be kept.
 			!! temp_assertions.make
 			temp_assertions.start
 
 			from
-				a1.start
+				user.start
 			until
-				a2.after
+				new_tmp.after
 			loop
+				-- Traversing `user' and `new_tmp' assertions
+				-- to keep user defined assertions.
+
 				from
-					a2.start
+					new_tmp.start
 					assertion_found := False
 				until
-					a2.after or else assertion_found
+					new_tmp.after or else assertion_found
 				loop
-					assertion_found := a2.item.is_equiv (a1.item)
-					a2.forth
+					assertion_found := new_tmp.item.is_equiv (user.item)
+					new_tmp.forth
 				end
 				
 				if not assertion_found then
-					temp_assertions.put_left (a1.item)
+					temp_assertions.put_left (user.item)
 				end
-				a1.forth
+				user.forth
 			end
 
-			!! merge_result.make (a2.count + temp_assertions.count)
+			!! merge_result.make (new_tmp.count + temp_assertions.count)
 
-			-- First assertions `a2'.
-			merge_result.merge_after_position (0, a2)
+			-- First the assertions of `new_tmp' will be put
+			-- in the merge result.
+			merge_result.merge_after_position (0, new_tmp)
 
-			-- Keep assertions from `a1' not appearing in `a2'.
-			merge_result.go_i_th (a2.count + 1)
+			-- Keeping assertions from `user' not appearing in `new_tmp'.
+			merge_result.go_i_th (new_tmp.count + 1)
 			from
 				temp_assertions.start
 			until

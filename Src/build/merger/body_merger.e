@@ -2,40 +2,46 @@ class BODY_MERGER
 
 feature
 
-	merge_comments (b1, b2, b3: BODY_AS) is
-		local
-			content_merger: CONTENT_MERGER
-		do
-		end;
+--	merge_comments (old_tmp, user, new_tmp: BODY_AS) is
+--		local
+--			content_merger: CONTENT_MERGER
+--		do
+--		end;
 
-	merge3 (b1, b2, b3: BODY_AS) is
-			-- Merge bodies `b1', `b2' and `b3'.
+	merge3 (old_tmp, user, new_tmp: BODY_AS) is
+			-- Merge bodies `old_tmp', `user' and `new_tmp'.
 		local
-			b1_content: CONTENT_AS;
+			old_tmp_content: CONTENT_AS;
 			arguments_merger: ARGUMENTS_MERGER;
 			content_merger: CONTENT_MERGER
 		do
 			!! merge_result
 
+			-- First merge arguments of `user' and
+			-- `new_tmp'. `old_tmp' will not be taken
+			-- in consideration.
 			!! arguments_merger;
-			arguments_merger.merge2 (b2.arguments, b3.arguments)
+			arguments_merger.merge2 (user.arguments, new_tmp.arguments)
 
 			merge_result.set_arguments (arguments_merger.merge_result)
-			merge_result.set_type (b3.type)
+			merge_result.set_type (new_tmp.type)
 
-			if b1 /= Void then
-				b1_content := b1.content
+			if old_tmp /= Void then
+				old_tmp_content := old_tmp.content
 			end
 
-			debug ("MERGER")
-				io.error.putstring ("%Tcontent: ");
-			end;
+debug ("MERGER")
+	io.error.putstring ("%Tcontent: ");
+end;
+
+			-- Now merge contents
 			!! content_merger;
-			content_merger.merge3 (b1_content, b2.content, b3.content)
+			content_merger.merge3 (old_tmp_content, user.content, new_tmp.content)
 			merge_result.set_content (content_merger.merge_result)
-			debug ("MERGER")
-				io.error.putstring ("finished content%N");
-			end;
+
+debug ("MERGER")
+	io.error.putstring ("finished content%N");
+end;
 		end;
 
 	merge_result: BODY_AS

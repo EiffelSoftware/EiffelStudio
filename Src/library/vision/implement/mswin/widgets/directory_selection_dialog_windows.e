@@ -150,7 +150,7 @@ feature -- Basic operations
 			ok_button_action
 			ok_actions.execute (action_widget, Void)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	combo_box_action (notify_code: INTEGER) is

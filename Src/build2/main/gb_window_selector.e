@@ -289,7 +289,6 @@ feature {NONE} -- Implementation
 		do
 			titled_window_object := selector_item.object
 			layout_constructor.set_root_window (titled_window_object)
-			titled_window_object.update_representations
 			
 				-- Now we must update the displayed display and builder windows.
 				-- Firstly hide the existing windows if shown

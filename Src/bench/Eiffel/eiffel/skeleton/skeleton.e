@@ -129,8 +129,16 @@ feature -- Comparison
 									-- checking voidness of `skeleton' from CLASS_C.
 							end
 						else
-								-- Previous skeleton did not exist, then it definitely changed.
-							Result := False
+							if l_exp_desc.class_type.associated_class.is_external then
+									-- A .NET external class so we cannot tell if the skeleton
+									-- changed
+									-- FIXME: Manu: 10/27/2003: What if we handle incremental
+									-- changes of external classes?
+								Result := True
+							else
+									-- Previous skeleton did not exist, then it definitely changed.
+								Result := False
+							end
 						end
 						i := i + 1
 					end

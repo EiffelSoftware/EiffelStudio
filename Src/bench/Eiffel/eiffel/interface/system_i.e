@@ -1641,7 +1641,7 @@ feature {NONE} -- IL generation
 				i > nb
 			loop
 				l_class := classes.item (i)
-				if l_class /= Void and then l_class.is_generated then
+				if l_class /= Void then
 						-- We now process each generic derivation in each class,
 						-- as it might be possible that we will have a class
 						-- called A_INT32 and a class A [INTEGER] which resolves
@@ -1652,35 +1652,37 @@ feature {NONE} -- IL generation
 					until
 						l_types.after
 					loop
-							-- Compute full type name. We do not need to check the
-							-- `full_il_implementation_type_name' as there is no way
-							-- that an Eiffel class can have a `.' in its name.
-						l_name := l_types.item.full_il_type_name
+						if l_types.item.is_generated then
+								-- Compute full type name. We do not need to check the
+								-- `full_il_implementation_type_name' as there is no way
+								-- that an Eiffel class can have a `.' in its name.
+							l_name := l_types.item.full_il_type_name
 
-						if cls_compliant then
-								-- CLS compliant prevent to have two types
-								-- with full name that only differs by case.
-							l_name := l_name.as_lower
-						end
-
-						if l_table.has (l_name) then
-								-- This name has already been inserted, we
-								-- record it in `l_conflicts' to report an error later.
-							if l_conflicts.has (l_name) then
-									-- An error has already been processed on this type,
-									-- get list of classes involved to add current `l_class'.
-								l_list := l_conflicts.item (l_name)
-							else
-									-- No error on `l_name', we create a new list.
-								create l_list.make (2)
-								l_conflicts.put (l_list, l_name)
+							if cls_compliant then
+									-- CLS compliant prevent to have two types
+									-- with full name that only differs by case.
+								l_name := l_name.as_lower
 							end
-								-- Add classes involved in error.
-							l_list.force (l_class)
-							l_list.force (l_table.item (l_name))
-						else
-								-- Mark `l_class' as being processed.
-							l_table.put (l_class, l_name)
+
+							if l_table.has (l_name) then
+									-- This name has already been inserted, we
+									-- record it in `l_conflicts' to report an error later.
+								if l_conflicts.has (l_name) then
+										-- An error has already been processed on this type,
+										-- get list of classes involved to add current `l_class'.
+									l_list := l_conflicts.item (l_name)
+								else
+										-- No error on `l_name', we create a new list.
+									create l_list.make (2)
+									l_conflicts.put (l_list, l_name)
+								end
+									-- Add classes involved in error.
+								l_list.force (l_class)
+								l_list.force (l_table.item (l_name))
+							else
+									-- Mark `l_class' as being processed.
+								l_table.put (l_class, l_name)
+							end
 						end
 						l_types.forth
 					end

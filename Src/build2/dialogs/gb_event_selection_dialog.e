@@ -312,6 +312,7 @@ feature {NONE} -- Implementation
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
 					create frame.make_with_text (renamed_action_sequence_name)
+					frame.set_background_color (white)
 					horizontal_box.extend (frame)
 					create label.make_with_text ("Generated feature name : ")
 					label.set_background_color (white)
@@ -443,13 +444,18 @@ feature {NONE} -- Implementation
 			end
 			update_scroll_bar
 			unlock_update
-			
+
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
 				-- options.
 			system_status.enable_project_modified
 			command_handler.update
+				-- We do this here as when the update is locked,
+				-- there appears to be problems.
+			if current_check_button.is_selected then
+				current_text_field.set_focus
+			end
 		end
 		
 	create_main_box is

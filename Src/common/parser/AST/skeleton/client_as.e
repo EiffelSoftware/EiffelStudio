@@ -14,6 +14,19 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like clients) is
+			-- Create a new CLIENT AST node.
+		require
+			c_not_void: c /= Void
+			c_not_empty: not c.empty
+		do
+			clients := c
+		ensure
+			clients_set: clients = c
+		end
+
 feature {NONE} -- Initialization
 
 	set is

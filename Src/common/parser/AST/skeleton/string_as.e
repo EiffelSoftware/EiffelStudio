@@ -16,6 +16,18 @@ inherit
 		end;
 	CHARACTER_ROUTINES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (s: STRING) is
+			-- Create a new STRING AST node.
+		require
+			s_not_void: s /= Void
+		do
+			value := s
+		ensure
+			value_set: value = s
+		end
+
 feature {NONE} -- Initilization
 
 	set is

@@ -14,6 +14,21 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like clients; f: like features) is
+			-- Create a new EXPORT_ITEM AST node.
+		require
+			c_not_void: c /= Void
+			f_not_void: f /= Void
+		do
+			clients := c
+			features := f
+		ensure
+			clients_set: clients = c
+			features_set: features = f
+		end
+
 feature {NONE} -- Initialization
 
 	set is

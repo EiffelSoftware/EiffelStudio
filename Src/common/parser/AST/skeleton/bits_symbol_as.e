@@ -10,8 +10,22 @@ class BITS_SYMBOL_AS
 inherit
 
 	BASIC_TYPE
+		rename
+			initialize as initialize_basic_type
 		redefine
 			set, is_equivalent
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (s: like bits_symbol) is
+			-- Create a mew BITS_SYMBOL AST node.
+		require
+			s_not_void: s /= Void
+		do
+			bits_symbol := s
+		ensure
+			bits_symbol_set: bits_symbol = s
 		end
 
 feature -- Properties

@@ -10,8 +10,25 @@ class UN_FREE_AS
 inherit
 
 	UNARY_AS
+		rename
+			initialize as initialize_unary_as
 		redefine
 			set, is_equivalent
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (op: like op_name; e: like expr) is
+			-- Create a new UN_FREE AST node.
+		require
+			op_not_void: op /= Void
+			e_not_void: e /= Void
+		do
+			op_name := op
+			expr := e
+		ensure
+			op_name_set: op_name = op
+			expr_set: expr = e
 		end
 
 feature {NONE} -- Initialization

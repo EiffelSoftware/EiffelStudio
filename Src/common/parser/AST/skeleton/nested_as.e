@@ -14,6 +14,21 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like target; m: like message) is
+			-- Create a new NESTED CALL AST node.
+		require
+			t_not_void: t /= Void
+			m_not_void: m /= Void
+		do
+			target := t
+			message := m
+		ensure
+			target_set: target = t
+			message_set: message = m
+		end
+
 feature {NONE} -- Initialization
 
 	set is

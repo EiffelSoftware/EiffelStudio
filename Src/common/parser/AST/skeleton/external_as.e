@@ -13,6 +13,21 @@ inherit
 			is_external, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: like language_name; a: like alias_name) is
+			-- Create a new EXTERNAL AST node.
+		require
+			l_not_void: l /= Void
+		do
+			check_validity
+			language_name := l
+			alias_name := a
+		ensure
+			language_name_set: language_name = l
+			alias_name_set: alias_name = a
+		end
+
 feature {NONE} -- Initialization
 
 	set is

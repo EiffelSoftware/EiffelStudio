@@ -10,14 +10,26 @@ class
 inherit
 	EXPR_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like target; f: like feature_name; o: like operands) is
+			-- Create a new ROUTINE_CREATION AST node.
+		require
+			f_not_void: f /= Void
+		do
+			target := t
+			feature_name := f
+			operands := o
+		ensure
+			target_set: target = t
+			feature_name_set: feature_name = f
+			operands_set: operands = o
+		end
+
 feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
-		local
-			access_feat_as: DELAYED_ACCESS_FEAT_AS
-			current_as: CURRENT_AS
-			access_id_as: ACCESS_ID_AS
 		do
 			target ?= yacc_arg (0)
 			feature_name ?= yacc_arg (1)

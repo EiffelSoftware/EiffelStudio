@@ -14,6 +14,23 @@ inherit
 			position, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like clients; f: like features; p: INTEGER) is
+			-- Create a new FEATURE_CLAUSE AST node.
+		require
+			f_not_void: f /= Void
+			p_non_negative: p > 0
+		do
+			clients := c
+			features := f
+			position := p
+		ensure
+			clients_set: clients = c
+			features_set: features = f
+			position_set: position = p
+		end
+
 feature {NONE} -- Initialization
 
 	set is

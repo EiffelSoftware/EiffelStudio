@@ -11,6 +11,18 @@ inherit
 
 	EXPR_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like terminal) is
+			-- Create a new VALUE AST node.
+		require
+			t_not_void: t /= Void
+		do
+			terminal := t
+		ensure
+			terminal_set: terminal = t
+		end
+
 feature {NONE} -- Initilization
 
 	set is

@@ -19,6 +19,61 @@ inherit
 		end
 	COMPILER_EXPORTER
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like class_name;
+		is_d, is_e, is_s: BOOLEAN;
+		ind: like indexes;
+		g: like generics;
+		p: like parents;
+		c: like creators;
+		f: like features;
+		inv: like invariant_part;
+		s: like suppliers;
+		o: like obsolete_message;
+		e: INTEGER) is
+			-- Create a new CLASS AST node.
+		require
+			n_not_void: n /= Void
+			s_not_void: s /= Void
+		do
+			class_name := n
+			is_deferred := is_d
+			is_expanded := is_e
+			is_separate := is_s
+			indexes := ind
+			generics := g
+			parents := p
+			creators := c
+			features := f
+			invariant_part := inv
+			if
+				invariant_part /= Void and then
+				invariant_part.assertion_list = Void
+			then
+					-- The keyword `invariant' followed by no assertion
+					-- at all is not significant.
+				invariant_part := Void
+			end
+			suppliers := s
+			obsolete_message := o
+			end_position := e
+		ensure
+			class_name_set: class_name = n
+			is_deferred_set: is_deferred = is_d
+			is_expanded_set: is_expanded = is_e
+			is_separate_set: is_separate = is_s
+			indexes_set: indexes = ind
+			generics_set: generics = g
+			parents_set: parents = p
+			creators_set: creators = c
+			features_set: features = f
+			invariant_part_set: invariant_part = inv
+			suppliers_set: suppliers = s
+			obsolete_message_set: obsolete_message = o
+			end_position_set: end_position = e
+		end
+
 feature {NONE} -- Initialization
 
 	set is

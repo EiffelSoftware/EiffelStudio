@@ -9,6 +9,18 @@ inherit
 
 	EXPR_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (i: like id_list) is
+			-- Create a new UN_STRIP AST node.
+		require
+			i_not_void: i /= Void
+		do
+			id_list := i
+		ensure
+			id_list_set: id_list = i
+		end
+
 feature {NONE} -- Initialization
 
 	set is
@@ -19,6 +31,8 @@ feature {NONE} -- Initialization
 				-- Empty list
 				!!id_list.make_filled (0)
 			end;
+				-- The following line is already a
+				-- property of EIFFEL_LIST! -- ericb
 			id_list.compare_objects;
 		ensure then
 			id_list /= Void;

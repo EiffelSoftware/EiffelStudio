@@ -14,6 +14,20 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: like lower; u: like upper) is
+			-- Create a new INTERVAL AST node.
+		require
+			l_not_void: l /= Void
+		do
+			lower := l
+			upper := u
+		ensure
+			lower_set: lower = l
+			upper_set: upper = u
+		end
+
 feature {NONE} -- Initialization
 
 	set is

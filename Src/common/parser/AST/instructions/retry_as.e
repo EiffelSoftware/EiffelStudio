@@ -11,6 +11,14 @@ inherit
 
 	INSTRUCTION_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: INTEGER) is
+			-- Create a new RETRY AST node.
+		do
+			line_number := l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -14,6 +14,32 @@ inherit
 			number_of_stop_points
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like from_part; i: like invariant_part;
+		v: like variant_part; s: like stop;
+		c: like compound; p, l: INTEGER) is
+			-- Create a new LOOP AST node.
+		require
+			s_not_void: s /= Void
+		do
+			from_part := f
+			invariant_part := i
+			variant_part := v
+			stop := s
+			compound := c
+			start_position := p
+			line_number := l
+		ensure
+			from_part_set: from_part = f
+			invariant_part_set: invariant_part = i
+			variant_part_set: variant_part = v
+			stop_set: stop = s
+			compound_set: compound = c
+			start_position_set: start_position = p
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

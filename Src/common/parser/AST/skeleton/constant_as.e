@@ -12,6 +12,18 @@ inherit
 			is_unique, is_constant, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (v: like value) is
+			-- Create a new CONSTANT AST node.
+		require
+			v_not_void: v /= Void
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature {NONE} -- Initialization
 
 	set is 

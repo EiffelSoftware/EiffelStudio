@@ -14,6 +14,21 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (i: like id_list; t: like type) is
+			-- Create a new TYPE_DEC AST node.
+		require
+			i_not_void: i /= Void
+			t_not_void: t /= Void
+		do
+			id_list := i
+			type := t
+		ensure
+			id_list_set: id_list = i
+			type_set: type = t
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -14,6 +14,20 @@ inherit
 			number_of_stop_points, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (a: like arguments; t: like type; c: like content) is
+			-- Create a new BODY AST node.
+		do
+			arguments := a
+			type := t
+			content := c
+		ensure
+			arguments_set: arguments = a
+			type_set: type = t
+			content_set: content = c
+		end
+
 feature {NONE} -- Initialization
 	
 	set is

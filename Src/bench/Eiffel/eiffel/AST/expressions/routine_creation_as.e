@@ -196,7 +196,7 @@ feature -- Type check, byte code and dead code removal
 
 			if
 				(a_feature = Void) or else
-				(not (a_feature.is_function or else a_feature.is_procedure) or else
+				(not a_feature.is_routine or else
 				a_feature.is_external)
 			then
 				!! not_supported
@@ -426,8 +426,7 @@ feature {NONE} -- Type
 		require
 			valid_table: a_table /= Void;
 			valid_feature: a_feature /= Void;
-			function_or_procedure: a_feature.is_function or else
-								   a_feature.is_procedure;
+			function_or_procedure: a_feature.is_routine
 			not_external: not a_feature.is_external
 		local
 			t, tgt_type, solved_type:TYPE_A

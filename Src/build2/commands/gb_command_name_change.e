@@ -81,7 +81,11 @@ feature -- Basic Operation
 			if old_name.is_empty then
 				Result := "Unnamed " + child_layout_item.object.short_type + " named as '" + new_name + "'"
 			else
-				Result := "'"+ old_name + "' renamed to '" + new_name + "'"
+				if new_name.is_empty then
+					Result := "'" + old_name + "' name removed."	
+				else
+					Result := "'"+ old_name + "' renamed to '" + new_name + "'"
+				end
 			end
 		end
 		

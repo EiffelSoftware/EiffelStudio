@@ -179,21 +179,12 @@ feature -- Pngs
 			if pixmaps_by_name.has (a_name) then
 				Result := pixmaps_by_name @ (a_name)
 			else
-				if Eiffel_platform.as_lower.is_equal ("windows") then
-					create full_path.make_from_string (Icon_path)
-					full_path.set_file_name (a_name)
-					full_path.add_extension ("ico")
-				else
-					create full_path.make_from_string (Bitmap_path)
-					full_path.set_file_name (a_name)
-					full_path.add_extension (Pixmap_suffix)
-				end
-				create file.make (full_path)
+				create file.make (pixmap_file_name (a_name))
 				--| FIXME This is a temporary hack to display
 				--| a not found pixmap if the pixmap does not exist.
 				--| Replace with a check when all pixmaps have been implemented.
 				if file.exists then
-					Result.set_with_named_file (full_path)
+					Result.set_with_named_file (pixmap_file_name (a_name))
 					check
 						pixmap_not_contained: not pixmaps_by_name.has (a_name)
 					end
@@ -220,28 +211,8 @@ feature -- Reading
 			create Result
 
 			if not retried then
-					-- Initialize the pathname & load the file
-
-					-- Note that if we have launched from
-					-- VisualStudio, then we look for the pixmaps
-					-- relative to the current directory, which is the location
-					-- of build.exe
-				if is_visual_studio_wizard then
-					create full_path.make_from_string (".\bitmaps\ico")
-					full_path.set_file_name (fn)
-					full_path.add_extension ("ico")
-				else
-					if Eiffel_platform.as_lower.is_equal ("windows") then
-						create full_path.make_from_string (Icon_path)
-						full_path.set_file_name (fn)
-						full_path.add_extension ("ico")
-					else
-						create full_path.make_from_string (Bitmap_path)
-						full_path.set_file_name (fn)
-						full_path.add_extension (Pixmap_suffix)
-					end
-				end
-				Result.set_with_named_file (full_path)
+					-- load the file
+				Result.set_with_named_file (pixmap_file_name (fn))
 			else
 				create warning_dialog.make_with_text (
 					"Cannot read pixmap file:%N" + full_path + ".%N%
@@ -268,6 +239,17 @@ feature -- Reading
 				Result := True
 			end
 		end
+		
+	visual_studio_pixmap_location: STRING is
+			--
+		local
+			pixmap_file_location: PIXMAP_LOCATER
+		once
+			create pixmap_file_location
+			Result := pixmap_file_location.pixmap_path
+			Result := Result + "\Wizards\Build\bitmaps\ico"
+		end
+		
 
 feature {NONE} -- Update
 
@@ -323,5 +305,32 @@ feature {NONE} -- Update
 		ensure
 			result_valid: Result /= Void and then Result.count = 2
 		end
+
+	pixmap_file_name (file: STRING): FILE_NAME is
+			-- `Result' is full path to `file'.
+			-- Dependent on platform, and type of
+			-- execution (Wizard, normal.)
+		do
+				-- Note that if we have launched from
+				-- VisualStudio, then we look for the pixmaps
+				-- relative to the current directory, which is the location
+				-- of build.exe
+			if is_visual_studio_wizard then
+				create Result.make_from_string (visual_studio_pixmap_location)
+				Result.set_file_name (file)
+				Result.add_extension ("ico")
+			else
+				if Eiffel_platform.as_lower.is_equal ("windows") then
+					create Result.make_from_string (Icon_path)
+					Result.set_file_name (file)
+					Result.add_extension ("ico")
+				else
+					create Result.make_from_string (Bitmap_path)
+					Result.set_file_name (file)
+					Result.add_extension (Pixmap_suffix)
+				end
+			end
+		end
+		
 
 end -- Class GB_SHARED_PIXMAPS

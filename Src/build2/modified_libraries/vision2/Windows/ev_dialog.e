@@ -17,8 +17,7 @@ inherit
 		redefine 
 			implementation,
 			create_implementation,
-			initialize,
-			is_modal
+			initialize
 		end
 
 create
@@ -65,9 +64,19 @@ feature -- Access
 
 feature -- Access
 
-	is_modal: BOOLEAN
-			-- Must `Current' be closed before application can
-			-- receive user events again?
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
+		do
+			Result := implementation.is_modal
+		end
+		
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := implementation.is_relative
+		end
 
 feature -- Status Setting
 		

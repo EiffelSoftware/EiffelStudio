@@ -11,11 +11,24 @@ inherit
 	EV_DIALOG_IMP_COMMON
 		redefine
 			hide,
-			setup_dialog	
+			setup_dialog,
+			is_modal
 		end
 
 create
 	make_with_dialog_window
+	
+feature -- Status report
+
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
+		do
+			if not is_destroyed then
+				Result := is_show_requested
+			end
+		end
 
 feature -- Basic operations
 

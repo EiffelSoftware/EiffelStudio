@@ -115,6 +115,20 @@ feature -- Status Report
 			-- Is `Current' closeable by the user?
 			-- (Through a click on the Window Menu, or by
 			-- pressing ALT-F4).
+			
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
+		do
+			Result := False
+		end
+		
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := False
+		end
 
 feature -- Status Setting
 
@@ -326,7 +340,6 @@ feature {NONE} -- Implementation
 			is_in_min_width := other_imp.is_in_min_width
 			is_minheight_recomputation_needed := other_imp.is_minheight_recomputation_needed
 			is_minwidth_recomputation_needed := other_imp.is_minwidth_recomputation_needed
-			is_modal := other_imp.is_modal
 			is_notify_originator := other_imp.is_notify_originator
 			is_pnd_in_transport := other_imp.is_pnd_in_transport
 			is_transport_enabled := other_imp.is_transport_enabled

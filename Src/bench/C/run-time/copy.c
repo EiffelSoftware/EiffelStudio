@@ -451,14 +451,81 @@ rt_public void xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
 	eif_std_ref_copy(source, target);
 }
 
+/*
+doc:	<routine name="eif_std_field_copy" return_type="void" export="private">
+doc:		<summary>Copy `source' into `target' field by field. And recurse on expanded field if any.</summary>
+doc:		<param name="source" type="EIF_REFERENCE">Object from which fields will be copied onto target.</param>
+doc:		<param name="target" type="EIF_REFERENCE">Object on which fields of `source' will be copied into.</param>
+doc:		<param name="dtype" type="int16">Dynamic type of `source' and `target'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None as we only manipulate data of `source' and `target'.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target, int16 dtype)
+{
+	struct cnode *skeleton = &System(dtype);
+	long index;		/* Target attribute index */
+	long offset;
+	EIF_REFERENCE t_ref, s_ref;
+#ifndef WORKBENCH
+	long *offsets = skeleton->cn_offsets;	/* Target attribute offsets. */
+#else
+	int32 *cn_attr = skeleton->cn_attr;		/* Array of attribute keys for target object */
+	int32 attr_key;	/* Attribute key */
+#endif
+	for (index = skeleton->cn_nbattr - 1; index >= 0; index--) {
+#ifndef WORKBENCH
+		offset = offsets[index];
+		t_ref = target + offset;
+		s_ref = source + offset;
+#else
+			/* Evaluation of the attribute key */
+		attr_key = cn_attr[index];
+			/* Evaluation of the target attribute offset */
+		CAttrOffs(offset,attr_key,dtype);
+		t_ref = target + offset;
+			/* Evaluation of the source attribute offset */
+			/* It is the same as the target, since they have the same dynamic type */
+		s_ref = source + offset;
+#endif
+		switch (skeleton->cn_types[index] & SK_HEAD) {
+		case SK_BOOL:
+		case SK_CHAR:
+			*t_ref = *s_ref; break;
+		case SK_WCHAR:
+			*(EIF_WIDE_CHAR *) t_ref = *(EIF_WIDE_CHAR *) s_ref; break;
+		case SK_INT8:
+			*(EIF_INTEGER_8 *) t_ref = *(EIF_INTEGER_8 *) s_ref; break;
+		case SK_INT16:
+			*(EIF_INTEGER_16 *) t_ref = *(EIF_INTEGER_16 *) s_ref; break;
+		case SK_INT32:
+			*(EIF_INTEGER_32 *) t_ref = *(EIF_INTEGER_32 *) s_ref; break;
+		case SK_INT64:
+			*(EIF_INTEGER_64 *) t_ref = *(EIF_INTEGER_64 *) s_ref; break;
+		case SK_FLOAT:
+			*(EIF_REAL *) t_ref = *(EIF_REAL *) s_ref; break;
+		case SK_DOUBLE:
+			*(EIF_DOUBLE *) t_ref = *(EIF_DOUBLE *) s_ref; break;
+		case SK_POINTER:
+			*(EIF_POINTER *) t_ref = *(EIF_POINTER *) s_ref; break;
+		case SK_EXP:
+			eif_std_ref_copy (t_ref, s_ref);
+			break;
+		default:
+			*(EIF_REFERENCE *)t_ref = *(EIF_REFERENCE *)s_ref;
+			break;
+		}
+	}
+}
 rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy Eiffel object `source' into Eiffel object `target'.
-	 * Problem: updating intra-references on expanded object
-	 * because the garbage collector needs to explore those references.
 	 * Dynamic type of `source' is supposed to be the same as dynamic type
 	 * of `target'. It assumes also that `source' and `target' are not 
 	 * references on special objects.
+	 * Problem: updating intra-references on expanded object
+	 * because the garbage collector needs to explore those references.
 	 */
 
 	register3 uint32 s_flags;			/* Source object flags */
@@ -476,19 +543,27 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	/* Precompute the enclosing target object */
 	enclosing = target;					/* By default */
 	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
-		enclosing -= t_zone->ov_size & B_SIZE;
-		size = EIF_Size(Deif_bid(t_flags));
+		if (t_flags & EO_EXP) {
+			enclosing -= t_zone->ov_size & B_SIZE;
 		}
-	else
+		size = EIF_Size(Deif_bid(t_flags));
+	} else {
 		size = s_zone->ov_size & B_SIZE;
+	}
 
 	if ((s_flags & EO_TYPE) == (t_flags & EO_TYPE)) {
 
-		/* Copy of source object into target object
-		 * with same dynamic type. Block copy here, but references on
-		 * expanded must be updated and special objects reallocated.
-		 */
-		memmove(target, source, size);
+		if (s_flags & EO_COMP) {
+			/* Case of composite object: updating of references on expanded
+			 * objects.
+			 */
+			eif_std_field_copy (source, target, Deif_bid(s_flags & EO_TYPE));
+		} else {
+			/* Copy of source object into target object
+			* with same dynamic type. Block copy here.
+			*/
+			memmove(target, source, size);
+		}
 
 #ifdef ISE_GC
 		/* Perform aging tests. We need the address of the enclosing object to
@@ -504,13 +579,6 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		)
 			erembq(enclosing);			/* Then remember the enclosing object */
 #endif /* ISE_GC */
-
-		if (s_flags & EO_COMP) {
-			/* Case of composite object: updating of references on expanded
-			 * objects and duplication of special objects.
-			 */
-			expanded_update(source, target, SHALLOW);
-		}
 	}
 }
 

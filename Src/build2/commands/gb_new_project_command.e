@@ -77,7 +77,7 @@ feature -- Basic operations
 				loop
 					shown_once := True
 					create_project := True
-					dialog.show_modal_to_window (system_status.main_window)
+					dialog.show_modal_to_window (main_window)
 						-- If a directory was chosen.
 					if not dialog.directory.is_empty then
 						create file_name.make_from_string (dialog.directory)
@@ -85,7 +85,7 @@ feature -- Basic operations
 						create raw_file.make (file_name)
 						if raw_file.exists then
 							create conf_dialog.make_with_text (Project_exists_warning)
-							conf_dialog.show_modal_to_window (system_status.main_window)
+							conf_dialog.show_modal_to_window (main_window)
 							if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 								create_project := False
 							end
@@ -95,7 +95,7 @@ feature -- Basic operations
 							create settings.make_with_default_values
 							settings.set_project_location (dialog.directory)
 							system_status.set_current_project (settings)
-							system_status.main_window.show_tools
+							main_window.show_tools
 							command_handler.update
 						end
 					end

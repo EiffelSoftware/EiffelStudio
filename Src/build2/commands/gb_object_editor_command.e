@@ -18,7 +18,7 @@ inherit
 	
 	GB_SHARED_OBJECT_HANDLER
 	
-	GB_SHARED_SYSTEM_STATUS
+	GB_SHARED_TOOLS
 	
 	GB_SHARED_OBJECT_EDITORS
 	
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 				dialog: EV_INFORMATION_DIALOG
 			do
 				create dialog.make_with_text (Object_editor_button_warning)
-				dialog.show_modal_to_window (system_status.main_window)
+				dialog.show_modal_to_window (main_window)
 			end
 			
 			

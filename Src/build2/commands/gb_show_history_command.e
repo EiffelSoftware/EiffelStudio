@@ -17,7 +17,9 @@ inherit
 	
 	GB_SHARED_HISTORY
 	
-	GB_SHARED_SYSTEM_STATUS
+--	GB_SHARED_SYSTEM_STATUS
+	
+	GB_SHARED_TOOLS
 
 create
 	make
@@ -51,7 +53,7 @@ feature -- Basic operations
 			do
 					-- Ensure that the appropriate itme is selected.
 				history.dialog.select_current_history_position
-				history.dialog.show_relative_to_window (system_status.main_window)
+				history.dialog.show_relative_to_window (main_window)
 				command_handler.update
 			end
 

@@ -39,10 +39,10 @@ feature
 			if i > 0 then
 				class_name := a_type_name.substring (1, i - 1)
 				dtype := a_type_name.substring (i + 1, a_type_name.count).to_integer
+				class_name.to_lower
 			else
-				class_name := clone (a_type_name)
+				class_name := a_type_name.as_lower
 			end
-			class_name.to_lower
 		end
 
 	make_verbose (s: STRING) is

@@ -472,14 +472,10 @@ feature -- Cluster tree warnings
 	w_Cannot_delete_read_only_class (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (100)
 			Result.append ("Cannot delete class ")
-			upper_name := clone (class_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (class_name.as_upper)
 			Result.append ("%Nbecause it is either precompiled%N%
 							%or in a library cluster.")
 		end
@@ -487,14 +483,10 @@ feature -- Cluster tree warnings
 	w_Cannot_delete_library_cluster (cluster_name: STRING): STRING is
 		require
 			cluster_name_not_void: cluster_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (100)
 			Result.append ("Cannot delete cluster ")
-			upper_name := clone (cluster_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (cluster_name.as_upper)
 			Result.append ("%Nbecause it is either a precompiled%N%
 							%or a library cluster.")
 		end
@@ -502,14 +494,10 @@ feature -- Cluster tree warnings
 	w_Cannot_add_to_library_cluster (cluster_name: STRING): STRING is
 		require
 			cluster_name_not_void: cluster_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (100)
 			Result.append ("Cannot add a cluster to cluster%N")
-			upper_name := clone (cluster_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (cluster_name.as_upper)
 			Result.append ("%Nbecause it is either a precompiled%N%
 							%or a library cluster.")
 		end
@@ -517,28 +505,20 @@ feature -- Cluster tree warnings
 	w_Cannot_find_class (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (30)
 			Result.append ("Cannot find class ")
-			upper_name := clone (class_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (class_name.as_upper)
 			Result.append (".")
 		end
 
 	w_Cannot_find_cluster (cluster_name: STRING): STRING is
 		require
 			cluster_name_not_void: cluster_name /= Void
-		local
-			lower_name: STRING
 		do
 			create Result.make (30)
 			Result.append ("Cannot find cluster ")
-			lower_name := clone (cluster_name)
-			lower_name.to_upper
-			Result.append (lower_name)
+			Result.append (cluster_name.as_upper)
 			Result.append (".")
 		end
 
@@ -546,16 +526,12 @@ feature -- Cluster tree warnings
 		require
 			feat_name_not_void: feat_name /= Void
 			class_name_not_void: class_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (30)
 			Result.append ("Cannot find feature ")
 			Result.append (feat_name)
 			Result.append (" for class ")
-			upper_name := clone (class_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (class_name.as_upper)
 			Result.append (".")
 		end
 
@@ -638,14 +614,10 @@ feature -- Cluster tree warnings
 	w_Class_modified (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
-		local
-			upper_name: STRING
 		do
 			create Result.make (30)
 			Result.append ("Class ")
-			upper_name := clone (class_name)
-			upper_name.to_upper
-			Result.append (upper_name)
+			Result.append (class_name.as_upper)
 			Result.append (" has been modified since last compilation.%N")
 			Result.append ("The text will not be clickable.")
 		end
@@ -657,42 +629,30 @@ feature -- Cluster tree warnings
 	w_Cluster_path_already_exists (path: STRING): STRING is
 		require
 			path_not_void: path /= Void
-		local
-			upper_name: STRING
 		do	
 			create Result.make (70);
 			Result.append ("Cluster with path ");
-			upper_name := clone (path);
-			upper_name.to_upper;
-			Result.append (upper_name);
+			Result.append (path.as_upper);
 			Result.append (" already exists in the universe.")
 		end;
 
 	w_Cluster_name_already_exists (name: STRING): STRING is
 		require
 			name_not_void: name /= Void
-		local
-			upper_name: STRING
 		do	
 			create Result.make (70);
 			Result.append ("Cluster with name ");
-			upper_name := clone (name);
-			upper_name.to_upper;
-			Result.append (upper_name);
+			Result.append (name.as_upper);
 			Result.append (" already exists in the universe.")
 		end;
 
 	w_Directory_already_in_cluster (base_name: STRING): STRING is
 		require
 			base_name_not_void: base_name /= Void
-		local
-			upper_name: STRING
 		do	
 			create Result.make (60);
 			Result.append ("Directory with name ");
-			upper_name := clone (base_name)
-			upper_name.to_lower
-			Result.append (upper_name)
+			Result.append (base_name.as_lower)
 			Result.append (" already exists.%N%
 				%Do you want to use it for the new cluster?")
 		end

@@ -637,7 +637,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 		do
 			!! Result.make (Void, associated_class.id.id);
 			count := generics.count;
-			!! gens.make (count);
+			!! gens.make_filled (count);
 			from
 				gens.start;
 				i := 1;
@@ -664,7 +664,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			class_name := clone (ass_classc.name);
 			!! Result.make (class_name, ass_classc.id.id);
 			count := generics.count;
-			!! gens.make (count);
+			!! gens.make_filled (count);
 			from
 				gens.start;
 				i := 1;

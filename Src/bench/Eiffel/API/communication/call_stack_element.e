@@ -329,7 +329,7 @@ end
 					l_count := rout.argument_count;
 					if l_count > 0 then
 						arg_names := rout.argument_names;
-						!! args_list.make (l_count);	
+						!! args_list.make_filled (l_count);	
 						from
 							arg_names.start;
 							args_list.start

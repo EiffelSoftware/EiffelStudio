@@ -30,7 +30,7 @@ feature -- Basic Operations
 		end
 
 	raise_error(msg: STRING) is
-			-- Raise an error
+			-- Raise an error.
 		require
 			message_exists: msg /= Void
 		do
@@ -42,7 +42,7 @@ feature -- Basic Operations
 
 feature {CGI_ERROR_HANDLING} -- Access
 
-		raised_error: STRING
+	raised_error: STRING
 			-- Error explicitely raised by developer code.
 
 end -- class CGI_ERROR_HANDLING

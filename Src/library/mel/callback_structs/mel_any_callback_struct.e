@@ -104,7 +104,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	widget_not_void: widget /= Void
+	widget_not_void: widget /= Void;
+	handle_not_null: handle /= default_pointer
 
 end -- class MEL_ANY_CALLBACK_STRUCT
 

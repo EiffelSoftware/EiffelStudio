@@ -657,20 +657,24 @@ feature -- BreakPoints
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
 
 				l_il_offset_list := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
-				from
-					l_il_offset_list.start
-				until
-					l_il_offset_list.after
-				loop
-					l_il_offset := l_il_offset_list.item
-					eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (l_module_name, l_class_token, l_feature_token, l_il_offset)
-
-					if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (
-								l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
-							)
-					end
-					l_il_offset_list.forth
+				if l_il_offset_list /= Void then
+					from
+						l_il_offset_list.start
+					until
+						l_il_offset_list.after
+					loop
+						l_il_offset := l_il_offset_list.item
+						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (l_module_name, l_class_token, l_feature_token, l_il_offset)
+	
+						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
+							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (
+									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
+								)
+						end
+						l_il_offset_list.forth
+					end		
+				else
+					check False end -- Should not occurs, unless data are corrupted
 				end
 				l_class_type_list.forth
 			end
@@ -721,20 +725,24 @@ feature -- BreakPoints
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
 
 				l_il_offset_list := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
-				from
-					l_il_offset_list.start
-				until
-					l_il_offset_list.after
-				loop
-					l_il_offset := l_il_offset_list.item
-					eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (l_module_name, l_class_token, l_feature_token, l_il_offset)
-
-					if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (
-								l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
-							)
+				if l_il_offset_list /= Void then
+					from
+						l_il_offset_list.start
+					until
+						l_il_offset_list.after
+					loop
+						l_il_offset := l_il_offset_list.item
+						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (l_module_name, l_class_token, l_feature_token, l_il_offset)
+	
+						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
+							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (
+									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
+								)
+						end
+						l_il_offset_list.forth
 					end
-					l_il_offset_list.forth
+				else
+					check False end -- Should not occurs, unless data are corrupted
 				end
 				l_class_type_list.forth
 			end

@@ -12,6 +12,9 @@ inherit
 	EIFFEL_ENV
 
 	ISED_X_SLAVE
+
+	EV_COMMAND
+
 	NEW_EB_CONSTANTS
 
 	ARGUMENTS
@@ -59,14 +62,14 @@ feature -- Initialization
 
 					-- Check then for the license and make sure that we are allowed to launch the
 					-- product.
-				if init_license then
+--debug				if init_license then
 
 						--| Initialization of the run-time, so that at the end of a store/retrieve
 						--| operation (like retrieving or storing the project, creating the CASEGEN
 						--| directory, generating the profile information, ...) the run-time is initialized
 						--| back to the values which permits the compiler to access correctly the EIFGEN
 						--| directory
-					create eifgen_init.make
+--debug					create eifgen_init.make
 
 						-- Read the resource files
 					if argument_count > 0 and then
@@ -75,10 +78,15 @@ feature -- Initialization
 					then
 						Eiffel_project.set_batch_mode (False)
 						init_connection (argument (1).is_equal ("-bench"))
+
+--|
+					create eifgen_init.make
+--|
+
 --						if toolkit = Void then end
 						create memory
 						memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
-						project_index := index_of_word_option ("project")
+--						project_index := index_of_word_option ("project")
 --						if project_index /= 0 then
 --								-- Project open by `ebench name_of_project.epr'
 --							create open_project.make_from_project_file (Project_tool, argument (project_index + 1))
@@ -93,7 +101,7 @@ feature -- Initialization
 --| FIXME
 --| Christophe, 26 oct 1999
 --| Options for launching es4. Not implemented yet.
-						create graphic_compiler.make
+						create graphic_compiler.make_with_caller (Current)
 					else
 						Eiffel_project.set_batch_mode (True)
 						create new_resources.initialize	
@@ -103,7 +111,7 @@ feature -- Initialization
 						create compiler.make_unlicensed
 						discard_licenses
 					end
-				end
+--debug				end
 			else
 					-- Ensure clean exit in case of exception
 				die (-1)
@@ -140,18 +148,21 @@ feature {NONE} -- Initialization
 
 feature -- Communications
 
-    listen_to: RAW_FILE
+	listen_to: RAW_FILE
 			-- File used to listen 
 
 	create_handler is
 		local
---			app_context: MEL_APPLICATION_CONTEXT
+			listener: EB_FILE_LISTENER
 		do
 				-- Associate the file descriptor corresponding
 				-- to the pipe on which reading is done
 				-- with `listen_to'.
---			create listen_to.make ("toto")
---			listen_to.fd_open_read (Listen_to_const)
+			create listen_to.make ("toto")
+			listen_to.fd_open_read (Listen_to_const)
+
+			create listener.make (listen_to, Current, Void)
+
 --			app_context := init_toolkit.application_context
 				-- Add an IO handler which
 				-- listens to the appropriate
@@ -163,9 +174,7 @@ feature -- Communications
 	        end
 --| FIXME
 --| Christophe, 26 oct 1999
---| There is no equivalent of this function implemented yet.
---| So es4 cannot listen to ebench yet. This has to be done
---| when the event system is made.
-
+--| Class EB_FILE_LISTENER has been created for handling the problem.
+--| This class could be packed with the vision2 library.
 
 end -- class EB_KERNEL

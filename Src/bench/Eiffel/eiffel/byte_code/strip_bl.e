@@ -8,7 +8,7 @@ inherit
 		redefine
 			analyze, generate, 
 			register, set_register,
-			unanalyze
+			unanalyze, allocates_memory
 		end;
 
 feature 
@@ -33,7 +33,9 @@ feature
 		do
 			get_register
 		end;
-	
+
+	allocates_memory: BOOLEAN is True;
+
 	generate is
 			-- Generate expression
 		local

@@ -11,7 +11,8 @@ inherit
 		redefine
 			stored_register, has_call, has_gcable_variable, c_type,
 			set_register, register, set_parent, parent, propagate,
-			unanalyze, generate_creation_call, generate, analyze
+			unanalyze, generate_creation_call, generate, analyze,
+			allocates_memory
 		end;
 
 	NESTED_B
@@ -19,7 +20,8 @@ inherit
 			print_register, free_register,
 			stored_register, has_call, has_gcable_variable, c_type,
 			set_register, register, set_parent, parent, propagate,
-			unanalyze, generate_creation_call, generate, analyze
+			unanalyze, generate_creation_call, generate, analyze,
+			allocates_memory
 		select
 			print_register, free_register
 		end;
@@ -389,7 +391,9 @@ end;
 			end;
 		end;
 
-	has_call: BOOLEAN is true;
-			-- The expression as at least one call
+	has_call: BOOLEAN is True;
+			-- The expression has at least one call
+
+	allocates_memory: BOOLEAN is True;
 
 end

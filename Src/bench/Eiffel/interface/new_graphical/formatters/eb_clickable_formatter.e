@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
+			if not retried and associated_class /= Void then
 				set_is_without_breakable
 				formatted_text := clickable_context_text (associated_class)
 				if formatted_text = Void then

@@ -37,6 +37,9 @@ feature -- Access
 	elements: LINKED_LIST[WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
 
+	size_of_instance: INTEGER
+			-- Size of instance of this type
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
@@ -86,6 +89,13 @@ feature -- Basic Operations
 			valid_elements: elements /= Void and elements = some_elements
 		end
  
+	set_size (a_size: INTEGER) is
+			-- Set `size_of_instance' with `a_size'.
+		do
+			size_of_instance := a_size
+		ensure
+			valid_size: size_of_instance = a_size
+		end
 
 	visit (a_visitor: WIZARD_TYPE_VISITOR) is
 			-- Call back `a_visitor' with appropriate feature.

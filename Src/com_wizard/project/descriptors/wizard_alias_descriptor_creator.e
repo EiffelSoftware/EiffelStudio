@@ -80,6 +80,7 @@ feature -- Basic operations
 			if vartype_namer.is_basic (type_descriptor.type) then
 				eiffel_class_name := clone (vartype_namer.eiffel_name (type_descriptor.type))
 			end
+
 			create Result.make (Current)
 		ensure
 			valid_descriptor: Result /= Void

@@ -13,7 +13,7 @@ inherit
 			proceed_with_current_info
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations
@@ -21,7 +21,11 @@ feature -- basic Operations
 	proceed_with_current_info is 
 		do
 			Precursor
-			proceed_with_new_state (create {WIZARD_FIRST_STATE}.make(wizard_information))
+			if Eiffel_platform /= Void and Eiffel_installation_dir_name /= Void then
+				proceed_with_new_state (create {WIZARD_FIRST_STATE}.make(wizard_information))
+			else
+				proceed_with_new_state (create {WIZARD_ERROR_ENV_VAR_STATE}.make(wizard_information))
+			end				
 		end
 
 	display_state_text is
@@ -40,6 +44,6 @@ feature -- basic Operations
 		end
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-		-- Icon for the Eiffel Store Wizard
+			-- Icon for the Eiffel Store Wizard
 
 end -- class WIZARD_INITIAL_STATE

@@ -39,7 +39,7 @@ feature -- Basic operations
 		local
 			internal_client_x: INTEGER
 			horizontal_buffer_offset: INTEGER
-			visible_physical_column_indexes: SPECIAL [INTEGER]
+			physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index: INTEGER
 			last_column_index: INTEGER
 			first_column_index_set, last_column_index_set: BOOLEAN
@@ -53,8 +53,8 @@ feature -- Basic operations
 			fixme ("Handle dynamic items in per item scrolling mode")
 			create Result.make (20)
 			
-			visible_physical_column_indexes := grid.visible_physical_column_indexes
-			
+			physical_column_indexes := grid.physical_column_indexes
+		
 			internal_client_x := grid.internal_client_x
 			internal_client_width := grid.internal_client_width
 			
@@ -261,7 +261,7 @@ feature -- Basic operations
 			current_row_list: SPECIAL [EV_GRID_ITEM_I]
 			current_row: EV_GRID_ROW_I
 			
-			visible_physical_column_indexes: SPECIAL [INTEGER]
+			physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index, first_row_index: INTEGER
 			last_column_index: INTEGER
 			grid_item: EV_GRID_ITEM_I
@@ -338,7 +338,7 @@ feature -- Basic operations
 			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
 	
 			
-			visible_physical_column_indexes := grid.visible_physical_column_indexes
+			physical_column_indexes := grid.physical_column_indexes
 			
 			internal_client_x := grid.internal_client_x
 			internal_client_y := grid.internal_client_y
@@ -464,10 +464,10 @@ feature -- Basic operations
 							visible_column_indexes.off
 						loop
 							check
-								lists_valid_lengths: visible_physical_column_indexes.count >= visible_column_indexes.count
+								lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 							end
 							current_column_index := visible_column_indexes.item
-							current_physical_column_index := visible_physical_column_indexes.item (visible_column_indexes.index - 1)
+							current_physical_column_index := physical_column_indexes.item (visible_column_indexes.index - 1)
 							
 							
 								-- Assume that there is no grid item at the current position.

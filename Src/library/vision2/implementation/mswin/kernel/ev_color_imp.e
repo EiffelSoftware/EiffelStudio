@@ -119,12 +119,12 @@ feature {EV_COLOR} -- Conversion
 		local
 			counter: INTEGER
 		do
-			counter := a_24_bit_rgb
-			wel_set_red (counter // 65536)
-			counter := counter - (counter // 65536)
-			wel_set_green (counter // 256)
-			counter := counter - (counter // 256)
-			wel_set_blue (counter)
+			counter :=a_24_bit_rgb
+			wel_set_blue (counter \\ 256)
+			counter := counter.bit_shift_right (8)
+			wel_set_green (counter \\ 256)
+			counter := counter.bit_shift_right (8)
+			wel_set_red (counter \\ 256)
 		end
 	
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is

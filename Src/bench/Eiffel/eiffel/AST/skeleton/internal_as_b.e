@@ -5,7 +5,8 @@ inherit
 	ROUT_BODY_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -68,6 +69,34 @@ feature -- Formatter
 			ctxt.commit;
 		end;
 
+feature -- Replication
+	
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current is
+		do
+			if compound /= void then
+				compound.fill_calls_list (l)
+			end
+		end;
+
+	Replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to Replication
+		do
+			if compound /= void then
+				Result := twin;
+				Result.set_compound (
+					compound.replicate (ctxt.new_ctxt))
+			else
+				Result := Current
+			end
+		end;			
+
+feature {INTERNAL_AS} -- Replication
+	
+	set_compound (c: like compound) is
+		do
+			compound := c;
+		end;	
 feature {} -- Formatter
 	
 	begin_keyword: STRING is 

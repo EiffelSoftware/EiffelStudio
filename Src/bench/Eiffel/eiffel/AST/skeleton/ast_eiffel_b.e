@@ -70,5 +70,19 @@ feature -- formatter
 			Result := -1;
 				-- treated as unknown
 		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			-- Do nothing
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- adapt to replication
+		do
+			Result := Current
+		end;
 		
 end

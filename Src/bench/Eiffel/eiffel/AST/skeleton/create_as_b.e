@@ -21,9 +21,9 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			clients ?= yacc_arg (0);
+				--| A void feature_list implies that we
+				--! have an empty creation clause
 			feature_list ?= yacc_arg (1);
-		ensure then
-			feature_list /= Void
 		end;
 
 feature -- formatter

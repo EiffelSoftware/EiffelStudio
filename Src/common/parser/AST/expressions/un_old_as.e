@@ -4,7 +4,8 @@ inherit
 
 	UNARY_AS
 		redefine
-			type_check, byte_node, operator_is_keyword, format
+			type_check, byte_node, operator_is_keyword, format,
+			replicate, fill_calls_list
 		end;
 
 feature -- Type check
@@ -21,6 +22,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			vaol1: VAOL1;
 			vaol2: VAOL2;
+			old_as: UN_OLD_AS;
 		do
 			if not context.level1 then
 					-- Old expression found somewhere else that in a
@@ -34,7 +36,11 @@ feature -- Type check, byte code and dead code removal
 				-- Expression type check
 			expr.type_check;
 
-			if context.item.conform_to (Void_type) then
+			old_as ?= expr;
+			if 
+				context.item.conform_to (Void_type) or else
+				(old_as /= Void)
+			then
 					-- Not an expression
 				!!vaol2;
 				context.init_error (vaol2);
@@ -77,4 +83,19 @@ feature -- Type check, byte code and dead code removal
 	operator_name: STRING is "old";
 	
 	operator_is_keyword: BOOLEAN is true;
+
+feature	-- Replication
+	
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			expr.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_expr (expr.replicate (ctxt));
+		end;
 end

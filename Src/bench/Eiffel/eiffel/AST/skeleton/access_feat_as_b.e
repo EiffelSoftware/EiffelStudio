@@ -8,7 +8,8 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -91,7 +92,10 @@ feature -- Type check, byte code and dead code removal
 			vuex: VUEX;
 			vhne: VHNE;
 			vkcn: VKCN;
-			obs_warn: OBS_FEAT_WARN
+			obs_warn: OBS_FEAT_WARN;
+			context_export: EXPORT_I;
+			feature_export: EXPORT_I;
+			vape_check: BOOLEAN;
 		do
 			last_type := context.item;
 			last_constrained := context.last_constrained_type;
@@ -135,7 +139,12 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.raise_error;
 				elseif parameters /= Void then
 						-- Type check on parameters
+					vape_check := context.check_for_vape;
+					if context.level4 then
+						context.set_check_for_vape (False);
+					end;
 					parameters.type_check;
+					context.set_check_for_vape (vape_check);
 						-- Conformance initialization
 					Argument_types.init2 (a_feature);
 					from
@@ -199,6 +208,21 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_obsolete_feature (a_feature);
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
+				end;
+				if context.level4 and then context.check_for_vape then
+					-- In precondition and checking for vape
+					context_export := context.a_feature.export_status;
+					feature_export := a_feature.export_status;
+					if 
+						not a_feature.feature_name.is_equal ("void") and then
+						not context_export.is_subset (feature_export) 
+					then
+						io.error.putstring ("VAPE error on feature ");
+						io.error.putstring (context.a_feature.feature_name);
+						io.error.putstring (" because of feature ");
+						io.error.putstring (a_feature.feature_name);
+						io.error.new_line;
+					end;
 				end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
@@ -267,5 +291,56 @@ feature -- Type check, byte code and dead code removal
 				ctxt.rollback
 			end;
 	end;
-					
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l;
+		do
+			if l.is_new then
+				l.add (feature_name);
+			end;
+			if parameters /= void then
+			 	!!new_list.make;
+				parameters.fill_calls_list (new_list);
+				l.merge (new_list);
+			end;
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+debug ("REPLICATION")
+	io.error.putstring ("feature name before: ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
+			ctxt.adapt_name (feature_name);
+			Result.set_feature_name (ctxt.adapted_name);
+debug ("REPLICATION")
+	io.error.putstring ("feature name after: ");
+	io.error.putstring (ctxt.adapted_name);
+	io.error.new_line;
+end;
+			if parameters /= void then
+				Result.set_parameters (
+					parameters.replicate (ctxt.new_ctxt))
+			end
+		end;
+
+feature -- Replication {ACCESS_FEAT_AS}
+
+	set_feature_name (name: like feature_name) is
+		do
+			feature_name := name;
+		end;
+
+	set_parameters (p: like parameters) is
+		do
+			parameters := p
+		end;
+
 end

@@ -6,7 +6,8 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attribute
@@ -94,11 +95,26 @@ feature -- Type check, byte code and dead code removal
 			ctxt.prepare_for_feature (feature_name.internal_name, void);
 			if ctxt.is_feature_visible then
 				ctxt.put_special("$");
-				ctxt.put_current_feature; 	-- traiter infix et prefix
+				ctxt.put_current_feature; 	-- treat infix and prefix
 				ctxt.commit;
 			else
 				ctxt.rollback;
 			end;
 		end;
+
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			l.add (feature_name.internal_name);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			ctxt.adapt_name (feature_name.internal_name);
+			Result.feature_name.set_name (ctxt.adapted_name);
+		end;
+
 
 end

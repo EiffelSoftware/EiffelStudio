@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format, replicate
 		end
 
 feature -- Initialization
@@ -48,5 +48,13 @@ feature -- Type check and byte code
 			ctxt.always_succeed;
 			ctxt.put_string ("Current");
 			ctxt.set_types_back_to_global;
+		end;
+
+feature -- Replication
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			ctxt.adapt_current;
+			Result := Current
 		end;
 end

@@ -101,16 +101,6 @@ feature -- Conveniences
 			!!Result.make (char_value.char_val, constant_i);
 		end;
 
-	depend_unit: DEPEND_UNIT is
-		local
-			feature_i: FEATURE_I;
-			class_c: CLASS_C;
-		do
-			class_c := context.a_class;
-			feature_i := class_c.feature_table.item (Current);
-			!!Result.make (class_c.id, feature_i.feature_id);
-		end;
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do

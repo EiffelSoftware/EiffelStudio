@@ -48,4 +48,13 @@ feature
 
 
 	operator_is_keyword: BOOLEAN is false;
+
+feature {BINARY_AS}
+
+	set_infix_function_name (name: ID_AS) is
+		do
+			op_name := name.duplicate;
+			op_name.tail (op_name.count - 7);
+			-- 7 = "_infix_".count
+		end;
 end

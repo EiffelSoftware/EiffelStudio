@@ -6,7 +6,8 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			replicate
 		end
 
 feature
@@ -70,6 +71,15 @@ feature -- Type check, byte code and dead code removal
 		do
 			ctxt.put_string("Result");
 			ctxt.always_succeed;
+		end;
+
+
+feature -- Replication
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			ctxt.adapt_Result;
+			Result := Current
 		end;
 
 

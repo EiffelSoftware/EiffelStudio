@@ -8,7 +8,8 @@ inherit
 		redefine
 			type_check, byte_node,
 			find_breakable,
-			format
+			format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -52,6 +53,14 @@ feature -- Type check, byte code and dead code removal
 			if content /= Void then
 					-- i.e: if it not the content of an attribute
 				content.check_local_names;
+			end;
+		end;
+
+	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+			-- Check conflicts between local names and feature names
+		do
+			if content /= Void then
+				Result := content.local_table (f);
 			end;
 		end;
 
@@ -271,6 +280,55 @@ feature -- formatter
 			end;
 			ctxt.commit;
 		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			if arguments /= void then
+				arguments.fill_calls_list (l)
+			end;
+			if type /= void then
+				type.fill_calls_list (l)
+			end;
+			if content /= void then
+				content.fill_calls_list (l);
+			end;
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			if arguments /= void then
+				Result.set_arguments (
+				arguments.replicate (ctxt))
+			end;
+			if type /= void then
+				Result.set_type (
+					type.replicate (ctxt))
+			end;
+			if content /= void then
+				Result.set_content (
+					content.replicate (ctxt))
+			end
+		end;
 		
-		
+feature {BODY_AS}	-- Replication
+
+	set_arguments (a: like arguments) is
+		do
+			arguments := a
+		end;
+
+	set_type (t: like type) is
+		do
+			type := t
+		end;
+
+	set_content (c: like content) is
+		do
+			content := c
+		end;
+
 end

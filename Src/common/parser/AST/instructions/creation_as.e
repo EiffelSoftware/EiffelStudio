@@ -4,7 +4,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end;
 
 feature -- Attributes
@@ -182,17 +183,23 @@ feature -- Type check, byte code and dead code removal
 					end;
 				else
 					creators := creation_class.creators;
-					if not (creators = Void or else creators.empty) then
-						!!vgcc4;
-						context.init_error (vgcc4);
-						vgcc4.set_type (creation_type);
-						Error_handler.insert_error (vgcc4);
-					else
+					if (creators = Void) then
 							-- Insert the creation without creation routine
 							-- (feature id = -1) in the dependance of the
 							-- current feature
 						!!depend_unit.make (creation_class.id, -1);
 						context.supplier_ids.add (depend_unit);
+					elseif creators.empty then
+						!!vgcc8;
+						context.init_error (vgcc8);
+						vgcc8.set_type (creation_type);
+						vgcc8.set_creation_feature (Void);
+						Error_handler.insert_error (vgcc8);
+					else
+						!!vgcc4;
+						context.init_error (vgcc4);
+						vgcc4.set_type (creation_type);
+						Error_handler.insert_error (vgcc4);
 					end;
 				end;
 			end;
@@ -295,4 +302,40 @@ feature -- Type check, byte code and dead code removal
 		end;
 
 
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			target.fill_calls_list (l);
+			l.stop_filling;
+			call.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			Result.set_target (target.replicate (ctxt));
+			if type = void then
+				if call /= void then
+					Result.set_call (call.replicate (ctxt));
+					-- if call is not creation routine
+					-- raise exception
+				else
+					-- if creation routine is needed
+					-- raise exception
+				end;
+			end;
+		end;
+
+feature {CREATION_AS}	-- Replication
+
+	set_call (c: like call) is
+		do
+			call := c
+		end;
+
+	set_target (t: like target) is
+		do
+			target := t;
+		end;
 end

@@ -7,7 +7,8 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -98,15 +99,45 @@ feature -- Formatter
 				ctxt.no_new_line_between_tokens;
 				keys.format (ctxt)
 			end;
-			ctxt.indent_one_more;
-			ctxt.set_separator(";");
-			ctxt.new_line_between_tokens;
-			compound.format (ctxt);
-			ctxt.indent_one_less;
+			if compound /= void then
+				ctxt.indent_one_more;
+				ctxt.set_separator(";");
+				ctxt.new_line_between_tokens;
+				compound.format (ctxt);
+				ctxt.indent_one_less;
+			end;
 			ctxt.next_line;
 			ctxt.put_keyword ("end");
 			ctxt.put_breakable;
 			ctxt.commit;
 		end;
-	
+
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- Find calls to Current.
+		do
+			if compound /= void then
+				compound.fill_calls_list (l);
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replictation.
+		do
+			if compound /= void then
+				Result := twin;
+				Result.set_compound (
+					compound.replicate (ctxt));
+			end
+		end;
+			
+feature {DEBUG_AS}	-- Replication
+
+	set_compound (c: like compound) is
+		do
+			compound := c
+		end;
+
 end

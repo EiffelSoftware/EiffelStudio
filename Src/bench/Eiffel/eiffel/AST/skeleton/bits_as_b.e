@@ -27,7 +27,17 @@ feature
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_A is
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table'
+		local
+			vtbt: VTBT;
 		do
+			if (bits_value.value <= 0) then
+				!!vtbt;
+				vtbt.set_class_id (feat_table.feat_tbl_id);
+				vtbt.set_feature_name (f.feature_name);
+				Error_handler.insert_error (vtbt);
+					-- Cannot go on here
+				Error_handler.raise_error;
+			end;
 			Result := actual_type;
 		end;
 

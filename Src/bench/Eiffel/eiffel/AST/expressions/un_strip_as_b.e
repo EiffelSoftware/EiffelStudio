@@ -18,6 +18,10 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			id_list ?= yacc_arg (0);
+			if id_list = Void then
+				-- Empty list
+				!!id_list.make (0)
+			end;
 		ensure then
 			id_list /= Void;
 		end;
@@ -98,7 +102,9 @@ feature -- Type check, byte code and dead code removal
 				id_list.after
 			loop
 				attribute_i ?= feature_table.item (id_list.item);
-				Result.feature_ids.put (attribute_i.feature_id);
+				if not attribute_i.feature_name.is_equal ("void") then
+					Result.feature_ids.put (attribute_i.feature_id);
+				end;
 				id_list.forth;
 			end;
 		end;
@@ -136,5 +142,14 @@ feature -- Type check, byte code and dead code removal
 				ctxt.commit;
 			end;
 		end;
+
+feature -- Replication
+
+	-- nothing is done and that is a bug (Didier)
+	-- The correct policy should be something like
+	-- fill_calls_list does nothing (ok): strip cannot
+	-- trigger a replication by itself.
+	-- replicate should replace a feature with all its version,
+	-- and add the attribute introduced in the descendant class		
 
 end

@@ -74,7 +74,7 @@ end;
 	debug_window: CLICK_WINDOW is
 			-- Debug window
 		once
-			Result := term_window
+			Result := bench_error_window
 		end;
 
 	explain_window: EXPLAIN_W is

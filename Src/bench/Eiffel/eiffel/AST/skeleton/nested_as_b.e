@@ -6,7 +6,8 @@ inherit
 
 	CALL_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -33,12 +34,23 @@ feature -- Type check, byte code and dead code removal
 
 	type_check is
 			-- Type check the call
+		local
+			curr_feat: FEATURE_I;
+			vape_check: BOOLEAN
+			
 		do
+			vape_check := context.check_for_vape;
 				-- Type check the target
 			target.type_check;
+			if context.level4 then
+				context.set_check_for_vape (False);	
+			end;
 
 				-- Type check the message
 			message.type_check;
+			if vape_check then
+				context.set_check_for_vape (true)
+			end;
 		end;
 
 	byte_node: NESTED_B is
@@ -77,6 +89,35 @@ feature -- Type check, byte code and dead code removal
 			end
 		end;
 	
-			
-			
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			target.fill_calls_list (l);
+			l.stop_filling;
+			message.fill_calls_list (l);
+		end;
+
+	Replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_target (target.replicate (ctxt));
+			Result.set_message (message.replicate (ctxt));
+		end;
+
+feature {NESTED_AS} -- Replication
+
+	set_target (t: like target) is
+		do
+			target := t;
+		end;
+
+
+	set_message (m: like message) is
+		do
+			message := m;
+		end;
+						
 end

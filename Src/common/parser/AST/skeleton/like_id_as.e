@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like, format
+			has_like, format, fill_calls_list, replicate
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -145,4 +145,25 @@ feature -- Implementation of inherited deferred features
 				-- careful with like argument
 			ctxt.commit;
 		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			l.add (anchor);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			Result.set_anchor (anchor.replicate (ctxt))
+		end;
+
+feature {LIKE_ID_AS}	-- Replication
+
+	set_anchor (a: like anchor) is
+		do
+			anchor := a
+		end;
+
 end

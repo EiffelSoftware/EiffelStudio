@@ -40,10 +40,24 @@ feature -- Output
 			Result.append_string ("%T|%T")
 			Result.append_string (descendants.out)
 			Result.append_string ("%T|%T")
-			Result.append_string (percentage.out)
+			Result.append_string (percentage_out)
 			Result.append_string ("%T|%T")
 			Result.append_string (int_function.name)
 		end
+
+	percentage_out: STRING is
+			-- Display only two decimals
+		local
+			percent_string: STRING
+		do
+			!! Result.make (0)
+			if percentage = 100.0 then
+				Result := "100"
+			else
+				Result := percentage.out
+			end
+		end
+				
 
 feature -- Compare
 

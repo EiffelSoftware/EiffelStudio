@@ -42,9 +42,12 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT) is
 			-- Append Current function to `st'.
 		local
-			cluster: CLUSTER_I;	
-			class_i: CLASS_I;
+			cluster: CLUSTER_I	
+			class_i: CLASS_I
 			e_class: E_CLASS
+			class_c: CLASS_C
+			feature_i: FEATURE_I
+			e_feature: E_FEATURE
 		do
 			if class_id = Void then
 				if int_cluster_name /= Void then
@@ -55,27 +58,26 @@ feature -- Output
 							class_id := class_i.compiled_eclass.id;
 						end
 					end
-				end;
-				if e_class = Void then
-					st.add_string ("<cluster_tag>");
-					st.add_string (int_class_name);
-					st.add_string (feature_name);
-				else
-					st.add_string ("<");
-					st.add_cluster (e_class.cluster, e_class.cluster.cluster_name);
-					st.add_string (">");
-					st.add_classi (e_class.lace_class, int_class_name);
-					st.add_string (".");
-					st.add_feature_name (feature_name, e_class)
 				end
+
+				st.add_string ("<cluster_tag>");
+				st.add_string (int_class_name);
+				st.add_string (feature_name);
 			else
 				e_class := class_id.associated_eclass;
+				class_c ?= e_class
 				st.add_string ("<");
 				st.add_cluster (e_class.cluster, e_class.cluster.cluster_name);
 				st.add_string (">");
 				st.add_classi (e_class.lace_class, int_class_name);
 				st.add_string (".");
-				st.add_feature_name (feature_name, e_class);
+				if class_c /= Void then
+					feature_i := class_c.feature_table.item (feature_name)
+					e_feature := feature_i.api_feature (class_id)
+					st.add_feature (e_feature, feature_name);
+				else
+					st.add_feature_name (feature_name, e_class);
+				end
 			end;			
 		end;
 

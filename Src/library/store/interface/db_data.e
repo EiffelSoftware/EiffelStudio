@@ -8,8 +8,21 @@ indexing
 
 class DB_DATA
 
-feature
+feature -- Status setting
 
+	update_metadata is
+			-- Cursor must update database metadata to
+			-- fill in properly.
+		do
+			metadata_to_update := True
+		end
+
+feature -- Status report
+
+	metadata_to_update: BOOLEAN
+			-- Should cursor update the metadata to fill in database
+			-- values properly?
+	
 end -- class DB_DATA
 
 

@@ -46,8 +46,6 @@ feature -- Basic operation
 
 	splash_pixmap (pix: EV_PIXMAP) is
 			-- Show the splash screen pixmap `pix'.
---		deferred
---		end
 		do
 			create splash_screen.make
 			splash_screen.set_background_pixmap (pix)
@@ -55,15 +53,15 @@ feature -- Basic operation
 			splash_screen.show
 		end
 
+	splash_screen: EV_UNTITLED_WINDOW_IMP
+			-- Splash screen of the application
+
 feature {EV_APPLICATION} -- Implementation
 	
 	iterate is
 			-- Loop the application.
 		deferred
 		end
-
-	splash_screen: EV_UNTITLED_WINDOW_IMP
-			-- Splash screen of the application
 
 feature {EV_UNTITLED_WINDOW_I} -- Root windows management
 
@@ -79,9 +77,6 @@ feature {EV_UNTITLED_WINDOW_I} -- Root windows management
 			valid_window: w /= Void
 		deferred
 		end
---		do
---			root_windows.extend (w)
---		end
 
 	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
 			-- Remove `w' from the root windows list.
@@ -89,32 +84,6 @@ feature {EV_UNTITLED_WINDOW_I} -- Root windows management
 			valid_window: w /= Void
 		deferred
 		end
---		do
---			if root_windows.count /= 1 then
---				root_windows.start
---				if root_windows.item = w then
---					root_windows.remove
---					set_root_window
---				else
---					root_windows.prune (w)
---				end
---			end
---		end
-
---	set_root_window is
---			-- Set the root window for the application.
---		require
---			valid_root_window: root_window /= Void
---		deferred
---		end
-
---	root_window: EV_UNTITLED_WINDOW_IMP is
---			-- The root window of the application.
---		do
---			if not root_windows.empty then
---				Result := root_windows.first
---			end
---		end
 
 end -- class EV_APPLICATION_I
 

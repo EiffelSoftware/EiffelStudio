@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	LABEL_G_W
+	LABEL_G_WINDOWS
 
 inherit
 	LABEL_WINDOWS
@@ -15,7 +15,7 @@ inherit
 creation
 	make
 
-end -- class LABEL_G_W
+end -- class LABEL_G_WINDOWS
  
 --|---------------------------------------------------------------- 
 --| EiffelVision: library of reusable components for ISE Eiffel 3. 

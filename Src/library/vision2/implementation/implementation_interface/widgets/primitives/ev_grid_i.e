@@ -1754,7 +1754,6 @@ feature {NONE} -- Event handling
 			--
 		local
 			pointed_item: EV_GRID_ITEM_I
-			pointed_item_row: EV_GRID_ROW_I
 			a_subrow_indent: INTEGER
 			first_tree_node_indent: INTEGER
 			node_pixmap_width, node_pixmap_height: INTEGER
@@ -1762,40 +1761,39 @@ feature {NONE} -- Event handling
 			current_item_x_position: INTEGER
 			node_index: INTEGER
 			current_subrow_indent: INTEGER
+			node_x_position_click_edge: INTEGER
+			pointed_row_i: EV_GRID_ROW_I
 		do
 			pointed_item := drawer.item_at_position (a_x, a_y)
 			if pointed_item /= Void then
+				pointed_row_i := pointed_item.row_i
 				node_pixmap_width := expand_node_pixmap.width
 				node_pixmap_height := expand_node_pixmap.height
 				total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
 				a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
 				first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-				node_index := pointed_item.column.index
-				
-				current_subrow_indent := a_subrow_indent * (pointed_item.row_i.indent_depth_in_tree - 1) + first_tree_node_indent
-				
+				node_index := pointed_item.column_i.index.min (pointed_row_i.first_set_item_index)
+				if node_index = pointed_item.column_i.index then
+					current_subrow_indent := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
+				end
 				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport.x_offset)
+				node_x_position_click_edge := current_subrow_indent - node_pixmap_width - 3 * tree_node_spacing + current_item_x_position
 				
-				if a_button = 1 then
-					if a_x >= current_subrow_indent - node_pixmap_width - 3 * tree_node_spacing + current_item_x_position then
-						pointed_item_row := pointed_item.row_i
-						if pointed_item_row.subrow_count > 0 and
-							node_index = pointed_item.column.index and
-							a_x < current_subrow_indent + current_item_x_position then
-							
-						
-							if pointed_item_row.is_expanded then
-								pointed_item_row.collapse
-							else
-								pointed_item_row.expand
-							end
-						elseif is_selection_on_click_enabled then
-							if not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
-									-- If the ctrl key is not pressed then we remove selection
-								remove_selection
-							end
-							pointed_item.enable_select
+				if a_button = 1 and a_x >= node_x_position_click_edge then
+					if pointed_row_i.subrow_count > 0 and
+						node_index = pointed_item.column.index and
+						a_x < current_subrow_indent + current_item_x_position then		
+						if pointed_row_i.is_expanded then
+							pointed_row_i.collapse
+						else
+							pointed_row_i.expand
 						end
+					elseif is_selection_on_click_enabled then
+						if not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
+								-- If the ctrl key is not pressed then we remove selection
+							remove_selection
+						end
+						pointed_item.enable_select
 					end
 				end
 			end

@@ -284,17 +284,17 @@ feature -- Basic operations
 			end
 		end
 		
-	ensure_item_visible (tree_item: EV_TREE_NODE) is
+	ensure_item_visible (tree_node: EV_TREE_NODE) is
 			-- Ensure `tree_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
-			tree_item_imp: EV_TREE_ITEM_IMP
+			tree_node_imp: EV_TREE_NODE_IMP
 		do
-			tree_item_imp ?= tree_item.implementation
+			tree_node_imp ?= tree_node.implementation
 			check
-				tree_item_imp /= Void
+				tree_node_imp /= Void
 			end
-			cwin_send_message (wel_item, Tvm_ensurevisible, 0, cwel_pointer_to_integer (tree_item_imp.h_item))
+			cwin_send_message (wel_item, Tvm_ensurevisible, 0, cwel_pointer_to_integer (tree_node_imp.h_item))
 		end
 
 feature {EV_TREE_NODE_I} -- Implementation

@@ -1,5 +1,5 @@
 --!-----------------------------------------------------------------------------
---! filter template for EiffelBench documentation output.
+--! filter template for EiffelStudio documentation output.
 --!-----------------------------------------------------------------------------
 --! $Date$
 --! $Revision$
@@ -10,7 +10,7 @@
 -- Several extra items may be defined and accessed through: $item$.
 -- In every construct, the following items are defined:
 --
--- $generator$		"ISE EiffelBench version x.x.x"
+-- $generator$		"ISE EiffelStudio version x.x.x"
 --
 -- $html_meta$		HTML specific. Entire indexing clause defined as meta data.
 --					Example: "<META NAME="keywords" CONTENT="eiffel, O-O">".

@@ -14,6 +14,7 @@ cluster
 
 	-- EiffelBase
 	kernel:			"$EIFFEL4\library\base\kernel";
+	routines:		"$EIFFEL4\library\base\routines";
 	support:		"$EIFFEL4\library\base\support";
 	access:			"$EIFFEL4\library\base\structures\access";
 	cursors:		"$EIFFEL4\library\base\structures\cursors";
@@ -35,7 +36,7 @@ cluster
 	time_local_settings (time):	"$\format\english";
 
 	-- MATISSE-Eiffel Binding
-	eif_matisse(root_cluster):	"$\..\..";
+	eif_matisse(root_cluster):	"$EIFFEL4\library\matisse";
 	matisse_retrieval(eif_matisse):	"$\matisse_retrieval"
 		visible
 			MT_LINKED_STACK   creation "make" export "make" end;
@@ -60,8 +61,8 @@ cluster
 
 external
 	object:	
-		"$(EIFFEL4)\library\time\Clib\datetime.lib",
+		"$EIFFEL4\library\time\Clib\datetime.lib",
 		"C:\MATISSE\lib\matisse.lib",
-		"..\..\..\..\matisse_externals\Clib\mt_support.lib";
+		"$EIFFEL4\library\matisse\matisse_externals\Clib\mt_support.lib";
 
 end

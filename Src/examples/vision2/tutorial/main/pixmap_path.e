@@ -32,8 +32,11 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	pixmap_extension: STRING is
+		local
+			platform: EV_TOOLKIT
 		once
-			if Operating_environment.directory_separator = '\' then
+			create platform
+			if platform.name.is_equal ("WEL") then
 				Result := "bmp"
 			else
 				Result := "xpm"

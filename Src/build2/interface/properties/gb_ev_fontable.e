@@ -17,11 +17,7 @@ inherit
 		end
 		
 	GB_EV_FONTABLE_EDITOR_CONSTRUCTOR
-	
-	DEFAULT_OBJECT_STATE_CHECKER
-		undefine
-			default_create
-		end
+
 
 feature {GB_XML_STORE} -- Output
 

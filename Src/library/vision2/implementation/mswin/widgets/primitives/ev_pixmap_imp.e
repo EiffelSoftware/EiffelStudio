@@ -164,7 +164,6 @@ feature {NONE} -- Initialization
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
-			screen_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
 					-- No error while loading the file
@@ -197,7 +196,7 @@ feature {NONE} -- Initialization
 						size_row * pixmap_height + 40
 						)
 					create internal_bitmap.make_by_dib(
-						s_dc, 
+						bitmap_dc, 
 						dib, 
 						Dib_rgb_colors
 						)
@@ -1088,6 +1087,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/30 18:22:33  pichery
+--| fixed compilation bug
+--|
 --| Revision 1.27  2000/03/30 17:41:14  pichery
 --| Last commit before splitting the implementation into 2 or more differents
 --| implementations.

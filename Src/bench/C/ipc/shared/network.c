@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <sys/types.h>
+#include "eif_globals.h"
 
 extern unsigned TIMEOUT;		/* Time out on reads */
 

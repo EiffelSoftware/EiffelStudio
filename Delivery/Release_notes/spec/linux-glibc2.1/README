@@ -1,8 +1,0 @@
-Release 4.5 for linux-glibc2.1
-==============================
-
-This delivery has been compiled with the distribution RedHat 6.0
-(linux  2.2.5-15, glibc 2.1.1-6).
-
-Eiffel executables compiled with this delivery may not work with previous
-glibc libraries.

@@ -1,6 +1,0 @@
-RELEASE NOTE FOR SOLARIS 2.5-SOLARIS-2.6 VERSION
-
-This version is the same as the SOLARIS-2.4 release (PLATFORM = solaris) 
-except in multithreaded mode. Please read ../solaris/README.
-
-

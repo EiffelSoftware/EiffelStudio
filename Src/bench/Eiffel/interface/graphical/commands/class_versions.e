@@ -10,11 +10,16 @@ class CLASS_VERSIONS
 inherit
 
 	PROJECT_CONTEXT;
+	EIFFEL_ENV;
 	TOOL_COMMAND
 		rename
 			init as make
 		redefine
 			tool, execute
+		end;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as read_in_file
 		end
 
 creation
@@ -25,7 +30,41 @@ feature -- Properties
 	tool: CLASS_W;
 			-- Class tool
 
-	name: STRING is "Versions"
+	name: STRING is 
+		do
+			Result := Interface_names.f_Version
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Version
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end
+
+	execute_warner_help is
+		do
+		end;
+
+	read_in_file (argument: ANY) is
+		local
+			file_name: STRING;
+			f: PLAIN_TEXT_FILE
+		do
+			file_name := version_list.i_th (choice.position);
+			!! f.make (file_name);
+			if f.exists and then f.is_readable and then f.is_plain then
+				f.read_stream (f.count);
+				text_window.set_text (f.last_string)
+			else
+ 				warner (popup_parent).gotcha_call
+					(Warning_messages.w_Cannot_read_file (file_name))
+			end	
+		end;
 
 feature -- Closure
 
@@ -33,7 +72,8 @@ feature -- Closure
 		do
 			if choice /= Void then	
 				choice.popdown
-			end
+			end;
+			version_list := Void
 		end
 
 feature {NONE} -- Implementation
@@ -41,27 +81,26 @@ feature {NONE} -- Implementation
 	choice: CHOICE_W;
 			-- Window for user choices.
 
-	version_list: ARRAYED_LIST [STRING];
+	version_list: ARRAYED_LIST [FILE_NAME];
 
 feature {NONE} -- Execution
 
 	execute (arg: ANY) is
 			-- Execute the command.
 		local
-			classi: CLASSI_STONE;
 			classc: CLASSC_STONE;
-			choice_position: INTEGER
+			classi: CLASSI_STONE;
 		do
 			if (choice /= Void) and then (arg = choice) then
-				choice_position := choice.position;
-				if choice_position /= 0 then
-					--class_i := version_list.i_th (choice_position);
-					-- update text
-					--execute (class_i)
+				if choice.position /= 0 then
+					if text_window.changed then
+						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+					else
+						read_in_file (Void)
+					end;
 				else
 					close_choice_window
 				end
-				version_list := Void
 			else
 				classi ?= tool.stone;
 				classc ?= tool.stone;
@@ -89,11 +128,14 @@ feature {NONE} -- Implementation
 			cluster_name: STRING;
 			base_name: STRING;
 			fname: FILE_NAME;
-			temp: STRING
+			temp: STRING;
+			file: PLAIN_TEXT_FILE;
+			output_list: LINKED_LIST [STRING]
 		do
 			base_name := classi.base_name;
 			cluster_name := classi.cluster.cluster_name;
 			!! version_list.make (1);
+			!! output_list.make;
 			!! stats.make_compilation_stat;
 			from
 				i := 1
@@ -107,11 +149,20 @@ feature {NONE} -- Implementation
 				fname.extend (temp);
 				fname.extend (cluster_name);
 				fname.extend (base_name);
+				!! file.make (fname);
+				if file.exists then
+					!! temp.make (0);
+					temp.append_integer (i);
+					temp.append (": ");
+					temp.append (date_string (file.date));
+					version_list.extend (fname)
+					output_list.extend (fname)
+				end	
 			end
 			if choice = Void then
 				!! choice.make (popup_parent)
 			end;
-			choice.popup (Current, version_list)
+			choice.popup (Current, output_list)
 		end
 
 end -- class CLASS_TEXT_FIELD

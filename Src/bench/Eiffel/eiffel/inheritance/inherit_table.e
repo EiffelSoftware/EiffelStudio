@@ -728,6 +728,7 @@ end;
 			vmfn: VMFN;
 			vmfn1: VMFN1;
 			compute_new_rout_id: BOOLEAN;
+			replace_body_id: BOOLEAN
 		do
 				-- Now, compute the routine id set of the feature.	
 			inherit_feat := item (feature_name);
@@ -810,20 +811,29 @@ end;
 					give_new_feature_id (feature_i);
 						-- Compute a body index information
 					feature_i.set_body_index (Body_index_counter.next_id);
+					replace_body_id := False
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
 					if not old_feature.written_in.is_equal (a_class.id) then
 						feature_i.set_body_index (Body_index_counter.next_id);
+						replace_body_id := False
 					else
 						feature_i.set_body_index (old_feature.body_index);
+						replace_body_id := True
 					end;
 				end;
 					-- Update body index/body id correpondances
 				if new_body_id /= Void then
 						-- A new body id has been computed for `feature_i'.
-					Body_index_table.force
+					if replace_body_id then
+							-- we change the body_id correponding to an old body_index
+						feature_i.change_body_id
+					else
+							-- we use a brand new body_index
+						Body_index_table.force
 									(new_body_id, feature_i.body_index);
+					end
 debug ("ACTIVITY")
 	io.error.putstring ("Insert new body id: ");
 	new_body_id.trace;
@@ -1552,6 +1562,7 @@ end;
 			old_feature: FEATURE_I;
 			new_rout_id_set: ROUT_ID_SET;
 			info: INHERIT_INFO
+			replace_body_id: BOOLEAN
 		do
 			--! The routine id set of feature_i was already done
 			--! in unselected in selection list.
@@ -1564,17 +1575,20 @@ end;
 				give_new_feature_id (feature_i);
 					-- Compute a body index information
 				feature_i.set_body_index (Body_index_counter.next_id);
+					-- A new body id has been computed for `feature_i'.
+				Body_index_table.force (new_body_id, feature_i.body_index);
 			else
 					-- Take the previous feature id
 				feature_i.set_feature_id (old_feature.feature_id);
 				if not equal (old_feature.written_in, a_class.id) then
 					feature_i.set_body_index (Body_index_counter.next_id);
+						-- A new body id has been computed for `feature_i'.
+					Body_index_table.force (new_body_id, feature_i.body_index);
 				else
 					feature_i.set_body_index (old_feature.body_index);
+					feature_i.change_body_id
 				end;
 			end;
-				-- A new body id has been computed for `feature_i'.
-			Body_index_table.force (new_body_id, feature_i.body_index);
 			new_body_id := Void;
 			Origins.put_front (feature_i.feature_name);
 		end;

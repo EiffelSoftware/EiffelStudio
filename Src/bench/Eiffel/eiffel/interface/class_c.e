@@ -597,6 +597,7 @@ feature -- Third pass: byte code production and type check
 		do
 			def_resc := default_rescue_feature
 
+
 			from
 				system.changed_body_ids.clear_all
 
@@ -905,6 +906,7 @@ end
 					new_body_id := Body_id_counter.next_id
 					System.body_index_table.force
 								(new_body_id, invariant_feature.body_index)
+					--invariant_feature.change_body_id
 				end
 				if
 					invariant_changed
@@ -1064,9 +1066,14 @@ end
 					else
 						Rep_feat_server.change_id (old_body_id, new_body_id)
 					end
+					System.depend_server.change_ids (old_body_id, new_body_id)
+
 					Byte_server.change_id (old_body_id, new_body_id)
 					System.Body_index_table.force (old_body_id, changed_body_id_info.body_index)
 					System.onbidt.undo_put (old_body_id, new_body_id)
+					if changed_body_id_info.has_to_update_dependances then
+						depend_server.item (changed_body_id_info.written_in).replace_key (old_body_id, new_body_id)
+					end
 
 					
 					changed_body_ids.forth
@@ -1332,8 +1339,9 @@ feature -- Melting
 				!!inv_melted_info
 				if not melted_set.has (inv_melted_info) then
 					melted_set.put (inv_melted_info)
-					new_body_id := Body_id_counter.next_id
-					System.body_index_table.force (new_body_id, invariant_feature.body_index)
+					--new_body_id := Body_id_counter.next_id
+					--System.body_index_table.force (new_body_id, invariant_feature.body_index)
+					invariant_feature.change_body_id
 				end
 			end
 
@@ -3337,7 +3345,9 @@ end
 							not old_feat_as.is_assertion_equiv (new_feat_as)
 							or else not old_feat_as.is_body_equiv (new_feat_as)
 						then
-							new_body_id := Body_id_counter.next_id
+						--	new_body_id := Body_id_counter.next_id
+							new_feat.change_body_id
+							new_body_id := new_feat.body_id
 							insert_changed_feature (new_feat.feature_name)
 
 								-- We do not have enough information to know
@@ -3356,7 +3366,7 @@ debug ("REPLICATION")
 end
 						end
 					
-						System.body_index_table.force (new_body_id, new_feat.body_index)
+						--	System.body_index_table.force (new_body_id, new_feat.body_index)
 					end
 					rep_table.force (new_feat_as, new_body_id)
 debug ("ACTUAL_REPLICATION", "REPLICATION")

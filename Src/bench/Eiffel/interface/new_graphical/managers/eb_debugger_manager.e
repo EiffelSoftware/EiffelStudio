@@ -538,6 +538,7 @@ feature -- Debugging events
 			output_manager.display_application_status
 				-- Update `Current'.
 			create kept_objects.make
+			kept_objects.compare_objects
 				-- Raise debugging tools.
 			raise
 				-- Modify the debugging window display.

@@ -107,7 +107,7 @@ feature -- Basic Operation
 		local
 			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
-			retried: BOOLEAN
+			retried, com_problem: BOOLEAN
 		do
 			if not retried then				
 				if root_class_name.text /= Void and then not root_class_name.text.is_empty then
@@ -140,13 +140,20 @@ feature -- Basic Operation
 					create {WIZARD_ERROR_VALID_ROOT_CLASS_NAME} next_window.make (wizard_information)
 				end
 			else
-					-- Something went wrong when checking validity of the root class name or creation routine name,
-					-- go to error.
-				create {WIZARD_ERROR_INVALID_DATA} next_window.make (wizard_information)			
+				if com_problem then
+					create {WIZARD_ERROR_COM_EXCEPTION} next_window.make (wizard_information)
+				else
+						-- Something went wrong when checking validity of the root class name or creation routine name,
+						-- go to error.
+					create {WIZARD_ERROR_INVALID_DATA} next_window.make (wizard_information)
+				end
 			end
 			Precursor
 			proceed_with_new_state (next_window)
 		rescue
+			if (create {EXCEPTIONS}).is_developer_exception_of_name ("com_exception") then
+				com_problem := True
+			end
 			retried := True
 			retry
 		end

@@ -1198,13 +1198,18 @@ feature -- Graphical Interface
 			project_toolbar.attach_left_widget (shell_button, object_button, 0)
 			project_toolbar.attach_top (object_button, 0)
 			project_toolbar.attach_left_widget (object_button, clear_bp_button, 0)
+			project_toolbar.attach_top (clear_bp_button, 0)
 			project_toolbar.attach_left_widget (clear_bp_button, stop_points_button, 0)
 			project_toolbar.attach_top (stop_points_button, 0)
-			project_toolbar.attach_top (clear_bp_button, 0)
 
 			project_toolbar.attach_top (sep1, 0)
 			project_toolbar.attach_bottom (sep1, 0)
-			project_toolbar.attach_left_widget (clear_bp_button, sep1, 30)
+			project_toolbar.attach_left_widget (stop_points_button, sep1, 5)
+
+			project_toolbar.attach_top (display_object_button, 0)
+			project_toolbar.attach_left_widget (sep1, display_object_button, 5)
+			project_toolbar.attach_top (display_feature_button, 0)
+			project_toolbar.attach_left_widget (display_object_button, display_feature_button, 0)
 
 			project_toolbar.attach_right (quick_update_button, 0)
 			project_toolbar.attach_top (quick_update_button, 0)
@@ -1213,15 +1218,10 @@ feature -- Graphical Interface
 			
 			project_toolbar.attach_top (sep2, 0)
 			project_toolbar.attach_bottom (sep2, 0)
-			project_toolbar.attach_right_widget (update_button, sep2, 10)
+			project_toolbar.attach_right_widget (update_button, sep2, 5)
 
 			project_toolbar.attach_top (search_cmd_holder.associated_button, 0)
-			project_toolbar.attach_right_widget (sep2, search_cmd_holder.associated_button, 10)
-
-			project_toolbar.attach_left_widget (sep1, display_feature_button, 30)
-			project_toolbar.attach_top (display_feature_button, 0)
-			project_toolbar.attach_right_widget (display_feature_button, display_object_button, 0)
-			project_toolbar.attach_top (display_object_button, 0)
+			project_toolbar.attach_right_widget (sep2, search_cmd_holder.associated_button, 5)
 		end
 
 	build_format_bar is

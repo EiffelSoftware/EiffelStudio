@@ -39,8 +39,8 @@ feature -- Initialization
 
 	make (size: INTEGER) is
 		do
-			!! ht.make (1)
-			!! map_table.make (1, 10)
+			create ht.make (1)
+			create map_table.make (1, 10)
 			scan_make (size)
 		end
 
@@ -86,8 +86,8 @@ feature -- Basic operations
 			sep: STRING
 		do
 			update_map_table (object)
-			!!quoter.make(1)
-			!!sep.make(1)
+			create quoter.make(1)
+			create sep.make(1)
 			quoter := db_spec.identifier_quoter
 			sep := db_spec.qualifier_seperator
 			sql_string.wipe_out
@@ -143,12 +143,6 @@ feature -- Basic operations
 			put (obj)
 		end
 
-	set_default_numeric_field_value ( value: DOUBLE) is
-			-- Set the value to represent a database null value.
-		do
-			db_default_null_value.set_value (value)
-		end
-
 feature {NONE} -- Status report
 
 	previous_type: INTEGER
@@ -169,7 +163,7 @@ feature {NONE} -- Status report
 	sql_string: STRING is
 			-- Constant string
 		once
-			!! Result.make (256)
+			create Result.make (256)
 		end
 
 feature {NONE} -- Status setting
@@ -230,7 +224,7 @@ feature {NONE} -- Status setting
 			j: INTEGER
 		do
 			if map_table = Void then
-				!! map_table.make (1, i)
+				create map_table.make (1, i)
 			elseif map_table.count < i then
 				map_table.resize (1, i)
 			end

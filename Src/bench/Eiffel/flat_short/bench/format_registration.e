@@ -149,6 +149,16 @@ feature -- Access
 
 feature -- Setting
 
+	set_feature_clause_order (fco: like feature_clause_order) is
+			-- Set `feature_clause_order' to `fco'.
+		require
+			valid_fco: fco /= Void
+		do
+			feature_clause_order := fco
+		ensure
+			set: feature_clause_order = fco
+		end;
+
 	set_class (target: CLASS_C) is
 			-- Set target_class to `target'.
 			--| For EiffelCase.
@@ -336,8 +346,10 @@ feature -- Output
 			array: ARRAY [STRING]
 		do
 			if not order_same_as_text then
-				array := feature_clauses_array;
-				update_feature_clause_order (array);
+				array := feature_clause_order;
+				if array /= Void then
+					update_feature_clause_order (array);
+				end;
 				categories.sort
 			end;
 			from
@@ -601,18 +613,8 @@ feature {NONE} -- Implementation
 			end;	
 		end;
 
-	feature_clauses_array: ARRAY [STRING] is
+	feature_clause_order: ARRAY [STRING];
 			-- Array of ordered feature clause comments
-		do
-			Result := Resources.get_array ("feature_clause_order",
-						<< "Initialization", "Access", "Measurement",
-						"Comparison", "Status report", "Status setting",
-						"Cursor movement", "Element change", "Removal",
-						"Resizing", "Transformation", "Conversion",
-						"Duplication", "Miscellaneous", 
-						"Basic operations", "Obsolete", "Inapplicable",
-						"Implementation", "*" >>)
-		end;
 
 feature {NONE} -- External features
 

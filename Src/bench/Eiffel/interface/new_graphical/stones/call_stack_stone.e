@@ -66,6 +66,9 @@ feature {NONE} -- Initialization
 					--| We try to give the feature relative to the dynamic class.
 					--| However, in case of a Precursor, we fall back to the feature in its static context.
 				prev_feat := elem.routine
+				check
+					prev_feat_not_void: prev_feat /= Void
+				end
 				if l_dynclass /= Void and then l_dynclass.has_feature_table then
 					cur_feat := l_dynclass.feature_with_body_index (prev_feat.body_index)
 				end

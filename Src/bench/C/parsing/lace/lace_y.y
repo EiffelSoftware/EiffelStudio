@@ -69,7 +69,7 @@
 %token LAC_ERROR7
 
 %type <node>			Ace System Root Cluster_mark Creation_procedure Clusters
-						Cluster_clause Cluster_tag Use Include
+						Cluster_clause Parent_tag Use Include
 						Exclude File_clause Name_adapt Cluster_adapt_clause
 						Cluster_ignore Cluster_rename_clause Class_rename_pair
 						Defaults Options D_option_clause O_option_clause Target_list
@@ -134,16 +134,18 @@ Cluster_clause_list     : Cluster_clause
 Cluster_clause          : /* empty */
 							{$$ = NULL;}
 /* Recude/Reduce conflict here */
-                        | Cluster_tag Name
-							{$$ = create_node3 (CLUSTER_SD,$1,$2,NULL);}
-                        | Cluster_tag Name LAC_END
-							{$$ = create_node3 (CLUSTER_SD,$1,$2,NULL);}
-                        | Cluster_tag Name Cluster_properties LAC_END
-							{$$ = create_node3 (CLUSTER_SD,$1,$2,$3);}
+                        | Name Parent_tag LAC_COLUMN Name
+							{$$ = create_node3 (CLUSTER_SD,$1,$4,NULL,$2);}
+                        | Name Parent_tag LAC_COLUMN Name LAC_END
+							{$$ = create_node3 (CLUSTER_SD,$1,$4,NULL,$2);}
+                        | Name Parent_tag LAC_COLUMN Name Cluster_properties LAC_END
+							{$$ = create_node3 (CLUSTER_SD,$1,$4,$5,$2);}
                         ;
 
-Cluster_tag             : Name LAC_COLUMN
-							{$$ = $1;}
+Parent_tag              : /* empty */
+							{$$ = NULL;}
+						| LAC_LEFT_PARAM Name LAC_RIGHT_PARAM
+							{$$ = $2;}
                         ;
 
 Cluster_properties  	: Use Include Exclude Name_adapt Defaults Options Visible 

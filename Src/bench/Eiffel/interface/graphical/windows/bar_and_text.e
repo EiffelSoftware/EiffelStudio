@@ -14,7 +14,7 @@ inherit
 		end
 
 	COMMAND
-
+ 
 	WINDOW_ATTRIBUTES
 
 	RESOURCE_USER
@@ -432,6 +432,8 @@ feature -- Window Properties
 		do
 			if is_a_shell then
 				Result := eb_shell.title
+			else
+				!! Result.make (1)
 			end
 		end
 

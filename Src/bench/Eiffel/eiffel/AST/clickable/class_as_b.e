@@ -171,7 +171,7 @@ feature -- Formatting
 				ctxt.indent;
 				ctxt.new_line;
 			end;
-			ctxt.put_class_name (ctxt.class_c);	
+			ctxt.put_classi (ctxt.class_c.lace_class);	
 			ctxt.put_text_item (ti_After_class_header);
 			if ctxt.is_short then
 				ctxt.exdent

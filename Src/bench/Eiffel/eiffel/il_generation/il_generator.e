@@ -393,8 +393,8 @@ feature {NONE} -- Type description
 								-- Generate correspondance between Eiffel IDs and
 								-- CIL information.
 							il_generator.generate_class_interfaces (cl_type, class_c)
-							cl_type.set_il_type_name
 							if cl_type.is_generated and then not l_class_counted then
+								cl_type.set_il_type_name
 								if is_class_generated (class_c) then
 									compiled_classes_count := compiled_classes_count + 1
 								end
@@ -915,7 +915,7 @@ feature {NONE} -- Progression
 			-- Is `a_class' to be generated?
 		do
 			Result := (a_class /= Void and then not a_class.is_external) and then
-				is_finalizing or else (a_class.is_generated and then a_class.degree_minus_1_needed)
+				(is_finalizing or else a_class.degree_minus_1_needed)
 		end
 		
 invariant

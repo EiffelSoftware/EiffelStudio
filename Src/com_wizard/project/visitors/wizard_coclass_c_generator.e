@@ -12,20 +12,6 @@ inherit
 
 	WIZARD_CPP_WRITER_GENERATOR
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			cpp_class_writer := Void
-			interface_names := Void
-			dispinterface_names := Void
-		ensure
-			void_atributes: cpp_class_writer = Void and
-				interface_names = Void and
-				dispinterface_names = Void 
-		end
-
 
 feature -- Access
 
@@ -36,16 +22,6 @@ feature -- Access
 			-- Names of dispinterfaces.
 
 feature {NONE} -- Implementation
-
-	libid_name (name: STRING): STRING is
-			-- Name of library id
-		require
-			non_void_name: name /= Void
-			valid_name: not name.empty
-		do
-			Result := "LIBID_"
-			Result.append (name)
-		end
 
 	clsid_name (a_name: STRING): STRING is
 			-- Name of CLSID constant.
@@ -60,31 +36,6 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_declaration: Result /= Void
 			valid_declaration: not Result.empty
-		end
-
-	libid_definition (name: STRING; guid: ECOM_GUID): STRING is
-			-- Definition of CLSID in source file.
-		require
-			non_void_name: name /= Void
-			valid_name: not name.empty
-			non_void_guid: guid /= Void
-			valid_guid: guid.item /= default_pointer
-		do
-			create Result.make (1000)
-			Result.append ("static ")
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (libid_name (name))
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (guid.to_definition_string)
-			Result.append (Semicolon)
-		ensure
-			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
 		end
 
 	clsid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
@@ -108,29 +59,6 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_definition: Result /= Void
 			valid_definition: not Result.empty
-		end
-
-
-	libid_declaration (name: STRING): STRING is
-			-- Declaration of LIBID in header file
-		require
-			non_void_name: name /= Void
-			valid_name: not name.empty
-		do
-			-- extern "C" IID LIBID_'name'
-
-			Result := clone (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (clsid_name (name))
-			Result.append (Semicolon)
 		end
 
 	clsid_declaration (a_name: STRING): STRING is

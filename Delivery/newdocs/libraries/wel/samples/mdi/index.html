@@ -1,0 +1,44 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Mdi</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Mdi">
+	</HEAD>
+
+	<BODY>
+		<H1>Multiple Document Interface Sample</H1>
+		<CENTER><IMG SRC="mdi.png" ALT="mdi" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\mdi\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, a window will be displayed as illustrated above. Selecting "New" from the "File" menu will create a new child window,
+		while selecting "Close" will close the currently selected child window. The options available on the "Window" menu allow positioning of the child windows.
+		Selecting "Exit" from the "File" menu or closing the window manually will exit the program.
+
+		<H2>Under the Hood</H2>
+		<A CLASS="eclass" HREF="/libraries/wel/samples/mdi/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_mdi_frame_window_chart.html">WEL_MDI_FRAME_WINDOW</A> to provide the multiple document interface
+		behaviour while each child window is of type <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_mdi_child_window_chart.html">WEL_MDI_CHILD_WINDOW</A>. When "Close" is selected from the "File" menu, the feature <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_mdi_frame_window.html#f_active_window">active_window</A> from
+		<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_mdi_frame_window_chart.html">WEL_MDI_FRAME_WINDOW</A> is used to select the window that must be closed.
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/mdi/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/mdi/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/mdi/root_cluster/mdi_demo_chart.html">MDI_DEMO</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/samples/bmpview/index.html">Bmpview</A></P>
+	</BODY>
+</HTML>

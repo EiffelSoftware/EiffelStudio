@@ -13,13 +13,10 @@ class
 inherit
 	EV_MENU_ITEM_I
 
-	EV_ITEM_IMP
+	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok
 		redefine
-			make,
-			make_with_text,
-			add_activate_command,
 			set_pixmap
 		end
 
@@ -143,6 +140,15 @@ feature -- Event : command association
 		do
 			add_command (widget, "activate", command, arguments)
 		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		do
+			remove_commands (widget, select_id)
+		end	
 
 feature {NONE} -- Implementation
 

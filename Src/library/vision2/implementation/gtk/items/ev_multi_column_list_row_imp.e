@@ -11,7 +11,14 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
 
-	EV_GTK_ITEMS_EXTERNALS
+	EV_COMPOSED_ITEM_IMP
+		rename
+			count as columns,
+			set_count as set_columns
+		undefine
+			destroy,
+			destroyed
+		end
 
 creation
 	make,
@@ -75,6 +82,22 @@ feature -- Access
 	index: INTEGER
 			-- Index of the row in the list
 			-- (gtk index starting from 0).
+
+
+	cell_pixmap (column: INTEGER): EV_PIXMAP is
+			-- Return the pixmap of the cell number
+			-- `index'. On windows platform, 
+			-- if index > 1, the result is void.
+		do
+			-- To implement
+		end
+
+	pixmap: LINKED_LIST [EV_PIXMAP] is
+			-- Return all the pixmaps of the item.
+			-- Only 1 on windows platform.
+		do
+			-- To implement
+		end
 
 feature -- Status report
 	
@@ -164,6 +187,12 @@ feature -- Status setting
 			Result.from_c (p)
 		end
 
+	set_cell_pixmap (column: INTEGER; pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the 
+			-- `index'-th cell of the item.
+		do
+			-- To implement
+		end
 
 feature -- Element Change
 

@@ -12,7 +12,7 @@ class
 inherit
 	WEL_CONTROL
 		redefine
-			process_notification
+			process_notification_info
 		end
 
 	WEL_LVS_CONSTANTS
@@ -164,7 +164,7 @@ feature -- Status report
 		end
 
 	get_item_state (index: INTEGER): INTEGER is
-			-- State of the zero-based `index'-th item. See WEL_LVIF_CONSTANTS for
+			-- State of the zero-based `index'-th item. See WEL_LVIS_CONSTANTS for
 			-- the state constants.
 		require
 			exists: exists
@@ -172,6 +172,24 @@ feature -- Status report
 			index_small_enough: index < column_count
 		do
 			Result := cwin_send_message_result (item, Lvm_getitemstate, index, 0)
+		end
+
+	get_item (index, subitem: INTEGER): WEL_LIST_VIEW_ITEM is
+			-- Return a representation of the item at the
+			-- `index' position.
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < column_count
+		do
+			!! Result.make
+			Result.set_mask (Lvif_text + Lvif_state + Lvif_image + Lvif_param)
+			Result.set_iitem (index)
+			Result.set_isubitem (subitem)
+			Result.set_text ("")
+			Result.set_cchtextmax (30)
+			Result.set_statemask (Lvis_cut + Lvis_drophilited + Lvis_focused + Lvis_selected)
+			cwin_send_message (item, Lvm_getitem, 0, Result.to_integer)
 		end
 
 feature -- Status setting
@@ -350,64 +368,97 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_lvn_itemchanged is
-			-- An item has changed.
+	on_lvn_begindrag (info: WEL_NM_LIST_VIEW) is
+			-- A drag-and-drop operation involving the left mouse
+			-- button is being initiated.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_itemchanging is
-			-- An item is changing
-		require
-			exists: exists
-		do
-		end
-
-	on_lvn_keydown is
-			-- A key has been pressed.
-		require
-			exists: exists
-		do
-		end
-
-	on_lvn_columnclick is
-			-- A column was tapped.
-		require
-			exists: exists
-		do
-		end
-
-	on_lvn_insertitem is
-			-- A new item was inserted.
-		require
-			exists: exists
-		do
-		end
-
-	on_lvn_beginlabeledit is
+	on_lvn_beginlabeledit (info: WEL_LIST_VIEW_ITEM) is
 			-- A label editing for an item has started.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_endlabeledit is
-			-- A label editing for an item has ended.
+	on_lvn_beginrdrag (info: WEL_NM_LIST_VIEW) is
+			-- A drag-and-drop operation involving the right mouse
+			-- button is being initiated.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_deleteallitems is
+	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
+			-- A column was tapped.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_deleteallitems (info: WEL_NM_LIST_VIEW) is
 			-- All the items were deleted.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_deleteitem is
+	on_lvn_deleteitem (info: WEL_NM_LIST_VIEW) is
 			-- An item was deleted.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_endlabeledit (info: WEL_LIST_VIEW_ITEM) is
+			-- A label editing for an item has ended.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_getdispinfo (info: WEL_LIST_VIEW_ITEM) is
+			-- It is a request for the parent window to
+			-- provide information needed to display or
+			-- sort a list view item.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_insertitem (info: WEL_NM_LIST_VIEW) is
+			-- A new item was inserted.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+			-- An item has changed.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_itemchanging (info: WEL_NM_LIST_VIEW) is
+			-- An item is changing
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_keydown (virtual_key: INTEGER) is
+			-- A key has been pressed.
+		require
+			exists: exists
+		do
+		end
+
+	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM) is
+			-- The list must update the information it maintains
+			-- for an item.
 		require
 			exists: exists
 		do
@@ -415,30 +466,55 @@ feature -- Notifications
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification_info (notification_info: WEL_NMHDR) is
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
+		local
+			nm_info: WEL_NM_LIST_VIEW
+			disp_info: WEL_LV_DISPINFO
+			keydown_info: WEL_LV_KEYDOWN
+			code: INTEGER
 		do
-			if notification_code = Lvn_itemchanged then
-				on_lvn_itemchanged
-			elseif notification_code = Lvn_itemchanging then
-				on_lvn_itemchanging
-			elseif notification_code = Lvn_keydown then
-				on_lvn_keydown
-			elseif notification_code = Lvn_columnclick then
-				on_lvn_columnclick
-			elseif notification_code = Lvn_insertitem then
-				on_lvn_insertitem
-			elseif notification_code = Lvn_beginlabeledit then
-				on_lvn_beginlabeledit
-			elseif notification_code = Lvn_endlabeledit then
-				on_lvn_endlabeledit
-			elseif notification_code = Lvn_deleteallitems then
-				on_lvn_deleteallitems
-			elseif notification_code = Lvn_deleteitem then
-				on_lvn_deleteitem
-			else
-				default_process_notification (notification_code)
+			code := notification_info.code
+			if code = Lvn_begindrag then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_begindrag (nm_info)
+			elseif code = Lvn_beginlabeledit then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_lvn_beginlabeledit (disp_info.list_item)
+			elseif code = Lvn_beginrdrag then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_beginrdrag (nm_info)
+			elseif code = Lvn_columnclick then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_columnclick (nm_info)
+			elseif code = Lvn_deleteallitems then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_deleteallitems (nm_info)
+			elseif code = Lvn_deleteitem then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_deleteitem (nm_info)
+			elseif code = Lvn_endlabeledit then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_lvn_endlabeledit (disp_info.list_item)
+			elseif code = Lvn_getdispinfo then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_lvn_getdispinfo (disp_info.list_item)
+			elseif code = Lvn_insertitem then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_insertitem (nm_info)
+			elseif code = Lvn_itemchanged then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_itemchanged (nm_info)
+			elseif code = Lvn_itemchanging then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_lvn_itemchanging (nm_info)
+			elseif code = Lvn_keydown then
+				!! keydown_info.make_by_nmhdr (notification_info)
+				on_lvn_keydown (keydown_info.virtual_key)
+			elseif code = Lvn_setdispinfo then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_lvn_setdispinfo (disp_info.list_item)
 			end
 		end
 
@@ -463,13 +539,10 @@ feature {NONE} -- Externals
 
 	cwin_wc_listview: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"WC_LISTVIEW"
 		end
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WEL_LIST_VIEW
 
@@ -488,4 +561,3 @@ end -- class WEL_LIST_VIEW
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

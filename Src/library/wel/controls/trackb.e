@@ -1,7 +1,7 @@
 indexing
 	description: "Contains a slider which indicates a position."
 	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		% be loaded to use this control."
+		%be loaded to use this control."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,12 +44,16 @@ feature {NONE} -- Initialization
 				default_pointer)
 			id := an_id
 		ensure
-			parent_set: parent = a_parent
 			exists: exists
+			parent_set: parent = a_parent
 			id_set: id = an_id
 			position_equal_zero: position = 0
 			minimum_equal_zero: minimum = 0
 			maximum_equal_zero: maximum = 0
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 	make_horizontal (a_parent: WEL_COMPOSITE_WINDOW; a_x, a_y, a_width,
@@ -57,8 +61,10 @@ feature {NONE} -- Initialization
 			-- Make a horizontal track bar.
 		require
 			a_parent_not_void: a_parent /= Void
-			width_large_enough: a_width >= minimal_width
-			height_large_enough: a_height >= minimal_height
+			a_width_small_enough: a_width <= maximal_width
+			a_width_large_enough: a_width >= minimal_width
+			a_height_small_enough: a_height <= maximal_height
+			a_height_large_enough: a_height >= minimal_height
 		do
 			internal_window_make (a_parent, Void,
 				default_style + Tbs_horz,
@@ -72,6 +78,10 @@ feature {NONE} -- Initialization
 			position_equal_zero: position = 0
 			minimum_equal_zero: minimum = 0
 			maximum_equal_zero: maximum = 0
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 feature -- Access
@@ -97,13 +107,36 @@ feature -- Access
 				Tbm_getrangemax, 0, 0)
 		end
 
+	tick_mark_position (index: INTEGER): INTEGER is
+			-- Tick mark position at the zero-based `index'
+		require
+			exists: exists
+			valid_index: valid_index (index)
+		do
+			Result := cwin_send_message_result (item, Tbm_gettic,
+				index, 0)
+		ensure
+			positive_result: Result >= 0
+		end
+
+feature -- Status report
+
+	valid_index (index: INTEGER): BOOLEAN is
+			-- Is `index' valid?
+		require
+			exists: exists
+		do
+			Result := index >= 0 and then
+				cwin_send_message_result (item, Tbm_gettic,
+				index, 0) /= -1
+		end
+
 feature -- Element change
 
 	set_position (new_position: INTEGER) is
 			-- Set `position' with `new_position'
 		do
-			cwin_send_message (item,  Tbm_setpos, 1,
-				new_position)
+			cwin_send_message (item, Tbm_setpos, 1, new_position)
 		end
 
 	set_range (a_minimum, a_maximum: INTEGER) is
@@ -112,6 +145,24 @@ feature -- Element change
 		do
 			cwin_send_message (item, Tbm_setrange, 1,
 				cwin_make_long (a_minimum, a_maximum))
+		end
+
+	set_tick_mark (pos: INTEGER) is
+			-- Set a tick mark at `pos'.
+		require
+			exists: exists
+			pos_large_enough: pos > minimum
+			pos_small_enough: pos < maximum
+		do
+			cwin_send_message (item, Tbm_settic, 0, pos)
+		end
+
+	clear_tick_marks is
+			-- Clear the current tick marks from the track bar.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tbm_cleartics, 1, 0)
 		end
 
 feature {NONE} -- Implementation

@@ -32,6 +32,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -96,7 +101,7 @@ feature -- Basic Operation
 			if not child_object.name.is_empty then
 				child_name := child_object.name
 			else
-				child_name := child_object.short_type
+				child_name := name_and_type_from_object (child_object)
 			end
 
 			if not parent_object.name.is_empty then
@@ -131,11 +136,11 @@ feature {NONE} -- Implementation
 		-- The position `execute' will insert `child_object'
 		-- in `parent_object'.
 
-	update_parent_object_editors (deleted_object, a_parent_object: GB_OBJECT) is
-			-- For every item in `editors', update to reflect removal of `deleted_object'.
+	update_parent_object_editors (an_object, a_parent_object: GB_OBJECT) is
+			-- For every item in `editors', update to reflect changed in `an_object'.
 		local
 			editor: GB_OBJECT_EDITOR
-			 editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			editors := all_editors
 			from
@@ -189,6 +194,7 @@ feature {NONE} -- Implementation
 						child_object_has_real_child_as_referer: child_object.instance_referers.has (actual_child_id)
 					end
 				end
+				real_child.remove_client_representation_recursively
 				unparent_children (real_child)
 			end
 			
@@ -223,18 +229,20 @@ feature {NONE} -- Implementation
 						-- If not a top level object, simply use the child as is.
 					real_child := child_object
 				end	
+
+					-- Add `real_child' to it's new parent, `parent_object' at position `an_insert_position'.
+				object_handler.add_object (parent_object, real_child, an_insert_position)
+
+					-- Create and add new representations of `real_child' to representations of `parent_object'
+					-- as position `an_insert_position'.
 				
+				create_new_representations (parent_object, real_child, an_insert_position)
+				system_status.set_object_structure_changing
+				real_child.add_client_representation_recursively
 				if object_handler.deleted_objects.has (real_child.id) then
 					object_handler.mark_existing (real_child)
 				end
-				
-					-- Add `real_child' to it's new parent, `parent_object' at position `an_insert_position'.
-				object_handler.add_object (parent_object, real_child, an_insert_position)
-				
-					-- Create and add new representations of `real_child' to representations of `parent_object'
-					-- as position `an_insert_position'.
-				system_status.set_object_structure_changing
-				create_new_representations (parent_object, real_child, an_insert_position)
+
 				system_status.set_object_structure_changed
 			end
 			
@@ -251,6 +259,7 @@ feature {NONE} -- Implementation
 			a_child_not_void: a_child /= Void
 		local
 			list: ARRAYED_LIST [INTEGER]
+			old_parent: GB_OBJECT
 		do
 				-- It is possible that the object has already been deleted by an undo
 				-- as we keep all instance referers even though they have been undone. This
@@ -261,19 +270,20 @@ feature {NONE} -- Implementation
 				-- at some point. Maybe each object could have a history index of when it was created
 				-- and when cutting off the history, we could determine which objects are no
 				-- longer usable.
-			if object_handler.objects.has (a_child.id) then		
+			if object_handler.objects.has (a_child.id) then
+				old_parent := a_child.parent_object
 					-- Actually perform the unparenting.
 				if not new_parent_child_objects.has (a_child.parent_object.id) then
 					new_parent_child_objects.extend (a_child.id, a_child.parent_object.id)
 				end
 				a_child.parent_object.remove_child (a_child)
-			
 				check
 					a_child_exists: object_handler.deep_object_from_id (a_child.id) /= Void
 					a_child_not_delted: not object_handler.deleted_objects.has (a_child.id)
 				end
 				object_handler.mark_as_deleted (a_child)
-			end	
+				update_parent_object_editors (a_child, old_parent)
+			end
 				-- Now iterate through the `instance_referers'.
 			list := a_child.instance_referers.linear_representation
 			from

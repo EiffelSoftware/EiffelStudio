@@ -122,13 +122,6 @@ feature -- Access
 			"_internal_BasicOperations"
 		end
 
-	get_initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"get_InitializationFeatures"
-		end
-
 	frozen a_internal_bit_or_infix: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
@@ -157,6 +150,13 @@ feature -- Access
 			"_internal_EiffelName"
 		end
 
+	get_external_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelClass"
+		alias
+			"get_ExternalName"
+		end
+
 	get_enum_type: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelClass"
@@ -171,11 +171,11 @@ feature -- Access
 			"_internal_ExternalName"
 		end
 
-	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
+	get_full_external_name: STRING is
 		external
-			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+			"IL signature (): System.String use ISE.Reflection.EiffelClass"
 		alias
-			"get_Attribute"
+			"get_FullExternalName"
 		end
 
 	frozen a_internal_enum_type: STRING is
@@ -190,6 +190,13 @@ feature -- Access
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"get_UnaryOperatorsFeatures"
+		end
+
+	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"get_Attribute"
 		end
 
 	frozen a_internal_element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -213,11 +220,11 @@ feature -- Access
 			"get_ElementChangeFeatures"
 		end
 
-	get_external_name: STRING is
+	get_basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (): System.String use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"get_ExternalName"
+			"get_BasicOperations"
 		end
 
 	get_bit_or_infix: BOOLEAN is
@@ -248,6 +255,13 @@ feature -- Access
 			"get_AccessFeatures"
 		end
 
+	frozen a_internal_is_generic: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"_internal_IsGeneric"
+		end
+
 	frozen a_internal_is_expanded: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
@@ -255,11 +269,11 @@ feature -- Access
 			"_internal_IsExpanded"
 		end
 
-	get_basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"get_BasicOperations"
+			"_internal_GenericDerivations"
 		end
 
 	get_routine: ISE_REFLECTION_EIFFELFEATURE is
@@ -276,18 +290,18 @@ feature -- Access
 			"get_IsDeferred"
 		end
 
-	frozen a_internal_full_external_name: STRING is
+	get_generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"_internal_FullExternalName"
+			"get_GenericDerivations"
 		end
 
-	get_full_external_name: STRING is
+	get_initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (): System.String use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"get_FullExternalName"
+			"get_InitializationFeatures"
 		end
 
 	frozen a_internal_special_features: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -309,6 +323,20 @@ feature -- Access
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"get_ImplementationFeatures"
+		end
+
+	get_is_generic: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"get_IsGeneric"
+		end
+
+	frozen a_internal_full_external_name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+		alias
+			"_internal_FullExternalName"
 		end
 
 	get_eiffel_name: STRING is
@@ -355,11 +383,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_deferred (a_value: BOOLEAN) is
+	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): ISE_REFLECTION_EIFFELFEATURE is
 		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Reflection.MemberInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
 		alias
-			"SetDeferred"
+			"AttributeFromInfo"
 		end
 
 	add_access_feature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
@@ -367,6 +395,13 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"AddAccessFeature"
+		end
+
+	set_external_names (a_full_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetExternalNames"
 		end
 
 	matching_arguments (info: SYSTEM_REFLECTION_METHODBASE; arguments: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
@@ -383,11 +418,11 @@ feature -- Basic Operations
 			"AddInitializationFeature"
 		end
 
-	set_external_names (a_full_name: STRING) is
+	set_generic (a_value: BOOLEAN) is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"SetExternalNames"
+			"SetGeneric"
 		end
 
 	has_attribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
@@ -467,9 +502,23 @@ feature -- Basic Operations
 			"HasCreationRoutine"
 		end
 
-	set_modified is
+	set_deferred (a_value: BOOLEAN) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetDeferred"
+		end
+
+	add_generic_derivation (a_derivation: ISE_REFLECTION_GENERICDERIVATION) is
+		external
+			"IL signature (ISE.Reflection.GenericDerivation): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddGenericDerivation"
+		end
+
+	set_modified (a_value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"SetModified"
 		end
@@ -523,13 +572,6 @@ feature -- Basic Operations
 			"AddInvariant"
 		end
 
-	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (System.Reflection.MemberInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"AttributeFromInfo"
-		end
-
 	set_external_name (a_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
@@ -551,9 +593,9 @@ feature -- Basic Operations
 			"AddImplementationFeature"
 		end
 
-	set_bit_or_infix is
+	set_bit_or_infix (a_value: BOOLEAN) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"SetBitOrInfix"
 		end

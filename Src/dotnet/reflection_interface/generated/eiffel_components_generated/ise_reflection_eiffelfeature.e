@@ -299,18 +299,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_external_name (a_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelFeature"
-		alias
-			"SetExternalName"
-		end
-
-	set_infix (a_value: BOOLEAN) is
+	set_literal (a_value: BOOLEAN) is
 		external
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
-			"SetInfix"
+			"SetLiteral"
 		end
 
 	set_abstract (a_value: BOOLEAN) is
@@ -318,6 +311,13 @@ feature -- Basic Operations
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"SetAbstract"
+		end
+
+	set_infix (a_value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
+		alias
+			"SetInfix"
 		end
 
 	add_precondition (a_tag: STRING; a_text: STRING) is
@@ -369,9 +369,9 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	add_argument (an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE) is
+	add_argument (an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE) is
 		external
-			"IL signature (ISE.Reflection.NamedSignatureType): System.Void use ISE.Reflection.EiffelFeature"
+			"IL signature (ISE.Reflection.INamedSignatureType): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"AddArgument"
 		end
@@ -381,13 +381,6 @@ feature -- Basic Operations
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"SetNewSlot"
-		end
-
-	set_literal (a_value: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
-		alias
-			"SetLiteral"
 		end
 
 	set_prefix (a_value: BOOLEAN) is
@@ -437,6 +430,13 @@ feature -- Basic Operations
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"SetModified"
+		end
+
+	set_external_name (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelFeature"
+		alias
+			"SetExternalName"
 		end
 
 	set_eiffel_name (a_name: STRING) is

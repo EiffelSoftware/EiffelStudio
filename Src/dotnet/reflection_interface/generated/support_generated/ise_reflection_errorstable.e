@@ -40,11 +40,11 @@ feature -- Basic Operations
 			"ReplaceErrorDescription"
 		end
 
-	error_info (a_code: INTEGER): ISE_REFLECTION_ERRORINFO is
+	remove_error (a_code: INTEGER) is
 		external
-			"IL signature (System.Int32): ISE.Reflection.ErrorInfo use ISE.Reflection.ErrorsTable"
+			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorsTable"
 		alias
-			"ErrorInfo"
+			"RemoveError"
 		end
 
 	make is
@@ -54,18 +54,18 @@ feature -- Basic Operations
 			"Make"
 		end
 
+	error_info (a_code: INTEGER): ISE_REFLECTION_ERRORINFO is
+		external
+			"IL signature (System.Int32): ISE.Reflection.ErrorInfo use ISE.Reflection.ErrorsTable"
+		alias
+			"ErrorInfo"
+		end
+
 	error_name (a_code: INTEGER): STRING is
 		external
 			"IL signature (System.Int32): System.String use ISE.Reflection.ErrorsTable"
 		alias
 			"ErrorName"
-		end
-
-	remove_error (a_code: INTEGER) is
-		external
-			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorsTable"
-		alias
-			"RemoveError"
 		end
 
 	error_description (a_code: INTEGER): STRING is

@@ -20,25 +20,11 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	write_lock_message: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"WriteLockMessage"
-		end
-
 	class_feature_info_generation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
 			"ClassFeatureInfoGenerationFailedMessage"
-		end
-
-	class_features_generation_failed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassFeaturesGenerationFailed"
 		end
 
 	class_parents_generation_failed: STRING is
@@ -48,39 +34,18 @@ feature -- Basic Operations
 			"ClassParentsGenerationFailed"
 		end
 
-	eiffel_assembly_generation_failed_message: STRING is
+	generic_derivation_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"EiffelAssemblyGenerationFailedMessage"
+			"GenericDerivationGenerationFailed"
 		end
 
-	eiffel_class_generation_failed: STRING is
+	class_body_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"EiffelClassGenerationFailed"
-		end
-
-	eiffel_class_generation_failed_message: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"EiffelClassGenerationFailedMessage"
-		end
-
-	class_feature_comments_generation_failed_message: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassFeatureCommentsGenerationFailedMessage"
-		end
-
-	class_footer_generation_failed_message: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassFooterGenerationFailedMessage"
+			"ClassBodyGenerationFailed"
 		end
 
 	class_parents_generation_failed_message: STRING is
@@ -90,11 +55,39 @@ feature -- Basic Operations
 			"ClassParentsGenerationFailedMessage"
 		end
 
-	class_body_generation_failed_message: STRING is
+	read_lock: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ClassBodyGenerationFailedMessage"
+			"ReadLock"
+		end
+
+	class_feature_arguments_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassFeatureArgumentsGenerationFailedMessage"
+		end
+
+	class_footer_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassFooterGenerationFailedMessage"
+		end
+
+	eiffel_class_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"EiffelClassGenerationFailedMessage"
+		end
+
+	generic_derivation_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"GenericDerivationGenerationFailedMessage"
 		end
 
 	class_feature_comments_generation_failed: STRING is
@@ -139,13 +132,6 @@ feature -- Basic Operations
 			"ClassFeatureAssertionsGenerationFailedMessage"
 		end
 
-	class_body_generation_failed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassBodyGenerationFailed"
-		end
-
 	class_header_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
@@ -153,11 +139,11 @@ feature -- Basic Operations
 			"ClassHeaderGenerationFailed"
 		end
 
-	class_feature_arguments_generation_failed_message: STRING is
+	class_feature_arguments_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ClassFeatureArgumentsGenerationFailedMessage"
+			"ClassFeatureArgumentsGenerationFailed"
 		end
 
 	class_feature_assertions_generation_failed: STRING is
@@ -174,6 +160,13 @@ feature -- Basic Operations
 			"ClassFooterGenerationFailed"
 		end
 
+	eiffel_class_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"EiffelClassGenerationFailed"
+		end
+
 	class_features_generation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
@@ -188,18 +181,39 @@ feature -- Basic Operations
 			"ClassFeatureInfoGenerationFailed"
 		end
 
-	class_feature_arguments_generation_failed: STRING is
+	class_features_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ClassFeatureArgumentsGenerationFailed"
+			"ClassFeaturesGenerationFailed"
 		end
 
-	read_lock: STRING is
+	eiffel_assembly_generation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ReadLock"
+			"EiffelAssemblyGenerationFailedMessage"
+		end
+
+	class_feature_comments_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassFeatureCommentsGenerationFailedMessage"
+		end
+
+	class_body_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassBodyGenerationFailedMessage"
+		end
+
+	write_lock_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"WriteLockMessage"
 		end
 
 end -- class ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES

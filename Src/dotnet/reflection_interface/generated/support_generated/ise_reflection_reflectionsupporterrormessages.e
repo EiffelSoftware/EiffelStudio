@@ -41,11 +41,11 @@ feature -- Basic Operations
 			"NoTypeDescriptionMessage"
 		end
 
-	hash_value_computation_failed: STRING is
+	no_assembly_description: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"HashValueComputationFailed"
+			"NoAssemblyDescription"
 		end
 
 	no_assembly_description_message: STRING is
@@ -55,11 +55,11 @@ feature -- Basic Operations
 			"NoAssemblyDescriptionMessage"
 		end
 
-	no_assembly_description: STRING is
+	hash_value_computation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupportErrorMessages"
 		alias
-			"NoAssemblyDescription"
+			"HashValueComputationFailed"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONSUPPORTERRORMESSAGES

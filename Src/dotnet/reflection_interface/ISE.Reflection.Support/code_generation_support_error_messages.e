@@ -76,6 +76,18 @@ feature -- Access
 		end
 
 
+	Generic_derivation_generation_failed: STRING is "Generic derivations generation failed."
+		indexing
+			description: "Error name: generic derivation generation failed"
+			external_name: "GenericDerivationGenerationFailed"
+		end
+		
+	Generic_derivation_generation_failed_message: STRING is "The generation of the derivations of this generic class from XML code has failed."
+		indexing
+			description: "Error message when generic derivations generation from XML has failed"
+			external_name: "GenericDerivationGenerationFailedMessage"
+		end
+		
 	Class_parents_generation_failed: STRING is "Class parents generation failed"
 		indexing
 			description: "Error name: class parents generation failed"

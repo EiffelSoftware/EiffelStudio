@@ -20,13 +20,6 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
---	import_assembly_without_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
---		external
---			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
---		alias
---			"ImportAssemblyWithoutDependancies"
---		end
-
 	import_assembly_with_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
 		external
 			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
@@ -71,9 +64,9 @@ feature {NONE} -- Implementation
 			"EmitEiffelClassesFromXml"
 		end
 
-	emit_from_assembly (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
+	emit_from_assembly (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; is_imported: BOOLEAN; is_dependency: BOOLEAN) is
 		external
-			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String, System.Boolean, System.Boolean): System.Void use EiffelClassGenerator"
 		alias
 			"EmitFromAssembly"
 		end
@@ -106,11 +99,32 @@ feature {NONE} -- Implementation
 			"EmitXmlFiles"
 		end
 
+	emit_xml_and_eiffel_files (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
+		external
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
+		alias
+			"EmitXmlAndEiffelFiles"
+		end
+
 	generated_assembly_factory (assembly_type: SYSTEM_TYPE; eiffel_cluster_path :STRING): ISE_REFLECTION_EIFFELASSEMBLY is
 		external
 			"IL signature (System.Type, System.String): ISE.Reflection.EiffelAssembly use EiffelClassGenerator"
 		alias
 			"GeneratedAssemblyFactory"
+		end
+
+	import_assembly_without_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN; xml_generation: BOOLEAN; is_dependency: BOOLEAN) is
+		external
+			"IL signature (System.Reflection.Assembly, System.String, System.Boolean, System.Boolean, System.Boolean): System.Void use EiffelClassGenerator"
+		alias
+			"ImportAssemblyWithoutDependancies"
+		end
+
+	import_assembly_dependencies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
+		external
+			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
+		alias
+			"ImportAssemblyDependencies"
 		end
 
 end -- class NEWEIFFELCLASSGENERATOR

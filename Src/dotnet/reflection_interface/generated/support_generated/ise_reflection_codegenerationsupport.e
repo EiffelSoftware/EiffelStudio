@@ -99,6 +99,13 @@ feature -- Basic Operations
 			"GenerateFeatureAssertions"
 		end
 
+	generate_comments is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateComments"
+		end
+
 	create_folder (a_path: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
@@ -120,11 +127,11 @@ feature -- Basic Operations
 			"GenerateClassBody"
 		end
 
-	generate_comments is
+	generate_generic_derivations is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateComments"
+			"GenerateGenericDerivations"
 		end
 
 	set_feature_info is

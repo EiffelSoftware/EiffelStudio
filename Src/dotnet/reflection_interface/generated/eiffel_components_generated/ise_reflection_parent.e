@@ -103,11 +103,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_export_clauses (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+	add_redefine_clause (a_clause: ISE_REFLECTION_REDEFINECLAUSE) is
 		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.Parent"
+			"IL signature (ISE.Reflection.RedefineClause): System.Void use ISE.Reflection.Parent"
 		alias
-			"SetExportClauses"
+			"AddRedefineClause"
 		end
 
 	add_select_clause (a_clause: ISE_REFLECTION_SELECTCLAUSE) is
@@ -122,13 +122,6 @@ feature -- Basic Operations
 			"IL signature (System.String): System.Void use ISE.Reflection.Parent"
 		alias
 			"Make"
-		end
-
-	frozen a_invariant (current_object: ISE_REFLECTION_PARENT) is
-		external
-			"IL static signature (ISE.Reflection.Parent): System.Void use ISE.Reflection.Parent"
-		alias
-			"_invariant"
 		end
 
 	set_select_clauses (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -159,11 +152,11 @@ feature -- Basic Operations
 			"AddUndefineClause"
 		end
 
-	add_redefine_clause (a_clause: ISE_REFLECTION_REDEFINECLAUSE) is
+	frozen a_invariant (current_object: ISE_REFLECTION_PARENT) is
 		external
-			"IL signature (ISE.Reflection.RedefineClause): System.Void use ISE.Reflection.Parent"
+			"IL static signature (ISE.Reflection.Parent): System.Void use ISE.Reflection.Parent"
 		alias
-			"AddRedefineClause"
+			"_invariant"
 		end
 
 	add_export_clause (a_clause: ISE_REFLECTION_EXPORTCLAUSE) is
@@ -178,6 +171,13 @@ feature -- Basic Operations
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.Parent"
 		alias
 			"SetUndefineClauses"
+		end
+
+	set_export_clauses (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.Parent"
+		alias
+			"SetExportClauses"
 		end
 
 	add_rename_clause (a_clause: ISE_REFLECTION_RENAMECLAUSE) is

@@ -411,13 +411,12 @@ feature {NONE} -- Generation
 					%%N%
 					%%T");
 
-				c_return_type.generate (gen_file)
-				gen_file.putstring ("(*function_ptr)();%N%N%
-					%%Tfunction_ptr = (")
-				c_return_type.generate (gen_file)
-				gen_file.putstring (" (*)()) ")
-
 				if final_mode then
+					c_return_type.generate (gen_file)
+					gen_file.putstring ("(*function_ptr)();%N%N%
+						%%Tfunction_ptr = (")
+					c_return_type.generate (gen_file)
+					gen_file.putstring (" (*)()) ")
 
 					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
@@ -442,42 +441,54 @@ feature {NONE} -- Generation
 						Extern_declarations.add_routine_table (table_name)
 
 					end
+
+					gen_file.putchar ('%T')
+					if a_feature.is_function then
+						gen_file.putstring ("return (")
+						c_return_type.generate (gen_file)
+						gen_file.putstring (")(")
+					end
+
+					gen_file.putstring ("(function_ptr)(Current")
+					if has_arguments then
+						generate_arg_list (args.count)
+					end
+					if a_feature.is_function then
+						gen_file.putstring (")")
+					end
+
+					gen_file.putstring (");%N")
 				else
 						-- Workbench mode
+
+					if a_feature.is_function then
+						gen_file.putstring ("return ")
+					end
+
+					gen_file.putchar ('(')
+					c_return_type.generate_function_cast (gen_file)
+
 					if
 						Compilation_modes.is_precompiling or
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id);
-						gen_file.putstring ("RTPWP(")
+						gen_file.putstring ("RTWPF(")
 						gen_file.putint (rout_info.origin.id);
 						gen_file.putstring (", ")
 						gen_file.putint (rout_info.offset);
 					else
-						gen_file.putstring ("RTWP(")
+						gen_file.putstring ("RTWF(")
 						gen_file.putint (a_type.id.id - 1)
 						gen_file.putstring (", ")
 						gen_file.putint (feature_id)
 					end;
-					gen_file.putstring (", Dtype (Current));%N")
+					gen_file.putstring (", Dtype (Current))(Current")
+					if has_arguments then
+						generate_arg_list (args.count)
+					end
+					gen_file.putstring (");%N")
 				end
-
-				gen_file.putchar ('%T')
-				if a_feature.is_function then
-					gen_file.putstring ("return (")
-					c_return_type.generate (gen_file)
-					gen_file.putstring (")(")
-				end
-
-				gen_file.putstring ("(function_ptr)(Current")
-				if has_arguments then
-					generate_arg_list (args.count)
-				end
-				if a_feature.is_function then
-					gen_file.putstring (")")
-				end
-
-				gen_file.putstring (");%N")
 
 				gen_file.putstring ("%N}%N%N")
 

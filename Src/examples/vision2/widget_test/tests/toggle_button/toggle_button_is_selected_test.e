@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that demonstrate `select_actions'%
-		%of EV_BUTTON."
+		%of EV_TOGGLE_BUTTON."
 	date: "$Date$"
 	revision: "$Revision$"
 

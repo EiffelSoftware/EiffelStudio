@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that demonstrate `disable_item_expand'%
-		%for EV_HORIZONTAL_BOX"
+		%for EV_VERTICAL_BOX"
 	date: "$Date$"
 	revision: "$Revision$"
 

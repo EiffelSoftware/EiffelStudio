@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that demonstrate adding items%
-		%to EV_HORIZONTAL_SPLIT_AREA."
+	description: "Objects that demonstrate a single child in%
+		%an EV_HORIZONTAL_SPLIT_AREA."
 	date: "$Date$"
 	revision: "$Revision$"
 

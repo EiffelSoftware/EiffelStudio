@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that demonstrate adding setting%
+	description: "Objects that demonstrate setting%
 		%item texts in an EV_NOTEBOOK"
 	date: "$Date$"
 	revision: "$Revision$"

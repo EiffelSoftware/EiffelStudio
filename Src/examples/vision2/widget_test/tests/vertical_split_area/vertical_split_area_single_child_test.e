@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that demonstrate adding items%
-		%to EV_VERTICAL_SPLIT_AREA."
+	description: "Objects that demonstrate adding a single%
+		%child in an EV_VERTICAL_SPLIT_AREA."
 	date: "$Date$"
 	revision: "$Revision$"
 

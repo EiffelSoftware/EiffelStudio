@@ -4,7 +4,6 @@ class NAME_CHOOSER_W
 inherit
 
 	COMMAND_W;
-	NAMER;
 	FILE_SEL_D
 		rename
 			make as file_sel_d_create,
@@ -33,7 +32,6 @@ feature
 			-- Create a file selection dialog
 		do
 			file_sel_d_create (l_file_selection, a_composite);
-			set_title (l_file_selection);
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);

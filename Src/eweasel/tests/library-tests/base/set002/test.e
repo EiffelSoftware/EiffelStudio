@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			from
 				i := 1
 			until
-				i > 2
+				i > Implementations
 			loop
 				create_string_sets (i)
 				fill_string_sets (False)
@@ -39,6 +39,10 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature {NONE} -- Constants
+
+	Implementations: INTEGER is 2
+	
 feature {NONE} -- Implementation
 
 	obj_set1, obj_set2: TRAVERSABLE_SUBSET [SAMPLE_OBJECT]
@@ -65,7 +69,7 @@ feature {NONE} -- Implementation
 			-- Create string sets using the implementation determined by
 			-- `impl'.
 		require
-			defined_implementation: 1 <= impl and impl <= 2
+			defined_implementation: 1 <= impl and impl <= Implementations
 		do
 			inspect
 				impl

@@ -58,7 +58,8 @@ feature -- Output
 			-- and reset the object windows.
 		do
 			debug_window.clear_window;
-			debug_window.put_string ("System terminated%N");
+			debug_window.put_string ("System terminated");
+			debug_window.new_line;
 			debug_window.display;
 			window_manager.object_win_mgr.reset
 			if Application.status.e_feature /= Void then
@@ -94,8 +95,10 @@ feature {NONE} -- Implementation
 					if not status.is_stopped then
 							-- Ask the application to interrupt ASAP.
 						debug_window.clear_window;
-						debug_window.put_string ("System is running%N");
-						debug_window.put_string ("Interruption request%N");
+						debug_window.put_string ("System is running");
+						debug_window.new_line;
+						debug_window.put_string ("Interruption request");
+						debug_window.new_line;
 						debug_window.display;
 						Application.interrupt
 					end

@@ -1,8 +1,8 @@
 indexing
-	description: "Objects that allow users access to the ICONINFO structure within Windows."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Information about an icon or a cursor."
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_ICON_INFO
@@ -15,14 +15,14 @@ create
 
 feature -- Status Report
 
-	fIcon: BOOLEAN is
+	is_icon: BOOLEAN is
 			-- Specifies whether this structure defines and icon or a cursor.
 			-- True specifies an icon; False specifies a cursor.
 		do
 			Result := fIcon_ext (item)
 		end
 	
-	xHotspot: INTEGER is
+	x_hotspot: INTEGER is
 			-- Specifies the x-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
 			-- always in the center of the icon, and this member is ignored.
@@ -30,7 +30,7 @@ feature -- Status Report
 			Result := xHotspot_ext (item)
 		end
 	
-	yHotspot: INTEGER is
+	y_hotspot: INTEGER is
 			-- Specifies the y-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
 			-- always in the center of the icon, and this member is ignored.
@@ -52,13 +52,13 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_xHotspot (xvalue: INTEGER) is
+	set_x_hotspot (xvalue: INTEGER) is
 			-- Assign `xvalue' to xHotspot.
 		do
 			set_xHotspot_ext (item, xvalue)
 		end
 
-	set_yHotspot (yvalue: INTEGER) is
+	set_y_hotspot (yvalue: INTEGER) is
 			-- Assign `yvalue' to yHotspot.
 		do
 			set_yHotspot_ext (item, yvalue)
@@ -76,10 +76,10 @@ feature -- Status Setting
 			set_hbmColor_ext (item, a_color_bitmap.item)
 		end
 
-	set_fIcon (is_icon: BOOLEAN) is
-			-- Assign `is_icon' to fIcon.
+	set_is_icon (a_is_icon: BOOLEAN) is
+			-- Assign `a_is_icon' to fIcon.
 		do
-			set_fIcon_ext (item, is_icon)
+			set_fIcon_ext (item, a_is_icon)
 		end
 
 feature --  Measurement
@@ -88,6 +88,45 @@ feature --  Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_iconinfo
+		end
+
+
+feature -- Obsolete
+
+	fIcon: BOOLEAN is
+		obsolete "use `is_icon' instead"
+		do
+			Result := is_icon
+		end
+	
+	xHotspot: INTEGER is
+		obsolete "use `x_hotspot' instead"
+		do
+			Result := x_hotspot
+		end
+	
+	yHotspot: INTEGER is
+		obsolete "use `y_hotspot' instead"
+		do
+			Result := y_hotspot
+		end
+	
+	set_xHotspot (xvalue: INTEGER) is
+		obsolete "use `set_x_hotspot' instead"
+		do
+			set_x_hotspot (xvalue)
+		end
+
+	set_yHotspot (yvalue: INTEGER) is
+		obsolete "use `set_y_hotspot' instead"
+		do
+			set_y_hotspot (yvalue)
+		end
+
+	set_fIcon (a_is_icon: BOOLEAN) is
+		obsolete "use `set_is_icon' instead"
+		do
+			set_is_icon (a_is_icon)
 		end
 
 feature {NONE} -- Externals

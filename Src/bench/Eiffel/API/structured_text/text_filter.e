@@ -11,13 +11,7 @@ class TEXT_FILTER
 inherit
 
 	TEXT_FORMATTER
-		rename
-			process_text as old_process_text
-		end;
-	TEXT_FORMATTER
 		redefine
-			process_text
-		select
 			process_text
 		end;
 	EIFFEL_ENV;
@@ -105,8 +99,17 @@ feature -- Text processing
 
 	process_text (text: STRUCTURED_TEXT) is
 		do
-			structured_text := text;
-			old_process_text (text);
+			if text /= Void then
+				structured_text := text;
+				from
+					text.start
+				until
+					text.after
+				loop
+					text.item.append_to (Current);
+					text.forth
+				end
+			end
 		end;
 
 feature {NONE} -- Text processing

@@ -43,7 +43,7 @@ feature -- Access
 	Marshallin_description_static_constant: INTEGER is 1059
 	Output_info_static_constant: INTEGER is 1038
 	Wizard2_bitmap_constant: INTEGER is 115
-	Out_of_process_check_constant: INTEGER is 1055
+	Out_of_process_check_constant: INTEGER is 1056
 	Information_check_constant: INTEGER is 1061
 	Automation_radio_constant: INTEGER is 1029
 	Wizard_definition_file_dialog_constant: INTEGER is 101

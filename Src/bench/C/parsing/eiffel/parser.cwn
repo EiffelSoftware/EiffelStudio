@@ -2604,7 +2604,7 @@ case 214:
 {yyval.node = create_node2(ELSIF_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=201;} break;
 case 215:
 # line 931 "parser.y"
-{yyval.node = NULL;yacc_error_code=202;} break;
+{yyval.node = inspect_no_else();yacc_error_code=202;} break;
 case 216:
 # line 932 "parser.y"
 {list_init();yacc_error_code=203;} break;

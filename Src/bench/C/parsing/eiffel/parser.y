@@ -928,7 +928,7 @@ Elsif_part:					TE_ELSEIF Expression TE_THEN {list_init();yacc_error_code=200;} 
 	;
 
 Inspect_default:            /* empty */
-                                {$$ = NULL;yacc_error_code=202;}
+                                {$$ = inspect_no_else();yacc_error_code=202;}
     |                       TE_ELSE {list_init();yacc_error_code=203;} Compound
                                 {$$ = inspect_else();yacc_error_code=204;}
     ;

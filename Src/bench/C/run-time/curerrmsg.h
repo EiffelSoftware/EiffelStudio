@@ -86,6 +86,7 @@
 #define CURAPPERR34 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect 'end'."
 #define CURAPPERR35 "    Syntax error in configure file for <%s>: %s\n-- executable file's name should be FULL name(from root)."
 #define CURAPPERR36 "    Syntax error in configure file for <%s>: %s\n-- executable file's name should not be empty."
+#define CURAPPERR37 "    Syntax Error in configure file around line:\n%s\n-- Key word `external' or `default' or nothing is expected!"
 
 
 /* The following are error messages whose causes are not clear  */
@@ -165,7 +166,7 @@
 
 /* The following are application error messages */
 /*
-#define CURAPPERR37
+#define CURAPPERR38
 */
 
 /* The following are error messages whose causes are not clear  */
@@ -185,7 +186,7 @@
 
 /* The following are application error messages */
 /*
-#define CURAPPERR37
+#define CURAPPERR38
 */
 
 /* The following are error messages whose causes are not clear  */

@@ -53,23 +53,28 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	wizard_pixmaps_path: STRING is 
+	wizard_pixmaps_path: PATH_NAME is 
 			-- Bitmaps location
 		once
-			Result := wizard_source+ "\pixmaps" 
+			create Result.make_from_string (wizard_source)
+			Result.extend ("pixmaps")
 		end
 
-	wizard_resources_path: STRING is
+	wizard_resources_path: PATH_NAME is
 			-- Resource location.
 		once
-			Result := wizard_source +"\resources"
+			create Result.make_from_string (wizard_source)
+			Result.extend ("resources")
 		end
 
 	pixmap_extension: STRING is
 			-- Extension used for pixmaps.
 		once
-			Result := "bmp"
+			Result := ".png"
 		end
+
+	platform_is_unix: BOOLEAN is False
+			-- False because this class is windows-related.
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap on which can be displayed a picture which 

@@ -28,16 +28,16 @@ feature {NONE} -- Initialization
                         -- Create a gtk push button.
                 local
                         a: ANY
-			parent_imp: EV_CONTAINER_IMP
+			par_imp: EV_CONTAINER_IMP
 		do
 			a ?= txt.to_c
-			parent_imp ?= par.implementation
+			par_imp ?= par.implementation
 			check
-				valid_parent: parent_imp /= Void
+				valid_parent: par_imp /= Void
 			end
-                        widget := gtk_radio_button_new_with_label (parent_imp.radio_button_group,
+                        widget := gtk_radio_button_new_with_label (par_imp.radio_button_group,
 								   $a)
-			parent_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
+			par_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
                 end
 	
 end

@@ -7,7 +7,7 @@ class
 	XM_LINK_FORMATTER
 
 inherit
-	XM_FORMATTER
+	XM_FORMATTER					
 		redefine
 			process_element
 		end
@@ -68,13 +68,13 @@ feature -- Tag
 	process_element (e: XM_ELEMENT) is
 			-- Process element `e'.
 		do	
+			Precursor {XM_FORMATTER} (e)
 			if link_tag_names.has (e.name) then
 				extract_url_from_link (e)
 				if convert_to_relative then
 					convert_link_to_relative (e)
 				end
-			end
-			Precursor {XM_FORMATTER} (e)
+			end			
 		end
 
 feature {NONE} -- Commands
@@ -94,7 +94,7 @@ feature {NONE} -- Commands
 				if l_url /= Void and then not l_url.is_empty then
 					l_url := tidied_string (l_url)
 							-- Create document link based on `document' and `e' link
-					create l_link.make (document.name, l_url)				
+					create l_link.make (document.name, l_url)		
 					links.extend (l_link)
 					if e.name.is_equal ("image") then
 						images.extend (l_link)

@@ -4,7 +4,7 @@ class CLASS_INFO_CACHE
 
 inherit
 
-	CACHE [CLASS_INFO]
+	CACHE [CLASS_INFO, CLASS_ID]
 
 creation
 

@@ -102,10 +102,18 @@ iff not defined NO_NEW_EC then
 		echo Could not finalize a new EiffelStudio
 		CANCEL
 	endiff
-	move ec.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-else
-	quick_move studio\spec\%ISE_PLATFORM\bin\ec.exe
-endiff
+	md %INSTALL_DIR\releases
+	md %INSTALL_DIR\releases\enterprise
+	md %INSTALL_DIR\releases\professional
+	md %INSTALL_DIR\releases\home
+	md %INSTALL_DIR\releases\student
+	md %INSTALL_DIR\releases\evaluation
+	move ec.exe %INSTALL_DIR\releases\enterprise
+	cdd %INSTALL_DIR\releases
+	copy enterprise\ec.exe professional
+	copy enterprise\ec.exe home
+	copy enterprise\ec.exe student
+	copy enterprise\ec.exe evaluation
 
 remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\Eiffel\extra\finish_freezing

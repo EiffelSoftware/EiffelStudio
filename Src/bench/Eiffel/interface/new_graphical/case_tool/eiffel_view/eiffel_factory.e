@@ -107,9 +107,11 @@ feature -- Access
 										target := world.model.class_from_interface (target_found)
 										if source /= Void and then target /= Void then
 											if node_name.is_equal (xml_client_supplier_figure_node_name) then
-												Result := world.model.client_supplier_link_connecting (source, target)
-												if Result = Void then
-													create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
+												if source.has_supplier (target) then
+													Result := world.model.client_supplier_link_connecting (source, target)
+													if Result = Void then
+														create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
+													end
 												end
 											else
 												Result := world.model.inheritance_link_connecting (source, target)

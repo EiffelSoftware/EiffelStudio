@@ -48,8 +48,8 @@ feature
 
 				-- Check assertion marks
 			if
-				not new_feature.is_require_else
-				and then new_feature.is_ensure_then
+				not new_feature.is_require_else or else
+				not new_feature.is_ensure_then
 			then
 				create vdrd8
 				vdrd8.set_class (System.current_class)

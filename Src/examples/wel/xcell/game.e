@@ -150,7 +150,7 @@ feature -- Access
 		require
 			valid_column_less: a_column <= Number_of_columns
 			valid_column_greater: a_column > 0
-			not_empty: not (columns @ a_column).empty
+			not_empty: not (columns @ a_column).is_empty
 		do
 				Result := ((columns @ a_column).the_top) = a_card.card_number
 		end
@@ -178,7 +178,7 @@ feature -- Access
 		require
 			valid_column_less: column_number <= Number_of_columns
 			valid_column_greater: column_number > 0
-			not_empty: not (columns @ column_number).empty
+			not_empty: not (columns @ column_number).is_empty
 		do
 			Result := (columns @ column_number).the_top
 		end
@@ -207,7 +207,7 @@ feature -- Access
 			valid_column_less: column_number <= Number_of_columns
 			valid_column_greater: column_number > 0
 		do
-			Result := (columns @ column_number).empty
+			Result := (columns @ column_number).is_empty
 		end
 
 	one_from_top_in_column (a_column: INTEGER): INTEGER is
@@ -282,7 +282,7 @@ feature -- Element change
 			from
 				the_card_numbers.start
 			until
-				the_card_numbers.empty
+				the_card_numbers.is_empty
 			loop
 				i := randomizer.next_random (game_number * 52) \\ the_card_numbers.count
 				from
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			if i > home_cell_offset then
 				Result := card_from_home_cell (i - home_cell_offset)
 			elseif i > Column_offset then
-				if not (columns @ (i - Column_offset)).empty then
+				if not (columns @ (i - Column_offset)).is_empty then
 					Result := card_from_top_of_column (i - Column_offset)
 				end
 			else

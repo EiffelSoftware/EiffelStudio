@@ -132,11 +132,8 @@ remtrace Borland files
 tar xvfz bcc55.tar.gz >>& %INSTALL_LOG
 fullrf bcc55.tar.gz
 
+remtrace Create documentation directory
 md docs
-cd docs
-remtrace PDF's
-exprt -r %DEFAULT_CVS_TAG -d PDF Delivery/newdocs/PDF
-cd ..
 
 remtrace Create directories
 safe_md %INSTALL_DIR\studio\spec

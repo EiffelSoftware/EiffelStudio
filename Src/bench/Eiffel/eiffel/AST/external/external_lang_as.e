@@ -94,6 +94,7 @@ feature {NONE} -- Implementation
 			extension := parser.root_node
 			is_yacc_parsing_successful := not parser.has_error and then extension /= Void
 			if not is_yacc_parsing_successful then
+				extension := Void
 				old_parse
 			end
 		ensure

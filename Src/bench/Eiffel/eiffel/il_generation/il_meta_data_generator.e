@@ -589,7 +589,7 @@ feature {NONE} -- Implementation: ancestors description
  			parent_type ?= byte_context.real_type (parents.first.type_i)
  			cl_type := parent_type.associated_class_type
 			if cl_type.associated_class.is_external then
- 				il_generator.add_to_parents_list (cl_type.implementation_id)
+--				il_generator.add_to_parents_list (cl_type.implementation_id)
 			end
 			il_generator.set_implementation_class
 			il_generator.add_interface (class_type.static_type_id)

@@ -17,15 +17,15 @@ with a single click on the <b>rightmost</b> mouse button. Then as you start movi
 any of its buttons - a pebble tracks the cursor position, and a line continuously connects the pebble to the
 object's original position. The pebble's shape indicates the type of the development object that you picked
 (oval disk for a class, cross for a feature, folder for a cluster...).
-<p>SCREENSHOT (picking a class in the editor)</p>
+<p align="center"><IMG SRC="/images/eiffelstudio/editor_pick_and_drop.png"></p>
 <p>You may terminate this situation in either of two ways:
 	<ul>
 		<li>If the pebble you are dragging is not crossed, you can right-click again to confirm the pick-and-drop
-		and so effectively send the dragged development object to the targetted component.
-		SCREENSHOT (pebble over a valid target)
+		and so effectively send the dragged development object to the targetted component. For a class, a droppable 
+		pebble looks like this:<IMG SRC="/images/eiffelstudio/icons/class.gif">
 		<p>Right-clicking when the pebble is crossed will do nothing because the component you are pointing with the
-		mouse does not accept your development object.
-		SCREENSHOT (pebble over an invalid target)</p>
+		mouse does not accept your development object. For a class, a not droppable 
+		pebble looks like this:<IMG SRC="/images/eiffelstudio/icons/Xclass.gif">
 		<li>If, for any reason, you change your mind, you can cancel the pick-and-drop by left-clicking anywhere
 		or by pressing the Escape key.
 	</ul>

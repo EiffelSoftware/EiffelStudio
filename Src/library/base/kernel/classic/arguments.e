@@ -169,7 +169,7 @@ feature -- Status report
 			p := index_of_character_option (o)
 			if p /= 0 then
 				if p = argument_count or else
-					argument_array.item (p + 1).item (1) = option_sign
+					argument_array.item (p + 1).item (1) = option_sign.item
 				then
 					Result := ""
 				else
@@ -196,7 +196,7 @@ feature -- Status report
 			p := index_of_word_option (opt)
 			if p /= 0 then
 				if p = argument_count or else
-					argument_array.item (p + 1).item (1) = option_sign
+					argument_array.item (p + 1).item (1) = option_sign.item
 				then
 					Result := ""
 				else
@@ -228,7 +228,7 @@ feature -- Status report
 			p := index_of_character_option (o)
 			if p /= 0 then
 				l := argument_array.item (p).twin
-				if option_sign /= '%U' then
+				if option_sign.item /= '%U' then
 					l.remove (1)
 				end
 				Result := l.substring (l.index_of (o, 1) + 1, l.count)
@@ -258,7 +258,7 @@ feature -- Status report
 			p := index_of_beginning_with_word_option (opt)
 			if p /= 0 then
 				l := argument_array.item (p).twin
-				if option_sign /= '%U' then
+				if option_sign.item /= '%U' then
 					l.remove (1)
 				end
 				Result := l.substring (opt.count + 1, l.count)
@@ -311,9 +311,9 @@ feature {NONE} -- Implementation
 	option_word_equal (arg, w: STRING): BOOLEAN is
 			-- Is `arg' equal to the word option `w'?
 		do
-			if option_sign = '%U' then
+			if option_sign.item = '%U' then
 				Result := arg.is_equal (w)
-			elseif arg.item (1) = option_sign then
+			elseif arg.item (1) = option_sign.item then
 				Result := arg.substring (2, arg.count).is_equal (w)
 			end
 		end
@@ -321,9 +321,9 @@ feature {NONE} -- Implementation
 	option_word_begins_with (arg, w: STRING): BOOLEAN is
 			-- Does `arg' begin with the word option `w'?
 		do
-			if option_sign = '%U' and then arg.count >= w.count then
+			if option_sign.item = '%U' and then arg.count >= w.count then
 				Result := arg.substring (1, w.count).is_equal (w)
-			elseif arg.item (1) = option_sign and then arg.count > w.count then
+			elseif arg.item (1) = option_sign.item and then arg.count > w.count then
 				Result := arg.substring (2, w.count + 1).is_equal (w)
 			end
 		end
@@ -331,9 +331,9 @@ feature {NONE} -- Implementation
 	option_character_equal (arg: STRING; c: CHARACTER): BOOLEAN is
 			-- Does `arg' contain the character option `c'?
 		do
-			if option_sign = '%U' then
+			if option_sign.item = '%U' then
 				Result := arg.has (c)
-			elseif arg.item (1) = option_sign then
+			elseif arg.item (1) = option_sign.item then
 				Result := arg.substring (2, arg.count).has (c)
 			end
 		end

@@ -160,4 +160,34 @@ feature
 			useless_body_ids.clear_all;
 		end;
 
+	trace is
+		local
+			i: INTEGER;
+		do
+			from
+				start
+				io.error.putstring ("Keys:%N");
+			until
+				after
+			loop
+				io.error.putstring ("%T");
+				io.error.putint (key_for_iteration);
+				io.error.new_line;
+				forth
+			end;
+			from
+				i := 1;
+				io.error.putstring ("Useless:%N");
+			until
+				i > nb_useless
+			loop
+				io.error.putstring ("%T");
+				io.error.putint (useless_body_ids.item (i));
+				io.error.new_line;
+				i := i + 1
+			end;
+			io.error.putstring ("O_N_TABLE:%N");
+			ontable.trace;
+		end;
+
 end

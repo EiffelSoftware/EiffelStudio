@@ -4,7 +4,8 @@ class ES
 
 inherit
 
-	ARGUMENTS
+	ARGUMENTS;
+	SHARED_ERROR_BEHAVIOR
 
 creation
 
@@ -33,23 +34,23 @@ feature -- Input/Output
 		local
 			i: INTEGER
 		do	
-			io.error.putstring (argument (0));
-			io.error.putstring (": incorrect options%N"); 
+			io.putstring (argument (0));
+			io.putstring (": incorrect options%N"); 
 			print_usage;
-			io.error.putstring ("Options:%N"); 
+			io.putstring ("Options:%N"); 
 			print_help
 		end;
 
 	print_usage is
 		do
-			io.error.putstring ("Usage:%N%T");
-			io.error.putstring (argument (0));
-			io.error.putstring (" [-help|-freeze|-finalize|-precompile|-clean|%N%
+			io.putstring ("Usage:%N%T");
+			io.putstring (argument (0));
+			io.putstring (" [-help|-freeze|-finalize|-precompile|-clean|%N%
 				%%T-flatshort [-troff] class|-flat class|%N%
 				%%T-descendants class|-ancestors class|%N%
 				%%T-aversions class feature|-dversions class feature|%N%
 				%%T-callers class feature|-dependents class feature|%N%
-				%%T[-ace Ace] [-project Project]]%N");
+				%%T[-stop] [-ace Ace] [-project Project]]%N");
 		end;
 
 	print_help is
@@ -70,15 +71,16 @@ feature -- Input/Output
 			print_one_help ("-aversions", "print the ancestor versions of a class feature");
 			print_one_help ("-dversions", "print the descendant versions of a class feature");
 			print_one_help ("-dependents", "print the classes depending on a class feature")
+			print_one_help ("-stop", "stop on errror")
 		end;
 
 	print_one_help (opt: STRING; txt: STRING) is
 		do
-			io.error.putstring ("%T");
-			io.error.putstring (opt);
-			io.error.putstring (" : ");
-			io.error.putstring (txt);
-			io.error.putstring (".%N")
+			io.putstring ("%T");
+			io.putstring (opt);
+			io.putstring (" : ");
+			io.putstring (txt);
+			io.putstring (".%N")
 		end;
 
 feature -- Command line options
@@ -292,6 +294,7 @@ feature -- Command line options
 				end;
 			elseif option.is_equal ("-stop") then
 					-- The compiler stops on errors
+				set_stop_on_error (True);
 			else
 				option_error := True
 			end;

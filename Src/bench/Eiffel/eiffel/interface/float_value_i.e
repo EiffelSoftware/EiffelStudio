@@ -52,4 +52,9 @@ feature
 			!VQMC4!Result;
 		end;
 
+	trace is
+		do
+			io.error.putstring (" (float)");
+			io.error.putstring (real_val);
+		end;
 end

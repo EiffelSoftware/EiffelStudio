@@ -322,9 +322,6 @@ feature -- Creation feature
 									a_class.set_cluster (Current);
 									a_class.set_date;
 								end;
-io.error.putstring ("Inserting class ");
-io.error.putstring (class_name);
-io.error.new_line;
 								classes.put (a_class, class_name);
 							end;
 						end;
@@ -680,11 +677,6 @@ io.error.new_line;
 					classes.forth
 				end;
 			end;
-if Result then
-	io.error.putstring ("Cluster ");
-	io.error.putstring (cluster_name);
-	io.error.putstring (" has changed%N");
-end;
 		end;
 
 feature {NONE} -- Externals

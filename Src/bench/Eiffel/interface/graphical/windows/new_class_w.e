@@ -115,8 +115,9 @@ feature
 					base_name.append (".e");
 					!!file.make (fname);
 					if not file.exists then	
-						class_i.set_cluster (cluster);
 						class_i.set_base_name (base_name);
+						class_i.set_cluster (cluster);
+						class_i.set_date;
 						if not cluster.classes.has (fname) then
 							cluster.classes.put (class_i, class_name);
 							stone := class_i.stone;

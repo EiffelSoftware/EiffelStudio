@@ -217,10 +217,10 @@ end;
 			from
 				error_list.start
 			until
-				error_list.offright
+				error_list.after
 			loop
 				error_list.item.trace;
-				error_window.new_line;
+				error_window.put_string ("%N------------------------------%N");
 				error_list.forth;
 			end;
 		end;
@@ -230,10 +230,10 @@ end;
 			from
 				warning_list.start
 			until
-				warning_list.offright
+				warning_list.after
 			loop
 				warning_list.item.trace;
-				error_window.new_line;
+				error_window.put_string ("%N------------------------------%N");
 				warning_list.forth;
 			end;
 			warning_list.wipe_out;

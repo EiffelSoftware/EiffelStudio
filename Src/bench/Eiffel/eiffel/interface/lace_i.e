@@ -45,8 +45,7 @@ feature
 			if new_date /= date then
 				do_recompilation;
 				date := new_date;
-			elseif Universe.cluster_changed then
-					-- Class file has been removed or added
+			else
 				build_universe;
 			end;
 		end;
@@ -111,6 +110,7 @@ feature
 					-- Reset `Workbench'
 				if old_system /= Void then
 					Universe.copy (old_universe);
+					Universe.reset_clusters;
 					System.copy (old_system);
 				end;
 				old_universe := Void;

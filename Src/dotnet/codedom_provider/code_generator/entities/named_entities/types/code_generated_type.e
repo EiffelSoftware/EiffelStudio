@@ -271,6 +271,11 @@ feature -- Code generation
 				-- class
 			Result.append (class_declaration)
 			
+				-- alias
+			Result.append ("alias%N%T%"")
+			Result.append (name)
+			Result.append ("%"%N%N")
+			
 				-- inherit
 			if snippet_inherit_clause /= Void then
 				Result.append (snippet_inherit_clause)
@@ -322,7 +327,7 @@ feature -- Code generation
 			create Result.make (9 + eiffel_name.count)
 			Result.append ("class%N%T")
 			Result.append (eiffel_name)
-			Result.append ("%N%N")
+			Result.append ("%N")
 		ensure
 			non_void_class_declaration: Result /= Void
 			not_empty_class_declaration: Result.count > 0

@@ -20,6 +20,10 @@ inherit
 		redefine
 			copy
 		end;
+	PROJECT_CONTEXT
+		redefine
+			copy
+		end
 
 creation {COMPILER_EXPORTER}
 
@@ -46,22 +50,47 @@ feature -- Properties
 
 feature -- Access
 
-	class_with_name (class_name: STRING): CLASS_I is
-			-- First class with name `class_name' found in the Universe
-			-- (Void if not found).
+	classes_with_name (class_name: STRING): LINKED_LIST [CLASS_I] is
+			-- Classes with name `class_name' found in the Universe
 		local
 			cur: CURSOR;
 			cname: STRING
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
+			!! Result.make;
 			cname := clone (class_name);
 			cname.to_lower;
 			cur := clusters.cursor;
-			from
-				clusters.start
-			until
-				clusters.after or else Result /= Void
-			loop
-				Result := class_named (cname, clusters.item);
+			from clusters.start until clusters.after loop
+				classes := clusters.item.classes;
+				if classes.has (cname) then
+					Result.extend (classes.item (cname))
+				end;
+				clusters.forth
+			end;
+			clusters.go_to (cur)
+		end;
+
+	compiled_classes_with_name (class_name: STRING): LINKED_LIST [CLASS_I] is
+			-- Compiled classes with name `class_name' found in the Universe
+		local
+			cur: CURSOR;
+			cname: STRING;
+			class_i: CLASS_I;
+			classes: HASH_TABLE [CLASS_I, STRING]
+		do
+			!! Result.make;
+			cname := clone (class_name);
+			cname.to_lower;
+			cur := clusters.cursor;
+			from clusters.start until clusters.after loop
+				classes := clusters.item.classes;
+				if classes.has (cname) then
+					class_i := classes.item (cname);
+					if class_i.compiled then
+						Result.extend (class_i)
+					end
+				end;
 				clusters.forth
 			end;
 			clusters.go_to (cur)
@@ -77,37 +106,56 @@ feature -- Access
 			real_name: STRING;
 			rename_clause: RENAME_I;
 			renamings: HASH_TABLE [STRING, STRING];
-			ignore: LINKED_LIST [CLUSTER_I];
 			old_cursor: CURSOR
 		do
-				-- First look for a renamed class in `cluster'
-			Result := cluster.renamed_class (class_name);
-
-			if Result = Void then
-				from
-					old_cursor := clusters.cursor;
-					ignore := cluster.ignore;
-					clusters.start
-				until
-					clusters.after or else Result /= Void
-				loop
-					a_cluster := clusters.item;
-					if not ignore.has (a_cluster) then
-						real_name := class_name;
-						rename_clause := cluster.rename_clause_for (a_cluster);
-						if rename_clause /= Void then
-								-- Evaluation of the real name of the class
-							renamings := rename_clause.renamings;
-							if renamings.has (class_name) then
-								real_name := renamings.item (class_name);
-							end;
-						end;
-						Result := a_cluster.classes.item (real_name);
+			if
+				has_override_cluster and then
+				not cluster.ignored (override_cluster)
+			then
+				real_name := class_name;
+				rename_clause := cluster.rename_clause_for (override_cluster);
+				if rename_clause /= Void then
+						-- Evaluation of the real name of the class
+					renamings := rename_clause.renamings;
+					if renamings.has (class_name) then
+						real_name := renamings.item (class_name);
+					elseif renamings.has_item (class_name) then
+						real_name := Has_been_renamed
 					end;
-					clusters.forth
 				end;
-				clusters.go_to (old_cursor)
+				Result := override_cluster.classes.item (real_name);
 			end;
+			if Result = Void then
+					-- First look for a renamed class in `cluster'
+				Result := cluster.renamed_class (class_name);
+
+				if Result = Void then
+					from
+						old_cursor := clusters.cursor;
+						clusters.start
+					until
+						clusters.after or else Result /= Void
+					loop
+						a_cluster := clusters.item;
+						if not cluster.ignored (a_cluster) then
+							real_name := class_name;
+							rename_clause := cluster.rename_clause_for (a_cluster);
+							if rename_clause /= Void then
+									-- Evaluation of the real name of the class
+								renamings := rename_clause.renamings;
+								if renamings.has (class_name) then
+									real_name := renamings.item (class_name);
+								elseif renamings.has_item (class_name) then
+									real_name := Has_been_renamed
+								end;
+							end;
+							Result := a_cluster.classes.item (real_name);
+						end;
+						clusters.forth
+					end;
+					clusters.go_to (old_cursor)
+				end;
+			end
 		end;
 
 	cluster_changed: BOOLEAN is
@@ -379,7 +427,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			real_name: STRING;
 			rename_clause: RENAME_I;
 			renamings: HASH_TABLE [STRING, STRING];
-			ignore: LINKED_LIST [CLUSTER_I];
 			vscn: VSCN;
 			new_class, override_class, precompiled_class: CLASS_I;
 			error_list: LINKED_LIST [VSCN]
@@ -387,13 +434,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			last_class := Void;
 
 			from
-				ignore := cluster.ignore;
 				clusters.start
 			until
 				clusters.after
 			loop
 				a_cluster := clusters.item;
-				if not ignore.has (a_cluster) then
+				if not cluster.ignored (a_cluster) then
 					real_name := class_name;
 					rename_clause := cluster.rename_clause_for (a_cluster);
 					if rename_clause /= Void then
@@ -401,6 +447,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 						renamings := rename_clause.renamings;
 						if renamings.has (class_name) then
 							real_name := renamings.item (class_name);
+						elseif renamings.has_item (class_name) then
+							real_name := Has_been_renamed
 						end;
 					end;
 
@@ -532,13 +580,20 @@ feature {COMPILER_EXPORTER} -- Precompilation
 
 	mark_precompiled is
 			-- Mark all the clusters of the universe as being precompiled.
+		local
+			precomp_ids: ARRAY [INTEGER];
+			nb: INTEGER
 		do
+			precomp_ids := Precompilation_directories.current_keys;
+			nb := precomp_ids.count + 1;
+			precomp_ids.resize (1, nb);
+			precomp_ids.put (System.compilation_id, nb);
 			from
 				clusters.start
 			until
 				clusters.after
 			loop
-				clusters.item.set_is_precompiled;
+				clusters.item.set_is_precompiled (precomp_ids);
 				clusters.forth
 			end;
 		end;
@@ -616,6 +671,11 @@ feature {COMPILER_EXPORTER} -- DLE Implementation
 				clusters.forth
 			end
 		end;
+
+feature {NONE} -- Constants
+
+	Has_been_renamed: STRING is "_"
+			-- Fake name to identify a class which has been renamed
 
 feature {NONE} -- Externals
 

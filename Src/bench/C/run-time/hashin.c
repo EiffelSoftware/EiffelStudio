@@ -208,7 +208,7 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	 * NOTE: If one has a pointer in the structure, he/she is responsible for free-ing that
 	 *	 part of memory, by first using 'ht_value' and free the memory and thereafter 'ht_remove' the item from the
 	 *	 H table.
-	 *	 This means too that if 'ht_value' can not find the value, you will not have to call 'ht_remove' (he he).
+	 *	 This means too that if 'ht_value' cannot find the value, you will not have to call 'ht_remove' (he he).
 	 *	 -- GLJ
 	 */
 

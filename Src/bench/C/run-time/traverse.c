@@ -89,7 +89,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	uint32 flags;				/* Object flags */
 	char *new;					/* Mapped object */
 	EIF_OBJECT mapped;				/* Mapped object protection */
-	int mapped_object = 0;		/* True if maping occured */
+	int mapped_object = 0;		/* True if maping occurred */
 	int i;						/* To iterate over the references */
 
 	zone = HEADER(object);
@@ -119,7 +119,7 @@ rt_shared void traversal(char *object, int p_accounting)
 				eraise("map table recording", EN_MEM);
 			zone = HEADER(object);			/* Object may have moved */
 			flags = zone->ov_flags;			/* Flags may have changed */
-			mapped_object = 1;				/* Maping occured */
+			mapped_object = 1;				/* Maping occurred */
 		}
 
 		/* It is important to count the objects only once they have been

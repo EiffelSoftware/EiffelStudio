@@ -130,7 +130,7 @@ rt_public char *tread(int *size)
 rt_public int twrite(void *buffer, int size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
-	 * of bytes effectively written or -1 if an error occured.
+	 * of bytes effectively written or -1 if an error occurred.
 	 */
 
 	Request rqst;		/* Leading request */

@@ -663,7 +663,7 @@ rt_private void spush(int sig)
 	if (sig_stk.s_max == sig_stk.s_min)
 		eif_panic(MTC "signal stack overflow");
 	
-	/* We do not stack multiple consecutive occurences of the same signal (the
+	/* We do not stack multiple consecutive occurrences of the same signal (the
 	 * kernel doesn't do that anyway), and "dangerous" signals raise a panic
 	 * rather than being stacked if the default Eiffel handler is on.
 	 */
@@ -725,7 +725,7 @@ rt_private int spop(void)
 	/* Now update the stack structure and do not forget to "clear" the last
 	 * signal on the stack (i.e. the one we are about to deal with). This is
 	 * actually only important when that signal is the only pending one,
-	 * because spush() makes sure we are not queuing two consecutives occurences
+	 * because spush() makes sure we are not queuing two consecutives occurrences
 	 * of the same signal, and the location checked is the one before s_max.
 	 */
 

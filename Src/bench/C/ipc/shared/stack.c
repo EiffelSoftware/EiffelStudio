@@ -180,7 +180,7 @@ rt_private void restore_stacks(void)
 
 /************************************************************************** 
  * NAME: execution_without_variables                                      * 
- * RET : the dump item we should send to EiffelBench                      * 
+ * RET : the dump item we should send to EiffelStudio                      * 
  *------------------------------------------------------------------------* 
  * Dump the call stack - locals and arguments excluded                    *
  *                                                                        *
@@ -436,7 +436,7 @@ rt_private struct dump *variable_item(int variable_type, int n, uint32 start)
  *       arg_num: Number of arguments                                     *
  *------------------------------------------------------------------------* 
  * Ask the debugger for the result of already called once function        *
- * and send the result back to EiffelBench                                *
+ * and send the result back to EiffelStudio                                *
  **************************************************************************/
 rt_public void send_once_result(eif_stream s, uint32 body_id, int arg_num)
 	{
@@ -484,7 +484,7 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 	struct item 	*ip = NULL;			/* Partial dump pointer */
 	uint32 			start = 0;			/* start of operation stack for current feature within whole operation stack */
 	char 			*new_object = NULL;	/* new value for the local variable if it's a reference */
-	unsigned char 	error_code = 0;		/* error code - different from zero means that an error occured */
+	unsigned char 	error_code = 0;		/* error code - different from zero means that an error occurred */
 
 	save_stacks(); /* save context */
 	start = go_ith_stack_level(stack_depth); /* go down the the call stack to set our feature "active" */

@@ -12,7 +12,7 @@
  * C calling convention.
  * `ArgCount' is the number of parameters.
  * `ArgTypes' contains the parameter types.
- * This macro can not be a function to keep the stack *virtually empty*
+ * This macro cannot be a function to keep the stack *virtually empty*
  * for the compiler.
  */
 

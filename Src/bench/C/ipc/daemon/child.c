@@ -706,19 +706,19 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void create_dummy_window (void)
 {
-	static int registred = 0;
+	static int registered = 0;
 	static int successful = 0;
 	HWND dummy_window = NULL;
 	extern HANDLE hInst;
 
-	if (!registred) {
+	if (!registered) {
 		WNDCLASSEX WinClass;
 
-		registred = 1;
+		registered = 1;
 
 		WinClass.cbSize=sizeof(WNDCLASSEX);
 		WinClass.hInstance=hInst;
-		WinClass.lpszClassName="EiffelBench Server";
+		WinClass.lpszClassName="EiffelStudio Server";
 		WinClass.lpfnWndProc=WndProc;
 		WinClass.style=CS_HREDRAW | CS_VREDRAW;
 		WinClass.hIcon=LoadIcon(NULL, IDI_APPLICATION);
@@ -733,8 +733,8 @@ void create_dummy_window (void)
 	}
 
 	if (successful) { 
-		dummy_window = CreateWindow("EiffelBench Server",
-								"EiffelBench Server",
+		dummy_window = CreateWindow("EiffelStudio Server",
+								"EiffelStudio Server",
 								WS_OVERLAPPEDWINDOW,
 								0,
 								0,

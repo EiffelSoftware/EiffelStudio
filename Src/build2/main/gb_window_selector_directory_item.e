@@ -67,7 +67,7 @@ feature {GB_XML_STORE} -- Implementation
 			add_element_containing_string (element, "name", text)		
 		end
 
-feature {GB_XML_LOAD} -- Implementation
+feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information in `element'

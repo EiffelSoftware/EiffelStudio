@@ -39,8 +39,15 @@
 #include <io.h>
 #endif
 
+ 
+#define IDRF_SIZE 4096 /* This is the size of the buffer to write to
+file or send to network.
 
-#define IDRF_SIZE 1024
+This cannot be larger than SHORT_MAX!!!
+
+This was previously 1024, but there was performance problems at least
+on Solaris 
+*/
 
 rt_private IDRF idrf;
 

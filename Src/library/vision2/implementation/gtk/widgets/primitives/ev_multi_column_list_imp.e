@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"resize_column",
-				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 3, ?),
+				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 4, ?),
 				agent (App_implementation.gtk_marshal).column_resize_callback_translate
 			)
 			

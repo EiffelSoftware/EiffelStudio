@@ -15,18 +15,19 @@ inherit
 		rename
 			make as make_plain_text_file
 		redefine
-			count, close
+			count,
+			close
 		end
 	
-creation
+create
 	make
 
 feature -- Initialization
 
 	make is
 		do
-			make_plain_text_file ("stdin");
-			file_pointer := file_def (0);
+			make_plain_text_file ("stdin")
+			file_pointer := file_def (0)
 			set_read_mode
 		end
 
@@ -35,7 +36,7 @@ feature -- Status setting
 	close is
 			-- Close file.
 		do
-			mode := Closed_file;
+			mode := Closed_file
 			descriptor_available := False
 		end
 

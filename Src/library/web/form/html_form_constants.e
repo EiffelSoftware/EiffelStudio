@@ -3,66 +3,66 @@ class
 
 feature
 
-	Tag_end: STRING is ">";
-	NewLine: STRING is "%N";
+	Tag_end: STRING is ">"
+	NewLine: STRING is "%N"
 
 feature -- Form
 
-	Form_start: STRING is "<FORM";
-	Form_end: STRING is "</FORM>";
+	Form_start: STRING is "<FORM"
+	Form_end: STRING is "</FORM>"
 
-	Method: STRING is " METHOD=";
-	Action: STRING is " ACTION=";
-	Enctype: STRING is " ENCTYPE=";
-	Name: STRING is " NAME=";
+	Method: STRING is " METHOD="
+	Action: STRING is " ACTION="
+	Enctype: STRING is " ENCTYPE="
+	Name: STRING is " NAME="
 
-	Post: STRING is "POST";
-	Get: STRING is "GET";
+	Post: STRING is "POST"
+	Get: STRING is "GET"
 
 feature -- Input
 
-	Input_start: STRING is "<INPUT";
+	Input_start: STRING is "<INPUT"
 
-	Type: STRING is " TYPE=";
-	Value: STRING is " VALUE=";
-	Src: STRING is " SRC=";
-	Size: STRING is " SIZE=";
-	Maxlength: STRING is " MAXLENGTH=";
-	Align: STRING is " ALIGN=";
-	Checked: STRING is " CHECKED";
+	Type: STRING is " TYPE="
+	Value: STRING is " VALUE="
+	Src: STRING is " SRC="
+	Size: STRING is " SIZE="
+	Maxlength: STRING is " MAXLENGTH="
+	Align: STRING is " ALIGN="
+	Checked: STRING is " CHECKED"
 
-	CheckBox: STRING is "CHECKBOX";
-	Hidden: STRING is "HIDDEN";
-	Radio: STRING is "RADIO";
-	Reset: STRING is "RESET";
-	Submit: STRING is "SUBMIT";
-	Text: STRING is "TEXT";
-	SendFile: STRING is "%"SEND FILE%"";
-	Image: STRING is "IMAGE";
+	CheckBox: STRING is "CHECKBOX"
+	Hidden: STRING is "HIDDEN"
+	Radio: STRING is "RADIO"
+	Reset: STRING is "RESET"
+	Submit: STRING is "SUBMIT"
+	Text: STRING is "TEXT"
+	SendFile: STRING is "%"SEND FILE%""
+	Image: STRING is "IMAGE"
 
 feature -- TextArea
 
-	TextArea_start: STRING is "<TEXTAREA";
-	TextArea_end: STRING is "</TEXTAREA>";
+	TextArea_start: STRING is "<TEXTAREA"
+	TextArea_end: STRING is "</TEXTAREA>"
 
-	Rows: STRING is " ROWS=";
-	Cols: STRING is " COLS=";
-	Wrap: STRING is " WRAP=";
+	Rows: STRING is " ROWS="
+	Cols: STRING is " COLS="
+	Wrap: STRING is " WRAP="
 
-	Off: STRING is "OFF";
-	Virtual: STRING is "VIRTUAL";
-	Physical: STRING is "PHYSICAL";
+	Off: STRING is "OFF"
+	Virtual: STRING is "VIRTUAL"
+	Physical: STRING is "PHYSICAL"
 
 feature -- Select
 
-	Select_start: STRING is "<SELECT";
-	Select_end  : STRING is "</SELECT>";
+	Select_start: STRING is "<SELECT"
+	Select_end  : STRING is "</SELECT>"
 
-	Multiple: STRING is " MULTIPLE";
+	Multiple: STRING is " MULTIPLE"
 
-	Option_start: STRING is "<OPTION";
-	Option_end: STRING is "";
-	Selected: STRING is " SELECTED";
+	Option_start: STRING is "<OPTION"
+	Option_end: STRING is ""
+	Selected: STRING is " SELECTED"
 
 end -- class HTML_FORM_CONSTANTS
 

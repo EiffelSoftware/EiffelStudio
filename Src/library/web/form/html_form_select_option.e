@@ -1,113 +1,114 @@
 class
 	HTML_FORM_SELECT_OPTION
+
 inherit
 	HTML_FORM_CONSTANTS
 		undefine
 			out
-		end;
+		end
 	ANY
 		undefine
 			out
-		end;
+		end
 
-creation
+create
 	make
 
 feature
 
 	make is
 		do
-		end;
+		end
 
 feature -- Routines out
 
 	out: STRING is
 		do
-			Result := clone(Option_start);
-			Result.append(attributes_out);
-			Result.append(Tag_end);
-			Result.append(NewLine);
-			Result.append(body_out);
-			Result.append(Option_end);
-			Result.append(NewLine);
+			Result := clone (Option_start)
+			Result.append (attributes_out)
+			Result.append (Tag_end)
+			Result.append (NewLine)
+			Result.append (body_out)
+			Result.append (Option_end)
+			Result.append (NewLine)
 		end;
 
 	attributes_out: STRING is
 		do
-			Result := "";
-			if has_value(value_value) then
-				Result.append(attribute_out(Value, value_value));
+			Result := ""
+			if has_value (value_value) then
+				Result.append (attribute_out (Value, value_value))
 			end;
 			if selected_value then
-				Result.append(Selected);
-			end;
-		end;
+				Result.append (Selected)
+			end
+		end
 
 	body_out: STRING is
 		do
-			Result := comment_value;
-		end;
+			Result := comment_value
+		end
 
-    attribute_out(an_attribute, its_value: STRING): STRING is
+    attribute_out (an_attribute, its_value: STRING): STRING is
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
-            Result := clone(an_attribute);
-            Result.append("%"");
-            Result.append(its_value);
-            Result.append("%"");
-        end;
+            Result := clone (an_attribute)
+            Result.append ("%"")
+            Result.append (its_value)
+            Result.append ("%"")
+        end
 
 feature -- Wipe out
 
 	wipe_out is
 		do
-			if has_value(value_value) then
-				value_value.wipe_out;
-			end;
-			if has_value(comment_value) then
-				comment_value.wipe_out;
-			end;
-			selected_value := false;
-		end;
+			if has_value (value_value) then
+				value_value.wipe_out
+			end
+			if has_value (comment_value) then
+				comment_value.wipe_out
+			end
+			selected_value := False
+		end
 
 feature -- Set attributes
 
-	set_value(s: STRING) is
+	set_value (s: STRING) is
 		require
 			s /= Void
 		do
-			value_value := clone(s);
-		end;
+			value_value := clone(s)
+		end
 
 	set_selected is
 		do
-			selected_value := true;
-		end;
+			selected_value := true
+		end
 
-	set_text(s: STRING) is
+	set_text (s: STRING) is
 		require
 			s /= Void
 		do
-			comment_value := clone(s);
-		end;
+			comment_value := clone(s)
+		end
 
 
 feature {NONE}
 
-	has_value(s: STRING): BOOLEAN is
+	has_value (s: STRING): BOOLEAN is
 			-- Has the attribute 's' a value ?
 		do
 			if s = Void or else s.is_equal("") then
-				Result := false;
+				Result := False
 			else
-				Result := true;
-			end;
-		end;
+				Result := True
+			end
+		end
 
 feature {NONE}
 
-	value_value, comment_value: STRING;
-	selected_value: BOOLEAN;
+	value_value, comment_value: STRING
+	selected_value: BOOLEAN
 
 end -- class HTML_FORM_SELECT_OPTION
 

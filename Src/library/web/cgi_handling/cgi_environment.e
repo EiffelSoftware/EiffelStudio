@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Access to environment variables set by the HTTP server when the %
 		%CGI application is executed. This class may be used as ancestor %
@@ -17,7 +16,8 @@ inherit
 		export
 			{NONE} all
 		redefine
-			eif_getenv, eif_putenv
+			eif_getenv,
+			eif_putenv
 		end
 
 feature -- Not request-specific environment variables
@@ -141,13 +141,13 @@ feature -- Cookies
 			until
 				i<1 
 			loop
-				i := s.index_of('=',1)
-				if i>0 then
-					j:= s.index_of(';',i)
-					if j>i then
-						Result.put(s.substring(1,i-1),s.substring(i+1,j-1))
-						if j< s.count-1 then
-							s.tail(s.count-j-1)
+				i := s.index_of ('=', 1)
+				if i > 0 then
+					j:= s.index_of (';', i)
+					if j > i then
+						Result.put (s.substring (1, i-1), s.substring (i+1, j-1))
+						if j < s.count-1 then
+							s.tail (s.count-j-1)
 						else
 							i := 0
 						end
@@ -177,10 +177,10 @@ feature -- Environment variable setting
 	set_environment_variable (variable, val: STRING) is
 			-- Set environment variable `variable' to `val'.
 		require
-			valid_variable: variable /= Void and then variable.count > 0;
+			valid_variable: variable /= Void and then variable.count > 0
 			valid_value: val /= Void
 		do
-			variable.to_upper;
+			variable.to_upper
 			put (val, variable)
 		end
 
@@ -190,11 +190,11 @@ feature {NONE} -- Implementation
 	get_env_variable (v: STRING): STRING is
 			-- Get value of environment variable `v'.
 		do
-			Result := get (v);
+			Result := get (v)
 			if Result = Void then
 				Result := ""
 			end
-		end;
+		end
 
 	eif_getenv (s : POINTER): POINTER is
 			-- Value of environment variable `s',

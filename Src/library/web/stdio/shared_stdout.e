@@ -15,7 +15,7 @@ feature -- Access
 	stdout: STDOUT is
 			-- Shared standard output (stdout).
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end -- class SHARED_STDOUT

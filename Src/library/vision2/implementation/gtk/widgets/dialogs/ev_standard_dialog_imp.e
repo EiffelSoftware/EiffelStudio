@@ -24,12 +24,11 @@ inherit
 feature {EV_STANDARD_DIALOG_IMP} -- Execute procedure
 
 	execute (argument: EV_ARGUMENT1[EV_STANDARD_DIALOG_I]; data: EV_EVENT_DATA) is
-			-- Command to close the dialog
+			-- Command to close the dialog.
+			-- We hide it.
 		local
 			dialog_imp: EV_STANDARD_DIALOG_IMP
 		do
---			argument.first.interface.destroy
---				-- destroy the gtk object
 			dialog_imp ?= argument.first
 			dialog_imp.hide
 				-- Hide the gtk object

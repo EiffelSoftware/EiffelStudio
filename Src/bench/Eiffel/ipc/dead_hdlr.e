@@ -31,7 +31,7 @@ feature
 			end;
 				-- Get rid of adopted objects.
 			addr_table.clear_all;
-			window_manager.object_win_mgr.hang_on;
+			window_manager.object_win_mgr.reset
 		end
 
 end

@@ -20,6 +20,8 @@ feature
 
 	clear_window is do end;
 
+	image: STRING is do Result := "" end;
+
 feature -- Obsolete
 
 	putstring (s: STRING) is obsolete "Use put_string"

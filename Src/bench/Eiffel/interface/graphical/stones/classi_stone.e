@@ -3,6 +3,20 @@ class CLASSI_STONE
 inherit
 
 	FILED_STONE
+		rename
+			is_valid as fs_valid
+		redefine
+			synchronized_stone
+		end;
+
+	FILED_STONE
+		redefine
+			is_valid, synchronized_stone
+		select
+			is_valid
+		end;
+
+	SHARED_WORKBENCH
 
 creation
 
@@ -71,5 +85,24 @@ feature -- dragging
 		do
 			Result := False
 		end
+
+	is_valid: BOOLEAN is
+			-- Is `Current' a valid stone?
+		do
+			if fs_valid and then class_i /= Void then
+				Result := Universe.class_i (class_i.class_name) = class_i
+			else
+				Result := False
+			end
+		end;
+
+	synchronized_stone: STONE is
+			-- Clone of `Current' after a recompilation
+			-- (May be Void if not valid anymore)
+		do
+			if class_i /= Void then
+				Result := clone (Universe.class_stone (class_i.class_name))
+			end
+		end;
 
 end

@@ -13,11 +13,11 @@ inherit
 		rename
 			execute as old_execute	
 		redefine
-			dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, make
 		end;
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, execute
+			dark_symbol, display_temp_header, execute, make
 		select
 			execute
 		end;
@@ -30,9 +30,9 @@ creation
 	
 feature -- Initialization
 
-	make (a_text_window: TEXT_WINDOW) is
+	make (a_tool: TOOL_W) is
 		do
-			init (a_text_window);
+			tool := a_tool;
 			to_show_all_callers :=
 				Feature_tool_resources.show_all_callers.actual_value
 		end;
@@ -66,10 +66,10 @@ feature -- Executions
 			end
 		end;	
 
-	execute_ok_action (a_cust_tool: like associated_custom_tool) is
-			-- Action performed when ok button is activated
+	execute_save_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when save button is activated
 		do
-			-- *** FIXME need to save resource
+				-- ******* FIXME need to save resource
 			execute_apply_action (a_cust_tool)
 		end;
 

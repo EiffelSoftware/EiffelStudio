@@ -101,6 +101,8 @@ feature -- Element change
 	extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
+			--| FIXME This means: item = old item or after = after or before = before.
+			--| and NOT: index = index!!!!!
 		local
 			w: EV_WIDGET_IMP
 			ww: WEL_WINDOW

@@ -315,29 +315,23 @@ feature
 			-- Find first class stone with class name `class_name'.
 			-- (Void if none are found).	
 		local
-			a_class_i: CLASS_I
-		do
-			a_class_i := class_i (class_name);
-			if a_class_i /= Void then
-				if a_class_i.compiled then
-					Result := a_class_i.compiled_class.stone;
-				else
-					!CLASSI_STONE! Result.make (a_class_i)
-				end
-			end
-		end;
-
-	class_i (class_name: STRING): CLASS_I is
-			-- Find first class interface with class name `class_name'.
-			-- (Void if none are found).	
+			class_i: CLASS_I
 		do
 			from
 				clusters.start
 			until
 				clusters.after or else (Result /= Void)
 			loop
-				Result :=  class_named (class_name, clusters.item);
-				clusters.forth
+				class_i :=  class_named (class_name, clusters.item);
+				if class_i /= Void then
+					if class_i.compiled then
+						Result := class_i.compiled_class.stone
+					else
+						!CLASSI_STONE!Result.make (class_i)
+					end
+				else
+					clusters.forth
+				end
 			end
 		end;
 
@@ -352,12 +346,14 @@ feature
 			rename_clause: RENAME_I;
 			renamings: HASH_TABLE [STRING, STRING];
 			ignore: LINKED_LIST [CLUSTER_I];
+			old_cursor: CURSOR
 		do
 				-- First look for a renamed class in `cluster'
 			Result := cluster.renamed_class (class_name);
 
 			if Result = Void then
 				from
+					old_cursor := clusters.cursor;
 					ignore := cluster.ignore;
 					clusters.start
 				until
@@ -378,6 +374,7 @@ feature
 					end;
 					clusters.forth
 				end;
+				clusters.go_to (old_cursor)
 			end;
 		end;
 

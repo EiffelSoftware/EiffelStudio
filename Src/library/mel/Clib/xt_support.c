@@ -120,7 +120,10 @@ char *res;
 	KeySym temp;
 
 	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
-	return (EIF_CHARACTER) temp;
+	if (temp<0 || temp>255)
+		return (EIF_CHARACTER) 0;
+	else
+		return (EIF_CHARACTER) temp;
 }
 
 void c_set_keysym (w, res, a_widget)

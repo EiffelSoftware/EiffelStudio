@@ -119,7 +119,7 @@ typedef struct _smart_string {
  * account for the last exception that occurred, which might not be in the
  * stack yet if manually or system raised.
  */
-struct eif_except {
+struct eif_exception {
 	unsigned char ex_val;	/* Exception code (raised) */
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
 	unsigned char ex_nsig;	/* Number of last signal received */

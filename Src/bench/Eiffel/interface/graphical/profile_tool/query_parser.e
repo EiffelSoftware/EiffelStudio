@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			
 	is_computed_value ( value: STRING ) : BOOLEAN is
 		do
-			if value = "max" or else value = "min" or else value = "avg" then
+			if value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg") then
 				Result := true;
 			else
 				Result := false

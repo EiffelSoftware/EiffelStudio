@@ -483,6 +483,7 @@ feature {NONE} -- Implementation
 			clause_added: INTEGER
 			rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST		
 			retried: BOOLEAN
+			a_parent: ISE_REFLECTION_PARENT
 		do
 			if not retried then
 				if type_description.get_Name.equals_string (xml_elements.Inherit_element) then
@@ -610,7 +611,14 @@ feature {NONE} -- Implementation
 								end
 							end							
 						end
-						eiffel_class.Add_Parent (parent_name, rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses)
+						create a_parent.make1
+						a_parent.make (parent_name)
+						a_parent.set_rename_clauses (rename_clauses)
+						a_parent.set_undefine_clauses (undefine_clauses)
+						a_parent.set_redefine_clauses (redefine_clauses)
+						a_parent.set_select_clauses (select_clauses)
+						a_parent.set_export_clauses (export_clauses)
+						eiffel_class.add_parent (a_parent)
 						type_description.read_end_element
 					end
 					type_description.Read_End_Element

@@ -449,10 +449,7 @@ feature -- Graphical Interface
 			txt: STRING
 		do
 			err ?= stone;
-			if err = Void then
-				text_window.highlight_selected
-					(stone.start_position, stone.end_position);
-			else
+			if err /= Void then
 				pos := err.error_position;
 				txt := text_window.text;
 				if txt.count > pos then
@@ -462,7 +459,7 @@ feature -- Graphical Interface
 					end
 				end;
 			end
-			text_window.set_cursor_position (stone.start_position);
+			text_window.set_cursor_position (0);
 			--text_window.set_top_character_position (stone.start_position);
 		end;
 

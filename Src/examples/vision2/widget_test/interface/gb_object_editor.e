@@ -56,7 +56,10 @@ feature -- Status Setting
 			combo_box_extendible_controls: COMBO_BOX_EXTENDIBLE_CONTROLS
 			tool_bar_extendible_controls: TOOL_BAR_EXTENDIBLE_CONTROLS
 			container_extendible_controls: CONTAINER_EXTENDIBLE_CONTROLS
+			current_parent: EV_CONTAINER
 		do
+			current_parent := parent
+			current_parent.prune (Current)
 			wipe_out
 			from
 				supported_types.start
@@ -125,7 +128,7 @@ feature -- Status Setting
 					<<"BUTTON", "FRAME", "TEXT">>)
 				extend (container_extendible_controls)
 			end
-			
+			current_parent.extend (Current)
 		end		
 
 end -- class GB_OBJECT_EDITOR

@@ -13,10 +13,7 @@ inherit
 
 	BULLETIN_D_I;
 
-	DIALOG_M
-		redefine	
-			screen_object
-		end;
+	DIALOG_M;
 
 	BULLETIN_M
 		rename
@@ -25,10 +22,10 @@ inherit
 			lower, raise, 
 			show, hide, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			is_stackable, clean_up,
+			is_stackable, created_dialog_automatically,
 			create_widget, bulletin_make, bulletin_make_no_auto_unmanage
 		redefine
-			screen_object
+			parent
 		end;
 
 	MEL_BULLETIN_BOARD_DIALOG
@@ -46,8 +43,8 @@ inherit
 			is_shown as shown
 		undefine
 			raise, lower, show, hide
-		redefine	
-			screen_object
+		redefine
+			parent
 		end
 
 creation
@@ -58,21 +55,22 @@ feature {NONE} -- Initialization
 
 	make (a_bulletin_d: BULLETIN_D; oui_parent: COMPOSITE) is
 			-- Create a motif bulletin dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_make_no_auto_unmanage (a_bulletin_d.identifier,
-				mel_parent (a_bulletin_d, widget_index));
+			mel_make_no_auto_unmanage (a_bulletin_d.identifier, mc);
 			a_bulletin_d.set_dialog_imp (Current);
-			action_target := screen_object;
 			set_margin_width (0);
 			set_margin_height (0);
-			initialize (dialog_shell)
+			initialize (parent)
 		end;
 
 feature -- Access
 
-	screen_object: POINTER
-			-- Associated C widget pointer
+	parent: MEL_DIALOG_SHELL
+			-- Dialog shell of the working dialog
 
 end -- class BULLETIN_D_M
 

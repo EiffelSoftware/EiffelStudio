@@ -168,6 +168,7 @@ feature {NONE} -- implementation
 			rpos: INTEGER
 			an_index: INTEGER
 			has_radio_item: BOOLEAN
+			temp_item_pointer: POINTER
 		do
 			item_imp ?= eif_object_from_c (
 				C.g_list_nth_data (
@@ -179,6 +180,17 @@ feature {NONE} -- implementation
 			
 			radio_imp ?= item_imp
 			if radio_imp /= Void then
+				if radio_imp.is_selected then
+					-- Select the first item in the radio group
+					if C.g_slist_length (radio_imp.radio_group) > 1 then
+						temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 0)
+						if temp_item_pointer = radio_imp.c_object then
+							temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 1)
+						end
+						--Check temp_item_pointer_not_void: temp_item_pointer /= Default_pointer end
+						C.gtk_check_menu_item_set_active (temp_item_pointer, True)
+					end
+				end
 				C.gtk_radio_menu_item_set_group (radio_imp.c_object, Default_pointer)
 			else
 				sep_imp ?= item_imp
@@ -262,6 +274,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/05/01 22:16:12  king
+--| Added code to select an item if selected radio item is removed
+--|
 --| Revision 1.19  2000/04/28 23:57:17  king
 --| Implemented radio regrouping on item removal
 --|

@@ -381,7 +381,7 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_COMPONENT_I
-			-- Responsible for interaction with the underlying native graphics
+			-- Responsible for interaction with native graphics
 			-- toolkit.
 
 invariant

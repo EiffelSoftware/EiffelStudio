@@ -20,7 +20,7 @@ inherit
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_RANGE_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 end -- class EV_RANGE
 

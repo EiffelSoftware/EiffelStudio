@@ -124,7 +124,7 @@ feature -- Default cursors
 feature {NONE} -- Implementation
 
 	Default_pixmaps_imp: EV_STOCK_PIXMAPS_IMP is
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 		once
 			create Result
 		end

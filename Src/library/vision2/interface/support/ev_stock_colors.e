@@ -186,7 +186,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	Default_color_imp: EV_STOCK_COLORS_IMP is
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 		once
 			create Result
 		end

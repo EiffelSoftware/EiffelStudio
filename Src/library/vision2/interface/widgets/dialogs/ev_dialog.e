@@ -174,7 +174,7 @@ feature {EV_DIALOG} -- Constants
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DIALOG_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 			
 feature {NONE} -- Implementation
 

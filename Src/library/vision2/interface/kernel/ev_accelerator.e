@@ -228,7 +228,7 @@ feature -- Status report
 feature {EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

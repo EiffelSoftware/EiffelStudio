@@ -107,7 +107,7 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_BUTTON_I
-		-- Responsible for interaction with the native graphics toolkit.
+		-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

@@ -298,7 +298,7 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_PICK_AND_DROPABLE_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 invariant
 	user_interface_modes_mutually_exclusive:

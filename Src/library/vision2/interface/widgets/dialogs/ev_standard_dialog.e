@@ -98,7 +98,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_STANDARD_DIALOG_I
-		-- Responsible for interaction with the native graphics toolkit.
+		-- Responsible for interaction with native graphics toolkit.
 
 invariant
 	title_not_void: is_usable implies title /= Void

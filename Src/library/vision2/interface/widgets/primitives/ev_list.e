@@ -118,7 +118,7 @@ feature -- Status setting
 feature {EV_ANY_I, EV_LIST} -- Implementation
 
 	implementation: EV_LIST_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

@@ -94,7 +94,7 @@ feature -- Status Report
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	 implementation: EV_ANY_I
-			-- Responsible for interaction with the underlying native graphics
+			-- Responsible for interaction with native graphics
 			-- toolkit.
 			--| The `Current' object serves only as an interface
 			--| it does not do any actual computation or interaction 

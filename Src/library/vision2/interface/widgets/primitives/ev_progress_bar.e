@@ -62,7 +62,7 @@ feature {NONE} -- Contract support
 feature {NONE} -- Implementation
 
 	implementation: EV_PROGRESS_BAR_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 end -- class EV_PROGRESS_BAR
 

@@ -64,7 +64,7 @@ feature {NONE} -- Contract support
 feature {EV_TOOLTIPABLE_I} -- Implementation
 	
 	implementation: EV_TOOLTIPABLE_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 end -- class EV_TOOLTIPABLE
 

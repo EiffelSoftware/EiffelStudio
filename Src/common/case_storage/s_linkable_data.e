@@ -70,10 +70,8 @@ feature -- Setting values
 
 	set_explanation (l: like explanation) is
 			-- Set explanation to `l'.
-		require
-			valid_l: l /= Void;
-			l_not_empty: not l.empty;
-			not_have_void: not l.has (Void)
+        require
+            valid_l: l /= Void;
 		do
 			explanation := l
 		ensure

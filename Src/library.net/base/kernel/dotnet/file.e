@@ -265,6 +265,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
 		end
 
@@ -273,6 +274,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
 		end
 
@@ -293,6 +295,7 @@ feature -- Measurement
 		do
 			if exists then
 				if not is_open_write then
+					internal_file.refresh
 					Result := internal_file.length.to_integer
 				else
 					Result := internal_stream.length.to_integer
@@ -332,6 +335,7 @@ feature -- Status report
 			-- Does physical file exist?
 			-- (Uses effective UID.)
 		do
+			internal_file.refresh
 			Result := internal_file.exists
 		ensure then
 			unchanged_mode: mode = old mode
@@ -341,6 +345,7 @@ feature -- Status report
 			-- Does physical file exist?
 			-- (Uses real UID.)
 		do
+			internal_file.refresh
 			Result := internal_file.exists
 		end
 
@@ -352,6 +357,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
+				internal_file.refresh
 				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.full_name)
 				perm.demand
 			end
@@ -395,6 +401,7 @@ feature -- Status report
 		do
 			if not retried then
 					-- Is the parent directory writable?
+				internal_file.refresh
 				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable
@@ -411,6 +418,7 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.normal.to_integer) = 
 				feature {FILE_ATTRIBUTES}.normal.to_integer
 		end
@@ -420,6 +428,7 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.device.to_integer) = 
 				feature {FILE_ATTRIBUTES}.device.to_integer
 		end
@@ -429,6 +438,7 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.directory.to_integer) = 
 				feature {FILE_ATTRIBUTES}.directory.to_integer
 		end
@@ -602,6 +612,7 @@ feature -- Status setting
 		require
 			is_closed: is_closed
 		do
+			internal_file.refresh
 			internal_stream := internal_file.open_read
 			mode := Read_file
 		ensure
@@ -613,6 +624,7 @@ feature -- Status setting
 			-- Open file in write-only mode;
 			-- create it if it does not exist.
 		do
+			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
@@ -626,6 +638,7 @@ feature -- Status setting
 		require
 			is_closed: is_closed
 		do
+			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.append, feature {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
@@ -638,6 +651,7 @@ feature -- Status setting
 		require
 			is_closed: is_closed
 		do
+			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
 				feature {FILE_MODE}.open,
 				feature {FILE_ACCESS}.read_write
@@ -655,6 +669,7 @@ feature -- Status setting
 		require
 			is_closed: is_closed
 		do
+			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
 				feature {FILE_MODE}.open_or_create,
 				feature {FILE_ACCESS}.read_write
@@ -1076,6 +1091,7 @@ feature -- Element change
 		local
 			t: SYSTEM_DATE_TIME
 		do
+			internal_file.refresh
 			internal_file.set_last_access_time (dot_net_file_date_time (time))
 		ensure
 			acess_date_updated: access_date = time	-- But race condition might occur
@@ -1089,6 +1105,7 @@ feature -- Element change
 		local
 			t: SYSTEM_DATE_TIME
 		do
+			internal_file.refresh
 			internal_file.set_last_write_time (dot_net_file_date_time (time))
 		ensure
 			access_date_unchanged: access_date = old access_date	-- But race condition might occur
@@ -1101,6 +1118,7 @@ feature -- Element change
 			new_name_not_void: new_name /= Void
 			file_exists: exists
 		do
+			internal_file.refresh
 			internal_file.move_to (new_name.to_cil)
 			name := new_name
 		ensure
@@ -1162,6 +1180,7 @@ feature -- Element change
 		require
 			file_exists: exists
 		do
+			internal_file.refresh
 			Result := internal_file.last_write_time.to_file_time.to_integer
 		end
 
@@ -1173,6 +1192,7 @@ feature -- Element change
 			now: SYSTEM_DATE_TIME
 		do
 			now := feature {SYSTEM_DATE_TIME}.now
+			internal_file.refresh
 			internal_file.set_last_access_time (now)
 			internal_file.set_last_write_time (now)
 		ensure
@@ -1235,6 +1255,7 @@ feature -- Removal
 			exists: exists
 		do
 			internal_file.delete
+			internal_file.refresh
 		end
 
 	reset (fn: STRING) is

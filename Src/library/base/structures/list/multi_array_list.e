@@ -212,6 +212,11 @@ feature -- Cursor movement
 					cell := cell.left;
 					if cell /= Void then current_array := cell.item end
 				end;
+				if counter = current_array.count then
+					counter := 0;
+					cell := cell.left;
+					if cell /= Void then current_array := cell.item end
+				end;
 				if cell = Void then
 					cell := first_element;
 					current_array.go_i_th (0);

@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			else
 				l_tooltip.prepend_string ("[!] Error occurred : %N" + expr.error_message + "%N%N")
 				
-				Result.extend ("Error occured (double click to see details)" ) --| Removed for better display: expr.error_message)
+				Result.extend ("Error occurred (double click to see details)" ) --| Removed for better display: expr.error_message)
 				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			
 				Result.set_pixmap (Icon_exception)
 			end

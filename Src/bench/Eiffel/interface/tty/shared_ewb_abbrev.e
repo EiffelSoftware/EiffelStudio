@@ -39,6 +39,8 @@ feature
 
 	Descendents_abb: CHARACTER is 'd';
 
+	Documentation_abb: CHARACTER is 'd';
+
 	Edit_ace_abb: CHARACTER is 'v';
 
 	Edit_class_abb: CHARACTER is 'v';
@@ -136,5 +138,13 @@ feature
 	Finalize_abb: CHARACTER is 'z';
 
 	Yank_abb: CHARACTER is 'y';
+
+	flat_doc_abb: CHARACTER is 'f';
+
+	flat_short_doc_abb: CHARACTER is 'i';
+
+	short_doc_abb: CHARACTER is 's';
+
+	text_doc_abb: CHARACTER is 't';
 
 end -- class SHARED_EWB_ABBREV

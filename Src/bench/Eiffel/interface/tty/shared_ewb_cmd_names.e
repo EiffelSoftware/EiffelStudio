@@ -45,6 +45,8 @@ feature {NONE}
 
 	Descendents_cmd_name: STRING is "descendents";
 
+	Documentation_cmd_name: STRING is "documentation";
+
 	dversions_cmd_name: STRING is "dversions"
 
 	edit_ace_cmd_name: STRING is "edit"
@@ -148,5 +150,13 @@ feature {NONE}
 	yank_cmd_name: STRING is "yank"
 
 	w_compile_cmd_name: STRING is "W-compile"
+
+	flat_doc_cmd_name: STRING is "Documentation (Flat)"
+
+	flat_short_doc_cmd_name: STRING is "Documentation (Flat/Short)"
+
+	short_doc_cmd_name: STRING is "Documentation (Short)"
+
+	text_doc_cmd_name: STRING is "Documentation (Text)"
 
 end

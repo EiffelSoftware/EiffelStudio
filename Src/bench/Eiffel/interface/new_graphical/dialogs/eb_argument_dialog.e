@@ -10,7 +10,7 @@ class
 
 inherit
 
-	EV_DIALOG
+	EV_TITLED_WINDOW
 
 	EV_KEY_CONSTANTS
 		export
@@ -24,9 +24,9 @@ inherit
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
-		end		
-
-	EB_SHARED_ARGUMENTS
+		end	
+		
+	EB_SHARED_DEBUG_TOOLS
 		export
 			{NONE} all
 		undefine
@@ -34,7 +34,8 @@ inherit
 		end	
 
 creation
-	make
+	make,
+	default_create
 	
 feature {NONE} -- Initialization
 
@@ -45,14 +46,14 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
 		do		
-			default_create
+			make_with_title ("Execution Control")
 			run := cmd
 			
 				-- Build Dialog GUI
 			create arguments_control.make (a_window.window)
 			extend (execution_frame)
 			key_press_actions.extend (agent escape_check (?))
-			set_title ("Execution Control")
+			focus_in_actions.extend (agent on_window_focused)
 		end
 
 	execution_frame: EV_HORIZONTAL_BOX is
@@ -86,11 +87,17 @@ feature {NONE} -- Initialization
 			b.select_actions.extend (agent cancel)
 
 			if run /= Void then
-				create b.make_with_text ("Run")
-				vbox.extend (b)
-				b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
-				vbox.disable_item_expand (b)
-				b.select_actions.extend (agent execute (apply_and_run_it))
+				create run_button.make_with_text ("Run")
+				vbox.extend (run_button)
+				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+				vbox.disable_item_expand (run_button)
+				run_button.select_actions.extend (agent execute (apply_and_run_it))
+				
+				create run_and_close_button.make_with_text ("Run and Close")
+				vbox.extend (run_and_close_button)
+				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+				vbox.disable_item_expand (run_and_close_button)
+				run_and_close_button.select_actions.extend (agent execute_and_close (apply_and_run_it))
 			end
 
 			create cell
@@ -102,6 +109,12 @@ feature {NONE} -- Initialization
 
 			Result.extend (hbox)
 		end
+
+feature -- GUI
+
+	run_button,
+	run_and_close_button: EV_BUTTON
+			-- Button to run system.
 
 feature -- Status Setting
 	
@@ -141,6 +154,19 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
+	on_window_focused is
+			-- Acion to be taken when window gains focused.
+		do
+			if not Debugger_manager.Application.is_running then
+				run_button.enable_sensitive
+				run_and_close_button.enable_sensitive
+			else
+				run_button.disable_sensitive
+				run_and_close_button.disable_sensitive
+			end
+		end
+		
+
 	escape_check (key: EV_KEY) is
 			-- Check for keyboard escape character.
 		require
@@ -157,10 +183,23 @@ feature {NONE} -- Implementation
 				if arg = Apply_and_run_it then
 					arguments_control.store_arguments (Void)
 					run.call ([])
+					run_button.disable_sensitive
+					run_and_close_button.disable_sensitive
 				end
 			end
 		end
-
+		
+	execute_and_close (arg: ANY) is
+		do
+			if arg /= Void then
+				if arg = Apply_and_run_it then
+					arguments_control.store_arguments (Void)
+					run.call ([])
+					hide
+				end
+			end
+		end
+		
 invariant
 	argument_control_not_void: arguments_control /= Void
 

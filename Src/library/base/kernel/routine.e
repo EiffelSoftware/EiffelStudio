@@ -215,7 +215,12 @@ feature {NONE}  -- Routine C argument structure
 			code: CHARACTER
 			ref_arg: ANY
 			null_ptr: POINTER
+			was_on: BOOLEAN
 		do
+			-- We must disable the GC in this routine
+			was_on := collecting
+			collection_off
+			
 			-- Compute no. arguments, including target.
 
 			if open_map /= Void then
@@ -310,6 +315,15 @@ feature {NONE}  -- Routine C argument structure
 				i := i + 1
 			end
 			rout_cargs := new_args
+
+			-- Now we turn the GC on again if `was_on'
+			if was_on then
+				collection_on
+			end
+		rescue
+			if was_on then
+				collection_on
+			end
 		end
 
 feature {NONE}  -- Run-time

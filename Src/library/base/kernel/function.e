@@ -16,14 +16,12 @@ feature -- Calls
 
 		do
 			arguments := args
-			rout_set_cargs
 			call_function
 		end
 
 	apply is
 
 		do
-			rout_set_cargs
 			call_function
 		end
 
@@ -34,7 +32,6 @@ feature -- Calls
 			callable: callable
 		do
 			arguments := args
-			rout_set_cargs
 			call_function
 			Result := last_result
 		end
@@ -65,6 +62,7 @@ feature {NONE} -- Implementation
 			ra: ARRAY [TRESULT]
 		do
 			!!ra.make (1, 1)
+			rout_set_cargs
 			rout_obj_call_function ($Current, $ra, 
 									rout_disp, rout_cargs)
 			last_result := ra.item (1)

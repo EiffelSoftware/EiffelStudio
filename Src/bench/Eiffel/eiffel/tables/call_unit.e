@@ -28,6 +28,10 @@ inherit
 		redefine
 			is_equal
 		end;
+	COMPILER_EXPORTER
+		redefine
+			is_equal
+		end
 	
 feature 
 

@@ -9,6 +9,7 @@ inherit
 			is_equal
 		end;
 	SHARED_WORKBENCH;
+	COMPILER_EXPORTER
 
 feature
 

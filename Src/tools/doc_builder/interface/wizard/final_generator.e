@@ -34,8 +34,8 @@ feature {NONE} -- Implmentation
 	generate_html is
 			-- Generate HTML
 		do
-			generate_documentation_html	
-			generate_code_html	
+			generate_documentation_html
+			generate_code_html
 		end		
 
 	generate_documentation_html is
@@ -45,6 +45,7 @@ feature {NONE} -- Implmentation
 			l_dir_name: DIRECTORY_NAME
 			l_files: ARRAYED_LIST [STRING]
 			l_toc: TABLE_OF_CONTENTS
+			l_toc_name: STRING
 		do
 			create l_dir_name.make_from_string (Shared_constants.Application_constants.Temporary_html_directory)			
 			if generation_data.is_help_convert then
@@ -52,7 +53,12 @@ feature {NONE} -- Implmentation
 					-- convert only the files necessary for the toc
 				l_toc := Shared_constants.Help_constants.toc
 				if l_toc /= Void and then shared_constants.help_constants.is_web_help then
-					l_dir_name.extend (l_toc.name)
+					if (create {PLAIN_TEXT_FILE}.make (l_toc.name)).exists then
+						l_toc_name := file_no_extension (short_name (l_toc.name))
+						l_dir_name.extend (l_toc_name)
+					else						
+						l_dir_name.extend (l_toc.name)	
+					end
 				end
 				l_files := l_toc.files (True)
 			else
@@ -75,8 +81,9 @@ feature {NONE} -- Implmentation
 			l_code_html_filter: CODE_HTML_FILTER
 			l_cnt: INTEGER
 			l_curr_dir: STRING
+			l_generate: BOOLEAN
 		do
-				-- Target directory for HTML
+				-- Target directory for libraries HTML
 			create l_code_dir_name.make_from_string (Shared_constants.Application_constants.Temporary_html_directory)
 			l_code_dir_name.extend ("libraries")		
 			create l_code_target_dir.make (l_code_dir_name.string)
@@ -102,24 +109,40 @@ feature {NONE} -- Implmentation
 				loop
 					l_code_dir.readentry
 					l_curr_dir := l_code_dir.lastentry
-					if l_curr_dir /= Void and then not l_curr_dir.is_equal (".") and not l_curr_dir.is_equal ("..") then
+					if l_curr_dir /= Void and then not l_curr_dir.is_equal (".") and not l_curr_dir.is_equal ("..") then	
 						create l_code_dir_name.make_from_string (l_code_dir.name)
 						l_code_dir_name.extend (l_curr_dir)
-						l_code_dir_name.extend ("reference")
-						create l_sub_dir.make (clone (l_code_dir_name.string))
+						create l_sub_dir.make (l_code_dir_name.string)
 						if l_sub_dir.exists then
-								-- We are in `project_root/libraries/library_name/reference', a code directory
-							Shared_constants.Application_constants.add_code_directory (l_sub_dir.name)
-							l_code_dir_name.make_from_string (l_code_target_dir.name)
+							l_generate := 
+								(shared_project.filter_manager.filter.description.has_substring ("ENViSioN!") and 
+								shared_constants.application_constants.envision_libraries.has (l_curr_dir)) or
+								(shared_project.filter_manager.filter.description.has_substring ("EiffelStudio") and 
+								shared_constants.application_constants.studio_libraries.has (l_curr_dir))
+						end
+						if l_generate then					
+							create l_code_dir_name.make_from_string (l_code_dir.name)
 							l_code_dir_name.extend (l_curr_dir)
 							l_code_dir_name.extend ("reference")
-							create l_target_sub_dir.make (l_code_dir_name.string)
-							if not l_target_sub_dir.exists then
-								l_target_sub_dir.create_dir							
-							end
-							create l_code_html_filter.make (l_target_sub_dir, l_sub_dir)
-						end
-					end				
+							create l_sub_dir.make (l_code_dir_name.string.twin)
+							if l_sub_dir.exists then
+									-- We are in `project_root/libraries/library_name/reference', a code directory	
+								Shared_constants.Application_constants.add_code_directory (l_sub_dir.name)
+								l_code_dir_name.make_from_string (l_code_target_dir.name)
+								l_code_dir_name.extend (l_curr_dir)
+								create l_target_sub_dir.make (l_code_dir_name.string)
+								if not l_target_sub_dir.exists then
+									l_target_sub_dir.create_dir							
+								end
+								l_code_dir_name.extend ("reference")
+								create l_target_sub_dir.make (l_code_dir_name.string)
+								if not l_target_sub_dir.exists then
+									l_target_sub_dir.create_dir							
+								end
+								create l_code_html_filter.make (l_target_sub_dir, l_sub_dir)
+							end	
+						end					
+					end
 					l_cnt := l_cnt + 1
 				end		
 			end

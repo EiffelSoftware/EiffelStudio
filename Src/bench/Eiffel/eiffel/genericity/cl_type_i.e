@@ -9,15 +9,13 @@ inherit
 	TYPE_I
 		redefine
 			is_reference,
-			is_true_expanded,
+			is_expanded,
 			is_separate,
 			is_valid,
 			is_explicit,
 			is_external,
 			same_as,
 			c_type,
-			instantiation_in,
-			complete_instantiation_in,
 			conforms_to_array,
 			generated_id,
 			generate_cid,
@@ -25,12 +23,10 @@ inherit
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
-			generate_expanded_creation
-		end
-	
-	DEBUG_OUTPUT
-		export
-			{NONE} all
+			generate_expanded_creation,
+			instantiation_in,
+			generic_derivation,
+			is_generated_as_single_type
 		end
 
 	SHARED_IL_CASING
@@ -60,6 +56,10 @@ feature {NONE} -- Initialization
 			valid_id: id > 0
 		do
 			class_id := id
+			if is_basic then
+					-- We know for sure that it is expanded then.
+				is_expanded := True
+			end
 		ensure
 			class_id_set: class_id = id
 		end
@@ -91,13 +91,44 @@ feature -- Access
 			Result := System.class_of_id (class_id)
 		end
 
+	generic_derivation: CL_TYPE_I is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			Result := Current
+		end
+		
 	type_a: CL_TYPE_A is
 		do
 			create Result.make (class_id)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 			Result.set_is_separate (is_separate)
 		end
 
+	name: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		local
+			l_base_class: like base_class
+		do
+			create Result.make (32)
+			l_base_class := base_class
+			if is_expanded and not l_base_class.is_expanded then
+				Result.append ("expanded ")
+			elseif not is_expanded and l_base_class.is_expanded then
+				Result.append ("reference ")
+			elseif is_separate then
+				Result.append ("separate ")
+			end
+			Result.append (l_base_class.name_in_upper)
+		end
+
+	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
+			-- Instantation of Current in `other'
+		do
+			Result := Current
+		end
+		
 	il_type_name (a_prefix: STRING): STRING is
 			-- Class name of current type.
 		local
@@ -106,7 +137,7 @@ feature -- Access
 			l_cl_type: like associated_class_type
 		do
 			l_class_c := base_class
-			if l_class_c.is_external then
+			if is_external then
 				Result := l_class_c.external_class_name.twin
 			else
 				l_is_precompiled := l_class_c.is_precompiled
@@ -123,38 +154,17 @@ feature -- Access
 			end
 		end
 
-	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
-			-- Instantiation of Current in context of `other'
-		require else
-			True
-		do
-			Result := Current
-		end
-
-	complete_instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
-			-- Instantiation of Current in context of `other'
-		require else
-			True
-		do
-			Result := Current
-		end
-
 	description: ATTR_DESC is
 			-- Type description for skeletons
 		local
 			exp: EXPANDED_DESC
 			ref: REFERENCE_DESC
 		do
-			if is_true_expanded then
+			if is_expanded then
 				create exp
-				is_true_expanded := False
 				exp.set_class_type (base_class.types.search_item (Current))
-				is_true_expanded := True
 				exp.set_type_i (Current)
 				Result := exp
-			elseif is_separate then
-				-- FIXME
-				Result := c_type.description
 			else
 				Result := c_type.description
 			end
@@ -176,17 +186,7 @@ feature -- Access
 		require
 		--	has: has_associated_class_type
 		do
-			if is_true_expanded then
-				is_true_expanded := False
-				Result := base_class.types.search_item (Current)
-				is_true_expanded := True
-			elseif is_separate then
-				is_separate := False
-				Result := base_class.types.search_item (Current)
-				is_separate := True
-			else
-				Result := base_class.types.search_item (Current)
-			end
+			Result := base_class.types.search_item (Current)
 		end
 
 	type_id: INTEGER is
@@ -198,20 +198,16 @@ feature -- Access
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
-				-- FIXME????: separate
-			if not is_true_expanded then
-				Result := Sk_ref | (type_id - 1)
-			else
-				is_true_expanded := False
+			if is_expanded then
 				Result := Sk_exp | (type_id - 1)
-				is_true_expanded := True
+			else
+				Result := Sk_ref | (type_id - 1)
 			end
 		end
 
 	cecil_value: INTEGER is
 		do
-				-- FIXME????: separate
-			if not is_true_expanded then
+			if not is_expanded then
 				Result := Sk_dtype
 			else
 				Result := Sk_exp | class_id
@@ -229,7 +225,7 @@ feature -- Status
 	element_type: INTEGER_8 is
 			-- Void element type
 		do
-			if is_expanded and base_class.is_external then
+			if is_expanded then
 					-- We only support expanded for external class at the moment.
 				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
 			else
@@ -243,7 +239,13 @@ feature -- Status
 			end
 		end
 
-	is_true_expanded: BOOLEAN
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+		end
+		
+	is_expanded: BOOLEAN
 			-- Is the type expanded?
 
 	is_separate: BOOLEAN
@@ -256,27 +258,55 @@ feature -- Status
 		require
 			il_generation: System.il_generation
 		do
-			Result := is_true_expanded and then base_class.is_enum
+			Result := is_expanded and then base_class.is_enum
 		end
 
 	is_external: BOOLEAN is
-			-- Is current type an IL enum type?
-			-- Useful to find out if some call optimization can be done
-			-- in FEATURE_B.
+			-- Is current type based on an external class?
+		local
+			l_base_class: like base_class
 		do
-			Result := base_class.is_external
+				-- All Eiffel basic types are externals, and only basic types used
+				-- as reference are not external.
+			l_base_class := base_class
+			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
+		end
+		
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and 
+			-- an implementation type.
+		local
+			l_class: CLASS_C
+		do
+				-- Expanded types do not have an interface since no polymorphic calls
+				-- are done on them.
+			Result := is_expanded
+			if not Result then
+				l_class := base_class
+					-- When `base_class' is a basic class and that we are here, it means
+					-- that we are handling the reference version of the basic type, which
+					-- needs to be generated with the interface type and the implementation type
+				if not l_class.is_basic then
+						-- External classes, or classes marked `frozen', or that
+						-- inherites from external classes have only one generated type.
+					Result := l_class.is_single or l_class.is_frozen or l_class.is_external
+				end
+			end
 		end
 
 	is_valid: BOOLEAN is
 			-- Is the base class still in the system and matches its specification?
+		local
+			l_base_class: like base_class
 		do
-			Result := base_class /= Void and then (base_class.generics = Void)
+			l_base_class := base_class
+			Result := l_base_class /= Void and then (l_base_class.generics = Void)
 		end
 
 	is_reference: BOOLEAN is
 			-- Is the type a reference type ?
 		do
-			Result := not is_true_expanded
+			Result := not is_expanded
 		end; 
 
 	is_explicit: BOOLEAN is
@@ -292,17 +322,7 @@ feature -- Status
 	has_associated_class_type: BOOLEAN is
 			-- Has `Current' an associated class type?
 		do
-			if is_true_expanded then
-				is_true_expanded := False
-				Result := base_class.types.has_type (Current)
-				is_true_expanded := True
-			elseif is_separate then
-				is_separate := False
-				Result := base_class.types.has_type (Current)
-				is_separate := True
-			else
-				Result := base_class.types.has_type (Current)
-			end
+			Result := base_class.types.has_type (Current)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -313,7 +333,7 @@ feature -- Status
 			other_cl_type ?= other
 			Result := other_cl_type /= Void -- FIXME
 					and then other_cl_type.class_id = class_id
-					and then other_cl_type.is_true_expanded = is_true_expanded
+					and then other_cl_type.is_expanded = is_expanded
 					and then other_cl_type.is_separate = is_separate
 					and then other_cl_type.meta_generic = Void
 					and then other_cl_type.true_generics = Void
@@ -321,12 +341,12 @@ feature -- Status
 
 feature -- Setting
 
-	set_is_true_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_true_expanded'.
+	set_is_expanded (b: BOOLEAN) is
+			-- Assign `b' to `is_expanded'.
 		do
-			is_true_expanded := b
+			is_expanded := b
 		ensure
-			is_true_expanded_set: is_true_expanded = b
+			is_expanded_set: is_expanded = b
 		end
 
 	set_is_separate (b: BOOLEAN) is
@@ -341,27 +361,11 @@ feature -- Setting
 			-- Set `cr_info' to `cinfo'.
 		require
 			create_info_not_void: cinfo /= Void
+			not_expanded: not is_expanded
 		do
 			cr_info := cinfo
 		ensure
 			cr_info_set : cr_info = cinfo
-		end
-
-feature -- Formatting
-
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			if is_true_expanded then
-				st.add_string ("expanded ")
-			elseif is_separate then
-				st.add_string ("separate ")
-			end
-			base_class.append_signature (st)
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-		do
-			buffer.putstring (debug_output)
 		end
 
 feature -- C generation
@@ -435,8 +439,7 @@ feature -- C generation
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil value
 		do
-				-- FIXME????: separate
-			if not is_true_expanded then
+			if not is_expanded then
 				buffer.putstring ("SK_DTYPE")
 			else
 				buffer.putstring ("SK_EXP + (uint32) ")
@@ -466,11 +469,7 @@ feature -- Generic conformance
 			if final_mode then
 				Result := type_id - 1
 			else
-				Result := associated_class_type.static_type_id-1
-			end
-
-			if is_true_expanded then
-				Result := Expanded_level - Result
+				Result := associated_class_type.static_type_id - 1
 			end
 		end
 
@@ -554,32 +553,38 @@ feature -- Generic conformance for IL
 			end	
 		end
 
-feature -- Output
-
-	debug_output: STRING is
-			-- String that should be displayed in debugger to represent `Current'.
-		do
-			create Result.make (32)
-			if is_true_expanded then
-				Result.append ("expanded ")
-			elseif is_separate then
-				Result.append ("separate ")
-			end
-			Result.append (base_class.name_in_upper)
-		end
-
 feature {NONE} -- Implementation
 
-	internal_il_type_name (a_base_name, a_prefix: STRING): STRING is
+	frozen internal_il_type_name (a_base_name, a_prefix: STRING): STRING is
 			-- Full type name of `a_base_name' using `a_prefix' in IL code generation
 			-- with namespace specification
 		require
 			a_base_name_not_void: a_base_name /= Void
 		local
 			l_name: STRING
+			l_base_class: like base_class
 		do
-			Result := a_base_name
-			l_name := base_class.lace_class.actual_namespace
+			l_base_class := base_class
+				-- Result needs to be in lower case because that's
+				-- what our casing conversion routines require to perform
+				-- a good job.
+			if
+				(is_expanded and l_base_class.is_expanded) or
+				(not is_expanded and not l_base_class.is_expanded)
+			then
+				Result := a_base_name.as_lower
+			else
+				if is_expanded then
+					create Result.make (6 + a_base_name.count)
+					Result.append ("VALUE_")
+				else
+					create Result.make (10 + a_base_name.count)
+					Result.append ("REFERENCE_")
+				end
+				Result.append (a_base_name)
+				Result.to_lower
+			end
+			l_name := l_base_class.lace_class.actual_namespace
 			if a_prefix /= Void then
 				if l_name.is_empty then
 					l_name := a_prefix + "."
@@ -599,5 +604,8 @@ feature {NONE} -- Implementation
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty
 		end
+
+invariant
+	class_id_positive: class_id > 0
 
 end

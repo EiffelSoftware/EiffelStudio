@@ -18,6 +18,8 @@ remtrace exml
 exprt -r $DEFAULT_CVS_TAG -d exml "Src/library/exml"
 remtrace gobo
 exprt -r $DEFAULT_CVS_TAG -d gobo "Src/library/gobo"
+remtrace helpers
+exprt -r $DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
 remtrace lex
 exprt -r $DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net
@@ -26,6 +28,8 @@ remtrace parse
 exprt -r $DEFAULT_CVS_TAG -d parse "Src/library/parse"
 remtrace patterns
 exprt -r $DEFAULT_CVS_TAG -d patterns "Src/library/patterns"
+remtrace preferences
+exprt -r $DEFAULT_CVS_TAG -d preferences "Src/library/preferences"
 remtrace time
 exprt -r $DEFAULT_CVS_TAG -d time "Src/library/time"
 remtrace gel

@@ -671,7 +671,12 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_fsize = egc_fsize_init;%N")
 
 			end
-			buffer.putstring ("%N}%N")
+
+			buffer.putstring ("%N%Tegc_system_name = %"")
+			buffer.putstring (System.system_name)
+			buffer.putstring ("%";%N%Tegc_compiler_tag = '")
+			buffer.putstring (System.version_tag);
+			buffer.putstring ("';%N}%N")
 			buffer.close_c
 
 			!! plug_file.make_open_write (gen_file_name (final_mode, Eplug));

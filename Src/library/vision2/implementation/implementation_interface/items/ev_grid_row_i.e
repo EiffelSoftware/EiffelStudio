@@ -123,8 +123,24 @@ feature -- Access
 			-- All items selected in `Current'.
 		require
 			is_parented: parent /= Void
+		local
+			i: INTEGER
+			create_if_void: BOOLEAN
+			a_item: EV_GRID_ITEM_I
 		do
-			to_implement ("EV_GRID_ROW.selected_items")
+			from
+				i := 1
+				create_if_void := is_selected
+				create Result.make (count)
+			until
+				i > count
+			loop
+				a_item := parent_grid_i.item_internal (index, i, create_if_void)
+				if a_item /= Void and then a_item.is_selected then
+					Result.extend (a_item.interface)
+				end
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -293,8 +309,21 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- Select the object.
 		do
 			selected_item_count := count
+			parent_grid_i.update_row_selection_status (Current)
 			parent_grid_i.redraw_client_area
 			fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")	
+		end
+
+	disable_select is
+			-- Deselect the object.
+		local
+			i: INTEGER
+			a_item: EV_GRID_ITEM_I
+		do
+			disable_select_internal
+			parent_grid_i.update_row_selection_status (Current)
+			parent_grid_i.redraw_client_area
+			fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")	
 		end
 
 	destroy is
@@ -342,7 +371,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		require
 			selected_item_count_greater_than_zero: selected_item_count > 0
 		do
-			selected_item_count := selected_item_count + 1
+			selected_item_count := selected_item_count - 1
 		ensure
 			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
 			selected_item_count_not_negative: selected_item_count >= 0
@@ -353,6 +382,29 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		
 	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- All subrows of `Current'.
+
+feature {EV_GRID_I} -- Implementation
+		
+	disable_select_internal is
+			-- Set internal data to signify that `Current' is unselected
+		local
+			i: INTEGER
+			a_item: EV_GRID_ITEM_I
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				a_item := parent_grid_i.item_internal (index, i, False)
+				if a_item /= Void and then a_item.internal_is_selected then
+					a_item.disable_select_internal
+				end
+				i := i + 1
+			end
+				-- Set selected item count to zero
+			selected_item_count := 0			
+		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 

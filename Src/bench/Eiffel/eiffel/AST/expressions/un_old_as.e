@@ -41,7 +41,7 @@ feature -- Type check, byte code and dead code removal
 			vaol2: VAOL2
 			saved_vaol_check: BOOLEAN
 		do
-			if not context.level1 then
+			if not context.is_checking_postcondition then
 					-- Old expression found somewhere else that in a
 					-- postcondition
 				create vaol1

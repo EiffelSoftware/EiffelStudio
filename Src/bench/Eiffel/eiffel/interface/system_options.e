@@ -101,48 +101,6 @@ feature -- Access: IL code generation
 	system_namespace: STRING
 			-- Top namespace of all generated Eiffel classes.
 
-feature -- Checking
-
-	valid_version (vers: STRING): BOOLEAN is
-			-- Is `vers' a valid version number?
-			-- I.e. a sequence of four integers separated by colon.
-		local
-			state: INTEGER
-			i, nb, nb_colons: INTEGER
-		do
-				-- State:
-				-- 1 means that we should read a sequence of digits
-				-- 2 means that we should read a colon or a digit
-
-			state := 1	
-			from
-				i := 1
-				nb := vers.count
-			until
-				i > nb or not Result
-			loop
-				inspect state
-				when 1 then
-					Result := vers.item (i).is_digit
-					state := 2
-				when 2 then
-					if vers.item (i) = ':' then
-						state := 1
-						nb_colons := nb_colons + 1
-					else
-						Result := vers.item (i).is_digit
-					end
-				end
-				i := i + 1
-			end
-			if Result then
-					-- It is a valid version number if there was 3 colons
-					-- and that we were waiting for a colon or a digit for
-					-- the last input.
-				Result := nb_colons = 3 and then state = 2
-			end
-		end
-
 feature -- Update
 
 	set_system_namespace (n: STRING) is
@@ -180,9 +138,11 @@ feature -- Update
 			end
 		ensure
 			java_generation_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else java_generation = v
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				java_generation = v
 			il_generation_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else il_generation = v
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				il_generation = v
 			msil_generation_type_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started
 				or else msil_generation_type.is_equal ("dll")
@@ -215,7 +175,8 @@ feature -- Update
 			end
 		ensure
 			il_generation_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else il_generation = v
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				il_generation = v
 		end
 
 	set_msil_culture (cult: STRING) is
@@ -232,9 +193,7 @@ feature -- Update
 	set_msil_version (vers: STRING) is
 			-- Set `msil_version' with `vers'.
 		require
-			vers_not_void: vers /= Void
-			vers_not_empty: not vers.is_empty
-			valid_version: valid_version (vers)
+			valid_version: (create {VERSION}).is_version_valid (vers)
 		do
 			msil_version := vers
 		ensure

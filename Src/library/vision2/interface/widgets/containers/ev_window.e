@@ -106,6 +106,7 @@ feature -- Access
 		ensure
 			bridge_ok: equal (Result, implementation.title)
 			not_void: Result /= Void
+			cloned: Result /= implementation.title
 		end
 
 	menu_bar: EV_MENU_BAR is

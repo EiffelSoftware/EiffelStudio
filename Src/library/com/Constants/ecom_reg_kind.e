@@ -1,51 +1,40 @@
 indexing
-
-	description: "IStorage and IStream Seek flags"
-	status: "See notice at end of class";
-	date: "$Date$";
+	description: "REGKIND constants"
+	status: "See notice at end of class"
+	author: "Marina Nudelman"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_STREAM_SEEK
+	ECOM_REG_KIND
 
 feature -- Access
 
-	Stream_seek_set: INTEGER is
-			-- Sets seek position relative to
-			-- beginning of stream
+	Regkind_default: INTEGER is
+			-- Default register behavior
 		external
-			"C [macro <objidl.h>]"
+			"C [macro <oleauto.h>]"
 		alias
-			"STREAM_SEEK_SET"
-		end
-		
-	Stream_seek_cur: INTEGER is
-			-- Sets seek position relative to
-			-- current position of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_CUR"
-		end
-		
-	Stream_seek_end: INTEGER is
-			-- Sets seek position relative to
-			-- current end of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_END"
+			"REGKIND_DEFAULT"
 		end
 
-	is_valid_seek (seek: INTEGER): BOOLEAN is
-			-- Is `seek' a valid IStorage and IStream seek flag?
-		do
-			Result := seek = Stream_seek_set or
-						seek = Stream_seek_cur or
-						seek = Stream_seek_end
+	Rgkind_register: INTEGER is
+			-- Registered type
+		external
+			"C [macro <oleauto.h>]"
+		alias
+			"REGKIND_REGISTER"
 		end
-		
-end -- class EOLE_STREAM_SEEK
+
+ 	Rgkind_none: INTEGER is
+			-- Not registered type
+		external
+			"C [macro <oleauto.h>]"
+		alias
+			"REGKIND_NONE"
+		end
+
+end -- class ECOM_REG_KIND
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -1,52 +1,28 @@
 indexing
 
-	description: "IStorage and IStream Seek flags"
+	description: "Generic flags class."
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	ECOM_STREAM_SEEK
+	ECOM_FLAGS
 
-feature -- Access
+feature {NONE} -- Externals
 
-	Stream_seek_set: INTEGER is
-			-- Sets seek position relative to
-			-- beginning of stream
+	binary_and (operand1, operand2: INTEGER): INTEGER is
+			-- Binary 'and'.
 		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_SET"
-		end
-		
-	Stream_seek_cur: INTEGER is
-			-- Sets seek position relative to
-			-- current position of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_CUR"
-		end
-		
-	Stream_seek_end: INTEGER is
-			-- Sets seek position relative to
-			-- current end of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_END"
+			"C [macro %"ecom_flags.h%"]"
 		end
 
-	is_valid_seek (seek: INTEGER): BOOLEAN is
-			-- Is `seek' a valid IStorage and IStream seek flag?
-		do
-			Result := seek = Stream_seek_set or
-						seek = Stream_seek_cur or
-						seek = Stream_seek_end
+	binary_or (operand1, operand2: INTEGER): INTEGER is
+			-- Binary 'or'.
+		external
+			"C [macro %"ecom_flags.h%"]"
 		end
-		
-end -- class EOLE_STREAM_SEEK
 
+end -- class ECOM_FLAGS
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
@@ -62,4 +38,5 @@ end -- class EOLE_STREAM_SEEK
 --| Customer support http://support.eiffel.com
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

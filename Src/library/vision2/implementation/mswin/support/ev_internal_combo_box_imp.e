@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -184,7 +183,8 @@ feature {NONE} -- Implementation
 
 feature {WEL_DISPATCHER} -- Message dispatcher
 
-	window_process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	window_process_message (hwnd: POINTER; msg, wparam,
+		lparam: INTEGER): INTEGER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		do
@@ -289,6 +289,9 @@ end -- class EV_INTERNAL_COMBO_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/07 02:39:12  oconnor
+--| released
+--|
 --| Revision 1.3  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

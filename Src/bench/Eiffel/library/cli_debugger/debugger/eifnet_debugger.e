@@ -844,20 +844,17 @@ feature -- Function Evaluation
 
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE;
- 				min,max: INTEGER ): STRING is
+ 				min,max: INTEGER): STRING is
 			-- Debug ouput string value
 		local
 			l_icd: ICOR_DEBUG_VALUE		
 			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_module_name: STRING
 			l_feature_token: INTEGER
-			
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
-
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do	
 			l_icd := a_icd
@@ -868,30 +865,32 @@ feature -- Function Evaluation
 			if l_feat /= Void then
 				l_icd_class := l_icd_object.get_class
 				l_icd_module := l_icd_class.get_module
-				l_module_name := l_icd_module.get_name
 			
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
-				if l_feature_token = 0 then
-					l_func := icd_function_by_name (l_class_type, l_feat.feature_name)
-				else				
-					l_func := l_icd_module.get_function_from_token (l_feature_token)
-				end
-
-				if l_func /= Void then
-					l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
-					if l_icd /= Void then
-						create l_value_info.make (l_icd)
-						Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, min, max)							
-					else
-						Result := Void -- "WARNING: Could not evaluate output"	
-					end
+				if l_feat.is_attribute then
+					l_icd := a_icd_obj.get_field_value (l_icd_class, l_feature_token)
 				else
-					debug ("DEBUGGER_TRACE_EVAL")
-						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
-						print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-						print ("                                :: module_name   = %"" + l_module_name + "%"%N")
-						print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
+					if l_feature_token = 0 then
+						l_func := icd_function_by_name (l_class_type, l_feat.feature_name)
+					else				
+						l_func := l_icd_module.get_function_from_token (l_feature_token)
 					end
+					if l_func /= Void then
+						l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+					else						
+						debug ("DEBUGGER_TRACE_EVAL")
+							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
+							print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
+							print ("                                :: module_name   = %"" + l_icd_module.get_name + "%"%N")
+							print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
+						end
+					end
+				end
+				if l_icd /= Void then
+					create l_value_info.make (l_icd)
+					Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, min, max)							
+				else
+					Result := Void -- "WARNING: Could not evaluate output"	
 				end
 			else
 				debug ("DEBUGGER_TRACE_EVAL")

@@ -423,6 +423,10 @@ feature -- Status setting
 			filename_not_void: a_filename /= Void
 		do
 			implementation.save_to_named_file (a_filename)
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 feature {NONE} -- Contract support

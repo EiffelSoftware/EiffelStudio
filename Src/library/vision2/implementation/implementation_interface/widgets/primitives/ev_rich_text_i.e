@@ -422,6 +422,10 @@ feature -- Status setting
 			create text_file.make_open_write (a_filename)
 			text_file.put_string (buffer.internal_text)
 			text_file.close
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is

@@ -20,7 +20,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_resource (a_parent: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (a_parent: EV_BOX; a_resource: like resource) is
 			-- Create display
 		local
 			s: STRING
@@ -36,9 +36,9 @@ feature {NONE} -- Initialization
 
 			Create text.make_with_text (Current, a_resource.value)
 			text.set_minimum_width (200)
-			text.set_expand (True)
+			set_child_expandable (text, True)
 
---			text.add_activate_command (Current, Void)
+--			text.add_return_command (Current, Void)
 
 		end
 

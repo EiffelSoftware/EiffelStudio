@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			main_window_class_name := "MAIN_WINDOW"
 			application_class_name := "VISION2_APPLICATION"
 			project_name := "VISION2_PROJECT"
+			attributes_local := Optimal_string
 			enable_complete_project
 			enable_grouped_locals
 			enable_rebuild_ace_file

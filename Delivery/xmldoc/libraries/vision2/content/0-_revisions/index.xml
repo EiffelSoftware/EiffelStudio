@@ -39,8 +39,10 @@
 				<bold>EV_PIXMAP</bold> - Added `sub_pixmap', this allows a pixmap to be created from a region of another
 			</item>
 			<item>
-				<bold>EV_RICH_TEXT</bold> - corrected postcondition of `buffered_format' which restricted the end position to `text_length' instead of `text_length' + 1.
+				<bold>EV_RICH_TEXT</bold> - Corrected postcondition of `buffered_format' which restricted the end position to `text_length' instead of `text_length' + 1.
 			</item>
+			<item><bold>EV_FILE_OPEN_DIALOG</bold> - Added features for retrieving multiple file names. The following additional features are now available: 'enable_multiple_selection', `disable_multiple_selection', `multiple_selection_enabled' and `file_names'.
+</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -67,7 +69,11 @@
 						<bold>EV_RADIO_BUTTON</bold> - Enabled better navigation between radio buttons of a group using the arrow keys.
 					</item>
 					<item>
-						<bold>EV_SPIN_BUTTON</bold> - When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.
+						<bold>EV_SPIN_BUTTON</bold>
+						<list ordered="false">
+						 <item>When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.</item>
+						<item>Fixed bug which restricted the maximum values permitted to approx. 16,000. Attempting to manipulate the spin button with values greater than this caused precondition violations internally.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_SCREEN</bold>

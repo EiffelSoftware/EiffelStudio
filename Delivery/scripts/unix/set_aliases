@@ -165,7 +165,7 @@ tgz_ccode ()
 {
 if [ -d EIFGEN/F_code ]; then
 cd EIFGEN
-tar -cf $1.tar F_code
+tar -cf $1.tar F_code >> $INSTALL_LOG
 gzip $1.tar
 mv $1.tar.gz ..
 cd ..
@@ -218,7 +218,11 @@ fi
 # Finalize at the Eiffel level only
 finalize ()
 {
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* >> $COMPILE_LOG
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* &> $INSTALL_LOG
+if [ ! -e EIFGEN/F_code/Makefile.SH ]; then
+echo "Couldn't finalize $1"
+CANCEL
+fi
 }
 # Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 cleanup_eiffel ()

@@ -76,6 +76,9 @@ cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
 move $ISE_EIFFEL/studio/config/unix $ISE_EIFFEL/studio/config/$ISE_PLATFORM
 
+move $ISE_EIFFEL/eifinit/studio/spec/unix $ISE_EIFFEL/eifinit/studio/spec/$ISE_PLATFORM
+move $ISE_EIFFEL/studio/help/defaults/unix $ISE_EIFFEL/studio/help/defaults/$ISE_PLATFORM
+
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.
 cd $EXPORT_DIR/C/run-time

@@ -13,6 +13,9 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
+	if [ ! -d $FINALIZATION_DIR ]; then
+		md $FINALIZATION_DIR
+	fi
 	cd $FINALIZATION_DIR
 	clean_project
 	finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: SYSTEM_DRAWING_FONT
+	font: DRAWING_FONT
 		indexing
 			description:"Font"
 			external_name: "Font"
@@ -41,33 +41,33 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	assembly_name_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
+	assembly_name_column_width_from_info (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR] ): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [assembly_descriptor]
 		indexing
 			description: "Assembly name column width from `a_list'."
 			external_name: "AssemblyNameColumnWidthFromInfo"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			name: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
-						if a_descriptor.get_name.get_length > Result then
-							Result := a_descriptor.get_name.get_length
-							name := a_descriptor.get_name
+						if a_descriptor.name.count > Result then
+							Result := a_descriptor.name.count
+							name := a_descriptor.name
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (name)
 				Result := adapted_width (width)
@@ -79,33 +79,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_name_column_width_from_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	assembly_name_column_width_from_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Assembly name column width from `a_list'."
 			external_name: "AssemblyNameColumnWidthFromAssemblies"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			name: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.get_assembly_descriptor.get_name.get_length > Result then
-							Result := an_eiffel_assembly.get_assembly_descriptor.get_name.get_length
-							name := an_eiffel_assembly.get_assembly_descriptor.get_name
+						if an_eiffel_assembly.assembly_descriptor.name.count > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.name.count
+							name := an_eiffel_assembly.assembly_descriptor.name
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (name)
 				Result := adapted_width (width)
@@ -117,33 +117,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_version_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
+	assembly_version_column_width_from_info (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [assembly_descriptor]
 		indexing
 			description: "Assembly version column width from `a_list'."
 			external_name: "AssemblyVersionColumnWidthFromInfo"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			version: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
-						if a_descriptor.get_version.get_length > Result then
-							Result := a_descriptor.get_version.get_length
-							version := a_descriptor.get_version
+						if a_descriptor.version.count > Result then
+							Result := a_descriptor.version.count
+							version := a_descriptor.version
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (version)
 				Result := adapted_width (width)
@@ -155,33 +155,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_version_column_width_from_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	assembly_version_column_width_from_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Assembly version column width from `a_list'."
 			external_name: "AssemblyVersionColumnWidthFromAssemblies"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			version: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.get_assembly_descriptor.get_version.get_length > Result then
-							Result := an_eiffel_assembly.get_assembly_descriptor.get_version.get_length
-							version := an_eiffel_assembly.get_assembly_descriptor.get_version
+						if an_eiffel_assembly.assembly_descriptor.version.count > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.version.count
+							version := an_eiffel_assembly.assembly_descriptor.version
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (version)
 				Result := adapted_width (width)
@@ -193,33 +193,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_culture_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
+	assembly_culture_column_width_from_info (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [assembly_descriptor]
 		indexing
 			description: "Assembly culture column width from `a_list'."
 			external_name: "AssemblyCultureColumnWidthFromInfo"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			culture: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
-						if a_descriptor.get_culture.get_length > Result then
-							Result := a_descriptor.get_culture.get_length
-							culture := a_descriptor.get_culture
+						if a_descriptor.culture.count > Result then
+							Result := a_descriptor.culture.count
+							culture := a_descriptor.culture
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (culture)
 				Result := adapted_width (width)
@@ -231,33 +231,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_culture_column_width_from_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	assembly_culture_column_width_from_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY] ): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Assembly culture column width from `a_list'."
 			external_name: "AssemblyCultureColumnWidthFromAssemblies"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			culture: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.get_assembly_descriptor.get_culture.get_length > Result then
-							Result := an_eiffel_assembly.get_assembly_descriptor.get_culture.get_length
-							culture := an_eiffel_assembly.get_assembly_descriptor.get_culture
+						if an_eiffel_assembly.assembly_descriptor.culture.count > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.culture.count
+							culture := an_eiffel_assembly.assembly_descriptor.culture
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (culture)
 				Result := adapted_width (width)
@@ -269,33 +269,33 @@ feature -- Basic Operations
 			retry
 		end
 		
-	assembly_public_key_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
+	assembly_public_key_column_width_from_info (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR] ): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [assembly_descriptor]
 		indexing
 			description: "Assembly public key column width from `a_list'."
 			external_name: "AssemblyPublicKeyColumnWidthFromInfo"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			public_key: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
-						if a_descriptor.get_public_key.get_length > Result then
-							Result := a_descriptor.get_public_key.get_length
-							public_key := a_descriptor.get_public_key
+						if a_descriptor.public_key.count > Result then
+							Result := a_descriptor.public_key.count
+							public_key := a_descriptor.public_key
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (public_key)
 				Result := adapted_width (width)
@@ -307,33 +307,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	assembly_public_key_column_width_from_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	assembly_public_key_column_width_from_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Assembly public key column width from `a_list'."
 			external_name: "AssemblyPublicKeyColumnWidthFromAssemblies"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			public_key: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.get_assembly_descriptor.get_public_key.get_length > Result then
-							Result := an_eiffel_assembly.get_assembly_descriptor.get_public_key.get_length
-							public_key := an_eiffel_assembly.get_assembly_descriptor.get_public_key
+						if an_eiffel_assembly.assembly_descriptor.public_key.count > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.public_key.count
+							public_key := an_eiffel_assembly.assembly_descriptor.public_key
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (public_key)
 				Result := adapted_width (width)
@@ -345,18 +345,18 @@ feature -- Basic Operations
 			retry
 		end
 
-	dependancies_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
+	dependancies_column_width_from_info (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR] ): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [assembly_descriptor]
 		indexing
 			description: "Dependancies column width from `a_list'."
 			external_name: "DependanciesColumnWidthFromInfo"
 		require
 			non_void_list: a_list /= Void
 		local
-			support: SUPPORT
+			support: ASSEMBLY_SUPPORT
 			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			a_descriptor: ASSEMBLY_DESCRIPTOR
+			dependancies: ARRAY [CLI_CELL [ASSEMBLY_NAME]]
 			dependancies_string: STRING
 			a_string: STRING
 			retried: BOOLEAN
@@ -365,11 +365,12 @@ feature -- Basic Operations
 			if not retried then
 				create support.make
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
 					dependancies_string := Void
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
 						dependancies := support.dependancies_from_info (a_descriptor)
 						if dependancies /= Void and then dependancies.count > 0 then
@@ -377,12 +378,12 @@ feature -- Basic Operations
 						else
 							dependancies_string := No_dependancy
 						end
-						if dependancies_string.get_length > Result then
-							Result := dependancies_string.get_length
+						if dependancies_string.count > Result then
+							Result := dependancies_string.count
 							a_string := dependancies_string
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (a_string)
 				Result := adapted_width (width)
@@ -394,46 +395,46 @@ feature -- Basic Operations
 			retry
 		end
 		
-	dependancies_column_width_from_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	dependancies_column_width_from_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Dependancies column width from `a_list'."
 			external_name: "DependanciesColumnWidthFromAssemblies"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
+			a_descriptor: ASSEMBLY_DESCRIPTOR
+			dependancies: ARRAY [CLI_CELL[ASSEMBLY_NAME]]
 			dependancies_string: STRING
 			a_string: STRING
-			support: SUPPORT
+			support: ASSEMBLY_SUPPORT
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				create support.make
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
 					dependancies_string := Void
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then					
-						a_descriptor := an_eiffel_assembly.get_assembly_descriptor
+						a_descriptor := an_eiffel_assembly.assembly_descriptor
 						dependancies := support.dependancies_from_info (a_descriptor)
 						if dependancies /= Void and then dependancies.count > 0 then
 							dependancies_string := support.dependancies_string (dependancies)
 						else
 							dependancies_string := No_dependancy
 						end
-						if dependancies_string.get_length > Result then
-							Result := dependancies_string.get_length
+						if dependancies_string.count > Result then
+							Result := dependancies_string.count
 							a_string := dependancies_string
 						end					
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (a_string)
 				Result := adapted_width (width)
@@ -445,33 +446,33 @@ feature -- Basic Operations
 			retry			
 		end
 
-	eiffel_path_column_width (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	eiffel_path_column_width (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Eiffel path column width from `a_list'."
 			external_name: "EiffelPathColumnWidth"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			eiffel_path: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.get_eiffel_cluster_path.get_length > Result then
-							Result := an_eiffel_assembly.get_eiffel_cluster_path.get_length
-							eiffel_path := an_eiffel_assembly.get_eiffel_cluster_path
+						if an_eiffel_assembly.eiffel_cluster_path.count > Result then
+							Result := an_eiffel_assembly.eiffel_cluster_path.count
+							eiffel_path := an_eiffel_assembly.eiffel_cluster_path
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (eiffel_path)
 				Result := adapted_width (width)
@@ -483,33 +484,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	eiffel_name_column_width_from_classes (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	eiffel_name_column_width_from_classes (a_list: LINKED_LIST [EIFFEL_CLASS]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "Eiffel name column width from `a_list'."
 			external_name: "EiffelNameColumnWidthFromClasses"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_class: ISE_REFLECTION_EIFFELCLASS
+			a_class: EIFFEL_CLASS
 			name: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_class ?= a_list.get_item (i)
+					a_class ?= a_list.item
 					if a_class /= Void then
-						if a_class.get_eiffel_name.get_length > Result then
-							Result := a_class.get_eiffel_name.get_length
-							name := a_class.get_eiffel_name
+						if a_class.eiffel_name.count > Result then
+							Result := a_class.eiffel_name.count
+							name := a_class.eiffel_name
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (name)
 				Result := adapted_width (width)
@@ -521,33 +522,33 @@ feature -- Basic Operations
 			retry
 		end
 
-	external_name_column_width_from_classes (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	external_name_column_width_from_classes (a_list: LINKED_LIST [EIFFEL_CLASS]): INTEGER is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "External name column width from `a_list'."
 			external_name: "ExternalNameColumnWidthFromClasses"
 		require
 			non_void_list: a_list /= Void
 		local
-			i: INTEGER
-			a_class: ISE_REFLECTION_EIFFELCLASS
+			a_class: EIFFEL_CLASS
 			name: STRING
 			retried: BOOLEAN
 			width: INTEGER
 		do
 			if not retried then
 				from
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_class ?= a_list.get_item (i)
+					a_class ?= a_list.item
 					if a_class /= Void then
-						if a_class.get_external_name.get_length > Result then
-							Result := a_class.get_external_name.get_length
-							name := a_class.get_external_name
+						if a_class.external_name.count > Result then
+							Result := a_class.external_name.count
+							name := a_class.external_name
 						end
 					end
-					i := i + 1
+					a_list.forth
 				end
 				width := pixel_width (name)
 				Result := adapted_width (width)
@@ -579,14 +580,14 @@ feature {NONE} -- Implementation
 			external_name: "PixelWidth"
 		require
 			non_void_string: a_string /= Void
-			not_empty_string: a_string.get_length > 0
+			not_empty_string: a_string.count > 0
 		local
-			a_label: SYSTEM_WINDOWS_FORMS_LABEL
-			graphics: SYSTEM_DRAWING_GRAPHICS
-			a_sizef: SYSTEM_DRAWING_SIZEF
+			a_label: WINFORMS_LABEL
+			graphics: DRAWING_GRAPHICS
+			a_sizef: DRAWING_SIZE_F
 		do
-			create a_label.make_label 
-			a_label.set_text (a_string)
+			create a_label.make_winforms_label 
+			a_label.set_text (a_string.to_cil)
 			a_label.set_font (font)
 			a_label.set_auto_size (True)
 			Result := a_label.get_width + Margin

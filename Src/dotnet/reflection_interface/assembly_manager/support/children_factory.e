@@ -1,5 +1,5 @@
 indexing
-	description: "Retrieves children from an instance of `ISE_REFLECTION_EIFFELCLASS'."
+	description: "Retrieves children from an instance of `EIFFELCLASS'."
 	external_name: "ISE.AssemblyManager.ChildrenFactory"
 
 class
@@ -24,59 +24,62 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	types: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	types: LINKED_LIST [EIFFEL_CLASS]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "Types in current assembly"
 			external_name: "Types"
 		end
 
-	recursive_children (a_class: ISE_REFLECTION_EIFFELCLASS): SYSTEM_COLLECTIONS_ARRAYLIST is
+	recursive_children (a_class: EIFFEL_CLASS): LINKED_LIST [EIFFEL_CLASS] is
 			-- | Call in loop to `children'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "All children of `a_class'"
 			external_name: "RecursiveChildren"
 		require
 			non_void_eiffel_class: a_class /= Void
 		local
-			class_children: SYSTEM_COLLECTIONS_ARRAYLIST
-			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
+			class_children: LINKED_LIST [EIFFEL_CLASS]
+			position: INTEGER
+			a_child: EIFFEL_CLASS
 			added: INTEGER
-			type_children: SYSTEM_COLLECTIONS_ARRAYLIST
+			type_children: LINKED_LIST [EIFFEL_CLASS]
 			j: INTEGER
-			a_type_child: ISE_REFLECTION_EIFFELCLASS
+			a_type_child: EIFFEL_CLASS
 		do
 			create Result.make
 			class_children := children (a_class)
 			from
-				i := 0
+				class_children.start
 			until
-				i = class_children.get_count
+				class_children.after
 			loop
-				a_child ?= class_children.get_item (i)
+				a_child ?= class_children.item
 				if a_child /= Void then
 					if not Result.has (a_child) then
-						added := Result.extend (a_child)
+						Result.extend (a_child)
 					end
 					type_children := children (a_child)
 					from
-						j := 0
+						type_children.start
 					until
-						j = type_children.get_count
+						type_children.after
 					loop
-						a_type_child ?= type_children.get_item (j)
+						a_type_child ?= type_children.item
 						if a_type_child /= Void and then not Result.has (a_type_child) then
-							added := Result.extend (a_type_child)
+							Result.extend (a_type_child)
 						end
-						j := j + 1
+						type_children.forth
 					end
 				end
-				i := i + 1
+				class_children.forth
 			end
 			if Result.has (a_class) then
-				Result.remove (a_class)
+				position := Result.index_of (a_class, 1)
+				if position > 0 then
+					Result.remove
+				end
 			end
 		ensure
 			children_created: Result /= Void
@@ -84,8 +87,8 @@ feature -- Access
 	
 feature {NONE} -- Implementation
 
-	children (a_class: ISE_REFLECTION_EIFFELCLASS): SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	children (a_class: EIFFEL_CLASS): LINKED_LIST [EIFFEL_CLASS] is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "Children of `a_class'"
 			external_name: "Children"
@@ -93,32 +96,36 @@ feature {NONE} -- Implementation
 			non_void_class: a_class /= Void
 		local
 			i: INTEGER
-			a_type: ISE_REFLECTION_EIFFELCLASS
-			parents_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
+			a_type: EIFFEL_CLASS
 			a_parent: STRING
 			added: INTEGER
 			moved: BOOLEAN
+			eiffel_class_name: STRING
 		do
 			create Result.make
 			from
-				i := 0
+				types.start
 			until	
-				i = types.get_count
+				types.after
 			loop
-				a_type ?= types.get_item (i)
+				a_type ?= types.item
 				if a_type /= Void then
-					parents_enumerator := a_type.get_parents.get_keys.get_enumerator
 					from
+						a_type.parents.start
 					until
-						not parents_enumerator.move_next
+						a_type.parents.after
 					loop
-						a_parent ?= parents_enumerator.get_current
-						if a_parent.to_lower.equals_string (a_class.get_eiffel_name.to_lower) and not Result.has (a_type) then
-							added := Result.extend (a_type)
+						a_parent ?= a_type.parents.key_for_iteration
+						a_parent := a_parent.clone (a_parent)
+						a_parent.to_lower
+						eiffel_class_name := a_class.eiffel_name.clone (a_class.eiffel_name)
+						eiffel_class_name.to_lower
+						if a_parent.is_equal (eiffel_class_name) and not Result.has (a_type) then
+							Result.extend (a_type)
 						end
 					end
 				end
-				i := i + 1
+				types.forth
 			end
 		ensure
 			children_created: Result /= Void

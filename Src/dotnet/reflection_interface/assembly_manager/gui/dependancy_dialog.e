@@ -12,14 +12,14 @@ inherit
 		end
 
 feature -- Access
-	
-	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+
+	dependancies: ARRAY [CLI_CELL[ASSEMBLY_NAME]]
 		indexing
 			description: "Assembly dependancies"
 			external_name: "Dependancies"
 		end
 
-	dependancies_label: SYSTEM_WINDOWS_FORMS_LABEL
+	dependancies_label: WINFORMS_LABEL
 		indexing
 			description: "Dependancies label"
 			external_name: "DependanciesLabel"
@@ -35,73 +35,73 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	assembly_name_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTEXTBOXCOLUMN
+	assembly_name_column_style: WINFORMS_DATA_GRID_TEXT_BOX_COLUMN
 		indexing
 			description: "Assembly name column style"
 			external_name: "AssemblyNameColumnStyle"
 		end
 		
-	assembly_version_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTEXTBOXCOLUMN
+	assembly_version_column_style: WINFORMS_DATA_GRID_TEXT_BOX_COLUMN
 		indexing
 			description: "Assembly versopm column style"
 			external_name: "AssemblyVersionColumnStyle"
 		end
 		
-	assembly_culture_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTEXTBOXCOLUMN
+	assembly_culture_column_style: WINFORMS_DATA_GRID_TEXT_BOX_COLUMN
 		indexing
 			description: "Assembly culture column style"
 			external_name: "AssemblyCultureColumnStyle"
 		end
 		
-	assembly_public_key_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTEXTBOXCOLUMN
+	assembly_public_key_column_style: WINFORMS_DATA_GRID_TEXT_BOX_COLUMN
 		indexing
 			description: "Assembly public key column style"
 			external_name: "AssemblyPublicKeyColumnStyle"
 		end
 
-	assembly_name_column: SYSTEM_DATA_DATACOLUMN
+	assembly_name_column: DATA_DATA_COLUMN
 		indexing
 			description: "Assembly name column"
 			external_name: "AssemblyNameColumn"
 		end
 
-	assembly_version_column: SYSTEM_DATA_DATACOLUMN
+	assembly_version_column: DATA_DATA_COLUMN
 		indexing
 			description: "Assembly version column"
 			external_name: "AssemblyVersionColumn"
 		end
 
-	assembly_culture_column: SYSTEM_DATA_DATACOLUMN
+	assembly_culture_column: DATA_DATA_COLUMN
 		indexing
 			description: "Assembly culture column"
 			external_name: "AssemblyCultureColumn"
 		end
 
-	assembly_public_key_column: SYSTEM_DATA_DATACOLUMN
+	assembly_public_key_column: DATA_DATA_COLUMN
 		indexing
 			description: "Assembly public_key column"
 			external_name: "AssemblyPublicKeyColumn"
 		end
 
-	data_grid: SYSTEM_WINDOWS_FORMS_DATAGRID
+	data_grid: WINFORMS_DATA_GRID
 		indexing
 			description: "Data grid associated with `data_table'"
 			external_name: "DataGrid"
 		end
 				
-	data_table: SYSTEM_DATA_DATATABLE
+	data_table: DATA_DATA_TABLE
 		indexing
 			description: "Data table"
 			external_name: "DataTable"
 		end
 
-	data_grid_font: SYSTEM_DRAWING_FONT
+	data_grid_font: DRAWING_FONT
 		indexing
 			description: "Data grid font"
 			external_name: "DataGridFont"
 		end
 
-	type_factory: SYSTEM_TYPE
+	type_factory: TYPE
 		indexing
 			description: "Statics needed to create a type"
 			external_name: "TypeFactory"
@@ -121,16 +121,16 @@ feature {NONE} -- Implementation
 			description: "Build `data_table'."
 			external_name: "BuildDataTable"
 		local
-			type: SYSTEM_TYPE
+			type: TYPE
 		do
-			create data_table.make_datatable_1 (dictionary.Data_table_title)
+			create data_table.make_data_data_table_1 (dictionary.Data_table_title.to_cil)
 			
 				-- Create table columns
-			type := type_factory.Get_Type_String (dictionary.System_string_type);
-			create assembly_name_column.make_datacolumn_2 (dictionary.Assembly_name_column_title, type)
-			create assembly_version_column.make_datacolumn_2 (dictionary.Assembly_version_column_title, type)
-			create assembly_culture_column.make_datacolumn_2 (dictionary.Assembly_culture_column_title, type)
-			create assembly_public_key_column.make_datacolumn_2 (dictionary.Assembly_public_key_column_title, type)
+			type := type_factory.Get_Type_String (dictionary.System_string_type.to_cil);
+			create assembly_name_column.make_data_data_column_2 (dictionary.Assembly_name_column_title.to_cil, type)
+			create assembly_version_column.make_data_data_column_2 (dictionary.Assembly_version_column_title.to_cil, type)
+			create assembly_culture_column.make_data_data_column_2 (dictionary.Assembly_culture_column_title.to_cil, type)
+			create assembly_public_key_column.make_data_data_column_2 (dictionary.Assembly_public_key_column_title.to_cil, type)
 
 				-- Add columns to data table
 			data_table.get_Columns.Add_Data_Column (assembly_name_column)
@@ -144,20 +144,20 @@ feature {NONE} -- Implementation
 			description: "Build `data_grid' and associate actions."
 			external_name: "BuildDataGrid"
 		local
-			row: SYSTEM_DATA_DATAROW
-			data_grid_table_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTABLESTYLE		
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
+			row: DATA_DATA_ROW
+			data_grid_table_style: WINFORMS_DATA_GRID_TABLE_STYLE		
+			a_size: DRAWING_SIZE
+			a_point: DRAWING_POINT
 			added: INTEGER
-			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			a_color: SYSTEM_DRAWING_COLOR
-			style: SYSTEM_DRAWING_FONTSTYLE
+			assembly: ASSEMBLY
+			a_color: DRAWING_COLOR
+			style: DRAWING_FONT_STYLE
 		do
 				-- Build data grid	
-			create data_grid.make_datagrid
+			create data_grid.make_winforms_data_grid
 			data_grid.Begin_Init
 			data_grid.set_Visible (True)
-			create data_grid_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
+			create data_grid_font.make_drawing_font_10 (dictionary.Font_family_name.to_cil, dictionary.Font_size, style.Regular)
 			data_grid.set_font (data_grid_font)
 			
 			a_point.set_x (0)
@@ -168,45 +168,45 @@ feature {NONE} -- Implementation
 			data_grid.End_Init 
 			
 				-- Table styles
-			create assembly_name_column_style.make_datagridtextboxcolumn
-			create assembly_version_column_style.make_datagridtextboxcolumn
-			create assembly_culture_column_style.make_datagridtextboxcolumn
-			create assembly_public_key_column_style.make_datagridtextboxcolumn
+			create assembly_name_column_style.make_winforms_data_grid_text_box_column
+			create assembly_version_column_style.make_winforms_data_grid_text_box_column
+			create assembly_culture_column_style.make_winforms_data_grid_text_box_column
+			create assembly_public_key_column_style.make_winforms_data_grid_text_box_column
 			
 				-- Set `MappingName'.
-			assembly_name_column_style.set_mapping_name (dictionary.Assembly_name_column_title)
-			assembly_version_column_style.set_mapping_name (dictionary.Assembly_version_column_title)
-			assembly_culture_column_style.set_mapping_name (dictionary.Assembly_culture_column_title)
-			assembly_public_key_column_style.set_mapping_name (dictionary.Assembly_public_key_column_title)
+			assembly_name_column_style.set_mapping_name (dictionary.Assembly_name_column_title.to_cil)
+			assembly_version_column_style.set_mapping_name (dictionary.Assembly_version_column_title.to_cil)
+			assembly_culture_column_style.set_mapping_name (dictionary.Assembly_culture_column_title.to_cil)
+			assembly_public_key_column_style.set_mapping_name (dictionary.Assembly_public_key_column_title.to_cil)
 
 				-- Set `HeaderText'.
-			assembly_name_column_style.set_header_text (dictionary.Assembly_name_column_title)
-			assembly_version_column_style.set_header_text (dictionary.Assembly_version_column_title)
-			assembly_culture_column_style.set_header_text (dictionary.Assembly_culture_column_title)
-			assembly_public_key_column_style.set_header_text (dictionary.Assembly_public_key_column_title)
+			assembly_name_column_style.set_header_text (dictionary.Assembly_name_column_title.to_cil)
+			assembly_version_column_style.set_header_text (dictionary.Assembly_version_column_title.to_cil)
+			assembly_culture_column_style.set_header_text (dictionary.Assembly_culture_column_title.to_cil)
+			assembly_public_key_column_style.set_header_text (dictionary.Assembly_public_key_column_title.to_cil)
 			
 				-- Set `width'.
 			set_default_column_width
 			set_read_only
 			
 				-- Set styles.
-			create data_grid_table_style.make_datagridtablestyle_1 
+			create data_grid_table_style.make_winforms_data_grid_table_style_1 
 			data_grid_table_style.set_back_color (a_color.get_White)
 			data_grid_table_style.set_Preferred_Column_Width (dictionary.Window_width // 6)
 			data_grid_table_style.set_preferred_row_height (dictionary.Row_height)
 			data_grid_table_style.set_read_only (True)
 			data_grid_table_style.set_row_headers_visible (False)
 			data_grid_table_style.set_column_headers_visible (True)
-			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
+			data_grid_table_style.set_mapping_name (dictionary.Data_table_title.to_cil)
 			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.get_grid_column_styles.extend (assembly_name_column_style)
-			added := data_grid_table_style.get_grid_column_styles.extend (assembly_version_column_style)
-			added := data_grid_table_style.get_grid_column_styles.extend (assembly_culture_column_style)
-			added := data_grid_table_style.get_grid_column_styles.extend (assembly_public_key_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_version_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_culture_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_public_key_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
-				added := data_grid.get_Table_Styles.extend (data_grid_table_style)
+				added := data_grid.get_Table_Styles.add (data_grid_table_style)
 			end	
 		end
 
@@ -215,28 +215,32 @@ feature {NONE} -- Implementation
 			description: "Build `dependancies_list'"
 			external_name: "BuildDependanciesList"
 		local
-			support: ISE_REFLECTION_CONVERSIONSUPPORT
-			i: INTEGER
-			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			added: INTEGER
+			support: CONVERSION_SUPPORT
+			an_assembly_name: ASSEMBLY_NAME
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			retried: BOOLEAN
+			item: CLI_CELL [ASSEMBLY_NAME]
+			i: INTEGER
 		do
 			create dependancies_list.make
 			if not retried then
-				create support.make_conversionsupport
-				from	
+				create support
+				from
+					i := 1
 				until
-					i = dependancies.count
+					i > dependancies.count
 				loop
-					an_assembly_name := dependancies.item (i)
-					if an_assembly_name /= Void then
-						a_descriptor := support.assembly_descriptor_from_name (an_assembly_name)
-						if a_descriptor /= Void then
-							added := dependancies_list.extend (a_descriptor)
+					item := dependancies.item (i)
+					if item /= Void then 
+						an_assembly_name := item.item
+						if an_assembly_name /= Void then
+							a_descriptor := support.assembly_descriptor_from_name (an_assembly_name)
+							if a_descriptor /= Void then
+								dependancies_list.extend (a_descriptor)
+							end
 						end
 					end
-					i := i + 1
+					i := i +1
 				end
 			end
 		ensure
@@ -246,8 +250,8 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
-	dependancies_list: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+	dependancies_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR] 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ASSEMBLYDESCRIPTOR]
 		indexing
 			description: "Dependancies list"
 			external_name: "DependanciesList"
@@ -295,25 +299,25 @@ feature {NONE} -- Implementation
 		local
 			row_count: INTEGER
 			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 		do
 			from
 				row_count := 0
-				i := 0
+				dependancies_list.start
 			until
-				i = dependancies_list.get_Count
+				dependancies_list.after
 			loop
-				a_descriptor ?= dependancies_list.get_Item (i)
+				a_descriptor ?= dependancies_list.item
 				if a_descriptor /= Void then
 					build_row (a_descriptor, row_count)
 					row_count := row_count + 1
 				end
-				i := i + 1
+				dependancies_list.forth
 			end
 			fill_data_grid
 		end
 
-	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER) is 
+	build_row (a_descriptor: ASSEMBLY_DESCRIPTOR; row_count: INTEGER) is 
 		indexing
 			description: "Build a row at index `row_count' and fill row with information from `a_descriptor'."
 			external_name: "BuildRow"
@@ -321,17 +325,17 @@ feature {NONE} -- Implementation
 			non_void_assembly_descriptor: a_descriptor /= Void
 			positive_row_count: row_count >= 0
 		local
-			row: SYSTEM_DATA_DATAROW
+			row: DATA_DATA_ROW
 		do
 			row := data_table.New_Row
 			data_table.get_rows.Add (row)
 			row.get_Table.get_Default_View.set_Allow_Edit (False)
 			row.get_Table.get_Default_View.set_Allow_New (False)
 			row.get_Table.get_Default_View.set_Allow_Delete (False)
-			row.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.get_name)
-			row.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.get_version)
-			row.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.get_culture)
-			row.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.get_public_key)			
+			row.set_Item_String (dictionary.Assembly_name_column_title.to_cil, a_descriptor.name.to_cil)
+			row.set_Item_String (dictionary.Assembly_version_column_title.to_cil, a_descriptor.version.to_cil)
+			row.set_Item_String (dictionary.Assembly_culture_column_title.to_cil, a_descriptor.culture.to_cil)
+			row.set_Item_String (dictionary.Assembly_public_key_column_title.to_cil, a_descriptor.public_key.to_cil)			
 		end
 
 	build_empty_row (row_count: INTEGER) is 
@@ -341,17 +345,17 @@ feature {NONE} -- Implementation
 		require
 			positive_row_count: row_count >= 0
 		local
-			row: SYSTEM_DATA_DATAROW
+			row: DATA_DATA_ROW
 		do
 			row := data_table.New_Row
 			data_table.get_rows.Add (row)
 			row.get_Table.get_Default_View.set_Allow_Edit (False)
 			row.get_Table.get_Default_View.set_Allow_New (False)
 			row.get_Table.get_Default_View.set_Allow_Delete (False)
-			row.set_Item_String (dictionary.Assembly_name_column_title, dictionary.Empty_string)
-			row.set_Item_String (dictionary.Assembly_version_column_title, dictionary.Empty_string)
-			row.set_Item_String (dictionary.Assembly_culture_column_title, dictionary.Empty_string)
-			row.set_Item_String (dictionary.Assembly_public_key_column_title, dictionary.Empty_string)			
+			row.set_Item_String (dictionary.Assembly_name_column_title.to_cil, dictionary.Empty_string.to_cil)
+			row.set_Item_String (dictionary.Assembly_version_column_title.to_cil, dictionary.Empty_string.to_cil)
+			row.set_Item_String (dictionary.Assembly_culture_column_title.to_cil, dictionary.Empty_string.to_cil)
+			row.set_Item_String (dictionary.Assembly_public_key_column_title.to_cil, dictionary.Empty_string.to_cil)			
 		end
 		
 	fill_data_grid is
@@ -363,7 +367,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			difference: INTEGER
-			rows: SYSTEM_DATA_DATAROWCOLLECTION
+			rows: DATA_DATA_ROW_COLLECTION
 			retried: BOOLEAN
 		do
 			if not retried then

@@ -6,7 +6,7 @@ class
 	ABOUT_DIALOG
 
 inherit
-	SYSTEM_WINDOWS_FORMS_FORM
+	ASSMEBLY_MANAGER_SUPPORT [STRING]
 
 create
 	make
@@ -18,11 +18,11 @@ feature {NONE} -- Initialization
 			description: "Initialize GUI."
 			external_name: "Make"
 		local
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			returned_value: WINFORMS_DIALOG_RESULT
 		do
-			make_form
+			create main_win.make_winforms_form
 			initialize_gui
-			returned_value := show_dialog
+			returned_value := main_win.show_dialog
 		end
 
 feature -- Access
@@ -44,41 +44,41 @@ feature -- Basic Operations
 			description: "Initialize GUI."
 			external_name: "InitializeGui"
 		local
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
-			an_image: SYSTEM_DRAWING_IMAGE
-			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
-			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			a_size: DRAWING_SIZE
+			a_point: DRAWING_POINT
+			an_image: DRAWING_IMAGE
+			a_panel: WINFORMS_PANEL
+			border_style: WINFORMS_FORM_BORDER_STYLE
 			retried: BOOLEAN
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
-			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			returned_value: WINFORMS_DIALOG_RESULT
+			message_box_buttons: WINFORMS_MESSAGE_BOX_BUTTONS
+			message_box_icon: WINFORMS_MESSAGE_BOX_ICON 
+			windows_message_box: WINFORMS_MESSAGE_BOX
 		do
-			set_enabled (True)
-			set_text (dictionary.Title)
+			main_win.set_enabled (True)
+			main_win.set_text (dictionary.Title.to_cil)
 			a_size.set_width (dictionary.Window_width)
 			a_size.set_height (dictionary.Window_height)
-			set_size (a_size)
-			set_border_style (border_style.fixed_single)
+			main_win.set_size (a_size)
+			main_win.set_form_border_style (border_style.fixed_single)
 			if not retried then
-				set_icon (dictionary.Assembly_manager_icon)
+				main_win.set_icon (dictionary.Assembly_manager_icon)
 			else
-				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 			end
-			set_back_color (dictionary.White_color)
-			set_maximize_box (False)
+			main_win.set_back_color (dictionary.White_color)
+			main_win.set_maximize_box (False)
 			
 				-- Image
-			an_image := image_factory.from_file (dictionary.Image_filename)
-			create a_panel.make_panel
+			an_image := image_factory.from_file (dictionary.Image_filename.to_cil)
+			create a_panel.make_winforms_panel
 			a_panel.set_height (an_image.get_height)
 			a_panel.set_width (an_image.get_width)
 			a_panel.set_background_image (an_image)			
-			get_controls.extend (a_panel)	
+			main_win.get_controls.add (a_panel)	
 			
 				-- Text
-			create main_panel.make_panel
+			create main_panel.make_winforms_panel
 			main_panel.set_back_color (dictionary.White_color)
 			a_size.set_width (dictionary.Window_width - a_panel.get_width)
 			a_size.set_height (dictionary.Window_width)
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			a_point.set_x (a_panel.get_width)
 			a_point.set_y (0)
 			main_panel.set_location (a_point)
-			get_controls.extend (main_panel)
+			main_win.get_controls.add (main_panel)
 			
 			display_text
 		rescue
@@ -96,18 +96,20 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	image_factory: SYSTEM_DRAWING_IMAGE 
+	image_factory: DRAWING_IMAGE 
 		indexing
 			description: "Static needed to create images"
 			external_name: "ImageFactory"
 		end
 	
-	main_panel: SYSTEM_WINDOWS_FORMS_PANEL
+	main_panel: WINFORMS_PANEL
 		indexing
 			description: "Panel where text is displayed"
 			external_name: "MainPanel"
 		end
-		
+
+	main_win: WINFORMS_FORM
+	
 	display_text is
 		indexing
 			description: "Display text."
@@ -130,30 +132,30 @@ feature {NONE} -- Implementation
 			external_name: "CreatePanelLabel"
 		require
 			non_void_text: a_text /= Void
-			not_empty_text: a_text.get_length > 0
+			not_empty_text: a_text.count > 0
 			valid_y_position: y_position >= 0 and y_position <= dictionary.Window_height
 		local
-			a_label: SYSTEM_WINDOWS_FORMS_LABEL
-			a_point: SYSTEM_DRAWING_POINT
-			a_font: SYSTEM_DRAWING_FONT
-			alignment: SYSTEM_DRAWING_CONTENTALIGNMENT
-			style: SYSTEM_DRAWING_FONTSTYLE
+			a_label: WINFORMS_LABEL
+			a_point: DRAWING_POINT
+			a_font: DRAWING_FONT
+			alignment: DRAWING_CONTENT_ALIGNMENT
+			style: DRAWING_FONT_STYLE
 		do
-			create a_label.make_label
+			create a_label.make_winforms_label
 			a_label.set_back_color (dictionary.White_color)
-			a_label.set_text (a_text)
+			a_label.set_text (a_text.to_cil)
 			a_point.set_x (dictionary.Margin)
 			a_point.set_y (y_position)
 			a_label.set_location (a_point)
 			a_label.set_auto_size (True)
 			a_label.set_text_align (alignment.Middle_center)
 			if is_bold_style then
-				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)
+				create a_font.make_drawing_font_10 (dictionary.Font_family_name.to_cil, dictionary.Font_size, style.Bold)
 			else
-				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
+				create a_font.make_drawing_font_10 (dictionary.Font_family_name.to_cil, dictionary.Font_size, style.Regular)
 			end
 			a_label.set_font (a_font)
-			main_panel.get_controls.extend (a_label)
+			main_panel.get_controls.add (a_label)
 		end
 		
 end -- class ABOUT_DIALOG

@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			description: "Initialize `features_modifications'."
 			external_name: "Make"
 		do
-			create features_modifications.make
+			create features_modifications.make (0)
 		ensure
 			non_void_features_modifications: features_modifications /= Void
 		end
@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			non_void_name: an_old_name /= Void
 		do
 			set_old_name (an_old_name)
-			create features_modifications.make
+			create features_modifications.make (0)
 		ensure
-			old_name_set: old_name.equals_string (an_old_name)
+			old_name_set: old_name.is_equal (an_old_name)
 			non_void_features_modifications: features_modifications /= Void
 		end
 		
@@ -53,7 +53,7 @@ feature -- Access
 			external_name: "NewName"
 		end
 		
-	features_modifications: SYSTEM_COLLECTIONS_HASHTABLE
+	features_modifications: HASH_TABLE [FEATURE_MODIFICATIONS, EIFFEL_FEATURE]
 			-- | Key: Instance of `EIFFEL_FEATURE'
 			-- | Value: Instance of `FEATURE_MODIFICATIONS'
 		indexing
@@ -72,7 +72,7 @@ feature -- Status Setting
 		do
 			old_name := an_old_name
 		ensure
-			old_name_set: old_name.equals_string (an_old_name)
+			old_name_set: old_name.is_equal (an_old_name)
 		end
 	
 	set_new_name (a_name: like new_name) is
@@ -84,12 +84,12 @@ feature -- Status Setting
 		do
 			new_name := a_name
 		ensure
-			new_name_set: new_name.equals_string (a_name)
+			new_name_set: new_name.is_equal (a_name)
 		end
 
 feature -- Basic Operations
 
-	add_feature_modification (a_feature: ISE_REFLECTION_EIFFELFEATURE; feature_modification: FEATURE_MODIFICATIONS) is
+	add_feature_modification (a_feature: EIFFEL_FEATURE; feature_modification: FEATURE_MODIFICATIONS) is
 		indexing
 			description: "[
 						Add `feature_modification' to `features_modifications' with key `a_feature'.
@@ -100,14 +100,14 @@ feature -- Basic Operations
 			non_void_feature: a_feature /= Void
 			non_void_feature_modification: feature_modification /= Void
 		do
-			if not features_modifications.contains_key (a_feature) then
-				features_modifications.extend (a_feature, feature_modification)
+			if not features_modifications.has (a_feature) then
+				features_modifications.extend (feature_modification, a_feature)
 			else
 				features_modifications.remove (a_feature)
-				features_modifications.extend (a_feature, feature_modification)
+				features_modifications.extend (feature_modification, a_feature)
 			end
 		ensure
-			feature_modification_added: features_modifications.contains_value (feature_modification)
+			feature_modification_added: features_modifications.has_item (feature_modification)
 		end
 		
 invariant

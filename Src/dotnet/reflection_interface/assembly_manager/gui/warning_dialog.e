@@ -1,4 +1,4 @@
-indexing
+	indexing
 	description: "Dialog showing dependancies of a .NET assembly"
 	external_name: "ISE.AssemblyManager.WarningDialog"
 
@@ -28,19 +28,19 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.get_name.get_length > 0
+			non_void_assembly_name: an_assembly_descriptor.name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.name.count > 0
 			non_void_dependancies: assembly_dependancies /= Void
 			not_empty_dependancies: assembly_dependancies.count > 0
 			non_void_question: a_question /= Void
-			not_empty_question: a_question.get_length > 0
+			not_empty_question: a_question.count > 0
 			non_void_caption_text: a_caption_text /= Void
-			not_empty_caption_text: a_caption_text.get_length > 0
+			not_empty_caption_text: a_caption_text.count > 0
 			non_void_call_back: a_call_back /= Void
 		local
-			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			return_value: WINFORMS_DIALOG_RESULT
 		do
-			make_form
+			create main_win.make_winforms_form
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			question_label_text := a_question
@@ -48,12 +48,12 @@ feature {NONE} -- Initialization
 			call_back := a_call_back
 			build_dependancies_list
 			initialize_gui
-			return_value := show_dialog
+			return_value := main_win.show_dialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
-			question_set: question_label_text.equals_string (a_question)
-			caption_text_set: caption_text.equals_string (a_caption_text)
+			question_set: question_label_text.is_equal (a_question)
+			caption_text_set: caption_text.is_equal (a_caption_text)
 			call_back_set: call_back = a_call_back
 			non_void_dependancies_list: dependancies_list /= Void
 		end
@@ -74,13 +74,13 @@ feature -- Access
 			external_name: "QuestionLabelText"
 		end
 		
-	call_back: SYSTEM_EVENTHANDLER
+	call_back: EVENT_HANDLER
 		indexing
 			description: "Call back agent"
 			external_name: "CallBack"
 		end
 
-	question_label: SYSTEM_WINDOWS_FORMS_LABEL
+	question_label: WINFORMS_LABEL
 		indexing
 			description: "Question label"
 			external_name: "QuestionLabel"
@@ -92,13 +92,13 @@ feature -- Access
 			external_name: "CaptionText"
 		end
 		
-	yes_button: SYSTEM_WINDOWS_FORMS_BUTTON
+	yes_button: WINFORMS_BUTTON
 		indexing
 			description: "Yes button"
 			external_name: "YesButton"
 		end
 
-	no_button: SYSTEM_WINDOWS_FORMS_BUTTON
+	no_button: WINFORMS_BUTTON
 		indexing
 			description: "No button"
 			external_name: "NoButton"
@@ -111,41 +111,41 @@ feature -- Basic Operations
 			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
-			label_font: SYSTEM_DRAWING_FONT
-			on_yes_event_handler_delegate: SYSTEM_EVENTHANDLER
-			on_no_event_handler_delegate: SYSTEM_EVENTHANDLER
-			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
-			style: SYSTEM_DRAWING_FONTSTYLE
+			a_size: DRAWING_SIZE
+			a_point: DRAWING_POINT
+			label_font: DRAWING_FONT
+			on_yes_event_handler_delegate: EVENT_HANDLER
+			on_no_event_handler_delegate: EVENT_HANDLER
+			border_style: WINFORMS_FORM_BORDER_STYLE
+			style: DRAWING_FONT_STYLE
 			retried: BOOLEAN
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
-			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
+			returned_value: WINFORMS_DIALOG_RESULT
+			message_box_buttons: WINFORMS_MESSAGE_BOX_BUTTONS
+			message_box_icon: WINFORMS_MESSAGE_BOX_ICON
+			windows_message_box: WINFORMS_MESSAGE_BOX	
 		do
-			set_Enabled (True)
-			set_text (dictionary.Title)
-			set_border_style (border_style.fixed_single)
+			main_win.set_Enabled (True)
+			main_win.set_text (dictionary.Title.to_cil)
+			main_win.set_form_border_style (border_style.fixed_single)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
-			set_size (a_size)	
+			main_win.set_size (a_size)	
 			if not retried then
-				set_icon (dictionary.Assembly_manager_icon)
+				main_win.set_icon (dictionary.Assembly_manager_icon)
 			else
-				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 			end
-			set_maximize_box (False)
+			main_win.set_maximize_box (False)
 
 				-- Assembly name
-			create assembly_label.make_label
-			assembly_label.set_text (assembly_descriptor.get_name)
+			create assembly_label.make_winforms_label
+			assembly_label.set_text (assembly_descriptor.name.to_cil)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)  
+			create label_font.make_drawing_font_10 (dictionary.Font_family_name.to_cil, dictionary.Font_size, style.Bold)  
 			assembly_label.set_font (label_font)
 			
 			create_assembly_labels
@@ -155,13 +155,13 @@ feature -- Basic Operations
 			a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
 			a_size.set_height (dictionary.Window_height - 7 * Dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
 			data_grid.set_Size (a_size)
-			data_grid.set_caption_text (caption_text)
+			data_grid.set_caption_text (caption_text.to_cil)
 			display_dependancies
-			get_controls.extend (data_grid)
+			main_win.get_controls.add (data_grid)
 
 				-- Question to the user
-			create question_label.make_label
-			question_label.set_text (Question_label_text)
+			create question_label.make_winforms_label
+			question_label.set_text (Question_label_text.to_cil)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)
 			question_label.set_location (a_point)
@@ -169,33 +169,33 @@ feature -- Basic Operations
 			question_label.set_font (label_font)
 			
 				-- Yes button
-			create yes_button.make_button
+			create yes_button.make_winforms_button
 			a_point.set_X ((dictionary.Window_width // 2) - dictionary.Button_width - (dictionary.Margin //2))
 			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			yes_button.set_location (a_point)
 			yes_button.set_width (dictionary.Button_width)
 			yes_button.set_height (dictionary.Button_height)
-			yes_button.set_text (dictionary.Yes_button_label)
-			create on_yes_event_handler_delegate.make_eventhandler (Current, $on_yes_event_handler)
+			yes_button.set_text (dictionary.Yes_button_label.to_cil)
+			create on_yes_event_handler_delegate.make_event_handler (Current, $on_yes_event_handler)
 			yes_button.add_Click (on_yes_event_handler_delegate)
 
 				-- No button
-			create no_button.make_button
+			create no_button.make_winforms_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
 			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			no_button.set_location (a_point)
 			no_button.set_width (dictionary.Button_width)
 			no_button.set_height (dictionary.Button_height)
-			no_button.set_text (dictionary.No_button_label)
-			create on_no_event_handler_delegate.make_eventhandler (Current, $on_no_event_handler)
+			no_button.set_text (dictionary.No_button_label.to_cil)
+			create on_no_event_handler_delegate.make_event_handler (Current, $on_no_event_handler)
 			no_button.add_Click (on_no_event_handler_delegate)
 			
 				-- Addition of get_controls
-			get_controls.extend (assembly_label)
-			get_controls.extend (dependancies_label)
-			get_controls.extend (question_label)
-			get_controls.extend (yes_button)
-			get_controls.extend (no_button)
+			main_win.get_controls.add (assembly_label)
+			main_win.get_controls.add (dependancies_label)
+			main_win.get_controls.add (question_label)
+			main_win.get_controls.add (yes_button)
+			main_win.get_controls.add (no_button)
 		rescue
 			retried := True
 			retry
@@ -203,7 +203,7 @@ feature -- Basic Operations
 
 feature -- Event handling
 
-	on_yes_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	on_yes_event_handler (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing	
 			description: "Process `yes_button' activation."
 			external_name: "OnYesEventHandler"
@@ -211,11 +211,11 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			an_array: ARRAY [ANY]
-			object_invoked: ANY
+			an_array: NATIVE_ARRAY [SYSTEM_OBJECT]
+			object_invoked: SYSTEM_OBJECT
 			retried: BOOLEAN
 		do
-			close
+			main_win.close
 			if not retried then
 				create an_array.make (0)
 				object_invoked := call_back.dynamic_invoke (an_array)
@@ -225,7 +225,7 @@ feature -- Event handling
 			retry
 		end
 
-	on_no_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	on_no_event_handler (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Process `no_button' activation."
 			external_name: "OnNoEventHandler"
@@ -233,7 +233,7 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		do
-			close
+			main_win.close
 		end
 			
 end -- class WARNING_DIALOG

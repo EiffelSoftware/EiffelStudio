@@ -497,7 +497,8 @@ feature {NONE} -- Cluster display and saving
 					clusters.remove (cl_name)
 					clusters.force (cl, cluster_name.text)
 				end
-				cl.set_cluster_name (new_id_sd (cluster_name.text, False))
+					-- If previously there were some double quotes, we add them again.
+				cl.set_cluster_name (new_id_sd (cluster_name.text, cl.cluster_name.is_string))
 			else
 				cl.set_cluster_name (new_id_sd ("Invalid_name", False))
 			end

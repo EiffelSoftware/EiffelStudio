@@ -17,7 +17,8 @@ inherit
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
 			child_minwidth_changed,
-			child_minheight_changed
+			child_minheight_changed,
+			update_display
 		end
 		
 creation
@@ -38,7 +39,14 @@ feature {NONE} -- Initialization
 			make_with_coordinates (par_imp, "Fixed", 0, 0, 0, 0)
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {NONE} -- Implementation
+
+	update_display is
+			-- Do nothing for a non manager container.
+		do
+		end
+
+feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because

@@ -7,7 +7,6 @@ indexing
 class SPECIAL_CLASS_TYPE 
 
 inherit
-
 	CLASS_TYPE
 		redefine
 			generate_feature
@@ -320,5 +319,97 @@ feature -- C code generation
 			buffer.putstring ("%N}%N%N");
 
 		end;
+
+feature -- IL code generation
+
+	prepare_generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is
+			-- Generate call to `name_id' from SPECIAL so that it is
+			-- very efficient.
+		require
+			valid_name_id:
+				name_id = feature {PREDEFINED_NAMES}.Item_name_id or
+				name_id = feature {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = feature {PREDEFINED_NAMES}.Put_name_id 
+			special_type_not_void: special_type /= Void
+			has_generics: type.true_generics /= Void
+			good_generic_count: type.true_generics.count = 1
+		local
+			l_native_array: ATTRIBUTE_I
+			l_native_array_type: CL_TYPE_I
+			l_class_type: CLASS_TYPE
+			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
+		do
+				-- Get `native_array' field info.
+			l_native_array ?= associated_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Native_array_name_id)
+			check
+				l_native_array_not_void: l_native_array /= Void
+			end
+			
+				-- Load `native_array' on stack.
+			Il_generator.generate_attribute (special_type, l_native_array.feature_id)
+		end
+
+	generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is
+			-- Generate call to `name_id' from SPECIAL so that it is
+			-- very efficient.
+		require
+			valid_name_id:
+				name_id = feature {PREDEFINED_NAMES}.Item_name_id or
+				name_id = feature {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = feature {PREDEFINED_NAMES}.Put_name_id 
+			special_type_not_void: special_type /= Void
+			has_generics: type.true_generics /= Void
+			good_generic_count: type.true_generics.count = 1
+		local
+			l_native_array: ATTRIBUTE_I
+			l_native_array_type: CL_TYPE_I
+			l_element_type: TYPE_I
+			l_index, l_element: INTEGER
+			l_class_type: CLASS_TYPE
+			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
+		do
+			if name_id = feature {PREDEFINED_NAMES}.Put_name_id then
+					-- Because `put' from SPECIAL and `put' from NATIVE_ARRAY
+					-- have their argument inverted, we need to swap the two
+					-- elements on top of the stack.
+				l_element_type := first_generic
+				
+					-- Variable to store element to be stored in SPECIAL
+				Byte_context.add_local (l_element_type)
+				l_element := Byte_context.local_list.count
+				il_generator.put_dummy_local_info (l_element_type, l_element)
+				
+					-- Variable to store index where element will be stored in SPECIAL.
+				Byte_context.add_local (Long_c_type)
+				l_index := Byte_context.local_list.count
+				il_generator.put_dummy_local_info (Long_c_type, l_index)
+				
+				Il_generator.generate_local_assignment (l_index)
+				Il_generator.generate_local_assignment (l_element)
+				Il_generator.generate_local (l_index)
+				Il_generator.generate_local (l_element)
+			end
+				-- Get `native_array' field info.
+			l_native_array ?= associated_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Native_array_name_id)
+			check
+				l_native_array_not_void: l_native_array /= Void
+			end
+			
+				-- Let's evaluate type of NATIVE_ARRAY			
+			l_class_type := Byte_context.class_type
+			Byte_context.set_class_type (Current)
+			l_native_array_type ?= Byte_context.real_type (l_native_array.type.actual_type.type_i)
+			check
+				l_native_array_type_not_void: l_native_array_type /= Void
+			end
+			Byte_context.set_class_type (l_class_type)
+			
+				-- Call feature from NATIVE_ARRAY
+			l_native_array_class_type ?= l_native_array_type.associated_class_type
+			check
+				l_native_array_class_not_void: l_native_array_type /= Void
+			end
+			l_native_array_class_type.generate_il (name_id, l_native_array_type)
+		end
 
 end

@@ -64,13 +64,13 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP override(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP set_override(  /* [in] */ VARIANT_BOOL return_value ) = 0;
 

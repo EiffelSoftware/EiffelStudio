@@ -59,6 +59,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Class Tool Tip.
+	-----------------------------------------------------------*/
+	STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Is class in system?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_in_system(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	List of names of class features.
 	-----------------------------------------------------------*/
 	STDMETHODIMP feature_names(  /* [out, retval] */ SAFEARRAY *  * names );

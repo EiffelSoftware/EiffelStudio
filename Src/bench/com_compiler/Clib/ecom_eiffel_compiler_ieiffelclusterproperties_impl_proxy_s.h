@@ -85,13 +85,13 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_override(  );
 
 
 	/*-----------------------------------------------------------
-	Should this cluster classes take priority over other classes with same name.
+	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
 	void ccom_set_override(  /* [in] */ EIF_BOOLEAN return_value );
 

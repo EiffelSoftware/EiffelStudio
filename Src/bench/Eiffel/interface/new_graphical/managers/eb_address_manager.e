@@ -201,7 +201,6 @@ feature -- Element change
 			new_formatters_non_void: new_formatters /= Void
 			for_development_window: not mode
 		local
-			tb: EV_TOOL_BAR
 			but: EV_TOOL_BAR_BUTTON
 			l_cnt: INTEGER
 		do

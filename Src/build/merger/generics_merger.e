@@ -2,13 +2,13 @@ class GENERICS_MERGER
 
 feature
 
-	merge2 (g1, g2: EIFFEL_LIST [FORMAL_DEC_AS]) is
-			-- Merge generics `g1' and `g2'.
-			-- `g1' will become `g2'.
+	merge2 (user, new_tmp: EIFFEL_LIST [FORMAL_DEC_AS]) is
+			-- Merge generics `user' and `new_tmp'.
+			-- `user' will become `new_tmp'.
 		do
-			if g2 /= Void then
-				!! merge_result.make (g2.count)
-				merge_result.merge_after_position (0, g2)
+			if new_tmp /= Void then
+				!! merge_result.make (new_tmp.count)
+				merge_result.merge_after_position (0, new_tmp)
 			else
 				merge_result := Void
 			end

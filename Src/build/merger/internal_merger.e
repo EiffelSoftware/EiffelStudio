@@ -2,39 +2,45 @@ class INTERNAL_MERGER
 
 feature
 	
-	merge3 (i1, i2, i3: INTERNAL_AS) is
+	merge3 (old_tmp, user, new_tmp: INTERNAL_AS) is
+			-- Merge `old_tmp', `user' and `new_tmp'.
 		require
-			i3_not_void: i3 /= Void
+			new_tmp_not_void: new_tmp /= Void
 		local
-			i1_compound, i2_compound, i3_compound: EIFFEL_LIST [INSTRUCTION_AS]
+			old_tmp_compound, user_compound, new_tmp_compound: EIFFEL_LIST [INSTRUCTION_AS]
 			do_as: DO_AS;
 			compound_merger: COMPOUND_MERGER
 		do	
-			if i2 /= Void then
-				if i1 /= Void then
-					i1_compound := i1.compound
+			if user /= Void then
+				if old_tmp /= Void then
+					old_tmp_compound := old_tmp.compound
 				end
 
 				!! compound_merger;
-				compound_merger.merge3 (i1_compound, i2.compound, i3.compound)
+				compound_merger.merge3 (old_tmp_compound, user.compound, new_tmp.compound)
 			
-				do_as ?= i3
+				do_as ?= new_tmp
 				if do_as /= Void then	
+					-- If `new_tmp' is a `do'-function,
+					-- result should be the same.
 					!DO_AS! merge_result
 				else
+					-- `new_tmp' is a `once_function',
+					-- so the result will be the same.
 					!ONCE_AS! merge_result
 				end
 
 				merge_result.set_compound (compound_merger.merge_result)
 			else
-				do_as ?= i3
+				-- Copying new template
+				do_as ?= new_tmp
 				if do_as /= Void then
 					!DO_AS! merge_result
 				else
 					!ONCE_AS! merge_result
 				end
 
-				merge_result.set_compound (i3.compound)	
+				merge_result.set_compound (new_tmp.compound)	
 			end
 		end;
 

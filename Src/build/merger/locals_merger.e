@@ -2,36 +2,36 @@ class LOCALS_MERGER
 
 feature
 
-	merge3 (old_temp_l, user_l, new_temp_l: EIFFEL_LIST [TYPE_DEC_AS]) is
-			-- Merge locals `user_l' and `new_temp_l'.
-			-- Locals from `user_l' appearing
-			-- in the list of locals `new_temp_l' 
+	merge3 (old_tmp, user, new_tmp: EIFFEL_LIST [TYPE_DEC_AS]) is
+			-- Merge locals `user' and `new_tmp'.
+			-- Locals from `user' appearing
+			-- in the list of locals `new_tmp' 
 			-- are overwritten.
 		local
 			comp_locals, new_locals, temp_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			u_id_list, n_id_list, temp_id_list: EIFFEL_LIST [ID_AS]
 			current_id_list: LINKED_LIST [ID_AS]
-			locals: LINKED_LIST [TYPE_DEC_AS]
+			--locals: LINKED_LIST [TYPE_DEC_AS]
 			local_found: BOOLEAN
 			new_type_dec: TYPE_DEC_AS
 			current_type: TYPE
 		do
-			if user_l /= Void then
-				if new_temp_l /= Void or else old_temp_l /= Void then
-					if old_temp_l = Void then
-						comp_locals := new_temp_l
+			if user /= Void then
+				if new_tmp /= Void or else old_tmp /= Void then
+					if old_tmp = Void then
+						comp_locals := new_tmp
 							-- compare it with the new template
 					else
-						comp_locals := old_temp_l
+						comp_locals := old_tmp
 							-- compare it with the old template
 					end;
 					from
-						user_l.start
+						user.start
 					until
-						user_l.after
+						user.after
 					loop
-						u_id_list := user_l.item.id_list
-						current_type := user_l.item.type
+						u_id_list := user.item.id_list
+						current_type := user.item.type
 						!! current_id_list.make
 						current_id_list.start
 						from
@@ -65,7 +65,7 @@ feature
 							u_id_list.forth
 						end;
 
-						-- Keeping locals from `user_l', not appearing in `comp_locals'.
+						-- Keeping locals from `user', not appearing in `comp_locals'.
 
 						!! temp_id_list.make (current_id_list.count)
 						from
@@ -97,28 +97,28 @@ feature
 						end
 
 						new_locals := temp_locals
-						user_l.forth
+						user.forth
 					end
 
 					if new_locals = Void then
 							-- No new locals were found.
-							-- Use the locals form the new template
-						merge_result := new_temp_l
-					elseif new_temp_l = Void then	
+							-- Use the locals from the new template
+						merge_result := new_tmp
+					elseif new_tmp = Void then	
 							-- Return the new_locals
 						merge_result := new_locals;
 					else
 							-- Adding locals to new_template
 						!! merge_result.make (new_locals.count + 
-										new_temp_l.count)
-                       	merge_result.merge_after_position (0, new_temp_l)
-                       	merge_result.merge_after_position (new_temp_l.count, new_locals)
+										new_tmp.count)
+                       	merge_result.merge_after_position (0, new_tmp)
+                       	merge_result.merge_after_position (new_tmp.count, new_locals)
 					end
 				else
-					merge_result := user_l
+					merge_result := user
 				end
 			else
-				merge_result := new_temp_l
+				merge_result := new_tmp
 			end
 		end;
 

@@ -56,7 +56,7 @@ feature {NONE} -- Execution
 				compile;
 				if Eiffel_project.successful then
 					print_tail;
-					prompt_finish_freezing (False)
+					process_finish_freezing (False)
 				end
 			else
 				io.error.putstring ("The project %"");

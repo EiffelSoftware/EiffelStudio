@@ -166,8 +166,6 @@ feature -- Bridge to Debugger
 		require
 			exception_occured: exception_occured
 		local
-			l_class_details: STRING
-			l_module_details: STRING
 			retried: BOOLEAN
 			l_icd_exception: ICOR_DEBUG_VALUE
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO

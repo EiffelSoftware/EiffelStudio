@@ -10,7 +10,7 @@ indexing
 class EXT_FEATURE_AS
 		
 inherit
-
+	EXT_AST_EIFFEL
 	FEATURE_AS
 		redefine
 			simple_format

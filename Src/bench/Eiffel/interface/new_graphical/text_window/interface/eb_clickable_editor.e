@@ -488,16 +488,8 @@ feature {NONE}-- Process Vision2 Events
 				if bkstn = Void then
 					if ctrled_key then
 						stone := text_displayed.stone_at (cur)
-						if stone /= Void then
-							cv_errst ?= stone
-							if cv_errst = Void then
-								Window_manager.create_window
-								if Window_manager.last_created_window /= Void then
-									Window_manager.last_created_window.set_stone (stone)
-								end
-							else
-								Window_manager.last_focused_development_window.set_stone (cv_errst)
-							end
+						if stone /= Void and then stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (stone)
 						end
 					end
 				else

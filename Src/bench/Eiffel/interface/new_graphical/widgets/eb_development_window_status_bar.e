@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			mg: EB_PROJECT_MANAGER
 		do
 				-- Build all widgets.
-			copy_icons
+			--copy_icons
 			build_interface
 				-- Update the status.
 			mg := eiffel_project.manager
@@ -98,15 +98,17 @@ feature {NONE} -- Initialization
 		local
 			vp: EV_VIEWPORT
 			f: EV_FRAME
+			cel: EV_CELL
 		do
 				-- Create all widgets.
 			create widget
 			create label
 			create project_label
 			create coordinate_label
-			create compilation_icon
-			create debugger_icon
-			create edition_icon
+			create compilation_icon.make_with_size (16, 16)
+			create debugger_cell
+			create debugger_icon.make_with_size (16, 16)
+			create edition_icon.make_with_size (16, 16)
 				
 				-- Set widget properties.
 			project_label.align_text_center
@@ -117,6 +119,7 @@ feature {NONE} -- Initialization
 			coordinate_label.align_text_center
 			project_label.set_tooltip (Interface_names.e_Project_name)
 			coordinate_label.set_tooltip (Interface_names.e_Cursor_position)
+			debugger_icon.clear
 			
 				-- Organize widgets.
 			create vp
@@ -138,22 +141,30 @@ feature {NONE} -- Initialization
 			widget.disable_item_expand (f)
 			create f
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			f.extend (edition_icon)
+			create cel
+			cel.extend (edition_icon)
 				-- 16: Size of the icons.
-			edition_icon.set_minimum_width (16)
-			edition_icon.set_minimum_height (16)
+			cel.set_minimum_width (16)
+			cel.set_minimum_height (16)
+			f.extend (cel)
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			f.extend (compilation_icon)
-			compilation_icon.set_minimum_width (16)
+			create cel
+			cel.extend (compilation_icon)
+				-- We cannot set the minimum width on the frame directly because
+				-- the width of the frame includes its border.
+			cel.set_minimum_width (16)
+			f.extend (cel)
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			f.extend (debugger_icon)
-			debugger_icon.set_minimum_width (16)
+			create debugger_cell
+			debugger_cell.extend (debugger_icon)
+			debugger_cell.set_minimum_width (16)
+			f.extend (debugger_cell)
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			
@@ -237,20 +248,27 @@ feature {NONE} -- Implementation: widgets
 	coordinate_label: EV_LABEL
 			-- Label that gives the current position in the editor.
 	
-	compilation_icon: EV_CELL
-			-- Cell that contains the icon giving the current compilation status.
+	compilation_icon: EV_PIXMAP
+			-- Pixmap that represents the current compilation status.
 
-	debugger_icon: EV_CELL
-			-- Cell that contains the icon giving the current debugger status.
+	debugger_icon: EV_PIXMAP
+			-- Pixmap that represents the current debugger status.
 
-	edition_icon: EV_CELL
+	edition_icon: EV_PIXMAP
 			-- Cell that contains the icon giving the current edition status of the project.
+
+	debugger_cell: EV_CELL
+			-- Cell that contains the debugger_icon.
 
 feature {NONE} -- Implementation: event handling
 
 	on_application_launched is
 			-- The application has just been launched by the debugger.
 		do
+			if debugger_cell.is_empty then
+				debugger_cell.extend (debugger_icon)
+			end
+			debugger_icon.set_tooltip (Interface_names.E_running)
 			update_running_icon
 			running_timer.set_interval (300)
 		end
@@ -261,16 +279,21 @@ feature {NONE} -- Implementation: event handling
 			p: EV_PIXMAP
 		do
 			running_timer.set_interval (0)
-			debugger_icon.wipe_out
-			p := icon_application_paused
-			debugger_icon.extend (p)
+			p := Pixmaps.icon_application_paused
+			debugger_icon.set_background_color (debugger_cell.background_color)
+			debugger_icon.clear
+			debugger_icon.draw_pixmap (0, 0, p)
+			debugger_icon.set_tooltip (Interface_names.E_paused)
+			if debugger_cell.is_empty then
+				debugger_cell.extend (debugger_icon)
+			end
 		end
 
 	on_application_killed is
 			-- The application has just terminated (dead).
 		do
 			running_timer.set_interval (0)
-			debugger_icon.wipe_out
+			debugger_cell.prune_all (debugger_icon)
 		end
 
 	on_project_created is
@@ -307,6 +330,12 @@ feature {NONE} -- Implementation: event handling
 			-- The project has been closed.
 		do
 			set_project_name ("No project")
+			compilation_icon.set_background_color (debugger_cell.background_color)
+			compilation_icon.clear
+			compilation_icon.remove_tooltip
+			edition_icon.set_background_color (debugger_cell.background_color)
+			edition_icon.clear
+			edition_icon.remove_tooltip
 				--| This is probably redundant...
 			on_application_killed
 		end
@@ -314,6 +343,7 @@ feature {NONE} -- Implementation: event handling
 	on_project_compiles is
 			-- The project starts to compile.
 		do
+			compilation_icon.set_tooltip (Interface_names.E_compiling)
 			update_compiling_icon
 			compiling_timer.set_interval (300)
 			if Eiffel_project.Manager.has_edited_classes then
@@ -330,12 +360,15 @@ feature {NONE} -- Implementation: event handling
 		do
 			compiling_timer.set_interval (0)
 			if eiffel_project.workbench.successful then
-				p := Icon_compilation_succeeded
+				p := Pixmaps.Icon_compilation_succeeded
+				compilation_icon.set_tooltip (Interface_names.E_compilation_succeeded)
 			else
-				p := Icon_compilation_failed
+				p := Pixmaps.Icon_compilation_failed
+				compilation_icon.set_tooltip (Interface_names.E_compilation_failed)
 			end
-			compilation_icon.wipe_out
-			compilation_icon.extend (p)
+			compilation_icon.set_background_color (debugger_cell.background_color)
+			compilation_icon.clear
+			compilation_icon.draw_pixmap (0, 0, p)
 		end
 
 	on_project_edited is
@@ -343,9 +376,11 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
-			p := icon_edited
-			edition_icon.wipe_out
-			edition_icon.extend (p)
+			p := Pixmaps.icon_edited
+			edition_icon.set_background_color (debugger_cell.background_color)
+			edition_icon.clear
+			edition_icon.draw_pixmap (0, 0, p)
+			edition_icon.set_tooltip (Interface_names.E_edited)
 		end
 
 	on_project_updated is
@@ -353,9 +388,11 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
-			p := icon_not_edited
-			edition_icon.wipe_out
-			edition_icon.extend (p)
+			p := Pixmaps.icon_not_edited
+			edition_icon.set_background_color (debugger_cell.background_color)
+			edition_icon.clear
+			edition_icon.draw_pixmap (0, 0, p)
+			edition_icon.set_tooltip (Interface_names.E_up_to_date)
 		end
 
 	edition_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
@@ -405,17 +442,16 @@ feature {NONE} -- Implementation
 			-- Change the "running" icon to the next pixmap.
 		local
 			p: EV_PIXMAP
+			op: EV_PIXMAP
 		do
 			running_icon_index := (running_icon_index + 1)
 			if running_icon_index > 3 then
 				running_icon_index := 1
 			end
-			p := Icon_running.item (running_icon_index)
-			if not debugger_icon.is_empty then
-				debugger_icon.replace (p)
-			else
-				debugger_icon.extend (p)
-			end
+			p := Pixmaps.Icon_running.item (running_icon_index)
+			debugger_icon.set_background_color (debugger_cell.background_color)
+			debugger_icon.clear
+			debugger_icon.draw_pixmap (0, 0, p)
 		end
 
 	update_compiling_icon is
@@ -427,12 +463,10 @@ feature {NONE} -- Implementation
 			if compiling_icon_index > 4 then
 				compiling_icon_index := 1
 			end
-			p := Icon_compiling.item (compiling_icon_index)
-			if not compilation_icon.is_empty then
-				compilation_icon.replace (p)
-			else
-				compilation_icon.extend (p)
-			end
+			p := Pixmaps.Icon_compiling.item (compiling_icon_index)
+			compilation_icon.set_background_color (debugger_cell.background_color)
+			compilation_icon.clear
+			compilation_icon.draw_pixmap (0, 0, p)
 		end
 
 	running_icon_index: INTEGER
@@ -446,55 +480,5 @@ feature {NONE} -- Implementation
 
 	compiling_timer: EV_TIMEOUT
 			-- Timer that updates the "compiling" icon.
-
-feature {NONE} -- Copy of once icons, to avoid numerous clonings
-
-	copy_icons is
-			-- Make copies of all used icons.
-		require
-			not_already_copied: Icon_compilation_succeeded = Void
-				--| Etc...
-		local
-			i: INTEGER
-		do
-			Icon_compilation_succeeded := clone (pixmaps.Icon_compilation_succeeded)
-			Icon_compilation_succeeded.set_tooltip (interface_names.e_Last_compilation_succeeded)
-			Icon_compilation_failed := clone (pixmaps.Icon_compilation_failed)
-			Icon_compilation_failed.set_tooltip (interface_names.e_Last_compilation_failed)
-			Icon_application_paused := clone (pixmaps.Icon_application_paused)
-			Icon_application_paused.set_tooltip (interface_names.e_Paused)
-			Icon_edited := clone (pixmaps.Icon_edited)
-			Icon_edited.set_tooltip (interface_names.e_Edited)
-			Icon_not_edited := clone (pixmaps.Icon_not_edited)
-			Icon_not_edited.set_tooltip (interface_names.e_Up_to_date)
-			from
-				i := 1
-				create Icon_running.make (1, 3)
-			until
-				i > 3
-			loop
-				Icon_running.put (clone (pixmaps.Icon_running.item (i)), i)
-				Icon_running.item (i).set_tooltip (Interface_names.E_running)
-				i := i + 1
-			end
-			from
-				i := 1
-				create Icon_compiling.make (1, 4)
-			until
-				i > 4
-			loop
-				Icon_compiling.put (clone (pixmaps.Icon_compiling.item (i)), i)
-				Icon_compiling.item (i).set_tooltip (Interface_names.E_compiling)
-				i := i + 1
-			end
-		end
-
-	Icon_compilation_succeeded: EV_PIXMAP
-	Icon_compilation_failed: EV_PIXMAP
-	Icon_application_paused: EV_PIXMAP
-	Icon_edited: EV_PIXMAP
-	Icon_not_edited: EV_PIXMAP
-	Icon_running: ARRAY [EV_PIXMAP]
-	Icon_compiling: ARRAY [EV_PIXMAP]
 
 end -- class EB_DEVELOPMENT_WINDOW_STATUS_BAR

@@ -21,6 +21,9 @@ inherit
 
 	EB_CLICKABLE_TEXT
 		rename
+			freeze as geler,
+			thaw as degeler,
+				-- tant que freeze et thaw sont pas implementees...
 			hole_target as source,
 			count as array_count,
 			widget as source
@@ -157,7 +160,6 @@ feature -- Changing
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		do
-			set_editable (True)
 			set_changed (True)
 			{EV_RICH_TEXT} Precursor (a_text)
 			set_changed (False)
@@ -237,6 +239,7 @@ feature -- Text manipulation
 			-- Erase internal structures of Current.
 			-- this feature is ugly
 		do
+			set_editable (True)
 			disable_clicking
 			struct_position := 1
 			text_position := 1
@@ -245,7 +248,8 @@ feature -- Text manipulation
 			set_changed (True)
 			set_text("")
 			set_position (1)
-			set_changed (false)
+			set_changed (False)
+			set_editable (False)
 		ensure then
 			struct_position = 1
 			clickable_count = 0
@@ -358,6 +362,9 @@ feature -- Focus Access
 --		end
 
 feature -- Update
+
+	geler is do hide end
+	degeler is do show end
 
 --	update_after_transport (but_data: BUTTON_DATA) is
 --			-- Update Current stone and related information

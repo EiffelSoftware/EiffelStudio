@@ -355,12 +355,6 @@ feature {NONE} -- Status report
 	update_map_table: BOOLEAN
 			-- Does `map_table' need to be updated?
 
-invariant
-
-	last_cursor_in_container: 
-		container /= Void and then not container.is_empty 
-								implies container.has (cursor)
-
 end -- class DB_SELECTION
 
 

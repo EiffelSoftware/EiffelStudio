@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			l_marshal: MARSHAL_CACHE_MANAGER
 			l_location: SYSTEM_STRING
 			l_full_name: SYSTEM_STRING
-			
+			l_resolver: ASSEMBLY_RESOLVER
 		do
 			if internal_marshalled_cache_manager = Void then
 				check
@@ -184,11 +184,26 @@ feature {NONE} -- Implementation
 				end
 				l_time_span := l_lifetime_lease.renew (feature {TIME_SPAN}.from_days (356))
 				
+					-- Note: When trying to unwrap a dynamically created object using
+					-- APP_DOMAIN.create_instance_from, OBJECT_HANDLE.unwrap will try
+					-- to relocate the assembly (using a display name instead of the path
+					-- used to create the instance?!? Using COM interop it will look
+					-- in the application base. For EiffelStudio this works fine because
+					-- it resides in the application base. However with Eiffel ENViSioN!
+					-- devenv location is the application base, which is not where the
+					-- consumer is installed to.
+				create l_resolver.make (feature {APP_DOMAIN}.current_domain)
+				l_resolver.add_resolver_path_from_assembly (to_dotnet.get_type.assembly)
+				
 				Result := l_inst_obj_handle
 				l_marshal ?= Result.unwrap
 				check
 					unwrapped: l_marshal /= Void
 				end
+				
+						-- clean up resolver because it's no longer needed
+				l_resolver.dispose
+				l_resolver := Void
 	
 				if eac_path = Void then
 					l_marshal.initialize (clr_version)
@@ -229,4 +244,11 @@ feature {NONE} -- Implementation
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 		
-end -- class MARSHAL_CACHE_MANAGER
+	resolver: ASSEMBLY_RESOLVER is
+			-- an assembly resolver to load consumer when using COM interop.
+
+		once
+			create Result.make (feature {APP_DOMAIN}.current_domain)
+		end
+		
+end -- class COM_CACHE_MANAGER

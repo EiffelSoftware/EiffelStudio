@@ -536,11 +536,11 @@ feature -- Miscellaneous
 			from a_y := 0 until a_y = 100 loop
 				from a_x := 0 until a_x = 300 loop
 					test_subject.set_red (
-						sine ((a_x + 100) / 300 * Pi * 2).abs * a_y / 100)
+						sine ((a_x + 100) / 300 * Pi).abs * a_y / 100)
 					test_subject.set_green (
-						sine (a_x / 300 * Pi * 2).abs * a_y / 100)
+						sine (a_x / 300 * Pi).abs * a_y / 100)
 					test_subject.set_blue (
-						sine ((a_x - 100) / 300 * Pi * 2).abs * a_y / 100)
+						sine ((a_x - 100) / 300 * Pi).abs * a_y / 100)
 					p.set_foreground_color (test_subject)
 					p.draw_point (a_x, a_y)
 					a_x := a_x + 1
@@ -614,6 +614,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/01 18:51:43  brendel
+--| Change in hue.
+--|
 --| Revision 1.15  2000/05/01 18:14:59  brendel
 --| Added test_widget.
 --|

@@ -21,7 +21,7 @@ inherit
 		end;
 	PIXMAP_COMMAND
 		redefine
-			tool, button_three_action
+			tool
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	WARNER_CALLBACKS
@@ -66,10 +66,10 @@ feature -- Properties
 	parent: COMPOSITE
 			-- Parent for the argument window
 
-	button_three_action: ANY is
+	melt_and_run: ANY is
 			-- Third button action
-		do
-			Result := specify_args
+		once
+		 	!! Result 
 		end
 
 feature -- Close window
@@ -104,7 +104,7 @@ feature -- Execution
 				update_command.set_run_after_melt (true);
 				update_command.execute (tool);
 				update_command.set_run_after_melt (false)
-			elseif argument = specify_args then
+			elseif argument = button_three_action then
 				if argument_window.destroyed then
 					argument_window.initialize (popup_parent, Current)
 				end

@@ -25,7 +25,7 @@ inherit
 			popup
 		end;
 
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 

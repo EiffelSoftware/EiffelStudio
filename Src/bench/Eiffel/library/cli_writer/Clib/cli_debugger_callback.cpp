@@ -169,6 +169,15 @@ HRESULT DebuggerManagedCallback::initialize_callback(
     return (S_OK);
 };
 
+
+HRESULT DebuggerManagedCallback::terminate_callback() 
+{
+	EIF_REFERENCE t_ref;
+	t_ref = eif_wean (m_callback_adopted_object);
+// 	DBGTRACE("[UnManagedCallback] terminate_callback");
+    return (S_OK);
+};
+
 HRESULT DebuggerManagedCallback::CreateProcess(ICorDebugProcess *pProcess)
 {
 //	DBGTRACE("[ManagedCallback] CreateProcess");
@@ -485,6 +494,14 @@ HRESULT DebuggerUnmanagedCallback::initialize_callback(
 	m_callback_adopted_object 	= eif_adopt (callback_object);
 	m_ucb_debug_event 			= a_ucb_debug_event;
 // 	DBGTRACE("[UnManagedCallback] initialize_callback");
+    return (S_OK);
+};
+
+HRESULT DebuggerUnmanagedCallback::terminate_callback() 
+{
+	EIF_REFERENCE t_ref;
+	t_ref = eif_wean (m_callback_adopted_object);
+// 	DBGTRACE("[UnManagedCallback] terminate_callback");
     return (S_OK);
 };
 

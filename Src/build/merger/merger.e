@@ -37,10 +37,11 @@ feature {NONE}
 			set_dtype2 ($invariant_as);
 
 			lace_parser_init
-					eiffel_parser_init
-
-				-- Error handler initialization
-			Error_handler.send_yacc_information;
+			eiffel_parser_init
+			
+			-- Error handler initialization
+			Error_handler.send_yacc_information
+			Error_handler.set_error_displayer (error_displayer)		
 		end;
 
 	retried: BOOLEAN;
@@ -111,14 +112,14 @@ feature
 				retried := False;
 				if Rescue_status.is_error_exception then
 					Rescue_status.set_is_error_exception (False);
-					Error_box.put_string ("Parsing error:%N"); --samik (this is temporary)
-		--samik			Error_handler.trace;
+					Error_handler.trace;
 					if command_caller /= Void then
 						Error_box.put_string ("Class: ");
 						Error_box.put_string 
-								(command_caller.current_command.eiffel_type_to_upper);
+						(command_caller.current_command.eiffel_type_to_upper);
 						Error_box.put_string (" (");
-						Error_box.put_string (command_caller.current_command.label);
+						Error_box.put_string 
+						(command_caller.current_command.label);
 						Error_box.put_string (")");
 					end;
 					Error_box.display_error_message (Current);
@@ -253,7 +254,21 @@ feature -- Integrate command
 		do
 			command_caller := Void
 		end;
-
+	
+feature {NONE} -- Implemantation
+	
+	-- Displayer for errors 
+	error_displayer: DEFAULT_ERROR_DISPLAYER is
+		once
+			!!Result.make (output_window)
+		end
+	
+	output_window: BUILD_OUTPUT_WINDOW is
+		once
+			!!Result.make (Error_box)
+		end
+	
+	
 feature {NONE} -- Integrate Command
 
 	full_path (fn: STRING): FILE_NAME is

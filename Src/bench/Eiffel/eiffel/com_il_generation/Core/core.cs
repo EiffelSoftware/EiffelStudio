@@ -37,12 +37,22 @@ public class Core : ICore {
 
 	public void EndAssemblyGeneration() {
 		core.EndAssemblyGeneration ();
+		cleanup();
+	}
+		
+	public string LastError() {
+		string error = core.LastError ();
+		cleanup();
+		return error;
+	}
+
+	private void cleanup () {
 		AppDomain.Unload(CoreApp);
 		CoreApp = null;
 		core = null;
 		GC.Collect();
 	}
-		
+
 	private AppDomain CoreApp;
 	private EiffelReflectionEmit core;
 
@@ -160,10 +170,6 @@ public class Core : ICore {
 
 	public void DefineEntryPoint (int TypeID, int FeatureID) {
 		core.DefineEntryPoint (TypeID, FeatureID);
-	}
-
-	public string LastError() {
-		return core.LastError ();
 	}
 
 	public void AddCA (int TargetTypeID, int AttributeTypeID, int ArgCount) {

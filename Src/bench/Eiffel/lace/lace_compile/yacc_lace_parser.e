@@ -1,33 +1,55 @@
 indexing
 
-	description: "Shared Lace parser"
+	description: "Lace parsers implemented in C with yacc"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class SHARED_LACE_PARSER
+class YACC_LACE_PARSER
 
-feature -- Access
+inherit
 
---	Parser: LACE_PARSER is
-	Parser: YACC_LACE_PARSER is
-			-- Lace parser
-		once
-			!! Result.make
-		ensure
-			lace_parser_not_void: Result /= Void
+	LACE_PARSER_ROUTINES
+
+	MEMORY
+		export {NONE} all end
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new Lace parser.
+		do
 		end
 
---	Classname_finder: CLASSNAME_FINDER is
-	Classname_finder: YACC_CLASSNAME_FINDER is
-			-- Classname finder
-		once
-			!! Result.make
-		ensure
-			classname_finder_not_void: Result /= Void
+feature {NONE} -- Implementation
+
+	parse_lace (a_file: FILE) is
+			-- Call lace parser with a source file.
+		local
+			file_name: STRING
+		do
+			file_name := a_file.name
+			collection_off
+			ast := lp_file (a_file.file_pointer, $file_name)
+			collection_on
+		rescue
+			ast := Void
+			collection_on
 		end
 
-end -- class SHARED_LACE_PARSER
+feature {NONE} -- Externals
+
+	lp_file (file: POINTER; fn: POINTER): ACE_SD is
+			-- Call lace parser with a source file.
+		external
+			"C"
+		end
+
+end -- class YACC_LACE_PARSER
 
 
 --|----------------------------------------------------------------

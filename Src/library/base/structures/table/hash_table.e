@@ -751,6 +751,25 @@ feature -- Element change
 					((new_key = computed_default_key) or
 					((new_key /= computed_default_key) and (old has_default)))
 		end
+		
+	merge (other: HASH_TABLE [G, H]) is
+			-- Merge `other' into Current. If `other' has some elements
+			-- with same key as in `Current', replace them by one from
+			-- `other'.
+		require
+			other_not_void: other /= Void
+		do
+			from
+				other.start
+			until
+				other.after
+			loop
+				force (other.item_for_iteration, other.key_for_iteration)
+				other.forth
+			end
+		ensure
+			inserted: other.current_keys.linear_representation.for_all (agent has)
+		end
 
 feature -- Removal
 

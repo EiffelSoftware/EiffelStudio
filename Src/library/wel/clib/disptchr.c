@@ -27,11 +27,7 @@ EIF_DLGPROC wel_dlgproc = NULL;
 EIF_OBJ dispatcher = NULL;
 /* Address of the Eiffel object WEL_DISPATCHER created for each application */
 
-LRESULT CALLBACK cwel_window_procedure (hwnd, msg, wparam, lparam)
-HWND hwnd;
-UINT msg;
-WPARAM wparam;
-LPARAM lparam;
+LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	/*
 	 * Receive window messages and call the Eiffel routine `window_procedure'
@@ -50,11 +46,7 @@ LPARAM lparam;
 		return DefWindowProc (hwnd, msg, wparam, lparam);
 }
 
-BOOL CALLBACK cwel_dialog_procedure (hwnd, msg, wparam, lparam)
-HWND hwnd;
-UINT msg;
-WPARAM wparam;
-LPARAM lparam;
+BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	/*
 	 * Receive dialog messages and call the Eiffel routine `dialog_procedure'
@@ -75,8 +67,8 @@ LPARAM lparam;
 
 /*
 --|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

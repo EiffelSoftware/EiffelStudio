@@ -179,7 +179,40 @@ feature -- Status report
 			external_name: ANY;
 		do
 			external_name := name.to_c;
-			Result := file_exists ($external_name)
+			Result := eif_dir_exists ($external_name)
+		end;
+
+	is_readable: BOOLEAN is
+			-- Is the directory readable?
+		require
+			directory_exists: exists
+		local
+			external_name: ANY;
+		do
+			external_name := name.to_c;
+			Result := eif_dir_is_readable ($external_name)
+		end;
+
+	is_executable: BOOLEAN is
+			-- Is the directory executable?
+		require
+			directory_exists: exists
+		local
+			external_name: ANY;
+		do
+			external_name := name.to_c;
+			Result := eif_dir_is_executable ($external_name)
+		end;
+
+	is_writable: BOOLEAN is
+			-- Is the directory writable?
+		require
+			directory_exists: exists
+		local
+			external_name: ANY;
+		do
+			external_name := name.to_c;
+			Result := eif_dir_is_writable ($external_name)
 		end;
 
 feature -- Removal
@@ -253,8 +286,26 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_exists (dir_name: POINTER): BOOLEAN is
-			-- Does `dir_name' exist ?
+	eif_dir_exists (dir_name: POINTER): BOOLEAN is
+			-- Does the directory `dir_name' exist?
+		external
+			"C"
+		end;
+
+	eif_dir_is_readable (dir_name: POINTER): BOOLEAN is
+			-- Is `dir_name' readable?
+		external
+			"C"
+		end;
+
+	eif_dir_is_executable (dir_name: POINTER): BOOLEAN is
+			-- Is `dir_name' executable?
+		external
+			"C"
+		end;
+
+	eif_dir_is_writable (dir_name: POINTER): BOOLEAN is
+			-- Is `dir_name' writable?
 		external
 			"C"
 		end;

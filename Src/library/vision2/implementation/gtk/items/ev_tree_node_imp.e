@@ -134,13 +134,6 @@ feature -- Status setting
 			internal_text := clone (a_text)
 			insert_pixmap
 		end
-		
-	remove_text is
-			-- Remove 'text' from 'Current'
-		do
-			internal_text := ""
-			insert_pixmap
-		end	
 
 feature -- PND
 
@@ -431,15 +424,6 @@ feature {EV_TREE_IMP} -- Implementation
 		do
 			internal_tooltip := ""		
 		end
-	
--- Text alignment not implemented
-	align_text_left is do  end
-	
-	align_text_center is do  end
-	
-	align_text_right is do end
-
-	alignment: EV_TEXT_ALIGNMENT	
 	
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the pixmap for 'Current'

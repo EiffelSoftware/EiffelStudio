@@ -14,11 +14,13 @@
 					<label>EiffelStudio</label> 
 				</link>
 			</item>
+			<item><link><url>resource_bench/index.xml</url><label>ResourceBench</label></link>
 			<item>
 				<link>
 					<url>wizards/index.xml</url>
 					<label>Wizards</label>
 				</link>
+			</item>
 			</item>
 		</list>
 	</paragraph></document>

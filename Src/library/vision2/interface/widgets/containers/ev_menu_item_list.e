@@ -39,6 +39,9 @@ end -- class EV_MENU_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/17 23:50:41  oconnor
+--| formatting
+--|
 --| Revision 1.4  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|
@@ -51,7 +54,6 @@ end -- class EV_MENU_ITEM_LIST
 --| Revision 1.1.2.1  2000/02/03 23:32:01  brendel
 --| Revised.
 --| Changed inheritance structure.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -147,17 +147,14 @@ feature -- Call stack creation
 			end
 		end
 
-	create_current_callstack_with (a_stack_max_depth: INTEGER) is
+feature {NONE} -- CallStack Impl
+
+	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK_DOTNET is
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
-		local
-			ecs: EIFFEL_CALL_STACK_DOTNET
 		do
 			clean_current_call_stack
-			create ecs.make (a_stack_max_depth)
-			set_call_stack (current_thread_id, ecs)
+			create Result.make (a_stack_max_depth)
 		end
-
-feature {NONE} -- Values Impl
 
 	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_DOTNET is
 			-- Eiffel call stack for `tid'

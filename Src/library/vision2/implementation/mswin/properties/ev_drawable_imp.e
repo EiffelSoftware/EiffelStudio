@@ -134,11 +134,12 @@ feature -- Element change
 			check
 				valid_cast: color_imp /= Void
 			end
-			if dc /= Void then
+			if is_drawable then
 				update_dc
 				dc.set_background_color (color_imp)
+				redraw
 			end
-		end 
+		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Set foreground value of GC.
@@ -150,6 +151,7 @@ feature -- Element change
 			if is_drawable then
 				update_pen
 				update_brush
+				redraw
 			end
 		end
 
@@ -157,8 +159,9 @@ feature -- Element change
 			-- Set line to be displayed with width of `value'.
 		do
 			line_width := value
-			if dc /= Void then
+			if is_drawable then
 				update_pen
+				redraw
 			end
 		end
 
@@ -166,8 +169,9 @@ feature -- Element change
 			-- Set drawing logical function to `value'.
 		do
 			logical_mode := value
-			if (dc /= Void) and then (dc.exists) then
+			if is_drawable then
 				update_dc
+				redraw
 			end
 		end
 
@@ -175,8 +179,9 @@ feature -- Element change
 			-- Set a font.
 		do
 			font := a_font
-			if dc /= Void then
+			if is_drawable then
 				update_font
+				redraw
 			end
 		end
 
@@ -197,66 +202,59 @@ feature -- Clearing operations
 			old_pen: WEL_PEN
 			a_rect: WEL_RECT
 		do
-			if is_drawable then
-				-- We store the old values.
-				old_rop2 := dc.rop2
-				old_brush := dc.brush
-				old_pen := dc.pen
+			-- We store the old values.
+			old_rop2 := dc.rop2
+			old_brush := dc.brush
+			old_pen := dc.pen
 
-				-- We set the new values
-				dc.set_rop2 (r2_copypen)
-				dc.select_brush (background_brush)
-				dc.select_pen (background_pen)
+			-- We set the new values
+			dc.set_rop2 (r2_copypen)
+			dc.select_brush (background_brush)
+			dc.select_pen (background_pen)
 
-				-- We clear the area.
-				!! a_rect.make (0, 0, width, height)
-				dc.rectangle (a_left, a_top, a_right, a_bottom)
-
-				-- We reset the old values
-				dc.set_rop2 (old_rop2)
-				if old_brush /= Void then
-					dc.select_brush (old_brush)
-				end
-				if old_pen /= Void then
-					dc.select_pen (old_pen)
-				end
+			-- We clear the area.
+			!! a_rect.make (0, 0, width, height)
+			dc.rectangle (a_left, a_top, a_right, a_bottom)
+			-- We reset the old values
+			dc.set_rop2 (old_rop2)
+			if old_brush /= Void then
+				dc.select_brush (old_brush)
 			end
+			if old_pen /= Void then
+				dc.select_pen (old_pen)
+			end
+			redraw
 		end
 
 feature -- Drawing operations
 
 	draw_point (pt: EV_COORDINATES) is
 			-- Draw `a_point'.
-		require else
-			dc_not_void: dc /= Void
 		do
 			dc.set_pixel (pt.x, pt.y, foreground_color_imp)
+			redraw
 		end
 
 	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw text
-		require else
-			dc_not_void: dc /= Void
 		do
 			dc.set_text_color (foreground_color_imp)
 			dc.set_background_transparent
 			dc.set_text_alignment (ta_baseline)
 			dc.text_out (pt.x, pt.y, text)
+			redraw
 		end
 
 	draw_segment (pt1, pt2: EV_COORDINATES) is
 			-- Draw a segment between `pt1' and `pt2'.
-		require else
-			dc_not_void: dc /= Void
 		do
 			dc.move_to (pt1.x, pt1.y)
 			dc.line_to (pt2.x, pt2.y)
+			redraw
 		end
 
 	draw_straight_line (point1, point2: EV_COORDINATES) is
 			-- Draw an infinite line traversing `point1' and `point2'.
-		require else
-			dc_not_void: dc /= Void
 		local
 			x1, x2, y1, y2, dx, dy: INTEGER
 		do
@@ -274,12 +272,11 @@ feature -- Drawing operations
 				x2 := width
 			end
 			dc.line (x1, y1, x2, y2)
+			redraw
 		end
 
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
-		require else
-			dc_not_void: dc /= Void
 		local
 			flat_points: ARRAY [INTEGER]
 			flat_index: INTEGER
@@ -310,15 +307,15 @@ feature -- Drawing operations
 				flat_points.put ((pts.item (i)).y, flat_index)
 			end
 			dc.polyline (flat_points)
+			redraw
 		end
 
 	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
-		require else
-			dc_not_void: dc /= Void
 		do
 			draw_any_rectangle (pt, w, h, orientation, false)
+			redraw
 		end
 
 	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
@@ -329,10 +326,9 @@ feature -- Drawing operations
 			--   -1 : no link between the first and the last point
 			--    0 : the first point is linked to the last point
 			--    1 : the first and the last point are linked to the center `pt'
-		require else
-			dc_not_void: dc /= Void
 		do
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, false)
+			redraw
 		end
 
 	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
@@ -345,43 +341,40 @@ feature -- Drawing operations
 				valid_cast: pix_imp /= Void
 			end
 			dc.draw_bitmap (pix_imp.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
+			redraw
 		end
 
 feature -- Filling operations
 
 	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
 			 -- Fill a polygon.
-		require else
-			dc_not_void: dc /= Void
 		local
 			flat_points: ARRAY [INTEGER]
 			i, flat_i: INTEGER
 		do
-			if dc /= Void then
-				!! flat_points.make (1, 2 * pts.count)
-				flat_i := 1
-				from
-					i := pts.lower
-				until
-					i > pts.upper
-				loop
-					flat_points.put ((pts.item (i)).x, flat_i)
-					flat_i := flat_i + 1
-					flat_points.put ((pts.item (i)).y, flat_i)
-					flat_i := flat_i + 1
-					i := i + 1
-				end
-				dc.polygon (flat_points)
+			!! flat_points.make (1, 2 * pts.count)
+			flat_i := 1
+			from
+				i := pts.lower
+			until
+				i > pts.upper
+			loop
+				flat_points.put ((pts.item (i)).x, flat_i)
+				flat_i := flat_i + 1
+				flat_points.put ((pts.item (i)).y, flat_i)
+				flat_i := flat_i + 1
+				i := i + 1
 			end
+			dc.polygon (flat_points)
+			redraw
 		end
 
 	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
-		require else
-			dc_not_void: dc /= Void
 		do
 			draw_any_rectangle (pt, w, h, orientation, true)
+			redraw
 		end 
 
 	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
@@ -394,6 +387,14 @@ feature -- Filling operations
 			--    1 : the first and the last point are linked to the center `pt'
 		do
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, true)
+			redraw
+		end
+
+feature -- Basic operations
+
+	redraw is
+			-- Redraw the area if necessary.
+		deferred
 		end
 
 feature {NONE} -- Implementation access
@@ -439,7 +440,7 @@ feature {NONE} -- Implementation
 	update_brush is
 			-- Update the `dc' due to brush details changing
 		require
-			dc: dc /= Void and dc.exists
+			drawable: is_drawable
 		do
 			inspect fill_style
 				when 0 then
@@ -456,7 +457,7 @@ feature {NONE} -- Implementation
 	update_dc is
 			-- Update the `dc' due to dc details changing
 		require
-			dc: dc /= Void and dc.exists
+			drawable: is_drawable
 		do
 			debug ("RASTER OPERATIONS")
 				print ("update_dc")
@@ -503,7 +504,7 @@ feature {NONE} -- Implementation
 	update_font is
 			-- Update the `dc' due to font details changing
 		require
-			dc: dc /= Void and dc.exists
+			drawable: is_drawable
 			font: font /= Void
 		local
 			fw: EV_FONT_IMP
@@ -515,7 +516,7 @@ feature {NONE} -- Implementation
 	update_pen is
 			-- Update the `dc' due to pen details changing
 		require
-			dc: dc /= Void and dc.exists
+			drawable: is_drawable
 		local
 			pen: WEL_PEN
 		do

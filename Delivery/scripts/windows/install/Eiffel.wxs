@@ -18,7 +18,6 @@
 				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)" >
 					<Registry Id="registry" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe,0" />
 				</Component>
-				<!--
 				<?if $(var.EDITION)="free" ?>
 					<Merge Id="ec" Language="1033" src="MSMs\ec_free.msm" DiskId="1" />
 					<Merge Id="build" Language="1033" src="MSMs\build_free.msm" DiskId="1" />
@@ -39,7 +38,6 @@
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
 				<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
-				-->
 			</Directory>
 
 			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="MyProjects" />
@@ -51,7 +49,6 @@
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="3" Display="hidden">
 				<ComponentRef Id="display_icon" />
 			</Feature>
-			<!--
 			<Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="build" />
 			</Feature>
@@ -90,7 +87,6 @@
 				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
 				<MergeRef Id="borland" />
 			</Feature>
-			-->
 		</Feature>
 		
 		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" Win64="$(var.IsWin64)" />

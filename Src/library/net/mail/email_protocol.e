@@ -8,8 +8,6 @@ deferred class
 	EMAIL_PROTOCOL
 
 inherit
-	EMAIL_CONSTANTS
-
 	PROTOCOL_RESOURCE
 
 feature -- Initialization
@@ -34,7 +32,7 @@ feature -- Access
 		deferred
 		end
 
-feature -- Status setting
+feature -- Status report
 
 	is_initiated: BOOLEAN
 		-- Has the connection has been initiated?
@@ -47,19 +45,11 @@ feature -- Basic operations
 
 	connect is
 			-- Connect to the host machine.
+			-- Use this feature only if the protocol has been created without the connection.
 		do
 			init_socket
-			enable_connected
-		end
-
-	initiate is
-			-- initiate the connection with the server.
-		deferred
-		end
-
-	terminate is
-			-- Terminate the connection to the server.
-		deferred
+		ensure
+			is_connected
 		end
 
 feature -- Settings
@@ -76,8 +66,14 @@ feature -- Settings
 			is_connected:= True
 		end
 
+	disable_connected is
+			-- Unset is_connected.
+		do
+			is_connected:= False
+		end
+
 	set_default_port (new_port: INTEGER) is
-			-- Set the default port
+			-- Set the default port to 'new_port'.
 		do
 			port:= new_port
 		end
@@ -95,6 +91,15 @@ feature {NONE} -- Miscellaneous
 		do
 			create socket.make_client_by_port (port, hostname)
 			socket.connect
+			socket.read_line
+			if decode (socket.last_string) = Ack_begin_connection then
+				enable_connected
+			end
+		end
+
+	decode (s: STRING): INTEGER is
+			-- Decode the answer and retrieve the code number.
+		deferred
 		end
 
 end -- class EMAIL_PROTOCOL

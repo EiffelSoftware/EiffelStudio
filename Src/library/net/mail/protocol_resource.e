@@ -10,6 +10,18 @@ deferred class
 inherit
 	EMAIL_RESOURCE
 
+feature -- Basic operations
+
+	initiate_protocol is
+			-- initiate the protocol with the server.
+		deferred
+		end
+
+	close_protocol is
+			-- Close the protocol.
+		deferred
+		end
+
 feature -- Implementation (EMAIL_RESOURCE)
 
 	can_be_sent: BOOLEAN is False

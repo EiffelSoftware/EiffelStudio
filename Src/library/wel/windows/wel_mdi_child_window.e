@@ -87,9 +87,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 		do
-			Result := cwin_def_mdi_child_proc (item, msg,
+			Result := cwin_def_mdi_child_proc (hwnd, msg,
 				 wparam, lparam)
 		end
 

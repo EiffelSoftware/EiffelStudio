@@ -112,13 +112,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 		do
 			if client_window /= Void and then client_window.exists then
-				Result := cwin_def_frame_proc (item,
+				Result := cwin_def_frame_proc (hwnd,
 					client_window.item, msg, wparam, lparam)
 			else
-				Result := cwin_def_frame_proc (item,
+				Result := cwin_def_frame_proc (hwnd,
 					default_pointer, msg, wparam, lparam)
 			end
 		end

@@ -110,86 +110,86 @@ feature {NONE} -- Implementation
 
 	math_rcos (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"cos"
+			"float_cos"
 		end;
 
 	math_racos (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"acos"
+			"float_acos"
 		end;
 
 	math_rfabs (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"fabs"
+			"float_fabs"
 		end;
 
 	math_rceil (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"ceil"
+			"float_ceil"
 		end;
 
 	math_rfloor (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"floor"
+			"float_floor"
 		end;
 
 	math_rlog10 (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"log10"
+			"float_log10"
 		end;
 
 	math_rlog (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"log"
+			"float_log"
 		end;
 
 	math_rsqrt (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"sqrt"
+			"float_sqrt"
 		end;
 
 	math_rtan (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"tan"
+			"float_tan"
 		end;
 
 	math_ratan (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"atan"
+			"float_atan"
 		end;
 
 	math_rsin (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"sin"
+			"float_sin"
 		end;
 
 	math_rasin (v: REAL): REAL is
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C [macro %"eif_misc.h%"]"
 		alias
-			"asin"
+			"float_asin"
 		end;
 
 end -- class SINGLE_MATH

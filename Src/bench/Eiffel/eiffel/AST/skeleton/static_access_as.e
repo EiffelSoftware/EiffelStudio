@@ -137,25 +137,8 @@ feature -- Type check, byte code and dead code removal
 
 	valid_feature (a_feature: FEATURE_I): BOOLEAN is
 			-- Is `a_feature' suitable for static access?
-		local
-			ext: EXTERNAL_I
-			att: ATTRIBUTE_I
-			extension: IL_EXTENSION_I
 		do
-			if a_feature /= Void then
-				if System.il_generation then
-					ext ?= a_feature
-					if ext /= Void then
-						extension ?= ext.extension
-					else
-						att ?= a_feature
-						extension ?= att.extension
-					end
-					Result := extension /= Void and then not extension.need_current (extension.type)
-				else
-					Result := a_feature.is_external
-				end
-			end
+			Result := a_feature /= Void and then a_feature.has_static_access
 		end
 
 	byte_node: ACCESS_B is

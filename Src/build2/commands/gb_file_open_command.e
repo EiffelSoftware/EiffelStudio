@@ -21,6 +21,8 @@ inherit
 	
 	GB_WIDGET_UTILITIES
 	
+	GB_CONSTANTS
+	
 	GB_ACCESSIBLE_SYSTEM_STATUS
 
 create
@@ -57,6 +59,7 @@ feature -- Basic operations
 				project_settings: GB_PROJECT_SETTINGS
 			do
 				create dialog
+				dialog.set_filter (project_file_filter)
 				dialog.show_modal_to_window (system_status.main_window)
 				if not dialog.file_name.is_empty then
 					create project_settings

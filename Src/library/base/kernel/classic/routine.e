@@ -45,10 +45,10 @@ feature -- Access
 			i, nb: INTEGER
 			l_open_map: like open_map
 		do
-			create Result
 			l_open_map := open_map
 			if l_open_map /= Void then
 				from
+					create Result
 					i := 0
 					nb := l_open_map.count - 1
 				until
@@ -253,7 +253,8 @@ feature -- Settings
 				end
 			end
 		ensure
-			operands_set: equal (operands, args)
+			operands_set: (operands /= Void implies equal (operands, args)) or
+				(operands = Void implies (args = Void or else args.is_empty))
 		end
 
 feature -- Duplication

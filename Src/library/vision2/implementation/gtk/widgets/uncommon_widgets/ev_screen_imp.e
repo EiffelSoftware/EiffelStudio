@@ -101,7 +101,7 @@ feature -- Basic operation
 		local
 			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
 		do
-			Result := feature {EV_GTK_EXTERNALS}.x_test_query_extension (
+			Result := x_test_query_extension (
 					feature {EV_GTK_EXTERNALS}.gdk_display, 
 					$a_event_base,
 					$a_error_base,
@@ -118,7 +118,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := feature {EV_GTK_EXTERNALS}.x_test_fake_motion_event (feature {EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
+			a_success_flag := x_test_fake_motion_event (feature {EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
 			check
 				pointer_position_set: a_success_flag
 			end		
@@ -132,7 +132,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := feature {EV_GTK_EXTERNALS}.x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
+			a_success_flag := x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
 			check
 				fake_pointer_button_press_success: a_success_flag
 			end		
@@ -146,7 +146,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := feature {EV_GTK_EXTERNALS}.x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
+			a_success_flag := x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
 			check
 				fake_pointer_button_release_success: a_success_flag
 			end		
@@ -162,8 +162,8 @@ feature -- Basic operation
 				x_test_capable: x_test_capable
 			end
 			a_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_key_code := feature {EV_GTK_EXTERNALS}.x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
-			a_success_flag := feature {EV_GTK_EXTERNALS}.x_test_fake_key_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
+			a_key_code := x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
+			a_success_flag := x_test_fake_key_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
 			check
 				fake_key_press_success: a_success_flag
 			end		
@@ -179,8 +179,8 @@ feature -- Basic operation
 				x_test_capable: x_test_capable
 			end
 			a_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_key_code := feature {EV_GTK_EXTERNALS}.x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
-			a_success_flag := feature {EV_GTK_EXTERNALS}.x_test_fake_key_event (
+			a_key_code := x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
+			a_success_flag := x_test_fake_key_event (
 								feature {EV_GTK_EXTERNALS}.gdk_display,
 								a_key_code,
 								False,
@@ -211,7 +211,56 @@ feature -- Measurement
 			Result := feature {EV_GTK_EXTERNALS}.gdk_screen_width
 		end
 
+feature {NONE} -- Externals (XTEST extension)
+
+	frozen x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER is
+			-- (from EV_C_GTK)
+		external
+			"C: EIF_INTEGER| <X11/Xlib.h>"
+		alias
+			"XKeysymToKeycode"
+		end
+
+	frozen x_test_fake_button_event (a_display: POINTER; a_button: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
+			-- (from EV_C_GTK)
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeButtonEvent"
+		end
+
+	frozen x_test_fake_key_event (a_display: POINTER; a_keycode: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
+			-- (from EV_C_GTK)
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeKeyEvent"
+		end
+
+	frozen x_test_fake_motion_event (a_display: POINTER; a_scr_num, a_x, a_y, a_delay: INTEGER): BOOLEAN is
+			-- (from EV_C_GTK)
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeMotionEvent"
+		end
+
+	frozen x_test_query_extension (a_display, a_event_base, a_error_base, a_major_version, a_minor_version: POINTER): BOOLEAN is
+			-- (from EV_C_GTK)
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestQueryExtension"
+		end
+
 feature {NONE} -- Implementation
+
+	app_implementation: EV_APPLICATION_IMP is
+			-- Return the instance of EV_APPLICATION_IMP.
+			-- (export status {NONE})
+		once
+			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+		end
 
 	flush is
 			-- Force all queued draw to be called.

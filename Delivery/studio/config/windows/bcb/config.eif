@@ -15,7 +15,7 @@ cc: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
 cpp: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
 
 -- C-linker
-sharedlink: "$(ISE_EIFFEL)\BCC55\ilink32"
+sharedlink: "$(ISE_EIFFEL)\BCC55\bin\ilink32"
 
 -- optimization flags
 wkoptimize: ""
@@ -54,7 +54,7 @@ shared_rt_suffix: ".lib"
 -- libraries
 libs: "CW32 IMPORT32 OLE2w32"
 mtlibs: "CW32MT IMPORT32 OLE2w32"
-sharedlibs: ""
+sharedlibs: "CW32.lib IMPORT32.lib OLE2w32.lib"
 
 mkdep: ""
 

@@ -29,9 +29,11 @@ feature {NONE} -- Initialization
 			!!button2.make (Current)
 
 			button1.set_text ("Press me")
+			button1.set_default_minimum_size
 			!! cmd.make (~execute1)
 			button1.add_click_command (cmd, Void)
 			button2.set_text ("Me too!")
+			button2.set_default_minimum_size
 			button1.set_x_y (10, 20)
 			button2.set_x_y (10, 50)
 		end

@@ -17,7 +17,7 @@ feature -- Access
 		local
 			file_location: STRING
 			directory_name: DIRECTORY_NAME
-		do
+		do	
 			file_location := execution_environment.get ("ISE_VISION2_TOUR")
 			if file_location = Void then
 				file_location := execution_environment.get ("ISE_EIFFEL")
@@ -83,12 +83,24 @@ feature {NONE} -- Implementation
 				Result := False
 			end
 		end
-		
 
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Once access to execution environment.
 		once
 			create Result
+		end
+		
+	image_extension: STRING is
+			-- Extension type of image formats on current platform.
+			-- either "png" or "ico"
+		once
+			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
+				Result := "ico"
+			else
+				Result := "png"
+			end
+		ensure
+			Result_valid: Result.is_equal ("png") or Result.is_equal ("ico")
 		end
 
 invariant

@@ -21,11 +21,11 @@ optimize: "-O2"
 wkoptimize: "-O0 -g"
 
 -- compiler flags
-ccflags: "-mno-cygwin"
-mtccflags: "-mno-cygwin -MT -DEIF_THREADS"
-cppflags: "-mno-cygwin"
-mtcppflags: "-mno-cygwin -MT -DEIF_THREADS"
-shared_flags: "-mno-cygwin -DEIF_USE_DLL"
+ccflags: "-mno-cygwin -DCYGWIN"
+mtccflags: "-mno-cygwin -MT -DCYGWIN -DEIF_THREADS"
+cppflags: "-mno-cygwin -DCYGWIN"
+mtcppflags: "-mno-cygwin -MT -DCYGWIN -DEIF_THREADS"
+shared_flags: "-mno-cygwin -DCYGWIN -DEIF_USE_DLL"
 
 large: ""
 

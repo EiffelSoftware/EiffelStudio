@@ -18,7 +18,6 @@ feature -- Initialization
 			-- according to `doc'.
 		local
 			s: STRING
-			att: XM_ATTRIBUTE
 		do
 			is_visible := True
 			if doc.has_attribute_by_name ("TOPIC_ID") then
@@ -254,7 +253,6 @@ feature {NONE} -- Implementation
 			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			node: XM_ELEMENT
 			txt: XM_CHARACTER_DATA
-			att: XM_ATTRIBUTE
 			val: STRING
 		do
 			create resource_name.make (20)

@@ -21,7 +21,8 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			container_widget
+			container_widget,
+			visual_widget
 		end
 
 feature -- Access
@@ -115,6 +116,12 @@ feature -- Status settings
 feature {NONE} -- Implementation
 
 	container_widget: POINTER
+	
+	visual_widget: POINTER is
+			-- Pointer to the viewable widget.
+		do
+			Result := container_widget
+		end
 
 feature {EV_ANY_I} -- Implementation
 

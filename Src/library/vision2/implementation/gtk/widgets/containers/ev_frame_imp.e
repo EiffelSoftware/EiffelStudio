@@ -22,14 +22,16 @@ inherit
 			make
 		redefine
 			interface,
-			container_widget
+			container_widget,
+			visual_widget
 		end
 		
 	EV_FONTABLE_IMP
 		undefine
 			destroy
 		redefine
-			interface
+			interface,
+			visual_widget
 		end
 
 create
@@ -51,6 +53,12 @@ feature {NONE} -- Initialization
 
 	container_widget: POINTER
 			-- Pointer to the gtkframe widget as c_object is event box
+			
+	visual_widget: POINTER is
+			-- Pointer to the widget that user sees on the screen.
+		do
+			Result := container_widget
+		end
 
 feature -- Access
 

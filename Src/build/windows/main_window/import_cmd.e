@@ -86,7 +86,7 @@ feature {NONE}
 	import_from_file (import_window: IMPORT_WINDOW) is
 		local
 			mp: MOUSE_PTR;
-			fn: STRING;
+			fn: FILE_NAME;
 			new_id: INTEGER;
 			old_id: INTEGER;
 			a_context: CONTEXT;
@@ -97,18 +97,16 @@ feature {NONE}
 			application_storer: APPLICATION_STORER;
 			group_storer: GROUP_STORER;
 			translation_storer: TRANSL_STORER;
-			import_directory: STRING
+			import_directory: DIRECTORY_NAME
 		do
 			!!mp;
 			mp.set_watch_shape;
-			import_directory := clone (import_window.file_selec.selected_file);
-			import_directory.extend (Environment.directory_separator);
-			import_directory.append (Environment.storage_name);
-			import_directory.extend (Environment.directory_separator);
+			!! import_directory.make_from_string (import_window.file_selec.selected_file);
+			import_directory.extend (Environment.storage_name);
 			if import_window.groups.state then
-				fn := clone (import_directory);
-				fn.append (Environment.groups_file_name);
-				!!group_storer;
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.groups_file_name);
+				!! group_storer;
 				group_storer.retrieve (fn);
 				retrieved_groups := group_storer.retrieved_data;
 				!!group_table.make (retrieved_groups.count);
@@ -135,8 +133,8 @@ feature {NONE}
 				context_catalog.update_groups;
 			end;
 			if import_window.interface.state then
-				fn := clone (import_directory);
-				fn.append (Environment.interface_file_name);
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.interface_file_name);
 				!!context_storer;
 				context_storer.retrieve (fn);
 				retrieved_contexts := context_storer.retrieved_data;
@@ -158,16 +156,16 @@ feature {NONE}
 				end;
 			end;
 			if import_window.commands.state then
-				fn := clone (import_directory);
-				fn.append (Environment.commands_file_name);
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.commands_file_name);
 				!! command_storer;
 				command_storer.retrieve (fn);
 				retrieved_commands := command_storer.retrieved_data;
 				command_catalog.merge (retrieved_commands);
 			end;
 			if import_window.translations.state then
-				fn := clone (import_directory);
-				fn.append (Environment.translations_file_name);
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.translations_file_name);
 				!!translation_storer;
 				translation_storer.retrieve (fn);
 				retrieved_translations := translation_storer.retrieved_data;
@@ -181,12 +179,12 @@ feature {NONE}
 				end;
 			end;
 			if import_window.entire_application.state then
-				fn := clone (import_directory);
-				fn.append (Environment.states_file_name);
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.states_file_name);
 				!!state_storer;
 				state_storer.retrieve (fn);
-				fn := clone (import_directory);
-				fn.append (Environment.application_file_name);
+				!! fn.make_from_string (import_directory);
+				fn.set_file_name (Environment.application_file_name);
 				!!application_storer;
 				application_storer.retrieve (fn);
 

@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	PROJECT_CONTEXT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -85,9 +90,9 @@ feature -- Generation
 				file_name := System.name + "." + System.msil_generation_type
 				
 				if System.in_final_mode then
-					location := (create {PROJECT_CONTEXT}).Final_generation_path
+					location := Final_generation_path
 				else
-					location := (create {PROJECT_CONTEXT}).Workbench_generation_path
+					location := Workbench_generation_path
 				end
 				
 					-- Set information about current assembly.
@@ -173,6 +178,94 @@ feature -- Generation
 			end
 		end
 
+	deploy is
+			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
+			-- copy configuration file to load local assemblies.
+		local
+			l_assembly: ASSEMBLY_I
+			l_assembly_path: STRING
+			l_source, l_target: RAW_FILE
+			l_source_name, l_target_name: FILE_NAME
+			l_pos: INTEGER
+			l_file_name: STRING
+			l_has_local, retried: BOOLEAN
+		do
+			if not retried then
+				from
+					Universe.clusters.start
+				until
+					Universe.clusters.after
+				loop
+					l_assembly ?= Universe.clusters.item
+					if l_assembly /= Void and then l_assembly.is_local then
+						l_has_local := True
+						l_assembly_path := l_assembly.assembly_path;
+						create_local_assemblies_directory
+						l_pos := l_assembly_path.last_index_of (
+							Platform_constants.Directory_separator, l_assembly_path.count)
+							
+						create l_source.make (l_assembly_path)
+						if System.in_final_mode then
+							create l_target_name.make_from_string (Final_bin_generation_path)
+						else
+							create l_target_name.make_from_string (Workbench_bin_generation_path)
+						end
+						if l_pos > 0 then
+							l_target_name.set_file_name (l_assembly_path.substring (l_pos,
+								l_assembly_path.count))
+						else
+							l_target_name.set_file_name (l_assembly_path)
+						end
+						create l_target.make (l_target_name)
+						
+							-- Only copy the file if it is not already there or if the original
+							-- file is more recent.
+						if not l_target.exists or else l_target.date < l_source.date then
+							l_source.open_read
+							l_target.open_write
+							l_source.copy_to (l_target)
+							l_source.close
+							l_target.close
+							l_target.set_date (l_source.date)
+						end
+					end
+					Universe.clusters.forth
+				end
+	
+				if l_has_local then
+						-- Compute name of configuration file: It is `system_name.xxx.config'
+						-- where `xxx' is either `exe' or `dll'.
+					l_file_name := System.name + "." + System.msil_generation_type + ".config"
+					
+					l_source_name := (create {EIFFEL_ENV}).Generation_templates_path
+					l_source_name.set_file_name ("assembly_config.xml")
+		
+					if System.in_final_mode then
+						create l_target_name.make_from_string (Final_generation_path)
+					else
+						create l_target_name.make_from_string (workbench_generation_path)
+					end
+					l_target_name.set_file_name (l_file_name)
+		
+					create l_source.make_open_read (l_source_name)
+					create l_target.make_open_write (l_target_name)
+					l_source.copy_to (l_target)
+					l_target.close
+					l_source.close
+				end
+			else
+					-- An error occurred, let's raise an Eiffel compilation
+					-- error that will be caught by WORBENCH_I.recompile.
+				Error_handler.raise_error
+			end
+		rescue
+			if not retried then
+				retried := True
+				Error_handler.insert_error (create {VIGE}.make ("Could not copy local assemblies."))
+				retry
+			end
+		end
+		
 feature {NONE} -- Type description
 
 	generate_types (classes: ARRAY [CLASS_C]) is

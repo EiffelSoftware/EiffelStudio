@@ -145,7 +145,7 @@ feature {NONE} -- GTK C function for tree items
 
 	gtk_tree_item_subtree (widget: POINTER): POINTER is
 		external
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>]: EIF_POINTER"
 		alias
 			"GTK_TREE_ITEM_SUBTREE"
 		end
@@ -186,6 +186,18 @@ feature {NONE} -- GTK C function for status bar items
 
 	c_gtk_statusbar_item_unset_pixmap (statusbar: POINTER; pixmap: POINTER) is
 		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_statusbar_item_set_bg_color (statusbar: POINTER; r, g, b: INTEGER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_statusbar_item_label (statusbar: POINTER): POINTER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_statusbar_item_frame (statusbar: POINTER): POINTER is
+		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
 end -- class EV_GTK_ITEMS_EXTERNALS

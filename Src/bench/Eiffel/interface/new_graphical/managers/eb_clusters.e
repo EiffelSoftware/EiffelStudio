@@ -323,7 +323,8 @@ feature -- Element change
 			new_class: CLASS_I
 		do
 				-- Add `a_class' to the universe.
-			a_cluster.actual_cluster.insert_class_from_file (a_class)
+			a_cluster.actual_cluster.force_compilation_on_class_from_file (a_class)
+
 				-- Get the created CLASS_I.
 			new_class := a_cluster.actual_cluster.class_with_base_name (a_class)
 

@@ -16,7 +16,7 @@ feature -- Basic operations
 			-- Set feature for user defined precondition.
 		require
 			non_void_name: function_name /= Void
-			valid_name: not function_name.empty
+			valid_name: not function_name.is_empty
 			non_void_writer: a_precondition_feature_writer /= Void
 		local
 			a_body, a_comment: STRING

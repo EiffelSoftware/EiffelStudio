@@ -28,7 +28,7 @@ feature -- Initialization
 			non_void_function: a_function /= Void
 			non_void_coclass: a_coclass /= Void
 			non_void_table_name: table_name /= Void
-			valid_table_name: not table_name.empty
+			valid_table_name: not table_name.is_empty
 		local
 			name, comment: STRING
 		do
@@ -51,7 +51,7 @@ feature -- Initialization
 			create comment.make (100)
 			if
 				a_function.description /= Void and then
-				not a_function.description.empty
+				not a_function.description.is_empty
 			then
 				comment.append (a_function.description)
 			else
@@ -78,7 +78,7 @@ feature -- Basic operations
 		require
 			non_void_function: a_function /= Void
 			non_void_table_name: table_name /= Void
-			valid_table_name: not table_name.empty
+			valid_table_name: not table_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append ("%T%T%T%
@@ -96,7 +96,7 @@ feature -- Basic operations
 							%end%N%T%T%Tend")
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	function_call (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING is
@@ -121,7 +121,7 @@ feature -- Basic operations
 					a_function.arguments.after or
 					is_paramflag_fretval (a_function.arguments.item.flags)
 				loop
-					if not call_arguments.empty then
+					if not call_arguments.is_empty then
 						call_arguments.append (", ")
 					else
 						call_arguments.append (" (")
@@ -134,7 +134,7 @@ feature -- Basic operations
 			end
 		ensure
 			non_void_call: Result /= Void
-			valid_call: not Result.empty
+			valid_call: not Result.is_empty
 		end
 		
 end -- class WIZARD_EIFFEL_SOURCE_SERVER_FUNCTION_GENERATOR

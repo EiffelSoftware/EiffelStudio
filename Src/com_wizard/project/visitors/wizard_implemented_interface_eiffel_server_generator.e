@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			create feature_body.make (100)
 			feature_body.append (Tab_tab_tab)
 			feature_body.append ("%"C++ %(new ")
-			if an_interface.namespace /= Void and then not an_interface.namespace.empty then
+			if an_interface.namespace /= Void and then not an_interface.namespace.is_empty then
 				feature_body.append (an_interface.namespace)
 				feature_body.append ("::")
 			end

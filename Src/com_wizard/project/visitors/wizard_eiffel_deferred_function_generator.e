@@ -45,7 +45,7 @@ feature -- Basic operation
 
 			precondition_writer := user_defined_precondition (func_desc.interface_eiffel_name)
 
-			if func_desc.arguments /= Void and not func_desc.arguments.empty then
+			if func_desc.arguments /= Void and not func_desc.arguments.is_empty then
 				func_desc.arguments.start
 
 				if not is_paramflag_fretval (func_desc.arguments.item.flags) then

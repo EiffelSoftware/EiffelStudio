@@ -80,7 +80,7 @@ feature -- Basic operations
 				-- Set pre-condition
 				if not visitor.is_basic_type then
 					generate_precondition (Argument_name, a_descriptor.data_type, True, False)
-					if not assertions.empty then
+					if not assertions.is_empty then
 						from 
 							assertions.start
 						until

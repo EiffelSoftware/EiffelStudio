@@ -62,7 +62,7 @@ feature -- Processing
 			create c_type.make (100)
 			if 
 				alias_descriptor.namespace /= Void and then
-				not alias_descriptor.namespace.empty
+				not alias_descriptor.namespace.is_empty
 			then
 				c_type.append (alias_descriptor.namespace + "::")
 			end
@@ -87,6 +87,19 @@ feature -- Processing
 			a_type_descriptor := alias_descriptor.type_descriptor
 			a_type_visitor := a_type_descriptor.visitor
 			writable := a_type_visitor.writable
+
+			need_free_memory := a_type_visitor.need_free_memory
+			need_generate_free_memory := a_type_visitor.need_generate_free_memory
+			
+			if need_free_memory then
+				if need_generate_free_memory then
+					free_memory_function_name := "free_memory_" + local_counter.out
+					free_memory_function_signature := (c_type + " a_pointer")
+					free_memory_function_body := clone (a_type_visitor.free_memory_function_body)
+				else
+					free_memory_function_name := clone (a_type_visitor.free_memory_function_name)
+				end
+			end
 
 			is_array_basic_type := a_type_visitor.is_array_basic_type
 			is_basic_type := a_type_visitor.is_basic_type
@@ -163,7 +176,7 @@ feature -- Processing
 			create c_type.make (100)
 			if 
 				coclass_descriptor.default_interface_descriptor.namespace /= Void and then
-				not coclass_descriptor.default_interface_descriptor.namespace.empty
+				not coclass_descriptor.default_interface_descriptor.namespace.is_empty
 			then
 				c_type.append (coclass_descriptor.default_interface_descriptor.namespace + "::")
 			end
@@ -214,7 +227,7 @@ feature -- Processing
 			-- process interface
 		do
 			create c_type.make (100)
-			if interface_descriptor.namespace /= Void and then not interface_descriptor.namespace.empty then
+			if interface_descriptor.namespace /= Void and then not interface_descriptor.namespace.is_empty then
 				c_type.append (interface_descriptor.namespace + "::")
 			end
 			c_type.append (interface_descriptor.c_type_name)
@@ -260,7 +273,7 @@ feature -- Processing
 			else
 				if 
 					interface_descriptor.namespace /= Void and then
-					not interface_descriptor.namespace.empty
+					not interface_descriptor.namespace.is_empty
 				then
 					c_type.prepend ("::")
 					c_type.prepend (interface_descriptor.namespace)
@@ -321,7 +334,7 @@ feature -- Processing
 		do
 			vt_type := Vt_record
 			create c_type.make (100)
-			if record_descriptor.namespace /= Void and then not record_descriptor.namespace.empty then
+			if record_descriptor.namespace /= Void and then not record_descriptor.namespace.is_empty then
 				c_type.append (record_descriptor.namespace + "::")
 			end
 			c_type.append (record_descriptor.c_type_name)
@@ -404,9 +417,9 @@ feature {NONE} -- Implementation
 			-- ce function body for records
 		require
 			non_void_class_name: a_class_name /= Void
-			valid_class_name: not a_class_name.empty
+			valid_class_name: not a_class_name.is_empty
 			non_void_c_type: a_c_type /= Void
-			valid_c_type: not a_c_type.empty
+			valid_c_type: not a_c_type.is_empty
 		do
 			create Result.make (10000)
 
@@ -436,14 +449,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	ce_function_body_interface (a_class_name: STRING): STRING is
 			-- ce function body for interfaces
 		require
 			non_void_class_name: a_class_name /= Void
-			valid_class_name: not a_class_name.empty
+			valid_class_name: not a_class_name.is_empty
 		do
 			create Result.make (10000)
 			Result.append (tab)
@@ -466,16 +479,16 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	ec_function_body_wrapper (a_class_name, a_c_type: STRING): STRING is
 			-- ec function body for wrappers.
 		require
 			non_void_class_name: a_class_name /= Void
-			valid_class_name: not a_class_name.empty
+			valid_class_name: not a_class_name.is_empty
 			non_void_c_type: a_c_type /= Void
-			valid_c_type: not a_c_type.empty
+			valid_c_type: not a_c_type.is_empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -565,7 +578,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	ce_function_body_alias (a_class_name, ce_function_for_alias: STRING; 
@@ -573,9 +586,9 @@ feature {NONE} -- Implementation
 			-- ce function body for aliases
 		require
 			non_void_class_name: a_class_name /= Void
-			valid_class_name: not a_class_name.empty
+			valid_class_name: not a_class_name.is_empty
 			non_void_ce_function: ce_function_for_alias /= Void
-			valid_ce_function: not ce_function_for_alias.empty
+			valid_ce_function: not ce_function_for_alias.is_empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -713,7 +726,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 	
 end -- class WIZARD_USER_DEFINED_DATA_TYPE_GENERATOR

@@ -42,7 +42,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			a_signature: STRING
 		do
@@ -68,7 +68,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 			non_void_interface_guid: an_interface.guid /= Void
 		do
 			create Result.make (1000)
@@ -112,7 +112,7 @@ feature -- Basic operations
 			Result.append ("pcpc->Release ();")
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 		
 	disable_routine (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
@@ -120,7 +120,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make
 			
@@ -138,7 +138,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 			non_void_interface_guid: an_interface.guid /= Void
 		do
 			create Result.make (1000)
@@ -182,7 +182,7 @@ feature -- Basic operations
 			Result.append ("pcpc->Release ();")
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	cookie_member (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_MEMBER is
@@ -190,7 +190,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make
 			
@@ -207,14 +207,14 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("cookie_")
 			Result.append (an_interface.name)
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 		
 end -- class WIZARD_SOURCE_INTERFACE_C_CLIENT_GENERATOR

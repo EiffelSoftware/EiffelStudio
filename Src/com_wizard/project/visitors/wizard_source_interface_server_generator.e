@@ -20,7 +20,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("add_")
@@ -28,7 +28,7 @@ feature -- Basic operations
 			Result.append ("_call_back")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	remove_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
@@ -36,7 +36,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("remove_")
@@ -44,7 +44,7 @@ feature -- Basic operations
 			Result.append ("_call_back")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	has_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
@@ -52,7 +52,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("has_")
@@ -60,7 +60,7 @@ feature -- Basic operations
 			Result.append ("_call_back")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 		
 end -- class WIZARD_SOURCE_INTERFACE_SERVER_GENERATOR

@@ -40,7 +40,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			comment: STRING
 		do
@@ -64,14 +64,14 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append (name_for_feature (an_interface.name))
 			Result.append ("_cookie_generator")
 		ensure
 			non_void_feature: Result /= Void
-			valid_feature: not Result.empty
+			valid_feature: not Result.is_empty
 		end
 		
 	interface_table_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
@@ -79,7 +79,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			comment: STRING
 			result_type: STRING
@@ -108,14 +108,14 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append (name_for_feature (an_interface.name))
 			Result.append ("_call_back_interface_table")
 		ensure
 			non_void_feature: Result /= Void
-			valid_feature: not Result.empty
+			valid_feature: not Result.is_empty
 		end
 
 	has_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
@@ -123,7 +123,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			body: STRING
 		do
@@ -150,7 +150,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			comment, body: STRING
 			precondition, postcondition: WIZARD_WRITER_ASSERTION
@@ -214,7 +214,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			comment, body: STRING
 			precondition, postcondition: WIZARD_WRITER_ASSERTION
@@ -263,7 +263,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 			non_void_coclass: a_coclass /= Void
 			non_void_writer: an_eiffel_writer /= Void
 		local

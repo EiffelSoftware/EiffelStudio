@@ -60,14 +60,14 @@ feature {NONE} -- Implementation
 			non_void_component_descriptor: a_component_descriptor /= Void
 		do
 			create Result.make (50)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				Result.append (a_component_descriptor.namespace)
 				Result.append ("::")
 			end
 			Result.append (a_component_descriptor.c_type_name)
 		ensure
 			non_void_c_type: Result /= Void
-			valid_c_type: not Result.empty
+			valid_c_type: not Result.is_empty
 		end
 		
 	define_feature_names (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
@@ -103,13 +103,13 @@ feature {NONE} -- Implementation
 			external_set_feature_name := external_feature_name (set_feature_name)
 		ensure
 			non_void_access_feature_name: access_feature_name /= Void
-			valid_access_feature_name: not access_feature_name.empty
+			valid_access_feature_name: not access_feature_name.is_empty
 			non_void_set_feature_name: set_feature_name /= Void
-			valid_set_feature_name: not set_feature_name.empty
+			valid_set_feature_name: not set_feature_name.is_empty
 			non_void_external_access_feature_name: external_access_feature_name /= Void
-			valid_external_access_feature_name: not external_access_feature_name.empty
+			valid_external_access_feature_name: not external_access_feature_name.is_empty
 			non_void_external_set_feature_name: external_set_feature_name /= Void
-			valid_external_set_feature_name: not external_set_feature_name.empty
+			valid_external_set_feature_name: not external_set_feature_name.is_empty
 		end
 
 	generate_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			non_void_visitor: a_visitor /= Void
 			non_void_descriptor: a_descriptor /= Void
 			non_void_access_feature_name: access_feature_name /= Void
-			valid_access_feature_name: not access_feature_name.empty
+			valid_access_feature_name: not access_feature_name.is_empty
 		do
 			create access_feature.make
 			access_feature.set_name (access_feature_name)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: a_visitor /= Void
 			non_void_set_feature_name: set_feature_name /= Void
-			valid_set_feature_name: not set_feature_name.empty
+			valid_set_feature_name: not set_feature_name.is_empty
 		local
 			an_argument: STRING
 		do
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			non_void_setting_feature_name: setting_feature.name /= Void
 			valid_setting_feature_name: setting_feature.name.is_equal (set_feature_name)
 			non_void_setting_feature_body: setting_feature.body /= Void
-			valid_setting_feature_arguments: not setting_feature.arguments.empty
+			valid_setting_feature_arguments: not setting_feature.arguments.is_empty
 		end
 
 	generate_external_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR;
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: a_visitor /= Void
 			non_void_external_access_feature_name: external_access_feature_name /= Void
-			valid_external_access_feature_name: not external_access_feature_name.empty
+			valid_external_access_feature_name: not external_access_feature_name.is_empty
 			non_void_component: a_component_descriptor /= Void
 			non_void_descriptor: a_descriptor /= Void
 		do
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			non_void_external_access_feature_name: external_access_feature.name /= Void
 			valid_external_access_feature_name: external_access_feature.name.is_equal (external_access_feature_name)
 			non_void_external_access_feature_body: external_access_feature.body /= Void
-			valid_external_access_feature_arguments: not external_access_feature.arguments.empty
+			valid_external_access_feature_arguments: not external_access_feature.arguments.is_empty
 		end
 
 	generate_external_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR;
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: a_visitor /= Void
 			non_void_external_set_feature_name: external_set_feature_name /= Void
-			valid_external_set_feature_name: not external_set_feature_name.empty
+			valid_external_set_feature_name: not external_set_feature_name.is_empty
 			non_void_component: a_component_descriptor /= Void
 		local
 			an_argument: STRING
@@ -242,14 +242,14 @@ feature {NONE} -- Implementation
 			non_void_external_setting_feature_name: external_setting_feature.name /= Void
 			valid_external_setting_feature_name: external_setting_feature.name.is_equal (external_set_feature_name)
 			non_void_external_setting_feature_body: external_setting_feature.body /= Void
-			valid_external_setting_feature_arguments: not external_setting_feature.arguments.empty
+			valid_external_setting_feature_arguments: not external_setting_feature.arguments.is_empty
 		end
 
 	setting_feature_comment (a_name: STRING): STRING is
 			-- Comment for setting feature.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append ("Set ")
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			Result.append (Dot)
 		ensure
 			non_void_comment: Result /= Void
-			valid_comment: not Result.empty
+			valid_comment: not Result.is_empty
 		end
 
 	setting_body (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: a_visitor /= Void
 			non_void_external_set_feature_name: external_set_feature_name /= Void
-			valid_external_set_feature_name: not external_set_feature_name.empty
+			valid_external_set_feature_name: not external_set_feature_name.is_empty
 		local
 			tmp_string, local_variable: STRING
 		do
@@ -317,14 +317,14 @@ feature {NONE} -- Implementation
 			Result.append (tmp_string)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty		
+			valid_body: not Result.is_empty		
 		end
 
 	access_body: STRING is
 			-- Coclass client access body
 		require
 			non_void_external_access_feature_name: external_access_feature_name /= Void
-			valid_external_access_feature_name: not external_access_feature_name.empty
+			valid_external_access_feature_name: not external_access_feature_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append (Tab_tab_tab)
@@ -335,16 +335,16 @@ feature {NONE} -- Implementation
 			Result.append (close_parenthesis)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty		
+			valid_body: not Result.is_empty		
 		end
 
 	external_access_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External access feature body
 		require
 			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.empty
+			valid_class_name: not class_name.is_empty
 			non_void_header_file_name: header_file_name /= Void
-			valud_header_file_name: not header_file_name.empty
+			valud_header_file_name: not header_file_name.is_empty
 			non_void_visitor: visitor /= Void
 		do
 			create Result.make (1000)
@@ -372,16 +372,16 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty		
+			valid_body: not Result.is_empty		
 		end
 
 	external_setting_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External setting body
 		require
 			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.empty
+			valid_class_name: not class_name.is_empty
 			non_void_header_file_name: header_file_name /= Void
-			valud_header_file_name: not header_file_name.empty
+			valud_header_file_name: not header_file_name.is_empty
 			non_void_visitor: visitor /= Void
 		do
 			create Result.make (1000)
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty		
+			valid_body: not Result.is_empty		
 		end
 
 end -- class WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR

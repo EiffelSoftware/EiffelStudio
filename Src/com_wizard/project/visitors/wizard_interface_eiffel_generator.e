@@ -37,7 +37,7 @@ feature -- Basic Operations
 			end
 			eiffel_writer.add_inherit_clause (inherit_clause_writer)
 
-			if a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
+			if a_descriptor.properties /= Void and then not a_descriptor.properties.is_empty then
 				process_properties (a_descriptor.properties)
 			end
 
@@ -63,8 +63,8 @@ feature {NONE} -- Implementation
 				a_descriptor.functions_after
 			loop
 				create func_generator.generate (a_descriptor.functions_item)
-				if func_generator.feature_writer.result_type /= Void and then func_generator.feature_writer.result_type.empty 
-						and func_generator.feature_writer.arguments.empty then
+				if func_generator.feature_writer.result_type /= Void and then func_generator.feature_writer.result_type.is_empty 
+						and func_generator.feature_writer.arguments.is_empty then
 					eiffel_writer.add_feature (func_generator.feature_writer, Access)
 				else
 					eiffel_writer.add_feature (func_generator.feature_writer, Basic_operations)
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			-- Process properties
 		require
 			non_void_list: properties /= Void
-			not_empty_list: not properties.empty
+			not_empty_list: not properties.is_empty
 			non_void_eiffel_writer: eiffel_writer /= Void
 		local
 			prop_generator: WIZARD_EIFFEL_DEFERRED_PROPERTY_GENERATOR

@@ -53,7 +53,7 @@ feature -- Basic operations
 			create a_result_type.make (100)
 			if 
 				a_descriptor.interface_descriptor.namespace /= Void and then
-				not a_descriptor.interface_descriptor.namespace.empty 
+				not a_descriptor.interface_descriptor.namespace.is_empty 
 			then
 				a_result_type.append (a_descriptor.interface_descriptor.namespace)
 				a_result_type.append ("::")
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			Result.append (Co_uninitialize_function)
 		ensure
 			non_void_destructor: Result /= void
-			valid_descructor: not Result.empty
+			valid_descructor: not Result.is_empty
 		end
 
 

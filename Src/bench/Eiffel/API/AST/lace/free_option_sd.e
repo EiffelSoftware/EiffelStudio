@@ -578,18 +578,18 @@ feature {COMPILER_EXPORTER}
 
 				when old_verbatim_strings then
 					if value.is_no then
-						System.set_old_verbatim_strings (False)
+						System.set_has_old_verbatim_strings (False)
 					elseif value.is_yes then
-						System.set_old_verbatim_strings (True)
+						System.set_has_old_verbatim_strings (True)
 					else
 						error_found := True
 					end
 				
 				when old_verbatim_strings_warning then
 					if value.is_no then
-						System.set_old_verbatim_strings_warning (False)
+						System.set_has_old_verbatim_strings_warning (False)
 					elseif value.is_yes then
-						System.set_old_verbatim_strings_warning (True)
+						System.set_has_old_verbatim_strings_warning (True)
 					else
 						error_found := True
 					end

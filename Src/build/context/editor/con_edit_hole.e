@@ -32,8 +32,6 @@ feature {NONE}
 			Result := Focus_labels.context_label
 		end;
 
-feature 
-
 	data: CONTEXT is
 		do
 			Result := associated_editor.edited_context
@@ -64,12 +62,33 @@ feature
 			Result := Pixmaps.context_pixmap
 		end;
 
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.context_dot_pixmap
+		end;
+
 feature {NONE}
 
 	process_context (dropped: CONTEXT_STONE) is
 			-- Set the new edited context
 		do
 			associated_editor.set_edited_context (dropped.data)
+		end
+
+feature
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
 		end
 
 end

@@ -11,21 +11,8 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_ITEM_IMP
-		rename
-			add_double_click_command as old_double_click
-		undefine
-			set_label_widget,
-			label_widget
 		redefine
 			create_text_label
-		end
-
-	EV_PIXMAPABLE_IMP
-		rename
-			make as old_make,
-			interface as widget_interface,
-			add_double_click_command as old_double_click,
-			set_interface as set_widget_interface
 		end
 
 creation
@@ -71,6 +58,30 @@ feature -- Status report
 			Result := False
 		end
 
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	is_first: BOOLEAN is
+			-- Is the item first in the list ?
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	is_last: BOOLEAN is
+			-- Is the item last in the list ?
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 feature -- Status setting
 
 	set_selected (flag: BOOLEAN) is
@@ -104,13 +115,21 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_double_click_command (a_command: EV_COMMAND; 
-			       arg: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
+	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be
 			-- executed when the item is double clicked
 		do
-			old_double_click (1, a_command, arg)
+			old_add_dblclk (1, cmd, arg)
 		end	
+
+feature -- Event -- removing command association
+
+	remove_double_click_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is double-clicked.
+		do
+			check False end
+		end
 
 end -- class EV_LIST_ITEM_IMP
 

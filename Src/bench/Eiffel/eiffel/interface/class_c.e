@@ -807,6 +807,9 @@ feature -- Third pass: byte code production and type check
 				-- For Concurrent Eiffel
 			def_resc_depend: DEPEND_UNIT
 			type_checked: BOOLEAN
+
+				-- For full type checking
+			full_type_checking, local_type_checking: BOOLEAN
 		do
 			from
 					-- Initialization for actual types evaluation
@@ -837,6 +840,7 @@ feature -- Third pass: byte code production and type check
 				end
 
 				feat_table.start
+				full_type_checking := System.full_type_checking
 			until
 				feat_table.after
 			loop
@@ -852,7 +856,8 @@ io.error.putint (feature_i.feature_id)
 io.error.new_line
 end
 
-				if feature_i.to_melt_in (Current) then
+				local_type_checking := feature_i.to_melt_in (Current)
+				if full_type_checking or else local_type_checking then
 					feature_name_id := feature_i.feature_name_id
 					feature_name := feature_i.feature_name
 
@@ -874,6 +879,10 @@ end
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name_id)
 					
+					if not local_type_checking then
+						feature_changed := True
+					end
+
 					if not feature_changed then
 							-- Force a change on all feature of current class if line
 							-- debugging is turned on. Not doing so could make obsolete
@@ -965,7 +974,7 @@ end
 							type_checked := True
 							type_check_error := Error_handler.new_error
 
-							if not type_check_error then
+							if local_type_checking and then not type_check_error then
 								if f_suppliers /= Void then
 										-- Dependances update: remove old
 										-- dependances for `feature_name'.
@@ -1017,12 +1026,16 @@ end
 						end
 					else
 							-- in_pass3 = False
-						record_suppliers (feature_i, dependances)
+						if local_type_checking then
+							record_suppliers (feature_i, dependances)
+						end
 					end
 
 					ast_context.clear2
 
-					if	(feature_changed or else byte_code_generated)
+					if
+						local_type_checking and then 
+						(feature_changed or else byte_code_generated)
 						and then not (type_check_error or else feature_i.is_deferred)
 					then
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")

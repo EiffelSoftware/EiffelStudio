@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			debug_value_kept.compare_objects
 		end
 
-feature {APPLICATION_EXECUTION_DOTNET} -- Operation
+feature {APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- Operation
 
 	recycle is
 		do

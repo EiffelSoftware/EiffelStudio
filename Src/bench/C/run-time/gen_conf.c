@@ -2186,7 +2186,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 
 	if (size > 8) {
 			/* Large array */
-		tp = (int16 *) eif_malloc(size*sizeof(int16));
+		tp = (int16 *) eif_malloc((size + 1)*sizeof(int16));
 		if (tp == (int16 *)0)
 			enomem();
 	} else {

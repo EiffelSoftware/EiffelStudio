@@ -174,6 +174,16 @@ feature -- Status report
 			end
 		end
 
+	memory_count_map: HASH_TABLE [INTEGER, INTEGER] is
+			-- Number of instances per dynamic type present in system.
+			-- Same as `memory_map' except that no references on the objects themselves
+			-- is kept.
+		do
+			check
+				False
+			end
+		end
+
 feature -- Status setting
 
 	collection_off is

@@ -15,7 +15,8 @@ inherit
  	EV_FONT_I
 		redefine
 			interface,
-			set_values
+			set_values,
+			string_size
 		end
 
 create
@@ -181,8 +182,9 @@ feature -- Status report
 			Result := string_width ("W")
 		end
 
-	string_width (a_string: STRING): INTEGER is
-			-- Width in pixels of `a_string' in the current font.
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- `Result' is [width, height] in pixels of `a_string' in the
+			-- current font, taking into account line breaks ('%N').
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
@@ -193,7 +195,13 @@ feature -- Status report
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
-			Result := a_width
+			Result := [a_width, a_height]
+		end
+
+	string_width (a_string: STRING): INTEGER is
+			-- Width in pixels of `a_string' in the current font.
+		do
+			Result := string_size (a_string).integer_32_item (1)
 		end
 
 	horizontal_resolution: INTEGER is

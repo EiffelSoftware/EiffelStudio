@@ -65,9 +65,38 @@ feature -- Element change
 			t_feat: FEATURE_I;
 			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX];
 			f_name: FEATURE_NAME_B;
+			comment: STRING;
+			tmp: STRING
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
+				from
+					--| Separate all the feature names
+					--| i.e. one feature name per ast
+					!! comment.make (40);
+					i := 1;
+					l_count := names.count;
+					comment.append ("Was declared in ");
+					tmp := clone (format_reg.current_class.class_name);
+					tmp.to_upper;
+					comment.append (tmp);
+					comment.append (" as synonym of ")
+				until
+					i > l_count
+				loop
+					if i /= 1 then
+						if i = l_count then
+							comment.append (" and ")
+						else 
+							comment.append (", ")
+						end
+					end;
+					comment.extend ('`');
+					comment.append (names.i_th (i).visual_name);	
+					comment.extend ('%'');
+					i := i + 1
+				end;
+				comment.extend ('.');
 				from
 					--| Separate all the feature names
 					--| i.e. one feature name per ast
@@ -82,6 +111,7 @@ feature -- Element change
 					new_feature_as.set_feature_names (eiffel_list);
 					!! adapter;
 					adapter.register (new_feature_as, format_reg);
+					adapter.add_comment (comment)
 					i := i + 1
 				end;
 			else
@@ -244,6 +274,7 @@ feature {NONE} -- Implementation
 					end;
 				end;
 			end;
+			format_reg.record_creation_feature (Current)
 		end;
 
 	register_uncompiled_feature (format_reg: FORMAT_REGISTRATION) is
@@ -289,5 +320,18 @@ feature -- Case storage output
 				Result.set_comments (feature_comments)
 			end
 		end
+
+feature {FEATURE_ADAPTER} -- Element change
+
+	add_comment (comment: STRING) is
+			-- Add `comment' to `comments'.
+		require
+			valid_comment: comment /= Void
+		do
+			if comments = Void then
+				!! comments.make 
+			end;
+			comments.extend (comment)
+		end;
 
 end -- class FEATURE_ADAPTER

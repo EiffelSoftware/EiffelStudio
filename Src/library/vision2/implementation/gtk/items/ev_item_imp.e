@@ -11,16 +11,9 @@ inherit
 	EV_ITEM_I
 
 	EV_TEXTABLE_IMP
-		rename
-			-- We want to maintain the name make_with_text
-			-- although the signature is different
-			make as old_make,
-			make_with_text as old_make_with_text
-		end
 
 	EV_PIXMAPABLE_IMP
 		rename
-			make as old_make,
 			interface as widget_interface,
 			set_interface as set_widget_interface,
 			add_double_click_command as old_add_dblclk,
@@ -31,7 +24,6 @@ inherit
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
-			make as old_make,
 			interface as widget_interface,
 			set_interface as set_widget_interface,
 			add_double_click_command as old_add_dblclk,
@@ -83,21 +75,6 @@ feature -- Event -- removing command association
 		do	
 			check False end
 		end
-
---feature {NONE} -- Implementation
-	
---	set_label_widget (new_label_widget: POINTER) is
---		do
---			check
---				do_not_call: False
---			end
---		end
-	
---	label_widget: POINTER is
- --                       -- gtk widget of the label inside the item
-  --              do
- --                     Result := c_gtk_get_label_widget (widget)
---		end
 
 end -- class EV_ITEM_IMP
 

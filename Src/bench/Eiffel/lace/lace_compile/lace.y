@@ -65,7 +65,7 @@ creation
 %type <PAIR [ID_SD, CLICK_AST]>		Clickable_name
 
 
-%expect 3
+%expect 2
 
 %%
 
@@ -128,8 +128,8 @@ Cluster_clause: Name Parent_tag LAC_COLON Name
 			{ $$ := new_cluster_sd ($1, $2, $4, Void) }
 	|	Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
 			{ $$ := new_cluster_sd ($1, $2, $4, $5) }
-	|	Name Parent_tag LAC_COLON Name LAC_END
-			{ $$ := new_cluster_sd ($1, $2, $4, Void) }
+--	|	Name Parent_tag LAC_COLON Name LAC_END
+--			{ $$ := new_cluster_sd ($1, $2, $4, Void) }
 	;
 
 Parent_tag: -- Empty

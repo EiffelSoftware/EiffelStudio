@@ -9,6 +9,9 @@ deferred class ERROR
 
 inherit
 	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 feature -- Properties 
 

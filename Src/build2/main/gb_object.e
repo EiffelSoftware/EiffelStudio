@@ -842,6 +842,7 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 			layout_item ?= a_layout_item
 			layout_item.set_object (Current)
 			build_drop_actions_for_layout_item (layout_item)
+			layout_item.set_pebble_function (agent retrieve_pebble)
 		ensure
 			layout_item_set: layout_item = a_layout_item
 			layout_item_object_set: layout_item.object = Current

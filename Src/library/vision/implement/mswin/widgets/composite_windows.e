@@ -65,8 +65,6 @@ feature -- Element change
 
 	realize_current is
 			-- Realize current composite without the children.
-		require
-			valid_parent: (parent /= Void) implies (parent.exists)
 		deferred
 		end
 

@@ -185,5 +185,11 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_NOT_STD_EQUAL	95
 #define BC_NEXT				96
 #define BC_BIT				97
+#define BC_ARRAY			98
+#define BC_INSERT			99
+#define BC_END_INSERT		100	
+#define BC_OLD				101
+#define BC_ADD_STRIP		102
+#define BC_END_STRIP		103
 
 #endif

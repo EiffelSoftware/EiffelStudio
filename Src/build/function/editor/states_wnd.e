@@ -28,8 +28,8 @@ feature {NONE}
 
 	continue_after_popdown is
 		do
-			if not equal (list.selected_item, "Cancel") then
-				caller.set_state (list.selected_item)
+			if not equal (list.selected_item.value, "Cancel") then
+				caller.set_state (list.selected_item.value)
 			end
 		end;
 

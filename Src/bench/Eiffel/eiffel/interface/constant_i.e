@@ -74,7 +74,9 @@ feature
 		do
 			old_check_types (feat_tbl);
 			actual_type := type.actual_type;
-			if not value.valid_type (actual_type) then
+			if value.valid_type (actual_type) then
+				value.set_real_value (actual_type)
+			else
 				vqmc := value.vqmc;
 				vqmc.set_class (written_class);
 				vqmc.set_feature_name (feature_name);

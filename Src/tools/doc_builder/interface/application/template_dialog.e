@@ -24,10 +24,8 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			empty_file.pointer_button_press_actions.force_extend (agent highlight_label (empty_val, empty_label))
-			how_to.pointer_button_press_actions.force_extend (agent highlight_label (howto_val, howto_label))
-			sample.pointer_button_press_actions.force_extend (agent highlight_label (sample_val, sample_label))
-			tutorial.pointer_button_press_actions.force_extend (agent highlight_label (tutorial_val, tutorial_label))
+			empty_file.pointer_button_press_actions.force_extend (agent highlight_label (empty_val, empty_label))			
+			sample.pointer_button_press_actions.force_extend (agent highlight_label (sample_val, sample_label))			
 			project.pointer_button_press_actions.force_extend (agent highlight_label (project_val, project_label))
 			ok_button.select_actions.extend (agent load_new_item)
 			cancel_button.select_actions.extend (agent hide)
@@ -47,23 +45,15 @@ feature {NONE} -- Implementation
 		end
 		
 	set_item_description is
-			-- Set description for selected template
-		local
-			empty_tmp: EMPTY_TEMPLATE
-			project_tmp: PROJECT_TEMPLATE
-			howto_tmp: HOWTO_TEMPLATE
+			-- Set description for selected template			
 		do
 			inspect label_number
 			when empty_val then
 				create empty_tmp
 				template_description.set_text (empty_tmp.description)
 			when sample_val then
-				
-			when tutorial_val then
-				
-			when howto_val then
-				create howto_tmp
-				template_description.set_text (howto_tmp.description)				
+				create sample_tmp
+				template_description.set_text (sample_tmp.description)			
 			when project_val then
 				create project_tmp
 				template_description.set_text (project_tmp.description)
@@ -72,21 +62,28 @@ feature {NONE} -- Implementation
 		
 	load_new_item is
 			-- Load new chosen item
-		do
+		local
+			l_document: DOCUMENT
+		do			
 			inspect label_number
 			when empty_val then
-				Shared_document_manager.create_document
+				shared_document_manager.create_document
+				l_document := shared_document_editor.current_document
+				l_document.set_text (empty_tmp.content)
 			when sample_val then
-				Shared_document_manager.create_document
-			when tutorial_val then
-				Shared_document_manager.create_document
-			when howto_val then
-				Shared_document_manager.create_document
+				shared_document_manager.create_document
+				l_document := shared_document_editor.current_document
+				l_document.set_text (sample_tmp.content)		
 			when project_val then
 				Shared_project.create_new
 			end
 			hide
 		end
+
+	empty_tmp: EMPTY_TEMPLATE
+	project_tmp: PROJECT_TEMPLATE
+	sample_tmp: SAMPLE_TEMPLATE
+			-- Templates
 
 	label_selected: EV_LABEL
 			-- Currently selected label
@@ -102,8 +99,6 @@ feature {NONE} -- Implementation
 
 	empty_val: INTEGER is unique
 	sample_val: INTEGER is unique
-	howto_val: INTEGER is unique
-	tutorial_val: INTEGER is unique
 	project_val: INTEGER is unique
 			-- Label number constants
 	

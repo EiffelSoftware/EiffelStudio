@@ -79,6 +79,10 @@ feature {NONE} -- Initialization
 			gen_menu_item.select_actions.extend 			(agent open_generation_dialog)
 			validator_menu_item.select_actions.extend 		(agent open_validator_tool)
 			expression_menu_item.select_actions.extend 		(agent open_expression_dialog)
+			character_menu_item.select_actions.extend 		(agent open_character_dialog)
+			
+					-- Help Menu
+			help_menu_item.select_actions.extend 			(agent display_help)
 		
 					-- Toolbar Events
 			toolbar_cut.select_actions.extend 				(agent Shared_document_editor.cut_text)
@@ -574,6 +578,12 @@ feature {NONE} -- Dialog
 			Shared_dialogs.expression_dialog.show_modal_to_window (Current)
 		end
 
+	open_character_dialog is
+			-- Special character dialog for XML and HTML
+		do
+			Shared_dialogs.character_dialog.show_relative_to_window (Current)
+		end
+
 	open_document_properties_dialog is
 			-- Properties dialog for currently loaded document
 		local
@@ -612,5 +622,19 @@ feature {NONE} -- Dialog
 		do
 			Shared_dialogs.toc_merge_dialog.show_modal_to_window (Current)
 		end
+
+	display_help is
+			-- Display help
+		local
+			l_error: ERROR_REPORT
+		do
+			shared_help_manager.show_help
+			if not shared_help_manager.last_show_successful then
+				create l_error.make ("Could not load help.")
+				l_error.append_error (create {ERROR}.make ("Unable to initialize help"))
+				shared_dialogs.error_dialog.set_error_list (l_error.errors)
+				shared_dialogs.error_dialog.show_modal_to_window (Current)
+			end	
+		end		
 
 end -- class MAIN_WINDOW

@@ -60,17 +60,16 @@ feature {NONE}-- Initialization
 			create doc_selector_menu
 			create attribute_selector_menu
 			create sub_element_menu
-			create output_sub_menu
-			create all_output_doc_item
-			create studio_output_doc_item
-			create envision_ouput_doc_item
 			create project_menu
 			create settings_menu_item
 			create tool_menu
 			create validator_menu_item
 			create gen_menu_item
 			create expression_menu_item
+			create character_menu_item
 			create help_menu
+			create help_menu_item
+			create l_ev_menu_separator_7
 			create about_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_frame_1
@@ -212,17 +211,16 @@ feature {NONE}-- Initialization
 			view_menu.extend (doc_selector_menu)
 			view_menu.extend (attribute_selector_menu)
 			view_menu.extend (sub_element_menu)
-			view_menu.extend (output_sub_menu)
-			output_sub_menu.extend (all_output_doc_item)
-			output_sub_menu.extend (studio_output_doc_item)
-			output_sub_menu.extend (envision_ouput_doc_item)
 			l_ev_menu_bar_1.extend (project_menu)
 			project_menu.extend (settings_menu_item)
 			l_ev_menu_bar_1.extend (tool_menu)
 			tool_menu.extend (validator_menu_item)
 			tool_menu.extend (gen_menu_item)
 			tool_menu.extend (expression_menu_item)
+			tool_menu.extend (character_menu_item)
 			l_ev_menu_bar_1.extend (help_menu)
+			help_menu.extend (help_menu_item)
+			help_menu.extend (l_ev_menu_separator_7)
 			help_menu.extend (about_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
@@ -367,22 +365,20 @@ feature {NONE}-- Initialization
 			types_selector_menu.enable_select
 			types_selector_menu.set_text ("Schema types")
 			doc_selector_menu.enable_select
-			doc_selector_menu.set_text ("Document editor")
+			doc_selector_menu.set_text ("Document Selector")
 			attribute_selector_menu.enable_select
 			attribute_selector_menu.set_text ("Element/Type attributes")
 			sub_element_menu.enable_select
 			sub_element_menu.set_text ("Sub element selector")
-			output_sub_menu.set_text ("Output documents")
-			all_output_doc_item.set_text ("All output types")
-			studio_output_doc_item.set_text ("EiffelStudio")
-			envision_ouput_doc_item.set_text ("ENViSioN!")
 			project_menu.set_text ("Project")
 			settings_menu_item.set_text ("Settings..")
 			tool_menu.set_text ("Tools")
 			validator_menu_item.set_text ("Validator..")
 			gen_menu_item.set_text ("Generator..")
 			expression_menu_item.set_text ("Expression Builder..")
+			character_menu_item.set_text ("Character Codes..")
 			help_menu.set_text ("Help")
+			help_menu_item.set_text ("Contents")
 			about_menu_item.set_text ("About..")
 			l_ev_vertical_box_1.set_padding_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
@@ -440,6 +436,7 @@ feature {NONE}-- Initialization
 			selector.set_item_text (type_area, "Types")
 			documentation_area.set_padding_width (padding_width)
 			documentation_area.set_border_width (border_width)
+			toc_container.hide
 			toc_container.set_minimum_height (400)
 			l_ev_vertical_split_area_3.set_minimum_height (400)
 			l_ev_vertical_box_3.set_minimum_height (310)
@@ -504,6 +501,7 @@ feature {NONE}-- Initialization
 			l_ev_label_3.align_text_left
 			node_properties_close.set_pixmap (icon_close_color_ico)
 			node_properties_list.set_minimum_height (0)
+			element_area.hide
 			element_area.set_minimum_height (20)
 			element_area.set_padding_width (padding_width)
 			element_area.set_border_width (border_width)
@@ -520,6 +518,7 @@ feature {NONE}-- Initialization
 			l_ev_label_4.set_text (" Attributes")
 			l_ev_label_4.align_text_left
 			attribute_list.set_minimum_height (0)
+			type_area.hide
 			type_area.set_padding_width (padding_width)
 			type_area.set_border_width (border_width)
 			sub_element_tool.set_style (1)
@@ -564,17 +563,15 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_menu_bar_1: EV_MENU_BAR
-	file_menu, document_menu, doc_format, view_menu, output_sub_menu, project_menu, 
-	tool_menu, help_menu: EV_MENU
+	file_menu, document_menu, doc_format, view_menu, project_menu, tool_menu, help_menu: EV_MENU
 	new_menu_item, open_menu_item, open_project_menu_item, save_menu_item, close_menu_item, 
 	cut_menu_item, copy_menu_item, paste_menu_item, font_menu_item, parser_menu_item, 
 	search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
-	about_menu_item: EV_MENU_ITEM
+	character_menu_item, help_menu_item, about_menu_item: EV_MENU_ITEM
 	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3, l_ev_menu_separator_4, 
-	l_ev_menu_separator_5, l_ev_menu_separator_6: EV_MENU_SEPARATOR
+	l_ev_menu_separator_5, l_ev_menu_separator_6, l_ev_menu_separator_7: EV_MENU_SEPARATOR
 	wrap_menu_item, menu_uppercase_tags, element_selector_menu, types_selector_menu, 
 	doc_selector_menu, attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
-	all_output_doc_item, studio_output_doc_item, envision_ouput_doc_item: EV_RADIO_MENU_ITEM
 	l_ev_vertical_box_1, l_ev_vertical_box_2, documentation_area, toc_container, l_ev_vertical_box_3, 
 	toc_vertical_toolbar, node_properties_area, element_area, l_ev_vertical_box_4, 
 	type_area, l_ev_vertical_box_5, l_ev_vertical_box_6, document_area: EV_VERTICAL_BOX

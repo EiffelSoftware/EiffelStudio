@@ -35,14 +35,10 @@ feature {NONE}-- Initialization
 			create l_ev_frame_1
 			create l_ev_fixed_1
 			create sample
-			create tutorial
-			create how_to
 			create empty_file
 			create project
 			create empty_label
 			create sample_label
-			create howto_label
-			create tutorial_label
 			create project_label
 			create l_ev_horizontal_box_1
 			create template_description
@@ -56,14 +52,10 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_fixed_1)
 			l_ev_fixed_1.extend (sample)
-			l_ev_fixed_1.extend (tutorial)
-			l_ev_fixed_1.extend (how_to)
 			l_ev_fixed_1.extend (empty_file)
 			l_ev_fixed_1.extend (project)
 			l_ev_fixed_1.extend (empty_label)
 			l_ev_fixed_1.extend (sample_label)
-			l_ev_fixed_1.extend (howto_label)
-			l_ev_fixed_1.extend (tutorial_label)
 			l_ev_fixed_1.extend (project_label)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (template_description)
@@ -87,24 +79,16 @@ feature {NONE}-- Initialization
 				-- Size and position all children of `l_ev_fixed_1'.
 			l_ev_fixed_1.set_item_x_position (sample, 0100)
 			l_ev_fixed_1.set_item_y_position (sample, 0020)
-			l_ev_fixed_1.set_item_width (sample, 0001)
-			l_ev_fixed_1.set_item_height (sample, 0001)
-			l_ev_fixed_1.set_item_x_position (tutorial, 0180)
-			l_ev_fixed_1.set_item_y_position (tutorial, 0020)
-			l_ev_fixed_1.set_item_width (tutorial, 0001)
-			l_ev_fixed_1.set_item_height (tutorial, 0001)
-			l_ev_fixed_1.set_item_x_position (how_to, 0020)
-			l_ev_fixed_1.set_item_y_position (how_to, 0100)
-			l_ev_fixed_1.set_item_width (how_to, 0001)
-			l_ev_fixed_1.set_item_height (how_to, 0001)
+			l_ev_fixed_1.set_item_width (sample, 0016)
+			l_ev_fixed_1.set_item_height (sample, 0016)
 			l_ev_fixed_1.set_item_x_position (empty_file, 0020)
 			l_ev_fixed_1.set_item_y_position (empty_file, 0020)
-			l_ev_fixed_1.set_item_width (empty_file, 0001)
-			l_ev_fixed_1.set_item_height (empty_file, 0001)
-			l_ev_fixed_1.set_item_x_position (project, 0100)
-			l_ev_fixed_1.set_item_y_position (project, 0100)
-			l_ev_fixed_1.set_item_width (project, 0001)
-			l_ev_fixed_1.set_item_height (project, 0001)
+			l_ev_fixed_1.set_item_width (empty_file, 0016)
+			l_ev_fixed_1.set_item_height (empty_file, 0016)
+			l_ev_fixed_1.set_item_x_position (project, 0180)
+			l_ev_fixed_1.set_item_y_position (project, 0020)
+			l_ev_fixed_1.set_item_width (project, 0016)
+			l_ev_fixed_1.set_item_height (project, 0016)
 			l_ev_fixed_1.set_item_x_position (empty_label, 0020)
 			l_ev_fixed_1.set_item_y_position (empty_label, 0060)
 			l_ev_fixed_1.set_item_width (empty_label, 0048)
@@ -113,28 +97,19 @@ feature {NONE}-- Initialization
 			l_ev_fixed_1.set_item_y_position (sample_label, 0060)
 			l_ev_fixed_1.set_item_width (sample_label, 0045)
 			l_ev_fixed_1.set_item_height (sample_label, 0020)
-			l_ev_fixed_1.set_item_x_position (howto_label, 0020)
-			l_ev_fixed_1.set_item_y_position (howto_label, 0140)
-			l_ev_fixed_1.set_item_width (howto_label, 0045)
-			l_ev_fixed_1.set_item_height (howto_label, 0020)
-			l_ev_fixed_1.set_item_x_position (tutorial_label, 0180)
-			l_ev_fixed_1.set_item_y_position (tutorial_label, 0060)
-			l_ev_fixed_1.set_item_width (tutorial_label, 0045)
-			l_ev_fixed_1.set_item_height (tutorial_label, 0020)
-			l_ev_fixed_1.set_item_x_position (project_label, 0100)
-			l_ev_fixed_1.set_item_y_position (project_label, 0140)
+			l_ev_fixed_1.set_item_x_position (project_label, 0180)
+			l_ev_fixed_1.set_item_y_position (project_label, 0060)
 			l_ev_fixed_1.set_item_width (project_label, 0045)
 			l_ev_fixed_1.set_item_height (project_label, 0020)
 			sample.set_minimum_width (20)
 			sample.set_minimum_height (20)
-			tutorial.set_minimum_width (20)
-			tutorial.set_minimum_height (20)
-			how_to.set_minimum_width (20)
-			how_to.set_minimum_height (20)
+			sample.copy (icon_copy_color_ico)
 			empty_file.set_minimum_width (20)
 			empty_file.set_minimum_height (20)
+			empty_file.copy (icon_new_doc_ico)
 			project.set_minimum_width (20)
 			project.set_minimum_height (20)
+			project.copy (icon_new_editor_color_ico)
 			empty_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			empty_label.set_text ("Empty file")
 			empty_label.set_minimum_width (45)
@@ -143,14 +118,6 @@ feature {NONE}-- Initialization
 			sample_label.set_text ("Sample")
 			sample_label.set_minimum_width (45)
 			sample_label.set_minimum_height (20)
-			howto_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			howto_label.set_text ("How-to")
-			howto_label.set_minimum_width (45)
-			howto_label.set_minimum_height (20)
-			tutorial_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			tutorial_label.set_text ("Tutorial")
-			tutorial_label.set_minimum_width (45)
-			tutorial_label.set_minimum_height (20)
 			project_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			project_label.set_text ("Project")
 			project_label.set_minimum_width (45)
@@ -184,8 +151,8 @@ feature -- Access
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_frame_1: EV_FRAME
 	l_ev_fixed_1: EV_FIXED
-	sample, tutorial, how_to, empty_file, project: EV_PIXMAP
-	empty_label, sample_label, howto_label, tutorial_label, project_label, template_description: EV_LABEL
+	sample, empty_file, project: EV_PIXMAP
+	empty_label, sample_label, project_label, template_description: EV_LABEL
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_cell_1: EV_CELL
 	ok_button, cancel_button: EV_BUTTON

@@ -61,6 +61,7 @@ feature -- Query
 			l_last_entry,
 			l_file_type: STRING
 			l_file_pixmap: EV_PIXMAP
+			l_filename: FILE_NAME
 		do
 			create Result.make (5)
 			from
@@ -73,8 +74,10 @@ feature -- Query
 				root_dir.readentry
 				l_last_entry := root_dir.lastentry
 				if l_last_entry /= Void and then not l_last_entry.is_equal (".") and then not l_last_entry.is_equal ("..") then
-					create file.make (root_dir.name + "\" + root_dir.lastentry)
-					create dir.make (root_dir.name + "\" + root_dir.lastentry)
+					create l_filename.make_from_string (root_dir.name)
+					l_filename.extend (root_dir.lastentry)
+					create file.make (l_filename.string)
+					create dir.make (l_filename.string)
 					if dir.exists then
 						create node.make_with_function (agent get_children (dir, node))
 						node.set_text (short_name (dir.name))

@@ -65,10 +65,10 @@ feature {NONE} -- Initialization
 	initialize_output is
 			-- Initialize output options
 		local
-			l_outputs: HASH_TABLE [STRING, STRING]
+			l_outputs: HASH_TABLE [DOCUMENT_FILTER, STRING]
 			l_item: EV_LIST_ITEM
 		do
-			l_outputs := Shared_constants.Output_constants.Output_list
+			l_outputs := shared_project.filter_manager.filters
 			from
 				l_outputs.start
 			until
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			-- Name prior to editing
 			
 	populate_widgets is
-			-- Build the dialog with information from `'a_doc
+			-- Build the dialog with information from `a_doc'
 		local
 			l_toc_element, l_element: XM_ELEMENT
 		do
@@ -236,6 +236,7 @@ feature {NONE} -- Implementation
 			l_formatter.set_output (l_output)
 			l_formatter.process_document (xm_document)			
 			document.set_text (pretty_xml (l_output.string))
+			document.widget.internal_edit_widget.set_text (document.text)
 			
 					-- Synchronization
 			Shared_document_manager.Synchronizer.add_document (document)

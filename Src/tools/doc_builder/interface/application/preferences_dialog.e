@@ -61,7 +61,7 @@ feature {NONE} -- Commands
 				header_loc_text.set_text (project_preferences.header_name)
 			end
 			if project_preferences.footer_name /= Void then
-				header_loc_text.set_text (project_preferences.footer_name)
+				footer_loc_text.set_text (project_preferences.footer_name)
 			end
 			
 			-- Conversion Options
@@ -114,7 +114,7 @@ feature {NONE} -- Commands
 
 				-- Footer File	
 			if not footer_loc_text.text.is_empty then
-				project_preferences.set_header (footer_loc_text.text)
+				project_preferences.set_footer (footer_loc_text.text)
 			end			
 			
 				-- Conversion Options

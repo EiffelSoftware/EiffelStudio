@@ -117,6 +117,16 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	icon_info_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_info.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	icon_paste_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -147,26 +157,26 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_studio_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_studio.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	button_cancel_text: STRING is
 			-- `Result' is STRING constant named `button_cancel_text'.
 		once
 			Result := "Cancel"
 		end
 
-	empty_cell_width: INTEGER is 
-			-- `Result' is INTEGER constant named empty_cell_width.
+	dialog_short_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_short_height.
 		once
-			Result := 15
+			Result := 175
+		end
+
+	icon_search_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_search.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	icon_validate_ico: EV_PIXMAP is
@@ -395,16 +405,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_format_text_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_format_text_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	button_back_text: STRING is
 			-- `Result' is STRING constant named `button_back_text'.
 		once
@@ -449,14 +449,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_search_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_search.ico")
-			set_with_named_file (Result, a_file_name)
+	empty_cell_width: INTEGER is 
+			-- `Result' is INTEGER constant named empty_cell_width.
+		once
+			Result := 15
 		end
 
 	icon_close_color_ico: EV_PIXMAP is
@@ -489,13 +485,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_info_ico: EV_PIXMAP is
+	icon_format_text_color_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_info.ico")
+			a_file_name.set_file_name ("icon_format_text_color.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -547,10 +543,14 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_short_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_short_height.
-		once
-			Result := 175
+	icon_studio_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_studio.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	unfiltered_text: STRING is
@@ -748,7 +748,7 @@ feature {NONE} -- Implementation
 						end_quote2 := line_contents.index_of ('"', start_quote2 + 1)
 						name := line_contents.substring (start_quote1 + 1, end_quote1 - 1)
 						value := line_contents.substring (start_quote2 + 1, end_quote2 - 1)
-						all_constants.extend (value, name)
+						all_constants.put (value, name)
 					end
 				end
 			end

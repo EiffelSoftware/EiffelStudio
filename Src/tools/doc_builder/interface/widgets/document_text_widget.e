@@ -9,7 +9,8 @@ class
 inherit	
 	EV_TEXT
 		redefine
-			initialize
+			initialize,
+			is_in_default_state
 		end
 
 	OBSERVER
@@ -40,9 +41,9 @@ feature -- Creation
 	make (a_document: DOCUMENT) is
 			-- Make Current with `text'
 		do
-			document := a_document
-			document.attach (Current)
+			document := a_document	
 			default_create
+			document.attach (Current)								
 		end
 
 feature {NONE} -- Initialization
@@ -74,12 +75,16 @@ feature -- Query
 			
 	is_valid_xml: BOOLEAN is
 			-- Is `text' valid xml?
+		local
+			l_error: ERROR
 		do
 			if not text.is_empty then					
 				Result := is_valid_xml_text (text)
 				if not Result then
 					create error_report.make ("Invalid XML")
-					error_report.append_error (create {ERROR}.make (error_description))
+					create l_error.make_with_line_information (error_description, error_line, error_column)
+					l_error.set_action (agent (error_report.actions).highlight_text_in_editor (error_line, error_column))
+					error_report.append_error (l_error)
 				end
 			end
 		end		
@@ -165,7 +170,7 @@ feature -- Status report
 	update_line_display is
 			-- Update line display to reflect caret position
 		do
-			Application_window.update_status_line (current_line_number, caret_position)	
+			Application_window.update_status_line (current_line_number, caret_position)
 		end	
 
 feature -- Status Setting
@@ -174,14 +179,6 @@ feature -- Status Setting
 			-- Save current to disk
 		do
 			document.save
-		end	
-
-	insert_xml_formatted (a_xml: STRING) is
-			-- Insert 'xml' into Current text, pretty formatted
-		require
-			is_valid_xml_text (a_xml)
-		do
-			insert_text (pretty_xml (a_xml))	
 		end	
 		
 	add_tabs_to_text (txt: STRING; tab_no: INTEGER): STRING is
@@ -276,6 +273,9 @@ feature -- Status Setting
 		do
 			should_update := False
 			document.set_text (text)
+--			if not text.is_empty then				
+--				document.insert_character (text.item (caret_position - 1), caret_position - 1 )	
+--			end
 			update_line_display
 			should_update := True
 		end 
@@ -307,7 +307,9 @@ feature {OBSERVED} -- Observer Pattern
 	update is
 			-- Update Current
 		do
-			set_text (document.text)
+			if not text.is_equal (document.text) then
+				set_text (document.text)				
+			end
 		end
 	
 feature {NONE} -- Implementation
@@ -420,7 +422,7 @@ feature {NONE} -- Implementation
 			
 					-- Prune out any attribute declarations
 			if Result.occurrences (' ') > 0 then
-				Result := Result.substring (1, Result.index_of (' ', 1))
+				Result := Result.substring (1, Result.index_of (' ', 1) - 1)
 			end	
 		end
 
@@ -472,5 +474,8 @@ feature {NONE} -- Implementation
 			insert_text (l_url)
 			select_region (l_start_pos, l_end_pos)
 		end		
+
+	is_in_default_state: BOOLEAN is True
+			-- Is in default state
 
 end -- class DOCUMENT_TEXT_WIDGET

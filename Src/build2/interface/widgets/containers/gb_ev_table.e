@@ -65,11 +65,6 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		local
-			label: EV_LABEL
-			second: like ev_type
-			check_button: EV_CHECK_BUTTON
-			button: EV_BUTTON
 		do
 			Result := Precursor {GB_EV_ANY}
 			create rows_entry.make (Current, Result, "Rows", agent set_rows (?), agent valid_row_value (?))
@@ -106,7 +101,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			temp_column_positions_string, temp_row_positions_string,
 			temp_widths_string, temp_heights_string: STRING
-			temp: STRING
 			item_list: ARRAYED_LIST [EV_WIDGET]
 		do
 			
@@ -329,10 +323,8 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			temp_column_positions_string, temp_row_positions_string,
 			temp_column_spans_string, temp_row_spans_string: STRING
 			extracted_column, extracted_row, extracted_column_span, extracted_row_span: STRING
-			extracted_string: STRING
 			first_items, second_items, temp_item_list: ARRAYED_LIST [EV_WIDGET]
 			lower, upper: INTEGER
-			check_assert_result: BOOLEAN
 		do
 				
 			full_information := get_unique_full_info (element)
@@ -429,11 +421,9 @@ feature {NONE} -- Implementation
 	layout_window: EV_DIALOG is
 			-- Window for laying out children of fixed.
 		local
-			horizontal_box, hb: EV_HORIZONTAL_BOX
-			vertical_box, vb, vb1: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			vertical_box: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
-			list_item: EV_LIST_ITEM
-			grid_control_holder: EV_FRAME
 		do
 			create Result
 			create vertical_box
@@ -485,7 +475,6 @@ feature {NONE} -- Implementation
 	draw_widgets is
 			-- Draw representation of all widgets and grid if shown.
 		local
-			listi: EV_LIST_ITEM
 			relative_pointa, relative_pointb: EV_RELATIVE_POINT
 			figure_rectangle: EV_FIGURE_RECTANGLE
 			widgets: ARRAYED_LIST [EV_WIDGET]
@@ -535,7 +524,7 @@ feature {NONE} -- Implementation
 	draw_grid is
 			-- Draw snap to grid in `world'.
 		local
-			counter, counter2: INTEGER
+			counter: INTEGER
 			figure_line: EV_FIGURE_LINE
 			figure_dot: EV_FIGURE_DOT
 			color: EV_COLOR
@@ -603,7 +592,6 @@ feature {NONE} -- Implementation
 	track_movement (x_position, y_position: INTEGER) is
 			-- Track `x', `y' position of cursor, and 
 		local
-			widget: EV_WIDGET
 			new_x, new_y: INTEGER
 			column_position, row_position, end_row_position, end_column_position: INTEGER
 			new_column, new_row: INTEGER
@@ -797,8 +785,6 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 			-- A button has been pressed. If `a_button' = 1 then
 			-- check for movement/resizing.
 		local
-			widget: EV_WIDGET
-			widget_list: ARRAYED_LIST [EV_WIDGET]
 			column_position, row_position, column_span, row_span,
 			end_column_position, end_row_position: INTEGER
 			x, y: INTEGER

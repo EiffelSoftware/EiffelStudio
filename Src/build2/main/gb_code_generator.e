@@ -425,7 +425,6 @@ feature {NONE} -- Implementation
 			-- button2: EV_BUTTON
 		local
 			temp_string: STRING
-			position: INTEGER
 		do
 			if local_string = Void then
 				local_string := ""
@@ -447,7 +446,6 @@ feature {NONE} -- Implementation
 			index_of_type: INTEGER
 			found_correctly: BOOLEAN
 			search_counter: INTEGER
-			new_line_counter: INTEGER
 		do
 			if local_string = Void then
 				local_string := name + ": " + local_type

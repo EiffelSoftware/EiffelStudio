@@ -10,13 +10,24 @@ class MOUSE_PTR
 
 inherit
 	
-	GRAPHICS;
-	SHARED_CURSORS
+	GRAPHICS
 
 creation
 
 	set_watch_cursor, do_nothing
 
+feature -- Access
+
+	Watch_cursor: SCREEN_CURSOR is
+			-- Cursor to be used when waiting for the end of an execution
+		local
+			ct: CURSOR_TYPE;
+		once
+			!! ct;
+			!! Result.make;
+			Result.set_type (ct.watch)
+		end;
+	
 feature -- Setting
 
 	set_watch_cursor is
@@ -24,7 +35,7 @@ feature -- Setting
 			-- shaped as a watch.
 		do
 			if not watch_shaped.item then
-				set_global_cursor (cur_Watch);
+				set_global_cursor (Watch_cursor);
 				watch_shaped.set_item (True)
 			end
 		end;
@@ -48,5 +59,5 @@ feature {NONE}
 		once
 			!! Result
 		end;
-	
+
 end -- class MOUSE_PTR

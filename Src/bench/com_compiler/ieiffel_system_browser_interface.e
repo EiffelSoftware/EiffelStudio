@@ -59,15 +59,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	substring_search_classes_user_precondition (a_string: STRING): BOOLEAN is
-			-- User-defined preconditions for `substring_search_classes'.
+	search_classes_user_precondition (a_string: STRING; is_substring: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `search_classes'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	substring_search_features_user_precondition (a_string: STRING): BOOLEAN is
-			-- User-defined preconditions for `substring_search_features'.
+	search_features_user_precondition (a_string: STRING; is_substring: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `search_features'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -135,20 +135,22 @@ feature -- Basic Operations
 
 		end
 
-	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		require
-			substring_search_classes_user_precondition: substring_search_classes_user_precondition (a_string)
+			search_classes_user_precondition: search_classes_user_precondition (a_string, is_substring)
 		deferred
 
 		end
 
-	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		require
-			substring_search_features_user_precondition: substring_search_features_user_precondition (a_string)
+			search_features_user_precondition: search_features_user_precondition (a_string, is_substring)
 		deferred
 
 		end

@@ -85,13 +85,13 @@ public:
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	STDMETHODIMP substring_search_classes(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
+	STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
 
 
 	/*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
-	STDMETHODIMP substring_search_features(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features );
+	STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features );
 
 
 	/*-----------------------------------------------------------

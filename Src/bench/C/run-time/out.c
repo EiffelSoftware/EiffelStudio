@@ -96,7 +96,6 @@ rt_public char *eif_out (EIF_REFERENCE object)
 	 */
 
 	EIF_GET_CONTEXT
-	char *ret;	/* Return value. */
 	EIF_OBJECT i_object;	/* Safe indirection to object. */
 	
 	i_object = eif_protect (object);	/* Protect "object". */

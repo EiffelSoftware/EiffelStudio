@@ -99,7 +99,8 @@ struct cnode {
 #define SK_INT		0x10000000			/* Simple integer type */
 #define SK_INT32	0x10000000			/* Simple integer 32 type */
 #define SK_INT16	0x14000000			/* Simple integer 16 type */
-#define SK_FLOAT	0x18000000			/* Simple float type */
+#define SK_FLOAT	0x18000000			/* Simple real type */
+#define SK_REAL		0x18000000			/* Simple real type */
 #define SK_WCHAR	0x1c000000			/* Simple unicode character type */
 #define SK_DOUBLE	0x20000000			/* Simple double type */
 #define SK_INT64	0x24000000			/* Simple integer 64 types */

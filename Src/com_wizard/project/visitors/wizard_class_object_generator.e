@@ -10,6 +10,10 @@ class
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

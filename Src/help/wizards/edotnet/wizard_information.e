@@ -77,11 +77,11 @@ feature -- Access
 
 	icon_location: STRING
 			-- Location of the icon choose by the user
-			
+
 	generate_dll: BOOLEAN
 			-- Should the compiler generate a DLL?
 			-- If set to False, it will generate an EXE.
-	
+
 	root_class_name: STRING
 			-- Name of the root class of the Eiffel.NET project
 
@@ -90,16 +90,16 @@ feature -- Access
 
 	dotnet_assembly_filename: STRING
 			-- Filename of .NET assembly to emit
-	
+
 	available_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Available (and not selected) Assemblies
-	
+
 	selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Selected Assemblies
 
 	local_assemblies: LINKED_LIST [STRING]
 			-- Local assemblies
-		
+
 	application_type: STRING is
 			-- "dll" if `generate_dll' is set, "exe" otherwise
 		do
@@ -158,7 +158,7 @@ feature -- Access
 
 	Mscorlib_name: STRING is "mscorlib"
 			-- Name of `mscorlib.dll'
-			
+
 feature -- Status Report
 
 	has_assembly (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): BOOLEAN is
@@ -204,7 +204,7 @@ feature -- Status Report
 				a_list.forth
 			end
 		end
-	
+
 	has_local_assembly (a_filename: STRING): BOOLEAN is
 			-- Does `local_assemblies' contain local assembly corresponding to `a_filename'?
 		require
@@ -226,8 +226,8 @@ feature -- Status Report
 				end
 				local_assemblies.forth
 			end
-
 		end
+
 feature -- Basic operation
 
 	retrieve_available_assemblies is
@@ -245,7 +245,7 @@ feature -- Basic operation
 			retried := True
 			retry
 		end
-	
+
 	remove_kernel_assembly is
 			-- Remove the kernel assembly (mscorlib.dll) from the list of `available_assemblies'.
 		local
@@ -327,9 +327,9 @@ feature -- Basic operation
 				an_assembly := assemblies_to_remove.item
 				available_assemblies.prune_all (an_assembly)
 				assemblies_to_remove.forth
-			end		
+			end	
 		end
-		
+
 feature {NONE} -- Implementation
 
 	Default_project_name: STRING is "my_dotnet_application"
@@ -356,67 +356,51 @@ feature {NONE} -- Implementation
 
 	confirmation_dialog: EV_QUESTION_DIALOG
 			-- Confirmation dialog
-	
+
 	on_abort is
 			-- Close confirmation message.
 		do
 			confirmation_dialog.destroy
 			current_application.destroy
 		end
-		
+
 	on_retry is
 			-- Retry assembly importation.
 		do
 			confirmation_dialog := Void
 			retrieve_available_assemblies 
 		end
-	
+
 	on_ignore is
 			-- Force access to the Eiffel Assembly Cache.
 		local
 			imported_assemblies: ECOM_ARRAY [STRING]
 		do
---			proxy.clean_assemblies
---			imported_assemblies := proxy.imported_assemblies
---			intern_retrieve_available_assemblies (imported_assemblies)	
---			remove_kernel_assembly
---			remove_system_assembly
---			create local_assemblies.make (1)
 		end
-	
---	Default_directory: STRING is 
---			-- Default emit directory ($ISE_EIFFEL\library.net\)
---		once
---			Result := clone (Eiffel_installation_dir_name)
---			Result.append (Dotnet_library_relative_path)
---		ensure
---			non_void_directory: Result /= Void
---			not_empty_directory: not Result.is_empty
---		end
 
 feature {NONE} -- Constants
 
 	Icon_relative_filename: STRING is "\eiffel.ico"
 			-- Filename of `eiffel.ico' relatively to `icon_location'
-	
+
 	Default_root_class_name: STRING is "APPLICATION"
 			-- Default root class name
 
 	Default_creation_routine_name: STRING is "make"
 			-- Default creation routine name
-			
+
 	Dll_type: STRING is "dll"
 			-- DLL type
-	
+
 	Exe_type: STRING is "exe"
 			-- EXE type
-	
+
 	System_name: STRING is "system"
 			-- Name of `System.dll'
-	
+
 	Eiffel_key: STRING is "$ISE_EIFFEL"
 			-- Key of environment variable to the Eiffel delivery
-	
+
 	t_Confirmation_dialog: STRING is ".NET Wizard - Error"
 			-- Title of confirmation dialog
 
@@ -424,6 +408,6 @@ feature {NONE} -- Constants
 						%- Abort: To close this dialog without doing anything.%N%
 						%- Retry: To retry in case the other process has exited.%N%
 						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache."
-			-- Confirmation message	
-	
+			-- Confirmation message
+
 end -- class WIZARD_INFORMATION

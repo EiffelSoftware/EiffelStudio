@@ -20,7 +20,7 @@ feature -- Basic Operations
 			project_name_lowercase: STRING
 			project_location: STRING
 			root_class_name_lowercase: STRING
-		do			
+		do	
 				-- cached variables
 			project_name_lowercase := clone (wizard_information.project_name)
 			project_name_lowercase.to_lower
@@ -36,7 +36,7 @@ feature -- Basic Operations
 			tuple.put (Application_type_template, 1)
 			tuple.put (wizard_information.application_type, 2)
 			map_list.extend (tuple)		
-			
+
 				-- Add the root class name
 			root_class_name_lowercase := clone (wizard_information.root_class_name)
 			root_class_name_lowercase.to_lower
@@ -51,14 +51,8 @@ feature -- Basic Operations
 				tuple.put (Creation_routine_name_template, 1)
 				tuple.put (wizard_information.creation_routine_name, 2)
 				map_list.extend (tuple)
-
 			end
---				-- Add the external assemblies paths
---			create tuple.make
---			tuple.put (External_assemblies_template, 1)
---			tuple.put (external_assemblies, 2)
---			map_list.extend (tuple)
-		
+
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
 				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
@@ -76,7 +70,7 @@ feature -- Basic Operations
 		do
 			create file_name.make_from_string (wizard_resources_path)
 			file_name.set_file_name (a_content_file)
-			
+
 			create file.make_open_read (file_name)
 			file.read_stream (file.count)
 
@@ -98,14 +92,12 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
-	
-	
+
 	external_assemblies: STRING is
 			-- List of assemblies to include in the project.
 			-- mscorlib is allways added to a new project.
 		require
 			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
---			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
 		local
 			an_assembly: ASSEMBLY_INFORMATION
 			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
@@ -116,7 +108,7 @@ feature {NONE} -- Implementation
 			create Result.make (1024)
 			Result.append (Assembly_keyword)
 			Result.append (New_line)
-			
+
 			Result.append (Tab)
 			Result.append (Mscorlib_assembly)
 			Result.append (New_line)
@@ -147,7 +139,7 @@ feature {NONE} -- Implementation
 
 				selected_assemblies.forth
 			end
-			
+
 			local_assemblies := wizard_information.local_assemblies
 			Result.append (New_line)
 			from
@@ -181,19 +173,8 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
-		end			
+		end		
 
---	emit (assembly_path: STRING): ASSEMBLY_INFORMATION is
---			-- emit assembly and return its information.
---		require
---			non_void_assembly_path: assembly_path /= Void
---			not_empty_assembly_path: not assembly_path.is_empty
---		do
---			create Result.make (assembly_path)
---		ensure 
---			non_void_result: Result /= Void
---		end
-		
 feature {NONE} -- Constants
 
 	Application_type_template: STRING is "<FL_APPLICATION_TYPE>"
@@ -201,7 +182,7 @@ feature {NONE} -- Constants
 
 	Root_class_external_name_template: STRING is "<FL_ROOT_CLASS_EXTERNAL_NAME>"
 			-- String to be replaced by the chosen root class external name
-			
+
 	Root_class_name_template: STRING is "<FL_ROOT_CLASS_NAME>"
 			-- String to be replaced by the chosen root class name
 
@@ -210,40 +191,37 @@ feature {NONE} -- Constants
 
 	External_assemblies_template: STRING is "<FL_EXTERNAL_ASSEMBLIES>"
 			-- String to be replaced by the paths to the selected .NET assemblies
-	
+
 	Ace_extension: STRING is ".ace"
 			-- Ace files extension
-	
+
 	Eiffel_extension: STRING is ".e"
 			-- Eiffel classes extension
-		
+
 	Dll_extension: STRING is ".dll"
 			-- DLLs extension
-	
+
 	Exe_extension: STRING is ".exe"
 			-- EXEs extension
-	
+
 	Ace_template_filename: STRING is "template_ace.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Ace_template_with_root_class_none_filename: STRING is "template_ace_with_root_class_none.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
-	
+
 	Application_template_filename: STRING is "template_application.e"
 			-- Filename of the template used to automatically generate a root class for .NET applications
 
---	External_classes_comment: STRING is "-- .NET System"
---			-- Comment before paths to external classes
-	
 	None_class: STRING is "none"
 			-- `NONE' class
-			
+
 	Inverted_comma: STRING is "%""
 			-- Inverted comma
-	
+
 	Comma: STRING is ","
 			-- Comma
-	
+
 	Assembly_keyword: STRING is "assembly"
 			-- Assembly keyword
 
@@ -252,7 +230,7 @@ feature {NONE} -- Constants
 
 	Eiffel_key: STRING is "$ISE_EIFFEL"
 			-- Key of environment variable to the Eiffel delivery
-			
+
 	Mscorlib_assembly: STRING is "mscorlib:   %"mscorlib%",   %"1.0.3300.0%", %"neutral%", %"b77a5c561934e089%""
 			-- Mscorlib assembly allways added to the ace file.
 

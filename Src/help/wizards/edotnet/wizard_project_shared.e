@@ -28,7 +28,7 @@ feature {NONE} -- Constants
 			-- Shared execution environment object
 		once
 			create Result
-		end		
+		end	
 
 	Wizard_icon_name: STRING is "eiffel_wizard_icon"
 			-- .NET Wizard icon name
@@ -38,17 +38,17 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
-		
+
 	New_line: STRING is "%N"
 			-- New line
-	
+
 	Tab: STRING is "%T"
 			-- Tabulation
 
 	Unrelevant_data: STRING is "-- Unrelevant data: root class is NONE --"
 			-- Message appearing in window text fields in case the root class is NONE
-			
+
 	Windows_new_line: STRING is "%R%N"
 			-- New line on Windows platform
-			
+
 end -- class WIZARD_PROJECT_SHARED

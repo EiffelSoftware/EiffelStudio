@@ -23,14 +23,14 @@ feature {NONE} -- Implementation
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_INITIAL_STATE_WINDOW} (an_info) 
+			Precursor {BENCH_WIZARD_INITIAL_STATE_WINDOW} (an_info)
 		end
-		
+
 feature -- Access
 
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/01_welcome/index.html"
 			-- Path to HTML help file
-			
+
 feature -- basic Operations
 
 	proceed_with_current_info is 
@@ -52,5 +52,5 @@ feature -- basic Operations
 			 create Result.make_from_string (Wizard_icon_name)
 			 Result.add_extension (pixmap_extension)
 		end
-	
+
 end -- class WIZARD_INITIAL_STATE

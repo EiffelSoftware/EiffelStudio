@@ -12,7 +12,7 @@ inherit
 			fill_message_and_title_box,
 			build
 		end
-	
+
 create
 	make
 
@@ -35,41 +35,11 @@ feature -- Basic Operations
 			
 			Precursor
 		end
-		
+
 	proceed_with_current_info is
---		local
---			project_name_lowercase: STRING
---			project_location: STRING
---			ec_command_line: STRING
---			eifgen_directory: DIRECTORY
---			epr_file: RAW_FILE
 		do
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)
-			--emit_all_assemblies
-			
-				-- Compilation
---			if wizard_information.compile_project then
---				project_name_lowercase := clone (wizard_information.project_name)
---				project_name_lowercase.to_lower
---				project_location := wizard_information.project_location
---				
---				ec_command_line := ec_location
---				if is_incremental_compilation_possible then
---					ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
---				else
---					create eifgen_directory.make (project_location + Back_slash + Eifgen)
---					if eifgen_directory.exists then
---						eifgen_directory.recursive_delete
---					end
---					create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
---					if epr_file.exists then
---						epr_file.delete
---					end
---					ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
---				end
---				(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
---			end
 			Precursor
 		end
 
@@ -87,27 +57,13 @@ feature -- Access
 				word := Space
 			end
 			if not wizard_information.selected_assemblies.is_empty then
---				if not wizard_information.dependencies.is_empty then
---					if not wizard_information.local_assemblies.is_empty then
---						message_text := Common_message +
---							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
---							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line
---						message_text.append (local_dependencies_string)
---					else
---						message_text := Common_message +
---							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies)
---					end
---				else
-					if not wizard_information.local_assemblies.is_empty then
-						message_text := Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + New_line + L_local_assemblies + New_line + local_assemblies_string + New_line
---							l_Dependencies + Space + New_line 
---						message_text.append (local_dependencies_string)
-					else
-						message_text := Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies)					
-					end
---				end
+				if not wizard_information.local_assemblies.is_empty then
+					message_text := Common_message +
+						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + New_line + L_local_assemblies + New_line + local_assemblies_string + New_line
+				else
+					message_text := Common_message +
+						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies)					
+				end
 				message_text_field.set_text (message_text)
 			else
 				message_text_field.set_text (Common_message)			
@@ -129,20 +85,20 @@ feature -- Access
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty
 		end
-		
+
 feature {NONE} -- Widgets
 
 	message_text_field: EV_TEXT
 			-- Text field summarizing the project settings
-			
+
 	instruction: EV_LABEL
 			-- Message telling the user how to launch code generation and compilation
-			
+
 feature {NONE} -- Implementation
 
 	message_text: STRING
 			-- Final message 
-			
+
 	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
 			-- Fill `message_and_title_box' with needed widgets.
 		do
@@ -157,7 +113,7 @@ feature {NONE} -- Implementation
 			 create Result.make_from_string (Wizard_icon_name)
 			 Result.add_extension (pixmap_extension)
 		end
-	
+
 	assemblies_string (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]): STRING is
 			-- String from `a_list'
 		require
@@ -213,7 +169,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_text: Result /= Void
 		end
-			
+	
 	is_incremental_compilation_possible: BOOLEAN is
 			-- Is an incremental compilation possible?
 		local
@@ -236,7 +192,7 @@ feature {NONE} -- Implementation
 				Result := False
 			end
 		end
-	
+
 	directory_exists (a_filename: STRING): BOOLEAN is
 			-- Does a directory with filename `a_filename' exist?
 		require
@@ -250,7 +206,7 @@ feature {NONE} -- Constants
 
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
 			-- Path to HTML help file
-			
+
 	ec_location: STRING is
 			-- Path to `ec.exe'
 		once
@@ -260,13 +216,11 @@ feature {NONE} -- Constants
 			non_void_path: Result /= Void
 			not_empty_path: not Result.is_empty
 		end
-	
+
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
 		local
-			--root_class_external_name: STRING
 			creation_routine_name: STRING
-			--creation_routine_external_name: STRING
 		do
 			create Result.make (3000)
 			Result.append ("You have specified the following settings:" + New_line + New_line +
@@ -278,7 +232,7 @@ feature {NONE} -- Constants
 			else
 				Result.append ("Application (.exe)")
 			end
-			
+
 			Result.append (New_line + New_line)
 			Result.append ("Root class name: " + Tab + wizard_information.root_class_name + New_line)
 			creation_routine_name := wizard_information.creation_routine_name
@@ -289,54 +243,51 @@ feature {NONE} -- Constants
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty
-		end			
+		end	
 
 	Space: STRING is " "
 			-- Space
-			
+
 	Epr_extension: STRING is ".epr"
 			-- Eiffel projects extension
-	
+
 	Eifgen: STRING is "EIFGEN"
 			-- EIFGEN directory
-	
+
 	Comp: STRING is "COMP"
 			-- COMP directory
-	
+
 	W_code: STRING is "W_code"
 			-- W_code directory
-	
+
 	F_code: STRING is "F_code"
 			-- F_code directory
-	
+
 	S1: STRING is "S1"
 			-- S1 directory
-	
+
 	Back_slash: STRING is "\"
 			-- Back slash
-	
+
 	Project_compilation_option: STRING is "-project"
 			-- ec option to specify an existing project
-	
+
 	Ace_compilation_option: STRING is "-ace"
 			-- ec option to specify the project Ace file
-	
+
 	Project_path_compilation_option: STRING is "-project_path"
 			-- ec option to specify the path to generate project into
-	
+
 	Ace_extension: STRING is ".ace"
 			-- Ace files extension
-	
+
 	l_External_assemblies: STRING is ".NET assemblies:"
 			-- Label before displaying the selected .NET assemblies
-	
---	l_Dependencies: STRING is "Dependencies:"
---			-- Label before displaying the dependencies of the selected .NET assemblies
 	
 	l_Local_assemblies: STRING is "Local assemblies:"
 			-- Label before displaying the local assemblies.
 
 	Text_if_compile: STRING is "and compile"
 			-- Text appended to the current state text in case the user asked for project compilation
-			
+
 end -- class WIZARD_FINAL_STATE

@@ -135,7 +135,7 @@ feature -- IL code generation
 				i := i + 1
 			end
 			if generation_value /= '%U' then
-				il_generator.put_character_constant (generation_value)
+				il_generator.put_character_constant (i)
 				il_generator.generate_binary_operator (feature {IL_CONST}.il_minus)
 			end
 		end

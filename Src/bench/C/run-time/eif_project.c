@@ -17,6 +17,58 @@ generated in a system in `E1/eplug.c'.
 #ifdef __cplusplus
 extern "C" {
 #endif
+/*
+doc:<file name="eif_project.c" header="eif_project.h">
+doc:	<attribute name="exception_stacked_managed" return_type="EIF_BOOLEAN">
+doc:		<summary>Is Eiffel call stack managed?</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+doc:	<attribute name="egc_prof_enabled" return_type="EIF_INTEGER">
+doc:		<summary>To enable or disable profiler.</summary>
+doc:		<thread_safety>Safe only if not modified during execution through use of PROFILING_SETTING class.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>PROFILING_SETTING</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="egc_strmake" return_type="fnptr">
+doc:		<summary>Address of Eiffel routine STRING.make to create Eiffel strings from C.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="egc_strset" return_type="fnptr">
+doc:		<summary>Address of Eiffel routine STRING.set_count to set count of Eiffel strings.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="egc_arrmake" return_type="fnptr">
+doc:		<summary>Address of Eiffel routine ARRAY.make to create Eiffel arrays of ANY from C used for command line arguments.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ARRAY [ANY]</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="egc_routdisp" return_type="fnptr">
+doc:		<summary>Address of Eiffel routine ROUTINE.set_rout_disp used to initialize new ROUTINE objects of type PROCEDURE, FUNCTION or PREDICATE.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="egc_correct_mismatch" return_type="fnptr">
+doc:		<summary>Address of Eiffel routine ANY.internal_correct_mismatch which is used to fix a mismatch while retrieving objects from a storable.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ANY</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="" return_type="">
+doc:		<summary></summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes></eiffel_classes>
+doc:		<fixme></fixme>
+doc:	</attribute>
+doc:</file>
+*/
 
 	EIF_BOOLEAN exception_stack_managed;
 	EIF_INTEGER egc_prof_enabled;	  

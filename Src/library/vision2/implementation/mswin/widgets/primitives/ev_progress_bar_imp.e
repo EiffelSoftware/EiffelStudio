@@ -19,6 +19,7 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			position as value,
+			shown as displayed,
 			set_position as set_value
 		undefine
 			window_process_message,
@@ -37,7 +38,9 @@ inherit
 			on_key_down,
 			on_key_up,
 			on_set_cursor,
-			default_style
+			default_style,
+			show,
+			hide
 		redefine
 			set_step
 		end
@@ -163,6 +166,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_PROGRESS_BAR_IMP

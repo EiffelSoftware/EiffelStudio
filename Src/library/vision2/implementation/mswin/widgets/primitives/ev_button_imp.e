@@ -53,6 +53,7 @@ inherit
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
+			shown as displayed,
 			set_font as wel_set_font,
 			destroy as wel_destroy
 		undefine
@@ -71,7 +72,9 @@ inherit
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
-			on_set_cursor
+			on_set_cursor,
+			show,
+			hide
 		redefine
 			default_style,
 			on_bn_clicked,
@@ -133,11 +136,7 @@ feature -- Status setting
 			end
 
 			-- Finaly, we set the minimum values.
-			internal_set_minimum_width (w)
-			internal_set_minimum_height (h)
-			if parent_imp /= Void then
-				notify_change (1 + 2)
-			end
+			internal_set_minimum_size (w, h)
 		end
 
 	set_left_alignment is
@@ -258,6 +257,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_BUTTON_IMP

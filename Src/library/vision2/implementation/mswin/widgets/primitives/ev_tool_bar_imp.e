@@ -15,6 +15,7 @@ inherit
 			set_default_options,
 			minimum_width,
 			minimum_height,
+			notify_change,
 			internal_resize
 		redefine
 			parent_imp,
@@ -27,13 +28,17 @@ inherit
 			on_middle_button_down,
 			on_mouse_move,
 			on_key_down,
-			destroy
+			destroy,
+			shown,
+			show,
+			hide
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
 		redefine
 			compute_minimum_width,
-			compute_minimum_height
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 	EV_ITEM_HOLDER_IMP
@@ -45,6 +50,7 @@ inherit
 			insert_button as wel_insert_button,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
+			shown as displayed,
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item
 		undefine
@@ -63,7 +69,9 @@ inherit
 			on_kill_focus,
 			on_set_focus,
 			on_set_cursor,
-			window_process_message
+			window_process_message,
+			show,
+			hide
 		redefine
 			wel_set_parent,
 			move,
@@ -71,7 +79,6 @@ inherit
 			move_and_resize,
 			hide,
 			show,
-			shown,
 			default_style,
 			default_process_message
 		end
@@ -171,7 +178,7 @@ feature -- Status report
 	shown: BOOLEAN is
 			-- Is the window shown?
 		do
-			Result := bar.shown
+			Result := flag_set (bar.style, Ws_visible)
 		end
 
 feature -- Status setting
@@ -189,12 +196,14 @@ feature -- Status setting
 	show is
 			-- Show the window
 		do
+			{EV_PRIMITIVE_IMP} Precursor
 			bar.show
 		end
 
 	hide is
 			-- Hide the window
 		do
+			{EV_PRIMITIVE_IMP} Precursor
 			bar.hide
 		end
 
@@ -292,6 +301,17 @@ feature -- Basic operation
 			-- Update the minimum-size of the tool-bar.
 		do
 			internal_set_minimum_height (button_height + 6)
+		end
+
+	compute_minimum_size is
+			-- Recompute both the minimum_width and then
+			-- minimum_height of the object.
+		local
+			num: INTEGER
+		do
+			num := separator_count
+			num := (count - num) * button_width + num * separator_width
+			internal_set_minimum_size (num, button_height + 6)
 		end
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
@@ -545,6 +565,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_TOOL_BAR_IMP

@@ -46,9 +46,6 @@ feature -- Status setting
    			-- Plateform dependant initializations.
    		do
 			internal_set_minimum_height (30)
-			if parent_imp /= Void then
-				parent_imp.notify_change (2)
-			end
  		end
 
 end -- class EV_HORIZONTAL_RANGE_IMP

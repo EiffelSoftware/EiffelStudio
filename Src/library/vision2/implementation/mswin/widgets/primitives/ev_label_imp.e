@@ -34,6 +34,7 @@ inherit
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			font as wel_font,
+			shown as displayed,
 			set_font as wel_set_font,
 			destroy as wel_destroy
 		undefine
@@ -52,7 +53,9 @@ inherit
 			on_kill_focus,
 			on_key_up,
 			on_key_down,
-			on_set_cursor
+			on_set_cursor,
+			show,
+			hide
 		redefine
 			default_style,
 			wel_background_color,
@@ -108,11 +111,7 @@ feature -- Status setting
 			check
 				font_not_void: fw /= Void
 			end
-			internal_set_minimum_width (fw.string_width (text) + 10)
-			internal_set_minimum_height (7 * fw.height // 4 - 2)
-			if parent_imp /= Void then
-				notify_change (1 + 2)
-			end
+			internal_set_minimum_size (fw.string_width (text) + 10, 7 * fw.height // 4 - 2)
 		end
 
 feature -- Element change
@@ -186,6 +185,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_LABEL_IMP

@@ -58,6 +58,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
+			shown as displayed,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
 			unselect as deselect_all,
@@ -85,7 +86,9 @@ inherit
 			wel_foreground_color,
 			on_en_change,
 			enable,
-			disable
+			disable,
+			show,
+			hide
 		end
 
 creation

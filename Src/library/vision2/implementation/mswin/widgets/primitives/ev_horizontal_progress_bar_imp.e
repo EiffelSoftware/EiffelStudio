@@ -27,7 +27,6 @@ feature -- Status settings
 			-- Initialize the size of the widget.
 			-- Redefine by some widgets.
 		do
-			internal_set_minimum_width (0)
 			internal_set_minimum_height (20)
 		end
 
@@ -36,8 +35,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
-			Result := Ws_visible + Ws_child + Ws_group
-				+ Ws_tabstop
+			Result := Ws_visible + Ws_child
 		end
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP

@@ -26,6 +26,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
+			shown as displayed,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
 			unselect as deselect_all,
@@ -49,7 +50,9 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			wel_background_color,
-			wel_foreground_color
+			wel_foreground_color,
+			show,
+			hide
 		redefine
 			default_style,
 			default_ex_style,
@@ -173,6 +176,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_TEXT_IMP

@@ -47,6 +47,7 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
+			shown as displayed,
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item
 		undefine
@@ -62,12 +63,14 @@ inherit
 			on_right_button_up,
 			on_left_button_double_click,
 			on_right_button_double_click,
+			on_key_down,
 			on_key_up,
 			on_kill_focus,
 			on_set_focus,
 			on_set_cursor,
-			on_key_down,
-			on_accelerator_command
+			on_accelerator_command,
+			show,
+			hide
 		redefine
 			on_size,
 			on_paint,
@@ -262,6 +265,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_DRAWING_AREA_IMP

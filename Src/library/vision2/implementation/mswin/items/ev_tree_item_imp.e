@@ -287,22 +287,25 @@ feature -- {EV_TREE_IMP}
 						-- Increase and store the number of items referencing
 						-- this image.
 				end
-			elseif p_imp.mask_bitmap /= Void and p_imp.bitmap /= Void then
-				--|FIXME This does not work correctly yet.
-				-- If the pixmap has a bitmap mask and a bitmap.
+			else
+				--|--------------------------------------------------------
+				--| FIXME ARNAUD: check that the image is not already in
+				--| `current_images'. Can you do that Julian?
+				--|--------------------------------------------------------
 				if p_imp.bitmap.height > tree_view_pixmap_height or
 					p_imp.bitmap.height > tree_view_pixmap_width then
-					p_imp.set_size (16, 16)
-					loc_image_list.add_masked_bitmap 
-					(p_imp.bitmap, p_imp.mask_bitmap)
-					image_index := loc_image_list.last_position
-						-- Add a bitmap and a bitmap mask image_list.
+					p_imp.stretch (16, 16)
 				end
-			else
-				check
-					-- If we reach here something is wrong with the pixmap.
-					False
+				if p_imp.mask_bitmap /= Void then
+					loc_image_list.add_masked_bitmap(
+						p_imp.bitmap, 
+						p_imp.mask_bitmap
+						)
+				else
+					loc_image_list.add_bitmap(p_imp.bitmap)
 				end
+						
+				image_index := loc_image_list.last_position
 			end
 			io.put_string (image_index.out)
 			set_image (image_index, image_index)
@@ -571,6 +574,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/03/29 06:59:49  pichery
+--| Improved the add of pixmaps in an item.
+--|
 --| Revision 1.51  2000/03/28 22:52:42  rogers
 --| Fixed index alteration bug in orphaning a sub tree structure.
 --| Simplified on_orphaned.

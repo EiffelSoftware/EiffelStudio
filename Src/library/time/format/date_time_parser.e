@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 invariant
 
 	valid_value_definition: is_value_valid =
-			parsed and then (is_date or is_time or is_date_time)
+			(parsed and then (is_date or is_time or is_date_time))
 	valid_value_implies_parsing: is_value_valid implies parsed
 	
 end -- class DATE_TIME_PARSER

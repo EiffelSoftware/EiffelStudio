@@ -18,10 +18,6 @@ feature
 	set_widgets is
 		local
 			da: DRAWING_AREA
-			circle1, circle2, circle3, circle4: CIRCLE
-			color: COLOR
-			interior: INTERIOR
-			center: COORD_XY_FIG
 		do
 			set_size (160, 160)
 			main_widget.set_x_y (30, 30)

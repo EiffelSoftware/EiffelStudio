@@ -109,7 +109,7 @@ feature
 				if prompt.is_popped_up then
 					prompt.remove_ok_action (Current, b_set_granul)
 					prompt.remove_cancel_action (Current, b_cancel)
-					widget.set_granularity (prompt.selection_text.to_integer) 
+					widget.set_line_increment (prompt.selection_text.to_integer) 
 					set_widgets_sensitive
 					prompt.popdown
 				else

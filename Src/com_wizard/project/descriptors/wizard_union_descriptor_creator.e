@@ -33,7 +33,7 @@ feature -- Basic operations
 		do
 			name := clone (a_documentation.name)
 			if name = Void or else name.empty then
-				create name.make (0)
+				create name.make (100)
 				name.append ("union_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
@@ -41,21 +41,19 @@ feature -- Basic operations
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
 
-			create eiffel_class_name.make (0)
+			create eiffel_class_name.make (100)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))
 			eiffel_class_name.to_upper
 
 			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
-			create c_type_name.make (0)
+			create c_type_name.make (100)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 			
-			create c_header_file_name.make (0)
-				c_header_file_name.append ("ecom_")
-				c_header_file_name.append (name)
-				c_header_file_name.append (".h")
+			create c_header_file_name.make (100)
+				c_header_file_name := header_name (name)
 
 		--	create_field_descriptors (a_type_info)
 		--	size_of_instance := a_type_info.type_attr.size_instance

@@ -59,7 +59,7 @@ feature -- Access
 	item3: EV_LIST_ITEM
 			-- an item
 
-end -- class COMBO_WINDOW
+	end -- class COMBO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision Tutorial: Example for the ISE EiffelVision library.

@@ -16,7 +16,7 @@ inherit
 			interface
 		end
 		
-feature {EV_ENVIRONMENT} -- Status report
+feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 		
 	application: EV_APPLICATION is
 			-- Single application object for system.
@@ -34,7 +34,7 @@ feature {EV_ANY_I} -- Implementation
             -- Provides a common user interface to platform dependent
             -- functionality implemented by `Current'
             
-feature {EV_APPLICATION_I} -- Access
+feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Access
 
 	set_application (an_application: EV_APPLICATION) is
 			-- Specify `an_application' as the single application object for the

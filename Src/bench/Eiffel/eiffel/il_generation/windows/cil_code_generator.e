@@ -2394,8 +2394,6 @@ feature -- IL Generation
 		require
 			base_name_not_void: base_name /= Void
 			base_name_not_empty: not base_name.is_empty
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
 			valid_external_type: valid_type (ext_kind)
 		local
 			l_type_token: INTEGER

@@ -417,7 +417,7 @@
 						<TEXT DESCRIPTION="Autocomplete Precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_precursor_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_precursor_return<STRING>%N$indent$$cursor$</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_precursor_space_later<STRING> $cursor$</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_precursor_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>

@@ -102,6 +102,7 @@ feature {NONE} -- Initialization
 			assembly_info_set: assembly_info = a_assembly_info
 			is_debug_info_enabled_set: is_debug_info_enabled = a_is_debug_mode
 			is_assembly_module_set: is_assembly_module = a_is_main_module
+			thread_static_attribute_not_defined: not is_thread_static_attribute_defined
 			helper_class_not_defined: not is_once_string_class_defined
 			once_string_field_cil_not_defined: not is_once_string_field_cil_defined
 			once_string_field_eiffel_not_defined: not is_once_string_field_eiffel_defined
@@ -263,6 +264,52 @@ feature -- Access: tokens
 	ise_assertion_level_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
 
+feature {NONE} -- Custom attributes: access
+
+	thread_static_attribute_ctor_token: INTEGER
+			-- Token of ThreadStaticAttribute constructor
+
+	is_thread_static_attribute_defined: BOOLEAN is
+			-- Is token of ThreadStaticAttribute constructor defined?
+		do
+			Result := thread_static_attribute_ctor_token /= 0
+		ensure
+			definition: Result implies thread_static_attribute_ctor_token /= 0
+		end
+
+feature {NONE} -- Custom attributes: implementation
+
+	empty_custom_attribute: MD_CUSTOM_ATTRIBUTE is
+			-- An empty custom attribute
+		once
+			create Result.make
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+feature {IL_CODE_GENERATOR} -- Custom attributes: modification
+
+	define_thread_static_attribute (field_token: INTEGER) is
+			-- Define a ThreadStaticAttribute attribute for field identified by `field_token'.
+		require
+			valid_token: field_token /= 0
+				-- member_token is FieldDef
+		local
+			attribute_class_token: INTEGER
+			l_method_sig: like method_sig
+		do
+			if not is_thread_static_attribute_defined then
+				attribute_class_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.ThreadStaticAttribute"), mscorlib_token)
+				l_method_sig := method_sig
+				l_method_sig.reset
+				l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current | feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+				l_method_sig.set_parameter_count (0)
+				l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				thread_static_attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, l_method_sig)
+			end
+			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, empty_custom_attribute).do_nothing
+		end
+
 feature {IL_CODE_GENERATOR} -- Once manifest strings: access
 
 	once_string_field_token (is_cil_string: BOOLEAN): INTEGER is
@@ -388,10 +435,6 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: management
 			helper_class_token: like once_string_class_token_value
 			l_field_sig: like field_sig
 			l_method_sig: like method_sig
-			attribute_class_token: INTEGER
-			attribute_ctor_signature: MD_METHOD_SIGNATURE
-			attribute_ctor_token: INTEGER
-			ca: MD_CUSTOM_ATTRIBUTE
 		do
 				-- Define helper class.
 			helper_class_token := md_emit.define_type (
@@ -412,14 +455,7 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: management
 				helper_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
 				l_field_sig)
-			create ca.make
-			attribute_class_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.ThreadStaticAttribute"), mscorlib_token)
-			create {MD_METHOD_SIGNATURE} attribute_ctor_signature.make
-			attribute_ctor_signature.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current | feature {MD_SIGNATURE_CONSTANTS}.default_sig)
-			attribute_ctor_signature.set_parameter_count (0)
-			attribute_ctor_signature.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, attribute_ctor_signature)
-			md_emit.define_custom_attribute (once_string_field_cil_token, attribute_ctor_token, ca).do_nothing
+			define_thread_static_attribute (once_string_field_cil_token)
 
 				-- Emit field for Eiffel strings.
 			l_field_sig.reset
@@ -431,7 +467,7 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: management
 				helper_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
 				l_field_sig)
-			md_emit.define_custom_attribute (once_string_field_eiffel_token, attribute_ctor_token, ca).do_nothing
+			define_thread_static_attribute (once_string_field_eiffel_token)
 
 				-- Emit method to allocate storage for strings.
 			l_method_sig := method_sig
@@ -2057,11 +2093,19 @@ feature {NONE} -- Once per modules being generated.
 			compute_mscorlib_method_tokens
 			compute_ise_runtime_tokens
 			compute_c_module_token
+				-- Clear custom attribute tokens.
+			thread_static_attribute_ctor_token := 0
 				-- Clear once string tokens.
 			once_string_field_cil_token := 0
 			once_string_field_eiffel_token := 0
 			once_string_allocation_routine_token_value := 0
 			once_string_class_token_value := 0
+		ensure
+			thread_static_attribute_not_defined: not is_thread_static_attribute_defined
+			helper_class_not_defined: not is_once_string_class_defined
+			once_string_field_cil_not_defined: not is_once_string_field_cil_defined
+			once_string_field_eiffel_not_defined: not is_once_string_field_eiffel_defined
+			once_string_allocation_routine_not_defined: not is_once_string_allocation_routine_defined
 		end
 
 	compute_c_module_token is

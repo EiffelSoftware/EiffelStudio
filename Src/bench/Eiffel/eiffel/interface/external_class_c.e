@@ -82,8 +82,7 @@ feature -- Initialization
 				end
 
 					-- Create abstract syntax tree.
-				create l_ast
-				l_ast.initialize (
+				create l_ast.initialize (
 					create {ID_AS}.make (10),
 					external_class.dotnet_name,
 					is_deferred,
@@ -101,8 +100,9 @@ feature -- Initialization
 					Void,	-- invariant_part
 					create {SUPPLIERS_AS}.make,	-- suppliers
 					Void,	-- obsolete_message
-					create {CLICK_LIST}.make (0),	-- click_list
-					True)	-- has_externals
+					True,	-- has_externals
+					create {LOCATION_AS}.make_null
+					)
 				l_ast.set_class_id (class_id)
 					
 				Tmp_ast_server.put (l_ast)

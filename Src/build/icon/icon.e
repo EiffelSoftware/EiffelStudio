@@ -66,6 +66,13 @@ feature
 				icon_label.set_text (label)
 				icon_label.manage
 			end
+			if icon_label /= Void then
+				if button /= Void then
+					set_width (icon_label.width.max (button.width))
+				else
+					set_width (icon_label.width)
+				end
+			end
 			update_positions
 		end
 

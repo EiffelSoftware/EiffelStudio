@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 		do
 			text_info.wipe_out
 			text_info.append_integer (list_box.count)
-			if list_box.count > 1 then
+			if list_box.count /= 1 then
 				text_info.append (" items are present.")
 			else
 				text_info.append (" item is present.")
@@ -363,12 +363,12 @@ feature {NONE} -- Implementation
 				text_info.wipe_out
 				text_info.append (list_box.selected_string)
 				text_info.append (" is selected.")
-				create msg_box.make
-				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				create msg_box.make
-				msg_box.information_message_box (Current, text_info, "Count item")
+				text_info.wipe_out
+				text_info.append ("No item selected.")
 			end
+			create msg_box.make
+			msg_box.information_message_box (Current, text_info, "Current item")
 		end
 
 	menu_mul_create is

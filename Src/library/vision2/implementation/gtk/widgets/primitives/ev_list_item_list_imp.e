@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"unselect_child",
-				~deselect_callback,
+				agent deselect_callback,
 				Void
 			)
 		end
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"select_child",
-				~select_callback,
+				agent select_callback,
 				Void
 			)
 			gtk_widget_set_flags (
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			temp_sig_id := c_signal_connect (
 					visual_widget,
 					eiffel_to_c ("button-press-event"),
-					~on_list_clicked
+					agent on_list_clicked
 			)
 		end
 
@@ -278,15 +278,15 @@ feature {NONE} -- Implementation
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,
 				eiffel_to_c ("button-press-event"),
-				~on_item_clicked
+				agent on_item_clicked
 				)
 			real_signal_connect (
 				v_imp.c_object,
 				"key-press-event",
-				~on_key_pressed,
+				agent on_key_pressed,
 				key_event_translate_agent
 			)	
-			v_imp.key_press_actions.extend (~on_key_pressed)
+			v_imp.key_press_actions.extend (agent on_key_pressed)
 		end
 
 	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is

@@ -158,26 +158,26 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"select_row",
-				~select_callback,
-				~gtk_value_int_to_tuple
+				agent select_callback,
+				agent gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"unselect_row",
-				~deselect_callback,
-				~gtk_value_int_to_tuple
+				agent deselect_callback,
+				agent gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"click_column",
-				~column_click_callback,
-				~gtk_value_int_to_tuple
+				agent column_click_callback,
+				agent gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"resize_column",
-				~column_resize_callback,
-				~column_resize_callback_translate
+				agent column_resize_callback,
+				agent column_resize_callback_translate
 			)				
 			
 			if row_height > 0 then
@@ -323,7 +323,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
-			real_signal_connect (visual_widget, "motion_notify_event", ~motion_handler, Default_translate)
+			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
 			connect_button_press_switch
 			disable_multiple_selection
 		end
@@ -714,7 +714,7 @@ feature -- Implementation
 			if button_press_connection_id > 0 then
 				signal_disconnect (button_press_connection_id)
 			end
-			signal_connect ("button-press-event", ~start_transport_filter, default_translate)
+			signal_connect ("button-press-event", agent start_transport_filter, default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		end

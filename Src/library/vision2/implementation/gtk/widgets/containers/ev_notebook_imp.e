@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_notebook_new ())
-			real_signal_connect (c_object, "switch-page", ~page_switch, ~page_switch_translate)
+			real_signal_connect (c_object, "switch-page", agent page_switch, agent page_switch_translate)
 		end
 
 	initialize is

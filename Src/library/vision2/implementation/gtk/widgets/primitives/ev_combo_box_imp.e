@@ -88,17 +88,17 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 					entry_widget,
 					"key_press_event",
-					~on_key_event,
+					agent on_key_event,
 					key_event_translate_agent
 				)
 			real_signal_connect (
 					entry_widget,
 					"key_release_event",
-					~on_key_event,
+					agent on_key_event,
 					key_event_translate_agent)
 			
 			create timer.make_with_interval (0)
-			timer.actions.extend (~launch_select_actions)
+			timer.actions.extend (agent launch_select_actions)
 			activate_id := C.gtk_combo_struct_activate_id (container_widget)
 			C.gtk_signal_handler_block (entry_widget, activate_id)
 		end
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			temp_sig_id := c_signal_connect (
 					list_widget,
 					eiffel_to_c ("button-release-event"),
-					~on_button_released
+					agent on_button_released
 			)
 		end
 		

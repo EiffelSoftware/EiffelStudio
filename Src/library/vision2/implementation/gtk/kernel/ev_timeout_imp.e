@@ -44,7 +44,7 @@ feature -- Access
 			if an_interval > 0 then
 				timeout_connection_id :=
 					c_ev_gtk_callback_marshal_timeout_connect (
-						an_interval, ~on_timeout
+						an_interval, agent on_timeout
 					)
 			end
 			interval := an_interval

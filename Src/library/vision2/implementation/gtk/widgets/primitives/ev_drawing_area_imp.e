@@ -59,17 +59,17 @@ feature {NONE} -- Initialization
 			temp_sig_id := c_signal_connect (
 					drawing_area_widget,
 					eiffel_to_c ("button-press-event"),
-					~give_focus
+					agent give_focus
 			)
 			temp_sig_id := c_signal_connect (
 					drawing_area_widget,
 					eiffel_to_c ("focus-in-event"),
-					~attain_focus
+					agent attain_focus
 			)
 			temp_sig_id := c_signal_connect (
 					drawing_area_widget,
 					eiffel_to_c ("focus-out-event"),
-					~lose_focus
+					agent lose_focus
 			)
 			C.gtk_widget_show (drawing_area_widget)
 			C.gtk_container_add (c_object, drawing_area_widget)

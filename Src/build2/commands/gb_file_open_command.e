@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 		do
 			if not file_name.is_empty then
 				create file.make (file_name)
-				Result := file.exists
+				Result := file.exists and not file.is_directory
 			end
 		end
 		

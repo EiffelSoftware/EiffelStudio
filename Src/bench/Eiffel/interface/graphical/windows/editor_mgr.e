@@ -9,7 +9,6 @@ class EDITOR_MGR
 
 inherit
 
-	CURSOR_W;
 	GRAPHICS;
 
 feature -- Initialization
@@ -62,6 +61,7 @@ feature -- Tabulations
 				was_changed := text_window.changed;
 				text_window.set_tab_length_to_default;
 				text_window.set_changed (was_changed);
+				text_window.tool.update_save_symbol;
 				active_editors.forth
 			end
 		end;
@@ -141,6 +141,8 @@ feature {WINDOW_MGR} -- Properties
 	editor: like editor_type is
 			-- Creates new editor. (Either creates one or
 			-- retrieves one from the free_list).
+		local
+			mp: MOUSE_PTR
 		do
 			if
 				not free_list.empty
@@ -152,9 +154,9 @@ feature {WINDOW_MGR} -- Properties
 				Result.text_window.set_font_to_default; 
 				free_list.remove;
 			else
-				set_global_cursor (watch_cursor);
-				!!Result.make (screen);
-				restore_cursors;
+				!! mp.set_watch_cursor;
+				!! Result.make (screen);
+				mp.restore;
 			end;
 			active_editors.extend (Result);
 		end;
@@ -220,6 +222,7 @@ feature {WINDOW_MGR} -- Implementation
 					--| safe programming.
 				ed.hide;
 				ed.reset;
+				ed.unregister_holes;
 				ed.destroy;
 			end;
 		end;

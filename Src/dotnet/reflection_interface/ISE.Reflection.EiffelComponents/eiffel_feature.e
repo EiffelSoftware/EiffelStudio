@@ -1,6 +1,8 @@
 indexing
 	description: "Include all the information needed to produce feature Eiffel code and XML file."
 	external_name: "ISE.Reflection.EiffelFeature"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+
 class	
 	EIFFEL_FEATURE
 
@@ -371,5 +373,8 @@ invariant
 	non_void_preconditions: preconditions /= Void
 	non_void_postconditions: postconditions /= Void
 	non_void_comments: comments /= Void
+	prefix_xor_infix: is_prefix xor is_infix
+	method_xor_field_xor_creation_routine: is_method xor is_field xor is_creation_routine
+	frozen_xor_abstract: is_frozen xor is_abstract
 	
 end -- class EIFFEL_FEATURE

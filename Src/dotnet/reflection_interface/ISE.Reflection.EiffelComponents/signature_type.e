@@ -1,6 +1,7 @@
 indexing
 	description: "Signature type"
 	external_name: "ISE.Reflection.SignatureType"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	SIGNATURE_TYPE

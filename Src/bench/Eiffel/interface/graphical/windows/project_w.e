@@ -69,6 +69,7 @@ feature
 			forbid_resize;
 			build_widgets;
 			set_title (l_New_project);
+			set_icon_name (tool_name);
 			set_default_position;
 			realize;
 			transporter_init;
@@ -157,15 +158,6 @@ feature -- xterminal
 				end
 			elseif arg = popdown then
 				hidden_project_tool := True;
-				if  
-					not initialized or else
-					Workbench.system = Void or else 
-					System.system_name = Void 
-				then
-					set_icon_name (tool_name)
-				else
-					set_icon_name (System.system_name)
-				end;
 				close_windows;
 				window_manager.hide_all_editors;
 				if 	system_tool.realized and then system_tool.shown then
@@ -216,8 +208,10 @@ feature -- rest
 	explain_hole: EXPLAIN_HOLE;
 
 	set_default_position is
-			-- Let the window manager do it for you.
+			-- Display the project tool at the 
+			-- upper left corner of the screen.
 		do
+			set_x_y (0, 0)
 		end;
 
 	build_widgets is

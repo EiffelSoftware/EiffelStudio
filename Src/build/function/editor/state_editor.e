@@ -10,14 +10,14 @@ inherit
 			destroy as shell_destroy
 		redefine
 			set_geometry
-		end;
+		end
 	EB_TOP_SHELL
 		redefine
 			realize, make, set_geometry,
 			destroy
 		select
 			realize, make, destroy
-		end;
+		end
 	FUNC_EDITOR
 		rename
 			clear as old_clear,
@@ -25,7 +25,7 @@ inherit
 		redefine
 			edited_function, menu_bar, output_stone, 
 			input_stone, output_hole, input_hole, output_list, input_list
-		end;
+		end
 	FUNC_EDITOR
 		redefine
 			clear, edited_function, menu_bar, output_stone, 
@@ -34,7 +34,7 @@ inherit
 		select
 			clear,
 			set_edited_function
-		end;
+		end
 	WINDOWS
 		select
 			init_toolkit
@@ -51,135 +51,148 @@ feature -- Geometry
 		do
 			set_size (Resources.state_ed_width,
 					Resources.state_ed_height)
-		end;
+		end
 
 feature -- Input/output
 
-	input_hole: CONTEXT_HOLE; 
-	input_stone: FUNC_CON_STONE; 
+	input_hole: CONTEXT_HOLE 
+	input_stone: FUNC_CON_STONE 
 
-	output_hole: BEHAVIOR_HOLE;
-	output_stone: FUNC_BEH_STONE;
+	output_hole: BEHAVIOR_HOLE
+	output_stone: FUNC_BEH_STONE
 
-	input_list: CON_BOX;
-	output_list: B_BOX;
+	input_list: CON_BOX
+	output_list: B_BOX
 
 feature -- Edited features
 
-	edited_function: BUILD_STATE;
+	edited_function: BUILD_STATE
 
 	set_edited_function (f: like edited_function) is
 		do
-			old_set_edited_function (f);
+			old_set_edited_function (f)
 			update_title
-		end;
+		end
 
 feature 
 
 	empty: BOOLEAN is
 		do
 			Result := (edited_function = Void)
-		end;
+		end
 
 	destroy is
 		do
-			unregister_holes;
+			unregister_holes
 			shell_destroy
-		end;
+		end
 	
 	reset_stones is
 		do
-			input_stone.reset;
+			input_stone.reset
 			output_stone.reset
-		end;
+		end
 
 	close is
 		do
-			clear;
+			clear
 			window_mgr.close (Current)
-		end;
+		end
 
 	clear is
 		do
-			old_clear;
-			set_title (Widget_names.state_editor);
-			set_icon_name (Widget_names.state_editor);
-		end;
+			old_clear
+			set_title (Widget_names.state_editor)
+			set_icon_name (Widget_names.state_editor)
+		end
 
 
 	realize is
 		do
-			shell_realize;
-			hide_stones;
-		end;
+			shell_realize
+			hide_stones
+		end
 
 	update_title is
 		 local
 			tmp: STRING
 		do
-			!! tmp.make (0);
-			tmp.append (Widget_names.state_name);
-			tmp.append (": ");
-			tmp.append (edited_function.label);
-			set_title (tmp);
+			!! tmp.make (0)
+			tmp.append (Widget_names.state_name)
+			tmp.append (": ")
+			tmp.append (edited_function.label)
+			set_title (tmp)
 			set_icon_name (tmp)
-		end;
+		end
 
 	update_context_name (c: CONTEXT) is
 			-- Update context name in Current editor for 
 			-- context `c'.
 		local
-			finished: BOOLEAN;
-			old_cur: CURSOR;
+			finished: BOOLEAN
+			old_cur: CURSOR
 			icons: LINKED_LIST [FUNC_CON_IS]
 		do
-			icons := input_list.icons;
-			old_cur := icons.cursor;
+			icons := input_list.icons
+			old_cur := icons.cursor
 			from
 				icons.start
 			until
 				icons.after or else finished
 			loop
 				if icons.item.data = c then
-					finished := True;
+					finished := True
 					icons.item.update_label_text
-				end;
+				end
 				icons.forth
-			end;
-			icons.go_to (old_cur);
-		end;
+			end
+			icons.go_to (old_cur)
+		end
 
 feature {NONE}
 
 	create_output_stone (a_parent: COMPOSITE) is
 		do
-			!!output_stone.make (Current);
-			output_stone.make_visible (a_parent);
-			button_form.attach_left_widget (page_label, row_label, 5);
-		end;
+			!!output_stone.make (Current)
+			output_stone.make_visible (a_parent)
+			button_form.attach_left_widget (page_label, row_label, 5)
+		end
 
 	create_input_stone (a_parent: COMPOSITE) is
 		do
-			!!input_stone.make (Current);
-			input_stone.make_visible (a_parent);
-		end;
+			!!input_stone.make (Current)
+			input_stone.make_visible (a_parent)
+		end
 
 feature {NONE} -- Interface
 
-	menu_bar: STATE_BAR;
+	menu_bar: STATE_BAR
+
+	window_menu_bar: BAR
+	file_category: MENU_PULL
+	exit_tool_entry: PUSH_B
+	exit_entry: PUSH_B
 	
 	make (a_name: STRING; a_screen: SCREEN) is
-		local
+		local		
+			exit_cmd: EXIT_EIFFEL_BUILD_CMD
 			del_com: DELETE_WINDOW
 		do
-			eb_top_shell_make (a_name, a_screen);
-			set_title (a_name);
-			set_icon_name (a_name);
-			set_icon_pixmap (Pixmaps.state_pixmap);
-			initialize (Widget_names.form, Current);
-			!! del_com.make (Current);
-			set_delete_command (del_com);
-			initialize_window_attributes;
-		end;
+			eb_top_shell_make (a_name, a_screen)
+			set_title (a_name)
+			set_icon_name (a_name)
+			set_icon_pixmap (Pixmaps.state_pixmap)
+			!! window_menu_bar.make (menu_names.menu_bar, Current)
+			!! file_category.make (menu_names.file, window_menu_bar)
+			!! exit_tool_entry.make (menu_names.exit_tool, file_category)
+			!! exit_entry.make (menu_names.exit, file_category)
+			initialize (Widget_names.form, Current)
+			!! del_com.make (Current)
+			set_delete_command (del_com)
+			exit_tool_entry.add_activate_action (del_com, Void) 
+			!! exit_cmd
+			exit_entry.add_activate_action (exit_cmd, Void)
+			initialize_window_attributes
+		end
 
 end

@@ -53,7 +53,7 @@ feature -- Insertion
 					-- The routine id has been recorded 
 					-- earlier.
 				info := item (rout_id);
-				if not equal (info.origin, org.id) then
+				if not info.origin.is_equal (org.id) then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.

@@ -51,7 +51,7 @@ feature -- Access
 			other_class_type ?= other;
 			Result := 	other_class_type /= Void
 						and then
-						equal (base_class_id, other_class_type.base_class_id)
+						base_class_id.is_equal (other_class_type.base_class_id)
 						and then
 						is_expanded = other_class_type.is_expanded
 						and then
@@ -277,7 +277,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			instantiation: TYPE_A;
 			gen_type: GEN_TYPE_A;
 		do
-			if equal (class_id, base_class_id) then
+			if class_id.is_equal (base_class_id) then
 					-- Feature is written in the class associated to the
 					-- current actual class type
 				instantiation := Current;
@@ -337,7 +337,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := equal (base_class_id, other.base_class_id);
+			Result := base_class_id.is_equal (other.base_class_id);
 		end;
 
 	create_info: CREATE_TYPE is

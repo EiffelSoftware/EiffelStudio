@@ -61,7 +61,7 @@ feature
 			-- Is `other' equal to Current ?
 		do
 			Result :=
-				equal (written_in, other.written_in)
+				written_in.is_equal (other.written_in)
 				and then
 				pattern.is_equal (other.pattern);
 		end;

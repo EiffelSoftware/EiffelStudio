@@ -90,7 +90,7 @@ end;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
 					id := client.id;
-					if equal (id, current_type.associated_class.id) then
+					if id.is_equal (current_type.associated_class.id) then
 							-- Found expanded circuit
 						!!vlec;
 						vlec.set_class (current_type.associated_class);

@@ -239,6 +239,9 @@ feature {NONE} -- Implementation
 	is_frozen: BOOLEAN
 			-- Boolean mark for frozen feature names
 
+	initial_has_old_verbatim_strings_warning: BOOLEAN
+			-- Value of `has_old_verbatim_strings_warning' when parser was started
+
 	fclause_pos: TOKEN_LOCATION
 			-- To memorize the beginning of a feature clause
 
@@ -610,14 +613,17 @@ feature {NONE} -- String factory
 			string_as_not_void: Result /= Void
 		end
 
-	new_empty_verbatim_string_as (marker: STRING): VERBATIM_STRING_AS is
+	new_empty_verbatim_string_as (marker: STRING; is_indentable: BOOLEAN): VERBATIM_STRING_AS is
 			-- New verbatim string AST node for ""
 		require
 			marker_not_void: marker /= Void
 		do
-			Result := new_verbatim_string_as ("", marker)
+			Result := new_verbatim_string_as ("", marker, is_indentable)
 		ensure
 			verbatim_string_as_not_void: Result /= Void
+			value_set: Result.value /= Void and then Result.value.is_empty
+			marker_set: Result.verbatim_marker = marker
+			is_indentable_set: Result.is_indentable = is_indentable
 		end
 
 feature {NONE} -- Clickable factory

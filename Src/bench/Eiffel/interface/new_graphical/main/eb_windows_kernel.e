@@ -1,6 +1,6 @@
 indexing
-	description: "$EiffelGraphicalCompiler$ root class for Windows"
-	author: ""
+	description: "Eiffel compiler that can be used from either EiffelStudio or
+		from Visual Studio .NET"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,37 +9,35 @@ class
 
 inherit
 	EB_KERNEL
-
+		rename
+			make as standard_make
+		end
+		
 create
 	make
 
-feature {NONE} -- Debugging
+feature {NONE} -- Initialization
 
-	create_handler is
+	make is
+			-- Initialize server.
 		local
-			delay: INTEGER
+			local_string: STRING
+			com_compiler: ECOM_EIF_COMPILER_REGISTRATION
 		do
-			delay := Configure_resources.get_pos_integer 
-						(r_Windows_timer_delay, 10)
-			if delay < 5 or else delay > 200 then	
-				delay := 10
-			end;
-				-- FIXME need to pass delay as a extra argument
-			win_ioh_make_client ($call_back, Current, delay) 
-		end;
-
-	call_back is
-			-- Call the command.
-		do
-			execute (Current)	
-		end
-
-feature {NONE} -- Externals
-
-	win_ioh_make_client (cb: POINTER; obj: like Current; delay: INTEGER) is
-			-- Make the io handler function
-		external
-			"C"
+			if argument_count > 0 then
+				local_string :=argument (1)
+				local_string.to_lower
+			end
+			if
+				local_string /= Void and
+				(local_string.is_equal ("-regserver") or local_string.is_equal ("/regserver") or
+				local_string.is_equal ("-unregserver") or local_string.is_equal ("/unregserver") or
+				local_string.is_equal ("-embedding") or local_string.is_equal ("/embedding"))
+			then
+				create com_compiler.make
+			else
+				standard_make
+			end
 		end
 
 end -- class EB_WINDOWS_KERNEL

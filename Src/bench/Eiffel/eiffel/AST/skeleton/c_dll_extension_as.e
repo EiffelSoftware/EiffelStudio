@@ -47,8 +47,6 @@ feature -- Type check
 		local
 			error: BOOLEAN
 			ext_dll_sign: EXT_DLL_SIGN
---			alias_name: STRING_AS
---			ext_dll_alias: EXT_DLL_ALIAS
 		do
 			type_check_signature
 
@@ -65,17 +63,6 @@ feature -- Type check
 				Error_handler.insert_error (ext_dll_sign)
 				Error_handler.raise_error
 			end
-
---			if dll_type = dll32_type then
---					-- Extra check for Win 31 DLL32
---				alias_name := ext_as_b.alias_name
---				if (alias_name = Void or else not alias_name.value.is_integer) then
---					!! ext_dll_alias
---					context.init_error (ext_dll_alias)
---					Error_handler.insert_error (ext_dll_alias)
---					Error_handler.raise_error
---				end
---			end
 		end
 
 feature -- Byte code

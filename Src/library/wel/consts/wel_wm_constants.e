@@ -358,8 +358,49 @@ feature -- Access
 	Wm_mdisetmenu: INTEGER is 560
 			-- Declared in Windows as WM_MDISETMENU
 
+	Wm_entersizemove: INTEGER is 561
+			-- Declared in Windows as WM_ENTERSIZEMOVE
+
+	Wm_exitsizemove: INTEGER is 562
+			-- Declared in Windows as WM_EXITSIZEMOVE
+
 	Wm_dropfiles: INTEGER is 563
 			-- Declared in Windows as WM_DROPFILES
+
+	Wm_mdirefreshmenu: INTEGER is 564
+			-- Declared in Windows as WM_MDIREFRESHMENU
+
+	Wm_ime_setcontext: INTEGER is 641
+			-- Declared in Windows as WM_IME_SETCONTEXT
+
+	Wm_ime_notify: INTEGER is 642
+			-- Declared in Windows as WM_IME_NOTIFY
+
+	Wm_ime_control: INTEGER is 643
+			-- Declared in Windows as WM_IME_CONTROL
+
+	Wm_ime_compositionfull: INTEGER is 644
+			-- Declared in Windows as WM_IME_COMPOSITIONFULL
+
+	Wm_ime_select: INTEGER is 645
+			-- Declared in Windows as WM_IME_SELECT
+
+	Wm_ime_char: INTEGER is 646
+			-- Declared in Windows as WM_IME_CHAR
+
+	Wm_ime_keydown: INTEGER is 656
+			-- Declared in Windows as WM_IME_KEYDOWN
+
+	Wm_ime_keyup: INTEGER is 657
+			-- Declared in Windows as WM_IME_KEYUP
+
+	Wm_mousehover: INTEGER is 673
+			-- Require Windows98, Windows NT 4.0 or later
+			-- Declared in Windows as WM_MOUSEHOVER
+
+	Wm_mouseleave: INTEGER is 675
+			-- Require Windows98, Windows NT 4.0 or later
+			-- Declared in Windows as WM_MOUSELEAVE
 
 	Wm_cut: INTEGER is 768
 			-- Declared in Windows as WM_CUT

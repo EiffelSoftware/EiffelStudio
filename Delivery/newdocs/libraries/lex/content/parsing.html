@@ -169,5 +169,235 @@ Term       [=] Simple_var Int_constant Nested
 Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<P>This grammar assumes a terminal Identifier, which must be defined as a token type in the lexical grammar. The other terminals are keywords, shown as strings appearing in double quotes, for example "+".</P>
+
+		<H2>PARSING CONCEPTS</H2>
+
+		<P>The Parse library supports a parsing mechanism based on the concepts of object-oriented software construction.</P>
+
+		<H3>Class CONSTRUCT</H3>
+
+		<P>The deferred class CONSTRUCT describes the general notion of construct; instances of this class and its descendants are specimens of the constructs of a grammar.</P>
+
+		<P>Deferred though it may be, CONSTRUCT defines some useful general patterns; for example, its procedure <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_process">process</A> appears as:<BR>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_parse">parse</A><BR>
+		<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_parsed">parsed</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_semantics">semantics</A><BR>
+		<SPAN CLASS="ekeyword">end</SPAN><BR>
+		</CODE><BR>
+
+		where procedures <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_parse">parse</A> and <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_semantics">semantics</A> are expressed in terms of some more specific procedures, which are deferred. This defines a general scheme while leaving the details to descendants of the class.</P>
+
+		<P>Such descendants, given in the library, are classes AGGREGATE, CHOICE, REPETITION and TERMINAL. They describe the corresponding types of construct, with features providing the operations for parsing their specimens and applying the associated semantic actions.</P>
+
+		<H3>Building a processor</H3>
+
+		<P>To build a processor for a given grammar, you write a class, called a <B>construct class</B>, for every construct of the grammar, terminal or non-terminal. The class should inherit from AGGREGATE, CHOICE, REPETITION or TERMINAL depending on the nature of the construct. It describes the production for the construct and any associated semantic actions.</P>
+
+		<P>To complete the processor, you must choose a "top construct" for that particular processor, and write a root class. In accordance with the object-oriented method, which implies that "roots" and "tops" should be chosen last, these steps are explained at the end of this chapter.</P>
+
+		<P>The next sections explain how to write construct classes, how to handle semantics, and how to interface parsing with the lexical analysis process. All these tasks rely on a fundamental data abstraction, the notion of <B>abstract syntax tree</B>.</P>
+
+		<H3>Abstract syntax trees</H3>
+
+		<P>The effect of processing a document with a processor built from a combination of
+		construct classes is to build an abstract syntax tree for that document, and to apply any
+		requested semantic actions to that tree.</P>
+
+		<P>The syntax tree is said to be abstract because it only includes important structural information and does not retain the concrete information such as keywords and separators. Such concrete information, sometimes called "syntactic sugar", serves only external purposes but is of no use for semantic processing.</P>
+
+		<P>The combination of Eiffel techniques and libraries yields a very simple approach to building and processing abstract syntax trees. Class CONSTRUCT is a descendant of the Data Structure Library class <A CLASS="eclass" HREF="/libraries/base/reference/structures/tree/two_way_tree_chart.html">TWO_WAY_TREE</A>, describing a versatile implementation of trees; so, as a consequence, are CONSTRUCT’s own descendants. The effect of parsing any specimen of a construct is therefore to create an instance of the corresponding construct class. This instance is (among other things) a tree node, and is automatically inserted at its right place in the abstract syntax tree.</P>
+
+		<P>As noted in the discussion of trees, class <A CLASS="eclass" HREF="/libraries/base/reference/structures/tree/two_way_tree_chart.html">TWO_WAY_TREE</A> makes no formal distinction between the notions of tree and tree node. So you may identify the abstract syntax tree with the object (instance of CONSTRUCT) representing the topmost construct specimen in the structure of the document being analyzed.</P>
+
+		<H3>The production function</H3>
+
+		<P>A construct class describes the syntax of a given construct through a function called
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A>, which is a direct representation of the corresponding production. This function is declared in CONSTRUCT as</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">-- Right-hand side of the production for the construct</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">deferred</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		</CODE>
+
+		<P>Function <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> remains deferred in classes AGGREGATE, CHOICE and REPETITION. Every effective construct class that you write must provide an effecting of that function. It is important for the efficiency of the parsing process that every effective version of <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> be a Once function. Several examples of such effectings are given below.</P>
+
+		<P>Classes AGGREGATE, CHOICE, REPETITION and TERMINAL also have a deferred function <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_construct_name">construct_name</A> of type STRING, useful for tracing and debugging. This function should be effected in every construct class to return the string name of the construct, such as "INSTRUCTION" or "CLASS" for construct classes in a grammar of
+		Eiffel. For efficiency reasons, the <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_construct_name">construct_name</A> function should also be a Once function. The form of such a function will always be the same, as illustrated by the following example which may appear in the construct class INSTRUCTION in a processor for Eiffel:</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_construct_name">construct_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Symbolic name of the construct</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
+
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="estring">"INSTRUCTION"</SPAN><BR>
+
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+		</CODE>
+
+		<P>The examples of the next few sections, which explain how to write construct classes, are borrowed from the small "Polynomial" language mentioned above, which may be found in the examples directory in the ISE Eiffel delivery.
+
+		<H2>PREPARING GRAMMARS</H2>
+
+		<P>Having studied the Parse library principles, let us see how to write grammar productions for various kinds of construct. The main task is to write the <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for each construct class.</P>
+
+		<P>The <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for a descendant of AGGREGATE will describe how to build a 	specimen of the corresponding function from a sequence of specimens of each of the constituent constructs. Writing this function from the corresponding production is straightforward.</P>
+
+		<P>As an example, consider the production function of class LINE for the Polynomial example language. The corresponding production is<BR>
+
+		<CODE>Line [=] Variables ":" Sum</CODE><BR>
+
+		where Variables and Sum are other constructs, and the colon ":" is a terminal. This means that every specimen of Line consists of a specimen of Variables, followed by a colon, followed by a specimen of Sum.</P>
+
+		<P>Here is the corresponding production function as it appears in class LINE:</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">VARIABLES</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">SUM</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">":"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		</CODE>
+
+		<P>As shown by this example, the <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for an aggregate construct class should declare a local entity (here <SPAN CLASS="elocal">var</SPAN> and <SPAN CLASS="elocal">sum</SPAN>) for each non-keyword component of the right-hand side, the type of each entity being the corresponding construct class (here <SPAN CLASS="eclass">VARIABLES</SPAN> and <SPAN CLASS="eclass">SUM</SPAN>).</P>
+
+		<P>The body of the function should begin with<BR>
+
+		<CODE>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+		</CODE><BR>
+
+		to create the object containing the result. Then for each non-keyword component, represented by the local entity <SPAN CLASS="elocal">component</SPAN> (this applies to <SPAN CLASS="elocal">var</SPAN> and <SPAN CLASS="elocal">sum</SPAN> in the example), there should be a sequence of two instructions, of the form</P>
+
+		<CODE>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P>For any keyword of associated string <I>symbol</I>, such as the colon ":" in the example,
+		there should be a call to
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P>The order of the various calls to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> (for non-keywords) and <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> (for keywords) must be the order of the components in the production. Also, every
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN> instruction must occur before the corresponding call to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN>.</P>
+
+		<P>All components in the above example are required. In the general case an aggregate production may have optional components. To signal that a component component of the right-hand side is optional, include a call of the form</P>
+
+		<CODE><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_set_optional">set_optional</A>
+		</CODE>
+
+		<P>This call may appear anywhere after the corresponding <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN> instruction. The recommended place is just after the call to put and on the same line, as in</P>
+
+		<CODE>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_set_optional">set_optional</A>
+		</CODE>
+
+		<H3>Choices</H3>
+
+		<P>The <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for a descendant of CHOICE will describe how to build a specimen of the corresponding function as a specimen of one of the alternative constructs.</P>
+
+		<P>As an example, consider the production function of class <A CLASS="eclass" HREF="/libraries/lex/samples/process/term_chart.html">TERM</A> for the Polynomial example language. The corresponding production is<BR>
+
+		<CODE>Term [=] Simple_var Poly_integer Nested</CODE><BR>
+
+		where Simple_var, Poly_integer and Nested are other constructs. This means that every specimen of Term consists of one specimen of any one of these three constructs. Here is the corresponding production function as it appears in class TERM:
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/term.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var_chart.html">SIMPLE_VAR</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer_chart.html">POLY_INTEGER</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested_chart.html">NESTED</A><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		</CODE>
+
+		<P>As shown by this example, the production function for a choice construct class must declare a local entity - here <SPAN CLASS="elocal">id</SPAN>, <SPAN CLASS="elocal">val</SPAN> and <SPAN CLASS="elocal">nest</SPAN> - for each alternative component of the right-hand side. The type of each entity is the corresponding construct class - here <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var_chart.html">SIMPLE_VAR</A>, <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer_chart.html">POLY_INTEGER</A> and <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested_chart.html">NESTED</A>.</P>
+
+		<P>The body of the function must begin by</P>
+
+		<CODE>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+		</CODE>
+
+		<P>Then for each alternative component represented by a local entity component (in the example this applies to <SPAN CLASS="elocal">id</SPAN>, <SPAN CLASS="elocal">val</SPAN> and <SPAN CLASS="elocal">nest</SPAN>) there should be two instructions of the form</P>
+
+
+		<CODE>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P CLASS="note"><B>Caution</B>: the order of the various calls to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> is irrelevant in principle. When a document is parsed, however, the choices will be tried in the order given; so if you know that certain
+		choices occur more frequently than others it is preferable to list them first to speed up the parsing process.</P>
+
+		<H3>Repetitions</H3>
+
+		<P>The <A CLASS="efeature" HREF="/libraries/lex/samples/process/term.html#f_production">production</A> function for a descendant of REPETITION will describe how to build a specimen of the corresponding function as a sequence or zero or more (or, depending on the grammar, one or more) specimens of the base construct. The class must also effect a feature <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_separator">separator</A> of type <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A>, usually as a constant attribute. (This feature is introduced as deferred in class REPETITION.)</P>
+
+		<P>As an example, consider the construct Variables in the Polynomial example language. The right-hand side of the corresponding production is<BR>
+
+		<CODE>Variables [=] {Identifier ";" ...}</CODE><BR>
+
+		where Identifier is another construct, and the semicolon ";" is a terminal. This means that every specimen of Variables consists of zero or more specimens of Identifier, separated from each other (if more than one) by semicolons.</P>
+
+		<P>Here are the corresponding <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A> function and <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_separator">separator</A> attribute as they appear in class <A CLASS="eclass" HREF="/libraries/lex/samples/process/variables_chart.html">VARIABLES</A>:</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/var_chart.html">IDENTIFIER</A><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<BR>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_separator">separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">";"</SPAN>
+		</CODE>
+
+		<P>As shown by this example, function <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A> is built along the same ideas as for aggregates and choices, except that here only one component, <SPAN CLASS="elocal">base</SPAN>, is required; its type must be the class corresponding to the construct serving as the base of the repetition, <A CLASS="eclass" HREF="/libraries/lex/samples/process/var_chart.html">IDENTIFIER</A> in the example.</P>
+
+		<H2>INTERFACE TO LEXICAL ANALYSIS</H2>
+
+		<P>One more type of construct class remains to be discussed: terminal construct classes. Since terminal constructs serve to elevate lexical tokens (regular expressions and keywords) to the dignity of syntactical construct, we must first take a look at how the Parse library classes collaborate with their counterparts in the Lex library.</P>
+
+		<H3>The notion of lexical interface class</H3>
+
+		<P>To parse a document, you need to get tokens from a lexical analyzer. This is achieved by making some construct classes, in particular those describing terminals, descendants of one of the lexical classes.</P>
+
+		<P>The best technique is usually to write a class covering the lexical needs of the language at hand, from which all construct classes that have some lexical business will inherit. Such a class is called a lexical interface class.</P>
+
+		<P>Lexical interface classes usually follow a common pattern. To take advantage of this uniformity, the Parse library includes a deferred class L_INTERFACE which describes that pattern. Specific lexical interface classes may be written as descendants of L_INTERFACE.</P>
+
+		<P>L_INTERFACE is a simple deferred class, with a deferred procedure <A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A>. It is an heir of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>.
+
+		<H3>Obtaining a lexical analyzer</H3>
+
+		<P>An effective descendant of L_INTERFACE must define procedure obtain_analyzer so that it records into the lexical analyzer the regular expressions and keywords of the language at hand. In writing <A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A> you may use any one of three different techniques, each of which may be the most convenient depending on the precise context, to obtain the required lexical analyzer:
+
+		<UL>
+			<LI>You may build the lexical analyzer by defining its regular expressions one by one, using the procedures described in the presentation of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>, in particular <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> and <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A>.</LI>
+			<LI>You may use use procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_retrieve_analyzer">retrieve_analyzer</A> from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> to retrieve an analyzer which a previous session saved into a file.</LI>
+			<LI>Finally, you may write a lexical grammar file (or reuse an existing one) and process it on the spot by using procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A> from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>.</LI>
+		</UL></P>
+
+		<H3>A lexical interface class</H3>
+
+		<P>An example of lexical interface class is POLY_LEX for the Polynomial example language. Here is the complete text of that class:
 	</BODY>
 </HTML>

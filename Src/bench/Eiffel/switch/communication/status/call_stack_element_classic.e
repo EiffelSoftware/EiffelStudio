@@ -217,12 +217,12 @@ feature {NONE} -- Implementation
 			counter			: INTEGER
 			l_names_heap: like Names_heap
 		do
-				debug ("DEBUGGER_TRACE"); io.putstring ("Initializing stack (CALL_STACK_ELEMENT_CLASSIC): "+routine_name+" from: "+dynamic_class.name+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("Initializing stack (CALL_STACK_ELEMENT_CLASSIC): "+routine_name+" from: "+dynamic_class.name+"%N"); end
 			if not is_exhausted then
 				retrieve_locals_and_arguments
 				set_hector_addr_for_locals_and_arguments
 			end
-				debug ("DEBUGGER_TRACE"); io.putstring ("Finished retrieving locals and argument"+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("Finished retrieving locals and argument"+"%N"); end
 			rout := routine
 			unprocessed_l := unprocessed_values
 			unprocessed_l.start
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			private_locals := locals_list
 			unprocessed_values := Void
 			initialized := True
-				debug ("DEBUGGER_TRACE"); io.putstring ("%TFinished initializating stack: "+routine_name+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("%TFinished initializating stack: "+routine_name+"%N"); end
 		ensure then
 			void_unprocessed: unprocessed_values = Void
 		end

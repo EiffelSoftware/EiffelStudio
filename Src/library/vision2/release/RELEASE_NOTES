@@ -1,4 +1,4 @@
-Eiffel Vision prerelease notes. 03-Feb-2000
+Eiffel Vision prerelease notes. 14-Feb-2000
 ===========================================
 
 This document describes the current prerelease of Eiffel Vision and changes
@@ -142,11 +142,6 @@ General Changes
  instance to change the appearance of a hole to indicate that it will accept the
  current pebble.
 
- Accelerators
- ------------
- FIXME
-  
-
  Naming conventions:
  -------------------
   - Features taking a boolean argument (set_capture (v: BOOLEAN)) are replaced
@@ -167,55 +162,3 @@ General Changes
    Contracts have been added and revised throughout the library. Where
   previously there were few invariants and postconditions now there are many.
   Preconditions have been added wherever possible.
-
-Changes to classes
-==================
- Changes to classes not mentioned above. 
-
-EV_ANY
-	Renamed:
-	 destroyed -> is_destroyed
-	Removed:
-	 is_valid
-	 same
-	 remove_implementation
-	 file_exists
-  
-EV_APPLICATION
-	Renamed:
-	 make -> make_and_launch
-	 initialize -> prepare
-	 exit ->  destroy (from EV_ANY)
-	Removed:
-	 splash_pixmap
-	 To display a splash screen put an agent in `post_launch_actions' that will
-	 display and remove the splash screen.
-
-EV_ACCELERATOR
-	Renamed:
-	 make -> make_with_key_combination
-
-EV_CURSOR
-	Removed:
-	 make_by_code 
-	 make_by_filename
-		Use set_pixmap
-
-EV_TIMEOUT
-	Renamed:
-	 period -> interval
-	 make -> make_with_interval
-	Removed:
-	 argument
-	 command
-	  Replaced by actions: EV_NOTIFY_ACTION_SEQUENCE.
-
-EV_PIXMAPABLE
-	Renamed:
-	 unset_pixmap -> remove_pixmap
-
-EV_TEXTABLE
-	Renamed:
-	 set_center_alignment -> align_text_center
-	 set_right_alignment -> align_text_right
-	 set_left_alignment -> align_text_left

@@ -16,7 +16,7 @@ inherit
 			abbreviation as attributes_abb
 		end
 
-creation
+create
 
 	make, do_nothing
 
@@ -27,7 +27,7 @@ feature {NONE} -- Properties
 			-- after successfully retrieving the compiled
 			-- class
 		do
-			!! Result.do_nothing
+			create Result.do_nothing
 		end;
 
 end -- class EWB_ATTRIBUTES

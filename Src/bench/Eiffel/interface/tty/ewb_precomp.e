@@ -16,7 +16,7 @@ inherit
 			save_project_again
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -82,7 +82,7 @@ feature {NONE} -- Execution
 				finished
 			loop
 				if Eiffel_project.precomp_save_error then
-					!! temp.make (0);
+					create temp.make (0);
 					temp.append ("Error: could not write to ");
 					temp.append (Precompilation_file_name);
 					temp.append ("%NPlease check permissions and disk space");
@@ -96,7 +96,7 @@ feature {NONE} -- Execution
 						Eiffel_project.save_precomp (licensed)
 					end;
 				else
-					{EWB_COMP} Precursor 
+					Precursor {EWB_COMP} 
 				end
 			end
 		end;

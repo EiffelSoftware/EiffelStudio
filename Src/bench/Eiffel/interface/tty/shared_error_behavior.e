@@ -17,7 +17,7 @@ feature {NONE}
 	stop_mode: BOOLEAN_REF is
 			-- Structure to keep `stop_on_error'.
 		once
-			!! Result
+			create Result
 		end
 
 end

@@ -17,7 +17,7 @@ inherit
 		end
 	TTY_CONSTANTS
 
-creation
+create
 
 	make, do_nothing
 
@@ -57,7 +57,7 @@ feature {NONE} -- Execution
 
 	associated_cmd: E_SHOW_FLAT is
 		do
-			!! Result.do_nothing
+			create Result.do_nothing
 			Result.set_feature_clause_order (feature_clause_order)
 		end
 

@@ -21,7 +21,7 @@ inherit
 
 	EIFFEL_ENV
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -340,7 +340,7 @@ feature -- Update
 			end
 				-- Default command
 			if (not option_error) and then (command = Void) then
-				!EWB_COMP!command
+				create {EWB_COMP} command
 			end
 		end
 
@@ -366,7 +366,7 @@ feature -- Update
 			elseif option.is_equal ("-version") then
 				version_only := True
 			elseif option.is_equal ("-quick_melt") then
-				!EWB_QUICK_MELT! command 
+				create {EWB_QUICK_MELT} command 
 			elseif has_documentation_generation and then option.is_equal ("-implementers") then
 				if current_option < argument_count then
 					if command /= Void then
@@ -387,7 +387,7 @@ feature -- Update
 								cn := argument (current_option)
 								current_option := current_option + 1
 								fn := argument (current_option)
-								!EWB_HISTORY!command.make (cn, fn, filter_name)
+								create {EWB_HISTORY} command.make (cn, fn, filter_name)
 							else
 								option_error := True
 							end
@@ -416,7 +416,7 @@ feature -- Update
 								cn := argument (current_option)
 								current_option := current_option + 1
 								fn := argument (current_option)
-								!EWB_PAST!command.make (cn, fn, filter_name)
+								create {EWB_PAST} command.make (cn, fn, filter_name)
 							else
 								option_error := True
 							end
@@ -445,7 +445,7 @@ feature -- Update
 								cn := argument (current_option)
 								current_option := current_option + 1
 								fn := argument (current_option)
-								!EWB_FUTURE!command.make (cn, fn, filter_name)
+								create {EWB_FUTURE} command.make (cn, fn, filter_name)
 							else
 								option_error := True
 							end
@@ -564,11 +564,11 @@ feature -- Update
 						if not option_error then
 							cn := argument (current_option)
 							if cn.is_equal ("-all") then
-								!EWB_DOCUMENTATION! command.make_flat (filter_name, false)
+								create {EWB_DOCUMENTATION} command.make_flat (filter_name, false)
 							elseif cn.is_equal ("-all_and_parents") then
-								!EWB_DOCUMENTATION! command.make_flat (filter_name, true)
+								create {EWB_DOCUMENTATION} command.make_flat (filter_name, true)
 							else
-								!EWB_FLAT!command.make (cn, filter_name)
+								create {EWB_FLAT} command.make (cn, filter_name)
 							end
 						end
 					end
@@ -585,9 +585,9 @@ feature -- Update
 						current_option := current_option + 1
 						cn := argument (current_option)
 						if cn.is_equal ("-all") then
-							!EWB_DOCUMENTATION! command.make_text (filter_name)
+							create {EWB_DOCUMENTATION} command.make_text (filter_name)
 						else
-							!EWB_TEXT!command.make (cn, filter_name)
+							create {EWB_TEXT} command.make (cn, filter_name)
 						end
 					end
 				else
@@ -610,7 +610,7 @@ feature -- Update
 						end
 						if not option_error then
 							cn := argument (current_option)
-							!EWB_ANCESTORS!command.make (cn, filter_name)
+							create {EWB_ANCESTORS} command.make (cn, filter_name)
 						end
 					end
 				else
@@ -633,7 +633,7 @@ feature -- Update
 						end
 						if not option_error then
 							cn := argument (current_option)
-							!EWB_CLIENTS!command.make (cn, filter_name)
+							create {EWB_CLIENTS} command.make (cn, filter_name)
 						end
 					end
 				else

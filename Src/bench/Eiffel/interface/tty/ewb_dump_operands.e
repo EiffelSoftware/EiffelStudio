@@ -20,7 +20,7 @@ inherit
 			process_feature
 		end
 
-creation
+create
 
 	make, do_nothing
 

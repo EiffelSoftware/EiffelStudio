@@ -16,7 +16,7 @@ inherit
 			force
 		end
 
-creation
+create
 
 	make
 
@@ -48,7 +48,7 @@ feature -- Update
 	force (s: STRING; i: INTEGER) is
 			-- Force string `s' at position `i'.
 		do
-			{ARRAY} Precursor (s, i);
+			Precursor {ARRAY} (s, i);
 			if i > argument_count then
 				argument_count := i
 			end;

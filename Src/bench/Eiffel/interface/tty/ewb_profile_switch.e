@@ -43,7 +43,7 @@ feature {NONE} -- Execution
 			show_enabled := not show_enabled;
 			if not show_enabled then
 				from
-					!! new_array.make (1, 0);
+					create new_array.make (1, 0);
 					i := 1;
 				until
 					i > output_names.count

@@ -16,7 +16,7 @@ inherit
 			abbreviation as descendants_abb
 		end
 
-creation
+create
 
 	make, do_nothing
 
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
-			!! Result.do_nothing
+			create Result.do_nothing
 		end;
 
 end -- class EWB_FUTURE

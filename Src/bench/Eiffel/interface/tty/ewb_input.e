@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_QUERY_VALUES
 
-creation
+create
 	make_loop
 
 feature -- Creation
@@ -64,7 +64,7 @@ feature {NONE} -- Execute
 			i: INTEGER;
 			empty_array: ARRAY [STRING];
 		do
-			!! empty_array.make (1, 0);
+			create empty_array.make (1, 0);
 			command_arguments := command_line_io.command_arguments;
 			if first_run and command_arguments.argument_count = 1 then
 				filenames.copy (empty_array);

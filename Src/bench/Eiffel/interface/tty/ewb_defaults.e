@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_QUERY_VALUES
 
-creation
+create
 	make_loop
 
 feature -- Creation
@@ -44,23 +44,23 @@ feature {NONE} -- Execute
 			ewb_cmd: EWB_CMD;
 		do
 			clear_values;
-			!EWB_NUMBER_OF_CALLS! ewb_cmd.make_loop;
+			create {EWB_NUMBER_OF_CALLS} ewb_cmd.make_loop;
 			main_menu.switches_menu.force (ewb_cmd, 1);
-			!EWB_FEATURENAME! ewb_cmd.make_loop;
+			create {EWB_FEATURENAME} ewb_cmd.make_loop;
 			main_menu.switches_menu.force (ewb_cmd, 2);
-			!EWB_TOTAL_SEC! ewb_cmd;
+			create {EWB_TOTAL_SEC} ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 3);
-			!EWB_SELF_SEC! ewb_cmd;
+			create {EWB_SELF_SEC} ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 4);
-			!EWB_DESCENDANTS_SEC! ewb_cmd;
+			create {EWB_DESCENDANTS_SEC} ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 5);
-			!EWB_PERCENTAGE! ewb_cmd;
+			create {EWB_PERCENTAGE} ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 6);
-			!EWB_INPUT! ewb_cmd.make_loop;
+			create {EWB_INPUT} ewb_cmd.make_loop;
 			main_menu.profile_menu.force (ewb_cmd, 7);
-			!EWB_LANGUAGE! ewb_cmd.make_loop;
+			create {EWB_LANGUAGE} ewb_cmd.make_loop;
 			main_menu.profile_menu.force (ewb_cmd, 8);
-			!EWB_RUN_PROF! ewb_cmd;
+			create {EWB_RUN_PROF} ewb_cmd;
 			main_menu.profile_menu.force (ewb_cmd, 9);
 		end;
 

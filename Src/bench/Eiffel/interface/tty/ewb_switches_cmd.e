@@ -16,7 +16,7 @@ inherit
 			help_message
 		end;
 
-creation
+create
 	make_without_help
 
 feature -- Initialization

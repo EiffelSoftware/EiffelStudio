@@ -34,11 +34,11 @@ feature {NONE} -- Execute
 			create_profiler_query;
 			create_profiler_options;
 
-			!! st.make;
+			create st.make;
 			if any_active_query then
 				print_active_query (st);
 					-- Do the computation.
-				!! executer.make (st, profiler_query, profiler_options);
+				create executer.make (st, profiler_query, profiler_options);
 				if last_output /= Void then
 					executer.set_last_output (last_output);
 				end;
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	create_profiler_query is
 			-- Creates `profiler_query'.
 		do
-			!! profiler_query
+			create profiler_query
 			profiler_query.set_subqueries (subqueries);
 			profiler_query.set_subquery_operators (subquery_operators);
 		end;
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	create_profiler_options is
 			-- Creates `profiler_options'.
 		do
-			!! profiler_options;
+			create profiler_options;
 			profiler_options.set_output_names (output_names);
 			profiler_options.set_filenames (filenames);
 			profiler_options.set_language_names (language_names);

@@ -17,7 +17,7 @@ inherit
 
 	SHARED_WORKBENCH
 
-creation
+create
 
 	do_nothing
 

@@ -16,7 +16,7 @@ inherit
 			abbreviation as number_of_calls_abb
 		end
 
-creation
+create
 	make_loop
 
 feature -- Creation

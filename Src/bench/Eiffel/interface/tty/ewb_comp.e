@@ -111,11 +111,11 @@ feature {NONE} -- Update
 					if not file_name.is_empty then
 						Eiffel_ace.set_file_name (clone(file_name));
 					else
-						!!file.make ("Ace.ace");
+						create file.make ("Ace.ace");
 						if file.exists then
 							Eiffel_ace.set_file_name ("Ace.ace");
 						else
-							!!file.make ("Ace")
+							create file.make ("Ace")
 							if file.exists then
 								Eiffel_ace.set_file_name ("Ace")
 							else
@@ -231,7 +231,7 @@ feature {NONE} -- Compilation
 				finished
 			loop
 				if Eiffel_project.save_error then
-					!! file_name.make_from_string (Eiffel_project.project_directory.name);
+					create file_name.make_from_string (Eiffel_project.project_directory.name);
 					if Compilation_modes.is_precompiling then 
 						file_name.set_file_name (dot_workbench)
 					else
@@ -239,7 +239,7 @@ feature {NONE} -- Compilation
 						file_name.add_extension (Project_extension)
 					end
 
-					!! temp.make (0);
+					create temp.make (0);
 					temp.append ("Error: could not write to ");
 					temp.append (file_name);
 					temp.append ("%NPlease check permissions and disk space");
@@ -260,7 +260,7 @@ feature {NONE} -- Compilation
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (fn);
+			create f.make (fn);
 			if
 				not (f.exists and then f.is_readable and then f.is_plain)
 			then

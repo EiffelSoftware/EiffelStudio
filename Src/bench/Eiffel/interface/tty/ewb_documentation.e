@@ -13,7 +13,7 @@ inherit
 			execute, loop_action
 		end
 
-creation
+create
 	make_flat,
 	make_flat_short,
 	make_short,
@@ -125,13 +125,13 @@ feature -- Execution
 			inspect 
 				format_type
 			when flat_type then
-				!! cmd.make_flat (filter_name, degree_output)
+				create cmd.make_flat (filter_name, degree_output)
 			when flat_short_type then
-				!! cmd.make_flat_short (filter_name, degree_output)
+				create cmd.make_flat_short (filter_name, degree_output)
 			when text_type then
-				!! cmd.make_text (filter_name, degree_output)
+				create cmd.make_text (filter_name, degree_output)
 			when short_type then
-				!! cmd.make_short (filter_name, degree_output)
+				create cmd.make_short (filter_name, degree_output)
 			end
 			if do_parents then
 				cmd.set_do_parents

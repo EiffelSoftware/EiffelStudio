@@ -574,10 +574,16 @@ feature {NONE} -- Implementation
 			file_dialog_not_void: fd /= Void
 		local
 			ilkg: IL_KEY_GENERATOR
+			l_error: EV_INFORMATION_DIALOG
 		do
 			create ilkg
 			ilkg.generate_key (fd.file_name)
-			signing_key_field.set_text (fd.file_name)
+			if ilkg.successful then
+				signing_key_field.set_text (fd.file_name)
+			else
+				create l_error.make_with_text (ilkg.error_message)
+				l_error.show_modal_to_window (system_window.window)
+			end
 		end
 		
 

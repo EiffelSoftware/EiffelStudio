@@ -124,8 +124,8 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 	token_StringBuilder_m_StringValue: INTEGER is
 			-- Attribute token of System.StringBuilder::m_StringValue	
 		once
-			if il_environment.version.is_equal (Il_environment.v1_2) then		
-				Result := token_StringBuilder_m_StringValue_v1_2		
+			if il_environment.version.is_equal (Il_environment.v2_0) then		
+				Result := token_StringBuilder_m_StringValue_v2_0		
 			else
 				Result := token_StringBuilder_m_StringValue_v1_1		
 			end
@@ -134,8 +134,8 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 	token_Exception__message: INTEGER is
 			-- Attribute token of System.Exception::ToString
 		once
-			if il_environment.version.is_equal (Il_environment.v1_2) then		
-				Result := token_Exception__message_v1_2		
+			if il_environment.version.is_equal (Il_environment.v2_0) then		
+				Result := token_Exception__message_v2_0		
 			else
 				Result := token_Exception__message_v1_1	
 			end			
@@ -144,8 +144,8 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 	token_Exception__className: INTEGER is
 			-- Attribute token of System.Exception::_className
 		once
-			if il_environment.version.is_equal (Il_environment.v1_2) then		
-				Result := token_Exception__className_v1_2		
+			if il_environment.version.is_equal (Il_environment.v2_0) then		
+				Result := token_Exception__className_v2_0		
 			else
 				Result := token_Exception__className_v1_1	
 			end			
@@ -154,8 +154,8 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 	token_Exception_ToString: INTEGER is
 			-- Attribute token of System.Exception::ToString
 		once
-			if il_environment.version.is_equal (Il_environment.v1_2) then		
-				Result := token_Exception_ToString_v1_2
+			if il_environment.version.is_equal (Il_environment.v2_0) then		
+				Result := token_Exception_ToString_v2_0
 			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
 				Result := token_Exception_ToString_v1_1
 			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
@@ -166,8 +166,8 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 	token_Exception_get_Message: INTEGER is
 			-- Attribute token of System.Exception::get_Message
 		once
-			if il_environment.version.is_equal (Il_environment.v1_2) then		
-				Result := token_exception_get_Message_v1_2
+			if il_environment.version.is_equal (Il_environment.v2_0) then		
+				Result := token_exception_get_Message_v2_0
 			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
 				Result := token_exception_get_Message_v1_1
 			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
@@ -182,38 +182,27 @@ feature {NONE} -- Implementation
 			create Result.make (Eiffel_system.System.clr_runtime_version)
 		end
 
-feature {NONE} -- Constants
-
-	token_StringBuilder_m_StringValue_v1_1: INTEGER is 0x0400001B
-			--| v1.0/1.1 => System.StringBuilder::m_StringValue: string :: 0x0400001B |--	
-			
-	token_StringBuilder_m_StringValue_v1_2: INTEGER is 0x0400005E
-			--| v1.2     => System.StringBuilder::m_StringValue: string :: 0x0400005E |--	
-
-	token_Exception__message_v1_1: INTEGER is 0x04000020
-			--| v1.0/1.1 => System.Exception::_message: string :: 0x04000020 |--	
-			
-	token_Exception__message_v1_2: INTEGER is 0x04000063
-			--| v1.2     => System.Exception::_message: string :: 0x04000063 |--	
+feature {NONE} -- Constants: v1.0
 
 	token_Exception_ToString_v1_0: INTEGER is 0x06000182
-			--| v1.0 => System.Exception::_message: string :: 0x06000182 |--	
-			
-	token_Exception_ToString_v1_1: INTEGER is 0x06000192			
-			--| v1.1 => System.Exception::_message: string :: 0x06000192 |--	
-
-	token_Exception_ToString_v1_2: INTEGER is 0x06000212			
-			--| v1.2 => System.Exception::_message: string :: 0x06000212 |--	
-
-	token_Exception_get_Message_v1_2: INTEGER is 0x06000185	
-			--| v1.2 => System.Exception::get_Message(): string :: 0x??? |--
-			--| FIXME JFIAT: please put real data for token_Exception_get_Message_v1_2
-			
-	token_Exception_get_Message_v1_1: INTEGER is 0x06000185			
-			--| v1.1 => System.Exception::get_Message(): string :: 0x06000185 |--	
+			--| v1.0 => System.Exception::ToString: string :: 0x06000182 |--	
 
 	token_Exception_get_Message_v1_0: INTEGER is 0x06000176		
 			--| v1.0 => System.Exception::get_Message(): string :: 0x06000176 |--
+			
+feature {NONE} -- Constants: v1.1
+			
+	token_StringBuilder_m_StringValue_v1_1: INTEGER is 0x0400001B
+			--| v1.0/1.1 => System.StringBuilder::m_StringValue: string :: 0x0400001B |--	
+			
+	token_Exception__message_v1_1: INTEGER is 0x04000020
+			--| v1.0/1.1 => System.Exception::_message: string :: 0x04000020 |--	
+			
+	token_Exception_ToString_v1_1: INTEGER is 0x06000192			
+			--| v1.1 => System.Exception::ToString: string :: 0x06000192 |--	
+
+	token_Exception_get_Message_v1_1: INTEGER is 0x06000185			
+			--| v1.1 => System.Exception::get_Message(): string :: 0x06000185 |--	
 
 	token_Exception_GetClassName_v1_1: INTEGER is 0x06000186			
 			--| v1.1 => System.Exception::GetClassName: string :: 0x06000186 |--
@@ -221,7 +210,21 @@ feature {NONE} -- Constants
 	token_Exception__className_v1_1: INTEGER is 0x0400001D
 			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
 
-	token_Exception__className_v1_2: INTEGER is 0x04000060
-			--| v1.2 => System.Exception::_className: string :: 0x04000060 |--	
+feature {NONE} -- Constants: v2.0
+
+	token_StringBuilder_m_StringValue_v2_0: INTEGER is 0x04000073
+			--| v2.0     => System.StringBuilder::m_StringValue: string :: 0x04000073 |--	
+
+	token_Exception__message_v2_0: INTEGER is 0x04000078
+			--| v2.0     => System.Exception::_message: string :: 0x04000078 |--	
+
+	token_Exception_ToString_v2_0: INTEGER is 0x06000297			
+			--| v2.0 => System.Exception::ToString: string :: 0x06000297 |--	
+
+	token_Exception_get_Message_v2_0: INTEGER is 0x06000288
+			--| v2.0 => System.Exception::get_Message(): string :: 0x06000288 |--
+			
+	token_Exception__className_v2_0: INTEGER is 0x04000075
+			--| v2.0 => System.Exception::_className: string :: 0x04000075 |--	
 			
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

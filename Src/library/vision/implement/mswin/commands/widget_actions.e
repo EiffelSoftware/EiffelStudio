@@ -161,7 +161,7 @@ feature -- Element change
 				act.after
 			loop
 				if (act.item.command = c) and then
-					(act.item.argument =  arg) then
+					equal (arg, act.item.argument) then
 					act.remove
 				end
 				if not act.after then

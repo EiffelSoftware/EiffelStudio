@@ -9,45 +9,28 @@ deferred class UNDOABLE
 
 inherit
 
-	COMMAND
+	COMMAND;
+	SCROLLABLE_LIST_ELEMENT
+		rename
+			value as name
+		end
 
-feature 
-
-	execute (argument: ANY) is
-			-- Execute Current command and insert it
-			-- into the history if it is successful. 
-			-- `argument' is automatically passed by
-			-- EiffelVision when Current command is
-			-- invoked as a callback.
-		do
-			work (argument);
-			if not failed then
-				update_history
-			end
-		end;
+feature -- Access
 
 	history: HISTORY is
 			-- History in which Current command
 			-- is to be recorded
 		deferred
 		ensure
-			History_exists: Result /= Void
+			Result_exists: Result /= Void
 		end;
-
-feature {NONE}
-
-	failed: BOOLEAN is
-			-- Was execution of Current command
-			-- successful?
-		deferred
-		end; 
-
-feature 
 
 	name: STRING is
 			-- Name of Current command
 		deferred
-		end;
+		end
+
+feature -- Update
 
 	redo is
 			-- Re-execute Current command. 
@@ -62,8 +45,22 @@ feature
 		deferred
 		end;
 
-	
-feature {NONE}
+feature -- Execution
+
+	execute (argument: ANY) is
+			-- Execute Current command and insert it
+			-- into the history if it is successful. 
+			-- `argument' is automatically passed by
+			-- EiffelVision when Current command is
+			-- invoked as a callback.
+		do
+			work (argument);
+			if not failed then
+				update_history
+			end
+		end;
+
+feature {NONE} -- Implementation
 
 	update_history is
 			-- Update history.
@@ -77,10 +74,15 @@ feature {NONE}
 			-- Execute actual semantics of
 			-- current command.
 		deferred
-		end 
+		end;
 
-end
+	failed: BOOLEAN is
+			-- Was execution of Current command
+			-- successful?
+		deferred
+		end; 
 
+end -- class UNDOABLE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

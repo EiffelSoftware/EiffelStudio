@@ -22,7 +22,7 @@ inherit
 		end
 	
 create
-	make, make_from_array, make_from_pointer
+	make, make_from_array, make_from_pointer, share_from_pointer
 	
 feature {NONE} -- Initialization
 
@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
+			is_shared_set: not is_shared
 		end
 
 	make_from_array (data: ARRAY [INTEGER_8]) is
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = data.count
+			is_shared_set: not is_shared
 		end
 
 	make_from_pointer (a_ptr: POINTER; n: INTEGER) is
@@ -73,8 +75,24 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
+			is_shared_set: not is_shared
 		end
-		
+
+	share_from_pointer (a_ptr: POINTER; n: INTEGER) is
+			-- Use directly `a_ptr' with count `n' to hold current data.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			n_positive: n > 0
+		do
+			item := a_ptr
+			count := n
+			is_shared := True
+		ensure
+			item_set: item /= default_pointer
+			count_set: count = n
+			is_shared_set: is_shared
+		end
+	
 feature -- Access
 
 	item: POINTER
@@ -82,6 +100,9 @@ feature -- Access
 			
 	count: INTEGER
 			-- Number of elements that Current can hold.
+
+	is_shared: BOOLEAN
+			-- Is `item' shared with another memory area?
 
 feature -- Comparison
 
@@ -95,10 +116,32 @@ feature -- Duplication
 
 	copy (other: like Current) is
 			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
+			-- to `other', so as to yield equal objects. If `is_shared'
+			-- and current is not large enough to hold `other' create
+			-- a new pointer area and `is_shared' is set to `False'.
+		local
+			l_ptr: POINTER
 		do
-			resize (other.count)
-			item.memory_copy (other.item, other.count)
+			if count >= other.count then
+					-- No need to reallocate, it is safe to just copy.
+				item.memory_copy (other.item, other.count)
+			else
+					-- We need to reallocate memory here
+				if is_shared then
+						-- Before `item' was shared, so we simply allocate
+						-- a new memory area from `other' and reset
+						-- the `is_shared' flag.
+					is_shared := False
+					make_from_pointer (other.item, other.count)
+				else
+						-- Simply resize Current and copy data.
+					resize (other.count)
+					item.memory_copy (other.item, other.count)
+				end
+			end
+		ensure then
+			sharing_status_not_preserved:
+				(old is_shared and not is_shared) implies (other.count > old count)
 		end
 		
 feature -- Access: Platform specific
@@ -529,6 +572,7 @@ feature -- Concatenation
 	append (other: like Current) is
 			-- Append `other' at the end of Current.
 		require
+			not_shared: not is_shared
 			other_not_void: other /= Void
 		local
 			new_count: INTEGER
@@ -547,6 +591,8 @@ feature -- Resizing
 	resize (n: INTEGER) is
 			-- Reallocate `item' to hold `n' bytes.
 			-- If `n' smaller than `count', does nothing.
+		require
+			not_shared: not is_shared
 		do
 			if n > count then
 					-- Reallocate.
@@ -568,10 +614,13 @@ feature {NONE} -- Disposal
 		local
 			null: POINTER
 		do
-			item.memory_free
+			if not is_shared then
+				item.memory_free
+			end
 			item := null
+			is_shared := False
 		ensure then
-			item_reset: item = default_pointer
+			shared_reset: not is_shared
 		end
 
 invariant

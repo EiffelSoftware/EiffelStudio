@@ -46,14 +46,17 @@ display. We have just set the title with &quot;Hello World&quot;.</p>
 <p>&nbsp;</p>
 <h2>Under the Hood</h2>
 <p>The application shows how to display a Windows Form under the windows environment.
-The application inherit the
-  <span class="eClass">FORM</span> class, and just call the parent creation routine (<span class="eKeyword">Precursor</span> {<span class="eClass">FORM</span>})
-and set the title with <span class="eString">&quot;Hello world&quot;</span> with the inherited feature <span class="eFeature">set_title</span>.</p>
+The application inherits the
+  <span class="eClass">FORM</span> class, and just set the title with <span class="eString">&quot;Hello world&quot;</span> with the inherited feature <span class="eFeature">set_title</span>. 
+The application is launch in a PROCESS with this command line: feature {WINFORMS_APPLICATION}.run_form 
+(Current).</p>
 <p>This sample contains the following class: </p>
 <ul>
   <li>
   <span class="eClass">
   FORM</span></li>
+  <li>
+  WINFORMS_APPLICATION</li>
 </ul>
 
 <h2>Notes</h2>

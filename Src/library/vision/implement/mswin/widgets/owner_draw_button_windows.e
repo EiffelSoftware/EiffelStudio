@@ -1,0 +1,302 @@
+indexing
+	description: "This class represents a MS_WINDOWS Ownerdraw button";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class
+	OWNER_DRAW_BUTTON_WINDOWS
+
+inherit
+	BUTTON_WINDOWS
+		redefine
+			realize
+		end
+
+	WEL_OWNER_DRAW_BUTTON
+		rename
+			make as wel_make,
+			show as wel_show,
+			hide as wel_hide,
+			destroy as wel_destroy,
+			x as wel_x,
+			y as wel_y,
+			width as wel_width,
+			height as wel_height,
+			set_x as wel_set_x,
+			set_y as wel_set_y,
+			set_width as wel_set_width,
+			set_height as wel_set_height,
+			shown as wel_shown,
+			parent as wel_parent,
+			text as wel_text,
+			text_length as wel_text_length,
+			set_text as wel_set_text,
+			move as wel_move,
+			set_focus as wel_set_focus,
+			set_capture as wel_set_capture,
+			release_capture as wel_release_capture,
+			item as wel_item,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			on_right_button_up, on_left_button_down,
+			on_left_button_up, on_right_button_down,
+			on_mouse_move, on_destroy, on_set_cursor,
+			on_key_up, on_bn_clicked,
+			on_key_down
+		end
+
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_PS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ODS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		end
+
+feature -- Status setting
+
+	realize is
+			-- Realize current widget.
+		local
+			wc: WEL_COMPOSITE_WINDOW
+		do
+			if not exists then
+				if width = 0 then set_width (20) end
+				if height = 0 then set_height (20) end
+				resize_for_shell
+				wc ?= parent
+				wel_make (wc, "", x, y, width, height, id_default)
+			end
+			shown := true
+		end
+
+feature -- Basic operations
+
+	draw_all_selected (a_dc: WEL_DC) is
+			-- Draw current button when selected.
+			-- With the borders.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			draw_selected_border (a_dc)
+			draw_selected (a_dc)
+		end
+
+	draw_all_unselected (a_dc: WEL_DC) is
+			-- Draw current button when unselected.
+			-- With the borders.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			draw_border (a_dc)
+			draw_unselected (a_dc)
+		end
+
+	draw_unselected (a_dc: WEL_DC) is
+			-- Draw current button when unselected.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		deferred
+		end
+
+	draw_selected (a_dc: WEL_DC) is
+			-- Draw current button when selected.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		deferred
+		end
+
+	draw_selected_border (a_dc: WEL_DC) is
+			-- Draw selected borders on `a_dc'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			a_dc.select_pen (dark_gray_pen)
+			a_dc.line (0, 0, width - 1, 0)
+			a_dc.line (0, 0, 0, height - 1)
+			a_dc.select_pen (black_pen)
+			a_dc.line (1, 1, width, 1)
+			a_dc.line (1, 1, 1, height)
+			a_dc.select_pen (gray_pen)
+			a_dc.line (1, height - 2, width - 1 , height - 2)
+			a_dc.line (width - 2, 1, width - 2, height - 2)
+			a_dc.select_pen (white_pen)
+			a_dc.line (1, height - 1, width, height - 1)
+			a_dc.line (width - 1, 1, width - 1, height - 1)
+		end
+
+	draw_border (a_dc: WEL_DC) is
+			-- Draw borders on `a_dc'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			a_dc.select_pen (dark_gray_pen)
+			a_dc.line (1, height - 2, width - 1 , height - 2)
+			a_dc.line (width - 2, 1, width - 2, height - 2)
+			a_dc.select_pen (white_pen)
+			a_dc.line (1, 1, width, 1)
+			a_dc.line (1, 1, 1, height)
+			a_dc.select_pen (black_pen)
+			a_dc.line (1, height - 1, width , height - 1)
+			a_dc.line (width - 1, 1, width - 1, height - 1)
+			a_dc.select_pen (gray_pen)
+			a_dc.line (0, 0, width, 0)
+			a_dc.line (0, 0, 0, height)	
+		end
+
+	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+			-- Respond to a draw_item message.
+		require
+			a_draw_item_struct_not_void: a_draw_item_struct /= Void
+			a_draw_item_struct_exists: a_draw_item_struct.exists
+		local
+			dc: WEL_DC
+			brush: WEL_BRUSH
+		do
+			dc := a_draw_item_struct.dc
+--			dc.set_bk_color (wel_background_color)
+--			dc.set_text_color (wel_foreground_color)
+			!! brush.make_solid (wel_background_color)
+			dc.select_brush (brush)
+			dc.rectangle (0, 0, width, height)
+			dc.unselect_brush
+			if flag_set (a_draw_item_struct.item_state, Ods_selected) then
+				draw_all_selected (dc)	
+			else
+				draw_all_unselected (dc)	
+			end	
+		end
+
+feature {NONE} -- Implementation
+
+	white_pen: WEL_PEN is
+			-- White pen
+		local
+			color: WEL_COLOR_REF
+		once
+			!! color.make_rgb (255, 255, 255)
+			!! Result.make (Ps_solid, 1, color)
+		ensure
+			result_exists: result /= Void
+		end
+
+	black_pen: WEL_PEN is
+			-- Black pen
+		local
+			color: WEL_COLOR_REF
+		once
+			!! color.make_rgb (0, 0, 0)
+			!! Result.make (Ps_solid, 1, color)
+		ensure
+			result_exists: result /= Void
+		end
+
+	dark_gray_pen: WEL_PEN is
+			-- Dark gray pen
+		local
+			color: WEL_COLOR_REF
+		once
+			!! color.make_system (Color_btnshadow)
+			!! Result.make (Ps_solid, 1, color)
+		ensure
+			result_exists: result /= Void
+		end
+
+	gray_pen: WEL_PEN is
+			-- Gray pen
+		local
+			color: WEL_COLOR_REF
+		once
+			!! color.make_rgb (192, 192, 192)
+			!! Result.make (Ps_solid, 1, color)
+		ensure
+			result_exists: result /= Void
+		end
+
+	wel_foreground_color: WEL_COLOR_REF is
+			-- Foreground color
+		require
+			exists: exists
+		do
+			if private_foreground_color /= Void then
+				Result ?= private_foreground_color.implementation
+				check
+					result_not_void: Result /= Void
+				end
+			else
+				!! Result.make_system (color_btntext)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	wel_background_color: WEL_COLOR_REF is
+			-- Background color
+		require
+			exists: exists
+		do
+			if private_background_color /= Void then
+				Result ?= private_background_color.implementation
+				check
+					result_not_void: Result /= Void
+				end
+			else
+				!! Result.make_system (color_btnface)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	on_bn_clicked is
+		local
+			cd: BUTCLICK_DATA
+		do
+			!! cd.make (owner, 0, 0, 0, 0, id, buttons_state);
+			activate_actions.execute (Current, cd)
+		end;
+
+end -- class OWNER_DRAW_BUTTON_WINDOWS
+
+
+--|---------------------------------------------------------------- 
+--| EiffelVision: library of reusable components for ISE Eiffel 3. 
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
+--|   Engineering Inc. 
+--| All rights reserved. Duplication and distribution prohibited. 
+--| 
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA 
+--| Telephone 805-685-1006 
+--| Fax 805-685-6869 
+--| Electronic mail <info@eiffel.com> 
+--| Customer support e-mail <support@eiffel.com> 
+--|---------------------------------------------------------------- 

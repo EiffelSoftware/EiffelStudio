@@ -1,0 +1,208 @@
+indexing
+
+	description: "This class represents a MS_WINDOWS multi-line text editor with scrollbar";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	SCROLLED_TEXT_WINDOWS
+
+inherit
+
+	TEXT_WINDOWS
+		redefine
+			horizontal_position,
+			make,
+			realize,
+			set_single_line_mode,
+			set_multi_line_mode
+		end
+
+	SCROLLED_T_I
+
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
+creation
+
+	make
+
+feature -- Initialization
+
+	make (a_scrolled_text: SCROLLED_T; man: BOOLEAN; oui_parent: COMPOSITE) is
+			-- Make a scrolled text
+		do
+			!! private_attributes
+			is_multi_line_mode := True
+			parent ?= oui_parent.implementation
+			!! private_text.make (0)
+			managed := man
+			show_horizontal_scrollbar
+			show_vertical_scrollbar
+			a_scrolled_text.set_font_imp (Current)
+		end
+
+	realize is
+			-- Realize current widget
+		local
+			fw: FONT_WINDOWS
+			wc: WEL_COMPOSITE_WINDOW
+		do
+			if not realized then
+				default_style := Ws_child + Ws_visible + Ws_border
+					   + Es_nohidesel + Es_left
+					   + Es_multiline + Es_autovscroll
+				if not is_word_wrap_mode then
+					default_style := default_style + Es_autohscroll
+				end
+				if is_read_only then
+					default_style := default_style + Es_readonly
+				end
+				if is_horizontal_scrollbar then
+					default_style := default_style + Ws_hscroll
+				end
+				if is_vertical_scrollbar then
+					default_style := default_style + Ws_vscroll
+				end
+				if width = 0 then
+					set_width (200)
+				end
+				if height = 0  then 
+					fw ?= font.implementation
+					set_height (fw.string_height (Current, "I") * 7 // 4 + 2)
+ 				end
+				resize_for_shell
+				wc ?= parent
+				wel_make (wc, text, x, y, width, height, id_default)
+				if private_font /= Void then
+					set_font (private_font)
+				end
+				set_text (private_text)
+				if maximum_size > 0 then
+					set_maximum_size (maximum_size)
+				end
+				set_cursor_position (private_cursor_position)
+				if margin_width + margin_height > 0 then
+					set_margins (margin_width, margin_height)
+				end
+				if not is_multi_line_mode then
+					hide_vertical_scrollbar
+				end
+				if not managed and wel_shown then
+					wel_hide
+				elseif parent.shown then
+					shown := true
+				end
+			end
+		end
+
+feature -- Status report
+
+	horizontal_position: INTEGER is
+			-- Position (in pixels) of horizontal scrollbar
+		do
+			Result :=  cwin_get_scroll_pos (wel_item, Sb_horz)
+		end
+
+	is_horizontal_scrollbar: BOOLEAN
+			-- Is horizontal scrollbar visible ?
+	
+	is_vertical_scrollbar: BOOLEAN 
+			-- Is vertical scrollbar visible ?
+		
+
+feature -- Status setting
+
+	hide_horizontal_scrollbar is
+			-- Make horizontal scrollbar invisible.
+		do
+			if exists then
+				hide_horizontal_scroll_bar
+			end
+			is_horizontal_scrollbar := False
+		ensure then
+			no_horizontal_scrollbar: not is_horizontal_scrollbar
+		end
+
+	hide_vertical_scrollbar is
+			-- Make vertical scrollbar invisible.
+		do
+			if exists then
+				hide_vertical_scroll_bar
+			end
+			is_vertical_scrollbar := False
+		ensure then
+			no_vertical_scrollbar: not is_vertical_scrollbar
+		end
+
+	set_multi_line_mode is
+			-- Set editing for multiline text.
+		do
+			is_multi_line_mode := true
+			show_vertical_scrollbar
+		end
+
+	set_single_line_mode is
+			-- Set editing for single line text.
+		do
+			is_multi_line_mode := false
+			show_horizontal_scrollbar
+		end
+
+	show_horizontal_scrollbar is
+			-- Make horizontal scrollbar visible.
+		do
+			if exists then
+				show_horizontal_scroll_bar
+			end
+			is_horizontal_scrollbar := True
+		ensure then
+			horizontal_scrollbar: is_horizontal_scrollbar
+		end
+
+	show_vertical_scrollbar is
+			-- Make vertical scrollbar visible.
+		do
+			if exists then
+				show_vertical_scroll_bar
+			end
+			is_vertical_scrollbar := True
+		ensure then
+			vertical_scrollbar: is_vertical_scrollbar
+		end
+
+feature {NONE} -- Inapplicable
+
+	action_target: POINTER is
+			-- Inapplicable for Windows
+		do
+		end
+
+feature {NONE} -- Implementation
+
+	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
+			-- SDK GetScrollPos
+		external
+			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
+		alias
+			"GetScrollPos"
+		end
+
+
+end -- SCROLLED_TEXT_WINDOWS
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|----------------------------------------------------------------

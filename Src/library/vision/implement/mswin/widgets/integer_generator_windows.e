@@ -1,0 +1,80 @@
+indexing 
+	status: "See notice at end of class"; 
+	date: "$Date$"; 
+	revision: "$Revision$" 
+ 
+class
+	INTEGER_GENERATOR_WINDOWS
+
+creation
+        make
+
+feature -- Initialization
+
+        make (a_minimum,a_maximum: INTEGER) is
+			-- Make the generator.
+                do
+                        minimum := a_minimum
+                        maximum := a_maximum
+                        value := minimum
+                ensure
+                        minimum_set: minimum = a_minimum
+                        maximum_set: maximum = a_maximum
+                        value_is_minimum: value = minimum
+                end
+
+feature -- Access
+
+        maximum: INTEGER
+                    -- Largest pssoible value for generator
+
+        minimum: INTEGER
+                    -- Smallest possible value for generator
+
+        value: INTEGER
+                    -- Current value of generator
+
+feature -- Status setting
+
+        next is
+                do
+                        value := value + 1
+                        if value > maximum then value := minimum end
+                ensure
+                        old value = maximum implies value = minimum
+                        old value /= maximum implies value = old value + 1
+                end
+
+        reset is
+                do
+                        value := minimum
+                ensure
+                        value = minimum
+                end
+
+        set_value (a_value: INTEGER) is
+                require
+                        in_range: minimum <= a_value and then a_value <= maximum
+                do
+                        value := a_value
+                ensure
+                        value = a_value
+                end
+invariant
+        minimal: minimum <= value
+        maximal: value <= maximum
+
+end -- class INTEGER_GENERATOR
+
+--|---------------------------------------------------------------- 
+--| EiffelVision: library of reusable components for ISE Eiffel 3. 
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software 
+--|   Engineering Inc. 
+--| All rights reserved. Duplication and distribution prohibited. 
+--| 
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA 
+--| Telephone 805-685-1006 
+--| Fax 805-685-6869 
+--| Electronic mail <info@eiffel.com> 
+--| Customer support e-mail <support@eiffel.com> 
+--|----------------------------------------------------------------

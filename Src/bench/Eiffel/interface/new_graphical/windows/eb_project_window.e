@@ -8,6 +8,8 @@ class
 
 inherit
 	EB_TOOL_WINDOW
+		undefine
+			build_windows_menu
 		redefine
 			make, make_top_level
 		end
@@ -164,6 +166,8 @@ feature -- Pulldown Menus
 	file_menu: EV_MENU
 			-- Menu for project file management.
 
+	edit_menu: EV_MENU
+
 	special_menu: EV_MENU
 			-- ID Menu for commands.
 			-- Only used during debugging
@@ -299,7 +303,7 @@ feature -- Update
 		do
 			create menu_bar.make (Current)
 			create file_menu.make_with_text (menu_bar, Interface_names.m_File)
---			create edit_menu.make_with_text (menu_bar, Interface_names.m_Edit)
+			create edit_menu.make_with_text (menu_bar, Interface_names.m_Edit)
 			create compile_menu.make_with_text (menu_bar, Interface_names.m_Compile)
 
 			create debug_menu.make_with_text (menu_bar, Interface_names.m_Debug)
@@ -307,10 +311,10 @@ feature -- Update
 			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
 			create window_menu.make_with_text (menu_bar, Interface_names.m_Windows)
 
-			build_file_menu
+			build_file_menu (file_menu)
 			build_compile_menu
 			build_toolbar_menu
-			build_windows_menu
+			build_windows_menu (window_menu)
 --			build_help_menu
 
 				--| Creation of empty menus that are disabled goes here,
@@ -354,32 +358,29 @@ feature -- Update
 			build_top
 		end
 
-	build_file_menu is
+	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Build the file menu.
 		local
 			new_cmd: EB_NEW_PROJECT_CMD
 			new_menu_item: EV_MENU_ITEM
 			open_cmd: EB_OPEN_PROJECT_CMD
 			open_menu_item: EV_MENU_ITEM
---			quit_cmd: QUIT_PROJECT
 			quit_menu_item: EV_MENU_ITEM
 		do
 			create new_cmd.make (tool)
-			create new_menu_item.make_with_text (file_menu, m_New_project)
+			create new_menu_item.make_with_text (a_menu, m_New_project)
 			new_menu_item.add_select_command (new_cmd, Void)
 
 			create open_cmd.make (tool)
-			create open_menu_item.make_with_text (file_menu, m_Open_project)
+			create open_menu_item.make_with_text (a_menu, m_Open_project)
 			open_menu_item.add_select_command (open_cmd, Void)
 
 --			build_print_menu_entry
 --
 --			build_recent_project_menu_entries
 
---			create quit_cmd.make (tool)
-			create quit_menu_item.make_with_text (file_menu, m_Exit_project)
---			create quit_cmd_holder.make_plain (quit_cmd)
---			quit_cmd_holder.set_menu_entry (quit_menu_entry)
+			create quit_menu_item.make_with_text (a_menu, m_Exit_project)
+			quit_menu_item.add_select_command (tool.exit_app_cmd, Void)
 		end
 
 	build_compile_menu is
@@ -448,7 +449,7 @@ feature -- Update
 			toolbar_t.set_selected (True)
 		end
 
-	build_windows_menu is
+	build_windows_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 		local
 			tool_action: EB_TOOL_BROADCASTER
 
@@ -464,23 +465,25 @@ feature -- Update
 			create_object_cmd: EB_CREATE_OBJECT_CMD
 			object_menu_item: EV_MENU_ITEM
 
+			show_system_tool: EB_SHOW_SYSTEM_TOOL
 			show_profiler: EB_SHOW_PROFILE_TOOL
 			show_preferences: EB_SHOW_PREFERENCE_TOOL
+
 			i: EV_MENU_ITEM
 		do
 			create tool_action
 
-			create i.make_with_text (window_menu, m_Close_all_tools)
+			create i.make_with_text (a_menu, m_Close_all_tools)
 			i.add_select_command (tool_action, tool_action.Close_all)
 
-			create i.make_with_text (window_menu, m_Raise_all_tools)
+			create i.make_with_text (a_menu, m_Raise_all_tools)
 			i.add_select_command (tool_action, tool_action.Raise_all)
 
 				-- Sub menus for open tools.
-			create open_explains_menu.make_with_text (window_menu, Interface_names.m_Explain_tools)
-			create open_classes_menu.make_with_text (window_menu, Interface_names.m_Class_tools)
-			create open_features_menu.make_with_text (window_menu, Interface_names.m_Feature_tools)
-			create open_objects_menu.make_with_text (window_menu, Interface_names.m_Object_tools)
+			create open_explains_menu.make_with_text (a_menu, Interface_names.m_Explain_tools)
+			create open_classes_menu.make_with_text (a_menu, Interface_names.m_Class_tools)
+			create open_features_menu.make_with_text (a_menu, Interface_names.m_Feature_tools)
+			create open_objects_menu.make_with_text (a_menu, Interface_names.m_Object_tools)
 
 			create create_explain_cmd.make (tool)
 			create explain_menu_item.make_with_text (open_explains_menu, Interface_names.m_New_explain)
@@ -499,12 +502,16 @@ feature -- Update
 			create object_menu_item.make_with_text (open_objects_menu, Interface_names.m_New_object)
 			object_menu_item.add_select_command (create_object_cmd, Void)
 
+			create show_system_tool.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_System)
+			i.add_select_command (show_system_tool, Void)
+
 			create show_profiler
-			create i.make_with_text (window_menu, Interface_names.m_Profile_tool)
+			create i.make_with_text (a_menu, Interface_names.m_Profile_tool)
 			i.add_select_command (show_profiler, Void)
 
 			create show_preferences.make
-			create i.make_with_text (window_menu, Interface_names.m_Preferences)
+			create i.make_with_text (a_menu, Interface_names.m_Preferences)
 			i.add_select_command (show_preferences, Void)
 		end
 

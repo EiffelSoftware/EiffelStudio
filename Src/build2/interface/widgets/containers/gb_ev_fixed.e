@@ -190,6 +190,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
 				strings_correct_length: temp_x_position_string.count // 4 = first.count			
 			end
+			Result := Result + indent + "%T-- Size and position all children of `" + a_name + "'."
 			from
 				counter := 1
 			until

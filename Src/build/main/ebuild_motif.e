@@ -13,7 +13,7 @@ creation
 
 feature {NONE}
 
-	XeiffelBuild: STRING is "XeiffelBuild";
+	XeiffelBuild: STRING is "ebuild";
 
 	init_toolkit: MOTIF is 
 		once 

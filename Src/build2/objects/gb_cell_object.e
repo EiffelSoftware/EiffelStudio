@@ -8,10 +8,11 @@ class
 	GB_CELL_OBJECT
 	
 inherit
-	GB_PARENT_OBJECT
+	GB_CONTAINER_OBJECT
 		redefine
 			object, display_object, is_full,
-			build_display_object, accepts_child
+			build_display_object, accepts_child,
+			add_child_object
 		end
 	
 create
@@ -86,16 +87,11 @@ feature {NONE} -- Implementation
 				container_not_void: container /= Void
 			end
 			create display_object.make_with_name_and_child (type, container)
-			display_object.set_pebble_function (agent retrieve_pebble)
-			display_object.child.set_pebble_function (agent retrieve_pebble)
-			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
-			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
-			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-			display_object.drop_actions.extend (agent set_color)
-			display_object.child.drop_actions.extend (agent set_color)
+			connect_display_object_events
 		end
+		
+invariant
+	--has_no_more_than_one_child: children.count <= 1
+	-- Not true if we are a window with a menu bar inserted.
 
 end -- class GB_CELL_OBJECT

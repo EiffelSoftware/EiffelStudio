@@ -125,28 +125,34 @@ feature -- Obsolete
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		obsolete
-			"Use put instead."
+			"Call notify_change."
 		do
-			put (child_imp.interface)
+			notify_change (2 + 1)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove the given child from the children of
 			-- the container.
+		obsolete
+			"Call notify_change."
 		do
-			remove
+			notify_change (2 + 1)
 		end
 
 	add_child_ok: BOOLEAN is
 			-- Used in the precondition of
 			-- 'add_child'. True, if it is ok to add a
 			-- child to container.
+		obsolete
+			"Do: item = Void"
 		do
 			Result := item = Void
 		end
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of the container?
+		obsolete
+			"Do: ?? = item.implementation"
 		do
 			Result := a_child = item.implementation
 		end
@@ -174,6 +180,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/28 23:38:55  brendel
+--| Improved all features in obsolete clause (My idea of a good time.)
+--|
 --| Revision 1.11  2000/04/26 22:16:50  rogers
 --| Rplace now calls insert instead of extend.
 --|

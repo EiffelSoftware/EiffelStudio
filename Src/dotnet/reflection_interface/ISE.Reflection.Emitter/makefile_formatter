@@ -1,4 +1,4 @@
-SRCLIST = ..\..\..\tools\emitter\formatter.cs
+SRCLIST = ..\..\..\tools\emitter\formatter.cs formatter_info.cs
 
 .SUFFIXES: .dll .cs
 

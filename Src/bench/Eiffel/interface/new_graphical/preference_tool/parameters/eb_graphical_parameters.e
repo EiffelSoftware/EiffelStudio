@@ -20,7 +20,7 @@ feature {TTY_RESOURCES} -- Initialization
 			-- Initialize all rsources valid for Current.
 		do
 --			create windows_text.make_default ("text_on_windows", rt, "", "")
-			create windows_text.make_default ("text_on_windows", rt, "", "-*-*-*-*-*-*-*-*-*-*-*-*-*")
+			create windows_text.make_default ("text_on_windows", rt, "", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
 			create breakable_text.make_default ("breakable text", rt, "red", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
 			create class_text.make_default ("class text", rt, "magenta", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")
 			create cluster_text.make_default ("cluster text", rt, "dark red", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")

@@ -82,6 +82,9 @@ feature -- Status report
 	is_binary_mode: BOOLEAN
 			-- Is binary transfer mode selected?
 			
+	passive_mode: BOOLEAN
+			-- Is passive mode used?
+			
 	Supports_multiple_transactions: BOOLEAN is True
 			-- Does resource support multiple transactions per connection?
 			-- (Answer: yes)
@@ -133,12 +136,18 @@ feature -- Status setting
 			if is_proxy_used then
 				proxy_connection.initiate_transfer
 			else
-				create data_socket.make_server_by_port (0)
-				data_socket.listen (5)
-				if send_port_command and then send_transfer_command then
+				if not passive_mode then
+					create data_socket.make_server_by_port (0)
+					data_socket.listen (5)
+				end
+				if send_transfer_command then
 					debug Io.error.put_string ("Accepting socket...%N") end
-					data_socket.accept
-					accepted_socket ?= data_socket.accepted
+					if passive_mode then
+						accepted_socket := data_socket
+					else
+						data_socket.accept
+						accepted_socket ?= data_socket.accepted
+					end
 					debug Io.error.put_string ("Socket accepted%N") end
 						check
 							type_ok: accepted_socket /= Void
@@ -182,6 +191,22 @@ feature -- Status setting
 			binary_mode_set: is_binary_mode
 		end
 		
+	set_active_mode is
+			-- Switch FTP client to active mode.
+		do
+			passive_mode := False
+		ensure
+			active_mode_set: not passive_mode
+		end
+
+	set_passive_mode is
+			-- Switch FTP client to passive mode.
+		do
+			passive_mode := True
+		ensure
+			passive_mode_set: passive_mode
+		end
+
 	reuse_connection (other: RESOURCE) is
 			-- Reuse connection of `other'.
 		local
@@ -469,6 +494,43 @@ feature {NONE} -- Implementation
 			if resource_size > 0 then is_count_valid := True end
 		end
 
+	setup_passive_mode_socket (data: STRING): NETWORK_STREAM_SOCKET is
+			-- Create a data socket specified by `data' for the use with
+			-- passive mode.
+		require
+			passive_mode: passive_mode
+			non_empty_data: data /= Void and then not data.empty
+		local
+			ip_address: STRING
+			l_paren, r_paren: INTEGER
+			comma: INTEGER
+			port_str: STRING
+			port_number: INTEGER
+		do
+			l_paren := last_reply.index_of ('(', 1)
+			r_paren := last_reply.index_of (')', l_paren)
+			ip_address := last_reply.substring (l_paren + 1, r_paren - 1)
+			ip_address.replace_substring_all (",", ".")
+			-- First occurrence
+			comma := ip_address.index_of ('.', 1)
+			-- Second occurrence
+			comma := ip_address.index_of ('.', comma + 1)
+			-- Third occurrence
+			comma := ip_address.index_of ('.', comma + 1)
+			-- Fourth occurrence
+			comma := ip_address.index_of ('.', comma + 1)
+			port_str := ip_address.substring (comma + 1, ip_address.count)
+			ip_address := ip_address.substring (1, comma - 1)
+			comma := port_str.index_of ('.', 1)
+			port_number := 256 * 
+				port_str.substring (1, comma - 1).to_integer +
+				port_str.substring (comma + 1, port_str.count).to_integer
+		
+			create Result.make_client_by_port (port_number, ip_address)
+		ensure
+			socket_created: Result /= Void
+		end
+
 	login is
 			-- Log in to server.
 		require
@@ -515,6 +577,19 @@ feature {NONE} -- Implementation
 			if not Result then
 				error_code := Access_denied
 			end	
+		end
+
+	send_passive_mode_command: BOOLEAN is
+			-- Send passive mode command. Did it work?
+		do
+			send (main_socket, Ftp_passive_mode_command)
+			Result := reply_code_ok (<<227>>)
+			if Result then
+				data_socket := setup_passive_mode_socket (last_reply)
+				data_socket.connect
+			else
+				error_code := Wrong_command
+			end
 		end
 
 	send_text_mode_command: BOOLEAN is
@@ -567,23 +642,31 @@ feature {NONE} -- Implementation
 		local
 			cmd: STRING
 		do
-			if Read_mode then
-				cmd := clone (Ftp_retrieve_command)
-			elseif Write_mode then
-				cmd := clone (Ftp_store_command)
+			if passive_mode then
+				Result := send_passive_mode_command
+			else
+				Result := send_port_command
 			end
-				check
-					command_set: cmd /= Void
-						-- Because there is only read and write mode
+
+			if Result then
+				if Read_mode then
+					cmd := clone (Ftp_retrieve_command)
+				elseif Write_mode then
+					cmd := clone (Ftp_store_command)
 				end
-			cmd.extend (' ')
-			cmd.append (address.path)
-			send (main_socket, cmd)
-			Result := reply_code_ok (<<150>>)
-			if not Result then
-				error_code := Permission_denied
-			elseif Read_mode then
-				get_size (last_reply)
+					check
+						command_set: cmd /= Void
+							-- Because there is only read and write mode
+					end
+				cmd.extend (' ')
+				cmd.append (address.path)
+				send (main_socket, cmd)
+				Result := reply_code_ok (<<150>>)
+				if not Result then
+					error_code := Permission_denied
+				elseif Read_mode then
+					get_size (last_reply)
+				end
 			end
 		end
 		

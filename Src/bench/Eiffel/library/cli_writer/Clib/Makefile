@@ -12,7 +12,7 @@ all:: cli_writer.lib
 .c.obj:
 	$(CC) $(CFLAGS) -c $<
 
-OBJ = cli_writer.obj
+OBJ = cli_writer.obj vs_support.obj
 
 cli_writer.lib: $(OBJ)
 	if exist $@ del $@

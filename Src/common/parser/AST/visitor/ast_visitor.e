@@ -5,7 +5,7 @@ indexing
 deferred class
 	AST_VISITOR
 
-feature {AST_EIFFEL} -- Initialization
+feature {AST_EIFFEL} -- Skeleton Visitors
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
 			-- Process `l_as'.
@@ -140,7 +140,7 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_access_id_as (l_as: ACCESS_id_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -196,13 +196,6 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
 			-- Process `l_as'.
 		require
@@ -210,12 +203,238 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_operand_as (l_as: OPERAND_AS) is
+	process_value_as (l_as: VALUE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
+
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_all_as (l_as: ALL_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_deferred_as (l_as: DEFERRED_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_do_as (l_as: DO_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_once_as (l_as: ONCE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_type_dec_as (l_as: TYPE_DEC_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_parent_as (l_as: PARENT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_like_id_as (l_as: LIKE_ID_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_like_cur_as (l_as: LIKE_CUR_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_separate_type_as (l_as: SEPARATE_TYPE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_none_type_as (l_as: NONE_TYPE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_bits_as (l_as: BITS_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_suppliers_as (l_as: SUPPLIERS_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_rename_as (l_as: RENAME_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_invariant_as (l_as: INVARIANT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_index_as (l_as: INDEX_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_create_as (l_as: CREATE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_client_as (l_as: CLIENT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_assert_list_as (l_as: ASSERT_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_ensure_as (l_as: ENSURE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_require_as (l_as: REQUIRE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_internal_as (l_as: INTERNAL_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+feature {AST_EIFFEL} -- Expressions visitors
 
 	process_tagged_as (l_as: TAGGED_AS) is
 			-- Process `l_as'.
@@ -225,13 +444,6 @@ feature {AST_EIFFEL} -- Initialization
 		end
 
 	process_variant_as (l_as: VARIANT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_value_as (l_as: VALUE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -462,49 +674,37 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_bin_ne_as (l_as: bin_ne_as) is
+	process_bin_ne_as (l_as: BIN_NE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
+	process_operand_as (l_as: OPERAND_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_exp_type_as (l_as: EXP_TYPE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
+feature {AST_EIFFEL} -- Instructions visitors
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_all_as (l_as: ALL_AS) is
+	process_elseif_as (l_as: ELSIF_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -518,7 +718,7 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_reverse_as (l_as: REVERSE_AS) is
+	process_case_as (l_as: CASE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -567,6 +767,13 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
+	process_interval_as (l_as: INTERVAL_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_loop_as (l_as: LOOP_AS) is
 			-- Process `l_as'.
 		require
@@ -581,6 +788,15 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
+	process_reverse_as (l_as: REVERSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+feature {AST_EIFFEL} -- External visitors
+
 	process_external_as (l_as: EXTERNAL_AS) is
 			-- Process `l_as'.
 		require
@@ -588,70 +804,23 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_deferred_as (l_as: DEFERRED_AS) is
+	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_do_as (l_as: DO_AS) is
+	process_use_list_as (l_as: USE_LIST_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_once_as (l_as: ONCE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
+feature {AST_EIFFEL} -- Clickable visitor
 
 	process_class_as (l_as: CLASS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_parent_as (l_as: PARENT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_like_id_as (l_as: LIKE_ID_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_formal_as (l_as: FORMAL_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -665,147 +834,14 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_exp_type_as (l_as: EXP_TYPE_AS) is
+	process_feature_as (l_as: FEATURE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
 		deferred
 		end
 
-	process_separate_type_as (l_as: SEPARATE_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_none_type_as (l_as: NONE_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_bits_as (l_as: BITS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_suppliers_as (l_as: SUPPLIERS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_rename_as (l_as: RENAME_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_invariant_as (l_as: INVARIANT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_interval_as (l_as: INTERVAL_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_index_as (l_as: INDEX_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_elseif_as (l_as: ELSIF_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_create_as (l_as: CREATE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_client_as (l_as: CLIENT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_case_as (l_as: CASE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_assert_list_as (l_as: ASSERT_LIST_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_ensure_as (l_as: ENSURE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_require_as (l_as: REQUIRE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_formal_as (l_as: FORMAL_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

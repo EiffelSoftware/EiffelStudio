@@ -486,6 +486,11 @@ feature -- Properties
 			local_workbench: WORKBENCH_I;
 			local_universe: UNIVERSE_I;
 			local_root_cluster: CLUSTER_I;
+			a_cluster_list    : LINKED_LIST [CLUSTER_I];
+			a_cluster         : CLUSTER_I;
+			a_class_table     : EXTEND_TABLE [CLASS_I, STRING]
+			a_class_i         : CLASS_I;
+			a_visible_i       : VISIBLE_I;
 		do
 			first_compilation := True;
 
@@ -513,6 +518,44 @@ feature -- Properties
 				-- The root class is not protected 
 				-- Godammit.
 			local_workbench.change_class (root_class)
+
+			-- Now add classes with visible features.
+
+			from
+				a_cluster_list := local_universe.clusters
+				a_cluster_list.start
+			until
+				a_cluster_list.after
+			loop
+				a_cluster := a_cluster_list.item
+
+				from
+					a_class_table := a_cluster.classes
+					if a_class_table /= Void then a_class_table.start end
+				until
+					a_class_table = Void or else a_class_table.after
+				loop
+					a_class_i := a_class_table.item_for_iteration
+
+					if a_class_i /= Void then
+						a_visible_i := a_class_i.visible_level
+
+						if a_visible_i /= Void and then 
+											a_visible_i.has_visible then
+							-- Add visible class to system.
+							local_workbench.change_class (a_class_i)
+							io.put_string ("%NAdd visible class <")
+							io.put_string (a_class_i.name)
+							io.put_string (">%N")
+						end
+					end
+
+					a_class_table.forth
+				end
+
+				a_cluster_list.forth
+			end
+
 		end;
 
 	protected_classes: BOOLEAN
@@ -1179,10 +1222,10 @@ end;
 					if a_class /= Void then
 						if not marked_classes.has (a_class.id) then
 							if a_class.has_visible then
-								!!vd31;
-								vd31.set_class_name (a_class.name);
-								vd31.set_cluster (a_class.cluster);
-								Error_handler.insert_error (vd31);
+-- NO! That's just what we want   !!vd31;
+--                                vd31.set_class_name (a_class.name);
+--                                vd31.set_cluster (a_class.cluster);
+--                                Error_handler.insert_error (vd31);
 							else
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Remove useless classes: ");

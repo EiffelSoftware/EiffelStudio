@@ -44,16 +44,16 @@ feature -- Execution
 	hide is
 			-- Hide Current.
 		do
-			Project_tool.hide_feature_portion;
 			is_shown := False;
+			Project_tool.hide_feature_portion;
 			update_visual_aspects
 		end;
 
 	show is
 			-- Show Current
 		do
-			Project_tool.show_feature_portion;
 			is_shown := True;
+			Project_tool.show_feature_portion;
 			update_visual_aspects
 		end;
 

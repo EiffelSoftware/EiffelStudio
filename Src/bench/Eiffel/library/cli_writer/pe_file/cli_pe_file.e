@@ -140,6 +140,14 @@ feature -- Settings
 			emitter_set: emitter = e
 		end
 		
+	set_entry_point_token (token: INTEGER) is
+			-- Set `token' as entry point of current CLI image.
+		require
+			token_not_null: token /= 0
+		do
+			cli_header.set_entry_point_token (token)
+		end
+
 feature -- Saving
 
 	save is

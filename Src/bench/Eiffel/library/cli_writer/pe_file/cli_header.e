@@ -61,6 +61,14 @@ feature -- Settings
 			c_set_flags (item, i)
 		end
 
+	set_entry_point_token (token: INTEGER) is
+			-- Set `token' as entry point of current CLI image.
+		require
+			token_not_null: token /= 0
+		do
+			c_set_entry_point_token (item, token)
+		end
+		
 feature -- Constants
 
 	il_only: INTEGER is 0x00000001

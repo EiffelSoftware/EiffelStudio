@@ -31,7 +31,27 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+			-- (Remove them and destroy them).
 		deferred
+		end
+
+	remove_all_items is
+			-- Remove all the items of the item holder.
+			-- The items are not destroyed.
+		local
+			list: ARRAYED_LIST [EV_ITEM_IMP]
+			litem: EV_ITEM
+		do
+			from
+				list := ev_children
+				list.finish
+			until
+				list.before
+			loop
+				litem ?= list.item.interface
+				litem.set_parent (Void)
+				list.back
+			end
 		end
 
 feature -- Basic operations

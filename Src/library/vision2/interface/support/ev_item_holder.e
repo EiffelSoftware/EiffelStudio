@@ -49,6 +49,17 @@ feature -- Element change
 			implementation.clear_items
 		end
 
+	remove_all_items is
+			-- Remove all the items of the item holder.
+			-- The items are not destroyed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_all_items
+		ensure
+			no_more_children: count = 0
+		end
+
 feature -- Basic operations
 
 	find_item_by_data (data: ANY): like item_type is

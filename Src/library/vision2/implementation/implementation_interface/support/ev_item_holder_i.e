@@ -41,6 +41,16 @@ feature -- Element change
 		deferred
 		end
 
+	remove_all_items is
+			-- Remove all the items of the item holder.
+			-- The items are not destroyed.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			no_more_children: count = 0
+		end
+
 feature -- Basic operations
 
 	find_item_by_data (data: ANY): EV_ITEM is

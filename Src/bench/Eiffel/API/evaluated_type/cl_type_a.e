@@ -411,7 +411,4 @@ feature -- Debugging
 			end
 		end
 
-invariant
-	class_id_positive: class_id > 0
-
 end -- class CL_TYPE_A

@@ -49,9 +49,9 @@ feature -- Access
 			eiffel_writer.add_inherit_clause (writer_inherit_clause)
 
 			eiffel_writer.add_creation_routine ("make")
-			eiffel_writer.add_creation_routine ("make_by_pointer")
 			eiffel_writer.add_creation_routine ("make_from_pointer")
 
+			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			an_external_size_name := external_size_name (a_descriptor.name)
 			eiffel_writer.add_feature (structure_size_feature (an_external_size_name), Measurement)
 			eiffel_writer.add_feature (external_structure_size (an_external_size_name, a_descriptor), Externals)
@@ -80,6 +80,18 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	make_from_pointer_feature: WIZARD_WRITER_FEATURE is
+			-- Creatio feature.
+		do
+			create Result.make
+
+			Result.set_name ("make_from_pointer")
+			Result.set_effective
+			Result.add_argument ("a_pointer: POINTER")
+			Result.set_body ("make_by_pointer (a_pointer)")
+			Result.set_comment ("Make from pointer.")
+		end
 
 	external_size_name (record_name: STRING): STRING is
 			-- Name of external feature, returning size of structure.

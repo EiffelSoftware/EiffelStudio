@@ -120,6 +120,26 @@ feature -- Document Manipulation
 			filename_not_void: a_filename /= Void
 			filename_not_empty: not a_filename.is_empty
 		local
+			l_util: UTILITY_FUNCTIONS
+			l_file_type: STRING
+		do
+			create l_util
+			l_file_type := l_util.file_type (a_filename)
+			if shared_constants.application_constants.allowed_file_types.has (l_file_type) then
+				l_file_type.to_upper
+				if (create {EV_ENVIRONMENT}).supported_image_formats.has (l_file_type) then
+					load_image_document (a_filename)
+				else				
+					load_text_document (a_filename)	
+				end
+			else
+				load_text_document (a_filename)	
+			end
+		end
+
+	load_text_document (a_filename: STRING) is
+			-- Load document as plain text file
+		local
 			document: DOCUMENT
 			file: PLAIN_TEXT_FILE
 		do
@@ -134,7 +154,24 @@ feature -- Document Manipulation
 			end
 			if document /= Void then
 				editor.load_document (document)
-			end				
+			end		
+		end
+
+	load_image_document (a_filename: STRING) is
+			-- Load document as image
+		local
+			l_container: EV_VERTICAL_BOX
+			l_button: EV_BUTTON
+			l_pixmap: EV_PIXMAP
+		do
+			create l_container
+			create l_pixmap
+			create l_button
+			l_button.set_background_color ((create {EV_STOCK_COLORS}).white)
+			l_container.extend (l_button)
+			l_pixmap.set_with_named_file (a_filename)			
+			l_button.set_pixmap (l_pixmap)
+			editor.notebook.extend (l_container)
 		end
 
 feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation
@@ -146,7 +183,6 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 		do
 			if not documents.has (a_doc.name) then
 				documents.extend (a_doc, a_doc.name)
---				a_doc.attach (Current)
 			end			
 		end
 

@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 				tabulation_symbol.fill_character (' ')
 			end
 			set_tabulation_size (Editor_preferences.tabulation_spaces)
+			create cursor_move_agents.make (5)
 		end
 
 feature -- Access
@@ -58,6 +59,9 @@ feature -- Access
 			-- String representing a tab.
 			-- Is '%T' or as many blank spaces as defined in
 			-- the preferences
+
+	cursor_move_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			-- Agents that are called whenever the cursor moves.
 
 feature -- Status Report
 
@@ -1489,8 +1493,12 @@ feature {TEXT_CURSOR}
 	on_cursor_move (cur: EDITOR_CURSOR) is
 			-- action performed on cursor moves.
 		do
-			if not ignore_cursor_moves and then cur = cursor then
-				history.record_move
+			if cur = cursor then
+				if not ignore_cursor_moves then
+					history.record_move
+				end
+					-- Notify observers.
+				on_cursor_moved
 			end
 		end
 

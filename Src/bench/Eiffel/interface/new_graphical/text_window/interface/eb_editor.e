@@ -171,6 +171,22 @@ feature -- Text status report
 					not open_backup
 		end
 
+	cursor_x_position: INTEGER is
+			-- Current column number.
+		require
+			not_empty: not is_empty
+		do
+			Result := text_displayed.cursor.x_in_characters
+		end
+
+	cursor_y_position: INTEGER is
+			-- Current line number (in the whole text).
+		require
+			not_empty: not is_empty
+		do
+			Result := text_displayed.cursor.y_in_lines
+		end
+
 feature -- Status setting
 
 	enable_editable is
@@ -276,6 +292,12 @@ feature -- Indirect observer / manager pattern.
 			-- Add observer of `text_displayed' for global content changes.
 		do
 			text_displayed.add_edition_observer (txt_observer)
+		end
+	
+	add_cursor_observer (txt_observer: TEXT_OBSERVER) is
+			-- Add observer of `text_displayed' for cursor position changes.
+		do
+			text_displayed.add_cursor_observer (txt_observer)
 		end
 	
 	remove_observer (txt_observer: TEXT_OBSERVER) is

@@ -98,4 +98,10 @@ feature {TEXT_OBSERVER_MANAGER} -- Update
 		do
 		end
 
+	on_cursor_moved is
+			-- Update `Current' when the main text cursor moves.
+			-- Observer must be registered as "cursor_observer" for this feature to be called.
+		do
+		end
+
 end -- class OBSERVER

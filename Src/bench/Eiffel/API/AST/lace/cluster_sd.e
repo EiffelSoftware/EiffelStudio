@@ -16,6 +16,30 @@ inherit
 	SHARED_ENV;
 	SHARED_EIFFEL_PROJECT
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (cn: like cluster_name; pn: like parent_name;
+		dn: like directory_name; cp: like cluster_properties) is
+			-- Create a new CLUSTER AST node.
+		require
+			cn_not_void: cn /= Void
+			dn_not_void: dn /= Void
+		do
+			cluster_name := cn
+			cluster_name.to_lower
+			parent_name := pn
+			if parent_name /= Void then
+				parent_name.to_lower
+			end
+			directory_name := dn
+			cluster_properties := cp
+		ensure
+			cluster_name_set: cluster_name = cn
+			parent_name_set: parent_name = pn
+			directory_name_set: directory_name = dn
+			cluster_properties_set: cluster_properties = cp
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

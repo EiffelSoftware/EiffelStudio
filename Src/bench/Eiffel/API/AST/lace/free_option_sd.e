@@ -7,6 +7,8 @@ class FREE_OPTION_SD
 
 inherit
 	OPTION_SD
+		rename
+			initialize as initialize_option
 		redefine
 			set, process_system_level_options, is_system_level,
 			is_valid, is_free_option
@@ -17,6 +19,18 @@ inherit
 	EIFFEL_ENV;
 
 	SHARED_BENCH_LICENSES
+
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (on: like option_name) is
+			-- Create a new FREE_OPTION AST node.
+		require
+			on_not_void: on /= Void
+		do
+			option_name := on
+		ensure
+			option_name_set: option_name = on
+		end
 
 feature {NONE} -- Initialization
 

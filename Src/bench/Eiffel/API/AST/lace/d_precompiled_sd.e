@@ -10,11 +10,29 @@ class D_PRECOMPILED_SD
 inherit
 
 	D_OPTION_SD
+		rename
+			initialize as d_initialize
 		redefine
 			set
 		end;
 
 	EIFFEL_ENV
+
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (o: like option; v: like value; r: like renamings) is
+			-- Create a new D_PRECOMPILED AST node.
+		require
+			o_not_void: o /= Void
+		do
+			option := o
+			value := v
+			renamings := r
+		ensure
+			option_set: option = o
+			value_set: value = v
+			renamings_set: renamings = r
+		end
 
 feature {NONE} -- Initialization
 

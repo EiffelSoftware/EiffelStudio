@@ -14,6 +14,24 @@ inherit
 			adapt
 		end
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (ln: like language_name;
+		gv: like generate_value; fn: like file__name) is
+			-- Create a new LANG_GEN AST node.
+		require
+			ln_not_void: ln /= Void
+			fn_not_void: fn /= Void
+		do
+			language_name := ln
+			generate_value := gv
+			file__name := fn
+		ensure
+			language_name_set: language_name = ln
+			generate_value_set: generate_value = gv
+			file__name_set: file__name = fn
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

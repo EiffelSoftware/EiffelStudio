@@ -14,6 +14,19 @@ inherit
 			adapt
 		end
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (cn: like cluster_name) is
+			-- Create a new CLUST_IGN AST node.
+		require
+			cn_not_void: cn /= Void
+		do
+			cluster_name := cn
+			cluster_name.to_lower
+		ensure
+			cluster_name_set: cluster_name = cn
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

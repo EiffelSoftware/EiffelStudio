@@ -14,6 +14,21 @@ inherit
 			adapt
 		end
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (ln: like language_name; fn: like file_names) is
+			-- Create a new LANG_TRIB AST node.
+		require
+			ln_not_void: ln /= Void
+			fn_not_void: fn /= Void
+		do
+			language_name := ln
+			file_names := fn
+		ensure
+			language_name_set: language_name = ln
+			file_names_set: file_names = fn
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

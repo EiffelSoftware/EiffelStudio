@@ -21,6 +21,30 @@ inherit
 			valid_reference_class, is_class
 		end
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (rn: like root_name; cm: like cluster_mark;
+		cp: like creation_procedure_name) is
+			-- Create a new ROOT AST node.
+		require
+			rn_not_void: rn /= Void
+		do
+			root_name := rn
+			root_name.to_lower
+			cluster_mark := cm
+			if cluster_mark /= Void then
+				cluster_mark.to_lower
+			end
+			creation_procedure_name := cp
+			if creation_procedure_name /= Void then
+				creation_procedure_name.to_lower
+			end
+		ensure
+			root_name_set: root_name = rn
+			cluster_mark_set: cluster_mark = cm
+			creation_procedure_name_set: creation_procedure_name = cp
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

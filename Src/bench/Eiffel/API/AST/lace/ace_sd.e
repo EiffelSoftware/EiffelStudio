@@ -15,6 +15,34 @@ inherit
 	EIFFEL_ENV;
 	SHARED_EIFFEL_PROJECT
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (sn: like system_name; r: like root;
+		d: like defaults; c: like clusters; e: like externals;
+		g: like generation; cl: like click_list) is
+			-- Create a new ACE AST node.
+		require
+			sn_not_void: sn /= Void
+			r_not_void: r /= Void
+			cl_not_void: cl /= Void
+		do
+			system_name := sn
+			root := r
+			defaults := d
+			clusters := c
+			externals := e
+			generation := g
+			click_list := cl
+		ensure
+			system_name_set: system_name = sn
+			root_set: root = r
+			defaults_set: defaults = d
+			clusters_set: clusters = c
+			externals_set: externals = e
+			generation_set: generation = g
+			click_list_set: click_list = cl
+		end
+
 feature {NONE} -- Initialization
 
 	set is

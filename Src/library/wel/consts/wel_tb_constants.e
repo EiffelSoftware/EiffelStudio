@@ -156,6 +156,13 @@ feature -- Access
 			"TB_HIDEBUTTON"
 		end
 
+	Tb_hittest: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TB_HITTEST"
+		end
+
 	Tb_indeterminate: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"

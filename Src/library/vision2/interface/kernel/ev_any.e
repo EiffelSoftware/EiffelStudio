@@ -22,8 +22,8 @@ inherit
 			default_create,
 			copy
 		end
-	
-feature -- Initialization
+
+feature {EV_ANY_HANDLER} -- Initialization
 
  --|----------------------------------------------------------------
  --| Creation sequence for all Vision2 objects is like this:

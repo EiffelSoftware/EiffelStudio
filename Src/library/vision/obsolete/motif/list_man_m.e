@@ -14,7 +14,7 @@ inherit
 
 	LIST_MAN_I;
 
-    PRIMITIVE_M
+	PRIMITIVE_M
 		undefine
 			create_callback_struct
 		end;
@@ -186,39 +186,18 @@ feature -- Status report
 
 feature -- Element change
 
-	add_browse_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when items are
-			-- selected with browse selection mode in current scroll list.
-		do
-			add_browse_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
-	add_click_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when items are
-			-- selected with click selection mode in current scroll list.
-		do
-			add_single_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
 	add_single_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with single selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_single_selection_callback (mel_vision_callback (a_command), argument)
-		end; 
-
-	add_extended_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when items are
-			-- selected with extended selection mode in current scroll list.
-		do
-			add_extended_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
-	add_multiple_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when items are
-			-- selected with multiple selection mode in current scroll list.
-		do
-			add_multiple_selection_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (single_selection_command);
+			if list = Void then
+				!! list.make;
+				set_single_selection_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end; 
 
 	put_left (an_item: STRING) is
@@ -517,39 +496,11 @@ feature -- Removal
 			index := count + 1;
 		end;
 
-	remove_browse_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to execute when items
-			-- are selected with browse selection mode in current scroll list.
-		do
-			remove_browse_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
-	remove_click_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to execute when items
-			-- are selected with click selection mode in current scroll list.
-		do
-			remove_single_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
-	remove_extended_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to execute when items
-			-- are selected with extended selection mode in current scroll list.
-		do
-			remove_extended_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
-	remove_multiple_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to execute when items
-			-- are selected with multiple selection mode in current scroll list.
-		do
-			remove_multiple_selection_callback (mel_vision_callback (a_command), argument)
-		end;
-
 	remove_single_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with single selection mode in current scroll list.
 		do
-			remove_single_selection_callback (mel_vision_callback (a_command), argument)
+			remove_command (single_selection_command, a_command, argument)
 		end;
 
 feature -- Update display
@@ -684,6 +635,92 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			other_is_after: other.after
+		end;
+
+feature {NONE} -- Obsolete features
+
+	add_browse_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when items are
+			-- selected with browse selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (browse_selection_command);
+			if list = Void then
+				!! list.make;
+				set_browse_selection_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
+		end;
+
+	add_click_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when items are
+			-- selected with click selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (default_action_command);
+			if list = Void then
+				!! list.make;
+				set_default_action_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
+		end;
+
+	add_extended_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when items are
+			-- selected with extended selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (extended_selection_command);
+			if list = Void then
+				!! list.make;
+				set_extended_selection_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
+		end;
+
+	add_multiple_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when items are
+			-- selected with multiple selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (multiple_selection_command);
+			if list = Void then
+				!! list.make;
+				set_multiple_selection_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
+		end;
+
+	remove_click_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when items are
+			-- selected with click selection mode in current scroll list.
+		do
+			remove_command (default_action_command, a_command, argument)
+		end;
+
+	remove_extended_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when items are
+			-- selected with extended selection mode in current scroll list.
+		do
+			remove_command (extended_selection_command, a_command, argument)
+		end;
+
+	remove_multiple_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when items are
+			-- selected with multiple selection mode in current scroll list.
+		do
+			remove_command (multiple_selection_command, a_command, argument)
+		end;
+
+	remove_browse_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when items are
+			-- selected with browse selection mode in current scroll list.
+		do
+			remove_command (browse_selection_command, a_command, argument)
 		end;
 
 end -- class LIST_MAN_M

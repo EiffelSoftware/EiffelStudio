@@ -18,6 +18,7 @@ feature -- Initialization
 		do
 			create msil_specific_widgets.make (10)
 			create c_specific_widgets.make (10)
+			create set_only_once_widgets.make (10)
 		end
 
 	reset is
@@ -50,6 +51,10 @@ feature -- Access
 			-- List of widgets specific to C generation.
 			-- Not sensitive when MSIL generation is chosen
 			-- from EB_SYSTEM_GENERAL_TAB.
+
+	set_only_once_widgets: ARRAYED_LIST [EV_WIDGET]
+			-- List of widgets that can be set only once
+			-- before first Eiffel compilation.
 			
 feature -- Status
 
@@ -73,6 +78,13 @@ feature -- Status setting
 		do
 			msil_specific_widgets.do_all ({EV_WIDGET}~disable_sensitive)
 			c_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
+		end
+
+	disable_set_only_once_widgets is
+			-- Disable all widgets that can be set only once during
+			-- a project lifetime.
+		do
+			set_only_once_widgets.do_all ({EV_WIDGET}~disable_sensitive)
 		end
 		
 feature -- Setting

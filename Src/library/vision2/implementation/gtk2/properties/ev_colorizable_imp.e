@@ -88,7 +88,7 @@ feature -- Status setting
 			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
 			if a_color /= Void then
-				color := color.memory_alloc (feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				color := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 				r := a_color.red_16_bit
 				g := a_color.green_16_bit
 				b := a_color.blue_16_bit
@@ -144,11 +144,15 @@ feature -- Status setting
 				mx := r.max (g).max (b)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red   (color, mx + ((r - mx)//4))
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, mx + ((g - mx)//4))
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))				
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))
 			end
 
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_bg (a_c_object, feature {EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM, color)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_base (a_c_object, feature {EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM, color)
+			
+			if color /= NULL then
+				color.memory_free
+			end
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -167,7 +171,7 @@ feature -- Status setting
 			color: POINTER
 		do
 			if a_color /= Void then
-				color := color.memory_alloc (feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				color := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, foreground_color_imp.red_16_bit)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, foreground_color_imp.green_16_bit)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, foreground_color_imp.blue_16_bit)				

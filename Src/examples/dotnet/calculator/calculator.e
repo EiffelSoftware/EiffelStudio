@@ -9,7 +9,6 @@
 indexing
 	description: "Root class"
 	external_name: "ISE.Examples.Calculator.Calculator"
-	attribute: create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute end
 
 class 
 	CALCULATOR 
@@ -29,7 +28,16 @@ feature {NONE} -- Initialization
 		local
 			a: HASH_TABLE [INTERFACE, STRING]
 			t: CONSOLE
+			b: BOOLEAN
+			tsd: POINTER
 		do 
+			tsd := $make
+			b := f and g and f and g
+			b := f or g or f or g
+
+			b := f and g or f and g
+			b := f or g and f or g
+
 			create t
 			io := t
 			io.put_string ("%N*********************************%N")
@@ -42,20 +50,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE}  -- Attributes 
-
-	f: BOOLEAN is 
-		indexing
-			description: "Operand"
-			external_name: "F"
-		do 
-		end
-		
-	g: BOOLEAN is 
-		indexing
-			description: "Operand"
-			external_name: "G"
-		do 
-		end
 
 	current_state: STATE
 		indexing
@@ -81,46 +75,15 @@ feature {NONE}  -- Attributes
  			external_name: "QST"
  		end
  		
--- 	remove: EMPTY
---		indexing
---			description: "Reset operation"
---			external_name: "Remove"
---		end
--- 	
--- 	pls: PLUS
--- 		indexing
---			description: "Addition operation"
---			external_name: "PLS"
---		end
--- 
--- 	mns: MINUS
--- 		indexing
---			description: "Subtraction operation"
---			external_name: "MNS"
---		end
--- 
--- 	mlt: MULTIPLY
--- 		indexing
---			description: "Multiplication operation"
---		end
--- 
--- 	dvd: DIVIDE
--- 		indexing
---			description: "Division operation"
---			external_name: "DVD"
---		end
- 
 feature {NONE} -- Implementation
 
 	session is
 		indexing
 			description: "The main loop"
 			external_name: "Session"
-			attribute: create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute_2 ("TOTO", False) end
 		do
 			from
 				start
---				print ("ti")
 			until
 				over
 			loop

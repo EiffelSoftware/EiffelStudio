@@ -194,7 +194,8 @@ feature {NONE} -- Code generation
 			-- Generate feature `execute'.
 		do
 			!! Result.make (0)
-			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%Tdo%N") 
+			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%T%N")
+			Result.append ("%T%Tlocal%N%T%T%Tprecondition: BOOLEAN%N%T%Tdo%N") 
 			from
 				form_list.start
 			until

@@ -423,6 +423,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	generate_finalize_feature_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_finalize_feature'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	generate_method_impl_user_precondition (feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_method_impl'.
 			-- Redefine in descendants if needed.
@@ -1753,6 +1760,15 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		require
 			generate_implementation_feature_il_user_precondition: generate_implementation_feature_il_user_precondition (feature_id)
+		deferred
+
+		end
+
+	generate_finalize_feature (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		require
+			generate_finalize_feature_user_precondition: generate_finalize_feature_user_precondition (feature_id)
 		deferred
 
 		end

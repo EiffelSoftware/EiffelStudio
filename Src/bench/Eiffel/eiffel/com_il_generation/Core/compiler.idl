@@ -293,4 +293,3 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
-

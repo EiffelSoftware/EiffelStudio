@@ -396,6 +396,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_generate_finalize_feature(  /* [in] */ EIF_INTEGER feature_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_generate_method_impl(  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER parent_type_id,  /* [in] */ EIF_INTEGER parent_feature_id );
 
 

@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_COMPILER_PROXY.h"
 static const CLSID CLSID_COMPILER_PROXY_ = {0xe3895019,0xe9fd,0x345e,{0x8f,0x63,0x00,0xc6,0x68,0x3c,0x1d,0x1a}};
 
-static const IID IID_COMPILER_PROXY_I_ = {0xebac202d,0x6108,0x3e2f,{0x85,0xe4,0x17,0xbf,0xe1,0xa1,0xff,0x49}};
+static const IID IID_COMPILER_PROXY_I_ = {0xab264b67,0x735c,0x3637,{0xa7,0xcc,0x89,0xba,0x03,0x24,0x33,0x63}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -2023,6 +2023,38 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_implementation_feature_i
 	tmp_feature_id = (LONG)feature_id;
 	
 	hr = p_COMPILER_PROXY_I->GenerateImplementationFeatureIL(tmp_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_finalize_feature(  /* [in] */ EIF_INTEGER feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_COMPILER_PROXY_I == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_COMPILER_PROXY_I_, (void **)&p_COMPILER_PROXY_I);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	
+	hr = p_COMPILER_PROXY_I->generate_finalize_feature(tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -31,7 +31,9 @@ feature -- Initialization
 	make (dn: STRING; project_eiffel_file: PROJECT_EIFFEL_FILE) is
 		do
 			directory_make (dn)
-			set_project_file (project_eiffel_file)
+			if project_eiffel_file /= Void then
+				set_project_file (project_eiffel_file)
+			end
 		end
 
 feature -- Access

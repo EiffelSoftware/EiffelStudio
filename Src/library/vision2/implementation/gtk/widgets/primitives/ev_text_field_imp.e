@@ -81,7 +81,7 @@ feature -- Status setting
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
 			feature {EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
-			set_caret_position (temp_caret_pos)
+			internal_set_caret_position (temp_caret_pos)
 		end
 	
 	prepend_text (txt: STRING) is
@@ -93,7 +93,7 @@ feature -- Status setting
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
 			feature {EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
-			set_caret_position (temp_caret_pos)
+			internal_set_caret_position (temp_caret_pos)
 		end
 		
 	set_capacity (len: INTEGER) is

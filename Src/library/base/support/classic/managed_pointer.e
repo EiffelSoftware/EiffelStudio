@@ -2,7 +2,7 @@ indexing
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
-		the one from the current hardware.
+		platform specific.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		redefine
 			dispose, is_equal, copy
+		end
+
+	PLATFORM
+		redefine
+			is_equal, copy
 		end
 		
 	ANY
@@ -103,124 +108,263 @@ feature -- Duplication
 			item.memory_copy (other.item, other.count)
 		end
 		
-feature -- Format independant
-
-	read_pointer (pos: INTEGER): POINTER is
-			-- Read POINTER at position `pos'.
-		require
-			valid_position: (pos + feature {PLATFORM}.Pointer_bytes) <= count
-		do
-			($Result).memory_copy (item + pos * feature {PLATFORM}.Pointer_bytes, 
-												feature {PLATFORM}.Pointer_bytes)
-		end
-
-	read_integer (pos: INTEGER): INTEGER is
-			-- Read INTEGER at position `pos'.
-		require
-			valid_position: (pos + feature {PLATFORM}.Integer_bytes) <= count
-		do
-			($Result).memory_copy (item + pos * feature {PLATFORM}.Integer_bytes, 
-												feature {PLATFORM}.Integer_bytes)
-		end		
+feature -- Access: Platform specific
 
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
-			valid_position: (pos + 1) <= count
+			valid_position: (pos + Integer_8_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, 1)
+			($Result).memory_copy (item + pos, Integer_8_bytes)
 		end
+
+	read_integer_16 (pos: INTEGER): INTEGER_16 is
+			-- Read INTEGER_16 at position `pos'.
+		require
+			valid_position: (pos + Integer_16_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Integer_16_bytes)
+		end
+
+	read_integer_32 (pos: INTEGER): INTEGER is
+			-- Read INTEGER at position `pos'.
+		require
+			valid_position: (pos + Integer_32_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Integer_32_bytes)
+		end		
+
+	read_integer_64 (pos: INTEGER): INTEGER_64 is
+			-- Read INTEGER_64 at position `pos'.
+		require
+			valid_position: (pos + Integer_64_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Integer_64_bytes)
+		end
+
+	read_pointer (pos: INTEGER): POINTER is
+			-- Read POINTER at position `pos'.
+		require
+			valid_position: (pos + Pointer_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Pointer_bytes)
+		end
+
+	read_real (pos: INTEGER): REAL is
+			-- Read REAL at position `pos'.
+		require
+			valid_position: (pos + Real_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Real_bytes)
+		end
+
+	read_double (pos: INTEGER): DOUBLE is
+			-- Read DOUBLE at position `pos'.
+		require
+			valid_position: (pos + Double_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, Double_bytes)
+		end
+
+	read_array (pos, a_count: INTEGER): ARRAY [INTEGER_8] is
+			-- Read `count' bytes at position `pos'.
+		require
+			count_positive: a_count > 0
+			valid_position: (pos + a_count) <= count
+		local
+			l_sp: SPECIAL [INTEGER_8]
+			i: INTEGER
+		do
+			from
+				create Result.make (1, a_count)
+			until
+				i >= a_count
+			loop
+				Result.put (read_integer_8 (pos + i), i + 1)
+				i := i + 1
+			end
+		ensure
+			read_array_not_void: Result /= Void
+			read_array_valid_count: Result.count = a_count
+		end
+
+feature -- Element change: Platform specific
 
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
-			valid_position: (pos + 1) <= count
+			valid_position: (pos + Integer_8_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, 1)
+			(item + pos).memory_copy ($i, Integer_8_bytes)
+		ensure
+			inserted: i = read_integer_8 (pos)
+		end
+
+	put_integer_16 (i: INTEGER_16; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_position: (pos + Integer_16_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, Integer_16_bytes)
+		ensure
+			inserted: i = read_integer_16 (pos)
+		end
+
+	put_integer_32 (i: INTEGER; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_position: (pos + Integer_32_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, Integer_32_bytes)
+		ensure
+			inserted: i = read_integer_32 (pos)
+		end
+
+	put_integer_64 (i: INTEGER_64; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			valid_position: (pos + Integer_64_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, Integer_64_bytes)
+		ensure
+			inserted: i = read_integer_64 (pos)
+		end
+
+	put_pointer (p: POINTER; pos: INTEGER) is
+			-- Insert `p' at position `pos'.
+		require
+			valid_position: (pos + Pointer_bytes) <= count
+		do
+			(item + pos).memory_copy ($p, Pointer_bytes)
+		ensure
+			inserted: p = read_pointer (pos)
+		end
+
+	put_real (r: REAL; pos: INTEGER) is
+			-- Insert `r' at position `pos'.
+		require
+			valid_position: (pos + Real_bytes) <= count
+		do
+			(item + pos).memory_copy ($r, Real_bytes)
+		ensure
+			inserted: r = read_real (pos)
+		end
+
+	put_double (d: DOUBLE; pos: INTEGER) is
+			-- Insert `d' at position `pos'.
+		require
+			valid_position: (pos + Double_bytes) <= count
+		do
+			(item + pos).memory_copy ($d, Double_bytes)
+		ensure
+			inserted: d = read_double (pos)
 		end
 
 	put_array (data: ARRAY [INTEGER_8]; pos: INTEGER) is
 			-- Copy content of `data' into `item' at position `pos'.
 		require
+			data_not_void: data /= Void
 			valid_position: (pos + data.count) <= count
 		local
 			l_sp: SPECIAL [INTEGER_8]
 		do
 			l_sp := data.area;
 			(item + pos).memory_copy ($l_sp, data.count)
+		ensure
+			inserted: data.is_equal (read_array (pos, data.count))
 		end
 
-feature -- Platform specific, here x86
+feature -- Access: Big-endian format
 
-	put_real (r: REAL; pos: INTEGER) is
-			-- Insert `r' at position `pos'.
+	read_integer_8_be (pos: INTEGER): INTEGER_8 is
+			-- Read INTEGER_8 at position `pos'.
 		require
-			valid_position: (pos + 4) <= count
+			valid_position: (pos + Integer_8_bytes) <= count
 		do
-			(item + pos).memory_copy ($r, 4)
+			Result := read_integer_8 (pos)
 		end
 
-	put_double (d: DOUBLE; pos: INTEGER) is
-			-- Insert `d' at position `pos'.
+	read_integer_16_be (pos: INTEGER): INTEGER_16 is
+			-- Read INTEGER_16 at position `pos'.
 		require
-			valid_position: (pos + 8) <= count
+			valid_position: (pos + Integer_16_bytes) <= count
+		local
+			l_high, l_low: INTEGER_16
 		do
-			(item + pos).memory_copy ($d, 8)
+			l_high := read_integer_8 (pos)
+			l_low := 0x00FF & read_integer_8 (pos + integer_8_bytes)
+			Result := (l_high.to_integer_16 |<< 8) | l_low
+		end
+
+	read_integer_32_be (pos: INTEGER): INTEGER is
+			-- Read INTEGER at position `pos'.
+		require
+			valid_position: (pos + Integer_32_bytes) <= count
+		local
+			l_high, l_low: INTEGER
+		do
+			l_high := read_integer_16_be (pos)
+			l_low := 0x0000FFFF & read_integer_16_be (pos + integer_16_bytes)
+			Result := (l_high.to_integer_32 |<< 16) | l_low
+		end		
+
+	read_integer_64_be (pos: INTEGER): INTEGER_64 is
+			-- Read INTEGER_64 at position `pos'.
+		require
+			valid_position: (pos + Integer_64_bytes) <= count
+		local
+			l_high, l_low: INTEGER_64
+		do
+			l_high := read_integer_32_be (pos)
+			l_low := 0x00000000FFFFFFFF & read_integer_32_be (pos + integer_32_bytes)
+			Result := (l_high.to_integer_64 |<< 32) | l_low
+		end
+
+feature -- Element change: Big-endian format
+
+	put_integer_8_be (i: INTEGER_8; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			valid_position: (pos + integer_8_bytes) <= count
+		do
+			put_integer_8 (i, pos)
+		ensure
+			inserted: i = read_integer_8_be (pos)
 		end
 		
-feature -- Update in little-endian format
-
-	put_integer_16 (i: INTEGER_16; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
-		require
-			valid_position: (pos + 2) <= count
-		do
-			(item + pos).memory_copy ($i, 2)
-		end
-
-	put_integer_32 (i: INTEGER; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
-		require
-			valid_position: (pos + 4) <= count
-		do
-			(item + pos).memory_copy ($i, 4)
-		end
-
-	put_integer_64 (i: INTEGER_64; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
-		require
-			valid_position: (pos + 8) <= count
-		do
-			(item + pos).memory_copy ($i, 8)
-		end
-		
-feature -- Update in big-endian format
-
 	put_integer_16_be (i: INTEGER_16; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
+			-- Insert `i' at position `pos' in big-endian format.
 		require
-			valid_position: (pos + 2) <= count
+			valid_position: (pos + integer_16_bytes) <= count
 		do
-			put_integer_8 (((i & 0xFF00) |>> 8).to_integer_8, pos)
-			put_integer_8 (((i & 0x00FF) |>> 8).to_integer_8, pos + 1)
+			put_integer_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_integer_8, pos)
+			put_integer_8 ((i & 0x00FF).to_integer_8, pos + Integer_8_bytes)
+		ensure
+			inserted: i = read_integer_16_be (pos)
 		end
 
 	put_integer_32_be (i: INTEGER; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
+			-- Insert `i' at position `pos' in big-endian format.
 		require
-			valid_position: (pos + 4) <= count
+			valid_position: (pos + integer_32_bytes) <= count
 		do
-			put_integer_16_be (((i & 0xFFFF0000) |>> 16).to_integer_16, pos)
-			put_integer_16_be (((i & 0x0000FFFF) |>> 16).to_integer_16, pos + 2)
+			put_integer_16_be ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_integer_16, pos)
+			put_integer_16_be ((i & 0x0000FFFF).to_integer_16, pos + Integer_16_bytes)
+		ensure
+			inserted: i = read_integer_32_be (pos)
 		end
 
 	put_integer_64_be (i: INTEGER_64; pos: INTEGER) is
-			-- Insert `i' at position `pos'.
+			-- Insert `i' at position `pos' in big-endian format.
 		require
-			valid_position: (pos + 8) <= count
+			valid_position: (pos + integer_64_bytes) <= count
 		do
-			put_integer_32_be (((i & 0xFFFFFFFF00000000) |>> 32).to_integer_32, pos)
-			put_integer_32_be (((i & 0x00000000FFFFFFFF) |>> 32).to_integer_32, pos + 4)		
+			put_integer_32_be (
+				(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_integer_32, pos)
+			put_integer_32_be ((i & 0x00000000FFFFFFFF).to_integer_32,
+				pos + Integer_32_bytes)
+		ensure
+			inserted: i = read_integer_64_be (pos)
 		end
 
 feature -- Concatenation

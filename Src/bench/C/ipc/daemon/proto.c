@@ -552,12 +552,12 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	int status;			/* Command status, as returned by system() */
 	int jobnum;			/* Job number assigned to comamnd */
 	Request dans;		/* Answer (status of comamnd) */
-    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
 #ifdef  EIF_WIN32
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
 #else
+    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
 	STREAM *sp;			/* Stream to be used for communications */
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
@@ -799,9 +799,9 @@ rt_public void dead_app(void)
 	 * option--RAM.
 	 */
 
-	int status;						/* Exit status of the application */
 	Request rqst;					/* Request to send */
 #ifndef EIF_WIN32
+	int status;						/* Exit status of the application */
 	Pid_t child_pid;				/* pid of the dead application */
 #endif
 

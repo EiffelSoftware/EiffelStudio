@@ -81,7 +81,6 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #ifdef EIF_WIN32
 	HANDLE pdn[2];						/* The opened downwards file descriptors */
 	HANDLE pup[2];						/* The opened upwards file descriptors */
-	HANDLE daemonstdin, daemonstdout; 	/* Original pipes */
 	HANDLE child_event_r;				/* Event for signalling readability */
 	HANDLE child_event_w;				/* Event for signalling writeability */
 	HANDLE pipe_to_dup;
@@ -97,7 +96,6 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	char *t_uu;				/* Result of UUEncode */
 
 	char *startpath, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
-	BOOL in_quote;									/* Needed for " processing */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int pdn[2];					/* The opened downwards file descriptors */
@@ -106,9 +104,9 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	Pid_t pid;					/* Pid of the child */
 	STREAM *sp;					/* Stream used for communications with ewb */
 	char **argv;				/* Argument vector for exec() */
+	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 #endif
 
-	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
 	 * opened, one for downwards communications (ised -> ewb) and one for

@@ -474,10 +474,10 @@ void display_splash()
     HBITMAP Bitmap, OldBitmap;
     BITMAP bm;
     RECT sr;
-    LONG Wait;
     HPALETTE palette;
 
-	int i,j,lines,random;
+	int i,lines,random;
+	size_t j;
 	CHAR *slogan;
 	CHAR st[100];
 	SIZE size;

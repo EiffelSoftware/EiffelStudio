@@ -26,11 +26,6 @@ inherit
 			default_create
 		end
 		
-	CONSTANTS
-		undefine
-			default_create
-		end
-		
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create

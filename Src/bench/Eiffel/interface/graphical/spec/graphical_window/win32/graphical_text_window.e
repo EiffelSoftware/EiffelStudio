@@ -132,25 +132,35 @@ feature -- Output
 	process_text (texts: STRUCTURED_TEXT) is
 			-- Process structured text `text' to be
 			-- generated as output.
+		do
+			hide_text_window
+			set_changed (True);
+			st_process_text (texts);
+			set_changed (False)
+			show_text_window
+		end;
+
+	hide_text_window is
 		local
 			p: WEL_COMPOSITE_WINDOW
 		do
 			if dummy_text = Void then
 				p ?= top.implementation;
 				!! dummy_text.make (p, 
-					"toto", implementation.wel_x + 10, 	
+					"Dummy", implementation.wel_x + 10, 	
 					implementation.wel_y + 10,
 					10, 10, 0)
 			else
 				dummy_text.show
 			end;
-			implementation.wel_hide
-			set_changed (True);
-			st_process_text (texts);
-			set_changed (False)
+			implementation.hide;
+		end
+
+	show_text_window is
+		do
 			implementation.wel_show;
 			dummy_text.hide
-		end;
+		end
 
 feature -- Update
 
@@ -314,7 +324,7 @@ feature -- Text formatting
 			-- Process padded value (used when processing breakpoints).
 		do
 			if last_click_break /= Void then
-				last_click_break.set_end_focus (text_position);
+				last_click_break.set_end_position (text_position);
 				last_click_break := Void
 			end;
 			implementation.set_character_format_word (breakable_format);
@@ -333,7 +343,7 @@ feature -- Text formatting
 				put_stone (breakable_stone, a_bp.index.out)
 			else
 				if last_click_break /= Void then
-					last_click_break.set_end_focus (text_position);
+					last_click_break.set_end_position (text_position);
 					last_click_break := Void
 				end;
 				put_string (" ");

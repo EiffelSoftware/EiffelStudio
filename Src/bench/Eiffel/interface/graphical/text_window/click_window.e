@@ -8,8 +8,8 @@ indexing
 deferred class CLICK_WINDOW 
 
 inherit
+	TEXT_STRUCT
 
-	TEXT_STRUCT;
 	TEXT_WINDOW
 		rename
 			count as text_count
@@ -198,7 +198,7 @@ feature -- Processing for text_struct
 			-- Process padded spaces in place of breakpoints.
 		do
 			if last_click_break /= Void then
-				last_click_break.set_end_focus (text_position);
+				last_click_break.set_end_position (text_position);
 				last_click_break := Void
 			end;
 			put_normal_string ("   ");
@@ -215,7 +215,7 @@ feature -- Processing for text_struct
 				put_stone (breakable_stone, a_bp.index.out)
 			else
 				if last_click_break /= Void then
-					last_click_break.set_end_focus (text_position);
+					last_click_break.set_end_position (text_position);
 					last_click_break := Void
 				end;
 				put_normal_string (" ");
@@ -276,7 +276,7 @@ feature -- Update
 		do
 			if clickable_count /= 0 then
 				search_by_index (i);
-				set_bounds (item (position).start_focus, item (position).end_focus)
+				set_bounds (item (position).start_position, item (position).end_position)
 			end
 		end;
 
@@ -296,7 +296,7 @@ feature -- Breakpoint update
 		do
 			cb := breakable_for (f, index);
 			if index >= 1 and cb /= Void then
-				set_bounds (cb.start_focus, cb.end_focus);
+				set_bounds (cb.start_position, cb.end_position);
 				highlight_focus
 			end
 		end;

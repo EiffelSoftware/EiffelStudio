@@ -43,7 +43,7 @@ feature {TTY_RESOURCES} -- Initialization
 			!! shell_command.make ("shell_command", rt, "xterm -geometry 80x40 -e vi +$line $target");
 			!! filter_name.make ("filter_name", rt, "PostScript");
 			!! filter_command.make ("filter_command", rt, "");
-			!! active_drag_and_drop.make ("active_drag_and_drop", rt, True);
+			!! browsing_facilities.make ("Browsing_classes_using_left_mouse_button", rt, True);
 			!! history_size.make ("history_size", rt, 10)
 			!! default_window_position.make ("default_window_position", rt, False);
 			!! window_free_list_number.make ("window_free_list_number", rt, 2);
@@ -75,7 +75,7 @@ feature -- Resources
 	print_shell_command: STRING_RESOURCE;
 	filter_name: STRING_RESOURCE;
 	filter_command: STRING_RESOURCE;
-	active_drag_and_drop: BOOLEAN_RESOURCE;
+	browsing_facilities: BOOLEAN_RESOURCE;
 	history_size: INTEGER_RESOURCE;
 	default_window_position: BOOLEAN_RESOURCE;
 	window_free_list_number: INTEGER_RESOURCE;

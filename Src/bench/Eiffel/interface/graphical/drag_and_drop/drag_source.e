@@ -85,9 +85,17 @@ feature {NONE} -- Transport
 			valid_source: source /= Void
 		do	
 			source.set_action ("!<Btn3Down>", transport_command, Current);
+			source.set_action ("!<Btn1Down>", open_command, Current);
 		end;
 	
 	transport_command: TRANSPORT is
+			-- Command which takes care of the 
+			-- the transport.
+		once
+			!!Result
+		end;
+
+	open_command: OPEN_CLASS is
 			-- Command which takes care of the 
 			-- the transport.
 		once

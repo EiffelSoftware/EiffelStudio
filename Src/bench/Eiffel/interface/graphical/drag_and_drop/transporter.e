@@ -46,9 +46,6 @@ feature -- Initialization
 	holes: LINKED_LIST [HOLE];
 			-- List of holes 
 
-	have_active_d_and_d: BOOLEAN
-			-- Does Current want to have an active drag and drop cursor
-
 feature -- Access
 
 	registered (h: HOLE): BOOLEAN is
@@ -142,7 +139,6 @@ feature -- Update
 			scr: SCREEN;
 			target: HOLE
 		do
-			have_active_d_and_d := General_resources.active_drag_and_drop.actual_value;
 			drag_source := s;
 			stone := s.transported_stone;
 			x0 := ix;
@@ -151,17 +147,12 @@ feature -- Update
 			y1 := widget.screen.y;
 			draw_segment (x0, y0, x1, y1);	
 			target := pointed_hole;
-			if have_active_d_and_d then
-				if 
-					target /= Void and then 
-					target.compatible (stone) 
-				then
-					is_compatible_target := True;
-					widget.grab (stone.stone_cursor)
-				else
-					is_compatible_target := False;
-					widget.grab (stone.x_stone_cursor)
-				end;
+			if target /= Void and then target.compatible (stone) then
+				is_compatible_target := True;
+				widget.grab (stone.stone_cursor)
+			else
+				is_compatible_target := False;
+				widget.grab (stone.x_stone_cursor)
 			end;
 			dropped := False;
 		end;
@@ -204,19 +195,17 @@ feature -- Execution
 					x1 := scr.x; 
 					y1 := scr.y;
 					draw_segment (x0, y0, x1, y1);
-					if have_active_d_and_d then
-						target := pointed_hole;
-						if target /= Void and then target.compatible (stone) then
-							if not is_compatible_target then
-								is_compatible_target := True
-								widget.ungrab;
-								widget.grab (stone.stone_cursor)
-							end
-						elseif is_compatible_target then
-							is_compatible_target := False;
+					target := pointed_hole;
+					if target /= Void and then target.compatible (stone) then
+						if not is_compatible_target then
+							is_compatible_target := True
 							widget.ungrab;
-							widget.grab (stone.x_stone_cursor)
+							widget.grab (stone.stone_cursor)
 						end
+					elseif is_compatible_target then
+						is_compatible_target := False;
+						widget.ungrab;
+						widget.grab (stone.x_stone_cursor)
 					end
 				end;
 			elseif argument = Abort_action then

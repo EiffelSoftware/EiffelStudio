@@ -231,8 +231,8 @@ feature -- Search
 			loop
 				click_stone := item (i);
 				if a_stone.same_as (click_stone.node) then
-					set_bounds (click_stone.start_focus, 
-						click_stone.end_focus);
+					set_bounds (click_stone.start_position, 
+						click_stone.end_position);
 					highlight_focus;
 					stone_found := true
 				end;

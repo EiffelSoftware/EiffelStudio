@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Text windows where tabulation characters are expanded %
 			%to `tablength' blank characters. Widget that is able %
@@ -8,11 +7,9 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	TABBED_TEXT_WINDOW
 
 inherit
-
 	TABBED_TEXT
 		rename
 			lower as lower_window,

@@ -82,6 +82,18 @@ feature -- Access
 			"ILC_MASK"
 		end
 
+feature -- Access (ILD constants)
+
+	Ild_normal: INTEGER is
+			-- Draws the image using the background color for the image
+			-- list. If the background color is the CLR_NONE value, the
+			-- image is drawn transparently using the mask.
+		external
+			"C [macro %"commctrl.h%"]"
+		alias
+			"ILD_NORMAL"
+		end
+
 end -- class WEL_ILC_CONSTANTS
 
 --|----------------------------------------------------------------

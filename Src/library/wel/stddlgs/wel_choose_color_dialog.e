@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			standard_dialog_make
 			cwel_choose_color_set_lstructsize (item, structure_size)
-			!! custom_colors.make
+			create custom_colors.make
 			set_custom_colors (custom_colors)
 		end
 
@@ -45,7 +45,7 @@ feature -- Access
 		require
 			selected: selected
 		do
-			!! Result.make_by_color (
+			create Result.make_by_color (
 				cwel_choose_color_get_rgbresult (item))
 		ensure
 			result_not_void: Result /= Void

@@ -31,7 +31,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_nm_treeview_get_hdr (item))
+			create Result.make_by_pointer (cwel_nm_treeview_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -48,7 +48,7 @@ feature -- Access
 		local
 			tree: WEL_TREE_VIEW
 		do
-			!! Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
+			create Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
 			tree ?= hdr.window_from
 			Result := tree.get_item_with_data (Result)
 		ensure
@@ -60,7 +60,7 @@ feature -- Access
 		local
 			tree: WEL_TREE_VIEW
 		do
-			!! Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
+			create Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
 			tree ?= hdr.window_from
 			if tree.has_item (Result) then
 				Result := tree.get_item_with_data (Result)
@@ -72,7 +72,7 @@ feature -- Access
 	position: WEL_POINT is
 			-- Mouse coordinates when notification occurred.
 		do
-			!! Result.make_by_pointer (cwel_nm_treeview_get_ptdrag (item))
+			create Result.make_by_pointer (cwel_nm_treeview_get_ptdrag (item))
 		ensure
 			result_not_void: Result /= Void
 		end

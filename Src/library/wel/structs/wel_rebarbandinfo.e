@@ -85,7 +85,7 @@ feature -- Access
 			exists: exists
 		do
 			set_mask (set_flag (mask, Rbbim_text))
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_rebarbandinfo_get_lptext (item))
 		end
 
@@ -150,7 +150,7 @@ feature -- Access
 			exists: exists
 		do
 			set_mask (set_flag (mask, Rbbim_colors))
-			!! Result.make_by_color (cwel_rebarbandinfo_get_clrfore (item))
+			create Result.make_by_color (cwel_rebarbandinfo_get_clrfore (item))
 		ensure
 			color_not_void: Result /= Void
 		end
@@ -162,7 +162,7 @@ feature -- Access
 			exists: exists
 		do
 			set_mask (set_flag (mask, Rbbim_colors))
-			!! Result.make_by_color (cwel_rebarbandinfo_get_clrback (item))
+			create Result.make_by_color (cwel_rebarbandinfo_get_clrback (item))
 		ensure
 			color_not_void: Result /= Void
 		end
@@ -187,7 +187,7 @@ feature -- Element change
 			a_text_not_void: txt /= Void
 		do
 			set_mask (set_flag (mask, Rbbim_text))
-			!! str_text.make (txt)
+			create str_text.make (txt)
 			cwel_rebarbandinfo_set_cch (item, txt.count)
 			cwel_rebarbandinfo_set_lptext (item, str_text.item)
 		ensure
@@ -249,7 +249,7 @@ feature -- Element change
 		do
 			set_mask (set_flag (mask, Rbbim_child))
 			composite ?= window.parent
-			!! container.make (composite, window)
+			create container.make (composite, window)
 			cwel_rebarbandinfo_set_hwndchild (item, container.item)
 		ensure
 			window_set: child.is_equal (window.parent)

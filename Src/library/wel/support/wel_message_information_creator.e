@@ -77,7 +77,7 @@ feature -- Initialization
 			else 
 				-- `message' is not handled by WEL.
 				-- Let's create a generic message object.
-				!! message_information.make (window,
+				create message_information.make (window,
 					message, wparam, lparam)
 			end
 		end

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		local
 			create_struct: WEL_CLIENT_CREATE_STRUCT
 		do
-			!! create_struct.make (a_menu, first_child)
+			create create_struct.make (a_menu, first_child)
 			internal_window_make (a_parent, Void,
 				default_style, 0, 0, 0, 0, 0,
 				create_struct.item)

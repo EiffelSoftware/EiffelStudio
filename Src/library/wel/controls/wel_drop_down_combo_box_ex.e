@@ -41,14 +41,14 @@ feature -- Status report
 			length := text_length
 			if length > 0 then
 				length := length + 1
-				!! Result.make (length)
+				create Result.make (length)
 				Result.fill_blank
-				!! a_wel_string.make (Result)
+				create a_wel_string.make (Result)
 				nb := cwin_get_window_text (edit_item, a_wel_string.item, length)
 				Result := a_wel_string.string
 				Result.head (nb)
 			else
-				!! Result.make (0)
+				create Result.make (0)
 			end
 		end
 

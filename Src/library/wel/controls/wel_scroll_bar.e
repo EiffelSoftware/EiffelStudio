@@ -117,7 +117,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (color_scrollbar)
+			create Result.make_system (color_scrollbar)
 		end
 
 feature -- Element change
@@ -219,7 +219,7 @@ feature {NONE} -- Inapplicable
 			-- Foreground color has no effect with SCROLL_BAR.
 			-- Cannot be Void.
 		do
-			!! Result.make_system (Color_windowtext)
+			create Result.make_system (Color_windowtext)
 		end
 
 feature {NONE} -- Implementation

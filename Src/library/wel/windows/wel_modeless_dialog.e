@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 
 			if a_name /= Void then
 				-- Load by name
-				!! c_name.make (a_name)
+				create c_name.make (a_name)
 				item := cwin_create_dialog (
 					main_args.current_instance.item,
 					c_name.item, parent_item,

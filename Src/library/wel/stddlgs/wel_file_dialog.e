@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 		do
 			standard_dialog_make
 			cwel_open_file_name_set_lstructsize (item, structure_size)
-			!! str_file_name.make_empty (Max_file_name_length)
+			create str_file_name.make_empty (Max_file_name_length)
 			str_file_name.set_string ("")
-			!! str_file_title.make_empty (Max_file_title_length)
+			create str_file_title.make_empty (Max_file_title_length)
 			str_file_title.set_string ("")
-			!! str_title.make_empty (Max_title_length)
+			create str_title.make_empty (Max_title_length)
 			str_title.set_string ("")
 			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
 			cwel_open_file_name_set_nmaxfile (item, Max_file_name_length - 10)
@@ -259,7 +259,7 @@ feature -- Element change
 			-- pattern. Each pair must be separated by a null
 			-- character. The string must be terminated by two
 			-- null characters.
-			!! s.make (0)
+			create s.make (0)
 			from
 				i := filter_names.lower
 			until
@@ -273,7 +273,7 @@ feature -- Element change
 			end
 			s.extend ('%U')
 			s.extend ('%U')
-			!! str_filter.make (s)
+			create str_filter.make (s)
 			cwel_open_file_name_set_lpstrfilter (item,
 				str_filter.item)
 		end
@@ -294,7 +294,7 @@ feature -- Element change
 		require
 			directory_not_void: directory /= Void
 		do
-			!! str_intial_directory.make (directory)
+			create str_intial_directory.make (directory)
 			cwel_open_file_name_set_lpstrinitialdir (item,
 				str_intial_directory.item)
 		end
@@ -313,7 +313,7 @@ feature -- Element change
 		require
 			extension_not_void: extension/= Void
 		do
-			!! str_default_extension.make (extension)
+			create str_default_extension.make (extension)
 			cwel_open_file_name_set_lpstrdefext (item,
 				str_default_extension.item)
 		end

@@ -44,7 +44,7 @@ feature -- Access
 		require
 			menu_exists: menu_exists
 		do
-			!! Result.make_by_pointer (h_menu)
+			create Result.make_by_pointer (h_menu)
 		end
 
 	h_menu: POINTER is

@@ -84,7 +84,7 @@ feature -- Access
 	text_color: WEL_COLOR_REF is
 			-- Text color
 		do
-			!! Result.make_by_color (
+			create Result.make_by_color (
 				cwel_charformat_get_crtextcolor (item))
 		ensure
 			result_not_void: Result /= Void
@@ -141,7 +141,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			add_mask (Cfm_face)
-			!! a_wel_string.make (a_face_name)
+			create a_wel_string.make (a_face_name)
 			cwel_charformat_set_szfacename (item, a_wel_string.item)
 		ensure
 			face_name_set: face_name.is_equal (a_face_name)

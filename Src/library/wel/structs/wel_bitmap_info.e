@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			rgb_quad_count := 0
 			structure_make
-			!! bih.make
+			create bih.make
 			set_bitmap_info_header (bih)
 			cwin_get_di_bits (dc.item, bitmap.item, 0, 0,
 				default_pointer, item, usage)
@@ -69,7 +69,7 @@ feature -- Access
 			-- Information about the dimensions and color
 			-- format of a DIB
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_bitmap_info_get_header (item))
 		ensure
 			result_not_void: Result /= Void
@@ -84,7 +84,7 @@ feature -- Access
 			index_small_enough: index < rgb_quad_count
 			index_large_enough: index >= 0
 		do
-			!! Result.make
+			create Result.make
 			Result.memory_copy (
 				cwel_bitmap_info_get_rgb_quad (item, index), 
 				c_size_of_rgb_quad)

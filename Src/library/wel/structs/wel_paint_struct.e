@@ -25,7 +25,7 @@ feature -- Access
 			-- Rectangle that specifies which part
 			-- must be painted.
 		do
-			!! Result.make_by_pointer (
+			create Result.make_by_pointer (
 				cwel_paintstruct_get_rcpaint (item))
 		ensure
 			result_not_void: Result /= Void

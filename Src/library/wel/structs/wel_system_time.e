@@ -91,7 +91,7 @@ feature -- Conversion
 	file_time: WEL_FILE_TIME is
 			-- SYSTEMTIME in FILETIME format
 		do
-			!!Result.make
+			create Result.make
 			cwel_system_time_to_file_time (item, Result.item)
 		end
 

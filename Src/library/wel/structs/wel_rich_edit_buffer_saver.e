@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create `text'.
 		do
 			rich_edit_stream_out_make
-			!! text.make (0)
+			create text.make (0)
 		end
 
 feature -- Access

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			parent := Void
 			resource_id := an_id
-			!! dialog_children.make
+			create dialog_children.make
 		ensure
 			no_parent: parent = Void
 			resource_id_set: resource_id = an_id
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		do
 			parent := Void
 			resource_name := clone (a_name)
-			!! dialog_children.make
+			create dialog_children.make
 		ensure
 			no_parent: parent = Void
 			resource_name_set: resource_name.is_equal (a_name)

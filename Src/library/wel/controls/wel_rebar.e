@@ -126,7 +126,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make
+			create Result.make
 			Result.set_mask (Rbim_imagelist)
 			cwin_send_message (item, Rb_getbarinfo, 0, Result.to_integer)
 		end
@@ -141,11 +141,11 @@ feature -- Status report
 		local
 			buffer: STRING
 		do
-			!! Result.make
+			create Result.make
 			Result.set_mask (Rbbim_style + Rbbim_colors + Rbbim_text
 				+ Rbbim_image + Rbbim_child + Rbbim_childsize
 				+ Rbbim_size + Rbbim_background + Rbbim_id)
-			!! buffer.make (buffer_size)
+			create buffer.make (buffer_size)
 			buffer.fill_blank
 			Result.set_text (buffer)
 			cwin_send_message (item, Rb_getbandinfo, index, Result.to_integer)
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_rebar_class)
 		end
 

@@ -41,7 +41,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_window)
+			create Result.make_system (Color_window)
 		end
 
 feature -- Status report
@@ -141,7 +141,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (new_text)
+			create a_wel_string.make (new_text)
 			cwin_send_message (item, Em_replacesel, 0,
 				cwel_pointer_to_integer (a_wel_string.item))
 		end
@@ -299,7 +299,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item, Em_getrect, 0,
 				Result.to_integer)
 		ensure

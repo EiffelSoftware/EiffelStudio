@@ -40,7 +40,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_hd_item_get_psz_text (item))
 		end
 

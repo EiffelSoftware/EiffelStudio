@@ -106,7 +106,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_pen (Current)
+			create Result.make_by_pen (Current)
 		ensure
 			result_not_void: Result /= Void
 		end

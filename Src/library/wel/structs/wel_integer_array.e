@@ -43,7 +43,7 @@ feature -- Conversion
 		local
 			a: ANY
 		do
-			!! Result.make (a_lower, a_lower + count - 1)
+			create Result.make (a_lower, a_lower + count - 1)
 			a := Result.to_c
 			c_memcpy ($a, item, structure_size)
 		ensure

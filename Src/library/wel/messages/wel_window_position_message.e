@@ -19,7 +19,7 @@ feature -- Access
 
 	position: WEL_WINDOW_POS is
 		do
-			!! Result.make_by_pointer (cwel_integer_to_pointer (l_param))
+			create Result.make_by_pointer (cwel_integer_to_pointer (l_param))
 		end
 
 feature {NONE} -- Externals

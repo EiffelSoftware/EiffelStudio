@@ -38,7 +38,7 @@ feature -- Access
 	window_menu: WEL_MENU is
 			-- MDI application's window menu
 		do
-			!! Result.make_by_pointer (cwel_client_cs_get_window_menu (item))
+			create Result.make_by_pointer (cwel_client_cs_get_window_menu (item))
 		ensure
 			result_not_void: Result /= Void
 		end

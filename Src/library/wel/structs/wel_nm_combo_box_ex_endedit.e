@@ -31,7 +31,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_nm_cbeendedit_get_hdr (item))
+			create Result.make_by_pointer (cwel_nm_cbeendedit_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -53,7 +53,7 @@ feature -- Access
 	text: STRING is
 			-- Text from within the control's edit box.
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_nm_cbeendedit_get_tchar (item))
 		end
 

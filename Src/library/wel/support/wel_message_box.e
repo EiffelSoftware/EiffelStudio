@@ -21,8 +21,8 @@ feature -- Basic operations
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			message_box_result := cwin_message_box (default_pointer,
 				a_wel_string1.item, a_wel_string2.item, a_style)
 		end
@@ -36,7 +36,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			message_box_result := cwin_message_box (default_pointer,
 				a_wel_string.item, default_pointer, a_style)
 		end

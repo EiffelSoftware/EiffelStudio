@@ -78,7 +78,7 @@ feature -- Standard window class values
 			-- window class.
 			-- Can be redefined to return a user-defined icon.
 		once
-			!! Result.make_by_predefined_id (Idi_application)
+			create Result.make_by_predefined_id (Idi_application)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -89,7 +89,7 @@ feature -- Standard window class values
 			-- class.
 			-- Can be redefined to return a user-defined cursor.
 		once
-			!! Result.make_by_predefined_id (Idc_arrow)
+			create Result.make_by_predefined_id (Idc_arrow)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -102,7 +102,7 @@ feature -- Standard window class values
 		require
 			background_brush_not_set: background_brush = Void
 		once
-			!! Result.make_by_sys_color (Color_window + 1)
+			create Result.make_by_sys_color (Color_window + 1)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -119,7 +119,7 @@ feature -- Standard window class values
 			-- Can be redefined to return a user-defined menu.
 			-- (None by default).
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		ensure
 			result_not_void: Result /= Void
 		end

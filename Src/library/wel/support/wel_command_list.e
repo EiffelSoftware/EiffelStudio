@@ -25,7 +25,7 @@ feature -- Element change
 		local
 			exec: WEL_COMMAND_EXEC
 		do
-			!! exec.make (command, argument)
+			create exec.make (command, argument)
 			extend (exec)
 		end
 

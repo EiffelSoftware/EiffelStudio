@@ -16,7 +16,7 @@ feature -- Initialization
 		do
 			class_name := a_class_name
 			class_name.to_upper
-			!! class_file.make_create_read_write (output_file)
+			create class_file.make_create_read_write (output_file)
 			insert_header_in_file (class_file, input_file)
 		end
 
@@ -39,7 +39,7 @@ feature -- Basic operations
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			!! a_file.make_open_read (input_file)
+			create a_file.make_open_read (input_file)
 			from
 				a_file.start
 			until
@@ -83,7 +83,7 @@ feature -- Status report
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			!! a_file.make (filename)
+			create a_file.make (filename)
 			Result := a_file.exists
 		end
 

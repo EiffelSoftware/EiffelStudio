@@ -54,7 +54,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			!! Result.make (0, count - 1)
+			create Result.make (0, count - 1)
 			from
 				i := Result.lower
 			until
@@ -77,9 +77,9 @@ feature -- Access
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! Result.make (i_th_text_length (i))
+			create Result.make (i_th_text_length (i))
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			cwin_send_message (item, Lb_gettext, i,
 				cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string
@@ -107,7 +107,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_windowtext)
+			create Result.make_system (Color_windowtext)
 		end
 
 	background_color: WEL_COLOR_REF is
@@ -115,7 +115,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_window)
+			create Result.make_system (Color_window)
 		end
 
 feature -- Element change
@@ -133,7 +133,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			cwin_send_message (item, Lb_addstring, 0,
 				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -150,7 +150,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			cwin_send_message (item, Lb_insertstring, index,
 				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -179,7 +179,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (files)
+			create a_wel_string.make (files)
 			cwin_send_message (item, Lb_dir, attribut,
 				cwel_pointer_to_integer (a_wel_string.item))
 		end

@@ -52,7 +52,7 @@ feature -- Access
 			-- Coordinates of the window's upper left
 			-- corner when the window is minimized.
 		do
-			!! Result.make_by_pointer
+			create Result.make_by_pointer
 				(cwel_window_placement_get_minimum_position
 					(item))
 		ensure
@@ -63,7 +63,7 @@ feature -- Access
 			-- Coordinates of the window's upper left
 			-- corner when the window is maximized.
 		do
-			!! Result.make_by_pointer
+			create Result.make_by_pointer
 				(cwel_window_placement_get_maximum_position
 					(item))
 		ensure
@@ -74,7 +74,7 @@ feature -- Access
 			-- Window's coordinates when the
 			-- windows is in the restored position
 		do
-			!! Result.make_by_pointer
+			create Result.make_by_pointer
 				(cwel_window_placement_get_normal_position
 					(item))
 		ensure

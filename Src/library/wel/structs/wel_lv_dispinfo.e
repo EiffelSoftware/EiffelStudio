@@ -32,7 +32,7 @@ feature -- Access
 	hdr: WEL_NMHDR is
 			-- Information about the Wm_notify message.
 		do
-			!! Result.make_by_pointer (cwel_lv_dispinfo_get_hdr (item))
+			create Result.make_by_pointer (cwel_lv_dispinfo_get_hdr (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -40,7 +40,7 @@ feature -- Access
 	list_item: WEL_LIST_VIEW_ITEM is
 			-- Virtual key number.
 		do
-			!! Result.make_by_pointer (cwel_lv_dispinfo_get_item (item))
+			create Result.make_by_pointer (cwel_lv_dispinfo_get_item (item))
 		ensure
 			result_not_void: Result /= Void
 		end

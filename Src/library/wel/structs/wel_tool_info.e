@@ -55,7 +55,7 @@ feature -- Access
 	rect: WEL_RECT is
 			-- Coordinates of the bounding rectangle of the tool
 		do
-			!! Result.make_by_pointer (cwel_toolinfo_get_rect (item))
+			create Result.make_by_pointer (cwel_toolinfo_get_rect (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -65,7 +65,7 @@ feature -- Access
 			-- tool. If `text' specifies the identifier of a string
 			-- resource, this information is used.
 		do
-			!! Result.make (cwel_toolinfo_get_hinst (item))
+			create Result.make (cwel_toolinfo_get_hinst (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -167,7 +167,7 @@ feature -- Element change
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! str_text.make (a_text)
+			create str_text.make (a_text)
 			cwel_toolinfo_set_lpsztext (item, str_text.item)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	window_manager: WEL_WINDOW_MANAGER is
 			-- Window manager used by `window'
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 	main_args: WEL_MAIN_ARGUMENTS is
 			-- Main arguments of the application used by `instance'
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -63,7 +63,7 @@ feature -- Access
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			!! Result.make
+			create Result.make
 			cwin_send_message (item, Ttm_enumtools, index,
 				Result.to_integer)
 		ensure

@@ -432,16 +432,18 @@ feature -- Comparison
 			other_count: INTEGER
 			current_count: INTEGER
 		do
-			other_area := other.area
-			other_count := other.count
-			current_count := count
-			if other_count = current_count then
-				Result := str_strict_cmp ($other_area, $area, other_count) > 0
-			else
-				if current_count < other_count then
-					Result := str_strict_cmp ($other_area, $area, current_count) >= 0
-				else
+			if other /= Current then
+				other_area := other.area
+				other_count := other.count
+				current_count := count
+				if other_count = current_count then
 					Result := str_strict_cmp ($other_area, $area, other_count) > 0
+				else
+					if current_count < other_count then
+						Result := str_strict_cmp ($other_area, $area, current_count) >= 0
+					else
+						Result := str_strict_cmp ($other_area, $area, other_count) > 0
+					end
 				end
 			end
 		end

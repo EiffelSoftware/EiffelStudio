@@ -536,8 +536,9 @@ invariant
 	consistent_size: capacity = upper - lower + 1
 	non_negative_count: count >= 0
 	index_set_has_same_count: valid_index_set
-	index_set_has_same_bounds: ((index_set.lower = lower) and 
-				(index_set.upper = lower + count - 1))
+-- Internal discussion haven't reached an agreement on this invariant
+--	index_set_has_same_bounds: ((index_set.lower = lower) and 
+--				(index_set.upper = lower + count - 1))
 
 indexing
 

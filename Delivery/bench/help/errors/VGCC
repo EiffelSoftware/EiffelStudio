@@ -40,5 +40,5 @@ VGCC, chapter 18 (Creating objects), page 286
           is available for creation to `X'.
 
      In addition, `x' must be writable. This is handled in
-     book by the syntax of Writable (p. 276). ISE Eiffel 4
+     book by the syntax of Writable (p. 276). ISE Eiffel 5
      treats the corresponding error as violation of VGCC7.

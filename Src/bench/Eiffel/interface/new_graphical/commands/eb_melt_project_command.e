@@ -115,7 +115,7 @@ feature {NONE} -- Compilation implementation
 					perform_compilation
 
 					if Eiffel_project.successful then
-							-- If a freezing already occured (due to a new external
+							-- If a freezing already occurred (due to a new external
 							-- or new derivation of SPECIAL), no need to freeze again.
 						if Eiffel_project.save_error then
 							create st.make
@@ -325,15 +325,15 @@ feature {NONE} -- Execution
 			-- user so and ask for a confirmation.
 			-- If confirmation successful then compile.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if
 				not Application.is_running
 			then
 				compile_and_run
 			else
-				create cd.make_with_text ("Recompiling project will end current run.%NStart compilation anyway?")
-				cd.button ("OK").select_actions.extend (~compile_and_run)
+				create cd.make_initialized (2, "stop_execution_when_compiling", "Recompiling project will end current run.", Interface_names.L_do_not_show_again)
+				cd.set_ok_action (~compile_and_run)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
 		end

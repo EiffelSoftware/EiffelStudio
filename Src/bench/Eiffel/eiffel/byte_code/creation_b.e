@@ -132,7 +132,10 @@ feature -- Inlining
 		do
 			Result := Current
 				-- The special register makes it difficult to
-				-- inline 
+				-- inline
+			if call /= Void then
+				call := call.inlined_byte_code
+			end
 		end
 
 end

@@ -12,6 +12,10 @@ class MESSAGE
 inherit
 
 	STORABLE
+		undefine
+			copy,
+			is_equal
+		end
 
 	LINKED_LIST [STRING]
 

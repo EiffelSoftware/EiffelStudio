@@ -9,9 +9,7 @@ class
 inherit
 	EV_GRID_ITEM
 		undefine
-			is_in_default_state,
-			background_color,
-			set_background_color
+			is_in_default_state
 		redefine
 			implementation
 		end
@@ -27,12 +25,6 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
-	 EV_COLORIZABLE
-	 	redefine
-	 		implementation,
-	 		is_in_default_state
-	 	end
 	
 create
 	default_create,
@@ -44,7 +36,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_FONTABLE} and Precursor {EV_TEXTABLE} and
-				Precursor {EV_COLORIZABLE}
+				Precursor {EV_GRID_ITEM}
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

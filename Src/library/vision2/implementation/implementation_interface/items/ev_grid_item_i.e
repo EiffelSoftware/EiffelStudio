@@ -22,6 +22,11 @@ inherit
 			interface
 		end
 
+	EV_COLORIZABLE_I
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -36,6 +41,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			is_initialized := True
 		end
 
 feature -- Access
@@ -43,7 +49,21 @@ feature -- Access
 	background_color: EV_COLOR is
 			-- Background color of current item if any
 		do
-			to_implement ("EV_GRID_ITEM_I.background_color")
+			if internal_background_color /= Void then
+				Result := internal_background_color.twin
+			else
+				create Result
+			end
+		end
+
+	foreground_color: EV_COLOR is
+			-- Foreground color of current item if any
+		do
+			if internal_foreground_color /= Void then
+				Result := internal_foreground_color.twin
+			else
+				create Result
+			end
 		end
 
 	column: EV_GRID_COLUMN is
@@ -103,14 +123,16 @@ feature -- Status report
 
 feature -- Element change
 
+	set_foreground_color (a_color: like foreground_color) is
+			-- Set `foreground_color' with `a_color'
+		do
+			internal_foreground_color := a_color.twin
+		end
+
 	set_background_color (a_color: like background_color) is
 			-- Set `background_color' with `a_color'
-		require
-			a_color_not_void: a_color /= Void
 		do
-			to_implement ("EV_GRID_ITEM_I.set_background_color")
-		ensure
-			background_color_set: background_color = a_color
+			internal_background_color := a_color.twin
 		end
 		
 feature {NONE} -- Implementation
@@ -132,6 +154,23 @@ feature {NONE} -- Implementation
 			-- Destroy `Current'.
 		do
 			to_implement ("EV_GRID_ITEM_I.destroy")
+		end
+
+feature {EV_GRID_DRAWER_I} -- Implementation
+
+	internal_background_color: EV_COLOR
+		-- Foreground color used for `Current'
+	
+	internal_foreground_color: EV_COLOR
+		-- Background color used for `Current'
+
+feature {NONE} -- Implementation
+
+	set_default_colors is
+			-- Reset the colors used to display `Current'
+		do
+			internal_background_color := Void
+			internal_foreground_color := Void
 		end
 
 feature {EV_ANY_I} -- Implementation

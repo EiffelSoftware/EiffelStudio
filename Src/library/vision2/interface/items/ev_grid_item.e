@@ -22,15 +22,12 @@ inherit
 			implementation
 		end
 
-feature -- Access
-
-	background_color: EV_COLOR is
-			-- Background color of current item if any
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.background_color
+	EV_COLORIZABLE
+		redefine
+			implementation
 		end
+
+feature -- Access
 
 	column: EV_GRID_COLUMN is
 			-- Column to which current item belongs
@@ -67,18 +64,6 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_parented
-		end
-
-feature -- Element change
-
-	set_background_color (a_color: like background_color) is
-			-- Set `background_color' with `a_color'
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_background_color (a_color)
-		ensure
-			background_color_set: background_color = a_color
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -142,16 +142,6 @@ feature -- Initialization
 			is_initialized := True
 		end
 		
-feature {NONE}
-	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
-		do
-				-- If the object is not void, it means that
-				-- we are not currently picking a type.
-			if transported_object.object /= Void then
-				Result := True
-			end
-		end
-
 feature -- Access
 
 	object: GB_OBJECT
@@ -320,7 +310,16 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 
 feature {NONE} -- Implementation
 
-		update_event_selection_button_text is
+	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
+		do
+				-- If the object is not void, it means that
+				-- we are not currently picking a type.
+			if transported_object.object /= Void then
+				Result := True
+			end
+		end
+
+	update_event_selection_button_text is
 			-- Change text displayed on `event_selection_button',
 			-- dependent on number of items in events from `object'.
 		do
@@ -678,6 +677,18 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.block
 			name_field.set_text (object.edited_name)
 			name_field.change_actions.resume
+		end
+		
+	update_merged_containers is
+			-- Update object editors to reflect merged
+			-- containers having changed.
+		local
+			container_object: GB_CONTAINER_OBJECT
+		do
+			container_object ?= object
+			if container_object /= Void then
+				replace_object_editor_item ("EV_CONTAINER")
+			end
 		end
 
 end -- class GB_OBJECT_EDITOR

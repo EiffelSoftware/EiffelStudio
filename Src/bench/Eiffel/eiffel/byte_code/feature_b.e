@@ -106,6 +106,7 @@ feature -- Byte code generation
 				parameters.make_byte_code (ba);
 			end;
 			standard_make_code (ba, flag);
+			make_java_typecode (ba)
 		end;
 
 	make_special_byte_code (ba: BYTE_ARRAY) is

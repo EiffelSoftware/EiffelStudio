@@ -194,6 +194,7 @@ feature -- Byte code generation
 				standard_make_code (ba, flag);
 				ba.append_uint32_integer (r_type.sk_value);
 			end;
+			make_java_typecode (ba)
 		end;
 
 	code_first: CHARACTER is

@@ -139,16 +139,13 @@ feature -- Miscellaneous
 		
 	Directory_string: STRING is "Directory"
 		-- XML tag used to represent a directory.
-	
-feature -- Directories
-
-	gb_ev_directory: FILE_NAME is
-		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			Result.extend ("build")
-			Result.extend ("interface")
+		
+	Directory_seperator: CHARACTER is
+			-- Seperator used for directories on current platform.
+		once
+			Result := (create {OPERATING_ENVIRONMENT}).directory_separator
 		end
-	
+
 feature -- Default values
 
 	Minimum_width_of_object_editor: INTEGER is 165

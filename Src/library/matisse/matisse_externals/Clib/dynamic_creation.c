@@ -128,7 +128,8 @@ EIF_OBJ create_container_object(int pred_oid, int rel_oid, const char * type_nam
 					NULL, NULL, NULL, NULL));
 			CHECK_STS(MtGetValue(ht_obj, HASH_TABLE__att_values, &att_value_type, 
 					NULL, NULL, NULL, NULL));
-			
+		
+						
 			if (att_key_type == MT_NIL) {
 				if (att_value_type == MT_NIL) {
 					strcpy (name, "MT_RR_HASH_TABLE [MT_OBJECT , HASHABLE]");
@@ -352,9 +353,10 @@ EIF_OBJ c_dynamic_create_eif_object(EIF_INTEGER mt_handle)
 	MtSTS sts;
 	MtSize size;
 	char  className[256];
-	EIF_OBJ eif_obj, eo;
-	EIF_TYPE_ID eif_type /*, mt_object_type */;
-//	EIF_PROC eif_make;
+	EIF_OBJ eif_obj;
+	EIF_REFERENCE eo;
+	//	EIF_PROC eif_make;
+	EIF_TYPE_ID eiffel_matisse_type;
 
 	sts = MtGetObjectClass(&classHandle, mt_handle);
 	CHECK_STS(sts);
@@ -365,12 +367,12 @@ EIF_OBJ c_dynamic_create_eif_object(EIF_INTEGER mt_handle)
 	EIF_MT_LOG1("MtGetValue sts = %d", sts);
 	
 	as_eiffel_class_name(className);
-	eif_type = eif_type_id(className);
-	EIF_MT_LOG2("eif_type_id = %d for class %s", eif_type, className);
-	eif_obj = eif_create(eif_type);
+	eiffel_matisse_type = eif_type_id(className);
+	EIF_MT_LOG2("eif_type_id = %d for class %s", eiffel_matisse_type, className);
+	eif_obj = eif_create(eiffel_matisse_type);
 	EIF_MT_LOG("eif_create");
 	
-	/* eif_make = eif_proc("make", eif_type); */ /* MTEXMBOOK */
+	/* eif_make = eif_proc("make", eiffel_matisse_type); */ /* MTEXMBOOK */
 //	mt_object_type = eif_type_id("MT_OBJECT");
 //	EIF_MT_LOG1("eif_type_id = %d for class MT_OBJECT", mt_object_type);
 //

@@ -376,6 +376,11 @@ feature {EV_APPLICATION_IMP} -- Implementation
 feature {NONE} -- Implementation
 
 	initialize is
+			-- Create the vertical box `vbox' and horizontal box `hbox'
+			-- to put in the window.
+			-- The `vbox' will be able to contain the menu bar, the `hbox'
+			-- and the status bar.
+			-- The `hbox' will contain the child of the window.
 		do
 			vbox := gtk_vbox_new (False, 0)
 			gtk_widget_show (vbox)
@@ -387,11 +392,11 @@ feature {NONE} -- Implementation
 		end
 
 	vbox: POINTER
-		-- Vertical_box to have a possibility for a menu on the
-		-- top.
+			-- Vertical_box to have a possibility for a menu on the
+			-- top and a status bar at the bottom.
 
 	hbox: POINTER
-		-- Horizontal box for the child
+			-- Horizontal box for the child
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 

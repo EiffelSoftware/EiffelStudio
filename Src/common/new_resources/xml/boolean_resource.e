@@ -1,35 +1,27 @@
 indexing
 
 	description:
-		"A resource value for boolean resources.";
-	date: "$Date$";
+		"A resource value for boolean resources."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class BOOLEAN_RESOURCE
+class
+	BOOLEAN_RESOURCE
 
 inherit
 	RESOURCE
 
 creation
-	make,
-	make_with_values
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_values (a_name: STRING; a_value: BOOLEAN) is
-		-- Initialie Current
-		do
-			name := a_name;
-			actual_value := a_value
-		end;
-
-	make (a_name: STRING; rt: RESOURCES_TABLE; def_value: BOOLEAN) is
+	make (a_name: STRING; a_value: BOOLEAN) is
 			-- Initialize Current.
 		do
-			actual_value := def_value
-			default_value := def_value
 			name := a_name
-			rt.put(Current, a_name)
+			actual_value := a_value
+			default_value := a_value
 		end
 
 feature -- Access
@@ -50,26 +42,26 @@ feature -- Access
 			-- Is `a_value' valid for use in Current?
 		do
 			Result := a_value.is_boolean
-		end;
+		end
 
 	has_changed: BOOLEAN is
 			-- Has the resource changed from the default value?
 		do
 			Result := actual_value /= default_value
-		end;
+		end
 
 feature -- Setting
 
 	set_value (new_value: STRING) is
-			-- Set `value' to `new_value' and update `actual_value'.
+			-- Set `actual_value' according to `new_value'.
 		do
-			actual_value := new_value.to_boolean;
-		end;
+			actual_value := new_value.to_boolean
+		end
 
 	set_actual_value (a_bool: BOOLEAN) is
-			-- Set `actual_value' to `a_bool' and update `value'.
+			-- Set `actual_value' to `a_bool'.
 		do
-			actual_value := a_bool;
-		end;
+			actual_value := a_bool
+		end
 
 end -- class BOOLEAN_RESOURCE

@@ -103,6 +103,9 @@ feature -- Access
 			-- Do nothing: to be redefined in STD_BYTE_CODE
 		end; -- compound
 
+	custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Custom attributes if any.
+
 	is_once: BOOLEAN is
 			-- Is the current byte code relative to a once feature ?
 		do
@@ -185,6 +188,14 @@ feature -- Settings
 			exp_not_empty: (var /= Void) implies not var.is_empty
 		do
 			old_expressions := var
+		end
+
+	set_custom_attributes (cas: like custom_attributes) is
+			-- Assign `cas' to `custom_attributes'.
+		do
+			custom_attributes := cas
+		ensure
+			custom_attributes_set: custom_attributes = cas
 		end
 
 	set_rescue_clause (var: like rescue_clause) is

@@ -1808,6 +1808,11 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_activate (wparam.to_integer_32)
 			when wm_getdlgcode then
 				on_getdlgcode
+			when wm_queryuistate, wm_changeuistate, wm_updateuistate then
+					-- Override windows behavior so that when running on Windows XP
+					-- with a manifest file you get the focus outline rectangle on
+					-- controls.
+				disable_default_processing
 			else
 				default_process_message (msg, wparam, lparam)
 			end

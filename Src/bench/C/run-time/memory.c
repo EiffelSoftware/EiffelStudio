@@ -334,3 +334,27 @@ rt_public char gc_ison(void)
 	EIF_END_GET_CONTEXT
 }
 
+
+rt_public void eif_set_max_mem (EIF_INTEGER lim)
+{
+	/*
+	 * Set the maximum amount of memory the run-time can allocate.
+	 */
+
+	EIF_GET_CONTEXT
+	eif_max_mem = (int) lim;
+	EIF_END_GET_CONTEXT
+}
+
+rt_public void eif_set_chunk_size (EIF_INTEGER sz)
+{
+	/*
+	 * Set the chunk size (the run-time always allocates a number of bytes
+	 * multiple of this amount from the system)
+	 */
+
+	EIF_GET_CONTEXT
+	int size = (int) sz;
+	if (size > 0) eif_chunk_size = size;
+	EIF_END_GET_CONTEXT
+}

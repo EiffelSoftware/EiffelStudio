@@ -145,7 +145,7 @@ feature
 	redisplay_current  is
 			-- Update the icon_stone at current_postion
 		do
-			if not (icons = Void) then
+			if icons /= Void then
 				icons.go_i_th (index);
 				icons.item.set_data (item);
 			end

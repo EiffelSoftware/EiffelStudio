@@ -25,7 +25,9 @@ feature -- Constants for SMTP Protocol
 
 	Subject: STRING is "SUBJECT:"
 
-	Quit: STRING is "QUIT "
+	Mail_reply_to: STRING is "RCPT REPLY TO:"
+
+	Quit: STRING is "QUIT"
 
 	Ack_begin_connection: INTEGER is 220
 
@@ -45,14 +47,21 @@ feature -- Constants for SMTP Protocol
 
 feature -- Constants for email headers (Authorized keys for the Hashtables)
 
-	H_to: STRING is "To"
+	H_to: STRING is "To:"
 
-	H_from: STRING is "From"
+	H_from: STRING is "From:"
 
-	H_cc: STRING is "Cc"
+	H_cc: STRING is "Cc:"
 
-	H_bcc: STRING is "Bcc"
+	H_bcc: STRING is "Bcc:"
 
-	H_subject: STRING is "Subject"
+	H_subject: STRING is "Subject:"
+
+	H_reply_to: STRING is "Reply-to:"
+
+	Default_headers: ARRAY [STRING] is 
+		once
+			create Result.make_from_array (<<H_to, H_from, H_cc, H_bcc, H_reply_to>>)
+		end
 
 end -- class EMAIL_CONSTANTS

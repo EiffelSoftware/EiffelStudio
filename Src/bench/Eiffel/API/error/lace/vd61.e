@@ -43,19 +43,7 @@ feature -- Output
 			st.add_string (assembly.cluster_name)
 			st.add_new_line
 			st.add_string ("Assembly details: %"")
-			st.add_string (assembly.assembly_name)
-			if assembly.version /= Void then
-				st.add_string (", ")
-				st.add_string (assembly.version)
-			end
-			if assembly.culture /= Void then
-				st.add_string (", ")
-				st.add_string (assembly.culture)
-			end
-			if assembly.public_key_token /= Void then
-				st.add_string (", ")
-				st.add_string (assembly.public_key_token)
-			end
+			assembly.format (st)
 			st.add_string ("%"")
 			st.add_new_line
 		end

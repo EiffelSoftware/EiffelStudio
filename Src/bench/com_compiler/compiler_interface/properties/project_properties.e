@@ -209,19 +209,19 @@ feature -- Access
         
     clusters: SYSTEM_CLUSTERS is
             -- List of clusters in current project (list of IEiffelClusterProperties*).
-        do
+       	once
             create Result.make (ace)
         end
         
     externals: SYSTEM_EXTERNALS is
             -- List of the externals in the current project (IEiffelExternalProperties*)
-        do
+        once
             create Result.make (ace)
         end
         
     assemblies: SYSTEM_ASSEMBLIES is
             -- System assemblies
-        do
+        once
             create Result.make (ace)
         end
         
@@ -493,9 +493,6 @@ feature -- Basic operations
             -- Apply changes.
         do
             if ace.is_valid then
-                clusters.store
-                externals.store
-                assemblies.store
                 ace.apply
             end
         end

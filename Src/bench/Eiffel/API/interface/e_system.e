@@ -72,12 +72,6 @@ feature -- Access
 
 feature -- Access
 
-	cluster: CLUSTER_I is		
-		obsolete "to be removed"
-		do
-			Result := Inst_context.cluster;
-		end;
-
 	Any_id: CLASS_ID is
 			-- Identification for class ANY
 		require

@@ -6,7 +6,8 @@ inherit
 			Bc_power as operator_constant,
 			il_power as il_operator_constant
 		redefine
-			print_register
+			print_register,
+			generate_standard_il
 		end
 
 	SHARED_INCLUDE
@@ -19,7 +20,19 @@ inherit
 			{NONE} all
 		end
 
-feature
+feature -- IL code generation
+
+	generate_standard_il is
+			-- Generate standard IL code for binary expression.
+		do
+			left.generate_il
+			il_generator.convert_to_double
+			right.generate_il
+			il_generator.convert_to_double
+			il_generator.generate_binary_operator (il_operator_constant)
+		end
+
+feature -- C code generation
 
 	print_register is
 			-- Print expression value

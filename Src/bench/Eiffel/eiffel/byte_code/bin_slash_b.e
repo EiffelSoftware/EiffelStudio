@@ -8,16 +8,31 @@ inherit
 			il_slash as il_operator_constant
 		redefine
 			generate_operator, is_simple,
-			generate_simple, print_register
+			generate_simple, print_register,
+			generate_standard_il
 		end;
 
-feature 
+feature -- Access
 
 	is_simple: BOOLEAN is
 			-- Operation is usually simple (C can compact it in affectations)
 		do
 			Result := is_built_in;
 		end;
+
+feature -- IL code generation
+
+	generate_standard_il is
+			-- Generate standard IL code for binary expression.
+		do
+			left.generate_il
+			il_generator.convert_to_double
+			right.generate_il
+			il_generator.convert_to_double
+			il_generator.generate_binary_operator (il_operator_constant)
+		end
+
+feature -- C code generation
 
 	generate_operator is
 			-- Generate the operator

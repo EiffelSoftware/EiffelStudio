@@ -64,15 +64,17 @@ feature -- Instances
 					until
 						s.after or Result
 					loop
-						b := s.output.data;
-						from
-							b.start
-						until
-							b.after or
-							Result
-						loop
-							Result := (b.output.associated_command = Current);
-							b.forth
+						if not s.input.deleted then
+							b := s.output.data;
+							from
+								b.start
+							until
+								b.after or
+								Result
+							loop
+								Result := (b.output.associated_command = Current);
+								b.forth
+							end;
 						end;
 						s.forth
 					end;
@@ -96,23 +98,27 @@ feature -- Instances
 			loop
 				s ?= Shared_app_graph.key_for_iteration;
 				if s /= Void then
-					found := False;
 					from
 						s.start
 					until
 						s.after
 					loop
-						b := s.output.data;
-						from
-							b.start
-						until
-							b.after 
-						loop
-							found := (b.output.associated_command = Current);
-							b.forth
-						end;
-						if found then
-							Result.extend (s.input)
+						if not s.input.deleted then
+							b := s.output.data;
+							from
+								b.start;
+								found := False;
+							until
+								b.after or else found
+							loop
+								found := (b.output.associated_command = Current);
+								b.forth
+							end;
+							if found then
+								if not Result.has (s.input) then
+									Result.extend (s.input)
+								end
+							end;
 						end;
 						s.forth
 					end;
@@ -142,18 +148,20 @@ feature -- Instances
 					until
 						s.after
 					loop
-						b := s.output.data;
-						from
-							b.start
-						until
-							b.after 
-						loop
-							if (b.output.associated_command = Current) then
-								if not Result.has (b.output) then
-									Result.extend (b.output)
+						if not s.input.deleted then
+							b := s.output.data;
+							from
+								b.start
+							until
+								b.after 
+							loop
+								if (b.output.associated_command = Current) then
+									if not Result.has (b.output) then
+										Result.extend (b.output)
+									end
 								end
-							end
-							b.forth
+								b.forth
+							end;
 						end;
 						s.forth
 					end;
@@ -403,5 +411,16 @@ feature -- Code Generation
 			-- is undeleted
 		deferred
 		end;
+
+feature {NONE}
+
+	popuper_parent: COMPOSITE is
+		do
+			if edited then	
+				Result := command_editor
+			else
+				Result := main_panel.base
+			end
+		end
 
 end 

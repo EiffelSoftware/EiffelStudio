@@ -1,0 +1,34 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>CHARACTER_REF</title>
+</head>
+
+<body>
+<h1>CHARACTER_REF</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>Char (CHARACTER), CONVERT
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{CONVERT}.to_int32_char
+	<li>{CHARACTER}.to_upper, to_lower, is_lower_char, is_upper_char, is_digit_char, is_letter
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Other notes</h2>
+<p>Had to add/change preconditions in Base, because Base is ASCII and Base.NET is Unicode.
+<br>Added is_valid_character_code in INTEGER_REF for this purpose.
+<br>Also added min_value/max_value in CHARACTER_REF (0-255 for Base, 0-65535 for Base.NET).
+
+</body>
+
+</html>

@@ -1810,9 +1810,11 @@ feature -- Debugging
 			--| information must thus be generated 
 			--| for each possible instantiation.
 		local
-			type_list: LINKED_LIST [CLASS_TYPE]
+			type_list: LINKED_LIST [CLASS_TYPE];
+			prev_cluster: CLUSTER_I
 		do
 			if is_debuggable then
+				prev_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (written_class.cluster);
 				!!Result.make;
 				from
@@ -1823,7 +1825,8 @@ feature -- Debugging
 				loop
 					Result.extend (debuggable (type_list.item));
 					type_list.forth
-				end
+				end;
+				Inst_context.set_cluster (prev_cluster);
 			end
 		end;
 

@@ -26,7 +26,8 @@ feature -- Status report
 		do
 			Result := implementation.pointer_position
 		ensure
-			bridge_ok: Result = implementation.pointer_position
+			--bridge_ok: Result = implementation.pointer_position
+			--| FIXME IEK Doesn't hold due to reference comparison
 		end 
 
 feature -- Basic operation
@@ -144,6 +145,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/25 21:38:58  king
+--| Commented out invalid bridge_ok post-cond which doesn't hold
+--|
 --| Revision 1.11  2000/04/11 19:01:55  king
 --| Added pointer manipulation functions
 --|

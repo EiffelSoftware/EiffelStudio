@@ -56,7 +56,7 @@ feature {AST_EIFFEL} -- Output
 			end
 			ctxt.put_string_item ("%"" + verbatim_marker + "[")
 			append_format_multilined (value.twin, ctxt.text, ctxt.in_indexing_clause)
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_string_item ("]" + verbatim_marker + "%"")
 		end
 

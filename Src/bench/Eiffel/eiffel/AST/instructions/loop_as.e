@@ -150,15 +150,15 @@ feature -- Type check, byte code and dead code removal
 			end
 
 debug ("OPTIMIZATION")
-	io.error.putstring ("Recording loop in class ")
-	io.error.putstring (context.current_class.name)
-	io.error.putstring (" (")
-	io.error.putint (context.current_class.class_id)
-	io.error.putstring ("), feature ")
-	io.error.putstring (context.current_feature.feature_name)
-	io.error.putstring (" (")
-	io.error.putint (context.current_feature.body_index)
-	io.error.putstring (")%N")
+	io.error.put_string ("Recording loop in class ")
+	io.error.put_string (context.current_class.name)
+	io.error.put_string (" (")
+	io.error.put_integer (context.current_class.class_id)
+	io.error.put_string ("), feature ")
+	io.error.put_string (context.current_feature.feature_name)
+	io.error.put_string (" (")
+	io.error.put_integer (context.current_feature.body_index)
+	io.error.put_string (")%N")
 end
 				-- Record loop for optimizations in final mode
 			optimization_tables.force (create {OPTIMIZE_UNIT}. make (context.current_class.class_id,
@@ -204,45 +204,45 @@ feature {AST_EIFFEL} -- Output
 			ctxt.set_new_line_between_tokens
 			if from_part /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.format_ast (from_part)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			else
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 			if invariant_part /= Void then
 				ctxt.put_text_item (ti_Invariant_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.format_ast (invariant_part)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 			if variant_part /= Void then
 				ctxt.put_text_item (ti_Variant_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.format_ast (variant_part)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 			ctxt.put_text_item (ti_Until_keyword)
 			ctxt.indent
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.new_expression
 			ctxt.put_breakable
 			ctxt.format_ast (stop)
 			ctxt.exdent
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_text_item (ti_Loop_keyword)
 			if compound /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.format_ast (compound)
 				ctxt.exdent
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_text_item (ti_End_keyword)
 		end
 

@@ -52,9 +52,9 @@ feature -- Update
 		do
 			if a_body_index > 0 then
 				debug
-					io.error.putstring ("TMP_BODY_SERVER.desactivate ")
-					io.error.putint (a_body_index)
-					io.error.new_line
+					io.error.put_string ("TMP_BODY_SERVER.desactivate ")
+					io.error.put_integer (a_body_index)
+					io.error.put_new_line
 				end
 				useless_body_indexes.force (a_body_index)
 			end
@@ -70,9 +70,9 @@ feature -- Update
 		do
 			if a_body_index > 0 then
 				debug
-					io.error.putstring ("TMP_BODY_SERVER.reactivate ")
-					io.error.putint (a_body_index)
-					io.error.new_line
+					io.error.put_string ("TMP_BODY_SERVER.reactivate ")
+					io.error.put_integer (a_body_index)
+					io.error.put_new_line
 				end
 				l_useless := useless_body_indexes
 				if l_useless.count > 0 then
@@ -88,7 +88,7 @@ feature -- Update
 			l_useless: like useless_body_indexes
 		do
 			debug
-				io.error.putstring ("TMP_BODY_SERVER.finalize%N")
+				io.error.put_string ("TMP_BODY_SERVER.finalize%N")
 			end
 				-- Desactive useless ids
 			from
@@ -101,9 +101,9 @@ feature -- Update
 					-- Note: `remove' will get the updated id
 					-- before performing the removal.
 				debug
-					io.error.putstring ("Useless body_index: ")
-					io.error.putint (useless_body_index)
-					io.error.new_line
+					io.error.put_string ("Useless body_index: ")
+					io.error.put_integer (useless_body_index)
+					io.error.put_new_line
 				end
 					-- Remove non-used `body_index' from both
 					-- Current and BODY_SERVER, otherwise during
@@ -136,27 +136,27 @@ feature -- Debugging
 		do
 			from
 				start
-				io.error.putstring ("Keys:%N")
+				io.error.put_string ("Keys:%N")
 			until
 				after
 			loop
-				io.error.putstring ("%T")
-				io.error.putint (key_for_iteration)
-				io.error.new_line
+				io.error.put_string ("%T")
+				io.error.put_integer (key_for_iteration)
+				io.error.put_new_line
 				forth
 			end
 			from
 				useless_body_indexes.start
-				io.error.putstring ("Useless:%N")
+				io.error.put_string ("Useless:%N")
 			until
 				useless_body_indexes.after
 			loop
-				io.error.putstring ("%T")
-				io.error.putint (useless_body_indexes.item_for_iteration)
-				io.error.new_line
+				io.error.put_string ("%T")
+				io.error.put_integer (useless_body_indexes.item_for_iteration)
+				io.error.put_new_line
 				useless_body_indexes.forth
 			end
-			io.error.putstring ("O_N_TABLE:%N")
+			io.error.put_string ("O_N_TABLE:%N")
 		end
 
 feature {NONE} -- Implementation

@@ -70,11 +70,11 @@ feature -- Initialisation
 			Result := Configure_resources.get_integer (s, default_value)
 
 			debug ("CACHE_SERVER")
-				io.error.putstring ("Size of ")
-				io.error.putstring (generator)
-				io.error.putstring (" is ")
-				io.error.putint (Result)
-				io.error.new_line
+				io.error.put_string ("Size of ")
+				io.error.put_string (generator)
+				io.error.put_string (" is ")
+				io.error.put_integer (Result)
+				io.error.put_new_line
 			end
 		end;
 
@@ -124,24 +124,24 @@ feature -- Cache manipulations
 					until
 						i = j
 					loop
-						io.putint (array_count.item (i))
+						io.put_integer (array_count.item (i))
 						if i /= 0 and then i \\ 80 = 0 then
-							io.putstring (" \%N")
+							io.put_string (" \%N")
 						else
-							io.putstring("-")
+							io.put_string("-")
 						end
 						i := i + 1
 					end
 				end
 			
-				io.putstring ("%N")
-				io.putstring (generator)
-				io.putstring (" has a total of: ")
-				io.putint (Count)
-				io.putstring ("%N")
-				io.putstring ("Result of the has_id: ")
-				io.putbool (found)
-				io.putstring ("%N%N")
+				io.put_string ("%N")
+				io.put_string (generator)
+				io.put_string (" has a total of: ")
+				io.put_integer (Count)
+				io.put_string ("%N")
+				io.put_string ("Result of the has_id: ")
+				io.put_boolean (found)
+				io.put_string ("%N%N")
 			end
 
 			debug ("CACHE_STAT")
@@ -151,14 +151,14 @@ feature -- Cache manipulations
 				end
 				success_has_id := nb_has_id_succeded / nb_has_id
 				success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
-				io.putstring (generator)
-				io.putstring ("%NNumber of has_id: ")
-				io.putint (nb_has_id)
-				io.putstring ("%NProportion of has_id succeded: ")
-				io.putreal (success_has_id)
-				io.putstring ("%NProportion of access succeded: ")
-				io.putreal (success)
-				io.putstring ("%N%N")
+				io.put_string (generator)
+				io.put_string ("%NNumber of has_id: ")
+				io.put_integer (nb_has_id)
+				io.put_string ("%NProportion of has_id succeded: ")
+				io.put_real (success_has_id)
+				io.put_string ("%NProportion of access succeded: ")
+				io.put_real (success)
+				io.put_string ("%N%N")
 			end
 		end
 
@@ -204,22 +204,22 @@ feature -- Cache manipulations
 					until
 						i = j
 					loop
-						io.putint (array_count.item (i))
+						io.put_integer (array_count.item (i))
 						if i /= 0 and then i \\ 80 = 0 then
-							io.putstring (" \%N")
+							io.put_string (" \%N")
 						else
-							io.putstring("-")
+							io.put_string("-")
 						end
 						i := i + 1
 					end
 				end
-				io.putstring ("%N")
-				io.putstring (generator)
-				io.putstring (" has a total of: ")
-				io.putint (Count)
-				io.putstring ("%NResult of the item_id:")
-				io.putbool (found)
-				io.putstring ("%N%N")
+				io.put_string ("%N")
+				io.put_string (generator)
+				io.put_string (" has a total of: ")
+				io.put_integer (Count)
+				io.put_string ("%NResult of the item_id:")
+				io.put_boolean (found)
+				io.put_string ("%N%N")
 			end
 
 			debug ("CACHE_STAT")
@@ -229,14 +229,14 @@ feature -- Cache manipulations
 				end
 				success_item_id := nb_item_id_succeded / nb_item_id
 				success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
-				io.putstring (generator)
-				io.putstring ("%NNumber of item_id: ")
-				io.putint (nb_item_id)
-				io.putstring ("%NProportion of item_id succeded: ")
-				io.putreal (success_item_id)
-				io.putstring ("%NProportion of access succeded: ")
-				io.putreal (success)
-				io.putstring ("%N%N")
+				io.put_string (generator)
+				io.put_string ("%NNumber of item_id: ")
+				io.put_integer (nb_item_id)
+				io.put_string ("%NProportion of item_id succeded: ")
+				io.put_real (success_item_id)
+				io.put_string ("%NProportion of access succeded: ")
+				io.put_real (success)
+				io.put_string ("%N%N")
 			end
 		end
 	
@@ -482,7 +482,7 @@ feature {NONE} -- to implement force
 			end
 			debug ("CACHE_RESEARCH")
 				if not found then
-					io.putstring ("Be carefull: object not found%N")
+					io.put_string ("Be carefull: object not found%N")
 				end
 			end
 			if found then

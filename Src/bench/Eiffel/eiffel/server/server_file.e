@@ -56,7 +56,7 @@ feature -- Initialization
 debug ("SERVER")
 	io.error.put_string ("Creating file ")
 	io.error.put_string (file_name (i))
-	io.error.new_line
+	io.error.put_new_line
 end
 		end
 
@@ -148,7 +148,7 @@ feature -- Status setting
 debug ("SERVER")
 	io.error.put_string ("Opening file ")
 	io.error.put_string (file_name (file_id))
-	io.error.new_line
+	io.error.put_new_line
 end
 		ensure
 			opened: is_open
@@ -194,7 +194,7 @@ end
 debug ("SERVER")
 	io.error.put_string ("Closing file ")
 	io.error.put_string (file_name (file_id))
-	io.error.new_line
+	io.error.put_new_line
 end
 		ensure
 			is_closed: not is_open
@@ -280,9 +280,9 @@ feature -- Status report
 				occurrence / number_of_objects < .25)
 debug ("SERVER")
 	trace
-	io.error.putstring ("Need purging: ")
-	io.error.putbool (Result)
-	io.error.new_line
+	io.error.put_string ("Need purging: ")
+	io.error.put_boolean (Result)
+	io.error.put_new_line
 end
 		end
 
@@ -313,17 +313,17 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("File E")
-			io.error.putint (file_id)
-			io.error.putstring ("%Nnb objects: ")
-			io.error.putint (number_of_objects)
-			io.error.putstring ("%Noccurrence: ")
-			io.error.putint (occurrence)
-			io.error.putstring ("%Nsize: ")
-			io.error.putint (last_offset)
-			io.error.putstring ("%Nneed_purging: ")
-			io.error.putbool (need_purging)
-			io.error.new_line
+			io.error.put_string ("File E")
+			io.error.put_integer (file_id)
+			io.error.put_string ("%Nnb objects: ")
+			io.error.put_integer (number_of_objects)
+			io.error.put_string ("%Noccurrence: ")
+			io.error.put_integer (occurrence)
+			io.error.put_string ("%Nsize: ")
+			io.error.put_integer (last_offset)
+			io.error.put_string ("%Nneed_purging: ")
+			io.error.put_boolean (need_purging)
+			io.error.put_new_line
 		end
 
 feature -- Disposal

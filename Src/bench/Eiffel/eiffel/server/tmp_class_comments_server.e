@@ -27,11 +27,11 @@ feature -- Element change
 			-- Put object `t' in server.
 		do
 debug ("SERVER")
-	io.putstring ("Putting element of id: ");
-	io.putint (t.class_id);
-	io.putstring (" into");
-	io.putstring (generator);
-	io.new_line;
+	io.put_string ("Putting element of id: ");
+	io.put_integer (t.class_id);
+	io.put_string (" into");
+	io.put_string (generator);
+	io.put_new_line;
 end;
 				-- Write item to disk right away.
 			write (t);

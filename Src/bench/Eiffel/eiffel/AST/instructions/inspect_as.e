@@ -168,7 +168,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.indent
 			ctxt.format_ast (switch)
 			ctxt.exdent
-			ctxt.new_line
+			ctxt.put_new_line
 			if case_list /= Void then
 				ctxt.set_separator (ti_Empty)
 				ctxt.set_no_new_line_between_tokens
@@ -177,11 +177,11 @@ feature {AST_EIFFEL} -- Output
 			if else_part /= Void then
 				ctxt.put_text_item (ti_Else_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (else_part)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 			ctxt.put_text_item (ti_End_keyword)

@@ -304,21 +304,21 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			buf.putchar ('(')
+			buf.put_character ('(')
 			inspect size
-			when 8 then buf.putstring (integer_8_cast)
-			when 16 then buf.putstring (integer_16_cast)
-			when 32 then buf.putstring (integer_32_cast)
-			when 64 then buf.putstring (integer_64_cast)
+			when 8 then buf.put_string (integer_8_cast)
+			when 16 then buf.put_string (integer_16_cast)
+			when 32 then buf.put_string (integer_32_cast)
+			when 64 then buf.put_string (integer_64_cast)
 			end
 
 			if compatibility_size = 64 then
-				buf.putstring (to_integer_64.out)
+				buf.put_string (to_integer_64.out)
 			else
-				buf.putint (lower)
+				buf.put_integer (lower)
 			end
-			buf.putchar ('L')
-			buf.putchar (')')
+			buf.put_character ('L')
+			buf.put_character (')')
 		end
 
 	generate_il is

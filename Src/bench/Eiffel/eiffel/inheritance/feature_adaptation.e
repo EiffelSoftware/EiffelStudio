@@ -58,12 +58,12 @@ feature -- Debugging
 
 	trace is
 		do
-			io.error.putstring ("Adapted feature: ")
-			io.error.putstring (new_feature.feature_name)
-			io.error.new_line
-			io.error.putstring ("inherited features%N")
+			io.error.put_string ("Adapted feature: ")
+			io.error.put_string (new_feature.feature_name)
+			io.error.put_new_line
+			io.error.put_string ("inherited features%N")
 			old_features.trace
-			io.error.new_line
+			io.error.put_new_line
 		end
 
 invariant

@@ -139,7 +139,7 @@ feature -- Format
 			end
 			if not_first then
 				ctxt.exdent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.commit
 			else
 				ctxt.rollback
@@ -166,7 +166,7 @@ feature {NONE} -- Format
 					ctxt.put_classi (source_cl.lace_class)
 				end
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.continue_on_failure
 				format_assertions (ctxt, hide_breakable_marks)
@@ -195,7 +195,7 @@ feature {AST_EIFFEL} -- Output
 		do
 			if assertions /= Void then
 				put_clause_keywords (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.indent
 				simple_format_assertions (ctxt)
@@ -227,7 +227,7 @@ feature {AST_EIFFEL} -- Output
 				i := i + 1
 			end
 			if l_count > 0 then
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 			ctxt.commit
 		end

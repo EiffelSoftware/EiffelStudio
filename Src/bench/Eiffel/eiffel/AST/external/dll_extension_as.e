@@ -106,12 +106,12 @@ feature {NONE} -- Implementation
 		do
 			end_file := parse_file_name (special_part, 1)
 debug
-	io.error.putstring (special_part)
-	io.error.new_line
-	io.error.putint (special_part.count)
-	io.error.new_line
-	io.error.putint (end_file)
-	io.error.new_line
+	io.error.put_string (special_part)
+	io.error.put_new_line
+	io.error.put_integer (special_part.count)
+	io.error.put_new_line
+	io.error.put_integer (end_file)
+	io.error.put_new_line
 end
 
 			if end_file = 0 then

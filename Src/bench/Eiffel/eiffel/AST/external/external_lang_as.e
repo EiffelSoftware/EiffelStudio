@@ -124,9 +124,9 @@ feature {NONE} -- Implementation
 		do
 			source := language_name.value
 			debug
-				io.error.putstring ("Parsing ")
-				io.error.putstring (source)
-				io.error.new_line
+				io.error.put_string ("Parsing ")
+				io.error.put_string (source)
+				io.error.put_new_line
 			end
 				-- getting rid of extra blanks
 			image := source.twin
@@ -167,13 +167,13 @@ feature {NONE} -- Implementation
 			if not valid_language_name then
 				if ext_language_name = Void then
 					debug
-						io.error.putstring ("Void%N")
+						io.error.put_string ("Void%N")
 					end
 					raise_external_error ("Unrecognized external language", 1, 1)
 				else
 					debug
-						io.error.putstring (ext_language_name)
-						io.error.new_line
+						io.error.put_string (ext_language_name)
+						io.error.put_new_line
 					end
 					pos := source.substring_index (ext_language_name,1)
 					raise_external_error ("Unrecognized external language",
@@ -332,9 +332,9 @@ feature {NONE} -- Implementation
 
 				debug
 					if extension /= Void then
-						io.error.putstring ("Extension: ")
-						io.error.putstring (extension.generator)
-						io.error.new_line
+						io.error.put_string ("Extension: ")
+						io.error.put_string (extension.generator)
+						io.error.put_new_line
 					end
 				end
 
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 						extension.set_include_files (image.substring (2, image.count))
 					else
 						debug
-							io.error.putstring (image)
+							io.error.put_string (image)
 						end
 						raise_external_error ("Extra text at end of external language specification",
 							source.substring_index (image,1), source.count)

@@ -422,12 +422,12 @@ feature {AST_EIFFEL} -- Output
 			end
 			comments := ctxt.eiffel_file.current_feature_clause_comments
 			if comments = Void then
-				ctxt.new_line
+				ctxt.put_new_line
 			else
 				if comments.count > 1 then
 					ctxt.indent
 					ctxt.indent
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.put_comments (comments)
 					ctxt.exdent
 					ctxt.exdent
@@ -436,7 +436,7 @@ feature {AST_EIFFEL} -- Output
 					ctxt.put_comments (comments)
 				end
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.indent
 			ctxt.set_new_line_between_tokens
 			ctxt.set_separator (ti_Empty)

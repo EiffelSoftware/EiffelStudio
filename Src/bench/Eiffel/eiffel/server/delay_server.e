@@ -25,13 +25,13 @@ feature
 			an_id, id_to_remove: INTEGER;
 		do
 debug ("SERVER")
-	io.putstring ("Putting element of id: ");
-	io.putint (t.id);
-	io.putstring ("(");
-	io.putint (id (t))
-	io.putstring (") into");
-	io.putstring (generator);
-	io.new_line;
+	io.put_string ("Putting element of id: ");
+	io.put_integer (t.id);
+	io.put_string ("(");
+	io.put_integer (id (t))
+	io.put_string (") into");
+	io.put_string (generator);
+	io.put_new_line;
 end;
 			an_id := id (t)
 			t.set_id (an_id);
@@ -67,11 +67,11 @@ end;
 		do
 			Result := cache.item_id (an_id);
 Debug ("CACHE_COMPILER")
-	io.putstring (generator)
+	io.put_string (generator)
 	if Result = Void then
-		io.putstring ("On the disk...%N")
+		io.put_string ("On the disk...%N")
 	else
-		io.putstring ("In the cache...%N")
+		io.put_string ("In the cache...%N")
 	end
 end
 			if Result = Void then

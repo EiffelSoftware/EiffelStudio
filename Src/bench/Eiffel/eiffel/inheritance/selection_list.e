@@ -80,10 +80,10 @@ feature -- Selection
 						--| Merge routine ids from unselected features
 					Result.set_is_selected (True);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
-	io.error.putstring ("Selected feature is: ");
-	io.error.putstring (Result.feature_name);
-	io.error.putstring (Result.generator);
-	io.error.new_line;
+	io.error.put_string ("Selected feature is: ");
+	io.error.put_string (Result.feature_name);
+	io.error.put_string (Result.generator);
+	io.error.put_new_line;
 end;
 				end;
 			end;
@@ -234,9 +234,9 @@ end;
 			create rout_id_set.make
 			feature_name_id := a_feature.feature_name_id;	
 debug ("REPLICATION", "ACTUAL_REPLICATION")
-	io.error.putstring ("unselecting :");
-	io.error.putstring (a_feature.feature_name);
-	io.error.new_line;
+	io.error.put_string ("unselecting :");
+	io.error.put_string (a_feature.feature_name);
+	io.error.put_new_line;
 end;
 			old_feature := old_t.item_id (feature_name_id);
 				-- Process a new routine id
@@ -262,11 +262,11 @@ end;
 				if not selected_rout_id_set.has (rid) then
 					rout_id_set.force (rid);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
-	io.error.putstring ("%T");
-	io.error.putstring (System.current_class.class_signature);
-	io.error.putstring (", ");
-	io.error.putstring (a_feature.feature_name);
-	io.error.putstring (" is unselected and has a history%N");
+	io.error.put_string ("%T");
+	io.error.put_string (System.current_class.class_signature);
+	io.error.put_string (", ");
+	io.error.put_string (a_feature.feature_name);
+	io.error.put_string (" is unselected and has a history%N");
 end;
 				end;
 				i := i + 1;
@@ -342,30 +342,30 @@ feature -- Trace
 if item.a_feature.written_class > System.any_class.compiled_class and
 		item.a_feature /= Void then
 				if item.parent = Void then
-					io.error.putstring ("VOID");
+					io.error.put_string ("VOID");
 				else
-					io.error.putstring (item.parent.class_name);
+					io.error.put_string (item.parent.class_name);
 				end;
-				io.error.putstring (": ");
-				io.error.putstring (item.a_feature.generator);
-				io.error.putstring (item.a_feature.feature_name);
-				--io.error.putchar (' ');
+				io.error.put_string (": ");
+				io.error.put_string (item.a_feature.generator);
+				io.error.put_string (item.a_feature.feature_name);
+				--io.error.put_character (' ');
 				item.a_feature.rout_id_set.trace;
-				io.error.putstring (" {body_index = ");
-				io.error.putint (item.a_feature.body_index)
-				io.error.putstring ("} written class: ");
-				io.error.putstring (item.a_feature.written_class.name);
-				io.error.new_line;
-				io.error.putstring ("Written in feature name: ");
+				io.error.put_string (" {body_index = ");
+				io.error.put_integer (item.a_feature.body_index)
+				io.error.put_string ("} written class: ");
+				io.error.put_string (item.a_feature.written_class.name);
+				io.error.put_new_line;
+				io.error.put_string ("Written in feature name: ");
 
 	if System.Feat_tbl_server.has (item.a_feature.written_in) then
-				io.error.putstring
+				io.error.put_string
 (item.a_feature.written_class.feature_table.feature_of_body_index
 (item.a_feature.body_index).feature_name);
 	else
-				io.error.putstring ("Dunno");
+				io.error.put_string ("Dunno");
 	end;
-				io.error.new_line;
+				io.error.put_new_line;
 end;
 				forth;
 			end;

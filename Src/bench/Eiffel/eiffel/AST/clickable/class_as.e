@@ -403,31 +403,31 @@ feature -- Formatting
 			ctxt.set_classes (void, void)
 			format_header (ctxt)
 			if ctxt.is_clickable_format and obsolete_message /= Void then
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.put_text_item (ti_Before_obsolete)
 				ctxt.put_text_item_without_tabs (ti_Obsolete_keyword)
 				ctxt.put_space
 				obsolete_message.format (ctxt)
 				ctxt.put_text_item_without_tabs (ti_After_obsolete)
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 			if ctxt.is_clickable_format and parents /= Void then
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.put_text_item (ti_Before_inheritance)
 				ctxt.put_text_item_without_tabs (ti_Inherit_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.set_separator (ti_New_line)
 				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 				parents.format (ctxt)
 				ctxt.set_classes (Void, Void)
 				ctxt.put_text_item (ti_After_inheritance)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 
-			ctxt.new_line
+			ctxt.put_new_line
 
 			if creators /= Void then
 				ctxt.put_text_item (ti_Before_creators)
@@ -435,10 +435,10 @@ feature -- Formatting
 				creators.format (ctxt)
 				if not ctxt.last_was_printed then
 					ctxt.put_text_item (ti_Create_keyword)
-					ctxt.new_line
+					ctxt.put_new_line
 				end
 				ctxt.put_text_item (ti_After_creators)
-				ctxt.new_line
+				ctxt.put_new_line
 					-- We reset `ctxt' so that we can print again.
 				ctxt.set_last_was_printed (True)
 			end;
@@ -453,7 +453,7 @@ feature -- Formatting
 			ctxt.end_class_text
 			ctxt.put_text_item (ti_After_class_end)
 			ctxt.put_text_item (ti_After_class_declaration)
-			ctxt.new_line
+			ctxt.put_new_line
 		end
 
 	format_indexes (ctxt: FORMAT_CONTEXT; i: EIFFEL_LIST [INDEX_AS]) is
@@ -465,14 +465,14 @@ feature -- Formatting
 				ctxt.put_text_item (ti_Before_indexing)
 				ctxt.put_text_item (ti_Indexing_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
 				i.format (ctxt)
 				ctxt.put_text_item (ti_After_indexing)
 				ctxt.exdent
-				ctxt.new_line
-				ctxt.new_line
+				ctxt.put_new_line
+				ctxt.put_new_line
 			end
 		end
 
@@ -495,12 +495,12 @@ feature -- Formatting
 				ctxt.put_text_item (ti_Interface_keyword)
 			end
 			ctxt.indent
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_classi (ctxt.class_c.lace_class)
 			ctxt.put_text_item (ti_After_class_header)
 			ctxt.exdent
 			format_generics (ctxt)
-			ctxt.new_line
+			ctxt.put_new_line
 		end
 
 	format_generics (ctxt: FORMAT_CONTEXT) is
@@ -528,15 +528,15 @@ feature -- Formatting
 			if convertors /= Void then
 				ctxt.put_text_item (Ti_convert_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 				ctxt.set_separator (Ti_comma)
 				convertors.simple_format (ctxt)
 				ctxt.set_separator (Ti_empty)
 				ctxt.exdent
-				ctxt.new_line
-				ctxt.new_line
+				ctxt.put_new_line
+				ctxt.put_new_line
 			end
 		end
 		
@@ -648,7 +648,7 @@ feature {COMPILER_EXPORTER} -- Output
 			end
 			ctxt.put_text_item (ti_Class_keyword)
 			ctxt.indent
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_class_name (class_name)
 			ctxt.exdent
 
@@ -660,33 +660,33 @@ feature {COMPILER_EXPORTER} -- Output
 				generics.simple_format (ctxt)
 				ctxt.put_text_item_without_tabs (ti_R_bracket)
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 
 			if obsolete_message /= Void then
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.put_text_item (ti_Obsolete_keyword)
 				ctxt.put_space
 				obsolete_message.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 
 			if parents /= Void then
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.put_text_item (ti_Inherit_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.set_separator (ti_Semi_colon)
 				parents.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 
-			ctxt.new_line
+			ctxt.put_new_line
 
 			if creators /= Void then
 				creators.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 
 			format_convert_clause (ctxt)
@@ -695,7 +695,7 @@ feature {COMPILER_EXPORTER} -- Output
 				ctxt.set_new_line_between_tokens
 				ctxt.set_separator (ti_Empty)
 				features_simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 
 			if invariant_part /= Void then
@@ -711,7 +711,7 @@ feature {COMPILER_EXPORTER} -- Output
 
 			ctxt.put_space
 			ctxt.put_class_name (class_name)
-			ctxt.new_line
+			ctxt.put_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -690,17 +690,17 @@ feature -- Context format
 			comments: EIFFEL_COMMENTS
 		do
 			if ctxt.is_feature_short then
-				ctxt.new_line
+				ctxt.put_new_line
 			else
 				ctxt.put_space
 				ctxt.put_text_item_without_tabs (ti_Is_keyword)
-				ctxt.new_line
+				ctxt.put_new_line
 				if obsolete_message /= Void then
 					ctxt.indent
 					ctxt.put_text_item (ti_Obsolete_keyword)
 					ctxt.put_space
 					obsolete_message.format (ctxt)
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.exdent
 				end
 			end
@@ -727,9 +727,9 @@ feature -- Context format
 					ctxt.set_separator (Void)
 					ctxt.indent
 					ctxt.set_new_line_between_tokens
-					ctxt.new_line
+					ctxt.put_new_line
 					locals.format (ctxt)
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.exdent
 				end
 				if routine_body /= Void then
@@ -748,12 +748,12 @@ feature -- Context format
 				if rescue_clause /= Void then
 					ctxt.put_text_item (ti_Rescue_keyword)
 					ctxt.indent
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.set_separator (Void)
 					ctxt.set_new_line_between_tokens
 					rescue_clause.format (ctxt)
 					ctxt.exdent
-					ctxt.new_line
+					ctxt.put_new_line
 				end
 				if
 					not is_deferred and
@@ -776,14 +776,14 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_Is_keyword)
-			ctxt.new_line
+			ctxt.put_new_line
 
 			if obsolete_message /= Void then
 				ctxt.indent
 				ctxt.put_text_item (ti_Obsolete_keyword)
 				ctxt.put_space
 				obsolete_message.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 
@@ -805,9 +805,9 @@ feature {AST_EIFFEL} -- Output
 				ctxt.set_separator (ti_Empty)
 				ctxt.indent
 				ctxt.set_new_line_between_tokens
-				ctxt.new_line
+				ctxt.put_new_line
 				locals.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 			if routine_body /= Void then
@@ -819,9 +819,9 @@ feature {AST_EIFFEL} -- Output
 			if rescue_clause /= Void then
 				ctxt.put_text_item (ti_Rescue_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				rescue_clause.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 				ctxt.put_breakable
 			end

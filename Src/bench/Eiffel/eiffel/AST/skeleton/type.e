@@ -102,7 +102,7 @@ feature -- Output
 
 	trace is
 		do
-			io.error.putstring (dump);
+			io.error.put_string (dump);
 		end;
 
 	dump: STRING is

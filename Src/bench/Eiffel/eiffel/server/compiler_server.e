@@ -45,8 +45,8 @@ feature
 			-- Set `current_file_id' to a new value.
 		do
 debug ("SERVER")
-	io.error.putstring (generator)
-	io.error.putstring (" set_current_file_id%N")
+	io.error.put_string (generator)
+	io.error.put_string (" set_current_file_id%N")
 end
 			Server_controler.compute_new_id
 			current_file_id := Server_controler.last_computed_id
@@ -71,13 +71,13 @@ end
 			old_item: T
 		do
 debug ("SERVER")
-	io.putstring ("Putting element of id: ")
-	io.putint (t.id)
-	io.putstring ("(")
-	io.putint (id (t))
-	io.putstring (") into")
-	io.putstring (generator)
-	io.new_line
+	io.put_string ("Putting element of id: ")
+	io.put_integer (t.id)
+	io.put_string ("(")
+	io.put_integer (id (t))
+	io.put_string (") into")
+	io.put_string (generator)
+	io.put_new_line
 end
 				-- Update id of element
 			t.set_id (id (t))
@@ -351,9 +351,9 @@ end
 			new := twin
 			new.make
 debug ("SERVER")
-	io.putstring ("===== Purging: ")
-	io.putstring (generator)
-	io.putstring (" =====%N")
+	io.put_string ("===== Purging: ")
+	io.put_string (generator)
+	io.put_string (" =====%N")
 end
 			from
 					-- Iterate on items sorted by file ids so the purge
@@ -367,7 +367,7 @@ end
 debug ("SERVER")
 	io.put_string ("File: ")
 	print (file_id)
-	io.new_line
+	io.put_new_line
 end
 				from
 					start
@@ -382,7 +382,7 @@ end
 							new.put_precompiled (file_id, an_id, old_info)
 						else
 debug ("SERVER")
-	io.putstring ("%TTransferring one element")
+	io.put_string ("%TTransferring one element")
 end
 								-- Put in purged server alive item	
 							new.write (item (an_id))
@@ -390,9 +390,9 @@ end
 								-- Remove occurrence from file where item was stored
 							old_server_file.remove_occurrence
 debug ("SERVER")
-	io.putstring (". Occurrences are now: ")
-	io.putint (old_server_file.occurrence)
-	io.new_line
+	io.put_string (". Occurrences are now: ")
+	io.put_integer (old_server_file.occurrence)
+	io.put_new_line
 end
 						end
 					end
@@ -401,7 +401,7 @@ end
 				old_server_file := Server_controler.file_of_id (file_id)
 				if old_server_file /= Void then
 debug ("SERVER")
-	io.putstring ("==> Removing the file%N")
+	io.put_string ("==> Removing the file%N")
 end
 				if not old_server_file.precompiled then
 					Server_controler.remove_file (old_server_file)
@@ -425,8 +425,8 @@ end
 			dead_files: LINKED_SET [SERVER_FILE]
 		do
 debug ("SERVER")
-	io.error.putstring ("partial_purge")
-	io.error.new_line
+	io.error.put_string ("partial_purge")
+	io.error.put_new_line
 end
 			flush
 
@@ -443,11 +443,11 @@ end
 				if old_server_file.need_purging then
 						-- Avoid side effects on the iteration
 debug ("SERVER")
-	io.error.putstring ("Marking id ")
-	io.error.putint (an_id)
-	io.error.putstring (" from ")
-	io.error.putint (old_server_file.file_id)
-	io.error.new_line
+	io.error.put_string ("Marking id ")
+	io.error.put_integer (an_id)
+	io.error.put_string (" from ")
+	io.error.put_integer (old_server_file.file_id)
+	io.error.put_new_line
 end
 					live_ids.extend (an_id)
 					live_ids.forth
@@ -462,9 +462,9 @@ end
 				live_ids.after
 			loop
 debug ("SERVER")
-	io.error.putstring ("Rewritting id ")
-	io.error.putint (live_ids.item)
-	io.error.new_line
+	io.error.put_string ("Rewritting id ")
+	io.error.put_integer (live_ids.item)
+	io.error.put_new_line
 end
 				write (item (live_ids.item))
 				live_ids.forth
@@ -476,9 +476,9 @@ end
 			loop
 				old_server_file := dead_files.item
 debug ("SERVER")
-	io.error.putstring ("Deleting file ")
-	io.error.putint (old_server_file.file_id)
-	io.error.new_line
+	io.error.put_string ("Deleting file ")
+	io.error.put_integer (old_server_file.file_id)
+	io.error.put_new_line
 	old_server_file.trace
 end
 				check

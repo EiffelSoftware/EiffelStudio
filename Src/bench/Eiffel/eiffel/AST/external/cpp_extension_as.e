@@ -243,9 +243,9 @@ feature {NONE} -- Implementation
 			class_header_file: STRING
 		do
 debug
-	io.error.putstring ("Parsing special part: ")
-	io.error.putstring (special_part)
-	io.error.new_line
+	io.error.put_string ("Parsing special part: ")
+	io.error.put_string (special_part)
+	io.error.put_new_line
 end
 			special := special_part
 

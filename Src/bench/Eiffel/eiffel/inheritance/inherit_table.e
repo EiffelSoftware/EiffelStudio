@@ -318,11 +318,11 @@ feature
 						-- the clients using !! without a creation routine
 						-- must be recompiled
 debug ("ACTIVITY")
-	io.error.putstring ("Insert -1 in the propagators%N");
+	io.error.put_string ("Insert -1 in the propagators%N");
 	if new_creators /= Void then
-		io.error.putstring ("Creators have been added");
+		io.error.put_string ("Creators have been added");
 	else
-		io.error.putstring ("The class is now deferred%N");
+		io.error.put_string ("The class is now deferred%N");
 	end;
 end;
 					if a_class.is_used_as_expanded then
@@ -351,9 +351,9 @@ end;
 								-- The routine is not a creation routine any more
 								-- or the export status has changed
 debug ("ACTIVITY")
-	io.error.putstring ("Creators: ");
-	io.error.putstring (creation_name);
-	io.error.putstring (" inserted in pass2_control.propagators%N");
+	io.error.put_string ("Creators: ");
+	io.error.put_string (creation_name);
+	io.error.put_string (" inserted in pass2_control.propagators%N");
 end;
 							create depend_unit.make (a_class.class_id, resulting_table.found_item);
 							pass2_control.propagators.extend (depend_unit);
@@ -921,9 +921,9 @@ end;
 		do
 			feature_name_id := feat.internal_name_id;
 debug ("ACTIVITY")
-	io.error.putstring ("FEATURE_UNIT on ");
-	io.error.putstring (feat.internal_name);
-	io.error.new_line;
+	io.error.put_string ("FEATURE_UNIT on ");
+	io.error.put_string (feat.internal_name);
+	io.error.put_new_line;
 end;
 
 			Result := yacc_feature.new_feature;
@@ -939,9 +939,9 @@ end;
 				integer_value.set_lower (class_info.unique_values.item (Result.feature_name));
 				unique_feature.set_value (integer_value);
 debug ("ACTIVITY")
-	io.error.putstring ("Value: ");
-	io.error.putint (integer_value.value);
-	io.error.new_line;
+	io.error.put_string ("Value: ");
+	io.error.put_integer (integer_value.value);
+	io.error.put_new_line;
 end;
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class. Freeze is taken care by
@@ -968,7 +968,7 @@ end;
 					is_the_same := old_description.is_assertion_equiv (yacc_feature);
 debug ("ACTIVITY")
 	if not is_the_same then
-		io.error.putstring ("%Tassertions has syntactically changed%N");
+		io.error.put_string ("%Tassertions has syntactically changed%N");
 	end;
 end;
 					if not is_the_same then
@@ -1000,10 +1000,10 @@ end;
 debug ("ACTIVITY")
 	if not is_the_same then
 		if not old_description.is_body_equiv (yacc_feature) then
-			io.error.putstring ("%Tbody is not equiv%N");
+			io.error.put_string ("%Tbody is not equiv%N");
 		end;
 --		if not Result.same_interface (feature_i) then
---			io.error.putstring ("%TInterface has changed%N");
+--			io.error.put_string ("%TInterface has changed%N");
 --		end;
 	end;
 end;
@@ -1023,15 +1023,15 @@ end;
 							-- The status of one of the suppliers of the feature has changed
 				then
 debug ("ACTIVITY")
-	io.error.putstring ("Is the same ");
-	io.error.putbool (is_the_same);
-	io.error.putstring ("%Nsupplier_status_modified ");
-	io.error.putbool (supplier_status_modified);
-	io.error.putstring ("%Nchanged status ");
-	io.error.putbool (not Degree_4.changed_status.disjoint (feature_i.suppliers));
-	io.error.putstring ("%Nold_feature_in_class ");
-	io.error.putbool (old_feature_in_class);
-	io.error.new_line;
+	io.error.put_string ("Is the same ");
+	io.error.put_boolean (is_the_same);
+	io.error.put_string ("%Nsupplier_status_modified ");
+	io.error.put_boolean (supplier_status_modified);
+	io.error.put_string ("%Nchanged status ");
+	io.error.put_boolean (not Degree_4.changed_status.disjoint (feature_i.suppliers));
+	io.error.put_string ("%Nold_feature_in_class ");
+	io.error.put_boolean (old_feature_in_class);
+	io.error.put_new_line;
 end;
 
 						-- Update `read_info' in BODY_SERVER
@@ -1264,11 +1264,11 @@ end;
 							create join.make (inherit_feat, inherited_feature);
 							adaptations.put_front (join);
 debug ("ACTIVITY")
-	io.putstring ("joining feature: ");
-	io.putstring (inherited_feature.feature_name);
-	io.putstring ("%N%Tfrom class: ");
-	io.putstring (inherited_feature.written_class.name);
-	io.new_line;
+	io.put_string ("joining feature: ");
+	io.put_string (inherited_feature.feature_name);
+	io.put_string ("%N%Tfrom class: ");
+	io.put_string (inherited_feature.written_class.name);
+	io.put_new_line;
 end;
 						end;
 					end;

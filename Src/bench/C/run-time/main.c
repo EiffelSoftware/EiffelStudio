@@ -110,6 +110,9 @@ long EIF_bonce_count;	/* Nr. of once routines in bytecode */
 char **EIF_once_values;
 #endif
 
+char starting_working_directory [MAX_PATH];	/* Store the working directory during the session, */
+							/* ie where to put output files from the runtime */
+
 rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT
@@ -190,6 +193,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef EIF_WIN32
 	static char module_name [255] = {0};
+
+		/* Get the current working directory, ie the one where we
+		/* are going to save the ouput files */
+	if (getcwd(starting_working_directory, MAX_PATH) == NULL)
+		print_err_msg(stderr, "Unable to get the current working directory.\n");
 
 	_fmode = O_BINARY;
 	GetModuleFileName (NULL, module_name, 255);

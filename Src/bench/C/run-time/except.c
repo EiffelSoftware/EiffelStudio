@@ -244,13 +244,6 @@ rt_private int ex_tagc[] = {
 	EN_OSTK,		/* EX_OSTK */
 };
 
-#ifndef EIF_THREADS
-#ifdef EIF_WINDOWS
-char *exception_trace_string = NULL;	/* %%zmt */
-#endif
-#endif /* EIF_THREADS */
-
-
 /* Strings used as separator for Eiffel stack dumps */
 rt_private char *retried =
 "===============================================================================";
@@ -1535,12 +1528,6 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	/* Display exception stack only if print_history_table is true */
 	if (!print_history_table)
 		return;
-
-#ifdef EIF_WIN32
-	exception_trace_string = eif_malloc (32000);
-	if (exception_trace_string != NULL)
-		*exception_trace_string = '\0';
-#endif
 
 	/* Signals failure. If the out of memory flags are set, mention it */
 	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);

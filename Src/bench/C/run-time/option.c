@@ -44,8 +44,6 @@ rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 */
 
 rt_public struct stack *prof_stack;
-static char cwd [MAX_PATH];	/* Store the working directory during the session, */
-							/* ie where to put the profile_output_file */
 
 extern EIF_INTEGER prof_enabled;
 
@@ -472,12 +470,6 @@ void initprf(void)
 	 */
 
 	if(prof_enabled) {
-			/* Get the current working directory, ie the one where we
-			/* are going to save the profile_ouput_file */
-
-		if (getcwd(cwd, MAX_PATH) == NULL)
-			print_err_msg(stderr, "Unable to get the current working directory.\n");
-
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
@@ -530,7 +522,7 @@ void exitprf(void)
 			
 		double percentage; /* the computed percentage of each routine */
 		
-		chdir (cwd);	/* change the current directory to EIFGEN/W_code or
+		chdir (starting_working_directory);	/* change the current directory to EIFGEN/W_code or
 						/* EIFGEN/F_code before to crete the profile_output_file */
 
 #ifdef HAS_GETRUSAGE

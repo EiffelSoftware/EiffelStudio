@@ -139,7 +139,7 @@ EIF_BOOLEAN c_is_file_name_valid (p)
 EIF_POINTER p;
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
-#ifdef EIF_WIN_3_1
+#ifdef EIF_WIN_31
 #define MAX_FILE_LEN 12
 #else
 #define MAX_FILE_LEN 256
@@ -152,7 +152,7 @@ EIF_POINTER p;
 	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > MAX_FILE_LEN) )
 		return EIF_FALSE;
 
-#ifdef EIF_WIN_3_1
+#ifdef EIF_WIN_31
 	dot = 0;
 	for (i = 0, s = p; i < len; i++, s++)
 		if (*s == '.')
@@ -194,7 +194,7 @@ EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid extension */
 #if defined EIF_WINDOWS || defined EIF_OS2
-#ifdef EIF_WIN_3_1
+#ifdef EIF_WIN_31
 	if ((p == NULL) || (strlen(p) > 3) || (strchr (p, '.') != 0) )
 		return EIF_FALSE;
 #else

@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLLBAR_M 
+class 
+	SCROLLBAR_M 
 
 inherit
 
@@ -46,11 +47,12 @@ feature {NONE} -- Initialization
 
 	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scrollbar.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_scroll_make (a_scrollbar.identifier,
-                    mel_parent (a_scrollbar, widget_index),
-                    man);
+			mel_scroll_make (a_scrollbar.identifier, mc, man)
 		end;
 
 feature -- Status report
@@ -102,14 +104,14 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
 		do
-            add_drag_callback (mel_vision_callback (a_command), argument)
+			add_drag_callback (mel_vision_callback (a_command), argument)
 		end; 
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		do
-            add_value_changed_callback (mel_vision_callback (a_command), argument)
+			add_value_changed_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Removal
@@ -118,14 +120,14 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
-            remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_drag_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
-            remove_value_changed_callback (mel_vision_callback (a_command), argument)
+			remove_value_changed_callback (mel_vision_callback (a_command), argument)
 		end;
 
 end -- class SCROLLBAR_M

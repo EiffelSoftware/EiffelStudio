@@ -44,10 +44,11 @@ inherit
 	WEL_TREE_VIEW_ITEM
 		rename
 			text as wel_text,
-			set_text as wel_set_text,
 			make as wel_make,
 			children as children_nb,
 			item as wel_item
+		redefine
+			set_text
 		end
 
 	WEL_TVIS_CONSTANTS
@@ -84,14 +85,6 @@ feature {NONE} -- Initialization
 			create internal_children.make (1)
 			is_initialized := True
 		end
-
-	--make_with_text (txt: STRING) is
-	--		-- Create a row with text in it.
-	--	do
-	--		wel_make
-	--		set_mask (Tvif_text + Tvif_state + Tvif_handle)
-	--		set_text (txt)
-	--	end
 
 feature -- Access
 
@@ -221,8 +214,8 @@ feature -- Element change
 		do
 			-- First we set localy the text
 			set_mask (Tvif_text)
-			text := txt
-			wel_set_text (txt)
+			text := clone (txt)
+			Precursor (txt)
 			-- Then, we update the graphical tree.
 			tree := top_parent_imp
 			if tree /= Void then
@@ -383,7 +376,7 @@ feature {NONE} -- Implementation
 			-- Add `item_imp' to the list
 		do
 			if top_parent_imp /= Void then
-				top_parent_imp.general_insert_item (item_imp, h_item, Tvi_last)
+				top_parent_imp.general_insert_item (item_imp, h_item, Tvi_last, index)
 			else
 				internal_children.extend (item_imp)
 			end
@@ -394,9 +387,9 @@ feature {NONE} -- Implementation
 		do
 			if top_parent_imp /= Void then
 				if index = 1 then
-					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first)
+					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first, pos)
 				else
-					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index - 1)).h_item)
+					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index - 1)).h_item, pos)
 				end
 			else
 				internal_children.go_i_th (pos)
@@ -442,6 +435,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/08 17:33:44  rogers
+--| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now sets the text to a clone of the passed text. All calls to general_insert_item now take an index.
+--|
 --| Revision 1.30  2000/03/07 17:43:18  rogers
 --| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. The same type change has been implemented for parent_imp, and insert item now takes EV_TREE_ITEM_IMP instead of like item_type.
 --|

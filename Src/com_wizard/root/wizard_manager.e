@@ -100,7 +100,6 @@ feature -- Basic Operations
 			elseif shared_wizard_environment.idl then
 				set_parent (parent)
 				initialize_log_file
-				parent.disable
 				set_title (Idl_compilation_title)
 				start
 				set_range (5)
@@ -150,7 +149,6 @@ feature -- Basic Operations
 			else
 				set_parent (parent)
 				initialize_log_file
-				parent.disable
 				generate
 			end
 			close_log_file
@@ -176,7 +174,7 @@ feature {NONE} -- Implementation
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 
 			intialize_file_directories
-			if directories_initialized then
+			if directories_initialized and not Shared_wizard_environment.abort then
 				parent.add_title (Generation_title)
 				from
 					system_descriptor.start
@@ -215,7 +213,11 @@ feature {NONE} -- Implementation
 					system_descriptor.forth
 				end
 				report_finish
-				parent.enable
+				if Shared_wizard_environment.abort then
+					parent.add_message (Generation_Aborted)
+				else
+					parent.add_message (Generation_Successful)
+				end
 			end
 		end
 		

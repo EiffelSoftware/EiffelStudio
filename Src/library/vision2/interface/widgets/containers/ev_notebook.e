@@ -81,6 +81,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tab_position
+		ensure
+			bridge_ok: Result = implementation.tab_position
 		end
 
 feature -- Status setting

@@ -24,26 +24,13 @@ public class GENERIC_CONFORMANCE {
 		// to be done in current context.
 	{
 		GENERIC_TYPE computed_type;
-		TYPE type;
-		FORMAL_TYPE formal_type;
-		CLASS_TYPE[] type_array;
 		EIFFEL_DERIVATION derivation;
 
 		if (a_type is GENERIC_TYPE) {
 				// We are handling a generic type.
-			computed_type = (GENERIC_TYPE) a_type;
-			type_array = new CLASS_TYPE [computed_type.nb_generics];
-			for (int i = 0; i < computed_type.nb_generics; i ++) {
-				type = computed_type.type_array [i];
-				if (type is FORMAL_TYPE) {
-					formal_type = (FORMAL_TYPE) type;
-					type_array [i] = a_current.____type().generics_type [formal_type.position - 1];
-				} else {
-					type_array [i] = (CLASS_TYPE) type;
-				}
-			}
+			computed_type = (GENERIC_TYPE) a_type.evaluated_type (a_current);
 			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
-				type_array);
+				(CLASS_TYPE []) computed_type.type_array);
 			a_target_object.____set_type (derivation);
 		} else {
 				// Normal class type, nothing special needs to be done.
@@ -59,22 +46,14 @@ public class GENERIC_CONFORMANCE {
 		// object and assign it to `obj'. We use `current' in case some research needs
 		// to be done in current context.
 	{
-		CLASS_TYPE[] type_array;
 		CLASS_TYPE type_to_create;
-		TYPE type;
 		GENERIC_TYPE computed_type;
-		FORMAL_TYPE formal_type;
 		EIFFEL_DERIVATION derivation;
 		ConstructorInfo constructor;
 		EIFFEL_TYPE_INFO Result;
 
-		if (a_type is FORMAL_TYPE) {
-			formal_type = (FORMAL_TYPE) a_type;
-				// Get type of formal in context of `a_current' object.
-			type_to_create = a_current.____type().generics_type [formal_type.position - 1];
-		} else {
-			type_to_create = (CLASS_TYPE) a_type;
-		}
+			// Evaluate type in context of Current object.
+		type_to_create = (CLASS_TYPE) a_type.evaluated_type (a_current);
 
 			// Create new object of type `type_to_create'.
 		constructor = Type.GetTypeFromHandle (type_to_create.type).GetConstructor (Type.EmptyTypes);
@@ -82,19 +61,9 @@ public class GENERIC_CONFORMANCE {
 
 			// Properly initializes `Result'.
 		if (type_to_create is GENERIC_TYPE) {
-			computed_type = (GENERIC_TYPE) type_to_create;
-			type_array = new CLASS_TYPE [computed_type.nb_generics];
-			for (int i = 0; i < computed_type.nb_generics; i ++) {
-				type = computed_type.type_array [i];
-				if (type is FORMAL_TYPE) {
-					formal_type = (FORMAL_TYPE) type;
-					type_array [i] = a_current.____type().generics_type [formal_type.position - 1];
-				} else {
-					type_array [i] = (CLASS_TYPE) type;
-				}
-			}
+			computed_type = (GENERIC_TYPE) a_type.evaluated_type (a_current);
 			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
-				type_array);
+				(CLASS_TYPE []) computed_type.type_array);
 			Result.____set_type (derivation);
 		}
 		return Result;

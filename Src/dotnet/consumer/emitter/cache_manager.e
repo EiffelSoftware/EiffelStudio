@@ -15,6 +15,7 @@ inherit
 		export 
 			{NONE} all
 			{CACHE_MANAGER} clr_version
+			{ANY} compact_and_clean_cache
 		undefine
 			start
 		end
@@ -153,7 +154,7 @@ feature -- Basic Oprtations
 			Result := cache_writer.consumed_assembly_from_path (a_path)
 		ensure
 			non_void_result: Result /= Void
-		end
+		end		
 
 feature {NONE} -- Basic Operations
 

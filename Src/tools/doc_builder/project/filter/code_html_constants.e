@@ -27,6 +27,26 @@ feature -- File	Location
 			l_file_path.extend ("HTMLEmptyTemplate.html")
 			Result := l_file_path.string
 		end	
+		
+	left_context_html_template_file_name: STRING is
+			-- HTML template file for left side context (i.e filter and TOC information)
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLLeftContextTemplate.html")
+			Result := l_file_path.string
+		end	
+		
+	web_help_project_template_file_name: STRING is
+			-- HTML template file for web based help project
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("WebHelpTemplate.html")
+			Result := l_file_path.string
+		end	
 
 	header_xml_template_file_name: STRING is
 			-- Header XML template file
@@ -80,6 +100,15 @@ feature -- Access
 	
 	html_navigation_token: STRING is "[!Navigation!]"
 			-- Token to replace with document navigation
+	
+	html_filter_token: STRING is "[!FilterHTML!]"
+			-- Token to replace with document HTML filter
+	
+	html_toc_token: STRING is "[!TOCHTML!]"
+			-- Token to replace with document HTML toc
+	
+	html_default_toc: STRING is "[!DefaultTOC!]"
+			-- Token to replace default document toc
 	
 	chart_suffix: STRING is "_chart"
 			-- Suffix for code chart view files

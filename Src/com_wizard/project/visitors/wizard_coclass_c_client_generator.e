@@ -51,7 +51,7 @@ feature -- Implementation
 			create default_member.make
 			default_member.set_name (Iunknown_variable_name)
 			default_member.set_result_type (Iunknown_pointer)
-			default_member.set_comment ("Default IUnknown interface pointer")
+			default_member.set_comment (Default_iunknown_variable_comment)
 			cpp_class_writer.add_member (default_member, Private)
 
 			-- Default header files include global variables and required header files
@@ -68,7 +68,7 @@ feature -- Implementation
 				tmp_string.append (Space)
 				tmp_string.append (Asterisk)
 				default_member.set_result_type (tmp_string)
-				default_member.set_comment ("Exception information")
+				default_member.set_comment (Excepinfo_variable_comment)
 				cpp_class_writer.add_member (default_member, Private)
 				cpp_class_writer.add_function (ccom_last_error_code_function, Public)
 				cpp_class_writer.add_function (ccom_last_source_of_exception_function, Public)

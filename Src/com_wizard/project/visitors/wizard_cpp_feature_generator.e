@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
-			Result.append ("char * arg_no;")
+			Result.append ("char * arg_no = 0;")
 			Result.append (New_line_tab_tab)
 			Result.append ("_itoa (nArgErr, arg_no, 10);")
 			Result.append (New_line_tab_tab)

@@ -23,13 +23,24 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef EIF_OS2
+#include <io.h>
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
 
 #ifdef I_UTIME
 #include <utime.h>
 #endif
+
+#ifdef I_SYSUTIME
+#include <sys/utime.h>
+#endif
+
 
 #ifdef __VMS
 #define lib$rename_file		LIB$RENAME_FILE
@@ -198,7 +209,7 @@ int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
@@ -211,7 +222,7 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
@@ -228,7 +239,7 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#if defined  EIF_WINDOWS  ||  __VMS
+#if defined  EIF_WINDOWS  ||  __VMS || defined EIF_OS2
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
@@ -982,7 +993,7 @@ int op;
 
     switch (op) {
 	case 0: /* Is file readable */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_BOOLEAN)((mode && S_IREAD) ? '\01' : '\0');
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1002,7 +1013,7 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 	case 1: /* Is file writable */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1022,7 +1033,7 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
 	case 2: /* Is file executable */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_BOOLEAN) '\01';
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1042,7 +1053,7 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 	case 3: /* Is file setuid */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISUID) ? '\01' : '\0');
@@ -1130,7 +1141,7 @@ char *to;
 	int status;			/* System call status */
 	
 	for (;;) {
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 		if (file_exists (to))			/* To have the same behavior as Unix */
 			remove (to);
 #endif
@@ -1182,7 +1193,11 @@ char *path;
 	
 	for (;;) {
 		errno = 0;			/* Reset error condition */
+#ifdef EIF_OS2
+		status = mkdir(path);		/* Create directory `path' */
+#else
 		status = mkdir(path, 0777);	/* Create directory `path' */
+#endif
 		if (status == -1) {		/* An error occurred */
 			if (errno == EINTR)	/* Interrupted by signal */
 				continue;	/* Re-issue system call */
@@ -1331,7 +1346,7 @@ int flag;		/* Add (1) or remove (0) permissions */
 		while (*what)
 			switch (*what++) {
 			case 's':
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 #else
 				if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
 #endif
@@ -1353,7 +1368,7 @@ int flag;		/* Add (1) or remove (0) permissions */
 		while (*what)
 			switch (*what++) {
 			case 't':
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 #else
 				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
 #endif
@@ -1490,7 +1505,7 @@ char *path;
 		strcpy (temp, "[]");
 #else	/* vms */
 	strcpy (temp, path);
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	ptr = rindex(temp, '\\');
 #else
 	ptr = rindex(temp, '/');
@@ -1688,6 +1703,8 @@ struct utimbuf *times;
 {
 	/* Emulation of utime */
 #ifdef __VMS
+	return -1;
+#elsif defined EIF_OS2
 	return -1;
 #else
 	...

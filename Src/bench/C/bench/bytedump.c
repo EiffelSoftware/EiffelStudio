@@ -244,7 +244,7 @@ static  int             fpos;
 static  char            *byte_path;
 static  FILE            *ifp, *ofp;
 static  char            *body;
-static  long            body_id;
+static  BODY_INDEX      body_id;
 static  long            body_size;
 static  long            bcount;
 static  char            *ip;
@@ -268,6 +268,7 @@ static  void    panic (void);
 /*------------------------------------------------------------------*/
 
 static  EIF_INTEGER rlong (void);
+static  BODY_INDEX rbody_index (void);
 static  char    *rbuf (int);
 static  EIF_CHARACTER * rstr (void);
 
@@ -277,6 +278,7 @@ static  EIF_BOOLEAN bbool (void);
 static  EIF_CHARACTER bchar (void);
 static  EIF_WIDE_CHAR bwchar (void);
 static  EIF_INTEGER blong (void);
+static  BODY_INDEX bbody_index (void);
 static  EIF_INTEGER_16 bshort (void);
 static  uint32  buint32 (void);
 static  EIF_DOUBLE  bdouble (void);
@@ -348,7 +350,7 @@ int main (int argc, char **argv)
 	{
 		read_byte_code ();
 
-		if (body_id < 0)
+		if (body_id == INVALID_ID)
 			break;
 
 		print_byte_code ();
@@ -366,9 +368,9 @@ int main (int argc, char **argv)
 static  void    read_byte_code ()
 
 {
-	body_id = rlong ();
+	body_id = rbody_index ();
 
-	if (body_id < 0)
+	if (body_id == INVALID_ID)
 		return;
 
 	body_size = rlong ();
@@ -400,7 +402,7 @@ static  void    print_byte_code ()
 	rid = blong ();
 	fprintf (ofp,"Routine Id   : %ld\n", rid);
 
-	body_id = blong ();
+	body_id = bbody_index ();
 	fprintf (ofp,"Body Id      : %ld\n", body_id);
 
 	fprintf (ofp,"Result Type  : ");
@@ -1317,6 +1319,16 @@ static  EIF_INTEGER blong (void)
 	
 	return result;
 }
+
+static  BODY_INDEX bbody_index (void)
+{
+	BODY_INDEX result;
+	memcpy (&result, ip, sizeof(BODY_INDEX));
+	ip += sizeof(BODY_INDEX);
+	
+	return result;
+}
+
 /*------------------------------------------------------------------*/
 
 static EIF_DOUBLE bdouble (void)
@@ -1358,6 +1370,21 @@ static EIF_CHARACTER *bstr (int length)
 	return result;
 }
 /*------------------------------------------------------------------*/
+
+static BODY_INDEX rbody_index ()
+{
+	BODY_INDEX result;
+
+	fpos += sizeof (BODY_INDEX);
+
+	if (fread (&result, sizeof (BODY_INDEX), 1, ifp) != 1)
+	{
+		printf ("Read error (EIF_INTEGER)\n");
+		panic ();
+	}
+
+	return result;
+}
 
 static EIF_INTEGER rlong ()
 {

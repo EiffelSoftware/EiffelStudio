@@ -18,12 +18,9 @@ feature -- Access
 	generating_type_feature_name: STRING is "generating_type"
 
 	generating_type_feature_i (c: CLASS_C): FEATURE_I is
-			-- 
-		local
-			l_rout_id: INTEGER
+			-- Generating_type feature related to class `c'.
 		do
-			l_rout_id := generating_type_feature.rout_id_set.first
-			Result := c.feature_of_rout_id (l_rout_id)			
+			Result := c.feature_of_rout_id (generating_type_feature.rout_id_set.first)
 		end
 		
 	generating_type_class: CLASS_C is

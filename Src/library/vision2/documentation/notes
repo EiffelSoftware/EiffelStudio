@@ -100,7 +100,7 @@ X   complete but found to have bugs
     kernel/ev_coordinates.e                             *    -    -    .
     kernel/ev_cursor.e                                  o    o 3  o    .
     kernel/ev_cursor_code.e                             o    *    o    .
-    kernel/ev_font.e                                    o    o 1  *    .
+    kernel/ev_font.e                                    o    o 2  *    .
     kernel/ev_rectangle.e                               o    -    -    .
     kernel/ev_timeout.e                                 *    *    *    .
     support/ev_default_font.e                           *    -    -    .

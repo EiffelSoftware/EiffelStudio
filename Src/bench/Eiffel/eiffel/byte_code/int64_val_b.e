@@ -37,7 +37,7 @@ feature -- Measurement
 		do
 				-- Convert to result type first to avoid overflow if difference is higher than maximum integer
 			Result := other.value
-			Result := (Result - value).abs
+			Result := Result - value
 		end
 		
 feature -- Error reporting

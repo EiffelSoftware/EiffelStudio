@@ -28,7 +28,7 @@ feature -- Measurement
 	distance (other: like Current): DOUBLE is
 			-- Distance between `other' and Current
 		do
-			Result := (other.value |-| value).abs
+			Result := other.value |-| value
 		end
 		
 feature -- Error reporting

@@ -38,19 +38,6 @@ feature -- Access
 		deferred
 		end
 
---	top_parent_imp: EV_ITEM_HOLDER_IMPis
---			-- Top item holder containing the current item.
---		local
---			itm: EV_ITEM_IMP
---		do
---			itm ?= parent_imp
---			if itm = Void then
---				Result ?= parent_imp
---			else
---				Result := itm.top_parent_imp
---			end
---		end
-
 	index: INTEGER is
 			-- Index of the current item.
 		require
@@ -58,7 +45,7 @@ feature -- Access
 			has_parent: parent_imp /= Void
 		deferred
 		ensure
-			valid_index: Result >= 1 and Result <= parent.count
+			valid_index: Result >= 1 and Result <= parent.count + 1
 		end
 
 feature -- Element change

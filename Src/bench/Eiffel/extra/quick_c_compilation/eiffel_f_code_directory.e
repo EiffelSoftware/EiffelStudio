@@ -57,7 +57,17 @@ feature
 				if l_file.exists then
 					l_file.delete
 				end
+				l_file_name := path (big_file_name) + ".xpp"
+				create l_file.make (l_file_name)
+				if l_file.exists then
+					l_file.delete
+				end
 				l_file_name := path (big_file_name) + ".c"
+				create l_file.make (l_file_name)
+				if l_file.exists then
+					l_file.delete
+				end
+				l_file_name := path (big_file_name) + ".cpp"
 				create l_file.make (l_file_name)
 				if l_file.exists then
 					l_file.delete

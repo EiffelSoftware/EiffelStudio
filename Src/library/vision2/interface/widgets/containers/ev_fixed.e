@@ -28,6 +28,11 @@ inherit
 			make_for_test
 		end
 
+	DOUBLE_MATH
+		undefine
+			default_create
+		end
+
 create
 	default_create,
 	make_for_test
@@ -44,14 +49,18 @@ feature {NONE} -- Initialization
 			-- Create for testing purposes.
 		local
 			swap_timer: EV_TIMEOUT
+			rotate_timer: EV_TIMEOUT
 		do
 			Precursor
 			from start until after loop
-				set_item_position (item, index * 20, index * 10)
+		--		set_item_position (item, index * 20, index * 10)
 				set_item_size (item, 50, 20)
+				forth
 			end
-			create swap_timer.make_with_interval (1000)
-			swap_timer.actions.extend (~do_test)
+		--	create swap_timer.make_with_interval (1000)
+		--	swap_timer.actions.extend (~do_test)
+			create rotate_timer.make_with_interval (1000 // 35)
+			rotate_timer.actions.extend (~rotate_widgets (rotate_timer))
 		end
 
 	do_test is
@@ -63,6 +72,17 @@ feature {NONE} -- Initialization
 			if w /= Void then
 				prune_all (w)
 				extend (w)
+			end
+		end
+
+	rotate_widgets (t: EV_TIMEOUT) is
+			-- Rotate children.
+		do
+			from start until after loop
+				set_item_position (item,
+					(sine (t.count / 50 * 2 * Pi) * 30 + 30 + index * 20).rounded,
+					(cosine (t.count / 50 * 2 * Pi) * 30 + 30 + index * 10).rounded)
+				forth
 			end
 		end
 
@@ -168,6 +188,9 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/02 16:14:54  brendel
+--| Temporary enhancement of make_for_test.
+--|
 --| Revision 1.12  2000/05/02 00:40:25  brendel
 --| Reintroduced EV_FIXED.
 --| Complete revision.

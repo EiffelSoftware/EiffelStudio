@@ -3,18 +3,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	WEB_HELP_PROJECT
 
 inherit
 	HELP_PROJECT
 
 	TEMPLATE_CONSTANTS
-	
-	APPLICATION_CONSTANTS
-
-create
-	make
 	
 feature -- Commands
 
@@ -31,6 +26,29 @@ feature -- Commands
 		do			
 			create_project_file			
 		end		
+
+feature -- Access
+
+	template_file_name: STRING is
+			-- Template file		
+		deferred
+		end
+
+	toc_template_file_name: STRING is
+			-- Toc template file
+		
+		deferred
+		end
+			
+	filter_template_file_name: STRING is
+			-- Filter template file
+		deferred
+		end
+		
+	default_toc_file_name: STRING is
+			-- Default toc
+		deferred
+		end
 		
 feature {NONE} -- File
 
@@ -42,12 +60,12 @@ feature {NONE} -- File
 			l_text: STRING
 			l_util: UTILITY_FUNCTIONS
 		do
-			create l_file.make_open_read (web_help_project_template_file_name)
+			create l_util
+			create l_file.make_open_read (template_file_name)
 			l_file.read_stream (l_file.count)
 			l_text := l_file.last_string.twin
-			if is_gui_mode then
+			if shared_constants.application_constants.is_gui_mode then
 				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-					create l_util
 					create l_filename.make_from_string (l_util.file_no_extension (l_util.short_name (toc.name)) + "/")
 				else
 					create l_filename.make_from_string (toc.name + "/")
@@ -57,7 +75,9 @@ feature {NONE} -- File
 				create l_filename.make_from_string ("")
 				replace_token (l_text, filter_frame_size_token, "25")
 			end
-			replace_token (l_text, html_default_toc, l_filename.string)
+			replace_token (l_text, html_default_toc_token, l_filename.string + l_util.short_name (default_toc_file_name))
+			replace_token (l_text, html_default_filter_token, l_filename.string + l_util.short_name (filter_template_file_name))
+			replace_token (l_text, html_default_index_token, l_filename.string + "index.html")
 			l_file.close
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory)
 			l_filename.extend (name)
@@ -81,7 +101,7 @@ feature {NONE} -- Implementation
 		do				
 				-- Open TOC template and fill with project toc data
 			create l_util
-			create l_file.make_open_read_write (left_context_html_template_file_name.string)
+			create l_file.make_open_read_write (toc_template_file_name)
 			l_file.readstream (l_file.count)
 			l_text := l_file.last_string.twin
 			replace_token (l_text, html_toc_token, full_toc_text)
@@ -89,7 +109,7 @@ feature {NONE} -- Implementation
 			
 				-- Now create toc file based on toc data
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if is_gui_mode then
+			if shared_constants.application_constants.is_gui_mode then
 				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
 					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
 				else						
@@ -99,15 +119,15 @@ feature {NONE} -- Implementation
 				if not l_dir.exists then
 					l_dir.create_dir
 				end
-				replace_token (l_text, html_toc_script, "../toc.js")
-				replace_token (l_text, html_toc_style, "../toc.css")
+				replace_token (l_text, html_toc_script_token, "../toc.js")
+				replace_token (l_text, html_toc_style_token, "../toc.css")
 			else
-				replace_token (l_text, html_toc_script, "toc.js")
-				replace_token (l_text, html_toc_style, "toc.css")
+				replace_token (l_text, html_toc_script_token, "toc.js")
+				replace_token (l_text, html_toc_style_token, "toc.css")
 			end
 			
 				-- And write to it and close			
-			l_filename.extend (l_util.short_name (left_context_html_template_file_name.string))
+			l_filename.extend (l_util.short_name (toc_template_file_name))
 			create l_dest_file.make_create_read_write (l_filename.string)
 			l_dest_file.put_string (l_text)
 			l_dest_file.close
@@ -125,7 +145,7 @@ feature {NONE} -- Implementation
 		do				
 				-- Open TOC template and fill with project toc data
 			create l_util
-			create l_file.make_open_read_write (filter_html_template_file_name.string)
+			create l_file.make_open_read_write (filter_template_file_name)
 			l_file.readstream (l_file.count)
 			l_text := l_file.last_string.twin
 			replace_token (l_text, html_filter_token, full_filter_text)		
@@ -134,7 +154,7 @@ feature {NONE} -- Implementation
 			
 				-- Now create toc file based on toc data
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if is_gui_mode then
+			if shared_constants.application_constants.is_gui_mode then
 				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
 					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
 				else						
@@ -144,15 +164,15 @@ feature {NONE} -- Implementation
 				if not l_dir.exists then
 					l_dir.create_dir
 				end
-				replace_token (l_text, html_toc_script, "../toc.js")
-				replace_token (l_text, html_toc_style, "../toc.css")
+				replace_token (l_text, html_toc_script_token, "../toc.js")
+				replace_token (l_text, html_toc_style_token, "../toc.css")
 			else
-				replace_token (l_text, html_toc_script, "toc.js")
-				replace_token (l_text, html_toc_style, "toc.css")
+				replace_token (l_text, html_toc_script_token, "toc.js")
+				replace_token (l_text, html_toc_style_token, "toc.css")
 			end
 			
 				-- And write to it and close
-			l_filename.extend (l_util.short_name (filter_html_template_file_name.string))
+			l_filename.extend (l_util.short_name (filter_template_file_name))
 			create l_dest_file.make_create_read_write (l_filename.string)
 			l_dest_file.put_string (l_text)
 			l_dest_file.close
@@ -188,7 +208,7 @@ feature {NONE} -- Implementation
 				
 				if l_file.exists then
 					create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-					if is_gui_mode then
+					if shared_constants.application_constants.is_gui_mode then
 						if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
 							l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
 						else						
@@ -219,7 +239,7 @@ feature {NONE} -- Implementation
 			l_util: UTILITY_FUNCTIONS
 		do	
 			create Result.make_empty
-			if is_gui_mode then
+			if shared_constants.application_constants.is_gui_mode then
 				Result.append ("Show documentation for:<br>")
 				if shared_project.preferences.generate_dhtml_filter then
 					l_filters := shared_project.filter_manager.filters
@@ -238,7 +258,7 @@ feature {NONE} -- Implementation
 								l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
 							end
 							l_toc_url.extend (l_toc_name)
-							l_toc_url.extend ("HTMLLeftContextTemplate.html")
+							l_toc_url.extend (toc_template_file_name)
 							l_toc_url_string := l_toc_url.string
 							l_toc_url_string.replace_substring_all ("\", "/")
 							Result.append ("<option value=%"" + l_toc_url_string + "%"")
@@ -269,7 +289,7 @@ feature {NONE} -- Implementation
 			-- Search HTML
 		do
 			create Result.make_empty
-			if is_gui_mode then
+			if shared_constants.application_constants.is_gui_mode then
 				Result.append ("%
 				%Search%
 				%<br>%
@@ -307,12 +327,7 @@ feature {NONE} -- Implementation
 		
 	full_toc_text: STRING is
 			-- Full TOC text
-		local
-			l_formatter: TABLE_OF_CONTENTS_WEB_HELP_FORMATTER
-		do
-			create Result.make_empty
-			create l_formatter.make (toc)
-			Result := l_formatter.text
+		deferred
 		end
 
 feature {NONE} -- File
@@ -340,26 +355,13 @@ feature {NONE} -- File
 
 	resource_files: ARRAYED_LIST [STRING] is
 			-- List of resource file to copy with project
-		once
-			create Result.make (3)
-			Result.extend ("icon_toc_file.gif")
-			Result.extend ("icon_toc_file_top.gif")
-			Result.extend ("icon_toc_file_bottom.gif")
-			Result.extend ("icon_toc_folder_closed.gif")
-			Result.extend ("icon_toc_folder_closed_top.gif")
-			Result.extend ("icon_toc_folder_open_top.gif")			
-			Result.extend ("icon_toc_folder_open.gif")
-			Result.extend ("spacer.gif")
-			Result.extend ("spacer_line.gif")
-			Result.extend ("icon_page_loading.gif")
-			Result.extend ("sync_button.gif")
+		deferred			
 		end
 
 	root_resource_files: ARRAYED_LIST [STRING] is
 			-- List of resource file to copy with project
 		once	
 			create Result.make (6)
-			Result.extend ("toc.js")
 			Result.extend ("toc.css")
 			Result.extend ("header.html")
 			Result.extend ("header_mainarea.jpg")

@@ -9,7 +9,7 @@ using System;
 namespace ISE.Runtime {
 
 [Serializable]
-public class NONE_TYPE: CLASS_TYPE {
+sealed public class NONE_TYPE: CLASS_TYPE {
 
 	public override String class_name ()
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION

@@ -198,7 +198,7 @@ rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
 	if (source == (EIF_REFERENCE) 0)
 		return (EIF_REFERENCE) 0;
 
-	epush(&loc_stack, (char *) &source);	/* In case object is going to move */
+	epush(&loc_stack, (EIF_REFERENCE) &source);	/* In case object is going to move */
 
 	if (HEADER(source)->ov_flags & EO_SPEC) {
 		result = spclone(source);	/* Special object cloning */

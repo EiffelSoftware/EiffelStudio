@@ -34,6 +34,14 @@ feature {NONE} -- Initialization
 			location_set: location.is_equal (s)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_external_lang_as (Current)
+		end
+
 feature -- Attributes
 
 	language_name: STRING_AS

@@ -132,9 +132,6 @@ feature -- Initialization
 
 feature -- Access
 
-	has_selection: BOOLEAN
-			-- Is there a selection?
-
 	insert_mode: BOOLEAN
 			-- Are we in insert mode?
 
@@ -148,10 +145,13 @@ feature -- Access
 			-- text currently displayed on the screen.
 
 	cursor: TEXT_CURSOR
-			-- current cursor
+			-- Current cursor.
 
 	history: UNDO_REDO_STACK
 			-- List of undo and redo commands
+
+	has_selection: BOOLEAN
+			-- Is there a selection ?
 
 feature -- Process Windows Messages
 
@@ -285,38 +285,41 @@ feature -- Process Windows Messages
 			-- Process the left button of the mouse (when pushed)
 		local
 			l_number: INTEGER
-			new_cursor: TEXT_CURSOR
+			old_cursor: TEXT_CURSOR
 			xline : EDITOR_LINE
 		do
-				-- Change the state of our flag
+				-- Change the state of our flag.
 			mouse_left_button_down := True
 			
+				-- Save cursor position.
+			old_cursor := clone (cursor)
+
 				-- Compute the line number pointed by the mouse cursor
 				-- and asdjust it if its over the number of lines in the text.
 			l_number := (y_pos // line_increment) + first_line_displayed
 			if l_number > number_of_lines then
 				xline := text_displayed.last_line
-				create new_cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
+				cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
 			else
-				create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				cursor.make_from_absolute_pos (x_pos, l_number, Current)
 			end
 
-
-			if not has_selection then
-					-- There is no selection
-				if shifted_key then
-						-- We press on the left button + Shift, so
-						-- we start a new selection.
+			if shifted_key then
+					-- We want to select or resume a selection.
+				if old_cursor.is_equal (cursor) then
+						-- Forget selection if nothing is selected.
+					has_selection := False
+				elseif not has_selection then
+						-- No selection? We have to start one.
 					has_selection := True
-					selection_start := clone (cursor)
+					selection_start := old_cursor
 				end
-			elseif shifted_key then
-				-- There is a selection, and we press on the
-				-- left button + Shift, so we go on selecting text.
-			else
+			elseif not has_selection then
 				-- There is a selection, and we press on the
 				-- left button without Shift, so we destroy the selection.
 				has_selection := False
+			else
+				-- There is no selection, so we don't need to do anything.
 			end
 
 				-- Setup the new cursor.
@@ -331,29 +334,33 @@ feature -- Process Windows Messages
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			l_number	: INTEGER
-			new_cursor	: TEXT_CURSOR
+			old_cursor	: TEXT_CURSOR
 			xline		: EDITOR_LINE
 		do
 			if mouse_left_button_down then
+
+					-- Save cursor position.
+				old_cursor := clone (cursor)
 
 					-- Compute the line number pointed by the mouse cursor
 					-- and asdjust it if its over the number of lines in the text.
 				l_number := (y_pos // line_increment) + first_line_displayed
 				if l_number > number_of_lines then
 					xline := text_displayed.last_line
-					create new_cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
+					cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
 				else
-					create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
+					cursor.make_from_absolute_pos (x_pos, l_number, Current)
 				end
 
-				if not has_selection then
-						-- There is no selection, so we start a selection
-						has_selection := True
-						selection_start := clone (cursor)
+				if old_cursor.is_equal (cursor) then
+						-- Forget selection if nothing is selected.
+					has_selection := False
+				elseif not has_selection then
+						-- There is no selection, so we start a selection.
+					has_selection := True
+					selection_start := old_cursor
 				end
-
-					-- Setup the new cursor.
-				cursor := new_cursor
+					-- Record in the history.
 				history.record_move
 				invalidate
 				update
@@ -410,10 +417,12 @@ feature -- Actions
 			if has_selection then
 				delete_selection
 			end
-			history.record_paste (clipboard)
-			cursor.insert_string (clipboard)
-			invalidate
-			update
+			if clipboard /= Void and then not clipboard.empty then
+				history.record_paste (clipboard)
+				cursor.insert_string (clipboard)
+				invalidate
+				update
+			end
 		end
 
 	delete_selection is
@@ -487,22 +496,21 @@ feature {NONE} -- Handle keystokes
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char
 		do
-			if not has_selection then
-					-- There is no selected text.
-				if shifted_key then
-						-- ... So start a new selection.
+			if shifted_key then
+					-- We want to create or modify a selection.
+				if not has_selection then
+						-- No selection? We have to start one.
 					has_selection := True
 					selection_start := clone (cursor)
 				end
 				invalidate_cursor_rect (False)
 				action.call([])
+				if selection_start.is_equal (cursor) then
+						-- If nothing is selected, we forget the selection.
+					has_selection := False
+				end
 				invalidate_cursor_rect (True)
-			elseif shifted_key then
-					-- There was a selection and we go on selecting text.
-				invalidate_cursor_rect (False)
-				action.call([])
-				invalidate_cursor_rect (True)
-			else
+			elseif has_selection then
 					-- There was a selection, but we destroy it.
 				action.call([])
 				has_selection := False
@@ -512,6 +520,11 @@ feature {NONE} -- Handle keystokes
 					--| FIXME ARNAUD: we only need to redraw the old selected part.
 				invalidate
 				update
+			else
+					-- There is no selection. Normal move.
+				invalidate_cursor_rect (False)
+				action.call([])
+				invalidate_cursor_rect (True)
 			end
 		end
 

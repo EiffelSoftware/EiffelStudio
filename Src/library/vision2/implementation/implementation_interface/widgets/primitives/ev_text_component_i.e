@@ -115,7 +115,7 @@ feature -- Element change
 			-- Assign `a_text' to text of `Current'.
 		deferred
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: (a_text = Void and then text.is_equal ("")) or else (text.is_equal (a_text))
 		end
 
 	remove_text is
@@ -126,26 +126,26 @@ feature -- Element change
 			text_empty: text.is_empty
 		end
 
-	insert_text (txt: STRING) is
-			-- Insert `txt' at the current caret position.
+	insert_text (a_text: STRING) is
+			-- Insert `a_text' at the current caret position.
 		require
-			valid_text: txt /= Void
+			valid_text: a_text /= Void
 		deferred
 		end
 	
-	append_text (txt: STRING) is
-			-- append 'txt' into `Current'.
+	append_text (a_text: STRING) is
+			-- append 'a_text' into `Current'.
 		require
-			valid_text: txt /= Void
+			valid_text: a_text /= Void
 		deferred
 		ensure
 			text_appended:
 		end
 	
-	prepend_text (txt: STRING) is
-			-- prepend 'txt' into `Current'.
+	prepend_text (a_text: STRING) is
+			-- prepend 'a_text' into `Current'.
 		require
-			valid_text: txt /= Void
+			valid_text: a_text /= Void
 		deferred
 		ensure
 			text_prepended:

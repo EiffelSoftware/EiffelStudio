@@ -46,7 +46,7 @@ feature -- Access
 			"esdouble_size"
 		end;
 
-	Context: OPERATING_ENVIRONMENT is
+	Operating_environment: OPERATING_ENVIRONMENT is
 			-- Objects available from the operating system
 		once
 			!!Result

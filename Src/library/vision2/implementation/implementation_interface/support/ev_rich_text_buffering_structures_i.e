@@ -85,6 +85,8 @@ feature -- Status Setting
 			character: CHARACTER
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			height_in_half_points: INTEGER
+			effects: EV_CHARACTER_FORMAT_EFFECTS
+			font: EV_FONT
 		do
 			hashed_character_format := a_format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -106,7 +108,11 @@ feature -- Status Setting
 			temp_string.append (color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
 			
-			format_underlined := formats.i_th (format_index).effects.is_underlined
+				-- Retrieve the effects and font
+			effects := formats.i_th (format_index).effects
+			font := formats.i_th (format_index).font
+			
+			format_underlined := effects.is_underlined
 			if not is_current_format_underlined and format_underlined then
 				temp_string.append (start_underline_string)
 				is_current_format_underlined := True
@@ -114,7 +120,7 @@ feature -- Status Setting
 				temp_string.append (end_underline_string)
 				is_current_format_underlined := False
 			end
-			format_striked := formats.i_th (format_index).effects.is_striked_out
+			format_striked := effects.is_striked_out
 			if not is_current_format_striked_through and format_striked then
 				temp_string.append (start_strikeout_string)
 				is_current_format_striked_through := True
@@ -122,7 +128,7 @@ feature -- Status Setting
 				temp_string.append (end_strikeout_string)
 				is_current_format_striked_through := False
 			end
-			format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
+			format_bold := font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
 			if not is_current_format_bold and format_bold then
 				temp_string.append (start_bold_string)
 				is_current_format_bold := True
@@ -130,7 +136,7 @@ feature -- Status Setting
 				temp_string.append (end_bold_string)
 				is_current_format_bold := False
 			end
-			format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
+			format_italic := font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
 			if not is_current_format_italic and format_italic then
 				temp_string.append (start_italic_string)
 				is_current_format_italic := True
@@ -138,7 +144,7 @@ feature -- Status Setting
 				temp_string.append (end_italic_string)
 				is_current_format_italic := False
 			end
-			vertical_offset := formats.i_th (format_index).effects.vertical_offset
+			vertical_offset := effects.vertical_offset
 			if vertical_offset /= current_vertical_offset then
 				temp_string.append (start_vertical_offset)
 				height_in_half_points := (pixels_to_half_points (vertical_offset))

@@ -35,7 +35,11 @@ feature
 			debugged_routines.wipe_out;
 			removed_routines.wipe_out;
 				-- Reset the supermelted body_ids counters.
-			System.reset_debug_counter
+				-- Do not call the once function `System' directly since it's
+				-- value may be replaced during the first compilation (as soon
+				-- as we figured out whether the system describes a Dynamic
+				-- Class Set or not).
+			Workbench.system.reset_debug_counter
 		end;
 
 	restore is
@@ -84,7 +88,7 @@ feature -- Debuggables (Byte code,...)
 			-- been called, but were not recorded in `once_debuggables' last
 			-- time we sent information to the application
 			--| This table is useful to figure out the number of new melted
-			--| routines, an dbe able to reallocate the corresponding
+			--| routines, and be able to reallocate the corresponding
 			--| data structures once and for all.
 			--| The structures held in this table are also held in
 			--| `once_debuggables', and this table must be cleared each
@@ -135,15 +139,17 @@ feature -- Debuggables (Byte code,...)
 			-- `feature_i' and record the corresponding information.
 			-- Do nothing if `f' has previously been added.
 		local
-			f_debuggables: LINKED_LIST [DEBUGGABLE]
+			f_debuggables: LINKED_LIST [DEBUGGABLE];
+			body_id: INTEGER
 		do
 			if not has_feature (f) then
+				body_id := f.body_id;
 				if f.is_once and then Once_request.already_called (f) then
 					f_debuggables := f.debuggables;
-					once_debuggables.put (f_debuggables, f.body_id);
-					new_once_debuggables.put (f_debuggables, f.body_id)
+					once_debuggables.put (f_debuggables, body_id);
+					new_once_debuggables.put (f_debuggables, body_id)
 				else
-					new_debuggables.put (f.debuggables, f.body_id)
+					new_debuggables.put (f.debuggables, body_id)
 				end;
 				debugged_routines.extend (f)
 			end
@@ -153,18 +159,44 @@ feature -- Debuggables (Byte code,...)
 			-- Switch `f' from debugged to removed or from removed to debugged.
 		require
 			has_feature (f)
+		local
+			body_id: INTEGER;
+			old_feat: FEATURE_I
 		do
-			if debugged_routines.has (f) then
+			body_id := f.body_id;
+			old_feat := feature_of_body_id (debugged_routines, body_id);
+			if old_feat /= Void then
 				debugged_routines.start;
-				debugged_routines.prune (f);
-				removed_routines.extend (f);
+				debugged_routines.prune (old_feat);
+				removed_routines.extend (old_feat)
 			else
-				removed_routines.start;
-				removed_routines.prune (f);
-				debugged_routines.extend (f)
+				old_feat := feature_of_body_id (removed_routines, body_id);
+				if old_feat /= Void then
+					removed_routines.start;
+					removed_routines.prune (old_feat);
+					debugged_routines.extend (old_feat)
+				end
 			end
 		end;
 
+	feature_of_body_id (list: LIST [FEATURE_I]; body_id: INTEGER): FEATURE_I is
+			-- Feature of boyd id `body_id' stored in `list';
+			-- Void if no such feature exists
+		require
+			list_not_void: list /= Void
+		do
+			from
+				list.start
+			until
+				Result /= Void or list.after
+			loop
+				if list.item.body_id = body_id then
+					Result := list.item
+				end;
+				list.forth
+			end
+		end;
+			
 	debuggable_count: INTEGER is
 			-- Number of new byte arrays since last transfer
 			-- between workbench and application 
@@ -236,24 +268,30 @@ feature -- Debuggables (Byte code,...)
 	has_feature (feature_i: FEATURE_I): BOOLEAN is
 			-- Has debuggable byte code already been 
 			-- generated for `feature_i'?
+		local
+			body_id: INTEGER
 		do
+			body_id := feature_i.body_id;
 			Result := 
-				new_debuggables.has (feature_i.body_id) or else 
-				once_debuggables.has (feature_i.body_id) or else 
-				sent_debuggables.has (feature_i.body_id)
+				new_debuggables.has (body_id) or else 
+				once_debuggables.has (body_id) or else 
+				sent_debuggables.has (body_id)
 		end; -- has_feature
 
 	debuggables (f: FEATURE_I): LINKED_LIST [DEBUGGABLE] is
 			-- List of debuggables corresponding to `feature_i'
 		require
 			has_feature (f)
+		local
+			body_id: INTEGER
 		do
-			if new_debuggables.has (f.body_id) then
-				Result := new_debuggables.item (f.body_id);
-			elseif once_debuggables.has (f.body_id) then
-				Result := once_debuggables.item (f.body_id)
+			body_id := f.body_id;
+			if new_debuggables.has (body_id) then
+				Result := new_debuggables.item (body_id);
+			elseif once_debuggables.has (body_id) then
+				Result := once_debuggables.item (body_id)
 			else
-				Result := sent_debuggables.item (f.body_id);
+				Result := sent_debuggables.item (body_id);
 			end;
 		ensure
 			Result /= Void
@@ -288,10 +326,13 @@ feature -- Debuggables (Byte code,...)
 		require
 			f_exists: f /= Void;
 			is_debuggable: f.is_debuggable
+		local
+			body_id: INTEGER
 		do
-			if sent_debuggables.has (f.body_id) then
+			body_id := f.body_id;
+			if sent_debuggables.has (body_id) then
 					-- `f' has been supermelted.
-				Result := sent_debuggables.item (f.body_id).first.real_body_id
+				Result := sent_debuggables.item (body_id).first.real_body_id
 			else
 				Result := f.real_body_id
 			end
@@ -361,7 +402,10 @@ feature -- Breakpoints
 				debug_item.breakable_points.i_th (i).set_stop (is_stop);
 				debug_bodies.forth
 			end;
-			if is_stop and removed_routines.has (f) then
+			if
+				is_stop and
+				feature_of_body_id (removed_routines, f.body_id) /= Void
+			then
 				switch_feature (f)
 			end
 		end;

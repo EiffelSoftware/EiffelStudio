@@ -23,8 +23,7 @@ feature -- Initialization
 			basket_nb, i: INTEGER;
 			basket: LINKED_LIST [STRING]
 		do
-			basket_nb := 1 + (System.static_type_id_counter.value - 
-				System.dle_max_dr_static_type_id) // Packet_number;
+			basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number;
 			!!object_baskets.make (1, basket_nb);
 			from i := 1 until i > basket_nb loop
 				!!basket.make;
@@ -37,8 +36,7 @@ feature -- Initialization
 				descriptor_baskets.put (basket, i);
 				i := i + 1
 			end;
-			basket_nb := 1 + (System.class_counter.value - 
-				System.dle_max_dr_class_id) // Packet_number;
+			basket_nb := 1 + System.class_counter.current_count // Packet_number;
 			!!feat_table_baskets.make (1, basket_nb);
 			from i := 1 until i > basket_nb loop
 				!!basket.make;

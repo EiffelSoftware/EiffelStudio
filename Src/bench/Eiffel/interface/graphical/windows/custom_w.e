@@ -74,10 +74,10 @@ feature -- General Settings
 
 feature -- General Properties
 
-	export_class_id: INTEGER;
+	export_class_id: CLASS_ID;
 			-- Class specified in `export_choice'.
 
-	origin_class_id: INTEGER;
+	origin_class_id: CLASS_ID;
 			-- CLass specified in `origin_choice'.
 
 	format_catalog: HASH_TABLE [CLASS_FORMAT, STRING];
@@ -569,25 +569,25 @@ feature -- Updating
 			if na_me /= Void and then na_me.count > 0 then
 				user_format.set_name (clone (text_window.text))
 			else
-				user_format.set_name ("Unamed")
+				user_format.set_name ("Unnamed")
 			end;
 			if export_choice.selected_button = export_all_choice then
-				user_format.set_visibility (c_GENERAL)
+				user_format.set_visibility (c_GENERAL, Void)
 			elseif export_choice.selected_button = none_choice then
-				user_format.set_visibility (c_NONE)
+				user_format.set_visibility (c_NONE, Void)
 			elseif export_choice.selected_button = more_than_choice then
-				user_format.set_visibility (c_RESTRICTED)
+				user_format.set_visibility (c_RESTRICTED, Void)
 			else
-				user_format.set_visibility (export_class_id)
+				user_format.set_visibility (c_CLASS_ID, export_class_id)
 			end;
 			if origin_choice.selected_button = current_choice then
-				user_format.set_origin (c_CURRENT)
+				user_format.set_origin (c_CURRENT, Void)
 			elseif origin_choice.selected_button = all_choice then
-				user_format.set_origin (c_ALL)
+				user_format.set_origin (c_ALL, Void)
 			elseif origin_choice.selected_button = all_but_choice then
-				user_format.set_origin (c_ALL_BUT_GENERAL)
+				user_format.set_origin (c_ALL_BUT_GENERAL, Void)
 			elseif origin_choice.selected_button = drop_origin_choice then
-				user_format.set_origin (origin_class_id)
+				user_format.set_origin (c_CLASS_ID, origin_class_id)
 			end;
 			user_format.set_dos (do_tog.state);
 			user_format.set_onces (once_tog.state);
@@ -613,7 +613,8 @@ feature -- Updating
 			-- Update display according to `user_format'.
 			-- FIXME: *********************************************
 		local
-			local_visible, local_origin, local_format: INTEGER
+			local_visible, local_origin, local_format: INTEGER;
+			local_visible_class_id, local_origin_class_id: CLASS_ID
 		do
 --			bitmap_bitmap.set_pixmap (user_format.bitmap);
 			text_window.set_text (user_format.na_me);
@@ -625,8 +626,9 @@ feature -- Updating
 			elseif local_visible= c_RESTRICTED then
 				export_choice.set_selected_button (more_than_choice)
 			else
+				local_visible_class_id := user_format.visibility_class_id;
 -- FIXME:
---				export_hole.receive (System.class_of_id (local_visible))
+--				export_hole.receive (System.class_of_id (local_visible_class_id))
 			end;
 			local_origin := user_format.origin;
 			if local_origin = c_CURRENT then
@@ -636,8 +638,9 @@ feature -- Updating
 			elseif local_origin = c_ALL_BUT_GENERAL then
 				origin_choice.set_selected_button (all_but_choice)
 			else
+				local_origin_class_id := user_format.origin_class_id;
 -- FIXME:
---				origin_hole.receive (System.class_of_id (local_origin))
+--				origin_hole.receive (System.class_of_id (local_origin_class_id))
 			end;
 			if user_format.dos then
 				do_tog.arm

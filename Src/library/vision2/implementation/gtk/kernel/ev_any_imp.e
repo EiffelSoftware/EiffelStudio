@@ -43,6 +43,7 @@ feature {EV_ANY_I} -- Access
 			c_object := a_c_object
 			if needs_event_box then
 				c_object := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 				feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
 			end
@@ -130,7 +131,6 @@ feature {EV_ANY_I} -- Event handling
 			do
 				internal_real_signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
 			end
-			
 
 	internal_real_signal_connect (
 		a_c_object: like c_object;
@@ -156,14 +156,14 @@ feature {EV_ANY_I} -- Event handling
 					a_c_object,
 					a_cs.item,
 					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?),
-					False
+					invoke_after_handler
 				)
 			else
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_cs.item,
 					an_agent,
-					False
+					invoke_after_handler
 				)
 			end
 		ensure

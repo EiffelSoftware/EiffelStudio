@@ -5,19 +5,22 @@ inherit
 		rename
 			analyze_on as feat_bl_analyze_on,
 			generate_parameters as feat_bl_generate_parameters,
-			unanalyze as feat_bl_unanalyze
+			unanalyze as feat_bl_unanalyze,
+			free_register as feat_bl_free_register
 		redefine
 			enlarged, perused,
 			generate_end, fill_from
 		end
+
 	FEATURE_BL
 		redefine
 			enlarged, analyze_on,
 			generate_end, fill_from,
 			generate_parameters,
-			unanalyze, perused
+			unanalyze, perused,
+			free_register
 		select
-			analyze_on, generate_parameters, unanalyze
+			analyze_on, generate_parameters, unanalyze, free_register
 		end
 
 feature
@@ -27,7 +30,12 @@ feature
 		--| Eabc(l[2], l[3], l[4]) cannot be replaced by
 		--| l[3] = l[2]
 		--| l[5] = l[3]
-		--| i.e. we loose the value of l[3]
+		--| i.e. we lose the value of l[3]
+
+	is_current_temporary: BOOLEAN;
+			-- Is Current a temporary register?
+
+	temporary_parameters: ARRAY [BOOLEAN];
 
 	fill_from (f: FEATURE_B) is
 		do
@@ -42,12 +50,7 @@ feature
 		end
 
 	enlarged: INLINED_FEAT_B is
-		local
-			old_current_type: CL_TYPE_I
 		do
-			--old_current_type := Context.current_type;
-			--Context.set_current_type (current_type);
-
 			Result := Current
 			enlarge_parameters;
 
@@ -61,7 +64,16 @@ feature
 			saved_compound := deep_clone (compound);
 
 			inliner.set_inlined_feature (Void);
-			--Context.set_current_type (old_current_type);
+		end
+
+
+	free_register is
+            -- Free registers
+		do
+			feat_bl_free_register;
+			if result_reg /= Void then
+				result_reg.free_register
+			end
 		end
 
 	unanalyze is
@@ -72,33 +84,54 @@ feature
 
 	analyze_on (reg: REGISTRABLE) is
 		local
-			result_type: TYPE_I
-			old_current_type: CL_TYPE_I
-			reg_type: TYPE_C
+			result_type: TYPE_I;
+			old_current_type: CL_TYPE_I;
+			reg_type: TYPE_C;
+			local_is_current_temporary: BOOLEAN;
+			a: ATTRIBUTE_BL
 		do
 				-- First, standard analysis of the call
 			feat_bl_analyze_on (reg);
 
 			reg_type := reg.c_type;
 
-				-- Instantiation of the result type (used by
-				-- INLINED_RESULT_B)
+				-- Instantiation of the result type (used by INLINED_RESULT_B)
 			type := real_type (type);
 			inliner.set_inlined_feature (Current);
 
 			old_current_type := Context.current_type;
 			Context.set_current_type (current_type);
 
-			current_reg := get_current_register (reg_type);
+			-- current_reg := get_current_register (reg_type);
+			local_is_current_temporary := reg.is_temporary or reg.is_predefined;
+
+			if local_is_current_temporary then
+				current_reg := reg
+			else
+				-- We have to check if Current is an attribute. A much nicer way
+				-- would be to define a feature in REGISTRABLE which would indicate
+				-- whether the register can be used during inlining, and to 
+				-- redefine it in the appropriate descendants.
+
+				a ?= reg;
+				if a /= Void then
+					current_reg := a.register;
+					if current_reg /= Void then
+						local_is_current_temporary := current_reg.is_temporary
+					end
+				end
+			end;
+
+			is_current_temporary := local_is_current_temporary;
+
+			if not local_is_current_temporary then
+				!REGISTER! current_reg.make (reg_type)
+			end;
+
 			Context.set_inlined_current_register (current_reg);
 
 			local_regs := get_inlined_registers (byte_code.locals);
-				-- FIXME: USE THE PARAMETER REGISTERS IF THEY EXIST
-				-- Now, the code can look like:
-				-- l[1] = l[0]
-				-- Edgdj(l[1])
-				-- l[1] should not be used
-			argument_regs := get_inlined_registers (byte_code.arguments);
+			argument_regs := get_inlined_param_registers (byte_code.arguments);
 
 			result_type := byte_code.result_type;
 			if not result_type.is_void then
@@ -114,11 +147,11 @@ feature
 
 				-- Free resources
 			free_inlined_registers (local_regs);
-			free_inlined_registers (argument_regs);
-			if result_reg /= Void then
-				result_reg.free_register
+			free_inlined_param_registers (argument_regs);
+
+			if not local_is_current_temporary then
+				current_reg.free_register
 			end;
-			current_reg.free_register
 
 			inliner.set_inlined_feature (Void);
 
@@ -127,7 +160,7 @@ feature
 		end
 
 	argument_type (pos: INTEGER): TYPE_I is
-			-- Type of the arguemtn at postion `pos'
+			-- Type of the argument at position `pos'
 		do
 			Result := real_type (byte_code.arguments.item (pos))
 		end
@@ -139,7 +172,6 @@ feature -- Generation
 			i, count: INTEGER
 			expr: EXPR_B;
 			current_t: CL_TYPE_I
-			old_current_type: CL_TYPE_I
 		do
 			feat_bl_generate_parameters (gen_reg)
 
@@ -161,12 +193,14 @@ feature -- Generation
 				until
 					parameters.after
 				loop
-					expr := parameters.item;
-					argument_regs.item (i).print_register;
-					generated_file.putstring (" = ");
-					expr.print_register;
-					generated_file.putchar (';');
-					generated_file.new_line;
+					if (not temporary_parameters.item (i)) then
+						expr := parameters.item;
+						argument_regs.item (i).print_register;
+						generated_file.putstring (" = ");
+						expr.print_register;
+						generated_file.putchar (';');
+						generated_file.new_line
+					end;
 					parameters.forth;
 					i := i + 1
 				end
@@ -188,30 +222,34 @@ feature -- Generation
 					-- Set the value of the result register to the default
 				reset_register_value (result_reg)
 			end;
-
-			old_current_type := Context.current_type;
+				
+			caller_type := Context.current_type;
 			current_t := current_type;
 
 			Context.set_current_type (current_t);
 			Context.set_inlined_current_register (current_reg);
 
-			current_register.print_register;
-			generated_file.putstring (" = ");
+			if not is_current_temporary then
+
+				current_register.print_register;
+				generated_file.putstring (" = ");
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
+				
+				Context.set_current_type (caller_type);
+				Context.set_inlined_current_register (Void);
+				
+				gen_reg.print_register;
+				generated_file.putchar (';');
+				generated_file.new_line
+				
+				generated_file.new_line
+				
+				Context.set_current_type (current_t);
+				Context.set_inlined_current_register (current_reg);
 
-			Context.set_current_type (old_current_type);
-			Context.set_inlined_current_register (Void);
-
-			gen_reg.print_register;
-			generated_file.putchar (';');
-			generated_file.new_line
-
-			generated_file.new_line
-
-			Context.set_current_type (current_t);
-			Context.set_inlined_current_register (current_reg);
+			end;
 
 			if inlined_dt_current > 1 then
 				context.set_inlined_dt_current (inlined_dt_current);
@@ -242,7 +280,8 @@ feature -- Generation
 			generated_file.putchar ('}');
 			generated_file.new_line;
 
-			Context.set_current_type (old_current_type);
+			Context.set_current_type (caller_type);
+			caller_type := Void;
 
 			inliner.set_inlined_feature (Void);
 		end
@@ -263,26 +302,18 @@ feature -- Registers
 
 	local_regs: ARRAY [REGISTER];
 
-	argument_regs: ARRAY [REGISTER];
+	argument_regs: ARRAY [REGISTRABLE];
 
 	result_reg: REGISTER;
 
 	Current_reg: REGISTRABLE;
 
-feature {NONE}
+feature -- Type information
 
-	get_current_register (reg_type: TYPE_C): REGISTRABLE is
-		local
-			tmp_reg: REGISTER
-		do
-	--io.error.putstring ("FIXME: get_current_register%N");
-	--		if reg.is_temporary then
-	--			Result := reg
-	--		else
-				!!tmp_reg.make (reg_type);
-				Result := tmp_reg
-	--		end
-		end
+	caller_type: CL_TYPE_I
+		-- Caller type
+
+feature {NONE}
 
 	inliner: INLINER is
 		do
@@ -293,21 +324,82 @@ feature {NONE} -- Registers
 
 	get_inlined_registers (a: ARRAY [TYPE_I]): ARRAY [REGISTER] is
 		local
-			i ,count: INTEGER
+			i, count: INTEGER
 		do
 			if a /= Void then
 				from
 					i := 1
 					count := a.count;
-					!!Result.make (1, count);
+					!!Result.make (1, count)
 				until
 					i > count
 				loop
-					Result.put (get_inline_register(real_type (a.item (i))), i)
+					Result.put (get_inline_register(real_type (a.item (i))), i);
 					i := i + 1
 				end
 			end
-		end
+		end;
+
+	get_inlined_param_registers (a: ARRAY [TYPE_I]): ARRAY [REGISTRABLE] is
+		local
+			i ,count: INTEGER;
+			is_param_temporary_reg, failed: BOOLEAN;
+			local_reg: REGISTRABLE;
+			p: PARAMETER_B;
+			expr: EXPR_B
+		do
+			if a /= Void then
+				from
+					i := 1;
+					count := a.count;
+					check
+						count /= parameters.count
+					end;
+					!!Result.make (1, count);
+					!! temporary_parameters.make (1, count);
+					parameters.start
+				until
+					i > count
+				loop
+					is_param_temporary_reg := false;
+
+					expr := parameters.item;
+					if expr.is_temporary or expr.is_predefined then
+						local_reg := expr;
+						is_param_temporary_reg := True
+					else
+						local_reg := expr.register;
+						if local_reg = Void then
+							p ?= expr;
+							if p /= Void then
+								expr := p.expression;
+								if expr.is_temporary or expr.is_predefined then
+									local_reg := expr;
+									is_param_temporary_reg := True
+								else
+									local_reg := p.expression.register;
+									if (local_reg /= Void) then
+										is_param_temporary_reg :=  local_reg.is_temporary or 
+											local_reg.is_predefined
+									end
+								end
+							end
+						end
+					end;
+
+					temporary_parameters.put (is_param_temporary_reg, i);					
+					if is_param_temporary_reg then
+						Result.put (local_reg, i)
+					else
+						Result.put (get_inline_register(real_type (a.item (i))), i)
+					end;
+
+					i := i + 1;
+					parameters.forth
+				end
+			end
+		end;
+
 
 	get_inline_register (type_i: TYPE_I): REGISTER is
 		do
@@ -320,12 +412,31 @@ feature {NONE} -- Registers
 		do
 			if a /= Void then
 				from
+					i := 1;
+					count := a.count
+				until
+					i > count
+				loop
+					a.item (i).free_register;
+					i := i + 1
+				end
+			end
+		end;
+
+	free_inlined_param_registers (a: ARRAY [REGISTRABLE]) is
+		local
+			i, count: INTEGER
+		do
+			if a /= Void then
+				from
 					i := 1
 					count := a.count
 				until
 					i > count
 				loop
-					a.item (i).free_register
+					if (not temporary_parameters.item (i)) then
+						a.item (i).free_register
+					end;
 					i := i + 1
 				end
 			end

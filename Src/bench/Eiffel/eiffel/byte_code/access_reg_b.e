@@ -8,7 +8,9 @@ inherit
 		redefine
 			print_register, generate,
 			register, set_register,
-			analyze, unanalyze
+			analyze, unanalyze,
+			is_temporary, is_predefined,
+			register_name
 		end;
 	
 feature 
@@ -56,11 +58,28 @@ feature
 			-- Do nothing
 		do
 		end;
-	
+
 	print_register is
 			-- Print register
 		do
 			register.print_register;
 		end;
 
+	is_temporary: BOOLEAN is
+			-- Is register a temporary one ?
+		do
+			Result := register.is_temporary
+		end;
+
+	is_predefined: BOOLEAN is
+			-- Is register a temporary one ?
+		do
+			Result := register.is_predefined
+		end;
+
+	register_name: STRING is
+			-- The ASCII representation of the register
+		do
+			Result := register.register_name
+		end
 end

@@ -91,10 +91,3 @@ N.B. some important notes are:
 2. Do not use special characters at the command-line!
    Especially be sure to use a valid classname, otherwise
    you will have to change it afterwards.
-
-
-3. Platforms supported
-----------------------
-
-h2e is a 32-bit Windows program, it runs under Windows 95,
-Windows NT and Windows 3.1 with Win32s.

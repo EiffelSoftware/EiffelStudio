@@ -290,14 +290,6 @@ feature -- Generation Structure
 		do
 		end
 
-	add_assembly_reference (name: STRING) is
-			-- Add reference to assembly file `name' for type lookups.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-		do
-		end
-
 	start_module_generation (name: STRING; debug_mode: BOOLEAN) is
 			-- Create Module `name' within current assembly.
 			-- In debug mode if `debug_mode' is true.

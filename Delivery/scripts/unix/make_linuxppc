@@ -1,0 +1,29 @@
+#!/bin/sh
+
+if [ "$1" == "local" ]; then
+	echo $1
+	export REMOTE=lisbon
+	cp -f make_linuxppc ~/
+	# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_linuxppc ."
+	rsh $REMOTE "cd local/TEST_DELIV ; ./make_linuxppc"
+
+ftp -n << EOF 
+verbose 
+open lisbon.ise 
+user manus manus 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel51_deliv.tgz Eiffel51_ppc.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel51.iso Eiffel51_ppc.iso
+close 
+EOF
+
+	echo LinuxPPC compilation done
+else
+	rm -rf PorterPackage
+	tar xvfz ~/PorterPackage_enterprise.tgz
+	cd PorterPackage
+	export ISE_PLATFORM=linuxppc
+	compile_exes
+	make_images
+fi

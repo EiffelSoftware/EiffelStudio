@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Create a delivery from scratch for all ISE supported platforms we have at ISE,
+# ie solaris, ppc and linux
+
+# Let's initialize our environments variables
+. set_aliases
+
+# Let's create an enterprise package for non Linux platform
+echo "\n" | /bin/sh make_delivery
+
+# Now edit `set_aliases' in PorterPackage as we are now going for compilation mode.
+cd PorterPackage
+rm -f tmp
+sed -e "s/\/PorterPackage//g" set_aliases > tmp
+rm -f set_aliases
+mv -f tmp set_aliases
+cd ..
+
+# Let's keep an archive of this package
+if [ ! -e PorterPackage_enterprise.tar ]; then
+	tar cvf PorterPackage_enterprise.tar PorterPackage
+fi
+cp -f PorterPackage_enterprise.tar ~/
+
+#Let's do the Linux version
+rm -rf PorterPackage
+
+# Let's create all packages
+echo "\n" | /bin/sh make_delivery all
+
+# Now edit `set_aliases' in PorterPackage as we are now going for compilation mode.
+cd PorterPackage
+rm -f tmp
+sed -e "s/\/PorterPackage//g" set_aliases > tmp
+rm -f set_aliases
+mv -f tmp set_aliases
+cd ..
+
+#Copy existing Build distribution
+cp -f /home/delivery/Eiffel51/build_deliv.tgz PorterPackage/
+
+# Let's keep an archive of this package
+if [ ! -e PorterPackage_all.tar ]; then
+	tar cvf PorterPackage_all.tar PorterPackage
+fi
+
+#Compile and build CDs
+cd PorterPackage
+/bin/sh compile_exes
+/bin/sh make_images
+cd ..
+
+#Let's compile for PPC on lisbon in background
+/bin/sh make_linuxppc local &
+
+#Let's compile for Solaris on dakar in background
+/bin/sh make_solaris local &
+

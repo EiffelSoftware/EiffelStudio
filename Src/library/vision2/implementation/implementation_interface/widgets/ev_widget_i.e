@@ -190,20 +190,20 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		do
-			if flag then
-				if vertical_resizable then
-					resize_type := 3
-				else
-					resize_type := 1
-				end
-			else
-				if vertical_resizable then
-					resize_type := 2
-				else
-					resize_type := 0
-				end				
-			end
+		deferred
+--			if flag then
+--				if vertical_resizable then
+--					resize_type := 3
+--				else
+--					resize_type := 1
+--				end
+--			else
+--				if vertical_resizable then
+--					resize_type := 2
+--				else
+--					resize_type := 0
+--				end				
+--			end
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
 		end
@@ -212,20 +212,20 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		do
-			if flag then
-				if horizontal_resizable then
-					resize_type := 3
-			else
-					resize_type := 2
-				end
-			else
-				if horizontal_resizable then
-					resize_type := 1
-				else
-					resize_type := 0
-				end				
-			end
+		deferred
+--			if flag then
+--				if horizontal_resizable then
+--					resize_type := 3
+--			else
+--					resize_type := 2
+--				end
+--			else
+--				if horizontal_resizable then
+--					resize_type := 1
+--				else
+--					resize_type := 0
+--				end				
+--			end
 		ensure
 			vertical_resize_set: vertical_resizable = flag
 		end

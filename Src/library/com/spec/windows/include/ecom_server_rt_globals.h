@@ -22,8 +22,19 @@ extern "C" {
 extern int return_hr_value;
 extern jmp_buf exenv;
 
-#define ECATCH if (return_hr_value = setjmp (exenv)) \
-				return (HRESULT)(return_hr_value)
+#define ECATCH	struct ex_vect *exvect;\
+	jmp_buf exenv;\
+	exvect = exset((char *) 0, 0, (char *) 0);\
+	exvect->ex_jbuf = (char *) exenv;\
+	if (return_hr_value = setjmp (exenv)) \
+		return (HRESULT)(return_hr_value)
+
+#define manu_macro	struct ex_vect *exvect;\
+	jmp_buf exenv;\
+	exvect = exset((char *) 0, 0, (char *) 0);\
+	exvect->ex_jbuf = (char *) exenv;\
+	if (return_hr_value = setjmp (exenv)) \
+		return (HRESULT)(return_hr_value)
 
 #ifdef __cplusplus
 }

@@ -178,7 +178,8 @@ feature -- Element change
 			a_position_small_enough: a_position <= count
 		do
 			cwin_insert_menu (item, a_position,
-				Mf_separator, 0, default_pointer)
+				Mf_separator + Mf_byposition, 0,
+				default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -677,8 +678,8 @@ feature {NONE} -- Externals
 end -- class WEL_MENU
 
 --|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

@@ -15,7 +15,7 @@ feature {NONE} -- Implementation
 			-- Any class that needs access, simply inherits from
 			-- this class.
 		once
-			create Result.initialize
+			create Result
 		end
 
 end -- class GB_ACCESSIBLE_XML_HANDLER

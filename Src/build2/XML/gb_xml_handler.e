@@ -30,18 +30,10 @@ feature -- Basic operations
 	save is
 			-- Save the currently built window to XML.
 		local
-			file: RAW_FILE
-			root_element: XML_ELEMENT
-			other_element: XML_ELEMENT
 			xml_store: GB_XML_STORE
 		do
 			create xml_store
 			xml_store.store
-		--	create root_element.make_root ("EV_WINDOW")
-		--	create other_element.make (root_element, "BUTTON")
-		--	create file.make_open_write (path)
-		--	file.put_string (root_element.out)
-		--	file.close
 		end
 		
 	load is

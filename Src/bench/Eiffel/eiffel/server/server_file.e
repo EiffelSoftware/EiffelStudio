@@ -28,7 +28,7 @@ creation
 
 feature
 
-	id: INTEGER;
+	id: FILE_ID;
 			-- Id of the file
 
 	occurence: INTEGER;
@@ -37,16 +37,16 @@ feature
 	is_open: BOOLEAN;
 			-- Is the current file open ?
 
-	set_id (i: INTEGER) is
+	set_id (i: FILE_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i
 		end;
 
-	make (i: INTEGER) is
+	make (i: FILE_ID) is
 			-- Initialization
 		require
-			positive_argument: i > 0
+			positive_argument: i /= Void
 		local
 			f_name: FILE_NAME;
 			d_name: DIRECTORY_NAME;
@@ -56,17 +56,14 @@ feature
 			!!d_name.make_from_string (Compilation_path);
 			!!temp.make (5);
 			temp.extend ('S');
-			temp.append_integer ((i // packet_size) + 1);
+			temp.append_integer (i.packet_number);
 			d_name.extend (temp);
 			!!d.make (d_name);
 			if not d.exists then
 				d.create
 			end;
 			!!f_name.make_from_string (d_name);
-			!!temp.make (5);
-			temp.extend ('E');
-			temp.append_integer (i);
-			f_name.set_file_name (temp);
+			f_name.set_file_name (i.file_name);
 			file_make (f_name);
 			if not Eiffel_project.is_read_only then
 					-- If the file exists, open_write + close
@@ -77,10 +74,9 @@ feature
 				basic_close
 			end;
 			id := i;
-			set_is_dynamic (System.is_dynamic);
 debug ("SERVER")
-	io.error.putstring ("Creating file E");
-	io.error.putint (i);
+	io.error.put_string ("Creating file ");
+	io.error.put_string (i.file_name);
 	io.error.new_line;
 end;
 		end;
@@ -125,8 +121,8 @@ end;
 			end;
 			is_open := True;
 debug ("SERVER")
-	io.error.putstring ("Opening file E");
-	io.error.putint (id);
+	io.error.put_string ("Opening file ");
+	io.error.put_string (id.file_name);
 	io.error.new_line;
 end;
 		ensure
@@ -141,23 +137,23 @@ end;
 			basic_close;
 			is_open := False;
 debug ("SERVER")
-	io.error.putstring ("Closing file E");
-	io.error.putint (id);
+	io.error.put_string ("Closing file ");
+	io.error.put_string (id.file_name);
 	io.error.new_line;
 end;
 		ensure then
 			is_closed: not is_open
 		end;
 
-	update_path (prec: BOOLEAN) is
+	update_path is
 			-- Update the file path of Current 
 			-- server file. (It might have changed 
 			-- between compilations)
 		local
 			fname: FILE_NAME;
-			temp: STRING;
+			temp: STRING
 		do
-			if prec then
+			if precompiled then
 				temp := Precompilation_path
 			elseif is_static then
 				temp := Extendible_path
@@ -167,40 +163,27 @@ end;
 			!!fname.make_from_string (temp);
 			!!temp.make (5);
 			temp.extend ('S');
-			temp.append_integer ((id // packet_size) + 1);
+			temp.append_integer (id.packet_number);
 			fname.extend (temp);
-			!!temp.make (5);
-			temp.extend ('E');
-			temp.append_integer (id);
-			fname.set_file_name (temp);
+			fname.set_file_name (id.file_name);
 			name := fname
 		end;
 
-	precompiled: BOOLEAN;
+feature -- Status report
+
+	precompiled: BOOLEAN is
 			-- Does the Current server file contain
 			-- precompiled information?
-
-	set_precompiled is
-			-- Set `precompiled' to True.
 		do
-			precompiled := True
-		end;
+			Result := id.is_precompiled
+		end
 
-feature -- Packet size
-
-	packet_size: INTEGER is 100
-
-feature -- DLE
-
-	is_dynamic: BOOLEAN;
+	is_dynamic: BOOLEAN is
 			-- Does the current server file contain 
 			-- dynamic classes' information?
-
-	set_is_dynamic (b: BOOLEAN) is
-			-- Assign `b' to `is_dynamic'.
 		do
-			is_dynamic := b
-		end;
+			Result := id.is_dynamic
+		end
 
 	is_static: BOOLEAN is
 			-- Does the current server file contain static classes' information
@@ -209,4 +192,4 @@ feature -- DLE
 			Result := System.is_dynamic and not is_dynamic
 		end;
 
-end
+end -- class SERVER_FILE

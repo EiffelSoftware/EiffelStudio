@@ -40,18 +40,14 @@ feature -- Access
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
-			-- FIXME why does this return 0
-			-- if it is indeed redefined by children it should be deffered.
-			Result := 0
+			Result := width
 		end
 	
 	client_height: INTEGER is
 			-- Height of the client area of container
 			-- Redefined in children.
 		do
-			-- FIXME why does this return 0
-			-- if it is indeed redefined by children it should be deffered.
-			Result := 0
+			Result := height
 		end
 
 	background_pixmap: EV_PIXMAP
@@ -229,6 +225,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/21 18:07:05  king
+--| Made client dimensions return widget dimensions
+--|
 --| Revision 1.32  2000/04/18 18:44:23  oconnor
 --| removed reference to obsolete C external in set_bg_pixmap
 --|

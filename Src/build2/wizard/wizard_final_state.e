@@ -27,6 +27,11 @@ inherit
 	GB_SHARED_SYSTEM_STATUS
 	
 	GB_SHARED_OBJECT_HANDLER
+	
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -67,6 +72,9 @@ feature {NONE} -- Implementation
 			output_file: PLAIN_TEXT_FILE
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			eifp_document: EIFP_DOCUMENT
+			eiffel_files: FILE_FOLDER_NODE_FRAGMENT
+			build_files: FILE_FOLDER_NODE_FRAGMENT
 		do
 				-- The wizard generated code seems to leave the
 				-- window locked, so we unlock it. We check first,
@@ -80,44 +88,41 @@ feature {NONE} -- Implementation
 			code_generator.generate
 			system_status.current_project_settings.save
 			xml_handler.save
-				-- We must now generate a text file containing information
-				-- about wizard completion. Whichever process launched the
-				-- wizard can then query the contents, to find out
-				-- status.
-			output_file_name := clone (generated_path)
-			output_file_name.extend (wizard_completion_file_name)
-			create output_file.make_open_write (output_file_name)
-			output_file.start
+			
+				-- create eifp file
+			create eifp_document.make_open_read (Visual_studio_information.wizard_installation_path + "\..\default_windows.eifp")
+			if eifp_document.successful then
+				eiffel_files := eifp_document.files_node.eiffel_source_files_node
+				build_files := eifp_document.files_node.other_source_files_node
 
-			from 
-				window_selector.start
-			until
-				window_selector.off
-			loop
-				window_selector_item ?= window_selector.item
-				 if window_selector_item /= Void then
-				 	output_file.putstring ((window_selector_item.object.name + Class_implementation_extension).as_upper + ".e%N")
-				end
-				window_selector_layout ?= window_selector.item
-				if window_selector_layout /= Void then
-					from
-						window_selector_layout.start
-					until
-						window_selector_layout.off
-					loop
-						window_selector_item ?= window_selector_layout.item
-						if window_selector_item /= Void then
-							output_file.putstring ((window_selector_layout.text + "\" + window_selector_item.object.name + Class_implementation_extension).as_upper + ".e%N")
-						end
-						window_selector_layout.forth
+				from 
+					window_selector.start
+				until
+					window_selector.off
+				loop
+					window_selector_item ?= window_selector.item
+					 if window_selector_item /= Void then
+					 	eiffel_files.add_file ((window_selector_item.object.name).as_lower + ".e", True)
 					end
+					window_selector_layout ?= window_selector.item
+					if window_selector_layout /= Void then
+						from
+							window_selector_layout.start
+						until
+							window_selector_layout.off
+						loop
+							window_selector_item ?= window_selector_layout.item
+							if window_selector_item /= Void then
+								eiffel_files.add_file ((window_selector_layout.text + "\" + window_selector_item.object.name).as_lower + ".e", True)								
+							end
+							window_selector_layout.forth
+						end
+					end
+					window_selector.forth
 				end
-				check
-					item_is_directory_or_window: window_selector_item /= Void or window_selector_layout /= Void
-				end
-				window_selector.forth
-			end			
-			output_file.close
+			end
+			build_files.add_file ("build_project.bpr", True)
+			eifp_document.save_document (system_status.current_project_settings.project_location + "\" + System_status.current_project_settings.project_name + ".eifp")
 			
 			--| Add here the action of your wizard.
 			--|
@@ -141,6 +146,7 @@ feature {NONE} -- Implementation
 			objects := Window_selector.objects
 			if not object_handler.objects_all_named (objects) then
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
+				confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				confirmation_dialog.show_modal_to_window (main_window)
 				if confirmation_dialog.selected_button.is_equal ("OK") then
 					object_handler.add_default_names (objects)

@@ -122,11 +122,15 @@ feature
 		end;
 
 	dump (file: FILE) is
+		local
+			s: STRING
 		do
 			if is_expanded then
 				file.putstring ("expanded ");
 			end;
-			file.putstring (base_class.class_name);
+			s := clone (base_class.class_name);
+			s.to_upper;
+			file.putstring (s);
 		end;
 
 	associated_class_type: CLASS_TYPE is

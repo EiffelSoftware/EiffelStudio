@@ -73,7 +73,7 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Text displayed when user moves mouse over widget.
-			--| FIXME Can this be implmented for all widgets?
+			--| FIXME Can tooltip be implmented for all widgets?
 			--| Would it be more appropriate to have somthing like
 			--| EV_TOOLTIPABLE ? (set_tooltip, remove_tooltip)
 			--| That could be inherited by items as well?
@@ -772,6 +772,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2000/03/27 18:35:53  oconnor
+--| comments
+--|
 --| Revision 1.74  2000/03/24 17:03:44  oconnor
 --| comments and formatting
 --|

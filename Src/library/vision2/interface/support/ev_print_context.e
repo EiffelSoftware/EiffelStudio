@@ -39,6 +39,14 @@ feature -- Access
 
 	printer_name: STRING
 		-- Name of printer.
+		
+	horizontal_resolution: INTEGER
+		-- Horizontal resolution in pixels, equating to full width
+		-- of printed page.
+	
+	vertical_resolution: INTEGER
+		-- Vertical resolution in pixels, equating to full height
+		-- of printed page.
 
 	file_name: STRING
 		-- Name of output file.
@@ -116,6 +124,26 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			file_name := a_string
 		ensure
 			file_name_set: file_name = a_string
+		end
+		
+	set_horizontal_resolution (resolution: INTEGER) is
+			-- Assign `resolution' to `horizontal_resolution'.
+		require
+			resolution_positive: resolution > 0
+		do
+			horizontal_resolution := resolution
+		ensure
+			resolution_set: horizontal_resolution = resolution
+		end
+		
+	set_vertical_resolution (resolution: INTEGER) is
+			-- Assign `resolution' to `vertical_resolution'.
+		require
+			resolution_positive: resolution > 0
+		do
+			vertical_resolution := resolution
+		ensure
+			resolution_set: vertical_resolution = resolution
 		end
 
 	set_portrait is

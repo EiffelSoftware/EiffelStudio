@@ -21,7 +21,8 @@ class
 inherit
  	EV_FONT_I
 		redefine
-			interface
+			interface,
+			set_values
 		end
 
 	EV_C_UTIL
@@ -113,6 +114,19 @@ feature -- Element change
 			update_font_face
 		end
 
+	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
+		a_preferred_face: STRING) is
+			-- Set `a_family', `a_weight', `a_shape' `a_height' and
+			-- `a_preferred_face' at the same time for speed.
+		do
+			family := a_family
+			weight := a_weight
+			shape := a_shape
+			height := a_height
+			preferred_face := a_preferred_face
+			update_font_face
+		end
+
 feature -- Status report
 
 	name: STRING is
@@ -196,20 +210,22 @@ feature {NONE} -- Implementation
 		local
 			exp_name: STRING
 			temp_font: EV_GDK_FONT
+			a_try_string: STRING
 		do
-			if preloaded.has (try_string) then
-				temp_font := preloaded.item (try_string)
+			a_try_string := try_string
+			if preloaded.has (a_try_string) then
+				temp_font := preloaded.item (a_try_string)
 			else
-				exp_name := match_name (try_string)
+				exp_name := match_name (a_try_string)
 				if exp_name = Void then
 					if preferred_face /= Void then
 						io.put_string ("Warning: no match found for " +
-							try_string + "%N")
+							a_try_string + "%N")
 					end
 					exp_name := rescue_match
 				end
 				create temp_font.make (exp_name)
-				preloaded.put (temp_font, try_string)
+				preloaded.put (temp_font, a_try_string)
 			end
 			full_name := temp_font.full_name
 			c_object := temp_font.c_object
@@ -526,6 +542,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/28 21:51:41  brendel
+--| Redefined set_values for optimization purpose.
+--| update_font_face uses local variable for speed optimization.
+--|
 --| Revision 1.13  2000/03/08 17:09:05  brendel
 --| Replaced `extend' with `put' on hash-table.
 --|

@@ -152,13 +152,13 @@ feature {NONE} -- Internal Results
 					i := j + 1
 				end
 			end
-			if i + 1 < s.count then
+			if j = 0 and then i + 1 <= s.count then
 				Result.extend (s.substring (i, s.count))
 			end
 		end
-
+	
 feature -- Access
-
+	
 	key_from_remote_host (host_name: STRING; root_key: POINTER): POINTER is
 			-- Connect the computer designed by its name 'host_name'.
 			-- 'Host_name' should be under the format: \\computer_name
@@ -612,4 +612,5 @@ end -- class WEL_REGISTRY
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
+	
+	

@@ -114,11 +114,13 @@ feature -- WEL Implementation
 			pen := shadow_pen
 			draw_dc.select_pen (pen)
 			draw_dc.line (item_left, item_top + cur_height_div_two - 1, item_right, item_top + cur_height_div_two - 1)
+			draw_dc.unselect_pen
 			pen.delete
 
 			pen := highlight_pen
 			draw_dc.select_pen (pen)
 			draw_dc.line (item_left, item_top + cur_height_div_two, item_right, item_top + cur_height_div_two)
+			draw_dc.unselect_pen
 			pen.delete
 
 				-- We need to draw a background.

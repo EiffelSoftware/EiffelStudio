@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 	make_with_tools (tool1, tool2, tool3: EV_WIDGET; title1, title2, title3: STRING) is
 			-- Create `Current' and extend with `first_tool' and `second_holder'.
 			-- Assign `title1' to `tool1' and `title2' to `tool2'.
-		local
-			tool_holder: GB_TOOL_HOLDER
 		do
 			default_create
 			create split_area

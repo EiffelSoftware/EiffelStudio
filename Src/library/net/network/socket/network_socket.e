@@ -99,7 +99,11 @@ feature -- Status setting
 		require
 			non_negative: n >= 0
 		do
-			timeout := n
+			if n > 0 then
+				timeout := n
+			else
+				timeout := default_timeout
+			end
 		ensure
 			timeout_set: timeout = n
 		end

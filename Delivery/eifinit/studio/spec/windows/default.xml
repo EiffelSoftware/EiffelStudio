@@ -551,6 +551,7 @@
 			<TEXT DESCRIPTION="Display dialog that warns that homonym format can take a long time">generate_homonyms<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog when an application is running and a compilation is launched">stop_execution_when_compiling<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog before killing a debugged application">confirm_kill<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display dialog when editing the same class in two development windows">already_editing_class<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
@@ -563,6 +564,7 @@
 			<TEXT>debugger__show_text_in_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>debug_main_splitter_position<INTEGER>250</INTEGER></TEXT>
 			<TEXT>debugger__default_maximum_stack_depth<INTEGER>100</INTEGER></TEXT>
+			<TEXT>debugger__critical_stack_depth<INTEGER>1000</INTEGER></TEXT>
 			<TEXT>last_saved_stack_path<STRING>C:\</STRING></TEXT>
 			<TEXT>last_browsed_cluster_directory<STRING>C:\</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>

@@ -34,7 +34,7 @@ feature
 			!!cont_request.make (Rqst_cont);
 			!!argument_window.make (c, Current);
 			!!specify_args;
-			add_button_press_action (3, Current, specify_args);
+			add_button_click_action (3, Current, specify_args);
 		end;
 	
 feature 

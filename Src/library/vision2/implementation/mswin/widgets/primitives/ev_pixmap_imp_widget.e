@@ -46,7 +46,7 @@ inherit
 			set_background_color, set_foreground_color, background_color,
 			foreground_color
 		redefine
-			interface, on_parented, set_size
+			interface, on_parented, set_size, destroy
 		end
 
 	WEL_CONTROL_WINDOW
@@ -387,6 +387,30 @@ feature -- Filling operations
 		end
 
 feature {NONE} -- Implementation
+
+	destroy is
+			-- Destroy the widget and the internal pixmaps
+		do
+			if display_bitmap_dc /= Void and then display_bitmap_dc.exists then
+				display_bitmap_dc.unselect_bitmap
+				display_bitmap_dc.delete
+			end
+
+			if display_mask_dc /= Void and then display_mask_dc.exists then
+				display_mask_dc.unselect_bitmap
+				display_mask_dc.delete
+			end
+
+			if display_mask_bitmap /= Void and then display_mask_bitmap.exists then
+				display_mask_bitmap.delete
+			end
+
+			if display_bitmap /= Void and then display_bitmap.exists then
+				display_bitmap.delete
+			end
+
+			{EV_PRIMITIVE_IMP} Precursor
+		end
 
 	class_background: WEL_BRUSH is
 			-- Set the class background to NULL in order
@@ -763,6 +787,10 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/13 18:32:06  pichery
+--| Added destroy feature in order to correctly free
+--| unused objects.
+--|
 --| Revision 1.3  2000/04/13 00:26:48  pichery
 --| - Added comments for `is_initialized := False' in
 --|   `initialize'.

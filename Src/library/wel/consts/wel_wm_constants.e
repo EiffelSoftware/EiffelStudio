@@ -1,971 +1,431 @@
 indexing
-	description: "Window message (WM) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Window message (WM) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_WM_CONSTANTS
 
 feature -- Access
 
-	Wm_compacting: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_COMPACTING"
-		end
-
-	Wm_wininichange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_WININICHANGE"
-		end
-
-	Wm_syscolorchange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSCOLORCHANGE"
-		end
-
-	Wm_querynewpalette: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUERYNEWPALETTE"
-		end
-
-	Wm_paletteischanging: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PALETTEISCHANGING"
-		end
-
-	Wm_palettechanged: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PALETTECHANGED"
-		end
-
-	Wm_fontchange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_FONTCHANGE"
-		end
-
-	Wm_spoolerstatus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SPOOLERSTATUS"
-		end
-
-	Wm_devmodechange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DEVMODECHANGE"
-		end
-
-	Wm_timechange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_TIMECHANGE"
-		end
-
-	Wm_null: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NULL"
-		end
-
-	Wm_user: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_USER"
-		end
-
-	Wm_penwinfirst: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PENWINFIRST"
-		end
-
-	Wm_penwinlast: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PENWINLAST"
-		end
-
-	Wm_power: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_POWER"
-		end
-
-	Wm_queryendsession: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUERYENDSESSION"
-		end
-
-	Wm_endsession: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ENDSESSION"
-		end
-
-	Wm_quit: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUIT"
-		end
-
-	Wm_create: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CREATE"
-		end
-
-	Wm_nccreate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCCREATE"
-		end
-
-	Wm_destroy: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DESTROY"
-		end
-
-	Wm_ncdestroy: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCDESTROY"
-		end
-
-	Wm_showwindow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SHOWWINDOW"
-		end
-
-	Wm_setredraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETREDRAW"
-		end
-
-	Wm_enable: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ENABLE"
-		end
-
-	Wm_settext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETTEXT"
-		end
-
-	Wm_gettext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_GETTEXT"
-		end
-
-	Wm_gettextlength: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_GETTEXTLENGTH"
-		end
-
-	Wm_windowposchanging: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_WINDOWPOSCHANGING"
-		end
-
-	Wm_windowposchanged: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_WINDOWPOSCHANGED"
-		end
-
-	Wm_move: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MOVE"
-		end
-
-	Wm_size: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SIZE"
-		end
-
-	Wm_queryopen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUERYOPEN"
-		end
-
-	Wm_close: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CLOSE"
-		end
-
-	Wm_getminmaxinfo: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_GETMINMAXINFO"
-		end
-
-	Wm_paint: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PAINT"
-		end
-
-	Wm_erasebkgnd: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ERASEBKGND"
-		end
-
-	Wm_iconerasebkgnd: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ICONERASEBKGND"
-		end
-
-	Wm_ncpaint: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCPAINT"
-		end
-
-	Wm_nccalcsize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCCALCSIZE"
-		end
-
-	Wm_nchittest: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCHITTEST"
-		end
-
-	Wm_querydragicon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUERYDRAGICON"
-		end
-
-	Wm_dropfiles: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DROPFILES"
-		end
-
-	Wm_activate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ACTIVATE"
-		end
-
-	Wm_activateapp: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ACTIVATEAPP"
-		end
-
-	Wm_ncactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCACTIVATE"
-		end
-
-	Wm_setfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETFOCUS"
-		end
-
-	Wm_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_KILLFOCUS"
-		end
-
-	Wm_keydown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_KEYDOWN"
-		end
-
-	Wm_keyup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_KEYUP"
-		end
-
-	Wm_char: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CHAR"
-		end
-
-	Wm_deadchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DEADCHAR"
-		end
-
-	Wm_syskeydown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSKEYDOWN"
-		end
-
-	Wm_syskeyup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSKEYUP"
-		end
-
-	Wm_syschar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSCHAR"
-		end
-
-	Wm_sysdeadchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSDEADCHAR"
-		end
-
-	Wm_keyfirst: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_KEYFIRST"
-		end
-
-	Wm_keylast: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_KEYLAST"
-		end
-
-	Wm_mousemove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MOUSEMOVE"
-		end
-
-	Wm_lbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_LBUTTONDOWN"
-		end
-
-	Wm_lbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_LBUTTONUP"
-		end
-
-	Wm_lbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_LBUTTONDBLCLK"
-		end
-
-	Wm_rbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_RBUTTONDOWN"
-		end
-
-	Wm_rbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_RBUTTONUP"
-		end
-
-	Wm_rbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_RBUTTONDBLCLK"
-		end
-
-	Wm_mbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MBUTTONDOWN"
-		end
-
-	Wm_mbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MBUTTONUP"
-		end
-
-	Wm_mbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MBUTTONDBLCLK"
-		end
-
-	Wm_mousefirst: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MOUSEFIRST"
-		end
-
-	Wm_mouselast: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MOUSELAST"
-		end
-
-	Wm_ncmousemove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCMOUSEMOVE"
-		end
-
-	Wm_nclbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCLBUTTONDOWN"
-		end
-
-	Wm_nclbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCLBUTTONUP"
-		end
-
-	Wm_nclbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCLBUTTONDBLCLK"
-		end
-
-	Wm_ncrbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCRBUTTONDOWN"
-		end
-
-	Wm_ncrbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCRBUTTONUP"
-		end
-
-	Wm_ncrbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCRBUTTONDBLCLK"
-		end
-
-	Wm_ncmbuttondown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCMBUTTONDOWN"
-		end
-
-	Wm_ncmbuttonup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCMBUTTONUP"
-		end
-
-	Wm_ncmbuttondblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NCMBUTTONDBLCLK"
-		end
-
-	Wm_mouseactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MOUSEACTIVATE"
-		end
-
-	Wm_cancelmode: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CANCELMODE"
-		end
-
-	Wm_timer: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_TIMER"
-		end
-
-	Wm_initmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_INITMENU"
-		end
-
-	Wm_initmenupopup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_INITMENUPOPUP"
-		end
-
-	Wm_menuselect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MENUSELECT"
-		end
-
-	Wm_menuchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MENUCHAR"
-		end
-
-	Wm_command: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_COMMAND"
-		end
-
-	Wm_hscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_HSCROLL"
-		end
-
-	Wm_vscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_VSCROLL"
-		end
-
-	Wm_cut: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CUT"
-		end
-
-	Wm_copy: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_COPY"
-		end
-
-	Wm_paste: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PASTE"
-		end
-
-	Wm_clear: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CLEAR"
-		end
-
-	Wm_undo: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_UNDO"
-		end
-
-	Wm_renderformat: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_RENDERFORMAT"
-		end
-
-	Wm_renderallformats: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_RENDERALLFORMATS"
-		end
-
-	Wm_destroyclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DESTROYCLIPBOARD"
-		end
-
-	Wm_drawclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DRAWCLIPBOARD"
-		end
-
-	Wm_paintclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PAINTCLIPBOARD"
-		end
-
-	Wm_sizeclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SIZECLIPBOARD"
-		end
-
-	Wm_vscrollclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_VSCROLLCLIPBOARD"
-		end
-
-	Wm_hscrollclipboard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_HSCROLLCLIPBOARD"
-		end
-
-	Wm_askcbformatname: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ASKCBFORMATNAME"
-		end
-
-	Wm_changecbchain: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CHANGECBCHAIN"
-		end
-
-	Wm_setcursor: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETCURSOR"
-		end
-
-	Wm_syscommand: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SYSCOMMAND"
-		end
-
-	Wm_mdicreate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDICREATE"
-		end
-
-	Wm_mdidestroy: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIDESTROY"
-		end
-
-	Wm_mdiactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIACTIVATE"
-		end
-
-	Wm_mdirestore: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIRESTORE"
-		end
-
-	Wm_mdinext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDINEXT"
-		end
-
-	Wm_mdimaximize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIMAXIMIZE"
-		end
-
-	Wm_mditile: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDITILE"
-		end
-
-	Wm_mdicascade: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDICASCADE"
-		end
-
-	Wm_mdiiconarrange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIICONARRANGE"
-		end
-
-	Wm_mdigetactive: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDIGETACTIVE"
-		end
-
-	Wm_mdisetmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MDISETMENU"
-		end
-
-	Wm_childactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CHILDACTIVATE"
-		end
-
-	Wm_initdialog: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_INITDIALOG"
-		end
-
-	Wm_nextdlgctl: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NEXTDLGCTL"
-		end
-
-	Wm_parentnotify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_PARENTNOTIFY"
-		end
-
-	Wm_enteridle: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_ENTERIDLE"
-		end
-
-	Wm_getdlgcode: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_GETDLGCODE"
-		end
-
-	Wm_setfont: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETFONT"
-		end
-
-	Wm_getfont: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_GETFONT"
-		end
-
-	Wm_drawitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DRAWITEM"
-		end
-
-	Wm_measureitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_MEASUREITEM"
-		end
-
-	Wm_deleteitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_DELETEITEM"
-		end
-
-	Wm_compareitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_COMPAREITEM"
-		end
-
-	Wm_vkeytoitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_VKEYTOITEM"
-		end
-
-	Wm_chartoitem: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_CHARTOITEM"
-		end
-
-	Wm_queuesync: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_QUEUESYNC"
-		end
-
-	Wm_commnotify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_COMMNOTIFY"
-		end
-
-	Wm_notify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_NOTIFY"
-		end
-
-	Wm_seticon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WM_SETICON"
-		end
+	Wm_null: INTEGER is 0
+			-- Declared in Windows as WM_NULL
+
+	Wm_create: INTEGER is 1
+			-- Declared in Windows as WM_CREATE
+
+	Wm_destroy: INTEGER is 2
+			-- Declared in Windows as WM_DESTROY
+
+	Wm_move: INTEGER is 3
+			-- Declared in Windows as WM_MOVE
+
+	Wm_size: INTEGER is 5
+			-- Declared in Windows as WM_SIZE
+
+	Wm_activate: INTEGER is 6
+			-- Declared in Windows as WM_ACTIVATE
+
+	Wm_setfocus: INTEGER is 7
+			-- Declared in Windows as WM_SETFOCUS
+
+	Wm_killfocus: INTEGER is 8
+			-- Declared in Windows as WM_KILLFOCUS
+
+	Wm_enable: INTEGER is 10
+			-- Declared in Windows as WM_ENABLE
+
+	Wm_setredraw: INTEGER is 11
+			-- Declared in Windows as WM_SETREDRAW
+
+	Wm_settext: INTEGER is 12
+			-- Declared in Windows as WM_SETTEXT
+
+	Wm_gettext: INTEGER is 13
+			-- Declared in Windows as WM_GETTEXT
+
+	Wm_gettextlength: INTEGER is 14
+			-- Declared in Windows as WM_GETTEXTLENGTH
+
+	Wm_paint: INTEGER is 15
+			-- Declared in Windows as WM_PAINT
+
+	Wm_close: INTEGER is 16
+			-- Declared in Windows as WM_CLOSE
+
+	Wm_queryendsession: INTEGER is 17
+			-- Declared in Windows as WM_QUERYENDSESSION
+
+	Wm_quit: INTEGER is 18
+			-- Declared in Windows as WM_QUIT
+
+	Wm_queryopen: INTEGER is 19
+			-- Declared in Windows as WM_QUERYOPEN
+
+	Wm_erasebkgnd: INTEGER is 20
+			-- Declared in Windows as WM_ERASEBKGND
+
+	Wm_syscolorchange: INTEGER is 21
+			-- Declared in Windows as WM_SYSCOLORCHANGE
+
+	Wm_endsession: INTEGER is 22
+			-- Declared in Windows as WM_ENDSESSION
+
+	Wm_showwindow: INTEGER is 24
+			-- Declared in Windows as WM_SHOWWINDOW
+
+	Wm_wininichange: INTEGER is 26
+			-- Declared in Windows as WM_WININICHANGE
+
+	Wm_devmodechange: INTEGER is 27
+			-- Declared in Windows as WM_DEVMODECHANGE
+
+	Wm_activateapp: INTEGER is 28
+			-- Declared in Windows as WM_ACTIVATEAPP
+
+	Wm_fontchange: INTEGER is 29
+			-- Declared in Windows as WM_FONTCHANGE
+
+	Wm_timechange: INTEGER is 30
+			-- Declared in Windows as WM_TIMECHANGE
+
+	Wm_cancelmode: INTEGER is 31
+			-- Declared in Windows as WM_CANCELMODE
+
+	Wm_setcursor: INTEGER is 32
+			-- Declared in Windows as WM_SETCURSOR
+
+	Wm_mouseactivate: INTEGER is 33
+			-- Declared in Windows as WM_MOUSEACTIVATE
+
+	Wm_childactivate: INTEGER is 34
+			-- Declared in Windows as WM_CHILDACTIVATE
+
+	Wm_queuesync: INTEGER is 35
+			-- Declared in Windows as WM_QUEUESYNC
+
+	Wm_getminmaxinfo: INTEGER is 36
+			-- Declared in Windows as WM_GETMINMAXINFO
+
+	Wm_iconerasebkgnd: INTEGER is 39
+			-- Declared in Windows as WM_ICONERASEBKGND
+
+	Wm_nextdlgctl: INTEGER is 40
+			-- Declared in Windows as WM_NEXTDLGCTL
+
+	Wm_spoolerstatus: INTEGER is 42
+			-- Declared in Windows as WM_SPOOLERSTATUS
+
+	Wm_drawitem: INTEGER is 43
+			-- Declared in Windows as WM_DRAWITEM
+
+	Wm_measureitem: INTEGER is 44
+			-- Declared in Windows as WM_MEASUREITEM
+
+	Wm_deleteitem: INTEGER is 45
+			-- Declared in Windows as WM_DELETEITEM
+
+	Wm_vkeytoitem: INTEGER is 46
+			-- Declared in Windows as WM_VKEYTOITEM
+
+	Wm_chartoitem: INTEGER is 47
+			-- Declared in Windows as WM_CHARTOITEM
+
+	Wm_setfont: INTEGER is 48
+			-- Declared in Windows as WM_SETFONT
+
+	Wm_getfont: INTEGER is 49
+			-- Declared in Windows as WM_GETFONT
+
+	Wm_querydragicon: INTEGER is 55
+			-- Declared in Windows as WM_QUERYDRAGICON
+
+	Wm_compareitem: INTEGER is 57
+			-- Declared in Windows as WM_COMPAREITEM
+
+	Wm_compacting: INTEGER is 65
+			-- Declared in Windows as WM_COMPACTING
+
+	Wm_commnotify: INTEGER is 68
+			-- Declared in Windows as WM_COMMNOTIFY
+
+	Wm_windowposchanging: INTEGER is 70
+			-- Declared in Windows as WM_WINDOWPOSCHANGING
+
+	Wm_windowposchanged: INTEGER is 71
+			-- Declared in Windows as WM_WINDOWPOSCHANGED
+
+	Wm_power: INTEGER is 72
+			-- Declared in Windows as WM_POWER
+
+	Wm_notify: INTEGER is 78
+			-- Declared in Windows as WM_NOTIFY
+
+	Wm_seticon: INTEGER is 128
+			-- Declared in Windows as WM_SETICON
+
+	Wm_nccreate: INTEGER is 129
+			-- Declared in Windows as WM_NCCREATE
+
+	Wm_ncdestroy: INTEGER is 130
+			-- Declared in Windows as WM_NCDESTROY
+
+	Wm_nccalcsize: INTEGER is 131
+			-- Declared in Windows as WM_NCCALCSIZE
+
+	Wm_nchittest: INTEGER is 132
+			-- Declared in Windows as WM_NCHITTEST
+
+	Wm_ncpaint: INTEGER is 133
+			-- Declared in Windows as WM_NCPAINT
+
+	Wm_ncactivate: INTEGER is 134
+			-- Declared in Windows as WM_NCACTIVATE
+
+	Wm_getdlgcode: INTEGER is 135
+			-- Declared in Windows as WM_GETDLGCODE
+
+	Wm_ncmousemove: INTEGER is 160
+			-- Declared in Windows as WM_NCMOUSEMOVE
+
+	Wm_nclbuttondown: INTEGER is 161
+			-- Declared in Windows as WM_NCLBUTTONDOWN
+
+	Wm_nclbuttonup: INTEGER is 162
+			-- Declared in Windows as WM_NCLBUTTONUP
+
+	Wm_nclbuttondblclk: INTEGER is 163
+			-- Declared in Windows as WM_NCLBUTTONDBLCLK
+
+	Wm_ncrbuttondown: INTEGER is 164
+			-- Declared in Windows as WM_NCRBUTTONDOWN
+
+	Wm_ncrbuttonup: INTEGER is 165
+			-- Declared in Windows as WM_NCRBUTTONUP
+
+	Wm_ncrbuttondblclk: INTEGER is 166
+			-- Declared in Windows as WM_NCRBUTTONDBLCLK
+
+	Wm_ncmbuttondown: INTEGER is 167
+			-- Declared in Windows as WM_NCMBUTTONDOWN
+
+	Wm_ncmbuttonup: INTEGER is 168
+			-- Declared in Windows as WM_NCMBUTTONUP
+
+	Wm_ncmbuttondblclk: INTEGER is 169
+			-- Declared in Windows as WM_NCMBUTTONDBLCLK
+
+	Wm_keydown: INTEGER is 256
+			-- Declared in Windows as WM_KEYDOWN
+
+	Wm_keyfirst: INTEGER is 256
+			-- Declared in Windows as WM_KEYFIRST
+
+	Wm_keyup: INTEGER is 257
+			-- Declared in Windows as WM_KEYUP
+
+	Wm_char: INTEGER is 258
+			-- Declared in Windows as WM_CHAR
+
+	Wm_deadchar: INTEGER is 259
+			-- Declared in Windows as WM_DEADCHAR
+
+	Wm_syskeydown: INTEGER is 260
+			-- Declared in Windows as WM_SYSKEYDOWN
+
+	Wm_syskeyup: INTEGER is 261
+			-- Declared in Windows as WM_SYSKEYUP
+
+	Wm_syschar: INTEGER is 262
+			-- Declared in Windows as WM_SYSCHAR
+
+	Wm_sysdeadchar: INTEGER is 263
+			-- Declared in Windows as WM_SYSDEADCHAR
+
+	Wm_keylast: INTEGER is 264
+			-- Declared in Windows as WM_KEYLAST
+
+	Wm_initdialog: INTEGER is 272
+			-- Declared in Windows as WM_INITDIALOG
+
+	Wm_command: INTEGER is 273
+			-- Declared in Windows as WM_COMMAND
+
+	Wm_syscommand: INTEGER is 274
+			-- Declared in Windows as WM_SYSCOMMAND
+
+	Wm_timer: INTEGER is 275
+			-- Declared in Windows as WM_TIMER
+
+	Wm_hscroll: INTEGER is 276
+			-- Declared in Windows as WM_HSCROLL
+
+	Wm_vscroll: INTEGER is 277
+			-- Declared in Windows as WM_VSCROLL
+
+	Wm_initmenu: INTEGER is 278
+			-- Declared in Windows as WM_INITMENU
+
+	Wm_initmenupopup: INTEGER is 279
+			-- Declared in Windows as WM_INITMENUPOPUP
+
+	Wm_menuselect: INTEGER is 287
+			-- Declared in Windows as WM_MENUSELECT
+
+	Wm_menuchar: INTEGER is 288
+			-- Declared in Windows as WM_MENUCHAR
+
+	Wm_enteridle: INTEGER is 289
+			-- Declared in Windows as WM_ENTERIDLE
+
+	Wm_mousemove: INTEGER is 512
+			-- Declared in Windows as WM_MOUSEMOVE
+
+	Wm_mousefirst: INTEGER is 512
+			-- Declared in Windows as WM_MOUSEFIRST
+
+	Wm_lbuttondown: INTEGER is 513
+			-- Declared in Windows as WM_LBUTTONDOWN
+
+	Wm_lbuttonup: INTEGER is 514
+			-- Declared in Windows as WM_LBUTTONUP
+
+	Wm_lbuttondblclk: INTEGER is 515
+			-- Declared in Windows as WM_LBUTTONDBLCLK
+
+	Wm_rbuttondown: INTEGER is 516
+			-- Declared in Windows as WM_RBUTTONDOWN
+
+	Wm_rbuttonup: INTEGER is 517
+			-- Declared in Windows as WM_RBUTTONUP
+
+	Wm_rbuttondblclk: INTEGER is 518
+			-- Declared in Windows as WM_RBUTTONDBLCLK
+
+	Wm_mbuttondown: INTEGER is 519
+			-- Declared in Windows as WM_MBUTTONDOWN
+
+	Wm_mbuttonup: INTEGER is 520
+			-- Declared in Windows as WM_MBUTTONUP
+
+	Wm_mbuttondblclk: INTEGER is 521
+			-- Declared in Windows as WM_MBUTTONDBLCLK
+
+	Wm_mouselast: INTEGER is 521
+			-- Declared in Windows as WM_MOUSELAST
+
+	Wm_parentnotify: INTEGER is 528
+			-- Declared in Windows as WM_PARENTNOTIFY
+
+	Wm_sizing: INTEGER is 532
+			-- Declared in Windows as WM_SIZING
+
+	Wm_mdicreate: INTEGER is 544
+			-- Declared in Windows as WM_MDICREATE
+
+	Wm_mdidestroy: INTEGER is 545
+			-- Declared in Windows as WM_MDIDESTROY
+
+	Wm_mdiactivate: INTEGER is 546
+			-- Declared in Windows as WM_MDIACTIVATE
+
+	Wm_mdirestore: INTEGER is 547
+			-- Declared in Windows as WM_MDIRESTORE
+
+	Wm_mdinext: INTEGER is 548
+			-- Declared in Windows as WM_MDINEXT
+
+	Wm_mdimaximize: INTEGER is 549
+			-- Declared in Windows as WM_MDIMAXIMIZE
+
+	Wm_mditile: INTEGER is 550
+			-- Declared in Windows as WM_MDITILE
+
+	Wm_mdicascade: INTEGER is 551
+			-- Declared in Windows as WM_MDICASCADE
+
+	Wm_mdiiconarrange: INTEGER is 552
+			-- Declared in Windows as WM_MDIICONARRANGE
+
+	Wm_mdigetactive: INTEGER is 553
+			-- Declared in Windows as WM_MDIGETACTIVE
+
+	Wm_mdisetmenu: INTEGER is 560
+			-- Declared in Windows as WM_MDISETMENU
+
+	Wm_dropfiles: INTEGER is 563
+			-- Declared in Windows as WM_DROPFILES
+
+	Wm_cut: INTEGER is 768
+			-- Declared in Windows as WM_CUT
+
+	Wm_copy: INTEGER is 769
+			-- Declared in Windows as WM_COPY
+
+	Wm_paste: INTEGER is 770
+			-- Declared in Windows as WM_PASTE
+
+	Wm_clear: INTEGER is 771
+			-- Declared in Windows as WM_CLEAR
+
+	Wm_undo: INTEGER is 772
+			-- Declared in Windows as WM_UNDO
+
+	Wm_renderformat: INTEGER is 773
+			-- Declared in Windows as WM_RENDERFORMAT
+
+	Wm_renderallformats: INTEGER is 774
+			-- Declared in Windows as WM_RENDERALLFORMATS
+
+	Wm_destroyclipboard: INTEGER is 775
+			-- Declared in Windows as WM_DESTROYCLIPBOARD
+
+	Wm_drawclipboard: INTEGER is 776
+			-- Declared in Windows as WM_DRAWCLIPBOARD
+
+	Wm_paintclipboard: INTEGER is 777
+			-- Declared in Windows as WM_PAINTCLIPBOARD
+
+	Wm_sizeclipboard: INTEGER is 779
+			-- Declared in Windows as WM_SIZECLIPBOARD
+
+	Wm_vscrollclipboard: INTEGER is 778
+			-- Declared in Windows as WM_VSCROLLCLIPBOARD
+
+	Wm_hscrollclipboard: INTEGER is 782
+			-- Declared in Windows as WM_HSCROLLCLIPBOARD
+
+	Wm_askcbformatname: INTEGER is 780
+			-- Declared in Windows as WM_ASKCBFORMATNAME
+
+	Wm_changecbchain: INTEGER is 781
+			-- Declared in Windows as WM_CHANGECBCHAIN
+
+	Wm_querynewpalette: INTEGER is 783
+			-- Declared in Windows as WM_QUERYNEWPALETTE
+
+	Wm_paletteischanging: INTEGER is 784
+			-- Declared in Windows as WM_PALETTEISCHANGING
+
+	Wm_palettechanged: INTEGER is 785
+			-- Declared in Windows as WM_PALETTECHANGED
+
+	Wm_penwinfirst: INTEGER is 896
+			-- Declared in Windows as WM_PENWINFIRST
+
+	Wm_penwinlast: INTEGER is 911
+			-- Declared in Windows as WM_PENWINLAST
+
+	Wm_user: INTEGER is 1024
+			-- Declared in Windows as WM_USER
 
 end -- class WEL_WM_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -9,47 +9,23 @@ class
 
 feature -- Access
 
-	Wm_ctlcolorstatic: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLORSTATIC"
-		end
+	Wm_ctlcolorstatic: INTEGER is 312
+			-- Declared in Windows as WM_CTLCOLORSTATIC
 
-	Wm_ctlcolorbtn: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLORBTN"
-		end
+	Wm_ctlcolorbtn: INTEGER is 309
+			-- Declared in Windows as WM_CTLCOLORBTN
 
-	Wm_ctlcoloredit: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLOREDIT"
-		end
+	Wm_ctlcoloredit: INTEGER is 307
+			-- Declared in Windows as WM_CTLCOLOREDIT
 
-	Wm_ctlcolorlistbox: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLORLISTBOX"
-		end
+	Wm_ctlcolorlistbox: INTEGER is 308
+			-- Declared in Windows as WM_CTLCOLORLISTBOX
 
-	Wm_ctlcolormsgbox: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLORMSGBOX"
-		end
+	Wm_ctlcolormsgbox: INTEGER is 306
+			-- Declared in Windows as WM_CTLCOLORMSGBOX
 
-	Wm_ctlcolorscrollbar: INTEGER is
-		external
-			"C [macro <winuser.h>]"
-		alias
-			"WM_CTLCOLORSCROLLBAR"
-		end
+	Wm_ctlcolorscrollbar: INTEGER is 311
+			-- Declared in Windows as WM_CTLCOLORSCROLLBAR
 
 end -- class WEL_WM_CTLCOLOR_CONSTANTS
 

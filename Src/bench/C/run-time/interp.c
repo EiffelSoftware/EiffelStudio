@@ -1473,12 +1473,14 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			break;
 		case BC_PCLIKE:				/* Like feature creation type */
 			{
+			short stype;
 			int32 origin, ooffset;
 
+			stype = get_short();			/* Get static type of caller */
 			origin = get_long();			/* Get the origin class id */
 			ooffset = get_long();			/* Get the offset in origin */
 /* GENERIC CONFORMANCE */
-			type = RTWPCT(origin, ooffset, icurrent->it_ref);
+			type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
 			break;
 			}
 		case BC_CCUR:				/* Like Current creation type */
@@ -4675,11 +4677,13 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 						break;
 			case -13: /* like feature - see BC_PCLIKE */
 						{
+							short stype;
 							int32 origin, ooffset;
 
+							stype = get_short();			/* Get static type of caller */
 							origin = get_long();			/* Get the origin class id */
 							ooffset = get_long();			/* Get the offset in origin */
-							*(gp++) = (int16) RTWPCT(origin, ooffset, icurrent->it_ref);
+							*(gp++) = (int16) RTWPCT(stype, origin, ooffset, icurrent->it_ref);
 							++cnt;
 						}
 						break;
@@ -4704,11 +4708,11 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 	} while (last != -1);
 
 	/* If not generic then return dtype */
-	
-	if (cnt == 1)
-			return dtype;
 
-	return (short) RTCID(Current, (int16) dtype, gen_types);
+	if (cnt == 1)
+		return dtype;
+	
+	return (short) RTCID((int16 *)0,Current, (int16) dtype, gen_types);
 
 	EIF_END_GET_CONTEXT
 }

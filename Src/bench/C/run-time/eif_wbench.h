@@ -36,7 +36,7 @@ RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, char *object);			
 RT_LNK int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
 RT_LNK int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
 RT_LNK int wtype_gen(int static_type, int32 feature_id, char *object);						/* Creation type (generic) */
-RT_LNK int wptype_gen(int32 origin, int32 offset, char *object);						/* Creation type of a precomp generic feature */
+RT_LNK int wptype_gen(int static_type, int32 origin, int32 offset, char *object);						/* Creation type of a precomp generic feature */
 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */

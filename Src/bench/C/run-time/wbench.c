@@ -470,10 +470,13 @@ rt_public int wtype_gen(int static_type, int32 feature_id, char *object)
 	rout_id = Routids(static_type)[feature_id];
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
-	return (int) eif_compound_id (object, type, gen_type);
+	if (gen_type != (int16 *) 0)
+		*gen_type = (int16) static_type;
+
+	return (int) eif_compound_id ((int16 *)0, object, type, gen_type);
 }
 
-rt_public int wptype_gen(int32 origin, int32 offset, char *object)
+rt_public int wptype_gen(int static_type, int32 origin, int32 offset, char *object)
 {
 	/* Type of a generic feature of routine identified by `offset' in 
 	 * its origin class `origin' and to be applied on `object'. Replaces
@@ -486,7 +489,10 @@ rt_public int wptype_gen(int32 origin, int32 offset, char *object)
 	dyn_type = Dtype(object);
 	desc = desc_tab[origin][dyn_type] + offset;
 
-	return (int) eif_compound_id (object, desc->type, desc->gen_type);
+	if (desc->gen_type != (int16 *) 0)
+		*(desc->gen_type) = (int16) static_type;
+
+	return (int) eif_compound_id ((int16 *) 0,object, desc->type, desc->gen_type);
 }
 
 rt_public EIF_FN_REF wdisp(int dyn_type)

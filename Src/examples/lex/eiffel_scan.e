@@ -14,7 +14,7 @@ inherit
 
 	ARGUMENTS
 		undefine
-			copy, consistent, is_equal, setup
+			copy, is_equal
 		end
 
 create

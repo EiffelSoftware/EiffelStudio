@@ -53,6 +53,8 @@ feature {NONE}
 
 	implementers_cmd_name: STRING is "implementers"
 
+	indexing_cmd_name: STRING is "indexing"
+
 	loop_cmd_name: STRING is "loop"
 
 	loop_help_cmd_name: STRING is "help"
@@ -60,6 +62,8 @@ feature {NONE}
 	melt_cmd_name: STRING is "melt"
 
 	main_cmd_name: STRING is "main"
+
+	modifs_cmd_name: STRING is "modifications"
 
 	once_cmd_name: STRING is "once"
 
@@ -80,6 +84,8 @@ feature {NONE}
 	storage_cmd_name: STRING is "store"
 
 	suppliers_cmd_name: STRING is "suppliers"
+
+	synonyms_cmd_name: STRING is "synonyms"
 
 	system_cmd_name: STRING is "system"
 

@@ -36,6 +36,8 @@ feature
 
 	Implementers_abb: CHARACTER is 'i';
 
+	Indexing_abb: CHARACTER is 'i';
+
 	Compile_abb: CHARACTER is 'i';
 
 	F_compile_abb: CHARACTER is 'c';
@@ -47,6 +49,8 @@ feature
 	Main_abb: CHARACTER is 'm';
 
 	Melt_abb: CHARACTER is 'l';
+
+	Modifs_abb: CHARACTER is 'm';
 
 	Once_abb: CHARACTER is 'o';
 
@@ -61,6 +65,8 @@ feature
 	Short_abb: CHARACTER is 's';
 
 	Storage_abb: CHARACTER is 's';
+
+	Synonyms_abb: CHARACTER is 's';
 
 	System_abb: CHARACTER is 's';
 

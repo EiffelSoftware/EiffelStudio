@@ -187,6 +187,7 @@ feature -- Status report
 			else
 				Result := 1
 			end
+			Result := Result + select_from (sep.width, sep.height)
 		ensure
 			positive_value: Result >= 0
 			coherent_position: Result <= maximum_split_position
@@ -291,21 +292,22 @@ feature -- Status setting
 		end
 
 	set_split_position (a_split_position: INTEGER) is
-			-- Make `a_split_position' the position of the splitter in pixels.
+			-- Make `a_split_position' position of splitter in pixels.
 		require
 			position_in_valid_range:
 				(a_split_position >= minimum_split_position
 				and a_split_position <= maximum_split_position)
 		local
-			fcd, scd: INTEGER
+			fcd, scd, previous_split_pos: INTEGER
 		do
 			fcd := a_split_position
 			scd := select_from (split_box.width, split_box.height) -
 				select_from (sep.width, sep.height) - a_split_position
-			if a_split_position < first_cell.height then
+			previous_split_pos := select_from (first_cell.width, first_cell.height)
+			if a_split_position < previous_split_pos then
 				set_first_cell_dimension (fcd)
 				set_second_cell_dimension (scd)
-			elseif a_split_position > first_cell.height then
+			elseif a_split_position > previous_split_pos then
 				set_second_cell_dimension (scd)
 				set_first_cell_dimension (fcd)
 			end
@@ -554,6 +556,11 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/05/01 21:40:07  manus
+--| `minimum_split_position' should take into account size of separator.
+--| `set_split_position' code was using `height' of `first_cell' where it should
+--| have depend on the type of EV_SPLIT_AREA and therefore use `select_from'.
+--|
 --| Revision 1.33  2000/04/25 21:10:01  brendel
 --| Improved readibility of draw_lineand splitter_position_from_x_or_y.
 --| Improved action sequence handling of separator.

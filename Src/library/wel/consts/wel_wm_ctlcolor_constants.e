@@ -9,23 +9,26 @@ class
 
 feature -- Access
 
-	Wm_ctlcolorstatic: INTEGER is 312
-			-- Declared in Windows as WM_CTLCOLORSTATIC
-
-	Wm_ctlcolorbtn: INTEGER is 309
-			-- Declared in Windows as WM_CTLCOLORBTN
-
-	Wm_ctlcoloredit: INTEGER is 307
-			-- Declared in Windows as WM_CTLCOLOREDIT
-
-	Wm_ctlcolorlistbox: INTEGER is 308
-			-- Declared in Windows as WM_CTLCOLORLISTBOX
-
 	Wm_ctlcolormsgbox: INTEGER is 306
 			-- Declared in Windows as WM_CTLCOLORMSGBOX
-
+	
+	Wm_ctlcoloredit: INTEGER is 307
+			-- Declared in Windows as WM_CTLCOLOREDIT
+	
+	Wm_ctlcolorlistbox: INTEGER is 308
+			-- Declared in Windows as WM_CTLCOLORLISTBOX
+	
+	Wm_ctlcolorbtn: INTEGER is 309
+			-- Declared in Windows as WM_CTLCOLORBTN
+	
+	Wm_ctlcolordlg: INTEGER is 310
+			-- Declared in Windows as WM_CTLCOLORDLG
+	
 	Wm_ctlcolorscrollbar: INTEGER is 311
 			-- Declared in Windows as WM_CTLCOLORSCROLLBAR
+	
+	Wm_ctlcolorstatic: INTEGER is 312
+			-- Declared in Windows as WM_CTLCOLORSTATIC
 
 end -- class WEL_WM_CTLCOLOR_CONSTANTS
 

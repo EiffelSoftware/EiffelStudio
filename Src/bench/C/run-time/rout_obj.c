@@ -10,6 +10,9 @@
 #include "eif_rout_obj.h"
 #include "eif_lmalloc.h"
 #include "rt_gen_types.h"
+#ifdef WORKBENCH
+#include <string.h>
+#endif
 
 /*------------------------------------------------------------------*/
 /* Create a ROUTINE object of type `dftype' and put the routine     */

@@ -30,11 +30,6 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_menu_bar_new)
 			C.gtk_widget_show (c_object)
 		end
-
-	initialize is
-		do
-			is_initialized := True
-		end
 		
 feature {EV_WINDOW_IMP} -- Implementation
 
@@ -62,6 +57,8 @@ feature {NONE} -- Implementation
 		do
 			an_item_imp.set_item_parent_imp (Current)
 			C.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
+			child_array.go_i_th (pos)
+			child_array.put_left (an_item_imp.interface)
 		end
 
 feature {EV_ANY_I} -- Implementation

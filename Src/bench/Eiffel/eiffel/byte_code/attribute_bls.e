@@ -88,17 +88,16 @@ feature
 	old_generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate attribute in a `typ' context
 		local
-			entry: POLY_TABLE [ENTRY]
 			table_name: STRING
 			offset_class_type: CLASS_TYPE
 			type_c: TYPE_C
 			type_i: TYPE_I
 			buf: GENERATION_BUFFER
+			array_index: INTEGER
 		do
 			buf := buffer
 			type_i := real_type (type)
 			type_c := type_i.c_type
-			entry := Eiffel_table.poly_table (rout_id)
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
 			if not type_i.is_expanded and then not type_c.is_bit then
@@ -117,14 +116,15 @@ feature
 --				buf.new_line
 --				buf.indent
 --			end
-			if entry.is_polymorphic (typ.type_id) then
+			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, False)
+			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := rout_id.table_name
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')
-				buf.putint (entry.min_type_id - 1)
+				buf.putint (array_index)
 				buf.putchar (')')
 				buf.putchar ('[')
 				if reg.is_current then

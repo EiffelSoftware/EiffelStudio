@@ -132,18 +132,15 @@ end
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			entry: POLY_TABLE [ENTRY]
 			class_type: CL_TYPE_I
 		do
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
 				class_type ?= context_type
-				entry := Eiffel_table.poly_table (rout_id)
-				if 	class_type /= Void
-					and then
-					entry.is_polymorphic (class_type.type_id)
-				then
-					context.add_dt_current
+				if class_type /= Void then
+					if Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False) >= 0 then
+						context.add_dt_current
+					end
 				end
 			end
 		end
@@ -151,15 +148,13 @@ end
 	is_polymorphic: BOOLEAN is
 			-- Is access polymorphic ?
 		local
-			entry: POLY_TABLE [ENTRY]
 			class_type: CL_TYPE_I
 			type_i: TYPE_I
 		do
 			type_i := context_type
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				entry := Eiffel_table.poly_table (rout_id)
-				Result := entry.is_polymorphic (class_type.type_id)
+				Result := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False) >= 0
 			end
 		end
 
@@ -179,17 +174,16 @@ end
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate attribute in a `typ' context
 		local
-			entry: POLY_TABLE [ENTRY]
 			table_name: STRING
 			offset_class_type: CLASS_TYPE
 			type_c: TYPE_C
 			type_i: TYPE_I
 			buf: GENERATION_BUFFER
+			array_index: INTEGER
 		do
 			buf := buffer
 			type_i := real_type (type)
 			type_c := type_i.c_type
-			entry := Eiffel_table.poly_table (rout_id)
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
 			if not type_i.is_expanded and then not type_c.is_bit then
@@ -207,14 +201,15 @@ end
 --				buf.new_line
 --				buf.indent
 --			end
-			if entry.is_polymorphic (typ.type_id) then
+			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, False)
+			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := rout_id.table_name
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')
-				buf.putint (entry.min_type_id - 1)
+				buf.putint (array_index)
 				buf.putchar (')')
 				buf.putchar ('[')
 				if reg.is_current then

@@ -7,7 +7,8 @@ inherit
 	EB_BUTTON_COM;
 	HOLE
 		redefine
-			process_command, process_instance
+			process_command, process_instance,
+			compatible
 		end
 
 creation
@@ -57,6 +58,12 @@ feature
 feature {NONE}
 
 	stone_type: INTEGER is do end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result := st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.type_stone_type
+		end;
 
 	process_command (cmd_stone: CMD_STONE) is
 		local

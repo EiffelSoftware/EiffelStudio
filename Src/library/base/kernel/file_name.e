@@ -1,21 +1,29 @@
-
 indexing
-
-	description:
-		"File name abstraction"
-
+	description: "File name abstraction"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FILE_NAME
+class
+	FILE_NAME
 
 inherit
 	PATH_NAME
 
 create
+	make, make_from_string, make_temporary_name
 
-	make, make_from_string
+feature {NONE} -- Initialization
+
+	make_temporary_name is
+			-- Create a temporary filename.
+		local
+			p: POINTER
+		do
+			p := c_tempnam (p, p)
+			make_from_c (p)
+			p.memory_free
+		end
 
 feature -- Status report
 
@@ -99,6 +107,13 @@ feature {NONE} -- Externals
 	eif_is_file_valid (p: POINTER): BOOLEAN is
 		external
 			"C (EIF_CHARACTER *): EIF_BOOLEAN | %"eif_path_name.h%""
+		end
+
+	c_tempnam (d, n: POINTER): POINTER is
+		external
+			"C (char *, char *): EIF_POINTER | <stdio.h>"
+		alias
+			"tempnam"
 		end
 
 indexing

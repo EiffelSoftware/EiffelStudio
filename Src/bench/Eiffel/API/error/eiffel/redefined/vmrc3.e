@@ -68,7 +68,8 @@ feature {COMPILER_EXPORTER}
 			valid_l: l /= Void
 		local
 			info: INHERIT_INFO;
-			cell2: cell2 [E_FEATURE, E_CLASS]
+			cell2: cell2 [E_FEATURE, E_CLASS];
+			api_feature: E_FEATURE
 		do
 			from
 				!! selection_list.make;
@@ -77,10 +78,11 @@ feature {COMPILER_EXPORTER}
 				l.after
 			loop
 				info := l.item;
+				api_feature := info.a_feature.api_feature (info.a_feature.written_in);
 				if info.parent = Void then
-					!! cell2.make (info.a_feature.api_feature, Void);
+					!! cell2.make (api_feature, Void);
 				else
-					!! cell2.make (info.a_feature.api_feature, info.parent.parent.e_class);
+					!! cell2.make (api_feature, info.parent.parent.e_class);
 				end;
 				selection_list.extend (cell2)
 				l.forth

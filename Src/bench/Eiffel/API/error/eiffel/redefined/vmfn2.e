@@ -73,7 +73,9 @@ feature {COMPILER_EXPORTER}
 			valid_fs: fs /= Void
 		local
 			cell2: CELL2 [E_FEATURE, E_CLASS];
-			inh_info: INHERIT_INFO
+			inh_info: INHERIT_INFO;
+			e_feature: E_FEATURE;
+			parent: E_CLASS
 		do
 			from
 				!! features.make;
@@ -82,8 +84,9 @@ feature {COMPILER_EXPORTER}
 				fs.after
 			loop
 				inh_info := fs.item;
-				!! cell2.make (inh_info.a_feature.api_feature, 
-						inh_info.parent.parent.e_class);
+				parent := inh_info.parent.parent.e_class;
+				e_feature := inh_info.a_feature.api_feature (parent.id);
+				!! cell2.make (e_feature, parent);
 				features.extend (cell2);
 				fs.forth
 			end

@@ -50,7 +50,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			unique_feature := f.api_feature;
+			unique_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VOMB4

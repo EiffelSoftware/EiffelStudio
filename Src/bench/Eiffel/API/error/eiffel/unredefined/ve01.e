@@ -62,7 +62,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			old_feature := f.api_feature;
+			old_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VE01

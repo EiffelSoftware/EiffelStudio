@@ -29,15 +29,15 @@ inherit
 
 feature -- Initialization
 
-	make (n: like name; i: like id) is
+	make (n: like name; i: INTEGER) is
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
 			valid_n: n /= Void;
-			positive_i: i >= 0
+			positive_i: i > 0
 		do
 			name := n;
-			id := i
+			id := i;
 		ensure
 			set: name = n and then id = i
 		end;
@@ -283,6 +283,15 @@ feature -- Access
 			end
 		end;
 
+	associated_class: E_CLASS is
+			-- Class where the feature was evaluated in
+		do
+			check
+				valid_class: associated_class_id > 0
+			end;
+			Result := Eiffel_system.class_of_id (associated_class_id);
+		end;
+
 	written_class: E_CLASS is
 			-- Class where the feature is written in
 		require
@@ -523,12 +532,15 @@ feature {DEBUG_INFO} -- Implementation
 
 feature {NONE} -- Implementation
 
+    associated_class_id: INTEGER 
+            -- Class id where the feature was evaluated in
+
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
 		local
 			s_table: SELECT_TABLE
 		do
-			s_table := written_class.compiled_info.feature_table.origin_table;
+			s_table := associated_class.compiled_info.feature_table.origin_table;
 			Result := s_table.item (rout_id_set.first)
 		end;
 
@@ -547,6 +559,12 @@ feature {FEATURE_I} -- Setting
 			-- Set `written_in' to `i'.
 		do
 			written_in := i;
+		end;
+
+	set_associated_class_id (i: INTEGER) is
+			-- Set `associated_class_id' to `i'.
+		do
+			associated_class_id := i
 		end;
 
 	set_body_id (i: INTEGER) is

@@ -51,7 +51,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			other_feature := f.api_feature
+			other_feature := f.api_feature (f.written_in)
 		end;
 
 end -- class VRFA

@@ -43,7 +43,7 @@ feature {COMPILER_EXPORTER}
 			-- Assign `f' to `creation_feature'.
 		do
 			if f /= Void then
-				creation_feature := f.api_feature;
+				creation_feature := f.api_feature (f.written_in);
 			end
 		end;
 

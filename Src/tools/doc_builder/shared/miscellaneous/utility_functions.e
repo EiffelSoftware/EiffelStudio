@@ -274,19 +274,23 @@ feature -- String
 
 feature -- Document
 
-	temporary_html_location (a_doc: DOCUMENT; with_name: BOOLEAN): STRING is
+	temporary_html_location (a_name: STRING; with_name: BOOLEAN): STRING is
 			-- Temporary directory for location of `document' in HTML
 		require
-			document_not_void: a_doc /= Void
+			document_not_void: a_name /= Void
 		local
 			l_root_dir: STRING
 			l_index: INTEGER
 		do			
 			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_html_directory.string)
-			Result := temporary_location (a_doc, l_root_dir)
+			Result := temporary_location (a_name, l_root_dir)
 			
 			if with_name then
-				if not file_type (Result).is_equal ("html") then
+				if 
+					not (file_type (Result).is_equal ("html") or 
+					file_type (Result).is_equal ("css") or 
+					file_type (Result).is_equal ("gif"))
+				then
 					l_index := Result.last_index_of ('.', Result.count)
 					if l_index > 0 then					
 						Result := Result.substring (1, l_index - 1)
@@ -298,16 +302,16 @@ feature -- Document
 			end			
 		end	
 		
-	temporary_xml_location (a_doc: DOCUMENT; with_name: BOOLEAN): STRING is
+	temporary_xml_location (a_name: STRING; with_name: BOOLEAN): STRING is
 			-- Temporary directory for location of `document' in XML		
 		require
-			document_not_void: a_doc /= Void
+			document_not_void: a_name /= Void
 		local
 			l_root_dir: STRING
 			l_index: INTEGER
 		do			
 			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_xml_directory.string)
-			Result := temporary_location (a_doc, l_root_dir)
+			Result := temporary_location (a_name, l_root_dir)
 			
 			if with_name then
 				if not file_type (Result).is_equal ("xml") then
@@ -339,10 +343,10 @@ feature -- Document
 
 feature {NONE} -- Implementation
 
-	temporary_location (a_doc: DOCUMENT; a_root: STRING): STRING is
+	temporary_location (a_name: STRING; a_root: STRING): STRING is
 			-- Temporary location
 		require
-			doc_not_void: a_doc /= Void
+			doc_not_void: a_name /= Void
 			rooT_not_void: a_root /= Void
 		local
 			l_proj_root: STRING
@@ -352,7 +356,7 @@ feature {NONE} -- Implementation
 			l_cnt: INTEGER
 			l_sub_dir: DIRECTORY
 		do				
-			Result := clone (a_doc.name)
+			Result := clone (a_name)
 			l_proj_root := (create {SHARED_OBJECTS}).Shared_project.root_directory
 			if l_proj_root /= Void then
 				Result.replace_substring_all (l_proj_root, "")

@@ -165,11 +165,11 @@ feature
 			value = new_value
 		end; -- set_value
 
-	show_value (flag: BOOLEAN) is
-			-- Show scale value on the screen if `flag', hide it otherwise.
+	set_value_shown (b: BOOLEAN) is
+			-- Show scale value on the screen if `b', hide it otherwise.
 		deferred
 		ensure
-			value_is_shown: is_value_shown = flag
+			value_is_shown: is_value_shown = b
 		end; -- show_value
 
 	text: STRING is

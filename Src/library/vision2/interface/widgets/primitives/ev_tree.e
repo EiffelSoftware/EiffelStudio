@@ -102,37 +102,10 @@ feature -- Access
 
 	selected_item: EV_TREE_ITEM is
 			-- Currently selected tree item.
-			-- Topmost selected item if multiple tree items are selected.
 		do
 			Result := implementation.selected_item
 		ensure
 			bridge_ok: Result = implementation.selected_item
-		end
-
-	selected_items: LINKED_LIST [EV_TREE_ITEM] is
-			-- List of currently selected items.
-		do
-			Result := implementation.selected_items
-		ensure
-			bridge_ok: lists_equal (Result, implementation.selected_items)
-		end
-
-feature -- Status setting
-
-	enable_multiple_selection is
-			-- Allow more than one item to be selected.
-		do
-			implementation.enable_multiple_selection	
-		ensure
-			multiple_selection_enabled: multiple_selection_enabled
-		end
-
-	disable_multiple_selection is
-			-- Allow only one item to be selected.
-		do
-			implementation.disable_multiple_selection
-		ensure
-			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
 feature -- Status report
@@ -142,14 +115,6 @@ feature -- Status report
 		require
 		do
 			Result := implementation.selected
-		end
-
-	multiple_selection_enabled: BOOLEAN is
-			-- Can more than one tree item be selected?
-		do
-			Result := implementation.multiple_selection_enabled
-		ensure
-			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
 
 feature -- Event handling
@@ -205,6 +170,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/09 19:58:52  king
+--| Removed multiple selection features
+--|
 --| Revision 1.29  2000/03/09 17:29:38  rogers
 --| Improved tests in make_for_test.
 --|

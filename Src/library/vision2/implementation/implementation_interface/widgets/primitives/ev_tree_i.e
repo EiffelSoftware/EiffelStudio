@@ -23,33 +23,6 @@ feature -- Access
 
 	selected_item: EV_TREE_ITEM is
 			-- Tree item which is currently selected
-			-- It needs to be in single selection mode
-		deferred
-		end
-
-	selected_items: LINKED_LIST [EV_TREE_ITEM] is
-			-- List of all the selected tree items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
-		require
-		deferred
-		end
-
-feature -- Status setting
-
-	enable_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-		require
-		deferred
-		end
-
-	disable_multiple_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
-		require
 		deferred
 		end
 
@@ -60,14 +33,6 @@ feature -- Status report
 		require
 		deferred
 		end
-
-	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
-		require
-		deferred
-		end
-
 
 feature {EV_ANY_I}
 
@@ -96,6 +61,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/09 19:57:38  king
+--| Removed multiple selection features
+--|
 --| Revision 1.20  2000/03/07 01:31:39  king
 --| Noe inheriting from ev_tree_item_holder_i
 --|

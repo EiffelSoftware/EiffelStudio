@@ -77,35 +77,36 @@ feature -- Instantiation
 			-- Instantiation of the current description in		
 			-- `class_type'.
 		local
-			gen_type: GEN_TYPE_I
 			l_type: TYPE_I
 			l_ref: REFERENCE_DESC
 			l_exp: EXPANDED_DESC
 		do
-			gen_type ?= class_type.type
 			check
-				is_generic: gen_type /= Void
+				is_generic: class_type.is_generic
 			end
-			l_type := type_i.instantiation_in (gen_type)
+			l_type := type_i.instantiation_in (class_type)
 			Result := l_type.description
 			l_ref ?= Result
 			if l_ref /= Void then
+					-- Override type in case we handle an attribute
+					-- which is a formal generic parameter instantiated
+					-- as a reference type, in that case we need to preserve
+					-- the fact that it is a formal.
 				if type_i.is_formal then
-					if l_type.is_reference then
-						l_ref.set_type_i (type_i)
-					end
-				else
-					l_ref.set_type_i (l_type)
+					l_ref.set_type_i (type_i)
 				end
-			end
-			l_exp ?= Result
-			if l_exp /= Void then
-				if type_i.is_formal then
-					if l_type.is_reference then
-						l_exp.set_type_i (type_i)
+			else
+				l_exp ?= Result
+				if l_exp /= Void then
+						-- Override type in case we handle an attribute
+						-- which is a formal generic parameter instantiated
+						-- as an expanded in `class_type', we preserve the
+						-- fact it is a formal.
+					if type_i.is_formal then
+						if l_type.is_true_expanded then
+							l_exp.set_type_i (type_i)
+						end
 					end
-				else
-					l_exp.set_type_i (l_type)
 				end
 			end
 

@@ -205,6 +205,8 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_COND_SIGNAL(pcond, msg) \
     if (pthread_cond_signal (pcond)) eraise (msg, EN_EXT)
 #define EIF_COND_DESTROY(pcond, msg) \
+    EIF_COND_DESTROY0 (pcond, msg); eif_free (pcond);
+#define EIF_COND_DESTROY0(pcond,msg) \
     if (pthread_cond_destroy (pcond)) eraise (msg, EN_EXT)
 #endif	
 

@@ -117,7 +117,7 @@ feature -- Constant strings
 		once
 			Result := 
 				"Copyright (C) 1985-2002 Eiffel Software Inc.%N%
-				%All right reserved"
+				%All rights reserved"
 		end
 
 	t_info: STRING is
@@ -131,7 +131,7 @@ feature -- Constant strings
 				%Electronic mail: <info@eiffel.com>%N%
 				% %N%
 				%Web Customer Support: http://support.eiffel.com%N%
-				%Visit Eiffel on the Web: http://eiffel.com%N"
+				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)
 		end
 

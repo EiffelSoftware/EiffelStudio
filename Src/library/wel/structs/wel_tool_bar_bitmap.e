@@ -12,7 +12,11 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		redefine
+			destroy_item
 		end
+
+	WEL_OBJECT_ID_MANAGER
 
 	WEL_IDB_CONSTANTS
 		export
@@ -63,6 +67,10 @@ feature {NONE} -- Initialization
 			bitmap_exists: a_bitmap.exists
 		do
 			internal_bitmap := a_bitmap
+			internal_bitmap_object_id := eif_object_id (internal_bitmap)
+			if a_bitmap.reference_tracked then
+				a_bitmap.increment_reference
+			end
 			structure_make
 			cwel_tbaddbitmap_set_nid (item, a_bitmap.to_integer)
 		ensure
@@ -93,6 +101,9 @@ feature {WEL_TOOL_BAR} -- Internal State
 			-- Associated bitmap. Void if a predefined bitmap or
 			-- a ressource bitmap is associated.
 
+	internal_bitmap_object_id: INTEGER
+			-- Object id of `internal_bitmap'
+
 	internal_bitmap_id: INTEGER
 			-- Associated bitmap. Void if a predefined bitmap or
 			-- a ressource bitmap is associated.
@@ -110,6 +121,16 @@ feature -- Element change
 		require
 			positive_bitmap_id: a_bitmap_id > 0
 		do
+				-- Remove any existing bitmap.
+			if internal_bitmap /= Void then
+				if internal_bitmap.reference_tracked then
+					internal_bitmap.decrement_reference
+				end
+				internal_bitmap := Void
+				internal_bitmap_object_id := 0
+			end
+
+				-- Set the new bitmap id.
 			cwel_tbaddbitmap_set_hinst (item,
 				main_args.current_instance.item)
 			cwel_tbaddbitmap_set_nid (item, a_bitmap_id)
@@ -125,6 +146,16 @@ feature -- Element change
 			valid_tool_bar_bitmap_constant:
 				valid_tool_bar_bitmap_constant (a_bitmap_id)
 		do
+				-- Remove any existing bitmap.
+			if internal_bitmap /= Void then
+				if internal_bitmap.reference_tracked then
+					internal_bitmap.decrement_reference
+				end
+				internal_bitmap := Void
+				internal_bitmap_object_id := 0
+			end
+
+				-- Set the new bitmap id.
 			cwel_tbaddbitmap_set_hinst (item, Hinst_commctrl)
 			cwel_tbaddbitmap_set_nid (item, a_bitmap_id)
 		ensure
@@ -146,6 +177,21 @@ feature {NONE} -- Implementation
 			create Result
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Free `item'
+		local
+			a_bitmap: WEL_BITMAP
+		do
+			{WEL_STRUCTURE} Precursor
+
+			a_bitmap ?= eif_id_object (internal_bitmap_object_id)
+			if a_bitmap /= Void and then a_bitmap.reference_tracked then
+				a_bitmap.decrement_reference
+			end
 		end
 
 feature {NONE} -- Externals

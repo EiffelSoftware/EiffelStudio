@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			dotnet_name_set: dotnet_name = en
 			donet_eiffel_name_set: equal (dotnet_eiffel_name, en)
 			is_frozen_set: is_frozen = True
-			is_static_set: is_static = True
+			is_static_set: is_static = a_is_static
 			is_deferred_set: is_deferred = False
 			is_public_set: is_public = True
 			is_new_slot_set: is_new_slot = False

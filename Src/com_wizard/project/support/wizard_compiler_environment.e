@@ -64,15 +64,6 @@ feature -- Access
 			Result.append ("\library\com\spec\windows\include ")
 		end
 
-	Eiffel4_location: STRING is
-			-- Location of Eiffel compiler.
-		once
-			Result := execution_environment.get (Eiffel4)
-		end
-
-	Eiffel4: STRING is "EIFFEL4"
-			-- Eiffel4 environmnent variable
-
 	Common_idl_compiler_options: STRING is ""
 			-- MIDL options
 

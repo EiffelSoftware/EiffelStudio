@@ -83,7 +83,9 @@ feature -- Basic operations
 			-- the contents of `ev_children'.
 		local
 			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			original_index: INTEGER
 		do
+			original_index := index
 			if not ev_children.empty then
 				from
 					list := ev_children
@@ -95,6 +97,9 @@ feature -- Basic operations
 					list.forth
 				end
 			end
+			interface.go_i_th (original_index)
+		ensure
+			index_not_changed: index = old index
 		end
 
 	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -244,6 +249,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/25 22:03:05  rogers
+--| Internal_copy_list, now restores the index after performing its actions. Added a postcondition to ensure this.
+--|
 --| Revision 1.20  2000/02/25 17:51:22  rogers
 --| Re implemented internal_is_selected. Added FIXME's to the other routines that have commented out bodies.
 --|

@@ -167,45 +167,44 @@ feature -- Resizing
                         end
 		end
 
-feature -- Event - command adding
+feature -- Event - command association
 
-	put_command (event: EV_EVENT; command: EV_COMMAND; argument: ARGUMENTS) is
-			-- Associate `command' and 'event' so that
-			-- 'command' will be executed when the 'event'
-			-- happens. `arguments' will be passed to
+	add_command (event: EV_EVENT; command: EV_COMMAND; 
+		     arguments: EV_ARGUMENTS) is
+			-- Add `command' at the end of the list of
+			-- actions to be executed when the 'event'
+			-- happens `arguments' will be passed to
 			-- `command' whenever it is invoked as a
-			-- callback.
-		
-			-- Only one command per event is possible
-			-- A new put_command with an existing event 
-			-- will replace the old command with the new one.
+			-- callback. 'arguments' can be Void, which
+			-- means that no arguments are passed to the
+			-- command.
 		local
-			gtk_command_id: INTEGER
+			a: ANY
                 do
+			a := event.type.to_c
 			-- check if to use gtk signals or x events
-			gtk_command_id := c_gtk_signal_connect (widget,
-                                                                $event,
+			last_command_id := c_gtk_signal_connect (widget,
+                                                                $a,
                                                                 command.execute_address,
                                                                 $command,
-                                                                $argument)      
-			-- save the event/id pair
-
+                                                                $arguments)
 		end
 
 
-feature -- Event - command removal
-
--- 	remove_command (event: EV_EVENT) is
--- 			-- Remove the command associated with 'event'.
--- 			-- Do nothing if there is no command 
--- 			-- associated with 'event'.
--- 		do
--- 			-- Find the id in event/id table and remove 
--- 			-- the signal
--- 		end
-
-
-
+	remove_command (command_id: INTEGER) is
+			-- Remove the command associated with
+			-- 'command_id' from the list of actions for
+			-- this context. If there is no command
+			-- associated with 'command_id', nothing
+			-- happens.
+		do		
+			gtk_signal_disconnect (widget, command_id)
+		end
+	
+	last_command_id: INTEGER
+			-- Id of the last command added by feature
+			-- 'add_command'
+	
 
 feature {EV_WIDGET_IMP} -- Implementation
 

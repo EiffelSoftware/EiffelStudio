@@ -303,50 +303,45 @@ feature -- Comparison
 			Result := other.implementation = implementation
 		end
 
-feature -- Event - command adding
+feature -- Event - command association
 
-	add_command (event: EV_EVENT; command: EV_COMMAND; argument: ARGUMENTS) is
-			-- Add `command' at the end of the list of
+	add_command (event: EV_EVENT; command: EV_COMMAND; 
+		     arguments: EV_ARGUMENTS) is
+			-- Add `command' at the _end_ of the list of
 			-- actions to be executed when the 'event'
 			-- happens `arguments' will be passed to
 			-- `command' whenever it is invoked as a
-			-- callback.
+			-- callback. 'arguments' can be Void, which
+			-- means that no arguments are passed to the
+			-- command.
 		require
 			exists: not destroyed
 			Valid_event: event /= Void
 			Valid_command: command /= Void
 		do
-			implementation.put_command (event, command, argument)
+			implementation.add_command (event, command, arguments)
 		end
 
-
-feature -- Event - command removal
-	
 	remove_command (command_id: INTEGER) is
 			-- Remove the command associated with
-			-- command_id from the list of actions for 
-			-- this context.
+			-- 'command_id' from the list of actions for
+			-- this context. If there is no command
+			-- associated with 'command_id', nothing
+			-- happens.
 		require
 			exists: not destroyed
 		do
---XX			implementation.remove_command (command_id)
+			implementation.remove_command (command_id)
 		end
 	
--- 	remove_command (event: EV_EVENT; command: EV_COMMAND; argument: EV_ARGUMENTS) is
--- 			-- Remove `command' from the list of actions
--- 			-- to be executed when 'event' happens Do
--- 			-- nothing if the pair (`command',
--- 			-- `argument') had not been specified
--- 			-- previously.
--- 		require
--- 			exists: not destroyed
--- 			Valid_command: a_command /= Void
--- 		do
--- 			implementation.remove_button_motion_action (number, 
--- 								    a_command, 
--- 								    argument)
--- 		end
-
+	
+	last_command_id: INTEGER is
+			-- Id of the last command added by feature
+			-- 'add_command'
+		do
+			Result := implementation.last_command_id
+		end
+	
 
 feature {EV_WIDGET} -- Implementation
 

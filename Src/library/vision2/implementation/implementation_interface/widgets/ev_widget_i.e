@@ -157,30 +157,38 @@ feature -- Resizing
 		deferred
 		end
 
-feature -- Event - command adding
+feature -- Event - command association
 
-	put_command (event: EV_EVENT; command: EV_COMMAND; argument: ARGUMENTS) is
-			-- Add `command' to the list of actions to be
-			-- executed when the 'event' happens
-			-- `arguments' will be passed to `a_command'
-			-- whenever it is invoked as a callback.
+	add_command (event: EV_EVENT; command: EV_COMMAND; 
+		     arguments: EV_ARGUMENTS) is
+			-- Add `command' at the end of the list of
+			-- actions to be executed when the 'event'
+			-- happens `arguments' will be passed to
+			-- `command' whenever it is invoked as a
+			-- callback. 'arguments' can be Void, which
+			-- means that no arguments are passed to the
+			-- command.
+		require
+			Valid_event: event /= Void
+			Valid_command: command /= Void
 		deferred
 		end
 
-
-feature -- Event - command removal
-
--- 	remove_command (event: EV_EVENT; command: EV_COMMAND; argument: EV_ARGUMENTS) is
--- 			-- Remove `command' from the list of actions
--- 			-- to be executed when 'event' happens Do
--- 			-- nothing if the pair (`command',
--- 			-- `argument') had not been specified
--- 			-- previously.
--- 		deferred
--- 		end
-
-
-
+	remove_command (command_id: INTEGER) is
+			-- Remove the command associated with
+			-- 'command_id' from the list of actions for
+			-- this context. If there is no command
+			-- associated with 'command_id', nothing
+			-- happens.
+		deferred
+		end
+	
+	last_command_id: INTEGER is
+			-- Id of the last command added by feature
+			-- 'add_command'
+		deferred
+		end
+	
 end -- class EV_WIDGET_I
 
 --|----------------------------------------------------------------

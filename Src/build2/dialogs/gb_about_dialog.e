@@ -115,7 +115,7 @@ feature -- Constant strings
 	t_Copyright_info: STRING is
 		once
 			Result := 
-				"Copyright (C) 1985-2001 Interactive Software Engineering Inc.%N%
+				"Copyright (C) 1985-2002 Interactive Software Engineering Inc.%N%
 				%All right reserved"
 		end
 

@@ -159,16 +159,17 @@ feature -- Eiffel names from .NET reflection info
 			non_void_info: info /= Void
 		do
 			if creation_routines.Count = 0 then
-				create Result.make
+				Result := Void
 			else
 				if has_creation_routine (info) then
 					Result := routine
 				else
-					create Result.make
+					Result := Void
 				end
 			end
 		ensure
-			non_void_creation_routine: Result /= Void		
+			non_void_feature_if_creation_routine_found: has_creation_routine (info) implies Result /= Void	
+			void_feature_if_no_creation_routine_or_not_found: (creation_routines.Count = 0 or else not has_creation_routine (info)) implies Result = Void
 		end
 		
 	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): EIFFEL_FEATURE is
@@ -195,10 +196,27 @@ feature -- Eiffel names from .NET reflection info
 			elseif has_attribute (info, implementation_features) then
 				Result := attribute
 			else
-				create Result.make
+				Result := Void
 			end
 		ensure
-			non_void_attribute: Result /= Void
+			non_void_attribute_if_is_initialization_feature: has_attribute (info, initialization_features) implies Result /= Void
+			non_void_attribute_if_is_access_feature: has_attribute (info, access_features) implies Result /= Void
+			non_void_attribute_if_is_element_change_feature: has_attribute (info, element_change_features) implies Result /= Void
+			non_void_attribute_if_is_basic_operation: has_attribute (info, basic_operations) implies Result /= Void
+			non_void_attribute_if_is_unary_operator: has_attribute (info, unary_operators_features) implies Result /= Void
+			non_void_attribute_if_is_binary_operator: has_attribute (info, binary_operators_features) implies Result /= Void
+			non_void_attribute_if_is_special_feature: has_attribute (info, special_features) implies Result /= Void
+			non_void_attribute_if_is_implementation_feature: has_attribute (info, implementation_features) implies Result /= Void
+			not_found_implies_void_result: (not has_attribute (info, initialization_features) 
+									and not has_attribute (info, access_features)
+									and not has_attribute (info, element_change_features)
+									and not has_attribute (info, basic_operations)
+									and not has_attribute (info, unary_operators_features)
+									and not has_attribute (info, binary_operators_features)
+									and not has_attribute (info, special_features)
+									and not has_attribute (info, implementation_features)
+									)
+									implies Result = Void
 		end
 		
 	routine_from_info (info: SYSTEM_REFLECTION_METHODINFO): EIFFEL_FEATURE is
@@ -225,10 +243,27 @@ feature -- Eiffel names from .NET reflection info
 			elseif has_routine (info, implementation_features) then
 				Result := routine
 			else
-				create Result.make
+				Result := Void
 			end			
 		ensure
-			non_void_routine: Result /= Void
+			non_void_routine_if_is_initialization_feature: has_routine (info, initialization_features) implies Result /= Void
+			non_void_routine_if_is_access_feature: has_routine (info, access_features) implies Result /= Void
+			non_void_routine_if_is_element_change_feature: has_routine (info, element_change_features) implies Result /= Void
+			non_void_routine_if_is_basic_operation: has_routine (info, basic_operations) implies Result /= Void
+			non_void_routine_if_is_unary_operator: has_routine (info, unary_operators_features) implies Result /= Void
+			non_void_routine_if_is_binary_operator: has_routine (info, binary_operators_features) implies Result /= Void
+			non_void_routine_if_is_special_feature: has_routine (info, special_features) implies Result /= Void
+			non_void_routine_if_is_implementation_feature: has_routine (info, implementation_features) implies Result /= Void
+			not_found_implies_void_result: (not has_routine (info, initialization_features) 
+									and not has_routine (info, access_features)
+									and not has_routine (info, element_change_features)
+									and not has_routine (info, basic_operations)
+									and not has_routine (info, unary_operators_features)
+									and not has_routine (info, binary_operators_features)
+									and not has_routine (info, special_features)
+									and not has_routine (info, implementation_features)
+									)
+									implies Result = Void
 		end
 		
 feature -- Status Report

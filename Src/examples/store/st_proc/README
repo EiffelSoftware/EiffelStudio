@@ -1,4 +1,10 @@
 
+This examples illustrates the use of stored procedure.
 
-	This examples illustrates the use of Sybase
-stored procedure.
+ODBC does not support creating stored procedure, so in order to run the
+example on ODBC, you should use the host DBMS to create a stored procedure
+"sel_proc" which has one STRING parameter and is equivalent to the following
+SQL statement:
+
+select * from DB_BOOK where author = :author
+

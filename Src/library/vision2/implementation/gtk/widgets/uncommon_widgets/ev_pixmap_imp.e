@@ -65,8 +65,7 @@ feature {NONE} -- Initialization
 			-- create the temporary window needed to create the pixmap
 			create_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 
-			-- create the gdk pixmap
-			gdk_pixmap_widget := c_gtk_pixmap_create_with_size (create_window, w, h)
+			widget := c_gtk_pixmap_create_with_size (create_window, w, h)
 		end	
 
 feature -- Measurement

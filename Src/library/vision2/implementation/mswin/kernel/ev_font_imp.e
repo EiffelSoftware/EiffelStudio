@@ -62,9 +62,9 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			create wel_font.make_indirect (default_wel_log_font)
 
 				-- Create and setup the preferred font face mechanism
-			create preferred_familys
-			preferred_familys.add_actions.extend (~update_preferred_faces)
-			preferred_familys.remove_actions.extend (~update_preferred_faces)
+			create preferred_families
+			preferred_families.add_actions.extend (~update_preferred_faces)
+			preferred_families.remove_actions.extend (~update_preferred_faces)
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
@@ -265,8 +265,8 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Access
 			weight := convert_font_weight(wel_log_font.weight)
 			family := convert_font_family(wel_log_font.family,
 				wel_log_font.pitch)
-			preferred_familys.wipe_out
-			preferred_familys.extend (clone(wel_log_font.face_name))
+			preferred_families.wipe_out
+			preferred_families.extend (clone(wel_log_font.face_name))
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -336,16 +336,16 @@ feature {EV_ANY_I} -- Implementation
 			end
 
 				-- Then, set the face name (if any)
-			if not preferred_familys.is_empty then
+			if not preferred_families.is_empty then
 				from
-					preferred_familys.start
+					preferred_families.start
 				until
-					found or preferred_familys.after
+					found or preferred_families.after
 				loop
-					lower_face := clone(preferred_familys.item)
+					lower_face := clone(preferred_families.item)
 					lower_face.to_lower
 					found := Font_enumerator.font_faces.has (lower_face)
-					preferred_familys.forth
+					preferred_families.forth
 				end
 				if found then
 					wel_log_font.set_face_name (lower_face)
@@ -697,6 +697,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/06/14 18:45:32  rogers
+--| Corrected spelling mistake. familys is now families.
+--|
 --| Revision 1.36  2001/06/14 17:23:02  rogers
 --| Renamed preferred_faces to preferred_familys.
 --|

@@ -114,7 +114,7 @@ feature -- Access
 			bridge_ok: Result = implementation.height
 		end
 
-	preferred_familys: ACTIVE_LIST [STRING] is
+	preferred_families: ACTIVE_LIST [STRING] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
 			-- the system, the second will be tried, etc.
@@ -123,9 +123,9 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.preferred_familys
+			Result := implementation.preferred_families
 		ensure
-			bridge_ok: Result = implementation.preferred_familys
+			bridge_ok: Result = implementation.preferred_families
 			Result_not_void: Result /= Void
 		end 
 
@@ -326,7 +326,7 @@ feature -- Basic operations
 				other.weight,
 				other.shape,
 				other.height,
-				other.preferred_familys
+				other.preferred_families
 			)
 		end
 
@@ -340,7 +340,7 @@ feature {NONE} -- Contract support
 				weight = ev_default_fonts.Screen_font.weight and then
 				shape = ev_default_fonts.Screen_font.shape and then
 				height = ev_default_fonts.Screen_font.height and then
-				preferred_familys /= Void and then preferred_familys.is_empty
+				preferred_families /= Void and then preferred_families.is_empty
 		end
 
 	Ev_default_fonts: EV_STOCK_FONTS is

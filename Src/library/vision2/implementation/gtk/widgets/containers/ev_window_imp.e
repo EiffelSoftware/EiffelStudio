@@ -548,13 +548,9 @@ feature {NONE} -- Implementation
 			check
 				bar_imp_not_void: bar_imp /= Void
 			end
-
 			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
 			create scr
-			set_maximum_width (scr.width)
-			set_maximum_height (scr.height)
-			
 			app_implementation.window_oids.extend (object_id)
 		end
 

@@ -208,7 +208,15 @@ feature -- Element change
 			clear_ev_children
 			gtk_list_clear_items (list_widget, 0, rows)
 		end
-	
+
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+		do
+			check not_implemented: False end
+		end	
+
 feature -- Event - command association
 	
 	add_activate_command ( command: EV_COMMAND; 

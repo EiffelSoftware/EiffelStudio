@@ -731,7 +731,7 @@ feature -- Initialization
 				Result.append (node.name + ": " + interface.tool.file_handler.content_of_node (node) + ", ")
 				metric_definition.forth
 			end
-			Result.head (Result.count - 2)
+			Result.keep_head (Result.count - 2)
 		end
 
 	valid_metric_definition: BOOLEAN is

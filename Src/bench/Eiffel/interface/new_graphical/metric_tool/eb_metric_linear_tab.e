@@ -639,7 +639,7 @@ feature -- Linear action
 					i > ind
 				loop
 					if last_index > 0 then
-						displayed_metric.head (last_index - 1)
+						displayed_metric.keep_head (last_index - 1)
 					else
 						displayed_metric.wipe_out
 					end

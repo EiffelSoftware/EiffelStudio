@@ -252,7 +252,7 @@ feature -- Status setting
 				syntax_error := syntax_error or message.syntax_error
 			elseif first_op > 0 then
 					-- There is an operator in `Current' at the first level.
-				s.tail (s.count - (first_op + op.count - 1))
+				s.keep_tail (s.count - (first_op + op.count - 1))
 				s.prepend (infix_feature_name_with_symbol (op) + "(")
 				s.append_character (')')
 				create message.make_with_target (Current, s)
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 					(i > s.count) or else (not is_blank (s.item (i)) and op = Void)
 				loop
 					if op /= Void then
-						s.tail (s.count - (op.count + i - 1))
+						s.keep_tail (s.count - (op.count + i - 1))
 						ops.extend (op)
 						i := 0
 					end

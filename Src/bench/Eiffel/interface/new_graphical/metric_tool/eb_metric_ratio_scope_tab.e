@@ -571,7 +571,7 @@ feature -- Action
 		do
 			if not first_scope_combobox.text.is_empty then
 				ind := displayed_metric.index_of (')', 1)
-				displayed_metric.tail (displayed_metric.count - ind)
+				displayed_metric.keep_tail (displayed_metric.count - ind)
 				formula.put_i_th (first_scope_combobox.text, 2)
 				displayed_metric := metric_combobox.text + " (" + first_scope_combobox.text + ")" + displayed_metric
 				text_field.set_text (displayed_metric)
@@ -588,7 +588,7 @@ feature -- Action
 		do
 			if not second_scope_combobox.text.is_empty then
 				ind := displayed_metric.index_of ('/', 1) + 1
-				displayed_metric.head (ind)
+				displayed_metric.keep_head (ind)
 				formula.put_i_th (second_scope_combobox.text, 4)
 				displayed_metric := displayed_metric + metric_combobox.text + " (" + second_scope_combobox.text + ")"
 				text_field.set_text (displayed_metric)

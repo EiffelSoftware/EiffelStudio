@@ -209,8 +209,8 @@ feature {NONE} -- Implementation
 			Result.left_adjust
 			Result.right_adjust
 			if (Result @ 1) = '"' then
-				Result.tail (Result.count - 1)
-				Result.head (Result.count - 1)
+				Result.keep_tail (Result.count - 1)
+				Result.keep_head (Result.count - 1)
 			end
 			Result.left_adjust
 			Result.right_adjust

@@ -69,7 +69,17 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
+feature -- Measurement
+
+	length: INTEGER is
+			-- Synonym for `count'.
+		do
+			Result := count
+		ensure
+			length_not_negative: Result >= 0
+		end
+
 feature -- Status report
 
 	to_integer: INTEGER is

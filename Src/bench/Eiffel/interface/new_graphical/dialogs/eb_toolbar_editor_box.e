@@ -423,33 +423,33 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	moving: BOOLEAN
 			-- flag set when moving an item up or down to avoid graying buttons unnecessarily
 
-	on_pool_select (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is
+	on_pool_select is
 			-- Called when the user clicks the pool list
 		do
 			if (not add_button.is_sensitive) then
 				add_button.enable_sensitive
-			end -- if
+			end
 		end
 
-	on_pool_deselect (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is
+	on_pool_deselect is
 			-- Called when the user deselects an item of the pool list
 		do
 			if add_button.is_sensitive then
 				add_button.disable_sensitive
-			end -- if
+			end
 		end
 
-	on_current_select (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is
+	on_current_select is
 			-- Called when the user clicks the current list
 		do
 			if (not remove_button.is_sensitive) then
 				remove_button.enable_sensitive
 				up_button.enable_sensitive
 				down_button.enable_sensitive
-			end -- if
+			end
 		end
 
-	on_current_deselect (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is
+	on_current_deselect is
 			-- Called when the user deselects an item of the current list
 		do
 			if (not moving) 
@@ -458,7 +458,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 				remove_button.disable_sensitive
 				up_button.disable_sensitive
 				down_button.disable_sensitive
-			end -- if
+			end
 		end
 
 	move_to_pool_list (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is

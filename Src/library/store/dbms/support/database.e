@@ -453,7 +453,7 @@ feature -- External features
 	terminate_order (no_descriptor: INTEGER) is
 			-- A SQL has been performed in DYNAMIC EXECUTION mode,
 			-- so the routine is to do some clearence:                             
-			-- 1. if the DYNAMICLLY EXECUTED SQL statement is a NON_SELECT 
+			-- 1. if the DYNAMICALLY EXECUTED SQL statement is a NON_SELECT 
 			-- statement, just free the memory for ODBCSQLDA and clear 
 			-- the cell in 'descriptor' to NULL; otherwise, CLOSE the CURSOR
 			-- and then do the same clearence.               

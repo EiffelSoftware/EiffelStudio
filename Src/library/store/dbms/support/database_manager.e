@@ -106,13 +106,13 @@ feature -- Queries
 				db_selection.set_query (s)
 				db_selection.execute_query
 				if db_selection.is_ok then
-					db_selection.load_result
-					db_selection.terminate
+					db_selection.load_result					
 					if db_selection.is_ok then
 						create tuple.copy (db_selection.cursor)
 						Result := tuple.item (1)
 					end
 				end
+				db_selection.terminate
 				if not db_selection.is_ok then
 					has_error := True
 					error_message := session_control.error_message
@@ -145,12 +145,12 @@ feature -- Queries
 				db_selection.set_action (db_actions)
 				db_selection.execute_query
 				if db_selection.is_ok then
-					db_selection.load_result
-					db_selection.terminate
+					db_selection.load_result					
 					if db_selection.is_ok then
 						Result := db_actions.list
 					end
 				end
+				db_selection.terminate
 				if not db_selection.is_ok then
 					has_error := True
 					error_message := session_control.error_message

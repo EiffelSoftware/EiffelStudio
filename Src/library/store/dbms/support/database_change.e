@@ -86,9 +86,7 @@ feature -- Element change
 							handle.status.set (db_spec.results_order (temp_descriptor))
 						end
 					end
-					if is_ok then
-						db_spec.terminate_order (temp_descriptor)
-					end
+					db_spec.terminate_order (temp_descriptor)						
 				end
 			end
 			handle.execution_type.unset_immediate

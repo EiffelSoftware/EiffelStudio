@@ -96,7 +96,7 @@ feature
 
 	terminate is
 		do
-				db_spec.terminate_order (descriptor)
+			db_spec.terminate_order (descriptor)
 		end
 
 feature -- Status Report

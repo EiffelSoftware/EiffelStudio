@@ -43,7 +43,7 @@ feature -- Status report
 					create tmp_text.make(1024)
 					from
 						seq := 1
-					until 
+					until
 						seq > row_number
 					loop	
        					private_selection.set_map_name (seq , "seq")

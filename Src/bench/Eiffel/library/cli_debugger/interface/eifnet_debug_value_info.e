@@ -62,41 +62,40 @@ feature {NONE} -- Internal Initialisation
 		do
 			if not error_occured then
 				address := icd_prepared_value.get_address
-				l_type := icd_prepared_value.get_type
+				l_type := icd_prepared_value.get_type		
+
+				is_reference_type := True			
 				inspect l_type
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_string
 				then
-					is_reference_type := True
 					is_string_type := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_string)
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_array
 				then
---					is_special_type := True
-					is_array_type := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray)					
-									or (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_array)
+					is_array_type := True
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_byref
 				then
-					is_reference_type := True
 					is_class := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_class)
 					is_object := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_object)
 					is_valuetype := (l_type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype)
 					is_byref := (l_type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_byref)
-					if interface_debug_reference_value /= Void then
-						is_null := interface_debug_reference_value.is_null
-					end
-
-					if is_reference_type or else is_class or else is_valuetype or else is_object then
-						has_object_interface := (interface_debug_object_value /= Void)
-					end
 				else
-					do_nothing
+					is_reference_type := False
 				end
+				
+				if interface_debug_reference_value /= Void then
+					is_null := interface_debug_reference_value.is_null
+				end
+
+				if is_reference_type or else is_class or else is_valuetype or else is_object then
+					has_object_interface := (interface_debug_object_value /= Void)
+				end				
 			end
 		rescue
 			error_occured := True

@@ -226,7 +226,18 @@ feature {EV_GRID_I} -- Implementation
 			to_implement ("EV_GRID_COLUMN_I.destroy")
 		end
 
+	set_is_visible (a_visible: BOOLEAN) is
+			-- Set `is_visible' to `a_visible'
+		do
+			is_visible := a_visible
+		ensure
+			is_visible_set: is_visible = a_visible
+		end
+
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
+
+	is_visible: BOOLEAN
+		-- Is the column visible in the grid?
 
 	physical_index: INTEGER
 		-- Physical index of column row data stored in `parent_grid_i'

@@ -59,6 +59,6 @@ feature -- Inapplicable
 feature {NONE} -- Implementation
 
 invariant
-	invariant_clause: -- Your invariant here
+	invariant_clause: True -- Your invariant here
 
 end -- class $classname

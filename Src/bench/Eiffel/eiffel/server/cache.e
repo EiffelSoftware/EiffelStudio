@@ -25,14 +25,14 @@ feature -- Initialisation
 			count := 0
 			size := s
 			make_area (s)
-			!! array_count.make (0, s - 1)
-			!! history.make (s)
-			!! index.make (0, s - 1)
+			create array_count.make (0, s - 1)
+			create history.make (s)
+			create index.make (0, s - 1)
 			from 
 			until
 				i = s
 			loop
-				!! array.make (1, 5)
+				create array.make (1, 5)
 				area.put (array, i)
 				i := i + 1
 			end
@@ -47,14 +47,14 @@ feature -- Initialisation
 			size := n
 			count := 0
 			make_area (n)
-			!! array_count.make (0, n - 1)
-			!! history.make (n)
-			!! index.make (0, n - 1)
+			create array_count.make (0, n - 1)
+			create history.make (n)
+			create index.make (0, n - 1)
 			from 
 			until
 				i = n
 			loop
-				!! array.make (1, 5)
+				create array.make (1, 5)
 				area.put (array, i)
 				i := i + 1
 			end
@@ -69,13 +69,13 @@ feature -- Initialisation
 			s.to_lower
 			Result := Configure_resources.get_integer (s, default_value)
 
-debug ("CACHE_SERVER")
-	io.error.putstring ("Size of ")
-	io.error.putstring (generator)
-	io.error.putstring (" is ")
-	io.error.putint (Result)
-	io.error.new_line
-end
+			debug ("CACHE_SERVER")
+				io.error.putstring ("Size of ")
+				io.error.putstring (generator)
+				io.error.putstring (" is ")
+				io.error.putint (Result)
+				io.error.new_line
+			end
 		end;
 
 	default_value: INTEGER is
@@ -116,50 +116,50 @@ feature -- Cache manipulations
 			end
 			Result := found
 
-Debug ("CACHE")
-	if Size < 500 then
-		from 
-			i :=  0
-			j := Size
-		until
-			i = j
-		loop
-			io.putint (array_count.item (i))
-			if i /= 0 and then i \\ 80 = 0 then
-				io.putstring (" \%N")
-			else
-				io.putstring("-")
+			debug ("CACHE")
+				if Size < 500 then
+					from 
+						i :=  0
+						j := Size
+					until
+						i = j
+					loop
+						io.putint (array_count.item (i))
+						if i /= 0 and then i \\ 80 = 0 then
+							io.putstring (" \%N")
+						else
+							io.putstring("-")
+						end
+						i := i + 1
+					end
+				end
+			
+				io.putstring ("%N")
+				io.putstring (generator)
+				io.putstring (" has a total of: ")
+				io.putint (Count)
+				io.putstring ("%N")
+				io.putstring ("Result of the has_id: ")
+				io.putbool (found)
+				io.putstring ("%N%N")
 			end
-			i := i + 1
-		end
-	end
 
-	io.putstring ("%N")
-	io.putstring (generator)
-	io.putstring (" has a total of: ")
-	io.putint (Count)
-	io.putstring ("%N")
-	io.putstring ("Result of the has_id: ")
-	io.putbool (found)
-	io.putstring ("%N%N")
-end
-
-Debug ("CACHE_STAT")
-	nb_has_id := nb_has_id + 1
-	if found then
-		nb_has_id_succeded := nb_has_id_succeded + 1
-	end
-	success_has_id := nb_has_id_succeded / nb_has_id
-	success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
-	io.putstring (generator)
-	io.putstring ("%NNumber of has_id: ")
-	io.putint (nb_has_id)
-	io.putstring ("%NProportion of has_id succeded: ")
-	io.putreal (success_has_id)
-	io.putstring ("%NProportion of access succeded: ")
-	io.putreal (success)
-	io.putstring ("%N%N")
-end
+			debug ("CACHE_STAT")
+				nb_has_id := nb_has_id + 1
+				if found then
+					nb_has_id_succeded := nb_has_id_succeded + 1
+				end
+				success_has_id := nb_has_id_succeded / nb_has_id
+				success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
+				io.putstring (generator)
+				io.putstring ("%NNumber of has_id: ")
+				io.putint (nb_has_id)
+				io.putstring ("%NProportion of has_id succeded: ")
+				io.putreal (success_has_id)
+				io.putstring ("%NProportion of access succeded: ")
+				io.putreal (success)
+				io.putstring ("%N%N")
+			end
 		end
 
 	item_id (id: INTEGER): T is
@@ -196,48 +196,48 @@ end
 				last_item_pos := j
 			end
 
-Debug ("CACHE")
-	if Size < 500 then
-		from 
-			i :=  0
-			j := Size
-		until
-			i = j
-		loop
-			io.putint (array_count.item (i))
-			if i /= 0 and then i \\ 80 = 0 then
-				io.putstring (" \%N")
-			else
-				io.putstring("-")
+			debug ("CACHE")
+				if Size < 500 then
+					from 
+						i :=  0
+						j := Size
+					until
+						i = j
+					loop
+						io.putint (array_count.item (i))
+						if i /= 0 and then i \\ 80 = 0 then
+							io.putstring (" \%N")
+						else
+							io.putstring("-")
+						end
+						i := i + 1
+					end
+				end
+				io.putstring ("%N")
+				io.putstring (generator)
+				io.putstring (" has a total of: ")
+				io.putint (Count)
+				io.putstring ("%NResult of the item_id:")
+				io.putbool (found)
+				io.putstring ("%N%N")
 			end
-			i := i + 1
-		end
-	end
-	io.putstring ("%N")
-	io.putstring (generator)
-	io.putstring (" has a total of: ")
-	io.putint (Count)
-	io.putstring ("%NResult of the item_id:")
-	io.putbool (found)
-	io.putstring ("%N%N")
-end
 
-Debug ("CACHE_STAT")
-	nb_item_id := nb_item_id + 1
-	if found then
-		nb_item_id_succeded := nb_item_id_succeded + 1
-	end
-	success_item_id := nb_item_id_succeded / nb_item_id
-	success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
-	io.putstring (generator)
-	io.putstring ("%NNumber of item_id: ")
-	io.putint (nb_item_id)
-	io.putstring ("%NProportion of item_id succeded: ")
-	io.putreal (success_item_id)
-	io.putstring ("%NProportion of access succeded: ")
-	io.putreal (success)
-	io.putstring ("%N%N")
-end
+			debug ("CACHE_STAT")
+				nb_item_id := nb_item_id + 1
+				if found then
+					nb_item_id_succeded := nb_item_id_succeded + 1
+				end
+				success_item_id := nb_item_id_succeded / nb_item_id
+				success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
+				io.putstring (generator)
+				io.putstring ("%NNumber of item_id: ")
+				io.putint (nb_item_id)
+				io.putstring ("%NProportion of item_id succeded: ")
+				io.putreal (success_item_id)
+				io.putstring ("%NProportion of access succeded: ")
+				io.putreal (success)
+				io.putstring ("%N%N")
+			end
 		end
 	
 	remove_id (id: INTEGER) is
@@ -296,7 +296,7 @@ end
 			i := e.id \\ Size
 			l_array := area.item (i)
 			history.add (e)
-			!! h_cell.make (e, history.younger)
+			create h_cell.make (e, history.younger)
 			to_remove := history.to_remove
 			if to_remove /= Void then
 				internal_remove (to_remove)
@@ -409,11 +409,11 @@ feature -- linear iteration
 				item_array := last_item_array_number			
 				item_number := last_item_pos + 1
 				array_current := last_item_array
-				limit := array_count.item (item_array)
 			until
 				found or else item_array = size
 			loop
 				from
+					limit := array_count.item (item_array)
 					array_current:= area.item (item_array)
 				until
 					found or else item_number > limit
@@ -480,11 +480,11 @@ feature {NONE} -- to implement force
 				found := l_array.item (j).item.id = id
 				j := j - 1
 			end
-DEBUG ("CACHE_RESEARCH")
-	if not found then
-		io.putstring ("Be carefull: object not found%N")
-	end
-end
+			debug ("CACHE_RESEARCH")
+				if not found then
+					io.putstring ("Be carefull: object not found%N")
+				end
+			end
 			if found then
 				-- found IS true
 				-- the if is to avoid a bug I didn't find (yet)

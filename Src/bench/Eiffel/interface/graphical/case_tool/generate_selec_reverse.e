@@ -23,6 +23,7 @@ feature
 		e : SCROLLABLE_LIST_CLUSTERS
 	do
 		!!aa
+		aa.set_parent_window (case_window.Project_tool.implementation)
 		aa.put_case_message("Starting Reverse Process")
 	--	aa.put_start_reverse_engineering (300)
 		!! bb.make (case_window)

@@ -12,7 +12,7 @@ inherit
 		end
 
 	WINDOWS
-		export {GENERATE_ALL_REVERSE}
+		export {GENERATE_ALL_REVERSE, GENERATE_SELEC_REVERSE}
 			project_tool
 		end
 

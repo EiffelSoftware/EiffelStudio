@@ -1,6 +1,7 @@
 #!/usr/local/bin/perl
 #Script to update Vision2 copyright notice
-#Use find . -name "*.e" -print | xargs perl testscript.ps 
+#Use find . -name "*.e" -print | xargs perl testscript.ps  (from vision root)
+#or perl testscript class_name.e
 
 $num_files = $#ARGV;
 $files_processed = 0;
@@ -14,17 +15,17 @@ for ($x = 0; $x <= $num_files; $x++)
 {
 if (-T $ARGV[$x] )
 {
-$files_processed++;
-print ("\nProcessing ");
-print $ARGV[$x];
-print ("\nCleansing ");
+	$files_processed++;
+	print ("\nProcessing ");
+	print $ARGV[$x];
+	print ("\nCleansing ");
 
-open(DATA, $ARGV[$x]);
-@file_lines = <DATA>;
-$file_length = $#file_lines;
-close(DATA);
+	open(DATA, $ARGV[$x]);
+	@file_lines = <DATA>;
+	$file_length = $#file_lines;
+	close(DATA);
 
-open(NEWF, ">$ARGV[$x]");
+	open(NEWF, ">$ARGV[$x]");
 
 
 for ($y = 0; $y <= $file_length ; $y++)
@@ -33,31 +34,35 @@ for ($y = 0; $y <= $file_length ; $y++)
 	print NEWF $updated_line;
 	print (".");
 }
-close(NEWF);
+	print (" = ");
+	print $y;
+	print (" lines");
+	close(NEWF);
 }
 
 else
 {
-print ("\n");
-print $ARGV[$x];
-print(" is not a text file (processing aborted)");
+	print ("\n");
+	print $ARGV[$x];
+	print(" is not a text file (processing aborted)");
 }
-print ("\n");
+	print ("\n");
 }
 
 sub update_string
 {
-local ($a);
-$a = $_[0];
-$a =~ s/EiffelVision:/EiffelVision2:/;
-$a =~ s/1986-1998/1986-1999/;
-$a =~ s/--\|/--!/;
-$a =~ s/!!/create /;
-$a =~ s/create  /create /;
-$a =~ s/Windows Eiffel Library/EiffelVision2/;
-$a =~ s/creation/create/;
-$a =~ s/Creation/create/;
-$a;
+	local ($a);
+	$a = $_[0];
+	$a =~ s/EiffelVision:/EiffelVision2:/;
+	$a =~ s/1986-1998/1986-1999/;
+	$a =~ s/--\|/--!/;
+	$a =~ s/!!/create /;
+	$a =~ s/create  /create /;
+	$a =~ s/Windows Eiffel Library/EiffelVision2/;
+	$a =~ s/creation/create/;
+	$a =~ s/Creation/create/;
+	$a =~ s/--! fix_me/--\| FIXME /;
+	$a;
 }
 print("\nNumber of classes processed: ");
 print $files_processed;

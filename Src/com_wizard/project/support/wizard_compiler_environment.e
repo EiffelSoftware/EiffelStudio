@@ -47,7 +47,7 @@ feature -- Access
 	Common_idl_compiler_options: STRING is ""
 			-- MIDL options
 
-	Rpc_library: STRING is "%"kernel32.lib%" %"rpcndr.lib%" %"rpcns4.lib%" %"rpcrt4.lib%" %"uuid.lib%""
+	Rpc_library: STRING is "%"kernel32.lib%" %"rpcndr.lib%" %"rpcns4.lib%" %"rpcrt4.lib%" %"uuid.lib%" %"oleaut32.lib%""
 			-- RPC library to be linked with MIDL generated c files
 
 end -- class WIZARD_COMPILER_ENVIRONMENT

@@ -42,10 +42,11 @@ feature -- Settings
 			i: INTEGER
 			block_rva: INTEGER
 		do
-			block_rva := pad_up (data_location, Section_alignment) - Section_alignment
+			block_rva := pad_up (data_location, Block_size) - Block_size
 			i := data_location - block_rva
 			c_set_block_rva (item, block_rva)
-			c_set_fixup (item, feature {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow | i.to_integer_16)
+			c_set_fixup (item, feature {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow |
+				i.to_integer_16)
 		end
 
 feature -- Measurement
@@ -63,6 +64,9 @@ feature -- Measurement
 		alias
 			"sizeof(CLI_IMAGE_RELOCATION)"
 		end
+
+	Block_size: INTEGER is 4096
+			-- Size of block for a relocation location.
 
 feature {NONE} -- Implementation
 

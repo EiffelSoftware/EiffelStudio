@@ -29,6 +29,7 @@ feature -- Initialization
 	initialize is
 			-- Create main box and separator.
 		do
+			create {EV_HORIZONTAL_BOX} split_box
 			create {EV_VERTICAL_SEPARATOR} sep
 			Precursor
 		end
@@ -41,8 +42,20 @@ feature {NONE} -- Implementation
 		do
 			Result := a_hor
 		end
+
+	set_first_cell_dimension (a_size: INTEGER) is
+			-- Set width of first_cell.
+		do
+			first_cell.set_minimum_width (a_size)
+		end
+
+	set_second_cell_dimension (a_size: INTEGER) is
+			-- Set width of second_cell.
+		do
+			second_cell.set_minimum_width (a_size)
+		end
 	
-end -- class EV_HORIZONTAL_SPLIT_AREA_I
+end -- class EV_HORIZONTAL_SPLIT_AREA
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -65,6 +78,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/05/03 21:44:10  brendel
+--| Reverted to old version not using EV_FIXED.
+--|
 --| Revision 1.18  2000/05/02 22:01:21  brendel
 --| Removed redundent features.
 --|

@@ -71,8 +71,10 @@ feature {NONE} -- Implementation
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+		local
+			constant_context: GB_CONSTANT_CONTEXT
 		do
-			text_entry.set_text (first.text)
+			text_entry.update_constant_display (first.text)
 		end
 		
 	set_up_user_events (vision2_object, an_object: like ev_type) is

@@ -91,9 +91,9 @@ feature -- Access
 			else
 				user_can_resize.disable_select
 			end
-			maximum_width_input.set_text (first.maximum_width.out)
-			maximum_height_input.set_text (first.maximum_height.out)
-			title_entry.set_text (first.title)
+			maximum_width_input.update_constant_display (first.maximum_width.out)
+			maximum_height_input.update_constant_display (first.maximum_height.out)
+			title_entry.update_constant_display (first.title)
 			
 			user_can_resize.select_actions.resume
 		end
@@ -222,6 +222,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_first_object (agent {EV_WINDOW}.set_maximum_width (integer))
+			update_editors
 		end
 		
 	valid_maximum_width (value: INTEGER): BOOLEAN is
@@ -237,6 +238,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_first_object (agent {EV_WINDOW}.set_maximum_height (integer))
+			update_editors
 		end
 		
 	valid_maximum_height (value: INTEGER): BOOLEAN is
@@ -250,6 +252,7 @@ feature {NONE} -- Implementation
 			-- Update property `title' on all items in `objects'.
 		do
 			for_first_object (agent {EV_WINDOW}.set_title (a_title))
+			update_editors
 		end
 
 	validate_true (s: STRING): BOOLEAN is

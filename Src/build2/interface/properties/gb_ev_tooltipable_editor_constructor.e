@@ -39,7 +39,7 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			tooltip_entry.set_text (first.tooltip)
+			tooltip_entry.update_constant_display (first.tooltip)
 		end
 		
 feature {NONE} -- Implementation
@@ -63,6 +63,7 @@ feature {NONE} -- Implementation
 			else
 				for_all_objects (agent {EV_TOOLTIPABLE}.remove_tooltip)
 			end
+			update_editors
 		end
 
 	Tooltip_string: STRING is "Tooltip"

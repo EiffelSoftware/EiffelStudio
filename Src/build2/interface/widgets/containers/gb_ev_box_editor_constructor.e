@@ -103,8 +103,10 @@ feature -- Access
 			else
 				is_homogeneous_check.disable_select
 			end
-			border_entry.set_text (first.border_width.out)
-			padding_entry.set_text (first.padding_width.out)
+			border_entry.update_constant_display (first.border_width.out)
+			padding_entry.update_constant_display (first.padding_width.out)
+		--	border_entry.set_text (first.border_width.out)
+	--		padding_entry.set_text (first.padding_width.out)
 			
 			from
 				check_buttons.start
@@ -176,6 +178,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_all_objects (agent {EV_BOX}.set_padding_width (value))
+			update_editors
 		end
 		
 	valid_input (value: INTEGER): BOOLEAN is
@@ -190,6 +193,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_all_objects (agent {EV_BOX}.set_border_width (value))
+			update_editors
 		end
 
 	is_homogeneous_check: EV_CHECK_BUTTON

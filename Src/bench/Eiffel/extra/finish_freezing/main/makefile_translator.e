@@ -54,6 +54,11 @@ feature -- Initialization
 					io.put_string ("Preparing C compilation...%N")
 					launch_quick_compilation
 				end
+				
+				smart_checking := options.get_boolean ("smart_checking", True)
+				if compiler.is_equal ("msc") and smart_checking then
+					create vs_setup.make
+				end
 			else
 				error_msg.append ("Could not launch finish_freezing. Make%N")
 				error_msg.append ("sure that the ISE EiffelStudio environment%N")
@@ -107,6 +112,10 @@ feature -- Access
 
 	quick_compilation: BOOLEAN
 			-- Is the current compilation a quick one?
+
+	smart_checking: BOOLEAN
+			-- Does the current compilation require that environment variables 
+			-- are automatically set for Visual Studio (i.e. should we run vcvars32.bat)?
 
 	delete_next: BOOLEAN		
 			-- Is the next line to be deleted?
@@ -1510,6 +1519,9 @@ feature {NONE}	-- substitutions
 
 
 feature {NONE} -- Implementation
+
+	vs_setup: VS_SETUP
+			-- Visual Studio setup details.
 
 	env: EXECUTION_ENVIRONMENT is
 		once

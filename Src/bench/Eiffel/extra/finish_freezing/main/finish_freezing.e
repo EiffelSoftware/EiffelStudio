@@ -26,6 +26,7 @@ feature -- Initialization
 			unc_mapper: UNC_PATH_MAPPER
 			mapped_path: BOOLEAN
 		do
+			
 				-- Location defaults to the current directory
 			location := current_working_directory
 
@@ -55,8 +56,7 @@ feature -- Initialization
 
 				translator.translate
 				if translator.has_makefile_sh then
-						-- We do not want to run nmake if launched from VS.Net
-						-- Nor to be launched when there was not Makefile.SH file
+						-- We don't want to be launched when there is no Makefile.SH file.
 					translator.run_make
 					c_error := c_compilation_error
 				end

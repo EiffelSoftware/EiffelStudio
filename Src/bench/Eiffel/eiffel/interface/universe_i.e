@@ -302,11 +302,13 @@ feature -- Access
 				clusters.after or l_found
 			loop
 				l_assembly ?= clusters.item
-				l_assembly_name := l_assembly.assembly_name
-				if lower_case_comparison then
-					l_assembly_name := l_assembly_name.as_lower
+				if l_assembly /= Void then
+					l_assembly_name := l_assembly.assembly_name
+					if lower_case_comparison then
+						l_assembly_name := l_assembly_name.as_lower
+					end
+					l_found := equal (l_an, l_assembly_name)
 				end
-				l_found := l_assembly /= Void and then equal (l_an, l_assembly_name)
 				clusters.forth
 			end
 			

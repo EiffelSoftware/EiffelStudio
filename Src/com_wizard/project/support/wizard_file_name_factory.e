@@ -73,7 +73,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_CPP_CLASS) is
+	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_C) is
 			-- File name for generated Eiffel to C structure mapper
 		do
 			transient_writer := a_writer

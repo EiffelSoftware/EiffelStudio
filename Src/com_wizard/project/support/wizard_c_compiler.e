@@ -2,11 +2,6 @@ class
 	WIZARD_C_COMPILER
 
 inherit
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all

@@ -433,8 +433,8 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 				end
 				create tmp_region.make_rect_indirect (r)
 				new_region := main_region.combine (tmp_region, Rgn_diff)
-				tmp_region.dispose
-				main_region.dispose
+				tmp_region.delete
+				main_region.delete
 				main_region := new_region
 				i := i + 1
 			end
@@ -444,8 +444,8 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			paint_dc.fill_region (main_region, bk_brush)
 
 				-- Clean up GDI objects
-			bk_brush.dispose
-			main_region.dispose
+			bk_brush.delete
+			main_region.delete
 		end
 
 feature {NONE} -- Implementation

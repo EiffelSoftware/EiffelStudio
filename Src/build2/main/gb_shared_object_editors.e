@@ -85,6 +85,42 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	rebuild_associated_editors (vision2_object: EV_ANY) is
+			-- For all editors referencing `vision2_object', rebuild any associated object editors.
+		local
+			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			local_item: GB_OBJECT_EDITOR
+			an_object: GB_OBJECT
+			locked_in_here: BOOLEAN
+			current_parent_window: EV_WINDOW
+		do
+			local_all_editors := all_editors
+			from
+				local_all_editors.start
+			until
+				local_all_editors.off
+			loop
+				local_item := local_all_editors.item
+					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
+					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
+				if local_item.object /= Void and then local_item.object.object = vision2_object then
+					an_object ?= local_all_editors.item.object
+					current_parent_window := local_all_editors.item.parent_window (local_all_editors.item)
+					if current_parent_window /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+						locked_in_here := True
+						current_parent_window.lock_update
+					end
+					local_all_editors.item.make_empty
+					local_all_editors.item.set_object (an_object)
+					if current_parent_window /= Void and locked_in_here then
+						current_parent_window.unlock_update
+					end
+					
+				end
+				local_all_editors.forth
+			end
+		end
+		
 	destroy_floating_editors is
 			-- For evey item in `floating_object_editors',
 			-- remove and destroy.

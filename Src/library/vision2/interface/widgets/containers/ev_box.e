@@ -35,6 +35,16 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
+	spacing: INTEGER is
+			-- Spacing between the objects in the box
+		require
+			exists: not destroyed
+		do
+			Result := implementation.spacing
+		ensure
+			positive_result: Result >= 0
+		end 
+
 feature -- Element change (box specific)
 	
 	set_homogeneous (flag: BOOLEAN) is

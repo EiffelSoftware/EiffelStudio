@@ -25,6 +25,14 @@ feature {NONE} -- Initialization
 			switch ?= yacc_arg (0)
 			case_list ?= yacc_arg (1)
 			else_part ?= yacc_arg (2)
+				-- We need to check for the existence of a `else' clause
+				-- in the inspect statement even if `else_part' is Void.
+				--| Note: we cannot generate a generic class from C if we don't have
+				--| the type of the generic parameter, that's why we are doing it
+				--| from the Eiffel side.
+			if else_part = Void and then yacc_bool_arg (0) then
+				!! else_part.make (0)
+			end
 			start_position := yacc_position
 			line_number    := yacc_line_number
 		ensure then

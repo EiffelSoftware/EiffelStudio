@@ -1518,7 +1518,7 @@ struct utimbuf *times;
 int unlink(path)
 char *path;
 {
-	return -1
+	return -1;
 }
 
 #endif

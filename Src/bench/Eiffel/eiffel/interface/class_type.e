@@ -838,9 +838,6 @@ feature -- Skeleton generation
 
 					-- Generate attribute types sequence
 				skeleton_file.putstring ("uint32 types")
-				if type_id = 256 or type_id = 295 then
-					print ("I'm here")
-				end
 				skeleton_file.putint (type_id)
 				skeleton_file.putstring (" [] =%N")
 				skeleton.generate_type_array

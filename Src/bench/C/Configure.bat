@@ -99,6 +99,13 @@ copy make.w32 run-time\make.bat
 copy run-time\size.win run-time\eif_size.h
 copy run-time\size.win eif_size.h
 rem
+rem Create OBJDIR and LIB in run-time
+rem
+cd run-time
+mkdir OBJDIR
+mkdir LIB
+cd ..
+rem
 rem Call the converter tranforming the makefile-win.sh to makefile
 rem
 cd ipc\shared

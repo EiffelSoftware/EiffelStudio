@@ -20,4 +20,10 @@ feature
 			value := 0;
 		end;
 
+	set_value (val: INTEGER) is
+			-- Assign `val' to `value'.
+		do
+			value := val
+		end;
+
 end

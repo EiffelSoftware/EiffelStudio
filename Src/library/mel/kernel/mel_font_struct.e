@@ -101,21 +101,21 @@ feature {NONE} -- External features
 
 	mel_font_id (a_font: POINTER): POINTER is
 		external
-			"C (XFontStruct *): EIF_POINTER | %"font.h%""
+			"C [macro %"font.h%"] (XFontStruct *): EIF_POINTER"
 		alias
 			"mel_font_id"
 		end;
 
 	mel_font_descent (a_font: POINTER): INTEGER is
 		external
-			"C (XFontStruct *): EIF_INTEGER | %"font.h%""
+			"C [macro %"font.h%"] (XFontStruct *): EIF_INTEGER"
 		alias
 			"mel_font_descent"
 		end;
 
 	mel_font_ascent (a_font: POINTER): INTEGER is
 		external
-			"C (XFontStruct *): EIF_INTEGER | %"font.h%""
+			"C [macro %"font.h%"] (XFontStruct *): EIF_INTEGER"
 		alias
 			"mel_font_ascent"
 		end;

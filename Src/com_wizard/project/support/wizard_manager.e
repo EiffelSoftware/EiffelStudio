@@ -512,9 +512,6 @@ feature {NONE} -- Implementation
 	Runtime_functions_generation: STRING is "Generating Runtime functions"
 			-- Runtime functions generation.
 
---	Clib_name: STRING is "ecom"
---			-- Libray file name.
-
 	Compilation_successful: STRING is "Compilation completed."
 			-- Compilation successful message.
 

@@ -8,13 +8,6 @@ class
 	TREE_FACTORY
 
 inherit
---	CACHE
-	CACHE_PATH
-		rename
-			Ise_eiffel_key as Ise_key
-		undefine
-			Eiffel_path
-		end		
 	ICON_PATH
 
 create
@@ -103,7 +96,7 @@ feature {NONE} -- Add element to tree
 			counter: INTEGER
 			eac: EAC_BROWSER
 			cat: CONSUMED_ASSEMBLY_TYPES
-			a_file_name: STRING
+--			a_file_name: STRING
 			l_namespaces: ARRAY [STRING]
 			l_namespace_name: STRING
 			l_namespace_node: EV_COMPARABLE_TREE_ITEM
@@ -124,7 +117,7 @@ feature {NONE} -- Add element to tree
 				(create {EV_ENVIRONMENT}).application.process_events
 				
 				create eac
-				a_file_name := absolute_info_assembly_path (an_assembly)
+--				a_file_name := absolute_info_assembly_path (an_assembly)
 				cat := eac.consumed_assembly (an_assembly)
 				l_namespaces := cat.namespaces
 				from
@@ -160,7 +153,7 @@ feature {NONE} -- Add element to tree
 		local
 			l_assembly_info: ASSEMBLY_INFORMATION
 		do
-			create l_assembly_info.make (dotnet_framework_path + an_assembly.name + ".xml")
+			create l_assembly_info.make ((create {COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
 			if l_assembly_info /= Void then
 				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
 			end

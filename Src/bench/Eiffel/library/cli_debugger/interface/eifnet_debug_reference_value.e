@@ -210,6 +210,7 @@ feature -- Output
 			-- List of all sub-items of `Current'. 
 			-- May be void if there are no children.
 			-- Generated on demand.
+			-- (sorted by name)
 		local
 			l_feature_table: FEATURE_TABLE
 			l_feature_i: FEATURE_I
@@ -219,7 +220,7 @@ feature -- Output
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
-			create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+			create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
 			l_icd_class := object_value.get_class
 			if 
 				dynamic_class /= Void 

@@ -727,12 +727,12 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					l_precomp_dirs.after
 				loop
 					l_remote_project_directory := l_precomp_dirs.item_for_iteration
-					l_pfn := l_remote_project_directory.precomp_eid_file
+					l_pfn := l_remote_project_directory.precomp_eiffel_debug_info_file
 					debug ("debugger_il_info_trace")
 						print (l_pfn)
 						io.put_new_line
 					end
-					l_succeed := import_file_data (l_remote_project_directory.precomp_eid_file, l_remote_project_directory.system_name, True)
+					l_succeed := import_file_data (l_remote_project_directory.precomp_eiffel_debug_info_file, l_remote_project_directory.system_name, True)
 					l_precomp_dirs.forth
 				end
 			end
@@ -814,7 +814,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 		once
 			create Result.make_from_string (Workbench_generation_path)
 			Result.set_file_name (System.name)
-			Result.add_extension ("eid")	
+			Result.add_extension ("pdbe")	
 		end	
 
 feature {NONE} -- Class Specific info

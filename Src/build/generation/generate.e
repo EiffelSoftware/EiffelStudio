@@ -11,7 +11,11 @@ inherit
 	CONSTANTS;
 	WINDOWS;
 	ERROR_POPUPER;
-	SHARED_TOOLKIT_NAME
+	SHARED_TOOLKIT_NAME;
+	EXCEPTIONS
+		rename
+			class_name as exceptions_class_name
+		end
 
 feature 
 
@@ -20,7 +24,8 @@ feature
 	execute (argument: ANY) is
 			-- Generate command
 		local
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			temp: STRING
 		do
 			if not rescued then
 				!!mp;
@@ -29,13 +34,27 @@ feature
 				mp.restore
 			else
 				rescued := False;
+				if original_exception = Operating_system_exception and then
+					original_tag_name /= Void
+				then
+					!! temp.make (0);
+					temp.append ("Reason: ");
+					temp.append (original_tag_name);
+				else
+					temp := Environment.classes_directory;
+				end;
 				error_box.popup (Current, 
-					Messages.generate_er, Environment.classes_directory)
+					Messages.generate_er, temp)
 			end
 		rescue
 			mp.restore;
 			rescued := True;
 			retry
+		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
 		end;
 
 feature -- Code generation
@@ -58,6 +77,8 @@ feature -- Code generation
 				-- Widget classes generation.
 				-- ==========================
 			callback_generator.update;
+			Environment.create_ace_file;
+			Environment.create_generated_directories;;
 			from
 				!! translate_content.make (0);
 				old_cursor := Shared_window_list.cursor;
@@ -70,15 +91,20 @@ feature -- Code generation
 				!!doc;
 				doc.set_directory_name (Environment.context_directory);
 				doc.set_document_name (window_c.base_file_name_without_dot_e);
-				temp := window_c.eiffel_text;
-				doc.update (temp);
-				error := doc.error;
-				doc := Void;
-				translate_content.append (window_c.base_file_name_without_dot_e);
-				translate_content.append (".e");
-				translate_content.append (":  ");
-				translate_content.append (window_c.label);
-				translate_content.extend ('%N');
+				if doc.is_file_name_valid then
+					temp := window_c.eiffel_text;
+					doc.update (temp);
+					error := doc.error;
+					doc := Void;
+					translate_content.append (window_c.base_file_name_without_dot_e);
+					translate_content.append (".e");
+					translate_content.append (":  ");
+					translate_content.append (window_c.label);
+					translate_content.extend ('%N');
+				else
+					error := True;
+					display_file_name_error (doc.document_file_name);
+				end;
 				Shared_window_list.go_to (current_cursor);
 				Shared_window_list.forth
 			end;
@@ -101,16 +127,18 @@ feature -- Code generation
 				Shared_group_list.after or else error
 			loop
 				group := Shared_group_list.item;
-				if group.eiffel_text /= Void then
+				!!doc;
+				doc.set_directory_name (Environment.groups_directory);
+				doc.set_document_name (group.entity_name);
+				if doc.is_file_name_valid then
 					current_cursor := Shared_group_list.cursor;
-					!!doc;
-					doc.set_directory_name (Environment.groups_directory);
-					doc.set_document_name (group.entity_name);
-					temp := group.eiffel_text;
-					doc.update (temp);
+					doc.update (group.updated_eiffel_text);
 					error := doc.error;
 					doc := Void;
 					Shared_group_list.go_to (current_cursor);
+				else
+					error := True;
+					display_file_name_error (doc.document_file_name);
 				end;
 				Shared_group_list.forth;
 			end;
@@ -326,6 +354,16 @@ feature {NONE}
 		end;
 
 
+feature {NONE} -- Error display
+
+	display_file_name_error (fn: STRING) is
+			-- Display file name error for `fn'.
+		do
+			error_box.popup (Current, 
+					Messages.Invalid_file_name_er, 
+					fn)
+		end;
+
 feature {NONE} -- Writing out the translate file
 
 	save_translation (translate_fn: FILE_NAME; 
@@ -349,7 +387,7 @@ feature {NONE} -- Writing out the translate file
 					translate_file.open_write;
 					translate_file.put_string (translate_content);
 					translate_file.close;
-				end
+				end;
 			else
 				translate_file.open_write;
 				translate_file.put_string (translate_content);

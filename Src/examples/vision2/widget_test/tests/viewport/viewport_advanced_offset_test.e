@@ -84,7 +84,9 @@ feature {NONE} -- Implementation
 		end
 	
 	pixmap_image: EV_PIXMAP is
-			-- `Result' is image used for test.
+			-- `Result' is image used for test. The way
+			-- in which this is generated is not important,
+			-- but the fact that it generates an intersting image is.
 		local
 			colors: LINKED_LIST [EV_COLOR]
 			counter: INTEGER

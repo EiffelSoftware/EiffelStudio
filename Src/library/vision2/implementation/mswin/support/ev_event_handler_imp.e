@@ -100,13 +100,16 @@ feature {NONE} -- Element change
 				list := command_list @ event_id
 				from
 					list.start
-				until
-					list.after
-				loop
 					if list.item.command = cmd then
 						list.remove
 					end
+				until
+					list.after
+				loop
 					list.forth
+					if list.item.command = cmd then
+						list.remove
+					end
 				end
 			end
 		end

@@ -71,8 +71,37 @@ feature
 			rout_name_exists: rout_name /= Void;
 			type_exists: type /= Void;
 		do
+			rout_name.append ("();")
 			routines.put (type, rout_name);
 		end;
+
+	add_routine_with_signature (type: TYPE_C; rout_name: STRING; argument_types: ARRAY [STRING]) is
+			-- Add one routine of name `rout_name' and C type `type' and with argument types
+			-- `arguments_types
+		local
+			i: INTEGER
+			nb: INTEGER
+			signature: STRING
+			sep: STRING
+		do
+			from
+				create signature.make (48)
+				signature.append (rout_name + "(")
+				sep := ", "
+				i := 1
+				nb := argument_types.count
+			until
+				i > nb
+			loop
+				if i /= 1 then
+					signature.append (sep)
+				end
+				signature.append (argument_types @ i)
+				i := i + 1
+			end
+			signature.append (");")
+			routines.put (type, signature)
+		end
 
 	wipe_out is
 			-- Wipe out current structure
@@ -135,10 +164,10 @@ feature
 			until
 				local_routines.after
 			loop
-				buffer.putstring ("extern ");
+				buffer.putstring ("%Nextern ");
 				local_routines.item_for_iteration.generate (buffer);
 				buffer.putstring (local_routines.key_for_iteration);
-				buffer.putstring ("();%N");
+--				buffer.putstring ("();%N");
 				local_routines.forth;
 			end;
 

@@ -198,6 +198,7 @@ end
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
+			local_argument_types: ARRAY [STRING]
 		do
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
@@ -244,13 +245,15 @@ end
 
 					rout_table.goto_used (typ.type_id)
 
+					local_argument_types := argument_types
 					if not rout_table.item.written_type_id.is_equal (Context.original_class_type.type_id) then
 							-- Remember extern routine declaration
-						Extern_declarations.add_routine (type_c, internal_name)
+						Extern_declarations.add_routine_with_signature (type_c,
+								internal_name, local_argument_types)
 					end
 
 					buf.putchar ('(')
-					type_c.generate_function_cast (buf, argument_types)
+					type_c.generate_function_cast (buf, local_argument_types)
 					buf.putstring (internal_name)
 					buf.putchar (')')
 				else

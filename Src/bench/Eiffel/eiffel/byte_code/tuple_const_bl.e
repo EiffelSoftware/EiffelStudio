@@ -326,7 +326,7 @@ feature {NONE} -- C code generation
 				-- Since `make' from TUPLE is a procedure, the return type is `Void_c_type'
 				--| Note: it used to be `real_ty.c_type' but it was the C type of
 				--| the TUPLE itself and not of the `make' routine and thus was incorrect.
-			Extern_declarations.add_routine (Void_c_type, internal_name)
+			Extern_declarations.add_routine_with_signature (Void_c_type, internal_name, <<"EIF_REFERENCE">>)
 		end
 
 	generate_wk_tuple_make (real_ty: TUPLE_TYPE_I)	is

@@ -116,10 +116,10 @@ private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
 shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
 public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
 public int gc_running = 0;			/* Is the GC running */
-public double last_gc_time;			/* The time spent on the last collect, sweep or whatever the GC did */
+public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */
 public int gc_ran = 0;				/* Has the GC been running */
 
-#ifdef __VMS
+#if defined __VMS || defined EIF_OS2
 public int r_fides;	/* moved here from retrieve.c */
 	/* Was getting a link warning that it couldn't find this symbol.
 	 * Under vms the linker won't include the symbol if at least one

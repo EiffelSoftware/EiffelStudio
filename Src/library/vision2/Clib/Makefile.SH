@@ -46,6 +46,7 @@ ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	make clobber
 
 MTload_pixmap.o: load_pixmap.c
 	$(CC) -c $(MTCFLAGS) $? -o $@

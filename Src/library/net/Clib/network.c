@@ -86,8 +86,6 @@
 
 #include "bitmask.h"
 
-
-
 #ifdef EIF_WIN32
 #define EIFNET_ERROR_HAPPENED SOCKET_ERROR
 	/* Clean up function */
@@ -192,7 +190,9 @@ void do_init(void)
 			fprintf (stderr, "Communications error %d", err);
 			eraise ("Unable to start WINSOCK", EN_PROG);
 		}
+#ifndef EIF_IL_DLL
 		eif_register_cleanup(eif_winsock_cleanup);
+#endif
 		done = TRUE;
 	}
 }
@@ -356,8 +356,7 @@ EIF_POINTER net_host(EIF_POINTER addr)
 	EIF_POINTER address;
 
 	res =  (char *) inet_ntoa(*((struct in_addr *) addr));
-	address = makestr(res, strlen(res));
-	return address;
+	return (EIF_POINTER) res;
 }
 
 void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)

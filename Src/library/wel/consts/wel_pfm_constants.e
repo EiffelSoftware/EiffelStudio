@@ -28,6 +28,33 @@ feature -- Access
 
 	Pfm_numbering: INTEGER is 32
 			-- The wNumbering member is valid.
+			
+	Pfm_spacebefore: INTEGER is 64
+			-- The dySpaceBefore member is valid.
+			
+	Pfm_spaceafter: INTEGER is 128
+			-- The dySpaceAfter member is valid.
+			
+	Pfm_linespacing: INTEGER is 256
+			-- The dyLineSpacing member is valid.
+			
+	Pfm_style: INTEGER is 512
+			-- The sStyle member is valid.
+			
+	Pfm_border: INTEGER is 2048
+			-- The wBorderSpace, wBorderWidth and wBorders members are valid.
+			
+	Pfm_shading: INTEGER is 4096
+			-- The wShadingStyle and wShadingWeight members arevalid.
+			
+	Pfm_numberingstyle: INTEGER is 8092
+			-- The wNumberingStyle member is valid.
+			
+	Pfm_numberingtab: INTEGER is 16384
+			-- The wNumberingTab member is valid.
+			
+	Pfm_numberingstart: INTEGER is 32768
+			-- The wNumberingStart member is valid.
 
 	Pfm_offsetindent: INTEGER is -2147483648
 			-- The dxOffset member is valid.

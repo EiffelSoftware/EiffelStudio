@@ -79,7 +79,8 @@ feature -- Initialization
 			managed := man
 			set_horizontal (true)
 			set_single_line
-			set_size (1,1)
+			set_form_width (1)
+			set_form_height (1)
 		end
 
 feature -- Status report

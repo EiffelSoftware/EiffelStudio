@@ -42,9 +42,13 @@ feature {NONE} -- Initialization
 			-- `Vision2 list' = gtk_scrolled_window + gtk_list.
 			-- We do this to allow the scrolling.
 
-			-- Creating the gtk scrolled window, pointed by `widget':
+			-- Creating the gtk scrolled window.
 			set_c_object (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
-			C.gtk_scrolled_window_set_policy (c_object, C.Gtk_policy_automatic_enum, C.Gtk_policy_automatic_enum)
+			C.gtk_scrolled_window_set_policy (
+				c_object,
+				C.GTK_POLICY_AUTOMATIC_ENUM,
+				C.GTK_POLICY_AUTOMATIC_ENUM
+			)
 
 			-- Creating the gtk_list, pointed by `list_widget':
 			list_widget := C.gtk_list_new
@@ -76,26 +80,60 @@ feature -- Access
 			end
 		end
 
+	selected_items: LINKED_LIST [EV_TREE_ITEM] is
+			-- Items which are currently selected.
+		local
+			list_pointer, item_pointer: POINTER
+			o: EV_ANY_IMP
+			a_counter: INTEGER
+			current_item: EV_TREE_ITEM
+		do
+			create Result.make
+			list_pointer := C.gtk_list_struct_selection (list_widget)
+			if list_pointer /= Default_pointer then
+				from
+					a_counter := 0
+				until
+					a_counter = C.g_list_length (list_pointer)
+				loop
+					item_pointer := C.g_list_nth_data (
+						list_pointer,
+						a_counter
+					)
+					o := eif_object_from_c (item_pointer)
+					current_item ?= o.interface
+					Result.extend (current_item)
+					a_counter := a_counter + 1
+				end
+			end	
+		end
+
 feature -- Status report
 
 	selected: BOOLEAN is
-			-- Is at least one item selected ?
+			-- Is one item selected ?
+		local
+			list_pointer: POINTER
 		do
-			Result := C.c_gtk_list_selected (list_widget) = 0
+			list_pointer := C.gtk_tree_struct_selection (list_widget)
+			if list_pointer /= Default_pointer then
+				Result := C.g_list_length (list_pointer) > 0
+			end
 		end
 
 	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		do
-			Result := C.c_gtk_list_selection_mode (list_widget) = C.Gtk_selection_multiple_enum
+			Result := C.c_gtk_list_selection_mode (list_widget) 
+					= C.GTK_MULTIPLE_SELECTION_ENUM
 		end
 
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
 			-- Give the item of the list at the one-base
-			-- index. (Gtk uses 0 based indexs, I think)
+			-- index.
 		do
 			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
@@ -117,7 +155,7 @@ feature -- Status setting
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
+			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
 		end
 
 	disable_multiple_selection is
@@ -125,7 +163,7 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
+			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
@@ -197,6 +235,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/29 00:00:23  king
+--| Added multiple item features
+--|
 --| Revision 1.23  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

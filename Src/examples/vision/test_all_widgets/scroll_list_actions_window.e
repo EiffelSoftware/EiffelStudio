@@ -46,20 +46,21 @@ feature
 
 	descendant_actions(arg: INTEGER_REF) is
 		local
-			widget: SCROLL_LIST
+			widget: SCROLLABLE_LIST
+			elem: SCROLLABLE_LIST_STRING_ELEMENT
 		do
 			widget ?= demo_window_array.item (main_window.current_demo).main_widget
 			inspect arg.item
 			when b_start then
 				widget.start
-				widget.show_current
+				widget.scroll_to_current
 			when b_finish then
 				widget.finish
-				widget.show_current
+				widget.scroll_to_current
 			when b_forth then
 				if not widget.empty and then widget.index <= widget.count then
 					widget.forth
-					widget.show_current
+					widget.scroll_to_current
 				end
 			when b_wipe_out then
 				widget.wipe_out
@@ -68,7 +69,8 @@ feature
 					prompt.remove_ok_action (Current, b_put_right)
 					prompt.remove_cancel_action (Current, b_cancel)
 					prompt.popdown
-					widget.put_right(prompt.selection_text)
+					!! elem.make_from_string (prompt.selection_text)
+					widget.put_right (elem)
 					set_widgets_sensitive
 					prompt_type:=0
 				else
@@ -107,7 +109,7 @@ feature
 					md.remove_ok_action (Current, b_item)
 					set_widgets_sensitive
 				else
-					md.set_message (widget.item)
+					md.set_message (widget.item.value)
 					md.add_ok_action (Current, b_item)
 					md.popup
 					set_widgets_insensitive
@@ -122,7 +124,7 @@ feature
 					md.remove_ok_action (Current, b_selected_it)
 					set_widgets_sensitive
 				else
-					md.set_message (widget.selected_item)
+					md.set_message (widget.selected_item.value)
 					md.add_ok_action (Current, b_selected_it)
 					md.popup
 					set_widgets_insensitive

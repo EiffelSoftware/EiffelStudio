@@ -338,6 +338,10 @@ feature -- Basic operations
 			end
 			history.cut_off_at_current_position
 			command_add.execute
+				-- Now we expand the layout item.
+			if not layout_item.is_expanded then
+				layout_item.expand
+			end
 		ensure
 			layout_item_not_void: an_object.layout_item /= Void
 		end

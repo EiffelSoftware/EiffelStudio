@@ -93,6 +93,7 @@
 #define Backup_Static                   	1072
 #define Backup2_Static                   	1073
 
+#define IDC_STATIC			-1
 
 // Next default values for new objects
 // 

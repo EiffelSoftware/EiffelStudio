@@ -118,6 +118,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_LOCK
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -156,8 +161,24 @@ feature -- Access
 
 	line (i: INTEGER): STRING is
 			-- `Result' is content of the `i'th line.
+		local
+			line_offset, length, chars_to_retrieve: INTEGER
+			handle, ptr: POINTER
+			c_string: C_STRING	
 		do
 			Result := wel_line (i - 1)
+			line_offset := wel_line_index (i - 1)
+			length := line_length (i - 1)
+			chars_to_retrieve := line_offset + length
+			if chars_to_retrieve < text_length - 2 then
+				handle := cwel_integer_to_pointer (cwin_send_message_result (wel_item, Em_gethandle, 0, 0))
+				ptr := c_local_lock (handle)
+				create c_string.make_by_pointer_and_count (ptr + chars_to_retrieve, 2)
+				c_local_unlock (handle)
+				if c_string.string.is_equal ("%R%N") then
+					Result.append_character ('%N')
+				end
+			end
 		end
 
 	text: STRING is
@@ -222,7 +243,7 @@ feature -- Status Report
 			then
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
-				Result := wel_text_length
+				Result := wel_text_length - 1
 			end
 		end
 		
@@ -259,7 +280,9 @@ feature -- Status Settings
 			set_text (old_text)
 			cwin_send_message (wel_item, Em_limittext, 0, 0)
 			show_vertical_scroll_bar
-			parent_imp.notify_change (2 + 1, Current)
+			if parent_imp /= Void then
+				parent_imp.notify_change (2 + 1, Current)
+			end
 		end
 		
 	disable_word_wrapping is
@@ -274,7 +297,9 @@ feature -- Status Settings
 			set_text (old_text)
 			cwin_send_message (wel_item, Em_limittext, 0, 0)
 			show_vertical_scroll_bar
-			parent_imp.notify_change (2 + 1, Current)
+			if parent_imp /= Void then
+				parent_imp.notify_change (2 + 1, Current)
+			end
 		end
 
 	append_text (txt: STRING) is

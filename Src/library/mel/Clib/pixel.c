@@ -11,10 +11,8 @@
 
 EIF_INTEGER last_color_alloc_status = 0; /* Global variable */
 
-EIF_POINTER get_color_by_name (a_name, a_display, a_colormap)
-char *a_name;
-EIF_POINTER a_display;
-EIF_POINTER a_colormap;
+EIF_POINTER get_color_by_name (char *a_name, EIF_POINTER a_display, 
+	EIF_POINTER a_colormap)
 {
 	/*
 	 * This function tries to allocate a pixel according to a name.
@@ -49,10 +47,8 @@ EIF_POINTER a_colormap;
 		return (EIF_POINTER) exact_def.pixel;
 }
 
-EIF_POINTER get_color_by_rgb_value (red, green, blue, a_display, a_colormap)
-EIF_INTEGER red, green, blue;
-EIF_POINTER a_display;
-EIF_POINTER a_colormap;
+EIF_POINTER get_color_by_rgb_value (EIF_INTEGER red, EIF_INTEGER green, 
+	EIF_INTEGER blue, EIF_POINTER a_display, EIF_POINTER a_colormap)
 {
 	/*
 	 * This function tries to allocate a pixel according to a rgb value.
@@ -84,10 +80,8 @@ EIF_POINTER a_colormap;
 		return (EIF_POINTER) exact_def.pixel;
 }
 
-EIF_INTEGER red_component (pixel, a_display, a_colormap)
-EIF_POINTER pixel;
-EIF_POINTER a_display;
-EIF_POINTER a_colormap;
+EIF_INTEGER red_component (EIF_POINTER pixel, EIF_POINTER a_display,
+	EIF_POINTER a_colormap)
 {
 	/*
 	 * This functions returns the red component of a pixel.
@@ -111,10 +105,8 @@ EIF_POINTER a_colormap;
 	return (EIF_INTEGER) colorcell_def.red;
 }
 
-EIF_INTEGER green_component (pixel, a_display, a_colormap)
-EIF_POINTER pixel;
-EIF_POINTER a_display;
-EIF_POINTER a_colormap;
+EIF_INTEGER green_component (EIF_POINTER pixel, EIF_POINTER a_display,
+	EIF_POINTER a_colormap)
 {
 	/*
 	 * This functions returns the green component of a pixel.
@@ -138,10 +130,8 @@ EIF_POINTER a_colormap;
 	return (EIF_INTEGER) colorcell_def.green;
 }
 
-EIF_INTEGER blue_component (pixel, a_display, a_colormap)
-EIF_POINTER pixel;
-EIF_POINTER a_display;
-EIF_POINTER a_colormap;
+EIF_INTEGER blue_component (EIF_POINTER pixel, EIF_POINTER a_display,
+	EIF_POINTER a_colormap)
 {
 	/*
 	 * This functions returns the blue component of a pixel.
@@ -165,23 +155,15 @@ EIF_POINTER a_colormap;
 	return (EIF_INTEGER) colorcell_def.blue;
 }
 
-void x_free_color (display, colormap, num)
-EIF_POINTER display;
-EIF_POINTER colormap;
-EIF_POINTER num;
+void x_free_color (EIF_POINTER display, EIF_POINTER colormap, EIF_POINTER num)
 {
 	XFreeColors ((Display *) display, (Colormap) colormap, (unsigned long *) &num, 1, 0);
 }
 
-EIF_POINTER x_create_pixmap_cursor (display, a_pixmap, a_mask,
-	fg_red, fg_green, fg_blue, bg_red, bg_green, bg_blue, x_hot, y_hot)
-EIF_POINTER display;
-EIF_POINTER a_pixmap;
-EIF_POINTER a_mask;
-EIF_INTEGER fg_red, fg_green, fg_blue;
-EIF_INTEGER bg_red, bg_green, bg_blue;
-EIF_INTEGER x_hot;
-EIF_INTEGER y_hot;
+EIF_POINTER x_create_pixmap_cursor (EIF_POINTER display, EIF_POINTER a_pixmap,
+	EIF_POINTER a_mask, EIF_INTEGER fg_red, EIF_INTEGER fg_green, 
+	EIF_INTEGER fg_blue, EIF_INTEGER bg_red, EIF_INTEGER bg_green, 
+	EIF_INTEGER bg_blue, EIF_INTEGER x_hot, EIF_INTEGER y_hot)
 {
 	
 	XColor fg, bg;

@@ -6,8 +6,7 @@
 
 #include "mel.h"
 
-EIF_REFERENCE xm_string_to_eiffel (motif_string)
-XmString motif_string;
+EIF_REFERENCE xm_string_to_eiffel (XmString motif_string)
 {
 	/*
 	 * Convert `motif_string' in Eiffel string
@@ -48,10 +47,7 @@ XmString motif_string;
  *  For XmStringTable
  */
 
-EIF_REFERENCE get_i_th_xmstring_table (w, i, res)
-EIF_POINTER w;
-EIF_INTEGER i;
-char *res;
+EIF_REFERENCE get_i_th_xmstring_table (EIF_POINTER w, EIF_INTEGER i, char *res)
 {
 	/*
 	 * Get XmString at `i'_th-1 position table corresponding to
@@ -66,9 +62,7 @@ char *res;
 	return (EIF_REFERENCE) eiffel_string;
 }
 
-EIF_POINTER get_i_th_table (motif_table, i)
-EIF_POINTER motif_table;
-EIF_INTEGER i;
+EIF_POINTER get_i_th_table (EIF_POINTER motif_table, EIF_INTEGER i)
 {
 	/*
 	 * Get XmString at `i'_th-1 position from `motif_table'.

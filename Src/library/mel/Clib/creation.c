@@ -21,9 +21,7 @@ EIF_POINTER c_auto_unmanage_arg()
 	return (EIF_POINTER) auto_unmanage_arg;
 }
 
-EIF_POINTER xm_create_scrolled_list_constant (w, a_name)
-Widget w;
-char *a_name;
+EIF_POINTER xm_create_scrolled_list_constant (Widget w, char *a_name)
 {
 	Arg args[1];
 
@@ -32,9 +30,7 @@ char *a_name;
 	return (EIF_POINTER) XmCreateScrolledList (w, a_name, args, 1);
 }
 
-EIF_POINTER xm_create_scrolled_list_resize (w, a_name)
-Widget w;
-char *a_name;
+EIF_POINTER xm_create_scrolled_list_resize (Widget w, char *a_name)
 {
 	Arg args[1];
 
@@ -44,11 +40,7 @@ char *a_name;
 }
 
 
-EIF_POINTER xm_create_option_menu_with_label
-	(a_parent, a_name, a_xmstring)
-EIF_POINTER a_parent;
-char *a_name;
-EIF_POINTER a_xmstring;
+EIF_POINTER xm_create_option_menu_with_label (EIF_POINTER a_parent, char *a_name, EIF_POINTER a_xmstring)
 {
 	Arg args[1];
 
@@ -57,14 +49,9 @@ EIF_POINTER a_xmstring;
 	return (EIF_POINTER) XmCreateOptionMenu ((Widget) a_parent, (String) a_name , args, 1);
 }
 
-EIF_POINTER xm_create_scrolled_text_detailed
-	(a_parent, a_name, scroll_hor, scroll_vert, scroll_top, scroll_left)
-EIF_POINTER a_parent;
-char *a_name;
-EIF_BOOLEAN scroll_hor;
-EIF_BOOLEAN scroll_vert;
-EIF_BOOLEAN scroll_top;
-EIF_BOOLEAN scroll_left;
+EIF_POINTER xm_create_scrolled_text_detailed ( EIF_POINTER a_parent, char *a_name,
+	EIF_BOOLEAN scroll_hor, EIF_BOOLEAN scroll_vert, EIF_BOOLEAN scroll_top,
+	EIF_BOOLEAN scroll_left)
 {
 	Arg args[4];
 
@@ -126,9 +113,7 @@ char *a_name;
 }
 
 EIF_POINTER xm_create_main_window_with_automatic_scrolling
-	(a_parent, a_name)
-EIF_POINTER a_parent;
-char *a_name;
+	(EIF_POINTER a_parent, char *a_name)
 {
 	Arg args[1];
 
@@ -138,25 +123,18 @@ char *a_name;
 }
 
 
-EIF_POINTER xt_create_transient_shell (a_name, a_parent)
-char * a_name;
-EIF_POINTER a_parent;
+EIF_POINTER xt_create_transient_shell (char * a_name, EIF_POINTER a_parent)
 {
 	return (EIF_POINTER) XtCreatePopupShell (a_name, transientShellWidgetClass, (Widget) a_parent, NULL, 0);
 }
 
-EIF_POINTER xt_create_override_shell (a_name, a_parent)
-char * a_name;
-EIF_POINTER a_parent;
+EIF_POINTER xt_create_override_shell (char * a_name, EIF_POINTER a_parent)
 {
 	return (EIF_POINTER) XtCreatePopupShell (a_name, overrideShellWidgetClass, (Widget) a_parent, NULL, 0);
 }
 
-EIF_POINTER xt_create_app_shell (app_name, class_name, disp, screen)
-char *app_name;
-char *class_name;
-EIF_POINTER disp;
-EIF_POINTER screen;
+EIF_POINTER xt_create_app_shell (char *app_name, char *class_name, 
+	EIF_POINTER disp, EIF_POINTER screen)
 {
 	return (EIF_POINTER) XtVaAppCreateShell (app_name, class_name, 
 					applicationShellWidgetClass,
@@ -166,11 +144,8 @@ EIF_POINTER screen;
 
 }
 
-EIF_POINTER xt_create_top_level_shell (app_name, class_name, disp, screen)
-char *app_name;
-char *class_name;
-EIF_POINTER disp;
-EIF_POINTER screen;
+EIF_POINTER xt_create_top_level_shell (char *app_name, char *class_name,
+	EIF_POINTER disp, EIF_POINTER screen)
 {
 	return (EIF_POINTER) XtVaAppCreateShell (app_name, class_name, 
 					topLevelShellWidgetClass,
@@ -179,10 +154,8 @@ EIF_POINTER screen;
 					NULL);
 }
 
-EIF_POINTER xt_create_top_level_popup_shell (a_name, a_parent, a_screen)
-char *a_name;
-EIF_POINTER a_parent;
-EIF_POINTER a_screen;
+EIF_POINTER xt_create_top_level_popup_shell (char *a_name, EIF_POINTER a_parent, 
+	EIF_POINTER a_screen)
 {
 	Arg an_arg;
 

@@ -124,10 +124,10 @@ extern XtAppContext gAppContext;
 /* Called at the font-box death (XmNdestroyCallback)						*/
 /* Warning: free 5 % of the memory...										*/
 /****************************************************************************/
-static void font_box_destroy_action (widget, client, motif)
-Widget widget;							/* useless							*/
-font_box_data * client;					/* font-box datas					*/
-XtPointer motif;						/* Useless							*/
+static void font_box_destroy_action (
+Widget widget,							/* useless							*/
+font_box_data * client,					/* font-box datas					*/
+XtPointer motif)						/* Useless							*/
 {
 	xfree (client);
 } /* font_box_destroy_action */
@@ -136,8 +136,8 @@ XtPointer motif;						/* Useless							*/
 /* Create a font_box_font_info structure and fill it with the informations	*/
 /* about the specified font													*/
 /****************************************************************************/
-static font_box_font_info * font_box_create_font_info (name)
-char * name;							/* Full name of the font 			*/
+static font_box_font_info * font_box_create_font_info (char * name)
+	/* Full name of the font 			*/
 {
 	font_box_font_info * result;
 	int i,j;
@@ -235,13 +235,13 @@ char * name;							/* Full name of the font 			*/
 /* the one to insert, just modify the pointer to the item to make it		*/
 /* pointing to the one found in the list (and free the other)				*/
 /****************************************************************************/
-static void font_box_put_item (item, number, menu_list)
-char **item;							/* Pointer to the pointer to the	*/
+static void font_box_put_item (
+char **item,							/* Pointer to the pointer to the	*/
 										/* item to insert (C is great)		*/
 										/* RETURNED							*/
-int *number;							/* Pointer to the number of items	*/
+int *number,							/* Pointer to the number of items	*/
 										/* RETURNED							*/
-char ***menu_list;						/* Pointer to the pointer to the	*/
+char ***menu_list)						/* Pointer to the pointer to the	*/
 										/* array of items (C is $%*!@#)		*/
 {
 	int i, j;
@@ -269,10 +269,10 @@ char ***menu_list;						/* Pointer to the pointer to the	*/
 /* Sort a list with an alphabetic order										*/
 /* Implemented as a buble sort												*/
 /****************************************************************************/
-static void font_box_sort_alpha (number, menu_list)
-int *number;							/* Pointer to the number of items	*/
+static void font_box_sort_alpha (
+int *number,							/* Pointer to the number of items	*/
 										/* in the list						*/
-char ***menu_list;						/* Pointer to the pointer to the	*/
+char ***menu_list)						/* Pointer to the pointer to the	*/
 										/* array of items					*/
 										/* I don't why I used pointer here	*/
 										/* but I'm too tired to change it	*/
@@ -295,10 +295,10 @@ char ***menu_list;						/* Pointer to the pointer to the	*/
 /* Sort a list with an arithmetic order										*/
 /* Implemented as a buble sort												*/
 /****************************************************************************/
-static void font_box_sort_num (number, menu_list)
-int *number;							/* Pointer to the number of items	*/
+static void font_box_sort_num (
+int *number,							/* Pointer to the number of items	*/
 										/* in the list						*/
-char ***menu_list;						/* Pointer to the pointer to the	*/
+char ***menu_list)						/* Pointer to the pointer to the	*/
 										/* array of items					*/
 										/* Same remark as above				*/
 {
@@ -324,8 +324,8 @@ char ***menu_list;						/* Pointer to the pointer to the	*/
 /* Set current font in the text widget										*/
 /* Free the old because it's a clever routine								*/
 /****************************************************************************/
-static void font_box_show_font (client)
-font_box_data * client;					/* Font-box datas					*/
+static void font_box_show_font (font_box_data * client)
+	/* Font-box datas					*/
 {
 	Display * display;
 	XmFontList motif_font_list;
@@ -357,8 +357,8 @@ font_box_data * client;					/* Font-box datas					*/
 /****************************************************************************/
 /* # of the standard font who matches the current # of family, weight, ...	*/
 /****************************************************************************/
-static int font_box_match_stand_font (client)
-font_box_data *client;					/* Font box datas					*/
+static int font_box_match_stand_font (font_box_data *client)
+	/* Font box datas					*/
 {
 	int i;
 
@@ -376,10 +376,10 @@ font_box_data *client;					/* Font box datas					*/
 /* Set current resolution to the resolution represented by widget			*/
 /* Called when a button is selected in the resolution menu					*/
 /****************************************************************************/
-static void font_box_set_resolution (widget, client, motif)
-Widget widget;							/* Widget who select the resolution	*/
-font_box_data *client;					/* Font-box datas					*/
-XtPointer motif;						/* Useless							*/
+static void font_box_set_resolution (
+Widget widget,							/* Widget who select the resolution	*/
+font_box_data *client,					/* Font-box datas					*/
+XtPointer motif)						/* Useless							*/
 {
 	int i;
 
@@ -402,8 +402,8 @@ XtPointer motif;						/* Useless							*/
 /* Set the sensitivity of the buttons in the resolution menu				*/
 /* And select the first button if the one selected does not match any font	*/
 /****************************************************************************/
-static void font_box_update_point (client)
-font_box_data *client;						/* Font-box datas				*/
+static void font_box_update_point (font_box_data *client)
+	/* Font-box datas				*/
 {
 	int j, k, l;
 
@@ -436,10 +436,10 @@ font_box_data *client;						/* Font-box datas				*/
 /* Set current point size to the point size represented by widget			*/
 /* Called when a button is selected in the resolution menu					*/
 /****************************************************************************/
-static void font_box_set_point (widget, client, motif)
-Widget widget;							/* Widget who select the resolution	*/
-font_box_data *client;					/* Font-box datas					*/
-XtPointer motif;						/* Useless							*/
+static void font_box_set_point (
+Widget widget,							/* Widget who select the resolution	*/
+font_box_data *client,					/* Font-box datas					*/
+XtPointer motif)						/* Useless							*/
 {
 	int i;
 
@@ -464,8 +464,8 @@ XtPointer motif;						/* Useless							*/
 /* Set the sensitivity of the buttons in the point size menu				*/
 /* And select the first button if the one selected does not match any font	*/
 /****************************************************************************/
-static void font_box_update_width (client)
-font_box_data *client;						/* Font-box datas				*/
+static void font_box_update_width (font_box_data *client)
+	/* Font-box datas				*/
 {
 	int j, k, l;
 
@@ -495,10 +495,7 @@ font_box_data *client;						/* Font-box datas				*/
 	font_box_update_point (client);
 }
 
-void font_box_set_width (widget, client, motif)
-Widget widget;
-font_box_data *client;
-XtPointer motif;
+void font_box_set_width (Widget widget, font_box_data *client, XtPointer motif)
 {
 	int i;
 
@@ -511,8 +508,7 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_update_slant (client)
-font_box_data *client;
+void font_box_update_slant (font_box_data *client)
 {
 	int j, k, l;
 
@@ -540,10 +536,7 @@ font_box_data *client;
 	font_box_update_width (client);
 }
 
-void font_box_set_slant (widget, client, motif)
-Widget widget;
-font_box_data *client;
-XtPointer motif;
+void font_box_set_slant (Widget widget, font_box_data *client, XtPointer motif)
 {
 	int i;
 
@@ -556,8 +549,7 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_update_weight (client)
-font_box_data *client;
+void font_box_update_weight (font_box_data *client)
 {
 	int j, k, l;
 
@@ -584,10 +576,7 @@ font_box_data *client;
 	font_box_update_slant (client);
 }
 
-void font_box_set_weight (widget, client, motif)
-Widget widget;
-font_box_data *client;
-XtPointer motif;
+void font_box_set_weight (Widget widget, font_box_data *client, XtPointer motif)
 {
 	int i;
 
@@ -600,8 +589,7 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_update_family (client)
-font_box_data *client;
+void font_box_update_family (font_box_data *client)
 {
 	int j, k, l;
 
@@ -628,10 +616,7 @@ font_box_data *client;
 	font_box_update_weight (client);
 }
 
-void font_box_set_family (widget, client, motif)
-Widget widget;
-font_box_data *client;
-XtPointer motif;
+void font_box_set_family (Widget widget, font_box_data *client, XtPointer motif)
 {
 	int i;
 
@@ -644,11 +629,7 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_fill_menu (menu_buttons, menu, number, menu_list)
-Widget **menu_buttons;
-Widget menu;
-int *number;
-char ***menu_list;
+void font_box_fill_menu (Widget **menu_buttons, Widget menu, int *number, char ***menu_list)
 {
 	int i;
 
@@ -659,10 +640,7 @@ char ***menu_list;
 	}
 }
 
-void font_box_switch_to_non_stand (widget, client, motif)
-Widget widget;
-font_box_data * client;
-XtPointer motif;
+void font_box_switch_to_non_stand (Widget widget, font_box_data * client, XtPointer motif)
 {
 	if (!client->is_stand_mode) return;
 	XtMapWidget (XtParent (client->non_stand_list));
@@ -672,10 +650,7 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_switch_to_stand (widget, client, motif)
-Widget widget;
-font_box_data * client;
-XtPointer motif;
+void font_box_switch_to_stand (Widget widget, font_box_data * client, XtPointer motif)
 {
 	if (client->is_stand_mode) return;
 	XtUnmapWidget (XtParent (client->non_stand_list));
@@ -685,18 +660,15 @@ XtPointer motif;
 	font_box_show_font (client);
 }
 
-void font_box_select_non_stand (widget, client, motif)
-Widget widget;
-font_box_data * client;
-XmListCallbackStruct * motif;
+void font_box_select_non_stand (Widget widget, font_box_data * client,
+	XmListCallbackStruct * motif)
 {
 	client->current_non_stand_font = motif->item_position-1;
 	client->current_font_name = client->non_stand_fonts_list [motif->item_position-1];
 	font_box_show_font (client);
 }
 
-void font_box_attach_buttons (client)
-font_box_data * client;
+void font_box_attach_buttons (font_box_data * client)
 {
 	int width_button, nb_buttons, i;
 
@@ -727,10 +699,7 @@ font_box_data * client;
 	}
 }
 
-EIF_POINTER font_box_create (a_name, a_parent, dialog)
-char * a_name;
-EIF_POINTER a_parent;
-EIF_BOOLEAN dialog;
+EIF_POINTER font_box_create (char * a_name, EIF_POINTER a_parent, EIF_BOOLEAN dialog)
 {
 	Widget form, select_form, mode_option;
 	Widget mode_menu, stand_fonts_button, non_stand_fonts_button;
@@ -1055,8 +1024,7 @@ EIF_BOOLEAN dialog;
 	return (EIF_POINTER) client;
 }
 
-EIF_POINTER font_box_form (client)
-EIF_POINTER client;
+EIF_POINTER font_box_form (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1064,8 +1032,7 @@ EIF_POINTER client;
 	return (EIF_POINTER) (temp->form);
 }
 
-EIF_POINTER font_box_ok_button (client)
-EIF_POINTER client;
+EIF_POINTER font_box_ok_button (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1073,8 +1040,7 @@ EIF_POINTER client;
 	return (EIF_POINTER) (temp->ok_button);
 }
 
-EIF_POINTER font_box_apply_button (client)
-EIF_POINTER *client;
+EIF_POINTER font_box_apply_button (EIF_POINTER *client)
 {
 	font_box_data *temp;
 
@@ -1082,8 +1048,7 @@ EIF_POINTER *client;
 	return (EIF_POINTER) (temp->apply_button);
 }
 
-EIF_POINTER font_box_cancel_button (client)
-EIF_POINTER *client;
+EIF_POINTER font_box_cancel_button (EIF_POINTER *client)
 {
 	font_box_data *temp;
 
@@ -1091,8 +1056,7 @@ EIF_POINTER *client;
 	return (EIF_POINTER) (temp->cancel_button);
 }
 
-char *font_box_current_font (client)
-EIF_POINTER *client;
+char *font_box_current_font (EIF_POINTER *client)
 {
 	font_box_data *temp;
 
@@ -1100,8 +1064,7 @@ EIF_POINTER *client;
 	return temp->current_font_name;
 }
 
-void font_box_hide_ok (client)
-EIF_POINTER client;
+void font_box_hide_ok (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1112,8 +1075,7 @@ EIF_POINTER client;
 	XtUnmanageChild (temp->ok_button);
 }
 
-void font_box_show_ok (client)
-EIF_POINTER client;
+void font_box_show_ok (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1124,8 +1086,7 @@ EIF_POINTER client;
 	font_box_attach_buttons (temp);
 }
 
-void font_box_hide_apply (client)
-EIF_POINTER client;
+void font_box_hide_apply (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1136,8 +1097,7 @@ EIF_POINTER client;
 	XtUnmanageChild (temp->apply_button);
 }
 
-void font_box_show_apply (client)
-EIF_POINTER client;
+void font_box_show_apply (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1148,8 +1108,7 @@ EIF_POINTER client;
 	font_box_attach_buttons (temp);
 }
 
-void font_box_hide_cancel (client)
-EIF_POINTER client;
+void font_box_hide_cancel (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1160,8 +1119,7 @@ EIF_POINTER client;
 	XtUnmanageChild (temp->cancel_button);
 }
 
-void font_box_show_cancel (client)
-EIF_POINTER client;
+void font_box_show_cancel (EIF_POINTER client)
 {
 	font_box_data *temp;
 
@@ -1172,9 +1130,7 @@ EIF_POINTER client;
 	font_box_attach_buttons (temp);
 }
 
-void font_box_set_font (font_name, client)
-char *font_name;
-EIF_POINTER client;
+void font_box_set_font (char *font_name, EIF_POINTER client)
 {
 	font_box_data *temp;
 	char *f_name;
@@ -1191,9 +1147,7 @@ EIF_POINTER client;
 	font_box_show_font (temp);
 }
 
-void fb_set_button_fg_color (client, pix)
-EIF_POINTER client;
-EIF_POINTER pix;
+void fb_set_button_fg_color (EIF_POINTER client, EIF_POINTER pix)
 {
 	font_box_data *fbd = (font_box_data *) client;
 	Widget w;
@@ -1226,9 +1180,7 @@ EIF_POINTER pix;
 	XtVaSetValues (w, XmNforeground, (Pixel) pix, NULL);
 }
 
-void fb_set_button_bg_color (client, pix)
-EIF_POINTER client;
-EIF_POINTER pix;
+void fb_set_button_bg_color (EIF_POINTER client, EIF_POINTER pix)
 {
 	font_box_data *fbd = (font_box_data *) client;
 	/*  Need to only set the parent color since
@@ -1250,19 +1202,14 @@ EIF_POINTER pix;
 	XmChangeColor (XtParent(fbd->stand_fonts_button), pix);
 }
 
-void fb_set_text_font (client, motif_font_list)
-EIF_POINTER client;
-EIF_POINTER motif_font_list;
+void fb_set_text_font (EIF_POINTER client, EIF_POINTER motif_font_list)
 {
 	font_box_data *fbd = (font_box_data *) client;
 
 	XtVaSetValues (fbd->non_stand_list, XmNfontList, (XmFontList) motif_font_list, NULL);
 }
 
-void fb_set_pulldown_font (menu_buttons, number, motif_font_list)
-Widget *menu_buttons;
-int number;
-XmFontList motif_font_list;
+void fb_set_pulldown_font (Widget *menu_buttons, int number, XmFontList motif_font_list)
 {
 	int i;
 	for (i = 0; i < number; i++) {
@@ -1270,9 +1217,7 @@ XmFontList motif_font_list;
 	}
 }
 
-void fb_set_button_font (client, motif_font_list)
-EIF_POINTER client;
-EIF_POINTER motif_font_list;
+void fb_set_button_font (EIF_POINTER client, EIF_POINTER motif_font_list)
 {
 	font_box_data *fbd = (font_box_data *) client;
 	XmFontList fl = (XmFontList) motif_font_list;

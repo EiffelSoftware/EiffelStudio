@@ -240,9 +240,9 @@ feature -- Basic operation
 			-- Go to the beginning of the following line.
 		do
 			if caret_position = text.count+1 then
-				append_text ("%R%N")
+				append_text ("%N")
 			else
-				insert_text ("%R%N")
+				insert_text ("%N")
 			end
 		end
 

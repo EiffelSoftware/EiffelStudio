@@ -270,7 +270,11 @@ feature {NONE} -- Implementation
 		local
 			popwin: POINTER
 		do
+			--| FIXME IEK Remove hacks when gtk+ 2.0 is out
+			if is_displayed then
+	
 			if not avoid_callback then
+					
 					--	Precursor (n, an_item)
 				if select_actions_internal /= Void and then select_actions_internal.count > 0 then
 				 	triggering_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (an_item))
@@ -287,6 +291,8 @@ feature {NONE} -- Implementation
 				avoid_callback := True
 			else
 				avoid_callback := False
+			end
+			
 			end
 		end
 

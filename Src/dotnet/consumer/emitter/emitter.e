@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			end
 			create cr
 			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.Absolute_info_path)
+				cr.initialize
 			end
 			if init then
 				from
@@ -189,7 +189,6 @@ feature {NONE} -- Implementation
 			elseif not successful then
 				display_error
 			else
-				create cr
 				from
 					assembly_locations.start
 				until
@@ -351,9 +350,14 @@ feature {NONE} -- Implementation
 			non_void_assembly: ass /= Void
 			signed_assembly: ass.get_name.get_public_key_token /= Void
 		local
+			cr: CACHE_READER
 			writer: CACHE_WRITER
 		do
 			if ass/= Void then
+				create cr
+				if not cr.is_initialized then
+					cr.initialize
+				end
 				create writer
 				if not no_output then
 					display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
@@ -428,7 +432,7 @@ feature {NONE} -- Implementation
 			create cr
 			if cr.is_initialized then
 				io.put_string ("%NCleaning Eiffel assembly cache.%N")
-	
+
 				l_assemblies_info := cr.consumed_assemblies_info
 				from
 					i := 1
@@ -450,7 +454,7 @@ feature {NONE} -- Implementation
 						else
 							l_same_assembly := False
 						end
-	
+
 						if not l_same_assembly then
 							io.put_string ("Removing assembly: " + l_assembly_location + " because file has been modified.%N")
 							create cw

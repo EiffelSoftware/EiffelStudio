@@ -175,8 +175,6 @@ feature -- Commands
 			end
 
 			if successful then
-				compilation_counter := compilation_counter + 1
-
 					--| Store the System info even after an error
 					--|	(the next compilation will be stored in a different
 					--| directory)
@@ -184,6 +182,8 @@ feature -- Commands
 					save_backup_info
 					create_backup_directory
 				end
+
+				compilation_counter := compilation_counter + 1
 			end
 		ensure
 			increment_compilation_counter: compilation_counter = old compilation_counter + 1

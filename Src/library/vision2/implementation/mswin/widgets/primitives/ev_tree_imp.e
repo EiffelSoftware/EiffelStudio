@@ -343,7 +343,8 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 				+ Ws_tabstop + Ws_border + Tvs_haslines
-				+ Tvs_hasbuttons + tvs_linesatroot
+				+ Tvs_hasbuttons + Tvs_linesatroot
+				+ Tvs_showselalways
 		end
 
 	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is

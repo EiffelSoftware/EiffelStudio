@@ -64,7 +64,7 @@ feature -- Generation
 				create l_src_name.make_from_string (l_constants.Temporary_help_directory.out)
 				l_src_name.extend (project.name)
 				l_src_name.add_extension (project.compiled_filename_extension)
-				l_dest_name.make_from_string (project.location.name)
+				create l_dest_name.make_from_string (project.location.name)
 				l_dest_name.extend (project.name)
 				l_dest_name.add_extension (project.compiled_filename_extension)
 			

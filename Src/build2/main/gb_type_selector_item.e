@@ -43,7 +43,13 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-
+		
+	GB_SHARED_DIGIT_CHECKER
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
 create
 	make_with_text
 
@@ -193,6 +199,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				-- not an object.
 			type_selector.update_drop_actions_for_all_children (Void)
 			
+			process_number_key
+			
 				-- Note that this generates a new id, so if the pnd is cancelled, we
 				-- will have used an other id, although this should not be a problem.
 				-- As the ids will be compacted when the project is next loaded.
@@ -200,6 +208,25 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	process_number_key is
+			-- Begin processing by `digit_checker', so that
+			-- it can be determined if a digit key is held down.
+		local
+			tree: EV_TREE
+			tree_node: EV_TREE_NODE_LIST
+		do
+			from
+				tree_node := Current
+			until
+				tree /= Void
+			loop
+				tree_node ?= tree_node.parent
+				tree ?= tree_node
+			end
+			digit_checker.begin_processing (tree)
+		end
+		
 		
 	replace_layout_item (an_object: GB_OBJECT) is
 			-- Replace `an_object' with a new object of

@@ -43,7 +43,6 @@ feature
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
-			first_class_topo_id: INTEGER;
 			i, nb, old_position: INTEGER
 			local_copy: ATTR_TABLE
 			system_i: SYSTEM_I
@@ -61,7 +60,7 @@ feature
 					local_copy := Current
 					from
 						cl_type := system_i.class_type_of_id (type_id);
-						first_class_topo_id := cl_type.associated_class.topological_id
+						first_class := cl_type.associated_class;
 						offset := cl_type.skeleton.offset (local_copy.array_item (i).feature_id)
 						i := i + 1
 						nb := max_position
@@ -70,7 +69,7 @@ feature
 					loop
 						entry := local_copy.array_item (i)
 						cl_type := system_i.class_type_of_id (entry.type_id);
-						Result := cl_type.associated_class.conformance_table.item (first_class_topo_id)
+						Result := cl_type.associated_class.simple_conform_to (first_class)
 								and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
 						i := i + 1
 					end;

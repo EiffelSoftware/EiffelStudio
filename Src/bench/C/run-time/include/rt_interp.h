@@ -110,7 +110,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_STRING			73
 #define BC_AND_THEN			74
 #define BC_OR_ELSE			75
-#define BC_NOTUSED_76		76
+#define BC_SPCREATE			76
 #define BC_NOTUSED_77		77
 #define BC_JMP_T			78
 #define BC_RESCUE			80

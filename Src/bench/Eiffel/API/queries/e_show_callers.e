@@ -51,7 +51,7 @@ feature -- Execution
 			loop
 				client := classes.item.compiled_eclass;	
 					-- Print out client name once.
-				client.append_clickable_name (output_window);
+				client.append_name (output_window);
 				output_window.new_line;
 				list := table.item (client.id);
 				from
@@ -65,7 +65,7 @@ feature -- Execution
 					if feat = Void then
 						output_window.put_string ("invariant")
 					else
-						feat.append_clickable_name (output_window, client)	
+						feat.append_name (output_window, client)	
 					end;
 					output_window.new_line;
 					list.forth

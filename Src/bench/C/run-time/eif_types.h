@@ -14,6 +14,10 @@
 #ifndef _eif_types_h_
 #define _eif_types_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "eif_constants.h"
 
@@ -166,8 +170,6 @@ struct stchunk {
 };
 
 
-
-
 	/*------------*/
 	/*	interp.h  */
 	/*------------*/
@@ -315,5 +317,8 @@ struct s_stack {
     char s_buf[SIGSTACK];   /* The circular buffer used as a FIFO stack */
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif	 /* _eif_types_h */

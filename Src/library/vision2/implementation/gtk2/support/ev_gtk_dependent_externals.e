@@ -13,6 +13,16 @@ feature -- Externals
 --			"C signature (): GtkWidget* use <gtk/gtk.h>"
 --		end
 
+	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
+			--	return (GtkArg*)(args_array + index);
+			-- }
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(GValue*)$args_array + (int)($an_index - 1)"
+		end
+
 	frozen g_value_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -231,7 +241,7 @@ feature -- Externals
 			"g_value_peek_pointer ((GValue*) $arg)"
 		end
 		
-	frozen gtk_value_int (arg: POINTER): POINTER is
+	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -439,15 +449,10 @@ feature -- Externals
 		alias
 			"gtk_signal_emit_stop_by_name"
 		end
-		
-	frozen gtk_editable_struct_selection_start (a_c_struct: POINTER): INTEGER is
+
+	frozen gtk_editable_get_selection_bounds (a_editable: POINTER; a_start, a_end: TYPED_POINTER [INTEGER]): BOOLEAN is
 		external
-			"C struct GtkOldEditable access selection_start_pos use <gtk/gtk.h>"
-		end
-		
-	frozen gtk_editable_struct_selection_end (a_c_struct: POINTER): INTEGER is
-		external
-			"C struct GtkOldEditable access selection_end_pos use <gtk/gtk.h>"
+			"C signature (GtkEditable*, gint*, gint*): gboolean use <gtk/gtk.h>"
 		end
 
 	frozen gtk_style_set_font (a_c_struct: POINTER; a_font: POINTER) is

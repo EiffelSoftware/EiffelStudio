@@ -56,11 +56,11 @@ feature -- Initialization
 			retry
 		end
 		
-feature -- Access		
+feature {NONE} -- Access		
 
 	status: INTEGER
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	No_error: INTEGER is 0
 	Could_not_generate_key: INTEGER is 1

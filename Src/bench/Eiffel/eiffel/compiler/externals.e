@@ -51,6 +51,17 @@ feature
 						-- If the name has been added and removed, no
 						-- refreezing is needed.
 					item_for_iteration.occurence = 0;
+debug
+	if not Result then
+		io.error.putstring ("EXTERNALS.equiv: False on ");
+		io.error.putstring (key_for_iteration);
+		io.error.putstring (" duplication.has: ")
+		io.error.putbool (duplication.has (key_for_iteration))
+		io.error.putstring (" item_for_iteration.occurence: ")
+		io.error.putint (item_for_iteration.occurence)
+		io.error.new_line
+	end
+end
 				forth;
 			end;
 		end;

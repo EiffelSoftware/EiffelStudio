@@ -3,6 +3,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+
+--FIXME: status management must be done in class`DATABASE'.
+
 class 
 	ORACLE
 
@@ -23,6 +26,20 @@ feature
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN
+	
+	is_error_updated: BOOLEAN
+			-- Has an Oracle function been called since last update which may have
+			-- updated error code, error message or warning message?
+
+	found: BOOLEAN
+			-- Is there any record matching the last
+			-- selection condition used ?
+
+	clear_error is
+			-- Reset database error status.
+		do
+			ora_clear_error
+		end
 
 feature -- For DATABASE_CHANGE 
 
@@ -36,9 +53,9 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
-			!! Result.make(1)
-			Result.append ("to_date('")
-			Result.append (object.formatted_out("[0]mm/[0]dd/yyyy [0]hh:mi:ss"))
+			!! Result.make (1)
+			Result.append ("to_date ('")
+			Result.append (object.formatted_out ("[0]mm/[0]dd/yyyy [0]hh:mi:ss"))
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
 		end
 	
@@ -75,13 +92,13 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			if uhandle.execution_type.immediate_execution then
 				Result := True
 			else
-				uhandle.status.set (init_order (descriptor, sql))
-				bind_args_value (descriptor, uht, uhandle, sql)
+				init_order (descriptor, sql)
+				bind_args_value (descriptor, uht, sql)
 				Result := True
 			end
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
+	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
 		local
 			i: INTEGER
 			tmp_c2, tmp_c, c_temp: ANY
@@ -92,14 +109,15 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			until
 				value.count<i
 			loop
-				tmp_c := (value.item(i).out).to_c
-				tmp_c2 := (parameters.item(i).out).to_c
-				uhandle.status.set (ora_set_parameter(descriptor, $c_temp, $tmp_c2, $tmp_c))
+				tmp_c := (value.item (i).out).to_c
+				tmp_c2 := (parameters.item (i).out).to_c
+				ora_set_parameter (descriptor, $c_temp, $tmp_c2, $tmp_c)
 				i := i + 1
 			end
+			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING) is
+	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING) is
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -113,11 +131,12 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			until
 				uht.off
 			loop
-				tmp_c := (uht.item(uht.key_for_iteration).out).to_c
+				tmp_c := (uht.item (uht.key_for_iteration).out).to_c
 				tmp_c2 := (uht.key_for_iteration).out.to_c
-				uhandle.status.set (ora_set_parameter(descriptor, $c_temp, $tmp_c2, $tmp_c))
+				ora_set_parameter (descriptor, $c_temp, $tmp_c2, $tmp_c)
 				uht.forth
 			end
+			is_error_updated := False
 		end
 
 feature -- For DATABASE_STORE
@@ -167,7 +186,7 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 
 	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN is
 		do
-			Result := name.is_equal(uname) and passwd.is_equal(upasswd)
+			Result := name.is_equal (uname) and passwd.is_equal (upasswd)
 		end
 
 feature -- For database types
@@ -242,9 +261,9 @@ feature -- For DATABASE_PROC
 
 	Select_exists (name: STRING): STRING is 
 		do
-			Result := "select count(*) from all_objects %
+			Result := "select count (*) from all_objects %
 			%where (object_type = 'PROCEDURE') and %
-			%(object_name = :name)"
+			% (object_name = :name)"
 		end
 
 feature -- For DATABASE_REPOSITORY
@@ -259,13 +278,13 @@ feature -- For DATABASE_REPOSITORY
 			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
 		end
 	
-	sql_string: STRING is "VARCHAR2("
+	sql_string: STRING is "VARCHAR2 ("
 
 	sql_string2 (int: INTEGER): STRING is
 		do
-			Result := "VARCHAR2("
-			Result.append(int.out)
-			Result.append(")")
+			Result := "VARCHAR2 ("
+			Result.append (int.out)
+			Result.append (")")
 		end
 
 feature -- External features
@@ -273,39 +292,52 @@ feature -- External features
 	get_error_message: POINTER is
 		do
 			Result := ora_get_error_message
+			is_error_updated := True
+		end
+
+	get_error_code: INTEGER is
+		do
+			Result := ora_get_error_code
+			is_error_updated := True
 		end
 
 	get_warn_message: POINTER is
 		do
 			Result := ora_get_warn_message
+			is_error_updated := True
 		end
 
 	new_descriptor: INTEGER is
 		do
 			Result := ora_new_descriptor
+			is_error_updated := False
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING): INTEGER is
+	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := ora_init_order ($c_temp, no_descriptor)
+			ora_init_order ($c_temp, no_descriptor)
+			is_error_updated := False
 		end
 
-	start_order (no_descriptor: INTEGER): INTEGER is
+	start_order (no_descriptor: INTEGER) is
 		do
-			Result := ora_start_order(no_descriptor)
+			ora_start_order (no_descriptor)
+			is_error_updated := False
 		end
 
-	next_row (no_descriptor: INTEGER): INTEGER is
+	next_row (no_descriptor: INTEGER) is
 		do
-			Result := ora_next_row(no_descriptor)
+			found := ora_next_row (no_descriptor) = 0
+			is_error_updated := False
 		end
 
-	terminate_order (no_descriptor: INTEGER): INTEGER is
+	terminate_order (no_descriptor: INTEGER) is
 		do
-			Result := ora_terminate_order(no_descriptor)
+			ora_terminate_order (no_descriptor)
+			is_error_updated := False
 		end
 
 	close_cursor (no_descriptor: INTEGER): INTEGER is
@@ -313,17 +345,18 @@ feature -- External features
 		do
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
+	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := ora_exec_immediate(no_descriptor, $c_temp)
+			ora_exec_immediate (no_descriptor, $c_temp)
+			is_error_updated := False
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL[CHARACTER]; max_len:INTEGER): INTEGER is
 		do
-			Result := ora_put_select_name(no_descriptor, index, $ar)
+			Result := ora_put_select_name (no_descriptor, index, $ar)
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL[CHARACTER]; max_len:INTEGER): INTEGER is
@@ -338,7 +371,7 @@ feature -- External features
 
 	get_count (no_descriptor: INTEGER): INTEGER is
 		do
-			Result := ora_get_count(no_descriptor)
+			Result := ora_get_count (no_descriptor)
 		end
 
 	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
@@ -391,8 +424,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_hour)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_hour)
 			Result := tmp_strg.to_integer
 		end
 
@@ -400,8 +433,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_sec)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_sec)
 			Result := tmp_strg.to_integer
 		end
 
@@ -409,8 +442,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_min)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_min)
 			Result := tmp_strg.to_integer
 		end
 
@@ -418,8 +451,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_year)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_year)
 			Result := tmp_strg.to_integer
 		end
 
@@ -427,8 +460,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_day)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_day)
 			Result := tmp_strg.to_integer
 		end
 
@@ -436,8 +469,8 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_month)
+			!! tmp_strg.make (0)
+			tmp_strg.from_c (ora_get_month)
 			Result := tmp_strg.to_integer
 		end
 
@@ -481,28 +514,33 @@ feature -- External features
 			ora_database_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING): INTEGER is
-        	local 
-            		c_temp1, c_temp2: ANY
-        	do      
-            		c_temp1 := user_name.to_c
-           		 c_temp2 := user_passwd.to_c
-            		Result := ora_connect ($c_temp1, $c_temp2)
-        	end
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
+        local
+			c_temp1, c_temp2: ANY
+		do      
+			c_temp1 := user_name.to_c
+			c_temp2 := user_passwd.to_c
+			ora_connect ($c_temp1, $c_temp2)
+			is_error_updated := False
+       	end
 
-	disconnect: INTEGER is
+	disconnect is
 		do
-			Result := ora_disconnect
+			ora_disconnect
+			is_error_updated := False
+			found := False
 		end
 
-	commit: INTEGER is
+	commit is
 		do
-			Result := ora_commit
+			ora_commit
+			is_error_updated := False
 		end
 
-	rollback: INTEGER is
+	rollback is
 		do
-			Result := ora_rollback
+			ora_rollback
+			is_error_updated := False
 		end
 
 	trancount: INTEGER is
@@ -530,6 +568,11 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
+	ora_get_error_code: INTEGER is
+		external
+			"C | %"oracle.h%""
+		end
+
 	ora_get_warn_message: POINTER is
 		external
 			"C | %"oracle.h%""
@@ -540,12 +583,12 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	ora_init_order (command: POINTER; no_descriptor: INTEGER): INTEGER is
+	ora_init_order (command: POINTER; no_descriptor: INTEGER) is
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_start_order (no_descriptor: INTEGER): INTEGER is
+	ora_start_order (no_descriptor: INTEGER) is
 		external
 			"C | %"oracle.h%""
 		end
@@ -555,14 +598,14 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	ora_terminate_order (no_descriptor: INTEGER): INTEGER is
+	ora_terminate_order (no_descriptor: INTEGER) is
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER): INTEGER is
+	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER) is
 		external
-			"C (EIF_INTEGER, text *): EIF_INTEGER | %"oracle.h%""
+			"C (EIF_INTEGER, text *) | %"oracle.h%""
 		end
 
 	ora_put_select_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
@@ -667,17 +710,17 @@ feature {NONE} -- External features
 			"c_ora_make"
 		end
 
-	ora_disconnect: INTEGER is
+	ora_disconnect is
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_commit: INTEGER is
+	ora_commit is
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_rollback: INTEGER is
+	ora_rollback is
 		external
 			"C | %"oracle.h%""
 		end
@@ -688,9 +731,9 @@ feature {NONE} -- External features
 		end
 
 
-	ora_connect (user_name, user_passwd: POINTER): INTEGER is
+	ora_connect (user_name, user_passwd: POINTER) is
 		external
-			"C (text *, text*): EIF_INTEGER | %"oracle.h%""
+			"C (text *, text*) | %"oracle.h%""
 		end
 
 	ora_available_descriptor: INTEGER is
@@ -698,9 +741,9 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER): INTEGER is
+	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER) is
 		external
-			"C (EIF_INTEGER, text *, text *, char *): EIF_INTEGER | %"oracle.h%""
+			"C (EIF_INTEGER, text *, text *, char *) | %"oracle.h%""
 		end
 
 	ora_string_type: INTEGER is
@@ -759,6 +802,11 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
+	ora_clear_error is
+		external
+			"C | %"oracle.h%""
+		end
+
 	break (s: STRING): STRING is
 			-- Broken long string using
 			-- Oracle's concatenation character.
@@ -767,13 +815,13 @@ feature {NONE} -- External features
 		local
 			i: INTEGER
 		do
-			!! Result.make (s.count + ((s.count // Max_char_size) * Concat_string.count))
+			!! Result.make (s.count + ( (s.count // Max_char_size) * Concat_string.count))
 			from
 				i := 1
 			until
 				i > s.count
 			loop
-				Result.append (s.substring (i,   s.count.min(i + Max_char_size - 1)))
+				Result.append (s.substring (i,   s.count.min (i + Max_char_size - 1)))
 				i := i + Max_char_size
 				if not (i > s.count) then
 					Result.append (Concat_string)

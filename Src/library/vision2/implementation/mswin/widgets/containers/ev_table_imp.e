@@ -34,7 +34,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
 			set_width,
@@ -828,7 +828,7 @@ feature {NONE} -- Implementation of WEL functions
 			-- By default there is no background
 		do
 			if background_color /= Void then
-				!! Result.make_solid (background_color)
+				!! Result.make_solid (background_color_imp)
 				disable_default_processing
 			end
 		end

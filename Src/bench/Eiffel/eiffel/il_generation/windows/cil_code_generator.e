@@ -643,7 +643,7 @@ feature -- Generation Structure
 				loop
 					l_type := l_types.item (i)
 					if l_type /= Void then
-						if not l_type.associated_class.is_external then
+						if not l_type.is_external then
 							define_assertion_level (l_type)
 						end
 						if l_type.is_generated then
@@ -857,6 +857,17 @@ feature -- Class info
 			create file_token.make (10)
 			create external_class_mapping.make (class_count)
 
+				-- Predefined .NET basic types.
+			external_class_mapping.put (create {BOOLEAN_I}, "System.Boolean")
+			external_class_mapping.put (create {CHAR_I}.make (False), "System.Char")
+			external_class_mapping.put (create {LONG_I}.make (8), "System.Byte")
+			external_class_mapping.put (create {LONG_I}.make (16), "System.Int16")
+			external_class_mapping.put (create {LONG_I}.make (32), "System.Int32")
+			external_class_mapping.put (create {LONG_I}.make (64), "System.Int64")
+			external_class_mapping.put (create {FLOAT_I}, "System.Float")
+			external_class_mapping.put (create {DOUBLE_I}, "System.Double")
+			external_class_mapping.put (create {POINTER_I}, "System.IntPtr")
+
 			create signatures_table.make (0, class_count)
 			create implementation_signatures_table.make (0, class_count)
 
@@ -874,11 +885,8 @@ feature -- Class info
 		require
 			class_type_not_void: class_type /= Void
 			class_type_generated: class_type.is_generated
-		local
-			class_c: CLASS_C
 		do
-			class_c := class_type.associated_class
-			if class_c.is_single or class_c.is_frozen then
+			if class_type.is_generated_as_single_type then
 				if for_interface then
 					current_module.generate_interface_class_mapping (class_type)
 				end
@@ -910,16 +918,13 @@ feature -- Class info
 			l_native_array ?= class_type
 			if l_native_array /= Void then
 				external_class_mapping.put (class_type.type, l_native_array.il_type_name)
-			elseif class_c.is_external and then not (class_c.is_basic and then class_c.actual_type.is_typed_pointer) then
+			elseif
+				class_type.is_external and then
+				not (class_c.is_basic and then class_c.is_typed_pointer)
+			then
 					-- We do not process TYPED_POINTER as it is not a real class type in .NET so
 					-- TYPED_POINTER doesn't really have a `full_il_type_name'.
 				l_type := class_type.type
-				if l_type.base_class.is_basic then
-					l_type := l_type.base_class.actual_type.type_i
-				elseif l_type.base_class.is_expanded then
-					l_type := l_type.twin
-					l_type.set_is_true_expanded (True)
-				end
 				external_class_mapping.put (l_type, class_type.full_il_type_name)
 			end
 
@@ -1162,8 +1167,8 @@ feature -- Features info
 			-- Generate features description of `class_type'.
 		require
 			class_c_not_void: class_c /= Void
-			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 		do
 			set_current_class_type (class_type)
 			set_current_class (class_c)
@@ -1172,10 +1177,10 @@ feature -- Features info
 
 				-- Generate interface features on Eiffel classes
 			inst_context.set_cluster (class_c.cluster)
-			if not (class_c.is_frozen or class_c.is_single) then
-				generate_interface_features (class_c, class_type)
-			else
+			if class_type.is_generated_as_single_type then
 				generate_implementation_features (class_c, class_type)
+			else
+				generate_interface_features (class_c, class_type)
 			end
 		end
 
@@ -1233,7 +1238,7 @@ feature -- Features info
 		require
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
-			class_c_is_single: class_c.is_frozen or class_c.is_single
+			generated_as_single_type: class_type.is_generated_as_single_type
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
@@ -1316,9 +1321,7 @@ feature -- Features info
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
 			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
-			l_is_single_class := l_class_type.associated_class.is_frozen or
-				l_class_type.associated_class.is_single or
-				l_class_type.associated_class.is_external
+			l_is_single_class := l_class_type.is_generated_as_single_type
 
 			l_current_class_type := byte_context.class_type
 			byte_context.set_class_type (l_class_type)
@@ -1330,157 +1333,155 @@ feature -- Features info
 				end
 				l_is_static := not l_ext.need_current (l_ext.type)
 			else
-				if not l_class_type.associated_class.is_single then
+				if not l_class_type.is_generated_as_single_type then
 					l_is_static := is_static
 				end
 			end
-			if l_feat.feature_name_id /= Names_heap.void_name_id then
-				l_is_attribute := l_feat.is_attribute
-				l_is_c_external := l_feat.is_c_external
-				l_parameter_count := l_feat.argument_count
+			l_is_attribute := l_feat.is_attribute
+			l_is_c_external := l_feat.is_c_external
+			l_parameter_count := l_feat.argument_count
 
-				create l_signature.make (0, l_parameter_count)
-				l_signature.compare_references
+			create l_signature.make (0, l_parameter_count)
+			l_signature.compare_references
 
-				l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
-				if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
-					l_field_sig := field_sig
-					l_field_sig.reset
-					set_signature_type (l_field_sig, l_return_type)
+			l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
+			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
+				l_field_sig := field_sig
+				l_field_sig.reset
+				set_signature_type (l_field_sig, l_return_type)
+				l_signature.put (l_return_type.static_type_id, 0)
+			else
+				l_meth_sig := method_sig
+				l_meth_sig.reset
+				if l_is_static and not in_interface then
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				else
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				end
+
+				if l_is_static and not l_is_c_external then
+					l_meth_sig.set_parameter_count (l_parameter_count + 1)
+				else
+					l_meth_sig.set_parameter_count (l_parameter_count)
+				end
+
+				if l_feat.is_function or l_is_attribute or l_feat.is_constant then
+					set_method_return_type (l_meth_sig, l_return_type)
 					l_signature.put (l_return_type.static_type_id, 0)
+				elseif l_feat.is_type_feature then
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						current_module.ise_type_token)
 				else
-					l_meth_sig := method_sig
-					l_meth_sig.reset
-					if l_is_static and not in_interface then
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-					else
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-					end
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				end
 
-					if l_is_static and not l_is_c_external then
-						l_meth_sig.set_parameter_count (l_parameter_count + 1)
-					else
-						l_meth_sig.set_parameter_count (l_parameter_count)
-					end
+				if l_is_static and not l_is_c_external then
+					set_signature_type (l_meth_sig, l_class_type.type)
+				end
 
-					if l_feat.is_function or l_is_attribute or l_feat.is_constant then
-						set_method_return_type (l_meth_sig, l_return_type)
-						l_signature.put (l_return_type.static_type_id, 0)
-					elseif l_feat.is_type_feature then
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.ise_type_token)
-					else
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				if l_feat.has_arguments then
+					from
+						l_feat_arg := l_feat.arguments
+						l_feat_arg.start
+						i := 0
+					until
+						l_feat_arg.after
+					loop
+						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+						set_signature_type (l_meth_sig, l_type_i)
+						l_signature.put (l_type_i.static_type_id, i + 1)
+						i := i + 1
+						l_feat_arg.forth
 					end
+				end
+			end
 
-					if l_is_static and not l_is_c_external then
-						set_signature_type (l_meth_sig, l_class_type.type)
-					end
+			if not l_feat.is_type_feature then
+					-- Only for not automatically generated feature do we use the 
+					-- naming convention chosen by user.
+				l_naming_convention := l_class_type.is_dotnet_name
+			end
 
-					if l_feat.has_arguments then
-						from
-							l_feat_arg := l_feat.arguments
-							l_feat_arg.start
-							i := 0
-						until
-							l_feat_arg.after
-						loop
-							l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
-							set_signature_type (l_meth_sig, l_type_i)
-							l_signature.put (l_type_i.static_type_id, i + 1)
-							i := i + 1
-							l_feat_arg.forth
+				-- When we are handling with an external feature, we have to extract its
+				-- real name, not the Eiffel one.
+			if l_ext /= Void then
+				l_name := l_ext.alias_name
+			else
+				if l_feat.is_type_feature then
+					l_name := l_feat.feature_name
+				else
+					if l_is_static then
+						if l_is_c_external then
+							l_name := encoder.feature_name (l_class_type.static_type_id,
+								l_feat.body_index)
+						else
+							if l_is_attribute then
+								l_name := "$$" + il_casing.camel_casing (
+									l_naming_convention, l_feat.feature_name)
+							else
+								l_name := "$$" + il_casing.pascal_casing (
+									l_naming_convention, l_feat.feature_name,
+									feature {IL_CASING_CONVERSION}.lower_case)
+							end
 						end
+					else
+						l_name := il_casing.pascal_casing (
+							l_naming_convention, l_feat.feature_name, 
+							feature {IL_CASING_CONVERSION}.lower_case)
 					end
 				end
+			end
 
-				if not l_feat.is_type_feature then
-						-- Only for not automatically generated feature do we use the 
-						-- naming convention chosen by user.
-					l_naming_convention := l_class_type.is_dotnet_name
+			uni_string.set_string (l_name)
+
+			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
+				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
+					l_field_sig)
+
+				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
+			else
+					-- Normal method
+				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
+					l_meth_sig)
+
+				if not l_is_static and l_is_attribute and not is_override then
+						-- Let's define attribute setter.
+					l_meth_sig.reset
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_parameter_count (1)
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					set_signature_type (l_meth_sig, l_return_type)
+					uni_string.set_string (setter_prefix + l_name)
+					l_setter_token := md_emit.define_member_ref (uni_string,
+						l_class_token, l_meth_sig)
+
+					insert_setter (l_setter_token, a_type_id, l_feat.feature_id)
 				end
 
-					-- When we are handling with an external feature, we have to extract its
-					-- real name, not the Eiffel one.
-				if l_ext /= Void then
-					l_name := l_ext.alias_name
-				else
-					if l_feat.is_type_feature then
-						l_name := l_feat.feature_name
+				if not is_override then
+					if l_is_single_class then
+						insert_implementation_feature (l_meth_token, a_type_id,
+							l_feat.feature_id)
+						insert_implementation_signature (l_signature, a_type_id,
+							l_feat.feature_id)
+						insert_feature (l_meth_token, a_type_id, l_feat.feature_id)
+						insert_signature (l_signature, a_type_id, l_feat.feature_id)
 					else
 						if l_is_static then
-							if l_is_c_external then
-								l_name := encoder.feature_name (l_class_type.static_type_id,
-									l_feat.body_index)
-							else
-								if l_is_attribute then
-									l_name := "$$" + il_casing.camel_casing (
-										l_naming_convention, l_feat.feature_name)
-								else
-									l_name := "$$" + il_casing.pascal_casing (
-										l_naming_convention, l_feat.feature_name,
-										feature {IL_CASING_CONVERSION}.lower_case)
-								end
-							end
-						else
-							l_name := il_casing.pascal_casing (
-								l_naming_convention, l_feat.feature_name, 
-								feature {IL_CASING_CONVERSION}.lower_case)
-						end
-					end
-				end
-
-				uni_string.set_string (l_name)
-
-				if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
-					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
-						l_field_sig)
-
-					insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
-				else
-						-- Normal method
-					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
-						l_meth_sig)
-
-					if not l_is_static and l_is_attribute and not is_override then
-							-- Let's define attribute setter.
-						l_meth_sig.reset
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-						l_meth_sig.set_parameter_count (1)
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-						set_signature_type (l_meth_sig, l_return_type)
-						uni_string.set_string (setter_prefix + l_name)
-						l_setter_token := md_emit.define_member_ref (uni_string,
-							l_class_token, l_meth_sig)
-
-						insert_setter (l_setter_token, a_type_id, l_feat.feature_id)
-					end
-
-					if not is_override then
-						if l_is_single_class then
 							insert_implementation_feature (l_meth_token, a_type_id,
 								l_feat.feature_id)
 							insert_implementation_signature (l_signature, a_type_id,
 								l_feat.feature_id)
+						else
 							insert_feature (l_meth_token, a_type_id, l_feat.feature_id)
 							insert_signature (l_signature, a_type_id, l_feat.feature_id)
-						else
-							if l_is_static then
-								insert_implementation_feature (l_meth_token, a_type_id,
-									l_feat.feature_id)
-								insert_implementation_signature (l_signature, a_type_id,
-									l_feat.feature_id)
-							else
-								insert_feature (l_meth_token, a_type_id, l_feat.feature_id)
-								insert_signature (l_signature, a_type_id, l_feat.feature_id)
-							end
 						end
-					else
-						last_non_recorded_feature_token := l_meth_token
 					end
+				else
+					last_non_recorded_feature_token := l_meth_token
 				end
 			end
 
@@ -1526,253 +1527,251 @@ feature -- Features info
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 			l_naming_convention: BOOLEAN
 		do
-			if feat.feature_name_id /= Names_heap.void_name_id then
-				l_is_attribute := feat.is_attribute
-				l_is_c_external := feat.is_c_external
-				l_parameter_count := feat.argument_count
+			l_is_attribute := feat.is_attribute
+			l_is_c_external := feat.is_c_external
+			l_parameter_count := feat.argument_count
 
-				create l_signature.make (0, l_parameter_count)
-				l_signature.compare_references
+			create l_signature.make (0, l_parameter_count)
+			l_signature.compare_references
 
-				l_return_type := argument_actual_type (feat.type.actual_type.type_i)
-				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
-					l_field_sig := field_sig
-					l_field_sig.reset
-					set_signature_type (l_field_sig, l_return_type)
+			l_return_type := argument_actual_type (feat.type.actual_type.type_i)
+			if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				l_field_sig := field_sig
+				l_field_sig.reset
+				set_signature_type (l_field_sig, l_return_type)
+				l_signature.put (l_return_type.static_type_id, 0)
+			else
+				l_meth_sig := method_sig
+				l_meth_sig.reset
+				if is_static and not in_interface then
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				else
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				end
+
+				if is_static and not l_is_c_external then
+					l_meth_sig.set_parameter_count (l_parameter_count + 1)
+				else
+					l_meth_sig.set_parameter_count (l_parameter_count)
+				end
+
+				if feat.is_function or l_is_attribute or feat.is_constant then
+					set_method_return_type (l_meth_sig, l_return_type)
 					l_signature.put (l_return_type.static_type_id, 0)
+				elseif feat.is_type_feature then
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						current_module.ise_type_token)
 				else
-					l_meth_sig := method_sig
-					l_meth_sig.reset
-					if is_static and not in_interface then
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				end
+
+				if is_static and not l_is_c_external then
+					set_signature_type (l_meth_sig, current_class_type.type)
+				end
+
+				if feat.has_arguments then
+					l_has_arguments := True
+					from
+						l_feat_arg := feat.arguments
+						l_feat_arg.start
+						i := 0
+					until
+						l_feat_arg.after
+					loop
+						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+						set_signature_type (l_meth_sig, l_type_i)
+						l_signature.put (l_type_i.static_type_id, i + 1)
+						i := i + 1
+						l_feat_arg.forth
+					end
+				end
+			end
+
+			if not feat.is_type_feature then
+					-- Only for not automatically generated feature do we use the 
+					-- naming convention chosen by user.
+				l_naming_convention := System.dotnet_naming_convention
+			end
+			if is_static then
+				if l_is_c_external then
+					l_name := encoder.feature_name (current_class_type.static_type_id,
+						feat.body_index)
+				else
+					if l_is_attribute then
+						l_name := "$$" + il_casing.camel_casing (
+							l_naming_convention, feat.feature_name)
 					else
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+						l_name := "$$" + il_casing.pascal_casing (
+							l_naming_convention, feat.feature_name,
+							feature {IL_CASING_CONVERSION}.lower_case)
 					end
+				end
+			else
+				l_name := il_casing.pascal_casing (
+					l_naming_convention, feat.feature_name, 
+					feature {IL_CASING_CONVERSION}.lower_case)
+			end
 
-					if is_static and not l_is_c_external then
-						l_meth_sig.set_parameter_count (l_parameter_count + 1)
+			uni_string.set_string (l_name)
+
+			if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				l_field_attr := feature {MD_FIELD_ATTRIBUTES}.Public
+
+				l_meth_token := md_emit.define_field (uni_string, current_class_token,
+					l_field_attr, l_field_sig)
+
+				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
+			else
+				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
+
+				if in_interface then
+					l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual |
+						feature {MD_METHOD_ATTRIBUTES}.Abstract |
+						feature {MD_METHOD_ATTRIBUTES}.New_slot
+				else
+					if is_static then
+						l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Static
 					else
-						l_meth_sig.set_parameter_count (l_parameter_count)
-					end
-
-					if feat.is_function or l_is_attribute or feat.is_constant then
-						set_method_return_type (l_meth_sig, l_return_type)
-						l_signature.put (l_return_type.static_type_id, 0)
-					elseif feat.is_type_feature then
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.ise_type_token)
-					else
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-					end
-
-					if is_static and not l_is_c_external then
-						set_signature_type (l_meth_sig, current_class_type.type)
-					end
-
-					if feat.has_arguments then
-						l_has_arguments := True
-						from
-							l_feat_arg := feat.arguments
-							l_feat_arg.start
-							i := 0
-						until
-							l_feat_arg.after
-						loop
-							l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
-							set_signature_type (l_meth_sig, l_type_i)
-							l_signature.put (l_type_i.static_type_id, i + 1)
-							i := i + 1
-							l_feat_arg.forth
+						l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual
+						if feat.is_origin then
+							l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.New_slot
+						end
+						if feat.is_deferred and not is_empty and not is_override_or_c_external then
+							l_meth_attr := l_meth_attr |
+								feature {MD_METHOD_ATTRIBUTES}.Abstract
 						end
 					end
 				end
 
-				if not feat.is_type_feature then
-						-- Only for not automatically generated feature do we use the 
-						-- naming convention chosen by user.
-					l_naming_convention := System.dotnet_naming_convention
-				end
-				if is_static then
-					if l_is_c_external then
-						l_name := encoder.feature_name (current_class_type.static_type_id,
-							feat.body_index)
-					else
-						if l_is_attribute then
-							l_name := "$$" + il_casing.camel_casing (
-								l_naming_convention, feat.feature_name)
-						else
-							l_name := "$$" + il_casing.pascal_casing (
-								l_naming_convention, feat.feature_name,
-								feature {IL_CASING_CONVERSION}.lower_case)
-						end
-					end
+				if is_static and l_is_c_external then
+						-- Let's define Pinvoke here.
+					l_meth_token := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed |
+						feature {MD_METHOD_ATTRIBUTES}.Preserve_sig)
+					md_emit.define_pinvoke_map (l_meth_token,
+						feature {MD_PINVOKE_CONSTANTS}.Charset_ansi |
+						feature {MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
+						current_module.c_module_token)
 				else
-					l_name := il_casing.pascal_casing (
-						l_naming_convention, feat.feature_name, 
-						feature {IL_CASING_CONVERSION}.lower_case)
+						-- Normal method
+					l_meth_token := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 				end
 
-				uni_string.set_string (l_name)
+				if is_cls_compliant and (is_static or feat.is_type_feature) then
+					define_custom_attribute (l_meth_token,
+						current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
+				end
+				if feat.is_type_feature then
+					define_custom_attribute (l_meth_token,
+						current_module.com_visible_ctor_token, not_com_visible_ca)
+				end
 
-				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
-					l_field_attr := feature {MD_FIELD_ATTRIBUTES}.Public
-
-					l_meth_token := md_emit.define_field (uni_string, current_class_token,
-						l_field_attr, l_field_sig)
-
-					insert_attribute (l_meth_token, current_type_id, feat.feature_id)
-				else
-					l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
-						feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
-
+				if not is_static and l_is_attribute and not is_override_or_c_external then
+						-- Let's define attribute setter.
 					if in_interface then
-						l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual |
-							feature {MD_METHOD_ATTRIBUTES}.Abstract |
-							feature {MD_METHOD_ATTRIBUTES}.New_slot
+						l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+							feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+							feature {MD_METHOD_ATTRIBUTES}.Virtual |
+							feature {MD_METHOD_ATTRIBUTES}.Abstract
 					else
-						if is_static then
-							l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Static
-						else
-							l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual
-							if feat.is_origin then
-								l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.New_slot
-							end
-							if feat.is_deferred and not is_empty and not is_override_or_c_external then
-								l_meth_attr := l_meth_attr |
-									feature {MD_METHOD_ATTRIBUTES}.Abstract
-							end
-						end
+						l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+							feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+							feature {MD_METHOD_ATTRIBUTES}.Virtual
 					end
 
-					if is_static and l_is_c_external then
-							-- Let's define Pinvoke here.
-						l_meth_token := md_emit.define_method (uni_string, current_class_token,
-							l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed |
-							feature {MD_METHOD_ATTRIBUTES}.Preserve_sig)
-						md_emit.define_pinvoke_map (l_meth_token,
-							feature {MD_PINVOKE_CONSTANTS}.Charset_ansi |
-							feature {MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
-							current_module.c_module_token)
-					else
-							-- Normal method
-						l_meth_token := md_emit.define_method (uni_string, current_class_token,
-							l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+					l_meth_sig.reset
+					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_parameter_count (1)
+					l_meth_sig.set_return_type (
+						feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					set_signature_type (l_meth_sig, l_return_type)
+					uni_string.set_string (setter_prefix + l_name)
+					l_setter_token := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+					insert_setter (l_setter_token, current_type_id, feat.feature_id)
+
+					create l_ca_factory
+					if l_is_attribute then
+						l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
 					end
 
-					if is_cls_compliant and (is_static or feat.is_type_feature) then
-						define_custom_attribute (l_meth_token,
+					if is_cls_compliant then
+						define_custom_attribute (l_setter_token,
 							current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 					end
-					if feat.is_type_feature then
-						define_custom_attribute (l_meth_token,
-							current_module.com_visible_ctor_token, not_com_visible_ca)
+				end
+
+					-- Let's generate argument names now.
+				if is_static and not l_is_c_external then
+						-- Offset for static features as we generate one more argument.
+					j := 1
+						-- Current needs to be generated only for static wrapper of Eiffel
+						-- feature so that metadata consumer can pick the name (e.g. debugger)
+						-- but it is not needed when it is defined as an instance method.
+					uni_string.set_string ("Current")
+					l_param_token := md_emit.define_parameter (l_meth_token, uni_string, j,
+						feature {MD_PARAM_ATTRIBUTES}.In)
+				end
+
+				if is_static and then l_is_c_external then
+					if l_return_type /= Void and then l_return_type.is_boolean then
+						uni_string.set_string ("Result")
+						l_param_token := md_emit.define_parameter (l_meth_token,
+							uni_string, 0, 0)
+						md_emit.set_field_marshal (l_param_token, boolean_native_signature)
 					end
+				end
 
-					if not is_static and l_is_attribute and not is_override_or_c_external then
-							-- Let's define attribute setter.
-						if in_interface then
-							l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
-								feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-								feature {MD_METHOD_ATTRIBUTES}.Virtual |
-								feature {MD_METHOD_ATTRIBUTES}.Abstract
-						else
-							l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
-								feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-								feature {MD_METHOD_ATTRIBUTES}.Virtual
-						end
-
-						l_meth_sig.reset
-						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-						l_meth_sig.set_parameter_count (1)
-						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-						set_signature_type (l_meth_sig, l_return_type)
-						uni_string.set_string (setter_prefix + l_name)
-						l_setter_token := md_emit.define_method (uni_string, current_class_token,
-							l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-						insert_setter (l_setter_token, current_type_id, feat.feature_id)
-
-						create l_ca_factory
-						if l_is_attribute then
-							l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
-						end
-
-						if is_cls_compliant then
-							define_custom_attribute (l_setter_token,
-								current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
-						end
+				if l_has_arguments then
+					from
+						l_feat_arg := feat.arguments
+						i := 1
+					until
+						i > l_parameter_count
+					loop
+						uni_string.set_string (l_feat_arg.item_name (i))
+						l_param_token := md_emit.define_parameter (l_meth_token, uni_string,
+							i + j, feature {MD_PARAM_ATTRIBUTES}.In)
+						i := i + 1
 					end
+				end
 
-						-- Let's generate argument names now.
-					if is_static and not l_is_c_external then
-							-- Offset for static features as we generate one more argument.
-						j := 1
-							-- Current needs to be generated only for static wrapper of Eiffel
-							-- feature so that metadata consumer can pick the name (e.g. debugger)
-							-- but it is not needed when it is defined as an instance method.
-						uni_string.set_string ("Current")
-						l_param_token := md_emit.define_parameter (l_meth_token, uni_string, j,
-							feature {MD_PARAM_ATTRIBUTES}.In)
-					end
-
-					if is_static and then l_is_c_external then
-						if l_return_type /= Void and then l_return_type.is_boolean then
-							uni_string.set_string ("Result")
-							l_param_token := md_emit.define_parameter (l_meth_token,
-								uni_string, 0, 0)
-							md_emit.set_field_marshal (l_param_token, boolean_native_signature)
-						end
-					end
-
-					if l_has_arguments then
-						from
-							l_feat_arg := feat.arguments
-							i := 1
-						until
-							i > l_parameter_count
-						loop
-							uni_string.set_string (l_feat_arg.item_name (i))
-							l_param_token := md_emit.define_parameter (l_meth_token, uni_string,
-								i + j, feature {MD_PARAM_ATTRIBUTES}.In)
-							i := i + 1
-						end
-					end
-
-					if not is_override_or_c_external then
-						if is_single_class then
+				if not is_override_or_c_external then
+					if is_single_class then
+						insert_implementation_feature (l_meth_token, current_type_id,
+							feat.feature_id)
+						insert_implementation_signature (l_signature, current_type_id,
+							feat.feature_id)
+						insert_feature (l_meth_token, current_type_id, feat.feature_id)
+						insert_signature (l_signature, current_type_id, feat.feature_id)
+					else
+						if is_static then
 							insert_implementation_feature (l_meth_token, current_type_id,
 								feat.feature_id)
 							insert_implementation_signature (l_signature, current_type_id,
 								feat.feature_id)
+						else
 							insert_feature (l_meth_token, current_type_id, feat.feature_id)
 							insert_signature (l_signature, current_type_id, feat.feature_id)
-						else
-							if is_static then
-								insert_implementation_feature (l_meth_token, current_type_id,
-									feat.feature_id)
-								insert_implementation_signature (l_signature, current_type_id,
-									feat.feature_id)
-							else
-								insert_feature (l_meth_token, current_type_id, feat.feature_id)
-								insert_signature (l_signature, current_type_id, feat.feature_id)
-							end
 						end
-					else
-						last_non_recorded_feature_token := l_meth_token
 					end
+				else
+					last_non_recorded_feature_token := l_meth_token
 				end
-				if not is_override_or_c_external and (not is_static or else l_is_attribute) then
-					create l_ca_factory
-					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
-				end
+			end
+			if not is_override_or_c_external and (not is_static or else l_is_attribute) then
+				create l_ca_factory
+				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+			end
 
-				if is_debug_info_enabled and l_is_attribute then
-					Il_debug_info_recorder.set_record_context (l_is_attribute, is_static, in_interface)
-					Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
-				end
+			if is_debug_info_enabled and l_is_attribute then
+				Il_debug_info_recorder.set_record_context (l_is_attribute, is_static, in_interface)
+				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 			end
 		end
 
@@ -1860,8 +1859,8 @@ feature -- IL Generation
 			-- Generate IL code for creation procedures in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 		local
 			create_name: STRING
 			l_attributes: INTEGER
@@ -1921,8 +1920,8 @@ feature -- IL Generation
 			-- Generate IL code for creation procedures in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 			feat_not_void: feat /= Void
 			feat_not_attribute: not feat.is_attribute
 			feat_not_function: not feat.is_function
@@ -1937,82 +1936,80 @@ feature -- IL Generation
 			l_meth_token, l_eiffel_meth_token, l_meth_attr: INTEGER
 			i, nb: INTEGER
 		do
-			if feat.feature_name_id /= Names_heap.void_name_id then
-				nb := feat.argument_count
-				l_meth_sig := method_sig
-				l_meth_sig.reset
-				l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-				if is_generic then
-					l_meth_sig.set_parameter_count (nb + 1)
-				else
-					l_meth_sig.set_parameter_count (nb)
-				end
-				set_method_return_type (l_meth_sig, current_class_type.type)
-
-				if nb > 0 then
-					from
-						l_feat_arg := feat.arguments
-						l_feat_arg.start
-					until
-						l_feat_arg.after
-					loop
-						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
-						set_signature_type (l_meth_sig, l_type_i)
-						l_feat_arg.forth
-					end
-				end
-				if is_generic then
-					l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						current_module.ise_eiffel_derivation_type_token)
-				end
-
-				l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
-					feat.feature_name, feature {IL_CASING_CONVERSION}.lower_case)
-
-				uni_string.set_string (l_name)
-
-				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
-					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					feature {MD_METHOD_ATTRIBUTES}.Static
-
-					-- Normal method
-				l_meth_token := md_emit.define_method (uni_string, current_class_token,
-					l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-				l_eiffel_meth_token := feature_token (
-					implemented_type (feat.origin_class_id, current_class_type.type).static_type_id,
-					feat.origin_feature_id)
-
-				start_new_body (l_meth_token)
-				create_object (current_class_type.implementation_id)
-				if is_generic then
-					duplicate_top
-					generate_argument (nb)
-					method_body.put_call (feature {MD_OPCODES}.callvirt,
-						current_module.ise_set_type_token, 1, False)
-				end
-				duplicate_top
-				if nb > 0 then
-					from
-					until
-						i >= nb
-					loop
-						generate_argument (i)
-						i := i + 1
-					end
-				end
-				method_body.put_call (feature {MD_OPCODES}.callvirt, l_eiffel_meth_token, nb, False)
-				method_body.put_opcode (feature {MD_OPCODES}.ret)
-				method_writer.write_current_body					
+			nb := feat.argument_count
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			if is_generic then
+				l_meth_sig.set_parameter_count (nb + 1)
+			else
+				l_meth_sig.set_parameter_count (nb)
 			end
+			set_method_return_type (l_meth_sig, current_class_type.type)
+
+			if nb > 0 then
+				from
+					l_feat_arg := feat.arguments
+					l_feat_arg.start
+				until
+					l_feat_arg.after
+				loop
+					l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+					set_signature_type (l_meth_sig, l_type_i)
+					l_feat_arg.forth
+				end
+			end
+			if is_generic then
+				l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					current_module.ise_eiffel_derivation_type_token)
+			end
+
+			l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
+				feat.feature_name, feature {IL_CASING_CONVERSION}.lower_case)
+
+			uni_string.set_string (l_name)
+
+			l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.Static
+
+				-- Normal method
+			l_meth_token := md_emit.define_method (uni_string, current_class_token,
+				l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+			l_eiffel_meth_token := feature_token (
+				implemented_type (feat.origin_class_id, current_class_type.type).static_type_id,
+				feat.origin_feature_id)
+
+			start_new_body (l_meth_token)
+			create_object (current_class_type.implementation_id)
+			if is_generic then
+				duplicate_top
+				generate_argument (nb)
+				method_body.put_call (feature {MD_OPCODES}.callvirt,
+					current_module.ise_set_type_token, 1, False)
+			end
+			duplicate_top
+			if nb > 0 then
+				from
+				until
+					i >= nb
+				loop
+					generate_argument (i)
+					i := i + 1
+				end
+			end
+			method_body.put_call (feature {MD_OPCODES}.callvirt, l_eiffel_meth_token, nb, False)
+			method_body.put_opcode (feature {MD_OPCODES}.ret)
+			method_writer.write_current_body					
 		end
 
 	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 		deferred
 		end
 
@@ -2271,10 +2268,13 @@ feature -- IL Generation
 		do
 			l_meth_token := feature_token (current_type_id, feat.feature_id)
 			start_new_body (l_meth_token)
-			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
-				0, True)
-			generate_check_cast (Void, current_class_type.type)
+				-- If `current_class_type' is expanded, cloning is done by compiler.
+			if not current_class_type.is_expanded then
+				generate_current
+				method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
+					0, True)
+				generate_check_cast (Void, current_class_type.type)
+			end
 			generate_return
 			method_writer.write_current_body
 		end
@@ -2961,15 +2961,15 @@ feature -- Variables access
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
-			l_class: CLASS_C
+			l_class_type: CLASS_TYPE
 		do
 			cl_type ?= type_i
 			if cl_type /= Void then
-				l_class := cl_type.base_class
+				l_class_type := cl_type.associated_class_type
 			end
 			if
-				l_class /= Void and then
-				(l_class.is_frozen or l_class.is_single or l_class.is_external)
+				l_class_type /= Void and then
+				l_class_type.is_generated_as_single_type
 			then
 				if need_target then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
@@ -3179,11 +3179,15 @@ feature -- Addresses
 		local
 			cl_type: CL_TYPE_I
 			local_number: INTEGER
+			l_class_type: CLASS_TYPE
 		do
 			cl_type ?= type_i
+			if cl_type /= Void then
+				l_class_type := cl_type.associated_class_type
+			end
 			if
-				cl_type /= Void and then
-				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+				l_class_type /= Void and then
+				l_class_type.is_generated_as_single_type
 			then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldflda,
 					attribute_token (cl_type.implementation_id, a_feature_id))
@@ -3297,15 +3301,15 @@ feature -- Assignments
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
-			l_class: CLASS_C
+			l_class_type: CLASS_TYPE
 		do
 			cl_type ?= type_i
 			if cl_type /= Void then
-				l_class := cl_type.base_class
+				l_class_type := cl_type.associated_class_type
 			end
 			if
-				l_class /= Void and then
-				(l_class.is_frozen or l_class.is_single or l_class.is_external)
+				l_class_type /= Void and then
+				l_class_type.is_generated_as_single_type
 			then
 				if need_target then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
@@ -3329,11 +3333,15 @@ feature -- Assignments
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
+			l_class_type: CLASS_TYPE
 		do
 			cl_type ?= type_i
+			if cl_type /= Void then
+				l_class_type := cl_type.associated_class_type
+			end
 			if
-				cl_type = Void or else
-				not (cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+				l_class_type = Void or else
+				not l_class_type.is_generated_as_single_type
 			then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj,
 					class_type_token (attr_type.static_type_id))
@@ -3913,7 +3921,7 @@ feature -- Assertions
 				id := cl_type.implementation_id
 				if not l_list.has (id) then
 					l_list.force (id)
-					if not cl_type.associated_class.is_external then
+					if not cl_type.is_external then
 						generate_current
 						method_body.put_call (feature {MD_OPCODES}.Call,
 							invariant_token (id), 0, False)
@@ -4009,10 +4017,10 @@ feature -- Constants generation
 		require
 			valid_s: s /= Void
 		do
-			create_object (String_implementation_id)
+			create_object (string_implementation_id)
 			duplicate_top
 			put_system_string (s)
-			internal_generate_feature_access (String_type_id, String_make_feat_id, 1, False, True)
+			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
 		end
 
 	put_system_string (s: STRING) is
@@ -4327,7 +4335,14 @@ feature -- Basic feature
 			create_object (string_implementation_id)
 			duplicate_top
 			generate_local (local_number)
-			internal_generate_feature_access (string_type_id, string_make_feat_id, 0, False, True)
+			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
+
+			if type.is_feature_pointer then
+					-- Handling a POINTER type, we need to prepend `0x' to the output.
+				duplicate_top
+				put_manifest_string ("0x")
+				internal_generate_feature_access (string_type_id, string_prepend_feat_id, 1, False, True)
+			end
 		end
 
 feature -- Line info
@@ -4688,29 +4703,40 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 			Result := System.system_string_class.compiled_class.types.first.type
 		end
 
-	String_type: TYPE_I is
+	string_type: TYPE_I is
 			-- Type of string object
 		once
 			Result := System.string_class.compiled_class.types.first.type
 		end
 
-	String_implementation_id: INTEGER is
+	string_implementation_id: INTEGER is
 			-- Type ID of string implementation.
 		once
-			Result := String_type.implementation_id
+			Result := string_type.implementation_id
 		end
 
-	String_type_id: INTEGER is
+	string_type_id: INTEGER is
 			-- Type of string interface.
 		once
-			Result := String_type.static_type_id
+			Result := string_type.static_type_id
 		end
 
-	String_make_feat_id: INTEGER is
+	string_prepend_feat_id: INTEGER is
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.string_class.compiled_class.
+				feature_table.item ("prepend").feature_id
+		ensure
+			string_prepend_feat_id_positive: Result > 0
+		end
+
+	string_make_feat_id: INTEGER is
 			-- Feature ID of `make_from_cil' of STRING.
 		once
 			Result := System.string_class.compiled_class.
 				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			string_make_feat_id_positive: Result > 0
 		end
 
 feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition

@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Updated version of S_FEATURE_DATA for versions 3.3.1 and up. %
-		%In fact, everything has been put in R340; this R331 exists %
+		%In fact, everything has been put in R40; this R331 exists %
 		%only for compatibility and will be removed, as well as %
 		%S_NEW_FEATURE_DATA and S_DELETED_FEATURE_DATA";
 	date: "$Date$";

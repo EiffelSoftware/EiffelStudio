@@ -35,6 +35,7 @@ default
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_interface")
 	disabled_debug ("debugger_trace")
+	debug ("disable_assertions")
 	disabled_debug ("display_exception_trace")
 	disabled_debug ("dle topo")
 	disabled_debug ("dlg_dispatcher")
@@ -137,19 +138,11 @@ cluster
 
 	const:		"$EIFFEL_SRC\Eiffel\const"
 
-	xml:		"$EIFFEL_SRC\library\exml"
-
-	xml_main (xml):		"$\main"
-
-	xml_tree_parser (xml_main):		"$\tree_parser"
-
-	xml_spec (xml):		"$\compiler_specific\ise"
-
 	observer:		"$EIFFEL_SRC\library\patterns\observer"
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "xm_formatter.e"; "xm_named_node.e"; 
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"
@@ -236,7 +229,6 @@ external
 
 	include_path:
 		"$(EIFFEL_SRC)\library\encryption\Clib",
-		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\C\bench",
@@ -259,7 +251,6 @@ external
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
-		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",

@@ -164,15 +164,18 @@ feature {NONE} -- Implementation
 			-- Show the arguments dialog box when the user right clicks the button
 		local
 			args_dialog: EB_ARGUMENT_DIALOG
-			window: EB_WINDOW
+			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
 			if a_button = 3 then	
 			window ?= Window_manager.last_focused_window
 					if window /= Void then
-						dev := window.window
-						create args_dialog.make_default (agent execute)
-						args_dialog.show_relative_to_window (dev)
+						if not window.has_argument_dialog then
+							dev := window.window
+							create args_dialog.make_default (window, agent execute)
+							window.attach_argument_dialog (args_dialog)
+							args_dialog.show_relative_to_window (dev)
+						end					
 					end			
 			end
 		end

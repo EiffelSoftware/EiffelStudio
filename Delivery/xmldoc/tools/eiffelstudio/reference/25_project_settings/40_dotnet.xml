@@ -1,13 +1,11 @@
 <document title=".NET Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>.NET Tab
 		</heading>
 		<paragraph> </paragraph>
-		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generationenabled.</paragraph>
+		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generation enabled.</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/dotnet_tab.png</url>
@@ -57,7 +55,7 @@
 		<paragraph>The CURSOR class is located at '$ISE_EIFFEL\library\base\structures\cursors'.  </paragraph>
 		<paragraph> </paragraph>
 		<list ordered="false">
-			<item>Follow .NET naming guidelines: this option determines whether the generated .NET code uses the Eiffel or .NET naming convention.  Using Ildasm, the IL disassemble tool provided with the .NET Framework, we can see the difference between them.  The Eiffel naming convention uses uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case style.  Note that this option is only available in anon-compiled system.  Once the system has been compiled the naming standard is thus fixed for the project.</item>
+			<item>Follow .NET naming guidelines: this option determines whether the generated .NET code uses the Eiffel or .NET naming convention.  Using Ildasm, the IL disassemble tool provided with the .NET Framework, we can see the difference between them.  The Eiffel naming convention uses uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case style.  Note that this option is only available in a non-compiled system.  Once the system has been compiled the naming standard is thus fixed for the project.</item>
 		</list>
 		<paragraph>
 			<image>
@@ -108,7 +106,7 @@
 			</image>
 		</paragraph>
 		<paragraph> </paragraph>
-		<paragraph>The final scenario is where a namespace has been defined for the cluster in the Clusters tab of the Project Settings.  In this situation the namespace overrides the name of the cluster.  In the example below the namespace name 'MyBaseNameSpace' is used so the resulting name is'MyBaseNameSpace.structures.cursors.CURSOR'.</paragraph>
+		<paragraph>The final scenario is where a namespace has been defined for the cluster in the Clusters tab of the Project Settings.  In this situation the namespace overrides the name of the cluster.  In the example below the namespace name 'MyBaseNameSpace' is used so the resulting name is 'MyBaseNameSpace.structures.cursors.CURSOR'.</paragraph>
 		<paragraph> </paragraph>
 		<paragraph>
 			<image>

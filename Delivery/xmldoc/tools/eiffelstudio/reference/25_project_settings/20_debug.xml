@@ -1,7 +1,5 @@
 <document title="Debug/Profile Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Debug/Profile Tab
@@ -50,8 +48,8 @@
 				</link>.
 			</item>
 		</list>
-		<paragraph>
+		<note>
 			<bold>Note</bold>: The profiler is only available in the Enterprise edition of EiffelStudio.
-		</paragraph>
+		</note>
 	</paragraph>
 </document>

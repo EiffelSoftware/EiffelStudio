@@ -1,14 +1,12 @@
 <document title="Clusters Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Clusters Tab
 		</heading>
 		<paragraph> </paragraph>
 		<paragraph>This is where you specify the directories where to look for classes when compiling your system. A cluster has a name and a path associated with it. Each cluster name in the system must be unique and only one cluster can reference a path, i.e. two clusters with different names cannot refer to the same path.</paragraph>
-		<paragraph>Here is how the clusters tab looks like for the calculatorexample:</paragraph>
+		<paragraph>Here is how the clusters tab looks like for the calculator example:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/clusters_tab.png</url>

@@ -122,8 +122,6 @@ feature {NONE} -- Implementation
 			-- Parent of `Current'.
 		require
 			parent_not_void: parent /= Void
-		local
-			a_parent: EV_CONTAINER
 		do
 			Result ?= parent
 			if Result = Void then

@@ -40,6 +40,7 @@ feature {EV_CONTAINER} -- Element change
 			end
 			add_child (pixmap_imp)
 			--gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, True, False, 0)
+		 	gtk_widget_show (pixmap_imp.widget)
 			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 2)
 		end
 

@@ -41,16 +41,6 @@ extern EIF_REFERENCE c_outd(EIF_DOUBLE d);		/* %%zs modified EIF_REFERENCE was c
 extern EIF_REFERENCE c_outc(EIF_CHARACTER c);		/* %%zs modified EIF_REFERENCE was char * */
 extern EIF_REFERENCE c_outp(EIF_POINTER p);		/* %%zs modified EIF_REFERENCE was char * */
 
-/*
- *	`out' string.
- */
-
-#ifndef EIF_THREADS
-extern char*tagged_out;
-#endif /* EIF_THREADS */
-
-
-
 #ifdef WORKBENCH
 
 /* The following routine builds a tagged out string out of simple types.

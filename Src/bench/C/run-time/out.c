@@ -31,7 +31,7 @@
 
 #ifndef EIF_THREADS
 rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */
-rt_public char *tagged_out = (char *) 0;	/* String where the tagged out is written */
+rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */
 rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */
 rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */
 #endif /* EIF_THREADS */
@@ -92,7 +92,7 @@ rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJECT object)
 rt_public char *eif_out (EIF_REFERENCE object) 
 {
 	/* Like "build_out" but for CECIL programmer. Take a direct reference
-	 * as argument and returns a copy of tagged_out
+	 * as argument.
 	 */
 
 	EIF_GET_CONTEXT
@@ -102,14 +102,12 @@ rt_public char *eif_out (EIF_REFERENCE object)
 	i_object = eif_protect (object);	/* Protect "object". */
 
 	build_out (i_object);	/* Build "tagged_out".*/
-	ret = (char *) eif_malloc (strlen(tagged_out)*sizeof(char));
-	strcpy (ret, tagged_out);
 
-	eif_wean (object);	/* We do not need a safe indirection any longer. */
+	eif_wean (i_object);	/* We do not need a safe indirection any longer. */
 
 	EIF_END_GET_CONTEXT
 
-	return ret;
+	return tagged_out;
 	
 }	/* eif_out */
 

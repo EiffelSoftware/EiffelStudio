@@ -233,14 +233,16 @@ feature {NONE} -- Implementation
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.parents
-				from
-					l.start
-				until
-					l.after
-				loop
-					ci := l.item.associated_class.lace_class
-					Result := Result + number_of_ancestors (ci, depth - 1) + 1
-					l.forth
+				if l /= Void then
+					from
+						l.start
+					until
+						l.after
+					loop
+						ci := l.item.associated_class.lace_class
+						Result := Result + number_of_ancestors (ci, depth - 1) + 1
+						l.forth
+					end
 				end
 			end
 		end
@@ -255,18 +257,20 @@ feature {NONE} -- Implementation
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.parents
-				from
-					l.start
-				until
-					l.after
-				loop
-					ci := l.item.associated_class.lace_class
-					add_class (ci)
-					explore_ancestors (ci, depth - 1, progress_bar)
-					if progress_bar then
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
+				if l /= Void then
+					from
+						l.start
+					until
+						l.after
+					loop
+						ci := l.item.associated_class.lace_class
+						add_class (ci)
+						explore_ancestors (ci, depth - 1, progress_bar)
+						if progress_bar then
+							context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
+						end
+						l.forth
 					end
-					l.forth
 				end
 			end
 		end

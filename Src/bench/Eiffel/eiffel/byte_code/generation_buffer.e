@@ -419,8 +419,8 @@ feature {NONE} -- Implementation: Status report
 	chunk_size: INTEGER
 			-- Size of buffers we will create.
 			
-	max_chunk_size: INTEGER is 10485760
-			-- Maximum size of chunks allocated (10MB)
+	max_chunk_size: INTEGER is 262144
+			-- Maximum size of chunks allocated (256KB)
 
 	count: INTEGER is
 			-- Number of characters in current.
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation: Element change
 			if (current_buffer.count + s.count) > current_buffer.capacity then
 				l_count := count
 				buffers.extend (current_buffer)
-				create current_buffer.make (Max_chunk_size.min (l_count * 2))
+				create current_buffer.make (max_chunk_size.min (l_count * 2))
 			end
 			current_buffer.append (s)
 		ensure

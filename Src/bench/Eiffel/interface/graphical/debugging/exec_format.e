@@ -25,17 +25,15 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute the command.
 		do
-			if is_sensitive then
-				focus_label.popdown
-				if last_warner /= Void then
-					last_warner.popdown
-				end;
-				format (Void);
-				if argument = Format_and_run then
-					tool.debug_run_cmd_holder.associated_command.execute (Void)
-				end;
-				tool.set_last_format (holder)
-			end
+			focus_label.popdown
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
+			format (Void);
+			if argument = Format_and_run then
+				tool.debug_run_cmd_holder.associated_command.execute (Void)
+			end;
+			tool.set_last_format (holder)
 		end;
 
 feature -- Formatting
@@ -50,6 +48,11 @@ feature -- Properties
 
 	tool: PROJECT_W;
 			-- Project tool
+
+	Format_and_run: ANY is
+		once
+			!! Result
+		end
 
 feature {NONE} -- Attributes
 

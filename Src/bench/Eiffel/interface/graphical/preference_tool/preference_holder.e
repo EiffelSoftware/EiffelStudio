@@ -25,10 +25,8 @@ feature {NONE} -- Initialization
 		require
 			a_command_not_void: a_command /= Void
 		do
-			associated_command := a_command;
-			is_sensitive := True
+			associated_command := a_command
 		ensure
-			sensitive: is_sensitive;
 			command_set: a_command.is_equal (associated_command)
 		end
 
@@ -76,11 +74,6 @@ feature -- Properties
 			-- Menu entry for in the menu
 
 feature {NONE} -- Useless
-
-	set_sensitive (sensitivity: BOOLEAN) is
-			-- Useless here.
-		do
-		end;
 
 	make (a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
 			-- Useless here.

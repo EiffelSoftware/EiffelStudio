@@ -9,27 +9,12 @@ class BOOLEAN_PREF_RES
 
 inherit
 	PREFERENCE_RESOURCE
-		rename
-			make as form_make
 		redefine
 			associated_resource
 		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_resource: BOOLEAN_RESOURCE; new_parent: COMPOSITE) is
-			-- Initialize Current with `a_resource' as `associated_resource',
-			-- and `new_parent' as `a_parent'.
-		require
-			a_resource_not_void: a_resource /= Void;
-			new_parent_not_void: new_parent /= Void
-		do
-			associated_resource := a_resource;
-			a_parent := new_parent
-		end
 
 feature -- Validation
 
@@ -39,17 +24,31 @@ feature -- Validation
 			is_resource_valid := True
 		end
 
-feature {PREFERENCE_CATEGORY} -- User Interface
+feature -- Element change
 
-	display is
-			-- Display Current
+	reset is
+			-- Reset the text field.
 		do
-			init
 			if associated_resource.actual_value then
 				boolean_toggle.set_toggle_on
 			else
 				boolean_toggle.set_toggle_off
 			end;
+		end;
+
+feature {PREFERENCE_CATEGORY} -- User Interface
+
+	init (a_parent: COMPOSITE) is
+			-- Display Current
+		do
+			form_make ("", a_parent);
+
+			!! boolean_toggle.make (associated_resource.visual_name, Current);
+
+			attach_top (boolean_toggle, 1);
+			attach_bottom (boolean_toggle, 1);
+			attach_left (boolean_toggle, 5)
+
 		end
 
 feature {PREFERENCE_CATEGORY} -- Access
@@ -82,22 +81,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make (associated_resource.name, boolean_toggle.state);
+			!! new_res.make_with_values (associated_resource.name, boolean_toggle.state);
 			!! Result.make (associated_resource, new_res)
-		end
-
-feature {NONE} -- Initialization
-
-	init is
-			-- Create and attach widgets to Current
-		do
-			form_make ("", a_parent);
-
-			!! boolean_toggle.make (associated_resource.name, Current);
-
-			attach_top (boolean_toggle, 1);
-			attach_bottom (boolean_toggle, 1);
-			attach_left (boolean_toggle, 1)
 		end
 
 feature {NONE} -- Properties

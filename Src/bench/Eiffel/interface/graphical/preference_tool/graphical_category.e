@@ -22,67 +22,49 @@ feature {NONE} -- Initialization
 			!! modified_resources.make
 		end
 
-feature {RESOURCES} -- Initialization
+feature {TTY_RESOURCES} -- Initialization
 
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all rsources valid for Current.
 		do
-			!! text_font.make ("text_font", rt.get_string
-					("text_font", Void));
-			!! font.make ("font", rt.get_string
-					("font", Void));
-			!! default_text_font.make ("default_text_font", rt.get_string
-					("default_text_font", "timi14"));
-			!! comment_font.make ("comment_font", rt.get_string
-					("comment_font", "timr14"));
-			!! string_text_font.make ("string_text_font", rt.get_string
-					("string_text_font", "fixed"));
-			!! class_font.make ("class_font", rt.get_string
-					("class_font", "timi14"));
-			!! feature_font.make ("feature_font", rt.get_string
-					("feature_font", "timi14"));
-			!! object_font.make ("object_font", rt.get_string
-					("object_font", "timi14"));
-			!! error_font.make ("error_font", rt.get_string
-					("error_font", "timi14"));
-			!! breakable_font.make ("breakable_font", rt.get_string
-					("breakable_font", "timi14"));
-			!! keyword_font.make ("keyword_font", rt.get_string
-					("keyword_font", "timb14"));
-			!! symbol_font.make ("symbol_font", rt.get_string
-					("symbol_font", "timr14"));
+			!! font.make ("font", rt, "");
+			!! breakable_font.make ("breakable_font", rt, "timi14");
+			!! class_font.make ("class_font", rt, "timi14");
+			!! comment_font.make ("comment_font", rt, "timr14");
+			!! default_text_font.make ("default_text_font", rt, "timi14");
+			!! error_font.make ("error_font", rt, "timi14");
+			!! feature_font.make ("feature_font", rt, "timi14");
+			!! keyword_font.make ("keyword_font", rt, "timb14");
+			!! object_font.make ("object_font", rt, "timi14");
+			!! text_font.make ("text_font", rt, "");
+			!! string_text_font.make ("string_text_font", rt, "fixed");
+			!! symbol_font.make ("symbol_font", rt, "timr14");
 
-			!! text_background_color.make ("text_background_color", 
-					rt.get_string ("text_background_color", "white"));
-			!! text_foreground_color.make ("text_foreground_color", 
-					rt.get_string ("text_foreground_color", "black"));
-			!! background_color.make ("background_color", rt.get_string
-					("background_color", Void));
-			!! foreground_color.make ("foreground_color", rt.get_string
-					("foreground_color", Void));
-			!! progress_bar_color.make ("progress_bar_color", rt.get_string
-					("progress_bar_color", "blue"));
-			!! string_text_color.make ("string_text_color", rt.get_string
-					("string_text_color", "black"));
-			!! default_text_color.make ("default_text_color", rt.get_string
-					("default_text_color", "black"));
-			!! stop_color.make ("stop_color", rt.get_string ("stop_color", "red"));
-			!! breakable_color.make ("breakable_color", rt.get_string ("breakable_color", "black"));
-			!! symbol_color.make ("symbol_color", rt.get_string ("symbol_color", "black"));
-			!! class_color.make ("class_color", rt.get_string ("class_color", "black"));
-			!! feature_color.make ("feature_color", rt.get_string ("feature_color", "black"));
-			!! error_color.make ("error_color", rt.get_string ("error_color", "red"));
-			!! object_color.make ("object_color", rt.get_string ("object_color", "black"));
-			!! comment_color.make ("comment_color", rt.get_string ("comment_color", "red"));
-			!! keyword_color.make ("keyword_color", rt.get_string ("keyword_color", "blue"));
-			!! highlight_line_background_color.make ("highlight_background_line_color", 
-					rt.get_string ("highlight_background_line_color", "red"));
-			!! highlight_line_foreground_color.make ("highlight_foreground_line_color", 
-					rt.get_string ("highlight_foreground_line_color", "white"));
-			!! selected_clickable_background_color.make ("selected_background_clickable_color", 
-					rt.get_string ("selected_background_clickable_color", "black"));
-			!! selected_clickable_foreground_color.make ("selected_foreground_clickable_color", 
-					rt.get_string ("selected_foreground_clickable_color", "white"));
+			!! background_color.make ("background_color", rt, "");
+			!! foreground_color.make ("foreground_color", rt, "");
+
+			!! text_background_color.make ("text_background_color", rt, "white");
+			!! text_foreground_color.make ("text_foreground_color", rt, "black");
+			!! breakable_color.make ("breakable_color", rt, "black");
+			!! class_color.make ("class_color", rt, "black");
+			!! comment_color.make ("comment_color", rt, "red");
+			!! default_text_color.make ("default_text_color", rt, "black");
+			!! error_color.make ("error_color", rt, "red");
+			!! feature_color.make ("feature_color", rt, "black");
+			!! highlight_line_background_color.make 
+					("highlight_background_line_color", rt, "red");
+			!! highlight_line_foreground_color.make 
+					("highlight_foreground_line_color", rt, "white");
+			!! keyword_color.make ("keyword_color", rt, "blue");
+			!! object_color.make ("object_color", rt, "black");
+			!! progress_bar_color.make ("progress_bar_color", rt, "blue");
+			!! selected_clickable_background_color.make 
+					("selected_background_clickable_color", rt, "black");
+			!! selected_clickable_foreground_color.make 
+					("selected_foreground_clickable_color", rt, "white");
+			!! stop_color.make ("stop_color", rt, "red");
+			!! string_text_color.make ("string_text_color", rt, "black");
+			!! symbol_color.make ("symbol_color", rt, "black");
 		end
 
 feature -- Validation

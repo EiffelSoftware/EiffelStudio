@@ -22,15 +22,8 @@ feature {NONE} -- Initialization
 			-- Initialize Current.
 		do
 			associated_button := a_button;
-			associated_menu_entry := a_menu_entry;
-			is_sensitive := True
+			associated_menu_entry := a_menu_entry
 		end;
-
-	make_plain is
-			-- Initialize Current.
-		do
-			is_sensitive := True
-		end
 
 feature -- Setting
 
@@ -67,9 +60,6 @@ feature -- Properties
 
 feature {NONE} -- Useless
 
-	set_sensitive (sensitivity: BOOLEAN) is
-			-- Useless here
-		do
-		end;
-	
+	make_plain is do end;
+
 end -- class CATEGORY_HOLDER

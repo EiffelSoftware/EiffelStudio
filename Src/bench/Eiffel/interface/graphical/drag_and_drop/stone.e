@@ -3,8 +3,7 @@ deferred class STONE
 inherit
 
 	STONE_TYPES;
-	EB_CONSTANTS;
-	INTERFACE_W
+	EB_CONSTANTS
 	
 feature -- Properties
 

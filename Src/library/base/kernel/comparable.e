@@ -15,11 +15,11 @@ indexing
 
 deferred class COMPARABLE inherit
 
-		PART_COMPARABLE
-			redefine
-				infix "<", infix "<=",
-				infix ">", infix ">="
-			end
+	PART_COMPARABLE
+		redefine
+			infix "<", infix "<=",
+			infix ">", infix ">="
+		end
 
 feature -- Comparison
 

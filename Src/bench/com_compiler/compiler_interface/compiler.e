@@ -89,13 +89,14 @@ feature -- Access
 		-- name of pipe for output
 
 	expand_path (a_path: STRING): STRING is
-			-- Epxand all env vars in the given path
+			-- Epxand all env vars in 'a_path'
 		local
 			var: STRING
 			formatted_var: STRING
 			dollar_pos: INTEGER
 			slash_pos: INTEGER
 			parth_pos: INTEGER
+			next_dollar_pos: INTEGER
 			env_var: STRING
 			env: EXECUTION_ENVIRONMENT
 		do
@@ -116,23 +117,30 @@ feature -- Access
 					-- allows for $(ENV)Ext\...
 					parth_pos := Result.index_of (')', dollar_pos + 1)
 					
-					if parth_pos > 0 then
-						-- if ) has been found
-						if slash_pos > 0 then
-							-- if the ) comes before \
-							if parth_pos < slash_pos then
-								slash_pos := parth_pos + 1
-							end
+					-- look or $ as path could be $var1$var2
+					next_dollar_pos := Result.index_of ('$', dollar_pos + 1)
+
+					if slash_pos > 0 then
+						if parth_pos > 0 then
+							slash_pos := slash_pos.min (parth_pos + 1)
+						end
+						if next_dollar_pos > 0 then
+							slash_pos := slash_pos.min (next_dollar_pos)
+						end
+					elseif parth_pos > 0 then
+						if next_dollar_pos > 0 then
+							slash_pos := slash_pos.min (next_dollar_pos)
 						else
 							slash_pos := parth_pos + 1
 						end
 					else
-						-- if there is no () then use the \
-						if slash_pos = 0 then
+						if next_dollar_pos > 0 then
+							slash_pos := next_dollar_pos
+						else
 							slash_pos := Result.count + 1
-						end						
+						end
 					end
-		
+					
 					var := Result.substring (dollar_pos, slash_pos - 1)
 					
 					-- remove the () and $
@@ -145,7 +153,11 @@ feature -- Access
 					if env_var /= Void and then env_var.count > 0 then
 						Result.replace_substring_all (var, env_var)
 					end
-					dollar_pos := Result.index_of ('$', 1)
+					if dollar_pos + 1 <= Result.count then
+						dollar_pos := Result.index_of ('$', dollar_pos + 1)
+					else
+						dollar_pos := 0
+					end
 				end
 			end
 		end

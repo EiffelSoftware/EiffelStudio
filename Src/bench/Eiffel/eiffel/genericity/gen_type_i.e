@@ -239,6 +239,7 @@ feature -- Access
 					Result.append (sep)
 					tmp := clone (l_meta.item (i).il_type_name)
 					tmp.remove_head (tmp.last_index_of ('.', tmp.count))
+					tmp.to_lower
 					Result.append (tmp)
 					i := i + 1
 				end

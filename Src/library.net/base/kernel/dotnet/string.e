@@ -390,9 +390,9 @@ feature -- Measurement
 		do
 			from
 				counter := 0
-				nb := count - 1
+				nb := count
 			until
-				counter > nb
+				counter = nb
 			loop
 				if internal_string_builder.chars (counter) = c then
 					Result := Result + 1
@@ -441,17 +441,18 @@ feature -- Status report
 	has (c: CHARACTER): BOOLEAN is
 			-- Does string include `c'?
 		local
-			counter: INTEGER
+			nb, counter: INTEGER
 		do
 			if not is_empty then
 				from
 					counter := 1
+					nb := count
 				until
-					counter > count or else (item (counter) = c)
+					counter > nb or else (item (counter) = c)
 				loop
 					counter := counter + 1
 				end
-				Result := (counter <= count)
+				Result := (counter <= nb)
 			end
 		end
 
@@ -728,7 +729,7 @@ feature -- Element change
 		local
 			new_size, substring_size: INTEGER
 			diff, i: INTEGER
-			s_area: like internal_string_builder
+			l_area, s_area: like internal_string_builder
 			s_count: INTEGER
 			start0: INTEGER
 			old_count: INTEGER
@@ -738,6 +739,7 @@ feature -- Element change
 			s_count := s.count
 			old_count := count
 			s_area := s.internal_string_builder
+			l_area := internal_string_builder
 			diff := s_count - substring_size
 			new_size := diff + old_count
 			if diff > 0 then
@@ -749,8 +751,7 @@ feature -- Element change
 				until
 					i < end_index
 				loop
-					internal_string_builder.set_chars (i + diff,
-						internal_string_builder.chars (i))
+					l_area.set_chars (i + diff, l_area.chars (i))
 					i := i - 1
 				end
 			elseif diff < 0 then
@@ -760,8 +761,7 @@ feature -- Element change
 				until
 					i = old_count
 				loop
-					internal_string_builder.set_chars (i + diff,
-						internal_string_builder.chars (i))
+					l_area.set_chars (i + diff, l_area.chars (i))
 					i := i + 1
 				end
 				set_count (new_size)
@@ -772,7 +772,7 @@ feature -- Element change
 			until
 				i < 0
 			loop
-				internal_string_builder.set_chars (i + start0, s_area.chars (i))
+				l_area.set_chars (i + start0, s_area.chars (i))
 				i := i - 1
 			end
 		ensure
@@ -813,12 +813,12 @@ feature -- Element change
 	fill_with (c: CHARACTER) is
 			-- Replace all current characters with characters all equal to `c'.
 		local
-			i, cnt: INTEGER
+			i, nb: INTEGER
 		do
 			from
-				cnt := count
+				nb := count
 			until
-				i = cnt
+				i = nb
 			loop
 				internal_string_builder.set_chars (i, c)
 				i := i + 1
@@ -1222,16 +1222,17 @@ feature -- Removal
 		require else
 			True
 		local
-			counter: INTEGER
+			nb, counter: INTEGER
 		do
 			from
 				counter := 1
+				nb := count
 			until
-				counter > count or else (item (counter) = c)
+				counter > nb or else (item (counter) = c)
 			loop
 				counter := counter + 1
 			end
-			if counter <= count then
+			if counter <= nb then
 				remove (counter)
 			end
 		end
@@ -1241,15 +1242,17 @@ feature -- Removal
 		require else
 			True
 		local
-			counter: INTEGER
+			nb, counter: INTEGER
 		do
 			from
 				counter := 1
+				nb := count
 			until
-				counter > count
+				counter > nb
 			loop
 				if item (counter) = c then
 					remove (counter)
+					nb := nb - 1
 				else
 					counter := counter + 1
 				end
@@ -1463,17 +1466,16 @@ feature -- Conversion
 	to_lower is
 			-- Convert to lower case.
 		local
-			i, cnt: INTEGER
+			i, nb: INTEGER
+			l_builder: like internal_string_builder
 		do
 			from
-				cnt := count
+				l_builder := internal_string_builder
+				nb := count
 			until
-				i = count
+				i = nb
 			loop
-				internal_string_builder.set_chars (
-					i, 
-					feature {DOTNET_CHARACTER}.to_lower (internal_string_builder.chars (i))
-				)
+				l_builder.set_chars (i, l_builder.chars (i).lower)
 				i := i + 1
 			end
 		end
@@ -1481,17 +1483,16 @@ feature -- Conversion
 	to_upper is
 			-- Convert to upper case.
 		local
-			i, cnt: INTEGER
+			i, nb: INTEGER
+			l_builder: like internal_string_builder
 		do
 			from
-				cnt := count
+				l_builder := internal_string_builder
+				nb := count
 			until
-				i = count
+				i = nb
 			loop
-				internal_string_builder.set_chars (
-					i, 
-					feature {DOTNET_CHARACTER}.to_upper (internal_string_builder.chars (i))
-				)
+				l_builder.set_chars (i, l_builder.chars (i).upper)
 				i := i + 1
 			end
 		end
@@ -1552,13 +1553,14 @@ feature -- Conversion
 			-- Representation as a linear structure
 		local
 			temp: ARRAYED_LIST [CHARACTER]
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			create temp.make (capacity)
 			from
 				i := 1
+				nb := count
 			until
-				i > count
+				i > nb
 			loop
 				temp.extend (item (i))
 				i := i + 1

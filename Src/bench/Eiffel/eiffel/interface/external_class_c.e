@@ -112,7 +112,7 @@ feature -- Initialization
 
 				-- Topological sort has been done and therefore all parents of current class
 				-- have been processed yet.
---			class_interface.process_features (l_feat_tbl)
+			class_interface.process_features (l_feat_tbl)
 
 				-- Save freshly computed feature table on disk.
 			Tmp_feat_tbl_server.put (l_feat_tbl)

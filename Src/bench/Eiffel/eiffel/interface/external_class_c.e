@@ -1035,8 +1035,6 @@ feature {NONE} -- Implementation
 			l_value: VALUE_I
 			l_bool_value: BOOL_VALUE_I
 			l_char_value: CHAR_VALUE_I
-			l_double_value: REAL_VALUE_I
-			l_real_value: FLOAT_VALUE_I
 			l_string_value: STRING_VALUE_I
 			l_int32: INTEGER
 			l_double: DOUBLE
@@ -1052,16 +1050,14 @@ feature {NONE} -- Implementation
 				l_int32 := l_int.lower;
 				($l_double + 4).memory_copy ($l_int32, 4)
 
-				create l_double_value.make (l_double)
-				l_value := l_double_value
+				create {REAL_VALUE_I} l_value.make_double (l_double)
 			elseif a_external_type.is_real then
 				create l_int.make_default
 				l_int.initialize_from_hexa ("0x" + a_value)
 				l_int32 := l_int.lower;
 				($l_real).memory_copy ($l_int32, 4)
 
-				create l_real_value.make (l_real)
-				l_value := l_real_value
+				create {REAL_VALUE_I} l_value.make_real (l_real)
 			elseif a_external_type.is_integer then
 				if a_value.item (1) = '-' then
 					l_val := a_value.substring (2, a_value.count)

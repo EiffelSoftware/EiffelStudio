@@ -588,6 +588,20 @@ feature  -- Generation
 			end;
 			if (parent_type = Void) then
 				Result.append ("%Texecute is%N%T%Tdo%N");
+				if not labels.empty then
+					from
+						labels.start
+					until
+						labels.after or found
+					loop
+						if (labels.item.parent_type = Void) then
+							Result.append ("%T%T%Tset_transition_label (");
+							Result.append (labels.item.label);
+							Result.append ("_label);%N");
+							found := True;
+						end;
+					end;
+				end;
 				Result.append ("%T%Tend;%N%N");
 			else
 				Result.append (parent_type.eiffel_body_text);

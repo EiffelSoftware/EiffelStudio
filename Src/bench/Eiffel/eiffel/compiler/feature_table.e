@@ -693,7 +693,8 @@ end
 			l_ext: IL_EXTENSION_I
 		do
 			from
-				create Result.make
+					-- Optimize creation as most of the time classes have no attributes
+				create Result.make (0)
 				start
 			until
 				after
@@ -762,10 +763,10 @@ end
 				loop
 					feat := tab.item (i)
 					if feat = Void then
-						ba.append_int32_integer (0)
+						ba.append_integer_32 (0)
 					else
 						rout_id := feat.rout_id_set.first
-						ba.append_int32_integer (rout_id)
+						ba.append_integer_32 (rout_id)
 					end
 					i := i + 1
 				end

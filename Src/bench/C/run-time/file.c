@@ -321,13 +321,15 @@ rt_public void file_flush(FILE *fp)
 rt_public  EIF_INTEGER file_size (FILE *fp)
 {
 	struct stat buf;
+#ifdef EIF_VMS
 	int current_pos;
 	int fd;
+#endif
 
 	errno = 0;
-	fd = fileno(fp);
 
 #ifdef EIF_VMS
+	fd = fileno (fp);
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
 	current_pos = lseek(fd,0,SEEK_CUR);
 	lseek(fd,0,SEEK_END);
@@ -335,27 +337,11 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 		esys();
 	lseek(fd,current_pos,SEEK_SET);	
 #else
-	/* Because of some "standard" ANSI C implementations don't
-	 * protect the internal file pointer during `fflush'-ing
-	 * we have to do it ourselves. -- GLJ
-	 */
-
-	/* Using fsync as there are problems storing from Linux to other platforms
-	 * using NFS (reproduceable by precompiling EiffelBase from a Linux box
-	 * to a distant machine. Xavier
-	 */
-	current_pos = file_tell(fp);
-#if defined EIF_WINDOWS || defined VXWORKS
 	if (0 != fflush (fp))   	/* Without a flush the information */
-#else
-	if (0 != fsync (fd))   	/* Without a flush the information */
-#endif
-		esys();						/* is not up to date, but it _may_ */
-									/* cause file pointer movement!    */
-	file_go(fp, current_pos);
+		esys();					/* is not up to date */
 #endif
 
-	if (fstat (fd, &buf) == -1)
+	if (fstat (fileno(fp), &buf) == -1)
 		esys();		/* An error occurred: raise exception */
 	return (EIF_INTEGER) buf.st_size;
 }

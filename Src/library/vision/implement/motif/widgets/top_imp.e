@@ -57,7 +57,19 @@ feature -- Status Report
 			Result := is_iconic
 		end;
 
+	is_maximized_state: BOOLEAN is
+			-- Does application start in maximized state?
+		do
+			-- Not implemented
+		end
+
 feature -- Status Setting
+
+	set_maximized_state is
+			-- Set start state of the application to be maximized.
+		do
+			-- Not implemented.
+		end
 
 	set_iconic_state is
 			-- Set start state of the application to be iconic.

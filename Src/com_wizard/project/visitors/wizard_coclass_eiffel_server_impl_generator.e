@@ -28,7 +28,6 @@ feature -- Basic operation
 		local
 			local_string: STRING
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
-			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 		do
 			coclass_descriptor := a_descriptor
 
@@ -57,10 +56,6 @@ feature -- Basic operation
 				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
 
-			if shared_wizard_environment.in_process_server then
-				create definition_file_generator
-				definition_file_generator.generate (coclass_descriptor)
-			end
 
 		end
 

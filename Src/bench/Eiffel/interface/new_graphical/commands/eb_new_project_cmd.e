@@ -155,7 +155,7 @@ feature -- Project initialization
 			-- Initialize project.
 		local
 			e_displayer: BENCH_ERROR_DISPLAYER
-			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
+--			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 			msg: STRING
 		do
 			Eiffel_project.make_new (project_dir)

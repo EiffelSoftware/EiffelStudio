@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
+frozen expanded class
 	CHARACTER
 
 inherit

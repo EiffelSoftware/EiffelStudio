@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class DOUBLE inherit
+frozen expanded class DOUBLE inherit
 
 	DOUBLE_REF
 

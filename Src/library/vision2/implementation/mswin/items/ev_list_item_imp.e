@@ -127,49 +127,49 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		do
-			add_command (Cmd_item_activate, cmd, arg)			
-		end	
+--|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is selected.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_activate, cmd, arg)			
+--|FIXME		end	
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		do
-			add_command (Cmd_item_deactivate, cmd, arg)		
-		end
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is unselected.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
+--|FIXME		end
 
-	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the item is double clicked.
-		do
-			add_command (Cmd_item_dblclk, cmd, arg)
-		end	
+--|FIXME	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add 'cmd' to the list of commands to be executed
+--|FIXME			-- when the item is double clicked.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_dblclk, cmd, arg)
+--|FIXME		end	
 
 feature -- Event -- removing command association
 
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		do
-			remove_command (Cmd_item_activate)			
-		end	
+--|FIXME	remove_select_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is selected.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_activate)			
+--|FIXME		end	
 
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		do
-			remove_command (Cmd_item_deactivate)		
-		end
+--|FIXME	remove_unselect_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is unselected.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_deactivate)		
+--|FIXME		end
 
-	remove_double_click_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is double-clicked.
-		do
-			remove_command (Cmd_item_dblclk)
-		end
+--|FIXME	remove_double_click_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is double-clicked.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_dblclk)
+--|FIXME		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -198,6 +198,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/19 06:23:05  oconnor
+--| removed command stuff
+--|
 --| Revision 1.26  2000/02/19 05:44:59  oconnor
 --| released
 --|

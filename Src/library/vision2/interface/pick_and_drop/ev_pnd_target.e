@@ -9,6 +9,12 @@ indexing
 class
 	EV_PND_TARGET
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 feature -- Access
 
 	add_pnd_command (type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is

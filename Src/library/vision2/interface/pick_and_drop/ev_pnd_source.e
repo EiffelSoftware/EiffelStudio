@@ -10,6 +10,11 @@ indexing
 class
 	EV_PND_SOURCE
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 
 feature -- Attributes 
 

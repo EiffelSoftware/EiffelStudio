@@ -18,6 +18,10 @@ feature
 
 	focus_label: FOCUS_LABEL;
 
+feature {NONE}
+
+	cut_hole: CUT_HOLE;
+
 	make (a_name: STRING; a_parent: COMPOSITE; app_editor: APP_EDITOR) is
 			-- Create application menu bar.
 		local
@@ -38,6 +42,7 @@ feature
 			!! exit_hole.make (Current);
 			!! init_state_hole.make (Current); 
 			!! tran_hole.make (Current); 
+			!! cut_hole.make (Current, focus_label); 
 
 			attach_top (new_state_b, 0);
 			attach_top (init_state_hole, 0);
@@ -46,6 +51,7 @@ feature
 			attach_top (self_hole, 0);
 			attach_top (close_b, 0);
 			attach_top (tran_hole, 0);
+			attach_top (cut_hole, 0);
 			attach_top (focus_label, 0);
 			attach_left (new_state_b, 0);
 			attach_left_widget (new_state_b, init_state_hole, 0);
@@ -53,7 +59,8 @@ feature
 			attach_left_widget (return_hole, self_hole, 0);
 			attach_left_widget (self_hole, exit_hole, 0);
 			attach_left_widget (exit_hole, tran_hole, 0);
-			attach_left_widget (tran_hole, focus_label, 0);
+			attach_left_widget (tran_hole, cut_hole, 0);
+			attach_left_widget (cut_hole, focus_label, 0);
 			attach_right_widget (close_b, focus_label, 0);
 			attach_right (close_b, 0);
 			attach_bottom (focus_label, 0);
@@ -63,6 +70,7 @@ feature
 			attach_bottom (exit_hole, 0);
 			attach_bottom (self_hole, 0);
 			attach_bottom (close_b, 0);
+			attach_bottom (tran_hole, 0);
 			attach_bottom (tran_hole, 0);
 		end;
 

@@ -41,7 +41,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterExcludes_impl_stub::Next(  /* [ou
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_175 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_172 (rgelt, NULL));
 	}
 	EIF_OBJECT tmp_pcelt_fetched = NULL;
 	if (pcelt_fetched != NULL)
@@ -56,7 +56,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterExcludes_impl_stub::Next(  /* [ou
 	
 	if (*rgelt != NULL)
 		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_175 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_172 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -143,7 +143,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterExcludes_impl_stub::ith_item(  /*
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_177 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_174 (rgelt, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -153,7 +153,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterExcludes_impl_stub::ith_item(  /*
 	
 	if (*rgelt != NULL)
 		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_177 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_174 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;

@@ -79,25 +79,25 @@ public:
 	/*-----------------------------------------------------------
 	Checks to see if a signed assembly has already been added to the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP contains_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP contains_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------
 	Checks to see if a unsigned assembly has already been added to the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP contains_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP contains_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------
 	Retrieves the cluster name for a signed assembly in the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_name_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP cluster_name_from_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
 	Retrieves the cluster name for a unsigned assembly in the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_name_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP cluster_name_from_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

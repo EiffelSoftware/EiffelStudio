@@ -84,7 +84,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy::ccom_targe
 rt_ce.free_memory_bstr (tmp_feature_name);
 rt_ce.free_memory_bstr (tmp_file_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_218 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_215 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

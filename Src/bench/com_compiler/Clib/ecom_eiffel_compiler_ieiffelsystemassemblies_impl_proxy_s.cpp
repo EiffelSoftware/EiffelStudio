@@ -231,7 +231,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_194 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_191 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -308,7 +308,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
 
 /*-----------------------------------------------------------
 	Checks to see if a signed assembly has already been added to the project
@@ -335,7 +335,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 	tmp_a_publickey = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_publickey));
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->contains_signed_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
+	hr = p_IEiffelSystemAssemblies->contains_gac_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -353,7 +353,7 @@ rt_ce.free_memory_bstr (tmp_a_publickey);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path )
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_local_assembly(  /* [in] */ EIF_OBJECT a_path )
 
 /*-----------------------------------------------------------
 	Checks to see if a unsigned assembly has already been added to the project
@@ -374,7 +374,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 	tmp_a_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_path));
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->contains_unsigned_assembly(tmp_a_path, &ret_value);
+	hr = p_IEiffelSystemAssemblies->contains_local_assembly(tmp_a_path, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -389,7 +389,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
 
 /*-----------------------------------------------------------
 	Retrieves the cluster name for a signed assembly in the project
@@ -416,7 +416,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_clu
 	tmp_a_publickey = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_publickey));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->cluster_name_from_signed_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
+	hr = p_IEiffelSystemAssemblies->cluster_name_from_gac_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -435,7 +435,7 @@ rt_ce.free_memory_bstr (tmp_a_publickey);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_local_assembly(  /* [in] */ EIF_OBJECT a_path )
 
 /*-----------------------------------------------------------
 	Retrieves the cluster name for a unsigned assembly in the project
@@ -456,7 +456,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_clu
 	tmp_a_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_path));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->cluster_name_from_unsigned_assembly(tmp_a_path, &ret_value);
+	hr = p_IEiffelSystemAssemblies->cluster_name_from_local_assembly(tmp_a_path, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -572,7 +572,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_205 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_202 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

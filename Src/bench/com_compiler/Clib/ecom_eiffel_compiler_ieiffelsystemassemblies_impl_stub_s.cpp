@@ -163,7 +163,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_p
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_194 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_191 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -236,7 +236,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_a
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
 	Checks to see if a signed assembly has already been added to the project
@@ -266,12 +266,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_s
 	}
 	
 	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("contains_signed_assembly", type_id);
+	eiffel_function = eif_boolean_function ("contains_gac_assembly", type_id);
 	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_version != NULL) ? eif_access (tmp_a_version) : NULL), ((tmp_a_culture != NULL) ? eif_access (tmp_a_culture) : NULL), ((tmp_a_publickey != NULL) ? eif_access (tmp_a_publickey) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "contains_signed_assembly", EIF_BOOLEAN);
+		tmp_value = eif_field (eif_access (eiffel_object), "contains_gac_assembly", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	if (tmp_a_name != NULL)
 		eif_wean (tmp_a_name);
@@ -287,7 +287,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_s
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
 	Checks to see if a unsigned assembly has already been added to the project
@@ -302,12 +302,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_u
 	}
 	
 	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("contains_unsigned_assembly", type_id);
+	eiffel_function = eif_boolean_function ("contains_local_assembly", type_id);
 	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "contains_unsigned_assembly", EIF_BOOLEAN);
+		tmp_value = eif_field (eif_access (eiffel_object), "contains_local_assembly", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	if (tmp_a_path != NULL)
 		eif_wean (tmp_a_path);
@@ -317,7 +317,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_u
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
 	Retrieves the cluster name for a signed assembly in the project
@@ -347,12 +347,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_na
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("cluster_name_from_signed_assembly", type_id);
+	eiffel_function = eif_reference_function ("cluster_name_from_gac_assembly", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_version != NULL) ? eif_access (tmp_a_version) : NULL), ((tmp_a_culture != NULL) ? eif_access (tmp_a_culture) : NULL), ((tmp_a_publickey != NULL) ? eif_access (tmp_a_publickey) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_signed_assembly", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_gac_assembly", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -375,7 +375,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_na
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
 	Retrieves the cluster name for a unsigned assembly in the project
@@ -390,12 +390,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_na
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("cluster_name_from_unsigned_assembly", type_id);
+	eiffel_function = eif_reference_function ("cluster_name_from_local_assembly", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_unsigned_assembly", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_local_assembly", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -491,7 +491,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assemblies
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_205 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_202 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -1082,7 +1082,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_3 = (BSTR)tmp_value [3]->bstrVal;
 				VARIANT_BOOL result = 0;
 				
-				hr = contains_signed_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
+				hr = contains_gac_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1148,7 +1148,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				VARIANT_BOOL result = 0;
 				
-				hr = contains_unsigned_assembly ( arg_0,&result);
+				hr = contains_local_assembly ( arg_0,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1253,7 +1253,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_3 = (BSTR)tmp_value [3]->bstrVal;
 				BSTR result = 0;
 				
-				hr = cluster_name_from_signed_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
+				hr = cluster_name_from_gac_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1319,7 +1319,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				BSTR result = 0;
 				
-				hr = cluster_name_from_unsigned_assembly ( arg_0,&result);
+				hr = cluster_name_from_local_assembly ( arg_0,&result);
 				
 				if (FAILED (hr))
 				{

@@ -103,25 +103,25 @@ public:
 	/*-----------------------------------------------------------
 	Checks to see if a signed assembly has already been added to the project
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
+	EIF_BOOLEAN ccom_contains_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
 
 
 	/*-----------------------------------------------------------
 	Checks to see if a unsigned assembly has already been added to the project
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path );
+	EIF_BOOLEAN ccom_contains_local_assembly(  /* [in] */ EIF_OBJECT a_path );
 
 
 	/*-----------------------------------------------------------
 	Retrieves the cluster name for a signed assembly in the project
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_name_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
+	EIF_REFERENCE ccom_cluster_name_from_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
 
 
 	/*-----------------------------------------------------------
 	Retrieves the cluster name for a unsigned assembly in the project
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_name_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path );
+	EIF_REFERENCE ccom_cluster_name_from_local_assembly(  /* [in] */ EIF_OBJECT a_path );
 
 
 	/*-----------------------------------------------------------

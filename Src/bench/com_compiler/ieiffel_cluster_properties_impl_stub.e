@@ -126,24 +126,6 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	cluster_path_exists: BOOLEAN is
-			-- Does the path to the cluster exsit
-		do
-			-- Put Implementation here.
-		end
-
-	create_cluster_path: BOOLEAN is
-			-- Create the cluster path if it doesnt exist
-		do
-			-- Put Implementation here.
-		end
-
-	all_cluster_path_not_excluded: BOOLEAN is
-			-- Does parent cluster have all set and does the cluster path extend upon the parents
-		do
-			-- Put Implementation here.
-		end
-
 	cluster_namespace: STRING is
 			-- Cluster namespace.
 		do

@@ -52,29 +52,29 @@ feature -- Status Report
 			Result := True
 		end
 
-	contains_signed_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
-			-- User-defined preconditions for `contains_signed_assembly'.
+	contains_gac_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+			-- User-defined preconditions for `contains_gac_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	contains_unsigned_assembly_user_precondition (a_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `contains_unsigned_assembly'.
+	contains_local_assembly_user_precondition (a_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `contains_local_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	cluster_name_from_signed_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
-			-- User-defined preconditions for `cluster_name_from_signed_assembly'.
+	cluster_name_from_gac_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+			-- User-defined preconditions for `cluster_name_from_gac_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	cluster_name_from_unsigned_assembly_user_precondition (a_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `cluster_name_from_unsigned_assembly'.
+	cluster_name_from_local_assembly_user_precondition (a_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `cluster_name_from_local_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -161,44 +161,44 @@ feature -- Basic Operations
 
 		end
 
-	contains_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+	contains_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
 			-- Checks to see if a signed assembly has already been added to the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		require
-			contains_signed_assembly_user_precondition: contains_signed_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
+			contains_gac_assembly_user_precondition: contains_gac_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
 		deferred
 
 		end
 
-	contains_unsigned_assembly (a_path: STRING): BOOLEAN is
+	contains_local_assembly (a_path: STRING): BOOLEAN is
 			-- Checks to see if a unsigned assembly has already been added to the project
 			-- `a_path' [in].  
 		require
-			contains_unsigned_assembly_user_precondition: contains_unsigned_assembly_user_precondition (a_path)
+			contains_local_assembly_user_precondition: contains_local_assembly_user_precondition (a_path)
 		deferred
 
 		end
 
-	cluster_name_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+	cluster_name_from_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
 			-- Retrieves the cluster name for a signed assembly in the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		require
-			cluster_name_from_signed_assembly_user_precondition: cluster_name_from_signed_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
+			cluster_name_from_gac_assembly_user_precondition: cluster_name_from_gac_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
 		deferred
 
 		end
 
-	cluster_name_from_unsigned_assembly (a_path: STRING): STRING is
+	cluster_name_from_local_assembly (a_path: STRING): STRING is
 			-- Retrieves the cluster name for a unsigned assembly in the project
 			-- `a_path' [in].  
 		require
-			cluster_name_from_unsigned_assembly_user_precondition: cluster_name_from_unsigned_assembly_user_precondition (a_path)
+			cluster_name_from_local_assembly_user_precondition: cluster_name_from_local_assembly_user_precondition (a_path)
 		deferred
 
 		end

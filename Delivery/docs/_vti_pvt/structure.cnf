@@ -1,5 +1,5 @@
 3.0.0.507
-1106
+1107
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -9,6 +9,7 @@ vti_globalpage:BW|true
 vti_globalpage:BW|true
 1031,Eiffel/index.html,0,About Eiffel,0,942204661,1
 vti_globalpage:BW|true
+1106,submit_report.html,0,Submitting a Bug Report,1033,942949542,0
 1027,papers/externals.html,0,Interface to other programming languages,1018,942203357,0
 1030,papers/profiler.html,0,Analyzing performance of Eiffel systems,1018,942203471,0
 1029,papers/multithreaded.html,0,Multi-threading for O-O development,1018,942203440,0

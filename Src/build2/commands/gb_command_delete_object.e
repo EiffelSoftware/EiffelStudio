@@ -158,8 +158,8 @@ feature {NONE} -- Implementation
 					-- Note that we could check to see which attributes of which objects
 					-- really were affected, thus minimizing, rebuilding. Not done
 					-- and probably not necessary.
-					
-				if editor.object /= Void and then
+				
+				if not editor.is_destroyed and then editor.object /= Void and then
 					type_conforms_to (dynamic_type_from_string (editor.object.type), dynamic_type_from_string (Ev_container_string)) then
 					editor.update_current_object
 				end	

@@ -57,7 +57,7 @@ feature -- Measurement
 				a_child_list := C.gtk_container_children (list_widget)
 				if a_child_list /= NULL then
 					Result := C.g_list_length (a_child_list)
-					C.g_list_free (a_child_list)					
+					C.g_list_free (a_child_list)
 				end
 			end
 		end

@@ -45,8 +45,12 @@ feature {NONE} -- Implementation
 feature -- Status report
 
 	widget_count: INTEGER is
+		local
+			a_child_list: POINTER
 		do
-			Result := C.g_list_length (C.gtk_container_children (container_widget))
+			a_child_list := C.gtk_container_children (container_widget)
+			Result := C.g_list_length (a_child_list)
+			C.g_list_free (a_child_list)
 		end
 
 	row_spacing: INTEGER is
@@ -128,7 +132,9 @@ feature -- Status settings
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
+			C.gtk_object_ref (item_imp.c_object)
 			C.gtk_container_remove (container_widget, item_imp.c_object)
+			C.gtk_object_unref (item_imp.c_object)
 		end
 
 feature {NONE} -- Externals

@@ -77,13 +77,14 @@ feature {EV_ANY_I} -- Implementation
 			temp_index: INTEGER
 		do
 			glist := C.gtk_container_children (a_container)
-                       	temp_index := C.g_list_index (glist, a_child)
+			temp_index := C.g_list_index (glist, a_child)
 			fixlist := C.gtk_fixed_struct_children (a_container)
 			fixitem := C.g_list_nth_data (fixlist, temp_index)
 			fixlist := C.g_list_remove (fixlist, fixitem)
 			fixlist := C.g_list_insert (fixlist, fixitem, a_position)
 			C.set_gtk_fixed_struct_children (a_container, fixlist)
 			C.gtk_widget_queue_resize (c_object)
+			C.g_list_free (glist)
 		end
 
 	interface: EV_FIXED

@@ -171,7 +171,7 @@ feature -- Inlining
 		end;
 
 	is_predefined: BOOLEAN is
-			-- Is register a temporary one ?
+			-- Is register a predefined one ?
 		do
 			Result := expr.is_predefined
 		end;

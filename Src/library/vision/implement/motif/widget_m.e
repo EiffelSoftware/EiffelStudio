@@ -111,12 +111,12 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (background_pixmap = Void) then
-				pixmap_implementation ?= background_pixmap.implementation;
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				background_pixmap := Void
+				bg_pixmap := Void
 			end;
-			if not (background_color = Void) then
+			if bg_color /= Void then
 				color_implementation ?= background_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
@@ -124,10 +124,10 @@ feature
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
+			c_set_color (screen_object, color_implementation.pixel (screen), 
+						$ext_name)
 		ensure
-			background_color = a_color;
-			(background_pixmap = Void)
+			background_set: background_color = a_color;
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
@@ -139,23 +139,24 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (background_color = Void) then
-				color_implementation ?= background_color.implementation;
+			if bg_color /= Void then
+				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current);
 				bg_color := Void
 			end;
-			if not (background_pixmap = Void) then
-				pixmap_implementation ?= background_pixmap.implementation;
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current)
 			end;
-			background_pixmap := a_pixmap;
+			bg_pixmap := a_pixmap;
 			pixmap_implementation ?= background_pixmap.implementation;
 			pixmap_implementation.put_object (Current);
 			ext_name := MbackgroundPixmap.to_c;
-			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+			c_set_pixmap (screen_object, 
+					pixmap_implementation.resource_pixmap (screen), 
+					$ext_name)
 		ensure
-			background_pixmap = a_pixmap;
-			--(background_color = Void)
+			background_pixmap_set: background_pixmap = a_pixmap;
 		end;
 
 	set_cursor (a_cursor: SCREEN_CURSOR) is
@@ -333,10 +334,6 @@ feature {NONE} -- External features
 		external
 			"C"
 		end;
-
-invariant
-
-	(background_color = Void) or (background_pixmap = Void)
 
 end
 

@@ -220,77 +220,252 @@ feature -- Status Setting
 		end
 		
 	set_with_rtf (rtf_text: STRING) is
-			-- Set contents of `rich_text' from RTF string `rtf_text'.
+			-- Set `text' and formatting of `Current' from `rtf_text' in RTF format.
 		local
-			iterated_char: CHARACTER
-			index: INTEGER
-			current_content: STRING
-			char1, char2: CHARACTER
-			keyword_index: INTEGER
+			current_character: CHARACTER
 		do
-			current_content := ""
+			plain_text := ""
 			from
-				index := 1
+				main_iterator := 1
 			until
-				index > rtf_text.count
+				main_iterator > rtf_text.count
 			loop
-				iterated_char := rtf_text.item (index)
-				if iterated_char.is_equal (rtf_control_character) or iterated_char.is_equal (rtf_open_brace_character) then
-					if current_content.count >= 2 then
-							-- Restore the first two characters for quick lookups.
-							-- We want to avoid string comparison unless actually necessary.
-						char1 := current_content.item (1)
-						char2 := current_content.item (2)
-						if char1.is_equal ('f') and char2.is_equal ('o') then
-								-- It appears that we have found the font table.
-							process_font_table (rtf_text, keyword_index)					
-						end
-						current_content.wipe_out
-					end
-						-- Store the index of the current keyword.
-					keyword_index := index + 1
-				else
-					current_content.append_character (iterated_char)
+				current_character := rtf_text.item (main_iterator)
+				if current_character = '{' then
+					-- Store state on stack
+				elseif current_character = '}' then
+					-- retrieve state from stack.
+				elseif current_character = '\' then
+					process_keyword (rtf_text, main_iterator)
+				elseif current_character = ' ' or ended_keyword_with_newline then
+					process_text (rtf_text, main_iterator)
 				end
-				index := index + 1
+				move_main_iterator (1)
+					-- Move the iterator by one. This may or may not be required
+					-- if other routines have just called it within this loop.
+				
+				update_main_iterator
 			end
+			rich_text.set_text (plain_text)
 		end
 		
-	-- Conversion
-	
---		\Highlight 	-> \hi
---		\cf			-> \cf
---		
-	process_font_table (rtf_text: STRING; start_index: INTEGER) is
-			--
+	process_text (rtf_text:STRING; index: INTEGER) is
+			-- Process RTF string `rtf_text' for text data from `index' until
+			-- text is exhausted signified through encountering a control character.
+		require
+			rtf_text_not_void: rtf_text /= Void
+			valid_index: rtf_text.valid_index (index)
 		local
-			index: INTEGER
-			iterated_char: CHARACTER
-			depth: INTEGER
-			current_font: STRING
-			last_open_brace: INTEGER
+			l_index: INTEGER
+			text_completed: BOOLEAN
+			current_text: STRING
+			current_character: CHARACTER
 		do
-			if rtf_text.substring (start_index, start_index + rtf_fonttable.count - 1).is_equal (rtf_fonttable) then
-				from
-					index := start_index + rtf_fonttable.count
-					depth := 1
-				until
-					depth = 0
-				loop
-					iterated_char := rtf_text.item (index)
-					if iterated_char.is_equal (rtf_open_brace_character) then
-						depth := depth + 1
-						current_font := ""
-					elseif iterated_char.is_equal (rtf_close_brace_character) then
-						depth := depth - 1
-						
+			current_text := ""
+			from
+				l_index := 1
+			until
+				text_completed
+			loop
+				current_character := get_character (rtf_text, l_index + index)
+				if current_character /= '%N' then
+						-- New line characters have no effect on the RTF contents, so
+						-- simply ignore these characters.
+					if current_character = '\' or current_character = '}' or current_character = '{' then
+						text_completed := True
 					end
-					current_font.append_character (iterated_char)
-					index := index + 1
+					if not text_completed then
+						current_text.append_character (current_character)
+					end
 				end
+				l_index := l_index + 1
+			end
+			plain_text.append (current_text)
+			
+			--| FIXME should this ever be empty?
+			if current_text.count > 0 then
+				move_main_iterator (current_text.count)
 			end
 		end
+	
+	get_character (rtf_text: STRING; index: INTEGER): CHARACTER is
+			-- `Result' is character `index' within `rtf_text'.
+		require
+			rtf_text_not_void: rtf_text /= Void
+			valid_index: rtf_text.valid_index (index)
+		do
+			Result := rtf_text.item (index)
+		ensure
+			Result_not_void: Result /= Void
+		end
 		
+	process_keyword  (rtf_text: STRING; index: INTEGER) is
+			-- Process RTF string `rtf_text' for a keyword starting at position `index'
+			-- until a rtf character is received signifying the end of the keyword.
+		require
+			rtf_text_not_void: rtf_text /= Void
+			valid_index: rtf_text.valid_index (index)
+		local
+			l_index: INTEGER
+			current_character: CHARACTER
+			tag: STRING
+			tag_value: STRING
+			performed_one_iteration: BOOLEAN
+			tag_completed: BOOLEAN
+			reading_tag_value: BOOLEAN
+			tag_start_position: INTEGER
+		do
+				-- As we are now starting to read a new keyword, reset this flag.
+			ended_keyword_with_newline := False
+			tag_start_position := index
+			tag := ""
+			tag_value := ""
+				-- Set to space as default.
+			current_character := ' '
+			from
+				l_index := 1
+			until
+				tag_completed
+			loop
+				current_character := get_character (rtf_text, l_index + index)
+				
+				if current_character = '%N' then
+						-- A newline character may be used to signify the end of a keyword and
+						-- if so it determines that text follows, instead of requiring a space
+						-- as normal. We must know if the last keyword ended with a newline
+						-- character within`set_with_rtf' so that we can start reading the text.
+					ended_keyword_with_newline := True
+				end
+				
+				if (current_character = ' ' or current_character = '\' or current_character = '}' or current_character = '{') or current_character = '%N' then
+						-- Note that newline characters are not permitted in the middle of tags.
+						-- We must perform at least one iteration, ensuring that we enter the loop.
+					if performed_one_iteration = True then
+							-- Flag the tag as completed so the loop is exited.
+							-- This is only set once the tag value has also been read.
+						tag_completed := True
+					end
+				elseif current_character.is_digit then
+						-- We have found a digit which signifies the end of the tag, but
+						-- the start of the tag value. Not all tags have an INTEGER value.
+					reading_tag_value := True
+				end
+				if not tag_completed then
+					if current_character /= '%N' then
+						if not reading_tag_value then
+								-- If still reading the tag, add the current character.
+							tag.append_character (current_character)
+						else
+								-- If now reading the tags value, add the current character.
+							tag_value.append_character (current_character)
+						end
+						performed_one_iteration := True
+					end
+					l_index := l_index + 1
+				end
+			end
+			--print ("Tag : " + tag.out + " Value : " + tag_value + "%N")
+				-- Now process the found keyword.
+			if tag.is_equal (rtf_fonttable) then
+			elseif tag.is_equal (rtf_colortbl) then
+			elseif tag.is_equal (rtf_bold) then
+			elseif tag.is_equal (rtf_highlight) then
+			elseif tag.is_equal (rtf_color) then
+			elseif tag.is_equal (rtf_font) then
+			elseif tag.is_equal (rtf_font_size) then
+			elseif tag.is_equal (rtf_new_line) then
+				plain_text.append_character ('%N')
+			--	move_main_iterator (tag.count)
+			elseif tag.is_equal (rtf_user_props) then
+				check
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
+				end
+				move_to_end_of_tag (rtf_text, tag_start_position - 1)
+			else
+				--print ("Unhandled tag : " + tag.out + "%N")
+			end	
+			
+			move_main_iterator (tag.count + tag_value.count + 1)
+		end
+		
+		
+	move_to_end_of_tag (rtf_text: STRING; start_index: INTEGER) is
+			-- Move `main_iterator' to the next character immediately following the closing brace
+			-- associated with the opening brace at `start_index' within RTF text `rtf_text'
+			-- This includes the depth of the brace, and will find the brace pair, not just the next closing brace.
+		require
+			rtf_text_not_void: rtf_text /= Void
+			valid_index: rtf_text.valid_index (start_index)
+			index_points_to_start_tag: rtf_text.item (start_index) = '{'
+		local
+			l_index: INTEGER
+			depth: INTEGER
+			current_character: CHARACTER
+		do
+			depth := 1
+			from
+				l_index := 1
+			until
+					-- We go one down from the starting position, as we do not include
+					-- the first brace in the searched characters.
+				depth = 0
+			loop
+				current_character := get_character (rtf_text, start_index + l_index)
+				if current_character.is_equal (rtf_open_brace_character) then
+					depth := depth + 1
+				elseif current_character.is_equal (rtf_close_brace_character) then
+					depth := depth - 1
+				end
+				if depth /= 0 then
+					l_index := l_index + 1
+				end
+			end
+			move_main_iterator (l_index)
+		ensure
+			moved: old temp_iterator > temp_iterator + 1
+		end
+		
+	main_iterator: INTEGER
+		-- The index currently iterated within the RTF file that is being loaded.
+		-- This must be accessible to `move_main_iterator'.
+		
+	temp_iterator: INTEGER
+		-- A temporary value used by `move_main_iterator' to ensure that multiple calls to
+		-- move forwards do not move backwards. For exampel
+	
+	plain_text: STRING
+		-- A string representation of the contents of from the last
+		-- RTF file loaded.
+	
+	ended_keyword_with_newline: BOOLEAN
+		-- In RTF, a space is normally used to signify the end of a tag and the start of
+		-- text. If a newline immediately follows the end of a tag, then we must check
+		-- for the newline to signify the start of text, and not a space.
+		-- Keywords may not be broken by a newline character.
+		
+	update_main_iterator is
+			-- Ensure `main_iterator' takes the value of `temp_iterator'.
+		do
+			main_iterator := temp_iterator
+		ensure
+			main_iterator_set: main_iterator = temp_iterator
+		end
+
+	move_main_iterator (step: INTEGER) is
+			-- Ensure `main_iterator' is moved `step' characters next time `update_main_iterator' is called.
+			-- Each call will not move the iterator back to less than one of the previous calls
+			-- as enforced by the value of `temp_iterator'.
+			-- i.e. calling `move_main_iterator three times with 5, 12, and 2 as arguments, ensures that
+			-- next time `update_main_iterator' is called it will increase by 12.
+		require
+			step_positive: step > 0
+		do
+			if main_iterator + step > temp_iterator then
+				temp_iterator := main_iterator + step
+			end
+		ensure
+			temp_iterator_moved_forwards: temp_iterator >= old temp_iterator
+		end
 
 feature -- Access
 
@@ -377,17 +552,17 @@ feature {NONE} -- Implementation
 			current_family := a_format.family
 			inspect current_family
 			when family_screen then 
-				family := "ftech"
+				family := rtf_family_tech
 			when family_roman then 
-				family := "froman"
+				family := rtf_family_roman
 			when family_sans then 
-				family := "fswiss"
+				family := rtf_family_swiss
 			when family_typewriter then 
-				family := "fscript"
+				family := rtf_family_script
 			when family_modern then 
-				family := "fmodern"
+				family := rtf_family_modern
 			else
-				family := "fnil"
+				family := rtf_family_nill
 			end
 			temp_string := "\"
 			temp_string.append (family)

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelBase Kernel</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+	<BODY>
+		<H1>The Kernel</H1>
+			<P>
+				In addition to basic concepts close to the language level, the Kernel covers such
+				common needs as <B>input</B> and <B>output</B>, <B>storage</B> and
+				<B>retrieval</B> of objects on persistent storage, fine control over <B><B>exception
+				handling</B> and <B>memory management</B>, and access to
+				<B>operating system facilities</B>. The kernel can be divided into 5 logical
+				clusters of classes:
+			<UL>
+				<LI>The first cluster contains the universal class defining facilities accessible to all
+					other classes: <A HREF="../../reference/kernel/any.html">ANY</A>.
+					Every developer-defined class is a descendant of this class.
+				<LI>The second cluster includes classes whose facilities are directly related to
+					language concepts:
+					<UL>
+						<LI>Classes describing the basic types: BOOLEAN, CHARACTER, INTEGER, REAL
+						and DOUBLE
+						<LI>Arrays: class ARRAY
+						<LI>Strings: class STRING
+						<LI>Basic facilities: classes BASIC_ROUTINES for conversions, MATH_CONST
+						<LI>SINGLE_MATH and DOUBLE_MATH for mathematical values and functions
+						<LI>PRIMES for prime numbers, RANDOM for pseudo-random sequences, ASCII for character codes
+					</UL>
+
+	</BODY>
+</HTML>

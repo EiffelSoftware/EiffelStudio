@@ -99,7 +99,6 @@ feature -- Output
 			first_bp: BOOLEAN;
 			bp_text: STRING;
 			bp: BREAKABLE_STONE;
-			more_than_one: BOOLEAN
 		do
 			from
 				!! table.make (5);
@@ -126,21 +125,13 @@ feature -- Output
 				c := Eiffel_system.class_of_id (table.key_for_iteration);
 				from
 					stwl.start;
-					more_than_one := stwl.count > 1;
-					if more_than_one then
-						debug_window.put_class (c, c.name_in_upper);
-						debug_window.put_string (": ");
-						debug_window.new_line
-					end
+					debug_window.put_class (c, c.name_in_upper);
+					debug_window.put_string (": ");
+					debug_window.new_line
 				until
 					stwl.after
 				loop
-					if more_than_one then
-						debug_window.put_one_indent
-					else
-						debug_window.put_class (c, c.name_in_upper);
-						debug_window.put_string (": ");
-					end;
+					debug_window.put_one_indent;
 					debug_window.put_feature (stwl.item, stwl.item.name);
 					f := stwl.item;
 					bp_list := Application.breakpoints_set_for (f);

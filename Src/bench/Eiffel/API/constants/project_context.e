@@ -8,20 +8,9 @@ indexing
 class PROJECT_CONTEXT
 
 inherit
-
 	SYSTEM_CONSTANTS
 
 feature {NONE} -- Eiffel Project Directories
-
-	Update_file: RAW_FILE is
-			-- File containing all the byte code to update
-		local
-			file_name: FILE_NAME
-		do
-			!!file_name.make_from_string (Workbench_generation_path)
-			file_name.set_file_name (Updt)
-			!!Result.make (file_name)
-		end
 
 	Project_directory_name: DIRECTORY_NAME is
 			-- Shared project directory

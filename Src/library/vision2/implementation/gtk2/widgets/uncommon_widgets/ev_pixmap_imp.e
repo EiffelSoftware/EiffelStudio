@@ -56,7 +56,8 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is True
+		-- Needed to receive events on GtkImage
 
 	make (an_interface: like interface) is
 			-- Create a gtk pixmap of size (1 * 1) with no mask.

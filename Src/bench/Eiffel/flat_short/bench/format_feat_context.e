@@ -2,7 +2,7 @@ class FORMAT_FEAT_CONTEXT
 
 inherit
 
-	FORMAT_CONTEXT
+	FORMAT_CONTEXT_B
 		rename
 			execute as old_execute
 		redefine
@@ -22,18 +22,18 @@ feature
 			class_set: class_c /= Void 
 			valid_arg: feat /= Void 
 		local
-			first_format: LOCAL_FORMAT;
+			first_format: LOCAL_FORMAT_B;
 			start_pos, end_pos: INTEGER;
 			file: RAW_FILE;
 			assert_server: ASSERT_SERVER;
-			ast: FEATURE_AS;
+			f_ast: FEATURE_AS_B;
 			target_feat: FEATURE_I;
 			s_table: SELECT_TABLE;
 			rout_fsas: ROUTINE_FSAS;
 			comment: EIFFEL_COMMENTS;
 			rout_id: INTEGER
 		do
-			ast := Body_server.item (feat.body_id)
+			f_ast := Body_server.item (feat.body_id)
 			export_status := feat.export_status;
 			!!previous.make;
 			!!text.make;
@@ -54,11 +54,11 @@ feature
 			else
 				target_feat := feat
 			end;
-			ast := ast.new_ast;
-			rout_fsas ?= ast.body.content;
+			f_ast := f_ast.new_ast;
+			rout_fsas ?= f_ast.body.content;
 			!! file.make (feat.written_class.file_name);
-			start_pos := ast.start_position;
-			end_pos := ast.end_position;
+			start_pos := f_ast.start_position;
+			end_pos := f_ast.end_position;
 			if file.exists then
 				if rout_fsas /= Void then
 					!! eiffel_file.make_for_feature_comments (file,
@@ -66,10 +66,10 @@ feature
 					comment := trailing_comment (start_pos);
 					rout_fsas.set_comment (comment);
 				end;
-				!! assert_server.make_for_feature (feat, ast);
+				!! assert_server.make_for_feature (feat, f_ast);
 				set_context_features (feat, target_feat);
 				indent_one_more;
-				ast.format (Current);
+				f_ast.format (Current);
 				if rout_fsas = Void then
 						--! Must have been an attribute or constant
 					begin;

@@ -232,7 +232,6 @@ rt_private int ex_tagc[] = {
 };
 
 #ifdef EIF_WINDOWS
-int save_exception_trace = 0;
 char *exception_trace_string = NULL;
 #endif
 
@@ -1465,13 +1464,8 @@ rt_public void esfail()
 
 #ifdef EIF_WIN32
 	exception_trace_string = malloc (32000);
-	if (exception_trace_string == NULL)
-		save_exception_trace = 0;
-	else
-		{
-		save_exception_trace = 1;
+	if (exception_trace_string != NULL)
 		*exception_trace_string = '\0';
-		}
 #endif
 
 	/* Signals failure. If the out of memory flags are set, mention it */
@@ -1777,7 +1771,7 @@ rt_private void find_call()
 rt_private void ds_stderr (line)
 char *line;
 {
-	fprintf (stderr, "%s", line);
+	print_err_msg (stderr, "%s", line);
 }
 
 rt_private void ds_string(line)
@@ -1826,7 +1820,7 @@ rt_private void dump_trace_stack()
 	dump_stack(ds_stderr);
 }
 
-rt_public void dump_stack(append_trace)
+rt_private void dump_stack(append_trace)
 void (* append_trace)();
 {
 	char buffer[256];

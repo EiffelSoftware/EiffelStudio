@@ -70,9 +70,6 @@ feature -- Basic operation
 				-- system should know that it has not been modifified
 				-- by the user.
 			system_status.disable_project_modified
-			
-				-- Set up the drop actions on all objects just loaded.
-			--object_handler.for_all_objects_build_drop_actions_for_new_object
 		end
 		
 feature {NONE} -- Implementation

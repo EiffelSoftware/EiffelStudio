@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			if not start_directory.is_empty then
 				end_char := start_directory @ start_directory.count
 				if end_char = '\' or end_char = '/' then
-					start_directory.head (start_directory.count - 1)
+					start_directory.keep_head (start_directory.count - 1)
 				end
 				if not start_directory.is_empty and then
 					(create {DIRECTORY}.make (start_directory)).exists

@@ -114,6 +114,9 @@ private void call_up();					/* Move cursor upwards */
 
 extern struct opstack op_stack;			/* Operational stack */
 extern long melt_count;					/* Size of the melting table */
+/* tnh */
+extern void dinterrupt();
+extern void dserver();
 
 #ifndef lint
 private char *rcsid =

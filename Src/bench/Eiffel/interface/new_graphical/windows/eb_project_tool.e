@@ -56,7 +56,7 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 			-- Create a project application.
@@ -95,9 +95,96 @@ feature -- Initialization
 --			hori_split_window.update_split
 --			top_verti_split_window.update_split
 
-			debug_part.display_welcome_info
 		end
 
+feature {EB_TOOL_MANAGER} -- Initialization
+
+	build_interface is
+			-- Build widget.
+		local
+			hide_split_windows: BOOLEAN
+--			display_feature_cmd: DISPLAY_ROUTINE_PORTION
+--			display_object_cmd: DISPLAY_OBJECT_PORTION
+
+			v_split: EV_VERTICAL_SPLIT_AREA
+		do
+			shown_portions := 1
+
+			create container.make (parent)
+
+				-- toolbar creation
+			create project_toolbar.make (container)
+			container.set_child_expandable (project_toolbar, False)
+
+			create global_verti_split_window.make (container)
+
+			tool_parent := global_verti_split_window
+			create selector_part.make (Current)
+			selector_part.build_interface
+
+  			create hori_split_window.make (global_verti_split_window)
+
+			create top_verti_split_window.make (hori_split_window)
+
+			tool_parent := hori_split_window
+			create feature_part.make (Current)
+			feature_part.build_interface
+
+			tool_parent := top_verti_split_window
+			create debug_part.make (Current)
+			debug_part.build_interface
+
+			set_debug_tool (debug_part)
+			create object_part.make (Current)
+			object_part.build_interface
+
+				-- now that the debug tool is created,
+				-- we can make the toolbar.
+			build_top (project_toolbar)
+
+			set_default_size
+
+-- 			create feature_part.form_create (feature_form, 
+--					menus @ special_feature_menu, 
+--					menus @ edit_feature_menu, 
+--					menus @ format_feature_menu,
+--					menus @ special_feature_menu)
+--
+
+--			create object_part.form_create ( object_form, 
+--					menus @ special_object_menu, 
+--					menus @ edit_object_menu, 
+--					menus @ format_object_menu,
+--					menus @ special_object_menu)
+--
+--			if Project_resources.command_bar.actual_value = False then
+--				project_toolbar.remove
+--			end
+--			if Project_resources.format_bar.actual_value = False then
+--				format_bar.remove
+--			end
+
+--			display_feature_cmd ?= display_feature_cmd_holder.associated_command
+--			display_object_cmd ?= display_object_cmd_holder.associated_command
+--
+--			if hide_split_windows or else not Project_resources.feature_window.actual_value then
+--				display_feature_cmd.hide
+--			else
+--				display_feature_cmd.show
+--			end
+--
+--			if hide_split_windows or else not Project_resources.object_window.actual_value then
+--				display_object_cmd.hide
+--			else
+--				display_object_cmd.show
+--			end
+
+				-- Make all the entry disabled.
+			disable_menus
+
+			debug_part.display_welcome_info
+		end
+		
 feature -- Resource Update
 
 	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
@@ -563,85 +650,6 @@ feature -- Update
 
 feature -- Graphical Interface
 
-	build_interface is
-			-- Build widget.
-		local
-			hide_split_windows: BOOLEAN
---			display_feature_cmd: DISPLAY_ROUTINE_PORTION
---			display_object_cmd: DISPLAY_OBJECT_PORTION
-
-			v_split: EV_VERTICAL_SPLIT_AREA
-		do
-			shown_portions := 1
-
-			create container.make (parent)
-
-				-- toolbar creation
-			create project_toolbar.make (container)
-			container.set_child_expandable (project_toolbar, False)
-
-			create global_verti_split_window.make (container)
-
-			tool_parent := global_verti_split_window
-			create selector_part.make (Current)
-
-  			create hori_split_window.make (global_verti_split_window)
-
-			create top_verti_split_window.make (hori_split_window)
-
-			tool_parent := hori_split_window
-			create feature_part.make (Current)
-
-			tool_parent := top_verti_split_window
-			create debug_part.make (Current)
-			set_debug_tool (debug_part)
-			create object_part.make (Current)
-
-				-- now that the debug tool is created,
-				-- we can make the toolbar.
-			build_top (project_toolbar)
-
-			set_default_size
-
--- 			create feature_part.form_create (feature_form, 
---					menus @ special_feature_menu, 
---					menus @ edit_feature_menu, 
---					menus @ format_feature_menu,
---					menus @ special_feature_menu)
---
-
---			create object_part.form_create ( object_form, 
---					menus @ special_object_menu, 
---					menus @ edit_object_menu, 
---					menus @ format_object_menu,
---					menus @ special_object_menu)
---
---			if Project_resources.command_bar.actual_value = False then
---				project_toolbar.remove
---			end
---			if Project_resources.format_bar.actual_value = False then
---				format_bar.remove
---			end
-
---			display_feature_cmd ?= display_feature_cmd_holder.associated_command
---			display_object_cmd ?= display_object_cmd_holder.associated_command
---
---			if hide_split_windows or else not Project_resources.feature_window.actual_value then
---				display_feature_cmd.hide
---			else
---				display_feature_cmd.show
---			end
---
---			if hide_split_windows or else not Project_resources.object_window.actual_value then
---				display_object_cmd.hide
---			else
---				display_object_cmd.show
---			end
-
-				-- Make all the entry disabled.
-			disable_menus
-		end
-		
 	build_top (a_toolbar: EV_BOX) is
 			-- Build top bar
 		local

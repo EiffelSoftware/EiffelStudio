@@ -47,16 +47,6 @@ inherit
 create
 	make
 
-feature {NONE} -- Dotnet debugger limitation (for now)
-
-	raise_dot_net_warning is
-			-- FIXME jfiat [2003/10/22 - 12:33] Soon to be implemented.
-		local
-			warning_dlg: EB_WARNING_DIALOG
-		do
-			create warning_dlg.make_with_text ("Sorry not yet available for Dotnet debugging")
-			warning_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
-		end
 
 feature {NONE} -- Initialization
 

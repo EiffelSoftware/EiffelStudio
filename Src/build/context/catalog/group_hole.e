@@ -29,7 +29,7 @@ feature
 
 	focus_source: WIDGET is
 		do
-			Result := Current
+			Result := button
 		end;
 
 	focus_label: FOCUS_LABEL is

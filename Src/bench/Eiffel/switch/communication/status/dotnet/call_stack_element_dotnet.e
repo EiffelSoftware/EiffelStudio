@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			l_list: LIST [ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 		do
-			debug ("DEBUGGER_TRACE_CALLSTACK") 
+			debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
 				io.putstring ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
 			end
 			rout := routine
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			private_locals := locals_list
 			initialized := True
 			
-			debug ("DEBUGGER_TRACE_CALLSTACK"); 
+			debug ("DEBUGGER_TRACE_CALLSTACK_DATA"); 
 				io.put_string ("  @-> Finished initializating stack: "+routine_name+"%N"); 
 				io.put_string ("%N-------------------------------------------------%N"); 
 			end

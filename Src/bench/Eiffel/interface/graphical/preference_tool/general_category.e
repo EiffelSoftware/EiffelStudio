@@ -44,7 +44,7 @@ feature {TTY_RESOURCES} -- Initialization
 			!! shell_command.make ("shell_command", rt, "xterm -geometry 80x40 -e vi +$line $target");
 			!! filter_name.make ("filter_name", rt, "PostScript");
 			!! filter_command.make ("filter_command", rt, "");
-			!! browsing_facilities.make ("Higlight clickable areas", rt, True);
+			!! browsing_facilities.make ("Highlight clickable areas", rt, True);
 			!! history_size.make ("history_size", rt, 10)
 			!! default_window_position.make ("default_window_position", rt, False);
 			!! window_free_list_number.make ("window_free_list_number", rt, 2);

@@ -349,13 +349,9 @@ feature {FORMAT_CONTEXT} -- Implementation
 				 						s_type := source_enclosing_class.constraint 
 													(formal_type.position)
 									end;
-										-- Because above call to `evaluated_type_for_format'
-										-- has computed `t_type' in context of
-										-- `target_enclosing_class', call to `instantiation_in'
-										-- can only be performed in this context.
 				 					t_type := t_type.instantiation_in 
 											(target_enclosing_class.actual_type,
-											target_enclosing_class.class_id).actual_type;
+											source_enclosing_class.class_id).actual_type;
 									if t_type.is_formal then
 										formal_type ?= t_type;
 				 						t_type := target_enclosing_class.constraint 

@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	Ctor_eiffel_name: STRING is
 				-- Eiffel name for `.ctor'
 			once
-				Result := Name_formatter.formatted_feature_name (".ctor")
+				Result := Name_formatter.valid_variable_name (".ctor")
 				Result.append_character ('%N')
 			end
 

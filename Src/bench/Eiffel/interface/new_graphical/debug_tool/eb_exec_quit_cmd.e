@@ -92,7 +92,8 @@ feature {NONE} -- Implementation
 			create cd.make_initialized (2, "confirm_kill", 
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again)
 			cd.set_ok_action (agent kill)
-			cd.show_modal_to_window (debugger_manager.debugging_window.window)
+			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			window_manager.last_focused_window.raise
 		end
 
 	kill is
@@ -106,5 +107,3 @@ feature {NONE} -- Implementation
 		end
 
 end -- class EB_EXEC_QUIT_CMD
-
-

@@ -57,18 +57,9 @@ feature {NONE} -- Commands
 		end
 
 	display_font (a_font: EV_FONT) is
-			-- 
-		local
-			string_size: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
-			a_max_width: INTEGER
+			-- Display font in example label.
 		do
 			example.set_font (a_font)
-			string_size := a_font.string_size("Example")
-			a_max_width := 250
-			example.set_minimum_size (string_size.integer_32_item (1).min (a_max_width), string_size.integer_32_item (2).max (change_b.minimum_height))
-			example.set_size (string_size.integer_32_item (1).min (a_max_width), string_size.integer_32_item (2))
-			example.clear
-			example.draw_text_top_left (0, 0, "Example")
 		end
 
 feature {NONE} -- Implementation
@@ -85,8 +76,7 @@ feature {NONE} -- Implementation
 			change_b.set_minimum_height (change_b.height)
 
 			create example
-			example.set_size (Layout_constants.Dialog_unit_to_pixels(120), change_b.height)
-			example.set_background_color ((create {EV_STOCK_COLORS}).Color_dialog)
+			example.set_text (example_string)
 
 			h2.extend (example)
 			h2.extend (change_b)
@@ -106,7 +96,9 @@ feature {NONE} -- Implementation
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.
 
-	example: EV_PIXMAP
-			-- Example written with the font.
+	example: EV_LABEL
+			-- Example label using the selected font.
+
+	example_string: STRING is "Abc"
 
 end -- class FONT_SELECTION_BOX

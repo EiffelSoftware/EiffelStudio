@@ -237,7 +237,7 @@ feature -- IL Generation
 				if rout_ids_tbl.has (rout_id) then
 					feat := rout_ids_tbl.found_item
 					if not feat.is_il_external then
-						generate_method_impl (feat, class_type, inh_feat, False)
+						generate_method_impl (feat, class_type, inh_feat)
 					end
 				else
 					feat := current_select_tbl.item (rout_id)
@@ -336,7 +336,7 @@ feature -- IL Generation
 					if inh_feat /= Void then
 						generate_feature (feat, False, False, False)
 						if is_method_impl_needed (feat, inh_feat) then
- 							generate_method_impl (feat, class_type, inh_feat, False)
+ 							generate_method_impl (feat, class_type, inh_feat)
 						end
  					end
 					generate_feature_code (feat)
@@ -344,7 +344,7 @@ feature -- IL Generation
 				if l_is_method_impl_generated then
 						-- We need a MethodImpl here for mapping
 						-- inherited method to current defined one.
-					generate_method_impl (feat, class_type, inh_feat, False)
+					generate_method_impl (feat, class_type, inh_feat)
 				end
 			end
 		end
@@ -392,7 +392,7 @@ feature -- IL Generation
 				-- We need a MethodImpl here for mapping
 				-- inherited method to current defined one.
 			if l_is_method_impl_generated then
-				generate_method_impl (feat, class_type, inh_feat, False)
+				generate_method_impl (feat, class_type, inh_feat)
 			end
 		end
 

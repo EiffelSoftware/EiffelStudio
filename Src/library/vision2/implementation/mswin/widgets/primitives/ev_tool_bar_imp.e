@@ -15,7 +15,7 @@ inherit
 			set_default_options,
 			minimum_width,
 			minimum_height,
-			internal_resize
+			integrate_changes
 		redefine
 			parent_imp,
 			move_and_resize,

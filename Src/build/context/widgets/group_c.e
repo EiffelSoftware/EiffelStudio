@@ -3,6 +3,7 @@ class GROUP_C
 inherit
 
 	SHARED_CONTEXT;
+	SHARED_STORAGE_INFO;
 	COMPOSITE_C
 		rename
 			reset_modified_flags as old_reset_modified_flags,
@@ -18,7 +19,7 @@ inherit
 			show_tree_elements, hide_tree_elements, tree_element, 
 			is_bulletin, is_in_a_group, is_a_group, save_widget, 
 			reset_callbacks, stored_node, widget,
-			set_modified_flags, help_file_name
+			set_modified_flags, help_file_name, retrieve_oui_group_child_widget
 		end;
 	COMPOSITE_C
 		redefine
@@ -29,7 +30,7 @@ inherit
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
 			reset_callbacks, stored_node, widget,
-			set_modified_flags, help_file_name
+			set_modified_flags, help_file_name, retrieve_oui_group_child_widget
 		select
 			reset_modified_flags, cut_list, cut, 
 			undo_cut, eiffel_callback_calls
@@ -37,7 +38,7 @@ inherit
 	
 feature 
 
-	widget: EB_BULLETIN;
+	widget: EB_BULLETIN_EXT;
 
 	symbol: PIXMAP is
 		do
@@ -297,7 +298,13 @@ feature
 			a_parent.append (Result);
 			Result.generate_internal_name;
 			Result.oui_create (a_parent.widget);
+				-- To give new identifier
+			for_import.set_item (True);
 			group_type.create_oui_group (Result);
+			for_import.set_item (False);
+				-- Clear the context table.
+			context_table.clear_all;		
+
 			Result.reset_modified_flags;
 
 			!!create_command;
@@ -537,7 +544,25 @@ feature
 
 	retrieved_node: S_GROUP;
 
+	retrieve_oui_group_child_widget is
+			-- Retrieve oui widget info.
+			--| this does not set the
+			--| the context attributes for
+			--| the children since it would
+			--| have been done by the group parent.
+		local
+			parent_widget: COMPOSITE
+		do
+			parent_widget ?= parent.widget;
+			oui_create (parent_widget);
+			group_type.create_oui_group (Current);
+			reset_modified_flags;
+			widget.manage;
+			retrieved_node := Void
+		end;
+
 	retrieve_oui_widget is
+			-- Retrieve oui widget info.
 		local
 			parent_widget: COMPOSITE
 		do
@@ -557,7 +582,6 @@ feature
 			new_id := group_table.item (retrieved_node.group_type);
 			set_type_identifier (new_id);
 			generate_internal_name;
-			retrieved_node.set_name_change (full_name);
 			retrieve_oui_widget;
 		end;
 

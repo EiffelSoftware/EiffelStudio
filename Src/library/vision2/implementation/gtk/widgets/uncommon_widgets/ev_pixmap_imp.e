@@ -78,7 +78,20 @@ feature {NONE} -- Initialization
 			initialize_graphical_context
 			init_default_values
 		end
-		
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- 
+		local
+			pix_imp: EV_PIXMAP_IMP
+			a_src_pixbuf, a_dest_pixbuf: POINTER
+		do
+			create Result.make_with_size (area.width, area.height)
+			Result.set_background_color ((create {EV_STOCK_COLORS}).white)
+			Result.clear
+			pix_imp ?= Result.implementation
+			Result.draw_sub_pixmap (0, 0, interface, area)
+		end
+
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 			-- Draw `a_pixmap' on to `Current' using given coordinates and dimensions.
 		do

@@ -281,6 +281,18 @@ feature -- Warning messages
 			Result.append ("Do you wish to overwrite it?")
 		end
 
+	w_Project_could_not_deleted (dir_name: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!! Result.make (128)
+			Result.append ("Could not delete project in`")
+			Result.append (dir_name)
+			Result.append ("'.%N")
+			Result.append ("Please select another directory or make sure%N")
+			Result.append ("that no programs are using a file from this project.")
+		end
+
 	w_File_exists (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void

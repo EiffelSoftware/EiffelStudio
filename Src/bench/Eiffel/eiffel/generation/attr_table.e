@@ -56,7 +56,7 @@ feature
 			if not system_i.poofter_finalization then
 				goto_used (type_id);
 				i := position
-				if i <= upper then
+				if i <= max_position then
 					local_copy := Current
 					first_entry := local_copy.array_item (i)
 					if first_entry.is_set then
@@ -66,7 +66,7 @@ feature
 							cl_type := system_i.class_type_of_id (type_id);
 							first_class := cl_type.associated_class;
 							i := i + 1
-							nb := upper
+							nb := max_position
 						until
 							Result or else i > nb
 						loop
@@ -87,7 +87,7 @@ feature
 					cl_type := system_i.class_type_of_id (type_id);
 					first_class := cl_type.associated_class;
 					i := lower
-					nb := upper
+					nb := max_position
 				until
 					Result or else i > nb
 				loop

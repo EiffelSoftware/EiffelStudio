@@ -179,14 +179,29 @@ feature -- Basic operations
 			-- Place a cancel button in `a_dialog',
 			-- and then remove it, so that we have
 			-- a cross on the window.
+		require
+			a_dialog_not_void: a_dialog /= Void
+			action_not_void: action /= Void
 		local
 			button: EV_BUTTON
+			widget: EV_WIDGET
 		do
+				-- If `a_dialog' is already full, then empty it
+				-- so the button may be inserted.
+			if a_dialog.full then
+				widget := a_dialog.item
+				a_dialog.prune_all (widget)
+			end
 			create button
 			a_dialog.extend (button)
 			button.select_actions.extend (action)
 			a_dialog.set_default_cancel_button (button)
 			a_dialog.prune_all (button)
+				-- If there was originally a widget in `a_dialog'
+				-- then restore it.
+			if widget /= Void then
+				a_dialog.extend (widget)
+			end
 		end
 
 	expand_tree_recursive (tree: EV_TREE) is

@@ -14,7 +14,9 @@ inherit
 		redefine
 			setup_dialog,
 			is_relative,
-			is_show_requested
+			is_show_requested,
+			hide, 
+			destroy
 		end
 		
 	EV_DIALOG_IMP_COMMON
@@ -22,7 +24,9 @@ inherit
 			setup_dialog,
 			show,
 			is_relative,
-			is_show_requested
+			is_show_requested,
+			hide,
+			destroy
 		select
 			show
 		end
@@ -50,7 +54,7 @@ feature -- Status report
 				Result := flag_set (style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
 			end	
 		end
-
+		
 feature -- Basic operations
 
 	show_modal_to_window (a_parent_window: EV_WINDOW) is
@@ -121,6 +125,32 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	hide is 
+			-- Hide `Current'.
+		do
+				--| FIXME, this is a hack to avoid unwanted behaviour when closing a focused
+				--| modeless dialog. To reproduce, create two dialogs and show one, followed by the
+				--| other, relative to a window. Then hide the first and then the second. The
+				--| Window to which they were relative is moved behind the second window in the Z order.
+				--| This is far from good. Another way to see this bug in action is to use a 5.4 or earlier
+				--| of EiffelStudio, open a class in the editor and introduce a syntax error. Compile, and
+				--| the development window is then obscured by the window that was behind it. Julian.
+			if has_focus then
+				parent_window.set_focus
+			end
+			Precursor {EV_DIALOG_IMP_COMMON}
+		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+				--| FIXME, this is the same hack as in `hide' which has a full explanation.
+			if has_focus then
+				parent_window.set_focus
+			end
+			Precursor {EV_DIALOG_IMP_COMMON}
+		end
 
 	setup_dialog is
    			-- Setup the dialog and its children.

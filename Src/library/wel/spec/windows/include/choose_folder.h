@@ -14,8 +14,9 @@
 extern "C" {
 #endif
 
-// Callback for the function SHBrowseForFolder (defined in ..\Clib\choose_folder.c)
+/* Callback for the function SHBrowseForFolder (defined in ..\Clib\choose_folder.c) */
 int CALLBACK cwel_browse_callback_proc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
+void cwel_sh_browse_for_folder (LPBROWSEINFO info, LPCSTR name);
 
 #define cwel_browse_info_set_hwndowner(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_browse_info_set_pidlroot (_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pidlRoot = (LPCITEMIDLIST) (_value_))

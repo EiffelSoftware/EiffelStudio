@@ -35,7 +35,6 @@ feature -- Initialization
 			create str_folder_name.make_empty (max_path)
 			create str_title.make_empty (max_title_length)
 			create str_starting_folder.make_empty (max_path)
-			create imalloc.make
 			cwel_browse_info_set_pszdisplayname (item, str_folder_name.item)
 			cwel_browse_info_set_lpsztitle (item, str_title.item)
 			cwel_browse_info_set_lparam (item, str_starting_folder.item)
@@ -148,21 +147,22 @@ feature -- Basic operations
 	activate (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
-		local
-			id_list: POINTER
 		do
 			set_parent (a_parent)
 			selected := False
-			id_list := cwin_sh_browse_for_folder (item)
-			if id_list /= default_pointer then
-				cwin_sh_get_path_from_id_list (id_list, str_folder_name.item)
-				imalloc.free_buffer (id_list)
-				if not str_folder_name.string.is_empty then
-					selected := True
-				end
+			cwel_sh_browse_for_folder (item, str_folder_name.item)
+			if not str_folder_name.string.is_empty then
+				selected := True
 			else
-				str_folder_name.set_string (create {STRING}.make (0))
+				str_folder_name.set_count (0)
 			end
+		end
+		
+	cwel_sh_browse_for_folder (p: POINTER; str: POINTER) is
+			-- Open dialog in a different thread with COM properly initialized
+			-- to single threaded appartment.
+		external
+			"C signature (LPBROWSEINFO, LPTSTR) use %"choose_folder.h%""
 		end
 
 feature {NONE} -- Implementation
@@ -175,9 +175,6 @@ feature {NONE} -- Implementation
 
 	str_title: WEL_STRING
 			-- Dialog title
-
-	imalloc: WEL_IMALLOC
-			-- IMalloc interface pointer
 
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Set parent window with `a_parent'.
@@ -254,21 +251,7 @@ feature {NONE} -- External
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
-
-	cwin_sh_browse_for_folder (browse_info: POINTER): POINTER is
-			external
-				"C [macro %"choose_folder.h%"] (LPBROWSEINFO): EIF_POINTER"
-			alias
-				"SHBrowseForFolder"
-			end
-	
-	cwin_sh_get_path_from_id_list (id_list, a_folder_name: POINTER) is
-			external
-				"C [macro %"choose_folder.h%"] (LPCITEMIDLIST, LPSTR)"
-			alias
-				"SHGetPathFromIDList"
-			end
-
+			
 end -- class WEL_CHOOSE_DIRECTORY_DIALOG
 
 

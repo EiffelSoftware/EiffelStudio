@@ -39,7 +39,9 @@ feature {NONE} -- Execution
 	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 		do
 			destroy
-			caller.process
+			if arg = Process_it then
+				caller.process
+			end
 		end
 
 feature {NONE} -- Implementation

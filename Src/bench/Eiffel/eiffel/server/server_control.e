@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	files: HASH_TABLE [SERVER_FILE, FILE_ID];
+	files: EXTEND_TABLE [SERVER_FILE, FILE_ID];
 			-- Table of all the files under the control of the
 			-- current object
 
@@ -240,6 +240,18 @@ feature -- Initialization
 			end;
 		end;
 
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		do
+			file_counter.append (other.file_counter);
+			files.merge (other.files)
+		end
+			
 feature -- SERVER_FILE sizes
 
 	chunk_size: INTEGER;

@@ -50,10 +50,10 @@ feature -- Properties
 			Result := class_win_mgr.top_shell_editor
 		end;
 
-	dialog_object_window: OBJECT_W is
+	object_window: OBJECT_W is
 			-- Make an object window
 		do
-			Result := object_win_mgr.form_d_editor
+			Result := object_win_mgr.top_shell_editor
 		end;
 
 	explain_window: EXPLAIN_W is

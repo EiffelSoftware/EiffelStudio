@@ -33,6 +33,11 @@ feature -- Access
 			"CREATE_NEW_PROCESS_GROUP"
 		end
  
+	create_no_window: INTEGER is 0x08000000
+			-- New process is console application run without console window.
+			-- Valid only when starting console application.
+			-- Windows Me/98/95:  Not supported.
+
 	detached_process: INTEGER is
 			-- For console processes, new process does not have access to parent's console.
 		external
@@ -45,7 +50,7 @@ feature -- Access
 			-- Is `a_constant' a valid process creation constant?
 		do
 			Result := a_constant = (a_constant & (create_default_error_mode | create_new_console |
-				create_new_process_group | detached_process))
+				create_new_process_group | detached_process | create_no_window))
 			Result := Result and
 				((a_constant & (create_new_console | detached_process)) /= (create_new_console | detached_process))
 		end

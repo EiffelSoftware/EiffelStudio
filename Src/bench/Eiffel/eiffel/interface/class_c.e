@@ -1455,10 +1455,18 @@ end
 			il_generation: System.il_generation
 		local
 			l_ast: like most_recent_ast
+			l_ca_feature: INVARIANT_FEAT_I
 		do
 			ast_context.clear2
 			l_ast := most_recent_ast
+			if
+				l_ast.custom_attributes /= Void or l_ast.interface_custom_attributes /= Void or
+				l_ast.class_custom_attributes /= Void or l_ast.assembly_custom_attributes /= Void
+			then
+				create l_ca_feature.make (Current)
+			end
 			if l_ast.custom_attributes /= Void then
+				ast_context.set_current_feature (l_ca_feature)
 				l_ast.custom_attributes.type_check
 				ast_context.start_lines
 				custom_attributes := l_ast.custom_attributes.byte_node
@@ -1467,6 +1475,7 @@ end
 				custom_attributes := Void
 			end
 			if l_ast.interface_custom_attributes /= Void then
+				ast_context.set_current_feature (l_ca_feature)
 				l_ast.interface_custom_attributes.type_check
 				ast_context.start_lines
 				interface_custom_attributes := l_ast.interface_custom_attributes.byte_node
@@ -1475,6 +1484,7 @@ end
 				interface_custom_attributes := Void
 			end
 			if l_ast.class_custom_attributes /= Void then
+				ast_context.set_current_feature (l_ca_feature)
 				l_ast.class_custom_attributes.type_check
 				ast_context.start_lines
 				class_custom_attributes := l_ast.class_custom_attributes.byte_node
@@ -1486,6 +1496,7 @@ end
 					-- We are processing the root class, let's figure out if there are some
 					-- assembly custom attributes.
 				if l_ast.assembly_custom_attributes /= Void then
+					ast_context.set_current_feature (l_ca_feature)
 					l_ast.assembly_custom_attributes.type_check
 					ast_context.start_lines
 					assembly_custom_attributes := l_ast.assembly_custom_attributes.byte_node

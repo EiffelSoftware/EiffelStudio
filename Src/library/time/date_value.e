@@ -10,49 +10,48 @@ class
 
 inherit
 	DATE_CONSTANTS
-		redefine
-			out
-		end
 
 creation
 
 feature -- Access
 
-	day: INTEGER;
+	day: INTEGER is
 			-- Day of the current object
-
-	month: INTEGER;
-			-- Month of the current object
-
-	year: INTEGER;
-			-- Year of the current object 
-
-feature -- Conversion
-		
-	out : STRING is
-		-- printable representation of `Current' with "standard"
-		-- Form: "dd/mm/yyyy"
 		do
-			Result := day.out;
-			if day < 10 then 
-				Result.prepend("0")
-			end
-			Result.extend('/');
-			if month < 10 then
-				Result.append("0")
-			end
-			Result.append(month.out);
-			Result.extend('/');
-			if year < 10 then
-				Result.append("000")
-			elseif year < 100 then
-				Result.append("00")
-			elseif year < 1000 then
-				Result.append("0")
-			end		
-			Result.append(year.out);
+			Result := c_day (compact_date);
+		end
 
-		end;
+	month: INTEGER is
+			-- Month of the current object
+		do
+			Result := c_month (compact_date);
+		end
+
+	year: INTEGER is
+			-- Year of the current object 
+		do
+			Result := c_year (compact_date);
+		end
+
+	compact_date: INTEGER
+			-- Day, month and year coded.
+
+feature {NONE} -- External
+
+	c_day (c_d: INTEGER): INTEGER is
+		external
+			"C"
+		end
+
+	c_month (c_d: INTEGER): INTEGER is
+		external
+			"C"
+		end
+
+	c_year (c_d: INTEGER): INTEGER is
+		external
+			"C"
+		end
 
 end -- class DATE_VALUE
 

@@ -12,7 +12,10 @@ inherit
 	DATE_VALUE
 		undefine
 			is_equal
+		redefine
+			day, month, year
 		end;
+
 	DURATION
 		undefine
 			is_equal,
@@ -57,6 +60,14 @@ feature -- Access
 		once
 				!! Result.make_by_days (0)
 		end;
+
+feature -- Attribute
+
+	day: INTEGER
+
+	month: INTEGER
+
+	year: INTEGER
 
 feature -- Comparison
 

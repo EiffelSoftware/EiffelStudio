@@ -28,10 +28,11 @@ feature -- Access
 	Hours_in_day: INTEGER is 24;
 			-- Number of hours in a day
 
--- Added by Jacques for make_from_string
-	Std_time_delim: CHARACTER is ':'
-		-- standard form is "hh:mm:ss.sss"
-			
+	time_default_format_string: STRING is
+		do
+			Result := date_time_tools.time_default_format_string
+		end
+	
 end -- class TIME_CONSTANTS
 
 

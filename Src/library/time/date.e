@@ -15,9 +15,12 @@ inherit
 		redefine
 			infix "<"
 		end;
+
 	DATE_VALUE
 		undefine
 			is_equal
+		redefine
+			out
 		end
 
 creation
@@ -27,7 +30,8 @@ creation
 	make_day_month_year,
 	make_now,
 	make_by_days,
-	make_from_string
+	make_from_string,
+	make_by_compact_date
 
 feature -- Initialization
 
@@ -38,10 +42,9 @@ feature -- Initialization
 			month_small_enough: m <= Months_in_year;
 			day_large_enough: d >= 1;
 			day_small_enough: d <= days_in_i_th_month (m, y)
+			year_small_enough: y <= 65535;
 		do
-			year := y;
-			month := m;
-			day := d
+			compact_date := c_make_date (d, m, y)
 		ensure
 			year_set: year = y;
 			month_set: month = m;
@@ -75,83 +78,107 @@ feature -- Initialization
 
 	make_now is
 			-- Set the current object to today's date.
+		local
+			y, m, d: INTEGER
 		do
 			c_get_date_time;
-			year := c_year;
-			month := c_month;
-			day := c_day
+			y := c_year_now;
+			m := c_month_now;
+			d := c_day_now;
+			make (y, m, d)
 		end;
 
-	make_by_days (d: INTEGER) is
-			-- Set the current date with the number of days `d' since `origin'.
+	make_by_days (n: INTEGER) is
+			-- Set the current date with the number of days `n' since `origin'.
 		local
 			i, j: INTEGER
+			y, m, d: INTEGER
 		do
-			i := 4 * (d - 59) - 1;
+			i := 4 * (n - 59) - 1;
 			j := (4 * div ((mod (i, 146097)), 4)) + 3;
-			year := (100 * (div (i, 146097))) + (div (j, 1461));
+			y := (100 * (div (i, 146097))) + (div (j, 1461));
 			i := (5 * (div (((mod (j, 1461)) + 4), 4))) - 3;
-			month := div (i, 153);
-			day := div (((mod (i, 153)) + 5 ), 5);
-			if month < 10 then
-				month := month + 3
+			m := div (i, 153);
+			d := div (((mod (i, 153)) + 5 ), 5);
+			if m < 10 then
+				m := m + 3
 			else
-				month := month - 9;
-				year := year + 1
+				m := m - 9;
+				y := y + 1;
 			end;
-			year := year + 1600
+			y := y + 1600;
+			make (y, m, d)
 		ensure
-			days_set: days = d
+			days_set: days = n
 		end;
 
-	make_from_string(s:STRING) is
-			-- initialise from a "standard" string of form
-			-- "dd/mm/yyyy hh:mm:ss.sss".
+	make_from_string_default (s: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `date_default_format_string'
 		require
 			s_exists: s /= Void;
-			date_valid: date_valid(s)
-		local
-			 pos1, pos2, pos3, pos4:INTEGER
-			 substrg1, substrg2, substrg3: STRING
-	    do
-			pos1 := s.index_of(Std_date_delim,1) 
-			pos2 := s.index_of(Std_date_delim,pos1+1) 
-			pos3 := s.index_of(Std_date_time_delim,1)
-			pos4 := s.count+1
-			substrg1:=s.substring(1, pos1-1)
-			substrg2:=s.substring(pos1+1, pos2-1)
-			if pos3/=0 then
-				substrg3:=s.substring(pos2+1, pos3-1)
-			else
-				substrg3:=s.substring(pos2+1, pos4-1)
-			end -- if
-			make_day_month_year(substrg1.to_integer, substrg2.to_integer, substrg3.to_integer) 
-	   end
-		   
-feature -- conditions
-	date_valid(s: STRING): BOOLEAN is
-			-- Has the substring the format "dd/mm/yyyy"?
-		local
-			pos1, pos2, pos3, pos4: INTEGER
-			substrg1, substrg2, substrg3: STRING
+			date_valid: date_valid (s, date_default_format_string)
 		do
-			if not(s.count < 10) then
-				-- If the count of the string is less than 10 then
-				-- This is not a date format.
-				pos1:=s.index_of(Std_date_delim,1)
-				pos2:=s.index_of(Std_date_delim,pos1+1)
-				pos3:=s.index_of(Std_date_time_delim,1)
-				pos4:=s.count+1
-				substrg1:=s.substring(1, pos1-1)
-				substrg2:=s.substring(pos1+1, pos2-1)
-				if pos3/=0 then
-					substrg3:=s.substring(pos2+1, pos3-1)
-				else
-					substrg3:=s.substring(pos2+1, pos4-1)
-				end
-				Result:=s.item(pos1)=Std_date_delim and s.item(pos1+3)=Std_date_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_integer; 
-			end -- if
+			make_from_string (s, date_default_format_string)
 		end
+
+	make_from_string (s: STRING; code: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `code'
+		require
+			s_exists: s /= Void;
+			c_exists: code /= Void
+			date_valid: date_valid (s, code)
+		local
+			code_string: DATE_TIME_CODE_STRING
+			date: DATE
+		do
+			!! code_string.make (code)
+			date := code_string.create_date (s)
+			make (date.year, date.month, date.day)
+		end
+
+	make_by_compact_date (c_d: INTEGER) is
+			-- Initialize from a `compact_date'.
+		require
+			c_d_not_void: c_d /= Void
+			c_d_valid: compact_date_valid (c_d)
+		do
+			compact_date := c_d
+		ensure
+			compact_date_set: compact_date = c_d
+		end
+
+feature -- Preconditions
+
+	date_valid (s: STRING; code_string: STRING): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE
+			-- And does the string `s' correspond to `code_string'?
+		require
+			s_exists: s /= Void
+			code_exists: code_string /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (code_string)
+			Result := code.precise_date and code.correspond (s)
+		end
+
+	compact_date_valid (c_d: INTEGER): BOOLEAN is
+		require
+			c_d_not_void: c_d /= Void
+		local
+			y, m, d: INTEGER
+		do
+			y := c_year (c_d)
+			m := c_month (c_d)
+			d := c_day (c_d)
+			Result := (m >= 1 and m <= Months_in_year and
+			d >= 1 and d <= days_in_i_th_month (m, y) and
+			y <= 65535);
+		end
+
 feature -- Access
 
 	origin: DATE is
@@ -297,7 +324,7 @@ feature -- Element change
 			d_large_enough: d >= 1;
 			d_small_enough: d <= days_in_month
 		do
-			day := d
+			c_set_day (d, compact_date)
 		ensure
 			day_set: day = d
 		end;
@@ -311,7 +338,7 @@ feature -- Element change
 			m_small_enough: m <= Months_in_year;
 			d_small_enough: day <= days_in_i_th_month (m, year)
 		do
-			month := m
+			c_set_month (m, compact_date)
 		ensure
 			month_set: month = m
 		end;
@@ -321,7 +348,7 @@ feature -- Element change
 		require
 			can_not_cut_29th_feb: day <= days_in_i_th_month (month, y)
 		do
-			year := y
+			c_set_year (y, compact_date)
 		ensure
 			year_set: year = y
 		end;
@@ -374,10 +401,10 @@ feature -- Basic operations
 			-- days is from the origin, day is current.
 		do
 			if day = days_in_month then
-				day := 1;
+				set_day (1);
 				month_forth
 			else
-				day := day + 1
+				set_day (day + 1)
 			end
 		ensure
 			days_set: days = old days + 1
@@ -388,9 +415,9 @@ feature -- Basic operations
 		do
 			if day = 1 then
 				month_back;
-				day := days_in_month
+				set_day (days_in_month)
 			else
-				day := day - 1
+				set_day (day - 1)
 			end
 		ensure
 			days_set: days = old days - 1
@@ -409,12 +436,12 @@ feature -- Basic operations
 			-- Can move days backward if next month has less days than the current month.
 		do
 			if month = Months_in_year then
-				month := 1;
+				set_month (1);
 				year_forth
 			else
-				month := month + 1
+				set_month (month + 1)
 				if day > days_in_month then
-					day := days_in_month
+					set_day (days_in_month)
 				end
 			end
 		end;
@@ -424,12 +451,12 @@ feature -- Basic operations
 			-- Can move days backward if previous month has less days than the current month.
 		do
 			if month = 1 then
-				month := Months_in_year;
+				set_month (Months_in_year)
 				year_back
 			else
-				month := month - 1;
+				set_month (month - 1)
 				if day > days_in_month then
-					day := days_in_month
+					set_day (days_in_month)
 				end
 			end
 		end;
@@ -438,10 +465,10 @@ feature -- Basic operations
 			-- add `m' months to the current date.
 			-- Can move days backward.
 		do
-			year := year + div ((month + m - 1), Months_in_year);
-			month := mod ((month + m - 1), Months_in_year) + 1;
+			set_year (year + div ((month + m - 1), Months_in_year))
+			set_month (mod ((month + m - 1), Months_in_year) + 1)
 			if day > days_in_month then
-				day := days_in_month
+				set_day (days_in_month)
 			end
 		end;
 
@@ -450,9 +477,9 @@ feature -- Basic operations
 			-- May cut the 29th february.
 		do
 			if day > days_in_i_th_month (month, year + 1) then
-				day := days_in_i_th_month (month, year + 1)
+				set_day (days_in_i_th_month (month, year + 1))
 			end;	
-			year := year + 1
+			set_year (year + 1)
 		
 		ensure
 			year_increased: year = old year + 1
@@ -463,9 +490,9 @@ feature -- Basic operations
 			-- May cut the 29th february.
 		do
 			if day > days_in_i_th_month (month, year - 1) then
-				day := days_in_i_th_month (month, year - 1)
+				set_day (days_in_i_th_month (month, year - 1))
 			end;	
-			year := year - 1
+			set_year (year - 1)
 		ensure
 			year_decreased: year = old year - 1
 		end;
@@ -475,9 +502,9 @@ feature -- Basic operations
 			-- May cut the 29th february.
 		do
 			if day > days_in_i_th_month (month, year + y) then
-				day := days_in_i_th_month (month, year + y)
+				set_day (days_in_i_th_month (month, year + y))
 			end;	
-			year := year + y
+			set_year (year + y)
 		ensure
 			year_set: year = old year + y
 		end;
@@ -488,6 +515,27 @@ feature -- Basic operations
 		do
 			month_add (y * Months_in_year + m)
 		end;
+
+feature -- Output
+
+	out: STRING is
+			-- printable representation of `Current' with "standard"
+			-- Form: `date_default_format_string'
+		do
+			Result := formatted_out (date_default_format_string)
+		end
+
+	formatted_out (s: STRING): STRING is
+			-- printable representation of `Current' with "standard"
+			-- Form: `s'
+		require
+			s_exists: s /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (s)
+			Result := code.create_date_string (Current)
+		end
 
 feature {NONE} -- Implementation
 
@@ -509,21 +557,45 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 	
-	c_year: INTEGER is
+	c_year_now: INTEGER is
 			-- Current year recorded by c_get_date_time.
 			-- Has to be checked after 2000.
 		external 
 			"C"
 		end
 
-	c_month: INTEGER is
+	c_month_now: INTEGER is
 			-- Current month recorded by c_get_date_time.
 		external
 			"C"
 		end;
 
-	c_day: INTEGER is
+	c_day_now: INTEGER is
 			-- Current day recorded by c_get_date_time.
+		external
+			"C"
+		end;
+
+	c_make_date (d, m, y: INTEGER): INTEGER is
+			-- Initialize the integer `compact_date'.
+		external
+			"C"
+		end;
+
+	c_set_day (d, c_d: INTEGER) is
+			-- Initialize the day in `compact_date'.
+		external
+			"C"
+		end;
+
+	c_set_month (m, c_d: INTEGER) is
+			-- Initialize the month in `compact_date'.
+		external
+			"C"
+		end;
+
+	c_set_year (y, c_d: INTEGER) is
+			-- Initialize the year in `compact_date'.
 		external
 			"C"
 		end;
@@ -534,6 +606,7 @@ invariant
 	day_small_enough: day <= days_in_month;
 	month_large_enough: month >= 1;
 	month_small_enough: month <= Months_in_year;
+	year_small_enough: year <= 65535;
 
 end -- class DATE
 

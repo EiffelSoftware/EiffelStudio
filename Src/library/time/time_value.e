@@ -10,34 +10,40 @@ class
 
 inherit
 	TIME_CONSTANTS
-		redefine
-			out
-		 end;
 
 creation
 
 feature -- Access 
 
-	hour: INTEGER;
+	hour: INTEGER is
 			-- Hour of the current time
-			
-	minute: INTEGER;
+		do
+			Result := c_hour (compact_time);
+		end
+	
+	minute: INTEGER is
 			-- Minute of the current time
-			
-	fine_second: DOUBLE;
-			-- Representation of second with decimals 
- 
+		do
+			Result := c_minute (compact_time);
+		end
+	
 	second: INTEGER is
 			-- Second of the current time
 		do
-			Result := fine_second.truncated_to_integer
+			Result := c_second (compact_time);
 		end;
 
-	fractionnal_second: DOUBLE is
+	fractionnal_second: DOUBLE 
 			-- Fractionnal part of `fine_second'
-		do
-			Result := fine_second - second
-		end;
+
+	compact_time: INTEGER 
+			-- Hour, minute, second coded.
+
+	fine_second: DOUBLE is
+			-- Representation of second with decimals 
+ 		do
+			Result := second + fractionnal_second;
+		end
 
 	milli_second: INTEGER is 
 			-- Millisecond of the current time
@@ -59,54 +65,22 @@ feature -- Access
 			Result := Result \\ 1000
 		end; 
  
-feature -- Conversion
- 
-	out: STRING is 
-			-- Printable representation of time with "standard"
-			-- Form: "hh:mm:ss"
-		do 
-			Result := hour.out; 
-			if hour < 10 then
-				Result.prepend("0")
-			end
-			Result.extend (':');
-			if minute < 10 then
-				Result.append("0")
-			end
-			Result.append (minute.out);
-			Result.extend (':');
-			if second < 10 then
-				Result.append("0")
-			end
-			Result.append ((second).out);
-		end;
- 
-	out_fine (p: INTEGER): STRING is
-			-- Printable representation of time with "standard"
-			-- Form: "hh:mm:ss.sss"
-			-- `p' is the number of decimals shown 
-		require
-			p_strictly_positive: p > 0
-		local
-			fractions: INTEGER;
-			format: FORMAT_DOUBLE
-		do
-			Result := hour.out;
-			if hour < 10 then
-				Result.prepend("0")
-			end
-			Result.extend (':'); 
-			if minute < 10 then
-				Result.append("0")
-			end	
-			Result.append (minute.out);
-			Result.extend (':');
-			if fine_second < 10 then
-				Result.append("0")
-			end
-			!! format.make (p + 1, p)
-			Result.append (format.formatted (fine_second));
-		end;			 
+feature {NONE} -- Externals
+
+	c_hour (c_t: INTEGER): INTEGER is
+		external
+			"C"
+		end
+
+	c_minute (c_t: INTEGER): INTEGER is
+		external
+			"C"
+		end
+
+	c_second (c_t: INTEGER): INTEGER is
+		external
+			"C"
+		end
 
 end -- class TIME_VALUE
 

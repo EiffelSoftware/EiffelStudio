@@ -10,9 +10,14 @@ class
 
 inherit
 	TIME_VALUE
+		rename
+			fractionnal_second as time_value_frac_sec
 		undefine
 			is_equal
+		redefine
+			hour, minute, second, fine_second
 		end;
+
 	DURATION
 		undefine
 			is_equal,
@@ -92,7 +97,8 @@ feature -- Access
 	seconds_count: INTEGER is
 			-- Total number of seconds of the current duration
 		do
-			Result := hour * Seconds_in_hour + minute * Seconds_in_minute + second
+			--Result := hour * Seconds_in_hour + minute * Seconds_in_minute + second
+			Result := fine_seconds_count.truncated_to_integer
 		ensure
 			same_count: Result = fine_seconds_count.truncated_to_integer
 		end;
@@ -101,6 +107,21 @@ feature -- Access
 			-- Neutral element for "+" and "-"
 		once
 			!! Result.make (0, 0, 0)
+		end;
+
+feature -- Attributes
+
+	hour: INTEGER
+
+	minute: INTEGER
+
+	second: INTEGER
+
+	fine_second: DOUBLE 
+
+	fractionnal_second: DOUBLE is
+		do
+			Result := fine_second - second
 		end;
 
 feature -- Comparaison

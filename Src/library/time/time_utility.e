@@ -35,9 +35,18 @@ feature -- Basic operations
 			Result_definition: i = j * Result + mod (i,j)
 		end;
 
-feature -- access
-	Std_date_time_delim: CHARACTER is ' '
-		-- appears between "dd/mm/yyyy" and "hh:mm:ss.sss"
+feature -- Access
+
+	date_time_tools: DATE_TIME_TOOLS is
+		once
+			!! Result
+		end
+
+
+	default_format_string: STRING is
+		do
+			Result := date_time_tools.default_format_string
+		end
 
 end -- class TIME_UTILITY
 

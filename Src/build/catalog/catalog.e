@@ -4,10 +4,12 @@ deferred class CATALOG [T->DATA]
 inherit
 
 	CONSTANTS
+
 	FORM
 		rename
-			make as form_create,
 			init_toolkit as form_init_toolkit
+		redefine
+			make, realize
 		end
 
 feature 
@@ -28,27 +30,19 @@ feature {NONE}
 
 feature 
 
-	focus_label: FOCUS_LABEL_I is
-			-- has to be redefined, so that it returns correct toolkit initializer
-			-- to which object belongs for every instance of this class
-                local
-                        ti: TOOLTIP_INITIALIZER
-                do
-                        ti ?= top
-                        check
-                                valid_tooltip_initializer: ti/= Void
-                        end
-                        Result := ti.label
-                end	
-	
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen' 
 			-- as the parent.
 		do
-			form_create (a_name, a_parent)
+			Precursor (a_name, a_parent)
 			create_interface
 		end
-
+	
+	realize is
+		do
+			Precursor
+		end
+	
 	create_interface is
 			-- Create the interface of the catalog.
 		deferred
@@ -155,7 +149,7 @@ feature {NONE}
 			current_page.set_symbol
 			page.set_selected_symbol
 			current_page := page
-			page.unmanage
+--			page.unmanage
 			page_sw.set_working_area (page)
 			if not just_created and then not page.empty then
 					-- Refresh page correctly (ok its for motif)
@@ -181,7 +175,7 @@ feature
 						page.go_i_th (1)
 						page.update_display
 					end
-					page.manage
+--					page.manage
 					set_current_page (page, true)
 					mp.restore
 				else

@@ -7,7 +7,8 @@ inherit
 			generate, is_character, equiv,
 			append_clickable_signature
 		end
-	
+	CHARACTER_ROUTINES
+
 feature 
 
 	char_val: CHARACTER;
@@ -64,9 +65,7 @@ feature
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_char ('%'');
---FIXME
--- %N, ...
-			a_clickable.put_char (char_val);
+			a_clickable.put_string (char_text (char_val));
 			a_clickable.put_char ('%'');
 		end;
 

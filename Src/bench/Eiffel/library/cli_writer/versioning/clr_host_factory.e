@@ -14,7 +14,7 @@ feature -- Access
 	runtime_host (version: STRING; flags: INTEGER): CLR_HOST is
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
-			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cprefadd/html/grfuncorbindtoruntimeex.asp
+			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/grfuncorbindtoruntimeex.asp
 		local
 			l_version: UNI_STRING
 			l_host: POINTER

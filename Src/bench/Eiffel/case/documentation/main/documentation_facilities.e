@@ -11,23 +11,11 @@ inherit
 
 feature -- Access
 
-	is_class_name (s: STRING): BOOLEAN is
-			-- Could `s' be the name of a class?
-			-- i.e. Does `s' consist of only underscores, uppercases and digits.
-		local
-			i: INTEGER
-			c: CHARACTER
-		do
-			Result := True
-			from i := 1 until not Result or else i > s.count loop
-				c := s @ i
-				i := i + 1
-				Result := c = '_' or else c.is_upper or else c.is_digit
-			end
-		end
-
 	class_by_name (name: STRING): CLASS_I is
 			-- Return class with `name'. `Void' if not in system.
+		require
+			name_not_void: name /= Void
+			is_class_name: (create {IDENTIFIER_CHECKER}).is_valid_upper (name)
 		local
 			cl: LIST [CLASS_I]
 		do
@@ -39,6 +27,8 @@ feature -- Access
 
 	cluster_by_name (name: STRING): CLUSTER_I is
 			-- Return cluster with `name'. `Void' if not in system.
+		require
+			name_not_void: name /= Void
 		do
 			Result := Eiffel_universe.cluster_of_name (name)
 		end

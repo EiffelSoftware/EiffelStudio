@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision text area, implementation interface."
 	status: "See notice at end of class"
@@ -8,13 +7,29 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_TEXT_AREA_I
 	
 inherit
-	
 	EV_TEXT_COMPONENT_I
-	
+		redefine
+			build
+		end	
+
+feature {EV_WIDGET} -- Initialization
+
+	build is
+			-- Common initializations for Gtk and Windows.
+		local
+			color: EV_COLOR
+		do
+			set_expand (True)
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
+		end
 
 end --class EV_TEXT_FIELD_I
 

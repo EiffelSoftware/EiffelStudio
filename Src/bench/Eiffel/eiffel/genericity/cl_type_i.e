@@ -369,7 +369,7 @@ feature -- C generation
 				buffer.putstring ("SK_DTYPE")
 			else
 				buffer.putstring ("SK_EXP + (uint32) ")
-				buffer.putint (class_id)
+				buffer.putint (associated_class_type.type_id - 1)
 			end
 		end
 

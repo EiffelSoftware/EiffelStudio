@@ -35,7 +35,11 @@ inherit
 			height as wel_height,
 			enabled as is_sensitive,
 			item as wel_item,
-			move as move_to
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			x as x_position,
+			y as y_position
 		undefine
 			window_process_message,
 			set_width,
@@ -160,6 +164,9 @@ end -- class EV_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/14 20:08:29  brendel
+--| Renamed some features from WEL in compliance with rest of window _IMP's.
+--|
 --| Revision 1.14  2000/02/19 05:45:01  oconnor
 --| released
 --|

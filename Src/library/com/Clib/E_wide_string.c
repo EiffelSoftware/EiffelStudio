@@ -14,7 +14,7 @@
 #include "E_wide_string.h"
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
 //-------------------------------------------------------------------------
@@ -35,7 +35,7 @@ WCHAR * ccom_create_from_string (char * string)
 
 EIF_REFERENCE ccom_wide_str_to_string (WCHAR * wide_string)
 
-// Convert unicode string to regular string, 
+// Convert unicode string to regular string,
 // return Eiffel STRING
 {
 	EIF_OBJ local_obj;
@@ -54,5 +54,5 @@ EIF_REFERENCE ccom_wide_str_to_string (WCHAR * wide_string)
 //--------------------------------------------------------------------------
 
 #ifdef __cplusplus
-}
+	}
 #endif

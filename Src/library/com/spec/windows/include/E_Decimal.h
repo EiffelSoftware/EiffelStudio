@@ -28,10 +28,18 @@
 #define ccom_decimal_divide(_ptr_, _ptr_2, _ptr_3) VarDecDiv(_ptr_, _ptr_2, _ptr_3)
 #define ccom_decimal_scale(_ptr_) ((EIF_INTEGER) (_ptr_)->scale)
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 void ccom_decimal_value_zero (DECIMAL * a_value);
 
 void ccom_decimal_value_one (DECIMAL * a_value);
 
 EIF_DOUBLE ccom_decimal_to_double (DECIMAL * a_value);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif // !__ECOM_E_DECIMAL_H_INC__

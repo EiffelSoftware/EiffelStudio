@@ -17,16 +17,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_figure: CLASS_FIGURE) is
+	make (a_figure: EIFFEL_CLASS_FIGURE) is
 			-- Initialize with `a_figure'.
 		do
-			make_with_class_i (a_figure.class_i)
+			make_with_class_i (a_figure.model.class_i)
 			source := a_figure
 		end
 
 feature -- Access
 
-	source: CLASS_FIGURE
+	source: EIFFEL_CLASS_FIGURE
 			-- Source this stone was picked from.
 
 end -- class CLASSI_FIGURE_STONE

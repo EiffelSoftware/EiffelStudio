@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create host_charset
 			host_charset.define ("A-Za-z0-9.\-")
 			path_charset := clone (host_charset)
-			path_charset.add ("%%/")
+			path_charset.add ("%%/_")
 			Precursor (a)
 		end
 		

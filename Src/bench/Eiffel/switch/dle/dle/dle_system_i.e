@@ -1014,8 +1014,8 @@ end;
 -- cl_type cannot be Void if process_dynamic_types has been done in
 -- freeze_system.
 					if cl_type /= Void then
-						Initialization_file.putstring ("Init");
-						Initialization_file.putint (cl_type.id.id);
+						Initialization_file.putchar ('%T');
+						Initialization_file.putstring (cl_type.id.init_name);
 						Initialization_file.putstring ("();");
 						Initialization_file.new_line
 					end;

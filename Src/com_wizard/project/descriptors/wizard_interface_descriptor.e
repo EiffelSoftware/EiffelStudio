@@ -183,7 +183,7 @@ feature -- Basic operations
 	disambiguate_eiffel_names is
 			-- Disambiguate feature names.
 		local
-			tmp_string: STRING
+			tmp_string, tmp_string2: STRING
 		do
 			if feature_eiffel_names.empty then
 				if 
@@ -199,14 +199,7 @@ feature -- Basic operations
 				until
 					functions.after
 				loop
-					tmp_string := clone (functions.item.interface_eiffel_name)
-					tmp_string.to_lower
-					if feature_eiffel_names.has (functions.item.interface_eiffel_name) or
-						eiffel_key_words.has (tmp_string)
-					then
-						functions.item.interface_eiffel_name.append_integer (counter)
-					end
-					feature_eiffel_names.force (clone (functions.item.interface_eiffel_name))
+					functions.item.disambiguate_eiffel_names (Current)
 					functions.forth
 				end
 
@@ -215,15 +208,7 @@ feature -- Basic operations
 				until
 					properties.after
 				loop
-					tmp_string := clone (properties.item.interface_eiffel_name)
-					tmp_string.to_lower
-
-					if feature_eiffel_names.has (properties.item.interface_eiffel_name)  or
-						eiffel_key_words.has (tmp_string)
-					then
-						properties.item.interface_eiffel_name.append_integer (counter)
-					end
-					feature_eiffel_names.force (clone (properties.item.interface_eiffel_name))
+					properties.item.disambiguate_eiffel_names (Current)
 					properties.forth
 				end
 
@@ -238,7 +223,10 @@ feature -- Basic operations
 						until
 							functions.item.arguments.after
 						loop
-							if feature_eiffel_names.has (functions.item.arguments.item.name) then
+							if 
+								feature_eiffel_names.has (functions.item.arguments.item.name)  or
+								eiffel_key_words.has (functions.item.arguments.item.name)
+							then
 								functions.item.arguments.item.name.prepend ("a_")
 							end
 							functions.item.arguments.forth

@@ -9,7 +9,8 @@ class
 inherit
 	WIZARD_FEATURE_DESCRIPTOR
 		redefine
-			disambiguate_names
+			disambiguate_names,
+			disambiguate_eiffel_names
 		end
 
 	ECOM_VAR_KIND
@@ -107,6 +108,70 @@ feature -- Transformation
 			tmp_name := clone (name)
 			tmp_name.prepend ("set_ref_")
 			a_coclass_descriptor.feature_c_names.force (tmp_name)
+		end
+
+	disambiguate_eiffel_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Disambiguate names for interface.
+		local
+			tmp_string, tmp_string2, set_tmp_string, set_tmp_string2, set_ref_tmp_string, set_ref_tmp_string2: STRING
+		do
+			tmp_string := clone (interface_eiffel_name)
+			tmp_string.to_lower
+			tmp_string2 := clone (tmp_string)
+			tmp_string2.append ("_user_precondition")
+
+			set_tmp_string := clone (tmp_string)
+			set_tmp_string.prepend ("set_")
+			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2.append ("_user_precondition")
+
+			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string.prepend ("set_ref_")
+			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2.append ("_user_precondition")
+			if 
+				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
+				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) or
+				an_interface_descriptor.feature_eiffel_names.has (set_tmp_string) or
+				an_interface_descriptor.feature_eiffel_names.has (set_tmp_string2) or
+				an_interface_descriptor.feature_eiffel_names.has (set_ref_tmp_string) or
+				an_interface_descriptor.feature_eiffel_names.has (set_ref_tmp_string2) or
+				eiffel_key_words.has (tmp_string)
+			then
+				interface_eiffel_name.append_integer (counter)
+			end
+			tmp_string := clone (interface_eiffel_name)
+			tmp_string2 := clone (tmp_string)
+			tmp_string2.append ("_user_precondition")
+
+			set_tmp_string := clone (tmp_string)
+			set_tmp_string.prepend ("set_")
+			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2.append ("_user_precondition")
+
+			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string.prepend ("set_ref_")
+			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2.append ("_user_precondition")
+
+			set_tmp_string := clone (tmp_string)
+			set_tmp_string.prepend ("set_")
+			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2.append ("_user_precondition")
+
+			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string.prepend ("set_ref_")
+			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2.append ("_user_precondition")
+
+			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
+			an_interface_descriptor.feature_eiffel_names.force (tmp_string2)
+
+			an_interface_descriptor.feature_eiffel_names.force (set_tmp_string)
+			an_interface_descriptor.feature_eiffel_names.force (set_tmp_string2)
+
+			an_interface_descriptor.feature_eiffel_names.force (set_ref_tmp_string)
+			an_interface_descriptor.feature_eiffel_names.force (set_ref_tmp_string2)
 		end
 
 feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations

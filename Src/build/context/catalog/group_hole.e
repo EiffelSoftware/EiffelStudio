@@ -68,7 +68,9 @@ feature {NONE}
 				and then not a_context.parent.is_in_a_group 
 			then
 				dropped_stone := dropped;
+				unmanage;
 				set_label (a_context.label);
+				manage;
 			end;
 		end;
 		

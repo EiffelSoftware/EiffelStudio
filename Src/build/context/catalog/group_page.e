@@ -40,6 +40,7 @@ feature {NONE}
 			text.set_size (60, 33);
 			text.add_activate_action (group_hole, text);
 
+			set_fraction_base (2);
 			attach_top (scrolled_w, 1);
 			attach_left (scrolled_w, 1);
 			attach_right (scrolled_w, 1);
@@ -49,10 +50,11 @@ feature {NONE}
 			attach_bottom (group_name, 5);
 			attach_bottom (text, 1);
 
-			attach_left (group_hole, 1);
-			attach_left_widget (group_hole, group_name, 40);
-			attach_left_widget (group_name, text, 10);
-			attach_right (text, 1);
+			attach_left (group_hole, 0);
+			attach_right_position (group_hole, 1);
+			attach_right_position (group_name, 1);
+			attach_left_position (text, 1);
+			attach_right (text, 0);
 		end;
 
 	symbol: PIXMAP is

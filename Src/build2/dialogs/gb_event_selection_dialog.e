@@ -79,8 +79,9 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title ("Event selection")
+			disable_user_resize
 			object := an_object
-			
+			show_actions.extend (agent update_text_field_minimum_width)
 				-- Reset building counter.
 			building_counter := 0
 			
@@ -104,7 +105,7 @@ feature {NONE} -- Initialization
 			temp_box.extend (separator)
 			temp_box.disable_item_expand (separator)
 			create viewport
-			viewport.set_background_color (white)
+			viewport.set_background_color (text_background_color)
 			create h_box
 			create scroll_bar
 			h_box.extend (viewport)
@@ -115,6 +116,7 @@ feature {NONE} -- Initialization
 				-- Build and add a box which will hold all the action sequences.
 			create_main_box
 			viewport.extend (main_vertical_box)
+			create all_labels.make (25)
 			
 				-- Now build the interface which will display the
 				-- applicable action sequences.
@@ -131,6 +133,17 @@ feature {NONE} -- Initialization
 					build_events_for_an_action_sequence (action_sequence)
 				end
 				action_sequences_list.forth
+			end
+			
+			from
+				all_labels.start
+			until
+				all_labels.off
+			loop
+					-- The "5" gives a little spacing between the end of the
+					-- label and the 
+				all_labels.item.set_minimum_width (minimum_label_width + 5)
+				all_labels.forth
 			end
 
 				-- We now wipe out the events for the object. When we check for valid
@@ -221,6 +234,20 @@ feature {NONE} -- Implementation
 		
 	temp_event_string: STRING is "Temporary feature name for comparison purposes."
 		-- Used internally. Cannot be entered by user, as contains spaces.
+		
+	all_labels: ARRAYED_LIST [EV_LABEL]
+		-- Used to hold all labels displayed before the
+		-- check buttons. When the interface has been
+		-- Created, we must then assign a minimum_width to all
+		-- the labels which will match that of the largest.
+		-- This procedure will ensure that all columns align correctly.
+	
+	minimum_label_width: INTEGER
+		-- The largest `minimum_width' of all labels displayed before
+		-- the check buttons.
+		
+	right_side_spacing: INTEGER is 30
+		-- Distance from right hand side of text boxes to scroll bar.
 
 	build_events_for_an_action_sequence (an_action_sequence: GB_EV_ACTION_SEQUENCES) is
 			-- Build interface representing events of `an_action_sequence'.
@@ -249,33 +276,32 @@ feature {NONE} -- Implementation
 				create frame
 				create horizontal_box
 				create check_button
-				check_button.set_background_color (white)
+				check_button.set_background_color (text_background_color)
 				create vertical_box
 				create text_field
 				text_field.set_minimum_width (100)
 				
 					-- Add the start label.
 				create start_label
-				start_label.set_background_color (white)
+				start_label.set_background_color (text_background_color)
 				create vertical_box
-				vertical_box.set_background_color (white)
+				vertical_box.set_background_color (text_background_color)
 				horizontal_box.extend (vertical_box)
 				horizontal_box.disable_item_expand (vertical_box)
-				start_label.set_minimum_width (250)
 				start_label.align_text_left
 				vertical_box.extend (start_label)
 				vertical_box.disable_item_expand (start_label)
 				create cell
-				cell.set_background_color (white)
+				cell.set_background_color (text_background_color)
 				vertical_box.extend (cell)
 				
 					-- We must check to see whether `object' has an event linked to
 					-- the current action sequence.
 				create vertical_box
-				vertical_box.set_background_color (white)
+				vertical_box.set_background_color (text_background_color)
 				
 				create cell
-				cell.set_background_color (white)
+				cell.set_background_color (text_background_color)
 				vertical_box.extend (check_button)
 				vertical_box.disable_item_expand (check_button)
 				vertical_box.extend (cell)
@@ -301,23 +327,32 @@ feature {NONE} -- Implementation
 				end
 				action_sequence_comment.keep_tail (action_sequence_comment.count - comment_start_string.count)
 				start_label.set_text (action_sequence_comment)
+				
+					-- We must store the minimum_width of `start_label' if
+					-- it is greater than the minimum width stored during
+					-- previous calls to `build_events_for_an_action_sequence'.
+				all_labels.extend (start_label)
+				if start_label.minimum_width > minimum_label_width then
+					minimum_label_width := start_label.minimum_width
+				end
 
 				if feature_name = Void then
 						-- Build empty interface.
 					create label.make_with_text (renamed_action_sequence_name)
-					label.set_background_color (white)
+					label.set_background_color (text_background_color)
 					label.align_text_left
 					horizontal_box.extend (label)
 				else
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
 					create frame.make_with_text (renamed_action_sequence_name)
-					frame.set_background_color (white)
+					frame.set_background_color (text_background_color)
 					horizontal_box.extend (frame)
+					horizontal_box.set_background_color (text_background_color)
 					create label.make_with_text ("Generated feature name : ")
-					label.set_background_color (white)
+					label.set_background_color (text_background_color)
 					create horizontal_box2
-					horizontal_box.set_background_color (white)
+					horizontal_box.set_background_color (text_background_color)
 					horizontal_box2.extend (label)
 					horizontal_box2.extend (text_field)
 					text_field.set_text (feature_name)
@@ -345,6 +380,27 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
+		
+	update_text_field_minimum_width is
+			-- For all text field in `all_text_fields' that are displayed,
+			-- update minimum width relative to the scroll bar
+			-- displayed to their right.
+			-- We check to see if they are displayed using `all_check_buttons'.
+			-- if the button `is_selected' then we must update the text_field.
+		do
+			from
+				all_text_fields.start
+			until
+				all_text_fields.off
+			loop
+				if (all_check_buttons @ (all_text_fields.index)).is_selected then
+					all_text_fields.item.set_minimum_width (x_position_relative_to_window (scroll_bar) -
+					x_position_relative_to_window (all_text_fields.item) - right_side_spacing)			
+				end
+				all_text_fields.forth
+			end
+		end
+		
 		
 	validate_name_change (index: INTEGER) is
 			-- text field, `all_text_fields' @ `index' has been modified, 
@@ -413,23 +469,24 @@ feature {NONE} -- Implementation
 				horizontal_box ?= vertical_box.parent
 				horizontal_box.prune (horizontal_box @ 3)
 				create frame.make_with_text (all_names @ index)
-				frame.set_background_color (white)
+				frame.set_background_color (text_background_color)
 				horizontal_box.extend (frame)
 				create label.make_with_text ("Generated feature name : ")
-				label.set_background_color (white)
+				label.set_background_color (text_background_color)
 				create horizontal_box
 				horizontal_box.extend (label)
 				current_text_field.set_text (current_text_field.text.as_lower)
 				horizontal_box.extend (current_text_field)
 				disable_all_items (horizontal_box)
 				frame.extend (horizontal_box)
+				horizontal_box.set_background_color (text_background_color)
 			else
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
 				horizontal_box.prune (horizontal_box @ 3)
 				
 				create label.make_with_text (all_names @ index)
-				label.set_background_color (white)
+				label.set_background_color (text_background_color)
 				label.align_text_left
 				horizontal_box.extend (label)
 					-- Need to unparent the previous text field, as this object
@@ -454,6 +511,8 @@ feature {NONE} -- Implementation
 				-- We do this here as when the update is locked,
 				-- there appears to be problems.
 			if current_check_button.is_selected then
+				current_text_field.set_minimum_width (x_position_relative_to_window (scroll_bar) -
+					x_position_relative_to_window (current_text_field) - right_side_spacing)
 				current_text_field.set_focus
 			end
 		end
@@ -464,7 +523,7 @@ feature {NONE} -- Implementation
 			create main_vertical_box
 			main_vertical_box.set_padding_width (10)
 			main_vertical_box.set_border_width (20)
-			main_vertical_box.set_background_color (white)
+			main_vertical_box.set_background_color (text_background_color)
 		end
 		
 	update_scroll_bar is
@@ -593,5 +652,17 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
+		
+	text_background_color: EV_COLOR is
+			-- `Result' is EV_COLOR used for
+			-- background of controls.
+			-- This is provided, so all controls can be
+			-- changed from one single place.
+		once
+			Result := white
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 end -- class GB_EVENT_SELECTION_DIALOG

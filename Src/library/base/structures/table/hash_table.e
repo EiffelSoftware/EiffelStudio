@@ -230,7 +230,7 @@ feature -- Status report
 			Result := (control = Found_constant)
 		end;
 
-	off: BOOLEAN is
+	after, off: BOOLEAN is
 			-- Is cursor past last item?
 		do
 			Result := pos_for_iter > keys.upper

@@ -3,8 +3,8 @@ deferred class EB_BUTTON
 
 inherit
 
-	FOCUSABLE;
-	CONSTANTS;
+	FOCUSABLE
+	CONSTANTS
 	PICT_COLOR_B
 		rename
 			make as pict_color_make,
@@ -32,7 +32,7 @@ feature {NONE}
 			set_symbol (symbol);
 
 			-- Default value for focus_string
-			set_focus_string ("DEFAULT FOCUS LABEL")
+			create_focus_label
 			initialize_focus;
 		end;
 
@@ -62,5 +62,9 @@ feature {NONE}
                         end
                         Result := ti.label
                 end
+		
+	create_focus_label is
+		deferred
+		end
 
 end

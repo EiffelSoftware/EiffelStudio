@@ -1252,7 +1252,6 @@
             <File Id="eiffel.chm" Name="eiffel.chm" KeyPath="yes" />
             <Shortcut Id="eiffel.chm1" Directory="Documentation8" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Target="[#eiffel.chm]" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
           </Component>
-          <Directory Id="Pdf" Name="Pdf" />
         </Directory>
       </Directory>
     </Directory>

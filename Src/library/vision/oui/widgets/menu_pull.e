@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MENU_PULL 
+class
+
+	MENU_PULL 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: MENU) is
 			-- Create a pulldown menu with `a_name' as identifier,
@@ -62,7 +64,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-feature -- Menu
+feature -- Access
 
 	menu_button: MENU_B is
 			-- Menu button 
@@ -83,21 +85,19 @@ feature -- Menu
 			Result ?= widget_manager.parent (Current)
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: MENU_PULL_I;
 			-- Implementation of pulldown menu
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current pulldown menu.
 		do
 		end;
 
-end 
-
-
+end -- class MENU_PULL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -111,3 +111,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class BASE_I 
+deferred class
+
+	BASE_I 
 
 inherit
 
@@ -13,9 +15,7 @@ inherit
 
 feature
 
-
 end -- class BASE_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -29,3 +29,4 @@ end -- class BASE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLLED_T 
+class
+
+	SCROLLED_T 
 
 inherit
 
@@ -21,7 +23,7 @@ creation
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a scrolled text with `a_name' as identifier,
@@ -76,8 +78,25 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-	
-feature -- Scrollbar visibility and orientation 
+feature -- Status report
+
+	is_vertical_scrollbar: BOOLEAN is
+			-- Is vertical scrollbar visible?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_vertical_scrollbar
+		end;
+
+	is_horizontal_scrollbar: BOOLEAN is
+			-- Is horizontal scrollbar visible?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_horizontal_scrollbar
+		end
+
+feature -- Status setting
 
 	show_vertical_scrollbar is
 			-- Make vertical scrollbar visible.
@@ -111,29 +130,12 @@ feature -- Scrollbar visibility and orientation
 			implementation.hide_horizontal_scrollbar
 		end;
 
-	is_vertical_scrollbar: BOOLEAN is
-			-- Is vertical scrollbar visible?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.is_vertical_scrollbar
-		end;
-
-	is_horizontal_scrollbar: BOOLEAN is
-			-- Is horizontal scrollbar visible?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.is_horizontal_scrollbar
-		end
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCROLLED_T_I;
 			-- Implementation of current text
 
-end
-
+end -- class SCROLLED_T
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -147,3 +149,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BULLETIN 
+class
+
+	BULLETIN 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a bulletin with `a_name' as identifier,
@@ -60,7 +62,34 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature
+feature -- Status report
+
+	valid_stackables (a_stackable_array: ARRAY [STACKABLE]): BOOLEAN is
+			-- check that the array of stackables meets the critea
+			-- require for widgets to be restacked
+		require
+			exists: not destroyed;
+			valid_array: a_stackable_array /= Void and then
+					not a_stackable_array.empty;
+		local
+			index1: INTEGER;
+		do
+			Result := True;
+			from index1 := a_stackable_array.lower 
+			until  not Result or else index1 > a_stackable_array.upper
+			loop
+				If a_stackable_array.item (index1) = Void  then
+					Result := False;
+				elseif not a_stackable_array.item (index1).is_stackable or else
+				  not a_stackable_array.item (index1).realized or else
+				  a_stackable_array.item (index1).parent /= a_stackable_array.item(a_stackable_array.lower).parent then
+					Result := False;
+				end;
+				index1 := index1 + 1;
+			end;
+		end;
+
+feature -- Status setting
 
 	allow_recompute_size is
 			-- Allow Current bulletin to recompute its size 
@@ -114,45 +143,19 @@ feature
 			implementation.restack_children (a_stackable_array);
 		end;
 
-	valid_stackables (a_stackable_array: ARRAY [STACKABLE]): BOOLEAN is
-			-- check that the array of stackables meets the critea
-			-- require for widgets to be restacked
-		require
-			exists: not destroyed;
-			valid_array: a_stackable_array /= Void and then
-					not a_stackable_array.empty;
-		local
-			index1: INTEGER;
-		do
-			Result := True;
-			from index1 := a_stackable_array.lower 
-			until  not Result or else index1 > a_stackable_array.upper
-			loop
-				If a_stackable_array.item (index1) = Void  then
-					Result := False;
-				elseif not a_stackable_array.item (index1).is_stackable or else
-				  not a_stackable_array.item (index1).realized or else
-				  a_stackable_array.item (index1).parent /= a_stackable_array.item(a_stackable_array.lower).parent then
-					Result := False;
-				end;
-				index1 := index1 + 1;
-			end;
-		end;
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current bulletin.
 		do
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BULLETIN_I
 			-- Implementation of bulletin
 
-end
-
+end -- class BULLETIN
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -166,3 +169,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

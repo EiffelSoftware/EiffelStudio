@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TRIANGLE
+class
+
+	TRIANGLE
 
 inherit
 
@@ -35,7 +37,7 @@ feature -- Initialization
 			radius := 0;
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_number_of_sides (new_number_of_sides: like number_of_sides) is
 			-- Set `number_of_sides' to `new_number_of_sides'.
@@ -62,7 +64,6 @@ invariant
 
 end -- class TRIANGLE 
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -75,3 +76,4 @@ end -- class TRIANGLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

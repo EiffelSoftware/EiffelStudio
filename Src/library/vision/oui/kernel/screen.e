@@ -10,7 +10,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCREEN 
+class
+
+	SCREEN 
 
 inherit
 
@@ -25,12 +27,18 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
-	destroyed: BOOLEAN is
+	make (a_screen_name: STRING) is
+			-- Create a screen specified by `a_screen_name'.
+		require
+			screen_name_exists: a_screen_name /= Void
 		do
-			Result := implementation = Void
+			screen_name := clone (a_screen_name);
+			implementation := toolkit.screen (current)
 		end;
+
+feature -- Access
 
 	buttons: BUTTONS is
 			-- Current state of the mouse buttons
@@ -42,13 +50,22 @@ feature
 			result_exists: Result /= Void
 		end;
 
-	make (a_screen_name: STRING) is
-			-- Create a screen specified by `a_screen_name'.
+	screen_name: STRING;
+			-- Screen name
+
+	widget_pointed: WIDGET is
+			-- Widget currently pointed by the pointer
 		require
-			screen_name_exists: a_screen_name /= Void
+			exists: not destroyed
 		do
-			screen_name := clone (a_screen_name);
-			implementation := toolkit.screen (current)
+			Result := implementation.widget_pointed
+		end;
+
+feature -- Status report
+
+	destroyed: BOOLEAN is
+		do
+			Result := implementation = Void
 		end;
 
 	is_valid: BOOLEAN is
@@ -59,6 +76,8 @@ feature
 			Result := implementation.is_valid
 		end;
 
+feature -- Measurement
+
 	height: INTEGER is
 			-- Height of screen (in pixel)
 		require
@@ -67,30 +86,6 @@ feature
 			Result := implementation.height
 		ensure
 			height_large_enough: Result >= 0
-		end;
-
-	implementation: SCREEN_I;
-			-- Implementation of current screen
-
-	same (other: like Current): BOOLEAN is
-			-- Does the current screen and `other' representing the
-			-- same screen ?
-		require else
-			exists: not destroyed;
-			other_exists: not (other = Void)
-		do
-			Result := other.implementation = implementation
-		end;
-
-	screen_name: STRING;
-			-- Screen name
-
-	widget_pointed: WIDGET is
-			-- Widget currently pointed by the pointer
-		require
-			exists: not destroyed
-		do
-			Result := implementation.widget_pointed
 		end;
 
 	width: INTEGER is
@@ -125,8 +120,24 @@ feature
 			position_small_enough: Result < height
 		end
 
-end
+feature -- Comparison
 
+	same (other: like Current): BOOLEAN is
+			-- Does the current screen and `other' representing the
+			-- same screen ?
+		require else
+			exists: not destroyed;
+			other_exists: other /= Void
+		do
+			Result := other.implementation = implementation
+		end;
+
+feature -- Implementation
+
+	implementation: SCREEN_I;
+			-- Implementation of current screen
+
+end -- class SCREEN
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

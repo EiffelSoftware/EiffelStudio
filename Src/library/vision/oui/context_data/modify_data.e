@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MODIFY_DATA 
+class
+
+	MODIFY_DATA 
 
 inherit 
 
@@ -18,16 +20,7 @@ creation
 
 	make
 
-feature 
-
-	start_position: INTEGER;
-			-- Start position of the text to be modified
-
-	last_position: INTEGER;
-			-- Last position of the text to be modified
-
-	text: STRING;
-			-- Text to be inserted between `start_position' and `last_position'
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_current, a_next, a_start, a_last: INTEGER; a_text: STRING) is
 			-- Create a context_data `modify' action.
@@ -40,8 +33,18 @@ feature
 			text := a_text
 		end
 
-end
+feature -- Access
 
+	start_position: INTEGER;
+			-- Start position of the text to be modified
+
+	last_position: INTEGER;
+			-- Last position of the text to be modified
+
+	text: STRING;
+			-- Text to be inserted between `start_position' and `last_position'
+
+end -- class MODIFY_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -55,3 +58,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

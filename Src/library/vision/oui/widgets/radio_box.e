@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RADIO_BOX 
+class
+
+	RADIO_BOX 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a radio box with `a_name' as identifier,
@@ -66,7 +68,7 @@ feature {NONE} -- Creation
 			Identifer_set: identifier.is_equal (a_name)
 		end;
 
-feature
+feature -- Status setting
 
 	set_always_one (flag: BOOLEAN) is
 		require
@@ -75,21 +77,19 @@ feature
 			implementation.set_always_one (flag);
 		end;
 
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current radio box.
 		do
 		end; 
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: RADIO_BOX_I
 			-- Implementation of radio box
 
-end
-
+end -- class RADIO_BOX
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -103,3 +103,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

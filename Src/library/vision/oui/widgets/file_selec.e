@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FILE_SELEC 
+class
+
+	FILE_SELEC 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a selection list with `a_name' as identifier,
@@ -45,7 +47,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature
+feature -- Element change
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -412,3 +414,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

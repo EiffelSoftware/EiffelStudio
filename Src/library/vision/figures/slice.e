@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SLICE 
+class
+
+	SLICE 
 
 inherit
 
@@ -48,7 +50,7 @@ feature -- Access
 			-- current arc relative to the start of
 			-- current arc
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_angle1 (an_angle: like angle1) is
 			-- Set angle1 to `an_angle'._
@@ -77,7 +79,7 @@ feature -- Modification & Insertion
 
 feature -- Output
 
-		draw is
+	draw is
 			-- Draw the slice.
 		do
 			if drawing.is_drawable then
@@ -106,7 +108,6 @@ feature -- Status report
 				and (angle2 = other.angle2)
 		end;
 
-
 invariant
 
 	angle1_small_enough: angle1 < 360;
@@ -116,7 +117,6 @@ invariant
 	angles_not_equal: angle2 /= angle1
 
 end -- class SLICE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -130,3 +130,4 @@ end -- class SLICE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

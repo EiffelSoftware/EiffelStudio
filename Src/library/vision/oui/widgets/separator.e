@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SEPARATOR 
+class
+
+	SEPARATOR 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a separator with `a_name' as identifier,
@@ -60,7 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Orientation
+feature -- Status report
 
 	is_horizontal: BOOLEAN is
 			-- Is separator oriented horizontal?
@@ -69,6 +71,8 @@ feature -- Orientation
 		do
 			Result := implementation.is_horizontal
 		end;
+
+feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -80,8 +84,6 @@ feature -- Orientation
 		ensure
 			value_correctly_set: is_horizontal = flag
 		end;
-
-feature -- Line type
 
 	set_single_line is
 			-- Set separator display to be single line.
@@ -123,19 +125,19 @@ feature -- Line type
 			implementation.set_no_line
 		end 
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SEPARATOR_I;
 			-- Implementation of separator
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current separator.
 		do
 		end;
-end
 
+end -- class SEPARATOR
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -149,3 +151,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

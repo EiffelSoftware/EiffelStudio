@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OPT_PULL 
+class
+
+	OPT_PULL 
 
 inherit
 
@@ -21,7 +23,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a pulldown menu with `a_name' as identifier,
@@ -63,7 +65,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-feature -- Option Menu
+feature -- Access
 
 	parent: COMPOSITE is
 			-- Parent of pulldown menu
@@ -77,16 +79,6 @@ feature -- Option Menu
 			exists: not destroyed
 		do
 			Result := implementation.selected_button
-		end;
-
-   	set_selected_button (a_button: BUTTON) is
-					-- Set `selected_button' to `a_button'
-		require
-			exists: not destroyed
-		do
-			implementation.set_selected_button(a_button)				
-		ensure
-			a_button.same (selected_button)
 		end;
 
 	option_button: OPTION_B is
@@ -109,6 +101,18 @@ feature -- Option Menu
 			Result := implementation.caption;
 		end
 
+feature -- Element change
+
+   	set_selected_button (a_button: BUTTON) is
+					-- Set `selected_button' to `a_button'
+		require
+			exists: not destroyed
+		do
+			implementation.set_selected_button(a_button)				
+		ensure
+			a_button.same (selected_button)
+		end;
+
 	set_caption (a_caption: STRING) is
 		require
 			exists: not destroyed;
@@ -117,22 +121,19 @@ feature -- Option Menu
 			implementation.set_caption (a_caption);
 		end;
 
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: OPT_PULL_I;
 			-- Implementation of pulldown menu
 
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current pulldown menu.
 		do
 		end;
 
-end
-
+end -- class OPT_PULL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -146,3 +147,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

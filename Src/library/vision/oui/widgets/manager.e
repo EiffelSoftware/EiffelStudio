@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MANAGER 
+deferred class
+
+	MANAGER 
 
 inherit 
 
@@ -19,15 +21,13 @@ inherit
 			implementation
 		end;
 
-feature -- Parent composite
+feature -- Access
 
 	parent: COMPOSITE is
 			-- Parent of manager widget
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
-
-feature -- Color
 
 	foreground_color: COLOR is
 			-- Foreground color of manager widget
@@ -38,6 +38,8 @@ feature -- Color
 		ensure
 			valid_result: Result /= Void
 		end;
+
+feature -- Element change
 
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
@@ -61,7 +63,7 @@ feature -- Color
 			foreground_color = new_color
 		end 
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: MANAGER_I;
 			-- Implementation of manager widget
@@ -70,8 +72,7 @@ invariant
 
 	valid_parent: (not destroyed and then parent /= Void) implies depth > 0
 
-end
-
+end -- class MANAGER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -85,3 +86,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

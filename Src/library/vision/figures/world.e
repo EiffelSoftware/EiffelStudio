@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class WORLD 
+class
+	
+	WORLD 
 
 inherit
 	
@@ -27,7 +29,7 @@ inherit
 
 	FIXED_LIST [LINKED_LIST[FIGURE]]
 		rename
-            make as al_make,
+			make as al_make,
 			put as al_put,
 			item as al_item,
 			start as al_start,
@@ -50,7 +52,6 @@ inherit
 creation
 
 	make, make_with_plane
-
 
 feature -- Initialization
 
@@ -88,8 +89,6 @@ feature -- Initialization
 			max_plane := plane_number;
 			make
 		end;
-
-	
 
 feature -- Access
 
@@ -147,7 +146,7 @@ feature -- Measurement
 		end;
 
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_origin (p: like origin) is
 			-- Set `origin' to `p'.
@@ -176,7 +175,6 @@ feature -- Modification & Insertion
 			v.conf_recompute;
 			set_conf_modified_with (v.surround_box);
 		end;
-
 
  	merge (other: like Current) is
 			-- Merge `other' 
@@ -352,7 +350,7 @@ feature {WORLD} -- Access
 
 	linked_list_cursor: CURSOR ;
 
-feature {WORLD} -- Modification & Insertion
+feature {WORLD} -- Element change
 
 	set_no_origin is
 			-- Erase definition of `origin'.
@@ -382,7 +380,6 @@ feature {WORLD} -- Cursor
 
 end --  class WORLD
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -395,3 +392,4 @@ end --  class WORLD
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

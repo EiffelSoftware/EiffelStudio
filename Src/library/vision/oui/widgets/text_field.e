@@ -10,7 +10,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT_FIELD 
+class
+
+	TEXT_FIELD 
 
 inherit
 
@@ -28,7 +30,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a text field with `a_name' as identifier,
@@ -70,29 +72,19 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Text size
+feature -- Access
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when 
-			-- an activate event occurs. 
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
+	text: STRING is
+			-- Value of current text field
 		require
 			exists: not destroyed
-			Valid_command: a_command /= Void
 		do
-			implementation.add_activate_action (a_command, argument)
+			Result := implementation.text
+		ensure
+			Result.count = count
 		end;
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed 
-			-- when an activate event occurs.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_activate_action (a_command, argument)
-		end;
+feature -- Measurement
 
 	maximum_size: INTEGER is
 			-- Maximum number of characters in current
@@ -113,6 +105,16 @@ feature -- Text size
 			Result >= 0
 		end;
 
+feature -- Status setting
+
+	clear is
+			-- Clear current text field.
+		require
+			exists: not destroyed
+		do
+			implementation.clear
+		end;
+
 	set_maximum_size (a_max: INTEGER) is
 			-- Set maximum_size to `a_max'.
 		require
@@ -122,16 +124,18 @@ feature -- Text size
 			implementation.set_maximum_size (a_max)
 		end; 
 
-feature -- Text manipulation
+feature -- Element change
 
-	text: STRING is
-			-- Value of current text field
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed when 
+			-- an activate event occurs. 
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
 			exists: not destroyed
+			Valid_command: a_command /= Void
 		do
-			Result := implementation.text
-		ensure
-			Result.count = count
+			implementation.add_activate_action (a_command, argument)
 		end;
 
 	append (a_text: STRING) is
@@ -141,14 +145,6 @@ feature -- Text manipulation
 			not_a_text_void: a_text /= Void
 		do
 			implementation.append (a_text)
-		end;
-
-	clear is
-			-- Clear current text field.
-		require
-			exists: not destroyed
-		do
-			implementation.clear
 		end;
 
 	insert (a_text: STRING; a_position: INTEGER) is
@@ -162,11 +158,9 @@ feature -- Text manipulation
 		do
 			implementation.insert (a_text, a_position)
 		ensure
---			count = (old count) + a_text.count;
 			a_text.count > 0 implies a_text.is_equal (text.substring
 					(a_position + 1, a_position + a_text.count))
 		end;
-
 
 	replace (from_position, to_position: INTEGER; a_text: STRING) is
 			-- Replace text from `from_position' to `to_position' by `a_text'.
@@ -179,7 +173,6 @@ feature -- Text manipulation
 		do
 			implementation.replace (from_position, to_position, a_text)
 		ensure
---			count = (old count) + a_text.count + to_position - from_position;
 			a_text.count > 0 implies a_text.is_equal (text.substring
 					(from_position + 1, from_position + a_text.count))
 		end;
@@ -193,24 +186,36 @@ feature -- Text manipulation
 			implementation.set_text (a_text)
 		end; 
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature -- Removal
+
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed 
+			-- when an activate event occurs.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_activate_action (a_command, argument)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: TEXT_FIELD_I;
 			-- Implementation of current text field
 
-feature {G_ANY, G_ANY_I, WIDGET_I}
+feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
 	is_fontable: BOOLEAN is true;
 			-- Is current widget an heir of FONTABLE ?
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default text to current text field.
 		do
 		end; 
-end
 
+end -- class TEXT_FIELD
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -224,3 +229,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

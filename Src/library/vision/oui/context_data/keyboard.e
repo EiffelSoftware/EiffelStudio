@@ -7,16 +7,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class KEYBOARD 
+class
+
+	KEYBOARD 
 
 creation
 
 	make
 
-feature 
-
-	control_pressed: BOOLEAN;
-			-- Is the CONTROL (CTRL) key pressed ?
+feature -- Initialization
 
 	make (nb_modifiers: INTEGER) is
 			-- Create a database to specify 
@@ -27,12 +26,24 @@ feature
 			end;
 		end;
 
-	lock_pressed: BOOLEAN;
-			-- Is the LOCK (CAPS LOCK) key pressed ?
+feature -- Access
 
 	modifiers: ARRAY [BOOLEAN];
 			-- Array of boolean representing the state (is pressed ?) of
 			-- the other logical modifiers
+
+feature -- Status report
+
+	control_pressed: BOOLEAN;
+			-- Is the CONTROL (CTRL) key pressed ?
+
+	lock_pressed: BOOLEAN;
+			-- Is the LOCK (CAPS LOCK) key pressed ?
+
+	shift_pressed: BOOLEAN
+			-- Is the key SHIFT pressed ?
+
+feature -- Status setting
 
 	set_control_pressed (a_state: BOOLEAN) is
 			-- Set `control_pressed' to `a_state'.
@@ -58,11 +69,7 @@ feature
 			shift_pressed = a_state
 		end;
 
-	shift_pressed: BOOLEAN
-			-- Is the key SHIFT pressed ?
-
-end
-
+end -- class KEYBOARD
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -76,3 +83,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

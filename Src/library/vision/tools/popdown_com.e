@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POPDOWN_COM 
+class
+
+	POPDOWN_COM 
 
 inherit
 
 	COMMAND
 
-feature 
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Popdown a shell.
@@ -28,8 +30,7 @@ feature
 			end
 		end
 
-end
-
+end -- class POPDOWN_COM
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -43,3 +44,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

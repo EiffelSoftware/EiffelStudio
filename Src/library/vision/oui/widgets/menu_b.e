@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MENU_B 
+class
+
+	MENU_B 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialziation
 
 	make (a_name: STRING; a_parent: MENU) is
 			-- Create a menu button with `a_name' as label
@@ -62,13 +64,15 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Attach menus
+feature -- Access
 
 	parent: MENU is
 			-- Parent of current menu button
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
+
+feature -- Element change
 
 	attach_menu (a_menu: MENU_PULL) is
 			-- Attach menu `a_menu' to the menu button, it will
@@ -82,20 +86,19 @@ feature -- Attach menus
 			implementation.attach_menu (a_menu)
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaitno
 
 	implementation: MENU_B_I;
 			-- Implementation of menu button
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default value to current menu button.
 		do
 		end
 
-end
-
+end -- class MENU_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -109,3 +112,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,18 +5,22 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SEPARATOR_I 
+deferred class
+
+	SEPARATOR_I 
 
 inherit
 
 	PRIMITIVE_I
 	
-feature 
+feature -- Status report
 
 	is_horizontal: BOOLEAN is
 			-- Is separator oriented horizontal?
 		deferred
 		end;
+
+feature -- Status setting
 
 	set_double_dashed_line is
 			-- Set separator display to be double dashed line.
@@ -53,7 +57,6 @@ feature
 
 end -- class SEPARATOR_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -66,3 +69,4 @@ end -- class SEPARATOR_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

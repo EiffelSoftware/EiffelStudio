@@ -5,25 +5,27 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CONTEXT_DATA 
+class
+
+	CONTEXT_DATA 
 
 creation
 
 	make
 
-feature 
-
-	widget: WIDGET;
-			-- The widget who triggered the callback
+feature -- Initialization
 
 	make (a_widget: WIDGET) is
 			-- Create a general context_data.
 		do
 			widget := a_widget
 		end
+feature -- Access
 
-end
+	widget: WIDGET;
+			-- The widget who triggered the callback
 
+end -- CONTEXT_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +39,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

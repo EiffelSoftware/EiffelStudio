@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POINT 
+class
+
+	POINT 
 
 inherit
 
@@ -28,8 +30,7 @@ inherit
 			set_conf_modified_with
 		redefine
 			conf_recompute
-		end;
-			
+		end;		
 
 	COORD_XY_FIG
 		undefine
@@ -93,7 +94,6 @@ invariant
 	origin_user_type <= 2
 
 end -- class POINT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PICT_COLOR_B 
+class
+
+	PICT_COLOR_B 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a draw button with `a_name' as identifier
@@ -62,7 +64,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Pixmap 
+feature -- Access
 
 	pixmap: PIXMAP is
 			-- Pixmap used
@@ -73,6 +75,19 @@ feature -- Pixmap
 		ensure
 			valid_result: Result /= Void and then Result.is_valid
 		end;
+
+feature -- Status report
+
+	is_valid (other: COMPOSITE): BOOLEAN is
+			-- Is `other' a valid parent?
+		local
+			a_bar: BAR
+		do
+			a_bar ?= other;
+			Result := (a_bar = Void)
+		end; 
+
+feature -- Element change
 
 	set_pixmap (a_pixmap: PIXMAP) is
 			-- Draw `a_pixmap' into the picture_button.
@@ -99,31 +114,19 @@ feature -- Pixmap
 			set_pixmap (a_pixmap);
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: PICT_COL_B_I;
 			-- Implementation of draw button
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current drawing button.
 		do
 		end;
 
-feature 
-
-	is_valid (other: COMPOSITE): BOOLEAN is
-			-- Is `other' a valid parent?
-		local
-			a_bar: BAR
-		do
-			a_bar ?= other;
-			Result := (a_bar = Void)
-		end; 
-
-end 
-
+end -- class PICT_COLOR_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -137,3 +140,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

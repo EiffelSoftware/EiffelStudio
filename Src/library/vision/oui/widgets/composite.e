@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COMPOSITE 
+deferred class
+
+	COMPOSITE 
 
 inherit
 
@@ -16,25 +18,12 @@ inherit
 			implementation, parent
 		end
 
-feature -- Widget hierarchy
+feature -- Access
 
 	parent: COMPOSITE is
 			-- Parent of composite
 		do
 			Result ?= widget_manager.parent (Current)
-		end;
-
-	children_count: INTEGER is
-			-- Number of children
-		require
-			exists: not destroyed;
-		local
-			ch: ARRAYED_LIST [WIDGET]
-		do
-			ch := widget_manager.children_of (Current);
-			Result:= ch.count
-		ensure
-			positive_result: Result >= 0
 		end;
 
 	children: ARRAYED_LIST [WIDGET] is
@@ -58,13 +47,27 @@ feature -- Widget hierarchy
 			valid_result: Result /= Void
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature -- Measurement
+
+	children_count: INTEGER is
+			-- Number of children
+		require
+			exists: not destroyed;
+		local
+			ch: ARRAYED_LIST [WIDGET]
+		do
+			ch := widget_manager.children_of (Current);
+			Result:= ch.count
+		ensure
+			positive_result: Result >= 0
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: COMPOSITE_I;
 			-- Implementation of Current
 
-end
-
+end -- class COMPOSITE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -78,3 +81,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

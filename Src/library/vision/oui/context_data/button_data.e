@@ -8,13 +8,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BUTTON_DATA 
+class
+
+	BUTTON_DATA 
 
 inherit
 
 	CONTEXT_DATA
 
-feature 
+feature  -- Access
 
 	absolute_x: INTEGER;
 			-- Absolute horizontal position of the pointer (in other words
@@ -42,10 +44,9 @@ feature
 			-- State of modifiers key (Shift, control...)
 invariant
 
-	not (buttons_state = Void)
+	buttons_state /= Void
 
-end
-
+end -- class BUTTON_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -59,3 +60,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOP_SHELL 
+class
+
+	TOP_SHELL 
 
 inherit 
 
@@ -20,7 +22,7 @@ creation
 
 	make
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make  (a_name: STRING; a_screen: SCREEN) is
 			-- Create a top_shell with `a_name' as identifier,
@@ -39,21 +41,19 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: TOP_SHELL_I
 			-- Implementation of top_shell
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values of current top shell.
 		do
 		end; 
 
-end 
-
-
+end -- class TOP_SHELL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -67,3 +67,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

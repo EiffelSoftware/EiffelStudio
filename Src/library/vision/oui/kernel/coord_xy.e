@@ -5,15 +5,19 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class COORD_XY 
+class
 
-feature 
+	COORD_XY 
+
+feature -- Access
 
 	x: INTEGER;
 			-- Value of horizontal position.
 
 	y: INTEGER;
 			-- Value of vertical position.
+
+feature -- Element change
 
 	set (new_x, new_y: INTEGER) is
 			-- Set position
@@ -25,8 +29,7 @@ feature
 			y_set: y = new_y
 		end
 
-end
-
+end -- class COORD_XY
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -40,3 +43,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PUSH_B 
+class
+
+	PUSH_B 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a push button with `a_name' as identifier,
@@ -73,6 +75,8 @@ feature -- Access
 		do
 			Result := parent.real_y + y;
 		end;
+
+feature -- Status report
 
 	is_valid (other: COMPOSITE): BOOLEAN is
 			-- Is `other' a valid parent?
@@ -129,7 +133,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: PUSH_B_I;
 			-- Implementation of push button
 
-end
+end -- class PUSH_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -143,3 +147,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

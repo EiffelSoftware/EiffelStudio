@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 	
-deferred class MOVABLE_FIG
+deferred class
+
+	MOVABLE_FIG
 	
 feature -- Access
 
@@ -14,9 +16,6 @@ feature -- Access
 		end;
 
 end -- class MOVABLE_FIG
-
-	
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COMPOSITE_FIG
+deferred class
+
+	COMPOSITE_FIG
 
 inherit
 	
@@ -30,8 +32,7 @@ feature -- Access
 		deferred
 		end;
 
-feature -- Modification & Insertion
-
+feature -- Element change
 
 	add (v: FIGURE) is
 			-- Append `v' 
@@ -229,8 +230,7 @@ feature -- Cursor movement
 		end;
 
 feature -- Output
-
-			
+		
 	draw is
 			-- Draw the figure in `drawing'.
 		require else
@@ -255,7 +255,6 @@ feature -- Updating
 
 	conf_recompute is
 		do
-			--io.putstring ("<< WORLD: conf_recompute >>%N");
 			from
 				composite_mark;
 				start;
@@ -300,7 +299,7 @@ feature -- Status report
 			other.composite_return
 		end;
 
-feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Modification & Insertion
+feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Element change
 
 	attach_drawing_imp (a_drawing: DRAWING_I) is
 			-- Attach a drawing to the figure.
@@ -321,7 +320,6 @@ feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Modification & Insertion
 
 end --  class COMPOSITE_FIG
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -334,3 +332,4 @@ end --  class COMPOSITE_FIG
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DRAW_FIG_COM 
+class
+
+	DRAW_FIG_COM 
 
 inherit
 
@@ -14,10 +16,12 @@ inherit
 			context_data_useful
 		end
 
-feature 
+feature -- Status report
 
-	context_data_useful: BOOLEAN is true;
+	context_data_useful: BOOLEAN is True;
 			-- This command need a context data
+
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Draw a figure.
@@ -38,7 +42,7 @@ feature
 				drawing := drawing_area
 			end;
 			check
-				not (drawing = Void)
+				drawing_not_void: drawing /= Void
 			end;
 			drawing.set_clip (expose_data.clip);
 			world ?= argument;
@@ -51,8 +55,7 @@ feature
 			drawing.set_no_clip
 		end;
 
-end
-
+end -- DRAW_FIG_COM
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -66,3 +69,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,14 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class OPEN_FIG 
+deferred class
+
+	OPEN_FIG 
 
 inherit
 
 	FIGURE
 
 end -- class OPEN_FIG
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

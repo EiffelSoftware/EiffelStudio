@@ -1,10 +1,12 @@
 indexing
-
+	description: "Description of a color";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class COLOR 
+class
+
+	COLOR 
 
 inherit
 
@@ -191,7 +193,7 @@ feature -- Status setting
 			black_default: not is_white_by_default
 		end;
 
-feature -- Obsolete features
+feature -- Obsolete
 
 	allocated_blue (a_widget: WIDGET): INTEGER is
 			-- Allocated blue saturation level for `a_widget'
@@ -241,3 +243,4 @@ end -- class COLOR
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

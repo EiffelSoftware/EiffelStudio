@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CHECK_BOX_I 
+deferred class
+
+	CHECK_BOX_I 
 
 inherit
 
@@ -13,8 +15,7 @@ inherit
 
 feature
 
-end --class CHECK_BOX_I
-
+end -- class CHECK_BOX_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -28,3 +29,4 @@ end --class CHECK_BOX_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

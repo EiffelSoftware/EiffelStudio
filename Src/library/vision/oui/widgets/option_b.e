@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OPTION_B 
+class
+
+	OPTION_B 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initiazliation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a menu button with `a_name' as label
@@ -60,7 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature
+feature -- Access
 
 	parent: COMPOSITE is
 			-- Parent of current menu button
@@ -75,6 +77,22 @@ feature
 		do
 			Result := implementation.selected_button
 		end;
+
+	title: STRING is
+		require
+			exists: not destroyed
+		do
+			Result := implementation.title;
+		end;
+
+	title_width: INTEGER is
+		require
+			exists: not destroyed
+		do
+			Result := implementation.title_width;
+		end;
+
+feature -- Element change
 
 	set_selected_button (button: BUTTON) is
 			-- Set `selected_button' to `button'
@@ -99,13 +117,6 @@ feature
 			implementation.attach_menu (a_menu)
 		end;
 
-	title: STRING is
-		require
-			exists: not destroyed
-		do
-			Result := implementation.title;
-		end;
-
 	set_title (a_title: STRING) is
 		require
 			exists: not destroyed;
@@ -118,13 +129,6 @@ feature
 			exists: not destroyed
 		do
 			implementation.remove_title;
-		end;
-
-	title_width: INTEGER is
-		require
-			exists: not destroyed
-		do
-			Result := implementation.title_width;
 		end;
 
 	set_size (new_width, new_height: INTEGER) is
@@ -160,20 +164,19 @@ feature
 			end;
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: OPTION_B_I;
 			-- Implementation of menu button
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default value to current menu button.
 		do
 		end 
 
-end
-
+end -- class OPTION_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -187,3 +190,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

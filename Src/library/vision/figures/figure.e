@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FIGURE
+deferred class
+
+	FIGURE
 
 inherit
 
@@ -58,7 +60,7 @@ feature -- Access
 	drawing: DRAWING_I;
 			-- Drawing area 
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	attach_drawing (a_drawing: DRAWING) is
 			-- Attach a drawing to the figure
@@ -113,7 +115,7 @@ feature -- Output
 			not_conf_modified: not conf_modified
 		end;
 
-feature
+feature -- Access
 
 	conf_notified: FIGURE;
 			-- receive notification modification
@@ -139,7 +141,6 @@ feature {WORLD, FIGURE} -- Initialization
 
 feature {CONFIGURE_NOTIFY} -- Access
 
-	 
 	set_figure (f: FIGURE) is
 		do
 			if f /= Void then
@@ -204,15 +205,12 @@ feature {CONFIGURE_NOTIFY} -- Access
 			set_conf_value_modified (false)
 		end;
 
-
-
 invariant
 	non_negative_plane: plane >= 0;
 	less_than_max_plane: plane < max_plane;
 	plane_same_as_parent: (conf_notified /= Void) implies (conf_notified.plane = plane)
 
 end -- class FIGURE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -226,3 +224,4 @@ end -- class FIGURE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

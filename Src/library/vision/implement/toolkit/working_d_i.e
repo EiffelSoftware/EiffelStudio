@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class WORKING_D_I 
+deferred class
+
+	WORKING_D_I 
 
 inherit
 
@@ -13,9 +15,7 @@ inherit
 
 feature
 
-
 end -- class WORKING_D_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -29,3 +29,4 @@ end -- class WORKING_D_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

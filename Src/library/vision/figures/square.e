@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SQUARE 
+class
+
+	SQUARE 
 
 inherit
 
@@ -56,9 +58,9 @@ feature -- Access
 				and p.y >= y0 and p.y <= y1);
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
-set_number_of_sides (new_number_of_sides: like number_of_sides) is
+	set_number_of_sides (new_number_of_sides: like number_of_sides) is
 			-- Set `number_of_sides' to `new_number_of_sides'.
 		require else
 			can_change_on_square: false
@@ -101,7 +103,6 @@ invariant
 
 end -- class SQUARE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -114,3 +115,4 @@ end -- class SQUARE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

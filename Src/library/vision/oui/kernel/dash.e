@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DASH 
+class
+
+	DASH 
 
 inherit
 
@@ -15,7 +17,12 @@ creation
 
 	make
 
-feature 
+feature -- Access
+
+	offset: INTEGER;
+			-- How many pixels into the patterns the line should actually begin
+
+feature -- Measurement
 
 	max_offset: INTEGER is
 			-- Sum of integers in the list
@@ -35,10 +42,7 @@ feature
 			go_to (keep_cursor)
 		end;
 
-feature 
-
-	offset: INTEGER;
-			-- How many pixels into the patterns the line should actually begin
+feature -- Element change
 
 	set_offset (new_offset: INTEGER) is
 			-- Set `offset' to `new_offset'.
@@ -56,8 +60,7 @@ invariant
 	non_negative_offset: offset >= 0;
 	not_empty_offset_in_bound: (not empty) implies (offset <= max_offset)
 
-end
-
+end -- class DASH
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -71,3 +74,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TABBED_TEXT
+class
+
+	TABBED_TEXT
 
 inherit
 
@@ -19,7 +21,7 @@ creation
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a scrolled text with `a_name' as identifier,
@@ -85,3 +87,4 @@ end -- class TABBED_TEXT
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

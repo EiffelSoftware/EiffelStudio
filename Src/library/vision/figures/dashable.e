@@ -5,14 +5,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DASHABLE 
+class
+
+	DASHABLE 
 
 feature -- Access 
 
 	dash_pattern: DASH;
 			-- Pattern of dash to be used to draw lines
 
-feature -- Modification & Insertion 
+feature -- Element change 
 
 	set_dash_pattern (a_dash: DASH) is
 			-- Set pattern of dash to be used to draw lines.
@@ -65,8 +67,6 @@ feature -- Status report
 			Result := line_style = LineSolid
 		end;
 
-
-
 feature {NONE} -- Access
 
 	line_style: INTEGER;
@@ -87,7 +87,6 @@ invariant
 
 end -- class DASHABLE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -100,3 +99,4 @@ end -- class DASHABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

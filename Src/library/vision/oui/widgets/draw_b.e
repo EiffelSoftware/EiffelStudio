@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DRAW_B 
+class
+
+	DRAW_B 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make
 	
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a draw button with `a_name' as identifier
@@ -64,19 +66,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: DRAW_B_I;
-			-- Implementation of draw button
-	
-feature {NONE}
-
-	set_default is
-			-- Set default values to current drawing button.
-		do
-		end;
-
-feature 
+feature -- Status report
 
 	is_valid (other: COMPOSITE): BOOLEAN is
 			-- Is `other' a valid parent?
@@ -86,9 +76,20 @@ feature
 			a_bar ?= other;
 			Result := (a_bar = Void)
 		end;
-	
-end
 
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: DRAW_B_I;
+			-- Implementation of draw button
+	
+feature {NONE} -- Implementation
+
+	set_default is
+			-- Set default values to current drawing button.
+		do
+		end;
+
+end -- class DRAW_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -102,3 +103,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

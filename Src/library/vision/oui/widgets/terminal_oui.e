@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TERMINAL_OUI
+class
+
+	TERMINAL_OUI
 
 inherit 
 
@@ -13,20 +15,33 @@ inherit
 			implementation, set_default
 		end
 
-feature {NONE}
+feature -- Access
 
-	set_default is
-			-- Set default value and build the terminal
+	label_font: FONT is
+			-- Font specified for labels
+		require
+			exists: not destroyed
 		do
-			implementation.build
+			Result := implementation.label_font
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+	button_font: FONT is
+			-- Font specified for buttons
+		require
+			exists: not destroyed
+		do
+			Result := implementation.button_font
+		end;
 
-	implementation: TERMINAL_I;
-			-- Implementation of terminal widget
+	text_font: FONT is
+			-- Font specified for text
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text_font
+		end 
 
-feature 
+feature -- Element change
 
 	set_label_font (a_font: FONT) is
 			-- Set font of every labels to `a_font'.
@@ -58,32 +73,20 @@ feature
 			implementation.set_text_font (a_font);
 		end;
 
-	label_font: FONT is
-			-- Font specified for labels
-		require
-			exists: not destroyed
+feature {NONE} -- Implementation
+
+	set_default is
+			-- Set default value and build the terminal
 		do
-			Result := implementation.label_font
+			implementation.build
 		end;
 
-	button_font: FONT is
-			-- Font specified for buttons
-		require
-			exists: not destroyed
-		do
-			Result := implementation.button_font
-		end;
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	text_font: FONT is
-			-- Font specified for text
-		require
-			exists: not destroyed
-		do
-			Result := implementation.text_font
-		end 
+	implementation: TERMINAL_I;
+			-- Implementation of terminal widget
 
-end
-
+end -- class TERMINAL_OUI
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -97,3 +100,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

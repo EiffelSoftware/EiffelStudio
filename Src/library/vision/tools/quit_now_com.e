@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class QUIT_NOW_COM 
+class
+
+	QUIT_NOW_COM 
 
 inherit
 
@@ -16,7 +18,7 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Quit the application.
@@ -24,8 +26,7 @@ feature
 			exit
 		end
 
-end
-
+end -- class QUIT_NOW_COM
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -39,3 +40,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

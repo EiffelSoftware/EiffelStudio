@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TOP 
+deferred class
+
+	TOP 
 
 inherit
 
@@ -19,7 +21,7 @@ inherit
 			implementation as wm_implementation
 		end
 	
-feature 
+feature  -- Access
 
 	screen: SCREEN;
 			-- Screen of current top-level
@@ -33,6 +35,16 @@ feature
 			Result := implementation.icon_name
 		end; 
 
+	top: TOP is
+			-- Top shell or base of widget (itself here)
+		do
+			Result := Current
+		ensure then
+			Top_is_current: Result = Current
+		end ;
+
+feature -- Status report
+
 	is_iconic_state: BOOLEAN is
 			-- Does application start in iconic state?
 		require
@@ -41,14 +53,7 @@ feature
 			Result := implementation.is_iconic_state
 		end;
 
-	set_icon_name (a_name: STRING) is
-			-- Set `icon_name' to `a_name'.
-		require
-			exists: not destroyed;
-			Valid_name: a_name /= Void
-		do
-			implementation.set_icon_name (a_name)
-		end;
+feature -- Status setting
 
 	set_iconic_state is
 			-- Set start state of the application to be iconic.
@@ -66,13 +71,16 @@ feature
 			implementation.set_normal_state
 		end;
 
-	top: TOP is
-			-- Top shell or base of widget (itself here)
+feature -- Element change
+
+	set_icon_name (a_name: STRING) is
+			-- Set `icon_name' to `a_name'.
+		require
+			exists: not destroyed;
+			Valid_name: a_name /= Void
 		do
-			Result := Current
-		ensure then
-			Top_is_current: Result = Current
-		end ;
+			implementation.set_icon_name (a_name)
+		end;
 
 	delete_window_action is
 			-- Called when 'top' is destroyed.
@@ -86,16 +94,18 @@ feature
 			end;
 		end;
 
+feature -- Removal
+
 	set_delete_command (c: COMMAND) is
 		do
 			delete_command := c;
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	delete_command: COMMAND;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, APPLICATION}
+feature {G_ANY, G_ANY_I, WIDGET_I, APPLICATION} -- Implementation
 
 	implementation: TOP_I;
 			-- Implementation of top
@@ -105,8 +115,7 @@ invariant
 	Depth_is_zero: depth = 0;
 	Has_no_parent: parent = Void
 
-end 
-
+end -- class TOP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -120,3 +129,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

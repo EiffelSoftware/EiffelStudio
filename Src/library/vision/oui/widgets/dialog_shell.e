@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DIALOG_SHELL 
+class
+
+	DIALOG_SHELL 
 
 inherit
 
@@ -23,7 +25,7 @@ creation
 
 	make
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a dialog shell with `a_name' as identifier,
@@ -42,20 +44,19 @@ feature {NONE} -- Creation
 			identifer_set: identifier.is_equal (a_name)
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: DIALOG_S_I
 			-- Implementation of dialog shell
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current dialog shell.
 		do
 		end;
 
-end
-
+end -- class DIALOG_SHELL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -69,3 +70,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

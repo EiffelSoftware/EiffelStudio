@@ -5,15 +5,18 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class BULLETIN_I 
+deferred class
+
+	BULLETIN_I 
 
 inherit
 
 	MANAGER_I
 
-feature
+feature -- Status setting
 	
 	set_default_position (flag: BOOLEAN) is
+			-- Set default position.
 		require
 			valid_flag: flag /= Void;
 		deferred
@@ -37,21 +40,19 @@ feature
 		end;
 
 	circulate_down is
-		--circulate the children of the bulletin down
+			--circulate the children of the bulletin down
 		deferred
 		end;
 
 	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
-		-- Stack the children of the bulletin in the 
-		-- order that they are in the array.
-		-- Each item in the argument array must have the same
-		--parent
+			-- Stack the children of the bulletin in the 
+			-- order that they are in the array.
+			-- Each item in the argument array must have the same
+			--parent
 		deferred
 		end;
 
-
 end -- class BULLETIN_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -65,3 +66,4 @@ end -- class BULLETIN_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

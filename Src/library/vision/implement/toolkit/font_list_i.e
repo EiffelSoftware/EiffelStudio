@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FONT_LIST_I 
+deferred class
+
+	FONT_LIST_I 
 
 inherit
 	G_ANY_I
@@ -17,25 +19,53 @@ inherit
 			setup
 		end;
 
-feature 
+feature -- Access
 
-	count: INTEGER is
-			-- Number of items in the chain
-		deferred
-		end;  -- count
-
-	destroy is
-			-- Destroy current font list.
+	first: FONT is
+			-- Item at first position
+		require
+			not_empty: not empty
 		deferred
 		end;
 
-	empty: BOOLEAN is
-			-- Is the chain empty?
+	item: like first is
+			-- Item at cursor position
+		require
+			not_off: not off
+		deferred
+		end;
+
+	i_th (i: INTEGER): like first is
+			-- Item at `i'_th position
+		require
+			index_large_enough: i >= 1;
+			index_small_enough: i <= count;
+		deferred
+		end;
+
+	last: like first is
+			-- Item at last position
+		require
+			not_empty: not empty
 		deferred
 		end;
 
 	position: INTEGER is
 			-- Current cursor position, 0 if empty
+		deferred
+		end;
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items in the chain
+		deferred
+		end
+
+feature -- Status report
+
+	empty: BOOLEAN is
+			-- Is the chain empty?
 		deferred
 		end;
 
@@ -68,34 +98,14 @@ feature
 			Result implies (not empty)
 		end;
 
-	first: FONT is
-			-- Item at first position
-		require
-			not_empty: not empty
+feature -- Status setting
+
+	destroy is
+			-- Destroy current font list.
 		deferred
 		end;
 
-	item: like first is
-			-- Item at cursor position
-		require
-			not_off: not off
-		deferred
-		end;
-
-	i_th (i: INTEGER): like first is
-			-- Item at `i'_th position
-		require
-			index_large_enough: i >= 1;
-			index_small_enough: i <= count;
-		deferred
-		end;
-
-	last: like first is
-			-- Item at last position
-		require
-			not_empty: not empty
-		deferred
-		end;
+feature -- Cursor movement
 
 	start is
 			-- Move cursor to first position.
@@ -126,8 +136,6 @@ feature
 		require
 			not_offleft: position > 0
 		deferred
-		ensure
---			position = old position - 1
 		end;
 
 	move (i: INTEGER) is
@@ -137,8 +145,6 @@ feature
 			stay_left: position + i <= count + 1;
 			not_empty_unless_zero: empty implies i=0;
 		deferred
-		ensure
---			position = old position + i
 		end;
 
 	go (i: INTEGER) is
@@ -149,7 +155,7 @@ feature
 			not_empty_unless_zero: empty implies i=0;
 		deferred
 		ensure
-			position = i
+			position_set: position = i
 		end;
 
 	search_equal (v: like first) is
@@ -158,10 +164,10 @@ feature
 			-- where item is equal to `v' (shallow equality);
 			-- go off right if none.
 		require
-			search_element_exists: not (v = Void)
+			search_element_exists: v /= Void
 		deferred
 		ensure
-			(not off) implies (v.is_equal (item))
+			valid: (not off) implies (v.is_equal (item))
 		end;
 
 	index_of (v: like first; i: INTEGER): INTEGER is
@@ -170,7 +176,7 @@ feature
 			positive_occurrence: i > 0
 		deferred
 		ensure
-			Result >= 0
+			positive_result: Result >= 0
 		end;
 
 	has (v: like first): BOOLEAN is
@@ -179,44 +185,24 @@ feature
 		end
 
 invariant
-
-		-- Definitions:
-
 	empty_is_zero_cnt:
 		empty = (count = 0);
-
 	off_is_offleft_or_offright:
 		off = ((position = 0) or else (position = count + 1));
-
 	isfirst_is_pos_one:
 		isfirst = (position = 1);
-
 	islast_is_pos_cnt:
 		islast = (not empty and (position = count));
-
-		-- Axioms:
-
-	non_negative_count:
-		count >= 0;
-
-	non_negative_position:
-		position >= 0;
-
-	stay_on:
-		position <= count + 1;
-
-	empty_implies_off:
-		empty implies off;
-
+	non_negative_count: count >= 0;
+	non_negative_position: position >= 0
+	stay_on: position <= count + 1;
+	empty_implies_off: empty implies off;
 	empty_implies_zero_pos:
 		empty implies position = 0;
-
-		-- Theorems:
 	not_on_empty:
 		empty implies not (isfirst or islast)
 
-end
-
+end -- FONT_LIST_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -230,3 +216,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,10 +1,13 @@
 indexing
 
+	description: "Dialog with a text field";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PROMPT_D 
+class
+
+	PROMPT_D 
 
 inherit
 
@@ -26,7 +29,7 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a prompt dialog with `a_name' as identifier,
@@ -44,47 +47,48 @@ feature {NONE} -- Creation
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)
 		end;
-feature
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- cancel button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
+feature -- Access
+
+	selection_text: STRING is
+			-- Current text in selection box
 		do
-			implementation.add_cancel_action (a_command, argument)
+			Result := implementation.selection_text
 		end;
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- apply button is activated.
+feature -- Status setting
+
+	show_apply_button is
+			-- Make apply button visible.
 		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
+			exists: not destroyed
 		do
-			implementation.add_apply_action (a_command, argument)
+			implementation.show_apply_button
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- help button is activated.
+	show_cancel_button is
+			-- Make cancel button visible.
 		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
+			exists: not destroyed
 		do
-			implementation.add_help_action (a_command, argument)
+			implementation.show_cancel_button
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- ok button is activated.
+	show_help_button is
+			-- Make help button visible.
 		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
+			exists: not destroyed
 		do
-			implementation.add_ok_action (a_command, argument)
+			implementation.show_help_button
 		end;
+
+	show_ok_button is
+			-- Make ok button visible.
+		require
+			exists: not destroyed
+		do
+			implementation.show_ok_button
+		end 
 
 	hide_apply_button is
 			-- Make apply button invisible.
@@ -110,58 +114,7 @@ feature
 			implementation.hide_ok_button
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: PROMPT_D_I
-			-- Implementation of current prompt dialog
-
-feature 
-
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- cancel button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_cancel_action (a_command, argument)
-		end;
-
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- apply button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_apply_action (a_command, argument)
-		end;
-
-	remove_help_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- help button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_help_action (a_command, argument)
-		end;
-
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- ok button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_ok_action (a_command, argument)
-		end;
-
-	selection_text: STRING is
-			-- Current text in selection box
-		do
-			Result := implementation.selection_text
-		end;
+feature -- Element change
 
 	set_apply_label (a_label: STRING) is
 			-- Set `a_label' as label for apply button,
@@ -222,39 +175,94 @@ feature
 			implementation.set_selection_text (a_text)
 		end;
 
-	show_apply_button is
-			-- Make apply button visible.
+	add_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
 		do
-			implementation.show_apply_button
+			implementation.add_cancel_action (a_command, argument)
 		end;
 
-	show_cancel_button is
-			-- Make cancel button visible.
+	add_apply_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- apply button is activated.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
 		do
-			implementation.show_cancel_button
+			implementation.add_apply_action (a_command, argument)
 		end;
 
-	show_help_button is
-			-- Make help button visible.
+	add_help_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- help button is activated.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
 		do
-			implementation.show_help_button
+			implementation.add_help_action (a_command, argument)
 		end;
 
-	show_ok_button is
-			-- Make ok button visible.
+	add_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
 		do
-			implementation.show_ok_button
-		end 
-end
+			implementation.add_ok_action (a_command, argument)
+		end;
 
+feature -- Removal
+
+	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- cancel button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_cancel_action (a_command, argument)
+		end;
+
+	remove_apply_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- apply button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_apply_action (a_command, argument)
+		end;
+
+	remove_help_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- help button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_help_action (a_command, argument)
+		end;
+
+	remove_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- ok button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_ok_action (a_command, argument)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementatino
+
+	implementation: PROMPT_D_I
+			-- Implementation of current prompt dialog
+
+end -- class PROMPT_D
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -268,3 +276,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

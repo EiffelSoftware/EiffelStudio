@@ -1,10 +1,13 @@
 indexing
-
+	
+	description: "Cursor displayable on the screen";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCREEN_CURSOR 
+class
+
+	SCREEN_CURSOR 
 
 inherit
 
@@ -28,20 +31,23 @@ feature {NONE} -- Initialization
 			implementation := toolkit.screen_cursor (current)
 		end;
 
-    make_for_screen (a_screen: SCREEN) is
-            -- Create a cursor for `a_screen'.
-        require
-            valid_screen: a_screen /= Void and then a_screen.is_valid
-        do
-            implementation := toolkit.screen_cursor_for_screen (Current, a_screen)
-        end;
+	make_for_screen (a_screen: SCREEN) is
+			-- Create a cursor for `a_screen'.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
+		do
+			implementation := toolkit.screen_cursor_for_screen (Current, a_screen)
+		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature -- Access
 
-	implementation: SCREEN_CURSOR_I;
-			-- Implementation of current cursor
+	type: INTEGER is
+			-- Predefined type of current cursor
+		do
+			Result := implementation.type
+		end
 
-feature 
+feature -- Element change
 
 	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
 			-- Set `pixmap' as the new shape of the cursor.
@@ -51,9 +57,9 @@ feature
 			-- they may be disposed, and if they change, cursor will be
 			-- altered.
 		require
-			pixmap_exists: not (pixmap = Void);
+			pixmap_exists: pixmap /= Void
 			pixmap_is_valid: pixmap.is_valid;
-			mask_is_valid_if_exists: (not (mask = Void)) implies mask.is_valid
+			mask_is_valid_if_exists: (mask /= Void) implies mask.is_valid
 		do
 			implementation.set_pixmap (pixmap, mask)
 		ensure
@@ -70,18 +76,16 @@ feature
 			type_set: type = new_type
 		end;
 
-	type: INTEGER is
-			-- Predefined type of current cursor
-		do
-			Result := implementation.type
-		end
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: SCREEN_CURSOR_I;
+			-- Implementation of current cursor
 
 invariant
 
 	valid_type: ((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
 
-end
-
+end -- class SCREEN_CURSOR
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -95,3 +99,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

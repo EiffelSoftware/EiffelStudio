@@ -5,14 +5,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LINE_WIDTH 
+class
+
+	LINE_WIDTH 
 
 feature -- Access 
 
 	line_width: INTEGER;
 			-- width of line of current figure
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_line_width (a_line_width: INTEGER) is
 			-- Set `line_width' of current figure to `a_line_width'.
@@ -24,13 +26,11 @@ feature -- Modification & Insertion
 			line_width = a_line_width
 		end;
 
-
 invariant
 
 	line_width >= 0
 
 end -- class LINE_WIDTH
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -44,3 +44,4 @@ end -- class LINE_WIDTH
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

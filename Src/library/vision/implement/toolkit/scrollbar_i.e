@@ -5,38 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SCROLLBAR_I 
+deferred class
+	
+	SCROLLBAR_I 
 
 inherit
 
 	PRIMITIVE_I
 	
-feature 
-
-	add_move_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when slide
-			-- is moved.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when value
-			-- is changed.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	granularity: INTEGER is
-			-- Value of the amount to move the slider and modifie the
-			-- slide position value when a move action occurs
-		deferred
-		ensure
-			granularity_large_enough: Result >= 1;
-			granularity_small_enough: Result <= (maximum - minimum)
-		end;
+feature -- Access
 
 	initial_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) before starting
@@ -46,16 +23,13 @@ feature
 			positive_value: Result > 0
 		end;
 
-	is_horizontal: BOOLEAN is
-			-- Is scrollbar oriented horizontal?
+	granularity: INTEGER is
+			-- Value of the amount to move the slider and modifie the
+			-- slide position value when a move action occurs
 		deferred
-		end;
-
-	is_maximum_right_bottom: BOOLEAN is
-			-- Is maximum value on the right side when orientation
-			-- is horizontal or on the bottom side when orientation
-			-- is vertical?
-		deferred
+		ensure
+			granularity_large_enough: Result >= 1;
+			granularity_small_enough: Result <= (maximum - minimum)
 		end;
 
 	maximum: INTEGER is
@@ -80,22 +54,6 @@ feature
 			position_small_enough: Result <= maximum
 		end;
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- slide is moved.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- value is changed.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
 	repeat_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) between subsequent
 			-- slider movements after the initial delay
@@ -103,6 +61,49 @@ feature
 		ensure
 			positive_delay: Result > 0
 		end;
+
+	slider_size: INTEGER is
+			-- Size of slider.
+		deferred
+		ensure
+			slider_size_small_enough: Result <= (maximum - minimum);
+			slider_size_large_enough: Result >= 0
+		end
+
+feature -- Status report
+
+	is_horizontal: BOOLEAN is
+			-- Is scrollbar oriented horizontal?
+		deferred
+		end;
+
+	is_maximum_right_bottom: BOOLEAN is
+			-- Is maximum value on the right side when orientation
+			-- is horizontal or on the bottom side when orientation
+			-- is vertical?
+		deferred
+		end;
+
+feature -- Status setting
+
+	set_horizontal (flag: BOOLEAN) is
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		deferred
+		ensure
+			value_correctly_set: is_horizontal = flag
+		end;feature -- Element change
+
+	set_maximum_right_bottom (flag: BOOLEAN) is
+			-- Set maximum value on the right side when orientation
+			-- is horizontal or on the bottom side when orientation
+			-- is vertical if `flag', and at the opposite side otherwise.
+		deferred
+		ensure
+			maximum_value_on_right_bottom: is_maximum_right_bottom = flag
+		end;
+
+feature -- Element change
 
 	set_granularity (new_granularity: INTEGER) is
 			-- Set amount to move the slider and modifie the slide
@@ -115,12 +116,20 @@ feature
 			granularity = new_granularity
 		end;
 
-	set_horizontal (flag: BOOLEAN) is
-            -- Set orientation of the scale to horizontal if `flag',
-            -- to vertical otherwise.
-        deferred
-        ensure
-            value_correctly_set: is_horizontal = flag
+	add_move_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when slide
+			-- is moved.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when value
+			-- is changed.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
 		end;
 
 	set_initial_delay (new_delay: INTEGER) is
@@ -130,7 +139,7 @@ feature
 			positive_delay: new_delay > 0
 		deferred
 		ensure
-			initial_delay = new_delay
+			set: initial_delay = new_delay
 		end;
 
 	set_maximum (new_maximum: INTEGER) is
@@ -139,17 +148,8 @@ feature
 			maximum_greater_than_mini: new_maximum > minimum
 		deferred
 		ensure
-			maximum = new_maximum
+			set: maximum = new_maximum
 		end;
-
-	set_maximum_right_bottom (flag: BOOLEAN) is
-            -- Set maximum value on the right side when orientation
-            -- is horizontal or on the bottom side when orientation
-            -- is vertical if `flag', and at the opposite side otherwise.
-        deferred
-        ensure
-            maximum_value_on_right_bottom: is_maximum_right_bottom = flag
-        end;
 
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of slider position to `new_minimum'.
@@ -157,7 +157,7 @@ feature
 			minimum_smaller_than_maxi: new_minimum < maximum
 		deferred
 		ensure
-			minimum = new_minimum
+			set: minimum = new_minimum
 		end;
 
 	set_position (new_position: INTEGER) is
@@ -167,7 +167,7 @@ feature
 			position_large_enough: new_position >= minimum
 		deferred
 		ensure
-			position = new_position
+			set: position = new_position
 		end;
 
 	set_repeat_delay (new_delay: INTEGER) is
@@ -177,7 +177,7 @@ feature
 			positive_delay: new_delay > 0
 		deferred
 		ensure
-			repeat_delay = new_delay
+			set: repeat_delay = new_delay
 		end;
 
 	set_slider_size (new_size: INTEGER) is
@@ -187,19 +187,28 @@ feature
 			new_size_large_enough: new_size >= 0
 		deferred
 		ensure
-			slider_size = new_size
+			set: slider_size = new_size
 		end;
 
-	slider_size: INTEGER is
-			-- Size of slider.
+feature -- Removal
+
+	remove_move_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- slide is moved.
+		require
+			not_a_command_void: a_command /= Void
 		deferred
-		ensure
-			slider_size_small_enough: Result <= (maximum - minimum);
-			slider_size_large_enough: Result >= 0
-		end
+		end;
+
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- value is changed.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
 
 end --class SCROLLBAR
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -213,3 +222,4 @@ end --class SCROLLBAR
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,8 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FILLABLE 
+class
 
+	FILLABLE 
 
 feature -- Access
 
@@ -17,7 +18,7 @@ feature -- Access
 	tile: PIXMAP;
 			-- Tile used to fill when `is_tiled_fill'
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_even_odd_rule is
 			-- Specifies that areas are not filled if they overlap an odd
@@ -139,7 +140,6 @@ invariant
 
 end -- class FILLABLE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -152,3 +152,4 @@ end -- class FILLABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,10 +1,13 @@
 indexing
 
+	description: "Implementaiton of a draw button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DRAW_B_I 
+deferred class
+
+	DRAW_B_I 
 
 inherit
 
@@ -13,7 +16,6 @@ inherit
 	DRAWING_I
 	
 end -- class DRAW_B_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -27,3 +29,4 @@ end -- class DRAW_B_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

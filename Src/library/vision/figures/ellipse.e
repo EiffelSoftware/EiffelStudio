@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ELLIPSE
+class
+
+	ELLIPSE
 
 inherit
 
@@ -66,7 +68,7 @@ feature -- Access
 	radius2: INTEGER;
 			-- Second radius of the ellipse
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_center (a_point: like center) is
 			-- Set `center' to `a_point'.
@@ -203,7 +205,6 @@ invariant
 
 end -- class ELLIPSE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, 1995,
@@ -216,3 +217,4 @@ end -- class ELLIPSE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -9,7 +9,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TIMER 
+class
+
+	TIMER 
 
 inherit
 
@@ -22,7 +24,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make is
 			-- Create a timer.
@@ -30,8 +32,7 @@ feature
 			implementation := toolkit.timer (Current)
 		end;
 
-	implementation: TIMER_I;
-			-- Implementation of timer
+feature -- Status report
 
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
@@ -50,6 +51,13 @@ feature
 			Result := implementation.is_regular_call_back
 		end;
 
+	destroyed: BOOLEAN is
+		do
+			Result := implementation = Void
+		end;
+
+feature -- Status setting
+
 	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_delay'
 			-- in milliseconds has expired.
@@ -57,7 +65,7 @@ feature
 			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			a_delay_positive_and_not_null: a_delay > 0;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.set_next_call_back (a_delay, a_command, an_argument)
 		ensure
@@ -82,16 +90,11 @@ feature
 			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			a_time_positive_and_not_null: a_time >0;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command = Void
 		do
 			implementation.set_regular_call_back (a_time, a_command, an_argument)
 		ensure
 			is_call_back_set and is_regular_call_back
-		end;
-
-	destroyed: BOOLEAN is
-		do
-			Result := implementation = Void
 		end;
 
 	destroy is
@@ -103,8 +106,12 @@ feature
 			destroyed: implementation = Void
 		end
 
-end
+feature -- Implementation
 
+	implementation: TIMER_I;
+			-- Implementation of timer
+
+end -- class TIMER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

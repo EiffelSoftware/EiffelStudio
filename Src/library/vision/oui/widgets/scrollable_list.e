@@ -5,6 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
+
 	SCROLLABLE_LIST 
 
 inherit
@@ -131,16 +132,6 @@ feature -- Access
 			Result := implementation.first
 		end
 
-	has (v: like item): BOOLEAN is
-			-- Does chain include v?
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		do
-			Result := implementation.has (v)
-		ensure
-			not_found_in_empty: Result implies not empty
-		end
-
 	i_th, infix "@" (i: INTEGER): like item is
 			-- Item at i-th position
 		require
@@ -193,6 +184,26 @@ feature -- Access
 			Result := implementation.occurrences (v)
 		ensure 
 			non_negative_occurrences: Result >= 0
+		end
+
+feature -- Status report
+
+	has (v: like item): BOOLEAN is
+			-- Does chain include v?
+			-- (Reference or object equality,
+			-- based on object_comparison.)
+		do
+			Result := implementation.has (v)
+		ensure
+			not_found_in_empty: Result implies not empty
+		end
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items
+		do
+			Result := implementation.count
 		end
 
 feature -- Conversion
@@ -429,14 +440,6 @@ feature -- Element change
 			implementation.replace (v)
 		ensure
 			item_replaced: item = v
-		end
-
-feature -- Measurement
-
-	count: INTEGER is
-			-- Number of items
-		do
-			Result := implementation.count
 		end
 
 feature -- Removal
@@ -877,4 +880,5 @@ end -- class SCROLLABLE_LIST
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+
 

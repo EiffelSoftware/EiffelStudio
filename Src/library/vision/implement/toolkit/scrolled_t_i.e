@@ -4,13 +4,27 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SCROLLED_T_I 
+deferred class
+
+	SCROLLED_T_I 
 
 inherit
 
 	TEXT_I
 
-feature 
+feature -- Status report
+
+	is_vertical_scrollbar: BOOLEAN is
+			-- Is vertical scrollbar visible?
+		deferred
+		end;
+
+	is_horizontal_scrollbar: BOOLEAN is
+			-- Is horizontal scrollbar visible?
+		deferred
+		end
+
+feature -- Status setting
 
 	show_vertical_scrollbar is
 			-- Make vertical scrollbar visible.
@@ -32,18 +46,7 @@ feature
 		deferred
 		end;
 
-	is_vertical_scrollbar: BOOLEAN is
-			-- Is vertical scrollbar visible?
-		deferred
-		end;
-
-	is_horizontal_scrollbar: BOOLEAN is
-			-- Is horizontal scrollbar visible?
-		deferred
-		end
-
 end -- class SCROLLED_T_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -57,3 +60,4 @@ end -- class SCROLLED_T_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

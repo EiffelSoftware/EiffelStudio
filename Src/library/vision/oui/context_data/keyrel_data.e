@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class KEYREL_DATA 
+class
+
+	KEYREL_DATA 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_keycode: INTEGER; a_string: STRING; a_keyboard: KEYBOARD) is
 			-- Create a context_data for `KeyRelease' event.
@@ -31,8 +33,7 @@ feature
 			keyboard := a_keyboard
 		end
 
-end
-
+end -- class KEYREL_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -46,3 +47,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

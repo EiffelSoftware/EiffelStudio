@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MENU  
+deferred class
+
+	MENU  
 
 inherit
 
@@ -14,7 +16,17 @@ inherit
 			implementation
 		end
 	
-feature -- Text
+feature -- Access
+
+	title: STRING is
+			-- Title of menu
+		require
+			exists: not destroyed;
+		do
+			Result:= implementation.title
+		end; 
+
+feature -- Element change
 
 	set_title (a_title: STRING) is
 			-- Set menu title to `a_title'.
@@ -25,14 +37,6 @@ feature -- Text
 			implementation.set_title (a_title)
 		end;
 
-	title: STRING is
-			-- Title of menu
-		require
-			exists: not destroyed;
-		do
-			Result:= implementation.title
-		end; 
-
 	remove_title is
 			-- Remove current menu title if any.
 		require
@@ -41,13 +45,12 @@ feature -- Text
 			implementation.remove_title
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: MENU_I;
 			-- Implementation of menu
 
-end 
-
+end -- class MENU
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -61,3 +64,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class REG_POLYGON 
+class
+
+	REG_POLYGON 
 
 inherit
 
@@ -40,7 +42,6 @@ feature -- Initialization
 			orientation := 0;
 		end;
 
-
 feature -- Access 
 
 	center: COORD_XY_FIG;
@@ -74,8 +75,7 @@ feature -- Access
 			Result := (2*radius/(cos (180.0/number_of_sides))).truncated_to_integer
 		end;
 
-feature -- Modification & Insertion
-
+feature -- Element change
 
 	set_center (a_point: like center) is
 			-- Set `center' to `a_point'.
@@ -240,8 +240,6 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			unset_conf_modified
 		end;
 
-
-
 invariant
 
 	origin_user_type_constraint: origin_user_type <= 2;
@@ -252,9 +250,7 @@ invariant
 	orientation_large_enough: orientation >= 0;
 	center_exists: center /= Void
 
-
 end -- class REG_POLYGON
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -268,3 +264,4 @@ end -- class REG_POLYGON
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TEXT_GEN 
+deferred class
+
+	TEXT_GEN 
 
 inherit
 
@@ -19,7 +21,6 @@ inherit
 		end
 
 feature -- Access
-
 
 	ascent: INTEGER;
 	
@@ -44,7 +45,7 @@ feature -- Access
 			-- Top and right point of the rectangle containing the text
 		do
 			!! Result;
-           	Result.set (top_left.x+string_width, top_left.y)
+   	Result.set (top_left.x+string_width, top_left.y)
 		end;
 
 	base_center: like top_left is
@@ -149,7 +150,7 @@ feature -- Access
 			end
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_base_center (a_point: like top_left) is
 			-- Set `base_center' to `a_point'.
@@ -199,9 +200,9 @@ feature -- Modification & Insertion
 			-- Set `bottom_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
-        	do
-            		top_left.set (a_point.x, a_point.y-ascent-descent);
-					set_conf_modified
+		do
+			top_left.set (a_point.x, a_point.y-ascent-descent);
+				set_conf_modified
 		ensure
 			bottom_left.is_superimposable (a_point)
 		end;
@@ -210,9 +211,9 @@ feature -- Modification & Insertion
 			-- Set `bottom_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
-        	do
-            		top_left.set (a_point.x-string_width, a_point.y-ascent-descent);
-					set_conf_modified
+		do
+		top_left.set (a_point.x-string_width, a_point.y-ascent-descent);
+				set_conf_modified
 		ensure
 			bottom_right.is_superimposable (a_point)
 		end;
@@ -242,9 +243,9 @@ feature -- Modification & Insertion
 			-- Set `middle_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
-        	do
-            		top_left.set (a_point.x, a_point.y- ((ascent+descent) // 2));
-					set_conf_modified
+		do
+			top_left.set (a_point.x, a_point.y- ((ascent+descent) // 2));
+				set_conf_modified
 		ensure
 			middle_left.is_superimposable (a_point)
 		end;
@@ -367,9 +368,9 @@ feature -- Modification & Insertion
 			-- Set `top_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
-        	do
-            		top_left.set (a_point.x-string_width, a_point.y);
-					set_conf_modified
+		do
+			top_left.set (a_point.x-string_width, a_point.y);
+				set_conf_modified
 		ensure
 			top_right.is_superimposable (a_point)
 		end;
@@ -447,7 +448,6 @@ invariant
 
 end -- class TEXT_GEN
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -460,3 +460,4 @@ end -- class TEXT_GEN
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

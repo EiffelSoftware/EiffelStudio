@@ -5,10 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LOGICAL 
+class
 
+	LOGICAL 
 
-feature -- Modification & Insertion 
+feature -- Element change 
 
 	set_and_inverted_mode is
 			-- Set drawing logical function to
@@ -192,7 +193,6 @@ feature {NONE} -- Access
 
 end -- class LOGICAL
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -205,3 +205,4 @@ end -- class LOGICAL
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

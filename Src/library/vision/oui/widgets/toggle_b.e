@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOGGLE_B 
+class
+
+	TOGGLE_B 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a toggle button with `a_name' as label,
@@ -62,7 +64,7 @@ feature {NONE} -- Creation
 			set_default
 		end; 
 
-feature -- Access
+feature -- Status report
 
 	is_parent_menu_pull: BOOLEAN is
 			-- Is `parent' a menu pull?
@@ -73,62 +75,15 @@ feature -- Access
 			Result := a_menu_pull /= Void
 		end;
 
-feature -- Element change
-
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when value
-			-- is changed.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
+	state: BOOLEAN is
+			-- State of current toggle button.
 		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
+			exists: not destroyed
 		do
-			implementation.add_value_changed_action (a_command, argument)
-		end;
+			Result := implementation.state
+		end 
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when 
-			-- arrow button is activated.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-			-- (Synonym for add_value_changed_action)
-		do
-			add_value_changed_action (a_command, argument)
-		end;
-
-	set_accelerator_action (a_translation: STRING) is
-            -- Set the accerlator action (modifiers and key to use as a shortcut
-            -- in selecting a button) to `a_translation'.
-            -- `a_translation' must be specified with the X toolkit conventions.
-		require
-			exists: not destroyed;
-			translation_not_void: a_translation /= Void;
-			parent_is_menu_pull: is_parent_menu_pull
-		do
-			implementation.set_accelerator_action (a_translation)
-		end;
-
-feature -- Removal
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
-			-- to be executed when value is changed.
-		require
-			exists: not destroyed;
-			valid_command: a_command /= Void
-		do
-			implementation.remove_value_changed_action (a_command, argument)
-		end; 
-
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to be executed when 
-			-- arrow button is activated.
-		do
-			remove_value_changed_action (a_command, argument)
-		end;
-
-feature -- State of Toggle Button
+feature -- Status setting
 
 	set_toggle_on is
 			-- Set Current toggle on and set
@@ -174,14 +129,6 @@ feature -- State of Toggle Button
 			state_is_false: not state
 		end; 
 
-	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: TOGGLE_B_I;
-			-- Implementation of current toggle button
-
-feature
-
 	set_default is
 			-- Set default values to current toggle button.
 		do
@@ -189,16 +136,67 @@ feature
 			not state
 		end;
 
-	state: BOOLEAN is
-			-- State of current toggle button.
+feature -- Element change
+
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed when value
+			-- is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			Valid_command: a_command /= Void
 		do
-			Result := implementation.state
-		end 
+			implementation.add_value_changed_action (a_command, argument)
+		end;
 
-end
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed when 
+			-- arrow button is activated.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+			-- (Synonym for add_value_changed_action)
+		do
+			add_value_changed_action (a_command, argument)
+		end;
 
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
+		require
+			exists: not destroyed;
+			translation_not_void: a_translation /= Void;
+			parent_is_menu_pull: is_parent_menu_pull
+		do
+			implementation.set_accelerator_action (a_translation)
+		end;
+
+feature -- Removal
+
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' with `argument' from the list of action 
+			-- to be executed when value is changed.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.remove_value_changed_action (a_command, argument)
+		end; 
+
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to be executed when 
+			-- arrow button is activated.
+		do
+			remove_value_changed_action (a_command, argument)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: TOGGLE_B_I;
+			-- Implementation of current toggle button
+
+end -- class TOGGLE_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -212,3 +210,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT_IMAGE
+class
+
+	TEXT_IMAGE
 
 inherit
 
@@ -78,7 +80,6 @@ invariant
 	background_color_exists: background_color /= Void
 
 end -- class TEXT_IMAGE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

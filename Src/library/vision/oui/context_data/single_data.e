@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SINGLE_DATA 
+class
+
+	SINGLE_DATA 
 
 inherit 
 
@@ -31,3 +33,4 @@ end -- class SINGLE_DATA
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

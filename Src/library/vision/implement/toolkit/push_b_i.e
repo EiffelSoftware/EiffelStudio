@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PUSH_B_I 
+deferred class
+
+	PUSH_B_I 
 
 inherit
 
@@ -31,7 +33,6 @@ feature -- Removal
 
 end -- class PUSH_B_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -44,3 +45,4 @@ end -- class PUSH_B_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

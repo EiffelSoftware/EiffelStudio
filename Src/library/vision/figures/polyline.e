@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POLYLINE
+class
+
+	POLYLINE
 
 inherit
 
@@ -40,13 +42,13 @@ inherit
 			merge_right as list_merge_right,
 			put as list_put,
 			put_i_th as list_put_i_th,
-            make as linked_list_make,
+			make as linked_list_make,
 			wipe_out as linked_list_wipe_out
 		end;
 
 	LINKED_LIST [POINT]
 		rename
-            make as linked_list_make,
+			make as linked_list_make,
 			extend as add
 		redefine
 			put_right, 
@@ -110,7 +112,7 @@ feature -- Duplication
 			Result.set_origin (origin)
 		end;
 
-feature  -- Modification & Insertion
+feature  -- Element change
 
 	add (v: like first) is
 			-- Append `v' to list.
@@ -390,7 +392,6 @@ feature  -- Modification & Insertion
 			set_conf_modified
 		end;
 
-
 feature -- Removal
 
 	wipe_out is
@@ -398,7 +399,6 @@ feature -- Removal
 			linked_list_wipe_out;
 			set_conf_modified
 		end;
-
 
 feature -- Output
 			
@@ -474,7 +474,7 @@ feature -- Status report
 			other.go_to (other_keep_cursor)
 		end;
 
-feature {NONE} -- Modification & Insertion
+feature {NONE} -- Element change
 
 	set_no_origin is
 			-- Erase definition of `origin'.
@@ -504,11 +504,8 @@ feature {NONE} -- Updating
 			go_to (keep_cursor);
 			unset_conf_modified
 		end;
-
-
 		
 end -- class POLYLINE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -522,3 +519,4 @@ end -- class POLYLINE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

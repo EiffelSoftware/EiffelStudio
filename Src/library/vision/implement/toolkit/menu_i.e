@@ -5,25 +5,31 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MENU_I 
+deferred class
+
+	MENU_I 
 
 inherit
 
 	MANAGER_I
 	
-feature 
-
-	set_title (a_title: STRING) is
-			-- Set menu title to `a_title'.
-		require
-			not_title_void: not (a_title = Void)
-		deferred
-		end;
+feature -- Access
 
 	title: STRING is
 			-- Title of menu
 		deferred
 		end;
+
+feature -- Element change
+
+	set_title (a_title: STRING) is
+			-- Set menu title to `a_title'.
+		require
+			not_title_void: a_title /= Void
+		deferred
+		end;
+
+feature -- Removal
 
 	remove_title is
 			-- Remove current menu title if any.
@@ -31,7 +37,6 @@ feature
 		end;
 
 end -- class MENU_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -45,3 +50,4 @@ end -- class MENU_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

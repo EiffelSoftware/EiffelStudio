@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BAR 
+class
+
+	BAR 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a menu bar with `a_name' as identifier,
@@ -60,7 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Help
+feature -- Access
 
 	help_button: MENU_B is
 			-- Menu Button which appears at the lower right corner of the
@@ -71,16 +73,7 @@ feature -- Help
 			Result := implementation.help_button
 		end;
 
-	set_help_button (button: MENU_B) is
-			-- Set the Menu Button which appears at the lower right corner
-			-- of the menu bar.
-		require
-			exists: not destroyed
-		do
-			implementation.set_help_button (button)
-		ensure
-			help_button.same (button)
-		end;
+feature -- Status setting
 
 	allow_recompute_size is
 		require
@@ -96,20 +89,32 @@ feature -- Help
 			implementation.forbid_recompute_size;
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature -- Element change
+
+	set_help_button (button: MENU_B) is
+			-- Set the Menu Button which appears at the lower right corner
+			-- of the menu bar.
+		require
+			exists: not destroyed
+		do
+			implementation.set_help_button (button)
+		ensure
+			help_button.same (button)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BAR_I
 			-- Implementation of menu bar
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current menu bar.
 		do
 		end;
 
-end 
-
+end -- class BAR
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -123,3 +128,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HISTORY_L_W 
+class
+
+	HISTORY_L_W 
 
 inherit
 
@@ -217,11 +219,10 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not (history_list = Void) implies ((history_list.count = scroll_list.count)
+	valid_history: (history_list /= Void) implies ((history_list.count = scroll_list.count)
 			and (history_list.index = scroll_list.index ))
 
-end
-
+end -- class HISTORY_L_W
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -235,3 +236,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

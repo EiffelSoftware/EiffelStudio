@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CHECK_BOX 
+class
+
+	CHECK_BOX 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a check box with `a_name' as identifier,
@@ -60,20 +62,19 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current check box.
 		do
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementatin
 
 	implementation: CHECK_BOX_I
 			-- Implementation of current check box
 
-end 
-
+end -- class CHECK_BOX
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -87,3 +88,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

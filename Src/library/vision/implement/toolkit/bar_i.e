@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class BAR_I 
+deferred class
+
+	BAR_I 
 
 inherit
 
@@ -13,21 +15,16 @@ inherit
 
 
 	
-feature 
+feature -- Access
 
 	help_button: MENU_B is
-            -- Menu Button which appears at the lower right corner of the
-            -- menu bar
-        deferred
+			-- Menu Button which appears at the lower right corner of the
+			-- menu bar
+		deferred
 		end;
 
-    set_help_button (button: MENU_B) is
-            -- Set the Menu Button which appears at the lower right corner
-            -- of the menu bar.
-        deferred
-        ensure
-            help_button.same (button)
-		end;
+feature -- Status setting
+
 
 	allow_recompute_size is
 		deferred
@@ -35,11 +32,19 @@ feature
 
 	forbid_recompute_size is
 		deferred
+		end
+
+feature -- Element change
+
+	set_help_button (button: MENU_B) is
+			-- Set the Menu Button which appears at the lower right corner
+			-- of the menu bar.
+		deferred
+		ensure
+			same_button: help_button.same (button)
 		end;
 
-
 end -- class BAR_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -53,3 +58,4 @@ end -- class BAR_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,26 +5,38 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class OPTION_B_I 
+deferred class
+
+	OPTION_B_I 
 
 inherit
 
 	BUTTON_I
-    
-feature 
+
+feature -- Access
 
 	selected_button: BUTTON is
-            -- Current Push Button selected in the option menu
-        deferred
-	end;
+			-- Current Push Button selected in the option menu
+		deferred
+		end;
 
-    set_selected_button (button: BUTTON) is
-            -- Set `selected_button' to `button'
-        require
-            button_exists: not (button = Void)
-        deferred
-        ensure
-            button = selected_button
+	title: STRING is
+		deferred
+		end;
+
+	title_width: INTEGER is
+		deferred
+		end;
+
+feature -- Element change
+
+	set_selected_button (button: BUTTON) is
+			-- Set `selected_button' to `button'
+		require
+			button_exists: button /= Void
+		deferred
+		ensure
+			button = selected_button
 		end;
 
 	attach_menu (a_menu: OPT_PULL) is
@@ -32,11 +44,7 @@ feature
 			-- be the menu which will appear when the button
 			-- is armed.
 		require
-			menu_not_void: not (a_menu = Void)
-		deferred
-		end;
-
-	title: STRING is
+			menu_not_void: a_menu /= Void
 		deferred
 		end;
 
@@ -48,12 +56,6 @@ feature
 		deferred
 		end;
 	
-	title_width: INTEGER is
-		deferred
-		end;
-
-feature
-
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
 		end;
@@ -65,6 +67,8 @@ feature
 	add_release_action (a_command: COMMAND; argument: ANY) is
 		deferred
 		end;
+
+feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
@@ -78,8 +82,7 @@ feature
 		deferred
 		end;
 
-end --class OPTION_B_I
-
+end -- class OPTION_B_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -93,3 +96,4 @@ end --class OPTION_B_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

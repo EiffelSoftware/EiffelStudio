@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLLED_W 
+class
+
+	SCROLLED_W 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a scrolled window with `a_name' as identifier
@@ -60,7 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Working Area
+feature -- Access
 
 	working_area: WIDGET is
 			-- Working area of window which will
@@ -70,6 +72,8 @@ feature -- Working Area
 		do
 			Result := implementation.working_area
 		end;
+
+feature -- Element change
 
 	set_working_area (a_widget: WIDGET) is
 			-- Set work area of windon to `a_widget'.
@@ -82,21 +86,19 @@ feature -- Working Area
 			working_area = a_widget
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCROLLED_W_I;
 			-- Implementation of scrolled window
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current scrolled window.
 		do
 		end;
 
-end
-
-
+end -- class SCROLLED_W
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -110,3 +112,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HISTORY_REDO 
+class
+
+	HISTORY_REDO 
 
 inherit
 
 	COMMAND
 
-feature 
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Redo the last command undone.
@@ -19,13 +21,12 @@ feature
 			history: HISTORY_L_W
 		do
 			history ?= argument;
-			if (not (history.history_list = Void)) and then (not history.history_list.islast) then
+			if (history.history_list /= Void) and then (not history.history_list.islast) then
 				history.history_list.forth
 			end
 		end;
 
-end
-
+end -- class HISTORY_REDO
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -39,3 +40,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

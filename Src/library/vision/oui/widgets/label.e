@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LABEL 
+class
+
+	LABEL 
 
 inherit
 
@@ -23,7 +25,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a label with `a_name' as identifier,
@@ -65,7 +67,17 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Resizing policies
+feature -- Access
+
+	text: STRING is
+			-- Text of current label
+		require
+			exists: not destroyed
+		do
+			Result:= implementation.text
+		end 
+
+feature -- Status setting
 
 	allow_recompute_size is
 			-- Allow current label to recompute its size according to
@@ -85,8 +97,6 @@ feature -- Resizing policies
 			implementation.forbid_recompute_size
 		end;
 
-feature -- Text 
-	
 	set_center_alignment is
 			-- Set text alignment of current label to center.
 		require
@@ -111,6 +121,8 @@ feature -- Text
 			implementation.set_left_alignment
 		end;
 
+feature -- Element chnage
+
 	set_text (a_text: STRING) is
 			-- Set text of current label to `a_text'.
 		require
@@ -122,33 +134,24 @@ feature -- Text
 			text.is_equal (a_text)
 		end;
 
-	text: STRING is
-			-- Text of current label
-		require
-			exists: not destroyed
-		do
-			Result:= implementation.text
-		end 
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: LABEL_I;
 			-- Implementation of current label
 
-feature {G_ANY, G_ANY_I, WIDGET_I}
+feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementatino
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN is True;
 			-- Is current widget an heir of FONTABLE ?
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current label.
 		do
 		end;
 
-end
-
+end -- class LABEL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -162,3 +165,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

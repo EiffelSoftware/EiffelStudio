@@ -5,14 +5,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FOREGROUND 
+class
+
+	FOREGROUND 
 
 feature -- Access 
 
 	foreground_color: COLOR;
 			-- Foreground color of current figure
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.
@@ -23,7 +25,6 @@ feature -- Modification & Insertion
 		end;
 
 end -- class FOREGROUND
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +38,4 @@ end -- class FOREGROUND
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CLICK_DATA 
+class
+
+	CLICK_DATA 
 
 inherit 
 
@@ -20,13 +22,7 @@ creation
 
 	make
 
-feature 
-
-	position: INTEGER;
-			-- Position of the double-clicked item
-
-	item: STRING;
-			-- Double-clicked item
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_position: INTEGER; an_item: STRING) is
 			-- Create a context_data for `click' action.
@@ -36,8 +32,15 @@ feature
 			item := an_item
 		end
 
-end
+feature -- Access
 
+	position: INTEGER;
+			-- Position of the double-clicked item
+
+	item: STRING;
+			-- Double-clicked item
+
+end -- CLICK_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -51,3 +54,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

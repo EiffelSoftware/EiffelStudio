@@ -5,9 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class W_MAN_GEN
+class
 
-feature {NONE}
+	W_MAN_GEN
+
+feature {NONE} -- Implementation
 
 	widget_manager: W_MANAGER is
 			-- EiffelVision widget manager 
@@ -17,8 +19,7 @@ feature {NONE}
 			Valid_result: Result /= Void
 		end
 
-end
-
+end -- class W_MAN_GEN
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -32,3 +33,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HISTORY_CLCK 
+class
+
+	HISTORY_CLCK 
 
 inherit
 
@@ -13,26 +15,27 @@ inherit
 			context_data_useful
 		end
 
-feature 
+feature -- Status report
 
 	context_data_useful: BOOLEAN is true;
 			-- This command need a context_data structure
 
+feature -- Basic operations
+
 	execute (argument: ANY) is
-			-- Undo the current command
+			-- Undo the current command.
 		local
 			history: HISTORY_L_W;
 			single_data: SINGLE_DATA
 		do
 			single_data ?= context_data;
 			history ?= argument;
-			if not (history.history_list = Void) then
+			if history.history_list /= Void then
 				history.history_list.go_i_th (single_data.position)
 			end
 		end;
 
-end
-
+end -- class HISTORY_CLCK
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -46,3 +49,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

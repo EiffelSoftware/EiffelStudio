@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class POPUP_SHELL 
+deferred class
+
+	POPUP_SHELL 
 
 inherit
 
@@ -14,7 +16,7 @@ inherit
 			implementation
 		end
 	
-feature -- Windowing
+feature -- Status report
 
 	is_cascade_grab: BOOLEAN is
 			-- Is the shell popped up with cascade grab (allowing the other
@@ -48,6 +50,8 @@ feature -- Windowing
 		do
 			Result := implementation.is_popped_up
 		end;
+
+feature -- Status setting
 
 	popdown is
 			-- Popdown popup shell.
@@ -99,7 +103,7 @@ feature -- Windowing
 			Has_no_grab: is_no_grab
 		end 
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: POPUP_S_I;
 			-- Implementation of popup shell
@@ -109,8 +113,7 @@ invariant
 	Positive_depth: depth > 0;
 	Valid_parent: parent /= Void
 
-end 
-
+end -- class POPUP_SHELL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -124,3 +127,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

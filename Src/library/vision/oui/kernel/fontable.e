@@ -5,9 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FONTABLE 
+deferred class
 
-feature 
+	FONTABLE 
+
+feature -- Access
 
 	font: FONT is
 			-- Font name of label
@@ -17,18 +19,20 @@ feature
 			Result := implementation.font
 		end;
 
-feature {G_ANY, WIDGET_I, TOOLKIT}
+feature -- Status report
 
-	implementation: FONTABLE_I;
-			-- Implementation of widget
+	destroyed: BOOLEAN is
+			-- Is current object destroyed
+		deferred
+		end;
 
-feature 
+feature -- Element change
 
 	set_font (a_font: FONT) is
 			-- Set font label to `font_name'.
 		require
 			exists: not destroyed;
-			a_font_exists: not (a_font = Void);
+			a_font_exists: a_font /= Void
 			a_font_specified: a_font.is_specified
 		do
 			implementation.set_font (a_font)
@@ -38,7 +42,7 @@ feature
 			-- Set font label to `a_font_name'.
 		require
 			exists: not destroyed;
-			a_font_name_exists: not (a_font_name = Void);
+			a_font_name_exists: a_font_name /= Void
 		local
 			a_font: FONT;
 		do
@@ -47,22 +51,22 @@ feature
 			set_font (a_font);
 		end;
 
-	destroyed: BOOLEAN is
-		deferred
-		end;
+feature {G_ANY, WIDGET_I, TOOLKIT} -- Implementation
 
-feature {G_ANY, WIDGET_I, TOOLKIT}
+	implementation: FONTABLE_I;
+			-- Implementation of widget
+
+feature {G_ANY, WIDGET_I, TOOLKIT} -- Implementation
 
 	set_font_imp (an_implementation: FONTABLE_I) is
 			-- Set `implementation' to `an_implementation'.
 		require
-			an_implementation_exists: not (an_implementation = Void)
+			an_implementation_exists: an_implementation /= Void
 		do
 			implementation := an_implementation
 		end
 
-end
-
+end -- class FONTABLE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -76,3 +80,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

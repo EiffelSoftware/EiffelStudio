@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DRAWING_AREA 
+class
+
+	DRAWING_AREA 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a drawing area with `a_name' as identifier,
@@ -62,7 +64,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Callbacks (adding) 
+feature -- Element change
 
 	add_input_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when
@@ -88,7 +90,7 @@ feature -- Callbacks (adding)
 			implementation.add_resize_action (a_command, argument)
 		end;
 
-feature -- Callbacks (removing)
+feature -- Removal
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' with `argument' from the list of action 
@@ -111,20 +113,19 @@ feature -- Callbacks (removing)
 			implementation.remove_resize_action (a_command, argument)
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaiton
 
 	implementation: D_AREA_I;
 			-- Implementation of drawing area
 
-feature {NONE}
+feature {NONE} -- Implementaiton
 
 	set_default is
 			-- Set default values to current drawing area.
 		do
 		end
 
-end 
-
+end -- class DRAWING_AREA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -138,3 +139,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

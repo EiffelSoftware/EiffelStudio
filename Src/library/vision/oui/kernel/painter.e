@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PAINTER 
+class
+
+	PAINTER 
 
 inherit
 
@@ -19,21 +21,60 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature -- Status report
+
+	is_drawable: BOOLEAN is
+			-- Can we draw on the window ?
+		require
+			drawing_set: valid_drawing;
+		do
+			Result := drawing_i.is_drawable
+		end;
+
+	valid_drawing: BOOLEAN is
+		do
+			Result := drawing_i /= Void;
+		end;
+
+feature -- Element change
 
 	set_font (a_font: FONT) is
 			-- Set the font used to draw texts.
 		require
 			drawing_set: valid_drawing;
-			a_font_exists: not (a_font = Void)
+			a_font_exists: a_font /= Void
 		do
 			drawing_i.set_drawing_font (a_font)
 		end;
 
+	set_drawing (a_drawing: DRAWING) is
+			-- Set the drawing one which all routines are directed.
+		do
+			if (a_drawing = Void) then
+				drawing_i := Void
+			else
+				drawing_i := a_drawing.implementation
+			end
+		ensure
+			drawing_set: (a_drawing /= Void) implies (drawing_i = a_drawing.implementation)
+		end;
+
+	set_logical_mode (a_mode: INTEGER) is
+			-- Set drawing logical function to `a_mode'.
+		require
+			mode_large_enough: a_mode >= 0;
+			mode_small_enough: a_mode <= 15;
+			drawing_set: valid_drawing;
+		do
+			drawing_i.set_logical_mode (a_mode)
+		end;
+
+feature -- Basic operations
+
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' at `x', `y'.
 		require
-			a_text_exists: not (a_text = Void)
+			a_text_exists: a_text /= Void
 		do
 			drawing_i.draw_text (coord_xy (x, y), a_text)
 		end;
@@ -47,7 +88,7 @@ feature
 			drawing_i.fill_polygon (points)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	coord_xy (x, y: INTEGER): COORD_XY is
 			-- Set of coordinates
@@ -57,21 +98,6 @@ feature {NONE}
 		ensure
 			x_set: Result.x = x;
 			y_set: Result.y = y
-		end;
-
-	is_drawable: BOOLEAN is
-			-- Can we draw on the window ?
-		require
-			drawing_set: valid_drawing;
-		do
-			Result := drawing_i.is_drawable
-		end;
-
-feature 
-
-	valid_drawing: BOOLEAN is
-		do
-			Result := drawing_i /= Void;
 		end;
 
 	set_foreground (color: COLOR) is
@@ -125,36 +151,8 @@ feature
 			drawing_i.draw_segment (coord_xy (x1, y1), coord_xy (x2, y2))
 		end;
 
-feature {NONE}
-
 	drawing_i: DRAWING_I;
 			-- Implementation of the drawing set
-
-feature 
-
-	set_drawing (a_drawing: DRAWING) is
-			-- Set the drawing one which all routines are directed.
-		do
-			if (a_drawing = Void) then
-				drawing_i := Void
-			else
-				drawing_i := a_drawing.implementation
-			end
-		ensure
-			drawing_set: (a_drawing /= Void) implies (drawing_i = a_drawing.implementation)
-		end;
-
-	set_logical_mode (a_mode: INTEGER) is
-			-- Set drawing logical function to `a_mode'.
-		require
-			mode_large_enough: a_mode >= 0;
-			mode_small_enough: a_mode <= 15;
-			drawing_set: valid_drawing;
-		do
-			drawing_i.set_logical_mode (a_mode)
-		end;
-
-feature {NONE}
 
 	set_subwindow_mode (a_mode: INTEGER) is
 			-- Set subwindow mode to `a_mode'.
@@ -166,8 +164,7 @@ feature {NONE}
 			drawing_i.set_subwindow_mode (a_mode)
 		end
 
-end
-
+end -- class PAINTER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -181,3 +178,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

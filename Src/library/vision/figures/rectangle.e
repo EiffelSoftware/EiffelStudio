@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RECTANGLE 
+class
+
+	RECTANGLE 
 
 inherit
 
@@ -97,7 +99,7 @@ feature -- Access
 			end
 		end;
 
-feature -- Modification & Insertion 
+feature -- Element change 
 
 	set_height (new_height: like height) is
 			-- Set `height' to `new_height'.
@@ -159,7 +161,6 @@ feature -- Modification & Insertion
 		ensure
 			width = new_width
 		end;
-
 
 	xyrotate (a: REAL; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
@@ -245,15 +246,10 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			unset_conf_modified
 		end
 
-
- 
-
 feature {NONE} -- Access
 
 	orientation: REAL;
 			-- Orientation in degree of the rectangle
-
-
 
 invariant
 
@@ -265,7 +261,6 @@ invariant
 	upper_left_exists: upper_left /= Void
 
 end -- class RECTANGLE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -279,3 +274,4 @@ end -- class RECTANGLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

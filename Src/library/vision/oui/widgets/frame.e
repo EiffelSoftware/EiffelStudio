@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FRAME 
+class
+
+	FRAME 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a frame with `a_name' as identifier,
@@ -60,20 +62,19 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current frame.
 		do
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: FRAME_I
 			-- Implementation of frame
 
-end 
-
+end -- class FRAME
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -87,3 +88,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TASK_I 
+deferred class
+
+	TASK_I 
 
 inherit
 
@@ -14,34 +16,39 @@ inherit
 			{NONE} all
 		end;
 	
-feature 
-
-	add_action (a_command: COMMAND; an_argument: ANY) is
-			-- Add `a_command' with `argument' to the list of action to execute            -- while the system is waiting for user events.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	remove_action (a_command: COMMAND; an_argument: ANY) is
-			-- Remove `a_command' with `argument' to the list of action to
-			-- execute while the system is waiting for user events.
-		require
-			not_a_command_void: not (a_command = Void);
-			not empty
-		deferred
-		end;
+feature -- Status report
 
 	empty: BOOLEAN is
 		deferred
 		end;
 
+feature -- Status setting
+
 	destroy is
 		deferred
 		end;
 
-end -- class TASK_I
+feature -- Element change
 
+	add_action (a_command: COMMAND; an_argument: ANY) is
+			-- Add `a_command' with `argument' to the list of action to execute-- while the system is waiting for user events.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+feature -- Removal
+
+	remove_action (a_command: COMMAND; an_argument: ANY) is
+			-- Remove `a_command' with `argument' to the list of action to
+			-- execute while the system is waiting for user events.
+		require
+			not_a_command_void: a_command /= Void
+			not empty
+		deferred
+		end;
+
+end -- class TASK_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -55,3 +62,4 @@ end -- class TASK_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,20 +4,39 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TERMINAL_I 
+deferred class
+
+	TERMINAL_I 
 
 inherit 
 
 	BULLETIN_I
 	
-feature {TERMINAL_OUI}
+feature -- Access
+
+	label_font: FONT is
+			-- Font specified for labels
+		deferred
+		end;
+
+	button_font: FONT is
+			-- Font specified for buttons
+		deferred
+		end;
+
+	text_font: FONT is
+			-- Font specified for text
+		deferred
+		end
+
+feature {TERMINAL_OUI} -- Basic operaitions
 
 	build is
 			-- Build the terminal.
 		deferred
 		end;
 	
-feature 
+feature -- Element change
 
 	set_label_font (a_font: FONT) is
 			-- Set font of every labels to `a_font_name'.
@@ -43,23 +62,7 @@ feature
 		deferred
 		end;
 
-	label_font: FONT is
-			-- Font specified for labels
-		deferred
-		end;
-
-	button_font: FONT is
-			-- Font specified for buttons
-		deferred
-		end;
-
-	text_font: FONT is
-			-- Font specified for text
-		deferred
-		end
-
 end -- class TERMINAL_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -73,3 +76,4 @@ end -- class TERMINAL_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

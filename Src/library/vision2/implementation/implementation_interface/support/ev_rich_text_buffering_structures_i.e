@@ -239,6 +239,7 @@ feature {EV_ANY_I} -- Status Setting
 				create all_paragraph_formats.make (50)
 				create all_paragraph_indexes.make (50)
 				create all_paragraph_format_keys.make (50)
+				highest_read_char := 0
 				number_of_characters_opened := 0
 				current_depth := 0
 				first_color_is_auto := False
@@ -370,8 +371,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_index := l_index + 1
-			end			
-	
+			end	
 				--| FIXME should this ever be empty?
 			if current_text.count > 0 then
 				move_main_iterator (current_text.count)			
@@ -453,17 +453,24 @@ feature {NONE} -- Implementation
 			valid_index: rtf_text.valid_index (index)
 		do
 			Result := rtf_text.item (index)
-			if Result = '{' then
-				current_depth := current_depth + 1
-			elseif Result = '}' then
-				current_depth := current_depth - 1
-				if current_depth = 1 then
-					current_depth := 0
+			if index > highest_read_char then
+				highest_read_char := index
+				if Result = '{' then
+					current_depth := current_depth + 1
+				elseif Result = '}' then
+					current_depth := current_depth - 1
+					if current_depth = 1 then
+						current_depth := 0
+					end
 				end
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	highest_read_char: INTEGER
+		-- Highest character index already read. This prevents us from increasing or
+		-- decreasing the "depth" of the document if a "{" or "}" character is read twice.
 		
 	process_keyword  (rtf_text: STRING; index: INTEGER) is
 			-- Process RTF string `rtf_text' for a keyword starting at position `index'
@@ -610,6 +617,10 @@ feature {NONE} -- Implementation
 			elseif tag.is_equal (rtf_font_size_string) then
 			elseif tag.is_equal (rtf_newline) then
 				buffer_formatting ("%N")
+			elseif tag.is_equal ("line") then
+				buffer_formatting ("%N")
+			elseif tag.is_equal ("tab") then
+				buffer_formatting ("%T")
 			elseif tag.is_equal (rtf_user_props) then
 				check
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")

@@ -1,24 +1,23 @@
 indexing
-
 	description: "Shared parser file buffer"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class SHARED_PARSER_FILE_BUFFER
+class
+	SHARED_PARSER_FILE_BUFFER
 
 feature -- Access
 
 	File_buffer: YY_FILE_BUFFER is
 			-- Parser input file buffer
 		once
-			!! Result.make_with_size (io.input, 50000)
+			create Result.make_with_size (io.input, 50000)
 		ensure
 			file_buffer_not_void: Result /= Void
 		end
 
 end -- class SHARED_PARSER_FILE_BUFFER
-
 
 --|----------------------------------------------------------------
 --| Copyright (C) 1999, Interactive Software Engineering Inc.

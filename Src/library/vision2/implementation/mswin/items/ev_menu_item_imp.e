@@ -22,6 +22,11 @@ inherit
 			parent_imp
 		end
 
+	EV_PIXMAP_CONTAINER_IMP
+		undefine
+			pixmap_size_ok
+		end
+
 creation
 	make,
 	make_with_text
@@ -41,8 +46,8 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: parent_imp /= Void
 			end
-			parent_imp.set_name (txt)
 			text := txt
+			initialize_list (item_command_count)
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
@@ -74,7 +79,11 @@ feature -- Status report
 			-- Is current object destroyed ?
 			-- Yes if the item doesn't exist in the menu.
 		do
-			Result := not parent_menu.item_exists (id)
+			if submenu /= Void then
+				Result := not parent_menu.popup_exists (position)
+			else
+				Result := not parent_menu.item_exists (id)
+			end
 		end
 
 	insensitive: BOOLEAN is
@@ -132,7 +141,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 				valid_item: item_imp /= Void
 			end
 			ev_children.extend (item_imp)
-			submenu.append_string (name_item, ev_children.count)
+			submenu.append_string (item_imp.text, ev_children.count)
 			item_imp.set_id (ev_children.count)
 			item_imp.set_position (submenu.count - 1)
 		end
@@ -159,10 +168,13 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 feature {EV_MENU_CONTAINER_IMP} -- Implementation
 
 	on_activate is
-			-- Is called by the menu when th item is activate.
+			-- Is called by the menu when the item is activated.
 		do
 			execute_command (Cmd_item_activate, Void)
 		end
+
+	wel_window: WEL_WINDOW
+			-- XX need to be removed and recreate.
 
 end -- class EV_MENU_ITEM_IMP
 

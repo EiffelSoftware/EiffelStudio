@@ -17,7 +17,8 @@ inherit
 		redefine
 			make,
 			interface,
-			initialize
+			initialize,
+			dispose
 		end
 
 create
@@ -32,12 +33,12 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_menu_item_new)
 			C.gtk_widget_show (c_object)
 		end
-	
+
 	initialize is
 			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
-			textable_imp_initialize
 			pixmapable_imp_initialize
+			textable_imp_initialize
 			initialize_menu_sep_box
 			create radio_group_ref
 			is_initialized := True
@@ -46,16 +47,23 @@ feature {NONE} -- Initialization
 	initialize_menu_sep_box is
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
-		local
-			box: POINTER
 		do
 			box := C.gtk_hbox_new (False, 0)
-			C.gtk_widget_hide (box)
 			C.gtk_box_pack_start (box, text_label, True, True, 0)
 			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
+
+	dispose is
+			-- Unreference unwanted gtk widgets.
+		do
+			gtk_object_unref (box)
+			Precursor
+		end
+		
+	box: POINTER
+		-- Dummy hbox used for holding *able widgets to satisfy invariants.
 
 	radio_group_ref: POINTER_REF
 

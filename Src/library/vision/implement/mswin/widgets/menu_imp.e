@@ -19,24 +19,12 @@ inherit
 		end;
 
 	MANAGER_IMP
-		rename
-			unrealize as composite_unrealize
-		redefine
-			set_managed,
-			realized,
-			realize_children,
-			set_insensitive
-		end
-
-	MANAGER_IMP
 		redefine
 			set_managed,
 			unrealize,
 			realized,
 			realize_children,
 			set_insensitive
-		select
-			unrealize
 		end
 
 feature {NONE} -- Initialization
@@ -396,7 +384,7 @@ feature -- Removal
 	unrealize is
 			-- Unrealize current widget.
 		do
-			composite_unrealize
+			Precursor
 			realized := False
 		end
 

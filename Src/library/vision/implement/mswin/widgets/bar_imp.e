@@ -13,46 +13,25 @@ inherit
 	ROOT_MENU_WINDOWS
 
 	MENU_IMP
-		rename
-			unrealize as menu_unrealize
 		redefine
-			realize,
-			width,
-			height,
-			set_x, 
-			set_y, 
-			set_width, 
-			set_height, 
-			set_form_height, 
-			set_form_width, 
-			set_managed,
-			set_size,
-			x,y, 
-			form_width, 
-			form_height,
-			set_insensitive
-		end	
-
-	MENU_IMP
-		redefine
-			realize,
-			width,
-			height,
-			set_x, 
-			set_y, 
-			set_width, 
-			set_height, 
-			set_form_height, 
-			set_form_width, 
-			set_managed,
-			set_size,
-			x,y, 
-			form_width, 
-			form_height,
 			unrealize,
-			set_insensitive
-		select
-			unrealize
+			realize,
+ 			width,
+			height,
+			set_x, 
+			set_y, 
+			set_width, 
+			set_height, 
+			set_form_height, 
+			set_form_width, 
+ 			set_managed,
+			set_size,
+ 			x,y,
+			real_x, real_y,
+			form_width, 
+			form_height,
+			set_insensitive,
+			invalidate
 		end	
 
 	BAR_I
@@ -109,12 +88,12 @@ feature -- Initialization
 			end
 			reset
 			realized := true
-			associated_root ?= current
+			associated_root ?= Current
 			realize_children
 			associated_shell.associate_bar (Current)
 			parent.child_has_resized
  				-- set initial focus
-			if initial_focus /= void then
+			if initial_focus /= Void then
 				initial_focus.wel_set_focus
 			end
 		end
@@ -122,7 +101,7 @@ feature -- Initialization
 	unrealize is
 		do
 			realized := false
-			menu_unrealize
+			Precursor
 		end
 
 feature -- Access
@@ -138,20 +117,40 @@ feature -- Access
 		end
 
 feature -- Measurement
-
-	form_height: INTEGER
-
-	form_width: INTEGER
-
-	width: INTEGER 
-
-	height: INTEGER 
-
+ 
+ 	form_height: INTEGER
+ 
+ 	form_width: INTEGER
+ 
+ 	width: INTEGER 
+ 
+	height: INTEGER is
+		local
+			system_font: WEL_SYSTEM_FONT
+		do
+			!! system_font.make
+			Result := system_font.log_font.height
+		end
+	
 feature -- Status report
 
-	x: INTEGER
+ 	x: INTEGER
 
 	y: INTEGER
+ 
+ 	real_x: INTEGER is
+ 		require else
+ 			parent: parent /= Void
+ 		do
+ 			Result := parent.real_x
+ 		end
+
+	real_y: INTEGER is
+		require else
+			parent: parent /= Void
+		do
+			Result := parent.real_y - height
+		end
 
 feature -- Status setting
 
@@ -165,16 +164,10 @@ feature -- Status setting
 			form_width := new_width
 		end
 
-	set_height (new_height: INTEGER) is
-		do
-			height := new_height
-		end
-
-	set_size (new_width, new_height: INTEGER) is
-		do
-			width := new_width
-			height := new_height
-		end
+ 	set_size (new_width, new_height: INTEGER) is
+ 		do
+ 			width := new_width
+ 		end
 
 	set_width (new_width: INTEGER) is
 		do
@@ -205,6 +198,16 @@ feature -- Status setting
 			end
 			private_attributes.set_insensitive (flag)
 			invalidate
+		end
+
+	invalidate is
+		do
+			associated_shell.associate_bar (Current)
+		end
+feature -- Inapplicable
+
+ 	set_height (new_height: INTEGER) is
+		do
 		end
 
 feature -- Element change

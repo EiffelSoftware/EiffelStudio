@@ -9,18 +9,44 @@ inherit
 			init_toolkit
 		-- end of samik     
 		redefine
-			set_widget_default
+			set_widget_default,
+			set_label
 		end;
 	HOLE
-		-- added by samik
-	FOCUSABLE
-		--end of samik	
+
 feature 
 
 	set_widget_default is
 		do
 			register
-		end;
+		end
+
+	set_label (s: STRING) is
+			-- Set icon label.
+		local
+			was_managed: BOOLEAN
+		do
+			label := clone (s)
+			if widget_created then
+				icon_label.unmanage
+				icon_label.set_y (init_y)
+				icon_label.set_text (label)
+				icon_label.manage
+			end
+			if icon_label /= Void then
+				if button /= Void then
+					set_width (icon_label.width.max (button.width))
+				else
+					set_width (icon_label.width)
+				end	
+				update_positions
+			end
+		end
+
+	set_focus_string (s: STRING) is
+		do
+			button.set_focus_string (s)
+		end
 
 	target: WIDGET is
 		do
@@ -33,19 +59,6 @@ feature
 		once
 			!! Result
 		end
-
-	focus_label: FOCUS_LABEL_I is
-			-- has to be redefined, so that it returns correct toolkit initializer
-			-- to which object belongs for every instance of this class
-                local
-                        ti: TOOLTIP_INITIALIZER
-                do
-                        ti ?= top
-                        check
-                                valid_tooltip_initializer: ti/= void
-                        end
-                        Result := ti.label
-                end
 
 	is_centered: BOOLEAN 
 		

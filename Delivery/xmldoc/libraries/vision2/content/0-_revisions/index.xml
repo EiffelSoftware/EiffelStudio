@@ -18,6 +18,14 @@
 			<item>
 				<bold>EV_CHECKABLE_TREE</bold> - A new widget that inherits EV_TREE, providing similar functionality but for each item contained a check box is displayed.
 			</item>
+			<item>
+				<bold>EV_NOTEBOOK</bold>
+				<list ordered="false">
+					<item>Added `pointed_tab_index' which returns the index of the tab beneath the mouse pointer or 0 if none.</item>
+					<item>Added EV_NOTEBOOK_TAB which may be queried via the new query `item_tab'. The object represented by this new class provides the ability to set both the text and a pixmap for the tab item.</item>
+					<item>Now inherits EV_ITEM_PIXMAP_SCALER as the tabs support pixmaps through the use of EV_NOTEBOOK_TAB.</item>
+				</list>
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

@@ -157,24 +157,6 @@ struct rout_info {						/* Routine information */
  * in production mode and dynamically in workbench mode.
  */
 extern struct cnode *esystem;	/* Describes a full Eiffel system */
-#ifdef WORKBENCH
-extern int32 **ecall;					/* Updated pointer */
-extern struct rout_info *eorg_table;	/* Updated pointer */
-extern struct desc_info ***desc_tab;	/* Global descriptor table */
-
-#define Routids(x)	ecall[x]	/* Routine id array */
-#endif
-
-/*
- * Nested call global variable: signals a nested call and trigger an
- * invariant check in generated C routines.
- */
-/* extern int nstcall; */ /* %%ss */
-
-/* Conformance table array used by Eiffel feature `conforms_to' of
- * class ANY.
- */
-extern struct conform **co_table;
 
 typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 
@@ -193,14 +175,11 @@ struct p_interface {
 };
 
 RT_LNK int ccount;				/* Number of classes */
-extern long melt_count;			/* Size of `melt' table */
 
 /*
  * Melting ice technology heart.
  */
-extern unsigned char **melt;				/* Byte code array of melted eiffel features */
 RT_LNK uint32 eif_nb_features;	/* Nb of features in frozen system */
-extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
 
 /*
  * Pattern table for interface between C code and the interpreter

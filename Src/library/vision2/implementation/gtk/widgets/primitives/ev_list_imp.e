@@ -22,8 +22,6 @@ inherit
 			initialize,
 			has_focus,
 			add_to_container,
-			select_item,
-			deselect_item,
 			clear_selection,
 			on_item_clicked
 		end	
@@ -125,21 +123,6 @@ feature -- Status setting
 			if sel_item /= Void then
 				sel_item.enable_select
 			end
-		end
-		
-	select_item (an_index: INTEGER) is
-			-- Select the item of the list at the one-based
-			-- `index'.
-		do
-			switch_to_browse_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
-		end
-		
-	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
-		do
-			switch_to_single_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
 		end
 		
 	clear_selection is

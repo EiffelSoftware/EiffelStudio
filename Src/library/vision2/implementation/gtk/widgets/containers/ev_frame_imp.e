@@ -175,13 +175,6 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
 		end
 
-	remove_text is
-			-- Make `text' `Void'.
-		do
-			internal_text := ""
-			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
-		end
-
 feature {NONE} -- Implementation
 
 	internal_text: STRING

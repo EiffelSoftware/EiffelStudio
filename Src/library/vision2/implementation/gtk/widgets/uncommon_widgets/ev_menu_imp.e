@@ -26,7 +26,6 @@ inherit
 			set_text,
 			on_activate,
 			dispose,
-			menu_item_type,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
 			pointer_double_press_actions_internal,
@@ -132,14 +131,6 @@ feature {NONE} -- Implementation
 						0)
 				end
 			end
-		end
-		
-		
-feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
-
-	menu_item_type: INTEGER is
-		do
-			Result := Menu_type
 		end
 
 feature {EV_ANY_I} -- Implementation

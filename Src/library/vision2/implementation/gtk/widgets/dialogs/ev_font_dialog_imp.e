@@ -170,13 +170,6 @@ feature {NONE} -- Implementation
 			"size_clist"
 		end
 
-	gtk_clist_struct_row_list (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"row_list"
-		end
-
 	gtk_clist_struct_selection (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"

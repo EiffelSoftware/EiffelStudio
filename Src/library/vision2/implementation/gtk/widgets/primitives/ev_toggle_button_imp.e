@@ -50,16 +50,6 @@ feature -- Status setting
 			end	
 		end
 
-	toggle is
-			-- Change the state of the toggle button.
-		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
-		end
-
 feature -- Status report
 	
 	is_selected: BOOLEAN is

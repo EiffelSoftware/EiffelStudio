@@ -149,16 +149,22 @@ feature {NONE} -- Externals
 	desinit (mode: INTEGER): INTEGER is
 		external
 			"C | %"des.h%""
+		alias
+			"ise_desinit"
 		end;
 
 	desdone is
 		external
 			"C | %"des.h%""
+		alias
+			"ise_desdone"
 		end;
 
 	setkey (key: POINTER) is
 		external
 			"C | %"des.h%""
+		alias
+			"ise_setkey"
 		end;
 
 end -- class DES_ENCODER

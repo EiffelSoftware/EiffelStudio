@@ -31,7 +31,8 @@ inherit
 			changeable_comparison_criterion, remove,
 			prune, has
 		redefine
-			duplicate
+			duplicate,
+			move
 		end
 
 create
@@ -561,6 +562,14 @@ feature -- Iteration.
 			-- Move cursor to position `p'.
 		do
 			implementation.go_to (p)
+		end
+
+	move (i: INTEGER) is
+			-- Move cursor `i' positions. The cursor
+			-- may end up `off' if the absolute value of `i'
+			-- is too big.
+		do
+			implementation.move (i)
 		end
 
 feature -- Contract support

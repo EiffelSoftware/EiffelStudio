@@ -61,85 +61,73 @@ feature {NONE} -- Initialization
 			-- Initialize the marshal object.
 			create gtk_marshal
 		end
-		
-		
-	a_idle_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout used to delay idle actions so widgets are resized.
-			
-	a_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout used to call post_launch_actions
 
 	launch is
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-
-			internal_idle_actions.not_empty_actions.extend (
-				agent connect_internal_idle_actions
-			)
-			internal_idle_actions.empty_actions.extend (
-				agent disconnect_internal_idle_actions
-			)
-			interface.idle_actions.not_empty_actions.extend (
-				agent internal_idle_actions.extend (idle_actions_agent)
-			)
-			interface.idle_actions.empty_actions.extend (
-				agent internal_idle_actions.prune_all (idle_actions_agent)
-			)
-			if not interface.idle_actions.is_empty then
-				internal_idle_actions.extend (idle_actions_agent)
-			end
-			
 			if gtk_maj_ver = 1 and then gtk_min_ver <= 2 and then gtk_mic_ver < 8 then
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
-			is_in_gtk_main := True
 			
-			a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			a_timeout_imp.interface.actions.extend (agent call_post_launch_actions)
-			a_timeout_imp.set_interval_kamikaze (75)
-				-- 75 allows gtk to calculate its initial sizing before post_launch_actions are called.
-			feature {EV_GTK_EXTERNALS}.gtk_main
-			is_in_gtk_main := False
-			
+			main_loop			
 			-- Unhook marshal object.
 			gtk_marshal.destroy
-			is_destroyed := True
-		end
+		end	
 		
-	initialize_idle_actions is
-			-- Initialize timeout for idle actions so call is made after gtk resize.
+	main_loop is
+			-- Our main loop		
+		local
+			main_running: BOOLEAN
+			gdk_event: POINTER
 		do
-			a_idle_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			a_idle_timeout_imp.interface.actions.extend (agent call_idle_actions)
-			a_idle_timeout_imp.set_interval_kamikaze (75)
-				-- This allows gtk to perform sizing calculations before idle is called.
-		end
-
-	call_post_launch_actions is
-			-- Actions to initiate after main loop has been called.
-		do
-			interface.post_launch_actions.call (empty_tuple)
-			if not internal_idle_actions.is_empty then
-				connect_internal_idle_actions
+			is_in_gtk_main := True
+			from
+			until 
+				is_destroyed
+			loop
+				gdk_event := feature {EV_GTK_EXTERNALS}.gdk_event_get
+				if gdk_event /= default_pointer then
+					-- Insert debugging information regarding gdk event structs.
+					--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
+					feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+				else
+					if feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+							-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
+							-- All pending resizing has been performed at this point.
+						call_idle_actions
+					end
+						-- Block loop by running a gmain loop iteration with blocking enabled.
+					main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
+				end
 			end
+			is_in_gtk_main := False
 		end
 		
 	call_idle_actions is
-			-- 
+			-- Call idle actions sequences
 		do
-			-- We do not want nested idle actions called.
+				-- We do not want nested idle actions called.
 			if not idle_actions_being_called then
+				if not post_launch_actions_called then
+					interface.post_launch_actions.call (Void)
+					post_launch_actions_called := True
+				end
 				idle_actions_being_called := True
-				internal_idle_actions.call (empty_tuple)
-				a_idle_timeout_imp.destroy
+				if not internal_idle_actions.is_empty then
+					internal_idle_actions.call (Void)
+				elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
+					idle_actions_internal.call (Void)
+				end
 				idle_actions_being_called := False
-			end
-			
+			end	
 		end
 		
 	idle_actions_being_called: BOOLEAN
 		-- Are the idle_actions in the process of being called?
+		
+	post_launch_actions_called: BOOLEAN
+		-- Have the post launch actions been called?
 		
 feature {EV_ANY_IMP} -- Access
 		
@@ -204,6 +192,34 @@ feature -- Access
 
 feature -- Basic operation
 
+	process_events_until_stopped is
+			-- Process all events until one event is received 
+			-- by `widget'.
+		local
+			main_not_running: INTEGER
+		do
+			from
+				stop_processing_requested := False
+			until 
+				stop_processing_requested
+			loop
+				-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
+				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+			end
+		end
+		
+	stop_processing is
+			-- Exit `process_events_until_stopped'.
+		local
+			temp_str: C_STRING
+		do
+				-- Set flag for 'process_events_until_stopped' to exit.
+			stop_processing_requested := True
+				-- Send a message to our hidden window to fire up 'process_events_until_stopped' loop.
+			create temp_str.make ("hide")
+			feature {EV_GTK_EXTERNALS}.gtk_signal_emit_by_name (default_gtk_window, temp_str.item)
+		end
+
 	process_events is
 			-- Process any pending events.
 			--| Pass control to the GUI toolkit so that it can
@@ -218,7 +234,8 @@ feature -- Basic operation
 				until 
 					feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
 				loop
-					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+						-- We only want to process the current events so we don't want any blocking.
 				end
 				processing_events := False
 			end
@@ -236,8 +253,8 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_main_quit
 			is_destroyed := True
+				-- This will exit our main loop
 		end
 
 feature -- Status report
@@ -366,42 +383,6 @@ feature -- Implementation
 
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?
-
-	internal_idle_actions_connection_id: INTEGER
-			-- GTK connection handle.
-
-	idle_actions_agent: PROCEDURE [ACTION_SEQUENCE [TUPLE []], TUPLE []] is
-			-- Agent for interface.idle_actions.call ([])
-		do
-			if idle_actions_agent_internal = Void then
-				idle_actions_agent_internal :=
-					agent (interface.idle_actions).call (empty_tuple)
-			end
-			Result := idle_actions_agent_internal
-		end
-
-	idle_actions_agent_internal: PROCEDURE [ACTION_SEQUENCE [TUPLE []], TUPLE []]
-
-	connect_internal_idle_actions is
-		do
-			if internal_idle_actions_connection_id = 0 then
-				internal_idle_actions_connection_id :=
-					gtk_marshal.c_ev_gtk_callback_marshal_idle_connect (
-						agent initialize_idle_actions--internal_idle_actions.call (empty_tuple) 
-					)
-			end
-		ensure
-			internal_idle_actions_connection_id_positive:
-				internal_idle_actions_connection_id > 0
-		end
-
-	disconnect_internal_idle_actions is
-		do
-			if internal_idle_actions_connection_id /= 0 then
-					feature {EV_GTK_EXTERNALS}.gtk_idle_remove (internal_idle_actions_connection_id)
-					internal_idle_actions_connection_id := 0
-			end
-		end
 
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.
@@ -534,13 +515,11 @@ feature -- External implementation
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"gtk_micro_version"
-		end
-		
+		end	
 
 invariant
 	window_oids_not_void: is_usable implies window_oids /= void
 	tooltips_not_void: tooltips /= NULL
-	idle_actions_agent_not_void: is_usable implies idle_actions_agent /= void
 
 end -- class EV_APPLICATION_IMP
 

@@ -117,14 +117,6 @@ feature -- Access
 	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 
-	gray_pixmap_imp: EV_PIXMAP_IMP is
-			-- Implementation of the gray pixmap contained 
-		do
-			if gray_pixmap /= Void then
-				Result ?= gray_pixmap.implementation
-			end
-		end
-
 feature -- Element change
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
@@ -139,19 +131,6 @@ feature -- Element change
 		do
 			gray_pixmap := Void
 			--| FIXME IEK Needs proper implementation
-		end
-
-feature -- Status report
-
-	index: INTEGER is
-			-- Index in toolbar
-		do
-			if parent_imp /= Void then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_list_child_position (
-					parent_imp.list_widget,
-					Current.c_object
-				) + 1
-			end 
 		end
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation

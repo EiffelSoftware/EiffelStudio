@@ -10,10 +10,29 @@ deferred class
 
 inherit
 	EV_TEXT_FIELD_I
+		redefine
+			build
+		end
 
 	EV_LIST_I
-		undefine
+		redefine
 			build
+		end
+
+feature {NONE} -- Initialization
+
+	build is
+			-- Common initializations for Gtk and Windows.
+		local
+			color: EV_COLOR
+		do
+			set_expand (True)
+			set_vertical_resize (False)
+			set_horizontal_resize (True)
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
 		end
 
 feature -- Status Report

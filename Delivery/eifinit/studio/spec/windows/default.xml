@@ -381,7 +381,7 @@
 				<TOPIC TOPIC_ID="misc_completion" ICON="icon_preferences_folder">
 					<HEAD>Other keywords</HEAD>
 					<TOPIC TOPIC_ID="Precursor" ICON="icon_preferences_folder">
-						<HEAD>Precusor</HEAD>
+						<HEAD>Precursor</HEAD>
 						<TEXT DESCRIPTION="Autocomplete Precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>

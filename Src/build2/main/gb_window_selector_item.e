@@ -71,6 +71,33 @@ feature -- Access
 			
 	is_destroyed: BOOLEAN
 		-- Is `Current' destroyed?
+		
+	file_exists: BOOLEAN is
+			-- Does the interface file corresponding to `object' currently exist on disk?
+		local
+			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			path: ARRAYED_LIST [STRING]
+			file_name: FILE_NAME
+			file: RAW_FILE
+		do
+			directory ?= parent
+			if directory /= Void then
+				path := directory.path
+				create file_name.make_from_string (system_status.current_project_settings.project_location)
+				from
+					path.start
+				until
+					path.off
+				loop
+					file_name.extend (path.item)
+					path.forth
+				end
+				file_name.extend (object.name + ".e")
+				create file.make (file_name)
+				Result := file.exists
+			end			
+		end
+		
 			
 feature -- Status setting
 

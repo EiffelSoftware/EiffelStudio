@@ -58,6 +58,7 @@ feature -- Access
 		end
 
 	Tvif_handle: INTEGER is
+			-- The hitem member is valid.
 		external
 			"C [macro %"cctrl.h%"]"
 		alias

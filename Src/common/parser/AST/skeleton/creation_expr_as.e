@@ -21,20 +21,10 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
-		local
-			dcr_id : ID_AS
 		do
 			type := t
 			call := c
 			location := clone (l)
-
-				-- If there's no call create 'default_call'
-			if call = Void then
-					-- Create id. True name set later.
-				create dcr_id.make (0)
-				create default_call
-				default_call.set_feature_name (dcr_id)
-			end
 		ensure
 			type_set: type = t
 			call_set: call = c
@@ -61,9 +51,6 @@ feature -- Attributes
 			-- Routine call: it is an instance of ACCESS_INV_AS because
 			-- only procedure and functions are valid and no export validation
 			-- is made.
-
-	default_call : ACCESS_INV_AS
-			-- Call to default create.
 
 feature -- Comparison
 

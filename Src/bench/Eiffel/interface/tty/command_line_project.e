@@ -169,7 +169,7 @@ feature -- Update
 				end
 				check_ace_file (Ace_name);
 			end;
-			Eiffel_project.set_lace_file_name (Ace_name);
+			Eiffel_ace.set_file_name (Ace_name);
 		end
 
 feature -- Output

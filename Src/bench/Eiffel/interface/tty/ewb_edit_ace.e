@@ -23,11 +23,11 @@ feature {NONE} -- Execution
 		local
 			lace_name: STRING;
 		do
-			lace_name := Eiffel_project.lace_file_name
+			lace_name := Eiffel_ace.file_name
 			if lace_name = Void then
 				io.error.putstring ("You must select an Ace file first%N");
 			else
-				edit (Eiffel_project.lace_file_name);
+				edit (lace_name);
 			end;
 		end;
 

@@ -22,10 +22,10 @@ feature -- Initialization
 
 	init is
 		do
-			if Eiffel_project.lace_file_name = Void then
+			if Eiffel_ace.file_name = Void then
 				select_ace_file;
 			end;
-			if Eiffel_project.lace_file_name /= Void then
+			if Eiffel_ace.file_name /= Void then
 				print_header;
 			end;
 		end;
@@ -52,7 +52,7 @@ feature {NONE} -- Update
 	select_ace_file is
 			-- Select an Ace if it hasn't been specified.
 		require
-			no_lace_file: Eiffel_project.lace_file_name = Void
+			no_lace_file: Eiffel_ace.file_name = Void
 		local
 			file_name, cmd: STRING;
 			option: CHARACTER;
@@ -80,27 +80,27 @@ feature {NONE} -- Update
 				inspect
 					option
 				when 'c' then
-					Eiffel_project.set_lace_file_name (Void)
+					Eiffel_ace.set_file_name (Void)
 				when 's' then
 					io.putstring ("File name (`Ace.ace' is the default): ");
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.empty then
-						Eiffel_project.set_lace_file_name (clone(file_name));
+						Eiffel_ace.set_file_name (clone(file_name));
 					else
 						!!file.make ("Ace.ace");
 						if file.exists then
-							Eiffel_project.set_lace_file_name ("Ace.ace");
+							Eiffel_ace.set_file_name ("Ace.ace");
 						else
 							!!file.make ("Ace")
 							if file.exists then
-								Eiffel_project.set_lace_file_name ("Ace")
+								Eiffel_ace.set_file_name ("Ace")
 							else
-								Eiffel_project.set_lace_file_name ("Ace.ace");
+								Eiffel_ace.set_file_name ("Ace.ace");
 							end
 						end
 					end;
-					check_ace_file (Eiffel_project.lace_file_name);
+					check_ace_file (Eiffel_ace.file_name);
 				when 't' then
 					io.putstring ("File name: ");
 					io.readline;
@@ -116,8 +116,8 @@ feature {NONE} -- Update
 						cmd.append (file_name);
 						!! cmd_exec;
 						cmd_exec.execute (cmd);
-						Eiffel_project.set_lace_file_name (clone(file_name));
-						edit (Eiffel_project.lace_file_name);
+						Eiffel_ace.set_file_name (clone(file_name));
+						edit (Eiffel_ace.file_name);
 					end;
 				else
 					io.putstring ("Invalid choice%N%N");
@@ -129,14 +129,14 @@ feature {NONE} -- Update
 	compile is
 			-- Melt system.
 		require
-			non_void_lace: Eiffel_project.lace_file_name /= Void
+			non_void_lace: Eiffel_ace.file_name /= Void
 		local
 			exit: BOOLEAN;
 			str: STRING
 		do
 			from
 					-- Is the Ace file still there?
-				check_ace_file (Eiffel_project.lace_file_name)
+				check_ace_file (Eiffel_ace.file_name)
 			until
 				exit
 			loop
@@ -167,7 +167,7 @@ feature {NONE} -- Update
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
 				init;
-				if Eiffel_project.lace_file_name /= Void then
+				if Eiffel_ace.file_name /= Void then
 					compile;
 					if Eiffel_project.successful then
 						print_tail;

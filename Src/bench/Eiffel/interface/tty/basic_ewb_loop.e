@@ -258,7 +258,7 @@ feature -- Execution
 			!! proj_dir.make (Eiffel_project.name);
 			if proj_dir.is_new then
 					-- The user will have to specify the Ace file
-				Eiffel_project.set_lace_file_name (Void);
+				Eiffel_ace.set_file_name (Void);
 			end;
 			ewb_iterate				
 		end;

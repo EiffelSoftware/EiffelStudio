@@ -248,7 +248,7 @@ feature -- Setting
 			feature_name_set: equal (feature_name, s)
 		end
 
-	set_feature_name_id (id: INTEGER) is
+	set_feature_name_id, set_renamed_name_id (id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (id)

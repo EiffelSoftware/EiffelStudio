@@ -1,12 +1,8 @@
 indexing
-
-	description:
-		"[
-		Access to internal object properties.
-		This class may be used as ancestor by classes needing its
-		facilities.
+	description: "[
+			Access to internal object properties.
+			This class may be used as ancestor by classes needing its facilities.
 		]"
-
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,16 +16,18 @@ feature -- Conformance
 			-- Is `object' an instance of type `type_id'?
 		require
 			object_not_void: object /= Void
+			type_id_positive: type_id > 0
 		do
 			Result := c_is_instance_of (type_id, $object)
 		end
 
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
-		external
-			"C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
-		alias
-			"eif_gen_conf"
+		require
+			type1_positive: type1 > 0
+			type2_positive: type2 > 0
+		do
+			Result := c_type_conforms_to (type1, type2)
 		end
 		
 feature -- Creation
@@ -52,10 +50,57 @@ feature -- Creation
 			-- New instance of dynamic `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
-		external
-			"C [macro %"eif_macros.h%"]"
-		alias
-			"RTLN"
+			-- `type_id' cannot represent a SPECIAL type, use
+			-- `new_special_any_instance' instead.
+		require
+			type_id_positive: type_id > 0
+			not_special_type: not is_special_type (type_id)
+		do
+			Result := c_new_instance_of (type_id)
+		ensure
+			not_special_type: not is_special (Result)
+			dynamic_type_set: dynamic_type (Result) = type_id
+		end
+
+	new_special_any_instance (type_id, count: INTEGER): SPECIAL [ANY] is
+			-- New instance of dynamic `type_id' that represents
+			-- a SPECIAL with `count' element. To create a SPECIAL of
+			-- basic type, use `TO_SPECIAL'.
+		require
+			count_valid: count >= 0
+			type_id_positive: type_id > 0
+			special_type: is_special_any_type (type_id)
+		local
+			l_sp: TO_SPECIAL [ANY]
+		do
+			create l_sp.make_area (count)
+			Result := l_sp.area
+			c_set_dynamic_type ($Result, type_id)
+		ensure
+			special_type: is_special (Result)
+			dynamic_type_set: dynamic_type (Result) = type_id
+			count_set: Result.count = count
+		end
+
+feature -- Status report
+
+	is_special_any_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type.
+		require
+			type_id_valid: type_id > 0
+		do
+			Result := c_eif_special_any_type (type_id)
+		end
+
+	is_special_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type
+			-- or a basic type.
+		require
+			type_id_valid: type_id > 0
+		do
+			Result := c_eif_is_special_type (type_id)
 		end
 
 feature -- Access
@@ -673,6 +718,53 @@ feature {NONE} -- Implementation
 			"C (int16, EIF_REFERENCE, int): EIF_INTEGER | %"eif_gen_conf.h%""
 		end
 
+	c_new_instance_of (type_id: INTEGER): ANY is
+			-- New instance of dynamic `type_id'.
+			-- Note: returned object is not initialized and may
+			-- hence violate its invariant.
+			-- `type_id' cannot represent a SPECIAL type, use
+			-- `new_special_any_instance' instead.	
+		external
+			"C macro use %"eif_macros.h%""
+		alias
+			"RTLN"
+		end
+		
+	c_set_dynamic_type (obj: POINTER; dtype: INTEGER) is
+			-- Set `obj' dynamic type to `dtype'.
+		external
+			"C signature (EIF_REFERENCE, EIF_INTEGER) use %"eif_internal.h%""
+		alias
+			"eif_set_dynamic_type"
+		end
+
+	c_eif_special_any_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type.
+		external
+			"C signature (EIF_INTEGER): EIF_BOOLEAN use %"eif_internal.h%""
+		alias
+			"eif_special_any_type"
+		end
+
+	c_eif_is_special_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type or
+			-- a basic type.
+		external
+			"C signature (EIF_INTEGER): BOOLEAN use %"eif_internal.h%""
+		alias
+			"eif_is_special_type"
+		end
+
+	c_type_conforms_to (type1, type2: INTEGER): BOOLEAN is
+			-- Does `type1' conform to `type2'?
+		external
+			"C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
+		alias
+			"eif_gen_conf"
+		end
+		
 indexing
 
 	library: "[

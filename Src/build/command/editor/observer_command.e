@@ -18,7 +18,8 @@ feature
 			-- Set `observed_command' to `a_command'.
 		do
 			observed_command := observed_cmd
-			observer := observer_cmd 
+			observer := observer_cmd
+			command_tool := observer_cmd.command_tool	
 		end
 feature
 
@@ -31,7 +32,6 @@ feature
 
 	execute (argument: ANY) is
 		do
---			observer ?=  argument
 			if observer /= Void then
 				command_work
 				update_history
@@ -65,6 +65,8 @@ feature {NONE}
 	observed_command: CMD_INSTANCE
 
 	observer: CMD_INSTANCE
+	
+	command_tool: COMMAND_TOOL
 
 	command_work is
 		deferred

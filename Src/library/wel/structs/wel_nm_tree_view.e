@@ -62,7 +62,9 @@ feature -- Access
 		do
 			!! Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
 			tree ?= hdr.window_from
-			Result := tree.get_item_with_data (Result)
+			if tree.has_item (Result) then
+				Result := tree.get_item_with_data (Result)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

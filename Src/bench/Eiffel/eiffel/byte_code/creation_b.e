@@ -7,7 +7,9 @@ inherit
 	INSTR_B
 		redefine
 			need_enlarging, enlarged,
-			make_byte_code
+			make_byte_code, is_unsafe,
+			optimized_byte_node,
+			calls_special_features
 		end
 	
 feature 
@@ -77,6 +79,26 @@ end;
 				target.make_byte_code (ba);
 				ba.append (Bc_create_inv);
 			end;
+		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := call.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := call.is_unsafe
+		end;
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+				-- The current call won't be optimized:
+				-- `item' and `put' are NOT creation routines
+			call ?= call.optimized_byte_node
 		end;
 
 end

@@ -6,7 +6,12 @@ inherit
 
 	CALL_ACCESS_B
 		redefine
-			same, is_external, set_parameters, parameters, enlarged		
+			same, is_external, set_parameters, parameters, enlarged,
+			is_unsafe, optimized_byte_node,
+			calls_special_features
+        end;
+
+
 		end;
 
 	SHARED_INCLUDE
@@ -214,5 +219,30 @@ feature -- Byte code generation
 		do
 			Result := Bc_extern_inv
 		end;
+
+feature -- Array optimization
+
+	is_unsafe: BOOLEAN is
+		do
+				-- An external call can have access to the entire system
+				-- and move. resize objects. Thus it is unsafe to call
+				-- an external feature.
+			Result := True
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			if parameters /= Void then
+				parameters := parameters.optimized_byte_node
+			end
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			if parameters /= Void then
+				Result := parameters.calls_special_features (array_desc)
+			end
+		end
 
 end

@@ -8,6 +8,9 @@ deferred class
 	SCROLLABLE_LIST_I
 
 inherit
+
+	FONTABLE_I
+
 	PRIMITIVE_I
 		rename
 			cursor as screen_cursor
@@ -110,7 +113,8 @@ feature  -- Element change
 			-- (Synonym for replace)
 		require
 			extendible: extendible
-		deferred
+		do
+			replace (v)
 		ensure
 			same_count: count = old count
 			item_inserted: has (v)
@@ -304,8 +308,23 @@ feature  -- Status setting
 		deferred
 		end;
 
+	deselect_item is
+			-- Deselect item at current position.
+		require
+			not_off: not off
+		deferred
+		end;
+
 	select_i_th (i: INTEGER) is
 			-- Select item at `i'-th position.
+		require
+			index_large_enough: i >= 1;
+			index_small_enough: i <= count
+		deferred
+		end;
+
+	deselect_i_th (i: INTEGER) is
+			-- Deselect item at `i'-th position.
 		require
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count

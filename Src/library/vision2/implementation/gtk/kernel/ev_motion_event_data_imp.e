@@ -10,21 +10,12 @@ class
 	
 inherit
 	EV_MOTION_EVENT_DATA_I
-		select
-			interface
-		end
 		
 	EV_EVENT_DATA_IMP
-		rename
-			interface as x_interface
 		redefine
 			initialize
 		end
-	
-	
-creation
-	make
-	
+
 feature -- Initialization
 	
 	initialize (p: POINTER) is
@@ -32,10 +23,45 @@ feature -- Initialization
 			-- fields according to C pointer 'p'
 		do
 			Precursor (p)			
-			interface.set_x (c_gdk_event_x (p))
-			interface.set_y (c_gdk_event_y (p))
-			interface.set_state (c_gdk_event_state (p))
+			set_x (c_gdk_event_x (p))
+			set_y (c_gdk_event_y (p))
+	--		set_state (c_gdk_event_state (p))
 		end
-end
+
+feature -- Access	
+	
+	absolute_x: INTEGER is
+			-- absolute x of the mouse pointer
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	absolute_y: INTEGER is
+			-- absolute y of the mouse pointer
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+end -- class EV_MOTION_EVENT_DATA_IMP
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 			
 	

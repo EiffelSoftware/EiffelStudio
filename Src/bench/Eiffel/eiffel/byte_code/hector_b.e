@@ -21,8 +21,8 @@ feature
 
 	type: TYPE_I is
 			-- Expression's type
-		do
-			Result := expr.type;
+		once
+			!POINTER_I!Result
 		end;
 
 	make (a: ACCESS_B) is

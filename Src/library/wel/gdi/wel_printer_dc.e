@@ -9,13 +9,9 @@ class
 
 inherit
 	WEL_DC
-		redefine
-			destroy_item
-		end
 
 creation
 	make_by_pointer
-
 
 feature -- Basic operations
 
@@ -93,14 +89,6 @@ feature -- Obsolete
 			exists: exists
 		do
 			end_page
-		end
-
-feature {NONE} -- Removal
-
-	destroy_item is
-			-- Ensure the current dc is deleted
-		do
-			delete
 		end
 
 feature {NONE} -- Externals

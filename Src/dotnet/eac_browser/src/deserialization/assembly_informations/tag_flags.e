@@ -51,10 +51,4 @@ feature -- Access
 	path_str: STRING is "path"
 	type_str: STRING is "type"
 	
---	list_header_str: STRING is "listheader"
---	item_str: STRING is "item"
---	term_str: STRING is "term"
---	description_str: STRING is "description"
-		
-
 end -- class TAG_FLAGS

@@ -91,19 +91,13 @@ feature -- Basic operation
 			-- already queued to be executed next idle event, do nothing.
 			-- Compares by reference, so if you want one action to be executed
 			-- twice, you should recreate the agent.
+		obsolete
+			"Do not use this function. Just do it yourself."
 		do
-			if once_idle_actions = Void then
-				create once_idle_actions
-				once_idle_actions.compare_references
-			end
-			if not once_idle_actions.has (an_agent) then
-				once_idle_actions.extend (an_agent)
+			if interface.once_idle_actions.has (an_agent) then
+				interface.once_idle_actions.extend (an_agent)
 			end
 		end
-
-	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when application becomes idle.
-			-- Clears after calling.
 
 feature -- Root window
 
@@ -252,9 +246,9 @@ feature {NONE} -- Message loop, we redefine it because the user
 						end
 					end
 				else
-					if not once_idle_actions.empty then
-						once_idle_actions.call ([])
-						once_idle_actions.wipe_out
+					if not interface.once_idle_actions.empty then
+						interface.once_idle_actions.call ([])
+						interface.once_idle_actions.wipe_out
 					elseif not internal_idle_actions.empty then
 						internal_idle_actions.call ([])
 					elseif not interface.idle_actions.empty then 
@@ -344,6 +338,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/23 18:20:20  brendel
+--| Implemented once_idle_actions in new way.
+--|
 --| Revision 1.23  2000/03/21 02:23:11  brendel
 --| First implementation of accelerators. Takes only `first_window'. The
 --| rest is to be implemented.

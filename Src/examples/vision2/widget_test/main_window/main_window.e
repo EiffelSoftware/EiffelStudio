@@ -112,6 +112,9 @@ feature {NONE} -- Initialization
 			temp_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
 			flat_short_display.set_font (temp_font)
 			
+				-- Connect missing pixmaps to show_actions.
+			application.post_launch_actions.extend (agent display_missing_pixmaps)
+			
 			setup_initial_screen
 		end
 
@@ -359,15 +362,52 @@ feature {NONE} -- Implementation
 			name_not_void: a_name /= Void
 		local
 			file_name: FILE_NAME
+			file_location: STRING
 		do
-			create file_name.make_from_string (get ("ISE_VISION2_TOUR"))
-			file_name.extend ("bitmaps")
-			file_name.extend (image_extension)
-			file_name.extend (a_name + "." + image_extension)
-			create Result
-			Result.set_with_named_file (file_name.out)
+			file_location := get ("ISE_VISION2_TOUR")
+			if file_location = Void then
+				file_location := get ("ISE_EIFFEL")
+			end
+			if file_location /= Void then
+				create file_name.make_from_string (file_location)
+				file_name.extend ("bitmaps")
+				file_name.extend (image_extension)
+				file_name.extend (a_name + "." + image_extension)
+				create Result
+				Result.set_with_named_file (file_name.out)
+			else
+				missing_files.extend (a_name + "." + image_extension)
+				Create Result
+			end
 		ensure
 			result_not_void: Result /= Void
+		end
+		
+	display_missing_pixmaps is
+			-- Warn user that files are missing.
+		local
+			warning_dialog: EV_WARNING_DIALOG
+			message_text: STRING
+		do
+			if not missing_files.is_empty then
+				create warning_dialog
+				message_text := "Unable to locate the following files :%N"
+				from
+					missing_files.start
+				until
+					missing_files.off
+				loop
+					message_text.append (missing_files.item + "%N")
+					if missing_files.index = 15 then
+						message_text.append ("... + More%N")
+						missing_files.go_i_th (missing_files.count)
+					end
+					missing_files.forth
+				end
+				message_text.append ("%NIf this tour was included in the EiffelStudio installation, please ensure that ISE_EIFFEL environment variable is correctly set.%N%NIf you downloaded this tour seperately, please ensure the ISE_VISION2_TOUR environment variable is set, and points to the root directory of this tour.")
+				warning_dialog.set_text (message_text)
+				warning_dialog.show_modal_to_window (Current)
+			end
 		end
 	
 	image_extension: STRING is

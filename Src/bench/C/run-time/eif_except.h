@@ -111,9 +111,7 @@ extern "C" {
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
-#ifdef WORKBENCH
 #define EN_DOL		26			/* $ applied to melted feature */
-#endif
 
 /* Maximum number of internal exceptions (EN_NEX) defined in
  * eif_constants.h

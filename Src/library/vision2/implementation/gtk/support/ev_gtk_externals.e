@@ -15227,10 +15227,10 @@ feature -- External C structs
 			"state"
 		end
 
-	frozen gdk_event_motion_struct_time (a_c_struct: POINTER): INTEGER is
+	frozen gdk_event_motion_struct_time (a_c_struct: POINTER): NATURAL_32 is
 			-- (from C_GDK_EVENT_MOTION_STRUCT)
 		external
-			"C [struct <gtk/gtk.h>] (GdkEventMotion): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GdkEventMotion): guint32"
 		alias
 			"time"
 		end
@@ -18004,6 +18004,27 @@ feature -- External C structs
 		alias
 			"ypad"
 		end
+
+	frozen c_g_timeval_struct_allocate: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"calloc (sizeof(GTimeVal), 1)"
+		end
+
+        frozen g_timeval_struct_tv_sec (a_c_struct: POINTER): INTEGER is
+                external
+                        "C [struct <gtk/gtk.h>] (GTimeVal): EIF_INTEGER"
+                alias
+                        "tv_sec"
+                end
+
+        frozen g_timeval_struct_tv_usec (a_c_struct: POINTER): INTEGER is
+                external
+                        "C [struct <gtk/gtk.h>] (GTimeVal): EIF_INTEGER"
+                alias
+                        "tv_usec"
+                end
 
 --	gtk_notebook_page_struct_allocation (a_c_struct: POINTER): POINTER is
 --			-- Pointer to GtkAllocation.

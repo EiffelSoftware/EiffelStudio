@@ -58,8 +58,6 @@ feature {NONE} -- Initialization
 			if feature {EV_GTK_EXTERNALS}.gtk_is_widget (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			end
-
-			set_default_colors
 			is_initialized := True
 		end
 

@@ -36,10 +36,14 @@ feature {NONE} -- Initialization
 			non_void_eiffel_cluster_path: an_eiffel_assembly.EiffelClusterPath.Length > 0
 			non_void_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber /= Void
 			not_empty_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber.Length > 0
+		local
+			code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 		do
 			eiffel_assembly := an_eiffel_assembly
-			if not valid_path then
-				create_assembly_folder
+			create code_generation_support.make_codegenerationsupport
+			code_generation_support.make
+			if not code_generation_support.validpath (eiffel_assembly.eiffelclusterpath) then
+				code_generation_support.createfolder (eiffel_assembly.eiffelclusterpath)
 			end
 		ensure
 			eiffel_assembly_set: eiffel_assembly = an_eiffel_assembly
@@ -64,22 +68,6 @@ feature -- Access
 		indexing
 			external_name: "GeneratedCode"
 		end
-			
-feature -- Status Report
-
-	valid_path: BOOLEAN is
-			-- Is Eiffel cluster path valid?
-		indexing
-			external_name: "ValidPath"
-		require
-			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_cluster_path: eiffel_assembly.eiffelclusterpath /= Void
-			not_empty_eiffel_cluster_path: eiffel_assembly.eiffelclusterpath.length > 0
-		local
-			dir: SYSTEM_IO_DIRECTORY
-		do
-			Result := dir.exists (eiffel_assembly.eiffelclusterpath)
-		end
 
 feature -- Basic Operations
 
@@ -99,7 +87,6 @@ feature -- Basic Operations
 			non_void_eiffel_cluster_path: eiffel_assembly.EiffelClusterPath.Length > 0
 			non_void_emitter_version_number: eiffel_assembly.EmitterVersionNumber /= Void
 			not_empty_emitter_version_number: eiffel_assembly.EmitterVersionNumber.Length > 0
-			valid_path: valid_path
 		local
 			file_stream: SYSTEM_IO_STREAMWRITER
 			eiffel_cluster_path: STRING
@@ -181,54 +168,6 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
-
-	create_assembly_folder is
-			-- Create assembly folder where Eiffel code will be generated.
-		indexing
-			external_name: "CreateAssemblyFolder"
-		require
-			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_cluster_path: eiffel_assembly.eiffelclusterpath /= Void
-			not_empty_eiffel_cluster_path: eiffel_assembly.eiffelclusterpath.length > 0		
-		local
-			i: INTEGER
-			folder_names: SYSTEM_COLLECTIONS_ARRAYLIST
-			a_folder_name: STRING
-			folder_path: STRING
-			path: STRING
-			slash_index: INTEGER
-			dir: SYSTEM_IO_DIRECTORY		
-			info: SYSTEM_IO_DIRECTORYINFO
-			path_exists: BOOLEAN
-			added: INTEGER
-		do
-			create folder_names.make
-			path := eiffel_assembly.eiffelclusterpath
-			from
-				slash_index := path.lastindexof ("\") 
-			until
-				path_exists or slash_index = -1
-			loop
-				added := folder_names.add (path.substring (slash_index + 1))
-				path_exists := dir.exists (path.substring_int32_int32 (0, slash_index))
-				path := path.substring_int32_int32 (0, slash_index)
-				slash_index := path.lastindexof ("\") 
-			end
-			from
-				i := folder_names.count - 1
-			until
-				i = - 1
-			loop
-				a_folder_name ?= folder_names.item (i)	
-				if a_folder_name /= Void then
-					folder_path := path.concat_string_string_string (path, "\", a_folder_name)
-					info := dir.createdirectory (folder_path)
-				end
-				i := i - 1
-			end
-		ensure
-			valid_path: valid_path
-		end
 		
 	parents: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Class parents

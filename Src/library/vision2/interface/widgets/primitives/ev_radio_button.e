@@ -45,7 +45,7 @@ feature {NONE} -- Contract support
 			-- Radio buttons are selected by default.
 		do
 			Result := Precursor {EV_RADIO_PEER}
-				and then Precursor {EV_BUTTON}
+				and then Precursor {EV_BUTTON} and is_left_aligned
 		end
 
 

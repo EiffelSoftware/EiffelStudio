@@ -3,11 +3,9 @@ class TRANSPORTER
 
 inherit
 
-	EB_TOP_SHELL
+	BASE
 		rename
 			make as base_create
-		redefine
-			set_geometry
 		end;
 	COMMAND;
 	PAINTER;
@@ -15,6 +13,7 @@ inherit
 	WINDOWS;
 	SHARED_LICENSE;
 	SHARED_CONTEXT;
+	CONSTANTS
 
 creation
 
@@ -79,6 +78,10 @@ feature {NONE}
 			wl := Shared_window_list;
 			widget_pointed := screen.widget_pointed;
 			if widget_pointed /= Void then
+				debug ("TRANSPORT")
+					io.error.putstring ("Widget found: ");
+					io.error.putstring (widget_pointed.identifier);
+				end;
 				from
 					wl.start
 				until
@@ -102,6 +105,13 @@ feature {NONE}
 						holes.forth
 					end
 				end
+				debug ("TRANSPORT")
+					if Result = Void then
+						io.error.putstring ("Hole not found%N");
+					else
+						io.error.putstring ("Hole found%N");
+					end
+				end;
 			end;
 		end;
 
@@ -171,21 +181,6 @@ feature {NONE}
 			end;
 		end;
 
-feature -- Windows
-
-	set_geometry is
-		local
-			tmp_x: INTEGER
-		do
-			set_size (Resources.main_panel_width,
-					Resources.main_panel_height)
-			tmp_x := Resources.main_panel_x;	
-			if tmp_x = -1 then
-				tmp_x := screen.width - width;
-			end;
-			set_x_y (tmp_x, Resources.main_panel_y);
-		end;
-	
 feature 
 
 	make (a_name: STRING; a_screen: SCREEN) is
@@ -206,4 +201,43 @@ feature
 			!!holes.make
 		end;
 
+feature -- Initializing window attrbutes
+
+    initialize_window_attributes is
+            -- Initialize the geometry
+            -- and color of current window.
+        do
+debug ("RESOURCES")
+    io.error.putstring ("Initializing window: ");
+    io.error.putstring (identifier);
+    io.error.putstring (" ...");
+end;
+            set_geometry;
+            set_default_color;
+debug ("RESOURCES")
+    io.error.putstring ("finished%N");
+end;
+        end;
+
+    set_default_color is
+        local
+            set_colors: SET_WINDOW_ATTRIBUTES_COM
+        do
+            !! set_colors;
+            set_colors.execute (Current)
+        end;
+
+	set_geometry is
+		local
+			tmp_x: INTEGER
+		do
+			set_size (Resources.main_panel_width,
+					Resources.main_panel_height)
+			tmp_x := Resources.main_panel_x;	
+			if tmp_x = -1 then
+				tmp_x := screen.width - width;
+			end;
+			set_x_y (tmp_x, Resources.main_panel_y);
+		end;
+	
 end

@@ -211,7 +211,7 @@ feature {EV_PIXMAP_ACTION_SEQUENCES_IMP} -- Implementation
 
 	Set_originating_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Sets `originating_pixmap' to `a_pixmap'.
-		once
+		do
 			originating_pixmap := a_pixmap
 		end
 

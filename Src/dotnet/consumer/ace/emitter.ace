@@ -13,12 +13,12 @@ default
 	trace (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
+	dotnet_naming_convention (yes)
 	use_cluster_name_as_namespace (no)
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
 	namespace ("EiffelSoftware.MetadataConsumer")
-	version ("5.5.624.0")
+	version ("5.5.715.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_clr_version ("v1.1.4322")
 	msil_assembly_compatibility ("None")
@@ -32,6 +32,7 @@ default
 	exception_trace (no)
 	inlining (no)
 	multithreaded (no)
+
 
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
@@ -50,9 +51,16 @@ cluster
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; "EIFGEN"; 
+			"CVS"; "EIFGEN"; "interop"
+		end
+
+	all interop:		"$EIFFEL_SRC\dotnet\consumer\support\interop"
+		exclude
+			"CVS"; "EIFGEN"; "interop"
+		default
+			namespace ("Interop")
 		visible
-			CACHE_REFLECTION
+			COM_CACHE_MANAGER
 				end
 		end
 
@@ -73,5 +81,4 @@ assembly
 		prefix
 			"XML_"
 		end
-
 end

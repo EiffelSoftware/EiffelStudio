@@ -1,3 +1,11 @@
+/*
+indexing
+	description: "Abstract representation of a class or interface being generated
+		or being reused (i.e. already generated)"
+	date: "$Date $"
+	revision: "$Revision$"
+*/
+
 using System;
 using System.IO;
 using System.Reflection;

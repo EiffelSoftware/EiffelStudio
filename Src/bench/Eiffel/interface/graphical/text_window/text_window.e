@@ -51,8 +51,6 @@ feature -- Properties
 	count: INTEGER is
 			-- Number of characters in `text'
 		deferred
-		ensure 
-			non_void_result: Result /= Void
 		end
 
 	changed: BOOLEAN is

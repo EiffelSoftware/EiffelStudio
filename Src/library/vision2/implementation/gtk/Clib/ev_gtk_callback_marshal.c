@@ -343,6 +343,7 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 			(GtkSignalFunc)
 			c_ev_gtk_callback_marshal_true_event_callback,
 				// Function pointer to attach.
+			(GtkCallbackMarshal)
 			gtk_marshal_BOOL__POINTER, // Function marshal.
 			eif_adopt (agent),         // User data for function.
 			(GtkDestroyNotify)
@@ -377,6 +378,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2000/03/08 16:46:44  brendel
+// Added cast so that no compiler warning appears anymore.
+//
 // Revision 1.3  2000/02/18 19:11:52  oconnor
 // added GTK_VALUE_INT wrapper
 //

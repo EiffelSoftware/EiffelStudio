@@ -164,6 +164,19 @@ feature {NONE} -- Implementation
 			then
 				notify_change (Nc_minsize, wel_win)
 			end
+			
+				-- If we have not been displayed, then we
+				-- must update the ranges, as we may then
+				-- call `set_*_offset' for which the ranges
+				-- must be set. Not sure if this really is
+				-- the best solution. Julian 07/17/02.
+			check
+				has_item: item_imp /= Void
+			end
+			if scroller /= Void then
+				set_horizontal_range (0, item_imp.width)
+				set_vertical_range (0, item_imp.height)
+			end
 		end
 
 	interface: EV_VIEWPORT

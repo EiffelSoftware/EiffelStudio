@@ -10,7 +10,7 @@
 <DIV>
 <p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
 
-<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel" width="109" height="226"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
 
 <p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-16.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-18.html"><area shape="default" nohref></MAP>
 </DIV>
@@ -42,19 +42,19 @@
 Compile</SPAN>
  menu (don't trigger any of them right now) as well as keyboard shortcuts and, in some cases, buttons:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-520763"></A><SPAN CLASS="ff-bold">
 Melt</SPAN>
 : quick incremental recompilation, doesn't optimize code for changed parts.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-520764"></A><SPAN CLASS="ff-bold">
 Freeze</SPAN>
 : incremental recompilation, not as fast as Melt, but generates more efficient code for changed parts.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-520773"></A><SPAN CLASS="ff-bold">
 Finalize</SPAN>
 : recompile entire system, generating highly optimized code.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-520774"></A><SPAN CLASS="ff-bold">
 Precompile</SPAN>
  (available both in the <SPAN CLASS="ee-keyword">
@@ -78,15 +78,15 @@ Precompilation wizard</SPAN>
 Melting Ice Technology </SPAN>
 reconciles the following goals:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521411"></A><SPAN CLASS="ff-italics">
 Security and efficiency of the generated code</SPAN>
 : compiling techniques for the strongly typed Eiffel language ensure that compilers can catch many errors before it is too late, and generate more efficient code. The &quot;<A NAME="marker-521412"></A>validity constraints&quot; of the language, whose violations are caught as compilation errors, are particularly useful here, playing the role of enforceable design rules.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521107"></A><SPAN CLASS="ff-italics">
 Quick turnaround</SPAN>
 : you should experience <A NAME="marker-521103"></A><A NAME="marker-521104"></A><A NAME="marker-521105"></A><A NAME="marker-521106"></A>an almost immediate transition from the time you write or (more commonly) modify software to the time you can execute it.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521856"></A><SPAN CLASS="ff-italics">
 C code generation</SPAN>
 <A NAME="marker-521855"></A>: for portability, it is useful to take advantage of C in its proper role, that of a portable assembly language. C's closeness to machine concepts -- one of the very properties making it less suitable for human programming except in the case of short routines to access low-level mechanisms --, its almost universal availability, and its good level of standardization, make it an excellent target language for a code generator. This also enables the environment to benefit from the often extensive optimizations performed by good C compilers, and facilitates interfacing new software with the large body of existing C-based systems, tools and libraries. As the final output of Eiffel compilation, you can obtain a complete C package that you can either C-compile on the same machine or port to other platforms, making ISE Eiffel a tool of choice for <SPAN CLASS="ff-bold">
@@ -189,21 +189,21 @@ melting</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-521590"></A>The roles of the four compilation modes follow from this analysis:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521591"></A><SPAN CLASS="ff-bold">
 Melting</SPAN>
  is the fastest mode: it processes the melted part without affecting the frozen part. With EiffelStudio, the melted elements will be <SPAN CLASS="ff-italics">
 interpreted</SPAN>
  while the rest is compiled.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521165"></A><SPAN CLASS="ff-bold">
 Freezing</SPAN>
 <A NAME="marker-521164"></A> is the process of putting back the melted parts into the &quot;freezer&quot;: bringing them to the same compiled state as the parts that have not been modified.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521167"></A><SPAN CLASS="ff-bold">
 Finalizing</SPAN>
 <A NAME="marker-521166"></A> is the non-incremental process of producing a stand-alone C package and the resulting executable, extensively optimized, from the current system.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521168"></A><SPAN CLASS="ff-bold">
 Precompiling </SPAN>
 is the process of compiling an entire set of reusable classes, once and for all, so that it can be shared by many systems and many users without duplicating the code or compiling it again for each project.
@@ -354,9 +354,9 @@ self-contained</SPAN>
 bytecode</SPAN>
 . ISE Eiffel bytecode serves two complementary purposes:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521271"></A>It can be executed directly. This is what happens during melting: while the rest of your system, the frozen part, is executed in the form produced by Eiffel compilation generation and C-compilation of the result, the melted part is interpreted &quot;as is&quot; without further translation.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521980"></A>It can be compiled into C for further processing.
 </UL>
 <P CLASS="nn-first">
@@ -382,9 +382,9 @@ EIFGEN/W_CODE</SPAN>
 melt-only </SPAN>
 mode and assumes that:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522012"></A>You do not add new external C functions, which would require re-freezing and linking.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522013"></A>You rely on precompiled libraries (such as EiffelBase). The precompilation process itself requires a C compiler, but you can obtain precompiled libraries as part of the ISE Eiffel delivery or download them from <SPAN CLASS="ww-crossref">
 <A HREF="http://www.eiffel.com/doc/manuals/getting_started/index.html" CLASS="URL">eiffel.com</A></SPAN>
 .
@@ -398,15 +398,15 @@ mode and assumes that:
 degrees</SPAN>
  on the messages that flash on the screen when you do a compilation. The names are inspired by the international temperature scale -- Celsius, also known as centigrade -- where water freezes at 0 (and boils at 100, but Eiffel software never reaches that). For EiffelStudio:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522179"></A>Compilation starts at degree 6, which examines the clusters of your system to determine what classes may have changed. In many cases the compilation can safely skip part of this degree.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522180"></A>Degree 5 parses modified classes. It's executed not only when you explicitly request a compilation, but also when you save a class from the EiffelStudio editor, or exit from an external editor, so that you can see and fix syntax errors without delay.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522181"></A>Degrees 4 down to 1 take care of melting.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522182"></A>Negative degrees only take place when you freeze or finalize.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-522183"></A>After negative degrees comes C-compilation if needed.
 </UL>
 </DIV>
@@ -453,9 +453,9 @@ Yes</SPAN>
 C compilation launched in background</SPAN>
 ) tells you when that C-compilation has started. C-compilation does not block EiffelStudio: at this point you can continue working with the environment. Any messages from C compiler will appear:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521334"></A>On Windows, in a new console that comes up for the occasion (minimize it if you don't want to see the messages).
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521338"></A>On Unix/Linux and VMS, in the window from which you launched EiffelStudio.
 </UL>
 <P CLASS="nn-first">
@@ -475,11 +475,11 @@ optimizations</SPAN>
  </SPAN>
 performed by finalization affect both space and time:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521349"></A><SPAN CLASS="ff-italics">
 Dead code removal</SPAN>
  strips the executable module of all the routines in the system that are not actually called, directly or indirectly, by the root's creation procedure. In a large system relying on many general-purpose classes, dead code removal can easily reduce an executable's size by one third or more. 
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-521350"></A>Finalization also applies <SPAN CLASS="ff-italics">
 static binding </SPAN>
 to non-polymorphic calls, and <SPAN CLASS="ff-italics">

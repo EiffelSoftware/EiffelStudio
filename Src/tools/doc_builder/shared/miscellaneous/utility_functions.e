@@ -19,6 +19,7 @@ feature -- Copying
 			sub_dir, src_sub_dir: DIRECTORY
 			l_file, target_file: RAW_FILE
 			path: STRING
+			l_filename: FILE_NAME
 		do	
 			from
 				cnt := 0
@@ -31,18 +32,29 @@ feature -- Copying
 			loop	
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
-					create src_sub_dir.make (path + "\" + a_dir.lastentry)
+					create l_filename.make_from_string (path)
+					l_filename.extend (a_dir.lastentry)
+					create src_sub_dir.make (l_filename.string)
 					if not src_sub_dir.exists then
-						create l_file.make (path + "\" + a_dir.lastentry)
+							-- This is not a directory, so check for file
+						create l_filename.make_from_string (path)
+						l_filename.extend (a_dir.lastentry)
+						create l_file.make (l_filename.string)
 						if l_file.exists then
-							create target_file.make_create_read_write (target.name + "\" + a_dir.lastentry)
+								-- This is a file
+							create l_filename.make_from_string (target.name)
+							l_filename.extend (a_dir.lastentry)
+							create target_file.make_create_read_write (l_filename)
 							target_file.close
 							if not l_file.is_empty then
 								copy_file (l_file, target_file)	
 							end
 						end
-					else						
-						create sub_dir.make (target.name + "\" + a_dir.lastentry)
+					else		
+							-- This is a directory
+						create l_filename.make_from_string (target.name)
+						l_filename.extend (a_dir.lastentry)
+						create sub_dir.make (l_filename)
 						if not sub_dir.exists then							
 							sub_dir.create_dir	
 						end

@@ -140,27 +140,27 @@ RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signal
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
 RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
-extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
+RT_LNK struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */
-extern struct ex_vect *extop(register1 struct xstack *stk);	/* Top of Eiffel stack */
-extern void esdie(int code);
+RT_LNK struct ex_vect *extop(register1 struct xstack *stk);	/* Top of Eiffel stack */
+RT_LNK void esdie(int code);
 
 /* Eiffel interface with class EXCEPTIONS */
-extern long eeocode(EIF_CONTEXT_NOARG);			/* Original exception code */
-extern char *eeotag(EIF_CONTEXT_NOARG);			/* Original exception tag */
-extern char *eeoclass(EIF_CONTEXT_NOARG);		/* Original class where exception occurred */
-extern char *eeorout(EIF_CONTEXT_NOARG);			/* Original routine where exception occurred */
-extern long eelcode(EIF_CONTEXT_NOARG);			/* Last exception code */
-extern char *eeltag(EIF_CONTEXT_NOARG);			/* Last exception tag */
-extern char *eelclass(EIF_CONTEXT_NOARG);		/* Last class where exception occurred */
-extern char *eelrout(EIF_CONTEXT_NOARG);			/* Last routine where exception occurred */
-extern void eetrace(EIF_CONTEXT char b);			/* Print/No Print of exception history table */
-extern void eecatch(EIF_CONTEXT long ex);			/* Catch exception */
-extern void eeignore(EIF_CONTEXT long ex);			/* Ignore exception */
-extern char *eename(long ex);			/* Exception description */
+RT_LNK long eeocode(EIF_CONTEXT_NOARG);			/* Original exception code */
+RT_LNK char *eeotag(EIF_CONTEXT_NOARG);			/* Original exception tag */
+RT_LNK char *eeoclass(EIF_CONTEXT_NOARG);		/* Original class where exception occurred */
+RT_LNK char *eeorout(EIF_CONTEXT_NOARG);			/* Original routine where exception occurred */
+RT_LNK long eelcode(EIF_CONTEXT_NOARG);			/* Last exception code */
+RT_LNK char *eeltag(EIF_CONTEXT_NOARG);			/* Last exception tag */
+RT_LNK char *eelclass(EIF_CONTEXT_NOARG);		/* Last class where exception occurred */
+RT_LNK char *eelrout(EIF_CONTEXT_NOARG);			/* Last routine where exception occurred */
+RT_LNK void eetrace(EIF_CONTEXT char b);			/* Print/No Print of exception history table */
+RT_LNK void eecatch(EIF_CONTEXT long ex);			/* Catch exception */
+RT_LNK void eeignore(EIF_CONTEXT long ex);			/* Ignore exception */
+RT_LNK char *eename(long ex);			/* Exception description */
 
-extern EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);		/* Exception stack as an Eiffel string */
+RT_LNK EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);		/* Exception stack as an Eiffel string */
 
 #ifdef __cplusplus
 }

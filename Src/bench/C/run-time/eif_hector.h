@@ -42,16 +42,16 @@ extern "C" {
 extern int stck_nb_items (const struct stack stk);
 extern int stck_nb_items_free_stack ();
 #endif
-extern EIF_REFERENCE efreeze(EIF_OBJECT object);				/* Freeze object's address (no more move) */
-extern EIF_OBJECT eadopt(EIF_OBJECT object);			/* The C wants to keep the reference */
-extern EIF_REFERENCE ewean(EIF_OBJECT object);				/* Weans a previously adopted reference */
+RT_LNK EIF_REFERENCE efreeze(EIF_OBJECT object);				/* Freeze object's address (no more move) */
+RT_LNK EIF_OBJECT eadopt(EIF_OBJECT object);			/* The C wants to keep the reference */
+RT_LNK EIF_REFERENCE ewean(EIF_OBJECT object);				/* Weans a previously adopted reference */
 extern void eufreeze(EIF_REFERENCE object);				/* Forget a frozen memory address */
-extern EIF_OBJECT hrecord(EIF_REFERENCE object);			/* Record entry in hector table */
-extern EIF_OBJECT henter(EIF_REFERENCE object);			/* Low-level entry in hector table */
-extern void hfree(EIF_OBJECT address);				/* Low-level release from hector table */
-extern EIF_REFERENCE spfreeze(EIF_REFERENCE object);			/* Freeze special object's address */
-extern void spufreeze(EIF_REFERENCE object);			/* Put frozen spec obj back to GC control */
-extern EIF_OBJECT hector_addr(EIF_REFERENCE root);		/* Maps an adress to an hector position */
+RT_LNK EIF_OBJECT hrecord(EIF_REFERENCE object);			/* Record entry in hector table */
+RT_LNK EIF_OBJECT henter(EIF_REFERENCE object);			/* Low-level entry in hector table */
+RT_LNK void hfree(EIF_OBJECT address);				/* Low-level release from hector table */
+RT_LNK EIF_REFERENCE spfreeze(EIF_REFERENCE object);			/* Freeze special object's address */
+RT_LNK void spufreeze(EIF_REFERENCE object);			/* Put frozen spec obj back to GC control */
+RT_LNK EIF_OBJECT hector_addr(EIF_REFERENCE root);		/* Maps an adress to an hector position */
 
 #define spfrozen(object)	(HEADER(object)->ov_size & B_C) /* Is special object frozen */
 

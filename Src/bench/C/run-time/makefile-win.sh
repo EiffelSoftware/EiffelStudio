@@ -207,57 +207,49 @@ $(OUTDIR)\wkbench.$lib: $(WOBJECTS)
 
 mtdll:: mtwkbench.dll
 
-DEF_FILE=mtwkbench.def
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS) \
-	/def:$(DEF_FILE) \
 	/OUT:$(DLLDIR)\mtwkbench.dll /IMPLIB:$(DLLDIR)\dll_mtwkbench.lib
 
 LINK32_OBJS= $(WOBJECTS)
-mtwkbench.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
+mtwkbench.dll : $(DLLDIR) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\mtwkbench.dll
 	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 mtdll:: mtfinalized.dll
 
-DEF_FILE= mtfinalized.def
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS) \
-	/def:$(DEF_FILE) \
 	/OUT:$(DLLDIR)\mtfinalized.dll /IMPLIB:$(DLLDIR)\dll_mtfinalized.lib
 
 LINK32_OBJS= $(OBJECTS)
-mtfinalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
+mtfinalized.dll : $(DLLDIR) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\mtfinalized.dll
 	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 dll:: wkbench.dll
 
-DEF_FILE= wkbench.def
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS) \
-	/def:$(DEF_FILE) \
 	/OUT:$(DLLDIR)\wkbench.dll /IMPLIB:$(DLLDIR)\dll_wkbench.lib
 
 LINK32_OBJS= $(WOBJECTS)
-wkbench.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
+wkbench.dll : $(DLLDIR) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\wkbench.dll
 	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 dll:: finalized.dll
 
-DEF_FILE= finalized.def
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS) \
-	/def:$(DEF_FILE) \
 	/OUT:$(DLLDIR)\finalized.dll /IMPLIB:$(DLLDIR)\dll_finalized.lib
 
 LINK32_OBJS= $(OBJECTS)
-finalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
+finalized.dll : $(DLLDIR) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\finalized.dll
 	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 

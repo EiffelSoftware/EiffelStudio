@@ -100,15 +100,15 @@ extern void free_sorted_attributes(void);
 extern void basic_general_free_store (char *object);
 extern void independent_free_store (char *object);
 
-extern void estore(EIF_INTEGER file_desc, char *object);
-extern void eestore(EIF_INTEGER file_desc, char *object);
-extern void sstore (EIF_INTEGER file_desc, char *object);
+RT_LNK void estore(EIF_INTEGER file_desc, char *object);
+RT_LNK void eestore(EIF_INTEGER file_desc, char *object);
+RT_LNK void sstore (EIF_INTEGER file_desc, char *object);
 
-extern long stream_estore(char **stream, long size, char *object, EIF_INTEGER *);
-extern long stream_eestore(char **stream, long size, char *object, EIF_INTEGER *);
-extern long stream_sstore (char **stream, long size, char *object, EIF_INTEGER *);
+RT_LNK long stream_estore(char **stream, long size, char *object, EIF_INTEGER *);
+RT_LNK long stream_eestore(char **stream, long size, char *object, EIF_INTEGER *);
+RT_LNK long stream_sstore (char **stream, long size, char *object, EIF_INTEGER *);
 
-extern char **stream_malloc (int stream_size);
+RT_LNK char **stream_malloc (int stream_size);
 #ifdef __cplusplus
 }
 #endif

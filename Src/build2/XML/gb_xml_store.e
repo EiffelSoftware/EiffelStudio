@@ -18,6 +18,8 @@ inherit
 	
 	INTERNAL
 	
+	GB_EVENT_UTILITIES
+	
 	GB_CONSTANTS
 	
 	GB_NAMING_UTILITIES
@@ -94,6 +96,7 @@ feature {GB_XML_HANDLER} -- Implementation
 			new_type_element: XML_ELEMENT
 			vision2_type: STRING
 			new_name: STRING
+			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
 			create handler
 				-- We must store the name and other attributes
@@ -136,6 +139,21 @@ feature {GB_XML_HANDLER} -- Implementation
 				end
 				supported_types.forth
 			end
+			
+				-- We must now store the selected action sequences.
+				events := an_object.events
+				if events.count > 0 then
+					new_type_element := new_child_element (element, Events_string, "")
+					element.force_last (new_type_element)	
+					from
+						events.start
+					until
+						events.off
+					loop
+						add_element_containing_string (new_type_element, Event_string, action_sequence_info_to_string (events.item))
+						events.forth
+					end
+				end
 		end
 		
 feature {GB_CODE_GENERATOR} -- Implementation

@@ -4,7 +4,8 @@ inherit
 
 	BITS_SYMBOL_AS
 		undefine
-			same_as
+			same_as, associated_eiffel_class,
+			append_to
 		redefine
 			bits_symbol, is_deep_equal
 		end;
@@ -13,7 +14,7 @@ inherit
 		undefine
 			set, is_deep_equal
 		redefine
-			append_clickable_signature
+			append_to
 		end
 
 feature -- Attributes
@@ -91,10 +92,10 @@ feature
 			False
 		end; -- actual_type
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_string (bits_symbol);
+			ow.put_string ("BIT ");
+			ow.put_string (bits_symbol);
 		end;
 
 end -- class BITS_SYMBOL_AS_B

@@ -12,7 +12,7 @@ inherit
 
 	EXP_TYPE_AS
 		undefine
-			same_as
+			same_as, associated_eiffel_class, append_to
 		redefine
 			record_expanded, is_deep_equal,
 			class_name, generics

@@ -10,7 +10,7 @@ inherit
 
 	FEAT_NAME_ID_AS
 		undefine
-			temp_name
+			temp_name, associated_feature_name
 		redefine
 			feature_name, internal_name, infix "<"
 		end;

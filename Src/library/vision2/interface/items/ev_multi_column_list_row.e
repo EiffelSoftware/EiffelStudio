@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Row item for use in EV_MULTI_COLUMN_LIST"
+		"[
+			Row item for use in EV_MULTI_COLUMN_LIST
+		]"
 	status: "See notice at end of class"
 	keywords: "multi column list, row, item, select"
 	date: "$Date$"

@@ -1,8 +1,10 @@
 indexing	
 	description:
-		"Menu item with state displayed as a circular check box.%N%
-		%`is_selected' is mutually exclusive with respect to other radio menu%
-		%items between separators in a menu."
+		"[
+			Menu item with state displayed as a circular check box.
+			`is_selected' is mutually exclusive with respect to other radio menu
+			items between separators in a menu.
+		]"
 	status: "See notice at end of class"
 	keywords: "radio, item, menu, check, select, unselect"
 	date: "$Date$"

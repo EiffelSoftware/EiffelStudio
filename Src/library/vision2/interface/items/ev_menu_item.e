@@ -1,13 +1,17 @@
 indexing	
 	description:
-		"Item for use in EV_MENU."
+		"[
+			Item for use in EV_MENU.
+		]"
 	note:
-		"Single ampersands in text are not shown in the actual%N%
-		%widget. If you need an ampersand in your text,%N%
-		%use && instead. The character following the & may%N%
-		%be a shortcut to this widget (combined with Alt)%N%
-		%&File -> File (Alt+F = shortcut)%N%
-		%Fish && Chips -> Fish & Chips (no shortcut)."
+		"[
+			Single ampersands in text are not shown in the actual
+			widget. If you need an ampersand in your text,
+			use && instead. The character following the & may
+			be a shortcut to this widget (combined with Alt)
+			&File -> File (Alt+F = shortcut)
+			Fish && Chips -> Fish & Chips (no shortcut).
+		]"
 	status: "See notice at end of class"
 	keywords: "menu, item, dropdown, popup"
 	date: "$Date$"

@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Base class for items for use with EV_TOOL_BAR"
+		"[
+			Base class for items for use with EV_TOOL_BAR.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

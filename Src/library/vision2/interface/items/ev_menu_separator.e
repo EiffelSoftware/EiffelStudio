@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Horizontal scored line separator for use in EV_MENU."
+		"[
+			Horizontal scored line separator for use in EV_MENU.
+		]"
 	status: "See notice at end of class."
 	keywords: "menu, item, separator"
 	date: "$Date$"

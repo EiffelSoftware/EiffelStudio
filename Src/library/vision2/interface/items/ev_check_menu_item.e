@@ -1,6 +1,8 @@
 indexing	
 	description:
-		"Menu item with a check box."
+		"[
+			Menu item with a check box.
+		]"
 	status: "See notice at end of class"
 	keywords: "menu, item, check, select, deselect, uncheck"
 	date: "$Date$"

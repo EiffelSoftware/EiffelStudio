@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Dynamically expandable tree item."
+		"[
+			Dynamically expandable tree item.
+		]"
 	status: "See notice at end of file"
 	keywords: "tree, item, dynamic"
 	date: "11/4/1999"

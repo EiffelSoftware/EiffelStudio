@@ -1,6 +1,8 @@
 indexing	
 	description: 
-		"Node for use with EV_TREE."
+		"[
+			Node for use with EV_TREE.
+		]"
 	status: "See notice at end of class"
 	keywords: "tree, item, leaf, node, branch"
 	date: "$Date$"

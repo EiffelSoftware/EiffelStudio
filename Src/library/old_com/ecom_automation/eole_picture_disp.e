@@ -13,7 +13,7 @@ inherit
 		rename
 			create_ole_interface_ptr as dispatch_create_ole_interface_ptr
 		redefine
-			interface_identifier
+			interface_identifier,
 			on_invoke
 		end
 		

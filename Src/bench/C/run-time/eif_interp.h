@@ -209,6 +209,8 @@ extern void idump(FILE *fd, char *start);
 #define BC_MAX				(char) 137
 #define BC_MIN				(char) 138
 #define BC_GENERATOR		(char) 139
+#define BC_ZERO		(char) 140
+#define BC_ONE		(char) 141
 
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */

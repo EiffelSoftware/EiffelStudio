@@ -14,6 +14,7 @@
 
 #include "ecom_exception.h"
 #include "ecom_runtime_c_e.h"
+#include "ecom_runtime_e_c.h"
 
 
 extern Formatter  f;

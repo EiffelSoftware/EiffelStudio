@@ -58,7 +58,7 @@ feature -- Basic Operations
 					consumer.set_error_printer (error_printer)
 					consumer.set_status_querier (status_querier)
 					consumer.set_destination_path (dir.name)
-					consumer.consume_from_name (aname)
+					consumer.consume (assembly)
 					
 					if not consumer.successful then
 						set_error (Consume_error, create {STRING}.make_from_cil (aname.name))

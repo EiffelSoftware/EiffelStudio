@@ -27,7 +27,8 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			close, set_title, parse_file,
-			resources, history_window_title, help_index, icon_id
+			resources, history_window_title, help_index, icon_id,
+			set_default_format
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -42,7 +43,8 @@ inherit
 			set_read_only_text_window, process_feature_error,
 			update_boolean_resource, able_to_edit,
 			update_integer_resource, help_index, icon_id,
-			close, set_title, parse_file, resources, history_window_title
+			close, set_title, parse_file, resources, history_window_title,
+			set_default_format
 		select
 			reset, close_windows, set_stone
 		end;
@@ -363,6 +365,31 @@ feature -- Stone process
 			if stone = Void then
 				class_text_field.clear
 			end
+		end;
+
+	set_default_format is
+			-- Default format of windows.
+		local
+			c: CLASSC_STONE;
+			ci: CLASSI_STONE;
+			class_i: CLASS_I
+		do
+			if stone /= Void then
+				c ?= stone;
+				ci ?= stone;
+				if c /= Void then
+					class_i := c.e_class.lace_class;	
+				else
+					class_i := ci.class_i;	
+				end;
+				if class_i.hide_implementation then
+					set_last_format (showshort_frmt_holder);
+				else
+					set_last_format (default_format);
+				end
+			else
+				set_last_format (default_format);
+			end;
 		end;
 
 feature -- Update

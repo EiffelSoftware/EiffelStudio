@@ -1,8 +1,5 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision range, mswindows implementation."
+	description: "Eiffel Vision range. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,18 +9,16 @@ deferred class
 
 inherit
 	EV_RANGE_I
-		rename
-			interface as ev_range_i_interface
-		select
-			ev_range_i_interface
+		redefine
+			interface
 		end
 
 	EV_GAUGE_IMP
-		rename
-			interface as ev_gauge
+		redefine
+			interface
 		end
 
-	WEL_TRACK_BAR
+	WEL_TRACK_BAR --| FIXME Does not get wm_?scroll messages.
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
@@ -34,7 +29,7 @@ inherit
 			line as step,
 			page as leap,
 			set_line as wel_set_step,
-			set_page as set_leap,
+			set_page as wel_set_leap,
 			width as wel_width,
 			height as wel_height,
 			move as move_to,
@@ -64,21 +59,14 @@ inherit
 			default_style
 		end
 
-feature {NONE} -- WEL Implementation
+feature {NONE} -- Implementation
 
 	default_style: INTEGER is
-			-- Default style used to create the control
+			-- Default style used to create the control.
 		do
 			Result := Ws_visible + Ws_child + Ws_group
-				+ Ws_tabstop + Tbs_tooltips--+ Tbs_autoticks
+				+ Ws_tabstop + Tbs_tooltips
 		end
-
-	on_scroll (scroll_code, pos: INTEGER) is
-			-- Do nothing here.
-		do
-		end
-
-feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -152,6 +140,12 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,8 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision scroll bar, mswindows implementation."
+		"Eiffel Vision scrollbar. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +15,8 @@ inherit
 		end
 
 	EV_GAUGE_IMP
+		undefine
+			on_scroll
 		redefine
 			interface
 		end
@@ -34,7 +34,7 @@ inherit
 			line as step,
 			page as leap,
 			set_line as wel_set_step,
-			set_page as set_leap,
+			set_page as wel_set_leap,
 			width as wel_width,
 			height as wel_height,
 			move as move_to,
@@ -61,17 +61,19 @@ inherit
 			show,
 			hide
 		redefine
-			default_style,
-			on_scroll
+			default_style
 		end
 
-feature {NONE} -- WEL Implementation
+feature {EV_SCROLL_BAR_IMP} -- Access
 
-	on_scroll (scroll_code, pos: INTEGER) is
+	user_scroll_bar_width: INTEGER is
+			-- Scrollbar width set by user.
 		do
-			Precursor (scroll_code, pos)
-			interface.change_actions.call ([])
+			Result := 15
+			--| FIXME To be implemented as suggested by Arnaud.
 		end
+
+feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -79,8 +81,6 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_visible + Ws_child + Ws_group
 				+ Ws_tabstop
 		end
-
-feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -154,6 +154,12 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

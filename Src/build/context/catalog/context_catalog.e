@@ -188,9 +188,9 @@ feature
 			Result := scroll_page.text_type
 		end;
 
-	scroll_list_type: CONTEXT_TYPE is
+	scrollable_list_type: CONTEXT_TYPE is
 		do
-			Result := scroll_page.scroll_list_type
+			Result := scroll_page.scrollable_list_type
 		end;
 
 
@@ -496,7 +496,7 @@ feature -- Context_editor list
 			bulletin_type.reset;
 			radio_box_type.reset;
 			check_box_type.reset;
-			scroll_list_type.reset;
+			scrollable_list_type.reset;
 			drawing_area_type.reset;
 		end;
 

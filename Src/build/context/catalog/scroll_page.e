@@ -14,7 +14,7 @@ feature
 
 	text_type: CONTEXT_TYPE;
 	drawing_area_type: CONTEXT_TYPE;
-	scroll_list_type: CONTEXT_TYPE;
+	scrollable_list_type: CONTEXT_TYPE;
 	drawing_area: DRAWING_BOX;
 
 feature {NONE}
@@ -64,12 +64,12 @@ feature {NONE}
 		local
 			text_c: TEXT_C;
 			drawing_area_c: DR_AREA_C;
-			scroll_list_c: SCROLL_LIST_C;
+			scrollable_list_c: SCROLLABLE_LIST_C;
 
 			text: SCROLLED_T;
-			scroll_list: SCROLL_LIST;
+			scrollable_list: SCROLLABLE_LIST;
 
-			text_item: STRING;
+			text_item: STRING_SCROLLABLE_ELEMENT;
 			i: INTEGER;
 		do
 			set_fraction_base (2);
@@ -79,9 +79,9 @@ feature {NONE}
 			!!text_type.make (Widget_names.text_name, text_c);
 			text_type.initialize_callbacks (text);
 
-			!!scroll_list_c;
-			!!scroll_list.make (scroll_list_c.eiffel_type, Current);
-			scroll_list.set_visible_item_count (3);
+			!!scrollable_list_c;
+			!!scrollable_list.make (scrollable_list_c.eiffel_type, Current);
+			scrollable_list.set_visible_item_count (3);
 			from
 				i := 1;
 			until
@@ -90,13 +90,13 @@ feature {NONE}
 				!!text_item.make (0);
 				text_item.append (Widget_names.item_name);
 				text_item.append_integer (i);
-				scroll_list.put_right (text_item);
-				scroll_list.forth;
+				scrollable_list.put_right (text_item);
+				scrollable_list.forth;
 				i := i + 1
 			end;
-			scroll_list.set_size (80, 80);
-			!!scroll_list_type.make (Widget_names.scroll_list_name, scroll_list_c);
-			scroll_list_type.initialize_callbacks (scroll_list);
+			scrollable_list.set_size (80, 80);
+			!!scrollable_list_type.make (Widget_names.scrollable_list_name, scrollable_list_c);
+			scrollable_list_type.initialize_callbacks (scrollable_list);
 
 			!!drawing_area_c;
 			!!drawing_area.make (drawing_area_c.eiffel_type, Current);
@@ -113,13 +113,13 @@ feature {NONE}
 			-- ***************
 
 			attach_left (text, 1);
-			attach_left_widget (text, scroll_list, 10);
-			--attach_right (scroll_list, 1);
+			attach_left_widget (text, scrollable_list, 10);
+			--attach_right (scrollable_list, 1);
 
 			attach_left (drawing_area.scrolled_window, 1);
 
 			attach_top (text, 1);
-			attach_top (scroll_list, 1);
+			attach_top (scrollable_list, 1);
 			attach_top_widget (text, drawing_area.scrolled_window, 10);
 		
             button.set_focus_string (Focus_labels.scroll_label)

@@ -119,6 +119,7 @@ feature -- Insertion
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is

@@ -23,7 +23,7 @@ cluster
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "kernel"; "support"; 
+			"table_eiffel3"; "desc"; "classic"; 
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"

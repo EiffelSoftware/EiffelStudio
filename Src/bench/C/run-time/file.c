@@ -2,8 +2,9 @@
 
  ######     #    #       ######           ####
  #          #    #       #               #    #
+ #          #    #       #               #    
  #####      #    #       #####           #
- #          #    #       #        ###    #
+ #          #    #       #               #
  #          #    #       #        ###    #    #
  #          #    ######  ######   ###     ####
 
@@ -51,6 +52,7 @@
 #ifdef EIF_VMS
 #include <assert.h>
 static int err;  		/* for debugging - save errno value */
+static char filnam[FILENAME_MAX +1];
 struct utimbuf {
     time_t actime;      /* access time */
     time_t modtime;     /* modification time */
@@ -359,14 +361,14 @@ rt_public void file_flush (FILE *fp)
 rt_public  EIF_INTEGER file_size (FILE *fp)
 {
 	struct stat buf;
-#ifdef EIF_VMS
+#ifdef EIF_VMSxxx
 	int current_pos;
 	int fd;
 #endif
 
 	errno = 0;
 
-#ifdef EIF_VMSxxx
+#ifdef EIF_VMSxxx	/* disable this questionable hack, for now --- dss */
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
 	fd = fileno (fp);
 	current_pos = lseek(fd,0,SEEK_CUR);
@@ -374,9 +376,15 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	if (0 != fsync (fd))	/* have to flush all the way! */
 		esys();
 	lseek(fd,current_pos,SEEK_SET);	
-#else
+#endif
 	if (0 != fflush (fp))   	/* Without a flush the information */
 		esys();					/* is not up to date */
+#ifdef EIF_VMS
+	/* for VMS, must also flush RMS buffers to file system */
+	if (0 != fsync(fileno(fp))) {
+	    err = (errno == EVMSERR ? vaxc$errno : errno);
+	    esys();
+	}
 #endif
 
 	if (fstat (fileno(fp), &buf) == -1)
@@ -438,18 +446,20 @@ rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 
 	errno = 0;
 #ifdef EIF_VMS
+	getname (fileno(f), filnam);		/* DEBUG */
 	/* on VMS, fwrite to a "record" (non-stream) file will cause an entire record to be written.  */
 	/* Though we try to make stream files for text (see file_fopen), we may be writing to a	      */
 	/* text record file (eg. a log file) created by some other agency.			      */
 	{
 	    int res, l = strlen (str);
-	    assert (l == len);
+	    /* assert (len <= l); */
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    if (l == len) 
 		res = fputs (str, f);
-	    else if (l < len) 
+	    else if (len < l) 
 		res = fprintf (f, "%.*s", len, str);
-	    else res = decc$record_write (f, str, len);
+	    else 
+		res = decc$record_write (f, str, len);
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    if (res < 0)
 		eise_io("FILE: unable to write STRING object.");
@@ -1681,11 +1691,7 @@ rt_public int mkdir(char *path)
 #endif
 
 #ifndef HAS_UTIME
-#ifdef EIF_VMSxxx
-rt_private int utime(char *path, char *times)
-#else
 rt_private int utime(char *path, struct utimbuf *times)
-#endif
 {
 	/* Emulation of utime */
 #ifdef EIF_VMS
@@ -1694,10 +1700,10 @@ rt_private int utime(char *path, struct utimbuf *times)
 	return -1;
 #else
 	...
-#endif
+#endif  /* platform */
 
 }
-#endif
+#endif  /* HAS_UTIME */
 
 
 #ifndef HAS_UNLINK
@@ -1727,4 +1733,4 @@ int unlink(char *path)
 }
 
 #endif		/* unlink */
-#endif		/* has link */
+#endif		/* HAS_UNLINK */

@@ -195,6 +195,7 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 			break;
 		case INDEPENDENT_STORE_3_2:		/* New Independent store */
 		case INDEPENDENT_STORE_4_0:		/* New Independent store */
+			char_read_func = char_read_function;
 			run_idr_init ();
 			rt_kind = INDEPENDENT_STORE;
 			idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);

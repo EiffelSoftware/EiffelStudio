@@ -122,7 +122,8 @@ struct gt_info {
  */
 
 #ifndef WORKBENCH
-extern struct ctable ce_rname[];		/* Routine names -> function pointer */
+extern struct ctable *ce_rname;		/* Routine names -> function pointer */
+extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 #endif
 
 extern struct ctable ce_type;			/* Class name -> type ID */

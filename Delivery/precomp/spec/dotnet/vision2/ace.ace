@@ -1,0 +1,128 @@
+system
+	"EiffelVision"
+
+root
+	ANY
+
+default
+ 	assertion (no)
+ 	msil_generation (yes)
+ 	il_verifiable (yes)
+ 	cls_compliant (yes)
+ 	use_all_cluster_name_as_namespace (yes)
+ 	use_cluster_name_as_namespace (yes)
+ 	msil_generation_type ("dll")
+	check_vape (yes)
+
+cluster
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+ 
+ 	all base:		"$ISE_EIFFEL\library\base"
+ 		exclude
+ 			"table_eiffel3"; "desc"; "classic";
+ 		end
+ 
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"; "clib"; "classic";
+		end
+
+	all wel_net:		"$ISE_EIFFEL\library.net\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"Clib"; "gtk"; "ev_pixmap_imp_loader.e";
+		end
+
+	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"
+
+	all vision2_extensions:		"$ISE_EIFFEL\library\vision2_extension"
+
+assembly
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+		prefix
+			"XML_"
+		end
+
+	data:	"$ISE_DOTNET_FRAMEWORK\System.Data.dll"
+		prefix
+			"DATA_"
+		end
+
+	winforms:	"$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll"
+		prefix
+			"WINFORMS_"
+		end
+
+	cscompmgd:	"$ISE_DOTNET_FRAMEWORK\cscompmgd.dll"
+		prefix
+			"CSCOMPMGD_"
+		end
+
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
+		prefix
+			"DRAWING_"
+		end
+
+	"Microsoft.VisualC":	"$ISE_DOTNET_FRAMEWORK\microsoft.visualc.dll"
+		prefix
+			"MICROSOFT_VISUALC_"
+		end
+
+	"System.DirectoryServices":	"$ISE_DOTNET_FRAMEWORK\system.directoryservices.dll"
+		prefix
+			"SYSTEM_DIRECTORYSERVICES_"
+		end
+
+	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
+		prefix
+			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
+		end
+
+	"System.Web.RegularExpressions":	"$ISE_DOTNET_FRAMEWORK\system.web.regularexpressions.dll"
+		prefix
+			"SYSTEM_WEB_REGULAREXPRESSIONS_"
+		end
+
+	"System.Web":	"$ISE_DOTNET_FRAMEWORK\system.web.dll"
+		prefix
+			"SYSTEM_WEB_"
+		end
+
+	"System.Runtime.Remoting":	"$ISE_DOTNET_FRAMEWORK\system.runtime.remoting.dll"
+		prefix
+			"SYSTEM_RUNTIME_REMOTING_"
+		end
+
+	"System.EnterpriseServices":	"$ISE_DOTNET_FRAMEWORK\system.enterpriseservices.dll"
+		prefix
+			"SYSTEM_ENTERPRISESERVICES_"
+		end
+
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
+		prefix
+			"ACCESSIBILITY_"
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\C_library\zlib"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

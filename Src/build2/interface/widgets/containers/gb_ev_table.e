@@ -280,7 +280,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 		do
 				-- Only perfrom subsequent processing of children
 				-- if there is one or more children.
-			if first.widget_count > 0 then
+			if first.count > 0 then
 				
 				full_information := get_unique_full_info (element)
 
@@ -309,7 +309,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 						temp_column_positions_string.count = temp_row_spans_string.count and
 						temp_column_positions_string.count = temp_column_spans_string.count
 					strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
-					strings_correct_length: temp_column_positions_string.count // 4 = first.widget_count
+					strings_correct_length: temp_column_positions_string.count // 4 = first.count
 				end
 				
 					-- We must now remove all the widgets contained in the tables.
@@ -366,8 +366,8 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					check
 						value_is_integer: extracted_row_span.is_integer
 					end
-					first.put (first_items.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
-					(objects @ 2).put (second_items @ first_items.index, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+					first.put_at_position (first_items.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+					(objects @ 2).put_at_position (second_items @ first_items.index, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
 					
 					first_items.forth
 				end

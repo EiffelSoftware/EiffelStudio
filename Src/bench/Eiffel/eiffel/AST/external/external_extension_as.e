@@ -217,9 +217,9 @@ feature {NONE} -- Implementation
 			end
 			if include_files /= Void then
 debug
-	io.error.putstring ("Processing include files: ")
-	io.error.putstring (include_files)
-	io.error.new_line
+	io.error.put_string ("Processing include files: ")
+	io.error.put_string (include_files)
+	io.error.put_new_line
 end
 
 				unprocessed := include_files.twin
@@ -264,9 +264,9 @@ end
 			string_non_void: s /= Void and then s.count > 0
 		do
 debug
-	io.error.putstring ("Parsing file name from ")
-	io.error.putstring (s.substring (start, s.count))
-	io.error.new_line
+	io.error.put_string ("Parsing file name from ")
+	io.error.put_string (s.substring (start, s.count))
+	io.error.put_new_line
 end
 			inspect
 				s @ start
@@ -280,12 +280,12 @@ end
 				Result := 0
 			end
 debug
-	io.error.putint (start)
-	io.error.new_line
-	io.error.putint (s.count)
-	io.error.new_line
-	io.error.putint (Result)
-	io.error.new_line
+	io.error.put_integer (start)
+	io.error.put_new_line
+	io.error.put_integer (s.count)
+	io.error.put_new_line
+	io.error.put_integer (Result)
+	io.error.put_new_line
 end
 		end
 

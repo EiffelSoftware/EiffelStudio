@@ -425,7 +425,7 @@ feature -- Debugger
 			feature_dec: FEATURE_DEC_ITEM
 		do
 			ctxt.begin
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.set_separator (ti_Comma)
 			ctxt.set_space_between_tokens
 			ctxt.abort_on_failure
@@ -446,7 +446,7 @@ feature -- Debugger
 				feature_dec.set_after
 				ctxt.put_text_item_without_tabs (feature_dec)
 				if not ctxt.is_feature_short then
-					ctxt.new_line
+					ctxt.put_new_line
 				end
 					-- Print comment if the content of the body is
 					-- an attribute or a constant.
@@ -456,7 +456,7 @@ feature -- Debugger
 					ctxt.indent
 					ctxt.indent
 					if ctxt.is_feature_short then
-						ctxt.new_line
+						ctxt.put_new_line
 					end
 					comments := ctxt.feature_comments
 					if comments /= Void then
@@ -531,14 +531,14 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 			cont := body.content
 			is_const_or_att := cont = Void or else cont.is_constant
 			if is_const_or_att and then c /= Void then
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.indent
 				ctxt.indent
 				ctxt.put_comments (c)
 				ctxt.exdent
 				ctxt.exdent
 			else
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 		end
 
@@ -546,13 +546,13 @@ feature {COMPILER_EXPORTER} -- Initialization
 
 	trace is
 		do
-			io.error.putstring ("FEATURE_AS")
-			io.error.putint (end_position)
-			io.error.new_line
-			io.error.putint (start_position)
-			io.error.new_line
-			io.error.putstring (feature_names.first.internal_name)
-			io.error.new_line
+			io.error.put_string ("FEATURE_AS")
+			io.error.put_integer (end_position)
+			io.error.put_new_line
+			io.error.put_integer (start_position)
+			io.error.put_new_line
+			io.error.put_string (feature_names.first.internal_name)
+			io.error.put_new_line
 		end
 
 invariant

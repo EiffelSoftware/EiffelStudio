@@ -66,18 +66,18 @@ feature -- Debugging
 
 	trace is
 		do
-			io.putstring ("written_in class: ")
-			io.putstring (System.class_of_id (written_in).name)
-			io.new_line
-			io.putstring ("body_index: ")
-			io.putint (body_index)
-			io.new_line
-			io.putstring ("has_postcondition: ")
-			io.putbool (has_postcondition)
-			io.new_line
-			io.putstring ("has_precondition: ")
-			io.putbool (has_precondition)
-			io.new_line
+			io.put_string ("written_in class: ")
+			io.put_string (System.class_of_id (written_in).name)
+			io.put_new_line
+			io.put_string ("body_index: ")
+			io.put_integer (body_index)
+			io.put_new_line
+			io.put_string ("has_postcondition: ")
+			io.put_boolean (has_postcondition)
+			io.put_new_line
+			io.put_string ("has_precondition: ")
+			io.put_boolean (has_precondition)
+			io.put_new_line
 		end
 
 end

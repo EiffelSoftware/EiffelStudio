@@ -82,7 +82,7 @@ feature -- Ids creation
 debug ("SERVER")
 	io.error.put_string ("Creating new file: ")
 	io.error.put_string (new_file.file_name (id))
-	io.error.new_line
+	io.error.put_new_line
 end
 		end
 
@@ -104,7 +104,7 @@ feature -- File operations
 debug ("SERVER")
 	io.error.put_string ("Forget file: ")
 	io.error.put_string (f.file_name (f.file_id))
-	io.error.new_line
+	io.error.put_new_line
 end
 				end
 				files.remove (f.file_id)
@@ -131,7 +131,7 @@ end
 debug ("SERVER")
 	io.error.put_string ("Remove file: ")
 	io.error.put_string (f.file_name (f.file_id))
-	io.error.new_line
+	io.error.put_new_line
 end
 		end
 
@@ -190,7 +190,7 @@ end
 debug ("SERVER")
 	io.error.put_string ("Opening file: ")
 	io.error.put_string (f.file_name (f.file_id))
-	io.error.new_line
+	io.error.put_new_line
 end
 		ensure
 			is_open: f.is_open

@@ -100,10 +100,10 @@ feature -- Debug
 				a_feature/= Void and then
 				a_feature.written_class > System.any_class.compiled_class
 			then
-				io.error.putstring ("set a feature in inherit info%N")
+				io.error.put_string ("set a feature in inherit info%N")
 				a_feature.trace
-				io.error.putstring (a_feature.generator)
-				io.new_line
+				io.error.put_string (a_feature.generator)
+				io.put_new_line
 			end
 		end
 			

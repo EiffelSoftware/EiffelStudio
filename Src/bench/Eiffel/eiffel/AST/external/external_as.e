@@ -100,16 +100,16 @@ feature {AST_EIFFEL, FEATURE_I} -- Output
 		do
 			ctxt.put_text_item (ti_External_keyword)
 			ctxt.indent
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.format_ast (language_name.language_name)
 			ctxt.exdent
-			ctxt.new_line
+			ctxt.put_new_line
 			if alias_name_id > 0 then
 				ctxt.put_text_item (ti_Alias_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.put_quoted_string_item (Names_heap.item (alias_name_id))
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 		end

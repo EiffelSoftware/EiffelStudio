@@ -29,11 +29,11 @@ feature
 
 	trace is
 		do
-			io.error.putstring ("SERVER_INFO%Nposition: ");
-			io.error.putint (position);
-			io.error.putstring ("%Nid: ");
-			io.error.putint (file_id);
-			io.error.new_line;
+			io.error.put_string ("SERVER_INFO%Nposition: ");
+			io.error.put_integer (position);
+			io.error.put_string ("%Nid: ");
+			io.error.put_integer (file_id);
+			io.error.put_new_line;
 		end;
 
 end

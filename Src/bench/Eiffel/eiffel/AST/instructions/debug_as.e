@@ -136,13 +136,13 @@ feature {AST_EIFFEL} -- Output
 			end
 			if compound /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (compound)
 				ctxt.exdent
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_text_item (ti_End_keyword)
 		end
 

@@ -399,34 +399,34 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("PARENT_C ");
-			io.error.putstring (class_name);
-			io.error.new_line;
+			io.error.put_string ("PARENT_C ");
+			io.error.put_string (class_name);
+			io.error.put_new_line;
 			if renaming /= Void then
-			io.error.putstring ("%TRenamings:%N");
+			io.error.put_string ("%TRenamings:%N");
 			from
 				renaming.start
 			until
 				renaming.after
 			loop
-				io.error.putstring ("%T%T");
-				io.error.putstring (renaming.key_for_iteration);
-				io.error.putstring (" as ");
-				io.error.putstring (renaming.item_for_iteration);
-				io.error.new_line;
+				io.error.put_string ("%T%T");
+				io.error.put_string (renaming.key_for_iteration);
+				io.error.put_string (" as ");
+				io.error.put_string (renaming.item_for_iteration);
+				io.error.put_new_line;
 				renaming.forth
 			end;
 			end;
 			if redefining /= Void then
-				io.error.putstring ("%TRedefinitions:%N");
+				io.error.put_string ("%TRedefinitions:%N");
 				trace_list (redefining);
 			end;
 			if undefining /= Void then
-				io.error.putstring ("%TUndefinitions:%N");
+				io.error.put_string ("%TUndefinitions:%N");
 				trace_list (undefining);
 			end;
 			if selecting /= Void then
-				io.error.putstring ("%TSelections:%N");
+				io.error.put_string ("%TSelections:%N");
 				trace_list (selecting);
 			end;
 		end;
@@ -438,9 +438,9 @@ feature -- Debug
 			until
 				a_list.after
 			loop
-				io.error.putstring ("%T%T");
-				io.error.putstring (a_list.item_for_iteration);
-				io.error.new_line;
+				io.error.put_string ("%T%T");
+				io.error.put_string (a_list.item_for_iteration);
+				io.error.put_new_line;
 				a_list.forth
 			end;
 		end;

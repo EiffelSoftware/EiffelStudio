@@ -117,11 +117,11 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (begin_keyword)
-			ctxt.new_line
+			ctxt.put_new_line
 			if compound /= Void then
 				ctxt.indent
 				format_compound (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.exdent
 			end
 		end
@@ -160,7 +160,7 @@ feature {AST_EIFFEL} -- Output
 							io.put_string ("Semicolon was needed.%N")
 						end
 					end
-					ctxt.new_line
+					ctxt.put_new_line
 				end
 			end
 			ctxt.commit

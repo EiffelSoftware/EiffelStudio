@@ -128,7 +128,7 @@ feature -- Settings
 			id: INTEGER
 		do
 debug ("TRANSFER")
-			io.error.putstring("in transfer...%N")
+			io.error.put_string("in transfer...%N")
 end
 			from
 				new_units.start

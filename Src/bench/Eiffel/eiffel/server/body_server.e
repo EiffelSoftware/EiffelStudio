@@ -34,17 +34,17 @@ feature
 			has_an_id: Tmp_body_server.has (an_id) or else has (an_id)
 		do
 debug
-io.error.putstring ("item ");
-io.error.putint (an_id)
+io.error.put_string ("item ");
+io.error.put_integer (an_id)
 end;
 			if Tmp_body_server.has (an_id) then
 debug
-io.error.putstring (" in tmp_server%N")
+io.error.put_string (" in tmp_server%N")
 end;
 				Result := Tmp_body_server.item (an_id);
 			else
 debug
-io.error.putstring (" in BODY_SERVER%N")
+io.error.put_string (" in BODY_SERVER%N")
 end;
 				Result := server_item (an_id);
 			end;
@@ -66,19 +66,19 @@ end;
 		do
 			from
 				start
-				io.error.putstring ("Keys:%N");
+				io.error.put_string ("Keys:%N");
 			until
 				after
 			loop
-				io.error.putstring ("%T");
-				io.error.putint (key_for_iteration);
+				io.error.put_string ("%T");
+				io.error.put_integer (key_for_iteration);
 				if item_for_iteration = Void then
-					io.error.putstring (" VOID ELEMENT");
+					io.error.put_string (" VOID ELEMENT");
 				end;
-				io.error.new_line;
+				io.error.put_new_line;
 				forth
 			end;
-			io.error.putstring ("O_N_TABLE:%N");
+			io.error.put_string ("O_N_TABLE:%N");
 		end;
 
 end

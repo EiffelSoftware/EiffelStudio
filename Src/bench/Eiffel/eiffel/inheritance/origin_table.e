@@ -123,9 +123,9 @@ feature
 			l_computed: like computed
 		do
 			debug
-				io.error.putstring ("========= START TRACE, class ")
-				io.error.putstring (new_t.associated_class.name)
-				io.error.putstring (" ============%N")
+				io.error.put_string ("========= START TRACE, class ")
+				io.error.put_string (new_t.associated_class.name)
+				io.error.put_string (" ============%N")
 			end
 			from
 				create l_computed.make (count)
@@ -147,7 +147,7 @@ feature
 				forth
 			end
 			debug
-				io.error.putstring ("========= END TRACE ==========%N")
+				io.error.put_string ("========= END TRACE ==========%N")
 			end
 		end
 

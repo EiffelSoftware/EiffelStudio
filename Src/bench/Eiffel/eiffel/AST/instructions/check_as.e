@@ -94,12 +94,12 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_check_keyword)
 			if check_list /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (check_list)
 				ctxt.exdent
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 			ctxt.put_text_item (ti_end_keyword)
 		end
 			

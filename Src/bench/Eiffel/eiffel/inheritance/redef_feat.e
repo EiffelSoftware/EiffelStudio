@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 				new_feat.set_assert_id_set (new_assert_id_set)
 				debug ("ASSERTION")
 					trace (new_feat)
-					io.new_line
+					io.put_new_line
 				end
 			end
 		end
@@ -161,9 +161,9 @@ feature {NONE} -- Implementation
 			assert_set: ASSERT_ID_SET
 			i: INTEGER
 		do
-			io.putstring ("Feature joined or merged: ")
-			io.putstring (new_feat.feature_name)
-			io.new_line
+			io.put_string ("Feature joined or merged: ")
+			io.put_string (new_feat.feature_name)
+			io.put_new_line
 			assert_set := new_feat.assert_id_set
 			if assert_set /= Void then
 				from

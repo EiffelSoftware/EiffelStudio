@@ -85,7 +85,7 @@ feature -- formatter
 			else
 				if feature_list /= Void then
 					ctxt.indent
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.set_new_line_between_tokens
 					ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 					if ctxt.is_flat_short then
@@ -93,7 +93,7 @@ feature -- formatter
 					else
 						ctxt.set_separator (ti_Comma)
 						feature_list.format (ctxt)
-						ctxt.new_line
+						ctxt.put_new_line
 					end
 				end
 				ctxt.commit
@@ -141,11 +141,11 @@ feature {AST_EIFFEL} -- Output
 			end
 			if feature_list /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_separator (ti_Comma)
 				ctxt.set_new_line_between_tokens
 				feature_list.simple_format (ctxt)
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 		end
 			

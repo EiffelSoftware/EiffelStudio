@@ -159,12 +159,12 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item_without_tabs (ti_Then_keyword)
 			if compound /= Void then
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (compound)
 				ctxt.exdent
 			end
-			ctxt.new_line
+			ctxt.put_new_line
 			if elsif_list /= Void then
 				ctxt.set_separator (ti_Empty)
 				ctxt.set_no_new_line_between_tokens
@@ -174,11 +174,11 @@ feature {AST_EIFFEL} -- Output
 			if else_part /= Void then
 				ctxt.put_text_item (ti_Else_keyword)
 				ctxt.indent
-				ctxt.new_line
+				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (else_part)
 				ctxt.exdent
-				ctxt.new_line
+				ctxt.put_new_line
 			end
 			ctxt.put_text_item (ti_End_keyword)
 		end

@@ -397,18 +397,18 @@ feature -- Type check, byte code and dead code removal
 					context_export := context.current_feature.export_status
 					feature_export := a_feature.export_status
 					debug
-						io.error.putstring ("feature ")
-						io.error.putstring (context.current_feature.feature_name)
-						io.error.putstring (" export ")
-						io.error.new_line
+						io.error.put_string ("feature ")
+						io.error.put_string (context.current_feature.feature_name)
+						io.error.put_string (" export ")
+						io.error.put_new_line
 						context_export.trace
-						io.error.new_line
-						io.error.putstring ("feature ")
-						io.error.putstring (a_feature.feature_name)
-						io.error.putstring (" export ")
-						io.error.new_line
+						io.error.put_new_line
+						io.error.put_string ("feature ")
+						io.error.put_string (a_feature.feature_name)
+						io.error.put_string (" export ")
+						io.error.put_new_line
 						feature_export.trace
-						io.error.new_line
+						io.error.put_new_line
 					end
 					if not context_export.is_subset (feature_export) then
 						create vape

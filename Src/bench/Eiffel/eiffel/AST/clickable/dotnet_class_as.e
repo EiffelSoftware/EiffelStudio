@@ -318,14 +318,14 @@ feature {NONE} -- Formatting
 			a_ctxt.put_text_item (ti_Before_indexing)
 			a_ctxt.put_text_item (ti_Indexing_keyword)
 			a_ctxt.indent
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 			a_ctxt.set_separator (Void)
 			a_ctxt.set_new_line_between_tokens
 				-- Full .NET name.
 			a_ctxt.put_string_item ("description: %"")
 			a_ctxt.put_string_item (dotnet_name)
 			a_ctxt.put_string_item ("%"")
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 		
 				-- Description of type.
 			if l_member_info /= Void then
@@ -340,16 +340,16 @@ feature {NONE} -- Formatting
 					l_summary.forth
 					if l_summary.after then
 						a_ctxt.put_string_item ("%"")
-						a_ctxt.new_line
+						a_ctxt.put_new_line
 					else
-						a_ctxt.new_line
+						a_ctxt.put_new_line
 					end
 				end
 			end
 			
 			a_ctxt.put_text_item (ti_After_indexing)
 			a_ctxt.exdent
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 		end
 
 	format_header (a_ctxt: DOTNET_CLASS_CONTEXT) is
@@ -373,12 +373,12 @@ feature {NONE} -- Formatting
 			a_ctxt.put_space
 			a_ctxt.put_text_item (ti_Interface_keyword)
 			a_ctxt.indent
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 			a_ctxt.put_classi (a_ctxt.class_i)
 			format_generics (a_ctxt)
 			a_ctxt.put_text_item (ti_After_class_header)
 			a_ctxt.exdent
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 		end
 
 	format_footer (a_ctxt: DOTNET_CLASS_CONTEXT) is
@@ -386,7 +386,7 @@ feature {NONE} -- Formatting
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 			a_ctxt.put_text_item (ti_Before_class_end)
 			a_ctxt.put_text_item (ti_End_keyword)
 			a_ctxt.put_string_item (" -- ") 
@@ -403,9 +403,9 @@ feature {NONE} -- Formatting
 		do
 			if ancestors /= Void and not ancestors.is_empty then
 				a_ctxt.put_text_item (Ti_before_inheritance)
-				a_ctxt.new_line
+				a_ctxt.put_new_line
 				a_ctxt.put_text_item (Ti_inherit_keyword)
-				a_ctxt.new_line
+				a_ctxt.put_new_line
 				a_ctxt.indent
 				from
 					ancestors.start
@@ -413,7 +413,7 @@ feature {NONE} -- Formatting
 					ancestors.after
 				loop
 					a_ctxt.put_classi (a_ctxt.class_i.type_from_consumed_type (ancestors.item))
-					a_ctxt.new_line
+					a_ctxt.put_new_line
 					ancestors.forth
 				end
 				a_ctxt.exdent
@@ -445,10 +445,10 @@ feature {NONE} -- Formatting
 		do
 			if not constructors.is_empty then 
 				a_ctxt.put_text_item (Ti_before_creators)
-				a_ctxt.new_line
+				a_ctxt.put_new_line
 				a_ctxt.put_text_item (Ti_create_keyword)
-				a_ctxt.new_line
-				--a_ctxt.new_line
+				a_ctxt.put_new_line
+				--a_ctxt.put_new_line
 				from
 					constructors.start
 				until
@@ -459,7 +459,7 @@ feature {NONE} -- Formatting
 					a_ctxt.indent
 					a_ctxt.format_feature (a_ctxt, f_constructor)
 					a_ctxt.exdent
-					a_ctxt.new_line
+					a_ctxt.put_new_line
 					constructors.forth
 				end
 			end
@@ -504,10 +504,10 @@ feature {NONE} -- Formatting
 			a_ctxt_not_void: a_ctxt /= Void
 			has_a_header: a_header /= Void
 		do
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 			a_ctxt.put_text_item (Ti_feature_keyword)
 			a_ctxt.put_comment_text (a_header)
-			a_ctxt.new_line
+			a_ctxt.put_new_line
 		end
 
 feature {NONE} -- Implementation

@@ -366,9 +366,9 @@ feature -- New feature description
 			Result := equivalent (type, other.type) and then
 					equivalent (arguments, other.arguments)
 debug
-	io.error.putstring ("BODY_AS.is_body_equiv%N")
+	io.error.put_string ("BODY_AS.is_body_equiv%N")
 	if not Result then
-		io.error.putstring ("Different signatures%N")
+		io.error.put_string ("Different signatures%N")
 	end
 end
 			if Result then
@@ -381,7 +381,7 @@ end
 					Result := content.is_body_equiv (other.content)
 debug
 	if not Result then
-		io.error.putstring ("Different bodies%N")
+		io.error.put_string ("Different bodies%N")
 	end
 end
 				else

@@ -68,7 +68,7 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
         do
             ctxt.put_text_item (ti_Deferred_keyword)
-			ctxt.new_line
+			ctxt.put_new_line
         end
 
 end -- class DEFERRED_AS

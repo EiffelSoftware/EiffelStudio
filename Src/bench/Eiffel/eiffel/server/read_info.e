@@ -45,13 +45,13 @@ feature -- Trace
 
 	trace is
 		do
-			io.error.putstring ("READ_INFO:%NPosition: ");
-			io.error.putint (Position);
-			io.error.putstring ("%NClass_id: ");
-			io.error.putint (class_id);
-			io.error.putstring ("%Nobject_count: ");
-			io.error.putint (object_count);
-			io.error.new_line;
+			io.error.put_string ("READ_INFO:%NPosition: ");
+			io.error.put_integer (Position);
+			io.error.put_string ("%NClass_id: ");
+			io.error.put_integer (class_id);
+			io.error.put_string ("%Nobject_count: ");
+			io.error.put_integer (object_count);
+			io.error.put_new_line;
 		end;
 
 end

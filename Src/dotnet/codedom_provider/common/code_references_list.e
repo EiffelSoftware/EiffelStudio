@@ -107,6 +107,26 @@ feature -- Status Report
 		
 feature -- Status Setting
 
+	extend_file_with_prefix (a_file_name, a_prefix: STRING) is
+			-- Add assembly with file name `a_file_name' and prefix `a_prefix' if found.
+			-- Set `assembly_added' accordingly.
+		require
+			non_void_name: a_file_name /= Void
+			non_void_prefix: a_prefix /= Void
+			not_has_file: not has_file (a_file_name)
+		local
+			l_assembly: ASSEMBLY
+		do
+			assembly_added := False
+			l_assembly := assembly_from_file (a_file_name)
+			if l_assembly /= Void then
+				extend (create {CODE_REFERENCED_ASSEMBLY}.make_with_prefix (l_assembly, a_prefix))
+				assembly_added := True
+			end
+		ensure
+			added: assembly_added implies count = old count + 1
+		end
+
 	extend_file (a_file_name: STRING) is
 			-- Add assembly with file name `a_file_name' if found.
 			-- Set `assembly_added' accordingly.

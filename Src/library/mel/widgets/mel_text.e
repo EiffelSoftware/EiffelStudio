@@ -248,8 +248,8 @@ feature -- Status setting
 
 feature -- Extras
 
-    find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
-            -- Search for the string `text_to_find' in the TEXT
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+			-- Search for the string `text_to_find' in the TEXT
 		local
 			pattern, text: ANY
 			lower_text: STRING
@@ -265,8 +265,8 @@ feature -- Extras
 				lower_pattern.to_lower
 				text := lower_text.to_c
 				pattern := lower_pattern.to_c 
-				dummy_object := xm_create_text (screen_object, $text, default_pointer, 0)
-   		end
+				dummy_object := xm_create_text (parent.screen_object, $text, default_pointer, 0)
+ 			end
 
 			if match_case then
 				Result := xm_text_find_string (screen_object, start_from, $pattern)

@@ -288,6 +288,26 @@ feature {NONE}
 			Result := pixmap_file_content ("freeze.bm");
 		end;
 
+	bm_Grey_finalize: PIXMAP is
+		once
+			Result := pixmap_file_content ("gfinaliz.bm")
+		end;
+
+	bm_Grey_font: PIXMAP is
+		once
+			Result := pixmap_file_content ("gfont.bm")
+		end;
+
+	bm_Hide_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("obj_up.bm")
+		end;
+
+	bm_Hide_routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("rout_up.bm")
+		end;
+
 	bm_Next_target: PIXMAP is
 		once
 			Result := pixmap_file_content ("histfort.bm")
@@ -506,6 +526,16 @@ feature {NONE}
 	bm_Showtext: PIXMAP is
 		once
 			Result := pixmap_file_content ("stext.bm");
+		end;
+
+	bm_Show_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("obj_down.bm")
+		end;
+
+	bm_Show_routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("routdown.bm")
 		end;
 
 	bm_Slice: PIXMAP is

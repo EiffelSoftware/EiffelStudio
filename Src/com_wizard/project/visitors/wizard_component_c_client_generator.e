@@ -64,8 +64,8 @@ feature -- Basic operations
 				loop
 					if not is_propertyputref (a_desc.functions.item.invoke_kind) then
 
-						if a_desc.functions.item.func_kind =  Func_dispatch then
-	
+					--	if a_desc.functions.item.func_kind =  Func_dispatch then
+						if a_desc.dispinterface and then not a_desc.dual then
 							create disp_func_generator
 							disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
 							cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)

@@ -34,10 +34,6 @@ feature -- Basic operations
 
 			-- Import header file
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
-		--	cpp_class_writer.add_import ("E_wide_string.h")
-		--	create tmp_string.make (0)
-		--	tmp_string.append ("RT_LNK HINSTANCE eif_hInstance;")
-		--	cpp_class_writer.add_other (tmp_string)
 
 			if shared_wizard_environment.out_of_process_server then
 				tmp_string := clone (a_descriptor.c_type_name)
@@ -310,7 +306,8 @@ feature {NONE} -- Implementation
 		do
 			create func_writer.make
 
-			tmp_body := clone (Assert)
+			tmp_body := clone (Tab)
+			tmp_body.append (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("pctinfo != 0")
 			tmp_body.append (Close_parenthesis)

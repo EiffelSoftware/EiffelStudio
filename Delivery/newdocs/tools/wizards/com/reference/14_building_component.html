@@ -1,0 +1,294 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelCOM Wizard Reference</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Reference">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+	</HEAD>
+
+	<BODY>
+		<h1>
+		<A NAME="pgfId=373966">
+		 </A>
+		 Building a COMPONENT</h1>
+
+
+		<A NAME="pgfId=373983">
+		</A>
+
+		<p>
+
+
+				<p align="justify">The EiffelCOM wizard enables the development of COM
+			components in Eiffel. To build a COM component you can start either from an
+			IDL file or from an Eiffel project. In the later case the wizard generates
+			an IDL file for you.</p>
+		<h2>
+		<A NAME="pgfId=370372">
+		 </A>
+		 Choosing an Eiffel Class</h2>
+
+		<p>
+
+
+
+		<p>If you start building a COM component from an Eiffel system,
+		you need to give an Eiffel class to the wizard. The wizard translates the
+		Flat-Short form of the class into an IDL file, which is a formal specification
+		of the COM component. Clients of the component are able to access only features
+		specified in the IDL file. You need to supply the wizard with a Facade class
+		that provides clients with a higher-level, single interface (do not confuse with
+		COM interface) to the facilities of a system.</p>
+		<p>The Facade class should satisfy the following requirements:</p>
+		<ul>
+				<li>It should have a creation routine &quot;make&quot; without
+				  arguments. The wizard does not enforce the rule, but breaking it
+				  causes a runtime error.
+				<li>Features of the class may only have arguments and return values of
+				  the following types: <span class="eclass">CHARACTER</span>, <span class="eclass">INTEGER</span>, <span class="eclass">REAL</span>, <span class="eclass">DOUBLE</span>,
+				  <span class="eclass">BOOLEAN</span>, <span class="eclass">INTEGER_REF</span>, <span class="eclass">BOOLEAN_REF</span>, <span class="eclass">REAL_REF</span>,
+				  <span class="eclass">CHARACTER_REF</span>, <span class="eclass">DOUBLE_REF</span>, <span class="eclass">STRING</span>, <span class="eclass">DATE_TIME</span>,
+				  <span class="eclass">ECOM_CURRENCY</span>, <span class="eclass">ECOM_DECIMAL</span>, <span class="eclass">ECOM_UNKNOWN_INTERFACE</span>,
+				  <span class="eclass">ECOM_AUTOMATION_INTERFACE</span>, and <span class="eclass">CELL</span> and <span class="eclass">ECOM_ARRAY</span>
+				  of above types. Features with arguments or return values of other
+				  types are excluded from the generated IDL file and are not accessible
+				  to the COM runtime.
+				<li>Feature names should not be C++ keywords or names of standard
+				  library functions such as min, max, etc. The wizard is able to handle
+				  this correctly and to create a COM component; however, other languages
+				  may not be able to access it.
+				<li>The class must belong to a compiled Eiffel project.</li>
+		</ul>
+			<p>In most Eiffel systems functionality is spread out throughout many
+			classes. A system may not contain a class that can render all services of
+			the system and can serve as a Facade to the outside world. If you cannot
+			find such a class you should write one.</p>
+		<h2>
+		<A NAME="pgfId=370371">
+		 </A>
+		 Using the Generated Code</h2>
+
+		<p>
+
+
+		<p><a name="pgfId_373984"></a>If you start from an Eiffel
+		project, the wizard produces a ready-to-use component, and you do not need to
+		modify or to implement any generated code.</p>
+		<p align="justify">If you start from a COM definition file, you are able to
+		design a more flexible component that has more than one interface and/or coclass
+		and user defined types, but you have to implement features of the generated
+		coclass. The generated Eiffel coclass features are empty. You should redefine
+		them in heir to implement the intended behavior. Unlike client generated code,
+		the server generated code will differ whether you have chosen to implement an
+		in-process or an out-of-process component. The difference lies in the component
+		activation code in the class 
+		<span class="eclass">ECOM_&lt;Name_of_system&gt;_REGISTRATION</span>. If the
+		component is in-process then this class includes the four functions that need to
+		be exported from an in-process COM component (<i>DllRegisterServer</i>, <i>DllUnregisterServer</i>,
+		<i>DllGetClassObject</i>, and <i>DllCanUnloadNow</i>). If the component is
+		out-of-process then the registration class includes a feature initializing the
+		component and its graphical user interface.</p>
+		<p align="justify"><a name="pgfId_374337"></a>The architecture of generated code
+		for the server is similar to the one for the client: the generated Eiffel
+		coclass should be inherited from and the contract features redefined. The
+		default feature implementation of the generated Eiffel coclass is empty.
+		Features should be redefined to implement the intended behavior. These features
+		will be called by the EiffelCOM runtime whenever a client accesses an interface.</p>
+		  <p>
+		<A NAME="pgfId=374337">
+		 </A>
+		 The architecture remains the same as when accessing a component: the generated Eiffel coclass should be inherited from and the contract features redefined. The default implementation for features from the generated Eiffel coclass are empty. They should also be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client access an interface.
+
+		<p class="note">	Note: For this first release, the name of the user defined coclass has to 
+		be <span class="eclass">&lt;Name_of_generated_coclass&gt;_IMP</span>. So if 
+		the generated coclass name 
+		is <span class="eclass">MY_COCLASS</span> then the user defined coclass name must be 
+		<span class="eclass">MY_COCLASS_IMP</span>.</P>
+				
+		
+		
+		
+		<h2>
+		<A NAME="pgfId=370378">
+		 </A>
+		<A NAME="34604">
+		 </A>
+		 Component's GUI</h2>
+
+		<p>
+
+
+		<A NAME="pgfId=375550"></A>
+		In the case of an out-of-process server, you might want
+		to add a Graphical User Interface to your component. There are two different
+		scenarios in which the component can be activated: either its user launched it
+		explicitly (e.g. by double clicking the executable icon) or it was launched by
+		the COM runtime to satisfy a client request. The GUI should appear only in the
+		former case, when the user has explicitly launched the application. The
+		generated registration class for an out-of-process server includes the feature:
+
+
+		<p class="code">	 main_window: <span CLASS="eclass">WEL_FRAME_WINDOW</span></P>
+				
+		
+		<A NAME="pgfId=375570"></A>
+		 This feature is a once function that can be
+		 redefined in a child class to return the class corresponding to the component
+		 window. This window is displayed only if COM does not start the component. When
+		 COM loads an out-of-process component, it appends the option
+		 &quot;-embedding&quot; to the executable. The generated registration class
+		 looks for this option and if it is part of the process argument list then it
+		 sets the default window appearance to hidden.
+		  <p>
+		<A NAME="pgfId=375583">
+		 </A>
+		 As a summary, when building a server from a COM definition you need to
+		implement classes that inherit from coclasses and implement interface functions.
+		The names of the children classes should be the names of the parent classes
+		appended with <span class="eclass">_IMP</span>. You will also have to inherit from the registration
+		class in the case of an out-of-process component to provide the class that
+		implements the component GUI.
+		</p>
+		<h2>
+		<A NAME="pgfId=375549">
+		 </A>
+		 Exceptions</h2>
+
+		<p>
+
+
+		<A NAME="pgfId=374350"></A>
+		The COM provides error status to the client by returning
+		an HRESULT from the interface function. Such behavior is not acceptable in
+		Eiffel and is replaced with exceptions. In the case of accessing an existing
+		component, EiffelCOM runtime will raise exceptions with error code 24 (developer
+		exception) and your code should catch
+		them. When creating a component it will be your code that will raise exceptions
+		and the EiffelCOM runtime that will catch them. Here is what the Eiffel code for
+		a server should look like:
+
+		<DIV>
+		<P class="code">
+			<span CLASS="ekeyword">
+			indexing</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;description: <span class="estring">&quot;Eiffel coclass server example&quot;</span><br>
+			<span CLASS="ekeyword">
+			class</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span CLASS="eclass">ECOM_SERVER_COCLASS_IMP</span><br><br>
+			<span CLASS="ekeyword">
+			inherit</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span CLASS="eclass">ECOM_SERVER_COCLASS</span> <span CLASS="ecomment">	-- Generated by the wizard</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span CLASS="eclass">ECOM_EXCEPTION</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;export</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span CLASS="eclass">NONE</span>} <span CLASS="ekeyword">all</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span><br>
+			<span CLASS="ekeyword"><br>
+			
+			feature </span>
+			<span CLASS="ecomment">
+			-- Basic Operations</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;coclass_feature (an_argument: <span CLASS="eclass">ARGUMENT_TYPE</span>) <span CLASS="ekeyword">
+			is</span><br>
+			<span CLASS="ecomment">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Example of a coclass feature</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+			not</span> is_valid (an_argument) <span CLASS="ekeyword">
+			then</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trigger (E_invalidargument)<br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</span><br>
+			<span CLASS="ecomment">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Normal processing</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span><br><br>
+			<span CLASS="ekeyword">
+			feature</span>
+			{NONE}<span CLASS="ecomment">
+			-- Implspanentation</span><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;is_valid (an_argument: <span CLASS="eclass">ARGUMENT_TYPE</span>): <span CLASS="eclass">BOOLEAN</span> <span CLASS="ekeyword">
+			is</span><br>
+			<span CLASS="ecomment">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Is an_argument a valid argument?</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</span><br>
+			<span CLASS="ecomment">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Test of validity of an_argument</span><br>
+			<span CLASS="ekeyword">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span><br>
+			<span CLASS="ekeyword">
+			end</span>
+			<span CLASS="ecomment">
+			-- class ECOM_SERVER_COCLASS_IMP</span><br>
+		</P>
+		</DIV>
+		<A NAME="pgfId=374678"></A>
+		 This class inherits from the generated Eiffel coclass and from 
+		 <span class="eclass">ECOM_EXCEPTION</span>.
+		 It redefines the feature coclass_feature from the generated coclass. This
+		 feature is part of the interface functions that can be called by clients of the
+		 component. Its implementation uses the feature trigger from 
+		 <span class="eclass">ECOM_EXCEPTION</span> to
+		 raise exceptions in case the feature cannot be executed normally (invalid
+		 argument e.g.). The EiffelCOM runtime catches the exception and maps it into an
+		 HRESULT that is sent back to the client.
+		<h2>
+		<A NAME="pgfId=374682">
+		 </A>
+		 Summary</h2>
+
+		<p>
+		  <p ><a name="pgfId_374686"></a>Implementing EiffelCOM
+		  components consists in inheriting from the generated Eiffel coclasses and
+		  implementing their features. The only specific rules to follow relate to the
+		  redefinition of precondition features and the use of exceptions to return
+		  error status to the client. In the case of an out-of-process server, the
+		  registration class should be inherited from and the feature corresponding to
+		  the component window redefined to return the correct class.</p>
+
+
+        <p class="seealso">See Also: <br>
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/01_introduction_d.html">
+        Introduction Dialog and Main Window</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/02_generated_code_type_d.html">
+        Generated Code Type Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/03_definition_file_d.html">Definition
+        File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/04_eiffel_project_file_d.html">Eiffel
+        Project File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/05_destination_folder_d.html">Destination
+        Folder Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/06_idl_marshalling_d.html">IDL
+        Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/07_type_lybrary_m_d.html">Type
+        Library Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/08_Final_d.html">Final
+        Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/09_com_definition_file_processing.html">COM
+        Definition File Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/10_eiffel_project_processing.html">Eiffel
+        Project Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/11_generated_files.html">Generated
+        Files</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/12_class_hierarchy.html">Class
+        Hierarchy</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/13_accessing_component.html">Accessing
+        a Component</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/14_building_component.html">Building
+        a Component</a></p>
+		<p>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

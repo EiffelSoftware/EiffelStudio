@@ -1,0 +1,471 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelCOM Wizard Reference</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Reference">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+	</HEAD>
+
+	<BODY>
+		<h1>
+		<A NAME="pgfId=371723">
+		 </A>
+		 Accessing a Component</h1>
+		<p>
+		<A NAME="pgfId=373349"></A>
+		The wizard generates all the necessary code to access the
+		existing component. The plumbing is already done, so instantiating an Eiffel
+		coclass actually initializes COM internals.
+		</p>
+		<h2>
+		<A NAME="pgfId=371724">
+		 </A>
+		 Using the Generated Code</h2>
+		<p>
+		<A NAME="pgfId=373367"></A>
+		 To access the component, you need to call features of the coclass. The data
+		 types of function arguments are either Eiffel types defined in Eiffel data
+		 structure libraries (EiffelBase), standard COM data types defined in the
+		 EiffelCOM library, or component COM data types specified in the definition
+		 file. For example, from the following IDL line
+
+		<p>
+
+
+		<P CLASS="code">
+		<A NAME="pgfId=373375">
+		 </A>
+		 HRESULT InterfaceFunction ([in] int a, [out, retval] MyStruct * b)</P>
+		<A NAME="pgfId=373411">
+		</A>The wizard generates the following feature in the Eiffel coclass:
+
+		<p>
+
+
+		<P CLASS="code">
+		interface_function (a: <span class="eclass">INTEGER</span>): <span class="eclass">MY_STRUCT_RECORD</span></p>
+
+		<A NAME="pgfId=373436">
+		</A>
+		where <span class="eclass">MY_STRUCT_RECORD</span> is a generated Eiffel class wrapping <em>MyStruct</em>.
+		<p align="justify">Here is a more difficult example:</p>
+		<p>
+		  <p>
+			<p class="code">HRESULT a_function ([in] IsomeInterface * p_interface)</p>
+		<p align="justify">The wizard generates the following Eiffel feature:</p>
+		<p>
+		  <p>
+			<p class="code">a_function (p_interface: <span class="eclass">ISOME_INTERFACE_INTERFACE</span>)</p>
+		<p align="justify">where <span class="eclass">ISOME_INTERFACE_INTERFACE</span> is a generated
+		deferred class.
+		Where can you obtain an instance of the class? First, you may receive from other
+		function. Second, you can create an implemented server interface <span class="eclass">ISOME_INTERFACE_IMPL_STUB</span>.
+		In the later case you should provide your own implementation.</p>
+		<h2>
+		<A NAME="pgfId=373348">
+		 </A>
+		 Contracts</h2>
+
+		<p>
+
+
+		<A NAME="pgfId=373448">
+		</A>The wizard cannot generate fully specified contracts. Indeed, the tool has
+		no domain specific knowledge and can only generate contracts that are domain
+		independent. Such contracts, although useful, are not enough to describe
+		entirely the behavior of the component. Generated contracts include void Eiffel
+		objects as well as C pointer validity (for wrappers) checking. There might be
+		other conditions to allow calls to an Eiffel coclass feature. Invariants and
+		postconditions can be enforced in an heir of the generated Eiffel coclass.
+		Preconditions, however, cannot be strengthened. A workaround provided by the
+		wizard is to generate a precondition function for each feature in the interface.
+		The default implementation of these functions always returns <em>True</em>. They
+		should be redefined to implement the correct behavior:
+
+
+		<DIV >
+		<P CLASS="code">
+		&nbsp;&nbsp;&nbsp;&nbsp;interface_function (a: <span class="eclass">INTEGER</span>): <span class="eclass">MY_STRUCT</span> <span CLASS="ekeyword">
+		is</span>
+		<br>
+				<span CLASS="ecomment">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Example of a generated Eiffel coclass feature</span>
+		
+		<br>
+		<A NAME="pgfId=373465">
+		 </A>
+			<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;require</span>
+		
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interface_function_user_precondition: interface_function_user_precondition 
+		<br>
+			<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</span>
+		
+		  
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+		<br>
+			<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensure</span>
+		
+		  
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;non_void_my_struct: <span CLASS="ereserved">
+		Result</span>
+		 /= <span CLASS="ereserved">
+		Void</span>
+		
+		<br>
+			<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		
+		</DIV>
+		<A NAME="pgfId=373481">
+		 </A>
+		So the complete class hierarchy for an Eiffel client coclass is the following:
+
+		<p>
+
+
+		<DIV>
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=373486">
+		 </A>
+		EiffelCOM Client System</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=373484">
+		 </A>
+		<MAP NAME="wizard-12">
+		</MAP>
+		<IMG SRC="../images/wizard-12.gif" USEMAP="#wizard-12" ALIGN="LEFT" width="483" height="180">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		</DIV>
+		<A NAME="pgfId=371725">
+		</A> Another advantage of the previous hierarchy is that it adds incrementality to
+		 the EiffelCOM system. Indeed, should the definition file be modified and the
+		 wizard run once more against it, your code would not be changed. Only the
+		 generated Eiffel coclass would be, and it would suffice to adapt your heir
+		 accordingly.
+		<h2>
+		<A NAME="pgfId=373560">
+		 </A>
+		<A NAME="41902">
+		 </A>
+		 Exceptions</h2>
+
+		<p>
+
+
+		<A NAME="pgfId=373569"></A>
+		 COM standard requires that any interface function
+		 returns a status value (known as a HRESULT). This corresponds to side effect
+		 features which the Eiffel methodology tends to avoid. The workaround used in
+		 EiffelCOM systems is to map these return values into Eiffel exceptions. If the
+		 server returns an error code, the EiffelCOM runtime raises an Eiffel exception
+		 that your code should catch.
+
+		<p>
+
+
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=373577">
+		 </A>
+		EiffelCOM Client System Exception Raising</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=373575">
+		 </A>
+		<MAP NAME="wizard-13">
+		</MAP>
+		<IMG SRC="../images/wizard-13.gif" USEMAP="#wizard-13" ALIGN="LEFT" width="483" height="158">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<A NAME="pgfId=373694"></A>
+		 As a result, any feature in the coclass client
+		 making calls to the user defined Eiffel coclass should include a rescue clause.
+		 The processing done in this clause might depend on the nature of the exception.
+		 All the standard COM exceptions can be found in the library class <span class="eclass">ECOM_EXCEPTION_CODES,</span>
+		 which is inherited from by <span class="eclass">ECOM_EXCEPTION</span>. The later also inherits
+		 from the kernel class <span class="eclass">EXCEPTIONS</span> and can consequently be used by the
+		 coclass client to catch the exceptions.
+		  <p>
+		<A NAME="pgfId=373848">
+		 </A>
+		 The following code snippet illustrates how a client can process exceptions raised in the Eiffel coclass:
+
+		<p>
+
+
+		<P CLASS="code">
+		<span CLASS="ekeyword">
+		indexing</span>
+		
+		
+
+
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;description: <span class="estring">&quot;Eiffel coclass client example&quot;</span>
+		
+		<br>
+		
+		<br>
+		<span CLASS="ekeyword">
+		class</span>
+				
+		<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span CLASS="eclass">COCLASS_CLIENT</span>
+		<br>
+		
+		<br>
+		<span CLASS="ekeyword">
+		inherit</span>
+		
+		
+		<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span CLASS="eclass">ECOM_EXCEPTION</span>
+		  
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;export</span>
+		
+			
+		<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span CLASS="eclass">NONE</span>} <span class="ekeyword">all</span>
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		
+		<br>
+		
+		<br>
+		<span CLASS="ekeyword">
+		create</span>
+		
+		
+		<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;make
+		<br>
+		
+		<br>
+		<span CLASS="ekeyword">
+		feature</span>
+		 {<span CLASS="eclass">NONE</span>} <span CLASS="ecomment">
+		-- Initialization</span>
+		
+		<br>
+		
+		
+		<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;make <span CLASS="ekeyword">
+		is</span>
+		
+		  			
+		<br>
+					<span CLASS="ecomment">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Initialize Eiffel coclass.</span>
+		
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</span>
+		
+			
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create</span>
+		 coclass.make
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		  
+		<br><br>
+		<span CLASS="ekeyword">
+		feature </span>
+		<span CLASS="ecomment">
+		-- Basic Operations</span>
+		
+		<br>
+		
+		
+		<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;coclass_feature_client <span CLASS="ekeyword">
+		is</span>
+				  
+			
+		<br>
+		<span CLASS="ecomment">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Example of a coclass feature caller</span>
+		
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local</span>
+		
+			
+		<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retried: <span CLASS="eclass">BOOLEAN</span>
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coclass: <span CLASS="eclass">EIFFEL_COCLASS_PROXY</span>
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</span>
+		
+			
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create </span>
+		coclass.make
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+		 not</span> retried <span CLASS="ekeyword">
+		then</span>
+		
+			  
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coclass.coclass_feature<span CLASS="ecomment">
+		 -- Actual call</span>
+		
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rescue</span>
+		
+			
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if</span>
+		 hresult = E_notimpl<span CLASS="ekeyword">
+		 then</span>
+		
+			  
+		<br>
+						<span CLASS="ecomment">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Process non implemented function error.</span>
+		
+		<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retried := <span class="ereserved">True</span>
+		<br>
+						<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retry</span>
+		
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif</span>
+		 hresult = E_invalidarg<span CLASS="ekeyword">
+		 then</span>
+		
+			  
+		<br>
+						<span CLASS="ecomment">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Process invalid argument error.</span>
+		
+		<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retried := <span class="ereserved">True</span>
+		<br>
+						<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retry</span>
+		
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</span>
+		
+			  
+		<br>
+						<span CLASS="ecomment">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Forward exception to caller.</span>
+		
+		<br>
+					<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		
+		<br>
+				<span CLASS="ekeyword">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</span>
+		
+		<br>
+		
+		<br>
+		<span CLASS="ekeyword">
+		end</span>
+		<span CLASS="ecomment">
+		 -- class COCLASS_CLIENT</span>
+		
+		
+		</p>
+		<h2>
+		<A NAME="pgfId=373971">
+		 </A>
+		 Summary</h2>
+
+		<p>
+
+
+		<p align="justify"><a name="pgfId_371703"></a>There are a few rules to follow
+		when building an Eiffel coclass client, but they are straightforward and do not
+		add any constraints. First, inherit from the generated Eiffel coclass to
+		implement the preconditions. Second, any feature call to the Eiffel coclass
+		should include a rescue clause.</p>
+
+		<p>
+        <p class="seealso">See Also: <br>
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/01_introduction_d.html">
+        Introduction Dialog and Main Window</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/02_generated_code_type_d.html">
+        Generated Code Type Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/03_definition_file_d.html">Definition
+        File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/04_eiffel_project_file_d.html">Eiffel
+        Project File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/05_destination_folder_d.html">Destination
+        Folder Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/06_idl_marshalling_d.html">IDL
+        Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/07_type_lybrary_m_d.html">Type
+        Library Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/08_Final_d.html">Final
+        Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/09_com_definition_file_processing.html">COM
+        Definition File Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/10_eiffel_project_processing.html">Eiffel
+        Project Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/11_generated_files.html">Generated
+        Files</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/12_class_hierarchy.html">Class
+        Hierarchy</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/13_accessing_component.html">Accessing
+        a Component</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/14_building_component.html">Building
+        a Component</a></p>
+
+		<P>&nbsp;</P>
+
+	</BODY>
+</HTML>

@@ -413,6 +413,7 @@ enum
 
     DISPID_EiffelComCompiler_FlushAssemblies,
     DISPID_EiffelComCompiler_AddAssembly,
+    DISPID_EiffelComCompiler_AddFusionAssembly,
     // DISPID_EiffelComCompiler_LastException,
     // DISPID_EiffelComCompiler_Store,
 

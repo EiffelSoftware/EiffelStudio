@@ -15,6 +15,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_SOURCE_I
+		redefine
+			interface
+		end
 
 	EV_SENSITIVE_I
 		redefine
@@ -148,7 +153,7 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		require
-			a_minimum_width_positive: a_minimum_width > 0
+			a_minimum_width_positive: a_minimum_width >= 0
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies
@@ -158,7 +163,7 @@ feature -- Element change
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		require
-			a_minimum_height_positive: a_minimum_height > 0
+			a_minimum_height_positive: a_minimum_height >= 0
 		deferred
 		ensure
 			minimum_height_assigned: is_usable implies 
@@ -169,8 +174,8 @@ feature -- Element change
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		require
-			a_minimum_width_positive: a_minimum_width > 0
-			a_minimum_height_positive: a_minimum_height > 0
+			a_minimum_width_positive: a_minimum_width >= 0
+			a_minimum_height_positive: a_minimum_height >= 0
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies 

@@ -449,6 +449,7 @@ feature -- Code generation
 --io.error.putstring ("Unknown type%N%N");
 						end
 					end
+	-- FIXME
 if param = Void then
 	type_c := real_type (expr.type).c_type
 else
@@ -520,7 +521,7 @@ feature -- Byte code generation
 			if assignment then
 				make_end_assignment (ba);
 			end;
-		end; -- make_assignment_code
+		end;
 	
 	make_end_assignment (ba: BYTE_ARRAY) is
 			-- Finish the assignment to the current access
@@ -605,13 +606,26 @@ feature -- Byte code generation
 
 	is_first: BOOLEAN is
 			-- Is the access the first one in a multi-dot expression ?
+		local
+			p: like parent
+			p_target: ACCESS_B
+			constant_b: CONSTANT_B
 		do
-			Result := 	parent = Void
-						or else
-						(	parent.target = Current
-							and then
-							(parent.parent = Void)
-						)
+			p := parent
+			if p = Void then
+				Result := True
+			else
+				p_target := p.target
+				if (p_target = Current and then p.parent = Void) then
+					Result := True
+				else
+						-- Bug fix: CONSTANT_B has a special construct
+						-- for nested calls
+					constant_b ?= p_target
+					Result := constant_b /= Void and then
+						constant_b.access = Current and then p.parent = Void
+				end
+			end
 		end;
 
 feature -- Array optimization

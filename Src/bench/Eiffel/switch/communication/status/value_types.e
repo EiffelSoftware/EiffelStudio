@@ -14,5 +14,6 @@ feature -- Shared constants
 	Reference_value: INTEGER is 3
 	Expanded_value: INTEGER is 4
 	Special_value: INTEGER is 5
+	External_reference_value: INTEGER is 6 -- used for dotnet 
 
 end -- class VALUE_TYPES

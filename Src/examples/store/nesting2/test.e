@@ -23,6 +23,9 @@ feature
 		do
 				-- Ask for user's name and password
 			io.putstring ("Database user authentication:%N")
+			io.putstring("Data Source Name: ");
+			io.readline;
+			set_data_source (io.laststring);
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := clone (io.laststring)

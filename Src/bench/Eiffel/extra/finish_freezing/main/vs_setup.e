@@ -273,7 +273,7 @@ feature {NONE} -- Keys
 			l_sep: CHARACTER
 		do
 			create l_reg
-			l_reg_key := l_reg.open_key_with_access (a_key_path, {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+			l_reg_key := l_reg.open_key_with_access (a_key_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 			if l_reg_key /= default_pointer then
 				l_key_value := l_reg.key_value (l_reg_key, "ProductDir")
 				l_reg.close_key (l_reg_key)	

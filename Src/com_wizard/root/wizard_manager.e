@@ -51,6 +51,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FILE_SYSTEM_MANAGEMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -355,40 +360,15 @@ feature {NONE} -- Implementation
 					a_string.append (a_path)
 					add_warning (Current, a_string)
 					add_message (Current, File_backed_up)
-					a_string := clone (Copy_command)
-					a_string.append (Space)
-					a_string.append (a_path)
-					a_string.append (Space)
-					a_string.append (a_path)
+					a_string := clone (a_path)
 					a_string.append (Backup_file_extension)
-					Shared_process_launcher.launch (a_string, Void)
-					if not (Shared_process_launcher.last_launch_successful and Shared_process_launcher.last_process_result = 0) then
-						a_string := clone (Could_not_copy_file)
-						a_string.append (Colon)
-						a_string.append (Space)
-						a_string.append (a_path)
-						directories_initialized := False
-						add_error (Current, a_string)
-					else
-						a_string := clone (Delete_command)
-						a_string.append (Space)
-						a_string.append (a_path)
-						Shared_process_launcher.launch (a_string, Void)
-						if not (Shared_process_launcher.last_launch_successful and Shared_process_launcher.last_process_result = 0) then
-							a_string := clone (Could_not_delete_file)
-							a_string.append (Colon)
-							a_string.append (Space)
-							a_string.append (a_path)
-							directories_initialized := False
-							add_error (Current, a_string)
-						else
-							create a_directory.make (a_path)
-							check
-								not_exists: not a_directory.exists
-							end
-							a_directory.create_dir
-						end
+					file_copy (a_path, a_string)
+					file_delete (a_path)
+					create a_directory.make (a_path)
+					check
+						not_exists: not a_directory.exists
 					end
+					a_directory.create_dir
 				end
 			else
 				create a_directory.make (a_path)

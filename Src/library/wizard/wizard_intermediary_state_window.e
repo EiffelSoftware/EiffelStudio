@@ -158,7 +158,7 @@ feature {NONE} -- Basic Operations
 	pixmap_location: STRING is "eiffel_wizard_icon.bmp"
 			-- Pixmap location
 
-feature {INTERMEDIARY_STATE_WINDOW} -- Implementation
+feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
 	choice_box: EV_VERTICAL_BOX
 

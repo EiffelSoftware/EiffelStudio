@@ -28,6 +28,7 @@ feature -- Access
 		ensure
 			bridge_ok: equal (Result, implementation.tooltip)
 			not_void: Result /= Void
+			cloned: Result /= implementation.tooltip
 		end
 
 feature -- Element change

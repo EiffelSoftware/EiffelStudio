@@ -62,9 +62,9 @@ feature -- Basic operations
 					create settings.make_with_default_values
 					settings.set_project_location (dialog.directory)
 					system_status.set_current_project (settings)
-				end
-				system_status.main_window.show_tools
-				command_handler.update
+					system_status.main_window.show_tools
+					command_handler.update
+				end				
 			end
 
 end -- class GB_NEW_PROJECT_COMMAND

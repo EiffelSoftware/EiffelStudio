@@ -27,7 +27,7 @@ inherit
 	DOUBLE_MATH
 		export {NONE}
 			all
-			end
+		end
 
 creation
 	make
@@ -98,7 +98,7 @@ feature -- Status setting
 	separate_after_decimal is
 			-- Use separators after the decimal.
 		do
-			after_decimal_separate := true
+			after_decimal_separate := True
 		ensure
 			after_decimal_separate
 		end
@@ -106,7 +106,7 @@ feature -- Status setting
 	no_separate_after_decimal is
 			-- Do not use separators after the decimal.
 		do
-			after_decimal_separate := false
+			after_decimal_separate := False
 		ensure
 			not after_decimal_separate
 		end
@@ -141,7 +141,7 @@ feature -- Status setting
 	show_zero is
 			-- Show 0.5 as 0.5 .
 		do
-			zero_not_shown := false
+			zero_not_shown := False
 		ensure
 			not zero_not_shown
 		end
@@ -149,7 +149,7 @@ feature -- Status setting
 	hide_zero is
 			-- Show 0.5 as .5 .
 		do
-			zero_not_shown := true
+			zero_not_shown := True
 		ensure
 			zero_not_shown
 		end
@@ -204,7 +204,7 @@ feature -- Conversion
 			end
 		ensure
 			exists: Result /= Void
-			correct_width: Result.count >= width
+			correct_length: not_justified or Result.count >= width
 		end
 
 feature {NONE} -- Implementation

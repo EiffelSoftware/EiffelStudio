@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 				if not Eiffel_project.is_compiling then
 					reset_debugger
 					error_window.clear_window
---					!! mp.set_watch_cursor
+--					create mp.set_watch_cursor
 					tool.update_compile_access (is_precompiling or Compilation_modes.is_precompiling)
 					perform_compilation
 
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 						title.append (Project_directory_name)
 						tool.set_title (title)
 						if Eiffel_project.save_error then
-							!! st.make
+							create st.make
 							st.add_string ("Could not write to ")
 							st.add_string (Project_directory_name)
 							st.add_new_line
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 		local
 --			file_name: STRING
 		do
---			!! file_name.make (0)
+--			create file_name.make (0)
 --			file_name.append ("Ace.ace")
 --			Eiffel_ace.set_file_name (file_name)
 --			wiz_dlg.popdown
@@ -282,7 +282,7 @@ feature {EB_CHOOSE_ACE_DIALOG} -- Implementation
 		local
 --			wizard: WIZARD
 		do
---			!! wizard.make (Project_tool, wiz_dlg, ace_b)
+--			create wizard.make (Project_tool, wiz_dlg, ace_b)
 --			wizard.execute_action
 		end
 
@@ -296,7 +296,7 @@ feature {NONE} -- Attributes
 --	wiz_dlg: WIZARD_DIALOG is
 --			-- Dialog used to display the wizard.
 --		once
---			!! Result.make (Interface_names.t_Ace_builder, Project_tool)
+--			create Result.make (Interface_names.t_Ace_builder, Project_tool)
 --		end
 
 	not_saved: BOOLEAN is
@@ -368,7 +368,7 @@ feature {NONE} -- Attributes
 --			-- Wizard action to generate ace file (the only one)
 --			-- At the moment there is only one step
 --		once
---			!! Result.make (Current)
+--			create Result.make (Current)
 --		end
 
 feature {NONE} -- Execution

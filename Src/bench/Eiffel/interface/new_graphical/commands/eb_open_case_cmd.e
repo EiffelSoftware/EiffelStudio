@@ -1,5 +1,5 @@
 indexing
-	description: "Command to retrieve a stored project."
+	description: "Command to launch EiffelCase."
 	date: "$Date$"
 	revision: "$Revision$"
 

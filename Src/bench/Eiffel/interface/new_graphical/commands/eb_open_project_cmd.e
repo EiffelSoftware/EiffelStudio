@@ -209,7 +209,7 @@ feature -- Project Initialization
 			project_tool.set_title ("Retrieving project...")
 
 				-- These 2 lines will update effectively the project tool.
---			!! mp.do_nothing
+--			create mp.do_nothing
 --			mp.restore
 
 				-- Put the cursor in the wait state.
@@ -221,7 +221,7 @@ feature -- Project Initialization
 			if Eiffel_project.retrieval_error then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
---				!! mp.do_nothing
+--				create mp.do_nothing
 --				mp.restore
 				
 				if Eiffel_project.is_incompatible then
@@ -244,7 +244,7 @@ feature -- Project Initialization
 			elseif Eiffel_project.incomplete_project then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
---				!! mp.do_nothing
+--				create mp.do_nothing
 --				mp.restore
 				
 				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
@@ -252,7 +252,7 @@ feature -- Project Initialization
 			elseif Eiffel_project.read_write_error then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
---				!! mp.do_nothing
+--				create mp.do_nothing
 --				mp.restore
 				
 				msg := Warning_messages.w_Cannot_open_project

@@ -107,9 +107,9 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create mutex and delegate object.
 		do
-			Precursor {EV_NOTIFY_ACTION_SEQUENCE}
 			create access_mutex
 			create action_sequence
+			Precursor {EV_NOTIFY_ACTION_SEQUENCE}
 		end
 
 feature {EV_THREAD_NOTIFY_ACTION_SEQUENCE} -- Initialization

@@ -43,7 +43,7 @@ E_IType_Lib::~E_IType_Lib ()
 
 EIF_REFERENCE E_IType_Lib::ccom_find_name (OLECHAR * szName, EIF_INTEGER count)
 
-// Finds occurences of type description in type library.
+// Finds occurrences of type description in type library.
 // May be used to quickly verify that name exists in type library.
 //    Parameters
 // szName - name to search for

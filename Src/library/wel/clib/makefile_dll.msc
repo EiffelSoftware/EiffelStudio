@@ -4,7 +4,7 @@ OBJS = $(PROJ).OBJ
 CFLAGS = $(CFLAGS) /DWIN32_LEAN_AND_MEAN /D_WIN32_WINNT=0x200
 LFLAGS =/DLL /SECTION:.shared,RWS 
 
-LIBS =  /OUT:$(PROJ).DLL kernel32.lib user32.lib advapi32.lib
+LIBS =  /OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 
 #############################################################
 # Debug

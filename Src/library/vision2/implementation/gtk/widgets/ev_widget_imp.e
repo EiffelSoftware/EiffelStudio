@@ -510,7 +510,11 @@ feature -- Measurement
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
-			update_request_size
+			if parent_imp /= Void then
+				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
+			else
+				update_request_size
+			end
 			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)
 			).max (minimum_width)
@@ -519,7 +523,11 @@ feature -- Measurement
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
-			update_request_size
+			if parent_imp /= Void then
+				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
+			else
+				update_request_size
+			end
 			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)
 			).max (minimum_height)
@@ -689,12 +697,9 @@ feature {EV_CONTAINER_IMP} -- Implementation
 	update_request_size is
 			-- Force the requisition struct to be updated.
 		do
-			if not is_displayed then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object))
-			end
+			feature {EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object))
 		end
-		
-		
+	
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_widget_mapped is

@@ -31,21 +31,8 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap that has been set.
-		local
-			p: POINTER
-			imp: EV_PIXMAP_IMP
-		do
-			p := gtk_pixmap
-			if p /= NULL then
-				imp ?= eif_object_from_c (p)
-				check
-					imp_not_void: imp /= Void
-				end
-				Result := imp.interface
-			end
-		end
 
 feature -- Element change
 
@@ -56,9 +43,9 @@ feature -- Element change
 			new_pixmap: EV_PIXMAP
 		do
 			remove_pixmap
-			create new_pixmap
-			new_pixmap.copy (a_pixmap)
-			imp ?= new_pixmap.implementation
+			create pixmap
+			pixmap.copy (a_pixmap)
+			imp ?= pixmap.implementation
 			C.gtk_container_add (pixmap_box, imp.c_object)
 			C.gtk_widget_show (pixmap_box)		
 		end
@@ -70,9 +57,11 @@ feature -- Element change
 		do
 			p := gtk_pixmap
 			if p /= NULL then
+				C.gtk_object_ref (p)
 				C.gtk_container_remove (pixmap_box, p)
 			end
 			C.gtk_widget_hide (pixmap_box)
+			pixmap := Void
 		end
 
 feature {NONE} -- Implementation

@@ -41,9 +41,6 @@ extern "C" {
 
 #include <stdio.h>		/* For stream flushing */
 
-#if ! defined CUSTOM || defined NEED_DLE_H
-#include "eif_dle.h"		/* For dle_reclaim */
-#endif
 #if ! defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"		/* For exitprf */
 #endif
@@ -847,10 +844,6 @@ rt_public void reclaim(void)
 	eif_free_dlls();
 #endif
 
-#ifdef DLE
-	dle_reclaim();			/* Reclaim resources introduced by DLE */
-#endif
-
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");
 #endif
@@ -975,10 +968,8 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
+	mark_simple_stack(&once_set, MARK_SWITCH, moving);
 
-/* Not used any more, since onces per thread --ZS
-	mark_stack(&once_set, MARK_SWITCH, moving);
-*/
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
 	 */
@@ -3693,7 +3684,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
-/* 	mark_stack(&once_set, GEN_SWITCH, moving); */
+ 	mark_simple_stack(&once_set, GEN_SWITCH, moving);
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
@@ -5039,7 +5030,7 @@ rt_shared void gfree(register union overhead *zone)
  * following to properly record itself.
  */
 
-rt_public char *onceset(register char **ptr)
+rt_public char *onceset(void)
 {
 	/* Record result of once functions onto the once_set stack, so that the
 	 * run-time may update the address should the result be moved around by
@@ -5052,7 +5043,7 @@ rt_public char *onceset(register char **ptr)
 	flush;
 #endif
 	
-	if (-1 == epush(&once_set, (char *) ptr))
+	if (-1 == epush(&once_set, (char *) 0 ))
 		eraise("once function recording", EN_MEM);
 
 	return (char *) (once_set.st_top - 1);

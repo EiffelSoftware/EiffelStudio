@@ -135,7 +135,7 @@ RT_LNK EIF_POINTER file_binary_dopen(int fd, int how);
 RT_LNK EIF_POINTER file_binary_reopen(char *name, int how, FILE *old);
 RT_LNK void file_close(FILE *fp);
 RT_LNK void file_flush(FILE *fp);
-RT_LNK EIF_INTEGER file_size (FILE *fp);
+RT_LNK EIF_INTEGER eif_file_size (FILE *fp);
 RT_LNK EIF_BOOLEAN file_feof(FILE *fp);
 RT_LNK void file_pi(FILE *f, EIF_INTEGER number);
 RT_LNK void file_pr(FILE *f, EIF_REAL_32 number);

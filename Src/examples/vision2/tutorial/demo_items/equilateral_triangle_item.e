@@ -18,13 +18,15 @@ feature -- Access
 	figure: EV_EQUILATERAL_TRIANGLE is
 		local
 			pt: EV_POINT
+			angle: EV_ANGLE
 		do
 			!! Result.make
 			Result.path.set_line_width (2)
 			!! pt.set (150, 150)
 			Result.set_center (pt)
 			Result.set_radius (60)
-			Result.set_orientation (69)
+			create angle.make_in_degrees (69)
+			Result.set_orientation (angle)
 		end
 
 end -- class EQUILATERAL_TRIANGLE_ITEM

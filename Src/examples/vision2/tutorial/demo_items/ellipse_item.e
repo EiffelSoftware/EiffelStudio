@@ -18,11 +18,13 @@ feature -- Access
 	figure: EV_ELLIPSE is
 		local
 			pt: EV_POINT
+			angle: EV_ANGLE
 		do
 			!! Result.make
 			!! pt.set (150, 150)
 			Result.set_center (pt)
-			Result.set_orientation (20)
+			create angle.make_in_degrees (0.0)
+			Result.set_orientation (angle)
 			Result.set_radius1 (100)
 			Result.set_radius2 (50)
 			Result.path.set_line_width (2)

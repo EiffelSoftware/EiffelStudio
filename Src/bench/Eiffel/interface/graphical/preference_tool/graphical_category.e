@@ -8,7 +8,8 @@ indexing
 class GRAPHICAL_CATEGORY
 
 inherit
-	RESOURCE_CATEGORY
+	RESOURCE_CATEGORY;
+	SYSTEM_CONSTANTS
 
 creation
 	make
@@ -57,7 +58,10 @@ feature {TTY_RESOURCES} -- Initialization
 					("highlight_foreground_line_color", rt, "white");
 			!! keyword_color.make ("keyword_color", rt, "blue");
 			!! object_color.make ("object_color", rt, "black");
-			!! progress_bar_color.make ("progress_bar_color", rt, "blue");
+			if not Platform_constants.is_windows then
+				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
+				!! focus_label_color.make ("progress_bar_color", rt, "LightYellow");
+			end;
 			!! selected_clickable_background_color.make 
 					("selected_background_clickable_color", rt, "black");
 			!! selected_clickable_foreground_color.make 
@@ -99,6 +103,7 @@ feature -- Resources
 	default_text_color,
 	stop_color,
 	breakable_color,
+	focus_label_color,
 	symbol_color,
 	class_color,
 	feature_color,

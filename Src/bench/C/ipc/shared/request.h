@@ -88,7 +88,7 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  *	INTERRUPT_OK	28	Application must stop its execution
  *	INTERRUPT_NO	29	Application can resume execution
  *	SP_LOWER	30		Bounds for special objects inspection
- *	SP_UPPER	31		Bounds for special objects inspection
+ *	METAMORPHOSE	31		Metamorphose the item on top of the operational stack (used to convert parameters in the evaluation of features)
  */
 
 typedef struct {			/* General client request format */

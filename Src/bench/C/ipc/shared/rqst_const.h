@@ -44,7 +44,7 @@
 #define INTERRUPT_OK	28		/* Application must stop its execution */
 #define INTERRUPT_NO	29		/* Application can resume execution */
 #define SP_LOWER		30		/* Bounds for special objects inspection */
-#define SP_UPPER		31		/* Bounds for special objects inspection */
+#define METAMORPHOSE		31		/* Convert the top-level item in the operational stack from a basic type to a reference */
 #define APP_INTERRUPT_FLAG	32	/* Application sends the address of its interruption flag to daemon */
 #define EWB_NEWBREAKPOINT	33	/* Application sends the address of its interruption flag to daemon */
 #define MODIFY_LOCAL	34		/* `ec' asks the æpplication to change the value of a local variable */

@@ -34,6 +34,12 @@ feature -- Access
 			create Result.make_with_default ("Question")
 		end
 
+	Default_window_icon: EV_PIXMAP is
+			-- Pixmap used as default icon for new windows.
+		do
+			create Result.make_with_default ("Vision2")
+		end
+
 end -- class EV_DEFAULT_PIXMAPS
 
 --!-----------------------------------------------------------------------------
@@ -57,6 +63,9 @@ end -- class EV_DEFAULT_PIXMAPS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/05/03 00:23:57  pichery
+--| Added default window pixmap.
+--|
 --| Revision 1.1  2000/04/29 03:21:55  pichery
 --| Added new class with Default pixmaps
 --|

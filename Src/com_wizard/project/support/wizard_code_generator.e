@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Generation_title: STRING is "Generating Code"
+	Generation_title: STRING is "Generating code"
 			-- Generation title.
 
 	Interface_generation_title: STRING is "Generating implemented interfaces"
@@ -54,13 +54,13 @@ feature -- Access
 	Registration_code_generation_title: STRING is "Generating registration code"
 			-- Registration code generation message.
 
-	Runtime_functions_generation: STRING is "Generating Runtime functions"
+	Runtime_functions_generation: STRING is "Generating runtime functions"
 			-- Runtime functions generation.
 
-	Ace_file_generation: STRING is "Generating Ace and resource file"
+	Ace_file_generation: STRING is "Generating Ace and resource files"
 			-- Ace and resource file genration.
 
-	Makefile_generation: STRING is "Generating Makefiles"
+	Makefile_generation: STRING is "Generating makefiles"
 			-- Makefiles genration.
 
 	ace_file_generated: BOOLEAN

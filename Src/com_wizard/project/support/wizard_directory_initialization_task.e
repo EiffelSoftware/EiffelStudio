@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Initializing Generation:"
+	title: STRING is "Initializing generation"
 			-- Task title
 
 	steps_count: INTEGER is 12

@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Processing Eiffel Facade Class:"
+	title: STRING is "Processing Eiffel facade class"
 			-- Task title
 
 	steps_count: INTEGER is

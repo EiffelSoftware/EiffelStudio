@@ -36,7 +36,7 @@ inherit
 	
 feature -- Access
 
-	title: STRING is "Analyzing Type Library:"
+	title: STRING is "Analyzing type library"
 			-- Task title
 
 	steps_count: INTEGER is

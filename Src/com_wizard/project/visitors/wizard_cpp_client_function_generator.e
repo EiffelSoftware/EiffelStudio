@@ -62,7 +62,6 @@ feature -- Basic operations
 						Result.append (visitor.cecil_type)
 
 					elseif 
-						visitor.is_array_basic_type or 
 						visitor.is_interface_pointer or 
 						visitor.is_coclass_pointer or 
 						visitor.is_structure_pointer 
@@ -71,7 +70,8 @@ feature -- Basic operations
 						
 					elseif 
 						visitor.is_interface or 
-						visitor.is_structure 					
+						visitor.is_structure or
+						visitor.is_array_basic_type					
 					then
 						Result.append (visitor.c_type + " *")
 
@@ -81,9 +81,6 @@ feature -- Basic operations
 					
 					Result.append (Space)
 					Result.append (arguments.item.name)
-					if visitor.is_array_basic_type then
-						Result.append (visitor.c_post_type)
-					end
 					
 					if 
 						not (visitor.c_header_file = Void or else 

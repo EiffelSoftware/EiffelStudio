@@ -130,7 +130,6 @@ feature {NONE} -- Initialization
 
 			set_height (pi.height)
 			set_width (pi.width)
-			split_visible := True
 
 			if is_vertical then
 				split_size := pi.width
@@ -138,7 +137,9 @@ feature {NONE} -- Initialization
 				split_size := pi.height
 			end
 
-			split_position := split_size // 100 * proportion
+			if split_visible then
+				split_position := split_size // 100 * proportion
+			end
 		end
 
 	set_default_split_size is
@@ -149,14 +150,15 @@ feature {NONE} -- Initialization
 			pi ?= parent
 			set_height (pi.height)
 			set_width (pi.width)
-			split_visible := True
 			if is_vertical then
 				split_size := pi.width
 			else
 				split_size := pi.height
 			end
 
-			split_position := split_size // 100 * proportion
+			if split_visible then
+				split_position := split_size // 100 * proportion
+			end
 			resize_children
 		end
 

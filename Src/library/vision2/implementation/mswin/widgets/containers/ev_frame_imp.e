@@ -137,8 +137,8 @@ feature -- Element change
 			-- of the widget.
 		do
 			top_level_window_imp := a_window
-			if child /= Void then
-				child.set_top_level_window_imp (a_window)
+			if item_imp /= Void then
+				item_imp.set_top_level_window_imp (a_window)
 			end
 		end
 
@@ -147,8 +147,8 @@ feature {NONE} -- Implementation for automatic size compute.
 	compute_minimum_width is
 			-- Recompute the minimum_width of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_width (child.minimum_width +
+			if item_imp /= Void then
+				internal_set_minimum_width (item_imp.minimum_width +
 					2 * box_width)
 			end
 		end
@@ -156,8 +156,8 @@ feature {NONE} -- Implementation for automatic size compute.
 	compute_minimum_height is
 			-- Recompute the minimum_width of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_height (child.minimum_height +
+			if item_imp /= Void then
+				internal_set_minimum_height (item_imp.minimum_height +
 					box_text_height + 2 * box_width)
 			end
 		end
@@ -166,9 +166,9 @@ feature {NONE} -- Implementation for automatic size compute.
 			-- Recompute both the minimum_width and then
 			-- minimum_height of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_size (child.minimum_width + 2 * box_width,
-					child.minimum_height + box_text_height + 2 * box_width)
+			if item_imp /= Void then
+				internal_set_minimum_size (item_imp.minimum_width + 2 * box_width,
+					item_imp.minimum_height + box_text_height + 2 * box_width)
 			end
 		end
 
@@ -183,8 +183,8 @@ feature {NONE} -- WEL Implementation
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width,
 				a_height, repaint)
-			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height +
+			if item_imp /= Void then
+				item_imp.set_move_and_size (box_width, box_text_height +
 					box_width, client_width, client_height)
 			end
 		end
@@ -239,10 +239,10 @@ feature {NONE} -- WEL Implementation
 			!! dc.make (Current)
 			dc.get
 			dc.select_font (a_font)
-			if child /= Void then
+			if item_imp /= Void then
 				internal_set_minimum_size (dc.string_width (wel_text) +
-					2 * box_width + 10 + child.minimum_width,
-					box_text_height + 2 * box_width + child.minimum_height)
+					2 * box_width + 10 + item_imp.minimum_width,
+					box_text_height + 2 * box_width + item_imp.minimum_height)
 			else
 				internal_set_minimum_size (dc.string_width (wel_text) +
 					2 * box_width + 10,
@@ -299,6 +299,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.25  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

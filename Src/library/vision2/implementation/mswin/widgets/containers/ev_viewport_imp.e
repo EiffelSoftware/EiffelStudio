@@ -92,16 +92,16 @@ feature -- Access
 	x_offset: INTEGER is
 			-- Horizontal position of viewport relative to `item'.
 		do
-			if child /= Void then
-				Result := - child.x_position
+			if item /= Void then
+				Result := - item.x_position
 			end
 		end
 
 	y_offset: INTEGER is
 			-- Vertical position of viewport relative to `item'.
 		do
-			if child /= Void then
-				Result := - child.y_position
+			if item /= Void then
+				Result := - item.y_position
 			end
 		end
 
@@ -110,16 +110,16 @@ feature -- Element change
 	set_x_offset (an_x: INTEGER) is
 			-- Set `x_offset' to `an_x'.
 		do
-			if child /= Void then
-				child.wel_move (- an_x, child.y_position)
+			if item /= Void then
+				item_imp.wel_move (- an_x, item.y_position)
 			end
 		end
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			if child /= Void then
-				child.wel_move (child.x_position, - a_y)
+			if item /= Void then
+				item_imp.wel_move (item.x_position, - a_y)
 			end
 		end
 
@@ -127,8 +127,8 @@ feature -- Element change
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
 		do
-			if child /= Void then
-				child.wel_move (- an_x, - a_y)
+			if item /= Void then
+				item_imp.wel_move (- an_x, - a_y)
 			end
 		end
 
@@ -154,12 +154,12 @@ feature {NONE} -- Implementation
 		do
 			{WEL_CONTROL_WINDOW} Precursor (
 				a_x, a_y, a_width, a_height, repaint)
-			if child /= Void then
-				child.set_move_and_size (child.x_position,
-					child.y_position, client_width, client_height)
+			if item_imp /= Void then
+				item_imp.set_move_and_size (item_imp.x_position,
+					item_imp.y_position, client_width, client_height)
 
-				cw := child.width - client_width
-				ch := child.height - client_height
+				cw := item_imp.width - client_width
+				ch := item_imp.height - client_height
 
 				if x_offset > cw then
 					set_x_offset (cw)
@@ -195,6 +195,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.11  2000/04/24 16:02:16  brendel
 --| Added redefinition of set_offset, to move x and y at the same time.
 --|

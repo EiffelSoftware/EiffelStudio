@@ -208,8 +208,8 @@ feature {NONE} -- Implementation
 			mh := title_bar_height + window_border_height +
 				2 * window_frame_height
 
-			if child /= Void then
-				mh := mh + child.minimum_height
+			if item_imp /= Void then
+				mh := mh + item_imp.minimum_height
 			end
 			if has_menu then
 				mh := mh + menu_bar_height
@@ -232,9 +232,9 @@ feature {NONE} -- Implementation
 			mh := title_bar_height + window_border_height +
 				2 * window_frame_height
 
-			if child /= Void then
-				mw := mw + child.minimum_width
-				mh := mh + child.minimum_height
+			if item_imp /= Void then
+				mw := mw + item_imp.minimum_width
+				mh := mh + item_imp.minimum_height
 			end
 			if has_menu then
 				mh := mh + menu_bar_height
@@ -341,6 +341,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.63  2000/04/20 16:31:03  brendel
 --| Moved accelerator code into EV_WINDOW_IMP.
 --|

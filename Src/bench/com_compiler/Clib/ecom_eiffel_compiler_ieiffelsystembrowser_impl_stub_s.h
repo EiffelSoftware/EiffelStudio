@@ -65,6 +65,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
+	-----------------------------------------------------------*/
+	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumAssembly * * return_value );
+
+
+	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
 	STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value );
@@ -104,6 +110,18 @@ public:
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
 	STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features );
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet type
+	-----------------------------------------------------------*/
+	STDMETHODIMP description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet feature
+	-----------------------------------------------------------*/
+	STDMETHODIMP description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

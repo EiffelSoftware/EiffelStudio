@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_sep_box
+			create radio_group_ref
 			is_initialized := True
 		end
 
@@ -56,14 +57,18 @@ feature {NONE} -- Initialization
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
-	radio_group: POINTER
-			-- Pointer to GSList.
-			--| Defines a new radio group since menu separators also
-			--| semantically separate radio groups.
+	radio_group_ref: POINTER_REF
 
-	set_radio_group (a_group: POINTER) is
+	set_radio_group (p: POINTER) is
+			-- Assign `p' to `radio_group'.
 		do
-			radio_group := a_group
+			radio_group_ref.set_item (p)
+		end
+
+	radio_group: POINTER is
+			-- GSList with all radio items of this container.
+		do
+			Result := radio_group_ref.item
 		end
 
 feature {NONE} -- Implementation
@@ -92,6 +97,9 @@ end -- class EV_MENU_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/27 23:36:53  king
+--| Added pointer ref functions for radio grouping
+--|
 --| Revision 1.10  2000/04/11 23:18:04  brendel
 --| Speling.
 --|

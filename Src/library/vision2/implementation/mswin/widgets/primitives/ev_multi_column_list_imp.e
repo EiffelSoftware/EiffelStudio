@@ -407,7 +407,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		local
 			list: LINKED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
-			counter: INTEGER
 			first_string: STRING
 			columns_to_add: INTEGER
 		do
@@ -922,6 +921,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.94  2000/04/26 22:14:29  rogers
+--| Removed redundent local.
+--|
 --| Revision 1.93  2000/04/26 04:06:20  pichery
 --| EV_IMAGE_LIST_IMP.add_pixmap now
 --| takes an EV_PIXMAP as parameter.

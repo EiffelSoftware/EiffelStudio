@@ -42,7 +42,6 @@ inherit
 		select
 			wel_line_index,
 			wel_item,
-			wel_line,
 			wel_current_line_number,
 			wel_selection_start,
 			wel_line_count,
@@ -79,7 +78,8 @@ inherit
 			set_caret_position as internal_set_caret_position,
 			text as wel_text,
 			text_length as wel_text_length,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			line as wel_line
 		undefine
 			hide,
 			line_count,
@@ -126,7 +126,6 @@ inherit
 			wel_background_color,
 			class_name,
 			show,
-			line,
 			destroy,
 			wel_make
 		redefine
@@ -169,6 +168,7 @@ feature {NONE} -- Initialization
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
+			enable_all_notifications
 			
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
@@ -219,14 +219,13 @@ feature -- Status report
 	wel_text_length: INTEGER is
 			-- Text length
 		do
-			Result := text.count
+			Result := wel_text.count
 		end
 
 	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
 			-- `Result' is character format of character `character_index'
 		local
 			wel_character_format: WEL_CHARACTER_FORMAT
-			imp: EV_CHARACTER_FORMAT_I
 			a_font: EV_FONT
 			color_ref: WEL_COLOR_REF
 			effects: INTEGER
@@ -296,7 +295,7 @@ feature -- Status report
 		
 	tab_width: INTEGER 
 			-- Default width in pixels of each tab in `Current'.
-			
+
 feature -- Status setting
 
 	set_text (a_text: STRING) is
@@ -361,11 +360,9 @@ feature -- Status setting
 			hashed_character_format: STRING
 			temp_string: STRING
 			format_index: INTEGER
-			font_text: STRING
 			counter: INTEGER
 			character: CHARACTER
-			format_underlined: BOOLEAN
-			format_striked: BOOLEAN
+			format_underlined, format_striked: BOOLEAN
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -463,21 +460,14 @@ feature -- Status setting
 			-- Flush any buffered operations.
 		local
 			counter: INTEGER
-			start_value, end_value: INTEGER
 			last_end_value: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
-			current_start, current_end: INTEGER
 			insert_pos: INTEGER
 			temp_string: STRING
 			format_index: INTEGER
+			font_text: STRING
 			color_text: STRING
 			a_color: EV_COLOR
-			font_text: STRING
-			a_font: EV_FONT
-			a_font_imp: EV_FONT_IMP
-			log_font: WEL_LOG_FONT
-			family: STRING
-			current_family: INTEGER
 			default_font_format: STRING
 			format_underlined, format_striked: BOOLEAN
 		do

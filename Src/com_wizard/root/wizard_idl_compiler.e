@@ -141,7 +141,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			add_message (Current, a_string)
-			generate_make_file (Linker_command_line, Temporary_input_file_name)
+			generate_make_file (Linker_command_line, Temporary_link_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
 			a_string.append (last_make_command)
@@ -183,6 +183,7 @@ feature {NONE} -- Implementation
 				a_file.put_string (content)
 				last_make_command := clone (At_sign)
 				last_make_command.append (title)
+				a_file.close
 			else
 				add_error (Current, Could_not_write_makefile)
 			end

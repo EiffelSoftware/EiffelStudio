@@ -246,6 +246,35 @@ feature -- Status setting
 			xm_text_disable_redisplay (screen_object)
 		end;
 
+feature -- Extras
+
+    find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+            -- Search for the string `text_to_find' in the TEXT
+		local
+			pattern, text: ANY
+			lower_text: STRING
+			lower_pattern: STRING
+			dummy_object: like screen_object
+		do
+			if match_case then
+				pattern := text_to_find.to_c
+			else
+				lower_text := clone (string)
+				lower_text.to_lower
+				lower_pattern := clone (text_to_find)
+				lower_pattern.to_lower
+				text := lower_text.to_c
+				pattern := lower_pattern.to_c 
+				dummy_object := xm_create_text (screen_object, $text, default_pointer, 0)
+   		end
+
+			if match_case then
+				Result := xm_text_find_string (screen_object, start_from, $pattern)
+			else
+				Result := xm_text_find_string (dummy_object, start_from, $pattern)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	xm_create_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
@@ -296,6 +325,11 @@ feature {NONE} -- Implementation
 		alias
 			"XmTextSetSource"
 		end;
+
+	xm_text_find_string (w: POINTER; pos: INTEGER; pattern: POINTER): INTEGER is
+		external
+			"C (Widget, XmTextPosition, char *): EIF_INTEGER | %"xm_support.h%""
+		end
 
 end -- class MEL_TEXT
 

@@ -11,6 +11,8 @@ inherit
 	WEL_FONT_FAMILY_ENUMERATOR
 		rename
 			make as get_fonts
+		redefine
+			dispose
 		end
 
 	TERMINAL_WINDOWS
@@ -24,7 +26,8 @@ inherit
 			set_size,
 			set_width,
 			set_form_width,
-			set_form_height
+			set_form_height,
+			dispose
 		end
 
 	FONT_BOX_I
@@ -597,6 +600,14 @@ feature {NONE} -- Implementation
 			-- Height of the border
 		once
 			Result := window_border_height
+		end
+
+feature {NONE} -- Dispose feature
+
+	dispose is
+		do
+			{TERMINAL_WINDOWS} precursor
+			{WEL_FONT_FAMILY_ENUMERATOR} precursor
 		end
 
 invariant

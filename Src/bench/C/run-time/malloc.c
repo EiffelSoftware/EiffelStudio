@@ -223,11 +223,11 @@ rt_private int cc_for_speed = 1;	/* Optimized for speed */
 #undef References
 #undef Size
 #undef Disp_rout
-#undef Create
+#undef XCreate
 #define References(type)	2		/* Number of references in object */
 #define Size(type)			40		/* Size of the object */
 #define Disp_rout(type)		0		/* No dispose procedure */
-#define Create(type)		0		/* No creation procedure */
+#define XCreate(type)		 0		 /* No creation procedure */
 char *(**ecreate)();
 
 #ifndef DEBUG
@@ -443,7 +443,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 		 /* case of a special object of expanded structures */
 		char *addr = object + OVERHEAD;		/* Needed for that stupid gcc */
 		dtype = HEADER(addr)->ov_flags & EO_TYPE;
-		init = Create(dtype);
+		init = XCreate(dtype);
 
 #ifdef MAY_PANIC
 		if ((char *(*)()) 0 == init)		/* There MUST be a routine */
@@ -2754,7 +2754,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 * is in charge of setting some other flags like EO_COMP and initializing
 	 * of expanded inter-references.
 	 */
-	init = Create(type & EO_TYPE);
+	init = XCreate(type & EO_TYPE);
 	if (init != (char *(*)()) 0)
 		((void (*)()) init)(object, object);
 

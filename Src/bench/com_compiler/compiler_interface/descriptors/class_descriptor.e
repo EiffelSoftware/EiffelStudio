@@ -36,7 +36,8 @@ inherit
 			is_true_external,
 			is_generic,
 			is_library,
-			is_in_system
+			is_in_system,
+			member_of
 		end
 
 	COMPILER_EXPORTER
@@ -455,7 +456,11 @@ feature -- Access
     is_true_external: BOOLEAN is
             -- Is true external class?
         do
-            Result := compiler_class.compiled_class.is_true_external
+			if compiler_class.compiled_class /= Void then
+				Result := compiler_class.compiled_class.is_true_external
+			else
+				Result := compiler_class.file_name.out.substring (compiler_class.file_name.out.count - 3, compiler_class.file_name.out.count).is_equal (".xml")
+			end          
         end
 
 	is_generic: BOOLEAN is
@@ -473,6 +478,13 @@ feature -- Access
 				Result := compiler_class.compiled_class.cluster.is_library
 			end
 		end
+		
+	member_of: CLUSTER_DESCRIPTOR is
+			-- Cluster class is member of
+		do
+			create Result.make_with_cluster_i (compiler_class.cluster)
+		end
+		
 
 feature {NONE} -- Implementation
 

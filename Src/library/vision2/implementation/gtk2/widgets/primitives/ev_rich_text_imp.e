@@ -20,7 +20,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			on_key_event
+			on_key_event,
+			initialize_buffer_events
 		end
 
 create
@@ -34,11 +35,20 @@ feature {NONE} -- Initialization
 			create tab_positions
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
-			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+			
 			pango_tab_array := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_new (1, True)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 			set_tab_width (96 // 2)
+			create temp_start_iter.make
+			create temp_end_iter.make
 			Precursor {EV_TEXT_IMP}
+		end
+
+	initialize_buffer_events is
+			-- Initialize `text_buffer' events
+		do
+			Precursor {EV_TEXT_IMP}
+			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
 		end
 
 	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
@@ -165,7 +175,7 @@ feature -- Status Report
 				if font_family_contiguous then
 					create font_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
 					
-					if not font_family.is_equal (previous_font_family) then
+					if font_family.hash_code /= previous_font_family.hash_code then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 						font_family_contiguous := False
 					end
@@ -553,7 +563,8 @@ feature -- Status setting
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (text_buffer)
+				append_buffer := text_buffer
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (append_buffer)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (default_pointer))
 			end
 			format_region (start_position, end_position, format)
@@ -567,43 +578,53 @@ feature -- Status setting
 			text_tag_table: POINTER
 			buffer_length: INTEGER
 			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			l_count: INTEGER
+			l_char: CHARACTER
 		do
-			if not buffer_locked_in_append_mode then
-				text_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
-				append_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (text_tag_table)
-				buffer_locked_in_append_mode := True
+			l_count := a_text.count
+			if l_count >= 1 then
+				if not buffer_locked_in_append_mode then
+					text_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
+					append_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (text_tag_table)
+					buffer_locked_in_append_mode := True
+				end
+				l_char := a_text.item (1)
+				if l_count = 1 and (l_char = '%N' or l_char = '%T') then
+					append_text_internal (append_buffer, a_text)
+				else
+					buffer_length := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1
+					append_text_internal (append_buffer, a_text)
+					a_format_imp ?= format.implementation
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer))
+					a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
+				end
 			end
-			a_format_imp ?= format.implementation
-			buffer_length := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1
-			append_text_internal (append_buffer, a_text)
-			modify_region_internal (append_buffer, buffer_length, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
+		
+	temp_start_iter, temp_end_iter: EV_GTK_TEXT_ITER_STRUCT
+		-- Reusable GtkTextIter objects
 		
 	flush_buffer is
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
 		local
-			text_buffer_iter, append_buffer_start_iter, append_buffer_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text_buffer: POINTER
 		do
 			if buffer_locked_in_format_mode then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, text_buffer)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, append_buffer)
+				initialize_buffer_events
+				feature {EV_GTK_EXTERNALS}.object_unref (append_buffer)
+				append_buffer := NULL
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
-				set_text ("")
-				create text_buffer_iter.make
-				create append_buffer_start_iter.make
-				create append_buffer_end_iter.make
-				
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (append_buffer, append_buffer_start_iter.item)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (append_buffer, append_buffer_end_iter.item)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (text_buffer, text_buffer_iter.item)
-				
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (text_buffer, text_buffer_iter.item, append_buffer_start_iter.item, append_buffer_end_iter.item)
-				dispose_append_buffer
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, append_buffer)
+				initialize_buffer_events
+				feature {EV_GTK_EXTERNALS}.object_unref (append_buffer)
+				append_buffer := NULL
 				buffer_locked_in_append_mode := False
 			end
-			
 		end
 		
 	flush_buffer_to (start_position, end_position: INTEGER) is
@@ -818,7 +839,8 @@ feature {NONE} -- Implementation
 			create a_end_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_start_iter.item, start_position - 1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_end_iter.item, end_position - 1)
-		
+
+			
 			text_tag := format_imp.new_text_tag_from_applicable_attributes (applicable_attributes)
 			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, text_tag)

@@ -53,17 +53,15 @@ feature {NONE} -- Initialization
 			text_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
-			text_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
-			feature {EV_GTK_EXTERNALS}.object_ref (text_buffer)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
+			
 		end
 		
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Hook up the change actions for the text widget
 		do
 			Result := Precursor {EV_TEXT_COMPONENT_IMP}
-			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 		
 	initialize is
@@ -71,7 +69,15 @@ feature {NONE} -- Initialization
 		do
 			enable_word_wrapping
 			set_editable (True)
+			set_background_color ((create {EV_STOCK_COLORS}).white)
+			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
+		end
+
+	initialize_buffer_events is
+			-- Initialize events for `Current'
+		do
+			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 		
 feature -- Access
@@ -336,7 +342,6 @@ feature -- Status report
 			-- Number of display lines present in widget.
 		local
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
-			
 		do
 			from
 				Result := 1
@@ -544,13 +549,14 @@ feature {NONE} -- Implementation
 			-- Clean up `Current'
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP}
-			feature {EV_GTK_EXTERNALS}.object_unref (text_buffer)
 		end
 
 	on_change_actions is
 			-- The text within the widget has changed.
 		do
-			change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+			if change_actions_internal /= Void then
+				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+			end
 		end
 
 	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
@@ -572,8 +578,11 @@ feature {NONE} -- Implementation
 	scrolled_window: POINTER
 		-- Pointer to the GtkScrolledWindow
 
-	text_buffer: POINTER
-		-- Pointer to the GtkTextBuffer.
+	text_buffer: POINTER is
+			-- Pointer to the GtkTextBuffer.
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -10,13 +10,6 @@ deferred class
 inherit
 	EV_GAUGE_I
 
-feature -- Access
-
-	proportion: REAL is
-			-- Proportion of bar filled. Range: [0,1].
-		deferred
-		end
-
 feature -- Status report
 
 	is_segmented: BOOLEAN is
@@ -38,15 +31,6 @@ feature -- Status setting
 		deferred
 		ensure
 			not_is_segmented: not is_segmented
-		end
-
-	set_proportion (a_proportion: REAL) is
-			-- Display bar with `a_proportion' filled.
-		require
-			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
-		deferred
-		ensure
-			assigned: (proportion - a_proportion).abs <= step / (maximum - minimum)
 		end
 
 end -- class EV_PROGRESSBAR_I
@@ -72,6 +56,9 @@ end -- class EV_PROGRESSBAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/13 18:03:39  brendel
+--| Removed set_proportion and proportion since they are defined in EV_GAUGE_I
+--|
 --| Revision 1.8  2000/04/03 23:00:57  rogers
 --| Fixed post condition on set_proportion.
 --|

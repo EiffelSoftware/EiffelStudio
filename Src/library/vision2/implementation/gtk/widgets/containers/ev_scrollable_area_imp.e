@@ -38,6 +38,62 @@ feature {NONE} -- Initialization
 							gtk_policy_automatic)
 		end	
 
+feature -- Access
+
+	horizontal_step: INTEGER is
+			-- Step of the horizontal scrolling
+			-- ie : the user clicks on a horizontal arrow
+		do
+		end
+
+	horizontal_leap: INTEGER is
+			-- Leap of the horizontal scrolling
+			-- ie : the user clicks on the horizontal scroll bar
+		do
+		end
+
+	vertical_step: INTEGER is
+			-- Step of the vertical scrolling
+			-- ie : the user clicks on a vertical arrow
+		do
+		end
+
+	vertical_leap: INTEGER is
+			-- Leap of the vertical scrolling
+			-- ie : the user clicks on the vertical scroll bar
+		do
+		end
+
+	horizontal_value: INTEGER is
+			-- Current position of the horizontal scroll bar
+		do
+		end
+
+	vertical_value: INTEGER is
+			-- Current position of the vertical scroll bar
+		do
+		end
+
+	horizontal_minimum: INTEGER is
+			-- Minimal position on the horizontal scroll bar
+		do
+		end
+
+	vertical_minimum: INTEGER is
+			-- Maximal position on the vertical scroll bar
+		do
+		end
+
+	horizontal_maximum: INTEGER is
+			-- Maximal position on the horizontal scroll bar
+		do
+		end
+
+	vertical_maximum: INTEGER is
+			-- Maximal position on the vertical scroll bar
+		do
+		end
+
 feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -48,6 +104,40 @@ feature -- Element change
 			-- or not.
 		do
 			c_gtk_scrollable_area_add (widget, child_imp.widget)
+		end
+
+	set_horizontal_step (value: INTEGER) is
+			-- Make `value' the new horizontal step.
+		do
+		end
+
+	set_vertical_step (value: INTEGER) is
+			-- Make `value' the new vertical step.
+		do
+		end
+
+	set_horizontal_leap (value: INTEGER) is
+			-- Make `value' the new horizontal leap.
+		do
+		end
+
+	set_vertical_leap (value: INTEGER) is
+			-- Make `value' the new vertical leap.
+		do
+		end
+
+	set_horizontal_value (value: INTEGER) is
+			-- Make `value' the new horizontal value where `value' is given in percentage.
+			-- As this feature use and integer approximation, the post-condition is not
+			-- always verified.
+		do
+		end
+
+	set_vertical_value (value: INTEGER) is
+			-- Make `value' the new vertical value where `value' is given in percentage.
+			-- As this feature use and integer approximation, the post-condition is not
+			-- always verified.
+		do
 		end
 
 feature -- Assertion test

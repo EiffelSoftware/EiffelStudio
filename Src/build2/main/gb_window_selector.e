@@ -607,7 +607,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			
 				--| FIXME we need a better solution for name changes on windows.
 				--| as undo allows their name to become empty.
-			if not new_name.is_empty or old_name.is_empty then
+			if not (new_name.is_empty or old_name.is_empty) then
 				
 					-- Build file names for accessing files.
 				interface_file_name := clone (file_name)

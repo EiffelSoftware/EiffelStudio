@@ -22,9 +22,11 @@
 		Only one event will be triggered at a time so we call the callback on that one.
   */
 
+
 #include <sys/types.h> /* for Cray */
 #include <errno.h>
 #include "eif_config.h"
+#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"

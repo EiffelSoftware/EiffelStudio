@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	editor: EB_EDITOR is
 			-- Editor corresponding to `Current'.
 		do
-			Result := target.editor_tool.text_area
+			Result := target.current_editor
 		end
 
 end -- class EB_CLIPBOARD_COMMAND

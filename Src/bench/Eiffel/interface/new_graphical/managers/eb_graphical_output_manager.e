@@ -431,6 +431,9 @@ feature {NONE} -- Implementation
 								bp_list.after
 							loop
 								i := bp_list.item
+								if Application.has_conditional_stop (f, i) then
+									st.add_string ("*")
+								end
 								if not first_bp then
 									st.add_string (", ")
 								else

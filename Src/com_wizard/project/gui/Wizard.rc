@@ -94,9 +94,6 @@ BEGIN
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    CONTROL         "Virtual Table, Standard Marshalling",
-                    Virtual_Table_Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    141,115,129,10
     LTEXT           "Components can be accessed either through Automation or directly through the interface's virtual table.",
                     Marshalling_Static,115,10,220,20
     CONTROL         "Automation",Automation_Radio,"Button",
@@ -104,6 +101,9 @@ BEGIN
     CONTROL         "Virtual Table, Universal Marshalling",
                     Virtual_Table_Universal_Radio,"Button",
                     BS_AUTORADIOBUTTON,141,100,130,10
+    CONTROL         "Virtual Table, Standard Marshalling",
+                    Virtual_Table_Standard_Radio,"Button",BS_AUTORADIOBUTTON,
+                    141,115,129,10
     LTEXT           "How should the component be accessed?",
                     Marshalling_Question_Static,115,70,140,10
     LTEXT           "Marshalling defines how data is passed between components. Universal Marshalling uses the marshaller built into Windows while Standard Marshalling uses a component specific marshaller.",

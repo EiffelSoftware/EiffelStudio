@@ -66,16 +66,16 @@ cluster
 		end
 
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	"mscorlib":	"${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"
 
-	"System":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	"System":	"${ISE_DOTNET_FRAMEWORK}\System.dll"
 		prefix
 			"SYSTEM_DLL_"
 		end
 
-	"System.Xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	"System.Xml":	"${ISE_DOTNET_FRAMEWORK}\System.Xml.dll"
 		prefix
 			"XML_"
 		end
-		
+
 end

@@ -69,7 +69,7 @@ feature {NONE} -- Events
 			-- Called by `select_actions' of `project_radio_button'.
 		do
 			rebuild_ace_file_check_button.disable_sensitive
-			class_naming_frame.disable_sensitive
+			project_specific_name_holder.disable_sensitive
 		end
 
 
@@ -77,7 +77,7 @@ feature {NONE} -- Events
 			-- Called by `select_actions' of `class_radio_button'.
 		do
 			rebuild_ace_file_check_button.enable_sensitive
-			class_naming_frame.enable_sensitive
+			project_specific_name_holder.enable_sensitive
 		end
 
 
@@ -120,6 +120,7 @@ feature {NONE} -- Implementation
 				-- Then display all information for "Build" tab.
 			application_class_name_field.set_text (project_settings.application_class_name)
 			project_class_name_field.set_text (project_settings.project_name)
+			constants_class_name_field.set_text (project_settings.constants_class_name)
 			if project_settings.complete_project then
 				project_radio_button.enable_select
 			else
@@ -171,6 +172,7 @@ feature {NONE} -- Implementation
 				--	project_settings.set_main_window_class_name (main_window_class_name_field.text.as_upper)
 			project_settings.set_application_class_name (application_class_name_field.text.as_upper)
 			project_settings.set_project_name (project_class_name_field.text)
+			project_settings.set_constants_class_name (constants_class_name_field.text.as_upper)
 			if project_radio_button.is_selected then
 				project_settings.enable_complete_project
 			else

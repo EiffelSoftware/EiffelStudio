@@ -21,7 +21,7 @@ default
 	exception_trace (no)
 	inlining (no)
 	multithreaded (no)
-	shared_library_definition ("E:\Sources\com_compiler\ace_file\EiffelSoftware.Compiler.def")
+	shared_library_definition ("EiffelSoftware.Compiler.def")
 
 
 cluster

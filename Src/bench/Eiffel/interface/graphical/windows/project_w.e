@@ -92,6 +92,10 @@ feature -- Initialization
 			set_composite_attributes (Current)
 			feature_part.init_text_window
 			object_part.init_text_window
+
+			global_verti_split_window.update
+			hori_split_window.update
+			top_verti_split_window.update
 		end
 
 feature -- Resource Update
@@ -804,16 +808,15 @@ feature -- Graphical Interface
 
 			!! common_form.make (new_name, global_verti_split_window)
 
-  			!! hori_split_window.make_horizontal_with_proportion (new_name, common_form,60)
+  			!! hori_split_window.make_horizontal_with_proportion (new_name, common_form,50)
 
 			!! top_form.make (new_name, hori_split_window)
 			top_form.set_size(hori_split_window.width,hori_split_window.height)
 
-			!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 60)
+			!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 50)
 
 			!! project_form.make (new_name, top_verti_split_window)
 			!! object_form.make (new_name, top_verti_split_window)
-			
 			!! feature_form.make (new_name, hori_split_window)
 
 			create_toolbar (global_form)
@@ -1877,10 +1880,8 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 		do
 			shown_portions := shown_portions - 1
 
-			allow_resize
 			feature_form.unmanage
 			feature_part.close_windows
-			forbid_resize
 
 			menus.item (edit_feature_menu).button.set_insensitive
 			menus.item (special_feature_menu).button.set_insensitive
@@ -1891,29 +1892,15 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			-- Show the feature portion and the menu entries
 			-- regarding the feature tool.
 		local
-			feature_height, feature_width: INTEGER
 			mp: MOUSE_PTR
 		do
 			!! mp.set_watch_cursor
-
-			feature_height := common_form.height // 2
-			feature_width := common_form.width // 2
-
 			shown_portions := shown_portions + 1
+			feature_form.manage
 
 			menus.item (edit_feature_menu).button.set_sensitive
 			menus.item (special_feature_menu).button.set_sensitive
 			menus.item (format_feature_menu).button.set_sensitive
-
-			allow_resize
-			if not hori_split_window.is_vertical then
-				feature_form.set_height (feature_height)
-				feature_form.manage
-			else
-				feature_form.set_width (feature_width)
-				feature_form.manage
-			end
-			forbid_resize
 
 			show_current_stoppoint
 			mp.restore
@@ -1925,40 +1912,13 @@ feature {NONE} -- Implementation
 			-- Hide the feature potion and hide the menu entries
 			-- regarding the feature tool.
 		do
-			shown_portions := shown_portions - 1
-
-			allow_resize
-			feature_form.unmanage
-			feature_part.close_windows
-			forbid_resize
 		end
 
 	show_class_portion is
 			-- Show the feature portion and the menu entries
 			-- regarding the feature tool.
 		local
-			class_height, class_width: INTEGER
-			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor
-
-			class_height := common_form.height // 2
-			class_width := common_form.width // 2
-
-			shown_portions := shown_portions + 1
-
-			allow_resize
-			if not hori_split_window.is_vertical then
-				class_form.set_height (class_height)
-				class_form.manage
-			else
-				class_form.set_width (class_width)
-				class_form.manage
-			end
-			forbid_resize
-
-			show_current_stoppoint
-			mp.restore
 		end
 
 feature {DISPLAY_OBJECT_PORTION} -- Implementation
@@ -1969,10 +1929,8 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 		do
 			shown_portions := shown_portions - 1
 
-			allow_resize
 			object_form.unmanage
 			object_part.close_windows
-			forbid_resize
 
 			menus.item (edit_object_menu).button.set_insensitive
 			menus.item (special_object_menu).button.set_insensitive
@@ -1993,13 +1951,7 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			menus.item (special_object_menu).button.set_sensitive
 			menus.item (format_object_menu).button.set_sensitive
 
-			allow_resize
-			if not hori_split_window.is_vertical then
-				object_form.manage
-			else
-				object_form.manage
-			end
-			forbid_resize
+			object_form.manage
 
 			show_current_object
 			mp.restore

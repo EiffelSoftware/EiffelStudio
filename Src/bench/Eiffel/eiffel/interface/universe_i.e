@@ -657,7 +657,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			old_universe: UNIVERSE_I
 			old_tag: STRING
 			old_cluster: CLUSTER_I
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			a_class: CLASS_C
 			ovc    : CLUSTER_I
 		do

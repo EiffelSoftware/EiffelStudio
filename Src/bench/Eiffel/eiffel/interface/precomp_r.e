@@ -92,7 +92,7 @@ feature
 		require	
 			driver_not_void: Workbench.precompiled_driver /= Void
 		local
-			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
 			Precompilation_driver.make_from_string
 					(Workbench.precompiled_driver)
@@ -114,7 +114,7 @@ feature
 		require	
 			driver_not_void: Workbench.precompiled_driver /= Void
 		local
-			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
 			Precompilation_driver.make_from_string (Workbench.precompiled_driver)
 			precomp_dirs := Workbench.precompiled_directories;

@@ -37,7 +37,7 @@ feature
 			-- Add `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			not_before: not before
+			not_before_unless_empty: before implies empty
 		deferred
 		end;
 
@@ -53,7 +53,7 @@ feature
 			-- Add `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			not_after: not after
+			not_after_unless_empty: after implies empty
 		deferred
 		ensure
 			new_count: count = old count+1;
@@ -207,7 +207,7 @@ feature
 			-- Do not move cursor.
 			-- Empty other.
 		require
-			not_before: not before;
+			empty_or_not_before: empty or not before;
 			other_exists: other /= Void
 		deferred
 		ensure
@@ -221,7 +221,7 @@ feature
 			-- Do not move cursor.
 			-- Empties other.
 		require
-			not_after: not after;
+			not_after_unless_empty: empty or not after;
 			other_exists: other /= Void
 		deferred
 		ensure

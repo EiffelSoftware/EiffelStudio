@@ -265,19 +265,19 @@ feature
 
 invariant
 			-- Definitions:
-	empty_is_zero_cnt: empty = (count = 0);
-	off_is_offleft_or_offright: off = 
-		((position = 0) or else (position = count + 1));
-	isfirst_is_pos_one: isfirst = (position = 1);
-	islast_is_pos_cnt: islast = (not empty and (position = count));
+	empty_is_zero_cnt: not destroyed implies (empty = (count = 0));
+	off_is_offleft_or_offright: not destroyed implies (off = 
+		((position = 0) or else (position = count + 1)));
+	isfirst_is_pos_one: not destroyed implies (isfirst = (position = 1));
+	islast_is_pos_cnt: not destroyed implies (islast = (not empty and (position = count)));
 			-- Axioms:
-	non_negative_count: count >= 0;
-	non_negative_position: position >= 0;
-	stay_on: position <= count + 1;
-	empty_implies_off: empty implies off;
-	empty_implies_zero_pos: empty implies position = 0;
+	non_negative_count: not destroyed implies count >= 0;
+	non_negative_position: not destroyed implies position >= 0;
+	stay_on: not destroyed implies position <= count + 1;
+	empty_implies_off: not destroyed implies (empty implies off);
+	empty_implies_zero_pos: not destroyed implies (empty implies position = 0);
 			-- Theorems:
-	not_on_empty: empty implies not (isfirst or islast);
+	not_on_empty: not destroyed implies (empty implies not (isfirst or islast));
 	not_on_destroy: not destroyed implies not (implementation = Void)
 
 end

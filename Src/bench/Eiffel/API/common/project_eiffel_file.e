@@ -23,16 +23,20 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	MEMORY
+		undefine
+			dispose
+		end
+
 creation
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_file_name, prj_txt_name: FILE_NAME) is
+	make (a_file_name: STRING) is
 		do
 			error_value := ok_value;
 			file_make (a_file_name);
-			project_txt_name := prj_txt_name;
 		end;
 
 feature -- Access
@@ -42,11 +46,10 @@ feature -- Access
 			
 	project_version_number: STRING;
 			-- Version number of project eiffel file
-			-- found in `project.txt' file
-			-- (Empty version implies there was no version file)
 
-	project_txt_name: FILE_NAME;
-			-- Project.txt file associated with current eiffel file
+	project_storable_version_number: STRING;
+			-- Version number of the storable version of the compiler used
+			-- to store the project file
 
 	is_interrupted: BOOLEAN is
 			-- Was the retrieve of the project interrupted?
@@ -82,7 +85,8 @@ feature -- Access
 			-- Retrieve project
 			-- (Note: error cannot be invalid_precompilation)
 		do
-			Result ?= retrieved_object
+				--| True because a project file has a header
+			Result ?= retrieved_object (True)
 		ensure
 			valid_result: not error implies Result /= Void
 			version_number_exists: project_version_number /= Void
@@ -92,7 +96,8 @@ feature -- Access
 			-- Retrieve the precompile info of project
 			-- (Note: error cannot be invalid_precompilation)
 		do
-			Result ?= retrieved_object
+				--| False because a precompiled project file has no header
+			Result ?= retrieved_object (False)
 		ensure
 			valid_result: not error implies Result /= Void
 			version_number_exists: project_version_number /= Void
@@ -107,39 +112,19 @@ feature -- Update
 		local
 			f_parser: RESOURCE_PARSER;
 			project_txt_file: PLAIN_TEXT_FILE;
-			rt: RESOURCE_TABLE;
-			stored_project_version_number: STRING;
 			file_precomp_id: INTEGER
 		do
 			error_value := ok_value;
-			!! project_version_number.make (0);
-			!! project_txt_file.make (project_txt_name);	
-			if not project_txt_file.exists or else
-				not project_txt_file.is_readable or else
-				project_txt_file.empty or else
-				not project_txt_file.is_plain
-			then
-				error_value := incompatible_value;
-			else
-				!! rt.make (1);
-				!! f_parser;
-				f_parser.parse_file (project_txt_name, rt);
-				project_version_number := rt.get_string (version_number_tag, "");
-				stored_project_version_number := rt.get_string (storable_version_number_tag, "");
-				if 
-					project_version_number.empty or else 
-					stored_project_version_number.empty or else 
-					not stored_project_version_number.is_equal (storable_version_number)
-				then
+
+				--| If the project header part is missing, we will set
+				--| error value to incompatible_value
+			parse_project_header
+
+			if error_value = ok_value then
+				if not project_storable_version_number.is_equal (storable_version_number) then
 					error_value := incompatible_value;
-					if project_version_number.empty then
-						project_version_number.append ("unknown")
-					end
-				elseif precomp_id /= 0 then
-					precompilation_id := rt.get_integer (precompilation_id_tag, 0);
-					if precomp_id /= precompilation_id then
-						error_value := invalid_precompilation_value;
-					end
+				elseif precomp_id /= 0 and then precomp_id /= precompilation_id then
+					error_value := invalid_precompilation_value;
 				end
 			end
 		ensure
@@ -156,16 +141,28 @@ feature {NONE} -- Implementation
 	incompatible_value, interrupt_value: INTEGER is unique
 			-- Error values
 
-	retrieved_object: ANY is
+	retrieved_object (has_header: BOOLEAN): ANY is
 			-- Retrieve project
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				check_version_number (0);
+				open_read
+				if has_header then
+					check_version_number (0);
+				end
 				if not error then
-					open_read;
+						--| To add the storable part after the project header
+						--| we need to set the position in the file
+						--| otherwise the retrieving won't work correctly
+					go (position)
+					full_coalesce
+					full_collect
+					collection_off
 					Result := retrieved;
+					collection_on
+					full_coalesce
+					full_collect
 					close;
 					if Result = Void then
 						error_value := corrupt_value
@@ -186,5 +183,57 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end;
+
+	parse_project_header is
+			-- Parse the project header file to get the following information:
+			-- version_number_tag
+			-- storable_version_number_tag
+			-- precompilation_id
+			--| The format is the followin:
+			--| -- system name is xxx
+			--| version_number_tag
+			--| storable_version_number_tag
+			--| precompilation_id
+			--| -- end of info
+		require
+			is_open_read: is_readable
+		local
+			line, tag, value: STRING
+			index, line_number: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				from
+					read_line
+					read_line
+					line := clone (last_string)
+				until
+					line_number > 4 or else line.is_equal (info_flag_end)
+				loop
+						-- Read the version number tag
+					index := line.index_of (':', 1)
+					tag := line.substring (1, index - 1)
+					value := line.substring (index + 1, line.count)
+
+					if version_number_tag.is_equal (tag) then
+						project_version_number := value
+					elseif storable_version_number_tag.is_equal (tag) then
+						project_storable_version_number := value
+					elseif precompilation_id_tag.is_equal (tag) then	
+						precompilation_id := value.to_integer
+					else
+						error_value := incompatible_value
+					end
+
+					read_line
+					line := clone (last_string)
+				end
+			else
+				error_value := incompatible_value
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 end -- class PROJECT_EIFFEL_FILE

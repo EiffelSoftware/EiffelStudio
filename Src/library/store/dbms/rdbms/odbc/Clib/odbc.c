@@ -40,6 +40,8 @@ void odbc_unhide_qualifier(char *);
 char *odbc_date_to_str(int, int, int, int, int, int, int);
 int	 odbc_c_type(int odbc_type);
 
+int odbc_close_cursor (int no_des);
+
 
 ODBCSQLDA * odbc_descriptor[MAX_DESCRIPTOR];
 short   flag[MAX_DESCRIPTOR];
@@ -756,26 +758,46 @@ int odbc_terminate_order (int no_des)
 	//int i;
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
 	int colNum;
+		if (odbc_close_cursor (no_des)) {
+		if (dap != NULL) {
+	    	if (dap != (ODBCSQLDA *)(0x1)) {
+			colNum = GetColNum(dap);
+			if (colNum)
+				free(GetDbColPtr(dap,0));
+			free(dap);
+			free(odbc_indicator[no_des]);
+			odbc_indicator[no_des] = NULL;
+		    }
+	 	    odbc_descriptor[no_des] = NULL;
+		    if (pcbValue[no_des] != NULL) {
+		        free(pcbValue[no_des]);
+			pcbValue[no_des] = NULL;
+		    }
+		    //rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
+			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
+		}}
+	return error_number;
+}
 
-
-	if (dap != NULL) {
-	    if (dap != (ODBCSQLDA *)(0x1)) {
-		colNum = GetColNum(dap);
-		if (colNum)
-			free(GetDbColPtr(dap,0));
-		free(dap);
-		free(odbc_indicator[no_des]);
-		odbc_indicator[no_des] = NULL;
-	    }
- 	    odbc_descriptor[no_des] = NULL;
-	    if (pcbValue[no_des] != NULL) {
-	        free(pcbValue[no_des]);
-		pcbValue[no_des] = NULL;
-	    }
-	    //rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
-		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
-	}
-
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+/*                                                               */
+/* NAME: odbc_close_cursor(no_des)                               */
+/* PARAMETERS: no_des- index in descriptor vector.               */
+/* DESCRIPTION:                                                  */
+/*   A SQL has been performed in DYNAMIC EXECUTION mode, so the  */
+/* routine is to do some clearence:                              */
+/*   1. if the DYNAMICLLY EXECUTED SQL statement is a NON_SELECT */
+/*      statement, just free the memory for ODBCSQLDA and clear the*/
+/*      cell in 'descriptor' to NULL; otherwise, CLOSE the CURSOR*/
+/*      and then do the same clearence.                          */
+/*   2. return error number.                                     */
+/*                                                               */
+/*****************************************************************/
+int odbc_close_cursor (int no_des)
+{
+    rc = SQLFreeStmt(hstmt[no_des], SQL_CLOSE);
 	return error_number;
 }
 

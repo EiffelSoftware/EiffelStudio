@@ -304,6 +304,11 @@ feature -- External features
 			Result := ora_terminate_order(no_descriptor)
 		end
 
+	close_cursor (no_descriptor: INTEGER): INTEGER is
+			-- Do nothing, for ODBC prepared statement
+		do
+		end
+
 	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
 		local
 			c_temp: ANY

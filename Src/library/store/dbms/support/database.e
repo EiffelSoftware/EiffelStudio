@@ -92,11 +92,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
-	parse_dyn (descriptor: INTEGER; parameters: ARRAY[ANY]; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
-			-- Prepare sql for dyn .
-		do
-		end
-
 	result_order (descriptor: INTEGER): INTEGER is
 			-- Fetch one row resulting from the sql query
 			-- Default value zero
@@ -451,6 +446,14 @@ feature -- External features
 			-- the cell in 'descriptor' to NULL; otherwise, CLOSE the CURSOR
 			-- and then do the same clearence.               
 			-- 2. return error number.
+		deferred
+		end
+
+	close_cursor (no_descriptor: INTEGER): INTEGER is
+			-- A SQL has been performed in DYNAMIC EXECUTION mode,
+			-- Then if the DYNAMICALLY EXECUTED SQL statement is a SELECT 
+			-- statement, then the cursor is closed.
+			-- Then one can do an other selection on the previous cursor.
 		deferred
 		end
 

@@ -63,7 +63,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			element_info, element_info2: ELEMENT_INFORMATION
 			interval: INTEGER_INTERVAL
-			integer_constant: GB_INTEGER_CONSTANT
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -93,15 +92,15 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			element_info, element_info2: ELEMENT_INFORMATION
+			element_info2: ELEMENT_INFORMATION
 			lower, upper: STRING
 		do
-			Result := ""
+			create Result.make (4)
 			full_information := get_unique_full_info (element)
 			
 			if attribute_set (Upper_string) then
@@ -111,20 +110,19 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 				lower := retrieve_integer_setting (lower_string)
 				upper := retrieve_integer_setting (upper_string)
-				Result := info.name + ".value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
+				Result.extend (info.name + ".value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))")
 			end
 			
 			if attribute_set (Value_string) then
-				Result := Result + indent + info.name + ".set_value (" + retrieve_integer_setting (value_string) + ")"
+				Result.extend (info.name + ".set_value (" + retrieve_integer_setting (value_string) + ")")
 			end
 			
 			if attribute_set (Step_string) then
-				Result := Result + indent + info.name + ".set_step (" + retrieve_integer_setting (step_string) + ")"
+				Result.extend (info.name + ".set_step (" + retrieve_integer_setting (step_string) + ")")
 			end
 			if attribute_set (Leap_string) then
-				Result := Result + indent + info.name + ".set_leap (" + retrieve_integer_setting (leap_string) + ")"
+				Result.extend (info.name + ".set_leap (" + retrieve_integer_setting (leap_string) + ")")
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_WINDOW

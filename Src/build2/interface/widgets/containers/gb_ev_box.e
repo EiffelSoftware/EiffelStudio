@@ -108,7 +108,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -116,23 +116,23 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info: ELEMENT_INFORMATION
 			children_names: ARRAYED_LIST [STRING]
 		do
-			Result := ""
+			create Result.make (4)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_homogeneous_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := info.name + ".enable_homogeneous"
+					Result.extend (info.name + ".enable_homogeneous")
 				else
-					Result := info.name + ".disable_homogeneous"
+					Result.extend (info.name + ".disable_homogeneous")
 				end
 			end
 			
 			if attribute_set (Padding_string) then
-				Result := Result + indent + info.name + ".set_padding_width (" + retrieve_integer_setting (padding_string) + ")"
+				Result.extend (info.name + ".set_padding_width (" + retrieve_integer_setting (padding_string) + ")")
 			end
 			
 			if attribute_set (Border_string) then
-				Result := Result + indent + info.name + ".set_border_width (" + retrieve_integer_setting (border_string) + ")"
+				Result.extend (info.name + ".set_border_width (" + retrieve_integer_setting (border_string) + ")")
 			end
 
 			element_info := full_information @ (Is_item_expanded_string)
@@ -150,12 +150,11 @@ feature {GB_CODE_GENERATOR} -- Output
 						-- We only generate code for all the children that are disabled as they
 						-- are expanded by default.
 					if element_info.data @ children_names.index /= '1' then
-						Result := Result + indent + info.name + ".disable_item_expand (" + children_names.item + ")"
+						Result.extend (info.name + ".disable_item_expand (" + children_names.item + ")")
 					end
 					children_names.forth
 				end
-			end	
-			Result := strip_leading_indent (Result)
+			end
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting

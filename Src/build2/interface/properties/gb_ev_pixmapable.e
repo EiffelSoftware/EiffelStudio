@@ -83,7 +83,7 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -91,30 +91,26 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info: ELEMENT_INFORMATION
 			data: STRING
 			a_pixmap_string: STRING
-			pixmap_constant: GB_STRING_CONSTANT
-			constant_context: GB_CONSTANT_CONTEXT
 		do
-			Result := ""
+			create Result.make (2)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result := ""
 					a_pixmap_string := element_info.data
 				else
 					info.enable_pixmaps_set
 					data := element_info.data
-					Result := pixmap_name + ".set_with_named_file (%"" + data + "%")"
+					Result.extend (pixmap_name + ".set_with_named_file (%"" + data + "%")")
 					a_pixmap_string := pixmap_name
 				end
 
 				if type_conforms_to (dynamic_type_from_string (info.type), dynamic_type_from_string (Ev_container_string)) then
-					Result := Result + indent + info.name + ".set_background_pixmap (" + a_pixmap_string + ")"
+					Result.extend (info.name + ".set_background_pixmap (" + a_pixmap_string + ")")
 				else
-					Result := Result + indent + info.name + ".set_pixmap (" + a_pixmap_string + ")"
+					Result.extend (info.name + ".set_pixmap (" + a_pixmap_string + ")")
 				end
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_PIXMAPABLE

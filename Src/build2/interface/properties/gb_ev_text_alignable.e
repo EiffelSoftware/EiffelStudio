@@ -79,26 +79,25 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
-			Result := ""
+			create Result.make (1)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_alignment_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (Ev_textable_left_string) then
-					Result := Result + indent + info.name + ".align_text_left"
+					Result.extend (info.name + ".align_text_left")
 				elseif element_info.data.is_equal (Ev_textable_center_string) then
-					Result := Result + indent + info.name + ".align_text_center"
+					Result.extend (info.name + ".align_text_center")
 				elseif element_info.data.is_equal (Ev_textable_right_string) then
-					Result := Result + indent + info.name + ".align_text_right"
+					Result.extend (info.name + ".align_text_right")
 				end
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_TEXT_ALIGNABLE

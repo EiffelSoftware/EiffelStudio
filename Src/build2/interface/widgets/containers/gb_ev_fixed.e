@@ -36,7 +36,7 @@ inherit
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -49,7 +49,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			current_child_name: STRING
 			children_names: ARRAYED_LIST [STRING]
 		do
-			Result := ""
+			create Result.make (8)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (x_position_string)
 			if element_info /= Void then
@@ -78,7 +78,7 @@ feature {GB_CODE_GENERATOR} -- Output
 						-- hence `first' will be Void.
 					--strings_correct_length: temp_x_position_string.count // 4 = first.count			
 				end
-				Result := Result + indent + "%T-- Size and position all children of `" + info.name + "'."
+				Result.extend ("%T-- Size and position all children of `" + info.name + "'.")
 				children_names := info.child_names
 				from
 					counter := 1
@@ -88,10 +88,10 @@ feature {GB_CODE_GENERATOR} -- Output
 					lower := (counter - 1) * 4 + 1
 					upper := (counter - 1) * 4 + 4
 					current_child_name := children_names @ counter
-					Result := Result + indent + info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
-					Result := Result + indent + info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
-					Result := Result + indent + info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
-					Result := Result + indent + info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
+					Result.extend (info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")")
+					Result.extend (info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")")
+					Result.extend (info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")")
+					Result.extend (info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")")
 					counter := counter + 1
 				end
 			end

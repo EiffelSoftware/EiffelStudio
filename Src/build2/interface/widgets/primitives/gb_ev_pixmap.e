@@ -61,7 +61,6 @@ feature {GB_XML_STORE} -- Output
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 			file: RAW_FILE
-			data: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)	
@@ -94,25 +93,23 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
-			data: STRING
 		do
-			Result := ""
+			create Result.make (2)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result := info.name + ".copy (" + element_info.data + ")"
+					Result.extend (info.name + ".copy (" + element_info.data + ")")
 				else
-					Result := info.name + ".set_with_named_file (%"" + element_info.data + "%")"
+					Result.extend (info.name + ".set_with_named_file (%"" + element_info.data + "%")")
 				end
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_PIXMAP

@@ -81,38 +81,37 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
-			Result := ""
+			create Result.make (5)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (family_string)
 			if element_info /= Void then
 				info.enable_fonts_set
-				Result := "internal_font.set_family (" + element_info.data + ")"
+				Result.extend ("internal_font.set_family (" + element_info.data + ")")
 
 				element_info := full_information @ (weight_string)
 				if element_info /= Void then
-					Result := Result + indent + "internal_font.set_weight (" + element_info.data + ")"
+					Result.extend ("internal_font.set_weight (" + element_info.data + ")")
 				end
 				element_info := full_information @ (shape_string)
 				if element_info /= Void then
-					Result := Result + indent + "internal_font.set_shape (" + element_info.data + ")"
+					Result.extend ("internal_font.set_shape (" + element_info.data + ")")
 				end
 				element_info := full_information @ (height_string)
 				if element_info /= Void then
-					Result := Result + indent + "internal_font.set_height (" + element_info.data + ")"
+					Result.extend ("internal_font.set_height (" + element_info.data + ")")
 				end
 				element_info := full_information @ (preferred_family_string)
 				if element_info /= Void then
-					Result := Result + indent + "internal_font.preferred_families.extend (%"" + element_info.data + "%")"
+					Result.extend ("internal_font.preferred_families.extend (%"" + element_info.data + "%")")
 				end
-				Result := Result + indent + info.name + ".set_font (internal_font)"
-				Result := strip_leading_indent (Result)
+				Result.extend (info.name + ".set_font (internal_font)")
 			end
 		end
 

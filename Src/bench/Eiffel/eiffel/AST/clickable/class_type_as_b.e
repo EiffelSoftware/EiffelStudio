@@ -335,8 +335,6 @@ feature -- Output
 			class_c := System.current_class;
 			if class_c /= Void then
 				class_i := Universe.class_named (c_name, class_c.cluster)
-			else
-				class_i := Universe.class_with_name (c_name)
 			end;
 			c_name.to_upper;
 			if class_i = Void then

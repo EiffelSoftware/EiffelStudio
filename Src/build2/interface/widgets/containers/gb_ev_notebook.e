@@ -236,11 +236,10 @@ feature {GB_CODE_GENERATOR} -- Output
 							counter > info.children.count
 						loop
 							if full_information.has (item_text_string + counter.out) then
-								
-							string_value := retrieve_string_setting (item_text_string + counter.out)
-							if not string_value.is_equal ("%"%"") then
-								Result.extend (info.name + ".set_item_text (" + (children_names @ (counter)) + ", " + string_value + ")")
-							end
+								if full_information.item (item_text_string + counter.out).data /= Void then
+									string_value := retrieve_string_setting (item_text_string + counter.out)
+									Result.extend (info.name + ".set_item_text (" + (children_names @ (counter)) + ", " + string_value + ")")
+								end
 							end
 							counter := counter + 1
 						end

@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 			flatten_button, shallow_flatten_button: EV_BUTTON
 			tool_bar: EV_TOOL_BAR
-			command_flatten: GB_COMMAND_FLATTEN_OBJECT
+			text: STRING
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -465,7 +465,19 @@ feature {NONE} -- Implementation
 			if system_status.is_in_debug_mode then
 					-- provide additional information when in debug mode.
 				create label
-				label.set_text (object.id.out)
+				text := (object.id.out + "%N")
+				from
+					object.instance_referers.start
+				until
+					object.instance_referers.off
+				loop
+					text.append (object.instance_referers.item_for_iteration.out + ", ")
+					object.instance_referers.forth
+				end
+				if object.instance_referers.count > 0 then
+					text.remove_tail (2)
+				end
+				label.set_text (text)
 				attribute_editor_box.extend (label)
 				label.pointer_double_press_actions.force_extend (agent show_id_dialog)
 			end
@@ -570,13 +582,12 @@ feature {NONE} -- Implementation
 				create horizontal_box
 				attribute_editor_box.extend (horizontal_box)
 				flatten_button.select_actions.extend (agent object.flatten)
-				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
+				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.id))
 				horizontal_box.extend (flatten_button)
 				horizontal_box.disable_item_expand (flatten_button)
 
 				create shallow_flatten_button.make_with_text ("Shallow")
-				create command_flatten.make (object, False)
-				shallow_flatten_button.select_actions.extend (agent command_flatten.execute)
+				shallow_flatten_button.select_actions.extend (agent flatten_object)
 				horizontal_box.extend (shallow_flatten_button)
 				horizontal_box.disable_item_expand (shallow_flatten_button)
 			end
@@ -585,6 +596,18 @@ feature {NONE} -- Implementation
 				current_window_parent.unlock_update	
 			end
 		end
+		
+	flatten_object is
+			-- Flatten `object'.
+		require
+			object_not_void: object /= Void
+		local
+			command_flatten: GB_COMMAND_FLATTEN_OBJECT
+		do
+			create command_flatten.make (object, False)
+			command_flatten.execute
+		end
+		
 		
 	update_client_setting is
 			-- Update client setting of `object'.
@@ -880,6 +903,19 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			if container_object /= Void then
 				replace_object_editor_item ("EV_CONTAINER")
 			end
+		end
+
+feature {GB_COMMAND} -- Implementation
+
+	set_object_silent (an_object: GB_OBJECT) is
+			-- Replace `object' with `an_object' silently.
+			-- The ids must be identical as this feature does not update the display
+			-- in `Current' and assumes that `an_object' is an identical copy of `object'.
+		require
+			an_object_not_void: an_object /= Void
+			ids_equal: an_object.id = object.id
+		do
+			object := an_object
 		end
 		
 feature {NONE} -- Debug information

@@ -59,10 +59,10 @@ feature {NONE}
 				then
 					compile (argument);
 				else
+					end_run_confirmed := true;
 					confirmer (text_window).call (Current,
 							"Recompiling project will end current run.%N%
-							%Start compilation anyway?", "Compile");
-					end_run_confirmed := true
+							%Start compilation anyway?", "Compile")
 				end;
 			end;
 		end;

@@ -22,8 +22,7 @@ class ui_window;
 
 #include "ecom_server_rt_globals.h"
 
-
-#include "ecom_control_library_IOleInPlaceUIWindow_s.h"
+#include "ecom_control_library_ioleinplaceuiwindow_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +34,8 @@ extern "C" const CLSID CLSID_ui_window_;
 extern "C" {
 namespace ecom_control_library
 {
-class ui_window : public ecom_control_library::IOleInPlaceUIWindow, public IProvideClassInfo2
+class ui_window : 
+  public ::IOleInPlaceUIWindow
 {
 public:
   ui_window (EIF_TYPE_ID tid);
@@ -45,7 +45,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetWindow(  /* [out] */ ecom_control_library::wireHWND * phwnd );
+  STDMETHODIMP GetWindow(  /* [out] */ HWND * phwnd );
 
 
   /*-----------------------------------------------------------
@@ -75,7 +75,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetActiveObject(  /* [in] */ ecom_control_library::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
+  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
 
 
   /*-----------------------------------------------------------
@@ -94,18 +94,6 @@ public:
   Query Interface.
   -----------------------------------------------------------*/
   STDMETHODIMP QueryInterface( REFIID riid, void ** ppv );
-
-
-  /*-----------------------------------------------------------
-  GetClassInfo
-  -----------------------------------------------------------*/
-  STDMETHODIMP GetClassInfo( ITypeInfo ** ppti );
-
-
-  /*-----------------------------------------------------------
-  GetGUID
-  -----------------------------------------------------------*/
-  STDMETHODIMP GetGUID( DWORD dwKind, GUID * pguid );
 
 
 

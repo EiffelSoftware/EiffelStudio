@@ -10,6 +10,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -106,6 +111,7 @@ feature {NONE} -- Implementation
 	generate is
 			-- Generate Eiffel/C++ code
 		do
+			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make (shared_wizard_environment.type_library_file_name))
 		end
 		
 	finish is

@@ -53,6 +53,9 @@ feature -- Access
 
 	Dt_internal: INTEGER is 4096
 			-- Declared in Windows as DT_INTERNAL
+			
+	Dt_word_ellipsis: INTEGER is 262144
+			-- Declared in Windows as DT_WORD_ELLIPSIS
 
 end -- class WEL_DT_CONSTANTS
 

@@ -21,66 +21,79 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>The second tutorial describes creating a COM component from an Eiffel system. The tutorial example 
-			<italic>String</italic> is almost identical to 
-			<italic>StringManipulator</italic> of the previous tutorial. In the 
-			<italic>StringManipulator</italic> example the wizard starts from IDL file and builds an Eiffel System; in contrast, the 
-			<italic>String</italic> example takes an Eiffel system and generates an IDL file and the required plumbing code to make the Eiffel project accessible to COM runtime. You do not need to modify any Eiffel or C code.
+			<class_name>String</class_name> is almost identical to 
+			<class_name>StringManipulator</class_name> of the previous tutorial. In the 
+			<class_name>StringManipulator</class_name> example the wizard starts from IDL file and builds an Eiffel System; in contrast, the 
+			<class_name>String</class_name> example takes an Eiffel system and generates an IDL file and the required plumbing code to make 
+			the Eiffel project accessible to COM.
 		</paragraph>
 		<heading>
 			<size>2</size> Step by step instructions
 		</heading>
 		<list ordered="true">
 			<item>Create a new Eiffel project in the directory 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject</italic> where $ISE_EIFFEL represents the path to your EIFFEL50 directory.
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject</italic> where $ISE_EIFFEL represents the path to the 
+				EiffelStudio installation directory.
 			</item>
-			<item>Select Ace file from the same directory and compile.</item>
-			<item>Launch the EiffelCOM Wizard (from the Start menu, open Programs then EiffelXX and click EiffelCOM Wizard)</item>
-			<item>Choose 
-				<italic>Create a new project from an existing Eiffel project</italic>.
+			<item>Select the ACE file located in the same directory and compile.</item>
+			<item>Start the EiffelCOM Wizard</item>
+			<item>
+				In <bold>Project</bold>, in the <bold>Current project</bold> input field, type in <italic>string</italic>
+				 and press <bold>enter</bold>.
 			</item>
-			<item>Click 
-				<italic>Next</italic>
+			<item>
+				In <bold>Project Type</bold>, choose 
+				<italic>Add a COM interface to an existing Eiffel project</italic>.
 			</item>
-			<item>Click 
-				<italic>Next</italic> again
+			<item>
+				Click the browse button under <bold>Path to Eiffel project file (*.epr)</bold> and open the file 
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</italic>.
 			</item>
-			<item>Click the top Browse button and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</italic>where $ISE_EIFFEL represents the path to your Eiffel installation directory.
+			<item>
+				Click the browse button under <bold>Path to system's ace file (*.ace)</bold> and open the file 
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\Ace.ace</italic>.
 			</item>
-			<item>Click the second Browse button and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\ eproject\Ace.ace</italic> where $ISE_EIFFEL represents the path to your EIFFEL50 directory.
+			<item>In the text field under <bold>Name of Eiffel facade class</bold>, enter: 
+				<class_name>string_manipulator</class_name>.
 			</item>
-			<item>In the third entry field enter 
-				<italic>string_manipulator</italic>.
+			<item>In the text field under <bold>Name of Eiffel facade class cluster</bold>, enter: 
+				<class_name>root_cluster</class_name>.
 			</item>
-			<item>In the forth entry field enter 
-				<italic>root_cluster</italic>.
+			<item>
+				<link/>Click 
+				<bold>Next</bold>.
 			</item>
-			<item>Click 
-				<italic>Next</italic>.
+			<item>
+				In <bold>Component Type</bold>, choose  
+				<italic>In-process (*.dll)</italic>.
 			</item>
-			<item>Click the Browse button and select the directory where you want to create the project (the destination folder). Choose 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\generated</italic> where $ISE_EIFFEL represents the path to your EIFFEL50 directory. If you work on a Windows 9x machine, please choose a directory with a shorter path, for example c:\e2idl.
+			<item>
+				In <bold>Generation Options</bold>, click the browse button and select the directory where the project should be created. Choose 
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\generated</italic>.
 			</item>
-			<item>Click 
-				<italic>Next</italic>
+			<item>
+				Make sure both <bold>Compile C code</bold> and <bold>Compile Eiffel code</bold> are checked.
 			</item>
-			<item>Choose Automation</item>
-			<item>Click 
-				<italic>Next</italic>
+			<item>
+				Make sure <bold>Clean destination folder prior to generation</bold> is selected.
 			</item>
-			<item>Click 
-				<italic>Finish</italic>
+			<item>
+				Click <bold>Generate</bold>.
 			</item>
-			<item>Wait until the wizard is done.</item>
+			<item>
+				Wait until the wizard is done.
+			</item>
 		</list>
 		<heading>
 			<size>2</size> First look at the generated code
 		</heading>The only generated Eiffel class is 
 		<class_name>COM_&amp;lt;Name_of_system&amp;gt;_REGISTRATION</class_name>. You do not need to modify or implement any classes. The wizard produces a ready-to-use component.
 		<tip>
-			<bold>Tip</bold>
-			<line_break/>In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionality of the system and can serve as a Facade to the outside world. Running the wizard on any such class would not be practical. Before starting the wizard write an Eiffel class that acts as a Facade and forwards client calls to the appropriate subsystems. Enter the Facade class name into "Enter Eiffel class name" field of the third dialog (Eiffel Project File Dialog). The wizard generates an IDL file from this class.
+			<bold>Tip</bold>:
+			<line_break/>In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionality 
+			of the system and can serve as a Facade to the outside world. Running the wizard on any such class would not be practical. 
+			Before starting the wizard write an Eiffel class that acts as a Facade and forwards client calls to the appropriate subsystems. 
+			Enter the Facade class name into <bold>Name of Eiffel facade class</bold> field. The wizard generates an IDL file from this class.
 		</tip>
 		<seealso>
 			<bold>See Also</bold>

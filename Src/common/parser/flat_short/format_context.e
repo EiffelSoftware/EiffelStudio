@@ -77,6 +77,8 @@ feature -- Properties
 	arguments: AST_EIFFEL;
 			-- Argument for feature being adapted
 
+	special_nl_symbol: TEXT_ITEM
+
 feature -- Access
 
 	formal_name (pos: INTEGER): ID_AS is
@@ -96,6 +98,20 @@ feature -- Access
 		end;
 
 feature -- Local format setting details
+
+	reset_special_nl_symbol is
+		do
+			special_nl_symbol := Void
+		ensure
+			special_nl_symbol_reset: special_nl_symbol = Void
+		end
+
+	set_special_nl_symbol (nls: like special_nl_symbol) is
+		do
+			special_nl_symbol := nls
+		ensure
+			special_nl_symbol_set: special_nl_symbol = nls
+		end
 
 	set_type_creation (t: TYPE) is
 			-- Set _type_creation to `t'.
@@ -363,6 +379,9 @@ feature -- Output
 			-- Go to beginning of next line in `text'.
 		do
 			text.add_new_line;
+			if special_nl_symbol /= Void then
+				text.add (special_nl_symbol)
+			end
 			tabs_emitted := False
 		end;
 

@@ -41,6 +41,7 @@ feature -- Access
 	Case_16: STRING is "Non-expanded classes for basic types may not have creation procedure"
 	
 	Case_17: STRING is "Class STRING must have a procedure with an integer argument named `set_count'"
+	Case_17_bis: STRING is "Class STRING must have an attribute of tye integer named `internal_hash_code'"
 
 	Case_18: STRING is "Class TUPLE must inherit from ARRAY [ANY]"
 

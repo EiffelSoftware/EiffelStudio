@@ -19,6 +19,7 @@
 */
 
 #include "eif_cond_var.h"
+#ifdef EIF_THREADS
 
 int pthread_cond_init (pthread_cond_t *cv, const pthread_condattr_t* unused)
 {
@@ -146,3 +147,4 @@ int pthread_cond_broadcast (pthread_cond_t *cv)
     return 1; 
 }
 
+#endif

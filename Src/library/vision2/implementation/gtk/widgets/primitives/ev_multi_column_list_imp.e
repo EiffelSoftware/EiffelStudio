@@ -63,12 +63,23 @@ feature {NONE} -- Initialization
 			-- Create the clist with `a_columns' columns.
 		local
 			i: INTEGER
+			temp_c_object: POINTER
 		do
 			list_widget := C.gtk_clist_new (a_columns)
+		
+			temp_c_object := c_object
+			c_object := list_widget
+			signal_connect ("select_row", ~select_callback)
+			signal_connect ("unselect_row", (interface.deselect_actions)~call ([]))
+
+			--| FIXME IEK  Click column needs special attention in marshal feature
+			--signal_connect ("click_column", (interface.column_click_actions)~call ([]))
+			c_object := temp_c_object
 
 			if rows_height > 0 then
 				C.gtk_clist_set_row_height (list_widget, rows_height)
 			end
+
 			C.gtk_widget_show (list_widget)
 			C.gtk_container_add (c_object, list_widget)
 
@@ -83,6 +94,12 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			show_title_row
+		end
+
+	select_callback is
+		do
+			interface.select_actions.call ([])
+			selected_item.select_actions.call ([])
 		end	
 
 feature -- Access
@@ -277,7 +294,9 @@ feature -- Status setting
 	clear_selection is
 			-- Clear the selection of the list.
 		do
-			C.gtk_clist_unselect_all (list_widget)
+			if list_widget /= Default_pointer then
+				C.gtk_clist_unselect_all (list_widget)
+			end
 		end
 
 feature -- Element change
@@ -399,55 +418,6 @@ feature -- Event : command association
 			--add_command (list_widget, "click_column", cmd, arg, default_pointer)
 		end
 
-feature -- Event -- removing command association
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been selected.
-		local
-			list: LINKED_LIST [EV_COMMAND]
-		do
-			-- list of the commands to be executed for "select_row" signal.
-			--list := (event_command_array @ select_row_id).command_list
-
-			from
-				list.start
-			until
-				list.after
-			loop
-			--	remove_single_command (list_widget, select_row_id, list.item)
-				-- we do not need to do "list.forth" as an item has been removed
-				-- that list.
-			end
-		end
-
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been unselected.
-		local
-			list: LINKED_LIST [EV_COMMAND]
-		do
-			-- list of the commands to be executed for "unselect_row" signal.
-			--list := (event_command_array @ unselect_row_id).command_list
-
-			from
-				list.start
-			until
-				list.after
-			loop
-			--	remove_single_command (list_widget, unselect_row_id, list.item)
-				-- we do not need to do "list.forth" as an item has been removed
-				-- that list.
-			end
-		end
-
-	remove_column_click_commands is
-			-- Empty the list of commands to be executed
-			-- when a column is clicked.
-		do
-			--remove_commands (list_widget, click_column_id)
-		end
-
 feature {NONE} -- Implementation
 
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
@@ -551,6 +521,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/18 18:37:46  king
+--| Removed redundant command association commands
+--|
 --| Revision 1.24  2000/02/17 21:52:21  king
 --| Implemented to use no column setting on creation
 --|

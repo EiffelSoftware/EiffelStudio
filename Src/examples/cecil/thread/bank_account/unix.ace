@@ -16,8 +16,8 @@ cluster
 	root_cluster: "."
 		visible
 			POST_OFFICE;
-			SPENDER;
-			SAVER;
+			WITHDRAWER;
+			DEPOSITOR;
 		end
 
 	-- EiffelBase

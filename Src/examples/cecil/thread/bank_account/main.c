@@ -6,8 +6,8 @@
 #undef NDEBUG
 #include <assert.h>
 
-#define NSPENDER 2
-#define NSAVER	3
+#define WITHDRAWERS 2
+#define DEPOSITORS	3
 #define INTERVAL 2
 
 static struct bank_account *ba = NULL;	/* Shared bank account. */
@@ -81,18 +81,18 @@ int main (int argc, char **argv, char **envp)
 				eif_access (proxy));
 
 	/* Launching SAVERs. */
-	tid = eif_type_id ("SAVER");
+	tid = eif_type_id ("DEPOSITOR");
 	make = eif_procedure ("make", tid);
-	for (i = 0; i < NSAVER; i ++) 
+	for (i = 0; i < DEPOSITORS; i ++) 
 	{
 		thr = eif_create (tid);
 		(make) (eif_access (thr), (EIF_POINTER) ba, eif_access (mutex), eif_access (proxy));
 	}
 
 	/* Launching SPENDERs. */
-	tid = eif_type_id ("SPENDER");
+	tid = eif_type_id ("WITHDRAWER");
 	make = eif_procedure ("make", tid);
-	for (i = 0; i < NSPENDER; i ++) 
+	for (i = 0; i < WITHDRAWERS; i ++) 
 	{
 		thr = eif_create (tid);
 		(make) (eif_access (thr), (EIF_POINTER) ba, eif_access (mutex), eif_access (proxy));

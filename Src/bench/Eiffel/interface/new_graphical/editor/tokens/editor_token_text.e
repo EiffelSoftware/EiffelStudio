@@ -83,14 +83,14 @@ feature -- Miscellaneous
 			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
-	display(d_y: INTEGER; device: EV_DRAWING_AREA) is
+	display(d_y: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
 			display_with_colors(d_y, text_color, background_color, device)
 		end
 
-	display_selected(d_y: INTEGER; device: EV_DRAWING_AREA) is
+	display_selected(d_y: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -98,7 +98,7 @@ feature -- Miscellaneous
 			display_with_colors(d_y, selected_text_color, selected_background_color, device)
 		end
 
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWING_AREA) is
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'
@@ -169,7 +169,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWING_AREA) is
+	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_PIXMAP) is
 		do
  				-- Change drawing style here.
  			device.set_font(font)

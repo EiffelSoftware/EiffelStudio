@@ -18,7 +18,7 @@ inherit
 
 feature -- Display
 
-	display(d_y: INTEGER; a_device: EV_DRAWING_AREA) is
+	display(d_y: INTEGER; a_device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		local
@@ -27,7 +27,7 @@ feature -- Display
 			useless := display_blanks(position, d_y, a_device, False, 1, length)
 		end
 
-	display_selected(d_y: INTEGER; a_device: EV_DRAWING_AREA) is
+	display_selected(d_y: INTEGER; a_device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -37,7 +37,7 @@ feature -- Display
 			useless := display_blanks(position, d_y, a_device, True, 1, length)
 		end
 
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_DRAWING_AREA) is
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_PIXMAP) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'
@@ -64,7 +64,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	display_blanks(d_x, d_y: INTEGER; device: EV_DRAWING_AREA; selected: BOOLEAN; start_tab, end_tab: INTEGER): INTEGER is
+	display_blanks(d_x, d_y: INTEGER; device: EV_PIXMAP; selected: BOOLEAN; start_tab, end_tab: INTEGER): INTEGER is
 		deferred
 		end
 

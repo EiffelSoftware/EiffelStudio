@@ -21,7 +21,7 @@
 				<link>
 					<url>content/10_kernel/index.xml</url>
 					<label>Kernel</label>
-				</link> cluster include core classes used in all Eiffel systems. These include a universal class providing facilities potentially useful for all classes: ANY. Every class is a descendant of this classes. The kernel also defines classes needed for exception handling, standard arithmetic operations, hashable elements for use with hash tables and basic arithmetic conversions.
+				</link> cluster include core classes used in all Eiffel systems. These include a universal class providing facilities potentially useful for all classes: <code><class_name>ANY</class_name></code>. Every class is a descendant of this classes. The kernel also defines classes needed for exception handling, standard arithmetic operations, hashable elements for use with hash tables and basic arithmetic conversions.
 			</item>
 			<item>The 
 				<link>

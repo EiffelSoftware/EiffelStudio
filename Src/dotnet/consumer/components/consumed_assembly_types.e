@@ -51,10 +51,10 @@ feature -- Access
 				i > count
 			loop
 				name := dotnet_names.item (i)
-				l_index := name.index_of ('.', 1)
+				l_index := name.last_index_of ('.', name.count)
 				namespace := Void
 				if l_index > 0 then
-					namespace := name.substring (1, l_index)
+					namespace := name.substring (1, l_index - 1)
 				end
 				if namespace /= Void and then not l_namespaces.has (namespace) then
 					l_namespaces.extend (namespace)

@@ -142,10 +142,8 @@ feature
 			good_argument: other /= Void
 		do
 			Result := 	other.level = level
-						and
-						other.feature_id = feature_id
-						and
-						other.rout_id.is_equal (rout_id)
+						and other.feature_id = feature_id
+						and other.rout_id.is_equal (rout_id)
 		end;
 
 	trace is

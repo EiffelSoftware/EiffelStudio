@@ -114,7 +114,7 @@ feature
 	
 feature {NONE}
 
-	top_shell: TOP_SHELL;
+	top_shell: EB_TOP_SHELL;
 
 	
 feature 
@@ -144,18 +144,19 @@ feature {NONE}
 
 	scrolled_w: SCROLLED_W;
 
-	
 feature 
+
+	focus_label: FOCUS_LABEL;
 
 	make (a_screen: SCREEN) is
 		local
 			form: FORM;
 			del_com: DELETE_WINDOW;
 			close_button: CLOSE_WINDOW_BUTTON;
-			focus_label: FOCUS_LABEL;
 			con_ed_hole: CON_ED_HOLE;
 			cut_hole: CUT_HOLE;
-			raise_wiget_hole: RAISE_WIDGET_HOLE;
+			raise_widget_hole: RAISE_WIDGET_HOLE;
+			show_window_hole: SHOW_WINDOW_HOLE;
 			exp_parent_hole: EXPAND_PARENT_HOLE
 		do
 			!! top_shell.make (Widget_names.context_tree, a_screen);
@@ -167,8 +168,9 @@ feature
 			!! close_button.make (Current, form, focus_label);
 			!! con_ed_hole.make (form, focus_label);
 			!! cut_hole.make (form, focus_label);
-			!! raise_wiget_hole.make (form, focus_label);
-			!! exp_parent_hole.make (form, focus_label);
+			!! raise_widget_hole.make (form);
+			!! exp_parent_hole.make (form);
+			!! show_window_hole.make (form);
 			!! current_position;
 			drawing_box_create (Current);
 				-- Attachments
@@ -176,12 +178,14 @@ feature
 			form.attach_top (con_ed_hole, 0);
 			form.attach_top (close_button, 0);
 			form.attach_top (focus_label, 5);
-			form.attach_top (raise_wiget_hole, 0);
+			form.attach_top (raise_widget_hole, 0);
+			form.attach_top (show_window_hole, 0);
 			form.attach_top (exp_parent_hole, 0);
 			form.attach_left (con_ed_hole, 0);
 			form.attach_left_widget (con_ed_hole, exp_parent_hole, 0);
-			form.attach_left_widget (exp_parent_hole, raise_wiget_hole, 0);
-			form.attach_left_widget (raise_wiget_hole, cut_hole, 0);
+			form.attach_left_widget (exp_parent_hole, raise_widget_hole, 0);
+			form.attach_left_widget (raise_widget_hole, show_window_hole, 0);
+			form.attach_left_widget (show_window_hole, cut_hole, 0);
 			form.attach_left_widget (cut_hole, focus_label, 0);
 			form.attach_right_widget (close_button, focus_label, 0);
 			form.attach_right (close_button, 0);
@@ -189,7 +193,8 @@ feature
 			form.attach_top_widget (cut_hole, scrolled_w, 0);
 			form.attach_top_widget (close_button, scrolled_w, 0);
 			form.attach_top_widget (con_ed_hole, scrolled_w, 0);
-			form.attach_top_widget (raise_wiget_hole, scrolled_w, 0);
+			form.attach_top_widget (raise_widget_hole, scrolled_w, 0);
+			form.attach_top_widget (show_window_hole, scrolled_w, 0);
 			form.attach_top_widget (exp_parent_hole, scrolled_w, 0);
 			form.attach_left (scrolled_w, 0);
 			form.attach_right (scrolled_w, 0);
@@ -215,10 +220,13 @@ feature
 
 			!! del_com.make (Current);
 			top_shell.set_delete_command (del_com);
-				-- FIXME (use size from top_shell when
-				-- resources is implemented)
+			top_shell.set_x_y (Resources.tree_x,
+						Resources.tree_y);
+			top_shell.set_size (Resources.tree_width,
+						Resources.tree_height);
+			top_shell.initialize_window_attributes;
 			set_size (300, 300);
-			set_background_color (App_const.white)
+			set_background_color (Resources.drawing_area_color);
 		ensure
 			target_is_current: target = Current
 		end;
@@ -375,7 +383,10 @@ feature -- Hole
 
 	process_attribute (dropped: ATTRIB_STONE) is
 		do
-			dropped.copy_attribute (element.data);
+			find;
+			if found then
+				dropped.copy_attribute (element.data);
+			end
 		end;
 
 	process_type (dropped: TYPE_STONE) is

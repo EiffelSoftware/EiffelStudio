@@ -91,12 +91,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialization.
-		require else
-			has_current_feature: current_feature /= Void
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
+			if not retried and then current_feature /= Void then
 				Precursor {DOTNET_FORMAT_CONTEXT}
 				declared_type := current_feature.declared_type
 				name_of_current_feature := current_feature.eiffel_name.twin
@@ -106,8 +104,6 @@ feature {NONE} -- Initialization
 			else
 				is_valid := False
 			end
-		ensure then
-			has_ast: ast /= Void
 		rescue
 			retried := True
 			retry		

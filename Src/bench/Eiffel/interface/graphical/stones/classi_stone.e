@@ -35,6 +35,16 @@ feature -- dragging
 			Result.to_upper;
 --			Result.append (" (not in system)")
 		end;
+
+	header: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("Cluster: ");
+			Result.append (class_i.cluster.cluster_name);
+			Result.append ("    ");
+			Result.append ("Class: ");
+			Result.append (signature);
+		end;
  
 	stone_type: INTEGER is do Result := Class_type end;
  

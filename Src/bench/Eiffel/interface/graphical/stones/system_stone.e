@@ -54,6 +54,12 @@ feature
 				Result := "Uncompiled"
 			end
 		end;
+
+	header: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("Ace");
+		end;
  
 	stone_type: INTEGER is do Result := System_type end;
  

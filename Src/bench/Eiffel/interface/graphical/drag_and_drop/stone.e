@@ -34,6 +34,9 @@ feature
 	signature: STRING is deferred end;
 			-- Short string to explain Current
 
+	header: STRING is do Result := signature end;
+			-- Short string to explain Current
+
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
 			-- A CLASSI_STONE is not clickable, but a CLASSC_STONE is.

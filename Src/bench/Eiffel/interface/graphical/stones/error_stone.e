@@ -31,6 +31,8 @@ feature
 			Result := error_i.code
 		end;
 
+	header: STRING is do end;
+
 	stone_type: INTEGER is do Result := Explain_type end;
 
 	stone_name: STRING is do Result := l_Explain end;

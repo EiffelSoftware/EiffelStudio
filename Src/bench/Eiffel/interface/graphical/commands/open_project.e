@@ -168,6 +168,7 @@ feature
 		local
 			init_work: INIT_WORKBENCH;
 			precomp_r: PRECOMP_R;
+			extendible_r: EXTENDIBLE_R;
 			workb: WORKBENCH_I;
 			temp: STRING
 		do
@@ -187,6 +188,10 @@ feature
 				end;
 				!!init_work.make (workb);
 				Workbench.init;
+				if System.is_dynamic then
+					!!extendible_r;
+					extendible_r.set_extendible_dir
+				end;
 				if System.uses_precompiled then
 					!!precomp_r;
 					precomp_r.set_precomp_dir

@@ -11,6 +11,10 @@ feature
 	System: SYSTEM_I is
 			-- Shared access to the current system
 		once
+debug ("DLE SYSTEM")
+io.error.put_string ("First call to `System'.");
+io.error.new_line
+end;
 			Result := Workbench.system
 		end;
 

@@ -1,6 +1,8 @@
 indexing	
 	description: 
-		"Item for use in EV_LIST and EV_COMBO_BOX."
+		"[
+			Item for use in EV_LIST and EV_COMBO_BOX.
+		]"
 	status: "See notice at end of class"
 	keywords: "list, item, combo"
 	date: "$Date$"

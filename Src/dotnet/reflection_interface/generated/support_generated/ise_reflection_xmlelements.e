@@ -90,6 +90,13 @@ feature -- Basic Operations
 			"CreateNoneElement"
 		end
 
+	derivation_types_count_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"DerivationTypesCountElement"
+		end
+
 	argument_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -97,11 +104,11 @@ feature -- Basic Operations
 			"ArgumentElement"
 		end
 
-	parent_element: STRING is
+	argument_external_name_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ParentElement"
+			"ArgumentExternalNameElement"
 		end
 
 	argument_type_element: STRING is
@@ -123,13 +130,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"ModifiedFeatureElement"
-		end
-
-	derivation_count_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"DerivationCountElement"
 		end
 
 	invariants_element: STRING is
@@ -293,6 +293,13 @@ feature -- Basic Operations
 			"NamespaceElement"
 		end
 
+	deferred_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"DeferredElement"
+		end
+
 	access_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -377,11 +384,11 @@ feature -- Basic Operations
 			"IsLiteralElement"
 		end
 
-	deferred_element: STRING is
+	parent_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"DeferredElement"
+			"ParentElement"
 		end
 
 	basic_operations_element: STRING is
@@ -424,6 +431,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"NewSlotElement"
+		end
+
+	element_change_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ElementChangeElement"
 		end
 
 	preconditions_element: STRING is
@@ -531,6 +545,13 @@ feature -- Basic Operations
 			"CommentsElement"
 		end
 
+	generic_type_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericTypeElement"
+		end
+
 	invariant_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -538,11 +559,11 @@ feature -- Basic Operations
 			"InvariantElement"
 		end
 
-	element_change_element: STRING is
+	constraints_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ElementChangeElement"
+			"ConstraintsElement"
 		end
 
 	export_element: STRING is
@@ -557,13 +578,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"InvariantTagElement"
-		end
-
-	argument_external_name_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentExternalNameElement"
 		end
 
 	abstract_element: STRING is
@@ -634,13 +648,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"InitializationElement"
-		end
-
-	derivation_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"DerivationElement"
 		end
 
 	header_element: STRING is

@@ -189,6 +189,12 @@ feature -- Access
 			retry
 		end
 
+	generic_type_names: ARRAY [STRING]
+		indexing
+			description: "Generic type names of current Eiffel class"
+			external_name: "GenericTypeNames"
+		end
+		
 feature -- Status Report
 
 	has_write_lock (a_folder_name: STRING): BOOLEAN is
@@ -297,8 +303,74 @@ feature -- Basic Operations
 		ensure
 			valid_path: valid_path (a_path)
 		end
+	
+	compute_generic_names (a_count: INTEGER) is
+		indexing
+			description: "Compute `a_count' generic names and set `generic_type_names' with the computed value."
+			external_name: "ComputeGenericNames"
+		local
+			i, j: INTEGER
+			a_generic_name: STRING
+		do
+			create generic_type_names.make (a_count)
+			if a_count <= generic_names_table.count then
+				from
+				until
+					i = a_count
+				loop
+					generic_type_names.put (i, generic_names_table.item (i))
+					i := i + 1
+				end
+			else
+				from
+				until
+					i = generic_names_table.count
+				loop
+					generic_type_names.put (i, generic_names_table.item (i))
+					i := i + 1
+				end
+				from
+					j := 1
+				until
+					i = a_count
+				loop
+					a_generic_name ?= generic_name_base.clone
+					generic_type_names.put (i, a_generic_name.concat_string_string (a_generic_name, j.to_string))
+					j := j + 1
+					i := i + 1
+				end
+			end
+		ensure
+			non_void_generic_names: generic_type_names /= Void
+			valid_generic_names: generic_type_names.count = a_count
+		end
 		
 feature {NONE} -- Implementation
+
+	generic_names_table: ARRAY [STRING] is
+		indexing
+			description: "Possible generic names"
+			external_name: "GenericNamesTable"
+		once
+			create Result.make (8)
+			Result.put (0, "G")
+			Result.put (1, "H")
+			Result.put (2, "K")
+			Result.put (3, "L")
+			Result.put (4, "M")
+			Result.put (5, "N")
+			Result.put (6, "O")
+			Result.put (7, "P")
+		ensure
+			non_void_table: Result /= Void
+			valid_table: Result.count = 8
+		end
+	
+	generic_name_base: STRING is "G__"
+		indexing
+			description: "Generic name base (when there are more than `generic_names_table.count' generic derivations)"
+			external_name: "GenericNameBase"
+		end
 
 	error_messages: CODE_GENERATION_SUPPORT_ERROR_MESSAGES
 		indexing
@@ -490,47 +562,83 @@ feature {NONE} -- Implementation
 			generic_derivations_currently_read: type_description.get_name.equals_string (xml_elements.Generic_derivations_element)
 			is_generic: eiffel_class.get_is_generic
 		local
-			derivation_count: STRING
+			generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST
+			added: INTEGER
+			derivation_types_count: STRING
 			generic_derivation: ISE_REFLECTION_GENERICDERIVATION
 			eiffel_name: STRING
 			external_name: STRING
-			a_constraint: STRING
 			a_type: ISE_REFLECTION_SIGNATURETYPE
 			convert: SYSTEM_CONVERT
+			derivations: ARRAY [ISE_REFLECTION_GENERICDERIVATION]
+			i: INTEGER
+			a_derivation: ISE_REFLECTION_GENERICDERIVATION
 			retried: BOOLEAN
+			constraints: ARRAY [STRING]
+			a_constraint: STRING
 		do
 			if not retried then
 				type_description.read_start_element_string (xml_elements.Generic_derivations_element)
 				from
+					create generic_derivations.make
 				until
 					 not type_description.get_name.equals_string (xml_elements.Generic_derivation_element)
 				loop
 					type_description.read_start_element_string (xml_elements.Generic_derivation_element)
-					derivation_count := type_description.read_element_string_string (xml_elements.derivation_count_element)
+					derivation_types_count := type_description.read_element_string_string (xml_elements.Derivation_types_count_element)
 					create generic_derivation.make1
-					generic_derivation.make (convert.to_int32_string (derivation_count))
+					generic_derivation.make (convert.to_int32_string (derivation_types_count))
 					from
 					until 
-						not type_description.get_name.equals_string (xml_elements.Derivation_element)
+						not type_description.get_name.equals_string (xml_elements.Generic_type_element)
 					loop
-						type_description.read_start_element_string (xml_elements.Derivation_element)
+						type_description.read_start_element_string (xml_elements.Generic_type_element)
 						eiffel_name := type_description.read_element_string_string (xml_elements.Generic_type_eiffel_name_element)
 						external_name := type_description.read_element_string_string (xml_elements.Generic_type_external_name_element)
-						a_constraint := type_description.read_element_string_string (xml_elements.Constraint_element)
 						if eiffel_name /= Void and then eiffel_name.get_length > 0 
-								and then external_name /= Void and then external_name.get_length > 0 
-								and then a_constraint /= Void then
+								and then external_name /= Void and then external_name.get_length > 0 then
 							create a_type.make1
 							a_type.make
 							a_type.set_type_eiffel_name (eiffel_name)
 							a_type.set_type_full_external_name (external_name)
-							generic_derivation.add_derivation_type (a_type, a_constraint)
+							generic_derivation.add_derivation_type (a_type)
 						end
 						type_description.read_end_element
 					end
+					added := generic_derivations.add (generic_derivation)
 					type_description.read_end_element
 				end
 				type_description.read_end_element
+				if generic_derivations /= Void and then generic_derivations.get_count > 0 then
+					from
+						create derivations.make (generic_derivations.get_count)
+					until 
+						i = generic_derivations.get_count
+					loop
+						a_derivation ?= generic_derivations.get_item (i)
+						if a_derivation /= Void then
+							derivations.put (i, a_derivation) 
+						end
+						i := i + 1
+					end
+					eiffel_class.set_generic_derivations (derivations)
+			
+					type_description.read_start_element_string (xml_elements.Constraints_element)
+					from
+						create constraints.make (derivations.count)
+						i := 0
+					until
+						not type_description.get_name.equals_string (xml_elements.Constraint_element)
+					loop
+						a_constraint := type_description.read_element_string_string (xml_elements.Constraint_element)
+						if a_constraint /= Void then
+							constraints.put (i, a_constraint)
+							i := i + 1
+						end
+					end
+					type_description.read_end_element
+					eiffel_class.set_constraints (constraints)
+				end
 			end
 		rescue
 			retried := True

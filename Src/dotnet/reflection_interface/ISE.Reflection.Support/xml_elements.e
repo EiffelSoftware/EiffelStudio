@@ -132,16 +132,16 @@ feature -- Access
 			external_name: "GenericDerivationElement"
 		end
 
-	Derivation_count_element: STRING is "derivation_count"
+	Derivation_types_count_element: STRING is "derivation_types_count"
 		indexing
-			description: "Derivation count element in XML file for a type"
-			external_name: "DerivationCountElement"
+			description: "Derivation types count element in XML file for a type"
+			external_name: "DerivationTypesCountElement"
 		end
 
-	Derivation_element: STRING is "derivation"
+	Generic_type_element: STRING is "generic_type"
 		indexing
-			description: "Derivation element in XML file for a type"
-			external_name: "DerivationElement"
+			description: "Generic type element in XML file for a type"
+			external_name: "GenericTypeElement"
 		end
 
 	Generic_type_eiffel_name_element: STRING is "generic_type_eiffel_name"
@@ -156,6 +156,12 @@ feature -- Access
 			external_name: "GenericTypeExternalNameElement"
 		end
 
+	Constraints_element: STRING is "constraints"
+		indexing
+			description: "Constraints element in XML file for a type"
+			external_name: "ConstraintsElement"
+		end
+		
 	Constraint_element: STRING is "constraint"
 		indexing
 			description: "Constraint element in XML file for a type"

@@ -85,7 +85,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	add_argument_modification (an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; new_argument_name: STRING) is
+	add_argument_modification (an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE; new_argument_name: STRING) is
 		indexing
 			description: "[
 						Add `new_argument_name' to `arguments_modifications' with key `an_argument'.

@@ -152,7 +152,7 @@ feature -- Basic Operations
 		end
 		
 feature {NONE} -- Implementation
-
+	
 	intern_generate_eiffel_class (a_filename: STRING) is
 		indexing
 			description: "Generate Eiffel class from `eiffel_class'."
@@ -169,11 +169,18 @@ feature {NONE} -- Implementation
 			dir: SYSTEM_IO_DIRECTORY
 			env: SYSTEM_ENVIRONMENT
 			cluster_path: STRING
+			constraints: ARRAY [ANY]
+			a_constraint: STRING
+			class_name: STRING
+			a_generic_type_name: STRING
+			i: INTEGER
+			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
+			generic_type_names: ARRAY [ANY]
 		do
 			create formatter.make
 			full_external_name := eiffel_class.get_Full_External_Name
 			filename := a_filename.Concat_String_String_String (a_filename, formatter.Format_Type_Name (full_external_name).To_Lower, Eiffel_class_extension)
-
+			
 			create file_stream.make_streamwriter_5 (filename, False, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 			create generated_code.make_2 ('%U', 0)
 			
@@ -192,10 +199,15 @@ feature {NONE} -- Implementation
 			if eiffel_class.get_Enum_Type /= Void and then eiffel_class.get_Enum_Type.get_length > 0 then
 				generated_code := generated_code.concat_string_string_string_string (generated_code, Tab, Enum_type_keyword, Colon)
 				generated_code := generated_code.concat_string_string_string_string (generated_code, Space, Inverted_comma, eiffel_class.get_Enum_Type)
-				generated_code := generated_code.concat_string_string_string_string (generated_code, Inverted_comma, Windows_new_line, Windows_new_line)
-			else
-				generated_code := generated_code.concat_string_string (generated_code, Windows_new_line)
-			end			
+				generated_code := generated_code.concat_string_string_string (generated_code, Inverted_comma, Windows_new_line)
+			end
+			
+				-- generic_types and constraints
+			if eiffel_class.get_is_generic then
+				generate_generic_clauses
+			end
+			
+			generated_code := generated_code.concat_string_string (generated_code, Windows_new_line)
 
 				-- frozen
 			if eiffel_class.get_Is_Frozen then
@@ -216,6 +228,38 @@ feature {NONE} -- Implementation
 				-- 	CLASS_NAME
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, External_keyword, Space, Class_keyword)
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, eiffel_class.get_eiffel_name.To_Upper)
+			
+			if eiffel_class.get_is_generic then
+				class_name := Space
+				class_name := class_name.concat_string_string (class_name, Opening_square_bracket)
+				constraints := eiffel_class.get_constraints
+				create support.make_codegenerationsupport
+				support.make
+				support.compute_generic_names (constraints.count)
+				check
+					non_void_generic_type_names: support.get_generic_type_names /= Void
+				end
+				generic_type_names := support.get_generic_type_names
+				from
+				until
+					i = generic_type_names.count
+				loop
+					a_constraint ?= constraints.item (i)
+					if a_constraint /= Void then
+						a_generic_type_name ?= generic_type_names.item (i)
+						if a_generic_type_name /= Void and then a_generic_type_name.get_length > 0 then
+							class_name := class_name.concat_string_string_string_string (class_name, a_generic_type_name, Space, "->")
+							class_name := class_name.concat_string_string_string (class_name, Space, a_constraint)
+							if i < generic_type_names.count - 1 then
+								class_name := class_name.concat_string_string_string (class_name, Comma, Space)
+							end
+						end
+					end
+					i := i + 1
+				end
+				class_name := class_name.concat_string_string_string (class_name, Space, Closing_square_bracket)
+				generated_code := generated_code.concat_string_string (generated_code, class_name)
+			end
 			generated_code := generated_code.Concat_String_String_String (generated_code, Windows_new_line, Windows_new_line)
 
 				-- inherit
@@ -235,7 +279,11 @@ feature {NONE} -- Implementation
 				-- `end -- class CLASS_NAME'
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, End_keyword, Space, Dashes)
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Class_keyword, Space)
-			generated_code := generated_code.Concat_String_String_String (generated_code, eiffel_class.get_eiffel_name.To_Upper, Windows_new_line)
+			generated_code := generated_code.Concat_String_String (generated_code, eiffel_class.get_eiffel_name.To_Upper)
+			if eiffel_class.get_is_generic and then class_name /= Void and then class_name.get_length > 0 then
+				generated_code := generated_code.concat_string_string (generated_code, class_name)
+			end
+			generated_code := generated_code.concat_string_string (generated_code, Windows_new_line)
 		
 			file_stream.Write_String (generated_code)
 			file_stream.Close
@@ -271,6 +319,106 @@ feature {NONE} -- Implementation
 			valid_special_classes: Result.get_count = 8
 		end
 
+	generate_generic_clauses is
+		indexing
+			description: "Generate `generic_types' and `constraints' clauses."
+			external_name: "GenerateGenericClauses"
+		require
+			non_void_eiffel_class: eiffel_class /= Void
+			is_generic: eiffel_class.get_is_generic
+			non_void_generic_derivations: eiffel_class.get_generic_derivations /= Void	
+			non_void_constraints: eiffel_class.get_constraints /= Void
+		do
+			generate_generic_types
+			generate_constraints
+		end
+	
+	generate_generic_types is
+		indexing
+			description: "Generate `generic_types' clause."
+			external_name: "GenerateGenericTypes"
+		require
+			non_void_eiffel_class: eiffel_class /= Void
+			is_generic: eiffel_class.get_is_generic
+			non_void_generic_derivations: eiffel_class.get_generic_derivations /= Void		
+			not_empty_generic_derivations: eiffel_class.get_generic_derivations.count > 0
+		local
+			generic_derivations: ARRAY [ANY]
+			a_generic_derivation: ISE_REFLECTION_GENERICDERIVATION
+			generic_types_count: INTEGER
+			i, j: INTEGER
+			generic_types: ARRAY [ANY]
+			a_generic_type: ISE_REFLECTION_SIGNATURETYPE
+		do
+			generated_code := generated_code.concat_string_string_string_string (generated_code, Tab, Generic_types_keyword, Colon)
+			generated_code := generated_code.concat_string_string_string (generated_code, Space, Inverted_comma)
+			
+			generic_derivations := eiffel_class.get_generic_derivations
+			a_generic_derivation ?= generic_derivations.item (0)
+			if a_generic_derivation /= Void then
+				generic_types_count := a_generic_derivation.get_generic_types.count
+				from
+				until
+					i = generic_types_count
+				loop
+					from
+						j := 0
+					until
+						j = generic_derivations.count
+					loop
+						a_generic_derivation ?= generic_derivations.item (j)
+						if a_generic_derivation /= Void then
+							generic_types := a_generic_derivation.get_generic_types
+							a_generic_type ?= generic_types.item (i)
+							if a_generic_type /= Void then
+								generated_code := generated_code.concat_string_string (generated_code, a_generic_type.type_eiffel_name)
+								if j < generic_derivations.count - 1 then
+									generated_code := generated_code.concat_string_string_string (generated_code, Comma, Space)
+								end
+							end
+						end
+						j := j + 1
+					end
+					if i < generic_types_count - 1 then
+						generated_code := generated_code.concat_string_string_string (generated_code, Semi_colon, Space)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	generate_constraints is
+		indexing
+			description: "Generate `constraints' clause."
+			external_name: "GenerateConstraints"
+		require
+			non_void_eiffel_class: eiffel_class /= Void
+			is_generic: eiffel_class.get_is_generic
+			non_void_constraints: eiffel_class.get_constraints /= Void		
+		local
+			constraints: ARRAY [ANY]
+			a_constraint: STRING
+			i: INTEGER
+		do		
+			generated_code := generated_code.concat_string_string_string_string (generated_code, Tab, Constraints_keyword, Colon)
+			generated_code := generated_code.concat_string_string_string (generated_code, Space, Inverted_comma)
+			constraints := eiffel_class.get_constraints
+			from
+			until 
+				i = constraints.count
+			loop
+				a_constraint ?= constraints.item (i)		
+				if a_constraint /= Void then
+					generated_code := generated_code.concat_string_string (generated_code, a_constraint)
+					if i < constraints.count - 1 then
+						generated_code := generated_code.concat_string_string_string (generated_code, Comma, Space)						
+					end
+				end
+				i := i + 1
+			end
+			generated_code := generated_code.concat_string_string_string (generated_code, Inverted_comma, Windows_new_line)
+		end
+		
 	generate_inherit_clause is
 		indexing
 			description: "Generate inherit clause."
@@ -602,13 +750,23 @@ feature {NONE} -- Implementation
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
 			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
+			formal_argument: ISE_REFLECTION_FORMALNAMEDSIGNATURETYPE
+			generic_parameter_index: INTEGER
 			argument_name: STRING
 			argument_type: STRING
+			formal_return_type: ISE_REFLECTION_FORMALSIGNATURETYPE
+			return_type_name: STRING
 			comments: SYSTEM_COLLECTIONS_ARRAYLIST
 			a_comment: STRING
 			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
+			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
+			generic_type_names: ARRAY [ANY]
 		do	
+			create support.make_codegenerationsupport
+			support.make
+			generic_type_names := support.get_generic_type_names
+			
 			is_binary_operator := eiffel_class.get_Binary_Operators_Features.Contains (a_feature)
 			is_unary_operator := eiffel_class.get_Unary_Operators_Features.Contains (a_feature)	
 
@@ -643,7 +801,17 @@ feature {NONE} -- Implementation
 					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then
 						argument_name := an_argument.eiffel_name
-						argument_type := an_argument.type_eiffel_name
+						formal_argument ?= arguments.get_item (i)
+						if formal_argument /= Void and then generic_type_names /= Void then
+							generic_parameter_index := formal_argument.get_generic_parameter_index
+							if generic_parameter_index < generic_type_names.count then
+								argument_type ?= generic_type_names.item (generic_parameter_index)
+							else
+								argument_type := an_argument.type_eiffel_name
+							end
+						else
+							argument_type := an_argument.type_eiffel_name
+						end
 					end
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, argument_name, Colon, Space)
 					generated_code := generated_code.Concat_String_String (generated_code, argument_type)
@@ -655,9 +823,20 @@ feature {NONE} -- Implementation
 				generated_code := generated_code.Concat_String_String (generated_code, Closing_round_bracket)
 			end
 
-				-- feature return type
-			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.Type_eiffel_name /= Void then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.get_Return_Type.Type_eiffel_name)
+				-- feature return type			
+			if a_feature.get_is_method and then a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.Type_eiffel_name /= Void then
+				formal_return_type ?= a_feature.get_return_type
+				if formal_return_type /= Void and then generic_type_names /= Void then
+					generic_parameter_index := formal_return_type.get_generic_parameter_index
+					if generic_parameter_index < generic_type_names.count then
+						return_type_name ?= generic_type_names.item (generic_parameter_index)
+					else
+						return_type_name := a_feature.get_return_type.type_eiffel_name
+					end				
+				else
+					return_type_name := a_feature.get_return_type.type_eiffel_name
+				end
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, return_type_name)
 			end
 			if a_feature.get_Is_Field then
 				if a_feature.get_external_name /= Void and then not a_feature.get_external_name.Starts_With (Property_set_prefix) then

@@ -34,6 +34,13 @@ feature -- Access
 			"_internal_ErrorMessages"
 		end
 
+	frozen a_internal_generic_type_names: ARRAY [ANY] is
+		external
+			"IL field signature :System.Object[] use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"_internal_GenericTypeNames"
+		end
+
 	frozen a_internal_type_description: SYSTEM_XML_XMLTEXTREADER is
 		external
 			"IL field signature :System.Xml.XmlTextReader use ISE.Reflection.CodeGenerationSupport"
@@ -83,6 +90,13 @@ feature -- Access
 			"get_ErrorMessages"
 		end
 
+	get_generic_type_names: ARRAY [ANY] is
+		external
+			"IL signature (): System.Object[] use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_GenericTypeNames"
+		end
+
 	get_eiffel_feature: ISE_REFLECTION_EIFFELFEATURE is
 		external
 			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.CodeGenerationSupport"
@@ -99,11 +113,11 @@ feature -- Basic Operations
 			"GenerateFeatureAssertions"
 		end
 
-	generate_comments is
+	has_read_lock (a_folder_name: STRING): BOOLEAN is
 		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateComments"
+			"HasReadLock"
 		end
 
 	create_folder (a_path: STRING) is
@@ -113,11 +127,11 @@ feature -- Basic Operations
 			"CreateFolder"
 		end
 
-	generate_class_header is
+	has_write_lock (a_folder_name: STRING): BOOLEAN is
 		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateClassHeader"
+			"HasWriteLock"
 		end
 
 	generate_class_body is
@@ -125,6 +139,13 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"GenerateClassBody"
+		end
+
+	read_lock_filename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"ReadLockFilename"
 		end
 
 	generate_generic_derivations is
@@ -141,6 +162,13 @@ feature -- Basic Operations
 			"SetFeatureInfo"
 		end
 
+	compute_generic_names (a_count: INTEGER) is
+		external
+			"IL signature (System.Int32): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"ComputeGenericNames"
+		end
+
 	generate_features (element_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
@@ -148,11 +176,11 @@ feature -- Basic Operations
 			"GenerateFeatures"
 		end
 
-	read_lock_filename: STRING is
+	generate_class_header is
 		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"ReadLockFilename"
+			"GenerateClassHeader"
 		end
 
 	generate_class_footer is
@@ -167,6 +195,13 @@ feature -- Basic Operations
 			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"ValidPath"
+		end
+
+	generic_name_base: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenericNameBase"
 		end
 
 	make is
@@ -197,18 +232,18 @@ feature -- Basic Operations
 			"GenerateParents"
 		end
 
-	has_write_lock (a_folder_name: STRING): BOOLEAN is
+	generate_comments is
 		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"HasWriteLock"
+			"GenerateComments"
 		end
 
-	has_read_lock (a_folder_name: STRING): BOOLEAN is
+	generic_names_table: ARRAY [ANY] is
 		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (): System.Object[] use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"HasReadLock"
+			"GenericNamesTable"
 		end
 
 	generate_arguments is

@@ -534,6 +534,7 @@ feature -- Access
 		g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS];
 		c: EIFFEL_LIST [CREATE_AS];
+		co: EIFFEL_LIST [CONVERT_FEAT_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
 		inv: INVARIANT_AS;
 		s: SUPPLIERS_AS;
@@ -546,7 +547,8 @@ feature -- Access
 			cl_not_void: cl /= Void
 		do
 			create Result
-			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind, g, p, c, f, inv, s, o, cl)
+			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind,
+				g, p, c, co, f, inv, s, o, cl)
 		ensure
 			class_as_not_void: Result /= Void
 			class_name_set: Result.class_name = n
@@ -561,6 +563,7 @@ feature -- Access
 			generics_set: Result.generics = g
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c
+			convertors_set: Result.convertors = co
 			features_set: Result.features = f
 			empty_invariant_part: Result.invariant_part = Void implies inv = Void or else inv.assertion_list = Void
 			invariant_part_set: Result.invariant_part /= Void implies Result.invariant_part = inv
@@ -620,6 +623,21 @@ feature -- Access
 		ensure
 			constant_as_not_void: Result /= Void
 			value_set: Result.value = v
+		end
+
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE]): CONVERT_FEAT_AS is
+			-- New convert feature entry AST node.
+		require
+			fn_not_void: fn /= Void
+			t_not_void: t /= Void
+			t_not_empty: not t.is_empty
+		do
+			create Result.initialize (cr, fn, t)
+		ensure
+			convert_feat_as_not_void: Result /= Void
+			is_creation_procedure_set: Result.is_creation_procedure = cr
+			feature_name_set: Result.feature_name = fn
+			conversion_types_set: Result.conversion_types = t
 		end
 
 	new_create_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_NAME]): CREATE_AS is
@@ -729,6 +747,17 @@ feature -- Access
 
 	new_eiffel_list_case_as (n: INTEGER): EIFFEL_LIST [CASE_AS] is
 			-- New empty list of CASE_AS
+		require
+			n_positive: n >= 0
+		do
+			create Result.make (n)
+		ensure
+			list_not_void: Result /= Void
+			list_empty: Result.is_empty
+		end
+
+	new_eiffel_list_convert (n: INTEGER): EIFFEL_LIST [CONVERT_FEAT_AS] is
+			-- New empty list of CONVERT_FEAT_AS
 		require
 			n_positive: n >= 0
 		do
@@ -1665,18 +1694,20 @@ feature -- Access
 			expressions_set: Result.expressions = exp
 		end
 
-	new_type_dec_as (i: ARRAYED_LIST [INTEGER]; t: EIFFEL_TYPE): TYPE_DEC_AS is
+	new_type_dec_as (i: ARRAYED_LIST [INTEGER]; t: EIFFEL_TYPE; l: TOKEN_LOCATION): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		require
 			i_not_void: i /= Void
 			t_not_void: t /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (i, t)
+			Result.initialize (i, t, l)
 		ensure
 			type_dec_as_not_void: Result /= Void
 			id_list_set: Result.id_list = i
 			type_set: Result.type = t
+			location_set: equal (Result.location, l)
 		end
 
 	new_un_free_as (op: ID_AS; e: EXPR_AS): UN_FREE_AS is

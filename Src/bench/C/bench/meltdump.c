@@ -174,7 +174,7 @@ static  void    prepare_types ()
 		{
 			int old_size = dtype_size;
 
-			dtype_size = ((dtype_size + 256) > dtype ? dtype_size : dtype + 256) ;
+			dtype_size = (dtype > dtype_size ? dtype + 256 : dtype_size) ;
 
 			dtype_names = (char **) realloc ((char *) dtype_names,
 											 dtype_size * sizeof (char *));
@@ -248,7 +248,7 @@ static  void    prepare_types ()
 		{
 			int old_size = ctype_size;
 
-			ctype_size = ((ctype_size + 256) > ctype ? ctype_size : ctype + 256) ;
+			ctype_size = (ctype > ctype_size ? ctype + 256 : ctype_size) ;
 
 			ctype_names = (char **) realloc ((char *) ctype_names,
 											 ctype_size * sizeof (char *));

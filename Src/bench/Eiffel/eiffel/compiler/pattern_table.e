@@ -84,7 +84,7 @@ feature
 					until
 						types.after
 					loop
-						c_pattern := info.instantiation_in (types.item.type).c_pattern
+						c_pattern := info.instantiation_in (types.item).c_pattern
 						create c_pattern_info.make (c_pattern)
 						if not c_patterns.has (c_pattern_info) then
 							c_pattern_info.set_c_pattern_id (c_pattern_id_counter.next)
@@ -123,7 +123,7 @@ feature
 			end
 		end
 
-	pattern_of_id (i: INTEGER; type: CL_TYPE_I): PATTERN is
+	pattern_of_id (i: INTEGER; type: CLASS_TYPE): PATTERN is
 			-- Pattern information of id `i'.
 		require
 			valid_id: info_array.has (i)
@@ -131,15 +131,14 @@ feature
 			Result := info_array.item (i).instantiation_in (type)
 		end
 
-	c_pattern_id (pattern_id: INTEGER; cl_type: CL_TYPE_I): INTEGER is
+	c_pattern_id (pattern_id: INTEGER; cl_type: CLASS_TYPE): INTEGER is
 			-- Pattern id of C pattern `p'
 		require
 			good_type: cl_type /= Void
 		local
 			info: C_PATTERN_INFO
 		do
-			Marker.set_pattern
-				(pattern_of_id (pattern_id, cl_type).c_pattern)
+			Marker.set_pattern (pattern_of_id (pattern_id, cl_type).c_pattern)
 			info := c_patterns.item (Marker)
 			if info /= Void then
 				Result := info.c_pattern_id

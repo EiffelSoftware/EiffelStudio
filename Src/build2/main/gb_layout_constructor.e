@@ -11,7 +11,7 @@ inherit
 	EV_TREE
 		export
 			{NONE} all
-			{ANY} first
+			{ANY} first, parent
 		undefine
 			is_in_default_state
 		redefine

@@ -132,6 +132,8 @@ feature -- Basic operation
 			system_status.disable_project_modified
 			update
 			unlock_update
+		ensure
+			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end
 		
 feature -- Status setting
@@ -154,6 +156,7 @@ feature -- Status setting
 			end
 		ensure then
 			display_view_set: display_view_enabled
+			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end
 		
 	set_build_view is
@@ -174,6 +177,7 @@ feature -- Status setting
 			end
 		ensure then
 			build_view_set: not display_view_enabled
+			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end
 		
 feature {NONE} -- Implementation
@@ -185,13 +189,14 @@ feature {NONE} -- Implementation
 			--| FIXME, in the next release, we should not do this
 			--| a component should be built as a component
 			--| from the start. The current method is most
-			--| certainly a hack of sorts.
+			--| certainly a hack of sorts. We may also need to remove
+			--| the objects from `object_handler.objects' recursively.
 		local
 			display_object: GB_DISPLAY_OBJECT
 			pick_and_dropable: EV_PICK_AND_DROPABLE
 			widget: EV_WIDGET
 		do
-			object_handler.objects.prune_all (an_object)
+			object_handler.objects.remove (an_object.id)
 			display_object ?= an_object.display_object
 	
 			if display_object /= Void then
@@ -340,6 +345,8 @@ feature {NONE} -- Implementation
 			if not keep_menu_bar then
 				remove_menu_bar
 			end
+		ensure
+			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end
 		
 		

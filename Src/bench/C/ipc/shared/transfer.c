@@ -23,7 +23,7 @@
 #include <string.h>
 
 #ifdef EIF_WIN32
-rt_public STREAM *sp;				/* Stream used for communications */
+rt_shared STREAM *sp;				/* Stream used for communications */
 #else
 rt_private STREAM *sp;				/* Stream used for communications */
 #endif

@@ -405,6 +405,7 @@ int n;
 	 * procedure.
 	 */
 	
+	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
@@ -414,6 +415,15 @@ int n;
 	
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
+
+	/* Because the interpreter (from time to time) does not care about the
+	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
+	 * object, we have to resynchronize these two entities before sending
+	 * that item to ewb (which relies on that consistency).
+	 */
+	type = ip->type & SK_HEAD;
+	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
+		ip->type = ip->type | Dtype(ip->it_ref);
 
 	return &dumped;			/* Pointer to static data */
 }
@@ -425,6 +435,7 @@ int n;
 	 * argument list.
 	 */
 	
+	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
@@ -434,6 +445,15 @@ int n;
 	
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
+
+	/* Because the interpreter (from time to time) does not care about the
+	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
+	 * object, we have to resynchronize these two entities before sending
+	 * that item to ewb (which relies on that consistency).
+	 */
+	type = ip->type & SK_HEAD;
+	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
+		ip->type = ip->type | Dtype(ip->it_ref);
 
 	return &dumped;			/* Pointer to static data */
 }
@@ -465,6 +485,39 @@ private struct dump *once()
 			HEADER(obj)->ov_flags & EO_TYPE;
 
 	return &dumped;			/* Pointer to static data */
+}
+
+/*
+ * Dumping result of an already called once function
+ */
+
+public void send_once_result(s, body_id, arg_num)
+int s;				/* The connected socket */
+uint32 body_id;		/* body id of the once function */
+int arg_num;		/* Number of arguments */
+{
+	/* Ask the debugger for the result of already called once function
+	 * and send the result back to ewb.
+	 */
+
+	uint32 type;
+	struct item *ip;					/* Partial item pointer */
+	struct dump dumped;					/* Item to send */
+
+	ip = docall(body_id, arg_num);
+	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
+	dumped.dmp_item = ip;
+
+	/* Because the interpreter (from time to time) does not care about the
+	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
+	 * object, we have to resynchronize these two entities before sending
+	 * that item to ewb (which relies on that consistency).
+	 */
+	type = ip->type & SK_HEAD;
+	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
+		ip->type = ip->type | Dtype(ip->it_ref);
+
+	send_dump(s, &dumped);
 }
 
 

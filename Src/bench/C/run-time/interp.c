@@ -331,6 +331,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	char *once_done = (char *) 0;	/* Address of the once mark */
 	char *rvar;						/* Result address for once */
 	int32 rout_id;					/* Routine id */
+	int32 body_id;					/* Body id of once routine */
 	struct item *result_val;		/* Postcondition result value */
 	RTSN;							/* Save nested flag */
 
@@ -367,6 +368,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	
 		if (*IC++) {				/* If it is a once */
 			once_done = IC++;
+			body_id = (uint32) get_long();	/* Get the body id */
 			rvar = IC;					/* Result address */
 			if (*once_done) {			/* Once already done */
 				npop(argnum + 1);		/* Pop Current and the arguments */
@@ -409,6 +411,8 @@ int where;			/* Are we checking invariant before or after compound? */
 			}
 
 			*once_done = '\01';	/* Mark the once done */
+			onceadd(body_id);	/* Add this routine to the list of already */
+								/* called once routines */
 
 			/* Skip the result storage location */
 			switch (rtype & SK_HEAD) {

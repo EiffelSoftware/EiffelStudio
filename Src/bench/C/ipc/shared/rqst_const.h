@@ -38,6 +38,7 @@
 #define ADOPT			22		/* Adopt object */
 #define ACCESS			23		/* Access object through hector */
 #define WEAN			24		/* Wean adopted object */
+#define ONCE			25		/* Once routines inspection */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */
@@ -52,6 +53,10 @@
 #define IN_RESULT		4		/* Result */
 #define IN_H_ADDR		5		/* Object at given hector address */
 #define IN_BIT_ADDR		6		/* Bit object at given address */
+
+/* Once inspection types */
+#define OUT_CALLED		0		/* Check whether once routine has been called */
+#define OUT_RESULT		1		/* Ask for result of already called once func */
 
 #endif
 

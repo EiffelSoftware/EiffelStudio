@@ -58,5 +58,6 @@ struct dump {
 
 /* Visible routine */
 extern void send_stack();		/* Send a stack dump to ewb */
+extern void send_once_result();	/* Send result of once function to ewb */
 
 #endif

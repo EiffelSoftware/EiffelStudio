@@ -70,6 +70,24 @@ struct stdchunk {
 };
 
 /*
+ * List of body_ids (uint32)
+ */
+
+struct id_list {
+	struct idlchunk *idl_hd;	/* Head of chunk list */
+	struct idlchunk *idl_tl;	/* Tail of chunk list */
+	uint32 *idl_last;			/* Last (pointer to next free location) */
+	uint32 *idl_end;			/* First element beyond current chunk */
+};
+
+struct idlchunk {
+	struct idlchunk *idl_next;	/* Next chunk in list */
+	struct idlchunk *idl_prev;	/* Previous chunk in list */
+	uint32 *idl_arena;			/* Arena where objects are stored */
+	uint32 *idl_end;			/* Pointer to first element beyond the chunk */
+};
+
+/*
  * Program status (saved when breakpoint reached, restored upon continuation).
  */
 
@@ -117,11 +135,18 @@ extern void dsetbreak();		/* Set/remove breakpoint in feature */
 extern void dstatus();			/* Update execution status (RESUME request) */
 
 /* Debugging stack handling */
-extern void initdb();			/* Create debugger stack */
+extern void initdb();			/* Create debugger stack and once list */
 extern struct dcall *dpush();	/* Push value on stack */
 extern struct dcall *dpop();	/* Pop value off stack */
 extern struct dcall *dtop();	/* Current top value */
 extern void dmove();			/* Move active routine cursor */
+
+/* Once list handling */
+extern uint32 *onceadd();		/* Add once body_id to list */	
+extern uint32 *onceitem();		/* Item with body_id in list */
+
+/* Once result evaluation */
+extern struct item *docall();	/* Evaluate result of already called once func*/
 
 /* Downloading byte code from compiler */
 extern int dmake_room();		/* Pre-extend melting table */

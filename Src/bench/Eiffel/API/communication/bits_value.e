@@ -14,6 +14,7 @@ feature
 
 	append_value (cw: CLICK_WINDOW) is 
 		do 
+			cw.put_string ("BIT");
 			send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_integer (addr));
 			cw.put_string (" = ");
 			cw.put_string (clone (c_tread));

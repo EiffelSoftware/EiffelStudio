@@ -8,7 +8,8 @@
 
 
 	Eiffle/C interface routines for dump (debugger)
- 	The dual Eiffel class is CALL_INFO (cluster debug)
+ 	The dual Eiffel class is RECV_VALUE (cluster ipc)
+	and CALL_INFO (cluster debug)
  */
 
 #include "macros.h"
@@ -99,7 +100,7 @@ public c_recv_rout_info (target)
 public c_recv_value (target)
 	EIF_OBJ	target;
 /*
- *	wait for a request. If it is a dumped item, send it to the CALL_INFO instance
+ *	wait for a request. If it is a dumped item, send it to the RECV_VALUE instance
  *	target. Else, report an error to target. If the request is not a DUMPED, treat
  *	it as a normal asynchronous request (and report the error too)
  */
@@ -161,15 +162,13 @@ public c_recv_value (target)
 }
 
 
-public c_pass_dump_routines (d_rout, d_int, d_bool, d_char, d_real,
+public c_pass_recv_routines (d_int, d_bool, d_char, d_real,
 			d_double, d_ref, d_point, d_bits, d_error)
-EIF_PROC d_rout, d_int, d_bool, d_char, d_real,
-	d_double, d_ref, d_point, d_bits, d_error;
+EIF_PROC d_int, d_bool, d_char, d_real, d_double, d_ref, d_point, d_bits, d_error;
 /*
- *	Register the routines to communicate with a CALL_INFO
+ *	Register the routines to communicate with a RECV_VALUE
  */
 {
-	set_rout = d_rout;
 	set_integer = d_int;
 	set_bool = d_bool;
 	set_char = d_char;
@@ -181,3 +180,11 @@ EIF_PROC d_rout, d_int, d_bool, d_char, d_real,
 	set_error = d_error;
 }
 		
+public c_pass_set_rout (d_rout)
+EIF_PROC d_rout;
+/*
+ *	Register the routine to communicate with a CALL_INFO
+ */
+{
+	set_rout = d_rout;
+}

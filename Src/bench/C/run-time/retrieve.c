@@ -837,7 +837,9 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	}
 
 	ht_free(rt_table);					/* Free hash table descriptor */
+#ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+#endif
 	switch (rt_type) {
 		case GENERAL_STORE_4_0: 
 			free_sorted_attributes();
@@ -925,7 +927,9 @@ rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 	retrieved = rt_make();
 
 	ht_free(rt_table);					/* Free hash table descriptor */
+#ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+#endif
 	rt_reset_retrieve();
 	return retrieved;
 }
@@ -1171,7 +1175,9 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	volatile size_t n = objectCount;
+#ifdef ISE_GC
 	char g_status = g_data.status;
+#endif
 	jmp_buf exenv;
 	RTXD;
 
@@ -1236,9 +1242,11 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 			}
 		}
 		
+#ifdef ISE_GC
 			/* Stop in the garbage collector because we have now an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
+#endif /* ISE_GC */
 
 			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
@@ -1256,8 +1264,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 			 */
 		rt_update2(oldadd, newadd, newadd);
 
+#ifdef ISE_GC
 			/* Restore garbage collector status */
 		g_data.status = g_status;
+#endif /* ISE_GC */
 	}
 	expop(&eif_stack);
 	return newadd;
@@ -1287,7 +1297,9 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	uint32 crflags, fflags, flags;
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
+#ifdef ISE_GC
 	char g_status = g_data.status;
+#endif
 	jmp_buf exenv;
 	RTXD;
 
@@ -1409,9 +1421,11 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			}
 		}
 
+#ifdef ISE_GC
 			/* Stop in the garbage collector because we have know an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
+#endif /* ISE_GC */
 
 			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
@@ -1429,8 +1443,10 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			 */
 		rt_update2(oldadd, newadd, newadd);
 
+#ifdef ISE_GC
 			/* Restore garbage collector status */
 		g_data.status = g_status;
+#endif /* ISE_GC */
 	}
 	expop(&eif_stack);
 
@@ -1465,7 +1481,9 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	uint32 crflags, fflags, flags;
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
+#ifdef ISE_GC
 	char g_status = g_data.status;
+#endif
 	jmp_buf exenv;
 	RTXD;
 
@@ -1587,9 +1605,11 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 			}
 		}
 		
+#ifdef ISE_GC
 			/* Stop in the garbage collector because we have know an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
+#endif /* ISE_GC */
 
 			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
@@ -1607,8 +1627,10 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 			 */
 		rt_update2(oldadd, newadd, newadd);
 
+#ifdef ISE_GC
 			/* Restore garbage collector status */
 		g_data.status = g_status;
+#endif /* ISE_GC */
 	}
 	expop(&eif_stack);
 	return newadd;
@@ -1714,6 +1736,9 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	EIF_REFERENCE volatile newadd = NULL;
 	volatile long int i;
 	jmp_buf exenv;
+#ifdef ISE_GC
+	char g_status = g_data.status;
+#endif
 	RTXD;
 
 	REQUIRE ("Positive count", objectCount > 0);
@@ -1735,7 +1760,6 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	printf ("-- Retrieving %ld objects:\n", objectCount);
 #endif
 	for (i=1; i<=objectCount; i++) {
-		char g_status = g_data.status;
 		uint32 crflags, fflags, flags;
 		uint32 count;
 		int16 old_type;
@@ -1767,9 +1791,11 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			newadd = emalloc (dftype);
 		}
 
+#ifdef ISE_GC
 			/* Stop in the garbage collector because we have now an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
+#endif
 
 #ifdef RECOVERABLE_DEBUG
 		if (newadd == NULL)
@@ -1820,8 +1846,10 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			newadd = eif_access (new_hector);
 		}
 
+#ifdef ISE_GC
 			/* Restore garbage collector status */
 		g_data.status = g_status;
+#endif
 	}
 	expop (&eif_stack);
 	return newadd;
@@ -1866,7 +1894,9 @@ rt_private void rt_clean(void)
 		xfree (r_buffer);
 		r_buffer = (char *) 0;
 	}
+#ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);				/* Pop hector records */
+#endif
 	if (rt_kind == INDEPENDENT_STORE || rt_kind == RECOVERABLE_STORE) {
 		independent_retrieve_reset ();
 	}

@@ -40,6 +40,9 @@ default
 
 cluster
 	all root_cluster:		"."
+		exclude
+			"templates";
+		end
 
 
 	all base:		"$ISE_EIFFEL/library/base"
@@ -51,7 +54,7 @@ cluster
 
 	all vision2:		"$ISE_EIFFEL/library/vision2"
 		exclude
-			"mswin"; 
+			"mswin"; "ev_pixmap.e"; "ev_pixmapable.e";
 		end
 
 external

@@ -75,6 +75,19 @@ feature -- Status report
 			Result := tree.is_expanded (Current)
 		end
 
+	is_parent: BOOLEAN is
+			-- is the item the parent of other items?
+		local
+			tree: WEL_TREE_VIEW
+		do
+			if parent_imp /= Void then
+				tree ?= wel_window
+				Result := tree.is_parent (Current)
+			else
+				Result := False
+			end
+		end
+
 feature -- Status setting
 
 	destroy is
@@ -87,13 +100,33 @@ feature -- Status setting
 --			destroy_item
 		end
 
-	set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		local
+			tree: EV_TREE_IMP
 		do
-			text := txt
-			wel_set_text (txt)
+			tree ?= parent_widget.implementation
+			if flag then
+				tree.select_item (Current)
+			else
+				tree.deselect_item (Current)
+			end
 		end
 
+	set_expand (flag: BOOLEAN) is
+			-- Expand the item if `flag', collapse it otherwise.
+			-- Do nothing if the item is not a sub-tree.
+		local
+			tree: EV_TREE_IMP
+		do
+			tree ?= parent_widget.implementation
+			if flag then
+				tree.expand_item (Current)
+			else
+				tree.collapse_item (Current)
+			end
+		end
+ 
 feature -- Element change
 
 	set_parent (par: EV_TREE_ITEM_HOLDER) is
@@ -101,6 +134,8 @@ feature -- Element change
 			-- `par' can be Void then the parent is the screen.
 		do
 			if parent_imp /= Void then
+				set_selected (False)
+				set_mask (Tvif_handle + Tvif_text)
 				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
@@ -110,19 +145,25 @@ feature -- Element change
 			end
 		end
 
+	set_text (txt: STRING) is
+			-- Make `txt' the new label of the item.
+		do
+			text := txt
+			wel_set_text (txt)
+		end
+
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item_imp' to the list
 		local
-			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
+			struct: WEL_TREE_VIEW_INSERT_STRUCT
 			tree: WEL_TREE_VIEW
 			ev_tree: EV_TREE_IMP
 		do
-			!! insert_struct.make
-			insert_struct.set_parent (h_item)
-			insert_struct.set_tree_view_item (item_imp)
+			!! struct.make
+			struct.set_parent (h_item)
+			struct.set_tree_view_item (item_imp)
 			tree ?= wel_window
-			tree.insert_item (insert_struct)
-			item_imp.set_h_item (tree.last_item)
+			tree.insert_item (struct)
 			ev_tree ?= wel_window
 			ev_tree.ev_children.force (item_imp, tree.last_item)
 			ev_tree.invalidate

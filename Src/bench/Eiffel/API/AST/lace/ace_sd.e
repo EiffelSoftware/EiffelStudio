@@ -775,7 +775,6 @@ feature {NONE} -- Incrementality
 			System.set_ise_gc_runtime (True)
 			System.set_il_verifiable (True)
 			System.set_system_namespace (Void)
-			System.set_manifest_integers_as_integer_32 (False)
 			System.set_msil_key_file_name (Void)
 		end
 

@@ -25,6 +25,7 @@ feature
 			result_type := std.result_type
 			rout_id := std.rout_id
 			compound := std.compound
+			once_manifest_string_count := std.once_manifest_string_count
 		end
 
 	has_inlined_code: BOOLEAN is

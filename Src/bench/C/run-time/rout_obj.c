@@ -170,8 +170,8 @@ rt_public void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNIO
 	void* body_addr;
 	void* patt_addr;
 	struct item* it;
-	int count;
-	int i = 0;
+	size_t count;
+	size_t i = 0;
 
 	count = strlen ((char*)types);
 
@@ -255,8 +255,8 @@ rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION
 	void* patt_addr;
 	void* resp;
 	struct item* it;
-	int count;
-	int i = 0;
+	size_t count;
+	size_t i = 0;
 
 	count = strlen ((char*)types);
 	resp = *(EIF_REFERENCE *) res;

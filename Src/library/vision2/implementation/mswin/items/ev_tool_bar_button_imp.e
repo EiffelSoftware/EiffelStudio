@@ -24,6 +24,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_SOURCE_IMP
+		redefine
+			interface
+		end
 
 	EV_TOOLTIPABLE_IMP
 		redefine
@@ -38,6 +43,20 @@ inherit
 
 creation
 	make
+	
+feature {NONE} --
+
+	pointer_style: EV_CURSOR is
+			--
+		do
+			
+		end
+		
+	wel_has_capture: BOOLEAN is
+			--
+		do
+			
+		end
 	
 feature {NONE} -- Initialization
 

@@ -141,6 +141,17 @@ feature -- Output on per class
 			processed := processed + 1;
 		end;
 
+	put_recursive_degree_6 (a_cluster: CLUSTER_I; a_path: STRING) is
+			-- Put message to indicate that `a_cluster' is being compiled
+			-- during degree six and that it is a recursive cluster so we have
+			-- to display the path too.
+		require
+			cluster_not_void: a_cluster /= Void
+			in_degree_six: current_degree = 6
+		do
+			-- Do nothing, but do something in graphical mode.
+		end
+
 	skip_entity is
 			-- Increment the processed by 1 (for both classes and clusters).
 		do

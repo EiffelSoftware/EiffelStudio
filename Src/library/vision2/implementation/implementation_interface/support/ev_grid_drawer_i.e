@@ -216,8 +216,14 @@ feature -- Basic operations
 		require
 			an_x_positive: an_x >= 0
 			a_y_positive: a_y >= 0
+		local
+			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 		do
-			Result := grid.item (items_spanning_horizontal_span (an_x, 0).first, items_spanning_vertical_span (a_y, 0).first)
+			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
+			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
+				Result := grid.item (horizontal_span_items.first, vertical_span_items.first)
+			end
 		end
 
 	partial_redraw (an_x, a_y, a_width, a_height: INTEGER) is

@@ -478,15 +478,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- Resize the container according to the 
 			-- resize of the child
 		do
-			if has_menu then
-				set_minimum_height (value + system_metrics.title_bar_height
-					+ system_metrics.window_border_height + menu_bar_height
-					+ 2 * system_metrics.window_frame_height)
-			else
-				set_minimum_height (value + system_metrics.title_bar_height
-					+ system_metrics.window_border_height 
-					+ 2 * system_metrics.window_frame_height)
-			end
+			update_minimum_size
 		end
 
 feature {NONE} -- Implementation

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Viewport Sample</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="Vision2 Samples, Viewport">
+	</HEAD>
+
+	<BODY>
+		<H1>Viewport sample</H1>
+		<CENTER><IMG SRC="viewport.png" ALT="viewport" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch EiffelStudio.
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\vision2\viewport\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>
+		After launching the application, you will see a window displayed with a similar appearance to the one above. Modifying the values of the spin buttons
+		will alter the position of the pixmapped button, relative to the viewport in which it is contained.
+		</P>
+		<H2>Under the Hood</H2>
+		<P>
+		The features <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport.html#f_set_x_offset">set_x_offset</A> and 
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport.html#f_set_y_offset">set_y_offset</A> are used to modify the position of the <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport_chart.html">EV_VIEWPORT</A> relative to the
+		 <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</A> contained within.
+		</P>
+	
+			
+		<P>This sample contains the following class:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/samples/viewport/root_cluster/viewport_chart.html">VIEWPORT</A>
+				
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport_chart.html">EV_VIEWPORT</A><br><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_spin_button_chart.html">EV_SPIN_BUTTON</A><BR><A HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</A><BR></P>
+	</BODY>
+</HTML>

@@ -548,6 +548,7 @@ feature -- Obsolete
 			
 	destroy is
 		do
+			is_destroyed := True
 		end
 
 invariant

@@ -284,7 +284,11 @@ feature -- Status report
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
 			a_background_color: EV_COLOR
+			screen_dc: WEL_SCREEN_DC
 		do
+				-- Create a screen DC for access to metrics
+			create screen_dc
+			screen_dc.get
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			effects := wel_character_format.effects
@@ -313,12 +317,14 @@ feature -- Status report
 			if flag_set (effects, Cfm_underline) then
 				character_effects.enable_underlined
 			end
+			character_effects.set_vertical_offset (point_to_pixel (screen_dc, wel_character_format.offset, 20))
 			
 			create Result.make_with_values (a_font,
 				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue),
 				a_background_color,
 				character_effects)
 			
+			screen_dc.release
 		end
 		
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
@@ -399,9 +405,8 @@ feature -- Status report
 			end
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
---			wel_character_format := current_selection_character_format
 			mask := wel_character_format.mask
-			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic)
+			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset)
 			if not range_already_selected then
 				safe_restore_caret
 			end
@@ -465,7 +470,7 @@ feature -- Status report
 			mask := wel_character_format.mask
 			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic),
 				flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_backcolor), flag_set (mask, cfm_strikeout),
-				flag_set (mask, cfm_underline))
+				flag_set (mask, cfm_underline), flag_set (mask, cfm_offset))
 			if not range_already_selected then
 				safe_restore_caret
 				enable_redraw
@@ -503,7 +508,12 @@ feature -- Status report
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			
 			mask := wel_paragraph_format.mask
-			create Result.make_with_values (flag_set (mask, pfm_alignment), flag_set (mask, pfm_startindent), flag_set (mask, pfm_rightindent), flag_set (mask, pfm_spacebefore), flag_set (mask, pfm_spaceafter))
+			create Result.make_with_values (
+					flag_set (mask, pfm_alignment),
+					flag_set (mask, pfm_startindent),
+					flag_set (mask, pfm_rightindent),
+					flag_set (mask, pfm_spacebefore),
+					flag_set (mask, pfm_spaceafter))
 
 			if not already_selected then
 				safe_restore_caret
@@ -646,7 +656,7 @@ feature -- Status setting
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		do
-			format_paragraph_internal (start_line, end_line, format, pfm_alignment + pfm_startindent + pfm_rightindent + pfm_spacebefore + pfm_spaceafter)
+			format_paragraph_internal (start_line, end_line, format, pfm_alignment + pfm_startindent + pfm_rightindent + pfm_spacebefore + pfm_spaceafter + pfm_linespacing)
 		end
 		
 	format_paragraph_internal (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
@@ -672,7 +682,7 @@ feature -- Status setting
 			end
 			
 				-- Now handle paragraph margins.
-				-- Note that there are 20 Twips per point, hence the multiplcation by 20.
+				-- Note that there are 20 Twips per point, hence the multiplication by 20.
 			paragraph.set_start_indent (pixel_to_point (screen_dc, format.left_margin) * 20)
 			paragraph.set_right_indent (pixel_to_point (screen_dc, format.right_margin) * 20)
 			paragraph.set_space_after (pixel_to_point (screen_dc, format.bottom_spacing) * 20)
@@ -719,6 +729,9 @@ feature -- Status setting
 			end
 			if applicable_attributes.effects_underlined then
 				mask := mask | cfm_underline
+			end
+			if applicable_attributes.effects_vertical_offset then
+				mask := mask | cfm_offset
 			end
 			if applicable_attributes.font_family then
 				mask := mask | cfm_face

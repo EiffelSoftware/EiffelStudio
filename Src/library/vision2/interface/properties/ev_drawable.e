@@ -266,6 +266,7 @@ feature -- Drawing operations
 			-- (`x2', `y2').
 		require
 			not_destroyed: not is_destroyed
+			points_not_equal: x1 /= x2 or y1 /= y2
 		do
 			implementation.draw_straight_line (x1, y1, x2, y2)
 		end

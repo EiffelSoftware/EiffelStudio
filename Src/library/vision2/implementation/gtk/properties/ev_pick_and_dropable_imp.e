@@ -25,6 +25,63 @@ inherit
 			create_drop_actions
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	connect_button_press_switch is
+			-- Connect `button_press_switch' to its event sources.
+		do
+			if not button_press_switch_is_connected then
+				real_signal_connect (event_widget, "button-press-event", agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate)
+				button_press_switch_is_connected := True
+			end
+		end
+
+	button_press_switch_is_connected: BOOLEAN
+			-- Is `button_press_switch' connected to its event source.
+
+	button_press_switch (
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	enable_capture is
+			-- Grab all the mouse and keyboard events.
+		local
+			i: INTEGER
+		do
+			if not has_capture then
+				App_implementation.disable_debugger
+				set_focus
+				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
+				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), 1, feature {EV_GTK_EXTERNALS}.gdk_button_release_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum, null, null, 0)
+				i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
+			end
+		end
+
+	disable_capture is
+			-- Ungrab all the mouse and keyboard events.
+			--| Used by pick and drop.
+		do
+			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
+			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
+				0 -- guint32 time
+			)
+			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+			App_implementation.enable_debugger				
+		end
+
+	has_capture: BOOLEAN is
+			-- Does Current have the keyboard and mouse event capture?
+		do
+			Result := has_struct_flag (event_widget, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
+		end
+
 feature -- Implementation
 
 --| FIXME IEK Remove this when cursor setting is fixed on Windows.

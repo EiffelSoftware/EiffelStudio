@@ -1,6 +1,6 @@
 #include <X11/Intrinsic.h>
 #include <Xm/Xm.h>
-#include "macros.h"
+#include <macros.h>
 
 
 EIF_POINTER c_efb_get_pixmap (w)

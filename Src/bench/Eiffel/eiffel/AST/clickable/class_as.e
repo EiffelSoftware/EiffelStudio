@@ -300,27 +300,27 @@ feature -- Access
 			end
 		end
 
-	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Custom attribute of current class if any.
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributse of current class if any.
 		do
 			if top_indexes /= Void then
-				Result := top_indexes.custom_attribute
+				Result := top_indexes.custom_attributes
 			end
 		end
 
-	class_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Custom attribute of current class if any.
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
-				Result := top_indexes.class_custom_attribute
+				Result := top_indexes.class_custom_attributes
 			end
 		end
 
-	interface_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Custom attribute of current class if any.
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
-				Result := top_indexes.interface_custom_attribute
+				Result := top_indexes.interface_custom_attributes
 			end
 		end
 

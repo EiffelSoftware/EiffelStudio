@@ -70,22 +70,22 @@ feature -- Access
 			Result := string_value (External_header)
 		end
 
-	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Expression representing a custom attribute
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attribute (Attribute_header)
+			Result := internal_custom_attributes (Attribute_header)
 		end
 
-	class_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Expression representing a custom attribute
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attribute (Class_attribute_header)
+			Result := internal_custom_attributes (Class_attribute_header)
 		end
 
-	interface_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Expression representing a custom attribute
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attribute (Interface_attribute_header)
+			Result := internal_custom_attributes (Interface_attribute_header)
 		end
 
 	has_global_once: BOOLEAN is
@@ -191,8 +191,8 @@ feature -- Constants
 
 feature {NONE} -- Implementation
 
-	internal_custom_attribute (tag: STRING): EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Expression representing a custom attribute
+	internal_custom_attributes (tag: STRING): EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes.
 		local
 			i: INDEX_AS
 			ca: CUSTOM_ATTRIBUTE_AS
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 					loop
 						ca ?= list.item
 						if ca /= Void then
-							Result.extend (ca.creation_expr)
+							Result.extend (ca)
 						end
 						list.forth
 					end

@@ -172,6 +172,7 @@ feature {NONE} -- Implementation
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
+			tool_bar: EV_TOOL_BAR
 		do
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
@@ -190,8 +191,10 @@ feature {NONE} -- Implementation
 			constants_combo_box.hide
 			horizontal_box.extend (constants_combo_box)
 			create_constants_button
-			horizontal_box.extend (constants_button)
-			horizontal_box.disable_item_expand (constants_button)
+			create tool_bar
+			tool_bar.extend (constants_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			populate_constants
 			text_field.return_actions.extend (agent process)
 			text_field.focus_in_actions.extend (agent set_initial)

@@ -46,6 +46,10 @@ feature {NONE} -- Initialization
 			parent_set: parent = a_parent
 			exists: exists
 			id_set: id = an_id
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 feature -- Access
@@ -167,6 +171,21 @@ feature -- Element change
 			cwin_send_message (item, Cb_deletestring, index, 0)
 		ensure
 			new_count: count = old count - 1
+		end
+
+	add_files (attribut: INTEGER; files: STRING) is
+			-- Add `files' to the combo box. `files' may contain
+			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
+			-- `attribut' values.
+		require
+			exists: exists
+			files_not_void: files /= Void
+		local
+			a: ANY
+		do
+			a := files.to_c
+			cwin_send_message (item, Cb_dir, attribut,
+				cwel_pointer_to_integer ($a))
 		end
 
 	reset_content is

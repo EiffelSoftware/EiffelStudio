@@ -1111,7 +1111,7 @@ feature -- Setting
 					reg := associated.item (rname)
 
 					check
-						reference_type: reg.c_type.is_pointer
+						reference_type: not reg.is_current implies reg.c_type.is_pointer
 					end
 
 					argument_b ?= reg

@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 		do
 			old_make (a_name, a_parent, True);
-			set_spacing (0);
-			create_buttons;
-			set_horizontal (True);
+			set_spacing (2);
+			create_labels;
+			set_horizontal;
 			set_num_columns (1);
-			set_margin_height (0);
-			set_margin_width (0);
+			set_margin_height (1);
+			set_margin_width (1);
 			set_entry_border (1);
 		end;
 
@@ -46,11 +46,11 @@ feature -- Status setting
 	reset_percentage is
 			-- Reset `last_percentage' to 0.
 		local
-			array: ARRAY [MEL_PUSH_BUTTON];
+			array: ARRAY [MEL_LABEL];
 			c, i: INTEGER;
 			last_per, shown_per: INTEGER;
 		do
-			array := buttons;
+			array := labels;
 			from
 				c := array.count;
 				i := 1
@@ -71,12 +71,12 @@ feature -- Status setting
 								a_percentage <= 100;
 			previous_percentage_higher: a_percentage >= last_percentage
 		local
-			array: ARRAY [MEL_PUSH_BUTTON];
+			array: ARRAY [MEL_LABEL];
 			i: INTEGER;
 			cur_unit: INTEGER
 		do
 			if a_percentage /= last_percentage then
-				array := buttons;
+				array := labels;
 				cur_unit := a_percentage // Step_unit;
 				from
 					i := last_percentage_units + 1
@@ -97,7 +97,7 @@ feature -- Status setting
             valid_percentage: a_percentage >= 0 and then
                                 a_percentage <= 100;
         local
-			array: ARRAY [MEL_PUSH_BUTTON];
+			array: ARRAY [MEL_LABEL];
 			i: INTEGER;
 			cur_units: INTEGER
 		do
@@ -105,7 +105,7 @@ feature -- Status setting
 				increase_percentage (a_percentage)
 			else
 					-- Percentage decreased
-				array := buttons;
+				array := labels;
 				cur_units := a_percentage // Step_unit + 1;
 				from
 					i := last_percentage_units;
@@ -131,14 +131,14 @@ feature {NONE} -- Implementation
 	Step_unit: INTEGER is 5
 			-- Number of percent unit per step in bar
 
-	buttons: ARRAY [MEL_PUSH_BUTTON]
-			-- Array of push buttons in bar
+	labels: ARRAY [MEL_LABEL]
+			-- Array of labels in bar
 
-	create_buttons is
-			-- Create the buttons for in the progress bar.
+	create_labels is
+			-- Create the labels for in the progress bar.
 		local
-			array: ARRAY [MEL_PUSH_BUTTON];
-			mel_button: MEL_PUSH_BUTTON;
+			array: ARRAY [MEL_LABEL];
+			mel_label: MEL_LABEL;
 			color_x: COLOR_X;
 			t, i: INTEGER
 		do
@@ -151,14 +151,16 @@ feature {NONE} -- Implementation
 			until
 				i > t
 			loop
-				!! mel_button.make ("", Current, True);
-				mel_button.set_background_color (color_x);
-				mel_button.set_size (15, 25);
-				mel_button.set_recomputing_size_allowed (False);
-				array.put (mel_button, i);
+				!! mel_label.make ("", Current, True);
+				mel_label.set_margin_height (0);
+				mel_label.set_margin_width (0);
+				mel_label.set_background_color (color_x);
+				mel_label.set_size (15, 25);
+				mel_label.forbid_recompute_size;
+				array.put (mel_label, i);
 				i := i + 1
 			end
-			buttons := array
+			labels := array
 		end;
 
 end -- class PROGRESS_BAR

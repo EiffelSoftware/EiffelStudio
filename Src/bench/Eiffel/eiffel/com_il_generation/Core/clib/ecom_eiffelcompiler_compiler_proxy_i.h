@@ -2,17 +2,17 @@
  Help file: 
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFELCOMPILER_ICORE_H__
-#define __ECOM_EIFFELCOMPILER_ICORE_H__
+#ifndef __ECOM_EIFFELCOMPILER_COMPILER_PROXY_I_H__
+#define __ECOM_EIFFELCOMPILER_COMPILER_PROXY_I_H__
 #ifdef __cplusplus
 extern "C" {
 
 
-#ifndef __ecom_EiffelCompiler_ICore_FWD_DEFINED__
-#define __ecom_EiffelCompiler_ICore_FWD_DEFINED__
+#ifndef __ecom_EiffelCompiler_COMPILER_PROXY_I_FWD_DEFINED__
+#define __ecom_EiffelCompiler_COMPILER_PROXY_I_FWD_DEFINED__
 namespace ecom_EiffelCompiler
 {
-class ICore;
+class COMPILER_PROXY_I;
 }
 #endif
 
@@ -29,15 +29,15 @@ extern "C" {
 
 #ifdef __cplusplus
 extern "C" {
-#ifndef __ecom_EiffelCompiler_ICore_INTERFACE_DEFINED__
-#define __ecom_EiffelCompiler_ICore_INTERFACE_DEFINED__
+#ifndef __ecom_EiffelCompiler_COMPILER_PROXY_I_INTERFACE_DEFINED__
+#define __ecom_EiffelCompiler_COMPILER_PROXY_I_INTERFACE_DEFINED__
 namespace ecom_EiffelCompiler
 {
-class ICore : public IUnknown
+class COMPILER_PROXY_I : public IUnknown
 {
 public:
-	ICore () {};
-	~ICore () {};
+	COMPILER_PROXY_I () {};
+	~COMPILER_PROXY_I () {};
 
 	/*-----------------------------------------------------------
 	No description available.

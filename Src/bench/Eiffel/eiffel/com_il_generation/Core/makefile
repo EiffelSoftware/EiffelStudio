@@ -1,4 +1,4 @@
-CORE_SRC = eiffel_reflection_emit.cs EiffelClass.cs EiffelMethod.cs core.cs core_assembly_info.cs custom_attribute_factory.cs icore.cs feature_info.cs
+CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs
 RUNTIME_SRC = runtime.cs runtime_assembly_info.cs
 CSFLAGS = -nologo -w:4 -optimize+
 #CSFLAGS = -nologo -w:4 -debug -d:DEBUG
@@ -23,15 +23,15 @@ EiffelCompiler.dll: $(CORE_SRC) makefile ise_runtime.dll
 	tlbexp -nologo $@
 	regasm -nologo $@
 
-generate_eiffel: core.idl
+generate_eiffel: compiler.idl
 	$(RMDIR) ..\junk
 	$(MKDIR) ..\junk
-	$(CP) core.idl ..\junk
-	$(ISE_EIFFEL)\wizards\com\com_wizard_cmd.exe -new_com_project -com_file core.idl -in_process -destination $(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\junk $(COM_WIZARD_FLAGS)
+	$(CP) compiler.idl ..\junk
+	$(ISE_EIFFEL)\wizards\com\com_wizard_cmd.exe -new_com_project -com_file compiler.idl -in_process -destination $(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\junk $(COM_WIZARD_FLAGS)
 	$(CP) ..\junk\Client\Clib\*.cpp clib
 	$(CP) ..\junk\Client\Include\*.h clib
 	$(CP) ..\junk\Client\Component\*.e ..
-	$(CP) ..\junk\Common\Include\ecom_eiffelcompiler_icore.h clib
+	$(CP) ..\junk\Common\Include\ecom_eiffelcompiler_compiler_proxy_i.h clib
 	$(CP) ..\junk\Common\Interfaces\*.e ..
 	cd clib
 	call make_msc.bat

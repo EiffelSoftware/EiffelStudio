@@ -2,13 +2,13 @@
 Writer for generated Eiffel to C mappers class
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_GEC_CORE_C_H__
-#define __ECOM_GEC_CORE_C_H__
+#ifndef __ECOM_GEC_COMPILER_C_H__
+#define __ECOM_GEC_COMPILER_C_H__
 #ifdef __cplusplus
 extern "C" {
 
 
-class ecom_gec_core_c;
+class ecom_gec_compiler_c;
 
 }
 #endif
@@ -25,11 +25,11 @@ extern "C" {
 
 #ifdef __cplusplus
 extern "C" {
-class ecom_gec_core_c
+class ecom_gec_compiler_c
 {
 public:
-	ecom_gec_core_c ();
-	virtual ~ecom_gec_core_c () {};
+	ecom_gec_compiler_c ();
+	virtual ~ecom_gec_compiler_c () {};
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -51,7 +51,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_core_c.h"
+#include "ecom_grt_globals_compiler_c.h"
 
 
 #endif

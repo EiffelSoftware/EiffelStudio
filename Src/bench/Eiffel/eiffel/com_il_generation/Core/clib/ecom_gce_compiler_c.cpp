@@ -2,20 +2,20 @@
 Writer for generated C to Eiffel mappers class
 -----------------------------------------------------------*/
 
-#include "ecom_gce_core_c.h"
-ecom_gce_core_c grt_ce_core_c;
+#include "ecom_gce_compiler_c.h"
+ecom_gce_compiler_c grt_ce_compiler_c;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ecom_gce_core_c::ecom_gce_core_c(  )
+ecom_gce_compiler_c::ecom_gce_compiler_c(  )
 {
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_core_c::ccom_ce_pointed_cell_3( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_compiler_c::ccom_ce_pointed_cell_3( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -47,7 +47,7 @@ EIF_REFERENCE ecom_gce_core_c::ccom_ce_pointed_cell_3( BSTR * a_pointer, EIF_OBJ
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_core_c::ccom_free_memory_pointed_3( BSTR * a_pointer )
+void ecom_gce_compiler_c::ccom_free_memory_pointed_3( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -62,7 +62,7 @@ void ecom_gce_core_c::ccom_free_memory_pointed_3( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_core_c::ccom_free_memory_pointed_11( LONG * a_pointer )
+void ecom_gce_compiler_c::ccom_free_memory_pointed_11( LONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of LONG *.

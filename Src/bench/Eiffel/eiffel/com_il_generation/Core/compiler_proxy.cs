@@ -1,6 +1,6 @@
 /*
 indexing
-	description: "Wrapper around `EiffelReflectionEmit'. Initially made because of 
+	description: "Wrapper around `COMPILER'. Initially made because of 
 		a memory leak due to the generated assembly being loaded in memory and not
 		freed by the .NET runtime. The solution was to create a new AppDomain in
 		which we were doing the generation and at the end we were destroying this
@@ -21,15 +21,17 @@ using System.Reflection.Emit;
 using System.Runtime.Remoting;
 using System.Runtime.InteropServices;
 
+namespace ISE.Compiler {
+
 [ClassInterfaceAttribute (ClassInterfaceType.None)]
-public class Core : ICore {
+public class COMPILER_PROXY : COMPILER_PROXY_I {
 
 	public void StartAssemblyGeneration (string Name, string FName,  string Location) {
 		AssemblyName name = new AssemblyName();
 
-#if ISE_APPDOMAIN
-		Assembly assembly;
-#endif
+		#if ISE_APPDOMAIN
+			Assembly assembly;
+		#endif
 
 			// Define assembly we want to load..
 		name.Name = "EiffelCompiler";
@@ -37,25 +39,25 @@ public class Core : ICore {
 		name.SetPublicKeyToken (new byte[8] {0x5b, 0x82, 0xf0, 0xd7, 0x09, 0x55, 0x93, 0x9a});
 		name.CultureInfo = new System.Globalization.CultureInfo ("");
 
-#if ISE_APPDOMAIN
-			// Create AppDomain
-		CoreApp = AppDomain.CreateDomain ("EiffelCompiler_domain");
+		#if ISE_APPDOMAIN
+				// Create AppDomain
+			CoreApp = AppDomain.CreateDomain ("EiffelCompiler_domain");
 
-			// Load our assembly into `CoreApp'.
-		assembly = CoreApp.Load (name);
+				// Load our assembly into `CoreApp'.
+			assembly = CoreApp.Load (name);
 
-			// Create an instance of `EiffelReflectionEmit' in `CoreWrap' and
-			// get a reference to it.
-		core = (EiffelReflectionEmit) CoreApp.CreateInstanceAndUnwrap
-			(assembly.FullName, "EiffelReflectionEmit");
-#else
-		core = new EiffelReflectionEmit();
-#endif
+				// Create an instance of `COMPILER' in `CoreWrap' and
+				// get a reference to it.
+			core = (COMPILER) CoreApp.CreateInstanceAndUnwrap
+				(assembly.FullName, "COMPILER");
+		#else
+			core = new COMPILER();
+		#endif
 
-#if ISE_APPDOMAIN
-			// Make sure `CoreApp' stays alive until we unload it.
-		CoreApp.InitializeLifetimeService();
-#endif
+		#if ISE_APPDOMAIN
+				// Make sure `CoreApp' stays alive until we unload it.
+			CoreApp.InitializeLifetimeService();
+		#endif
 
 			// Start IL generation through `core'.
 		core.StartAssemblyGeneration (Name, FName, Location);
@@ -73,20 +75,20 @@ public class Core : ICore {
 	}
 
 	private void cleanup () {
-#if ISE_APPDOMAIN
-		AppDomain.Unload(CoreApp);
-		CoreApp = null;
-#endif
+		#if ISE_APPDOMAIN
+			AppDomain.Unload(CoreApp);
+			CoreApp = null;
+		#endif
 		core = null;
 		GC.Collect();
 	}
 
-#if ISE_APPDOMAIN
-	private AppDomain CoreApp;
-#endif
-	private EiffelReflectionEmit core;
+	#if ISE_APPDOMAIN
+		private AppDomain CoreApp;
+	#endif
 
-/* Delegation to EiffelReflectionEmit object */
+	private COMPILER core;
+		// Delegation to COMPILER object.
 
 	public void SetConsoleApplication() {
 		core.SetConsoleApplication();
@@ -739,4 +741,6 @@ public class Core : ICore {
 		core.SetForImplementations();
 	}
 
-}
+} // end of COMPILER_PROXY
+
+} // end of namespace ISE.Compiler

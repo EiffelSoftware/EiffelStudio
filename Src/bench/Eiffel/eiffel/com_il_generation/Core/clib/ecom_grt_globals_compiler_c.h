@@ -2,8 +2,8 @@
 Global variables used in generated code.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_GRT_GLOBALS_CORE_C_H__
-#define __ECOM_GRT_GLOBALS_CORE_C_H__
+#ifndef __ECOM_GRT_GLOBALS_COMPILER_C_H__
+#define __ECOM_GRT_GLOBALS_COMPILER_C_H__
 
 #include "eif_com.h"
 
@@ -11,9 +11,9 @@ Global variables used in generated code.
 
 #include "ecom_rt_globals.h"
 
-#include "ecom_gec_core_c.h"
+#include "ecom_gec_compiler_c.h"
 
-#include "ecom_gce_core_c.h"
+#include "ecom_gce_compiler_c.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,9 +21,9 @@ extern "C" {
 
 
 
-extern ecom_gec_core_c grt_ec_core_c;
+extern ecom_gec_compiler_c grt_ec_compiler_c;
 
-extern ecom_gce_core_c grt_ce_core_c;
+extern ecom_gce_compiler_c grt_ce_compiler_c;
 #ifdef __cplusplus
 }
 #endif

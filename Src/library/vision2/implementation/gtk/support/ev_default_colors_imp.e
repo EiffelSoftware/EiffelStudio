@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "List of default colors used by the system.%
 		% Gtk implementation."

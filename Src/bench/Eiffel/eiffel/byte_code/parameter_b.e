@@ -97,7 +97,6 @@ feature -- IL code generation
 			-- Generate IL code for `expression'
 		local
 			target_type, source_type: TYPE_I
-			l_type: TYPE_I
 		do
 			expression.generate_il
 

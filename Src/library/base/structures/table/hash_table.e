@@ -102,6 +102,8 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 	MISMATCH_CORRECTOR
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		redefine
 			correct_mismatch
 		end
@@ -874,7 +876,7 @@ feature {NONE} -- Transformation
 			
 			if content = Void or keys = Void or deleted_marks = Void then
 					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
-				Precursor {TABLE}
+				Precursor {MISMATCH_CORRECTOR}
 			end
 		end
 

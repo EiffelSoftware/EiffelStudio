@@ -371,8 +371,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			fields_not_void: fields /= Void
 		do
 			Result := consumed_type_entities (True)
-			Result.fill (consumed_type_entities (False))
-			-- This is quite inefficient but only sparingly.
+			Result.append (consumed_type_entities (False))
 		end
 
 	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE] is

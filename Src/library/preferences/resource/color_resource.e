@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
  
 class
-	COLOR_RESOURCE 
+	COLOR_PREFERENCE 
  
 inherit
-	TYPED_RESOURCE [EV_COLOR]
+	TYPED_PREFERENCE [EV_COLOR]
  
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
  
 feature -- Access
@@ -30,7 +30,7 @@ feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
 			-- Is `a_string' valid for this resource type to convert into a value?
-			-- String must conform to the following stucture: "xxx;xxx;xxx" where xxx represents
+			-- String must conform to the following structure: "xxx;xxx;xxx" where xxx represents
 			-- an integer value between 0 and 255.
 		local
 			s, rgbval: STRING
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			rgbval := s.substring (1, s.count)
 			b := rgbval.to_integer
 		
-			create value.make_with_8_bit_rgb (r, g, b)
+			set_value (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
 		end	
 
-end -- class COLOR_RESOURCE
+end -- class COLOR_PREFERENCE

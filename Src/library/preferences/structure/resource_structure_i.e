@@ -5,7 +5,7 @@ indexing
 		]"
 
 deferred class
-	RESOURCE_STRUCTURE_I
+	PREFERENCE_STRUCTURE_I
 
 feature -- Initialization
 
@@ -56,14 +56,14 @@ feature -- Access
 
 feature -- Save
 
-	save (resources: ARRAYED_LIST [RESOURCE]) is
+	save (resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		require
 			resources_not_void: resources /= Void
 		deferred
 		end
 
-	save_resource (a_resource: RESOURCE) is
+	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to underlying data store
 		require
 			resource_not_void: a_resource /= Void		
@@ -75,4 +75,4 @@ feature -- Save
 invariant
 	has_location: location /= Void
 
-end -- class RESOURCE_STRUCTURE_I
+end -- class PREFERENCE_STRUCTURE_I

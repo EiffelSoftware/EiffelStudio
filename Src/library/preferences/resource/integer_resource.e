@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
 
 class
-	INTEGER_RESOURCE
+	INTEGER_PREFERENCE
 
 inherit
-	TYPED_RESOURCE [INTEGER]
+	TYPED_PREFERENCE [INTEGER]
 
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
 feature -- Access
@@ -52,4 +52,4 @@ feature {NONE} -- Implementation
 			set_value (a_value.to_integer)			
 		end		
 
-end -- class INTEGER_RESOURCE
+end -- class INTEGER_PREFERENCE

@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
 
 class
-	BOOLEAN_RESOURCE
+	BOOLEAN_PREFERENCE
 
 inherit
-	TYPED_RESOURCE [BOOLEAN]
+	TYPED_PREFERENCE [BOOLEAN]
 
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 	
 feature -- Access
@@ -58,4 +58,4 @@ feature {NONE} -- Implementation
 			set_value (l_value.is_equal ("true"))
 		end	
 
-end -- class BOOLEAN_RESOURCE
+end -- class BOOLEAN_PREFERENCE

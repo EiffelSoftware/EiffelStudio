@@ -1,17 +1,17 @@
 indexing
-	description: "Generic RESOURCE."
+	description: "Generic PREFERENCE."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	TYPED_RESOURCE [G]
+	TYPED_PREFERENCE [G]
 	
 inherit
-	RESOURCE
+	PREFERENCE
 
 feature {NONE} --Initialization
 
-	make (a_manager: PREFERENCE_RESOURCE_MANAGER; a_name: STRING; a_value: G) is
+	make (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: G) is
 			-- New resource with `a_name' and `a_value'.
 		require
 			manager_not_void: a_manager /= Void
@@ -22,14 +22,14 @@ feature {NONE} --Initialization
 			create change_actions
 			manager := a_manager
 			name := a_name
-			value := a_value					
+			set_value (a_value)
 		ensure
 			has_manager: manager /= Void
 			has_name: name /= Void and not name.is_empty
 			has_change_action: change_actions /= Void
 		end
 
-	make_from_string_value (a_manager: PREFERENCE_RESOURCE_MANAGER; a_name: STRING; a_value: STRING) is
+	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: STRING) is
 			-- Create resource and set value based on string value `a_value'.
 		require
 			manager_not_void: a_manager /= Void
@@ -72,4 +72,4 @@ feature -- Access
 			Result := value /= Void	
 		end		
 
-end -- class TYPED_RESOURCE
+end -- class TYPED_PREFERENCE

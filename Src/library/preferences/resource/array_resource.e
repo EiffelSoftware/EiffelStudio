@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
 
 class
-	ARRAY_RESOURCE
+	ARRAY_PREFERENCE
 
 inherit
-	TYPED_RESOURCE [ARRAY [STRING]]
+	TYPED_PREFERENCE [ARRAY [STRING]]
 
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
 feature -- Access
@@ -39,12 +39,19 @@ feature -- Access
 			Result := "LIST"
 		end	
 
+	selected_value: STRING is
+			-- 
+		do
+			--TODO: neilc.
+			Result := value.item (1)	
+		end		
+
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
 			-- Is `a_string' valid for this resource type to convert into a value?		
 		do
-			Result := not a_string.is_empty
+			Result := a_string /= Void
 		end		
 
 feature {PREFERENCES} -- Access
@@ -78,6 +85,7 @@ feature {NONE} -- Implementation
 					value.force (a_value.substring (start_pos, a_value.count), value.count + 1)
 				end
 			end
+			set_value (value)
 		end	
 		
-end -- class ARRAY_RESOURCE
+end -- class ARRAY_PREFERENCE

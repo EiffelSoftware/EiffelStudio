@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	RESOURCE_STRUCTURE
+	PREFERENCE_STRUCTURE
 
 create
 	make_empty,
@@ -15,7 +15,7 @@ feature {PREFERENCES} -- Initialization
 	make_empty is
 			-- Make a new underlying data store based upon the name of the application.
 		local
-			imp: RESOURCE_STRUCTURE_IMP
+			imp: PREFERENCE_STRUCTURE_IMP
 		do
 			default_create
 			create imp.make_empty
@@ -30,7 +30,7 @@ feature {PREFERENCES} -- Initialization
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
 		local
-			imp: RESOURCE_STRUCTURE_IMP
+			imp: PREFERENCE_STRUCTURE_IMP
 		do
 			default_create
 			create imp.make_with_location (a_location)
@@ -73,19 +73,19 @@ feature {PREFERENCES} -- Resource Management
 			has_result: Result /= Void
 		end
 
-	save_resource (a_resource: RESOURCE) is
+	save_resource (a_resource: PREFERENCE) is
 			-- Save `resource' to storage device.
 		require		
 			resource_not_void: a_resource /= Void
 		do
 			implementation.save_resource (a_resource)
 		ensure
-			resource_saved: has_resource (a_resource.full_name)
+			resource_saved: has_resource (a_resource.name)
 		end		
 
 feature {PREFERENCES} -- Saving
 
-	save (resources: ARRAYED_LIST [RESOURCE]) is
+	save (resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save all changes in appropriate storing device.
 		require
 			resources_not_void: resources /= Void
@@ -95,10 +95,10 @@ feature {PREFERENCES} -- Saving
 
 feature {NONE} -- Implementation
 
-	implementation: RESOURCE_STRUCTURE_I
+	implementation: PREFERENCE_STRUCTURE_I
 			-- Structure interface.
 
 invariant
 	has_implementation: implementation /= Void
 
-end -- class RESOURCE_STRUCTURE
+end -- class PREFERENCE_STRUCTURE

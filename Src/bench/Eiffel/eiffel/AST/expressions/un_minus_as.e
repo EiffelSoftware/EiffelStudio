@@ -7,6 +7,9 @@ class UN_MINUS_AS
 
 inherit
 	UNARY_AS
+		redefine
+			is_minus
+		end
 
 feature -- Visitor
 
@@ -19,6 +22,9 @@ feature -- Visitor
 feature -- Properties
 
 	operator_name: STRING is "-"
+
+	is_minus: BOOLEAN is True
+			-- Is current prefix "-"?
 
 feature -- Type check
 

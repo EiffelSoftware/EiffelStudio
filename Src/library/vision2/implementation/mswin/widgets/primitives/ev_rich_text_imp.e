@@ -171,6 +171,11 @@ inherit
 			{NONE} all
 		end
 		
+	WEL_CFE_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 	EV_RICH_TEXT_ACTION_SEQUENCES_IMP
 	
 create
@@ -271,17 +276,25 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 			a_font: EV_FONT
-			color_ref: WEL_COLOR_REF
+			color_ref, back_color_ref: WEL_COLOR_REF
 			effects: INTEGER
 			font_imp: EV_FONT_IMP
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
+			a_background_color: EV_COLOR
 		do
-			wel_character_format := current_selection_character_format
+			create wel_character_format.make
+			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			effects := wel_character_format.effects
 			color_ref := wel_character_format.text_color
+			if not flag_set (effects, cfe_autobackcolor) then
+				back_color_ref := wel_character_format.background_color		
+				create a_background_color.make_with_8_bit_rgb (back_color_ref.red, back_color_ref.green, back_color_ref.blue)
+			else
+				a_background_color := background_color.twin
+			end
 			create a_font
 			font_imp ?= a_font.implementation
 			create a_wel_font.make_indirect (wel_character_format.log_font)
@@ -303,6 +316,7 @@ feature -- Status report
 			
 			create Result.make_with_values (a_font,
 				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue),
+				a_background_color,
 				character_effects)
 			
 		end
@@ -374,7 +388,7 @@ feature -- Status report
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		local
 			mask: INTEGER
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 			range_already_selected: BOOLEAN
 		do
 			disable_redraw
@@ -383,7 +397,9 @@ feature -- Status report
 			else
 				safe_store_caret
 			end
-			wel_character_format := current_selection_character_format
+			create wel_character_format.make
+			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
+--			wel_character_format := current_selection_character_format
 			mask := wel_character_format.mask
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic)
 			if not range_already_selected then
@@ -435,7 +451,7 @@ feature -- Status report
 			-- are subsequently changed.
 		local
 			mask: INTEGER
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 			range_already_selected: BOOLEAN
 		do
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
@@ -444,9 +460,12 @@ feature -- Status report
 				disable_redraw
 				safe_store_caret
 			end
-			wel_character_format := current_selection_character_format
+			create wel_character_format.make
+			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			mask := wel_character_format.mask
-			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
+			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic),
+				flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_backcolor), flag_set (mask, cfm_strikeout),
+				flag_set (mask, cfm_underline))
 			if not range_already_selected then
 				safe_restore_caret
 				enable_redraw
@@ -614,7 +633,7 @@ feature -- Status setting
 			-- Set the format of the text between `first_pos' and `last_pos' to
 			-- `format'. May or may not change the cursor position.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 		do
 			set_selection (first_pos - 1, last_pos - 1)
 			wel_character_format ?= format.implementation
@@ -676,7 +695,7 @@ feature -- Status setting
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 			mask: INTEGER
 		do
 			disable_redraw
@@ -691,6 +710,9 @@ feature -- Status setting
 			end
 			if applicable_attributes.color then
 				mask := mask | cfm_color
+			end
+			if applicable_attributes.background_color then
+				mask := mask | cfm_backcolor
 			end
 			if applicable_attributes.effects_striked_out then
 				mask := mask | cfm_strikeout
@@ -868,8 +890,10 @@ feature -- Status setting
 			stream.release_stream
 			buffer_locked_in_append_mode := False
 			
-				-- Ensure there is no selection, and the caret is restored.			
-			unselect
+				-- Ensure there is no selection, and the caret is restored.
+			if has_selection then
+				unselect
+			end
 			set_caret_position (original_position)
 		end
 		
@@ -1176,6 +1200,7 @@ feature -- Status setting
 			current_default: INTEGER
 		do
 			if tab_positions.count > 0 then
+				safe_store_caret
 				create screen_dc
 				screen_dc.get
 				logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
@@ -1209,6 +1234,7 @@ feature -- Status setting
 				set_selection (0, text_length)
 				set_tab_stops_array (array)
 				
+				safe_restore_caret
 					-- Ensure change is reflected immediately.
 				invalidate
 			end
@@ -1255,7 +1281,7 @@ feature -- Status setting
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT
+			wel_character_format: WEL_CHARACTER_FORMAT2
 		do	
 			safe_store_caret
 			wel_character_format ?= format.implementation

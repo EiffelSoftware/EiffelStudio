@@ -300,9 +300,8 @@ feature -- C code generation
 				Result := Precursor {ENCAPSULATED_I} (access_type, static_type)
 			else
 					-- Constants are hardwired in final mode
-				!!constant_b
+				create constant_b.make (value)
 				constant_b.set_access (Precursor {ENCAPSULATED_I} (access_type, static_type))
-				constant_b.set_value (value)
 				Result := constant_b
 			end
 		end

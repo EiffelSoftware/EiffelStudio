@@ -21,9 +21,17 @@ inherit
 
 feature -- Status setting
 
+	position: INTEGER is
+			-- The position of the split in pixels.
+		require
+			exists: not destroyed
+		do
+			Result:=implementation.position
+		end
+
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
-			-- `value' is given in pixel.
+			-- `value' is given in pixels.
 			-- Has an effect only if the split area has
 			-- already a child.
 		require
@@ -34,7 +42,7 @@ feature -- Status setting
 
 feature {EV_MENU_ITEM} -- Implementation
 	
-	implementation: EV_SPLIT_AREA_I	
+	implementation: EV_SPLIT_AREA_I
 
 end -- class EV_SPLIT_AREA
 

@@ -47,7 +47,7 @@ feature -- Status setting
 	set_state (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
 		do
-			gtk_check_menu_item_set_state (widget, flag)
+			gtk_check_menu_item_set_active (widget, flag)
 		end
 
 end -- class EV_CHECK_MENU_ITEM_IMP

@@ -81,15 +81,16 @@ feature -- Initialization
 			viewport.set_minimum_width (Minimum_width_of_object_editor)
 			create scrollable_holder
 			vertical_box1.extend (scrollable_holder)
-			create v_box
+			create control_holder
 			create scroll_bar
-			v_box.set_minimum_width (Minimum_width_of_object_editor)
+			control_holder.set_minimum_width (Minimum_width_of_object_editor)
 			vertical_box1.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
 			scrollable_holder.extend (viewport)
-			viewport.extend (v_box)
-			v_box.extend (attribute_editor_box)
-			v_box.disable_item_expand (attribute_editor_box)
-			v_box.resize_actions.force_extend (agent update_scroll_bar)
+			viewport.extend (control_holder)
+			control_holder.extend (attribute_editor_box)
+			control_holder.disable_item_expand (attribute_editor_box)
+
+			control_holder.resize_actions.force_extend (agent update_scroll_bar)
 			viewport.resize_actions.force_extend (agent update_scroll_bar)
 			scroll_bar.change_actions.extend (agent scroll_bar_changed)
 			scroll_bar.hide
@@ -99,17 +100,10 @@ feature -- Initialization
 			vertical_box1.set_minimum_height (100)
 			
 			create item_parent
-			v_box.extend (item_parent)
-			v_box.disable_item_expand (item_parent)
+			control_holder.extend (item_parent)
+			control_holder.disable_item_expand (item_parent)
 			is_initialized := True
 		end
-		
---	build_box is
---			--
---		do
---			
---		end
-		
 		
 	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
 		do
@@ -210,12 +204,11 @@ feature -- Status setting
 		end
 		
 	update_current_object is
-			--
-		local
-			an_object: GB_OBJECT
+			-- Update fields for `object'.
+			-- For now, we just rebuild the whole
+			-- tool. This can be optimized later.
 		do
-			an_object := object
-			set_object (an_object)
+			set_object (object)
 		end
 		
 	replace_object_editor_item (a_type: STRING) is
@@ -498,41 +491,48 @@ feature {NONE} -- Implementation
 		end
 		
 	update_scroll_bar is
-			--
+			-- Show/hide the scroll bar as appropriate. Modify the
+			-- range of the scroll bar as needed.
 		local
 			interval: INTEGER_INTERVAL
 		do
-					io.putstring ("Viewport height : " + viewport.height.out + "%N")
-				io.putstring ("v_box.height : " + v_box.height.out + "%N")
-				io.putstring ("v_box.minimum_height : " + v_box.minimum_height.out + "%N")
-			if viewport.height < v_box.minimum_height then --v_box.height then
-				if not scroll_bar.is_show_requested then
+			if viewport.height < control_holder.minimum_height then
+				if not scroll_bar.is_show_requested then	
+			viewport.resize_actions.pause
+			control_holder.resize_actions.pause
+						-- There is no way ti resize a box in a viewport to
+						-- be smaller, so we must rebuild a new box,
+						-- and expand it by putting the items in.
+					control_holder.wipe_out
+					viewport.prune_all (control_holder)
+					create control_holder
+					viewport.extend (control_holder)
+					control_holder.extend (attribute_editor_box)
+					control_holder.disable_item_expand (attribute_editor_box)
+					control_holder.extend (item_parent)
+					control_holder.disable_item_expand (item_parent)
 				
-					viewport.resize_actions.pause
-					v_box.resize_actions.pause
-					v_box.wipe_out
-					viewport.prune_all (v_box)
-					create v_box
-					viewport.extend (v_box)
-					v_box.extend (attribute_editor_box)
-					v_box.disable_item_expand (attribute_editor_box)
-					v_box.extend (item_parent)
-					v_box.disable_item_expand (item_parent)
-				
-					v_box.set_minimum_width (Minimum_width_of_object_editor)
+						-- Set up the minimum width on the new box.
+					control_holder.set_minimum_width (Minimum_width_of_object_editor)
 					viewport.set_minimum_width (Minimum_width_of_object_editor)
-					v_box.resize_actions.force_extend (agent update_scroll_bar)
-					viewport.resize_actions.resume
+					control_holder.resize_actions.force_extend (agent update_scroll_bar)
+					
 					scroll_bar.show	
+					
+					viewport.resize_actions.resume
+					control_holder.resize_actions.resume
+	
 				end
 			else
 				scroll_bar.hide
 				scroll_bar_changed (0)
-				v_box.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
+				control_holder.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
 				viewport.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
 			end
+				-- If the scroll bar is visible then we must update the values
+				-- to match the size of the 
 			if scroll_bar.is_show_requested then
-				create interval.make (0, v_box.minimum_height - viewport.height)
+				create interval.make (0, control_holder.minimum_height - viewport.height)
 				if viewport.height > 0 then
 					scroll_bar.set_leap (viewport.height)
 				end
@@ -542,7 +542,8 @@ feature {NONE} -- Implementation
 		end
 		
 	scroll_bar_changed (value: INTEGER) is
-			--
+			-- Set the offset of the controls to `Value'
+			-- within the viewport.
 		do
 			viewport.set_y_offset (value)
 		end
@@ -566,7 +567,8 @@ feature {NONE} -- Implementation
 	viewport: EV_VIEWPORT
 		-- Viewport containg the attribute editors.
 	
-	v_box: EV_VERTICAL_BOX
+	control_holder: EV_VERTICAL_BOX
+		-- Holds the controls, and is placed in the scrollable area.
 	
 feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 

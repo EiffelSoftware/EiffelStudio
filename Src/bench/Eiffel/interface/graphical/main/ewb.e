@@ -11,12 +11,7 @@ inherit
 		rename
 			command_line as arguments_line
 		end
-	LIC_EXITER
-		rename
-			build_dir as Eiffel3_dir_name
-		undefine
-			Eiffel3_dir_name
-		end;
+	SHARED_LICENSE;
 	SHARED_RESCUE_STATUS;
 	EXCEPTIONS
 
@@ -26,7 +21,7 @@ feature -- Licence managment
 		do
 			licence.get_registration_info;
 			licence.set_version (3);
-			licence.set_application_name ("EiffelBench");
+			licence.set_application_name ("eiffelbench");
 			Result := licence.connected
 		end;
 

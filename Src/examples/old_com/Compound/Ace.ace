@@ -6,7 +6,7 @@ root
 
 default
 	assertion (require);
---	precompiled ("$EIFFEL4\precomp\spec\windows\wel")
+	precompiled ("$EIFFEL4\precomp\spec\windows\wel")
 
 cluster
 
@@ -48,8 +48,6 @@ cluster
 			EOLE_DISPATCH;
 			EOLE_PICTURE_DISP;
 			EOLE_FONT_DISP;
-			EOLE_TYPE_LIB;
-			EOLE_TYPE_INFO;
 			EOLE_PICTURE_DISP;
 			EOLE_FONT_DISP;
 		end;
@@ -88,7 +86,6 @@ cluster
 			EOLE_ELEMDESC;
 			EOLE_EXCEPINFO;
 			EOLE_FILETIME;
-			EOLE_FUNCDESC;
 			EOLE_REFERENCE;
 			EOLE_SAFEARRAY;
 			EOLE_SAFEARRAY_BOUNDS;
@@ -96,10 +93,6 @@ cluster
 			EOLE_SIZE;
 			EOLE_TEXTMETRIC;
 			EOLE_TYPE_LIB_RESULT;
-			EOLE_TYPEATTR;
-			EOLE_TYPEDESC;
-			EOLE_VARDESC;
-			EOLE_VARIANT;
 		end;
 
 external

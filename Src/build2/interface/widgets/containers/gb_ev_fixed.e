@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			scrollable_area.set_minimum_size (200, 200)
 			create ok_button.make_with_text ("Done")
 			create status_timer.make_with_interval (50)
-			ok_button.select_actions.extend (agent status_timer.destroy)
+			ok_button.select_actions.extend (agent pre_close_tidy)
 			ok_button.select_actions.extend (agent Result.destroy)
 			create h1
 			status_timer.actions.extend (agent update_status)
@@ -354,8 +354,6 @@ feature {NONE} -- Implementation
 			if snap_button = Void then
 				create snap_button.make_with_text ("Snap to grid")
 				snap_button.enable_select
-			else
-				snap_button.parent.prune_all (snap_button)
 			end
 			create grid_control_holder.make_with_text ("Grid properties")
 			create vb1
@@ -364,12 +362,11 @@ feature {NONE} -- Implementation
 			vertical_box.extend (grid_control_holder)
 			vb1.extend (snap_button)
 			vertical_box.disable_item_expand (grid_control_holder)
+				-- Do not build new control it it exists.
 			if grid_visible_control = Void then
 				create grid_visible_control.make_with_text ("Visible")
 				grid_visible_control.enable_select
 				grid_visible_control.select_actions.force_extend (agent draw_widgets)
-			else
-				grid_visible_control.parent.prune_all (grid_visible_control)
 			end
 			vb1.extend (grid_visible_control)
 				-- We do not build a new control if it already exists.
@@ -378,8 +375,6 @@ feature {NONE} -- Implementation
 				create grid_size_control.make_with_value_range (create {INTEGER_INTERVAL}.make (5, 500))
 				grid_size_control.change_actions.force_extend (agent draw_widgets)
 				grid_size_control.set_value (20)
-			else
-				grid_size_control.parent.prune_all (grid_size_control)
 			end
 			vb1.extend (grid_size_control)
 			from
@@ -399,6 +394,16 @@ feature {NONE} -- Implementation
 				first.forth
 			end
 			set_initial_area_size
+		end
+		
+	pre_close_tidy is
+			-- Perform necessary actions before `layout_window'
+			-- is destroyed.
+		do
+			snap_button.parent.prune_all (snap_button)
+			grid_visible_control.parent.prune_all (grid_visible_control)
+			grid_size_control.parent.prune_all (grid_size_control)
+			status_timer.destroy
 		end
 		
 	set_initial_area_size is

@@ -7,7 +7,7 @@
 			</image> is.
 		</paragraph>
 		<paragraph>To see at which point the features in the call stack have stopped, just click the feature on which you want this information in the call stack. Doing this will change the cursor position in the call stack and display the flat view of the feature in the context tool.</paragraph>
-		<paragraph>To follow an object state between pauses of the application, pick and drop it into the object tree, which will make it stay init.</paragraph>
+		<paragraph>To follow an object state between pauses of the application, pick and drop it into the object tree, which will make it stay in it.</paragraph>
 		<paragraph>You can also query features dynamically by using the evaluation tool, which can be very useful to have glimpses of the C memory of the system, for instance.</paragraph>
 		<seealso>
 			<bold>See Also</bold>

@@ -30,7 +30,7 @@
 			<item>The 
 				<link>
 					<url>/tools/eiffelstudio/reference/40_debugger/10_execution/70_pause_execution.xml</url>
-					<label> command</label>
+					<label><bold>stop</bold> command<image><url>/images/eiffelstudio/icons/icon_exec_stop_color.gif</url></image></label>
 				</link>, located in both the debug menu and the project toolbar.
 			</item>
 			<item>Breakpoints, which make it easy to stop the application at a precise point.</item>
@@ -38,7 +38,7 @@
 		<paragraph>To kill a debugged application, use the 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/10_execution/80_kill_application.xml</url>
-				<label> command</label>
+				<label><bold>kill</bold> command<image><url>/images/eiffelstudio/icons/icon_exec_quit_color.gif</url></image></label>
 			</link>, located in both the debug menu and the project toolbar.
 		</paragraph>
 		<seealso>

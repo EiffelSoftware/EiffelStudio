@@ -29,7 +29,7 @@ inherit
 			{NONE} all
 			{ANY} area, array_item, count
 		redefine
-			wipe_out
+			discard_items
 		end
 
 create
@@ -300,7 +300,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	discard_items is
 			-- Remove all elements
 		do
 			dimension_count := 0

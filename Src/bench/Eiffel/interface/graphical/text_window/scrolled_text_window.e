@@ -509,7 +509,9 @@ feature -- Update
 					end_pos := end_of_selection;
 					clear_selection
 				end;
+				changed := True;
 				replace (cb.start_position, cb.end_position, bs.sign);
+				changed := False;
 				status := Application.status;
 				if
 					status /= Void and status.is_stopped and

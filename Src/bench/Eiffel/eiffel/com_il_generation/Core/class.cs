@@ -80,7 +80,7 @@ internal class CLASS
 	// Creation Routines
 	public FEATURE[] CreationRoutines;
 
-	private string source_file_name = null;
+	public string source_file_name = null;
 			// Location of Eiffel source file defining Current.
 
 	// Set `FeatureID' of `FeatureIDTable' to be invariant
@@ -168,9 +168,7 @@ internal class CLASS
 
 			// Create Document associated to current class.
 		Document = module.DefineDocument (source_file_name,
-			new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
-			new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
-			Guid.Empty);
+			COMPILER.Language_guid, COMPILER.Language_vendor_guid, COMPILER.Document_type_guid);
 
 			// Not needed anymore.
 		source_file_name = null;

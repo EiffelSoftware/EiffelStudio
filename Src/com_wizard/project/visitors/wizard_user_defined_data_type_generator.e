@@ -245,7 +245,7 @@ feature -- Processing
 			cecil_type := clone (Eif_integer)
 			create c_post_type.make (0)
 			create c_header_file.make (0)
-			eiffel_type := clone (enum_descriptor.eiffel_class_name)
+			eiffel_type := clone (Integer_type)
 			vt_type := Vt_int
 
 			is_enumeration := True

@@ -14,8 +14,6 @@ inherit
 		rename
 			count as columns,
 			set_count as set_columns
-		undefine
-			top_parent_imp
 		redefine
 			destroy,
 			parent_imp,

@@ -9,10 +9,11 @@ class
 
 inherit
 	EV_TREE_ITEM_I
+		redefine
+			parent_imp
+		end
 
 	EV_SIMPLE_ITEM_IMP
-		undefine
-			top_parent_imp
 		redefine
 			parent_imp,
 			set_text,

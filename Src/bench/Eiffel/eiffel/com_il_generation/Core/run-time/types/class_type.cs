@@ -8,9 +8,11 @@ indexing
 */
 	
 using System;
+
 namespace ISE.Runtime {
 
 public class CLASS_TYPE: TYPE {
+
 /*
 feature -- Access
 */
@@ -24,7 +26,21 @@ feature -- Status Report
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION
 		// (type of which it is a direct instance)
 	{
-		return Type.GetTypeFromHandle (type).Name;
+		String Result;
+		Object [] l_ca;
+		EIFFEL_CLASS_NAME_ATTRIBUTE l_class_name;
+
+		l_ca = Type.GetTypeFromHandle (type).GetCustomAttributes
+			(typeof (EIFFEL_CLASS_NAME_ATTRIBUTE), false);
+
+		#if ASSERTIONS
+			ASSERTIONS.CHECK ("There should be only one element in `l_ca'", l_ca.Length == 1);
+		#endif
+
+		l_class_name = (EIFFEL_CLASS_NAME_ATTRIBUTE) l_ca [0];
+		Result = l_class_name.class_name;
+
+		return Result;
 	}
 
 	public override String type_name ()
@@ -43,6 +59,6 @@ feature -- Setting
 		type = a_type;
 	}
 
-}
+} // class CLASS_TYPE
 
 }

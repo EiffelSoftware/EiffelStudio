@@ -95,7 +95,9 @@ feature -- IL Generation
 				end
 			end
 				-- Generate `ToString' from System.Object.
-			generate_to_string_feature (current_select_tbl.item (internal_to_string_rout_id))
+			if current_select_tbl.has (internal_to_string_rout_id) then
+				generate_to_string_feature (current_select_tbl.item (internal_to_string_rout_id))
+			end
 
 				-- Generate invariant routine.
 			generate_invariant_feature (class_c.invariant_feature)

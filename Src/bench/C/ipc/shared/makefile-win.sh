@@ -1,16 +1,11 @@
 CC=$cc
 RM=del
 TOP=..\..
-LIBRUN = ..\..\run-time
-LIBIDR = ..\..\idrs
-DPFLAGS = /I$(TOP) /I$(LIBRUN) /I$(LIBIDR) /I.
+LIBRUN = $(TOP)\run-time
+LIBIDR = $(TOP)\idrs
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I.
 CFLAGS = $(DPFLAGS) -DWORKBENCH
-
-JCFLAGS = $(CFLAGS) $ccflags $optimize -DWIN32
-
-.c.obj:
-	$(RM) $@
-	$(CC) -c $(JCFLAGS) $<
+JCFLAGS = $(CFLAGS) $ccflags $optimize
 
 OBJECTS = \
 	com.obj \
@@ -28,6 +23,10 @@ OBJECTS = \
 	transfer.obj \
 	rqst_idrs.obj \
 	uu.obj
+
+.c.obj:
+	$(RM) $@
+	$(CC) -c $(JCFLAGS) $<
 
 all:: ipc.lib
 

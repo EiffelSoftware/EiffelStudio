@@ -10,9 +10,9 @@ RM = del
 	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
-RUN_TIME = ..\..\run-time
+RUN_TIME = $(TOP)\run-time
 SHARED_CLIB = ..\shared
-CFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP) 
+CFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP)
 
 OBJECTS = eiffel_c.obj eif_err.obj encode.obj pretrieve.obj date.obj \
 	keyword.obj byte.obj offset.obj parser.obj lexic.obj infix.obj \

@@ -1,6 +1,6 @@
 TOP = ..\..
 CC = $cc
-JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH -DWIN32
+JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH
 MAKE = $make
 MV = copy
 RM = del
@@ -18,8 +18,8 @@ OBJECTS = \
 
 # Where shared archive is located (path and name)
 LIBDIR = ..\shared
-LIBRUN = ..\..\run-time
-LIBIDR = ..\..\idrs
+LIBRUN = $(TOP)\run-time
+LIBIDR = $(TOP)\idrs
 LIBIDRNAME = idr.lib
 LIBNAME = ipc.lib
 LIBARCH = $(LIBDIR)\$(LIBNAME)

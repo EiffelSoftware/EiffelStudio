@@ -1,20 +1,16 @@
 TOP = ..
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
+CFLAGS = -I$(TOP) -I$(TOP)\run-time -I$(TOP)\ipc\shared
 MAKE = $make
 MV = ren
 RM = del
 
+OBJECTS = names.obj sizes.obj commands.obj
+
 .c.obj:
 	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
-
-CFLAGS = -I$(TOP) -I..\run-time
-
-OBJECTS = \
-	names.obj \
-	sizes.obj \
-	commands.obj
 
 all:: platform.lib
 

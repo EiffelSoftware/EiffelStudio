@@ -42,17 +42,22 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
 
-			scroll_window := (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			scroll_window := 
+				C.gtk_scrolled_window_new (Default_pointer, Default_pointer)
+			
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
 			C.gtk_scrolled_window_set_policy (
 				scroll_window, 
-				C.GTK_POLICY_AUTOMATIC_ENUM,
-				C.GTK_POLICY_AUTOMATIC_ENUM
+				C.Gtk_policy_automatic_enum,
+				C.Gtk_policy_automatic_enum
 			)
 
 			list_widget := C.gtk_tree_new
-			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
+			C.gtk_tree_set_selection_mode (
+				list_widget,
+				C.Gtk_selection_single_enum
+			)
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
 		end
@@ -63,9 +68,15 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 
-			real_signal_connect (list_widget, "select_child", ~select_callback)
+			real_signal_connect (
+				list_widget,
+				"select_child",
+				~select_callback,
+				default_translate
+			)
 			
-			-- Gtk bug means that select_child signal is fired on mouse press regardless.
+			-- Gtk bug means that select_child signal
+			-- is fired on mouse press regardless.
 		end
 
 feature {EV_TREE_ITEM_IMP} -- Implementation
@@ -154,7 +165,10 @@ feature {NONE} -- Implementation
 			C.gtk_widget_show (item_imp.c_object)
 			C.gtk_tree_append (list_widget, item_imp.c_object)
 			if item_imp.dummy_list_widget /= Default_pointer then
-				C.gtk_tree_item_set_subtree (item_imp.c_object, item_imp.dummy_list_widget)
+				C.gtk_tree_item_set_subtree (
+					item_imp.c_object,
+					item_imp.dummy_list_widget
+				)
 				item_imp.set_dummy_list_widget (Default_pointer)
 			end
 		end
@@ -208,14 +222,16 @@ end -- class EV_TREE_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
- 
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/04/04 21:00:33  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.37  2000/03/21 21:52:30  king
 --| Made c_object an event box
 --|
@@ -287,7 +303,6 @@ end -- class EV_TREE_IMP
 --|
 --| Revision 1.17.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

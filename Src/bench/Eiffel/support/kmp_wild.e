@@ -13,21 +13,11 @@ class KMP_WILD
 inherit
 	KMP_MATCHER
 		rename
-			search_for_pattern as kmp_search,
-			set_pattern as kmp_set_pattern,
-			make as kmp_make
-		redefine
-			found_at
-		end;
-	KMP_MATCHER
-		rename
-			search_for_pattern as kmp_search,
 			make as kmp_make
 		redefine
 			found_at,
-			set_pattern
-		select
-			set_pattern
+			set_pattern,
+			search_for_pattern
 		end
 
 creation
@@ -102,7 +92,7 @@ feature -- Status report
 
 feature -- Search
 
-	search_for_pattern is
+	search_for_pattern: BOOLEAN is
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		local
@@ -110,66 +100,67 @@ feature -- Search
 			lsi: STRING;
 			fa, lp, i, tc, pc, tcmpc: INTEGER;
 			sr, cr: STRING;
-			ta: SPECIAL [CHARACTER]
+			real_end: BOOLEAN
+			kmp_matcher: KMP_MATCHER
+			str_without_wild: STRING
 		do
-			from
-				found := false;
-				!! sr.make (0);
-				sr.extend (string_representation);
-				!! cr.make (0);
-				cr.extend (character_representation);
-				i := index;
-				tc := text.count;
-				pc := pattern.count;
-				tcmpc := tc - pc;
-				if
-					tcmpc = -1 and then
-					pattern.item (pc) = string_representation
-				then
-					found := text.is_equal (pattern.substring (1, tc))
-				end;
-				ta := text.area
-			until
-				found or else i >= tcmpc
-			loop
+			found := false;
+			!! sr.make (0);
+			sr.extend (string_representation);
+			!! cr.make (0);
+			cr.extend (character_representation);
+			i := index;
+			tc := text.count;
+			pc := pattern.count;
+			tcmpc := tc - pc;
+			if tcmpc = -1 and then pattern.item (pc) = string_representation then
+				found := text.is_equal (pattern.substring (1, tc))
+			end;
+
+			!! kmp_matcher.make (pattern,text)
+
+			str_without_wild := clone (pattern)
+			str_without_wild.prune_all (string_representation)
+	
+			if str_without_wild.count > text.count then
+				found := False
+			else
 				from
 					ls := string_list;
 					ls.start;
 					found := true;
 					fa := -1
+					real_end := False
 				until
-					not found or else ls.after
+					real_end
 				loop
 					lsi := ls.item;
 					if lsi.is_equal (sr) then
 						ls.forth
 					elseif lsi.is_equal (cr) then
-						lp := i;
 						if fa = -1 then
 							fa := i + 1
 						end;
 						i := i + 1;
+						index := i
 						ls.forth;
-						check_word (ta, lsi.area, i, lsi.count);
-						i := index;
-						if not found then
-							i := lp
-						end;
-						ls.forth
 					else
-						kmp_set_pattern (lsi);
+						kmp_matcher.set_pattern (lsi);
 						index := i;
-						kmp_search;
+						found := kmp_matcher.search_for_pattern
 						i := index;
 						if fa = -1 then
 							fa := i - lsi.count + 1
 						end;
 						ls.forth
 					end
+					real_end := ls.after or else not found
 				end
-			end;
+			end
+
 			if found then
 				found_at := fa
+				Result := found
 			end
 		end
 
@@ -182,7 +173,6 @@ feature {NONE} -- Implementation
 			str: STRING;
 			i, pc: INTEGER;
 			pa: SPECIAL [CHARACTER];
-			sl: LINKED_LIST [STRING];
 			sr, cr: STRING
 		do
 			from
@@ -193,52 +183,30 @@ feature {NONE} -- Implementation
 				!! cr.make (0);
 				cr.extend (character_representation);
 				pa := pattern.area;
-				i := 0;
 				pc := pattern.count;
-				sl := string_list
+				i := 0;
 			until
 				i = pc
 			loop
-				if pa.item (i).is_equal (string_representation) then
-					sl.extend (str);
-					sl.extend (sr);
+				if pa.item (i) = string_representation then
+					if str.count > 0 then
+						string_list.extend (str);
+					end
+					string_list.extend (sr);
 					!! str.make (0);
-					i := i + 1
-				elseif pa.item (i).is_equal (character_representation) then
-					sl.extend (str);
-					sl.extend (cr);
+				elseif pa.item (i) = character_representation then
+					if str.count > 0 then
+						string_list.extend (str);
+					end
+					string_list.extend (cr);
 					!! str.make (0);
-					i := i + 1
 				else
 					str.extend (pa.item (i));
-					i := i + 1
 				end
+				i := i + 1
 			end;
 			if str.count > 0 then
-				sl.extend (str)
-			end
-		end;
-
-	check_word (t, p: SPECIAL [CHARACTER]; i, pc: INTEGER) is
-			-- Checks whether `p' with length `pc'
-			-- is in `t' starting at `i'.
-		local
-			j, n: INTEGER
-		do
-			from
-				n := i;
-				j := 0
-			until
-				j = pc or else t.item (n) /= p.item (j)
-			loop
-				j := j + 1;
-				n := n + 1
-			end
-			index := n;
-			if j = pc then
-				found := true
-			else
-				found := false
+				string_list.extend (str)
 			end
 		end;
 

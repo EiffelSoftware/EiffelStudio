@@ -55,7 +55,7 @@ feature
 
 	il_type_name: STRING is
 			-- Name of current class type.
-		do
+		once
 			Result := "NONE"
 		end
 

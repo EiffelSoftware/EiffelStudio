@@ -8,31 +8,24 @@ deferred class COLOR_I
 
 inherit
 
-feature 
+feature -- Access
 
-	allocated_blue (a_widget: WIDGET_I): INTEGER is
+	allocated_blue: INTEGER is
 			-- Allocated blue saturation level for `a_widget'
-		require
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
 		deferred
 		end;
 
-	allocated_green (a_widget: WIDGET_I): INTEGER is
+	allocated_green: INTEGER is
 			-- Allocated green saturation level for `a_widget'
-		require
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
 		deferred
 		end;
 
-	allocated_red (a_widget: WIDGET_I): INTEGER is
+	allocated_red: INTEGER is
 			-- Allocated red saturation level for `a_widget'
-		require
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
 		deferred
 		end;
+
+feature -- Status report
 
 	blue: INTEGER is
 			-- Blue saturation level
@@ -66,13 +59,7 @@ feature
 		deferred
 		end;
 
-	set_black_default is
-			-- Set black color to be used by default if
-			-- it is impossible to allocate desire color.
-		deferred
-		ensure
-			not is_white_by_default
-		end;
+feature -- Status setting
 
 	set_blue (blue_value: INTEGER) is
 			-- Set blue saturation level to `blue_value'.
@@ -81,8 +68,8 @@ feature
 			blue_value_not_negative: blue_value >= 0
 		deferred
 		ensure
-			(name = Void);
-			blue = blue_value
+			no_name: (name = Void);
+			blue_set: blue = blue_value
 		end;
 
 	set_green (green_value: INTEGER) is
@@ -92,18 +79,8 @@ feature
 			green_value_not_negative: green_value >= 0
 		deferred
 		ensure
-			(name = Void);
-			green = green_value
-		end;
-
-	set_name (a_name: STRING) is
-			-- Set color name to `a_name'.
-		require
-			a_name_not_void: not (a_name = Void)
-		deferred
-		ensure
-			not (name = Void);
-			name.is_equal (a_name)
+			no_name: (name = Void);
+			green_set: green = green_value
 		end;
 
 	set_red (red_value: INTEGER) is
@@ -113,8 +90,18 @@ feature
 			red_value_not_negative: red_value >= 0
 		deferred
 		ensure
-			(name = Void);
-			red = red_value
+			no_name: (name = Void);
+			red_set: red = red_value
+		end;
+
+	set_name (a_name: STRING) is
+			-- Set color name to `a_name'.
+		require
+			a_name_not_void: not (a_name = Void)
+		deferred
+		ensure
+			name_exists: name /= Void;
+			name_set: name.is_equal (a_name)
 		end;
 
 	set_rgb (red_value, green_value, blue_value: INTEGER) is
@@ -129,10 +116,18 @@ feature
 			blue_value_not_negative: blue_value >= 0
 		deferred
 		ensure
-			(name = Void);
-			red = red_value;
-			green = green_value;
-			blue = blue_value
+			no_name: (name = Void);
+			red_set: red = red_value;
+			green_set: green = green_value;
+			blue_set: blue = blue_value
+		end;
+
+	set_black_default is
+			-- Set black color to be used by default if
+			-- it is impossible to allocate desire color.
+		deferred
+		ensure
+			black_default: not is_white_by_default
 		end;
 
 	set_white_default is
@@ -140,7 +135,7 @@ feature
 			-- it is impossible to allocate desire color.
 		deferred
 		ensure
-			is_white_by_default
+			white_default: is_white_by_default
 		end
 
 end -- class COLOR_I

@@ -2022,7 +2022,15 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		require
 			for_context_tool: mode
 		do
+				-- FIXME: Manu 11/11/2001 Vision2 issue?
+				-- The following code is called just after `button_action'
+				-- is called causing the `address_dialog' to close because
+				-- no widgets got the focus yet. Since the code of `one_lost_focus'
+				-- is never called otherwise on GTK because clicking outside a
+				-- window does not make the window loose the focus, we put this
+				-- part as Windows specific.
 			if
+				(create {PLATFORM_CONSTANTS}).is_windows and then
 				not class_address.has_focus and then
 				not feature_address.has_focus and then
 				not cluster_address.has_focus and then

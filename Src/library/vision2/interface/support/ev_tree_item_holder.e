@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -16,11 +15,6 @@ inherit
 			implementation
 		end
 
-feature -- Implementation
-
-	implementation: EV_TREE_ITEM_HOLDER_I
-			-- Platform dependent access.
-
 feature -- Status report
 
 	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
@@ -31,7 +25,10 @@ feature -- Status report
 			Result := implementation.find_item_recursively_by_data (data)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TREE_ITEM_HOLDER_I
+			-- Platform dependent access.
 
 end -- class EV_TREE_ITEM_HOLDER
 
@@ -56,6 +53,9 @@ end -- class EV_TREE_ITEM_HOLDER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/07 01:32:43  king
+--| Reformatted text
+--|
 --| Revision 1.11  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

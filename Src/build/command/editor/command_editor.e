@@ -14,8 +14,6 @@ inherit
 		rename
 			init_toolkit as g_any_init_toolkit
 		redefine
---			make,
---			make_unmanaged,
 			realize,
 			destroy
 		end
@@ -38,22 +36,6 @@ creation
 
 feature -- Creation
 
--- 	make (a_name: STRING; a_parent: COMPOSITE) is
--- 			-- Create the command editor managed.
--- 		do
--- 			Precursor (a_name, a_parent)
--- 			command_tool ?= a_parent.parent
--- 			create_interface
--- 		end
--- 
--- 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
--- 			-- Create the command editor managed.
--- 		do
--- 			Precursor (a_name, a_parent)
--- 			command_tool ?= a_parent
--- 			create_interface
--- 		end
-
 	set_command_tool (a_command_tool: COMMAND_TOOL) is
 			-- Set `command_tool' to `a_command_tool'.
 		do
@@ -67,18 +49,15 @@ feature -- Creation
 			!! list_form.make ("List form", Current)
 			!! observer_form.make ("Observer form", list_form)
 			!! label_form.make ("Label form", list_form)
-			!! add_argument_hole.make (Current, editing_button_form)
 			!! add_ancestor_hole.make (Current, editing_button_form)
-			!! new_command_button.make ("New", editing_button_form)
 			!! undoable_toggle_b.make ("Undoable", editing_button_form)
-			!! new_label_label.make ("New label", editing_button_form)
-			!! new_label_text.make ("", editing_button_form)
-			!! separator_2.make ("", Current)
-			!! observers_scrolled_w.make (Widget_names.scroll2, observer_form)
-			!! observers.make ("Observer box", observers_scrolled_w, command_tool)
+			!! observed_instances_label.make ("Observed commands:", observer_form)
+			!! new_label_label.make ("New label", label_form)
+			!! new_label_text.make ("", label_form)
+			!! observed_commands_scrolled_w.make (Widget_names.scroll2, observer_form)
+			!! observed_commands.make ("Observer box", observed_commands_scrolled_w, command_tool)
 			!! label_scrolled_w.make (Widget_names.scroll3, label_form)
 			!! labels.make ("Label box", label_scrolled_w, Current)
-			!! separator_3.make ("", Current)
 			!! text_editor.make ("Text editor", Current)
 			set_values
 			attach_all
@@ -88,70 +67,59 @@ feature -- Creation
 	set_values is
 			-- Set the values for the GUI elements.
 		do
-			observers.set_row_layout
-			observers.set_spacing (5)
-			new_command_button.set_command_editor (Current)
-			label_scrolled_w.set_height (75)
-			label_form.set_height (75)
-			observers_scrolled_w.set_height (75)
-			observer_form.set_height (75)
+			list_form.set_height (75)
+			label_scrolled_w.set_height (55)
+			label_form.set_height (55)
+			observed_commands_scrolled_w.set_height (55)
+			observer_form.set_height (55)
 		end
 
 	attach_all is
 			-- Perform attachments.
 		do
-			attach_top (editing_button_form, 0)
-			attach_left (editing_button_form, 0)
-			attach_right (editing_button_form, 0)
-			attach_top_widget (editing_button_form, separator_2, 0)
-			attach_left (separator_2, 0)
-			attach_right (separator_2, 0)
-			attach_top_widget (separator_2, list_form, 0)
+			attach_top (list_form, 0)
 			attach_left (list_form, 0)
 			attach_right (list_form, 0)
-			attach_top_widget (list_form, separator_3, 0)
-			attach_left (separator_3, 0)
-			attach_right (separator_3, 0)
-			attach_top_widget (separator_3, text_editor, 0)
-			attach_left (text_editor, 5)
-			attach_right (text_editor, 5)
-			attach_bottom (text_editor, 5)
+			attach_top_widget (list_form, editing_button_form, 0)
+			attach_left (editing_button_form, 0)
+			attach_right (editing_button_form, 0)
+			attach_top_widget (editing_button_form, text_editor, 0)
+			attach_left (text_editor, 0)
+			attach_right (text_editor, 0)
+			attach_bottom (text_editor, 0)
 
-			editing_button_form.attach_top (add_argument_hole, 3)
-			editing_button_form.attach_top (add_ancestor_hole, 3)
-			editing_button_form.attach_top (new_command_button, 3)
-			editing_button_form.attach_top (undoable_toggle_b, 3)
-			editing_button_form.attach_top (new_label_label, 6)
-			editing_button_form.attach_top (new_label_text, 3)
-			editing_button_form.attach_left (add_argument_hole, 0)
-			editing_button_form.attach_left_widget (add_argument_hole, add_ancestor_hole, 0)
-			editing_button_form.attach_left_widget (add_ancestor_hole, new_command_button, 0)
-			editing_button_form.attach_left_widget (new_command_button, undoable_toggle_b, 5)
-			editing_button_form.attach_right (new_label_text, 0)
-			editing_button_form.attach_right_widget (new_label_text, new_label_label, 5)
-			editing_button_form.attach_bottom (add_argument_hole, 0)
+			editing_button_form.attach_top (add_ancestor_hole, 0)
+			editing_button_form.attach_top (undoable_toggle_b, 0)
+			editing_button_form.attach_left (add_ancestor_hole, 0)
+			editing_button_form.attach_right (undoable_toggle_b, 0)
 			editing_button_form.attach_bottom (add_ancestor_hole, 0)
-			editing_button_form.attach_bottom (new_command_button, 0)
 			editing_button_form.attach_bottom (undoable_toggle_b, 0)
-			editing_button_form.attach_bottom (new_label_label, 0)
-			editing_button_form.attach_bottom (new_label_text, 0)
 
-			list_form.set_fraction_base (2)
+			list_form.set_fraction_base (5)
 			list_form.attach_top (observer_form, 0)
 			list_form.attach_top (label_form, 0)
 			list_form.attach_left (observer_form, 0)
-			list_form.attach_right_position (observer_form, 1)
-			list_form.attach_left_position (label_form, 1)
+			list_form.attach_right_position (observer_form, 2)
+			list_form.attach_left_position (label_form, 2)
 			list_form.attach_right (label_form, 0)
-			list_form.attach_bottom (observer_form, 0)
-			list_form.attach_bottom (label_form, 0)
+			list_form.attach_bottom (observer_form, 2)
+			list_form.attach_bottom (label_form, 2)
 
-			observer_form.attach_top (observers_scrolled_w, 0)
-			observer_form.attach_left (observers_scrolled_w, 0)
-			observer_form.attach_right (observers_scrolled_w, 0)
-			observer_form.attach_bottom (observers_scrolled_w, 0)
+			observer_form.attach_top (observed_instances_label, 5)
+			observer_form.attach_left (observed_instances_label, 0)
+			observer_form.attach_right (observed_instances_label, 0)
+			observer_form.attach_top_widget (observed_instances_label, observed_commands_scrolled_w, 2)
+			observer_form.attach_left (observed_commands_scrolled_w, 0)
+			observer_form.attach_right (observed_commands_scrolled_w, 0)
+			observer_form.attach_bottom (observed_commands_scrolled_w, 0)
 
-			label_form.attach_top (label_scrolled_w, 0)
+			label_form.attach_top (new_label_label, 5)
+			label_form.attach_top (new_label_text, 0)
+			label_form.attach_left (new_label_label, 0)
+			label_form.attach_right (new_label_text, 0)
+			label_form.attach_left_widget (new_label_label, new_label_text, 5)
+			label_form.attach_top_widget (new_label_text, label_scrolled_w, 0)
+			label_form.attach_top_widget (new_label_label, label_scrolled_w, 2)
 			label_form.attach_left (label_scrolled_w, 0)
 			label_form.attach_right (label_scrolled_w, 0)
 			label_form.attach_bottom (label_scrolled_w, 0)
@@ -178,14 +146,12 @@ feature {NONE} -- Graphical interface
 
 		--| Graphical elements
 
-	observers_scrolled_w: SCROLLED_W
-			-- Scrolled window enclosing `observers'
-	add_argument_hole: ARG_HOLE
-			-- Hole used to add a formal argument
+	observed_commands_scrolled_w: SCROLLED_W
+			-- Scrolled window enclosing `observed_commands'
 	add_ancestor_hole: CMD_INH_HOLE
 			-- Hole used to add an ancestor to the edited command
-	new_command_button: NEW_COMMAND_BUTTON
-			-- Button used to create a new command
+	observed_instances_label,
+			-- Label for observed instances list
 	new_label_label: LABEL
 			-- Label specifying "New label"
 	new_label_text: TEXT_FIELD
@@ -194,14 +160,10 @@ feature {NONE} -- Graphical interface
 			-- Toggle button to specify if a command is undoable
 	label_scrolled_w: SCROLLED_W
 			-- Scrolled window enclosing `labels'
-	separator_2,
-			-- Separator between the row of button and the two boxes
-	separator_3: THREE_D_SEPARATOR
-			-- Separator between the two boxes and the text editor
 
 feature {COMMAND_TOOL, CMD_UPDATE_PARENT} -- Graphical interface
 
-	observers: OBSERVER_BOX
+	observed_commands: OBSERVED_INSTANCE_BOX
 			-- Observers of command_instance
 	labels: LABEL_BOX
 			-- Labels of current edited command
@@ -279,7 +241,6 @@ feature -- Editing
 			-- destroy Current
 		do
 			Precursor
-			add_argument_hole.unregister
 			add_ancestor_hole.unregister
 			argument_box.unregister_holes
 			labels.unregister_holes
@@ -301,6 +262,7 @@ feature -- Editing
 		do
 			save_previous_command
 			arguments.wipe_out
+			observed_commands.wipe_out
 			labels.wipe_out
 			text_editor.set_text ("")
 			current_command := Void
@@ -370,10 +332,20 @@ feature {COMMAND_TOOL}
 			elseif not (pr_cmd = Void) then
 				set_read_only_command (pr_cmd)
 			end
+			update_boxes
 			update_parent_symbol
 			update_title
 		end
 
+	set_current_command (cmd: CMD) is
+			-- Set the currently edited command.
+		require
+			not_void_cmd: not (cmd = Void)
+		do
+			save_previous_command
+			current_command := cmd
+		end
+			
 feature
 
 	update_title is
@@ -388,8 +360,8 @@ feature
 			-- Update `labels' and the argument box in 
 			-- `command_tool'.
 		do
-			labels.update_display
-			argument_box.update_display
+--			labels.update_display
+			observed_commands.set (instance_of_command_tool.observed_commands)
 		end
 
 feature {NONE}
@@ -407,6 +379,7 @@ feature {NONE}
 			current_command.set_editor (Current)
 			text_editor.set_text (current_command.eiffel_text)
 			text_editor.set_editable
+			undoable_toggle_b.set_sensitive
 			if edited_command.undoable then
 				undoable_toggle_b.set_toggle_on
 			else
@@ -431,6 +404,7 @@ feature {NONE}
 			text_editor.set_text (cmd.eiffel_text)
 			current_command.set_editor (Current)
 			text_editor.set_read_only
+			undoable_toggle_b.set_insensitive
 			if add_ancestor_hole.realized and then 
 				add_ancestor_hole.shown 
 			then
@@ -454,7 +428,7 @@ feature {COMMAND_TOOL}
 			-- Save values of currently
 			-- edited command.
 		do
-			if edited_command /= Void then
+			if edited_command /= Void and then edited_command.edited then
 				edited_command.save
 				edited_command.save_to_disk
 			end
@@ -551,7 +525,8 @@ feature -- Labels
 					popup_error_box (Messages.instance_rem_label_er)
 				else
 					edited_command.remove_label (l)
-					labels.remove_label (l)
+					labels.go_i_th (1)
+					labels.update_display
 				end
 			end
 		end

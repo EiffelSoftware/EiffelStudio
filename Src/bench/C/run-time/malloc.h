@@ -195,10 +195,6 @@ extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void sc_stop(void);
 rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type);				/* Set Eiffel object prior use */
 
-#ifndef TEST
-extern int cc_for_speed;			/* Priority to speed or memory? */
-#endif
-
 #ifdef __cplusplus
 }
 #endif

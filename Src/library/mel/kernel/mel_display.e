@@ -11,11 +11,9 @@ class
 
 inherit
 
-	MEMORY
-		export
-			{NONE} all
+	ANY
 		redefine
-			dispose
+			is_equal
 		end
 
 creation 
@@ -24,9 +22,9 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (application_context: MEL_APPLICATION_CONTEXT; display_name: STRING;
+	make (application_context: MEL_APPLICATION_CONTEXT; a_display_name: STRING;
 				app_name: STRING; app_class_name: STRING) is
-			-- Open the display with `display_name', application name `app_name'
+			-- Open the display with `a_display_name', application name `app_name'
 			-- and application class name `app_class_name'.
 		require
 			application_context_not_null: application_context.is_valid;
@@ -39,12 +37,12 @@ feature {NONE} -- Initialization
 			i: INTEGER;
 			a_display: POINTER
 		do
-			if display_name /= Void then
-				disp_name := display_name.to_c
+			if a_display_name /= Void then
+				disp_name := a_display_name.to_c
 			end;
 			app_name_ext := app_name.to_c;
 			app_class_name_ext := app_class_name.to_c;
-			if display_name /= Void then
+			if a_display_name /= Void then
 				a_display := xt_open_display (application_context.handle, $disp_name, 
 						$app_name_ext, $app_class_name_ext, default_pointer, 0, argc, argv)
 			else
@@ -54,12 +52,16 @@ feature {NONE} -- Initialization
 			if a_display /= default_pointer then
 				make_from_existing (a_display)
 			end;
+		ensure
+			name_set: (is_valid and then a_display_name /= Void and then
+				not a_display_name.empty) implies 
+					name.is_equal (a_display_name)
 		end;
 
 	make_from_existing (a_display: POINTER) is
 			-- Create display from `a_display'.
 		require
-			a_display_not_null: a_display /= Void
+			a_display_not_null: a_display /= default_pointer
 		local
 			i: INTEGER
 			nb_screens: INTEGER;
@@ -95,11 +97,44 @@ feature -- Access
 	default_screen: MEL_SCREEN is
 			-- The default screen of the display.
 		require
-			display_not_void: handle /= Void
+			is_valid: is_valid
 		do
 			Result := screens @ default_scr (handle)
 		ensure
 			default_screen_not_void: Result /= Void
+		end;
+
+	default_root_window: POINTER is
+			-- Default root window
+		require
+			is_valid: is_valid
+		do
+			Result := default_screen.root_window
+		end;
+
+	max_request_size: INTEGER is
+			-- Maximum number of request support by Current display
+		require
+			is_valid: is_valid
+		do
+			Result := x_max_request_size (handle)
+		end;
+
+	name: STRING is
+			-- Display name used to open the Current display
+		require
+			is_valid: is_valid
+		do
+			!! Result.make (0);
+			Result.from_c (display_string (handle))
+		end;
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is display equal to `other'?
+		do
+			Result := handle = other.handle
 		end;
 
 feature -- Status report
@@ -135,14 +170,6 @@ feature -- Removal
 			display_is_closed: not is_valid
 		end;
 
-	dispose is
-			-- Close the display if this one is valid.
-		do
-			if is_valid then
-				close
-			end
-		end;
-
 feature {NONE} -- Implementation
 
 	xt_open_display (app_context, disp_name, 
@@ -162,12 +189,27 @@ feature {NONE} -- Implementation
 			"XtCloseDisplay"
 		end;
 
+	x_max_request_size (display_ptr: POINTER): INTEGER is
+		external
+			"C [macro <X11/Xlib.h>] (Display *): EIF_INTEGER"
+		alias
+			"XMaxRequestSize"
+		end;
+
 	x_flush (dsp_ptr: POINTER) is
 		external
 			"C [macro <X11/Xlib.h>] (Display *)"
 		alias
 			"XFlush"
 		end;
+
+	display_string (display_ptr: POINTER): POINTER is
+			-- X macro
+		external
+			"C [macro <X11/Xlib.h>] (Display *): EIF_POINTER"
+		alias
+			"DisplayString"
+		end
 
 	default_scr (display_ptr: POINTER): INTEGER is
 			-- X macro

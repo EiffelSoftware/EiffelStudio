@@ -1,0 +1,18 @@
+system
+	base
+
+root
+	ANY
+
+default
+	assertion (all);
+
+cluster 
+
+		-- EiffelBase
+	all base: 		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "EIFGEN"; "Documentation"; "libraries"
+		end
+		
+end -- system base

@@ -1,0 +1,24 @@
+system
+	web
+
+root
+	NONE
+
+default
+	assertion (all);
+	precompiled ("$EIFFEL_SRC\library\base")
+
+cluster 
+
+		-- EiffelBase
+	all base: 		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"
+		end
+		
+	all web:		"$EIFFEL_SRC\library\web"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"
+		end
+
+end -- system base

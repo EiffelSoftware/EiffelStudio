@@ -1,0 +1,29 @@
+system
+	base
+
+root
+	NONE
+
+default
+	assertion (all);
+	precompiled ("$EIFFEL_SRC\library\base")
+
+cluster 
+
+		-- EiffelBase
+	all base: 		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"
+		end
+		
+	all wel: 		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "clib"; "spec"; "extra"
+		end
+	
+	all vision2:	"$EIFFEL_SRC\library\vision2"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "Clib"; "obsolete"; "spec"
+		end
+
+end -- system base

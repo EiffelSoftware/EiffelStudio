@@ -1,0 +1,30 @@
+system
+	net
+
+root
+	NONE
+
+default
+	assertion (all);
+	precompiled ("$EIFFEL_SRC\library\base")
+
+cluster 
+
+		-- EiffelBase
+	all base: 		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"
+		end
+	
+		-- WEL
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"clib"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "spec"; "extra"
+		end
+
+	all net:		"$EIFFEL_SRC\library\net"
+		exclude
+			"Clib"; "Clib_kr"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "mel_socket_poller.e"; "vision_socket_poller.e"
+		end
+	
+end -- system base

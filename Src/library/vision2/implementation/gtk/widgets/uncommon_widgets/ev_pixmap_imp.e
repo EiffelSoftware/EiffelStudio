@@ -25,7 +25,8 @@ inherit
 			height,
 			destroy,
 			drawable,
-			draw_full_pixmap
+			draw_full_pixmap,
+			draw_point
 		end
 
 	EV_PRIMITIVE_IMP
@@ -82,6 +83,20 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
 			flush	
+		end
+		
+	draw_point (x, y: INTEGER) is
+			-- Draw point at (`x', `y').
+		local
+			mask_gc: POINTER
+		do
+			if mask /= NULL then
+				mask_gc := C.gdk_gc_new (mask)
+				C.gdk_gc_set_function (mask_gc, C.GDK_INVERT_ENUM)
+	 			C.gdk_draw_point (mask, mask_gc, x, y)
+	 			C.gdk_gc_unref (mask_gc)
+			end
+			Precursor {EV_DRAWABLE_IMP} (x, y)
 		end
 
 	reset_to_size (a_x, a_y: INTEGER) is
@@ -199,7 +214,6 @@ feature -- Access
 			color_struct_size: INTEGER
 			local_c: EV_C_EXTERNALS
 			character_result, n_character: INTEGER
-			red_value: INTEGER
 		do
 			local_c := C
 			array_size := width * height
@@ -237,8 +251,11 @@ feature -- Access
 					n_character := 0
 					character_result := 0
 				end		
-				red_value := local_c.gdk_color_struct_red (a_color)
-				if red_value > 0  then
+				if 
+					local_c.gdk_color_struct_red (a_color) > 0
+					or else local_c.gdk_color_struct_green (a_color) > 0
+					or else local_c.gdk_color_struct_blue (a_color) > 0
+				then
 					character_result := character_result + (2 ^ (n_character)).rounded
 					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
 					-- This is the way it is read in by the gdk function. (FIFO)

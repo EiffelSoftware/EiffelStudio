@@ -43,6 +43,25 @@ feature {NONE} -- Initialization
 			{EV_MENU_ITEM_LIST} Precursor
 		end
 
+feature -- Standard operations
+
+	show is
+			-- Pop up on the current pointer position.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+			-- Pop up on `a_x', `a_y' relative to the top-left corner
+			-- of `a_widget'.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_I	
@@ -71,6 +90,9 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/17 19:28:54  brendel
+--| Added interfaces for show and show_at.
+--|
 --| Revision 1.22  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

@@ -24,7 +24,7 @@ feature -- Initialization
 			io.put_string ("Losing reference to initial o1 from Eiffel%N")
 			o1 := o2
 			io.put_string ("Collecting...%N")
-			full_collect
+			l_mem.full_collect
 			io.put_string ("Display new o1:%N")
 			o1.display
 			io.put_string ("Display o1 given to C:%N")
@@ -35,7 +35,7 @@ feature -- Initialization
 			io.put_string ("Losing reference from Eiffel%N")
 			o1 := o2
 			io.put_string ("Collecting...%N")
-			full_collect
+			l_mem.full_collect
 			io.put_string ("Old o1 forgot from both C and Eiffel:%N")
 			o1 ?= reference_from_c	
 			io.put_string ("Raise a Void exception..%N")

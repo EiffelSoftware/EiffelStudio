@@ -21,7 +21,6 @@ feature -- Initialization
 		require
 			feat_is_not_void: feat /= Void
 		local
-			current_class_i: CLASS_I
 			class_c: CLASS_C
 			current_feature: E_FEATURE
 		do
@@ -32,7 +31,7 @@ feature -- Initialization
 				current_feature_name := feat.name
 				cluster_name := class_c.cluster.cluster_name
 				is_ready := False
-	 			current_class_i := Universe.class_named (current_class_name, Universe.cluster_of_name (cluster_name))
+				initialize_context
 				if current_class_i /= Void and then current_class_i.compiled and then not current_class_i.date_has_changed then
 					class_c := current_class_i.compiled_class
 					if class_c.has_feature_table then
@@ -71,13 +70,17 @@ feature -- Basic operation
 			a_position	: INTEGER
 			token		: EDITOR_TOKEN
 			line		: EDITOR_LINE
+			l_current_class_c: CLASS_C
 		do
 			initialize_context
-			if context_initialized_successfully then
-				feat := current_class_c.feature_with_name (current_feature_name)
-				if feat /= Void then
-					ft := feat.ast
-					feat := Void
+			if current_class_i /= Void and then current_class_i.is_compiled then
+				l_current_class_c := current_class_i.compiled_class
+				if l_current_class_c.has_feature_table then
+					feat := l_current_class_c.feature_with_name (current_feature_name)
+					if feat /= Void then
+						ft := feat.ast
+						feat := Void
+					end
 				end
 				token := cursor.token
 				line := cursor.line
@@ -99,7 +102,6 @@ feature -- Basic operation
 			end
 			reset_after_search
 		end
-
 
 feature -- Analysis preparation
 

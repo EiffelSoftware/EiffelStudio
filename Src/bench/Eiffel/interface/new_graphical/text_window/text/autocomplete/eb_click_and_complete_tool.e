@@ -29,7 +29,6 @@ feature -- Initialisation
 			a_class_name_is_not_void: a_class_name /= Void
 			a_cluster_name_is_not_void: a_cluster_name /= Void
 		local
-			current_class_i: CLASS_I
 			current_cluster_i: CLUSTER_I
 			class_c: CLASS_C
 		do
@@ -39,15 +38,12 @@ feature -- Initialisation
 			is_ready := False
 			can_analyze_current_class := False
 			if not Workbench.is_compiling then
-				current_cluster_i := Universe.cluster_of_name (cluster_name)
-	 			if current_cluster_i /= Void then
-		 			current_class_i := Universe.class_named (current_class_name, current_cluster_i)
-					if current_class_i /= Void and then current_class_i.compiled then
-						class_c := current_class_i.compiled_class
-						generate_ast (class_c, after_save)
-						can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
-					end
-	 			end
+				initialize_context
+				if current_class_i /= Void and then current_class_i.compiled then
+					class_c := current_class_i.compiled_class
+					generate_ast (class_c, after_save)
+					can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
+				end
 			end
 		end
 
@@ -423,6 +419,7 @@ feature -- Basic Operations
 			par_token			: EDITOR_TOKEN
 			blnk				: EDITOR_TOKEN_BLANK
 			show_any_features	: BOOLEAN
+			l_current_class_c	: CLASS_C
 		do
 			create insertion.make (1,2)
 			insertion.put ("", 1)
@@ -432,7 +429,8 @@ feature -- Basic Operations
 			create completion_possibilities.make (1, 30)
 			cp_index := 1
 			initialize_context
-			if context_initialized_successfully then
+			if current_class_i /= Void and then current_class_i.is_compiled then
+				l_current_class_c := current_class_i.compiled_class
 				if cursor.token /= Void then
 					token := cursor.token.previous
 					if 
@@ -442,14 +440,14 @@ feature -- Basic Operations
 						local_analyzer.build_entities_list (cursor.line, token, False)
 						add_names_to_completion_list (Local_analyzer.found_names)
 						local_analyzer.reset
-						cls_c := current_class_c
+						cls_c := l_current_class_c
 					elseif token /= Void and then token.is_text then
 						exploring_current_class := False
 						if token_image_is_in_array (token, Feature_call_separators) then
 								-- token is dot or tilda
 							if token.image @ 1 = '%L' and then is_beginning_of_expression (token.previous) then
 								exploring_current_class := True
-								cls_c := current_class_c
+								cls_c := l_current_class_c
 								token := Void
 							else
 								insertion.put (token.image, 1)
@@ -462,7 +460,7 @@ feature -- Basic Operations
 							token := token.previous
 							if is_beginning_of_expression (token) then
 								exploring_current_class := True
-								cls_c := current_class_c
+								cls_c := l_current_class_c
 								local_analyzer.build_entities_list (cursor.line, token, False)
 								add_names_to_completion_list (Local_analyzer.found_names)
 								local_analyzer.reset
@@ -471,7 +469,7 @@ feature -- Basic Operations
 								if token_image_is_in_array (token, Feature_call_separators) then
 									if token.image @ 1 = '%L' and then is_beginning_of_expression (token.previous) then
 										exploring_current_class := True
-										cls_c := current_class_c
+										cls_c := l_current_class_c
 										token := Void
 									else
 										insertion.put (token.image, 1)
@@ -568,7 +566,7 @@ feature -- Basic Operations
 								(
 									exploring_current_class
 										or else
-									feat.is_exported_to (current_class_c)
+									feat.is_exported_to (l_current_class_c)
 								)
 									and then
 								(
@@ -596,7 +594,7 @@ feature -- Basic Operations
 								(
 									exploring_current_class
 										or else
-									feat.is_exported_to (current_class_c)
+									feat.is_exported_to (l_current_class_c)
 								)
 									and then
 								(
@@ -631,7 +629,7 @@ feature -- Basic Operations
 			line		: EDITOR_LINE
 		do
 			initialize_context
-			if context_initialized_successfully then
+			if current_class_i /= Void then
 				token := cursor.token
 				line := cursor.line
 				a_position := token.pos_in_text
@@ -831,6 +829,8 @@ feature {NONE} -- Completion implementation
 			token_not_void: token /= Void
 			line_not_void: line /= Void
 			token_in_line: line.has_token (token)
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		do
 			current_token := token
 			searched_token := token
@@ -846,7 +846,8 @@ feature {NONE} -- Completion implementation
 	searched_type: TYPE_A is
 			-- analyze class text from `current_token' to find type associated with `searched_token'
 		require
-			current_class_c_not_void: current_class_c /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
 			name: STRING
@@ -855,9 +856,11 @@ feature {NONE} -- Completion implementation
 			type: TYPE_A
 			formal: FORMAL_A
 			feat: E_FEATURE
+			l_current_class_c: CLASS_C
 		do
 			from
-				Result := current_class_c.actual_type
+				l_current_class_c := current_class_i.compiled_class
+				Result := l_current_class_c.actual_type
 				if token_image_is_same_as_word (current_token, "create") then
 					go_to_next_token
 					is_create := True
@@ -914,23 +917,23 @@ feature {NONE} -- Completion implementation
 							end
 						else
 							go_to_previous_token
-							if current_feature_as /= Void and then current_class_c.parents /= Void then
+							if current_feature_as /= Void and then l_current_class_c.parents /= Void then
 								from
-									current_class_c.parents.start
+									l_current_class_c.parents.start
 								until
-									feat /= Void or else current_class_c.parents.after
+									feat /= Void or else l_current_class_c.parents.after
 								loop
-									type := current_class_c.parents.item
+									type := l_current_class_c.parents.item
 									if type.associated_class /= Void and then type.associated_class.has_feature_table then
 										feat := type.associated_class.feature_with_name (current_feature_as.feature_name)
 									end
-									current_class_c.parents.forth
+									l_current_class_c.parents.forth
 								end
 							end
 						end
 					else
-						if current_class_c.has_feature_table then
-							feat := current_class_c.feature_with_name (name)
+						if l_current_class_c.has_feature_table then
+							feat := l_current_class_c.feature_with_name (name)
 						end
 						is_create := create_before_position (current_line, current_token)
 					end

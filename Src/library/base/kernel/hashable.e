@@ -15,7 +15,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		require
-			is_hashable
+			hashable: is_hashable
 		deferred
 		ensure
 			valid_hash_value: Result >= 0

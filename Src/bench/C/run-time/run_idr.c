@@ -13,6 +13,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include <stdio.h>
 #include "err_msg.h"
 #include <sys/types.h>
 #ifdef I_NETINET_IN

@@ -121,8 +121,7 @@ feature
 		local
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
-			Precompilation_driver.make_from_string
-					(Workbench.precompiled_driver)
+			Precompilation_driver.make_from_string (Workbench.precompiled_driver)
 			precomp_dirs := Workbench.precompiled_directories;
 			from 
 				precomp_dirs.start 

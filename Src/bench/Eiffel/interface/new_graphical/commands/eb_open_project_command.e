@@ -203,7 +203,6 @@ feature {NONE} -- Project Initialization
 			project_name: STRING
 			wd: EV_WARNING_DIALOG
 			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
-			dev_window: EB_DEVELOPMENT_WINDOW
 		do	
 				-- Retrieve the project
 			Eiffel_project.make (project_dir)
@@ -254,8 +253,7 @@ feature {NONE} -- Project Initialization
 
 			if not Eiffel_project.error_occurred then
 				init_project
-				title := clone (Interface_names.t_Project)
-				title.append (": ")
+				title := clone (Interface_names.l_Loaded_project)
 				project_name := project_dir.name
 				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
 					project_name.head (project_name.count -1)
@@ -264,12 +262,8 @@ feature {NONE} -- Project Initialization
 				if Eiffel_system.is_precompiled then
 					title.append ("  (precompiled)")
 				end
-				dev_window := window_manager.last_focused_development_window
-				if dev_window /= Void then
-					dev_window.window.set_title (title)
-				end
+				window_manager.display_message (title)
 				Recent_projects_manager.save_environment
-				Eiffel_project.Workbench.on_project_loaded
 				
 					-- We print text in the project_tool text concerning the system.
 				output_manager.display_system_info

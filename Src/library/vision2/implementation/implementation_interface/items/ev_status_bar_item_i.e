@@ -1,3 +1,4 @@
+--| FIXME Not for release
 indexing
 	description: "Eiffel Vision status bar item. Implementation interface."
 	status: "See notice at end of class."
@@ -72,6 +73,9 @@ end -- class EV_STATUS_BAR_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/28 21:45:50  brendel
+--| Unreleased.
+--|
 --| Revision 1.15  2000/04/26 21:55:02  brendel
 --| value -> a_width.
 --|

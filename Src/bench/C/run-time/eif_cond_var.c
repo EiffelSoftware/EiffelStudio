@@ -161,7 +161,24 @@ int pthread_cond_timedwait (pthread_cond_t *cv, pthread_mutex_t external_mutex, 
 
 	WaitForSingleObject (external_mutex, INFINITE); 
 
-	return (result == WAIT_FAILED ? WAIT_FAILED : 0);
+	return result; 
+
+	/* Return Code 	Description 																*/
+	/* WAIT_ABANDONED 	The specified object is a mutex object that was not released  			*/
+	/*				   	by the thread that owned the mutex object before the owning 			*/
+	/*				   	thread terminated. Ownership of the mutex object is granted 			*/
+	/*				   	to the calling thread, and the mutex is set to nonsignaled. 			*/
+	/* WAIT_OBJECT_0 	The state of the specified object is signaled. 							*/
+	/* WAIT_TIMEOUT 	The time-out interval elapsed, and the object's state is nonsignaled. 	*/
+	/*  																						*/
+	/* ( only for SignalObjectAndWait ... 														*/
+  	/*	   WAIT_IO_COMPLETION 	 																*/
+	/*				   The wait was ended by one or more user-mode asynchronous 				*/
+	/*				   procedure calls (APC) queued to the thread. 								*/
+	/* )																						*/
+	/* If the function fails, the return value is WAIT_FAILED.  								*/
+	/* ... 																						*/
+
 }
 
 int pthread_cond_signal (pthread_cond_t *cv)

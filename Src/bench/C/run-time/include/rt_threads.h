@@ -94,7 +94,7 @@ extern int eif_is_synchronized (void);
 #define EIF_COND_INIT(cond, msg)
 #define EIF_COND_CREATE(cond, msg)
 #define EIF_COND_WAIT(cond, mutex, msg)
-#define EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, timeout, msg)
+#define EIF_COND_WAIT_WITH_TIMEOUT(result_success, cond, mutex, timeout, msg)
 #define EIF_COND_BROADCAST(cond, msg)
 #define EIF_COND_SIGNAL(cond, msg)
 #define EIF_COND_DESTROY(cond, msg)
@@ -109,10 +109,15 @@ extern int eif_is_synchronized (void);
     if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
 
 #ifdef EIF_WIN32 
-#define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
-    if (pthread_cond_timedwait (pcond, pmutex, timeout)) eraise (msg, EN_EXT)
+#define EIF_COND_WAIT_WITH_TIMEOUT(result_success, pcond, pmutex, timeout, msg) \
+	{ \
+		int res = 0; \
+    	res = pthread_cond_timedwait (pcond, pmutex, timeout); \
+		if (res && !((res == WAIT_TIMEOUT) || (res == WAIT_OBJECT_0))) eraise (msg, EN_EXT); \
+		result_success = (res != WAIT_TIMEOUT ? 1 : 0); \
+	}
 #else
-#define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
+#define EIF_COND_WAIT_WITH_TIMEOUT(result_success, pcond, pmutex, timeout, msg) \
 	{ \
 		int res = 0; \
 		time_t l_seconds = timeout / 1000;	/* `timeout' is in second */ \
@@ -122,6 +127,7 @@ extern int eif_is_synchronized (void);
 		tspec.tv_nsec = l_nano_seconds; \
 		res = pthread_cond_timedwait (pcond, pmutex, &tspec); \
 		if (res && !((res == ETIMEDOUT) || (res == ETIME))) eraise (msg, EN_EXT); \
+		result_success = (res != ETIMEDOUT ? 1 : 0); \
 	}
 #endif
 

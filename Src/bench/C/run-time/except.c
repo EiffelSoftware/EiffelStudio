@@ -805,7 +805,7 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 		return;			/* Exception is ignored */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
-	echval = num;		/* Set exception number */
+	echval = (unsigned char) num;		/* Set exception number */
 
 	/* Save the exception on the exception trace stack, if possible. If that
 	 * stack is full, raise the EN_OMEM memory exception if not currently done.
@@ -817,7 +817,7 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 			if (num != EN_OMEM)					/* If not already there */
 				enomem(MTC_NOARG);						/* Raise an out of memory */
 		} else {
-			trace->ex_type = num;		/* Exception code */
+			trace->ex_type = (unsigned char) num;		/* Exception code */
 			switch (num) {
 			case EN_SIG:				/* Received a signal */
 				trace->ex_sig = echsig;	/* Record its number */

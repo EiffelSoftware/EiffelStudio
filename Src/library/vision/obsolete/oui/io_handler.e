@@ -38,6 +38,8 @@ feature
 
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_call_back_set
 		end;
@@ -48,6 +50,7 @@ feature
 			--| the behave of this routine should be examined when other
 			--| error handlers are used (such as Eiffel exception mechanism).
 		require
+			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			not_a_command_void: not (a_command = Void)
 		do
@@ -59,6 +62,7 @@ feature
 	set_no_call_back is
 			-- Remove any call-back already set.
 		require
+			exists: not destroyed;
 			a_call_back_must_be_set: is_call_back_set
 		do
 			implementation.set_no_call_back
@@ -70,6 +74,7 @@ feature
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		require
+			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			not_a_command_void: not (a_command = Void)
 		do
@@ -82,6 +87,7 @@ feature
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		require
+			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			not_a_command_void: not (a_command = Void)
 		do
@@ -90,8 +96,15 @@ feature
 			is_call_back_set
 		end;
 
+	destroyed: BOOLEAN is
+		do
+			Result := implementation = Void
+		end;
+
 	destroy is
 			-- Destroy Current.
+		require
+			exists: not destroyed
 		do
 			implementation.destroy;
 			implementation := Void

@@ -27,10 +27,10 @@ feature
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 		do
-			check
-				consistency: count = System.nb_of_classes
-			end;
 			classes := System.classes;
+			check
+				consistency: count = classes.count
+			end;
 			count := System.dle_max_topo_id
 			from 
 				classes.start 

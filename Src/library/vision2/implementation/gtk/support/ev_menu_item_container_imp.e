@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision invisible container, gtk implementation."
 	status: "See notice at end of class"
@@ -66,7 +65,7 @@ feature {NONE} -- Implementation
 		end
 
 
-end
+end -- class EV_MENU_ITEM_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

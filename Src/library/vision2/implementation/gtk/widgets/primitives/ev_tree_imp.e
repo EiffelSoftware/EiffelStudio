@@ -11,8 +11,16 @@ inherit
 	EV_TREE_I
 
 	EV_PRIMITIVE_IMP
+		redefine
+			destroy,
+			destroyed
+		end
 
 	EV_TREE_ITEM_HOLDER_IMP
+		redefine
+			destroy,
+			destroyed
+		end
 
 creation
 	make
@@ -28,7 +36,6 @@ feature {NONE} -- Initialization
 			-- Creating the gtk scrolled window, pointed by `widget':
 			widget := gtk_scrolled_window_new (Default_pointer, Default_pointer)
 			gtk_object_ref (widget)
-			gtk_widget_show (widget)
 			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), gtk_policy_automatic, gtk_policy_automatic)
 
 			-- Creating the gtk_tree, pointed by `tree_widget':
@@ -89,6 +96,26 @@ feature -- Status report
 			check
 				not_yet_implemented: False
 			end
+		end
+
+	destroyed: BOOLEAN is
+			-- Is screen window destroyed?
+                do
+                        Result := (widget = Default_pointer) and (tree_widget = Default_pointer)
+ 		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy screen widget implementation and EV_LIST_ITEM objects
+		do
+-- clear_items
+			if not destroyed then
+	                        gtk_widget_destroy (tree_widget)
+	                        gtk_widget_destroy (widget)
+			end
+			widget := Default_pointer
+			tree_widget := Default_pointer
 		end
 
 feature -- Event : command association

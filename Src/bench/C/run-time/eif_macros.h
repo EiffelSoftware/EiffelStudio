@@ -389,7 +389,7 @@ RT_LNK int fcount;
 #else
 #define RTLU(x,y)
 #define RTLO(n)	
-#define RTHOOK(n)
+#define RTHOOK(n)	exvect->ex_linenum = n
 #define RTNHOOK(n)
 #endif
 

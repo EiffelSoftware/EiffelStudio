@@ -30,15 +30,16 @@ feature {NONE} -- Initialization
 
 			!! button.make (Current)
 			button.set_text ("I move")
+			button.set_default_minimum_size
 			button.set_x_y (10, 10)
 
 			!! popup.make (Current)
 			!! item.make_with_text (popup, "GO")
 			!! cmd.make (~plus_command)
-			item.add_activate_command (cmd, Void)
+			item.add_select_command (cmd, Void)
 			!! item.make_with_text (popup, "BACK")
 			!! cmd.make (~less_command)
-			item.add_activate_command (cmd, Void)
+			item.add_select_command (cmd, Void)
 		end
 
 feature -- Access

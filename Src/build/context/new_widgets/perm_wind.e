@@ -15,7 +15,7 @@ inherit
 			real_x, real_y,
 			realize,
 			unrealize, realized,
-			raise, lower
+			raise, lower, shown
 		end
 
 creation
@@ -120,6 +120,11 @@ feature
 	show is
 		do
 			top_shell.show
+		end;
+
+	shown: BOOLEAN is
+		do
+			Result := top_shell.shown
 		end;
 
 	hide is

@@ -24,7 +24,8 @@ inherit
 			set_heavy_capture,
 			release_heavy_capture,
 			remove_pixmap,
-			set_pixmap
+			set_pixmap,
+			top_level_window_imp
 		end
 
 	EV_TEXTABLE_IMP
@@ -248,6 +249,28 @@ feature {NONE} -- Implementation
 			if internal_object_id /= 0 then
 				eif_object_id_free (internal_object_id)
 				internal_object_id := 0
+			end
+		end
+		
+feature {EV_MENU_ITEM_IMP} -- Implementation
+		
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window containing `Current' in parenting heirarchy.
+		local
+			a_menu: EV_MENU_IMP
+			a_menu_bar: EV_MENU_BAR_IMP
+		do
+			if parent_imp /= Void then
+				a_menu ?= parent_imp
+				if a_menu /= Void then
+					Result := a_menu.top_level_window_imp
+				else
+					a_menu_bar ?= parent_imp
+					check
+						parent_was_menu_or_bar: a_menu_bar /= Void
+					end
+					Result := a_menu_bar.top_level_window_imp
+				end
 			end
 		end
 

@@ -14,11 +14,8 @@ inherit
 		redefine
 			create_drop_actions
 		end
-
-	WEL_SYSTEM_METRICS
-		export
-			{NONE} all
-		end
+		
+	EV_SHARED_TRANSPORT_IMP
 
 feature {NONE} -- Initialization
 
@@ -267,6 +264,7 @@ feature {EV_ANY_I} -- Implementation
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.
 			then
+				
 					-- We need to store `top_level_window_imp' for use later if `Current'
 					-- is unparented during the pick and drop execution.
 				original_top_level_window_imp := top_level_window_imp
@@ -342,7 +340,7 @@ feature {EV_ANY_I} -- Implementation
 				-- Return capture type to capture_normal.
 				--| normal capture only works on the current windows thread.
 			set_capture_type (Capture_normal)
-
+		
 			release_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
 
@@ -500,11 +498,6 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		end
-		
-feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
-
-	cursor_pixmap: EV_CURSOR
-			-- Cursor used on the widget.
 			
 feature {EV_ANY_I} -- Implementation
 
@@ -545,12 +538,6 @@ feature {EV_ANY_I} -- Implementation
 		-- actually starts, with real_start_transport,these can be passed
 		-- as arguments.
 
-	awaiting_movement: BOOLEAN
-		-- Is a drag and drop awaiting mouse movement?
-
-	drag_and_drop_starting_movement: INTEGER is 3
-		-- Pointer movement in pixels required to start a drag and drop.
-
 	pnd_stored_cursor: EV_CURSOR
 			-- Cursor used on the widget before PND started.
 
@@ -567,50 +554,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 			pnd_stored_cursor := new_cursor
 		end
-
-	internal_set_pointer_style (new_cursor: EV_CURSOR) is
-			-- Assign `new_cursor' to cursor used on `Current'.
-			-- Only called through implementation.
-		local
-			wel_cursor: WEL_CURSOR
-			cursor_imp: EV_PIXMAP_IMP_STATE
-		do
-				-- We do a global setting. This means that if the widget
-				-- where the cursor is has a different cursor than
-				-- `new_cursor' it will flash, but this is better than to
-				-- wait until the on_set_cursor event (WM_SETCURSOR) is
-				-- called to change the shape of the cursor.
-			cursor_pixmap := new_cursor
-			cursor_imp ?= cursor_pixmap.implementation
-			wel_cursor := cursor_imp.cursor
-			if wel_cursor = Void then
-				wel_cursor := cursor_imp.build_cursor
-				wel_cursor.enable_reference_tracking
-			else
-				wel_cursor.increment_reference
-			end
-				-- The cursor has been just built from `cursor_imp'
-				-- so we can use it's width and height to check they match
-				-- the cursor size from WEL_SYSTEM_METRICS.
-				--| If we are running on Windows 95 we need to check that
-				--| the cursor size is valid.	 	
-			check
-				cursor_size_valid: (create {WEL_WINDOWS_VERSION}
-					).is_windows_95
-					implies (cursor_imp.width = cursor_width and
-					cursor_imp.height = cursor_height)
-			end
-			
-			if current_wel_cursor /= Void then
-				current_wel_cursor.decrement_reference
-				current_wel_cursor := Void
-			end
-			current_wel_cursor := wel_cursor
-			wel_cursor.set
-		end
-		
-	current_wel_cursor: WEL_CURSOR
-			-- Current cursor set, Void if none.
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
 			-- Cursor of `Current'.
@@ -646,14 +589,6 @@ feature {EV_ANY_I} -- Implementation
 				rubber_band_is_drawn := False
 			end
 		end
-
-	pnd_screen: EV_SCREEN
-			-- Screen, used for drawing rubber band.
-		--| This was previously a `Once' function, but on Windows 98,
-		--| the screen appeared to become corrupted from time to time.
-		--| We now create this screen in `real_start_transport' which
-		--| is a reasonable trade off. When EV_SCREEN is fixed on Win98
-		--| Then this can be a once again.
 
 	enable_capture is
 			-- Enable capture.

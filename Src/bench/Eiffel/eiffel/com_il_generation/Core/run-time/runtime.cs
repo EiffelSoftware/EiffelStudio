@@ -238,6 +238,16 @@ feature -- Redirection to feature of ANY class
 		return ANY.conforms_to (obj1, obj2);
 	}
 
+	public static object clone (object Current, object other)
+		// Void if `other' is void; otherwise new object
+		// equal to `other'
+		//
+		// For non-void `other', `clone' calls `copy';
+		// to change copying/cloning semantics, redefine `copy'.
+	{
+		return ANY.clone (Current, other);
+	}
+
 	public static void copy (object Current, object other)
 		// Update current object using fields of object attached
 		// to `other', so as to yield equal objects.
@@ -301,6 +311,14 @@ feature -- Redirection to feature of ANY class
 		// Is type of current object identical to type of `other'?
 	{
 		return ANY.same_type (Current, other);
+	}
+
+	public static object standard_clone (object Current, object other)
+		// Void if `other' is void; otherwise new object
+		// field-by-field identical to `other'.
+		// Always uses default copying semantics.
+	{
+		return ANY.standard_clone (Current, other);
 	}
 
 	public static void standard_copy (object Current, object other)

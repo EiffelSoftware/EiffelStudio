@@ -133,23 +133,17 @@ feature
 				end
 				types.forth
 			end
-			Plug_file := System.Plug_file
-			Plug_file.putstring ("int egc_sp_char = ")
+			Plug_file.putstring ("%Negc_sp_char = ")
 			Plug_file.putint (char_dtype)
-			Plug_file.putstring (";%N")
-			Plug_file.putstring ("int egc_sp_bool = ")
+			Plug_file.putstring (";%Negc_sp_bool = ")
 			Plug_file.putint (boolean_dtype)
-			Plug_file.putstring (";%N")
-			Plug_file.putstring ("int egc_sp_int = ")
+			Plug_file.putstring (";%Negc_sp_int = ")
 			Plug_file.putint (long_dtype)
-			Plug_file.putstring (";%N")
-			Plug_file.putstring ("int egc_sp_real = ")
+			Plug_file.putstring (";%Negc_sp_real = ")
 			Plug_file.putint (float_dtype)
-			Plug_file.putstring (";%N")
-			Plug_file.putstring ("int egc_sp_double = ")
+			Plug_file.putstring (";%Negc_sp_double = ")
 			Plug_file.putint (double_dtype)
-			Plug_file.putstring (";%N")
-			Plug_file.putstring ("int egc_sp_pointer = ")
+			Plug_file.putstring (";%Negc_sp_pointer = ")
 			Plug_file.putint (pointer_dtype)
 			Plug_file.putstring (";%N")
 		end

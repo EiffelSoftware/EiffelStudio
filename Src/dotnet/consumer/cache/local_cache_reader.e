@@ -36,9 +36,6 @@ feature {NONE}
 		
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `ca' types.
-		require
-			non_void_assembly: ca /= Void
-			valid_assembly: ca.key /= Void
 		local
 			relative_path, a_absolute_path: STRING
 			a_dir: DIRECTORY
@@ -57,9 +54,6 @@ feature {NONE}
 				a_absolute_path.append (relative_path)
 			end
 			Result := a_absolute_path
-		ensure
-			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 		
 	local_info_path: STRING is

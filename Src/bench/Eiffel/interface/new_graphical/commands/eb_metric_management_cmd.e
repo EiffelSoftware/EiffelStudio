@@ -211,7 +211,7 @@ feature -- Access
 	ev_list: EV_LIST
 		-- List of available non basic metrics in current system.
 		
-	deleted_metrics: LINKED_LIST [EV_LIST_ITEM]
+	deleted_metrics: ARRAYED_LIST [EV_LIST_ITEM]
 		-- List of deleted metrics.
 
 	import: EB_METRIC_MANAGEMENT_IMPORT
@@ -252,8 +252,8 @@ feature -- Setting
 			existing_metrics: tool.metrics /= Void
 			check_non_basic: tool.metrics.count - tool.nb_basic_metrics = tool.user_metrics_xml_list.count
 		local
-			metric_list: LINKED_LIST [EB_METRIC]
-			metric_xml_list: LINKED_LIST [XM_ELEMENT]
+			metric_list: ARRAYED_LIST [EB_METRIC]
+			metric_xml_list: ARRAYED_LIST [XM_ELEMENT]
 			list_item_data: CELL2 [EB_METRIC, XM_ELEMENT]
 			list_item: EV_LIST_ITEM
 			i: INTEGER
@@ -555,8 +555,8 @@ feature -- Action
 		require
 			check_non_basic: tool.metrics.count - tool.nb_basic_metrics = tool.user_metrics_xml_list.count
 		local
-			metric_list: LINKED_LIST [EB_METRIC]
-			metric_xml_list: LINKED_LIST [XM_ELEMENT]
+			metric_list: ARRAYED_LIST [EB_METRIC]
+			metric_xml_list: ARRAYED_LIST [XM_ELEMENT]
 			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			i: INTEGER
 		do
@@ -1067,7 +1067,7 @@ feature -- Edit
 				import.importable_metric_list.wipe_out
 				import.current_metric_list.wipe_out
 			end
-			create deleted_metrics.make
+			create deleted_metrics.make (1)
 			up_button.disable_sensitive
 			down_button.disable_sensitive
 			delete_button.disable_sensitive

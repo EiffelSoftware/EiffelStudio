@@ -86,11 +86,6 @@ feature -- Element Change
 			
 feature {NONE} -- External
 
-	ccom_format_message (a_pointer: POINTER; code: INTEGER): STRING is
-		external
-			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"
-		end
-
 	ccom_hresult_to_string (a_pointer: POINTER; code: INTEGER): STRING is
 		external
 			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"

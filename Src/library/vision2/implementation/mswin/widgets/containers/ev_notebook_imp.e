@@ -778,6 +778,13 @@ feature {NONE} -- Implementation
 			insert_item (i - 1, wel_tci)
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
+				-- If another item is already selected, we need to ensure
+				-- that we hide `v_imp' as otherwise, it may appear to be the
+				-- widget of the currently selected tab, when it should not be
+				-- displayed as its tab is not selected.
+			if selected_item_index /= i then
+				v_imp.show_window (v_imp.wel_item, Sw_hide)
+			end
 			notify_change (Nc_minsize, v_imp)
 				-- Call `new_item_actions' on `Current'.
 			new_item_actions.call ([v])

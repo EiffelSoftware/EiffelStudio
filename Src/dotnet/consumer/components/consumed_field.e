@@ -82,7 +82,7 @@ feature -- Status report
 			-- Yes, if it is not a static field.
 		do
 			Result := not is_static
-		ensure
+		ensure then
 			definition: Result = not is_static
 		end
 

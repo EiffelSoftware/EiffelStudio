@@ -26,7 +26,7 @@ feature -- Initialization
 			create a_parameter.make
 			create current_comment.make_empty
 			create current_tag.make (10)
-		ensure
+		ensure then
 			non_void_a_member: a_member /= Void
 			non_void_a_parameter: a_parameter /= Void
 			non_void_current_comment: current_comment /= Void

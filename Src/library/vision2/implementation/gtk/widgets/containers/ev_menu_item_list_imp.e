@@ -163,7 +163,11 @@ feature {NONE} -- implementation
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_ITEM_IMP
-			radio_imp: EV_RADIO_MENU_ITEM
+			radio_imp: EV_RADIO_MENU_ITEM_IMP
+			sep_imp: EV_MENU_SEPARATOR_IMP
+			rpos: INTEGER
+			an_index: INTEGER
+			has_radio_item: BOOLEAN
 		do
 			item_imp ?= eif_object_from_c (
 				C.g_list_nth_data (
@@ -172,6 +176,42 @@ feature {NONE} -- implementation
 				)
 			)
 			Precursor (a_position)
+			
+			radio_imp ?= item_imp
+			if radio_imp /= Void then
+				C.gtk_radio_menu_item_set_group (radio_imp.c_object, Default_pointer)
+			else
+				sep_imp ?= item_imp
+				if sep_imp /= Void then
+					sep_imp := separator_imp_by_index (a_position)
+					from
+						an_index := interface.index
+						interface.go_i_th (a_position)
+					until
+						interface.after or else is_menu_separator_imp (interface.item.implementation)
+					loop
+						radio_imp ?= interface.item.implementation
+						if radio_imp /= Void then
+							has_radio_item := True
+							if sep_imp /= Void then
+								radio_imp.set_radio_group (sep_imp.radio_group)
+								sep_imp.set_radio_group (radio_imp.radio_group)
+								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							else
+								radio_imp.set_radio_group (radio_group)
+								set_radio_group (radio_imp.radio_group)
+								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							end
+						end
+						interface.forth
+					end
+					if not has_radio_item and then sep_imp = Void then
+						set_radio_group (Default_pointer)
+					end						
+					interface.go_i_th (an_index)						
+				end
+			end
+
 			item_imp.set_parent_imp (Void)
 		end
 
@@ -222,6 +262,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/28 23:57:17  king
+--| Implemented radio regrouping on item removal
+--|
 --| Revision 1.18  2000/04/28 00:50:56  king
 --| Added check for separator radio group
 --|

@@ -109,57 +109,57 @@ feature {NONE} -- Implementation
 	c_name (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly name
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"name"
+			"Name"
 		end
 		
 	c_version (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly version
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"version"
+			"Version"
 		end
 		
 	c_culture (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- asssembly culture
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"culture"
+			"Culture"
 		end
 		
 	c_public_key_token (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly public key token
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"public_key_token"
+			"PublicKeyToken"
 		end
 
 	c_is_in_gac (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- was assembly consumed in GAC
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"is_in_gac"
+			"IsInGac"
 		end
 
 	c_is_consumed (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly consumed folder name
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"is_consumed"
+			"IsConsumed"
 		end
 
 	c_consumed_folder_name (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly consumed folder name
 		external
-			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"consumed_folder_name"
+			"ConsumedFolderName"
 		end
 
 end -- class COM_ASSEMBLY_INFORMATION

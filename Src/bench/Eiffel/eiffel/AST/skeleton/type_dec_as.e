@@ -10,7 +10,7 @@ class TYPE_DEC_AS
 inherit
 	AST_EIFFEL
 		redefine 
-			fill_calls_list, replicate, is_equivalent
+			is_equivalent
 		end
 
 	SHARED_NAMES_HEAP
@@ -56,24 +56,6 @@ feature -- Comparison
 		do
 			Result := equal (id_list, other.id_list) and then
 				equivalent (type, other.type)
-		end
-
-feature  -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			type.fill_calls_list (l)
-				--| useful for like ... only
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to Replication
-		do
-			Result := clone (Current)
-			Result.set_type (clone (type))
-			Result.set_id_list (clone (id_list))
-				--| useful for like ... only
 		end
 
 feature {AST_EIFFEL} -- Output

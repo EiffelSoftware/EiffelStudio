@@ -9,8 +9,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			number_of_breakpoint_slots, is_equivalent,
-			type_check, byte_node,
-			fill_calls_list, replicate
+			type_check, byte_node
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -142,7 +141,7 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Check conflicts between local names and feature names
 		do
 			if content /= Void then
@@ -150,7 +149,7 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	local_table_for_format (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table_for_format (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Check conflicts between local names and feature names
 		do
 			if content /= Void then
@@ -439,33 +438,6 @@ end
 				Result := r1.is_assertion_equiv (r2)
 			else
 				Result := True
-			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			if content /= Void then
-				content.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			if arguments /= Void then
-				Result.set_arguments (
-				arguments.replicate (ctxt))
-			end
-			if type /= Void then
-				Result.set_type (
-					type.replicate (ctxt))
-			end
-			if content /= Void then
-				Result.set_content (
-					content.replicate (ctxt))
 			end
 		end
 

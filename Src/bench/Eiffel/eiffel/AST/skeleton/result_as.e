@@ -10,7 +10,7 @@ class
 inherit
 	ACCESS_AS
 		redefine
-			type_check, byte_node, replicate,
+			type_check, byte_node,
 			is_equivalent, format
 		end
 
@@ -92,14 +92,6 @@ feature -- Type check, byte code and dead code removal
 		do
 			ctxt.prepare_for_result
 			ctxt.put_text_item (ti_Result)
-		end
-
-feature -- Replication
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			ctxt.adapt_Result
-			Result := clone (Current)
 		end
 
 feature {AST_EIFFEL} -- Output

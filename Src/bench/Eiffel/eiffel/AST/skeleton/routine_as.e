@@ -13,7 +13,7 @@ inherit
 			has_rescue, has_precondition, has_postcondition,
 			check_local_names, 
 			type_check, byte_node,
-			fill_calls_list, replicate, local_table, format,
+			local_table, format,
 			local_table_for_format, create_default_rescue, is_empty,
 			number_of_precondition_slots,
 			number_of_postcondition_slots,
@@ -381,7 +381,7 @@ feature -- Type check, byte code and dead code removal
 			track_local: BOOLEAN
 			counter: INTEGER
 			local_info: LOCAL_INFO
-			context_locals: EXTEND_TABLE [LOCAL_INFO, STRING]
+			context_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			vrle1: VRLE1
 			vrle2: VRLE2
 			vtug: VTUG
@@ -525,7 +525,7 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	local_table (a_feature: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table (a_feature: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table for dead code removal
 		local
 			feat_tbl: FEATURE_TABLE
@@ -566,7 +566,7 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	Empty_local_table: EXTEND_TABLE [LOCAL_INFO, STRING] is
+	Empty_local_table: HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Empty local table
 		once
 			create Result.make (1)
@@ -574,7 +574,7 @@ feature -- Type check, byte code and dead code removal
 
 feature -- Format Context
 
-	local_table_for_format (a_feature: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table_for_format (a_feature: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table for format context
 		local
 			feat_tbl: FEATURE_TABLE
@@ -628,46 +628,6 @@ feature -- Format Context
 					end
 					locals.forth
 				end
-			end
-		end
-
-feature	-- Replication
-	
-	fill_calls_list (l: CALLS_LIST) is
-			-- find call to Current
-		do
-			if precondition /= Void then
-				precondition.fill_calls_list (l)
-			end
-			routine_body.fill_calls_list (l)
-			if postcondition /= Void then
-				postcondition.fill_calls_list (l)
-			end
-			if rescue_clause /= Void then
-				rescue_clause.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- adapt to replication
-		do
-			Result := clone (Current)
-			if precondition /= Void then
-				Result.set_precondition	(
-					precondition.replicate (ctxt))
-			end
-			if locals /= Void then
-				Result.set_locals (
-					locals.replicate (ctxt))
-			end
-			Result.set_routine_body (routine_body.replicate (ctxt))
-			if postcondition /= Void then
-				Result.set_postcondition (
-					postcondition.replicate (ctxt))
-			end
-			if rescue_clause /= Void then
-				Result.set_rescue_clause (
-					rescue_clause.replicate (ctxt))
 			end
 		end
 

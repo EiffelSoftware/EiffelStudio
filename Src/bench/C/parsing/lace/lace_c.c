@@ -136,7 +136,7 @@ char *lace_id (char s[])
 	/* FIXME: put internal error if strlen(s) > MAXILEN... */
 	strcpy(id_pchar, s);
 	/* Set attribute `count' of instance of ID_SD `id_string' */
-	(eif_strset)(id_string, strlen(s));
+	(egc_strset)(id_string, strlen(s));
 
 	result = create_node(ID_SD);
 

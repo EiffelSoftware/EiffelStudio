@@ -1868,6 +1868,9 @@
 										<File Id="ev_gdi_allocated_pens.e" Name="EV_GDI~3.E" LongName="ev_gdi_allocated_pens.e" />
 										<File Id="ev_pixmap_imp_loader.e" Name="EV_PIX~A.E" LongName="ev_pixmap_imp_loader.e" />
 										<File Id="ev_notebook_tab_imp.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab_imp.e" />
+										<File Id="ev_classic_theme_drawer_imp_e" Name="EV_CLA~1.E" LongName="ev_classic_theme_drawer_imp.e" />
+										<File Id="ev_theme_drawer_imp_e" Name="EV_THE~1.E" LongName="ev_theme_drawer_imp.e" />
+										<File Id="ev_xp_theme_drawer_imp_e" Name="EV_XP_~1.E" LongName="ev_xp_theme_drawer_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="properties" Name="PROPER~1" LongName="properties">

@@ -22,7 +22,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like type; c: like call; l: like location) is
 			-- Create a new CREATION_EXPR AST node.

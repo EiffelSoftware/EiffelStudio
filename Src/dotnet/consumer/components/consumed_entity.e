@@ -47,8 +47,10 @@ feature -- Access
 		do
 		end
 		
-	return_type: CONSUMED_REFERENCED_TYPE
+	return_type: CONSUMED_REFERENCED_TYPE is
 			-- Return type if any.
+		do
+		end
 
 	is_public: BOOLEAN is
 			-- Is .NET entity public?

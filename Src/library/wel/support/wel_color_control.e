@@ -2,7 +2,6 @@ indexing
 	description: "Common type for several control which%
 				% backgound and foreground colors can be%
 				% changed"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

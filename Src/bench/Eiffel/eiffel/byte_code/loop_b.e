@@ -8,7 +8,8 @@ inherit
 		redefine
 			need_enlarging, enlarged, make_byte_code,
 			has_loop, assigns_to, is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size, inlined_byte_code,
+			pre_inlined_code
 		end;
 	ASSERT_TYPE
 		export
@@ -221,6 +222,7 @@ feature -- Array optimization
 
 			!!Result.make (array_desc, safe_array_desc);
 			Result.set_generated_array_desc (deep_clone (old_context.generated_array_desc));
+			Result.set_generated_offsets (deep_clone (old_context.generated_offsets));
 		end
 
 	optimized_byte_node: like Current is
@@ -228,40 +230,67 @@ feature -- Array optimization
 			opt_loop: OPT_LOOP_B
 			opt_context: OPTIMIZATION_CONTEXT;
 			safe_array_desc, generated_array_desc: TWO_WAY_SORTED_SET [INTEGER];
-			id: INTEGER
+			generated_offsets: TWO_WAY_SORTED_SET [INTEGER];
+			id: INTEGER;
+			unsafe, generate_optimization: BOOLEAN
 		do
 			opt_context := new_optimization_context;
 			optimizer.push_optimization_context (opt_context);
 
-			if  not loop_is_unsafe then
-					-- It is safe to optimize array accesses
+				-- The from part must be optimized with the `old' context, i.e.
+				-- the new generated arrays cannot be used
+			if from_part /= Void then
+				from_part := from_part.optimized_byte_node
+			end;
 
-					-- Create an optimized loop byte_code
-				!!opt_loop;
+			unsafe := loop_is_unsafe;
 
-					-- The from part must be optimized with the `old' context, i.e.
-					-- the new generated arrays cannot be used
-				if from_part /= Void then
-					opt_loop.set_from_part (from_part.optimized_byte_node)
-				end;
+			generate_optimization := not unsafe;
 
-					-- Check to see if the new safe array types can
-					-- be generated at this level (they must be generated at
-					-- the highest pssible level but onl if they are used!!)
-				from
-					generated_array_desc := opt_context.generated_array_desc;
-					safe_array_desc := opt_context.safe_array_desc
-					safe_array_desc.start
-				until
-					safe_array_desc.after
-				loop
-					id := safe_array_desc.item;
-					if not generated_array_desc.has (id) then
+				-- Create an optimized loop byte_code
+			!!opt_loop;
+				-- Check to see if the new safe array types can
+				-- be generated at this level (they must be generated at
+				-- the highest pssible level but onl if they are used!!)
+			from
+				generated_array_desc := opt_context.generated_array_desc;
+				generated_offsets := opt_context.generated_offsets;
+				safe_array_desc := opt_context.safe_array_desc
+				safe_array_desc.start
+			until
+				safe_array_desc.after
+			loop
+				id := safe_array_desc.item;
+				if
+					not generated_array_desc.has (id)
+				and then
+					loop_calls_special_features (id)
+				then
+						-- If the loop is safe, we can generate the access to
+						-- area-lower, otherwise, just the offsets
+					if unsafe then
+						if not generated_offsets.has (id) then
+							generated_offsets.extend (id);
+							opt_loop.add_offset_to_generate (id);
+
+								-- A special byte code needs to be created
+							generate_optimization := True
+						end;
+					else
 						generated_array_desc.extend (id);
 						opt_loop.add_array_to_generate (id);
+						if generated_offsets.has (id) then
+							opt_loop.add_offset_already_generated (id);
+						end
 					end
-					safe_array_desc.forth
 				end
+				safe_array_desc.forth
+			end
+
+			if generate_optimization then
+					-- It is safe to optimize array accesses
+
+				opt_loop.set_from_part (from_part);
 
 					-- The new generated arrays can be used now
 
@@ -284,9 +313,7 @@ feature -- Array optimization
 
 					-- Only the from_part and the compound can be optimized
 					-- (the other parts don't contain any loop anyway)
-				if from_part /= Void then
-					from_part := from_part.optimized_byte_node
-				end;
+					-- (the from part has already been optimized)
 				if compound /= Void then
 					compound := compound.optimized_byte_node
 				end
@@ -300,6 +327,61 @@ feature {NONE} -- Array optimization
 	optimizer: ARRAY_OPTIMIZER is
 		do
 			Result := System.remover.array_optimizer
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1 + stop.size;
+			if from_part /= Void then
+				Result := Result + from_part.size
+			end;
+			if compound /= Void then
+				Result := Result + compound.size
+			end
+			if invariant_part /= Void then
+				Result := Result + invariant_part.size
+			end;
+			if variant_part /= Void then
+				Result := Result + variant_part.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			if from_part /= Void then
+				from_part := from_part.pre_inlined_code
+			end
+			if compound /= Void then
+				compound := compound.pre_inlined_code
+			end
+			if invariant_part /= Void then
+				invariant_part := invariant_part.pre_inlined_code
+			end
+			if variant_part /= Void then
+				variant_part := variant_part.pre_inlined_code
+			end
+			stop := stop.pre_inlined_code
+		end;
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if from_part /= Void then
+				from_part := from_part.inlined_byte_code
+			end
+			if compound /= Void then
+				compound := compound.inlined_byte_code
+			end
+			if invariant_part /= Void then
+				invariant_part := invariant_part.inlined_byte_code
+			end
+			if variant_part /= Void then
+				variant_part := variant_part.inlined_byte_code
+			end
+			stop := stop.inlined_byte_code
 		end
 
 end

@@ -8,7 +8,8 @@ inherit
 		redefine
 			compound, analyze, generate, finish_compound,
 			has_loop, assigns_to, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size,
+			inlined_byte_code, pre_inlined_code
 		end;
 
 feature 
@@ -1035,6 +1036,8 @@ feature -- Array optimization
 			!!Result.make (array_desc, safe_array_desc);
 			!!g.make;
 			Result.set_generated_array_desc (g);
+			!!g.make;
+			Result.set_generated_offsets (g);
 			if arguments /= Void then
 				from
 					n := arguments.count
@@ -1073,5 +1076,55 @@ feature -- Array optimization
 				array_desc.extend (0)
 			end;
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			if compound /= Void then
+				Result := compound.size
+			end
+			if rescue_clause /= Void then
+				Result := Result + rescue_clause.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			check
+				no_rescue: rescue_clause = Void
+			end
+
+			Result := Current;
+			if compound /= Void then
+				compound := compound.pre_inlined_code
+			end
+		end;
+
+	inlined_byte_code: like Current is
+		local
+			inlined_b: INLINED_BYTE_CODE
+			inliner: INLINER
+		do
+			if compound /= Void then
+				compound := compound.inlined_byte_code
+			end;
+			if rescue_clause /= Void then
+				rescue_clause := rescue_clause.inlined_byte_code
+			end
+			inliner := System.remover.inliner
+			if inliner.current_feature_inlined then
+					-- If something has been inlined, create
+					-- a new byte code
+				!!inlined_b
+				inlined_b.fill_from (Current);
+				Result := inlined_b
+
+					-- Reset the flags in INLINER
+				inliner.reset;
+			else
+				Result := Current
+			end;
+		end
 
 end

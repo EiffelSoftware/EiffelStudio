@@ -4,7 +4,8 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged, is_simple_expr, optimized_byte_node
+			enlarged, is_simple_expr, optimized_byte_node,
+			inlined_byte_code, pre_inlined_code
 		end;
 	
 feature 
@@ -86,6 +87,20 @@ feature -- Array optimization
 		end
 
 	optimized_byte_node: CALL_B is
+			-- Redefined only for type check
+		do
+			Result := Current
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: CALL_B is
+			-- Redefined only for type check
+		do
+			Result := Current
+		end
+
+	inlined_byte_code: CALL_B is
 			-- Redefined only for type check
 		do
 			Result := Current

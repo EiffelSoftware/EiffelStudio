@@ -4,7 +4,9 @@ inherit
 
 	UNARY_B
 		redefine
-			type, make_byte_code, enlarged
+			type, make_byte_code, enlarged,
+			is_unsafe, optimized_byte_node,
+			pre_inlined_code, inlined_byte_code
 		end;
 	
 feature 
@@ -78,5 +80,32 @@ feature -- Byte code generation
 			ba.append (Bc_retrieve_old);
 			ba.append_short_integer (position);
 		end;
+
+feature -- Array optimization
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expr.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			expr := expr.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			expr ?= expr.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			expr := expr.inlined_byte_code
+		end
 
 end

@@ -9,7 +9,8 @@ inherit
 			need_enlarging, enlarged,
 			make_byte_code, is_unsafe,
 			optimized_byte_node,
-			calls_special_features
+			calls_special_features, size,
+			inlined_byte_code, pre_inlined_code
 		end
 	
 feature 
@@ -85,12 +86,16 @@ feature -- Array optimization
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do
-			Result := call.calls_special_features (array_desc)
+			if call /= Void then
+				Result := call.calls_special_features (array_desc)
+			end
 		end
 
 	is_unsafe: BOOLEAN is
 		do
-			Result := call.is_unsafe
+			if call /= Void then
+				Result := call.is_unsafe
+			end
 		end;
 
 	optimized_byte_node: like Current is
@@ -98,7 +103,29 @@ feature -- Array optimization
 			Result := Current
 				-- The current call won't be optimized:
 				-- `item' and `put' are NOT creation routines
-			call ?= call.optimized_byte_node
+			if call /= Void then
+				call ?= call.optimized_byte_node
+			end
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 100000
+		end
+
+	pre_inlined_code: like Current is
+			-- This routine should NEVER be called
+		do
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if call /= Void then
+				call := call.inlined_byte_code
+			end
+		end
 
 end

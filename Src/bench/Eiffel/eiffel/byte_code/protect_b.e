@@ -10,7 +10,9 @@ inherit
 			register, set_register,
 			analyze, generate, unanalyze,
 			print_register, free_register,
-			type, enlarged, make_byte_code
+			type, enlarged, make_byte_code,
+			is_unsafe, optimized_byte_node,
+			pre_inlined_code, inlined_byte_code
 		end
 	
 feature 
@@ -93,5 +95,32 @@ feature -- Byte code generation
 		do
 			expr.make_byte_code (ba);
 		end;
+
+feature -- Array optimization
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expr.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			expr := expr.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+		do  
+			Result := Current
+			expr ?= expr.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			expr := expr.inlined_byte_code
+		end
 
 end

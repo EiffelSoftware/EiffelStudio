@@ -235,13 +235,10 @@ feature {EV_ANY_I} -- Implementation
 
 	aux_info_struct: POINTER is
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
-		local
-			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := "gtk-aux-info"
 			Result := feature {EV_GTK_EXTERNALS}.gtk_object_get_data (
 				c_object,
-				a_cs.item
+				aux_info_string.item
 			)
 		end
 
@@ -250,5 +247,14 @@ feature {EV_ANY_I} -- Implementation
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
+
+feature {NONE} -- Implementation
+
+	aux_info_string: EV_GTK_C_STRING is
+			-- String optimization for  "gtk-aux-info"
+		once
+			Result := "gtk-aux-info"
+		end
+		
 
 end -- class EV_GTK_WIDGET_IMP

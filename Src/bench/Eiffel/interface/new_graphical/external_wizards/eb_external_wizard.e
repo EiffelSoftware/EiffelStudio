@@ -99,7 +99,9 @@ feature {NONE} -- Implementation
 			wizard_exec_filename.extend ("spec")
 			wizard_exec_filename.extend (eiffel_platform)
 			wizard_exec_filename.set_file_name ("wizard")
-			wizard_exec_filename.add_extension (Platform_constants.Executable_suffix)
+			if not Platform_constants.Executable_suffix.is_empty then
+				wizard_exec_filename.add_extension (Platform_constants.Executable_suffix)
+			end
 			
 			create wizard_exec_file.make (wizard_exec_filename)
 			if not (wizard_exec_file.exists and then wizard_exec_file.is_executable) then

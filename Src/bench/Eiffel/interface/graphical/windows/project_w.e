@@ -139,21 +139,19 @@ feature -- xterminal
 						system_tool.show
 						hidden_system_window := False;
 					end;
-					if initialized then
-						raise
-						if hidden_warner then
-							hidden_warner := false;
-							warner.popup
-						end;
-						if hidden_name_chooser then
-							hidden_name_chooser := false;
-							name_chooser.popup
-						end;	
-						if hidden_confirmer then
-							hidden_confirmer := false;
-							confirmer.popup
-						end	
-					end
+					raise
+					if hidden_warner then
+						hidden_warner := false;
+						warner.popup
+					end;
+					if hidden_name_chooser then
+						hidden_name_chooser := false;
+						name_chooser.popup
+					end;	
+					if hidden_confirmer then
+						hidden_confirmer := false;
+						confirmer.popup
+					end	
 				else
 						-- The project tool is being raised, moved or resized.
 						-- Raise popups with an exclusive grab.
@@ -161,10 +159,14 @@ feature -- xterminal
 				end
 			elseif arg = popdown then
 				hidden_project_tool := True;
-				if System.system_name /= Void then
-					set_icon_name (System.system_name)
-				else
+				if  
+					not initialized or else
+					Workbench.system = Void or else 
+					System.system_name = Void 
+				then
 					set_icon_name (tool_name)
+				else
+					set_icon_name (System.system_name)
 				end;
 				close_windows;
 				window_manager.hide_all_editors;
@@ -206,6 +208,11 @@ feature -- rest
 
 	stop_points_hole: DEBUG_STOPIN;
 			-- To set breakpoints
+	system_hole: SYSTEM_HOLE;
+	class_hole: PROJ_CLASS_HOLE;
+	routine_hole: ROUTINE_HOLE;
+	object_hole: OBJECT_HOLE;
+	explain_hole: EXPLAIN_HOLE;
 
 	build_widgets is
 			-- Build widget.
@@ -222,14 +229,6 @@ feature -- rest
 
 	build_top is
 			-- Build top bar
-		local
-			system_hole: SYSTEM_HOLE;
-			class_hole: PROJ_CLASS_HOLE;
-			routine_hole: ROUTINE_HOLE;
-			object_hole: OBJECT_HOLE;
-			explain_hole: EXPLAIN_HOLE;
-			shell_hole: SHELL_HOLE;
-			dummy_rc: ROW_COLUMN;
 		do
 			!!open_command.make (text_window);
 			!!classic_bar.make (new_name, form_manager);
@@ -324,7 +323,6 @@ feature -- rest
 	quit_command: QUIT_PROJECT;
 
 	update_command: UPDATE_PROJECT;
---	run_command: RUN;
 	debug_run_command: DEBUG_RUN;
 	debug_status_command: DEBUG_STATUS;
 	debug_quit_command: DEBUG_QUIT;
@@ -339,7 +337,6 @@ feature -- rest
 		do
 			!!icing.make (new_name, form_manager);
 				!!update_command.make (icing, text_window);
---				!!run_command.make (icing, text_window);
 				!!debug_run_command.make (icing, text_window);
 				!!debug_status_command.make (icing, text_window);
 				!!debug_quit_command.make (icing, text_window);

@@ -74,12 +74,12 @@ feature {NONE}
 			!!showlist_command.make (format_bar, text_window);
 				format_bar.attach_top (showlist_command, 0);
 				format_bar.attach_left_widget (showtext_command, showlist_command, 0);
-			!!showmodifs_command.make (format_bar, text_window);
-				format_bar.attach_top (showmodifs_command, 0);
-				format_bar.attach_left_widget (showlist_command, showmodifs_command, 0);
+			!!showmodified_command.make (format_bar, text_window);
+				format_bar.attach_top (showmodified_command, 0);
+				format_bar.attach_left_widget (showlist_command, showmodified_command, 0);
 			!!showindexing_command.make (format_bar, text_window);
 				format_bar.attach_top (showindexing_command, 0);
-				format_bar.attach_left_widget (showmodifs_command, showindexing_command, 0);
+				format_bar.attach_left_widget (showmodified_command, showindexing_command, 0);
 			!!shell_command.make (format_bar, text_window);
 				format_bar.attach_top (shell_command, 0);
 				format_bar.attach_right (shell_command, 0);
@@ -94,7 +94,7 @@ feature {NONE}
 --	check_command: CHECK_SYSTEM;
 	quit_command: QUIT_SYSTEM;
 	showlist_command: SHOW_CLUSTERS;
-	showmodifs_command: SHOW_MODIFS;
+	showmodified_command: SHOW_MODIFIED;
 	showindexing_command: SHOW_INDEXING;
 	shell_command: SHELL_COMMAND
 

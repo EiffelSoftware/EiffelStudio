@@ -39,7 +39,6 @@ feature -- Conveniences
 
 feature -- Internal name computing
 
-
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		deferred
 		end;
@@ -65,7 +64,6 @@ feature -- Internal name computing
 		do
 			is_frozen := b;
 		end;
-
 
 	code_table: HASH_TABLE [STRING, STRING] is
 			-- Corepondance table for infix/prefix notation

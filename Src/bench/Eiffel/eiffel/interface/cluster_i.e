@@ -99,15 +99,15 @@ feature -- Element change
 	add_new_classs (class_i: CLASS_I) is
 		require
 			non_void_class_i: class_i /= Void;
-			name_set: class_i.class_name /= Void;
+			name_set: class_i.name /= Void;
 			base_name_set: class_i.base_name /= Void;
-			not_in_cluster: not classes.has (class_i.class_name)
+			not_in_cluster: not classes.has (class_i.name)
 		do
 			class_i.set_cluster (Current);
 			class_i.set_date;
-			classes.put (class_i, class_i.class_name);	
+			classes.put (class_i, class_i.name);	
 		ensure
-			in_cluster: classes.has (class_i.class_name)
+			in_cluster: classes.has (class_i.name)
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
@@ -546,7 +546,7 @@ debug ("REMOVE_CLASS")
 	io.error.putstring ("new class!!!%N");
 end;
 					!!a_class.make;
-					a_class.set_class_name (class_name);
+					a_class.set_name (class_name);
 					a_class.set_base_name (file_name);
 					a_class.set_cluster (Current);
 					a_class.set_date;
@@ -606,10 +606,10 @@ end;
 		do
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Removing class ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
-			classes.remove (a_class.class_name);
+			classes.remove (a_class.name);
 
 				-- If a_class has already be compiled,
 				-- all its clients must recheck their suppliers
@@ -625,7 +625,7 @@ end;
 		do
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Removing class from system ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 			class_c := a_class.compiled_class;
@@ -686,11 +686,11 @@ end;
 				old_classes.after
 			loop
 				old_class := old_classes.item_for_iteration;
-				if not classes.has (old_class.class_name) then
+				if not classes.has (old_class.name) then
 					-- the class has been removed
 					old_cluster.remove_class (old_class);
 					if Workbench.automatic_backup then
-						record_removed_class (old_class.class_name)
+						record_removed_class (old_class.name)
 					end
 				end;
 				old_classes.forth;

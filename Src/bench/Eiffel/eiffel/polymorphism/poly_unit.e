@@ -66,7 +66,7 @@ feature -- Trace
 	trace is
 		do
 			io.putstring ("Class ");	
-			io.putstring (System.class_of_id (id).class_name);	
+			io.putstring (System.class_of_id (id).name);	
 			io.new_line
 		end
 

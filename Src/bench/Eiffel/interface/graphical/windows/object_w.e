@@ -236,7 +236,8 @@ feature -- Update
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		local
-			status: APPLICATION_STATUS
+			status: APPLICATION_STATUS;
+			cur: CURSOR;
 		do
 			status := Application.status;
 			if status = Void then
@@ -244,7 +245,9 @@ feature -- Update
 			elseif not status.is_stopped then
 				warner (eb_shell).gotcha_call (w_System_not_stopped)
 			else
-				synchronise_stone
+				cur := text_window.cursor;
+				synchronise_stone;
+				text_window.go_to (cur)
 			end
 		end
 
@@ -347,10 +350,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			if create_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
-				change_font_cmd_holder.set_menu_entry (change_font_menu_entry)
+				change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
 
 				!! quit_menu_entry.make (quit_cmd, file_menu);
-				!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+				!! quit.make (quit_cmd, quit_button, quit_menu_entry);
 
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);

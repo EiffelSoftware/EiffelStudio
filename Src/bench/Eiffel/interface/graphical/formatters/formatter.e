@@ -9,9 +9,13 @@ deferred class FORMATTER
 
 inherit
 
-	PIXMAP_COMMAND
+	TWO_STATE_CMD
 		rename
+			true_state_symbol as symbol,
+			false_state_symbol as dark_symbol,
 			work as format
+		undefine
+			dark_symbol
 		redefine
 			execute, holder
 		end;
@@ -30,11 +34,6 @@ feature -- Properties
 			-- Will we call `format' without checking if this is 
 			-- really necessary (i.e. the format and the stone
 			-- haven't changed since last call)?
-
-	dark_symbol: PIXMAP is
-			-- Symbol to denote selected format
-		deferred
-		end
 
 feature -- Callbacks
 
@@ -69,21 +68,31 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
 		local
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			f: FOCUSABLE
 		do
-			if last_warner /= Void then
-				last_warner.popdown
-			end
+			if is_sensitive then
+				if holder /= Void then
+					f ?= holder.associated_button
+				end;
+				if f /= Void then
+					f.popdown
+				end;
 
-			if argument = tool then
-				formatted ?= tool.stone
-			else
-				formatted ?= argument
-			end;
-			if not text_window.changed then
-				execute_licenced (formatted);
-			else
-				warner (popup_parent).call (Current, l_File_changed)
+				if last_warner /= Void then
+					last_warner.popdown
+				end;
+
+				if argument = tool then
+					formatted ?= tool.stone
+				else
+					formatted ?= argument
+				end;
+				if not text_window.changed then
+					execute_licenced (formatted)
+				else
+					warner (popup_parent).call (Current, l_File_changed)
+				end
 			end
 		end;
 

@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include "eif_setup.h"
 #include "eif_eiffel.h"
-#include "version.h"	/* For name compatibility */
 	
-
 int main (int argc,char **argv,char **envp) {
 
 	EIF_INTEGER *c_array;
@@ -26,12 +24,8 @@ int main (int argc,char **argv,char **envp) {
 	eif_enable_visible_exception ();
 
 		/* Set Type id. */
-#if VERSION > 42 
 		/* `eif_type_id has been extended to generic type since v4.3 */
 	my_array_tid = eif_type_id ("MY_ARRAY[INTEGER]");	
-#else
-	my_array_tid = eif_generic_id ("MY_ARRAY", eif_type_id("INTEGER"));	
-#endif
 	if (my_array_tid == EIF_NO_TYPE) 
 			/* MY_ARRAY's type id not found. */
 		eif_panic ("No type id.");
@@ -72,4 +66,16 @@ int main (int argc,char **argv,char **envp) {
 
 
 }
-	
+
+#ifdef EIF_WIN32
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	int argc;
+	char **argv;
+	char **envp;
+
+	get_argcargv (&argc, &argv);
+	envp = (char **) GetEnvironmentStrings ();
+	return main(argc, argv, envp);
+}
+#endif

@@ -1,8 +1,6 @@
 indexing
-
-	description:
-		"Text item to represent a class syntax error.";
-	date: "$Date$";
+	description: "Text item to represent a class syntax error."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CL_SYNTAX_ITEM
@@ -20,30 +18,30 @@ creation
 
 feature -- Initialization
 
-	make (a_syntax_error: SYNTAX_ERROR; c: CLASS_C; str: STRING) is
-			-- Create Current for `a_syntax_error' in `c' with
+	make (a_syntax_message: like syntax_message; c: like e_class; str: like error_text) is
+			-- Create Current for `a_syntax_message' in `c' with
 			-- `str' as representation.
 		require
-			valid_a_syntax_error: a_syntax_error /= Void;
-			valid_c: c /= Void;
-			valid_str: str /= Void
+			a_syntax_message_not_void: a_syntax_message /= Void
+			c_not_void: c /= Void
+			str_not_void: str /= Void
 		do
-			syntax_error := a_syntax_error;
-			e_class := c;
-			error_text := str;
+			syntax_message := a_syntax_message
+			e_class := c
+			error_text := str
 		ensure
-			syntax_error_set: equal (syntax_error, a_syntax_error);
-			e_class_set: equal (e_class, c);
+			syntax_error_set: equal (syntax_message, a_syntax_message)
+			e_class_set: equal (e_class, c)
 			erro_text_set: equal (error_text, str)
-		end;
+		end
 
 feature -- Properties
 
-	e_class: CLASS_C;
-			-- Class where `syntax_error' has been detected.
+	e_class: CLASS_C
+			-- Class where syntax issue has been detected.
 
-	syntax_error: SYNTAX_ERROR;
-			-- Syntax error that has been detected.
+	syntax_message: SYNTAX_MESSAGE
+			-- Syntax issue that has been detected.
 
 feature {TEXT_FORMATTER} -- Implementation
 
@@ -51,6 +49,6 @@ feature {TEXT_FORMATTER} -- Implementation
 			-- Append Current to `text'.
 		do
 			text.process_cl_syntax (Current)
-		end;
+		end
 
 end -- class CL_SYNTAX_ITEM

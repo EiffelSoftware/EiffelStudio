@@ -8,10 +8,10 @@ indexing
 	revision: "$Revision$"
 	
 class
-	EV_TEXT_AREA_IMP
+	EV_TEXT_IMP
 	
 inherit
-	EV_TEXT_AREA_I
+	EV_TEXT_I
 
 	EV_TEXT_COMPONENT_IMP
 		undefine
@@ -24,14 +24,14 @@ creation
 
 feature {NONE} -- Initialization
 
-        make is
-                        -- Create a gtk label.
-               do
-                        widget := gtk_text_new (Default_pointer, 
-						Default_pointer)
+	make is
+			-- Create a gtk label.
+	   do
+			widget := gtk_text_new (Default_pointer, 
+				Default_pointer)
 			gtk_object_ref (widget)
 			gtk_text_set_editable (widget, True)
-                end
+		end
 
 	make_with_text (txt: STRING) is
 			-- Create a text area with `par' as
@@ -73,14 +73,14 @@ feature -- Status setting
 	
 	append_text (txt: STRING) is
 		do
-			set_position (text_length)
+			gtk_editable_set_position (widget, text_length)
 			insert_text (txt)
 		end
 	
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' to text
 		do
-			set_position (-1)
+			gtk_editable_set_position (widget, 0)
 			insert_text (txt)
 		end
 	
@@ -105,7 +105,7 @@ feature -- Basic operation
 			end
 		end
 
-end -- class EV_TEXT_AREA_IMP
+end -- class EV_TEXT_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable  components for ISE Eiffel.

@@ -15,8 +15,7 @@ inherit
 			make as wrong_make
 		redefine
 			parent_imp,
-			set_parent,
-			on_key_down
+			set_parent
 		end
 
 	EV_ITEM_HOLDER_IMP
@@ -26,6 +25,7 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
+			shown as displayed,
 			destroy as wel_destroy,
 			set_minimum_height as wel_set_minimum_height,
 			text as wel_text,
@@ -46,7 +46,9 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
-			on_set_cursor
+			on_set_cursor,
+			hide,
+			show
 		end
 
 creation
@@ -192,21 +194,6 @@ feature -- Implementation
 			end
 		end
 
-feature {NONE} -- WEL Implementation
-
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
-		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -215,7 +202,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -225,7 +212,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -245,6 +232,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_STATUS_BAR_IMP

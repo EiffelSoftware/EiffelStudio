@@ -33,30 +33,6 @@ feature -- Properties
 	image: STRING;
 			-- Text representation of Current
 
-	is_special: BOOLEAN;
-			-- Is Current special?
-
-	is_keyword: BOOLEAN;
-			-- Is Current a keyword?
-
-feature -- Setting
-
-	set_is_keyword is
-			-- Set is_keyword to True.
-		do
-			is_keyword := True
-		ensure
-			is_keyword: is_keyword
-		end;
-
-	set_is_special is
-			-- Set is_special to True.
-		do
-			is_special := true;
-		ensure
-			is_special: is_special
-		end;
-
 feature {TEXT_FORMATTER} -- Implementation
 
 	append_to (text: TEXT_FORMATTER) is

@@ -62,6 +62,11 @@ feature {TEXT_ITEM} -- Implementation
 		do
 		end;
 
+	process_padded is
+			-- Process padded item at start of non breakpoint line.
+		do
+		end;
+
 	process_new_line (t: NEW_LINE_ITEM) is
 			-- Process new line text `t'.
 		deferred
@@ -72,16 +77,6 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
-	process_after_feature (t: AFTER_FEATURE) is
-			-- Process after feature text `t'.
-		do
-		end;
-
-	process_before_feature (t: BEFORE_FEATURE) is
-			-- Process before feature text `t'.
-		do
-		end;
-	
 	process_after_class (t: AFTER_CLASS) is
 			-- Process after class text `t'.
 		do
@@ -95,6 +90,24 @@ feature {TEXT_ITEM} -- Implementation
 	process_filter_item (t: FILTER_ITEM) is
 			-- Process filter text `t'.
 		do
+		end;
+
+	process_symbol_text (t: SYMBOL_TEXT) is
+			-- Process symbol text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_keyword_text (t: KEYWORD_TEXT) is
+			-- Process keyword text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_operator_text (t: OPERATOR_TEXT) is
+			-- Process operator text.
+		do
+			process_basic_text (t)
 		end;
 
 end -- class TEXT_FORMATTER

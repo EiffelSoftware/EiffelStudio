@@ -94,7 +94,8 @@ feature -- Properties
 	server_file_size,
 	shared_library_definition,
 	working_directory,
-	force_recompile: INTEGER is unique
+	force_recompile,
+	generate_eac_metadata: INTEGER is unique
 
 feature -- Duplication
 
@@ -154,6 +155,7 @@ feature {NONE} -- Codes and names.
 			Result.force (arguments, "arguments");
 			Result.force (working_directory, "working_directory");
 			Result.force (force_recompile, "force_recompile");
+			Result.force (generate_eac_metadata, "generate_eac_metadata");
 		end
 
 	option_names: ARRAY [STRING] is
@@ -483,6 +485,15 @@ feature {COMPILER_EXPORTER}
 						System.set_il_verifiable (False)
 					elseif value.is_yes then
 						System.set_il_verifiable (True)
+					else
+						error_found := True;
+					end;
+
+				when generate_eac_metadata then
+					if value.is_no then
+						System.set_generate_eac_metadata (False)
+					elseif value.is_yes then
+						System.set_generate_eac_metadata (True)
 					else
 						error_found := True;
 					end;

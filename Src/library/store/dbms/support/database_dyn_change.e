@@ -69,9 +69,9 @@ feature
 	execute is
 			-- Execute the sql statement
 		do
-			if is_ok then
-				handle.status.set (db_spec.unset_catalog_flag(descriptor))
-			end
+--			if is_ok then
+--				handle.status.set (db_spec.unset_catalog_flag(descriptor))
+--			end
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	parameters_value: ARRAY [ANY] is
 			-- Values of the parameters of the sql statement
 		once
-			last := 0
+			last := 1
 			!! Result.make (1, 0)
 		end
 	

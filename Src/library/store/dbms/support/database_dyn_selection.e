@@ -20,37 +20,50 @@ feature
 		local
 			parsed_s: STRING
 			parsed: BOOLEAN
-			i, j, k: INTEGER
+			ArgNum, i, j, k: INTEGER
 		do
 			sql_string := s
+			ArgNum := s.occurrences('?')
+
 			if s.has(':') then
 				from
-					i := 0
+--					i := 0
+					i := 1
 					k := 1
 				until
 					i=s.count
 				loop
-					--	i := s.index_of (':', i)					
-					--	j := s.index_of (',', i)
+					i := s.index_of (':', i)					
+					j := s.index_of (',', i)
 
-					i := s.index_of (':', 1)					
-					j := s.index_of (',', 1)
+--					i := s.index_of (':', 1)					
+--					j := s.index_of (',', 1)
 					if j=0 then
 						j := s.count
 					end
---					parameters.put(s.substring (i+1, j-1), k)
-					parameters.force (s.substring (i+1, j-1), k)
+----					parameters.put(s.substring (i+1, j-1), k)
+--					parameters.force (s.substring (i+1, j-1), k)
+					parameters.force (s.substring (i+1, j), k)
+
 					i := j
 					k := k + 1
 				end
 			end
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
+--				parsed := db_spec.parse_dyn (descriptor,parameters, ht, handle, s)	
 				parsed := db_spec.parse (descriptor, ht, handle, s)	
 			end
 			if not parsed then
 				parsed_s := parse (s)
-				handle.status.set (db_spec.init_order (descriptor, parsed_s))
+				if is_ok then
+					handle.status.set (db_spec.init_order (descriptor, parsed_s))
+				end
+
+				if is_ok then
+					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
+				end
+		
 			end
 		end
 
@@ -63,6 +76,10 @@ feature
 	execute is
 			-- Execute the sql statement
 		do
+			if is_ok then
+				handle.status.set (db_spec.unset_catalog_flag(descriptor))
+			end
+
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end	
@@ -89,7 +106,7 @@ feature {NONE} -- Implementation
 	parameters_value: ARRAY [ANY] is
 			-- Values of the parameters of the sql statement
 		once
-			last := 0
+			last := 1
 			!! Result.make (1, 0)
 		end
 	

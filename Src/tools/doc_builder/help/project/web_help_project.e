@@ -10,6 +10,8 @@ inherit
 	HELP_PROJECT
 
 	TEMPLATE_CONSTANTS
+	
+	APPLICATION_CONSTANTS
 
 create
 	make
@@ -43,11 +45,17 @@ feature {NONE} -- File
 			create l_file.make_open_read (web_help_project_template_file_name)
 			l_file.read_stream (l_file.count)
 			l_text := l_file.last_string.twin
-			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-				create l_util
-				create l_filename.make_from_string (l_util.file_no_extension (l_util.short_name (toc.name)))
+			if is_gui_mode then
+				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					create l_util
+					create l_filename.make_from_string (l_util.file_no_extension (l_util.short_name (toc.name)) + "/")
+				else
+					create l_filename.make_from_string (toc.name + "/")
+				end
+				replace_token (l_text, filter_frame_size_token, "120")
 			else
-				create l_filename.make_from_string (toc.name)
+				create l_filename.make_from_string ("")
+				replace_token (l_text, filter_frame_size_token, "0")
 			end
 			replace_token (l_text, html_default_toc, l_filename.string)
 			l_file.close
@@ -76,19 +84,26 @@ feature {NONE} -- Implementation
 			create l_file.make_open_read_write (left_context_html_template_file_name.string)
 			l_file.readstream (l_file.count)
 			l_text := l_file.last_string.twin
-			replace_token (l_text, html_toc_token, full_toc_text)			
+			replace_token (l_text, html_toc_token, full_toc_text)
 			l_file.close
 			
 				-- Now create toc file based on toc data
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
-			else						
-				l_filename.extend (toc.name)	
-			end
-			create l_dir.make (l_filename.string)
-			if not l_dir.exists then
-				l_dir.create_dir
+			if is_gui_mode then
+				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+				else						
+					l_filename.extend (toc.name)	
+				end
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+				replace_token (l_text, html_toc_script, "../toc.js")
+				replace_token (l_text, html_toc_style, "../toc.css")
+			else
+				replace_token (l_text, html_toc_script, "toc.js")
+				replace_token (l_text, html_toc_style, "toc.css")
 			end
 			
 				-- And write to it and close			
@@ -113,19 +128,27 @@ feature {NONE} -- Implementation
 			create l_file.make_open_read_write (filter_html_template_file_name.string)
 			l_file.readstream (l_file.count)
 			l_text := l_file.last_string.twin
-			replace_token (l_text, html_filter_token, full_filter_text)			
+			replace_token (l_text, html_filter_token, full_filter_text)		
+			replace_token (l_text, html_filter_search_token, search_text)	
 			l_file.close
 			
 				-- Now create toc file based on toc data
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
-			else						
-				l_filename.extend (toc.name)	
-			end
-			create l_dir.make (l_filename.string)
-			if not l_dir.exists then
-				l_dir.create_dir
+			if is_gui_mode then
+				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+				else						
+					l_filename.extend (toc.name)	
+				end
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+				replace_token (l_text, html_toc_script, "../toc.js")
+				replace_token (l_text, html_toc_style, "../toc.css")
+			else
+				replace_token (l_text, html_toc_script, "toc.js")
+				replace_token (l_text, html_toc_style, "toc.css")
 			end
 			
 				-- And write to it and close
@@ -165,10 +188,12 @@ feature {NONE} -- Implementation
 				
 				if l_file.exists then
 					create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-					if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
-						l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
-					else						
-						l_filename.extend (toc.name)	
+					if is_gui_mode then
+						if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+							l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+						else						
+							l_filename.extend (toc.name)	
+						end
 					end
 					l_filename.extend (resource_files.item)
 					create l_src_file.make_create_read_write (l_filename.string)
@@ -194,6 +219,9 @@ feature {NONE} -- Implementation
 			l_util: UTILITY_FUNCTIONS
 		do	
 			create Result.make_empty
+			if is_gui_mode then
+				Result.append ("Show documentation for:<br>")
+			end
 			if shared_project.preferences.generate_dhtml_filter then
 				l_filters := shared_project.filter_manager.filters
 				Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
@@ -229,11 +257,31 @@ feature {NONE} -- Implementation
 						-- If there have been less than 2 filters successfully processed there is no
 						-- point for filter combo, so just wipe out the Result
 					Result.wipe_out
-				end
+				end				
 			end
 		ensure
 			result_not_void: Result /= Void
 		end		
+
+	search_text: STRING is
+			-- Search HTML
+		do
+			create Result.make_empty
+			if is_gui_mode then
+				Result.append ("%
+				%Search%
+				%<br>%
+				%<input type=%"hidden%" name=%"method%" value=%"and%">%
+				%<input type=%"hidden%" name=%"format%" value=%"builtin-long%">%
+				%<input type=%"hidden%" name=%"sort%" value=%"score%">%
+				%<input type=%"hidden%" name=%"config%" value=%"betadocs_from_betadocs.eiffel.com%">%
+				%<input type=%"hidden%" name=%"restrict%" value=%"%">%
+				%<input type=%"hidden%" name=%"exclude%" value=%"%">%
+				%<input type=%"text%" size=%"30%" name=%"words%" value=%"%">%
+				%<input type=%"submit%" name=%"submitForm%" value=%"Go%">"
+				)				
+			end
+		end
 
 	filter_option_string (a_filter: OUTPUT_FILTER): STRING is
 			-- Comma separated filter string for filter type
@@ -311,6 +359,9 @@ feature {NONE} -- File
 			create Result.make (6)
 			Result.extend ("toc.js")
 			Result.extend ("toc.css")
+			Result.extend ("header.html")
+			Result.extend ("header_mainarea.jpg")
+			Result.extend ("header.css")
 		end
 
 	copy_root_resource_files is

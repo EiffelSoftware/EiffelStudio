@@ -45,9 +45,9 @@ feature -- Generation
 					-- must be done because HTML Help 1.x won't compile in HTML files which are not
 					-- outside the directory hierarchy of the project.  It also ensures we know exactly
 					-- where all the files which should be included in the new help project are located.
---			create l_html_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
---			create l_help_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
---			copy_directory (l_html_dir, l_help_dir)
+			create l_html_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
+			create l_help_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
+			copy_directory (l_html_dir, l_help_dir)
 		
 			l_html_help_project ?= project
 			if l_html_help_project /= Void then				

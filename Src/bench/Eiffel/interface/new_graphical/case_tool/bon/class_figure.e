@@ -240,19 +240,38 @@ feature -- Status setting
 			-- `Current' has just been moved/resized.
 			-- Links need to adapt.
 		do
-			from ancestor_figures.start until ancestor_figures.after loop
+			from
+				ancestor_figures.start
+			until 
+				ancestor_figures.after
+			loop
 				ancestor_figures.item.update
 				ancestor_figures.forth
 			end
-			from descendant_figures.start until descendant_figures.after loop
+
+			from
+				descendant_figures.start
+			until
+				descendant_figures.after
+			loop
 				descendant_figures.item.update
 				descendant_figures.forth
 			end
-			from client_figures.start until client_figures.after loop
+			
+			from
+				client_figures.start
+			until
+				client_figures.after
+			loop
 				client_figures.item.update
 				client_figures.forth
 			end
-			from supplier_figures.start until supplier_figures.after loop
+			
+			from
+				supplier_figures.start
+			until
+				supplier_figures.after 
+			loop
 				if supplier_figures.item.parent_link = Void then
 					supplier_figures.item.update
 				end
@@ -345,7 +364,11 @@ feature -- Status report
 				if not Result then
 					i := c.ast.top_indexes
 					if i /= Void then
-						from i.start until Result or i.after loop
+						from
+							i.start 
+						until 
+							Result or i.after 
+						loop
 							s := i.item.tag
 							Result := s /= Void and then s.is_equal ("persistent")
 							i.forth
@@ -353,7 +376,11 @@ feature -- Status report
 					end
 					i := c.ast.bottom_indexes
 					if i /= Void then
-						from i.start until Result or i.after loop
+						from
+							i.start
+						until
+							Result or i.after
+						loop
 							s := i.item.tag
 							Result := s /= Void and then s.is_equal ("persistent")
 							i.forth
@@ -373,7 +400,11 @@ feature -- Status report
 			c := class_i.compiled_class
 			if c /= Void then
 				f := c.written_in_features
-				from f.start until Result or f.after loop
+				from 
+					f.start 
+				until 
+					Result or f.after 
+				loop
 					Result := f.item.is_external
 					f.forth
 				end
@@ -766,7 +797,11 @@ feature {CONTEXT_DIAGRAM} -- Synchronizing
 			create {LINKED_LIST [CASE_SUPPLIER]} queries.make
 			if class_i.compiled then
 				f := class_i.compiled_class.written_in_features
-				from f.start until f.after loop
+				from
+					f.start
+				until
+					f.after
+				loop
 					ef := f.item
 					if ef.type /= Void and then ef.type.has_associated_class then
 						queries.extend (create {CASE_SUPPLIER}.make_compiled (ef))

@@ -13,7 +13,8 @@ feature -- Output
 			-- Process structured text `text' to be
 			-- generated as output.
 		local
-			linkable: LINKABLE [TEXT_ITEM]	
+			linkable: LINKABLE [TEXT_ITEM]
+			text_item: TEXT_ITEM
 		do
 			if text /= Void then
 				from
@@ -21,7 +22,8 @@ feature -- Output
 				until
 					linkable = Void
 				loop
-					linkable.item.append_to (Current)
+					text_item := linkable.item;
+					text_item.append_to (Current);
 					linkable := linkable.right;
 				end;
 			end

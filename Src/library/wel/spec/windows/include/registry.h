@@ -9,16 +9,7 @@
 #	include <wel.h>
 #endif
 
-//////////////////////////////////////////////////////////////
-//
-//  Structure used to store information about key value.  
-//
-
-typedef struct {
-	DWORD type;
-	LPBYTE data;
-	DWORD length;
-	} REG_VALUE;
+#include "wel_reg_value.h"
 
 //////////////////////////////////////////////////////////////
 //

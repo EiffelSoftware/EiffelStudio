@@ -3164,7 +3164,7 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 	int l = 0;	/* length of the currently analyzed string */
 	EIF_TYPE_ID result; /* Computed `type_id' */
 
-	if (type_string == (char) 0)
+	if (type_string == (char *) 0)
 			/* Cannot process current string */
 		return -1;
 
@@ -3247,32 +3247,34 @@ rt_private int is_generic (struct gt_info *type, char *class)
 
 rt_public EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 {
-	int16 *typearr = (int16 *) 0;
 	struct gt_info type;
 	EIF_TYPE_ID result;
 	int error = 0;
 
-		/* allocate the typearr structures and do the basic
-		 * initialization, the first element is set to `-1' since
-		 * there is no static call context, the last one too as a terminator
-		 * for other generic conformance routines
-		 */
-	typearr = (int16 *) malloc (n + 2 * sizeof (int16));
-	if (typearr == (int16 *)0)
-		enomem();
-	typearr [0] = -1;
-	typearr [n + 1] = -1;
-
 	if (is_generic (&type, type_string_array[0]) > 0) {
+		int16 *typearr = (int16 *) 0;
+
+			/* Allocate the typearr structures and do the basic
+			 * initialization, the first element is set to `-1' since
+			 * there is no static call context, the last one too as a terminator
+			 * for other generic conformance routines
+			 */
+		typearr = (int16 *) malloc ((n + 2) * sizeof (int16));
+		if (typearr == (int16 *)0)
+			enomem();
+		typearr [0] = -1;
+		typearr [n + 1] = -1;
+
 			/* There is a generic type, so we need to analyze the generic parameter
 			 * before finding out the real type */
 		eif_type_id_ex (&error, &type, type.gt_param, type_string_array, typearr, 0, n);
-		if (error == 0)
+		if (error == 0) {
 			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (char *)0,(int16) typearr[1], typearr);
+		}
+		free (typearr);
 	} else
 		result = eifcid(type_string_array [0]);
 
-	free (typearr);
 	if (error == 0) {
 		return result;
 	} else {

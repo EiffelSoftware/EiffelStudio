@@ -3,9 +3,11 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
 	WEL_MESSAGE_BOX
+
+obsolete
+	"Use WEL_MSG_BOX instead"
 
 feature -- Basic operations
 
@@ -17,12 +19,12 @@ feature -- Basic operations
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			a1 := a_text.to_c
-			a2 := a_title.to_c
+			!! a_wel_string1.make (a_text)
+			!! a_wel_string2.make (a_title)
 			message_box_result := cwin_message_box (default_pointer,
-				$a1, $a2, a_style)
+				a_wel_string1.item, a_wel_string2.item, a_style)
 		end
 
 	error_message_box (a_text: STRING; a_style: INTEGER) is
@@ -32,11 +34,11 @@ feature -- Basic operations
 		require
 			text_not_void: a_text /= Void
 		local
-			a1: ANY
+			a_wel_string: WEL_STRING
 		do
-			a1 := a_text.to_c
+			!! a_wel_string.make (a_text)
 			message_box_result := cwin_message_box (default_pointer,
-				$a1, default_pointer, a_style)
+				a_wel_string.item, default_pointer, a_style)
 		end
 
 feature -- Status report

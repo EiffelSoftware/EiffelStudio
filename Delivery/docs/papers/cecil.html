@@ -255,7 +255,7 @@ name></I> is the name of your system)
 located in EIFGEN\W_code
 to the directory where you intend to execute your C application from. Note
 that each time you melt the Eiffel system, the <I>&lt;system name>.melted</I>
-(<I>melted.eif</I> ) file is updated.</li>
+ file is updated.</li>
         </ul>
 CAVEAT: in the second case (workbench mode), it is not possible to call
 through the CECIL interface any routine that has been melted in the last
@@ -338,20 +338,20 @@ then type:
 <P> On version 4.4 and later, the CECIL library is automatically generated, you do not
 need to call `nmake cecil' any longer. This will be done when freezing or finalizing.
 <P><BR>This generates a CECIL archive whose name derived from the name
-&lt;system nameof the Eiffel system, as follows:
+&lt;system name> of the Eiffel system, as follows:
         <ul>
           lib&lt;system name>.a&nbsp; (on unix)
-<BR>&lt;system name>.lib (on Windows)
+<BR>lib&lt;system name>.lib (on Windows)
         </ul>
 For example, the corresponding archive&nbsp; for an Eiffel system called
-"test", would&nbsp; be called either "libtest.a" (Unix) or test.lib&nbsp;
+"test", would&nbsp; be called either "libtest.a" (Unix) or libtest.lib&nbsp;
 (Windows.)
 <P>You can build a CECIL archive with either the "finalized" C code or
-"frozen" C code. In the latter case you must copy the "melted.eif" file
-located in $/EIFGEN/W_code/melted.eif
+"frozen" C code. In the latter case you must copy the "&lt;system name>.melted" file
+located in $/EIFGEN/W_code/&lt;system name>.melted
 to the directory from where you intend
 to execute your C application . Each time you melt the Eiffel system, the
-melted.eif file updates.
+&lt;system name>.melted file is updated.
 <P>Note: Calling
 melted routines through the CECIL interface is not supported in the current
 version&nbsp; - calling a melted routine raises the exception "$ applied

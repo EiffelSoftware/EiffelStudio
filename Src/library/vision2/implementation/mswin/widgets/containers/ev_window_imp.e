@@ -819,7 +819,17 @@ feature {EV_ANY_I} -- Implementation
 			end
 			app_imp.clear_override_from_mouse_activate
 			msg := cwin_hi_word (lparam)
-			source := source_at_pointer_position
+				--| We need to pass the mouse_button to `source_at_pointer_position'.
+				--| This enables it to only call `pebble_function' if really necessary,
+				--| i.e. the pressed button matches the type of transport.
+			if msg = Wm_lbuttondown then
+				source := source_at_pointer_position (1)
+			elseif msg = Wm_rbuttondown then
+				source := source_at_pointer_position (3)
+			else
+				source := Void
+			end
+		
 				--| We set `override movement' to False. It is easier to then assign `True
 				--| if we find (below) that `Current' must not be raised due to the widget
 				--| at the pointer_position having a drag/pick and drop.
@@ -885,8 +895,11 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	source_at_pointer_position: EV_PICK_AND_DROPABLE_IMP is
+	source_at_pointer_position (button_pressed: INTEGER): EV_PICK_AND_DROPABLE_IMP is
 			-- `Result' is EV_PICK_AND_DROPABLE at current pointer_position.
+			-- `button_pressed' is pointer button which caused this feature to be
+			-- called. This allows us to avoid excessive processing when we know
+			-- that the type of transport of the widget does not match the button.
 		local
 			wel_window: WEL_WINDOW
 			wel_point: WEL_POINT
@@ -902,33 +915,39 @@ feature {EV_ANY_I} -- Implementation
 			if wel_window /= Void then
 				widget_imp ?= wel_window
 				if widget_imp /= Void then
-						-- We execute the pebble function
-					pebble_result := widget_imp.query_pebble_function (wel_point.x - widget_imp.screen_x,
-						wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
-					if widget_imp.pebble /= Void or pebble_result /= Void then
-						Result := widget_imp
-					end
-					item_list_imp ?= widget_imp
-					if item_list_imp /= Void then
-						an_item_imp ?= item_list_imp.find_item_at_position (wel_point.x
-							- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
-						if an_item_imp /= Void then
-									--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
-								pebble_result := an_item_imp.query_pebble_function (0, 0, wel_point.x, wel_point.y)
-							if an_item_imp.pebble /= Void or pebble_result /= Void then
-									-- If the cursor is over an item and the item is a
-									-- pick and drop target then we set the target id to that of the
-									-- item, as the items are conceptually 'above' the list and so
-									-- if a list and one of its items are pnd targets then the 
-									-- item should recieve.
-								sensitive ?= an_item_imp.interface
-									-- If an item is not `sensitive' then it cannot be dropped on.
-								if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
-									Result := an_item_imp
+						--| We only need to perform further processing if the pointer
+						--| button matches the type of transport of `widget_imp'.
+					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
+						(button_pressed = 3 and widget_imp.mode_is_pick_and_drop) then
+
+							-- We execute the pebble function
+						pebble_result := widget_imp.query_pebble_function (wel_point.x - widget_imp.screen_x,
+							wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
+						if widget_imp.pebble /= Void or pebble_result /= Void then
+							Result := widget_imp
+						end
+						item_list_imp ?= widget_imp
+						if item_list_imp /= Void then
+							an_item_imp ?= item_list_imp.find_item_at_position (wel_point.x
+								- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
+							if an_item_imp /= Void then
+										--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
+									pebble_result := an_item_imp.query_pebble_function (0, 0, wel_point.x, wel_point.y)
+								if an_item_imp.pebble /= Void or pebble_result /= Void then
+										-- If the cursor is over an item and the item is a
+										-- pick and drop target then we set the target id to that of the
+										-- item, as the items are conceptually 'above' the list and so
+										-- if a list and one of its items are pnd targets then the 
+										-- item should recieve.
+									sensitive ?= an_item_imp.interface
+										-- If an item is not `sensitive' then it cannot be dropped on.
+									if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
+										Result := an_item_imp
+									end
 								end
 							end
 						end
-					end
+					end				
 				end
 			end
 		end
@@ -1228,6 +1247,12 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2001/07/11 21:06:08  rogers
+--| Modified `source_at_pointer_position' so that `pebble_function' is only
+--| executed if really necessary. `source_at_pointer_position' now takes an
+--| INTEGER argument corresponding to the button which was pressed. This is
+--| calculated in `on_wm_mouse_activate".
+--|
 --| Revision 1.57  2001/07/10 00:00:03  rogers
 --| Fixed `on_get_min_max_info'. We now actually take into account
 --| `maximum_width' and `maximum_height'. Previsouly, calling `set_maximum_*'

@@ -301,6 +301,33 @@ feature {NONE} -- Contract support
 			go_to (c)
 		end
 
+feature {NONE}-- Assertion
+
+	lists_equal (list1, list2: LINKED_LIST [G]): BOOLEAN is
+			-- Are elements in `list1' equal to those in `list2'.
+		require
+			list1_not_void: list1 /= Void
+			list2_not_void: list2 /= Void
+		do
+			if list1.count = list1.count and then list1.count > 0 then
+				from
+					list1.start
+					list2.start
+					Result := True
+				until
+					list1.off
+				loop
+					if list1.item /= list2.item then
+						Result := False
+					end
+					list1.forth
+					list2.forth
+				end
+				list1.start
+				list2.start
+			end
+		end
+
 feature -- Implementation
 
 	changeable_comparison_criterion: BOOLEAN is False
@@ -340,6 +367,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/01 23:43:21  king
+--| Added lists_equal linked_list comparison feature
+--|
 --| Revision 1.3  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

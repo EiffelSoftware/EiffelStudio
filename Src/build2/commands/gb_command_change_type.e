@@ -37,8 +37,6 @@ feature -- Basic Operation
 
 	execute is
 			-- Execute `Current'.
-		
-			
 		do
 			object_handler.replace_object_type (layout_item.object, new_type)
 			if not history.command_list.has (Current) then
@@ -71,7 +69,7 @@ feature {NONE} -- Implementation
 	
 	layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		-- Layout item representing the object `Current' refers to.
-		-- We cannot store the object, as changing the type creates
+		-- We cannot store the object, as changing the type
 		-- creates a new object, therefore we have to do `layout_item.object'
 		-- to retrieve the current object we are working with.
 

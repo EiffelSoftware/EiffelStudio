@@ -164,11 +164,13 @@ feature -- Output
 			if args_list /= Void then
 				from
 					args_list.start;
-					st.add_string ("%NArguments: %N")
+					st.add_new_line;
+					st.add_string ("Arguments:");
+					st.add_new_line
 				until
 					args_list.after
 				loop
-					st.add_string ("%T");
+					st.add_indent;
 					args_list.item.append_to (st, 0);
 					args_list.forth;
 				end;
@@ -185,7 +187,9 @@ feature -- Output
 		do
 			locals_list := locals;
 			if locals_list /= Void or else private_result /= Void then
-				st.add_string ("%NLocal entities: %N");
+				st.add_new_line;
+				st.add_string ("Local entities:");
+				st.add_new_line
 			end;
 			if locals_list /= Void then
 				!! local_names.make;
@@ -205,7 +209,7 @@ feature -- Output
 					until
 						local_names.after
 					loop
-						st.add_string ("%T");
+						st.add_indent;
 						local_names.item.append_to (st, 0);
 						local_names.forth	
 					end
@@ -213,7 +217,7 @@ feature -- Output
 			end;
 			if private_result /= Void then
 					-- Display the Result entity value.
-				st.add_string ("%T");
+				st.add_indent;
 				private_result.append_to (st, 0);
 			end;
 		end; 
@@ -263,7 +267,7 @@ feature -- Output
 				st.add_string ("NOT FOUND		   ");
 			end;
 
-			st.add_feature_name (routine_name, c);
+			st.add_feature_name (routine_name, oc);
 			if oc /= c then
 				st.add_string (" (From ");
 				if oc /= Void then

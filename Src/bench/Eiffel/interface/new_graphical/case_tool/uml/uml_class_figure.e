@@ -37,6 +37,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	SHARED_EIFFEL_PROJECT
+		undefine
+			default_create
+		end
 	
 create
 	make_with_model
@@ -678,10 +683,12 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			l_section: FEATURE_SECTION
 			fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			l_export_status: EXPORT_I
+			l_item: FEATURE_CLAUSE_AS
 		do
 			create {ARRAYED_LIST[FEATURE_SECTION]} Result.make (0)
 			if not retried then
-				
+				eiffel_system.system.set_current_class (compiled_class)
 				fcl := model.feature_clause_list
 				if fcl /= Void and then not fcl.is_empty then
 					class_text := compiled_class.text
@@ -700,13 +707,16 @@ feature {NONE} -- Implementation
 								raise ("Void feature clause")
 							end
 							features := fcl.item.features
-							name := fcl.item.comment (class_text)
+							l_item := fcl.item
+							name := l_item.comment (class_text)
 							name.right_adjust
 							create l_section.make (name, features, compiled_class)
-							
-							if fcl.item.export_status.is_none then
+							l_export_status := l_item.export_status
+							if l_export_status = Void then
 								l_section.enable_is_none
-							elseif fcl.item.export_status.is_set then
+							elseif l_export_status.is_none then
+								l_section.enable_is_none
+							elseif l_export_status.is_set then
 								l_section.enable_is_some
 							else
 								l_section.enable_is_any
@@ -738,6 +748,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			eiffel_system.system.set_current_class (Void)
 		ensure
 			Result_not_Void: Result /= Void
 		rescue

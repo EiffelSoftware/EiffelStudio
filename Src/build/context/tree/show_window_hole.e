@@ -1,49 +1,59 @@
--- Show/Hide windows
+indexing
+	description: "Show/Hide windows."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class SHOW_WINDOW_HOLE
 
 inherit
-
-	TREE_HOLE
-        rename
-            make as parent_make
+	EB_BUTTON
 		redefine
-			process_context
-		end;
+			make
+		end
+
+	CONSTANTS
+
+	EV_COMMAND
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-    make (a_parent: COMPOSITE) is
+    make (par: EV_TOOL_BAR) is
         do
-            parent_make (a_parent)
+			{EB_BUTTON} Precursor (par)
+			add_pnd_command (Pnd_types.context_type, Current, Void)
         end
 
-	create_focus_label is
-		do
-			set_focus_string (Focus_labels.show_window_label)
-		end;
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.show_window_label)
+--		end
 
-	process_context (dropped: CONTEXT_STONE) is
-		local
-			cont: CONTEXT
-		do
-			cont := dropped.data;
-			if cont.is_window then
-				if cont.shown then
-					cont.hide
-				else
-					main_panel.interface_entry.set_toggle_on
-					cont.show
-				end;
-			end
-		end;
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.show_window_pixmap
-		end;
+		end
 
-end
+
+feature {NONE} -- Command
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+		local
+			ctxt: CONTEXT
+		do
+			ctxt ?= ev_data.data
+			if ctxt.is_window then
+				if ctxt.shown then
+					ctxt.hide
+				else
+--					main_window.menu_bar.interface_entry.set_selected (True)
+					ctxt.show
+				end
+			end
+		end
+
+end -- class SHOW_WINDOW_HOLE
+

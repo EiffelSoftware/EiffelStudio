@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 			real_signal_connect (list_widget, "select_child", ~select_callback)
 			
-			-- Gtk bug means that select_child signal is fired on mouse press.
+			-- Gtk bug means that select_child signal is fired on mouse press regardless.
 		end
 
 feature {EV_TREE_ITEM_IMP} -- Implementation
@@ -257,6 +257,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/02 00:27:49  king
+--| Updated bug comment
+--|
 --| Revision 1.30  2000/03/01 23:42:46  king
 --| Corrected select_callback, corrected initialize
 --|

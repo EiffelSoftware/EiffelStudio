@@ -2,6 +2,8 @@ class SYSTEM_CONSTANTS
 
 feature {NONE}
 
+	Class_suffix: STRING is "C";
+
 	Continuation: CHARACTER is '\'
 
 	Comp: STRING is "COMP"
@@ -141,12 +143,14 @@ feature {NONE}
 			Result := Platform_constants.Preobj
 		end;
 
+	System_object_prefix: STRING is "E";
+
 	Updt: STRING is
 		once
 			Result := Platform_constants.Updt
 		end;
 
-	Version_number: STRING is "3.2.5"
+	Version_number: STRING is "3.2.6"
 
 	W_code: STRING is "W_code"
 

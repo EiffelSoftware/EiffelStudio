@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_BENCH_LICENSES
-		export
-			{NONE} all
-		end
-
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -40,6 +35,16 @@ inherit
 		end
 
 	SHARED_CONFIGURE_RESOURCES
+		export
+			{NONE} all
+		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	EXCEPTIONS
 		export
 			{NONE} all
 		end
@@ -206,7 +211,6 @@ feature {NONE} -- Compilation implementation
 	perform_compilation is
 			-- The real compilation. (This is melting.)
 		do
-			license_display
 			Eiffel_project.melt
 		end
 
@@ -358,19 +362,6 @@ feature {NONE} -- Execution
 			end
 		end
 
-feature {NONE} -- License checking
-
-	license_display is
-			-- Display license reminder.
-		do
-			if license.demo_mode then
-				number_of_compilations := number_of_compilations + 1
-				if number_of_compilations \\ license_frequency = 0 then
-					license.get_license
-				end
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	menu_name: STRING is
@@ -409,12 +400,6 @@ feature {NONE} -- Implementation
 			-- Argument used when files needs to be saved before compiling.
 		once
 			create Result
-		end
-
-	license_frequency: INTEGER is
-			-- Frequency of license appearance in demo mode.
-		once
-			Result := 5
 		end
 
 	number_of_compilations: INTEGER

@@ -75,7 +75,6 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			license_display
 			Eiffel_project.precompile (False)
 		end
 

@@ -13,7 +13,7 @@ inherit
 			confirm_and_compile,
 			menu_name, pixmap, tooltip,
 			finalization_error, perform_compilation,
-			license_frequency, name,
+			name,
 			make, description
 		end
 
@@ -107,7 +107,6 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The real compilation work.
 		do
-			license_display
 				-- If the argument is `warner' the user pressed on "Keep assertions"
 				-- "False" means no assertions
 			Eiffel_project.finalize (assertions_included)
@@ -145,9 +144,6 @@ feature {NONE} -- Implementation
 				-- Display message.
 			output_manager.process_text (output_text)
 		end
-
-	license_frequency: INTEGER is 1
- 			-- Frequency of license appearance in demo mode.
 
 feature {NONE} -- Implementation
 

@@ -259,11 +259,9 @@ feature -- Queries
 			-- Not very nice, but how could we do otherwise ?
 		local
 			pos: INTEGER
-			sep: CHARACTER
 		do
-			sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 			Result := f.twin
-			pos := Result.last_index_of (sep, Result.count)
+			pos := Result.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, Result.count)
 			if pos > 0 then
 				Result := Result.substring (pos + 1, Result.count)
 			end

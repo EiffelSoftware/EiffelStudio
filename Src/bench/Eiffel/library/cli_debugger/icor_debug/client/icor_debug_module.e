@@ -113,6 +113,13 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+	get_base_address: INTEGER is
+		do
+			last_call_success := cpp_get_base_address (item, $Result)
+		ensure
+			success: last_call_success = 0
+		end
+		
 	get_assembly: ICOR_DEBUG_ASSEMBLY is
 			-- Reference to the ICorDebugAssembly
 		local
@@ -274,6 +281,16 @@ feature {ICOR_EXPORTER} -- Implementation
 		alias
 			"GetProcess"
 		end		
+		
+	frozen cpp_get_base_address (obj: POINTER; a_p: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugModule signature(CORDB_ADDRESS*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"GetBaseAddress"
+		end
 
 	frozen cpp_get_assembly (obj: POINTER; a_p: POINTER): INTEGER is
 		external

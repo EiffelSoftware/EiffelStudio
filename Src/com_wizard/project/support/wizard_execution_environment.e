@@ -9,6 +9,20 @@ class
 
 feature -- Access
 
+	Ise_c_compiler_value: STRING is
+			-- ISE_C_COMPILER value
+		once
+			Result := execution_environment.get (Ise_c_compiler)
+			if Result = Void then
+				Result := "msc"
+				execution_environment.put ("msc", Ise_c_compiler)
+			end
+		ensure
+			non_void_compiler: Result /= Void
+			valid_compiler: Result.is_equal ("msc") or 
+						Result.is_equal ("bcb")
+		end
+		
 	Eiffel4_location: STRING is
 			-- Location of Eiffel compiler.
 		once
@@ -86,6 +100,9 @@ feature {NONE} -- Implementation
 
 	Ise_eiffel: STRING is "ISE_EIFFEL"
 			-- Ise_eiffel environmnent variable.
+
+	Ise_c_compiler: STRING is "ISE_C_COMPLIER"
+			-- ISE_C_COMPLIER environmnent variable.
 
 end -- class WIZARD_EXECUTION_ENVIRONMENT
 

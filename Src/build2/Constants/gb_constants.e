@@ -182,7 +182,7 @@ feature -- Generation constants
 			-- `Result' + short type + number.
 			-- i.e. l_button1
 			
-	Generation_directory: STRING is "Generated"
+	Generation_directory: STRING is "generated"
 		-- Directory name to hold the generated files.
 		
 		

@@ -31,6 +31,7 @@ feature {NONE} -- Implementation
 				create all_loaded_pixmaps.make (2)
 			end
 			create filename.make_from_string (get ("ISE_VISION2_TOUR"))
+			filename.extend ("bitmaps")
 			filename.extend ("png")
 			filename.extend ("image" + a_number.out + ".png")
 			if all_loaded_pixmaps @ filename /= Void then

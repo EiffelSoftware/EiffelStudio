@@ -340,27 +340,26 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	deep_actual_type: GEN_TYPE_A is
+	deep_actual_type: like Current is
 			-- Actual type of Current; recursive version for generics
 		local
-			i, count: INTEGER
+			i: INTEGER
 			new_generics: like generics
 		do
 			if not has_like then
 				Result := Current
 			else
 				from
-					i := 1
-					count := generics.count
-					create new_generics.make (1, count)
+					i := generics.count
+					create new_generics.make (1, i)
 				until
-					i > count
+					i <= 0
 				loop
 					new_generics.put (generics.item (i).deep_actual_type, i)
-					i := i + 1
+					i := i - 1
 				end
-				create Result.make (class_id, new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result := twin
+				Result.set_generics (new_generics)
 			end
 		end
 

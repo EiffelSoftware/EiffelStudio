@@ -229,13 +229,13 @@ feature -- Implementation
 			-- Description string of the current font used
 		local
 			gtk_settings, font_name_ptr: POINTER
-			a_utf8_c_string: EV_GTK_C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			gtk_settings := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
-			create a_utf8_c_string.make ("gtk-font-name")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (gtk_settings, a_utf8_c_string.item, $font_name_ptr)
-			create a_utf8_c_string.make_from_pointer (font_name_ptr)
-			Result := a_utf8_c_string.string
+			a_cs := "gtk-font-name"
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (gtk_settings, a_cs.item, $font_name_ptr)
+			create a_cs.make_from_pointer (font_name_ptr)
+			Result := a_cs.string
 		end
 		
 	font_names_on_system: ARRAYED_LIST [STRING] is

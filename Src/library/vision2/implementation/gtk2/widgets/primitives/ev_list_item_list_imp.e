@@ -98,7 +98,7 @@ feature -- Insertion
 			str_value: POINTER
 			a_list_item_imp: EV_LIST_ITEM_IMP
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			str_value := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)

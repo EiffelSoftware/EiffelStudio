@@ -710,10 +710,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			
-			create a_gtk_c_str.make ("vertical-separator")
+			a_gtk_c_str := "vertical-separator"
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			
-			create a_gtk_c_str.make ("height")
+			a_gtk_c_str := "height"
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end

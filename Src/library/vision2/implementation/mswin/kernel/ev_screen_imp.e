@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			color: EV_COLOR
 		do
 			base_make (an_interface)
-			!! dc
+			create dc
 			dc.get
 		end
 
@@ -58,20 +58,22 @@ feature -- Status report
 
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer.
+		local
+			wel_point: WEL_POINT
 		do
-			--|FIXME
-			check fixme: false end
+			create wel_point.make_by_cursor_position
+			create Result.set (wel_point.x, wel_point.y)
 		end
 
 feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
-			-- Set `pointer_position' to (`x',`y`).		
+			-- Set `pointer_position' to (`x',`y`).
+		local
+			wel_point: WEL_POINT
 		do
-			--|FIXME
-			check fixme: false end
-			--| See SendInput
-	--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+			create wel_point.make (0,0)
+			wel_point.set_cursor_position (x, y)
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
@@ -119,7 +121,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
-			dc.delete
+			dc.release
 			is_destroyed := True
 			destroy_just_called := True
 		end
@@ -151,6 +153,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/11 21:40:24  pichery
+--| implemented set_pointer_position & pointer_position.
+--|
 --| Revision 1.10  2000/04/11 21:16:41  king
 --| Made <= 80 columns
 --|

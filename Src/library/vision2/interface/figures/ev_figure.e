@@ -16,8 +16,6 @@ inherit
 			out as default_out
 		redefine
 			default_create
-		select
-			default_out
 		end
 
 feature {NONE} -- Initialization
@@ -453,6 +451,9 @@ end -- class EV_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/26 16:20:05  brendel
+--| Fixed inh. clause.
+--|
 --| Revision 1.12  2000/04/26 16:07:41  brendel
 --| Moved testable feature from EV_FIGURE to EV_ATOMIC_FIGURE.
 --|

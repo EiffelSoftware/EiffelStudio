@@ -20,7 +20,7 @@ feature -- Access
 	generate_project (directory: DIRECTORY; test_class_name: STRING; widget_type: STRING) is
 			-- Generate project based on `test_class_name'.
 		local
-			project_name, project_location, test_name: STRING
+			project_name, test_name: STRING
 
 		do
 			current_generation_directory := directory

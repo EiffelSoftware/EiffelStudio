@@ -46,7 +46,7 @@ feature {NONE}
 			mark_and_record (f, static_class, rout_id_val);
 
 			check
-				(not Tmp_poly_server.has (rout_id_val.id)) implies f.is_deferred;
+				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
 					-- Case for an non existing routine table: a deferred
 					-- feature without any implementation in descendant classes
 					-- leads to NO routine table.
@@ -78,11 +78,11 @@ feature {NONE}
 --				end;
 --			end;
 
-			if Tmp_poly_server.has (rout_id_val.id) then
+			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				written_class := f.written_class;
-				table ?= Tmp_poly_server.item (rout_id_val.id);
+				table ?= Tmp_poly_server.item (rout_id_val);
 				check
 					table_exists: table /= Void;
 				end;
@@ -171,7 +171,7 @@ debug ("MARKING")
     io.error.putstring (written_class.class_name);
     io.error.new_line;
 end;
-				depend_list := Depend_server.item (written_class.id.id).item
+				depend_list := Depend_server.item (written_class.id).item
 									(original_feature.feature_name);
 				if depend_list /= Void then
 					propagate_feature (written_class, original_feature, depend_list);

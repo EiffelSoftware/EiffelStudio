@@ -229,6 +229,27 @@ feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, APPLICATION_STATUS}
 			Result := System.class_types.item (i)
 		end
 
+feature {COMPILER_EXPORTER} -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		local
+			other_classes: HASH_TABLE [E_CLASS, CLASS_ID];
+			class_id: CLASS_ID;
+		do
+			other_classes := other.classes;
+			from other_classes.start until other_classes.after loop
+				class_id := other_classes.key_for_iteration;
+				if not classes.has (class_id) then
+					classes.put (other_classes.item_for_iteration, class_id)
+				end;
+				other_classes.forth
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	System_chunk: INTEGER is 500

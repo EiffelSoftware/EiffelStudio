@@ -16,6 +16,7 @@ inherit
 	IDABLE;
 	PROJECT_CONTEXT;
 	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	SHARED_SERVER
 		export
 			{ANY} all
@@ -486,6 +487,37 @@ feature {NONE} -- Implementation
 		ensure
 			valid_result: Result /= Void
 		end;
+
+feature {COMPILER_EXPORTER} -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+			same_class: equal (id, other.id)
+		local
+			classes: LINKED_LIST [E_CLASS]
+			ec: E_CLASS
+		do
+			classes := other.clients;
+			from classes.start until classes.after loop
+				ec := Eiffel_system.class_of_id (classes.item.id);
+				if not clients.has (ec) then
+					clients.extend (ec)
+				end;
+				classes.forth
+			end;
+			classes := other.descendants;
+			from classes.start until classes.after loop
+				ec := Eiffel_system.class_of_id (classes.item.id);
+				if not descendants.has (ec) then
+					descendants.extend (ec)
+				end;
+				classes.forth
+			end;
+			types.append (other.types)
+		end
 
 invariant
 

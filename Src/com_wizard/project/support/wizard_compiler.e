@@ -174,7 +174,9 @@ feature -- Basic Operations
 			a_directory: DIRECTORY
 			a_local_folder: STRING
 			a_project_file, a_dest_file: STRING
+			component_empty: BOOLEAN
 		do
+			-- Delete EIFGEN directory if exists.
 			a_local_folder := clone (a_folder)
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (Eifgen)
@@ -182,9 +184,22 @@ feature -- Basic Operations
 			if a_directory.exists then
 				a_directory.recursive_delete
 			end
+
+			-- Check whether Component directory empty
+			a_local_folder := clone (a_folder)
+			a_local_folder.append_character (Directory_separator)
+			a_local_folder.append ("Component")
+			create a_directory.make (a_local_folder)
+			if a_directory.exists then
+				component_empty := a_directory.empty
+			end
+
 			displayed := displayed_while_running
 			set_displayed_while_running (True)
-			if a_folder.is_equal (Client) then
+			if 
+				a_folder.is_equal (Client) or
+				component_empty
+			then
 				launch (precompile_command, a_folder)
 			else
 				launch (eiffel_compile_command, a_folder)

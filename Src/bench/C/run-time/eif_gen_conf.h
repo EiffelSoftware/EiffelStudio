@@ -75,6 +75,10 @@ RT_LNK int16 *eif_cid_map;
 /* Inverse RTUD Table to reverse the effect of RTUD */
 RT_LNK int16 *rtud_inv;
 
+#ifdef EIF_THREADS
+RT_LNK int16 eif_cid_map_acc (int idx);
+#endif
+
 /* Maximum nr. of entries in a compound typeid array */
 #define MAX_CID_SIZE    200
 

@@ -5,12 +5,17 @@
 #include "eif_struct.h"
 #include "eif_macros.h"
 #include "eif_gen_conf.h"
+#include "eif_lmalloc.h"
+#include "eif_threads.h"
 
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */
 /* output to the file 'logfile'. Simple facility.                   */
 /*------------------------------------------------------------------*/
 
+/*
+#define GEN_CONF_DEBUG
+*/
 #ifdef GEN_CONF_DEBUG
 rt_public void log_puts (char *);
 rt_public void log_puti (int);
@@ -18,17 +23,39 @@ rt_public void log_puti (int);
 #endif
 
 /*------------------------------------------------------------------*/
+/* Parent tables. The first, `eif_par_table', is defined in the file*/
+/* `eparents.c' which is produced by the compiler. Changes to that  */
+/* table after re-melting are stored in `melted.eif' and are pro-   */
+/* cessed in `update.c' and stored in `eif_par_table2'.             */
+/*                                                                  */
+/* Access   : Read only through macro `par_info'.                   */
+/* Indexing : base id; RTUD(no)                                     */
+/*------------------------------------------------------------------*/
 
 rt_public struct eif_par_types **eif_par_table = (struct eif_par_types **) 0;
 rt_public int    eif_par_table_size = 0;
 rt_public struct eif_par_types **eif_par_table2 = (struct eif_par_types **) 0;
 rt_public int    eif_par_table2_size = 0;
+
+#define par_info(t) (eif_par_table2[(t)])
+
+/*------------------------------------------------------------------*/
+/* Compound id map. Maps compiler generated ids to themselves and   */
+/* run-time generated ids to their base ids.                        */
+/* Table is dynamic.                                                */
+/*                                                                  */
+/* Access   : Read/Write (read with macros Deif_bid, Dtype and      */
+/*                        Mapped_flags).                            */
+/*            In multi-threaded mode read with eif_cid_map_acc.     */
+/* Indexing : full type id; RTUD(yes).                              */
+/* Result   : base id; RTUD(yes).                                   */
+/*------------------------------------------------------------------*/
+
 rt_public int16  *eif_cid_map = (int16 *) 0;
-rt_public int16 *rtud_inv = (int16 *) 0;
 
 /*------------------------------------------------------------------*/
 /* egc_any_dtype is used for creating ARRAY[ANY] in the run-time    */
-/* e.g. for `strip'                                                 */
+/* e.g. for `strip'. RTUD(no)                                       */
 /*------------------------------------------------------------------*/
 
 rt_public int egc_any_dtype = 2; /* Precise value determined in init */
@@ -43,14 +70,23 @@ typedef struct eif_gen_der {
 	long                size;       /* Size of type array/ nr. of bits in BIT type */
 	int16               hcode;      /* Hash code to speedup search */
 	int16               *typearr;   /* Array of types (cid) */
+									/* RTUD(no) */
 	int16               stypearr[8];/* Small type array */
+									/* RTUD(no) */
 	int16               *gen_seq;   /* Id sequence which generates this type */
+									/* RTUD(yes) */
 	int16               sgen_seq[8];/* Small id sequence */
+									/* RTUD(yes) */
 	int16               *ptypes;    /* Parent types */
+									/* RTUD(yes) */
 	int16               sptypes[8]; /* Small parent types table */
+									/* RTUD(yes) */
 	int16               id;         /* Run-time generated id */
+									/* RTUD(no) */
 	int16               base_id;    /* Compiler generated (base) id */
+									/* RTUD(no) */
 	int16               first_id;   /* First matching compiler gen. id */
+									/* RTUD(no) */
 	int16               uniformizer;/* Uniformizer id for TUPLE types */
 	char                *name;      /* Full type name */
 	char                is_expanded;/* Is it an expanded type? */
@@ -63,6 +99,9 @@ typedef struct eif_gen_der {
 /*------------------------------------------------------------------*/
 /* Structure for conformance information. The `lower' ids are the   */
 /* usual compiler generated ids. The others are generated here.     */
+/*                                                                  */
+/* All ids are full type ids; RTUD(yes)                             */
+/* Indexing: full type ids; RTUD(yes)                               */
 /*------------------------------------------------------------------*/
 
 typedef struct {
@@ -87,10 +126,16 @@ typedef struct {
 
 typedef struct {
 
-	int16           min_id;         /* Minimal ancestor id */
-	int16           max_id;         /* Maximal ancestor id */
-	int16           *map;           /* Ancestor id map */
-	int16           smap [8];       /* Small ancestor id map */
+	int16           min_id;         /* Minimal ancestor id; RTUD(no) */
+	int16           max_id;         /* Maximal ancestor id; RTUD(no) */
+	int16           *map;           /* Ancestor id map.
+									   Index : RTUD(no)
+									   Result: RTUD(yes)
+									*/
+	int16           smap [8];       /* Small ancestor id map.
+									   Index : RTUD(no)
+									   Result: RTUD(yes)
+									*/
 
 } EIF_ANC_ID_MAP;
 /*------------------------------------------------------------------*/
@@ -98,10 +143,52 @@ typedef struct {
 rt_private int  eif_cid_size = 0;
 rt_private int  first_gen_id = 0;
 rt_private int  next_gen_id  = 0;
-rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
-rt_private EIF_CONF_TAB **eif_conf_tab = (EIF_CONF_TAB **)0;
+
+/*------------------------------------------------------------------*/
+/* Ancestor id maps.                                                */
+/*                                                                  */
+/* Access   : Read/Write                                            */
+/* Indexing : full type id; RTUD(yes)                               */
+/*------------------------------------------------------------------*/
+
 rt_private EIF_ANC_ID_MAP **eif_anc_id_map = (EIF_ANC_ID_MAP **)0;
+
+/*------------------------------------------------------------------*/
+/* Conformance tables.                                              */
+/*                                                                  */
+/* Access   : Read/Write                                            */
+/* Indexing : full type id; RTUD(yes)                               */
+/*------------------------------------------------------------------*/
+
+rt_private EIF_CONF_TAB **eif_conf_tab = (EIF_CONF_TAB **)0;
+
+/*------------------------------------------------------------------*/
+/* Generic derivations.                                             */
+/*                                                                  */
+/* Access   : Read/Write                                            */
+/* Indexing : full type id; RTUD(yes)                               */
+/*------------------------------------------------------------------*/
+
+rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
+
+/*------------------------------------------------------------------*/
+/* Inverse RTUD table.
+/*                                                                  */
+/* Access   : Read only                                             */
+/* Indexing : base id; RTUD(yes)                                    */
+/* Result   : RTUD(no)                                              */
+/*------------------------------------------------------------------*/
+
+rt_private int16 *rtud_inv = (int16 *) 0;
+
+/*------------------------------------------------------------------*/
+
 rt_private int16 cid_array [3];
+
+/*------------------------------------------------------------------*/
+/* Various base ids. RTUD(no)                                       */
+/*------------------------------------------------------------------*/
+
 rt_private int16 egc_character_dtype = -1;
 rt_private int16 egc_boolean_dtype = -1;
 rt_private int16 egc_integer_dtype = -1;
@@ -111,24 +198,64 @@ rt_private int16 egc_pointer_dtype = -1;
 rt_private int16 tuple_static_type = -1;
 
 /*------------------------------------------------------------------*/
+/* Macros GDtype and GDeif_bid. In multithreaded mode the usual     */
+/* macros Dtype and Deif_bid call eif_cid_map_acc. But we must have */
+/* direct access to eif_cid_map here.                               */
+/*------------------------------------------------------------------*/
 
-rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16, char *, char *);
-rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
-rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
-rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
-rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
-rt_private void eif_expand_tables(int);
+#define GDtype(x) (eif_cid_map[(HEADER(x)->ov_flags & EO_TYPE)])
+#define GDeif_bid(x) (eif_cid_map[(x) & EO_TYPE])
+
+/*------------------------------------------------------------------*/
+/* THREADS.                                                         */
+/* Calls to public routines are indirected and protected by a mutex */
+/* The indirection avoids problems with recursive calls.            */
+/*------------------------------------------------------------------*/
+
+#ifdef  EIF_THREADS
+
+rt_private EIF_MUTEX_TYPE   *eif_gen_mutex = (EIF_MUTEX_TYPE *) 0;
+
+rt_public void eifthd_gen_conf_init (int);
+rt_public int16 eifthd_compound_id (int16 *, char *, int16, int16 *);
+rt_public int16 eifthd_final_id (int16, int16 *, int16 **, char *);
+rt_public int16 eifthd_gen_param (int16, char *, int, char *, long *);
+rt_public int eifthd_gen_count (char *);
+rt_public char eifthd_gen_typecode (char *, int);
+rt_public char eifthd_gen_is_uniform (char *, char);
+rt_public char *eifthd_gen_typecode_str (char *);
+rt_public int16 eifthd_gen_param_id (int16, char *, int);
+rt_public char *eifthd_gen_create (char *, int);
+rt_public int16 eifthd_register_bit_type (long);
+rt_public int16 eifthd_typeof_array_of (int16);
+rt_public char *eifthd_gen_typename (char *);
+rt_public int16 *eifthd_gen_cid (int16);
+rt_public int16 eifthd_gen_id_from_cid (int16 *, int *);
+rt_public char *eifthd_gen_create_from_cid (int16 *);
+rt_public int eifthd_gen_conf (int16, int16);
+
+#define EIFMTX_CREATE EIF_MUTEX_CREATE(eif_gen_mutex, "Cannot create mutex for eif_gen_conf\n")
+#define EIFMTX_LOCK   EIF_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n")
+#define EIFMTX_UNLOCK EIF_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n")
+
+#endif
+/*------------------------------------------------------------------*/
+
 rt_private char *eif_typename (int16);
 rt_private int  eif_typename_len (int16);
 rt_private void eif_create_typename (int16, char*);
+rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
+rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
+rt_private void eif_compute_anc_id_map (int16);
+rt_private void eif_expand_tables(int);
+rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16, char *);
+rt_private void eif_compute_ctab (int16);
+rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
+rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
 rt_private int16 eif_gen_seq_len (int16);
-rt_private void eif_put_gen_seq (int16, int16*, int16*);
-rt_private void eif_compute_ctab (int16, int, int);
-rt_private void eif_compute_anc_id_map (int16, int, int);
+rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 
 /*------------------------------------------------------------------*/
-
-#define parent_of(t)    (((t) > eif_par_table_size) ? eif_par_table2[(t)-eif_par_table_size] : eif_par_table[t])
 
 #ifdef WORKBENCH
 #define RTUD_INV(x)  (((x) >= fcount)?(x):rtud_inv[(x)])
@@ -137,7 +264,341 @@ rt_private void eif_compute_anc_id_map (int16, int, int);
 #endif
 
 /*------------------------------------------------------------------*/
+
+#ifdef EIF_THREADS
+
+/*------------------------------------------------------------------*/
+/* Public features protected with a MUTEX.                          */
+/*------------------------------------------------------------------*/
+
+rt_public void eif_gen_conf_init (int max_dtype)
+{
+	EIF_GET_CONTEXT
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	eifthd_gen_conf_init (max_dtype);
+
+	EIFMTX_UNLOCK;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int16 *types)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_compound_id (cache, Current, base_id, types);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char *Current)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_final_id (stype, ttable, gttable, Current);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, long *nr_bits)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_param (stype, obj, pos, is_exp, nr_bits);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int eif_gen_count (char *obj)
+{
+	EIF_GET_CONTEXT
+	int result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_count (obj);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char eif_gen_typecode (char *obj, int pos)
+{
+	EIF_GET_CONTEXT
+	char    result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_typecode (obj, pos);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char eif_gen_is_uniform (char *obj, char code)
+{
+	EIF_GET_CONTEXT
+	char    result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_is_uniform (obj, code);
+
+	EIFMTX_UNLOCK;
+	
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_typecode_str (char *obj)
+{
+	EIF_GET_CONTEXT
+	char    *result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_typecode_str (obj);
+
+	EIFMTX_UNLOCK;
+	
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_param_id (stype, obj, pos);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_create (char *obj, int pos)
+{
+	EIF_GET_CONTEXT
+	char    *result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_create (obj, pos);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_register_bit_type (long size)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_register_bit_type (size);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_typeof_array_of (int16 dtype)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_typeof_array_of (dtype);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_typename (char *obj)
+{
+	EIF_GET_CONTEXT
+	char    *result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_typename (obj);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 *eif_gen_cid (int16 dftype)
+{
+	EIF_GET_CONTEXT
+	int16   *result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_cid (dftype);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
+{
+	EIF_GET_CONTEXT
+	int16   result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_id_from_cid (cidarr, dtype_map);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_create_from_cid (int16 *cidarr)
+{
+	EIF_GET_CONTEXT
+	char    *result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_create_from_cid (cidarr);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int eif_gen_conf (int16 source_type, int16 target_type)
+{
+	EIF_GET_CONTEXT
+	int result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eifthd_gen_conf (source_type, target_type);
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_cid_map_acc (int idx)
+{
+	EIF_GET_CONTEXT
+	int result;
+
+	EIFMTX_CREATE;
+	EIFMTX_LOCK;
+
+	result = eif_cid_map [idx];
+
+	EIFMTX_UNLOCK;
+
+	return result;
+	EIF_END_GET_CONTEXT
+}
+/*------------------------------------------------------------------*/
+/* Rename public features if EIF_THREADS is on.                     */
+/*------------------------------------------------------------------*/
+
+#define eif_gen_conf_init         eifthd_gen_conf_init
+#define eif_compound_id           eifthd_compound_id
+#define eif_final_id              eifthd_final_id
+#define eif_gen_param             eifthd_gen_param
+#define eif_gen_count             eifthd_gen_count
+#define eif_gen_typecode          eifthd_gen_typecode
+#define eif_gen_is_uniform        eifthd_gen_is_uniform
+#define eif_gen_typecode_str      eifthd_gen_typecode_str
+#define eif_gen_param_id          eifthd_gen_param_id
+#define eif_gen_create            eifthd_gen_create
+#define eif_register_bit_type     eifthd_register_bit_type
+#define eif_typeof_array_of       eifthd_typeof_array_of
+#define eif_gen_typename          eifthd_gen_typename
+#define eif_gen_cid               eifthd_gen_cid
+#define eif_gen_id_from_cid       eifthd_gen_id_from_cid
+#define eif_gen_create_from_cid   eifthd_gen_create_from_cid
+#define eif_gen_conf              eifthd_gen_conf
+
+#endif
+
+/*------------------------------------------------------------------*/
 /* Initialize all structures                                        */
+/* Called only once before root object is created.                  */
 /*------------------------------------------------------------------*/
 
 rt_public void eif_gen_conf_init (int max_dtype)
@@ -149,22 +610,30 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	eif_cid_size = max_dtype + 32;
 	first_gen_id = next_gen_id = max_dtype + 1;
 
-	eif_cid_map = (int16 *) cmalloc(eif_cid_size * sizeof (int16));
+	/* Set `eif_par_table2' if it is null. */
+
+	if (eif_par_table2 == (struct eif_par_types **) 0)
+	{
+		eif_par_table2 = eif_par_table;
+		eif_par_table2_size = eif_par_table_size;
+	}
+
+	eif_cid_map = (int16 *) eif_malloc(eif_cid_size * sizeof (int16));
 
 	if (eif_cid_map == (int16 *) 0)
 		enomem();
 
-	eif_derivations = (EIF_GEN_DER **) cmalloc(eif_cid_size * sizeof (EIF_GEN_DER*));
+	eif_derivations = (EIF_GEN_DER **) eif_malloc(eif_cid_size * sizeof (EIF_GEN_DER*));
 
 	if (eif_derivations == (EIF_GEN_DER **) 0)
 		enomem();
 
-	eif_conf_tab = (EIF_CONF_TAB **) cmalloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
+	eif_conf_tab = (EIF_CONF_TAB **) eif_malloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
 
 	if (eif_conf_tab == (EIF_CONF_TAB **) 0)
 		enomem();
 
-	eif_anc_id_map = (EIF_ANC_ID_MAP **) cmalloc(eif_cid_size * sizeof (EIF_ANC_ID_MAP*));
+	eif_anc_id_map = (EIF_ANC_ID_MAP **) eif_malloc(eif_cid_size * sizeof (EIF_ANC_ID_MAP*));
 
 	if (eif_anc_id_map == (EIF_ANC_ID_MAP **) 0)
 		enomem();
@@ -181,7 +650,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 
 	/* Now initialize egc_xxx_dtypes */
 
-	for (dt=0,pt = eif_par_table; dt < eif_par_table_size; ++dt, ++pt)
+	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
 	{
 		if (*pt == (struct eif_par_types *)0)
 			continue;
@@ -227,14 +696,14 @@ rt_public void eif_gen_conf_init (int max_dtype)
 
 #ifdef WORKBENCH
 
-	rtud_inv = (int16 *) cmalloc (fcount * sizeof (int16));
+	rtud_inv = (int16 *) eif_malloc (fcount * sizeof (int16));
 
 	if (rtud_inv == (int16 *) 0)
 		enomem();
 	
 	for (dt = 0; dt < fcount; ++dt)
 	{
-		if (parent_of(dt) != (struct eif_par_types *) 0)
+		if (par_info(dt) != (struct eif_par_types *) 0)
 			rtud_inv [egc_fdtypes [dt]] = dt;
 	}
 
@@ -249,13 +718,18 @@ rt_public void eif_gen_conf_init (int max_dtype)
 /*------------------------------------------------------------------*/
 /* Compute id for `types'. `cache' is used to cache the result in   */
 /* the generated C code if possible.                                */
+/*                                                                  */
+/* cache   : To cache result; RTUD(yes)                             */
+/* base_id : Base id of type; RTUD(no)                              */
+/* types   : Id array; RTUD(no)                                     */
+/* Result  : Resulting id; RTUD(yes)                                */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int16 *types)
 {
 	int16   result, gresult;
 	int16   outtab [256], *outtable, *intable;
-	char    cachable, found;
+	char    cachable;
 
 	result = base_id;
 
@@ -289,13 +763,12 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 		intable  = types+1;
 		outtable = outtab;
 		cachable = (char) 1;
-		found    = (char) 0;
 
 		if (Current != (char *) 0)
 			gresult = eif_id_of (*types, &intable, &outtable,
-								 (int16)Dftype(Current),1, &cachable, &found);
+								 (int16)Dftype(Current),1, &cachable);
 		else
-			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable, &found);
+			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable);
 
 
 #ifdef GEN_CONF_DEBUG
@@ -327,6 +800,9 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 /*------------------------------------------------------------------*/
 /* Compute id for `gttable' (generic type list for feature in final */
 /* mode).                                                           */
+/*                                                                  */
+/* stype  : static type of caller; RTUD(no)                         */
+/* Result : RTUD(yes); doesn't matter since in final mode           */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char *Current)
@@ -336,19 +812,19 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char 
 
 	if (gttable != (int16 **) 0)
 	{
-		gtp = gttable [Dtype(Current)];
+		gtp = gttable [GDtype(Current)];
 
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != -1))
 		{
 			*gtp = stype;
 
-			result = eif_compound_id ((int16 *)0, Current, ttable[Dtype(Current)], gtp);
+			result = eif_compound_id ((int16 *)0, Current, ttable[GDtype(Current)], gtp);
 
 			return result;
 		}
 	}
 
-	result = ttable[Dtype(Current)];
+	result = ttable[GDtype(Current)];
 
 	if (result <= -256)        /* expanded */
 		return -256 - result;
@@ -360,6 +836,9 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char 
 /* `is_exp' is set to a non-zero value if type is expanded else it's*/
 /* set to zero. `nr_bits' is > 0 if type is BIT, zero otherwise -   */
 /* the value can then be used to call RTLB(nr_bits).                */
+/*                                                                  */
+/* stype : type of caller; RTUD(no)                                 */
+/* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, long *nr_bits)
@@ -391,7 +870,7 @@ rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, lo
 
 		if (amap == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (dftype, 1, 0);
+			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
@@ -462,7 +941,7 @@ rt_public int eif_gen_count (char *obj)
 
 		if (amap == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (dftype, 1, 0);
+			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
@@ -511,7 +990,7 @@ rt_public char eif_gen_typecode (char *obj, int pos)
 
 		if (amap == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (dftype, 1, 0);
+			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
@@ -579,7 +1058,7 @@ rt_public char eif_gen_is_uniform (char *obj, char code)
 
 		if (amap == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (dftype, 1, 0);
+			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
@@ -663,6 +1142,8 @@ rt_public char *eif_gen_typecode_str (char *obj)
 	if (gdp->size < 2)
 		eif_panic ("Not a routine object.");
 
+	/* Type of call target */
+
 	gtype = gdp->typearr [0];
 
 	if (gtype <= -256)
@@ -688,7 +1169,9 @@ rt_public char *eif_gen_typecode_str (char *obj)
 				 break;
 	}
 
-	/* Now treat the arguments */
+	/* Now treat the arguments.
+	   This is necessarily a TUPLE 
+	*/
 
 	dftype = gdp->typearr [1];
 
@@ -700,13 +1183,17 @@ rt_public char *eif_gen_typecode_str (char *obj)
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
 
+	/* NOTE: Since dftype is a TUPLE
+			 we have RTUD(dftype) = dftype. 
+	*/
+
 	if (tuple_static_type >= 0)
 	{
 		amap = eif_anc_id_map [dftype];
 
 		if (amap == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (dftype, 1, 0);
+			eif_compute_anc_id_map (dftype);
 			amap = eif_anc_id_map [dftype];
 		}
 
@@ -753,6 +1240,10 @@ rt_public char *eif_gen_typecode_str (char *obj)
 
 	*strp = '\0';
 
+	/* We use cmalloc here! The C string will be part of
+	   an Eiffel STRING object.
+	*/
+
 	strp = cmalloc (strlen (tstr) + 1);
 
 	if (strp == (char *) 0)
@@ -764,6 +1255,9 @@ rt_public char *eif_gen_typecode_str (char *obj)
 }
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
+/*                                                                  */
+/* stype : Type of caller; RTUD(no)                                 */
+/* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
@@ -791,7 +1285,6 @@ rt_public char *eif_gen_create (char *obj, int pos)
 
 	if (is_expanded)
 	{
-		/* FIXME: expanded parameter in final mode */
 		eif_panic ("Expanded generic parameter.");
 	}
 #endif
@@ -816,7 +1309,9 @@ rt_public char *eif_gen_create (char *obj, int pos)
 	return RTLN(result_type);
 }
 /*------------------------------------------------------------------*/
-/* Register a bit type.                                             */
+/* Register a bit type. Return its type id.                         */
+/*                                                                  */
+/* Result : RTUD(yes) (doesn't matter actually)                     */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_register_bit_type (long size)
@@ -859,13 +1354,19 @@ rt_public int16 eif_register_bit_type (long size)
 /*------------------------------------------------------------------*/
 /* Type id for ARRAY [something], where 'something' is a reference  */
 /* type.                                                            */
+/*                                                                  */
+/* Result : RTUD(yes) (doesn't matter actually)                     */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_typeof_array_of (int16 dtype)
 {
 	int16   typearr [4], arr_dtype;
 
+#ifdef WORKBENCH
 	arr_dtype = RTUD_INV(egc_arr_dtype);
+#else
+	arr_dtype = egc_arr_dtype;
+#endif
 
 	typearr [0] = -1;           /* No static call context */
 	typearr [1] = arr_dtype;    /* Base type of ARRAY     */
@@ -874,7 +1375,6 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 
 	return eif_compound_id ((int16 *)0, (char *)0,(int16) arr_dtype, typearr);
 }
-
 /*------------------------------------------------------------------*/
 /* Full type name of `obj' as STRING object.                        */
 /*------------------------------------------------------------------*/
@@ -893,6 +1393,9 @@ rt_public char *eif_gen_typename (char *obj)
 /*------------------------------------------------------------------*/
 /* CID which generates `dftype'. First entry is the length of the   */
 /* compound id.                                                     */
+/*                                                                  */
+/* dftype : full type id; RTUD(yes)                                 */
+/* Result : base ids; RTUD(yes)                                     */
 /*------------------------------------------------------------------*/
 
 rt_public int16 *eif_gen_cid (int16 dftype)
@@ -911,8 +1414,9 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	gdp = eif_derivations [dftype];
 
 	if (gdp->gen_seq != (int16 *) 0)
+	{
 		return gdp->gen_seq;        /* already computed */
-
+	}
 	/* Compute size of array */
 
 	len = eif_gen_seq_len (dftype);
@@ -924,7 +1428,7 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	}
 	else
 	{
-		gdp->gen_seq = (int16 *) cmalloc ((len+2)*sizeof(int16));
+		gdp->gen_seq = (int16 *) eif_malloc ((len+2)*sizeof(int16));
 
 		if (gdp->gen_seq == (int16 *) 0)
 			enomem();
@@ -937,7 +1441,7 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 
 	len = 1;
 
-	eif_put_gen_seq (dftype, gdp->gen_seq, &len);
+	eif_put_gen_seq (dftype, gdp->gen_seq, &len, 0);
 
 	return gdp->gen_seq;
 }
@@ -1049,6 +1553,9 @@ rt_public char *eif_gen_create_from_cid (int16 *cidarr)
 }
 /*------------------------------------------------------------------*/
 /* Conformance test. Does `source_type' conform to `target_type'?   */
+/*                                                                  */
+/* Source_type : full type id; RTUD(yes)                            */
+/* Target_type : full type id; RTUD(yes)                            */
 /*------------------------------------------------------------------*/
 
 rt_public int eif_gen_conf (int16 source_type, int16 target_type)
@@ -1104,7 +1611,7 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 	if (stab == (EIF_CONF_TAB *) 0)
 	{
-		eif_compute_ctab (stype, 1, 0);
+		eif_compute_ctab (stype);
 		stab = eif_conf_tab[stype];
 	}
 
@@ -1252,9 +1759,21 @@ done:
 /* Private routines.                                                */
 /*------------------------------------------------------------------*/
 
+/*------------------------------------------------------------------*/
+/* Computation of a new id.                                         */
+/*                                                                  */
+/* stype      : Static type of caller; RTUD(no); -1 if none.        */
+/* intab      : RTUD(no) except for dtypes of objects               */
+/* outtab     : List of computed ids for generics; RTUD(no).        */
+/* obj_type   : Full type of object; RTUD(yes). Used to replace a   */
+/*              formal generic by an actual generic of the object.  */
+/* apply_rtud : Send result through RTUD?                           */
+/* cachable   : Is result cachable?                                 */
+/*------------------------------------------------------------------*/
+
 rt_private int16 eif_id_of (int16 stype, int16 **intab, 
 							int16 **outtab, int16 obj_type, 
-							int16 apply_rtud, char *cachable, char *found)
+							int16 apply_rtud, char *cachable)
 
 {
 	int16   dftype, gcount, i, hcode, ltype, uniformizer;
@@ -1321,7 +1840,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
+		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -1351,7 +1870,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
+		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -1381,7 +1900,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 			if (amap == (EIF_ANC_ID_MAP *) 0)
 			{
-				eif_compute_anc_id_map (obj_type, 1, 0);
+				eif_compute_anc_id_map (obj_type);
 				amap = eif_anc_id_map [obj_type];
 			}
 
@@ -1397,7 +1916,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		(*intab)++;
 		**outtab = dftype;
 		(*outtab)++;
-		return dftype;
+
+		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
 	if ((dftype < 0) || (dftype >= first_gen_id))
@@ -1413,12 +1933,14 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		}
 		**outtab = dftype;
 		(*outtab)++;
+
+		/* RTUD would not have an effect here */
 		return dftype;
 	}
 
 	/* It's an ordinary id generated by the compiler */
 
-	pt = parent_of(dftype);
+	pt = par_info(dftype);
 
 	if (!is_tuple)
 		gcount = pt->nb_generics;
@@ -1442,7 +1964,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	for (hcode = 0, i = gcount; i; --i)
 	{
-		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
+		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
 	}
 
 	/* Search */
@@ -1463,9 +1985,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 			if (mcmp == 0)
 			{
-				if (found != (char *) 0)
-					*found = (char) 1;
-
 				break; /* Found */
 			}
 		}
@@ -1495,8 +2014,21 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	**outtab = gdp->id;
 	(*outtab)++;
 
+	/* RTUD would not have an effect here */
 	return gdp->id;
 }
+/*------------------------------------------------------------------*/
+/* Create a new generic derivation. Actually we create one for every*/
+/* type, generic or not.                                            */
+/*                                                                  */
+/* size     : Nr. of bits in a bit type; nr. of generics in a ge-   */
+/*            neric type; 0 otherwise.                              */
+/* typearr  : Ids of generic paramenters; RTUD(no); null pointer    */
+/*            if not a generic type                                 */
+/* base_id  : Base id of type; RTUD(no)                             */
+/* is_exp   : Is it expanded?                                       */
+/* is_tuple : Is it a tuple?                                        */
+/* hcode    : Hash code for faster search                           */
 /*------------------------------------------------------------------*/
 
 rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id, char is_exp, char is_tuple, int16 hcode)
@@ -1506,14 +2038,14 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 	char *cname;
 	struct eif_par_types **pt;
 
-	result = (EIF_GEN_DER *) cmalloc(sizeof (EIF_GEN_DER));
+	result = (EIF_GEN_DER *) eif_malloc(sizeof (EIF_GEN_DER));
 
 	if (result == (EIF_GEN_DER *) 0)
 		enomem();
 
 	if (typearr == (int16 *)0)
 	{
-		/* It's not a generic type. If Size > 0 then it's a BIT type */
+		/* It's not a generic type. If size > 0 then it's a BIT type */
 
 		result->size        = size;
 		result->hcode       = hcode;
@@ -1545,7 +2077,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 	{
 		/* Large array */
 
-		tp = (int16 *) cmalloc(size*sizeof(int16));
+		tp = (int16 *) eif_malloc(size*sizeof(int16));
 
 		if (tp == (int16 *)0)
 			enomem();
@@ -1560,9 +2092,6 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 	{
 		bcopy(typearr,tp,size*sizeof(int16));
 	}
-
-	if (next_gen_id >= eif_cid_size)
-		eif_expand_tables (next_gen_id + 32);
 
 	result->size        = size;
 	result->hcode       = hcode;
@@ -1582,7 +2111,15 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 
 finish:
 
-	/* Map it to compiler generated id */
+	/* Expand tables if necessary */
+
+	if (next_gen_id >= eif_cid_size)
+		eif_expand_tables (next_gen_id + 32);
+
+	/* Map it to RTUDed compiler generated base id.
+	   NOTE: at this point `result->id' is a new id
+			 so we have: RTUD(result->id) = result->id.
+	*/
 
 	eif_cid_map [result->id] = RTUD(base_id);
 
@@ -1592,12 +2129,12 @@ finish_simple:
 	   which has the same class name as `base_id'.
 	*/
 
-	cname = (parent_of(base_id))->class_name;
+	cname = (par_info(base_id))->class_name;
 
 	if (strcmp (cname, "ARRAY") == 0)
 		result->is_array = '1';
 
-	for (dt=0,pt = eif_par_table; dt < eif_par_table_size; ++dt, ++pt)
+	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
 	{
 		if (*pt == (struct eif_par_types *)0)
 			continue;
@@ -1609,25 +2146,12 @@ finish_simple:
 		}
 	}
 
-	/* If not found, look in second table */
-
-	if (result->first_id == -1)
-	{
-		for (dt=1,pt = eif_par_table2,pt++; dt < eif_par_table2_size; ++dt, ++pt)
-		{
-			if (*pt == (struct eif_par_types *)0)
-				continue;
-
-			if (strcmp (cname,(*pt)->class_name) == 0)
-			{
-				result->first_id = eif_par_table_size + dt;
-				break;
-			}
-		}
-	}
-
 	return result;
 }
+/*------------------------------------------------------------------*/
+/* Create new conformance table.                                    */
+/*                                                                  */
+/* All ids are full type ids; RTUD(yes)                             */
 /*------------------------------------------------------------------*/
 
 rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 min_high, int16 max_high)
@@ -1636,7 +2160,7 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 	int16 size;
 	unsigned char *tab;
 
-	result = (EIF_CONF_TAB *) cmalloc(sizeof (EIF_CONF_TAB));
+	result = (EIF_CONF_TAB *) eif_malloc(sizeof (EIF_CONF_TAB));
 
 	if (result == (EIF_CONF_TAB *) 0)
 		enomem();
@@ -1656,14 +2180,14 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 
 		if (size > 8)
 		{
-			tab = (unsigned char *) cmalloc (size);
+			tab = (unsigned char *) eif_malloc (size);
 
 			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->low_tab = tab;
 
-			tab = (unsigned char *) cmalloc (size);
+			tab = (unsigned char *) eif_malloc (size);
 
 			if (tab == (unsigned char *) 0)
 				enomem ();
@@ -1685,14 +2209,14 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 
 		if (size > 8)
 		{
-			tab = (unsigned char *) cmalloc (size);
+			tab = (unsigned char *) eif_malloc (size);
 
 			if (tab == (unsigned char *) 0)
 				enomem ();
 
 			result->high_tab = tab;
 
-			tab = (unsigned char *) cmalloc (size);
+			tab = (unsigned char *) eif_malloc (size);
 
 			if (tab == (unsigned char *) 0)
 				enomem ();
@@ -1713,6 +2237,8 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 }
 /*------------------------------------------------------------------*/
 /* Enlarge conformance table to include `new_id'                    */
+/*                                                                  */
+/* New_id: full type id; RTUD(yes)                                  */
 /*------------------------------------------------------------------*/
 
 rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
@@ -1808,12 +2334,12 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 
 	if (size > 8)
 	{
-		tab = (unsigned char *) cmalloc (size);
+		tab = (unsigned char *) eif_malloc (size);
 
 		if (tab == (unsigned char *) 0)
 			enomem ();
 
-		comp = (unsigned char *) cmalloc (size);
+		comp = (unsigned char *) eif_malloc (size);
 
 		if (comp == (unsigned char *) 0)
 			enomem ();
@@ -1836,8 +2362,8 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 
 	if (!was_small)
 	{
-		xfree ((char *) old_tab);
-		xfree ((char *) old_comp);
+		eif_free ((char *) old_tab);
+		eif_free ((char *) old_comp);
 	}
 
 	/* Now update structure values */
@@ -1866,13 +2392,18 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 	}
 }
 /*------------------------------------------------------------------*/
+/* Create new ancestor id map.                                      */
+/*                                                                  */
+/* min_id : minimal ancestor id; RTUD (no)                          */
+/* max_id : maximal ancestor id; RTUD (no)                          */
+/*------------------------------------------------------------------*/
 
-rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map(int16 min_id, int16 max_id)
+rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id)
 {
 	EIF_ANC_ID_MAP *result;
 	int16 *map, size;
 
-	result = (EIF_ANC_ID_MAP *) cmalloc(sizeof (EIF_ANC_ID_MAP));
+	result = (EIF_ANC_ID_MAP *) eif_malloc(sizeof (EIF_ANC_ID_MAP));
 
 	if (result == (EIF_ANC_ID_MAP *) 0)
 		enomem();
@@ -1887,7 +2418,7 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map(int16 min_id, int16 max_id)
 
 		if (size > 8)
 		{
-			map = (int16 *) cmalloc (size*sizeof(int16));
+			map = (int16 *) eif_malloc (size*sizeof(int16));
 
 			if (map == (int16 *) 0)
 				enomem ();
@@ -1917,28 +2448,28 @@ rt_private void eif_expand_tables(int new_size)
 	int16       *map;
 	int         i;
 
-	new = (EIF_GEN_DER **) crealloc((char*)eif_derivations, new_size*sizeof (EIF_GEN_DER*));
+	new = (EIF_GEN_DER **) eif_realloc((char*)eif_derivations, new_size*sizeof (EIF_GEN_DER*));
 
 	if (new == (EIF_GEN_DER **) 0)
 		enomem();
 
 	eif_derivations = new;
 
-	tab = (EIF_CONF_TAB **) crealloc((char*)eif_conf_tab, new_size*sizeof (EIF_CONF_TAB*));
+	tab = (EIF_CONF_TAB **) eif_realloc((char*)eif_conf_tab, new_size*sizeof (EIF_CONF_TAB*));
 
 	if (tab == (EIF_CONF_TAB **) 0)
 		enomem();
 
 	eif_conf_tab = tab;
 
-	amap = (EIF_ANC_ID_MAP **) crealloc((char*)eif_anc_id_map, new_size*sizeof (EIF_ANC_ID_MAP*));
+	amap = (EIF_ANC_ID_MAP **) eif_realloc((char*)eif_anc_id_map, new_size*sizeof (EIF_ANC_ID_MAP*));
 
 	if (amap == (EIF_ANC_ID_MAP **) 0)
 		enomem();
 
 	eif_anc_id_map = amap;
 
-	map = (int16 *) crealloc((char*)eif_cid_map, new_size*sizeof (int16));
+	map = (int16 *) eif_realloc((char*)eif_cid_map, new_size*sizeof (int16));
 
 	if (map == (int16 *) 0)
 		enomem();
@@ -1957,6 +2488,8 @@ rt_private void eif_expand_tables(int new_size)
 }
 /*------------------------------------------------------------------*/
 /* Full type name for type `dftype' as C string.                    */
+/*                                                                  */
+/* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
 rt_private char *eif_typename (int16 dftype)
@@ -1971,15 +2504,19 @@ rt_private char *eif_typename (int16 dftype)
 	if (dftype < first_gen_id)
 	{
 		/* Compiler generated id */
-		return parent_of(RTUD_INV(dftype))->class_name;
+		return par_info(RTUD_INV(dftype))->class_name;
 	}
 
 	gdp = eif_derivations [dftype];
 
 	if (gdp->name != (char *) 0)    /* Already computed */
+	{
 		return gdp->name;
+	}
 
 	len = eif_typename_len (dftype);
+
+	/* We use cmalloc here! */
 
 	result = cmalloc (len + 1);
 
@@ -1994,12 +2531,14 @@ rt_private char *eif_typename (int16 dftype)
 }
 /*------------------------------------------------------------------*/
 /* Produce full type name of `dftype' in `result'.                  */
+/*                                                                  */
+/* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
 rt_private void eif_create_typename (int16 dftype, char *result)
 {
 	EIF_GEN_DER *gdp;
-	int16       *gp, i;
+	int16       *gp, dtype, i;
 	int         size;
 	char        *bits;
 
@@ -2036,11 +2575,11 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	if (dftype < first_gen_id)
 	{
 		/* Compiler generated id */
-		strcat (result, parent_of(dftype)->class_name);
+		strcat (result, par_info(RTUD_INV(dftype))->class_name);
 		return;
 	}
 
-	/* We have create this id */
+	/* We have created this id */
 
 	gdp = eif_derivations [dftype];
 
@@ -2061,7 +2600,7 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 			++i;
 		}
 
-		bits = cmalloc (i+1);
+		bits = eif_malloc (i+1);
 
 		if (bits == (char *) 0)
 			enomem ();
@@ -2091,7 +2630,7 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	if (gdp->is_expanded)
 		strcat (result, "expanded ");
 
-	strcat (result, parent_of(gdp->base_id)->class_name);
+	strcat (result, par_info(gdp->base_id)->class_name);
 
 	if (i > 0)
 	{
@@ -2101,7 +2640,19 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 
 		while (i--)
 		{
-			eif_create_typename (*gp, result);
+			dtype = *gp;
+
+			if (dtype <= -256)
+			{
+				dtype = -256-dtype;
+				dtype = -256-RTUD(dtype);
+			}
+			else
+			{
+				if (dtype >= 0)
+					dtype = RTUD(dtype);
+			}
+			eif_create_typename (dtype, result);
 			++gp;
 
 			if (i)
@@ -2113,12 +2664,14 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 }
 /*------------------------------------------------------------------*/
 /* Compute length of string needed for full type name of `dftype'   */
+/*                                                                  */
+/* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
 rt_private int eif_typename_len (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
-	int16       *gp, i, len;
+	int16       *gp, i, len, dtype;
 	int         size;
 
 	if (dftype <= -256)
@@ -2142,10 +2695,10 @@ rt_private int eif_typename_len (int16 dftype)
 	if (dftype < first_gen_id)
 	{
 		/* Compiler generated id */
-		return strlen (parent_of(dftype)->class_name);
+		return strlen (par_info(RTUD_INV(dftype))->class_name);
 	}
 
-	/* We have create this id */
+	/* We have created this id */
 
 	gdp = eif_derivations [dftype];
 
@@ -2171,7 +2724,7 @@ rt_private int eif_typename_len (int16 dftype)
 
 	i = (int16) gdp->size;
 
-	len = strlen (parent_of(gdp->base_id)->class_name);
+	len = strlen (par_info(gdp->base_id)->class_name);
 
 	if (gdp->is_expanded)
 		len += 9;
@@ -2185,7 +2738,20 @@ rt_private int eif_typename_len (int16 dftype)
 
 	while (i--)
 	{
-		len += eif_typename_len (*gp);
+		dtype = *gp;
+
+		if (dtype <= -256)
+		{
+			dtype = -256-dtype;
+			dtype = -256-RTUD(dtype);
+		}
+		else
+		{
+			if (dtype >= 0)
+				dtype = RTUD(dtype);
+		}
+
+		len += eif_typename_len (dtype);
 		++gp;
 	}
 
@@ -2193,6 +2759,8 @@ rt_private int eif_typename_len (int16 dftype)
 }
 /*------------------------------------------------------------------*/
 /* Compute length of generating id sequence for `dftype'            */
+/*                                                                  */
+/* dftype : full type id; RTUD(doesn't matter)                      */
 /*------------------------------------------------------------------*/
 
 rt_private int16 eif_gen_seq_len (int16 dftype)
@@ -2230,9 +2798,14 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 }
 /*------------------------------------------------------------------*/
 /* Produce generating id sequence for `dftype' in `typearr'.        */
+/*                                                                  */
+/* dftype    : full type id; RTUD(not apply_rtud)                   */
+/* typearr   : Base type ids; RTUD(yes)                             */
+/* idx       : index where to put id                                */
+/* apply_rtud: must we send entries through RTUD?                   */
 /*------------------------------------------------------------------*/
 
-rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
+rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16 apply_rtud)
 {
 	EIF_GEN_DER *gdp;
 	int16 i, len, dtype;
@@ -2252,9 +2825,17 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 	if (dtype < first_gen_id)
 	{
 		if (dtype < 0)
+		{
+			/* Special id */
 			typearr [*idx] = dtype;
+		}
 		else
-			typearr [*idx] = RTUD(dtype);
+		{
+			if (is_expanded)
+				typearr [*idx] = (apply_rtud ? -256-RTUD(dtype) : -256-dtype);
+			else
+				typearr [*idx] = (apply_rtud ? RTUD(dtype) : dtype);
+		}
 
 		(*idx)++;
 		return;
@@ -2300,18 +2881,20 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 
 	for (i = 0; i < len; ++i)
 	{
-		eif_put_gen_seq (gdp->typearr [i], typearr, idx);
+		eif_put_gen_seq (gdp->typearr [i], typearr, idx, 1);
 	}
 }
 /*------------------------------------------------------------------*/
 /* Compute conformance table for `dftype'                           */
+/*                                                                  */
+/* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
-rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
+rt_private void eif_compute_ctab (int16 dftype)
 
 {
 	int16 outtab [256], *outtable, *intable, nulltab[]={-1};
-	int16 min_low, max_low, min_high, max_high, ptype, dtype, *ptypes;
+	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
 	int i, count, offset, pcount;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
 	char is_expanded, cachable;
@@ -2321,9 +2904,9 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	/* Get parent table */
 
-	dtype = Deif_bid(dftype);
+	dtype = GDeif_bid(dftype);
 
-	pt = parent_of (RTUD_INV(dtype));
+	pt = par_info (RTUD_INV(dtype));
 
 	is_expanded = pt->is_expanded;
 
@@ -2355,15 +2938,15 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 		++pcount;
 
-		ctab = eif_conf_tab [ptype];
+		ctab = eif_conf_tab [pftype];
 
 		if (ctab == (EIF_CONF_TAB *) 0)
 		{
-			eif_compute_ctab (ptype, 1, indent + 4);
-			ctab = eif_conf_tab [ptype];
+			eif_compute_ctab (pftype);
+			ctab = eif_conf_tab [pftype];
 		}
 
 		if (ctab->min_low_id < min_low)
@@ -2392,7 +2975,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	if (gdp == (EIF_GEN_DER *) 0)
 	{
-		gdp = eif_new_gen_der (0, (int16*) 0, RTUD_INV(dftype), (char)0, (char)0, 0);
+		gdp = eif_new_gen_der ((long)0, (int16*) 0, RTUD_INV(dtype), (char)0, (char)0, 0);
 
 		eif_derivations [dftype] = gdp;
 	}
@@ -2404,7 +2987,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 	}
 	else
 	{
-		ptypes = (int16 *) cmalloc (sizeof (int16)*pcount);
+		ptypes = (int16 *) eif_malloc (sizeof (int16)*pcount);
 
 		if (ptypes == (int16 *) 0)
 			enomem ();
@@ -2422,12 +3005,12 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
-		pctab = eif_conf_tab [ptype];
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pctab = eif_conf_tab [pftype];
 
 		/* Register parent type */
 
-		*(ptypes++) = ptype;
+		*(ptypes++) = pftype;
 
 		if ((min_low <= max_low) && (pctab->min_low_id <= pctab->max_low_id))
 		{
@@ -2511,13 +3094,17 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 }
 /*------------------------------------------------------------------*/
 /* Compute ancestor id map for `dftype'.                            */
+/*                                                                  */
+/* dftype                      : full type; RTUD(yes)               */
+/* min_id, max_id, table index : RTUD(no)                           */
+/* Table entries               : RTUD(yes)                          */
 /*------------------------------------------------------------------*/
 
-rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int indent)
+rt_private void eif_compute_anc_id_map (int16 dftype)
 
 {
 	int16 outtab [256], *outtable, *intable, nulltab[]={-1};
-	int16 min_id, max_id, pftype, ptype, dtype;
+	int16 min_id, max_id, pftype, dtype;
 	int i, count, offset;
 	int16 *src, *dest;
 	struct eif_par_types *pt;
@@ -2526,9 +3113,9 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	/* Get parent table */
 
-	dtype = Deif_bid(dftype);
+	dtype = GDeif_bid(dftype);
 
-	pt = parent_of (RTUD_INV(dtype));
+	pt = par_info (RTUD_INV(dtype));
 
 	/* Compute the range of the id map */
 
@@ -2542,14 +3129,13 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	while (*intable != -1)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
-		ptype = Deif_bid(pftype);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 
 		map = eif_anc_id_map [pftype];
 
 		if (map == (EIF_ANC_ID_MAP *) 0)
 		{
-			eif_compute_anc_id_map (pftype, 1, indent + 4);
+			eif_compute_anc_id_map (pftype);
 			map = eif_anc_id_map [pftype];
 		}
 
@@ -2575,8 +3161,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	while (*intable != -1)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
-		ptype = Deif_bid(pftype);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 		pamap = eif_anc_id_map [pftype];
 
 		/* Register parent type */
@@ -2605,6 +3190,8 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
+/*------------------------------------------------------------------*/
+/*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 #ifdef GEN_CONF_DEBUG
 

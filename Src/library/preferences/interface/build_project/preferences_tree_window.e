@@ -134,7 +134,9 @@ feature {NONE} -- Events
 			l_confirmation_dialog.show_modal_to_window (parent_window)
 			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				preferences.restore_defaults
-				fill_right_list (selected_resource_name)
+				if selected_resource_name /= Void then
+					fill_right_list (selected_resource_name)	
+				end				
 			end
 		end		
 
@@ -251,7 +253,7 @@ feature {NONE} -- Implementation
 			pref_name_not_void: a_pref_name /= Void
 			pref_name_not_empty: not a_pref_name.is_empty
 		local		
-			l_names: SORTABLE_ARRAY [STRING]
+			l_names: SORTED_TWO_WAY_LIST [STRING]
 			l_pref_name: STRING
 			l_index: INTEGER
 			it: EV_MULTI_COLUMN_LIST_ROW
@@ -259,15 +261,17 @@ feature {NONE} -- Implementation
 		do
 			selected_resource_name := a_pref_name
 				-- Retrieve known preferences
-			create l_names.make_from_array (preferences.resources.current_keys)
+			create l_names.make
+			
+			l_names.append (create {ARRAYED_LIST [STRING]}.make_from_array (preferences.resources.current_keys))
 			l_names.sort
 			from
-				l_index := 1
+				l_names.start
 				right_list.wipe_out
 			until
-				l_index > l_names.count
+				l_names.after
 			loop
-				l_pref_name := l_names.item (l_index)
+				l_pref_name := l_names.item
 				if should_display_preference (l_pref_name, a_pref_name) and l_pref_name.count > a_pref_name.count then					
 					l_resource := preferences.resources.item (l_pref_name)
 					
@@ -276,11 +280,11 @@ feature {NONE} -- Implementation
 					end
 					
 					create it
-					if l_resource.name /= Void then	
+					if l_resource.name /= Void then
 						if show_full_resource_name then
 							it.extend (l_resource.name)								
 						else
-							it.extend (short_resource_name (l_resource.name))
+							it.extend (formatted_name (short_resource_name (l_resource.name)))
 						end
 					else
 						it.extend ("")	
@@ -295,7 +299,7 @@ feature {NONE} -- Implementation
 					it.select_actions.extend (agent show_resource_in_edit_widget (l_resource))					
 					right_list.extend (it)
 				end
-				l_index := l_index + 1
+				l_names.forth
 			end
 			right_list.resize_column_to_content (1)
 		end
@@ -400,6 +404,14 @@ feature {NONE} -- Implementation
 			name_not_void: a_name /= Void			
 		do
 			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
+		end		
+	
+	formatted_name (a_name: STRING): STRING is
+			-- Formatted name for display
+		do
+			create Result.make_from_string (a_name)
+			Result.replace_substring_all ("_", " ")
+			Result.replace_substring (Result.item (1).upper.out, 1, 1)
 		end		
 	
 feature {NONE} -- Private attributes

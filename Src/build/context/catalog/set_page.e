@@ -12,8 +12,8 @@ creation
 feature 
 
 	bulletin_type: CONTEXT_TYPE;
-	radio_box_type: CONTEXT_TYPE;
-	check_box_type: CONTEXT_TYPE;
+	radio_box_type: GROUP_COMPOSITE_TYPE;
+	check_box_type: GROUP_COMPOSITE_TYPE;
 
 feature {NONE}
 

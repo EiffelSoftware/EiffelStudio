@@ -8,7 +8,12 @@ deferred class
 	EV_MENU_ITEM_I
 	
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ITEM_I
+		redefine
+			interface
+		end
+
+	EV_TEXTABLE_I
 		redefine
 			interface
 		end
@@ -59,6 +64,9 @@ end -- class EV_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/07 20:49:34  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.29  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

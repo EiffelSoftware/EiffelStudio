@@ -48,6 +48,8 @@ creation
 feature {NONE} -- Initialization
 
 	make is
+		local
+			bitmap_index1, bitmap_index2: INTEGER
 		do
 			make_top (Title)
 			set_menu (main_menu)
@@ -83,22 +85,30 @@ feature {NONE} -- Initialization
 			!! tool_bar_bitmap.make (Bmp_toolbar)
 			!! standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
 
-			!! tool_bar_button1.make_button (Std_fileopen, Cmd_open)
-			!! tool_bar_button2.make_button (Std_filesave, Cmd_save)
-			!! tool_bar_button3.make_separator
-			tool_bar.add_bitmaps (standard_tool_bar_bitmap, 2)
-			tool_bar.add_buttons (<<tool_bar_button1, tool_bar_button2, tool_bar_button3>>)
+			tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
+			bitmap_index1 := tool_bar.last_bitmap_index
 
-			!! tool_bar_button1.make_check (Std_filesave + 7, Cmd_bold)
-			!! tool_bar_button2.make_check (Std_filesave + 8, Cmd_italic)
-			!! tool_bar_button3.make_separator
-			tool_bar.add_bitmaps (tool_bar_bitmap, 2)
-			tool_bar.add_buttons (<<tool_bar_button1, tool_bar_button2, tool_bar_button3>>)
+			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
+			bitmap_index2 := tool_bar.last_bitmap_index
 
-			!! tool_bar_button1.make_button (Std_filesave + 9, Cmd_progress_bar)
-			!! tool_bar_button2.make_button (Std_filesave + 10, Cmd_exit)
-			tool_bar.add_bitmaps (tool_bar_bitmap, 2)
-			tool_bar.add_buttons (<<tool_bar_button1, tool_bar_button2>>)
+			!! tool_bar_button1.make_button (bitmap_index1 + Std_fileopen, Cmd_open)
+			!! tool_bar_button2.make_button (bitmap_index1 + Std_filesave, Cmd_save)
+			!! tool_bar_button3.make_separator
+			!! tool_bar_button4.make_check (bitmap_index2 + 0, Cmd_bold)
+			!! tool_bar_button5.make_check (bitmap_index2 + 1, Cmd_italic)
+			!! tool_bar_button6.make_separator
+			!! tool_bar_button7.make_button (bitmap_index2 + 2, Cmd_progress_bar)
+			!! tool_bar_button8.make_button (bitmap_index2 + 3, Cmd_exit)
+
+			tool_bar.add_buttons (<<
+				tool_bar_button1,
+				tool_bar_button2,
+				tool_bar_button3,
+				tool_bar_button4,
+				tool_bar_button5,
+				tool_bar_button6,
+				tool_bar_button7,
+				tool_bar_button8>>)
 
 			-- Create a tooltip
 			!! tooltip.make (Current, -1)
@@ -136,7 +146,14 @@ feature -- Access
 
 	tool_bar_bitmap, standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 
-	tool_bar_button1, tool_bar_button2, tool_bar_button3: WEL_TOOL_BAR_BUTTON
+	tool_bar_button1,
+	tool_bar_button2,
+	tool_bar_button3,
+	tool_bar_button4,
+	tool_bar_button5,
+	tool_bar_button6,
+	tool_bar_button7,
+	tool_bar_button8: WEL_TOOL_BAR_BUTTON
 
 	rich_edit: WEL_RICH_EDIT
 
@@ -145,6 +162,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
 		do
@@ -163,6 +181,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_menu_command (menu_id: INTEGER) is
+			-- Execute the command identified by `menu_id'.
 		local
 			i: INTEGER
 		do

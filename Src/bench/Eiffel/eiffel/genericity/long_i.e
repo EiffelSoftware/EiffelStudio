@@ -48,13 +48,8 @@ feature -- Status report
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-				-- FIXME: Manu 4/8/2002: In order to be CLS compliant and to be
-				-- able to consume CLS compliant type, we force our INTEGER_8 to
-				-- be unsigned by using `Element_type_u1'.
-				-- Fix is to introduce UNSIGNED_INTEGER_8 as well as a basic
-				-- class.
 			inspect size
-			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
+			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1
 			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2
 			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4
 			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8

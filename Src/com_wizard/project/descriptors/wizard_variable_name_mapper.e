@@ -74,6 +74,9 @@ feature -- Access
 				Result.tail (Result.count - 1)
 			end
 
+			if Result.item (1).is_digit then
+				Result.prepend ("x_")
+			end
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.empty
@@ -148,10 +151,13 @@ feature -- Access
 			-- Names of standard structures.
 			-- Where item is Eiffel name, and key is C name
 		once
-			create Result.make (5)
+			create Result.make (10)
 			Result.compare_objects
 
 			Result.put ("ECOM_GUID", "GUID")
+			Result.put ("INTEGER", "RemotableHandle")
+			Result.put ("INTEGER", "_RemotableHandle")
+
 --			Result.put ("ECOM_STATSTG", "STATSTG")
 --			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
 --			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")

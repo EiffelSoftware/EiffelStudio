@@ -9,12 +9,30 @@ class
 
 inherit
 	ECOM_STRUCTURE
+		redefine
+			make
+		end
 
 	ECOM_VAR_TYPE
 
 creation
 	make,
 	make_by_pointer
+
+feature -- Initialization
+
+	make is
+			-- Create and initialize object.
+		do
+			precursor
+			initialize
+		end
+
+	initialize is
+			-- Initialize object.
+		do
+			ccom_initialize_variant (item)
+		end
 
 feature -- Access
 
@@ -1297,6 +1315,13 @@ feature {NONE} -- Element change
 		end
 
 feature {NONE} -- Externals
+
+	ccom_initialize_variant (a_ptr: POINTER) is
+		external
+			"C (VARIANT *)|<oleauto.h>"
+		alias
+			"VariantInit"
+		end
 
 	c_size_of_variant: INTEGER is
 		external 

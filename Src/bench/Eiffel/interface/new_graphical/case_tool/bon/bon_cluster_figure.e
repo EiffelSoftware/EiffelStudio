@@ -423,7 +423,7 @@ feature -- Status setting
 		require else
 			is_not_iconified: not iconified
 		local
-			new_x, new_y: INTEGER
+			new_x, new_y, p_x, p_y: INTEGER
 			scx, scy: DOUBLE
 			tmp, l_point: EV_RELATIVE_POINT
 			parent_fig, clf: CLUSTER_FIGURE
@@ -470,17 +470,25 @@ feature -- Status setting
 				classes.forth
 			end
 
-			if parent_fig /= Void then
-				point.set_position (
-					((new_x - parent_fig.left) / scx).rounded,
-					((new_y - parent_fig.top) / scy).rounded)
-			else
-				point.set_position (
-					((new_x - world.point.x) / scx).rounded,
-					((new_y - world.point.y) / scy).rounded)
-			end
-
+--			if parent_fig /= Void then
+--				point.set_position (
+--					((new_x - parent_fig.left) / scx).rounded,
+--					((new_y - parent_fig.top) / scy).rounded)
+--			else
+--				point.set_position (
+--					((new_x - world.point.x) / scx).rounded,
+--					((new_y - world.point.y) / scy).rounded)
+--			end
+			point.set_position (((new_x - body.point_a.x_abs) / scx).rounded + point.x,
+			((new_y - body.point_a.y_abs) / scx).rounded + point.y)
+			
+			p_x := point.x
+			p_y := point.y
+			
 			snap_to_default_grid
+			
+			p_x := p_x - point.x
+			p_y := p_y - point.y
 			
 			from
 				subclusters.start
@@ -512,9 +520,73 @@ feature -- Status setting
 				classes.forth
 			end
 			set_size (
-				((a_right - a_left) / scx).rounded,
-				((a_bottom - a_top) / scy).rounded)
+				((a_right - a_left) / scx).rounded + p_x,
+				((a_bottom - a_top) / scy).rounded + p_y)
 			update
+		end
+
+	update_minimum_size is
+			-- Figures have been added/removed in `Current',
+			-- minimum size should change.
+		local
+			rec: EV_RECTANGLE
+			l, t, r, b: INTEGER
+			new_left, new_top, new_right, new_bottom: INTEGER
+			d: DOUBLE
+			resize_needed: BOOLEAN
+			clf: CLUSTER_FIGURE
+		do
+			if world /= Void then
+    			rec := bounds
+    			if rec.width /= 0 and then rec.height /= 0 then
+	    			resize_needed := False
+	    			new_left := body_left
+	    			new_top := body_top
+	    			new_right := body_left + body_width
+	    			new_bottom := body_top + body_height
+	    			l := rec.x - 1
+	    			t := rec.y - 1
+	    			r := rec.width + l + 2
+	    			b := rec.height + t + 2
+	    			if r > new_right  then
+	    				d := world.grid_x
+	    				d := (r - new_right) / d
+	    				new_right := new_right + d.ceiling * world.grid_x
+	    				resize_needed := True
+	    			end
+	    			if b > new_bottom then
+	    				d := world.grid_y
+	    				d := (b - new_bottom) / d
+	    				new_bottom := new_bottom + d.ceiling * world.grid_y
+	    				resize_needed := True
+	    			end
+	    			if l < new_left then
+	    				d := world.grid_x
+	    				d := (new_left - l) / d
+	    				new_left := new_left - d.ceiling * world.grid_x
+	    				resize_needed := True
+	    			end
+	    			if t < new_top then
+	    				d := world.grid_y
+	    				d := (new_top - t) / d
+	    				new_top := new_top - d.ceiling * world.grid_y
+	    				resize_needed := True
+	    			end
+	    			if resize_needed then
+	    				set_bounds (new_left, new_top, new_right, new_bottom)	
+	    			end
+	    			set_minimum_bounds (l, t, r, b)
+	    		else
+	    			set_minimum_bounds (right - minimum_width - 20, bottom - 20, left + minimum_width + 20, top + 20)
+    			end
+    			
+    			clf ?= parent
+    			if clf /= Void then
+    				clf.update_minimum_size
+    			else
+    				cluster_diagram.context_editor.update_bounds (cluster_diagram)
+    			end
+			end
 		end
 
 	set_relative_position_and_size (a_x, a_y, a_width, a_height: INTEGER) is
@@ -682,7 +754,51 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 
 		end
 
-feature -- Implementation
+feature {LINKABLE_FIGURE_GROUP} -- XML
+
+	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+			-- XML representation.
+		do
+			create Result.make (a_parent, "CLUSTER_FIGURE")
+			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cluster_i.cluster_name))
+			Result.put_last (xml_node (Result, "ICONIFIED", iconified.out))
+			Result.put_last (xml_node (Result, "X_POS", point.x.out))
+			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
+			if iconified then
+				Result.put_last (xml_node (Result, "WIDTH", old_width.out))
+				Result.put_last (xml_node (Result, "HEIGHT", old_height.out))
+			else
+				Result.put_last (xml_node (Result, "WIDTH", body_width.out))
+				Result.put_last (xml_node (Result, "HEIGHT", body_height.out))
+			end
+		end
+
+	set_with_xml_element (an_element: XML_ELEMENT) is
+			-- Set attributes from XML element.
+		require else
+			an_element_is_cluster_figure: an_element.name.is_equal ("CLUSTER_FIGURE")
+			an_element_has_name_attribute: an_element.attributes.has ("NAME")
+			an_element_name_is_cluster_name:
+				an_element.attributes.item ("NAME").value.is_equal (cluster_i.cluster_name)
+		local
+			x_pos, y_pos, w, h: INTEGER
+			was_iconified: BOOLEAN
+		do
+			reset_valid_tags 
+			was_iconified := xml_boolean (an_element, "ICONIFIED")
+			if was_iconified then
+				iconify
+			else
+				deiconify
+			end
+			x_pos := xml_integer (an_element, "X_POS")
+			y_pos := xml_integer (an_element, "Y_POS")
+			w := xml_integer (an_element, "WIDTH")
+			h := xml_integer (an_element, "HEIGHT")
+			set_relative_position_and_size (x_pos, y_pos, w, h)
+		end
+
+feature {NONE} -- Implementation
 
 	arrange_clusters is
 			-- Items of `subclusters' need to be moved.
@@ -751,6 +867,19 @@ feature {NONE} -- Implementation
 		do
 			Result := body.point_b.y
 		end
+
+	body_top: INTEGER is
+			-- top of `body'.
+		do
+			Result := body.point_a.y_abs
+		end
+
+	body_left: INTEGER is
+			-- left of `body'.
+		do
+			Result := body.point_a.x_abs
+		end
+
 
 	Max_backup: INTEGER is 7
 			-- Break at underscores, but do not search further than this index.
@@ -935,7 +1064,7 @@ feature {CLUSTER_FIGURE} -- Events
 --				saved_x_abs := (saved_x * cluster_figure.point.scale_x_abs).rounded + cluster_figure.point.x_abs
 --				saved_y_abs := (saved_y * cluster_figure.point.scale_y_abs).rounded + cluster_figure.point.y_abs
 --				cluster_diagram.context_editor.history.do_named_undoable (
---					Interface_names.t_Diagram_move_class_cmd,
+--				Interface_names.t_Diagram_move_class_cmd,
 --					[<<cluster_diagram~on_move_cluster_end (Current, new_cluster_figure),
 --						point~set_position (
 --							((point.x_abs - new_cluster_figure.point.x_abs) /
@@ -982,10 +1111,10 @@ feature {NONE} -- Events
 	on_resizer_start is
 			-- User started resizing.
 		do
-			old_top := top
-			old_left := left
-			old_right := right
-			old_bottom := bottom
+			old_top := body_top
+			old_left := body_left
+			old_right := body_left + body_width
+			old_bottom := body_top + body_height
 		end
 		
 	on_resizer_top_left_move (x, y: INTEGER) is
@@ -1003,6 +1132,7 @@ feature {NONE} -- Events
 		do
 			update_minimum_size
 			update_cluster_size
+			update_area_bounds
 		end
 
 	on_resizer_top_right_move (x, y: INTEGER) is
@@ -1100,5 +1230,23 @@ feature {NONE} -- Events
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	minimum_width: INTEGER is
+			-- 
+		do
+			if name_figures /= Void then
+				from
+					name_figures.start
+				until
+					name_figures.after
+				loop
+					Result := (name_figures.item.width).max (Result)
+					name_figures.forth
+				end
+			end
+		end
+
 
 end -- class BON_CLUSTER_FIGURE

@@ -383,50 +383,7 @@ feature -- Status setting
 	update_minimum_size is
 			-- Figures have been added/removed in `Current',
 			-- minimum size should change.
-		local
-			rec: EV_RECTANGLE
-			l, t, r, b: INTEGER
-			new_left, new_top, new_right, new_bottom: INTEGER
-			resize_needed: BOOLEAN
-			clf: CLUSTER_FIGURE
-		do
-			if world /= Void then
-    			resize_needed := False
-    			new_left := left
-    			new_top := top
-    			new_right := right
-    			new_bottom := bottom
-    			rec := bounds
-    			l := rec.x
-    			t := rec.y
-    			r := rec.width + l
-    			b := rec.height + t
-    			if r > right  then
-    				new_right := r
-    				resize_needed := True
-    			end
-    			if b > bottom then
-    				new_bottom := b
-    				resize_needed := True
-    			end
-    			if l < left then
-    				new_left := l
-    				resize_needed := True
-    			end
-    			if t < top then
-    				new_top := t
-    				resize_needed := True
-    			end
-    			if resize_needed then
-    				set_bounds (new_left, new_top, new_right, new_bottom)	
-    			end
-    			set_minimum_bounds (l, t, r, b)
-    			
-    			clf ?= parent
-    			if clf /= Void then
-    				clf.update_minimum_size
-    			end
-			end
+		deferred
 		end
 
 	set_bounds (a_left, a_top, a_right, a_bottom: INTEGER) is
@@ -461,50 +418,6 @@ feature -- Status setting
 	unmask is
 			-- `Current' needs to be displayed again.
 		deferred
-		end
-	
-feature {LINKABLE_FIGURE_GROUP} -- XML
-
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
-			-- XML representation.
-		do
-			create Result.make (a_parent, "CLUSTER_FIGURE")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cluster_i.cluster_name))
-			Result.put_last (xml_node (Result, "ICONIFIED", iconified.out))
-			Result.put_last (xml_node (Result, "X_POS", point.x.out))
-			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
-			if iconified then
-				Result.put_last (xml_node (Result, "WIDTH", old_width.out))
-				Result.put_last (xml_node (Result, "HEIGHT", old_height.out))
-			else
-				Result.put_last (xml_node (Result, "WIDTH", body_width.out))
-				Result.put_last (xml_node (Result, "HEIGHT", body_height.out))
-			end
-		end
-
-	set_with_xml_element (an_element: XML_ELEMENT) is
-			-- Set attributes from XML element.
-		require else
-			an_element_is_cluster_figure: an_element.name.is_equal ("CLUSTER_FIGURE")
-			an_element_has_name_attribute: an_element.attributes.has ("NAME")
-			an_element_name_is_cluster_name:
-				an_element.attributes.item ("NAME").value.is_equal (cluster_i.cluster_name)
-		local
-			x_pos, y_pos, w, h: INTEGER
-			was_iconified: BOOLEAN
-		do
-			reset_valid_tags 
-			was_iconified := xml_boolean (an_element, "ICONIFIED")
-			if was_iconified then
-				iconify
-			else
-				deiconify
-			end
-			x_pos := xml_integer (an_element, "X_POS")
-			y_pos := xml_integer (an_element, "Y_POS")
-			w := xml_integer (an_element, "WIDTH")
-			h := xml_integer (an_element, "HEIGHT")
-			set_relative_position_and_size (x_pos, y_pos, w, h)
 		end
 
 feature {CLUSTER_FIGURE} -- Events
@@ -592,13 +505,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	body_width: INTEGER is
-			-- width of cluster figure body.
-		deferred
-		end
-
-	body_height: INTEGER is
-			-- height of cluster figure body.
+	minimum_width: INTEGER is
+			-- 
 		deferred
 		end
 

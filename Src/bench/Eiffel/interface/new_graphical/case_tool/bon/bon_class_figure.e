@@ -698,6 +698,7 @@ feature {NONE} -- Events
 						cluster_figure.update_minimum_size
 				end
 			end
+			world.context_editor.update_bounds (world)
 		end
 
 	update_scrollable_area_size is

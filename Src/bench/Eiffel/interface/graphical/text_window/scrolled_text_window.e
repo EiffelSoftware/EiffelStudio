@@ -18,9 +18,10 @@ inherit
 			lower as lower_window,
 			set_background_color as old_set_background_color,
 			set_cursor_position as st_set_cursor_position,
+			set_top_character_position as st_set_top_character_position,
 			set_font as old_set_font
 		export
-			{NONE} st_set_cursor_position
+			{NONE} st_set_cursor_position, st_set_top_character_position
 		undefine
 			copy, setup, consistent, is_equal
 		end;
@@ -30,9 +31,10 @@ inherit
 			make as text_create,
 			cursor as widget_cursor,
 			set_cursor_position as st_set_cursor_position,
+			set_top_character_position as st_set_top_character_position,
 			lower as lower_window
 		export
-			{NONE} st_set_cursor_position
+			{NONE} st_set_cursor_position, st_set_top_character_position
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
@@ -48,7 +50,7 @@ inherit
 		redefine
 			clear_window, display, 
 			update_before_transport, initial_x, initial_y,
-			update_after_transport, tab_length
+			update_after_transport, update_symbol, reset_update_symbol
 		end;
 	SHARED_ACCELERATOR
 		undefine
@@ -58,37 +60,63 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	GRAPHICAL_CONSTANTS
+	WIDGET_ROUTINES
 		undefine
 			copy, setup, consistent, is_equal
-		end;
-	WIDGET_ROUTINES
+		end
+	EB_CONSTANTS
 		undefine
 			copy, setup, consistent, is_equal
 		end
 
 creation
 
-	make
+	make,
+	make_from_tool
 
 feature -- Initialization
 
-	make (a_name: STRING; a_tool: TOOL_W) is
+	make_from_tool (a_name: STRING; a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require
 			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
 		do
-			text_create (a_name, a_tool.global_form);
-			tool := a_tool;
+			make (a_name, a_tool.global_form);
+			a_tool.init_modify_action (Current);
+		end;
+
+	make (a_name: STRING; a_parent: COMPOSITE) is
+			-- Initialize text window with name `a_name', parent `a_parent',
+			-- and tool window `a_tool'.
+		require
+			valid_parent: a_parent /= Void 
+		do
+			text_create (a_name, a_parent);
 			initialize_transport;
 			upper := -1 			-- Init clickable array.
-			add_default_callbacks;
+
+			add_modify_action (Current, modify_event_action);
+			set_action ("!c<Btn3Down>", Current, new_tooler_action)
+			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
+
 			set_accelerators;
 			!! matcher.make_empty;
-			set_foreground_color (g_String_text_fg_color);
-			set_scrolled_text_background_color (implementation, g_Bg_color)
-			old_set_font (g_String_text_font)
+		end;
+
+	init_resource_values is
+			-- Initialize the resource values.
+		local
+			f: FONT
+		do
+			set_foreground_color 
+				(Graphical_resources.text_foreground_color.actual_value);
+			set_scrolled_text_background_color (implementation, 
+				Graphical_resources.text_background_color.actual_value)
+			f := Graphical_resources.text_font.actual_value;
+			if f /= Void then
+				old_set_font (f)
+			end
 		end;
 
 feature -- Drag source/Hole properties
@@ -101,8 +129,8 @@ feature -- Drag source/Hole properties
 
 feature -- Properties
 
-	found: BOOLEAN;
-			-- Has last search been successful?
+	update_symbol: BOOLEAN;
+			-- Update symbol?
 
 feature -- Access
 
@@ -136,13 +164,16 @@ feature -- Access
 
 feature -- Changing
 
+	reset_update_symbol is
+			-- Set `update_symbol' to False.
+		do
+			update_symbol := False
+		end;
+
 	set_changed (b: BOOLEAN) is
 			-- Set `changed' to b.
 		do
-			if changed /= b then
-				changed := b
-			end;
-			tool.update_save_symbol
+			changed := b
 		ensure then
 			set: changed = b
 		end;
@@ -151,10 +182,9 @@ feature -- Changing
 			-- Set `text' to `a_text'.
 		do
 			set_editable;
-			changed := true;
-			st_set_text (a_text)
-			changed := false;
-			tool.set_mode_for_editing
+			changed := True;
+			st_set_text (a_text);
+			changed := False;
 		ensure then
 			not_changed: not changed	
 		end;
@@ -163,7 +193,8 @@ feature -- Changing
 			-- Set `background_color' to `a_color'.
 		do
 			old_set_background_color (a_color);
-			set_scrolled_text_background_color (implementation, g_Bg_color)
+			set_scrolled_text_background_color (implementation, 
+				Graphical_resources.text_background_color.actual_value)
 		end;
 
 	set_font (a_font: FONT) is
@@ -175,14 +206,10 @@ feature -- Changing
 feature -- Displaying
 
 	display is
-			-- Display the `image' to the text window
-			-- and set the mode to read_only.
+			-- Display the `image' to the text window.
 		do
 			set_editable;
-			changed := true;
 			set_text (image);
-			changed := false;
-			tool.update_save_symbol;
 			image.wipe_out;
 			set_read_only
 		ensure then
@@ -225,17 +252,19 @@ feature -- Cursor movement
 			last_cursor_position, last_top_position: INTEGER
 		do
 			cur ?= a_cursor;
-			last_cursor_position := cur.cursor_position;
-			last_top_position := cur.top_character_position;
-			c := count;
-			if last_cursor_position > c then
-				last_cursor_position := c
-			end;
-			if last_top_position > c then
-				last_top_position := c
-			end;
-			st_set_cursor_position (last_cursor_position);
-			set_top_character_position (last_top_position)
+			if cur /= Void then
+				last_cursor_position := cur.cursor_position;
+				last_top_position := cur.top_character_position;
+				c := count;
+				if last_cursor_position > c then
+					last_cursor_position := c
+				end;
+				if last_top_position > c then
+					last_top_position := c
+				end;
+				st_set_cursor_position (last_cursor_position);
+				set_top_character_position (last_top_position)
+			end
 		end
 
 feature -- Text selection
@@ -249,6 +278,24 @@ feature -- Text selection
 
 feature -- Text manipulation
 
+	copy_text is
+			-- Copy the highlighted text.
+		do
+			copy_text_from_widget (implementation)
+		end;
+ 
+	cut_text is
+			-- Cut the highlighted text.
+		do
+			cut_text_from_widget (implementation)
+		end;
+ 
+	paste_text is
+			-- Paste the highlighted text.
+		do
+			paste_text_to_widget (implementation)
+		end;
+ 
 	clear_window is
 			-- Erase internal structures of Current.
 		do
@@ -259,11 +306,8 @@ feature -- Text manipulation
 			text_position := 0;
 			focus_start := 0;
 			focus_end := 0;
-			tool.set_icon_name (tool.tool_name);
-			tool.set_stone (Void);
-			tool.set_file_name (Void);
+			changed := True;
 			clear;
-			tool.set_mode_for_editing;
 			set_changed (false);
 		ensure then
 			image.empty;
@@ -287,12 +331,6 @@ feature -- Text manipulation
 		end;
 
 feature -- Tabulations
-
-	tab_length: INTEGER is
-			-- Number of blank characters in a tabulation
-		do
-			Result := 8
-		end;
 
 	set_tab_length (new_length: INTEGER) is
 			-- Assign `new_length' to `tab_length'.
@@ -322,6 +360,15 @@ feature -- Update
 			end
 		end;
 
+	set_top_character_position (a_position: INTEGER) is
+			-- Set top_character_position to `a_position' if the new position
+			-- is not out of bounds.
+		do
+			if a_position <= count then
+				st_set_top_character_position (a_position)
+			end
+		end;
+
 	search (s: STRING) is
 			-- Highlight and show next occurence of `s'.
 		local
@@ -329,49 +376,44 @@ feature -- Update
 			local_text: like text;
 			search_sub: STRING;
 			c_pos: INTEGER;
-			start_position: INTEGER;
+			start_position, end_position: INTEGER;
 			temp: STRING;
 		do
-			local_text := text;
+			local_text := implementation.actual_text;
 
-			if changed or else not equal(matcher.text, local_text) then
-				l_t := clone (local_text);
-				l_t.to_lower;
-				matcher.set_text (l_t)
-			end;
-			if not equal(matcher.pattern, s) then
+			l_t := clone (local_text);
+			l_t.to_lower;
+			matcher.set_text (l_t)
+
+			if not equal (matcher.pattern, s) then
 				l_s := clone (s);
 				l_s.to_lower;
 				matcher.set_pattern (l_s)
 			end;
 
-			c_pos := cursor_position;
+			c_pos := implementation.actual_cursor_position;
 			if
 				(c_pos >= 0)	and then
 				(c_pos + 1 < local_text.count)
 			then
 				matcher.start_at (c_pos);
 				matcher.search_for_pattern;
-				if matcher.found then
-					start_position := matcher.found_at - 1;
-					highlight_selected (start_position, start_position + s.count);
-					set_cursor_position (start_position + s.count);
-					found := true
-				else
+				if not matcher.found then
 					if (c_pos > 0) then
 						matcher.start_at (0);
 						matcher.search_for_pattern;
-						if matcher.found then
-							start_position := matcher.found_at - 1;
-							highlight_selected (start_position, start_position + s.count);
-							set_cursor_position (start_position + s.count);
-							found := true
-						else
-							found := false
-						end
 					end
 				end
-			end
+				if matcher.found then
+					start_position := matcher.found_at - 1;
+					end_position := start_position + s.count;
+					start_position := implementation.unexpanded_position (start_position);
+					end_position := implementation.unexpanded_position (end_position);
+					highlight_selected (start_position, end_position);
+					set_cursor_position (end_position)
+				end
+			end;
+			matcher.set_text (Void)
 		end;
 
 feature -- Focus Access
@@ -436,7 +478,6 @@ feature -- Update
 					clear_selection
 				end;
 				replace (cb.start_position, cb.end_position, bs.sign);
-				changed := False;
 				status := Application.status;
 				if
 					status /= Void and status.is_stopped and
@@ -459,22 +500,12 @@ feature -- Execution
 		do
 			if not changed then
 				if argument = modify_event_action then
+
 					disable_clicking;
-					set_changed (true);
 				else
 					process_action (argument)
 				end
 			end
-		end;
-
-feature {NONE} -- Callback values
-
-	add_default_callbacks is
-			-- Set some default callbacks.
-		do
-			add_modify_action (Current, modify_event_action);
-			set_action ("!c<Btn3Down>", Current, new_tooler_action)
-			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
 		end;
 
 feature {NONE} -- Properties

@@ -471,28 +471,28 @@ feature -- Document
 				a_filename := a_file.twin
 				l_name := l_consts.Shared_document_manager.stylesheet.name.twin
 					-- Create a project relative link to the stylesheet file
-				if (create {PLATFORM}).is_unix then							
-							-- Dirty hack for linux
-					l_start := l_name.substring_index (l_consts.shared_project.root_directory, 1)
-					l_name.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
-					l_start := a_filename.substring_index (l_consts.shared_project.root_directory, 1)
-					a_filename.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
-					from	
-						create Result.make_from_string (l_name)
-						l_cnt := a_filename.occurrences ('/')
-					until
-						l_cnt = 0
-					loop
-						Result.prepend ("../")
-						l_cnt := l_cnt - 1
-					end
-				else
+--				if (create {PLATFORM}).is_unix then							
+--							-- Dirty hack for linux
+--					l_start := l_name.substring_index (l_consts.shared_project.root_directory, 1)
+--					l_name.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
+--					l_start := a_filename.substring_index (l_consts.shared_project.root_directory, 1)
+--					a_filename.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
+--					from	
+--						create Result.make_from_string (l_name)
+--						l_cnt := a_filename.occurrences ('/')
+--					until
+--						l_cnt = 0
+--					loop
+--						Result.prepend ("../")
+--						l_cnt := l_cnt - 1
+--					end
+--				else
 					create l_link.make (a_file, l_name)
 					if rel then
 						Result := l_link.relative_url
 					else
 						Result := l_link.absolute_url
-					end
+--					end
 				end
 			end				
 		end	

@@ -56,16 +56,6 @@ feature -- Event - command association
 			implementation.add_activate_command (cmd, arg)
 		end	
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_change_command (cmd, arg)
-		end
-
 feature -- Event -- removing command association
 
 	remove_activate_commands is
@@ -76,15 +66,6 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_activate_commands
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_change_commands
 		end
 
 feature {NONE} -- Implementation

@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			left_button_down_implementation.replace (true);
+			left_button_down_implementation.set_item (true);
 			left_button_down_widget_implementation.replace (Current);
 			wel_set_capture
 			is_being_pressed := True
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			left_button_down_implementation.replace (false);
+			left_button_down_implementation.set_item (false);
 			left_button_down_widget_implementation.replace (void);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);

@@ -9,10 +9,10 @@ class
 
 feature {NONE} -- Implementation
 
-	left_button_down_implementation: CELL [BOOLEAN] is
+	left_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for left_button_down
 		once
-			!! Result.put (false)
+			!! Result
 		ensure
 			result_exists: Result /= Void
 		end
@@ -23,10 +23,10 @@ feature {NONE} -- Implementation
 			Result := left_button_down_implementation.item
 		end
 
-	middle_button_down_implementation: CELL [BOOLEAN] is
+	middle_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for the middle_button_down
 		once
-			!! Result.put (false)
+			!! Result
 		ensure
 			result_exists: Result /= Void
 		end
@@ -37,10 +37,10 @@ feature {NONE} -- Implementation
 			Result := middle_button_down_implementation.item
 		end
 
-	right_button_down_implementation: CELL [BOOLEAN] is
+	right_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for right_button_down
 		once
-			!! Result.put (false)
+			!! Result
 		ensure
 			result_exists: Result /= Void
 		end

@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATORS
+	WIZARD_SHARED_MAPPER_HELPERS
 		export
 			{NONE} all
 		end

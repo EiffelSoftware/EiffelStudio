@@ -332,17 +332,19 @@ rt_private void process_name (char *ewb_path)
 
 	if (es4_name == (char *) 0)			/* Environment variable set */
 		strcat (ewb_path, EWB);
-	else
-		{
-			local = (char *) malloc (50 * sizeof (char));
+	else {
 #ifdef EIF_VMS
-			strcat (local, ".bin]");
+			/* for VMS, es4_name is the full path to the es4 executable */
+			strcpy (ewb_path, es4_name);	    /* replace bench/spec/platform */
+			strcat (ewb_path, " -bench");
 #else
-			strcat (local, "/bin/");
-#endif
+			/* else its the name in the bench ewb bin/ directory */
+			local = (char *) malloc (50 * sizeof (char));
+			strcpy (local, "/bin/");
 			strcat (local, es4_name);
 			strcat (local, " -bench");
 			strcat (ewb_path, local);
+#endif
 		}
 #endif
 }

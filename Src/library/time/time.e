@@ -18,6 +18,8 @@ inherit
 	TIME_VALUE
 		undefine
 			is_equal
+		redefine
+			out
 		end
 
 creation
@@ -27,7 +29,8 @@ creation
 	make_now,
 	make_by_seconds,
 	make_by_fine_seconds,
-	make_from_string
+	make_from_string,
+	make_by_compact_time
 
 feature -- Initialization
 
@@ -41,9 +44,7 @@ feature -- Initialization
 			s_large_enough: s >= 0;
 			s_small_enough: s < Seconds_in_minute	
 		do
-			hour := h;
-			minute := m;
-			fine_second := s
+			compact_time := c_make_time (h, m, s)
 		ensure
 			hour_set: hour = h;
 			minute_set: minute = m;
@@ -60,10 +61,12 @@ feature -- Initialization
 			m_small_enough: m < Minutes_in_hour;
 			s_large_enough: s >= 0;
 			s_small_enough: s < Seconds_in_minute;
+		local
+			s_tmp: INTEGER
 		do
-			hour := h;
-			minute := m;
-			fine_second := s
+			s_tmp :=  s.truncated_to_integer
+			fractionnal_second := s - s_tmp
+			make (h, m, s_tmp)
 		ensure
 			hour_set: hour = h;
 			minute_set: minute = m;
@@ -72,87 +75,117 @@ feature -- Initialization
 
 	make_now is
 			-- Set current time according to timezone.
+		local
+			h, m, s: INTEGER
 		do
 			c_get_date_time;
-			hour := c_hour;
-			minute := c_minute;
-			fine_second := (c_second + c_millisecond / 1000);
+			h := c_hour_now;
+			m := c_minute_now;
+			s := c_second_now;
+			make (h, m, s)
+			fractionnal_second := c_millisecond_now / 1000;
+			--fine_second := (c_second + c_millisecond / 1000);
 		end;
 
-	make_by_seconds (s: INTEGER) is
-			-- Set the object by the number of seconds `s' from midnight.
+	make_by_seconds (sec: INTEGER) is
+			-- Set the object by the number of seconds `sec' from midnight.
 		require
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_day
+			s_large_enough: sec >= 0;
+			s_small_enough: sec < Seconds_in_day
+		local
+			h, m, s: INTEGER
 		do
-			fine_second := s;
-			hour := second // Seconds_in_hour;
-			fine_second := fine_second - (hour * Seconds_in_hour);
-			minute := second // Seconds_in_minute;
-			fine_second := fine_second - (minute * Seconds_in_minute)
+			s := sec;
+			h := s // Seconds_in_hour;
+			s := s - (h * Seconds_in_hour);
+			m := s // Seconds_in_minute;
+			s := s - (m * Seconds_in_minute);
+			make (h, m, s)
+			fractionnal_second := 0;
 		ensure
-			seconds_set: seconds = s
+			seconds_set: seconds = sec
 		end;
 
-	make_by_fine_seconds (s: DOUBLE) is
-			-- Set the object by the number of seconds `s'.
+	make_by_fine_seconds (sec: DOUBLE) is
+			-- Set the object by the number of seconds `sec'.
 		require
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_day
+			s_large_enough: sec >= 0;
+			s_small_enough: sec < Seconds_in_day
+		local
+			s: INTEGER
 		do
-			fine_second := s;
-			hour := div (second, seconds_in_hour);
-			fine_second := fine_second - (hour * seconds_in_hour);
-			minute := div (second, seconds_in_minute);
-			fine_second := fine_second - (minute * seconds_in_minute)
+			s := sec.truncated_to_integer;
+			fractionnal_second := sec - s;
+			make_by_seconds (s)
 		end;
 
-	make_from_string(s:STRING) is
-			-- initialise from a "standard" string of form
-			-- "dd/mm/yyyy hh:mm:ss.sss".
-		require 
+	make_from_string_default (s: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `default_format_string'
+		require
 			s_exists: s /= Void;
-			time_valid: time_valid(s);
-		local
-			 t:STRING
-			 pos1, pos2, pos3:INTEGER
+			time_valid: time_valid (s, default_format_string)
 		do
-			 t := s.substring(s.index_of(Std_date_time_delim,1)+1, s.count)
-			 pos1 := t.index_of(Std_time_delim,1) 
-			 pos2 := t.index_of(Std_time_delim,pos1+1) 
-			 pos3 := t.count+1
+			make_from_string (s, default_format_string)
+		end
 
-			 make_fine(t.substring(1,pos1-1).to_integer, 
-						t.substring(pos1+1,pos2-1).to_integer, 
-						t.substring(pos2+1,pos3-1).to_real) 
-		ensure
-			
-	       end
-		   
-feature -- conditions
-
-	time_valid(s: STRING): BOOLEAN is
-			-- Has the substring the format "hh:mm:ss.sss"?
+	make_from_string (s: STRING; code: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `code'
+		require
+			s_exists: s /= Void;
+			c_exists: code /= Void
+			time_valid: time_valid (s, code)
 		local
-			pos1, pos2, pos3, pos4: INTEGER
-			substrg1, substrg2, substrg3: STRING
+			code_string: DATE_TIME_CODE_STRING
+			time: TIME
 		do
-			if not(s.count < 12) then
-				-- If the count of the string is less than 12 then
-				-- This is not a time format.
-				pos1:=s.index_of(Std_date_time_delim,1)
-				pos2:=s.index_of(Std_time_delim,1)
-				pos3:=s.index_of(Std_time_delim,pos2+1)
-				pos4:=s.count+1
-				substrg1:=s.substring(pos1+1, pos2-1)
-				substrg2:=s.substring(pos2+1, pos3-1)
-				substrg3:=s.substring(pos3+1, pos4-1)
-			
-				Result:=s.item(pos1+3)=Std_time_delim and s.item(pos2+3)=Std_time_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_real; 
-			end -- if
+			!! code_string.make (code)
+			time := code_string.create_time (s)
+			make_fine (time.hour, time.minute, time.fine_second)
 		end
 		
-			
+	make_by_compact_time (c_t: INTEGER) is
+			-- Initialize from `compact_time'.
+		require
+			c_t_not_void: c_t /= Void
+			c_t_valid: compact_time_valid (c_t)
+		do
+			compact_time := c_t
+		ensure
+			compact_time_set: compact_time = c_t;
+		end
+
+feature -- Preconditions
+
+	time_valid (s: STRING; code_string: STRING): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type TIME
+			-- And does the string `s' correspond to `code_string'?
+		require
+			s_exists: s /= Void
+			code_exists: code_string /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (code_string)
+			Result := code.precise_time and code.correspond (s)
+		end
+		
+	compact_time_valid (c_t: INTEGER): BOOLEAN is
+		require
+			c_t_not_void: c_t /= Void
+		local
+			h, m, s: INTEGER
+		do
+			h := c_hour (c_t)
+			m := c_minute (c_t)
+			s := c_second (c_t)
+			Result := (h >= 0 and h < Hours_in_day and
+			m >= 0 and m < Minutes_in_hour and
+			s >= 0 and s < Seconds_in_minute)	
+		end
+
 feature -- Access
 
 	origin: TIME is
@@ -206,7 +239,7 @@ feature -- Element change
 			s_large_enough: s >= 0; 
 			s_small_enough: s < Seconds_in_minute 
 		do 
-			fine_second := s
+			c_set_second (s, compact_time)
 		ensure 
 			second_set: second = s 
 		end;
@@ -215,9 +248,13 @@ feature -- Element change
 			-- Set `fine_second' to `s'
 		require 
 			s_large_enough: s >= 0; 
-			s_small_enough: s < Seconds_in_minute 
+			s_small_enough: s < Seconds_in_minute
+		local
+			s_tmp: INTEGER 
 		do 
-			fine_second := s 
+			s_tmp := s.truncated_to_integer
+			fractionnal_second := s - s_tmp
+			set_second (s_tmp)
 		ensure
 			fine_second_set: fine_second = s
 		end;
@@ -228,7 +265,7 @@ feature -- Element change
 			f_large_enough: f >= 0;
 			f_small_enough: f < 1 
 		do
-			fine_second := second + f
+			fractionnal_second := f
 		ensure
 			second_same: second = old second
 		end;	
@@ -239,7 +276,7 @@ feature -- Element change
 			m_large_enough: m >= 0; 
 			m_small_enough: m < Minutes_in_hour 
 		do 
-			minute := m 
+			c_set_minute (m, compact_time) 
 		ensure 
 			minute_set: minute = m 
 		end;
@@ -250,7 +287,7 @@ feature -- Element change
 			h_large_enough: h >= 0; 
 			h_small_enough: h < Hours_in_day 
 		do 
-			hour := h 
+			c_set_hour (h, compact_time)
 		ensure 
 			hour_set: hour = h 
 		end;
@@ -284,10 +321,10 @@ feature -- Basic operations
 		do
 			total_second := second + s;
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				fine_second := mod (total_second, Seconds_in_minute) + fractionnal_second;
+				set_fine_second (mod (total_second, Seconds_in_minute) + fractionnal_second)
 				minute_add (div (total_second, Seconds_in_minute))	
 			else
-				fine_second := total_second + fractionnal_second
+				set_fine_second (total_second + fractionnal_second)
 			end
 		end;
 
@@ -299,10 +336,10 @@ feature -- Basic operations
 		do
 			total_second:= fine_second + f;
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				fine_second := total_second - div (total_second.floor, Seconds_in_minute) * Seconds_in_minute;
+				set_fine_second (total_second - div (total_second.floor, Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
 			else
-				fine_second:= total_second
+				set_fine_second (total_second)
 			end
 		end;	
 
@@ -313,26 +350,26 @@ feature -- Basic operations
 		do
 			total_minute := minute + m;
 			if (total_minute < 0 or else total_minute >= minutes_in_hour) then
-				minute := mod (total_minute, minutes_in_hour);
+				set_minute (mod (total_minute, minutes_in_hour))
 				hour_add (div (total_minute, minutes_in_hour))
 			else
-				minute := total_minute
+				set_minute (total_minute)
 			end
 		end;
 
 	hour_add (h: INTEGER) is
 			-- Add `h' hours to the current object.
 		do
-			hour := mod (hour + h, Hours_in_day)
+			set_hour (mod (hour + h, Hours_in_day))
 		end;
 
 	second_forth is
 			-- Move to next second.
 		do
 			if fine_second < Seconds_in_minute - 1 then
-				fine_second := fine_second + 1
+				set_fine_second (fine_second + 1)
 			else
-				fine_second := 0;
+				set_fine_second (0);
 				minute_forth
 			end
 		end;
@@ -341,9 +378,9 @@ feature -- Basic operations
 			-- Move to previous second.
 		do
 			if fine_second > 0 then
-				fine_second := fine_second - 1
+				set_fine_second (fine_second - 1)
 			else
-				fine_second := Seconds_in_minute - 1;
+				set_fine_second (Seconds_in_minute - 1)
 				minute_back
 			end
 		end;	
@@ -352,9 +389,9 @@ feature -- Basic operations
 			-- Move to next minute.
 		do
 			if minute < Minutes_in_hour - 1 then
-				minute := minute + 1
+				set_minute (minute + 1)
 			else
-				minute := 0;
+				set_minute (0);
 				hour_forth
 			end
 		end;
@@ -363,9 +400,9 @@ feature -- Basic operations
 			-- Move to evious minute.	
 		do
 			if minute > 0 then
-				minute := minute - 1
+				set_minute (minute - 1)
 			else
-				minute := Minutes_in_hour - 1
+				set_minute (Minutes_in_hour - 1)
 				hour_back
 			end
 		end;
@@ -374,9 +411,9 @@ feature -- Basic operations
 			-- Move to next hour.
 		do
 			if hour < Hours_in_day -  1 then
-				hour := hour + 1
+				set_hour (hour + 1)
 			else
-				hour := 0
+				set_hour (0)
 			end
 		end;
 
@@ -384,12 +421,33 @@ feature -- Basic operations
 			-- Move to evious hour.
 		do
 			if hour > 0 then
-				hour := hour - 1
+				set_hour (hour - 1)
 			else
-				hour := Hours_in_day - 1
+				set_hour (Hours_in_day - 1)
 			end
 		end;
-				
+		
+feature -- Output
+
+	out: STRING is
+			-- Printable representation of time with "standard"
+			-- Form: `time_default_format_string'
+		do
+			Result := formatted_out (time_default_format_string)
+		end
+
+	formatted_out (s: STRING): STRING is
+			-- Printable representation of time with "standard"
+			-- Form: `s'
+		require
+			s_exists: s /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (s)
+			Result := code.create_time_string (Current)
+		end	
+	
 feature {NONE} -- Externals 
 	
 	c_get_date_time is
@@ -397,22 +455,42 @@ feature {NONE} -- Externals
 			"C"
 		end;
 	
-	c_hour: INTEGER is
+	c_hour_now: INTEGER is
 		external
 			"C"
 		end;
 
-	c_minute: INTEGER is
+	c_minute_now: INTEGER is
 		external
 			"C"
 		end;
 
-	c_second: INTEGER is
+	c_second_now: INTEGER is
 		external
 			"C"
 		end;
 
-	c_millisecond: INTEGER is
+	c_millisecond_now: INTEGER is
+		external
+			"C"
+		end;
+
+	c_make_time (h, m, s: INTEGER): INTEGER is
+		external
+			"C"
+		end;
+
+	c_set_hour (h, c_t: INTEGER) is
+		external
+			"C"
+		end;
+
+	c_set_minute (h, c_t: INTEGER) is
+		external
+			"C"
+		end;
+
+	c_set_second (h, c_t: INTEGER) is
 		external
 			"C"
 		end;

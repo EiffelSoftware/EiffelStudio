@@ -9,13 +9,8 @@ class
 
 inherit 
 	DATE_CONSTANTS
-		redefine
-			out
-		end;
+		
 	TIME_CONSTANTS
-		redefine
-			out
-		end
 
 creation
 	
@@ -93,24 +88,15 @@ feature -- Access
  
 feature -- Conversion
 
-	out: STRING is
-			-- Printable representation of the current object
-			-- With "standard" form: "dd/mm/yyyy hh:mm:ss.sss"
-		do
-			Result := clone (date.out);
-			Result.extend (' ');
-			Result.append (time.out_fine(3))
-		end
-
-	out_fine (p: INTEGER): STRING is 
-			-- Printable representation of the current object
-			-- with `p' decimals for the seconds. 
-		do 
-			Result := clone (date.out); 
-			Result.extend (' '); 
-			Result.append (time.out_fine (p)) 
-		end 
- 
+	--out_fine (p: INTEGER): STRING is 
+	--		-- Printable representation of the current object
+	--		-- with `p' decimals for the seconds. 
+	--	do 
+	--		Result := clone (date.out); 
+	--		Result.extend (' '); 
+	--		Result.append (time.out_fine (p)) 
+	--	end 
+		
 invariant
 
 	date_exists: date /= Void;

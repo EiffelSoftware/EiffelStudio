@@ -46,9 +46,30 @@ feature -- Access
 			end 
 		end; 
 
-	Std_date_delim: CHARACTER is '/'
-		-- standard form is "dd/mm/yyyy"
+	date_default_format_string: STRING is
+		do
+			Result := date_time_tools.date_default_format_string
+		end
 
+	days_text: ARRAY [STRING] is
+		do
+			Result := date_time_tools.days_text
+		end
+
+	months_text: ARRAY [STRING] is
+		do
+			Result := date_time_tools.months_text
+		end
+
+	long_days_text: ARRAY [STRING] is
+		do
+			Result := date_time_tools.long_days_text
+		end
+
+	long_months_text: ARRAY [STRING] is
+		do
+			Result := date_time_tools.long_months_text
+		end
 
 feature {NONE} -- Implementation
 
@@ -61,7 +82,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 			valid_count: Result.count = Months_in_year
 		end
-		
+
 end -- class DATE_CONSTANTS
 
 

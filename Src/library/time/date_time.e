@@ -15,13 +15,15 @@ inherit
 		redefine
 			infix "<", copy, is_equal
 		end;
+
 	DATE_TIME_VALUE
 		undefine
 			is_equal
 		redefine
 			date, 
 			time,
-			copy
+			copy,
+			out
 		end
 
 creation
@@ -120,16 +122,48 @@ feature -- Initialization
 			!! time.make_now
 		end; 
 
-	make_from_string(s: STRING) is
-			-- initialise from a "standard" string of form
-			-- "dd/mm/yyyy hh:mm:ss.sss".	
+	make_from_string_default (s: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `default_format_string'
 		require
 			s_exists: s /= Void;
+			date_time_valid: date_time_valid (s, default_format_string)
 		do
-			!! date.make_from_string(s)
-			!! time.make_from_string(s)
-		end;
+			make_from_string (s, default_format_string)
+		end
 
+	make_from_string (s: STRING; code: STRING) is
+			-- Initialise from a "standard" string of form
+			-- `code'
+		require
+			s_exists: s /= Void;
+			c_exists: code /= Void
+			date_time_valid: date_time_valid (s, code)
+		local
+			code_string: DATE_TIME_CODE_STRING
+			date_time: DATE_TIME
+		do
+			!! code_string.make (code)
+			date_time := code_string.create_date_time (s)
+			make_by_date_time (date_time.date, date_time.time)
+		end
+
+feature -- Preconditions
+
+	date_time_valid (s: STRING; code_string: STRING): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE_TIME
+			-- And does the string `s' correspond to `code_string'?
+		require
+			s_exists: s /= Void
+			code_exists: code_string /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (code_string)
+			Result := code.precise and code.correspond (s)
+		end
+	
 feature -- Access
 			
 	date: DATE;
@@ -330,6 +364,30 @@ feature -- Basic operations
 				time.set_fine_second (total_second)
 			end
 		end;
+
+feature -- Output
+
+	out: STRING is
+			-- Printable representation of the current object
+			-- With "standard" form: `default_format_string'
+		do
+			Result := formatted_out (default_format_string)
+			--Result := clone (date.out);
+			--Result.extend (' ');
+			--Result.append (time.out_fine(3))
+		end
+
+	formatted_out (s: STRING): STRING is
+			-- Printable representation of the current object
+			-- With "standard" form: `s'
+		require
+			s_exists: s /= Void
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			!! code.make (s)
+			Result := code.create_string (Current)
+		end
 
 end -- class DATE_TIME
 

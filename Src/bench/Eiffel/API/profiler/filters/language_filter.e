@@ -1,7 +1,15 @@
+indexing
+
+	description:
+		"Abstract notion of a profile filter used to check the language %
+		%type of a function.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class LANGUAGE_FILTER
 
 inherit
-	FILTER
+	PROFILE_FILTER
 
 feature {NONE} -- Implementation
 
@@ -25,7 +33,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	extend (new_filter: FILTER) is
+	extend (new_filter: PROFILE_FILTER) is
 		do
 		end
 

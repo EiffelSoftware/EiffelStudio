@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Set of information about a profiled run.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class PROFILE_SET
 
 creation
@@ -104,7 +111,7 @@ feature -- Iteration
 			end;
 		end;
 
-feature {FILTER} -- Adding
+feature {PROFILE_FILTER} -- Adding
 
 	insert_unknown_profile_data (data: PROFILE_DATA) is
 			-- Puts `data' in the set.
@@ -129,7 +136,7 @@ feature {FILTER} -- Adding
 			end;
 		end;
 
-feature {PROFILE_INFORMATION, FILTER} -- Adding
+feature {PROFILE_INFORMATION, PROFILE_FILTER} -- Adding
 
 	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA) is
 		do

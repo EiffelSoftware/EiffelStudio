@@ -5,7 +5,7 @@ indexing
 	attribute:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end
 	class_attribute:
-		create {CLASS_INTERFACE_ATTRIBUTE}.make_from_class_interface_type (feature {CLASS_INTERFACE_TYPE}.none.to_integer.to_integer_16) end,
+		create {CLASS_INTERFACE_ATTRIBUTE}.make_from_class_interface_type_2 (feature {CLASS_INTERFACE_TYPE}.none) end,
 		create {GUID_ATTRIBUTE}.make (("01BDF738-3044-3ED6-BA7B-34632D67E145").to_cil) end
 	interface_attribute:
 		create {GUID_ATTRIBUTE}.make (("E3526F85-A118-3FBC-B445-417452D1AAA5").to_cil) end

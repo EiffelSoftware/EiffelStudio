@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 	
 --XX deferred class
-class
+deferred class
 	EV_FONTABLE_IMP
 	
 inherit
@@ -30,7 +30,7 @@ feature -- Access
 -- 			end;
 -- 			Result := private_font
 		end;
-	
+
 feature -- Status setting
 
 --XX 	set_font_list (a_font_list: MEL_FONT_LIST) is

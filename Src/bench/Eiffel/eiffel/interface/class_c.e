@@ -3786,7 +3786,7 @@ feature -- Initialization
 				-- Creation of the descendant list
 			create descendants.make (10)
 				-- Creation of the supplier list
-			create suppliers.make
+			create suppliers.make (2)
 				-- Creation of the client list
 			create clients.make (10)
 				-- Types list creation

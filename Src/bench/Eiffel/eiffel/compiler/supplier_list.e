@@ -1,11 +1,21 @@
--- Descritpion of the suppliers of a class
+indexing
+	description: "Descritpion of the suppliers of a class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SUPPLIER_LIST 
 
 inherit
-	LINKED_LIST [SUPPLIER_INFO]
+	ARRAYED_LIST [SUPPLIER_INFO]
+		export
+			{NONE} all
+			{ANY} count, start, after, forth, item, cursor, go_to, is_empty, wipe_out
+			{SUPPLIER_LIST} put_right
+		end
 
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
@@ -16,93 +26,95 @@ inherit
 		end
 
 create
-
 	make
 
-feature 
+feature -- Element change
 
 	remove_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
 			-- Remove one occurrence for each supplier of id
 			-- included in `l'.
 		require
-			good_argument: l /= Void;
-			consistency: is_ok (l);
+			l_not_void: l /= Void
+			consistency: is_ok (l)
 		local
-			suppl_info: SUPPLIER_INFO;
-			id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER]
+			suppl_info: SUPPLIER_INFO
+			l_class_id: INTEGER
+			l_system: SYSTEM_I
 		do
-			s := suppliers (l);
 			from
-				s.start
+				l_system := eiffel_system.system
+				l.start
 			until
-				s.after
+				l.after
 			loop
-				id := s.item;
-				goto (id);
-					-- Defensive programming: according to the
-					-- precondition, after should always be false
-				if not after then
-					suppl_info := item;
-					suppl_info.remove_occurrence;
-					if suppl_info.occurrence <= 0 then
-						remove;
-					end;
-				end;
-				s.forth
-			end;
-		end;
+				l_class_id := l.item.class_id
+				if l_system.class_of_id (l_class_id) /= Void then
+					goto (l_class_id)
+						-- Defensive programming: according to the
+						-- precondition, after should always be false
+					if not after then
+						suppl_info := item
+						suppl_info.remove_occurrence
+						if suppl_info.occurrence <= 0 then
+							remove
+						end
+					end
+				end
+				l.forth
+			end
+		end
 
 	add_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
 			-- Add one occurrence for each supplier of id
 			-- included in `l'.
 		require
-			good_argument: l /= Void
+			l_not_void: l /= Void
 		local
-			suppl_info: SUPPLIER_INFO;
-			class_id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER]
+			suppl_info: SUPPLIER_INFO
+			l_class_id: INTEGER
 		do
-			s := suppliers (l);
 			from
-				s.start
+				l.start
 			until
-				s.after
+				l.after
 			loop
-				class_id := s.item;
-debug ("ACTIVITY");
-	io.error.putstring ("SUPPLIER_LIST add_occurrence: ");
-	io.error.putstring (Eiffel_system.class_of_id (class_id).name);
-	io.error.new_line;
-end;
-				suppl_info := info (class_id);
+				l_class_id := l.item.class_id
+				check
+					has_class: Eiffel_system.class_of_id (l_class_id) /= Void
+				end
+				debug ("ACTIVITY")
+					io.error.putstring ("SUPPLIER_LIST add_occurrence: ")
+					io.error.putstring (Eiffel_system.class_of_id (l_class_id).name)
+					io.error.new_line
+				end
+				suppl_info := info (l_class_id)
 				if suppl_info = Void then
-					create suppl_info.make (class_id);
-					put_front (suppl_info);
+					create suppl_info.make (l_class_id)
+					put_front (suppl_info)
 				else
-					suppl_info.add_occurrence;
-				end;
+					suppl_info.add_occurrence
+				end
 	
-				s.forth;
-			end;
+				l.forth
+			end
 		ensure
 			consistency: is_ok (l)
-		end;
+		end
 
 	same_suppliers: SUPPLIER_LIST is
 			-- Duplicated list
 		do
-			create Result.make;
+			create Result.make (count)
 			from
 				start
 			until
 				after
 			loop
-				Result.put_right (clone (item));
-				Result.forth;
+				Result.put_right (clone (item))
+				Result.forth
 				forth
 			end
-		end;
+		end
 
 	classes: ARRAYED_LIST [CLASS_C] is
 			-- List of `CLASS_C'es
@@ -113,11 +125,11 @@ end;
 			until
 				after
 			loop
-				Result.extend (item.supplier);
+				Result.extend (item.supplier)
 				Result.forth
 				forth
 			end
-		end;
+		end
 
 	remove_class (a_class: CLASS_C) is
 			-- Remove `a_class' from Current.
@@ -143,32 +155,61 @@ end;
 			end
 		end
 
-feature {NONE}
+feature -- Consistency
 
-	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [INTEGER] is
+	is_ok (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): BOOLEAN is
+			-- Is the supplier list consistant regarding to `l'.
+		require
+			l_not_void: l /= Void
+		local
+			suppl_info: SUPPLIER_INFO
+			l_class_id: INTEGER
+			l_system: SYSTEM_I
 		do
-debug ("ACTIVITY")
-	io.error.putstring ("SUPPLIER_lIST.suppliers%N");
-end;
-			create Result.make
-			from
+			debug ("ACTIVITY")
+				trace
+			end
+			from	
+				Result := True
+				l_system := eiffel_system.system
 				l.start
 			until
-				l.after
+				l.after or else not Result
 			loop
-				Result.extend (l.item.class_id)
-debug ("ACTIVITY")
-	io.error.putint (l.item.class_id);
-	io.error.new_line;
-end;
+				l_class_id := l.item.class_id
+				if l_system.class_of_id (l_class_id) /= Void then
+					suppl_info := info (l_class_id)
+					Result := suppl_info /= Void and then suppl_info.occurrence >= 1
+				end
 				l.forth
-			end;
-		end;
+			end
+		end
+
+feature {NONE} -- Implementation: debugging
+
+	trace is
+			-- Debug purpose
+		do
+			io.error.putstring ("SUPPLIER_LIST.trace%N")
+			from
+				start
+			until
+				after
+			loop
+				io.error.putstring (item.supplier.name)
+				io.error.putstring (" [")
+				io.error.putint (item.occurrence)
+				io.error.putstring ("]  ")
+				forth
+			end
+		end
+
+feature {NONE} -- Implementation: traversal
 
 	goto (id: INTEGER) is
 			-- Move cursor to supplier info of id `id'.
 		require
-			consistency: info (id) /= Void
+			valid_id: id >= 0
 		do
 			from
 				start
@@ -177,78 +218,27 @@ end;
 					-- test!!!
 				after or else item.supplier_id = id
 			loop
-				forth;
-			end;
-		end;
+				forth
+			end
+		end
 		
 	info (id: INTEGER): SUPPLIER_INFO is
 			-- Supplier information associated to supplier of id `id'.
 		require
-			valid_id: id /= 0
+			valid_id: id >= 0
 		local
-			cur: CURSOR;
+			cur: CURSOR
 		do
-			cur := cursor;
-			from
-				start
-			until
-				after or else Result /= Void
-			loop
-				if item.supplier_id = id then
-					Result := item;
-				end;
-				forth;
-			end;
-			go_to (cur);
-		end;
-
-feature
-
-	is_ok (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): BOOLEAN is
-			-- Is the supplier list consistant regarding to `l'.
-		require
-			good_argument: l /= Void
-		local
-			suppl_info: SUPPLIER_INFO;
-			id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER];
-		do
-debug ("ACTIVITY")
-	trace;
-end;
-			s := suppliers (l);
-			from	
-				Result := True;
-				s.start;
-			until
-				s.after or else not Result
-			loop
-				id := s.item;
-				suppl_info := info (id);
-				Result := 	suppl_info /= Void
-							and then
-							suppl_info.occurrence >= 1;
-				s.forth;
-			end;
-		end;
-
-feature 
-
-	trace is
-			-- Debug purpose
-		do
-			io.error.putstring ("SUPPLIER_LIST.trace%N");
-			from
-				start
-			until
-				after
-			loop
-				io.error.putstring (item.supplier.name);
-				io.error.putstring (" [");
-				io.error.putint (item.occurrence);
-				io.error.putstring ("]  ");
-				forth;
-			end;
-		end;
+			cur := cursor
+			goto (id)
+			if not after then
+					-- We found it.
+				Result := item
+				check
+					result_not_void: Result /= Void
+				end
+			end
+			go_to (cur)
+		end
 				
 end

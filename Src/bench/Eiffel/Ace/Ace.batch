@@ -4,40 +4,42 @@ root
 
 	es (root_cluster): "make"
 
+default
+
+	assertion (no)
+
 cluster
 
 -- STANDARD STRUCTURES:
 
-		kernel:				"$BASE/kernel";
-		support:			"$BASE/support";
-		access:				"$BASE/structures/access";
-		cursors:			"$BASE/structures/cursors";
-		dispenser:			"$BASE/structures/dispenser";
-		list:				"$BASE/structures/list";
-		set:				"$BASE/structures/set";
-		sort:				"$BASE/structures/sort";
-		storage:			"$BASE/structures/storage";
-		table:				"$BASE/structures/table";
-		traversing:			"$BASE/structures/traversing";
+		kernel:				"$BENCH/library/base/kernel";
+		support:			"$BENCH/library/base/support";
+		access:				"$BENCH/library/base/structures/access";
+		cursors:			"$BENCH/library/base/structures/cursors";
+		dispenser:			"$BENCH/library/base/structures/dispenser";
+		list:				"$BENCH/library/base/structures/list";
+		set:				"$BENCH/library/base/structures/set";
+		sort:				"$BENCH/library/base/structures/sort";
+		storage:			"$BENCH/library/base/structures/storage";
+		table:				"$BENCH/library/base/structures/table";
+		traversing:			"$BENCH/library/base/structures/traversing";
+		tree:				"$BENCH/library/base/structures/tree";
 
 -- ES3 SPECIFIC CLUSTERS
 
-	-- Root
-
-		root_cluster:		"$BENCH/Eiffel/root";
-
-	-- Switch cluster
-
-		switch_cluster:		"$BENCH/Eiffel/batch_bench/batch";
+		beurk:				"$BENCH/Eiffel/beurk";
+		dialog:				"$BENCH/Eiffel/dialog";
+		replication:		"$BENCH/Eiffel/eiffel/replication";
+		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- General compilation:
 
-		special_ast:		"$BENCH/Eiffel/special_ast";
 		flat_short:			"$BENCH/Eiffel/flat_short";
+		special_ast:        "$BENCH/Eiffel/special_ast";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
 		error:				"$BENCH/Eiffel/error";
-		struct_text:		"$BENCH/Eiffel/structured_text";
+		struct_text:        "$BENCH/Eiffel/structured_text";
 
 	-- Lace compilation:
 
@@ -57,9 +59,6 @@ cluster
 		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
 		cecil:				"$BENCH/Eiffel/eiffel/cecil";
 		compiler:			"$BENCH/Eiffel/eiffel/compiler";
-			--default
-				--debug ("ACTIVITY")
-			--end;
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
 		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
 		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
@@ -68,21 +67,15 @@ cluster
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
-			--option
-				--debug (yes): INHERIT_TABLE
-			--end;
 		interface:			"$BENCH/Eiffel/eiffel/interface";
-			--default
-				--debug ("ACTIVITY")
-			--end;
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
 		server:				"$BENCH/Eiffel/eiffel/server";
+--		temp:				"$BENCH/Eiffel/eiffel/temp";
 		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
 		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
 		structures:			"$BENCH/Eiffel/eiffel/structures";
 		tables:				"$BENCH/Eiffel/eiffel/tables";
-		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
-		debuggable:			"$BENCH/Eiffel/debug";
+		descriptor:         "$BENCH/Eiffel/eiffel/descriptor";
 
 -- SHARED BETWEEN COMPILER AND INTERFACE:
 
@@ -91,11 +84,32 @@ cluster
 		stones:				"$BENCH/Eiffel/shared/stones";
 		tops:				"$BENCH/Eiffel/shared/tops";
 
+-- INTERFACE CLUSTERS
+
+--	 Root
+
+		 root_cluster:		"$BENCH/Eiffel/root";
+
+	-- Switch:
+	
+		switch: 			"$BENCH/Eiffel/batch_bench/batch";
+
+	-- graphical interface (bench):
+	-- NEEDED ?
+
+		 windows:			"$BENCH/Eiffel/interface/windows";
+		 commands:			"$BENCH/Eiffel/interface/commands";
+		 formatters:		"$BENCH/Eiffel/interface/formatters";
+		 debugging:			"$BENCH/Eiffel/interface/debugging";
+		 archi_text:		"$BENCH/Eiffel/interface/archi_text";
+
+		 ipc:				"$BENCH/Eiffel/ipc";
+
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";
-		"$(BENCH)/C/parsing/shared/libparsing.a"
+		"$(BENCH)/C/parsing/shared/libparsing.a";
 
 end

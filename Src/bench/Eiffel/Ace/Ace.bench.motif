@@ -12,25 +12,26 @@ cluster
 
 -- STANDARD STRUCTURES:
 
-		kernel:				"$BASE/kernel";
-		support:			"$BASE/support";
-		access:				"$BASE/structures/access";
-		cursors:			"$BASE/structures/cursors";
-		dispenser:			"$BASE/structures/dispenser";
-		list:				"$BASE/structures/list";
-		set:				"$BASE/structures/set";
-		sort:				"$BASE/structures/sort";
-		storage:			"$BASE/structures/storage";
-		table:				"$BASE/structures/table";
-		traversing:			"$BASE/structures/traversing";
+		kernel:				"$BENCH/library/base/kernel";
+		support:			"$BENCH/library/base/support";
+		access:				"$BENCH/library/base/structures/access";
+		cursors:			"$BENCH/library/base/structures/cursors";
+		dispenser:			"$BENCH/library/base/structures/dispenser";
+		list:				"$BENCH/library/base/structures/list";
+		set:				"$BENCH/library/base/structures/set";
+		sort:				"$BENCH/library/base/structures/sort";
+		storage:			"$BENCH/library/base/structures/storage";
+		table:				"$BENCH/library/base/structures/table";
+		traversing:			"$BENCH/library/base/structures/traversing";
+		tree:				"$BENCH/library/base/structures/tree";
 
 -- ES3 SPECIFIC CLUSTERS
 
-	-- Root
 
-		--root_cluster:       "$BENCH/Eiffel/es";
-
-	debugclas:					"$BENCH/Eiffel/debug";
+		beurk:				"$BENCH/Eiffel/beurk";
+		dialog:				"$BENCH/Eiffel/dialog";
+		replication:		"$BENCH/Eiffel/eiffel/replication";
+		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- General compilation:
 
@@ -104,24 +105,24 @@ cluster
 
 		 ipc:				"$BENCH/Eiffel/ipc";
 
-		 graph_resources:	"$VISION/implement/motif/Resources";
-		 graph_widgets:		"$VISION/implement/motif/widgets";
-		 graph_toolkit:		"$VISION/implement/toolkit";
-		 graph_X:			"$VISION/implement/X";
-		 graph_commands:		"$VISION/oui/commands";
-		 graph_kernel:		"$VISION/oui/kernel";
-		 graph_oui_widgets:	"$VISION/oui/widgets";
+		 graph_resources:	"$BENCH/library/vision/implement/motif/Resources";
+		 graph_widgets:		"$BENCH/library/vision/implement/motif/widgets";
+		 graph_toolkit:		"$BENCH/library/vision/implement/toolkit";
+		 graph_X:			"$BENCH/library/vision/implement/X";
+		 graph_commands:	"$BENCH/library/vision/oui/commands";
+		 graph_kernel:		"$BENCH/library/vision/oui/kernel";
+		 graph_oui_widgets:	"$BENCH/library/vision/oui/widgets";
 
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";
 		"$(BENCH)/C/parsing/shared/libparsing.a";
 		"$(BENCH)/C/clicking/shared/archix.o";
 		"$(BENCH)/C/clicking/motif/libclick.a";
-		"$(VISION)/implement/motif/Clib/motif_Clib.a";
-		"$(VISION)/implement/X/Clib/Xt.a";
+		"$(BENCH)/library/vision/implement/motif/Clib/motif_Clib.a";
+		"$(BENCH)/library/vision/implement/X/Clib/Xt.a";
 		"$(BENCH)/C/ipc/ewb/libewb.a";
 		"$(BENCH)/C/ipc/shared/libipc.a";
 		"$(BENCH)/C/idrs/libidr.a";

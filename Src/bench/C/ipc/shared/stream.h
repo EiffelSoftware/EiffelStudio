@@ -62,6 +62,8 @@ extern int net_send(STREAM *, char *, int);
 #else
 extern STREAM *new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
 extern STREAM *stream_by_fd[];		/* Maps a fd to a STREAM */
+rt_public int net_send(int cs, char *buf, int size) ;
+rt_public int net_recv(int cs, char *buf, int size) ;
 #endif
 
 extern void close_stream(STREAM *sp);			/* Close stream connection */

@@ -266,12 +266,12 @@ feature {NONE} -- Implementation
 			dc.get
 			!! region1.make_rect (0, 0, width, height)
 			region1 := region1.combine (splitter_region, Rgn_diff)
-			if c1 /= Void then
+			if c1 /= Void and then c1.shown then
 				!! region2.make_rect (c1.x, c1.y, c1.width + c1.x, c1.height + c1.y)
 				region1 := region1.combine (region2, Rgn_diff)
 				c1.invalidate
 			end
-			if c2 /= Void then
+			if c2 /= Void and then c2.shown then
 				!! region2.make_rect (c2.x, c2.y, c2.width + c2.x, c2.height + c2.y)
 				region1 := region1.combine (region2, Rgn_diff)
 				c2.invalidate

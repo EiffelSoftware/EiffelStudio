@@ -118,11 +118,11 @@ feature {NONE} -- Implementation
 	initialize is
 			-- Create `Current' in correct default state.
 		do
+			is_initialized := True
 			set_minimum_height (tool_minimum_height)
 			drop_actions.set_veto_pebble_function (agent veto_drop)
 			drop_actions.extend (agent add_new_object)			
 			key_press_actions.extend (agent check_for_object_delete)
-			is_initialized := True
 		end
 
 feature -- Access

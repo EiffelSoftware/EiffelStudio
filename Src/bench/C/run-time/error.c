@@ -48,6 +48,9 @@ rt_public void esys(void)
 	 * If errno is zero, the 'External event' exception is generated instead.
 	 */
 
+#ifdef EIF_VMS
+	int err = errno;
+#endif
 	if (errno == 0)					/* Function did not set errno? */
 		xraise(EN_EXT);				/* External event */
 

@@ -140,9 +140,9 @@ feature
 					Error_handler.insert_error (vmrc3);
 				else
 					computed.put (selected, key_for_iteration);
-					if selected.is_replicated then
-						new_t.replace (selected, selected.feature_name);
-					end
+--					if selected.is_replicated then
+--						new_t.replace (selected, selected.feature_name);
+--					end
 				end;
 				forth;
 			end;

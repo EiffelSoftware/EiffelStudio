@@ -319,7 +319,6 @@ run-time/macros.h
 run-time/main.c
 run-time/malloc.c
 run-time/malloc.h
-run-time/math.c
 run-time/memory.c
 run-time/misc.c
 run-time/misc.h

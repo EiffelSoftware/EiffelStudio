@@ -5,24 +5,23 @@ indexing
 class
 	ASSIGN_ATTEMPT [G]
 
-create
-	default_create
-
 feature -- Access
 
 	attempt (an_object: ANY): G is
 		-- Attempt to return an object of type `G' from `an_object'
 		do
-			Result := generize (an_object)
+			Result := generize ($an_object)
 		end
 
 feature {NONE} -- External
 
-	generize (an_object: ANY): G is
+	generize (an_object: POINTER): G is
 		external
-			"C (EIF_OBJECT): EIF_REFERENCE| %"gtk_eiffel.h%""
+			"C macro signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_eiffel.h%""
+		alias
+			" "
 		end
-		
+
 end -- class ASSIGN_ATTEMPT
 
 --|----------------------------------------------------------------

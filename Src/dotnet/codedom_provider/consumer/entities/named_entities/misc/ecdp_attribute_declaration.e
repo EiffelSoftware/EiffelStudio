@@ -41,7 +41,7 @@ feature -- Access
 			Result.append (Dictionary.Create_keyword)
 			Result.append (Dictionary.Space)
 			Result.append (Dictionary.Opening_brace_bracket)
-			Result.append (Eiffel_types.eiffel_type_name (name))
+			Result.append (Resolver.eiffel_type_name (name))
 			Result.append (Dictionary.Closing_brace_bracket)
 			Result.append (constructor_call)
 
@@ -115,34 +115,10 @@ feature -- Status Setting
 feature {NONE} -- Implementation
 
 	constructor_call: STRING is
-			-- | call `Eiffel_types.eiffel_constructor_name' to find constructor_name
-			-- | Result := ""
-			-- | OR		:= ".constructor_name"
-
 			-- Generate constructor name.
-		require
-			name_set: not name.is_empty
-		local
-			l_arguments: LINKED_LIST [ECDP_EXPRESSION]
+			--| `.make'
 		do
-			create Result.make (40)
-			
-			create l_arguments.make
-			from
-				arguments.start
-			until
-				arguments.after or else not arguments.item.name.is_empty
-			loop
-				l_arguments.extend (arguments.item.value)
-				arguments.forth
-			end
-			Result.append (Eiffel_types.eiffel_constructor_name (Eiffel_types.dotnet_type (name), l_arguments))
-
-			set_constructor_name (Result)
-
-			if not Result.is_empty then
-				Result.prepend (dictionary.Dot_keyword)
-			end
+			Result := ".make"
 		ensure
 			non_void_result: Result /= Void
 		end

@@ -79,8 +79,8 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which `Current' is displayed in
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.interface
+			if parent_i /= Void then
+				Result := parent_i.interface
 			end
 		end
 
@@ -100,16 +100,16 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				if parent_grid_i.single_row_selection_enabled or else parent_grid_i.multiple_row_selection_enabled then
+				if parent_i.single_row_selection_enabled or else parent_i.multiple_row_selection_enabled then
 						-- We are in row selection mode so we manipulate the parent row directly
 					parent_row_i.enable_select
 				else
 					enable_select_internal
 					if parent_row_i.is_selected then
-						parent_grid_i.update_row_selection_status (parent_row_i)
+						parent_i.update_row_selection_status (parent_row_i)
 					end
-					parent_grid_i.update_item_selection_status (Current)
-					parent_grid_i.redraw_client_area
+					parent_i.update_item_selection_status (Current)
+					parent_i.redraw_client_area
 					fixme ("Perform a more optimal redraw when available")
 				end
 			end
@@ -120,7 +120,7 @@ feature -- Status setting
 		do
 			if is_selected then
 				disable_select_internal
-				parent_grid_i.redraw_client_area
+				parent_i.redraw_client_area
 				fixme ("Perform a more optimal redraw when available")				
 			end
 		end
@@ -130,7 +130,7 @@ feature -- Status report
 	is_parented: BOOLEAN is
 			-- Does current item belongs to an EV_GRID?
 		do
-			Result := parent_grid_i /= Void
+			Result := parent_i /= Void
 		end
 		
 	is_selected: BOOLEAN is
@@ -186,23 +186,32 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	set_parents (a_parent_grid_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
+	set_parents (a_parent_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
 			-- Set the appropriate grid, column and row parents
 		require
-			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+			a_parent_i_not_void: a_parent_i /= Void
 			a_parent_column_i_not_void: a_parent_column_i /= Void
 			a_parent_row_i_not_void: a_parent_row_i /= Void
 		do
-			parent_grid_i := a_parent_grid_i
+			parent_i := a_parent_i
 			parent_column_i := a_parent_column_i
 			parent_row_i := a_parent_row_i
 		ensure
-			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+			parent_i_set: parent_i = a_parent_i
 			parent_column_i_set: parent_column_i = a_parent_column_i
 			parent_row_i_set: parent_row_i = a_parent_row_i
 		end
 
-	parent_grid_i: EV_GRID_I
+	set_created_from_grid is
+			-- Flag `Current' as `created_from_grid' to signify that `Current' hasn't been set by user
+		do
+			created_from_grid := True
+		end
+
+	created_from_grid: BOOLEAN
+		-- Was `Current' create from `parent_i'
+
+	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
 
 	parent_column_i: EV_GRID_COLUMN_I
@@ -249,8 +258,8 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 			-- functionality implemented by `Current'
 
 invariant
-	is_parented_implies_parents_set: is_parented implies parent_grid_i /= Void and then parent_column_i /= Void and then parent_row_i /= Void
-	not_is_parented_implies_parents_not_set: not is_parented implies parent_grid_i = Void and then parent_column_i = Void and then parent_row_i = Void
+	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then parent_column_i /= Void and then parent_row_i /= Void
+	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then parent_column_i = Void and then parent_row_i = Void
 			
 end
 

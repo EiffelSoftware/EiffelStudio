@@ -20,6 +20,14 @@ creation
 
 	make
 
+feature -- Access
+
+	associated_eclass: E_CLASS is
+			-- Class associated with current id
+		do
+			Result := class_array.item (internal_id)
+		end
+
 feature {COMPILER_EXPORTER} -- Access
 
 	packet_number: INTEGER is

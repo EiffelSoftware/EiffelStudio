@@ -669,6 +669,8 @@ feature -- Object editor properties
 	pixmap_missing_string: STRING is "Error - named pixmap missing."
 	invalid_pixmap_contents_warning: STRING is " does not contain a valid image. Possible causes for this are:-%N%NFile is not one of the supported image types.%NFile is corrupted.%N%NPlease select a diferent file."
 	
+	select_constant_tooltip: STRING is "Select constant"
+	
 feature -- Booleans
 
 	multiple_line_entry: BOOLEAN is True

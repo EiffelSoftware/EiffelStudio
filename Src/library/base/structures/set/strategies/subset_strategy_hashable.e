@@ -57,6 +57,7 @@ feature -- Comparison
 							Result := (set1.item /= hash.found_item)
 						end
 					end
+					set1.forth
 				end
 				if Result and then not set2.after then
 					h ?= set2.item
@@ -77,9 +78,8 @@ feature -- Comparison
 							Result := (set2.item /= hash.found_item)
 						end
 					end
+					set2.forth
 				end
-				set1.forth
-				set2.forth
 			end
 		end
 	

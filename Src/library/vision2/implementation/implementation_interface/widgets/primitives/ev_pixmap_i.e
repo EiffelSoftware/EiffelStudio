@@ -13,12 +13,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAPABLE) is
-			-- Create a pixmap implementation.
+	make_with_size (w, h: INTEGER) is
+			-- Create a pixmap with 'par' as parent, 
+			-- 'w' and `h' as size.
+		require
+			valid_width: w > 0
+			valid_height: h > 0
 		deferred
 		end	
 
-feature -- Meassurement
+feature -- Access
+
+	interface: EV_PIXMAP
+			-- Interface of Current implementation
+
+feature -- Measurement
 
 	width: INTEGER is
 			-- width of the pixmap
@@ -31,7 +40,15 @@ feature -- Meassurement
 		end
 
 feature -- Element change
-	
+
+	set_interface (pix: EV_PIXMAP) is
+			-- Make `pix' the new interface.
+		do
+			interface := pix
+		end
+
+feature -- Basic operation
+
 	read_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
 			-- If the file does not exist or it is in a 

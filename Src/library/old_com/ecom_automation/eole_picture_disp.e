@@ -45,7 +45,7 @@ feature -- Access
 			-- List of supported interfaces
 		once
 			Result := precursor
-			Result.extend (interface_identifier)
+			Result.extend (Iid_picture_disp)
 		end
 
 	picture: EOLE_PICTURE is

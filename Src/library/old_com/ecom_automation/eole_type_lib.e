@@ -39,7 +39,7 @@ feature -- Access
 			-- List of supported interfaces
 		once
 			Result := precursor
-			Result.extend (interface_identifier)
+			Result.extend (Iid_type_lib)
 		end
 
 	is_initializable_from_eiffel: BOOLEAN is

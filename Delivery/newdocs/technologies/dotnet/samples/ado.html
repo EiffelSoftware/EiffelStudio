@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="ADO.NET" />
+		<MSHelp:Keyword Index="K" Term="Samples, ADO.NET" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
+	<HEAD>
+		<TITLE>ADO.NET Sample</TITLE>
+		<LINK HREF="../../../default.css" TYPE="text/css" REL="STYLESHEET">
+	</HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">ADO.NET Sample</TD>
+				<TD ALIGN=RIGHT>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\ado"
+							SamplePrj = "ado.eifp"
+						End Sub							
+					</SCRIPT>
+
+					<P>This sample consists in a command line application showing how to
+					interact with a database using ADO.NET.</P>
+
+					<P>The <SPAN CLASS="eclass">DATA_READER</SPAN> object is
+					somewhat synonymous with a read-only/forward-only cursor
+					over data. The <SPAN CLASS="eclass">DATA_READER</SPAN>
+					interface supports flat as well as hierarchical data. A
+					<SPAN CLASS="eclass">DATA_READER</SPAN>  object is returned
+					after executing a command against a database. The format of
+					the returned <SPAN CLASS="eclass">DATA_READER</SPAN> object
+					is different from a recordset. For example, you might use
+					the <SPAN CLASS="eclass">DATA_READER</SPAN>  to show the
+					results of a search list in a web page.</P>
+
+					<H2>Requirements</H2>
+					
+					<P>For this sample to run properly, the SQL Server service
+					should be running on the local machine and should expose
+					the <SPAN CLASS="italics">Northwind</SPAN> database. The
+					code of the sample may be modified to point to a different
+					machine and/or a different database though (see below for
+					where to modify the code).
+					
+					<H2>Running the sample</H2>
+
+					<P>After you launch the sample, the following output appears:</P>
+
+					<TABLE CLASS="WITHBORDERS">
+						<TR>
+							<TH>Customer ID</TH>
+							<TH>Company Name</TH>
+						</TR>
+						<TR>
+							<TD>ALFKI</TD>
+							<TD>Alfreds Futterkiste</TD>
+						</TR>
+							<TD>ANATR</TD>
+							<TD>Ana Trujillo Emparedados y helados</TD>
+						</TR>
+						</TR>
+							<TD>AROUT</TD>
+							<TD>Around the Horn</TD>
+						</TR>
+						</TR>
+							<TD>BERGS</TD>
+							<TD>Berglunds snabbk”p</TD>
+						</TR>
+						</TR>
+							<TD>BLAUS</TD>
+							<TD>Blauer See Delikatessen</TD>
+						</TR>
+						</TR>
+							<TD>BLONP</TD>
+							<TD>Blondesddsl père et fils</TD>
+						</TR>
+						</TR>
+							<TD>BOLID</TD>
+							<TD>B¢lido Comidas preparadas</TD>    
+						</TR>
+						</TR>
+							<TD>ANTON</TD>
+							<TD>Antonio Moreno Taquerìa</TD>
+						</TR>
+						</TR>
+							<TD>ANATR</TD>
+							<TD>Ana Trujillo Emparedados y helados</TD>
+						</TR>
+						</TR>
+							<TD>BONAP</TD>
+							<TD>Bon app'</TD>
+						</TR>
+						</TR>
+							<TD>BOTTM</TD>
+							<TD>Bottom-Dollar Markets</TD>
+						</TR>
+						</TR>
+							<TD>BSBEV</TD>
+							<TD>B's Beverages</TD>
+						</TR>
+						</TR>
+							<TD>CACTU</TD>
+							<TD>Cactus Comidas para llevar</TD>
+						</TR>
+						</TR>
+							<TD>CENTC</TD>
+							<TD>Centro comercial Moctezuma</TD>
+						</TR>
+						</TR>
+							<TD>CHOPS</TD>
+							<TD>Chop-suey Chinese</TD>
+						</TR>
+						</TR>
+							<TD>COMMI</TD>
+							<TD>Comèrcio Mineiro</TD>
+						</TR>
+						</TR>
+							<TD>CONSH</TD>
+							<TD>Consolidated Holdings</TD>
+						</TR>
+						</TR>
+							<TD>DRACD</TD>
+							<TD>Drachenblut Delikatessen</TD>
+						</TR>
+						</TR>
+							<TD>DUMON</TD>
+							<TD>Du monde entier</TD>
+						</TR>
+						</TR>
+							<TD>EASTC</TD>
+							<TD>Eastern Connection</TD>
+						</TR>
+						</TR>
+							<TD>...</TD>
+							<TD>...</TD>
+						</TR>
+						</TR>
+							<TD>WILMK</TD>
+							<TD>Wilman Kala</TD>
+						</TR>
+						</TR>
+							<TD>WOLZA</TD>
+							<TD>Wolski  Zajazd</TD>
+						</TR>
+					</TABLE>
+					
+					<P>After displaying this result, the application waits for
+					you to press enter to terminate.</P>
+					
+					<H2>Under the Hood</H2>
+
+					<P>This application first opens a connection to the database
+					with the following code:</P>
+					
+					<CODE>
+						<P><SPAN CLASS="ekeyword">create</SPAN>
+						<SPAN CLASS="efeature">connection</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">make</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"server=(local)\NetSDK;Trusted_Connection=yes;database=northwind"</SPAN><SPAN CLASS="esymbol">)</SPAN></P>
+					</CODE>
+					
+					<P>where <SPAN CLASS="efeature">connection</SPAN> is of
+					type <SPAN CLASS="eclass">DATA_SQL_CONNECTION</SPAN>.</P>
+					
+					You may change the connection string (argument given to the
+					feature <SPAN CLASS="efeature">make</SPAN>) to point to a
+					different machine (change the value after
+					<SPAN CLASS="estring">server=</SPAN>) and/or a different
+					database (change the value after
+					<SPAN CLASS="estring">database=</SPAN>).
+										
+					<P>Once the <SPAN CLASS="efeature">connection</SPAN> object
+					has been initialized, it can be used to create an SQL query
+					as follows:</P>
+					
+					<CODE>
+						<P><SPAN CLASS="ekeyword">create</SPAN>
+						<SPAN CLASS="efeature">command</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">make</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"select
+						* from customers"</SPAN><SPAN CLASS="esymbol">,</SPAN>
+						<SPAN CLASS="efeature">connection</SPAN><SPAN CLASS="esymbol">)</SPAN></P>
+					</CODE>
+					
+					<P>where <SPAN CLASS="efeature">command</SPAN> is of
+					type <SPAN CLASS="eclass">DATA_SQL_COMMAND</SPAN>.</P>
+					
+					<P>The query can then be executed:<P>
+
+					<CODE>
+						<P><SPAN CLASS="efeature">reader</SPAN>
+						<SPAN CLASS="esymbol">:=</SPAN>
+						<SPAN CLASS="efeature">command</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">execute_reader</SPAN></P>
+					</CODE>
+
+					<P>where <SPAN CLASS="efeature">reader</SPAN> is of
+					type <SPAN CLASS="eclass">DATA_SQL_DATA_READER</SPAN>.</P>
+
+					<P>Finally, the result of the request is displayed by
+					looping through the return Data Reader:</P>
+					
+					<CODE>
+						<P><SPAN CLASS="ekeyword">from</SPAN></P>
+
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="elocal">ok</SPAN>
+						<SPAN CLASS="esymbol">:=</SPAN>
+						<SPAN CLASS="efeature">reader</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">read</SPAN></P>
+
+						<P><SPAN CLASS="ekeyword">until</SPAN></P>
+					
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="efeature">not</SPAN>
+						<SPAN CLASS="elocal">ok</SPAN></P>
+
+						<P><SPAN CLASS="ekeyword">loop</SPAN></P>
+
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="efeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">put_string</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">reader</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">item</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"CustomerID"</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">to_string</SPAN><SPAN CLASS="esymbol">)</SPAN></P>
+
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="efeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">put_string</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"%T%T"</SPAN><SPAN CLASS="esymbol">)</SPAN></P>
+
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="efeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">put_string</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">reader</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">item</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"CompanyName"</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">to_string</SPAN><SPAN CLASS="esymbol">)</SPAN></P>
+						
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="efeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">new_line</SPAN>
+						
+						<P>&nbsp;&nbsp;
+						<SPAN CLASS="elocal">ok</SPAN>
+						<SPAN CLASS="esymbol">:=</SPAN>
+						<SPAN CLASS="efeature">reader</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="efeature">read</SPAN></P>
+
+						<P><SPAN CLASS="ekeyword">end</SPAN></P>
+					</CODE>
+
+					<P>where <SPAN CLASS="elocal">ok</SPAN> is a local variable
+					of type <SPAN CLASS="eclass">BOOLEAN</SPAN>.</P>
+					
+					<P>The feature <SPAN CLASS="efeature">item</SPAN> is used
+					to retrieve the content of a column in the returned Data
+					Reader. So if you were to modify this sample to use a 
+					different database you would also have to change the name
+					of the columns used.</P>
+
+					<p>This sample uses the following classes: </p>
+					<ul>
+						<li><SPAN CLASS="eclass">SQL_DATA_READER</SPAN></li>
+						<li><SPAN CLASS="eclass">SQL_CONNECTION</SPAN></li>
+						<li><SPAN CLASS="eclass">SQL_COMMAND</SPAN></li>
+					</ul>
+					
+					<P CLASS="note"><B>Note:</B><BR />
+					This sample was translated from the `adoplus' .NET Framework
+					sample.</P>
+
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
+	</BODY>
+</HTML>

@@ -9,46 +9,35 @@ class SCROLLED_W_M
 
 inherit
 
-	SCROLLED_W_R_M
-		export
-			{NONE} all
-		end;
+	SCROLLED_W_R_M;
 
-
-	SCROLLED_W_R_M
-		export
-			{NONE} all
-		end;
+	SCROLLED_W_R_M;
 
 	MANAGER_M
 		redefine
-			set_foreground_color, set_background_color,
-			update_foreground_color, update_background_color
+			set_background_color,
+			update_background_color
 		end;
 
-
-	    SCROLLED_W_I
-        export
-            {NONE} all
-        end
+	SCROLLED_W_I
 
 creation
 
-    make
+	make
 
 feature {NONE} -- Creation
 
-    make (a_scrolled_window: SCROLLED_W; man: BOOLEAN) is
-            -- Create a motif scrolled window.
-        local
-            ext_name: ANY
-        do
+	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN) is
+			-- Create a motif scrolled window.
+		local
+			ext_name: ANY
+		do
 			widget_index := widget_manager.last_inserted_position;
-            ext_name := a_scrolled_window.identifier.to_c;
-            screen_object := create_scrolled_w ($ext_name,
+			ext_name := a_scrolled_window.identifier.to_c;
+			screen_object := create_scrolled_w ($ext_name,
 				parent_screen_object (a_scrolled_window, widget_index),
 				man);
-       end;
+	   end;
 
 feature 
 
@@ -88,63 +77,32 @@ feature
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);
-			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
-		end;
-
-	set_foreground_color (a_color:  COLOR) is
-			-- Set `foreground_color' to `a_color'.
-		local
-			color_implementation: COLOR_X;
-			ext_name: ANY;
-			pix: POINTER
-		do
+			xm_change_bg_color (screen_object, pix);
+			xm_change_bg_color (vertical_widget, pix);
+			xm_change_bg_color (horizontal_widget, pix);
+			xm_change_bg_color (clip_window, pix);
 			if fg_color /= Void then
-				color_implementation ?= fg_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			fg_color := a_color;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
-			ext_name := Mforeground_color.to_c;
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
+				update_foreground_color
+			end
 		end;
 
 feature {COLOR_X}
 
-	update_foreground_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			ext_name: ANY;
-			color_implementation: COLOR_X;
-			pix: POINTER
-		do
-			ext_name := Mforeground_color.to_c;
-			color_implementation ?= foreground_color.implementation;
-			pix := color_implementation.pixel (screen);
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-		end;
-
 	update_background_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
-			ext_name: ANY;
 			color_implementation: COLOR_X;
 			pix: POINTER
 		do
-			ext_name := Mbackground.to_c;
 			color_implementation ?= background_color.implementation;
 			pix := color_implementation.pixel (screen);
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
+			xm_change_bg_color (screen_object, pix);
+			xm_change_bg_color (horizontal_widget, pix);
+			xm_change_bg_color (vertical_widget, pix);
+			xm_change_bg_color (clip_window, pix);
+			if fg_color /= Void then
+				update_foreground_color
+			end
 		end;
 
 feature {NONE}
@@ -159,14 +117,18 @@ feature {NONE}
 			Result := xt_widget (screen_object, MhorizontalScrollBar);
 		end;
 
+	clip_window: POINTER is
+		do
+			Result := xt_widget (screen_object, MclipWindow);
+		end;
 
 feature {NONE} -- External features
 
-    create_scrolled_w (sw_name: POINTER; scr_obj: POINTER;
+	create_scrolled_w (sw_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
-            "C"
-        end;
+			"C"
+		end;
 
 end
 

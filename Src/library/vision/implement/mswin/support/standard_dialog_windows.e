@@ -10,8 +10,6 @@ deferred class
 
 inherit
 	DIALOG_IMP
-		rename
-			wel_move as wel_move_relative
 		redefine
 			default_style,
 			default_ex_style,
@@ -26,26 +24,6 @@ inherit
 			set_y,
 			x,
 			y
-		end
-
-	DIALOG_IMP
-		redefine
-			default_style,
-			default_ex_style,
-			popup,
-			on_paint,
-			on_size,
-			on_set_focus,
-			realize_current,
-			realize,	
-			set_x_y,
-			set_x,
-			set_y,
-			x,
-			y,
-			wel_move
-		select
-			wel_move
 		end
 
 	BASIC_ROUTINES
@@ -116,14 +94,6 @@ feature -- Access
 
 feature -- Basic operations
 
-	wel_move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y' position.
-		do
-			cwin_set_window_pos (wel_item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
-		end
-
 	popup is
 			-- Popup the dialog.
 		do
@@ -145,7 +115,7 @@ feature -- Status setting
 		do
 			private_attributes.set_x (new_x)
 			if exists then
-				wel_set_x (new_x - parent.absolute_x)
+				wel_set_x (new_x)
 			end
 		end
 
@@ -155,7 +125,7 @@ feature -- Status setting
 			private_attributes.set_y (new_y)
 			private_attributes.set_x (new_x)
 			if exists then
-				wel_move_relative (new_x - parent.absolute_x, new_y - parent.absolute_y)
+				wel_move (new_x, new_y)
 			end
 		end
 
@@ -164,7 +134,7 @@ feature -- Status setting
 		do
 			private_attributes.set_y (new_y)
 			if exists then
-				wel_set_y (new_y - parent.absolute_y)
+				wel_set_y (new_y)
 			end
 		end
 
@@ -728,7 +698,7 @@ feature {NONE} -- Implementation
 		do
 			if default_position then
 				if parent /= Void and then parent.exists then
-					wel_move_relative (((parent.wel_width - wel_width) // 2),
+					wel_move (((parent.wel_width - wel_width) // 2),
 						(parent.wel_height - wel_height) // 2)
 				else
 					wel_move (((Maximum_window_width - wel_width) // 2),

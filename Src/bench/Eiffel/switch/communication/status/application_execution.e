@@ -65,7 +65,8 @@ feature -- load and save
 		do
 			create load_filename.make
 			load_filename.set_directory (Workbench_generation_path)
-			load_filename.set_file_name (Debug_info_name + Debug_info_extension)
+			load_filename.set_file_name (Debug_info_name)
+			load_filename.add_extension (Debug_info_extension)
 
 			if debug_info = Void then
 				create debug_info.make
@@ -89,7 +90,8 @@ feature -- load and save
 		do
 			create save_filename.make
 			save_filename.set_directory(Workbench_generation_path)
-			save_filename.set_file_name(Debug_info_name + Debug_info_extension)
+			save_filename.set_file_name (Debug_info_name)
+			save_filename.add_extension (Debug_info_extension)
 		
 			if debug_info = Void then
 				create debug_info.make

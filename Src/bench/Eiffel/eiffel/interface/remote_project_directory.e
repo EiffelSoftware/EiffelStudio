@@ -128,13 +128,13 @@ feature -- Access
 			create Result.make (precomp_eif)
 		end
 
-	precomp_eiffel_debug_info_file: FILE_NAME is
+	precomp_il_info_file: FILE_NAME is
 			-- File where the il debug info for the precompiled is stored
 		do
 			create Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (system_name)			
-			Result.add_extension ("pdbe")	
+			Result.set_file_name (Il_info_name)			
+			Result.add_extension (Il_info_extension)	
 		end
 		
 	precompiled_preobj: FILE_NAME is

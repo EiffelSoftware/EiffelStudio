@@ -143,7 +143,9 @@ feature
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			local_argument_types: ARRAY [STRING]
+			local_argument_types: like argument_types
+			rout_table: ROUT_TABLE
+			internal_name: STRING
 		do
 			check
 				final_mode: context.final_mode
@@ -199,19 +201,44 @@ feature
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
-					if is_boolean then
-						buf.putstring ("EIF_TEST(");
-					else
-						if extension.has_return_type then
-							type_c.generate_cast (buf);
-						end
-					end;
-					extension.generate_header_files
-
 						-- Generate the right name to call the external
-						-- In the case of a signature or a macro, the call will be direct
-						-- In the case of a dll, the encapsulation will be called (encoded name)
-					extension.generate_external_name (buf, external_name, typ, type_c);
+					if extension.is_dll then
+							-- In the case of a dll, the encapsulation will be called (encoded name)
+						rout_table ?= Eiffel_table.poly_table (routine_id)
+						rout_table.goto_implemented (typ.type_id)
+						check
+							is_valid_routine: rout_table.is_implemented
+						end
+						internal_name := rout_table.feature_name
+
+						local_argument_types := argument_types
+						if
+							not (rout_table.item.written_type_id = Context.original_class_type.type_id)
+						then
+								-- Remember extern routine declaration
+							Extern_declarations.add_routine_with_signature (type_c,
+									internal_name, local_argument_types)
+						end
+
+						buf.putchar ('(')
+						type_c.generate_function_cast (buf, local_argument_types)
+						buf.putstring (internal_name)
+						if not is_boolean then
+							buf.putchar (')')
+						end
+					else
+						if is_boolean then
+							buf.putstring ("EIF_TEST(");
+						else
+							if extension.has_return_type then
+								type_c.generate_cast (buf);
+							end
+						end;
+						extension.generate_header_files
+
+							-- In the case of a signature or a macro, the call will be direct
+						extension.generate_external_name (buf, external_name, typ, type_c)
+					end
 				else
 					if is_boolean then
 						buf.putstring ("EIF_TEST(");

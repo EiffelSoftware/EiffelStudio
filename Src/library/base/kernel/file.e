@@ -1318,12 +1318,6 @@ feature -- Input
 			separator := file_lh (file_pointer); -- Look ahead
 		end;
 
-feature {STORABLE} -- Implementation
-
-	storage_type: CHARACTER is 'F'
-			-- Type for storage mechanism
-			-- F for File, S for Socket
-
 feature {NONE} -- Implementation
 
 	true_string: STRING is

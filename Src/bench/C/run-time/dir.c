@@ -18,9 +18,6 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
 #include <stdio.h>
-#if !defined EIF_VMS && !defined VXWORKS 
-#include <malloc.h>
-#endif
 
 #ifdef EIF_VMS_V6_ONLY
  /* define these routines in upr case, cause that's how they are in the lib */

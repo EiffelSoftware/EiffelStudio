@@ -215,14 +215,14 @@ feature {NONE} -- Implementation
 					check
 						Ise_eiffel_defined: Result /= Void
 					end
-					if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
-						Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-					end	
 					-- set internal eiffel path to registry key
 					internal_eiffel_path.put (Result)
 				else
 					Result := clone (internal_eiffel_path.item)
 				end
+				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
+					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+				end	
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.
 				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")

@@ -364,6 +364,9 @@ feature -- Status report
 	last_bitmap_index: INTEGER
 			-- Last bitmap index added by `add_bitmaps'.
 
+	last_string_index: INTEGER
+			-- Last string index added by `add_strings'.
+
 feature -- Element change
 
 	insert_button (index: INTEGER; button: WEL_TOOL_BAR_BUTTON) is
@@ -416,7 +419,6 @@ feature -- Element change
 
 	add_strings (strings: ARRAY [STRING]) is
 			-- Add strings to the toolbar.
-			-- The last string must finished by a double NULL char.
 		require
 			exists: exists
 			string_not_void: strings /= Void
@@ -439,7 +441,7 @@ feature -- Element change
 			end
 			s.append_character ('%/0/')
 			!! wel_s.make (s)
-			cwin_send_message (item, Tb_addstring, 0, wel_s.to_integer)
+			last_string_index := cwin_send_message_result (item, Tb_addstring, 0, wel_s.to_integer)
 		end	
 
 feature -- Removal

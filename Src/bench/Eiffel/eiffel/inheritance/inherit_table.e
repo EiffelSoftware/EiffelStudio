@@ -913,7 +913,7 @@ end;
 				-- Feature coming from a previous recompilation
 			body_index: INTEGER;
 				-- Body index of a previous compiled feature
-			old_description: FEATURE_AS;
+			old_description, old_tmp_description: FEATURE_AS;
 				-- Abstract representation of a previous compiled feature
 			is_the_same, old_feature_in_class: BOOLEAN;
 				-- Is the parsed feature the saem than a previous
@@ -962,16 +962,17 @@ end;
 				if old_feature_in_class then
 						-- Found a feature of same name and written in the
 						-- same class.
-					old_description := Body_server.server_item (body_index);
+					old_description := Body_server.server_item (body_index)
+					if Tmp_body_server.has (body_index) then
+						old_tmp_description := Tmp_body_server.item (body_index)
+					end
+
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
 						-- one of an old feature.
-					is_the_same := old_description.is_assertion_equiv (yacc_feature);
-debug ("ACTIVITY")
-	if not is_the_same then
-		io.error.put_string ("%Tassertions has syntactically changed%N");
-	end;
-end;
+					is_the_same := old_description.is_assertion_equiv (yacc_feature) and
+						(old_tmp_description /= Void implies old_tmp_description.is_assertion_equiv (yacc_feature))
+
 					if not is_the_same then
 							-- assertions have changed
 						create assert_prop_list.make;
@@ -989,7 +990,8 @@ end;
 							System.set_freeze
 						end
 					else
-						is_the_same := old_description.is_body_equiv (yacc_feature)
+						is_the_same := old_description.is_body_equiv (yacc_feature) and
+							(old_tmp_description /= Void implies old_tmp_description.is_body_equiv (yacc_feature))
 							-- Same interface does NOT work: the types must be resolved first
 							-- The check is done later anyway
 
@@ -998,16 +1000,6 @@ end;
 							is_the_same := feature_i.is_unique and then
 								unique_feature.same_value (feature_i)
 						end;
-debug ("ACTIVITY")
-	if not is_the_same then
-		if not old_description.is_body_equiv (yacc_feature) then
-			io.error.put_string ("%Tbody is not equiv%N");
-		end;
---		if not Result.same_interface (feature_i) then
---			io.error.put_string ("%TInterface has changed%N");
---		end;
-	end;
-end;
 					end;
 
 						-- If old representation written in the class,
@@ -1144,7 +1136,10 @@ end;
 		require
 			no_error: not Error_handler.has_error;
 		do
-			Tmp_body_server.merge (body_table);
+			Tmp_body_server.merge (body_table)
+				-- Since we access `tmp_body_server' in `feature_unit', the cache
+				-- is now invalid. So we need to clear it.
+			tmp_body_server.cache.wipe_out
 		end;
 
 	update_changed_features is

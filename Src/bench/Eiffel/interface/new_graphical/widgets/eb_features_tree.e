@@ -332,14 +332,24 @@ feature {NONE} -- Implementation
 				create tree_item
 				tree_item.set_text (fl.item.eiffel_name)
 				if is_clickable then
-					if features_tool.current_compiled_class /= Void and then features_tool.current_compiled_class.has_feature_table then
+					if 
+						features_tool.current_compiled_class /= Void and then 
+						features_tool.current_compiled_class.has_feature_table 
+					then
 						ef := features_tool.current_compiled_class.feature_with_name (fl.item.eiffel_name)
+						if ef = Void then
+								-- Check for infix feature
+							ef := features_tool.current_compiled_class.feature_with_name ("infix %"" + fl.item.eiffel_name + "%"")
+							if ef = Void then
+									-- Check for prefix feature
+								ef := features_tool.current_compiled_class.feature_with_name ("prefix %"" + fl.item.eiffel_name + "%"")
+							end
+						end
 						if ef /= Void then
 							tree_item.select_actions.extend (agent features_tool.go_to (ef))	
 						end
 					end
 				end
-				ef := features_tool.current_compiled_class.feature_with_name (fl.item.eiffel_name)
 				if ef = Void then
 					raise ("Void feature")
 				end

@@ -85,6 +85,7 @@ feature -- Element change
 			ftxt: DOTNET_FEATURE_CONTEXT
 			l_feature: E_FEATURE
 			l_dev_win: EB_DEVELOPMENT_WINDOW
+			l_featurei: FEATURE_I
 		do
 			create ftxt.make_from_entity (a_dn_entity, consumed_t, class_i)
 			ftxt.prepare_for_feature (a_dn_entity)
@@ -94,7 +95,18 @@ feature -- Element change
 						-- Is compiled class so we can make feature clickable and scrollable.
 					l_dev_win := Window_manager.last_focused_development_window
 					if l_dev_win /= Void then
-						l_feature ?= ftxt.class_c.feature_table.item (ftxt.name_of_current_feature).api_feature (ftxt.class_c.class_id)			
+						l_featurei ?= ftxt.class_c.feature_table.item (ftxt.name_of_current_feature)
+						if l_featurei = Void then
+								-- Do a check for an infix feature.
+							l_featurei ?= ftxt.class_c.feature_table.item ("infix %"" + ftxt.name_of_current_feature + "%"")
+						end
+						if l_featurei = Void then
+								-- Do a check for an prefix feature.
+							l_featurei ?= ftxt.class_c.feature_table.item ("prefix %"" + ftxt.name_of_current_feature + "%"")
+						end
+						if l_featurei /= Void then
+							l_feature ?= l_featurei.api_feature (ftxt.class_c.class_id)
+						end
 						if l_feature /= Void then
 							if l_dev_win.feature_positions.has (l_feature) then
 								l_dev_win.feature_positions.replace (a_ctxt.text.position, l_feature)

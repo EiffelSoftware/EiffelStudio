@@ -32,6 +32,7 @@ feature -- Status Setting
 			Previous_elements.wipe_out
 			Complex_stack.wipe_out
 			Attribute_stack.wipe_out
+			list_type_stack.wipe_out
 		end		
 
 feature -- Tag	
@@ -42,7 +43,7 @@ feature -- Tag
 			can_write_content := True
 			if element_element_complex_mappings.has (a_local_part) then
 				process_complex_element (a_local_part, True)
-			elseif element_element_mappings.has (a_local_part) then
+			elseif element_element_mappings.has (a_local_part) or single_element_element_mappings.has (a_local_part) then
 				write_element (a_local_part, True, False)
 			elseif Element_attribute_mappings.has (a_local_part) then
 				process_attribute_element (a_local_part)
@@ -61,11 +62,15 @@ feature -- Tag
 		do
 			if conc_content /= Void then
 				if 
-					a_local_part.is_equal ("url") and then 
-					not Previous_elements.linear_representation.i_th (2).has_substring ("image")
+					a_local_part.is_equal ("url")
 				then
-					conc_content := link_convert (conc_content)
+					if Previous_elements.linear_representation.i_th (2).has_substring ("image") then
+						conc_content := image_link_convert (conc_content)
+					else
+						conc_content := link_convert (conc_content)
+					end
 				end
+					
 				if in_attribute then
 					output_string.insert_string ("%"" + conc_content + "%"", content_write_position)
 				else
@@ -113,19 +118,19 @@ feature -- Tag
 				if l_prev.is_equal ("size") then
 					l_tag := ""
 					if 
-						a_content.is_equal ("1") or
-						a_content.is_equal ("2") or
-						a_content.is_equal ("3") or
-						a_content.is_equal ("4") or
-						a_content.is_equal ("5") or
-						a_content.is_equal ("6")
+						a_content.item (1) = '1' or
+						a_content.item (1) = '2' or
+						a_content.item (1) = '3' or
+						a_content.item (1) = '4' or
+						a_content.item (1) = '5' or
+						a_content.item (1) = '6'
 					then
 						l_tag := "h" + a_content					
 					end					
 					l_content := "<" + l_tag + ">"
 					if not l_tag.is_empty then
 						Buffered_tags.extend ("</" + l_tag + ">")
-					end									
+					end
 				elseif Conc_content_elements.has (l_prev) then
 					if conc_content = Void then
 						conc_content := ""
@@ -166,7 +171,9 @@ feature {NONE} -- Processing
 			l_previous,
 			l_name: STRING
 		do
-			l_previous := Previous_elements.item
+			if not previous_elements.is_empty then				
+				l_previous := Previous_elements.item	
+			end
 					
 			if is_start then
 						-- Complex start tag
@@ -207,16 +214,23 @@ feature {NONE} -- Processing
 						l_name := "document_paragraph"
 					else
 						l_name :=  e
-					end						
+					end	
+				elseif e.is_equal ("document") then
+						-- Document
+					l_name := e
+					output_string.remove_tail (4)
+					output_string.append ("</body>")
 				elseif e.is_equal ("list")then
-						-- List
-					if previous_attribute /= Void then
-						if previous_attribute_value.is_equal ("true") then
-							l_name := "list_ordered"
-						elseif previous_attribute_value.is_equal ("false") then
-							l_name := "list_unordered"
-						end
-					end
+						-- List					
+					if list_type_stack.item then						
+						l_name := "list_ordered"
+					else
+						l_name := "list_unordered"					
+					end				
+				elseif e.is_equal ("start") then
+						-- Start
+					output_string.insert_string ("<table><tr><td class=%"tagged_text_bottom%">..end text for " + type_value + " version</td></tr></table>", content_write_position)
+					l_name := "start_end"
 				elseif 
 						-- Block elements
 					e.is_equal ("warning") or
@@ -288,8 +302,10 @@ feature {NONE} -- Processing
 						-- List
 					if a_value.is_equal ("true") then
 						write_element ("list_ordered", True, True)
+						list_type_stack.extend (True)
 					elseif a_value.is_equal ("false") then						
 						write_element ("list_unordered", True, True)
+						list_type_stack.extend (False)
 					end						
 				elseif l_prev_element.is_equal ("output") then
 						-- Output
@@ -297,7 +313,13 @@ feature {NONE} -- Processing
 						l_att := " id=%"" + a_value + "%""
 						output_string.insert_string (l_att, attribute_write_position)
 						attribute_write_position := output_string.count
-					end						
+					end		
+				elseif l_prev_element.is_equal ("start") then
+						-- Start
+					if a_name.is_equal ("type") then
+						type_value := a_value						
+						output_string.insert_string ("<table><tr><td class=%"tagged_text_top%">Start text for " + type_value + " version..</td></tr></table>", content_write_position)
+					end		
 				else										
 					output_string.insert_string (l_att, attribute_write_position)
 					attribute_write_position := output_string.count
@@ -359,7 +381,38 @@ feature {NONE} -- Query
 					-- A external link
 				Result := a_url			
 			end		
-		end		
+		end	
+		
+	image_link_convert (a_url: STRING): STRING is
+			-- Converts `a_url' image file link to relative link
+		require
+			url_not_void: a_url /= Void
+			url_not_empty: not a_url.is_empty
+		local
+			l_util: UTILITY_FUNCTIONS
+			l_filename: FILE_NAME
+			l_link: DOCUMENT_LINK
+			l_shared: SHARED_OBJECTS
+			l_dir: DIRECTORY
+		do
+			create l_util
+			create l_shared			
+			create l_link.make (filename, a_url)
+			if not l_link.external_link then
+				create l_filename.make_from_string (l_link.absolute_url)
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then							
+						-- Convert to relative links
+					Result := l_link.relative_url
+				else
+						-- A directory
+					Result := a_url
+				end
+			else
+					-- A external link
+				Result := a_url			
+			end		
+		end	
 
 feature {NONE} -- Access
 
@@ -389,28 +442,38 @@ feature {NONE} -- Output
 		require
 			e_not_void: e /= Void
 			e_not_empty: not e.is_empty
-			e_maps: element_element_complex_mappings.has (e) or element_element_mappings.has (e)			
+			e_maps: element_element_complex_mappings.has (e) or element_element_mappings.has (e) or single_element_element_mappings.has (e)			
 		local
 			l_start_tag,
+			l_end_tag,
 			l_name: STRING
-		do	
-					-- Determine correct tag format
+		do		
+					-- Determine correct tag formats
 			if start then
 				l_start_tag := "<"
 			else
 				l_start_tag := "</"
 			end
 			
+			if single_element_element_mappings.has (e) then
+				l_end_tag := "/>"
+			else
+				l_end_tag := ">"
+			end				
+			
 					-- Extract mapping from appropriate list
 			if is_complex then
 				l_name := element_element_complex_mappings.item (e)
 			else
 				l_name := element_element_mappings.item (e)
+				if l_name = Void then
+					l_name := single_element_element_mappings.item (e)
+				end
 			end
 			
 					-- Write value to output
-			if not l_name.is_empty then
-				output_string.append (l_start_tag + l_name + ">")
+			if not l_name.is_empty then				
+				output_string.append (l_start_tag + l_name + l_end_tag)	
 			end
 			
 					-- Set attribute write position if applicable
@@ -470,6 +533,12 @@ feature {NONE} -- Implementation
 			Result.compare_objects
 		end
 
+	list_type_stack: ARRAYED_STACK [BOOLEAN] is
+			-- Stack indicating list type
+		once
+			create Result.make (1)		
+		end		
+
 	previous_element: STRING is
 			-- Name of last processed element
 		do
@@ -494,6 +563,8 @@ feature {NONE} -- Implementation
 				Result ?= previous_attribute.item (2)
 			end			
 		end
+
+	type_value: STRING
 
 	filename: STRING
 			-- File name

@@ -32,6 +32,7 @@ feature -- Commands
 		do
 			if documents /= Void then
 				invalid_links.wipe_out
+				invalid_files.wipe_out
 				from
 					documents.start
 				until
@@ -48,6 +49,9 @@ feature -- Commands
 								l_link := l_links.item
 								if not l_link.exists then
 									invalid_links.extend (l_link)
+									if not invalid_files.has (l_link.filename) then
+										invalid_files.extend (l_link.filename)	
+									end									
 								end
 								l_links.forth
 							end
@@ -109,6 +113,21 @@ feature -- Commands
 			end
 		end	
 
+feature -- Status Setting
+
+	add_document (a_doc: DOCUMENT) is
+			-- Add document to list
+		require
+			doc_not_void: a_doc /= Void
+		do	
+			if documents = Void then
+				create documents.make (1)
+			end
+			documents.extend (a_doc)
+		ensure
+			has_document: documents.has (a_doc)
+		end		
+
 feature -- Access
 
 	documents: ARRAYED_LIST [DOCUMENT]
@@ -119,6 +138,13 @@ feature -- Access
 		once
 			create Result.make (1)
 		end
+		
+	invalid_files: ARRAYED_LIST [STRING] is
+			-- Files containing one or more invalid links
+		once
+			create Result.make (1)
+			Result.compare_objects
+		end	
 		
 	document_links (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK] is
 			-- Retrieved links from `a_doc', if any

@@ -19,13 +19,11 @@ feature -- Initialize
 			-- Initialize project
 		require
 			has_preferences: preferences /= Void
-		do		
+		do
 			create invalid_files.make (5)
 			invalid_files.compare_objects
 
-			if preferences.is_valid then								
-				has_been_validated := False
-				all_documents_read := False
+			if preferences.is_valid then												
 				files_changed := False	
 				
 						-- Copy stylesheet file
@@ -49,7 +47,7 @@ feature -- Initialize
 			if document_map /= Void then
 				document_map.clear
 			end
-			create document_map.make (root_directory, Application_window.document_selector)
+			create document_map.make (root_directory, application_window.document_selector)
 		end	
 
 	reset is
@@ -59,8 +57,6 @@ feature -- Initialize
 			root_directory := Void
 			invalid_files := Void
 			document_map := Void
-			has_been_validated := False			
-			all_documents_read := False
 			files_changed := False
 			if shared_constants.application_constants.is_gui_mode then				
 				Application_window.document_selector.wipe_out
@@ -85,15 +81,13 @@ feature -- Access
 	documents: ARRAYED_LIST [DOCUMENT] is
 			-- Get all project documents from disk		
 		do
-			if not all_documents_read then
-				progress_generator.set_title ("Retrieving Documents")
-				Progress_generator.set_heading_text ("Retrieving file...")
-				progress_generator.set_procedure (agent retrieve_documents (create {DIRECTORY}.make (root_directory)))
-				progress_generator.suppress_progress_bar (True)
-				progress_generator.generate
-				progress_generator.suppress_progress_bar (False)
-				all_documents_read := True
-			end
+			progress_generator.set_title ("Retrieving Documents")
+			Progress_generator.set_heading_text ("Retrieving file...")
+			shared_document_manager.documents.clear_all
+			progress_generator.set_procedure (agent retrieve_documents (create {DIRECTORY}.make (root_directory)))
+			progress_generator.suppress_progress_bar (True)
+			progress_generator.generate
+			progress_generator.suppress_progress_bar (False)
 			Result := Shared_document_manager.documents.linear_representation
 		end		
 
@@ -143,8 +137,9 @@ feature -- Commands
 		end
 
 	load_documents is
-			-- Load all document under root
+			-- Load all documents under root
 		do
+			shared_document_manager.documents.clear_all
 			retrieve_documents (create {DIRECTORY}.make (root_directory))	
 		end		
 
@@ -152,16 +147,9 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 
 	validate_files_xml is
 			-- Validate files in Current to XML.
-		do			
-			if not has_been_validated then
-				has_been_validated := True
-				invalid_files.wipe_out
-				progress_generator.set_title ("File Validation")
-				progress_generator.set_upper_range (documents.count)
-				progress_generator.set_procedure (agent validate_against_xml)
-				progress_generator.set_heading_text ("Validating project files...")				
-				progress_generator.generate	
-			end
+		do
+			invalid_files.wipe_out
+			validate_against_xml			
 			build_error_report
 			show_error_report
 		end
@@ -169,19 +157,9 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 	validate_files is
 			-- Validate files in Current to loaded schema.  Put invalid files
 			-- in `invalid_files' list.
-		local
-			l_doc_count: INTEGER
-		do			
-			l_doc_count := documents.count
-			if not has_been_validated then
-				has_been_validated := True
-				invalid_files.wipe_out
-				progress_generator.set_title ("File Validation")
-				progress_generator.set_procedure (agent validate_against_schema)
-				progress_generator.set_heading_text ("Validating project files...")
-				progress_generator.set_upper_range (l_doc_count)
-				progress_generator.generate	
-			end
+		do
+			invalid_files.wipe_out		
+			validate_against_schema	
 			build_error_report
 			show_error_report
 		end
@@ -248,6 +226,24 @@ feature -- Status Setting
 			files_changed := True
 		end
 
+	add_include_document (a_name: STRING) is
+			-- Add `a_name' to list of files/directories to exclude
+		require
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+		do
+			if not include_documents_list.has (a_name) then
+				include_documents_list.extend (a_name)
+			end	
+		end
+	
+	include_documents_list: ARRAYED_LIST [STRING] is
+			-- List of file and directory names to include in document processing
+		once
+			create Result.make (1)
+			Result.compare_objects	
+		end
+
 feature -- Access
 			
 	filter_manager: FILTER_MANAGER	is
@@ -265,9 +261,7 @@ feature -- Access
 	has_invalid_files: BOOLEAN is
 			-- Has Current any invalid files
 		do
-			if not has_been_validated then
-				validate_files
-			end
+			validate_files
 			Result := invalid_files.count > 0			
 		end		
 
@@ -282,11 +276,8 @@ feature {DOCUMENT_PROJECT_PREFERENCES} -- File
 	file: PLAIN_TEXT_FILE
 			-- Project file	
 
-feature {NONE} -- Implementation				
-		
-	has_been_validated: BOOLEAN
-			-- Has Current been validated?
-		
+feature {NONE} -- Implementation								
+				
 	files_changed: BOOLEAN
 			-- Have files changed?
 
@@ -408,7 +399,8 @@ feature {NONE} -- Implementation
 feature {NONE} -- Document Retrieval
 
 	retrieve_documents (a_dir: DIRECTORY) is
-			-- Retrieve all documents recusrsively in `a_dir'.
+			-- Retrieve all documents recursively in `a_dir'.  Only include those documents
+			-- listed in `include_documents_list'
 		require
 			a_dir_not_void: a_dir /= Void
 			a_dir_exists: a_dir.exists
@@ -427,7 +419,7 @@ feature {NONE} -- Document Retrieval
 				cnt := 0
 				l_dir.open_read
 				l_dir.start
-				l_cnt := l_dir.count
+				l_cnt := l_dir.count				
 			until
 				cnt = l_cnt
 			loop
@@ -438,7 +430,7 @@ feature {NONE} -- Document Retrieval
 					create l_sub_dir.make (l_filename.string)
 					if not l_sub_dir.exists then
 						create l_file.make (l_filename.string)
-						if l_file.exists and then file_type (l_file.name).is_equal ("xml") then
+						if l_file.exists and then file_type (l_file.name).is_equal ("xml") and include_documents_list.has (l_file.name) then
 								-- Read documents
 							create doc.make_from_file (l_file)
 								-- Add to manager
@@ -455,9 +447,6 @@ feature {NONE} -- Document Retrieval
 			end
 		end
 
-	all_documents_read: BOOLEAN
-			-- Have all project documents been read?
-
 feature {ARGUMENTS_PARSER} -- Retrieval
 
 	load (a_filename: STRING) is
@@ -468,7 +457,10 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 			create preferences.make (Current)
 			preferences.read
 			initialize
-			preferences.write
+			if preferences.is_valid then				
+					-- Write back in case there were changes during loading
+				preferences.write	
+			end
 		end
 
 invariant

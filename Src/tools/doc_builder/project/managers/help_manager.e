@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			-- Handle to help window
 
 	show (a_chm_url: STRING) is
-			-- Display help page page with url `a_chm_url'.
+			-- Display help page with url `a_chm_url'.
 		do
 			help_window_handle := cwin_html_help (default_pointer, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, default_pointer)
 		end
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		end
 	
 	default_page_url: STRING is 
-			-- URL default page whe opening help
+			-- URL default page when opening help
 		once
 			Result := "index.html"
 		end

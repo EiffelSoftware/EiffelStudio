@@ -270,22 +270,22 @@ feature -- Commands
 			
 					-- Help generation
 			if help_generation then
-				create l_help_directory.make (l_constants.Temporary_help_directory)	
-				report ("Creating directory for storage of temporary Help Project Files...")
-				if l_help_directory.exists then
-					l_help_directory.recursive_delete
-				end
-				l_help_directory.create_dir
-				report ("success%N")
+--				create l_help_directory.make (l_constants.Temporary_help_directory)	
+--				report ("Creating directory for storage of temporary Help Project Files...")
+--				if l_help_directory.exists then
+--					l_help_directory.recursive_delete
+--				end
+--				l_help_directory.create_dir
+--				report ("success%N")
 				
 						-- Generate Help project from TOC						
-				report ("Creating help project in " + l_constants.Temporary_help_directory + "...")
+				report ("Creating help project...")
 				if help_generation_type.is_equal ("mshtml") then
-					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
-					report ("success")
+					l_help_project := create {HTML_HELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
+					report ("success%N")
 				elseif help_generation_type.is_equal ("vsip") then
-					l_help_project := create {MSHELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
-					report ("success")
+					l_help_project := create {MSHELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
+					report ("success%N")
 				else
 					-- TO DO: Web Help
 				end

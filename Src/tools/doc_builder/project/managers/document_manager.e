@@ -48,6 +48,7 @@ feature -- Schema
 			-- Set `schema' to 'a_name'
 		do
 			schema := a_schema
+			application_window.render_schema
 		ensure
 			schema_set: schema = a_schema
 		end		
@@ -122,9 +123,12 @@ feature -- Document Manipulation
 		local
 			l_util: UTILITY_FUNCTIONS
 			l_file_type: STRING
+			l_name: STRING
 		do
 			create l_util
 			l_file_type := l_util.file_type (a_filename)
+			l_name := a_filename
+			l_name.replace_substring_all ("\", "/")
 			if shared_constants.application_constants.allowed_file_types.has (l_file_type) then
 				l_file_type.to_upper
 				if (create {EV_ENVIRONMENT}).supported_image_formats.has (l_file_type) then

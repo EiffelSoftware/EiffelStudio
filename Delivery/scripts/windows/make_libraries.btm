@@ -30,7 +30,24 @@ remtrace wel
 exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 
 iff not defined NO_COMPILE then
+	remtrace Retrieve the header files
+	cd %EIFFEL_SRC
+	exprt -l -r %DEFAULT_CVS_TAG -d headers Src/library
+	cd headers
+	gunzip headers.tar.gz
+	tar -xf headers.tar
+	iff not isdir apps then
+		remtrace Couldnt retrieve the header files.
+		CANCEL
+	endiff
+	set JDK_HOME=%EIFFEL_SRC\headers\apps\jdk1.1.8
+	set ORACLE_HOME=%EIFFEL_SRC\headers\apps\oracle
 	remtrace Compile the C code, and remove extra clib's
+	remtrace C_library
+	cd %INSTALL_DIR\C_library\zlib
+	all_makes
+	cd %INSTALL_DIR\C_library\libpng
+	all_makes
 	iff isdir %INSTALL_DIR\library\com then
 		remtrace com
 		cd %INSTALL_DIR\library\com\Clib
@@ -59,6 +76,7 @@ iff not defined NO_COMPILE then
 	remtrace wel
 	cd %INSTALL_DIR\library\wel\clib
 	all_makes
+	fullrf %INSTALL_DIR\library\wel\clib\make.log
 else
 	quick_move /s library\com\spec
 	fullrd %INSTALL_DIR\library\com\Clib

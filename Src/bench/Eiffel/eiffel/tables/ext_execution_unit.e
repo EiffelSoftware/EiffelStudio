@@ -70,8 +70,7 @@ feature
 
 	is_valid: BOOLEAN is
 		do
-			Result := Externals.has (external_name) and then
-				IRS_valid
+			Result := Externals.has (external_name) and then IRS_valid
 		end;
 
 	IRS_valid: BOOLEAN is

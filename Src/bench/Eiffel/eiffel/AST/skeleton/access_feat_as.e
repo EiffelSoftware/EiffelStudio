@@ -385,7 +385,7 @@ feature -- Type check, byte code and dead code removal
 				end
 				if
 					not System.do_not_check_vape and then
-					context.level4 and then
+					context.is_checking_precondition and then
 					not is_in_creation_expression and then
 					context.check_for_vape
 				then
@@ -416,7 +416,7 @@ feature -- Type check, byte code and dead code removal
 				end
 
 					-- Supplier dependances update
-				create depend_unit.make (last_id, a_feature)
+				create depend_unit.make_with_level (last_id, a_feature, context.depend_unit_level)
 				context.supplier_ids.extend (depend_unit)
 	
 					-- Access managment

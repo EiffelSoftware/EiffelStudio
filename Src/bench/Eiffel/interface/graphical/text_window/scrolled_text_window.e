@@ -94,8 +94,8 @@ feature -- Initialization
 			upper := -1 			-- Init clickable array.
 
 			add_modify_action (Current, modify_event_action);
-			set_action ("!c<Btn3Down>", Current, new_tooler_action)
-			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
+			set_action ("c<Btn3Down>", Current, new_tooler_action)
+			set_action ("Shift<Btn3Down>", Current, super_melt_action)
 
 		end;
 

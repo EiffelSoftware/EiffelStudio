@@ -31,7 +31,7 @@ feature
 			children: ARRAYED_LIST [WIDGET]
 		do
 			old_initialize_callbacks (a_source);
-			source.set_action ("!<Btn3Down>", 
+			source.set_action ("<Btn3Down>", 
 						transport_command, Current)
 			children := a_source.children;
 			from
@@ -39,7 +39,7 @@ feature
 			until
 				children.after
 			loop
-				children.item.set_action ("!<Btn3Down>", 
+				children.item.set_action ("<Btn3Down>", 
 						transport_command, Current)
 				children.forth
 			end

@@ -220,7 +220,7 @@ feature
 			add_button_press_action (3, Current, Third);
 			initialize_transport;
 
-			set_action ("!Ctrl<Btn1Down>", Current, Fourth);
+			set_action ("Ctrl<Btn1Down>", Current, Fourth);
 
 				-- Callbacks for arrow keys
 			set_action ("<Key>osfLeft", Current, Fifth);

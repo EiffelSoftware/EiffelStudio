@@ -909,7 +909,7 @@ feature -- Graphical Interface
 			!! stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry);
 			!! clear_bp_cmd.make (Current);
 			!! clear_bp_button.make (clear_bp_cmd, classic_bar);
-			clear_bp_button.set_action ("!c<Btn1Down>", 
+			clear_bp_button.set_action ("c<Btn1Down>", 
 						clear_bp_cmd, clear_bp_cmd.clear_it_action);
 			!! clear_bp_menu_entry.make (clear_bp_cmd, debug_menu);
 			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry);
@@ -940,14 +940,14 @@ feature -- Graphical Interface
 
 			!! update_cmd.make (Current);
 			!! update_button.make (update_cmd, classic_bar);
-			update_button.set_action ("!c<Btn1Down>", update_cmd, update_cmd.generate_code_only);
+			update_button.set_action ("c<Btn1Down>", update_cmd, update_cmd.generate_code_only);
 			!! update_menu_entry.make (update_cmd, compile_menu);
 			!! update_cmd_holder.make (update_cmd, update_button, update_menu_entry);
 
 			!! quick_update_cmd.make (Current);
 			quick_update_cmd.set_quick_melt;
 			!! quick_update_button.make (quick_update_cmd, classic_bar);
-			quick_update_button.set_action ("!c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only);
+			quick_update_button.set_action ("c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only);
 			!! quick_update_menu_entry.make (quick_update_cmd, compile_menu);
 			!! quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_update_menu_entry);
 
@@ -1016,7 +1016,7 @@ feature -- Graphical Interface
 			!! debug_run_cmd.make (Current);
 			!! debug_run_button.make (debug_run_cmd, format_bar);
 			debug_run_button.add_third_button_action;
-			debug_run_button.set_action ("!c<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run);
+			debug_run_button.set_action ("c<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run);
 			!! debug_run_menu_entry.make (debug_run_cmd, debug_menu);
 			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry);
 			!! debug_status_cmd.make (Current);
@@ -1038,7 +1038,7 @@ feature -- Graphical Interface
 
 			!! debug_quit_cmd.make (Current);
 			!! debug_quit_button.make (debug_quit_cmd, format_bar);
-			debug_quit_button.set_action ("!c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
+			debug_quit_button.set_action ("c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_menu_entry.make_button_only (debug_quit_cmd, debug_menu);
 			debug_quit_menu_entry.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry);
@@ -1047,22 +1047,22 @@ feature -- Graphical Interface
 
 			!! stop_cmd.make (Current);
 			!! stop_button.make (stop_cmd, format_bar)
-			stop_button.set_action ("!c<Btn1Down>", stop_cmd, stop_cmd.Format_and_run);
+			stop_button.set_action ("c<Btn1Down>", stop_cmd, stop_cmd.Format_and_run);
 			!! stop_menu_entry.make (stop_cmd, debug_menu);
 			!! exec_stop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry);
 			!! step_cmd.make (Current);
 			!! step_button.make (step_cmd, format_bar);
-			step_button.set_action ("!c<Btn1Down>", step_cmd, step_cmd.Format_and_run);
+			step_button.set_action ("c<Btn1Down>", step_cmd, step_cmd.Format_and_run);
 			!! step_menu_entry.make (step_cmd, debug_menu);
 			!! exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry);
 			!! last_cmd.make (Current);
 			!! last_button.make (last_cmd, format_bar);
-			last_button.set_action ("!c<Btn1Down>", last_cmd, last_cmd.Format_and_run);
+			last_button.set_action ("c<Btn1Down>", last_cmd, last_cmd.Format_and_run);
 			!! last_menu_entry.make (last_cmd, debug_menu);
 			!! exec_last_frmt_holder.make (last_cmd, last_button, last_menu_entry);
 			!! nostop_cmd. make (Current);
 			!! nostop_button.make (nostop_cmd, format_bar);
-			nostop_button.set_action ("!c<Btn1Down>", nostop_cmd, nostop_cmd.Format_and_run);
+			nostop_button.set_action ("c<Btn1Down>", nostop_cmd, nostop_cmd.Format_and_run);
 			!! nostop_menu_entry.make (nostop_cmd, debug_menu);
 			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry);
 

@@ -816,9 +816,13 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for window control;
 		do
-			Result := {WEL_RICH_EDIT} precursor + Es_left + Es_autovscroll
+			Result := {WEL_RICH_EDIT} Precursor + Es_left + Es_autovscroll
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
+			end
+
+			if not is_multi_line_mode then
+				Result := Result - Ws_hscroll - Ws_vscroll - Es_multiline
 			end
 		end
 

@@ -359,7 +359,7 @@ feature -- Drawing operations
 					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 					a_y := y - a_baseline
 				else
-					a_y := y
+					a_y := y - 3 -- This takes the spacing in to account
 				end
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, internal_font_imp.font_description_from_values)

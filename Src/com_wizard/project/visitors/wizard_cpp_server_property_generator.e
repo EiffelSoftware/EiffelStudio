@@ -125,6 +125,10 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_variable_name)
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 			end
 			Result.append (Semicolon)

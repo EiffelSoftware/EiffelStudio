@@ -1,96 +1,119 @@
--- Hash table for cecil
+indexing
+	description: "Hash table for cecil."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CECIL_TABLE [T] 
+deferred class CECIL_TABLE [T] 
 
 inherit
-
-	ARRAY [STRING]
-		rename
-			item as array_item,
-			put as array_put,
-			wipe_out as array_wipe_out
-		end;
 	SHARED_CODE_FILES
-		undefine
-			copy, is_equal
-		end;
-	SHARED_WORKBENCH
-		undefine
-			copy, is_equal
-		end;
-	SHARED_GENERATION
-		undefine
-			copy, is_equal
+		export
+			{NONE} ALL
 		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} ALL
+		end
+
+	SHARED_GENERATION
+		export
+			{NONE} ALL
+		end
+
 	COMPILER_EXPORTER
-        undefine
-            copy, is_equal
-        end;
+		export
+			{NONE} ALL
+		end
 
-create
-	init
-	
-feature
+	BASIC_ROUTINES
+		export
+			{NONE} ALL
+		end
 
-	values: ARRAY [T];
-			-- Values of the hash table
+feature -- Initialization
 
 	init (hash_size: INTEGER) is
 			-- Table creation
 		require
-			primes.is_prime (hash_size);
+			hash_size_positive: hash_size > 0
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
-			i := hash_size - 1;
-			make (0, i);
-			create values.make (0, i);
-		end;
+			i := primes.higher_prime (bottom_int_div (5 * hash_size, 4)) - 1
+			create keys.make (0, i)
+			create values.make (0, i)
+		end
 
-	primes: PRIMES is
-			-- Prime number testor
-		once
-			create Result;
-		end; -- primes
+feature -- Status report
+
+	capacity: INTEGER is
+			-- Capacity of current
+		do
+			if values /= Void then
+				Result := values.capacity
+			end
+		end
+
+feature {NONE} -- Access
+
+	values: ARRAY [T]
+			-- Values of the hash table
+			
+	keys: ARRAY [STRING]
+			-- Keys of the hash table
+
+feature -- Removal
 
 	wipe_out is
 			-- Empty the table
 		do
-			lower := 0
-			upper := -1
-			make_area (0)
-			values := Void;
-		end;
+			keys := Void
+			values := Void
+		end
+
+feature -- Element change
 
 	put (f: T; s: STRING) is
 			-- Insert `f' in the hash table
 		require
-			good_argument1: f /= Void;
-			good_argument2: s /= Void;
-			table_exists: values /= Void;
+			good_argument1: f /= Void
+			good_argument2: s /= Void
 		local
-			increment, key, position, try, hash_size: INTEGER;
-			stop: BOOLEAN;
-			local_values: like values
+			increment, key, position, try, hash_size: INTEGER
+			stop: BOOLEAN
+			l_values: like values
+			l_keys: like keys
 		do
 			from
-				local_values := values
-				hash_size := count;
-				key := s.hash_code;
-				position := key \\ hash_size;
-				increment := 1 + (key \\ (hash_size - 1));
+				l_keys := keys
+				l_values := values
+				hash_size := capacity
+				key := s.hash_code
+				position := key \\ hash_size
+				increment := 1 + (key \\ (hash_size - 1))
 			until
 				try >= hash_size or else stop
 			loop
-				if array_item (position) = Void then
+				if l_keys.item (position) = Void then
 						-- Found a free location
-					array_put (s, position);
-					local_values.put (f, position);
-					stop := True;
-				end;
-				position := (position + increment) \\ hash_size;
-				try := try + 1;
-			end;
-		end;
+					l_keys.put (s, position)
+					l_values.put (f, position)
+					stop := True
+				end
+				position := (position + increment) \\ hash_size
+				try := try + 1
+			end
+		end
+
+feature {NONE} -- Convenience
+
+	primes: PRIMES is
+			-- Prime number testor
+		once
+			create Result
+		ensure
+			primes_not_void: Result /= Void
+		end
 
 end

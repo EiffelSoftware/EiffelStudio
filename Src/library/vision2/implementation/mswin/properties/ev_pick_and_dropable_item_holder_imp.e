@@ -18,7 +18,8 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
+		EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do

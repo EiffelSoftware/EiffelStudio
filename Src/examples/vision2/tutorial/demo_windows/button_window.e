@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			pixmap: EV_PIXMAP
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			{EV_VERTICAL_BOX} Precursor (Void)
 
 			set_homogeneous (False)
 			!! b1.make_with_text (Current, "Button")
@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 			-- There is no action window for these buttons
 			-- Each descendant has a seperate action window.
 			--Sets the tabs for the action window
+
+			set_parent (par)
 		end
 
 	set_tabs is

@@ -50,11 +50,14 @@ feature -- Resizing
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `height' but smaller than the
 			-- one of the cell, the widget is resized.
+		local
+			wid: EV_WIDGET
 		do
 			minimum_height := value
 			if parent_imp /= Void then
 				parent_imp.child_minheight_changed (value, Current)
-				if interface /= Void and then interface.managed then
+				wid ?= interface
+				if interface /= Void and then wid.managed then
 					if value > height and then value <= child_cell.height then
 						move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - value)//2 + child_cell.y, width, value, True)
 					end
@@ -71,11 +74,14 @@ feature -- Resizing
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `width', but smaller than the one
 			-- of the cell, the widget is resized.
+		local
+			wid: EV_WIDGET
 		do
 			minimum_width := value
 			if parent_imp /= Void then
 				parent_imp.child_minwidth_changed (value, Current)
-				if interface.managed then
+				wid ?= interface
+				if wid.managed then
 					if value > width and then value <= child_cell.width then
 						move_and_resize ((child_cell.width - value)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, value, height, True)
 					end
@@ -295,13 +301,6 @@ feature {NONE} -- deferred feature
 	y: INTEGER is
 			-- Vertical position relative to parent
 			-- Implemented by wel.
-		deferred
-		end
-
-	interface: EV_WIDGET is
-			-- The interface of the current implementation
-			-- Used to give the parent of a widget to the user
-			-- and in the implementation of some widgets
 		deferred
 		end
 

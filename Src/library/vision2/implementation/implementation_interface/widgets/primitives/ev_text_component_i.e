@@ -115,15 +115,7 @@ feature -- Element change
 			-- Assign `a_text' to text of `Current'.
 		deferred
 		ensure
-			text_set: (a_text = Void and then text.is_equal ("")) or else (text.is_equal (a_text))
-		end
-
-	remove_text is
-			-- Make `text' `Void'.
-		do
-			set_text (Void)
-		ensure
-			text_empty: text.is_empty
+			text_set: text.is_equal (a_text)
 		end
 
 	insert_text (a_text: STRING) is

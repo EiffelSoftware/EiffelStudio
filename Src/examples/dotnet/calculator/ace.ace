@@ -20,14 +20,12 @@ default
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\base\calculator"
 
-
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
-
 
 assembly
 	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"

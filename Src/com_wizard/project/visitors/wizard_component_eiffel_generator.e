@@ -44,19 +44,6 @@ feature {NONE} -- Implementation
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			-- Add enumeration
-			if not system_descriptor.enumerators.empty then
-				from
-					system_descriptor.enumerators.start
-				until
-					system_descriptor.enumerators.off
-				loop
-					create tmp_writer.make
-					tmp_writer.set_name (system_descriptor.enumerators.item.eiffel_class_name)
-					an_eiffel_writer.add_inherit_clause (tmp_writer)
-					system_descriptor.enumerators.forth
-				end
-			end
 				
 		end
 

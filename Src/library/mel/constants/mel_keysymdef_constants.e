@@ -1,2738 +1,2738 @@
 indexing
-    description:
-        "Resource values for KEYSYM definition. Only includes latin 1 %
+	description:
+		"Resource values for KEYSYM definition. Only includes latin 1 %
 		%and common keysym definitions.";
-    status: "See notice at end of class";
-    date: "$Date$";
-    revision: "$Revision$"
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class MEL_KEYSYMDEF_CONSTANTS
 
 feature -- keysymdef resources
 
-	XK_BackSpace: POINTER is
+	XK_BackSpace: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_BackSpace"
 		end
 	
-	XK_Tab: POINTER is
+	XK_Tab: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Tab"
 		end
 	
-	XK_Linefeed: POINTER is
+	XK_Linefeed: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Linefeed"
 		end
 	
-	XK_Clear: POINTER is
+	XK_Clear: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Clear"
 		end
 	
-	XK_Return: POINTER is
+	XK_Return: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Return"
 		end
 	
-	XK_Pause: POINTER is
+	XK_Pause: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Pause"
 		end
 	
-	XK_Scroll_Lock: POINTER is
+	XK_Scroll_Lock: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Scroll_Lock"
 		end
 	
-	XK_Sys_Req: POINTER is
+	XK_Sys_Req: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Sys_Req"
 		end
 	
-	XK_Escape: POINTER is
+	XK_Escape: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Escape"
 		end
 	
-	XK_Delete: POINTER is
+	XK_Delete: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Delete"
 		end
 	
-	XK_Home: POINTER is
+	XK_Home: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Home"
 		end
 	
-	XK_Left: POINTER is
+	XK_Left: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Left"
 		end
 	
-	XK_Up: POINTER is
+	XK_Up: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Up"
 		end
 	
-	XK_Right: POINTER is
+	XK_Right: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Right"
 		end
 	
-	XK_Down: POINTER is
+	XK_Down: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Down"
 		end
 	
-	XK_Prior: POINTER is
+	XK_Prior: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Prior"
 		end
 	
-	XK_Page_Up: POINTER is
+	XK_Page_Up: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Page_Up"
 		end
 	
-	XK_Next: POINTER is
+	XK_Next: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Next"
 		end
 	
-	XK_Page_Down: POINTER is
+	XK_Page_Down: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Page_Down"
 		end
 	
-	XK_End: POINTER is
+	XK_End: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_End"
 		end
 	
-	XK_Begin: POINTER is
+	XK_Begin: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Begin"
 		end
 	
-	XK_Select: POINTER is
+	XK_Select: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Select"
 		end
 	
-	XK_Print: POINTER is
+	XK_Print: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Print"
 		end
 	
-	XK_Execute: POINTER is
+	XK_Execute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Execute"
 		end
 	
-	XK_Insert: POINTER is
+	XK_Insert: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Insert"
 		end
 	
-	XK_Undo: POINTER is
+	XK_Undo: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Undo"
 		end
 	
-	XK_Redo: POINTER is
+	XK_Redo: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Redo"
 		end
 	
-	XK_Menu: POINTER is
+	XK_Menu: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Menu"
 		end
 	
-	XK_Find: POINTER is
+	XK_Find: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Find"
 		end
 	
-	XK_Cancel: POINTER is
+	XK_Cancel: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Cancel"
 		end
 	
-	XK_Help: POINTER is
+	XK_Help: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Help"
 		end
 	
-	XK_Break: POINTER is
+	XK_Break: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Break"
 		end
 	
-	XK_Mode_switch: POINTER is
+	XK_Mode_switch: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Mode_switch"
 		end
 	
-	XK_script_switch: POINTER is
+	XK_script_switch: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_script_switch"
 		end
 	
-	XK_Num_Lock: POINTER is
+	XK_Num_Lock: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Num_Lock"
 		end
 	
-	XK_KP_Space: POINTER is
+	XK_KP_Space: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Space"
 		end
 	
-	XK_KP_Tab: POINTER is
+	XK_KP_Tab: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Tab"
 		end
 	
-	XK_KP_Enter: POINTER is
+	XK_KP_Enter: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Enter"
 		end
 	
-	XK_KP_F1: POINTER is
+	XK_KP_F1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_F1"
 		end
 	
-	XK_KP_F2: POINTER is
+	XK_KP_F2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_F2"
 		end
 	
-	XK_KP_F3: POINTER is
+	XK_KP_F3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_F3"
 		end
 	
-	XK_KP_F4: POINTER is
+	XK_KP_F4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_F4"
 		end
 	
-	XK_KP_Home: POINTER is
+	XK_KP_Home: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Home"
 		end
 	
-	XK_KP_Left: POINTER is
+	XK_KP_Left: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Left"
 		end
 	
-	XK_KP_Up: POINTER is
+	XK_KP_Up: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Up"
 		end
 	
-	XK_KP_Right: POINTER is
+	XK_KP_Right: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Right"
 		end
 	
-	XK_KP_Down: POINTER is
+	XK_KP_Down: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Down"
 		end
 	
-	XK_KP_Prior: POINTER is
+	XK_KP_Prior: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Prior"
 		end
 	
-	XK_KP_Page_Up: POINTER is
+	XK_KP_Page_Up: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Page_Up"
 		end
 	
-	XK_KP_Next: POINTER is
+	XK_KP_Next: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Next"
 		end
 	
-	XK_KP_Page_Down: POINTER is
+	XK_KP_Page_Down: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Page_Down"
 		end
 	
-	XK_KP_End: POINTER is
+	XK_KP_End: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_End"
 		end
 	
-	XK_KP_Begin: POINTER is
+	XK_KP_Begin: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Begin"
 		end
 	
-	XK_KP_Insert: POINTER is
+	XK_KP_Insert: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Insert"
 		end
 	
-	XK_KP_Delete: POINTER is
+	XK_KP_Delete: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Delete"
 		end
 	
-	XK_KP_Equal: POINTER is
+	XK_KP_Equal: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Equal"
 		end
 	
-	XK_KP_Multiply: POINTER is
+	XK_KP_Multiply: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Multiply"
 		end
 	
-	XK_KP_Add: POINTER is
+	XK_KP_Add: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Add"
 		end
 	
-	XK_KP_Separator: POINTER is
+	XK_KP_Separator: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Separator"
 		end
 	
-	XK_KP_Subtract: POINTER is
+	XK_KP_Subtract: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Subtract"
 		end
 	
-	XK_KP_Decimal: POINTER is
+	XK_KP_Decimal: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Decimal"
 		end
 	
-	XK_KP_Divide: POINTER is
+	XK_KP_Divide: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_Divide"
 		end
 	
-	XK_KP_0: POINTER is
+	XK_KP_0: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_0"
 		end
 	
-	XK_KP_1: POINTER is
+	XK_KP_1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_1"
 		end
 	
-	XK_KP_2: POINTER is
+	XK_KP_2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_2"
 		end
 	
-	XK_KP_3: POINTER is
+	XK_KP_3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_3"
 		end
 	
-	XK_KP_4: POINTER is
+	XK_KP_4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_4"
 		end
 	
-	XK_KP_5: POINTER is
+	XK_KP_5: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_5"
 		end
 	
-	XK_KP_6: POINTER is
+	XK_KP_6: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_6"
 		end
 	
-	XK_KP_7: POINTER is
+	XK_KP_7: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_7"
 		end
 	
-	XK_KP_8: POINTER is
+	XK_KP_8: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_8"
 		end
 	
-	XK_KP_9: POINTER is
+	XK_KP_9: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_9"
 		end
 	
-	XK_F1: POINTER is
+	XK_F1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F1"
 		end
 	
-	XK_F2: POINTER is
+	XK_F2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F2"
 		end
 	
-	XK_F3: POINTER is
+	XK_F3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F3"
 		end
 	
-	XK_F4: POINTER is
+	XK_F4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F4"
 		end
 	
-	XK_F5: POINTER is
+	XK_F5: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F5"
 		end
 	
-	XK_F6: POINTER is
+	XK_F6: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F6"
 		end
 	
-	XK_F7: POINTER is
+	XK_F7: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F7"
 		end
 	
-	XK_F8: POINTER is
+	XK_F8: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F8"
 		end
 	
-	XK_F9: POINTER is
+	XK_F9: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F9"
 		end
 	
-	XK_F10: POINTER is
+	XK_F10: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F10"
 		end
 	
-	XK_F11: POINTER is
+	XK_F11: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F11"
 		end
 	
-	XK_L1: POINTER is
+	XK_L1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L1"
 		end
 	
-	XK_F12: POINTER is
+	XK_F12: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F12"
 		end
 	
-	XK_L2: POINTER is
+	XK_L2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L2"
 		end
 	
-	XK_F13: POINTER is
+	XK_F13: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F13"
 		end
 	
-	XK_L3: POINTER is
+	XK_L3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L3"
 		end
 	
-	XK_F14: POINTER is
+	XK_F14: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F14"
 		end
 	
-	XK_L4: POINTER is
+	XK_L4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L4"
 		end
 	
-	XK_F15: POINTER is
+	XK_F15: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F15"
 		end
 	
-	XK_L5: POINTER is
+	XK_L5: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L5"
 		end
 	
-	XK_F16: POINTER is
+	XK_F16: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F16"
 		end
 	
-	XK_L6: POINTER is
+	XK_L6: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L6"
 		end
 	
-	XK_F17: POINTER is
+	XK_F17: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F17"
 		end
 	
-	XK_L7: POINTER is
+	XK_L7: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L7"
 		end
 	
-	XK_F18: POINTER is
+	XK_F18: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F18"
 		end
 	
-	XK_L8: POINTER is
+	XK_L8: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L8"
 		end
 	
-	XK_F19: POINTER is
+	XK_F19: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F19"
 		end
 	
-	XK_L9: POINTER is
+	XK_L9: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L9"
 		end
 	
-	XK_F20: POINTER is
+	XK_F20: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F20"
 		end
 	
-	XK_L10: POINTER is
+	XK_L10: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L10"
 		end
 	
-	XK_F21: POINTER is
+	XK_F21: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F21"
 		end
 	
-	XK_R1: POINTER is
+	XK_R1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R1"
 		end
 	
-	XK_F22: POINTER is
+	XK_F22: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F22"
 		end
 	
-	XK_R2: POINTER is
+	XK_R2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R2"
 		end
 	
-	XK_F23: POINTER is
+	XK_F23: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F23"
 		end
 	
-	XK_R3: POINTER is
+	XK_R3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R3"
 		end
 	
-	XK_F24: POINTER is
+	XK_F24: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F24"
 		end
 	
-	XK_R4: POINTER is
+	XK_R4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R4"
 		end
 	
-	XK_F25: POINTER is
+	XK_F25: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F25"
 		end
 	
-	XK_R5: POINTER is
+	XK_R5: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R5"
 		end
 	
-	XK_F26: POINTER is
+	XK_F26: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F26"
 		end
 	
-	XK_R6: POINTER is
+	XK_R6: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R6"
 		end
 	
-	XK_F27: POINTER is
+	XK_F27: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F27"
 		end
 	
-	XK_R7: POINTER is
+	XK_R7: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R7"
 		end
 	
-	XK_F28: POINTER is
+	XK_F28: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F28"
 		end
 	
-	XK_R8: POINTER is
+	XK_R8: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R8"
 		end
 	
-	XK_F29: POINTER is
+	XK_F29: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F29"
 		end
 	
-	XK_R9: POINTER is
+	XK_R9: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R9"
 		end
 	
-	XK_F30: POINTER is
+	XK_F30: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F30"
 		end
 	
-	XK_R10: POINTER is
+	XK_R10: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R10"
 		end
 	
-	XK_F31: POINTER is
+	XK_F31: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F31"
 		end
 	
-	XK_R11: POINTER is
+	XK_R11: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R11"
 		end
 	
-	XK_F32: POINTER is
+	XK_F32: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F32"
 		end
 	
-	XK_R12: POINTER is
+	XK_R12: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R12"
 		end
 	
-	XK_F33: POINTER is
+	XK_F33: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F33"
 		end
 	
-	XK_R13: POINTER is
+	XK_R13: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R13"
 		end
 	
-	XK_F34: POINTER is
+	XK_F34: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F34"
 		end
 	
-	XK_R14: POINTER is
+	XK_R14: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R14"
 		end
 	
-	XK_F35: POINTER is
+	XK_F35: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F35"
 		end
 	
-	XK_R15: POINTER is
+	XK_R15: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R15"
 		end
 	
-	XK_Shift_L: POINTER is
+	XK_Shift_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Shift_L"
 		end
 	
-	XK_Shift_R: POINTER is
+	XK_Shift_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Shift_R"
 		end
 	
-	XK_Control_L: POINTER is
+	XK_Control_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Control_L"
 		end
 	
-	XK_Control_R: POINTER is
+	XK_Control_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Control_R"
 		end
 	
-	XK_Caps_Lock: POINTER is
+	XK_Caps_Lock: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Caps_Lock"
 		end
 	
-	XK_Shift_Lock: POINTER is
+	XK_Shift_Lock: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Shift_Lock"
 		end
 	
-	XK_Meta_L: POINTER is
+	XK_Meta_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Meta_L"
 		end
 	
-	XK_Meta_R: POINTER is
+	XK_Meta_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Meta_R"
 		end
 	
-	XK_Alt_L: POINTER is
+	XK_Alt_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Alt_L"
 		end
 	
-	XK_Alt_R: POINTER is
+	XK_Alt_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Alt_R"
 		end
 	
-	XK_Super_L: POINTER is
+	XK_Super_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Super_L"
 		end
 	
-	XK_Super_R: POINTER is
+	XK_Super_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Super_R"
 		end
 	
-	XK_Hyper_R: POINTER is
+	XK_Hyper_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Hyper_R"
 		end
 	
-	XK_Hyper_L: POINTER is
+	XK_Hyper_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Hyper_L"
 		end
 	
-	XK_space: POINTER is
+	XK_space: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_space"
 		end
 	
-	XK_exclam: POINTER is
+	XK_exclam: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_exclam"
 		end
 	
-	XK_quotedbl: POINTER is
+	XK_quotedbl: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_quotedbl"
 		end
 	
-	XK_numbersign: POINTER is
+	XK_numbersign: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_numbersign"
 		end
 	
-	XK_dollar: POINTER is
+	XK_dollar: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_dollar"
 		end
 	
-	XK_percent: POINTER is
+	XK_percent: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_percent"
 		end
 	
-	XK_ampersand: POINTER is
+	XK_ampersand: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ampersand"
 		end
 	
-	XK_apostrophe: POINTER is
+	XK_apostrophe: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_apostrophe"
 		end
 	
-	XK_quoteright: POINTER is
+	XK_quoteright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_quoteright"
 		end
 	
-	XK_parenleft: POINTER is
+	XK_parenleft: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_parenleft"
 		end
 	
-	XK_parenright: POINTER is
+	XK_parenright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_parenright"
 		end
 	
-	XK_asterisk: POINTER is
+	XK_asterisk: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_asterisk"
 		end
 	
-	XK_plus: POINTER is
+	XK_plus: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_plus"
 		end
 	
-	XK_comma: POINTER is
+	XK_comma: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_comma"
 		end
 	
-	XK_minus: POINTER is
+	XK_minus: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_minus"
 		end
 	
-	XK_period: POINTER is
+	XK_period: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_period"
 		end
 	
-	XK_slash: POINTER is
+	XK_slash: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_slash"
 		end
 	
-	XK_0: POINTER is
+	XK_0: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_0"
 		end
 	
-	XK_1: POINTER is
+	XK_1: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_1"
 		end
 	
-	XK_2: POINTER is
+	XK_2: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_2"
 		end
 	
-	XK_3: POINTER is
+	XK_3: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_3"
 		end
 	
-	XK_4: POINTER is
+	XK_4: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_4"
 		end
 	
-	XK_5: POINTER is
+	XK_5: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_5"
 		end
 	
-	XK_6: POINTER is
+	XK_6: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_6"
 		end
 	
-	XK_7: POINTER is
+	XK_7: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_7"
 		end
 	
-	XK_8: POINTER is
+	XK_8: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_8"
 		end
 	
-	XK_9: POINTER is
+	XK_9: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_9"
 		end
 	
-	XK_colon: POINTER is
+	XK_colon: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_colon"
 		end
 	
-	XK_semicolon: POINTER is
+	XK_semicolon: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_semicolon"
 		end
 	
-	XK_less: POINTER is
+	XK_less: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_less"
 		end
 	
-	XK_equal: POINTER is
+	XK_equal: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_equal"
 		end
 	
-	XK_greater: POINTER is
+	XK_greater: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_greater"
 		end
 	
-	XK_question: POINTER is
+	XK_question: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_question"
 		end
 	
-	XK_at: POINTER is
+	XK_at: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_at"
 		end
 	
-	XK_upper_A: POINTER is
+	XK_upper_A: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_A"
 		end
 	
-	XK_upper_B: POINTER is
+	XK_upper_B: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_B"
 		end
 	
-	XK_upper_C: POINTER is
+	XK_upper_C: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_C"
 		end
 	
-	XK_upper_D: POINTER is
+	XK_upper_D: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_D"
 		end
 	
-	XK_upper_E: POINTER is
+	XK_upper_E: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_E"
 		end
 	
-	XK_upper_F: POINTER is
+	XK_upper_F: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_F"
 		end
 	
-	XK_upper_G: POINTER is
+	XK_upper_G: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_G"
 		end
 	
-	XK_upper_H: POINTER is
+	XK_upper_H: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_H"
 		end
 	
-	XK_upper_I: POINTER is
+	XK_upper_I: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_I"
 		end
 	
-	XK_upper_J: POINTER is
+	XK_upper_J: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_J"
 		end
 	
-	XK_upper_K: POINTER is
+	XK_upper_K: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_K"
 		end
 	
-	XK_upper_L: POINTER is
+	XK_upper_L: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_L"
 		end
 	
-	XK_upper_M: POINTER is
+	XK_upper_M: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_M"
 		end
 	
-	XK_upper_N: POINTER is
+	XK_upper_N: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_N"
 		end
 	
-	XK_upper_O: POINTER is
+	XK_upper_O: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_O"
 		end
 	
-	XK_upper_P: POINTER is
+	XK_upper_P: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_P"
 		end
 	
-	XK_upper_Q: POINTER is
+	XK_upper_Q: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Q"
 		end
 	
-	XK_upper_R: POINTER is
+	XK_upper_R: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_R"
 		end
 	
-	XK_upper_S: POINTER is
+	XK_upper_S: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_S"
 		end
 	
-	XK_upper_T: POINTER is
+	XK_upper_T: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_T"
 		end
 	
-	XK_upper_U: POINTER is
+	XK_upper_U: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_U"
 		end
 	
-	XK_upper_V: POINTER is
+	XK_upper_V: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_V"
 		end
 	
-	XK_upper_W: POINTER is
+	XK_upper_W: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_W"
 		end
 	
-	XK_upper_X: POINTER is
+	XK_upper_X: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_X"
 		end
 	
-	XK_upper_Y: POINTER is
+	XK_upper_Y: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Y"
 		end
 	
-	XK_upper_Z: POINTER is
+	XK_upper_Z: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Z"
 		end
 	
-	XK_bracketleft: POINTER is
+	XK_bracketleft: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_bracketleft"
 		end
 	
-	XK_backslash: POINTER is
+	XK_backslash: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_backslash"
 		end
 	
-	XK_bracketright: POINTER is
+	XK_bracketright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_bracketright"
 		end
 	
-	XK_asciicircum: POINTER is
+	XK_asciicircum: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_asciicircum"
 		end
 	
-	XK_underscore: POINTER is
+	XK_underscore: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_underscore"
 		end
 	
-	XK_grave: POINTER is
+	XK_grave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_grave"
 		end
 	
-	XK_quoteleft: POINTER is
+	XK_quoteleft: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_quoteleft"
 		end
 	
-	XK_a: POINTER is
+	XK_a: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_a"
 		end
 	
-	XK_b: POINTER is
+	XK_b: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_b"
 		end
 	
-	XK_c: POINTER is
+	XK_c: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_c"
 		end
 	
-	XK_d: POINTER is
+	XK_d: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_d"
 		end
 	
-	XK_e: POINTER is
+	XK_e: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_e"
 		end
 	
-	XK_f: POINTER is
+	XK_f: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_f"
 		end
 	
-	XK_g: POINTER is
+	XK_g: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_g"
 		end
 	
-	XK_h: POINTER is
+	XK_h: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_h"
 		end
 	
-	XK_i: POINTER is
+	XK_i: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_i"
 		end
 	
-	XK_j: POINTER is
+	XK_j: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_j"
 		end
 	
-	XK_k: POINTER is
+	XK_k: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_k"
 		end
 	
-	XK_l: POINTER is
+	XK_l: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_l"
 		end
 	
-	XK_m: POINTER is
+	XK_m: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_m"
 		end
 	
-	XK_n: POINTER is
+	XK_n: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_n"
 		end
 	
-	XK_o: POINTER is
+	XK_o: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_o"
 		end
 	
-	XK_p: POINTER is
+	XK_p: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_p"
 		end
 	
-	XK_q: POINTER is
+	XK_q: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_q"
 		end
 	
-	XK_r: POINTER is
+	XK_r: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_r"
 		end
 	
-	XK_s: POINTER is
+	XK_s: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_s"
 		end
 	
-	XK_t: POINTER is
+	XK_t: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_t"
 		end
 	
-	XK_u: POINTER is
+	XK_u: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_u"
 		end
 	
-	XK_v: POINTER is
+	XK_v: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_v"
 		end
 	
-	XK_w: POINTER is
+	XK_w: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_w"
 		end
 	
-	XK_x: POINTER is
+	XK_x: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_x"
 		end
 	
-	XK_y: POINTER is
+	XK_y: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_y"
 		end
 	
-	XK_z: POINTER is
+	XK_z: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_z"
 		end
 	
-	XK_braceleft: POINTER is
+	XK_braceleft: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_braceleft"
 		end
 	
-	XK_bar: POINTER is
+	XK_bar: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_bar"
 		end
 	
-	XK_braceright: POINTER is
+	XK_braceright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_braceright"
 		end
 	
-	XK_asciitilde: POINTER is
+	XK_asciitilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_asciitilde"
 		end
 	
-	XK_nobreakspace: POINTER is
+	XK_nobreakspace: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_nobreakspace"
 		end
 	
-	XK_exclamdown: POINTER is
+	XK_exclamdown: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_exclamdown"
 		end
 	
-	XK_cent: POINTER is
+	XK_cent: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_cent"
 		end
 	
-	XK_sterling: POINTER is
+	XK_sterling: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_sterling"
 		end
 	
-	XK_currency: POINTER is
+	XK_currency: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_currency"
 		end
 	
-	XK_yen: POINTER is
+	XK_yen: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_yen"
 		end
 	
-	XK_brokenbar: POINTER is
+	XK_brokenbar: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_brokenbar"
 		end
 	
-	XK_section: POINTER is
+	XK_section: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_section"
 		end
 	
-	XK_diaeresis: POINTER is
+	XK_diaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_diaeresis"
 		end
 	
-	XK_copyright: POINTER is
+	XK_copyright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_copyright"
 		end
 	
-	XK_ordfeminine: POINTER is
+	XK_ordfeminine: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ordfeminine"
 		end
 	
-	XK_guillemotleft: POINTER is
+	XK_guillemotleft: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_guillemotleft"
 		end
 	
-	XK_notsign: POINTER is
+	XK_notsign: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_notsign"
 		end
 	
-	XK_hyphen: POINTER is
+	XK_hyphen: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_hyphen"
 		end
 	
-	XK_registered: POINTER is
+	XK_registered: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_registered"
 		end
 	
-	XK_macron: POINTER is
+	XK_macron: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_macron"
 		end
 	
-	XK_degree: POINTER is
+	XK_degree: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_degree"
 		end
 	
-	XK_plusminus: POINTER is
+	XK_plusminus: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_plusminus"
 		end
 	
-	XK_twosuperior: POINTER is
+	XK_twosuperior: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_twosuperior"
 		end
 	
-	XK_threesuperior: POINTER is
+	XK_threesuperior: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_threesuperior"
 		end
 	
-	XK_acute: POINTER is
+	XK_acute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_acute"
 		end
 	
-	XK_mu: POINTER is
+	XK_mu: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_mu"
 		end
 	
-	XK_paragraph: POINTER is
+	XK_paragraph: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_paragraph"
 		end
 	
-	XK_periodcentered: POINTER is
+	XK_periodcentered: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_periodcentered"
 		end
 	
-	XK_cedilla: POINTER is
+	XK_cedilla: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_cedilla"
 		end
 	
-	XK_onesuperior: POINTER is
+	XK_onesuperior: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_onesuperior"
 		end
 	
-	XK_masculine: POINTER is
+	XK_masculine: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_masculine"
 		end
 	
-	XK_guillemotright: POINTER is
+	XK_guillemotright: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_guillemotright"
 		end
 	
-	XK_onequarter: POINTER is
+	XK_onequarter: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_onequarter"
 		end
 	
-	XK_onehalf: POINTER is
+	XK_onehalf: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_onehalf"
 		end
 	
-	XK_threequarters: POINTER is
+	XK_threequarters: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_threequarters"
 		end
 	
-	XK_questiondown: POINTER is
+	XK_questiondown: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_questiondown"
 		end
 	
-	XK_Agrave: POINTER is
+	XK_Agrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Agrave"
 		end
 	
-	XK_Aacute: POINTER is
+	XK_Aacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Aacute"
 		end
 	
-	XK_Acircumflex: POINTER is
+	XK_Acircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Acircumflex"
 		end
 	
-	XK_Atilde: POINTER is
+	XK_Atilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Atilde"
 		end
 	
-	XK_Adiaeresis: POINTER is
+	XK_Adiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Adiaeresis"
 		end
 	
-	XK_Aring: POINTER is
+	XK_Aring: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Aring"
 		end
 	
-	XK_AE: POINTER is
+	XK_AE: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_AE"
 		end
 	
-	XK_Ccedilla: POINTER is
+	XK_Ccedilla: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ccedilla"
 		end
 	
-	XK_Egrave: POINTER is
+	XK_Egrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Egrave"
 		end
 	
-	XK_Eacute: POINTER is
+	XK_Eacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Eacute"
 		end
 	
-	XK_Ecircumflex: POINTER is
+	XK_Ecircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ecircumflex"
 		end
 	
-	XK_Ediaeresis: POINTER is
+	XK_Ediaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ediaeresis"
 		end
 	
-	XK_Igrave: POINTER is
+	XK_Igrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Igrave"
 		end
 	
-	XK_Iacute: POINTER is
+	XK_Iacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Iacute"
 		end
 	
-	XK_Icircumflex: POINTER is
+	XK_Icircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Icircumflex"
 		end
 	
-	XK_Idiaeresis: POINTER is
+	XK_Idiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Idiaeresis"
 		end
 
-	XK_upper_ETH: POINTER is
+	XK_upper_ETH: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ETH"
 		end
 	
-	XK_upperE_Eth: POINTER is
+	XK_upperE_Eth: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Eth"
 		end
 	
-	XK_Ntilde: POINTER is
+	XK_Ntilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ntilde"
 		end
 	
-	XK_Ograve: POINTER is
+	XK_Ograve: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ograve"
 		end
 	
-	XK_Oacute: POINTER is
+	XK_Oacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Oacute"
 		end
 	
-	XK_Ocircumflex: POINTER is
+	XK_Ocircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ocircumflex"
 		end
 	
-	XK_Otilde: POINTER is
+	XK_Otilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Otilde"
 		end
 	
-	XK_Odiaeresis: POINTER is
+	XK_Odiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Odiaeresis"
 		end
 	
-	XK_multiply: POINTER is
+	XK_multiply: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_multiply"
 		end
 	
-	XK_Ooblique: POINTER is
+	XK_Ooblique: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ooblique"
 		end
 	
-	XK_Ugrave: POINTER is
+	XK_Ugrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ugrave"
 		end
 	
-	XK_Uacute: POINTER is
+	XK_Uacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Uacute"
 		end
 	
-	XK_Ucircumflex: POINTER is
+	XK_Ucircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Ucircumflex"
 		end
 	
-	XK_Udiaeresis: POINTER is
+	XK_Udiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Udiaeresis"
 		end
 	
-	XK_Yacute: POINTER is
+	XK_Yacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Yacute"
 		end
 	
-	XK_upper_THORN: POINTER is
+	XK_upper_THORN: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_THORN"
 		end
 	
-	XK_Thorn: POINTER is
+	XK_Thorn: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Thorn"
 		end
 	
-	XK_ssharp: POINTER is
+	XK_ssharp: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ssharp"
 		end
 	
-	XK_lower_agrave: POINTER is
+	XK_lower_agrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_agrave"
 		end
 	
-	XK_lower_aacute: POINTER is
+	XK_lower_aacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_aacute"
 		end
 	
-	XK_lower_acircumflex: POINTER is
+	XK_lower_acircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_acircumflex"
 		end
 	
-	XK_lower_atilde: POINTER is
+	XK_lower_atilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_atilde"
 		end
 	
-	XK_lower_adiaeresis: POINTER is
+	XK_lower_adiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_adiaeresis"
 		end
 	
-	XK_lower_aring: POINTER is
+	XK_lower_aring: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_aring"
 		end
 	
-	XK_lower_ae: POINTER is
+	XK_lower_ae: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ae"
 		end
 	
-	XK_lower_ccedilla: POINTER is
+	XK_lower_ccedilla: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ccedilla"
 		end
 	
-	XK_lower_egrave: POINTER is
+	XK_lower_egrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_egrave"
 		end
 	
-	XK_lower_eacute: POINTER is
+	XK_lower_eacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_eacute"
 		end
 	
-	XK_lower_ecircumflex: POINTER is
+	XK_lower_ecircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ecircumflex"
 		end
 	
-	XK_lower_ediaeresis: POINTER is
+	XK_lower_ediaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ediaeresis"
 		end
 	
-	XK_lower_igrave: POINTER is
+	XK_lower_igrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_igrave"
 		end
 	
-	XK_lower_iacute: POINTER is
+	XK_lower_iacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_iacute"
 		end
 	
-	XK_lower_icircumflex: POINTER is
+	XK_lower_icircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_icircumflex"
 		end
 	
-	XK_lower_idiaeresis: POINTER is
+	XK_lower_idiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_idiaeresis"
 		end
 	
-	XK_lower_eth: POINTER is
+	XK_lower_eth: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_eth"
 		end
 	
-	XK_lower_ntilde: POINTER is
+	XK_lower_ntilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ntilde"
 		end
 	
-	XK_lower_ograve: POINTER is
+	XK_lower_ograve: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ograve"
 		end
 	
-	XK_lower_oacute: POINTER is
+	XK_lower_oacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_oacute"
 		end
 	
-	XK_lower_ocircumflex: POINTER is
+	XK_lower_ocircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ocircumflex"
 		end
 	
-	XK_lower_otilde: POINTER is
+	XK_lower_otilde: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_otilde"
 		end
 	
-	XK_lower_odiaeresis: POINTER is
+	XK_lower_odiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_odiaeresis"
 		end
 	
-	XK_division: POINTER is
+	XK_division: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_division"
 		end
 	
-	XK_oslash: POINTER is
+	XK_oslash: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_oslash"
 		end
 	
-	XK_lower_ugrave: POINTER is
+	XK_lower_ugrave: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ugrave"
 		end
 	
-	XK_lower_uacute: POINTER is
+	XK_lower_uacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_uacute"
 		end
 	
-	XK_lower_ucircumflex: POINTER is
+	XK_lower_ucircumflex: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ucircumflex"
 		end
 	
-	XK_lower_udiaeresis: POINTER is
+	XK_lower_udiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_udiaeresis"
 		end
 	
-	XK_lower_yacute: POINTER is
+	XK_lower_yacute: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_yacute"
 		end
 	
-	XK_lower_thorn: POINTER is
+	XK_lower_thorn: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_thorn"
 		end
 	
-	XK_ydiaeresis: POINTER is
+	XK_ydiaeresis: INTEGER is
 		external
-			"C [macro <X11/keysymdef.h>] : EIF_POINTER%
+			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_ydiaeresis"

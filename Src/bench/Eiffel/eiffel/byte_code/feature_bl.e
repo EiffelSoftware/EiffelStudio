@@ -77,11 +77,16 @@ io.error.putstring (feature_name)
 io.error.new_line
 end
 			basic_i ?= context_type
-			if basic_i /= Void and not is_feature_special (True, basic_i) then
+			if
+				basic_i /= Void and
+				(not is_feature_special (True, basic_i) or else basic_i.is_bit)
+			then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
+					-- We need it only when a metamorphose occurs or if we 
+					-- are handling BIT objects.
 				!!tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
 			end

@@ -251,49 +251,45 @@ feature -- Opcode insertion
 			add_integer (token)
 		end
 
-	put_opcode_natural_8 (opcode: INTEGER_16; i: INTEGER_8) is
+	put_opcode_natural_8 (opcode: INTEGER_16; n: NATURAL_8) is
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
-			fixme ("Use NATURAL_XX types")
 			put_opcode (opcode)
-			internal_put (i, current_position)
+			internal_put (n.as_integer_8, current_position)
 			current_position := current_position + 1
 		end
 
-	put_opcode_natural_16 (opcode: INTEGER_16; i: INTEGER_16) is
+	put_opcode_natural_16 (opcode: INTEGER_16; n: NATURAL_16) is
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
-			fixme ("Use NATURAL_XX types")
 			put_opcode (opcode)
-			add_natural_16 (i)
+			add_natural_16 (n)
 		end
 
-	put_opcode_natural_32 (opcode: INTEGER_16; i: INTEGER) is
+	put_opcode_natural_32 (opcode: INTEGER_16; n: NATURAL_32) is
 			-- Insert `opcode' manipulating a natural.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
-			fixme ("Use NATURAL_XX types")
 			put_opcode (opcode)
-			add_natural_32 (i)
+			add_natural_32 (n)
 		end
 
-	put_opcode_natural_64 (opcode: INTEGER_16; i: INTEGER_64) is
+	put_opcode_natural_64 (opcode: INTEGER_16; n: NATURAL_64) is
 			-- Insert `opcode' manipulating an natural 64.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
-			fixme ("Use NATURAL_XX types")
 			put_opcode (opcode)
-			add_natural_64 (i)
+			add_natural_64 (n)
 		end
 
 	put_opcode_integer_8 (opcode: INTEGER_16; i: INTEGER_8) is
@@ -505,15 +501,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Opcode insertion helpers
 
-	add_natural_16 (val: INTEGER_16) is
+	add_natural_16 (val: NATURAL_16) is
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
 		local
-			l_val: INTEGER_16
+			l_val: NATURAL_16
 			l_pos: INTEGER
 		do
-			fixme ("Use NATURAL_XX types")
 			l_val := val
 			l_pos := current_position
 			internal_put ((l_val & 0x00FF).to_integer_8, l_pos)
@@ -522,15 +517,15 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos + 2
 		end
 
-	add_natural_32 (val: INTEGER) is
+	add_natural_32 (val: NATURAL_32) is
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
 		local
-			l_val, l_pos: INTEGER
+			l_val: NATURAL_32
+			l_pos: INTEGER
 			i: INTEGER
 		do
-			fixme ("Use NATURAL_XX types")
 			from
 				l_val := val
 				l_pos := current_position
@@ -546,16 +541,15 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 		
-	add_natural_64 (val: INTEGER_64) is
+	add_natural_64 (val: NATURAL_64) is
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
 		local
-			l_val: INTEGER_64
+			l_val: NATURAL_64
 			l_pos: INTEGER
 			i: INTEGER
 		do
-			fixme ("Use NATURAL_XX types")
 			from
 				l_val := val
 				l_pos := current_position

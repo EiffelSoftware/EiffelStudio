@@ -12,7 +12,9 @@ inherit
 		rename
 			copy as copy_titled_window
 		redefine
-			destroy
+			destroy,
+			initialize,
+			is_in_default_state
 		select
 			copy_titled_window
 		end
@@ -23,16 +25,22 @@ inherit
 		end
 
 create
-	make
+	make, default_create
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Initialize Current window.
+		obsolete "Use `default_create' instead"
+		do
+			default_create
+		end
+
+	initialize is
+			-- Initialize `Current'.
 		local
 			v1: EV_VERTICAL_BOX
 		do
-			default_create
 --			disable_user_resize
 			set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
@@ -215,6 +223,11 @@ feature -- Basic Operations
 			end
 			update_navigation
 		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is True
+		-- Is `Current' in its default state?
 
 end -- class WIZARD_WINDOW
 

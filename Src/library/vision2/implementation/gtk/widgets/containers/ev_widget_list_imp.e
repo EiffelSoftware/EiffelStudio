@@ -123,12 +123,17 @@ feature -- Element change
 			-- Do not move cursor.
 		local
 			imp: EV_WIDGET_IMP
-		do	
+			was_after: BOOLEAN
+		do
+			was_after := index = count + 1
 			if v.parent /= Void then
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
 			C.gtk_container_add (c_object, imp.c_object)
+			if was_after then
+				index := index + 1
+			end
 			new_item_actions.call ([v])
 		end
 
@@ -268,6 +273,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 23:10:14  brendel
+--| Fixed bug in `extend'.
+--|
 --| Revision 1.6  2000/02/26 06:27:46  oconnor
 --| adjust index after prune to ensure it is not too big
 --|

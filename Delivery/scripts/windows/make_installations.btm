@@ -29,15 +29,15 @@ mkdir setups\Free\setup
 remtrace Preparing Enterprise edition
 WfWI "D:\Installations\Eiffel53\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
 move setup.exe setups\Enterprise
-copy D:\Installations\Eiffel53\Eiffel53.exe setups\Enterprise\setup\install.exe
-copy D:\Installations\Eiffel53\Eiffel53.ini setups\Enterprise\setup\install.ini
-copy D:\Installations\Eiffel53\Eiffel53.msi setups\Enterprise\setup\
+copy D:\Installations\Eiffel53\Eiffel53_enterprise.exe setups\Enterprise\setup\install.exe
+copy D:\Installations\Eiffel53\Eiffel53_enterprise.ini setups\Enterprise\setup\install.ini
+copy D:\Installations\Eiffel53\Eiffel53_enterprise.msi setups\Enterprise\setup\
 copy %INSTALL_DIR\studio\bitmaps\png\logo.png %INSTALL_DIR\setups\Enterprise\setup\install_logo.png
 copy %INSTALL_DIR\studio\bitmaps\png\activation.png %INSTALL_DIR\setups\Enterprise\setup\install_left.png
 
 remtrace Preparing Free edition
 WfWI "D:\Installations\Eiffel53\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
-copy D:\Installations\Eiffel53\Eiffel53.exe setups\Free\setup\
+copy D:\Installations\Eiffel53\Eiffel53_single.exe setups\Free\setup\
 copy D:\Installations\Eiffel53\Eiffel53.exe setups\Free\setup\
 copy D:\Installations\Eiffel53\Eiffel53.ini setups\Free\setup\
 copy D:\Installations\Eiffel53\Eiffel53.msi setups\Free\setup\

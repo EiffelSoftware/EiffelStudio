@@ -1,13 +1,18 @@
-RELEASE NOTES FOR SGI-6.2/SGI-6.3/SGI-6.4 VERSION.
+RELEASE NOTES FOR SGI , ISE EIFFEL VERSION 4.3.
+----------------------------------------------
 
-This release has been compiled on IRIX64 sgi 6.4i with cc.
+EiffelBench
+~~~~~~~~~~~
+
+This release has been compiled on IRIX64 sgi 6.4 with cc.
 
 Please your PLATFORM environment variable to sgi if you
 are running on sgi 6.x.  This release is not compatible
 with sgi-5.x.
 
-Reverse engineering is now possible.
-Memory mis-alignment in finalized mode has been corrected (reason why it
-crashed on sgi6.4 using cc).
+The new EiffelBench interface is not the same as on other Unix platforms, due
+to a bug in Motif1.2. You should use Motif2.x.
+
+
 
 

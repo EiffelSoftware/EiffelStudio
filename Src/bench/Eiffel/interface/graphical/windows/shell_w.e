@@ -15,7 +15,6 @@ inherit
 		rename
 			make as prompt_dialog_create
 		end;
-	WINDOW_ATTRIBUTES
 
 creation
 
@@ -38,7 +37,6 @@ feature -- Initialization
 			associcated_command := cmd;
 			set_default_position (False);
 			realize;
-			set_composite_attributes (Current)
 		end;
 
 feature -- Access

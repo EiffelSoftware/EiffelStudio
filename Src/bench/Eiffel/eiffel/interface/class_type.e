@@ -318,7 +318,6 @@ feature -- Generation
 			from
 				feature_table.start;
 				byte_context.init (Current);
-				--byte_context.set_class_type (Current);
 			until
 				feature_table.after
 			loop

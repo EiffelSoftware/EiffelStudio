@@ -134,7 +134,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			to_implement ("EV_GRID_COLUMN_I.is_selected")
+			Result := selected_item_count = count
 		end
 			
 feature -- Element change
@@ -208,7 +208,9 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select the object.
 		do
-			to_implement ("EV_GRID_COLUMN_I.enable_select")
+			selected_item_count := count
+			parent_grid_i.redraw_client_area
+			fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")	
 		end
 
 	destroy is
@@ -224,6 +226,32 @@ feature {EV_GRID_I} -- Implementation
 		ensure
 			is_visible_set: is_visible = a_visible
 		end
+
+feature {EV_GRID_ITEM_I} -- Implementation
+
+	increase_selected_item_count is
+			-- Increase `selected_item_count' by 1
+		require
+			selected_item_count_less_than_count: selected_item_count < count
+		do
+			selected_item_count := selected_item_count + 1
+		ensure
+			selected_item_count_increased: selected_item_count = old selected_item_count + 1
+		end
+
+	decrease_selected_item_count is
+			-- Decrease selected_item_count by 1
+		require
+			selected_item_count_greater_than_zero: selected_item_count > 0
+		do
+			selected_item_count := selected_item_count + 1
+		ensure
+			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
+			selected_item_count_not_negative: selected_item_count >= 0
+		end
+
+	selected_item_count: INTEGER
+		-- Number of selected items in `Current'
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
 

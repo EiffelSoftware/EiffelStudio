@@ -226,6 +226,27 @@ feature -- Basic operations
 					feature_eiffel_names.force (clone (properties.item.interface_eiffel_name))
 					properties.forth
 				end
+
+				from
+					functions.start
+				until
+					functions.after
+				loop
+					if functions.item.argument_count > 0 then
+						from
+							functions.item.arguments.start
+						until
+							functions.item.arguments.after
+						loop
+							if feature_eiffel_names.has (functions.item.arguments.item.name) then
+								functions.item.arguments.item.name.prepend ("a_")
+							end
+							functions.item.arguments.forth
+						end
+					end
+					functions.forth
+				end
+
 			end
 		ensure
 			not_empty_feature_names: not functions.empty and not properties.empty implies 

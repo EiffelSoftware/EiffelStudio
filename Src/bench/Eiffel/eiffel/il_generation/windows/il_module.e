@@ -209,25 +209,25 @@ feature -- Access: tokens
 			-- Token for constructor of `System.Diagnostics.DebuggerHiddenAttribute' and
 			-- `System.Diagnostics.DebuggerStepThroughAttribute'.
 
-	exception_ctor_token: INTEGER
-			-- Token for `System.Exception' constructor feature in `mscorlib'.
-
 	memberwise_clone_token: INTEGER
 			-- Token for `MemberwiseClone' of `System.Object'.
 
 	ise_runtime_token: INTEGER
 			-- Token for `ise_runtime' assembly
 
+	ise_eiffel_exception_ctor_token: INTEGER
+			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor'.
+
 	ise_last_exception_token: INTEGER
-			-- Token for `ISE.RUNTIME.last_exception' static field that holds
+			-- Token for `ISE.Runtime.last_exception' static field that holds
 			-- exception object we got from `catch'.
 
 	ise_in_assertion_token, ise_set_in_assertion_token: INTEGER
-			-- Token for `ISE.RUNTIME.in_assertion' and `ISE.RUNTIME.set_in_assertion'
+			-- Token for `ISE.Runtime.in_assertion' and `ISE.Runtime.set_in_assertion'
 			-- static members that holds status of assertion checking.
 
 	ise_assertion_tag_token: INTEGER
-			-- Token for `ISE.RUNTIME.assertion_tag' static field that holds
+			-- Token for `ISE.Runtime.assertion_tag' static field that holds
 			-- message for exception being thrown.
 
 	ise_set_type_token: INTEGER
@@ -239,7 +239,7 @@ feature -- Access: tokens
 			-- checks a class invariant.
 
 	ise_is_invariant_checked_for_token: INTEGER
-			-- Token for `ISE.RUNTIME.is_invariant_checked_for' feature that
+			-- Token for `ISE.Runtime.is_invariant_checked_for' feature that
 			-- tells if a class invariant has been checked or not for a given type.
 
 	ise_eiffel_type_info_type_token,
@@ -1821,16 +1821,6 @@ feature {NONE} -- Once per modules being generated.
 				mscorlib_token)
 			uni_string.set_string (".ctor")
 
-				-- Define `.ctor' from `System.Exception'.
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			exception_ctor_token := md_emit.define_member_ref (uni_string,
-				system_exception_token, l_sig)
-
 				-- Define `.ctor' from `System.Object'.
 			object_ctor_token := md_emit.define_member_ref (uni_string, object_type_token,
 				default_sig)
@@ -1919,7 +1909,7 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_excep_man_token: INTEGER
+			l_token: INTEGER
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
 			l_ise_eiffel_class_name_attr_token: INTEGER
@@ -1937,24 +1927,20 @@ feature {NONE} -- Once per modules being generated.
 			ise_runtime_token := md_emit.define_assembly_ref (
 				create {UNI_STRING}.make (runtime_namespace), l_ass_info, l_pub_key)
 
-				-- Define `ise_last_exception_token'.
-			l_excep_man_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (exception_manager_class_name),
-				ise_runtime_token)
+			ise_runtime_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
 
+				-- Define `ise_last_exception_token'.
 			l_sig := field_sig
 			l_sig.reset
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				system_exception_token)
 
 			ise_last_exception_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("last_exception"), l_excep_man_token,
+				create {UNI_STRING}.make ("last_exception"), ise_runtime_type_token,
 				l_sig)
 
 				-- Define `ise_in_assertion_token'.
-			ise_runtime_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
-
 			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
@@ -1973,7 +1959,23 @@ feature {NONE} -- Once per modules being generated.
 			ise_set_in_assertion_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
 
-				-- Define `ise_assertion_tag_token'.
+				-- Define `.ctor' from `ISE.Runtime.EIFFEL_EXCEPTION'.
+			l_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (eiffel_exception_class_name),
+				ise_runtime_token)
+
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (2)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			ise_eiffel_exception_ctor_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make (".ctor"),
+				l_token, l_meth_sig)
+
+				-- Define `ise_assertion_tag_token'
 			l_sig.reset
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 

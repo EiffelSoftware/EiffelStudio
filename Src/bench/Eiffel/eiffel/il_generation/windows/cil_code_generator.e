@@ -3755,35 +3755,30 @@ feature -- Assertions
 			-- Generate test after an assertion is being generated.
 			-- If result of test is False, we raise an exception.
 		local
-			type_assert: STRING
+			type_assert: INTEGER
 			l_label: INTEGER
-			l_str_token: INTEGER
 		do
 			inspect
 				assert_type
 			when In_postcondition then
-				type_assert := "Postcondition violation: "
+				type_assert := feature {EXCEP_CONST}.postcondition
 			when In_check then
-				type_assert := "Check violation: "
+				type_assert := feature {EXCEP_CONST}.check_instruction
 			when In_loop_invariant then
-				type_assert := "Loop invariant violation: "
+				type_assert := feature {EXCEP_CONST}.loop_invariant
 			when In_loop_variant then
-				type_assert := "Loop variant violation: "
+				type_assert := feature {EXCEP_CONST}.loop_variant
 			when In_invariant then
-				type_assert := "Invariant violation: "
+				type_assert := feature {EXCEP_CONST}.class_invariant
 			end
-
-			uni_string.set_string (type_assert + tag)
-			l_str_token := md_emit.define_string (uni_string)
 
 			l_label := method_body.define_label
 			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, l_label)
 			put_boolean_constant (False)
 			generate_set_assertion_status
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj, current_module.exception_ctor_token,
-				1, True)
-			method_body.put_opcode (feature {MD_OPCODES}.Throw)
+
+			generate_raise_exception (type_assert, tag)
+
 			method_body.mark_label (l_label)
 		end
 
@@ -3796,9 +3791,13 @@ feature -- Assertions
 		local
 			l_str_token: INTEGER
 		do
-			uni_string.set_string ("Precondition violation: " + tag)
-			l_str_token := md_emit.define_string (uni_string)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
+			if tag = Void then
+				put_void
+			else
+				uni_string.set_string (tag)
+				l_str_token := md_emit.define_string (uni_string)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
+			end
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld,
 				current_module.ise_assertion_tag_token)
 			method_body.put_opcode_label (feature {MD_OPCODES}.Brfalse, failure_block.id)
@@ -3810,10 +3809,28 @@ feature -- Assertions
 		do
 			put_boolean_constant (False)
 			generate_set_assertion_status
+			put_integer_32_constant (feature {EXCEP_CONST}.precondition)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
 				current_module.ise_assertion_tag_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj, current_module.exception_ctor_token,
-				1, True)
+			method_body.put_call (feature {MD_OPCODES}.Newobj,
+				current_module.ise_eiffel_exception_ctor_token, 1, True)
+			method_body.put_opcode (feature {MD_OPCODES}.Throw)
+		end
+
+	generate_raise_exception (a_code: INTEGER; a_tag: STRING) is
+			-- Generate an exception of type EIFFEL_EXCEPTION with code
+			-- `a_code' and with tag `a_tag'.
+		do
+			put_integer_32_constant (a_code)
+			if a_tag = Void then
+				put_void
+			else
+				uni_string.set_string (a_tag)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr,
+					md_emit.define_string (uni_string))
+			end
+			method_body.put_call (feature {MD_OPCODES}.Newobj,
+				current_module.ise_eiffel_exception_ctor_token, 1, True)
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 		end
 

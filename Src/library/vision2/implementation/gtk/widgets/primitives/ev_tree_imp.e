@@ -158,8 +158,14 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_TREE_ITEM_IMP
 		do
-			item_imp ?= interface.i_th (a_position).implementation	
+			item_imp ?= interface.i_th (a_position).implementation
+			item_imp.set_dummy_list_widget (item_imp.list_widget)
+
+			if item_imp.list_widget /= Default_pointer then
+				C.gtk_widget_ref (item_imp.list_widget)
+			end
 			Precursor (a_position)
+				-- Precursor unrefs list widget.
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -202,6 +208,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/10 23:53:10  king
+--| Fixed dereferencing of list widget
+--|
 --| Revision 1.34  2000/03/09 19:56:46  king
 --| Removed multiple-selection features as they are not available on win32
 --|

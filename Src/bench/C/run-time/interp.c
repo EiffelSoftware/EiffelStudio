@@ -1743,98 +1743,80 @@ end:
 		{
 			long nbr_of_items;
 			char *new_obj;
+			char *sp_area;
 			short stype, dtype, feat_id;
 			unsigned long stagval;
+			int curr_pos = 0;
+			struct item *it;
+			long elem_size;
+			char *OLD_IC;
  
 			stype = get_short();			/* Get the static type */
+			dtype = get_short();			/* Get the static type */
 			feat_id = get_short();		  	/* Get the feature id */
 			nbr_of_items = get_long();	  	/* Number of items in array */
 			stagval = tagval;
+			OLD_IC = IC;					/* Save IC counter */
  
-			new_obj = RTLN(RTUD(stype));	/* Create new object */
+			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, &new_obj);   /* Protect new_obj */
-			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))
+			((void (*)()) RTWF(stype, feat_id, dtype))
 									(new_obj, 1L, nbr_of_items);
 			epop (&loc_stack, 1);
+
+			IC = OLD_IC;
 			if (tagval != stagval)
-				sync_registers(scur, stop); /* If G.C calls melted dispose */
+				sync_registers(scur, stop); /* If calls melted make of array */ 
+		
+			sp_area = *(char **) new_obj;
+			while ((curr_pos++) != nbr_of_items) {
+				/* Fill the special area with the expressions
+			 	* for the manifest array.
+			 	*/
+				it = opop();		/* Pop expression off stack */
+				switch (it->type & SK_HEAD) {
+					case SK_BOOL:
+					case SK_CHAR:
+						*(char *) sp_area = it->it_char;
+						sp_area += sizeof(char);
+						break;
+					case SK_BIT:
+						*(char **) sp_area = it->it_bit;
+						sp_area += LENGTH(it->it_bit); 
+						break;
+					case SK_EXP:
+						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
+						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						break;
+					case SK_REF:
+						*(char **) sp_area = it->it_ref;
+						sp_area += sizeof(char *);
+						break;
+					case SK_INT:
+						*(long *) sp_area = it->it_long;
+						sp_area += sizeof(long);
+						break;
+					case SK_FLOAT:
+						*(float *) sp_area = it->it_float;
+						sp_area += sizeof(float);
+						break;
+					case SK_DOUBLE:
+						*(double *) sp_area = it->it_double;
+						sp_area += sizeof(double);
+						break;
+					case SK_POINTER:
+						*(fnptr *) sp_area = it->it_ptr;
+						sp_area += sizeof(fnptr);
+						break;
+					default:
+						panic(botched);
+				}
+			}
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
-			last = iget();
-			last->type = SK_REF;
-			last->it_ref = *(char **)new_obj;
 			break;
 		}
-
-	/* 
-	 * Insert expression into manifest arrary
-	 */
-	case BC_INSERT:
-#ifdef DEBUG
-		dprintf(2)("BC_INSERT\n");
-#endif
-		{
-			struct item *it;
-			char *ref;
-			long elem_size, curr_pos;
- 
-			it = opop();					/* Pop the last expression */
-			last = otop();					/* Get special area of manifest array */
-			/* Fill the special area with the expressions
-			 * for the manifest array.
-			 */
-			switch (it->type & SK_HEAD) {
-				case SK_BOOL:
-				case SK_CHAR:
-					*(char *) last->it_ref = it->it_char;
-					last->it_ref += sizeof(char);
-					break;
-				case SK_BIT:
-					*(char **) last->it_ref = it->it_bit;
-					last->it_ref += LENGTH(it->it_bit); 
-					break;
-				case SK_EXP:
-					curr_pos = get_long(); 	/* Get current position of item */
-					elem_size = *(long *) (last->it_ref + (HEADER(last->it_ref)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
-					ecopy(it->it_ref, last->it_ref + OVERHEAD + elem_size * curr_pos);
-					break;
-				case SK_REF:
-					*(char **) last->it_ref = it->it_ref;
-					last->it_ref += sizeof(char *);
-					break;
-				case SK_INT:
-					*(long *) last->it_ref = it->it_long;
-					last->it_ref += sizeof(long);
-					break;
-				case SK_FLOAT:
-					*(float *) last->it_ref  = it->it_float;
-					last->it_ref += sizeof(float);
-					break;
-				case SK_DOUBLE:
-					*(double *) last->it_ref = it->it_double;
-					last->it_ref += sizeof(double);
-					break;
-				case SK_POINTER:
-					*(fnptr *) last->it_ref = it->it_ptr;
-					last->it_ref += sizeof(fnptr);
-					break;
-				default:
-					panic(botched);
-			}
-			break;
-		}
-
-	/* 
-	 * End insertion in manifest arrary
-	 */
-	case BC_END_INSERT:
-#ifdef DEBUG
-		dprintf(2)("BC_END_INSERT\n");
-#endif
-		/* Discard special area of array */
-		opop ();
-		break;
 
 	/*
 	 * Old expression.
@@ -4455,20 +4437,6 @@ char *start;
 		}
 		break;
 
-	/* 
-	 * Insertion into a manifest array
-	 */
-	case BC_INSERT:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_INSERT");
-		break;
-	
-	/* 
-	 * End insertion into manifest arry
-	 */
-	case BC_END_INSERT:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_INSERT");
-		break;
-	
 	/* 
 	 * Old expression 
 	 */

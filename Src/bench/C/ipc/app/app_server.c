@@ -76,17 +76,17 @@ void sigtrap_handler (int sig)
 	
 	if (sig==SIGTRAP)
 		{
-		/* Read the interrupt flag value from the file /tmp/ebenchXXXX */
+		/* Read the interrupt flag value from the file /tmp/estudioXXXX */
 		/* where XXXX is the PID of the application */
 		filename[0]='0';
-		sprintf(filename,"/tmp/ebench%d",pid);
+		sprintf(filename,"/tmp/estudio%d",pid);
 
 		file = fopen(filename,"rb");
 		if (file != NULL)
 			{
 			fread(&interrupt_flag, sizeof(unsigned char), 1, file);
 			fclose(file);
-			}	
+			}
 		}
 	}
 #endif	/* USE_SIGNAL */

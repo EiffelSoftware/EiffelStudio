@@ -60,6 +60,12 @@ feature -- Processing
 			a_type_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create c_type.make (100)
+			if 
+				alias_descriptor.namespace /= Void and then
+				not alias_descriptor.namespace.empty
+			then
+				c_type.append (alias_descriptor.namespace + "::")
+			end
 			c_type.append (alias_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
@@ -163,7 +169,7 @@ feature -- Processing
 				coclass_descriptor.default_interface_descriptor.namespace /= Void and then
 				not coclass_descriptor.default_interface_descriptor.namespace.empty
 			then
-			c_type.append (coclass_descriptor.default_interface_descriptor.namespace + "::")
+				c_type.append (coclass_descriptor.default_interface_descriptor.namespace + "::")
 			end
 			c_type.append (coclass_descriptor.default_interface_descriptor.c_type_name)
 			
@@ -365,7 +371,8 @@ feature -- Processing
 			ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
 			if 
 				record_descriptor.name.is_equal ("RemotableHandle") or 
-				record_descriptor.name.is_equal ("_RemotableHandle") 
+				record_descriptor.name.is_equal ("_RemotableHandle") or
+				record_descriptor.name.is_equal ("tag_RemotableHandle")
 			then
 				is_structure := False
 				is_basic_type := True
@@ -374,6 +381,7 @@ feature -- Processing
 				need_generate_ec := False
 				c_header_file := clone ("")
 				cecil_type := clone ("EIF_INTEGER")
+				c_type := clone (Void_c_keyword)
 			end
 		end
 

@@ -394,7 +394,8 @@ feature -- Output
 	put_front_text_item (t: TEXT_ITEM) is
 			-- Insert `t' to `text' in front of list.
 		do
-			text.put_front (t)
+			text.put_front (t);
+			text.finish
 		end
 
 	put_text_item (t: TEXT_ITEM) is

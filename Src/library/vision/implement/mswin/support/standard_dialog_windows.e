@@ -13,7 +13,6 @@ inherit
 		rename
 			wel_move as wel_move_relative
 		redefine
-			class_background,
 			default_style,
 			default_ex_style,
 			popup,
@@ -31,7 +30,6 @@ inherit
 
 	DIALOG_IMP
 		redefine
-			class_background,
 			default_style,
 			default_ex_style,
 			popup,
@@ -97,7 +95,7 @@ feature -- Initialization
 				realize_current
 			end
 				-- set initial focus
-			if initial_focus /= void then
+			if initial_focus /= Void then
 				initial_focus.wel_set_focus
 			end					
 		end
@@ -787,19 +785,6 @@ feature {NONE} -- Implementation
 			-- Default extended style of a dialog
 		do
 			Result := Ws_ex_dlgmodalframe
-		end
-
-	class_background: WEL_BRUSH is
-			-- Default background.
-		local
-			windows_color: COLOR_IMP
-		do
-			if private_background_color = Void then
-				!! Result.make_by_sys_color (Color_btnface	+ 1)
-			else
-				windows_color ?= private_background_color.implementation
-				Result := windows_color.brush
-			end
 		end
 
 feature {NONE} -- Inapplicable

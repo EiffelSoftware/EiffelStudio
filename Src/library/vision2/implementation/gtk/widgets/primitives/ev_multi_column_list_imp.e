@@ -33,7 +33,6 @@ inherit
 			pointer_over_widget,
 			interface,
 			destroy,
-			visual_widget,
 			able_to_transport,
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
@@ -52,7 +51,6 @@ inherit
 			destroy,
 			list_widget,
 			interface,
-			visual_widget,
 			disconnect_all_signals,
 			wipe_out,
 			append,
@@ -78,9 +76,7 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			visual_widget := C.gtk_event_box_new
-			C.gtk_widget_show (visual_widget)
-			C.gtk_scrolled_window_add_with_viewport (c_object, visual_widget)
+			
 			create ev_children.make (0)
 
 				-- create a list with one column
@@ -251,9 +247,9 @@ feature {NONE} -- Initialization
 				ev_children.forth
 			end
 			if old_list_widget /= NULL then
-				C.gtk_container_remove (visual_widget, old_list_widget)
+				C.gtk_container_remove (c_object, old_list_widget)
 			end
-			C.gtk_container_add (visual_widget, list_widget)
+			C.gtk_container_add (c_object, list_widget)
 			if is_multiple_selected then
 				enable_multiple_selection
 			end
@@ -333,7 +329,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
-			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
+			real_signal_connect (c_object, "motion_notify_event", agent motion_handler, Default_translate)
 			connect_button_press_switch
 			disable_multiple_selection
 		end
@@ -907,10 +903,10 @@ feature -- Implementation
 		do
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
+					signal_emit_stop (c_object, "button-press-event")
 				end
 			elseif mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
+					signal_emit_stop (c_object, "button-press-event")
 			end
 			create env
 			app_imp ?= env.application.implementation
@@ -1164,8 +1160,6 @@ feature {NONE} -- Implementation
 				Result := C.gtk_clist_struct_row_height (list_widget)
 			end			
 		end
-
-	visual_widget: POINTER
 
 	disconnect_all_signals is
 		do

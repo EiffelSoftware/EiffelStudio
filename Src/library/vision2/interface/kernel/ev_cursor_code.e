@@ -78,7 +78,7 @@ feature -- Access
 	uparrow: INTEGER is
 			-- Vertical arrow
 		do
-			Result := implementation.sizewe
+			Result := implementation.uparrow
 		end
 
 	wait: INTEGER is

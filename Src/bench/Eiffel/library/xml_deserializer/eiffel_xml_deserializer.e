@@ -53,6 +53,7 @@ feature -- Query
 			l_xml_parser: like xml_parser
 			l_file: KL_TEXT_INPUT_FILE
 			l_bool: BOOLEAN
+			l_object_root: like xml_element
 		do
 			Result := retrieve_binary_file (a_file_name)
 			
@@ -71,8 +72,11 @@ feature -- Query
 					l_file.close
 	
 					if l_xml_parser.is_correct then
-						Result := reference_from_xml (Pipe_callback.document.root_element)
-						store_binary_file (a_file_name, Result)
+						l_object_root ?= Pipe_callback.document.root_element.item (3)
+						if l_object_root /= Void then
+							Result := reference_from_xml (l_object_root)
+							store_binary_file (a_file_name, Result)	
+						end
 					end			
 				end
 			end
@@ -169,6 +173,8 @@ feature {NONE} -- Object retrieval from node.
 		local
 			l_lower, l_count: INTEGER
 			l_attr: like xml_attribute
+			l_compare_objects: BOOLEAN
+			l_ar: ARRAY [ANY]
 		do
 			a_xml_element.start
 
@@ -185,6 +191,11 @@ feature {NONE} -- Object retrieval from node.
 			a_xml_element.forth
 			l_count := l_attr.value.to_integer
 
+				-- we get `object_comparison'.
+			l_attr ?= a_xml_element.item_for_iteration
+			l_compare_objects := l_attr.value.to_boolean
+			a_xml_element.forth
+
 				-- we get `type'.
 			l_attr ?= a_xml_element.item_for_iteration
 			a_xml_element.forth
@@ -200,6 +211,12 @@ feature {NONE} -- Object retrieval from node.
 				Result := string_array_from_xml (a_xml_element, l_lower, l_lower + l_count - 1)
 			else
 				Result := reference_array_from_xml (a_xml_element, l_lower, l_lower + l_count - 1)
+			end
+			if Result /= Void then
+				l_ar ?= Result
+				if l_ar /= Void and then l_compare_objects then
+					l_ar.compare_objects
+				end
 			end
 		end
 

@@ -10,6 +10,7 @@ inherit
 	WIZARD_FINAL_STATE_WINDOW
 		redefine
 			proceed_with_current_info,
+			display,
 			back
 		end
 
@@ -35,10 +36,7 @@ feature {NONE} -- Implementation
 			--
 			-- Note: You can remove this feature if you don't need
 			--       a progress bar.
-		local
-			h1: EV_HORIZONTAL_BOX
 		do
-			graphically_replace_window (first_window, main_window)	
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
 			create progress 
@@ -86,6 +84,14 @@ feature {NONE} -- Implementation
 			build_finish
 			process_info
 			Precursor
+		end
+		
+	display is
+			-- Display Current State
+		do
+			first_window.set_final_state ("Finish")
+			build
+			first_window.set_size (dialog_unit_to_pixels (503).max (first_window.width), dialog_unit_to_pixels (385))
 		end
 
 	display_state_text is

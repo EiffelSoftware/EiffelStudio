@@ -140,16 +140,15 @@ feature -- Cache manipulations
 			if it /= Void then 
 				if equal (it.id, id) then
 					t.set_first (t.second)
-					last_removed_item := it
 					count := count - 1
 				else
 					it := t.second
 					if it /= Void and then equal (it.id, id) then
-						t.set_second (Void)
-						last_removed_item := it
 						count := count - 1
 					end
 				end
+				last_removed_item := it
+				t.set_second (Void)
 			end
 		end	
 	
@@ -178,25 +177,17 @@ feature -- Cache manipulations
 			i := v.id.internal_id \\ size
 			t := area.item (i)
 			lfirst := t.first
-			lsecond := t.second
 			if lfirst /= Void then
+				lsecond := t.second
 				last_removed_item := lsecond
 				if lsecond = Void then
-					if count < size then
-						count := count + 1
-					else
-						remove_first_found
-					end
+					count := count + 1
 				end
 				t.set_second (lfirst)
 				t.set_first (v)
 			else	
 				last_removed_item := Void
-				if count < size then
-					count := count + 1
-				else
-					remove_first_found
-				end
+				count := count + 1
 				t.set_first (v)
 			end
 		end

@@ -70,7 +70,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 		local
 			cell: EV_CELL
 			new_split_position: INTEGER
-			max_split_position: INTEGER
 			min_split_position: INTEGER
 			stb: EV_STATUS_BAR
 		do
@@ -116,7 +115,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 			new_split_position := left_panel_width
 			min_split_position := panel.minimum_split_position
-			max_split_position := panel.maximum_split_position
 			splitter_position := new_split_position
 --			panel.set_split_position (splitter_position.max (min_split_position))
 

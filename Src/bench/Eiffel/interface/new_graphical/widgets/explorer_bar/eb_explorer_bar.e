@@ -475,7 +475,7 @@ feature {NONE} -- Implementation (attributes)
 			minimized_items: ARRAYED_LIST [like item]
 			maximized_item: like item
 			curr_item: like item
-			max_main, height: INTEGER
+			height: INTEGER
 			first_item: EV_WIDGET
 			second_item: EV_WIDGET
 			third_item: EV_WIDGET
@@ -491,7 +491,6 @@ feature {NONE} -- Implementation (attributes)
 					end
 					if main_split_area /= Void then
 						main_split_position := main_split_area.split_position
-						max_main := main_split_area.maximum_split_position
 					end
 				end
 	

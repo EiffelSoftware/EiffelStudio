@@ -209,9 +209,7 @@ feature -- Code generation
 
 			create header_file.make_open_write (
 				full_file_name ("lib" + System.name + ".h", final_mode))
-			if not Shared_include_queue.is_empty then
-				extern_declarations.generate_header_files (header_buffer)
-			end
+			extern_declarations.generate_header_files (header_buffer)
 			header_buffer.put_in_file (header_file)
 			header_file.close
 

@@ -493,7 +493,7 @@ feature -- Generation
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
 			once_count:INTEGER
-			tmp, buffer, header_buffer: GENERATION_BUFFER
+			tmp, buffer, header_buffer, headers: GENERATION_BUFFER
 		do
 			final_mode := byte_context.final_mode
 
@@ -509,6 +509,9 @@ feature -- Generation
 				buffer.clear_all
 				header_buffer := header_generation_buffer
 				header_buffer.clear_all
+				if final_mode then
+					create headers.make (100)
+				end
 
 				feature_table := current_class.feature_table
 				if final_mode then
@@ -539,7 +542,7 @@ feature -- Generation
 					byte_context.set_has_cpp_externals_calls (False)
 
 					if final_mode then
-						tmp := buffer
+						tmp := headers
 					else
 						tmp := header_buffer
 					end
@@ -553,9 +556,9 @@ feature -- Generation
 
 
 					if final_mode then
-						buffer.putstring ("%N#include %"")
-						buffer.putstring (base_file_name)
-						buffer.putstring (".h%"%N%N")
+						headers.putstring ("%N#include %"")
+						headers.putstring (base_file_name)
+						headers.putstring (".h%"%N%N")
 	
 							-- Generation of extern declarations
 						header_buffer.putstring ("#ifndef ")
@@ -633,6 +636,7 @@ feature -- Generation
 	
 					if final_mode then
 						Extern_declarations.generate (header_buffer)
+						Extern_declarations.generate_header_files (headers)
 						Extern_declarations.wipe_out
 
 							-- End of header protection
@@ -643,6 +647,7 @@ feature -- Generation
 						extern_decl_file.close
 					else
 						Extern_declarations.generate (header_buffer)
+						Extern_declarations.generate_header_files (header_buffer)
 						Extern_declarations.wipe_out
 					end
 					buffer.close_c
@@ -660,6 +665,8 @@ feature -- Generation
 					
 					if not final_mode then
 						Header_generation_buffer.put_in_file (file)
+					else
+						headers.put_in_file (file)
 					end
 					buffer.put_in_file (file)
 					file.close

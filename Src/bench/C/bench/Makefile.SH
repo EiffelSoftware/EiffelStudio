@@ -55,6 +55,7 @@ wpstore.o: pstore.c
 
 clean::
 	\$(RM) *.o 
+	\$(RM) bytedump meltdump
 
 clobber:: clean
 	\$(RM) Makefile *.o

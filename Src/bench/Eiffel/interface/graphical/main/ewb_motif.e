@@ -11,6 +11,6 @@ creation
 
 feature {NONE}
 
-	init_toolkit: MOTIF is once !!Result.make ("ewb") end;
+	init_toolkit: MOTIF is once !!Result.make ("ebench") end;
 
 end

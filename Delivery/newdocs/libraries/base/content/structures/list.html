@@ -36,7 +36,7 @@
         are <a CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</a> and
         <a CLASS="eclass" href="../../reference/structures/traversing/bilinear.html">BILINEAR</a>, introduced in the
         <a href="taxonomy.html">discussion</a> of the general taxonomy.</p>
-        <h3>Linear Structures</h3>
+        <h3>Linear structures</h3>
         <p><a CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</a>
         describes sequential structures that may be traversed one way. It introduces in
         particular the following features, illustrated on the figure below:</p>
@@ -63,16 +63,20 @@
           is true the command has no effect).</li>
           <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_forth">forth</a>, a command to advance by one position; the precondition is not after.</li>
           <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_finish">finish</a>, a command to move to the last position; the precondition is:<br>
+          <code>
           <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
          <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</a>.
+         </code>
           </ul>
         <p><img border="0" src="linear.png" width="330" height="140"></p>
         <p class="figuretitle">fig.1: Linear Structure</p>
         <p>
         There is also a procedure <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</a> with one argument, which determines whether the
         value of that argument appears in the structure at or after the current position, and if not
-        makes <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after"> after</a> become true. This procedure is internally used by the default
-        implementation of the has function (the general membership test) for linear structures.
+        makes <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a> become true. This procedure is internally used by the default
+        implementation of the
+        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_has">has</a>
+        function (the general membership test) for linear structures.
         Like has for all containers, <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</a>
         uses object or reference equality depending on the value set for <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_object_comparison">object_comparison</a>.</p>
         <p>
@@ -115,16 +119,17 @@
         <SPAN CLASS=".esymbol">=</SPAN>
         <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
         <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after<br>
-        </a></code>This property, however, would be too constraining. More precisely, it is always true
+        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a><br>
+        </code>This property, however, would be too constraining. More precisely, it is always true
         that the right-hand side implies the left-hand-side: if a linear structure is either empty or
         after, then it is off. But the converse is not true, since certain kinds of linear structure,
         for example bilinear ones, may be off but neither empty nor after.<br>
         The actual invariant for class <a CLASS="eclass" href="../../reference/structures/traversing/bilinear.html">BILINEAR</a>
         is obtained in three stages. In class <a CLASS="eclass" href="../../reference/structures/traversing/bilinear.html">TRAVERSABLE</a>
         the feature off is deferred and a basic property of that feature is<br>
-        expressed by the invariant clause<code><SPAN CLASS="etag"><br>
-        empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+        expressed by the invariant clause<br>
+        <code>
+        <SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
         <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
         <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
         <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off<br>
@@ -347,7 +352,7 @@ detail below:<br>
         reserve space for them (for example in an array representation), none of the
         implementations used in Base for the classes of this documentation and other descendants of
         <a CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</a>
-        does. The only purpose of the sentinels is to provide two valid theoretical
+        do. The only purpose of the sentinels is to provide two valid theoretical
         cursor positions, which exist regardless of the number of actual (non-sentinel) items in
         the structure.<br>
         The sentinel items always appear at positions 0 and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
@@ -385,7 +390,7 @@ detail below:<br>
         <h3>Some lessons</h3>
         <p>This discussion has illustrated some of the important patterns of reasoning that are
         frequently involved in serious object-oriented design. Among the lessons are four ideas
-        which you may find useful in many different cases. First, consistency is once again the central principle. Throughout the design of a<br>
+        which you may find useful in many different cases. First, consistency is once again the central principle. Throughout the design of a
         class library we must constantly ask ourselves:</p>
         <ul>
           <li>“How do I make my next design decision compatible with the previous ones?”</li>
@@ -403,7 +408,7 @@ detail below:<br>
         becomes of it when it is applied to extreme situations - in particular, as was done in this
         example, empty structures.<br>
         Finally, the only way to make delicate design decisions is to express the issues
-        clearly through assertions, most notably invariants. To analyze the properties under<br>
+        clearly through assertions, most notably invariants. To analyze the properties under
         discussion, and weigh the various alternatives, we need the precision of mathematical
         logic. Once again note that without assertions it would be impossible to build a good
         library; we would have no way to know precisely what we are talking about.
@@ -562,15 +567,23 @@ detail below:<br>
         first. The symmetric property applies to <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>.
         The cyclic nature of <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
         and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>
-        for circular chains is expressed precisely by the assertions. The version of forth for class
-        <a class="eclass" href="../../reference/structures/list/chain.html"> CHAIN</a>, which comes from
+        for circular chains is expressed precisely by the assertions. The version of
+        <a class="efeature" href="../../reference/structures/list/chain.html#f_forth">forth</a>
+        for class
+        <a class="eclass" href="../../reference/structures/list/chain.html">CHAIN</a>, which comes from
         <a CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</a>,
-        has precondition
-        <p>not after</p>
-        <p>Similarly, the precondition for <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>
-        is</p>
-        <p>not before</p>
-        <p>For lists, <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
+        has precondition<br>
+        <code>
+        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
+        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</a>
+        </code><br>
+        Similarly, the precondition for <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>
+        is<br>
+        <code>
+        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
+        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</a>
+        </code><br>
+        For lists, <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
         becomes true when the cursor moves past the last item. For circular chains, however,
         <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</a>
         and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</a>
@@ -592,7 +605,7 @@ detail below:<br>
         </code><br>
         For a non-empty circular chain, then, you can circle forever around the items, using
         <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        or <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>.</p>
+        or <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>.
         <h3>Choosing the first item</h3>
         <p>For a list, the <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>
         and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>
@@ -625,8 +638,7 @@ detail below:<br>
         In such cases the circular chain classes have features called <SPAN CLASS="efeature">standard_first</SPAN>,
         <SPAN CLASS="efeature">standard_last</SPAN>,
         <SPAN CLASS="efeature">standard_start</SPAN>
-        and so on, which are not exported (so that you will not see<br>
-        them in the flat-short forms) but serve to implement visible features such
+        and so on, which are not exported (so that you will not see them in the flat-short forms) but serve to implement visible features such
         as <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>,
         <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>
         and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>. For example a possible implementation of
@@ -637,7 +649,7 @@ detail below:<br>
         &nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Move cursor to next item, cyclically.</SPAN><br>
         <SPAN CLASS="ekeyword">do</SPAN><br>
         &nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_forth</SPAN><br>
-        <SPAN CLASS="ekeyword">if</SPAN>
+        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
         <SPAN CLASS="efeature" >standard_after</SPAN>
         <SPAN CLASS="ekeyword">then</SPAN><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_start</SPAN><br>
@@ -785,7 +797,7 @@ detail below:<br>
         structures. It introduces features right, a reference to another cell to which the current<br>
     cell will be linked. Two-way linked structures use <a class="eclass" href="../../reference/structures/list/bi_linkable.html">BI_LINKABLE</a>, an heir of <a class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</a>
         which to the above features adds left, a reference to the preceding cell in the structure.</p>
-    <p CLASS="warning"><b>CAUTION</b>:
+    <p CLASS="warning"><b>Caution</b>:
     Do not confuse the item feature of <a class="eclass" href="../../reference/structures/list/cell.html">CELL</a>
     and its descendants, such as <a class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</a>,
     with the item feature of the classes describing linear structures, such as <a class="eclass" href="../../reference/structures/list/linked_list.html">LINKED_LIST</a>.
@@ -814,7 +826,7 @@ detail below:<br>
     the structure. In contrast, forth is O (1), that is to say, takes an execution time bounded
     by a constant.
         <p CLASS="warning">
-    <b>CAUTION</b>: As a consequence, you should not use one-way linked structures if you need to
+    <b>Caution</b>: As a consequence, you should not use one-way linked structures if you need to
     execute more than occasional back operations (and other operations requiring access to
     previous items, such as <a class="efeature" href="../../reference/structures/list/linked_list.html#f_remove_left">remove_left</A>).
     <p>Two-way linked structures, such as those
@@ -847,7 +859,8 @@ detail below:<br>
           <li>As a result, <a class="eclass" href="../../reference/structures/list/fixed_list.html">FIXED_LIST</a>
             joins the deferred feature <a class="efeature" href="../../reference/structures/list/list.html#f_count">count</a> of <a class="eclass" href="../../reference/structures/list/list.html">LIST</a>
             with the
-            feature <a class="eclass" href="../../reference/kernel/array.html#f_count">count</a> of <a class="eclass" href="../../reference/kernel/array.html">ARRAY</a>, which satisfies the property count = capacity.</li>
+            feature <a class="eclass" href="../../reference/kernel/array.html#f_count">count</a> of <a class="eclass" href="../../reference/kernel/array.html">ARRAY</a>, which satisfies the property <a class="eclass" href="../../reference/kernel/array.html#f_count">count</a>
+            = capacity.</li>
           <li>Query <a class="efeature" href="../../reference/structures/list/fixed_list.html#f_prunable">prunable</a> has value false too: it is not possible to remove an item from a
             fixed list.</li>
         </ul>
@@ -870,7 +883,7 @@ detail below:<br>
         does not suffer from this problem,
         since it is easy to add an item to the end of an array, especially if there is still room so
         that no resizing is necessary.)</p>
-        <p class="warning"><b>CAUTION</b>:
+        <p class="warning"><b>Caution</b>:
         The situation of these features in <a class="eclass" href="../../reference/structures/list/arrayed_list.html">ARRAYED_LIST</a>
         is similar to the situation of <a class="efeature" href="../../reference/structures/list/linked_list.html#f_back">back</a>
         in classes describing one-way linked structures: it is convenient to include them because they may be needed once in a while
@@ -908,7 +921,7 @@ detail below:<br>
         </code><br>
         <p>As indicated by the constrained generic parameter it describes bilinear structures
         whose items may be compared by a total order relation.</p>
-        <p class="warning"><b>CAUTION</b>: Note that the class name, chosen for brevity’s sake, is slightly misleading: it is not the structures
+        <p class="warning"><b>Caution</b>: Note that the class name, chosen for brevity’s sake, is slightly misleading: it is not the structures
         that are comparable but their items.</p>
         <p> <a class="eclass" href="../../reference/structures/sort/comparable_struct.html">COMPARABLE_STRUCT</a>
         introduces the features min and max, giving access to

@@ -68,7 +68,9 @@ feature -- Status setting
 	set_maximum_line_lenght (lenght: INTEGER) is
 			-- Maximum number of charachters on line
 		do
-			-- Not yet implemented
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	select_region (start_pos, end_pos: INTEGER) is
@@ -76,6 +78,53 @@ feature -- Status setting
 			-- 'start_pos' and 'end_pos'
 		do
 			wel_window.set_selection (start_pos, end_pos)
+		end
+
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	cut_selection is
+			-- Cut the `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard 
+			-- to paste it later.
+			-- If the `selectd_region' is empty, it does
+			-- nothing.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	copy_selection is
+			-- Copy the `selected_region' in the Clipboard
+			-- to paste it later.
+			-- If the `selected_region' is empty, it does
+			-- nothing.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the string which is in the 
+			-- Clipboard at the `index' postion in the
+			-- text.
+			-- If the Clipboard is empty, it does nothing. 
+		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Implementation

@@ -237,7 +237,7 @@ feature -- Byte Code generation
 						-- Write the body id
 					write_int (file.file_pointer, real_body_id - 1)
 						-- Write the size
-					write_int (file.file_pointer, melted_feature.size)
+					write_int (file.file_pointer, melted_feature.count)
 						-- Write the pattern id
 					write_int (file.file_pointer, e.real_pattern_id)
 						-- Write the byte code

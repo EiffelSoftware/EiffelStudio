@@ -1,5 +1,4 @@
 indexing
-
 	description: "Hkey registry open access mode constants"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -10,24 +9,91 @@ class
 
 feature -- Access
 
-	Key_query_value: INTEGER is 1
-			-- Permission to query subkey data. 
-
-	Key_set_value: INTEGER is 2
-			-- Permission to set subkey data. 
-
-	Key_create_sub_key: INTEGER is 4
-			-- Permission to create subkeys. 
-
-	Key_enumerate_sub_keys: INTEGER is 8
-			-- Permission to enumerate subkeys. 
-
-	Key_notify: INTEGER is 16
-			-- Permission for change notification. 
-
-	Key_create_link: INTEGER is 32
+	Key_create_link: INTEGER is
 			-- Permission to create a symbolic link.
-
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_CREATE_LINK"
+		end
+		
+	Key_create_sub_key: INTEGER is
+			-- Permission to create subkeys.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_CREATE_SUB_KEY"
+		end
+		
+	Key_enumerate_sub_keys: INTEGER is
+			-- Permission to enumerate subkeys.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_ENUMERATE_SUB_KEYS"
+		end
+		
+	Key_execute: INTEGER is
+			-- Permission for read access.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_EXECUTE"
+		end
+		
+	Key_notify: INTEGER is
+			-- Permission for change notification.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_NOTIFY"
+		end
+		
+	Key_query_value: INTEGER is
+			-- Permission to query subkey data.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_QUERY_VALUE"
+		end
+		
+	Key_set_value: INTEGER is
+			-- Permission to set subkey data.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_SET_VALUE"
+		end
+		
+	Key_all_access: INTEGER is
+			-- Combines the KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, 
+			-- KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and 
+			-- KEY_SET_VALUE access rights, plus all the standard 
+			-- access rights except SYNCHRONIZE. 
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_ALL_ACCESS"
+		end
+		
+	Key_read: INTEGER is
+			-- Combines the STANDARD_RIGHTS_READ, KEY_QUERY_VALUE, 
+			-- KEY_ENUMERATE_SUB_KEYS, and KEY_NOTIFY access rights.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_READ"
+		end
+		
+	Key_write: INTEGER is
+			-- Combines the STANDARD_RIGHTS_WRITE, KEY_SET_VALUE,
+			-- and KEY_CREATE_SUB_KEY access rights.
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"KEY_WRITE"
+		end
+		
 end -- class WEL_REGISTRY_ACCESS_MODE
 
 --|----------------------------------------------------------------

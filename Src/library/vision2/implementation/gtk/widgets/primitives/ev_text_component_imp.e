@@ -34,11 +34,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation		
-			
-	entry_widget: POINTER is
-			-- Pointer to the Gtk text component widget.
-		deferred
-		end
 
 	interface: EV_TEXT_COMPONENT
 

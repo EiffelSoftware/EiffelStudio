@@ -181,7 +181,7 @@ typedef unsigned int uint32;
 typedef unsigned char	EIF_BOOLEAN;
 typedef unsigned char	EIF_CHARACTER;
 typedef uint32			EIF_WIDE_CHAR;
-typedef char			EIF_INTEGER_8;
+typedef signed char		EIF_INTEGER_8;
 typedef int16			EIF_INTEGER_16;
 typedef int32			EIF_INTEGER;
 typedef int32			EIF_INTEGER_32;

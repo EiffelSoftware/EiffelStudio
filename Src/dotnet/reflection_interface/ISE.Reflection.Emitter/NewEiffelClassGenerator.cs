@@ -25,35 +25,27 @@ public class EiffelClassGenerator: Globals
 	virtual internal void Emit( String FileName, String PathName )
 	{
 		Assembly assembly;
+		bool IsImported;
 		String Path;
-		ArrayList Dependencies;
-		int i;
-		Assembly Dependency;
 		
 		assembly = Assembly.LoadFrom( FileName );
+		IsImported = IsAssemblyImported( assembly );
 		if( PathName == null )
 		{
 			Path = Environment.CurrentDirectory;
-			EmitFromAssembly( assembly, Path );
+			EmitFromAssembly( assembly, Path, IsImported, false );
 		}
 		else
 		{
 			if( PathName.Length == 0 )
 			{
 				Path = Environment.CurrentDirectory;
-				EmitFromAssembly( assembly, Path );
+				EmitFromAssembly( assembly, Path, IsImported, false );
 			}
 			else
-				EmitFromAssembly( assembly, PathName );
+				EmitFromAssembly( assembly, PathName, IsImported, false );
 		}
-		Done = new ArrayList();
-		Dependencies = LoadExternalAssemblies( assembly );
-		for( i = 0; i < Dependencies.Count; i ++ )
-		{
-			Dependency = ( Assembly )Dependencies [i];
-			NameFormatter.XmlGeneration = IsSigned( Dependency );	
-			ImportAssemblyWithoutDependancies( Dependency, PathName, NameFormatter.EiffelFormatting, NameFormatter.XmlGeneration, true );
-		}
+		ImportAssemblyDependencies( assembly, PathName, NameFormatter.EiffelFormatting );
 	}	
 	
 	
@@ -64,14 +56,8 @@ public class EiffelClassGenerator: Globals
 	// Import `assembly' with its dependencies.
 	virtual public void ImportAssemblyWithDependancies( Assembly assembly, String PathName, bool EiffelFormatting )
 	{
-		ArrayList Dependencies;
-		int i;
-		
 		ImportAssemblyWithoutDependancies( assembly, PathName, EiffelFormatting, true, false );
-		Done = new ArrayList();
-		Dependencies = LoadExternalAssemblies( assembly );
-		for( i = 0; i < Dependencies.Count; i ++ )
-			ImportAssemblyWithoutDependancies( ( Assembly )Dependencies [i], PathName, EiffelFormatting, true, true );
+		ImportAssemblyDependencies( assembly, PathName, EiffelFormatting );
 	}
 	
 	// Generate Eiffel code from XML files corresponding to assemblies in `ImportedAssemblies'.
@@ -94,7 +80,7 @@ public class EiffelClassGenerator: Globals
 		bool Imported;
 		
 		Imported = IsAssemblyImported( assembly );
-		if( !Imported ||( ( NameFormatter.XmlGeneration )&&( !IsDependency ) ) )
+		if( !Imported ||( XmlGeneration && !IsDependency ) )
 		{
 			if( !Imported )
 			{
@@ -107,34 +93,36 @@ public class EiffelClassGenerator: Globals
 			if( PathName == null )
 			{
 				Path = Environment.CurrentDirectory;
-				EmitFromAssembly( assembly, Path );
+				EmitFromAssembly( assembly, Path, Imported, IsDependency );
 			}
 			else
 			{
 				if( PathName.Length == 0 )
 				{
 					Path = Environment.CurrentDirectory;
-					EmitFromAssembly( assembly, Path );
+					EmitFromAssembly( assembly, Path, Imported, IsDependency );
 				}
 				else
-					EmitFromAssembly( assembly, PathName );
+					EmitFromAssembly( assembly, PathName, Imported, IsDependency );
 			}
 		}
 	}
  	
 	// Generate Eiffel code an Xml files for `assembly'.
-	virtual protected void EmitFromAssembly( Assembly assembly, String PathName )
+	virtual protected void EmitFromAssembly( Assembly assembly, String PathName, bool IsImported, bool IsDependency )
 	{	
-		if( !IsAssemblyImported( assembly ) )
+		if( !IsImported )
 		{
 			if( NameFormatter.XmlGeneration )
-				EmitXmlFiles( assembly, PathName );
-			EmitEiffelClasses( assembly, PathName );
+				EmitXmlAndEiffelFiles( assembly, PathName );
+			else
+				EmitEiffelClasses( assembly, PathName );
 		}
 		else
 		{
-			if( ( NameFormatter.XmlGeneration )&& !( assembly.GetName().Name.Equals( MscorlibAssemblyName ) ) )
-				EmitEiffelClassesFromXml( assembly, null );
+			if( !IsDependency )
+				if( ( NameFormatter.XmlGeneration )&& !( assembly.GetName().Name.Equals( MscorlibAssemblyName ) ) )
+					EmitEiffelClassesFromXml( assembly, null );
 		}
 	}		
 
@@ -269,6 +257,60 @@ public class EiffelClassGenerator: Globals
 		}
 	}
 
+	// Generate Xml and Eiffel files for assemblies in `Dependancies' and set `EiffelClusterPath' of EiffelAssembly generated with `PathName'.
+	// PathName: Path to folder where Eiffel code will be generated.
+	virtual protected void EmitXmlAndEiffelFiles( Assembly assembly, String PathName )
+	{	
+		Module [] Modules;
+		Type [] types;
+		int  i, j, typesLength;
+		EiffelClass GeneratedEiffelClass;
+		EiffelAssembly AssemblyFactory = null;
+		XmlCodeGenerator XmlGenerator = null;
+		EiffelClassFactory ClassFactory;
+		bool EiffelAssemblyGenerated = false;
+		AssemblyDescriptor Descriptor = null;
+		EiffelAssembly GeneratedAssembly = null;
+		EiffelCodeGenerator EiffelGenerator = null;
+	
+		XmlGenerator = new XmlCodeGenerator();
+		XmlGenerator.MakeXmlCodeGenerator();
+		EiffelGenerator = new EiffelCodeGenerator();
+		Descriptor = new AssemblyDescriptor();
+	
+		Modules = assembly.GetModules();
+		EiffelAssemblyGenerated = false;
+		for( i = 0; i < Modules.Length; i++ )
+		{
+			types = Modules [i].GetTypes();
+			typesLength = types.Length;
+
+			for( j = 0; j < typesLength; j++ )
+			{				
+				if( ClassIDTable [types [j]] != null )
+				{	
+					if( !EiffelAssemblyGenerated )
+					{
+						AssemblyFactory = GeneratedAssemblyFactory( types [j], EiffelPath( assembly, PathName ) );
+						Descriptor = AssemblyFactory.AssemblyDescriptor;
+						XmlGenerator.StartAssemblyGeneration( AssemblyFactory );
+						GeneratedAssembly = new EiffelAssembly();
+						GeneratedAssembly.Make( Descriptor, AssemblyFactory.EiffelClusterPath, AssemblyFactory.EmitterVersionNumber );
+						EiffelGenerator.MakeFromInfo( GeneratedAssembly );
+						EiffelAssemblyGenerated = true;
+					}
+					ClassFactory = ( EiffelClassFactory )ClassTable [( int )ClassIDTable [types [j]]];
+					GeneratedEiffelClass = GeneratedClass( ClassFactory );
+					GeneratedEiffelClass.SetAssemblyDescriptor( Descriptor );
+					XmlGenerator.GenerateType( GeneratedEiffelClass );
+					EiffelGenerator.GenerateEiffelClass( GeneratedEiffelClass );
+				}						
+			}
+		}
+		if( EiffelAssemblyGenerated )
+			XmlGenerator.EndAssemblyGeneration();
+	}
+	
 	// `EiffelPath' from `assembly' and `PathName'.
 	virtual protected String EiffelPath( Assembly assembly, String PathName )
 	{
@@ -319,7 +361,6 @@ public class EiffelClassGenerator: Globals
 		EiffelAssembly EAssembly;
 		String EiffelClusterPath;
 		EiffelCodeGeneratorFromXml generator;
-		ReflectionInterface reflectionInterface;
 		ArrayList AssemblyTypes;
 		int i;
 		EiffelClass AType;
@@ -342,8 +383,6 @@ public class EiffelClassGenerator: Globals
 				EiffelClusterPath = EAssembly.EiffelClusterPath;
 
 				generator = new EiffelCodeGeneratorFromXml();
-				reflectionInterface = new ReflectionInterface();
-				reflectionInterface.MakeReflectionInterface();
 				if( EAssembly != null )
 				{
 					AssemblyTypes = EAssembly.Types();
@@ -543,11 +582,11 @@ public class EiffelClassGenerator: Globals
 		}
 		else
 		{
-			if (
+			GeneratedEiffelClass.SetBitOrInfix
+			( 
 				( ClassFactory.UnderlyingType.IsEnum )&&
 				( ClassFactory.UnderlyingType.GetCustomAttributes( typeof( FlagsAttribute ), false ).Length > 0 )
-			)
-				GeneratedEiffelClass.SetBitOrInfix();			
+			);			
 		}
 
 		if( ClassFactory.UnaryOperatorsFeatures.Count > 0 )
@@ -951,6 +990,33 @@ public class EiffelClassGenerator: Globals
 			return( Key.Length > 0 );
 		else
 			return false;		
+	}
+	
+	// Import `assembly' dependencies.
+	virtual protected void ImportAssemblyDependencies( Assembly assembly, String PathName, bool EiffelFormatting )
+	{
+		ArrayList Dependencies;
+		Assembly Dependency;
+		bool IsSignedAssembly = false;
+		int i;
+		String assemblyFullName;
+		
+		assemblyFullName = assembly.FullName.ToLower();
+		Done = new ArrayList();
+		Dependencies = LoadExternalAssemblies( assembly );
+		for( i = 0; i < Dependencies.Count; i ++ )
+		{
+			Dependency = ( Assembly )Dependencies [i];
+			if( Dependency != null )
+			{
+				if( !Dependency.FullName.ToLower().Equals( assemblyFullName ) )
+				{
+					IsSignedAssembly = IsSigned( Dependency );
+					NameFormatter.XmlGeneration = IsSignedAssembly;
+					ImportAssemblyWithoutDependancies( Dependency, PathName, EiffelFormatting, IsSignedAssembly, true );
+				}
+			}
+		}
 	}
 	
 	// Loaded assemblies, used in `LoadExternalAssemblies'

@@ -118,7 +118,7 @@ feature -- Access
 	gotcha_call (a_message: STRING) is
 		do
 			set_no_grab;
-			add_button_click_action (1, Current, popdown_action);
+			add_button_press_action (1, Current, popdown_action);
 			custom_call (Void, a_message, Void, Void, Void);
 		end;
 

@@ -47,8 +47,7 @@ feature
 
 	undo is
 		do
-			context_catalog.append_group_type (group_type);
-			Shared_group_list.extend (group_type.group);
+			context_catalog.add_group_type (group_type);
 		end;
 
 	redo is

@@ -795,7 +795,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 	is_special = EIF_TEST(flags & EO_SPEC);	
 	twrite (&is_special, sizeof(EIF_BOOLEAN));
 		/* Send class dynamic id */
-	dtype = Deif_bid(flags & EO_TYPE);
+	dtype = Deif_bid(flags);
 	twrite (&dtype, sizeof(int32));
 					
 	if (is_special) {

@@ -652,42 +652,43 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			vertical_box: EV_VERTICAL_BOX
 			cell: EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			counter: INTEGER
 		do
-			index_of_tool := all_holders.index_of (a_holder, 1)
+			index_of_tool := index_of_holder (a_holder)
 			from
-				all_holders.start
+				counter := 1
 			until
-				all_holders.off
+				counter > count
 			loop
-				holder := all_holders.item
-				if all_holders.index < index_of_tool or
-					all_holders.index > index_of_tool + 1 then
+				holder := holder_of_widget (linear_representation.i_th (counter))
+				if counter < index_of_tool or
+					counter > index_of_tool + 1 then
 					vertical_box := holder.upper_box
 					create cell
-					cell.set_data (all_holders.index)
+					cell.set_data (counter)
 					vertical_box.extend (cell)
 					vertical_box.disable_item_expand (cell)
 					cell.enable_docking
 					holder.set_real_target (cell)
 				end
-				if all_holders.index = all_holders.count and index_of_tool /= all_holders.count then
+				if counter = count and index_of_tool /= count then
 						-- As `holder' is the last holder, we must perform special processing, so
 						-- that the final position may be docked to.
-					if index_of_tool + 1 /= all_holders.index then
+					if index_of_tool + 1 /= counter then
 							-- If `a_holder' is immediately above `holder', then
 							-- do not allow docking to the top, as it is already
 							-- positioned there.
 						holder.label_box.set_real_target (cell)
 					end
 					create cell
-					cell.set_data (all_holders.index + 1)
+					cell.set_data (counter + 1)
 					vertical_box := holder.lower_box
 					vertical_box.extend (cell)
 					vertical_box.disable_item_expand (cell)
 					cell.enable_docking
 					holder.tool.set_real_target (cell)
 				end
-				all_holders.forth
+				counter := counter + 1
 			end
 		end
 		

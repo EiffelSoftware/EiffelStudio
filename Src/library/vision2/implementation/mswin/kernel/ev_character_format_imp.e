@@ -30,8 +30,7 @@ inherit
 			set_effects as wel_set_effects,
 			set_background_color as wel_set_background_color,
 			background_color as wel_background_color,
-			height as wel_height,
-			height_in_points as wel_height_in_points
+			height as wel_height
 		undefine
 			default_create, copy, is_equal, out
 		end
@@ -184,7 +183,7 @@ feature -- Status setting
 
 			set_height_in_points (font_imp.height_in_points)
 			set_char_set (l_log_font.char_set)
-			if log_font.weight >= 700 then
+			if l_log_font.weight >= 700 then
 				enable_bold
 			else
 				disable_bold
@@ -326,12 +325,6 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		do
 			Result := height_in_pixels
 		end
-		
-	height_in_points: INTEGER is
-			-- Height of `Current' in points.
-		do
-			Result := wel_height_in_points
-		end	
 		
 	fcolor: INTEGER is
 			-- foreground color RGB packed into 24 bit.

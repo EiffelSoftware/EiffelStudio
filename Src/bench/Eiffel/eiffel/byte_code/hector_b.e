@@ -72,7 +72,7 @@ feature -- IL code generation
 			l_local_number: INTEGER
 		do
 			l_type := context.real_type (expr.type)
-			if l_type.is_basic then
+			if l_type.is_expanded then
 				check
 					not_current: not expr.is_current
 				end

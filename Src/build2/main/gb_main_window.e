@@ -124,6 +124,7 @@ feature {NONE} -- Implementation
 			history_button: GB_HISTORY_TOOL_BAR_BUTTON
 			redo_button: GB_REDO_TOOL_BAR_BUTTON
 			separator: EV_TOOL_BAR_SEPARATOR
+			generation_button: GB_CODE_GENERATION_TOOL_BAR_BUTTON
 		once
 			create Result
 			create delete_button
@@ -144,6 +145,10 @@ feature {NONE} -- Implementation
 			create redo_button
 			Result.extend (redo_button)
 			redo_button.disable_sensitive
+			create separator
+			Result.extend (separator)
+			create generation_button
+			Result.extend (generation_button)
 			create separator
 			Result.extend (separator)
 		end

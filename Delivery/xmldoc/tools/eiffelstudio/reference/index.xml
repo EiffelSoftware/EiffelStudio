@@ -1,5 +1,5 @@
 <document title="EiffelStudio Reference" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>
@@ -10,8 +10,8 @@
 			</item>
 			<item>
 				<link>
-					<url>02_what_s_new/Eiffel55.xml</url>
-					<label>What's new in EiffelStudio 5.5</label>
+					<url>02_what_s_new/Eiffel56.xml</url>
+					<label>What's new in EiffelStudio 5.6</label>
 				</link>
 			</item>
 			<item>

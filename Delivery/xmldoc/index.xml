@@ -1,5 +1,5 @@
 <document title="Online Eiffel Documentation">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<output output="studio">
 			<paragraph>Congratulations for installing Eiffel Software's Eiffel, featuring 
@@ -22,7 +22,7 @@
 				</paragraph>
 				<paragraph>You will find out 
 					<link>
-						<url>tools/eiffelstudio/reference/02_what_s_new/Eiffel55.xml</url>
+						<url>tools/eiffelstudio/reference/02_what_s_new/Eiffel56.xml</url>
 						<label>here</label>
 					</link> what's new in this release.
 					<heading>

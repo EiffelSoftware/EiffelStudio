@@ -1753,14 +1753,41 @@ feature {NONE} -- Event handling
 	grid_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		local
-			pointed_item: EV_GRID_ITEM
+			pointed_item: EV_GRID_ITEM_I
 			pointed_item_row: EV_GRID_ROW
+			a_subrow_indent: INTEGER
+			first_tree_node_indent: INTEGER
+			node_pixmap_width, node_pixmap_height: INTEGER
+			total_tree_node_width: INTEGER
+			current_item_x_position: INTEGER
+			node_index: INTEGER
+			current_subrow_indent: INTEGER
 		do
 			pointed_item := drawer.item_at_position (a_x, a_y)
 			if pointed_item /= Void then
+				node_pixmap_width := expand_node_pixmap.width
+				node_pixmap_height := expand_node_pixmap.height
+				total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
+				a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
+				first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
+				from
+					node_index := pointed_item.column.index
+				until
+					node_index = 1 or else not is_item_set (node_index - 1, pointed_item.row.index) 
+				loop
+					node_index := node_index - 1
+				end
+				
+				current_subrow_indent := a_subrow_indent * (pointed_item.parent_row_i.indent_depth_in_tree - 1) + first_tree_node_indent
+				
+				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport.x_offset)
 				if a_button = 1 then
 					pointed_item_row := pointed_item.row
-					if pointed_item_row.subrow_count > 0 then
+					if pointed_item_row.subrow_count > 0 and
+						node_index = pointed_item.column.index and
+						a_x < current_subrow_indent + current_item_x_position and
+						a_x > current_subrow_indent - node_pixmap_width - 2 * tree_node_spacing + current_item_x_position then
+					
 						if pointed_item_row.is_expanded then
 							pointed_item_row.collapse
 						else

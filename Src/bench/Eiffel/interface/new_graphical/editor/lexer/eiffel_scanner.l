@@ -335,6 +335,7 @@ feature -- Start Job / Reinitialization
 			create analysed_tokens.make	-- create a new one, the old one
 										-- is still "usable"
 			last_token := Void
+			first_token := Void
 		end
 
 feature -- Access
@@ -344,6 +345,9 @@ feature -- Access
 
 	last_token: EDITOR_TOKEN
 			-- Last token analysed.
+
+	first_token: EDITOR_TOKEN
+			-- First token analysed.
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -356,7 +360,11 @@ feature {NONE} -- Processing
 	update_token_list is
 			-- Link the current token to the last one.
 		do
-			last_token.set_previous_token(curr_token)
+			if last_token = Void then
+				first_token := current_token
+			else
+				last_token.set_previous_token(curr_token)
+			end
 			curr_token.set_next_token(last_token)
 			last_token := curr_token
 		end

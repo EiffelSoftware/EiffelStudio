@@ -1,11 +1,6 @@
 indexing
-
-	description:
-
-		"Scanners for Eiffel parsers"
-
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	description:"Scanners for Eiffel parsers"
+	author:     "Arnaud PICHERY from an Eric Bezault model"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -64,872 +59,1020 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-if yy_act <= 59 then
-if yy_act <= 30 then
-if yy_act <= 15 then
-if yy_act <= 8 then
-if yy_act <= 4 then
+if yy_act <= 67 then
+if yy_act <= 34 then
+if yy_act <= 17 then
+if yy_act <= 9 then
+if yy_act <= 5 then
+if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 50
+--|#line 45
 -- Ignore carriage return
 else
---|#line 51
+--|#line 46
 
 					create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 else
-if yy_act = 3 then
---|#line 55
+--|#line 50
 
 					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
-					analysed_tokens.extend(curr_token)
+					update_token_list
+					
+end
+else
+if yy_act = 4 then
+--|#line 54
+
+					from i := 1 until i > text_count loop
+						create {EDITOR_TOKEN_EOL} curr_token.make
+						update_token_list
+						i := i + 1
+					end
 					
 else
---|#line 59
--- Do nothing. It's an error since we are only analysing lines
-end
-end
-else
-if yy_act <= 6 then
-if yy_act = 5 then
---|#line 64
+--|#line 65
  
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
---|#line 72
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
+end
 else
-if yy_act = 7 then
+if yy_act <= 7 then
+if yy_act = 6 then
 --|#line 73
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 74
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 12 then
-if yy_act <= 10 then
-if yy_act = 9 then
+if yy_act = 8 then
 --|#line 75
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 76
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
+end
+end
 else
-if yy_act = 11 then
+if yy_act <= 13 then
+if yy_act <= 11 then
+if yy_act = 10 then
 --|#line 77
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 78
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
-end
 else
-if yy_act <= 14 then
-if yy_act = 13 then
+if yy_act = 12 then
 --|#line 79
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 80
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
+end
 else
+if yy_act <= 15 then
+if yy_act = 14 then
 --|#line 81
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
-end
-end
-end
 else
-if yy_act <= 23 then
-if yy_act <= 19 then
-if yy_act <= 17 then
-if yy_act = 16 then
 --|#line 82
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
+end
 else
+if yy_act = 16 then
 --|#line 83
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
+					
+else
+--|#line 84
+
+						-- Symbols
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					update_token_list
 					
 end
+end
+end
+end
 else
+if yy_act <= 26 then
+if yy_act <= 22 then
+if yy_act <= 20 then
+if yy_act <= 19 then
 if yy_act = 18 then
---|#line 89
+--|#line 90
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
+--|#line 91
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+else
+--|#line 92
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 21 then
+--|#line 93
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 94
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+end
+else
+if yy_act <= 24 then
+if yy_act = 23 then
+--|#line 95
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 96
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 25 then
 --|#line 97
-
-										-- Create/Creation keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 else
-if yy_act <= 21 then
-if yy_act = 20 then
 --|#line 98
-
-										-- Create/Creation keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+end
+end
 else
+if yy_act <= 30 then
+if yy_act <= 28 then
+if yy_act = 27 then
 --|#line 99
-
-										-- Create/Creation keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 100
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 end
 else
-if yy_act = 22 then
---|#line 105
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+if yy_act = 29 then
+--|#line 101
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 else
---|#line 106
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-end
-else
-if yy_act <= 27 then
-if yy_act <= 25 then
-if yy_act = 24 then
---|#line 107
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 108
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
-if yy_act = 26 then
---|#line 109
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 110
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+--|#line 102
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 end
 end
 else
-if yy_act <= 29 then
-if yy_act = 28 then
---|#line 111
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 112
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
---|#line 113
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-end
-end
-else
-if yy_act <= 45 then
-if yy_act <= 38 then
-if yy_act <= 34 then
 if yy_act <= 32 then
 if yy_act = 31 then
---|#line 114
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+--|#line 103
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 else
---|#line 115
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+--|#line 104
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
 end
 else
 if yy_act = 33 then
+--|#line 105
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 106
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+end
+end
+end
+end
+else
+if yy_act <= 51 then
+if yy_act <= 43 then
+if yy_act <= 39 then
+if yy_act <= 37 then
+if yy_act <= 36 then
+if yy_act = 35 then
+--|#line 107
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 108
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+else
 --|#line 116
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
 else
+if yy_act = 38 then
 --|#line 117
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
-end
-end
 else
-if yy_act <= 36 then
-if yy_act = 35 then
 --|#line 118
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
+end
 else
+if yy_act <= 41 then
+if yy_act = 40 then
 --|#line 119
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
-end
 else
-if yy_act = 37 then
 --|#line 120
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
 else
+if yy_act = 42 then
 --|#line 121
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
-end
-end
-end
 else
-if yy_act <= 42 then
-if yy_act <= 40 then
-if yy_act = 39 then
 --|#line 122
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
+end
+end
 else
+if yy_act <= 47 then
+if yy_act <= 45 then
+if yy_act = 44 then
 --|#line 123
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
-end
 else
-if yy_act = 41 then
 --|#line 124
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
 else
+if yy_act = 46 then
 --|#line 125
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
-end
-end
 else
-if yy_act <= 44 then
-if yy_act = 43 then
 --|#line 126
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
+end
+end
 else
+if yy_act <= 49 then
+if yy_act = 48 then
 --|#line 127
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
+										
+else
+--|#line 128
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
 										
 end
 else
+if yy_act = 50 then
+--|#line 129
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 130
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+end
+end
+else
+if yy_act <= 59 then
+if yy_act <= 55 then
+if yy_act <= 53 then
+if yy_act = 52 then
+--|#line 131
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 132
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 54 then
 --|#line 133
 
-										is_operator := True
-										-- infix Keyword
+										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
+										
+else
+--|#line 134
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+else
+if yy_act <= 57 then
+if yy_act = 56 then
+--|#line 135
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 136
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 58 then
+--|#line 137
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 138
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
 										
 end
 end
 end
 else
-if yy_act <= 52 then
-if yy_act <= 49 then
-if yy_act <= 47 then
-if yy_act = 46 then
+if yy_act <= 63 then
+if yy_act <= 61 then
+if yy_act = 60 then
 --|#line 139
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
 --|#line 140
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 end
 else
-if yy_act = 48 then
+if yy_act = 62 then
 --|#line 141
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
 --|#line 142
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-else
-if yy_act <= 51 then
-if yy_act = 50 then
---|#line 143
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 144
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
---|#line 145
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-else
-if yy_act <= 56 then
-if yy_act <= 54 then
-if yy_act = 53 then
---|#line 146
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 147
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
-if yy_act = 55 then
---|#line 148
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 149
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-else
-if yy_act <= 58 then
-if yy_act = 57 then
---|#line 150
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 151
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
---|#line 157
-
-										is_operator := True
-										-- Prefix Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-end
-end
-end
-else
-if yy_act <= 89 then
-if yy_act <= 74 then
-if yy_act <= 67 then
-if yy_act <= 63 then
-if yy_act <= 61 then
-if yy_act = 60 then
---|#line 163
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 164
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
-if yy_act = 62 then
---|#line 165
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 166
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 end
 end
 else
 if yy_act <= 65 then
 if yy_act = 64 then
+--|#line 143
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 144
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 66 then
+--|#line 145
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 146
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+end
+end
+end
+end
+else
+if yy_act <= 101 then
+if yy_act <= 84 then
+if yy_act <= 76 then
+if yy_act <= 72 then
+if yy_act <= 70 then
+if yy_act <= 69 then
+if yy_act = 68 then
+--|#line 147
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 148
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+--|#line 149
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 71 then
+--|#line 150
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 151
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+else
+if yy_act <= 74 then
+if yy_act = 73 then
+--|#line 152
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 153
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 75 then
+--|#line 154
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 155
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+end
+else
+if yy_act <= 80 then
+if yy_act <= 78 then
+if yy_act = 77 then
+--|#line 156
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 157
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 79 then
+--|#line 158
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 159
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+else
+if yy_act <= 82 then
+if yy_act = 81 then
+--|#line 160
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 161
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 83 then
+--|#line 162
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 163
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+end
+end
+end
+else
+if yy_act <= 93 then
+if yy_act <= 89 then
+if yy_act <= 87 then
+if yy_act <= 86 then
+if yy_act = 85 then
+--|#line 164
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 165
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+--|#line 166
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 88 then
 --|#line 167
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
 --|#line 168
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 end
+end
 else
-if yy_act = 66 then
+if yy_act <= 91 then
+if yy_act = 90 then
 --|#line 169
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
 --|#line 170
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 71 then
-if yy_act <= 69 then
-if yy_act = 68 then
+if yy_act = 92 then
 --|#line 171
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
---|#line 172
+--|#line 180
 
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
-if yy_act = 70 then
---|#line 173
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 174
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-end
-else
-if yy_act <= 73 then
-if yy_act = 72 then
---|#line 175
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 176
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
---|#line 177
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										update_token_list
 										
 end
 end
 end
 else
-if yy_act <= 82 then
-if yy_act <= 78 then
-if yy_act <= 76 then
-if yy_act = 75 then
---|#line 178
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-else
---|#line 179
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
-end
-else
-if yy_act = 77 then
+if yy_act <= 97 then
+if yy_act <= 95 then
+if yy_act = 94 then
 --|#line 188
 
 										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										
 else
---|#line 196
+--|#line 198
 
-										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 96 then
+--|#line 199
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 200
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
 end
 end
 else
-if yy_act <= 80 then
-if yy_act = 79 then
+if yy_act <= 99 then
+if yy_act = 98 then
+--|#line 201
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 202
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 100 then
+--|#line 203
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 204
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+end
+end
+end
+end
+end
+else
+if yy_act <= 118 then
+if yy_act <= 110 then
+if yy_act <= 106 then
+if yy_act <= 104 then
+if yy_act <= 103 then
+if yy_act = 102 then
+--|#line 205
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
 --|#line 206
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
+end
 else
 --|#line 207
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 else
-if yy_act = 81 then
+if yy_act = 105 then
 --|#line 208
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 209
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 end
-end
 else
-if yy_act <= 86 then
-if yy_act <= 84 then
-if yy_act = 83 then
+if yy_act <= 108 then
+if yy_act = 107 then
 --|#line 210
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 211
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 else
-if yy_act = 85 then
+if yy_act = 109 then
 --|#line 212
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 213
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 end
+end
 else
-if yy_act <= 88 then
-if yy_act = 87 then
+if yy_act <= 114 then
+if yy_act <= 112 then
+if yy_act = 111 then
 --|#line 214
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
 --|#line 215
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 else
+if yy_act = 113 then
 --|#line 216
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
-end
-end
-end
-end
 else
-if yy_act <= 104 then
-if yy_act <= 97 then
-if yy_act <= 93 then
-if yy_act <= 91 then
-if yy_act = 90 then
 --|#line 217
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
+end
+end
 else
+if yy_act <= 116 then
+if yy_act = 115 then
 --|#line 218
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
-end
 else
-if yy_act = 92 then
 --|#line 219
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
---|#line 220
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-end
-end
-else
-if yy_act <= 95 then
-if yy_act = 94 then
---|#line 221
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
---|#line 222
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
 else
-if yy_act = 96 then
---|#line 223
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
+if yy_act = 117 then
 --|#line 224
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-end
-end
-end
-else
-if yy_act <= 101 then
-if yy_act <= 99 then
-if yy_act = 98 then
---|#line 225
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
---|#line 226
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-end
-else
-if yy_act = 100 then
---|#line 227
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-else
---|#line 232
 
 					code_ := text_substring (4, text_count - 2).to_integer
 					if code_ > Platform.Maximum_character_code then
@@ -938,156 +1081,156 @@ else
 					else
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					end
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
-end
-end
 else
-if yy_act <= 103 then
-if yy_act = 102 then
---|#line 243
+--|#line 235
 
 					-- Character error. Catch-all rules (no backing up)
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
+end
+end
+end
+end
 else
---|#line 244
+if yy_act <= 126 then
+if yy_act <= 122 then
+if yy_act <= 120 then
+if yy_act = 119 then
+--|#line 236
 
 					-- Character error. Catch-all rules (no backing up)
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
-end
 else
---|#line 253
+--|#line 245
 
 					-- Eiffel String
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 111 then
-if yy_act <= 108 then
-if yy_act <= 106 then
-if yy_act = 105 then
---|#line 254
+if yy_act = 121 then
+--|#line 246
 
 					-- Eiffel String
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
+--|#line 247
+
+					-- Eiffel String
+					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					update_token_list
+					
+end
+end
+else
+if yy_act <= 124 then
+if yy_act = 123 then
 --|#line 255
-
-					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
-					
-end
-else
-if yy_act = 107 then
---|#line 263
 
 					-- Eiffel Bit
 					create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					
 else
---|#line 271
+--|#line 263
 
 						-- Eiffel Integer
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 end
-end
 else
-if yy_act <= 110 then
-if yy_act = 109 then
---|#line 272
+if yy_act = 125 then
+--|#line 264
 
 						-- Eiffel Integer
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 else
---|#line 277
+--|#line 269
 
 						-- Eiffel Integer Error (considered as text)
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 end
+end
+end
+else
+if yy_act <= 130 then
+if yy_act <= 128 then
+if yy_act = 127 then
+	yy_position := yy_position - 1
+--|#line 277
+
+							-- Eiffel reals & doubles
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						update_token_list
+						
+else
+--|#line 278
+
+							-- Eiffel reals & doubles
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						update_token_list
+						
+end
+else
+if yy_act = 129 then
+--|#line 279
+
+							-- Eiffel reals & doubles
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						update_token_list
+						
 else
 	yy_position := yy_position - 1
---|#line 285
+--|#line 280
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 end
 end
 else
-if yy_act <= 115 then
-if yy_act <= 113 then
-if yy_act = 112 then
---|#line 286
+if yy_act <= 132 then
+if yy_act = 131 then
+--|#line 281
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 else
---|#line 287
+--|#line 282
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
-						
-end
-else
-if yy_act = 114 then
-	yy_position := yy_position - 1
---|#line 288
-
-							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
-						
-else
---|#line 289
-
-							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						
 end
-end
 else
-if yy_act <= 117 then
-if yy_act = 116 then
---|#line 290
-
-							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
-						
-else
---|#line 303
+if yy_act = 133 then
+--|#line 295
 
 					-- Error (considered as text)
 				create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-				analysed_tokens.extend(curr_token)
+				update_token_list
 				
-end
 else
 --|#line 0
 echo
+end
 end
 end
 end
@@ -1116,108 +1259,107 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,    4,    5,    6,    7,    8,    9,   10,   11,   12,
-			   13,   14,   15,   16,   17,   17,   18,   19,   20,   21,
-			   22,   23,   24,   25,   26,   17,   27,   28,   29,   30,
-			   31,   32,   33,   34,   35,   35,   36,   35,   35,   37,
-			   35,   38,   39,   40,   35,   41,   42,   43,   44,   45,
-			   46,   47,   35,   35,   48,   49,   50,   17,   51,   29,
-			   30,   31,   32,   34,   35,   37,   38,   35,   41,   42,
-			   43,   44,   45,   52,   53,   60,   66,   67,   61,   68,
-			   69,   69,   70,   70,   69,   69,  104,   69,   69,   71,
-			  112,   72,   73,   71,   85,   73,   73,   69,   69,   97,
+			   13,   14,   15,   16,   17,   18,   19,   20,   21,   22,
+			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
+			   33,   34,   35,   36,   37,   37,   38,   37,   37,   39,
+			   37,   40,   41,   42,   37,   43,   44,   45,   46,   47,
+			   48,   49,   37,   37,   50,   51,   52,   53,   54,   31,
+			   32,   33,   34,   36,   37,   39,   40,   37,   43,   44,
+			   45,   46,   47,   55,   56,   63,   69,   70,   64,   71,
+			   73,   75,   74,   74,   83,   84,  116,   76,   72,   77,
+			  124,   78,   79,   77,   97,   79,   79,   85,   86,  109,
 
-			   74,   87,  311,   88,   86,   98,  106,   81,   77,  104,
-			   78,   82,  320,   89,  337,   79,  111,   83,  338,  112,
-			   84,  107,   90,  199,  199,  110,   91,   87,   88,   75,
-			  331,   74,  311,   75,   77,   78,   81,   82,   79,   92,
-			   83,   93,  320,   84,  107,  100,  108,  111,   94,   95,
-			  110,  114,  114,   90,   96,  101,  109,  102,  143,  143,
-			   60,  103,   92,   61,   60,   60,  283,   61,   61,   79,
-			  144,   93,  147,  147,   95,  108,  100,   96,  161,  109,
-			  266,  101,  102,  276,  103,  139,  139,  419,  148,  114,
-			  117,  149,   79,  118,  119,  120,  121,  140,   71,  418,
+			   80,   99,  319,  100,   98,  110,  118,   93,   89,  116,
+			   90,   94,  328,  101,  345,   91,  123,   95,  346,  124,
+			   96,  119,  102,  211,  211,  122,  103,   99,  100,   81,
+			  339,   80,  319,   81,   89,   90,   93,   94,   91,  104,
+			   95,  105,  328,   96,  119,  112,  120,  123,  106,  107,
+			  122,  127,  127,  102,  108,  113,  121,  114,  156,  156,
+			   63,  115,  104,   64,   63,   63,  293,   64,   64,   91,
+			  157,  105,  160,  160,  107,  120,  112,  108,  174,  121,
+			  276,  113,  114,  286,  115,  152,  152,  426,  161,  127,
+			  130,  162,   91,  131,  132,  133,  134,  153,   77,  425,
 
-			  146,  146,  122,  149,  161,  266,  151,  123,  162,  124,
-			  114,  125,  126,  127,  128,  417,  129,  149,  130,  153,
-			  156,  154,  131,  141,  132,  155,  157,  133,  134,  135,
-			  136,  137,  138,   71,  149,  145,  146,  151,   75,  162,
-			  173,  158,  153,  156,   74,  159,  174,  171,  175,  160,
-			  176,  416,  154,  185,  415,  155,  165,  157,  166,  172,
-			  167,  187,  228,  173,  158,  413,  183,  178,  191,  174,
-			  184,  168,  160,   75,  169,   74,  185,  179,  171,  175,
-			  180,  176,  181,  182,  187,  188,  193,  165,  166,  167,
-			  189,  191,  183,  228,  168,  114,  114,  169,  178,  216,
+			  159,  159,  135,  162,  174,  276,  164,  136,  175,  137,
+			  127,  138,  139,  140,  141,  424,  142,  162,  143,  166,
+			  169,  167,  144,  154,  145,  168,  170,  146,  147,  148,
+			  149,  150,  151,   77,  162,  158,  159,  164,   81,  175,
+			  185,  171,  166,  169,   80,  172,  183,  178,  186,  173,
+			  187,  179,  167,  188,  423,  168,  195,  170,  184,  422,
+			  196,  420,  180,  185,  171,  181,  401,  197,  127,  127,
+			  199,  186,  173,   81,  203,   80,  190,  183,  178,  205,
+			  179,  187,  195,  392,  188,  180,  191,  240,  181,  192,
+			  197,  193,  194,  199,  200,  231,  231,  203,   77,  201,
 
-			  216,  190,  179,  180,  394,  181,  182,  230,  217,  193,
-			  217,  140,  385,  218,  218,  229,  188,  219,  219,  220,
-			  220,  223,  231,  223,  190,  232,  224,  224,  227,  227,
-			  230,  221,   71,  114,  225,  226,   71,  141,  226,  226,
-			  233,  236,  237,   74,  240,  241,  229,  242,  232,  244,
-			  249,  251,  255,  231,  259,  256,  238,  222,  258,  264,
-			  243,  260,  272,  233,  236,  262,  114,  240,  241,  383,
-			  269,  382,   75,  237,   74,  244,   75,  259,  286,  261,
-			  380,  249,  251,  255,  364,  256,  363,  272,  262,  258,
-			  264,  359,  260,  269,  273,  199,  199,  274,  274,  218,
+			  238,  238,  205,  390,  228,  228,  127,  190,  232,  232,
+			  202,  191,  192,  241,  193,  194,  153,  229,  240,  229,
+			  233,  243,  230,  230,  235,  200,  235,  239,  239,  236,
+			  236,  242,   77,  202,  237,  238,  244,  245,   81,  248,
+			  252,  253,  154,   80,  241,  254,  234,  249,  260,  256,
+			  262,  266,  243,  268,  242,  270,  274,  269,  255,  244,
+			  245,  250,  248,  252,  253,  127,  272,  279,  282,  283,
+			  211,  211,   81,  271,   80,  256,  284,  284,  249,  260,
+			  269,  262,  266,  389,  268,  387,  270,  274,  153,  272,
+			  279,  230,  230,  282,  285,  285,  271,  287,  287,  288,
 
-			  218,  286,  261,  275,  275,  277,  277,  278,  278,  140,
-			  279,  288,  279,  281,  281,  280,  280,  224,  224,  221,
-			  282,  282,  284,  289,  225,  226,  284,  292,  226,  226,
-			  285,  285,  294,   74,  288,  141,  295,  296,  326,  326,
-			  297,  276,  299,  307,  304,  222,  289,  306,  308,  309,
-			  292,  315,  314,  317,  357,  294,  318,  321,  283,  322,
-			  296,  295,  114,  297,   74,  299,  114,  304,  114,  307,
-			  306,  323,  309,  356,  308,  314,  276,  315,  355,  318,
-			  321,  274,  274,  341,  317,  322,  327,  327,  328,  328,
-			  339,  329,  329,  325,  280,  280,  330,  330,  332,  332,
+			  288,  289,  296,  289,  291,  291,  290,  290,  236,  236,
+			  298,  233,  292,  292,  154,  294,  299,  237,  238,  294,
+			  302,  238,  238,  295,  295,  296,   80,  305,  304,  371,
+			  306,  307,  286,  298,  316,  309,  317,  234,  325,  299,
+			  313,  315,  318,  302,  322,  323,  331,  326,  330,  329,
+			  293,  304,  305,  306,  307,  127,  370,   80,  309,  127,
+			  316,  127,  317,  313,  315,  318,  366,  322,  364,  325,
+			  326,  323,  329,  363,  330,  284,  284,  331,  334,  334,
+			  335,  335,  336,  336,  337,  337,  348,  333,  290,  290,
+			  338,  338,  340,  340,  341,  341,  233,  342,  342,  337,
 
-			  333,  333,  323,  221,  334,  334,  329,  329,  336,  340,
-			  114,  114,  343,  341,  344,  339,  345,  346,  335,  347,
-			  351,  362,  354,  358,  360,  365,  361,  367,  367,  222,
-			  368,  368,  340,  384,  331,  369,  353,  344,  283,  352,
-			  346,  345,  350,  343,  347,  354,  358,  360,   75,  361,
-			  365,  351,  362,  366,  349,  366,  329,  329,  367,  367,
-			  381,  141,  371,  371,  384,  276,  372,  372,  370,  373,
-			  373,  374,  374,  375,  375,  376,  386,  376,  378,  378,
-			  374,  374,  387,  381,  390,  388,  348,  389,  391,  392,
-			  379,  393,  342,  396,  395,  404,  397,  367,  367,  386,
+			  337,  344,  347,  127,  127,  349,  351,  352,  353,  348,
+			  361,  343,  359,  354,  355,  362,  286,  365,  369,  367,
+			  372,  368,  234,  374,  374,  375,  375,  347,  339,  376,
+			  352,  360,  293,  353,  358,  349,  354,  351,  362,  355,
+			  365,   81,  367,  359,  368,  372,  373,  391,  373,  369,
+			  397,  374,  374,  337,  337,  154,  378,  378,  379,  379,
+			  388,  286,  380,  380,  393,  377,  381,  381,  382,  382,
+			  383,  394,  383,  385,  385,  381,  381,  395,  391,  396,
+			  398,  397,  399,  388,  400,  386,  357,  393,  402,  403,
+			  404,  374,  374,  416,  339,  417,  394,  374,  374,  356,
 
-			  331,  367,  367,  398,  398,  402,  402,  387,  388,  283,
-			  389,  391,  392,  403,  403,  390,  393,  395,  396,  397,
-			  399,  222,  399,  374,  374,  400,  400,  401,  409,  401,
-			  405,  405,  402,  402,  374,  374,  406,  406,  410,  407,
-			  411,  407,  412,  331,  408,  408,  324,  414,  404,  400,
-			  400,  420,  420,  409,  402,  402,  402,  402,  421,  421,
-			  422,  425,  422,  373,  373,  423,  423,  426,  412,  410,
-			  319,  411,  414,  316,  222,  404,  408,  408,  424,  424,
-			  398,  398,  423,  423,  425,  427,  427,  405,  405,  276,
-			  426,  421,  421,   76,   76,   76,   76,  313,  312,   59,
+			  395,  411,  396,  398,  293,  399,  405,  405,  418,  400,
+			  406,  402,  406,  404,  403,  407,  407,  408,  416,  408,
+			  409,  409,  409,  409,  410,  410,  417,  234,  381,  381,
+			  412,  412,  381,  381,  413,  413,  414,  419,  414,  418,
+			  421,  415,  415,  407,  407,  350,  411,  427,  427,  409,
+			  409,  409,  409,  428,  428,  429,  432,  429,  339,  433,
+			  430,  430,  332,  419,  327,  421,  380,  380,  415,  415,
+			  431,  431,  234,  405,  405,  430,  430,  324,  411,  432,
+			  434,  434,  433,  412,  412,  286,  428,  428,   62,   62,
+			  321,   62,   62,   62,   62,   62,   62,   62,   62,   88,
 
-			   59,  222,   59,   59,   59,   59,   59,   59,   59,   59,
-			  310,  305,  303,  302,  301,  300,  283,  298,  276,  293,
-			  291,  290,  287,  331,   62,  283,  271,  270,  268,  331,
-			   62,   62,   62,   62,   62,   63,   63,  267,   63,   63,
-			   63,   63,   63,   63,   63,   63,   65,   65,  265,   65,
-			   65,   65,   65,   65,   65,   65,   65,  115,  115,  263,
-			  115,  115,  115,  115,  115,  115,  115,  115,   68,   68,
-			  257,   68,   68,   68,   68,   68,   68,   68,   68,  142,
-			  142,  142,  142,  142,  142,  254,  142,  142,  142,  142,
-			  377,  377,  377,  377,  377,  377,  253,  377,  377,  377,
+			   88,   88,   88,  320,  234,  314,   65,  312,  293,  311,
+			  310,  286,   65,   65,   65,   65,   65,  308,  339,  303,
+			  301,  293,   66,   66,  339,   66,   66,   66,   66,   66,
+			   66,   66,   66,   68,   68,  300,   68,   68,   68,   68,
+			   68,   68,   68,   68,  128,  128,  297,  128,  128,  128,
+			  128,  128,  128,  128,  128,   71,   71,  281,   71,   71,
+			   71,   71,   71,   71,   71,   71,  155,  155,  155,  155,
+			  155,  155,  280,  155,  155,  155,  155,  384,  384,  384,
+			  384,  384,  384,  278,  384,  384,  384,  384,  277,  275,
+			  273,  267,  265,  264,  263,  261,  259,  258,  257,  251,
 
-			  377,  252,  250,  248,  247,  246,  245,  239,  235,  234,
-			  215,  214,  213,  212,  211,  210,  209,  208,  207,  206,
-			  205,  204,  203,  202,  201,  200,  198,  197,  196,  195,
-			  194,  192,  186,  177,  170,  164,  163,  152,  150,  116,
-			   64,   64,   57,   56,   55,   54,   69,  113,  105,   99,
-			   80,   69,   69,   64,   58,   57,   56,   55,   54,  428,
-			    3,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
+			  247,  246,  227,  226,  225,  224,  223,  222,  221,  220,
+			  219,  218,  217,  216,  215,  214,  213,  212,  210,  209,
+			  208,  207,  206,  204,  198,  189,  182,  177,  176,  165,
+			  163,  129,   67,   67,   60,   59,   58,   57,  126,  125,
+			  117,  111,   92,   87,   82,   67,   61,   60,   59,   58,
+			   57,  435,    3,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428>>)
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435>>)
 		end
 
 	yy_chk_template: ANY is
@@ -1232,102 +1374,101 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,   10,   14,   14,   10,   19,
-			   20,   21,   20,   20,   26,   26,   40,   21,   19,   22,
-			   46,   22,   22,   23,   32,   23,   23,   27,   27,   37,
+			    1,    1,    1,    1,    1,   10,   14,   14,   10,   20,
+			   21,   22,   21,   21,   27,   27,   42,   22,   20,   23,
+			   48,   23,   23,   24,   34,   24,   24,   29,   29,   39,
 
-			   22,   33,  257,   33,   32,   37,   42,   31,   29,   40,
-			   29,   31,  268,   33,  289,   29,   45,   31,  289,   46,
-			   31,   42,   34,  122,  122,   44,   34,   33,   33,   22,
-			  421,   22,  257,   23,   29,   29,   31,   31,   29,   34,
-			   31,   36,  268,   31,   42,   39,   43,   45,   36,   36,
-			   44,   51,   51,   34,   36,   39,   43,   39,   71,   71,
-			   59,   39,   34,   59,   60,   61,  405,   60,   61,   80,
-			   71,   36,   75,   75,   36,   43,   39,   36,   90,   43,
-			  186,   39,   39,  398,   39,   70,   70,  396,   77,   51,
-			   66,   77,   80,   66,   66,   66,   66,   70,   73,  395,
+			   23,   35,  267,   35,   34,   39,   44,   33,   31,   42,
+			   31,   33,  278,   35,  299,   31,   47,   33,  299,   48,
+			   33,   44,   36,  135,  135,   46,   36,   35,   35,   23,
+			  428,   23,  267,   24,   31,   31,   33,   33,   31,   36,
+			   33,   38,  278,   33,   44,   41,   45,   47,   38,   38,
+			   46,   54,   54,   36,   38,   41,   45,   41,   77,   77,
+			   62,   41,   36,   62,   63,   64,  412,   63,   64,   92,
+			   77,   38,   81,   81,   38,   45,   41,   38,  102,   45,
+			  198,   41,   41,  405,   41,   74,   74,  403,   89,   54,
+			   69,   89,   92,   69,   69,   69,   69,   74,   79,  402,
 
-			   73,   73,   66,   78,   90,  186,   82,   66,   91,   66,
-			   75,   66,   66,   66,   66,  393,   66,   77,   66,   84,
-			   87,   85,   66,   70,   66,   85,   88,   66,   66,   66,
-			   66,   66,   66,   72,   78,   72,   72,   82,   73,   91,
-			   99,   88,   84,   87,   72,   89,  100,   98,  101,   89,
-			  102,  392,   85,  107,  391,   85,   95,   88,   95,   98,
-			   95,  109,  148,   99,   88,  387,  106,  105,  111,  100,
-			  106,   95,   89,   72,   95,   72,  107,  105,   98,  101,
-			  105,  102,  105,  105,  109,  110,  113,   95,   95,   95,
-			  110,  111,  106,  148,   95,  114,  114,   95,  105,  139,
+			   79,   79,   69,   90,  102,  198,   94,   69,  103,   69,
+			   81,   69,   69,   69,   69,  400,   69,   89,   69,   96,
+			   99,   97,   69,   74,   69,   97,  100,   69,   69,   69,
+			   69,   69,   69,   78,   90,   78,   78,   94,   79,  103,
+			  111,  100,   96,   99,   78,  101,  110,  107,  112,  101,
+			  113,  107,   97,  114,  399,   97,  118,  100,  110,  398,
+			  118,  394,  107,  111,  100,  107,  365,  119,  127,  127,
+			  121,  112,  101,   78,  123,   78,  117,  110,  107,  125,
+			  107,  113,  118,  354,  114,  107,  117,  161,  107,  117,
+			  119,  117,  117,  121,  122,  154,  154,  123,  159,  122,
 
-			  139,  110,  105,  105,  358,  105,  105,  151,  140,  113,
-			  140,  139,  346,  140,  140,  150,  110,  141,  141,  143,
-			  143,  144,  152,  144,  110,  153,  144,  144,  147,  147,
-			  151,  143,  145,  114,  145,  145,  146,  139,  146,  146,
-			  154,  158,  159,  145,  161,  162,  150,  163,  153,  164,
-			  169,  171,  177,  152,  180,  177,  159,  143,  179,  184,
-			  163,  181,  192,  154,  158,  182,  147,  161,  162,  343,
-			  189,  340,  145,  159,  145,  164,  146,  180,  228,  181,
-			  338,  169,  171,  177,  321,  177,  320,  192,  182,  179,
-			  184,  314,  181,  189,  199,  199,  199,  216,  216,  217,
+			  159,  159,  125,  351,  152,  152,  127,  117,  156,  156,
+			  122,  117,  117,  163,  117,  117,  152,  153,  161,  153,
+			  156,  165,  153,  153,  157,  122,  157,  160,  160,  157,
+			  157,  164,  158,  122,  158,  158,  166,  167,  159,  171,
+			  174,  175,  152,  158,  163,  176,  156,  172,  181,  177,
+			  183,  189,  165,  191,  164,  193,  196,  192,  176,  166,
+			  167,  172,  171,  174,  175,  160,  194,  201,  204,  211,
+			  211,  211,  158,  193,  158,  177,  228,  228,  172,  181,
+			  192,  183,  189,  348,  191,  346,  193,  196,  228,  194,
+			  201,  229,  229,  204,  230,  230,  193,  231,  231,  232,
 
-			  217,  228,  181,  218,  218,  219,  219,  220,  220,  216,
-			  221,  230,  221,  222,  222,  221,  221,  223,  223,  220,
-			  224,  224,  225,  231,  225,  225,  226,  234,  226,  226,
-			  227,  227,  236,  225,  230,  216,  237,  238,  275,  275,
-			  239,  218,  241,  251,  247,  220,  231,  249,  253,  255,
-			  234,  261,  260,  263,  312,  236,  264,  269,  224,  270,
-			  238,  237,  225,  239,  225,  241,  226,  247,  227,  251,
-			  249,  271,  255,  311,  253,  260,  275,  261,  310,  264,
-			  269,  274,  274,  293,  263,  270,  276,  276,  277,  277,
-			  290,  278,  278,  274,  279,  279,  280,  280,  281,  281,
+			  232,  233,  240,  233,  234,  234,  233,  233,  235,  235,
+			  242,  232,  236,  236,  228,  237,  243,  237,  237,  238,
+			  246,  238,  238,  239,  239,  240,  237,  249,  248,  329,
+			  250,  251,  230,  242,  262,  253,  264,  232,  273,  243,
+			  258,  260,  266,  246,  270,  271,  281,  274,  280,  279,
+			  236,  248,  249,  250,  251,  237,  328,  237,  253,  238,
+			  262,  239,  264,  258,  260,  266,  322,  270,  320,  273,
+			  274,  271,  279,  319,  280,  284,  284,  281,  285,  285,
+			  286,  286,  287,  287,  288,  288,  302,  284,  289,  289,
+			  290,  290,  291,  291,  292,  292,  288,  293,  293,  294,
 
-			  282,  282,  271,  278,  283,  283,  284,  284,  285,  292,
-			  285,  285,  295,  293,  296,  290,  297,  299,  284,  300,
-			  305,  318,  309,  313,  315,  323,  317,  326,  326,  278,
-			  327,  327,  292,  345,  280,  328,  308,  296,  282,  306,
-			  299,  297,  304,  295,  300,  309,  313,  315,  285,  317,
-			  323,  305,  318,  325,  302,  325,  329,  329,  325,  325,
-			  339,  328,  330,  330,  345,  326,  331,  331,  329,  332,
-			  332,  333,  333,  334,  334,  335,  348,  335,  336,  336,
-			  335,  335,  349,  339,  352,  350,  301,  351,  353,  354,
-			  336,  356,  294,  363,  362,  373,  365,  366,  366,  348,
+			  294,  295,  300,  295,  295,  303,  305,  306,  307,  302,
+			  317,  294,  314,  309,  310,  318,  285,  321,  326,  323,
+			  331,  325,  288,  334,  334,  335,  335,  300,  290,  336,
+			  306,  315,  292,  307,  313,  303,  309,  305,  318,  310,
+			  321,  295,  323,  314,  325,  331,  333,  353,  333,  326,
+			  360,  333,  333,  337,  337,  336,  338,  338,  339,  339,
+			  347,  334,  340,  340,  356,  337,  341,  341,  342,  342,
+			  343,  357,  343,  344,  344,  343,  343,  358,  353,  359,
+			  361,  360,  362,  347,  363,  344,  312,  356,  369,  370,
+			  372,  373,  373,  387,  338,  389,  357,  374,  374,  311,
 
-			  330,  367,  367,  368,  368,  371,  371,  349,  350,  333,
-			  351,  353,  354,  372,  372,  352,  356,  362,  363,  365,
-			  369,  373,  369,  374,  374,  369,  369,  370,  380,  370,
-			  375,  375,  370,  370,  376,  376,  378,  378,  382,  379,
-			  383,  379,  384,  371,  379,  379,  273,  390,  378,  399,
-			  399,  400,  400,  380,  401,  401,  402,  402,  403,  403,
-			  404,  414,  404,  406,  406,  404,  404,  416,  384,  382,
-			  265,  383,  390,  262,  378,  406,  407,  407,  408,  408,
-			  420,  420,  422,  422,  414,  423,  423,  424,  424,  400,
-			  416,  427,  427,  433,  433,  433,  433,  259,  258,  429,
+			  358,  380,  359,  361,  341,  362,  375,  375,  390,  363,
+			  376,  369,  376,  372,  370,  376,  376,  377,  387,  377,
+			  378,  378,  377,  377,  379,  379,  389,  380,  381,  381,
+			  382,  382,  383,  383,  385,  385,  386,  391,  386,  390,
+			  397,  386,  386,  406,  406,  304,  385,  407,  407,  408,
+			  408,  409,  409,  410,  410,  411,  421,  411,  378,  423,
+			  411,  411,  283,  391,  275,  397,  413,  413,  414,  414,
+			  415,  415,  385,  427,  427,  429,  429,  272,  413,  421,
+			  430,  430,  423,  431,  431,  407,  434,  434,  436,  436,
+			  269,  436,  436,  436,  436,  436,  436,  436,  436,  440,
 
-			  429,  406,  429,  429,  429,  429,  429,  429,  429,  429,
-			  256,  248,  246,  245,  244,  243,  408,  240,  420,  235,
-			  233,  232,  229,  423,  430,  424,  191,  190,  188,  427,
-			  430,  430,  430,  430,  430,  431,  431,  187,  431,  431,
-			  431,  431,  431,  431,  431,  431,  432,  432,  185,  432,
-			  432,  432,  432,  432,  432,  432,  432,  434,  434,  183,
-			  434,  434,  434,  434,  434,  434,  434,  434,  435,  435,
-			  178,  435,  435,  435,  435,  435,  435,  435,  435,  436,
-			  436,  436,  436,  436,  436,  176,  436,  436,  436,  436,
-			  437,  437,  437,  437,  437,  437,  174,  437,  437,  437,
+			  440,  440,  440,  268,  413,  259,  437,  257,  415,  256,
+			  255,  427,  437,  437,  437,  437,  437,  252,  430,  247,
+			  245,  431,  438,  438,  434,  438,  438,  438,  438,  438,
+			  438,  438,  438,  439,  439,  244,  439,  439,  439,  439,
+			  439,  439,  439,  439,  441,  441,  241,  441,  441,  441,
+			  441,  441,  441,  441,  441,  442,  442,  203,  442,  442,
+			  442,  442,  442,  442,  442,  442,  443,  443,  443,  443,
+			  443,  443,  202,  443,  443,  443,  443,  444,  444,  444,
+			  444,  444,  444,  200,  444,  444,  444,  444,  199,  197,
+			  195,  190,  188,  186,  184,  182,  180,  179,  178,  173,
 
-			  437,  172,  170,  168,  167,  166,  165,  160,  156,  155,
-			  138,  137,  136,  135,  134,  133,  132,  131,  130,  129,
-			  128,  127,  126,  125,  124,  123,  121,  120,  119,  118,
-			  117,  112,  108,  104,   97,   94,   92,   83,   81,   65,
-			   64,   63,   57,   56,   55,   54,   49,   47,   41,   38,
-			   30,   28,   24,   13,    9,    8,    7,    6,    5,    3,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
+			  169,  168,  151,  150,  149,  148,  147,  146,  145,  144,
+			  143,  142,  141,  140,  139,  138,  137,  136,  134,  133,
+			  132,  131,  130,  124,  120,  116,  109,  106,  104,   95,
+			   93,   68,   67,   66,   60,   59,   58,   57,   51,   49,
+			   43,   40,   32,   30,   25,   13,    9,    8,    7,    6,
+			    5,    3,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428>>)
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435>>)
 		end
 
 	yy_base_template: ANY is
@@ -1335,54 +1476,55 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,  859,  860,  856,  854,  852,  850,  848,
-			   68,    0,  860,  846,   66,  860,  860,  860,  860,   62,
-			   62,   62,   71,   75,  827,  860,   60,   72,  826,   69,
-			  814,   72,   62,   62,   94,    0,  108,   63,  807,  116,
-			   41,  816,   74,  111,   84,   88,   55,  805,  860,  791,
-			  860,  131,  860,  860,  843,  841,  839,  837,  860,  153,
-			  157,  158,    0,  834,  833,  828,  183,    0,    0,  860,
-			  165,  138,  215,  180,  860,  152,    0,  152,  172,    0,
-			  122,  806,  178,  805,  174,  192,    0,  174,  195,  202,
-			  139,  180,  794,    0,  792,  225,    0,  796,  217,  193,
+			    0,    0,    0,  851,  852,  848,  846,  844,  842,  840,
+			   68,    0,  852,  838,   66,  852,  852,  852,  852,  852,
+			   62,   62,   62,   71,   75,  819,  852,   60,  852,   72,
+			  818,   69,  806,   72,   62,   62,   94,    0,  108,   63,
+			  799,  116,   41,  808,   74,  111,   84,   88,   55,  797,
+			  852,  783,  852,  852,  131,  852,  852,  835,  833,  831,
+			  829,  852,  153,  157,  158,    0,  826,  825,  820,  183,
+			    0,    0,  852,  852,  165,  852,  852,  138,  215,  180,
+			  852,  152,  852,  852,  852,  852,  852,  852,    0,  152,
+			  172,    0,  122,  798,  178,  797,  174,  192,    0,  174,
 
-			  200,  217,  220,    0,  801,  236,  227,  208,  800,  213,
-			  254,  223,  799,  241,  275,  860,  860,  819,  818,  817,
-			  816,  815,  103,  814,  813,  812,  811,  810,  809,  808,
-			  807,  806,  805,  804,  803,  802,  801,  800,  799,  279,
-			  293,  297,  860,  299,  306,  314,  318,  308,  234,    0,
-			  285,  261,  294,  280,  292,  777,  776,    0,  293,  314,
-			  775,  298,  298,  307,  310,  774,  769,  772,  760,  322,
-			  770,  323,  758,    0,  754,    0,  753,  322,  738,  330,
-			  306,  331,  320,  727,  331,  712,  139,  705,  696,  326,
-			  691,  690,  321,    0,  860,  860,  860,  860,  860,  375,
+			  195,  202,  139,  180,  786,    0,  784,  216,    0,  788,
+			  216,  193,  202,  219,  223,    0,  793,  245,  217,  222,
+			  792,  222,  263,  229,  791,  234,  852,  248,  852,  852,
+			  811,  810,  809,  808,  807,  103,  806,  805,  804,  803,
+			  802,  801,  800,  799,  798,  797,  796,  795,  794,  793,
+			  792,  791,  284,  302,  275,  852,  288,  309,  314,  280,
+			  307,  259,    0,  283,  285,  293,  291,  289,  769,  768,
+			    0,  291,  319,  767,  294,  294,  305,  310,  766,  765,
+			  753,  320,  763,  322,  751,    0,  751,    0,  760,  321,
+			  759,  325,  309,  325,  321,  758,  328,  753,  139,  756,
 
-			  860,  860,  860,  860,  860,  860,  860,  860,  860,  860,
-			  860,  860,  860,  860,  860,  860,  377,  379,  383,  385,
-			  387,  395,  393,  397,  400,  404,  408,  410,  332,  684,
-			  365,  376,  689,  686,  382,  683,  387,  395,  392,  395,
-			  685,  394,    0,  683,  678,  662,  661,  399,  679,  402,
-			    0,  404,    0,  409,    0,  401,  674,   69,  658,  661,
-			  404,  412,  621,  423,  411,  627,    0,    0,   79,  409,
-			  420,  443,    0,  635,  461,  418,  466,  468,  471,  474,
-			  476,  478,  480,  484,  486,  490,    0,    0,    0,   82,
-			  449,    0,  464,  450,  560,  481,  467,  475,    0,  472,
+			  751,  323,  736,  721,  327,    0,  852,  852,  852,  852,
+			  852,  350,  852,  852,  852,  852,  852,  852,  852,  852,
+			  852,  852,  852,  852,  852,  852,  852,  852,  356,  371,
+			  374,  377,  379,  386,  384,  388,  392,  397,  401,  403,
+			  356,  708,  364,  369,  703,  686,  375,  683,  383,  386,
+			  385,  386,  685,  387,    0,  678,  673,  656,  395,  673,
+			  396,    0,  395,    0,  397,    0,  394,   69,  663,  654,
+			  396,  406,  625,  408,  402,  621,    0,    0,   79,  401,
+			  409,  418,    0,  651,  455,  458,  460,  462,  464,  468,
+			  470,  472,  474,  477,  479,  483,    0,    0,    0,   82,
 
-			  478,  554,  518,    0,  506,  490,  503,    0,  504,  477,
-			  427,  437,  422,  478,  359,  477,    0,  479,  493,    0,
-			  350,  352,    0,  484,  860,  538,  507,  510,  503,  536,
-			  542,  546,  549,  551,  553,  560,  558,    0,  338,  513,
-			  339,    0,    0,  337,    0,  505,  280,    0,  530,  541,
-			  538,  540,  556,  541,  543,    0,  550,    0,  272,    0,
-			    0,    0,  547,  552,    0,  549,  577,  581,  583,  605,
-			  612,  585,  593,  563,  603,  610,  614,  860,  616,  624,
-			  587,    0,  607,  609,  603,    0,    0,  231,    0,    0,
-			  606,  222,  209,  183,    0,  167,  155,    0,  125,  629,
+			  461,    0,  441,  472,  613,  475,  460,  467,    0,  468,
+			  473,  567,  550,  498,  482,  495,    0,  478,  470,  437,
+			  436,  472,  434,  472,    0,  474,  490,    0,  420,  397,
+			    0,  479,  852,  531,  503,  505,  497,  533,  536,  538,
+			  542,  546,  548,  555,  553,    0,  343,  513,  351,    0,
+			    0,  271,    0,  519,  251,    0,  518,  530,  530,  532,
+			  522,  533,  536,  543,    0,  234,    0,    0,    0,  541,
+			  548,    0,  543,  571,  577,  586,  595,  602,  600,  604,
+			  569,  608,  610,  612,  852,  614,  621,  552,    0,  564,
+			  577,  598,    0,    0,  227,    0,    0,  599,  227,  212,
 
-			  631,  634,  636,  638,  645,  108,  643,  656,  658,    0,
-			    0,    0,    0,    0,  614,    0,  622,    0,    0,    0,
-			  660,   72,  662,  665,  667,    0,    0,  671,  860,  698,
-			  723,  734,  745,  685,  756,  767,  778,  789>>)
+			  183,    0,  167,  155,    0,  125,  623,  627,  629,  631,
+			  633,  640,  108,  646,  648,  650,    0,    0,    0,    0,
+			    0,  609,    0,  614,    0,    0,    0,  653,   72,  655,
+			  660,  663,    0,    0,  666,  852,  687,  705,  721,  732,
+			  691,  743,  754,  765,  776>>)
 		end
 
 	yy_def_template: ANY is
@@ -1390,54 +1532,55 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,  428,    1,  428,  428,  428,  428,  428,  428,  428,
-			  429,  430,  428,  431,  432,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  429,
-			  429,  429,  430,  431,  431,  434,  434,  434,  435,  428,
-			  428,  436,  428,  428,  428,  428,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
+			    0,  435,    1,  435,  435,  435,  435,  435,  435,  435,
+			  436,  437,  435,  438,  439,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  436,  436,  436,  437,  438,  438,  441,  441,
+			  441,  442,  435,  435,  435,  435,  435,  443,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  428,  428,  428,  428,  428,  428,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  428,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  436,  428,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
+			  440,  440,  440,  440,  440,  440,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  443,  435,  440,  440,  440,  440,
 
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  428,  428,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  437,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  428,  428,  428,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  428,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  428,  428,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  435,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  444,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  435,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 
-			  428,  428,  428,  428,  428,  428,  428,  428,  428,  433,
-			  433,  433,  433,  433,  433,  433,  433,  433,  433,  433,
-			  428,  428,  428,  428,  428,  433,  433,  428,    0,  428,
-			  428,  428,  428,  428,  428,  428,  428,  428>>)
+			  440,  440,  440,  440,  440,  435,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435,  435,  440,  440,  440,  440,
+			  440,  440,  440,  440,  440,  440,  440,  435,  435,  435,
+			  435,  435,  440,  440,  435,    0,  435,  435,  435,  435,
+			  435,  435,  435,  435,  435>>)
 		end
 
 	yy_ec_template: ANY is
@@ -1495,65 +1638,66 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,  119,  117,    3,    4,    1,    2,   10,
-			  117,   78,   17,  117,  117,   11,   12,   18,    8,   18,
-			    6,   18,  108,  108,    9,    7,   18,   18,  117,   77,
-			   77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-			   77,   77,   77,   77,   77,   77,   77,   77,   15,  117,
-			   16,  110,   13,   14,    3,    4,    1,    2,   19,    0,
-			  104,  106,   78,    0,  105,  102,  102,  102,    5,   18,
-			  113,    0,  108,  108,  107,  110,   77,   77,   77,   24,
-			   77,   77,   77,   77,   77,   77,   30,   77,   77,   77,
-			   77,   77,   77,   42,   77,   77,   49,   77,   77,   77,
+			    0,    0,    0,  135,  133,    3,    4,    1,    2,   10,
+			  133,   94,   17,  133,  133,   11,   12,   31,   30,    8,
+			   29,    6,   32,  124,  124,    9,    7,   36,   34,   35,
+			  133,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+			   15,  133,   16,   33,  126,   13,   14,    3,    4,    1,
+			    2,   37,    0,  120,  122,   94,    0,  121,  118,  118,
+			  118,    5,   23,   24,  129,   18,   20,    0,  124,  124,
+			  123,  126,   28,   25,   22,   21,   26,   27,   93,   93,
+			   93,   42,   93,   93,   93,   93,   93,   93,   48,   93,
 
-			   77,   77,   77,   57,   77,   77,   77,   77,   77,   77,
-			   77,   77,   77,   77,  110,  102,   79,  102,  102,  102,
-			  102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-			  102,  102,  102,  102,  102,  102,  102,  102,  102,  113,
-			    0,    0,  111,  113,  111,  108,  108,  110,   77,   23,
-			   77,   77,   77,   77,   77,   77,   77,   33,   77,   77,
-			   77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-			   77,   77,   77,   53,   77,   55,   77,   77,   77,   77,
-			   77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-			   77,   77,   77,   76,   96,   94,   95,   97,   98,  103,
+			   93,   93,   93,   93,   93,   60,   93,   93,   66,   93,
+			   93,   93,   93,   93,   93,   74,   93,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   19,  126,  118,   95,
+			  118,  118,  118,  118,  118,  118,  118,  118,  118,  118,
+			  118,  118,  118,  118,  118,  118,  118,  118,  118,  118,
+			  118,  118,  129,    0,    0,  127,  129,  127,  124,  124,
+			  126,   93,   41,   93,   93,   93,   93,   93,   93,   93,
+			   51,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+			   93,   93,   93,   93,   93,   70,   93,   72,   93,   93,
+			   93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
 
-			   99,  100,   80,   81,   82,   83,   84,   85,   86,   87,
-			   88,   89,   90,   91,   92,   93,  113,    0,  113,    0,
-			  113,    0,    0,    0,  112,  108,  108,  110,   77,   77,
-			   77,   77,   77,   77,   77,   31,   77,   77,   77,   77,
-			   77,   77,   40,   77,   77,   77,   77,   77,   77,   77,
-			   50,   77,   52,   77,   56,   77,   77,   77,   77,   77,
-			   77,   77,   77,   77,   77,   77,   69,   70,   77,   77,
-			   77,   77,   75,  103,  113,  113,    0,    0,  113,    0,
-			  112,    0,  112,    0,    0,  109,   22,   25,   26,   77,
-			   77,   28,   77,   77,   77,   77,   77,   77,   38,   77,
+			   93,   93,   93,   93,   93,   92,  112,  110,  111,  113,
+			  114,  119,  115,  116,   96,   97,   98,   99,  100,  101,
+			  102,  103,  104,  105,  106,  107,  108,  109,  129,    0,
+			  129,    0,  129,    0,    0,    0,  128,  124,  124,  126,
+			   93,   93,   93,   93,   93,   93,   93,   49,   93,   93,
+			   93,   93,   93,   93,   58,   93,   93,   93,   93,   93,
+			   93,   67,   93,   69,   93,   73,   93,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   85,   86,   93,   93,
+			   93,   93,   91,  119,  129,  129,    0,    0,  129,    0,
+			  128,    0,  128,    0,    0,  125,   40,   43,   44,   93,
 
-			   77,   77,   77,   45,   77,   77,   77,   51,   77,   77,
-			   77,   77,   77,   77,   77,   77,   65,   77,   77,   68,
-			   77,   77,   73,   77,  101,    0,  113,    0,  116,  113,
-			  112,    0,    0,  112,    0,  111,    0,   21,   77,   77,
-			   77,   32,   34,   77,   36,   77,   77,   41,   77,   77,
-			   77,   77,   77,   77,   77,   59,   77,   61,   77,   63,
-			   64,   66,   77,   77,   72,   77,    0,  113,    0,    0,
-			    0,  112,    0,  116,  112,    0,    0,  114,  116,  114,
-			   77,   27,   77,   77,   77,   39,   43,   77,   46,   47,
-			   77,   77,   77,   77,   62,   77,   77,   74,  116,    0,
+			   93,   46,   93,   93,   93,   93,   93,   93,   56,   93,
+			   93,   93,   93,   93,   93,   93,   68,   93,   93,   93,
+			   93,   93,   93,   93,   81,   93,   93,   84,   93,   93,
+			   89,   93,  117,    0,  129,    0,  132,  129,  128,    0,
+			    0,  128,    0,  127,    0,   39,   93,   93,   93,   50,
+			   52,   93,   54,   93,   93,   59,   93,   93,   93,   93,
+			   93,   93,   93,   93,   77,   93,   79,   80,   82,   93,
+			   93,   88,   93,    0,  129,    0,    0,    0,  128,    0,
+			  132,  128,    0,    0,  130,  132,  130,   93,   45,   93,
+			   93,   93,   57,   61,   93,   63,   64,   93,   93,   93,
 
-			  116,    0,  112,    0,    0,  115,  116,    0,  115,   20,
-			   29,   35,   37,   44,   77,   54,   77,   60,   67,   71,
-			  116,  115,    0,  115,  115,   48,   58,  115,    0>>)
+			   93,   78,   93,   93,   90,  132,    0,  132,    0,  128,
+			    0,    0,  131,  132,    0,  131,   38,   47,   53,   55,
+			   62,   93,   71,   93,   76,   83,   87,  132,  131,    0,
+			  131,  131,   65,   75,  131,    0>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 860
+	yyJam_base: INTEGER is 852
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 428
+	yyJam_state: INTEGER is 435
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 429
+	yyTemplate_mark: INTEGER is 436
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -1572,10 +1716,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 118
+	yyNb_rules: INTEGER is 134
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 119
+	yyEnd_of_buffer: INTEGER is 135
 			-- End of buffer rule code
 
 	INITIAL: INTEGER is 0
@@ -1599,7 +1743,6 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			eif_buffer := STRING_.make (Init_buffer_size)
-			eif_lineno := 1
 		end
 
 feature -- Start Job / Reinitialization 
@@ -1616,17 +1759,23 @@ feature -- Start Job / Reinitialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
-			eif_lineno := 1
 			eif_buffer.wipe_out
 			create analysed_tokens.make	-- create a new one, the old one
 										-- is still "usable"
+			last_token := Void
+			first_token := Void
 		end
 
 feature -- Access
 
 	curr_token: EDITOR_TOKEN
+			-- Current token analysed
 
-	analysed_tokens: EDITOR_LINE
+	last_token: EDITOR_TOKEN
+			-- Last token analysed.
+
+	first_token: EDITOR_TOKEN
+			-- First token analysed.
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -1634,27 +1783,18 @@ feature -- Access
 	eif_buffer: STRING
 			-- Buffer for lexial tokens
 
-	eif_lineno: INTEGER
-			-- Current line number
-
-	is_operator: BOOLEAN
-			-- Parsing an operator declaration?
-
 feature {NONE} -- Processing
 
-	process_operator (op: INTEGER): INTEGER is
-			-- Process current token as operator `op' or as
-			-- an Eiffel string depending on the context
-		require
-			text_count_large_enough: text_count > 2
+	update_token_list is
+			-- Link the current token to the last one.
 		do
-			if is_operator then
-				is_operator := False
-				Result := op
+			if last_token = Void then
+				first_token := current_token
 			else
-				Result := E_STRING
-				last_value := text_substring (2, text_count - 1)
+				last_token.set_previous_token(curr_token)
 			end
+			curr_token.set_next_token(last_token)
+			last_token := curr_token
 		end
 
 feature {NONE} -- Constants

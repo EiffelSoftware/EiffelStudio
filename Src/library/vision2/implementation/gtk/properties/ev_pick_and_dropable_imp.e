@@ -48,6 +48,7 @@ feature -- Implementation
 			if target /= last_pointed_target then
 				update_pointer_style (target)
 			end
+			last_pointed_target := target
 		end
 
 	enable_transport is
@@ -424,7 +425,7 @@ feature -- Implementation
 			l_invert_gc, l_root_parent: POINTER
 		do
 			if
-				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
+				feature {EV_GTK_EXTERNALS}.gtk_events_pending <= 1
 			then
 				l_invert_gc := invert_gc
 				l_root_parent := root_parent

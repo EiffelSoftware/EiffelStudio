@@ -15,12 +15,15 @@ inherit
 		export
 			{NONE} all
 		undefine
-			display
+			display, is_equal
 		redefine
 			display_handle
 		end;
 
-	D_AREA_I;
+	D_AREA_I
+		undefine
+			is_equal
+		end;
 
 	PRIMITIVE_M
 		undefine
@@ -45,6 +48,8 @@ inherit
 			fill_polygon as mel_fill_polygon,
 			fill_rectangle as mel_fill_rectangle,
 			is_shown as shown
+		undefine
+			is_equal
 		redefine
 			display_handle
 		select

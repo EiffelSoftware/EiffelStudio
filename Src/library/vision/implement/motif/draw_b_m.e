@@ -11,7 +11,10 @@ class
 
 inherit
 
-	DRAW_B_I;
+	DRAW_B_I
+		undefine
+			is_equal
+		end;
 
 	DRAWING_X
 		undefine
@@ -22,7 +25,7 @@ inherit
 
 	BUTTON_M
 		undefine
-			create_callback_struct, shown
+			create_callback_struct, shown, is_equal
 		redefine
 			display_handle
 		end;
@@ -45,6 +48,8 @@ inherit
 			fill_polygon as mel_fill_polygon,
 			fill_rectangle as mel_fill_rectangle,
 			is_shown as shown
+		undefine
+			is_equal
 		redefine
 			display_handle
 		select

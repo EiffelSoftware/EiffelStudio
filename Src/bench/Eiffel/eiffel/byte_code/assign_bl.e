@@ -443,7 +443,10 @@ feature
 			generate_special (how);
 				-- No aging tests if target is not a reference. Of course, if
 				-- the target is also pre-defined, aging tests are not needed.
+				-- If it is an assignment copy, RTXA will take care of the
+				-- aging test for references within the expanded
 			need_aging_tests :=
+				how /= Copy_assignment and then
 				not target.is_predefined and target.c_type.is_pointer;
 			if need_aging_tests then
 					-- For strings constants, we have to be careful. Put its

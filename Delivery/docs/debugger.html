@@ -1,0 +1,188 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ISE EiffelBench</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="styles/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="styles/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" width="700" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+
+Debugging facilities : ebench  (ISE Eiffel 4.4)<br>
+===============================================<br>
+<br>
+<br>
+	1  INTRODUCTION<br>
+	2  ATTACHED TOOLS<br>
+	3  AN EXAMPLE DEBUGGING SESSION<br>
+	4  STOP POINTS AND STOPPABLE ROUTINES<br>
+	5  INTERRUPTING AND TERMINATING EXECUTION<br>
+	6  SETTING AND REMOVING STOP POINTS<br>
+	7  EXECUTION INFORMATION<br>
+	8  LIMITATION IN MULTITHREADED MODE<br>
+	9  MORE INFORMATION<br>
+<br>
+<br>
+<br>
+1  INTRODUCTION<br>
+---------------<br>
+<br>
+   To debug an Eiffel system and, more generally, monitor its execution,<br>
+   you will use a combination of:<br>
+<br>
+	-The Project Tool, to start execution steps.<br>
+<br>
+	-One or more Feature Tools, to follow execution of instructions.<br>
+<br>
+	-One or more Object Tools, to inspect the contents of objects at run time.<br>
+<br>
+<br>
+2  ATTACHED TOOLS<br>
+-----------------<br>
+<br>
+   Besides ordinary Feature and Object Tools, which you will have to<br>
+   retarget explicitly to a certain feature or object, you can use attached<br>
+   tools, which will reflect the state of the execution.<br>
+<br>
+   There are 2 buttons in the middle of the command bar in the Project Tool:&nbsp;<br>
+   	-the left one is to display the attached Object Tool.&nbsp;<br>
+	-the right one is to display the attached Feature Tool.<br>
+<br>
+<br>
+   When displayed, the Feature Tool will, whenever execution stops,<br>
+   show the current execution position, using the Stop Points format.<br>
+<br>
+<br>
+3  AN EXAMPLE DEBUGGING SESSION<br>
+-------------------------------<br>
+<br>
+   To put a stop point on procedure :<br>
+<br>
+	-make by drag-and-dropping it into the Stop Point hole of the&nbsp;<br>
+	 Project Tool. The Project Tool display indicates that a stop&nbsp;<br>
+	 point has been added.<br>
+	-accelerator:  Ctrl Shift+right-click<br>
+<br>
+   At each stage, the red arrow -> shows the instruction that will be<br>
+   executed next.&nbsp;<br>
+<br>
+<br>
+   To terminate execution :<br>
+<br>
+	-Ctrl-click the Terminate button in the Project Tool (top-right bar).<br>
+	-accelerator: Ctrl+E<br>
+<br>
+<br>
+4  STOP POINTS AND STOPPABLE ROUTINES<br>
+-------------------------------------<br>
+<br>
+   A routine is stoppable if you have put a stop point on the routine as a<br>
+   whole or one of its instructions. Even if you remove the stop point later<br>
+   on, the routine remains stoppable.<br>
+<br>
+   Stoppable routines are important because the Single-Step  and To<br>
+   End of Routine  execution formats apply to these routines. For<br>
+   example if you resume execution in Single-Step format it will single-step<br>
+   through the instructions of the first stoppable routine that it encounters.<br>
+<br>
+<br>
+5  INTERRUPTING AND TERMINATING EXECUTION<br>
+-----------------------------------------<br>
+<br>
+   You can click the Interrupt button (the little bomb) to interrupt execution&nbsp;<br>
+   at the first applicable instruction of the first stoppable routine to be&nbsp;<br>
+   encountered.<br>
+<br>
+   To terminate execution rather than just interrupting it, control-click the<br>
+   Interrupt button.<br>
+<br>
+<br>
+6  SETTING AND REMOVING STOP POINTS<br>
+-----------------------------------<br>
+<br>
+   You set a stop point by drag-and-dropping an appropriate element to a<br>
+   Stop Point hole . The elements that can be drag-and-dropped in this<br>
+   manner are:<br>
+<br>
+	-Entire routines.<br>
+<br>
+	-Individual instructions of a routine, which you obtain by targeting<br>
+	 a Feature Tool to the routine and selecting the Stop Points format.&nbsp;<br>
+	 The clickable element in that case is the three consecutive dots ...&nbsp;<br>
+	 that appear to the left of the instruction.&nbsp;<br>
+<br>
+   If a stop point has already been set on instruction, the three dots ... are<br>
+   replaced by three vertical bars |||, as illustrated by the last instruction<br>
+   above.<br>
+<br>
+   When you set or remove a stop point, the Project Tool display reflects<br>
+   the current Stop Point situation.<br>
+<br>
+   The Stop Point hole (which you find in both the Project Tool and<br>
+   Feature Tools) acts as a toggle: to remove a stop point, drag-and-drop<br>
+   it again to the hole. The source of the drag-and-drop can be in a Class<br>
+   Tool (for a routine), a stop point marker (... or |||) in a Feature Tool, or<br>
+   a stop point indicator appearing in the Project Tool as shown in the last<br>
+   figure.<br>
+<br>
+<br>
+7  EXECUTION INFORMATION<br>
+-------------------------<br>
+<br>
+   When you click the Run button, execution starts or, if previously&nbsp;<br>
+   interrupted, restarts. If it proceeds with interruption and terminates,&nbsp;<br>
+   the message `System terminated' will appear in the Project Tool. But any&nbsp;<br>
+   of the following events may cause execution to stop before termination:<br>
+<br>
+	-You click Interrupt .<br>
+<br>
+	-An exception occurs. (In this case the execution will be interrupted<br>
+	 just before the exception, so that you can use the environment's<br>
+	 mechanisms to browse classes, features and objects. If you click Run<br>
+	 once more the exception will be triggered for good.)<br>
+<br>
+	-Execution reaches a stop point (except in Ignore Stop Points format).<br>
+<br>
+	-The next instruction is executed (in Step-by-step  format).<br>
+<br>
+	-The end of the routine is reached (in To End of Routine  format).<br>
+<br>
+   In any case, the display will show the execution status and the call stack.<br>
+<br>
+   All the elements shown are clickable. The local entities of all the<br>
+   routines on the call stack are accessible; to move up and down the<br>
+   stack, use Up and Down buttons.<br>
+<br>
+<br>
+8  LIMITATION IN MULTITHREADED MODE<br>
+-----------------------------------<br>
+   For now the EIFFEL debugger is not fully multithreaded safe.&nbsp;<br>
+   it is possible to put a break-point in any class which doesn't inherit<br>
+   from the class THREAD, if it is not called in the execution of a thread.<br>
+<br>
+<br>
+9  MORE INFORMATION<br>
+-------------------<br>
+   For more information, visit our web page:&nbsp;<br>
+	www.eiffel.com<br>
+   and for debugging facilities :&nbsp;<br>
+	www.eiffel.com/doc/manuals/bench/4.0/debugging.html <br>
+
+</td></tr></table>
+</body>
+
+</html>

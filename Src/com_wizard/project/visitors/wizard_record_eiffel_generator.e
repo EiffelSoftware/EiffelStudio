@@ -33,10 +33,7 @@ feature -- Access
 		do
 			create a_visible.make
 			a_visible.set_name (a_descriptor.eiffel_class_name)
-			a_visible.add_feature ("make")
-			a_visible.add_feature ("make_from_pointer")
-			a_visible.add_feature ("set_shared")
-			a_visible.add_feature ("set_unshared")
+
 			system_descriptor.add_visible_class_common (a_visible)
 
 			create eiffel_writer.make
@@ -47,11 +44,13 @@ feature -- Access
 
 			create writer_inherit_clause.make
 			writer_inherit_clause.set_name (Ecom_structure)
+			writer_inherit_clause.add_redefine ("make")
 			eiffel_writer.add_inherit_clause (writer_inherit_clause)
 
 			eiffel_writer.add_creation_routine ("make")
 			eiffel_writer.add_creation_routine ("make_from_pointer")
 
+			eiffel_writer.add_feature (make_feature, Initialization)
 			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			an_external_size_name := external_size_name (a_descriptor.name)
 			eiffel_writer.add_feature (structure_size_feature (an_external_size_name), Measurement)
@@ -83,6 +82,17 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	make_feature: WIZARD_WRITER_FEATURE is
+			-- Creatio feature.
+		do
+			create Result.make
+
+			Result.set_name ("make")
+			Result.set_effective
+			Result.set_body ("%T%T%TPrecursor {ECOM_STRUCTURE}")
+			Result.set_comment ("Make.")
+		end
 
 	make_from_pointer_feature: WIZARD_WRITER_FEATURE is
 			-- Creatio feature.

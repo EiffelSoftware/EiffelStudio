@@ -650,14 +650,14 @@ feature -- IL code generation
 
 				-- Make IL code for preconditions
 			if
-				class_c.assertion_level.check_precond and then
+				(context.workbench_mode or class_c.assertion_level.check_precond) and then
 				(precondition /= Void or inh_assert.has_precondition)
 			then
 				generate_il_precondition
 			end
 			
 			if
-				class_c.assertion_level.check_postcond and then
+				(context.workbench_mode or class_c.assertion_level.check_postcond) and then
 				(old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
@@ -690,7 +690,7 @@ feature -- IL code generation
 
 				-- Make IL code for postcondition
 			if
-				class_c.assertion_level.check_postcond and then
+				(context.workbench_mode or class_c.assertion_level.check_postcond) and then
 				(postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
@@ -1073,7 +1073,8 @@ end
 			if
 				(not l_il_generation and then l_old_expressions /= Void) or else
 				(l_il_generation and then l_old_expressions /= Void and then
-				context.class_type.associated_class.assertion_level.check_postcond)
+				(context.workbench_mode or 
+				context.class_type.associated_class.assertion_level.check_postcond))
 			then
 				from
 					nb := l_old_expressions.count

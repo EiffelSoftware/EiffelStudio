@@ -360,6 +360,35 @@ feature {EV_ANY_I} -- WEL Implementation
 	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			-- A list of all items in the image list and their positions.
 			-- [[position in image list, number of items pointing to this image], windows pointer].
+
+	reduce_image_list_references (i: INTEGER) is
+			--  Decrease any references to an image position > `i' by one.
+		local
+			original_index: INTEGER
+			value: INTEGER
+		do
+			from
+				current_image_list_info.start
+			until
+				current_image_list_info.off
+			loop
+				value := current_image_list_info.item_for_iteration.integer_item (1)
+				if value > i then
+					current_image_list_info.item_for_iteration.enter (value - 1, 1)
+				end
+				current_image_list_info.forth
+			end
+			original_index := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.reduce_image_list_references (i)
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+		end
 	
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
@@ -583,6 +612,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/28 01:11:47  rogers
+--| Added reduce_image_list_references.
+--|
 --| Revision 1.55  2000/03/27 17:35:03  rogers
 --| Renamed current_image_list_images -> current_image_list_info, which now stores a tuple which contains the position in the image list and the number of items referencing this image in the tree.
 --|

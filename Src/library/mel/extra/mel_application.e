@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
+class
 	MEL_APPLICATION
 
 feature {NONE} -- Initialization
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 
 	set_default is
 			-- Define default parameters for the application.
-		deferred
+		do
 		end;
 
 	build is

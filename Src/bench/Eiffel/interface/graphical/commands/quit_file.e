@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, Interface_names.w_File_changed)
 				else
 					window_manager.close (tool)
 				end

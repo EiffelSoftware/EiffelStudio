@@ -50,7 +50,7 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licenced (argument)
 			 else
-				warner (popup_parent).call (Current, l_File_changed)
+				warner (popup_parent).call (Current, Interface_names.w_File_changed)
 			end
 		end;
 

@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner (popup_parent).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, Interface_names.w_File_changed)
 				else
 					tool.last_format.associated_command.filter (filter_name)
 				end

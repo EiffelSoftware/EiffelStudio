@@ -7,18 +7,9 @@ indexing
         date: "$Date$";
         revision: "$Revision$"
 
-class
+deferred class
 
 	SOCKET_POLLER
-
-inherit
-
-	COMMAND
-
-creation
-
-	make, make_active
-
 
 feature -- Creation
 
@@ -27,7 +18,6 @@ feature -- Creation
 		do
 			make_listen_list;
 			make_service_list;
-			!! a_timer.make;
 			set_poll_all;
 			set_no_discard
 			
@@ -50,22 +40,19 @@ feature -- Activation
 		require
 			a_poll_delay_positive_and_not_null: a_poll_delay > 0;
 			poller_inactive: not is_poller_active
-		do
-			a_timer.set_regular_call_back (a_poll_delay, Current, Void)
+		deferred
 		end;
 
 	set_inactive is
 			-- Disactivate poller timer.
 		require
 			poller_active: is_poller_active
-		do
-			a_timer.set_no_call_back
+		deferred
 		end;
 
 	is_poller_active: BOOLEAN is
 			-- Is poller called back ?
-		do
-			Result := a_timer.is_call_back_set
+		deferred
 		end;
 
 	is_poll_all: BOOLEAN;
@@ -104,7 +91,7 @@ feature -- Activation
 
 feature -- Subscription
 
-	add_accept_call_back (a_stream_socket: STREAM_SOCKET; a_command: COMMAND; an_argument: ANY) is
+	add_accept_call_back (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
 			-- Set command	`a_command' to be called when
 			-- `a_stream_socket' is connected.
 		require
@@ -120,7 +107,7 @@ feature -- Subscription
 			listen_list_remove (a_stream_socket)
 		end;
 
-	add_readable_call_back (a_socket: SOCKET; a_command: COMMAND; an_argument: ANY) is
+	add_readable_call_back (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
 			-- Set command	`a_command' to be called when
 			-- `a_socket' is readable.
 		require
@@ -152,7 +139,7 @@ feature -- Subscription
 
 feature {NONE} -- execution
 
-	execute (arg: ANY) is
+	poll is
 			-- Synchronously poll when called back by timer.
 		local
 			was_blocking, we_are_done: BOOLEAN;
@@ -213,10 +200,6 @@ feature {NONE} -- execution
 
 feature {NONE} -- implementation
 
-	a_timer: TIMER;
-			-- Internal timer.
-
-
 --x All the following should be provided exclusively by class LINKED_CIRCULAR.
 --x since this facility is completely unusable (bug in put/remove, extend, etc.)
 --x the changes will have to be performed when fixed up.
@@ -224,7 +207,7 @@ feature {NONE} -- implementation
 	listen_socket_list: LINKED_LIST [STREAM_SOCKET];
 			-- List of listen sockets to poll for connection.
 
-	listen_command_list: LINKED_LIST [COMMAND];
+	listen_command_list: LINKED_LIST [POLL_COMMAND];
 			-- List of commands to operate at connection.
 
 	listen_argument_list: LINKED_LIST [ANY];
@@ -233,7 +216,7 @@ feature {NONE} -- implementation
 	service_socket_list: LINKED_LIST [SOCKET];
 			-- List of service sockets to poll for data.
 
-	service_command_list: LINKED_LIST [COMMAND];
+	service_command_list: LINKED_LIST [POLL_COMMAND];
 			-- List of commands to operate at data arrival.
 
 	service_argument_list: LINKED_LIST [ANY];
@@ -257,7 +240,7 @@ feature {NONE} -- implementation
 			service_list_exhausted := True
 		end;
 
-	listen_list_extend (a_stream_socket: STREAM_SOCKET; a_command: COMMAND; an_argument: ANY) is
+	listen_list_extend (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
 			-- Add `a_stream_socket' at the end of the circular,
 			-- i.e. at position before cursor.
 		do
@@ -326,7 +309,7 @@ feature {NONE} -- implementation
 			Result := listen_socket_list.item
 		end;
 
-	listen_list_command_item: COMMAND is
+	listen_list_command_item: POLL_COMMAND is
 			-- Current command item in listen list.
 		do
 			Result := listen_command_list.item
@@ -375,7 +358,7 @@ feature {NONE} -- implementation
 		end;
 
 
-	service_list_extend (a_socket: SOCKET; a_command: COMMAND; an_argument: ANY) is
+	service_list_extend (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
 			-- See listen_list comments.
 		do
 			if service_list_empty or else
@@ -442,7 +425,7 @@ feature {NONE} -- implementation
  			Result := service_socket_list.item
 		end;
 
-	service_list_command_item: COMMAND is
+	service_list_command_item: POLL_COMMAND is
 			-- See listen_list comments.
  		do
  			Result := service_command_list.item

@@ -28,6 +28,8 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			fix_operator ?= yacc_arg (0);
+				-- (Free) operators are not case sensitive
+			fix_operator.value.to_lower;
 			is_frozen := yacc_bool_arg (0);
 		ensure then
 			fix_operator_exists: fix_operator /= Void

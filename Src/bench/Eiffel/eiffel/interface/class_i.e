@@ -56,6 +56,17 @@ feature
 	make is
 			-- initialization
 		do
+			reset_options;
+			if not System.first_compilation then
+					-- Time check and genericity (a generic parameter cannot
+					-- have the same name as a class)
+				System.record_new_class_i (Current)
+			end;
+		end;
+
+	reset_options is
+			-- Reset the option values of the class
+		do
 			assertion_level := Require_level;
 			trace_level := No_trace;
 			optimize_level := No_optimize;

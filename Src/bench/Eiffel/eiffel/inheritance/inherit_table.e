@@ -128,7 +128,7 @@ feature
 			-- goal here is to calculate the feature table `inherited_features'.
 		require
 			a_class /= Void;
-			second_pass_has_to_be_done: a_class.make_pass2;
+--			second_pass_has_to_be_done: a_class.make_pass2;
 			class_info_exists: Class_info_server.has (a_class.id);
 		local
 			class_id, i, nb: INTEGER;
@@ -136,6 +136,9 @@ feature
 			a_cluster: CLUSTER_I;
 			pass2_control: PASS2_CONTROL;
 			pass3_control: PASS3_CONTROL;
+			depend_unit: DEPEND_UNIT;
+			creation_name: STRING;
+			old_creators, new_creators: EXTEND_TABLE [EXPORT_I, STRING];
 		do
 				-- Verbose
 			a_cluster := a_class.cluster;
@@ -227,6 +230,7 @@ feature
 				-- features of a changed class
 			if a_class.changed then
 					-- Creators processing
+				old_creators := a_class.creators;
 			   	a_class.set_creators
 							(class_info.creation_table (resulting_table));
 					-- Generic types tracking
@@ -246,6 +250,41 @@ feature
 			if a_class.changed then
 				pass2_control.set_new_externals (new_externals);
 				pass2_control.process_externals;
+			end;
+
+				-- Insert the changed creators in the propagators list
+			new_creators := a_class.creators;
+			if old_creators = Void then
+				if new_creators /= Void
+				or else a_class.is_deferred then
+						-- the clients using !! without a creation routine
+						-- must be recompiled
+					!!depend_unit.make (a_class.id, -1);
+					pass2_control.propagators.add (depend_unit)
+				end;
+			else
+				from
+					old_creators.start
+				until
+					old_creators.offright
+				loop
+					creation_name := old_creators.key_for_iteration;
+					if
+						new_creators = Void
+					or else
+						not new_creators.has (creation_name)
+					or else
+							-- The new export status is more restrictive than the old one
+						not old_creators.item_for_iteration.equiv (new_creators.item (creation_name))
+					then
+							-- The routine is not a creation routine any more
+							-- or the export status has changed
+						!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
+						pass2_control.propagators.add (depend_unit);
+					end;
+					old_creators.forth
+				end;
+				old_creators := Void
 			end;
 
 				-- Remember the removed features written in `a_class'
@@ -294,6 +333,8 @@ feature
 					-- Error happened during second pass: clear the
 					-- structure
 				clear;
+					-- Reset the old creation table
+				a_class.set_creators (old_creators);
 			end;
 		end;
 
@@ -317,8 +358,8 @@ feature
 			else
 					-- No previous compilation
 				feature_table := Empty_table;
-					-- Ensure third pass will be done later
-				a_class.do_pass3;	
+--					-- Ensure third pass will be done later
+--				a_class.do_pass3;	
 			end;
 				-- Prepare `inherited_features'.
 			inherited_features.set_feat_tbl_id (a_class.id);

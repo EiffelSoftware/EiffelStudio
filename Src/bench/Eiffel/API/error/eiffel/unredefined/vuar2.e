@@ -5,8 +5,22 @@ class VUAR2
 inherit
 
 	VUAR
+		rename
+			build_explain as old_build_explain
+		redefine
+			code
+		end;
 	
+	VUAR
+		redefine
+			build_explain, code
+		select
+			build_explain
+		end
+
 feature 
+
+	code: STRING is "VUAR2";
 
 	argument_name: STRING;
 			-- Name of the involved argument
@@ -33,6 +47,16 @@ feature
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a;
+		end;
+
+	build_explain (a_clickable: CLICK_WINDOW) is
+			-- Build specific explanation image for current error
+			-- in `a_clickable'.
+		do
+			old_build_explain (a_clickable);
+			a_clickable.put_string ("%T%Tfor argument `");
+			a_clickable.put_string (argument_name);
+			a_clickable.put_string ("'%N")
 		end;
 
 end

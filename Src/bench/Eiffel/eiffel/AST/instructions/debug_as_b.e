@@ -25,6 +25,18 @@ feature -- Initialization
 		do
 			keys ?= yacc_arg (0);
 			compound ?= yacc_arg (1);
+
+				-- Debug keys are not case sensitive
+			if keys /= Void then
+				from
+					keys.start
+				until
+					keys.after
+				loop
+					keys.item.value.to_lower;
+					keys.forth
+				end;
+			end;
 		end;
 
 feature -- Type check, byte code and dead code removal

@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	id: INTEGER is
+	topological_id: INTEGER is
 			-- Id of topological item
 		deferred
 		end;

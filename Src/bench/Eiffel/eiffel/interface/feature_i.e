@@ -825,9 +825,8 @@ feature -- Signature checking
 				vdrd51.set_type (new_type);
 				vdrd51.set_precursor_type (old_type);
 				Error_handler.insert_error (vdrd51);
-			elseif 	(new_type.is_expanded and then not old_type.is_expanded)
-					or else
-					(old_type.is_expanded and then not new_type.is_expanded)
+			elseif
+				new_type.is_expanded /= old_type.is_expanded
 			then
 				!!ve02;
 				ve02.init (old_feature, Current);
@@ -862,13 +861,8 @@ feature -- Signature checking
 						vdrd53.set_precursor_type (old_type);
 						vdrd53.set_argument_number (i);
 						Error_handler.insert_error (vdrd53);
-					elseif 	(	new_type.is_expanded
-								and then
-								not old_type.is_expanded)
-							or else
-							(	old_type.is_expanded
-								and then
-								not new_type.is_expanded)
+					elseif
+						new_type.is_expanded /= old_type.is_expanded
 					then
 						!!ve02a;
 						ve02a.init (old_feature, Current);

@@ -6,7 +6,6 @@ inherit
 
 	TOPOLOGICAL
 		rename
-			id as topological_id,
 			successors as descendants
 		end;
 	IDABLE;
@@ -24,10 +23,10 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_CODE_FILES;
 	SHARED_BODY_ID;
+	SHARED_PASS;
 	EXCEPTIONS;
 	MEMORY;
 	SK_CONST;
-	STATUS;
 
 creation
 
@@ -125,7 +124,7 @@ feature
 			-- Creation procedure names
 
 	creation_feature: FEATURE_I;
-			-- Creation feature fro expanded types
+			-- Creation feature for expanded types
 
 	date: INTEGER;
 			-- Last modification sate of the associated file
@@ -177,18 +176,6 @@ feature
 			!!propagators.make;
 				-- Unique counter creation
 			!!unique_counter;
-				-- Options initialization
-			init_status;
-		end;
-
-	create_conformance_table is
-			-- Creation of the conformance table
-		require
-			topological_id_is_processed: topological_id > 0;
-		do
-				-- Once the topological sort is done, we can create
-				-- a well-sized conformance table
-			conformance_table.resize (1, topological_id);
 		end;
 
 	already_compiled: BOOLEAN is
@@ -197,32 +184,14 @@ feature
 		do
 			Result := Ast_server.has (id);
 		end;
-	
-	pass1 is
-			-- Syntax analysis on current class.
-		require
-			first_pass_has_to_be_done: make_pass1
-		
-				-- Abstract syntax tree represented parsed class named `s'.
+
+	build_ast: CLASS_AS is
+			-- Parse the file and generate the AST
 		local
-			ast, other: CLASS_AS;
-			supplier_list: LINKED_LIST [ID_AS];
-			class_info: CLASS_INFO;
-				-- Temporary structure to build about the current class
-				-- which will be useful for second pass.
-			parent_list: EIFFEL_LIST [PARENT_AS];
-			invariant_info: READ_INFO;
-			old_syntactical_suppliers: like syntactical_suppliers;
 			file: UNIX_FILE;
 			class_file_name: STRING;
-			vd22: VD22;
 			vd21: VD21;
 		do
-				-- Verbose
-			io.error.putstring ("Pass 1 on class ");
-			io.error.putstring (class_name);
-			io.error.new_line;
-
 			!!file.make (file_name);
 				-- Check if the file to parse is readable
 			if not file.is_readable then
@@ -249,11 +218,34 @@ feature
 				-- Call Yacc
 			class_file_name := file_name;
 			collection_off;
-			ast := c_parse (file.file_pointer, $class_file_name);
+			Result := c_parse (file.file_pointer, $class_file_name);
 			collection_on;
 			file.close;
 			Error_handler.checksum;
-
+		rescue
+			if exception = Programmer_exception then
+					-- Error happened
+				collection_on;
+				if not (file = Void or else file.is_closed) then
+					file.close;
+				end;
+			end;
+		end;
+	
+	end_of_pass1 (ast: CLASS_AS) is
+				-- End of the first pass after syntax analysis
+		local
+			supplier_list: LINKED_LIST [ID_AS];
+			class_info: CLASS_INFO;
+				-- Temporary structure to build about the current class
+				-- which will be useful for second pass.
+			parent_list: EIFFEL_LIST [PARENT_AS];
+			invariant_info: READ_INFO;
+			old_syntactical_suppliers: like syntactical_suppliers;
+			file: UNIX_FILE;
+			class_file_name: STRING;
+			vd22: VD22;
+		do
 				-- Check suppliers of parsed class represented by `ast'.
 				-- Supplier classes not present already in the system
 				-- are introduced in it, after having verified that they
@@ -319,15 +311,11 @@ feature
 		rescue
 			if exception = Programmer_exception then
 					-- Error happened
-				collection_on;
-				if not (file = Void or else file.is_closed) then
-					file.close;
-				end;
 				if old_syntactical_suppliers /= Void then
 					syntactical_suppliers.copy (old_syntactical_suppliers)
 				end;
 			end;
-		end; -- pass1
+		end; -- end_of_pass1
 
 feature -- Building conformance table
 
@@ -338,11 +326,12 @@ feature -- Building conformance table
 		require
 			topological_id_processed: topological_id > 0;
 		do
-			create_conformance_table;
+				-- Resize the table after the topological sort
+			conformance_table.resize (1, topological_id);
+			conformance_table.clear_all;
 			build_conformance_table_of (Current);
 		end;
 
-	
 	build_conformance_table_of (cl: CLASS_C) is
 			-- Build recursively the conformance table of class `cl.
 		require
@@ -352,16 +341,21 @@ feature -- Building conformance table
 			conformance: topological_id <= cl.topological_id;
 		local
 			a_parent: CLASS_C;
+			a_table: ARRAY [BOOLEAN];
 		do
-			from
-				cl.conformance_table.put (True, topological_id);
-				parents.start;
-			until
-				parents.offright
-			loop
-				a_parent := parents.item.associated_class;
-				a_parent.build_conformance_table_of (cl);
-				parents.forth;
+			a_table := cl.conformance_table;
+			if a_table.item (topological_id) = False then
+					-- The parent has not been inserted yet
+				a_table.put (True, topological_id);
+				from
+					parents.start;
+				until
+					parents.offright
+				loop
+					a_parent := parents.item.associated_class;
+					a_parent.build_conformance_table_of (cl);
+					parents.forth;
+				end;
 			end;
 		end;
 		
@@ -387,11 +381,13 @@ feature -- Propagation of second pass
 					-- `changed', its feature table will be at least
 					-- recalculated.
 				descendant.set_changed2 (True);
-					-- Set the compilation status of the descendant
-				descendant.do_pass2;
+--					-- Set the compilation status of the descendant
+--				descendant.do_pass2;
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
-				System.insert_changed_class (descendant);
+				pass2_controler.insert_new_class (descendant);
+				pass3_controler.insert_new_class (descendant);
+				pass4_controler.insert_new_class (descendant);
 
 				local_cursor := local_cursor.right
 			end;
@@ -417,11 +413,12 @@ feature -- Propagation of third pass
 				client := local_cursor.item;
 					-- Remember the cause for type checking `client'.
 				client.propagators.update (pass2_control);
-					-- Set the compilation status of the client
-				client.do_pass3;
-					-- Insert the lient in the changed classes list
+--					-- Set the compilation status of the client
+--				client.do_pass3;
+					-- Insert the client in the changed classes list
 					-- of the system if not present
-				System.insert_changed_class (client);
+				pass3_controler.insert_new_class (client);
+				pass4_controler.insert_new_class (client);
 
 				local_cursor := local_cursor.right
 			end;
@@ -437,8 +434,8 @@ feature -- Third pass: byte code production and type check
 			--	for all the other features.
 			-- 2. the class is marked `changed3' only, make a type check
 			--	on all the features of the class.
-		require
-			third_pass_has_to_be_done: make_pass3
+--		require
+--			third_pass_has_to_be_done: make_pass3
 		local
 			feat_table: FEATURE_TABLE;
 				-- Feature table of the class
@@ -735,7 +732,7 @@ end;
 						new_suppliers.remove_occurence (f_suppliers);
 						dependances.remove ("_inv_");
 					end;
-				
+
 					invar_clause := Tmp_inv_ast_server.item (id);
 					Error_handler.mark;
 					invar_clause.type_check;
@@ -902,7 +899,7 @@ feature -- Melting
 			System.freeze_set2.put (id);
 				-- Mark the class melted
 			System.melted_set.put (id);
-			System.insert_changed_class (Current);
+			pass4_controler.insert_new_class (Current);
 		end;
 
 	melt_feature_table is
@@ -1034,6 +1031,7 @@ feature -- Class initialization
 			parent_list: PARENT_LIST;
 			parent_c: PARENT_C;
 			ve04: VE04;
+			old_is_expanded: BOOLEAN;
 		do
 			old_parents := parents;
 
@@ -1049,7 +1047,13 @@ feature -- Class initialization
 			is_deferred := ast.is_deferred;
 
 				-- Expanded mark
+			old_is_expanded := is_expanded;
 			is_expanded := ast.is_expanded;
+			if is_expanded /= old_is_expanded and then old_parents /= Void then
+					-- The expanded status has been modifed
+					-- (`old_parents' is Void only for the first compilation of the class)
+				pass2_controler.set_expanded_modified (Current);
+			end;
 
 				-- Initialization of the parent types `parents': put
 				-- the default paretn HERE if needed. Calculates also the
@@ -1225,20 +1229,6 @@ feature
 				end;
 				local_cursor := local_cursor.right
 			end;
---				-- Take care of possible removed classes
---			from
---				local_cursor := old_syntactical_suppliers.first_element
---			until
---				local_cursor = Void
---			loop
---				a_class := local_cursor.item.supplier;
---				supplier_clients := a_class.syntactical_clients;
---				if supplier_clients.empty then
---						-- `a_class' is no more in the system
---					System.remove_old_class (a_class);
---				end;
---				local_cursor := local_cursor.right
---			end;
 		end;
 
 	remove_relations is
@@ -1293,37 +1283,27 @@ feature
 			end;
 		end;
 
---	change_name (new_class_name: STRING) is
---			-- Change class name of current class and trigger recompilation
---			-- of clients
---		require
---			good_argument: new_class_name /= Void
---		local
---			local_cursor: LINKABLE [CLASS_C]
---		do
-----debug ("ACTIVITY")
---	io.error.putstring ("%Tchanging name of ");
---	io.error.putstring (class_name);
---	io.error.putstring (": ");
---	io.error.putstring (new_class_name);
---	io.error.new_line;
-----end;
---			cluster.classes.change_key (new_class_name, class_name);	
---			lace_class.set_class_name (new_class_name);
---			check
---				cluster_modified: cluster.classes.changed
---			end;
---			from
---				local_cursor := syntactical_clients.first_element
---			until
---				local_cursor = Void
---			loop
---				Workbench.change_class (local_cursor.item.lace_class);
---				local_cursor := local_cursor.right
---			end
---		ensure
---			class_name = new_class_name
---		end;
+	mark_class (marked_classes: ARRAY [BOOLEAN]) is
+			-- Mark the class as used in the system
+			-- and propagate to the suppliers
+			-- Used by remove_useless_classes in SYSTEM_I
+		do
+			if marked_classes.item (id) = False then
+debug ("MARK_CLASS")
+io.error.putstring (class_name);
+io.error.putstring (" marked%N");
+end;
+				marked_classes.put (True, id);
+				from
+					syntactical_suppliers.start
+				until
+					syntactical_suppliers.after
+				loop
+					syntactical_suppliers.item.supplier.mark_class (marked_classes);
+					syntactical_suppliers.forth
+				end;
+			end;
+		end;
 
 	check_generics is
 			-- Check validity formal generic parameter declaration.
@@ -1376,6 +1356,34 @@ feature
 				end;
 				generics.go (pos);
 
+				generics.forth;
+			end;
+		end;
+
+	check_generic_parameters is
+			-- Check validity formal generic parameter declaration.
+			-- Validity rule VCFG1 (page 52)
+		require
+			generics_exists: generics /= Void;
+		local
+			generic_dec: FORMAL_DEC_AS;
+			generic_name: ID_AS;
+			vcfg1: VCFG1;
+		do
+			from
+				generics.start
+			until
+				generics.offright
+			loop
+				generic_dec := generics.item;
+				generic_name := generic_dec.formal_name;
+
+				if Universe.class_named (generic_name, cluster) /= Void then
+					!!vcfg1;
+					vcfg1.set_class_id (id);
+					vcfg1.set_formal_name (generic_name);
+					Error_handler.insert_error (Vcfg1);
+				end;
 				generics.forth;
 			end;
 		end;
@@ -1441,8 +1449,9 @@ feature -- Supplier checking
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
 						-- recompile the client (Current class)
+
 					recompile := True;
-					Workbench.change_class (lace_class);
+					Workbench.add_class_to_recompile (lace_class);
 				end;
 				syntactical_suppliers.forth
 			end;
@@ -1929,7 +1938,7 @@ feature -- Actual class type
 					-- Mark the class `changed4' because there is a new
 					-- type
 				changed4 := True;
-				System.insert_changed_class (Current);
+				pass4_controler.insert_new_class (Current);
 					-- Insertion of the new class type
 				types.start;	
 				types.add_left (new_class_type);

@@ -794,10 +794,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_val: OPT_VAL_SD
 			l_has_value: BOOLEAN
 			l_installed_runtimes: LINEAR [STRING]
+			l_il_env: IL_ENVIRONMENT
 		do
+			create l_il_env
 			if defaults /= Void then
 				from
-					l_installed_runtimes := (create {IL_ENVIRONMENT}).installed_runtimes
+					l_installed_runtimes := l_il_env.installed_runtimes
 					defaults.start
 				until
 					defaults.after
@@ -822,8 +824,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				end
 			end
 			if system.clr_runtime_version = Void then
-				system.set_clr_runtime_version ((create {IL_ENVIRONMENT}).default_version)
+				system.set_clr_runtime_version (l_il_env.default_version)
 			end
+			create l_il_env.make (system.clr_runtime_version)
+			l_il_env.register_environment_variable
 		end
 		
 	set_metadata_cache_path is

@@ -4,7 +4,11 @@ inherit
 
 	ICONED_COMMAND;
 	IPC_SHARED;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION;
+	E_CMD
+		rename
+			execute as termination_processing
+		end;
 
 creation
 
@@ -15,8 +19,9 @@ feature
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window);
-			!!request.make (Rqst_quit)
-			set_action ("!c<Btn1Down>", Current, kill_it)
+			!!request.make (Rqst_quit);
+			set_action ("!c<Btn1Down>", Current, kill_it);
+			Application.set_termination_command (Current)
 		end;
 
 	non_gui_make is
@@ -39,31 +44,44 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Continue execution.
+		local
+			status: APPLICATION_STATUS
 		do
-			if Run_info.is_running then
+			status := Application.status;
+			if status /= Void then
 				if argument /= kill_it then
-					if not Run_info.is_stopped then
+					if not status.is_stopped then
 							-- Ask the application to interrupt ASAP.
 						debug_window.clear_window;
 						debug_window.put_string ("System is running%N");
 						debug_window.put_string ("Interruption request%N");
 						debug_window.display;
-						request.make (Rqst_interrupt);
-						request.send
+						Application.interrupt
 					end
-				elseif Run_info.is_stopped then
-					request.make (Rqst_quit);
-					request.send;
-					if Run_info.e_feature /= Void then
-						Run_info.set_is_stopped (False);
-						Window_manager.routine_win_mgr.show_stoppoint
-								(Run_info.e_feature, Run_info.break_index)
-					end	
 				else
-					request.make (Rqst_kill);
-					request.send
+					Application.kill;
 				end;
 			end;
+		end;
+
+feature -- Output
+
+	termination_processing is
+			-- Print the termination message to the debug_window
+			-- and reset the object windows.
+		do
+			debug_window.clear_window;
+			debug_window.put_string ("System terminated%N");
+			debug_window.display;
+			window_manager.object_win_mgr.reset
+			if Application.status.e_feature /= Void then
+				Application.status.set_is_stopped (False);
+				-- *** FIXME
+				-- To be fixed: remove above instruction
+				-- and have extra routine named `remove_stoppoint'
+				Window_manager.routine_win_mgr.show_stoppoint
+						(Application.status.e_feature, Application.status.break_index)
+			end
 		end;
 
 feature 

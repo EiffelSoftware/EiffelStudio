@@ -2350,6 +2350,33 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Natural constant.
+	 */
+	case BC_UINT8:
+		last = iget();
+		last->type = SK_UINT8;
+		last->it_uint8 = get_uint8 (&IC);
+		break;
+
+	case BC_UINT16:
+		last = iget();
+		last->type = SK_UINT16;
+		last->it_uint16 = get_uint16 (&IC);
+		break;
+
+	case BC_UINT32:
+		last = iget();
+		last->type = SK_UINT32;
+		last->it_uint32 = get_uint32(&IC);
+		break;
+
+	case BC_UINT64:
+		last = iget();
+		last->type = SK_UINT64;
+		last->it_uint64 = get_uint64(&IC);
+		break;
+
+	/*
 	 * Integer constant.
 	 */
 	case BC_INT8:

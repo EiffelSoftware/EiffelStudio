@@ -57,6 +57,8 @@ inherit
 			on_set_cursor,
 			on_size,
 			on_move,
+			on_hide,
+			on_show,
 			on_key_up,
 			on_key_down
 		redefine
@@ -73,17 +75,12 @@ feature
 			-- Creation 
 		local
 			a_box: BOX_WINDOWS;
-			a_menu: MENU
 		do
 			!! private_attributes
 			parent ?= oui_parent.implementation;
 			a_box ?= parent
 			if a_box /= Void then
 				a_box.add_toggle (Current)
-			end
-			a_menu ?= oui_parent
-			if a_menu /= Void then
-				in_menu := true
 			end
 			a_toggle_b.set_font_imp (Current);
 			set_text (a_toggle_b.identifier);
@@ -93,38 +90,22 @@ feature
 	realize is
 			-- Display a toggle button
 		local
-			a_radio: RADIO_BOX_WINDOWS;
-			a_check: CHECK_BOX_WINDOWS;
-			a_style: INTEGER
 			wc: WEL_COMPOSITE_WINDOW
+			mp: MENU_PULL_WINDOWS
 		do
 			if not exists then
 				if in_menu then
+					mp ?= parent
+					if mp /= Void and then mp.realized then
+						mp.add_a_child (Current)
+					end
 				else	
-					a_radio ?= parent;
-					a_check ?= parent;
-					if a_radio /= Void then
-						a_style := ws_child + ws_visible + bs_autoradiobutton
-					else
-						a_style := ws_child + ws_visible + bs_autocheckbox
-					end
-					default_style := a_style;
-					if in_a_box then
-						wc ?= parent.parent
-						wel_make (wc, text, x + parent.x , y + parent.y , width, height, id_default);
-					else
-						wc ?= parent
-						wel_make (wc, text, x , y , width + 20, height, id_default);
-					end
+					wc ?= parent
+					wel_make (wc, text, x , y , width + 20, height, id_default);
 					if private_font /= Void then
 						set_font (private_font)
 					end
 					set_default_size;
-					if a_radio /= Void then
-						a_radio.scan_toggles
-					elseif a_check /= Void then
-						a_check.scan_toggles
-					end
 					if width = 0 then
 						set_default_size
 					end
@@ -151,9 +132,6 @@ feature
 					a_box_not_void: a_box /= Void
 				end
 				a_box.remove_toggle (Current)
-				if a_box.number_of_toggles > 0 then
-					a_box.scan_toggles
-				end
 			end
 		end	
 
@@ -173,11 +151,7 @@ feature -- Status report
 			-- Horizontal position relative to parent
 		do
 			if exists then
-				if in_a_box then
-					Result := wel_x + parent.x
-				else
-					Result := wel_x
-				end
+				Result := wel_x
 			else
 				Result := private_attributes.x
 			end
@@ -187,11 +161,7 @@ feature -- Status report
 			-- Vertical position relative to parent
 		do
 			if exists then
-				if in_a_box then
-					Result := wel_y + parent.y
-				else
-					Result := wel_y
-				end
+				Result := wel_y
 			else
 				Result := private_attributes.y
 			end
@@ -202,11 +172,7 @@ feature -- Status setting
 	set_x (a_x: INTEGER) is
 		do
 			if exists then
-				if in_a_box then
-					wel_set_x (parent.x + a_x)
-				else
-					wel_set_x (a_x)
-				end
+				wel_set_x (a_x)
 			end
 			private_attributes.set_x (a_x)
 		end
@@ -214,11 +180,7 @@ feature -- Status setting
 	set_y (a_y: INTEGER) is
 		do
 			if exists then
-				if in_a_box then
-					wel_set_y (parent.y + a_y)
-				else
-					wel_set_y (a_y)
-				end
+				wel_set_y (a_y)
 			end
 			private_attributes.set_y (a_y)
 		end
@@ -226,21 +188,26 @@ feature -- Status setting
 	arm is
 			-- Set a toggle armed
 		do
-			set_toggle_on
-			toggle_value_changed_actions.execute (Current, Void)
+			if not state then
+				set_toggle_on
+				toggle_value_changed_actions.execute (Current, Void)
+			end
 		end
 
 	disarm is
 			-- Set a toggle disarmed
 		do
-			set_toggle_off
-			toggle_value_changed_actions.execute (Current, Void)
+			if state then
+				set_toggle_off
+				toggle_value_changed_actions.execute (Current, Void)
+			end
 		end
 
 	set_toggle_on is
 			-- Set current toggle button on.
 		local
 			menu_parent: MENU_WINDOWS
+			radio_box: RADIO_BOX_WINDOWS
 		do
 			private_state := True;
 			if in_menu then
@@ -250,6 +217,10 @@ feature -- Status setting
 				end
 			else
 				if exists then
+					radio_box ?= parent
+					if radio_box /= Void then
+						radio_box.set_index_on_checked_toggle (Current)
+					end
 					set_checked
 				end
 			end
@@ -332,12 +303,6 @@ feature {BOX_WINDOWS} -- Status setting
 
 feature {NONE} -- Implementation
 
---	on_left_button_up (keys, a_x, a_y: INTEGER) is
---		do
---			widget_on_left_button_up (keys, a_x, a_y)
---			release_actions.execute (Current, Void)
---		end
-
 	private_state: BOOLEAN;
 
 	on_bn_clicked is
@@ -346,11 +311,12 @@ feature {NONE} -- Implementation
 			a_parent: RADIO_BOX_WINDOWS
 		do
 			a_parent ?= parent
-			if a_parent /= Void then
+			if a_parent = Void then
+				release_actions.execute (Current, Void)
+			else
 				a_parent.set_index_on_checked_toggle (Current)
 			end
 			toggle_value_changed_actions.execute (Current, Void)
-			release_actions.execute (Current, Void)
 		end
 
 	in_a_box: BOOLEAN is
@@ -362,18 +328,30 @@ feature {NONE} -- Implementation
 			Result := box /= Void
 		end
 
-	extra_width: INTEGER is
+	Extra_width: INTEGER is
 			-- Extra width
 		once
 			Result := 25
 		end
 
-	minimum_height: INTEGER is 15
+	Minimum_height: INTEGER is 15
 			-- Minimum height of a toggle button in a check box
 			-- or a radio box.
 
-	default_style: INTEGER
+	default_style: INTEGER is
 			-- Default style for creation
+		local
+			a_radio: RADIO_BOX_WINDOWS
+			a_check: CHECK_BOX_WINDOWS
+		do
+			a_radio ?= parent;
+			a_check ?= parent;
+			if a_radio /= Void then
+				Result := Ws_child + Ws_visible + Bs_autoradiobutton
+			else
+				Result := Ws_child + Ws_visible + Bs_autocheckbox
+			end
+		end
 
 end -- class TOGGLE_B_WINDOWS
 

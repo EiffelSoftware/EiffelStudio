@@ -15,8 +15,6 @@ inherit
 			verify_current_user
 		end
 
-	ENV_INTERP
-
 	SHARED_CODES
 		rename
 			studio_non_commercial_key_50 as non_commercial_key,

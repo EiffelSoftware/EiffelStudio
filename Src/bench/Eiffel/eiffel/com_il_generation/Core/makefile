@@ -1,5 +1,5 @@
 CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs
-RUNTIME_SRC = runtime.cs runtime_assembly_info.cs
+RUNTIME_SRC = runtime.cs runtime_assembly_info.cs gen_conf.cs
 CSFLAGS = -nologo -w:4 -optimize+
 #CSFLAGS = -nologo -w:4 -debug -d:DEBUG
 GACFLAGS = -nologo

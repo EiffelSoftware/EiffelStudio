@@ -53,29 +53,6 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_IMP} -- Access
 
-	enable_exception_handling is
-			-- Enable event exception handling
-		do
-			exception_handling_enabled := True
-		end
-
-	disable_exception_handling is
-			-- Enable event exception handling
-		do
-			last_callback_had_exception := False
-			last_exception_message := Void
-			exception_handling_enabled := False
-		end
-		
-	exception_handling_enabled: BOOLEAN
-			-- Is main loop exception handling enabled?
-
-	last_callback_had_exception: BOOLEAN
-		-- Did the last call to `marshal' raise an exception?
-		
-	last_exception_message: STRING
-		-- Message of last exception encountered by `marshal'
-
 	translate_and_call (
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
@@ -322,22 +299,21 @@ feature {NONE} -- Implementation
 			args_not_null: n_args > 0 implies args /= default_pointer
 		local
 			retried: BOOLEAN
+			l_exception: EXCEPTION
+			ev_app: EV_APPLICATION
 		do
 			if not retried then
 					integer_pointer_tuple.put (n_args, 1)
 					integer_pointer_tuple.put (args, 2)
 					action.call (integer_pointer_tuple)
+			else
+				ev_app ?= (create {EV_ENVIRONMENT}).application
+				create l_exception.make_with_tag_and_trace (tag_name, exception_trace)
+				ev_app.uncaught_exception_actions.call ([l_exception])
 			end
 		rescue
-			if exception_handling_enabled then
-				retried := True
-				last_callback_had_exception := True
-				last_exception_message := tag_name 
-				if last_exception_message /= Void then
-					last_exception_message := last_exception_message + " Code: " + exception.out
-				end
-				retry				
-			end
+			retried := True
+			retry
 		end
 
 feature {EV_ANY_IMP} -- Tuple optimizations.

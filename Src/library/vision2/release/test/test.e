@@ -35,7 +35,7 @@ feature
 			--  Create one of each Vision widget in a notebook.
 		local
 			box: EV_BOX
-			scroll: EV_SCROLLABLE_AREA
+			--|scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
 			menu_item: EV_MENU
@@ -48,10 +48,11 @@ feature
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
 			first_window.extend (box)
-			create scroll
-			scroll.set_minimum_size (700,500)
-			box.extend (scroll)
-			scroll.extend (widgets_frame)
+			--|create scroll
+			--|scroll.set_minimum_size (700,500)
+			--|box.extend (scroll)
+			--|scroll.extend (widgets_frame)
+			box.extend (widgets_frame)
 			create description_frame.make_with_text ("Description")
 			box.extend (description_frame)
 			widget_label.align_text_left
@@ -335,6 +336,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/07 18:27:40  oconnor
+--| removed scrolling area pending implementation in WEL
+--|
 --| Revision 1.10  2000/03/02 18:37:34  oconnor
 --| added tree
 --|

@@ -99,7 +99,7 @@ short ora_tranNumber=0; /* number of transaction opened at present */
 /* initialise ora   c-module                                                                    */
 /*****************************************************************/
 
-int c_ora_make (int m_size)
+void c_ora_make (int m_size)
 {
   /*int count;
   
@@ -117,7 +117,7 @@ int c_ora_make (int m_size)
     }*/
 
   
-  return error_number;
+ // return error_number;
 }
 
 

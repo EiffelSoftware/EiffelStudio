@@ -18,9 +18,7 @@ feature -- Properties
 		local
 			tabs_resource: STRING
 		once
-			--Result := resources.get_boolean (r_Tabs_disabled, False);
-			---******* FIXME
-			Result := True
+			Result := resources.get_boolean (r_Tabs_disabled, False);
 		end;
 
 	default_tab_length: INTEGER_REF is

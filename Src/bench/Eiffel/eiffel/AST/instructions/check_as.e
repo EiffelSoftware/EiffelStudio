@@ -14,16 +14,19 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like check_list; l: like location) is
+	initialize (c: like check_list; l, e: like location) is
 			-- Create a new CHECK AST node.
 		require
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		do
 			check_list := c
 			location := clone (l)
+			end_location := clone (e)
 		ensure
 			check_list_set: check_list = c
 			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (e)
 		end
 
 feature -- Attributes
@@ -31,6 +34,9 @@ feature -- Attributes
 	check_list: EIFFEL_LIST [TAGGED_AS]
 			-- List of tagged boolean expression
 
+	end_location: like location
+			-- Line number where `end' keyword is located
+			
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is
@@ -67,6 +73,7 @@ feature -- Type check, byte code and dead code removal
 				Result.set_check_list (check_list.byte_node)
 			end
 			Result.set_line_number (line_number)
+			Result.set_end_location (end_location)
 		end
 
 feature {AST_EIFFEL} -- Output

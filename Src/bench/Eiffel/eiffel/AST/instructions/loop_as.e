@@ -18,11 +18,12 @@ feature {AST_FACTORY} -- Initialization
 
 	initialize (f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; l: like location) is
+		c: like compound; l, e: like location) is
 			-- Create a new LOOP AST node.
 		require
 			s_not_void: s /= Void
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		do
 			from_part := f
 			invariant_part := i
@@ -30,6 +31,7 @@ feature {AST_FACTORY} -- Initialization
 			stop := s
 			compound := c
 			location := clone (l)
+			end_location := clone (e)
 		ensure
 			from_part_set: from_part = f
 			invariant_part_set: invariant_part = i
@@ -37,6 +39,7 @@ feature {AST_FACTORY} -- Initialization
 			stop_set: stop = s
 			compound_set: compound = c
 			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (e)
 		end
 
 feature -- Attributes
@@ -55,6 +58,9 @@ feature -- Attributes
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Loop compound
+
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 feature -- Access
 
@@ -177,6 +183,7 @@ end
 				-- most of the time the case, but we need to record some position
 				-- info in the AST to do a correct job.
 			Result.set_line_number (line_number + 1)
+			Result.set_end_location (end_location)			
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -16,21 +16,24 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (s: like switch; c: like case_list; e: like else_part; l: like location) is
+	initialize (s: like switch; c: like case_list; e: like else_part; l, el: like location) is
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
 			l_not_void: l /= Void
+			el_not_void: el /= Void
 		do
 			switch := s
 			case_list := c
 			else_part := e
 			location := clone (l)
+			end_location := clone (el)
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
 			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (el)
 		end
 
 feature -- Attributes
@@ -43,6 +46,9 @@ feature -- Attributes
 
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
+
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 feature -- Access
 
@@ -140,6 +146,7 @@ feature -- Type check, byte code and dead code removal
 				Result.set_else_part (else_part.byte_node)
 			end
 			Result.set_line_number (line_number)
+			Result.set_end_location (end_location)
 		end
 
 feature {AST_EIFFEL} -- Output

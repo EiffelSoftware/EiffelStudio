@@ -13,10 +13,11 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (k: like keys; c: like compound; l: like location) is
+	initialize (k: like keys; c: like compound; l, e: like location) is
 			-- Create a new DEBUG AST node.
 		require
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		local
 			str: STRING
 		do
@@ -37,10 +38,12 @@ feature {AST_FACTORY} -- Initialization
 
 			compound := c
 			location := clone (l)
+			end_location := clone (e)
 		ensure
 			keys_set: keys = k
 			compound_set: compound = c
 			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (e)
 		end
 
 feature -- Attributes
@@ -50,6 +53,9 @@ feature -- Attributes
 
 	keys: EIFFEL_LIST [STRING_AS]
 			-- Debug keys
+
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 feature -- Access
 
@@ -103,6 +109,7 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 			Result.set_line_number (line_number)
+			Result.set_end_location (end_location)
 		end
 
 feature {AST_EIFFEL} -- Output

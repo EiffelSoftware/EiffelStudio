@@ -2,9 +2,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
-		"EiffelVision radio menu item. Implementatino interface."
+		"Eiffel Vision radio menu item. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,22 +12,21 @@ class
 
 inherit
 	EV_RADIO_MENU_ITEM_I
-		select
-			parent_imp
+		redefine
+			interface
 		end
 
 	EV_CHECK_MENU_ITEM_IMP
-		rename
-			parent_imp as old_check_menu_parent_imp
 		redefine
-			set_selected,
+			interface,
 			on_activate,
+			set_selected,
 			destroy
 		end
 
-	EV_RADIO_IMP [EV_RADIO_MENU_ITEM]
+--	EV_RADIO_IMP [EV_RADIO_MENU_ITEM]
 
-creation
+create
 	make
 
 feature -- Status setting
@@ -36,17 +34,17 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item.
 		do
-			group.remove_item (Current)
-			{EV_CHECK_MENU_ITEM_IMP} Precursor
+--			group.remove_item (Current)
+--			{EV_CHECK_MENU_ITEM_IMP} Precursor
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
 		do
-			{EV_CHECK_MENU_ITEM_IMP} Precursor (flag)
-			if group /= Void then
-				group.set_selection_at_no_event (Current)
-			end
+--			{EV_CHECK_MENU_ITEM_IMP} Precursor (flag)
+--			if group /= Void then
+--				group.set_selection_at_no_event (Current)
+--			end
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -54,18 +52,23 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 	on_activate is
 			-- Is called by the menu when the item is activate.
 		do
-			if group /= Void then
-				group.set_selection_at (Current)
-			end
-			set_selected (True)
-			execute_command (Cmd_item_activate, Void)
+			Precursor
+--			if group /= Void then
+--				group.set_selection_at (Current)
+--			end
+--			set_selected (True)
+--			execute_command (Cmd_item_activate, Void)
 		end
 
 	on_unselect is
 			-- Is called when the item is unselected.
 		do
-			execute_command (Cmd_item_deactivate, Void)
+--			execute_command (Cmd_item_deactivate, Void)
 		end
+
+feature {NONE} -- Implementation
+
+	interface: EV_RADIO_MENU_ITEM
 
 end -- class EV_RADIO_MENU_ITEM_IMP
 
@@ -90,6 +93,9 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/22 20:14:46  brendel
+--| Commented out old implementation.
+--|
 --| Revision 1.11  2000/02/14 11:40:39  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -33,6 +33,8 @@ To be revised:
 	ev_simple_item.e
 
 To do:
+- Load different file formats in GTK EV_PIXMAP_IMP.
+- Fik key release events on GTK.
 - Check for things that could inherit textable (frame, menu, simple item)
 - Test circular parenting contracts for items and widgets.
 - Check export of stuff int _I and _IMP, nothing should be exported to all,

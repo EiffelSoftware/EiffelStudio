@@ -14,10 +14,24 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
+	
+	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -47,8 +61,11 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			do
-				history.redo
-				command_handler.update
+				force_name_change_completion_on_all_editors
+				if executable then
+					history.redo
+					command_handler.update
+				end
 			end
 
 end -- class GB_REDO_COMMAND

@@ -15,6 +15,7 @@ inherit
 	EV_GEOMETRICAL
 		export
 			{NONE} all
+			{ANY} translate, rotate
 		redefine
 			set_modified
 		end

@@ -18,7 +18,9 @@ inherit
 		redefine
 			set_managed,
 			add_button_press_action,
-			set_size
+			set_size,
+			set_width,
+			set_height
 		end
 
 feature 
@@ -86,6 +88,20 @@ feature
 			-- and `new_height'.
 		do 
 			{CENTERED_BULLETIN} Precursor (new_width, new_height)
+			update_positions
+		end
+
+	set_width (new_width:INTEGER) is
+			-- Set height to `new_width'.
+		do 
+			{CENTERED_BULLETIN} Precursor (new_width)
+			update_positions
+		end
+
+	set_height (new_height: INTEGER) is
+			-- Set height to `new_height'.
+		do 
+			{CENTERED_BULLETIN} Precursor (new_height)
 			update_positions
 		end
 

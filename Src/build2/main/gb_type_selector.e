@@ -26,6 +26,11 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_STORABLE_TOOL
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	GB_DEFAULT_STATE
 	
 create
@@ -65,6 +70,17 @@ feature {NONE} -- Initialization
 			recursive_do_all (agent strip_leading_ev (?))
 		end
 		
+feature -- Access
+		
+	tool_bar: EV_TOOL_BAR is
+			-- A tool bar containing all buttons associated with `Current'.
+		do
+			create Result
+		end
+		
+	name: STRING is "Type Selector"
+			-- Full name used to represent `Current'.
+
 feature -- Basic operation
 
 	ensure_top_item_visible is

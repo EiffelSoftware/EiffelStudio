@@ -26,9 +26,7 @@ feature -- Access
 			until
 				not reserved_names.has (Result)
 			loop
-				sb := Result.to_cil.trim_end (Digits)
-				create Result.make_from_cil (sb)
-				Result.append ("_")
+				trim_end_digits (Result)
 				Result.append (count.out)
 				count := count + 1
 			end

@@ -24,7 +24,7 @@ feature
 	make is
 		do
 			ise_make
-			set_version (3.5)
+			set_version (4.0)
 			set_application_name ("eiffeldle")
 			get_licence
 		end

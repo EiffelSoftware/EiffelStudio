@@ -22,13 +22,16 @@ inherit
 		end
 
 	CACHE_PATH
-		rename
-			make as cache_path_make
 		export
 			{NONE} all
 		end
 		
 	SAFE_ASSEMBLY_LOADER
+		export
+			{NONE} all
+		end
+		
+	AR_SHARED_SUBSCRIBER
 		export
 			{NONE} all
 		end
@@ -45,24 +48,19 @@ feature {NONE} -- Initialization
 			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch, 
 						list_assemblies_short, verbose_switch, verbose_short, add_switch, add_short,
 						remove_switch, remove_short, compact_switch, nice_switch, nice_short, fullname_switch,
-						fullname_short, out_switch, out_short, version_switch, version_short>>)
+						fullname_short, out_switch, out_short>>)
 			parse
 		
 			if not successful then
 				process_error (error_message)
 			else
-				if clr_version = Void then
-						-- If it is Void, either an error was thrown, or we ask for
-						-- usage information.
-					clr_version := "v1.1.4322"
-				end
 				complete_initialization
 				start
 			end
-			debug ("press_enter_to_exit")
+		--	debug ("press_enter_to_exit")
 				io.put_string ("Press Enter to exit the application...")
 				io.read_line
-			end
+		--	end
 		end
 		
 	complete_initialization is
@@ -71,8 +69,8 @@ feature {NONE} -- Initialization
 			non_void_clr_version: clr_version /= Void
 			valid_clr_version: not clr_version.is_empty and then clr_version.item (1).as_lower = 'v'
 		do
-			create cache_writer.make (clr_version)
-			create cache_reader.make (clr_version)
+			create cache_writer.make
+			create cache_reader
 			if verbose_output then
 				cache_writer.set_status_printer (agent display_status)	
 			end		
@@ -137,12 +135,6 @@ feature -- Access
 	out_short: STRING is "o"
 			-- Shortcut equivalent of `out_short'
 
-	version_switch: STRING is "version"
-			-- Switch to specify target CLR version.
-			
-	version_short: STRING is "ver"
-			-- Shortcut equivalent of `version_switch'
-
 feature -- Status report
 
 	no_copyright_display: BOOLEAN
@@ -177,7 +169,7 @@ feature {NONE} -- Implementation
 			non_void_clr_version: clr_version /= Void
 		local
 			l_assembly: ASSEMBLY
-			l_resolver: ASSEMBLY_RESOLVER
+			l_resolver: AR_RESOLVER
 		do
 			if not no_copyright_display then
 				display_copyright		
@@ -199,8 +191,9 @@ feature {NONE} -- Implementation
 					set_error (Invalid_assembly, target_path)
 					display_error
 				elseif successful then
-					create l_resolver.make (feature {APP_DOMAIN}.current_domain)
-					l_resolver.add_resolver_path_from_assembly (l_assembly)
+					create l_resolver.make
+					resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+					l_resolver.add_resolve_path_from_file_name (l_assembly.location)
 					
 					if add_to_eac then
 						add_assembly_to_eac (l_assembly.location)						
@@ -208,7 +201,7 @@ feature {NONE} -- Implementation
 						remove_assembly_from_eac (l_assembly.location)
 					end
 					
-					l_resolver.remove_from_app_domain
+					resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 					
 					if cache_writer /= Void and then not cache_writer.successful then
 						process_error (cache_writer.error_message)
@@ -250,8 +243,6 @@ feature {NONE} -- Implementation
 				path_is_full_name := True
 			elseif switch.is_equal (out_short) or switch.is_equal (out_switch) then
 				set_internal_eiffel_cache_path (switch_value)
-			elseif switch.is_equal (version_switch) or switch.is_equal (version_short) then
-				clr_version := switch_value
 			end
 		end
 
@@ -271,8 +262,6 @@ feature {NONE} -- Implementation
 			elseif not (list_assemblies or display_usage_help) then
 				if not add_to_eac or remove_from_eac or list_assemblies or compact_cache then
 					set_error (no_operation, Void)
-				elseif clr_version = Void or clr_version.is_empty or clr_version.item (1).as_lower /= 'v' then
-					set_error (invalid_version_specified, clr_version)	
 				end
 			end
 			
@@ -298,27 +287,26 @@ feature {NONE} -- Implementation
 			exec_from_command_line: exec_from_cli
 		do
 			io.put_string ("Usage:%N%N")
-			io.put_string ("  " + System_name + " /a <assembly> [/full] /ver:<version> [/o:<path>] [/compact] [/n] [/v] [/nologo]%N")
-			io.put_string ("  " + System_name + " /r <assembly> [/full] /ver:<version> [/o:<path>] [/compact] [/v] [/nologo]%N")
-			io.put_string ("  " + System_name + " /l <assembly> [/full] /ver:<version> [/o:<path>] [/nologo]%N%N")
-			io.put_string ("  " + System_name + " /compact /ver:<version> [/o:<path>] [/nologo]%N%N")
+			io.put_string ("  " + System_name + " /a <assembly> [/full] [/o:<path>] [/compact] [/n] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /r <assembly> [/full] [/o:<path>] [/compact] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /l <assembly> [/full] [/o:<path>] [/nologo]%N")
+			io.put_string ("  " + System_name + " /compact [/o:<path>] [/nologo]%N%N")
 			io.put_string ("Options:%N%N")
 			
-			io.put_string ("  /a[dd] - Put assembly in Eiffel Assembly Cache.%N")
-			io.put_string ("  /r[emove] - Remove assembly from Eiffel Assembly Cache.%N")
-			io.put_string ("  /ver[sion]:<version> - Runtime version of the assembly being consumed.%N")
+			io.put_string ("  /a[dd]        - Put assembly in Eiffel Assembly Cache.%N")
+			io.put_string ("  /r[emove]     - Remove assembly from Eiffel Assembly Cache.%N")
 			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel assembly cache.%N")
-			io.put_string ("  /full[name] - Indicates that <assembly> is a full or part display name.%N")
-			io.put_string ("  /l[ist] - List assemblies in EAC.%N")
-			io.put_string ("  /compact - Cleans and compacts cache.%N")
-			io.put_string ("  /n[ice] - Writes indented XML for each assemblies consumed metadata.%N")
-			io.put_string ("  /v[erbose] - Display all information when consuming an assembly.%N")
-			io.put_string ("  /nologo - Prevent display of copyright notice.%N")
-			io.put_string ("  /? - Display's this usage guide.%N%N")
+			io.put_string ("  /full[name]   - Indicates that <assembly> is a full or part display name.%N")
+			io.put_string ("  /l[ist]       - List assemblies in EAC.%N")
+			io.put_string ("  /compact      - Cleans and compacts cache.%N")
+			io.put_string ("  /n[ice]       - Writes indented XML for each assemblies consumed metadata.%N")
+			io.put_string ("  /v[erbose]    - Display all information when consuming an assembly.%N")
+			io.put_string ("  /nologo       - Prevent display of copyright notice.%N")
+			io.put_string ("  /?            - Display's this usage guide.%N%N")
 			
 			io.put_string ("Arguments:%N%N")
-			io.put_string ("  <assembly> - Name or path for assembly to generate XML metadata for.%N")
-			io.put_string ("  <path> - A path to an existing folder on disk or UNC path.%N%N")
+			io.put_string ("  <assembly>    - Name or path for assembly to generate XML metadata for.%N")
+			io.put_string ("  <path>        - A path to an existing folder on disk or UNC path.%N%N")
 		end
 	
 	display_status (s: STRING) is
@@ -437,7 +425,7 @@ feature {NONE} -- Implementation
 		end
 	
 	target_path: STRING
-			-- Path to target assembly
+			-- Path of executing assembly
 			
 	System_name: STRING is 
 			-- Name of executable
@@ -451,7 +439,14 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	Version: STRING is "3.0"
+	Version: STRING is
+			-- Version of executing assembly
+		once
+			Result := ({EMITTER}).to_cil.assembly.get_name.version.to_string
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 		
 	is_path_relative (a_path: STRING): BOOLEAN is
 			-- is `a_path' a relative path?

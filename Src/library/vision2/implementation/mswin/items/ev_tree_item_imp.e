@@ -21,7 +21,8 @@ inherit
 		rename
 			parent as old_simple_parent
 		undefine
-			set_pointer_style
+			set_pointer_style,
+			pnd_press
 		redefine
 			parent_imp,
 			destroy,
@@ -95,35 +96,19 @@ feature {NONE} -- Initialization
 
 feature -- {EV_TREE_IMP}
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-			-- Possible PND status modification.
-		local
-			tree_imp: EV_TREE_IMP
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
-			tree_imp ?= top_parent_imp
-			check
-				parent_not_void: tree_imp /= Void
-			end
-			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, 
-				a_screen_y)
-				tree_imp.set_parent_source_true
-				tree_imp.set_item_source (Current)
-				tree_imp.set_item_source_true
-			elseif press_action = Ev_pnd_end_transport then
-				end_transport (a_x, a_y, a_button)
-				tree_imp.set_parent_source_false
-				tree_imp.set_item_source (Void)
-				tree_imp.set_item_source_false
-			else
-				tree_imp.set_parent_source_false
-				tree_imp.set_item_source (Void)
-				tree_imp.set_item_source_false
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
+			--|FIXME This is redundent in this class.
 		end
+
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+			-- `Result' is absolute screen coordinates in pixels
+			-- of coordinates `a_x', a_y_' on `Current'.
+		do
+			--|FIXME This is redundent
+		end
+
 
 	set_pointer_style (c: EV_CURSOR) is
 			-- Assign `c' to `parent_imp' pointer style.
@@ -601,6 +586,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/04/11 17:10:03  rogers
+--| Removed pnd_press.
+--|
 --| Revision 1.58  2000/04/10 18:28:09  brendel
 --| Modified creation sequence.
 --|

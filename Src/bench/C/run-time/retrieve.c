@@ -179,7 +179,7 @@ long objectCount;
 
 	/* Initialization of the hash table */
 	nb_recorded = 0;
-	rt_table = (struct htable *) malloc(sizeof(struct htable));
+	rt_table = (struct htable *) cmalloc(sizeof(struct htable));
 	if (rt_table == (struct htable *) 0)
 		xraise(EN_MEM);
 	if (-1 == ht_create(rt_table, objectCount, sizeof(struct rt_struct)))
@@ -803,7 +803,7 @@ private int retrieve_read ()
 
 
 private void object_read (object, parent)
-char * object, parent;
+char * object, * parent;
 {
 	long attrib_offset;
 	int z;

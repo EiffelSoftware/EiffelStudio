@@ -389,15 +389,19 @@ int i;					/* Index in g_stat array where statistics are kept */
 	}
 
 #ifdef MEMCHK
+#ifdef DEBUG
 	dprintf(1)("scollect: before GC\n");
 	memck(0);
+#endif
 #endif
 
 	status = (gc_func)();				/* GC invocation */
 
 #ifdef MEMCHK
+#ifdef DEBUG
 	dprintf(1)("scollect: after GC\n");
 	memck(0);
+#endif
 #endif
 
 	/* Get CPU time before real time, so that we have a more precise figure

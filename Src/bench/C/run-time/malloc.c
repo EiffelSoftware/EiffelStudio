@@ -12,7 +12,6 @@
 	If this file is compiled with -DTEST, it will produce a standalone
 	executable.
 */
-
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
@@ -883,14 +882,12 @@ int type;
 		 */
 #ifdef HAS_MMAP
 		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
+
+		if ((union overhead *) -1 != oldbrk)
+			break;							/* OK, we got it */
 #else
 #ifdef HAS_SBRK
 		oldbrk = (union overhead *) sbrk(asked);
-#else
-		oldbrk = (union overhead *) malloc(asked);
-#endif
-#endif
-
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
 			((union overhead *) -1 == oldbrk) ? "no" : "ok", oldbrk);
@@ -899,11 +896,30 @@ int type;
 
 		if ((union overhead *) -1 != oldbrk)
 			break;							/* OK, we got it */
+#else
+		oldbrk = (union overhead *) malloc(asked);
+#ifdef DEBUG
+		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
+			((union overhead *) 0 == oldbrk) ? "no" : "ok", oldbrk);
+		flush;
+#endif
+
+		if ((union overhead *) 0 != oldbrk)
+			break;							/* OK, we got it */
+#endif
+#endif
+
 	}
+
+#if defined HAS_MMAP || defined HAS_SBRK
 
 	if ((union overhead *) -1 == oldbrk)
 		return (union overhead *) 0;		/* We never succeeded */
+#else
 
+	if ((union overhead *) 0 == oldbrk)
+		return (union overhead *) 0;		/* We never succeeded */
+#endif
 	SIGBLOCK;			/* Critical section starts */
 
 	/* Accounting informations */
@@ -2218,6 +2234,8 @@ struct sc_zone *sc;
 	register6 int object = 0;			/* Count released objects */
 
 	next = (union overhead *) sc->sc_arena;
+	if (next == (union overhead *) 0)
+			return;
 	zone = next - 1;
 	flags = zone->ov_size;
 
@@ -2672,7 +2690,9 @@ unsigned int max_dt;
 
 	struct chunk *chunk;		/* Current chunk */
 	char *arena;				/* Arena in chunk */
+#ifndef TEST
 	extern int scount;			/* Maximum dynamic type as given by Eiffel */
+#endif
 
 	if (max_dt == 0)			/* Maximum dtype left unspecified */
 		max_dtype = scount - 1;

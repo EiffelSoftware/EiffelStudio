@@ -56,20 +56,20 @@ feature {NONE} -- Initialization
 			-- Create a status bar with one part.
 		do 
 			wel_make (default_parent.item, 0)
-			!! ev_children.make
+			!! ev_children.make (1)
 			set_parent (par)
 		end
 
 feature -- Access
+
+	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			-- List of the children
 
 	parent_imp: EV_WINDOW_IMP is
 			-- It is a window
 		do
 			Result ?= {EV_PRIMITIVE_IMP} Precursor
 		end
-
-	ev_children: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
-			-- List of the children
 
 	count: INTEGER is
 			-- Number of children in the status bar.
@@ -121,6 +121,17 @@ feature -- Element change
 			update_texts
 		end
 
+feature -- Basic operation
+
+	internal_set_text (item_imp: EV_STATUS_BAR_ITEM_IMP; txt: STRING) is
+			-- Make `txt' the text of `item_imp'.
+		local
+			idi: INTEGER
+		do
+			idi := ev_children.index_of (item_imp, 1) - 1
+			set_text_part (idi, txt)
+		end
+
 feature {NONE} -- Inapplicable
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -148,7 +159,7 @@ feature -- Implementation
 	update_edges is
 			-- Update the status after addition or remove of a child.
 		local
-			clist: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			array: ARRAY [INTEGER]
 		do
 			clist := ev_children
@@ -185,7 +196,7 @@ feature -- Implementation
 	update_texts is
 			-- Update the texts after addition or remove of a child.
 		local
-			clist: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 		do
 			clist := ev_children
 			from
@@ -194,7 +205,6 @@ feature -- Implementation
 				clist.after
 			loop
 				set_text_part (clist.index - 1, clist.item.text)
-				clist.item.set_id (clist.index)
 				clist.forth
 			end
 			if number_of_parts > count then

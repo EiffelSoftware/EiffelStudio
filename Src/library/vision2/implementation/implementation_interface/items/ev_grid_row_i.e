@@ -291,7 +291,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW) is
-			-- Updarent `a_row' from `Current'
+			-- Unparent `a_row' from `Current'
 		require
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
@@ -303,7 +303,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrows.prune_all (row_imp)
 			row_imp.internal_set_parent_row (Void)
 		end
-		
 
 	add_subrow (a_row: EV_GRID_ROW) is
 			-- Make `a_row' a child of Current

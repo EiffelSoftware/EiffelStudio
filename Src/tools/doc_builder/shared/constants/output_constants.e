@@ -36,7 +36,8 @@ feature -- Access
 		once
 			create Result.make (3)
 			Result.compare_objects
-			Result.extend (web_help_flag)
+			Result.extend (web_help_tree_flag)
+			Result.extend (web_help_simple_flag)
 			Result.extend (mshtml_help_flag)
 			Result.extend (vsip_help_flag)
 		end	
@@ -47,7 +48,9 @@ feature -- Help Tags
 
 	vsip_help_flag: STRING is "vsip"
 
-	web_help_flag: STRING is "web"
+	web_help_tree_flag: STRING is "web_tree"
+	
+	web_help_simple_flag: STRING is "web_simple"
 
 	xml_to_html_flag: STRING is "xml2html"
 	

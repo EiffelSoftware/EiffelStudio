@@ -291,6 +291,17 @@ feature -- File
 			end
 		end		
 
+	unique_name: STRING is
+			-- Unique name
+		do
+			Result := (create {DATE_TIME}.make_now).out
+			Result.replace_substring_all (".", "_")
+			Result.replace_substring_all (":", "_")
+			Result.replace_substring_all (" ", "_")
+			Result.replace_substring_all ("\", "_")
+			Result.replace_substring_all ("/", "_")
+		end	
+
 feature -- String
 
 	is_alpha_numeric_string (a_string: STRING): BOOLEAN is
@@ -420,6 +431,7 @@ feature -- Document
 			Result.prune_all_leading ('\')			
 			create l_name.make_from_string (Result)				
 			Result := l_name.string
+			Result.replace_substring_all ("\", "/")
 		end		
 
 	is_code_document (a_doc: DOCUMENT): BOOLEAN is

@@ -14,6 +14,9 @@ inherit
 		end
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 
 
 feature {NONE} -- Implementation

@@ -23,12 +23,12 @@
 #include "stream.h"
 #include "ewbio.h"
 
-public void dexit();
+rt_public void dexit();
 
 extern char *rindex();
 extern unsigned TIMEOUT;
 
-public void main(argc, argv)
+rt_public void main(argc, argv)
 int argc;
 char **argv;
 {
@@ -65,7 +65,7 @@ char **argv;
 	exit(0);
 }
 
-public void dexit(status)
+rt_public void dexit(status)
 int status;
 {
 	add_log(12, "exiting with status %d", status);

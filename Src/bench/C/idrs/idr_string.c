@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_string(idrs, sp, maxlen)
+rt_public bool_t idr_string(idrs, sp, maxlen)
 IDR *idrs;				/* The serializing stream */
 char **sp;				/* Pointer to area where string address is stored */
 unsigned int maxlen;	/* Maximum length, 0 = no limit */

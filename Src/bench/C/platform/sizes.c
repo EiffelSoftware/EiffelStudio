@@ -1,6 +1,6 @@
 #include "eiffel.h"
 
-public EIF_INTEGER eif_packet_size ()
+rt_public EIF_INTEGER eif_packet_size ()
 {
 #ifdef __SCO__
 	return 100;

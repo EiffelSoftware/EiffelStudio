@@ -24,10 +24,10 @@
 #endif
 
 extern void welcome();			/* Print a welcome message */
-public void dexit();			/* Final exiting with logging message */
+rt_public void dexit();			/* Final exiting with logging message */
 extern int identify();			/* Make sure we are started via the wrapper */
 
-public void main(argc, argv)
+rt_public void main(argc, argv)
 int argc;
 char **argv;
 {
@@ -69,7 +69,7 @@ char **argv;
 	dexit(0);
 }
 
-public void dexit(status)
+rt_public void dexit(status)
 int status;
 {
 #ifdef USE_ADD_LOG

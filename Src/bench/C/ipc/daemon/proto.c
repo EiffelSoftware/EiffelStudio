@@ -30,32 +30,32 @@
 #define OTHER(x)	\
 	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
 
-public void drqsthandle();			/* General request processor */
-public void send_packet();			/* Send an asnwer to client */
-public int recv_packet();			/* Request reception */
+rt_public void drqsthandle();			/* General request processor */
+rt_public void send_packet();			/* Send an asnwer to client */
+rt_public int recv_packet();			/* Request reception */
 
-private void dprocess_request();		/* General processing of requests */
-private void transfer();			/* Handle transfer requests */
-private void commute();				/* Commute data from one file to another */
-private void run_command();			/* Run specified command */
-private void run_asynchronous();	/* Run command in background */
-private void start_app();			/* Start Eiffel application */
-private void kill_app();			/* Kill Eiffel application brutally*/
+rt_private void dprocess_request();		/* General processing of requests */
+rt_private void transfer();			/* Handle transfer requests */
+rt_private void commute();				/* Commute data from one file to another */
+rt_private void run_command();			/* Run specified command */
+rt_private void run_asynchronous();	/* Run command in background */
+rt_private void start_app();			/* Start Eiffel application */
+rt_private void kill_app();			/* Kill Eiffel application brutally*/
 
-private IDRF idrf;					/* IDR filters used for serializing */
+rt_private IDRF idrf;					/* IDR filters used for serializing */
 
 extern void dexit();				/* Daemon exiting procedure */
 extern STREAM *spawn_child();		/* Start up child with ipc link */
 
 extern int errno;					/* System call error number */
 
-private int interrupted;	/* Has application been asked to be interrupted */
+rt_private int interrupted;	/* Has application been asked to be interrupted */
 
 /*
  * IDR protocol initialization.
  */
 
-public void prt_init()
+rt_public void prt_init()
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE)) {
 		print_err_msg(stderr, "cannot initialize streams\n");
@@ -63,7 +63,7 @@ public void prt_init()
 	}
 }
 
-public void drqsthandle(s)
+rt_public void drqsthandle(s)
 int s;
 {
 	/* Given a connected socket, wait for a request and process it */
@@ -78,7 +78,7 @@ int s;
 	dprocess_request(s, &rqst);		/* Process the received request */
 }
 
-private void dprocess_request(s, rqst)
+rt_private void dprocess_request(s, rqst)
 int s;						/* The connected socket */
 Request *rqst;				/* The received request to be processed */
 {
@@ -132,7 +132,7 @@ Request *rqst;				/* The received request to be processed */
  * Sending/receiving packets.
  */
 
-public int recv_packet(s, rqst)
+rt_public int recv_packet(s, rqst)
 int s;			/* The connected socket */
 Request *rqst;	/* The request received */
 {
@@ -172,7 +172,7 @@ Request *rqst;	/* The request received */
 	return 0;
 }
 
-public void send_packet(s, dans)
+rt_public void send_packet(s, dans)
 int s;			/* The connected socket */
 Request *dans;	/* The answer to send back */
 {
@@ -218,7 +218,7 @@ Request *dans;	/* The answer to send back */
  * Protocol handling.
  */
 
-private void transfer(s, rqst)
+rt_private void transfer(s, rqst)
 int s;			/* The connected socket */
 Request *rqst;	/* The request received */
 {
@@ -254,7 +254,7 @@ Request *rqst;	/* The request received */
 	commute(s, writefd(sp), rqst->rq_ack.ak_type);
 }
 
-private void commute(from, to, size)
+rt_private void commute(from, to, size)
 int from;		/* Source file descriptor */
 int to;			/* Target file descriptor */
 int size;		/* Amount of bytes to be commuted */
@@ -285,7 +285,7 @@ int size;		/* Amount of bytes to be commuted */
 	}
 }
 
-private void run_command(s)
+rt_private void run_command(s)
 int s;
 {
 	/* Run a command, which is sent to us as a string, which should be passed
@@ -337,7 +337,7 @@ int s;
 		send_ack(writefd(sp), AK_ERROR);	/* Comamnd failed */
 }
 
-private void run_asynchronous(s, rqst)
+rt_private void run_asynchronous(s, rqst)
 int s;
 Request *rqst;
 {
@@ -433,7 +433,7 @@ Request *rqst;
 	/* NOTREACHED */
 }
 
-private void start_app(s)
+rt_private void start_app(s)
 int s;
 {
 	/* Start Eiffel application, setting up the necessary communication stream.
@@ -474,7 +474,7 @@ int s;
 	}
 }
 
-private void kill_app () 
+rt_private void kill_app () 
 {
 	/* Kill the application brutally */
 
@@ -482,7 +482,7 @@ private void kill_app ()
 		kill((Pid_t) d_data.d_app, SIGKILL);
 }
 
-public void dead_app()
+rt_public void dead_app()
 {
 	/* Signal ewb that the application is dead. This is why each transaction
 	 * has to be acknowledged, so that ewb does not remain hung waiting for

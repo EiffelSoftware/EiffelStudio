@@ -23,21 +23,21 @@
 /* Initialization routines */
 
 /* Internal (de)serialization */
-private bool_t idr_Opaque();
-private bool_t idr_Acknlge();
-private bool_t idr_Where();
-private bool_t idr_Stop();
-private bool_t idr_Dumped();
+rt_private bool_t idr_Opaque();
+rt_private bool_t idr_Acknlge();
+rt_private bool_t idr_Where();
+rt_private bool_t idr_Stop();
+rt_private bool_t idr_Dumped();
 
 /* Main encoding/decoding routine */
-public bool_t idr_Request();
+rt_public bool_t idr_Request();
 
 /* This arrray records each serialization routine depending on the type of
  * the union request (field rq_type). The default arm routine is idr_void,
  * therefore only those requests which carry some other information are
  * listed hereafter.
  */
- private struct idr_discrim u_Request[] = {
+rt_private struct idr_discrim u_Request[] = {
 	{ EIF_OPAQUE, idr_Opaque },
 	{ ACKNLGE, idr_Acknlge },
 	{ TRANSFER, idr_Opaque },
@@ -63,7 +63,7 @@ public bool_t idr_Request();
  * Private encoding routines (one for each structure).
  */
 
-private bool_t idr_Opaque(idrs, ext)
+rt_private bool_t idr_Opaque(idrs, ext)
 IDR *idrs;
 Opaque *ext;
 {
@@ -72,14 +72,14 @@ Opaque *ext;
 			idr_u_long(idrs, &ext->op_size);
 }
 
-private bool_t idr_Acknlge(idrs, ext)
+rt_private bool_t idr_Acknlge(idrs, ext)
 IDR *idrs;
 Acknlge *ext;
 {
 	return idr_int(idrs, &ext->ak_type);
 }
 
-private bool_t idr_Where(idrs, ext)
+rt_private bool_t idr_Where(idrs, ext)
 IDR *idrs;
 Where *ext;
 {
@@ -90,7 +90,7 @@ Where *ext;
 			idr_u_long(idrs, &ext->wh_offset);
 }
 
-private bool_t idr_Stop(idrs, ext)
+rt_private bool_t idr_Stop(idrs, ext)
 IDR *idrs;
 Stop *ext;
 {
@@ -100,7 +100,7 @@ Stop *ext;
 			idr_string(idrs, &ext->st_tag, -MAX_STRLEN);
 }
 
-private bool_t idr_Item (idrs, ext)
+rt_private bool_t idr_Item (idrs, ext)
 IDR *idrs;
 struct item* ext;
 {
@@ -124,7 +124,7 @@ struct item* ext;
 }
 
 
-private bool_t idr_Dumped (idrs, ext)
+rt_private bool_t idr_Dumped (idrs, ext)
 IDR *idrs;
 Dump *ext;
 {
@@ -183,7 +183,7 @@ struct item *exi;
  * Public (de)serializing routine.
  */
 
-public bool_t idr_Request(idrs, ext)
+rt_public bool_t idr_Request(idrs, ext)
 IDR *idrs;
 Request *ext;
 {

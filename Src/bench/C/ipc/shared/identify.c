@@ -18,7 +18,7 @@
 #include "timehdr.h"
 #include "ewbio.h"
 
-public int identify()
+rt_public int identify()
 {
 	/* Identification protocol, to make sure we have been started via the
 	 * ised wrapper. We expect a null character from file descriptor EWBIN and

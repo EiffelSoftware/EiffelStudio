@@ -28,7 +28,7 @@
 extern int identify();			/* Make sure we are started via the wrapper */
 extern char *ename;				/* Eiffel program name */
 
-public void init_connect()
+rt_public void init_connect()
 {
 	int s;			/* The connected socket descriptor */
 	STREAM *sp;		/* Stream used for communications with ised */

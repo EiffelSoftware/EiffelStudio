@@ -15,16 +15,16 @@
 
 #define dprintf(n)	if (DEBUG & (n)) printf
 
-private EIF_INTEGER private_object_id();
-private EIF_INTEGER private_general_object_id();
-private EIF_REFERENCE private_id_object();
-private void private_object_id_free();
+rt_private EIF_INTEGER private_object_id();
+rt_private EIF_INTEGER private_general_object_id();
+rt_private EIF_REFERENCE private_id_object();
+rt_private void private_object_id_free();
 
 /* The following stack records the addresses of objects for which
  * `object_id' has been called.
  */
 
-public struct stack object_id_stack = {
+rt_public struct stack object_id_stack = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -32,32 +32,32 @@ public struct stack object_id_stack = {
 	(char **) 0,			/* st_end */
 };
 
-private EIF_INTEGER max_object_id = 0;	/* Max object_id allocated */
+rt_private EIF_INTEGER max_object_id = 0;	/* Max object_id allocated */
 /* This needs to be done as the chunks of memory are not cleared after
  * allocation and we do not want to consider some garbage as a valid
  * descendant of IDENTIFIED and then call `object_id' on it
  */
 
-public EIF_INTEGER eif_object_id(object)
+rt_public EIF_INTEGER eif_object_id(object)
 EIF_REFERENCE object;
 {
 	return private_object_id(object, &object_id_stack, &max_object_id);
 }
  
-public EIF_INTEGER eif_general_object_id(object)
+rt_public EIF_INTEGER eif_general_object_id(object)
 EIF_REFERENCE object;
 {
 	return private_general_object_id(object, &object_id_stack, &max_object_id, EIF_FALSE);
 }
  
-public EIF_REFERENCE eif_id_object(id)
+rt_public EIF_REFERENCE eif_id_object(id)
 EIF_INTEGER id;
 {
 		/* Returns the object associated with `id' */
 	return private_id_object (id, &object_id_stack, max_object_id);
 }
  
-public void eif_object_id_free(id)
+rt_public void eif_object_id_free(id)
 EIF_INTEGER id;
 {
 	private_object_id_free(id, &object_id_stack, max_object_id);
@@ -70,7 +70,7 @@ EIF_INTEGER id;
  * Free locations are reused
  */
 
-public struct stack separate_object_id_set = {
+rt_public struct stack separate_object_id_set = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -78,21 +78,21 @@ public struct stack separate_object_id_set = {
 	(char **) 0,			/* st_end */
 };
 
-private EIF_INTEGER max_separate_object_id = 0;
+rt_private EIF_INTEGER max_separate_object_id = 0;
 
-public EIF_INTEGER eif_separate_object_id(object)
+rt_public EIF_INTEGER eif_separate_object_id(object)
 EIF_REFERENCE object;
 {
 	return private_general_object_id(object, &separate_object_id_set, &max_separate_object_id, EIF_TRUE);
 }
 
-public EIF_REFERENCE eif_separate_id_object(id)
+rt_public EIF_REFERENCE eif_separate_id_object(id)
 EIF_INTEGER id;
 {
 	return private_id_object (id, &separate_object_id_set, max_separate_object_id);
 }
 
-public void eif_separate_object_id_free(id)
+rt_public void eif_separate_object_id_free(id)
 EIF_INTEGER id;
 {
 	private_object_id_free(id, &separate_object_id_set, max_separate_object_id);
@@ -103,7 +103,7 @@ EIF_INTEGER id;
 
 #define STACK_SIZE (STACK_CHUNK-(sizeof(struct stchunk)/sizeof(char*)))
 
-private EIF_INTEGER private_object_id(object, a_set, max_value_ptr)
+rt_private EIF_INTEGER private_object_id(object, a_set, max_value_ptr)
 EIF_REFERENCE object;
 struct stack *a_set;
 EIF_INTEGER *max_value_ptr;
@@ -139,7 +139,7 @@ EIF_INTEGER *max_value_ptr;
 	return Result;
 }
 
-private EIF_INTEGER private_general_object_id(object, a_set, max_value_ptr, reuse_free)
+rt_private EIF_INTEGER private_general_object_id(object, a_set, max_value_ptr, reuse_free)
 EIF_REFERENCE object;
 struct stack *a_set;
 EIF_INTEGER *max_value_ptr;
@@ -194,7 +194,7 @@ EIF_BOOLEAN reuse_free;
 		return private_object_id(object, a_set, max_value_ptr);
 }
 
-private EIF_REFERENCE private_id_object(id, a_set, max_value)
+rt_private EIF_REFERENCE private_id_object(id, a_set, max_value)
 EIF_INTEGER id;
 struct stack *a_set;
 EIF_INTEGER max_value;
@@ -237,7 +237,7 @@ EIF_INTEGER max_value;
 	return (EIF_REFERENCE) 0;
 }
 
-private void private_object_id_free(id, a_set, max_value)
+rt_private void private_object_id_free(id, a_set, max_value)
 EIF_INTEGER id;
 struct stack *a_set;
 EIF_INTEGER max_value;

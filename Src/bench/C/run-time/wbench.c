@@ -36,7 +36,7 @@
  * `wdisp (dyn_type)'
  */
 
-public char *(*wfeat(static_type, feature_id, dyn_type))()
+rt_public char *(*wfeat(static_type, feature_id, dyn_type))()
 int static_type, dyn_type;
 int32 feature_id;
 {
@@ -77,7 +77,7 @@ int32 feature_id;
 #endif
 }
 
-public char *(*wpfeat(origin, offset, dyn_type))()
+rt_public char *(*wpfeat(origin, offset, dyn_type))()
 int dyn_type;
 int32 origin, offset;
 {
@@ -114,7 +114,7 @@ int32 origin, offset;
 #endif
 }
 
-public char *(*wfeat_inv(static_type, feature_id, name, object))()
+rt_public char *(*wfeat_inv(static_type, feature_id, name, object))()
 int static_type;
 int32 feature_id;
 char *object;
@@ -168,7 +168,7 @@ char *name;
 #endif
 }
 
-public char *(*wpfeat_inv(origin, offset, name, object))()
+rt_public char *(*wpfeat_inv(origin, offset, name, object))()
 int32 origin, offset;
 char *object;
 char *name;
@@ -218,7 +218,7 @@ char *name;
 }
 
 
-public void wexp(static_type, feature_id, dyn_type, object)
+rt_public void wexp(static_type, feature_id, dyn_type, object)
 int static_type, dyn_type;
 int32 feature_id;
 char *object;
@@ -276,7 +276,7 @@ char *object;
 									 */
 }
 
-public void wpexp(origin, offset, dyn_type, object)
+rt_public void wpexp(origin, offset, dyn_type, object)
 int32 origin, offset;
 int dyn_type;
 char *object;
@@ -331,7 +331,7 @@ char *object;
 									 */
 }
 
-public long wattr(static_type, feature_id, dyn_type)
+rt_public long wattr(static_type, feature_id, dyn_type)
 int static_type, dyn_type;
 int32 feature_id;
 {
@@ -348,7 +348,7 @@ int32 feature_id;
 	return (offset);
 }
 
-public long wpattr(origin, offset, dyn_type)
+rt_public long wpattr(origin, offset, dyn_type)
 int32 origin, offset;
 int dyn_type;
 {
@@ -360,7 +360,7 @@ int dyn_type;
 	return (desc_tab[origin][dyn_type][offset].info);
 }
 
-public long wattr_inv (static_type, feature_id, name, object)
+rt_public long wattr_inv (static_type, feature_id, name, object)
 int static_type;
 int32 feature_id;
 char *object;	/* Target object */
@@ -399,7 +399,7 @@ char *name;		/* Feature name to apply */
 	return (offset);
 }
 
-public long wpattr_inv (origin, offset, name, object)
+rt_public long wpattr_inv (origin, offset, name, object)
 int32 origin, offset;
 char *object;	/* Target object */
 char *name;		/* Feature name to apply */
@@ -433,7 +433,7 @@ char *name;		/* Feature name to apply */
 	return (desc_tab[origin][dyn_type][offset].info);
 }
 
-public int wtype(static_type, feature_id, dyn_type)
+rt_public int wtype(static_type, feature_id, dyn_type)
 int dyn_type, static_type;
 int32 feature_id;
 {
@@ -451,7 +451,7 @@ int32 feature_id;
 	return (type & SK_DTYPE);
 }
 
-public int wptype(origin, offset, dyn_type)
+rt_public int wptype(origin, offset, dyn_type)
 int32 origin, offset;
 int dyn_type;
 {
@@ -466,7 +466,7 @@ int dyn_type;
 	return (type & SK_DTYPE);
 }
 
-public char *(*wdisp(dyn_type))()
+rt_public char *(*wdisp(dyn_type))()
 int dyn_type;
 {
 	/* Function pointer associated to Eiffel feature of routine id
@@ -551,7 +551,7 @@ int mdesc_tab_size;			/* Size of the `mdesc_tab' */
  * global descriptor table
  */
 
-public void init_desc() 
+rt_public void init_desc() 
 {
 	/* Initialize the temporary structures used for the
 	 * construction of the global descriptor table.
@@ -579,7 +579,7 @@ public void init_desc()
 	tabinit();
 }
 
-public void put_desc(desc_ptr, org, dtype)
+rt_public void put_desc(desc_ptr, org, dtype)
 struct desc_info desc_ptr[];
 int org;
 int dtype;
@@ -602,7 +602,7 @@ int dtype;
 	}
 }
 
-public void put_mdesc(desc_ptr, org, dtype)
+rt_public void put_mdesc(desc_ptr, org, dtype)
 struct desc_info desc_ptr[];
 int org;
 int dtype;
@@ -641,7 +641,7 @@ int dtype;
 	mdesc_tab[mdesc_count++] = md;
 }
 
-public void create_desc()
+rt_public void create_desc()
 {
 	struct bounds *b;
 	int i, upper;

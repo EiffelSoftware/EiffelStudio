@@ -28,23 +28,23 @@
  * Call backs should not return any status, because how can we imagine which is
  * the best in case of failure?
  */
-private void (*callback[NOFILE])();		/* Call backs on a per-fd basis */
+rt_private void (*callback[NOFILE])();		/* Call backs on a per-fd basis */
 
 /* The select mask is updated every time a file descriptor is added or removed,
  * as well as the maximum file descriptor number to be used for the select call.
  */
-private fd_set rd_mask;			/* Read mask */
-private fd_set rd_tmask;		/* Temporary mask */
-private fd_set read_mask;		/* Mask used for select (altered) */
-private int nfds = 0;					/* Number of fd to be selected */
+rt_private fd_set rd_mask;			/* Read mask */
+rt_private fd_set rd_tmask;		/* Temporary mask */
+rt_private fd_set read_mask;		/* Mask used for select (altered) */
+rt_private int nfds = 0;					/* Number of fd to be selected */
 
 /* The global variable s_errno is used to record error conditions from this
  * set of routines. The s_errlist[] array contains a description of each
  * error while s_nerr is the size of that array. Similarily, s_nerrlist[] and
  * s_nerr contain the symbolic names and the size of the array.
  */
-public int s_errno = 0;					/* Error number */
-private char *s_errlist[] = {			/* List of error messages */
+rt_public int s_errno = 0;					/* Error number */
+rt_private char *s_errlist[] = {			/* List of error messages */
 	"OK",								/* No error */
 	"Invalid file descriptor",			/* S_FDESC */
 	"Invalid callback address",			/* S_CALBAK */
@@ -53,7 +53,7 @@ private char *s_errlist[] = {			/* List of error messages */
 	"Select system call failed",		/* S_SELECT */
 	"No input file to select",			/* S_NOFILE */
 };
-private char *s_nerrlist[] = {			/* Symbolic codes for errors */
+rt_private char *s_nerrlist[] = {			/* Symbolic codes for errors */
 	"OK",								/* No error */
 	"S_FDESC",							/* Invalid file descriptor */
 	"S_CALBAK",							/* Invalid call back address */
@@ -62,7 +62,7 @@ private char *s_nerrlist[] = {			/* Symbolic codes for errors */
 	"S_SELECT",							/* Select system call failed */
 	"S_NOFILE",							/* No input file to select */
 };
-private int s_nerr = sizeof(s_errlist);	/* Number of error messages */
+rt_private int s_nerr = sizeof(s_errlist);	/* Number of error messages */
 
 extern int errno;						/* System call error status */
 
@@ -70,7 +70,7 @@ extern int errno;						/* System call error status */
  * Setting the parameters.
  */
 
-public int add_input(fd, call)
+rt_public int add_input(fd, call)
 int fd;					/* File descriptor on which select must be done */
 void (*call)();			/* Function to be called when input is available */
 {
@@ -102,7 +102,7 @@ void (*call)();			/* Function to be called when input is available */
 	return 0;			/* Ok status */
 }
 
-public int tmp_input(fd)
+rt_public int tmp_input(fd)
 int fd;
 {
 	/* Temporarily reset the selection for 'fd' in the temporary read mask. In
@@ -125,7 +125,7 @@ int fd;
 	return 0;
 }
 
-public void (*new_callback(fd, call))()
+rt_public void (*new_callback(fd, call))()
 int fd;					/* File descriptor on which select must be done */
 void (*call)();			/* New function to be called when input is available */
 {
@@ -154,7 +154,7 @@ void (*call)();			/* New function to be called when input is available */
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-public void (*rem_input(fd))()
+rt_public void (*rem_input(fd))()
 int fd;					/* File descriptor on which no select is to be done */
 {
 	/* This function removes the input and associated callback for 'fd' and
@@ -195,7 +195,7 @@ int fd;					/* File descriptor on which no select is to be done */
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-public int has_input(fd)
+rt_public int has_input(fd)
 {
 	/* Returns 1 if the associated 'fd' has an input callback recorded, 0 if
 	 * the file is not selected, and -1 in case of error.
@@ -216,7 +216,7 @@ public int has_input(fd)
  * Description of errors.
  */
 
-public char *s_strerror()
+rt_public char *s_strerror()
 {
 	/* Return a description of the last error, as described by 's_errno' */
 
@@ -226,7 +226,7 @@ public char *s_strerror()
 	return s_errlist[s_errno];				/* English description */
 }
 
-public char *s_strname()
+rt_public char *s_strname()
 {
 	/* Return the symbolic name of the last error, as described by 's_errno' */
 
@@ -240,7 +240,7 @@ public char *s_strname()
  * Altering the result from select
  */
 
-public void clear_fd(f)
+rt_public void clear_fd(f)
 int f;
 {
 	/* It could happen that while processing one file descriptor, we have to
@@ -264,7 +264,7 @@ int f;
  * Perform select system call.
  */
 
-public int do_select(timeout)
+rt_public int do_select(timeout)
 struct timeval *timeout;
 {
 	/* Finally, this runs the select call with the computed read mask, with the

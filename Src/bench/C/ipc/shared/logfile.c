@@ -44,15 +44,15 @@
 
 #define MAX_STRING	1024			/* Maximum length for logging string */
 
-private int logfile = -2;			/* File descriptor used for logging */
-private char *logname = (char *) 0;	/* Name of the logfile in use */
-private int loglvl = 20;			/* Logging level */
-private void expand();				/* Run the %m %e expansion on the string */
-private int add_error();			/* Prints description of error in errno */
-private int add_errcode();			/* Print the symbolic error name */
+rt_private int logfile = -2;			/* File descriptor used for logging */
+rt_private char *logname = (char *) 0;	/* Name of the logfile in use */
+rt_private int loglvl = 20;			/* Logging level */
+rt_private void expand();				/* Run the %m %e expansion on the string */
+rt_private int add_error();			/* Prints description of error in errno */
+rt_private int add_errcode();			/* Print the symbolic error name */
 
-public char *progname = "ram";	/* Program name */
-public Pid_t progpid = 0;		/* Program PID */
+rt_public char *progname = "ram";	/* Program name */
+rt_public Pid_t progpid = 0;		/* Program PID */
 
 extern Time_t time();			/* Time in seconds since the Epoch */
 extern int errno;				/* System error report variable */
@@ -60,7 +60,7 @@ extern int file_lock();			/* Obtain a lock file with .lock extension */
 extern void release_lock();		/* Release previous lock */
 
 /* VARARGS2 */
-public void add_log(level, format, arg1, arg2, arg3, arg4, arg5)
+rt_public void add_log(level, format, arg1, arg2, arg3, arg4, arg5)
 int level;
 char *format;
 int arg1, arg2, arg3, arg4, arg5;
@@ -102,7 +102,7 @@ int arg1, arg2, arg3, arg4, arg5;
 	(void) write(fd, buffer, strlen(buffer));
 }
 
-public int open_log(name)
+rt_public int open_log(name)
 char *name;
 {
 	/* Open log file 'name' for logging. If a previous log file was opened,
@@ -125,7 +125,7 @@ char *name;
 	return 0;
 }
 
-public void close_log()
+rt_public void close_log()
 {
 	/* Close log file */
 
@@ -135,7 +135,7 @@ public void close_log()
 	logfile = -2;				/* Mark file as closed */
 }
 
-public int reopen_log()
+rt_public int reopen_log()
 {
 	/* Reopen logfile with same name as before (useful when child wants to start
 	 * with a fresh new file descriptor).
@@ -147,7 +147,7 @@ public int reopen_log()
 	return -1;						/* No previously opened logfile */
 }
 
-public void set_loglvl(level)
+rt_public void set_loglvl(level)
 int level;
 {
 	/* Set logging level to 'level' */
@@ -155,7 +155,7 @@ int level;
 	loglvl = level;
 }
 
-private void expand(from, to)
+rt_private void expand(from, to)
 char *from;
 char *to;
 {
@@ -181,7 +181,7 @@ char *to;
 			}
 }
 
-private int add_error(where)
+rt_private int add_error(where)
 char *where;
 {
 	/* Prints a description of the error code held in 'errno' into 'where' if
@@ -202,7 +202,7 @@ char *where;
 	return strlen(where);		/* FIXME */
 }
 
-private int add_errcode(where)
+rt_private int add_errcode(where)
 char *where;
 {
 	/* Prints the symbolic description of the error code heldin in 'errno' into

@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public void idrmem_destroy(idrs)
+rt_public void idrmem_destroy(idrs)
 IDR *idrs;
 {
 	/* Release the memory used by the IDR stream */

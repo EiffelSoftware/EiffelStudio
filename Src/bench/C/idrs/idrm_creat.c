@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public void idrmem_create(idrs, addr, len, i_op)
+rt_public void idrmem_create(idrs, addr, len, i_op)
 IDR *idrs;			/* The IDR structure managing the stream */
 char *addr;			/* Address of the serializing buffer */
 int len;			/* Length of the serializing buffer */

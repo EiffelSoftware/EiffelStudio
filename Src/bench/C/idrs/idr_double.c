@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_double(idrs, dp)
+rt_public bool_t idr_double(idrs, dp)
 IDR *idrs;
 double *dp;
 {

@@ -61,48 +61,48 @@
 /*
  * Public data declarations 
  */
-public struct htable *rt_table;		/* Table used for solving references */
-public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
-public char rt_kind;			/* Kind of storable */
+rt_public struct htable *rt_table;		/* Table used for solving references */
+rt_public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
+rt_public char rt_kind;			/* Kind of storable */
 
 /*
  * Private data declaration
  */
-private int **dattrib;				/* Pointer to attribute offsets in each object
+rt_private int **dattrib;				/* Pointer to attribute offsets in each object
 						 * for independent store */
-private int *dtypes;				/* Dynamic types */
-private uint32 *spec_elm_size;			/*array of special element sizes*/
-private uint32 old_overhead = 0;		/*overhead size from stored object*/
-private char * r_buffer = (char *) 0;		/*buffer for make_header*/
+rt_private int *dtypes;				/* Dynamic types */
+rt_private uint32 *spec_elm_size;			/*array of special element sizes*/
+rt_private uint32 old_overhead = 0;		/*overhead size from stored object*/
+rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
 /* Public data declarations */
 
 #ifdef __VMS		/* r_fides declared in garcol.c for vms */
 #else
-public int r_fides;			/* File descriptor use for retrieve */
-public char r_fstoretype;	/* File storage type used for retrieve */
+rt_public int r_fides;			/* File descriptor use for retrieve */
+rt_public char r_fstoretype;	/* File storage type used for retrieve */
 #endif
 
 /*
  * Function declations
  */
-public char *irt_make();			/* Do the independant retrieve */
-public char *grt_make();			/* Do the general retrieve (3.3 and later) */
-public char *irt_nmake();			/* Retrieve n objects  independent form*/
-public char *grt_nmake();			/* Retrieve n objects  general form*/
-private void iread_header();		/* Read independent header */
-private void rt_clean();			/* Clean data structure */
-private void rt_update1();			/* Reference correspondance update */
-private void rt_update2();			/* Fields updating */
-public char *rt_make();				/* Do the retrieve */
-public char *rt_nmake();			/* Retrieve n objects */
-private void read_header();			/* Read  general header */
-private void object_read ();		/* read the individual attributes of the object*/
-private void gen_object_read ();	/* read the individual attributes of the object*/
-private long get_expanded_pos ();
+rt_public char *irt_make();			/* Do the independant retrieve */
+rt_public char *grt_make();			/* Do the general retrieve (3.3 and later) */
+rt_public char *irt_nmake();			/* Retrieve n objects  independent form*/
+rt_public char *grt_nmake();			/* Retrieve n objects  general form*/
+rt_private void iread_header();		/* Read independent header */
+rt_private void rt_clean();			/* Clean data structure */
+rt_private void rt_update1();			/* Reference correspondance update */
+rt_private void rt_update2();			/* Fields updating */
+rt_public char *rt_make();				/* Do the retrieve */
+rt_public char *rt_nmake();			/* Retrieve n objects */
+rt_private void read_header();			/* Read  general header */
+rt_private void object_read ();		/* read the individual attributes of the object*/
+rt_private void gen_object_read ();	/* read the individual attributes of the object*/
+rt_private long get_expanded_pos ();
 
-private int readline ();
-private int buffer_read ();
+rt_private int readline ();
+rt_private int buffer_read ();
 
 
 #define GEN_MAX	4		/* Maximum number of generic parameters */
@@ -119,7 +119,7 @@ int (*retrieve_read_func)() = retrieve_read;
 
 
 
-public char *eretrieve(file_desc, file_storage_type)
+rt_public char *eretrieve(file_desc, file_storage_type)
 EIF_INTEGER file_desc;
 EIF_CHARACTER file_storage_type;
 {
@@ -243,7 +243,7 @@ EIF_CHARACTER file_storage_type;
 }
 
 
-public char *rt_make()
+rt_public char *rt_make()
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -260,7 +260,7 @@ public char *rt_make()
 }
 
 
-public char *rt_nmake(objectCount)
+rt_public char *rt_nmake(objectCount)
 long objectCount;
 {
 	/* Make the retrieve of `objectCount' objects.
@@ -396,7 +396,7 @@ long objectCount;
 	return newadd;
 }
 
-public char *grt_make()
+rt_public char *grt_make()
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -411,7 +411,7 @@ public char *grt_make()
 	return grt_nmake(objectCount);
 }
 
-public char *grt_nmake(objectCount)
+rt_public char *grt_nmake(objectCount)
 long objectCount;
 {
 	/* Make the retrieve of `objectCount' objects.
@@ -577,7 +577,7 @@ long objectCount;
 	return newadd;
 }
 
-public char *irt_make()
+rt_public char *irt_make()
 {
 	/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -592,7 +592,7 @@ public char *irt_make()
 	return irt_nmake(objectCount);
 }
 
-public char *irt_nmake(objectCount)
+rt_public char *irt_nmake(objectCount)
 long objectCount;
 {
 	/* Make the retrieve of `objectCount' objects.
@@ -794,7 +794,7 @@ long objectCount;
 	return newadd;
 }
 
-private void rt_clean()
+rt_private void rt_clean()
 {
 	/* Clean the data structure before raising an exception of code `code'
 	/* after having cleaned the hash table */
@@ -855,7 +855,7 @@ private void rt_clean()
 	retrieve_read_func = retrieve_read;
 }
 
-private void rt_update1 (old, new)
+rt_private void rt_update1 (old, new)
 register4 char *old;
 register3 EIF_OBJ new;
 {
@@ -910,7 +910,7 @@ register3 EIF_OBJ new;
 	rt_info->rt_obj = new;
 }
 
-private void rt_update2(old, new, parent)
+rt_private void rt_update2(old, new, parent)
 char *old, *new, *parent;
 {
 	/* Reference field updating: record new unsolved references.
@@ -1027,7 +1027,7 @@ update:
 }
 
 
-private char *next_item (ptr)
+rt_private char *next_item (ptr)
 char * ptr;
 {
 	int first_char = 0;
@@ -1042,7 +1042,7 @@ char * ptr;
 	return (ptr);
 }
 
-private void read_header(rt_type)
+rt_private void read_header(rt_type)
 char rt_type;
 {
 	/* Read header and make the dynamic type correspondance table */
@@ -1177,7 +1177,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 }
 
 
-private void iread_header()
+rt_private void iread_header()
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
@@ -1379,7 +1379,7 @@ private void iread_header()
 }
 
 
-private int readline (ptr, maxlen)
+rt_private int readline (ptr, maxlen)
 register char * ptr;
 register int *maxlen;
 {
@@ -1410,7 +1410,7 @@ register int *maxlen;
 }
 		
 			
-private int direct_read (object, size)
+rt_private int direct_read (object, size)
 register char * object;
 int size;
 {
@@ -1436,7 +1436,7 @@ int size;
 
 		
 			
-private int buffer_read (object, size)
+rt_private int buffer_read (object, size)
 register char * object;
 int size;
 {
@@ -1466,7 +1466,7 @@ int size;
 
 
 
-public int old_retrieve_read ()
+rt_public int old_retrieve_read ()
 {
 	char * ptr = general_buffer;
 
@@ -1485,7 +1485,7 @@ public int old_retrieve_read ()
 	return (end_of_buffer);
 }
 
-public int retrieve_read ()
+rt_public int retrieve_read ()
 {
 	char * ptr = general_buffer;
 	short read_size;
@@ -1524,7 +1524,7 @@ public int retrieve_read ()
 	return (end_of_buffer);
 }
 
-private void gen_object_read (object, parent)
+rt_private void gen_object_read (object, parent)
 char * object, * parent;
 {
 	long attrib_offset;
@@ -1692,7 +1692,7 @@ char * object, * parent;
 }
 
 
-private void object_read (object, parent)
+rt_private void object_read (object, parent)
 char * object, * parent;
 {
 	long attrib_offset;
@@ -1965,7 +1965,7 @@ char * object, * parent;
 	}
 }
 
-private long get_expanded_pos (o_type, num_attrib)
+rt_private long get_expanded_pos (o_type, num_attrib)
 uint32 o_type, num_attrib;
 {
 	long Result;

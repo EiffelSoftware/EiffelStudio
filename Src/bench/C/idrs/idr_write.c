@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_write(idrs, fd, bp, idr_bp)
+rt_public bool_t idr_write(idrs, fd, bp, idr_bp)
 IDR *idrs;			/* The serializing stream */
 int fd;				/* File descriptor we want to write to */
 char *bp;			/* Pointer to structure which contains the data */

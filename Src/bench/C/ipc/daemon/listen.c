@@ -21,10 +21,10 @@
 #define ACTIVE_TM	10		/* Active checks performed every 10 seconds */
 
 #ifndef EOFPIPE
-private int active_check();	/* Monitor connection to detect child death */
+rt_private int active_check();	/* Monitor connection to detect child death */
 #endif
 
-public void dwide_listen()
+rt_public void dwide_listen()
 {
 	/* Listen on all the file descriptors opened for reading until the
 	 * connected socket is broken. If the socket is in fact a pipe, then there
@@ -130,7 +130,7 @@ public void dwide_listen()
 #include "request.h"
 #endif
 
-private int active_check(sp, pid)
+rt_private int active_check(sp, pid)
 STREAM *sp;		/* Communication channel */
 int pid;		/* Child's pid */
 {

@@ -18,7 +18,7 @@
 #include "portable.h"
 #include "idrf.h"
 
-public int idrf_create(idrf, size)
+rt_public int idrf_create(idrf, size)
 IDRF *idrf;		/* IDR filtering pair */
 int size;		/* Size of IDR buffers */
 {

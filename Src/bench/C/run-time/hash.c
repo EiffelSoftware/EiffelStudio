@@ -20,13 +20,13 @@
  * Declarations
  */
 
-shared char **hash_search();	/* Search in the hash table */
-shared void hash_free();		/* Free the tables */
-shared void hash_malloc();		/* Hash table creation */
-private void free_entries();	/* Free all the hector entries */
+rt_shared char **hash_search();	/* Search in the hash table */
+rt_shared void hash_free();		/* Free the tables */
+rt_shared void hash_malloc();		/* Hash table creation */
+rt_private void free_entries();	/* Free all the hector entries */
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -35,7 +35,7 @@ private char *rcsid =
  */
 
 
-shared void hash_malloc(hp, size)
+rt_shared void hash_malloc(hp, size)
 struct hash *hp;
 register1 long size;
 {
@@ -46,7 +46,7 @@ register1 long size;
 	hp->h_entry = (char **) xcalloc(hp->h_size, sizeof(char *));
 }
 
-shared void hash_free(hp)
+rt_shared void hash_free(hp)
 struct hash *hp;
 {
 	/* Free memory allocated to the tables. */
@@ -55,7 +55,7 @@ struct hash *hp;
 	xfree(hp->h_entry);			/* Free entries array */
 }
 
-shared char **hash_search(hp, object)
+rt_shared char **hash_search(hp, object)
 struct hash *hp;
 register2 char *object;
 {

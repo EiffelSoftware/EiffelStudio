@@ -25,7 +25,7 @@
 
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -35,16 +35,16 @@ private char *rcsid =
  * variable upon entrance in the feature, so this is merely an added optional
  * parameter.
  */
-public int nstcall = 0;					/* Is current call a nested one? */
+rt_public int nstcall = 0;					/* Is current call a nested one? */
 
-private void recursive_chkinv();		/* Internal invariant control loop */
+rt_private void recursive_chkinv();		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
  * class creation routine
  */
 
-public char *argarr(argc,argv)
+rt_public char *argarr(argc,argv)
 int argc;
 char **argv;
 {
@@ -81,7 +81,7 @@ char **argv;
  * Manifest array creation for strip
  */
 
-public char *striparr(curr, dtype, items, nbr)
+rt_public char *striparr(curr, dtype, items, nbr)
 register1 char *curr;
 register2 int dtype;
 register3 char **items;
@@ -197,7 +197,7 @@ register4 long nbr;
 	return array;
 }
 
-public char *makestr(s, len)
+rt_public char *makestr(s, len)
 register1 char *s;
 register2 int len;
 {
@@ -230,7 +230,7 @@ register2 int len;
  * Conformance query
  */
 
-public char estypeg(obj1,obj2)
+rt_public char estypeg(obj1,obj2)
 char *obj1, *obj2;
 {
 	/* Are dynamic types of `obj1' and `obj2' identical? */
@@ -241,7 +241,7 @@ char *obj1, *obj2;
 	return (Dtype(obj1) == Dtype(obj2));
 }
 
-public EIF_BOOLEAN econfg(obj1,obj2)
+rt_public EIF_BOOLEAN econfg(obj1,obj2)
 char *obj1, *obj2;
 {
 	/* Does dynamic type of `obj2' conform to dynamic type of `obj1' ? */
@@ -253,7 +253,7 @@ char *obj1, *obj2;
 
 }
 
-public int econfm(ancestor, heir)
+rt_public int econfm(ancestor, heir)
 int ancestor;	/* If conformance is true, this must be the ancestor type */
 int heir;		/* And this must be the heir then */
 {
@@ -283,7 +283,7 @@ int heir;		/* And this must be the heir then */
  * Special object count
  */
 
-public long sp_count(spobject)
+rt_public long sp_count(spobject)
 char *spobject;
 {
 	/* Return the count of a special object */
@@ -298,11 +298,11 @@ char *spobject;
  * Invariant checking
  */
 
-private char *inv_mark_table;		/* Marking table to avoid checking the same 
+rt_private char *inv_mark_table;		/* Marking table to avoid checking the same 
 									 * invariant several times
 									 */
 
-public void chkinv (obj, where)
+rt_public void chkinv (obj, where)
 char *obj;
 int where;		/* Invariant is beeing checked before or after compound? */
 {
@@ -322,7 +322,7 @@ int where;		/* Invariant is beeing checked before or after compound? */
 }
 
 #ifdef WORKBENCH
-public void chkcinv(obj)
+rt_public void chkcinv(obj)
 char *obj;
 {
 	/* Check invariant of `obj' after creation. */
@@ -332,7 +332,7 @@ char *obj;
 }
 #endif
 
-private void recursive_chkinv(dtype, obj, where)
+rt_private void recursive_chkinv(dtype, obj, where)
 int dtype;
 char *obj;
 int where;		/* Invariant is being checked before or after compound? */

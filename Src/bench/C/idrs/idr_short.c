@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_short(idrs, sp)
+rt_public bool_t idr_short(idrs, sp)
 IDR *idrs;
 short *sp;
 {

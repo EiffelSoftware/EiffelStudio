@@ -31,17 +31,17 @@
 #define EWB			"/bin/es3 -bench"	/* Ewb process within Eiffel dir */
 
 /* Function declaration */
-public void dexit();			/* Daemon's exit */
-private void die();				/* A termination signal was trapped */
-private Signal_t handler();		/* Signal handler */
-private void set_signal();		/* Set up the signal handler */
+rt_public void dexit();			/* Daemon's exit */
+rt_private void die();				/* A termination signal was trapped */
+rt_private Signal_t handler();		/* Signal handler */
+rt_private void set_signal();		/* Set up the signal handler */
 
 extern STREAM *spawn_child();	/* Start up child with ipc link */
 extern char *getenv();			/* Get environment variable value */
 extern Malloc_t malloc();		/* Memory allocation */
-public unsigned TIMEOUT;		/* Time out for interprocess communications */
+rt_public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
-public struct d_flags d_data = {	/* Internal daemon's flags */
+rt_public struct d_flags d_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
@@ -49,10 +49,10 @@ public struct d_flags d_data = {	/* Internal daemon's flags */
 };
 
 #ifndef USE_ADD_LOG
-public char *progname;	/* Otherwise defined in logfile.c */
+rt_public char *progname;	/* Otherwise defined in logfile.c */
 #endif
 
-public void main(argc, argv)
+rt_public void main(argc, argv)
 int argc;
 char **argv;
 {
@@ -148,7 +148,7 @@ char **argv;
 	dexit(0);		/* Workbench died, so do we */
 }
 
-private void set_signal()
+rt_private void set_signal()
 {
 	/* Set up the signal handler */
 
@@ -171,7 +171,7 @@ private void set_signal()
 #endif
 }
 
-private Signal_t handler(sig)
+rt_private Signal_t handler(sig)
 int sig;
 {
 	/* A signal was caught */
@@ -186,7 +186,7 @@ int sig;
 	dexit(0);
 }
 
-private void die()
+rt_private void die()
 {
 #ifdef USE_ADD_LOG
 	add_log(9, "going down on termination signal");
@@ -194,7 +194,7 @@ private void die()
 	dexit(0);
 }
 
-public void dexit(code)
+rt_public void dexit(code)
 int code;
 {
 #ifdef USE_ADD_LOG
@@ -205,7 +205,7 @@ int code;
 
 #ifndef HAS_STRDUP
 
-public char *strdup (s)
+rt_public char *strdup (s)
 char * s;
 {
 	char *new;

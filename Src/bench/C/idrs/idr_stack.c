@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_stack(idrs, ap, size, elemsize, idr_elem)
+rt_public bool_t idr_stack(idrs, ap, size, elemsize, idr_elem)
 IDR *idrs;				/* The serializing stream */
 char **ap;				/* Where address of arena is stored */
 int size;				/* Number of items in the fixed stack */

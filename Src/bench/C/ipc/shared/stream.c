@@ -26,9 +26,9 @@ extern Malloc_t malloc();
 /* All the recorded streams are recorded in an array, which makes it possible
  * to map an file descriptor to its associated stream structure.
  */
-public STREAM *stream_by_fd[MAX_FILE_DESC];
+rt_public STREAM *stream_by_fd[MAX_FILE_DESC];
 
-public STREAM *new_stream(read_fd, write_fd)
+rt_public STREAM *new_stream(read_fd, write_fd)
 int read_fd;
 int write_fd;
 {
@@ -51,7 +51,7 @@ int write_fd;
 	return sp;			/* Associated stream structure */
 }
 
-public void close_stream(sp)
+rt_public void close_stream(sp)
 STREAM *sp;
 {
 	/* Close the stream connection */

@@ -40,16 +40,16 @@
 
 #define IDRF_SIZE 1024
 
-private IDRF idrf;
+rt_private IDRF idrf;
 
-shared char *idr_temp_buf;	/* This is shared so it can be freed
+rt_shared char *idr_temp_buf;	/* This is shared so it can be freed
 							 * if an exception occurs.
 							 */
 
-private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
+rt_private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
 
 
-public bool_t run_idr_setpos(idrs, pos)
+rt_public bool_t run_idr_setpos(idrs, pos)
 IDR *idrs;
 int pos;
 {
@@ -65,7 +65,7 @@ int pos;
 }
 
 
-public void run_mem_destroy(idrs)
+rt_public void run_mem_destroy(idrs)
 IDR *idrs;
 {
 	/* Release the memory used by the IDR stream */
@@ -77,7 +77,7 @@ IDR *idrs;
 	}
 }
 
-public void run_idrmem_create(idrs, addr, len, i_op)
+rt_public void run_idrmem_create(idrs, addr, len, i_op)
 IDR *idrs;			/* The IDR structure managing the stream */
 char *addr;			/* Address of the serializing buffer */
 int len;			/* Length of the serializing buffer */
@@ -94,7 +94,7 @@ int i_op;			/* Operation wanted */
 }
 
 
-public int run_idrf_create(size)
+rt_public int run_idrf_create(size)
 int size;		/* Size of IDR buffers */
 {
 	/* Initializes memory for IDR operations. We create memory streams for
@@ -122,7 +122,7 @@ int size;		/* Size of IDR buffers */
 }
 
 
-public void run_idr_init ()
+rt_public void run_idr_init ()
 {
 	if (-1 == run_idrf_create (IDRF_SIZE))
 		eraise ("cannot allocate idrf", EN_MEM);
@@ -131,14 +131,14 @@ public void run_idr_init ()
 	amount_read = 0;
 }
 
-public void run_idr_destroy ()
+rt_public void run_idr_destroy ()
 {
 	run_mem_destroy(&idrf.i_encode);
 	run_mem_destroy(&idrf.i_decode);
 }
 
 
-private int run_idr_read (bu)
+rt_private int run_idr_read (bu)
 IDR *bu;
 {
         register char * ptr = bu->i_buf;
@@ -187,7 +187,7 @@ IDR *bu;
 	return total_read;
 }
 
-private void run_idr_write (bu)
+rt_private void run_idr_write (bu)
 IDR *bu;
 {
         register char * ptr = idrs_buf (bu);
@@ -234,7 +234,7 @@ IDR *bu;
 		}
 }
 
-public void check_capacity (bu, size)
+rt_public void check_capacity (bu, size)
 IDR *bu;
 int size;
 {
@@ -252,12 +252,12 @@ int size;
 	}
 }
 
-public void idr_flush ()
+rt_public void idr_flush ()
 {
 	check_capacity (&idrf.i_encode, IDRF_SIZE);
 }
 
-public bool_t run_long(idrs, lp, len, size)
+rt_public bool_t run_long(idrs, lp, len, size)
 IDR *idrs;
 long *lp;
 int len;
@@ -352,7 +352,7 @@ int size;
 	return TRUE;
 }
 
-public bool_t run_ulong(idrs, lp, len, size)
+rt_public bool_t run_ulong(idrs, lp, len, size)
 IDR *idrs;
 unsigned long *lp;
 int len;
@@ -425,7 +425,7 @@ int size;
 	return TRUE;
 }
 
-public bool_t run_int(idrs, ip, len)
+rt_public bool_t run_int(idrs, ip, len)
 IDR *idrs;
 uint32 *ip;
 int len;
@@ -454,7 +454,7 @@ int len;
 }
 
 
-public void ridr_multi_char (obj, num)
+rt_public void ridr_multi_char (obj, num)
 char *obj;
 int num;
 {
@@ -482,7 +482,7 @@ int num;
 	}
 }
 
-public void widr_multi_char (obj, num)
+rt_public void widr_multi_char (obj, num)
 char *obj;
 int num;
 {
@@ -511,7 +511,7 @@ int num;
 }
 
 
-public void ridr_multi_any (obj, num)
+rt_public void ridr_multi_any (obj, num)
 char *obj;
 int num;
 {
@@ -539,7 +539,7 @@ int num;
 	}
 }
 
-public void widr_multi_any (obj, num)
+rt_public void widr_multi_any (obj, num)
 char *obj;
 int num;
 {
@@ -567,7 +567,7 @@ int num;
 }
 
 
-public void ridr_multi_int (obj, num)
+rt_public void ridr_multi_int (obj, num)
 long *obj;
 int num;
 {
@@ -594,7 +594,7 @@ int num;
 	}
 }
 
-public void widr_multi_int (obj, num)
+rt_public void widr_multi_int (obj, num)
 long *obj;
 int num;
 {
@@ -621,7 +621,7 @@ int num;
 }
 
 
-public void ridr_multi_float (obj, num)
+rt_public void ridr_multi_float (obj, num)
 float *obj;
 int num;
 {
@@ -641,7 +641,7 @@ int num;
 	}
 }
 
-public void widr_multi_float (obj, num)
+rt_public void widr_multi_float (obj, num)
 float *obj;
 int num;
 {
@@ -662,7 +662,7 @@ int num;
 }
 
 
-public void ridr_multi_double (obj, num)
+rt_public void ridr_multi_double (obj, num)
 double *obj;
 int num;
 {
@@ -682,7 +682,7 @@ int num;
 	}
 }
 
-public void widr_multi_double (obj, num)
+rt_public void widr_multi_double (obj, num)
 double *obj;
 int num;
 {
@@ -703,7 +703,7 @@ int num;
 }
 
 
-public void ridr_multi_bit (obj, num, elm_siz)
+rt_public void ridr_multi_bit (obj, num, elm_siz)
 struct bit *obj;
 int num;
 long elm_siz;
@@ -744,7 +744,7 @@ long elm_siz;
 	}
 }
 
-public void widr_multi_bit (obj, num, len, elm_siz)
+rt_public void widr_multi_bit (obj, num, len, elm_siz)
 struct bit *obj;
 int num;
 uint32 len;
@@ -781,19 +781,19 @@ uint32 len;
 	}
 }
 
-public void ridr_norm_int (obj)
+rt_public void ridr_norm_int (obj)
 uint32 *obj;
 {
 	run_int (&idrf.i_decode, obj, 1);
 }
 
-public void widr_norm_int (obj)
+rt_public void widr_norm_int (obj)
 uint32 *obj;
 {
 	run_int (&idrf.i_encode, obj, 1);
 }
 
-public int idr_read_line (bu, max_size)
+rt_public int idr_read_line (bu, max_size)
 char * bu;
 int max_size;
 {

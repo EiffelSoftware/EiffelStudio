@@ -34,62 +34,62 @@
 #endif
 
 #ifdef __VMS
-public int	putenv ();
+rt_public int	putenv ();
 #endif
 
 /*
  * Various casts.
  */
 
-public EIF_CHARACTER chconv(i)
+rt_public EIF_CHARACTER chconv(i)
 EIF_INTEGER i;
 {
 	return (EIF_CHARACTER) i;	/* (EIF_INTEGER) -> (EIF_CHARACTER) */
 }
 
-public EIF_INTEGER chcode(c)
+rt_public EIF_INTEGER chcode(c)
 EIF_CHARACTER c;
 {
 	return (EIF_INTEGER) c;	/* (EIF_CHARACTER) -> (EIF_INTEGER) */
 }
 
-public EIF_POINTER conv_pp(p)
+rt_public EIF_POINTER conv_pp(p)
 EIF_POINTER p;
 {
 	return p;	/* (EIF_POINTER) -> (EIF_POINTER) */
 }
 
-public EIF_INTEGER conv_pi(p)
+rt_public EIF_INTEGER conv_pi(p)
 EIF_POINTER p;
 {
 	return (EIF_INTEGER) p;	/* (EIF_POINTER) -> (EIF_INTEGER) */
 }
 
-public EIF_REAL conv_ir(v)
+rt_public EIF_REAL conv_ir(v)
 EIF_INTEGER v;
 {
 	return (EIF_REAL) v;	/* (EIF_INTEGER) -> (EIF_REAL) */
 }
 
-public EIF_INTEGER conv_ri(v)
+rt_public EIF_INTEGER conv_ri(v)
 EIF_REAL v;
 {
 	return (EIF_INTEGER) v;	/* (EIF_REAL) -> (EIF_INTEGER) */
 }
 
-public EIF_REAL conv_dr (d)
+rt_public EIF_REAL conv_dr (d)
 EIF_DOUBLE d;
 {
 	return (EIF_REAL) d;	/* (EIF_DOUBLE) -> (EIF_REAL) */
 }
 
-public EIF_INTEGER conv_di(d)
+rt_public EIF_INTEGER conv_di(d)
 EIF_DOUBLE d;
 {
 	return (EIF_INTEGER) d;		/* (EIF_DOUBLE) -> (EIF_INTEGER) */
 }
 
-public EIF_INTEGER bointdiv(n1, n2)
+rt_public EIF_INTEGER bointdiv(n1, n2)
 EIF_INTEGER n1, n2;
 {
 	/* Return the greatest integer less or equal to the
@@ -99,7 +99,7 @@ EIF_INTEGER n1, n2;
 	return ((n1 >= 0) ^ (n2 > 0))  ? (n1 % n2 ? n1 / n2 - 1: n1 / n2) : n1 / n2;
 }
 
-public EIF_INTEGER upintdiv(n1,n2)
+rt_public EIF_INTEGER upintdiv(n1,n2)
 EIF_INTEGER n1, n2;
 {
 	/* Return the smallest integer greater or equal to the
@@ -114,58 +114,58 @@ EIF_INTEGER n1, n2;
  */
 
 
-public EIF_CHARACTER chupper(c)
+rt_public EIF_CHARACTER chupper(c)
 EIF_CHARACTER c;
 {
 	return (EIF_CHARACTER)toupper(c);
 }
 
-public EIF_CHARACTER chlower(c)
+rt_public EIF_CHARACTER chlower(c)
 EIF_CHARACTER c;
 {
 	return (EIF_CHARACTER)tolower(c);
 }
 
-public EIF_BOOLEAN chis_upper(c)
+rt_public EIF_BOOLEAN chis_upper(c)
 EIF_CHARACTER c;
 {
 	return EIF_TEST(isupper(c));
 }
 
-public EIF_BOOLEAN chis_lower(c)
+rt_public EIF_BOOLEAN chis_lower(c)
 EIF_CHARACTER c;
 {
 	return EIF_TEST(islower(c));
 }
 
-public EIF_BOOLEAN chis_digit(c)
+rt_public EIF_BOOLEAN chis_digit(c)
 EIF_CHARACTER c;
 {
 	return EIF_TEST(isdigit(c));
 }
 
-public EIF_BOOLEAN chis_alpha(c)
+rt_public EIF_BOOLEAN chis_alpha(c)
 EIF_CHARACTER c;
 {
 	return EIF_TEST(isalpha(c));
 }
 
-public EIF_INTEGER eschar_size()
+rt_public EIF_INTEGER eschar_size()
 {
 	return ALIGN*CHRSIZ;
 }
 
-public EIF_INTEGER esreal_size()
+rt_public EIF_INTEGER esreal_size()
 {
 	return ALIGN*FLTSIZ;
 }
 
-public EIF_INTEGER esint_size()
+rt_public EIF_INTEGER esint_size()
 {
 	return ALIGN*LNGSIZ;
 }
 
-public EIF_INTEGER esdouble_size()
+rt_public EIF_INTEGER esdouble_size()
 {
 	return ALIGN*DBLSIZ;
 }
@@ -174,7 +174,7 @@ public EIF_INTEGER esdouble_size()
  * Protected call to system
  */
 
-public EIF_INTEGER eif_system (s)
+rt_public EIF_INTEGER eif_system (s)
 char *s;
 {
 	EIF_INTEGER result;
@@ -215,7 +215,7 @@ char *s;
 	return result;
 }
 
-public EIF_INTEGER eif_putenv (v,k)
+rt_public EIF_INTEGER eif_putenv (v,k)
 EIF_OBJ v,k;
 {
 		/* We need a copy of the string because the string will be
@@ -300,7 +300,7 @@ EIF_OBJ v,k;
 #endif
 }
 
-public EIF_OBJ eif_getenv (k)
+rt_public EIF_OBJ eif_getenv (k)
 EIF_OBJ k;
 {
 #ifdef EIF_WIN32
@@ -370,7 +370,7 @@ EIF_OBJ k;
 
 /***************************************/
 
-public char *arycpy(area, i, j, k)
+rt_public char *arycpy(area, i, j, k)
 char *area;
 EIF_INTEGER i, j, k;
 {

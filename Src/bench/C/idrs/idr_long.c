@@ -21,7 +21,7 @@
 #include "idr.h"
 #include "size.h"
 
-public bool_t idr_long(idrs, lp)
+rt_public bool_t idr_long(idrs, lp)
 IDR *idrs;
 long *lp;
 {

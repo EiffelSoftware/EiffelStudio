@@ -33,7 +33,7 @@
 #endif
 
 #ifndef HAS_DUP2
-public int dup2(old, new)
+rt_public int dup2(old, new)
 int old;
 int new;
 {
@@ -71,7 +71,7 @@ int new;
 
 
 #ifndef HAS_USLEEP
-public int usleep(usec)
+rt_public int usleep(usec)
 int usec;
 {
 	/* Sleep for 'usec' micro-seconds */
@@ -85,7 +85,7 @@ int usec;
 }
 #endif
 
-public char *str_save(s)
+rt_public char *str_save(s)
 char *s;
 {
 	/* Save string 's' somewhere in memory */

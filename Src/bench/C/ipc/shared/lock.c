@@ -28,16 +28,16 @@
 #define ATTEMPTS	20			/* Number of attempts made */
 #define INTERVAL	10000		/* Number of micro seconds between intervals */
 
-private char lockfile[MAX_STRING];		/* Location of lock file */
-private int locked = 0;					/* Did we lock successfully? */
+rt_private char lockfile[MAX_STRING];		/* Location of lock file */
+rt_private int locked = 0;					/* Did we lock successfully? */
 
-private void check_lock();				/* Make sure lockfile is not too old */
+rt_private void check_lock();				/* Make sure lockfile is not too old */
 
 extern int errno;						/* System error status */
 extern Time_t time();					/* Current time */
 extern int usleep();					/* Micro sleeps */
 
-public int lock_file(file)
+rt_public int lock_file(file)
 char *file;						/* Where lockfile should be written */
 {
 	/* Note: this locking is not completly safe w.r.t. race conditions, but the
@@ -71,7 +71,7 @@ char *file;						/* Where lockfile should be written */
 	return locked ? 0 : -1;
 }
 
-public void release_lock()
+rt_public void release_lock()
 {
 	if (locked && -1 == unlink(lockfile)) {
 #ifdef USE_ADD_LOG
@@ -82,12 +82,12 @@ public void release_lock()
 	locked = 0;
 }
 
-public int is_locked()
+rt_public int is_locked()
 {
 	return locked;			/* Do we have a lock file active or not? */
 }
 
-private void check_lock(file)
+rt_private void check_lock(file)
 char *file;
 {
 	/* Make sure the lock file is not older than MAX_TIME seconds, otherwise

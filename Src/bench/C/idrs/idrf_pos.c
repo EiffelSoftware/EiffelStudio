@@ -18,7 +18,7 @@
 #include "portable.h"
 #include "idrf.h"
 
-public void idrf_pos(idrf)
+rt_public void idrf_pos(idrf)
 IDRF *idrf;
 {
 	/* This routine should be called before any IDR operation,

@@ -511,7 +511,7 @@ char is_frozen;
  * Prefix/Infix operator analysis primitives
  */
 
-public int is_infix(s)
+rt_public int is_infix(s)
 char *s;
 {
 	/* Is `s' a valid infix operator ? */
@@ -548,7 +548,7 @@ char *s;
 	}
 }
 
-public int is_prefix(s)
+rt_public int is_prefix(s)
 char *s;
 {
 	/* Is `s' a valid prefix operator ? */
@@ -586,7 +586,7 @@ char *s;
 }
 
 
-private int is_free(s)
+rt_private int is_free(s)
 char *s;
 {
 	/* Is `s' a free operator ?

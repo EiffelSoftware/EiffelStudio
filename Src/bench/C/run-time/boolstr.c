@@ -19,7 +19,7 @@
 #include <strings.h>
 #endif
 
-public char *bl_str_set(a1, s, n)
+rt_public char *bl_str_set(a1, s, n)
 char *a1;
 int s;			/* number of boolean in `a1' */
 int n;
@@ -32,7 +32,7 @@ int n;
 	return a1;
 }
 
-public char *bl_str_and(a1, a2, a3, s)
+rt_public char *bl_str_and(a1, a2, a3, s)
 char *a1, *a2, *a3;
 int s;
 {
@@ -44,7 +44,7 @@ int s;
 	return a3;
 }
 
-public char *bl_str_or(a1, a2, a3, s)
+rt_public char *bl_str_or(a1, a2, a3, s)
 char *a1, *a2, *a3;
 int s;
 {
@@ -56,7 +56,7 @@ int s;
 	return a3;
 }
 
-public char *bl_str_xor(a1, a2, a3, s)
+rt_public char *bl_str_xor(a1, a2, a3, s)
 char *a1, *a2, *a3;
 int s;
 {
@@ -68,7 +68,7 @@ int s;
 	return a3;
 }
 
-public char *bl_str_not(a1, a2, s)
+rt_public char *bl_str_not(a1, a2, s)
 char *a1, *a2;
 int s;
 {
@@ -80,7 +80,7 @@ int s;
 	return a2;
 }
 
-public char *bl_str_shiftr(a1, a2, s, n)
+rt_public char *bl_str_shiftr(a1, a2, s, n)
 char *a1, *a2;
 int s;			/* number of booleans in `a1' */
 int n;
@@ -101,7 +101,7 @@ int n;
 	return a2;
 }
 
-public char *bl_str_shiftl(a1, a2, s, n)
+rt_public char *bl_str_shiftl(a1, a2, s, n)
 char *a1, *a2;
 int s;			/* number of booleans in `a1' */
 int n;

@@ -45,44 +45,44 @@
 
 /*#define DEBUG 1    /**/
 
-public int fides;
-public char fstoretype;
-public char *general_buffer = (char *) 0;
-public int current_position = 0;
-public int buffer_size = 1024;
-public int end_of_buffer = 0;
-private char *s_buffer = (char *) 0;
+rt_public int fides;
+rt_public char fstoretype;
+rt_public char *general_buffer = (char *) 0;
+rt_public int current_position = 0;
+rt_public int buffer_size = 1024;
+rt_public int end_of_buffer = 0;
+rt_private char *s_buffer = (char *) 0;
 
 
 /*
  * Function declarations
  */
-private void internal_store();
-private void st_store();				/* Second pass of the store */
-private void ist_write();
-private void gst_write();
-private void make_header();				/* Make header */
-private void imake_header();				/* Make header */
-private int store_buffer ();
-private void object_write ();
-private void gen_object_write ();
-public long get_offset ();
-public long get_alpha_offset ();
-public void allocate_gen_buffer();
+rt_private void internal_store();
+rt_private void st_store();				/* Second pass of the store */
+rt_private void ist_write();
+rt_private void gst_write();
+rt_private void make_header();				/* Make header */
+rt_private void imake_header();				/* Make header */
+rt_private int store_buffer ();
+rt_private void object_write ();
+rt_private void gen_object_write ();
+rt_public long get_offset ();
+rt_public long get_alpha_offset ();
+rt_public void allocate_gen_buffer();
 void store_write();
-private void st_clean();
-public void free_sorted_attributes();
+rt_private void st_clean();
+rt_public void free_sorted_attributes();
 
 /*
  * Shared data declarations
  */
-shared char *account = (char *) 0;			/* Array of traversed dyn types */
-shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
+rt_shared char *account = (char *) 0;			/* Array of traversed dyn types */
+rt_shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
 
-private int accounting = 0;
+rt_private int accounting = 0;
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -97,7 +97,7 @@ void (*store_write_func)() = store_write;
  * Functions definitions
  */
 
-public void eestore(file_desc, object, file_storage_type)
+rt_public void eestore(file_desc, object, file_storage_type)
 EIF_INTEGER file_desc;
 char *object;
 EIF_CHARACTER file_storage_type;
@@ -117,7 +117,7 @@ EIF_CHARACTER file_storage_type;
 	st_write_func = st_write;
 }
 
-public void estore(file_desc, object, file_storage_type)
+rt_public void estore(file_desc, object, file_storage_type)
 EIF_INTEGER file_desc;
 char *object;
 EIF_CHARACTER file_storage_type;
@@ -130,7 +130,7 @@ EIF_CHARACTER file_storage_type;
 	internal_store(object);
 }
 
-public void sstore (fd, object, file_storage_type)
+rt_public void sstore (fd, object, file_storage_type)
 EIF_INTEGER fd;
 char * object;
 EIF_CHARACTER file_storage_type;
@@ -158,7 +158,7 @@ EIF_CHARACTER file_storage_type;
 	idr_temp_buf = (char *)0;
 }
 
-public void allocate_gen_buffer ()
+rt_public void allocate_gen_buffer ()
 {
 	if (general_buffer == (char *) 0) {
 		char g_status = g_data.status;
@@ -173,7 +173,7 @@ public void allocate_gen_buffer ()
 	end_of_buffer = 0;
 }
 
-private void internal_store(object)
+rt_private void internal_store(object)
 char *object;
 {
 	/* Store object hierarchy of root `object' in file `file_ptr' and
@@ -257,7 +257,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #endif
 }
 
-private void st_store(object)
+rt_private void st_store(object)
 char *object;
 {
 	/* Second pass of the store mecahnism: writing on the disk. */
@@ -320,7 +320,7 @@ char *object;
 
 }
 
-public void st_write(object)
+rt_public void st_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
@@ -371,7 +371,7 @@ char *object;
 
 }
 
-private void gst_write(object)
+rt_private void gst_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
@@ -417,7 +417,7 @@ char *object;
 
 }
 
-private void ist_write(object)
+rt_private void ist_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
@@ -463,7 +463,7 @@ char *object;
 
 }
 
-public long get_offset(o_type, attrib_num)
+rt_public long get_offset(o_type, attrib_num)
 uint32 o_type, attrib_num;
 {
 #ifndef WORKBENCH
@@ -478,7 +478,7 @@ uint32 o_type, attrib_num;
 #endif
 }
 
-public long get_alpha_offset(o_type, attrib_num)
+rt_public long get_alpha_offset(o_type, attrib_num)
 uint32 o_type, attrib_num;
 {
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
@@ -506,7 +506,7 @@ uint32 o_type, attrib_num;
 }
 
 
-private void gen_object_write(object)
+rt_private void gen_object_write(object)
 char * object;
 {
 		/* Writes an object to disk (used by the new (3.3) general store)
@@ -645,7 +645,7 @@ char * object;
 }
 
 
-private void object_write(object)
+rt_private void object_write(object)
 char * object;
 {
 	long attrib_offset;
@@ -869,7 +869,7 @@ char * object;
 
 
 
-private void make_header()
+rt_private void make_header()
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -973,7 +973,7 @@ private void make_header()
 	expop(&eif_stack);
 }
 
-public void sort_attributes(dtype)
+rt_public void sort_attributes(dtype)
 int dtype;
 {
 	/* Sort the attributes alphabeticaly by type */
@@ -1039,7 +1039,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
-private void imake_header()
+rt_private void imake_header()
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -1163,7 +1163,7 @@ private void imake_header()
 }
 
 
-private void st_clean()
+rt_private void st_clean()
 {
 	/* clean up memory allocation and reset function pointers */
 
@@ -1185,7 +1185,7 @@ private void st_clean()
 	}
 }
 
-public void free_sorted_attributes()
+rt_public void free_sorted_attributes()
 {
 	unsigned int i;
 	unsigned int *s_attr;
@@ -1205,7 +1205,7 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 	}
 }
 
-public void buffer_write(data, size)
+rt_public void buffer_write(data, size)
 register char * data;
 int size;
 {
@@ -1224,7 +1224,7 @@ int size;
 	}
 }
 
-public void flush_st_buffer ()
+rt_public void flush_st_buffer ()
 {
 	if (current_position != 0)
 		store_write_func ();

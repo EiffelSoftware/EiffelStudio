@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_int(idrs, ip)
+rt_public bool_t idr_int(idrs, ip)
 IDR *idrs;
 int *ip;
 {

@@ -68,7 +68,7 @@
  * result back onto the stack. Of course, optimizations are here to avoid
  * useless stack manipulations.
  */
-shared struct opstack op_stack = {
+rt_shared struct opstack op_stack = {
 	(struct stochunk *) 0,		/* st_hd */
 	(struct stochunk *) 0,		/* st_tl */
 	(struct stochunk *) 0,		/* st_cur */
@@ -84,7 +84,7 @@ shared struct opstack op_stack = {
  * to be fetched. Its behaviour is similar to the one of PC in a central
  * processing unit.
  */
-public char *IC;				/* Interpreter Counter (like PC on a CPU) */
+rt_public char *IC;				/* Interpreter Counter (like PC on a CPU) */
 
 /* To speed-up access of the local parameters and variables, they are all
  * gathered in a separate array (automagically resized). The value of Current
@@ -95,10 +95,10 @@ public char *IC;				/* Interpreter Counter (like PC on a CPU) */
  * of the interpreter's registers, but for faster access, they are copied
  * to C global vars--RAM.
  */
-private struct item **iregs = (struct item **) 0;	/* Interpreter registers */
-private int iregsz = 0;					/* Size of 'iregs' array (bytes) */
-private int argnum;						/* Number of arguments */
-private int locnum;						/* Number of locals */
+rt_private struct item **iregs = (struct item **) 0;	/* Interpreter registers */
+rt_private int iregsz = 0;					/* Size of 'iregs' array (bytes) */
+rt_private int argnum;						/* Number of arguments */
+rt_private int locnum;						/* Number of locals */
 
 /* To optimize registers resync, we keep track of a tag value which is updated
  * each time we enter in an interpreted routine. This gives us the ability to
@@ -106,72 +106,72 @@ private int locnum;						/* Number of locals */
  * routine due to a function call. If none have been called, then the registers
  * have no reason to have changed.
  */
-private unsigned long tagval = 0L;	/* Records number of interpreter's call */
+rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */
 
 /* Error message */
-private char *botched = "Operational stack botched";
-private char *unknown_type = "unknown entity type";
+rt_private char *botched = "Operational stack botched";
+rt_private char *unknown_type = "unknown entity type";
 
 /* Monadic and diadic operator handling */
-private void monadic_op();				/* Execute a monadic operation */
-private void diadic_op();				/* Execute a diadic operation */
+rt_private void monadic_op();				/* Execute a monadic operation */
+rt_private void diadic_op();				/* Execute a diadic operation */
 
 /* Assertion checking */
-private void icheck_inv();				/* Invariant check */
-private void irecursive_chkinv();		/* Recursive invariant check */
+rt_private void icheck_inv();				/* Invariant check */
+rt_private void irecursive_chkinv();		/* Recursive invariant check */
 
 /* Getting constants */
-private uint32 get_uint32();			/* Get an unsigned int32 */
-private double get_double();			/* Get a double constant */
-private float get_float();				/* Get a float constant */
-private long get_long();				/* Get a long constant */
-private short get_short();				/* Get a short constant */
-private fnptr get_fnptr();				/* Get a function pointer */
-private char *get_address();			/* Get an address */
+rt_private uint32 get_uint32();			/* Get an unsigned int32 */
+rt_private double get_double();			/* Get a double constant */
+rt_private float get_float();				/* Get a float constant */
+rt_private long get_long();				/* Get a long constant */
+rt_private short get_short();				/* Get a short constant */
+rt_private fnptr get_fnptr();				/* Get a function pointer */
+rt_private char *get_address();			/* Get an address */
 
 /* Writing constants */
-private void write_long();				/* Write long constant */
-private void write_float();				/* Write a float constant */
-private void write_double();			/* Write a double constant */
-private void write_fnptr();				/* Write a function pointer constant */
-private void write_address();			/* Write an address constant */
+rt_private void write_long();				/* Write long constant */
+rt_private void write_float();				/* Write a float constant */
+rt_private void write_double();			/* Write a double constant */
+rt_private void write_fnptr();				/* Write a function pointer constant */
+rt_private void write_address();			/* Write an address constant */
 
 /* Interpreter interface */
-public void exp_call();					/* Sets IC before calling interpret */
-public void xinterp();					/* Sets IC before calling interpret */
-public void xinitint();					/* Initialization of the interpreter */
-private void interpret();				/* Run the interpreter */
+rt_public void exp_call();					/* Sets IC before calling interpret */
+rt_public void xinterp();					/* Sets IC before calling interpret */
+rt_public void xinitint();					/* Initialization of the interpreter */
+rt_private void interpret();				/* Run the interpreter */
 
 /* Feature call and/or access  */
-private int icall();					/* Interpreter dispatcher (in water) */
-private int ipcall();					/* Interpreter precomp dispatcher */
-private void interp_access();			/* Access to an attribute */
-private void interp_paccess();			/* Access to a precompiled attribute */
-private void address();					/* Address of a routine */
-private void assign();					/* Assignment in an attribute */
-private void passign();					/* Assignment in a precomp attribute */
+rt_private int icall();					/* Interpreter dispatcher (in water) */
+rt_private int ipcall();					/* Interpreter precomp dispatcher */
+rt_private void interp_access();			/* Access to an attribute */
+rt_private void interp_paccess();			/* Access to a precompiled attribute */
+rt_private void address();					/* Address of a routine */
+rt_private void assign();					/* Assignment in an attribute */
+rt_private void passign();					/* Assignment in a precomp attribute */
 
 /* Calling protocol */
-private void init_var();				/* Initialize to 0 a variable entity */
-private void init_registers();			/* Intialize registers in callee */
-private void allocate_registers();		/* Allocate the register array */
-shared void sync_registers();			/* Resynchronize the register array */
-private void pop_registers();			/* Remove local vars and arguments */
+rt_private void init_var();				/* Initialize to 0 a variable entity */
+rt_private void init_registers();			/* Intialize registers in callee */
+rt_private void allocate_registers();		/* Allocate the register array */
+rt_shared void sync_registers();			/* Resynchronize the register array */
+rt_private void pop_registers();			/* Remove local vars and arguments */
 
 /* Operational stack handling routines */
-public struct item *opush();			/* Push one value on op stack */
-public struct item *opop();				/* Pop last item */
-private struct item *stack_allocate();	/* Allocates first chunk */
-private int stack_extend();				/* Extend stack's size */
-private void npop();					/* Pop 'n' items */
-public struct item *otop();				/* Pointer to value at the top */
-private struct item *oitem();			/* Pointer to value at position `n' down the stack */
-private void stack_truncate();			/* Truncate stack if necessary */
-private void wipe_out();				/* Remove unneeded chunk from stack */
+rt_public struct item *opush();			/* Push one value on op stack */
+rt_public struct item *opop();				/* Pop last item */
+rt_private struct item *stack_allocate();	/* Allocates first chunk */
+rt_private int stack_extend();				/* Extend stack's size */
+rt_private void npop();					/* Pop 'n' items */
+rt_public struct item *otop();				/* Pointer to value at the top */
+rt_private struct item *oitem();			/* Pointer to value at position `n' down the stack */
+rt_private void stack_truncate();			/* Truncate stack if necessary */
+rt_private void wipe_out();				/* Remove unneeded chunk from stack */
 #ifdef DEBUG
-private void dump_stack();				/* Dumps the operational stack */
-public void idump();					/* Byte code dumping */
-private void iinternal_dump();			/* Internal (compound) dumping */
+rt_private void dump_stack();				/* Dumps the operational stack */
+rt_public void idump();					/* Byte code dumping */
+rt_private void iinternal_dump();			/* Internal (compound) dumping */
 #endif
 
 /* Those macros are used to save and restore the ``x'' stack context to/from 
@@ -202,12 +202,12 @@ private void iinternal_dump();			/* Internal (compound) dumping */
 	}
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
 
-public void xinterp(icval)
+rt_public void xinterp(icval)
 char *icval;
 {
 	/* Starts interpretation at IC = icval. It is the interpreter entry
@@ -268,7 +268,7 @@ char *icval;
 	dpop();								/* Remove calling context */
 }
 
-public void xiinv(icval, where)
+rt_public void xiinv(icval, where)
 char *icval;
 int where;		/* Invariant checked after or before ? */
 {
@@ -298,7 +298,7 @@ int where;		/* Invariant checked after or before ? */
 	dpop();								/* Remove calling context */
 }
 
-public void xinitint()
+rt_public void xinitint()
 {
 	/* Creation of the register array. */
 
@@ -308,7 +308,7 @@ public void xinitint()
 		enomem();
 }
 
-private void interpret(flag, where)
+rt_private void interpret(flag, where)
 int flag;			/* Flag set to INTERP_INVA or INTERP_CMPD */
 int where;			/* Are we checking invariant before or after compound? */
 {
@@ -2583,11 +2583,11 @@ null:
  * Invariant checking
  */
 
-private char *inv_mark_table;		/* Marking table to avoid checking the same
+rt_private char *inv_mark_table;		/* Marking table to avoid checking the same
 									 * invariant several times
 									 */
 
-private void icheck_inv(obj, scur, stop, where)
+rt_private void icheck_inv(obj, scur, stop, where)
 char *obj;
 struct stochunk *scur;		/* Current chunk (stack context) */
 struct item *stop;			/* To save stack context */
@@ -2613,7 +2613,7 @@ int where;					/* Invariant after or before */
 	}
 }
 
-private void irecursive_chkinv(dtype, obj, scur, stop, where)
+rt_private void irecursive_chkinv(dtype, obj, scur, stop, where)
 int dtype;
 char *obj;
 struct stochunk *scur;		/* Current chunk (stack context) */
@@ -2720,7 +2720,7 @@ int where;					/* Invariant after or before */
  * Monadic and diadic operations
  */
 
-private void monadic_op(code)
+rt_private void monadic_op(code)
 int code;
 {
 	/* Apply the operation 'code' to the value on top of the stack */
@@ -2777,7 +2777,7 @@ int code;
 	}
 }
 
-private void diadic_op(code)
+rt_private void diadic_op(code)
 int code;
 {
 	/* Execute the diadic operation "code" (arithmetic or boolean) and push
@@ -3312,7 +3312,7 @@ int code;
  * Function calling routines
  */
 
-private int icall(fid, stype, is_extern)
+rt_private int icall(fid, stype, is_extern)
 int fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
 int is_extern;			/* Is it an external or an Eiffel feature */
@@ -3380,7 +3380,7 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-private int ipcall(origin, offset, is_extern)
+rt_private int ipcall(origin, offset, is_extern)
 int32 origin;			/* Origin class ID of the feature.*/
 int32 offset;			/* offset of the feature in the origin class */
 int is_extern;			/* Is it an external or an Eiffel feature */
@@ -3446,7 +3446,7 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-private void interp_access(fid, stype, type)
+rt_private void interp_access(fid, stype, type)
 int fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
 uint32 type;			/* Get attribute meta-type */
@@ -3482,7 +3482,7 @@ uint32 type;			/* Get attribute meta-type */
 	}
 }
 
-private void interp_paccess(origin, f_offset, type)
+rt_private void interp_paccess(origin, f_offset, type)
 int32 origin;			/* Origin class ID of the attribute.*/
 int32 f_offset;			/* offset of the feature in the origin class */
 uint32 type;			/* Get attribute meta-type */
@@ -3518,7 +3518,7 @@ uint32 type;			/* Get attribute meta-type */
 	}
 }
 
-private void assign(fid, stype, type)
+rt_private void assign(fid, stype, type)
 long fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
 uint32 type;			/* Attribute meta-type */
@@ -3582,7 +3582,7 @@ uint32 type;			/* Attribute meta-type */
 #undef l
 }
 
-private void passign(origin, f_offset, type)
+rt_private void passign(origin, f_offset, type)
 int32 origin;			/* Origin class ID of the attribute.*/
 int32 f_offset;			/* offset of the feature in the origin class */
 uint32 type;			/* Attribute meta-type */
@@ -3659,7 +3659,7 @@ char *object;
 	IC = OLD_IC;
 }
 
-private void address(fid, stype)
+rt_private void address(fid, stype)
 int32 fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
 {
@@ -3680,7 +3680,7 @@ int stype;				/* Static type (entity where feature is applied) */
  * Get constants from byte code in an hopefully portable (slow) way--RAM.
  */
 
-private double get_double()
+rt_private double get_double()
 {
 	/* Get double stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3700,7 +3700,7 @@ private double get_double()
 	return *(double *) &xdouble;	/* Correctly aligned by union */
 }
 
-private float get_float()
+rt_private float get_float()
 {
 	/* Get float stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3720,7 +3720,7 @@ private float get_float()
 	return *(float *) &xfloat;		/* Correctly aligned by union */
 }
 
-private long get_long()
+rt_private long get_long()
 {
 	/* Get long int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3740,7 +3740,7 @@ private long get_long()
 	return *(long *) &xlong;		/* Correctly aligned by union */
 }
 
-private short get_short()
+rt_private short get_short()
 {
 	/* Get short int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3760,7 +3760,7 @@ private short get_short()
 	return *(short *) &xshort;		/* Correctly aligned by union */
 }
 
-private uint32 get_uint32()
+rt_private uint32 get_uint32()
 {
 	/* Get uint32 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3780,7 +3780,7 @@ private uint32 get_uint32()
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
 }
 
-private fnptr get_fnptr()
+rt_private fnptr get_fnptr()
 {
 	/* Get a fnptr stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3800,7 +3800,7 @@ private fnptr get_fnptr()
 	return *(fnptr *) &xfnptr;		/* Correctly aligned by union */
 }
 
-private char *get_address()
+rt_private char *get_address()
 {
 	/* Get an address stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -3824,7 +3824,7 @@ private char *get_address()
  * Write constants to byte code in an hopefully portable (slow) way--RAM.
  */
 
-private void write_long(where, value)
+rt_private void write_long(where, value)
 char *where;
 long value;
 {
@@ -3843,7 +3843,7 @@ long value;
 		*where++ = *p++;
 }
 
-private void write_float(where, value)
+rt_private void write_float(where, value)
 char *where;
 float value;
 {
@@ -3862,7 +3862,7 @@ float value;
 		*where++ = *p++;
 }
 
-private void write_double(where, value)
+rt_private void write_double(where, value)
 char *where;
 double value;
 {
@@ -3881,7 +3881,7 @@ double value;
 		*where++ = *p++;
 }
 
-private void write_fnptr(where, value)
+rt_private void write_fnptr(where, value)
 char *where;
 fnptr value;
 {
@@ -3900,7 +3900,7 @@ fnptr value;
 		*where++ = *p++;
 }
 
-private void write_address(where, value)
+rt_private void write_address(where, value)
 char *where;
 char *value;
 {
@@ -3924,7 +3924,7 @@ char *value;
  * Calling protocol
  */
 
-private void init_var(ptr, type)
+rt_private void init_var(ptr, type)
 struct item *ptr;
 long type;
 {
@@ -3946,7 +3946,7 @@ long type;
 	}
 }
 
-private void init_registers()
+rt_private void init_registers()
 {
 	/* Upon entry in a new feature, given that locnum and argnum are set,
 	 * initialize the register array, poping the registers from the stack,
@@ -4022,7 +4022,7 @@ private void init_registers()
 	last->it_long = argnum;			/* Got this from byte code */
 }
 
-private void allocate_registers()
+rt_private void allocate_registers()
 {
 	/* Automagically increase/decrease the size of the register array. If its
 	 * size is too small, then of course we try to extend it. However, it it's
@@ -4061,7 +4061,7 @@ private void allocate_registers()
 	}
 }
 
-shared void sync_registers(stack_cur, stack_top)
+rt_shared void sync_registers(stack_cur, stack_top)
 struct stochunk *stack_cur;		/* Saved current chunk of op stack */
 struct item *stack_top;			/* Saved top of op stack */
 {
@@ -4121,7 +4121,7 @@ struct item *stack_top;			/* Saved top of op stack */
 	dsync();						/* Resynchronize cached status */
 }
 
-private void pop_registers()
+rt_private void pop_registers()
 {
 	/* This is the reverse operation of init_registers(). We remove all the
 	 * registers from the stack because the Eiffel function is now returning.
@@ -4160,7 +4160,7 @@ private void pop_registers()
  * Operational stack handling.
  */
 
-private struct item *stack_allocate(size)
+rt_private struct item *stack_allocate(size)
 register1 int size;					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -4196,7 +4196,7 @@ register1 int size;					/* Initial size */
  * (char *) elements, we now store (struct item) ones.
  */
 
-public struct item *opush(val)
+rt_public struct item *opush(val)
 register2 struct item *val;
 {
 	/* Push value 'val' on top of the operational stack. If it fails, raise
@@ -4240,7 +4240,7 @@ register2 struct item *val;
 	return top;				/* Address of allocated item */
 }
 
-private int stack_extend(size)
+rt_private int stack_extend(size)
 register1 int size;					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.
@@ -4273,7 +4273,7 @@ register1 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-public struct item *opop()
+rt_public struct item *opop()
 {
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
@@ -4311,7 +4311,7 @@ public struct item *opop()
 	return op_stack.st_top;
 }
 
-private void npop(nb_items)
+rt_private void npop(nb_items)
 register1 int nb_items;
 {
 	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
@@ -4380,7 +4380,7 @@ register1 int nb_items;
 		stack_truncate();			/* Eventually remove unused chunks */
 }
 
-public struct item *otop()
+rt_public struct item *otop()
 {
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -4407,7 +4407,7 @@ public struct item *otop()
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
-private struct item *oitem(n)
+rt_private struct item *oitem(n)
 uint32 n;
 {
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if
@@ -4434,7 +4434,7 @@ uint32 n;
 	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
 }
 
-private void stack_truncate()
+rt_private void stack_truncate()
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
 	 * MIN_FREE locations, then we may free all the chunks starting with the
@@ -4461,7 +4461,7 @@ private void stack_truncate()
 	}
 }
 
-private void wipe_out(chunk)
+rt_private void wipe_out(chunk)
 register struct stochunk *chunk;	/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
@@ -4486,7 +4486,7 @@ register struct stochunk *chunk;	/* First chunk to be freed */
  */
 
 /* VARARGS1 */
-public struct item *ivalue(code, num)
+rt_public struct item *ivalue(code, num)
 int code;		/* Request code */
 int num;		/* Additional info for local and arguments */
 {
@@ -4526,7 +4526,7 @@ int num;		/* Additional info for local and arguments */
 }
 
 #ifdef DEBUG
-private void dump_stack()
+rt_private void dump_stack()
 {
 	/* Dumps the contents of the operational stack */
 
@@ -4685,7 +4685,7 @@ int n;
  * Byte-code dumping routines.
  */
 
-public void idump(fd, start)
+rt_public void idump(fd, start)
 FILE *fd;
 char *start;
 {
@@ -4822,7 +4822,7 @@ char *start;
 	IC = old_IC;
 }
 	
-private void iinternal_dump(fd, start)
+rt_private void iinternal_dump(fd, start)
 FILE *fd;
 char *start;
 {

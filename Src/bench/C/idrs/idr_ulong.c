@@ -22,7 +22,7 @@
 #include "size.h"
 /*
 
-public bool_t idr_u_long(idrs, lp)
+rt_public bool_t idr_u_long(idrs, lp)
 IDR *idrs;
 unsigned long *lp;
 {
@@ -31,7 +31,7 @@ unsigned long *lp;
 
 */
 
-public bool_t idr_u_long(idrs, lp)
+rt_public bool_t idr_u_long(idrs, lp)
 IDR *idrs;
 unsigned long *lp;
 {

@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_poly(idrs, type, unp, arms, dfltarm)
+rt_public bool_t idr_poly(idrs, type, unp, arms, dfltarm)
 IDR *idrs;					/* The serializing stream */
 int type;					/* Union discriminent, externally provided */
 char *unp;					/* Pointer to the start of the union */

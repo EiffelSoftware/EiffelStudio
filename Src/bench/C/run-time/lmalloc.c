@@ -28,7 +28,7 @@
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -38,7 +38,7 @@ private char *rcsid =
  * wanted, but that makes a difference only when we are short in memory--RAM.
  */
 
-public Malloc_t malloc(nbytes)
+rt_public Malloc_t malloc(nbytes)
 register1 unsigned int nbytes;
 {
 	char *arena;
@@ -55,7 +55,7 @@ register1 unsigned int nbytes;
 	return (Malloc_t) arena;
 }
 
-public Malloc_t calloc(nelem, elsize)
+rt_public Malloc_t calloc(nelem, elsize)
 unsigned int nelem;
 unsigned int elsize;
 {
@@ -69,7 +69,7 @@ unsigned int elsize;
 	return allocated;
 }
 
-public Malloc_t realloc(ptr, nbytes)
+rt_public Malloc_t realloc(ptr, nbytes)
 register1 Malloc_t ptr;
 register2 unsigned int nbytes;
 {

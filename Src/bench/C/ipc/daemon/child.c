@@ -37,16 +37,16 @@
 extern unsigned TIMEOUT;	/* Time to let the child initialize */
 
 /* To fight SIGPIPE signals */
-private jmp_buf env;		/* Environment saving for longjmp() */
-private Signal_t broken();	/* Signal handler for SIGPIPE */
+rt_private jmp_buf env;		/* Environment saving for longjmp() */
+rt_private Signal_t broken();	/* Signal handler for SIGPIPE */
 
 /* Function declaration */
-private int comfort_child();	/* Reassure child, make him confident */
-private void close_on_exec();	/* Ensure this file will be closed by exec */
+rt_private int comfort_child();	/* Reassure child, make him confident */
+rt_private void close_on_exec();	/* Ensure this file will be closed by exec */
 
 extern char **shword();			/* Shell word parsing of command string */
 
-public STREAM *spawn_child(cmd, child_pid)
+rt_public STREAM *spawn_child(cmd, child_pid)
 char *cmd;			/* The child command process */
 Pid_t *child_pid;	/* Where pid of the child is writtten */
 {
@@ -231,7 +231,7 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 	return sp;			/* Stream used to speak to child process */
 }
 
-private int comfort_child(sp)
+rt_private int comfort_child(sp)
 STREAM *sp;		/* Stream used to talk to the child */
 {
 	/* Tell the child his parent is here, and make sure he responds. The
@@ -327,7 +327,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 	return 0;
 }
 
-private void close_on_exec(fd)
+rt_private void close_on_exec(fd)
 int fd;
 {
 	/* Set the close on exec flag for file descriptor 'fd' */
@@ -346,7 +346,7 @@ int fd;
 #endif
 }
 
-private Signal_t broken()
+rt_private Signal_t broken()
 {
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */

@@ -23,7 +23,7 @@
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -37,7 +37,7 @@ private char *rcsid =
  * Xavier
  */
 
-public int ht_create(ht, n, sval)
+rt_public int ht_create(ht, n, sval)
 struct htable *ht;
 int32 n;
 int sval;
@@ -72,7 +72,7 @@ int sval;
 	return 0;			/* Creation was ok */
 }
 
-public void ht_zero(ht)
+rt_public void ht_zero(ht)
 struct htable *ht;
 {
 	/* Initialize the hash table with zeros */
@@ -83,7 +83,7 @@ struct htable *ht;
 	bzero(ht->h_values, hsize * ht->h_sval);
 }
  
-public char *ht_value(ht, key)
+rt_public char *ht_value(ht, key)
 struct htable *ht;
 register1 unsigned long key;
 {
@@ -115,7 +115,7 @@ register1 unsigned long key;
 	return (char *) 0;			/* Item was not found */
 }
 
-public char *ht_first(ht, key)
+rt_public char *ht_first(ht, key)
 struct htable *ht;
 register1 unsigned long key;
 {
@@ -173,7 +173,7 @@ char *val;
 	}
 }
 
-public char *ht_put(ht, key, val)
+rt_public char *ht_put(ht, key, val)
 struct htable *ht;
 register1 unsigned long key;
 char *val;
@@ -214,7 +214,7 @@ char *val;
 	return (char *) 0;		/* We were unable to insert item */
 }
 
-public void ht_remove(ht, key)
+rt_public void ht_remove(ht, key)
 struct htable *ht;
 register1 unsigned long key;
 {
@@ -252,7 +252,7 @@ register1 unsigned long key;
 	}
 }
 
-public int ht_xtend(ht)
+rt_public int ht_xtend(ht)
 struct htable *ht;
 {
 	/* The H table 'ht' is full and needs resizing. We add 50% of old size and
@@ -298,7 +298,7 @@ struct htable *ht;
 	return 0;		/* Extension was ok */
 }
 
-public void ht_free(ht)
+rt_public void ht_free(ht)
 struct htable *ht;
 {
 	/* Free hash table arrays and descriptor */

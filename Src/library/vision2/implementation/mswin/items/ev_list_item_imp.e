@@ -30,7 +30,14 @@ inherit
 			interface
 		end
 
-	EV_SYSTEM_PEN_IMP
+	WEL_LIST_VIEW_ITEM
+		rename
+			make as wel_make,
+			text as wel_text,
+			set_text as wel_set_text
+		end
+
+	WEL_LVM_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -43,11 +50,12 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create the widget with `par' as parent.
 		do
+			wel_make
 			base_make (an_interface)
-			real_text := ""
 		end
 
 	initialize is
+			-- Initialize the item.
 		do
 			is_initialized := True
 		end
@@ -55,9 +63,9 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is `Current' selected in `parent'?
+			-- Is the item selected
 		do
-			Result := parent_imp.is_item_imp_selected (Current)
+			Result := parent_imp.internal_is_selected (Current)
 		end
 
 feature -- Status setting
@@ -65,31 +73,17 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			parent_imp.select_item_imp (Current)
+			parent_imp.internal_select (Current)
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			parent_imp.deselect_item_imp (Current)
+			parent_imp.internal_deselect (Current)
 		end
 
-feature -- Access
+feature {EV_ANY_I} -- Access
 
-	parent_imp: EV_LIST_ITEM_LIST_IMP
-		-- Parent of `Current'
-	
-	set_parent (a_parent: like parent) is
-			-- Assign `a_parent' to `parent'.
-		do
-			if a_parent /= Void then
-				parent_imp ?= a_parent.implementation
-			else
-				parent_imp := Void
-			end
-		end
-
-	--|FIXME implement as now pick and dropable
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		local
 			list_imp: EV_LIST_IMP
@@ -119,6 +113,27 @@ feature -- Access
 			end
 		end
 
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := parent_imp.internal_get_index (Current)
+		end
+
+	parent_imp: EV_LIST_IMP
+		-- Parent of `Current'
+	
+	set_parent (par: like parent) is
+			-- Assign `a_parent' to `parent'.
+		do
+			if par /= Void then
+				parent_imp ?= par.implementation
+			else
+				parent_imp := Void
+			end
+		end
+
+feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
+
 	set_pointer_style (c: EV_CURSOR) is
 			-- Assign `c' to `parent_imp' pointer style.
 		do
@@ -127,119 +142,64 @@ feature -- Access
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	wel_text: STRING is
-			-- Text of `Current'
-		do
-			Result := clone (real_text)
-		end
-
-	wel_set_text (a_text: STRING) is
-			-- Make `a_text' the new label of the item.
-		do
-			real_text := clone (a_text)
-			if parent_imp /= Void then
-				parent_imp.set_item_imp_text (Current, a_text)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	real_text: STRING
-			-- Internal `text'.
-
-feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
+feature {EV_LIST_IMP} -- Implementation.
 
 	relative_y: INTEGER is
 			-- `Result' is relative y coordinate in pixels to parent.
 		require
 			parent_not_void: parent_imp /= Void
+		local
+			wel_point: WEL_POINT
 		do
-			Result := (displayed_index - 1) * parent_imp.item_height
+			Result := parent_imp.get_item_position (index).y
 		end
 
 	is_displayed: BOOLEAN is
 			-- Can the user view `Current'?
+		local
+			local_index: INTEGER
+			first_index: INTEGER -- first displayed index
+			last_index: INTEGER	-- last displayed index
 		do
 			if parent_imp /= Void then
-				check
-					to_be_implemented: False
-				end
+				local_index := index
+				first_index := parent_imp.top_index
+				last_index := first_index + parent_imp.visible_count
+
+				Result := (local_index >= first_index and
+						   local_index < last_index)
 			end
 		end
 
-	displayed_index: INTEGER is
-			-- Position relative to top item displayed in list.
-			-- (If `Current' is top item, returns 1.)
-		require
-			parent_imp_not_void: parent_imp /= Void
+feature {EV_LIST_IMP} -- Implementation
+
+	set_capture is
+			-- Grab user input.
 		do
-			Result := list_index - parent_imp.top_index
+			parent_imp.set_capture
 		end
 
-	list_index: INTEGER is
-			-- Position inside list.
-		require
-			parent_imp_not_void: parent_imp /= Void
+	release_capture is
+			-- Release user input.
 		do
-			Result := parent_imp.index_of_item_imp (Current)
-		ensure
-			Result_within_bounds: Result > 0 and then
-				Result <= parent_imp.ev_children.count
+			parent_imp.release_capture
+		end
+
+	set_heavy_capture is
+			-- Grab user input.
+		do
+			parent_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input.
+		do
+			parent_imp.release_heavy_capture
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST_ITEM
-
-	set_capture is
-			-- Grab user input.
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.set_capture
-		end
-
-	release_capture is
-			-- Release user input.
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.release_capture
-		end
-
-	set_heavy_capture is
-			-- Grab user input.
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.set_heavy_capture
-		end
-
-	release_heavy_capture is
-			-- Release user input.
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.release_heavy_capture
-		end
 
 end -- class EV_LIST_ITEM_IMP
 
@@ -264,6 +224,13 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/04/18 21:19:47  pichery
+--| Changed the implementation of EV_LIST_IMP. It now
+--| inherit from WEL_LIST_VIEW instead of WEL_LIST_BOX.
+--|
+--| Adapted EV_LIST_ITEM to take that into account. Added
+--| inheritance from WEL_LIST_VIEW_ITEM.
+--|
 --| Revision 1.46  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

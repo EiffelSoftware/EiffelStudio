@@ -164,7 +164,11 @@ feature -- Byte code generation
 			inst_cont_type := context_type
 			metamorphosed := inst_cont_type.is_basic 
 							and then not inst_cont_type.is_bit
-			if metamorphosed then
+				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only means
+				-- that we are currently performing a static access call on a feature
+				-- from a basic class. Assuming otherwise is not correct as you
+				-- cannot seriously inherit from a basic class.
+			if metamorphosed and precursor_type = Void then
 				basic_type ?= inst_cont_type
 				if is_feature_special (False, basic_type) then
 					make_special_byte_code (ba, basic_type)
@@ -417,7 +421,11 @@ end
 			type_i := context_type
 				-- Special provision is made for calls on basic types
 				-- (they have to be themselves known by the compiler).
-			if type_i.is_basic then
+				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only means
+				-- that we are currently performing a static access call on a feature
+				-- from a basic class. Assuming otherwise is not correct as you
+				-- cannot seriously inherit from a basic class.
+			if type_i.is_basic and then precursor_type = Void then
 				basic_type ?= type_i
 				if not basic_type.is_bit and then is_feature_special (True, basic_type) then
 					generate_special_feature (reg, basic_type)

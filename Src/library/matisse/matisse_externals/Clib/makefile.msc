@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Zi -I"e:\Eiffel43\library\matisse\matisse_externals\c sources" -IE:\eiffel43\bench\spec\windows\include -Ic:\matisse4.0\include -DWORKBENCH
+CFLAGS = -c -Zi -I"e:\Eiffel45\library\matisse\matisse_externals\c sources" -IE:\eiffel45\bench\spec\windows\include -Ic:\matisse\include -DWORKBENCH
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

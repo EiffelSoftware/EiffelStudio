@@ -43,8 +43,7 @@ inherit
 		rename
 			make as arrayed_list_make
 		redefine
-			default_create,
-			set_count
+			default_create
 		end
 
 create

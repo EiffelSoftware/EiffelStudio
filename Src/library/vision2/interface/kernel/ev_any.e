@@ -13,7 +13,9 @@ feature -- Status report
 			-- Is Current object destroyed?  
 			-- (= implementation does not exist)
 		do
-			Result := (implementation = Void)
+			Result := (implementation = Void) or 
+						(implementation /= Void and then 
+							implementation.destroyed)
 		end
 
 	is_valid (object: EV_ANY): BOOLEAN is

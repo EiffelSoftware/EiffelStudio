@@ -547,6 +547,9 @@ feature {NONE} -- Implementation
 					typ := dmp.generating_type_representation
 					l_tooltip.append_string ("--< TYPE >--%N  " + typ + "%N")
 					l_tooltip.append_string ("--< VALUE >--%N  " + res + "%N")
+				else
+					res := ""
+					typ := ""
 				end
 				
 				Result.set_pixmap (Icon_green_tick)

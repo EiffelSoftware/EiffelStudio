@@ -17,6 +17,9 @@ inherit
 feature {EV_LIST_ITEM_IMP} -- Access
 
 	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP] is
+			-- List of the children
+			-- Deferred because it will be implemented in
+			-- the _I classes.
 		deferred
 		end
 
@@ -34,7 +37,7 @@ feature {EV_LIST_ITEM, EV_LIST_ITEM_IMP} -- Element change
 
 	add_item (an_item: EV_LIST_ITEM) is
 			-- Add an item to the list
-		local
+	local
 			item_imp: EV_LIST_ITEM_IMP
 		do
 			item_imp ?= an_item.implementation
@@ -42,7 +45,7 @@ feature {EV_LIST_ITEM, EV_LIST_ITEM_IMP} -- Element change
 				valid_item: item_imp /= Void
 			end
 			ev_children.extend (item_imp)
-			add_string (name_item)
+			add_string (item_imp.text)
 			item_imp.set_id (ev_children.count - 1)
 		end
 
@@ -70,8 +73,12 @@ feature {NONE} -- Implementation
 			-- In some cases, windows return -1, then we have to
 			-- check before to call the paint message of the
 			-- children.
+		local
+			id: INTEGER
 		do
-			if (struct.item_id /= -1) then
+			id := count
+			id := struct.item_id
+			if (id /= -1) then
 				(ev_children @ (struct.item_id + 1)).on_draw (struct)
 			end
 		end

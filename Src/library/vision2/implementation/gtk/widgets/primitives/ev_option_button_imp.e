@@ -12,7 +12,8 @@ inherit
 
 	EV_MENU_HOLDER_IMP
 		undefine
-			set_foreground_color
+			set_foreground_color,
+			add_menu_ok
 		end
 
 	EV_BUTTON_IMP
@@ -127,22 +128,35 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- This menu_item is not put in the menu_items_array.
 			-- It is only used when the user want to have a title
 			-- for the option button.
-			if (menu_imp.text /= Void) then
+			if ((menu_imp.text /= Void) and then (menu_title_widget = default_pointer)) then
 				a := menu_imp.text.to_c
-				wid := gtk_menu_item_new_with_label ($a)
-				gtk_widget_show (wid)
-				gtk_menu_append (menu_imp.widget, wid)
+				menu_title_widget := gtk_menu_item_new_with_label ($a)
+				gtk_widget_show (menu_title_widget)
+				-- Append it so it is the first item.
+				gtk_menu_prepend (menu_imp.widget, menu_title_widget)
 			end
 
 			-- Add the menu to the option button.
 			gtk_option_menu_set_menu (widget, menu_imp.widget)
+
+			-- Status setting.
 			menu := menu_imp
+			menu_items_array := menu.ev_children
 		end
 	
 	remove_menu (menu_imp: EV_MENU_IMP) is
 			-- Remove menu from option button. 
 		do
+			-- Remove the menu_item added for the menu title.
+			gtk_container_remove (GTK_CONTAINER (menu_imp.widget), menu_title_widget)
+
+			-- Remove the gtk_menu from the gtk_option_menu.
 			gtk_option_menu_remove_menu (widget)
+
+			-- Status setting.
+			menu := Void
+			menu_items_array := Void
+			menu_title_widget := default_pointer
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -162,8 +176,11 @@ feature -- Event - command association
 
 feature -- Implementation
 
-	menu: EV_MENU_IMP
-		-- The menu contained in the option button.
+	menu_title_widget: POINTER
+			-- A gtk_menu_item:
+			-- When the menu has a title (`text' not null)
+			-- we create a menu_item with a text set to `text'
+			-- and we append it to the menu (see `add_item').
 
 end -- class EV_OPTION_BUTTON_IMP
 

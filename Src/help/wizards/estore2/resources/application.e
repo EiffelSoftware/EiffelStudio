@@ -1,139 +1,83 @@
 indexing
-	description: "System's root class";
-	note: "Initial version automatically generated"
+	description	: "Application (root class)"
+	note		: "Initial version automatically generated"
 
 class
 	APPLICATION
 
 inherit
-
-	EV_APPLICATION
-		select
-			default_create
-		end
-
-	EXECUTION_ENVIRONMENT
-		rename 
-			launch as launch_exec,
-			default_create as create_exec
-		end
+	SHARED
 
 create
-	make_and_launch
+	make
 
 feature -- Initialization
 
-	make_and_launch is
+	make is
+			-- Creation procedure.
 		do
-			default_create
-			prepare
-			launch
+			create ev_application
+			setup_display_components_db_objects
+			connect
+			setup_boxes
+			create main_window.make_from_application (Current)
+			main_window.show
+			main_window.set_initial_focus
+			if db_manager.has_error then
+				main_window.send_status (Not_connected)
+				main_window.send_warning (db_manager.error_message)
+			else
+				main_window.send_status (Connection_established)
+			end
+			ev_application.launch
 		end
 
-	initiate is do end
-			-- Intialize
- 
-	prepare is
-			-- Prepare the first window to be displayed.
-			-- Perform one call to first window in order to
-			-- avoid to violate the invariant of class EV_APPLICATION.
+feature -- Basic operations
+
+	destroy is
+			-- Kills the graphic application.
 		do
-			first_window.set_title ("EiffelStore Wizard example")
-			first_window.show
+			ev_application.destroy
 		end
 
-feature -- Access to windows
+feature -- Access
 
-	first_window: MAIN_WINDOW is
-			-- Root window of the application.
-		once
-			create Result.make_window (Current)
+	main_window: MAIN_WINDOW
+			-- Application main window.
+
+	ev_application: EV_APPLICATION
+			-- Graphic application.
+
+feature {NONE} -- Implementation
+
+	connect is
+			-- Connect to the database.
+		do
+			db_manager.set_connection_information (Username, Password, Data_source)
+			db_manager.establish_connection
 		end
 
-	select_window: SELECT_WINDOW
-			-- Window to carry out a 'select' query.
-
-	select_results_window: SEL_RES_WINDOW
-			-- Window to show the 'select' results.
+	setup_display_components_db_objects is
+			-- Sets the database manager and table access objects
+			-- used by the display components.
+		local
+			default_dc: DV_DATABASE_HANDLE
+		do
+				-- Sets the specific database tables to the general access system.
+			set_tables (tables)
 			
-	insert_window: INSERT_WINDOW
-			-- Window to carry out an 'insert' query.
-
-	error_window: EV_WARNING_DIALOG
-			-- Window to explain the proper use of the software
-
- feature -- Popups
-
-	popup_select_window is
-			-- Popup Select Window.
-			-- Ensure the unicity of the window at run-time.
-		do
-			if select_window /= Void and then not select_window.is_destroyed then
-				select_window.raise
-			else
-				create select_window.make_window (Current)
-				select_window.set_title ("Select")
-				select_window.show
-			end
+			create default_dc.make_for_settings
+			default_dc.set_database_handler (db_manager)
 		end
 
-	popup_select_results_window ( to_display : ARRAYED_LIST [DB_TABLE] ; row_titles : ARRAY [STRING] ) is
-			-- Popup Select Results Window 'to_display' with feature names 'row_titles'
-			-- Ensure the unicity of the window at run-time.
+	setup_boxes is
+			-- Set up boxes.
+		local
+			box: DV_VERTICAL_BOX
 		do
-			if select_results_window /= Void and then not select_results_window.is_destroyed then
-				select_results_window.raise
-			else
-				create select_results_window.make_window (Current, to_display, row_titles)
-				select_results_window.set_title ("Select results")
-				select_results_window.show
-			end
-		end
-
-	popup_insert_window is
-			-- Popup Insert Window.
-			-- Ensure the unicity of the window at run-time.
-		do
-			if insert_window /= Void and then not insert_window.is_destroyed then
-				insert_window.raise
-			else
-				create insert_window.make_window (Current)
-				insert_window.set_title ("Insert")
-				insert_window.show
-			end
-		end
-
-	popup_error_window ( error_text: STRING) is
-			-- Popup Error Window.
-		do
-			create error_window.make_with_text  (error_text)
-			error_window.show_modal
-		end
-
-	destroy_select_results_window  is
-			-- Destroy Select Results Window.
-		do
-			if select_results_window /= Void and then not select_results_window.is_destroyed then
-				select_results_window.destroy
-			end
-		end
-
-	destroy_windows is
-			-- Destroys all windows popped up through APPLICATION	
-		do
-			destroy
---			if first_window /= Void and then not first_window.is_destroyed then
---				first_window.destroy
---			end
---			if select_window /= Void and then not select_window.is_destroyed then
---				select_window.destroy
---			end
---			if select_results_window /= Void and then not select_results_window.is_destroyed then
---				select_results_window.destroy
---			end
---			if insert_window /= Void and then not insert_window.is_destroyed then
---				insert_window.destroy
---			end
+			create box.make
+			box.set_default_border_width (Border_width)
+			box.set_default_padding (Padding)
 		end
 
 end -- class APPLICATION

@@ -22,11 +22,6 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("attrib.symb")
 		end;
 
-	Behavior_pixmap_small: PIXMAP is
-		once
-			Result := symbol_file_content ("behavior_small.symb")
-		end;
-
 	Behavior_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("behavior.symb")
@@ -74,12 +69,12 @@ feature -- General Pixmaps
  
  	Cat_menu_entry_pixmap: PIXMAP is
  		once
- 			Result := symbol_file_content ("cat_menu_entry.symb")
+ 			Result := symbol_file_content ("cat_m_entry.symb")
  		end;
  
  	Cat_menu_pull_pixmap: PIXMAP is
  		once
- 			Result := symbol_file_content ("cat_menu_pull.symb")
+ 			Result := symbol_file_content ("cat_m_pull.symb")
  		end;
  
  	Cat_opt_pull_pixmap: PIXMAP is
@@ -119,7 +114,7 @@ feature -- General Pixmaps
 
 	Command_i_icon_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("command_instance.icon")
+			Result := symbol_file_content ("cmd_instance.symb")
 		end;
 
 	Command_pixmap: PIXMAP is
@@ -404,12 +399,12 @@ feature -- General Pixmaps
 
 	Selected_list_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("sel_scroll_list.symb")
+			Result := symbol_file_content ("s_scr_list.symb")
 		end;
 
 	Selected_scrolled_w_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("sel_scrolled_w.symb")
+			Result := symbol_file_content ("s_scr_w.symb")
 		end;
 
 	Selected_resize_pixmap: PIXMAP is
@@ -464,7 +459,7 @@ feature -- General Pixmaps
 
 	Selected_text_field_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("sel_text_field.symb")
+			Result := symbol_file_content ("sel_tf.symb")
 		end;
 
 	Selected_translation_pixmap: PIXMAP is
@@ -485,6 +480,11 @@ feature -- General Pixmaps
 	Self_label_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("self_label.symb")
+		end;
+
+	Show_window_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("show_window.symb")
 		end;
 
 	State_pixmap_small: PIXMAP is
@@ -661,12 +661,12 @@ feature -- Context Pixmaps
 
 	Scrolled_w_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("scrolled_w.symb")
+			Result := symbol_file_content ("scr_w.symb")
 		end;
 
 	Scrolled_t_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("scrolled_t.symb")
+			Result := symbol_file_content ("scr_t.symb")
 		end;
 
 	Separator_pixmap: PIXMAP is
@@ -703,17 +703,17 @@ feature -- Event pixmaps
 
 	Button_arm_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("button_arm.symb")
+			Result := symbol_file_content ("but_arm.symb")
 		end;
 
 	Button_release_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("button_release.symb")
+			Result := symbol_file_content ("but_release.symb")
 		end;
 
 	Button_activate_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("button_activate.symb")
+			Result := symbol_file_content ("but_activate.symb")
 		end;
 
 	Button_pixmap: PIXMAP is
@@ -793,17 +793,17 @@ feature -- Event pixmaps
 
 	Mouse_motion1_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("mouse_mot1.symb");
+			Result := symbol_file_content ("mot1_mouse.symb");
 		end;
 
 	Mouse_motion2_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("mouse_mot2.symb");
+			Result := symbol_file_content ("mot2_mouse.symb");
 		end;
 
 	Mouse_motion3_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("mouse_mot3.symb");
+			Result := symbol_file_content ("mot3_mouse.symb");
 		end;
 
 	Mouse_enter_pixmap: PIXMAP is
@@ -828,12 +828,12 @@ feature -- Event pixmaps
 
 	Scr_t_modify_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("scr_t_modify.symb");
+			Result := symbol_file_content ("scr_modify.symb");
 		end;
 
 	Scr_t_motion_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("scr_t_motion.symb");
+			Result := symbol_file_content ("scr_motion.symb");
 		end;
 
 	Selection_pixmap: PIXMAP is
@@ -880,11 +880,10 @@ feature {NONE} -- Read from file
 
 	symbol_file_content (fn: STRING): PIXMAP is
 		local
-			full_name: STRING;
+			full_name: FILE_NAME;
 		do
-			full_name := clone (Environment.bitmaps_directory);
-			full_name.extend (Environment.directory_separator);	
-			full_name.append (fn);	
+			!! full_name.make_from_string (Environment.bitmaps_directory);
+			full_name.set_file_name (fn);	
 			!! Result.make;
 			Result.read_from_file (full_name);
 			if not Result.is_valid then

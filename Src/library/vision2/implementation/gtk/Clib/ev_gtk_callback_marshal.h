@@ -22,7 +22,7 @@ void c_ev_gtk_callback_marshal_init
 void c_ev_gtk_callback_marshal_destroy ();
 
 guint c_ev_gtk_callback_marshal_signal_connect
-	(GtkObject*, const gchar*, EIF_OBJECT);
+	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
 
 guint c_ev_gtk_callback_marshal_signal_connect_true
 	(GtkObject*, const gchar*, EIF_OBJECT);
@@ -44,6 +44,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.9  2004/06/24 17:08:57  king
+// Added extra parameter for invoking signals after default handler
+//
 // Revision 1.8  2004/03/19 23:09:41  king
 // Removed gtk_value_pointer and gtk_value_int as these are implemented inline
 //

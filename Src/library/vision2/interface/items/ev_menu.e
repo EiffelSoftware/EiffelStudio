@@ -17,10 +17,18 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
 	
 feature {NONE} -- Initialization
-	
+
+	make (par: EV_MENU_CONTAINER) is
+			-- Create an empty menu.
+		do
+			!EV_MENU_IMP!implementation.make (par)
+			par.implementation.add_menu (Current)
+		end
+
 	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is         
 			-- Create a menu widget with `par' as
 			-- parent

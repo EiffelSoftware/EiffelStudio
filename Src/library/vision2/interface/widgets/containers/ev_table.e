@@ -51,7 +51,7 @@ inherit
 			copy, is_equal, default_create,
 			changeable_comparison_criterion, extend
 		redefine
-			linear_representation
+			linear_representation, prune, prunable
 		select
 			bag_put, extend
 		end
@@ -262,6 +262,9 @@ feature -- Status report
 
 	Writable: BOOLEAN is True
 		-- `Current' is always writeable.
+		
+	Prunable: BOOLEAN is True
+		-- `Current' is always prunable.
 
 feature -- Status settings
 
@@ -432,6 +435,12 @@ feature -- Element change
 			end
 		ensure
 			item_removed: not has (v)
+		end
+		
+	prune (v: EV_WIDGET) is
+			-- Remove first occurrence of `v' if any.
+		do
+			remove (v)
 		end
 
 feature -- Conversion

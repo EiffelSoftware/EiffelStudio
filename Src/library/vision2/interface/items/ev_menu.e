@@ -50,6 +50,7 @@ feature -- Standard operations
 			-- Pop up on the current pointer position.
 		require
 			not_destroyed: not is_destroyed
+			not_parented: parent = Void
 		do
 			implementation.show
 		end
@@ -59,6 +60,10 @@ feature -- Standard operations
 			-- of `a_widget'.
 		require
 			not_destroyed: not is_destroyed
+			not_parented: parent = Void
+			widget_not_void: a_widget /= Void
+			widget_not_destroyed: not a_widget.is_destroyed
+			widget_displayed: a_widget.is_displayed
 		do
 			implementation.show_at (a_widget, a_x, a_y)
 		end

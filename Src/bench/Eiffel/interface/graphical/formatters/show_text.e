@@ -80,9 +80,31 @@ feature
 			filed_stone: FILED_STONE;
 			temp: STRING
 		do
-			if stone /= Void then
-				stone_text := stone.origin_text;
-				if stone_text /= Void then
+			if
+				do_format or else
+				(text_window.last_format /= Current or
+				not equal (stone, text_window.root_stone))
+			then
+				if
+					stone /= Void and then stone.is_valid
+				then
+					stone_text := stone.origin_text;
+					if stone_text = Void then
+						stone_text := "";
+						filed_stone ?= stone;
+						if filed_stone /= Void then
+							!! temp.make (0);
+							if filed_stone.file_name /= Void then
+								temp.append ("File: ");
+								temp.append (filed_stone.file_name);	
+								temp.append (" cannot be read");
+							else
+								temp.append ("There is no associated file for pebble dropped");
+							end;
+							warner.set_window (text_window);
+							warner.gotcha_call (temp);
+						end			
+					end;
 					text_window.clean;
 					display_header (stone);
 					text_window.set_root_stone (stone);
@@ -97,19 +119,6 @@ feature
 					text_window.show_image;
 					text_window.set_mode_for_editing;
 					text_window.set_last_format (Current)
-				else
-					filed_stone ?= stone;
-					if filed_stone /= Void then
-						!! temp.make (0);
-						if filed_stone.file_name /= Void then
-							temp.append ("File: ");
-							temp.append (filed_stone.file_name);	
-							temp.append (" cannot be read");
-						else
-							temp.append ("There is no associated file for pebble dropped");
-						end;
-						warner.gotcha_call (temp);
-					end			
 				end
 			end
 		end;

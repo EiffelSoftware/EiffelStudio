@@ -1,7 +1,7 @@
 indexing
 
-    description:
-        "EiffelVision implementaiton of a Motif row_column.";
+	description:
+		"EiffelVision implementaiton of a Motif row_column.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -14,25 +14,25 @@ inherit
 	ROW_COLUMN_I;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;
 
-    MEL_ROW_COLUMN
-        rename
-            make as mel_rc_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            is_shown as shown
-        end
+	MEL_ROW_COLUMN
+		rename
+			make as mel_rc_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			is_shown as shown
+		end
 
 creation
 
@@ -42,11 +42,12 @@ feature {NONE} -- Initialization
 
 	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif row_column.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_rc_make (a_row_column.identifier,
-                    mel_parent (a_row_column, widget_index),
-                    man);
+			mel_rc_make (a_row_column.identifier, mc, man);
 		end;
 
 feature -- Status report

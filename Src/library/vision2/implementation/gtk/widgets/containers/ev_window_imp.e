@@ -431,7 +431,7 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			end
 		end
 		
-feature {EV_DRAWING_AREA_IMP, EV_LIST_ITEM_LIST_IMP} -- Implementation
+feature {EV_ANY_IMP} -- Implementation
 
 	set_focus_widget (a_focus_wid: EV_WIDGET_IMP) is
 		do

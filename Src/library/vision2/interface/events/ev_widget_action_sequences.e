@@ -75,7 +75,14 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
+		
+	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Actions to be performed when mouse wheel is rotated.
+		do
+			Result := implementation.mouse_wheel_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 	key_press_actions: EV_KEY_ACTION_SEQUENCE is
 			-- Actions to be performed when a keyboard key is pressed.

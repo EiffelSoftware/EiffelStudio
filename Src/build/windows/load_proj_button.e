@@ -3,10 +3,11 @@ class LOAD_PROJ_BUTTON
 inherit
 
 	EB_BUTTON_COM
-		rename
-			make_visible as make
-		end;
-	WINDOWS;
+	
+	WINDOWS
+		select
+			init_toolkit
+		end
 	LICENCE_COMMAND
 	QUEST_POPUPER
 
@@ -15,17 +16,23 @@ creation
 	make
 	
 feature {NONE}
+  
+	  make (a_parent: COMPOSITE) is
+        do
+            make_visible (a_parent)
+            set_focus_string (Focus_labels.load_project_label)
+        end
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.load_project_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.load_project_label
+-- samik		end;
 
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end
-
+-- samik	focus_label: LABEL is
+-- samik		do
+-- samik			Result := main_panel.focus_label
+-- samik		end
+  
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.load_project_pixmap

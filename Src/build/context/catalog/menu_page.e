@@ -51,6 +51,8 @@ feature {NONE}
 
 			attach_top_widget (bar_type.source, submenu_type.source, 10);
 			attach_top_widget (bar_type.source, menu_entry_type.source, 10);
+
+			button.set_focus_string (Focus_labels.menus_label)
 		end;
 
 	symbol: PIXMAP is
@@ -63,9 +65,9 @@ feature {NONE}
 			Result := Pixmaps.selected_menus_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.menus_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.menus_label
+-- samik		end;
 
 end

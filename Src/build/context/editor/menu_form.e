@@ -3,7 +3,10 @@ class MENU_FORM
 
 inherit
 
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	COMMAND;
 	COMMAND_ARGS;
 	EDITOR_FORM

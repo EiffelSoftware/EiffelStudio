@@ -55,7 +55,9 @@ feature {NONE}
 			attach_right_position (group_name, 1);
 			attach_left_position (text, 1);
 			attach_right (text, 0);
-		end;
+
+            button.set_focus_string (Focus_labels.groups_label)
+        end;
 
 	symbol: PIXMAP is
 		do
@@ -67,9 +69,9 @@ feature {NONE}
 			Result := Pixmaps.selected_groups_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.groups_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.groups_label
+-- samik		end;
 
 end

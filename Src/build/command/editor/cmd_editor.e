@@ -19,7 +19,10 @@ inherit
 			make, destroy, realize
 		end
 	COMMAND;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	ERROR_POPUPER;
 	QUEST_POPUPER;
 	CLOSEABLE
@@ -368,7 +371,7 @@ feature
 			-- Text editing area containing
 			-- the text of the Eiffel Class
 			-- representing the edited command.
-	focus_label: FOCUS_LABEL;
+--samik	focus_label: FOCUS_LABEL;
 
 feature {NONE}
 
@@ -407,15 +410,15 @@ feature {NONE}
 			!! edit_hole.make (Current, edit_bar_form)
 			!! first_separator.make (Widget_names.separator, form)
 			!! undoable_t.make (Widget_names.undoable_label, edit_bar_form)
-			!! focus_label.make (edit_bar_form);
-			!! trash_hole.make (edit_bar_form, focus_label);
+--samik			!! focus_label.initialize (edit_bar_form);
+			!! trash_hole.make (edit_bar_form);
 			!! instance_button.make (Current, edit_bar_form)
 			!! popup_contexts_button.make (Current, edit_bar_form)
 			!! generate_button.make (Current, edit_bar_form)
 			!! popup_cname.make (Current, edit_bar_form)
 			!! popup_instances_button.make (Current, edit_bar_form)
 			!! inherit_hole.make (Current, edit_bar_form)
-			!! close_b.make (Current, edit_bar_form, focus_label)
+			!! close_b.make (Current, edit_bar_form)
 			!! argument_hole.make (Current, argument_form)
 			!! argument_sw.make (Widget_names.scroll1, argument_form)
 			!! arguments.make (Widget_names.icon_box1, argument_sw, Current)
@@ -484,8 +487,8 @@ feature {NONE}
 			edit_bar_form.attach_top (popup_contexts_button, 0)
 			edit_bar_form.attach_top (popup_instances_button, 0)
 			edit_bar_form.attach_top (undoable_t, 0)
-			edit_bar_form.attach_top (focus_label, 0)
-			edit_bar_form.attach_bottom (focus_label, 0)
+--samik			edit_bar_form.attach_top (focus_label, 0)
+--samik			edit_bar_form.attach_bottom (focus_label, 0)
 			edit_bar_form.attach_bottom (edit_hole, 0)
 			edit_bar_form.attach_bottom (inherit_hole, 0)
 			edit_bar_form.attach_bottom (close_b, 0)
@@ -497,8 +500,8 @@ feature {NONE}
 			edit_bar_form.attach_bottom (popup_instances_button, 0)
 			edit_bar_form.attach_left_widget (edit_hole, inherit_hole, 0)
 			edit_bar_form.attach_left_widget (inherit_hole, trash_hole, 0);
-			edit_bar_form.attach_left_widget (trash_hole, focus_label, 0);
-			edit_bar_form.attach_right_widget (undoable_t, focus_label, 0)
+--samik			edit_bar_form.attach_left_widget (trash_hole, focus_label, 0);
+--samik			edit_bar_form.attach_right_widget (undoable_t, focus_label, 0)
 			edit_bar_form.attach_right_widget (generate_button, undoable_t, 0)
 			edit_bar_form.attach_right_widget (popup_cname, generate_button, 0)
 			edit_bar_form.attach_right_widget (instance_button, popup_cname, 0)

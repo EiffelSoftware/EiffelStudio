@@ -1,32 +1,53 @@
--- Syntax error for invalid external declaration
+indexing
+
+	description: 
+		"Syntax error for invalid external declaration.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EXTERNAL_SYNTAX_ERROR
 
 inherit
 
 	SYNTAX_ERROR
+		rename
+			syntax_message as external_error_message
 		redefine
-			build_explain
+			external_error_message
 		end
 
-creation
+creation {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS}
+
 	init
 
-feature
+feature -- Property
 
 	external_error_message: STRING;
+			-- Specific syntax message
+
+feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 
 	set_external_error_message (message: STRING) is
 		do
-			!!external_error_message.make (0);
-			external_error_message.copy (message);
+			external_error_message := clone (message);
 		end;
 
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
-        do
-			put_string (external_error_message);
-        end
+	set_file_name (s: STRING) is
+			-- Assign `s' to `file_name'.
+		do
+			file_name := s;
+		end;
 
-end
+	set_start_position (i: INTEGER) is
+			-- Assign `i' to `start_position'.
+		do
+			start_position := i;
+		end;
+
+	set_end_position (i: INTEGER) is
+			-- Assign `i' to `end_position'.
+		do
+			end_position := i;
+		end;
+
+end -- class EXTERNAL_SYNTAX_ERROR

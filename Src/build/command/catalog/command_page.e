@@ -6,10 +6,15 @@ inherit
 	CAT_PAGE [CMD]
 		rename
 			make as old_make
+	    -- added by samik
+        undefine
+            init_toolkit
+        -- end of samik
 		redefine
 			associated_catalog, 
 			new_icon, create_new_icon, 
 			button
+	
 		end;
 	WINDOWS;
 	ERROR_POPUPER;

@@ -3,9 +3,10 @@ deferred class HOLE
 
 inherit
 
-	CONSTANTS;
+	CONSTANTS
 	WINDOWS
-	
+		
+
 feature 
 
 	receive (dropped: STONE) is
@@ -34,6 +35,7 @@ debug ("TRANSPORT")
 end;
 			end
 		end;
+
 
 	compatible (s: STONE): BOOLEAN is
 		do

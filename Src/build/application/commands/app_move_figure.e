@@ -72,7 +72,10 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (figure.label);
+			-- added by samik
+			if figure /= Void then
+				Result.append (figure.label);
+			end
 		end; -- worked_on
 
 end

@@ -35,6 +35,8 @@ feature {NONE}
 
 			attach_top (perm_wind_type.source, 1);
 			attach_top (temp_wind_type.source, 1);
+
+			button.set_focus_string (Focus_labels.windows_label)
 		end;
 
 	symbol: PIXMAP is
@@ -47,9 +49,9 @@ feature {NONE}
 			Result := Pixmaps.selected_windows_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.windows_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.windows_label
+-- samik		end;
 
 end

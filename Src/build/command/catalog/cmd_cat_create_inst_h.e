@@ -7,24 +7,26 @@ inherit
 		redefine
 			compatible, process_command,
 			process_instance
+		select
+			init_toolkit
 		end;
 	EB_BUTTON_COM
-
+	
 creation
 
 	make
 
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.create_instance_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.create_instance_label
+-- samik		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := command_catalog.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := command_catalog.focus_label
+-- samik		end;
 
 	target: WIDGET is
 		do
@@ -34,6 +36,9 @@ feature {NONE}
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.create_instance_label)
+			-- end of samik
 			initialize_focus;
 			register
 		end; -- Create

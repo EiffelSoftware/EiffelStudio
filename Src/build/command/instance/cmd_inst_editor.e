@@ -16,7 +16,11 @@ inherit
 		select
 			make, destroy
 		end
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
+	
 	CLOSEABLE
 
 creation
@@ -107,7 +111,7 @@ feature {NONE}
 
 feature 
 
-	focus_label: FOCUS_LABEL
+--samik	focus_label: FOCUS_LABEL
 
 	destroy is
 		do
@@ -136,11 +140,11 @@ feature
 			end;
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form, form);
-			!! focus_label.make (top_form);
+--samik			!! focus_label.initialize (top_form);
 			!! command_hole.make (Current, top_form);
 			!! instance_hole.make (Current, top_form);
-			!! trash_hole.make (top_form, focus_label);
-			!! close_b.make (Current, top_form, focus_label);
+			!! trash_hole.make (top_form);
+			!! close_b.make (Current, top_form);
 			!! argument_sw.make (Widget_names.scroll2, form);
 			!! arguments.make (Widget_names.icon_box1, argument_sw);
 			initialize_window_attributes;
@@ -151,8 +155,8 @@ feature
 			top_form.attach_top (trash_hole, 0);
 			top_form.attach_top (command_hole, 0);
 			top_form.attach_top (close_b, 0);
-			top_form.attach_top (focus_label, 0);
-			top_form.attach_bottom (focus_label, 0);
+--samik			top_form.attach_top (focus_label, 0);
+--samik			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (close_b, 0);
 			top_form.attach_bottom (instance_hole, 0);
 			top_form.attach_bottom (command_hole, 0);
@@ -160,8 +164,8 @@ feature
 			top_form.attach_left (instance_hole, 0);
 			top_form.attach_left_widget (instance_hole, command_hole, 0);
 			top_form.attach_left_widget (command_hole, trash_hole, 0);
-			top_form.attach_left_widget (trash_hole, focus_label, 0);
-			top_form.attach_right_widget (close_b, focus_label, 0);
+--samik			top_form.attach_left_widget (trash_hole, focus_label, 0);
+--samik			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
 
 			form.attach_left (top_form, 0);

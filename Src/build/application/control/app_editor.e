@@ -30,7 +30,10 @@ inherit
 		redefine
 			set_geometry
 		end;
-	WINDOWS;
+	WINDOWS
+		select 
+			init_toolkit
+		end
 	CLOSEABLE
 
 creation
@@ -153,7 +156,8 @@ feature -- Drawing area
 			!!circle.make;
 			circle.init;
 			circle.set_stone (state);
-			transitions.init_element (state);	
+			transitions.init_element (state);
+
 			figures.append (circle);
 				!!point;
 				point.set (50, 50);
@@ -436,10 +440,10 @@ feature -- EiffelVision Section
 
 	state_list: STATE_SCR_L;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := menu_bar.focus_label
-		end
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := menu_bar.focus_label
+-- samik		end
 
 feature {NONE} -- EiffelVision Section
 
@@ -466,7 +470,7 @@ feature
 		do
 			!! mp;
 			mp.set_watch_shape;
-			make_visible;
+		--samik	make_visible;
 			figures.attach_to_drawing_area;
 			lines.attach_to_drawing_area;
 			set_default_selected;
@@ -498,17 +502,18 @@ feature
 
 	is_initialized: BOOLEAN is
 		do
-			Result := implementation /= Void
+--samik			Result := implementation /= Void
+			Result := realized --samik
 		end;
 
 feature {NONE}
 
 	make is
+			-- The meaning of this wss not clear. I changed this to call make_visible
+			-- samik
 		do
-			!!drawing_area.make;
-			!!transitions;
-			!!lines.make (drawing_area);
-			!!figures.make (drawing_area);
+			make_visible		
+			
 		end;
 
 	make_visible is
@@ -521,9 +526,15 @@ feature {NONE}
 				-- **************
 			top_create (Widget_names.application_editor, Eb_screen);
 			!!form.make (Widget_names.form, Current);
-			!!form1.make (Widget_names.form1, form);
-			!!drawing_sw.make (Widget_names.scroll, form);
-			drawing_area.make_visible (Widget_names.drawingarea, drawing_sw);
+            !!form1.make (Widget_names.form1, form);
+            !!drawing_sw.make (Widget_names.scroll, form);
+     
+			!!drawing_area.make_visible (Widget_names.drawingarea, drawing_sw);
+		    !! transitions    
+              
+                !!lines.make (drawing_area);
+                !!figures.make (drawing_area);
+
 			!!menu_bar.make (Widget_names.bar, form, Current);
 			!!state_label.make (Widget_names.state_name, form1);
 			!!transition_label.make (Widget_names.transition_name, form1);
@@ -589,6 +600,7 @@ feature {NONE}
 			
 			!! del_com.make (Current);
 			set_delete_command (del_com);
+	
 		end; 
 
 	context_data_useful: BOOLEAN is

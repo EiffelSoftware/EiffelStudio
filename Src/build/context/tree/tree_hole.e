@@ -3,17 +3,19 @@ deferred class TREE_HOLE
 inherit
 
 	HOLE
-		undefine
-			process_context
+         undefine
+             process_context
+ 		select
+			init_toolkit
 		end;
 	EB_BUTTON 
 
 feature {NONE}
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := Tree.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := Tree.focus_label
+-- samik		end;
 
 	make (a_parent: COMPOSITE) is
 		do

@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end;
 
-feature {BODY_AS, FEATURE_AS}
+feature {BODY_AS, FEATURE_AS, COMPILER_EXPORTER}
 
 	check_local_names is
 			-- Check conflicts between local names and feature names

@@ -6,7 +6,8 @@ inherit
 	CONSTANTS;
 	FORM
 		rename
-			make as form_create
+			make as form_create,
+			init_toolkit as form_init_toolkit
 		end;
 
 feature 
@@ -27,9 +28,22 @@ feature {NONE}
 
 feature 
 
-	focus_label: FOCUS_LABEL is
-		deferred
-		end;
+	focus_label: FOCUS_LABEL_I is
+			-- has to be redefined, so that it returns correct toolkit initializer
+			-- to which object belongs for every instance of this class
+                local
+                        ti: TOOLTIP_INITIALIZER
+                do
+                        ti ?= top
+                        check
+                                valid_tooltip_initializer: ti/= void
+                        end
+                        Result := ti.label
+                end	
+	
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		deferred
+-- samik		end;
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen' 

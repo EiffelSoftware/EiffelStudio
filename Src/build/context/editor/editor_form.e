@@ -7,7 +7,8 @@ inherit
 	FORM
 		rename
 			make as form_create,
-			make_unmanaged as form_create_unmanaged
+			make_unmanaged as form_create_unmanaged,
+			init_toolkit as form_init_toolkit
 		end
 
 feature 

@@ -3,13 +3,21 @@ class CON_CAT_BUTTON
 inherit
 
 	COMMAND;
-	CONSTANTS;
-	PICT_COLOR_B
-		rename
-			make as button_make
-		end;		
+--	CONSTANTS;
+--	PICT_COLOR_B
+--		rename
+--			make as button_make
+		-- added by samik
+  --      undefine
+      --      init_toolkit
+    --    -- end of samik     
+		--end;		
 	WINDOWS
-
+		select
+			init_toolkit
+		end
+	EB_BUTTON
+		
 creation
 
 	make
@@ -23,20 +31,23 @@ feature {NONE}
 			valid_a_parent: a_parent /= Void
 		do
 			catalog_page := cat_page;
-			button_make (Widget_names.pcbutton, a_parent)
+			make_visible (a_parent)
+	--samik xxxx		set_focus_string (context_catalog.focus_label)
+		
+--	button_make (Widget_names.pcbutton, a_parent)
 			add_activate_action (Current, Void);
 			set_symbol (symbol)
 		end;
 
-	set_symbol (s: PIXMAP) is
+--	set_symbol (s: PIXMAP) is
 			 -- Set icon symbol.
-		require
-			valid_argument: s /= Void
-		do
-			if s.is_valid then
-				set_pixmap (s);
-			end
-		end;
+--		require
+--			valid_argument: s /= Void
+--		do
+--			if s.is_valid then
+--				set_pixmap (s);
+--			end
+--		end;
 
 feature 
 

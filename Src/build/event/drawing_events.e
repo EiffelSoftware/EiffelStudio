@@ -3,11 +3,22 @@ class DRAWING_EVENTS
 
 inherit
 	
-	EVENT_PAGE
-		rename
-			make as page_make
-		redefine
-			is_optional
+    EVENT_PAGE
+        rename
+            make as page_make
+        redefine
+            is_optional,
+            make_button_visible
+        select
+            make_button_visible
+        end;
+
+    EVENT_PAGE 
+        rename
+            make as page_make,
+            make_button_visible as cat_make_button_visible
+        redefine
+            is_optional
 		end;
 
 creation
@@ -30,10 +41,19 @@ feature {NONE}
 			Result := Pixmaps.selected_drawing_area_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.drawing_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.drawing_label
+-- samik		end;
+
+feature {CATALOG}
+    
+    make_button_visible (button_rc: ROW_COLUMN) is
+            -- call cat_make_button_visible and set focus string for the button
+        do
+            cat_make_button_visible (button_rc)
+            button.set_focus_string (Focus_labels.drawing_label)
+        end
 
 feature {NONE}
 
@@ -43,6 +63,9 @@ feature {NONE}
 			extend (expose_ev);
 			extend (input_ev);
 			extend (resize_ev);
+			-- added by samik
+	--		set_focus_string (Focus_labels.drawing_label)
+			-- end of samik	
 		end
 
 end -- class TEXT_EVENTS   

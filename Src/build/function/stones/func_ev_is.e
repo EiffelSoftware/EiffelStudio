@@ -3,7 +3,12 @@ class FUNC_EV_IS
 
 inherit
 
-	EV_ICON_STONE;
+	EV_ICON_STONE
+		-- added by samik
+        undefine
+            init_toolkit
+        -- end of samik     
+		end;
 	FUNCTION_ELEMENT
 		rename
 			target as source

@@ -1,5 +1,8 @@
 class CLASS_MERGER
 
+inherit
+	COMPILER_EXPORTER
+
 feature 
 
 	merge3 (old_tmp: CLASS_AS; user: CLASS_AS; new_tmp: CLASS_AS) is
@@ -57,7 +60,7 @@ end;
 
 			-- Copying some information from `new_tmp'.
 
-			merge_result.set_id (new_tmp.id)
+		--	merge_result.set_id (new_tmp.id)
 			merge_result.set_class_name (new_tmp.class_name)
 debug ("MERGER")
 	io.error.putstring ("finished feature %N");

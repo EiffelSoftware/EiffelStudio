@@ -5,12 +5,15 @@ inherit
 
 	HOLE
 		redefine
-			process_any
+			process_any	
+		select
+			init_toolkit
 		end;
 	CAT_BUTTON
 		redefine
 			catalog_page,
 			set_default
+
 		end
 
 creation

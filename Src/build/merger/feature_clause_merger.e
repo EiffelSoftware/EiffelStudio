@@ -1,5 +1,9 @@
 class FEATURE_CLAUSE_MERGER
 
+inherit
+	COMPILER_EXPORTER
+end
+
 feature
 	
 	merge3 (old_tmp, user, new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
@@ -134,7 +138,7 @@ feature {NONE} -- Internal
 				
 				-- COMMENTS SHOULD BE MERGED!!!
 				if user_clause /= Void then
-					result_clause.set_comment (user_clause.comment)
+		--samik			result_clause.set_comment (user_clause.comment)
 				end
 	
 				ordered_result.replace (result_clause);
@@ -294,7 +298,7 @@ feature {NONE} -- Internal
 							new_clause.set_features (nw_features)
 
 							-- COMMENTS SHOULD BE MERGED!!!
-							new_clause.set_comment (user_clause.comment)
+				--samik			new_clause.set_comment (user_clause.comment)
 
 							temp_clauses.put_left (new_clause)
 						else
@@ -310,7 +314,7 @@ feature {NONE} -- Internal
 										!! new_clause
 									end
 									new_clause.set_clients (user_clause.clients)
-									new_clause.set_comment (user_clause.comment)
+					--samik				new_clause.set_comment (user_clause.comment)
 									!! nw_features.make (1)
 									nw_features.start
 									nw_features.replace (user_features.item)
@@ -392,7 +396,7 @@ feature {NONE} -- Internal
 				new_clause.set_clients (merge_result.item.clients)
 
 				-- COMMENTS SHOULD BE MERGED!!!
-				new_clause.set_comment (merge_result.item.comment)
+			--samik	new_clause.set_comment (merge_result.item.comment)
 
 				new_clause.set_features (new_features)
 				merge_result.replace (new_clause)

@@ -76,7 +76,7 @@ feature {NONE}
 		local
 			a_segment: SEGMENT;
 		do
-			!!arrow_head.make (3);
+			!!arrow_head.make_filled (3);
 			from
 				arrow_head.start
 			until

@@ -9,7 +9,7 @@ inherit
 		redefine
 			process_context
 		end;
-	FOCUSABLE;
+	
 	ERROR_POPUPER
 
 creation
@@ -24,6 +24,9 @@ feature
 			set_label (" ");
 			set_symbol (Pixmaps.context_pixmap);
 			make_visible (a_parent);
+			-- added by samik			
+			set_focus_string (Focus_labels.group_label)
+			-- end of samik	
 			initialize_focus
 		end;
 
@@ -32,15 +35,16 @@ feature
 			Result := button
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := context_catalog.focus_label
-		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.group_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := context_catalog.focus_label
+-- samik		end;
+
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.group_label
+-- samik		end;
 	
 feature {NONE}
 

@@ -2,7 +2,7 @@ class OK_BUTTON
 
 inherit
 
-	EB_BUTTON_COM;	
+	EB_BUTTON_COM;
 
 creation
 
@@ -10,15 +10,15 @@ creation
 
 feature {NONE} -- focus label
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.accept_change_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.accept_change_label
+-- samik		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := namer_window.focus_label
-		end
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := namer_window.focus_label
+-- samik		end
 	
 	symbol: PIXMAP is
 		do
@@ -29,6 +29,7 @@ feature {NONE} -- focus label
 		do
 			namer_window := namer;	
 			make_visible (a_parent);
+			set_focus_string (Focus_labels.accept_change_label)
 		end;
 
 

@@ -18,13 +18,13 @@ feature
 			user_eb, new_tmp_eb: ROUTINE_AS_EBUILD
 		do
 			if old_tmp /= Void then
-				old_tmp_com := old_tmp.comment
+		--samik		old_tmp_com := old_tmp.comment
 				old_tmp_rout_body := old_tmp.routine_body
 				old_tmp_locals := old_tmp.locals
 			end
 
 			if user /= Void then
-				user_com := user.comment
+		--samik		user_com := user.comment
 				user_rout_body := user.routine_body
 				user_require := user.precondition
 				user_ensure := user.postcondition
@@ -32,7 +32,7 @@ feature
 			end
 	
 			if new_tmp /= Void then
-				new_tmp_com := new_tmp.comment
+			--samik	new_tmp_com := new_tmp.comment
 				new_tmp_rout_body := new_tmp.routine_body
 				new_tmp_require := new_tmp.precondition
 				new_tmp_ensure := new_tmp.postcondition
@@ -68,7 +68,7 @@ feature
 				merge_result.set_rescue_clause (new_tmp.rescue_clause)
 				!! comment_merger;
 				comment_merger.merge3 (old_tmp_com, user_com, new_tmp_com)
-				merge_result.set_comment (comment_merger.merge_result)
+		--samik		merge_result.set_comment (comment_merger.merge_result)
 			else
 				!! merge_result
 				merge_result.set_routine_body (new_tmp_rout_body)

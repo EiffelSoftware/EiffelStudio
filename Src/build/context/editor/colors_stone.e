@@ -5,12 +5,15 @@ inherit
 
 	ATTRIB_STONE
 
+creation
+	make
+
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.colors_att_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.colors_att_label
+-- samik		end;
 
 	command: CLR_STONE_CMD is
 		once

@@ -21,6 +21,7 @@ feature -- Creation
 	make is
 			-- Create the figures.
 		do
+			init_fig (Void)
 			!!inner_figure.make;
 			!!outer_figure.make;
 			!!text_image.make;

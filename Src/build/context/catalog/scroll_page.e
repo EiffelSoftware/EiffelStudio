@@ -121,7 +121,9 @@ feature {NONE}
 			attach_top (text, 1);
 			attach_top (scroll_list, 1);
 			attach_top_widget (text, drawing_area.scrolled_window, 10);
-		end;
+		
+            button.set_focus_string (Focus_labels.scroll_label)
+    	end;
 
 	execute (argument: ANY) is
 		do
@@ -138,9 +140,9 @@ feature {NONE}
 			Result := Pixmaps.selected_scrolled_w_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.scroll_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.scroll_label
+-- samik		end;
 
 end

@@ -26,10 +26,10 @@ feature {NONE}
 			command_editor.clear
 		end;
 
-	focus_string: STRING is	
-		do
-			Result := Focus_labels.command_label
-		end;
+-- samik	focus_string: STRING is	
+-- samik		do
+-- samik			Result := Focus_labels.command_label
+-- samik		end;
 	
 	source: WIDGET is
 		do
@@ -43,6 +43,9 @@ feature {NONE}
 			-- as command_editor.
 		do
 			old_make (cmd_editor, a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.command_label)
+			-- end of samik
 			initialize_transport;
 			add_activate_action (Current, Void)
 		end -- Create

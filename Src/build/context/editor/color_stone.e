@@ -9,16 +9,7 @@ inherit
 		end;
 	PICT_COLOR_B
 		rename 
-			make as pict_color_make,
-			set_background_color as pict_set_background_color
-		end;
-	PICT_COLOR_B
-		rename 
 			make as pict_color_make
-		redefine
-			set_background_color
-		select
-			set_background_color
 		end;
 	FOCUSABLE;
 	STONE;
@@ -71,38 +62,53 @@ feature
 	make (a_color_name: STRING; a_parent: COMPOSITE; ed: CONTEXT_EDITOR) is
 		require
 			valid_args: a_color_name /= Void and 
-						(a_parent /= Void) and then ed /= Void
+				    (a_parent /= Void) and then ed /= Void
 		local
 			a_color: COLOR;
 		do
+
 			editor := ed;
 			color_name := clone (a_color_name);
+			-- added by samik
+			set_focus_string (color_name)
+			-- end of samik
 			!!a_color.make;
 			a_color.set_name (color_name);
 			pict_color_make (color_name, a_parent);
 			set_size (20, 20);
-			pict_set_background_color (a_color);
+			set_background_color (a_color);
 			initialize_transport;
 			initialize_focus;
+	--		reset_commands
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := editor.focus_label
-		end;
+	focus_label: FOCUS_LABEL_I is
+			-- has to be redefined, so that it returns correct toolkit initializer
+			-- to which object belongs for every instance of this class
+                local
+                        ti: TOOLTIP_INITIALIZER
+                do
+                        ti ?= top
+                        check
+                                valid_tooltip_initializer: ti/= void
+                        end
+                        Result := ti.label
+                end
 
-	focus_string: STRING is
-		do
-			Result := color_name
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := editor.focus_label
+-- samik		end;
+
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := color_name
+-- samik		end;
 
 	focus_source: WIDGET is
 		do
 			Result := Current
 		end;
 
-	set_background_color (color: COLOR) is
-		do
-		end;
 
 end

@@ -28,9 +28,9 @@ feature -- Anchors
 
 feature -- Focus_label
 
-	focus_label: FOCUS_LABEL is
-		deferred
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		deferred
+-- samik		end;
 
 feature -- Edited function
 

@@ -1,4 +1,9 @@
--- Syntax error for manifest string too long
+indexing
+
+	description: 
+		"Syntax error for manifest string too long.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STRING_TOO_LONG
 
@@ -6,20 +11,19 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
+	syntax_message: STRING is
+			-- Specific syntax message.
         do
-			put_string ("(string too long)%N")
+			Result := "string too long"
         end;
 
-end
+end -- class STRING_TOO_LONG

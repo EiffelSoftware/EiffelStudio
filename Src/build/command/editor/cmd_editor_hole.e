@@ -5,6 +5,9 @@ inherit
 
 	EB_BUTTON;
 	HOLE
+		select
+			init_toolkit
+		end
 
 feature {NONE}
 
@@ -19,10 +22,10 @@ feature {NONE}
 			register;
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := command_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := command_editor.focus_label
+-- samik		end;
 
 	target: WIDGET is
 		do

@@ -1,5 +1,8 @@
 class INVARIANT_PART_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 
 	merge2 (user, new_tmp: INVARIANT_AS) is
@@ -19,19 +22,19 @@ feature
 				assert_list_merger.merge2 (user.assertion_list, new_tmp.assertion_list)
 				!! merge_result
 				merge_result.set_assertion_list (assert_list_merger.merge_result)
-				merge_result.set_id (new_tmp.id)
+	--samik			merge_result.set_id (new_tmp.id)
 			elseif new_tmp /= Void then
 				-- `new_tmp' not Void, `user' Void
 				-- Copying `new_tmp'
 				!! merge_result
 				merge_result.set_assertion_list (new_tmp.assertion_list)
-				merge_result.set_id (new_tmp.id)
+	--samik			merge_result.set_id (new_tmp.id)
 			elseif user /= Void then
 				-- `new_tmp' Void, `user' not Void
 				-- Copying `user'
 				!! merge_result
 				merge_result.set_assertion_list (user.assertion_list)
-				merge_result.set_id (user.id)
+	--samik			merge_result.set_id (user.id)
 			else
 				-- Both void 
 				merge_result := Void

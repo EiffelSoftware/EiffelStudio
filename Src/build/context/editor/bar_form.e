@@ -3,7 +3,10 @@ class BAR_FORM
 
 inherit
 
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	COMMAND;
 	EDITOR_FORM
 		redefine

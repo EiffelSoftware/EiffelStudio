@@ -2,10 +2,12 @@ class CON_EDIT_HOLE
 
 inherit
 
-	EB_BUTTON;
+	EB_BUTTON		
 	HOLE
-		redefine
+    	redefine
 			process_context
+		select
+			init_toolkit
 		end
 	CONTEXT_STONE;
 	CONTEXT_DRAG_SOURCE
@@ -22,15 +24,15 @@ feature {NONE}
 			Result := Current
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := associated_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := associated_editor.focus_label
+-- samik		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.context_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.context_label
+-- samik		end;
 
 	data: CONTEXT is
 		do
@@ -53,6 +55,9 @@ feature {NONE}
 		do
 			associated_editor := ed;
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.context_label)
+			-- end of samik
 			register;
 			initialize_transport
 		end;

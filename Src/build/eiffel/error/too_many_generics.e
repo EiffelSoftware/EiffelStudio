@@ -1,4 +1,9 @@
--- Syntax error for more than 4 generic parameters
+indexing
+
+	description: 
+		"Syntax error for more than 4 generic parameters.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class TOO_MANY_GENERICS
 
@@ -6,20 +11,19 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
+	syntax_message: STRING is
+			-- Specific syntax message.
         do
-			put_string ("(the number of generic parameters is limited to four)%N")
+			Result := "the number of generic parameters is limited to four"
         end;
 
-end
+end -- class TOO_MANY_GENERICS

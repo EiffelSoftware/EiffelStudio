@@ -2,8 +2,12 @@ class CLOSE_WINDOW_BUTTON
 
 inherit
 
-	EB_BUTTON_COM;
+	EB_BUTTON_COM
+	
 	WINDOWS
+		select
+			init_toolkit
+		end
 
 creation
 
@@ -11,18 +15,23 @@ creation
 
 feature {NONE}
 
-	focus_label: FOCUS_LABEL;
+-- samik	focus_label: FOCUS_LABEL;
 
 	top_window: CLOSEABLE;
 
-	make (win: like top_window; a_parent: COMPOSITE; l: FOCUS_LABEL) is
+	make (win: like top_window; a_parent: COMPOSITE) is
 		require
 			valid_win: win /= Void;
-			valid_l: l /= Void
 		do
-			focus_label := l
 			top_window := win;
 			make_visible (a_parent);
+			-- added by samik
+			if top_window = Main_panel then
+				set_focus_string (Focus_labels.quit_label)
+			else
+				set_focus_string (Focus_labels.close_label)
+			end;
+			-- end of samik
 		end;
 
 	symbol: PIXMAP is
@@ -30,18 +39,18 @@ feature {NONE}
 			Result := Pixmaps.quit_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			if top_window = Main_panel then
-				Result := Focus_labels.quit_label
-			else
-				Result := Focus_labels.close_label
-			end;
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			if top_window = Main_panel then
+-- samik				Result := Focus_labels.quit_label
+-- samik			else
+-- samik				Result := Focus_labels.close_label
+-- samik			end;
+-- samik		end;
 
 	execute (arg: ANY) is
 		do
-			focus_label.set_text (" ");
+		--	focus_label.set_text (" ");
 			top_window.close;
 		end
 

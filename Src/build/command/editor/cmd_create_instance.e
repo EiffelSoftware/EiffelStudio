@@ -14,9 +14,10 @@ creation
 
 feature {NONE}
 
-	make (an_instance: CMD_INSTANCE) is
+	make (an_instance: CMD_INSTANCE; an_associated_command: ANY) is
 		do
 			cmd_instance := an_instance
+			execute (an_associated_command)
 		end;
 
 

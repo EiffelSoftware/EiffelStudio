@@ -4,7 +4,10 @@ class TRANSL_EDITOR
 inherit
 
 	COMMAND;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	EB_TOP_SHELL
 		rename
 			make as shell_make
@@ -66,8 +69,8 @@ feature {NONE}
 			end;
 			reset_title;
 			!! form.make (Widget_names.form, Current);
-			!! focus_label.make (form);
-			!! close_button.make (Current, form, focus_label);
+			!! focus_label.initialize (form);
+			!! close_button.make (Current, form);
 			!! transl_hole.make (Current, form);
 			!! ear_icon.make (Current, form);
 			!! negate_t.make (Widget_names.negate_name, form);

@@ -14,6 +14,9 @@ inherit
 			show
 		end;
 	WINDOWS
+		select
+			init_toolkit
+		end
 
 creation
 
@@ -24,7 +27,7 @@ feature -- Interface
 	make_visible (a_parent: COMPOSITE) is
 		do
 			initialize (Widget_names.behavior_form_name, a_parent);
-			!!event_catalog.make (Widget_names.event_catalog_name, Current, editor.focus_label);
+			!!event_catalog.make (Widget_names.event_catalog_name, Current);
 			!!behavior_editor.make (Widget_names.behaviour_editor_name, Current);
 
 			set_fraction_base(5);

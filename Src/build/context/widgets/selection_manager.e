@@ -11,6 +11,9 @@ inherit
 	COMMAND_ARGS;
 	CONSTANTS;
 	PAINTER
+		undefine
+			init_toolkit
+		end
 
 creation
 

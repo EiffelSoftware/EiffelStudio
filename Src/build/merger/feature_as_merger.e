@@ -1,5 +1,9 @@
 class FEATURE_AS_MERGER
 
+inherit
+	COMPILER_EXPORTER
+end
+
 feature
 
 	merge3 (old_tmp, user, new_tmp: FEATURE_AS) is
@@ -55,8 +59,8 @@ feature
 				-- Copying user feature
 				merge_result.set_feature_names (user.feature_names)
 				merge_result.set_body (user.body)
-				merge_result.set_body_id (user.body_id)
-				merge_result.set_id (user.id)
+--samik				merge_result.set_body_id (user.body_id)
+--samik				merge_result.set_id (user.id)
 			end
 
 			if u_fas_ebuild /= Void and n_fas_ebuild /= Void then
@@ -77,7 +81,7 @@ feature
 					comment_merger.merge3 (o_comment,
 										u_fas_ebuild.comment, 
 										n_fas_ebuild.comment)
-					merge_result.set_comment (comment_merger.merge_result)
+		--samik			merge_result.set_comment (comment_merger.merge_result)
 				end
 			end
 		end;

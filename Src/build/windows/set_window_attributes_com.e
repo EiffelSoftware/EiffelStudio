@@ -17,6 +17,7 @@ feature
 			manager: MANAGER;
 			fontable: FONTABLE;
 			term: TERMINAL_OUI
+			color_stone: COLOR_STONE
 		do
 			bg_color := Resources.background_color;
 			fg_color := Resources.foreground_color;
@@ -25,7 +26,7 @@ feature
 				fg_color /= Void or else
 				a_font /= Void
 			then
-				ch := composite.descendents;
+				ch := composite.descendants;
 				ch.extend (composite);
 				from
 					ch.start
@@ -35,7 +36,12 @@ feature
 					widget := ch.item;
 					term ?= widget;
 					if bg_color /= Void then
-						widget.set_background_color (bg_color)
+						color_stone ?= widget
+						-- If the widget is of type COLOR_STONE, we
+						-- do not want to set the background color
+						if color_stone = Void then
+							widget.set_background_color (bg_color)
+						end
 					end;
 					if fg_color /= Void then
 						primitive ?= widget;

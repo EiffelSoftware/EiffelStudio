@@ -21,7 +21,9 @@ feature
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" (");
-			Result.append (edited_function.label);
+			if edited_function /= Void then
+				Result.append (edited_function.label);
+			end
 			if	worked_on /= Void then
 				Result.append ("-");
 				Result.append (worked_on);

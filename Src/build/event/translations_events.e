@@ -13,8 +13,16 @@ inherit
 	EVENT_PAGE 
 		rename
 			make_button_visible as page_make_button_visible
+		-- added by samik
+        undefine
+            init_toolkit
+		-- end of samik     
 		end;
 	EVENT_PAGE
+		-- added by samik
+        undefine
+            init_toolkit
+        -- end of samik     
 		redefine
 			make_button_visible
 		select
@@ -85,6 +93,7 @@ feature {CATALOG}
 			page_make_button_visible (button_rc);
 			button.add_activate_action (Current, Second);
 			button.add_button_press_action (3, Current, Third);
+            button.set_focus_string (Focus_labels.translation_label)
 		end;
 
 	
@@ -100,10 +109,10 @@ feature {NONE}
 			Result := Pixmaps.selected_translation_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.translation_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.translation_label
+-- samik		end;
 
 	translation_editor: TRANSL_EDITOR is
 		once

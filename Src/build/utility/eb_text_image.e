@@ -114,6 +114,7 @@ feature
 
 	make is
 		do
+			init_fig (Void)
 			!!base_left
 		end;
 

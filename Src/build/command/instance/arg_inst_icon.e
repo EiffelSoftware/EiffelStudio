@@ -7,13 +7,13 @@ inherit
 		rename
 			set_data as old_set_data
 		undefine
-			stone_cursor, stone, initialize_transport
+			stone_cursor, stone, initialize_transport, init_toolkit -- last by samik
 		redefine
 			data, set_widget_default
 		end;
 	ICON_STONE
 		undefine
-			initialize_transport
+			initialize_transport, init_toolkit -- last by sami
 		redefine
 			set_data, data, set_widget_default, stone
 		select

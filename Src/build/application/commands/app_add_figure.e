@@ -87,7 +87,13 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (figure.label);
+			-- added by samik
+			if figure /= Void then
+				Result.append (figure.label);
+			else 
+				Result.append ("Figure is Void")
+			end
+			--end of samik
 		end; -- worked_on
 
 end 

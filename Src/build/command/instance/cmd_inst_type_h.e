@@ -9,6 +9,8 @@ inherit
 		redefine
 			process_command, process_instance,
 			compatible
+		select
+			init_toolkit
 		end
 
 creation
@@ -32,6 +34,9 @@ feature
 		do
 			instance_editor := ed;
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.command_type_label)
+			-- end of samik
 			register;
 		end; -- Create
 
@@ -40,15 +45,10 @@ feature
 			Result := Pixmaps.create_command_instance_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.command_type_label
-		end;
-
-	focus_label: FOCUS_LABEL is
-		do
-			Result := instance_editor.focus_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.command_type_label
+-- samik		end;
 
 	source, target: WIDGET is
 		do	

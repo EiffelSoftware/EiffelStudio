@@ -12,10 +12,14 @@ inherit
 		redefine
 			process, stone_type
 		end;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end;
 	CONSTANTS;
 	DATA;
 	EB_BUTTON
+
 	
 feature 
 
@@ -115,10 +119,10 @@ feature
 			initialize_focus
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := editor.focus_label
+-- samik		end;
 
 	source: WIDGET is
 		do

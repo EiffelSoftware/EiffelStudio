@@ -6,6 +6,9 @@ inherit
 
 	PROJECT_WINDOW;
 	WINDOWS
+		select
+			init_toolkit
+		end
 
 creation
 

@@ -1,4 +1,9 @@
--- Syntax error when a string extension is bad
+indexing
+
+	description: 
+		"Syntax error when a string extension is bad.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STRING_EXTENSION
 
@@ -6,20 +11,19 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
-	build_explain is
-			-- Build specific explanation image for current error
-            -- in `error_window'.
+	syntax_message: STRING is
+			-- Specific syntax message.
         do
-			put_string ("(invalid character code after percent)%N")
+			Result := "invalid character code after percent"
         end
 
-end
+end -- class STRING_EXTENSION

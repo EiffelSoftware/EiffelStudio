@@ -6,11 +6,14 @@ inherit
 	ATTRIB_STONE
 		rename
 			make as old_make
+		select
+			init_toolkit
 		end;
 	HOLE
 		rename
-			stone_type as hole_stone_type
-		redefine
+			stone_type as hole_stone_type,
+			init_toolkit as hole_init_toolkit
+	    	redefine
 			process_color
 		end;
 
@@ -20,10 +23,10 @@ creation
 	
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.fg_color_att_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.fg_color_att_label
+-- samik		end;
 
 	command: FG_STONE_CMD is
 		once
@@ -38,6 +41,9 @@ feature {NONE}
 	make (a_parent: COMPOSITE; tf: TEXT_FIELD; an_editor: like editor) is
 		do
 			old_make (a_parent, an_editor);
+			-- added by samik
+			set_focus_string (Focus_labels.fg_color_att_label)
+			-- end of samik
 			associated_tf := tf;	
 			register
 		end;

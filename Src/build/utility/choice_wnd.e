@@ -5,12 +5,16 @@ inherit
 	OVERRIDE_S	
 		rename
 			make as dialog_create,
-			popup as old_popup
+			popup as old_popup,
+			init_toolkit as override_s_init_toolkit
 		export
 			{NONE} all;
 			{ANY} popdown, is_popped_up, destroyed, raise
 		end;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	COMMAND;
 	CONSTANTS
 

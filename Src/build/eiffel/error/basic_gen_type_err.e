@@ -1,4 +1,9 @@
--- Syntax error for basic type with generic derivation
+indexing
+
+	description: 
+		"Syntax error for basic type with generic derivation.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BASIC_GEN_TYPE_ERR
 
@@ -6,20 +11,19 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
+	syntax_message: STRING is
+            -- Specific syntax message.
         do
-			put_string ("(basic type can not have generic derivation)%N")
+			Result := "basic type can not have generic derivation"
         end;
 
-end
+end -- class BASIC_GEN_TYPE_ERR

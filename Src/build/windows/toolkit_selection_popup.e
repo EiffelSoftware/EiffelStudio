@@ -18,7 +18,7 @@ feature {NONE}
 			temp: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 			top_form: FORM;
-			toolkit: STRING;
+			toolkit_name: STRING;
 			toggle: TOGGLE_B;
 			toggle_found: BOOLEAN;
 			del_win: DELETE_WINDOW;
@@ -30,8 +30,8 @@ feature {NONE}
 			form_d.set_title (Widget_names.select_toolkit_popup);
 			!! rb.make (Widget_names.radio_box, form_d);	
 			!! top_form.make (Widget_names.form, form_d);
-			!! focus_label.make (top_form);
-			!! close_button.make (Current, top_form, focus_label);
+			!! focus_label.initialize (top_form);
+			!! close_button.make (Current, top_form);
 			top_form.attach_left (focus_label, 0);
 			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_top (focus_label, 0);
@@ -60,10 +60,10 @@ feature {NONE}
 				until
 					file.end_of_file
 				loop
-					toolkit := file.laststring;
-					!! toggle.make (toolkit, rb);
+					toolkit_name := file.laststring;
+					!! toggle.make (toolkit_name, rb);
 					toggle.add_activate_action (Current, toggle);
-					if toolkit.is_equal (Shared_toolkit_name) then
+					if toolkit_name.is_equal (Shared_toolkit_name) then
 						toggle_found := True
 						toggle.set_toggle_on
 					end;

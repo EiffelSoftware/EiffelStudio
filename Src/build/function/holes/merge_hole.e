@@ -3,8 +3,11 @@ deferred class MERGE_HOLE
 
 inherit
 
-	HOLE;
-	EB_BUTTON;
+	HOLE
+		select
+			init_toolkit
+		end
+	EB_BUTTON
 
 feature {NONE}
 
@@ -13,20 +16,23 @@ feature {NONE}
 			Result := Current
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.merge_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.merge_label
+-- samik		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := associated_function.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := associated_function.focus_label
+-- samik		end;
 
 	make (func: FUNC_EDITOR; a_parent: COMPOSITE) is
 		do
 			associated_function := func;
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.merge_label)
+			-- end of samik
 			register
 		end;
 

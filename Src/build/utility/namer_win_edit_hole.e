@@ -9,6 +9,8 @@ inherit
 	HOLE
 		redefine
 			process_any
+		select
+			init_toolkit
 		end;
 	DRAG_SOURCE
 
@@ -18,15 +20,10 @@ creation
 
 feature {NONE} 
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.namer_label
-		end;
-
-	focus_label: FOCUS_LABEL is
-		do
-			Result := namer_window.focus_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.namer_label
+-- samik		end;
 	
 	button_symbol: PIXMAP is
 		do
@@ -38,7 +35,10 @@ feature {NONE}
 		do
 			make_visible (a_parent);
 			initialize_transport;
-			register;
+			register;	
+			-- added by samik
+			set_focus_string (Focus_labels.namer_label)
+			-- end of samik
 		end;
 
 	target: WIDGET is

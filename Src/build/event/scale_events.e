@@ -3,12 +3,23 @@ class SCALE_EVENTS
 
 inherit
 	
-	EVENT_PAGE
-		rename
-			make as make_page
-		redefine
-			is_optional
-		end;
+    EVENT_PAGE
+        rename
+            make as make_page
+        redefine
+            is_optional,
+            make_button_visible
+        select
+            make_button_visible
+        end;
+
+    EVENT_PAGE 
+        rename
+            make as make_page,
+            make_button_visible as cat_make_button_visible
+        redefine
+            is_optional
+        end;
 
 creation
 
@@ -30,11 +41,20 @@ feature {NONE}
 			Result := Pixmaps.selected_scale_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.scale_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.scale_label
+-- samik		end;
 	
+feature {CATALOG}
+    
+    make_button_visible (button_rc: ROW_COLUMN) is
+            -- call cat_make_button_visible and set focus string for the button
+        do
+            cat_make_button_visible (button_rc)
+            button.set_focus_string (Focus_labels.scale_label)
+        end
+
 feature {NONE}
 
 	make (cat: like associated_catalog) is
@@ -42,6 +62,9 @@ feature {NONE}
 			make_page (cat);
 			extend (move_ev);
 			extend (value_changed_ev)
+			-- added by samik
+	--		set_focus_string (Focus_labels.scale_label)
+			-- end of samik	
 		end
 
-end -- class TEXT_EVENTS   
+end -- class SCALE_EVENTS   

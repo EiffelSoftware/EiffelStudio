@@ -7,6 +7,8 @@ inherit
 	HOLE
 		redefine
 			process_instance
+		select
+			init_toolkit
 		end;
 	DRAG_SOURCE;
 	CMD_INST_STONE;
@@ -35,15 +37,15 @@ feature
 			Result := Current
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := instance_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := instance_editor.focus_label
+-- samik		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.command_instance_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.command_instance_label
+-- samik		end;
 
 	associated_command: CMD is
 		do
@@ -58,6 +60,9 @@ feature
 		do
 			instance_editor := ed;
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.command_instance_label)
+			-- end of samik
 			register;
 			initialize_transport
 		end; 

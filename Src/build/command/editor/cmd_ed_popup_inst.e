@@ -3,7 +3,10 @@ class CMD_ED_POPUP_INST
  
 inherit
 	WINDOWS
-	EB_BUTTON;
+		select
+			init_toolkit
+		end
+	EB_BUTTON
 	COMMAND
 
 creation
@@ -18,17 +21,20 @@ feature {NONE}
 			command_editor := ed;
 			make_visible (a_parent);
 			add_activate_action (Current, Void)
+			-- added by samik
+			set_focus_string (Focus_labels.popup_instance_label)
+			-- end of samik
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := command_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := command_editor.focus_label
+-- samik		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.popup_instance_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.popup_instance_label
+-- samik		end;
 
 	symbol: PIXMAP is
 		do

@@ -21,7 +21,7 @@ feature {NONE}
 		local
 			fb: FORMAT_BUTTON
 		do
-			list_make (Context_const.number_of_formats);
+			make_filled (Context_const.number_of_formats);
 			!GEOMETRY_BUTTON!fb.make (a_parent, ed)
 			put_i_th (fb, Context_const.Geometry_format_nbr);
 			!ATTRIBUTE_BUTTON!fb.make (a_parent, ed)

@@ -57,6 +57,8 @@ feature {NONE}
 			attach_top (frame_check_box, 1);
 
 			attach_top_widget (frame_radio_box, bulletin_type.source, 10);
+
+			button.set_focus_string (Focus_labels.sets_label)
 		end;
 
 	symbol: PIXMAP is
@@ -69,9 +71,9 @@ feature {NONE}
 			Result := Pixmaps.selected_sets_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.sets_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.sets_label
+-- samik		end;
 
 end

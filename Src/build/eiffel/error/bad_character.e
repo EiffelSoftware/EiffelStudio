@@ -1,4 +1,9 @@
--- Error for bad character recognition
+indexing
+
+	description: 
+		"Error for bad character recognition.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BAD_CHARACTER
 
@@ -6,20 +11,19 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
-	build_explain is
-			-- Build specific explanation image for current error
-			-- in `error_window'.
+	syntax_message: STRING is
+			-- Specific syntax message
 		do
-			put_string ("(invalid character)%N")
+			Result := "invalid character"
 		end
 
-end
+end -- class BAD_CHARACTER

@@ -6,7 +6,7 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor, stone
+			stone_cursor, stone, init_toolkit -- last added by samik
 		redefine
 			data, set_widget_default
 		end;

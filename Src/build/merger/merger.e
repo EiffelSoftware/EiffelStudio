@@ -1,6 +1,8 @@
 class MERGER
 
 inherit
+	COMPILER_EXPORTER
+
 	MEMORY
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
@@ -147,36 +149,36 @@ feature
 		local
 			class_merger: CLASS_MERGER
 			merge_as: CLASS_AS;
-			file: RAW_FILE;
+		--	file: RAW_FILE;
 			comment_server: EIFFEL_FILE
 		do
 			if not retried then
-				!! file.make (user);
-				if file.exists and then 
-					file.is_readable and then
-					not file.empty
-				then
-					!! comment_server.make (file);
+			--	!! file.make (user);
+			--	if file.exists and then 
+			--		file.is_readable and then
+			--		not file.empty
+			--	then
+					!! comment_server.make (user, merge_as.end_position);
 					user_ast.set_comments (comment_server)
-				end;
+--				end;
 	
-				!! file.make (old_template);
-				if file.exists and then 
-					file.is_readable and then
-					not file.empty 
-				then
-					!! comment_server.make (file)
+			--	!! file.make (old_template);
+			--	if file.exists and then 
+			--		file.is_readable and then
+			--		not file.empty 
+			--	then
+					!! comment_server.make (old_template, merge_as.end_position)
 					old_temp_ast.set_comments (comment_server)
-				end;
+	--			end;
 	
-				!! file.make (new_template)
-				if file.exists and then 
-					file.is_readable and then
-					not file.empty
-				then
-					!! comment_server.make (file)
+			--	!! file.make (new_template)
+			--	if file.exists and then 
+			--		file.is_readable and then
+			--		not file.empty
+			--	then
+					!! comment_server.make (new_template, merge_as.end_position)
 					new_temp_ast.set_comments (comment_server)
-				end;
+		--		end;
 	
 				!! class_merger
 				class_merger.merge3 (old_temp_ast, user_ast, new_temp_ast)
@@ -197,9 +199,9 @@ feature
 		local
 			ctxt: FORMAT_CONTEXT
 		do
-			!! ctxt.make
-			ctxt.set_ast (ast)
-			ctxt.execute
+			!! ctxt.make (ast, "this should be a file name")
+--samik			ctxt.set_ast (ast)
+	--samik		ctxt.execute
 
 			ast.simple_format (ctxt)
 

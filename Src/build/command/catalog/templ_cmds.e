@@ -17,6 +17,11 @@ feature {NONE}
 
 	make is
 		do
+			old_make (command_catalog)
+			-- added by samik
+			set_focus_string (Focus_labels.templates_label)
+			-- end of samik
+--samik			associated_catalog := command_catalog;
 			associated_catalog := command_catalog;
 			reset_commands
 		end;
@@ -37,9 +42,9 @@ feature {NONE}
 			Result := Pixmaps.selected_command_page_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.templates_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.templates_label
+-- samik		end;
 
 end -- class TEMPL_CMDS

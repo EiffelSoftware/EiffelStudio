@@ -3,10 +3,12 @@ class GENERATE_BUTTON
 
 inherit
 
-	LICENCE_COMMAND;
-	EB_BUTTON_COM;
-	WINDOWS
-
+	LICENCE_COMMAND
+		select
+			init_toolkit
+		end
+	EB_BUTTON_COM
+	
 creation
 
 	make
@@ -17,6 +19,9 @@ feature {NONE}
 		do
 			make_visible (a_parent);
 			add_button_press_action (3, Current, Select_toolkit)
+			-- added by samik
+			set_focus_string (Focus_labels.generate_code_label)
+			-- end of samik
 		end;
 
 	Select_toolkit: ANY is
@@ -24,15 +29,15 @@ feature {NONE}
 			!! Result 
 		end
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.generate_code_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.generate_code_label
+-- samik		end;
 
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end
+-- samik	focus_label: LABEL is
+-- samik		do
+-- samik			Result := main_panel.focus_label
+-- samik		end
 
 feature {NONE}
 

@@ -76,10 +76,10 @@ feature -- Editing features
 			associated_context_editor := ed
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := associated_context_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := associated_context_editor.focus_label
+-- samik		end;
 
 	clear is
 		do

@@ -26,7 +26,7 @@ feature  {NONE}
 			-- create a context type associated with `a_context'
 		do
 			dummy_context := a_context;
-			focus_string := a_name;
+-- samik			focus_string := a_name;
 			identifier := group.identifier;
 		end;
 

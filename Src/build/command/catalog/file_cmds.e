@@ -13,6 +13,11 @@ feature {NONE}
 
 	make is
 		do
+			old_make (command_catalog)
+			-- added by samik
+			set_focus_string (Focus_labels.file_label)
+			-- end of samik
+--samik associated_catalog := command_catalog;
 			associated_catalog := command_catalog;
 			reset_commands
 		end;
@@ -33,9 +38,9 @@ feature {NONE}
 			Result := Pixmaps.selected_file_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.file_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.file_label
+-- samik		end;
 
 end 

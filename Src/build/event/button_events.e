@@ -3,12 +3,23 @@ class BUTTON_EVENTS
 
 inherit
 	
-	EVENT_PAGE
-		rename
-			make as page_create
-		redefine
-			is_optional
-		end
+    EVENT_PAGE
+        rename
+            make as page_create
+        redefine
+            is_optional,
+            make_button_visible
+        select
+            make_button_visible
+        end;
+
+    EVENT_PAGE 
+        rename
+            make as page_create,
+            make_button_visible as cat_make_button_visible
+        redefine
+            is_optional
+		end;
 
 creation
 
@@ -24,6 +35,9 @@ feature {NONE}
 		do
 			page_create (cat);
 			button_type := not_set;
+			-- added by samik
+	--		set_focus_string (Focus_labels.button_label)
+			-- end of samik
 		end;
 
 feature {NONE}
@@ -42,10 +56,19 @@ feature {NONE}
 			Result := Pixmaps.selected_button_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.button_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.button_label
+-- samik		end;
+
+feature {CATALOG}
+    
+    make_button_visible (button_rc: ROW_COLUMN) is
+            -- call cat_make_button_visible and set focus string for the button
+        do
+            cat_make_button_visible (button_rc)
+            button.set_focus_string (Focus_labels.button_label)
+        end
 
 feature 
 

@@ -1,4 +1,9 @@
--- Syntax error
+indexing
+
+	description: 
+		"Syntax error.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SYNTAX_ERROR
 
@@ -7,14 +12,24 @@ inherit
 	ERROR
 		redefine
 			trace
-			-- stone
-		end
+		end;
+	SHARED_WORKBENCH
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	init is
+			-- Initialize `start_position' and `end_position'.
+		do
+			start_position := get_start_position;
+			end_position := get_end_position;
+			file_name := get_yacc_file_name;
+		end;
+
+feature -- Properties
 
 	file_name: STRING;
 			-- Path to the file where the syntax error happened
@@ -26,51 +41,36 @@ feature -- Attributes
 			-- Ending position of the of the token involved in the syntax
 			-- error
 
-feature -- Creation
-
-	init is
-			-- Initialize `start_position' and `end_position'.
-		do
-			start_position := get_start_position;
-			end_position := get_end_position;
-			file_name := get_yacc_file_name;
-		end;
-
-feature -- Conveniences
-
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
-		do
-			file_name := s;
-		end;
-
-	set_start_position (i: INTEGER) is
-			-- Assign `i' to `start_position'.
-		do
-			start_position := i;
-		end;
-
-	set_end_position (i: INTEGER) is
-			-- Assign `i' to `end_position'.
-		do
-			end_position := i;
-		end;
-
-feature -- Error code
-
 	code: STRING is "Syntax error";
 			-- Error code
 
-feature
-
-	build_explain is
+	syntax_message: STRING is 
+			-- Specific syntax message. 
+			-- (By default, it is empty)
 		do
+			Result := ""
+		ensure
+			non_void_result: Result /= Void
+		end;	
+
+feature -- Output
+
+	build_explain (st: STRUCTURED_TEXT) is
+		local
+			msg: STRING
+		do
+			msg := syntax_message;
+			if not msg.empty then
+				st.add_char ('(');
+				st.add_string (msg)
+				st.add_string (")");
+				st.add_new_line
+			end
 		end;
 
-	trace is
+	trace (st: STRUCTURED_TEXT) is
 			-- Debug purpose
 		local
-			--dummy_reference: CLASS_C;
 			file: PLAIN_TEXT_FILE;
 			previous_line: STRING;
 			current_line: STRING;
@@ -78,56 +78,52 @@ feature
 			start_line_pos: INTEGER;
 			line_number: INTEGER;
 		do
-			if not (start_line_pos = 0 and then end_position = 0) then
-				!!file.make_open_read (file_name);
-				from
-				until
-					file.position > start_position or else file.end_of_file
-				loop
-					previous_line := current_line;
-					start_line_pos := file.position;
-					line_number := line_number + 1;
-					file.readline;
-					current_line := clone (file.laststring)
-				end;
-				if not file.end_of_file then
-					file.readline;
-					next_line := clone (file.laststring)
-				end;
-				file.close;
+			!!file.make_open_read (file_name);
+			from
+			until
+				file.position > start_position or else file.end_of_file
+			loop
+				previous_line := current_line;
+				start_line_pos := file.position;
+				line_number := line_number + 1;
+				file.readline;
+				current_line := clone (file.laststring)
 			end;
+			if not file.end_of_file then
+				file.readline;
+				next_line := clone (file.laststring)
+			end;
+			file.close;
 
-			put_string ("Syntax error at line ");
-			put_int (line_number);
-
-			--if Lace.parsed then
-				--if Lace.successfull then
-						---- Error happened in a class
-					--put_string (" in class ");
-					--put_clickable_string (
-							--stone (System.current_class),
-							--System.current_class.signature)
-				--else
-						---- Error happened while parsing a "use" file
-					--put_string (" in Cluster_properties %"Use%" file")
-					--if file_name /= Void then
-						put_string ("%N     File: "); put_string (file_name);
-					--end;
-				--end
-			--else
-				--put_clickable_string (ace_stone (dummy_reference), " in Ace file")
-			--end;
-			new_line;
-			if line_number /= 0 then
-				build_explain;
-				display_line (previous_line);
-				display_error_line (current_line, start_position - start_line_pos, 
-														end_position - start_line_pos);
-				display_line (next_line);
-			end
+			st.add_string ("Syntax error at line ");
+			st.add_int (line_number);
+			if Lace.parsed then
+				if Lace.successfull then
+						-- Error happened in a class
+					st.add_string (" in class ");
+					st.add_class_syntax (Current, System.current_class, 
+							System.current_class.signature)
+				else
+						-- Error happened while parsing a "use" file
+					st.add_string (" in Cluster_properties %"Use%" file")
+					if file_name /= Void then
+						st.add_new_line;
+						st.add_string ("	 File: "); 
+						st.add_string (file_name);
+					end;
+				end
+			else
+				st.add_ace_syntax (Current, " in Ace file")
+			end;
+			st.add_new_line;
+			build_explain (st);
+			display_line (st, previous_line);
+			display_error_line (st, current_line, 
+						start_position - start_line_pos);
+			display_line (st, next_line);
 		end;
 
-	display_line (a_line: STRING) is
+	display_line (st: STRUCTURED_TEXT; a_line: STRING) is
 		local
 			i: INTEGER;
 			nb: INTEGER;
@@ -142,61 +138,54 @@ feature
 					i := i + 1;
 					c := a_line.item (i);
 					if c = '%T' then
-						put_string ("    ")
+						st.add_indent
 					else
-						put_char (c)
+						st.add_char (c)
 					end;
 				end;
-				new_line;
+				st.add_new_line;
 			end;
 		end;
 
-	display_error_line (a_line: STRING; start_pos, end_pos: INTEGER) is
+	display_error_line (st: STRUCTURED_TEXT; a_line: STRING; pos: INTEGER) is
 		local
 			i, nb: INTEGER;
 			c: CHARACTER;
-			position: INTEGER;
+			position, nb_tab: INTEGER;
 		do
 			from
 				nb := a_line.count;
 			until
-				i = start_pos
+				i = nb
 			loop
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
-					put_string ("    ");
+					st.add_indent
+					if i <= pos then
+						nb_tab := nb_tab + 1;
+					end;
 				else
-					put_char (c)
+					st.add_char (c)
 				end;
 			end;
-			put_string ("=>");
-			from
-			until
-				i = end_pos
-			loop
-				i := i + 1
-				c := a_line.item (i);
-				if c = '%T' then
-					put_string ("    ");
-				else
-					put_char (c)
-				end
-			end
-			put_string ("<=")
-			from
-			until
-				i >= nb
-			loop
-				i := i + 1;
-				c := a_line.item (i)
-				if c = '%T' then
-					put_string ("    ");
-				else
-					put_char (c)
-				end
+			st.add_new_line;
+			position := pos + 3*nb_tab;
+			if position = 0 then
+				st.add_string ("^---------------------------");
+				st.add_new_line
+			else
+				from
+					i := 1;
+				until
+					i > position
+				loop
+					st.add_char ('-');
+					i := i + 1;
+				end;
+				st.add_string ("^");
+				st.add_new_line
 			end;
-			new_line
 		end;
 
 feature {NONE} -- Externals
@@ -219,18 +208,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-feature -- stoning
-
---	stone (reference_class: CLASS_C): CL_SYNTAX_STONE is
---			-- Reference class is useless here
---		do
---			!!Result.make (Current, reference_class)
---		end;
---
---	ace_stone (reference_class: CLASS_C): ACE_SYNTAX_STONE is
---			-- Reference class is useless here
---		do
---			!!Result.make (Current)
---		end
-
-end
+end -- class SYNTAX_ERROR

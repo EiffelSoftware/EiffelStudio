@@ -6,7 +6,7 @@ inherit
 	EB_TOP_SHELL
 		rename
 			realize as shell_realize,
-			make as top_shell_make,
+			make as eb_top_shell_make,
 			destroy as shell_destroy
 		redefine
 			set_geometry
@@ -35,7 +35,10 @@ inherit
 			clear,
 			set_edited_function
 		end;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	CLOSEABLE
 
 creation
@@ -148,10 +151,10 @@ feature
 
 feature {NONE}
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := menu_bar.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := menu_bar.focus_label
+-- samik		end;
 
 	create_output_stone (a_parent: COMPOSITE) is
 		do
@@ -174,7 +177,7 @@ feature {NONE} -- Interface
 		local
 			del_com: DELETE_WINDOW
 		do
-			top_shell_make (a_name, a_screen);
+			eb_top_shell_make (a_name, a_screen);
 			set_title (a_name);
 			set_icon_name (a_name);
 			set_icon_pixmap (Pixmaps.state_pixmap);

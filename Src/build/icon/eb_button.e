@@ -8,11 +8,17 @@ inherit
 	PICT_COLOR_B
 		rename
 			make as pict_color_make,
-			identifier as oui_identifier
+			identifier as oui_identifier,
+			init_toolkit as eb_button_init_toolkit
 		end;
 
 feature {NONE}
 
+	Focus_labels: FOCUS_LABEL_CONSTANTS is
+		once
+			!! Result
+		end
+	
 	focus_source: WIDGET is
 		do
 			Result := Current
@@ -24,6 +30,9 @@ feature {NONE}
 		do
 			pict_color_make (Widget_names.pcbutton, a_parent);
 			set_symbol (symbol);
+
+			-- Default value for focus_string
+			set_focus_string ("DEFAULT FOCUS LABEL")
 			initialize_focus;
 		end;
 
@@ -40,5 +49,18 @@ feature {NONE}
 				set_pixmap (s);
 			end
 		end;
+
+	focus_label: FOCUS_LABEL_I is
+			-- has to be redefined, so that it returns correct toolkit initializer
+			-- to which object belongs for every instance of this class
+                local
+                        ti: TOOLTIP_INITIALIZER
+                do
+                        ti ?= top
+                        check
+                                valid_tooltip_initializer: ti/= void
+                        end
+                        Result := ti.label
+                end
 
 end

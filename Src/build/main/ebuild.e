@@ -7,13 +7,18 @@ inherit
 	ARGUMENTS;
 	WINDOWS;
 	SHARED_LICENSE;
-	GRAPHICS;
+-- samik	GRAPHICS;
 	UNIX_SIGNALS
 		rename
 			meaning as sig_meanging,
 			ignore as sig_ignore,
 			catch as sig_catch
 		end;
+
+-- added by samik
+creation
+	make
+-- end of samik
 
 feature 
 
@@ -37,7 +42,7 @@ feature
 					init_project;
 					read_command_line;
 					iterate;
-					discard_licence
+					discard_license
 				end
 			else
 				io.error.putstring ("Internal error: ");
@@ -47,7 +52,7 @@ feature
 				io.error.putstring ("%NEiffelBuild stopped%N");
 			end;
 		rescue
-			discard_licence;
+			discard_license;
 			if not is_signal or else signal /= Sigint then
 				retried := True;
 				rescue_project
@@ -65,6 +70,7 @@ feature {NONE} -- Initialize toolkit
 	init_windowing is
 			-- Initialize toolkit
 		do
+			if (init_toolkit = Void) then end;
 			if (toolkit = Void) then end
 		end
 
@@ -74,10 +80,10 @@ feature {NONE}
 
 	init_licence: BOOLEAN is
 		do
-			licence.get_registration_info;
-			licence.set_version (3);
-			licence.set_application_name (Application_name);
-			Result := licence.connected
+			license.get_license;
+			license.set_version (3);
+			license.set_application_name (Application_name);
+			Result := license.licensed
 		end;
 
 	read_command_line is

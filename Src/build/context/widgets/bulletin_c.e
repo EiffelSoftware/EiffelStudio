@@ -7,6 +7,7 @@ inherit
 			widget, stored_node, is_bulletin,
 			data, intermediate_name
 		end
+
 	
 feature 
 

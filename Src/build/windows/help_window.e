@@ -13,6 +13,8 @@ inherit
 	HOLE
 		redefine
 			process_any
+		select
+			init_toolkit
 		end;
 	CLOSEABLE
 
@@ -63,9 +65,8 @@ feature {NONE}
 			!! text.make (Widget_names.text, form);
 			!! form1.make (Widget_names.form1, form);
 
-			!! focus_label.make (form1);
 			!! help_hole.make (Current, form1);
-			!! close_b.make (Current, form1, focus_label);
+			!! close_b.make (Current, form1);
 			
 			form.attach_top (form1, 2);
 			form.attach_left (form1, 2);
@@ -77,12 +78,12 @@ feature {NONE}
 
 			form1.attach_top (help_hole, 0);
 			form1.attach_top (close_b, 0);
-			form1.attach_top (focus_label, 0);
+--samik			form1.attach_top (focus_label, 0);
 			form1.attach_left (help_hole, 2);
-			form1.attach_left_widget (help_hole, focus_label, 0);
-			form1.attach_right_widget (close_b, focus_label, 0);
+--samik			form1.attach_left_widget (help_hole, focus_label, 0);
+--samik			form1.attach_right_widget (close_b, focus_label, 0);
 			form1.attach_right (close_b, 2);
-			form1.attach_bottom (focus_label, 2);
+--samik			form1.attach_bottom (focus_label, 2);
 			form1.attach_bottom (help_hole, 2);
 			form1.attach_bottom (close_b, 2);
 
@@ -93,8 +94,6 @@ feature {NONE}
 		end;
 
 feature
-
-	focus_label: FOCUS_LABEL;
 
 	update_text (data: DATA) is
 		require

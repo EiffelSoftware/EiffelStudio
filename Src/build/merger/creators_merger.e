@@ -1,5 +1,9 @@
 class CREATORS_MERGER
 
+inherit
+	COMPILER_EXPORTER
+end
+
 feature
 
 	merge2 (user, new_tmp: EIFFEL_LIST [CREATE_AS]) is

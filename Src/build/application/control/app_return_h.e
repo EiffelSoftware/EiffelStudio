@@ -4,6 +4,8 @@ class APP_RETURN_H
 inherit
 
 	APP_EDITOR_HOLE
+        rename
+            make as parent_make
 		redefine
 			process_label
 		end
@@ -14,15 +16,21 @@ creation
 	
 feature {NONE}
 
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.return_label)
+        end
+
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.return_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.return_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.return_label
+-- samik		end;
 	
 feature {NONE}
 

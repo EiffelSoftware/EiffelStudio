@@ -5,7 +5,7 @@ inherit
 
 	CON_ICON_STONE
 		undefine
-			is_equal
+			is_equal, init_toolkit -- last by samik
 		redefine
 			transportable
 		end;

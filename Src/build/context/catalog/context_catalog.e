@@ -10,7 +10,10 @@ inherit
 		redefine
 			set_geometry
 		end;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	SHARED_TRANSLATIONS;
 	SHARED_CONTEXT;
 	CLOSEABLE
@@ -42,7 +45,7 @@ feature
 	set_page: SET_PAGE;
 	scroll_page: SCROLL_PAGE;
 
-	focus_label: FOCUS_LABEL;
+--samik	focus_label: FOCUS_LABEL;
 
 feature {CONTEXT_CAT_PAGE}
 
@@ -77,11 +80,11 @@ feature
 			rc.set_preferred_count (1);
 			rc.set_row_layout;
 
-			!! focus_label.make (top_form);
+--samik			!! focus_label.initialize (top_form);
 
-			!! edit_hole.make (top_form, focus_label);
-			!! cut_hole.make (top_form, focus_label);
-			!! close_b.make (Current, top_form, focus_label);
+			!! edit_hole.make (top_form);
+			!! cut_hole.make (top_form);
+			!! close_b.make (Current, top_form);
 
 			!! window_page.make (form, rc);
 			!! primitive_page.make (form, rc);
@@ -95,13 +98,13 @@ feature
 			top_form.attach_top (edit_hole, 0);
 			top_form.attach_top (cut_hole, 0);
 			top_form.attach_top (close_b, 0);
-			top_form.attach_top (focus_label, 0);
+--samik			top_form.attach_top (focus_label, 0);
 			top_form.attach_left (edit_hole, 0);
 			top_form.attach_left_widget (edit_hole, cut_hole, 0);
 			top_form.attach_right (close_b, 0);
-			top_form.attach_left_widget (cut_hole, focus_label, 0);
-			top_form.attach_right_widget (close_b, focus_label, 0);
-			top_form.attach_bottom (focus_label, 0);
+--samik			top_form.attach_left_widget (cut_hole, focus_label, 0);
+--samik			top_form.attach_right_widget (close_b, focus_label, 0);
+--samik			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (edit_hole, 0);
 			top_form.attach_bottom (cut_hole, 0);
 			top_form.attach_bottom (close_b, 0);

@@ -3,6 +3,8 @@ class CMD_ED_HOLE
 inherit
 
 	EDIT_BUTTON
+        rename
+            make as parent_make
 		redefine
 			process_command, process_instance,
 			compatible
@@ -12,6 +14,12 @@ creation
 	make
 
 feature {NONE}
+
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.command_type_label)
+        end
 
 	symbol: PIXMAP is
 		do
@@ -40,10 +48,10 @@ feature {NONE}
 			dropped.associated_command.create_editor
 		end;
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.command_type_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.command_type_label
+-- samik		end;
 
 	create_empty_editor is
 		local

@@ -1,10 +1,18 @@
-class WINDOWS 
+class
+	WINDOWS 
+inherit
+
+	GRAPHICS
+		redefine
+			init_toolkit
+		end 
 
 feature {NONE}
 
+
 	eb_screen: SCREEN is
 		once
-			!! Result.make ("")
+			!! Result.make ("seattle:0.0")
 		end
 
 	transporter: TRANSPORTER is
@@ -23,6 +31,13 @@ feature {NONE}
 		end
 
 feature {NONE} -- Initial windowing
+
+	 init_toolkit: OBSOLETE_MOTIF is
+                        -- The demo uses the
+                        -- Motif toolkit
+                once
+                        !!Result.make ("");
+                end;
 
 	init_project is
 		do

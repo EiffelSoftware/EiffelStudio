@@ -5,32 +5,28 @@ inherit
 
 	DRAWING_AREA
 		rename
-			make as make_drawing_area
+			init_toolkit as drawing_area_init_toolkit
 		end;
 	HOLE
 		redefine
 			process_any	
+		select
+			init_toolkit
 		end;
 	DRAG_SOURCE;
 	COMMAND;
-	WINDOWS
 
 creation
 
-	make
+	make_visible
 	
-feature {NONE} -- Creation 
-
-	make is
-		do
-		end;
 
 feature
 
 	make_visible (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the drawing area.
 		do
-			make_drawing_area (a_name, a_parent);
+			make (a_name, a_parent);
 			add_button_press_action (3, Current, Void);
 			register;
 			initialize_transport

@@ -22,14 +22,15 @@ feature {NONE}
 			Result := Pixmaps.selected_windows_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.window_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.window_label
+-- samik		end;
 
 	make is 
 		do
-			associated_catalog := command_catalog;
+			old_make (command_catalog)
+--samik			associated_catalog := command_catalog;
 			reset_commands
 		end;
 

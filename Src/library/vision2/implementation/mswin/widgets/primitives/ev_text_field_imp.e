@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
-feature -- {EV_ANY_I} -- Status report
+feature {EV_ANY_I} -- Status report
 
 	text: STRING is
 			-- Text of `Current'
@@ -255,6 +255,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2001/06/24 21:21:23  pichery
+--| Fixed export status
+--|
 --| Revision 1.44  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -76,7 +76,7 @@ feature -- Comparison
 			end
 		end;
 
-	max (other: CHARACTER_REF): CHARACTER is
+	max (other: like Current): CHARACTER is
 			-- The greater of current object and `other'
 		require
 			other_exists: other /= Void
@@ -84,7 +84,7 @@ feature -- Comparison
 			Result := max_ref (other).item
 		end;
 
-	min (other: CHARACTER_REF): CHARACTER is
+	min (other: like Current): CHARACTER is
 			-- The smaller of current object and `other'
 		require
 			other_exists: other /= Void

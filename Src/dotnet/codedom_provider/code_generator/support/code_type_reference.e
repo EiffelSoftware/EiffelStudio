@@ -266,6 +266,10 @@ feature -- Access
 						l_parents.forth
 					end
 				end
+				if Result = Void then
+						-- Probably a snippet feature
+					create Result.make_external (a_name, a_name, Void, Current)
+				end
 			else
 				Result := dotnet_member_from_name (a_name)
 			end

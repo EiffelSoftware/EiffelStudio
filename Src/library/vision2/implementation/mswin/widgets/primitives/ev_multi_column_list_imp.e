@@ -7,12 +7,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 class
-	EV_MULTI_COLUMN_LIST_IMP
+	EV_MULTI_COLUMN_LIST_IMP 
 
 inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_PRIMITIVE_IMP
@@ -29,7 +30,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
-			interface
+			interface,
+			extend
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -220,13 +222,53 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_columns (i: INTEGER)is
-			-- Assign `i' to `columns'.
+	extend (v: like item)is
 		do
-			Check
-				to_be_implemented: False
+			if not first_addition then
+				first_addition := True
+				set_columns (v.columns)
 			end
+			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
+
+	first_addition: Boolean
+
+	set_columns (c: INTEGER)is
+			-- Assign `i' to `columns'.
+		local
+			par_imp: WEL_WINDOW
+			a_column: WEL_LIST_VIEW_COLUMN
+			i, a_x, a_y, a_width, a_height: INTEGER 
+		do
+			-- Once the columns have been set, they are fixed.
+			-- Therefore, we destroy the old WEL_LIST_VIEW,
+			-- and create another with the same information.
+
+		par_imp ?= parent_imp
+		a_x := x
+		a_y := y
+		a_width := width
+		a_height := height
+			-- Store parent, x, y, width, height
+		wel_destroy
+			-- Destroy the windows object.
+		wel_make (par_imp, a_x, a_y, a_width, a_height, 0)
+			-- Create a new windows object with information from
+			-- The previous.
+			from
+				i := 1
+			until
+				i = c + 1
+			loop
+				!! a_column.make
+				a_column.set_cx (80)
+				a_column.set_text ("")
+				append_column (a_column)
+				i := i + 1
+			end
+			-- Add columns to the list.
+		end
+
 
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `an_index' the list.
@@ -817,8 +859,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.39  2000/03/03 17:13:49  rogers
---| Added set_columns. Fixed use of wrong index within insert_item.
+--| Revision 1.40  2000/03/03 19:10:02  rogers
+--| Redefined extend from EV_ITEM_LIST_IMP, added a boolean, first_addition which holds whether the addition is the first addition after creation. Implemented set_columns.
 --|
 --| Revision 1.38  2000/03/03 00:54:20  brendel
 --| set_selected -> en/dis-able_select.

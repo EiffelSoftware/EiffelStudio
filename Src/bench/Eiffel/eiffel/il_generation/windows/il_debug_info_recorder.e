@@ -410,6 +410,30 @@ feature {IL_CODE_GENERATOR} -- line debug recording
 			ignoring_next_debug_info := True
 		end
 
+	record_ghost_debug_infos (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; 
+								a_il_line: INTEGER; a_eiffel_line: INTEGER; 
+								a_nb: INTEGER) is
+			-- Record potential IL offset stoppable without any IL generation
+			-- this is used for non generated debug clauses
+			-- for enabling estudio to show correct eiffel line.
+		local
+			i: INTEGER	
+			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE			
+		do
+			if is_debug_info_enabled then
+				l_info_from_class_type := info_from_class_type (a_class_type, True)
+				from
+					i := 1
+				until
+					i > a_nb
+				loop
+						--| 0 instead of `a_il_line'
+					l_info_from_class_type.record_add_line_info (a_feat, 0, a_eiffel_line + i)					
+					i := i + 1
+				end				
+			end			
+		end
+		
 	record_line_info (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_line: INTEGER; a_eiffel_line: INTEGER;) is
 			-- Record IL information regarding breakable line
 		require
@@ -1237,6 +1261,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 		do
 			create l_fn.make_from_string (a_project_path)
 			l_fn.set_file_name (a_info_module.module_name)
+				--| module_name : contains ".dll"
 			a_info_module.update_module_filename (module_key (l_fn))
 		end
 		
@@ -1251,7 +1276,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 		once
 			create Result.make_from_string (Workbench_generation_path)
 			Result.set_file_name (Il_info_name)
-			Result.add_extension (Il_info_extension)	
+			Result.add_extension (Il_info_extension)
 		end
 
 end -- class IL_DEBUG_INFO_RECORDER

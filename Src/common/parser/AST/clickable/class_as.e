@@ -233,7 +233,7 @@ feature -- formatting
 
 feature {CASE_CLASS_INFO} -- Case storage 
 
-	header_storage_info (classc: CLASS_C): S_CLASS_DATA is
+	header_storage_info (classc: CLASS_C): S_CLASS_DATA_R331 is
 			-- Header storage information for Current
 			-- (such as index and class name)
 		require
@@ -251,6 +251,7 @@ feature {CASE_CLASS_INFO} -- Case storage
 			name := class_name.string_value;
 			name.to_upper;
 			!! Result.make (name);
+			Result.set_reversed_engineered;
 			if indexes /= Void then
 				!! s_chart;
 				from

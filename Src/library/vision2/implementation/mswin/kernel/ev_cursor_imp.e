@@ -57,9 +57,9 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			c: CHARACTER
 		do
-			pix_imp ?= pix.implementation
-			list := pix_imp.character_representation
-			c := '%/255/'
+-- 			pix_imp ?= pix.implementation
+-- 			list := pix_imp.character_representation
+-- 			c := '%/255/'
 -- 			from
 -- 				i := 1
 -- 			until
@@ -68,18 +68,18 @@ feature {NONE} -- Initialization
 -- 				list.put (c, i)
 -- 				i := i + 1
 -- 			end
-
-			create mask.make (1, list.count)
-			from
-				i := 1
-			until
-				i = mask.count
-			loop
-				mask.put ('%U', i)
-				i := i + 1
-			end
-			-- Mask first, then pixmap
-			make_by_bitmask (0, 0, list, mask)
+-- 
+-- 			create mask.make (1, list.count)
+-- 			from
+-- 				i := 1
+-- 			until
+-- 				i = mask.count
+-- 			loop
+-- 				mask.put ('%U', i)
+-- 				i := i + 1
+-- 			end
+-- 			-- Mask first, then pixmap
+-- 			make_by_bitmask (0, 0, list, mask)
 		end
 
 feature -- Status report

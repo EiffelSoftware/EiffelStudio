@@ -1,15 +1,18 @@
--- Byte code for routine creation expression
+indexing
+	description: "Byte code for routine creation expression"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ROUTINE_CREATION_BL
 
 inherit
-
 	ROUTINE_CREATION_B
 		redefine
 			analyze, generate, 
 			register, set_register, free_register,
 			unanalyze
 		end
+
 	SHARED_C_LEVEL
 	SHARED_TABLE
 	SHARED_DECLARATIONS
@@ -32,11 +35,8 @@ feature
 			if arguments /= Void then
 				arguments.unanalyze
 			end
-			if open_map /= Void then
-				open_map.unanalyze
-			end
-			if closed_map /= Void then
-				closed_map.unanalyze
+			if open_positions /= Void then
+				open_positions.unanalyze
 			end
 			set_register (Void)
 		end
@@ -47,11 +47,8 @@ feature
 			if arguments /= Void then
 				arguments.analyze
 			end
-			if open_map /= Void then
-				open_map.analyze
-			end
-			if closed_map /= Void then
-				closed_map.analyze
+			if open_positions /= Void then
+				open_positions.analyze
 			end
 			get_register
 			context.add_dftype_current
@@ -64,11 +61,8 @@ feature
 			if arguments /= Void then
 				arguments.free_register
 			end
-			if open_map /= Void then
-				open_map.free_register
-			end
-			if closed_map /= Void then
-				closed_map.free_register
+			if open_positions /= Void then
+				open_positions.free_register
 			end
 		end
 
@@ -83,12 +77,8 @@ feature
 				arguments.generate
 			end
 
-			if open_map /= Void then
-				open_map.generate
-			end
-
-			if closed_map /= Void then
-				closed_map.generate
+			if open_positions /= Void then
+				open_positions.generate
 			end
 
 			buf := buffer
@@ -98,7 +88,7 @@ feature
 			generate_gen_type_conversion (gen_type)
 			print_register
 			buf.putstring (" = ")
-			buf.putstring ("RTLNR(typres, ")
+			buf.putstring ("RTLNR2(typres, ")
 			generate_routine_address
 			buf.putstring (", ")
 			generate_true_routine_address
@@ -108,21 +98,15 @@ feature
 				arguments.print_register
 				buf.putstring (", ")
 			else
-				buf.putstring ("(EIF_REFERENCE) 0, ")
+				buf.putstring ("NULL, ")
 			end
 
-			if open_map /= Void then
-				open_map.print_register
-				buf.putstring (", ")
+			if open_positions /= Void then
+				open_positions.print_register
 			else
-				buf.putstring ("(EIF_REFERENCE) 0, ")
+				buf.putstring ("NULL")
 			end
 
-			if closed_map /= Void then
-				closed_map.print_register
-			else
-				buf.putstring ("(EIF_REFERENCE) 0")
-			end
 			buf.putstring (");")
 			buf.new_line
 			generate_block_close

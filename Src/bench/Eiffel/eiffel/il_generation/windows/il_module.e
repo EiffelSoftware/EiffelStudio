@@ -388,20 +388,11 @@ feature -- Settings: signature
 			else
 				l_gen_type ?= a_type
 				if l_gen_type /= Void then
-					if a_type.is_out then
-						a_sig.set_byref_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					else
-						a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					end
+					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
 				else
-					if a_type.is_out then
-						a_sig.set_byref_type (a_type.element_type,
-							class_type_token (a_type.static_type_id))
-					else
-						a_sig.set_type (a_type.element_type,
-							class_type_token (a_type.static_type_id))
-					end
+					a_sig.set_type (a_type.element_type,
+						class_type_token (a_type.static_type_id))
 				end
 			end
 		end

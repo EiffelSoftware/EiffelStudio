@@ -283,6 +283,7 @@ feature {NONE} -- Implementation
  			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			tmp_string, local_variable: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			is_interface_pointer: BOOLEAN
 		do
 			create Result.make (10000)			
 			Result.append (Tab_tab_tab)
@@ -338,6 +339,13 @@ feature {NONE} -- Implementation
 							visitor.is_structure_pointer or
 							visitor.is_structure 
 						then
+							if visitor.is_interface_pointer then
+								Result.append (check_interface_item (arguments.item.name))
+								if not is_interface_pointer then
+									feature_writer.add_local_variable ("a_stub: ECOM_STUB")
+									is_interface_pointer := True
+								end
+							end
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)
 						elseif is_paramflag_fin (arguments.item.flags) and
@@ -367,6 +375,42 @@ feature {NONE} -- Implementation
 			end
 
 			Result.append (tmp_string)
+		ensure
+			non_void_body: Result /= Void
+			valid_body: not Result.empty
+		end
+
+	check_interface_item (an_argument_name: STRING): STRING is
+			-- Check item of interface with `an_argument_name'.
+		require
+			non_void_name: an_argument_name /= Void
+			valid_name: not an_argument_name.empty
+		do
+			create Result.make (200)
+			Result.append ("if (")
+			Result.append (an_argument_name)
+			Result.append (".item = default_pointer) then")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab)
+
+			Result.append ("a_stub ?= ")
+			Result.append (an_argument_name)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab)
+
+			Result.append ("if a_stub /= Void then")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab_tab)
+
+			Result.append ("a_stub.create_item")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab)
+
+			Result.append (End_keyword)
+			Result.append (New_line_tab_tab_tab)
+
+			Result.append (End_keyword)
+			Result.append (New_line_tab_tab_tab)
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.empty

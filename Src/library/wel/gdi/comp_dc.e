@@ -8,6 +8,9 @@ indexing
 class
 	WEL_COMPATIBLE_DC
 
+obsolete
+	"use WEL_MEMORY_DC"
+
 inherit
 	WEL_DC
 

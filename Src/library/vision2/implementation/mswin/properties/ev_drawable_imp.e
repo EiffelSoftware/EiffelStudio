@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: "EiffelVision drawable. Mswindows implementation."
 	status: "See notice at end of class"
@@ -757,6 +756,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/19 06:22:06  oconnor
+--| released
+--|
 --| Revision 1.17  2000/02/16 18:06:57  pichery
 --| Cosmetics: renammed feature `clear_rect' into `clear_rectangle'.
 --|

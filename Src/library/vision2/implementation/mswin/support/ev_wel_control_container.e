@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -176,6 +175,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/19 06:19:24  oconnor
+--| released
+--|
 --| Revision 1.13  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -29,9 +29,8 @@ feature {NONE} -- Initialization
 			tool.build_interface
 
 			initialize_main_menu
-
-				-- a tester
 			add_close_command (tool.close_cmd, Void)
+			tool.update
 
 		ensure then
 			created: not destroyed
@@ -46,8 +45,8 @@ feature {NONE} -- Initialization
 			tool.build_interface
 
 			initialize_main_menu
-
 			add_close_command (tool.close_cmd, Void)
+			tool.update
 
 		ensure then
 			created: not destroyed

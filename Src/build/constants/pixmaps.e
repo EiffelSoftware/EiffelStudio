@@ -27,6 +27,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("behavior.symb")
 		end;
 
+	Behavior_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("beh_dot.symb")
+		end;
+
 	Behavior_format_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("beh_format.symb")
@@ -40,6 +45,11 @@ feature -- General Pixmaps
  	Bg_color_stone_pixmap: PIXMAP is
  		once
  			Result := symbol_file_content ("bg_color_st.symb")
+		end;
+
+ 	Bg_pixmap_stone_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("bg_pixmap.symb")
 		end;
 
 	Bricks_pixmap: PIXMAP is
@@ -107,6 +117,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("instance.symb")
 		end;
 
+	Command_instance_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("inst_dot.symb")
+		end;
+
 	Command_page_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("cmd_page.symb")
@@ -120,6 +135,11 @@ feature -- General Pixmaps
 	Command_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("command.symb")
+		end;
+
+	Command_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("cmd_dot.symb")
 		end;
 
 	Containers_pixmap: PIXMAP is
@@ -187,9 +207,14 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("event.symb")
 		end;
 
-	Exit_pixmap: PIXMAP is
+	Event_dot_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("exit.symb")
+			Result := symbol_file_content ("event_dot.symb")
+		end;
+
+	Exit_label_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("exit_label.symb")
 		end;
 
 	Expand_parent_pixmap: PIXMAP is
@@ -300,6 +325,21 @@ feature -- General Pixmaps
 	Parent_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("parent.symb")
+		end;
+
+	Popup_filename_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("pop_fn.symb")
+		end;
+
+	Popup_instances_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("pop_insts.symb")
+		end;
+
+	Popup_context_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("pop_context.symb")
 		end;
 
 	Predef_command_pixmap: PIXMAP is
@@ -497,6 +537,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("state.symb")
 		end;
 
+	State_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("state_dot.symb")
+		end;
+
 	State_d_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("state.icon")
@@ -572,6 +617,11 @@ feature -- Context Pixmaps
 	Context_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("context.symb")
+		end;
+
+	Context_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("cont_dot.symb")
 		end;
 
 	Dialog_shell_pixmap: PIXMAP is

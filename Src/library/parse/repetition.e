@@ -196,19 +196,19 @@ feature {NONE} -- Implementation
 			-- optional are between square brackets.
 		do
 			print_name;
-			io.putstring (" :	");
+			io.put_string (" :	");
 			child_start;
 			if child.is_optional then
-				io.putchar ('[')
+				io.put_character ('[')
 			end;
 			child.print_name;
 			if child.is_optional then
-				io.putchar (']')
+				io.put_character (']')
 			end;
-			io.putstring (" ..");
+			io.put_string (" ..");
 			child_forth;
 			if has_separator then
-				io.putstring (" ");
+				io.put_string (" ");
 				print_keyword
 			end;
 			io.new_line
@@ -217,9 +217,9 @@ feature {NONE} -- Implementation
 	print_keyword is
 			-- Print separator string.
 		do
-			io.putchar ('"');
-			io.putstring (document.keyword_string (separator_code));
-			io.putstring ("%" ")
+			io.put_character ('"');
+			io.put_string (document.keyword_string (separator_code));
+			io.put_string ("%" ")
 		end 
 
 end -- class REPETITION

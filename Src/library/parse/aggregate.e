@@ -173,12 +173,12 @@ feature {NONE} -- Implementation
 			from
 				child_start;
 				print_name;
-				io.putstring (" :    ")
+				io.put_string (" :    ")
 			until
 				no_components or child_after
 			loop
 				print_child;
-				io.putstring (" ");
+				io.put_string (" ");
 				child_forth
 			end;
 			io.new_line
@@ -189,11 +189,11 @@ feature {NONE} -- Implementation
 			-- with square brackets if optional.
 		do
 			if child.is_optional then
-				io.putchar ('[')
+				io.put_character ('[')
 			end;
 			child.print_name;
 			if child.is_optional then
-				io.putchar (']')
+				io.put_character (']')
 			end
 		end
 

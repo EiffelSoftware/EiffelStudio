@@ -76,7 +76,7 @@ feature -- Output
 		do
 				io.new_line;
 				io.new_line;
-				io.putstring ("--------------- LEXICAL ANALYSIS: ----");
+				io.put_string ("--------------- LEXICAL ANALYSIS: ----");
 				io.new_line;
 				io.new_line
 		end;
@@ -94,16 +94,16 @@ feature -- Output
 		do
 			type := read_token.type;
 			if read_token.keyword_code /= -1 then
-				io.putstring ("Keyword:  ");
-				io.putstring (read_token.string_value);
-				io.putstring ("Code: ");
-				io.putint (read_token.keyword_code);
+				io.put_string ("Keyword:  ");
+				io.put_string (read_token.string_value);
+				io.put_string ("Code: ");
+				io.put_integer (read_token.keyword_code);
 				io.new_line
 			elseif type /= 0 then
-				io.putstring ("Token type ");
-				io.putint (read_token.type);
-				io.putstring (": ");
-				io.putstring (read_token.string_value);
+				io.put_string ("Token type ");
+				io.put_integer (read_token.type);
+				io.put_string (": ");
+				io.put_string (read_token.string_value);
 				io.new_line
 			end
 		end 

@@ -210,10 +210,10 @@ feature
 			socket_exists: exists
 			opened_for_write: is_open_write
 		do
-			putchar ('%N')
+			put_character ('%N')
 		end
 
-	putstring (s: STRING) is
+	put_string, putstring (s: STRING) is
 			-- Write `s' to medium
 		require else
 			socket_exists: exists
@@ -225,7 +225,7 @@ feature
 			c_put_string (descriptor, $ext)
 		end
 
-	putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER) is
 			-- Write `c' to medium
 		require else
 			socket_exists: exists
@@ -234,7 +234,7 @@ feature
 			c_put_char (descriptor, c)
 		end
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write ASCII value of `r' to medium
 		require else
 			socket_exists: exists
@@ -243,7 +243,7 @@ feature
 			c_put_float (descriptor, r)
 		end
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write ASCII value of `i' to medium.
 		require else
 			socket_exists: exists
@@ -252,20 +252,20 @@ feature
 			c_put_int (descriptor, i)
 		end
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' to medium.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
 		do
 			if b then
-				putstring ("True")
+				put_string ("True")
 			else
-				putstring ("FALSE")
+				put_string ("False")
 			end
 		end
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write ASCII value of `d' to medium.
 		require else
 			socket_exists: exists
@@ -394,49 +394,49 @@ feature
 
 feature -- Input
 
-	readreal is
+	read_real, readreal is
 			-- Read a new real.
-			-- Make result available in `lastreal'.
+			-- Make result available in `last_real'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			lastreal := c_read_float (descriptor)
+			last_real := c_read_float (descriptor)
 		end
 
-	readdouble is
+	read_double, readdouble is
 			-- Read a new double.
-			-- Make result available in `lastdouble'.
+			-- Make result available in `last_double'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			lastdouble := c_read_double (descriptor)
+			last_double := c_read_double (descriptor)
 		end
 
-	readchar is
+	read_character, readchar is
 			-- Read a new character.
-			-- Make result available in `lastchar'.
+			-- Make result available in `last_character'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			lastchar := c_read_char (descriptor)
+			last_character := c_read_char (descriptor)
 		end
 
-	readint is
+	read_integer, readint is
 			-- Read a new integer.
-			-- Make result available in `lastint'.
+			-- Make result available in `last_integer'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			lastint := c_read_int (descriptor)
+			last_integer := c_read_int (descriptor)
 		end
 
-	readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most  `nb_char'  characters
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
@@ -444,30 +444,30 @@ feature -- Input
 			ext: ANY
 			return_val: INTEGER
 		do
-			if laststring = Void or else laststring.capacity <= nb_char then
-				!!laststring.make (nb_char + 1)
+			if last_string = Void or else last_string.capacity <= nb_char then
+				!!last_string.make (nb_char + 1)
 			end
-			ext := laststring.to_c
+			ext := last_string.to_c
 			return_val := c_read_stream (descriptor, nb_char, $ext)
-			laststring.set_count (return_val)
+			last_string.set_count (return_val)
 		end
 
-	readline is
-			-- read a line of characters until a new line
+	read_line, readline is
+			-- Read a line of characters until a new line.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			if laststring = Void then
-				!!laststring.make (512)
+			if last_string = Void then
+				!!last_string.make (512)
 			end
-			readchar
+			read_character
 			from
 			until
-				lastchar = '%N'
+				last_character = '%N'
 			loop
-				laststring.extend (lastchar)
-				readchar
+				last_string.extend (last_character)
+				read_character
 			end
 		end
 

@@ -117,15 +117,15 @@ feature -- Output
 			i: INTEGER;
 		do
 			io.set_error_default;
-			io.putstring (" FIXED_INTEGER_SET: ");
+			io.put_string (" FIXED_INTEGER_SET: ");
 			from
 				i := 1
 			until
 				i > count
 			loop
 				if has (i) then
-					io.putint (i);
-					io.putstring (" ");
+					io.put_integer (i);
+					io.put_string (" ");
 				end;
 				i := i +1
 			end;

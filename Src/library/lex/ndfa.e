@@ -235,11 +235,11 @@ feature {NONE} -- Implementation
 				index > last_index
 			loop
 				debug
-					io.putstring ("Arity: ")
-					io.putint (current_tree.arity)
+					io.put_string ("Arity: ")
+					io.put_integer (current_tree.arity)
 					io.new_line
-					io.putstring ("Index: ")
-					io.putint (index)
+					io.put_string ("Index: ")
+					io.put_integer (index)
 					io.new_line
 				end
 				current_tree.child_go_i_th (index);

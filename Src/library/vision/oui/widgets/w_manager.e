@@ -334,13 +334,13 @@ feature -- Widget
 					until
 						j = 0
 					loop
-						a_file.putchar (b_routines.charconv (Tabulation));
+						a_file.put_character (b_routines.charconv (Tabulation));
 						j := j-1
 					end;
 					if (i_th (i).identifier = Void) then
-						a_file.putstring ("???")
+						a_file.put_string ("???")
 					else
-						a_file.putstring (i_th (i).identifier)
+						a_file.put_string (i_th (i).identifier)
 					end;
 					a_file.new_line
 				end;

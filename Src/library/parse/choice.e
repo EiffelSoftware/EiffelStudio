@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			-- Print children separated with a bar.
 		do
 			print_name;
-			io.putstring (" :    ");
+			io.put_string (" :    ");
 			from
 				child_start
 			until
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 				child.print_name;
 				child_forth;
 				if not child_after then
-					io.putstring (" | ")
+					io.put_string (" | ")
 				end
 			end;
 			io.new_line

@@ -55,7 +55,7 @@ feature -- Element change
 			if (before or empty) or else not message.is_equal (item) then
 				put_right (message);
 				if display then
-					output.putstring (message);
+					output.put_string (message);
 					output.new_line
 				end
 			end

@@ -1,6 +1,7 @@
 indexing
 	description: "Error occurred during storage or data retrieval"
 	external_name: "ISE.Reflection.ErrorInfo"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 	
 class
 	ERROR_INFO

@@ -1,6 +1,7 @@
 indexing
 	description: "Generate XML files describing types from emitter information"
 	external_name: "ISE.Reflection.XmlCodeGenerator"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class 
 	XML_CODE_GENERATOR
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 			
 feature -- Basic Operations
 	
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
 			-- Start assembly generation: create folder and assembly description file and set write lock.
 			-- | Call `StoreAssembly' on `cache_handler'.
 		indexing

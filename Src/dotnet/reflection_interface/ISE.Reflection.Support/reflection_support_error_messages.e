@@ -1,6 +1,7 @@
 indexing
 	description: "Error messages for support"
 	external_name: "ISE.Reflection.ReflectionSupportErrorMessages"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	REFLECTION_SUPPORT_ERROR_MESSAGES

@@ -1,6 +1,7 @@
 indexing
 	description: "Error messages for code generation support"
 	external_name: "ISE.Reflection.CodeGenerationSupportErrorMessages"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	CODE_GENERATION_SUPPORT_ERROR_MESSAGES

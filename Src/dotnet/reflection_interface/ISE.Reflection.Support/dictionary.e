@@ -1,6 +1,7 @@
 indexing
 	description: "Useful strings"
 	external_name: "ISE.Reflection.Dictionary"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	DICTIONARY

@@ -254,7 +254,7 @@ feature -- Conversion
 			Result := item.to_integer_16
 		end
 
-	to_integer: INTEGER is
+	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		require
 			not_too_small: item >= -2147483648

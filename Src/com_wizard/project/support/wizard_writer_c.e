@@ -99,12 +99,6 @@ feature -- Basic operations
 			add_import (Eif_eiffel_h)
 		end
 
-	conversion_include is
-			-- Standart include files.
-		do
-			add_import (Ecom_generated_rt_globals_header_file_name)
-		end
-
 	header_protector (a_header_file_name: STRING): STRING is
 			-- Protect multiple inclusion of same header file.
 		require

@@ -734,7 +734,81 @@ feature -- changing a specified breakpoint
 			end
 		end
 
+	set_condition (f: E_FEATURE; i: INTEGER; expr: EB_EXPRESSION) is
+			-- Make the breakpoint located at (`f',`i') conditional with condition `expr'.
+			-- Create an enabled breakpoint if is doesn't already exist.
+		require
+			valid_f: f /= Void and then f.is_debuggable
+			valid_i: i > 0 and i <= f.number_of_breakpoint_slots
+			valid_expr: expr /= Void and then not expr.syntax_error
+			good_semantics: expr.is_condition (f)
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real one in hash table
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so set its condition.
+					breakpoints.found_item.set_condition (expr)
+				else
+						-- No, create it and set its condition.
+					breakpoints.add_breakpoint (bp)
+					bp.set_condition (expr)
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	remove_condition (f: E_FEATURE; i: INTEGER) is
+			-- Make the breakpoint located at (`f',`i') unconditional.
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real one in hash table
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so remove its condition.
+					breakpoints.found_item.remove_condition
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
 feature -- getting the status of a specified breakpoint
+
+	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
+			-- Does breakpoint located at (`f', `i') have a condition?
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real one in hash table
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so remove its condition.
+					Result := breakpoints.found_item.condition
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
 
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' set? (enabled or disabled)

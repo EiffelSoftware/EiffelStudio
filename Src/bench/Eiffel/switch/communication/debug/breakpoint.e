@@ -69,6 +69,9 @@ feature -- Properties
 			-- See the private constants at the end of the class to see the 
 			-- different possible values taken.
 
+	condition: EB_EXPRESSION
+			-- Condition to stop.
+
 feature -- Access
 
 	hash_code: INTEGER is
@@ -121,6 +124,12 @@ feature -- Access
 			-- Is the breakpoint set and enabled?
 		do
 			Result := (bench_status = Bench_breakpoint_set)
+		end
+	
+	has_condition: BOOLEAN is
+			-- Is `Current' a conditional breakpoint?
+		do
+			Result := condition /= Void
 		end
 	
 	trace is
@@ -256,6 +265,9 @@ feature -- Setting
 							-- we update it as well in case of)
 						real_body_id := routine.real_body_id -- update the real_body_id as well
 						body_index := routine.body_index -- update the body_index as well
+						if condition /= Void and then not condition.is_condition (routine) then
+							condition := Void
+						end
 					else
 							-- set the breakpoint to be removed: the line does no longer exist
 						discard
@@ -279,6 +291,20 @@ feature -- Setting
 				-- We declare the breakpoint as "invalid".
 			invalid_breakpoint := True
 			retry			
+		end
+
+	set_condition (expr: EB_EXPRESSION) is
+			-- Set `Current's condition.
+		require
+			valid_expression: expr /= Void and then not expr.syntax_error and then expr.is_condition (routine)
+		do
+			condition := expr
+		end
+
+	remove_condition is
+			-- Remove any condition on `Current'.
+		do
+			condition := Void
 		end
 
 feature {EWB_REQUEST} -- application status access

@@ -97,8 +97,8 @@ end;
 			end
 		end;
 
-	e_classes: LINKED_LIST [E_CLASS] is
-			-- List of `E_CLASS'es
+	e_classes: LINKED_LIST [CLASS_C] is
+			-- List of `CLASS_C'es
 		do
 			from
 				!! Result.make

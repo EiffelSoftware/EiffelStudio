@@ -91,7 +91,7 @@ feature
 			i: INTEGER;
 			no_cycle: BOOLEAN;
 			name_list: LINKED_LIST [CLASS_ID];
-			a_class: E_CLASS;
+			a_class: CLASS_C;
 			vhpr1: VHPR1;
 		do
 			from
@@ -128,7 +128,7 @@ feature
 			-- class ids
 		local
 			i: INTEGER;
-			cl: E_CLASS;
+			cl: CLASS_C;
 		do
 			from
 				i := 1

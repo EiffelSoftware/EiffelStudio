@@ -221,7 +221,7 @@ rt_private char *ex_tag[] = {
 	"Assertion violated.",				/* EN_CHECK */
 	"Routine failure.",					/* EN_FAIL */
 	"Unmatched inspect value.",			/* EN_WHEN */
-	"Non-decreasing loop variant.",		/* EN_VAR */
+	"Non-decreasing loop variant or negative value reached.",		/* EN_VAR */
 	"Loop invariant violated.",			/* EN_LINV */
 	"Operating system signal.",			/* EN_SIG */
 	"Eiffel run-time panic.",			/* EN_BYE */

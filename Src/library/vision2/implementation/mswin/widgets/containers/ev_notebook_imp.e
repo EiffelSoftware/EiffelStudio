@@ -84,7 +84,6 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_draw_item,
-			on_menu_command,
 			on_accelerator_command,
 			on_color_control,
 			on_wm_vscroll,
@@ -1121,6 +1120,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/02/23 02:23:56  brendel
+--| Removed on_menu_command from inh. clause.
+--|
 --| Revision 1.45  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

@@ -1,0 +1,59 @@
+system
+	es3sh
+
+root
+
+	es3sh (es3sh): "make"
+
+default
+
+--	debug ("problem");	-- leave this on for specific problem troubleshooting
+--	debug ("progress");	-- were are we in the execution
+--	debug ("subst");	-- the substitutions
+--	debug ("implementation");	-- implementation debugging
+--	debug ("input");	-- are lines from Makefile.SH read in correctly
+--	debug ("output");	-- are lines put out to Makefile correctly
+--	debug ("translate_case");
+--	debug ("translate_echo");
+--	debug ("translate_spit");
+--	debug ("translate_translate");
+--	debug ("translate_externals");
+	debug ("translate_application");
+--	debug ("translate_dependencies");
+--	debug ("translate_line_subst");
+--	debug ("translate_line_change");
+	debug ("translate_appl");
+--	debug ("translate_cecil");
+
+	assertion (all);
+
+--	precompiled ("$EIFFEL3\precomp\spec\$PLATFORM\base")
+
+cluster
+
+	es3sh:			"main";
+				
+	resources:		"resources";
+	
+	-- Windows status box
+	statusbox:		"spec\windows";
+
+	-- Standard resources
+
+	-- EiffelBase
+	kernel: 			"$EIFFEL3\library\base\kernel";
+	support:			"$EIFFEL3\library\base\support";
+	access: 			"$EIFFEL3\library\base\structures\access";
+	cursors:			"$EIFFEL3\library\base\structures\cursors";
+	cursor_trees:		"$EIFFEL3\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL3\library\base\structures\dispenser";
+	iteration:		"$EIFFEL3\library\base\structures\iteration";
+	list:			"$EIFFEL3\library\base\structures\list";
+	set:				"$EIFFEL3\library\base\structures\set";
+	sort:			"$EIFFEL3\library\base\structures\sort";
+	storage:			"$EIFFEL3\library\base\structures\storage";
+	table:			"$EIFFEL3\library\base\structures\table";
+	traversing:		"$EIFFEL3\library\base\structures\traversing";
+	tree:			"$EIFFEL3\library\base\structures\tree";
+
+end

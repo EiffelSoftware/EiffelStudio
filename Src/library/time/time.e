@@ -9,12 +9,14 @@ class
 	TIME
 
 inherit
+
 	ABSOLUTE
 		undefine
 			out
 		redefine
 			infix "<"
 		end;
+
 	TIME_VALUE
 		undefine
 			is_equal
@@ -52,7 +54,8 @@ feature -- Initialization
 		end;
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
-			-- Set `hour, `minute' and `second' to `h', `m' and truncated to integer part of `s' respectively.
+			-- Set `hour, `minute' and `second' to `h', `m' and truncated to 
+			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
 		require
 			h_large_enough: h >= 0;
@@ -120,8 +123,8 @@ feature -- Initialization
 		end;
 
 	make_from_string_default (s: STRING) is
-			-- Initialise from a "standard" string of form
-			-- `default_format_string'
+			-- Initialize from a "standard" string of form
+			-- `default_format_string'.
 		require
 			s_exists: s /= Void;
 			time_valid: time_valid_default (s)
@@ -130,8 +133,8 @@ feature -- Initialization
 		end
 
 	make_from_string (s: STRING; code: STRING) is
-			-- Initialise from a "standard" string of form
-			-- `code'
+			-- Initialize from a "standard" string of form
+			-- `code'.
 		require
 			s_exists: s /= Void;
 			c_exists: code /= Void

@@ -134,8 +134,8 @@ feature -- Initialization
 		end
 
 	make_from_string_default (s: STRING) is
-			-- Initialise from a "standard" string of form
-			-- `default_format_string'
+			-- Initialize from a "standard" string of form
+			-- `default_format_string'.
 		require
 			s_exists: s /= Void;
 			date_time_valid: date_time_valid (s, default_format_string)
@@ -144,8 +144,8 @@ feature -- Initialization
 		end
 
 	make_from_string (s: STRING; code: STRING) is
-			-- Initialise from a "standard" string of form
-			-- `code'
+			-- Initialize from a "standard" string of form
+			-- `code'.
 		require
 			s_exists: s /= Void;
 			c_exists: code /= Void

@@ -73,7 +73,14 @@ feature -- Element change
 		ensure then
 			message_is_equal_to_s: message.is_equal (s)
 		end
+feature -- Update display
 
+	update_display is
+			-- No implementation on windows, because
+			-- display is updated automatically
+		do
+		end
+		
 feature {NONE} -- implementation
 
 	message: STRING

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			number_of_classes := Eiffel_system.number_of_classes;
 			number_of_melted_classes := System.freeze_set1.count;
-			number_of_compilations := Workbench.compilation_counter;
+			number_of_compilations := Workbench.compilation_counter - 1;
 			number_of_clusters := Eiffel_universe.clusters.count;
 		end;
 

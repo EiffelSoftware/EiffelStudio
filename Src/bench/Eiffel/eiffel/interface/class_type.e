@@ -26,7 +26,8 @@ inherit
 		rename
 			Descriptor_suffix as Static_suffix
 		end;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	COMPILER_EXPORTER
 
 creation
 

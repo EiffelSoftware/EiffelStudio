@@ -23,7 +23,7 @@ inherit
 	
 feature -- Initialization
 
-	create_pixmap_place is
+	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
 			-- prepare the place for the pixmap in the `box'.
 			-- For that, we add a pixmap with a default gdk pixmap
 			-- in the `box'.
@@ -34,7 +34,9 @@ feature -- Initialization
 			pixmap_imp: EV_PIXMAP_IMP
 		do
 			-- create the pixmap with a default xpm.
-			pixmap_widget := c_gtk_pixmap_create_empty (box)
+			-- We use the pixmap's `create_window' to create the new pixmap
+			-- as we need a GdkWindow.
+			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
 
 			-- Set the pixmap in the `box'.
 			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, False, False, 0)
@@ -70,7 +72,7 @@ feature {EV_CONTAINER} -- Element change
 			if (pixmap = Void) then
 				-- No pixmap in the `box', so create the place
 				-- for it.
-				create_pixmap_place
+				create_pixmap_place (pixmap_imp)
 			end
 
 			-- We replace the former gdk_pixmap of the gtk_pixmap (in pixmap_widget)

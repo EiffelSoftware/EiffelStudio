@@ -509,15 +509,13 @@ EIF_OBJ object;
 		/* Special object */
 		sprintf(buffer, "%s", "SPECIAL");
 		twrite (buffer, strlen(buffer));
-		sprintf(buffer, "0x%lX", eif_access(object));
-		twrite (buffer, strlen(buffer));
 		/* Send items recursively */
 		rec_sinspect(eif_access(object));
 	} else {
 		/* Send instance class name and object id */
 		sprintf(buffer, "%s", System(flags & EO_TYPE).cn_generator);
 		twrite (buffer, strlen(buffer));
-		sprintf(buffer, "0x%lX", eif_access(object));
+		sprintf(buffer, "%ld", (flags & EO_TYPE));
 		twrite (buffer, strlen(buffer));
 		/* Inspect recursively `object' */
 		rec_inspect(eif_access(object));
@@ -634,7 +632,7 @@ register1 char *object;
 			/* Expanded attribute */
 			sprintf(buffer, "expanded");
 			twrite (buffer, strlen(buffer));
-			sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
+			sprintf(buffer, "%ld", Dtype(o_ref));
 			twrite (buffer, strlen(buffer));
 			rec_inspect((char *)o_ref);
 			break;
@@ -656,13 +654,17 @@ register1 char *object;
 					twrite (buffer, strlen(buffer));
 					rec_sinspect (reference);
 				} else {
-					sprintf(buffer, "%s",System(Dtype(reference)).cn_generator);
+					sprintf(buffer, "reference");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%ld", Dtype(reference));
 					twrite (buffer, strlen(buffer));
 					sprintf(buffer, "0x%lX", reference);
 					twrite (buffer, strlen(buffer));
 				}
 			} else {
-				sprintf(buffer, "%s", System(type & SK_DTYPE).cn_generator);
+				sprintf(buffer, "reference");
+				twrite (buffer, strlen(buffer));
+				sprintf(buffer, "%ld", (type & SK_DTYPE));
 				twrite (buffer, strlen(buffer));
 				sprintf(buffer, "Void");
 				twrite (buffer, strlen(buffer));
@@ -729,7 +731,7 @@ register1 char *object;
 					twrite (buffer, strlen(buffer));
 					sprintf(buffer, "expanded");
 					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
+					sprintf(buffer, "%ld", Dtype(o_ref));
 					twrite (buffer, strlen(buffer));
 					rec_inspect(o_ref);
 				}
@@ -796,7 +798,9 @@ register1 char *object;
 					sprintf(buffer, "0x%lX", reference);
 					twrite (buffer, strlen(buffer));
 				} else {
-					sprintf(buffer, "%s", System(Dtype(reference)).cn_generator);
+					sprintf(buffer, "reference");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%ld", Dtype(reference));
 					twrite (buffer, strlen(buffer));
 					sprintf(buffer, "0x%lX", reference);
 					twrite (buffer, strlen(buffer));

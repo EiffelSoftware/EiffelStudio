@@ -55,24 +55,18 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_lace (a_file_name: STRING) is
+	parse_lace (a_file: FILE) is
 			-- Parse Lace class text from `a_file_name'.
 			-- Make result available in `ast'.
 			-- An exception is raised if a syntax error is found.
-		local
-			l_file: EXTEND_FILE
 		do
 			ast := Void
-			create l_file.make (a_file_name)
-			if not l_file.open_read_error then
-				File_buffer.set_file (l_file)
-				input_buffer := File_buffer
-				yy_load_input_buffer
-				filename := a_file_name
-				yyparse
-				reset
-				l_file.close
-			end
+			File_buffer.set_file (a_file)
+			input_buffer := File_buffer
+			yy_load_input_buffer
+			filename := a_file.name
+			yyparse
+			reset
 		rescue
 			reset
 		end

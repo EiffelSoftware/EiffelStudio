@@ -723,6 +723,7 @@ feature -- Third pass: byte code production and type check
 			melted_info: FEAT_MELTED_INFO
 			melt_set: like melted_set
 			type_check_error: BOOLEAN
+			check_local_names_needed: BOOLEAN
 			byte_code_generated, has_default_rescue: BOOLEAN
 			body_id: BODY_ID
 			feat_dep: FEATURE_DEPENDANCE
@@ -965,7 +966,7 @@ end
 							-- and feature names
 -- FIX ME
 -- ONLY needed when new features are inserted in the feature table
-							feature_i.check_local_names
+							check_local_names_needed := True
 						end
 					else
 							-- in_pass3 = False
@@ -996,6 +997,12 @@ end
 						ast_context.set_a_feature (feature_i)
 
 						feature_i.type_check
+						check_local_names_needed := False
+						ast_context.clear2
+					end
+					if check_local_names_needed then
+						ast_context.set_a_feature (feature_i)
+						feature_i.check_local_names
 						ast_context.clear2
 					end
 

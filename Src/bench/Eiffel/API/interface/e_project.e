@@ -437,6 +437,7 @@ feature -- Status setting
 			valid_args: t_path /= Void 
 		do
 			if not t_path.is_equal (tmp_directory) then
+				tmp_directory.wipe_out
 				tmp_directory.make_from_string (interpreted_string (t_path))
 			end
 		end;

@@ -44,11 +44,11 @@ feature -- Access
 			exists: exists
 		local
 			dir_name: DIRECTORY_NAME
-			eif_gen_d: DIRECTORY;
+			eif_gen_d: DIRECTORY
 		do
-			!! dir_name.make_from_string (name);
-			dir_name.extend (Eiffelgen);
-			!! eif_gen_d.make (dir_name);
+			!! dir_name.make_from_string (name)
+			dir_name.extend (Eiffelgen)
+			!! eif_gen_d.make (dir_name)
 			Result := not eif_gen_d.exists
 			if not Result then
 					-- A `EIFGEN' directory exists, we need to check

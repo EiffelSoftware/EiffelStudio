@@ -275,10 +275,10 @@ feature -- Generation
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putstring ("extern ")
+			buffer.put_string ("extern ")
 			type.generate (buffer)
-			buffer.putstring (compound_name)
-			buffer.putstring ("();%N")
+			buffer.put_string (compound_name)
+			buffer.put_string ("();%N")
 		end
 
 	generate (buffer: GENERATION_BUFFER) is
@@ -286,27 +286,27 @@ feature -- Generation
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putstring ("(fnptr) ")
-			buffer.putstring (compound_name)
-			buffer.putstring (",%N")
+			buffer.put_string ("(fnptr) ")
+			buffer.put_string (compound_name)
+			buffer.put_string (",%N")
 		end
 
 feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (generator)
-			io.error.putstring ("%NBody_index: ")
-			io.error.putint (body_index)
-			io.error.putstring ("%NIndex: ")
-			io.error.putint (real_body_index)
-			io.error.putstring ("%NPattern id: ")
-			io.error.putint (pattern_id)
-			io.error.putstring ("%Nwritten_in: ")
-			io.error.putint (written_in)
-			io.error.putstring ("%NType: ")
+			io.error.put_string (generator)
+			io.error.put_string ("%NBody_index: ")
+			io.error.put_integer (body_index)
+			io.error.put_string ("%NIndex: ")
+			io.error.put_integer (real_body_index)
+			io.error.put_string ("%NPattern id: ")
+			io.error.put_integer (pattern_id)
+			io.error.put_string ("%Nwritten_in: ")
+			io.error.put_integer (written_in)
+			io.error.put_string ("%NType: ")
 			type.trace
-			io.error.new_line
+			io.error.put_new_line
 		end
 
 feature {NONE} -- Implementation

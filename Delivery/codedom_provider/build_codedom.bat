@@ -40,6 +40,7 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\e
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\nmap\EIFGEN\F_code\nmap.exe bin\
+COPY ..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll bin\
 
 CD bin
 REM in delivery\codedom\bin

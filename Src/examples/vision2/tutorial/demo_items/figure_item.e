@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
+
+
 feature -- Access
 
 	demo_window: FIGURE_WINDOW
@@ -32,8 +34,11 @@ feature -- Access
 			-- Current figure associated tothe item.
 		deferred
 		end
+		
 
 feature {DEMO_ITEM} -- Execution commands
+
+
 
 	activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- When we select the item, we launch the
@@ -54,6 +59,10 @@ feature {DEMO_ITEM} -- Execution commands
 					demo_window.set_parent (demo_page)
 				end
 				current_demo.put (demo_window)
+				example_page.set_text(clone(read_text(example_path)))
+				class_page.set_text(clone(read_text(class_path)))
+				set_docs_path("documentation/figure_documentation.txt")
+				text_page.set_text(clone(read_text(docs_path)))	
 			end
 			demo_window.set_figure (figure)
 		end

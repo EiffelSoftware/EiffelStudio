@@ -54,6 +54,14 @@ iff not defined NO_INSTALL then
 		CANCEL
 	endiff
 endiff	
+iff not exist %ISE_EIFFEL\wizards\com\com_wizard_cmd.exe then
+	echo Cannot find a version of EiffelCom wizard.
+	CANCEL
+endiff
+iff "%@SEARCH[upx.exe]" == "" then
+	echo Cannot find a version of upx packager. Cannot continue
+	CANCEL
+endiff
 iff not defined INSTALL_LOG then
 	echo Error: No file specified for the log
 	CANCEL

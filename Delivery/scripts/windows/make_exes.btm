@@ -4,6 +4,7 @@ cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
 exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
+exprt -r %DEFAULT_CVS_TAG -d com_compiler "Src/bench/com_compiler"
 
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
@@ -138,6 +139,7 @@ copy %EIFFEL_SRC\C\run-time\LIB\finalized.lib .
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library
 fullrd .libs
+
 remtrace expat
 cd %EIFFEL_SRC\C_library\expat
 safe_md %EIFFEL_SRC\C_library\expat\lib
@@ -174,6 +176,10 @@ remtrace CLI writer
 cd %EIFFEL_SRC\Eiffel\library\cli_writer\Clib
 call nmake
 
+remtrace COM compiler Clib
+cd %EIFFEL_SRC\com_compiler
+call make.bat
+
 remtrace Compiling .NET components
 cdd %INIT_DIR
 call make_dotnet.btm
@@ -202,16 +208,36 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	move ec.exe %INSTALL_DIR\releases\enterprise
 else
 	iff not defined NO_NEW_EC then
-		remtrace compiling EiffelStudio
+		remtrace compiling Enterprise Editions
 		cdd %FINALIZATION_DIR
-		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
-		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin-vs.ace finalizedbench.ace
 		iff not exist finalizedbench.ace then
 			remtrace Cannot find the finalization Ace for EiffelStudio
 			CANCEL
 		endiff
 
-		remtrace Enterprise edition
+		remtrace Enterprise edition for Envision
+		copy %EIFFEL_SRC\com_compiler\ace_file\cec.rc .
+		copy %EIFFEL_SRC\com_compiler\ace_file\cec.ico .
+		copy %EIFFEL_SRC\com_compiler\ace_file\cec.tlb .
+		clean_project
+		finalize finalizedbench.ace
+		fff
+		cleanup_eiffel cec.exe
+		iff not exist cec.exe then
+			remtrace Could not finalize a new "enterprise" EiffelStudio for Envision
+			CANCEL
+		endiff
+		move cec.exe %INSTALL_DIR\releases\enterprise
+
+		remtrace Enterprise edition for EiffelStudio
+		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+		sed -r "s/cec/ec/g" finalizedbench.ace >> newace.ace
+		move newace.ace finalizedbench.ace
+		sed -r "s/eiffel_studio_52/eiffel_envision_10/g" finalizedbench.ace >> newace.ace
+		move newace.ace finalizedbench.ace
+		sed -r "s/console_application \(no\)/console_application \(yes\)/g" finalizedbench.ace >> newace.ace
+		move newace.ace finalizedbench.ace
 		clean_project
 		finalize finalizedbench.ace
 		fff
@@ -222,7 +248,16 @@ else
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise
 
+
 		remtrace Free edition
+		cdd %FINALIZATION_DIR
+		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
+		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+		iff not exist finalizedbench.ace then
+			remtrace Cannot find the finalization Ace for EiffelStudio
+			CANCEL
+		endiff
+
 		cdd %FINALIZATION_DIR
 		sed -e "s/free/enterprise/g" finalizedbench.ace >> newace.ace
 		move newace.ace finalizedbench.ace
@@ -317,10 +352,30 @@ iff not exist h2e.exe then
 endiff
 move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile License installation program
+cdd %EIFFEL_SRC
+mkdir tools
+cd tools
+exprt -r %DEFAULT_CVS_TAG -d cd_key_validator "Src/tools/cd_key_validator"
+cd %EIFFEL_SRC\tools\cd_key_validator\eiffel_studio_52
+copy ..\setup.ico .
+copy ..\setup.rc .
+clean_project
+finalize ace.ace
+fff
+cleanup_eiffel setup.exe
+iff not exist setup.exe then
+	remtrace Couldnt generate setup.exe
+	CANCEL
+endiff
+call upx.exe setup.exe
+move setup.exe %INSTALL_DIR
+
 remtrace Recompile configure_all
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d configure_all "Src/tools/configure_all"
 cd %EIFFEL_SRC\configure_all
+copy %EIFFEL_SRC\Eiffel\Ace\ec.ico .
 clean_project
 finalize configure_all.ace
 fff

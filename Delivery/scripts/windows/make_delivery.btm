@@ -111,6 +111,7 @@ safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
 exprt -r %DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
+exprt -r %DEFAULT_CVS_TAG -d dotnet Delivery/precomp/spec/dotnet
 cdd %INSTALL_DIR
 remtrace wizards
 exprt -r %DEFAULT_CVS_TAG -d wizards Delivery/wizards
@@ -191,6 +192,12 @@ iff not defined NO_COMPILE then
 		quick_move /s wizards
 	endiff
 
+	remtrace Extracting Gobo
+	cdd %INSTALL_DIR\free_add_ons
+	tar xvfz gobo\gobo30win.tgz
+	fullrf gobo\gobo30win.tgz
+	fullrf gobo\gobo30.tar.gz
+
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	sed -e s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g zad_miner.ace >> new_ace.ace
 	clean_project
@@ -246,21 +253,12 @@ call make_libraries.btm
 cdd %INIT_DIR
 
 iff not defined NO_INSTALL then
-	remtrace Compile the installation executable
-	WfWI "D:\Installations\Eiffel52\base_libraries.wsm" /c
-	WfWI "D:\Installations\Eiffel52\borland.wsm" /c
-	WfWI "D:\Installations\Eiffel52\build.wsm" /c
-	WfWI "D:\Installations\Eiffel52\c_library.wsm" /c
-	WfWI "D:\Installations\Eiffel52\dotnet.wsm" /c
-	WfWI "D:\Installations\Eiffel52\eiffelcom.wsm" /c
-	WfWI "D:\Installations\Eiffel52\enterprise_studio.wsm" /c
-	WfWI "D:\Installations\Eiffel52\free_studio.wsm" /c
-	WfWI "D:\Installations\Eiffel52\graphical_libraries.wsm" /c
-	WfWI "D:\Installations\Eiffel52\studio_core.wsm" /c
-	WfWI "D:\Installations\Eiffel52\Eiffel5.wsi" /c
+	call make_installations.btm
 	cdd %INIT_DIR
-	give_time_to compile the delivery
 endiff
+
+remtrace Copying cec to Envision delivery location
+copy %INSTALL_DIR\releases\enterprise\cec.exe \\10.0.10.158\Incoming
 
 REM Finish
 remtrace final time:

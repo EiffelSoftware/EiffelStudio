@@ -28,14 +28,4 @@ cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\ISE.VS.FusionSupport
 call nmake
 copy ISE.VS.FusionSupport.dll %INSTALL_DIR\dotnet_binaries
 
-remtrace Compiling CodeDom
-cdd %EIFFEL_SRC\dotnet\CodeDom\src\ace_file
-finalize ace.ace
-fff
-iff not exist EIFGEN\F_code\ISE.CodeDomProvider.dll then
-	remtrace Could not compile Codedom
-	CANCEL
-endiff
-copy EIFGEN\F_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_binaries
-
 cdd %EIFFEL_SRC

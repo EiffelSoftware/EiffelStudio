@@ -97,7 +97,7 @@ feature
 			top_form.attach_right (close_b, 0);
 			top_form.attach_left_widget (edit_hole, focus_label, 0);
 			top_form.attach_right_widget (close_b, focus_label, 0);
-			top_form.attach_bottom (focus_label, 5);
+			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (edit_hole, 0);
 			top_form.attach_bottom (close_b, 0);
 
@@ -398,7 +398,7 @@ feature -- Group management
 				if not cont.widget.destroyed then
 						-- Temp windows may be already destroyed
 						-- if its parent is a perm window.
-					cont.hide;
+					cont.widget.hide;
 					cont.widget.destroy;
 				end;
 				Shared_window_list.forth
@@ -470,6 +470,7 @@ feature -- Group management
 
 	realize is
 		do	
+			main_panel.cont_cat_t.set_toggle_on;
 			top_shell_realize;
 			primitive_page.hide;
 			menu_page.hide;

@@ -80,9 +80,6 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 	radio_group: POINTER
 			-- GSList with all radio items of this container.
 
-	peer: EV_CONTAINER_IMP
-			-- Merged radio grouping list.
-
 	radio_dummy: BOOLEAN
 			-- Is this container merged with another?
 
@@ -98,43 +95,51 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 
 feature -- Status setting
 
+	gslist_to_eiffel (gslist: POINTER): LINKED_LIST [POINTER] is
+			-- List of all radio items in the group `Current' is in.
+		local
+			cur: POINTER
+		do
+			create Result.make
+			from
+				cur := gslist
+			until
+				cur = Default_pointer
+			loop
+				Result.extend (C.gslist_struct_data (cur))
+				cur := C.gslist_struct_next (cur)
+			end
+		ensure
+			same_size: Result.count = C.g_slist_length (gslist)
+		end
+
 	connect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Join radio grouping of `a_container' to Current.
 		local
-			l: LINEAR [EV_WIDGET]
+			l: LINKED_LIST [POINTER]
+			peer: EV_CONTAINER_IMP
+			rbi: EV_RADIO_BUTTON_IMP
 		do
-			check
-				not_is_dummy: not radio_dummy
-			end
-
 			peer ?= a_container.implementation
-			-- Set `peer' as radio dummy.
 			peer.enable_radio_dummy
 
-			-- Merge actual radio groups.
-			--| This is wrong: should iterate over radio items not items.
-			l := a_container.linear_representation
 			from
+				l := gslist_to_eiffel (peer.radio_group)
 				l.start
 			until
 				l.off
 			loop
-				peer.remove_radio_button (l.item)
-				add_radio_button (l.item)
+				C.gtk_radio_button_set_group (l.item, radio_group)
+				radio_group := C.gtk_radio_button_group (l.item)
+				C.gtk_toggle_button_set_active (l.item, False)
 				l.forth
 			end
-			check
-				has_actions: peer.new_item_actions.has (peer~add_radio_button)
-				not_has_actions: not peer.new_item_actions.has (~add_radio_button)
-			end
+
+			--| FIXME to be verified:
 			peer.new_item_actions.prune (peer~add_radio_button)
 			peer.new_item_actions.extend (~add_radio_button)
 			peer.remove_item_actions.prune (peer~remove_radio_button)
 			peer.remove_item_actions.extend (~remove_radio_button)
-			check
-				not_has_actions: not peer.new_item_actions.has (peer~add_radio_button)
-				has_actions: peer.new_item_actions.has (~add_radio_button)
-			end
 		end
 
 	add_radio_button (w: EV_WIDGET) is
@@ -230,6 +235,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/29 02:22:20  brendel
+--| Finished first imp of radio group merging.
+--|
 --| Revision 1.26  2000/02/28 23:21:22  brendel
 --| Started first imp of merging containers as radio groups.
 --|

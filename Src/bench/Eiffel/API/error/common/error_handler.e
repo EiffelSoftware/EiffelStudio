@@ -153,7 +153,7 @@ feature -- Debug purpose
 				error_list.offright
 			loop
 				error_list.item.trace;
-				io.error.putstring ("------------------------------\n");
+				io.error.putstring ("------------------------------%N");
 				error_list.forth;
 			end;
 		end;

@@ -69,6 +69,7 @@ feature {NONE} -- Implementation
 			a_menu_bar.extend (settings_menu)
 			create about_menu.make_with_text (gb_about_menu_text)
 			a_menu_bar.extend (about_menu)
+			about_menu.select_actions.extend (agent show_about_dialog)
 		end
 		
 	build_widget_structure is
@@ -158,5 +159,15 @@ feature {NONE} -- Implementation
 		do
 			display_window.show
 		end
+		
+	show_about_dialog is
+			-- Display an about dialog.
+		local
+			about_dialog: ABOUT_DIALOG
+		do
+			create about_dialog.make
+			about_dialog.show_modal_to_window (Current)
+		end
+		
 
 end -- class GB_MAIN_WINDOW

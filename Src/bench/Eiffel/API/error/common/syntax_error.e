@@ -70,7 +70,7 @@ feature
 			-- Debug purpose
 		local
 			dummy_reference: CLASS_C;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			previous_line: STRING;
 			current_line: STRING;
 			next_line: STRING;

@@ -30,7 +30,7 @@ feature
 	used: BOOLEAN is True;
 			-- Is an attribute entry used ?
 
-	generate_workbench_info (file: UNIX_FILE) is
+	generate_workbench_info (file: INDENT_FILE) is
 			-- Generate access info.
 		local
 			skel: SKELETON;
@@ -40,7 +40,7 @@ feature
 			skel.generate_workbench_offset (file, feature_id);
 		end;
 
-	generate_empty_info (file: UNIX_FILE) is
+	generate_empty_info (file: INDENT_FILE) is
 			-- Generate empty access-info
 		do
 			file.putstring ("(long) 0");

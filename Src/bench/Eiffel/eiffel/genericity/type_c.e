@@ -46,7 +46,7 @@ feature
 		deferred
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		require
 			good_argument: file /= Void;
@@ -54,7 +54,7 @@ feature
 		deferred
 		end;
 
-	generate_cast (file: UNIX_FILE) is
+	generate_cast (file: INDENT_FILE) is
 			-- Generate C cast in file `file'.
 		require
 			good_argument: file /= Void;
@@ -62,7 +62,7 @@ feature
 		deferred
 		end;
 
-	generate_access_cast (file: UNIX_FILE) is
+	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		require
 			good_argument: file /= Void;
@@ -70,7 +70,7 @@ feature
 		deferred
 		end;
 
-	generate_function_cast (file: UNIX_FILE) is
+	generate_function_cast (file: INDENT_FILE) is
 			-- Generate C function cast in file `file'.
 		require
 			good_argument: file /= Void;
@@ -78,7 +78,7 @@ feature
 		deferred
 		end;
 
-	generate_size (file: UNIX_FILE) is
+	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		require
 			good_argument: file /= Void;
@@ -86,7 +86,7 @@ feature
 		deferred
 		end;
 
-	generate_union (file: UNIX_FILE) is
+	generate_union (file: INDENT_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
 		require
@@ -95,7 +95,7 @@ feature
 		deferred
 		end; -- generate_union
 
-	generate_sk_value (file: UNIX_FILE) is
+	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		require
 			good_argument: file /= Void;

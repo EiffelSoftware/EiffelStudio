@@ -73,12 +73,12 @@ feature
 			end;
 		end;
 
-	generate_workbench_info (file: UNIX_FILE) is
+	generate_workbench_info (file: INDENT_FILE) is
 			-- Generate workbench info
 		deferred
 		end;
 
-	generate_empty_info (file: UNIX_FILE) is
+	generate_empty_info (file: INDENT_FILE) is
 			-- Generate empty workbench info
 		deferred
 		end;

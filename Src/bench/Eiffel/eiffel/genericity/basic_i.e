@@ -60,7 +60,7 @@ feature
 		end;
 
 	metamorphose
-	(reg, value: REGISTRABLE; file: UNIX_FILE; workbench_mode: BOOLEAN) is
+	(reg, value: REGISTRABLE; file: INDENT_FILE; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.

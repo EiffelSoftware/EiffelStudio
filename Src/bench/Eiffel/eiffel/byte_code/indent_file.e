@@ -4,7 +4,7 @@ class INDENT_FILE
 
 inherit
 
-	UNIX_FILE
+	PLAIN_TEXT_FILE
 		rename
 			putchar as file_putchar,
 			new_line as file_new_line,
@@ -13,7 +13,7 @@ inherit
 			putreal as file_putreal,
 			putdouble as file_putdouble
 		end;
-	UNIX_FILE
+	PLAIN_TEXT_FILE
 		redefine
 			putdouble, putreal, putstring, putint, new_line, putchar	
 		select

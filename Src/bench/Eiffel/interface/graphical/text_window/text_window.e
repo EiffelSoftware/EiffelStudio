@@ -31,7 +31,7 @@ feature
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
 		local
 			nothing: ANY;
-			temp: WIDGET_X
+			temp: SCROLLED_T_M
 		do
 			text_create (a_name, a_parent);
 			tool := a_tool;
@@ -140,7 +140,7 @@ feature
 		require
 			name_not_void: not (a_file_name = Void)
 		local
-			a_file: UNIX_FILE;
+			a_file: PLAIN_TEXT_FILE;
 		do
 			!!a_file.make_open_read (a_file_name);
 			a_file.readstream (a_file.count);
@@ -319,7 +319,7 @@ feature
 				search_sub := text.substring (c_pos + 1, text.count);
 				search_sub.to_lower;
 				s1 := search_sub.to_c;
-				temp := s.duplicate;
+				temp := clone (s);
 				temp.to_lower;	
 				s2 := temp.to_c;
 				start_position := text_window_search_str_after (s1, s2);
@@ -333,7 +333,7 @@ feature
 						search_sub := text.substring (1, c_pos);
 						search_sub.to_lower;
 						s1 := search_sub.to_c;
-						temp := s.duplicate;
+						temp := clone (s);
 						temp.to_lower;	
 						s2 := temp.to_c;
 						start_position := 

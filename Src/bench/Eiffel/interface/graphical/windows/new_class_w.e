@@ -80,8 +80,8 @@ feature
 			str, str2: STRING
 		do
 			cluster := cl;
-			class_name := class_n.duplicate;
-			str2 :=  class_n.duplicate;
+			class_name := clone (class_n);
+			str2 :=  clone (class_n);
 			str2.to_upper;
 			class_name.to_lower;
 			!!str.make (0);
@@ -100,7 +100,7 @@ feature
 		local
 			class_i: CLASS_I;
 			fname: STRING;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			stone: CLASSI_STONE;
 			str: STRING;
 			base_name: STRING
@@ -115,7 +115,7 @@ feature
 					fname.extend (Directory_separator);
 					fname.append (class_name);
 					fname.append (".e");
-					base_name := class_name.duplicate;
+					base_name := clone (class_name);
 					base_name.append (".e");
 					!!file.make (fname);
 					class_i.set_base_name (base_name);
@@ -123,7 +123,7 @@ feature
 					class_i.set_date;
 					if cluster.classes.has (fname) then
 						fname.wipe_out;
-						str := class_name.duplicate;
+						str := clone (class_name);
 						str.to_upper;
 						fname.append ("Class ");
 						fname.append (str);
@@ -132,7 +132,7 @@ feature
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						str := fname.duplicate;
+						str := clone (fname);
 						fname.wipe_out;
 						fname.append ("Cannot create file:%N");
 						fname.append (str);

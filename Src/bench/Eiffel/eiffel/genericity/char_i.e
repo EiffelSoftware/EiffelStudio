@@ -42,37 +42,37 @@ feature
 			file.putstring ("CHAR");
 		end;
 
-	generate_cecil_value (file: UNIX_FILE) is
+	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate cecil type value
 		do
 			file.putstring ("SK_CHAR");
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
 			file.putstring ("char ");
 		end;
 
-	generate_cast (file: UNIX_FILE) is
+	generate_cast (file: INDENT_FILE) is
 			-- Generate C type cast in file `file'.
 		do
 			file.putstring ("(char) ");
 		end;
 
-	generate_access_cast (file: UNIX_FILE) is
+	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		do
 			file.putstring ("(char *) ");
 		end;
 
-	generate_function_cast (file: UNIX_FILE) is
+	generate_function_cast (file: INDENT_FILE) is
 			-- Generate C function cast in file `file'.
 		do
 			file.putstring ("(char (*)()) ");
 		end;
 
-	generate_size (file: UNIX_FILE) is
+	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
 			file.putstring ("sizeof(char)");
@@ -97,14 +97,14 @@ feature
 			Result := Sk_char;
 		end;
 
-	generate_union (file: UNIX_FILE) is
+	generate_union (file: INDENT_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
 		do
 			file.putstring ("it_char");
 		end;
 
-	generate_sk_value (file: UNIX_FILE) is
+	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		do
 			file.putstring ("SK_CHAR");

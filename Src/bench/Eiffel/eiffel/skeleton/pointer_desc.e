@@ -18,7 +18,7 @@ feature
 			Result := Pointer_level;
 		end;
 
-	generate_code (file: UNIX_FILE) is
+	generate_code (file: INDENT_FILE) is
 			-- Generate type code for current attribute description in
 			-- file `file'.
 		do

@@ -77,7 +77,7 @@ feature
 			ba.append_short_integer (pattern_id);
 		end;
 
-	generate_workbench_info (file: UNIX_FILE) is
+	generate_workbench_info (file: INDENT_FILE) is
 			-- Generate call info
 		do
 			file.putstring ("{(int16) ");
@@ -87,7 +87,7 @@ feature
 			file.putchar ('}');
 		end;
 
-	generate_empty_info (file: UNIX_FILE) is
+	generate_empty_info (file: INDENT_FILE) is
 			-- Generate empty workbench info
 		do
 			file.putstring ("{(int16) 0, (int16) 0}");

@@ -121,7 +121,7 @@ feature
 			Result := Encoder.feature_name (class_type.id, body_id);
 		end;
 
-	generate_declaration (file: UNIX_FILE) is
+	generate_declaration (file: INDENT_FILE) is
 			-- Generate external declaration for the compound routine
 		require
 			good_argument: file /= Void;
@@ -133,7 +133,7 @@ feature
 			file.putstring ("();%N");
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate compound pointer
 		require
 			good_argument: file /= Void;

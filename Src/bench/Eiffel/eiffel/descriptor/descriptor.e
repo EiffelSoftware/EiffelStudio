@@ -52,7 +52,7 @@ feature -- Generation
 			-- Generate descriptor table and initialization
 			-- function of current class type.
 		local
-			f: UNIX_FILE
+			f: INDENT_FILE
 		do
 			f := class_type.descriptor_file;
 			f.open_write;

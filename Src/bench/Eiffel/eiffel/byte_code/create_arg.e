@@ -29,7 +29,7 @@ feature
 		local
 			type_i: TYPE_I;
 			cl_type_i: CL_TYPE_I;
-			gen_file: UNIX_FILE;
+			gen_file: INDENT_FILE;
 		do
 			gen_file := context.generated_file;
 			type_i := context.byte_code.arguments.item (position);

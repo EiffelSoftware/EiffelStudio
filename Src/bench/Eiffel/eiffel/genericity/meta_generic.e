@@ -56,7 +56,7 @@ feature
 			end;
 		end;
 
-	generate_cecil_values (f: UNIX_FILE) is
+	generate_cecil_values (f: INDENT_FILE) is
 			-- Generate Cecil meta-types
 		local
 			i: INTEGER;

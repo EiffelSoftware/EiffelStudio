@@ -19,7 +19,7 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local   
-			new_file: UNIX_FILE;
+			new_file: PLAIN_TEXT_FILE;
 			to_write: STRING;
 			file_name: STRING;
 			aok: BOOLEAN;

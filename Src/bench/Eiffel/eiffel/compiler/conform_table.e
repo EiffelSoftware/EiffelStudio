@@ -79,7 +79,7 @@ feature
 			put (True, i);
 		end;
 
-	Conformance_file: UNIX_FILE is
+	Conformance_file: INDENT_FILE is
 		do
 			Result := System.conformance_file
 		end;

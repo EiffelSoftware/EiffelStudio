@@ -178,6 +178,7 @@ shared char *gmalloc();					/* Wrapper to xmalloc */
 #ifdef HAS_SMART_MMAP
 extern Caddr_t mmap();
 extern int munmap ();
+private void free_unused();
 #else
 #ifdef HAS_SBRK
 extern Caddr_t sbrk();					/* Set break (system call) */

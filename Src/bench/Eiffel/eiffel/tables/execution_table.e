@@ -25,7 +25,7 @@ creation
 	
 feature 
 
-	make_update (file: UNIX_FILE) is
+	make_update (file: RAW_FILE) is
 			-- Generate byte code for updating the dispatch table
 		local
 			e: EXECUTION_UNIT;
@@ -78,7 +78,7 @@ end;
 			write_int (file.file_pointer, -1);
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate the frozen execution table in `file'.
 		require
 			good_argument: file /= Void;

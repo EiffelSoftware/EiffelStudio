@@ -26,7 +26,7 @@ feature
 			io.error.putstring ("all debug");
 		end;
 
-	generate (file: UNIX_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: INTEGER) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("{DB_ALL, (int16) 0, (char **) 0}");

@@ -1,6 +1,6 @@
 -- Root class of the Eiffelbench system.
 
-class EWB
+deferred class EWB
 
 inherit
 
@@ -19,10 +19,6 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	EXCEPTIONS
-
-creation
-
-	make
 
 feature -- Licence managment
 

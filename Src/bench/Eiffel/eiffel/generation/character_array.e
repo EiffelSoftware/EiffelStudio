@@ -66,7 +66,7 @@ feature
 			Result := ca_item ($area, i - 1);
 		end;
 		
-	store (file: UNIX_FILE) is
+	store (file: RAW_FILE) is
 			-- Store C array in `file'.
 		require
 			good_argument: file /= Void;

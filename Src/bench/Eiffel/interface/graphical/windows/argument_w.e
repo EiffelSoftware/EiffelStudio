@@ -75,7 +75,7 @@ feature {NONE}
 				arg_list := argument_list;
 				if not selection_text.empty then
 					arg_list.wipe_out;
-					arg_list.append (selection_text.duplicate);
+					arg_list.append (clone (selection_text));
 				else
 					set_selection_text (arg_list);
 				end;
@@ -86,7 +86,7 @@ feature {NONE}
 				arg_list := argument_list;
 				if not selection_text.empty then
 					arg_list.wipe_out;
-					arg_list.append (selection_text.duplicate);
+					arg_list.append (clone (selection_text));
 				else
 					set_selection_text (arg_list);
 				end;

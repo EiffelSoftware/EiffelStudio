@@ -11,7 +11,7 @@ feature
 	ast: AST_LACE;
 			-- Last AS description
 
-	open_file (file: UNIX_FILE): BOOLEAN is
+	open_file (file: PLAIN_TEXT_FILE): BOOLEAN is
 			-- Open file `file' and catch possible exception
 		require
 			good_argument: file /= Void
@@ -33,7 +33,7 @@ feature
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			vd21: VD21;
 			vd22: VD22;
 			ptr: POINTER;

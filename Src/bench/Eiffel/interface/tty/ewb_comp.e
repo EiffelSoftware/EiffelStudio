@@ -62,7 +62,7 @@ feature -- Compilation
 			file_name, cmd: STRING;
 			option: CHARACTER;
 			exit: BOOLEAN;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 		do
 			file_name := "Ace";
 			!!file.make (file_name);
@@ -193,7 +193,7 @@ feature -- Compilation
 		local
 			arg2: STRING;
 			cmd_string: STRING;
-			uf: UNIX_FILE
+			uf: RAW_FILE
 		do
 			if not melt_only and then System.uses_precompiled then
 					-- Target

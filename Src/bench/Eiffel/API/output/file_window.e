@@ -10,7 +10,7 @@ inherit
 			putstring as click_w_putstring
 		end;
 
-	UNIX_FILE
+	PLAIN_TEXT_FILE
 
 creation
 

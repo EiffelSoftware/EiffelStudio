@@ -76,7 +76,7 @@ feature
 		require
 			file_name_exists: file_name /= Void;
 		local
-			f: UNIX_FILE;
+			f: INDENT_FILE;
 		do	
 			!!f.make (file_name);
 			f.open_write;

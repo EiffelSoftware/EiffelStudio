@@ -471,10 +471,10 @@ dummy_choice.set_text ("GAGAGAG");
 				hide
 			elseif argument = record_push then
 				update_user_format;
-				format_name := user_format.na_me.duplicate;
+				format_name := clone (user_format.na_me);
 				format_catalog.force (user_format, format_name);
 				if not catalog_list.has (format_name) then
-					catalog_list.add_right (format_name);
+					catalog_list.put_right (format_name);
 					catalog_list.move (1);
 					catalog_list.select_item
 				end

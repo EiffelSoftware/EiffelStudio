@@ -63,7 +63,7 @@ feature -- Debug pupose
 	print_short_help is
 		local
 			file_name: STRING;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 		do
 			file_name := clone (help_path)
 			file_name.extend (Directory_separator);

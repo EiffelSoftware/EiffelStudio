@@ -61,7 +61,7 @@ feature {NONE}
 				cmd_name := associcated_command.command_shell_name;
 				if not selection_text.empty then
 					cmd_name.wipe_out;
-					cmd_name.append (selection_text.duplicate);
+					cmd_name.append (clone (selection_text));
 					popdown;
 				else
 					set_selection_text (cmd_name);

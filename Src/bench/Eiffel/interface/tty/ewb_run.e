@@ -20,8 +20,8 @@ feature
 		local
 			appl_name: STRING;
 			makefile_sh_name: STRING;
-			f: UNIX_FILE;
-			make_f: UNIX_FILE;
+			f: RAW_FILE;
+			make_f: INDENT_FILE;
 			error: BOOLEAN;
 			system_name: STRING
 		do

@@ -34,7 +34,7 @@ feature
 		deferred
 		end;
 
-	generate (file: UNIX_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: INTEGER) is
 			-- Generate assertion value in `file'.
 		require
 			good_argument: file /= Void;

@@ -151,7 +151,7 @@ feature
 		deferred
 		end; -- description
 
-	generate_cecil_value (file: UNIX_FILE) is
+	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate type value for cecil.
 		deferred
 		end; -- generate_cecil_value

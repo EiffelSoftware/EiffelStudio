@@ -143,7 +143,7 @@ feature
 			end;
 		end;
 
-	generate_size (file: UNIX_FILE) is
+	generate_size (file: INDENT_FILE) is
 			-- Generate the size of current skeleton in file `file'.
 		require
 			good_argument: file /= Void;
@@ -191,7 +191,7 @@ feature
 			end;
 		end;
 
-	generate_workbench_size (file: UNIX_FILE) is
+	generate_workbench_size (file: INDENT_FILE) is
 			-- Generate size of the skeleton in workbench mode.
 		do
 			file.putint (workbench_size);
@@ -232,7 +232,7 @@ feature
 			end;
 		end;
 
-	generate_ith_offset (file: UNIX_FILE; pos: INTEGER) is
+	generate_ith_offset (file: INDENT_FILE; pos: INTEGER) is
 			-- Generate the i-th attribute offset of the skeleton
 		require
 			pos >= 1;
@@ -244,7 +244,7 @@ feature
 			generate (file);
 		end;
 
-	generate_workbench_ith_offset (file: UNIX_FILE; pos: INTEGER) is
+	generate_workbench_ith_offset (file: INDENT_FILE; pos: INTEGER) is
 			-- Generate the i-th attribute offset of the skeleton
 			-- in workbench mode.
 		require
@@ -257,7 +257,7 @@ feature
 			file.putint (workbench_offset);
 		end;
 
-	generate_offset (file: UNIX_FILE; feature_id: INTEGER) is
+	generate_offset (file: INDENT_FILE; feature_id: INTEGER) is
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in file `file'.
 		require
@@ -269,7 +269,7 @@ feature
 			generate (file);
 		end;
 
-	generate_workbench_offset (file: UNIX_FILE; feature_id: INTEGER) is
+	generate_workbench_offset (file: INDENT_FILE; feature_id: INTEGER) is
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in file `file' in workbench mode only.
 		require
@@ -281,7 +281,7 @@ feature
 			file.putint (workbench_offset);
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate offset of the attribute at the current position
 		require
 			not_off: not off;
@@ -610,7 +610,7 @@ feature
 			ba.append_integer (workbench_offset);
 		end;
 
-	Skeleton_file: UNIX_FILE is
+	Skeleton_file: INDENT_FILE is
 		do
 			Result := System.Skeleton_file
 		end;

@@ -4,12 +4,12 @@ class SERVER_FILE
 
 inherit
 
-	UNIX_FILE
+	RAW_FILE
 		rename
 			make as file_make,
 			close as basic_close
 		end;
-	UNIX_FILE
+	RAW_FILE
 		rename
 			make as file_make
 		redefine
@@ -56,7 +56,7 @@ feature
 			f_name.extend ('E');
 			f_name.append_integer (i);
 			file_make (f_name);
-			open_binary_write;
+			open_write;
 			basic_close;	
 			id := i;
 debug ("SERVER")
@@ -98,9 +98,9 @@ end;
 			is_closed: not is_open
 		do
 			if precompiled then
-				open_binary_read
+				open_read
 			else
-				open_binary_read_write;
+				open_read_write;
 			end;
 			is_open := True;
 debug ("SERVER")

@@ -64,7 +64,7 @@ feature
 		local
 			entry: POLY_TABLE [ENTRY];
 			create_table_name: STRING;
-			gen_file: UNIX_FILE;
+			gen_file: INDENT_FILE;
 			dyn_type: INTEGER;
 		do
 			gen_file := context.generated_file;

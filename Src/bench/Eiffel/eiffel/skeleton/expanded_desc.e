@@ -37,7 +37,7 @@ feature
 	is_expanded: BOOLEAN is True;
 			-- Is the attribute an expanded one ?
 
-	generate_code (file: UNIX_FILE) is
+	generate_code (file: INDENT_FILE) is
 			-- Generate type code for current attribute description in
 			-- file `file'.
 		do

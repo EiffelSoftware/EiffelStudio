@@ -108,7 +108,7 @@ feature
 			dtype, char_dtype, long_dtype,
 			float_dtype, double_dtype,
 			pointer_dtype, boolean_dtype: INTEGER;
-			Plug_file: UNIX_FILE;
+			Plug_file: INDENT_FILE;
 		do
 			from
 				char_dtype := -1;

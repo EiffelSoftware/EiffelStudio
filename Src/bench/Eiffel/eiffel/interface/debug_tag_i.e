@@ -63,7 +63,7 @@ feature
 			l.go_i_th (pos);
 		end;
 
-	generate (file: UNIX_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: INTEGER) is
 			-- Generate assertion value in `file'.
 		do
 			file.putstring ("{DB_ALL, (int16) ");
@@ -73,7 +73,7 @@ feature
 			file.putstring ("}");
 		end;
 
-	generate_keys (file: UNIX_FILE; id: INTEGER) is
+	generate_keys (file: INDENT_FILE; id: INTEGER) is
 			-- Generate keys C array
 		require
 			good_argument: file /= Void;

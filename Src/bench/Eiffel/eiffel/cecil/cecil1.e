@@ -12,7 +12,7 @@ inherit
 	
 feature 
 
-	generate_final (file: UNIX_FILE; type_id: INTEGER) is
+	generate_final (file: INDENT_FILE; type_id: INTEGER) is
 			-- Generation of the hash table
 		require
 			file.is_open_write;
@@ -81,7 +81,7 @@ end;
 			file.putstring ("};%N%N");
 		end;
 
-	generate_workbench (file: UNIX_FILE; class_id: INTEGER) is
+	generate_workbench (file: INDENT_FILE; class_id: INTEGER) is
 			-- Generate workbench feature id array
 		local
 			i: INTEGER;
@@ -108,7 +108,7 @@ end;
 			file.putstring ("};%N%N");
 		end;
 
-	generate_name_table (file: UNIX_FILE; id: INTEGER) is
+	generate_name_table (file: INDENT_FILE; id: INTEGER) is
 			-- Generate name table in file `file'.
 		require
 			good_argument: file /= Void;

@@ -211,7 +211,7 @@ feature
 			Result := type.meta_generic.item (1);
 		end;
 
-	generate_area_access (file: UNIX_FILE) is
+	generate_area_access (file: INDENT_FILE) is
 			-- Generate access to area.
 		require
 			good_argument: file /= Void;

@@ -183,7 +183,7 @@ feature -- Cecil
 
 feature -- Actual generation
 
-	make_file: UNIX_FILE is
+	make_file: INDENT_FILE is
 		do
 			Result := System.make_file;
 		end;

@@ -27,7 +27,7 @@ feature
 			project_name: STRING;
 			project_dir: PROJECT_DIR;
 			workb: WORKBENCH_I;
-			workbench_file: UNIX_FILE;
+			workbench_file: RAW_FILE;
 			freeze: BOOLEAN;
 			vd41: VD41
 		do
@@ -42,7 +42,7 @@ feature
 					init_precompilation_directory := project_dir;
 					if Precompilation_directory /= Precompilation_directory then end;
 					!!workb;
-					!!workbench_file.make_open_binary_read (Precompilation_file_name);
+					!!workbench_file.make_open_read (Precompilation_file_name);
 					workb ?= workb.retrieved (workbench_file);
 	
 					-- Check that it is a precompiled cluster

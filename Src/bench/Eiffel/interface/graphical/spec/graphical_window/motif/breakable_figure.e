@@ -11,17 +11,15 @@ inherit
 
 	TEXT_FIGURE
 		rename
-			draw as draw_text,
-			select_clickable as select_clickable_text,
-			unselect_clickable as unselect_clickable_text
+			draw as draw_text
 		redefine
 			stone
 		end;
 	TEXT_FIGURE
 		redefine
-			stone, draw, select_clickable, unselect_clickable
+			stone, draw
 		select
-			draw, select_clickable, unselect_clickable
+			draw
 		end
 
 feature -- Properties
@@ -76,50 +74,6 @@ feature -- Output
 					non_void_text: text /= Void
 				end;
 				draw_text (d, values, is_in_hightlighted_line, x_offset, y_offset)
-			else
-				!! ul;
-				ul.set (base_left_x - x_offset, 
-						base_left_y - pixmap.height - y_offset);
-				d.set_foreground_gc_color (actual_foreground_color);
-				d.set_background_gc_color (values.text_background_color);
-				d.copy_bitmap (ul, pixmap);
-			end
-		end;
-
-	select_clickable (d: DRAWING_X; 
-			values: GRAPHICAL_VALUES;
-			x_offset, y_offset: INTEGER) is
-			-- Select clickable.
-		local
-			ul: COORD_XY
-		do
-			if pixmap = Void then
-				check
-					non_void_text: text /= Void
-				end;
-				select_clickable_text (d, values, x_offset, y_offset)
-			else
-				!! ul;
-				ul.set (base_left_x - x_offset, 
-						base_left_y - pixmap.height - y_offset);
-				d.set_foreground_gc_color (values.selected_clickable_fg_color);
-				d.set_background_gc_color (values.selected_clickable_bg_color);
-				d.copy_bitmap (ul, pixmap);
-			end
-		end;
-
-	unselect_clickable (d: DRAWING_X; 
-			values: GRAPHICAL_VALUES;
-			x_offset, y_offset: INTEGER) is
-			-- Unselect clickable.
-		local
-			ul: COORD_XY
-		do
-			if pixmap = Void then
-				check
-					non_void_text: text /= Void
-				end;
-				unselect_clickable_text (d, values, x_offset, y_offset)
 			else
 				!! ul;
 				ul.set (base_left_x - x_offset, 

@@ -91,14 +91,14 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "OK" button is pressed.
 		do
-			add_command (ok_widget, "clicked", cmd, arg)
+			add_command (ok_widget, "clicked", cmd, arg, default_pointer)
 		end
 
 	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "Help" button is pressed.
 		do
-			add_command (help_widget, "clicked", cmd, arg)
+			add_command (help_widget, "clicked", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

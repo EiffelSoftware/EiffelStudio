@@ -123,17 +123,6 @@ feature -- Status report
 		deferred
 		end
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the figure superimposable to `other' ?
-		obsolete
-			"Use is_superimposable instead."
-		do
-			Result := is_superimposable (other)
-		end;
-
-
-
-
 feature {NONE} -- Access
 
 	origin_user: like origin;

@@ -144,7 +144,7 @@ feature -- Basic operations
 		require
 			non_void_import_file: an_import_file /= Void
 			valid_import_file: not an_import_file.is_empty
-			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
+			valid_syntax: an_import_file.item (1) /= '%R' and an_import_file.item (an_import_file.count) /= '%N'
 		do
 			if not import_files.has (an_import_file) then
 				import_files.extend (an_import_file)
@@ -188,7 +188,7 @@ feature -- Basic operations
 		require
 			non_void_import_file: an_import_file /= Void
 			valid_import_file: not an_import_file.is_empty
-			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
+			valid_syntax: an_import_file.item (1) /= '%R' and an_import_file.item (an_import_file.count) /= '%N'
 		do
 			if not import_files_after.has (an_import_file) then
 				import_files_after.extend (an_import_file)

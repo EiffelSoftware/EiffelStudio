@@ -149,11 +149,11 @@ feature -- Access
 
 	Set_type_id_function_name: STRING is "set_type_id"
 
-	Ecatch: STRING is "%TECATCH;%N"
+	Ecatch: STRING is "%TECATCH;%R%N"
 
 	Ecatch_auto: STRING is "ECATCH_AUTO"
 
-	End_ecatch: STRING is "END_ECATCH;%N%T"
+	End_ecatch: STRING is "END_ECATCH;%R%N%T"
 
 	Lock_module_function: STRING is "LockModule ();"
 
@@ -247,7 +247,7 @@ feature -- Access
 
 	Iunknown_clsid: STRING is "IID_IUnknown"
 
-	Hresult_variable: STRING is "HRESULT hr = 0;%N"
+	Hresult_variable: STRING is "HRESULT hr = 0;%R%N"
 																		
 	Routine_clause: STRING is "_routine"
 
@@ -295,17 +295,17 @@ feature -- Access
 
 	Current_item_variable: STRING is "current_item: POINTER"
 
-	Null_coclass_test: STRING is "if (eiffel_coclass == NULL)%<%N"
+	Null_coclass_test: STRING is "if (eiffel_coclass == NULL)%<%R%N"
 
-	Type_id_variable: STRING is "EIF_TYPE_ID tid = -1;%N"
+	Type_id_variable: STRING is "EIF_TYPE_ID tid = -1;%R%N"
 
 	Type_id_variable_name: STRING is "tid"
 
-	Eif_procedure_variable: STRING is "EIF_PROCEDURE p_make;%N"
+	Eif_procedure_variable: STRING is "EIF_PROCEDURE p_make;%R%N"
 
-	Make_procedure: STRING is "p_make = eif_procedure (%"make_from_pointer%", tid)%N"
+	Make_procedure: STRING is "p_make = eif_procedure (%"make_from_pointer%", tid)%R%N"
 
-	Create_eiffel_object: STRING is "eiffel_object = eif_create (tid);%N"
+	Create_eiffel_object: STRING is "eiffel_object = eif_create (tid);%R%N"
 
 	Tmp_clause: STRING is "tmp_"
 
@@ -341,7 +341,7 @@ feature -- Access
 
 	Empty_dispparams: STRING is "DISPPARAMS args = %<NULL, NULL, 0, 0%>;"
 
-	Return_variant_variable: STRING is "VARIANT pResult; %N%TVariantInit (&pResult);"
+	Return_variant_variable: STRING is "VARIANT pResult; %R%N%TVariantInit (&pResult);"
 
 	Return_variant_variable_name: STRING is "pResult"
 

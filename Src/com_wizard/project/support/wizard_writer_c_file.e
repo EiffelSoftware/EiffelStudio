@@ -39,30 +39,30 @@ feature -- Access
 			ready: can_generate
 		do
 			create Result.make (4096)
-			Result.append ("/*-----------------------------------------------------------%N")
+			Result.append ("/*-----------------------------------------------------------%R%N")
 			Result.append (header)
-			Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
+			Result.append ("%R%N-----------------------------------------------------------*/%R%N%R%N#ifndef ")
 			Result.append (header_protector (header_file_name))
-			Result.append ("%N#define ")
+			Result.append ("%R%N#define ")
 			Result.append (header_protector (header_file_name))
-			Result.append ("%N")
+			Result.append ("%R%N")
 			if not others_forward.is_empty then
 				Result.append (cpp_protector_start)
-				Result.append ("%N")
+				Result.append ("%R%N")
 				from
 					others_forward.start
 				until
 					others_forward.after
 				loop
-					Result.append ("%N%N")
+					Result.append ("%R%N%R%N")
 					Result.append (others_forward.item)
 					others_forward.forth
 				end
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 				Result.append (cpp_protector_end)
-				Result.append ("%N")
+				Result.append ("%R%N")
 			end
-			Result.append ("%N")
+			Result.append ("%R%N")
 			from
 				import_files.start
 			until
@@ -70,17 +70,17 @@ feature -- Access
 			loop
 				Result.append ("#include %"")
 				Result.append (import_files.item)
-				Result.append ("%"%N%N")
+				Result.append ("%"%R%N%R%N")
 				import_files.forth
 			end
 			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
+			Result.append ("%R%N%R%N")
 			from
 				global_variables.start
 			until
 				global_variables.after
 			loop
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 				Result.append (global_variables.item.generated_header_file)
 				global_variables.forth
 			end
@@ -89,7 +89,7 @@ feature -- Access
 			until
 				others.after
 			loop
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 				Result.append (others.item)
 				others.forth
 			end
@@ -98,13 +98,13 @@ feature -- Access
 			until
 				functions.after
 			loop
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 				Result.append (functions.item.generated_header_file)
 				functions.forth
 			end
-			Result.append ("%N")
+			Result.append ("%R%N")
 			Result.append (cpp_protector_end)
-			Result.append ("%N")
+			Result.append ("%R%N")
 			from
 				import_files_after.start
 			until
@@ -112,10 +112,10 @@ feature -- Access
 			loop
 				Result.append ("#include %"")
 				Result.append (import_files_after.item)
-				Result.append ("%"%N%N")
+				Result.append ("%"%R%N%R%N")
 				import_files_after.forth
 			end
-			Result.append ("%N#endif")
+			Result.append ("%R%N#endif")
 		end
 
 	functions: LIST [WIZARD_WRITER_C_FUNCTION]
@@ -128,13 +128,13 @@ feature -- Access
 			-- Generated code
 		do
 			create Result.make (4096)
-			Result.append ("/*-----------------------------------------------------------%N")
+			Result.append ("/*-----------------------------------------------------------%R%N")
 			Result.append (header)
-			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
+			Result.append ("%R%N-----------------------------------------------------------*/%R%N%R%N#include %"")
 			Result.append (header_file_name)
-			Result.append ("%"%N%N")
+			Result.append ("%"%R%N%R%N")
 			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
+			Result.append ("%R%N%R%N")
 			from
 				others_source.start
 			until
@@ -142,18 +142,18 @@ feature -- Access
 			loop
 				Result.append (others_source.item)
 				others_source.forth
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 			end
 			from
 				functions.start
 			until
 				functions.after
 			loop
-				Result.append ("%N%N")
+				Result.append ("%R%N%R%N")
 				Result.append (functions.item.generated_code)
 				functions.forth
 			end
-			Result.append ("%N")
+			Result.append ("%R%N")
 			Result.append (cpp_protector_end)
 		end
 

@@ -323,12 +323,12 @@ feature {NONE} -- Implementation
 			create l_file.make (Def_file_name)
 			if not l_file.exists then
 				l_file.make_create_read_write (Def_file_name)
-				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
-				l_file.put_string ("EXPORTS%N")
-				l_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
-				l_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
-				l_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
-				l_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
+				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%R%N")
+				l_file.put_string ("EXPORTS%R%N")
+				l_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%R%N")
+				l_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%R%N")
+				l_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%R%N")
+				l_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%R%N")
 				l_file.close
 			end
 		end
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 	Shared_library_option: STRING is
 			-- Dll definition file for Ace file
 		do
-			Result := "default%N%Tshared_library_definition (%""
+			Result := "default%R%N%Tshared_library_definition (%""
 			Result.append (User_def_file_name)
 			Result.append ("%")")
 		end

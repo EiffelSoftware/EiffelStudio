@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 					if environment.backup then
 						l_string := "File already exists: "
 						l_string.append (a_file_name)
-						l_string.append ("%N")
+						l_string.append ("%R%N")
 						l_string.append ("File backed up with extension %".bac%"")
 						message_output.add_warning (l_string)
 						file_delete (backup_file_name (a_file_name))

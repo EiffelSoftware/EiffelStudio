@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision multi column list. Implementation interface."
@@ -20,34 +19,31 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	initialize is
 		do
 			update_children_agent := ~update_children
+			create column_titles.make
+			create column_widths.make
 		end
 
 feature -- Access
 
 	columns: INTEGER is
-			-- Number of columns in the list.
+			-- Column count.
 		deferred
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected in a single
-			-- selection mode.
-		require
-			single_selection: not multiple_selection_enabled
+			-- Currently selected item.
+			-- Topmost selected item if multiple items are selected.
+			-- (For multiple selections see `selected_items')
 		deferred
 		end
 
 	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
-			-- List of all the selected items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
+			-- Currently selected items.
 		deferred
 		end
 
@@ -58,166 +54,237 @@ feature -- Access
 
 feature -- Status report
 
-	selected: BOOLEAN is
-			-- Is at least one item selected ?
-		deferred
-		end
-
 	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
+			-- Can more that one item be selected?
 		deferred
 		end
-
+	
 	title_shown: BOOLEAN is
-			-- True if the title row is shown.
-			-- False if the title row is not shown.
+			-- Is a row displaying column titles shown?
 		deferred
 		end
 
 	column_title (a_column: INTEGER): STRING is
-			-- Title of column `a_column'.
+			-- Title of `a_column'.
 		require
-			column_exists: a_column >= 1 and a_column <= columns
-		deferred
+			a_column_positive: a_column > 0
+		do
+			if a_column <= column_titles.count then
+				Result := column_titles @ a_column
+			else
+				Result := ""
+			end
 		end
-
+	
 	column_width (a_column: INTEGER): INTEGER is
-			-- Width of column `a_column' in pixels.
+			-- Width of `a_column' in pixels.
 		require
-			column_exists: a_column >= 1 and a_column <= columns
-		deferred
+			a_column_positive: a_column > 0
+		do
+			if a_column <= column_widths.count then
+				Result := column_widths @ a_column
+			end
 		end
 
 feature -- Status setting
 
-	set_columns (i: INTEGER) is
-			-- Assign `i' to `columns'
+	select_item (an_index: INTEGER) is
+			-- Select item at `an_index'.
 		require
-			empty: count = 0
+			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			columns_assigned: columns = i					
-		end
-
-	select_item (an_index: INTEGER) is
-			-- Select an item at the one-based `an_index' the list.
-		require
-			index_large_enough: an_index > 0
-			index_small_enough: an_index <= count
-		deferred
+			item_deselected: not selected_items.has (interface.i_th (an_index))
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `an_index'.
+			-- Deselect item at `an_index'.
 		require
-			index_large_enough: an_index > 0
-			index_small_enough: an_index <= count
+			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
+		ensure
+			item_deselected: not selected_items.has (interface.i_th (an_index))
 		end
 
 	clear_selection is
-			-- Clear the selection of the list.
+			-- Make `selected_items' empty.
 		deferred
+		ensure
+			selected_items_empty: selected_items.empty
 		end
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
-		deferred	
+		deferred
+		ensure
+			multiple_selection_enabled: multiple_selection_enabled
 		end
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
 		deferred
+		ensure
+			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
 	show_title_row is
-			-- Show the row of the titles.
+			-- Show row displaying column titles.
 		deferred
+		ensure
+			title_shown: title_shown
 		end
 
 	hide_title_row is
-			-- Hide the row of the titles.
+			-- Hide row displaying column titles.
+		deferred
+		ensure
+			not_title_shown: not title_shown
+		end
+
+	align_text_left (a_column: INTEGER) is
+			-- Display text of `a_column' left aligned.
+			-- First column is always left aligned.
+		require
+			a_column_withing_range: a_column > 1 and a_column <= columns
 		deferred
 		end
 
-	set_column_alignment (type: INTEGER; column: INTEGER) is
-			-- Align the text of the column.
-			-- Not allowed for the first column that stays
-			-- left aligned.
-			-- 0: Left, 
-			-- 1: Right,
-			-- 2: Center,
+	align_text_center (a_column: INTEGER) is
+			-- Display text of `a_column' centered.
+			-- First column is always left aligned.
 		require
-			column_exists: column > 1 and column <= columns
+			a_column_within_range: a_column > 1 and a_column <= columns
+		deferred
+		end
+	
+	align_text_right (a_column: INTEGER) is
+			-- Display text of `a_column' right aligned.
+			-- First column is always left aligned.
+		require
+			a_column_within_range: a_column > 1 and a_column <= columns
 		deferred
 		end
 
 feature -- Element change
 
-	set_column_title (txt: STRING; column: INTEGER) is
-			-- Make `txt' the title of the one-based column.
+	set_column_title (a_title: STRING; a_column: INTEGER) is
+			-- Assign `a_title' to the `column_title'(`a_column').
 		require
-			column_exists: column >= 1 and column <= columns
-		deferred
-		end
-
-	set_columns_title (txt: ARRAY [STRING]) is         
-			-- Make `txt' the new titles of the columns.
-		require
-			text_not_void: txt /= Void
-			valid_text_length: txt.count <= columns
-		local
-			i: INTEGER
-			list_i: INTEGER
+			a_column_positive: a_column > 0
+			a_title_not_void: a_title /= Void
 		do
-			from
-				i := txt.lower
-				list_i := 1
-			until
-				i = txt.upper + 1
-			loop
-				set_column_title (txt @ i, list_i)
-				i := i+ 1
-				list_i := list_i + 1
+			if a_column <= column_titles.count then
+				column_titles.go_i_th (a_column)
+				column_titles.replace (clone (a_title))
+			else
+				from	
+				until
+					a_column = column_titles.count + 1
+				loop
+					column_titles.extend (Void)
+				end
+				column_titles.extend (clone (a_title))
 			end
+			column_title_changed (a_title, a_column)
+		ensure
+			a_title_assigned: a_title.is_equal (column_title (a_column))
 		end
 
-	set_column_width (a_width: INTEGER; column: INTEGER) is
-			-- Make `value' the new width of the one-based column.
+	set_column_titles (titles: ARRAY [STRING]) is         
+			-- Assign `titles' to titles of columns in order.
 		require
-			valid_width: a_width >= 1
-			column_exists: column >= 1 and column <= columns
-		deferred
-		end
-
-	set_columns_width (value: ARRAY [INTEGER]) is         
-			-- Make `value' the new values of the columns width.
-		require
-			value_not_void: value /= Void
-			valid_value_length: value.count <= columns
+			titles_not_void: titles /= Void
+			titles_count_is_columns: titles.count = columns
 		local
 			i: INTEGER
-			list_i: INTEGER
+			old_count: INTEGER
 		do
 			from
-				i := value.lower
-				list_i := 1
+				i := 1
+				old_count := column_titles.count
+				column_titles.wipe_out
 			until
-				i = value.upper + 1
+				i > column_titles.count
 			loop
-				set_column_width (value @ i, list_i)
+				column_title_changed (titles @ i, i)
+				column_titles.extend (clone (titles @ i))
 				i := i + 1
-				list_i := list_i + 1
+				old_count := old_count - 1
+			end
+			from
+			until
+				old_count <= 0
+			loop
+				column_title_changed ("", i)
+				i := i + 1
+				old_count := old_count - 1
 			end
 		end
 
-	set_rows_height (value: INTEGER) is
-			-- Make`value' the new height of all the rows.
-		deferred
+	set_column_width (a_width: INTEGER; a_column: INTEGER) is
+			-- Assign `a_width' `column_width'(`a_column').
+		require
+			a_column_within_range: a_column > 0 and a_column <= columns
+			a_width_positive: a_width > 0
+		do
+			if a_column <= column_widths.count then
+				column_widths.go_i_th (a_column)
+				column_widths.replace (a_width)
+			else
+				from	
+				until
+					a_column = column_widths.count + 1
+				loop
+					column_widths.extend (Default_column_width) 
+				end
+				column_widths.extend (a_width)
+			end
+			column_width_changed (a_width, a_column)
+		ensure
+			a_width_assigned: a_width = column_width (a_column)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
+	set_column_widths (widths: ARRAY [INTEGER]) is         
+			-- Assign `widths' to column widths in order.
+		require
+			widths_not_void: widths /= Void
+			widths_count_is_columns: widths.count = columns
+		local
+			i: INTEGER
+			old_count: INTEGER
+		do
+			from
+				i := 1
+				old_count := column_widths.count
+				column_widths.wipe_out
+			until
+				i > column_widths.count
+			loop
+				column_width_changed (widths @ i, i)
+				column_widths.extend (widths @ i)
+				i := i + 1
+				old_count := old_count - 1
+			end
+			from
+			until
+				old_count <= 0
+			loop
+				column_title_changed ("", i)
+				i := i + 1
+				old_count := old_count - 1
+			end
+		end
+
+	set_row_height (a_height: INTEGER) is
+			-- Set all rows to `a_height'.
+		require
+			height_valid: a_height > 0
+		deferred
+		ensure
+			a_height_assigned: a_height = row_height
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	update_children is
 			-- Update all children with `update_needed' True.
@@ -280,14 +347,31 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			column_count_increased: columns = old columns + 1
 		end
 
-	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set the label of the cell with coordinates `a_x', `a_y'
 			-- with `txt'.
 		require
-			a_x_large_enough: a_x > 0
-			a_y_large_enough: a_y > 0
-			a_x_small_enough: a_x <= columns
-			a_y_small_enough: a_y <= count
+			a_column_large_enough: a_column > 0
+			a_row_large_enough: a_row > 0
+			a_column_small_enough: a_column <= columns
+			a_row_small_enough: a_row <= count
+			a_text_not_void: a_text /= Void
+		deferred
+		end
+
+	column_title_changed (a_title: STRING; a_column: INTEGER) is
+			-- Replace title of `a_column' with `a_title' if column present.
+			-- If `a_title' is Void, remove it.
+		require
+			a_column_positive: a_column > 0
+		deferred
+		end
+
+	column_width_changed (a_width, a_column: INTEGER) is
+			-- Replace width of `a_column' with `a_width' if column present.
+		require
+			a_column_positive: a_column > 0
+			a_width_positive: a_width > 0
 		deferred
 		end
 
@@ -299,6 +383,17 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
+
+	column_titles: LINKED_LIST [STRING]
+			-- All column titles set using `set_column_titles' and
+			-- `set_column_title'. We store it to give the user the
+			-- option to specify more titles than the current number of colums.
+
+	column_widths: LINKED_LIST [INTEGER]
+			-- All column widths set using `set_column_widths' and
+			-- `set_column_width'.
+
+	Default_column_width: INTEGER is 80
 
 invariant
 	ev_children_not_void: ev_children /= Void
@@ -326,6 +421,11 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/25 01:13:58  brendel
+--| Revised. Formatting.
+--| Implemented platform independently: set_column_*.
+--| Propagated to platforms: column_width_changed and column_title_changed.
+--|
 --| Revision 1.36  2000/03/24 19:36:08  brendel
 --| Moved update_child back again. Added `add_column' and
 --| `set_text_on_position' to support the function.

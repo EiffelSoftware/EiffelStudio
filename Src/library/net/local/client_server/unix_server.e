@@ -49,7 +49,7 @@ feature -- Access
 		do
 			in.accept;
 			outflow ?= in.accepted;
-			received ?= retrieved (outflow)
+			received ?= outflow.retrieved
 		end;
 	
 	close is

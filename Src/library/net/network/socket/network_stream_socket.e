@@ -20,6 +20,8 @@ inherit
 		end
 
 	NETWORK_SOCKET
+		undefine
+			support_storable
 		select
 			address,
 			set_peer_address

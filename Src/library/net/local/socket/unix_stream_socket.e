@@ -21,6 +21,8 @@ inherit
 		end
 
 	UNIX_SOCKET
+		undefine
+			support_storable
 		select
 			address,
 			cleanup,

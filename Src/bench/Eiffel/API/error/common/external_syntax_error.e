@@ -16,7 +16,7 @@ inherit
 			external_error_message
 		end
 
-creation {EXTERNAL_LANG_AS}
+creation {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS}
 
 	init
 
@@ -25,12 +25,11 @@ feature -- Property
 	external_error_message: STRING;
 			-- Specific syntax message
 
-feature {EXTERNAL_LANG_AS} -- Setting
+feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 
 	set_external_error_message (message: STRING) is
 		do
-			!!external_error_message.make (0);
-			external_error_message.copy (message);
+			external_error_message := clone (message);
 		end;
 
 	set_file_name (s: STRING) is

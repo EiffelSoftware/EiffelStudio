@@ -48,10 +48,10 @@ feature -- Initialization
 	make is
 			-- Create an interface objet to query active base.
 		do
-			!! ht.make (name_table_size)
+			create ht.make (name_table_size)
 			implementation := handle.database.db_selection
 			implementation.set_ht (ht)
-			error_c := error_code
+	--		error_c := error_code
 		end
 
 feature -- Access
@@ -64,8 +64,8 @@ feature -- Access
 
 feature -- Status report
 
-	container: CHAIN [DB_RESULT]
-			-- Stored cursors. [Cedric: I replaced LINKED_LIST by CHAIN]
+	container: LIST [DB_RESULT]
+			-- Stored cursors.
 
 	object: ANY
 			-- Eiffel object to be filled in by `cursor_to_object'
@@ -102,12 +102,13 @@ feature -- Status report
 			Result := container.after
 		end
 
-	error_m: STRING is 
-		do
-			Result := error_message
-		end
-
-	error_c: INTEGER
+		-- Please access status report from class DB_CONTROL.
+--	error_m: STRING is 
+--		do
+--			Result := error_message
+--		end
+--
+--	error_c: INTEGER
 
 feature -- Status setting
 
@@ -237,9 +238,10 @@ feature -- Basic operations
 		do
 			from
 				if cursor = Void then
-					!! cursor.make
+					create cursor.make
 					cursor.set_descriptor (active_selection_number)
 				end
+				cursor.update_metadata
 				if handle.status.found then
 					cursor.fill_in
 				end
@@ -251,7 +253,8 @@ feature -- Basic operations
 			loop
 				if container /= Void then
 					container.extend (cursor)
-					!! cursor.make
+							-- I think that metadata is taken for each row in this case... (Cedric)
+					create cursor.make
 					cursor.set_descriptor (active_selection_number)
 				end
 				if stop_condition /= Void then
@@ -329,24 +332,6 @@ feature -- Basic operations
 			query (last_query)
 		end
 
-	set_default_numeric_field_value ( value: DOUBLE) is
-			-- Set the value to represent a database null value.
-		do
-			db_default_null_value.set_value (value)
-		ensure
-			db_default_null_value.value = value
-		end
-
-	set_default_datetime_field_value ( value: DATE_TIME) is
-			-- Set the value to represent a database null value.
-		require
-			not_void: value /= Void
-		do
-			db_default_null_value.set_datetime_value (value)
-		ensure
-			db_default_null_value.datetime_value = value
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: DATABASE_SELECTION [DATABASE]
@@ -366,7 +351,7 @@ feature {NONE} -- Status report
 invariant
 
 	last_cursor_in_container: 
-		container /= Void and then not container.empty 
+		container /= Void and then not container.is_empty 
 								implies container.has (cursor)
 
 end -- class DB_SELECTION

@@ -305,9 +305,17 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
  * Class ID versus dynamic type
  */
 
+rt_public EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object)
+{
+	/* Return type id of the direct reference "object" */
+	return Dftype (object);
+}
+	
 rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 {
-	/* Return the dynamic type of the specified object */
+	/* Obsolete. Use "eif_type_by_object" instead.
+	 * Return the Type id of the specified object. 
+ 	 */
 
 	return Dftype(eif_access(object));
 }
@@ -345,11 +353,41 @@ rt_private int cid_to_dtype(EIF_TYPE_ID cid)
  * Field access (attributes)
  */
 
-rt_public char *eifaddr(char *object, char *name)
+rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret)
 {
-	/* Returns the physical address of the attribute named 'name' in the given
+	/* Like eif_attribute, but perform a type checking between the type	
+	 * given by "type_int" and the actual type of the attribute.
+	 * Return EIF_WRONG_TYPE, if this fails.
+	 */
+
+	void *addr;
+	int tid;
+
+	addr = eifaddr (object, name, ret);
+
+	if (*ret != EIF_CECIL_OK)	/* Was "eifaddr" successfull? */
+		return addr;	/* Return "addr" with error code in "ret". */	
+
+	tid = eif_type_by_object (object);	/* Get type id for "eif_attribute_type" */
+	if (tid == EIF_NO_TYPE)	/* No type id? */
+		eif_panic ("Object has no type id.");/* Should not happen. */
+
+	if (eif_attribute_type (name, tid) != type_int)  {	/* Do types match. */
+		*ret = EIF_WRONG_TYPE;	/* Wrong type. */
+		return addr;	
+	}
+
+} 	/* eif_field_safe */
+	
+
+rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
+{
+	/*
+	 * Returns the physical address of the attribute named 'name' in the given
 	 * object (note that the address of the object is expected -- we do not
 	 * want an Hector indirection pointer).
+	 * If it fails, "*ret" is EIF_NO_ATTRIBUTE, EIF_CECIL_OK, otherwise.
+	 * (was necessary was getting value of basic types failed).
 	 */
 	
 	int i;							/* Index in skeleton */
@@ -360,16 +398,23 @@ rt_public char *eifaddr(char *object, char *name)
 #endif
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
-	if (i == -1)					/* Attribute not found */
-		return (char *) 0;			/* Will certainly raise a bus error */
+	if (i == EIF_NO_ATTRIBUTE) {					/* Attribute not found */
+		void **failed;				/* Necessary for avoiding seg. fault */
+		*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
+		failed = (void **) malloc (sizeof(void *));	
+		*failed = (void *) 0;
+		return failed;	/* So that "*(EIF_TYPE *) failed" does not crash */
+	}
 
+	*ret = EIF_CECIL_OK; 	/* Set "*ret" for successfull return. */
 #ifndef WORKBENCH
-	return (char *) (object + (System(Dtype(object)).cn_offsets[i]));
+	return (void *) (object + (System(Dtype(object)).cn_offsets[i]));
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i]; 
 	CAttrOffs(offset,rout_id,dtype);
-	return object + offset;
+	
+	return (void *) (object + offset);
 #endif
 }
 
@@ -383,7 +428,7 @@ rt_public int eiflocate (EIF_OBJECT object, char *name) {
 rt_private int locate(char *object, char *name)
 {
 	/* Locate the attribute 'name' in the specified object and return the index
-	 * in the cn_offsets array, or -1 if there is no such attribute.
+	 * in the cn_offsets array, or EIF_NO_ATTRIBUTE if there is no such attribute.
 	 */
 
 	struct cnode *sk;				/* Skeleton entry in system */
@@ -392,7 +437,7 @@ rt_private int locate(char *object, char *name)
 	int i;
 
 	if (object == (char *) 0)		/* Null pointer */
-		return -1;					/* Differ the bus error */
+		return EIF_NO_ATTRIBUTE;					/* Differ the bus error */
 
 	sk = &System(Dtype(object));	/* Fetch skeleton entry */
 	nb_attr = sk->cn_nbattr;		/* Number of attributes */
@@ -410,7 +455,7 @@ rt_private int locate(char *object, char *name)
 			break;					/* Attribute was found */
 
 	if (i == nb_attr)				/* Attribute not found */
-		return -1;					/* Will certainly raise a bus error */
+		return EIF_NO_ATTRIBUTE;					/* Will certainly raise a bus error */
 
 	return i;			/* Index in the attribute array */
 }
@@ -434,7 +479,7 @@ rt_public EIF_BIT eifgbit(char *object, char *name)
 #endif
 
 	i = locate(object, name);		/* Locate attribute by name */
-	if (i == -1)					/* Attribute not found */
+	if (i == EIF_NO_ATTRIBUTE)					/* Attribute not found */
 		return EIF_NO_BIT_FIELD;		/* No bit field */
 
 	sk = &System(Dtype(object));	/* Fetch skeleton entry */

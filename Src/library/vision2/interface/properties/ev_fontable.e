@@ -17,14 +17,14 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.font
-		end;
+		end
 
 feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is current object destroyed
 		deferred
-		end;
+		end
 
 feature -- Element change
 
@@ -36,7 +36,7 @@ feature -- Element change
 			a_font_specified: a_font.is_specified
 		do
 			implementation.set_font (a_font)
-		end;
+		end
 
 	set_font_name (a_font_name: STRING) is
 			-- Set font label to `a_font_name'.
@@ -44,12 +44,12 @@ feature -- Element change
 			exists: not destroyed;
 			a_font_name_exists: a_font_name /= Void
 		local
-			a_font: EV_FONT;
+			a_font: EV_FONT
 		do
-			!! a_font.make;
-			a_font.set_name (a_font_name);
-			set_font (a_font);
-		end;
+			!! a_font.make
+			a_font.set_name (a_font_name)
+			set_font (a_font)
+		end
 
 feature {NONE} -- Implementation
 
@@ -67,7 +67,6 @@ feature {NONE} -- Implementation
 		end
 
 end -- class EV_FONTABLE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -188,7 +188,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 					add_node (center_class)
 					disable_all_links (center_class.links)
 --				else
-					-- The class must have been deleted/or renamed and can't be found enymore
+					-- The class must have been deleted/or renamed and can't be found anymore
 					-- The stone will be set to Void and the diagram is erased.
 				end
 			end

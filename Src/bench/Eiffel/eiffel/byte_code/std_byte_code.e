@@ -788,6 +788,8 @@ feature
 						-- free separate parameters
 					free_separate_parameters;
 						-- Reserve separate parameters
+					generated_file.putstring ("CURCSPFW;");
+					generated_file.new_line;
 					reserve_separate_parameters;
 					generated_file.putstring ("CURCSPF;");
 					generated_file.new_line;

@@ -9,7 +9,7 @@ class TRANSLATION_COMMAND
 inherit
 	EVENT_HDL
 
-        WEL_SIZE_CONSTANTS
+	WEL_SIZE_CONSTANTS
 
 	COMMAND
 		redefine
@@ -117,8 +117,14 @@ feature {WIDGET_WINDOWS, ACCELERABLE_WINDOWS} -- Implementation
 			end
 			if special_translation_number = 0 then
 				m := s.item (1)
+
+-- FIXME: On windows, we should put exact to true all the time, because otherwise if we have
+-- Ctrl<Btn1Down> and <Btn1Down> it will execute the two actions corresponding to the
+-- two events when you press Ctrl+Btn1 instead of doing only the first one.
+				exact := true
+
 				if m = '!' then
-					exact := true
+--					exact := true
 					place := 2
 				elseif m = ':' then
 					case_sensitive := true

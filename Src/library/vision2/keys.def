@@ -61,8 +61,8 @@ scroll lock, scroll_lock, ScrollLock, GDK_Scroll_Lock, Vk_scroll
 "=" (or "+"), equal, =, GDK_equal, 187
 "." (or ">"), period, ., GDK_period, 190
 ";" (or ":"), semicolon, ;, GDK_semicolon, 186
-"[" (or "{"), open_bracket, [, GDK_braceleft, 219
-"]" (or "}"), close_bracket, ], GDK_braceright, 221
+"[" (or "{"), open_bracket, [, GDK_bracketleft, 219
+"]" (or "}"), close_bracket, ], GDK_bracketright, 221
 "/" (or "?"), slash, /, GDK_slash, 191
 "\" (or "|"), backslash, \, GDK_backslash, 220
 "'" (or """), quote, ', GDK_quoteleft, 222
@@ -72,12 +72,12 @@ the up-arrow, up, Up, GDK_uparrow, Vk_up
 the down-arrow, down, Down, GDK_downarrow, Vk_down
 the left-arrow, left, Left, GDK_leftarrow, Vk_left
 the right-arrow, right, Right, GDK_rightarrow, Vk_right
-page up, page_up, PageUp, GDK_KP_Page_Up, Vk_prior
-page down, page_down, PageDown, GDK_KP_Page_Down, Vk_next
-home, home, Home, GDK_KP_Home, Vk_home
-end, end, End, GDK_KP_End, Vk_end
-insert, insert, Insert, GDK_KP_Insert, Vk_insert
-delete, delete, Delete, GDK_KP_Delete, Vk_delete
+page up, page_up, PageUp, GDK_Page_Up, Vk_prior
+page down, page_down, PageDown, GDK_Page_Down, Vk_next
+home, home, Home, GDK_Home, Vk_home
+end, end, End, GDK_End, Vk_end
+insert, insert, Insert, GDK_Insert, Vk_insert
+delete, delete, Delete, GDK_Delete, Vk_delete
 "a", a, a, GDK_a, 65
 "b", b, a, GDK_b, 66
 "c", c, b, GDK_c, 67
@@ -110,6 +110,9 @@ delete, delete, Delete, GDK_KP_Delete, Vk_delete
 #-------------------------------------------------------------------------------
 #
 # $Log$
+# Revision 1.9  2000/03/17 20:15:03  brendel
+# Fixed GDK externals.
+#
 # Revision 1.8  2000/03/17 18:53:31  brendel
 # Fixed more cases in GDK externals.
 #

@@ -5,21 +5,26 @@ indexing
 
 class
 	IL_EMITTER
+	
+inherit
+	SHARED_WORKBENCH
 
 create
 	make
 	
 feature {NONE} -- Initialization
 
-	make (runtime_version: STRING) is
+	make (a_path, a_runtime_version: STRING) is
 			-- Create new instance of IL_EMITTER
-		local
-			l_path: UNI_STRING
+		require
+			a_path_not_void: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+			a_runtime_version_not_void: a_runtime_version /= Void
+			a_runtime_version_not_empty: not a_runtime_version.is_empty
 		do
-			create l_path.make ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			implementation := (create {EMITTER_FACTORY}).new_emitter (runtime_version)
+			implementation := (create {EMITTER_FACTORY}).new_emitter (a_runtime_version)
 			if implementation /= Void then
-				implementation.initialize_with_path (l_path, create {UNI_STRING}.make (runtime_version))
+				implementation.initialize_with_path (create {UNI_STRING}.make (a_path), create {UNI_STRING}.make (a_runtime_version))
 			end
 		end
 
@@ -28,6 +33,14 @@ feature -- Status report
 	exists: BOOLEAN is
 		do
 			Result := implementation /= Void
+		end
+		
+	is_initialized: BOOLEAN is
+			-- Is consumer initialized for given path?
+		require
+			exists: exists
+		do
+			Result := implementation.is_initialized
 		end
 
 	assembly_found: BOOLEAN
@@ -160,7 +173,6 @@ feature -- XML generation
 			implementation.consume_assembly_from_path (
 				create {UNI_STRING}.make (a_path))
 		end
-		
 
 	consume_assembly (a_name, a_version, a_culture, a_key: STRING) is
 			-- consume an assembly into the EAC from assemblyy defined by

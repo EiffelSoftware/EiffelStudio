@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_METADATA_ACCESS
+		export
+			{NONE} all
+		end
+
 feature -- Implementation
 
 	Eiffel_base_types: HASH_TABLE [STRING, STRING] is
@@ -55,7 +60,6 @@ feature -- Implementation
 			non_void_an_eiffel_type_name: an_eiffel_type_name /= Void
 			not_empty_an_eiffel_type_name: not an_eiffel_type_name.is_empty
 		local
-			l_cache_reflection: CACHE_REFLECTION
 			l_cat: CONSUMED_ASSEMBLY_TYPES
 			l_counter: INTEGER
 			l_eiffel_type_name: STRING
@@ -77,7 +81,6 @@ feature -- Implementation
 				l_referenced_assemblies := (create {CODE_REFERENCED_ASSEMBLIES}).referenced_assemblies
 				from
 					l_referenced_assemblies.start
-					create l_cache_reflection.make (Clr_version)
 				until
 					l_referenced_assemblies.after or Result /= Void
 				loop
@@ -318,15 +321,13 @@ feature -- Implementation
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
 			l_ca: ARRAY [CONSUMED_ASSEMBLY]
-			l_cache_reflection: CACHE_REFLECTION
 			l_counter: INTEGER
 		do
-			create l_cache_reflection.make (Clr_version)
-			l_cache_reflection.Types_cache.search (a_dotnet_type_name)
-			if l_cache_reflection.Types_cache.found_item /= Void then
-				Result ?= l_cache_reflection.Types_cache.found_item
+			cache_reflection.Types_cache.search (a_dotnet_type_name)
+			if cache_reflection.Types_cache.found_item /= Void then
+				Result ?= cache_reflection.Types_cache.found_item
 			else		
-				l_ca := l_cache_reflection.consumed_assemblies
+				l_ca := cache_reflection.consumed_assemblies
 				from
 					l_counter := 1
 				until
@@ -339,7 +340,7 @@ feature -- Implementation
 				check
 					Type_found: Result /= Void
 				end
-				l_cache_reflection.Types_cache.put (Result, a_dotnet_type_name)			
+				cache_reflection.Types_cache.put (Result, a_dotnet_type_name)			
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
@@ -347,11 +348,8 @@ feature -- Implementation
 
 	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; dotnet_type_target_feature: STRING): CONSUMED_TYPE is
 			-- 
-		local
-			l_cache_reflection: CACHE_REFLECTION
 		do
-			create l_cache_reflection.make (Clr_version)
-			Result := l_cache_reflection.consumed_type_from_dotnet_type_name (ca, dotnet_type_target_feature)
+			Result := cache_reflection.consumed_type_from_dotnet_type_name (ca, dotnet_type_target_feature)
 		end
 
 feature -- Status Setting

@@ -24,7 +24,7 @@ create
 feature -- Events
 
 	polygon_array: ARRAY [EV_COORDINATE] is
-			-- Return an array with the four absolute corner points.
+			-- Array with four absolute corner points.
 		local
 			sin_a, cos_a: DOUBLE
 			w, h: INTEGER
@@ -58,9 +58,8 @@ feature -- Events
 		end
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
-			--| FIXME Always filled? No!
 			if point_a.angle_abs = 0.0 then
 				Result := point_on_rectangle (x, y,
 					point_a.x_abs, point_a.y_abs,
@@ -80,7 +79,7 @@ feature -- Status report
 	--| strange.
 
 	width: INTEGER is
-			-- The width of the rectangle.
+			-- Width of rectangle.
 		do
 			if point_b.relative_to (point_a) then
 				Result := point_b.x_rel_to (point_a)
@@ -93,7 +92,7 @@ feature -- Status report
 		end
 
 	height: INTEGER is
-			-- The height of the rectangle.
+			-- Height of rectangle.
 		do
 			if point_b.relative_to (point_a) then
 				Result := point_b.y_rel_to (point_a)
@@ -106,7 +105,7 @@ feature -- Status report
 		end
 
 	center: EV_COORDINATE is
-			-- get the center point of the rectangle.
+			-- Center point of rectangle.
 		do
 			create Result.set (
 				(point_a.x_abs + point_b.x_abs) // 2,
@@ -114,7 +113,7 @@ feature -- Status report
 		end
 
 	top_left: EV_COORDINATE is
-			-- Get the top-left coordinates of the rectangle.
+			-- Top-left coordinates of rectangle.
 		local
 			top, left: INTEGER
 		do

@@ -39,23 +39,23 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	background_color: EV_COLOR
-			-- The color used to clear the drawing device.
+			-- Color used to clear drawing device.
 			-- Default: White.
 
 	points_visible: BOOLEAN
-			-- Are all the points in the world visible?
+			-- Are all points in world visible?
 			-- Used for debugging purposes.
 			-- Default: False.
 
 	capture_figure: EV_FIGURE
-			-- Figure that has the mouse capture.
+			-- Figure that has mouse capture.
 
 	grid_enabled: BOOLEAN
-			-- Should all move handles in the world snap to the grid?
+			-- Should all move handles in world snap to grid?
 			-- Default: False.
 
 	grid_visible: BOOLEAN
-			-- Display a visual representation of the grid?
+			-- Display visual representation of  grid?
 			-- Default: True.
 
 	Default_grid_x: INTEGER is 20
@@ -103,7 +103,7 @@ feature -- Access
 feature -- Status report
 
 	is_redraw_needed: BOOLEAN
-			-- Does the entire area need to be redrawn?
+			-- Does entire area need to be redrawn?
 			-- This is the case when a figure is added or removed.
 
 feature -- Status setting

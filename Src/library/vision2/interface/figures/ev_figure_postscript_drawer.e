@@ -19,7 +19,7 @@ feature -- Figure drawing
 	--| FIXME No figure drawing routines have support for the orientation attribute.
 
 	draw_figure_arc (arc: EV_FIGURE_ARC) is
-			-- Draw a standard representation of `arc' to the canvas.
+			-- Draw standard representation of `arc' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			cx, cy, w, h: INTEGER
@@ -43,7 +43,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_dot (dot: EV_FIGURE_DOT) is
-			-- Draw a standard representation of `dot' to the canvas.
+			-- Draw standard representation of `dot' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER]
 			cx, cy, r: INTEGER
@@ -66,7 +66,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
-			-- Draw a standard representation of `ellipse' to the canvas.
+			-- Draw standard representation of `ellipse' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			cx, cy, w, h: INTEGER
@@ -95,7 +95,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL) is
-			-- Draw a standard representation of `eql' to the canvas.
+			-- Draw standard representation of `eql' to canvas.
 		do
 			if eql.is_show_requested then
 				add_ps ("%%Drawing PS Figure Equilateral")
@@ -111,7 +111,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_line (line: EV_FIGURE_LINE) is
-			-- Draw a standard representation of `line' to the canvas.
+			-- Draw standard representation of `line' to canvas.
 		do
 			if line.is_show_requested then
 				add_ps ("%%Drawing PS Figure Line")
@@ -128,7 +128,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_picture (picture: EV_FIGURE_PICTURE) is
-			-- Draw a standard representation of `picture' to the canvas.
+			-- Draw standard representation of `picture' to canvas.
 		local
 			hex_string: STRING
 			pixmap_width, pixmap_height, i: INTEGER
@@ -158,7 +158,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE) is
-			-- Draw a standard representation of `slice' to the canvas.
+			-- Draw standard representation of `slice' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			cx, cy, w, h: INTEGER
@@ -184,7 +184,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_polygon (polygon: EV_FIGURE_POLYGON) is
-			-- Draw a standard representation of `polygon' to the canvas.
+			-- Draw standard representation of `polygon' to canvas.
 		do
 			if polygon.is_show_requested then
 				add_ps ("%%Drawing PS Figure Polygon")
@@ -200,7 +200,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_polyline (line: EV_FIGURE_POLYLINE) is
-			-- Draw a standard representation of `polyline' to the canvas.
+			-- Draw standard representation of `polyline' to canvas.
 		do
 			if line.is_show_requested then
 				add_ps ("%%Drawing PS Figure Polyline")
@@ -217,7 +217,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE) is
-			-- Draw a standard representation of `rectangle' to the canvas.
+			-- Draw standard representation of `rectangle' to canvas.
 		do
 			if rectangle.is_show_requested then
 				add_ps ("%%Drawing PS Figure Rectangle")
@@ -233,7 +233,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_rounded_rectangle (rounded_rectangle: EV_FIGURE_ROUNDED_RECTANGLE) is
-			-- Draw a standard representation of `rounded_rectangle' to the canvas.
+			-- Draw standard representation of `rounded_rectangle' to canvas.
 		do
 			if rounded_rectangle.is_show_requested then
 				add_ps ("%%Drawing PS Figure Rounded Rectangle")
@@ -249,7 +249,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_star (star: EV_FIGURE_STAR) is
-			-- Draw a standard representation of `star' to the canvas.
+			-- Draw standard representation of `star' to canvas.
 		local
 				coord_array: LINEAR [EV_COORDINATE]
 		do
@@ -278,7 +278,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
-			-- Draw a standard representation of `text_figure' to the canvas.
+			-- Draw standard representation of `text_figure' to canvas.
 		local
 			font_name, font_style: STRING
 		do
@@ -339,7 +339,7 @@ feature -- Access
 feature -- Status setting
 
 	set_margins (a_left_margin, a_bottom_margin: INTEGER) is
-			-- Set the `left' and `bottom' margins to `a_left_margin'
+			-- Set `left' and `bottom' margins to `a_left_margin'
 			-- and `a_bottom_margin'.
 			--| FIXME Requires pre- and post-conditions.
 		do
@@ -348,7 +348,7 @@ feature -- Status setting
 		end
 
 	set_page_size (a_size: INTEGER; landscape: BOOLEAN) is
-			-- Set the horizontal and vertical dimensions of the page.
+			-- Set horizontal and vertical dimensions of page.
 		do
 			point_width := page_width (a_size, landscape) - (left_margin*2)
 			point_height := page_height (a_size, landscape) - (bottom_margin*2)
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_line_styles (a_figure: EV_ATOMIC_FIGURE) is
-			-- Add postscript code for the dashed line style and line width.
+			-- Add postscript code for dashed line style and line width.
 		do
 			if a_figure.dashed_line_style then
 				add_ps ("[3] 0 setdash")

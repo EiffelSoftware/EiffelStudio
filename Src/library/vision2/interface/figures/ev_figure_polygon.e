@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	side_count: INTEGER is
-			-- Returns the number of sides this polyline has.
+			-- Returns number of sides this polyline has.
 		do
 			if points.count <= 1 then
 				Result := 0
@@ -64,7 +64,7 @@ feature -- Status report
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point (`x', `y') contained in this figure?
+			-- Is (`x', `y') contained in this figure?
 		do
 			Result := point_on_polygon (x, y, point_array)
 		end

@@ -26,7 +26,7 @@ feature -- Basic operations
 			-- Then, do not start a new one.
 
 	project is
-			-- Make a standard projection of the world on the device.
+			-- Make standard projection of world on device.
 		deferred
 		end
 

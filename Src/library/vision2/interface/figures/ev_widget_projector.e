@@ -60,7 +60,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	widget: EV_WIDGET
-			-- `device' if conforms to EV_WIDGET. `Void' otherwise.
+			-- `device' if conforms to EV_WIDGET.
+			-- `Void' otherwise.
 
 	area: EV_DRAWABLE
 			-- Area associated with `widget'.
@@ -96,7 +97,7 @@ feature -- Element change
 feature -- Basic operations
 
 	project is
-			-- Make a standard projection of the world on the device.
+			-- Make a standard projection of world on device.
 		local
 			e, u: EV_RECTANGLE
 		do
@@ -192,18 +193,18 @@ feature -- Basic operations
 feature {NONE} -- Event implementation
 
 	current_figure: EV_FIGURE
-			-- Figure the mouse is currently on.
+			-- Figure mouse is currently on.
 			--| To generate leave and enter actions.
 
 	last_pointer_x, last_pointer_y: INTEGER
-			-- The last mouse coordinates.
-			--| Used when the world changes using `project'.
+			-- Last mouse coordinates.
+			--| Used when world changes using `project'.
 
 	has_mouse: BOOLEAN
-			-- Does the canvas have the mouse on it?
+			-- Does canvas have mouse on it?
 
 	figure_on_position (group: EV_FIGURE_GROUP; x, y: INTEGER): EV_FIGURE is
-			-- Get the figure the mouse-cursor is on.
+			-- Figure mouse-cursor is on.
 		local
 			grp: EV_FIGURE_GROUP
 		do
@@ -310,7 +311,7 @@ feature {NONE} -- Event implementation
 		end
 
 	pointer_leave is
-			-- Pointer left the canvas.
+			-- Pointer left canvas.
 		do
 			has_mouse := False
 		end
@@ -334,7 +335,7 @@ feature {NONE} -- Event implementation
 		end
 
 	change_current (new_current_figure: EV_FIGURE) is
-			-- Change the current to `new_focused_figure'.
+			-- Change current to `new_focused_figure'.
 			--| Generate leave and/or enter events accordingly.
 		local
 			old_figure: EV_FIGURE
@@ -427,11 +428,11 @@ feature {NONE} -- Event implementation
 		end
 
 	on_pebble_request (a_x, a_y: INTEGER): ANY is
-			-- Pebble of the current figure.
-			-- If figure is `Void', return the pebble of the world.
-			-- Because when a context menu is up, no events are sent
-			-- to the world, first simulate a mouse motion to update
-			-- the projection.
+			-- Pebble of current figure.
+			-- If figure is `Void', return pebble of world.
+			--| Because when a context menu is up, no events are sent
+			--| to the world, first simulate a mouse motion to update
+			--| the projection.
 		local
 			fig: EV_FIGURE
 		do	
@@ -485,10 +486,10 @@ feature {NONE} -- Event implementation
 feature {NONE} -- Implementation
 
 	axle_length: INTEGER is 15
-			-- Length of the x and y axles when points are displayed.
+			-- Length of x and y axles when points are displayed.
 
 	project_rel_point (point: EV_RELATIVE_POINT) is
-			-- Draw a representation of a point on the canvas.
+			-- Draw representation of a point on canvas.
 		local
 			dx, dy: INTEGER
 			nl: LINKED_LIST [EV_RELATIVE_POINT]

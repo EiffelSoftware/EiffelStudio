@@ -53,13 +53,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_closed: BOOLEAN
-			-- Should this polyline be closed? That means should the first
-			-- and the last point be connected?
+			-- Should this polyline be closed?
+			-- i.e. should first and last point be connected?
 
 feature -- Status report
 
 	line_count: INTEGER is
-			-- Returns the number of lines this polyline has.
+			-- Returns number of lines this polyline has.
 		do
 			if points.count <= 1 then
 				Result := 0
@@ -119,7 +119,7 @@ feature {EV_FIGURE_DRAWER} -- Implementation
 		end
 
 	start_ref_point: EV_RELATIVE_POINT is
-			-- Point that determines the angle for `start_point'.
+			-- Point that determines angle for `start_point'.
 		do
 			Result := points.i_th (2)
 		end
@@ -131,7 +131,7 @@ feature {EV_FIGURE_DRAWER} -- Implementation
 		end
 
 	end_ref_point: EV_RELATIVE_POINT is
-			-- Point that determines the angle for `end_point'.
+			-- Point that determines angle for `end_point'.
 		do
 			Result := points.i_th (points.count - 1)
 		end
@@ -139,8 +139,8 @@ feature {EV_FIGURE_DRAWER} -- Implementation
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure? i.e. is it
-			-- on any of the lines of this polyline?
+			-- Is (`x', `y') on this figure? i.e. is it
+			-- on any of lines of this polyline?
 		local
 			pa, pb: EV_RELATIVE_POINT
 		do

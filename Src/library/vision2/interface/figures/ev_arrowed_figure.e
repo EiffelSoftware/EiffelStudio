@@ -123,7 +123,7 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 		end
 
 	start_ref_point: EV_RELATIVE_POINT is
-			-- Point that determines the angle for `start_point'.
+			-- Point that determines angle for `start_point'.
 		deferred
 		end
 
@@ -133,19 +133,19 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 		end
 
 	end_ref_point: EV_RELATIVE_POINT is
-			-- Point that determines the angle for `end_point'.
+			-- Point that determines angle for `end_point'.
 		deferred
 		end
 
 	start_angle: DOUBLE is
-			-- Actual angle the line is on relative to the world.
+			-- Actual angle line is on relative to world.
 		do
 			Result := line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)
 		end
 
 	end_angle: DOUBLE is
-			-- Actual angle the line is on relative to the world.
+			-- Actual angle line is on relative to world.
 		do
 			Result := -line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)

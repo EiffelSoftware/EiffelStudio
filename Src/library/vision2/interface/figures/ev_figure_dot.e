@@ -27,9 +27,8 @@ create
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
-			-- To be optimized.
 			Result := point_on_ellipse (x, y, point.x_abs,
 				point.y_abs, line_width // 2, line_width // 2)
 		end

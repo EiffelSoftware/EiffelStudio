@@ -53,7 +53,7 @@ feature -- Element change
 feature -- Status report
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_polygon (x, y, polygon_array)
 		end

@@ -8,7 +8,7 @@ cd C_library/expat
 make
 remtrace libpng
 cd $INITIAL_DIR/C_library/libpng
-if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" -o "$ISE_PLATFORM" = "linuxppc" ]; then
+if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
 	cp scripts/makefile.linux .
 	make -f makefile.linux
 elif [ "$ISE_PLATFORM" = "solaris-2.5+" ]; then
@@ -16,13 +16,15 @@ elif [ "$ISE_PLATFORM" = "solaris-2.5+" ]; then
 	make -f makefile.solaris
 else
 	rep = $ISE_PLATFORM
-	echo Here are the available makefiles:
-	ls scripts
-	while [ ! -f "scripts/makefile.$rep" ]; do
-		echo "scripts/makefile.$rep doesn't exist..."
+	if [ ! -f "scripts/makefile.$rep" ]; then
+		echo Here are the available makefiles:
+		ls scripts
 		echo "What is the extension of the makefile that should be used?"
-		read rep
-	done
+		while [ ! -f "scripts/makefile.$rep" ]; do
+			echo "scripts/makefile.$rep doesn't exist... Try another one"
+			read rep
+		done
+	fi
 	cp scripts/makefile.$rep .
 	make -f makefile.$rep
 fi

@@ -333,6 +333,8 @@ feature -- Basic Operations
 
 			create on_resize_delegate.make_eventhandler (Current, $on_resize)
 			add_resize (on_resize_delegate)
+			
+			fill_data_grid
 		ensure
 			non_void_menu: main_menu /= Void
 			non_void_toolbar: toolbar /= Void
@@ -370,8 +372,8 @@ feature -- Basic Operations
 			create show_all_menu_item.make_menuitem_1 (dictionary.Show_all_menu_item)
 						
 			name_menu_item.set_shortcut (dictionary.Ctrl_N_shortcut)
-			version_menu_item.set_shortcut (dictionary.Ctrl_V_shortcut)
-			culture_menu_item.set_shortcut (dictionary.Ctrl_C_shortcut)
+			version_menu_item.set_shortcut (dictionary.Ctrl_R_shortcut)
+			culture_menu_item.set_shortcut (dictionary.Ctrl_U_shortcut)
 			public_key_menu_item.set_shortcut (dictionary.Ctrl_K_shortcut)
 			dependancies_menu_item.set_shortcut (dictionary.Ctrl_D_shortcut)
 			show_all_menu_item.set_shortcut (dictionary.Ctrl_A_shortcut)
@@ -759,9 +761,11 @@ feature -- Event handling
 		do
 			a_size.set_width (width - dictionary.Margin // 2)
 			a_size.set_height (height - 4 * dictionary.Row_height)
-			data_grid.set_Size (a_size)			
-			fill_data_grid
+			data_grid.set_Size (a_size)
 			resize_columns
+			if data_table.rows /= Void and then data_table.rows.count > 0 then
+				fill_data_grid
+			end			
 			refresh
 		end
 		

@@ -19,6 +19,8 @@ inherit
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
 		rename
 			notify_new_module as notify_new_module_for_breakpoints
+--| removed so far, since we do not really need this
+--| and for performance reason
 --			, notify_new_class as notify_new_class_for_breakpoints
 		redefine
 			reset, init
@@ -41,6 +43,7 @@ create
 feature {NONE}
 
 	make is
+			-- Create Current data.
 		do
 			create_jit_info
 			init
@@ -56,8 +59,10 @@ feature {NONE}
 feature -- Debugger
 
 	controller: EIFNET_DEBUGGER
+			-- Bridge to dotnet debugger
 
 	set_controller (val: like controller) is
+			-- Set `controller' value to `val'.
 		do
 			controller := val
 		end
@@ -65,6 +70,7 @@ feature -- Debugger
 feature -- Reset
 
 	reset is
+			-- Reset data contained in Current.
 		do
 			data_changed                := False
 
@@ -114,6 +120,7 @@ feature -- Reset
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
 		end
 
+
 feature -- Current CallStack
 
 	current_stack_info: EIFNET_DEBUGGER_STACK_INFO
@@ -123,15 +130,14 @@ feature -- Current CallStack
 			-- Contains saved debugger info about previous stack
 	
 	reset_current_callstack is
+			-- Reset current callstack information
 		do
 			create current_stack_info
 			current_callstack_initialized := False
 		end
 		
 	init_current_callstack is
-			-- 
---		require
---			current_stack_ready: current_stack_info /= Void
+			-- Initialize current callback information
 		local
 			l_frame: ICOR_DEBUG_FRAME
 			l_chain: ICOR_DEBUG_CHAIN
@@ -174,17 +180,38 @@ feature -- Current CallStack
 					end
 				end
 				current_callstack_initialized := True
---				set_current_state_representation
 			end
 		ensure
 			current_callstack_initialized
 		end
 		
 	current_callstack_initialized: BOOLEAN
+			-- Is current callstack initialized ?
+
+feature {EIFNET_EXPORTER} -- Current Breakpoint access
+
+	current_breakpoint: BREAKPOINT is
+			-- Current eStudio Breakpoint object corresponding to the
+			-- current breakpoint in dotnet world.
+		local
+			l_eifnet_breakpoint: EIFNET_BREAKPOINT
+		do
+			check
+				last_managed_callback_is_breakpoint
+			end
+			l_eifnet_breakpoint := eifnet_breakpoint (
+										current_stack_info.current_module_name,
+										current_stack_info.current_class_token,
+										current_stack_info.current_feature_token,
+										current_stack_info.current_il_offset
+									)
+			Result := l_eifnet_breakpoint.breakpoint
+		end
 
 feature -- Evaluation
 
 	is_inside_function_evaluation: BOOLEAN is
+			-- Is the current context correspond to a function evaluation ?
 		do
 			Result := Application.imp_dotnet.status.is_evaluating
 		end		
@@ -192,6 +219,7 @@ feature -- Evaluation
 feature -- Progression
 
 	save_current_stack_as_previous is
+			-- Save current callstack as previous callstack.
 		do
 			previous_stack_info := current_stack_info.twin
 		ensure
@@ -199,6 +227,9 @@ feature -- Progression
 		end
 
 	is_current_state_same_as_previous: BOOLEAN is
+			-- Is current callstack same as previous ?
+			-- Used to notice when a debugger operation had no "il offset moving" effect.
+			-- this use the il offset related to stoppable point.
 		require
 			current_stack_info_set: current_stack_info /= Void
 		do
@@ -214,8 +245,10 @@ feature -- Progression
 feature -- Debugger updatable
 
 	data_changed: BOOLEAN
+			-- Data changed during last operation ?
 
 	set_data_changed (val: BOOLEAN) is
+			-- Set `data_changed' to `val'.
 		do
 			data_changed := val
 		end
@@ -512,16 +545,22 @@ feature -- Debuggee Session Parameters
 feature -- Change Debuggee Session Parameters
 	
 	set_param_directory (a_dir: STRING) is
+			-- Set the working directory parameter  to `a_dir'
+			-- used for launching application
 		do
 			param_directory := a_dir
 		end
 
 	set_param_executable (a_exec: STRING) is
+			-- Set the executable parameter  to `a_exec'
+			-- used for launching application
 		do
 			param_executable := a_exec
 		end
 
 	set_param_arguments (a_arg: STRING) is
+			-- Set the arguments parameter  to `a_arg'
+			-- used for launching application
 		do
 			param_arguments := a_arg
 		end	
@@ -529,13 +568,16 @@ feature -- Change Debuggee Session Parameters
 feature -- JIT notification
 
 	notify_new_module (a_mod_key: STRING) is
+			-- Notify new module loading.
 		do
 			notify_new_module_for_breakpoints (a_mod_key)
 		end
 
+--| removed so far, since we do not really need this
+--| and for performance reason
 --	notify_new_class (a_cls_token: INTEGER; a_mod_key: STRING) is
 --		do
-----			notify_new_class_for_breakpoints (a_cls_token, a_mod_key)
+--			notify_new_class_for_breakpoints (a_cls_token, a_mod_key)
 --		end
 
 feature -- JIT info
@@ -549,22 +591,29 @@ feature -- JIT info
 		end
 
 	create_jit_info is
+			-- Create JustInTime information.
 		do
 			create Loaded_modules.make (10)
 			loaded_modules.compare_objects
 			
+--| removed so far, since we do not really need this
+--| and for performance reason
 --			create Loaded_classes.make (10)
 --			loaded_classes.compare_objects
 		end
 
 	reset_jit_info is
+			-- Reset JustInTime information.
 		do
 			Loaded_modules.wipe_out
+
+--| removed so far, since we do not really need this
+--| and for performance reason
 --			Loaded_classes.wipe_out
 		end
 
 	register_new_module (a_module: ICOR_DEBUG_MODULE) is
-			-- Notify system a new module is loaded
+			-- Register new module after being notified laoding
 		require
 			a_module /= Void
 		local
@@ -574,8 +623,9 @@ feature -- JIT info
 		do
 			l_module_key_name := module_key (a_module.get_name)
 			if loaded_modules.is_empty then
-				-- We have to deal with the MSCORLIB.DLL module 
-				--| FIXME: JFIAT : 2003/12/23 : to check
+					-- We have to deal with the MSCORLIB.DLL module 
+					--| FIXME: JFIAT : 2003/12/23 : to check if the first module 
+					--|              : is always MSCORLIB
 				mscorlid_module := a_module
 			end
 			loaded_modules.put (a_module, l_module_key_name)
@@ -613,6 +663,8 @@ feature -- JIT info
 			notify_new_module (l_module_key_name)
 		end
 
+--| removed so far, since we do not really need this
+--| and for performance reason
 --	register_new_class (a_class: ICOR_DEBUG_CLASS) is
 --			-- Notify system a new class is loaded
 --		require
@@ -645,20 +697,25 @@ feature {NONE} -- JIT info implementation
 		end
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING]
+			-- Loaded modules by the execution
 
 	mscorlid_module: ICOR_DEBUG_MODULE
+			-- MSCORLIB ICorDebugModule
 	
+--| removed so far, since we do not really need this
+--| and for performance reason
 --	loaded_classes: HASH_TABLE [ICOR_DEBUG_CLASS, TUPLE[STRING,INTEGER]]
 
 feature -- JIT Info access
 
 	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
-			-- 
+			-- ICorDebugModule for `a_mod_name'
 		do
 			Result := loaded_modules.item (module_key (a_mod_name))
 		end
 		
 	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
+			-- ICorDebugModule for MSCORLIB
 		do
 			Result := mscorlid_module
 		end
@@ -666,8 +723,17 @@ feature -- JIT Info access
 feature -- Stepping
 
 	last_control_mode: INTEGER
+			-- Last control mode
+			-- stepping into,next,out, continue...
+
+	last_control_mode_as_string: STRING is
+			-- String representation for `last_control_mode'
+		do
+			Result := control_mode_to_string (last_control_mode)
+		end
 
 	valid_control_mode (a_mode: INTEGER): BOOLEAN is
+			-- Is the control mode `a_mode' valid ?
 		do
 			Result :=  a_mode = cst_control_continue 
 					or a_mode = cst_control_stop 
@@ -678,12 +744,8 @@ feature -- Stepping
 					or a_mode = cst_control_nothing
 		end	
 
-	last_control_mode_as_string: STRING is
-		do
-			Result := control_mode_to_string (last_control_mode)
-		end
-
 	set_last_control_mode (a_mode: INTEGER) is
+			-- Set `last_control_mode' to `a_mode'
 		require
 			control_value_valid: valid_control_mode (a_mode)
 		do
@@ -691,36 +753,43 @@ feature -- Stepping
 		end
 
 	last_control_mode_is_continue: BOOLEAN is
+			-- Last control was `continue'
 		do
 			Result := last_control_mode = Cst_control_continue
 		end
 
 	last_control_mode_is_stop: BOOLEAN is
+			-- Last control was `stop'
 		do
 			Result := last_control_mode = Cst_control_stop
 		end
 
 	last_control_mode_is_kill: BOOLEAN is
+			-- Last control was `kill'
 		do
 			Result := last_control_mode = Cst_control_kill
 		end
 
 	last_control_mode_is_step_out: BOOLEAN is
+			-- Last control was `step_out'
 		do
 			Result := last_control_mode = Cst_control_step_out
 		end
 
 	last_control_mode_is_step_into: BOOLEAN is
+			-- Last control was `step_into'
 		do
 			Result := last_control_mode = Cst_control_step_into
 		end
 
 	last_control_mode_is_step_next: BOOLEAN is
+			-- Last control was `step_next'
 		do
 			Result := last_control_mode = Cst_control_step_next
 		end
 		
 	last_control_mode_is_stepping: BOOLEAN is
+			-- Last control was `stepping'
 		do
 			Result := last_control_mode_is_step_into
 			or else last_control_mode_is_step_out
@@ -728,6 +797,7 @@ feature -- Stepping
 		end
 
 	last_control_mode_is_nothing: BOOLEAN is
+			-- Last control was not affected
 		do
 			Result := last_control_mode = Cst_control_nothing
 		end		

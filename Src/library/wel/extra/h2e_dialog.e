@@ -106,6 +106,7 @@ feature {NONE} -- Behaviors
 			conv: CONVERTER
 			c: WEL_CURSOR
 			previous_text: STRING
+			msg_box: WEL_MSG_BOX
 		do
 			if file_exists (h_file_edit.text) then
 				!! c.make_by_predefined_id (Idc_wait)
@@ -120,7 +121,8 @@ feature {NONE} -- Behaviors
 				translate_button.set_text (previous_text)
 				c.restore_previous
 			else
-				error_message_box ("Header file not found.")
+				create msg_box.make
+				msg_box.error_message_box (Current, "Header file not found.", "Error")
 			end
 		end
 

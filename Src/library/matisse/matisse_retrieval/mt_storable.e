@@ -955,6 +955,16 @@ feature {MT_CLASS, MATISSE} -- Access
 			relationships_loaded := True
 		end
 
+	attributes_unloaded is
+		do
+			attributes_loaded := False
+		end
+
+	relationships_unloaded is
+		do
+			relationships_loaded := False
+		end
+
 	predefined_eif_field (a_field_name: STRING): BOOLEAN is
 			-- Is a_field_name an attribute defined in this class MT_STORABLE?
 		do

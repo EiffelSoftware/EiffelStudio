@@ -13,7 +13,8 @@ inherit
 			allocates_memory,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code,
+			has_separate_call
 		end;
 	
 feature 
@@ -251,6 +252,19 @@ feature -- Inlining
 				Result := Current
 				expr := expr.inlined_byte_code
 			end
+		end
+
+feature -- concurrent Eiffel
+
+	has_separate_call: BOOLEAN is
+		-- Is there separate feature call in the assertion?
+		do
+			if expr /= Void then
+				Result := expr.has_separate_call;
+			end;
+			if not Result and access /= Void then
+				Result := access.has_separate_call;
+			end;
 		end
 
 end

@@ -41,22 +41,11 @@ feature {NONE} -- Implementation
 
 	make  is
 			-- create and instance
-		local
-			--resource: RESOURCE_STRUCTURE
-			--kernel: EB_KERNEL
-			--eifgen_init: INIT_SERVERS
-			--new_resources: TTY_RESOURCES
 		do
 			create output.make	
 			Eiffel_project.set_degree_output (output)
 			create excluded_clusters.make
-
-			-- initialize the resources needed to create the HTML docs
-			--create kernel.make
-			--create eifgen_init.make
-			--initialize_resources (System_general, Eiffel_preferences)
-			--create pref_strs
-			--create new_resources.initialize
+			add_default_excluded_clusters
 		end
 
 
@@ -116,7 +105,7 @@ feature -- Basic operations
 			cluster_name_exists: a_cluster_name /= Void
 			valid_cluster_name: not a_cluster_name.is_empty
 		do
-			--excluded_clusters.object_comparison
+			excluded_clusters.compare_objects
 			if not excluded_clusters.has (a_cluster_name) then
 				excluded_clusters.extend (a_cluster_name)
 			end
@@ -132,7 +121,7 @@ feature -- Basic operations
 		local
 			index: INTEGER
 		do
-			--excluded_clusters.object_comparison
+			excluded_clusters.compare_objects
 			if excluded_clusters.has (a_cluster_name) then
 				index := excluded_clusters.index_of (a_cluster_name, 1)
 				if index > 0 then
@@ -155,7 +144,6 @@ feature -- Basic operations
 				doc_generator.set_filter ("html-stylesheet")
 				doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
 				doc_generator.set_all_universe
-				add_default_excluded_clusters
 				doc_generator.set_cluster_formats (true, false)
 				doc_generator.set_system_formats (true, true, true)
 				doc_generator.set_class_formats (false, false, false, true, false, false)
@@ -221,13 +209,9 @@ feature {NONE} -- Basic Operations
 				clusters.after
 			loop
 				cluster := clusters.item
-				if cluster.is_library then
-					add_excluded_cluster (cluster.cluster_name)
-				else
-					assembly ?= cluster
-					if assembly /= Void then
-						add_excluded_cluster (cluster.cluster_name)	
-					end
+				assembly ?= cluster
+				if assembly /= Void then
+					add_excluded_cluster (cluster.cluster_name)	
 				end
 				clusters.forth
 			end

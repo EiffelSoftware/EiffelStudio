@@ -481,7 +481,7 @@ feature -- Update
 		do
 			is_compiling_ref.set_item (True)
 			Workbench.recompile
-			Comp_system.purge
+			Comp_system.prepare_before_saving (True)
 
 			if successful then
 				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
@@ -561,7 +561,7 @@ feature -- Update
 				set_error_status (Ok_status)
 				is_compiling_ref.set_item (True)
 				Comp_system.finalize_system (keep_assertions)
-				Comp_system.purge
+				Comp_system.prepare_before_saving (True)
 				is_compiling_ref.set_item (False)
 			end
 		ensure
@@ -595,10 +595,11 @@ feature -- Update
 			Compilation_modes.set_is_freezing
 			Workbench.recompile
 				-- FIXME: We don't purge the system, because of a problems with IDs
+				-- and we give a `False' arguments to `prepare_before_saving'
 				-- i.e. the system which is using the precompiled can think that some
 				-- IDs are available but they are not. This is due because of a bad
 				-- merging of SERVER_CONTROLs from the different precompiled libraries.
---			Comp_system.purge
+			Comp_system.prepare_before_saving (False)
 
 			if successful then
 				Comp_system.set_licensed_precompilation (licensed)
@@ -623,7 +624,7 @@ feature -- Output
 			-- successful compilation we save it.
 		do
 				-- Purge uselss files
-			Comp_system.purge
+			Comp_system.prepare_before_saving (True)
 			Comp_system.tmp_purge
 
 			save_project

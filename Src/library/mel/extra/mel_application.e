@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
+deferred class
 	MEL_APPLICATION
 
 feature {NONE} -- Initialization
@@ -19,12 +19,12 @@ feature {NONE} -- Initialization
 			set_default;
 			!! application_context.make;
 			!! display.make (application_context, Void, 
-					application_name, application_class_name);
+				Void, application_name);
 			if display.is_valid then
 				!! top_level.make (application_name, Void, display.default_screen);
 				build;
 				top_level.realize;
-				application_context.iterate
+				application_context.main_loop
 			end
 		end;
 
@@ -36,36 +36,13 @@ feature -- Access
 	display: MEL_DISPLAY;
 			-- Application display
 
-	application_name: STRING
+	application_name: STRING is
 			-- Application name
-
-	application_class_name: STRING
-			-- Application class name
+		deferred
+		end;
 
 	application_context: MEL_APPLICATION_CONTEXT
 			-- Application context
-
-feature -- Status setting
-
-	set_application_name (a_string: STRING) is
-			-- Set the name of the application.
-		require
-			string_is_not_void: a_string /= Void
-		do
-			application_name := a_string
-		ensure
-			application_name_set: application_name = a_string
-		end;
-
-	set_application_class_name (a_string: STRING) is
-			-- Set the class name of the application.
-		require
-			string_is_not_void: a_string /= Void
-		do
-			application_class_name := a_string
-		ensure
-			application_class_name_set: application_class_name = a_string
-		end;
 
 feature -- Basic operations
 
@@ -75,10 +52,10 @@ feature -- Basic operations
 			application_context.exit
 		end;
 
-	iterate is
+	main_loop is
 			-- Loop the application.
 		do
-			application_context.iterate
+			application_context.main_loop
 		end;
 
 feature {NONE} -- Implementation
@@ -91,24 +68,6 @@ feature {NONE} -- Implementation
 	build is
 			-- Build an application.
 		do
-		end;
-
-	build_application_class_name is
-			-- Set the application class name according to
-			-- the recommandations of Motif.
-		require
-			application_name_not_void: application_name /= Void
-		local
-			the_class_name: STRING
-		do
-			the_class_name := clone (application_name);
-			if (the_class_name.count >= 1) then
-				the_class_name.put ((the_class_name @ 1).upper, 1);
-				if ((the_class_name.count >= 2) and then ((the_class_name @ 1).is_equal ('X'))) then
-					the_class_name.put ((the_class_name @ 2).upper, 2)
-				end
-			end;
-			application_class_name := the_class_name
 		end;
 
 end -- class MEL_APPLICATION

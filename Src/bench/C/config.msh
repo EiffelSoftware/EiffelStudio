@@ -1,6 +1,6 @@
-# 
+#
 # This is the configuration file for MICROSOFT'S VISUAL C++
-# 
+#
 microsoft-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'

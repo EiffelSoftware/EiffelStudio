@@ -2,6 +2,7 @@
 #include <Xm/List.h>
 #include <Xm/Protocols.h>
 #include "mel.h"
+#include "xm_support.h"
 
 /*
  * Xm functions for Text
@@ -53,6 +54,15 @@ EIF_INTEGER xm_text_y_coord (EIF_POINTER widget, EIF_INTEGER pos)
 
 	XmTextPosToXY ((Widget) widget, (XmTextPosition) pos, &x0, &y0);
 	return (EIF_INTEGER) y0;
+}
+
+EIF_INTEGER xm_text_find_string (EIF_POINTER widget, EIF_INTEGER pos, char *pattern)
+{
+	XmTextPosition new_position = pos;
+	Boolean found = False;
+
+	found = XmTextFindString ((Widget) widget, pos, pattern, XmTEXT_FORWARD, &new_position);
+	return (found = True) ? new_position: -1;
 }
 
 /*

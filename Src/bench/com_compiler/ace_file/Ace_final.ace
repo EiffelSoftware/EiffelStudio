@@ -353,7 +353,7 @@ external
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse"
 
@@ -372,7 +372,7 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
-		"corguids.lib"
+		"corguids.lib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
 		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib"
 

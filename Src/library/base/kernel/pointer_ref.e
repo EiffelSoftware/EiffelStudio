@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_item (p: POINTER) is
+	frozen set_item (p: POINTER) is
 			-- Make `p' the `item' value.
 		do
 			item := p
@@ -83,6 +83,23 @@ feature -- Memory copy
 			valid_n: n >= 0
 		do
 			c_memset (item, val, n)	
+		end
+
+feature -- Allocation/free
+
+	memory_alloc (a_size: INTEGER): POINTER is
+			-- Allocated `size' bytes using `malloc'.
+		require
+			valid_size: a_size >= 0
+		do
+			Result := c_malloc (a_size)
+		end
+
+	memory_free is
+			-- Free allocated memory with `malloc'.
+		do
+			c_free (item)
+			item := default_pointer
 		end
 
 feature -- Output
@@ -140,7 +157,23 @@ feature {NONE} -- Implementation
 		alias
 			"memset"
 		end
-	
+
+	c_malloc (size: INTEGER): POINTER is
+			-- C malloc
+		external
+			"C (size_t): EIF_POINTER | <stdlib.h>"
+		alias
+			"malloc"
+		end
+
+	c_free (p: POINTER) is
+			-- C malloc
+		external
+			"C (void *) | <stdlib.h>"
+		alias
+			"free"
+		end
+
 indexing
 
 	library: "[

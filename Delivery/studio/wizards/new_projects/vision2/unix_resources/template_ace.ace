@@ -35,6 +35,9 @@ cluster
 
 		-- GEL
 	all gel: "$ISE_EIFFEL/library/gel"
+		exclude
+			"gtk_gl";
+		end
 
 		-- EiffelVision2
 	all vision2: "$ISE_EIFFEL/library/vision2"

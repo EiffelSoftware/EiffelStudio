@@ -10,14 +10,34 @@ class
 inherit
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_COMMAND
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
+	
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -39,6 +59,7 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			object: GB_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			
@@ -46,10 +67,10 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-			if object.name.is_empty then
-				object.layout_item.set_text (object.type.substring (4, object.type.count))
-			else
-				object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
+			object.layout_item.set_text (name_and_type_from_object (object))
+			titled_window_object ?= object
+			if titled_window_object /= Void then
+				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			update_all_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_merged_containers)
@@ -62,13 +83,14 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			object: GB_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			object.set_name (old_name)
-			if object.name.is_empty then
-				object.layout_item.set_text (object.type.substring (4, object.type.count))
-			else
-				object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
+			object.layout_item.set_text (name_and_type_from_object (object))
+			titled_window_object ?= object
+			if titled_window_object /= Void then
+				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update
@@ -92,7 +114,7 @@ feature -- Basic Operation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	object_id: INTEGER
 		-- Id of object whose name is changed.
 		

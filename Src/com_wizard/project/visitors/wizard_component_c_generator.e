@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Component C generator."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,28 +14,6 @@ feature -- Access
 
 	dispatch_interface: BOOLEAN
 			-- Is coclass contained dispatch interface?
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 
@@ -83,13 +61,6 @@ feature -- Basic operations
 			non_void_definition: Result /= Void
 			valid_definition: not Result.empty
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
 
 end -- class WIZARD_COMPONENT_C_GENERATOR
 

@@ -29,7 +29,7 @@ feature -- Implementation
 		local
 			default_member: WIZARD_WRITER_C_MEMBER
 			default_function: WIZARD_WRITER_C_FUNCTION
-			function_body: STRING
+			function_body, tmp_string: STRING
 			generated_file, generated_header_file: PLAIN_TEXT_FILE
 			tmp_ce_mapper, tmp_ec_mapper: WIZARD_WRITER_C_MEMBER
 		do
@@ -63,10 +63,17 @@ feature -- Implementation
 
 				-- Add memeber "EXCEPINFO * excepinfo"
 				create default_member.make
-				default_member.set_name ("excepinfo")
-				default_member.set_result_type ("EXCEPINFO *")
+				default_member.set_name (clone (Excepinfo_variable_name))
+				tmp_string := clone (Excepinfo)
+				tmp_string.append (Space)
+				tmp_string.append (Asterisk)
+				default_member.set_result_type (tmp_string)
 				default_member.set_comment ("Exception information")
 				cpp_class_writer.add_member (default_member, Private)
+				cpp_class_writer.add_function (ccom_last_error_code_function, Public)
+				cpp_class_writer.add_function (ccom_last_source_of_exception_function, Public)
+				cpp_class_writer.add_function (ccom_last_error_description_function, Public)
+				cpp_class_writer.add_function (ccom_last_error_help_file_function, Public)
 			end
 
 			cpp_class_writer.set_destructor (destructor)

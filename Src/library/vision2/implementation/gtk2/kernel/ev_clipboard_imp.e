@@ -74,10 +74,15 @@ feature -- Status Setting
 				-- We also set the primary selection as there is no windows equivalent.
 		end
 		
+feature {EV_TEXT_COMPONENT_IMP} -- Implementation
+
+	clipboard: POINTER
+			-- Pointer to the CLIPBOARD Gtk clipboard
+	
 feature {NONE} -- Implementation
 
-	clipboard, primary: POINTER
-			-- Pointers to the CLIPBOARD and PRIMARY Gtk clipboards
+	primary: POINTER
+			-- Pointer to the PRIMARY Gtk clipboard
 
 feature {EV_ANY_I}
 

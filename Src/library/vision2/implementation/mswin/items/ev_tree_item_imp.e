@@ -43,25 +43,10 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create the widget with `par' as parent.
+			-- Create the item.
 		do
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
-		end
-
-feature -- Access
-
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP
-			-- Tree that contains the item
-
-	parent: EV_TREE_ITEM_HOLDER is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
 		end
 
 feature -- Status report
@@ -99,7 +84,7 @@ feature -- Status setting
 				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
-			destroy_item
+--			destroy_item
 		end
 
 	set_text (txt: STRING) is

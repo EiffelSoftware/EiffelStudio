@@ -27,6 +27,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.pointer_position
+		ensure
+			result_not_void: Result /= Void
 		end 
 	
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
@@ -76,6 +78,7 @@ feature -- Basic operation
 			-- Simulate the user pressing a `key'.
 		require
 			not_destroyed: not is_destroyed
+			key_not_void: a_key /= Void
 		do
 			implementation.fake_key_press (a_key)
 		end
@@ -84,6 +87,7 @@ feature -- Basic operation
 			-- Simulate the user releasing a `key'.
 		require
 			not_destroyed: not is_destroyed
+			key_not_void: a_key /= Void
 		do
 			implementation.fake_key_release (a_key)
 		end
@@ -92,6 +96,7 @@ feature -- Basic operation
 			-- Simulate the user clicking a `key'.
 		require
 			not_destroyed: not is_destroyed
+			key_not_void: a_key /= Void
 		do
 			implementation.fake_key_press (a_key)
 			implementation.fake_key_release (a_key)
@@ -100,7 +105,7 @@ feature -- Basic operation
 feature -- Measurement
 
 	width: INTEGER is
-			-- Horizontal size in pixels.				
+			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
 		ensure then

@@ -39,6 +39,7 @@ private void set_signal();		/* Set up the signal handler */
 extern STREAM *spawn_child();	/* Start up child with ipc link */
 extern char *getenv();			/* Get environment variable value */
 extern Malloc_t malloc();		/* Memory allocation */
+extern int TIMEOUT;				/* Time to let the child initialize */
 
 public struct d_flags d_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_rqst */
@@ -62,6 +63,18 @@ char **argv;
 	char *ewb_path;		/* Path leading to the ewb executable */
 	char *eiffel3;		/* Eiffel 3.0 installation directory */
 	char *platform;
+	char *eif_timeout;	/* Timeout specified in environment variable */
+
+	/* Check if the user wants to override the default timeout value
+	 * required by the children processes to launch and initialize
+	 * themselves. This new value is specified in the EIF_TIMEOUT 
+	 * environment variable
+	 */
+	eif_timeout = getenv("EIF_TIMEOUT");
+	if (eif_timeout != (char *) 0)			/* Environment variable set */
+		TIMEOUT = atoi(eif_timeout);
+	else
+		TIMEOUT = 120;
 
 	/* Compute program name, removing any leading path to keep only the name
 	 * of the executable file.

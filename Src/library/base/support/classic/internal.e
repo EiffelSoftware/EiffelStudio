@@ -65,16 +65,13 @@ feature -- Creation
 	new_special_any_instance (type_id, count: INTEGER): SPECIAL [ANY] is
 			-- New instance of dynamic `type_id' that represents
 			-- a SPECIAL with `count' element. To create a SPECIAL of
-			-- basic type, use `TO_SPECIAL'.
+			-- basic type, use `SPECIAL'.
 		require
 			count_valid: count >= 0
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
-		local
-			l_sp: TO_SPECIAL [ANY]
 		do
-			create l_sp.make_area (count)
-			Result := l_sp.area
+			create Result.make (count)
 			c_set_dynamic_type ($Result, type_id)
 		ensure
 			special_type: is_special (Result)
@@ -105,8 +102,6 @@ feature -- Status report
 
 	is_special (object: ANY): BOOLEAN is
 			-- Is `object' a special object?
-			-- It only recognized a special object 
-			-- initialized within a TO_SPECIAL object.
 		require
 			object_not_void: object /= Void
 		do

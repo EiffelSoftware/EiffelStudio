@@ -114,7 +114,6 @@ feature -- Metrics loading
 			agent_array: ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]]
 			is_derived, is_linear, is_metric_ratio, is_scope_ratio,
 			retried, info_missing, percentage, op, self: BOOLEAN
-			error_dialog:EB_INFORMATION_DIALOG
 		do
 			if not retried then
 				tool.set_min_scope_available (tool.scope (interface_names.metric_this_system).index)
@@ -209,9 +208,9 @@ feature -- Metrics loading
 			end
 		rescue
 			retried := True
-			create error_dialog.make_with_text ("Unable to read file:%N"
-								+ file_manager.metric_file_name )
-			error_dialog.show_modal_to_window (tool.development_window.window)
+			Xml_routines.display_warning_message_relative (
+					"Unable to read file:%N" + file_manager.metric_file_name,
+					tool.development_window.window)
 			retry
 		end
 
@@ -499,7 +498,6 @@ feature -- Measures
 			a_metric: EB_METRIC
 			a_composite_metric: EB_METRIC_COMPOSITE
 			a_result: DOUBLE
-			l_error_dialog: EB_INFORMATION_DIALOG
 		do
 			if not retried then
 				l_deserialized_document := deserialize_document (f.name)
@@ -581,9 +579,9 @@ feature -- Measures
 			end
 		rescue
 			retried := True
-			create l_error_dialog.make_with_text ("Unable to read file:%N"
-								+ file_manager.metric_file_name )
-			l_error_dialog.show_modal_to_window (tool.development_window.window)
+			Xml_routines.display_warning_message_relative (
+					"Unable to read file:%N" + file_manager.metric_file_name,
+					tool.development_window.window)
 			tool.progress_dialog.hide
 			retry
 		end

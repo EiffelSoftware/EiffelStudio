@@ -99,7 +99,6 @@ feature -- Displayed messages in text form.
 			measure_element, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			retried, same_metric: BOOLEAN
-			error_dialog:EB_INFORMATION_DIALOG
 			basic_metric: EB_METRIC_BASIC
 		do
 			if not retried then
@@ -136,12 +135,14 @@ feature -- Displayed messages in text form.
 							Result := "Sorry, no measure has been recorded for this metric."
 						end
 					else
-						create error_dialog.make_with_text ("File: " + f.name + "%Nis not an archive file.")
-						error_dialog.show_modal_to_window (tool.development_window.window)
+						Xml_routines.display_warning_message_relative (
+									"File: " + f.name + "%Nis not an archive file.",
+									tool.development_window.window)
 					end
 				else
-					create error_dialog.make_with_text ("File: " + f.name + "%Nhas syntax errors or is not an archive file.")
-					error_dialog.show_modal_to_window (tool.development_window.window)
+					Xml_routines.display_warning_message_relative (
+									"File: " + f.name + "%Nhas syntax errors or is not an archive file.",
+									tool.development_window.window)
 				end
 --				if final_result = Void or else final_result.is_empty then
 --					Result := "Sorry, no measure has been recorded for this metric."
@@ -149,9 +150,9 @@ feature -- Displayed messages in text form.
 			end
 		rescue
 			retried := True
-			create error_dialog.make_with_text ("Unable to read file:%N"
-								+ f.name )
-			error_dialog.show_modal_to_window (tool.development_window.window)
+			Xml_routines.display_warning_message_relative (
+					"Unable to read file:%N" + f.name,
+					tool.development_window.window)
 			retry
 		end
 

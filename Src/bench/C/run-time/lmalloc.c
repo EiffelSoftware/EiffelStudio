@@ -21,10 +21,10 @@
 */
 
 
-#include <assert.h>
 #include <stdio.h>
-#include "eif_config.h"
 #include "eif_portable.h"
+#include <assert.h>
+#include "eif_config.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"

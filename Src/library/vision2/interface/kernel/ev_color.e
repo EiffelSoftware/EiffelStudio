@@ -7,6 +7,12 @@ indexing
 class 
 	EV_COLOR
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_rgb
@@ -102,7 +108,7 @@ feature -- Element change
 
 feature -- Implementation
 
-		implementation: EV_COLOR_I
+	implementation: EV_COLOR_I
 			-- Implementation of color
 
 feature {EV_DEFAULT_COLORS_IMP} -- Initialization
@@ -114,9 +120,8 @@ feature {EV_DEFAULT_COLORS_IMP} -- Initialization
 			implementation.set_interface (Current)
 		end
 
-invariant
-
-	valid_implementation: implementation /= Void
+--invariant
+--	valid_implementation: implementation /= Void
 
 end -- class EV_COLOR
 

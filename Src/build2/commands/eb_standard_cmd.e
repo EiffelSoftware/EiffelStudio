@@ -84,7 +84,7 @@ feature -- Status setting
 		do
 			accelerator := acc
 			if accelerator.actions.is_empty then
-				accelerator.actions.extend (~execute)
+				accelerator.actions.extend (~execute_if_executable)
 			end
 		end
 
@@ -126,5 +126,22 @@ feature -- Basic operations
 				execute_agents.forth
 			end
 		end
+		
+	execute_if_executable is
+			-- Call all agents associated with `Current' if
+			-- executable.
+		do
+			if executable then
+				from
+					execute_agents.start
+				until
+					execute_agents.after
+				loop
+					execute_agents.item.call ([])
+					execute_agents.forth
+				end	
+			end
+		end
+		
 
 end -- class EB_STANDARD_CMD

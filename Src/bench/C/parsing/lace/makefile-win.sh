@@ -19,12 +19,12 @@ lace.lib: $(OBJECTS)
 	$(RM) $@
 	$link_line
 
-#lace_y.c: lace_y.cwn
-#	copy lace_y.cwn lace_y.c
+lace_y.c: lace_y.cwn
+	copy lace_y.cwn lace_y.c
 
-#lace_y.h: lace_y.hwn
-#	copy lace_y.hwn lace_y.h
+lace_y.h: lace_y.hwn
+	copy lace_y.hwn lace_y.h
 
 lace_c.obj: $(TOP)\config.h
-#lace_y.obj: lace_y.h
+lace_y.obj: lace_y.h
 lac_err.obj: ..\shared\yacc.h

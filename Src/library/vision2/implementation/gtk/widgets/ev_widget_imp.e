@@ -18,12 +18,8 @@ inherit
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface,
-			is_displayed
-		end
-
-	EV_ANY_IMP
-		redefine
-			interface
+			is_displayed,
+			destroy
 		end
 
 	EV_SENSITIVE_IMP
@@ -72,15 +68,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
-	initialize_events is
-			-- Initialize the gtk events received by `Current'
-		do
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
-			else
-				--print (generator + "has no events for c_object%N")
-			end
-		end
 
 	initialize is
 			-- Show non window widgets.
@@ -90,7 +77,13 @@ feature {NONE} -- Initialization
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			initialize_events
+				-- Initialize events
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
+			end
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (visual_widget, Gdk_events_mask)
+			end
 			if not feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			else
@@ -645,6 +638,17 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		end
 		
 feature {EV_ANY_IMP} -- Implementation
+
+	destroy is
+			-- Destroy `Current'
+		do
+			if not is_destroyed then
+				if parent_imp /= Void then
+					parent_imp.interface.prune_all (interface)
+				end
+				Precursor {EV_PICK_AND_DROPABLE_IMP}
+			end
+		end
 
 	parent_imp: EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.

@@ -49,13 +49,14 @@ feature -- Initialization
 			attach_right_position (exit_b, 2);
 			attach_bottom (exit_b, 5);
 			allow_resize;
-			--set_exclusive_grab;
+			set_exclusive_grab;
 			list.add_click_action (Current, Void);
 			exit_b.add_activate_action (Current, exit_b);
 			set_composite_attributes (Current);
 			set_default_position (False);
 				-- When user closes via the window manager close button
 			set_parent_action ("<Unmap>,<Prop>", Current, exit_b);
+			set_width (200)
 		end;
 
 	make_with_widget (a_parent: COMPOSITE; a_widget: WIDGET) is
@@ -127,7 +128,7 @@ feature
 				if argument = exit_b then
 					list.deselect_all;
 				end;
-				caller.execute (Current)
+				caller.execute (Current);
 			end
 		end;
 

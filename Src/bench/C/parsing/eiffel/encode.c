@@ -38,7 +38,6 @@ void 	eif000(),
  * Static declarations.
  */
 
-static int 	reverse();				/* Reverse encoding */
 static void encode();				/* Encoder function */
 static char encode_tbl[] = {		/* Corespondance table */
 	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -206,20 +205,6 @@ uint32 n;
 
 #ifdef TEST
 
-static int value(c)
-char c;
-{
-	/* Value of digit 'c' in base BASE */
-	
-	int i;
-
-	for (i = 0; i < BASE; i++)
-		if (encode_tbl[i] == c)
-			return i;
-	
-	return i;
-}
-
 static uint32 decode(s)
 char *s;
 {
@@ -238,6 +223,20 @@ char *s;
 	return n;
 }
 
+static int value(c)
+char c;
+{
+	/* Value of digit 'c' in base BASE */
+	
+	int i;
+
+	for (i = 0; i < BASE; i++)
+		if (encode_tbl[i] == c)
+			return i;
+	
+	return i;
+}
+
 #include <stdio.h>
 
 main()
@@ -245,9 +244,14 @@ main()
 	char l[100];
 	uint32 value;
 
+	char toto [1000];
+	strcpy (toto, "E000000");
+
+	encode(toto, ((uint32) 12) + ((uint32) 14 << 15) + FEAT_NAME_FLAG);
+	printf ("Encoded name: %s\n", toto);
 	while (gets(l)) {
 		value = decode(l);
-		printf("%s is %d, %d\n", l, value / 65536, value % 65536);
+		printf("%s is %d, %d\n", l, value / 32768, value % 32768);
 	}
 	exit(0);
 }

@@ -153,13 +153,16 @@ static int process_name(token_code)
 int token_code;
 {
 	/* Process an identifier. */
-	
+
 	int i, length;
 	char c;
 	struct token *key;
 	
 	/* truncation of identifiers */
-	length= (yyleng<IDLENGTH) ? yyleng:IDLENGTH;
+	length= yyleng;
+	
+	if (length >= IDLENGTH)
+		return EIF_ERROR7;
 
 	/* Copy into `token_str' */
 	strncpy(token_str,yytext,length);

@@ -2708,11 +2708,23 @@ int code;
 		dprintf(2)("BC_SLASH\n");
 #endif
 		switch(first->type & SK_HEAD) {
+
+		case SK_INT:
+			first->type = second->type;
+			switch (second->type & SK_HEAD) {
+			case SK_INT: f->it_float = f->it_long / s->it_long;	
+						f->type = SK_FLOAT; b;
+			case SK_FLOAT: f->it_float = (float) f->it_long / s->it_float; b;
+			case SK_DOUBLE: f->it_double = (double) f->it_long / s->it_double; b;
+			default: panic(botched);
+			}
+			break;
 		case SK_FLOAT:
 			switch (second->type & SK_HEAD) {
 			case SK_INT: f->it_float = f->it_float / (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float / s->it_float; b;
-			case SK_DOUBLE: f->it_float = f->it_float / (float) s->it_double; b;
+			case SK_DOUBLE: f->it_double = (double) f->it_float / s->it_double;
+							f->type = SK_DOUBLE; b;
 			default: panic(botched);
 			}
 			break;

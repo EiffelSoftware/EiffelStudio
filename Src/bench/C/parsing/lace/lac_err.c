@@ -35,11 +35,19 @@ void xxerror(s)
 		 * of class ERROR_HANDLER.
 		 */
 		((void (*)()) syntax4)(Error_handler);
+		break;
 	case LAC_ERROR6:
 		/* Empty string: call feature `make_string_empty'
 		 * of class ERROR_HANDLER.
 		 */
 		((void (*)()) syntax6)(Error_handler);
+		break;
+	case LAC_ERROR7:
+		/* Identier too long: call feature `make_id_too_long' of
+		 * class ERROR_HANDLER.
+		 */
+		((void (*)()) syntax7)(Error_handler);
+		break;
 	default:
 		/* Common syntax error */
 		((void (*)()) syntax1)(Error_handler);

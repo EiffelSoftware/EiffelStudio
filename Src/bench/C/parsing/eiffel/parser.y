@@ -141,6 +141,7 @@ extern char token_str[];
 %token		EIF_ERROR3;
 %token		EIF_ERROR4;
 %token		EIF_ERROR5;
+%token		EIF_ERROR7;
 
 
 %type <node> Class_declaration Indexing Index Index_clause Identifier Index_value
@@ -1063,7 +1064,7 @@ Expression:					Expression_constant
 	|						Feature_call
 								{$$ = create_node1(EXPR_CALL_AS, $1);}
 	|						TE_LPARAN Expression TE_RPARAN
-								{$$ = create_node2(PARAN_AS, $2);}
+								{$$ = create_node1(PARAN_AS, $2);}
 	|						Expression TE_PLUS Expression
 								{yyerrok;$$ = create_node2(BIN_PLUS_AS,$1,$3);}
 	|						Expression TE_MINUS Expression

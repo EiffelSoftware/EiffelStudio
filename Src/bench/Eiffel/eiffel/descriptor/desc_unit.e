@@ -11,11 +11,11 @@ inherit
 		end;
 	COMPILER_EXPORTER
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end;
 	SHARED_COUNTER
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 creation

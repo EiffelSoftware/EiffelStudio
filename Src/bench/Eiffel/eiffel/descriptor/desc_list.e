@@ -13,22 +13,22 @@ inherit
 
 	SHARED_WORKBENCH
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 	SHARED_TMP_SERVER
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 	SHARED_ARRAY_BYTE
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 	COMPILER_EXPORTER
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 creation

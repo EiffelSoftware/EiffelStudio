@@ -7,7 +7,7 @@ inherit
 	CECIL_TABLE [FEATURE_I];
 	SHARED_DECLARATIONS
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end;
 	
 feature 

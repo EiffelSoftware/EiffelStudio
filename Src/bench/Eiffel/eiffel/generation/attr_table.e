@@ -13,12 +13,12 @@ inherit
 
 	SHARED_CODE_FILES
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_GENERATOR
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 creation

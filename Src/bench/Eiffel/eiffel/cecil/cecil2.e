@@ -12,12 +12,12 @@ inherit
 		export
 			{NONE} ALL
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_WORKBENCH
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 creation

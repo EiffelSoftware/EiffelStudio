@@ -61,7 +61,7 @@ feature -- Access
 			
 	default_version: STRING is
 			-- Default runtime version if `version' was not specified.
-			-- Semantic is to take `v1_0' if present, `v1_1' otherwise.
+			-- Semantic is to take the most recent version of the run-time.
 		local
 			l_installed: like installed_runtimes
 		do
@@ -70,8 +70,11 @@ feature -- Access
 				Result := v2_0.twin
 			elseif l_installed.has (v1_1) then
 				Result := v1_1.twin
-			else
+			elseif l_installed.has (v1_0) then
 				Result := v1_0.twin
+			else
+					-- Take the most recent version from `installed_runtimes'.
+				Result := l_installed.last.twin
 			end
 		ensure
 			default_version_not_void: Result /= Void
@@ -83,17 +86,17 @@ feature -- Access
 			Result := installed_runtimes.has (version)
 		end
 		
-	installed_runtimes: LINEAR [STRING] is
+	installed_runtimes: DS_ARRAYED_LIST [STRING] is
 			-- List all installed version of the runtime.
 		local
 			l_runtime_path: STRING
-			l_result, l_content: ARRAYED_LIST [STRING]
+			l_content: ARRAYED_LIST [STRING]
 			l_dir: DIRECTORY
 			l_file_name: FILE_NAME
 			l_file: RAW_FILE
 		do
 			l_runtime_path := dotnet_runtime_path
-			create l_result.make (5)
+			create Result.make_equal (5)
 			if l_runtime_path /= Void then
 				create l_dir.make (l_runtime_path)
 				if l_dir.exists then
@@ -104,7 +107,7 @@ feature -- Access
 					until
 						l_content.after
 					loop
-							-- Insert in `l_result' all files/directories
+							-- Insert in `Result' all files/directories
 							-- starting with letter `v' as it is most likely
 							-- to be an occurrence of an installed .NET runtime.
 						if l_content.item.item (1) = 'v' then
@@ -117,7 +120,7 @@ feature -- Access
 							l_file_name.set_file_name ("mscorwks.dll")
 							create l_file.make (l_file_name)
 							if l_file.exists then
-								l_result.extend (l_content.item)
+								Result.put_right (l_content.item)
 							end
 						end
 						l_content.forth
@@ -125,8 +128,7 @@ feature -- Access
 					l_dir.close
 				end
 			end
-			l_result.compare_objects
-			Result := l_result
+			Result.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 		ensure
 			installed_runtimes_not_void: Result /= Void
 		end
@@ -266,7 +268,7 @@ feature -- Constants
 	v1_1: STRING is "v1.1.4322"
 			-- Version number of v1.1 of Microsoft .NET
 			
-	v2_0: STRING is "v2.0.40426"
+	v2_0: STRING is "v2.0.40607"
 			-- Temporary version number of the v2.0 of Microsoft .NET
 
 feature {NONE} -- Constants

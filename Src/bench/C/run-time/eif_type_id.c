@@ -277,16 +277,16 @@ rt_private int16 gen_type_id (int32 cecil_id)
 {
 			/* We need to find out which basic type it is */
 	switch (cecil_id & SK_HEAD) {
-	  	case SK_CHAR:   return CHARACTER_TYPE;
-	  	case SK_WCHAR:   return WIDE_CHAR_TYPE;
-		case SK_BOOL:   return BOOLEAN_TYPE;
-		case SK_INT8:    return INTEGER_8_TYPE;
-		case SK_INT16:    return INTEGER_16_TYPE;
-		case SK_INT32:    return INTEGER_TYPE;
-		case SK_INT64:    return INTEGER_64_TYPE;
-		case SK_FLOAT:  return REAL_TYPE;
-		case SK_DOUBLE: return DOUBLE_TYPE;
-		case SK_POINTER: return POINTER_TYPE;
+	  	case SK_CHAR:   return egc_char_dtype;
+	  	case SK_WCHAR:   return egc_wchar_dtype;
+		case SK_BOOL:   return egc_bool_dtype;
+		case SK_INT8:    return egc_int8_dtype;
+		case SK_INT16:    return egc_int16_dtype;
+		case SK_INT32:    return egc_int32_dtype;
+		case SK_INT64:    return egc_int64_dtype;
+		case SK_FLOAT:  return egc_real_dtype;
+		case SK_DOUBLE: return egc_doub_dtype;
+		case SK_POINTER: return egc_point_dtype;
 		default:	return (int16) ((uint32) cecil_id & SK_DTYPE);
 	}
 }

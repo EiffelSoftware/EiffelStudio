@@ -357,6 +357,11 @@ feature {EV_ANY_I} -- Implementation
 				internal_set_pointer_style (Default_pixmaps.Standard_cursor)
 			end
 
+				-- Update `application_imp' to reflect end of transport.
+			create env
+			application_imp.transport_ended
+			application_imp.set_transport_just_ended
+
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -382,15 +387,10 @@ feature {EV_ANY_I} -- Implementation
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
 			
-				-- Update `application_imp' to reflect end of transport.
-			create env
-			application_imp.transport_ended
-			application_imp.set_transport_just_ended
 			
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
-				
-				
+			
 			original_top_level_window_imp.allow_movement
 			original_top_level_window_imp := Void
 			

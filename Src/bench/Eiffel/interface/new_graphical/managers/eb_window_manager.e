@@ -17,11 +17,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_GRAPHICAL_DATA
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

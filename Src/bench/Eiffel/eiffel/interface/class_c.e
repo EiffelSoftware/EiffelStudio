@@ -265,7 +265,7 @@ feature -- Action
 			finished_file_name: FILE_NAME
 			finished_file: PLAIN_TEXT_FILE
 		do
-			if not retried and System.makefile_generator /= Void and then not types.is_empty then
+			if not retried and System.makefile_generator /= Void and then has_types then
 				create generation_dir.make_from_string (Workbench_generation_path)
 				
 				from
@@ -1609,7 +1609,7 @@ feature -- Workbench feature and descriptor table generation
 			file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
-			if not is_precompiled then
+			if not is_precompiled and has_types then
 					-- Clear buffer for Current generation
 				buffer := generation_buffer
 				buffer.clear_all
@@ -1660,6 +1660,8 @@ feature
 			-- Generated file name prefix
 			-- Side effect: Create the corresponding subdirectory if it
 			-- doesnot exist yet.
+		require
+			has_types: has_types
 		local
 			subdirectory, base_name: STRING
 			dir: DIRECTORY
@@ -1720,6 +1722,8 @@ feature
 
 	packet_number: INTEGER is
 			-- Packet in which the file will be generated
+		require
+			has_types: has_types
 		do
 			Result := System.static_type_id_counter.packet_number (feature_table_file_id)
 		ensure
@@ -1729,13 +1733,11 @@ feature
 	feature_table_file_id: INTEGER is
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
+		require
+			has_types: has_types
 		do
 			if internal_feature_table_file_id = -1 then
-				if has_types then
-					Result := types.first.static_type_id
-				else
-					Result := class_id
-				end
+				Result := types.first.static_type_id
 				internal_feature_table_file_id := Result
 			else
 				Result := internal_feature_table_file_id

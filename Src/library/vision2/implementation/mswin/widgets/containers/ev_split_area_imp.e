@@ -17,8 +17,8 @@ inherit
 			on_left_button_up,
 			on_mouse_move
 		redefine
+			move_and_resize,
 			set_insensitive,
-			on_first_display,
 			remove_child
 		end
 
@@ -140,7 +140,7 @@ feature -- Element change
 			else
 				child2 := child_imp
 			end
-			update_display
+			notify_change (2 + 1)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
@@ -152,7 +152,7 @@ feature -- Element change
 			else
 				child2 := Void
 			end
-			update_display
+			notify_change (2 + 1)
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
@@ -208,31 +208,20 @@ feature -- Assertions
 			-- Is `a_child' a child of the container?
 		do
 			Result := (a_child = child1) or
-						(a_child = child2)
+					(a_child = child2)
 		end
 
 feature {NONE} -- Implementation for automatic size compute
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
+			-- We resize the children too.
+			-- No care about has_changes.
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
 			resize_children (level)
 		end
 
 feature {NONE} -- Implementation
-
-  	on_first_display is
-   		do
- 			if child1 /= Void then
- 				child1.on_first_display
- 			end
-			if child2 /= Void then
-				child2.on_first_display
-			end
- 			already_displayed := True
- 		end
 
 	on_split (value: INTEGER): BOOLEAN is
 			-- Is a point with `value' as the coordinate on the split?
@@ -342,10 +331,6 @@ feature {NONE} -- Deferred features
 	resize_children (a_level: INTEGER) is
 			-- Resize both children according to the new level
 			-- `level' of the splitter.
-		deferred
-		end
-
-	update_display is
 		deferred
 		end
 

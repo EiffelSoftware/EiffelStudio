@@ -13,10 +13,8 @@ inherit
 
 	EV_SPLIT_AREA_IMP
 		redefine
-			child_minwidth_changed,
-			child_minheight_changed,
+			compute_minimum_height,
 			set_default_minimum_size,
-			on_first_display,
 			on_set_cursor
 		end
 
@@ -60,14 +58,19 @@ feature -- Element change
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			set_minimum_size (size, 0)
+			internal_set_minimum_width (size)
+			if parent_imp /= Void then
+				notify_change (1)
+			end
 		end
 
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
-			-- `value' is given in percentage.
+			-- `value' is given in pixel.
+			-- Has an effect only if the split area has
+			-- already a child.
 		do
-			resize_children ((value * width) // 100)
+			resize_children (value)
 		end
 
 feature {NONE} -- Basic operation
@@ -81,33 +84,9 @@ feature {NONE} -- Basic operation
 			end
 			if child2 /= Void then
 				child2.set_move_and_size (a_level + size, 0, 
-							width - a_level - size, height)
+					(width - a_level - size).max (0), height)
 			end
 			refresh
-		end
-
-	update_display is
-			-- Feature that update the actual container.
-		do
-			if child1 /= Void then
-				child1.parent_ask_resize (child1.minimum_width, height)
-			end
-			resize_children (level)
-		end
-
-feature {NONE} -- Implementation for automatic size compute
-
-	child_minwidth_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_width because the child did.
-		do
-			-- Do nothing for a split area.
-		end
-
-   	child_minheight_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
-   			-- Change the minimum width of the container because
-   			-- the child changed his own minimum width.
-		do
-			-- Do nothing for a split area.
 		end
 
 feature {NONE} -- Implementation
@@ -156,13 +135,20 @@ feature {NONE} -- Implementation
 			ldc.release
 		end
 
-  	on_first_display is
-   		do
-			{EV_SPLIT_AREA_IMP} Precursor
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+			-- Should call only set_internal_minimum_height.
+		local
+			value: INTEGER
+		do
 			if child1 /= Void then
-				resize_children (child1.minimum_width)
+				value := child1.minimum_height
 			end
- 		end
+			if child2 /= Void and then child2.minimum_height > value then
+				value := child2.minimum_height
+			end
+			internal_set_minimum_height (value)		
+		end
 
 feature {NONE} -- WEL Implementation
 

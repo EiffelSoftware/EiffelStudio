@@ -1970,13 +1970,13 @@ end;
 				-- Generate makefile
 			generate_make_file;
 
-				-- Clean Eiffel table
-			Eiffel_table.wipe_out;
-			Tmp_poly_server.clear;
-
 				-- Generate main file
 			generate_main_file;
 			generate_init_file;
+
+				-- Clean Eiffel table
+			Eiffel_table.wipe_out;
+			Tmp_poly_server.clear;
 
 			remover := Void;
 			remover_off := old_remover_off;
@@ -2992,6 +2992,9 @@ feature -- Main file generation
 			has_argument: BOOLEAN;
 			i, nb: INTEGER;
 			Initialization_file: UNIX_FILE
+
+			rout_id: INTEGER;
+			rout_table: ROUT_TABLE
 		do
 
 			final_mode := byte_context.final_mode;
@@ -3041,15 +3044,9 @@ feature -- Main file generation
 
 			if 	creation_name /= Void then
 				if final_mode then
-					if root_feat.is_external then
-							-- The name is the external name
-							-- FIXME: is_encapsulated ...
-						ext_feat ?= root_feat;
-						c_name := ext_feat.external_name
-					else
-						c_name := Encoder.feature_name
-										(cl_type.id, root_feat.body_id);
-					end;
+					rout_id := root_feat.rout_id_set.first;
+					rout_table ?= Eiffel_table.item_id (rout_id);
+					c_name := rout_table.feature_name (cl_type.id);
 					Initialization_file.putstring ("%Textern void ");
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring (" ();%N%N");

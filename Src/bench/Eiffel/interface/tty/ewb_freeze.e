@@ -41,7 +41,7 @@ feature
 			if not error_occurred then
 				System.set_freeze (True);
 				compile;
-				if System.successfull then
+				if Workbench.successfull then
 					terminate_project;
 					print_tail;
 					prompt_finish_freezing (False)

@@ -46,11 +46,11 @@ feature
 			left_type := left.type;
 			right_type := right.type;
 			if left_type.is_long and then right_type.is_long then
-				generated_file.putstring (" ((float) (");
+				generated_file.putstring (" ((float)");
 				left.print_register;
 				generate_operator;
 				right.print_register;
-				generated_file.putstring ("))");
+				generated_file.putstring (")");
 			else
 				left.print_register;
 				generate_operator;

@@ -9,7 +9,8 @@ inherit
 	SHARED_STATUS;
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
-	WINDOWS
+	WINDOWS;
+	LIC_EXITER
 
 creation
 
@@ -35,6 +36,7 @@ feature -- Creation
 					command.work (Project_name, Ace_name);
 					output_window.close;
 				end;
+				discard_license
 			end;
 		end;
 

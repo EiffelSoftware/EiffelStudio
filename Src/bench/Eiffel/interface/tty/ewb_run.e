@@ -39,6 +39,7 @@ feature
 				appl_name.append (Workbench_generation_path);
 				appl_name.append_character (Directory_separator);
 				appl_name.append (System.system_name);
+				appl_name.append (Executable_suffix);
 			end;
 			!!f.make (appl_name);
 			if not f.exists then

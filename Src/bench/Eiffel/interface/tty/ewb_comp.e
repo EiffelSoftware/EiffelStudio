@@ -46,7 +46,7 @@ feature
 			init;
 			if not error_occurred then
 				compile;
-				if System.successfull then
+				if Workbench.successfull then
 					terminate_project;
 					print_tail;
 					if System.freezing_occurred then

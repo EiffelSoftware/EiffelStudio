@@ -63,7 +63,7 @@ feature
 			init;
 			if not error_occurred then
 				compile;
-				if System.successfull then
+				if Workbench.successfull then
 						-- Save the project before the finalization in order to
 						-- be able to use the project for other melting/freezing
 						-- or finalization afterwards.

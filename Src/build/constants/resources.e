@@ -131,6 +131,7 @@ feature {NONE} -- Initialize font values
 
 feature -- Integer Misc Values
 
+	history_size: INTEGER;
 	window_free_list_number: INTEGER;
 	command_file_name: STRING;
 	perm_window_file_name: STRING;
@@ -143,6 +144,8 @@ feature {NONE} -- Integer Values initialization
 
 	initialize_misc_values (resource: RESOURCE_TABLE) is
 		do
+			history_size 
+				:= resource.get_integer ("history_size", 10);
 			window_free_list_number 
 				:= resource.get_integer ("window_free_list_number", 0);
 			command_file_name

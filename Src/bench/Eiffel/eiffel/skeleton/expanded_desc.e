@@ -98,8 +98,8 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.putstring ("SK_EXP + ")
-			buffer.putint (type_id - 1)
+			buffer.put_string ("SK_EXP + ")
+			buffer.put_type_id (type_id)
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is
@@ -122,10 +122,10 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("[EXPANDED ")
-			io.error.putstring (class_type.associated_class.name)
-			io.error.putstring ("]")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("[EXPANDED ")
+			io.error.put_string (class_type.associated_class.name)
+			io.error.put_string ("]")
 		end
 
 end

@@ -25,15 +25,15 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.putstring ("SK_DOUBLE")
+			buffer.put_string ("SK_DOUBLE")
 		end
 
 feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("[DOUBLE]")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("[DOUBLE]")
 		end
 
 end

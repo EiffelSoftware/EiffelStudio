@@ -67,18 +67,18 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.putstring ("SK_INT")
-			buffer.putint (size)
+			buffer.put_string ("SK_INT")
+			buffer.put_integer (size)
 		end
 
 feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("[INTEGER_")
-			io.error.putint (size)
-			io.error.putstring ("]")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("[INTEGER_")
+			io.error.put_integer (size)
+			io.error.put_string ("]")
 		end
 
 invariant

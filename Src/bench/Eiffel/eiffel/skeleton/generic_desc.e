@@ -127,8 +127,8 @@ feature -- Debug
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("Generic desc: ")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("Generic desc: ")
 			type_i.trace
 		end
 

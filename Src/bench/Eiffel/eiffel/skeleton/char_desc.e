@@ -65,9 +65,9 @@ feature -- Code generation
 			-- `buffer'.
 		do
 			if is_wide then
-				buffer.putstring ("SK_WCHAR")
+				buffer.put_string ("SK_WCHAR")
 			else
-				buffer.putstring ("SK_CHAR")
+				buffer.put_string ("SK_CHAR")
 			end
 		end
 
@@ -75,12 +75,12 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("[")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("[")
 			if is_wide then
-				io.error.putstring ("WIDE_")
+				io.error.put_string ("WIDE_")
 			end
-			io.error.putstring ("CHARACTER]")
+			io.error.put_string ("CHARACTER]")
 		end
 
 end

@@ -137,11 +137,11 @@ feature -- Code generation
 		local
 			l_type: like type_i
 		do
-			buffer.putstring ("static int16 g_atype")
-			buffer.putint (code)
-			buffer.putchar ('_')
-			buffer.putint (idx)
-			buffer.putstring (" [] = {0,")
+			buffer.put_string ("static int16 g_atype")
+			buffer.put_integer (code)
+			buffer.put_character ('_')
+			buffer.put_integer (idx)
+			buffer.put_string (" [] = {0,")
 				-- In order to generate proper type description for current entry we need to
 				-- evaluate `type_i' in the context of `current_type' from BYTE_CONTEXT, otherwise
 				-- it is possible that we would not find the associated class type of `l_type'
@@ -149,7 +149,7 @@ feature -- Code generation
 				-- storable).
 			l_type := context.creation_type (type_i)			
 			l_type.generate_cid (buffer, is_final_mode, False)
-			buffer.putstring ("-1};%N")
+			buffer.put_string ("-1};%N")
 		end
 
 	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is

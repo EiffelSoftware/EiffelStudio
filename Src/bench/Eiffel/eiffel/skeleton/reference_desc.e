@@ -55,15 +55,15 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.putstring ("SK_REF")
+			buffer.put_string ("SK_REF")
 		end
 
 feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name)
-			io.error.putstring ("[REFERENCE]")
+			io.error.put_string (attribute_name)
+			io.error.put_string ("[REFERENCE]")
 		end
 
 end

@@ -407,23 +407,23 @@ feature -- Status
 			expanded_pos := position
 			nb_exp := nb_expanded
 
-			buffer.putstring ("@OBJSIZ(");
-			buffer.putint (nb_ref + nb_exp);
-			buffer.putchar (',');
-			buffer.putint (nb_char);
-			buffer.putchar (',');
-			buffer.putint (nb_int16);
-			buffer.putchar (',');
-			buffer.putint (nb_int32);
-			buffer.putchar (',');
-			buffer.putint (nb_flt);
-			buffer.putchar (',');
-			buffer.putint (nb_ptr);
-			buffer.putchar (',');
-			buffer.putint (nb_int64);
-			buffer.putchar (',');
-			buffer.putint (nb_dbl);
-			buffer.putchar (')');
+			buffer.put_string ("@OBJSIZ(");
+			buffer.put_integer (nb_ref + nb_exp);
+			buffer.put_character (',');
+			buffer.put_integer (nb_char);
+			buffer.put_character (',');
+			buffer.put_integer (nb_int16);
+			buffer.put_character (',');
+			buffer.put_integer (nb_int32);
+			buffer.put_character (',');
+			buffer.put_integer (nb_flt);
+			buffer.put_character (',');
+			buffer.put_integer (nb_ptr);
+			buffer.put_character (',');
+			buffer.put_integer (nb_int64);
+			buffer.put_character (',');
+			buffer.put_integer (nb_dbl);
+			buffer.put_character (')');
 
 			from
 					-- Go at the bits level
@@ -434,9 +434,9 @@ feature -- Status
 				i > nb or else current_area.item (i).level /= Bits_level
 			loop
 				bit_desc ?= current_area.item (i)
-				buffer.putstring (" + OVERHEAD + @BITOFF(");
-				buffer.putint (bit_desc.value);
-				buffer.putchar (')');
+				buffer.put_string (" + OVERHEAD + @BITOFF(");
+				buffer.put_integer (bit_desc.value);
+				buffer.put_character (')');
 				i := i + 1;
 			end;
 
@@ -449,7 +449,7 @@ feature -- Status
 			loop
 				expanded_desc ?= current_area.item (i)
 				expanded_skeleton := expanded_desc.class_type.skeleton;
-				buffer.putstring (" + OVERHEAD +");
+				buffer.put_string (" + OVERHEAD +");
 				expanded_skeleton.generate_size (buffer);
 				i := i + 1;
 			end;
@@ -458,7 +458,7 @@ feature -- Status
 	generate_workbench_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of the skeleton in workbench mode.
 		do
-			buffer.putint (workbench_size);
+			buffer.put_integer (workbench_size);
 		end;
 
 	workbench_size: INTEGER is
@@ -551,7 +551,7 @@ feature -- Status
 			good_argument: buffer /= Void;
 		do
 			search_feature_id (feature_id);
-			buffer.putint (workbench_offset);
+			buffer.put_integer (workbench_offset);
 		end;
 
 	generate (buffer: GENERATION_BUFFER; is_in_attr_table: BOOLEAN) is
@@ -577,77 +577,77 @@ feature -- Status
 			when Reference_level then
 				value := index
 				if value /= 0 then
-					buffer.putstring (" + @REFACS(");
-					buffer.putint (value);
-					buffer.putchar (')');
+					buffer.put_string (" + @REFACS(");
+					buffer.put_integer (value);
+					buffer.put_character (')');
 				elseif is_in_attr_table then
-					buffer.putchar ('0')
+					buffer.put_character ('0')
 				end
 			when Character_level, Boolean_level, Integer_8_level then
 				nb_ref := nb_reference;
-				buffer.putstring ("+ @CHROFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref)
-				buffer.putchar (')');
+				buffer.put_string ("+ @CHROFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref)
+				buffer.put_character (')');
 			when Integer_16_level, Wide_char_level then
 				nb_ref := nb_reference
 				nb_char := nb_character
-				buffer.putstring ("+ @I16OFF(")
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char)
-				buffer.putchar (')');
+				buffer.put_string ("+ @I16OFF(")
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char)
+				buffer.put_character (')');
 			when Integer_32_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
-				buffer.putstring ("+ @LNGOFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int16 )
-				buffer.putchar (')');
+				buffer.put_string ("+ @LNGOFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char - nb_int16 )
+				buffer.put_character (')');
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
-				buffer.putstring ("+ @FLTOFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (nb_int32);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32)
-				buffer.putchar (')');
+				buffer.put_string ("+ @FLTOFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int32);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32)
+				buffer.put_character (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
-				buffer.putstring ("+ @PTROFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (nb_int32);
-				buffer.putchar (',');
-				buffer.putint (nb_flt);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt)
-				buffer.putchar (')');
+				buffer.put_string ("+ @PTROFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int32);
+				buffer.put_character (',');
+				buffer.put_integer (nb_flt);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt)
+				buffer.put_character (')');
 			when Integer_64_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -655,21 +655,21 @@ feature -- Status
 				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				buffer.putstring ("+ @I64OFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (nb_int32);
-				buffer.putchar (',');
-				buffer.putint (nb_flt);
-				buffer.putchar (',');
-				buffer.putint (nb_ptr);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr)
-				buffer.putchar (')');
+				buffer.put_string ("+ @I64OFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int32);
+				buffer.put_character (',');
+				buffer.put_integer (nb_flt);
+				buffer.put_character (',');
+				buffer.put_integer (nb_ptr);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr)
+				buffer.put_character (')');
 			when Double_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -678,23 +678,23 @@ feature -- Status
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_int64 := nb_integer_64
-				buffer.putstring ("+ @DBLOFF(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (nb_int32);
-				buffer.putchar (',');
-				buffer.putint (nb_flt);
-				buffer.putchar (',');
-				buffer.putint (nb_ptr);
-				buffer.putchar (',');
-				buffer.putint (nb_int64);
-				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr - nb_int64)
-				buffer.putchar (')');
+				buffer.put_string ("+ @DBLOFF(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int32);
+				buffer.put_character (',');
+				buffer.put_integer (nb_flt);
+				buffer.put_character (',');
+				buffer.put_integer (nb_ptr);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int64);
+				buffer.put_character (',');
+				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr - nb_int64)
+				buffer.put_character (')');
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -706,23 +706,23 @@ feature -- Status
 				nb_dbl := nb_double;
 					-- Save where the Bit level start
 				bits_pos := position
-				buffer.putstring ("+ @OBJSIZ(");
-				buffer.putint (nb_ref + nb_expanded);
-				buffer.putchar (',');
-				buffer.putint (nb_char);
-				buffer.putchar (',');
-				buffer.putint (nb_int16);
-				buffer.putchar (',');
-				buffer.putint (nb_int32);
-				buffer.putchar (',');
-				buffer.putint (nb_flt);
-				buffer.putchar (',');
-				buffer.putint (nb_ptr);
-				buffer.putchar (',');
-				buffer.putint (nb_int64);
-				buffer.putchar (',');
-				buffer.putint (nb_dbl);
-				buffer.putchar (')');
+				buffer.put_string ("+ @OBJSIZ(");
+				buffer.put_integer (nb_ref + nb_expanded);
+				buffer.put_character (',');
+				buffer.put_integer (nb_char);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int16);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int32);
+				buffer.put_character (',');
+				buffer.put_integer (nb_flt);
+				buffer.put_character (',');
+				buffer.put_integer (nb_ptr);
+				buffer.put_character (',');
+				buffer.put_integer (nb_int64);
+				buffer.put_character (',');
+				buffer.put_integer (nb_dbl);
+				buffer.put_character (')');
 				if level = Bits_level then
 					from
 						current_area := area
@@ -730,13 +730,13 @@ feature -- Status
 					until
 						i >= index
 					loop
-						buffer.putstring (" + OVERHEAD + @BITOFF(");
+						buffer.put_string (" + OVERHEAD + @BITOFF(");
 						bit_desc ?= current_area.item (i);
-						buffer.putint (bit_desc.value);
-						buffer.putchar (')');
+						buffer.put_integer (bit_desc.value);
+						buffer.put_character (')');
 						i := i + 1;
 					end;
-					buffer.putstring (" + OVERHEAD");
+					buffer.put_string (" + OVERHEAD");
 				else
 					current_area := area
 					from
@@ -744,10 +744,10 @@ feature -- Status
 					until
 						current_area.item(i).level > Bits_level
 					loop
-						buffer.putstring (" + OVERHEAD + @BITOFF(");
+						buffer.put_string (" + OVERHEAD + @BITOFF(");
 						bit_desc ?= current_area.item (i);
-						buffer.putint (bit_desc.value);
-						buffer.putchar (')');
+						buffer.put_integer (bit_desc.value);
+						buffer.put_character (')');
 						i := i + 1;
 					end;
 
@@ -755,12 +755,12 @@ feature -- Status
 					until
 						i >= index
 					loop
-						buffer.putstring (" + OVERHEAD + ");
+						buffer.put_string (" + OVERHEAD + ");
 						expanded_desc ?= current_area.item (i)
 						expanded_desc.class_type.skeleton.generate_size (buffer);
 						i := i + 1
 					end;
-					buffer.putstring (" + OVERHEAD");
+					buffer.put_string (" + OVERHEAD");
 				end;
 			end;
 
@@ -1002,8 +1002,8 @@ feature -- Skeleton byte code
 			i, nb: INTEGER
 		do
 			buffer := generation_buffer
-			buffer.putchar ('{');
-			buffer.new_line;
+			buffer.put_character ('{');
+			buffer.put_new_line;
 			from
 				current_area := area
 				i := 0
@@ -1011,12 +1011,12 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				buffer.putchar ('"');
-				buffer.putstring (current_area.item (i).attribute_name);
-				buffer.putstring ("%",%N");
+				buffer.put_character ('"');
+				buffer.put_string (current_area.item (i).attribute_name);
+				buffer.put_string ("%",%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_type_array is
@@ -1030,8 +1030,8 @@ feature -- Skeleton byte code
 			i, nb: INTEGER
 		do
 			buffer := generation_buffer
-			buffer.putchar ('{');
-			buffer.new_line;
+			buffer.put_character ('{');
+			buffer.put_new_line;
 			from
 				current_area := area
 				i := 0
@@ -1040,10 +1040,10 @@ feature -- Skeleton byte code
 				i > nb
 			loop
 				current_area.item (i).generate_code (buffer);
-				buffer.putstring (",%N");
+				buffer.put_string (",%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_generic_type_arrays (code : INTEGER) is
@@ -1069,10 +1069,10 @@ feature -- Skeleton byte code
 				current_area.item (i).generate_generic_code (buffer, Context.final_mode, code, i)
 				i := i + 1;
 			end;
-			buffer.new_line;
-			buffer.putstring ("static int16 *gtypes")
-			buffer.putint (code)
-			buffer.putstring (" [] = {%N")
+			buffer.put_new_line;
+			buffer.put_string ("static int16 *gtypes")
+			buffer.put_integer (code)
+			buffer.put_string (" [] = {%N")
 
 			from
 				i := 0
@@ -1081,14 +1081,14 @@ feature -- Skeleton byte code
 				i > nb
 			loop
 				edesc ?= current_area.item (i)
-				buffer.putstring ("g_atype")
-				buffer.putint (code)
-				buffer.putchar ('_')
-				buffer.putint (i)
-				buffer.putstring (",%N")
+				buffer.put_string ("g_atype")
+				buffer.put_integer (code)
+				buffer.put_character ('_')
+				buffer.put_integer (i)
+				buffer.put_string (",%N")
 				i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_offset_array is
@@ -1103,8 +1103,8 @@ feature -- Skeleton byte code
 			i, nb: INTEGER
 		do
 			buffer := generation_buffer
-			buffer.putchar ('{');
-			buffer.new_line;
+			buffer.put_character ('{');
+			buffer.put_new_line;
 			from
 				current_area := area
 				i := 0
@@ -1120,10 +1120,10 @@ feature -- Skeleton byte code
 --				generate_offset (buffer, tbl.first.feature_id, True)
 				position := i
 				generate (buffer, True)
-				buffer.putstring (",%N");
+				buffer.put_string (",%N");
 				 i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_rout_id_array is
@@ -1136,8 +1136,8 @@ feature -- Skeleton byte code
 			i, nb: INTEGER
 		do
 			buffer := generation_buffer
-			buffer.putchar ('{');
-			buffer.new_line;
+			buffer.put_character ('{');
+			buffer.put_new_line;
 			from
 				current_area := area
 				i := 0
@@ -1145,11 +1145,11 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				buffer.putint (current_area.item (i).rout_id);
-				buffer.putstring (",%N");
+				buffer.put_integer (current_area.item (i).rout_id);
+				buffer.put_string (",%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 feature -- Sort
@@ -1246,10 +1246,10 @@ feature -- Trace
 			until
 				i > nb
 			loop
-				io.error.putstring (current_area.item (i).attribute_name);
-				io.error.putstring (": ");
+				io.error.put_string (current_area.item (i).attribute_name);
+				io.error.put_string (": ");
 				item.trace;
-				io.error.new_line;
+				io.error.put_new_line;
 				i := i + 1;
 			end;
 		end

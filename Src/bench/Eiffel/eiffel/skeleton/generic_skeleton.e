@@ -44,10 +44,10 @@ feature -- Output
 			until
 				after
 			loop
-				io.error.putstring (item.attribute_name);
-				io.error.putstring (": ");
+				io.error.put_string (item.attribute_name);
+				io.error.put_string (": ");
 				item.trace;
-				io.error.new_line;
+				io.error.put_new_line;
 				forth;
 			end;
 		end;

@@ -81,7 +81,6 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 			create ev_children.make (0)
-
 			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
 			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
@@ -433,7 +432,7 @@ feature {NONE} -- Implementation
 			-- 
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
---			if pixmaps_height > feature {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
+--			if pixmaps_height > {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
 --				set_row_height (pixmaps_height)
 --			end
 		end
@@ -673,7 +672,6 @@ feature -- Element change
 		do
 			if column_widths /= Void then
 				a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (a_column_ptr, value)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)				
 			end
 		end
@@ -1191,19 +1189,12 @@ feature {NONE} -- Implementation
 	row_height: INTEGER is
 			-- Height of rows in `Current'
 		local
-			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
-			a_vert_sep: INTEGER
+			a_column_ptr: POINTER
+			a_x, a_y, a_width, a_height: INTEGER
 		do
 			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
-			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
-			
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, NULL, $Result)
-			
-			a_gtk_c_str := "vertical-separator"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
-			Result := Result + a_vert_sep
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			Result := a_height
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation

@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TREE_I}
 			
 			initialize_model
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)				
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,
@@ -134,9 +134,9 @@ feature {NONE} -- Initialization
 			)
 			
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
-			
+
 			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
 
@@ -153,12 +153,12 @@ feature {NONE} -- Initialization
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
 			
-			real_signal_connect (tree_view, "row-collapsed", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), agent (app_implementation.gtk_marshal).gtk_args_to_tuple)
-			real_signal_connect (tree_view, "row-expanded", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?), agent (app_implementation.gtk_marshal).gtk_args_to_tuple)
-			
+			real_signal_connect (tree_view, "row-collapsed", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), Void)
+			real_signal_connect (tree_view, "row-expanded", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?), Void)
+
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 			initialize_pixmaps
 			connect_button_press_switch
@@ -194,7 +194,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_expander_size)
 			create a_property.make ("horizontal-separator")
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_horizontal_separator)
-			
+
 			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
 			if a_success then
 				a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
@@ -697,21 +697,12 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	row_height: INTEGER is
 			-- Height of rows in `Current'
 		local
-			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
-			a_vert_sep: INTEGER
+			a_column_ptr: POINTER
+			a_x, a_y, a_width, a_height: INTEGER
 		do
-			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
-			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
-			
-			create a_gtk_c_str.make ("height")
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_integer (a_cell_rend, a_gtk_c_str.item, $Result)
-			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
-			
-			create a_gtk_c_str.make ("vertical-separator")
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
-			Result := Result + a_vert_sep -- spacing
+			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			Result := a_height
 		end
 
 	tree_view: POINTER

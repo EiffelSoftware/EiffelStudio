@@ -30,6 +30,8 @@ inherit
 	BASE
 		rename
 			make as base_make
+		export {GENERATE_ALL_REVERSE}
+			implementation
 		end
 
 	WINDOW_ATTRIBUTES

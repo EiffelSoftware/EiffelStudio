@@ -313,13 +313,15 @@ feature {NONE} -- Implementation
 			list_item: EV_LIST_ITEM
 			grid_control_holder: EV_FRAME
 			status_bar: EV_FRAME
+			split_area: EV_HORIZONTAL_SPLIT_AREA
 		do
 			create Result
+			Result.set_minimum_size (300, 250)
 			Result.set_title ("EV_FIXED child positioner")
 			create vertical_box
 			Result.extend (vertical_box)
-			create horizontal_box
-			vertical_box.extend (horizontal_box)
+			create split_area
+			vertical_box.extend (split_area)
 			create drawing_area
 			
 			drawing_area.pointer_motion_actions.force_extend (agent track_movement (?, ?))
@@ -334,7 +336,7 @@ feature {NONE} -- Implementation
 			create projector.make_with_buffer (world, pixmap, drawing_area)
 			
 			create scrollable_area
-			scrollable_area.set_minimum_size (200, 200)
+			scrollable_area.set_minimum_size (100, 100)
 			create ok_button.make_with_text ("Done")
 			create status_timer.make_with_interval (50)
 			ok_button.select_actions.extend (agent pre_close_tidy)
@@ -351,13 +353,14 @@ feature {NONE} -- Implementation
 			h1.disable_item_expand (ok_button)
 			vertical_box.extend (h1)
 			vertical_box.disable_item_expand (h1)
-			horizontal_box.extend (scrollable_area)
+			split_area.extend (scrollable_area)
 			scrollable_area.extend (drawing_area)
 			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
 			
 			create vertical_box
-			horizontal_box.extend (vertical_box)
-			horizontal_box.disable_item_expand (vertical_box)
+			split_area.extend (vertical_box)
+			split_area.enable_item_expand (split_area.first)
+			split_area.disable_item_expand (vertical_box)
 				-- We do not build a new control if it already exists.
 			if snap_button = Void then
 				create snap_button.make_with_text ("Snap to grid")
@@ -384,7 +387,11 @@ feature {NONE} -- Implementation
 				grid_size_control.change_actions.force_extend (agent draw_widgets)
 				grid_size_control.set_value (20)
 			end
-			vb1.extend (grid_size_control)
+			create h1
+			h1.extend (grid_size_control)
+			h1.disable_item_expand (grid_size_control)
+			vb1.extend (h1)--grid_size_control)
+			
 			from
 				first.start
 			until

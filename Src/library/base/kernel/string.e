@@ -143,6 +143,9 @@ feature -- Access
 			Result := hashcode ($area, count)
 		end;
 
+	False_constant: STRING is "false";
+			-- Constant string "false"
+
 	True_constant: STRING is "true";
 			-- Constant string "true"
 
@@ -302,6 +305,34 @@ feature -- Status report
 		end;
 
 	changeable_comparison_criterion: BOOLEAN is false;
+
+	is_integer: BOOLEAN is
+			-- Is the string representing an integer?
+		do
+			Result := str_isi ($area, count)
+		end;
+
+	is_real: BOOLEAN is
+			-- Is the string representing a real?
+		do
+			Result := str_isr ($area, count)
+		end;
+
+	is_double: BOOLEAN is
+			-- Is the string representing a double?
+		do
+			Result := str_isd ($area, count)
+		end;
+
+	is_boolean: BOOLEAN is
+			-- Is the string representing a boolean?
+		local
+			s: STRING
+		do
+			s := clone (Current);
+			s.to_lower;
+			Result := s.is_equal (True_constant) or else s.is_equal (False_constant)
+		end;
 
 feature -- Element change
 
@@ -816,7 +847,7 @@ feature -- Conversion
 			-- Integer value;
 			-- for example, when applied to "123", will yield 123
 		require
-			-- String contains digits only
+			is_integer: is_integer
 		do
 			Result := str_atoi ($area, count)
 		end;
@@ -825,7 +856,7 @@ feature -- Conversion
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
 		require
-			-- String is representation of real number.
+			is_real: is_real
 		do
 			Result := str_ator ($area, count)
 		end;
@@ -834,17 +865,17 @@ feature -- Conversion
 			-- "Double" value;
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require
-			-- String contains double digits only
+			is_double: is_double
 		do
 			Result := str_atod ($area, count)
 		end;
 
 	to_boolean: BOOLEAN is
 			-- Boolean value;
-			-- "true" yields `true', "false" yields `false' 
+			-- "true" yields `True', "false" yields `False' 
 			-- (case-insensitive)
 		require
-			-- String is "true" or "false" (with some letters possibly upper-case)
+			is_boolean: is_boolean
 		local
 			s: STRING
 		do
@@ -1122,7 +1153,24 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 
-	
+	str_isi (c_string: POINTER; length: INTEGER): BOOLEAN is
+			-- Is is an integer?
+		external
+			"C"
+		end;
+
+	str_isr (c_string: POINTER; length: INTEGER): BOOLEAN is
+			-- Is is a real?
+		external
+			"C"
+		end;
+
+	str_isd (c_string: POINTER; length: INTEGER): BOOLEAN is
+			-- Is is a double?
+		external
+			"C"
+		end;
+
 	str_mirror (c_string, new_string: POINTER; length: INTEGER) is
 			-- Build a new string into `new_string' which is the
 			-- mirror copy of the original string held in `c_string'.
@@ -1130,7 +1178,6 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 	
-
 	str_cpy (to_str: POINTER; from_str: POINTER; length_from: INTEGER) is
 			-- Copy `length_from' characters from `from_str' into `to_str'.
 		external
@@ -1155,7 +1202,6 @@ feature {STRING} -- Implementation
 		external
 			"C"
 		end;
-
 
 	str_take (other_string, c_string: POINTER; n1, n2: INTEGER) is
 			-- Make `c_string' the substring of `other_string'

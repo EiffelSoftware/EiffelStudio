@@ -49,7 +49,6 @@ feature
 			end
 		end;
 
-	focus_label: FOCUS_LABEL
 
 feature {NONE}
 
@@ -69,7 +68,6 @@ feature {NONE}
 			end;
 			reset_title;
 			!! form.make (Widget_names.form, Current);
-			!! focus_label.initialize (form);
 			!! close_button.make (Current, form);
 			!! transl_hole.make (Current, form);
 			!! ear_icon.make (Current, form);
@@ -81,13 +79,9 @@ feature {NONE}
 
 			form.attach_top (transl_hole, 0);
 			form.attach_top (close_button, 0);
-			form.attach_top (focus_label, 5);
 			form.attach_left (transl_hole, 0);
 			form.attach_left (ear_icon, 10);
 			form.attach_right (close_button, 0);
-			form.attach_left_widget (transl_hole, focus_label, 2);
-			form.attach_right_widget (close_button, focus_label, 2);
-			form.attach_top_widget (focus_label, sep1, 2);
 			form.attach_top_widget (transl_hole, sep1, 2);
 			form.attach_top_widget (close_button, sep1, 2);
 

@@ -63,7 +63,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.title")
+			Result := header_item.text
 		ensure
 			title_not_void: Result /= Void
 		end
@@ -146,7 +146,7 @@ feature -- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.set_item")
+			parent_grid_i.set_item (index, i, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -156,7 +156,7 @@ feature -- Element change
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.title")
+			header_item.set_text (a_title)
 		ensure
 			title_set: title = a_title
 		end

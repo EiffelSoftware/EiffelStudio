@@ -1,5 +1,5 @@
 /* C code produced by gperf version 1.9.1 (modified by Raphael Manfredi) */
-/* Command-line: gperf -l -k 1,2,$ -N std_infix infix.gperf  */
+/* Command-line: gperf -a -l -N std_infix infix.gperf  */
 
 
 
@@ -12,7 +12,8 @@
    31 is the maximum key range
 */
 
-static int hash (register char *str, register unsigned int len)
+static int
+hash (register const char *str, register int len)
 {
   static unsigned char hash_table[] =
     {
@@ -20,37 +21,28 @@ static int hash (register char *str, register unsigned int len)
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
-     31, 31,  9, 15, 31, 14, 31,  0, 31, 31,
+     31, 31,  9, 15, 31,  4, 31,  0, 31, 31,
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
-     10,  0,  4, 31, 31, 31, 31, 31, 31, 31,
+     10,  5,  3, 31, 31, 31, 31, 31, 31, 31,
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
      31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
      31, 31, 31, 31,  5, 31, 31,  0, 31, 31,
-     10,  5, 31, 31, 31,  0, 31, 31, 31,  0,
-      0, 15, 31, 31,  0,  0, 31, 31, 31, 31,
+     10,  5, 31, 31, 31,  9, 31, 31, 31, 31,
+      0, 10, 31, 31,  0,  0, 31, 31, 31, 31,
       0, 31, 31, 31, 31, 31, 31, 31,
     };
-  register int hval = len ;
-
-  switch (hval)
-    {
-      default:
-      case 2:
-        hval += hash_table[str[1]];
-      case 1:
-        hval += hash_table[str[0]];
-    }
-  return hval + hash_table[str[len - 1]] ;
+  return len + hash_table[str[len - 1]] + hash_table[str[0]];
 }
 
-char * std_infix (register char *str, register unsigned int len)
+char *
+std_infix (register const char *str, register int len)
 {
 
   static unsigned char lengthtable[] =
     {
-      0,  1,  2,  0,  0,  0,  2,  7,  8,  1,  0,  1,  2,  3,
-      0,  0,  0,  2,  3,  1,  0,  1,  0,  0,  0,  0,  0,  7,
-      0,  1,  0,  1,
+      0,  1,  2,  3,  0,  0,  0,  1,  8,  1,  2,  1,  2,  3,
+      0,  0,  7,  2,  0,  1,  0,  1,  7,  0,  0,  0,  0,  0,
+      0,  0,  0,  1,
     };
 
 
@@ -59,26 +51,24 @@ char * std_infix (register char *str, register unsigned int len)
       "", 
       "/", 
       "//", 
-      "", "", "", 
-      ">=", 
-      "implies", 
-      "and then", 
-      ">", 
-      "", 
-      "^", 
-      "<=", 
-      "and", 
-      "", "", "", 
-      "or", 
       "xor", 
+      "", "", "", 
+      ">", 
+      "and then", 
+      "-", 
+      ">=", 
+      "^", 
+      "or", 
+      "and", 
+      "", "", 
+      "implies", 
+      "<=", 
+      "", 
       "*", 
       "", 
       "<", 
-      "", "", "", "", "", 
       "or else", 
-      "", 
-      "-", 
-      "", 
+      "", "", "", "", "", "", "", "", 
       "+", 
     };
 

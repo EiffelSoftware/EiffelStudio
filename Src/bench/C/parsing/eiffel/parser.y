@@ -876,7 +876,12 @@ Formal_generic:
 
 Constraint:
 	{$$ = NULL;}
-    | TE_CONSTRAIN Class_type
+ /*
+   | TE_CONSTRAIN Class_type TE_CREATION {list_init();} Feature_list
+		{$$ = create_node2(CREATE_AS, NULL,list_new(CONSTRUCT_LIST_AS));}
+		{$$ = $2;}
+*/
+    | TE_CONSTRAIN Class_type 
 		{$$ = $2;}
     ;
 

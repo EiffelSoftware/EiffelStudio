@@ -603,7 +603,7 @@ char *xxtext_ptr;
 static int process();
 static int process_name();
 static int get_string();
-static int eif_char();
+static int eif_char(char);
 
 /* Global variables */
 extern struct location *current_location;   /* Record the position of the first, and the 
@@ -1565,8 +1565,7 @@ void *ptr;
 # line 60 "lace_l.l"
 
 
-static int process(token_code)
-int token_code;
+static int process(int token_code)
 {
 	/* Process a token updating global variables `start_position' and
 	 * `end_position'.
@@ -1576,8 +1575,7 @@ int token_code;
 	return token_code;
 }
 
-static int process_name(token_code)
-int token_code;
+static int process_name(int token_code)
 {
 	/* Process an identifier. */
 	
@@ -1679,8 +1677,7 @@ static int get_string()
 	}
 }
 
-static int eif_char(c)
-char c;
+static int eif_char(char c)
 {
 	int i;
 	int dec_value = 0;

@@ -1,5 +1,5 @@
 # Run this file through
-#   gperf -l -k '1,2,$' -N std_infix infix.gperf > infix.c
+#   gperf -a -l -k '1,2,$' -N std_infix infix.gperf > infix.c
 # to produce a fast keyword recognition function.
 or
 and

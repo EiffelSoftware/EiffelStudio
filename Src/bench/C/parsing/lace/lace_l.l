@@ -22,7 +22,7 @@
 static int process();
 static int process_name();
 static int get_string();
-static int eif_char();
+static int eif_char(char);
 
 /* Global variables */
 extern struct location *current_location;   /* Record the position of the first, and the 

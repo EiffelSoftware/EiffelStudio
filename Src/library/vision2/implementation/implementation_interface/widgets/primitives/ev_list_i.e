@@ -172,6 +172,7 @@ feature -- Basic operation
 			valid_data: data /= Void
 		local
 			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			litem: EV_LIST_ITEM
 		do
 			from
 				list := ev_children
@@ -179,8 +180,9 @@ feature -- Basic operation
 			until
 				list.after or Result /= Void
 			loop
-				if data.is_equal (list.item.data) then
-					Result ?= list.item.interface
+				litem ?= list.item.interface
+				if litem.data.is_equal (data) then
+					Result ?= litem
 				end
 				list.forth
 			end

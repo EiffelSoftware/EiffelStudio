@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make (par)
 			implementation.set_interface (Current)
+			implementation.build
 			implementation.initialize_colors
 		end
 	
@@ -42,11 +43,12 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make_top_level 
 			implementation.set_interface (Current)
+			implementation.build
 			implementation.initialize_colors
 		end
 	
 feature  -- Access
-
+ 
 	parent: EV_WINDOW is
 			-- The parent of the Current window: a window
 			-- If the widget is an EV_WINDOW without parent,

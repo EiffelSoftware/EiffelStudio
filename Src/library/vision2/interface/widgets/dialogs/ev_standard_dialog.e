@@ -1,9 +1,10 @@
 indexing
-	description: "EiffelVision standard dialog. Deferred class,%
-				% ancestor of the standard dialogs.%
-				% All the standard dialogs are modal. Therefore%
-				% nothing can be done until the user close the%
-				% window."
+	description:
+		"EiffelVision standard dialog. Deferred class,%
+		% ancestor of the standard dialogs.%
+		% All the standard dialogs are modal. Therefore%
+		% nothing can be done until the user close the%
+		% window."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -340,7 +340,7 @@ interface IEiffelCompletionInfo: IDispatch
 	HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrLocationName, [in] EIF_COMPLETION_LOCATION clLocation, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] IEiffelEnumString** pDescriptions, [out] VARIANT* pvarImageIndexes);
 
 	[id (DISPID_EiffelComCompiler_TargetFeature), helpstring ("Feature information")]
-	HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] BSTR* pbstrFeatureName, [out] BSTR* pvarDescription, [out] VARIANT* pvarReturnTypes, [out] VARIANT* pvarParams);
+	HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] BSTR* pbstrFeatureName, [out] VARIANT* pvarDescriptions, [out] VARIANT* pvarReturnTypes, [out] VARIANT* pvarParams);
 
 	[id (DISPID_EiffelComCompiler_ParseSourceForExpr), helpstring ("Parses bstrSrcText and extracts an Eiffel expression at row/col.")]
 	HRESULT ParseSourceForExpr ([in] BSTR bstrSrcText, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrExpr, [out] BSTR* pbstrFeatureName, [out] VARIANT_BOOL* pvbIsClassExpr);

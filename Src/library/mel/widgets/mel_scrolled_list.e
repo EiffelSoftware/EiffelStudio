@@ -13,12 +13,11 @@ inherit
 
 	MEL_LIST
 		rename
-			make as make_variable,
 			make_from_existing as list_make_from_existing
 		export
 			{NONE} list_make_from_existing
 		redefine
-			make_variable, parent, clean_up
+			parent, clean_up
 		end;
 
 creation
@@ -30,7 +29,11 @@ creation
 feature -- Initialization
 
 	make_variable (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
-			-- Create a motif scrolled list.
+			-- Create a motif scrolled list with `is_list_size_policy_variable'
+			-- set to True.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
@@ -43,11 +46,14 @@ feature -- Initialization
 				manage
 			end
 		ensure then
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 			list_size_policy_set: is_list_size_policy_variable
 		end;
 
 	make_constant (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
-			-- Create a motif scrolled list with a constant width.
+			-- Create a motif scrolled list with a constant size.
 		require
 			name_exists: a_name /= Void
 			parent_exists: a_parent /= Void and then not a_parent.is_destroyed

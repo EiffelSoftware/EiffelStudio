@@ -84,14 +84,11 @@ feature {NONE} -- Implementation
 			color_b.set_text ("Auto")
 
 			create change_b.make_with_text_and_action ("Change...", agent change)
-			Layout_constants.set_default_size_for_button (change_b)
 
 			create reset_b.make_with_text_and_action ("Auto", agent set_as_auto)
-			Layout_constants.set_default_size_for_button (reset_b)
 
 			create color_frame
 			color_frame.extend (color_b)
-			color_frame.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (40))
 			
 			create h2
 			h2.set_padding (Layout_constants.Dialog_unit_to_pixels (3))
@@ -100,8 +97,6 @@ feature {NONE} -- Implementation
 			h2.extend (change_b)
 			h2.disable_item_expand (change_b)
 			h2.extend (reset_b)
-			h2.disable_item_expand (reset_b)
-			h2.extend (create {EV_CELL})
 
 			create a_frame
 			a_frame.extend (h2)

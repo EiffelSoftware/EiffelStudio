@@ -461,7 +461,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			--| `pointer_button_press_actions_internal' must be called before
 			--| a pick and drop starts, but after a pick and drop ends.
 			t := translate_coordinates (x_pos, y_pos)
-			if not is_dnd_in_transport and not is_pnd_in_transport then
+			if not is_dnd_in_transport and not is_pnd_in_transport and not is_dock_executing then
 				call_pointer_actions (
 					pointer_button_press_actions_internal,
 					t.integer_item (1),
@@ -472,14 +472,18 @@ feature {NONE} -- Implementation, mouse_button_events
 				)
 				actions_called := True
 			end
-			if interface.is_dragable then
+			if interface.is_dockable then
 				dragable_press (
 				t.integer_item (1),
 				t.integer_item (2),
 				button,
 				t.integer_item (3),
 				t.integer_item (4))
-			else
+			end
+				-- `widget_source_being_dragged' is not Void, if a docking
+				-- transport just started. There is no need to now call
+				-- `pnd_press' as docking will override drag and drop.
+			if not is_dock_executing then
 				pnd_press (
 					t.integer_item (1),
 					t.integer_item (2),
@@ -701,7 +705,7 @@ feature {NONE} -- Implementation
 				track_mouse.dispose
 			end
 			t := translate_coordinates (x_pos, y_pos)
-			if awaiting_movement or is_dragging then
+			if awaiting_movement or is_dock_executing then
 				dragable_motion (
 					t.integer_item (1),
 					t.integer_item (2),

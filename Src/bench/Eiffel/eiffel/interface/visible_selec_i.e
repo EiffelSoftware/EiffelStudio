@@ -145,7 +145,7 @@ feature
 			loop
 				a_feature := feat_table.item
 							(visible_features.item_for_iteration);
-				if not (a_feature.is_deferred or else a_feature.is_attribute)
+				if a_feature /= Void and then not (a_feature.is_deferred or else a_feature.is_attribute)
 				then
 					Result := Result + 1;
 				end;

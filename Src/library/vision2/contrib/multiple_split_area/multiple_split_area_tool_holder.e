@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 				parent_area.rebuild
 				parent_area.restore_stored_positions
 				if not (original_height = 0 and original_width = 0) then
-					parent_area.docked_out_actions.call ([])
+					parent_area.docked_out_actions.call (Void)
 				end
 			end
 			if parent /= Void then
@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 				parent_area.update_for_holder_position_change (original_position, new_position)
 				parent_area.rebuild
 				parent_area.restore_stored_positions
-				parent_area.docked_in_actions.call ([])
+				parent_area.docked_in_actions.call (Void)
 			end
 			parent_area.remove_docking_areas
 			if original_parent_window /= Void then
@@ -371,7 +371,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			if original_parent_window /= Void then
 				original_parent_window.unlock_update
 			end
-			parent_area.docked_in_actions.call ([])
+			parent_area.docked_in_actions.call (Void)
 		ensure
 			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end

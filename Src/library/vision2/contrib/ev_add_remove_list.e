@@ -188,7 +188,7 @@ feature {NONE} -- Action
 				l.extend (list_item)
 				l.i_th (l.count).enable_select
 				text.remove_text
-				add_actions.call ([])
+				add_actions.call (Void)
 			else
 				if display_error_message /= Void then
 					display_error_message.call ([txt])
@@ -221,7 +221,7 @@ feature {NONE} -- Action
 				l.prune (list_item)
 			end
 			text.remove_text
-			remove_actions.call ([])
+			remove_actions.call (Void)
 		end
 	
 	modify_item_in (l: EV_LIST; text: EV_TEXT_FIELD) is
@@ -241,7 +241,7 @@ feature {NONE} -- Action
 				list_item.select_actions.wipe_out
 				list_item.select_actions.extend (agent text.set_text (txt))
 			end
-			modify_actions.call ([])
+			modify_actions.call (Void)
 		end
 	
 invariant

@@ -284,7 +284,7 @@ feature {NONE} -- Actions
 	on_edit_end is
 			-- Action to be performed when row editing has been finished
 		do
-			end_edit_actions.call ([])
+			end_edit_actions.call (Void)
 		end
 
 	on_change_widget_deselected is
@@ -339,7 +339,7 @@ feature {NONE} -- Actions
 
 feature -- Actions
 				
-	end_edit_actions: ACTION_SEQUENCE [TUPLE[]]
+	end_edit_actions: ACTION_SEQUENCE [TUPLE]
 			-- List of actions to perform when list row has just been edited.
 
 feature {NONE} -- Widget Editing

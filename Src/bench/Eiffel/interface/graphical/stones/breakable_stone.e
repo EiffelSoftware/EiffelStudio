@@ -55,9 +55,9 @@ feature -- Access
 			status: APPLICATION_STATUS
 		do
 			status := Application.status;
-			if 
-				status /= Void and status.is_stopped and 
-				status.is_at (routine, index) 
+			if
+				status /= Void and status.is_stopped and
+				status.is_at (routine, index)
 			then
 					-- Execution stopped at that point.
 				Result := "->|"

@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		end
 
 	frozen dialog_procedure (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): BOOLEAN is
+			lparam: INTEGER): INTEGER is
 			-- Dialog box messages dispatcher routine
 		local
 			window: WEL_WINDOW
@@ -102,21 +102,29 @@ feature {NONE} -- Implementation
 					-- was unknown until now.
 					--| Since it is not possible to check
 					--| if `set_focus' from WEL_WINDOW has been
-					--| called, Result is set to True.
+					--| called, Result is set to `1'.
 					--| As a result, any call to `set_focus' in
 					--| `setup_dialog' from WEL_DIALOG is useless.
 					windows.remove (cwel_temp_dialog_value)
 					window.set_item (hwnd)
 					register_window (window)
-					Result := window.process_message (hwnd, msg, wparam, lparam) /= 0
+					Result := window.process_message (hwnd, msg, wparam, lparam)
 				end
-				Result := True
+				Result := 1
 			else
 				window := windows.item (hwnd)
 				if window /= Void then
 					window.reset_window_processing
 					last_result := window.process_message (hwnd, msg, wparam, lparam)
-					Result := not window.default_processing_enabled
+					if window.has_return_value then
+						Result := window.message_return_value
+					else
+						if not window.default_processing_enabled then
+							Result := 1
+						else
+							Result := 0
+						end
+					end
 				end
 			end
 		end

@@ -36,6 +36,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	 * object we need to call `eif_access' to use it.
 	 */
 	WGTCX
+
 	if (dispatcher)
 		return (LRESULT) ((wel_wndproc) (
 			(EIF_OBJ) eif_access (dispatcher),
@@ -56,16 +57,40 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 	 */
 
 	WGTCX
-	if (dispatcher)
-		return (BOOL) ((wel_dlgproc) (
+
+	if (dispatcher) {
+		LONG dialog_result;
+
+		dialog_result = (LONG) ((wel_dlgproc) (
 			(EIF_OBJ) eif_access (dispatcher),
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,
 			(EIF_INTEGER) lparam));
-	else
-		return FALSE;
 
+		switch (msg) {
+			case WM_CTLCOLORBTN:
+			case WM_CTLCOLORDLG:
+			case WM_CTLCOLOREDIT:
+			case WM_CTLCOLORLISTBOX:
+			case WM_CTLCOLORMSGBOX:
+			case WM_CTLCOLORSCROLLBAR:
+			case WM_CTLCOLORSTATIC:
+			case WM_COMPAREITEM:
+			case WM_VKEYTOITEM:
+			case WM_CHARTOITEM:
+			case WM_QUERYDRAGICON:
+					return (BOOL) dialog_result;
+			default:
+				if (dialog_result != 0) {
+						/* Set the result given by WEL to the dialog */
+					dialog_result = SetWindowLong (hwnd, DWL_MSGRESULT, dialog_result);
+					return (dialog_result != 0);
+				} else
+					return FALSE;
+		}
+	} else
+		return FALSE;
 }
 
 #ifdef EIF_THREADS

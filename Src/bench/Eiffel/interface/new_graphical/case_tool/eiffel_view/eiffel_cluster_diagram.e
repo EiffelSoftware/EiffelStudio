@@ -34,7 +34,8 @@ inherit
 		undefine
 			default_create
 		redefine
-			on_class_added
+			on_class_added,
+			on_cluster_added
 		end
 		
 feature {NONE} -- Initialization
@@ -102,6 +103,7 @@ feature -- Element change
 			drop_actions.prune_all (agent on_class_drop)
 			drop_actions.prune_all (agent on_cluster_drop)
 			drop_actions.prune_all (agent on_new_class_drop)
+			manager.remove_observer (Current)
 		end
 		
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
@@ -314,6 +316,26 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+		end
+		
+	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
+			-- `a_cluster' was added to the system.
+		local
+			parent, es_cluster: ES_CLUSTER
+			parent_fig, cluster_fig: EG_CLUSTER_FIGURE
+		do
+			parent := model.cluster_from_interface (a_cluster.actual_cluster.parent_cluster)
+			if parent /= Void then
+				parent_fig ?= figure_from_model (parent)
+				check
+					a_cluster_not_in_graph: model.cluster_from_interface (a_cluster.actual_cluster) = Void
+				end
+				create es_cluster.make (a_cluster.actual_cluster)
+				model.add_cluster (es_cluster)
+				parent.extend (es_cluster)
+				cluster_fig ?= figure_from_model (es_cluster)
+				cluster_fig.set_port_position (parent_fig.port_x, parent_fig.port_y)
 			end
 		end
 

@@ -110,6 +110,7 @@
 						<B>EV_BOX</B> - Attempting to dock from an EV_DOCKABLE_SOURCE while the box was 
 						empty would not work. This has now been fixed.
 					</li>
+					<li><B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or `insert_text' while `is_editable' is False caused a precondition failure in the implementation which is now fixed.</li>
 				</ul>
 			<li>
 				<b>Windows</b>
@@ -206,8 +207,7 @@
 					- Fixed bug where if both drag and drop and docking were enabled, both would be 
 					executed, now docking overrides drag and drop if both are enabled.
 					<LI>
-						<STRONG>EV_TEXT_COMPONENT - </STRONG>Fixed precondition&nbsp;violations in 
-						implementation whilst altering text when in 'disable_edit' mode.</LI></UL>
+				</UL>
 			</li>
 		</UL>
 		<h2>Eiffel Studio 5.3</h2>

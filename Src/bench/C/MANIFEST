@@ -155,6 +155,7 @@ liman/client/liman.c
 liman/client/liman.h
 liman/client/proto.c
 liman/client/proto.h
+liman/client/timec.c
 liman/daemon
 liman/daemon/Jmakefile
 liman/daemon/Makefile.SH

@@ -112,8 +112,8 @@ feature -- Conversion
 	sequential_representation: SEQUENTIAL [G] is
 			-- Sequential representation of `Current'.
 			-- This feature enables you to manipulate each
-            		-- item of `Current' regardless of its
-            		-- actual structure.
+			-- item of `Current' regardless of its
+			-- actual structure.
 		local
 			temp: ARRAY_SEQUENCE [G];
 			i: INTEGER;
@@ -224,8 +224,8 @@ feature -- Removal
 			-- Rearrange `Current' so that it can accommodate
 			-- indices down to `minindex' and up to `maxindex'.
 			-- Do not lose any previously entered item.
-	require
-		valid_indices: minindex <= maxindex
+		require
+			valid_indices: minindex <= maxindex
 		local
 			i: INTEGER
 		do

@@ -167,9 +167,9 @@ feature -- External, Conversion
 	double_to_real (d: DOUBLE): REAL is
 			-- Real conversion (truncation) of `d'
 		external
-            		"C"
-        	alias
-            		"conv_dr"
+			"C"
+       	alias
+ 			"conv_dr"
 		end;
 
 	real_to_double (r: REAL): DOUBLE is

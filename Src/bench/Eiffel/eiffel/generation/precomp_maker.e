@@ -43,7 +43,7 @@ feature
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
 			Make_file.new_line;
-			Make_file.putstring ("%T$(RM) .UPDT Makefile Makefile.SH config.sh");
+			Make_file.putstring ("%T$(RM) melted.eif Makefile Makefile.SH config.sh");
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) -r $(SUBDIRS)");
 			Make_file.new_line

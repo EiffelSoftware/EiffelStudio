@@ -14,6 +14,7 @@
 
 #include <setjmp.h>
 #include "ecom_generated_rt_globals.h"
+#include "eif_except.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,14 +28,7 @@ extern jmp_buf exenv;
 	exvect = exset((char *) 0, 0, (char *) 0);\
 	exvect->ex_jbuf = (char *) exenv;\
 	if (return_hr_value = setjmp (exenv)) \
-		return (HRESULT)(return_hr_value)
-
-#define manu_macro	struct ex_vect *exvect;\
-	jmp_buf exenv;\
-	exvect = exset((char *) 0, 0, (char *) 0);\
-	exvect->ex_jbuf = (char *) exenv;\
-	if (return_hr_value = setjmp (exenv)) \
-		return (HRESULT)(return_hr_value)
+		return (HRESULT)(MAKE_HRESULT (1, FACILITY_ITF, 1024 + return_hr_value))
 
 #ifdef __cplusplus
 }

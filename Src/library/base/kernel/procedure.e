@@ -1,21 +1,22 @@
 indexing
-	description: "";
+	description: "Procedure objects, with some arguments possibly still open";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PROCEDURE [TBASE, TOPEN ->TUPLE]
+class
+	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE]
 
 inherit
-	ROUTINE [TBASE, TOPEN]
+	ROUTINE [BASE_TYPE, OPEN_ARGS]
 		redefine
 			call
 		end
 
 feature -- Calls
 
-	call (args: TOPEN) is
-
+	call (args: OPEN_ARGS) is
+			-- Call procedure with arguments `args'.
 		do
 			arguments := args
 			rout_set_cargs
@@ -23,7 +24,8 @@ feature -- Calls
 		end
 
 	apply is
-
+			-- Call procedure with arguments `arguments'
+			-- as last set.
 		do
 			rout_set_cargs
 			rout_obj_call_procedure (rout_disp, rout_cargs)
@@ -32,8 +34,9 @@ feature -- Calls
 feature {NONE} -- Implementation
 
 	rout_obj_call_procedure (rout: POINTER; args: POINTER) is
-
-		external "C[macro %"eif_rout_obj.h%"]"
+			-- Perform call to `rout' with `args'.
+		external
+			"C [macro %"eif_rout_obj.h%"]"
 		end
 
 end -- class PROCEDURE

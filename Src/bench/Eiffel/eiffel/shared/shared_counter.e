@@ -1,10 +1,15 @@
-class SHARED_COUNTER
+indexing
+	description: "Shared access to counters."
+	date: "$Date$"
+	revision: "$Date$"
+	
+class
+	SHARED_COUNTER
 
 inherit
-
 	SHARED_WORKBENCH
 
-feature {NONE} -- Counters
+feature -- Counters
 
 	Class_counter: CLASS_COUNTER is
 			-- Counter of classes
@@ -30,28 +35,10 @@ feature {NONE} -- Counters
 			Result := System.body_index_counter
 		end
 
-	Feature_as_counter: COMPILER_COUNTER is
-			-- Counter of instances of FEATURE_AS
-		once
-			Result := System.feature_as_counter
-		end
-
 	Real_body_id_counter: REAL_BODY_ID_COUNTER is
 			-- Counter for real body id
 		once
 			Result := System.execution_table.counter
-		end
-
-	File_counter: FILE_COUNTER is
-			-- Counter for server file id
-		once
-			Result := System.server_controler.file_counter
-		end
-
-	Pattern_id_counter: COMPILER_COUNTER is
-			-- Counter for pattern id
-		once
-			Result := System.pattern_table.pattern_id_counter
 		end
 
 	Invalid_index: INTEGER is 65535

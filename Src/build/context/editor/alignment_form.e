@@ -111,7 +111,7 @@ feature {ALIGNMENT_HOLE}
 		end;
 
 	add_item (item: CONTEXT) is
-			-- add an item in the list of context
+			-- Add an `item' in the list of context.
 		local
 			found: BOOLEAN;
 		do
@@ -156,38 +156,53 @@ feature {NONE}
 					context_list.after
 				loop
 					a_context := context_list.item.data;
-					i := i + 1;
-					if vertical.state then
-						if offset.state then
-							new_y := ref_context.y + i * offset_value.value + list_height	
+					if not a_context.deleted then
+						i := i + 1;
+						if vertical.state then
+							if offset.state then
+								new_y := ref_context.y + 
+											i * offset_value.value 
+											+ list_height	
+							else
+								new_y := ref_context.y
+							end;
+							if top_left.state then
+								new_x := ref_context.x
+							elseif center.state then
+								new_x := ref_context.x + 
+											ref_context.width // 2 
+											- a_context.width // 2
+							else
+								new_x := ref_context.x + 
+											ref_context.width 
+											- a_context.width
+							end
 						else
-							new_y := ref_context.y
+							if offset.state then
+								new_x := ref_context.x + 
+											i * offset_value.value 
+											+ list_width
+							else
+								new_x := ref_context.x
+							end;
+							if top_left.state then
+								new_y := ref_context.y
+							elseif center.state then
+								new_y := ref_context.y + 
+											ref_context.height // 2 
+											- a_context.height // 2
+							else
+								new_y := ref_context.y + 
+											ref_context.height 
+											- a_context.height
+							end
 						end;
-						if top_left.state then
-							new_x := ref_context.x
-						elseif center.state then
-							new_x := ref_context.x + ref_context.width // 2 - a_context.width // 2
-						else
-							new_x := ref_context.x + ref_context.width - a_context.width
-						end
-					else
-						if offset.state then
-							new_x := ref_context.x + i * offset_value.value + list_width
-						else
-							new_x := ref_context.x
-						end;
-						if top_left.state then
-							new_y := ref_context.y
-						elseif center.state then
-							new_y := ref_context.y + ref_context.height // 2 - a_context.height // 2
-						else
-							new_y := ref_context.y + ref_context.height - a_context.height
-						end
+						a_context.set_x_y (new_x, new_y);
+						context_catalog.update_editors (a_context, 
+											Context_const.geometry_form_nbr);
+						list_width := list_width + a_context.width;
+						list_height := list_height + a_context.height;
 					end;
-					a_context.set_x_y (new_x, new_y);
-					--context_catalog.update_editors (a_context, geometry_form_number);
-					list_width := list_width + a_context.width;
-					list_height := list_height + a_context.height;
 					context_list.forth;
 				end;
 			end;

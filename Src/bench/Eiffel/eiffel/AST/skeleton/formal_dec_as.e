@@ -287,7 +287,7 @@ feature -- Output
 			non_void_st: st /= Void
 		local
 			c_name: STRING
-			feature_name: FEAT_NAME_ID_AS
+			eiffel_name: STRING
 		do
 			c_name := clone (formal_name)
 			c_name.to_upper
@@ -303,16 +303,16 @@ feature -- Output
 						st.add (ti_Space)
 						st.add (ti_Creation_keyword)
 						st.add (ti_Space)
-						feature_name ?= creation_feature_list.item
-						st.add_string (feature_name.feature_name)
+						eiffel_name := creation_feature_list.item.internal_name
+						st.add_string (eiffel_name)
 						creation_feature_list.forth
 					until
 						creation_feature_list.after
 					loop
 						st.add (ti_Comma)
 						st.add (ti_Space)
-						feature_name ?= creation_feature_list.item
-						st.add_string (feature_name.feature_name)
+						eiffel_name := creation_feature_list.item.internal_name
+						st.add_string (eiffel_name)
 						creation_feature_list.forth
 					end
 					st.add (ti_Space)
@@ -423,8 +423,6 @@ feature {NONE} -- Implementation
 		do
 			p ?= f
 			Result := p /= Void
-			if Result then
-			end
 		end
 
 end -- class FORMAL_DEC_AS

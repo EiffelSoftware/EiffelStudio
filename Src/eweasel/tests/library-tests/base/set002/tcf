@@ -1,0 +1,20 @@
+test_name symdif-sets
+test_description New implementation of SUBSET.symdif tested with different descendants
+
+define OUTPUT $TEST
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	sample_object.e $CLUSTER sample_object.e
+copy_raw 	sample_object_comparable.e $CLUSTER sample_object_comparable.e
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

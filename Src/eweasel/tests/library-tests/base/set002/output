@@ -1,0 +1,41 @@
+Create object set as type LINKED_SET
+reference comparison set
+Filling object set
+Set 1: 5, 1, 2, 5, 3, 4, 
+Set 2: 2, 4, 5, 
+Create object set as type LINKED_SET
+object comparison set
+Filling object set
+Set 1: 1, 3, 2, 4, 
+Set 2: 2, 4, 5, 
+Create comparable object set as type BINARY_SEARCH_TREE_SET
+reference comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 5, 5, 
+Set 2: 2, 4, 5, 
+Create comparable object set as type BINARY_SEARCH_TREE_SET
+object comparison set
+Filling comparable object set
+Set 1: 1, 2, 3, 4, 
+Set 2: 2, 4, 5, 
+Create string set as type LINKED_SET
+reference comparison set
+Filling string set
+Set 1: boo, bla, bar, boo, foo, baz, 
+Set 2: bla, baz, boo, 
+Create string set as type LINKED_SET
+object comparison set
+Filling string set
+Set 1: baz, bar, bla, foo, 
+Set 2: bla, baz, boo, 
+Create string set as type BINARY_SEARCH_TREE_SET
+reference comparison set
+Filling string set
+Set 1: bar, baz, bla, boo, boo, foo, 
+Set 2: baz, bla, boo, 
+Create string set as type BINARY_SEARCH_TREE_SET
+object comparison set
+Filling string set
+Set 1: bar, baz, bla, foo, 
+Set 2: baz, bla, boo, 
+Execution completed

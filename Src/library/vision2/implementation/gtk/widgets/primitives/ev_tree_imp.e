@@ -105,8 +105,7 @@ feature -- Status report
 
 	selected_item: EV_TREE_ITEM is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
-			-- XX Currently just give head of the gtk selection list
+			-- selection, it gives the first item in the list.
 		local
 			p: POINTER
 			o: EV_ANY_IMP
@@ -250,6 +249,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/01 18:06:44  king
+--| Corrected selected_item comment
+--|
 --| Revision 1.27  2000/02/29 22:29:35  king
 --| Merged selection callbacks in to one due to gtk bug
 --|

@@ -121,7 +121,11 @@ RT_LNK void eraise(EIF_CONTEXT char *tag, long num);		/* Raise an Eiffel excepti
 RT_LNK void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raise an EiffelCOM exception */
 RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
-RT_LNK void enomem(EIF_CONTEXT_NOARG);			/* Raises an "Out of memory" exception */
+#ifdef EIF_IL_DLL
+#define enomem()	
+#else
+RT_LNK void enomem();			/* Raises an "Out of memory" exception */
+#endif
 RT_LNK struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
 RT_LNK void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
 RT_LNK void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */

@@ -400,6 +400,7 @@ feature -- Contexts
 			temp: STRING
 		do
 			entry := Eiffel_table.poly_table (rout_id)
+			Eiffel_table.mark_used (rout_id)
 			temp := rout_id.table_name
 			buffer.putstring ("extern long ")
 			buffer.putstring (temp)

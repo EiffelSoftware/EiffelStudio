@@ -13,7 +13,8 @@ inherit
 
 feature -- Basic operations
 
-	get is 
+	get is
+			-- Get the device context.
 		require
 			not_exists: not exists
 		deferred
@@ -22,6 +23,7 @@ feature -- Basic operations
 		end
 
 	release is 
+			-- Release the device context.
 		require
 			exists: exists
 		deferred

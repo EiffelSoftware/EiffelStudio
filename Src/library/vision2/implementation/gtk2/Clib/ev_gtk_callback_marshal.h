@@ -39,9 +39,9 @@ guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
-void* gtk_value_pointer (void*);
+void* gtk_value_pointer (EIF_POINTER);
 
-int gtk_value_int (void*);
+int gtk_value_int (EIF_POINTER);
 
 #endif
 
@@ -50,8 +50,8 @@ int gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
-// Revision 1.1  2003/04/03 01:40:50  king
-// Initial gtk 2 conversion
+// Revision 1.2  2003/04/15 01:32:31  king
+// Now new marshal proxy is correctly executed, updated arg function to gtk2
 //
 // Revision 1.6  2001/06/29 19:56:43  king
 // Updated signal connect true signature to return connect id

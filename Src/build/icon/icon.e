@@ -10,20 +10,20 @@ inherit
 
 	CONSTANTS
 
-	BULLETIN
+	CENTERED_BULLETIN
 		rename
 			make as bulletin_make,
 			make_unmanaged as bulletin_make_unmanaged,
 			identifier as oui_identifier
-
 		redefine
 			set_managed,
-			add_button_press_action
+			add_button_press_action,
+			set_size
 		end
 
 feature 
 
-	init_y: INTEGER is 29	
+	init_y: INTEGER is 24	
 
 	source_button: PICT_COLOR_B is
 		do
@@ -49,6 +49,7 @@ feature
 				button.set_pixmap (s)
 				button.manage
 			end
+			update_positions
 		end
 
 	set_label (s: STRING) is
@@ -65,13 +66,22 @@ feature
 				icon_label.set_text (label)
 				icon_label.manage
 			end
+			update_positions
 		end
 
 	widget_created: BOOLEAN is
 		do
 			Result := implementation /= Void
 		end
-	
+
+	set_size (new_width:INTEGER; new_height: INTEGER) is
+			-- Set width and height to `new_width'
+			-- and `new_height'.
+		do 
+			{CENTERED_BULLETIN} Precursor (new_width, new_height)
+			update_positions
+		end
+
 feature {NONE} -- Interface section
 
 	button: ACTIVE_PICT_COLOR_B
@@ -113,6 +123,7 @@ feature  -- Interface section
 			else
 				icon_label.set_text ("")
 			end
+			update_positions
 			set_widget_default
 		end
 
@@ -152,6 +163,7 @@ feature  -- Interface section
 				end
 				button.manage
 				manage
+				update_positions
 			else 
 				unmanage
 				if button.managed then
@@ -183,6 +195,22 @@ feature {EB_BOX}
 			font := res.default_font
 			if font /= Void then
 				icon_label.set_font (font)
+			end
+		end
+
+feature {NONE} -- Update position
+
+	update_positions is
+			-- Center the button in the bulletin.
+		do
+			if button /= Void then
+
+				if label = Void or else label.empty then
+					button.set_x_y (1, 1)
+				else
+					button.set_x_y ((width // 2) - (button.width // 2), 1)
+					icon_label.set_x_y ((width //2) - (icon_label.width // 2), init_y)
+				end
 			end
 		end
 

@@ -18,9 +18,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize data.
 		do
-			create root_class_name.make (0)
-			create class_creation_feature_name.make (0)
-			create export_feature_name.make (0)
+			create root_class_name.make (100)
+			create class_creation_feature_name.make (100)
+			create export_feature_name.make (100)
 		end
 
 feature -- Access

@@ -26,7 +26,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (Tab_tab_tab)
 			Result.append (name)
 			if not exported_features.empty then

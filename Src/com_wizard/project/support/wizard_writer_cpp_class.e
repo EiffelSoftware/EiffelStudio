@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 			non_void_members: a_members /= Void
 			valid_export_status: is_valid_export_status (a_export_status)
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			a_members.search (a_export_status)
 			if a_members.found then
 				from
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_function: a_function /= Void
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (a_function.result_type)
 			Result.append (Space)
 			Result.append (name)

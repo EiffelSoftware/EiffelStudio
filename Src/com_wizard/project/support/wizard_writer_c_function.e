@@ -30,7 +30,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (generated_signature)
 			Result.append (New_line)
 			Result.append (New_line)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		require
 			can_generate: can_generate
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (tab)
 			Result.append (C_open_comment_line)
 			Result.append (New_line_tab)
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 		require
 			can_generate: can_generate
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (result_type)
 			Result.append (Space)
 			Result.append (name)

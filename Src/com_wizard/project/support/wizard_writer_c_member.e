@@ -37,7 +37,7 @@ feature -- Access
 	generated_header_file: STRING is
 			-- Generated header file
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (tab)
 			Result.append (C_open_comment_line)
 			Result.append (New_line_tab)

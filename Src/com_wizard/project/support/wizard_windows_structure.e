@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 				end
 
 				from
-					create tmp_string.make (0)
+					create tmp_string.make (100)
 					words.put (tmp_string, j)
 				until
 					i > a_count or else

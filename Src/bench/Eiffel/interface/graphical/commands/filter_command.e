@@ -21,21 +21,13 @@ feature
 	filter_name: STRING is
 			-- Name of the filter to be applied
 		once
-			Result := Execution_environment.get ("EIF_FILTER_NAME");
-			if Result = Void or else Result.empty then
-					-- EIF_FILTER_NAME was not set.
-				Result := resources.get_string (r_Filter_name, "PostScript")
-			end
+			Result := resources.get_string (r_Filter_name, "PostScript")
 		end;
 
 	shell_command_name: STRING is
 			-- Command name to be executed
 		once
-			Result := Execution_environment.get ("EIF_FILTER_COMMAND");
-			if Result = Void or else Result.empty then
-					-- EIF_FILTER_COMMAND was not set.
-				Result := resources.get_string (r_Filter_command, "lpr $target")
-			end
+			Result := resources.get_string (r_Filter_command, "lpr $target")
 		end;
 
 	text_window: CLASS_TEXT;
@@ -80,7 +72,7 @@ feature {NONE}
 				if filterable_format = Void then
 					warner (text_window).gotcha_call (w_Not_a_filterable_format)
 				else
-					filename := filterable_format.filtered_file_name
+					filename := filterable_format.temp_filtered_file_name
 										(text_window.root_stone, filter_name);
 					if 
 						filterable_format.filtered and
@@ -96,15 +88,11 @@ feature {NONE}
 							save_to_file (new_text, filename)
 						end
 					end;
-					!!cmd_string.make (0);
-					cmd_string.append ("target=");
-					cmd_string.append (filterable_format.filtered_file_name
-										(text_window.root_stone, filter_name));
-					cmd_string.append ("; export target; ");
-					cmd_string.append (shell_command_name);
+					cmd_string := clone (shell_command_name);
+					cmd_string.replace_substring_all ("$target", filename);
 					!!shell_request;
 					shell_request.set_command_name (cmd_string);
-					shell_request.send
+					shell_request.send;
 				end
 			end;
 			restore_cursors

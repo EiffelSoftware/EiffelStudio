@@ -158,7 +158,8 @@ feature -- Basic operations
 
 			elseif 
 				pointed_visitor.is_basic_type or 
-				pointed_visitor.vt_type = Vt_bool 
+				pointed_visitor.vt_type = Vt_bool or
+				pointed_visitor.is_enumeration 
 			then
 				is_basic_type_ref := True
 				a_type := pointed_visitor.vt_type
@@ -240,18 +241,6 @@ feature -- Basic operations
 						writable := False
 					end
 				end
-
-			elseif pointed_visitor.is_enumeration then
-				is_basic_type_ref := True
-
-				create eiffel_type.make (100)
-				eiffel_type.append (Integer_ref_type)
-				writable := True
-
-				create ce_function_name.make (100)
-				create ec_function_name.make (100)
-				ec_function_name.append ("ccom_ec_pointed_integer")
-				ce_function_name.append ("ccom_ce_pointed_integer")
 
 			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
 				eiffel_type := clone (Ecom_hresult)

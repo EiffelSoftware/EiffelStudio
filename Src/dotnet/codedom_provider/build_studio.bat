@@ -31,7 +31,7 @@ GOTO END
 CD build_studio\EiffelSoftware.CodeDom
 IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL /Q /F *.epr
-ec -ace ace.ace -precompile -finalize -c_compile
+ec -ace ace.ace -finalize -c_compile
 CD ..\..
 IF EXIST build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.CodeDom.dll GOTO VISION2
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.dll was generated in build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code)

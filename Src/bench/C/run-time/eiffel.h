@@ -18,6 +18,7 @@ extern "C" {
 #endif
 
 #include "config.h"
+#include "eif_globals.h"
 
 /* The following includes are needed only because Eiffel has no way to direct
  * the compiler to include specific files when using some externals routines.

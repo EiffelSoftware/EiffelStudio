@@ -51,28 +51,40 @@ feature -- Access
 			t: STRING
 			c_w:CLASS_W
 			r_w:ROUTINE_W
+			o_w:OBJECT_W
 		do
 			c_w ?= tool
 			r_w ?= tool
+			o_w ?= tool
 
 			if c_w /= Void then
---				t := clone (tool.title)
-				t := clone (tool.eb_shell.icon_name)
+				if c_w.class_text_field.text.empty then
+					t:="..."
+				else
+					t := clone (tool.eb_shell.icon_name)
+				end
 			elseif r_w /= Void then
 				t := clone (tool.title)
 				if not t.empty then
 					t.replace_substring_all ("Feature: ","+ ")
 					t.replace_substring_all ("Class:","from:")
 				end
+			elseif o_w /= Void then
+				t := clone (tool.title)
+--				if not t.empty then
+--					t.replace_substring_all ("Feature: ","+ ")
+--					t.replace_substring_all ("Class:","from:")
+--				end
 			else
 				t := clone ("? Unknown Tool")
 			end
 
 			if t.empty then
-				t.append ("<<>> EL WHAT ??")
+--				t.append ("<<>> EL WHAT ??")
 			else
 				t.append (tag)
 			end
+
 			Result := t
 		end
 

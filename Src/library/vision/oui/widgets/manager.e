@@ -64,15 +64,14 @@ feature -- Element change
 		end 
 	
 	set_initial_input_focus (a_child: WIDGET) is
-                -- Set child which will initially have input focus
-                require
-                        exists: not destroyed;
-                        a_child_not_void: not (a_child = Void)
-                        is_a_child: children.has (a_child)
-                do
-                        implementation.set_initial_input_focus (a_child)
-                end
-
+			-- Set child which will initially have input focus
+		require
+			exists: not destroyed;
+			a_child_not_void: not (a_child = Void)
+			is_a_child: children.has (a_child)
+		do
+			implementation.set_initial_input_focus (a_child)
+		end
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 

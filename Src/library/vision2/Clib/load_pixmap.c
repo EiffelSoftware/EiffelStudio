@@ -1300,20 +1300,23 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 		/* Expand paletted colors into true RGB triplets */
 	if (color_type == PNG_COLOR_TYPE_PALETTE) {
-		png_set_expand(png_ptr);
+		png_set_palette_to_rgb(png_ptr);
 	}
 
 		/* Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel */
 	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
-		png_set_expand(png_ptr);
+		png_set_gray_1_2_4_to_8(png_ptr);
 	}
 
 		/* Expand paletted or RGB images with transparency to full alpha channels
 		 * so the data will be available as RGBA quartets.
 		 */
 	if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
-		png_set_expand(png_ptr);
+		png_set_tRNS_to_alpha(png_ptr);
 	}
+
+	if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+		png_set_gray_to_rgb(png_ptr);
 
 		/* invert monocrome files to have 0 as white and 1 as black */
 	png_set_invert_mono(png_ptr);
@@ -1329,8 +1332,8 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 		/* Allocate the memory to hold the image using the fields of info_ptr. */
 	ppImage = (unsigned char **) malloc(height * sizeof(unsigned char *));
+	sRowSize = png_get_rowbytes(png_ptr, info_ptr);
 	for (row = 0; row < height; row++) {
-		sRowSize = png_get_rowbytes(png_ptr, info_ptr);
 		ppImage[row] = (unsigned char *)malloc(sRowSize);
 	}
 

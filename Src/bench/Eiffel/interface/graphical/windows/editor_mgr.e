@@ -70,6 +70,8 @@ feature {WINDOW_MGR}
 				free_list.start;
 				Result := free_list.item;
 				Result.set_x_y (screen.x, screen.y);
+				Result.text_window.set_tab_length 
+							(Result.text_window.default_tab_length.item);
 				free_list.remove;
 			else
 				set_global_cursor (watch_cursor);

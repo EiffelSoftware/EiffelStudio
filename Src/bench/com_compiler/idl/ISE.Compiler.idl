@@ -45,6 +45,15 @@ enum
     ISECompilerID_replace_object_file,
     ISECompilerID_object_files,
 
+    ISECompilerID_assembly_name,
+    ISECompilerID_assembly_version,
+    ISECompilerID_assembly_culture,
+    ISECompilerID_assembly_public_key_token,
+    ISECompilerID_is_local,
+    ISECompilerID_is_signed,
+    ISECompilerID_assembly_cluster_name,
+    ISECompilerID_assembly_prefix,
+
     EIFFELCLUSTERPROP_Name,
     EIFFELCLUSTERPROP_Path,
     EIFFELCLUSTERPROP_Namespace,
@@ -919,16 +928,16 @@ interface IEiffelSystemAssemblies: IDispatch
   HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Checks to see if a signed assembly has already been added to the project")]
-  HRESULT contains_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
+  HRESULT contains_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
-  HRESULT contains_unsigned_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
+  HRESULT contains_local_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Retrieves the cluster name for a signed assembly in the project")]
-  HRESULT cluster_name_from_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
+  HRESULT cluster_name_from_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
 
   [helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
-  HRESULT cluster_name_from_unsigned_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
+  HRESULT cluster_name_from_local_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
   [helpstring ("Is 'prefix' a valid assembly prefix")]
   HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
@@ -1038,15 +1047,6 @@ interface IEiffelClusterProperties: IDispatch
   [id (EIFFELCLUSTERPROP_ExpandedClusterPath), propget, helpstring ("Full path to cluster with ISE_EIFFEL env var expanded.")]
   HRESULT expanded_cluster_path ([out, retval] BSTR * path);
 
-  [helpstring ("Does the path to the cluster exsit")]
-  HRESULT cluster_path_exists ([out, retval] VARIANT_BOOL * exists);
-
-  [helpstring ("Create the cluster path if it doesnt exist")]
-  HRESULT create_cluster_path ([out, retval] VARIANT_BOOL * exists);
-
-  [helpstring ("Does parent cluster have all set and does the cluster path extend upon the parents")]
-  HRESULT all_cluster_path_not_excluded ([out, retval] VARIANT_BOOL * exists);
-
   [id (EIFFELCLUSTERPROP_Namespace), propget, helpstring ("Cluster namespace.")]
   HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
 
@@ -1063,31 +1063,31 @@ interface IEiffelClusterProperties: IDispatch
 ]
 interface IEiffelAssemblyProperties: IDispatch
 {
-  [id (200), propget, helpstring ("Assembly name.")]
+  [id (ISECompilerID_assembly_name), propget, helpstring ("Assembly name.")]
   HRESULT assembly_name ([out, retval] BSTR * return_value);
 
-  [id (201), propget, helpstring ("Assembly version.")]
+  [id (ISECompilerID_assembly_version), propget, helpstring ("Assembly version.")]
   HRESULT assembly_version ([out, retval] BSTR * path);
 
-  [id (202), propget, helpstring ("Assembly culture.")]
+  [id (ISECompilerID_assembly_culture), propget, helpstring ("Assembly culture.")]
   HRESULT assembly_culture ([out, retval] BSTR *path);
 
-  [id (203), propget, helpstring ("Assembly public key token")]
+  [id (ISECompilerID_assembly_public_key_token), propget, helpstring ("Assembly public key token")]
   HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
 
-  [id (205), propget, helpstring ("Is the assembly local")]
+  [id (ISECompilerID_is_local), propget, helpstring ("Is the assembly local")]
   HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
 
-  [id (208), propget, helpstring ("Is the assembly local")]
+  [id (ISECompilerID_is_signed), propget, helpstring ("Is the assembly local")]
   HRESULT is_signed ([out, retval] VARIANT_BOOL * a_bool);
 
-  [id (206), propget, helpstring ("Assembly cluster name.")]
+  [id (ISECompilerID_assembly_cluster_name), propget, helpstring ("Assembly cluster name.")]
   HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
 
-  [id (207), propget, helpstring ("Prefix.")]
+  [id (ISECompilerID_assembly_prefix), propget, helpstring ("Prefix.")]
   HRESULT assembly_prefix ([out, retval] BSTR * return_value);
 
-  [id (207), propput, helpstring ("Prefix.")]
+  [id (ISECompilerID_assembly_prefix), propput, helpstring ("Prefix.")]
   HRESULT assembly_prefix ([in] BSTR a_prefx);
 
 };

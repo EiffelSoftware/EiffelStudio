@@ -22,6 +22,11 @@ inherit
 			dispose
 		end
 	
+	SAFE_ASSEMBLY_LOADER
+		export
+			{NONE} all
+		end
+	
 	MARSHAL_BY_REF_OBJECT
 		rename
 			make as make_marhaller
@@ -40,7 +45,9 @@ feature {COM_ISE_CACHE_MANAGER} -- Initialization
 		do
 			app_domain := a_domain
 			create resolver_paths.make (7)
+			create resolver_assembly_paths.make (10)
 			resolver_paths.compare_objects
+			resolver_assembly_paths.compare_objects
 			app_domain.add_assembly_resolve (create {RESOLVE_EVENT_HANDLER}.make (Current, $resolve_reference))
 		end
 		
@@ -48,6 +55,9 @@ feature -- Access
 		
 	resolver_paths: ARRAYED_LIST [STRING]
 			-- array of prioritized paths to resolve an assembly reference with
+			
+	resolver_assembly_paths: ARRAYED_LIST [STRING]
+			-- array of prioritized assembly paths to load assemblies from when attempting to `resolve_reference_level_2'
 			
 	app_domain: APP_DOMAIN
 			-- app domain that resolver is associated with
@@ -95,34 +105,48 @@ feature -- Basic operations
 		local
 			l_assembly_path: STRING
 		do
-			from
-				resolver_paths.start
-			until
-				Result /= Void or resolver_paths.after
-			loop
-				create l_assembly_path.make (resolver_paths.item.count + a_args.name.length + 5)
-				l_assembly_path.append (resolver_paths.item.twin)
-				l_assembly_path.append_character ('\')
-				l_assembly_path.append (get_assembly_name (a_args.name))
-				l_assembly_path.append (".dll")
-				if (create {RAW_FILE}.make (l_assembly_path)).exists then
-					Result := load_assembly (l_assembly_path)
-					if Result /= Void and then not is_good_match (Result, a_args.name) then
-						Result := Void
-					end	
-				end
-				if Result = Void then
-					l_assembly_path.keep_head (l_assembly_path.count - 3)
-					l_assembly_path.append ("exe")
+			if not is_request_being_made (a_args.name) then
+				request_stack.extend (a_args.name)
+				
+				from
+					resolver_paths.start
+				until
+					Result /= Void or resolver_paths.after
+				loop
+					create l_assembly_path.make (resolver_paths.item.count + a_args.name.length + 5)
+					l_assembly_path.append (resolver_paths.item.twin)
+					l_assembly_path.append_character ('\')
+					l_assembly_path.append (get_assembly_name (a_args.name))
+					l_assembly_path.append (".dll")
 					if (create {RAW_FILE}.make (l_assembly_path)).exists then
-						Result := load_assembly (l_assembly_path)
+						Result := load_assembly_from_path (l_assembly_path)
 						if Result /= Void and then not is_good_match (Result, a_args.name) then
 							Result := Void
+						end	
+					end
+					if Result = Void then
+						l_assembly_path.keep_head (l_assembly_path.count - 3)
+						l_assembly_path.append ("exe")
+						if (create {RAW_FILE}.make (l_assembly_path)).exists then
+							Result := load_assembly_from_path (l_assembly_path)
+							if Result /= Void and then not is_good_match (Result, a_args.name) then
+								Result := Void
+							end
 						end
 					end
+					resolver_paths.forth
 				end
-				resolver_paths.forth
+				if Result = Void then
+						-- try to load an assembly from `resolver_assembly_paths'
+					Result := resolve_reference_level_2 (a_args.name)
+				end
+				
+				request_stack.remove
+			else
+				Result := Void
 			end
+		ensure
+			request_stack_normalized: request_stack.count = old request_stack.count
 		end
 		
 feature -- Extension
@@ -166,6 +190,17 @@ feature -- Extension
 			if l_path /= Void then
 				add_resolver_path (l_path)
 			end
+		end
+		
+	add_resolver_assembly (a_path: STRING) is
+			-- add assembly located at `a_path' to list of resolvable assemblies
+		require
+			a_path_not_void: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		do
+			resolver_assembly_paths.extend (a_path.twin)
+		ensure
+			path_added: resolver_assembly_paths.has (a_path)
 		end
 		
 feature -- Removal
@@ -212,6 +247,21 @@ feature -- Removal
 			end
 		end
 
+	remove_resolver_assembly (a_path: STRING) is
+			-- add assembly located at `a_path' to list of resolvable assemblies
+		require
+			a_path_not_void: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+			resolver_assembly_paths.has (a_path)
+		do
+			resolver_assembly_paths.search (a_path)
+			if not resolver_assembly_paths.after then
+				resolver_assembly_paths.remove
+			end
+		ensure
+			path_removed: not resolver_assembly_paths.has (a_path)
+		end
+
 	remove_from_app_domain is
 			-- removes current instance from notified app domain events
 		do
@@ -226,23 +276,38 @@ feature -- Removal
 			remove_from_app_domain
 		end
 		
+feature -- Query
+
+	is_request_being_made (a_name: SYSTEM_STRING): BOOLEAN is
+			-- is a resolution request being made for `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			not_a_name_is_empty: a_name.length > 0
+		do
+			Result := request_stack.has (a_name)
+		end
+		
 feature {NONE} -- Implementation
 
-	load_assembly (a_path: STRING): ASSEMBLY is
-			-- attempt to load assembly at `a_path'
+	resolve_reference_level_2 (a_full_name: SYSTEM_STRING): ASSEMBLY is
+			-- attempt o resolve a reference using `resolver_assembly_paths' is
 		require
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-			path_exists: (create {RAW_FILE}.make (a_path)).exists
+			a_full_name_not_void: a_full_name /= Void
+			not_a_full_name_is_empty: a_full_name.length > 0
 		local
-			l_retried: BOOLEAN
+			l_assembly: ASSEMBLY
 		do
-			if not l_retried then
-				Result := feature {ASSEMBLY}.load_from (a_path)
+			from
+				resolver_assembly_paths.start
+			until
+				resolver_assembly_paths.after or Result /= Void
+			loop
+				l_assembly := load_assembly_from_path (resolver_assembly_paths.item)
+				if l_assembly /= Void and then is_good_match (l_assembly, a_full_name) then
+					Result := l_assembly
+				end
+				resolver_assembly_paths.forth			
 			end
-		rescue
-			l_retried := True
-			retry
 		end
 	
 	get_assembly_name (a_name: STRING): STRING is
@@ -306,10 +371,21 @@ feature {NONE} -- Implementation
 					l_parts.forth
 				end				
 			end
+		end	
+		
+	request_stack: ARRAYED_STACK [SYSTEM_STRING] is
+			-- is a resolution request already being processed?
+		once
+			create Result.make (2)
+			Result.compare_objects
+		ensure
+			result_not_void: Result /= Void
+			result_compares_objects: Result.object_comparison
 		end
 
 invariant
 	non_void_resolver_paths: resolver_paths /= Void
+	non_void_resolver_assembly_paths: resolver_assembly_paths /= Void
 	non_void_app_domain: app_domain /= Void
 
 end -- class ASSEMBLY_RESOLVER

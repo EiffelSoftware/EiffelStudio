@@ -104,6 +104,8 @@ feature {NONE} -- Implementation
 			Result.put (Wel_window_constants.Wm_geticon,			Wel_window_constants.Wm_geticon)
 			Result.put (Wel_window_constants.Wm_showwindow,			Wel_window_constants.Wm_showwindow)
 			Result.put (Wel_window_constants.Wm_enteridle,			Wel_window_constants.Wm_enteridle)
+			Result.put (Wel_window_constants.Wm_drawitem,			Wel_window_constants.Wm_drawitem)
+			Result.put (Wel_window_constants.Wm_gettextlength,		Wel_window_constants.Wm_gettextlength)
 		end
 
 	special_messages: HASH_TABLE [INTEGER, INTEGER] is
@@ -130,7 +132,7 @@ feature {NONE} -- Implementation
 				-- Message are "authorized" if they are for the blocking window (and one
 				-- of its control, or if they are listed in the list of authorized messages.
 				if (blocking_dispatcher_window = Void) or else 
-				   authorized_messages.has(msg) or else
+				   (not unauthorized_messages.has(msg) and not special_messages.has(msg)) or else
 				   (window.is_located_inside (blocking_dispatcher_window))
 				then
 					Result := process_received_message (window, hwnd, msg, wparam, lparam)
@@ -140,10 +142,6 @@ feature {NONE} -- Implementation
 				-- top of the window.
 				elseif (blocking_dispatcher_window /= Void) and then special_messages.has(msg) then
 					Result := process_special_message (window, hwnd, msg, wparam, lparam)
-				else
-					if not unauthorized_messages.has (msg) then
-						io.putstring ("Message not handled (msg="+msg.out+"), please report it to pichery@eiffel.com%N")
-					end
 				end
 			else
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)

@@ -61,11 +61,11 @@ feature {NONE} -- GUI
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
 			deactivate_menu_fields
-			if object_tool_generator.precondition_test.state then
+--			if object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
-			else	
-				test_text_field.set_insensitive
-			end
+--			else	
+--				test_text_field.set_insensitive
+--			end
 		end
 
 	attach_all is
@@ -350,6 +350,13 @@ feature {NONE} -- Attribute
 	default_choice: STRING_SCROLLABLE_ELEMENT
 			-- Default choice in the menu entries
 
+feature {NONE} -- Generated interface attributes
+
+	new_text_field_c: TEXT_FIELD_C
+			-- Text field holding the value used to set `query'
+	new_opt_pull_c: OPT_PULL_C
+			-- Option pull holding the value used to set `query' 
+
 feature -- Interface generation
 
 	generate_interface_elements (base_x, base_y: INTEGER; a_perm_wind_c: PERM_WIND_C) is
@@ -357,8 +364,6 @@ feature -- Interface generation
 			-- starting at position (`base_x', `base_y').
 		local
 			new_label_c: LABEL_C
-			new_text_field_c: TEXT_FIELD_C
-			new_opt_pull_c: OPT_PULL_C
 		do
 			!! new_label_c
 			new_label_c := new_label_c.create_context (a_perm_wind_c)
@@ -427,7 +432,47 @@ feature -- Interface generation
 
 feature -- Command generation
 
-	generate_eiffel_text (parent_perm_wind: STRING): STRING is
+	arguments: EB_LINKED_LIST [ARG] is
+		   -- Generated widgets holding the value to set `query'.
+		local
+			arg: ARG
+		do
+			!! Result.make
+			if is_both then
+				!! arg.session_init (new_text_field_c.type)
+				Result.extend (arg)
+				!! arg.session_init (new_opt_pull_c.type)
+				Result.extend (arg)
+			elseif new_text_field_c /= Void then
+				!! arg.session_init (new_text_field_c.type)
+				Result.extend (arg)
+			else
+				!! arg.session_init (new_opt_pull_c.type)
+				Result.extend (arg)
+			end	
+		end
+
+	argument_instances: EB_LINKED_LIST [ARG_INSTANCE] is
+		   -- Generated widgets holding the value to set `query'.
+		local
+			arg: ARG_INSTANCE
+		do
+			!! Result.make
+			if is_both then
+				!! arg.storage_init (new_text_field_c.type, new_text_field_c)
+				Result.extend (arg)
+				!! arg.storage_init (new_opt_pull_c.type, new_opt_pull_c)
+				Result.extend (arg)
+			elseif new_text_field_c /= Void then
+				!! arg.storage_init (new_text_field_c.type, new_text_field_c)
+				Result.extend (arg)
+			else
+				!! arg.storage_init (new_opt_pull_c.type, new_opt_pull_c)
+				Result.extend (arg)
+			end	
+		end
+
+	generate_eiffel_text (counter: INT_GENERATOR): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		local
@@ -436,52 +481,49 @@ feature -- Command generation
 			!! Result.make (0)
 			Result.append ("%T%T%T")
 			if is_both then
-				Result.append ("if not ")
-				Result.append (text_field_name)
+				Result.append ("if not argument")
+				Result.append_integer (counter.value)
 				Result.append (".text.empty then%N%T%T%T")
 				!! actual_argument.make (0)
-				actual_argument.append (parent_perm_wind)
-				actual_argument.append (".")
-				actual_argument.append (text_field_name)
+				actual_argument.append ("argument")
+				actual_argument.append_integer (counter.value)
 				actual_argument.append (".text")
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
 					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tdisplay_error_message (%"")
 					Result.append (test_text_field.text)
-					Result.append ("%", ")
-					Result.append (parent_perm_wind)
-					Result.append (")%N%T%T%T%Tend%N")
+					Result.append ("%", argument")
+					Result.append_integer (counter.value)
+					Result.append (".parent)%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Telse%N%T%T%T%T")
+				counter.next
 				!! actual_argument.make (0)
-				actual_argument.append (parent_perm_wind)
-				actual_argument.append (".")
-				actual_argument.append (opt_pull_name)
+				actual_argument.append ("argument")
+				actual_argument.append_integer (counter.value)
 				actual_argument.append (".selected_button.text")
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
 					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tdisplay_error_message (%"")
 					Result.append (test_text_field.text)
-					Result.append ("%", ")
-					Result.append (parent_perm_wind)
-					Result.append (")%N%T%T%T%Tend%N")
+					Result.append ("%", argument")
+					Result.append_integer (counter.value)
+					Result.append (".parent)%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Tend%N")
 			elseif text_field_name /= Void then
 				!! actual_argument.make (0)
-				actual_argument.append (parent_perm_wind)
-				actual_argument.append (".")
-				actual_argument.append (text_field_name)
+				actual_argument.append ("argument")
+				actual_argument.append_integer (counter.value)
 				actual_argument.append (".text")
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
 			else
 				!! actual_argument.make (0)
-				actual_argument.append (parent_perm_wind)
-				actual_argument.append (".")
-				actual_argument.append (opt_pull_name)
+				actual_argument.append ("argument")
+				actual_argument.append_integer (counter.value)
 				actual_argument.append (".selected_button.text")
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
@@ -489,9 +531,9 @@ feature -- Command generation
 			if test_toggle_b.state and not procedure.precondition_list.empty and not is_both then
 				Result.append ("%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
 				Result.append (test_text_field.text)
-				Result.append ("%", ")
-				Result.append (parent_perm_wind)
-				Result.append (")%N%T%T%Tend%N")
+				Result.append ("%", argument")
+				Result.append_integer (counter.value)
+				Result.append (".parent)%N%T%T%Tend%N")
 			end		
 		end
 

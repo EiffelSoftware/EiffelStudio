@@ -88,7 +88,17 @@ feature -- Interface generation
 
 feature -- Command generation
 
-	generate_eiffel_text (parent_perm_wind: STRING): STRING is
+	arguments: EB_LINKED_LIST [ARG] is
+		   -- Generated widgets holding the value to set `query'.
+		deferred
+		end
+
+	argument_instances: EB_LINKED_LIST [ARG_INSTANCE] is
+		   -- Generated widgets holding the value to set `query'.
+		deferred
+		end
+		
+	generate_eiffel_text (counter: INT_GENERATOR): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		deferred

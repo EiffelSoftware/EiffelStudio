@@ -46,7 +46,7 @@ feature -- Properties
 --			navigate_tab_cmd: NAVIGATE_CMD
 		do
 --			if not toolkit.name.is_equal ("MS_WINDOWS") then
---				!! navigate_tab_cmd.make (next_tab)
+--				create navigate_tab_cmd.make (next_tab)
 --				set_action ("<Key>Tab", navigate_tab_cmd, Void)
 --				set_action ("Shift<Key>Tab", navigate_tab_cmd, Void)
 --			end

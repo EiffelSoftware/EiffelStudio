@@ -237,21 +237,17 @@ feature -- Status setting
 			-- Freeze the widget.
 			-- If the widget is frozen any updates made to the
 			-- window will not be shown until the widget is
-			-- thawn again.
+			-- `thawed out' using `thaw'.
 			-- Note: Only one window can be frozen at a time.
 			-- This is because of a limitation on Windows.
 		do
-			check
-				To_be_implemented: False
-			end
+			gtk_text_freeze (widget)
 		end
 
 	thaw is
 			-- Thaw a frozen widget.
 		do
-			check
-				To_be_implemented: False
-			end
+			gtk_text_thaw (widget)
 		end
 
 feature -- Basic operation
@@ -275,6 +271,18 @@ feature -- Assertions
 			-- Has the line at least one character?
 		do
 			Result := not ((text @ text.count) = '%N')
+		end
+
+feature -- Externals
+	
+	gtk_text_freeze (text_wid: POINTER) is
+		external
+			"C (GtkText *)| <gtk/gtk.h>"
+		end
+
+	gtk_text_thaw (text_wid: POINTER) is
+		external
+			"C (GtkText *)| <gtk/gtk.h>"
 		end
 
 end -- class EV_TEXT_IMP

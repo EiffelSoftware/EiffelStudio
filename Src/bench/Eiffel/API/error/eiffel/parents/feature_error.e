@@ -38,9 +38,9 @@ feature -- Access
 	is_feature_defined: BOOLEAN is
 			-- Is the feature defined for error?
 		do
-			Result := e_feature /= Void
+			Result := True
 		ensure
-			yes_implies_valid_feature: Result implies e_feature /= Void
+			always_true: Result
 		end;
 
 feature -- Output
@@ -50,10 +50,17 @@ feature -- Output
 			print_error_message (st);
 			st.add_string ("Class: ");
 			e_class.append_signature (st);
-			st.add_string ("%NFeature: ");
-			e_feature.append_name (st, e_class);
+			if e_feature /= Void then
+				st.add_string ("%NFeature: ");
+				e_feature.append_name (st, e_class);
+			elseif feature_name /= Void then
+				st.add_string ("%NFeature: ");
+				st.add_string (feature_name);
+			else
+				st.add_string ("%NFeature: invariant");
+			end;
 			st.add_new_line;
-			build_explain (st);
+			build_explain (st)
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -12,7 +12,7 @@ inherit
 		redefine
 			licence_checked
 		end;
-	LIC_EXITER
+	SHARED_LICENSE
 
 creation
 

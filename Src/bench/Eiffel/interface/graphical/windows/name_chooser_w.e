@@ -18,7 +18,7 @@ inherit
 		select
 			popup
 		end;
-	LIC_EXITER
+	SHARED_LICENSE
 
 creation
 

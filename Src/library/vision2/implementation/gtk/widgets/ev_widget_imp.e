@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		do
 			Result := C.GDK_EXPOSURE_MASK_ENUM +
 			C.GDK_POINTER_MOTION_MASK_ENUM +
-			C.GDK_BUTTON_MOTION_MASK_ENUM +
+		--	C.GDK_BUTTON_MOTION_MASK_ENUM +
 			C.GDK_BUTTON_PRESS_MASK_ENUM +
 			C.GDK_BUTTON_RELEASE_MASK_ENUM +
 			C.GDK_KEY_PRESS_MASK_ENUM +
@@ -56,9 +56,9 @@ feature {NONE} -- Initialization
 			C.GDK_ENTER_NOTIFY_MASK_ENUM +
 			C.GDK_LEAVE_NOTIFY_MASK_ENUM +
 			C.GDK_FOCUS_CHANGE_MASK_ENUM +
-			C.GDK_VISIBILITY_NOTIFY_MASK_ENUM +
-			C.GDK_PROXIMITY_IN_MASK_ENUM +
-			C.GDK_PROXIMITY_OUT_MASK_ENUM
+			C.GDK_VISIBILITY_NOTIFY_MASK_ENUM-- +
+		--	C.GDK_PROXIMITY_IN_MASK_ENUM +
+		--	C.GDK_PROXIMITY_OUT_MASK_ENUM
 		end
 
 	initialize_events is
@@ -330,7 +330,7 @@ feature -- Status setting
 				C.GDK_BUTTON_RELEASE_MASK_ENUM +
 				C.GDK_BUTTON_PRESS_MASK_ENUM +
 				C.GDK_BUTTON_MOTION_MASK_ENUM +
-				C.GDK_POINTER_MOTION_HINT_MASK_ENUM +
+				--C.GDK_POINTER_MOTION_HINT_MASK_ENUM +
 				C.GDK_POINTER_MOTION_MASK_ENUM,
 				NULL,                      -- GdkWindow* confine_to 
 				NULL,                      -- GdkCursor *cursor
@@ -838,6 +838,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2001/06/19 16:58:05  king
+--| Commented out unneeded event masks
+--|
 --| Revision 1.71  2001/06/14 20:14:29  king
 --| Not calling key action sequence if key is void
 --|

@@ -204,6 +204,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define exception_invalid_parameter      		7 
 #define exception_cant_set_up_connection		8
 #define exception_out_of_memory         		9
+#define exception_invalid_separate_object 		10
 #define exception_void_separate_object  		11
 
 #define CONCURRENT_CRASH        -101 

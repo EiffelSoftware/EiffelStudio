@@ -25,31 +25,18 @@ feature {NONE} -- Execution
 			command_arguments: EWB_ARGUMENTS;
 			new_commands: INTEGER;
 		do
-			command_arguments := command_line_io.command_arguments
-			if command_arguments.argument_count /= 3 then
-				io.putstring ("--> Filename and compile_type: ");
-				command_line_io.get_name;
-				new_commands := 1;
+			command_line_io.get_prof_file_name;
+			if command_line_io.last_input.empty then
+				proffile_dir := "profinfo"
+			else
+				proffile_dir := command_line_io.last_input
+			end
+			command_line_io.get_compile_type;
+			if command_line_io.last_input.empty then
+				compile_type := "workbench"
+			else
+				compile_type := command_line_io.last_input
 			end;
-			from
-			until
-				command_arguments.argument_count + new_commands = 3
-			loop
-				io.putstring ("--> Filename and compile_type: ");
-				command_line_io.get_name;
-				new_commands := 1;
-			end;
-			from
-				proffile_dir := command_arguments.item (2 - new_commands);
-			until
-				command_arguments.item (3 - new_commands).is_equal ("workbench") or else 
-				command_arguments.item (3 - new_commands).is_equal ("final")
-			loop
-				io.putstring ("--> compile_type: ");
-				command_line_io.get_name;
-				new_commands := 2;
-			end;
-			compile_type := command_arguments.item (3 - new_commands);
 			execute;
 		end;
 

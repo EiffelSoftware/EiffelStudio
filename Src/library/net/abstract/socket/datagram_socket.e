@@ -51,14 +51,13 @@ feature -- Input
 			return_val: INTEGER
 			ext_data: ANY
 			ext_addr: ANY
-			peer_addr_size: INTEGER_REF
+			peer_addr_size: INTEGER
 		do
 			if peer_address = Void then
 				make_peer_address
 			end
 			ext_addr := peer_address.socket_address
-			!!peer_addr_size
-			peer_addr_size.set_item (peer_address.count)
+			peer_addr_size := peer_address.count
 			!!Result.make (size)
 			ext_data := Result.data
 			return_val := c_rcv_from (descriptor, $ext_data, Result.count, flags, $ext_addr, $peer_addr_size)

@@ -90,6 +90,16 @@ feature -- Element change
 			end
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
 end -- class EV_POPUP_MENU_IMP
 
 --|----------------------------------------------------------------

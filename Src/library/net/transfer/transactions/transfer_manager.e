@@ -20,6 +20,9 @@ class TRANSFER_MANAGER inherit
 			make as list_make, item as transaction, 
 			go_i_th as select_transaction
 		export
+			{ANY} valid_index, valid_cursor_index
+			{TRANSFER_MANAGER} area, i_th, cursor, go_to, valid_cursor, upper,
+				subcopy, array_valid_index, lower, subarray
 			{NONE} all
 		end
 
@@ -31,8 +34,10 @@ class TRANSFER_MANAGER inherit
 		end
 		
 create
-
 	make
+
+create {TRANSFER_MANAGER}
+	make_filled
 
 feature {NONE} -- Initialization
 

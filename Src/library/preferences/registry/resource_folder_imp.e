@@ -17,6 +17,10 @@ feature -- Initialization
 
 	make (doc: WEL_REGISTRY_KEY; p: POINTER; struct: like structure) is
 			-- Initialization
+		require
+			doc_not_void: doc /= Void
+			struct_not_void: struct /= Void
+			handle_not_null: handle /= default_pointer
 		do
 			name := doc.name
 			description := name
@@ -48,7 +52,7 @@ feature -- Initialization
 			resource: RESOURCE
 		do
 				--| We fill `child_list'
-			create {ARRAYED_LIST [RESOURCE_FOLDER_IMP]} child_list.make (20)
+			create {ARRAYED_LIST [like Current]} child_list.make (20)
 			from
 				i := 0
 				key := enumerate_key (handle, i)
@@ -265,6 +269,12 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		end
+
+	new_child (doc: XM_ELEMENT; struct: like structure): like Current is
+			-- New instance of Current belonging to `struct' according to `doc'.
+		do
+			create Result.make_default (doc, struct)
 		end
 
 end -- class RESOURCE_FOLDER_IMP

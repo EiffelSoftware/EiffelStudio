@@ -13,6 +13,9 @@ inherit
 create
 	make_resource
 
+create {RESOURCE_LIST_ITEM}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make_resource (res: RESOURCE) is

@@ -23,6 +23,7 @@ feature
 			class_type, written_type: CLASS_TYPE;
 			actual_type: TYPE_A;
 			formal_type: FORMAL_A
+			gen_type_a: GEN_TYPE_A
 			local_values: like values
 		do
 			buffer.putstring ("static char *(*cr");
@@ -65,13 +66,18 @@ end;
 					buffer.putstring ("(char *(*)()) ");
 					buffer.putstring (routine_name);
 
-					actual_type := feat.type.actual_type;
 						-- Remember extern declarations
+					actual_type := feat.type.actual_type;
 					if actual_type.is_formal then
-						formal_type ?= actual_type;
-						actual_type := 
-							class_type.associated_class.constraint 
-												(formal_type.position);
+							-- If `actual_type' is a formal parameter, it means that the
+							-- current class declaration is a generic class and therefore
+							-- `gen_type_a' cannot be Void (enforced by a check statement).
+						formal_type ?= actual_type
+						gen_type_a ?= class_type.type.type_a
+						check
+							gen_type_a_exists: gen_type_a /= Void
+						end
+						actual_type := gen_type_a.generics.item (formal_type.position)
 					end; 
 					c_type := actual_type.type_i.c_type;
 					Extern_declarations.add_routine (c_type, clone (routine_name));

@@ -13,6 +13,14 @@ inherit
 		end
 
 	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
+
+	SHARED_EVALUATOR
+		export
+			{NONE} all
+		end
 
 feature {AST_FACTORY} -- Initialization
 
@@ -146,20 +154,14 @@ feature -- Type check
 			context.begin_expression
 
 			if type.has_like then
-				-- FIXME
-				-- !like a! is not supported in 3.2
-				-- The resolution of the type should be done
-				-- as the one for local variables (call to
-				-- local_evalutor and use of solved typecreate )
-				create not_supported
-				context.init_error (not_supported)
-				not_supported.set_message ("An anchored type cannot be used as an explicit creation type")
-				Error_handler.insert_error (not_supported)
-				Error_handler.raise_error
+					-- We need to evaluate `type' in context of current class
+					-- and current feature.
+				new_creation_type := creation_evaluator.evaluated_type (
+					type, Context.feature_table, Context.current_feature)
+			else
+					-- Entity to create is of the type specified between the curlies.
+				new_creation_type := type.actual_type
 			end
-
-				-- Entity to create is of the type specified between the curlies.
-			new_creation_type := type.actual_type
 
 			if new_creation_type.has_expanded then
 				if new_creation_type.expanded_deferred then

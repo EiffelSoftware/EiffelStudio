@@ -20,6 +20,20 @@ inherit
 			copy
 		end
 
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	DOUBLE_MATH
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make_with_rgb
@@ -508,6 +522,34 @@ feature -- Constants
 			-- Maximum value for 32 bit unsigned integers.
 			--| FIXME INTEGER is signed!
 
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- Visualization on pixmap.
+		local
+			p: EV_PIXMAP
+			a_x, a_y: INTEGER
+			test_subject: EV_COLOR
+		do
+			create test_subject
+			create p.make_with_size (300, 100)
+			from a_y := 0 until a_y = 100 loop
+				from a_x := 0 until a_x = 300 loop
+					test_subject.set_red (
+						sine ((a_x + 100) / 300 * Pi * 2).abs * a_y / 100)
+					test_subject.set_green (
+						sine (a_x / 300 * Pi * 2).abs * a_y / 100)
+					test_subject.set_blue (
+						sine ((a_x - 100) / 300 * Pi * 2).abs * a_y / 100)
+					p.set_foreground_color (test_subject)
+					p.draw_point (a_x, a_y)
+					a_x := a_x + 1
+				end
+				a_y := a_y + 1
+			end
+			Result := p
+		end
+
 feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP} -- Implementation
 
 	implementation: EV_COLOR_I
@@ -572,6 +614,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/01 18:14:59  brendel
+--| Added test_widget.
+--|
 --| Revision 1.14  2000/03/16 22:42:15  brendel
 --| Commented out invariant using Max_32_bit.
 --|

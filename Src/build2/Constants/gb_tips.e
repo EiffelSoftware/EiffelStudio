@@ -10,7 +10,7 @@ feature -- Access
 
 	pick_and_drop_tip: STRING is "EiffelBuild uses pick and drop to transport information/data/objects.%NTo start a pick and drop right click on the desired source,%Nand complete the transport by right clicking on a target.%NIf a deny cursor is displayed, the current target is not valid."
 	
-	discardable_dialogs: STRING is "Most warning/information dialogs in EiffelBuild may be supressed%Nby checking the %"do not show again%" check box.%NThe default behaviour of these dialogs may be re-instated through%Nthe preferences dialog, available from the %"View%",%N%"Preferences%", %"Preferences..%"menu option."
+	discardable_dialogs: STRING is "Most warning/information dialogs in EiffelBuild may be supressed%Nby checking the %"do not show again%" check box.%NThe default behaviour of these dialogs may be re-instated through%Nthe preferences dialog, available from the %"View%",%N%"Preferences%", %"Preferences..%" menu option."
 	
 	display_window: STRING is "The Display Window shows an accurate view of the window that is being%Ncreated and should be used to preview the interface.%NYou may not build directly into the Display Window."
 
@@ -25,6 +25,8 @@ feature -- Access
 	builder_window_ctrl_shift: STRING is "Hold down Ctrl and Shift keys while right%Nclicking on an object in the Builder Window to highlight%Nthat object in the layout constructor."
 	
 	builder_window_build: STRING is "The Builder Window shows an approximation of the%Ninterface that is being constructed and permits%Ninteractive building."
+	
+	directory_addition: STRING is "Adding or removing directories via the Window Selector%Ncreates or removes these directories from the disk immediately."
 	
 	changing_type: STRING is "You may change the type of an object by picking it,%Nand dropping it on the type you wish to change it to in%Nthe Type Selector. Any objects contained will be re-parented into the new%Nobject. This may only occur if the new type matches, and supports%Ninsertion of all children."
 	
@@ -45,6 +47,7 @@ feature -- Access
 			Result.extend (builder_window_ctrl_shift)
 			Result.extend (changing_type)
 			Result.extend (renaming_window)
+			Result.extend (directory_addition)
 		end
 	
 	tip_count: INTEGER is

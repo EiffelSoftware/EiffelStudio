@@ -43,7 +43,18 @@ feature {NONE} -- Initial windowing
 			if not context_catalog.realized then
 				context_catalog.realize
 			end
-		end
+		end;
+
+	clear_project is
+		do
+			context_catalog.clear;
+			command_catalog.clear;
+			window_mgr.clear_all_editors;
+			command_catalog.initialize_pages;		
+			app_editor.clear;
+			history_window.wipe_out;
+			main_panel.unset_project_initialized;
+		end	
 
 feature {NONE} -- Windows
 

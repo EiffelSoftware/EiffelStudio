@@ -17,6 +17,7 @@ inherit
 			set_red as wel_set_red,
 			set_green as wel_set_green,
 			set_blue as wel_set_blue,
+			set_rgb as wel_set_rgb,
 			red as wel_red,
 			green as wel_green,
 			blue as wel_blue
@@ -121,6 +122,17 @@ feature -- Settings
 		do
 			blue := b
 			wel_set_blue (b // 256)
+			name := Void
+		end
+
+	set_rgb (r, g, b: INTEGER) is
+			-- Set red, green and blue saturation level respectivly to
+			-- `red_value', `green_value' and `blue_value'.
+		do
+			red := r
+			green := g
+			blue := b
+			wel_set_rgb (r // 256, g // 256, b // 256)
 			name := Void
 		end
 

@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	FONT_RESOURCE_WIDGET
+	FONT_PREFERENCE_WIDGET
 
 inherit
-	RESOURCE_WIDGET
+	PREFERENCE_WIDGET
 		redefine
 			resource, 
 			set_resource
@@ -55,9 +55,17 @@ feature {NONE} -- Commands
 			font: EV_FONT
 		do
 			font := font_tool.font
-			resource.set_value (font)
+			last_selected_value := font
 			display_font (font)
 		end
+
+	update_resource is
+			-- 
+		do
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)	
+			end
+		end		
 
 	display_font (a_font: EV_FONT) is
 			-- Display font in example label.
@@ -66,6 +74,15 @@ feature {NONE} -- Commands
 		do
 			example_label.set_font (a_font)
 		end
+
+	reset is
+			-- 
+		do
+			if resource.has_default_value then
+				resource.reset
+			end	
+			display_font (resource.value)
+		end		
 
 feature {NONE} -- Implementation
 
@@ -93,7 +110,7 @@ feature {NONE} -- Implementation
 			change_item_widget := a_frame
 		end
 
-	resource: FONT_RESOURCE
+	resource: FONT_PREFERENCE
 			-- Actual resource.
 
 	change_b: EV_BUTTON
@@ -108,4 +125,7 @@ feature {NONE} -- Implementation
 	example_string: STRING is "Abc"
 			-- Example string to use in `example_label'.
 
-end -- class FONT_RESOURCE_WIDGET
+	last_selected_value: EV_FONT
+			-- Value last selected by user.
+
+end -- class FONT_PREFERENCE_WIDGET

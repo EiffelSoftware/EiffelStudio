@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	RESOURCE_WIDGET
+	PREFERENCE_WIDGET
 
 feature {NONE} -- Initialization
 
@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			build_change_item_widget
 		end
 
-	make_with_resource (a_resource: RESOURCE) is
+	make_with_resource (a_resource: PREFERENCE) is
 			-- Make with values from `a_resource'.
 		require
 			resource_not_void: a_resource /= Void
@@ -35,7 +35,7 @@ feature -- Access
 	caller: PREFERENCE_VIEW
 			-- Caller view to which this resource widget currently belongs.
 
-	resource: RESOURCE
+	resource: PREFERENCE
 			-- Actual resource associated to the widget.
 
 	graphical_type: STRING is
@@ -82,6 +82,16 @@ feature -- Basic operations
 		deferred
 		end		
 		
+	update_resource is
+			-- Update the changes made in `change_item_widget' to `resource'.
+		deferred
+		end		
+		
+	reset is
+			-- Reset resource to default value if any
+		deferred				
+		end		
+		
 feature {NONE} -- Implementation
 
 	build_change_item_widget is
@@ -94,4 +104,4 @@ feature {NONE} -- Implementation
 invariant
 	has_widget: change_item_widget /= Void
 
-end -- class RESOURCE_WIDGET
+end -- class PREFERENCE_WIDGET

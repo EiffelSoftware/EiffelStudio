@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	COLOR_RESOURCE_WIDGET
+	COLOR_PREFERENCE_WIDGET
 
 inherit
-	RESOURCE_WIDGET
+	PREFERENCE_WIDGET
 		redefine
 			resource, 
 			set_resource
@@ -26,7 +26,7 @@ feature -- Status Setting
 			defcol: EV_STOCK_COLORS
 		do
 			Precursor (new_resource)
-			if not (resource.value = Void) then
+			if resource.value /= Void then
 				val := resource.value
 				color_label.set_background_color (val)
 				color_label.parent.set_background_color (val)
@@ -70,8 +70,26 @@ feature {NONE} -- Commands
 		do
 			color := color_tool.color
 			color_label.set_background_color (color)
-			resource.set_value (color)
+			last_selected_value := color
 		end
+		
+	update_resource is
+			-- 
+		do
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)
+			end	
+		end		
+
+	reset is
+			-- 
+		do
+			if resource.has_default_value then
+				resource.reset
+			end	
+			color_label.set_background_color (resource.value)
+		end		
+
 
 feature {NONE} -- Implementation
 
@@ -83,7 +101,6 @@ feature {NONE} -- Implementation
 			a_frame: EV_FRAME
 		do
 			create color_label
-			color_label.set_text ("Auto")
 
 			create change_b.make_with_text_and_action ("Change...", agent change)
 
@@ -104,7 +121,7 @@ feature {NONE} -- Implementation
 	color_tool: EV_COLOR_DIALOG
 			-- Color Palette from which we can select a color.
 
-	resource: COLOR_RESOURCE
+	resource: COLOR_PREFERENCE
 			-- Actual resource.
 
 	color_label: EV_LABEL
@@ -116,4 +133,6 @@ feature {NONE} -- Implementation
 	change_b: EV_BUTTON
 			-- Button labeled "Change" to popup EV_COLOR_DIALOG.
 
-end -- class COLOR_RESOURCE_WIDGET
+	last_selected_value: EV_COLOR
+
+end -- class COLOR_PREFERENCE_WIDGET

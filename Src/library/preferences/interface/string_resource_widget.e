@@ -7,10 +7,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	STRING_RESOURCE_WIDGET
+	STRING_PREFERENCE_WIDGET
 
 inherit
-	RESOURCE_WIDGET
+	PREFERENCE_WIDGET
 		redefine
 			set_resource,
 			change_item_widget
@@ -57,36 +57,36 @@ feature {NONE} -- Command
 
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
-		local
-			int: INTEGER_RESOURCE
-			str: STRING_RESOURCE
-			success: BOOLEAN
-			widget_text: STRING
 		do
-			check
-				resource_exists: resource /= Void
-				change_item_widget_created: change_item_widget /= Void
-			end
-			
-			widget_text := change_item_widget.text
-			
+		end
+
+	update_resource is
+			-- 
+		local
+			int: INTEGER_PREFERENCE
+			str: STRING_PREFERENCE
+		do
 			int ?= resource
 			str ?= resource
 			if int /= Void then
-				if not widget_text.is_empty then
-					if widget_text.is_integer then
+				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
 						int.set_value (change_item_widget.text.to_integer)
-						success := True
-					end
 				else
-					int.set_value (0)
-					success := True
+					int.set_value (0)					
 				end
 			elseif str /= Void then
-				str.set_value (widget_text)
-				success := True
-			end
-		end
+				str.set_value (change_item_widget.text)
+			end		
+		end		
+
+	reset is
+			-- 
+		do
+			if resource.has_default_value then
+				resource.reset
+			end	
+			change_item_widget.set_text (resource.default_value)
+		end		
 
 feature {NONE} -- Implementation
 
@@ -96,4 +96,4 @@ feature {NONE} -- Implementation
 			create change_item_widget			
 		end
 
-end -- class STRING_RESOURCE_WIDGET
+end -- class STRING_PREFERENCE_WIDGET

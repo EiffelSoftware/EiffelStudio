@@ -12,6 +12,9 @@ class
 
 inherit
 	PREFERENCES_TREE_WINDOW_IMP
+		redefine
+			destroy
+		end
 
 	PREFERENCE_VIEW		
 		undefine
@@ -63,6 +66,14 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Status Setting
+
+	set_show_full_resource_name (a_flag: BOOLEAN) is
+			-- Set 'show_full_resource_name'
+		do
+			show_full_resource_name := a_flag	
+		end		
+
 feature {NONE} -- Events
 
 	on_close is
@@ -84,29 +95,32 @@ feature {NONE} -- Events
 	on_set_resource is
 			-- Set the resource value to the newly entered value in the edit widget.
 		local
-			l_resource_widget: RESOURCE_WIDGET
+			l_resource_widget: PREFERENCE_WIDGET
 		do			
 			l_resource_widget ?= resource_cell.data
 			if l_resource_widget /= Void then
 				changed_resources.put (l_resource_widget.resource, l_resource_widget.resource.string_value)
-				l_resource_widget.update_changes
+				l_resource_widget.update_resource
 				right_list.selected_item.go_i_th (2)
 				right_list.selected_item.replace (l_resource_widget.resource.string_value)
+				right_list.selected_item.go_i_th (3)
+				right_list.selected_item.replace ("user set")
 			end		
 		end	
 
 	on_set_resource_default is
 			-- Set the resource value to the original default.
 		local
-			l_resource_widget: RESOURCE_WIDGET
+			l_resource_widget: PREFERENCE_WIDGET
 		do			
 			l_resource_widget ?= resource_cell.data
 			if l_resource_widget /= Void then
-				--changed_resources.put (l_resource_widget.resource, l_resource_widget.resource.string_value)
-				l_resource_widget.resource.reset
+				l_resource_widget.reset
 				right_list.selected_item.go_i_th (2)
 				right_list.selected_item.replace (l_resource_widget.resource.string_value)
-			end		
+				right_list.selected_item.go_i_th (3)
+				right_list.selected_item.replace ("default")
+			end
 		end	
 
 	on_restore is
@@ -130,7 +144,9 @@ feature {NONE} -- Events
 			l_width: INTEGER
 		do
 			l_width := right_list.column_width (1) + right_list.column_width (2) + right_list.column_width (3)
-	  		right_list.set_column_width (right_list.width - l_width, 4)
+			if right_list.width - l_width > 0 then
+		  		right_list.set_column_width (right_list.width - l_width, 4)				
+			end
 		end	
 
 feature {NONE} -- Implementation
@@ -141,7 +157,7 @@ feature {NONE} -- Implementation
  			it,
  			l_parent: EV_TREE_ITEM
 			l_pref_hash: HASH_TABLE [EV_TREE_ITEM, STRING]
-			l_known_pref_hash: HASH_TABLE [RESOURCE, STRING]
+			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
 			l_pref_name,
 			l_pref_parent_name,
 			l_pref_parent_full_name,
@@ -235,15 +251,16 @@ feature {NONE} -- Implementation
 			pref_name_not_void: a_pref_name /= Void
 			pref_name_not_empty: not a_pref_name.is_empty
 		local		
-			l_names: ARRAY [STRING]
+			l_names: SORTABLE_ARRAY [STRING]
 			l_pref_name: STRING
 			l_index: INTEGER
 			it: EV_MULTI_COLUMN_LIST_ROW
-			l_resource: RESOURCE
+			l_resource: PREFERENCE
 		do
 			selected_resource_name := a_pref_name
 				-- Retrieve known preferences
-			l_names := preferences.resources.current_keys
+			create l_names.make_from_array (preferences.resources.current_keys)
+			l_names.sort
 			from
 				l_index := 1
 				right_list.wipe_out
@@ -251,7 +268,7 @@ feature {NONE} -- Implementation
 				l_index > l_names.count
 			loop
 				l_pref_name := l_names.item (l_index)
-				if l_pref_name.substring (1, a_pref_name.count).is_equal (a_pref_name) and l_pref_name.count > a_pref_name.count then					
+				if should_display_preference (l_pref_name, a_pref_name) and l_pref_name.count > a_pref_name.count then					
 					l_resource := preferences.resources.item (l_pref_name)
 					
 					check
@@ -259,8 +276,12 @@ feature {NONE} -- Implementation
 					end
 					
 					create it
-					if l_resource.name /= Void then						
-						it.extend (l_resource.name)	
+					if l_resource.name /= Void then	
+						if show_full_resource_name then
+							it.extend (l_resource.name)								
+						else
+							it.extend (short_resource_name (l_resource.name))
+						end
 					else
 						it.extend ("")	
 					end
@@ -278,7 +299,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN is
+			-- Should we display the preference in the right list?
+		do
+			Result := a_pref_name.substring (1, b_pref_name.count).is_equal (b_pref_name)
+			if Result then				
+				Result := not (a_pref_name.substring (b_pref_name.count + 2, a_pref_name.count).has ('.'))
+			end
+		end		
+
 feature {NONE} -- Implementation
+
+	destroy is
+			-- Destroy.
+		do
+			resource_cell.wipe_out
+			Precursor
+		end		
 
 	pixmap_file_contents (pn: STRING): EV_PIXMAP is
 			-- Load a pixmap in file named `pn'.
@@ -300,18 +337,16 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	show_resource_in_edit_widget (a_resource: RESOURCE) is
+	show_resource_in_edit_widget (a_resource: PREFERENCE) is
 			-- Show selected list resource in edit widget.
 		require
 			resource_not_void: a_resource /= Void
 		local
-			l_resource_widget: RESOURCE_WIDGET
+			l_resource_widget: PREFERENCE_WIDGET
 			l_timeout: EV_TIMEOUT
 		do
 			l_resource_widget := preferences.resource_widget (a_resource)
-			if resource_cell.has (l_resource_widget.change_item_widget) then
-				resource_cell.prune (l_resource_widget.change_item_widget)
-			end
+			resource_cell.wipe_out
 			resource_cell.put (l_resource_widget.change_item_widget)			
 			resource_cell.set_data (l_resource_widget)
 			if l_resource_widget.resource.description /= Void then
@@ -345,7 +380,7 @@ feature {NONE} -- Implementation
 	restore_changed_resources is
 			-- Restore the values of the resources which have been changed in this session.
 		local
-			l_resource: RESOURCE
+			l_resource: PREFERENCE
 		do
 			from 
 				changed_resources.start
@@ -358,12 +393,23 @@ feature {NONE} -- Implementation
 			end	
 		end		
 	
+	short_resource_name (a_name: STRING): STRING is
+			-- The short, non-unique name of a resource
+		require
+			name_not_void: a_name /= Void			
+		do
+			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
+		end		
+	
 feature {NONE} -- Private attributes
+
+	show_full_resource_name: BOOLEAN
+			-- Show the full name of the resource in the list?
 
 	root_node_text: STRING
 			-- Text for the top level node.
 
-	changed_resources: HASH_TABLE [RESOURCE, STRING]
+	changed_resources: HASH_TABLE [PREFERENCE, STRING]
 			-- A hash table of resources that have been changed since this dialog was opened.
 			-- Table key is the resource's old string value.
 			-- Used to reset the values if the user wishes to cancel all of their prior changes	.

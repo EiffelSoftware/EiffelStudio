@@ -20,9 +20,8 @@
  * late part(in "default" clause of "switch").
 */
 
-#define is_sep_obj(ref) scount == Dtype(ref)
 
-#define DEBUG 0/**/
+/*#define DEBUG 0/**/
 #define dprintf(n)	if (DEBUG & n) printf
 
 rt_private int locate_from_cecil(object, name)
@@ -75,23 +74,14 @@ EIF_INTEGER get_pattern_id(struct ctable *ct, char *key) {
     register5 int32 tryv = (int32) 0;   /* Count number of attempts */
     register6 long inc;     /* Loop increment */
  
-dprintf(4) ("In get_pattern_id: ct=%x, key=%s\n", ct, key);
     /* Initializations */
     hsize = ct->h_size;
-dprintf(4) ("In get_pattern_id: sizeoftable=%d\n", hsize);
     hkeys = ct->h_keys;
-dprintf(4) ("In get_pattern_id: sizeoftable=%d, keyary=%x\n", hsize, hkeys);
- 
-    if (hsize == 0) {
-    	sprintf(_concur_crash_info, "    Can't find feature %s(in class %s)'s pattern ID.", _concur_command_feature, _concur_command_class);
-	    c_raise_concur_exception(exception_implementation_error);
-	}
  
     /* Jump from one hashed position to another until we find the value or
      * go to an empty entry or reached the end of the table.
      */
     inc = hashcode(key, (long) strlen(key));
-dprintf(4) ("In get_pattern_id: inc=%ld\n", inc);
     for (
         pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
         tryv < hsize;
@@ -100,13 +90,11 @@ dprintf(4) ("In get_pattern_id: inc=%ld\n", inc);
         if (hkeys[pos] == (char *) 0)
             break;
         else if (0 == strcmp(hkeys[pos], key)) {
-dprintf(4)("In get_pattern_id, POS=%d, value_p=%x, ", pos, ct->h_values);
-dprintf(4)("*+++++++++* patID=%d\n", ((EIF_INTEGER *)ct->h_values)[pos]);
             return ((EIF_INTEGER *)ct->h_values)[pos];
 		}
     }
  
-    sprintf(_concur_crash_info, "    Can't find feature %s(in class %s)'s pattern ID.", _concur_command_feature, _concur_command_class);
+    sprintf(_concur_crash_info, CURERR24, _concur_command_feature, _concur_command_class);
     c_raise_concur_exception(exception_implementation_error);
 }
 #endif
@@ -215,10 +203,6 @@ void separate_call() {
 #ifdef DEBUG
 dprintf(4)("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, static_type, dyn_type);
 #endif
-			ptr_table = &(Cecil(dyn_type));		/* Get associated H table */
-#ifdef DEBUG
-dprintf(4)("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
-#endif
 			is_extern = 0; /* It should be determined by the info transferred from caller, 
 							* or in some other way. 
 							*/
@@ -284,6 +268,10 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 					nstcall = 0;	/* The feature is the creation feature, 
 									 * so we check Invariant when the feature is done. 
 									 */
+				ptr_table = &(Cecil(dyn_type));		/* Get associated H table */
+#ifdef DEBUG
+dprintf(4)("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
+#endif
 #ifndef WORKBENCH
 				fptr = *(EIF_FN_REF *) ct_value(ptr_table, _concur_command_feature);
 #ifdef DEBUG

@@ -257,15 +257,15 @@ void c_get_host_name() {
 char *c_get_name_from_addr(addr)
 EIF_INTEGER addr;
 {
-#ifdef EIF_WIN32
-	static char null_str[] = "\0";
-#endif
 	struct hostent *host;
 	EIF_INTEGER real_addr = ntohl(addr);
 	host=gethostbyaddr((char *)&real_addr, sizeof(EIF_INTEGER), AF_INET);
 	if (!host) {
 #ifdef EIF_WIN32
-		return null_str;
+		{ struct in_addr tmp;
+		tmp.s_addr = addr;
+    	return inet_ntoa(&tmp));
+		}
 		/* Because the BUG existed in Windows NT's socket. */
 #endif
 		sprintf(_concur_crash_info, CURIMPERR19, addr, error_info());
@@ -826,9 +826,6 @@ void c_raise_concur_exception(int type) {
 		case exception_out_of_memory:
 			eraise("Out of Memory", CONCURRENT_CRASH);
 			break;
-		case exception_sep_obj_not_visible:
-			eraise("Class SEP_OBJ Invisible", CONCURRENT_CRASH);
-			break;
 		case exception_void_separate_object:
 			eraise("Void Separate Object", CONCURRENT_CRASH);
 			break;
@@ -965,15 +962,6 @@ void cur_set_daemon_port(EIF_INTEGER port) {
 	_concur_scoop_dog_port = port;
 }
 
-void  cur_clear_configure_table() {
-}
-
-void cur_append_to_configure_table(char *host, char *dir, char * exec, EIF_INTEGER capability) {
-}
-
-void cur_change_capacity_of_configure_table_item(char *host, char *dir, char * exec, EIF_INTEGER capability) {
-}
-
 void cur_set_sleeping_time_of_reserve_sep_para(EIF_INTEGER to) {
 	if (to < 0) 
 		_concur_waiting_time_of_rspf = constant_waiting_time_in_reservation;
@@ -988,16 +976,24 @@ void cur_set_sleeping_time_of_precondition (EIF_INTEGER to) {
 		_concur_waiting_time_of_cspf = to;
 }
 
-/*
+EIF_INTEGER cur_port_of_local_server() {
+	return _concur_pid;
+}
+
 void cur_set_gc_on_cpu() {
+/*
 	set_gc_on_cpu;
+*/
 }
 
 void cur_unset_gc_on_cpu() {
+/*
 	unset_gc_on_cpu;
+*/
 }
 
 void cur_set_gc_period(EIF_INTEGER gcp) {
+/*
 	if (gcp<0) {
 		if (gc_on_cpu)
 			_concur_gc_period = 10*constant_cpu_period;
@@ -1006,5 +1002,6 @@ void cur_set_gc_period(EIF_INTEGER gcp) {
 	}	
 	else 
 		_concur_gc_period = gcp;
-}
 */
+}
+

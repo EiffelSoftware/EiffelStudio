@@ -54,18 +54,18 @@ EIF_REFERENCE sep_obj_create() {
 	EIF_INTEGER sep_obj_size = constant_sep_obj_size*constant_sizeofint;
 	sep_obj = xmalloc(sep_obj_size, EIFFEL_T, GC_ON);	
 	if (sep_obj != (char *)0) {
-		sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, scount | EO_NEW); 
+		sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, _concur_sep_obj_dtype | EO_NEW); 
 			/* Set for Eiffel use */
 	} else {
 		if (gen_scavenge & GS_ON)       /* If generation scaveging was on */
 			sc_stop();                  /* Free 'to' and explode 'from' space
 		sep_obj = xmalloc(sep_obj_size, EIFFEL_T, GC_OFF);	/* Try again */	
 		if (sep_obj != (char *)0) {
-			sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, scount | EO_NEW); 
+			sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, _concur_sep_obj_dtype | EO_NEW); 
 				/* Set for Eiffel use */
 		} else {
 			add_nl;
-			sprintf(crash_info, "    No memory to create Eiffel object.");
+			sprintf(crash_info, CURIMPERR25);
 			c_raise_concur_exception(exception_out_of_memory);
 		}
 	}
@@ -83,7 +83,7 @@ void sep_obj_make(EIF_REFERENCE s_obj, EIF_INTEGER haddr, EIF_INTEGER port, EIF_
 	set_oid(eif_access(sep_obj), oid);
 	sock =  c_concur_make_client(port, haddr);
 	if (sock < 0) {
-		sprintf(_concur_crash_info, "    Can't make network connection with host %s at port %d.", c_get_name_from_addr(haddr), port);
+		sprintf(_concur_crash_info, CURERR23, c_get_name_from_addr(haddr), port);
 		c_raise_concur_exception(exception_implementation_error);
 	}
 	set_sock(eif_access(sep_obj), sock);

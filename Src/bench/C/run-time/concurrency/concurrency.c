@@ -9,7 +9,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #define tTEST_CON
 #define tDISP_MSG
 
-#undef DISP_MSG
+#undef tDISP_MSG
 
 #ifdef TEST
 #include <fcntl.h>
@@ -48,8 +48,6 @@ to indicate indirect(also called Eiffel or protected) address.
 	}\
 }
 
-void print_config();
-
 void con_make(conf_file)
 char *conf_file;
 {
@@ -80,24 +78,8 @@ char *conf_file;
 	int tmp_int;
 
 	/* the following initialize the global variables */
-	_concur_rem_ser_size = constant_num_of_remote_servers;
-	_concur_rem_sers = (REMOTE_SERVER *)malloc(_concur_rem_ser_size*sizeof(REMOTE_SERVER));
-	valid_memory(_concur_rem_sers);
-	_concur_rem_ser_count = 0;
-
-	_concur_host_size = constant_num_of_hosts; 
-	_concur_hosts = (RESOURCE *)malloc(_concur_host_size*sizeof(RESOURCE));
-	valid_memory(_concur_hosts);
-	_concur_host_count = 0;
-	for(stop=0; stop<_concur_host_size; stop++) {
-		_concur_hosts[stop].executable[0] = '\0';
-	}
-
-	_concur_host_level_size = constant_num_of_host_levels;
-	_concur_host_levels = (RESOURCE_LEVEL *)malloc(_concur_host_level_size*sizeof(RESOURCE_LEVEL));
-	valid_memory(_concur_host_levels);
-	_concur_host_level_count = 0;
-
+	cur_clear_configure_table();
+	
 	/* begin read configure information from the file */
 	if (conf_file == NULL) {
 		get_remote_servers(-1, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
@@ -185,33 +167,41 @@ print_config();/**/
 }
 
 post_process() {
-	int idx, ind;
+	EIF_INTEGER ind;
+	RESOURCE_LEVEL *g_tmp;
+	RESOURCE *h_tmp;
 
-	_concur_resource_index = -1;
-	for(idx=0; idx<_concur_host_count; idx++) {
-		if (!strlen(_concur_hosts[idx].host) || !strlen(_concur_hosts[idx].directory)) {
-			sprintf(_concur_crash_info, CURAPPERR21, _concur_hosts[idx].host, _concur_hosts[idx].directory);	
-			c_raise_concur_exception(exception_configure_syntax_error);
-		}
-		if (_concur_hosts[idx].executable[0] == '\0') {
-			for(ind=strlen(_concur_hosts[idx].directory); ind>=0 && _concur_hosts[idx].directory[ind] != '\\' && _concur_hosts[idx].directory[ind] != '/'; ind--);
-			if (ind<0) {
-				add_nl;
-				sprintf(crash_info, CURAPPERR35, _concur_hosts[idx].host, _concur_hosts[idx].directory);
+	_concur_group_index = (RESOURCE_LEVEL *)NULL;
+	_concur_host_index = (RESOURCE *)NULL;
+
+	for(g_tmp=_concur_host_groups; g_tmp; g_tmp=g_tmp->next) {
+		for (h_tmp=g_tmp->host_list; h_tmp; h_tmp = h_tmp->next) {	
+			if (!strlen((*h_tmp).host) || !strlen((*h_tmp).directory)) {
+				sprintf(_concur_crash_info, CURAPPERR21, (*h_tmp).host, (*h_tmp).directory);	
 				c_raise_concur_exception(exception_configure_syntax_error);
 			}
-			strcpy(_concur_hosts[idx].executable, _concur_hosts[idx].directory+ind+1);
-			_concur_hosts[idx].directory[ind+1] = '\0';
-			if (_concur_hosts[idx].executable[0] == '\0') {
-				add_nl;
-				sprintf(crash_info, CURAPPERR36, _concur_hosts[idx].host, _concur_hosts[idx].directory);
-				c_raise_concur_exception(exception_configure_syntax_error);
+			if ((*h_tmp).executable[0] == '\0') {
+				for(ind=strlen((*h_tmp).directory); ind>=0 && (*h_tmp).directory[ind] != '\\' && (*h_tmp).directory[ind] != '/'; ind--);
+				if (ind<0) {
+					add_nl;
+					sprintf(crash_info, CURAPPERR35, (*h_tmp).host, (*h_tmp).directory);
+					c_raise_concur_exception(exception_configure_syntax_error);
+				}
+				strcpy((*h_tmp).executable, (*h_tmp).directory+ind+1);
+				(*h_tmp).directory[ind+1] = '\0';
+				if ((*h_tmp).executable[0] == '\0') {
+					add_nl;
+					sprintf(crash_info, CURAPPERR36, (*h_tmp).host, (*h_tmp).directory);
+					c_raise_concur_exception(exception_configure_syntax_error);
+				}
+			}
+			if ((*h_tmp).capability > 0 && !_concur_host_index ) {
+				_concur_group_index = g_tmp;
+				_concur_host_index = h_tmp;;
+				_concur_resource_count = 0;
 			}
 		}
-		if (_concur_hosts[idx].capability > 0 && _concur_resource_index < 0)
-			_concur_resource_index = idx;
 	}
-	_concur_resource_count = 0;
 
 }
 
@@ -227,7 +217,6 @@ char *end_of_file;
 {
 /* Precondition: fd >= 0 */
 /* Read information about DEFAULT values from the configure file. */
-	int port, instance;
 	char stop, stop_line;
 	char num_str[constant_max_len_of_int_in_str+1];
 	int tmp_int;
@@ -235,6 +224,10 @@ char *end_of_file;
 	char tmp_buf[20];
 	int idx;
 	int line_idx;
+
+	REMOTE_SERVER *tmp_r;
+	RESOURCE *tmp_h;
+	RESOURCE_LEVEL *tmp_g;
 
 	/* get rid of "default" */
 	memcpy(tmp_buf, cur_line, 7);
@@ -244,9 +237,6 @@ char *end_of_file;
 		sprintf(crash_info, CURAPPERR14, cur_raw_line);
 		c_raise_concur_exception(exception_configure_syntax_error);
 	}
-	
-	port = -1;
-	instance = -1;
 	
 	skip_to_next_valuable_line;
 
@@ -277,9 +267,9 @@ char *end_of_file;
 	
 		for(tmp_int=strlen(tmp_buf)-1; tmp_int>=0; tmp_buf[tmp_int]=tolower(tmp_buf[tmp_int]), tmp_int--);
 		if (!memcmp(tmp_buf, "port", 4)) 
-			port = atoi(num_str);
+			_concur_default_port = atoi(num_str);
 		else if (!memcmp(tmp_buf, "instance", 8)) 
-			instance = atoi(num_str);
+			_concur_default_instance = atoi(num_str);
 		else {
 			sprintf(_concur_crash_info, CURAPPERR17, cur_raw_line);	
 			c_raise_concur_exception(exception_configure_syntax_error);
@@ -308,59 +298,31 @@ char *end_of_file;
 	}
 	
 	
-#ifdef DISP_MSG
-printf("\nNow, Remote Servers:\n");
-#endif
-	for(idx=0; idx<_concur_rem_ser_count; idx++) {
-#ifdef DISP_MSG
-printf("<%s, %s, %d>", _concur_rem_sers[idx].name, _concur_rem_sers[idx].host, _concur_rem_sers[idx].port);
-#endif
-		if (_concur_rem_sers[idx].port < 0)
-			_concur_rem_sers[idx].port = port;
-#ifdef DISP_MSG
-printf("(%d)\n", _concur_rem_sers[idx].port);
-#endif
-		if (_concur_rem_sers[idx].port <= 0 || !strlen(_concur_rem_sers[idx].host)) {
-			sprintf(_concur_crash_info, CURAPPERR20, _concur_rem_sers[idx].name, _concur_rem_sers[idx].host, _concur_rem_sers[idx].port);	
+	for(tmp_r=_concur_rem_sers; tmp_r; tmp_r=tmp_r->next) {
+		if (tmp_r->port < 0)
+			tmp_r->port = _concur_default_port;
+		if (tmp_r->port <= 0 || !strlen(tmp_r->host)) {
+			sprintf(_concur_crash_info, CURAPPERR20, tmp_r->name, tmp_r->host, tmp_r->port);	
 			c_raise_concur_exception(exception_configure_syntax_error);
 		}
 			
 	}
 
-#ifdef DISP_MSG
-printf("\nNow, Host Level:\n");
-	for(idx=0; idx<_concur_host_level_count; idx++) {
-printf("<%s,  %d>\n", _concur_host_levels[idx].name, (_concur_host_levels[idx]).indicator);
-	}
-#endif
-
-#ifdef DISP_MSG
-printf("\nNow, Network Resources:\n");
-#endif
-	for(idx=0; idx<_concur_host_count; idx++) {
-#ifdef DISP_MSG
-printf("<%s, %d, %s>", _concur_hosts[idx].host, _concur_hosts[idx].capability, _concur_hosts[idx].directory);
-#endif
-		if (!_concur_hosts[idx].capability)
-			_concur_hosts[idx].capability = instance;
-#ifdef DISP_MSG
-printf("(%d)\n", _concur_hosts[idx].capability);
-#endif
-		if (!strlen(_concur_hosts[idx].host) || !strlen(_concur_hosts[idx].directory)) {
-			sprintf(_concur_crash_info, CURAPPERR21, _concur_hosts[idx].host, _concur_hosts[idx].directory);	
-			c_raise_concur_exception(exception_configure_syntax_error);
+	idx = 0;
+	for(tmp_g=_concur_host_groups; tmp_g; tmp_g=tmp_g->next) {
+		for(tmp_h=tmp_g->host_list; tmp_h; tmp_h=tmp_h->next) {
+			if (tmp_h->capability < 0)
+				tmp_h->capability = _concur_default_instance;
+			if (tmp_h->capability > 0)
+				idx = 1;
 		}
 	}
 
-	for(idx=0; idx<_concur_host_count && _concur_hosts[idx].capability<=0; idx++);
-	if (idx == _concur_host_count) {
-			strcat(_concur_crash_info, CURAPPERR22);	
-			c_raise_concur_exception(exception_configure_syntax_error);
+	if (!idx) {
+		strcat(_concur_crash_info, CURAPPERR22);	
+		c_raise_concur_exception(exception_configure_syntax_error);
 	}
 	
-#ifdef DISP_MSG
-printf("------- Default.port=%d, instance=%d\n", port, instance);
-#endif
 }
 
 
@@ -382,11 +344,11 @@ char *end_of_file;
 	int line_idx;
 	int len;
 	char stop, stop_line;
-	int index;
+
+	REMOTE_SERVER *tmp_r;
 		
 
 	if (fd < 0) {
-		_concur_rem_ser_count = 0;
 	}
 	else {
 		/* get rid of "external" */
@@ -397,7 +359,7 @@ char *end_of_file;
 			c_raise_concur_exception(exception_configure_syntax_error);
 		}
 		
-		for(index=0, stop=0; !stop && !*end_of_file; index++ ) {
+		for(stop=0; !stop && !*end_of_file; ) {
 			skip_to_next_valuable_line;
 			if (!*end_of_file) {
 				adjust_a_line(cur_raw_line, cur_line);
@@ -422,22 +384,32 @@ char *end_of_file;
 			line_idx = 0;
 			len = strlen(cur_line);
 		
+			tmp_r = (REMOTE_SERVER *)malloc(sizeof(REMOTE_SERVER));
+			valid_memory(tmp_r);
+/*
+			tmp_r->name[0] = '\0';
+			tmp_r->host[0] = '\0';
+*/
+			tmp_r->port = -1;
+			tmp_r->next = _concur_rem_sers;
+			_concur_rem_sers = tmp_r;
+
 			/* Get SERVER NAME */
 			for (tmp_int=0; line_idx<len && cur_line[line_idx]!=':'; ) {
-				_concur_rem_sers[index].name[tmp_int] = cur_line[line_idx];
+				tmp_r->name[tmp_int] = cur_line[line_idx];
 				tmp_int++; line_idx++;
 			}
-			_concur_rem_sers[index].name[tmp_int] = '\0';
+			tmp_r->name[tmp_int] = '\0';
 
 			/* skip to MACHINE NAME */
 			for(line_idx++; line_idx<len && cur_line[line_idx]!='"'; line_idx++);	
 
 			/* get MACHINE NAME */
 			for(line_idx++, tmp_int=0; line_idx<len && cur_line[line_idx]!='"'; ) {
-				_concur_rem_sers[index].host[tmp_int] = cur_line[line_idx];
+				tmp_r->host[tmp_int] = cur_line[line_idx];
 				tmp_int++; line_idx++;
 			}
-			_concur_rem_sers[index].host[tmp_int] = '\0';
+			tmp_r->host[tmp_int] = '\0';
 
 			/* skip to PORT NUMBER */
 			for(line_idx++; line_idx<len && (cur_line[line_idx]<'0' || cur_line[line_idx]>'9'); line_idx++);	
@@ -449,9 +421,9 @@ char *end_of_file;
 			}
 			port_str[tmp_int] = '\0';
 			if (tmp_int) 
-				_concur_rem_sers[index].port = atoi(port_str);
+				tmp_r->port = atoi(port_str);
 			else
-				_concur_rem_sers[index].port = -1;
+				tmp_r->port = -1;
 
 		}
 
@@ -459,8 +431,6 @@ char *end_of_file;
 			sprintf(_concur_crash_info, CURAPPERR25, cur_raw_line);
 			c_raise_concur_exception(exception_configure_syntax_error);
 		}
-		
-		_concur_rem_ser_count = index;
 		
 	}
 }
@@ -479,7 +449,6 @@ char *end_of_file;
 /* Precondition: fd>0 */
 /* Read information about NETWORK RESOURCEs from the configure file. */
 	char port_str[constant_max_len_of_int_in_str+1];
-	int level_idx;
 	char localhost[constant_max_host_name_len+1];
 	char localdir[constant_max_directory_len+1];
 	char tmp_buf[20];
@@ -489,16 +458,23 @@ char *end_of_file;
 	char stop, substop, stop_line;
 	int index;
 	char at_least_one_host;
+	
+	RESOURCE *tmp_host=(RESOURCE *)(NULL);
+	RESOURCE_LEVEL *tmp_grp=(RESOURCE_LEVEL *)NULL;
 		
 	/* Now, we begin to read information from Configure File */
 	if (fd < 0) {
-		_concur_host_level_count = 0;
-		_concur_host_count = 1;
-		/* c_get_host_name(); */
-		strcpy(_concur_hosts[0].host, _concur_hostname);
-		_concur_hosts[0].capability = 1;
-		strcpy(_concur_hosts[0].directory, c_get_current_directory());
-		strcpy(_concur_hosts[0].executable, _concur_executable);
+		_concur_host_groups = _concur_end_of_host_groups = (RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+		valid_memory(_concur_host_groups);
+		strcpy(_concur_host_groups->name, "Current");
+		_concur_host_groups->next = (RESOURCE_LEVEL *)NULL;
+		_concur_host_groups->host_list = _concur_host_groups->end_of_host_list = (RESOURCE *)malloc(sizeof(RESOURCE)); 
+		valid_memory(_concur_host_groups->host_list);
+		_concur_host_groups->host_list->next = (RESOURCE *)NULL;
+		strcpy(_concur_host_groups->host_list->host, _concur_hostname);
+		_concur_host_groups->host_list->capability = 1;
+		strcpy(_concur_host_groups->host_list->directory, c_get_current_directory());
+		strcpy(_concur_host_groups->host_list->executable, _concur_executable);
 		return;
 	}
 	
@@ -514,7 +490,6 @@ char *end_of_file;
 	skip_to_next_valuable_line;
 	
 	index = 0;
-	level_idx = 0;
 	for (stop=0; !stop && !*end_of_file; ) {
 		memcpy(tmp_buf, cur_line, 3);
 		for(tmp_int=0; tmp_int < 3; tmp_buf[tmp_int]=tolower(tmp_buf[tmp_int]), tmp_int++);
@@ -524,15 +499,25 @@ char *end_of_file;
 			break;
 		}
 
+		tmp_grp = (RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+		valid_memory(tmp_grp);
+		tmp_grp->next = NULL;
+		tmp_grp->host_list = tmp_grp->end_of_host_list = (RESOURCE *)NULL;
+		if (_concur_host_groups) {
+			_concur_end_of_host_groups->next = tmp_grp;
+			_concur_end_of_host_groups = tmp_grp;
+		}
+		else {
+			_concur_host_groups = _concur_end_of_host_groups = tmp_grp;
+		}
+
 		/* get Level Name */
 		for(line_idx=0, len=strlen(cur_line), tmp_int=0; line_idx<len && cur_line[line_idx]!=':'; ) {
-                _concur_host_levels[level_idx].name[tmp_int] = cur_line[line_idx];
+                tmp_grp->name[tmp_int] = cur_line[line_idx];
                 tmp_int++; line_idx++;
         }
 		if (!stop && line_idx<len && cur_line[line_idx]==':') {	
-	        _concur_host_levels[level_idx].name[tmp_int] = '\0';
-	        _concur_host_levels[level_idx].indicator = index;
-			level_idx++;
+	        tmp_grp->name[tmp_int] = '\0';
 		}
 		else {
 			sprintf(_concur_crash_info, CURAPPERR27, cur_raw_line);
@@ -571,6 +556,22 @@ char *end_of_file;
 				break;
 			}
 
+			tmp_host = (RESOURCE *)malloc(sizeof(RESOURCE));
+			valid_memory(tmp_host);
+
+			tmp_host->host[0] = '\0';
+			tmp_host->directory[0] = '\0';
+			tmp_host->executable[0] = '\0';
+
+			tmp_host->next = (RESOURCE *)NULL;
+			if (tmp_grp->host_list) {
+				tmp_grp->end_of_host_list->next = tmp_host;
+				tmp_grp->end_of_host_list = tmp_host;
+			} else {
+				tmp_grp->host_list =
+					tmp_grp->end_of_host_list = tmp_host;
+			}
+
 			at_least_one_host = 1;
 			line_idx = 0;
 			len = strlen(cur_line);
@@ -591,8 +592,8 @@ char *end_of_file;
 
 			/* get HOST NAME */
 			for(line_idx++, tmp_int=0; line_idx<len && cur_line[line_idx]!='"'; line_idx++, tmp_int++) 
-				_concur_hosts[index].host[tmp_int] = cur_line[line_idx];
-			_concur_hosts[index].host[tmp_int] = '\0';
+				(*tmp_host).host[tmp_int] = cur_line[line_idx];
+			(*tmp_host).host[tmp_int] = '\0';
 
 			/* skip to NUMBER */
 /*
@@ -607,12 +608,12 @@ char *end_of_file;
 
 			/* get NUMBER */
 			if (line_idx<len && cur_line[line_idx]==':') 
-				_concur_hosts[index].capability = 0;
+				(*tmp_host).capability = -1;
 			else {
 				for(tmp_int=0, line_idx++; !substop && line_idx<len && ((cur_line[line_idx]>='0' && cur_line[line_idx]<='9') || cur_line[line_idx]=='-'); line_idx++, tmp_int++)
 					 port_str[tmp_int] = cur_line[line_idx];
 				port_str[tmp_int] = '\0';
-				_concur_hosts[index].capability = atoi(port_str);
+				(*tmp_host).capability = atoi(port_str);
 			}
 
 
@@ -626,8 +627,8 @@ char *end_of_file;
 
 			/* get DIRECTORY */
 			for(line_idx++, tmp_int=0; line_idx<len && cur_line[line_idx]!='"'; line_idx++,tmp_int++)
-				_concur_hosts[index].directory[tmp_int] = cur_line[line_idx];
-			_concur_hosts[index].directory[tmp_int] = '\0';
+				(*tmp_host).directory[tmp_int] = cur_line[line_idx];
+			(*tmp_host).directory[tmp_int] = '\0';
 
 
 			index++;
@@ -651,44 +652,43 @@ char *end_of_file;
 		c_raise_concur_exception(exception_configure_syntax_error);
 	}
 
-	_concur_host_level_count = level_idx;
-	_concur_host_count = index;
-
-	if (!_concur_host_count) {
-		_concur_host_level_count = 0;
-		_concur_host_count = 1;
-		strcpy(_concur_hosts[0].host, _concur_hostname);
-		_concur_hosts[0].capability = 1;
-		strcpy(_concur_hosts[0].directory, c_get_current_directory());
-#if defined EIF_WIN32 || defined EIF_OS2
-		strcat(_concur_hosts[0].directory, "\\");
-#else
-		strcat(_concur_hosts[0].directory, "/");
-#endif
-		strcat(_concur_hosts[0].directory, _concur_executable);
+	if (!index) {
+		sprintf(_concur_crash_info, CURAPPERR42);
+		c_raise_concur_exception(exception_configure_syntax_error);
 	}
 
 	return;
 }
 
 void print_config() {
-	EIF_INTEGER idx;
+	REMOTE_SERVER *tmp_ser;
+	RESOURCE *tmp_host;
+	RESOURCE_LEVEL *tmp_grp;
 	
-printf("\nNow, Remote Servers:\n");
-	for(idx=0; idx<_concur_rem_ser_count; idx++) {
-printf("<%s, %s, %d>\n", _concur_rem_sers[idx].name, _concur_rem_sers[idx].host, _concur_rem_sers[idx].port);
+	printf("------------------------------ Configure Table --------------------------------\n");
+
+	printf("Remote Servers:\n");
+	for(tmp_ser=_concur_rem_sers; tmp_ser; tmp_ser=tmp_ser->next) {
+		printf("<%s, %s, %d>\n", tmp_ser->name, tmp_ser->host, tmp_ser->port);
 	}
 
-printf("\nNow, Host Level:\n");
-	for(idx=0; idx<_concur_host_level_count; idx++) {
-printf("<%s,  %d>\n", _concur_host_levels[idx].name, (_concur_host_levels[idx]).indicator);
+	printf("\nNet Work Resources:\n");
+	for(tmp_grp=_concur_host_groups; tmp_grp; tmp_grp=tmp_grp->next) {
+		printf("In Group <%s>:\n", tmp_grp->name);
+		for(tmp_host=tmp_grp->host_list; tmp_host; tmp_host=tmp_host->next) {
+			printf("	<%s, %d, %s, %s>\n", (*tmp_host).host, (*tmp_host).capability, (*tmp_host).directory, (*tmp_host).executable);
+		}
 	}
 
-printf("\nNow, Network Resources:\n");
-	for(idx=0; idx<_concur_host_count; idx++) {
-printf("<%s, %d, %s, %s>\n", _concur_hosts[idx].host, _concur_hosts[idx].capability, _concur_hosts[idx].directory, _concur_hosts[idx].executable);
-	}
-printf("\n");
+	if (_concur_group_index && _concur_host_index)
+		printf("\nCursor is on \n<%s, %d, %s, %s>\nof group <%s> with count: %d.\n", _concur_host_index->host, _concur_host_index->capability, _concur_host_index->directory, _concur_host_index->executable, _concur_group_index->name, _concur_resource_count);
+	else
+		printf("\nInvalid Cursor. \n");
+
+	printf("\nDefault Port for External Server: %d;   Default Instance: %d\n", _concur_default_port, _concur_default_instance);
+
+	printf("-------------------------------------------------------------------------------\n");
+
 }
 
 
@@ -698,64 +698,179 @@ char *dispatch_to() {
  * object will be dispatched.
 */
 
-	_concur_dispatched_host = _concur_hosts[_concur_resource_index].host;
-	_concur_dispatched_directory = _concur_hosts[_concur_resource_index].directory;
-	_concur_dispatched_executable = _concur_hosts[_concur_resource_index].executable;
-	_concur_resource_count++;
-	for (;_concur_resource_count >= _concur_hosts[_concur_resource_index].capability;) {
-		_concur_resource_count = 0;
-		_concur_resource_index = (_concur_resource_index+1) % _concur_host_count;
+	if (!_concur_host_index) {
+		sprintf(_concur_crash_info, CURAPPERR43);
+		c_raise_concur_exception(exception_configure_syntax_error);
 	}
+	_concur_dispatched_host = _concur_host_index->host;
+	_concur_dispatched_directory = _concur_host_index->directory;
+	_concur_dispatched_executable = _concur_host_index->executable;
+	_concur_resource_count++;
+	_concur_end_of_host_groups->next = _concur_host_groups;
+	for (;_concur_resource_count >= _concur_host_index->capability;) {
+		_concur_resource_count = 0;
+		_concur_host_index = _concur_host_index->next;
+		if (!_concur_host_index) {
+			for(_concur_group_index=_concur_group_index->next;
+				!(_concur_group_index->host_list); 
+					_concur_group_index=_concur_group_index->next);
+			_concur_host_index = _concur_group_index->host_list;
+		}
+	}
+	_concur_end_of_host_groups->next = (RESOURCE_LEVEL *)NULL;
 	return _concur_dispatched_host;
 }
 
 
-void reset_by_host(name)
-char *name;
+void reset_by_host(char *gname, char *hname)
 {
 /* reset the CURSOR(used for dispatching separate objects) to the 
  * host with the name.
 */
-	int idx;
 
-	for(idx=0; idx<_concur_host_count && memcmp(_concur_hosts[idx].host, name, strlen(name)); idx++);
-	if (idx<_concur_host_count) {
-	/* The host name does  exist! */
-		_concur_resource_index = idx;
-		_concur_resource_count = 0;
-		for (;_concur_resource_count >= _concur_hosts[_concur_resource_index].capability;) {
+	for(_concur_group_index=_concur_host_groups; _concur_group_index && memcmp(_concur_group_index->name, gname, strlen(gname)); _concur_group_index=_concur_group_index->next);
+	if (_concur_group_index) {
+		for(_concur_host_index=_concur_group_index->host_list; _concur_host_index &&  memcmp(_concur_host_index->host, hname, strlen(hname)); _concur_host_index=_concur_host_index->next);
+		if (_concur_host_index && _concur_host_index->capability>0) {
+		/* The host name does  exist and its capacity is greater than 0! */
 			_concur_resource_count = 0;
-			_concur_resource_index = (_concur_resource_index+1) % _concur_host_count;
+		} else {
+			sprintf(_concur_crash_info, CURAPPERR39, hname, gname);	
+			c_raise_concur_exception(exception_configure_syntax_error);
 		}
+	} else {
+		sprintf(_concur_crash_info, CURAPPERR40, gname);	
+		c_raise_concur_exception(exception_configure_syntax_error);
 	}
+	
 	return;
 }
 
 
-void reset_by_level(name)
-char *name;
+void reset_by_level(char *gname)
 {
 /* reset the CURSOR(used for dispatching separate objects) to the 
  * first host in the host level indicated by the given level name.
 */
-	int idx;
 
-	for(idx=0; idx<_concur_host_level_count && memcmp(_concur_host_levels[idx].name, name, strlen(name)); idx++);
-	if (idx<_concur_host_level_count) {
-	/* The level name does  exist! */
-		_concur_resource_index = _concur_host_levels[idx].indicator;
-		_concur_resource_count = 0;
-		for (;_concur_resource_count >= _concur_hosts[_concur_resource_index].capability;) {
+	for(_concur_group_index=_concur_host_groups; _concur_group_index && memcmp(_concur_group_index->name, gname, strlen(gname)); _concur_group_index=_concur_group_index->next);
+	if (_concur_group_index) {
+		for(_concur_host_index=_concur_group_index->host_list; _concur_host_index && _concur_host_index->capability<1; _concur_host_index=_concur_host_index->next);
+		if (_concur_host_index) {
 			_concur_resource_count = 0;
-			_concur_resource_index = (_concur_resource_index+1) % _concur_host_count;
+		} else {
+			sprintf(_concur_crash_info, CURAPPERR41, gname);	
+			c_raise_concur_exception(exception_configure_syntax_error);
 		}
+	} else {
+		sprintf(_concur_crash_info, CURAPPERR40, gname);	
+		c_raise_concur_exception(exception_configure_syntax_error);
 	}
 	return;	
+}
+
+void  cur_clear_configure_table() {
+REMOTE_SERVER *tmp_r, *tmp_r1;
+RESOURCE *tmp_h, *tmp_h1;
+RESOURCE_LEVEL *tmp_g, *tmp_g1;
+
+	for(tmp_r=_concur_rem_sers; tmp_r; ) {
+		tmp_r1 = tmp_r;	
+		tmp_r = tmp_r->next;
+		free(tmp_r1);
+	}
+	for(tmp_g=_concur_host_groups; tmp_g; ) {
+		for(tmp_h=tmp_g->host_list; tmp_h; ) {
+			tmp_h1 = tmp_h;	
+			tmp_h = tmp_h->next;
+			free(tmp_h1);
+		}
+		tmp_g1 = tmp_g;
+		tmp_g = tmp_g->next;
+		free(tmp_g1);
+	}
+	_concur_rem_sers = (REMOTE_SERVER *)NULL;
+	_concur_host_groups = _concur_end_of_host_groups = (RESOURCE_LEVEL *)NULL;
+	_concur_group_index = (RESOURCE_LEVEL *)NULL;
+	_concur_host_index = (RESOURCE *)NULL;
+	_concur_default_port = 0;
+	_concur_default_instance = 0;
+}
+ 
+void add_group(char *gname) {
+/* if the group already exists, do nothing */
+	RESOURCE_LEVEL *tmp_g;
+
+	for(tmp_g=_concur_host_groups; tmp_g && strcmp(tmp_g->name, gname); tmp_g=tmp_g->next);
+	if (tmp_g)
+		return;
+	tmp_g=(RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+	valid_memory(tmp_g);
+	strcpy(tmp_g->name, gname);
+	tmp_g->next = (RESOURCE_LEVEL *)NULL;
+	tmp_g->host_list = tmp_g->end_of_host_list = (RESOURCE *)NULL;
+	if (_concur_host_groups) {
+		_concur_end_of_host_groups->next = tmp_g;
+		_concur_end_of_host_groups = tmp_g;
+	} else {
+		_concur_host_groups = _concur_end_of_host_groups = tmp_g;
+	}
+}
+
+void add_host (char *gname, char *hname, EIF_INTEGER cap, char *dir, char *exe) {
+/* If the group does not exist, add it;
+ * If the host exists, do nothing;
+ * Otherwise, add it.
+ */
+
+	RESOURCE_LEVEL *tmp_g;
+	RESOURCE *tmp_h;
+
+	for(tmp_g=_concur_host_groups; tmp_g && strcmp(tmp_g->name, gname); tmp_g=tmp_g->next);
+	if (!tmp_g) {
+		add_group(gname);		
+		tmp_g = _concur_end_of_host_groups;
+	}
+	for(tmp_h=tmp_g->host_list; tmp_h &&  memcmp(tmp_h->host, hname, strlen(hname)); tmp_h=tmp_h->next);
+	if (tmp_h)
+		return;
+	tmp_h=(RESOURCE *)malloc(sizeof(RESOURCE));
+	valid_memory(tmp_h);
+	strcpy(tmp_h->host, hname);
+	strcpy(tmp_h->directory, dir);
+	strcpy(tmp_h->executable, exe);
+	tmp_h->capability = cap;
+	tmp_h->next = (RESOURCE *)NULL;
+	if (tmp_g->host_list) {
+		tmp_g->end_of_host_list->next = tmp_h;	
+		tmp_g->end_of_host_list = tmp_h;	
+	} else {
+		tmp_g->host_list = tmp_g->end_of_host_list = tmp_h;	
+	}
+	if (!_concur_host_index) {
+		_concur_group_index = tmp_g;
+		_concur_host_index = tmp_h;
+	}
+}
+
+void change_capacity_of_host(char *gname, char *hname, EIF_INTEGER cap) {
+/* If the group and host exist, change the host's capacity, otherwise,
+ * do nothing.
+ */
+	RESOURCE_LEVEL *tmp_g;
+	RESOURCE *tmp_h;
+	for(tmp_g=_concur_host_groups; tmp_g && strcmp(tmp_g->name, gname); tmp_g=tmp_g->next);
+	if (tmp_g) {
+		for(tmp_h=tmp_g->host_list; tmp_h &&  memcmp(tmp_h->host, hname, strlen(hname)); tmp_h=tmp_h->next);
+		if (tmp_h)
+			tmp_h->capability = cap;
+	}
 }
 
 
 
 #ifdef TEST_CON
+
 
 eio(){
 	printf("Exit from eio()\n");
@@ -774,21 +889,30 @@ EIF_POINTER makestr(){
 	exit(1);
 }
 
+void gettime (Timeval *t) {
+}
+
+ulong elapsed(Timeval *t1, Timeval *t2) {
+return 0;
+}
+
 main() {
 	int idx;
 
 	con_make("conf");
+	print_config();
 
 
-	printf("\nresource_index=%d, count=%d\n", _concur_resource_index, _concur_resource_count);
-	reset_by_host("lannion");
-	printf("After reset by 'lannion':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
+	printf("\nresource_index=%x, count=%d\n", _concur_host_index, _concur_resource_count);
+	printf("Dispatched to: <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
+	reset_by_host("fast_machine", "lannion");
+	printf("After reset by 'fast_machine, lannion':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
 
-	reset_by_host("authen");
-	printf("After reset by 'authen':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
+	reset_by_host("slow_machine", "athen");
+	printf("After reset by 'slow_machine, athen':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
 
-	reset_by_host("1lannion");
-	printf("After reset by '1lannion':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
+	reset_by_host("fast_machine", "lannion");
+	printf("After reset by 'fast_machine, lannion':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
 
 	reset_by_level("middle_machine");
 	printf("After reset by 'middle_machine':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
@@ -796,12 +920,35 @@ main() {
 	reset_by_level("fast_machine");
 	printf("After reset by 'fast_machine':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
 
-	reset_by_level("1fast_machine");
-	printf("After reset by '1fast_machine':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
+	reset_by_level("middle_machine");
+	printf("After reset by 'middle_machine':\n <%s, %s>\n", dispatch_to(), _concur_dispatched_directory);
 
-	for(idx=0; idx<20; idx++) 
+    add_group("middle_machine");
+    add_group("my_machine");
+    add_host("my_machine", "katherine", 1, "/tang/c1", "fff");
+    add_host("my_machine", "katherine", 2, "/tang/c2", "fff");
+    add_host("my_machine1", "katherine", 1, "/tang/c2", "fff");
+	change_capacity_of_host ("my_machine1", "katherine", 2);
+	print_config(); 
+
+	for(idx=0; idx<35; idx++) 
 	printf("%dth <%s, %s>\n", idx, dispatch_to(), _concur_dispatched_directory);
 
+	cur_clear_configure_table();
+    add_group("middle_machine");
+    add_group("my_machine");
+    add_host("my_machine", "katherine", 1, "/tang/c1", "fff");
+    add_host("my_machine", "katherine", 2, "/tang/c2", "fff");
+    add_host("my_machine1", "katherine", 1, "/tang/c2", "fff");
+	change_capacity_of_host ("my_machine1", "katherine", 2);
+	reset_by_level("my_machine");
+	print_config(); 
+	for(idx=0; idx<20; idx++) 
+	printf("%dth <%s, %s>\n", idx, dispatch_to(), _concur_dispatched_directory);
+	con_make("conf");
+	for(idx=0; idx<20; idx++) 
+	printf("%dth <%s, %s>\n", idx, dispatch_to(), _concur_dispatched_directory);
+	
 	
 }
 #endif

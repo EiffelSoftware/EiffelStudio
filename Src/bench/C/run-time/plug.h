@@ -126,6 +126,10 @@ extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
 extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 
+#ifdef CONCURRENT_EIFFEL
+#define _concur_sep_obj_dtype scount
+#endif
+
 /*
  * Miscellaneous routines.
  */

@@ -22,8 +22,7 @@ to indicate indirect(also called Eiffel or protected) address.
 void disp_info(char *, char *, long);
 #endif
 
-void make_server(config_file)
-char *config_file;
+void make_server()
 {
 
 
@@ -120,8 +119,8 @@ char *config_file;
 	set_mask(_concur_sock);
 	c_concur_set_non_blocking(_concur_sock);
 		
-	con_make(config_file);
-	/* read the information in configure file */
+	con_make((char *)0);
+	/* fill the configure table with default entries */
 
 	c_reset_timer();
 
@@ -1347,6 +1346,7 @@ printf("\n\n\n * %d(%s) We have no client to server again, so to release %d serv
 	_concur_sock = -1;
 	/* free the memory resource used by the parameter array. */
 	free_parameter_array(_concur_paras, _concur_paras_size);
+	cur_clear_configure_table();
 	
 	return;
 }
@@ -1461,44 +1461,22 @@ print_ref_table_and_exported_object();
     }
 }
 
-EIF_OBJ remote_server_by_index(idx)
-EIF_INTEGER idx;
-{
-/* create a SEP_OBJ proxy for a remote server, and return DIRECT address. */
-	char *tmp_str;
-	EIF_REFERENCE my_str;
-	EIF_REFERENCE my_sep_obj;
-	EIF_PROC c_make;
-
-	if (idx >= _concur_rem_ser_count) {
-		add_nl;
-		sprintf(crash_info, CURAPPERR5, idx, _concur_rem_ser_count);
-		c_raise_concur_exception(exception_invalid_parameter);
-	}
-	
-	return remote_server(_concur_rem_sers[idx].host, _concur_rem_sers[idx].port);
-}
-
 EIF_REFERENCE remote_server_by_name(name)
 char *name;
 {
 /* create a SEP_OBJ proxy for a remote server, and return DIRECT address. */
-	int idx;
-	char *tmp_str;
-	EIF_REFERENCE my_str;
-	EIF_REFERENCE my_sep_obj;
-	EIF_PROC c_make;
+	REMOTE_SERVER *tmp_r;
 
 	/* find the entry in REMOTE SERVER TABLE with the name. */
-	for(idx=0; idx<_concur_rem_ser_count && memcmp(name, _concur_rem_sers[idx].name, strlen(name)); idx++);
+	for(tmp_r=_concur_rem_sers; tmp_r && memcmp(name, tmp_r->name, strlen(name)); tmp_r=tmp_r->next);
 	
-	if (idx >= _concur_rem_ser_count) {
+	if (tmp_r) 
+		return remote_server(tmp_r->host, tmp_r->port);
+	else {
 		add_nl;
 		sprintf(crash_info, CURAPPERR6, name);
 		c_raise_concur_exception(exception_invalid_parameter);
 	}
-	
-	return remote_server(_concur_rem_sers[idx].host, _concur_rem_sers[idx].port);
 }
 
 
@@ -2359,6 +2337,7 @@ failure();
 
 	release_system_lists_in_rescue();
 	free_parameter_array(_concur_paras, _concur_paras_size);
+	cur_clear_configure_table();
 	if (_concur_call_stack.info)
 		free(_concur_call_stack.info);
 	exit(1); 

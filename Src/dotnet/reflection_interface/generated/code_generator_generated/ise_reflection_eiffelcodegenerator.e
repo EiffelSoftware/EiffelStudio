@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "ISE.Reflection.EiffelCodeGenerator"
 
 external class

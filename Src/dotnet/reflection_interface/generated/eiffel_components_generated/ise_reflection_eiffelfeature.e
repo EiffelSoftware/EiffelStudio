@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "ISE.Reflection.EiffelFeature"
 
 external class
@@ -17,32 +17,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen ReturnType: ISE_REFLECTION_SIGNATURETYPE is
-		external
-			"IL field signature :ISE.Reflection.SignatureType use ISE.Reflection.EiffelFeature"
-		alias
-			"ReturnType"
-		end
-
-	frozen Arguments: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelFeature"
-		alias
-			"Arguments"
-		end
-
-	frozen EiffelName: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelFeature"
-		alias
-			"EiffelName"
-		end
-
-	frozen IsPrefix: BOOLEAN is
+	frozen IsAbstract: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
-			"IsPrefix"
+			"IsAbstract"
 		end
 
 	frozen Comments: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -52,60 +31,25 @@ feature -- Access
 			"Comments"
 		end
 
-	frozen IsInfix: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsInfix"
-		end
-
-	frozen IsAbstract: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsAbstract"
-		end
-
-	frozen postcondition: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"postcondition"
-		end
-
-	frozen ExternalName: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelFeature"
-		alias
-			"ExternalName"
-		end
-
-	frozen IsMethod: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsMethod"
-		end
-
-	frozen IsField: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsField"
-		end
-
-	frozen IsFrozen: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsFrozen"
-		end
-
 	frozen IsStatic: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
 			"IsStatic"
+		end
+
+	frozen Modified: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"Modified"
+		end
+
+	frozen IsInfix: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsInfix"
 		end
 
 	frozen Preconditions: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -115,18 +59,81 @@ feature -- Access
 			"Preconditions"
 		end
 
-	frozen IsCreationRoutine: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
-		alias
-			"IsCreationRoutine"
-		end
-
 	frozen Postconditions: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelFeature"
 		alias
 			"Postconditions"
+		end
+
+	frozen IsFrozen: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsFrozen"
+		end
+
+	frozen ExternalName: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelFeature"
+		alias
+			"ExternalName"
+		end
+
+	frozen IsField: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsField"
+		end
+
+	frozen IsMethod: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsMethod"
+		end
+
+	frozen EiffelName: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelFeature"
+		alias
+			"EiffelName"
+		end
+
+	frozen Arguments: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelFeature"
+		alias
+			"Arguments"
+		end
+
+	frozen IsPrefix: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsPrefix"
+		end
+
+	frozen postcondition: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"postcondition"
+		end
+
+	frozen ReturnType: ISE_REFLECTION_SIGNATURETYPE is
+		external
+			"IL field signature :ISE.Reflection.SignatureType use ISE.Reflection.EiffelFeature"
+		alias
+			"ReturnType"
+		end
+
+	frozen IsCreationRoutine: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsCreationRoutine"
 		end
 
 feature -- Basic Operations
@@ -138,11 +145,11 @@ feature -- Basic Operations
 			"AddPostcondition"
 		end
 
-	AddPrecondition (a_tag: STRING; a_text: STRING) is
+	SetModified is
 		external
-			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelFeature"
+			"IL signature (): System.Void use ISE.Reflection.EiffelFeature"
 		alias
-			"AddPrecondition"
+			"SetModified"
 		end
 
 	SetField (a_value: BOOLEAN) is
@@ -220,6 +227,13 @@ feature -- Basic Operations
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"SetFrozen"
+		end
+
+	AddPrecondition (a_tag: STRING; a_text: STRING) is
+		external
+			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelFeature"
+		alias
+			"AddPrecondition"
 		end
 
 	SetExternalName (a_name: STRING) is

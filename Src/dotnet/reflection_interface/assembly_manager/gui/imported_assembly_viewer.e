@@ -144,6 +144,7 @@ feature -- Basic Operations
 			notifier: ISE_REFLECTION_NOTIFIER
 			on_update_add_delegate: SYSTEM_EVENTHANDLER
 			on_update_remove_delegate: SYSTEM_EVENTHANDLER
+			on_update_replace_delegate: SYSTEM_EVENTHANDLER
 		do
 			create notifier_handle.make1
 			notifier := notifier_handle.currentnotifier
@@ -151,6 +152,8 @@ feature -- Basic Operations
 			notifier.addadditionobserver (on_update_add_delegate)
 			create on_update_remove_delegate.make_eventhandler (Current, $update_remove)		
 			notifier.addremoveobserver (on_update_remove_delegate)
+			create on_update_replace_delegate.make_eventhandler (Current, $update_replace)
+			notifier.addreplaceobserver (on_update_replace_delegate)
 		end
 		
 	build_menu is
@@ -351,7 +354,28 @@ feature -- Basic Operations
 		end
 		
 feature -- Event handling
+
+	on_close (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Action performed when user closes the window"
+			external_name: "OnClose"
+		do
+			--reflection_interface.cleanassemblies
+			close
+		end
 	
+	update_replace (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Display assembly name column if checked."
+			external_name: "DisplayName"
+		require
+			non_void_sender: sender /= Void
+		do
+			current_history.typestable.clear
+		ensure
+			empty_types_table: current_history.typestable.count = 0
+		end
+			
 	display_name (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Display assembly name column if checked."
@@ -713,40 +737,27 @@ feature -- Event handling
 			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
 			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			error_code: INTEGER
 		do
 			if not retried then
-				wait_cursor := cursors.WaitCursor
-				set_cursor (wait_cursor)
-				selected_row := data_grid.CurrentRowIndex
-				current_descriptor := current_assembly (selected_row)
-				if current_descriptor /= Void then
-					if is_non_editable_assembly (current_descriptor) then
-						normal_cursor := cursors.Arrow
-						set_cursor (normal_cursor)
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-					else			
-						an_assembly := reflection_interface.assembly (current_descriptor)
-						if an_assembly /= Void then
-							a_type_list := an_assembly.types
-							if a_type_list /= Void then								
-								create assembly_view.make (an_assembly)
-								normal_cursor := cursors.Arrow
-								set_cursor (normal_cursor)
-							end
-						else
-							normal_cursor := cursors.Arrow
-							set_cursor (normal_cursor)
-							if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-								returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-							end
-						end
-					end
-				end
+				intern_edit (False)
 			else
 				normal_cursor := cursors.Arrow
 				set_cursor (normal_cursor)
-				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				if not reflection_interface.lastreadsuccessful then 
+					error_code := reflection_interface.lasterror.code
+					if error_code = reflection_interface.Haswritelockcode or error_code = reflection_interface.Hasreadlockcode then
+						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Access_violation_error, dictionary.Error_caption, dictionary.Abort_retry_ignore_message_box_buttons, dictionary.Error_icon)
+						if returned_value = dictionary.Retry_result then
+							intern_edit (False)
+						elseif returned_value = dictionary.Ignore_result then
+							intern_edit (True)
+						end
+					end
+				else
+					if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
+						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					end
 				end
 			end
 		rescue
@@ -910,6 +921,55 @@ feature -- Event handling
 		end
 		
 feature {NONE} -- Implementation
+
+	intern_edit (remove_locks: BOOLEAN) is
+		indexing
+			description: "Internal code of the `edit' feature"
+			external_name: "InternEdit"
+		local
+			selected_row: INTEGER
+			a_type_list: SYSTEM_COLLECTIONS_ARRAYLIST
+			an_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			assembly_view: ASSEMBLY_VIEW
+			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			returned_value: INTEGER
+			retried: BOOLEAN
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR		
+		do
+			wait_cursor := cursors.WaitCursor
+			set_cursor (wait_cursor)
+			selected_row := data_grid.CurrentRowIndex
+			current_descriptor := current_assembly (selected_row)
+			if current_descriptor /= Void then
+				if is_non_editable_assembly (current_descriptor) then
+					normal_cursor := cursors.Arrow
+					set_cursor (normal_cursor)
+					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				else	
+					if remove_locks then
+						reflection_interface.cleanassembly (current_descriptor)
+					end
+					an_assembly := reflection_interface.assembly (current_descriptor)
+					if an_assembly /= Void then
+						a_type_list := an_assembly.types
+						if a_type_list /= Void then								
+							create assembly_view.make (an_assembly)
+							normal_cursor := cursors.Arrow
+							set_cursor (normal_cursor)
+						end
+					else
+						normal_cursor := cursors.Arrow
+						set_cursor (normal_cursor)
+						if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
+							returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+						end
+					end
+				end
+			end
+		end
 		
 	build_assemblies is
 		indexing
@@ -919,13 +979,31 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			returned_value: INTEGER
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			error_code: INTEGER
 		do
 			if not retried then
 				imported_assemblies := reflection_interface.assemblies
 				sort_assemblies
 			else
-				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				if not reflection_interface.lastreadsuccessful then 
+					error_code := reflection_interface.lasterror.code
+					if error_code = reflection_interface.Haswritelockcode or error_code = reflection_interface.Hasreadlockcode then
+						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Access_violation_error, dictionary.Error_caption, dictionary.Abort_retry_ignore_message_box_buttons, dictionary.Error_icon)
+						if returned_value = dictionary.Retry_result then
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						elseif returned_value = dictionary.Ignore_result then
+							reflection_interface.cleanassemblies
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						else
+							close
+						end
+					end
+				else					
+					if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
+						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					end
 				end
 			end
 		ensure then
@@ -1184,6 +1262,14 @@ feature {NONE} -- Implementation
 			fill_data_grid
 			controls.add (data_grid)
 			refresh		
+		end
+
+	current_history: ISE_REFLECTION_HISTORY is
+		indexing
+			description: "Current history"
+			external_name: "CurrentHistory"
+		once
+			create Result.make1
 		end
 		
 end -- class IMPORTED_ASSEMBLY_VIEWER

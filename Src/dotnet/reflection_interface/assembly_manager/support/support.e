@@ -74,5 +74,57 @@ feature -- Access
 		ensure
 			string_created: Result /= Void
 		end
+
+	eiffel_feature: ISE_REFLECTION_EIFFELFEATURE
+		indexing
+			description: "Eiffel feature (Result of `has_feature')"
+			external_name: "EiffelFeature"
+		end
 		
+feature -- Status Report
+
+	exists (a_class: ISE_REFLECTION_EIFFELCLASS; a_feature_name: STRING): BOOLEAN is
+		indexing
+			description: "Does a feature with `a_feature_name' exist in `eiffel_class'?"
+			external_name: "Exists"
+		require
+			non_void_class: a_class /= Void
+			non_void_feature_name: a_feature_name /= Void
+		do
+			Result := has_feature (a_class.initializationfeatures, a_feature_name)
+					or has_feature (a_class.accessfeatures, a_feature_name)
+					or has_feature (a_class.elementchangefeatures, a_feature_name)
+					or has_feature (a_class.basicoperations, a_feature_name)
+					or has_feature (a_class.unaryoperatorsfeatures, a_feature_name)
+					or has_feature (a_class.binaryoperatorsfeatures, a_feature_name)
+					or has_feature (a_class.specialfeatures, a_feature_name)
+					or has_feature (a_class.implementationfeatures, a_feature_name)
+		end
+
+feature {NONE} -- Implementation
+
+	has_feature (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
+		indexing
+			description: "Does `a_list' contain feature with name `a_feature_name'?"
+			external_name: "HasFeature"
+		require
+			non_void_list: a_list /= Void
+			non_void_feature_name: a_feature_name /= Void
+		local
+			i: INTEGER
+			a_feature: ISE_REFLECTION_EIFFELFEATURE
+		do
+			from
+			until
+				i = a_list.count or Result
+			loop
+				a_feature ?= a_list.item (i)
+				if a_feature /= Void and then a_feature.eiffelname.tolower.equals_string (a_feature_name.tolower) then
+					eiffel_feature := a_feature
+					Result := True
+				end
+				i := i + 1
+			end
+		end
+
 end -- class SUPPORT

@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "ISE.Reflection.XmlElements"
 
 external class
@@ -74,6 +74,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"ReturnTypeElement"
+		end
+
+	ModifiedElement: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ModifiedElement"
 		end
 
 	PreconditionsElement: STRING is
@@ -501,6 +508,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"ClassElement"
+		end
+
+	ModifiedFeatureElement: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ModifiedFeatureElement"
 		end
 
 	InheritElement: STRING is

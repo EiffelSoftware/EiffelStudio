@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			assembly_view := an_assembly_view
 			create eiffel_dictionary.make_eiffelcodegeneratordictionary
 			create type_modifications.make_from_info (eiffel_class.eiffelname)
+			create parents_handler.make (eiffel_class, assembly_descriptor)
 			initialize_gui
 			return_value := showdialog
 		ensure
@@ -256,54 +257,54 @@ feature -- Event handling
 			refresh
 		end
 		
-	on_class_name_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		indexing
-			description: "Action launched when a text box is entered"
-			external_name: "OnClassNameLeaveEventHandler"
-		require
-			non_void_sender: sender /= Void
-			non_void_arguments: arguments /= Void
-		local
-			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			a_font: SYSTEM_DRAWING_FONT
-		do
-			text_box ?= sender
-			if text_box /= Void and then text_box.text /= Void then
-				if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
-					type_modifications.set_new_name (text_box.text)
-					if text_box.text.length > 0 then
-						create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-						text_box.set_width (text_box_width_from_text (text_box.text, a_font))
-					end
-				end
-			end
-		end
-
-	on_class_name_enter (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
-		indexing
-			description: "Action launched when user presses `Enter' in the class name text box"
-			external_name: "OnClassNameEnter"
-		require
-			non_void_sender: sender /= Void
-			non_void_arguments: arguments /= Void
-		local
-			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			a_font: SYSTEM_DRAWING_FONT
-		do
-			if arguments.keycode = dictionary.Enter_key then
-				text_box ?= sender
-				if text_box /= Void and then text_box.text /= Void then
-					if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
-						type_modifications.set_new_name (text_box.text)				
-						if text_box.text.length > 0 then
-							create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-							text_box.set_width (text_box_width_from_text (text_box.text, a_font))
-						end
-					end
-				end
-			end
-		end
-	
+--	on_class_name_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+--		indexing
+--			description: "Action launched when a text box is entered"
+--			external_name: "OnClassNameLeaveEventHandler"
+--		require
+--			non_void_sender: sender /= Void
+--			non_void_arguments: arguments /= Void
+--		local
+--			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+--			a_font: SYSTEM_DRAWING_FONT
+--		do
+--			text_box ?= sender
+--			if text_box /= Void and then text_box.text /= Void then
+--				if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
+--					type_modifications.set_new_name (text_box.text)
+--					if text_box.text.length > 0 then
+--						create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+--						text_box.set_width (text_box_width_from_text (text_box.text, a_font))
+--					end
+--				end
+--			end
+--		end
+--
+--	on_class_name_enter (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
+--		indexing
+--			description: "Action launched when user presses `Enter' in the class name text box"
+--			external_name: "OnClassNameEnter"
+--		require
+--			non_void_sender: sender /= Void
+--			non_void_arguments: arguments /= Void
+--		local
+--			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+--			a_font: SYSTEM_DRAWING_FONT
+--		do
+--			if arguments.keycode = dictionary.Enter_key then
+--				text_box ?= sender
+--				if text_box /= Void and then text_box.text /= Void then
+--					if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
+--						type_modifications.set_new_name (text_box.text)				
+--						if text_box.text.length > 0 then
+--							create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+--							text_box.set_width (text_box_width_from_text (text_box.text, a_font))
+--						end
+--					end
+--				end
+--			end
+--		end
+--	
 	on_click (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Action launched when a text box is entered"
@@ -443,6 +444,9 @@ feature -- Event handling
 				else
 					close
 					eiffel_class := type_view_handler.eiffel_class
+					if type_modifications.features_modifications /= Void and then type_modifications.features_modifications.count > 0 then
+						eiffel_class.setmodified
+					end
 					children := type_view_handler.children
 					assembly_view.set_children (eiffel_class, children)
 					create xml_generator.make_xmlcodegenerator
@@ -476,10 +480,16 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 		local
 			message_box: MESSAGE_BOX
-			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			emitter: NEWEIFFELCLASSGENERATOR
+			--assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			--assembly: SYSTEM_REFLECTION_ASSEMBLY
+			--conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
+			--emitter: NEWEIFFELCLASSGENERATOR
+			assembly_filename: STRING
+			code_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
+			support: ISE_REFLECTION_REFLECTIONSUPPORT
+			type_filename: STRING
+			a_child: ISE_REFLECTION_EIFFELCLASS
+			i: INTEGER
 			returned_value: INTEGER
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 			eiffel_generation_dictionary: EIFFEL_GENERATION_DIALOG_DICTIONARY
@@ -493,11 +503,34 @@ feature -- Event handling
 					wait_cursor := cursors.WaitCursor
 					message_box.set_cursor (wait_cursor)
 					message_box.refresh
-					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
-					assembly := assembly.load (assembly_name)
-					create emitter.make_neweiffelclassgenerator
-					emitter.generateeiffelclassesfromxml (assembly)			
+					--create conversion_support.make_conversionsupport
+					--assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					--assembly := assembly.load (assembly_name)
+					--create emitter.make_neweiffelclassgenerator
+					--emitter.generateeiffelclassesfromxml (assembly)
+					create support.make_reflectionsupport
+					support.make
+					assembly_filename := support.Xmlassemblyfilename (assembly_descriptor)
+					assembly_filename := assembly_filename.replace (support.Eiffelkey, support.Eiffeldeliverypath)
+					if assembly_filename /= Void and then assembly_filename.length > 0 then
+						create code_generator_from_xml.make1
+						code_generator_from_xml.makefrominfo (assembly_filename)
+						type_filename := support.Xmltypefilename (assembly_descriptor, eiffel_class.fullexternalname)
+						type_filename := type_filename.replace (support.Eiffelkey, support. Eiffeldeliverypath)
+						code_generator_from_xml.generateeiffelcodefromxml (type_filename)
+						from
+						until
+							i = children.count
+						loop
+							a_child ?= children.item (i)
+							if a_child /= Void then
+								type_filename := support.Xmltypefilename (assembly_descriptor, a_child.fullexternalname)
+								type_filename := type_filename.replace (support.Eiffelkey, support.Eiffeldeliverypath)
+								code_generator_from_xml.generateeiffelcodefromxml (type_filename)
+							end
+							i := i + 1
+						end
+					end
 					message_box.close
 				end
 			else
@@ -526,6 +559,12 @@ feature -- Event handling
 	
 feature {NONE} -- Implementation
 	
+	parents_handler: PARENTS_HANDLER
+		indexing
+			description: "Parents handler"
+			external_name: "ParentsHandler"
+		end
+		
 	modified_feature: ISE_REFLECTION_EIFFELFEATURE
 		indexing
 			description: "Feature being modified by the user"
@@ -602,11 +641,11 @@ feature {NONE} -- Implementation
 			end_class: STRING
 			external_class: STRING
 			on_click_delegate: SYSTEM_EVENTHANDLER
-			on_class_name_enter_event_handler_delegate: SYSTEM_EVENTHANDLER
-			on_class_name_leave_event_handler_delegate: SYSTEM_EVENTHANDLER
-			class_name_width: INTEGER
-			a_font: SYSTEM_DRAWING_FONT
-			on_class_name_enter_delegate: SYSTEM_WINDOWS_FORMS_KEYEVENTHANDLER
+			--on_class_name_enter_event_handler_delegate: SYSTEM_EVENTHANDLER
+			--on_class_name_leave_event_handler_delegate: SYSTEM_EVENTHANDLER
+			--class_name_width: INTEGER
+			--a_font: SYSTEM_DRAWING_FONT
+			--on_class_name_enter_delegate: SYSTEM_WINDOWS_FORMS_KEYEVENTHANDLER
 		do
 			create panel.make_panel
 			a_position.set_x (0)
@@ -655,16 +694,17 @@ feature {NONE} -- Implementation
 				create_label (eiffel_dictionary.Classkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end
 			create class_name_text_box.make_textbox
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-			class_name_width := text_box_width_from_text (an_eiffel_class.eiffelname.toupper, a_font)
-			set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, class_name_width, dictionary.Class_color)
+			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+			--class_name_width := text_box_width_from_text (an_eiffel_class.eiffelname.toupper, a_font)
+			--set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, class_name_width, dictionary.Class_color)
+			create_label (an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, dictionary.Class_color, False)
 			
-			create on_class_name_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
-			class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
-			create on_class_name_leave_event_handler_delegate.make_eventhandler (Current, $on_class_name_leave_event_handler)
-			class_name_text_box.add_lostfocus (on_class_name_leave_event_handler_delegate)
-			create on_class_name_enter_delegate.make_keyeventhandler (Current, $on_class_name_enter)
-			class_name_text_box.add_keydown (on_class_name_enter_delegate)
+			--create on_class_name_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
+			--class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
+			--create on_class_name_leave_event_handler_delegate.make_eventhandler (Current, $on_class_name_leave_event_handler)
+			--class_name_text_box.add_lostfocus (on_class_name_leave_event_handler_delegate)
+			--create on_class_name_enter_delegate.make_keyeventhandler (Current, $on_class_name_enter)
+			--class_name_text_box.add_keydown (on_class_name_enter_delegate)
 			
 			panel_height := 2 * dictionary.Margin + 4 * dictionary.Label_height
 			
@@ -1218,10 +1258,12 @@ feature {NONE} -- Implementation
 			new_label_width: INTEGER
 			a_font: SYSTEM_DRAWING_FONT
 			an_array: ARRAY [ANY]
+			is_editable_feature: BOOLEAN
 		do
 			is_unary_operator := an_eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
 			label_width := 0
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+			is_editable_feature := True--not parents_handler.is_inherited_feature (a_feature.eiffelname)
 			
 				-- frozen
 			if a_feature.IsFrozen then
@@ -1238,9 +1280,14 @@ feature {NONE} -- Implementation
 				if a_feature.iscreationroutine then
 					create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)	
 					feature_name_width := label_width
-				else
-					feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)
-					set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+				else					
+					if is_editable_feature then
+						feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)
+						set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+					else
+						create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)
+						feature_name_width := label_width
+					end
 				end
 			else
 				if a_feature.IsInfix then
@@ -1250,16 +1297,26 @@ feature {NONE} -- Implementation
 						create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)	
 						feature_name_width := label_width
 					else
-						feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)		
-						set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+						if is_editable_feature then
+							feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)		
+							set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+						else
+							create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)
+							feature_name_width := label_width
+						end
 					end
 				else
 					if a_feature.iscreationroutine then
 						create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)	
 						feature_name_width := label_width
 					else
-						feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)			
-						set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+						if is_editable_feature then
+							feature_name_width := text_box_width_from_text (a_feature.eiffelname, a_font)			
+							set_editable_text_box_properties (a_text_box, a_feature.eiffelname, new_label_width, panel_height, feature_name_width, dictionary.Feature_color)
+						else
+							create_label (a_feature.eiffelname, new_label_width, panel_height, dictionary.Feature_color, False)
+							feature_name_width := label_width
+						end
 					end
 				end
 			end
@@ -1285,9 +1342,14 @@ feature {NONE} -- Implementation
 						create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
 						new_label_width := new_label_width + label_width 
 					else
-						create a_text_box.make_textbox		
-						argument_name_width := text_box_width_from_text (argument_name, a_font)				
-						set_editable_text_box_properties (a_text_box, argument_name, new_label_width, panel_height, argument_name_width, dictionary.Feature_color)
+						create a_text_box.make_textbox
+						if is_editable_feature then
+							argument_name_width := text_box_width_from_text (argument_name, a_font)				
+							set_editable_text_box_properties (a_text_box, argument_name, new_label_width, panel_height, argument_name_width, dictionary.Feature_color)
+						else
+							create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
+							argument_name_width := label_width
+						end
 						new_label_width := new_label_width + argument_name_width 
 						create an_array.make (2)
 						an_array.put (0, a_feature)

@@ -86,7 +86,7 @@ feature -- Access
 			external_name: "WarningText"
 		end
 
-	Window_height: INTEGER is 220
+	Window_height: INTEGER is 190
 		indexing
 			description: "Window height"
 			external_name: "WindowHeight"

@@ -148,10 +148,19 @@ feature {NONE} -- Implementation
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 			non_void_sender: sender /= Void
 		local
-			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			emitter: NEWEIFFELCLASSGENERATOR
+			--assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			--assembly: SYSTEM_REFLECTION_ASSEMBLY
+			--conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
+			--emitter: NEWEIFFELCLASSGENERATOR
+			support: ISE_REFLECTION_REFLECTIONSUPPORT
+			assembly_filename: STRING
+			type_filename: STRING
+			i: INTEGER
+			code_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
+			reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			assembly_types: SYSTEM_COLLECTIONS_ARRAYLIST
+			a_type: ISE_REFLECTION_EIFFELCLASS
 			returned_value: INTEGER
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 			retried: BOOLEAN
@@ -161,22 +170,68 @@ feature {NONE} -- Implementation
 			if message_box /= Void then
 				message_box.refresh
 				if not retried then
-					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
-					assembly := assembly.load (assembly_name)
+					--create conversion_support.make_conversionsupport
+					--assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					--assembly := assembly.load (assembly_name)
 					close
-					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						if destination_path_text_box.text.tolower.equals_string (eiffel_path.tolower) then
-							emitter.generateeiffelclassesfromxml (assembly)
-							message_box.close
+					--create emitter.make_neweiffelclassgenerator
+					--if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
+					--	if destination_path_text_box.text.tolower.equals_string (eiffel_path.tolower) then
+					--		emitter.generateeiffelclassesfromxml (assembly)
+					--		message_box.close
+					--	else
+					--		emitter.generateeiffelclassesfromxmlandpathname (assembly, destination_path_text_box.text)
+					--		message_box.close
+					--	end
+					--else
+					--	returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					--end
+					create support.make_reflectionsupport
+					support.make
+					assembly_filename := support.Xmlassemblyfilename (assembly_descriptor)
+					assembly_filename := assembly_filename.replace (support.Eiffelkey, support.Eiffeldeliverypath)
+					if assembly_filename /= Void and then assembly_filename.length > 0 then
+						if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
+							create code_generator_from_xml.make1
+							create reflection_interface.make_reflectioninterface
+							reflection_interface.makereflectioninterface
+							reflection_interface.search (assembly_descriptor)
+							eiffel_assembly := reflection_interface.searchresult
+							if eiffel_assembly /= Void then
+								assembly_types := eiffel_assembly.types
+								if destination_path_text_box.text.tolower.equals_string (eiffel_path.tolower) then
+									code_generator_from_xml.makefrominfo (assembly_filename)
+									from
+									until
+										i = assembly_types.count
+									loop
+										a_type ?= assembly_types.item (i)
+										if a_type /= Void then
+											type_filename := support.Xmltypefilename (assembly_descriptor, a_type.fullexternalname)
+											type_filename := type_filename.replace (support.Eiffelkey, support.Eiffeldeliverypath)
+											code_generator_from_xml.generateeiffelcodefromxml (type_filename)
+										end
+										i := i + 1
+									end
+								else								
+									code_generator_from_xml.makefrominfoandpath (assembly_filename, destination_path_text_box.text)
+									from
+									until
+										i = assembly_types.count
+									loop
+										a_type ?= assembly_types.item (i)
+										if a_type /= Void then
+											type_filename := support.Xmltypefilename (assembly_descriptor, a_type.fullexternalname)
+											code_generator_from_xml.generateeiffelcodefromxmlandpath (type_filename, destination_path_text_box.text)
+										end
+										i := i + 1
+									end
+								end
+							end
 						else
-							emitter.generateeiffelclassesfromxmlandpathname (assembly, destination_path_text_box.text)
-							message_box.close
+							returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 						end
-					else
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-					end	
+					end
 				else
 					message_box.close
 					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Eiffel_generation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)

@@ -315,6 +315,7 @@ feature -- Basic Operations
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 			on_resize_delegate: SYSTEM_EVENTHANDLER
+			on_close_delegate: SYSTEM_EVENTHANDLER
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
@@ -335,6 +336,9 @@ feature -- Basic Operations
 			add_resize (on_resize_delegate)
 			
 			fill_data_grid
+			
+			create on_close_delegate.make_eventhandler (Current, $on_close)
+			add_closed (on_close_delegate)
 		ensure
 			non_void_menu: main_menu /= Void
 			non_void_toolbar: toolbar /= Void
@@ -752,6 +756,16 @@ feature -- Basic Operations
 	
 feature -- Event handling
 
+	on_close (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Action performed when user closes the window"
+			external_name: "OnClose"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		deferred
+		end
+		
 	on_resize (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Resize window and its content."

@@ -212,6 +212,14 @@ feature -- Basic Operations
 		
 feature -- Event handling
 
+	on_close (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Action performed when user closes the window"
+			external_name: "OnClose"
+		do
+			close
+		end
+		
 	open_assembly (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Open an open file dialog to import a signed assembly, which is not in the GAC."

@@ -47,6 +47,12 @@ feature -- Access
 			-- tree-view control loses focus.
 			--
 			-- Declared in Windows as TVS_SHOWSELALWAYS
+			
+	Tvs_checkboxes: INTEGER is 256
+			-- Enables a check box for ech item contained.
+			--
+			-- Declared in Windows as TVS_CHECKBOXES
+	
 
 	Tvs_infotip: INTEGER is 2048
 			-- Declared in Windows as TVS_INFOTIP

@@ -202,10 +202,10 @@ feature {NONE} -- Implementation
 		
 invariant
 	
-	modal_or_relative: is_modal implies not is_relative and is_relative implies not is_modal
-	blocking_window_correct: (is_modal or is_relative implies blocking_window /= Void)
-	no_blocking_window_correct: not is_modal and not is_relative implies blocking_window = Void
-	no_blocking_window_when_hidden: not is_show_requested implies blocking_window = Void
+	modal_or_relative: is_usable implies (is_modal implies not is_relative and is_relative implies not is_modal)
+	blocking_window_correct: is_usable implies (is_modal or is_relative implies blocking_window /= Void)
+	no_blocking_window_correct: is_usable implies (not is_modal and not is_relative implies blocking_window = Void)
+	no_blocking_window_when_hidden: is_usable implies (not is_show_requested implies blocking_window = Void)
 	
 
 end -- class EV_DIALOG

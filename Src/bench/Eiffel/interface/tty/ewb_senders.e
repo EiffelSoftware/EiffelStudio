@@ -27,7 +27,8 @@ feature
 			client: CLASS_C;
 			ftable: FEATURE_TABLE;
 			first_time: BOOLEAN
-			feat: FEATURE_I
+			feat: FEATURE_I;
+			d: DEPEND_UNIT;
 		do
 			fid := feature_i.feature_id;
 			clients := class_c.clients;
@@ -50,8 +51,9 @@ feature
 					until
 						fdep.after
 					loop
-						if (fdep.item.id = class_c.id) and
-							(fdep.item.feature_id = fid) then
+						d := fdep.item;
+						if (d.id = class_c.id) and
+							(d.feature_id = fid) then
 							client := clients.item;
 							if first_time then
 								client.append_clickable_name (output_window);

@@ -139,6 +139,14 @@ feature -- Status setting
 			end
 		end
 
+	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+			-- Remove Join of `a_container' to radio grouping of `Current'.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 	add_radio_button (w: EV_WIDGET) is
 			-- Called every time a widget is added to the container.
 		require

@@ -34,7 +34,7 @@ feature
 			end
 			str1 := to_c;
 			str2 := file_name.to_c;
-			c_append_file_name ($Current, $str1, $str2);
+			eif_append_file_name ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
 		end
@@ -58,7 +58,7 @@ feature
 			any: ANY
 		do
 			any := to_c
-			Result := c_is_file_valid ($any)
+			Result := eif_is_file_valid ($any)
 		end
 
 	is_file_name_valid (f_name: STRING): BOOLEAN is
@@ -67,7 +67,7 @@ feature
 			any: ANY
 		do
 			any := f_name.to_c;
-			Result := c_is_file_name_valid ($any)
+			Result := eif_is_file_name_valid ($any)
 		end
 
 	is_extension_valid (ext: STRING): BOOLEAN is
@@ -76,27 +76,27 @@ feature
 			any: ANY
 		do
 			any := ext.to_c;
-			Result := c_is_extension_valid ($any)
+			Result := eif_is_extension_valid ($any)
 		end
 
 feature {NONE} -- Externals
 
-	c_append_file_name (s, p, v: POINTER) is
+	eif_append_file_name (s, p, v: POINTER) is
 		external
 			"C"
 		end
 
-	c_is_file_name_valid (p: POINTER): BOOLEAN is
+	eif_is_file_name_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	c_is_extension_valid (p: POINTER): BOOLEAN is
+	eif_is_extension_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	c_is_file_valid (p: POINTER): BOOLEAN is
+	eif_is_file_valid (p: POINTER): BOOLEAN is
 		external
 			"C"
 		end

@@ -25,6 +25,9 @@ feature -- Access
 	rtf_underline_string: STRING is "ul"
 		-- String denoting underlined in RTF.
 		
+	rtf_underline_none_string: STRING is "ulnone"
+		-- String denoting end of underlined in RTF.
+		
 	rtf_strikeout_string: STRING is "strike"
 		-- String denoting striked out in RTF.
 		

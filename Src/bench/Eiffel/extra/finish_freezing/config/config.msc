@@ -9,12 +9,14 @@ include_path: "$(INCLUDE_PATH)"
 
 -- C-compiler
 cc: "cl"
+cpp: "cpp"
 
 -- optimization flags
 optimize: "-Ox"
 
 -- compiler flags
 ccflags: "-c -nologo -D%"WIN32%""
+cppflags: "-c -nologo -D%"WIN32%""
 
 large: ""
 

@@ -22,16 +22,16 @@ inherit
 		redefine
 			set_action, remove_action,
 			set_background_color,
-			set_foreground
+			set_foreground_color
 		end
 
 creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
-	make (a_separator_gadget: SEPARATOR_G) is
+	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN) is
 			-- Create a motif separator gadget.
 		local
 			ext_name: ANY
@@ -39,10 +39,13 @@ feature
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_separator_gadget.identifier.to_c;
 			screen_object := create_separator_gadget ($ext_name, 
-					parent_screen_object (a_separator_gadget, widget_index));
+				parent_screen_object (a_separator_gadget, widget_index),
+				man);
 		ensure
-			is_horizontal
+			--default_orientation: is_horizontal
 		end;
+
+feature
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
@@ -67,8 +70,8 @@ feature
 		do
 		end; -- set_background_color
 
-	set_foreground (new_color: COLOR) is
-			-- Set foreground color to `new_color'.
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground_color color to `new_color'.
 		require else
 			color_not_void: not (new_color = Void)
 		do
@@ -76,7 +79,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_separator_gadget (sg_name: ANY; scr_obj: POINTER): POINTER is
+	create_separator_gadget (sg_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

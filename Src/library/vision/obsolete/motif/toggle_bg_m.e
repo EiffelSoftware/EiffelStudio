@@ -27,14 +27,14 @@ inherit
 		redefine
 			set_action, remove_action,
 			set_background_color,
-			set_foreground
+			set_foreground_color
 		end;
 
 	BUTTON_M
 		redefine
 			set_action, remove_action,
 			set_background_color,
-			set_foreground, clean_up
+			set_foreground_color, clean_up
 		select
 			clean_up
 		end;
@@ -48,9 +48,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_toggle_bg: TOGGLE_BG) is
+	make (a_toggle_bg: TOGGLE_BG; man: BOOLEAN) is
 			-- Create a motif toggle button gadget.
 		local
 			ext_name: ANY
@@ -58,7 +58,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_toggle_bg.identifier.to_c;
 			screen_object := create_toggle_b_gadget ($ext_name,
-					parent_screen_object (a_toggle_bg, widget_index));
+					parent_screen_object (a_toggle_bg, widget_index),
+					man);
 			a_toggle_bg.set_font_imp (Current)
 		end;
 
@@ -224,8 +225,8 @@ feature
 		do
 		end;
 
-	set_foreground (new_color: COLOR) is
-			-- Set foreground color to `new_color'.
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground_color color to `new_color'.
 		require else
 			color_not_void: not (new_color = Void)
 		do
@@ -251,7 +252,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_toggle_b_gadget (t_name: ANY; scr_obj: POINTER): POINTER is
+	create_toggle_b_gadget (t_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

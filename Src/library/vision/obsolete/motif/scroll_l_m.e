@@ -24,7 +24,7 @@ inherit
 			set_unsigned_char as p_set_unsigned_char,
 			clean_up as primitive_clean_up
 		redefine
-			action_target, set_foreground, update_foreground,
+			action_target, set_foreground_color, update_foreground_color,
 			set_background_color, update_background_color
 		end;
 	PRIMITIVE_M
@@ -33,7 +33,7 @@ inherit
 			set_int as p_set_int,
 			set_unsigned_char as p_set_unsigned_char
 		redefine
-			action_target, set_foreground, update_foreground,
+			action_target, set_foreground_color, update_foreground_color,
 			set_background_color, update_background_color,
 			clean_up
 		select
@@ -59,9 +59,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_list: SCROLL_LIST) is
+	make (a_list: SCROLL_LIST; man: BOOLEAN) is
             -- Create a motif list, get screen_object value of srolled
             -- window which contains current list.
         local
@@ -70,7 +70,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
             ext_name := a_list.identifier.to_c;
             list_screen_object := create_scroll_list ($ext_name,
-					parent_screen_object (a_list, widget_index));
+					parent_screen_object (a_list, widget_index),
+					man);
             screen_object := xt_parent (list_screen_object);
             a_list.set_list_imp (Current);
             a_list.set_font_imp (Current);
@@ -109,8 +110,8 @@ feature
 
 
 
-	set_foreground (a_color: COLOR) is
-			-- Set `foreground' to `a_color'.
+	set_foreground_color (a_color: COLOR) is
+			-- Set `foreground_color' to `a_color'.
 		require else
 			a_color_exists: not (a_color = Void)
 		
@@ -118,14 +119,14 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (foreground = Void) then
-				color_implementation ?= foreground.implementation;
+			if not (foreground_color = Void) then
+				color_implementation ?= foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground := a_color;
+			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground.to_c;
+			ext_name := Mforeground_color.to_c;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name); 
 			xt_unmanage_child (list_screen_object);
 			c_set_color (list_screen_object, color_implementation.pixel (screen), $ext_name);
@@ -133,7 +134,7 @@ feature
 			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
 			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
 		ensure then
-			foreground = a_color
+			foreground_color = a_color
 		end;
 
 	set_background_color (a_color: COLOR) is
@@ -145,26 +146,27 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (background_pixmap = Void) then
-				pixmap_implementation ?= background_pixmap.implementation;
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				background_pixmap := Void
+				bg_pixmap := Void
 			end;
-			if not (background_color = Void) then
-				color_implementation ?= background_color.implementation;
+			if bg_color = Void then
+				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
-			color_implementation ?= background_color.implementation;
+			color_implementation ?= bg_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name); 
-			c_set_color (list_screen_object, color_implementation.pixel (screen), $ext_name); 
-			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name); 
-			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name); 
-		ensure then
-			background_color = a_color;
-			(background_pixmap = Void)
+			c_set_color (screen_object, 
+					color_implementation.pixel (screen), $ext_name); 
+			c_set_color (list_screen_object, 
+					color_implementation.pixel (screen), $ext_name); 
+			c_set_color (horizontal_widget, 
+					color_implementation.pixel (screen), $ext_name); 
+			c_set_color (vertical_widget, 
+					color_implementation.pixel (screen), $ext_name); 
 		end;
 
 feature {NONE}
@@ -179,14 +181,14 @@ feature {NONE}
 
 feature {COLOR_X}
 
-	update_foreground is
+	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			ext_name: ANY;
 			color_implementation: COLOR_X
 		do
-			ext_name := Mforeground.to_c;
-			color_implementation ?= foreground.implementation;
+			ext_name := Mforeground_color.to_c;
+			color_implementation ?= foreground_color.implementation;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
 			c_set_color (list_screen_object, color_implementation.pixel (screen), $ext_name);
 		end;
@@ -219,7 +221,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scroll_list (l_name: ANY; scr_obj: POINTER): POINTER is
+	create_scroll_list (l_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

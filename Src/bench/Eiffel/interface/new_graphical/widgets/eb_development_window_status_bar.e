@@ -124,11 +124,11 @@ feature {NONE} -- Initialization
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (vp)
 			widget.extend (f)
-			create project_frame
-			project_frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			project_frame.extend (project_label)
-			widget.extend (project_frame)
-			widget.disable_item_expand (project_frame)
+			create f
+			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.extend (project_label)
+			widget.extend (f)
+			widget.disable_item_expand (f)
 			create f
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (coordinate_label)
@@ -242,11 +242,6 @@ feature {NONE} -- Implementation: widgets
 
 	edition_icon: EV_CELL
 			-- Cell that contains the icon giving the current edition status of the project.
-
-	project_frame: EV_FRAME
-			-- Frame that contains the project name.
-
---| FIXME XR: Add line/column in current editor.
 
 feature {NONE} -- Implementation: event handling
 
@@ -399,12 +394,8 @@ feature {NONE} -- Implementation
 				s := n
 				w := f.string_width (s).min (100)
 			end
-			create project_label.make_with_text (s)
 			project_label.set_minimum_width (w)
 			project_label.set_text (s)
-			project_frame.wipe_out
-
-			project_frame.extend (project_label)
 		end
 
 	update_running_icon is

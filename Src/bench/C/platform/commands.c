@@ -1,4 +1,3 @@
-
 /*
 	Commands used by the compiler to link the precompilation driver or
 	to execute `finish_freezing'
@@ -35,18 +34,18 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
-	eiffel_dir = eif_getenv("EIFFEL3");
-
-	cmd = cmalloc (40 + strlen (eiffel_dir));
+	eiffel_dir = (char *) eif_getenv("EIFFEL3");
+	cmd = cmalloc (40 + strlen (eiffel_dir),1);
 	if (cmd == (char *)0)
 		enomem();
+	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
+	strcat (cmd, eif_getenv("PLATFORM"));
+	strcat (cmd, "\\bin\\es3sh.exe");
 
-	sprintf (cmd, "%s\\bench\\spec\\winwat\\bin\\es3sh.exe", eiffel_dir);
-
-	(void) eif_system(cmd);
+	(void) WinExec(cmd, SW_SHOWNORMAL);
 	xfree(cmd);
-	chdir(current_dir);
 
+	chdir(current_dir);
 	xfree(current_dir);
 #else
 	DIR *dirp;
@@ -123,6 +122,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	char *ini_path, *src, *eiffel_dir, *eiffel_plt, *system_exe;
 	FILE *ini_file, *fi, *fo;
 	char buffer[4096];
+	char *start_dir, *i;
 	int amount;
 
 		/* First create the .INI file */
@@ -130,29 +130,35 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	if (ini_path == (char *)0)
 		enomem();
 
+	// Given abc\EIFGEN\W_code
+	// The starting directory is abc or abc\EIFGEN\W_code - 14 characters
+	start_dir = cmalloc (strlen(eif_access(c_code_dir)),1);
+	strncpy (start_dir, eif_access(c_code_dir), strlen(eif_access(c_code_dir))-14);
+
 	sprintf(ini_path, "%s\\%s.INI", eif_access(c_code_dir), eif_access(system_name));
 
 	ini_file = fopen(ini_path, "wt");
-	fprintf(ini_file, "[Environment]\nDriver=%s\n", eif_access(driver_name));
+	fprintf(ini_file, "[Environment]\nDriver=%s\nStartDirectory=%s\n", 
+			eif_access(driver_name), start_dir);
 	fclose(ini_file);
 
 	xfree(ini_path);
 
 		/* Link */
 
-	eiffel_dir = eif_getenv("EIFFEL3");
+	eiffel_dir = (char *) eif_getenv("EIFFEL3");
 	src = cmalloc(38 + strlen (eiffel_dir));
 	if (src == (char *)0)
 		enomem();
 	strcpy (src, eiffel_dir);
 	strcat (src, "\\bench\\spec\\");
-	eiffel_plt = eif_getenv("PLATFORM");
+	eiffel_plt = (char *) eif_getenv("PLATFORM");
 	strcat (src, eiffel_plt);
 	strcat (src, "\\bin\\precompd.exe");
 	fi = fopen (src, "rb");
 	system_exe = cmalloc (strlen (eif_access (system_name)) + 
 						  strlen (eif_access (c_code_dir)) + 5);
-	if (strlen (eif_access (system_name) > 8)
+	if (strlen (eif_access (system_name)) > 8)
 		{
 		printf ("The system is called: %s\n", eif_access (system_name));
 		printf ("The system name should not be more than 8 characters\n");

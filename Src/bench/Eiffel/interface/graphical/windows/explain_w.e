@@ -15,13 +15,13 @@ inherit
 		redefine
 			text_window, build_format_bar, 
 			tool_name, build_text_window, hole, stone_type, 
-			process_any
+			process_any, build_menus, hole_button
 		end;
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, 
+			text_window, build_format_bar, hole_button,
 			tool_name, make, build_text_window, 
-			hole, stone_type, process_any
+			hole, stone_type, process_any, build_menus
 		select
 			make
 		end;
@@ -65,6 +65,19 @@ feature -- Status setting
 
 feature -- Graphical Interface
 
+	build_menus is
+			-- Create the menus.
+		do
+			!! menu_bar.make (new_name, global_form);
+			!! file_menu.make ("File", menu_bar);
+			!! edit_menu.make ("Edit", menu_bar);
+			!! preference_menu.make ("Preference", menu_bar);
+			!! window_menu.make ("Windows", menu_bar);
+			!! help_menu.make ("Help", menu_bar);
+			menu_bar.set_help_button (help_menu.menu_button);
+			fill_menus
+		end;
+
 	build_text_window is
 			-- Create `text_window' different ways whether
 			-- the tabulation mecanism is disable or not
@@ -84,7 +97,8 @@ feature -- Graphical Interface
 		do
 			!! showtext_cmd.make (text_window);
 			!! showtext_button.make (showtext_cmd, format_bar);
-			!! showtext_frmt_holder.make (showtext_cmd, showtext_button);
+			!! showtext_frmt_holder.make_plain (showtext_cmd);
+			showtext_frmt_holder.set_button (showtext_button);
 			format_bar.attach_top (showtext_button, 0);
 			format_bar.attach_left (showtext_button, 0);
 		end;
@@ -103,6 +117,9 @@ feature -- Window Properties
 feature {NONE} -- Attributes; Forms And Holes
 
 	hole: EXPLAIN_CMD;
-			-- Hole charaterizing current
+			-- Hole characterizing Current.
+
+	hole_button: EXPLAIN_HOLE;
+			-- Hole characterizing Current.
 
 end -- class EXPLAIN_W

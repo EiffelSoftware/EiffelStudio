@@ -100,6 +100,8 @@ feature -- Initialization
 				-- Initialize the cursor
 			create cursor.make_from_absolute_pos (0, 1, Current)
 
+				--| this is just for selection_start not to be Void.
+			selection_start := cursor
 				-- Get the focus
 			set_focus
 		end
@@ -161,6 +163,12 @@ feature -- Selection
 		do
 			has_selection := True
 			selection_start := clone (c)
+		end
+
+	forget_selection is
+			-- Unselect all.
+		do
+			has_selection := False
 		end
 
 feature -- Process Windows Messages
@@ -301,8 +309,11 @@ feature -- Process Windows Messages
 				-- Change the state of our flag.
 			mouse_left_button_down := True
 			
-				-- Save cursor position.
-			old_cursor := clone (cursor)
+			if shifted_key and then (not has_selection) then
+					-- No selection? We have to start one.
+				has_selection := True
+				selection_start := clone (cursor)
+			end
 
 				-- Compute the line number pointed by the mouse cursor
 				-- and asdjust it if its over the number of lines in the text.
@@ -314,20 +325,12 @@ feature -- Process Windows Messages
 				cursor.make_from_absolute_pos (x_pos, l_number, Current)
 			end
 
-			if shifted_key then
-					-- We want to select or resume a selection.
-				if old_cursor.is_equal (cursor) then
-						-- Forget selection if nothing is selected.
+			if has_selection then
+					-- Look if we have preform a deselection.
+				if not shifted_key or else cursor.is_equal (selection_start) then
+						-- The selection has to be forgotten.
 					has_selection := False
-				elseif not has_selection then
-						-- No selection? We have to start one.
-					has_selection := True
-					selection_start := old_cursor
 				end
-			elseif not has_selection then
-				-- There is a selection, and we press on the
-				-- left button without Shift, so we destroy the selection.
-				has_selection := False
 			else
 				-- There is no selection, so we don't need to do anything.
 			end
@@ -343,13 +346,16 @@ feature -- Process Windows Messages
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			l_number	: INTEGER
-			old_cursor	: TEXT_CURSOR
 			xline		: EDITOR_LINE
 		do
 			if mouse_left_button_down then
 
 					-- Save cursor position.
-				old_cursor := clone (cursor)
+				if not has_selection then
+						-- There is no selection, so we start a selection.
+					has_selection := True
+					selection_start := clone (cursor)
+				end
 
 					-- Compute the line number pointed by the mouse cursor
 					-- and asdjust it if its over the number of lines in the text.
@@ -361,13 +367,9 @@ feature -- Process Windows Messages
 					cursor.make_from_absolute_pos (x_pos, l_number, Current)
 				end
 
-				if old_cursor.is_equal (cursor) then
+				if cursor.is_equal (selection_start) then
 						-- Forget selection if nothing is selected.
 					has_selection := False
-				elseif not has_selection then
-						-- There is no selection, so we start a selection.
-					has_selection := True
-					selection_start := old_cursor
 				end
 					-- Record in the history.
 				history.record_move

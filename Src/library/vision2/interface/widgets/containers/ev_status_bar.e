@@ -16,7 +16,8 @@ inherit
 		redefine
 			implementation,
 			parent,
-			set_parent
+			set_parent,
+			parent_needed
 		end
 
 creation
@@ -60,6 +61,14 @@ feature -- Element change
 			-- `par' can be Void then the parent is the screen.
 		do
 			implementation.set_parent (par)
+		end
+
+feature -- Assertion
+
+	parent_needed: BOOLEAN is
+			-- Is a parent needed by the widget
+		do
+			Result := True
 		end
 
 feature -- Implementation

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is         
 			-- Create a menu widget with `par' as parent window.
 		require
-			parent_exists: not par.destroyed
+			valid_parent: is_valid (par)
 		do
 			!EV_STATIC_MENU_BAR_IMP!implementation.make (par)
 		end

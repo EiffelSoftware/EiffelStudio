@@ -95,12 +95,14 @@ feature
 					check
 						a_local_part.is_equal (Name_str)
 					end
-					a_parameter.set_name (a_value)
+					a_parameter.set_name (name_formatter.formatted_variable_name (a_value))
 				elseif current_tag.last.is_equal (Param_ref_str) then
 					check
 						a_local_part.is_equal (Name_str)
 					end
-					current_comment.append (a_value)
+					current_comment.append_character ('`')
+					current_comment.append (name_formatter.formatted_variable_name (a_value))
+					current_comment.append_character ('%'')
 				elseif current_tag.last.is_equal (See_also_str) then
 					check
 						a_local_part.is_equal (Cref_str)
@@ -204,7 +206,7 @@ feature -- Basic Operation
 			not_empty_a_comment: not a_comment.is_empty
 		do
 			Result := clone (a_comment)
-			Result.replace_substring_all ("%N", "")
+			Result.replace_substring_all ("%N", " ")
 			Result.prune_all_leading (' ')
 			Result.prune_all_trailing (' ')
 			Result.replace_substring_all ("   ", " ")
@@ -213,6 +215,14 @@ feature -- Basic Operation
 			Result.replace_substring_all (paragraphe_tag, "%N")
 		end
 
+feature {NONE} -- Formatter
+
+	name_formatter: NAME_FORMATTER is
+			-- Used to format argument names
+		once
+			create Result
+		end
+		
 invariant
 	non_void_a_member: a_member /= Void
 	non_void_a_parameter: a_parameter /= Void

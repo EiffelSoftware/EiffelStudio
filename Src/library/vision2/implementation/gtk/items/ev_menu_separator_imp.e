@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			initialize_menu_sep_box
 			create radio_group_ref
+			is_sensitive := True
 			is_initialized := True
 		end
 

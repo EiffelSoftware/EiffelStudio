@@ -260,7 +260,7 @@ feature -- Search
 
 	find_matching_indices is
 			-- All indices in `text' which matches the
-			-- very next occurence of `pattern'.
+			-- very next occurrence of `pattern'.
 		local
 			ls: LIST [STRING]
 			lsi: STRING;

@@ -3,7 +3,7 @@ indexing
 	description: "Description of infinited lines (implementation for X)";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class INF_LINE 
 

@@ -27,6 +27,7 @@
 #include "cecil.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
+#include <stdio.h>
 
 #ifdef __VMS
 public int	putenv ();

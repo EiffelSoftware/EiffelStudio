@@ -8,13 +8,14 @@ CFLAGS = -c -O2 -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\bench
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj diskspace.obj dynload.obj
+OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj registry.obj diskspace.obj dynload.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
 	tlib $@ +disptchr.obj
 	tlib $@ +enumfont.obj
 	tlib $@ +estream.obj
+	tlib $@ +choose_folder.obj
 	tlib $@ +msgboxpa.obj
 	tlib $@ +registry.obj
 	if not exist $(EIFFEL4)\library\wel\spec\bcc mkdir $(EIFFEL4)\library\wel\spec\bcc

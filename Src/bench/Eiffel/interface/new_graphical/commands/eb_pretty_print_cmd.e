@@ -129,11 +129,10 @@ feature -- Basic operations
 			-- A debug session ended. We free the resources.
 		do
 			from
-				opened_dialogs.start
 			until
-				opened_dialogs.after
+				opened_dialogs.is_empty
 			loop
-					--| No need to call `forth', `destroy' removes the items automatically.
+				opened_dialogs.start
 				opened_dialogs.item.destroy
 			end
 		end

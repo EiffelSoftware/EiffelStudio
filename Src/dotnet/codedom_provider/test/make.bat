@@ -15,11 +15,8 @@
 @REM   * The Eiffel Codedom Tester which uses the codedom trees produced by the
 @REM     Eiffel Codedom Serializer to test the implementation.
 
-@REM ------------------------------------------------------------
-@REM Change ISE_EIFFEL so that it points to the correct location:
-@REM ------------------------------------------------------------
-SET ISE_EIFFEL=d:\dev\eiffel55
-
+IF %ISE_EIFFEL% == "" ECHO ISE_EIFFEL is not defined !!
+IF %ISE_EIFFEL% == "" GOTO END
 SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
 IF EXIST "%VS71COMNTOOLS%vsvars32.bat" CALL "%VS71COMNTOOLS%vsvars32.bat"
 IF EXIST "%VS71COMNTOOLS%vsvars32.bat" GOTO COMPILE

@@ -219,13 +219,40 @@ feature -- Status setting
 		local
 			x, y, l, a, b: REAL
 		do
+				-- Some explanation for those you have forgotten about their math classes.
+				-- We have two equations:
+				-- 1 - the ellipse: x^2/a^2 + y^2/b^2 = 1
+				-- 2 - the line which has an angle `angle': y = tan(angle) * x
+				--
+				-- The solution of the problem is to find the point (x, y) which is
+				-- common to both equations (1) and (2). Because `tangent' only applies for
+				-- angle values between ]-pi / 2, pi / 2 [, we have to get the result
+				-- for the other quadrant of the ellipse by mirroring the value of x
+				-- and of y.
+				-- With `l = tan(angle)', we can write the following equivalences:
+				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2/a^2 + (l^2*x^2)/b^2 = 1
+				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2*b^2 + l^2*x^2*a^2 = a^2*b^2
+				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2*(b^2 + l^2*a^2) = a^2*b^2
+				-- x^2/a^2 + y^2/b^2 = 1 <=> x^2 = a^2*b^2 / (b^2 + l^2*a^2)
+				-- x^2/a^2 + y^2/b^2 = 1 <=> x = a*b / sqrt(b^2 + l^2*a^2)
 			l := tangent (angle)
 			a := ellipse.point_b.x / 2
 			b := ellipse.point_b.y / 2
 			x := (a * b) / sqrt (b^2 + l^2 * a^2)
 			y := l * x
-			if cosine (angle) > 0 then
+			
+			if cosine (angle) < 0 then
+					-- When we are in ]pi/2, 3*pi/2[, then we need to reverse
+					-- the coordinates. It looks strange like that, but don't forget
+					-- that although `x' is always positive, `y' might be negative depending
+					-- on the sign of `l'. This is why we need to reverse both coordinates, 
+					-- but because we also need to reverse the `y' value because in a figure world
+					-- the `y' coordinates go down and not up, the effect is null, thus no operation
+					-- on `y'.
 				x := -x
+			else
+					-- We need to reverse the y value, because in a figure world, the y coordinates
+					-- go down and not up.
 				y := -y
 			end
 			p.set_position (x.truncated_to_integer, -y.truncated_to_integer)

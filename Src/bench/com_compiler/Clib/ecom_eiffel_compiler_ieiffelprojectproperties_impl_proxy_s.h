@@ -63,12 +63,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Apply changes
-	-----------------------------------------------------------*/
-	void ccom_apply();
-
-
-	/*-----------------------------------------------------------
 	System name.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_system_name(  );
@@ -264,6 +258,24 @@ public:
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	void ccom_remove_assembly(  /* [in] */ EIF_OBJECT assembly_path );
+
+
+	/*-----------------------------------------------------------
+	Update the project Ace file according to the current settings.
+	-----------------------------------------------------------*/
+	void ccom_update_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name );
+
+
+	/*-----------------------------------------------------------
+	Synchronize the current settings with the project Ace file.
+	-----------------------------------------------------------*/
+	void ccom_synchronize_with_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name );
+
+
+	/*-----------------------------------------------------------
+	Apply changes
+	-----------------------------------------------------------*/
+	void ccom_apply();
 
 
 	/*-----------------------------------------------------------

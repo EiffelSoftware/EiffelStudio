@@ -41,12 +41,6 @@ public:
 	virtual ~IEiffelProjectProperties_impl_stub ();
 
 	/*-----------------------------------------------------------
-	Apply changes
-	-----------------------------------------------------------*/
-	STDMETHODIMP Apply( void );
-
-
-	/*-----------------------------------------------------------
 	System name.
 	-----------------------------------------------------------*/
 	STDMETHODIMP system_name(  /* [out, retval] */ BSTR * return_value );
@@ -242,6 +236,24 @@ public:
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_assembly(  /* [in] */ BSTR assembly_path );
+
+
+	/*-----------------------------------------------------------
+	Update the project Ace file according to the current settings.
+	-----------------------------------------------------------*/
+	STDMETHODIMP update_project_ace_file(  /* [in] */ BSTR project_ace_file_name );
+
+
+	/*-----------------------------------------------------------
+	Synchronize the current settings with the project Ace file.
+	-----------------------------------------------------------*/
+	STDMETHODIMP synchronize_with_project_ace_file(  /* [in] */ BSTR project_ace_file_name );
+
+
+	/*-----------------------------------------------------------
+	Apply changes
+	-----------------------------------------------------------*/
+	STDMETHODIMP Apply( void );
 
 
 	/*-----------------------------------------------------------

@@ -62,6 +62,7 @@ inherit
 			on_key_up,
 			on_kill_focus,
 			on_set_focus,
+			on_set_cursor,
 			on_accelerator_command
 		redefine
 			on_size,

@@ -43,6 +43,7 @@ inherit
 			on_key_down,
 			on_set_focus,
 			on_kill_focus,
+			on_set_cursor,
 			process_notification
 		redefine
 			default_style

@@ -78,6 +78,7 @@ inherit
 			on_kill_focus,
 			on_key_up,
 			on_key_down,
+			on_set_cursor,
 			wel_background_color,
 			wel_foreground_color,
 			on_en_change

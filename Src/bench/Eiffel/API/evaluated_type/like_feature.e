@@ -12,7 +12,7 @@ inherit
 	TYPE_A
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
-			is_basic, instantiated_in, same_as, meta_type, is_deep_equal,
+			is_basic, instantiated_in, same_as, meta_type,
 			has_associated_class
 		end;
 	SHARED_LIKE_CONTROLER;
@@ -67,12 +67,12 @@ feature -- Access
 						other_like_feat.feature_id = feature_id
 		end;
 
-    has_associated_class: BOOLEAN is
-            -- Does Current have an associated class?
-        do
+	has_associated_class: BOOLEAN is
+			-- Does Current have an associated class?
+		do
 			Result := evaluated_type /= Void and then
-            		evaluated_type.has_associated_class
-        end;
+			evaluated_type.has_associated_class
+		end;
 
 	associated_eclass: E_CLASS is
 			-- Associated class
@@ -247,25 +247,24 @@ end;
 			Result := actual_type.meta_type
 		end;
 
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			like_feat: LIKE_FEATURE
-		do
-			like_feat ?= other;
-			Result := like_feat /= Void and then
-				like_feat.rout_id.is_equal (rout_id) and then
-				equal (like_feat.class_id, class_id) and then
-				like_feat.feature_id = feature_id and then
-				like_feat.actual_type.is_deep_equal (actual_type) and then
-				feature_name.is_equal (like_feat.feature_name)
-		end;
-
 	create_info: CREATE_FEAT is
 			-- Byte code information for entity type creation
 		do
 			!!Result;
 			Result.set_feature_id (feature_id);
 			Result.set_feature_name (feature_name);
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := rout_id.is_equal (other.rout_id) and then
+				equal (class_id, other.class_id) and then
+				feature_id = other.feature_id and then
+				equivalent (actual_type, other.actual_type) and then
+				feature_name.is_equal (other.feature_name)
 		end
 
 feature {COMPILER_EXPORTER} -- Storage information for EiffelCase

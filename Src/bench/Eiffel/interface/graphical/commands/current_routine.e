@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			else
 				e_class := status.origin_class;
 				!! st.make (status.e_feature, e_class);
-				text_window.receive (st);
+				text_window.tool.process_feature (st);
 				if text_window.in_debug_format then
 					text_window.highlight_breakable (status.break_index)
 				end

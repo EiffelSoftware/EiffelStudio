@@ -25,6 +25,70 @@ feature {NONE} -- Initialization
 
 feature -- Removal
 
+	remove_feature (f: E_FEATURE) is
+			-- Remove debugging informatin for feature `f'.
+		require
+			valid_f: f /= Void;
+			f_is_debuggable: f.is_debuggable;
+			has_f: has_feature (f)
+		local
+			old_feat: E_FEATURE;
+			d_list: LINKED_LIST [DEBUGGABLE];
+			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			r_body_id: REAL_BODY_ID;
+			body_id: BODY_ID;
+			b_list: BREAK_LIST;
+			sent_bp, new_bp: like new_breakpoints;
+			bp: BREAKPOINT
+		do
+			d_list := debuggables (f);
+			body_id := f.body_id;
+			from
+				sent_bp := sent_breakpoints;
+				new_bp := new_breakpoints;
+				d_list.start
+			until
+				d_list.after
+			loop
+				from
+					r_body_id := d_list.item.real_body_id;
+					breakable_points := d_list.item.breakable_points;
+					breakable_points.start
+				until
+					breakable_points.after
+				loop
+					!! bp;
+					bp.set_offset (breakable_points.item.position);
+					bp.set_real_body_id (r_body_id);
+					sent_bp.remove (bp);
+					new_bp.remove (bp);
+					breakable_points.forth
+				end
+				d_list.forth
+			end;
+
+			old_feat := feature_of_body_id (debugged_routines, body_id);
+				-- Remove `f' from the stoppoint list
+			if old_feat /= Void then
+				debugged_routines.start;
+				debugged_routines.prune (old_feat);
+			else
+				old_feat := feature_of_body_id (removed_routines, body_id);
+				if old_feat /= Void then
+					removed_routines.start;
+					removed_routines.prune (old_feat)
+				end
+			end;
+			new_debuggables.remove (body_id);
+			sent_debuggables.remove (body_id);
+			if f.is_once then
+				once_debuggables.remove (body_id);
+				new_once_debuggables.remove (body_id)
+			end;
+		ensure
+			not_has_f: not has_feature (f)
+		end;
+
 	wipe_out is
 			-- Empty Current.
 		do
@@ -254,6 +318,104 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 		do
 			restore_debuggables;
 			restore_breakpoints;
+		end;
+
+	resynchronize_breakpoints is
+			-- Resychronize the breakpoints after a compilation.
+		require
+			has_debugging_info: not removed_routines.empty or else
+						not debugged_routines.empty
+		local
+			rem_routines: like removed_routines;
+			deb_routines: like debugged_routines;
+			rem_list: FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]];
+			deb_list: FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]];
+			cell2: CELL2 [E_FEATURE, LIST [INTEGER]];
+			f: E_FEATURE
+		do
+			rem_list := feature_bp_list (removed_routines)
+			deb_list := feature_bp_list (debugged_routines)
+
+			wipe_out; -- Clear the debugging information
+			-- Now update the debugging information
+			from
+				deb_list.start
+			until	
+				deb_list.after
+			loop
+				cell2 := deb_list.item;
+				f := cell2.item1.updated_version;
+				if f /= Void then
+					add_breakpoints_for_feature (f, cell2.item2)
+					debugged_routines.extend (f)
+				end;
+				deb_list.forth
+			end;	
+			from
+				rem_list.start
+			until	
+				rem_list.after
+			loop
+				cell2 := rem_list.item;
+				f := cell2.item1.updated_version;
+				if f /= Void then
+					add_breakpoints_for_feature (f, cell2.item2)
+					removed_routines.extend (f)
+				end;
+				rem_list.forth
+			end;	
+		end;
+
+	add_breakpoints_for_feature (feat: E_FEATURE; a_list: LIST [INTEGER]) is
+			-- Add all the breakpoints `a_list' for feature `feat'.
+		local
+			debug_bodies: LINKED_LIST [DEBUGGABLE];
+			bps: SORTED_TWO_WAY_LIST [AST_POSITION]
+			id: INTEGER
+		do
+			debug_bodies := feat.debuggables;
+			new_debuggables.put (debug_bodies, feat.body_id);
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				id := a_list.item;
+				from
+					debug_bodies.start
+				until	
+					debug_bodies.after
+				loop
+					bps := debug_bodies.item.breakable_points;
+					if id <= bps.count then
+						bps.i_th (id).set_stop (True)
+					end;
+					debug_bodies.forth
+				end;
+				a_list.forth
+			end
+		end;
+
+	feature_bp_list (list: like debugged_routines):
+				FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]] is
+			-- Create a list with features and breakpoints
+		local
+			f: E_FEATURE;
+			cell2: CELL2 [E_FEATURE, LIST [INTEGER]]
+		do
+			from
+				!! Result.make (list.count)
+				Result.start;
+				list.start
+			until
+				list.after
+			loop
+				f := list.item;
+				!! cell2.make (f, breakpoints_set_for (f));
+				Result.replace (cell2);
+				Result.forth;
+				list.forth
+			end
 		end;
 
 feature {APPLICATION_STATUS}

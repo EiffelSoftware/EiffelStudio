@@ -1131,7 +1131,6 @@ feature {NONE} -- XML
 										class_name := child_node.attribute_by_name ("NAME").value.as_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf = Void then
-											class_name.to_lower
 											classes_found := Eiffel_universe.classes_with_name (class_name)
 											if not classes_found.is_empty then
 													--| FIXME: What to do if classes_found.count > 1?

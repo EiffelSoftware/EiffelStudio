@@ -249,9 +249,11 @@ feature -- Status report
 		do
 			create class_file.make (file_name)
 			class_file.open_read
-			Classname_finder.parse (class_file)
-			new_class_name := Classname_finder.classname
-			class_file.close
+			if not class_file.is_open_read then
+				Classname_finder.parse (class_file)
+				new_class_name := Classname_finder.classname
+				class_file.close
+			end
 
 			if new_class_name /= Void then
 				new_class_name.to_lower

@@ -184,7 +184,7 @@ feature -- Initialization
 				l_assembly ?= Universe.cluster_of_path (l_assembly_location)
 				if l_assembly = Void then
 					create l_vd60.make (Current, l_cons_assembly)
-					Error_handler.insert_error (Void)
+					Error_handler.insert_error (l_vd60)
 				else
 					referenced_assemblies.put (l_assembly, i)
 				end

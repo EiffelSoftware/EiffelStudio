@@ -411,8 +411,10 @@ feature{NONE} -- Element change
 					end
 				end
 			end
+			if new_value /= Void and then new_value.count > 0 then
+				defaults.extend (new_special_option_sd (def_opt, new_value , True))
+			end
 			
-			defaults.extend (new_special_option_sd (def_opt, new_value, True))
 		end
 
 	set_boolean_default (def_opt: INTEGER; new_value: BOOLEAN) is

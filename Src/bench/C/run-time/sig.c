@@ -1098,7 +1098,7 @@ rt_public char esigiscaught(long int sig)
      */
 
 	if (esigdefined(sig) == (char) 1)
-		return ((sig_ign[sig] == 1)?(char)0:(char)1);
+		return (char) ((sig_ign[sig] == 1)? 0: 1);
 	else
 		return (char) 0;
 }

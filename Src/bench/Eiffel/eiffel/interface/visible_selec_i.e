@@ -85,6 +85,8 @@ feature
 					Cecil1.generate_final (Cecil_file, types.item.type_id);
 					types.forth
 				end;
+			elseif a_class.is_precompiled then
+				Cecil1.generate_precomp_workbench (Cecil_file, a_class.id);
 			else
 				Cecil1.generate_workbench (Cecil_file, a_class.id);
 			end;

@@ -43,8 +43,8 @@ feature -- Access
 		do
 				-- Only may be executed if the project settings window is
 				-- not displayed. There must also be a project open.
-			Result := (not project_settings_window.is_show_requested) and 
-				system_status.project_open = True
+			Result := system_status.project_open and then (not project_settings_window.is_show_requested)
+				
 		end
 
 feature -- Basic operations

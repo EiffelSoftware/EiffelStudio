@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 		deferred
 		end
 	
@@ -26,7 +26,7 @@ feature {EV_WIDGET} -- Initialization
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 		deferred
 		ensure
  			exists: not destroyed
@@ -41,7 +41,7 @@ feature {EV_WIDGET} -- Initialization
 			-- Common initializations for Gtk and Windows.
 		require
 			exists: not destroyed
-			valid_parent: parent_imp.is_valid
+			valid_parent: parent_imp /= Void and then not parent_imp.destroyed
 		do
 			set_expand (True)
 			set_vertical_resize (True)
@@ -228,7 +228,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
-			valid_color: color.is_valid
+			valid_color: is_valid (color)
 		deferred
 		ensure
 			background_color_set: background_color.equal_color(color)
@@ -238,7 +238,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
-			valid_color: color.is_valid
+			valid_color: is_valid (color)
 		deferred
 		ensure
 			foreground_color_set: foreground_color.equal_color(color)

@@ -1,26 +1,28 @@
 indexing
-	description:
-		"EiffelVision menu-container, implementation interface";
-	date: "$Date$";
+	description: 
+		"EiffelVision menu item container, implementation interface."
+	status: "See notice at end of class"
+	id: "$Id$"
+	date: "$Date$"
 	revision: "$Revision$"
-
+	
 deferred class
-	EV_MENU_CONTAINER_I
+	EV_MENU_ITEM_CONTAINER_I
 
 inherit
 	EV_ANY_I
 
-feature {EV_MENU} -- Implementation
+feature {EV_MENU_ITEM_CONTAINER} -- Implementation
 	
-	add_menu (menu: EV_MENU) is
-			-- Add `a_menu' into container.
+	add_item (an_item: EV_MENU_ITEM) is
+			-- Add `an_item' into container.
 		require
-			exists: not destroyed
-			valid_menu: is_valid (menu)
+			exist: not destroyed
+			valid_item: is_valid (an_item)
 		deferred
 		end
 
-end -- class EV_MENU_CONTAINER_I
+end -- class EV_MENU_ITEM_CONTAINER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

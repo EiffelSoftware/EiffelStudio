@@ -246,7 +246,7 @@ feature -- Element change
 			-- Make `pixmap' the new icon mask.
 		require
 			exists: not destroyed
-			valid_mask: pixmap.is_valid
+			valid_mask: is_valid (pixmap)
 		do
 			implementation.set_icon_mask (pixmap)
 		end
@@ -255,7 +255,7 @@ feature -- Element change
 			-- Make `pixmap' the new icon pixmap.
 		require
 			exists: not destroyed
-			valid_pixmap: pixmap.is_valid
+			valid_pixmap: is_valid (pixmap)
 		do
 			implementation.set_icon_pixmap (pixmap)
 		end
@@ -264,7 +264,7 @@ feature -- Element change
 			-- Make Current part of the group of `widget'.
 		require
 			exists: not destroyed
-			valid_widget: widget.is_valid
+			valid_widget: is_valid (widget)
 		do
 			implementation.set_widget_group (widget)
 		end

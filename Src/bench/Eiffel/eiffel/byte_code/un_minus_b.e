@@ -14,8 +14,14 @@ feature
 
 	generate_operator is
 			-- Generate the unary operator
+		local
+			l_buf: like buffer
 		do
-			buffer.putchar ('-');
+			l_buf := buffer
+				-- Space is important here otherwise eweasel test ccomp042
+				-- would fail like in `d := - - 3.5'.
+			l_buf.putchar (' ');
+			l_buf.putchar ('-');
 		end;
 
 	is_built_in: BOOLEAN is

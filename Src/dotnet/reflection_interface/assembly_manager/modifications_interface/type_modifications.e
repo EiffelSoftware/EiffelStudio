@@ -101,10 +101,10 @@ feature -- Basic Operations
 			non_void_feature_modification: feature_modification /= Void
 		do
 			if not features_modifications.contains_key (a_feature) then
-				features_modifications.add (a_feature, feature_modification)
+				features_modifications.extend (a_feature, feature_modification)
 			else
 				features_modifications.remove (a_feature)
-				features_modifications.add (a_feature, feature_modification)
+				features_modifications.extend (a_feature, feature_modification)
 			end
 		ensure
 			feature_modification_added: features_modifications.contains_value (feature_modification)

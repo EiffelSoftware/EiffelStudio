@@ -75,7 +75,7 @@ feature -- Basic Operations
 			a_panel.set_height (an_image.get_height)
 			a_panel.set_width (an_image.get_width)
 			a_panel.set_background_image (an_image)			
-			get_controls.add (a_panel)	
+			get_controls.extend (a_panel)	
 			
 				-- Text
 			create main_panel.make_panel
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			a_point.set_x (a_panel.get_width)
 			a_point.set_y (0)
 			main_panel.set_location (a_point)
-			get_controls.add (main_panel)
+			get_controls.extend (main_panel)
 			
 			display_text
 		rescue
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			end
 			a_label.set_font (a_font)
-			main_panel.get_controls.add (a_label)
+			main_panel.get_controls.extend (a_label)
 		end
 		
 end -- class ABOUT_DIALOG

@@ -218,8 +218,8 @@ feature -- Basic Operations
 			cancel_button.add_Click (on_cancel_delegate)
 			
 				-- Addition of get_controls
-			get_controls.add (ok_button)		
-			get_controls.add (cancel_button)
+			get_controls.extend (ok_button)		
+			get_controls.extend (cancel_button)
 
 			add_closed (on_cancel_delegate)
 			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
@@ -241,7 +241,7 @@ feature -- Event handling
 		do
 				-- Resize `panel'.
 			a_size.set_width (get_width - dictionary.Margin // 2)
-			if errors_list_view /= Void and then get_controls.contains (errors_list_view) then
+			if errors_list_view /= Void and then get_controls.has (errors_list_view) then
 				a_size.set_height (get_height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
 			else
 				a_size.set_height (get_height - 6 * dictionary.Margin - 5 * dictionary.Label_height - dictionary.Button_height)
@@ -257,7 +257,7 @@ feature -- Event handling
 			cancel_button.set_location (a_point)
 			
 				-- Resize and move `errors_list_view' if non Void
-			if errors_list_view /= Void and then get_controls.contains (errors_list_view) then
+			if errors_list_view /= Void and then get_controls.has (errors_list_view) then
 				a_point.set_X (0)
 				a_point.set_Y (get_height - 5 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)	
 				errors_list_view.set_location (a_point)	
@@ -320,7 +320,7 @@ feature -- Event handling
 						if an_array /= Void and then an_array.count = 2 then
 							modified_feature ?= an_array.item (0)
 							if modified_feature /= Void then
-								if type_modifications.features_modifications.contains (modified_feature) then
+								if type_modifications.features_modifications.has (modified_feature) then
 									feature_modifications ?= type_modifications.features_modifications.get_item (modified_feature)
 								else
 									create feature_modifications.make_from_info (modified_feature.get_eiffel_name)
@@ -401,7 +401,7 @@ feature -- Event handling
 					a_size.set_width (get_width - dictionary.Margin // 2)
 					a_size.set_height (get_height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
 					panel.set_size (a_size)
-					if errors_list_view /= Void and then get_controls.contains (errors_list_view) then
+					if errors_list_view /= Void and then get_controls.has (errors_list_view) then
 						get_controls.remove (errors_list_view)
 					end
 					display_errors (type_view_handler.class_error_message, type_view_handler.errors_in_features, type_view_handler.errors_in_arguments)
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			panel.set_border_style (border_style.none)
 			panel.set_back_color (dictionary.White_color)
 			panel.set_auto_scroll (True)
-			get_controls.add (panel)
+			get_controls.extend (panel)
 			create on_click_delegate.make_eventhandler (Current, $on_click_action)
 			panel.add_click (on_click_delegate)
 			
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			end
 			a_label.set_font (a_font)
-			panel.get_controls.add (a_label)
+			panel.get_controls.extend (a_label)
 			label_width := a_label.get_width
 			created_label := a_label
 		end
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 			a_label.set_text_align (alignment.middle_left)
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)
 			a_label.set_font (a_font)
-			get_controls.add (a_label)
+			get_controls.extend (a_label)
 		end	
 		
 	set_editable_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
@@ -868,7 +868,7 @@ feature {NONE} -- Implementation
 			a_text_box.set_back_color (dictionary.Editable_color)
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Italic)
 			a_text_box.set_font (a_font)
-			panel.get_controls.add (a_text_box)
+			panel.get_controls.extend (a_text_box)
 		end
 		
 	build_inherit_clause (an_eiffel_class: like eiffel_class) is
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 			label_width := 0
 			parents := an_eiffel_class.get_Parents
 			
-			if parents.get_Count > 1 or has_any_in_clause or (parents.get_Count = 1 and (not parents.Contains (eiffel_dictionary.Any_class))) then
+			if parents.get_Count > 1 or has_any_in_clause or (parents.get_Count = 1 and (not parents.has (eiffel_dictionary.Any_class))) then
 				create_label (eiffel_dictionary.Inherit_keyword, dictionary.Margin, dictionary.Margin + panel_height, dictionary.Keyword_color, True)
 				panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 				
@@ -1144,14 +1144,14 @@ feature {NONE} -- Implementation
 			external_name: "SpecialClasses"
 		once
 			create Result.make
-			Result.add (eiffel_dictionary.Integer_class, eiffel_dictionary.Integer_class)
-			Result.add (eiffel_dictionary.Integer16_class, eiffel_dictionary.Integer16_class)
-			Result.add (eiffel_dictionary.Integer64_class, eiffel_dictionary.Integer64_class)
-			Result.add (eiffel_dictionary.Integer8_class, eiffel_dictionary.Integer8_class)
-			Result.add (eiffel_dictionary.Double_class, eiffel_dictionary.Double_class)
-			Result.add (eiffel_dictionary.Real_class, eiffel_dictionary.Real_class)
-			Result.add (eiffel_dictionary.Boolean_class, eiffel_dictionary.Boolean_class)
-			Result.add (eiffel_dictionary.Character_class, eiffel_dictionary.Character_class)
+			Result.extend (eiffel_dictionary.Integer_class, eiffel_dictionary.Integer_class)
+			Result.extend (eiffel_dictionary.Integer16_class, eiffel_dictionary.Integer16_class)
+			Result.extend (eiffel_dictionary.Integer64_class, eiffel_dictionary.Integer64_class)
+			Result.extend (eiffel_dictionary.Integer8_class, eiffel_dictionary.Integer8_class)
+			Result.extend (eiffel_dictionary.Double_class, eiffel_dictionary.Double_class)
+			Result.extend (eiffel_dictionary.Real_class, eiffel_dictionary.Real_class)
+			Result.extend (eiffel_dictionary.Boolean_class, eiffel_dictionary.Boolean_class)
+			Result.extend (eiffel_dictionary.Character_class, eiffel_dictionary.Character_class)
 		ensure
 			special_classes_created: Result /= Void 
 			valid_special_classes: Result.get_count = 8
@@ -1304,7 +1304,7 @@ feature {NONE} -- Implementation
 			is_editable_feature: BOOLEAN
 			style: SYSTEM_DRAWING_FONTSTYLE
 		do
-			is_unary_operator := an_eiffel_class.get_Unary_Operators_Features.Contains (a_feature)	
+			is_unary_operator := an_eiffel_class.get_Unary_Operators_Features.has (a_feature)	
 			label_width := 0
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Italic)
 			is_editable_feature := a_feature.get_new_slot
@@ -1365,7 +1365,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			new_label_width := new_label_width +  feature_name_width
-			feature_names_boxes.add (a_text_box, a_feature)
+			feature_names_boxes.extend (a_text_box, a_feature)
 			
 				-- feature arguments
 			arguments := a_feature.get_Arguments
@@ -1408,7 +1408,7 @@ feature {NONE} -- Implementation
 						create an_array.make (2)
 						an_array.put (0, a_feature)
 						an_array.put (1, an_argument)
-						feature_arguments_boxes.add (a_text_box, an_array)
+						feature_arguments_boxes.extend (a_text_box, an_array)
 					end
 					create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 					new_label_width := new_label_width + label_width
@@ -1559,7 +1559,7 @@ feature {NONE} -- Implementation
 				create list_view_item.make_1 (message_from_class_error (class_error_message))
 				list_view_item.set_fore_color (dictionary.Red_color)
 				list_view_item := errors_list_view.get_items.add_list_view_item (list_view_item)
-				errors_table.add (0, class_name_text_box)
+				errors_table.extend (0, class_name_text_box)
 			end
 			
 			if errors_in_features /= Void and then errors_in_features.get_count > 0 then
@@ -1575,7 +1575,7 @@ feature {NONE} -- Implementation
 							create list_view_item.make_1 (message_from_feature_error (a_feature, an_error_message))
 							list_view_item.set_fore_color (dictionary.Red_color)
 							list_view_item := errors_list_view.get_items.add_list_view_item (list_view_item)
-							errors_table.add (errors_list_view.get_items.get_count - 1, feature_text_box (a_feature))
+							errors_table.extend (errors_list_view.get_items.get_count - 1, feature_text_box (a_feature))
 						end
 					end
 				end
@@ -1597,7 +1597,7 @@ feature {NONE} -- Implementation
 								create list_view_item.make_1 (message_from_argument_error (a_feature, an_argument, an_error_message))
 								list_view_item.set_fore_color (dictionary.Red_color)
 								list_view_item := errors_list_view.get_items.add_list_view_item (list_view_item)
-								errors_table.add (errors_list_view.get_items.get_count - 1, argument_text_box (an_argument, a_feature))
+								errors_table.extend (errors_list_view.get_items.get_count - 1, argument_text_box (an_argument, a_feature))
 							end
 						end
 					end
@@ -1605,7 +1605,7 @@ feature {NONE} -- Implementation
 			end	
 			create on_item_delegate.make_eventhandler (Current, $on_item)
 			errors_list_view.add_Click (on_item_delegate)
-			get_controls.add (errors_list_view)
+			get_controls.extend (errors_list_view)
 		end
 
 	message_from_class_error (an_error_message: STRING): STRING is

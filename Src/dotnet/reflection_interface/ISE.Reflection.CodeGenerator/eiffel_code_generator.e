@@ -306,14 +306,14 @@ feature {NONE} -- Implementation
 			external_name: "SpecialClasses"
 		once
 			create Result.make
-			Result.add (Integer_class, Integer_class)
-			Result.add (Integer_16_class, Integer_16_class)
-			Result.add (Integer_64_class, Integer_64_class)
-			Result.add (Integer_8_class, Integer_8_class)
-			Result.add (Double_class, Double_class)
-			Result.add (Real_class, Real_class)
-			Result.add (Boolean_class, Boolean_class)
-			Result.add (Character_class, Character_class)
+			Result.extend (Integer_class, Integer_class)
+			Result.extend (Integer_16_class, Integer_16_class)
+			Result.extend (Integer_64_class, Integer_64_class)
+			Result.extend (Integer_8_class, Integer_8_class)
+			Result.extend (Double_class, Double_class)
+			Result.extend (Real_class, Real_class)
+			Result.extend (Boolean_class, Boolean_class)
+			Result.extend (Character_class, Character_class)
 		ensure
 			special_classes_created: Result /= Void 
 			valid_special_classes: Result.get_count = 8
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 		do
 			parents := eiffel_class.get_Parents
 			
-			if parents.get_count > 1 or has_any_rename or has_any_undefine or  has_any_redefine or (parents.get_count = 1 and (not parents.Contains (Any_class))) then
+			if parents.get_count > 1 or has_any_rename or has_any_undefine or  has_any_redefine or (parents.get_count = 1 and (not parents.has (Any_class))) then
 				generated_code := generated_code.Concat_String_String (generated_code, Inherit_keyword)
 				
 				parents_names := parents.get_Keys
@@ -767,8 +767,8 @@ feature {NONE} -- Implementation
 			support.make
 			generic_type_names := support.get_generic_type_names
 			
-			is_binary_operator := eiffel_class.get_Binary_Operators_Features.Contains (a_feature)
-			is_unary_operator := eiffel_class.get_Unary_Operators_Features.Contains (a_feature)	
+			is_binary_operator := eiffel_class.get_Binary_Operators_Features.has (a_feature)
+			is_unary_operator := eiffel_class.get_Unary_Operators_Features.has (a_feature)	
 
 			generated_code := generated_code.Concat_String_String (generated_code, Tab)
 
@@ -960,8 +960,8 @@ feature {NONE} -- Implementation
 		do
 			create formatter.make
 			signature := feature_signature (a_feature)
-			is_binary_operator := eiffel_class.get_Binary_Operators_Features.Contains (a_feature)
-			is_unary_operator := eiffel_class.get_Unary_Operators_Features.Contains (a_feature)	
+			is_binary_operator := eiffel_class.get_Binary_Operators_Features.has (a_feature)
+			is_unary_operator := eiffel_class.get_Unary_Operators_Features.has (a_feature)	
 			
 			if a_feature.get_Is_Method then
 				if is_unary_operator or is_binary_operator then
@@ -1045,8 +1045,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_2 ('%U', 0)
 			
-			is_binary_operator := eiffel_class.get_Binary_Operators_Features.Contains (a_feature)
-			is_unary_operator := eiffel_class.get_Unary_Operators_Features.Contains (a_feature)
+			is_binary_operator := eiffel_class.get_Binary_Operators_Features.has (a_feature)
+			is_unary_operator := eiffel_class.get_Unary_Operators_Features.has (a_feature)
 
 			if a_feature.get_Is_Method then
 				arguments := a_feature.get_Arguments

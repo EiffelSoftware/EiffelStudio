@@ -232,7 +232,7 @@ feature -- Retrieval
 
 				if file.exists (index_path) then
 					create xml_reader.make_xmltextreader_10 (index_path)
-					xml_reader.set_Whitespace_Handling (white_space_handling.auto_dual)
+					xml_reader.set_Whitespace_Handling (white_space_handling.None)
 					xml_reader.Read_Start_Element_String (Assemblies_Element)
 					last_read_successful := True
 					from					
@@ -266,7 +266,7 @@ feature -- Retrieval
 										if file.exists (assembly_xml_filename) then
 											an_eiffel_assembly := eiffel_assembly (assembly_xml_filename)
 											if an_eiffel_assembly /= Void then
-												assembly_added := Result.Add (an_eiffel_assembly)
+												assembly_added := Result.extend (an_eiffel_assembly)
 												last_read_successful := True
 											else
 												support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)

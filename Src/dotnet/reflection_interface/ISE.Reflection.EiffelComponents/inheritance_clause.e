@@ -50,7 +50,7 @@ feature -- Status Report
 	is_equal (obj: INHERITANCE_CLAUSE): BOOLEAN is
 		indexing
 			description: "Is Current equals to `obj'?"
-			external_name: "IsEqual"
+			external_name: "Equals"
 		do
 			Result := source_name.to_lower.equals_string (obj.source_name.to_lower)
 		end

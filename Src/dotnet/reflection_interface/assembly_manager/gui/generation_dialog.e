@@ -99,7 +99,7 @@ feature -- Basic Operations
 			assembly_label.set_auto_size (True)
 			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			get_controls.add (assembly_label)			
+			get_controls.extend (assembly_label)			
 			
 			create_assembly_labels
 			
@@ -111,7 +111,7 @@ feature -- Basic Operations
 			destination_path_label.set_location (a_point)
 			destination_path_label.set_auto_size (True)
 			destination_path_label.set_font (label_font)
-			get_controls.add (destination_path_label)
+			get_controls.extend (destination_path_label)
 
 				-- Destination path text box
 			create destination_path_text_box.make_textbox
@@ -122,7 +122,7 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Label_height)
 			destination_path_text_box.set_size (a_size)
 			destination_path_text_box.set_enabled (False)
-			get_controls.add (destination_path_text_box)
+			get_controls.extend (destination_path_text_box)
 
 				-- Browse button
 			create browse_button.make_button
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			browse_button.set_enabled (False)
 			create on_browse_event_handler_delegate.make_eventhandler (Current, $on_browse_event_handler)
 			browse_button.add_Click (on_browse_event_handler_delegate)
-			get_controls.add (browse_button)
+			get_controls.extend (browse_button)
 			
 				-- Explanations for destination path
 			create explanation_label.make_label
@@ -145,7 +145,7 @@ feature -- Basic Operations
 			a_point.set_Y (4 * dictionary.Margin + 6 * dictionary.Label_height)
 			explanation_label.set_location (a_point)
 			explanation_label.set_auto_size (True)
-			get_controls.add (explanation_label)
+			get_controls.extend (explanation_label)
 		end
 
 feature -- Event handling

@@ -208,7 +208,7 @@ feature -- Basic Operations
 							not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
 						loop
 							a_folder_name := xml_reader.Read_Element_String_String (Assembly_Filename_Element)
-							assembly_folder_name_added := assembly_folders_list.Add (a_folder_name)
+							assembly_folder_name_added := assembly_folders_list.extend (a_folder_name)
 						end
 						xml_reader.Read_End_Element
 						xml_reader.Close
@@ -562,13 +562,13 @@ feature {NONE} -- Implementation
 						not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
 					loop
 						an_assembly_folder_name := xml_reader.read_element_string_string (Assembly_Filename_Element)
-						assembly_folder_name_added := assembly_folders_list.Add (an_assembly_folder_name)
+						assembly_folder_name_added := assembly_folders_list.extend (an_assembly_folder_name)
 					end
 					xml_reader.Read_End_Element
 					xml_reader.Close
 					relative_folder_path := assembly_folder_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
-					if not assembly_folders_list.Contains (relative_folder_path) then
-						assembly_folder_name_added := assembly_folders_list.Add (relative_folder_path)				
+					if not assembly_folders_list.has (relative_folder_path) then
+						assembly_folder_name_added := assembly_folders_list.extend (relative_folder_path)				
 						create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 							-- Set generation options
 						text_writer.set_Formatting (formatting.indented)
@@ -841,7 +841,7 @@ feature {NONE} -- Implementation
 						not xml_reader.get_Name.Equals_String (Assembly_Type_Filename_Element)
 					loop
 						a_type_name := xml_reader.Read_Element_String_String (Assembly_Type_Filename_Element)
-						added := Result.Add (a_type_name)
+						added := Result.extend (a_type_name)
 					end
 					xml_reader.Read_End_Element
 				end

@@ -51,7 +51,7 @@ feature -- Basic Operations
 			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.add (a_label)
+			get_controls.extend (a_label)
 
 			create a_label.make_label
 			a_label.set_font (a_font)
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.add (a_label)
+			get_controls.extend (a_label)
 
 			create a_label.make_label
 			a_label.set_font (a_font)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			a_point.set_Y (dictionary.Margin + 3 * dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.add (a_label)
+			get_controls.extend (a_label)
 		end
 		
 end -- class DIALOG

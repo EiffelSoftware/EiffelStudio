@@ -132,7 +132,7 @@ feature -- Access
 					loop
 						type_filename := assembly_description.read_element_string_string (xml_elements.Assembly_type_filename_element)
 						type_filename := type_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
-						added := Result.add (generation_support.eiffel_class_from_xml (type_filename))
+						added := Result.extend (generation_support.eiffel_class_from_xml (type_filename))
 					end
 					assembly_description.read_end_element
 				end

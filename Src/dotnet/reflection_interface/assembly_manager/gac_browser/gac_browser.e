@@ -34,7 +34,7 @@ feature -- Access
 				i >= assemblies.count
 			loop
 				versions := assembly_versions (assemblies.item (i))
-				Result.add_range (versions)
+				Result.append (versions)
 				i := i + 1
 			end
 		ensure
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 					assembly := load_from_file (files.item (j).get_full_name)
 					if assembly /= Void then
 						desc := assembly_descriptor_from_name (assembly)
-						n := Result.add (desc)
+						n := Result.extend (desc)
 					end
 					j := j + 1
 				end

@@ -156,7 +156,7 @@ feature -- Basic Operations
 							create an_array.make (2)
 							an_array.put (0, a_feature)
 							an_array.put (1, a_feature_modifications)
-							added := changes.add (an_array)
+							added := changes.extend (an_array)
 						end
 					end
 				end
@@ -231,16 +231,16 @@ feature {NONE} -- Implementation
 					new_name := a_feature_modifications.new_feature_name
 					if recursive_exists (new_name) then
 						is_valid := False
-						if errors_in_features.contains (a_feature) then
+						if errors_in_features.has (a_feature) then
 							errors_in_features.remove (a_feature)
 						end
-						errors_in_features.add (a_feature, Feature_exists_error)
-					elseif reserved_words.contains (new_name.to_lower) then
+						errors_in_features.extend (a_feature, Feature_exists_error)
+					elseif reserved_words.has (new_name.to_lower) then
 						is_valid := False
-						if errors_in_features.contains (a_feature) then
+						if errors_in_features.has (a_feature) then
 							errors_in_features.remove (a_feature)
 						end					
-						errors_in_features.add (a_feature, Feature_clash_with_reserved_word)
+						errors_in_features.extend (a_feature, Feature_clash_with_reserved_word)
 					else
 						is_valid := is_valid and True
 						old_name := a_feature_modifications.old_feature_name					
@@ -252,10 +252,10 @@ feature {NONE} -- Implementation
 					end
 				else
 					is_valid := False
-					if errors_in_features.contains (a_feature) then
+					if errors_in_features.has (a_feature) then
 						errors_in_features.remove (a_feature) 
 					end
-					errors_in_features.add (a_feature, Empty_feature_name)
+					errors_in_features.extend (a_feature, Empty_feature_name)
 				end 
 			end
 				-- Update feature arguments
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 							create an_array.make (2)
 							an_array.put (0, an_argument)
 							an_array.put (1, new_name)
-							added := changes.add (an_array)						
+							added := changes.extend (an_array)						
 						end
 					end
 				end			
@@ -316,28 +316,28 @@ feature {NONE} -- Implementation
 					create an_array.make (2)
 					an_array.put (0, a_feature)
 					an_array.put (1, an_argument)
-					if errors_in_arguments.contains (an_array) then
+					if errors_in_arguments.has (an_array) then
 						errors_in_arguments.remove (an_array)
 					end
-					errors_in_arguments.add (an_array, Clash_with_feature_name)
-				elseif reserved_words.contains (new_name.to_lower) then
+					errors_in_arguments.extend (an_array, Clash_with_feature_name)
+				elseif reserved_words.has (new_name.to_lower) then
 					is_valid := False
 					create an_array.make (2)
 					an_array.put (0, a_feature)
 					an_array.put (1, an_argument)
-					if errors_in_arguments.contains (an_array) then
+					if errors_in_arguments.has (an_array) then
 						errors_in_arguments.remove (an_array)
 					end
-					errors_in_arguments.add (an_array, Argument_clash_with_reserved_word)	
+					errors_in_arguments.extend (an_array, Argument_clash_with_reserved_word)	
 				elseif argument_exists (new_name, a_feature) then
 					is_valid := False
 					create an_array.make (2)
 					an_array.put (0, a_feature)
 					an_array.put (1, an_argument)
-					if errors_in_arguments.contains (an_array) then
+					if errors_in_arguments.has (an_array) then
 						errors_in_arguments.remove (an_array)
 					end
-					errors_in_arguments.add (an_array, Argument_name_exists)
+					errors_in_arguments.extend (an_array, Argument_name_exists)
 				else
 					is_valid := is_valid and True
 					an_argument.set_eiffel_name (new_name)
@@ -348,10 +348,10 @@ feature {NONE} -- Implementation
 				create an_array.make (2)
 				an_array.put (0, a_feature)
 				an_array.put (1, an_argument)
-				if errors_in_arguments.contains (an_array) then
+				if errors_in_arguments.has (an_array) then
 					errors_in_arguments.remove (an_array)
 				end
-				errors_in_arguments.add (an_array, Empty_argument_name)
+				errors_in_arguments.extend (an_array, Empty_argument_name)
 			end
 		end
 		
@@ -431,11 +431,11 @@ feature {NONE} -- Implementation
 				a_child ?= children.get_item (i)
 				if a_child /= Void then
 					parents := a_child.get_parents
-					if parents.contains (eiffel_class.get_eiffel_name) then
+					if parents.has (eiffel_class.get_eiffel_name) then
 						clauses ?= parents.get_item (eiffel_class.get_eiffel_name)
 						if clauses /= Void then
 							parents.remove (eiffel_class.get_eiffel_name)
-							parents.add (new_name, clauses)
+							parents.extend (new_name, clauses)
 						end
 					end
 				end
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			loop
 				a_child ?= children.get_item (i)
 				if a_child /= Void and then exists (a_child, old_name) then
-					children_to_change.add (a_child, eiffel_feature)
+					children_to_change.extend(a_child, eiffel_feature)
 				end
 				i := i + 1
 			end
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			loop
 				a_parent_name ?= parents_enumerator.get_current
 				if a_parent_name /= Void and then a_parent_name.get_length > 0 then
-					added := parent_names.add (a_parent_name)
+					added := parent_names.extend (a_parent_name)
 					--update_inheritance_clauses (a_parent_name, old_name, new_name)
 				end
 			end
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			if not has_rename_clause (old_name) and then (is_in_list (undefine_clauses, old_name) or is_in_list (redefine_clauses, old_name) or is_in_list (select_clauses, old_name)) then
 				create a_rename_clause.make_renameclause
 				a_rename_clause.make_from_info (old_name, new_name)
-				added := rename_clauses.add (a_rename_clause)
+				added := rename_clauses.extend (a_rename_clause)
 			end
 			intern_update_inheritance_clauses (old_name, new_name)
 			commit_parent_changes (parent_name, eiffel_class)
@@ -610,28 +610,28 @@ feature {NONE} -- Implementation
 			a_select_clause: ISE_REFLECTION_SELECTCLAUSE
 		do
 		--	if has_rename_clause (old_name) then
-		--		rename_clauses.removeat (index_in_list)
+		--		rename_clauses.prune_i_th (index_in_list)
 		--		create a_rename_clause.make_renameclause
 		--		a_rename_clause.makefrominfo (rename_source, new_name)
-		--		added := rename_clauses.add (a_rename_clause)
+		--		added := rename_clauses.extend (a_rename_clause)
 		--	end
 			if is_in_list (undefine_clauses, old_name) then
-				undefine_clauses.remove_at (index_in_list)
+				undefine_clauses.prune_i_th (index_in_list)
 				create an_undefine_clause.make_undefineclause
 				an_undefine_clause.make (new_name)
-				added := undefine_clauses.add (an_undefine_clause)
+				added := undefine_clauses.extend (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
-				redefine_clauses.remove_at (index_in_list)
+				redefine_clauses.prune_i_th (index_in_list)
 				create a_redefine_clause.make_redefineclause
 				a_redefine_clause.make (new_name)				
-				added := redefine_clauses.add (a_redefine_clause)			
+				added := redefine_clauses.extend (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
-				select_clauses.remove_at (index_in_list)
+				select_clauses.prune_i_th (index_in_list)
 				create a_select_clause.make_selectclause
 				a_select_clause.make (new_name)
-				added := select_clauses.add (a_select_clause)			
+				added := select_clauses.extend (a_select_clause)			
 			end
 		ensure
 			not_in_undefine_clauses: not is_in_list (undefine_clauses, old_name)
@@ -648,10 +648,10 @@ feature {NONE} -- Implementation
 			non_void_inheritance_clauses: new_inheritance_clauses /= Void
 			non_void_class: a_class /= Void
 		do
-			if new_inheritance_clauses.contains (parent_name) then
+			if new_inheritance_clauses.has (parent_name) then
 				new_inheritance_clauses.remove (parent_name)
-				if a_class.get_parents.contains (parent_name) and not a_class.get_eiffel_name.equals_string (parent_name) then
-					new_inheritance_clauses.add (parent_name, inheritance_clauses)
+				if a_class.get_parents.has (parent_name) and not a_class.get_eiffel_name.equals_string (parent_name) then
+					new_inheritance_clauses.extend (parent_name, inheritance_clauses)
 				end
 			end
 		end
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 				a_child ?= children.get_item (i)
 				if a_child /= Void then
 					parents := a_child.get_parents
-					if parents.contains (eiffel_class.get_eiffel_name) then
+					if parents.has (eiffel_class.get_eiffel_name) then
 						new_inheritance_clauses ?= parents.clone
 						clauses ?= parents.get_item (eiffel_class.get_eiffel_name) 
 						if clauses /= Void and then clauses.count = 5 then
@@ -886,64 +886,64 @@ feature {NONE} -- Implementation
 			added: INTEGER
 		once
 			create Result.make
-			added := Result.add ("current")
-			added := Result.add ("class")
-			added := Result.add ("end")
-			added := Result.add ("indexing")
-			added := Result.add ("deferred")
-			added := Result.add ("expanded")
-			added := Result.add ("obsolete")
-			added := Result.add ("feature")
-			added := Result.add ("is")
-			added := Result.add ("frozen")
-			added := Result.add ("prefix")
-			added := Result.add ("infix")
-			added := Result.add ("not")
-			added := Result.add ("and")
-			added := Result.add ("or")
-			added := Result.add ("xor")
-			added := Result.add ("else")
-			added := Result.add ("implies")
-			added := Result.add ("do")
-			added := Result.add ("once")
-			added := Result.add ("local")
-			added := Result.add ("old")
-			added := Result.add ("like")
-			added := Result.add ("if")
-			added := Result.add ("elseif")
-			added := Result.add ("create")
-			added := Result.add ("then")
-			added := Result.add ("inspect")
-			added := Result.add ("when")
-			added := Result.add ("from")
-			added := Result.add ("loop")
-			added := Result.add ("precursor")
-			added := Result.add ("until")
-			added := Result.add ("debug")
-			added := Result.add ("rescue")
-			added := Result.add ("retry")
-			added := Result.add ("unique")
-			added := Result.add ("creation")
-			added := Result.add ("inherit")
-			added := Result.add ("rename")
-			added := Result.add ("as")
-			added := Result.add ("export")
-			added := Result.add ("all")
-			added := Result.add ("redefine")
-			added := Result.add ("undefine")
-			added := Result.add ("select")
-			added := Result.add ("strip")
-			added := Result.add ("external")
-			added := Result.add ("alias")
-			added := Result.add ("require")
-			added := Result.add ("ensure")
-			added := Result.add ("invariant")
-			added := Result.add ("check")
-			added := Result.add ("variant")
-			added := Result.add ("true")
-			added := Result.add ("false")
-			added := Result.add ("result")
-			added := Result.add ("bit")
+			added := Result.extend ("current")
+			added := Result.extend ("class")
+			added := Result.extend ("end")
+			added := Result.extend ("indexing")
+			added := Result.extend ("deferred")
+			added := Result.extend ("expanded")
+			added := Result.extend ("obsolete")
+			added := Result.extend ("feature")
+			added := Result.extend ("is")
+			added := Result.extend ("frozen")
+			added := Result.extend ("prefix")
+			added := Result.extend ("infix")
+			added := Result.extend ("not")
+			added := Result.extend ("and")
+			added := Result.extend ("or")
+			added := Result.extend ("xor")
+			added := Result.extend ("else")
+			added := Result.extend ("implies")
+			added := Result.extend ("do")
+			added := Result.extend ("once")
+			added := Result.extend ("local")
+			added := Result.extend ("old")
+			added := Result.extend ("like")
+			added := Result.extend ("if")
+			added := Result.extend ("elseif")
+			added := Result.extend ("create")
+			added := Result.extend ("then")
+			added := Result.extend ("inspect")
+			added := Result.extend ("when")
+			added := Result.extend ("from")
+			added := Result.extend ("loop")
+			added := Result.extend ("precursor")
+			added := Result.extend ("until")
+			added := Result.extend ("debug")
+			added := Result.extend ("rescue")
+			added := Result.extend ("retry")
+			added := Result.extend ("unique")
+			added := Result.extend ("creation")
+			added := Result.extend ("inherit")
+			added := Result.extend ("rename")
+			added := Result.extend ("as")
+			added := Result.extend ("export")
+			added := Result.extend ("all")
+			added := Result.extend ("redefine")
+			added := Result.extend ("undefine")
+			added := Result.extend ("select")
+			added := Result.extend ("strip")
+			added := Result.extend ("external")
+			added := Result.extend ("alias")
+			added := Result.extend ("require")
+			added := Result.extend ("ensure")
+			added := Result.extend ("invariant")
+			added := Result.extend ("check")
+			added := Result.extend ("variant")
+			added := Result.extend ("true")
+			added := Result.extend ("false")
+			added := Result.extend ("result")
+			added := Result.extend ("bit")
 		ensure
 			list_created: Result /= Void
 		end

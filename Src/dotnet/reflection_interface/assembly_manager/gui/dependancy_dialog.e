@@ -200,10 +200,10 @@ feature {NONE} -- Implementation
 			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
 			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_name_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_version_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_culture_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_public_key_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_version_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_culture_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_public_key_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
 				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 					if an_assembly_name /= Void then
 						a_descriptor := support.assembly_descriptor_from_name (an_assembly_name)
 						if a_descriptor /= Void then
-							added := dependancies_list.add (a_descriptor)
+							added := dependancies_list.extend (a_descriptor)
 						end
 					end
 					i := i + 1

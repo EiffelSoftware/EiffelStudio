@@ -58,8 +58,8 @@ feature -- Access
 			added: INTEGER
 		once
 			create Result.make
-			added := Result.add (dictionary.Mscorlib_assembly_name)
-			added := Result.add (dictionary.System_assembly_name)
+			added := Result.extend (dictionary.Mscorlib_assembly_name)
+			added := Result.extend (dictionary.System_assembly_name)
 		ensure
 			list_created: Result /= Void
 			valid_list: Result.get_count = 2
@@ -100,7 +100,7 @@ feature -- Status Setting
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
-			Result := non_removable_assemblies.contains (a_descriptor.get_name.to_lower)
+			Result := non_removable_assemblies.has (a_descriptor.get_name.to_lower)
 		end
 		
 feature -- Basic Operations
@@ -182,10 +182,10 @@ feature -- Basic Operations
 			no_button.add_Click (on_no_event_handler_delegate)
 			
 				-- Addition of get_controls
-			get_controls.add (assembly_label)
-			get_controls.add (question_label)
-			get_controls.add (yes_button)
-			get_controls.add (no_button)
+			get_controls.extend (assembly_label)
+			get_controls.extend (question_label)
+			get_controls.extend (yes_button)
+			get_controls.extend (no_button)
 		rescue
 			retried := True
 			retry

@@ -107,7 +107,7 @@ feature -- Access
 				not enumerator.move_next
 			loop
 				a_code ?= enumerator.get_current
-				added := Result.add (error_info (a_code))	
+				added := Result.extend (error_info (a_code))	
 				moved := enumerator.move_next
 			end
 		ensure
@@ -129,7 +129,7 @@ feature -- Basic Operations
 			create description_array.make (2)
 			description_array.put (0, an_error.name)
 			description_array.put (1, an_error.description)
-			errors_table.Add (an_error.code, description_array)
+			errors_table.extend (an_error.code, description_array)
 		ensure
 			error_added: errors_table.contains_key (an_error.code)
 			table_updated: errors_table.get_count = old errors_table.get_count + 1
@@ -153,7 +153,7 @@ feature -- Basic Operations
 				new_description_array.put (0, new_name)
 				new_description_array.put (1, description_array.item (1))
 				errors_table.Remove (a_code)
-				errors_table.Add (a_code, new_description_array)
+				errors_table.extend (a_code, new_description_array)
 			end
 		ensure
 			name_replaced: error_name (a_code).Equals_String (new_name)
@@ -177,7 +177,7 @@ feature -- Basic Operations
 				new_description_array.put (0, description_array.item (0))
 				new_description_array.put (1, new_description)
 				errors_table.Remove (a_code)
-				errors_table.Add (a_code, new_description_array)
+				errors_table.extend (a_code, new_description_array)
 			end
 		ensure
 			decription_replaced: error_description (a_code).Equals_String (new_description)

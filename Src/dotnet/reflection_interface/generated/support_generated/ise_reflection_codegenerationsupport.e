@@ -113,18 +113,18 @@ feature -- Basic Operations
 			"GenerateFeatureAssertions"
 		end
 
-	has_read_lock (a_folder_name: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"HasReadLock"
-		end
-
 	create_folder (a_path: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"CreateFolder"
+		end
+
+	generate_parents is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateParents"
 		end
 
 	has_write_lock (a_folder_name: STRING): BOOLEAN is
@@ -141,18 +141,11 @@ feature -- Basic Operations
 			"GenerateClassBody"
 		end
 
-	read_lock_filename: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"ReadLockFilename"
-		end
-
-	generate_generic_derivations is
+	generate_comments is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateGenericDerivations"
+			"GenerateComments"
 		end
 
 	set_feature_info is
@@ -176,11 +169,11 @@ feature -- Basic Operations
 			"GenerateFeatures"
 		end
 
-	generate_class_header is
+	read_lock_filename: STRING is
 		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateClassHeader"
+			"ReadLockFilename"
 		end
 
 	generate_class_footer is
@@ -218,6 +211,20 @@ feature -- Basic Operations
 			"WriteLockFilename"
 		end
 
+	generic_names_table: ARRAY [ANY] is
+		external
+			"IL signature (): System.Object[] use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenericNamesTable"
+		end
+
+	generate_generic_derivations is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateGenericDerivations"
+		end
+
 	eiffel_class_from_xml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
@@ -225,25 +232,18 @@ feature -- Basic Operations
 			"EiffelClassFromXml"
 		end
 
-	generate_parents is
+	generate_class_header is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateParents"
+			"GenerateClassHeader"
 		end
 
-	generate_comments is
+	has_read_lock (a_folder_name: STRING): BOOLEAN is
 		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateComments"
-		end
-
-	generic_names_table: ARRAY [ANY] is
-		external
-			"IL signature (): System.Object[] use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenericNamesTable"
+			"HasReadLock"
 		end
 
 	generate_arguments is

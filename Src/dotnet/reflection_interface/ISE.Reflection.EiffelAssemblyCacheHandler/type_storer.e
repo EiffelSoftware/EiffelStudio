@@ -152,7 +152,7 @@ feature -- Basic Operations
 						notifier := notifier_handle.current_notifier
 						notifier.Notify_Replace		
 					end
-					added := types.add (eiffel_class)
+					added := types.extend (eiffel_class)
 				end
 				eiffel_class := Void
 			end

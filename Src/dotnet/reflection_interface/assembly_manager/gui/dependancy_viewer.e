@@ -95,7 +95,7 @@ feature -- Basic Operations
 			assembly_label.set_size (a_size)
 			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			get_controls.add (assembly_label)
+			get_controls.extend (assembly_label)
 			
 			create_assembly_labels
 			
@@ -107,7 +107,7 @@ feature -- Basic Operations
 				data_grid.set_Size (a_size)
 				data_grid.set_caption_text (dictionary.Caption_text)
 				display_dependancies
-				get_controls.add (data_grid)
+				get_controls.extend (data_grid)
 			else
 				create dependancies_label.make_label
 				dependancies_label.set_text (dictionary.No_dependancies_text)
@@ -117,7 +117,7 @@ feature -- Basic Operations
 				a_size.set_Height (dictionary.Label_height)
 				dependancies_label.set_size (a_size)
 				dependancies_label.set_font (label_font)	
-				get_controls.add (dependancies_label)
+				get_controls.extend (dependancies_label)
 			end
 		rescue
 			retried := True

@@ -57,8 +57,8 @@ feature -- Access
 			loop
 				a_child ?= class_children.get_item (i)
 				if a_child /= Void then
-					if not Result.contains (a_child) then
-						added := Result.add (a_child)
+					if not Result.has (a_child) then
+						added := Result.extend (a_child)
 					end
 					type_children := children (a_child)
 					from
@@ -67,15 +67,15 @@ feature -- Access
 						j = type_children.get_count
 					loop
 						a_type_child ?= type_children.get_item (j)
-						if a_type_child /= Void and then not Result.contains (a_type_child) then
-							added := Result.add (a_type_child)
+						if a_type_child /= Void and then not Result.has (a_type_child) then
+							added := Result.extend (a_type_child)
 						end
 						j := j + 1
 					end
 				end
 				i := i + 1
 			end
-			if Result.contains (a_class) then
+			if Result.has (a_class) then
 				Result.remove (a_class)
 			end
 		ensure
@@ -113,8 +113,8 @@ feature {NONE} -- Implementation
 						not parents_enumerator.move_next
 					loop
 						a_parent ?= parents_enumerator.get_current
-						if a_parent.to_lower.equals_string (a_class.get_eiffel_name.to_lower) and not Result.contains (a_type) then
-							added := Result.add (a_type)
+						if a_parent.to_lower.equals_string (a_class.get_eiffel_name.to_lower) and not Result.has (a_type) then
+							added := Result.extend (a_type)
 						end
 					end
 				end

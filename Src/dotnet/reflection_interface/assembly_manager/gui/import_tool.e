@@ -87,22 +87,22 @@ feature -- Basic Operations
 				-- Build File menu item.
 			create open_menu_item.make_menuitem_1 (dictionary.Open_menu_item)
 			open_menu_item.set_shortcut (shortcut.Ctrl_O)
-			added := file_menu_item.get_menu_items.add (open_menu_item)
+			added := file_menu_item.get_menu_items.extend (open_menu_item)
 			separator := file_menu_item.get_menu_items.add_string ("-")
-			added := file_menu_item.get_menu_items.add (exit_menu_item)
+			added := file_menu_item.get_menu_items.extend (exit_menu_item)
 			
 				-- Build View menu item.
 			create show_name_menu_item.make_menuitem_1 (dictionary.Show_name_menu_item)
 			show_all_menu_item.set_shortcut (shortcut.Ctrl_A)
 			show_name_menu_item.set_shortcut (shortcut.Ctrl_W)
 			separator := view_menu_item.get_menu_items.add_string ("-")
-			added := view_menu_item.get_menu_items.add (show_all_menu_item)	
-			added := view_menu_item.get_menu_items.add (show_name_menu_item)	
+			added := view_menu_item.get_menu_items.extend (show_all_menu_item)	
+			added := view_menu_item.get_menu_items.extend (show_name_menu_item)	
 			
 				-- Build Tools menu item.
 			create import_menu_item.make_menuitem_1 (dictionary.Import_menu_item)
 			import_menu_item.set_shortcut (shortcut.Ctrl_I)
-			added := tools_menu_item.get_menu_items.add (import_menu_item)
+			added := tools_menu_item.get_menu_items.extend (import_menu_item)
 		end
 	
 	set_menu_actions is
@@ -172,7 +172,7 @@ feature -- Basic Operations
 			added := toolbar.get_buttons.add_tool_bar_button (import_toolbar_button)
 			added := toolbar.get_buttons.add_tool_bar_button (separator)
 			added := toolbar.get_buttons.add_tool_bar_button (help_toolbar_button)
-			get_controls.add (toolbar)
+			get_controls.extend (toolbar)
 		rescue
 			retried := True
 			retry
@@ -211,8 +211,8 @@ feature -- Basic Operations
 
 				image_list := toolbar.get_image_list
 				images := image_list.get_images
-				images.add (open_image)
-				images.add (import_image)
+				images.extend (open_image)
+				images.extend (import_image)
 			else
 				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
@@ -277,7 +277,7 @@ feature -- Event handling
 			columns := data_table.get_columns
 			checked := name_menu_item.get_checked
 			if columns.get_count > 1 or not checked then				
-				if checked and then columns.contains (dictionary.Assembly_name_column_title) then
+				if checked and then columns.has (dictionary.Assembly_name_column_title) then
 					columns.remove_data_column (assembly_name_column)
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
@@ -307,7 +307,7 @@ feature -- Event handling
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh		
 				end
 			end
@@ -324,7 +324,7 @@ feature -- Event handling
 			columns := data_table.get_columns
 			checked := version_menu_item.get_checked
 			if columns.get_count > 1 or not checked then
-				if checked and then columns.contains (dictionary.Assembly_version_column_title) then
+				if checked and then columns.has (dictionary.Assembly_version_column_title) then
 					columns.remove_data_column (assembly_version_column)
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
@@ -354,7 +354,7 @@ feature -- Event handling
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh		
 				end
 			end
@@ -371,7 +371,7 @@ feature -- Event handling
 			columns := data_table.get_columns
 			checked := culture_menu_item.get_checked
 			if columns.get_count > 1 or not checked then			
-				if checked and then columns.contains (dictionary.Assembly_culture_column_title) then
+				if checked and then columns.has (dictionary.Assembly_culture_column_title) then
 					columns.remove_data_column (assembly_culture_column)
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
@@ -401,7 +401,7 @@ feature -- Event handling
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh		
 				end
 			end
@@ -418,7 +418,7 @@ feature -- Event handling
 			columns := data_table.get_columns
 			checked := public_key_menu_item.get_checked
 			if columns.get_count > 1 or not checked then					
-				if checked and then columns.contains (dictionary.Assembly_public_key_column_title) then
+				if checked and then columns.has (dictionary.Assembly_public_key_column_title) then
 					columns.remove_data_column (assembly_public_key_column)
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
@@ -448,7 +448,7 @@ feature -- Event handling
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					fill_data_grid
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh		
 				end
 			end
@@ -465,7 +465,7 @@ feature -- Event handling
 			columns := data_table.get_columns
 			checked := dependancies_menu_item.get_checked
 			if columns.get_count > 1 or not checked then							
-				if checked and then columns.contains (dictionary.Dependancies_column_title) then
+				if checked and then columns.has (dictionary.Dependancies_column_title) then
 					columns.remove_data_column (dependancies_column)
 					dependancies_menu_item.set_checked (not checked)
 					dependancies_toolbar_button.set_pushed (not checked)
@@ -495,7 +495,7 @@ feature -- Event handling
 					dependancies_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh		
 				end
 			end
@@ -510,7 +510,7 @@ feature -- Event handling
 			display_assemblies
 			set_default_column_width
 			fill_data_grid
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 			refresh
 		ensure then
 			all_columns_displayed: data_table.get_columns.get_count = 5
@@ -528,7 +528,7 @@ feature -- Event handling
 			display_assemblies
 			assembly_name_column_style.set_width (dictionary.Window_width - dictionary.Scrollbar_width)
 			fill_data_grid
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 			refresh
 		ensure
 			name_columns_displayed: data_table.get_columns.get_count = 1
@@ -771,7 +771,7 @@ feature {NONE} -- Implementation
 			loop
 				a_descriptor ?= shared_assemblies.get_item (i)
 				if a_descriptor /= Void and then not imported_table.contains_key (a_descriptor) then
-					imported_table.add (a_descriptor, is_imported (a_descriptor))
+					imported_table.extend (a_descriptor, is_imported (a_descriptor))
 				end
 				i := i + 1
 			end
@@ -889,7 +889,7 @@ feature {NONE} -- Implementation
 					data_table.get_columns.add_data_column (assembly_public_key_column)
 					data_table.get_columns.add_data_column (dependancies_column)
 					display_assemblies
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					rows := data_table.get_rows
 					
 					get_controls.remove (data_grid)
@@ -923,7 +923,7 @@ feature {NONE} -- Implementation
 					end
 					display_assemblies
 					resize_columns
-					get_controls.add (data_grid)
+					get_controls.extend (data_grid)
 					refresh
 				end
 			else
@@ -939,7 +939,7 @@ feature {NONE} -- Implementation
 			update_gui_assembly_viewer	
 			display_assemblies
 			resize_columns
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 			refresh		
 		end
 		

@@ -44,6 +44,10 @@ feature
 		local
 			validator_window: ACTIVATION_KEY_VALIDATOR_WINDOW
 		do
+			check
+				has_application: (create {EV_ENVIRONMENT}).application /= Void
+				application_started: not (create {EV_ENVIRONMENT}).application.is_destroyed
+			end
 			check_license
 			if is_evaluating then
 				create validator_window.make (agent set_can_run (True), a_next_action)

@@ -479,8 +479,7 @@ feature -- Pattern generation
 			else
 				file.putchar ('(');
 			end;
-			result_type.generate_function_cast (file,
-				argument_type_array (not is_extern));
+			result_type.generate_function_cast (file, argument_type_array (not is_extern));
 			file.putstring ("ptr)(");
 			nb := argument_count;
 			if not is_extern then

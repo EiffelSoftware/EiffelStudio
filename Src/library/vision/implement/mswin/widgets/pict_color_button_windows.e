@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 					pixmap_y := (2 + ((internal_height - bitmap.height) // 2)).max (2)
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
-					a_dc.draw_bitmap (bitmap, 1, 1, internal_width, internal_height)
+					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
 				end
 			end
 		end
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0
 		end
 
-	off_set: INTEGER is 3
+	off_set: INTEGER is 4
 
 end -- class PICT_COLOR_BUTTON_WINDOWS
 

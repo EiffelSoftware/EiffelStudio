@@ -169,7 +169,11 @@ feature -- Status report
 			cur_width, cur_height: INTEGER
 			index, n: INTEGER
 			s: STRING
+			l_height: INTEGER
+		
 		do
+				-- Assign to local, avoiding multiple computations.
+			l_height := height
 			from
 				n := 1
 			until
@@ -184,7 +188,7 @@ feature -- Status report
 					n := a_string.count + 1
 				end
 				cur_width := cur_width.max (string_width (s))
-				cur_height := cur_height + height
+				cur_height := cur_height + l_height
 			end
 			Result := [cur_width, cur_height]
 		end

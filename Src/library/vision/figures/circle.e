@@ -3,7 +3,7 @@ indexing
 	description: "Description of circle";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CIRCLE
 

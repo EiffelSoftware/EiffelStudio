@@ -3,7 +3,7 @@ indexing
 	description: "Description of a path";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class PATH 
 

@@ -3,7 +3,7 @@ indexing
 	description: "Description of general lines (implementation for X)";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class LINE 
 

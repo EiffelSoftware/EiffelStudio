@@ -53,7 +53,7 @@ feature  {NONE} -- Initialization
 			end;
 			!! list.make (mel_display, "*", 10000);
 			from	
-				list_make (list.count);
+				list.make_filled (list.count);
 				list.start;	
 				start
 			until

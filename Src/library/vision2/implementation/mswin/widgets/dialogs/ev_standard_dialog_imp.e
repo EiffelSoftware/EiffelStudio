@@ -32,10 +32,10 @@ feature -- Status setting
 			activate (modal_to)
 			if selected then
 				selected_button := "OK"
-				--interface.ok_actions.call ([])
+				interface.ok_actions.call ([])
 			else
 				selected_button := "Cancel"
-				--interface.cancel_actions.call ([])
+				interface.cancel_actions.call ([])
 			end
 		end
 
@@ -83,6 +83,10 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/23 04:51:29  pichery
+--| removed 2 commented lines in order to have actions performed when
+--| clicking on "ok" or "cancel" buttons.
+--|
 --| Revision 1.7  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -163,6 +163,7 @@ feature -- Status setting
 			-- Select the item.
 		local
 			par: POINTER
+			combo_par: EV_COMBO_BOX_IMP
 		do
 			if not is_selected then
 				par := parent_imp.list_widget
@@ -176,6 +177,11 @@ feature -- Status setting
 						) = NULL
 					then
 						feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
+					end
+					combo_par ?= parent_imp
+					-- We need to explicitly launch select actions in combo box due to selection workaround
+					if combo_par /= Void then
+						combo_par.launch_select_actions
 					end
 				end				
 			end

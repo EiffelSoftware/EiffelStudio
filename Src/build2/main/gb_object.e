@@ -306,18 +306,21 @@ feature -- Basic operations
 	add_new_object_in_parent (an_object: GB_OBJECT) is
 			-- Add `an_object' to parent of `Current', before `Current'.
 		local
-			--position_in_parent: INTEGER
 			command_add: GB_COMMAND_ADD_OBJECT
+			insert_position: INTEGER
 		do
-			create command_add.make (parent_object, an_object, parent_object.layout_item.index_of (layout_item, 1))
+			insert_position := parent_object.layout_item.index_of (layout_item, 1)
+			
+				-- We must now check that the item being inserted before is not contained in the same parent as `Current'.
+				-- If this is the case, and the item is before `Current' in the parent, then we must use an insert_position
+				-- one less than normal.
+			if parent_object.layout_item.has (an_object.layout_item) and
+				parent_object.layout_item.index_of (an_object.layout_item, 1) < parent_object.layout_item.index_of (layout_item, 1) then
+				insert_position := insert_position - 1
+			end
+			create command_add.make (parent_object, an_object, insert_position)
 			history.cut_off_at_current_position
 			command_add.execute
---				-- We need to unparent the object if parented
---			if an_object.parent_object /= Void then
---				an_object.unparent
---			end
---			position_in_parent := parent_object.layout_item.index_of (layout_item, 1)
---			object_handler.add_object (parent_object, an_object, position_in_parent)
 		end
 		
 	add_new_object (an_object: GB_OBJECT) is
@@ -325,7 +328,14 @@ feature -- Basic operations
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
 		do
-			create command_add.make (Current, an_object, layout_item.count + 1)
+				-- `an_object' may already be contained in `Current'.
+				-- If this is the case, then the insert position is the number of
+				-- items held in the layout item, as we are effectively moving it to the end.
+			if layout_item.has (an_object.layout_item) then
+				create command_add.make (Current, an_object,layout_item.count)
+			else
+				create command_add.make (Current, an_object, layout_item.count + 1)
+			end
 			history.cut_off_at_current_position
 			command_add.execute
 		ensure

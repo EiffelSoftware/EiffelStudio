@@ -90,7 +90,7 @@ feature
 
 	check_redeclaration
 		(	new_tbl, old_tbl: FEATURE_TABLE;
-			pattern_list: LINKED_LIST [STRING];
+			pattern_list: ARRAYED_LIST [INTEGER];
 			origin_table: ORIGIN_TABLE)
 	is
 			-- Check redeclaration into an attribute.
@@ -114,7 +114,7 @@ feature
 						attribute.set_has_function_origin (True);
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this
-						pattern_list.put_front (attribute.feature_name);
+						pattern_list.extend (attribute.feature_name_id);
 					end;
 					rout_id_set := attribute.rout_id_set;
 					if not rout_id_set.has_attribute_origin then
@@ -152,7 +152,7 @@ feature
 					if stop then
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this function
-						pattern_list.put_front (attribute.feature_name);
+						pattern_list.extend (attribute.feature_name_id);
 					end;
 				end
 			elseif new_feature.is_constant then
@@ -166,7 +166,7 @@ feature
 				if not constant.is_once and then constant.generate_in = 0 then
 					constant.set_generate_in (new_tbl.feat_tbl_id)
 						-- Remember to process a pattern for this function
-					pattern_list.put_front (constant.feature_name)
+					pattern_list.extend (constant.feature_name_id)
 				end
 			end
 

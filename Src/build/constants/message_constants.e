@@ -74,7 +74,7 @@ feature -- Error messages
 
 feature -- Question messages
 
-	Exit_qu: STRING is "Do you wish to exit?";
+	Exit_qu: STRING is "Exit EiffelBuild?";
 	Overwrite_qu: STRING is "Ok to discard existing project %N%%X%N(including generated Eiffel code)?";
 	Project_exists_qu: STRING is "An EiffelBuild project exists in %N%%X";
 	Retrieve_crash_qu: STRING is 

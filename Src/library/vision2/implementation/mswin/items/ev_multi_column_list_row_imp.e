@@ -17,14 +17,10 @@ inherit
 		end
 
 	EV_ITEM_IMP
-		rename
-	--		count as columns,
-	--		set_count as set_columns
 		undefine
 			parent
 		redefine
 			destroy,
-	--		set_cell_text,
 			parent_imp,
 			interface
 		end
@@ -37,9 +33,16 @@ inherit
 			pnd_press
 		end
 
-	EV_PIXMAPABLE_IMP
-		redefine
-			interface
+	--EV_PIXMAPABLE_IMP
+	--	redefine
+	--		interface
+	--	end
+
+	WEL_LIST_VIEW_ITEM
+		rename
+			make as wel_make,
+			text as wel_text,
+			set_text as wel_set_text
 		end
 
 create
@@ -52,6 +55,7 @@ feature {NONE} -- Initialization
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
 		do
+			wel_make
 			base_make (an_interface)
 		--	create internal_text.make (1)
 		--	internal_text.extend ("")
@@ -224,6 +228,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/29 02:18:09  brendel
+--| Removed inheritance from EV_PIXMAPABLE temporarily.
+--| Added inheritance of WEL_LIST_VIEW_ITEM.
+--|
 --| Revision 1.31  2000/03/27 21:52:46  pichery
 --| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
 --| `set_heavy_capture' and `release_heavy_capture'.

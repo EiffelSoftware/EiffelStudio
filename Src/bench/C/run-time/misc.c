@@ -27,7 +27,7 @@
 #include "eif_malloc.h"
 #include "eif_lmalloc.h"		/* for eif_malloc() */
 #include "eif_macros.h"
-#include "x2c.h"
+#include "x2c.header"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>

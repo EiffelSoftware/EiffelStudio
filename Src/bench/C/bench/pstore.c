@@ -22,7 +22,7 @@
 #include "eif_error.h"
 #include "eif_compress.h"
 #include "pstore.h"
-#include "x2c.h"		/* For LNGPAD macro */
+#include "x2c.header"		/* For LNGPAD macro */
 
 #ifdef EIF_WIN32
 #include <io.h>

@@ -34,7 +34,7 @@
 #include "eif_hector.h"
 #include "eif_traverse.h"
 #include "eif_memory.h"
-#include "x2c.h"		/* For LNGPAD macros... */
+#include "x2c.header"		/* For LNGPAD macros... */
 
 /*
  * Declarations

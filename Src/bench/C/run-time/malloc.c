@@ -36,7 +36,7 @@
 #include "eif_garcol.h"			/* For Eiffel flags and function declarations */
 #include "eif_except.h"			/* For exception raising */
 #include "eif_plug.h"
-#include "x2c.h"			/* For macro LNGPAD */
+#include "x2c.header"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
 #ifndef TEST

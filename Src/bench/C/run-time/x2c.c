@@ -12,7 +12,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "x2c.h"
+#include "x2c.header"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
 #else

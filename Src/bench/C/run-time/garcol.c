@@ -34,7 +34,7 @@ extern "C" {
 #include "eif_sig.h"
 #include "eif_urgent.h"
 #include "eif_search.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "x2c.header"		/* For macro LNGPAD */
 
 #ifdef EIF_THREADS
 #include "eif_once.h"

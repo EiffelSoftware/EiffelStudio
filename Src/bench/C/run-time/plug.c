@@ -26,7 +26,7 @@
 #include "eif_hashin.h"
 #endif
 #include "eif_bits.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "x2c.header"		/* For macro LNGPAD */
 
 
 #ifndef lint

@@ -27,7 +27,7 @@
 #include "eif_rtlimits.h"
 #include "eif_traverse.h"
 #include "eif_compress.h"
-#include "x2c.h"	/* For macro LNGPAD */
+#include "x2c.header"	/* For macro LNGPAD */
 
 #include <ctype.h>					/* For isspace() */
 

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	WEL_STRUCTURE
+		rename
+			initialize as structure_initialize
+		end
 
 feature -- Basic operations
 

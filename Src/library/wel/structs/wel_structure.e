@@ -106,7 +106,7 @@ feature {NONE} -- Externals
 			"enomem"
 		end
 
-	c_memset (destination: POINTER; a_char: CHARACTER; count: INTEGER) is
+	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER) is
 			-- C function 
 		external
 			"C (void *, int, size_t) | <memory.h>"

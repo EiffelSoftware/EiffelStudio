@@ -91,6 +91,18 @@ feature -- Generation type
 		do
 		end
 
+feature -- Generation Info
+
+	set_version (build, major, minor, revision: INTEGER) is
+			-- Assign current generated assembly with given version.
+		do
+		end
+
+	set_verifiability (verifiable: BOOLEAN) is
+			-- Mark current generation to generate verifiable code.
+		do
+		end
+
 feature -- Class info
 
 	generate_class_mappings (dotnet_name, eiffel_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is

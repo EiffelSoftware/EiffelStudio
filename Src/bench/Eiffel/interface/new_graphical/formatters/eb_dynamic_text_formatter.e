@@ -58,7 +58,7 @@ feature {FEATURE_TOOL_LIST} -- Displaying
 feature -- Formatting
 
 	format (stone: STONE) is
-			-- Show text of `stone' in `text_window'
+			-- Show text of `stone' in `text_area'
 		local
 			retried: BOOLEAN
 --			mp: MOUSE_PTR
@@ -69,12 +69,12 @@ feature -- Formatting
 		do
 			if not retried then
 --				!! mp.set_watch_cursor
-				cur := tool.text_window.position
+				cur := tool.text_area.position
 				
 				display_temp_header (stone)
 
 --				if cur /= Void then
-					tool.text_window.go_to (cur)
+					tool.text_area.go_to (cur)
 --				end
 				tool.set_clickable (False)
 				tool.display_clickable_dynamic_lib_exports (False)

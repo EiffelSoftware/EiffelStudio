@@ -63,6 +63,7 @@ feature {COMPILER_EXPORTER}
 				opt := valid_options.item (option_name)
 				Result := opt /= dynamic and then 
 					opt /= hide and then
+					opt /= document and then
 					opt /= profile
 			end;
 		end;
@@ -85,7 +86,7 @@ feature {NONE}
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, profile, override_cluster,
-	address_expression, profiler_type: INTEGER is UNIQUE;
+	address_expression, profiler_type, document: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -108,6 +109,7 @@ feature {NONE}
 			Result.force (profiler_type, "profiler_type");
 			Result.force (override_cluster, "override_cluster");
 			Result.force (address_expression, "address_expression");
+			Result.force (document, "document");
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -121,6 +123,7 @@ feature {COMPILER_EXPORTER}
 		local
 			dynamic_sd: DYNAMIC_SD;
 			hide_sd: HIDE_SD;
+			document_sd: DOCUMENT_SD;
 			profile_sd: PROFILE_SD;
 			opt: INTEGER
 		do
@@ -131,6 +134,9 @@ feature {COMPILER_EXPORTER}
 			elseif opt = hide then
 				!! hide_sd;
 				hide_sd.adapt (value, classes, list)	
+			elseif opt = document then
+				!! document_sd;
+				document_sd.adapt (value, classes, list)	
 			elseif opt = profile then
 				!! profile_sd;
 				profile_sd.adapt (value, classes, list)	
@@ -144,7 +150,8 @@ feature {COMPILER_EXPORTER}
 			error_found: BOOLEAN;
 			vd37: VD37;
 			i: INTEGER;
-			string_value: STRING
+			string_value: STRING;
+			path: DIRECTORY_NAME
 		do
 			inspect
 				valid_options.item (option_name)
@@ -301,6 +308,14 @@ feature {COMPILER_EXPORTER}
 				end
 			when dynamic, hide, profile then
 					-- This has been taken care of in `adapt'.
+			when document then
+				string_value := value.value;
+				!! path.make_from_string (string_value);
+				if path.is_valid then
+					System.set_document_path (path)
+				else
+					error_found := True
+				end
 			else
 				error_found := True
 			end;

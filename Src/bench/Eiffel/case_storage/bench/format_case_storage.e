@@ -12,7 +12,8 @@ inherit
 	SHARED_CASE_INFO;
 	STORABLE;
 	COMPILER_EXPORTER;
-	SHARED_COUNTER
+	SHARED_COUNTER;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -188,7 +189,7 @@ feature {NONE} -- Implementation
 			root_file_name, file_name: STRING;
 			full_path: DIRECTORY_NAME
 		do
-			io.error.putstring ("Processing clusters%N");
+			Degree_output.put_case_message ("Reverse engineering project.");
 			!! cluster_info.make;
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
@@ -394,20 +395,8 @@ feature {NONE} -- Implementation
 				classes.forth
 			end;
 			if need_to_save then
-				save_workbench_file
+				Eiffel_project.save_project
 			end
-		end;
-
-	save_workbench_file is
-			-- Save the `.workbench' file.
-		local
-			file: RAW_FILE
-		do
-			System.server_controler.wipe_out;
-			!!file.make (Project_file_name);
-			file.open_write;
-			workbench.basic_store (file);
-			file.close;
 		end;
 
 invariant

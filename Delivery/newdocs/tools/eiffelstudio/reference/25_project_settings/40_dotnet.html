@@ -16,7 +16,7 @@
 <p>&nbsp;</p>
 
 <p>This tab is only available when you have the .NET generation enabled. Here is
-what you will see if you open the .NET calculator example:</p>
+what you will see if you have .NET generation enabled.</p>
 
 <p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/dotnet_tab.png"></p>
 
@@ -28,11 +28,19 @@ what you will see if you open the .NET calculator example:</p>
 such as:</p>
 
 <ul>
-  <li>full name</li>
-  <li>version</li>
-  <li>compatibility</li>
-  <li>culture</li>
+  <li>Namespace name</li>
+  <li>Version</li>
+  <li>Compatibility</li>
+  <li>Culture</li>
+  <li>Company</li>
+  <li>Product</li>
+  <li>Trademark</li>
+  <li>Copyright</li>
 </ul>
+
+<p>You can also specify a cryptographic key for your application so that the compiled assembly
+can be added to the Global Assembly Cache (GAC).  Alternatively, if you wish to create a new
+for your assembly then the 'Generate' key will automatically generate one.</p>
 
 <p>&nbsp;</p>
 
@@ -51,12 +59,6 @@ such as:</p>
 </ul>
 
 <p>&nbsp;</p>
-
-<h2><a name="assemblies"></a>Assemblies</h2>
-
-<p>Add here all the assemblies that are used in your system. You do not need to
-include `mscorlib.dll' since it is included by default. The assemblies should be
-listed using absolute paths.</p>
 
 </body>
 

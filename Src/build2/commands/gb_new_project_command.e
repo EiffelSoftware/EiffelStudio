@@ -97,21 +97,23 @@ feature -- Basic operations
 				dialog: EV_DIRECTORY_DIALOG
 				raw_file: RAW_FILE
 				file_name: FILE_NAME
-				shown_once, created_project: BOOLEAN
+				created_project: BOOLEAN
 				conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
-				create_project: BOOLEAN
+				create_project, cancelled: BOOLEAN
 				directory: DIRECTORY
 			do
 				from
 					create dialog
 				until
-					(dialog.directory.is_empty and shown_once) or created_project
+					cancelled or created_project
 				loop
-					shown_once := True
 					create_project := True
 					dialog.show_modal_to_window (main_window)
+					if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+						cancelled := True
+					end
 						-- If a directory was chosen.
-					if not dialog.directory.is_empty then
+					if not cancelled then
 						create file_name.make_from_string (dialog.directory)
 						file_name.extend (Project_filename)
 						create raw_file.make (file_name)

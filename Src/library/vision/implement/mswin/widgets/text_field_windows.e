@@ -12,7 +12,8 @@ inherit
 		redefine
 			realize, 
 			unrealize,
-			on_key_down
+			on_key_down,
+			on_key_up
 		end
 
 	TEXT_FIELD_I
@@ -246,6 +247,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_key_up (code, flags: INTEGER) is
+			-- Respond to a wm_key_up message.
+		local
+			cd: KEYREL_DATA
+			k: KEYBOARD_WINDOWS
+		do
+			check
+				code_large_enough: code >= virtual_keys.lower
+				code_small_enough: code <= virtual_keys.upper
+			end
+			!! k.make_from_key_state
+			!! cd.make (owner, code, virtual_keys @ code, k);
+			key_release_actions.execute (Current, cd)
+			if code = Vk_shift then
+				shift_pressed := False
+			end
+		end
+
 	on_key_down (code, flags: INTEGER) is
 			-- Wm_keydown message
 		local
@@ -255,18 +274,18 @@ feature {NONE} -- Implementation
 			!! kw.make_from_key_state
 			!! kpd.make (owner, code, virtual_keys @ code, kw) 
 			key_press_actions.execute (Current, kpd)
-			if code = vk_return then
+			if code = Vk_return then
 				activate_actions.execute (Current, kpd)
-			end
-			if code = vk_return then
 				disable_default_processing
-			elseif code = vk_tab then
-				if key_state (Vk_shift) then
+			elseif code = Vk_tab then
+				if shift_pressed then
 					go_to_prev_text_field
 				else
 					go_to_next_text_field
 				end
 				disable_default_processing
+			elseif code = Vk_shift then
+				shift_pressed := True
 			end
 		end
 
@@ -353,6 +372,9 @@ feature {NONE} -- Implementation
 				tf.wel_set_focus
 			end
 		end
+
+	shift_pressed: BOOLEAN
+			-- Is the shift-key pressed?
 
 end -- class TEXT_FIELD_WINDOWS
 

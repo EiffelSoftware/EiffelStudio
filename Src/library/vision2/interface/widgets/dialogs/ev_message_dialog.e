@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 
 			--| We now put the button in the hash-table to give the
 			--| user access to it.
-			buttons.extend (new_button, s)
+			buttons.put (new_button, s)
 
 			new_button.press_actions.extend (~on_button_press (s))
 			button_box.extend (new_button)
@@ -229,6 +229,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/08 17:18:26  brendel
+--| Replaced `extend' with `put'.
+--|
 --| Revision 1.18  2000/03/06 19:48:11  oconnor
 --| renamed but_texts -> button_labels
 --|

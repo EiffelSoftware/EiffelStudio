@@ -1069,9 +1069,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
 		local	
-			creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			a_routine: STRING
+			a_feature_name: STRING
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
@@ -1079,9 +1078,9 @@ feature {NONE} -- Implementation
 			value: STRING
 		do
 			label_width := 0
-			creation_routines := an_eiffel_class.get_Creation_Routines
+			initialization_features := an_eiffel_class.get_Initialization_Features
 
-			if an_eiffel_class.get_Creation_Routines.get_Count > 0 and not an_eiffel_class.get_Is_Deferred and not is_special_class (an_eiffel_class) then			
+			if initialization_features.get_Count > 0 and not an_eiffel_class.get_Is_Deferred and not is_special_class (an_eiffel_class) then			
 					-- Do not generate creation clause for expanded classes
 				if not an_eiffel_class.get_Is_Expanded then
 					create_label (eiffel_dictionary.Create_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
@@ -1089,22 +1088,25 @@ feature {NONE} -- Implementation
 					from
 						i := 0
 					until
-						i = creation_routines.get_Count
+						i = initialization_features.get_Count
 					loop
-						a_routine ?= creation_routines.get_Item (i)
-						if a_routine /= Void and then a_routine.get_length > 0 then
-							create a_text_box.make_textbox
-							if i < (creation_routines.get_Count - 1) then
-								create_label (a_routine.concat_string_string (a_routine, eiffel_dictionary.Comma), 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
-							else
-								create_label (a_routine, 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
+						a_feature ?= initialization_features.get_Item (i)
+						if a_feature /= Void then
+							a_feature_name := a_feature.get_eiffel_name
+							if a_feature_name /= Void and then a_feature_name.get_length > 0 then
+								create a_text_box.make_textbox
+								if i < (initialization_features.get_Count - 1) then
+									create_label (a_feature_name.concat_string_string (a_feature_name, eiffel_dictionary.Comma), 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
+								else
+									create_label (a_feature_name, 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
+								end
 							end
 						end
 						i := i + 1
 					end
-					panel_height := panel_height + dictionary.Label_height * creation_routines.get_count
+					panel_height := panel_height + dictionary.Label_height * initialization_features.get_count
 				end				
-			elseif an_eiffel_class.get_Creation_Routines.get_Count = 0 and not an_eiffel_class.get_Is_Deferred and not an_eiffel_class.get_is_expanded then
+			elseif initialization_features.get_Count = 0 and not an_eiffel_class.get_Is_Deferred and not an_eiffel_class.get_is_expanded then
 				create_label (eiffel_dictionary.Create_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				new_label_width := dictionary.Margin + label_width
 				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)

@@ -13,6 +13,8 @@ inherit
 	
 	ECOM_STANDARD_DISPID_ENUM
 	
+	AMBIENT_PROPERTIES
+	
 feature -- Access
 
 	allow_windowless_activation: BOOLEAN is
@@ -24,13 +26,13 @@ feature -- Access
 	back_color: INTEGER is
 			-- Set the background color
 		do
-			Result := m_back_color
+			Result := background_color.item
 		end
 
 	fore_color: INTEGER is
 			-- Set the ambient foreground color
 		do
-			Result := m_fore_color
+			Result := foreground_color.item
 		end
 
 	locale_id: INTEGER is
@@ -107,7 +109,7 @@ feature -- Basic Operations
 			-- Set the background color
 			-- `pclr_background' [in].  
 		do
-			m_back_color := pclr_background
+			create background_color.make_by_color (pclr_background)
 			fire_ambient_property_change (DISPID_AMBIENT_BACKCOLOR)
 			invalidate_rect (Void, 0)
 		end
@@ -116,7 +118,7 @@ feature -- Basic Operations
 			-- Set the ambient foreground color
 			-- `pclr_foreground' [in].  
 		do
-			m_fore_color := pclr_foreground
+			create foreground_color.make_by_color (pclr_foreground)
 			fire_ambient_property_change (DISPID_AMBIENT_FORECOLOR)
 		end
 
@@ -212,48 +214,6 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementaion
 
-	m_allow_windowless_activation: BOOLEAN 
-			-- Enable or disable windowless activation
-
-	m_back_color: INTEGER 
-			-- Set the background color
-
-	m_fore_color: INTEGER 
-			-- Set the ambient foreground color
-
-	m_locale_id: INTEGER 
-			-- Set the ambient locale
-
-	m_user_mode: BOOLEAN 
-			-- Set the ambient user mode
-
-	m_display_as_default: BOOLEAN 
-			-- Enable or disable the control as default
-
-	m_font: FONT_INTERFACE 
-			-- Set the ambient font
-
-	m_message_reflect: BOOLEAN 
-			-- Enable or disable message reflection
-
-	m_doc_host_flags: INTEGER 
-			-- Set the DOCHOSTUIFLAG flags
-
-	m_doc_host_double_click_flags: INTEGER 
-			-- Set the DOCHOSTUIDBLCLK flags
-
-	m_allow_context_menu: BOOLEAN 
-			-- Enable or disable context menus
-
-	m_allow_show_ui: BOOLEAN 
-			-- Enable or disable UI
-
-	m_option_key_path: STRING 
-			-- Set the option key path
-		
-	m_ole_control: IOLE_CONTROL_IMPL_PROXY
-			-- IOleControl interface of control.
-			
 	fire_ambient_property_change (disp_changed: INTEGER) is
 			-- Notify control that ambient property has changed.
 		require

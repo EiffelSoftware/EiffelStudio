@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			fw: FONT_WINDOWS
 		do
 			if not fixed_size_flag then
-				fw ?= f.implementation
+				fw ?= font.implementation
 				set_size (f.width_of_string (text), fw.string_height (Current, text))
 				if exists then
 					invalidate

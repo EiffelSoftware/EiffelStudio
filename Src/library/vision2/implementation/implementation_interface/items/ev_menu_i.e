@@ -17,12 +17,12 @@ inherit
 
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+        make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
                         -- Create a menu with name. 
 			deferred
 			end	
 
-end
+end -- class EV_MENU_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -37,3 +37,20 @@ EIF_OBJ Formatter::ccom_format_message( EIF_INTEGER Code )
 		*szErrorMessage =( LPVOID )( "No help available" );
 	return makestr( ( char* )szErrorMessage, sizeof( szErrorMessage ));
 }
+
+char* Formatter::c_format_message( long Code )
+{
+	LPVOID *szErrorMessage;
+	
+	if( FormatMessage(
+					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+					NULL,
+					( DWORD )Code,
+					MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), // Default language
+					( LPTSTR )&szErrorMessage,
+					0,
+					NULL ) == 0)
+		*szErrorMessage =( LPVOID )( "No help available" );
+	return ( char* )szErrorMessage;
+}
+	

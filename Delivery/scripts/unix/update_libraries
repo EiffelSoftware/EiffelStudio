@@ -18,7 +18,7 @@ remtrace exml
 exprt -r $DEFAULT_CVS_TAG -d exml "Src/library/exml"
 remtrace gobo
 exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons/gobo
-gunzip -c free_add_ons/gobo_unix.tgz | tar -xf -
+gunzip -c free_add_ons/gobo_33_unix.tgz | tar -xf -
 fullrd free_add_ons
 remtrace helpers
 exprt -r $DEFAULT_CVS_TAG -d helpers "Src/library/helpers"

@@ -85,7 +85,12 @@ feature {NONE} -- code in the glue library
 
 feature {NONE} -- Cast features
 
-	c_integer_to_pointer (i: INTEGER): POINTER is
+	c_gtk_integer_to_pointer (i: INTEGER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_pointer_to_integer (i: POINTER): INTEGER is
 		external
 			"C [macro %"gtk_eiffel.h%"]"
 		end

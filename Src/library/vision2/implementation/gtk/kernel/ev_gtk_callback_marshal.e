@@ -115,7 +115,20 @@ feature {EV_ANY_IMP} -- Access
 			motion_tuple.put (a_7, 7)
 		end
 		
+	dimension_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- 
+		once
+			Result := [0, 0, 0, 0]
+		end
 		
+	set_dimension_tuple (a_1, a_2, a_3, a_4: INTEGER) is
+		do
+			dimension_tuple.put (a_1, 1)
+			dimension_tuple.put (a_2, 2)
+			dimension_tuple.put (a_3, 3)
+			dimension_tuple.put (a_4, 4)			
+		end
+
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
 			-- A TUPLE containing `args' data from a GdkEvent.
 			-- `n_args' is ignored.
@@ -165,12 +178,13 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_expose_enum
 			then
 				p := local_C.gdk_event_expose_struct_area (gdk_event)
-				Result := [
+				set_dimension_tuple (
 					local_C.gdk_rectangle_struct_x (p),
 					local_C.gdk_rectangle_struct_y (p),
 					local_C.gdk_rectangle_struct_width (p),
 					local_C.gdk_rectangle_struct_height (p)
-				]
+				)
+				Result := dimension_tuple
 			when
 				Gdk_button_press_enum,
 				Gdk_2button_press_enum
@@ -219,12 +233,13 @@ feature {EV_ANY_IMP} -- Access
 			when
 				Gdk_configure_enum
 			then
-				Result := [
+				set_dimension_tuple (
 					local_C.gdk_event_configure_struct_x (gdk_event),
 					local_C.gdk_event_configure_struct_y (gdk_event),
 					local_C.gdk_event_configure_struct_width (gdk_event),
 					local_C.gdk_event_configure_struct_height (gdk_event)
-				]
+				)
+				Result := dimension_tuple
 			end
 			end
 		end
@@ -260,12 +275,13 @@ feature {EV_ANY_IMP} -- Access
 		do
 			gtk_alloc := gtk_value_pointer (p)
 			local_C := C
-			Result := [
+			set_dimension_tuple (
 				local_C.gtk_allocation_struct_x (gtk_alloc),
 				local_C.gtk_allocation_struct_y (gtk_alloc),
 				local_C.gtk_allocation_struct_width (gtk_alloc),
 				local_C.gtk_allocation_struct_height (gtk_alloc)
-			]
+			)
+			Result := dimension_tuple
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
@@ -408,7 +424,6 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		once
 			Result := [0]
 		end
-		
 
 	integer_pointer_tuple: TUPLE [INTEGER, POINTER] is
 		once

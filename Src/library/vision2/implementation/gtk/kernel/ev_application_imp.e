@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 		do
 			gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
 				0,
-				agent (interface.post_launch_actions).call ([])
+				agent (interface.post_launch_actions).call (empty_tuple)
 			)
 			internal_idle_actions.not_empty_actions.extend (
 				agent connect_internal_idle_actions
@@ -337,6 +337,12 @@ feature {EV_ANY_IMP} -- Implementation
 
 	tooltips: POINTER
 			-- Reference to GtkTooltips object.
+			
+	empty_tuple: TUPLE is
+			-- Tuple optimization to prevent object recreation
+		once
+			Result := []
+		end
 
 feature -- Implementation
 
@@ -351,7 +357,7 @@ feature -- Implementation
 		do
 			if idle_actions_agent_internal = Void then
 				idle_actions_agent_internal :=
-					agent (interface.idle_actions).call ([])
+					agent (interface.idle_actions).call (empty_tuple)
 			end
 			Result := idle_actions_agent_internal
 		end
@@ -363,7 +369,7 @@ feature -- Implementation
 			if internal_idle_actions_connection_id = 0 then
 				internal_idle_actions_connection_id :=
 					gtk_marshal.c_ev_gtk_callback_marshal_idle_connect (
-						agent internal_idle_actions.call ([]) 
+						agent internal_idle_actions.call (empty_tuple) 
 					)
 			end
 		ensure

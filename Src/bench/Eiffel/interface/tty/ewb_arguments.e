@@ -10,14 +10,7 @@ class EWB_ARGUMENTS
 
 inherit
 	ARRAY [STRING]
-		rename
-			wipe_out as array_wipe_out,
-			force as array_force
-		end;
-	ARRAY [STRING]
 		redefine
-			wipe_out, force
-		select
 			wipe_out, force
 		end
 
@@ -53,7 +46,7 @@ feature -- Update
 	force (s: STRING; i: INTEGER) is
 			-- Force string `s' at position `i'.
 		do
-			array_force (s, i);
+			{ARRAY} Precursor (s, i);
 			if i > argument_count then
 				argument_count := i
 			end;

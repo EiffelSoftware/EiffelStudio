@@ -57,13 +57,6 @@ feature -- Initialization
 		deferred
 		end
 
-feature -- Status report
-
-
-
-feature -- Status setting
-
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAP
@@ -91,6 +84,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/07 01:16:15  brendel
+--| Cosmetics.
+--|
 --| Revision 1.12  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

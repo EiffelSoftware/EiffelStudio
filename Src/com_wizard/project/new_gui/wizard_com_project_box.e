@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			initialize_checker
-			definition_file_box.setup ("Component definition file:", "definition_key", agent is_valid_definition_file (?, Invalid_component_file), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
+			definition_file_box.setup ("Component definition file:", "definition_key", agent definition_file_validity (?, Invalid_component_file), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
 		end
 
 feature -- Basic Operations
@@ -119,13 +119,15 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Implementation
 
-	is_valid_definition_file (a_file_name, a_error_message: STRING): BOOLEAN is
+	definition_file_validity (a_file_name, a_error_message: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_file_name' a valid definition file?
 			-- Show marshaller box if `a_file_name' corresponds to an IDL file.
 		do
-			Result := is_valid_file_name (a_file_name, a_error_message)
-			if Result then
+			if is_valid_file_name (a_file_name, a_error_message) then
+				create Result.make_success
 				update_environment
+			else
+				create Result.make_error (a_error_message)
 			end
 		end
 		
@@ -135,12 +137,16 @@ feature {NONE} -- Implementation
 			non_void_file_name: a_file_name /= Void
 		do
 			Result := not a_file_name.is_empty and then (create {RAW_FILE}.make (a_file_name)).exists
-			set_error (Result, a_error_message)
+			if Result then
+				set_status (create {WIZARD_VALIDITY_STATUS}.make_success)
+			else
+				set_status (create {WIZARD_VALIDITY_STATUS}.make_error (a_error_message))
+			end
 		end
 
 feature {NONE} -- Private Access
 
-	Invalid_component_file: STRING is "Invalid component definition file"
+	Invalid_component_file: STRING is "Invalid component definition file: File does not exist"
 			-- Invalid component file error
 
 end -- class WIZARD_COM_PROJECT_BOX

@@ -75,6 +75,7 @@ extern "C" {
 #ifdef EIF_THREADS
 extern EIF_LW_MUTEX_TYPE *eif_gc_mutex;	/* GC mutex */
 extern EIF_LW_MUTEX_TYPE *eif_gc_set_mutex;	/* GC mutex */
+extern EIF_LW_MUTEX_TYPE *eif_global_once_set_mutex;
 #ifdef ISE_GC
 extern EIF_LW_MUTEX_TYPE *eif_g_data_mutex;
 #endif

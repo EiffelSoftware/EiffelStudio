@@ -21,6 +21,20 @@ inherit
 			is_child			
 		end
 
+feature -- Access
+
+	is_homogeneous: BOOLEAN is
+			-- Is the current box homogeneous
+		do
+			Result := c_gtk_box_homogeneous (widget) /= 0
+		end
+
+	border_width: INTEGER is
+			-- Border width around container
+		do
+			Result := c_gtk_container_border_width (widget)
+		end
+
 feature -- Element change (box specific)
 	
 	set_homogeneous (flag: BOOLEAN) is
@@ -42,14 +56,6 @@ feature -- Element change (box specific)
 			gtk_box_set_spacing (widget, value)
 		end	
 
-feature -- Access
-
-	border_width: INTEGER is
-			-- Border width around container
-		do
-			Result := c_gtk_container_border_width (widget)
-		end
-	
 feature -- Assertion test
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is

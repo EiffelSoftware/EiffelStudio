@@ -45,8 +45,7 @@ feature
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) .UPDT Makefile Makefile.SH config.sh");
 			Make_file.new_line;
-			Make_file.putstring ("%T$(RM) -r ");
-			generate_subdir_names;
+			Make_file.putstring ("%T$(RM) -r $(SUBDIRS)");
 			Make_file.new_line
 		end;
 

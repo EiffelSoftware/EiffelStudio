@@ -275,9 +275,10 @@ feature -- Status
 		local
 			l_class: CLASS_C
 		do
+				-- FIXME: Manu 06/28/2004: Expanded cannot yet be generated as single type.
 				-- Expanded types do not have an interface since no polymorphic calls
 				-- are done on them.
-			Result := is_expanded
+--			Result := is_expanded
 			if not Result then
 				l_class := base_class
 					-- When `base_class' is a basic class and that we are here, it means

@@ -19,6 +19,11 @@ inherit
 			make
 		end
 
+	EV_RADIO_PEER_IMP
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -30,23 +35,15 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_radio_menu_item_new (Default_pointer))
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
+			C.gtk_check_menu_item_set_active (c_object, True)
 		end
 
-feature -- Access
+feature {EV_ANY_I} -- Implementation
 
-	peers: LINKED_LIST [like interface] is
-			-- List of all radio items in the group `Current' is in.
+	gslist: POINTER is
 		do
-			check to_be_implemented: False end
+			Result := C.gtk_radio_menu_item_group (c_object)
 		end
-
-	selected_peer: like interface is
-			-- Radio item that is currently selected.
-		do
-			check to_be_implemented: False end
-		end
-
-feature {NONE} -- Implementation
 
 	interface: EV_RADIO_MENU_ITEM
 
@@ -73,6 +70,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/25 01:54:56  brendel
+--| Added inheritance of EV_RADIO_PEER_IMP, which means: effecting of `gslist'
+--| and features `peers' and `selected_peer' could be removed.
+--|
 --| Revision 1.16  2000/02/24 20:48:54  brendel
 --| Changed in compliance with interface.
 --|

@@ -77,10 +77,7 @@ feature -- Event handling
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when button is pressed.
 
-feature -- Implementation
-
-	implementation: EV_TOOL_BAR_BUTTON_I
-			-- Platform dependent access.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of tool bar button.
@@ -95,6 +92,11 @@ feature -- Implementation
 			{EV_PICK_AND_DROPABLE} Precursor
 			create press_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_BUTTON_I
+			-- Platform dependent access.
 
 invariant
 	press_actions_not_void: press_actions /= Void
@@ -122,6 +124,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.9  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

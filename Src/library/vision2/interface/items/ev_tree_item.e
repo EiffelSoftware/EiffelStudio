@@ -130,10 +130,7 @@ feature -- Event handling
 	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions performed when tree item node is collapsed.
 
-feature -- Implementation
-
-	implementation: EV_TREE_ITEM_I
-			-- Platform dependent access
+feature {NONE} -- Implementation
 
 	create_implementation is
 		do
@@ -149,6 +146,11 @@ feature -- Implementation
 			create expand_actions
 			create collapse_actions
 		end
+
+feature {EV_ANY_I}-- Implementation
+
+	implementation: EV_TREE_ITEM_I
+			-- Platform dependent access
 
 end -- class EV_TREE_ITEM
 
@@ -174,6 +176,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.32  2000/03/01 18:09:03  oconnor
 --| released
 --|

@@ -92,11 +92,7 @@ feature -- Event handling
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when item is deselected.
 
-feature -- Implementation
-
-	implementation: EV_LIST_ITEM_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of list item.
@@ -111,6 +107,12 @@ feature -- Implementation
 			create select_actions
 			create deselect_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_LIST_ITEM_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 invariant
 	select_actions_not_void: select_actions /= Void
@@ -139,6 +141,9 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.25  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

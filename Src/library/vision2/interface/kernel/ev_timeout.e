@@ -81,11 +81,7 @@ feature -- Event handling
 	actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions to be performed at a regular `interval'.
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TIMEOUT_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_action_sequences is
 			-- Create action sequences for button.
@@ -110,6 +106,12 @@ feature {NONE} -- Contract support
 				count = 0
 			)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TIMEOUT_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 invariant
 	interval_not_negative: interval >= 0
@@ -139,6 +141,9 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.4  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

@@ -30,15 +30,15 @@ create
 
 feature {NONE} -- Implementation
 
-	implementation: EV_FRAME_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
 	create_implementation is
 			-- Create implementation of frame.
 		do
 			create {EV_FRAME_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_FRAME_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 end -- class EV_FRAME
 
@@ -63,6 +63,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.9  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

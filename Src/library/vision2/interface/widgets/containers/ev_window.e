@@ -303,11 +303,7 @@ feature -- Event handling
 	move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when window moves.
 
-feature {EV_WINDOW, EV_ANY_I} -- Implementation
-
-	implementation: EV_WINDOW_I
-            -- Responsible for interaction with the underlying native graphics
-            -- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of window.
@@ -323,6 +319,12 @@ feature {EV_WINDOW, EV_ANY_I} -- Implementation
 			create resize_actions
 			create move_actions
 		end
+
+feature {EV_WINDOW, EV_ANY_I} -- Implementation
+
+	implementation: EV_WINDOW_I
+            -- Responsible for interaction with the underlying native graphics
+            -- toolkit.
 
 invariant
 	title_not_void: is_useable implies title /= Void
@@ -364,6 +366,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.47  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

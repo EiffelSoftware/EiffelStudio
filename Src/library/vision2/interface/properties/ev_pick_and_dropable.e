@@ -142,7 +142,7 @@ feature -- User input events
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to take when pick and drop transport drops on `Current'.
 
-feature -- Implementation
+feature {NONE}-- Implementation
 
 	create_action_sequences is
 			-- Create pick and drop action sequences.
@@ -192,6 +192,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.3  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

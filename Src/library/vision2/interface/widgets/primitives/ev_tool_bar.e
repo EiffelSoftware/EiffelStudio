@@ -27,16 +27,19 @@ create
 	default_create,
 	make_for_test
 
-feature -- Initialization
 
-	implementation: EV_TOOL_BAR_I
-			-- Platform dependent access.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of button.
 		do
 			create {EV_TOOL_BAR_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Initialization
+
+	implementation: EV_TOOL_BAR_I
+			-- Platform dependent access.
 
 end -- class EV_TOOL_BAR
 
@@ -61,6 +64,9 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 19:48:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.10  2000/03/01 03:27:05  oconnor
 --| added make_for_test
 --|

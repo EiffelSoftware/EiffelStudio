@@ -20,7 +20,7 @@ create
 	make_with_range,
 	make_for_test
 
-feature -- Implementation
+feature {NONE}-- Implementation
 
 	implementation: EV_VERTICAL_RANGE_I
 			-- Platform dependent access.
@@ -54,6 +54,9 @@ end -- class EV_VERTICAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 19:48:54  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/03/01 03:26:21  oconnor
 --| added make_for_test
 --|

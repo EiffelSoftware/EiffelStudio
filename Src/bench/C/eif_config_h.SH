@@ -803,7 +803,7 @@ $inttypes_include
 #define EIF_INTEGER_64_DISPLAY $eif_integer_64_display
 
 /* INTEGER_64 constant definition: */
-#define RTI64C(x)	$eif_integer_64_constants
+#define RTI64C(x)	$eif_integer_64_constant
 
 #endif
 !GROK!THIS!

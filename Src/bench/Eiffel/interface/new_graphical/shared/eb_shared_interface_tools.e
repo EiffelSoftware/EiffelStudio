@@ -6,6 +6,12 @@ indexing
 class
 	EB_SHARED_INTERFACE_TOOLS
 
+inherit
+	EB_SHARED_OUTPUT_TOOLS
+		redefine
+			init_error_window
+		end
+
 feature {NONE} -- Shared tools access
 
 	project_tool: EB_PROJECT_TOOL is
@@ -15,13 +21,14 @@ feature {NONE} -- Shared tools access
 		end
 
 	project_tool_is_valid: BOOLEAN is
+			-- Is the project tool avalible?
 		do
 			Result := (project_tool /= Void) and then
 				(not project_tool.destroyed)
 		end
 
 	debug_tool: EB_DEBUG_TOOL is
-			-- Main and unique control window
+			-- Shared debugger
 		do
 			Result := Debug_tool_cell.item
 		end
@@ -33,7 +40,7 @@ feature {NONE} -- Shared tools access
 		end
 
 	select_tool: EB_SELECT_TOOL is
-			-- Main and unique control window
+			-- Tool selector
 		do
 			Result := Select_tool_cell.item
 		end
@@ -95,59 +102,49 @@ feature {NONE} -- Shared tools access
 feature {NONE} -- Shared tools change
 
 	set_project_tool (tool: EB_PROJECT_TOOL) is
-			-- Main and unique control window
+			-- Makes `tool' the shared project tool
 		do
 			Project_tool_cell.put (tool)
 		end
 
 	set_debug_tool (tool: EB_DEBUG_TOOL) is
-			-- Main and unique control window
+			-- Makes `tool' the shared debugger.
 		do
 			Debug_tool_cell.put (tool)
 		end
 
 	set_select_tool (tool: EB_SELECT_TOOL) is
-			-- Main and unique control window
+			-- Makes `tool' the shared selector.
 		do
 			Select_tool_cell.put (tool)
 		end
 
 	set_system_tool (tool: EB_SYSTEM_TOOL) is
-			-- Unique assembly tool
+			-- Makes `tool' the shared system tool.
 		do
 			System_tool_cell.put (tool)
 		end
 
 	set_preference_tool (tool: EB_PREFERENCE_TOOL) is
-			-- makes `tool' the shared preference tool
+			-- makes `tool' the shared preference tool.
 		do
 			Preference_tool_cell.put (tool)
 		end
 
 	set_profile_tool (tool: EB_PROFILE_TOOL) is
-			-- makes `tool' the shared profile tool
+			-- makes `tool' the shared profiler.
 		do
 			Profile_tool_cell.put (tool)
 		end
 
 	set_dynamic_lib_tool (tool: EB_DYNAMIC_LIB_TOOL) is
-			-- Unique assembly tool
+			-- makes `tool' the shared dynamic library tool.
 		do
 			Dynamic_lib_tool_cell.put (tool)
 		end
 
 
 feature
-
-	error_window: OUTPUT_WINDOW is
-			-- Error window that displays error message
-		once
-			if mode.item then
-				Result := term_window
-			else
-				Result := bench_error_window
-			end
-		end
 
 	Debug_window: EB_FORMATTED_TEXT is
 			-- Debug window
@@ -167,13 +164,14 @@ feature
 			Tool_supervisor_cell.put (t_s)
 		end
 
-	Argument_window: ARGUMENT_W is
-			-- General argument window.
+	Argument_list: STRING is
+			-- arguments used while debugging.
 		once
-			!! Result.make
+			create Result.make (0)
 		end
 
 	Progress_dialog: DEGREE_OUTPUT is
+			-- Compilation advance dialog.
 		do
 			Result := Project_tool.progress_dialog
 		end
@@ -186,36 +184,43 @@ feature {NONE} -- Implementation
 			Result.set_item (True)
 		end
 
+	init_error_window: OUTPUT_WINDOW is
+			-- Error window that displays error message
+		do
+			if mode.item then
+				Result := term_window
+			else
+				Result := bench_error_window
+			end
+		end
+
 	bench_error_window: EB_FORMATTED_TEXT is
+		require
+			debug_tool_exists: debug_tool_is_valid
 		do
 			Result := debug_tool.text_window
 		end
 
-	term_window: TERM_WINDOW is
-		once
-			create Result
-		end
-
 	Project_tool_cell: CELL [EB_PROJECT_TOOL] is
-			-- Cell for the profile tool
+			-- Cell for the project tool
 		once
 			create Result.put (Void)
 		end
 
 	Debug_tool_cell: CELL [EB_DEBUG_TOOL] is
-			-- Cell for the profile tool
+			-- Cell for the debugger
 		once
 			create Result.put (Void)
 		end
 
 	Select_tool_cell: CELL [EB_SELECT_TOOL] is
-			-- Cell for the profile tool
+			-- Cell for the selector
 		once
 			create Result.put (Void)
 		end
 
 	System_tool_cell: CELL [EB_SYSTEM_TOOL] is
-			-- Cell for the profile tool
+			-- Cell for the system tool
 		once
 			create Result.put (Void)
 		end
@@ -233,7 +238,7 @@ feature {NONE} -- Implementation
 		end
 
 	Dynamic_lib_tool_cell: CELL [EB_DYNAMIC_LIB_TOOL] is
-			-- Cell for the profile tool
+			-- Cell for the dynamic library tool
 		once
 			create Result.put (Void)
 		end
@@ -243,41 +248,5 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end
-
-feature {NONE} -- Implementation
-
---	init_windowing is
---			-- Initialize the windowing environment.
---		local
---			new_resources: EB_RESOURCES_INITIALIZER
---			display_name: STRING
---			exc: EXCEPTIONS
---			exec_env: EXECUTION_ENVIRONMENT
---			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
---			launched_project_tool: EB_PROJECT_TOOL
---		do
---			if not ewb_display.is_valid then
---				io.error.putstring ("Cannot open display %"")
---				create exec_env
---				display_name := exec_env.get ("DISPLAY")
---				if display_name /= Void then
---					io.error.putstring (display_name)
---				end
---				io.error.putstring ("%"%N%
---					%Check that $DISPLAY is properly set and that you are%N%
---					%authorized to connect to the corresponding server%N")
---				create exc
---				exc.raise ("Invalid display")
---			end
---				--| If we don't put bench mode here,
---				--| `error_window' will assume batch
---				--| mode and thus it will initialize
---				--| `error_window' as a TERM_WINDOW.
---				--| Also note that `error_window' is a
---				--| once-function!!
---			mode.set_item (False)
---			create new_resources.initialize
---			launched_project_tool := Project_tool
---		end
 
 end -- class EB_SHARED_INTERFACE_TOOLS

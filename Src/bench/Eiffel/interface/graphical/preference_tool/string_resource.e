@@ -11,16 +11,42 @@ inherit
 	RESOURCE
 
 creation
-	make
+	make,
+	make_with_values
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_string: STRING) is
+	make_with_values (a_name: STRING; a_value: STRING) is
+			-- Initialie Current
+		require
+			valid_name: a_name /= Void;
+			valid_value: a_value /= Void
+		do
+			name := a_name;
+			value := a_value
+		end;
+
+	make (a_name: STRING; rt: RESOURCE_TABLE; def_value: STRING) is
 			-- Initialize Current
+		require
+			valid_name: a_name /= Void;
+			valid_value: def_value /= Void
 		do
 			name := a_name
-			value := a_string
+			value := rt.get_string (a_name, def_value);
+			default_value := def_value;
 		end
+
+feature -- Access
+
+	default_value, value: STRING
+			-- Value as a `STRING' as represented by Current
+
+	has_changed: BOOLEAN is
+			-- Has the resource changed from the default value?
+		do
+			Result := not equal (default_value, value)
+		end;
 
 feature -- Setting
 
@@ -34,12 +60,11 @@ feature -- Access
 
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?
-			--| Always `True'.
 		local
 			lexer: RESOURCE_STRING_LEX;
 			str: STRING
 		do
-			if a_value /= Void and then not a_value.empty then
+			if not a_value.empty then
 				if a_value @ 1 /= '%"' then
 					!! str.make (0);
 					str.extend ('%"');
@@ -56,10 +81,5 @@ feature -- Access
 				Result := True
 			end
 		end
-
-feature -- Properties
-
-	value: STRING
-			-- Value as a `STRING' as represented by Current
 
 end -- class STRING_RESOURCE

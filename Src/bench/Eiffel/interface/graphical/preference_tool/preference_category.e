@@ -8,11 +8,31 @@ indexing
 deferred class PREFERENCE_CATEGORY
 
 inherit
-	ROW_COLUMN;
+	ROW_COLUMN
+		rename
+			make as make_row_column
+		end;
 	PREFERENCE_COMMAND
 		rename
 			make as init_tool
 		end
+
+feature {NONE} -- Initialization
+
+	make (a_tool: like tool) is
+			-- Initialize Current.
+		do
+			tool := a_tool;
+			!! resources.make;
+			update_resources 
+		end
+
+	update_resources is
+			-- Update `resources'.
+		require
+			valid_resources: resources /= Void
+		deferred
+		end;
 
 feature -- Access
 
@@ -30,18 +50,22 @@ feature {PREFERENCE_TOOL} -- Initialization
 		deferred
 		end;
 
-	add_button_action (a_tool: PREFERENCE_TOOL) is
-			-- Add `a_tool' as command for `button'.
-		do
-			--button.add_activate_action (a_tool, name)
-		end
-
 feature -- Properties
 
 	associated_category: RESOURCE_CATEGORY is
 			-- Category Current is about
 		deferred
 		end;
+
+	name: STRING is
+			-- Name of the category
+		deferred
+		end;
+	
+	symbol: PIXMAP is
+			-- Pixmap representing the category
+		deferred
+		end
 
 feature -- Validation
 
@@ -76,6 +100,10 @@ feature -- Access
 		local
 			res: like resources
 		do
+			file.putstring ("-- **** ");
+			file.putstring (name);
+			file.putstring (" **** ");
+			file.new_line
 			from
 				res := resources;
 				res.start
@@ -84,7 +112,8 @@ feature -- Access
 			loop
 				res.item.save (file);
 				res.forth
-			end
+			end;
+			file.new_line
 		end;
 
 	update is
@@ -110,27 +139,46 @@ feature -- Access
 
 feature -- Output
 
-	display is
-			-- Display Current
-			--| This feature is used to initialize `resources'.
+	reset_content is
+			-- Reset content;
+			--| This feature is used to reset `resources'.
 		local
-			mp: MOUSE_PTR
+			res: PREFERENCE_RESOURCE
 		do
-			holder.set_selected (True);
 			if been_displayed then
-				manage
-			else
-				!! mp.set_watch_cursor;
 				from
 					resources.start
 				until
 					resources.after
 				loop
-					resources.item.display;
+					res := resources.item;
+					res.reset;
+					resources.forth
+				end;
+			end
+		end;
+
+	display is
+			-- Display Current
+			--| This feature is used to initialize `resources'.
+		local
+			res: PREFERENCE_RESOURCE
+		do
+			holder.set_selected (True);
+			if been_displayed then
+				manage
+			else
+				from
+					resources.start
+				until
+					resources.after
+				loop
+					res := resources.item;
+					res.init (Current);
+					res.reset;
 					resources.forth
 				end;
 				init_colors;
-				mp.restore;
 				been_displayed := True
 			end
 		end;
@@ -161,7 +209,7 @@ feature {PREFERENCE_COMMAND} -- Execution
 	execute (argument: ANY) is
 			-- Execute Current
 		do
-			tool.execute (argument)
+			tool.execute (Current)
 		end
 
 end -- class PREFERENCE_CATEGORY

@@ -139,8 +139,8 @@ feature -- Saving
 				until
 					resource_list.after
 				loop
-					Result.append (resource_list.item.xml_trace)
-					Result.extend ('%N')
+					s.append (resource_list.item.xml_trace)
+					s.extend ('%N')
 					resource_list.forth
 				end
 				s.append ("</EIFFEL_DOCUMENT>%N")
